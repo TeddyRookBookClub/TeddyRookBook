@@ -1,0 +1,162 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<div class="mk-grid two">
+  <section class="mk-box" data-calc="compound">
+    <h2>📈 Compound growth &amp; savings</h2>
+    <div class="calc">
+      <label>Starting amount ($)<input type="number" id="cp-p" value="10000" step="any"></label>
+      <label>Added each month ($)<input type="number" id="cp-m" value="500" step="any"></label>
+      <label>Annual return (%)<input type="number" id="cp-r" value="7" step="0.1"></label>
+      <label>Years<input type="number" id="cp-y" value="30" min="1" max="80"></label>
+      <label>Contributions grow each year (%)<input type="number" id="cp-g" value="0" step="0.1"></label>
+      <label>Inflation (%)<input type="number" id="cp-i" value="2.5" step="0.1"></label>
+    </div>
+    <div class="calc-out" id="cp-out"></div>
+    <div class="mc" id="cp-chart" style="height:240px;margin-top:.5rem"></div>
+  </section>
+  <section class="mk-box" data-calc="loan">
+    <h2>🏠 Loan &amp; mortgage</h2>
+    <div class="calc">
+      <label>Loan amount ($)<input type="number" id="ln-p" value="400000" step="any"></label>
+      <label>Interest rate (%)<input type="number" id="ln-r" value="6.5" step="0.01"></label>
+      <label>Term (years)<input type="number" id="ln-y" value="30" min="1"></label>
+      <label>Extra payment per month ($)<input type="number" id="ln-x" value="0" step="any"></label>
+    </div>
+    <div class="calc-out" id="ln-out"></div>
+  </section>
+  <section class="mk-box" data-calc="bs">
+    <h2>🎯 Option pricer (Black–Scholes) &amp; Greeks</h2>
+    <div class="calc">
+      <label>Stock price<input type="number" id="bs-s" value="100" step="any"></label>
+      <label>Strike<input type="number" id="bs-k" value="105" step="any"></label>
+      <label>Days to expiration<input type="number" id="bs-t" value="30" step="1"></label>
+      <label>Implied volatility (%)<input type="number" id="bs-v" value="25" step="0.1"></label>
+      <label>Risk-free rate (%)<input type="number" id="bs-r" value="4.5" step="0.01"></label>
+      <label>Dividend yield (%)<input type="number" id="bs-q" value="0" step="0.01"></label>
+    </div>
+    <div class="calc-out" id="bs-out"></div>
+  </section>
+  <section class="mk-box" data-calc="bond">
+    <h2>🏛️ Bond price, yield &amp; duration</h2>
+    <div class="calc">
+      <label>Face value ($)<input type="number" id="bd-f" value="1000" step="any"></label>
+      <label>Coupon rate (%)<input type="number" id="bd-c" value="4" step="0.01"></label>
+      <label>Years to maturity<input type="number" id="bd-n" value="10" step="0.5"></label>
+      <label>Yield to maturity (%)<input type="number" id="bd-y" value="4.5" step="0.01"></label>
+      <label>Payments per year<select id="bd-m"><option value="2">2 (Treasuries, most U.S. bonds)</option><option value="1">1</option><option value="4">4</option><option value="12">12</option></select></label>
+      <label>Or find the yield from a price (per 100)<input type="number" id="bd-p" placeholder="e.g. 96.5" step="any"></label>
+    </div>
+    <div class="calc-out" id="bd-out"></div>
+  </section>
+  <section class="mk-box" data-calc="size">
+    <h2>⚖️ Position size &amp; risk/reward</h2>
+    <div class="calc">
+      <label>Account size ($)<input type="number" id="ps-a" value="50000" step="any"></label>
+      <label>Risk per trade (%)<input type="number" id="ps-r" value="1" step="0.1"></label>
+      <label>Entry price<input type="number" id="ps-e" value="50" step="any"></label>
+      <label>Stop-loss price<input type="number" id="ps-s" value="47" step="any"></label>
+      <label>Target price (optional)<input type="number" id="ps-t" value="59" step="any"></label>
+    </div>
+    <div class="calc-out" id="ps-out"></div>
+  </section>
+  <section class="mk-box" data-calc="infl">
+    <h2>🛒 Inflation: what’s it worth today?</h2>
+    <div class="calc">
+      <label>Amount ($)<input type="number" id="in-a" value="100" step="any"></label>
+      <label>In year<input type="number" id="in-f" value="1990" min="1947"></label>
+      <label>Worth in year<input type="number" id="in-t" value="2025" min="1947"></label>
+    </div>
+    <div class="calc-out" id="in-out"></div>
+  </section>
+  <section class="mk-box" data-calc="cagr">
+    <h2>📊 Annualized return (CAGR)</h2>
+    <div class="calc">
+      <label>Starting value<input type="number" id="cg-a" value="10000" step="any"></label>
+      <label>Ending value<input type="number" id="cg-b" value="25000" step="any"></label>
+      <label>Years<input type="number" id="cg-y" value="8" step="0.25"></label>
+    </div>
+    <div class="calc-out" id="cg-out"></div>
+  </section>
+  <section class="mk-box" data-calc="tbill">
+    <h2>💵 T-bill price &amp; yield</h2>
+    <div class="calc">
+      <label>Discount rate (%)<input type="number" id="tb-d" value="4.2" step="0.001"></label>
+      <label>Days to maturity<input type="number" id="tb-t" value="91" step="1"></label>
+    </div>
+    <div class="calc-out" id="tb-out"></div>
+    <p class="mk-note">Bills are quoted at a discount rate on a 360-day year; the investment rate is the comparable bond yield, which Treasury reports with each auction.</p>
+  </section>
+  <section class="mk-box" data-calc="real">
+    <h2>🔁 Real (after-inflation) return</h2>
+    <div class="calc">
+      <label>Nominal return (%)<input type="number" id="rl-n" value="5" step="0.01"></label>
+      <label>Inflation (%)<input type="number" id="rl-i" value="3" step="0.01"></label>
+    </div>
+    <div class="calc-out" id="rl-out"></div>
+  </section>
+  <section class="mk-box">
+    <h2>🌡️ More calculators</h2>
+    <p class="mk-help">The <a href="{{ "markets/vix/" | relURL }}">VIX page</a> has an expected-move calculator, and <a href="{{ "markets/indicators/" | relURL }}">Economic data</a> lets you chart any series as year-over-year, month-over-month or 3-month annualized changes and download the numbers.</p>
+  </section>
+</div>
+
+<section class="mk-box" style="margin-top:1rem">
+  <h2>The best free finance &amp; economics tools on the web</h2>
+  <div class="dir">
+    <section><h3>Economic data</h3><ul>
+      <li><a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">FRED</a>: 800,000+ U.S. and international series from the St. Louis Fed, with charting and downloads.</li>
+      <li><a href="https://alfred.stlouisfed.org/" target="_blank" rel="noopener">ALFRED</a>: the numbers as first published, before revisions.</li>
+      <li><a href="https://www.bls.gov/" target="_blank" rel="noopener">BLS</a> (jobs, CPI, PPI), <a href="https://www.bea.gov/" target="_blank" rel="noopener">BEA</a> (GDP, PCE) and <a href="https://www.census.gov/economic-indicators/" target="_blank" rel="noopener">Census</a> (retail sales, housing): the original sources.</li>
+      <li><a href="https://www.atlantafed.org/cqer/research/gdpnow" target="_blank" rel="noopener">Atlanta Fed GDPNow</a> and <a href="https://www.newyorkfed.org/research/policy/nowcast" target="_blank" rel="noopener">NY Fed Staff Nowcast</a>: real-time GDP estimates.</li>
+      <li><a href="https://www.clevelandfed.org/indicators-and-data/inflation-nowcasting" target="_blank" rel="noopener">Cleveland Fed Inflation Nowcasting</a>: daily estimates of this month’s CPI and PCE.</li>
+      <li><a href="https://db.nomics.world/" target="_blank" rel="noopener">DBnomics</a>, <a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Bank</a>, <a href="https://data.imf.org/" target="_blank" rel="noopener">IMF</a>, <a href="https://data-explorer.oecd.org/" target="_blank" rel="noopener">OECD</a> and <a href="https://ourworldindata.org/" target="_blank" rel="noopener">Our World in Data</a>: international statistics.</li>
+    </ul></section>
+    <section><h3>The Fed &amp; interest rates</h3><ul>
+      <li><a href="https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html" target="_blank" rel="noopener">CME FedWatch</a>: market-implied odds of each Fed rate decision.</li>
+      <li><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC calendar</a>: meeting dates, statements, minutes and the “dot plot”.</li>
+      <li><a href="https://www.treasurydirect.gov/auctions/" target="_blank" rel="noopener">TreasuryDirect auctions</a>: announcements and full results; you can also buy Treasuries directly.</li>
+      <li><a href="https://www.newyorkfed.org/markets/reference-rates" target="_blank" rel="noopener">NY Fed reference rates</a>: SOFR and the fed funds rate each morning.</li>
+    </ul></section>
+    <section><h3>Charts, screeners &amp; market maps</h3><ul>
+      <li><a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a>: the charts on these pages, with alerts and saved layouts on a free account.</li>
+      <li><a href="https://finviz.com/" target="_blank" rel="noopener">Finviz</a>: fast screener, market heat maps and insider trades.</li>
+      <li><a href="https://stockcharts.com/" target="_blank" rel="noopener">StockCharts</a>: classic technical charts and market breadth.</li>
+      <li><a href="https://www.koyfin.com/" target="_blank" rel="noopener">Koyfin</a>: Bloomberg-style dashboards; the free tier is generous.</li>
+      <li><a href="https://finance.yahoo.com/" target="_blank" rel="noopener">Yahoo Finance</a> and <a href="https://www.google.com/finance/" target="_blank" rel="noopener">Google Finance</a>: quotes, news and historical prices.</li>
+    </ul></section>
+    <section><h3>Company research</h3><ul>
+      <li><a href="https://www.sec.gov/edgar/search/" target="_blank" rel="noopener">SEC EDGAR full-text search</a>: every 10-K, 10-Q, 8-K and proxy, searchable.</li>
+      <li><a href="https://stockanalysis.com/" target="_blank" rel="noopener">Stock Analysis</a> and <a href="https://www.macrotrends.net/" target="_blank" rel="noopener">Macrotrends</a>: long financial histories and ratios.</li>
+      <li><a href="http://openinsider.com/" target="_blank" rel="noopener">OpenInsider</a>: insider buying and selling from SEC Form 4.</li>
+      <li><a href="https://whalewisdom.com/" target="_blank" rel="noopener">WhaleWisdom</a>: what big funds own (13F filings).</li>
+      <li><a href="https://www.nasdaq.com/market-activity/earnings" target="_blank" rel="noopener">Nasdaq earnings calendar</a>: who reports this week.</li>
+    </ul></section>
+    <section><h3>Valuation &amp; long-run data</h3><ul>
+      <li><a href="https://www.multpl.com/shiller-pe" target="_blank" rel="noopener">Multpl</a>: Shiller CAPE, dividend yield and other S&amp;P 500 ratios back to 1871.</li>
+      <li><a href="https://pages.stern.nyu.edu/~adamodar/" target="_blank" rel="noopener">Aswath Damodaran’s data</a>: equity risk premiums, industry margins and valuation spreadsheets.</li>
+      <li><a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html" target="_blank" rel="noopener">Kenneth French Data Library</a>: factor returns (value, size, momentum) back to 1926.</li>
+    </ul></section>
+    <section><h3>Options &amp; volatility</h3><ul>
+      <li><a href="https://www.cboe.com/tradable_products/vix/" target="_blank" rel="noopener">Cboe VIX</a> and <a href="http://vixcentral.com/" target="_blank" rel="noopener">VIX Central</a>: the index and the full futures curve.</li>
+      <li><a href="https://optionstrat.com/" target="_blank" rel="noopener">OptionStrat</a> and <a href="https://www.optionsprofitcalculator.com/" target="_blank" rel="noopener">Options Profit Calculator</a>: visualize payoffs for any strategy.</li>
+    </ul></section>
+    <section><h3>Portfolios &amp; backtesting</h3><ul>
+      <li><a href="https://www.portfoliovisualizer.com/" target="_blank" rel="noopener">Portfolio Visualizer</a>: backtest asset allocations, Monte Carlo simulations, factor analysis.</li>
+      <li><a href="https://www.bogleheads.org/wiki/Main_Page" target="_blank" rel="noopener">Bogleheads wiki</a>: plain-spoken guides to investing and retirement accounts.</li>
+    </ul></section>
+    <section><h3>Bitcoin</h3><ul>
+      <li><a href="https://mempool.space/" target="_blank" rel="noopener">mempool.space</a>: live Bitcoin blocks, fees and transactions.</li>
+      <li><a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noopener">The Bitcoin white paper</a> (Satoshi Nakamoto, 2008): nine pages.</li>
+    </ul></section>
+    <section><h3>Learning</h3><ul>
+      <li><a href="https://www.investopedia.com/" target="_blank" rel="noopener">Investopedia</a>: definitions of almost every finance term.</li>
+      <li><a href="https://fredblog.stlouisfed.org/" target="_blank" rel="noopener">FRED Blog</a>: short, chart-driven explanations of economic data.</li>
+      <li><a href="https://www.khanacademy.org/economics-finance-domain" target="_blank" rel="noopener">Khan Academy</a>: free courses in economics and finance.</li>
+    </ul></section>
+  </div>
+</section>
+{{ partial "markets-foot.html" . }}
+</div>
+<script src="{{ "markets/tools.js" | relURL }}?v={{ (os.Stat "static/markets/tools.js").ModTime.Unix }}"></script>
+{{ end }}

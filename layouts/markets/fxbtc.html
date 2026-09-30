@@ -1,0 +1,57 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<h2 style="margin:.2rem 0 .6rem">💱 Forex</h2>
+<div class="mk-grid two">
+  <section class="mk-box"><h3>Cross rates <small>1 unit of the row currency in the column currency</small></h3><div class="mk-tv" id="cross"></div></section>
+  <section class="mk-box"><h3>Currency heat map <small>% change today; green = row currency stronger</small></h3><div class="mk-tv" id="heat"></div></section>
+</div>
+<section class="mk-box" style="margin-top:1rem">
+  <div class="mk-row" style="margin-bottom:.4rem"><h3 style="margin:0">Pair chart</h3>
+    <select id="pair">
+      <option value="FX:EURUSD">EUR/USD</option><option value="FX:USDJPY">USD/JPY</option><option value="FX:GBPUSD">GBP/USD</option><option value="FX:USDCHF">USD/CHF</option><option value="FX:AUDUSD">AUD/USD</option><option value="FX:USDCAD">USD/CAD</option><option value="FX:NZDUSD">NZD/USD</option><option value="FX:EURJPY">EUR/JPY</option><option value="FX:EURGBP">EUR/GBP</option><option value="FX:GBPJPY">GBP/JPY</option><option value="FX_IDC:USDCNY">USD/CNY</option><option value="FX_IDC:USDMXN">USD/MXN</option><option value="OANDA:XAUUSD">Gold (XAU/USD)</option>
+    </select></div>
+  <div class="mk-tv h600" id="fxchart"></div>
+</section>
+<div class="mk-grid two" style="margin-top:1rem">
+  <section class="mk-box"><h3>Forex screener</h3><div class="mk-tv h600" id="fxscr"></div></section>
+  <section class="mk-box"><h3>Long-term history <small>daily, from the Federal Reserve</small></h3>
+    <div class="mk-row" style="margin-bottom:.4rem"><select id="lt"><option value="DTWEXBGS">U.S. dollar index (broad, trade-weighted)</option><option value="DEXUSEU">EUR/USD</option><option value="DEXJPUS">USD/JPY</option><option value="DEXUSUK">GBP/USD</option><option value="DEXCHUS">USD/CNY</option></select></div>
+    <div class="mc" id="ltc" style="height:470px"></div></section>
+</div>
+<h2 style="margin:1.4rem 0 .6rem">₿ Bitcoin</h2>
+<div class="mk-tv" id="btcinfo"></div>
+<section class="mk-box" style="margin-top:.6rem;padding:.4rem"><div class="mk-tv h600" id="btc"></div></section>
+<div class="mk-grid two" style="margin-top:1rem">
+  <section class="mk-box"><h3>Bitcoin since 2014 <small>log scale · dashed lines = halvings</small></h3><div class="mc" id="btclt" style="height:380px"></div>
+    <p class="mk-note">Every four years or so the reward for mining new blocks is cut in half (“halving”), slowing the creation of new bitcoin. The supply is capped at 21 million.</p></section>
+  <section class="mk-box"><h3>Technical rating</h3><div class="mk-tv" id="btcta"></div></section>
+</div>
+{{ partial "markets-foot.html" . }}
+</div>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var CUR = 'EUR,USD,JPY,GBP,CHF,AUD,CAD,NZD,CNY';
+  MK.wc('#cross', 'tv-forex-table', { currencies: CUR });
+  MK.wc('#heat', 'tv-forex-table', { currencies: CUR, heatmap: true });
+  var P = localStorage.getItem('mk-pair') || 'FX:EURUSD'; $('#pair').value = P;
+  var fx = MK.tv('#fxchart', 'advanced-chart', { symbol: P, interval: 'D', style: '1', allow_symbol_change: true, hide_side_toolbar: false, withdateranges: true, details: true, save_image: true, autosize: true, timezone: 'America/New_York', support_host: 'https://www.tradingview.com' });
+  $('#pair').addEventListener('change', function () { try { localStorage.setItem('mk-pair', this.value); } catch (e) { } MK.update(fx, { symbol: this.value }); });
+  MK.tv('#fxscr', 'screener', { market: 'forex', showToolbar: true, defaultColumn: 'overview', defaultScreen: 'general', isTransparent: true, width: '100%', height: '100%' });
+  var lt = new MChart($('#ltc'), {}), REC = [];
+  function drawLt() { var id = $('#lt').value; MK.fred(id).then(function (p) { lt.set([{ name: $('#lt').selectedOptions[0].textContent, pts: p, color: MK.PALETTE[0], fmt: function (v) { return MChart.fmt(v, 4); } }], { shade: REC }); }).catch(function () { lt.set([], { emptyText: 'Data appears after the next site build.' }); }); }
+  MK.recessions().then(function (r) { REC = r; drawLt(); });
+  $('#lt').addEventListener('change', drawLt);
+
+  MK.tv('#btcinfo', 'symbol-info', { symbol: 'BITSTAMP:BTCUSD', isTransparent: true, width: '100%' });
+  MK.tv('#btc', 'advanced-chart', { symbol: 'BITSTAMP:BTCUSD', interval: 'D', style: '1', allow_symbol_change: false, hide_side_toolbar: false, withdateranges: true, details: true, save_image: true, autosize: true, timezone: 'Etc/UTC', support_host: 'https://www.tradingview.com' });
+  MK.wc('#btcta', 'tv-technical-analysis', { symbol: 'BITSTAMP:BTCUSD', interval: '1D' });
+  var bc = new MChart($('#btclt'), {});
+  MK.fred('CBBTCUSD').then(function (p) {
+    bc.set([{ name: 'Bitcoin (Coinbase)', pts: p, color: '#e67e22', fmt: function (v) { return '$' + MChart.fmt(v, 0); } }], { logLeft: true, fmtLeft: function (v) { return '$' + MChart.fmt(v, 0); },
+      vlines: [['2016-07-09', 'Halving 2016'], ['2020-05-11', '2020'], ['2024-04-20', '2024']].map(function (h) { return { x: Date.parse(h[0]), label: h[1] }; }) });
+  }).catch(function () { bc.set([], { emptyText: 'Data appears after the next site build.' }); });
+})();
+</script>
+{{ end }}

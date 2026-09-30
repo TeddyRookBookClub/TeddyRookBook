@@ -1,0 +1,68 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<div class="mk-grid two">
+  <section class="mk-box">
+    <h2>Treasury yield curve <small>daily par yields from the U.S. Treasury</small></h2>
+    <div class="mk-row" style="margin-bottom:.4rem">
+      <span class="mk-note" style="margin:0">Compare with:</span>
+      <label><input type="checkbox" id="yc-7"> 1 week ago</label>
+      <label><input type="checkbox" id="yc-30" checked> 1 month ago</label>
+      <label><input type="checkbox" id="yc-365" checked> 1 year ago</label>
+      <label>a date <input type="date" id="yc-date"></label>
+    </div>
+    <div class="mc" id="yc" style="height:340px"></div>
+    <p class="mk-note" id="yc-sum">Loading…</p>
+  </section>
+  <section class="mk-box">
+    <h2>Latest yields and changes</h2>
+    <div class="mk-tablewrap"><table class="mk-t" id="yc-table"><tbody><tr><td>Loading…</td></tr></tbody></table></div>
+    <p class="mk-note">bp = basis points (hundredths of a percentage point). Green = yield up, red = yield down. Treasury publishes these after about 6 p.m. ET each business day.</p>
+  </section>
+</div>
+<section class="mk-box" style="margin-top:1rem">
+  <h2>Rate history</h2>
+  <div class="mk-row" style="margin-bottom:.4rem">
+    <select id="h-set"><option value="main">Fed funds, 3-month, 2-, 10- and 30-year</option><option value="real">10-year: nominal, real and breakeven inflation</option><option value="mort">Mortgage rate vs. 10-year Treasury</option></select>
+    <span class="mk-seg" id="h-yrs"><button type="button" data-y="2">2Y</button><button type="button" data-y="5">5Y</button><button type="button" data-y="10">10Y</button><button type="button" data-y="20" class="on">20Y</button><button type="button" data-y="0">Max</button></span>
+  </div>
+  <div class="mk-grid two">
+    <div class="mc" id="hist" style="height:360px"></div>
+    <div><div class="mc" id="spr" style="height:360px"></div></div>
+  </div>
+  <p class="mk-note">Left: yields. Right: yield-curve spreads; below zero means inverted. Gray bars are recessions. Drag to zoom, double-click to reset. Every series is also in <a href="{{ "markets/indicators/" | relURL }}">Economic data</a>.</p>
+</section>
+<section class="mk-box" style="margin-top:1rem" id="auctions">
+  <h2>Treasury auction results</h2>
+  <div class="mk-row" style="margin-bottom:.5rem">
+    <select id="a-kind"><option>All</option><option value="Bill">Bills</option><option value="Note">Notes</option><option value="Bond">Bonds</option><option value="TIPS">TIPS</option><option value="FRN">Floating rate notes</option><option value="CMB">Cash management bills</option></select>
+    <select id="a-term"></select>
+    <span class="mk-note" id="a-next" style="margin:0"></span>
+  </div>
+  <div class="mk-tablewrap" style="max-height:560px">
+    <table class="mk-t" id="auc"><thead><tr>
+      <th>Auction</th><th>Security</th><th class="num" title="Amount Treasury offered to sell">Offered</th><th class="num" title="Total bids received">Bids</th><th class="num" title="Bids minus amount offered">Over-subscribed by</th>
+      <th class="num" title="Bids ÷ amount accepted; ▲▼ versus the average of the previous six auctions of the same security">Bid-to-cover</th>
+      <th class="num" title="Highest accepted yield (notes, bonds) or investment rate (bills); previous auction for comparison">High yield / rate</th>
+      <th class="num" title="High yield minus Treasury’s end-of-day yield for that maturity on auction day, in basis points. A rough stand-in for the tail: + means buyers demanded a higher yield than the market (weaker); − means a stop-through (stronger).">vs. market (bp)</th>
+      <th class="num" title="Share of competitive awards to indirect bidders (mostly foreign central banks and funds bidding through dealers)">Indirect</th>
+      <th class="num" title="Share to direct bidders (domestic funds and institutions bidding for themselves)">Direct</th>
+      <th class="num" title="Share left with primary dealers, who must bid; a high share usually means weaker outside demand">Dealers</th>
+      <th>Demand</th></tr></thead><tbody><tr><td colspan="12">Loading…</td></tr></tbody></table>
+  </div>
+  <h3 id="a-title" style="margin-top:1rem"></h3>
+  <div class="mc" id="auc-chart" style="height:300px"></div>
+  <details class="mk-help" style="margin-top:.6rem"><summary>How to read an auction</summary>
+    <ul>
+      <li><b>Offered</b> is the amount Treasury set out to sell. <b>Bids</b> is how much investors asked to buy. <b>Over-subscribed by</b> is the difference.</li>
+      <li><b>Bid-to-cover</b> = bids ÷ amount sold. Higher means more demand. It’s most useful compared with recent auctions of the same security, so the arrow shows the change against the previous six.</li>
+      <li><b>Tail vs. stop-through:</b> traders compare the auction’s high yield with the “when-issued” yield trading just before the 1 p.m. deadline. Treasury doesn’t publish that figure, so this page compares with Treasury’s end-of-day yield for the same maturity. That’s a rough guide: positive means the auction cleared at a higher yield than the market (a tail, weaker); negative means lower (a stop-through, stronger).</li>
+      <li><b>Who bought:</b> indirect bidders (often foreign official buyers), direct bidders (U.S. institutions) and primary dealers, who are obliged to bid and absorb what others don’t take.</li>
+      <li><b>Demand</b> combines bid-to-cover versus recent auctions and the yield versus the market. It is a simple rule of thumb, not an official rating.</li>
+    </ul></details>
+</section>
+{{ partial "markets-foot.html" . }}
+</div>
+<script src="{{ "markets/treasury.js" | relURL }}?v={{ (os.Stat "static/markets/treasury.js").ModTime.Unix }}"></script>
+<script src="{{ "markets/rates.js" | relURL }}?v={{ (os.Stat "static/markets/rates.js").ModTime.Unix }}"></script>
+{{ end }}

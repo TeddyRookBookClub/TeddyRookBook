@@ -59,8 +59,16 @@
       <div class="tile-vis gamevis" aria-hidden="true"><canvas id="home-temple" width="220" height="150"></canvas><canvas id="home-theater" width="200" height="140"></canvas></div>
       <div class="tile-body">
         <h2>🏛️ Games</h2>
-        <p>Build a festival in ancient Greece or Rome, or escape the Teutoburg Forest in AD 9, learning Greek and Latin as you play.</p>
+        <p>Build a festival in ancient Greece or Rome, escape the Teutoburg Forest in AD 9, or chase a thief through time, learning Greek and Latin as you play.</p>
         <span class="go">Play →</span>
+      </div>
+    </a>
+    <a class="tile t-mk" href="/markets/" style="grid-column:1/-1">
+      <div class="tile-vis mkvis" aria-hidden="true" style="height:150px"><canvas id="home-mk" style="width:100%;height:100%;display:block"></canvas><span id="home-mk-l" style="position:absolute;left:1rem;top:.7rem;font:600 .85rem system-ui;color:var(--muted)"></span></div>
+      <div class="tile-body">
+        <h2>📈 Markets &amp; Economy</h2>
+        <p>Stock screener and charts, the economic calendar, 80+ economic indicators, Treasury yields and auctions, forex, Bitcoin, the VIX, and finance calculators.</p>
+        <span class="go">Open →</span>
       </div>
     </a>
   </section>
@@ -101,6 +109,21 @@
     box.querySelector('.v-g').textContent = v.g; box.querySelector('.v-l').textContent = v.l; box.querySelector('.v-e').textContent = v.en;
     box.querySelector('.v-ref').textContent = v.r + ' · ESV';
   }).catch(function () {});
+})();
+</script>
+<script>
+(function () {
+  var cv = document.getElementById('home-mk'); if (!cv) return;
+  fetch('/markets/data/fred/SP500.json').then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+    var n = d.v.length, v = d.v.slice(Math.max(0, n - 520)), w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    cv.width = w * dpr; cv.height = h * dpr; var c = cv.getContext('2d'); c.scale(dpr, dpr);
+    var lo = Math.min.apply(null, v), hi = Math.max.apply(null, v);
+    var X = function (i) { return 12 + i / (v.length - 1) * (w - 24); }, Y = function (x) { return h - 14 - (x - lo) / (hi - lo || 1) * (h - 44); };
+    var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, 'rgba(0,105,58,.28)'); g.addColorStop(1, 'rgba(0,105,58,0)');
+    c.beginPath(); v.forEach(function (x, i) { i ? c.lineTo(X(i), Y(x)) : c.moveTo(X(i), Y(x)); });
+    c.strokeStyle = '#00693a'; c.lineWidth = 2; c.stroke(); c.lineTo(X(v.length - 1), h); c.lineTo(X(0), h); c.fillStyle = g; c.fill();
+    document.getElementById('home-mk-l').textContent = 'S&P 500, last 2 years · ' + v[v.length - 1].toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }).catch(function () { });
 })();
 </script>
 {{ end }}

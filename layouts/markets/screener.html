@@ -1,0 +1,78 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<section class="mk-box">
+  <h2>Stock screener <small>U.S. stocks · click any symbol to open its chart page</small></h2>
+  <div class="mk-row" style="margin-bottom:.6rem">
+    <label>Start with
+      <select id="scr-screen">
+        <option value="most_capitalized">Most capitalized</option>
+        <option value="volume_leaders">Volume leaders</option>
+        <option value="top_gainers">Top gainers</option>
+        <option value="top_losers">Top losers</option>
+        <option value="new_52week_high">New 52-week high</option>
+        <option value="new_52week_low">New 52-week low</option>
+        <option value="high_dividend">High dividend</option>
+        <option value="most_volatile">Most volatile</option>
+        <option value="unusual_volume">Unusual volume</option>
+        <option value="overbought">Overbought</option>
+        <option value="oversold">Oversold</option>
+      </select></label>
+    <label>Columns
+      <select id="scr-col">
+        <option value="overview">Overview</option>
+        <option value="performance">Performance</option>
+        <option value="valuation">Valuation</option>
+        <option value="dividends">Dividends</option>
+        <option value="margins">Margins</option>
+        <option value="income_statement">Income statement</option>
+        <option value="balance_sheet">Balance sheet</option>
+        <option value="oscillators">Oscillators</option>
+        <option value="moving_averages">Moving averages</option>
+      </select></label>
+    <span class="mk-note" style="margin:0">Inside the screener, use <b>Filters</b> to add any condition (P/E, market cap, sector, RSI, and more).</span>
+  </div>
+  <div class="mk-tv h800" id="screener"></div>
+</section>
+<div class="mk-grid two" style="margin-top:1rem">
+  <section class="mk-box">
+    <h2>Stock heatmap</h2>
+    <div class="mk-row" style="margin-bottom:.5rem">
+      <select id="hm-src"><option value="SPX500">S&amp;P 500</option><option value="NASDAQ100">Nasdaq 100</option><option value="DJDJI">Dow 30</option><option value="AllUSA">All U.S.</option></select>
+      <select id="hm-color"><option value="change">Today’s change</option><option value="Perf.W">1 week</option><option value="Perf.1M">1 month</option><option value="Perf.YTD">Year to date</option><option value="Perf.Y">1 year</option><option value="relative_volume_10d_calc">Relative volume</option><option value="gap">Gap</option></select>
+      <select id="hm-group"><option value="sector">By sector</option><option value="no_group">No grouping</option></select>
+    </div>
+    <div class="mk-tv h600" id="heatmap"></div>
+  </section>
+  <section class="mk-box">
+    <h2>ETF heatmap</h2>
+    <div class="mk-row" style="margin-bottom:.5rem">
+      <select id="etf-color"><option value="change">Today’s change</option><option value="Perf.W">1 week</option><option value="Perf.1M">1 month</option><option value="Perf.YTD">Year to date</option><option value="Perf.Y">1 year</option></select>
+      <select id="etf-group"><option value="asset_class">By asset class</option><option value="no_group">No grouping</option></select>
+    </div>
+    <div class="mk-tv h600" id="etfmap"></div>
+  </section>
+</div>
+{{ partial "markets-foot.html" . }}
+</div>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var P = {}; try { P = JSON.parse(localStorage.getItem('mk-scr')) || {}; } catch (e) { }
+  function save() { try { localStorage.setItem('mk-scr', JSON.stringify(P)); } catch (e) { } }
+  ['scr-screen', 'scr-col', 'hm-src', 'hm-color', 'hm-group', 'etf-color', 'etf-group'].forEach(function (id) { if (P[id]) $('#' + id).value = P[id]; });
+  var chart = MK.chartUrl();
+  var scr = MK.tv('#screener', 'screener', { market: 'us', showToolbar: true, defaultColumn: $('#scr-col').value, defaultScreen: $('#scr-screen').value, isTransparent: true, width: '100%', height: '100%', largeChartUrl: chart });
+  var hm = MK.tv('#heatmap', 'stock-heatmap', { dataSource: $('#hm-src').value, blockSize: 'market_cap_basic', blockColor: $('#hm-color').value, grouping: $('#hm-group').value, symbolUrl: chart, hasTopBar: true, isDataSetEnabled: true, isZoomEnabled: true, hasSymbolTooltip: true, isMonoSize: false, width: '100%', height: '100%' });
+  var etf = MK.tv('#etfmap', 'etf-heatmap', { dataSource: 'AllUSEtf', blockSize: 'volume', blockColor: $('#etf-color').value, grouping: $('#etf-group').value, symbolUrl: chart, hasTopBar: true, isDataSetEnabled: true, isZoomEnabled: true, hasSymbolTooltip: true, isMonoSize: false, width: '100%', height: '100%' });
+  function on(id, fn) { $('#' + id).addEventListener('change', function () { P[id] = this.value; save(); fn(this.value); }); }
+  on('scr-screen', function (v) { MK.update(scr, { defaultScreen: v }); });
+  on('scr-col', function (v) { MK.update(scr, { defaultColumn: v }); });
+  on('hm-src', function (v) { MK.update(hm, { dataSource: v }); });
+  on('hm-color', function (v) { MK.update(hm, { blockColor: v }); });
+  on('hm-group', function (v) { MK.update(hm, { grouping: v }); });
+  on('etf-color', function (v) { MK.update(etf, { blockColor: v }); });
+  on('etf-group', function (v) { MK.update(etf, { grouping: v }); });
+})();
+</script>
+{{ end }}

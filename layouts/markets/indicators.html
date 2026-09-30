@@ -1,0 +1,9 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<p class="mk-note" id="ib-upd" style="margin:-.4rem 0 .6rem"></p>
+<div id="ib"><p class="mk-note">Loading…</p></div>
+{{ partial "markets-foot.html" . }}
+</div>
+<script src="{{ "markets/indicators.js" | relURL }}?v={{ (os.Stat "static/markets/indicators.js").ModTime.Unix }}"></script>
+{{ end }}

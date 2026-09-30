@@ -1,0 +1,75 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<div class="mk-tv" id="tape"></div>
+<div class="mk-grid side" style="margin-top:1rem">
+  <div class="mk-grid">
+    <section class="mk-box">
+      <h2>Latest economic numbers <small id="upd"></small></h2>
+      <div class="mk-stats" id="latest"><p class="mk-note">Loading…</p></div>
+      <p class="mk-note">Tap a number to chart its history. More in <a href="{{ "markets/indicators/" | relURL }}">Economic data</a>.</p>
+    </section>
+    <section class="mk-box">
+      <h2>Tools</h2>
+      <div class="mk-cards">
+        <a class="mk-card" href="{{ "markets/screener/" | relURL }}"><span class="ic">🔎</span><b>Stock screener</b><span>Filter thousands of U.S. stocks. S&amp;P 500 and ETF heatmaps.</span></a>
+        <a class="mk-card" href="{{ "markets/chart/" | relURL }}"><span class="ic">📈</span><b>Stock chart &amp; analysis</b><span>Full chart with indicators and drawing tools, fundamentals, technical ratings, seasonality, news.</span></a>
+        <a class="mk-card" href="{{ "markets/calendar/" | relURL }}"><span class="ic">🗓️</span><b>Economic calendar</b><span>ISM, jobs, CPI, UMich sentiment and more, with forecasts. Release guide and auction schedule.</span></a>
+        <a class="mk-card" href="{{ "markets/indicators/" | relURL }}"><span class="ic">📊</span><b>Economic data</b><span>Chart and compare 80+ series with recession shading, YoY and other transforms.</span></a>
+        <a class="mk-card" href="{{ "markets/rates/" | relURL }}"><span class="ic">🏦</span><b>Treasuries</b><span>Live yield curve, spreads, rate history and auction results.</span></a>
+        <a class="mk-card" href="{{ "markets/fx-bitcoin/" | relURL }}"><span class="ic">💱</span><b>Forex &amp; Bitcoin</b><span>Cross rates, currency heat map and Bitcoin charts.</span></a>
+        <a class="mk-card" href="{{ "markets/vix/" | relURL }}"><span class="ic">🌡️</span><b>VIX</b><span>History since 1990, percentile, futures and the expected-move calculator.</span></a>
+        <a class="mk-card" href="{{ "markets/tools/" | relURL }}"><span class="ic">🧮</span><b>Calculators &amp; links</b><span>Options, bonds, loans, compounding, position sizing, and the best free tools online.</span></a>
+      </div>
+    </section>
+    <section class="mk-box">
+      <h2>Market overview</h2>
+      <div class="mk-tv" id="overview"></div>
+    </section>
+  </div>
+  <aside class="mk-grid">
+    <section class="mk-box"><h2>Coming up <small>U.S., medium and high importance</small></h2><div class="mk-tv h600" id="events"></div><p class="mk-note"><a href="{{ "markets/calendar/" | relURL }}">Full calendar →</a></p></section>
+    <section class="mk-box"><h2>Top stories</h2><div class="mk-tv h500" id="news"></div></section>
+  </aside>
+</div>
+{{ partial "markets-foot.html" . }}
+</div>
+<script>
+(function () {
+  MK.tv('#tape', 'ticker-tape', { symbols: [
+    { proName: 'FOREXCOM:SPXUSD', title: 'S&P 500' }, { proName: 'FOREXCOM:NSXUSD', title: 'Nasdaq 100' }, { proName: 'FOREXCOM:DJI', title: 'Dow 30' },
+    { proName: 'CBOE:VX1!', title: 'VIX futures' }, { proName: 'FX:EURUSD', title: 'EUR/USD' }, { proName: 'FX:USDJPY', title: 'USD/JPY' },
+    { proName: 'FX:GBPUSD', title: 'GBP/USD' }, { proName: 'BITSTAMP:BTCUSD', title: 'Bitcoin' }, { proName: 'OANDA:XAUUSD', title: 'Gold' }],
+    showSymbolLogo: true, isTransparent: true, displayMode: 'adaptive' });
+  MK.wc('#overview', 'tv-market-overview', { 'symbol-sectors': [
+    { sectionName: 'U.S. indices', symbols: ['FOREXCOM:SPXUSD', 'FOREXCOM:NSXUSD', 'FOREXCOM:DJI'] },
+    { sectionName: 'Volatility', symbols: ['CBOE:VX1!', 'CBOE:VX2!', 'CAPITALCOM:VIX'] },
+    { sectionName: 'Forex', symbols: ['FX:EURUSD', 'FX:USDJPY', 'FX:GBPUSD', 'FX:AUDUSD', 'FX:USDCAD', 'FX:USDCHF'] },
+    { sectionName: 'Bitcoin & gold', symbols: ['BITSTAMP:BTCUSD', 'COINBASE:BTCUSD', 'OANDA:XAUUSD'] }] });
+  MK.tv('#events', 'events', { isTransparent: true, width: '100%', height: '100%', importanceFilter: '0,1', countryFilter: 'us' });
+  MK.tv('#news', 'timeline', { feedMode: 'market', market: 'stock', isTransparent: true, displayMode: 'compact', width: '100%', height: '100%' });
+
+  // latest numbers from FRED
+  var WANT = [['UNRATE', 'level'], ['CPIAUCSL', 'yoy', 'CPI inflation (YoY)'], ['PCEPILFE', 'yoy', 'Core PCE inflation (YoY)'], ['PAYEMS', 'diff', 'Payrolls, monthly change (k)'],
+    ['DFF', 'level', 'Fed funds rate'], ['DGS10', 'level', '10-year Treasury'], ['T10Y2Y', 'level', '10y − 2y spread'], ['MORTGAGE30US', 'level', '30-yr mortgage'],
+    ['GACDFSA066MSFRBPHI', 'level', 'Philly Fed manufacturing'], ['UMCSENT', 'level', 'UMich consumer sentiment'], ['ICSA', 'level', 'Initial jobless claims'], ['VIXCLS', 'level', 'VIX (close)'], ['CBBTCUSD', 'level', 'Bitcoin (USD)'], ['A191RL1Q225SBEA', 'level', 'Real GDP growth (ann.)']];
+  var box = document.getElementById('latest');
+  MK.fredIndex().then(function (ix) {
+    document.getElementById('upd').textContent = 'updated ' + ix.updated;
+    var meta = {}; ix.series.forEach(function (s) { meta[s.id] = s; });
+    return Promise.all(WANT.filter(function (w) { return meta[w[0]]; }).map(function (w) {
+      return MK.fred(w[0]).then(function (p) {
+        var q = MK.TRANSFORMS[w[1]].f(p), a = q[q.length - 1], b = q[q.length - 2];
+        return { id: w[0], name: w[2] || meta[w[0]].title, v: a[1], d: a[0], ch: a[1] - b[1], tf: w[1], unit: MK.TRANSFORMS[w[1]].unit || (/Percent/.test(meta[w[0]].units) ? '%' : '') };
+      });
+    }));
+  }).then(function (rows) {
+    box.innerHTML = rows.map(function (r) {
+      var dec = Math.abs(r.v) >= 1000 ? 0 : 2, up = r.ch > 0, flat = Math.abs(r.ch) < 1e-9;
+      return '<a class="mk-stat" style="text-decoration:none;color:inherit;box-shadow:none" href="{{ "markets/indicators/" | relURL }}#s=' + r.id + ':' + r.tf + '"><small>' + MK.esc(r.name) + '</small><b>' + MChart.fmt(r.v, dec) + r.unit + '</b>' +
+        '<span class="ch ' + (flat ? '' : up ? 'up' : 'down') + '">' + (flat ? '·' : (up ? '▲' : '▼') + MChart.fmt(Math.abs(r.ch), dec)) + '</span><small>' + MChart.fullDate(r.d) + '</small></a>';
+    }).join('');
+  }).catch(function () { box.innerHTML = '<p class="mk-note">Economic data will appear after the site’s next automatic build.</p>'; });
+})();
+</script>
+{{ end }}

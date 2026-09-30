@@ -1,0 +1,81 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<div class="mk-grid side">
+  <section class="mk-box">
+    <h2>Economic calendar <small>times shown in your time zone · actual vs. forecast vs. previous</small></h2>
+    <div class="mk-row" style="margin-bottom:.5rem">
+      <span class="mk-seg" id="imp"><button type="button" data-v="-1,0,1">All</button><button type="button" data-v="0,1">Medium + high</button><button type="button" data-v="1">High only</button></span>
+      <span class="mk-row" id="ctry" style="gap:.35rem"></span>
+    </div>
+    <div class="mk-tv h800" id="events"></div>
+  </section>
+  <aside class="mk-grid" style="align-content:start">
+    <section class="mk-box">
+      <h2>Upcoming Treasury auctions</h2>
+      <div class="mk-tablewrap"><table class="mk-t" id="up"><tbody><tr><td>Loading…</td></tr></tbody></table></div>
+      <p class="mk-note">Announced auctions from the U.S. Treasury. Results appear on the <a href="{{ "markets/rates/" | relURL }}#auctions">Treasuries</a> page.</p>
+    </section>
+  </aside>
+</div>
+<section class="mk-box" style="margin-top:1rem">
+  <h2>Guide to the key U.S. releases <small>typical timing; exact dates are in the calendar above</small></h2>
+  <div class="mk-tablewrap"><table class="mk-t" id="guide">
+    <thead><tr><th>Release</th><th>From</th><th>Usually</th><th>Time (ET)</th><th>What it tells you</th><th>History</th></tr></thead>
+    <tbody></tbody></table></div>
+  <p class="mk-note">ET = U.S. Eastern Time. Release dates move around holidays, so check the calendar for exact days. “History” opens the series on the Economic data page. The ISM PMIs are licensed by ISM and not freely redistributable, so their history is not included here; the regional Fed surveys track them closely, and <a href="https://www.tradingview.com/symbols/ECONOMICS-USBCOI/" target="_blank" rel="noopener">TradingView has the full ISM Manufacturing PMI history since 1948</a>.</p>
+</section>
+{{ partial "markets-foot.html" . }}
+</div>
+<script src="{{ "markets/treasury.js" | relURL }}?v={{ (os.Stat "static/markets/treasury.js").ModTime.Unix }}"></script>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var IND = '{{ "markets/indicators/" | relURL }}';
+  var P = { imp: '0,1', c: ['us'] }; try { var sp = JSON.parse(localStorage.getItem('mk-cal')); if (sp) P = sp; } catch (e) { }
+  function save() { try { localStorage.setItem('mk-cal', JSON.stringify(P)); } catch (e) { } }
+  var C = [['us', '🇺🇸 U.S.'], ['eu', '🇪🇺 Euro area'], ['gb', '🇬🇧 U.K.'], ['jp', '🇯🇵 Japan'], ['cn', '🇨🇳 China'], ['ca', '🇨🇦 Canada'], ['de', '🇩🇪 Germany'], ['au', '🇦🇺 Australia'], ['ch', '🇨🇭 Switzerland'], ['in', '🇮🇳 India'], ['mx', '🇲🇽 Mexico']];
+  $('#ctry').innerHTML = C.map(function (c) { return '<label><input type="checkbox" value="' + c[0] + '"' + (P.c.indexOf(c[0]) >= 0 ? ' checked' : '') + '>' + c[1] + '</label>'; }).join('');
+  function segs() { Array.prototype.forEach.call($('#imp').children, function (b) { b.classList.toggle('on', b.dataset.v === P.imp); }); }
+  segs();
+  var ev = MK.tv('#events', 'events', { isTransparent: true, width: '100%', height: '100%', importanceFilter: P.imp, countryFilter: P.c.join(',') || 'us' });
+  $('#imp').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; P.imp = b.dataset.v; segs(); save(); MK.update(ev, { importanceFilter: P.imp }); });
+  $('#ctry').addEventListener('change', function () { P.c = Array.prototype.filter.call($('#ctry').querySelectorAll('input'), function (i) { return i.checked; }).map(function (i) { return i.value; }); save(); MK.update(ev, { countryFilter: P.c.join(',') || 'us' }); });
+
+  var G = [
+    ['ISM Manufacturing PMI', 'Institute for Supply Management', '1st business day of the month', '10:00', 'Survey of purchasing managers. Above 50 = factories expanding, below 50 = contracting. Sub-indexes: new orders, prices, employment.', 'GACDFSA066MSFRBPHI', 'level', 'Philly Fed (similar survey)'],
+    ['ISM Services PMI', 'Institute for Supply Management', '3rd business day', '10:00', 'The same survey for the much larger services sector. Above 50 = expanding.', '', ''],
+    ['Jobs report (Employment Situation)', 'Bureau of Labor Statistics', 'Usually the 1st Friday', '8:30', 'Nonfarm payrolls (jobs added), the unemployment rate, average hourly earnings. The month’s most market-moving release.', 'PAYEMS', 'diff'],
+    ['Initial jobless claims', 'Department of Labor', 'Every Thursday', '8:30', 'New filings for unemployment benefits: the most timely read on layoffs.', 'ICSA', 'level'],
+    ['JOLTS', 'Bureau of Labor Statistics', 'About 5 weeks after the month ends', '10:00', 'Job openings, hires and quits. Many quits = workers confident they can find new jobs.', 'JTSJOL', 'level'],
+    ['CPI (Consumer Price Index)', 'Bureau of Labor Statistics', 'Around the 10th–15th', '8:30', 'Inflation in consumer prices. “Core” excludes food and energy.', 'CPIAUCSL', 'yoy'],
+    ['PPI (Producer Price Index)', 'Bureau of Labor Statistics', 'Around mid-month', '8:30', 'Prices businesses receive; an early signal for consumer inflation.', 'PPIFIS', 'yoy'],
+    ['PCE prices & personal income', 'Bureau of Economic Analysis', 'Near the end of the month', '8:30', 'The Fed’s preferred inflation gauge (core PCE, target 2%), plus income, spending and saving.', 'PCEPILFE', 'yoy'],
+    ['Retail sales', 'Census Bureau', 'Around the 15th', '8:30', 'Monthly change in sales at stores and online: consumer spending.', 'RSAFS', 'mom'],
+    ['GDP', 'Bureau of Economic Analysis', 'About 4 weeks after each quarter (advance), then 2 revisions', '8:30', 'Total economic output, quoted as an annualized growth rate.', 'A191RL1Q225SBEA', 'level'],
+    ['UMich Consumer Sentiment (UMCSI)', 'University of Michigan', 'Preliminary mid-month (Friday); final at month end', '10:00', 'How consumers feel about their finances and the economy, plus their inflation expectations.', 'UMCSENT', 'level'],
+    ['Conference Board Consumer Confidence', 'The Conference Board', 'Last Tuesday of the month', '10:00', 'A second consumer survey, weighted more toward the job market.', '', ''],
+    ['Empire State Manufacturing Survey', 'New York Fed', 'Around the 15th', '8:30', 'First factory survey of each month. Above 0 = expanding.', 'GACDISA066MSFRBNY', 'level'],
+    ['Philadelphia Fed Manufacturing', 'Philadelphia Fed', '3rd Thursday', '8:30', 'Regional factory survey that tracks the ISM closely. Above 0 = expanding.', 'GACDFSA066MSFRBPHI', 'level'],
+    ['S&P Global flash PMIs', 'S&P Global', 'About the 3rd–4th week', '9:45', 'Early estimates of manufacturing and services PMIs for the current month.', '', ''],
+    ['Industrial production', 'Federal Reserve', 'Mid-month', '9:15', 'Output of factories, mines and utilities, plus capacity utilization.', 'INDPRO', 'yoy'],
+    ['Housing starts & permits', 'Census Bureau', 'Around the 17th', '8:30', 'New homes begun and authorized: a leading indicator for housing.', 'HOUST', 'level'],
+    ['New home sales', 'Census Bureau', 'Around the 25th', '10:00', 'Sales of newly built homes.', 'HSN1F', 'level'],
+    ['Durable goods orders', 'Census Bureau', 'Around the 25th', '8:30', 'Orders for long-lasting goods; “ex-transportation” removes volatile aircraft orders.', 'DGORDER', 'mom'],
+    ['FOMC rate decision', 'Federal Reserve', '8 meetings a year', '2:00 (press conference 2:30)', 'The Fed’s target for the federal funds rate and its policy statement. Minutes follow three weeks later.', 'DFF', 'level'],
+    ['Treasury auctions', 'U.S. Treasury', 'Most weekdays', 'Bills 11:30, notes & bonds 1:00', 'Demand for new government debt. Weak auctions can push yields up.', '', '']
+  ];
+  $('#guide tbody').innerHTML = G.map(function (g) {
+    return '<tr><td><b>' + g[0] + '</b></td><td>' + g[1] + '</td><td>' + g[2] + '</td><td>' + g[3] + '</td><td style="white-space:normal;min-width:260px">' + g[4] + '</td><td>' +
+      (g[5] ? '<a href="' + IND + '#s=' + g[5] + ':' + g[6] + '">' + (g[7] || 'Chart') + ' →</a>' : '–') + '</td></tr>';
+  }).join('');
+
+  TSY.upcoming().then(function (rows) {
+    if (!rows.length) { $('#up').innerHTML = '<tbody><tr><td>No auctions announced right now.</td></tr></tbody>'; return; }
+    $('#up').innerHTML = '<thead><tr><th>Date</th><th>Security</th><th class="num">Size</th></tr></thead><tbody>' + rows.slice(0, 30).map(function (r) {
+      return '<tr><td>' + r.auction_date.slice(5) + '</td><td>' + MK.esc(r.term + ' ' + r.type) + (r.reopening === 'Yes' ? ' <span class="tag" title="Reopening: more of an existing security">re</span>' : '') + '</td><td class="num">' + (r.offering_amt ? '$' + (r.offering_amt / 1e9).toFixed(0) + 'B' : 'TBA') + '</td></tr>';
+    }).join('') + '</tbody>';
+  }).catch(function (e) { $('#up').innerHTML = '<tbody><tr><td>Could not reach the Treasury API (' + MK.esc(e.message) + ').</td></tr></tbody>'; });
+})();
+</script>
+{{ end }}

@@ -1,0 +1,71 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<div class="mk-grid side">
+  <section class="mk-box">
+    <h2>VIX since 1990 <small>daily close · gray = recessions</small></h2>
+    <div class="mk-row" style="margin-bottom:.4rem"><span class="mk-seg" id="vr"><button type="button" data-y="1">1Y</button><button type="button" data-y="5">5Y</button><button type="button" data-y="10">10Y</button><button type="button" data-y="0" class="on">All</button></span></div>
+    <div class="mc" id="vix" style="height:420px"></div>
+    <p class="mk-note">Dashed lines at 20 (roughly the long-run average) and 30 (stress). Drag to zoom into episodes like 2008 or March 2020.</p>
+  </section>
+  <aside class="mk-grid" style="align-content:start">
+    <section class="mk-box"><h3>Where the VIX is now</h3><div class="mk-stats" id="vstats"><p class="mk-note">Loading…</p></div></section>
+    <section class="mk-box mk-note" style="margin:0">📊 See also the <a href="{{ "infographics/" | relURL }}#vix-explained">VIX explained infographic</a>.</section>
+  </aside>
+</div>
+<div class="mk-grid two" style="margin-top:1rem">
+  <section class="mk-box">
+    <h2>Expected-move calculator</h2>
+    <div class="calc">
+      <label>VIX (or any implied volatility, %)<input type="number" id="c-v" step="0.1" value="18"></label>
+      <label>Index or stock price<input type="number" id="c-p" step="any" value="6000"></label>
+      <label>Time horizon<select id="c-h"><option value="1">1 trading day</option><option value="5">1 week</option><option value="21" selected>1 month</option><option value="63">3 months</option><option value="126">6 months</option><option value="252">1 year</option></select></label>
+    </div>
+    <div class="calc-out" id="c-out"></div>
+    <p class="mk-note">The VIX is the market’s estimate of the S&amp;P 500’s annualized volatility over the next 30 days. Scale by the square root of time: one month ≈ VIX ÷ √12, one day ≈ VIX ÷ √252. About two-thirds of the time the move stays within 1 standard deviation, about 95% within 2. Real markets have fatter tails than this.</p>
+  </section>
+  <section class="mk-box">
+    <h2>How often has the VIX been at each level?</h2>
+    <div class="mc" id="hist" style="height:320px"></div>
+    <p class="mk-note">Share of trading days since 1990 in each 2-point band. The red line marks today.</p>
+  </section>
+</div>
+<section class="mk-box" style="margin-top:1rem">
+  <h2>VIX futures <small>front month (VX1!) vs. second month (VX2!), delayed</small></h2>
+  <div class="mk-tv h500" id="vx"></div>
+  <p class="mk-note">The VIX index itself can’t be traded; futures can. Usually the second month trades above the first (<b>contango</b>): calm now, uncertainty later. When the front month jumps above the second (<b>backwardation</b>), markets are stressed right now. Live index levels are at <a href="https://www.cboe.com/tradable_products/vix/" target="_blank" rel="noopener">Cboe</a>, and the full futures curve at <a href="http://vixcentral.com" target="_blank" rel="noopener">VIX Central</a>.</p>
+</section>
+{{ partial "markets-foot.html" . }}
+</div>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var ch = new MChart($('#vix'), {}), hi = new MChart($('#hist'), { xType: 'num', noZoom: true, xLabel: function (x) { return 'VIX ' + (x - 1) + '–' + (x + 1); } }), REC = [], V = null, yrs = 0;
+  function draw() { if (!V) return; ch.set([{ name: 'VIX', pts: V, color: '#c0392b', fmt: function (v) { return v.toFixed(2); } }], { x0: yrs ? Date.now() - yrs * MK.YEAR : null, shade: REC, refLines: [{ y: 20, label: '20' }, { y: 30, label: '30', color: '#c0392b' }] }); }
+  $('#vr').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; yrs = +b.dataset.y; Array.prototype.forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); }); draw(); });
+  function calc() {
+    var v = +$('#c-v').value, p = +$('#c-p').value, d = +$('#c-h').value, m = v / 100 * Math.sqrt(d / 252);
+    $('#c-out').innerHTML = 'Expected 1-σ move over ' + $('#c-h').selectedOptions[0].textContent + ': <b>±' + (m * 100).toFixed(2) + '%</b> (±' + MChart.fmt(p * m, 2) + ')<br>' +
+      '68% range: ' + MChart.fmt(Math.max(0, p * (1 - m)), 2) + ' – ' + MChart.fmt(p * (1 + m), 2) + '<br>95% range: ' + MChart.fmt(Math.max(0, p * (1 - 2 * m)), 2) + ' – ' + MChart.fmt(p * (1 + 2 * m), 2);
+  }
+  ['c-v', 'c-p', 'c-h'].forEach(function (id) { $('#' + id).addEventListener('input', calc); });
+  calc();
+  Promise.all([MK.fred('VIXCLS'), MK.recessions(), MK.fred('SP500').catch(function () { return null; })]).then(function (r) {
+    V = r[0]; REC = r[1]; draw();
+    var last = V[V.length - 1][1], vals = V.map(function (p) { return p[1]; }), sorted = vals.slice().sort(function (a, b) { return a - b; });
+    var rank = sorted.filter(function (x) { return x < last; }).length / sorted.length * 100;
+    var yr = V.filter(function (p) { return p[0] > Date.now() - MK.YEAR; }).map(function (p) { return p[1]; });
+    var mean = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length, med = sorted[Math.floor(sorted.length / 2)];
+    function st(label, val, note) { return '<div class="mk-stat"><small>' + label + '</small><b>' + val + '</b>' + (note ? '<small>' + note + '</small>' : '') + '</div>'; }
+    $('#vstats').innerHTML = st('Latest close', last.toFixed(2), MChart.fullDate(V[V.length - 1][0])) + st('Percentile since 1990', Math.round(rank) + '%', 'higher than ' + Math.round(rank) + '% of days') +
+      st('1-year range', Math.min.apply(null, yr).toFixed(1) + ' – ' + Math.max.apply(null, yr).toFixed(1)) + st('Average / median since 1990', mean.toFixed(1) + ' / ' + med.toFixed(1)) + st('Record close', Math.max.apply(null, vals).toFixed(2), MChart.fullDate(V[vals.indexOf(Math.max.apply(null, vals))][0]));
+    $('#c-v').value = last.toFixed(2); if (r[2]) $('#c-p').value = r[2][r[2].length - 1][1].toFixed(2); calc();
+    var bins = {}; vals.forEach(function (v) { var b = Math.floor(v / 2) * 2 + 1; bins[b] = (bins[b] || 0) + 1; });
+    var pts = Object.keys(bins).map(Number).sort(function (a, b) { return a - b; }).filter(function (b) { return b <= 61; }).map(function (b) { return [b, bins[b] / vals.length * 100]; });
+    hi.set([{ name: 'Share of days', pts: pts, color: '#1f6fb2', type: 'bar', fmt: function (v) { return v.toFixed(1) + '%'; } }], { xTicks: [10, 20, 30, 40, 50, 60].map(function (x) { return [x, String(x)]; }), fmtLeft: function (v) { return v + '%'; }, vlines: [{ x: last, label: 'now', color: '#c0392b' }] });
+  }).catch(function () { $('#vstats').innerHTML = '<p class="mk-note">VIX history appears after the next site build.</p>'; });
+  MK.tv('#vx', 'advanced-chart', { symbol: 'CBOE:VX1!', interval: 'D', style: '2', allow_symbol_change: true, hide_side_toolbar: false, withdateranges: true, save_image: true, autosize: true, timezone: 'America/New_York',
+    compareSymbols: [{ symbol: 'CBOE:VX2!', position: 'SameScale' }], support_host: 'https://www.tradingview.com' });
+})();
+</script>
+{{ end }}

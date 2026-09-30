@@ -1,0 +1,105 @@
+{{ define "main" }}
+<div class="mk">
+{{ partial "markets-head.html" . }}
+<section class="mk-box">
+  <form class="mk-row" id="sym-form" autocomplete="off">
+    <label for="sym" style="font-weight:600;color:inherit">Symbol</label>
+    <span class="search-pop"><input type="text" id="sym" placeholder="Ticker or company, e.g. AAPL, Coca-Cola" style="width:260px"><span class="search-list" id="sym-list" hidden></span></span>
+    <button class="mk-btn pri" type="submit">Open</button>
+    <label>Compare with <input type="text" id="cmp" placeholder="e.g. SPY, QQQ" style="width:150px;text-transform:uppercase"></label>
+    <label>Interval <select id="iv"><option value="1">1 min</option><option value="5">5 min</option><option value="15">15 min</option><option value="60">1 hour</option><option value="240">4 hours</option><option value="D" selected>Daily</option><option value="W">Weekly</option><option value="M">Monthly</option></select></label>
+    <label>Style <select id="st"><option value="1">Candles</option><option value="0">Bars</option><option value="2">Line</option><option value="3">Area</option><option value="8">Heikin Ashi</option><option value="9">Hollow candles</option><option value="10">Baseline</option></select></label>
+  </form>
+  <div class="mk-row" id="recent" style="margin-top:.5rem"></div>
+  <p class="mk-note">Type a ticker or a company name. You can also use TradingView’s exchange:symbol form, e.g. NYSE:KO or AMEX:SPY.</p>
+</section>
+<div class="mk-tv" id="info" style="margin-top:1rem"></div>
+<section class="mk-box" style="margin-top:.6rem;padding:.4rem">
+  <div class="mk-tv h800" id="adv"></div>
+</section>
+<details class="mk-box mk-help" style="margin-top:.8rem">
+  <summary>How to use the chart’s analysis tools</summary>
+  <ul>
+    <li><b>Indicators</b> (top bar, ƒx): add any of 100+ studies, such as moving averages, Bollinger Bands, RSI, MACD, Stochastic, VWAP, Ichimoku, volume profile, ATR, OBV and more. Click an indicator’s name on the chart to change its settings or remove it.</li>
+    <li><b>Drawing tools</b> (left toolbar): trend lines, horizontal levels, channels, Fibonacci retracements and extensions, Gann and pitchfork tools, shapes, text notes, and measuring tools for price and date ranges.</li>
+    <li><b>Compare</b>: type symbols in “Compare with” above, or use the ⊕ button in the chart, to overlay other stocks or ETFs as percentage change.</li>
+    <li><b>Timeframes</b>: pick the interval above or in the chart. The date-range buttons along the bottom jump to 1 day through all history. Scroll to zoom; drag to pan.</li>
+    <li><b>Details panel</b> (right side): key stats, a watchlist, and today’s biggest movers. Use the camera icon to save a picture of the chart.</li>
+    <li>Changes you make inside the chart are not saved when you leave the page.</li>
+  </ul>
+</details>
+<div class="mk-grid two" style="margin-top:1rem">
+  <section class="mk-box"><h2>Technical rating</h2><div class="mk-tv" id="ta"></div></section>
+  <section class="mk-box"><h2>Company profile</h2><div class="mk-tv" id="profile"></div></section>
+  <section class="mk-box"><h2>Fundamentals</h2><div class="mk-tv h600" id="fund"></div></section>
+  <section class="mk-box"><h2>News</h2><div class="mk-tv h600" id="news"></div></section>
+</div>
+<section class="mk-box" style="margin-top:1rem"><h2>Seasonality <small>how this stock has moved through the calendar year in past years</small></h2><div class="mk-tv" id="season"></div></section>
+{{ partial "markets-foot.html" . }}
+</div>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var q = new URLSearchParams(location.search);
+  var P = {}; try { P = JSON.parse(localStorage.getItem('mk-chart')) || {}; } catch (e) { }
+  function save() { try { localStorage.setItem('mk-chart', JSON.stringify(P)); } catch (e) { } }
+  var sym = (q.get('tvwidgetsymbol') || q.get('s') || P.last || 'NASDAQ:AAPL').toUpperCase().trim();
+  // ticker -> exchange (from Nasdaq Trader's symbol directory, downloaded at build time)
+  var SYMS = [], EX = {};
+  function full(s) { return s.indexOf(':') > 0 ? s : EX[s] ? EX[s] + ':' + s : s; }
+  if (P.iv) $('#iv').value = P.iv; if (P.st) $('#st').value = P.st;
+  $('#sym').value = sym; $('#cmp').value = P.cmp || '';
+  var W = {};
+  function cmpList() { return $('#cmp').value.toUpperCase().split(/[\s,]+/).filter(Boolean).slice(0, 5).map(function (s) { return { symbol: s, position: 'SameScale' }; }); }
+  function build() {
+    sym = full(sym); $('#sym').value = sym;
+    P.last = sym; P.recent = [sym].concat((P.recent || []).filter(function (s) { return s !== sym; })).slice(0, 12); save();
+    document.title = sym + ' · Stock Chart · Teddy Rook Book';
+    history.replaceState(null, '', '?s=' + encodeURIComponent(sym));
+    $('#recent').innerHTML = '<span class="mk-note" style="margin:0">Recent:</span>' + P.recent.map(function (s) { return '<button type="button" class="mk-btn" data-s="' + MK.esc(s) + '" style="padding:.2rem .55rem;font-size:.8rem">' + MK.esc(s) + '</button>'; }).join('');
+    var adv = { symbol: sym, interval: $('#iv').value, style: $('#st').value, timezone: 'America/New_York', allow_symbol_change: true, hide_side_toolbar: false, hide_top_toolbar: false,
+      hide_legend: false, hide_volume: false, withdateranges: true, details: true, hotlist: true, calendar: false, save_image: true, autosize: true,
+      watchlist: P.recent, compareSymbols: cmpList(), studies: [], support_host: 'https://www.tradingview.com' };
+    if (W.adv) MK.update(W.adv, adv); else W.adv = MK.tv('#adv', 'advanced-chart', adv);
+    var info = { symbol: sym, isTransparent: true, width: '100%' };
+    if (W.info) MK.update(W.info, info); else W.info = MK.tv('#info', 'symbol-info', info);
+    if (W.ta) MK.update(W.ta, { symbol: sym }); else W.ta = MK.wc('#ta', 'tv-technical-analysis', { symbol: sym, interval: '1D' });
+    if (W.profile) MK.update(W.profile, { symbol: sym }); else W.profile = MK.wc('#profile', 'tv-company-profile', { symbol: sym });
+    var fund = { symbol: sym, isTransparent: true, displayMode: 'regular', width: '100%', height: '100%' };
+    if (W.fund) MK.update(W.fund, fund); else W.fund = MK.tv('#fund', 'financials', fund);
+    var news = { feedMode: 'symbol', symbol: sym, isTransparent: true, displayMode: 'regular', width: '100%', height: '100%' };
+    if (W.news) MK.update(W.news, news); else W.news = MK.tv('#news', 'timeline', news);
+    if (W.season) MK.update(W.season, { symbol: sym }); else W.season = MK.wc('#season', 'tv-seasonal-chart', { symbol: sym, 'show-average': true, 'show-series-labels': true });
+  }
+  // autocomplete
+  var list = $('#sym-list'), hl = -1;
+  function suggest() {
+    var t = $('#sym').value.trim().toUpperCase(); if (!t || !SYMS.length) { list.hidden = true; return; }
+    var a = [], b = [];
+    for (var i = 0; i < SYMS.length && a.length < 12; i++) { var r = SYMS[i]; if (r[0] === t || r[0].indexOf(t) === 0) a.push(r); }
+    if (a.length < 12 && t.length > 1) for (var j = 0; j < SYMS.length && a.length + b.length < 12; j++) { var r2 = SYMS[j]; if (r2[1].toUpperCase().indexOf(t) >= 0 && a.indexOf(r2) < 0) b.push(r2); }
+    var rows = a.sort(function (x, y) { return (x[0] === t ? -1 : 0) - (y[0] === t ? -1 : 0) || x[0].length - y[0].length; }).concat(b);
+    list.innerHTML = rows.map(function (r) { return '<button type="button" data-s="' + r[2] + ':' + r[0] + '"><b>' + MK.esc(r[0]) + '</b> ' + MK.esc(r[1]) + ' <small>' + r[2] + (r[3] ? ' · ETF' : '') + '</small></button>'; }).join('');
+    list.hidden = !rows.length; hl = -1;
+  }
+  $('#sym').addEventListener('input', suggest);
+  $('#sym').addEventListener('keydown', function (e) {
+    var bs = list.querySelectorAll('button'); if (list.hidden || !bs.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); hl = (hl + (e.key === 'ArrowDown' ? 1 : -1) + bs.length) % bs.length; Array.prototype.forEach.call(bs, function (b, i) { b.classList.toggle('hl', i === hl); }); }
+    if (e.key === 'Enter' && hl >= 0) { e.preventDefault(); bs[hl].click(); }
+    if (e.key === 'Escape') list.hidden = true;
+  });
+  list.addEventListener('click', function (e) { var b = e.target.closest('[data-s]'); if (!b) return; list.hidden = true; $('#sym').value = b.dataset.s; $('#sym-form').requestSubmit ? $('#sym-form').requestSubmit() : $('#sym-form').dispatchEvent(new Event('submit')); });
+  document.addEventListener('click', function (e) { if (!e.target.closest('.search-pop')) list.hidden = true; });
+  $('#sym-form').addEventListener('submit', function (e) {
+    e.preventDefault(); list.hidden = true; var v = $('#sym').value.toUpperCase().trim(); if (!v) return;
+    if (v.indexOf(':') < 0 && !EX[v] && SYMS.length) { var byName = SYMS.filter(function (r) { return r[1].toUpperCase().indexOf(v) >= 0; })[0]; if (byName) v = byName[2] + ':' + byName[0]; }
+    sym = v; P.cmp = $('#cmp').value; save(); build(); window.scrollTo({ top: $('#adv').getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' });
+  });
+  ['iv', 'st'].forEach(function (id) { $('#' + id).addEventListener('change', function () { P[id] = this.value; save(); MK.update(W.adv, { interval: $('#iv').value, style: $('#st').value }); }); });
+  $('#cmp').addEventListener('change', function () { P.cmp = this.value; save(); MK.update(W.adv, { compareSymbols: cmpList() }); });
+  $('#recent').addEventListener('click', function (e) { var b = e.target.closest('[data-s]'); if (!b) return; sym = b.dataset.s; $('#sym').value = sym; build(); });
+  MK.getJSON('symbols.json').then(function (rows) { SYMS = rows; rows.forEach(function (r) { EX[r[0]] = r[2]; }); }).catch(function () { }).then(build);
+})();
+</script>
+{{ end }}

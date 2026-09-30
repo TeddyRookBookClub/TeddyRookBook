@@ -1,0 +1,16 @@
+<meta name="mk-base" content="{{ "markets/" | relURL }}">
+<link rel="stylesheet" href="{{ "markets/mk.css" | relURL }}?v={{ (os.Stat "static/markets/mk.css").ModTime.Unix }}">
+<script src="{{ "markets/mchart.js" | relURL }}?v={{ (os.Stat "static/markets/mchart.js").ModTime.Unix }}"></script>
+<script src="{{ "markets/mk.js" | relURL }}?v={{ (os.Stat "static/markets/mk.js").ModTime.Unix }}"></script>
+<header class="mk-hero">
+  <p class="eyebrow"><a href="{{ "markets/" | relURL }}">Markets &amp; Economy</a>{{ if ne .Kind "section" }} · {{ .Title }}{{ end }}</p>
+  <h1>{{ if eq .Kind "section" }}Markets &amp; Economy{{ else }}{{ .Title }}{{ end }}</h1>
+  <p>{{ .Description }}</p>
+</header>
+<nav class="mk-nav" aria-label="Markets pages">
+  {{ $cur := .RelPermalink }}
+  {{ range slice (slice "" "🏠 Overview") (slice "screener/" "🔎 Screener") (slice "chart/" "📈 Stock chart") (slice "calendar/" "🗓️ Calendar") (slice "indicators/" "📊 Economic data") (slice "rates/" "🏦 Treasuries") (slice "fx-bitcoin/" "💱 Forex & Bitcoin") (slice "vix/" "🌡️ VIX") (slice "tools/" "🧮 Calculators & links") }}
+  {{ $u := printf "markets/%s" (index . 0) | relURL }}
+  <a href="{{ $u }}"{{ if eq $cur $u }} class="on" aria-current="page"{{ end }}>{{ index . 1 }}</a>
+  {{ end }}
+</nav>
