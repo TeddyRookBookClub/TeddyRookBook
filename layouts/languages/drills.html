@@ -1,0 +1,70 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<div class="lang loading is-paused" id="drills">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Gospel Drills</p>
+    <h1>Hear it. Say it. <span class="grc">Ἀκούετε.</span> <span class="lat">Audite.</span></h1>
+    <p>Each sentence plays in the order you set. Repeat the Greek or Latin aloud during the pause, then keep going. Press pause at any time to study every word.</p>
+  </header>
+  {{ partial "lang-notice.html" . }}
+  <div class="lang-grid">
+    <div>
+      <section class="stage" id="stage" aria-live="polite">
+        <div class="stage-head"><span class="ref" id="st-ref">Loading…</span><span class="ptitle" id="st-title"></span></div>
+        <div id="stage-rows"></div>
+        <p class="hint">Paused: tap any Greek or Latin word to study it. Press ▶ on a line to hear just that language.</p>
+      </section>
+      <div class="controls">
+        <button class="cbtn" id="btn-prev" type="button" aria-label="Previous sentence">⏮</button>
+        <button class="cbtn play" id="btn-play" type="button" aria-label="Play"><span class="ico"></span><span class="lbl">Play</span></button>
+        <button class="cbtn" id="btn-next" type="button" aria-label="Next sentence">⏭</button>
+      </div>
+      <div class="box">
+        <div class="sliders">
+          <div class="sl"><label for="speed">Speed <b id="speed-v">1.0×</b></label><input id="speed" type="range" min="0.5" max="3.5" step="0.1" value="1"></div>
+          <div class="sl"><label for="gap">Pause between sentences <b id="gap-v">2 s</b></label><input id="gap" type="range" min="1" max="5" step="1" value="2"></div>
+          <div class="sl"><label for="reps">Repeat each Greek/Latin line</label><select id="reps"><option value="1">Once</option><option value="2">Twice</option><option value="3">Three times</option></select></div>
+          <div class="sl"><label for="text-mode">Show text</label><select id="text-mode"><option value="always">While it plays</option><option value="after">Only after I hear it</option></select></div>
+        </div>
+        <div class="opts">
+          <label><input type="checkbox" id="interlinear"> Word-by-word glosses when paused</label>
+          <span>Keys: Space = play/pause · ← → = previous/next</span>
+        </div>
+        <p class="pool" id="voice-note" style="margin:.6rem 0 0"></p>
+      </div>
+    </div>
+    <aside class="side">
+      <div class="box"><h3>Word study</h3><div class="wpanel" id="word-panel"></div></div>
+      <div class="box">
+        <h3>Your progress <small style="text-transform:none;letter-spacing:0">(this browser)</small></h3>
+        <div class="stats">
+          <div class="ring" id="ring"><span id="ring-lbl">0%</span></div>
+          <div class="nums">
+            <div><b id="s-session">0</b>this visit</div>
+            <div><b id="s-total">0</b>all reviews</div>
+            <div><b id="s-unique">0</b>of 499 heard</div>
+            <div><b id="s-min">0</b>minutes</div>
+          </div>
+        </div>
+        <div class="laurels" id="laurels"></div>
+        <p style="margin:.6rem 0 0"><button class="linkbtn" id="reset" type="button">Reset counters</button></p>
+      </div>
+      <div class="box">
+        <h3>Languages &amp; order</h3>
+        <ol class="lo" id="lang-order"></ol>
+      </div>
+      <div class="box filters">
+        <h3>What to practice</h3>
+        <select id="f-book" aria-label="Gospel"><option value="ALL">All four Gospels</option><option value="MAT">Matthew</option><option value="MRK">Mark</option><option value="LUK">Luke</option><option value="JHN">John</option></select>
+        <select id="f-passage" aria-label="Passage"></select>
+        <div class="radios"><label><input type="radio" name="mode" value="shuffle"> Shuffle</label><label><input type="radio" name="mode" value="order"> In order</label></div>
+        <span class="pool" id="pool-count"></span>
+      </div>
+    </aside>
+  </div>
+  {{ partial "lang-credits.html" . }}
+</div>
+<script src="{{ "lang/grammar.js" | relURL }}"></script>
+<script src="{{ "lang/core.js" | relURL }}"></script>
+<script src="{{ "lang/drills.js" | relURL }}"></script>
+{{ end }}

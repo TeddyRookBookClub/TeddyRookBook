@@ -1,0 +1,31 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<div class="lang" id="reader">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Gospel Reader</p>
+    <h1><span class="grc">Εὐαγγέλιον</span> · <span class="lat">Evangelium</span></h1>
+    <p>The four Gospels in Koine Greek and the Latin Vulgate. Hover or tap any word to see how it works. Verses marked ★ are in the drills and include English and recorded Greek audio.</p>
+  </header>
+  <div class="rbar">
+    <select id="r-book" aria-label="Book"><option value="MAT">Matthew</option><option value="MRK">Mark</option><option value="LUK">Luke</option><option value="JHN">John</option></select>
+    <select id="r-chap" aria-label="Chapter"></select>
+    <button class="cbtn" id="r-prev" type="button" aria-label="Previous chapter">‹</button>
+    <button class="cbtn" id="r-next" type="button" aria-label="Next chapter">›</button>
+    <span class="sep"></span>
+    <label><input type="checkbox" id="t-g"> Greek</label>
+    <label><input type="checkbox" id="t-l"> Latin</label>
+    <label><input type="checkbox" id="t-en"> English</label>
+    <label><input type="checkbox" id="t-inter"> Glosses</label>
+    <label><input type="checkbox" id="t-only"> ★ only</label>
+    <span class="speed">Speed <input type="range" id="r-speed" min="0.5" max="3.5" step="0.1" value="1"><b id="r-speed-v">1.0×</b></span>
+  </div>
+  <div class="lang-grid">
+    <article id="text"><p class="muted">Loading…</p></article>
+    <aside class="side"><div class="box"><h3>Word study</h3><div class="wpanel" id="word-panel"><p class="wp-empty">Hover over a word for a quick look, or click it for the full breakdown. Press ▶ after a verse to hear it.</p></div></div></aside>
+  </div>
+  {{ partial "lang-credits.html" . }}
+</div>
+<script src="{{ "lang/grammar.js" | relURL }}"></script>
+<script src="{{ "lang/core.js" | relURL }}"></script>
+<script src="{{ "lang/reader.js" | relURL }}"></script>
+{{ end }}
