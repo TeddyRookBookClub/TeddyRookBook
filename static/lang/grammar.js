@@ -126,15 +126,19 @@
     p: ['present', 'Happening now, or habitually.'], i: ['imperfect', 'Ongoing or repeated in the past ("was saying").'],
     r: ['perfect', 'Completed action: a simple past ("said") or a finished state ("has said").'],
     l: ['pluperfect', 'Completed before another past event ("had said").'], f: ['future', 'Will happen ("will say").'],
-    t: ['future perfect', 'Will have been completed ("will have said").'], a: ['aorist', ''], s: ['resultative', ''], u: ['past', '']
+    t: ['future perfect', 'Will have been completed ("will have said").'],
+    a: ['aorist', 'Action viewed as a simple whole; usually a simple past in the indicative ("saw").'], s: ['resultative', ''], u: ['past', '']
   };
   var L_MOOD = {
+    o: ['optative', 'A wish or a remote possibility ("may it be", "he would…").'],
     i: ['indicative', 'States a fact or asks a question.'], s: ['subjunctive', 'Wish, purpose, possibility, or indirect question ("that he may…").'],
     m: ['imperative', 'A command.'], n: ['infinitive', 'A verbal noun: "to ___".'],
     p: ['participle', 'A verbal adjective ("loving / having been loved"); agrees with a noun.'],
     d: ['gerund', 'A verbal noun: "(of) ___-ing".'], g: ['gerundive', 'A verbal adjective of obligation: "to be ___ed".'], u: ['supine', 'Expresses purpose after verbs of motion.']
   };
-  var L_VOICE = { a: ['active', 'The subject does the action.'], p: ['passive', 'The subject receives the action (or a deponent verb with active meaning).'] };
+  var L_VOICE = { a: ['active', 'The subject does the action.'], p: ['passive', 'The subject receives the action (or a deponent verb with active meaning).'],
+    m: ['middle', 'The subject acts on or for itself (Greek).'], e: ['middle or passive', 'A form shared by middle and passive; context decides.'],
+    d: ['deponent', 'Passive in form, active in meaning.'] };
   var L_CASE = { n: 'nominative', g: 'genitive', d: 'dative', a: 'accusative', v: 'vocative', b: 'ablative', l: 'locative', c: 'genitive/dative', i: 'ablative' };
   var L_NUM = { s: 'singular', p: 'plural', d: 'dual' };
   var L_GEN = { m: 'masculine', f: 'feminine', n: 'neuter', p: 'masculine/feminine', o: 'masculine/neuter', r: 'feminine/neuter', q: 'any gender' };
@@ -163,6 +167,53 @@
     r.summary = r.parts.map(function (x) { return x.v; }).join(' ');
     if (rel && L_REL[rel]) r.parts.push({ k: 'Role', v: L_REL[rel] });
     return r;
+  }
+
+  // ---------- Perseus AGLDT (Latin and Greek treebanks): 9-character postag ----------
+  // pos, person, number, tense, mood, voice, gender, case, degree
+  var A_POS = { n: 'noun', v: 'verb', t: 'participle', a: 'adjective', d: 'adverb', l: 'article', g: 'particle', c: 'conjunction',
+    r: 'preposition', p: 'pronoun', m: 'number', i: 'interjection', e: 'exclamation', x: 'word' };
+  var A_CASE = { n: 'nominative', g: 'genitive', d: 'dative', a: 'accusative', v: 'vocative', b: 'ablative', l: 'locative' };
+  var A_GEN = { m: 'masculine', f: 'feminine', n: 'neuter', c: 'masculine/feminine' };
+  var A_REL = {
+    PRED: 'Main verb / predicate of its clause', SBJ: 'Subject', OBJ: 'Object of the verb', ATR: 'Attribute: describes a nearby noun',
+    ADV: 'Adverbial: tells how, when, where or why', ATV: 'Describes the subject or object while the action happens',
+    AtvV: 'Describes the subject or object while the action happens', PNOM: 'Predicate nominative: what the subject is or becomes',
+    OCOMP: 'Object complement: what the object is made or called', COORD: 'Coordinator: joins equal parts ("and", "or")',
+    APOS: 'Apposition: renames a nearby noun', AuxP: 'Preposition', AuxC: 'Subordinating conjunction: introduces a clause',
+    AuxY: 'Sentence adverb or connecting particle', AuxZ: 'Emphasizing particle', AuxV: 'Auxiliary verb', AuxX: 'Comma',
+    AuxK: 'End punctuation', AuxG: 'Bracket or quotation mark', ExD: 'Part of a construction whose governing word is left out'
+  };
+  function agldt(tag, rel) {
+    tag = tag || '---------';
+    var r = { pos: A_POS[tag[0]] || '', parts: [], notes: [] };
+    var p = tag[1], n = tag[2], t = tag[3], md = tag[4], v = tag[5], g = tag[6], c = tag[7], d = tag[8];
+    if (tag[0] === 'v' && md === 'p') r.pos = 'participle';
+    if (L_TENSE[t]) r.parts.push({ k: 'Tense', v: L_TENSE[t][0], tip: L_TENSE[t][1] });
+    if (L_VOICE[v]) r.parts.push({ k: 'Voice', v: L_VOICE[v][0], tip: L_VOICE[v][1] });
+    if (L_MOOD[md]) r.parts.push({ k: 'Mood', v: L_MOOD[md][0], tip: L_MOOD[md][1] });
+    if (PERS[p]) r.parts.push({ k: 'Person', v: PERS[p] });
+    if (A_CASE[c]) r.parts.push({ k: 'Case', v: A_CASE[c], tip: CASE_TIP[A_CASE[c]] });
+    if (L_NUM[n]) r.parts.push({ k: 'Number', v: L_NUM[n] });
+    if (A_GEN[g]) r.parts.push({ k: 'Gender', v: A_GEN[g] });
+    if (L_DEG[d]) r.parts.push({ k: 'Degree', v: L_DEG[d] });
+    if (tag[0] === 'l') r.notes.push('The article ("the") matches its noun in case, number and gender. In Homer it often works as a pronoun: "he, she, it".');
+    r.summary = r.parts.map(function (x) { return x.v; }).join(' ');
+    if (rel) {
+      var base = rel.replace(/_.*$/, ''), co = /_CO/.test(rel), ap = /_AP/.test(rel);
+      if (A_REL[base]) r.parts.push({ k: 'Role', v: A_REL[base] + (co ? ' (one of a coordinated pair or list)' : ap ? ' (in apposition)' : '') });
+    }
+    return r;
+  }
+  // One entry point for 7-field tokens: PROIEL (10-character morphology) or AGLDT (9-character postag).
+  function tree(pos, morph, rel) {
+    if (morph && morph.length === 9) return agldt(morph, rel);
+    return latin(pos, morph, rel);
+  }
+  // Normalize either tag set to a coarse part of speech: 'V', 'N', 'A' or ''.
+  function coarse(pos, morph) {
+    if (morph && morph.length === 9) return { v: 'V', t: 'V', n: 'N', a: 'A' }[morph[0]] || '';
+    return { V: 'V', N: 'N', A: 'A' }[(pos || '')[0]] || '';
   }
 
   // ---------- word-class hints (declension / conjugation) ----------
@@ -202,5 +253,5 @@
     return '';
   }
 
-  W.Grammar = { greek: greek, latin: latin, greekClass: greekClass, latinClass: latinClass };
+  W.Grammar = { greek: greek, latin: latin, agldt: agldt, tree: tree, coarse: coarse, greekClass: greekClass, latinClass: latinClass };
 })(window);

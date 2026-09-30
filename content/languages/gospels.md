@@ -1,5 +1,5 @@
 ---
-title: "Gospel Drills"
-description: "Listen and repeat: 499 Gospel sentences in English, Koine Greek and Latin."
+title: "Sentence Drills"
+description: "Listen and repeat: Latin and Greek sentences from the Gospels and the classics, with English."
 layout: drills
 ---

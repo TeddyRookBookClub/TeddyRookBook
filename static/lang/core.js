@@ -1,4 +1,6 @@
-/* Shared engine for the Gospel drills and reader: data, word rendering, grammar panel, audio, progress. */
+/* Shared engine for the sentence drills and reader: data, word rendering, grammar panel, audio, progress.
+   Language codes: g = Gospel Greek (MACULA tokens), l = Vulgate Latin (PROIEL tokens),
+   L = classical Latin, G = classical Greek (7-field treebank tokens, PROIEL or Perseus AGLDT). */
 (function (W, D) {
   'use strict';
   var BASE = (D.querySelector('meta[name="lang-base"]') || {}).content || '/lang/';
@@ -19,7 +21,7 @@
 
   // ---------- rendering ----------
   // Greek token: [text, after, lexIdx, gloss, morph, role]
-  // Latin token: [form, before, after, lexIdx, pos, morph, rel]
+  // Latin and classical tokens: [form, before, after, lexIdx, pos, morph, rel]
   function renderWords(lang, toks, opts) {
     opts = opts || {};
     var h = '';
@@ -33,15 +35,20 @@
     });
     return h;
   }
-  var LEX = { g: null, l: null };
+  var LEX = { g: null, l: null, L: null, G: null };
   function glossFor(lang, t) {
     if (lang === 'g') return (t[3] || '').replace(/^\[|\]$/g, '');
-    var e = LEX.l && LEX.l[t[3]]; if (!e) return '';
+    var e = LEX[lang] && LEX[lang][t[3]]; if (!e) return '';
     return shortGloss(e.g);
   }
-  function shortGloss(s) { return String(s || '').split(/[;,(]/)[0].trim(); }
+  function shortGloss(s) { s = String(s || ''); if (/^\(/.test(s)) return s; return s.split(/[;,(]/)[0].trim(); }
   function loadLex() {
     return Promise.all([getJSON('grc-lex.json'), getJSON('lat-lex.json')]).then(function (r) { LEX.g = r[0]; LEX.l = r[1]; return LEX; });
+  }
+  // Classical sentences: which = 'L' (Latin) or 'G' (Greek). Resolves to { works, s: [...] }.
+  function loadClassics(which) {
+    var n = which === 'L' ? 'lat' : 'grc';
+    return Promise.all([getJSON('cls-' + n + '.json'), getJSON('cls-' + n + '-lex.json')]).then(function (r) { LEX[which] = r[1]; return r[0]; });
   }
 
   // ---------- word panel ----------
@@ -51,6 +58,14 @@
       return {
         lang: 'Koine Greek', word: t[0], lemma: e.l, gloss: (t[3] || '').replace(/[\[\]]/g, ''), def: e.d || e.b, pos: gr.pos,
         parts: gr.parts, notes: gr.notes, cls: W.Grammar.greekClass(e.l, t[4]), freq: e.n, code: t[4], strong: e.s
+      };
+    }
+    if (lang === 'L' || lang === 'G') {
+      var ce = LEX[lang][t[3]] || {}, ct = W.Grammar.tree(t[4], t[5], t[6]), co = W.Grammar.coarse(t[4], t[5]);
+      return {
+        lang: lang === 'L' ? 'Latin' : 'Ancient Greek', word: t[0], lemma: ce.l, gloss: shortGloss(ce.g), def: ce.g, pos: ct.pos, parts: ct.parts, notes: ct.notes,
+        cls: lang === 'L' ? W.Grammar.latinClass(ce.l, co === 'V' ? 'V-' : co === 'N' ? 'Nb' : '') : W.Grammar.greekClass(ce.l, co),
+        freq: ce.n, freqNote: 'in the classical sentences', code: t[5]
       };
     }
     var le = LEX.l[t[3]] || {}, lt = W.Grammar.latin(t[4], t[5], t[6]);
@@ -75,7 +90,7 @@
     if (info.cls) h += '<p class="wp-note"><b>Pattern:</b> ' + esc(info.cls) + '</p>';
     info.notes.forEach(function (n) { h += '<p class="wp-note">' + esc(n) + '</p>'; });
     if (info.def) h += '<p class="wp-def"><b>Dictionary:</b> ' + esc(info.def) + '</p>';
-    if (info.freq) h += '<p class="wp-freq">Appears ' + info.freq + '× in the four Gospels' + (info.strong ? ' · Strong’s G' + info.strong : '') + '</p>';
+    if (info.freq) h += '<p class="wp-freq">Appears ' + info.freq + '× ' + (info.freqNote || 'in the four Gospels') + (info.strong ? ' · Strong’s G' + info.strong : '') + '</p>';
     return h;
   }
   function tooltipHTML(info) {
@@ -205,7 +220,7 @@
 
   W.Gospels = {
     BOOKS: BOOKS, LATIN_BOOKS: LATIN_BOOKS, GREEK_BOOKS: GREEK_BOOKS, getJSON: getJSON, loadLex: loadLex, LEX: LEX,
-    renderWords: renderWords, bindWords: bindWords, wordInfo: wordInfo, panelHTML: panelHTML, esc: esc,
+    renderWords: renderWords, bindWords: bindWords, loadClassics: loadClassics, wordInfo: wordInfo, panelHTML: panelHTML, esc: esc,
     Player: Player, voiceFor: voiceFor, loadProgress: loadProgress, saveProgress: saveProgress, sessionCount: sessionCount,
     refLabel: refLabel, renderEnglish: renderEnglish, latinText: latinText, greekText: greekText, glossFor: glossFor
   };

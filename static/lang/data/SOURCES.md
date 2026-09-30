@@ -5,4 +5,11 @@
 - `esv.json` and the `en` field in `drills.json`: 499 verses of the ESV® Bible, © 2001 by Crossway, used under Crossway's 500-verse quotation allowance. Do not add more ESV verses without written permission from Crossway.
 - Greek audio timings in `drills.json` (`a`: file, start, end in seconds) point into "Audio Greek New Testament" read by Marilyn Phemister (© 2001, free for non-commercial use with credit), streamed from the Internet Archive.
 
+- `cls-lat.json`, `cls-lat-lex.json`, `cls-grc.json`, `cls-grc-lex.json`: classical sentences for the drills.
+  - Texts, lemmas and grammar: PROIEL Treebank (Caesar, Gallic War; Cicero, Letters to Atticus; Herodotus; CC BY-NC-SA 3.0) and the Perseus Ancient Greek and Latin Dependency Treebank v2.1 (Cicero, In Catilinam; Virgil, Aeneid 6; Ovid, Metamorphoses 1; Homer, Iliad and Odyssey; CC BY-SA 3.0, https://github.com/PerseusDL/treebank_data). Derived files follow the same licenses (CC BY-NC-SA for the PROIEL-based sentences).
+  - English: public-domain translations from the Perseus canonical texts (CC BY-SA 4.0 markup, https://github.com/PerseusDL/canonical-latinLit and canonical-greekLit): McDevitte & Bohn (Caesar), Shuckburgh (Atticus), Yonge (Catiline), T. C. Williams (Aeneid), Brookes More (Metamorphoses), Godley (Herodotus, Loeb, modernized by Perseus), Murray (Iliad and Odyssey, Loeb).
+  - Sentences were aligned to the translations automatically (length-based alignment, then a word-overlap check) and chosen greedily so each adds new lemmas, verb forms or noun forms.
+  - Greek definitions: Liddell–Scott–Jones via the Perseus Digital Library (PerseusDL/lexica, CC BY-SA 4.0), plus a few hand-written glosses for very common words. Latin definitions: William Whitaker's WORDS.
+  - Audio: none bundled; the page uses the device's text-to-speech voices.
+
 Build scripts live outside the site; ask Claude to regenerate if the verse selection changes.
