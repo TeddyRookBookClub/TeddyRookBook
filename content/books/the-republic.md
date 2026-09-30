@@ -6,7 +6,9 @@ year: -380
 genre: "Philosophy"
 collection: "Great Books of the Western World"
 haveRead: true
-podcast: ""
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-01"
 audiobook: "8h 30m"
 links:
@@ -23,5 +25,5 @@ links:
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 **Status:** ✅ Read

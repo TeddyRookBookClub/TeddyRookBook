@@ -6,9 +6,11 @@ year: 1855
 genre: "Poetry"
 collection: "Harvard Classics Vol. 42"
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-25"
 audiobook: "8h 20m"
-podcast: ""
 links: []
 ---
 
@@ -24,7 +26,7 @@ links: []
 
 ## My Notes & Reflections
 
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 
 **Status:** 📖 To Read
 

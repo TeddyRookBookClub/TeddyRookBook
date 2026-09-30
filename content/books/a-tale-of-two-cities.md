@@ -6,9 +6,11 @@ year: 1859
 genre: "Fiction"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "13h 40m"
-podcast: ""
 links: []
 ---
 

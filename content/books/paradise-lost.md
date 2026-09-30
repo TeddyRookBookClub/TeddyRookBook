@@ -6,9 +6,11 @@ year: 1667
 genre: "Epic Poetry"
 collection: "Harvard Classics Vol. 4"
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-25"
 audiobook: "9h 10m"
-podcast: ""
 links: []
 ---
 
@@ -24,7 +26,7 @@ links: []
 
 ## My Notes & Reflections
 
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 
 **Status:** 📖 To Read
 

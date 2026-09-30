@@ -6,9 +6,11 @@ year: 1851
 genre: "Fiction / Adventure"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "21h 30m"
-podcast: ""
 links: []
 ---
 

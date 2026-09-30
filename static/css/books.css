@@ -1,4 +1,4 @@
-/* Teddy Rook Book Club - Books section polish (British Racing Green theme) */
+/* Teddy Rook Book - Books section polish (British Racing Green theme) */
 #bookTable {
   background: #fff;
   color: #222;
@@ -176,3 +176,7 @@ html[data-theme="dark"] .book-single blockquote {
   color: #ccc;
   border-left-color: #a8d5b8;
 }
+/* Let the Library, Infographics and Home pages use a wider column than PaperMod's default */
+main.main:has(.books-page),
+main.main:has(.ig-page),
+main.main:has(.home) { max-width: 1200px; }

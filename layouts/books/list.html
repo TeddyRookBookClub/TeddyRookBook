@@ -2,9 +2,9 @@
 <link rel="stylesheet" href="/css/books.css">
 <div class="books-page" style="max-width: 1200px; margin: 0 auto;">
   <header class="books-header" style="margin-bottom: 1.5rem;">
-    <h1 style="margin: 0 0 0.25rem 0; font-size: 2rem;">📚 My Books</h1>
+    <h1 style="margin: 0 0 0.25rem 0; font-size: 2rem;">📚 Library</h1>
     <p style="color: #555; margin: 0; font-size: 1.05rem;">
-      {{ .Description | default "A personal reading list of classics from the Harvard Classics, Great Books of the Western World, and beyond." }}
+      {{ .Description | default "Every book in my collection, with reading status, format and shelf." }}
     </p>
   </header>
 
@@ -12,6 +12,9 @@
   <div id="book-stats" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.95rem;">
     <div style="background: #f8f9fa; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #eee;">
       <strong id="stat-total">0</strong> total books
+    </div>
+    <div style="background: #e6f0f5; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #cfe0ea;">
+      🏠 <strong id="stat-owned">0</strong> owned
     </div>
     <div style="background: #e6f4ea; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #c3e6cb;">
       ✅ <strong id="stat-read">0</strong> read
@@ -48,6 +51,15 @@
     </div>
 
     <div>
+      <label style="font-size: 0.8rem; display: block; margin-bottom: 2px; color: #555;">Ownership</label>
+      <select id="filter-owned" style="padding: 0.4rem 0.5rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;">
+        <option value="">All</option>
+        <option value="owned">🏠 Owned</option>
+        <option value="notowned">Not owned</option>
+      </select>
+    </div>
+
+    <div>
       <button id="clear-filters" type="button" 
               style="margin-top: 1.1rem; padding: 0.4rem 0.7rem; background: #fff; border: 1px solid #004C2A; color: #004C2A; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
         Clear Filters
@@ -67,6 +79,8 @@
           <th data-col="4" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Genre <span class="sort-indicator"></span></th>
           <th data-col="5" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Collection <span class="sort-indicator"></span></th>
           <th data-col="6" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Status <span class="sort-indicator"></span></th>
+          <th data-col="7" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Format <span class="sort-indicator"></span></th>
+          <th data-col="8" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Shelf <span class="sort-indicator"></span></th>
           <th style="padding: 10px 12px; text-align: left;">Notes</th>
         </tr>
       </thead>
@@ -82,6 +96,7 @@
             data-author="{{ .Params.author | default "" | lower }}"
             data-collection="{{ $collection }}"
             data-status="{{ if $read }}read{{ else }}unread{{ end }}"
+            data-owned="{{ if .Params.owned }}owned{{ else }}notowned{{ end }}"
             data-genre="{{ $genre | lower }}"
             style="border-bottom: 1px solid #eee;"
           >
@@ -102,6 +117,8 @@
                 <span style="color: #b36b00;">📖 To Read</span>
               {{ end }}
             </td>
+            <td style="padding: 9px 12px; font-size: 0.85rem;">{{ .Params.format | default "—" }}</td>
+            <td style="padding: 9px 12px; font-size: 0.85rem;">{{ .Params.shelf | default "—" }}</td>
             <td style="padding: 9px 12px;">
               <a href="{{ .RelPermalink }}" style="font-size: 0.8rem; color: #004C2A; text-decoration: underline;">View notes →</a>
             </td>
@@ -127,6 +144,8 @@
   const searchInput = document.getElementById('book-search');
   const collSelect = document.getElementById('filter-collection');
   const statusSelect = document.getElementById('filter-status');
+  const ownedSelect = document.getElementById('filter-owned');
+  const statOwned = document.getElementById('stat-owned');
   const clearBtn = document.getElementById('clear-filters');
 
   const statTotal = document.getElementById('stat-total');
@@ -144,6 +163,7 @@
       else unread++;
     });
     statTotal.textContent = total;
+    statOwned.textContent = rows.filter(r => r.dataset.owned === 'owned').length;
     statRead.textContent = read;
     statUnread.textContent = unread;
   }
@@ -152,6 +172,7 @@
     const q = (searchInput.value || '').toLowerCase().trim();
     const selectedColls = Array.from(collSelect.selectedOptions).map(o => o.value);
     const statusVal = statusSelect.value;
+    const ownedVal = ownedSelect.value;
 
     let visibleCount = 0;
 
@@ -172,6 +193,9 @@
       }
       if (statusVal) {
         match = match && (status === statusVal);
+      }
+      if (ownedVal) {
+        match = match && (row.dataset.owned === ownedVal);
       }
 
       if (match) {
@@ -252,11 +276,13 @@
 
   collSelect.addEventListener('change', applyFilters);
   statusSelect.addEventListener('change', applyFilters);
+  ownedSelect.addEventListener('change', applyFilters);
 
   clearBtn.addEventListener('click', () => {
     searchInput.value = '';
     Array.from(collSelect.options).forEach(o => o.selected = false);
     statusSelect.value = '';
+    ownedSelect.value = '';
     rows.forEach(r => r.style.display = '');
     sortCol = null;
     sortDir = 'asc';

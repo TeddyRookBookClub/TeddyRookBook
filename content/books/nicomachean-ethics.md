@@ -6,9 +6,11 @@ year: -350
 genre: "Philosophy"
 collection: "Great Books of the Western World"
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "6h 20m"
-podcast: ""
 links: []
 ---
 

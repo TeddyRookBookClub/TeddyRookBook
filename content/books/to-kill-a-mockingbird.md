@@ -6,9 +6,11 @@ year: 1960
 genre: "Fiction"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "12h 15m"
-podcast: ""
 links: []
 ---
 

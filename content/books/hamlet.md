@@ -6,7 +6,9 @@ year: 1600
 genre: "Drama"
 collection: "Harvard Classics Vol. 46"
 haveRead: false
-podcast: ""
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-24"
 audiobook: "4h 05m"
 links: []
@@ -17,5 +19,5 @@ links: []
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 **Status:** 📖 To Read

@@ -6,9 +6,11 @@ year: 1926
 genre: "Fiction"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "6h 50m"
-podcast: ""
 links: []
 ---
 

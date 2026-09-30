@@ -1,305 +1,63 @@
 {{ define "main" }}
 <link rel="stylesheet" href="/css/books.css">
-<div class="trbc-dashboard" style="max-width: 1280px; margin: 0 auto; padding: 0 1rem;">
+<link rel="stylesheet" href="/css/home.css">
+{{ $books := where site.RegularPages "Section" "books" }}
+{{ $ig := where site.Data.infographics "show" true }}
+<div class="home">
 
-  <!-- Hero Header with main image (large banner restored, text removed from overlay, new crop centered on the person with full hat visible at top) -->
-  <header style="margin-bottom: 2rem; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 76, 42, 0.15);">
-    <div style="position: relative;">
-      <img src="/img/hero.jpg" alt="Teddy Rook Book Club hero" 
-           style="width: 100%; height: auto; display: block; max-height: 380px; object-fit: cover; object-position: 50% 0%;">
-      <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0, 76, 42, 0.55));"></div>
-    </div>
+  <header class="home-hero">
+    <img src="/img/hero.jpg" alt="Teddy Rook Book">
+    <div class="home-hero-fade"></div>
   </header>
 
-  <!-- Top descriptive card (styled like What's New) -->
-  <div style="background: #f8f9f7; border: 1px solid #e6e8e3; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.45;">
-    Curated classics for deliberate reading. Track progress, capture quotes and reflections, and explore connections across the Western canon.
-  </div>
+  <p class="home-intro">
+    Welcome to Teddy Rook Book: a personal library, notes on the great books,
+    and infographics about the books and ideas I enjoy.
+  </p>
 
-  <!-- Notifications / What's New -->
-  <section style="margin-bottom: 2rem;">
-    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.5rem;">
-      <h2 style="margin: 0; font-size: 1.15rem; color: #004C2A;">🔔 What's New</h2>
-      <span style="font-size: 0.8rem; color: #666;">Last updated: May 2026</span>
+  <section class="home-cards">
+    <a class="home-card" href="/books/">
+      <span class="home-emoji">📚</span>
+      <h2>Library</h2>
+      <p>{{ len $books }} books catalogued, with reading status, format and shelf. Search, sort and filter the whole collection.</p>
+      <span class="home-go">Browse the library →</span>
+    </a>
+    <a class="home-card" href="/infographics/">
+      <span class="home-emoji">🖼️</span>
+      <h2>Infographics</h2>
+      <p>{{ len $ig }} visual explainers on books, ideas, language and finance.</p>
+      <span class="home-go">Open the gallery →</span>
+    </a>
+    <div class="home-card soon">
+      <span class="home-emoji">🗣️</span>
+      <h2>Languages</h2>
+      <p>Coming soon: study notes and tools for Koine Greek, Latin and more.</p>
     </div>
-
-    <div style="background: #f8f9f7; border: 1px solid #e6e8e3; border-radius: 10px; padding: 0.9rem 1.1rem; font-size: 0.92rem; line-height: 1.5;">
-      <ul style="margin: 0; padding-left: 1.1rem; display: grid; gap: 0.35rem;">
-        <li><strong>Finished Meditations</strong> — Added rich notes + favorite Stoic quotes. Multiple re-reads over the years.</li>
-        <li><strong>New links added</strong> — YouTube discussions for <em>The Republic</em> and <em>Meditations</em>, plus a Spotify episode for <em>Pride and Prejudice</em>.</li>
-        <li><strong>Site refresh</strong> — Single-page dashboard experience with better sorting (by last activity) and external links column.</li>
-        <li><strong>Reading goal</strong> — Continuing through the Harvard Classics shelf and Great Books set. 2 books completed so far this year.</li>
-      </ul>
+    <div class="home-card soon">
+      <span class="home-emoji">🎲</span>
+      <h2>Games</h2>
+      <p>Coming soon: small book and word games.</p>
     </div>
   </section>
 
-  <!-- Books Table Section -->
-  <section id="my-reading-list">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.5rem;">
-      <h2 style="margin: 0; font-size: 1.35rem;">📖 My Reading List</h2>
+  <section class="home-section">
+    <h2>Latest infographics</h2>
+    <div class="home-strip">
+      {{ range first 4 $ig }}
+      <a href="/infographics/"><img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy"><span>{{ .title }}</span></a>
+      {{ end }}
     </div>
+  </section>
 
-    <p style="margin: 0 0 0.75rem; color: #555; font-size: 0.93rem;">
-      Click column headers to sort. Default sort is <strong>most recently updated</strong>. Use the filters below to explore.
-    </p>
-
-    <!-- Stats -->
-    <div id="book-stats" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; font-size: 0.9rem;">
-      <div style="background: #f8f9fa; padding: 0.35rem 0.7rem; border-radius: 6px; border: 1px solid #eee;">
-        <strong id="stat-total">0</strong> total
-      </div>
-      <div style="background: #e6f4ea; padding: 0.35rem 0.7rem; border-radius: 6px; border: 1px solid #c3e6cb;">
-        ✅ <strong id="stat-read">0</strong> read
-      </div>
-      <div style="background: #fff3cd; padding: 0.35rem 0.7rem; border-radius: 6px; border: 1px solid #ffeaa7;">
-        📖 <strong id="stat-unread">0</strong> to read
-      </div>
-    </div>
-
-    <!-- Filters -->
-    <div class="books-controls" style="display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: flex-end; margin-bottom: 0.85rem; padding: 0.6rem 0.7rem; background: #fafafa; border: 1px solid #eee; border-radius: 8px;">
-      <div style="flex: 1; min-width: 200px;">
-        <input type="search" id="book-search" placeholder="Search title or author..." 
-               style="width: 100%; padding: 0.4rem 0.55rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;">
-      </div>
-
-      <div>
-        <label style="font-size: 0.75rem; display: block; margin-bottom: 1px; color: #555;">Collection</label>
-        <select id="filter-collection" multiple size="2" style="min-width: 145px; padding: 0.2rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem;">
-          <option value="Harvard Classics">Harvard Classics</option>
-          <option value="Harvard Classics Shelf of Fiction">Shelf of Fiction</option>
-          <option value="Great Books of the Western World">Great Books</option>
-        </select>
-      </div>
-
-      <div>
-        <label style="font-size: 0.75rem; display: block; margin-bottom: 1px; color: #555;">Status</label>
-        <select id="filter-status" style="padding: 0.35rem 0.45rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.85rem;">
-          <option value="">All</option>
-          <option value="read">✅ Read</option>
-          <option value="unread">📖 To Read</option>
-        </select>
-      </div>
-
-      <div>
-        <button id="clear-filters" type="button" 
-                style="padding: 0.35rem 0.6rem; background: #fff; border: 1px solid #004C2A; color: #004C2A; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
-          Clear
-        </button>
-      </div>
-    </div>
-
-    <!-- The Table (wider, horizontally scrollable on all screen sizes) -->
-    <div style="overflow-x: auto; width: 100%; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); -webkit-overflow-scrolling: touch;">
-      <table id="bookTable" style="min-width: 1100px; width: 100%; border-collapse: collapse; font-size: 0.9rem;">
-        <thead>
-          <tr>
-            <th data-col="0" style="padding: 8px 10px; text-align: left; cursor: pointer; user-select: none;">Author <span class="sort-indicator"></span></th>
-            <th data-col="1" style="padding: 8px 10px; text-align: left; cursor: pointer; user-select: none;">Title <span class="sort-indicator"></span></th>
-            <th data-col="2" style="padding: 8px 10px; text-align: center; cursor: pointer; user-select: none; min-width: 55px;">Year <span class="sort-indicator"></span></th>
-            <th data-col="3" style="padding: 8px 10px; text-align: right; cursor: pointer; user-select: none; min-width: 55px;">Pages <span class="sort-indicator"></span></th>
-            <th data-col="4" style="padding: 8px 10px; text-align: right; cursor: pointer; user-select: none;">Audio <span class="sort-indicator"></span></th>
-            <th data-col="5" style="padding: 8px 10px; text-align: left; cursor: pointer; user-select: none;">Collection <span class="sort-indicator"></span></th>
-            <th style="padding: 8px 10px; text-align: left; min-width: 70px;">Notes</th>
-            <th style="padding: 8px 10px; text-align: left; min-width: 100px;">Links</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{ $pages := where .Site.RegularPages "Section" "books" }}
-          {{ range $pages }}
-            {{ if not .Params.isListPage }}
-            {{ $read := .Params.haveRead | default false }}
-            {{ $collection := .Params.collection | default "Other" }}
-            {{ $last := .Params.lastUpdated | default "2025-01-01" }}
-            {{ $pages := .Params.pages | default "—" }}
-            {{ $year := .Params.year | default "—" }}
-            {{ $audio := .Params.audiobook | default "—" }}
-            <tr 
-              data-title="{{ .Title | lower }}"
-              data-author="{{ .Params.author | default "" | lower }}"
-              data-collection="{{ $collection }}"
-              data-status="{{ if $read }}read{{ else }}unread{{ end }}"
-              data-updated="{{ $last }}"
-            >
-              <td style="padding: 7px 10px; font-size: 0.88rem;">{{ .Params.author | default "—" }}</td>
-              <td style="padding: 7px 10px; font-weight: 500;">
-                <a href="{{ .RelPermalink }}" style="color: #004C2A; text-decoration: none;">{{ .Title }}</a>
-                {{ if $read }}<span style="margin-left:4px; font-size:0.75rem;">✅</span>{{ else }}<span style="margin-left:4px; font-size:0.75rem;">📖</span>{{ end }}
-              </td>
-              <td style="padding: 7px 10px; text-align: center; font-size: 0.85rem;">{{ $year }}</td>
-              <td style="padding: 7px 10px; text-align: right; font-size: 0.85rem;">{{ $pages }}</td>
-              <td style="padding: 7px 10px; text-align: right; font-size: 0.82rem; white-space: nowrap;">{{ $audio }}</td>
-              <td style="padding: 7px 10px; font-size: 0.82rem;">{{ $collection }}</td>
-              <td style="padding: 7px 10px; text-align: left;">
-                <a href="{{ .RelPermalink }}" style="font-size: 0.75rem; color: #004C2A; text-decoration: underline; white-space: nowrap;">Notes →</a>
-              </td>
-              <td style="padding: 7px 10px; font-size: 0.8rem;">
-                {{ range .Params.links }}
-                  {{ if eq .platform "youtube" }}
-                    <a href="{{ .url }}" target="_blank" rel="noopener" title="{{ .title }}" style="margin-right: 4px; text-decoration: none;">▶️</a>
-                  {{ else if eq .platform "spotify" }}
-                    <a href="{{ .url }}" target="_blank" rel="noopener" title="{{ .title }}" style="margin-right: 4px; text-decoration: none;">🎧</a>
-                  {{ else if eq .platform "substack" }}
-                    <a href="{{ .url }}" target="_blank" rel="noopener" title="{{ .title }}" style="margin-right: 4px; text-decoration: none;">✍️</a>
-                  {{ else }}
-                    <a href="{{ .url }}" target="_blank" rel="noopener" title="{{ .title }}" style="margin-right: 4px;">🔗</a>
-                  {{ end }}
-                {{ else }}
-                  <span style="color: #aaa; font-size: 0.75rem;">—</span>
-                {{ end }}
-              </td>
-            </tr>
-            {{ end }}
-          {{ end }}
-        </tbody>
-      </table>
-    </div>
-
-    <p style="margin-top: 0.6rem; font-size: 0.75rem; color: #777;">
-      Tip: The table is fully client-side filterable and sortable. Add new books via the <code>book</code> archetype.
-    </p>
+  <section class="home-section">
+    <h2>Recently updated books</h2>
+    <ul class="home-list">
+      {{ $sorted := sort (where $books "Params.lastUpdated" "!=" nil) "Params.lastUpdated" "desc" }}
+      {{ range first 6 $sorted }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a> <span>{{ .Params.author }}</span></li>
+      {{ end }}
+    </ul>
   </section>
 
 </div>
-
-<script>
-(function() {
-  const table = document.getElementById('bookTable');
-  if (!table) return;
-
-  const tbody = table.tBodies[0];
-  const rows = Array.from(tbody.rows);
-  const searchInput = document.getElementById('book-search');
-  const collSelect = document.getElementById('filter-collection');
-  const statusSelect = document.getElementById('filter-status');
-  const clearBtn = document.getElementById('clear-filters');
-
-  const statTotal = document.getElementById('stat-total');
-  const statRead = document.getElementById('stat-read');
-  const statUnread = document.getElementById('stat-unread');
-
-  let sortCol = null; // we will do an initial sort by data-updated (newest first)
-  let sortDir = 'desc';
-
-  function updateStats() {
-    const total = rows.length;
-    let read = 0, unread = 0;
-    rows.forEach(r => {
-      if (r.dataset.status === 'read') read++;
-      else unread++;
-    });
-    statTotal.textContent = total;
-    statRead.textContent = read;
-    statUnread.textContent = unread;
-  }
-
-  function applyFilters() {
-    const q = (searchInput.value || '').toLowerCase().trim();
-    const selectedColls = Array.from(collSelect.selectedOptions).map(o => o.value);
-    const statusVal = statusSelect.value;
-
-    rows.forEach(row => {
-      const title = row.dataset.title || '';
-      const author = row.dataset.author || '';
-      const coll = row.dataset.collection || '';
-      const status = row.dataset.status || '';
-
-      let match = true;
-      if (q) match = match && (title.includes(q) || author.includes(q));
-      if (selectedColls.length > 0) match = match && selectedColls.some(c => coll.includes(c));
-      if (statusVal) match = match && (status === statusVal);
-
-      row.style.display = match ? '' : 'none';
-    });
-
-    if (sortCol !== null) sortVisibleRows();
-  }
-
-  function sortVisibleRows() {
-    const visibleRows = rows.filter(r => r.style.display !== 'none');
-
-    visibleRows.sort((a, b) => {
-      let x = a.cells[sortCol].textContent.trim().toLowerCase();
-      let y = b.cells[sortCol].textContent.trim().toLowerCase();
-
-      // Date column (Updated)
-      if (sortCol === 2) {
-        return sortDir === 'asc' ? x.localeCompare(y) : y.localeCompare(x);
-      }
-
-      // Numeric attempt
-      const nx = parseFloat(x) || x;
-      const ny = parseFloat(y) || y;
-      if (typeof nx === 'number' && typeof ny === 'number' && !isNaN(nx) && !isNaN(ny)) {
-        return sortDir === 'asc' ? nx - ny : ny - nx;
-      }
-
-      return sortDir === 'asc' ? (x < y ? -1 : 1) : (x < y ? 1 : -1);
-    });
-
-    visibleRows.forEach(r => tbody.appendChild(r));
-  }
-
-  function updateSortIndicators() {
-    const headers = table.querySelectorAll('th[data-col]');
-    headers.forEach(h => {
-      const ind = h.querySelector('.sort-indicator');
-      if (!ind) return;
-      const col = parseInt(h.dataset.col, 10);
-      if (col === sortCol) {
-        ind.textContent = sortDir === 'asc' ? ' ▲' : ' ▼';
-      } else {
-        ind.textContent = '';
-      }
-    });
-  }
-
-  // Sorting
-  const headers = table.querySelectorAll('th[data-col]');
-  headers.forEach(header => {
-    header.addEventListener('click', () => {
-      const col = parseInt(header.dataset.col, 10);
-      if (sortCol === col) {
-        sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-      } else {
-        sortCol = col;
-        sortDir = (col === 2) ? 'desc' : 'asc'; // dates default newest first
-      }
-      updateSortIndicators();
-      sortVisibleRows();
-    });
-  });
-
-  // Filters
-  searchInput.addEventListener('input', applyFilters);
-  collSelect.addEventListener('change', applyFilters);
-  statusSelect.addEventListener('change', applyFilters);
-
-  clearBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    Array.from(collSelect.options).forEach(o => o.selected = false);
-    statusSelect.value = '';
-    rows.forEach(r => r.style.display = '');
-    sortCol = 2;
-    sortDir = 'desc';
-    updateSortIndicators();
-    updateStats();
-  });
-
-  // Initial sort: newest first by the hidden data-updated attribute
-  function initialSortByUpdated() {
-    const visibleRows = rows.filter(r => r.style.display !== 'none');
-    visibleRows.sort((a, b) => {
-      const x = a.dataset.updated || '2000-01-01';
-      const y = b.dataset.updated || '2000-01-01';
-      return x > y ? -1 : (x < y ? 1 : 0); // newest first
-    });
-    visibleRows.forEach(r => tbody.appendChild(r));
-  }
-
-  updateStats();
-  updateSortIndicators();
-  initialSortByUpdated();
-})();
-</script>
 {{ end }}

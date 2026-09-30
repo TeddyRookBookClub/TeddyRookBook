@@ -6,9 +6,11 @@ year: 1924
 genre: "Fiction"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "22h 00m"
-podcast: ""
 links: []
 ---
 

@@ -6,7 +6,9 @@ year: 1321
 genre: "Epic Poetry"
 collection: "Harvard Classics Vol. 20"
 haveRead: false
-podcast: ""
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-12"
 audiobook: "14h 50m"
 links: []
@@ -17,5 +19,5 @@ links: []
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 **Status:** 📖 To Read

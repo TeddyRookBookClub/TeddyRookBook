@@ -6,9 +6,11 @@ year: 1913
 genre: "Fiction"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "14h 30m"
-podcast: ""
 links: []
 ---
 

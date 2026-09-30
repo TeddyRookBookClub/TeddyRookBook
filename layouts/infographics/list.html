@@ -1,0 +1,66 @@
+{{ define "main" }}
+<link rel="stylesheet" href="/css/books.css">
+<link rel="stylesheet" href="/css/infographics.css">
+<div class="ig-page">
+  <header class="ig-header">
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Description }}</p>
+  </header>
+
+  {{ $items := where site.Data.infographics "show" true }}
+  {{ $tags := slice }}
+  {{ range $items }}{{ range .tags }}{{ $tags = $tags | append . }}{{ end }}{{ end }}
+
+  <div class="ig-filters" role="group" aria-label="Filter by topic">
+    <button type="button" class="ig-chip active" data-tag="all">All ({{ len $items }})</button>
+    {{ range $tags | uniq | sort }}<button type="button" class="ig-chip" data-tag="{{ . }}">{{ . }}</button>{{ end }}
+  </div>
+
+  <div class="ig-grid">
+    {{ range $items }}
+    <figure class="ig-card" data-tags="{{ delimit .tags "|" }}">
+      <a href="/img/infographics/{{ .file }}.jpg" class="ig-open" data-title="{{ .title }}" data-desc="{{ .description }}"{{ with .pdf }} data-pdf="/pdfs/{{ . }}"{{ end }}{{ with .pdf_title }} data-pdftitle="{{ . }}"{{ end }}>
+        <img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy">
+      </a>
+      <figcaption>
+        <strong>{{ .title }}</strong>
+        <span>{{ delimit .tags " · " }}</span>
+        {{ with .pdf }}<a class="ig-pdf" href="/pdfs/{{ . }}" target="_blank" rel="noopener">📄 Read the full paper (PDF)</a>{{ end }}
+      </figcaption>
+    </figure>
+    {{ end }}
+  </div>
+
+  <div class="ig-lightbox" id="ig-lightbox" hidden>
+    <button type="button" class="ig-close" aria-label="Close">×</button>
+    <div class="ig-lb-inner">
+      <img id="ig-lb-img" alt="">
+      <div class="ig-lb-caption"><strong id="ig-lb-title"></strong><p id="ig-lb-desc"></p>
+        <a id="ig-lb-full" target="_blank" rel="noopener">Open full size ↗</a>
+        <a id="ig-lb-pdf" class="ig-pdf" target="_blank" rel="noopener" hidden></a></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var chips=document.querySelectorAll('.ig-chip'), cards=document.querySelectorAll('.ig-card');
+  chips.forEach(function(c){c.addEventListener('click',function(){
+    chips.forEach(function(x){x.classList.remove('active')}); c.classList.add('active');
+    var t=c.dataset.tag;
+    cards.forEach(function(card){card.style.display=(t==='all'||card.dataset.tags.split('|').indexOf(t)>-1)?'':'none';});
+  });});
+  var lb=document.getElementById('ig-lightbox'), img=document.getElementById('ig-lb-img');
+  function close(){lb.hidden=true;img.src='';document.body.style.overflow='';}
+  document.querySelectorAll('.ig-open').forEach(function(a){a.addEventListener('click',function(e){
+    e.preventDefault(); img.src=a.href; img.alt=a.dataset.title;
+    document.getElementById('ig-lb-title').textContent=a.dataset.title;
+    document.getElementById('ig-lb-desc').textContent=a.dataset.desc||'';
+    document.getElementById('ig-lb-full').href=a.href;
+    var pl=document.getElementById('ig-lb-pdf');
+    if(a.dataset.pdf){pl.href=a.dataset.pdf;pl.textContent='📄 '+(a.dataset.pdftitle||'Read the full paper (PDF)');pl.hidden=false;}else{pl.hidden=true;} lb.hidden=false; document.body.style.overflow='hidden';
+  });});
+  lb.addEventListener('click',function(e){if(e.target===lb||e.target.classList.contains('ig-close'))close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+})();
+</script>
+{{ end }}

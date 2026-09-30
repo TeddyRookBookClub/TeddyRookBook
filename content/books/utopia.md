@@ -6,7 +6,9 @@ year: 1516
 genre: "Political Philosophy"
 collection: "Harvard Classics Vol. 36"
 haveRead: false
-podcast: ""
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-04-20"
 audiobook: "3h 50m"
 links: []
@@ -17,5 +19,5 @@ links: []
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 **Status:** 📖 To Read

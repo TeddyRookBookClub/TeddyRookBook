@@ -6,9 +6,11 @@ year: 1759
 genre: "Fiction / Satire"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-25"
 audiobook: "4h 05m"
-podcast: ""
 links: []
 ---
 
@@ -24,7 +26,7 @@ links: []
 
 ## My Notes & Reflections
 
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 
 **Status:** 📖 To Read
 

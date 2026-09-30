@@ -6,9 +6,14 @@ year: 1900
 genre: "Fiction"
 collection: "Harvard Classics"
 haveRead: false
+owned: true          # do you own a copy?
+format: ""          # Hardcover, Paperback, Ebook, Audiobook
+shelf: ""           # where it lives, e.g. "Living room, shelf 2"
+isbn: ""
+publisher: ""
+cover: ""           # optional image path, e.g. /img/covers/name.jpg
 lastUpdated: "2026-05-20"
 audiobook: ""          # e.g. "12h 45m" or "14h 30m"
-podcast: ""
 links: []
 ---
 
@@ -24,7 +29,7 @@ links: []
 
 ## My Notes & Reflections
 
-Write your thoughts, themes you noticed, connections to other books in the club, questions for discussion...
+Write your thoughts, themes you noticed, connections to other books, questions to revisit...
 
 **Status:** 📖 To Read
 

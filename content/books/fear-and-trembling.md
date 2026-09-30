@@ -6,9 +6,11 @@ year: 1843
 genre: "Philosophy"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "5h 10m"
-podcast: ""
 links: []
 ---
 
