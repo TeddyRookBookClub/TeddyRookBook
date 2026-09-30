@@ -1,20 +1,22 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
-country: "England"
-authorCountry: "England"
-genre: "Science Fiction"
+title: "On Duties"
+author: "Cicero"
+year: -44
+country: "Rome"
+authorCountry: "Rome"
+genre: "Philosophy"
 haveRead: false
 owned: true
 editions:
-  - set: "Barnes & Noble Leatherbound"
+  - set: "Loeb Classical Library"
+    vol: "30"
+    detail: "Cicero XXI, Latin and English, Walter Miller translation"
 notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# On Duties
+**Cicero • 44 BC**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

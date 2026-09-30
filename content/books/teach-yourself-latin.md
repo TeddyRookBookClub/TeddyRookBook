@@ -1,20 +1,19 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
+title: "Teach Yourself Latin"
+author: "Gavin Betts"
+year: 1986
 country: "England"
 authorCountry: "England"
-genre: "Science Fiction"
+genre: "Language"
 haveRead: false
 owned: true
-editions:
-  - set: "Barnes & Noble Leatherbound"
+editions: []
 notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# Teach Yourself Latin
+**Gavin Betts • 1986**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

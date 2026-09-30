@@ -1,10 +1,10 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
+title: "The Complete Sherlock Holmes"
+author: "Arthur Conan Doyle"
+year: 1887
 country: "England"
-authorCountry: "England"
-genre: "Science Fiction"
+authorCountry: "Scotland"
+genre: "Mystery"
 haveRead: false
 owned: true
 editions:
@@ -13,8 +13,8 @@ notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# The Complete Sherlock Holmes
+**Arthur Conan Doyle • 1887**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

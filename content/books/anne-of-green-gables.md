@@ -1,10 +1,10 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
-country: "England"
-authorCountry: "England"
-genre: "Science Fiction"
+title: "Anne of Green Gables"
+author: "L. M. Montgomery"
+year: 1908
+country: "Canada"
+authorCountry: "Canada"
+genre: "Children"
 haveRead: false
 owned: true
 editions:
@@ -13,8 +13,8 @@ notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# Anne of Green Gables
+**L. M. Montgomery • 1908**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

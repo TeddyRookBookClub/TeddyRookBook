@@ -1,20 +1,19 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
+title: "The Hobbit"
+author: "J. R. R. Tolkien"
+year: 1937
 country: "England"
 authorCountry: "England"
-genre: "Science Fiction"
+genre: "Fantasy"
 haveRead: false
 owned: true
-editions:
-  - set: "Barnes & Noble Leatherbound"
+editions: []
 notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# The Hobbit
+**J. R. R. Tolkien • 1937**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

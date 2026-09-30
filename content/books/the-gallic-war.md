@@ -1,20 +1,22 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
-country: "England"
-authorCountry: "England"
-genre: "Science Fiction"
+title: "The Gallic War"
+author: "Julius Caesar"
+year: -50
+country: "Rome"
+authorCountry: "Rome"
+genre: "History"
 haveRead: false
 owned: true
 editions:
-  - set: "Barnes & Noble Leatherbound"
+  - set: "Loeb Classical Library"
+    vol: "72"
+    detail: "Caesar I, Latin and English, Cynthia Damon translation"
 notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# The Gallic War
+**Julius Caesar • 50 BC**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

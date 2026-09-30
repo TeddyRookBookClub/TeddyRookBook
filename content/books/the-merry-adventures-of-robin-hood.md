@@ -1,20 +1,22 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
-country: "England"
-authorCountry: "England"
-genre: "Science Fiction"
+title: "The Merry Adventures of Robin Hood"
+author: "Howard Pyle"
+year: 1883
+country: "United States"
+authorCountry: "United States"
+genre: "Fiction / Adventure"
 haveRead: false
 owned: true
 editions:
   - set: "Barnes & Noble Leatherbound"
-notes: ""
+  - set: "Hardcover"
+    detail: "large illustrated edition"
+notes: "2 copies"
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# The Merry Adventures of Robin Hood
+**Howard Pyle • 1883**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

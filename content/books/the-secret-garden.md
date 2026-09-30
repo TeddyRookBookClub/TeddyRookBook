@@ -1,10 +1,10 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
+title: "The Secret Garden"
+author: "Frances Hodgson Burnett"
+year: 1911
 country: "England"
 authorCountry: "England"
-genre: "Science Fiction"
+genre: "Children"
 haveRead: false
 owned: true
 editions:
@@ -13,8 +13,8 @@ notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# The Secret Garden
+**Frances Hodgson Burnett • 1911**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

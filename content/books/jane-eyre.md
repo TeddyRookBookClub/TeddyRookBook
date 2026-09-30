@@ -1,10 +1,10 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
+title: "Jane Eyre"
+author: "Charlotte Brontë"
+year: 1847
 country: "England"
 authorCountry: "England"
-genre: "Science Fiction"
+genre: "Fiction"
 haveRead: false
 owned: true
 editions:
@@ -13,8 +13,8 @@ notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# Jane Eyre
+**Charlotte Brontë • 1847**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

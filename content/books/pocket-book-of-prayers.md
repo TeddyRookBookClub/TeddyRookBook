@@ -1,10 +1,9 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
-country: "England"
-authorCountry: "England"
-genre: "Science Fiction"
+title: "Pocket Book of Prayers"
+author: "Various"
+country: ""
+authorCountry: ""
+genre: "Devotional"
 haveRead: false
 owned: true
 editions:
@@ -13,8 +12,8 @@ notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# Pocket Book of Prayers
+**Various**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

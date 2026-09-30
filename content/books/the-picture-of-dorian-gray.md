@@ -1,10 +1,10 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
+title: "The Picture of Dorian Gray"
+author: "Oscar Wilde"
+year: 1890
 country: "England"
-authorCountry: "England"
-genre: "Science Fiction"
+authorCountry: "Ireland"
+genre: "Fiction"
 haveRead: false
 owned: true
 editions:
@@ -13,8 +13,8 @@ notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# The Picture of Dorian Gray
+**Oscar Wilde • 1890**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

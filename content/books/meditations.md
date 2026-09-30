@@ -22,7 +22,10 @@ editions:
     detail: "George Long translation"
   - set: "Great Books"
     vol: "11"
-notes: "2 copies"
+  - set: "Loeb Classical Library"
+    vol: "58"
+    detail: "Greek and English, C. R. Haines translation"
+notes: "3 copies"
 ---
 # Meditations
 **Marcus Aurelius • 180 • ~192 pages**

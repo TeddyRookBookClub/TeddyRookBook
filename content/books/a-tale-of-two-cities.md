@@ -13,7 +13,8 @@ shelf: ""
 lastUpdated: "2026-09-30"
 audiobook: "13h 40m"
 links: []
-editions: []
+editions:
+  - set: "Barnes & Noble Leatherbound"
 notes: ""
 ---
 

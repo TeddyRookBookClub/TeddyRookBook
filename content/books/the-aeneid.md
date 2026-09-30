@@ -21,7 +21,10 @@ editions:
     vol: "12"
   - set: "Penguin Classics"
     detail: "Robert Fagles translation"
-notes: "3 copies in at least 2 translations (Dryden, Fagles)"
+  - set: "Loeb Classical Library"
+    vol: "63–64"
+    detail: "Latin and English, H. R. Fairclough translation"
+notes: "4 copies in at least 3 translations (Dryden, Fairclough, Fagles)"
 ---
 
 # The Aeneid

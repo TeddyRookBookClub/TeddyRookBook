@@ -1,9 +1,9 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
-country: "England"
-authorCountry: "England"
+title: "Twenty Thousand Leagues Under the Sea"
+author: "Jules Verne"
+year: 1870
+country: "France"
+authorCountry: "France"
 genre: "Science Fiction"
 haveRead: false
 owned: true
@@ -13,8 +13,8 @@ notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# Twenty Thousand Leagues Under the Sea
+**Jules Verne • 1870**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

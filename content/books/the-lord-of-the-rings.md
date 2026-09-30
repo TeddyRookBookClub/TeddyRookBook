@@ -1,20 +1,19 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
+title: "The Lord of the Rings"
+author: "J. R. R. Tolkien"
+year: 1954
 country: "England"
 authorCountry: "England"
-genre: "Science Fiction"
+genre: "Fantasy"
 haveRead: false
 owned: true
-editions:
-  - set: "Barnes & Noble Leatherbound"
-notes: ""
+editions: []
+notes: "The Fellowship of the Ring, The Two Towers, The Return of the King"
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# The Lord of the Rings
+**J. R. R. Tolkien • 1954**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

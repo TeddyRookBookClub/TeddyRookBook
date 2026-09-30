@@ -1,20 +1,22 @@
 ---
-title: "The Ultimate Hitchhiker's Guide to the Galaxy"
-author: "Douglas Adams"
-year: 1979
-country: "England"
-authorCountry: "England"
-genre: "Science Fiction"
+title: "Anabasis"
+author: "Xenophon"
+year: -370
+country: "Greece"
+authorCountry: "Greece"
+genre: "History"
 haveRead: false
 owned: true
 editions:
-  - set: "Barnes & Noble Leatherbound"
+  - set: "Loeb Classical Library"
+    vol: "90"
+    detail: "Xenophon III, Greek and English, C. L. Brownson translation"
 notes: ""
 lastUpdated: "2026-09-30"
 links: []
 ---
-# The Ultimate Hitchhiker's Guide to the Galaxy
-**Douglas Adams • 1979**
+# Anabasis
+**Xenophon • 370 BC**
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

@@ -15,7 +15,10 @@ editions:
   - set: "Harvard Classics"
     vol: "12"
     detail: "selected lives"
-notes: "3 editions"
+  - set: "Loeb Classical Library"
+    vol: "46, 47, 65, 80, 87, 98, 99, 100, 101"
+    detail: "Lives I–IX, Greek and English, Bernadotte Perrin translation"
+notes: "4 editions, including 9 Loeb volumes"
 lastUpdated: "2026-09-30"
 links: []
 ---
