@@ -28,7 +28,8 @@
       if (lang === 'g') { word = t[0]; after = t[1] || ''; if (after && !/\s$/.test(after)) after += ' '; gloss = t[3]; }
       else { word = t[0]; before = t[1] || ''; after = t[2]; gloss = null; }
       var g = opts.interlinear ? '<span class="w-gl">' + esc(glossFor(lang, t) || '·') + '</span>' : '';
-      h += esc(before) + '<span class="w" tabindex="0" data-l="' + lang + '" data-i="' + i + '"><span class="w-t">' + esc(word) + '</span>' + g + '</span>' + esc(after);
+      var red = (lang === 'g' ? t[6] : t[7]) === 1 ? ' wj' : '';
+      h += esc(before) + '<span class="w' + red + '" tabindex="0" data-l="' + lang + '" data-i="' + i + '"><span class="w-t">' + esc(word) + '</span>' + g + '</span>' + esc(after);
     });
     return h;
   }
@@ -191,6 +192,13 @@
     return n;
   }
 
+  // English with words of Christ in red. ranges = [[start, end], ...] character offsets.
+  function renderEnglish(text, ranges) {
+    if (!ranges || !ranges.length) return esc(text);
+    var h = '', at = 0;
+    ranges.forEach(function (r) { h += esc(text.slice(at, r[0])) + '<span class="wj">' + esc(text.slice(r[0], r[1])) + '</span>'; at = r[1]; });
+    return h + esc(text.slice(at));
+  }
   function refLabel(b, c, v) { return BOOKS[b] + ' ' + c + ':' + v; }
   function latinText(toks) { return toks.map(function (t) { return (t[1] || '') + t[0] + (t[2] || ''); }).join('').trim(); }
   function greekText(toks) { return toks.map(function (t) { return t[0] + (t[1] || ''); }).join('').trim(); }
@@ -199,6 +207,6 @@
     BOOKS: BOOKS, LATIN_BOOKS: LATIN_BOOKS, GREEK_BOOKS: GREEK_BOOKS, getJSON: getJSON, loadLex: loadLex, LEX: LEX,
     renderWords: renderWords, bindWords: bindWords, wordInfo: wordInfo, panelHTML: panelHTML, esc: esc,
     Player: Player, voiceFor: voiceFor, loadProgress: loadProgress, saveProgress: saveProgress, sessionCount: sessionCount,
-    refLabel: refLabel, latinText: latinText, greekText: greekText, glossFor: glossFor
+    refLabel: refLabel, renderEnglish: renderEnglish, latinText: latinText, greekText: greekText, glossFor: glossFor
   };
 })(window, document);

@@ -1,0 +1,116 @@
+/* Panegyris / Ludi game UI */
+main.main:has(.fest){max-width:1500px}
+.fest{--g:#004C2A;--gold:#b8963e;--gold-l:#f3dfa3;--wine:#7a2338;--ink:#1d2320;--muted:#5d6862;--line:#dde5df;--card:#fff;--paper:#fbf8f0;
+  --c-g:#1f5a8f;--c-l:#8c1d2c;position:relative;display:flex;flex-direction:column;height:calc(100vh - 150px);min-height:560px;
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper);color:var(--ink);font-size:14px;user-select:none;-webkit-user-select:none}
+.fest.rome{--c-g:#1f5a8f;--c-l:#8c1d2c}
+html[data-theme="dark"] .fest{--ink:#e6ece8;--muted:#9fb0a6;--line:#33403a;--card:#1c221f;--paper:#1f2521;--c-g:#8fbfea;--c-l:#e59aa9}
+.fest .lg,.fest .ll{font-family:"Gentium Book Plus","Gentium Plus",Georgia,serif}
+.fest .lg{color:var(--c-g)}
+.fest .ll{color:var(--c-l)}
+.fest .le{color:var(--muted);font-size:.78em}
+.vx{display:inline-flex;flex-direction:column;line-height:1.15;vertical-align:middle}
+.vx.inline{flex-direction:row;gap:.35em;align-items:baseline}
+.vx.inline .lg+.ll::before,.vx.inline .ll+.lg::before{content:"· ";color:var(--muted)}
+.vx.big{font-size:1.25em}
+.vx.big .le{font-size:.6em}
+
+/* top bar */
+.f-top{display:flex;align-items:center;gap:.6rem;padding:.45rem .7rem;background:linear-gradient(135deg,#004C2A,#00693a);color:#fff;flex-wrap:wrap}
+.fest.rome .f-top{background:linear-gradient(135deg,#6e1624,#8c1d2c)}
+.f-top .lg,.f-top .ll{color:var(--gold-l)} .f-top .le{color:#cfe0d6}
+.f-brand{font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:.3rem}
+.f-stats{display:flex;gap:.9rem;flex-wrap:wrap;flex:1}
+.st{display:flex;align-items:center;gap:.3rem;white-space:nowrap}
+.st b{font-variant-numeric:tabular-nums}
+.st b.neg{color:#ffb4a8}
+.dayp{display:inline-block;width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin-left:.3rem;overflow:hidden}
+.dayp i{display:block;height:100%;background:var(--gold-l)}
+.f-btn{border:1px solid rgba(0,0,0,.12);background:var(--card);color:var(--ink);border-radius:8px;padding:.3rem .55rem;cursor:pointer;font-size:.9rem;line-height:1.1}
+.f-btn:hover{border-color:var(--gold)}
+.f-top .f-btn{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.f-top .f-btn.on{background:var(--gold-l);color:#1d2320}
+.f-speed{display:flex;gap:.25rem}
+.f-langs{display:flex;gap:.25rem}
+.lt{display:inline-flex;align-items:center;gap:.2rem;padding:.2rem .45rem;border-radius:999px;border:1px solid rgba(255,255,255,.3);cursor:pointer;font-size:.8rem}
+.lt input{margin:0;accent-color:var(--gold)}
+
+/* main */
+.f-main{flex:1;display:grid;grid-template-columns:200px minmax(0,1fr) 270px;min-height:0}
+.f-tools{overflow-y:auto;border-right:1px solid var(--line);background:var(--card);padding:.4rem}
+.tg{margin-bottom:.5rem}
+.tg h4{margin:.35rem .2rem;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.tg h4 .vx{text-transform:none;letter-spacing:0;font-size:1.1em}
+.tool{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:.35rem;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:8px;padding:.15rem .3rem;cursor:pointer;color:inherit;margin-bottom:2px}
+.tool:hover{background:var(--paper);border-color:var(--line)}
+.tool.on{background:rgba(184,150,62,.18);border-color:var(--gold)}
+.tool .ti{font-size:1.3rem;text-align:center}
+.tool canvas{width:56px;height:44px}
+.tool .tc{font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tool .tc::before{content:"🪙"}
+.tg:first-child .tool{grid-template-columns:30px 1fr}
+.f-stage{position:relative;min-width:0;min-height:0}
+.f-stage canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+.f-zoom{position:absolute;right:.6rem;bottom:.6rem;display:flex;flex-direction:column;gap:.3rem}
+.f-toast{position:absolute;left:50%;top:.8rem;transform:translate(-50%,-10px);background:rgba(29,35,32,.92);color:#fff;padding:.5rem .8rem;border-radius:10px;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center}
+.f-toast .lg,.f-toast .ll{color:var(--gold-l)} .f-toast .le{color:#cfe0d6}
+.f-toast.on{opacity:1;transform:translate(-50%,0)}
+.f-info{position:absolute;left:.6rem;top:.6rem;width:280px;max-width:calc(100% - 1.2rem);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.f-x{position:absolute;right:.4rem;top:.3rem;border:0;background:none;font-size:1.3rem;cursor:pointer;color:var(--muted)}
+.ih{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;padding-right:1.2rem}
+.ih>div{flex:1}
+.ih .nm{font:700 1.2rem "Gentium Book Plus",Georgia,serif}
+.iq{background:var(--paper);border-radius:8px;padding:.35rem .5rem;margin-bottom:.4rem}
+.needs{display:grid;grid-template-columns:auto 1fr;gap:.3rem .6rem;margin:0;align-items:center}
+.needs dt{font-size:.85rem}
+.needs dd{margin:0;font-variant-numeric:tabular-nums}
+.needs input[type=range]{width:110px;accent-color:var(--g);vertical-align:middle}
+.bar{display:inline-block;width:100%;height:7px;background:var(--line);border-radius:4px;overflow:hidden;vertical-align:middle}
+.bar i{display:block;height:100%}
+.f-btn.wide{width:100%;margin-top:.6rem}
+.f-side{border-left:1px solid var(--line);background:var(--card);overflow-y:auto;padding:.6rem .7rem}
+.f-side h3{margin:.2rem 0 .5rem;font-size:.95rem}
+.f-feed{list-style:none;margin:0 0 1rem;padding:0;display:flex;flex-direction:column;gap:.45rem}
+.f-feed li{display:grid;grid-template-columns:22px 1fr;gap:.35rem;padding:.4rem .45rem;background:var(--paper);border-radius:10px;border-left:3px solid var(--gold);animation:fin .35s ease}
+@keyframes fin{from{opacity:0;transform:translateX(8px)}}
+.f-feed .fi{font-size:1.05rem}
+.f-feed .fn{color:var(--muted);display:block;margin-bottom:.1rem}
+.f-feed .vx.q{font-size:1.02rem}
+.f-goals{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.3rem;font-size:.9rem}
+.f-goals li.won{color:var(--g);font-weight:600}
+.f-note{font-size:.8rem;color:var(--muted);margin-top:.8rem}
+
+/* start screen */
+.f-start{position:absolute;inset:0;background:rgba(251,248,240,.97);display:flex;align-items:center;justify-content:center;z-index:5;padding:1rem;overflow:auto}
+html[data-theme="dark"] .f-start{background:rgba(31,37,33,.97)}
+.f-start[hidden]{display:none}
+.sbox{max-width:640px;text-align:center}
+.sbox h2{font-size:2.2rem;margin:.2rem 0}
+.sp{color:var(--muted)}
+.scs{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+@media (max-width:520px){.scs{grid-template-columns:1fr}}
+.sc{border:1px solid var(--line);border-radius:14px;padding:1rem;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.sc-greece{border-top:5px solid #2f5f93}.sc-rome{border-top:5px solid #8c1d2c}
+.se{font-size:2.6rem}
+.f-btn.prim{background:var(--g);color:#fff;border-color:var(--g);padding:.45rem .9rem}
+.f-btn.prim .lg,.f-btn.prim .ll{color:var(--gold-l)} .f-btn.prim .le{color:#d3e6da}
+.slang{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;align-items:center;margin:.6rem 0}
+.slang .lt{border-color:var(--line)}
+.snote{font-size:.85rem;color:var(--muted);background:var(--card);border-left:4px solid var(--gold);padding:.5rem .7rem;border-radius:8px;text-align:left}
+
+/* responsive: phones and narrow windows drop the thoughts sidebar and move tools to the bottom */
+@media (max-width:1000px){.f-main{grid-template-columns:180px minmax(0,1fr)}.f-side{display:none}}
+@media (max-width:700px){
+  .fest{height:calc(100svh - 110px);min-height:480px;font-size:13px}
+  .f-main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+  .f-tools{order:2;border-right:0;border-top:1px solid var(--line);display:flex;overflow-x:auto;overflow-y:hidden;gap:.4rem;padding:.3rem;max-height:118px}
+  .tg{display:flex;gap:.2rem;margin:0;flex:none}
+  .tg h4{display:none}
+  .tool{grid-template-columns:1fr;justify-items:center;width:84px;text-align:center;font-size:.72rem;padding:.2rem}
+  .tool canvas{width:48px;height:38px}
+  .tg:first-child .tool{grid-template-columns:1fr}
+  .f-stats{gap:.5rem;font-size:.8rem}
+  .st .vx{display:none}
+  .f-info{left:.4rem;right:.4rem;top:auto;bottom:.4rem;width:auto}
+  .f-brand .vx .le{display:none}
+}

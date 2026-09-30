@@ -10,7 +10,7 @@
     l: { name: 'Latin', short: 'LATINA', sub: 'Vulgate' }
   };
   var PREF_KEY = 'trb-gospels-prefs';
-  var prefs = { order: ['en', 'g', 'l'], show: { en: true, g: true, l: true }, play: { en: true, g: true, l: true },
+  var prefs = { order: ['g', 'en', 'l'], red: true, show: { en: true, g: true, l: true }, play: { en: true, g: true, l: true },
     speed: 1, gap: 2, reps: 1, book: 'ALL', passage: -1, mode: 'shuffle', text: 'always' };
   try { var sp = JSON.parse(W.localStorage.getItem(PREF_KEY)); if (sp) for (var k in sp) prefs[k] = sp[k]; } catch (e) { }
   function savePrefs() { try { W.localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch (e) { } }
@@ -100,7 +100,7 @@
       var show = prefs.show[k] || paused;
       var hide = !show || (prefs.text === 'after' && playing && !spoken[k]);
       var body;
-      if (k === 'en') body = G.esc(v.en);
+      if (k === 'en') body = G.renderEnglish(v.en, v.r);
       else body = G.renderWords(k, k === 'g' ? v.g : v.l, { interlinear: paused && $('#interlinear').checked });
       h += '<div class="row row-' + k + (activeLang === k ? ' speaking' : '') + (hide ? ' veiled' : '') + '" data-k="' + k + '">' +
         '<div class="row-lab"><b>' + LANGS[k].short + '</b><small>' + LANGS[k].sub + '</small>' +
@@ -216,6 +216,8 @@
     rp.addEventListener('change', function () { prefs.reps = +rp.value; savePrefs(); });
     tx.addEventListener('change', function () { prefs.text = tx.value; savePrefs(); renderStage(); });
     $('#interlinear').addEventListener('change', function () { renderStage(); });
+    var rl = $('#redletter'); rl.checked = prefs.red !== false; root.classList.toggle('no-red', !rl.checked);
+    rl.addEventListener('change', function () { prefs.red = rl.checked; savePrefs(); root.classList.toggle('no-red', !rl.checked); });
     $('#reset').addEventListener('click', function () {
       if (!W.confirm || W.confirm('Reset the counters saved in this browser?')) {
         progress = { seen: {}, total: 0, seconds: 0, since: Date.now() }; G.saveProgress(progress);

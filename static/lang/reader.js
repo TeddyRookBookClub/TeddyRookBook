@@ -5,16 +5,16 @@
   var root = $('#reader'); if (!root) return;
   var panel = $('#word-panel'), player = new G.Player();
   var CHAPTERS = { MAT: 28, MRK: 16, LUK: 24, JHN: 21 };
-  var st = { b: 'JHN', c: 1, g: true, l: true, en: true, inter: false, only: false };
+  var st = { b: 'JHN', c: 1, g: true, l: true, en: true, inter: false, only: false, red: true };
   try { var s0 = JSON.parse(W.localStorage.getItem('trb-reader')); if (s0) for (var k in s0) st[k] = s0[k]; } catch (e) { }
   var m = /#(MAT|MRK|LUK|JHN)(\d+)/.exec(W.location.hash); if (m) { st.b = m[1]; st.c = +m[2]; }
   function save() { try { W.localStorage.setItem('trb-reader', JSON.stringify(st)); } catch (e) { } }
 
-  var esv = {}, drill = {}, passages = [], book = {};
+  var esv = {}, woc = {}, drill = {}, passages = [], book = {};
   var BN = { MAT: 40, MRK: 41, LUK: 42, JHN: 43 };
 
-  Promise.all([G.loadLex(), G.getJSON('esv.json'), G.getJSON('drills.json')]).then(function (r) {
-    esv = r[1]; passages = r[2].passages;
+  Promise.all([G.loadLex(), G.getJSON('esv.json'), G.getJSON('drills.json'), G.getJSON('esv-woc.json')]).then(function (r) {
+    esv = r[1]; passages = r[2].passages; woc = r[3];
     r[2].verses.forEach(function (v) { drill[v.b + ' ' + v.c + ':' + v.v] = v; });
     setup(); load();
   }).catch(function (e) { $('#text').innerHTML = '<p class="err">Could not load the text (' + G.esc(e.message) + ').</p>'; });
@@ -28,10 +28,11 @@
     cs.addEventListener('change', function () { st.c = +cs.value; load(); });
     $('#r-prev').addEventListener('click', function () { go(-1); });
     $('#r-next').addEventListener('click', function () { go(1); });
-    ['g', 'l', 'en', 'inter', 'only'].forEach(function (k) {
+    ['g', 'l', 'en', 'inter', 'only', 'red'].forEach(function (k) {
       var el = $('#t-' + k); el.checked = !!st[k];
-      el.addEventListener('change', function () { st[k] = el.checked; save(); render(); });
+      el.addEventListener('change', function () { st[k] = el.checked; save(); root.classList.toggle('no-red', !st.red); render(); });
     });
+    root.classList.toggle('no-red', !st.red);
     function go(d) {
       var c = st.c + d;
       if (c < 1 || c > CHAPTERS[st.b]) return;
@@ -76,7 +77,7 @@
       cols.forEach(function (k) {
         if (k === 'en') {
           var t = esv[esvKey];
-          h += '<div class="vc vc-en">' + (t ? G.esc(t) + ' <button class="vp" data-play="en" aria-label="Play English">▶</button>' : '<span class="muted">—</span>') + '</div>';
+          h += '<div class="vc vc-en">' + (t ? G.renderEnglish(t, woc[esvKey]) + ' <button class="vp" data-play="en" aria-label="Play English">▶</button>' : '<span class="muted">—</span>') + '</div>';
         } else {
           var toks = (k === 'g' ? gch : lch)[String(v)];
           h += '<div class="vc vc-' + k + ' ' + (k === 'g' ? 'grc' : 'lat') + '">' + (toks ? G.renderWords(k, toks, { interlinear: st.inter }) + ' <button class="vp" data-play="' + k + '" aria-label="Play">▶</button>' : '<span class="muted">(not in this text)</span>') + '</div>';
