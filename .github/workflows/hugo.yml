@@ -4,6 +4,10 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  # Rebuild on weekdays so the Markets pages get fresh economic data from FRED
+  schedule:
+    - cron: "17 13 * * 1-5"
+    - cron: "47 21 * * 1-5"
 
 permissions:
   contents: read
@@ -31,6 +35,10 @@ jobs:
         with:
           hugo-version: '0.147.0'
           extended: true
+
+      - name: Download economic data (FRED)
+        run: python3 scripts/fetch_market_data.py
+        continue-on-error: true
 
       - name: Build
         run: hugo --minify
