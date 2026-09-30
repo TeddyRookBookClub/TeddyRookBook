@@ -3,6 +3,8 @@ title: "Beowulf"
 author: "Anonymous"
 pages: 120
 year: 1000
+country: "England"
+authorCountry: "Unknown"
 genre: "Epic Poetry"
 collection: ""
 haveRead: false

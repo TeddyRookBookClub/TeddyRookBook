@@ -2,7 +2,9 @@
 title: "{{ replace .Name "-" " " | title }}"
 author: "Author Name"
 pages: 300
-year: 1900
+year: 1900            # negative for BC, e.g. -350
+country: ""           # country the book comes from
+authorCountry: ""     # country the author comes from
 genre: "Fiction"
 collection: "Harvard Classics"
 haveRead: false

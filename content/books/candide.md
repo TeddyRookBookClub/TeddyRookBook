@@ -3,6 +3,8 @@ title: "Candide"
 author: "Voltaire"
 pages: 130
 year: 1759
+country: "France"
+authorCountry: "France"
 genre: "Fiction / Satire"
 collection: ""
 haveRead: false

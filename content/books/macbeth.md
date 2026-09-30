@@ -3,6 +3,8 @@ title: "Macbeth"
 author: "William Shakespeare"
 pages: 90
 year: 1606
+country: "England"
+authorCountry: "England"
 genre: "Drama"
 collection: "Harvard Classics Vol. 46"
 haveRead: false

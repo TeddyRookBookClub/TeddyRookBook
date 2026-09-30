@@ -3,6 +3,8 @@ title: "Anna Karenina"
 author: "Leo Tolstoy"
 pages: 864
 year: 1877
+country: "Russia"
+authorCountry: "Russia"
 genre: "Fiction"
 collection: "Great Books of the Western World"
 haveRead: false

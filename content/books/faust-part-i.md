@@ -3,6 +3,8 @@ title: "Faust, Part I"
 author: "Johann Wolfgang von Goethe"
 pages: 200
 year: 1808
+country: "Germany"
+authorCountry: "Germany"
 genre: "Drama / Poetry"
 collection: "Harvard Classics Vol. 19"
 haveRead: false

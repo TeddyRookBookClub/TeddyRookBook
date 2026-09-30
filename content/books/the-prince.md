@@ -3,6 +3,8 @@ title: "The Prince"
 author: "Niccolò Machiavelli"
 pages: 140
 year: 1513
+country: "Italy"
+authorCountry: "Italy"
 genre: "Political Philosophy"
 collection: "Harvard Classics Vol. 36"
 haveRead: false

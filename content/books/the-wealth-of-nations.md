@@ -3,6 +3,8 @@ title: "The Wealth of Nations"
 author: "Adam Smith"
 pages: 800
 year: 1776
+country: "Scotland"
+authorCountry: "Scotland"
 genre: "Economics"
 collection: "Harvard Classics Vol. 10"
 haveRead: false

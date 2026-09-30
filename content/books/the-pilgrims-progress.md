@@ -3,6 +3,8 @@ title: "The Pilgrim's Progress"
 author: "John Bunyan"
 pages: 320
 year: 1678
+country: "England"
+authorCountry: "England"
 genre: "Allegory / Fiction"
 collection: "Harvard Classics Vol. 15"
 haveRead: false

@@ -3,6 +3,8 @@ title: "Nicomachean Ethics"
 author: "Aristotle"
 pages: 200
 year: -350
+country: "Greece"
+authorCountry: "Greece"
 genre: "Philosophy"
 collection: "Great Books of the Western World"
 haveRead: false

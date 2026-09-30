@@ -3,6 +3,8 @@ title: "War and Peace"
 author: "Leo Tolstoy"
 pages: 1225
 year: 1869
+country: "Russia"
+authorCountry: "Russia"
 genre: "Fiction"
 collection: "Great Books of the Western World"
 haveRead: false

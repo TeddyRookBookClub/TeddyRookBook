@@ -3,6 +3,8 @@ title: "Utopia"
 author: "Thomas More"
 pages: 128
 year: 1516
+country: "England"
+authorCountry: "England"
 genre: "Political Philosophy"
 collection: "Harvard Classics Vol. 36"
 haveRead: false

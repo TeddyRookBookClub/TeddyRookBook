@@ -3,6 +3,8 @@ title: "The Federalist Papers (Selections)"
 author: "Alexander Hamilton, James Madison, John Jay"
 pages: 250
 year: 1788
+country: "United States"
+authorCountry: "United States"
 genre: "Political Philosophy"
 collection: "Harvard Classics Vol. 43"
 haveRead: false

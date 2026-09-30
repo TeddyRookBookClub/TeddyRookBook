@@ -3,6 +3,8 @@ title: "On the Origin of Species"
 author: "Charles Darwin"
 pages: 502
 year: 1859
+country: "England"
+authorCountry: "England"
 genre: "Science"
 collection: "Harvard Classics Vol. 11"
 haveRead: false

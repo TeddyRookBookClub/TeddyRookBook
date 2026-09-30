@@ -3,6 +3,8 @@ title: "Fear and Trembling"
 author: "Søren Kierkegaard"
 pages: 160
 year: 1843
+country: "Denmark"
+authorCountry: "Denmark"
 genre: "Philosophy"
 collection: ""
 haveRead: false

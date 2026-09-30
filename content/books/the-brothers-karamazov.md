@@ -3,6 +3,8 @@ title: "The Brothers Karamazov"
 author: "Fyodor Dostoevsky"
 pages: 840
 year: 1880
+country: "Russia"
+authorCountry: "Russia"
 genre: "Fiction"
 collection: "Great Books of the Western World"
 haveRead: false

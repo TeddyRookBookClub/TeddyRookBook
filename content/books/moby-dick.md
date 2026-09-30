@@ -3,6 +3,8 @@ title: "Moby-Dick"
 author: "Herman Melville"
 pages: 635
 year: 1851
+country: "United States"
+authorCountry: "United States"
 genre: "Fiction / Adventure"
 collection: ""
 haveRead: false

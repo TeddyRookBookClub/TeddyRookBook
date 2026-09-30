@@ -1,4 +1,4 @@
 ---
 title: "Library"
-description: "Every book in my collection, with reading status, format and shelf."
+description: "Every book in my collection, by author, year and country of origin."
 ---

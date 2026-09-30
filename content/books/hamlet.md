@@ -3,6 +3,8 @@ title: "Hamlet"
 author: "William Shakespeare"
 pages: 152
 year: 1600
+country: "England"
+authorCountry: "England"
 genre: "Drama"
 collection: "Harvard Classics Vol. 46"
 haveRead: false

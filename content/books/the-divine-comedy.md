@@ -3,6 +3,8 @@ title: "The Divine Comedy"
 author: "Dante Alighieri"
 pages: 432
 year: 1321
+country: "Italy"
+authorCountry: "Italy"
 genre: "Epic Poetry"
 collection: "Harvard Classics Vol. 20"
 haveRead: false

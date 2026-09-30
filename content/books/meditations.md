@@ -3,6 +3,8 @@ title: "Meditations"
 author: "Marcus Aurelius"
 pages: 192
 year: 180
+country: "Rome"
+authorCountry: "Rome"
 genre: "Philosophy"
 collection: "Harvard Classics Vol. 2"
 haveRead: true

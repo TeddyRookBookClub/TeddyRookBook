@@ -3,6 +3,8 @@ title: "Pride and Prejudice"
 author: "Jane Austen"
 pages: 432
 year: 1813
+country: "England"
+authorCountry: "England"
 genre: "Fiction"
 collection: "Harvard Classics Shelf of Fiction"
 haveRead: false

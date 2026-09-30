@@ -3,6 +3,8 @@ title: "A Tale of Two Cities"
 author: "Charles Dickens"
 pages: 340
 year: 1859
+country: "England"
+authorCountry: "England"
 genre: "Fiction"
 collection: ""
 haveRead: false

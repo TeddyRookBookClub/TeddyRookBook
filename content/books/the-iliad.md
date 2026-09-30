@@ -3,6 +3,8 @@ title: "The Iliad"
 author: "Homer"
 pages: 450
 year: -750
+country: "Greece"
+authorCountry: "Greece"
 genre: "Epic Poetry"
 collection: "Great Books of the Western World"
 haveRead: false

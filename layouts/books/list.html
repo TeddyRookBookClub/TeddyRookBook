@@ -1,302 +1,125 @@
 {{ define "main" }}
 <link rel="stylesheet" href="/css/books.css">
-<div class="books-page" style="max-width: 1200px; margin: 0 auto;">
-  <header class="books-header" style="margin-bottom: 1.5rem;">
-    <h1 style="margin: 0 0 0.25rem 0; font-size: 2rem;">📚 Library</h1>
-    <p style="color: #555; margin: 0; font-size: 1.05rem;">
-      {{ .Description | default "Every book in my collection, with reading status, format and shelf." }}
-    </p>
+<link rel="stylesheet" href="/css/library.css">
+{{ $flags := dict "England" "🇬🇧" "Scotland" "🇬🇧" "Russia" "🇷🇺" "France" "🇫🇷" "Spain" "🇪🇸" "Germany" "🇩🇪" "Denmark" "🇩🇰" "United States" "🇺🇸" "Greece" "🇬🇷" "Italy" "🇮🇹" "Rome" "🏛️" "Unknown" "❔" }}
+{{ $books := where (where .Site.RegularPages "Section" "books") "Params.isListPage" "!=" true }}
+{{ $countries := slice }}
+{{ range $books }}{{ with .Params.country }}{{ $countries = $countries | append . }}{{ end }}{{ with .Params.authorCountry }}{{ $countries = $countries | append . }}{{ end }}{{ end }}
+
+<div class="books-page lib">
+  <header class="lib-hero">
+    <p class="lib-eyebrow">The collection</p>
+    <h1>Library</h1>
+    <p class="lib-sub">{{ .Description | default "Every book in my collection, by author, year and country of origin." }}</p>
+    <div class="lib-stats">
+      <span class="lib-stat"><strong id="stat-total">0</strong> books</span>
+      <span class="lib-stat"><strong id="stat-authors">0</strong> authors</span>
+      <span class="lib-stat"><strong id="stat-countries">0</strong> countries</span>
+    </div>
   </header>
 
-  <!-- Stats -->
-  <div id="book-stats" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.95rem;">
-    <div style="background: #f8f9fa; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #eee;">
-      <strong id="stat-total">0</strong> total books
-    </div>
-    <div style="background: #e6f0f5; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #cfe0ea;">
-      🏠 <strong id="stat-owned">0</strong> owned
-    </div>
-    <div style="background: #e6f4ea; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #c3e6cb;">
-      ✅ <strong id="stat-read">0</strong> read
-    </div>
-    <div style="background: #fff3cd; padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid #ffeaa7;">
-      📖 <strong id="stat-unread">0</strong> to read
-    </div>
+  <div class="lib-controls">
+    <input type="search" id="book-search" placeholder="Search title or author…" aria-label="Search title or author">
+    <select id="filter-country" aria-label="Filter by country">
+      <option value="">Any country</option>
+      {{ range $countries | uniq | sort }}<option value="{{ . }}">{{ index $flags . | default "🌍" }} {{ . }}</option>{{ end }}
+    </select>
+    <button id="clear-filters" type="button">Clear</button>
   </div>
 
-  <!-- Filters -->
-  <div class="books-controls" style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 1rem; padding: 0.75rem; background: #fafafa; border: 1px solid #eee; border-radius: 8px;">
-    <div style="flex: 1; min-width: 220px;">
-      <input type="search" id="book-search" placeholder="Search title or author..." 
-             style="width: 100%; padding: 0.5rem 0.6rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem;">
-    </div>
-
-    <div>
-      <label style="font-size: 0.8rem; display: block; margin-bottom: 2px; color: #555;">Collection</label>
-      <select id="filter-collection" multiple size="3" style="min-width: 160px; padding: 0.25rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;">
-        <option value="Harvard Classics">Harvard Classics</option>
-        <option value="Harvard Classics Shelf of Fiction">Shelf of Fiction</option>
-        <option value="Great Books of the Western World">Great Books</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-
-    <div>
-      <label style="font-size: 0.8rem; display: block; margin-bottom: 2px; color: #555;">Status</label>
-      <select id="filter-status" style="padding: 0.4rem 0.5rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;">
-        <option value="">All</option>
-        <option value="read">✅ Read</option>
-        <option value="unread">📖 To Read</option>
-      </select>
-    </div>
-
-    <div>
-      <label style="font-size: 0.8rem; display: block; margin-bottom: 2px; color: #555;">Ownership</label>
-      <select id="filter-owned" style="padding: 0.4rem 0.5rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;">
-        <option value="">All</option>
-        <option value="owned">🏠 Owned</option>
-        <option value="notowned">Not owned</option>
-      </select>
-    </div>
-
-    <div>
-      <button id="clear-filters" type="button" 
-              style="margin-top: 1.1rem; padding: 0.4rem 0.7rem; background: #fff; border: 1px solid #004C2A; color: #004C2A; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-        Clear Filters
-      </button>
-    </div>
-  </div>
-
-  <!-- Table -->
-  <div style="overflow-x: auto;">
-    <table id="bookTable" style="width: 100%; border-collapse: collapse; font-size: 0.93rem; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+  <div class="lib-tablewrap">
+    <table id="libTable" class="lib-table">
       <thead>
-        <tr style="background: #004C2A; color: white;">
-          <th data-col="0" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Title <span class="sort-indicator"></span></th>
-          <th data-col="1" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Author <span class="sort-indicator"></span></th>
-          <th data-col="2" style="padding: 10px 12px; text-align: right; cursor: pointer; user-select: none; min-width: 60px;">Pages <span class="sort-indicator"></span></th>
-          <th data-col="3" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Year <span class="sort-indicator"></span></th>
-          <th data-col="4" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Genre <span class="sort-indicator"></span></th>
-          <th data-col="5" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Collection <span class="sort-indicator"></span></th>
-          <th data-col="6" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Status <span class="sort-indicator"></span></th>
-          <th data-col="7" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Format <span class="sort-indicator"></span></th>
-          <th data-col="8" style="padding: 10px 12px; text-align: left; cursor: pointer; user-select: none;">Shelf <span class="sort-indicator"></span></th>
-          <th style="padding: 10px 12px; text-align: left;">Notes</th>
+        <tr>
+          <th data-col="0" scope="col">Title <span class="sort-indicator"></span></th>
+          <th data-col="1" scope="col">Author <span class="sort-indicator"></span></th>
+          <th data-col="2" scope="col">Year <span class="sort-indicator"></span></th>
+          <th data-col="3" scope="col">Country <span class="sort-indicator"></span></th>
         </tr>
       </thead>
       <tbody>
-        {{ $pages := where .Site.RegularPages "Section" "books" }}
-        {{ range $pages }}
-          {{ if not .Params.isListPage }}
-          {{ $read := .Params.haveRead | default false }}
-          {{ $collection := .Params.collection | default "Other" }}
-          {{ $genre := .Params.genre | default "—" }}
-          <tr 
-            data-title="{{ .Title | lower }}"
+        {{ range sort $books "Title" }}
+        {{ $bc := .Params.country | default "" }}
+        {{ $ac := .Params.authorCountry | default "" }}
+        {{ $y := int (.Params.year | default 0) }}
+        <tr data-title="{{ .Title | lower }}"
             data-author="{{ .Params.author | default "" | lower }}"
-            data-collection="{{ $collection }}"
-            data-status="{{ if $read }}read{{ else }}unread{{ end }}"
-            data-owned="{{ if .Params.owned }}owned{{ else }}notowned{{ end }}"
-            data-genre="{{ $genre | lower }}"
-            style="border-bottom: 1px solid #eee;"
-          >
-            <td style="padding: 9px 12px; font-weight: 500;">
-              <a href="{{ .RelPermalink }}" style="color: #004C2A; text-decoration: none;">{{ .Title }}</a>
-            </td>
-            <td style="padding: 9px 12px;">{{ .Params.author | default "—" }}</td>
-            <td style="padding: 9px 12px; text-align: right; color: #555;">{{ .Params.pages | default "—" }}</td>
-            <td style="padding: 9px 12px; color: #555;">{{ .Params.year | default "—" }}</td>
-            <td style="padding: 9px 12px;">
-              <span style="background: #f0f0f0; padding: 1px 6px; border-radius: 3px; font-size: 0.8rem;">{{ $genre }}</span>
-            </td>
-            <td style="padding: 9px 12px; font-size: 0.85rem;">{{ $collection }}</td>
-            <td style="padding: 9px 12px;">
-              {{ if $read }}
-                <span style="color: #2e7d32; font-weight: 500;">✅ Read</span>
-              {{ else }}
-                <span style="color: #b36b00;">📖 To Read</span>
-              {{ end }}
-            </td>
-            <td style="padding: 9px 12px; font-size: 0.85rem;">{{ .Params.format | default "—" }}</td>
-            <td style="padding: 9px 12px; font-size: 0.85rem;">{{ .Params.shelf | default "—" }}</td>
-            <td style="padding: 9px 12px;">
-              <a href="{{ .RelPermalink }}" style="font-size: 0.8rem; color: #004C2A; text-decoration: underline;">View notes →</a>
-            </td>
-          </tr>
-          {{ end }}
+            data-year="{{ $y }}"
+            data-country="{{ $bc | lower }}"
+            data-countries="{{ $bc }}|{{ $ac }}">
+          <td class="lib-title" data-label="Title">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </td>
+          <td class="lib-author" data-label="Author">{{ .Params.author | default "—" }}</td>
+          <td class="lib-year" data-label="Year"><span>{{ if lt $y 0 }}{{ mul $y -1 }} BC{{ else if lt $y 500 }}{{ $y }} AD{{ else if eq $y 0 }}—{{ else }}{{ $y }}{{ end }}</span></td>
+          <td class="lib-country" data-label="Country">
+            {{ if $bc }}<div><i>Book</i> <span>{{ index $flags $bc | default "🌍" }} {{ $bc }}</span></div>{{ end }}
+            {{ if $ac }}<div><i>Author</i> <span>{{ index $flags $ac | default "🌍" }} {{ $ac }}</span></div>{{ end }}
+            {{ if and (not $bc) (not $ac) }}—{{ end }}
+          </td>
+        </tr>
         {{ end }}
       </tbody>
     </table>
+    <p id="lib-empty" class="lib-empty" hidden>No books match those filters.</p>
   </div>
 
-  <p style="margin-top: 1rem; font-size: 0.8rem; color: #777;">
-    Click any column header to sort. Use filters above to narrow the list. Add new books by creating a new Markdown file in <code>content/books/</code> (use the <code>book</code> archetype).
-  </p>
+  <p class="lib-foot">Click a column heading to sort. Add a book by creating a Markdown file in <code>content/books/</code> using the <code>book</code> template.</p>
 </div>
 
 <script>
-(function() {
-  const table = document.getElementById('bookTable');
-  if (!table) return;
+(function () {
+  var table = document.getElementById('libTable'); if (!table) return;
+  var tbody = table.tBodies[0], rows = Array.from(tbody.rows);
+  var q = document.getElementById('book-search'), fc = document.getElementById('filter-country'),
+      empty = document.getElementById('lib-empty');
+  var sortCol = 0, sortDir = 'asc';
 
-  const tbody = table.tBodies[0];
-  const rows = Array.from(tbody.rows);
-  const searchInput = document.getElementById('book-search');
-  const collSelect = document.getElementById('filter-collection');
-  const statusSelect = document.getElementById('filter-status');
-  const ownedSelect = document.getElementById('filter-owned');
-  const statOwned = document.getElementById('stat-owned');
-  const clearBtn = document.getElementById('clear-filters');
-
-  const statTotal = document.getElementById('stat-total');
-  const statRead = document.getElementById('stat-read');
-  const statUnread = document.getElementById('stat-unread');
-
-  let sortCol = null;
-  let sortDir = 'asc'; // 'asc' or 'desc'
-
-  function updateStats(visibleRows) {
-    const total = rows.length;
-    let read = 0, unread = 0;
-    rows.forEach(r => {
-      if (r.dataset.status === 'read') read++;
-      else unread++;
-    });
-    statTotal.textContent = total;
-    statOwned.textContent = rows.filter(r => r.dataset.owned === 'owned').length;
-    statRead.textContent = read;
-    statUnread.textContent = unread;
+  function stats() {
+    document.getElementById('stat-total').textContent = rows.length;
+    var au = {}; rows.forEach(function (r) { au[r.dataset.author] = 1; });
+    document.getElementById('stat-authors').textContent = Object.keys(au).length;
+    var set = {}; rows.forEach(function (r) { r.dataset.countries.split('|').forEach(function (c) { if (c && c !== 'Unknown') set[c] = 1; }); });
+    document.getElementById('stat-countries').textContent = Object.keys(set).length;
   }
-
-  function applyFilters() {
-    const q = (searchInput.value || '').toLowerCase().trim();
-    const selectedColls = Array.from(collSelect.selectedOptions).map(o => o.value);
-    const statusVal = statusSelect.value;
-    const ownedVal = ownedSelect.value;
-
-    let visibleCount = 0;
-
-    rows.forEach(row => {
-      const title = row.dataset.title || '';
-      const author = row.dataset.author || '';
-      const coll = row.dataset.collection || '';
-      const status = row.dataset.status || '';
-      const genre = row.dataset.genre || '';
-
-      let match = true;
-
-      if (q) {
-        match = match && (title.includes(q) || author.includes(q));
-      }
-      if (selectedColls.length > 0) {
-        match = match && selectedColls.some(c => coll.includes(c));
-      }
-      if (statusVal) {
-        match = match && (status === statusVal);
-      }
-      if (ownedVal) {
-        match = match && (row.dataset.owned === ownedVal);
-      }
-
-      if (match) {
-        row.style.display = '';
-        visibleCount++;
-      } else {
-        row.style.display = 'none';
-      }
+  function filter() {
+    var s = q.value.toLowerCase().trim(), c = fc.value, shown = 0;
+    rows.forEach(function (r) {
+      var ok = (!s || r.dataset.title.indexOf(s) > -1 || r.dataset.author.indexOf(s) > -1) &&
+               (!c || r.dataset.countries.split('|').indexOf(c) > -1);
+      r.style.display = ok ? '' : 'none'; if (ok) shown++;
     });
-
-    // Re-apply sort to currently visible rows if a sort is active
-    if (sortCol !== null) {
-      sortVisibleRows();
-    }
+    empty.hidden = shown > 0;
   }
-
-  function sortVisibleRows() {
-    if (sortCol === null) return;
-
-    const visibleRows = rows.filter(r => r.style.display !== 'none');
-
-    visibleRows.sort((a, b) => {
-      let x = a.cells[sortCol].textContent.trim().toLowerCase();
-      let y = b.cells[sortCol].textContent.trim().toLowerCase();
-
-      // Numeric columns (pages, year)
-      const numCols = [2, 3];
-      if (numCols.includes(sortCol)) {
-        const nx = parseFloat(x) || 0;
-        const ny = parseFloat(y) || 0;
-        return sortDir === 'asc' ? nx - ny : ny - nx;
-      }
-
-      if (x < y) return sortDir === 'asc' ? -1 : 1;
-      if (x > y) return sortDir === 'asc' ? 1 : -1;
-      return 0;
+  function key(r, col) {
+    if (col === 0) return r.dataset.title.replace(/^(the|a|an) /, '');
+    if (col === 1) return r.dataset.author;
+    if (col === 2) return parseInt(r.dataset.year, 10);
+    return r.dataset.country;
+  }
+  function sort() {
+    rows.sort(function (a, b) {
+      var x = key(a, sortCol), y = key(b, sortCol), d = (x < y ? -1 : x > y ? 1 : 0);
+      if (d === 0) d = a.dataset.title < b.dataset.title ? -1 : 1;
+      return sortDir === 'asc' ? d : -d;
     });
-
-    // Re-append only the visible sorted rows (hidden ones stay in place in DOM but we don't touch)
-    visibleRows.forEach(r => tbody.appendChild(r));
-  }
-
-  function updateSortIndicators() {
-    const headers = table.querySelectorAll('th[data-col]');
-    headers.forEach(h => {
-      const ind = h.querySelector('.sort-indicator');
-      if (!ind) return;
-      const col = parseInt(h.dataset.col, 10);
-      if (col === sortCol) {
-        ind.textContent = sortDir === 'asc' ? ' ▲' : ' ▼';
-      } else {
-        ind.textContent = '';
-      }
+    rows.forEach(function (r) { tbody.appendChild(r); });
+    table.querySelectorAll('th[data-col]').forEach(function (h) {
+      h.querySelector('.sort-indicator').textContent = (+h.dataset.col === sortCol) ? (sortDir === 'asc' ? '▲' : '▼') : '';
+      h.setAttribute('aria-sort', (+h.dataset.col === sortCol) ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none');
     });
   }
-
-  // Sorting
-  const headers = table.querySelectorAll('th[data-col]');
-  headers.forEach(header => {
-    header.addEventListener('click', () => {
-      const col = parseInt(header.dataset.col, 10);
-      if (sortCol === col) {
-        sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-      } else {
-        sortCol = col;
-        sortDir = 'asc';
-      }
-      updateSortIndicators();
-      // Sort only visible rows
-      sortVisibleRows();
+  table.querySelectorAll('th[data-col]').forEach(function (h) {
+    h.addEventListener('click', function () {
+      var c = +h.dataset.col; if (c === sortCol) sortDir = sortDir === 'asc' ? 'desc' : 'asc'; else { sortCol = c; sortDir = 'asc'; }
+      sort();
     });
   });
-
-  // Live filters
-  searchInput.addEventListener('input', () => {
-    applyFilters();
+  [q, fc].forEach(function (el) { el.addEventListener(el === q ? 'input' : 'change', filter); });
+  document.getElementById('clear-filters').addEventListener('click', function () {
+    q.value = ''; fc.value = ''; sortCol = 0; sortDir = 'asc'; filter(); sort();
   });
-
-  collSelect.addEventListener('change', applyFilters);
-  statusSelect.addEventListener('change', applyFilters);
-  ownedSelect.addEventListener('change', applyFilters);
-
-  clearBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    Array.from(collSelect.options).forEach(o => o.selected = false);
-    statusSelect.value = '';
-    ownedSelect.value = '';
-    rows.forEach(r => r.style.display = '');
-    sortCol = null;
-    sortDir = 'asc';
-    updateSortIndicators();
-    updateStats();
-  });
-
-  // Initial
-  updateStats();
-  updateSortIndicators();
-
-  // Bonus: pre-select "Harvard Classics" and "Shelf of Fiction" lightly? No, leave open.
-  // Keyboard hint
-  console.log('%c[Books] Enhanced sortable + filterable table ready', 'color:#004C2A');
+  stats(); sort(); filter();
 })();
 </script>
 {{ end }}

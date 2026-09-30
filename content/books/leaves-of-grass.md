@@ -3,6 +3,8 @@ title: "Leaves of Grass"
 author: "Walt Whitman"
 pages: 450
 year: 1855
+country: "United States"
+authorCountry: "United States"
 genre: "Poetry"
 collection: "Harvard Classics Vol. 42"
 haveRead: false

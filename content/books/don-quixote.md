@@ -3,6 +3,8 @@ title: "Don Quixote"
 author: "Miguel de Cervantes"
 pages: 1072
 year: 1605
+country: "Spain"
+authorCountry: "Spain"
 genre: "Fiction"
 collection: "Harvard Classics Vol. 14"
 haveRead: false

@@ -3,6 +3,8 @@ title: "The Master and Margarita"
 author: "Mikhail Bulgakov"
 pages: 402
 year: 1967
+country: "Russia"
+authorCountry: "Russia"
 genre: "Fiction / Satire"
 collection: ""
 haveRead: false

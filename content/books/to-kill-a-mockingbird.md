@@ -3,6 +3,8 @@ title: "To Kill a Mockingbird"
 author: "Harper Lee"
 pages: 376
 year: 1960
+country: "United States"
+authorCountry: "United States"
 genre: "Fiction"
 collection: ""
 haveRead: false

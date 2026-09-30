@@ -3,6 +3,8 @@ title: "Crime and Punishment"
 author: "Fyodor Dostoevsky"
 pages: 545
 year: 1866
+country: "Russia"
+authorCountry: "Russia"
 genre: "Fiction"
 collection: "Great Books of the Western World"
 haveRead: false

@@ -3,6 +3,8 @@ title: "The Odyssey"
 author: "Homer"
 pages: 350
 year: -800
+country: "Greece"
+authorCountry: "Greece"
 genre: "Epic Poetry"
 collection: "Harvard Classics Vol. 22"
 haveRead: false

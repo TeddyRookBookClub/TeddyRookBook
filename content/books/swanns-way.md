@@ -3,6 +3,8 @@ title: "Swann's Way"
 author: "Marcel Proust"
 pages: 450
 year: 1913
+country: "France"
+authorCountry: "France"
 genre: "Fiction"
 collection: ""
 haveRead: false

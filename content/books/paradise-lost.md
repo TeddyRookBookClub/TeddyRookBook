@@ -3,6 +3,8 @@ title: "Paradise Lost"
 author: "John Milton"
 pages: 350
 year: 1667
+country: "England"
+authorCountry: "England"
 genre: "Epic Poetry"
 collection: "Harvard Classics Vol. 4"
 haveRead: false

@@ -3,6 +3,8 @@ title: "The Republic"
 author: "Plato"
 pages: 300
 year: -380
+country: "Greece"
+authorCountry: "Greece"
 genre: "Philosophy"
 collection: "Great Books of the Western World"
 haveRead: true

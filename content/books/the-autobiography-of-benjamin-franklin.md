@@ -3,6 +3,8 @@ title: "The Autobiography of Benjamin Franklin"
 author: "Benjamin Franklin"
 pages: 300
 year: 1791
+country: "United States"
+authorCountry: "United States"
 genre: "Biography"
 collection: "Harvard Classics Vol. 1"
 haveRead: false
