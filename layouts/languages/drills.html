@@ -18,6 +18,8 @@
       <li><b>Text / Audio switches</b> choose, per language, whether you see it, hear it, both, or neither. Turn off English text to test yourself.</li>
       <li><b>Say it back.</b> Repeat the sentence out loud during the pause. <i>Pause between sentences</i> sets that gap (1–5 s), and <i>Repeat</i> plays the Latin and Greek up to three times.</li>
       <li><b>Speed</b> runs from 0.5× to 3.5×. It applies to all audio.</li>
+      <li><b>Word highlighting:</b> while a line is read by your device’s voice, each word lights up as it is spoken, using the timing the voice itself reports. The human Gospel Greek recording has no word timing, so it isn’t highlighted; set <i>Gospel Greek audio</i> to <i>Device voice</i> if you want highlighting there too. Some voices (for example Chrome’s online “Google” voices) don’t report timing, so nothing is highlighted rather than guessing.</li>
+      <li><b>Text size:</b> <i>A−</i> and <i>A+</i> at the top of the sentence box change the size of the sentences only. <i>Aa</i> at the top of every page changes the text size across the site.</li>
       <li><b>Pause to study.</b> While paused, tap any Latin or Greek word. The <i>Word study</i> panel shows its dictionary form, meaning, case/tense/mood and job in the sentence. Tick <i>Word-by-word glosses</i> to see a meaning under every word.</li>
       <li><b>▶ next to a line</b> plays just that language. ⏮ ⏭ move between sentences. On a keyboard: Space pauses, ← → go back and forward.</li>
       <li><b>What to practice</b> narrows the sentences to the Gospels (one Gospel or one passage), to all the classical authors, or to one work.</li>
@@ -27,8 +29,7 @@
       <li><b>About the audio:</b> Gospel Greek is a human reading (Marilyn Phemister). Everything else uses your device’s built-in voices, which differ between devices: Latin uses an Italian voice, and classical Greek uses a modern Greek voice, so its pronunciation is modern, not ancient. If you hear nothing, check that your device isn’t muted.</li>
     </ol>
   </details>
-  <div class="lang-grid">
-    <div>
+  <div class="drill-focus">
       <section class="stage" id="stage" aria-live="polite">
         <div class="study-pick" id="study-pick" hidden>
           <h2>What would you like to study?</h2>
@@ -39,7 +40,8 @@
           </div>
         </div>
         <div class="stage-head"><span class="ref" id="st-ref">Loading…</span><span class="ptitle" id="st-title"></span>
-          <button type="button" class="linkbtn study-chg" id="change-study">Studying: <b id="study-name">…</b> · Change</button></div>
+          <button type="button" class="linkbtn study-chg" id="change-study">Studying: <b id="study-name">…</b> · Change</button>
+          <span class="sfs" role="group" aria-label="Sentence text size"><button type="button" id="sfs-dn" aria-label="Smaller sentence text" title="Smaller sentence text">A−</button><button type="button" id="sfs-up" aria-label="Larger sentence text" title="Larger sentence text">A+</button></span></div>
         <div id="stage-rows"></div>
         <p class="hint">Paused: tap any Latin or Greek word to study it. Press ▶ on a line to hear just that language.</p>
       </section>
@@ -48,12 +50,16 @@
         <button class="cbtn play" id="btn-play" type="button" aria-label="Play"><span class="ico"></span><span class="lbl">Play</span></button>
         <button class="cbtn" id="btn-next" type="button" aria-label="Next sentence">⏭</button>
       </div>
+      <div class="box wstudy"><h3>Word study</h3><div class="wpanel" id="word-panel"></div></div>
+  </div>
+  <div class="drill-more">
       <div class="box">
         <div class="sliders">
           <div class="sl"><label for="speed">Speed <b id="speed-v">1.0×</b></label><input id="speed" type="range" min="0.5" max="3.5" step="0.1" value="1"></div>
           <div class="sl"><label for="gap">Pause between sentences <b id="gap-v">2 s</b></label><input id="gap" type="range" min="1" max="5" step="1" value="2"></div>
           <div class="sl"><label for="reps">Repeat each Latin/Greek line</label><select id="reps"><option value="1">Once</option><option value="2">Twice</option><option value="3">Three times</option></select></div>
           <div class="sl"><label for="text-mode">Show text</label><select id="text-mode"><option value="always">While it plays</option><option value="after">Only after I hear it</option></select></div>
+          <div class="sl"><label for="g-audio">Gospel Greek audio</label><select id="g-audio"><option value="human">Human reading (no word highlight)</option><option value="tts">Device voice (words highlighted)</option></select></div>
         </div>
         <div class="opts">
           <label><input type="checkbox" id="interlinear"> Word-by-word glosses when paused</label>
@@ -61,10 +67,8 @@
           <span>Keys: Space = play/pause · ← → = previous/next</span>
         </div>
         <p class="pool" id="voice-note" style="margin:.6rem 0 0"></p>
+        <p class="pool" id="hl-note" style="margin:.3rem 0 0" hidden></p>
       </div>
-    </div>
-    <aside class="side">
-      <div class="box"><h3>Word study</h3><div class="wpanel" id="word-panel"></div></div>
       <div class="box">
         <h3>Your progress <small style="text-transform:none;letter-spacing:0">(this device)</small></h3>
         <div class="stats">
@@ -93,10 +97,28 @@
         <div class="radios"><label><input type="radio" name="mode" value="shuffle"> Shuffle</label><label><input type="radio" name="mode" value="order"> In order</label></div>
         <span class="pool" id="pool-count"></span>
       </div>
-    </aside>
   </div>
   {{ partial "lang-credits.html" (dict "classics" true) }}
 </div>
+<script>
+/* If the drills never start (a script blocked or failed on this browser), say so and offer a fix instead of "Loading…" forever. */
+(function () {
+  var errs = [];
+  window.addEventListener('error', function (e) {
+    var s = e.target && e.target.src ? 'Could not download ' + e.target.src.split('/').pop().split('?')[0] : (e.message || 'Script error') + (e.filename ? ' (' + e.filename.split('/').pop().split('?')[0] + ':' + e.lineno + ')' : '');
+    errs.push(s);
+  }, true);
+  setTimeout(function () {
+    if (window.__drillsStarted) return;
+    var ref = document.getElementById('st-ref'), rows = document.getElementById('stage-rows');
+    if (ref) ref.textContent = 'The drills didn’t start';
+    if (rows) rows.innerHTML = '<div class="load-help"><p><b>The sentence drills didn’t start on this browser.</b> Reloading usually fixes it.</p>' +
+      '<p><button type="button" class="cbtn play" onclick="location.reload()">Reload the page</button> ' +
+      '<button type="button" class="cbtn" onclick="location.href=location.pathname+\'?fresh=\'+Date.now()">Reload fresh</button></p>' +
+      '<p class="muted">Still stuck? Turn off content blockers for this site, or try another browser.' + (errs.length ? '<br><small>Details: ' + errs.map(function (x) { return String(x).replace(/[<>&]/g, ''); }).join(' · ') + '</small>' : '') + '</p></div>';
+  }, 10000);
+})();
+</script>
 <script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
 <script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
 <script src="{{ "lang/drills.js" | relURL }}?v={{ (os.Stat "static/lang/drills.js").ModTime.Unix }}"></script>

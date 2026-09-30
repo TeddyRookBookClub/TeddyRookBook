@@ -10,10 +10,11 @@
   var GREEK_BOOKS = { MAT: 'Ματθαῖον', MRK: 'Μᾶρκον', LUK: 'Λουκᾶν', JHN: 'Ἰωάννην' };
 
   var cache = {};
-  function getJSON(name) {
-    if (!cache[name]) cache[name] = fetch(BASE + 'data/' + name).then(function (r) {
-      if (!r.ok) throw new Error('Could not load ' + name); return r.json();
-    });
+  // Failed downloads are forgotten so "Try again" can fetch them afresh; retry=true skips the browser cache.
+  function getJSON(name, retry) {
+    if (!cache[name]) cache[name] = fetch(BASE + 'data/' + name + (retry ? '?r=' + Date.now() : ''), retry ? { cache: 'reload' } : undefined).then(function (r) {
+      if (!r.ok) throw new Error('Could not load ' + name + ' (' + r.status + ')'); return r.json();
+    }).catch(function (e) { delete cache[name]; throw e; });
     return cache[name];
   }
 
@@ -42,13 +43,13 @@
     return shortGloss(e.g);
   }
   function shortGloss(s) { s = String(s || ''); if (/^\(/.test(s)) return s; return s.split(/[;,(]/)[0].trim(); }
-  function loadLex() {
-    return Promise.all([getJSON('grc-lex.json'), getJSON('lat-lex.json')]).then(function (r) { LEX.g = r[0]; LEX.l = r[1]; return LEX; });
+  function loadLex(retry) {
+    return Promise.all([getJSON('grc-lex.json', retry), getJSON('lat-lex.json', retry)]).then(function (r) { LEX.g = r[0]; LEX.l = r[1]; return LEX; });
   }
   // Classical sentences: which = 'L' (Latin) or 'G' (Greek). Resolves to { works, s: [...] }.
-  function loadClassics(which) {
+  function loadClassics(which, retry) {
     var n = which === 'L' ? 'lat' : 'grc';
-    return Promise.all([getJSON('cls-' + n + '.json'), getJSON('cls-' + n + '-lex.json')]).then(function (r) { LEX[which] = r[1]; return r[0]; });
+    return Promise.all([getJSON('cls-' + n + '.json', retry), getJSON('cls-' + n + '-lex.json', retry)]).then(function (r) { LEX[which] = r[1]; return r[0]; });
   }
 
   // ---------- word panel ----------
@@ -151,14 +152,23 @@
     this.token++; try { this.audio.pause(); } catch (e) { }
     if (W.speechSynthesis) W.speechSynthesis.cancel();
   };
-  Player.prototype.speak = function (text, kind, rate) {
+  // Word timing: the browser reports each word as the voice starts it (the "boundary" event), so the
+  // highlight follows the real speech. Voices that don't report it (e.g. Chrome's online "Google" voices)
+  // simply get no highlight. BOUNDARY[kind] records what each voice did: true, false or undefined (unknown).
+  var BOUNDARY = {};
+  Player.prototype.speak = function (text, kind, rate, onWord) {
     var self = this, tok = self.token;
     return new Promise(function (res) {
       if (!W.speechSynthesis) return res(false);
       var u = new SpeechSynthesisUtterance(text), v = voiceFor(kind);
       if (v) { u.voice = v; u.lang = v.lang; } else u.lang = { en: 'en-US', l: 'it-IT', g: 'el-GR' }[kind];
       u.rate = Math.max(0.1, Math.min(10, rate));
-      var done = false; function fin() { if (!done) { done = true; clearInterval(k); res(tok === self.token); } }
+      var got = false, vname = (u.voice && u.voice.name) || kind;
+      u.onboundary = function (e) {
+        if (tok !== self.token || (e.name && e.name !== 'word')) return;
+        got = true; BOUNDARY[vname] = true; if (onWord) onWord(e.charIndex, e.charLength);
+      };
+      var done = false; function fin() { if (!done) { done = true; clearInterval(k); if (onWord && tok === self.token) onWord(-1); if (!got && tok === self.token && text.length > 12 && BOUNDARY[vname] === undefined) BOUNDARY[vname] = false; res(tok === self.token); } }
       u.onend = fin; u.onerror = fin;
       // Chrome can stall long utterances; keep it alive and guard with a timeout.
       var k = setInterval(function () { if (tok !== self.token) { fin(); } else if (!W.speechSynthesis.speaking) { fin(); } }, 250);
@@ -218,10 +228,12 @@
   function latinText(toks) { return toks.map(function (t) { return (t[1] || '') + t[0] + (t[2] || ''); }).join('').trim(); }
   function greekText(toks) { return toks.map(function (t) { return t[0] + (t[1] || ''); }).join('').trim(); }
 
+  function voiceTiming(kind) { var v = voiceFor(kind); return BOUNDARY[(v && v.name) || kind]; }
+
   W.Gospels = {
     BOOKS: BOOKS, LATIN_BOOKS: LATIN_BOOKS, GREEK_BOOKS: GREEK_BOOKS, getJSON: getJSON, loadLex: loadLex, LEX: LEX,
     renderWords: renderWords, bindWords: bindWords, loadClassics: loadClassics, wordInfo: wordInfo, panelHTML: panelHTML, esc: esc,
-    Player: Player, voiceFor: voiceFor, loadProgress: loadProgress, saveProgress: saveProgress, sessionCount: sessionCount,
+    Player: Player, voiceFor: voiceFor, voiceTiming: voiceTiming, loadProgress: loadProgress, saveProgress: saveProgress, sessionCount: sessionCount,
     refLabel: refLabel, renderEnglish: renderEnglish, latinText: latinText, greekText: greekText, glossFor: glossFor
   };
 })(window, document);

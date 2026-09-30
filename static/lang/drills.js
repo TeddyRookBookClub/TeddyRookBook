@@ -18,7 +18,8 @@
   };
   var PREF_KEY = 'trb-gospels-prefs';
   var prefs = { study: null, order: ['g', 'en', 'l'], red: true, show: { en: true, g: true, l: true }, play: { en: true, g: true, l: true },
-    inc: { g: true, l: true }, speed: 1, gap: 2, reps: 1, src: 'ALL', book: 'ALL', passage: -1, mode: 'shuffle', text: 'always' };
+    inc: { g: true, l: true }, speed: 1, gap: 2, reps: 1, src: 'ALL', book: 'ALL', passage: -1, mode: 'shuffle', text: 'always',
+    gaudio: 'human', sfs: 1 };
   try { var sp = JSON.parse(W.localStorage.getItem(PREF_KEY)); if (sp) for (var k in sp) prefs[k] = sp[k]; } catch (e) { }
   if (!prefs.inc) prefs.inc = { g: true, l: true };
   if (prefs.order.length !== 3) prefs.order = ['g', 'en', 'l'];
@@ -26,7 +27,16 @@
 
   var data, cls = { L: null, G: null }, items = [], universe = [], pool = [], bag = [], history = [], hi = -1, cur = null, playing = false;
   var player = new G.Player(), progress = G.loadProgress(), panel = $('#word-panel'), picker = $('#study-pick');
-  var ready = Promise.all([G.getJSON('drills.json'), G.loadLex()]).then(function (r) { data = r[0]; });
+  var ready = null;
+  function loadBase(retry) {
+    if (data) return Promise.resolve();
+    if (!ready || retry) {
+      var p = ready = Promise.all([G.getJSON('drills.json', retry), G.loadLex(retry)]).then(function (r) { data = r[0]; });
+      p.catch(function () { if (ready === p) ready = null; });
+    }
+    return ready;
+  }
+  loadBase();
 
   // ---------- choosing what to study ----------
   function showPicker() {
@@ -39,20 +49,43 @@
     b.addEventListener('click', function () { choose(b.dataset.study); });
   });
   $('#change-study').addEventListener('click', showPicker);
-  function choose(study) {
+  var attempt = 0;
+  function loadMsg(html) { $('#stage-rows').innerHTML = html; }
+  function choose(study, retry) {
     prefs.study = study; savePrefs();
     picker.hidden = true; root.classList.remove('picking'); root.classList.add('loading');
+    $('#st-ref').textContent = 'Loading…'; $('#st-title').textContent = '';
+    var mine = ++attempt, t0 = Date.now();
+    loadMsg('<p class="muted load-msg">Loading the sentences…</p>');
+    // If the download is slow, say so and offer a way out instead of spinning forever.
+    var slow = setTimeout(function () {
+      if (mine !== attempt) return;
+      loadMsg('<div class="load-help"><p><b>This is taking longer than usual.</b> The lessons are a few megabytes, so a slow or busy connection can take a while.</p>' +
+        '<p><button type="button" class="cbtn" data-retry>Try again</button> <button type="button" class="cbtn" data-pick>Choose a smaller set</button></p>' +
+        '<p class="muted">Tip: <i>Latin</i> or <i>Greek</i> on its own loads less than <i>Both</i>.</p></div>');
+    }, 15000);
     var need = [];
-    if (study !== 'grc' && !cls.L) need.push(G.loadClassics('L').then(function (d) { cls.L = d; }));
-    if (study !== 'lat' && !cls.G) need.push(G.loadClassics('G').then(function (d) { cls.G = d; }));
-    ready.then(function () { return Promise.all(need); }).then(function () {
+    if (study !== 'grc' && !cls.L) need.push(G.loadClassics('L', retry).then(function (d) { cls.L = d; }));
+    if (study !== 'lat' && !cls.G) need.push(G.loadClassics('G', retry).then(function (d) { cls.G = d; }));
+    loadBase(retry).then(function () { return Promise.all(need); }).then(function () {
+      clearTimeout(slow); if (mine !== attempt) return;
       buildItems(); buildFilters(); buildLangRows(); rebuildPool(); history = []; hi = -1; cur = null; updateStats();
       $('#study-name').textContent = STUDY[study].name;
       root.dataset.study = study;
       next(false);
       root.classList.remove('loading');
-    }).catch(function (e) { root.classList.remove('loading'); $('#stage-rows').innerHTML = '<p class="err">Could not load the lesson data (' + G.esc(e.message) + ').</p>'; });
+    }).catch(function (e) {
+      clearTimeout(slow); if (mine !== attempt) return;
+      root.classList.remove('loading'); $('#st-ref').textContent = 'Could not load';
+      loadMsg('<div class="load-help"><p class="err"><b>The sentences didn’t download.</b> (' + G.esc(e.message) + ')</p>' +
+        '<p><button type="button" class="cbtn play" data-retry>Try again</button> <button type="button" class="cbtn" data-pick>Choose another set</button></p>' +
+        '<p class="muted">If it keeps failing: check the connection, turn off any content blocker or “Low Data Mode” for this site, or try another browser.</p></div>');
+    });
   }
+  $('#stage-rows').addEventListener('click', function (e) {
+    if (e.target.closest('[data-retry]')) choose(prefs.study, true);
+    else if (e.target.closest('[data-pick]')) { attempt++; showPicker(); }
+  });
 
   // ---------- items ----------
   // gospel item: { k:'gos', v } ; classical item: { k:'cls', lang:'L'|'G', s, work }
@@ -232,11 +265,58 @@
     if (it.k === 'gos' && k === 'g') return G.greekText(it.v.g);
     return G.latinText(toks(it, k));
   }
+  // Character offsets of each word in the text handed to the voice, so a reported position maps to a word.
+  function spans(it, k, text) {
+    if (k === 'en') return null;
+    var tk = toks(it, k), out = [], pos = 0, gos = it.k === 'gos' && k === 'g';
+    var full = gos ? tk.map(function (t) { return t[0] + (t[1] || ''); }).join('') : tk.map(function (t) { return (t[1] || '') + t[0] + (t[2] || ''); }).join('');
+    var lead = full.length - full.replace(/^\s+/, '').length;
+    tk.forEach(function (t) {
+      if (!gos) pos += (t[1] || '').length;
+      out.push([pos - lead, pos - lead + t[0].length]);
+      pos += t[0].length + ((gos ? t[1] : t[2]) || '').length;
+    });
+    return out;
+  }
+  function clearHL() {
+    $$('.w.hl', $('#stage-rows')).forEach(function (el) { el.classList.remove('hl'); });
+    if (W.CSS && CSS.highlights) CSS.highlights.delete('trb-word');
+  }
+  function highlighter(it, k, text) {
+    var sp = spans(it, k, text);
+    return function (ci, cl) {
+      clearHL(); if (ci < 0) return;
+      var row = $('.row-' + k + ' .row-txt', $('#stage-rows')); if (!row) return;
+      if (sp) { // Latin / Greek: light up the word's own element
+        var idx = -1;
+        for (var i = 0; i < sp.length; i++) { if (ci < sp[i][1]) { idx = i; break; } }
+        var el = idx >= 0 && $('.w[data-i="' + idx + '"]', row); if (el) el.classList.add('hl');
+        return;
+      }
+      if (!(W.CSS && CSS.highlights && W.Highlight)) return; // English: highlight the text range itself
+      var end = ci + (cl || (text.slice(ci).match(/^[\w’'\-]+/) || [''])[0].length); if (end <= ci) return;
+      var walker = D.createTreeWalker(row, NodeFilter.SHOW_TEXT), n, at = 0, r = D.createRange(), started = false;
+      while ((n = walker.nextNode())) {
+        var len = n.nodeValue.length;
+        if (!started && ci < at + len) { r.setStart(n, ci - at); started = true; }
+        if (started && end <= at + len) { r.setEnd(n, end - at); CSS.highlights.set('trb-word', new Highlight(r)); return; }
+        at += len;
+      }
+    };
+  }
   function say(it, k) {
     var rate = prefs.speed;
-    if (k === 'g' && it.k === 'gos' && it.v.a) return player.clip(it.v.a, rate);
-    if (k === 'g') return player.speak(textFor(it, 'g'), 'g', rate);
-    return player.speak(textFor(it, k), k === 'en' ? 'en' : 'l', rate * (k === 'l' ? 0.9 : 1));
+    if (k === 'g' && it.k === 'gos' && it.v.a && prefs.gaudio !== 'tts') return player.clip(it.v.a, rate);
+    var text = textFor(it, k), hl = highlighter(it, k, text);
+    var p = k === 'g' ? player.speak(text, 'g', rate, hl) : player.speak(text, k === 'en' ? 'en' : 'l', rate * (k === 'l' ? 0.9 : 1), hl);
+    return p.then(function (ok) { noteTiming(); return ok; });
+  }
+  function noteTiming() {
+    var off = ['l', 'g', 'en'].filter(function (k) { return G.voiceTiming(k) === false; });
+    var el = $('#hl-note'); if (!el) return;
+    el.hidden = !off.length;
+    el.textContent = off.length ? 'Word highlighting isn’t available for the ' + off.map(function (k) { return LANGS[k].name; }).join(' and ') +
+      ' voice on this browser: it doesn’t report when each word is spoken. Safari, and Chrome or Edge with a voice installed on the device, usually do.' : '';
   }
   var creditSpoken = false;
   function runItem() {
@@ -263,10 +343,11 @@
       return player.wait(prefs.gap * 1000).then(function (ok2) { if (ok2 && playing && mine === cur) next(true); });
     });
   }
+  var oneTok = 0;
   function playOne(k) {
     player.stop(); playing = false; setPlayBtn();
-    var it = items[cur]; renderStage(k);
-    say(it, k).then(function () { renderStage(); });
+    var it = items[cur], mine = ++oneTok; renderStage(k);
+    say(it, k).then(function () { if (mine === oneTok && !playing) renderStage(); });
   }
   function setPlayBtn() {
     var b = $('#btn-play'); b.classList.toggle('on', playing);
@@ -275,8 +356,8 @@
   }
   function togglePlay() {
     if (cur == null) return;
-    if (playing) { playing = false; player.stop(); setPlayBtn(); renderStage(); return; }
-    playing = true; setPlayBtn(); panel.classList.remove('open'); spoken = {}; renderStage(); runItem();
+    if (playing) { playing = false; player.stop(); clearHL(); setPlayBtn(); renderStage(); return; }
+    oneTok++; playing = true; setPlayBtn(); panel.classList.remove('open'); spoken = {}; renderStage(); runItem();
   }
 
   // ---------- progress ----------
@@ -314,6 +395,19 @@
     gp.addEventListener('input', function () { prefs.gap = +gp.value; sync(); savePrefs(); });
     rp.addEventListener('change', function () { prefs.reps = +rp.value; savePrefs(); });
     tx.addEventListener('change', function () { prefs.text = tx.value; savePrefs(); renderStage(); });
+    var ga = $('#g-audio'); ga.value = prefs.gaudio === 'tts' ? 'tts' : 'human';
+    ga.addEventListener('change', function () { prefs.gaudio = ga.value; savePrefs(); });
+    // Text size inside the sentence box (separate from the site-wide Aa setting)
+    var SF = [0.85, 1, 1.15, 1.3, 1.5, 1.75, 2];
+    function applySfs() {
+      var i = SF.indexOf(prefs.sfs); if (i < 0) { prefs.sfs = 1; i = 1; }
+      $('#stage').style.setProperty('--sfs', prefs.sfs);
+      $('#sfs-dn').disabled = i === 0; $('#sfs-up').disabled = i === SF.length - 1;
+    }
+    function stepSfs(d) { var i = SF.indexOf(prefs.sfs); prefs.sfs = SF[Math.max(0, Math.min(SF.length - 1, (i < 0 ? 1 : i) + d))]; savePrefs(); applySfs(); }
+    $('#sfs-dn').addEventListener('click', function () { stepSfs(-1); });
+    $('#sfs-up').addEventListener('click', function () { stepSfs(1); });
+    applySfs();
     $('#interlinear').addEventListener('change', function () { renderStage(); });
     var rl = $('#redletter'); rl.checked = prefs.red !== false; root.classList.toggle('no-red', !rl.checked);
     rl.addEventListener('change', function () { prefs.red = rl.checked; savePrefs(); root.classList.toggle('no-red', !rl.checked); });
@@ -341,4 +435,5 @@
 
   root.classList.remove('loading');
   showPicker();
+  W.__drillsStarted = true;
 })(window, document);

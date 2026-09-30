@@ -1,0 +1,15 @@
+{{- /* Text size: applied before the page paints so there is no jump. Set by the Aa button in the header. */ -}}
+<script>(function(){try{var f=parseFloat(localStorage.getItem('trb-fs'));if(f>0.7&&f<1.8)document.documentElement.style.setProperty('--fs',f)}catch(e){}})();</script>
+<style>
+html{font-size:calc(16px * var(--fs,1))}
+body{font-size:calc(18px * var(--fs,1))}
+.trb-fs{position:relative;display:inline-flex;margin-left:.6rem}
+.trb-fs-btn{background:none;border:0;cursor:pointer;color:var(--primary);font:700 15px/1 system-ui,sans-serif;padding:4px 6px;border-radius:6px}
+.trb-fs-btn:hover{background:var(--tertiary)}
+.trb-fs-pop{position:absolute;top:130%;left:50%;transform:translateX(-50%);z-index:200;background:var(--entry);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.15);padding:.45rem;display:flex;align-items:center;gap:.35rem;white-space:nowrap;font:14px system-ui,sans-serif}
+.trb-fs-pop[hidden]{display:none}
+@media (max-width:700px){.trb-fs-pop{left:auto;right:-40px;transform:none}}
+.trb-fs-pop button{border:1px solid var(--border);background:var(--theme);color:var(--primary);border-radius:8px;min-width:34px;height:32px;cursor:pointer;font:600 14px system-ui,sans-serif}
+.trb-fs-pop button:hover{border-color:#004C2A}
+.trb-fs-pop output{min-width:3.2em;text-align:center;color:var(--secondary);font-variant-numeric:tabular-nums}
+</style>

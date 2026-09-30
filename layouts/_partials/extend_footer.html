@@ -8,3 +8,28 @@
 .trb-social a:hover{color:var(--primary)}
 .trb-social svg{width:18px;height:18px}
 </style>
+<script>
+/* Text-size control in the header (next to the light/dark switch). Remembered on this device. */
+(function () {
+  var sw = document.querySelector('.logo-switches'); if (!sw) return;
+  var STEPS = [0.85, 0.93, 1, 1.1, 1.2, 1.32, 1.45], root = document.documentElement;
+  function cur() { var f = parseFloat(getComputedStyle(root).getPropertyValue('--fs')) || 1; var best = 2; STEPS.forEach(function (s, i) { if (Math.abs(s - f) < Math.abs(STEPS[best] - f)) best = i; }); return best; }
+  var wrap = document.createElement('span'); wrap.className = 'trb-fs';
+  wrap.innerHTML = '<button type="button" class="trb-fs-btn" aria-expanded="false" aria-label="Text size" title="Text size">Aa</button>' +
+    '<span class="trb-fs-pop" role="group" aria-label="Text size" hidden><button type="button" data-d="-1" aria-label="Smaller text">A−</button><output></output><button type="button" data-d="1" aria-label="Larger text">A+</button><button type="button" data-d="0" aria-label="Reset text size">Reset</button></span>';
+  sw.appendChild(wrap);
+  var btn = wrap.firstChild, pop = wrap.lastChild, out = pop.querySelector('output');
+  function set(i) {
+    i = Math.max(0, Math.min(STEPS.length - 1, i)); var f = STEPS[i];
+    if (f === 1) root.style.removeProperty('--fs'); else root.style.setProperty('--fs', f);
+    try { if (f === 1) localStorage.removeItem('trb-fs'); else localStorage.setItem('trb-fs', f); } catch (e) { }
+    out.textContent = Math.round(f * 100) + '%';
+    pop.querySelector('[data-d="-1"]').disabled = i === 0; pop.querySelector('[data-d="1"]').disabled = i === STEPS.length - 1;
+    window.dispatchEvent(new Event('resize'));
+  }
+  btn.addEventListener('click', function (e) { e.stopPropagation(); pop.hidden = !pop.hidden; btn.setAttribute('aria-expanded', !pop.hidden); if (!pop.hidden) set(cur()); });
+  pop.addEventListener('click', function (e) { e.stopPropagation(); var b = e.target.closest('[data-d]'); if (!b) return; var d = +b.dataset.d; set(d === 0 ? 2 : cur() + d); });
+  document.addEventListener('click', function () { pop.hidden = true; btn.setAttribute('aria-expanded', 'false'); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') pop.hidden = true; });
+})();
+</script>
