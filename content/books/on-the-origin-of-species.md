@@ -3,10 +3,14 @@ title: "On the Origin of Species"
 author: "Charles Darwin"
 pages: 502
 year: 1859
+country: "England"
+authorCountry: "England"
 genre: "Science"
 collection: "Harvard Classics Vol. 11"
 haveRead: false
-podcast: ""
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-20"
 audiobook: "12h 55m"
 links: []
@@ -17,5 +21,5 @@ links: []
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 **Status:** 📖 To Read

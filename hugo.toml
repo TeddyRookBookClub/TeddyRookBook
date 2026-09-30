@@ -1,24 +1,40 @@
 baseURL = "https://teddyrookbookclub.com/"
-title = "Teddy Rook Book Club"
+title = "Teddy Rook Book"
 theme = "PaperMod"
 languageCode = "en"
 defaultContentLanguage = "en"
 
 # Appearance
-paginate = 10
 summaryLength = 30
 
-# Menu (we'll expand later)
+[pagination]
+  pagerSize = 10
+
+# Menu
 [[menu.main]]
-name = "Reading List"
-url = "/#my-reading-list"
+name = "Library"
+url = "/books/"
 weight = 1
 
+[[menu.main]]
+name = "Infographics"
+url = "/infographics/"
+weight = 2
+
+[[menu.main]]
+name = "Languages"
+url = "/languages/"
+weight = 3
+
+[[menu.main]]
+name = "Games"
+url = "/games/"
+weight = 4
 
 # PaperMod settings
 [params]
   author = "Teddy Rook"
-  description = "A personal reading list and notes on the Great Books — Harvard Classics, Great Books of the Western World, and beyond."
+  description = "A personal library catalog, reading notes on the Great Books, and infographics about books and ideas."
   defaultTheme = "auto"        # light/dark/auto
   ShowReadingTime = false
   ShowShareButtons = true

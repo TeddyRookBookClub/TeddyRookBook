@@ -1,16 +1,15 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/books.css">
+<link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
 {{ $read := .Params.haveRead | default false }}
 {{ $collection := .Params.collection | default "Other" }}
 {{ $genre := .Params.genre | default "" }}
 {{ $pages := .Params.pages | default "" }}
 {{ $year := .Params.year | default "" }}
 {{ $author := .Params.author | default "" }}
-{{ $podcast := .Params.podcast | default "" }}
 
 <article class="book-single" style="max-width: 820px; margin: 0 auto;">
   <nav style="margin-bottom: 1rem;">
-    <a href="/books/" style="color: #004C2A; text-decoration: none; font-size: 0.9rem;">← Back to Books list</a>
+    <a href="/books/" style="color: #004C2A; text-decoration: none; font-size: 0.9rem;">← Back to Library</a>
   </nav>
 
   <header>
@@ -25,31 +24,36 @@
       {{ if $pages }}<span style="background:#f1f1f1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">{{ $pages }} pages</span>{{ end }}
       {{ if $genre }}<span style="background:#e8f0e8; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#2c5a2c;">{{ $genre }}</span>{{ end }}
       <span style="background:#e6f0f5; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#1e4a5f;">{{ $collection }}</span>
+      {{ if .Params.owned }}<span style="background:#e6f0f5; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#1e4a5f;">🏠 Owned{{ with .Params.format }} · {{ . }}{{ end }}</span>{{ end }}
+      {{ with .Params.shelf }}<span style="background:#f1f1f1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">📍 {{ . }}</span>{{ end }}
       <span style="background: {{ if $read }}#e6f4ea{{ else }}#fff3cd{{ end }}; padding:2px 8px; border-radius:4px; font-size:0.85rem; color: {{ if $read }}#2e7d32{{ else }}#8a6d00{{ end }};">
         {{ if $read }}✅ Read{{ else }}📖 To Read{{ end }}
       </span>
     </div>
   </header>
 
+  {{ $slug := .File.ContentBaseName }}
+  {{ $igs := slice }}{{ range site.Data.infographics }}{{ if and .show (in (.books | default slice) $slug) }}{{ $igs = $igs | append . }}{{ end }}{{ end }}
+  {{ with $igs }}
+  <section style="margin: 0 0 1.5rem;">
+    <h2 style="font-size:1.15rem;color:#004C2A;margin:0 0 .6rem;">🖼️ Infographics about this book</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.8rem;">
+      {{ range . }}<a href="/infographics/#{{ .file }}" style="display:block;text-decoration:none;color:inherit;border:1px solid #dde5df;border-radius:10px;overflow:hidden;">
+        <img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy" style="display:block;width:100%;height:170px;object-fit:cover;object-position:top;margin:0;">
+        <span style="display:block;padding:.4rem .55rem;font-size:.85rem;font-weight:600;">{{ .title }}</span></a>{{ end }}
+    </div>
+  </section>
+  {{ end }}
+
   <div class="book-content" style="font-size: 1.02rem; line-height: 1.65;">
     {{ .Content }}
   </div>
 
-  {{ if $podcast }}
-  <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-left: 4px solid #004C2A;">
-    <strong>🎙️ Related Podcast Episode</strong><br>
-    <a href="{{ $podcast }}" target="_blank" rel="noopener">Listen here →</a>
-  </div>
-  {{ else }}
-  <div style="margin-top: 2rem; padding: 0.75rem 1rem; background: #fafafa; border: 1px dashed #ccc; font-size: 0.9rem; color: #666;">
-    No podcast episode linked yet. (Add <code>podcast: "https://..."</code> in frontmatter when ready.)
-  </div>
-  {{ end }}
 
   <footer style="margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.85rem; color: #777;">
     Edit this page’s notes by editing the Markdown file in <code>content/books/{{ .File.BaseFileName }}.md</code>.
     <br>
-    <a href="/books/" style="color: #004C2A;">← Return to full reading list</a>
+    <a href="/books/" style="color: #004C2A;">← Return to the Library</a>
   </footer>
 </article>
 {{ end }}

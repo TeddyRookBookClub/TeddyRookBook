@@ -3,10 +3,14 @@ title: "The Wealth of Nations"
 author: "Adam Smith"
 pages: 800
 year: 1776
+country: "Scotland"
+authorCountry: "Scotland"
 genre: "Economics"
 collection: "Harvard Classics Vol. 10"
 haveRead: false
-podcast: ""
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-04-28"
 audiobook: "22h 40m"
 links: []
@@ -17,5 +21,5 @@ links: []
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 **Status:** 📖 To Read

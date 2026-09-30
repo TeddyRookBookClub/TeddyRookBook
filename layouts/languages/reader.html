@@ -1,0 +1,44 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<div class="lang" id="reader">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Gospel Reader</p>
+    <h1><span class="grc">Εὐαγγέλιον</span> · <span class="lat">Evangelium</span></h1>
+    <p>The four Gospels in Koine Greek and the Latin Vulgate. Hover or tap any word to see how it works. Verses marked ★ are in the drills and include English and recorded Greek audio.</p>
+  </header>
+  <details class="lang-help">
+    <summary>❓ How the reader works</summary>
+    <ol>
+      <li><b>Pick a Gospel and chapter</b> at the top, or use ‹ › to turn chapters.</li>
+      <li><b>Greek / Latin / English</b> switch the columns. English (ESV) appears only for the 499 drill verses, marked ★. <i>★ only</i> hides the other verses.</li>
+      <li><b>Hover</b> (or tap on a phone) any Greek or Latin word for a quick meaning; <b>click</b> it for the full breakdown in the <i>Word study</i> panel.</li>
+      <li><b>Glosses</b> puts a short meaning under every word, like an interlinear Bible.</li>
+      <li><b>▶ after a verse</b> reads it aloud. ★ verses use the recorded Greek; the rest use your device’s voices. <i>Speed</i> sets the pace.</li>
+      <li><b>Red letters</b> mark the words of Jesus. In Greek and Latin the red is matched from the English and can be off by a word or two at the start or end of a quote.</li>
+      <li>Verse numbers sometimes differ slightly between the Greek, the Latin Vulgate and the ESV; each column shows its own text for that number.</li>
+    </ol>
+  </details>
+  <div class="rbar">
+    <select id="r-book" aria-label="Book"><option value="MAT">Matthew</option><option value="MRK">Mark</option><option value="LUK">Luke</option><option value="JHN">John</option></select>
+    <select id="r-chap" aria-label="Chapter"></select>
+    <button class="cbtn" id="r-prev" type="button" aria-label="Previous chapter">‹</button>
+    <button class="cbtn" id="r-next" type="button" aria-label="Next chapter">›</button>
+    <span class="sep"></span>
+    <label><input type="checkbox" id="t-g"> Greek</label>
+    <label><input type="checkbox" id="t-l"> Latin</label>
+    <label><input type="checkbox" id="t-en"> English</label>
+    <label><input type="checkbox" id="t-inter"> Glosses</label>
+    <label><input type="checkbox" id="t-only"> ★ only</label>
+    <label><input type="checkbox" id="t-red"> Red letters</label>
+    <span class="speed">Speed <input type="range" id="r-speed" min="0.5" max="3.5" step="0.1" value="1"><b id="r-speed-v">1.0×</b></span>
+  </div>
+  <div class="lang-grid">
+    <article id="text"><p class="muted">Loading…</p></article>
+    <aside class="side"><div class="box"><h3>Word study</h3><div class="wpanel" id="word-panel"><p class="wp-empty">Hover over a word for a quick look, or click it for the full breakdown. Press ▶ after a verse to hear it.</p></div></div></aside>
+  </div>
+  {{ partial "lang-credits.html" . }}
+</div>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/reader.js" | relURL }}?v={{ (os.Stat "static/lang/reader.js").ModTime.Unix }}"></script>
+{{ end }}

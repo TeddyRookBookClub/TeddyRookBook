@@ -3,12 +3,16 @@ title: "To Kill a Mockingbird"
 author: "Harper Lee"
 pages: 376
 year: 1960
+country: "United States"
+authorCountry: "United States"
 genre: "Fiction"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "12h 15m"
-podcast: ""
 links: []
 ---
 

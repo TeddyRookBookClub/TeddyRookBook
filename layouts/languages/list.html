@@ -1,0 +1,32 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<div class="lang">
+  <header class="lang-hero">
+    <p class="lang-eyebrow">Languages</p>
+    <h1><span class="grc">Κοινή</span> &amp; <span class="lat">Latina</span></h1>
+    <p>Learn Koine Greek and Latin the way they were read for centuries: through the Gospels. Hear each sentence in English, Greek and Latin, then tap any word to see what it means and why it has that form.</p>
+  </header>
+  {{ partial "lang-notice.html" . }}
+  <section class="lang-cards">
+    <a class="lang-card" href="{{ "languages/gospels/" | relURL }}">
+      <span class="big" aria-hidden="true">🎧</span>
+      <h2>Gospel Drills</h2>
+      <p>Glossika-style listening. 499 well-known Gospel sentences play in any order you choose: English, Greek, Latin, or any mix. Adjust the speed from 0.5× to 3.5× and the pause between sentences. Pause at any time to study the grammar.</p>
+      <span class="go">Start listening →</span>
+    </a>
+    <a class="lang-card" href="{{ "languages/reader/" | relURL }}">
+      <span class="big" aria-hidden="true">📜</span>
+      <h2>Gospel Reader</h2>
+      <p>Matthew, Mark, Luke and John in full, in Koine Greek and the Latin Vulgate, side by side. Hover or tap any word for its dictionary form, meaning, case, tense, mood and role in the sentence.</p>
+      <span class="go">Open the reader →</span>
+    </a>
+    <a class="lang-card" href="{{ "infographics/" | relURL }}">
+      <span class="big" aria-hidden="true">🖼️</span>
+      <h2>Koine Greek &amp; Latin chart</h2>
+      <p>The companion infographic: alphabets, cases and how the two languages line up.</p>
+      <span class="go">See the infographics →</span>
+    </a>
+  </section>
+  {{ partial "lang-credits.html" . }}
+</div>
+{{ end }}

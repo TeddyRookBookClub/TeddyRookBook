@@ -3,12 +3,16 @@ title: "The Sun Also Rises"
 author: "Ernest Hemingway"
 pages: 250
 year: 1926
+country: "United States"
+authorCountry: "United States"
 genre: "Fiction"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "6h 50m"
-podcast: ""
 links: []
 ---
 

@@ -3,10 +3,14 @@ title: "Meditations"
 author: "Marcus Aurelius"
 pages: 192
 year: 180
+country: "Rome"
+authorCountry: "Rome"
 genre: "Philosophy"
 collection: "Harvard Classics Vol. 2"
 haveRead: true
-podcast: ""
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-22"
 audiobook: "5h 10m"
 links:
@@ -28,5 +32,5 @@ One of the most practical philosophy books ever written. Marcus writes as a man 
 - Memento mori: remember you will die — use it to cut through petty concerns.
 - Treat others with justice and kindness even when difficult.
 I read this slowly over a month, a few pages each morning. It pairs incredibly well with Epictetus (also in HC Vol 2).
-**For the book club:** Great discussion on leadership under pressure and maintaining character in public life.
+**Takeaway:** Great discussion on leadership under pressure and maintaining character in public life.
 **Status:** ✅ Read (multiple times, favorite passages marked)

@@ -3,10 +3,14 @@ title: "The Odyssey"
 author: "Homer"
 pages: 350
 year: -800
+country: "Greece"
+authorCountry: "Greece"
 genre: "Epic Poetry"
 collection: "Harvard Classics Vol. 22"
 haveRead: false
-podcast: ""
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-10"
 audiobook: "11h 15m"
 links: []
@@ -17,5 +21,5 @@ links: []
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 **Status:** 📖 To Read

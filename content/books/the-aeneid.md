@@ -3,12 +3,16 @@ title: "The Aeneid"
 author: "Virgil"
 pages: 400
 year: -19
+country: "Rome"
+authorCountry: "Rome"
 genre: "Epic Poetry"
 collection: "Harvard Classics Vol. 13"
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-25"
 audiobook: "10h 30m"
-podcast: ""
 links: []
 ---
 
@@ -24,7 +28,7 @@ links: []
 
 ## My Notes & Reflections
 
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 
 **Status:** 📖 To Read
 

@@ -3,12 +3,16 @@ title: "Faust, Part I"
 author: "Johann Wolfgang von Goethe"
 pages: 200
 year: 1808
+country: "Germany"
+authorCountry: "Germany"
 genre: "Drama / Poetry"
 collection: "Harvard Classics Vol. 19"
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-25"
 audiobook: "6h 15m"
-podcast: ""
 links: []
 ---
 
@@ -24,7 +28,7 @@ links: []
 
 ## My Notes & Reflections
 
-(Add your thoughts, themes, how it connects to other books, discussion questions for the club...)
+(Add your thoughts, themes, how it connects to other books, questions to revisit...)
 
 **Status:** 📖 To Read
 

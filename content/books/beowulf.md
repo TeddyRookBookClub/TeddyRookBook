@@ -3,12 +3,16 @@ title: "Beowulf"
 author: "Anonymous"
 pages: 120
 year: 1000
+country: "England"
+authorCountry: "Unknown"
 genre: "Epic Poetry"
 collection: ""
 haveRead: false
+owned: true
+format: ""
+shelf: ""
 lastUpdated: "2026-05-26"
 audiobook: "3h 45m"
-podcast: ""
 links: []
 ---
 
