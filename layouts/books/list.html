@@ -59,7 +59,7 @@
             {{- $eds := .Params.editions | default slice }}{{ $en := slice }}{{ range $eds }}{{ $en = $en | append .set }}{{ end }}
             data-sets="{{ delimit $en "|" }}"
             data-copies="{{ len $eds }}"
-            data-notes="{{ .Params.notes | default "" | lower }} {{ range $eds }}{{ .set | lower }} {{ .detail | default "" | lower }} {{ end }}">
+            data-notes="{{ .Params.notes | default "" | lower }} {{ range .Params.posts }}{{ .title | lower }} {{ end }}{{ range $eds }}{{ .set | lower }} {{ .detail | default "" | lower }} {{ end }}">
           <td class="lib-title" data-label="Title">
             <a href="{{ .RelPermalink }}">{{ .Title }}</a>
             {{ $slug := .File.ContentBaseName }}
@@ -75,7 +75,8 @@
           <td class="lib-notes" data-label="Notes">
             {{ range $eds }}{{ $k := index $setKeys .set }}<span class="lib-ed">{{ if $k }}<a href="#set-{{ $k }}">{{ .set }}{{ with .vol }} <b>{{ . }}</b>{{ end }}</a>{{ else }}{{ .set }}{{ with .vol }} <b>{{ . }}</b>{{ end }}{{ end }}{{ with .detail }}<small>{{ . }}</small>{{ end }}</span>{{ end }}
             {{ with .Params.notes }}<p>{{ . }}</p>{{ end }}
-            {{ if and (not $eds) (not .Params.notes) }}<span class="lib-none">—</span>{{ end }}
+            {{ range .Params.posts }}<a class="lib-post" href="{{ .url }}" target="_blank" rel="noopener">𝕏 {{ .title }} ↗</a>{{ end }}
+            {{ if and (not $eds) (not .Params.notes) (not .Params.posts) }}<span class="lib-none">—</span>{{ end }}
           </td>
         </tr>
         {{ end }}
