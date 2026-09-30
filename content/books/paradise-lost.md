@@ -6,21 +6,27 @@ year: 1667
 country: "England"
 authorCountry: "England"
 genre: "Epic Poetry"
-collection: "Harvard Classics Vol. 4"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "9h 10m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "4"
+  - set: "Great Books"
+    vol: "29"
+  - set: "Canterbury Classics"
+    detail: "illustrated by Gustave Doré"
+notes: "3 copies"
 ---
 
 # Paradise Lost
 
 **John Milton • 1667 • ~350 pages**
 
-*Harvard Classics Vol. 4*
 
 ## Key Quotes
 

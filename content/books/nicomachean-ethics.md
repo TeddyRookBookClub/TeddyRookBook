@@ -6,21 +6,23 @@ year: -350
 country: "Greece"
 authorCountry: "Greece"
 genre: "Philosophy"
-collection: "Great Books of the Western World"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "6h 20m"
 links: []
+editions:
+  - set: "Great Books"
+    vol: "8"
+notes: ""
 ---
 
 # Nicomachean Ethics
 
 **Aristotle • -350 • ~200 pages**
 
-*Great Books of the Western World*
 
 ## Key Quotes
 

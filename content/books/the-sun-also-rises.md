@@ -6,14 +6,17 @@ year: 1926
 country: "United States"
 authorCountry: "United States"
 genre: "Fiction"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "6h 50m"
 links: []
+editions:
+  - set: "Barnes & Noble Leatherbound"
+    detail: "in Ernest Hemingway: Four Novels"
+notes: ""
 ---
 
 # The Sun Also Rises

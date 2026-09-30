@@ -6,21 +6,28 @@ year: -19
 country: "Rome"
 authorCountry: "Rome"
 genre: "Epic Poetry"
-collection: "Harvard Classics Vol. 13"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "10h 30m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "13"
+    detail: "John Dryden translation"
+  - set: "Great Books"
+    vol: "12"
+  - set: "Penguin Classics"
+    detail: "Robert Fagles translation"
+notes: "3 copies in at least 2 translations (Dryden, Fagles)"
 ---
 
 # The Aeneid
 
 **Virgil • -19 • ~400 pages**
 
-*Harvard Classics Vol. 13*
 
 ## Key Quotes
 

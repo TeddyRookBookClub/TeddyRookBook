@@ -6,18 +6,24 @@ year: 1600
 country: "England"
 authorCountry: "England"
 genre: "Drama"
-collection: "Harvard Classics Vol. 46"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-24"
+lastUpdated: "2026-09-30"
 audiobook: "4h 05m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "46"
+  - set: "Great Books"
+    vol: "24–25"
+  - set: "Barnes & Noble Leatherbound"
+    detail: "in The Complete Works"
+notes: "3 copies"
 ---
 # Hamlet
 **William Shakespeare • 1600 • ~152 pages**
-*Harvard Classics Vol. 46*
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

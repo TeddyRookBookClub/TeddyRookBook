@@ -6,14 +6,15 @@ year: 1913
 country: "France"
 authorCountry: "France"
 genre: "Fiction"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "14h 30m"
 links: []
+editions: []
+notes: ""
 ---
 
 # Swann's Way

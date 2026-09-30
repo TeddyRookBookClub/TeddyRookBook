@@ -6,14 +6,15 @@ year: 1924
 country: "Germany"
 authorCountry: "Germany"
 genre: "Fiction"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "22h 00m"
 links: []
+editions: []
+notes: ""
 ---
 
 # The Magic Mountain

@@ -6,14 +6,15 @@ year: 1967
 country: "Russia"
 authorCountry: "Russia"
 genre: "Fiction / Satire"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "14h 00m"
 links: []
+editions: []
+notes: ""
 ---
 
 # The Master and Margarita

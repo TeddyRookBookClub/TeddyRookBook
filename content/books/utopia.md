@@ -6,18 +6,20 @@ year: 1516
 country: "England"
 authorCountry: "England"
 genre: "Political Philosophy"
-collection: "Harvard Classics Vol. 36"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-04-20"
+lastUpdated: "2026-09-30"
 audiobook: "3h 50m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "36"
+notes: ""
 ---
 # Utopia
 **Thomas More • 1516 • ~128 pages**
-*Harvard Classics Vol. 36*
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

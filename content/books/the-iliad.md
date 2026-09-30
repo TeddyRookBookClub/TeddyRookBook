@@ -6,21 +6,26 @@ year: -750
 country: "Greece"
 authorCountry: "Greece"
 genre: "Epic Poetry"
-collection: "Great Books of the Western World"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "11h 20m"
 links: []
+editions:
+  - set: "Great Books"
+    vol: "3"
+    detail: "Richmond Lattimore translation"
+  - set: "Penguin Classics"
+    detail: "Robert Fagles translation, 2 copies"
+notes: "3 copies in 2 translations (Lattimore, Fagles)"
 ---
 
 # The Iliad
 
 **Homer • -750 • ~450 pages**
 
-*Great Books of the Western World*
 
 ## Key Quotes
 

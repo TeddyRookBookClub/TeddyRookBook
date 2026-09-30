@@ -6,18 +6,25 @@ year: 1605
 country: "Spain"
 authorCountry: "Spain"
 genre: "Fiction"
-collection: "Harvard Classics Vol. 14"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "24h 10m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "14"
+    detail: "Part I, Thomas Shelton translation"
+  - set: "Great Books"
+    vol: "27"
+    detail: "Parts I and II"
+  - set: "Barnes & Noble Leatherbound"
+notes: "3 copies"
 ---
 # Don Quixote
 **Miguel de Cervantes • 1605 • ~1072 pages**
-*Harvard Classics Vol. 14*
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

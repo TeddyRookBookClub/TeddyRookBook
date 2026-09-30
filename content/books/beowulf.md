@@ -6,14 +6,18 @@ year: 1000
 country: "England"
 authorCountry: "Unknown"
 genre: "Epic Poetry"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "3h 45m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "49"
+    detail: "in Epic and Saga"
+notes: ""
 ---
 
 # Beowulf

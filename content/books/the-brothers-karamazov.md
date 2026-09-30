@@ -6,21 +6,26 @@ year: 1880
 country: "Russia"
 authorCountry: "Russia"
 genre: "Fiction"
-collection: "Great Books of the Western World"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "24h 00m"
 links: []
+editions:
+  - set: "Great Books"
+    vol: "52"
+    detail: "Constance Garnett translation"
+  - set: "Picador"
+    detail: "paperback"
+notes: "2 copies"
 ---
 
 # The Brothers Karamazov
 
 **Fyodor Dostoevsky • 1880 • ~840 pages**
 
-*Great Books of the Western World*
 
 ## Key Quotes
 

@@ -54,3 +54,30 @@ html[data-theme="dark"] .lib-year span{color:#a8d5b8}
 .lib-title{line-height:1.35}
 html[data-theme="dark"] .lib-ig{color:#f3dfa3}
 .lib-title a.lib-ig{font:600 .72rem/1.4 system-ui,-apple-system,sans-serif}
+/* Notes column: sets, editions, copies */
+.lib-notes{font-size:.82rem;line-height:1.35;min-width:13rem}
+.lib-ed{display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:.25rem;margin:.12rem .3rem .12rem 0;padding:.08rem .5rem;border:1px solid var(--line);border-radius:10px;background:var(--g-soft);color:var(--ink);white-space:nowrap;max-width:100%;box-sizing:border-box}
+.lib-ed a{color:var(--g);text-decoration:none;font-weight:600}
+.lib-ed a:hover{text-decoration:underline}
+html[data-theme="dark"] .lib-ed a{color:#a8d5b8}
+.lib-ed b{color:var(--gold)}
+.lib-ed small{color:var(--muted);font-size:.72rem;white-space:normal}
+.lib-notes p{margin:.25rem 0 0;color:var(--muted);font-style:italic}
+.lib-none{color:var(--muted)}
+.lib-sets{margin-top:1.4rem}
+.lib-sets h2{font-family:Georgia,"Times New Roman",serif;color:var(--g);margin:0 0 .2rem;font-size:1.4rem}
+html[data-theme="dark"] .lib-sets h2{color:#a8d5b8}
+.lib-sets-sub{margin:0 0 .7rem;color:var(--muted);font-size:.9rem}
+.lib-set{border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:10px;background:var(--card);margin:0 0 .5rem;padding:.55rem .9rem;scroll-margin-top:80px}
+.lib-set summary{cursor:pointer;color:var(--ink)}
+.lib-set summary b{color:var(--g)}
+html[data-theme="dark"] .lib-set summary b{color:#a8d5b8}
+.lib-set summary span{color:var(--muted);font-size:.82rem;margin-left:.3rem}
+.lib-set p{margin:.5rem 0;font-size:.88rem;color:var(--muted)}
+.lib-vols{columns:2 280px;column-gap:1.5rem;margin:.3rem 0 .6rem;padding-left:0;list-style:none;font-size:.84rem}
+.lib-vols li{break-inside:avoid;padding:.12rem 0;border-bottom:1px dotted var(--line)}
+.lib-setfilter{padding:.35rem .8rem;border:1px solid var(--g);background:transparent;color:var(--g);border-radius:8px;cursor:pointer;font-size:.84rem}
+.lib-setfilter:hover{background:var(--g);color:#fff}
+html[data-theme="dark"] .lib-setfilter{color:#a8d5b8;border-color:#a8d5b8}
+@media (max-width:720px){.lib-notes{min-width:0;padding-top:.3rem !important}}
+@media (max-width:720px){.lib-none{display:none}}

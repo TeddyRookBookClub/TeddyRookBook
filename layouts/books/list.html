@@ -1,9 +1,11 @@
 {{ define "main" }}
 <link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
 <link rel="stylesheet" href="/css/library.css?v={{ (os.Stat "static/css/library.css").ModTime.Unix }}">
-{{ $flags := dict "England" "🇬🇧" "Scotland" "🇬🇧" "Russia" "🇷🇺" "France" "🇫🇷" "Spain" "🇪🇸" "Germany" "🇩🇪" "Denmark" "🇩🇰" "United States" "🇺🇸" "Greece" "🇬🇷" "Italy" "🇮🇹" "Rome" "🏛️" "Unknown" "❔" }}
+{{ $flags := dict "England" "🇬🇧" "Scotland" "🇬🇧" "Northern Ireland" "🇬🇧" "Ireland" "🇮🇪" "Russia" "🇷🇺" "France" "🇫🇷" "Spain" "🇪🇸" "Germany" "🇩🇪" "Denmark" "🇩🇰" "United States" "🇺🇸" "Greece" "🇬🇷" "Italy" "🇮🇹" "Rome" "🏛️" "China" "🇨🇳" "Japan" "🇯🇵" "Czech Republic" "🇨🇿" "Switzerland" "🇨🇭" "Palestine" "🇵🇸" "Unknown" "❔" }}
+{{ $setKeys := dict }}{{ range site.Data.sets }}{{ $setKeys = merge $setKeys (dict .name .key) }}{{ end }}
 {{ $books := where (where .Site.RegularPages "Section" "books") "Params.isListPage" "!=" true }}
-{{ $countries := slice }}
+{{ $countries := slice }}{{ $sets := slice }}
+{{ range $books }}{{ range .Params.editions }}{{ $sets = $sets | append .set }}{{ end }}{{ end }}
 {{ range $books }}{{ with .Params.country }}{{ $countries = $countries | append . }}{{ end }}{{ with .Params.authorCountry }}{{ $countries = $countries | append . }}{{ end }}{{ end }}
 
 <div class="books-page lib">
@@ -15,14 +17,20 @@
       <span class="lib-stat"><strong id="stat-total">0</strong> books</span>
       <span class="lib-stat"><strong id="stat-authors">0</strong> authors</span>
       <span class="lib-stat"><strong id="stat-countries">0</strong> countries</span>
+      <span class="lib-stat"><strong>{{ len site.Data.sets }}</strong> sets &amp; editions</span>
     </div>
   </header>
 
   <div class="lib-controls">
-    <input type="search" id="book-search" placeholder="Search title or author…" aria-label="Search title or author">
+    <input type="search" id="book-search" placeholder="Search title, author or notes…" aria-label="Search title, author or notes">
     <select id="filter-country" aria-label="Filter by country">
       <option value="">Any country</option>
       {{ range $countries | uniq | sort }}<option value="{{ . }}">{{ index $flags . | default "🌍" }} {{ . }}</option>{{ end }}
+    </select>
+    <select id="filter-set" aria-label="Filter by set or edition">
+      <option value="">Any set or edition</option>
+      <option value="*multi">Several copies</option>
+      {{ range $sets | uniq | sort }}<option value="{{ . }}">{{ . }}</option>{{ end }}
     </select>
     <button id="clear-filters" type="button">Clear</button>
   </div>
@@ -35,6 +43,7 @@
           <th data-col="1" scope="col">Author <span class="sort-indicator"></span></th>
           <th data-col="2" scope="col">Year <span class="sort-indicator"></span></th>
           <th data-col="3" scope="col">Country <span class="sort-indicator"></span></th>
+          <th data-col="4" scope="col">Notes <span class="sort-indicator"></span></th>
         </tr>
       </thead>
       <tbody>
@@ -46,18 +55,27 @@
             data-author="{{ .Params.author | default "" | lower }}"
             data-year="{{ $y }}"
             data-country="{{ $bc | lower }}"
-            data-countries="{{ $bc }}|{{ $ac }}">
+            data-countries="{{ $bc }}|{{ $ac }}"
+            {{- $eds := .Params.editions | default slice }}{{ $en := slice }}{{ range $eds }}{{ $en = $en | append .set }}{{ end }}
+            data-sets="{{ delimit $en "|" }}"
+            data-copies="{{ len $eds }}"
+            data-notes="{{ .Params.notes | default "" | lower }} {{ range $eds }}{{ .set | lower }} {{ .detail | default "" | lower }} {{ end }}">
           <td class="lib-title" data-label="Title">
             <a href="{{ .RelPermalink }}">{{ .Title }}</a>
             {{ $slug := .File.ContentBaseName }}
             {{ range site.Data.infographics }}{{ if and .show (in (.books | default slice) $slug) }}<a class="lib-ig" href="/infographics/#{{ .file }}" title="Infographic: {{ .title }}">🖼️ {{ .title }}</a>{{ end }}{{ end }}
           </td>
           <td class="lib-author" data-label="Author">{{ .Params.author | default "—" }}</td>
-          <td class="lib-year" data-label="Year"><span>{{ if lt $y 0 }}{{ mul $y -1 }} BC{{ else if lt $y 500 }}{{ $y }} AD{{ else if eq $y 0 }}—{{ else }}{{ $y }}{{ end }}</span></td>
+          <td class="lib-year" data-label="Year"><span>{{ if eq $y 0 }}—{{ else if lt $y 0 }}{{ mul $y -1 }} BC{{ else if lt $y 500 }}{{ $y }} AD{{ else }}{{ $y }}{{ end }}</span></td>
           <td class="lib-country" data-label="Country">
             {{ if $bc }}<div><i>Book</i> <span>{{ index $flags $bc | default "🌍" }} {{ $bc }}</span></div>{{ end }}
             {{ if $ac }}<div><i>Author</i> <span>{{ index $flags $ac | default "🌍" }} {{ $ac }}</span></div>{{ end }}
             {{ if and (not $bc) (not $ac) }}—{{ end }}
+          </td>
+          <td class="lib-notes" data-label="Notes">
+            {{ range $eds }}{{ $k := index $setKeys .set }}<span class="lib-ed">{{ if $k }}<a href="#set-{{ $k }}">{{ .set }}{{ with .vol }} <b>{{ . }}</b>{{ end }}</a>{{ else }}{{ .set }}{{ with .vol }} <b>{{ . }}</b>{{ end }}{{ end }}{{ with .detail }}<small>{{ . }}</small>{{ end }}</span>{{ end }}
+            {{ with .Params.notes }}<p>{{ . }}</p>{{ end }}
+            {{ if and (not $eds) (not .Params.notes) }}<span class="lib-none">—</span>{{ end }}
           </td>
         </tr>
         {{ end }}
@@ -66,6 +84,20 @@
     <p id="lib-empty" class="lib-empty" hidden>No books match those filters.</p>
   </div>
 
+  <section class="lib-sets" id="sets">
+    <h2>Sets and special editions</h2>
+    <p class="lib-sets-sub">Books that are part of a set are tagged in the Notes column. Open a set to see every volume.</p>
+    {{ range site.Data.sets }}
+    {{ $name := .name }}{{ $n := 0 }}{{ range $books }}{{ range .Params.editions }}{{ if eq .set $name }}{{ $n = add $n 1 }}{{ end }}{{ end }}{{ end }}
+    <details class="lib-set" id="set-{{ .key }}">
+      <summary><b>{{ .full }}</b> <span>{{ with .count }}{{ . }} volumes · {{ end }}{{ $n }} {{ if eq $n 1 }}title{{ else }}titles{{ end }} in the table</span></summary>
+      <p>{{ .about }}</p>
+      {{ with .volumes }}<ol class="lib-vols">{{ range . }}<li>{{ . }}</li>{{ end }}</ol>{{ end }}
+      <button type="button" class="lib-setfilter" data-set="{{ .name }}">Show these in the table</button>
+    </details>
+    {{ end }}
+  </section>
+
   <p class="lib-foot">Click a column heading to sort. Add a book by creating a Markdown file in <code>content/books/</code> using the <code>book</code> template.</p>
 </div>
 
@@ -73,7 +105,7 @@
 (function () {
   var table = document.getElementById('libTable'); if (!table) return;
   var tbody = table.tBodies[0], rows = Array.from(tbody.rows);
-  var q = document.getElementById('book-search'), fc = document.getElementById('filter-country'),
+  var q = document.getElementById('book-search'), fc = document.getElementById('filter-country'), fs = document.getElementById('filter-set'),
       empty = document.getElementById('lib-empty');
   var sortCol = 0, sortDir = 'asc';
 
@@ -85,10 +117,11 @@
     document.getElementById('stat-countries').textContent = Object.keys(set).length;
   }
   function filter() {
-    var s = q.value.toLowerCase().trim(), c = fc.value, shown = 0;
+    var s = q.value.toLowerCase().trim(), c = fc.value, st = fs.value, shown = 0;
     rows.forEach(function (r) {
-      var ok = (!s || r.dataset.title.indexOf(s) > -1 || r.dataset.author.indexOf(s) > -1) &&
-               (!c || r.dataset.countries.split('|').indexOf(c) > -1);
+      var ok = (!s || r.dataset.title.indexOf(s) > -1 || r.dataset.author.indexOf(s) > -1 || r.dataset.notes.indexOf(s) > -1) &&
+               (!c || r.dataset.countries.split('|').indexOf(c) > -1) &&
+               (!st || (st === '*multi' ? +r.dataset.copies > 1 : r.dataset.sets.split('|').indexOf(st) > -1));
       r.style.display = ok ? '' : 'none'; if (ok) shown++;
     });
     empty.hidden = shown > 0;
@@ -97,7 +130,8 @@
     if (col === 0) return r.dataset.title.replace(/^(the|a|an) /, '');
     if (col === 1) return r.dataset.author;
     if (col === 2) return parseInt(r.dataset.year, 10);
-    return r.dataset.country;
+    if (col === 3) return r.dataset.country;
+    return (r.dataset.sets ? 0 : 1) + ':' + (9 - Math.min(9, +r.dataset.copies)) + ':' + r.dataset.sets;
   }
   function sort() {
     rows.sort(function (a, b) {
@@ -117,9 +151,16 @@
       sort();
     });
   });
-  [q, fc].forEach(function (el) { el.addEventListener(el === q ? 'input' : 'change', filter); });
+  [q, fc, fs].forEach(function (el) { el.addEventListener(el === q ? 'input' : 'change', filter); });
+  document.querySelectorAll('.lib-setfilter').forEach(function (b) {
+    b.addEventListener('click', function () { fs.value = b.dataset.set; filter(); document.querySelector('.lib-controls').scrollIntoView({ behavior: 'smooth' }); });
+  });
+  document.querySelectorAll('.lib-ed a').forEach(function (a) {
+    a.addEventListener('click', function () { var d = document.querySelector(a.getAttribute('href')); if (d) d.open = true; });
+  });
+  if (location.hash.indexOf('#set-') === 0) { var d0 = document.querySelector(location.hash); if (d0) d0.open = true; }
   document.getElementById('clear-filters').addEventListener('click', function () {
-    q.value = ''; fc.value = ''; sortCol = 0; sortDir = 'asc'; filter(); sort();
+    q.value = ''; fc.value = ''; fs.value = ''; sortCol = 0; sortDir = 'asc'; filter(); sort();
   });
   stats(); sort(); filter();
 })();

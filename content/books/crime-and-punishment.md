@@ -6,21 +6,21 @@ year: 1866
 country: "Russia"
 authorCountry: "Russia"
 genre: "Fiction"
-collection: "Great Books of the Western World"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "15h 45m"
 links: []
+editions: []
+notes: ""
 ---
 
 # Crime and Punishment
 
 **Fyodor Dostoevsky • 1866 • ~545 pages**
 
-*Great Books of the Western World*
 
 ## Key Quotes
 

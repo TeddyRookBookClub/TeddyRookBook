@@ -6,14 +6,19 @@ year: 1851
 country: "United States"
 authorCountry: "United States"
 genre: "Fiction / Adventure"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "21h 30m"
 links: []
+editions:
+  - set: "Great Books"
+    vol: "48"
+  - set: "Hardcover"
+    detail: "decorated blue binding"
+notes: "2 copies"
 ---
 
 # Moby-Dick

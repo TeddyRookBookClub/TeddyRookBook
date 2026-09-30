@@ -6,21 +6,26 @@ year: 1808
 country: "Germany"
 authorCountry: "Germany"
 genre: "Drama / Poetry"
-collection: "Harvard Classics Vol. 19"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "6h 15m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "19"
+    detail: "Anna Swanwick translation"
+  - set: "Great Books"
+    vol: "45"
+notes: "2 copies"
 ---
 
 # Faust, Part I
 
 **Johann Wolfgang von Goethe • 1808 • ~200 pages**
 
-*Harvard Classics Vol. 19*
 
 ## Key Quotes
 

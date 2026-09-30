@@ -6,14 +6,15 @@ year: 1960
 country: "United States"
 authorCountry: "United States"
 genre: "Fiction"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "12h 15m"
 links: []
+editions: []
+notes: ""
 ---
 
 # To Kill a Mockingbird

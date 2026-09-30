@@ -1,7 +1,6 @@
 {{ define "main" }}
 <link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
 {{ $read := .Params.haveRead | default false }}
-{{ $collection := .Params.collection | default "Other" }}
 {{ $genre := .Params.genre | default "" }}
 {{ $pages := .Params.pages | default "" }}
 {{ $year := .Params.year | default "" }}
@@ -23,7 +22,7 @@
       {{ if $year }}<span style="background:#f1f1f1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">{{ $year }}</span>{{ end }}
       {{ if $pages }}<span style="background:#f1f1f1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">{{ $pages }} pages</span>{{ end }}
       {{ if $genre }}<span style="background:#e8f0e8; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#2c5a2c;">{{ $genre }}</span>{{ end }}
-      <span style="background:#e6f0f5; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#1e4a5f;">{{ $collection }}</span>
+      {{ if not .Params.editions }}{{ with .Params.collection }}<span style="background:#e6f0f5; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#1e4a5f;">{{ . }}</span>{{ end }}{{ end }}
       {{ if .Params.owned }}<span style="background:#e6f0f5; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#1e4a5f;">🏠 Owned{{ with .Params.format }} · {{ . }}{{ end }}</span>{{ end }}
       {{ with .Params.shelf }}<span style="background:#f1f1f1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">📍 {{ . }}</span>{{ end }}
       <span style="background: {{ if $read }}#e6f4ea{{ else }}#fff3cd{{ end }}; padding:2px 8px; border-radius:4px; font-size:0.85rem; color: {{ if $read }}#2e7d32{{ else }}#8a6d00{{ end }};">
@@ -32,6 +31,14 @@
     </div>
   </header>
 
+  {{ if or .Params.editions .Params.notes }}
+  {{ $setKeys := dict }}{{ range site.Data.sets }}{{ $setKeys = merge $setKeys (dict .name .key) }}{{ end }}
+  <section style="margin:0 0 1.5rem;padding:.8rem 1rem;border:1px solid #dde5df;border-left:4px solid #b8963e;border-radius:10px;">
+    <h2 style="font-size:1.05rem;color:#004C2A;margin:0 0 .4rem;">📚 Copies on my shelf</h2>
+    {{ with .Params.editions }}<ul style="margin:0;padding-left:1.1rem;">{{ range . }}{{ $k := index $setKeys .set }}<li>{{ if $k }}<a href="/books/#set-{{ $k }}">{{ .set }}{{ with .vol }}, Vol. {{ . }}{{ end }}</a>{{ else }}{{ .set }}{{ with .vol }}, Vol. {{ . }}{{ end }}{{ end }}{{ with .detail }} — {{ . }}{{ end }}</li>{{ end }}</ul>{{ end }}
+    {{ with .Params.notes }}<p style="margin:.4rem 0 0;font-size:.92rem;color:#555;">{{ . }}</p>{{ end }}
+  </section>
+  {{ end }}
   {{ $slug := .File.ContentBaseName }}
   {{ $igs := slice }}{{ range site.Data.infographics }}{{ if and .show (in (.books | default slice) $slug) }}{{ $igs = $igs | append . }}{{ end }}{{ end }}
   {{ with $igs }}

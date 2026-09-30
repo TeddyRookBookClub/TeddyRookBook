@@ -6,14 +6,15 @@ year: 1859
 country: "England"
 authorCountry: "England"
 genre: "Fiction"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "13h 40m"
 links: []
+editions: []
+notes: ""
 ---
 
 # A Tale of Two Cities

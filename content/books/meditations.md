@@ -6,21 +6,26 @@ year: 180
 country: "Rome"
 authorCountry: "Rome"
 genre: "Philosophy"
-collection: "Harvard Classics Vol. 2"
 haveRead: true
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-22"
+lastUpdated: "2026-09-30"
 audiobook: "5h 10m"
 links:
   - platform: "youtube"
     url: "https://www.youtube.com/results?search_query=marcus+aurelius+meditations+discussion"
     title: "Discussion clip"
+editions:
+  - set: "Harvard Classics"
+    vol: "2"
+    detail: "George Long translation"
+  - set: "Great Books"
+    vol: "11"
+notes: "2 copies"
 ---
 # Meditations
 **Marcus Aurelius • 180 • ~192 pages**
-*Harvard Classics Vol. 2*
 ## Key Quotes
 > "You have power over your mind — not outside events. Realize this, and you will find strength."
 > "The happiness of your life depends upon the quality of your thoughts."

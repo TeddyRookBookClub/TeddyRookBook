@@ -6,21 +6,27 @@ year: 1788
 country: "United States"
 authorCountry: "United States"
 genre: "Political Philosophy"
-collection: "Harvard Classics Vol. 43"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "7h 50m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "43"
+    detail: "selections"
+  - set: "Great Books"
+    vol: "40"
+    detail: "complete"
+notes: "2 copies"
 ---
 
 # The Federalist Papers (Selections)
 
 **Alexander Hamilton, James Madison, John Jay • 1788 • ~250 pages**
 
-*Harvard Classics Vol. 43*
 
 ## Key Quotes
 

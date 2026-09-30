@@ -6,21 +6,21 @@ year: 1877
 country: "Russia"
 authorCountry: "Russia"
 genre: "Fiction"
-collection: "Great Books of the Western World"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "26h 30m"
 links: []
+editions: []
+notes: ""
 ---
 
 # Anna Karenina
 
 **Leo Tolstoy • 1877 • ~864 pages**
 
-*Great Books of the Western World*
 
 ## Key Quotes
 

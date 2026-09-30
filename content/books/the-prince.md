@@ -6,18 +6,23 @@ year: 1513
 country: "Italy"
 authorCountry: "Italy"
 genre: "Political Philosophy"
-collection: "Harvard Classics Vol. 36"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-05"
+lastUpdated: "2026-09-30"
 audiobook: "3h 45m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "36"
+  - set: "Great Books"
+    vol: "21"
+  - set: "Paperback"
+notes: "3 copies"
 ---
 # The Prince
 **Niccolò Machiavelli • 1513 • ~140 pages**
-*Harvard Classics Vol. 36*
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

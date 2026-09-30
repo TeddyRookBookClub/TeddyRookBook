@@ -6,21 +6,24 @@ year: 1855
 country: "United States"
 authorCountry: "United States"
 genre: "Poetry"
-collection: "Harvard Classics Vol. 42"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "8h 20m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "42"
+    detail: "selections, in English Poetry III"
+notes: ""
 ---
 
 # Leaves of Grass
 
 **Walt Whitman • 1855 • ~450 pages**
 
-*Harvard Classics Vol. 42*
 
 ## Key Quotes
 

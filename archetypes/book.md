@@ -6,7 +6,12 @@ year: 1900            # negative for BC, e.g. -350
 country: ""           # country the book comes from
 authorCountry: ""     # country the author comes from
 genre: "Fiction"
-collection: "Harvard Classics"
+editions: []         # each copy you own, e.g.
+#  - set: "Harvard Classics"          # a name from data/sets.yaml links to that set
+#    vol: "22"
+#    detail: "Butcher and Lang translation"
+#  - set: "Penguin Classics"
+notes: ""            # shown in the Library's Notes column, e.g. "2 copies in different translations"
 haveRead: false
 owned: true          # do you own a copy?
 format: ""          # Hardcover, Paperback, Ebook, Audiobook
@@ -22,8 +27,6 @@ links: []
 # {{ replace .Name "-" " " | title }}
 
 **Author Name • YEAR • PAGES pages**
-
-*Collection / Series*
 
 ## Key Quotes
 

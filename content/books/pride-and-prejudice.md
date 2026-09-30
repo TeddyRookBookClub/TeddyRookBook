@@ -6,17 +6,22 @@ year: 1813
 country: "England"
 authorCountry: "England"
 genre: "Fiction"
-collection: "Harvard Classics Shelf of Fiction"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-18"
+lastUpdated: "2026-09-30"
 audiobook: "11h 35m"
 links:
   - platform: "spotify"
     url: "https://open.spotify.com/search/pride%20and%20prejudice"
     title: "Spotify episode"
+editions:
+  - set: "Great Books"
+    vol: "46"
+  - set: "Barnes & Noble Leatherbound"
+    detail: "in Jane Austen: Seven Novels"
+notes: "2 copies"
 ---
 # Pride and Prejudice
 **Jane Austen • 1813 • 432 pages**

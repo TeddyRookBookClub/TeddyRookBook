@@ -6,18 +6,22 @@ year: 1859
 country: "England"
 authorCountry: "England"
 genre: "Science"
-collection: "Harvard Classics Vol. 11"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-20"
+lastUpdated: "2026-09-30"
 audiobook: "12h 55m"
 links: []
+editions:
+  - set: "Harvard Classics"
+    vol: "11"
+  - set: "Great Books"
+    vol: "49"
+notes: "2 copies"
 ---
 # On the Origin of Species
 **Charles Darwin • 1859 • ~502 pages**
-*Harvard Classics Vol. 11*
 ## Key Quotes
 > (Add your favorite passages here)
 ## My Notes & Reflections

@@ -6,14 +6,17 @@ year: 1759
 country: "France"
 authorCountry: "France"
 genre: "Fiction / Satire"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "4h 05m"
 links: []
+editions:
+  - set: "Great Books"
+    vol: "34"
+notes: ""
 ---
 
 # Candide

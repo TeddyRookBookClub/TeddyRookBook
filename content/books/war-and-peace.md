@@ -6,21 +6,25 @@ year: 1869
 country: "Russia"
 authorCountry: "Russia"
 genre: "Fiction"
-collection: "Great Books of the Western World"
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-25"
+lastUpdated: "2026-09-30"
 audiobook: "36h 00m"
 links: []
+editions:
+  - set: "Great Books"
+    vol: "51"
+    detail: "Louise and Aylmer Maude translation"
+  - set: "Barnes & Noble Leatherbound"
+notes: "2 copies"
 ---
 
 # War and Peace
 
 **Leo Tolstoy • 1869 • ~1225 pages**
 
-*Great Books of the Western World*
 
 ## Key Quotes
 

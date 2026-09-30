@@ -6,14 +6,17 @@ year: 1843
 country: "Denmark"
 authorCountry: "Denmark"
 genre: "Philosophy"
-collection: ""
 haveRead: false
 owned: true
 format: ""
 shelf: ""
-lastUpdated: "2026-05-26"
+lastUpdated: "2026-09-30"
 audiobook: "5h 10m"
 links: []
+editions:
+  - set: "Great Books"
+    vol: "43"
+notes: ""
 ---
 
 # Fear and Trembling
