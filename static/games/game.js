@@ -495,18 +495,20 @@
       '<div class="f-stats"><span class="st" id="st-coins"></span><span class="st" id="st-vis"></span><span class="st" id="st-fame"></span><span class="st" id="st-day"></span></div>' +
       '<div class="f-speed" id="f-speed"></div>' +
       '<div class="f-langs" id="f-langs"></div>' +
-      '<button class="f-btn" id="f-menu" type="button" aria-label="Menu">☰</button>' +
+      '<button class="f-btn" id="f-helpb" type="button" aria-label="Help" title="How to play">?</button>' +
+      '<button class="f-btn" id="f-menu" type="button" aria-label="Menu" title="Menu: choose Greece or Rome">☰</button>' +
       '</div>' +
       '<div class="f-main"><div class="f-tools" id="f-tools"></div>' +
       '<div class="f-stage"><canvas id="f-cv" aria-label="Festival grounds"></canvas><div class="f-toast" id="f-toast" aria-live="polite"></div><div class="f-info" id="f-info" hidden></div>' +
       '<div class="f-zoom"><button class="f-btn" id="z-in" type="button" aria-label="Zoom in">＋</button><button class="f-btn" id="z-out" type="button" aria-label="Zoom out">－</button></div></div>' +
       '<aside class="f-side" id="f-side"><h3 id="f-th"></h3><ol class="f-feed" id="f-feed"></ol><h3 id="f-gh"></h3><ul class="f-goals" id="f-goals"></ul><p class="f-note" id="f-note"></p></aside></div>' +
-      '<div class="f-start" id="f-start"></div>';
+      '<div class="f-start" id="f-start"></div><div class="f-help" id="f-help" hidden></div>';
     cv = $('#f-cv'); ctx = cv.getContext('2d');
     W.addEventListener('resize', resize); resize(); bindInput();
     $('#z-in').onclick = function () { cam.z = clampZ(cam.z * 1.2); };
     $('#z-out').onclick = function () { cam.z = clampZ(cam.z / 1.2); };
     $('#f-menu').onclick = function () { saveGame(); startScreen(); };
+    $('#f-helpb').onclick = openHelp;
   }
   function labels() {
     $('#f-brand').innerHTML = (S.setting === 'rome' ? '🏛️ ' : '🏺 ') + L(V.title);
@@ -607,6 +609,38 @@
   var toastT = 0;
   function toast(html) { var t = $('#f-toast'); t.innerHTML = html; t.classList.add('on'); toastT = 3.2; }
 
+  // ---------- help ----------
+  var helpPrevSpeed = 1;
+  function openHelp() {
+    helpPrevSpeed = speed; speed = 0; var h = $('#f-help');
+    function row(o) { return '<tr><td class="lg">' + (o.g || '') + '</td><td class="ll">' + (o.l || '') + '</td><td>' + (o.e || '') + '</td></tr>'; }
+    var bl = Object.keys(DEF).filter(function (k) { return DEF[k].group; }).map(function (k) {
+      var d = DEF[k], does = [];
+      if (d.fun) does.push(ICON.fun + ' fun'); if (d.hunger) does.push(ICON.hunger + ' food'); if (d.thirst) does.push(ICON.thirst + ' drink');
+      if (d.energy > 0) does.push(ICON.energy + ' rest'); if (d.toilet) does.push(ICON.toilet + ' bathroom'); if (d.decor) does.push(ICON.pretty + ' beauty nearby');
+      if (k === 'path') does.push('visitors walk on paths');
+      return '<tr><td class="lg">' + B[k].g + '</td><td class="ll">' + B[k].l + '</td><td>' + B[k].e + '</td><td>🪙 ' + d.cost + '</td><td>' + d.size[0] + '×' + d.size[1] + '</td><td>' + does.join(', ') + '</td></tr>';
+    }).join('');
+    h.innerHTML = '<button type="button" class="f-btn close" id="help-x">✕ Close</button>' +
+      '<h2>How to play</h2>' +
+      '<ol><li>Pick <b>Greece</b> or <b>Rome</b> on the start screen (☰ brings it back any time).</li>' +
+      '<li>Choose the <b>path</b> tool and drag across the grass to lay paths from the entrance gate. Visitors only walk on paths.</li>' +
+      '<li>Pick a building from the left panel and click the map to place it. Every building (except scenery) must <b>touch a path</b>. Trees in the way are cleared automatically.</li>' +
+      '<li>Visitors pay the entrance fee, then look for what they need. Keep them fed, watered, rested and entertained, and give them latrines.</li>' +
+      '<li>Use the <b>🔍 Inspect</b> tool to click a building (set its price, open or close it) or a visitor (see their needs and last thought).</li>' +
+      '<li>Happy visitors raise your <b>fame</b> (⭐), which brings more visitors. Each day, buildings cost upkeep, so watch your coins.</li></ol>' +
+      '<h3>Controls</h3><ul><li><b>Move:</b> drag the map (on a phone, drag with one finger while Inspect is selected).</li><li><b>Zoom:</b> mouse wheel, pinch, or the ＋/－ buttons.</li>' +
+      '<li><b>Speed:</b> ❚❚ pause, ▶ normal, ▶▶ fast. Space bar pauses too.</li><li><b>Languages:</b> the Ελ / La / En switches show Greek, Latin and English in any combination. Greek is blue, Latin is red, English is small and grey.</li>' +
+      '<li><b>Esc</b> returns to the Inspect tool.</li></ul>' +
+      '<h3>Visitor needs</h3><p>' + ICON.hunger + ' hunger → bread stall · ' + ICON.thirst + ' thirst → tavern or fountain · ' + ICON.toilet + ' bathroom → latrine or baths · ' + ICON.energy + ' tiredness → bench or baths · ' + ICON.fun + ' boredom → attractions. If a price is higher than a visitor thinks fair, they walk away. Scenery (' + ICON.pretty + ') near paths makes visitors happier.</p>' +
+      '<h3>Buildings</h3><table><thead><tr><th>Greek</th><th>Latin</th><th>English</th><th>Cost</th><th>Size</th><th>Gives</th></tr></thead><tbody>' + bl + '</tbody></table>' +
+      '<h3>Word list: what visitors say</h3><table><thead><tr><th>Greek</th><th>Latin</th><th>English</th></tr></thead><tbody>' + Object.keys(T).map(function (k) { return row(T[k]); }).join('') + '</tbody></table>' +
+      '<h3>Word list: buttons and labels</h3><table><thead><tr><th>Greek</th><th>Latin</th><th>English</th></tr></thead><tbody>' + Object.keys(V).map(function (k) { return row(V[k]); }).join('') + '</tbody></table>' +
+      '<h3>Saving</h3><p>There is no account. Your festival saves automatically in this browser only (one for Greece, one for Rome). Clearing browser data or using a private window starts over.</p>';
+    h.hidden = false; h.scrollTop = 0;
+    $('#help-x').onclick = function () { h.hidden = true; speed = helpPrevSpeed; if (S) labels(); };
+  }
+
   // ---------- start screen & saving ----------
   function saveKey(s) { return 'panegyris-v1-' + s; }
   function saveGame() {
@@ -625,14 +659,16 @@
         '<button type="button" class="f-btn prim" data-new="' + s + '">' + L(V.newGame) + '</button>' +
         (sv ? '<button type="button" class="f-btn" data-go="' + s + '">' + L(V.resume) + ' · ' + L(V.day, 'inline') + ' ' + sv.day + '</button>' : '') + '</div>';
     };
-    st.innerHTML = '<div class="sbox"><h2>' + L(V.title, 'big') + '</h2><p class="sp">' + L(V.choose) + '</p>' +
+    st.innerHTML = '<div class="sbox"><h2>' + L(V.title, 'big') + '</h2>' +
       '<div class="scs">' + card('greece', '🏺') + card('rome', '🏛️') + '</div>' +
       '<div class="slang"><b>' + L(V.langs) + '</b> <span id="s-langs"></span></div>' +
+      '<p><button type="button" class="f-btn" id="s-help">? How to play</button></p>' +
       '<p class="snote">No account and nothing uploaded: your festival is saved only in this browser on this device. Clearing browser data or using a private window starts over.</p></div>';
     $('#s-langs').innerHTML = [['g', 'Ἑλληνική (Greek)'], ['l', 'Latina (Latin)'], ['e', 'English help']].map(function (k) {
       return '<label class="lt lt-' + k[0] + '"><input type="checkbox" data-sl="' + k[0] + '"' + (show[k[0]] ? ' checked' : '') + '> ' + k[1] + '</label>';
     }).join('');
     Array.prototype.forEach.call(st.querySelectorAll('[data-sl]'), function (c) { c.onchange = function () { show[c.dataset.sl] = c.checked; if (!show.g && !show.l) { show.g = true; } saveLangs(); startScreen(); }; });
+    $('#s-help').onclick = openHelp;
     Array.prototype.forEach.call(st.querySelectorAll('[data-new]'), function (b) { b.onclick = function () { begin(newState(b.dataset.new)); }; });
     Array.prototype.forEach.call(st.querySelectorAll('[data-go]'), function (b) { b.onclick = function () { begin(loadGame(b.dataset.go)); }; });
   }

@@ -49,6 +49,8 @@
             data-countries="{{ $bc }}|{{ $ac }}">
           <td class="lib-title" data-label="Title">
             <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            {{ $slug := .File.ContentBaseName }}
+            {{ range site.Data.infographics }}{{ if and .show (in (.books | default slice) $slug) }}<a class="lib-ig" href="/infographics/#{{ .file }}" title="Infographic: {{ .title }}">🖼️ {{ .title }}</a>{{ end }}{{ end }}
           </td>
           <td class="lib-author" data-label="Author">{{ .Params.author | default "—" }}</td>
           <td class="lib-year" data-label="Year"><span>{{ if lt $y 0 }}{{ mul $y -1 }} BC{{ else if lt $y 500 }}{{ $y }} AD{{ else if eq $y 0 }}—{{ else }}{{ $y }}{{ end }}</span></td>

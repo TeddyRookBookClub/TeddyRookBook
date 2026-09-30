@@ -1,65 +1,106 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/books.css">
 <link rel="stylesheet" href="/css/home.css">
-{{ $books := where site.RegularPages "Section" "books" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
+{{ $books := where (where site.RegularPages "Section" "books") "Params.isListPage" "!=" true }}
 {{ $ig := where site.Data.infographics "show" true }}
+{{ $countries := slice }}{{ range $books }}{{ with .Params.country }}{{ $countries = $countries | append . }}{{ end }}{{ end }}
 <div class="home">
 
-  <header class="home-hero">
-    <img src="/img/hero.jpg" alt="Teddy Rook Book">
-    <div class="home-hero-fade"></div>
+  <header class="hh">
+    <div class="hh-art"><img src="/img/hero.jpg" alt="Teddy Rook, a mosaic figure in a rook-shaped hat surrounded by chess pieces"></div>
+    <div class="hh-text">
+      <p class="hh-eyebrow">Books · Ideas · Languages</p>
+      <h1>Teddy Rook Book</h1>
+      <p class="hh-lead">A home library, visual explainers on the great books and big ideas, and playful ways to learn Koine Greek and Latin.</p>
+      <div class="hh-btns">
+        <a class="hbtn prim" href="/books/">Browse the library</a>
+        <a class="hbtn" href="/infographics/">See the infographics</a>
+      </div>
+    </div>
   </header>
 
-  <p class="home-intro">
-    Welcome to Teddy Rook Book: a personal library, notes on the great books,
-    and infographics about the books and ideas I enjoy.
-  </p>
-
-  <section class="home-cards">
-    <a class="home-card" href="/books/">
-      <span class="home-emoji">📚</span>
-      <h2>Library</h2>
-      <p>A running list of the {{ len $books }} books in my home library. Search, sort and filter by author, year or country.</p>
-      <span class="home-go">Browse the library →</span>
+  <section class="tiles" aria-label="Sections">
+    <a class="tile t-lib" href="/books/">
+      <div class="tile-vis spines" aria-hidden="true">
+        {{ range $i, $b := first 9 (sort $books "Params.year") }}<span class="spine s{{ mod $i 5 }}" style="height:{{ add 62 (mod (mul $i 17) 30) }}%"><i>{{ $b.Title }}</i></span>{{ end }}
+      </div>
+      <div class="tile-body">
+        <h2>📚 Library</h2>
+        <p>{{ len $books }} books from {{ len ($countries | uniq) }} countries on the home shelves, from Homer to Harper Lee.</p>
+        <span class="go">Browse →</span>
+      </div>
     </a>
-    <a class="home-card" href="/infographics/">
-      <span class="home-emoji">🖼️</span>
-      <h2>Infographics</h2>
-      <p>{{ len $ig }} visual explainers on books, ideas, language and finance.</p>
-      <span class="home-go">Open the gallery →</span>
+    <a class="tile t-ig" href="/infographics/">
+      <div class="tile-vis mosaic" aria-hidden="true">
+        {{ range first 4 $ig }}<img src="/img/infographics/{{ .file }}-thumb.jpg" alt="" loading="lazy">{{ end }}
+      </div>
+      <div class="tile-body">
+        <h2>🖼️ Infographics</h2>
+        <p>{{ len $ig }} one-page explainers on books, faith, language, finance and more.</p>
+        <span class="go">Open the gallery →</span>
+      </div>
     </a>
-    <a class="home-card" href="/languages/">
-      <span class="home-emoji">🗣️</span>
-      <h2>Languages</h2>
-      <p>Koine Greek and Latin through the Gospels: listening drills and a full reader with every word explained.</p>
-      <span class="home-go">Start learning →</span>
+    <a class="tile t-lang" href="/languages/">
+      <div class="tile-vis verse" id="votd" aria-live="polite">
+        <span class="v-lab">Verse of the day</span>
+        <p class="v-g grc">Ἐν ἀρχῇ ἦν ὁ λόγος, καὶ ὁ λόγος ἦν πρὸς τὸν θεόν.</p>
+        <p class="v-l lat">in principio erat Verbum et Verbum erat apud Deum</p>
+        <p class="v-e">In the beginning was the Word, and the Word was with God.</p>
+        <span class="v-ref">John 1:1</span>
+      </div>
+      <div class="tile-body">
+        <h2>🗣️ Languages</h2>
+        <p>Learn Koine Greek and Latin from the Gospels: listening drills plus a reader that explains every word.</p>
+        <span class="go">Start learning →</span>
+      </div>
     </a>
-    <a class="home-card" href="/games/">
-      <span class="home-emoji">🎲</span>
-      <h2>Games</h2>
-      <p>Panegyris · Ludi: build an ancient festival in Greece or Rome, played entirely in Koine Greek and Latin.</p>
-      <span class="home-go">Play →</span>
+    <a class="tile t-game" href="/games/festival/">
+      <div class="tile-vis gamevis" aria-hidden="true"><canvas id="home-temple" width="220" height="150"></canvas><canvas id="home-theater" width="200" height="140"></canvas></div>
+      <div class="tile-body">
+        <h2>🏛️ Games</h2>
+        <p><span class="grc">Πανήγυρις</span> · <span class="lat">Ludi</span>: build a festival in ancient Greece or Rome, played in Greek and Latin.</p>
+        <span class="go">Play →</span>
+      </div>
     </a>
   </section>
 
-  <section class="home-section">
-    <h2>Latest infographics</h2>
-    <div class="home-strip">
-      {{ range first 4 $ig }}
-      <a href="/infographics/"><img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy"><span>{{ .title }}</span></a>
+  <section class="hs">
+    <div class="hs-head"><h2>Latest infographics</h2><a href="/infographics/">All {{ len $ig }} →</a></div>
+    <div class="strip">
+      {{ range first 6 $ig }}
+      <a href="/infographics/#{{ .file }}"><img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy"><span>{{ .title }}</span></a>
       {{ end }}
     </div>
   </section>
 
-  <section class="home-section">
-    <h2>Recently updated books</h2>
-    <ul class="home-list">
-      {{ $sorted := sort (where $books "Params.lastUpdated" "!=" nil) "Params.lastUpdated" "desc" }}
-      {{ range first 6 $sorted }}
-      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a> <span>{{ .Params.author }}</span></li>
-      {{ end }}
+  {{ $withIg := slice }}
+  {{ range $books }}{{ $slug := .File.ContentBaseName }}{{ $p := . }}{{ range $ig }}{{ if in (.books | default slice) $slug }}{{ $withIg = $withIg | append $p }}{{ end }}{{ end }}{{ end }}
+  {{ with $withIg | uniq }}
+  <section class="hs">
+    <div class="hs-head"><h2>Books with an infographic</h2><a href="/books/">Whole library →</a></div>
+    <ul class="chips">
+      {{ range . }}<li><a href="{{ .RelPermalink }}"><b>{{ .Title }}</b><span>{{ .Params.author }}</span></a></li>{{ end }}
     </ul>
   </section>
+  {{ end }}
 
 </div>
+<script src="/games/vocab.js"></script>
+<script src="/games/art.js"></script>
+<script>
+(function () {
+  try {
+    if (window.FestArt) {
+      FestArt.icon(document.getElementById('home-temple'), 'temple', 3, 2, 'greece');
+      FestArt.icon(document.getElementById('home-theater'), 'theater', 3, 3, 'rome');
+    }
+  } catch (e) {}
+  fetch('/lang/data/votd.json').then(function (r) { return r.json(); }).then(function (list) {
+    var d = new Date(), n = Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())) / 864e5), v = list[n % list.length], box = document.getElementById('votd');
+    box.querySelector('.v-g').textContent = v.g; box.querySelector('.v-l').textContent = v.l; box.querySelector('.v-e').textContent = v.en;
+    box.querySelector('.v-ref').textContent = v.r + ' · ESV';
+  }).catch(function () {});
+})();
+</script>
 {{ end }}

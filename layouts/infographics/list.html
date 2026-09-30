@@ -18,7 +18,7 @@
 
   <div class="ig-grid">
     {{ range $items }}
-    <figure class="ig-card" data-tags="{{ delimit .tags "|" }}">
+    <figure class="ig-card" id="{{ .file }}" data-tags="{{ delimit .tags "|" }}">
       <a href="/img/infographics/{{ .file }}.jpg" class="ig-open" data-title="{{ .title }}" data-desc="{{ .description }}"{{ with .pdf }} data-pdf="/pdfs/{{ . }}"{{ end }}{{ with .pdf_title }} data-pdftitle="{{ . }}"{{ end }}>
         <img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy">
       </a>
@@ -26,6 +26,7 @@
         <strong>{{ .title }}</strong>
         <span>{{ delimit .tags " · " }}</span>
         {{ with .pdf }}<a class="ig-pdf" href="/pdfs/{{ . }}" target="_blank" rel="noopener">📄 Read the full paper (PDF)</a>{{ end }}
+        {{ with .books }}<span class="ig-books">📚 {{ range $i, $b := . }}{{ with site.GetPage (printf "/books/%s" $b) }}{{ if $i }} · {{ end }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}</span>{{ end }}
       </figcaption>
     </figure>
     {{ end }}
@@ -61,6 +62,8 @@
   });});
   lb.addEventListener('click',function(e){if(e.target===lb||e.target.classList.contains('ig-close'))close();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  // open an infographic directly from a link like /infographics/#karamazov-whos-who
+  var h=decodeURIComponent(location.hash.slice(1)); if(h){var f=document.getElementById(h); if(f){var a=f.querySelector('.ig-open'); f.scrollIntoView({block:'center'}); if(a) a.click();}}
 })();
 </script>
 {{ end }}

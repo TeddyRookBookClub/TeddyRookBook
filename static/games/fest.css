@@ -36,7 +36,10 @@ html[data-theme="dark"] .fest{--ink:#e6ece8;--muted:#9fb0a6;--line:#33403a;--car
 .lt input{margin:0;accent-color:var(--gold)}
 
 /* main */
-.f-main{flex:1;display:grid;grid-template-columns:200px minmax(0,1fr) 270px;min-height:0}
+.f-main{flex:1;display:grid;grid-template-columns:210px minmax(0,1fr) 280px;min-height:0;overflow:hidden}
+.f-tools,.f-side{min-height:0}
+.fest{width:100%;box-sizing:border-box}
+.f-stats{min-width:0}
 .f-tools{overflow-y:auto;border-right:1px solid var(--line);background:var(--card);padding:.4rem}
 .tg{margin-bottom:.5rem}
 .tg h4{margin:.35rem .2rem;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
@@ -49,16 +52,18 @@ html[data-theme="dark"] .fest{--ink:#e6ece8;--muted:#9fb0a6;--line:#33403a;--car
 .tool .tc{font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .tool .tc::before{content:"🪙"}
 .tg:first-child .tool{grid-template-columns:30px 1fr}
-.f-stage{position:relative;min-width:0;min-height:0}
-.f-stage canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+.f-stage{position:relative;min-width:0;min-height:0;overflow:hidden}
+.f-stage>canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
 .f-zoom{position:absolute;right:.6rem;bottom:.6rem;display:flex;flex-direction:column;gap:.3rem}
 .f-toast{position:absolute;left:50%;top:.8rem;transform:translate(-50%,-10px);background:rgba(29,35,32,.92);color:#fff;padding:.5rem .8rem;border-radius:10px;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center}
 .f-toast .lg,.f-toast .ll{color:var(--gold-l)} .f-toast .le{color:#cfe0d6}
 .f-toast.on{opacity:1;transform:translate(-50%,0)}
-.f-info{position:absolute;left:.6rem;top:.6rem;width:280px;max-width:calc(100% - 1.2rem);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.f-info{position:absolute;left:.6rem;top:.6rem;width:300px;max-width:calc(100% - 1.2rem);max-height:calc(100% - 1.2rem);overflow-y:auto;box-sizing:border-box;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem;box-shadow:0 6px 20px rgba(0,0,0,.15)}
 .f-x{position:absolute;right:.4rem;top:.3rem;border:0;background:none;font-size:1.3rem;cursor:pointer;color:var(--muted)}
 .ih{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;padding-right:1.2rem}
-.ih>div{flex:1}
+.ih>div{flex:1;min-width:0}
+.ih canvas{width:64px;height:50px;flex:none}
+.needs dt .vx{font-size:.95em}
 .ih .nm{font:700 1.2rem "Gentium Book Plus",Georgia,serif}
 .iq{background:var(--paper);border-radius:8px;padding:.35rem .5rem;margin-bottom:.4rem}
 .needs{display:grid;grid-template-columns:auto 1fr;gap:.3rem .6rem;margin:0;align-items:center}
@@ -114,3 +119,19 @@ html[data-theme="dark"] .f-start{background:rgba(31,37,33,.97)}
   .f-info{left:.4rem;right:.4rem;top:auto;bottom:.4rem;width:auto}
   .f-brand .vx .le{display:none}
 }
+
+/* help overlay */
+.f-help{position:absolute;inset:0;z-index:6;background:var(--paper);overflow-y:auto;padding:1.2rem 1.4rem;user-select:text;-webkit-user-select:text}
+.f-help[hidden]{display:none}
+.f-help h2{margin:.2rem 0 .6rem;font-size:1.5rem}
+.f-help h3{margin:1.2rem 0 .4rem;font-size:1.1rem;color:var(--g)}
+html[data-theme="dark"] .f-help h3{color:#a8d5b8}
+.f-help p,.f-help li{line-height:1.55;max-width:60rem}
+.f-help table{border-collapse:collapse;width:100%;max-width:60rem;font-size:.92rem}
+.f-help th,.f-help td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+.f-help th{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.f-help .close{position:sticky;top:0;float:right}
+.f-help td.lg,.f-help td.ll{font-size:1.05rem}
+.tool .tn{word-break:keep-all;overflow-wrap:normal;hyphens:none;font-size:.95em}
+@media (min-width:701px){.f-main{grid-template-columns:230px minmax(0,1fr) 280px}.tool{grid-template-columns:50px 1fr auto}.tool canvas{width:50px;height:40px}}
+@media (min-width:701px) and (max-width:1000px){.f-main{grid-template-columns:210px minmax(0,1fr)}}
