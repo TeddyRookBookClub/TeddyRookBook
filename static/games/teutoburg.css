@@ -81,3 +81,19 @@ table.gl td.la{color:var(--wine);font-size:1.05rem}
   .tb-hud{gap:.6rem;font-size:.82rem}
   .tb-title .la{font-size:1rem}
 }
+.tb-speed{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;margin:.7rem 0;color:var(--ink)}
+.tb-speed label{display:flex;align-items:baseline;gap:.35rem;flex-wrap:wrap;font-size:.95rem}
+.tb-speed label>.en{font-size:.75rem;color:var(--muted)}
+.tb-lv{margin-left:auto;padding:.1rem .55rem;border-radius:999px;color:#fff;font-weight:700;font-size:.85rem;transition:background .25s}
+.tb-lv .en{font-size:.7rem;font-weight:400;opacity:.9}
+.tb-lv.lv-easy{background:#2e7d4f}.tb-lv.lv-med{background:#b8862a}.tb-lv.lv-hard{background:#a3202f}
+.tb-lv.pop{animation:lvpop .45s ease}
+@keyframes lvpop{40%{transform:scale(1.25)}}
+.tb-spd{width:100%;margin:.45rem 0 .1rem;accent-color:var(--wine);-webkit-appearance:none;appearance:none;height:8px;border-radius:6px;
+  background:linear-gradient(90deg,#2e7d4f 0 31.8%,#fff 31.8% 32.3%,#b8862a 32.3% 63.6%,#fff 63.6% 64.1%,#a3202f 64.1%)}
+.tb-spd::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:pointer}
+.tb-spd::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:pointer}
+.tb-zones{display:grid;grid-template-columns:31.8% 31.8% 1fr;font-size:.68rem;color:var(--muted);font-family:"Gentium Book Plus",Georgia,serif}
+.tb-zones span:nth-child(2){text-align:center}.tb-zones span:nth-child(3){text-align:right}
+.tb-spdv{font-size:.7rem;color:var(--muted)}
+.tb-flash.lv.lv-easy .la{color:#9be3b5}.tb-flash.lv.lv-med .la{color:#f3d58a}.tb-flash.lv.lv-hard .la{color:#ff9a8a}

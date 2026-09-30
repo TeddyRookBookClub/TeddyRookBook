@@ -20,7 +20,7 @@
     {{ range $items }}
     <figure class="ig-card" id="{{ .file }}" data-tags="{{ delimit .tags "|" }}">
       <a href="/img/infographics/{{ .file }}.jpg" class="ig-open" data-title="{{ .title }}" data-desc="{{ .description }}"{{ with .pdf }} data-pdf="/pdfs/{{ . }}"{{ end }}{{ with .pdf_title }} data-pdftitle="{{ . }}"{{ end }}>
-        <img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy">
+        <span class="ig-frame"><img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy"><span class="ig-expand" aria-hidden="true">⤢ Tap to expand</span></span>
       </a>
       <figcaption>
         <strong>{{ .title }}</strong>
@@ -51,7 +51,7 @@
     cards.forEach(function(card){card.style.display=(t==='all'||card.dataset.tags.split('|').indexOf(t)>-1)?'':'none';});
   });});
   var lb=document.getElementById('ig-lightbox'), img=document.getElementById('ig-lb-img');
-  function close(){lb.hidden=true;img.src='';document.body.style.overflow='';}
+  function close(){lb.hidden=true;lb.classList.remove('zoom');img.src='';document.body.style.overflow='';}
   document.querySelectorAll('.ig-open').forEach(function(a){a.addEventListener('click',function(e){
     e.preventDefault(); img.src=a.href; img.alt=a.dataset.title;
     document.getElementById('ig-lb-title').textContent=a.dataset.title;
@@ -61,6 +61,9 @@
     if(a.dataset.pdf){pl.href=a.dataset.pdf;pl.textContent='📄 '+(a.dataset.pdftitle||'Read the full paper (PDF)');pl.hidden=false;}else{pl.hidden=true;} lb.hidden=false; document.body.style.overflow='hidden';
   });});
   lb.addEventListener('click',function(e){if(e.target===lb||e.target.classList.contains('ig-close'))close();});
+  img.addEventListener('click',function(){lb.classList.toggle('zoom');});
+  // flag infographics taller than the standard card so the card shows a "see all" fade
+  document.querySelectorAll('.ig-frame img').forEach(function(im){function f(){if(im.naturalWidth&&im.naturalHeight/im.naturalWidth>1.48)im.parentNode.classList.add('tall');}if(im.complete)f();else im.addEventListener('load',f);});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
   // open an infographic directly from a link like /infographics/#karamazov-whos-who
   var h=decodeURIComponent(location.hash.slice(1)); if(h){var f=document.getElementById(h); if(f){var a=f.querySelector('.ig-open'); f.scrollIntoView({block:'center'}); if(a) a.click();}}

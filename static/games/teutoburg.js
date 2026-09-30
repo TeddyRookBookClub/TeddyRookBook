@@ -38,6 +38,32 @@
 
   var GLOSS = { 'Varus tres legiones ducit.': 'Varus leads three legions.', 'Pluit et ventus flat.': 'It rains and the wind blows.', 'Milites castra ponunt.': 'The soldiers pitch camp.', 'Via angusta est.': 'The road is narrow.', 'Germani undique oppugnant.': 'The Germans attack from all sides.', 'Silva densa est.': 'The forest is dense.' };
   var showEn = true; try { showEn = W.localStorage.getItem('teut-en') !== '0'; } catch (e) { }
+  // ---------- game speed (difficulty) ----------
+  var GS = 1; try { var gsv = parseFloat(W.localStorage.getItem('teut-speed')); if (gsv >= 0.5 && gsv <= 1.6) GS = gsv; } catch (e) { }
+  var LEVELS = [{ max: 0.85, la: 'Facilis', en: 'Easy', cls: 'lv-easy' }, { max: 1.2, la: 'Mediocris', en: 'Medium', cls: 'lv-med' }, { max: 9, la: 'Difficilis', en: 'Hard', cls: 'lv-hard' }];
+  function level(v) { for (var i = 0; i < LEVELS.length; i++) if (v < LEVELS[i].max) return LEVELS[i]; return LEVELS[2]; }
+  function speedHTML() {
+    var L = level(GS);
+    return '<div class="tb-speed"><label><span class="la">Celeritas</span>' + (showEn ? ' <span class="en">Speed</span>' : '') +
+      ' <b class="tb-lv ' + L.cls + '"><span class="la">' + L.la + '</span>' + (showEn ? ' <span class="en">' + L.en + '</span>' : '') + '</b></label>' +
+      '<input type="range" class="tb-spd" min="0.5" max="1.6" step="0.05" value="' + GS + '" aria-label="Game speed">' +
+      '<div class="tb-zones"><span>' + LEVELS[0].la + (showEn ? ' · ' + LEVELS[0].en : '') + '</span><span>' + LEVELS[1].la + (showEn ? ' · ' + LEVELS[1].en : '') + '</span><span>' + LEVELS[2].la + (showEn ? ' · ' + LEVELS[2].en : '') + '</span></div>' +
+      '<small class="tb-spdv">' + Math.round(GS * 100) + '%</small></div>';
+  }
+  function setSpeed(v) {
+    var before = level(GS); GS = Math.max(0.5, Math.min(1.6, v));
+    try { W.localStorage.setItem('teut-speed', String(GS)); } catch (e) { }
+    var L = level(GS);
+    Array.prototype.forEach.call(root.querySelectorAll('.tb-speed'), function (box) {
+      var inp = box.querySelector('input'); if (+inp.value !== GS) inp.value = GS;
+      var b = box.querySelector('.tb-lv'); b.className = 'tb-lv ' + L.cls;
+      b.innerHTML = '<span class="la">' + L.la + '</span>' + (showEn ? ' <span class="en">' + L.en + '</span>' : '');
+      box.querySelector('.tb-spdv').textContent = Math.round(GS * 100) + '%';
+      if (before !== L) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
+    });
+    if (before !== L) flash(L.la, L.en, 'lv ' + L.cls);
+  }
+
   function T(pair, tag) { tag = tag || 'span'; return '<' + tag + ' class="la">' + pair[0] + '</' + tag + '>' + (showEn && pair[1] ? '<' + tag + ' class="en">' + pair[1] + '</' + tag + '>' : ''); }
 
   // ---------- maze ----------
@@ -348,13 +374,14 @@
       '<div class="tb-btns"><label class="tb-en"><input type="checkbox" id="tb-en"' + (showEn ? ' checked' : '') + '> English</label>' +
       '<button type="button" class="tb-btn" id="tb-pause" title="Pause (P)">❚❚</button><button type="button" class="tb-btn" id="tb-help" title="How to play and history">?</button></div></div>' +
       '<div class="tb-main"><div class="tb-stage"><canvas id="tb-cv"></canvas><div class="tb-flash" id="tb-flash"></div><div class="tb-card" id="tb-card" hidden></div></div>' +
-      '<aside class="tb-side"><h3>' + T(X.words) + '</h3><ul id="tb-learned" class="tb-learned"></ul><h3>Germani</h3><ul class="tb-tribes">' +
+      '<aside class="tb-side"><div id="tb-side-speed">' + speedHTML() + '</div><h3>' + T(X.words) + '</h3><ul id="tb-learned" class="tb-learned"></ul><h3>Germani</h3><ul class="tb-tribes">' +
       TRIBES.map(function (t) { return '<li><i style="background:' + t.color + '"></i><b>' + t.name + '</b><small>' + t.note + '</small></li>'; }).join('') + '</ul></aside></div>' +
       '<div class="tb-pad" aria-label="Direction buttons">' + ['up', 'left', 'right', 'down'].map(function (d) { return '<button type="button" data-d="' + d + '" class="pad-' + d + '"><span>' + { up: '▲', down: '▼', left: '◀', right: '▶' }[d] + '</span><small>' + X[d][0] + '</small></button>'; }).join('') + '</div>';
     cv = root.querySelector('#tb-cv'); ctx = cv.getContext('2d');
     W.addEventListener('resize', function () { resize(); });
-    root.querySelector('#tb-en').onchange = function (e) { showEn = e.target.checked; try { W.localStorage.setItem('teut-en', showEn ? '1' : '0'); } catch (x) { } renderHud(); if (state === 'card' || state === 'menu') refreshCard(); };
+    root.querySelector('#tb-en').onchange = function (e) { showEn = e.target.checked; try { W.localStorage.setItem('teut-en', showEn ? '1' : '0'); } catch (x) { } renderHud(); root.querySelector('#tb-side-speed').innerHTML = speedHTML(); if (state === 'card' || state === 'menu' || cardHTML) refreshCard(); };
     root.querySelector('#tb-pause').onclick = togglePause;
+    root.addEventListener('input', function (e) { if (e.target.classList && e.target.classList.contains('tb-spd')) setSpeed(+e.target.value); });
     root.querySelector('#tb-help').onclick = function () { if (state === 'play') togglePause(); card(helpCard, true); };
     Array.prototype.forEach.call(root.querySelectorAll('[data-d]'), function (b) {
       b.addEventListener('pointerdown', function (e) { e.preventDefault(); steer(b.dataset.d); });
@@ -419,7 +446,7 @@
   function goals() { return '<ul class="tb-goals"><li>🪙 ' + T(X.goal1) + '</li><li>🦅 ' + T(X.goal3) + '</li><li>⚠️ ' + T(X.goal2) + '</li></ul>'; }
   function menuCard() {
     return '<h2>' + T(X.title) + '</h2><p class="lead">' + (showEn ? 'September, AD 9. You are a legionary in Varus’ army, marching through the rain-soaked forest of Germania. Collect coins, grab the eagle standards, and escape the Germanic tribes.' : '') + '</p>' +
-      goals() + '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="new">' + T(X.start) + '</button><button type="button" class="tb-btn helpbtn">' + T(X.help) + '</button></div>' +
+      goals() + speedHTML() + '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="new">' + T(X.start) + '</button><button type="button" class="tb-btn helpbtn">' + T(X.help) + '</button></div>' +
       '<p class="small">Arrow keys or WASD · swipe or use the buttons on a phone · P pauses. Nothing is saved: each game starts fresh.</p>';
   }
   function dayCard() {
@@ -450,7 +477,8 @@
   function helpCard() {
     return '<h2>' + T(X.help) + '</h2>' + goals() +
       '<h3>Controls</h3><ul><li><b>Keyboard:</b> arrow keys or W A S D. <b>P</b> or <b>Esc</b> pauses.</li><li><b>Phone or tablet:</b> swipe on the forest, or use the four buttons: <i>Sursum</i> (up), <i>Deorsum</i> (down), <i>Sinistrorsum</i> (left), <i>Dextrorsum</i> (right).</li>' +
-      '<li>You can reverse direction at any time. Turns are remembered, so press the next turn early.</li></ul>' +
+      '<li>You can reverse direction at any time. Turns are remembered, so press the next turn early.</li>' +
+      '<li><b>Speed</b> (<i>celeritas</i>): slide it left for <i>Facilis</i> (easy), to the middle for <i>Mediocris</i> (medium) or right for <i>Difficilis</i> (hard). It speeds up or slows down the whole forest, you and the tribes alike, and can be changed at any time from the start screen, this help screen or the panel beside the map.</li></ul>' + speedHTML() +
       '<h3>How it plays</h3><ul><li>🪙 Coins (<i>nummi</i>) are 10 points. Clear every coin to escape that day. There are three days (<i>Dies I–III</i>).</li>' +
       '<li>🦅 An eagle standard (<i>aquila</i>) in each corner is worth 50 and rallies you. For a few seconds the tribesmen turn blue and <i>timent</i> (are afraid). Catch them for 200, 400, 800 and 1600. They retreat to the turf rampart in the middle and return.</li>' +
       '<li>🍞 Bonus supplies appear below the rampart twice per day: <i>panis</i> (bread), <i>posca</i> (the sour-wine drink of Roman soldiers), <i>galea</i> (helmet), <i>pilum</i> (javelin).</li>' +
@@ -468,7 +496,7 @@
   // ---------- loop ----------
   function frame(ts) {
     var t = ts / 1000, dt = Math.min(0.05, t - (last || t)); last = t;
-    if (S && state !== 'paused' && state !== 'card') update(dt);
+    if (S && state !== 'paused' && state !== 'card') update(dt * GS);
     if (S) draw(); else drawIdle(t);
     W.requestAnimationFrame(frame);
   }
