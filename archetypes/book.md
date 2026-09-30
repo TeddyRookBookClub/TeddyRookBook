@@ -12,9 +12,6 @@ editions: []         # each copy you own, e.g.
 #    vol: "22"
 #    detail: "Butcher and Lang translation"
 #  - set: "Penguin Classics"
-posts: []           # links to your posts, e.g.
-#  - title: "One line about the post"
-#    url: "https://x.com/teddyrookbook/status/..."
 notes: ""            # shown in the Library's Notes column, e.g. "2 copies in different translations"
 haveRead: false
 owned: true          # do you own a copy?

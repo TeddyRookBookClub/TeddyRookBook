@@ -31,12 +31,6 @@
     </div>
   </header>
 
-  {{ with .Params.posts }}
-  <section style="margin:0 0 1.2rem;">
-    <h2 style="font-size:1.05rem;color:#004C2A;margin:0 0 .4rem;">𝕏 Posts about this book</h2>
-    <ul style="margin:0;padding-left:1.1rem;">{{ range . }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .title }}</a></li>{{ end }}</ul>
-  </section>
-  {{ end }}
   {{ if or .Params.editions .Params.notes }}
   {{ $setKeys := dict }}{{ range site.Data.sets }}{{ $setKeys = merge $setKeys (dict .name .key) }}{{ end }}
   <section style="margin:0 0 1.5rem;padding:.8rem 1rem;border:1px solid #dde5df;border-left:4px solid #b8963e;border-radius:10px;">
