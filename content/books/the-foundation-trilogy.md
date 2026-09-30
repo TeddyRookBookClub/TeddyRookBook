@@ -1,5 +1,6 @@
 ---
 title: "The Foundation Trilogy"
+description: "The Foundation Trilogy by Isaac Asimov (1951), in the Teddy Rook Book home library."
 author: "Isaac Asimov"
 year: 1951
 country: "United States"

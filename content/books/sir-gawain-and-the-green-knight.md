@@ -1,5 +1,6 @@
 ---
 title: "Sir Gawain and the Green Knight"
+description: "Sir Gawain and the Green Knight by J. R. R. Tolkien (translator) (1975), in the Teddy Rook Book home library."
 author: "J. R. R. Tolkien (translator)"
 year: 1975
 country: "England"

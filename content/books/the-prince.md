@@ -1,5 +1,6 @@
 ---
 title: "The Prince"
+description: "The Prince by Niccolò Machiavelli (1513), in the Teddy Rook Book home library."
 author: "Niccolò Machiavelli"
 pages: 140
 year: 1513

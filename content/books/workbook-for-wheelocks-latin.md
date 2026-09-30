@@ -1,5 +1,6 @@
 ---
 title: "Workbook for Wheelock's Latin"
+description: "Workbook for Wheelock's Latin by Paul T. Comeau and Richard A. LaFleur (1980), in the Teddy Rook Book home library."
 author: "Paul T. Comeau and Richard A. LaFleur"
 year: 1980
 country: "United States"

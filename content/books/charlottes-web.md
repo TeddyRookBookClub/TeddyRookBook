@@ -1,5 +1,6 @@
 ---
 title: "Charlotte's Web"
+description: "Charlotte's Web by E. B. White (1952), in the Teddy Rook Book home library."
 author: "E. B. White"
 year: 1952
 country: "United States"

@@ -1,5 +1,6 @@
 ---
 title: "From Ritual to Romance"
+description: "From Ritual to Romance by Jessie L. Weston (1920), in the Teddy Rook Book home library."
 author: "Jessie L. Weston"
 year: 1920
 country: "England"

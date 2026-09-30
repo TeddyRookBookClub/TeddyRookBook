@@ -1,5 +1,6 @@
 ---
 title: "Heidi"
+description: "Heidi by Johanna Spyri (1881), in the Teddy Rook Book home library."
 author: "Johanna Spyri"
 year: 1881
 country: "Switzerland"

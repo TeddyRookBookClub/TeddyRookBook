@@ -1,5 +1,6 @@
 ---
 title: "Les Misérables"
+description: "Les Misérables by Victor Hugo (1862), in the Teddy Rook Book home library."
 author: "Victor Hugo"
 year: 1862
 country: "France"

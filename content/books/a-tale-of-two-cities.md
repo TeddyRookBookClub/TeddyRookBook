@@ -1,5 +1,6 @@
 ---
 title: "A Tale of Two Cities"
+description: "A Tale of Two Cities by Charles Dickens (1859), in the Teddy Rook Book home library."
 author: "Charles Dickens"
 pages: 340
 year: 1859

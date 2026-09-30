@@ -1,5 +1,6 @@
 ---
 title: "Slaughterhouse-Five"
+description: "Slaughterhouse-Five by Kurt Vonnegut (1969), in the Teddy Rook Book home library."
 author: "Kurt Vonnegut"
 year: 1969
 country: "United States"

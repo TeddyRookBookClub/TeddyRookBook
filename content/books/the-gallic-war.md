@@ -1,5 +1,6 @@
 ---
 title: "The Gallic War"
+description: "The Gallic War by Julius Caesar (50 BC), in the Teddy Rook Book home library."
 author: "Julius Caesar"
 year: -50
 country: "Rome"

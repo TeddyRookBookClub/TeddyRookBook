@@ -1,5 +1,6 @@
 ---
 title: "Alice's Adventures in Wonderland & Other Stories"
+description: "Alice's Adventures in Wonderland & Other Stories by Lewis Carroll (1865), in the Teddy Rook Book home library."
 author: "Lewis Carroll"
 year: 1865
 country: "England"

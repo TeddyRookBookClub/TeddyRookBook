@@ -1,5 +1,6 @@
 ---
 title: "Zero to One"
+description: "Zero to One by Peter Thiel (2014), in the Teddy Rook Book home library."
 author: "Peter Thiel"
 year: 2014
 country: "United States"

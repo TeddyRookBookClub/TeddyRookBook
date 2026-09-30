@@ -1,5 +1,6 @@
 ---
 title: "The Master and Margarita"
+description: "The Master and Margarita by Mikhail Bulgakov (1967), in the Teddy Rook Book home library."
 author: "Mikhail Bulgakov"
 pages: 402
 year: 1967

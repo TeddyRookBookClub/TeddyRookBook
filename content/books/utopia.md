@@ -1,5 +1,6 @@
 ---
 title: "Utopia"
+description: "Utopia by Thomas More (1516), in the Teddy Rook Book home library."
 author: "Thomas More"
 pages: 128
 year: 1516

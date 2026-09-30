@@ -1,5 +1,6 @@
 ---
 title: "From Scythia to Camelot"
+description: "From Scythia to Camelot by C. Scott Littleton and Linda A. Malcor (1994), in the Teddy Rook Book home library."
 author: "C. Scott Littleton and Linda A. Malcor"
 year: 1994
 country: "United States"

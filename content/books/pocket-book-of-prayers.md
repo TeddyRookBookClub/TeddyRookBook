@@ -1,5 +1,6 @@
 ---
 title: "Pocket Book of Prayers"
+description: "Pocket Book of Prayers, in the Teddy Rook Book home library."
 author: "Various"
 country: ""
 authorCountry: ""

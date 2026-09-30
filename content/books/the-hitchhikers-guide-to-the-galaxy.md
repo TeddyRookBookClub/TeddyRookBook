@@ -1,5 +1,6 @@
 ---
 title: "The Ultimate Hitchhiker's Guide to the Galaxy"
+description: "The Ultimate Hitchhiker's Guide to the Galaxy by Douglas Adams (1979), in the Teddy Rook Book home library."
 author: "Douglas Adams"
 year: 1979
 country: "England"

@@ -1,5 +1,6 @@
 ---
 title: "The Wonderful Wizard of Oz"
+description: "The Wonderful Wizard of Oz by L. Frank Baum (1900), in the Teddy Rook Book home library."
 author: "L. Frank Baum"
 year: 1900
 country: "United States"

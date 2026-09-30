@@ -1,5 +1,6 @@
 ---
 title: "How to Win Friends and Influence People"
+description: "How to Win Friends and Influence People by Dale Carnegie (1936), in the Teddy Rook Book home library."
 author: "Dale Carnegie"
 year: 1936
 country: "United States"

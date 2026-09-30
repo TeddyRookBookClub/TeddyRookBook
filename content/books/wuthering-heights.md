@@ -1,5 +1,6 @@
 ---
 title: "Wuthering Heights"
+description: "Wuthering Heights by Emily Brontë (1847), in the Teddy Rook Book home library."
 author: "Emily Brontë"
 year: 1847
 country: "England"

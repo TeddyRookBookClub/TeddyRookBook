@@ -1,5 +1,6 @@
 ---
 title: "Moral Letters to Lucilius"
+description: "Moral Letters to Lucilius by Seneca (AD 65), in the Teddy Rook Book home library."
 author: "Seneca"
 year: 65
 country: "Rome"

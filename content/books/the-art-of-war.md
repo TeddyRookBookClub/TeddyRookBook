@@ -1,5 +1,6 @@
 ---
 title: "The Art of War"
+description: "The Art of War by Sun Tzu (500 BC), in the Teddy Rook Book home library."
 author: "Sun Tzu"
 year: -500
 country: "China"

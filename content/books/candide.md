@@ -1,5 +1,6 @@
 ---
 title: "Candide"
+description: "Candide by Voltaire (1759), in the Teddy Rook Book home library."
 author: "Voltaire"
 pages: 130
 year: 1759

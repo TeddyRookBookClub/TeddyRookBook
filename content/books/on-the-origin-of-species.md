@@ -1,5 +1,6 @@
 ---
 title: "On the Origin of Species"
+description: "On the Origin of Species by Charles Darwin (1859), in the Teddy Rook Book home library."
 author: "Charles Darwin"
 pages: 502
 year: 1859

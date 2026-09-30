@@ -1,5 +1,6 @@
 ---
 title: "Strange Case of Dr Jekyll and Mr Hyde"
+description: "Strange Case of Dr Jekyll and Mr Hyde by Robert Louis Stevenson (1886), in the Teddy Rook Book home library."
 author: "Robert Louis Stevenson"
 year: 1886
 country: "Scotland"

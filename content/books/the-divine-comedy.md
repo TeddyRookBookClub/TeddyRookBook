@@ -1,5 +1,6 @@
 ---
 title: "The Divine Comedy"
+description: "The Divine Comedy by Dante Alighieri (1321), in the Teddy Rook Book home library."
 author: "Dante Alighieri"
 pages: 432
 year: 1321

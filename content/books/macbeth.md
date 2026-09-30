@@ -1,5 +1,6 @@
 ---
 title: "Macbeth"
+description: "Macbeth by William Shakespeare (1606), in the Teddy Rook Book home library."
 author: "William Shakespeare"
 pages: 90
 year: 1606

@@ -1,5 +1,6 @@
 ---
 title: "Plutarch's Lives"
+description: "Plutarch's Lives by Plutarch (AD 100), in the Teddy Rook Book home library."
 author: "Plutarch"
 year: 100
 country: "Greece"

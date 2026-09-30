@@ -1,5 +1,6 @@
 ---
 title: "Beauty and the Beast and Other Classic Fairy Tales"
+description: "Beauty and the Beast and Other Classic Fairy Tales (1740), in the Teddy Rook Book home library."
 author: "Various"
 year: 1740
 country: "France"

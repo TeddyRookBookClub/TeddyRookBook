@@ -1,5 +1,6 @@
 ---
 title: "Miracles"
+description: "Miracles by C. S. Lewis (1947), in the Teddy Rook Book home library."
 author: "C. S. Lewis"
 year: 1947
 country: "England"

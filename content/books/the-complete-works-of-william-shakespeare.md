@@ -1,5 +1,6 @@
 ---
 title: "The Complete Works of William Shakespeare"
+description: "The Complete Works of William Shakespeare by William Shakespeare (1623), in the Teddy Rook Book home library."
 author: "William Shakespeare"
 year: 1623
 country: "England"

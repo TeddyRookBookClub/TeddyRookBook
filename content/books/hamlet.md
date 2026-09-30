@@ -1,5 +1,6 @@
 ---
 title: "Hamlet"
+description: "Hamlet by William Shakespeare (1600), in the Teddy Rook Book home library."
 author: "William Shakespeare"
 pages: 152
 year: 1600

@@ -1,5 +1,6 @@
 ---
 title: "Institutes of the Christian Religion"
+description: "Institutes of the Christian Religion by John Calvin (1536), in the Teddy Rook Book home library."
 author: "John Calvin"
 year: 1536
 country: "Switzerland"

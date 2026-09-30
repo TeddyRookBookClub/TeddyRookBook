@@ -1,5 +1,6 @@
 ---
 title: "Treasure Island"
+description: "Treasure Island by Robert Louis Stevenson (1883), in the Teddy Rook Book home library."
 author: "Robert Louis Stevenson"
 year: 1883
 country: "Scotland"

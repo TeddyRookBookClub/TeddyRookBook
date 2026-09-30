@@ -1,5 +1,6 @@
 ---
 title: "The Federalist Papers (Selections)"
+description: "The Federalist Papers (Selections) by Alexander Hamilton, James Madison, John Jay (1788), in the Teddy Rook Book home library."
 author: "Alexander Hamilton, James Madison, John Jay"
 pages: 250
 year: 1788

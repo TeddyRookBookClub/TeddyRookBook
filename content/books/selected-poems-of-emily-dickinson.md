@@ -1,5 +1,6 @@
 ---
 title: "Selected Poems of Emily Dickinson"
+description: "Selected Poems of Emily Dickinson by Emily Dickinson (1890), in the Teddy Rook Book home library."
 author: "Emily Dickinson"
 year: 1890
 country: "United States"

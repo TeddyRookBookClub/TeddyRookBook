@@ -1,5 +1,6 @@
 ---
 title: "The Godfather"
+description: "The Godfather by Mario Puzo (1969), in the Teddy Rook Book home library."
 author: "Mario Puzo"
 year: 1969
 country: "United States"

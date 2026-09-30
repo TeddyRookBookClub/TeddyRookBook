@@ -1,5 +1,6 @@
 ---
 title: "Death on the Nile and Other Hercule Poirot Mysteries"
+description: "Death on the Nile and Other Hercule Poirot Mysteries by Agatha Christie (1937), in the Teddy Rook Book home library."
 author: "Agatha Christie"
 year: 1937
 country: "England"

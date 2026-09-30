@@ -1,5 +1,6 @@
 ---
 title: "Theodore Rex"
+description: "Theodore Rex by Edmund Morris (2001), in the Teddy Rook Book home library."
 author: "Edmund Morris"
 year: 2001
 country: "United States"

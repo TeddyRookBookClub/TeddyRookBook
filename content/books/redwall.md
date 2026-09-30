@@ -1,5 +1,6 @@
 ---
 title: "Redwall"
+description: "Redwall by Brian Jacques (1986), in the Teddy Rook Book home library."
 author: "Brian Jacques"
 year: 1986
 country: "England"

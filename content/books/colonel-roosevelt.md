@@ -1,5 +1,6 @@
 ---
 title: "Colonel Roosevelt"
+description: "Colonel Roosevelt by Edmund Morris (2010), in the Teddy Rook Book home library."
 author: "Edmund Morris"
 year: 2010
 country: "United States"

@@ -1,5 +1,6 @@
 ---
 title: "Dune"
+description: "Dune by Frank Herbert (1965), in the Teddy Rook Book home library."
 author: "Frank Herbert"
 year: 1965
 country: "United States"

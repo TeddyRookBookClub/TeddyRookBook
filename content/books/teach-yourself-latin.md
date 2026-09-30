@@ -1,5 +1,6 @@
 ---
 title: "Teach Yourself Latin"
+description: "Teach Yourself Latin by Gavin Betts (1986), in the Teddy Rook Book home library."
 author: "Gavin Betts"
 year: 1986
 country: "England"

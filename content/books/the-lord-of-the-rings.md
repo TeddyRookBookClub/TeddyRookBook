@@ -1,5 +1,6 @@
 ---
 title: "The Lord of the Rings"
+description: "The Lord of the Rings by J. R. R. Tolkien (1954), in the Teddy Rook Book home library."
 author: "J. R. R. Tolkien"
 year: 1954
 country: "England"

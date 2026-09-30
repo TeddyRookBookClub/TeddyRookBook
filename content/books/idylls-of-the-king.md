@@ -1,5 +1,6 @@
 ---
 title: "Idylls of the King"
+description: "Idylls of the King by Alfred, Lord Tennyson (1859), in the Teddy Rook Book home library."
 author: "Alfred, Lord Tennyson"
 year: 1859
 country: "England"

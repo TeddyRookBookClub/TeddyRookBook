@@ -1,5 +1,6 @@
 ---
 title: "Murder on the Orient Express and Other Hercule Poirot Mysteries"
+description: "Murder on the Orient Express and Other Hercule Poirot Mysteries by Agatha Christie (1934), in the Teddy Rook Book home library."
 author: "Agatha Christie"
 year: 1934
 country: "England"

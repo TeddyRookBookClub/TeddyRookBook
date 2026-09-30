@@ -1,5 +1,6 @@
 ---
 title: "When Genius Failed"
+description: "When Genius Failed by Roger Lowenstein (2000), in the Teddy Rook Book home library."
 author: "Roger Lowenstein"
 year: 2000
 country: "United States"

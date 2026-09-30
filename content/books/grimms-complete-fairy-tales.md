@@ -1,5 +1,6 @@
 ---
 title: "Grimm's Complete Fairy Tales"
+description: "Grimm's Complete Fairy Tales by Jacob and Wilhelm Grimm (1812), in the Teddy Rook Book home library."
 author: "Jacob and Wilhelm Grimm"
 year: 1812
 country: "Germany"

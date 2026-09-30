@@ -1,5 +1,6 @@
 ---
 title: "The History of the Decline and Fall of the Roman Empire"
+description: "The History of the Decline and Fall of the Roman Empire by Edward Gibbon (1776), in the Teddy Rook Book home library."
 author: "Edward Gibbon"
 year: 1776
 country: "England"

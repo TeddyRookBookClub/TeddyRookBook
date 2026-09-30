@@ -1,5 +1,6 @@
 ---
 title: "The Supreme Court: Landmark Decisions"
+description: "The Supreme Court: Landmark Decisions, in the Teddy Rook Book home library."
 author: "Various"
 country: "United States"
 authorCountry: ""

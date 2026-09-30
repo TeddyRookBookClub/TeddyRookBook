@@ -1,5 +1,6 @@
 ---
 title: "The Iliad"
+description: "The Iliad by Homer (750 BC), in the Teddy Rook Book home library."
 author: "Homer"
 pages: 450
 year: -750

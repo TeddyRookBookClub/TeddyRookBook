@@ -1,5 +1,6 @@
 ---
 title: "The Brothers Karamazov"
+description: "The Brothers Karamazov by Fyodor Dostoevsky (1880), in the Teddy Rook Book home library."
 author: "Fyodor Dostoevsky"
 pages: 840
 year: 1880

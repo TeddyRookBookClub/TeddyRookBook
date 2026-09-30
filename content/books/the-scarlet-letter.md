@@ -1,5 +1,6 @@
 ---
 title: "The Scarlet Letter"
+description: "The Scarlet Letter by Nathaniel Hawthorne (1850), in the Teddy Rook Book home library."
 author: "Nathaniel Hawthorne"
 year: 1850
 country: "United States"

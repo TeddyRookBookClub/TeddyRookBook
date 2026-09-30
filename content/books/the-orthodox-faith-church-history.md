@@ -1,5 +1,6 @@
 ---
 title: "The Orthodox Faith: Church History"
+description: "The Orthodox Faith: Church History by Thomas Hopko (1976), in the Teddy Rook Book home library."
 author: "Thomas Hopko"
 year: 1976
 country: "United States"

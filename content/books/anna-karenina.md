@@ -1,5 +1,6 @@
 ---
 title: "Anna Karenina"
+description: "Anna Karenina by Leo Tolstoy (1877), in the Teddy Rook Book home library."
 author: "Leo Tolstoy"
 pages: 864
 year: 1877

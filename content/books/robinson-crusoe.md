@@ -1,5 +1,6 @@
 ---
 title: "Robinson Crusoe"
+description: "Robinson Crusoe by Daniel Defoe (1719), in the Teddy Rook Book home library."
 author: "Daniel Defoe"
 year: 1719
 country: "England"

@@ -1,5 +1,6 @@
 ---
 title: "How the Catholic Church Built Western Civilization"
+description: "How the Catholic Church Built Western Civilization by Thomas E. Woods Jr. (2005), in the Teddy Rook Book home library."
 author: "Thomas E. Woods Jr."
 year: 2005
 country: "United States"

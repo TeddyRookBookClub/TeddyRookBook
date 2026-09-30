@@ -1,5 +1,6 @@
 ---
 title: "For Esmé—with Love and Squalor, and Other Stories"
+description: "For Esmé—with Love and Squalor, and Other Stories by J. D. Salinger (1953), in the Teddy Rook Book home library."
 author: "J. D. Salinger"
 year: 1953
 country: "United States"

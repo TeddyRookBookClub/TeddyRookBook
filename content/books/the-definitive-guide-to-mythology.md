@@ -1,5 +1,6 @@
 ---
 title: "The Definitive Guides to Greek, Roman, Norse and Celtic Mythology"
+description: "The Definitive Guides to Greek, Roman, Norse and Celtic Mythology by Finn D. Moore and others, in the Teddy Rook Book home library."
 author: "Finn D. Moore and others"
 country: ""
 authorCountry: ""

@@ -1,5 +1,6 @@
 ---
 title: "Softwar"
+description: "Softwar by Jason P. Lowery (2023), in the Teddy Rook Book home library."
 author: "Jason P. Lowery"
 year: 2023
 country: "United States"

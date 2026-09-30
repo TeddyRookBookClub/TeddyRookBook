@@ -1,5 +1,6 @@
 ---
 title: "Winnie Ille Pu"
+description: "Winnie Ille Pu by A. A. Milne (1958), in the Teddy Rook Book home library."
 author: "A. A. Milne"
 year: 1958
 country: "England"

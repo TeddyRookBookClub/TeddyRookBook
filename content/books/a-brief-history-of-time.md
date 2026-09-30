@@ -1,5 +1,6 @@
 ---
 title: "A Brief History of Time"
+description: "A Brief History of Time by Stephen Hawking (1988), in the Teddy Rook Book home library."
 author: "Stephen Hawking"
 year: 1988
 country: "England"

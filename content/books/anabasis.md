@@ -1,5 +1,6 @@
 ---
 title: "Anabasis"
+description: "Anabasis by Xenophon (370 BC), in the Teddy Rook Book home library."
 author: "Xenophon"
 year: -370
 country: "Greece"

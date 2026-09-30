@@ -1,5 +1,6 @@
 ---
 title: "Nicomachean Ethics"
+description: "Nicomachean Ethics by Aristotle (350 BC), in the Teddy Rook Book home library."
 author: "Aristotle"
 pages: 200
 year: -350

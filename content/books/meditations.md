@@ -1,5 +1,6 @@
 ---
 title: "Meditations"
+description: "Meditations by Marcus Aurelius (AD 180), in the Teddy Rook Book home library."
 author: "Marcus Aurelius"
 pages: 192
 year: 180

@@ -1,5 +1,6 @@
 ---
 title: "The Problem of Pain"
+description: "The Problem of Pain by C. S. Lewis (1940), in the Teddy Rook Book home library."
 author: "C. S. Lewis"
 year: 1940
 country: "England"

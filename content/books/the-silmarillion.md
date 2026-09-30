@@ -1,5 +1,6 @@
 ---
 title: "The Silmarillion"
+description: "The Silmarillion by J. R. R. Tolkien (1977), in the Teddy Rook Book home library."
 author: "J. R. R. Tolkien"
 year: 1977
 country: "England"

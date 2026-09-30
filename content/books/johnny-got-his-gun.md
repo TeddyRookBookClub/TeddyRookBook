@@ -1,5 +1,6 @@
 ---
 title: "Johnny Got His Gun"
+description: "Johnny Got His Gun by Dalton Trumbo (1939), in the Teddy Rook Book home library."
 author: "Dalton Trumbo"
 year: 1939
 country: "United States"

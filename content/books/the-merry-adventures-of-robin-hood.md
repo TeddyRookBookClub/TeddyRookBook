@@ -1,5 +1,6 @@
 ---
 title: "The Merry Adventures of Robin Hood"
+description: "The Merry Adventures of Robin Hood by Howard Pyle (1883), in the Teddy Rook Book home library."
 author: "Howard Pyle"
 year: 1883
 country: "United States"

@@ -1,5 +1,6 @@
 ---
 title: "Swann's Way"
+description: "Swann's Way by Marcel Proust (1913), in the Teddy Rook Book home library."
 author: "Marcel Proust"
 pages: 450
 year: 1913

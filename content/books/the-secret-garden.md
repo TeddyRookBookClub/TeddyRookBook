@@ -1,5 +1,6 @@
 ---
 title: "The Secret Garden"
+description: "The Secret Garden by Frances Hodgson Burnett (1911), in the Teddy Rook Book home library."
 author: "Frances Hodgson Burnett"
 year: 1911
 country: "England"

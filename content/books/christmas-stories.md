@@ -1,5 +1,6 @@
 ---
 title: "Christmas Stories"
+description: "Christmas Stories by Charles Dickens (1843), in the Teddy Rook Book home library."
 author: "Charles Dickens"
 year: 1843
 country: "England"

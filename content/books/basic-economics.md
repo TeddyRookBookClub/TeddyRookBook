@@ -1,5 +1,6 @@
 ---
 title: "Basic Economics"
+description: "Basic Economics by Thomas Sowell (2000), in the Teddy Rook Book home library."
 author: "Thomas Sowell"
 year: 2000
 country: "United States"

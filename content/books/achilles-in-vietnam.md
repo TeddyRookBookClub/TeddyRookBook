@@ -1,5 +1,6 @@
 ---
 title: "Achilles in Vietnam"
+description: "Achilles in Vietnam by Jonathan Shay (1994), in the Teddy Rook Book home library."
 author: "Jonathan Shay"
 year: 1994
 country: "United States"

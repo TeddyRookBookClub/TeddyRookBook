@@ -1,5 +1,6 @@
 ---
 title: "Wheelock's Latin"
+description: "Wheelock's Latin by Frederic M. Wheelock (1956), in the Teddy Rook Book home library."
 author: "Frederic M. Wheelock"
 year: 1956
 country: "United States"

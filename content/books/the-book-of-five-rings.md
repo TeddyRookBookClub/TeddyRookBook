@@ -1,5 +1,6 @@
 ---
 title: "The Book of Five Rings"
+description: "The Book of Five Rings by Miyamoto Musashi (1645), in the Teddy Rook Book home library."
 author: "Miyamoto Musashi"
 year: 1645
 country: "Japan"

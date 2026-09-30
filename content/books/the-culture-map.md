@@ -1,5 +1,6 @@
 ---
 title: "The Culture Map"
+description: "The Culture Map by Erin Meyer (2014), in the Teddy Rook Book home library."
 author: "Erin Meyer"
 year: 2014
 country: "United States"

@@ -1,5 +1,6 @@
 ---
 title: "The Canterbury Tales"
+description: "The Canterbury Tales by Geoffrey Chaucer (1400), in the Teddy Rook Book home library."
 author: "Geoffrey Chaucer"
 year: 1400
 country: "England"

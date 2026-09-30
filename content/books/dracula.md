@@ -1,5 +1,6 @@
 ---
 title: "Dracula"
+description: "Dracula by Bram Stoker (1897), in the Teddy Rook Book home library."
 author: "Bram Stoker"
 year: 1897
 country: "England"

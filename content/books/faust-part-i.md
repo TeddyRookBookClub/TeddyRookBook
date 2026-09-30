@@ -1,5 +1,6 @@
 ---
 title: "Faust, Part I"
+description: "Faust, Part I by Johann Wolfgang von Goethe (1808), in the Teddy Rook Book home library."
 author: "Johann Wolfgang von Goethe"
 pages: 200
 year: 1808

@@ -1,5 +1,6 @@
 ---
 title: "The Abolition of Man"
+description: "The Abolition of Man by C. S. Lewis (1943), in the Teddy Rook Book home library."
 author: "C. S. Lewis"
 year: 1943
 country: "England"

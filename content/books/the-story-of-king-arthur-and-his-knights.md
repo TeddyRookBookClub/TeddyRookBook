@@ -1,5 +1,6 @@
 ---
 title: "The Story of King Arthur and His Knights"
+description: "The Story of King Arthur and His Knights by Howard Pyle (1903), in the Teddy Rook Book home library."
 author: "Howard Pyle"
 year: 1903
 country: "United States"

@@ -1,5 +1,6 @@
 ---
 title: "The Screwtape Letters"
+description: "The Screwtape Letters by C. S. Lewis (1942), in the Teddy Rook Book home library."
 author: "C. S. Lewis"
 year: 1942
 country: "England"

@@ -1,5 +1,6 @@
 ---
 title: "City of God"
+description: "City of God by Augustine of Hippo (AD 426), in the Teddy Rook Book home library."
 author: "Augustine of Hippo"
 year: 426
 country: "Rome"

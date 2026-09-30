@@ -1,5 +1,6 @@
 ---
 title: "The Odyssey"
+description: "The Odyssey by Homer (800 BC), in the Teddy Rook Book home library."
 author: "Homer"
 pages: 350
 year: -800

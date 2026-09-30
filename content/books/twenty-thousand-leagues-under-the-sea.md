@@ -1,5 +1,6 @@
 ---
 title: "Twenty Thousand Leagues Under the Sea"
+description: "Twenty Thousand Leagues Under the Sea by Jules Verne (1870), in the Teddy Rook Book home library."
 author: "Jules Verne"
 year: 1870
 country: "France"

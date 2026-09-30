@@ -1,5 +1,6 @@
 ---
 title: "The Trial"
+description: "The Trial by Franz Kafka (1925), in the Teddy Rook Book home library."
 author: "Franz Kafka"
 year: 1925
 country: "Germany"

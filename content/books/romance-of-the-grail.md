@@ -1,5 +1,6 @@
 ---
 title: "Romance of the Grail"
+description: "Romance of the Grail by Joseph Campbell (2015), in the Teddy Rook Book home library."
 author: "Joseph Campbell"
 year: 2015
 country: "United States"

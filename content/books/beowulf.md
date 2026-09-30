@@ -1,5 +1,6 @@
 ---
 title: "Beowulf"
+description: "Beowulf by Anonymous (1000), in the Teddy Rook Book home library."
 author: "Anonymous"
 pages: 120
 year: 1000

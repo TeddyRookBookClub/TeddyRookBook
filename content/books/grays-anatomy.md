@@ -1,5 +1,6 @@
 ---
 title: "Gray's Anatomy"
+description: "Gray's Anatomy by Henry Gray (1858), in the Teddy Rook Book home library."
 author: "Henry Gray"
 year: 1858
 country: "England"

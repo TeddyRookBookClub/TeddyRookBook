@@ -1,5 +1,6 @@
 ---
 title: "A Treasury of Greek Mythology"
+description: "A Treasury of Greek Mythology, in the Teddy Rook Book home library."
 author: "Various"
 country: "Greece"
 authorCountry: ""

@@ -1,5 +1,6 @@
 ---
 title: "Jurassic Park and The Lost World"
+description: "Jurassic Park and The Lost World by Michael Crichton (1990), in the Teddy Rook Book home library."
 author: "Michael Crichton"
 year: 1990
 country: "United States"

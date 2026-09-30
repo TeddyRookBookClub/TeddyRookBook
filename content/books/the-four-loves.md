@@ -1,5 +1,6 @@
 ---
 title: "The Four Loves"
+description: "The Four Loves by C. S. Lewis (1960), in the Teddy Rook Book home library."
 author: "C. S. Lewis"
 year: 1960
 country: "England"

@@ -1,5 +1,6 @@
 ---
 title: "Greek Epic Fragments"
+description: "Greek Epic Fragments by Various (ed. M. L. West) (600 BC), in the Teddy Rook Book home library."
 author: "Various (ed. M. L. West)"
 year: -600
 country: "Greece"

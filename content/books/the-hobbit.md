@@ -1,5 +1,6 @@
 ---
 title: "The Hobbit"
+description: "The Hobbit by J. R. R. Tolkien (1937), in the Teddy Rook Book home library."
 author: "J. R. R. Tolkien"
 year: 1937
 country: "England"

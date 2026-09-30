@@ -1,5 +1,6 @@
 ---
 title: "Metamorphoses"
+description: "Metamorphoses by Ovid (AD 8), in the Teddy Rook Book home library."
 author: "Ovid"
 year: 8
 country: "Rome"

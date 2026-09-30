@@ -1,5 +1,6 @@
 ---
 title: "The Wind in the Willows"
+description: "The Wind in the Willows by Kenneth Grahame (1908), in the Teddy Rook Book home library."
 author: "Kenneth Grahame"
 year: 1908
 country: "England"

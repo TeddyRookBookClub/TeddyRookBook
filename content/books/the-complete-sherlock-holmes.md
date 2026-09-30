@@ -1,5 +1,6 @@
 ---
 title: "The Complete Sherlock Holmes"
+description: "The Complete Sherlock Holmes by Arthur Conan Doyle (1887), in the Teddy Rook Book home library."
 author: "Arthur Conan Doyle"
 year: 1887
 country: "England"

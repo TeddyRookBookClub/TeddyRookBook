@@ -1,5 +1,6 @@
 ---
 title: "Wheelock's Latin Reader"
+description: "Wheelock's Latin Reader by Frederic M. Wheelock (1967), in the Teddy Rook Book home library."
 author: "Frederic M. Wheelock"
 year: 1967
 country: "United States"

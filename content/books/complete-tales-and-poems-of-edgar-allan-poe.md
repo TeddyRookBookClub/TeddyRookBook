@@ -1,5 +1,6 @@
 ---
 title: "The Complete Tales and Poems of Edgar Allan Poe"
+description: "The Complete Tales and Poems of Edgar Allan Poe by Edgar Allan Poe (1845), in the Teddy Rook Book home library."
 author: "Edgar Allan Poe"
 year: 1845
 country: "United States"

@@ -1,5 +1,6 @@
 ---
 title: "Crime and Punishment"
+description: "Crime and Punishment by Fyodor Dostoevsky (1866), in the Teddy Rook Book home library."
 author: "Fyodor Dostoevsky"
 pages: 545
 year: 1866

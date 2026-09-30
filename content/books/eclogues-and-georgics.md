@@ -1,5 +1,6 @@
 ---
 title: "Eclogues and Georgics"
+description: "Eclogues and Georgics by Virgil (29 BC), in the Teddy Rook Book home library."
 author: "Virgil"
 year: -29
 country: "Rome"

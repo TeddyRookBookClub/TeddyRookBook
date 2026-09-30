@@ -1,5 +1,6 @@
 ---
 title: "Jane Austen: Seven Novels"
+description: "Jane Austen: Seven Novels by Jane Austen (1811), in the Teddy Rook Book home library."
 author: "Jane Austen"
 year: 1811
 country: "England"

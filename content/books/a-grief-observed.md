@@ -1,5 +1,6 @@
 ---
 title: "A Grief Observed"
+description: "A Grief Observed by C. S. Lewis (1961), in the Teddy Rook Book home library."
 author: "C. S. Lewis"
 year: 1961
 country: "England"

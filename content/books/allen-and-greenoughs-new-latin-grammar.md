@@ -1,5 +1,6 @@
 ---
 title: "Allen and Greenough's New Latin Grammar"
+description: "Allen and Greenough's New Latin Grammar by J. H. Allen and J. B. Greenough (1903), in the Teddy Rook Book home library."
 author: "J. H. Allen and J. B. Greenough"
 year: 1903
 country: "United States"

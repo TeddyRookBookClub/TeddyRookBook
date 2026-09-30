@@ -1,5 +1,6 @@
 ---
 title: "Pride and Prejudice"
+description: "Pride and Prejudice by Jane Austen (1813), in the Teddy Rook Book home library."
 author: "Jane Austen"
 pages: 432
 year: 1813

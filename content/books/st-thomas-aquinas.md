@@ -1,5 +1,6 @@
 ---
 title: "St. Thomas Aquinas"
+description: "St. Thomas Aquinas by G. K. Chesterton (1933), in the Teddy Rook Book home library."
 author: "G. K. Chesterton"
 year: 1933
 country: "England"

@@ -1,5 +1,6 @@
 ---
 title: "Black Beauty"
+description: "Black Beauty by Anna Sewell (1877), in the Teddy Rook Book home library."
 author: "Anna Sewell"
 year: 1877
 country: "England"

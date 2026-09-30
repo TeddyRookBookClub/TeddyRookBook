@@ -1,5 +1,6 @@
 ---
 title: "The Wealth of Nations"
+description: "The Wealth of Nations by Adam Smith (1776), in the Teddy Rook Book home library."
 author: "Adam Smith"
 pages: 800
 year: 1776

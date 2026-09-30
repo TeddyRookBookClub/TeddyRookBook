@@ -1,5 +1,6 @@
 ---
 title: "War and Peace"
+description: "War and Peace by Leo Tolstoy (1869), in the Teddy Rook Book home library."
 author: "Leo Tolstoy"
 pages: 1225
 year: 1869

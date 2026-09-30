@@ -1,5 +1,6 @@
 ---
 title: "Anne of Green Gables"
+description: "Anne of Green Gables by L. M. Montgomery (1908), in the Teddy Rook Book home library."
 author: "L. M. Montgomery"
 year: 1908
 country: "Canada"

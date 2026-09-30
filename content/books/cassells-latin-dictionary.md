@@ -1,5 +1,6 @@
 ---
 title: "Cassell's Latin Dictionary"
+description: "Cassell's Latin Dictionary by D. P. Simpson (1959), in the Teddy Rook Book home library."
 author: "D. P. Simpson"
 year: 1959
 country: "England"

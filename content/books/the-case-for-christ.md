@@ -1,5 +1,6 @@
 ---
 title: "The Case for Christ"
+description: "The Case for Christ by Lee Strobel (1998), in the Teddy Rook Book home library."
 author: "Lee Strobel"
 year: 1998
 country: "United States"

@@ -1,5 +1,6 @@
 ---
 title: "The Aeneid"
+description: "The Aeneid by Virgil (19 BC), in the Teddy Rook Book home library."
 author: "Virgil"
 pages: 400
 year: -19

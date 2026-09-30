@@ -1,5 +1,6 @@
 ---
 title: "The Vatican: All the Paintings"
+description: "The Vatican: All the Paintings by Anja Grebe (2013), in the Teddy Rook Book home library."
 author: "Anja Grebe"
 year: 2013
 country: "United States"

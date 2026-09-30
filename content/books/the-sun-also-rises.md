@@ -1,5 +1,6 @@
 ---
 title: "The Sun Also Rises"
+description: "The Sun Also Rises by Ernest Hemingway (1926), in the Teddy Rook Book home library."
 author: "Ernest Hemingway"
 pages: 250
 year: 1926

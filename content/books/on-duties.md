@@ -1,5 +1,6 @@
 ---
 title: "On Duties"
+description: "On Duties by Cicero (44 BC), in the Teddy Rook Book home library."
 author: "Cicero"
 year: -44
 country: "Rome"

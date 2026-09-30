@@ -1,5 +1,6 @@
 ---
 title: "The Picture of Dorian Gray"
+description: "The Picture of Dorian Gray by Oscar Wilde (1890), in the Teddy Rook Book home library."
 author: "Oscar Wilde"
 year: 1890
 country: "England"

@@ -1,5 +1,6 @@
 ---
 title: "Ernest Hemingway: Four Novels"
+description: "Ernest Hemingway: Four Novels by Ernest Hemingway (1926), in the Teddy Rook Book home library."
 author: "Ernest Hemingway"
 year: 1926
 country: "United States"

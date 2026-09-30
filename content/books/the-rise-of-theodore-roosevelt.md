@@ -1,5 +1,6 @@
 ---
 title: "The Rise of Theodore Roosevelt"
+description: "The Rise of Theodore Roosevelt by Edmund Morris (1979), in the Teddy Rook Book home library."
 author: "Edmund Morris"
 year: 1979
 country: "United States"

@@ -1,5 +1,6 @@
 ---
 title: "The Complete Tales of Winnie-the-Pooh"
+description: "The Complete Tales of Winnie-the-Pooh by A. A. Milne (1926), in the Teddy Rook Book home library."
 author: "A. A. Milne"
 year: 1926
 country: "England"

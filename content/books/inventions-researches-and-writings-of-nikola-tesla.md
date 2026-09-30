@@ -1,5 +1,6 @@
 ---
 title: "The Inventions, Researches and Writings of Nikola Tesla"
+description: "The Inventions, Researches and Writings of Nikola Tesla by Thomas Commerford Martin (1894), in the Teddy Rook Book home library."
 author: "Thomas Commerford Martin"
 year: 1894
 country: "United States"

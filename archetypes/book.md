@@ -1,6 +1,7 @@
 ---
 title: "{{ replace .Name "-" " " | title }}"
 author: "Author Name"
+description: ""      # one line for search results and link previews
 pages: 300
 year: 1900            # negative for BC, e.g. -350
 country: ""           # country the book comes from

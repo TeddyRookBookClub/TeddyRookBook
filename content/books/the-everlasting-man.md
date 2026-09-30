@@ -1,5 +1,6 @@
 ---
 title: "The Everlasting Man"
+description: "The Everlasting Man by G. K. Chesterton (1925), in the Teddy Rook Book home library."
 author: "G. K. Chesterton"
 year: 1925
 country: "England"

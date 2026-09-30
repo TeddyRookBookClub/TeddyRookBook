@@ -1,5 +1,6 @@
 ---
 title: "The Pilgrim's Progress"
+description: "The Pilgrim's Progress by John Bunyan (1678), in the Teddy Rook Book home library."
 author: "John Bunyan"
 pages: 320
 year: 1678

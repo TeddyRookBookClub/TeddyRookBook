@@ -1,5 +1,6 @@
 ---
 title: "Flatland"
+description: "Flatland by Edwin A. Abbott (1884), in the Teddy Rook Book home library."
 author: "Edwin A. Abbott"
 year: 1884
 country: "England"

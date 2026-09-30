@@ -1,5 +1,6 @@
 ---
 title: "The Intelligent Investor"
+description: "The Intelligent Investor by Benjamin Graham (1949), in the Teddy Rook Book home library."
 author: "Benjamin Graham"
 year: 1949
 country: "United States"

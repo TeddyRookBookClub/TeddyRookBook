@@ -1,5 +1,6 @@
 ---
 title: "Never Split the Difference"
+description: "Never Split the Difference by Chris Voss (2016), in the Teddy Rook Book home library."
 author: "Chris Voss"
 year: 2016
 country: "United States"

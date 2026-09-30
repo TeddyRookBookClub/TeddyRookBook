@@ -1,5 +1,6 @@
 ---
 title: "The Gulag Archipelago"
+description: "The Gulag Archipelago by Aleksandr Solzhenitsyn (1973), in the Teddy Rook Book home library."
 author: "Aleksandr Solzhenitsyn"
 year: 1973
 country: "Russia"

@@ -1,5 +1,6 @@
 ---
 title: "Mere Christianity"
+description: "Mere Christianity by C. S. Lewis (1952), in the Teddy Rook Book home library."
 author: "C. S. Lewis"
 year: 1952
 country: "England"

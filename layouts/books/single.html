@@ -19,7 +19,7 @@
 
     <!-- Meta row -->
     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem;">
-      {{ if $year }}<span style="background:#f1f1f1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">{{ $year }}</span>{{ end }}
+      {{ if $year }}{{ $y := int $year }}<span style="background:#f1f1f1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">{{ if lt $y 0 }}{{ mul $y -1 }} BC{{ else if lt $y 500 }}AD {{ $y }}{{ else }}{{ $y }}{{ end }}</span>{{ end }}
       {{ if $pages }}<span style="background:#f1f1f1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">{{ $pages }} pages</span>{{ end }}
       {{ if $genre }}<span style="background:#e8f0e8; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#2c5a2c;">{{ $genre }}</span>{{ end }}
       {{ if not .Params.editions }}{{ with .Params.collection }}<span style="background:#e6f0f5; padding:2px 8px; border-radius:4px; font-size:0.85rem; color:#1e4a5f;">{{ . }}</span>{{ end }}{{ end }}
@@ -53,13 +53,18 @@
   {{ end }}
 
   <div class="book-content" style="font-size: 1.02rem; line-height: 1.65;">
-    {{ .Content }}
+    {{- /* Hide the template's placeholder text (and the repeated title line) until real notes are written. */ -}}
+    {{ $c := string .Content }}
+    {{ $c = replaceRE `^\s*<h1[^>]*>[^<]*</h1>\s*<p><strong>[^<]*</strong></p>` "" $c }}
+    {{ $c = replaceRE `<h2[^>]*>Key Quotes</h2>\s*<blockquote>\s*<p>\(Add your favorite passages here\)</p>\s*</blockquote>` "" $c }}
+    {{ $c = replaceRE `<h2[^>]*>My Notes &amp; Reflections</h2>\s*<p>\(Add your thoughts[^<]*\)\s*(<strong>Status:</strong>\s*(📖 To Read|✅ Read))?</p>` "" $c }}
+    {{ $c = replaceRE `<p><strong>Status:</strong>\s*(📖 To Read|✅ Read)</p>` "" $c }}
+    {{ $c = replaceRE `(<p>[^<]*)\n<strong>Status:</strong>\s*(📖 To Read|✅ Read)</p>` "$1</p>" $c }}
+    {{ $c | safeHTML }}
   </div>
 
 
   <footer style="margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.85rem; color: #777;">
-    Edit this page’s notes by editing the Markdown file in <code>content/books/{{ .File.BaseFileName }}.md</code>.
-    <br>
     <a href="/books/" style="color: #004C2A;">← Return to the Library</a>
   </footer>
 </article>

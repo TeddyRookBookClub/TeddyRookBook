@@ -1,5 +1,6 @@
 ---
 title: "Operation Paperclip"
+description: "Operation Paperclip by Annie Jacobsen (2014), in the Teddy Rook Book home library."
 author: "Annie Jacobsen"
 year: 2014
 country: "United States"

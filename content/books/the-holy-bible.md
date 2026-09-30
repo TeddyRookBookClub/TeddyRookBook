@@ -1,5 +1,6 @@
 ---
 title: "The Holy Bible"
+description: "The Holy Bible, in the Teddy Rook Book home library."
 author: "Various"
 country: ""
 authorCountry: ""

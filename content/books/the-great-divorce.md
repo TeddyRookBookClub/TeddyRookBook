@@ -1,5 +1,6 @@
 ---
 title: "The Great Divorce"
+description: "The Great Divorce by C. S. Lewis (1945), in the Teddy Rook Book home library."
 author: "C. S. Lewis"
 year: 1945
 country: "England"

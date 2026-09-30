@@ -1,5 +1,6 @@
 ---
 title: "The Count of Monte Cristo"
+description: "The Count of Monte Cristo by Alexandre Dumas (1844), in the Teddy Rook Book home library."
 author: "Alexandre Dumas"
 year: 1844
 country: "France"

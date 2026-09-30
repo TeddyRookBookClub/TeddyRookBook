@@ -1,5 +1,6 @@
 ---
 title: "The Bitcoin Standard"
+description: "The Bitcoin Standard by Saifedean Ammous (2018), in the Teddy Rook Book home library."
 author: "Saifedean Ammous"
 year: 2018
 country: "United States"

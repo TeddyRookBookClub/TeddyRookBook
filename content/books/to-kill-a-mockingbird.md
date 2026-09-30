@@ -1,5 +1,6 @@
 ---
 title: "To Kill a Mockingbird"
+description: "To Kill a Mockingbird by Harper Lee (1960), in the Teddy Rook Book home library."
 author: "Harper Lee"
 pages: 376
 year: 1960

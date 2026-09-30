@@ -1,5 +1,6 @@
 ---
 title: "'Twas the Night Before Christmas"
+description: "'Twas the Night Before Christmas by Clement Clarke Moore (1823), in the Teddy Rook Book home library."
 author: "Clement Clarke Moore"
 year: 1823
 country: "United States"

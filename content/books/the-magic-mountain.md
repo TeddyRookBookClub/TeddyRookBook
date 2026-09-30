@@ -1,5 +1,6 @@
 ---
 title: "The Magic Mountain"
+description: "The Magic Mountain by Thomas Mann (1924), in the Teddy Rook Book home library."
 author: "Thomas Mann"
 pages: 700
 year: 1924

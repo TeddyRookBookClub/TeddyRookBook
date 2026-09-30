@@ -1,5 +1,6 @@
 ---
 title: "Paradise Lost"
+description: "Paradise Lost by John Milton (1667), in the Teddy Rook Book home library."
 author: "John Milton"
 pages: 350
 year: 1667

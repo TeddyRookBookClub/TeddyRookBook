@@ -1,5 +1,6 @@
 ---
 title: "Animal Farm"
+description: "Animal Farm by George Orwell (1945), in the Teddy Rook Book home library."
 author: "George Orwell"
 year: 1945
 country: "England"

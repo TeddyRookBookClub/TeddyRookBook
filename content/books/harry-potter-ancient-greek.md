@@ -1,5 +1,6 @@
 ---
 title: "Harry Potter and the Philosopher's Stone (Ancient Greek)"
+description: "Harry Potter and the Philosopher's Stone (Ancient Greek) by J. K. Rowling (1997), in the Teddy Rook Book home library."
 author: "J. K. Rowling"
 year: 1997
 country: "England"

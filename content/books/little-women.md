@@ -1,5 +1,6 @@
 ---
 title: "Little Women and Other Novels"
+description: "Little Women and Other Novels by Louisa May Alcott (1868), in the Teddy Rook Book home library."
 author: "Louisa May Alcott"
 year: 1868
 country: "United States"

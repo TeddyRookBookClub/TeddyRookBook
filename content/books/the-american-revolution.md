@@ -1,5 +1,6 @@
 ---
 title: "The American Revolution: An Intimate History"
+description: "The American Revolution: An Intimate History by Geoffrey C. Ward and Ken Burns (2025), in the Teddy Rook Book home library."
 author: "Geoffrey C. Ward and Ken Burns"
 year: 2025
 country: "United States"

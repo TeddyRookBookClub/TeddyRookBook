@@ -1,5 +1,6 @@
 ---
 title: "On the Republic and On the Laws"
+description: "On the Republic and On the Laws by Cicero (51 BC), in the Teddy Rook Book home library."
 author: "Cicero"
 year: -51
 country: "Rome"

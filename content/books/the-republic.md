@@ -1,5 +1,6 @@
 ---
 title: "The Republic"
+description: "The Republic by Plato (380 BC), in the Teddy Rook Book home library."
 author: "Plato"
 pages: 300
 year: -380

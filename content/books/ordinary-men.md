@@ -1,5 +1,6 @@
 ---
 title: "Ordinary Men"
+description: "Ordinary Men by Christopher R. Browning (1992), in the Teddy Rook Book home library."
 author: "Christopher R. Browning"
 year: 1992
 country: "United States"

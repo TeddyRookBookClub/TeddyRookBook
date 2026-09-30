@@ -1,5 +1,6 @@
 ---
 title: "The Bell Curve"
+description: "The Bell Curve by Richard J. Herrnstein and Charles Murray (1994), in the Teddy Rook Book home library."
 author: "Richard J. Herrnstein and Charles Murray"
 year: 1994
 country: "United States"

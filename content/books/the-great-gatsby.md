@@ -1,5 +1,6 @@
 ---
 title: "The Great Gatsby and Other Classic Works"
+description: "The Great Gatsby and Other Classic Works by F. Scott Fitzgerald (1925), in the Teddy Rook Book home library."
 author: "F. Scott Fitzgerald"
 year: 1925
 country: "United States"

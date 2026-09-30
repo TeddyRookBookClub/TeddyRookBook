@@ -1,5 +1,6 @@
 ---
 title: "Starship Troopers"
+description: "Starship Troopers by Robert A. Heinlein (1959), in the Teddy Rook Book home library."
 author: "Robert A. Heinlein"
 year: 1959
 country: "United States"

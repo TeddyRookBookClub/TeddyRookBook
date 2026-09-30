@@ -1,5 +1,6 @@
 ---
 title: "The Princess Bride"
+description: "The Princess Bride by William Goldman (1973), in the Teddy Rook Book home library."
 author: "William Goldman"
 year: 1973
 country: "United States"

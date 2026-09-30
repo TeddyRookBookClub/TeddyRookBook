@@ -1,5 +1,6 @@
 ---
 title: "Selected Poems"
+description: "Selected Poems by Robert Frost (1923), in the Teddy Rook Book home library."
 author: "Robert Frost"
 year: 1923
 country: "United States"

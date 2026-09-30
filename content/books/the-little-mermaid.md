@@ -1,5 +1,6 @@
 ---
 title: "The Little Mermaid and Other Fairy Tales"
+description: "The Little Mermaid and Other Fairy Tales by Hans Christian Andersen (1837), in the Teddy Rook Book home library."
 author: "Hans Christian Andersen"
 year: 1837
 country: "Denmark"

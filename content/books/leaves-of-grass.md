@@ -1,5 +1,6 @@
 ---
 title: "Leaves of Grass"
+description: "Leaves of Grass by Walt Whitman (1855), in the Teddy Rook Book home library."
 author: "Walt Whitman"
 pages: 450
 year: 1855

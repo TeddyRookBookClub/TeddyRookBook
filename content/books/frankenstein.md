@@ -1,5 +1,6 @@
 ---
 title: "Frankenstein"
+description: "Frankenstein by Mary Shelley (1818), in the Teddy Rook Book home library."
 author: "Mary Shelley"
 year: 1818
 country: "England"

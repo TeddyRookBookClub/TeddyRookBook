@@ -1,5 +1,6 @@
 ---
 title: "Aesop's Fables"
+description: "Aesop's Fables by Aesop (550 BC), in the Teddy Rook Book home library."
 author: "Aesop"
 year: -550
 country: "Greece"

@@ -1,5 +1,6 @@
 ---
 title: "Irish Mythology and Fairy Tales"
+description: "Irish Mythology and Fairy Tales, in the Teddy Rook Book home library."
 author: "Various"
 country: "Ireland"
 authorCountry: ""

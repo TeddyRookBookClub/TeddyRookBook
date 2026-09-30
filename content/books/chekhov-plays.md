@@ -1,5 +1,6 @@
 ---
 title: "Plays"
+description: "Plays by Anton Chekhov (1904), in the Teddy Rook Book home library."
 author: "Anton Chekhov"
 year: 1904
 country: "Russia"

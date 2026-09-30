@@ -1,5 +1,6 @@
 ---
 title: "The Autobiography of Benjamin Franklin"
+description: "The Autobiography of Benjamin Franklin by Benjamin Franklin (1791), in the Teddy Rook Book home library."
 author: "Benjamin Franklin"
 pages: 300
 year: 1791

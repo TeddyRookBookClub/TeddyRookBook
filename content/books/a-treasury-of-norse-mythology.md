@@ -1,5 +1,6 @@
 ---
 title: "A Treasury of Norse Mythology"
+description: "A Treasury of Norse Mythology, in the Teddy Rook Book home library."
 author: "Various"
 country: "Norway"
 authorCountry: ""

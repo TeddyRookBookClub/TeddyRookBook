@@ -1,5 +1,6 @@
 ---
 title: "Orthodoxy"
+description: "Orthodoxy by G. K. Chesterton (1908), in the Teddy Rook Book home library."
 author: "G. K. Chesterton"
 year: 1908
 country: "England"

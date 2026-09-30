@@ -1,5 +1,6 @@
 ---
 title: "Fear and Trembling"
+description: "Fear and Trembling by Søren Kierkegaard (1843), in the Teddy Rook Book home library."
 author: "Søren Kierkegaard"
 pages: 160
 year: 1843

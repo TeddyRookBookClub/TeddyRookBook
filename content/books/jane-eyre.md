@@ -1,5 +1,6 @@
 ---
 title: "Jane Eyre"
+description: "Jane Eyre by Charlotte Brontë (1847), in the Teddy Rook Book home library."
 author: "Charlotte Brontë"
 year: 1847
 country: "England"

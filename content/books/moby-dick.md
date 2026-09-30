@@ -1,5 +1,6 @@
 ---
 title: "Moby-Dick"
+description: "Moby-Dick by Herman Melville (1851), in the Teddy Rook Book home library."
 author: "Herman Melville"
 pages: 635
 year: 1851

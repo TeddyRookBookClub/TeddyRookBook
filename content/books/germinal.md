@@ -1,5 +1,6 @@
 ---
 title: "Germinal"
+description: "Germinal by Émile Zola (1885), in the Teddy Rook Book home library."
 author: "Émile Zola"
 year: 1885
 country: "France"
