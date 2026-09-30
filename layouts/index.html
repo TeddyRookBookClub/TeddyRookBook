@@ -12,25 +12,27 @@
     <div class="hh-text">
       <p class="hh-eyebrow">Books · Ideas · Languages</p>
       <h1>Teddy Rook Book</h1>
-      <p class="hh-lead">A home library, visual explainers on the great books and big ideas, and playful ways to learn Koine Greek and Latin.</p>
+      <p class="hh-lead">One-page infographics on great books and big ideas, playful ways to learn Koine Greek and Latin, and history games. Free to use, no sign-up.</p>
       <div class="hh-btns">
-        <a class="hbtn prim" href="/books/">Browse the library</a>
-        <a class="hbtn" href="/infographics/">See the infographics</a>
+        <a class="hbtn prim" href="/infographics/">See the infographics</a>
+        <a class="hbtn" href="/languages/">Learn Greek &amp; Latin</a>
+        <a class="hbtn" href="/games/">Play a game</a>
       </div>
     </div>
   </header>
 
-  <section class="tiles" aria-label="Sections">
-    <a class="tile t-lib" href="/books/">
-      <div class="tile-vis spines" aria-hidden="true">
-        {{ range $i, $b := first 9 (sort $books "Params.year") }}<span class="spine s{{ mod $i 5 }}" style="height:{{ add 62 (mod (mul $i 17) 30) }}%"><i>{{ $b.Title }}</i></span>{{ end }}
-      </div>
-      <div class="tile-body">
-        <h2>📚 Library</h2>
-        <p>{{ len $books }} books from {{ len ($countries | uniq) }} countries on the home shelves, from Homer to Harper Lee.</p>
-        <span class="go">Browse →</span>
-      </div>
-    </a>
+  <section class="about" aria-labelledby="about-h">
+    <h2 id="about-h">What is this?</h2>
+    <p>Teddy Rook Book is a free, one-person project about great books and big ideas. <b>It isn’t a book club</b>, despite the “club” in the web address: there are no meetings, members or sign-ups. It’s a resource you can pull from, whether you run a book club, teach a class, homeschool, or just like to read.</p>
+    <ul class="about-list">
+      <li><b>🖼️ Infographics</b> One-page visual guides: character maps, book-club companions, and explainers on faith, science and finance. Open one on a screen or print it for your group.</li>
+      <li><b>🗣️ Languages</b> Learn Koine Greek and Latin from the Gospels and the classics, with listening drills and a reader that explains every word.</li>
+      <li><b>🏛️ Games</b> Short browser games set in ancient Greece and Rome that teach vocabulary as you play.</li>
+    </ul>
+    <p class="about-more">Also here: my <a href="/books/">home library</a> catalog and the <a href="/markets/">markets dashboards</a> I use myself. They’re mostly for me, but they’re public, so use them however you like.</p>
+  </section>
+
+  <section class="tiles tiles-3" aria-label="Main sections">
     <a class="tile t-ig" href="/infographics/">
       <div class="tile-vis mosaic" aria-hidden="true">
         {{ range first 4 $ig }}<img src="/img/infographics/{{ .file }}-thumb.jpg" alt="" loading="lazy">{{ end }}
@@ -63,14 +65,6 @@
         <span class="go">Play →</span>
       </div>
     </a>
-    <a class="tile t-mk" href="/markets/" style="grid-column:1/-1">
-      <div class="tile-vis mkvis" aria-hidden="true" style="height:150px"><canvas id="home-mk" style="width:100%;height:100%;display:block"></canvas><span id="home-mk-l" style="position:absolute;left:1rem;top:.7rem;font:600 .85rem system-ui;color:var(--muted)"></span></div>
-      <div class="tile-body">
-        <h2>📈 Markets &amp; Economy</h2>
-        <p>Stock screener and charts, the economic calendar, 80+ economic indicators, Treasury yields and auctions, forex, Bitcoin, the VIX, and finance calculators.</p>
-        <span class="go">Open →</span>
-      </div>
-    </a>
   </section>
 
   <section class="hs">
@@ -92,6 +86,30 @@
     </ul>
   </section>
   {{ end }}
+
+  <section class="hs">
+    <div class="hs-head"><h2>Also on the site</h2><span class="hs-note">Mostly for me, open to anyone</span></div>
+    <div class="tiles tiles-2">
+    <a class="tile t-lib" href="/books/">
+      <div class="tile-vis spines" aria-hidden="true">
+        {{ range $i, $b := first 9 (sort $books "Params.year") }}<span class="spine s{{ mod $i 5 }}" style="height:{{ add 62 (mod (mul $i 17) 30) }}%"><i>{{ $b.Title }}</i></span>{{ end }}
+      </div>
+      <div class="tile-body">
+        <h2>📚 Library</h2>
+        <p>{{ len $books }} books from {{ len ($countries | uniq) }} countries on the home shelves, from Homer to Harper Lee.</p>
+        <span class="go">Browse →</span>
+      </div>
+    </a>
+    <a class="tile t-mk" href="/markets/">
+      <div class="tile-vis mkvis" aria-hidden="true" style="height:150px"><canvas id="home-mk" style="width:100%;height:100%;display:block"></canvas><span id="home-mk-l" style="position:absolute;left:1rem;top:.7rem;font:600 .85rem system-ui;color:var(--muted)"></span></div>
+      <div class="tile-body">
+        <h2>📈 Markets &amp; Economy</h2>
+        <p>Stock screener and charts, the economic calendar, 80+ economic indicators, Treasury yields and auctions, forex, Bitcoin, the VIX, and finance calculators.</p>
+        <span class="go">Open →</span>
+      </div>
+    </a>
+    </div>
+  </section>
 
 </div>
 <script src="/games/vocab.js?v={{ (os.Stat "static/games/vocab.js").ModTime.Unix }}"></script>

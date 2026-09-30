@@ -25,6 +25,7 @@
       <figcaption>
         <strong>{{ .title }}</strong>
         <span>{{ delimit .tags " · " }}</span>
+        {{ with .description }}<p class="ig-desc">{{ . }}</p>{{ end }}
         {{ with .pdf }}<a class="ig-pdf" href="/pdfs/{{ . }}" target="_blank" rel="noopener">📄 Read the full paper (PDF)</a>{{ end }}
         {{ with .books }}<span class="ig-books">📚 {{ range $i, $b := . }}{{ with site.GetPage (printf "/books/%s" $b) }}{{ if $i }} · {{ end }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}</span>{{ end }}
       </figcaption>
