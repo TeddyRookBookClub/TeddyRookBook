@@ -1,0 +1,8 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "games/teutoburg.css" | relURL }}?v={{ (os.Stat "static/games/teutoburg.css").ModTime.Unix }}">
+<div class="teut" id="teut"><noscript>This game needs JavaScript.</noscript></div>
+<p style="font-size:.8rem;color:#777;margin-top:.5rem">Arrow keys or WASD to move, P to pause. On a phone, swipe or use the direction buttons. Press <b>?</b> for help and the history of the battle.</p>
+<script src="{{ "games/teutoburg.js" | relURL }}?v={{ (os.Stat "static/games/teutoburg.js").ModTime.Unix }}"></script>
+{{ end }}
