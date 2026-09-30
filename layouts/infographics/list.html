@@ -1,6 +1,6 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/books.css">
-<link rel="stylesheet" href="/css/infographics.css">
+<link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
+<link rel="stylesheet" href="/css/infographics.css?v={{ (os.Stat "static/css/infographics.css").ModTime.Unix }}">
 <div class="ig-page">
   <header class="ig-header">
     <h1>{{ .Title }}</h1>

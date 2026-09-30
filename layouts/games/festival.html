@@ -1,10 +1,10 @@
 {{ define "main" }}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
-<link rel="stylesheet" href="{{ "games/fest.css" | relURL }}">
+<link rel="stylesheet" href="{{ "games/fest.css" | relURL }}?v={{ (os.Stat "static/games/fest.css").ModTime.Unix }}">
 <div class="fest" id="fest"><noscript>This game needs JavaScript.</noscript></div>
 <p style="font-size:.8rem;color:#777;margin-top:.5rem">Tips: drag to move around, scroll or pinch to zoom. With the path tool selected, drag to lay paths. Every building must touch a path. Space pauses. Progress is kept only in this browser.</p>
-<script src="{{ "games/vocab.js" | relURL }}"></script>
-<script src="{{ "games/art.js" | relURL }}"></script>
-<script src="{{ "games/game.js" | relURL }}"></script>
+<script src="{{ "games/vocab.js" | relURL }}?v={{ (os.Stat "static/games/vocab.js").ModTime.Unix }}"></script>
+<script src="{{ "games/art.js" | relURL }}?v={{ (os.Stat "static/games/art.js").ModTime.Unix }}"></script>
+<script src="{{ "games/game.js" | relURL }}?v={{ (os.Stat "static/games/game.js").ModTime.Unix }}"></script>
 {{ end }}

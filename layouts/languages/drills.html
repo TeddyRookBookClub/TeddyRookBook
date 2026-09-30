@@ -80,7 +80,7 @@
   </div>
   {{ partial "lang-credits.html" . }}
 </div>
-<script src="{{ "lang/grammar.js" | relURL }}"></script>
-<script src="{{ "lang/core.js" | relURL }}"></script>
-<script src="{{ "lang/drills.js" | relURL }}"></script>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/drills.js" | relURL }}?v={{ (os.Stat "static/lang/drills.js").ModTime.Unix }}"></script>
 {{ end }}

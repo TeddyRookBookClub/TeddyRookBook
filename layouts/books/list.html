@@ -1,6 +1,6 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/books.css">
-<link rel="stylesheet" href="/css/library.css">
+<link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
+<link rel="stylesheet" href="/css/library.css?v={{ (os.Stat "static/css/library.css").ModTime.Unix }}">
 {{ $flags := dict "England" "🇬🇧" "Scotland" "🇬🇧" "Russia" "🇷🇺" "France" "🇫🇷" "Spain" "🇪🇸" "Germany" "🇩🇪" "Denmark" "🇩🇰" "United States" "🇺🇸" "Greece" "🇬🇷" "Italy" "🇮🇹" "Rome" "🏛️" "Unknown" "❔" }}
 {{ $books := where (where .Site.RegularPages "Section" "books") "Params.isListPage" "!=" true }}
 {{ $countries := slice }}

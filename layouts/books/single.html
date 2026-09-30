@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/books.css">
+<link rel="stylesheet" href="/css/books.css?v={{ (os.Stat "static/css/books.css").ModTime.Unix }}">
 {{ $read := .Params.haveRead | default false }}
 {{ $collection := .Params.collection | default "Other" }}
 {{ $genre := .Params.genre | default "" }}

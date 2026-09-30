@@ -1,5 +1,5 @@
 {{ define "main" }}
-<link rel="stylesheet" href="/css/home.css">
+<link rel="stylesheet" href="/css/home.css?v={{ (os.Stat "static/css/home.css").ModTime.Unix }}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
 {{ $books := where (where site.RegularPages "Section" "books") "Params.isListPage" "!=" true }}
@@ -86,8 +86,8 @@
   {{ end }}
 
 </div>
-<script src="/games/vocab.js"></script>
-<script src="/games/art.js"></script>
+<script src="/games/vocab.js?v={{ (os.Stat "static/games/vocab.js").ModTime.Unix }}"></script>
+<script src="/games/art.js?v={{ (os.Stat "static/games/art.js").ModTime.Unix }}"></script>
 <script>
 (function () {
   try {
