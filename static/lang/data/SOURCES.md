@@ -12,4 +12,6 @@
   - Greek definitions: Liddell–Scott–Jones via the Perseus Digital Library (PerseusDL/lexica, CC BY-SA 4.0), plus a few hand-written glosses for very common words. Latin definitions: William Whitaker's WORDS.
   - Audio: none bundled; the page uses the device's text-to-speech voices.
 
+- `flash.json` (flashcards): built from the Greek and Latin Gospel files above. Words are ranked by how often they occur in the four Gospels; every word form is attested in the Gospels, with its parsing and an example. Greek–Latin pairs for the three-sided cards were found by comparing parallel verses and then checked by hand; words without a clear single equivalent are left out of those cards. Some Latin glosses were rewritten for their Gospel sense.
+
 Build scripts live outside the site; ask Claude to regenerate if the verse selection changes.

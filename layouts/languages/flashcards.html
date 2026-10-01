@@ -1,0 +1,101 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<link rel="stylesheet" href="{{ "lang/flash.css" | relURL }}?v={{ (os.Stat "static/lang/flash.css").ModTime.Unix }}">
+<div class="lang fc" id="fc">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Flashcards</p>
+    <h1>Remember it. <span class="lat">Memento.</span> <span class="grc">Μνημόνευε.</span></h1>
+    <p>The most common words of the Gospels in Koine Greek and Latin, and the real forms they take. Recall the answer first, then flip and rate yourself; each card comes back just before you would forget it.</p>
+  </header>
+  {{ partial "lang-notice.html" . }}
+  <details class="lang-help">
+    <summary>❓ How to get the most out of the flashcards</summary>
+    <ol>
+      <li><b>Say the answer before you flip.</b> Trying to remember, even when you can’t, is what makes a word stick. Then flip and grade yourself honestly.</li>
+      <li><b>Grade each card.</b> <i>Again</i> brings it back in a few cards. <i>Hard</i>, <i>Good</i> and <i>Easy</i> push it further out (the button shows when you’ll see it next). Cards you know well come back after days, then weeks; cards you miss come back soon. This is spaced repetition.</li>
+      <li><b>Little and often.</b> Ten minutes a day beats an hour once a week. <i>Smart review</i> shows the cards that are due first, then a few new ones (you choose how many per day).</li>
+      <li><b>Start with the most common words.</b> The words are ranked by how often they occur in the four Gospels: the top 100 make up about 70% of the text, the top 600 about 90%.</li>
+      <li><b>Then drill the forms.</b> <i>Word forms</i> shows a real form from the Gospels (say, <span class="grc">ἐλάλησεν</span>) and asks what it is; <i>Build the form</i> gives the dictionary word and a description (“aorist active indicative, 3rd singular”) and asks you to produce it. Narrow either one to a tense, mood, voice, person, case or number to practise one pattern at a time, then mix them.</li>
+      <li><b>Both languages:</b> choose <i>Greek + Latin</i> and each vocabulary card becomes a three-sided prism. Tap to turn it: Greek, Latin and English, in the order you set. Only words with a clear match between the two languages are included.</li>
+      <li><b>Every form is real.</b> Forms come from the Greek New Testament and the Latin Vulgate, with an example phrase and reference, so you only learn forms that actually occur.</li>
+      <li><b>Keys:</b> Space or Enter flips; 1–4 grade (Again, Hard, Good, Easy); P plays the word aloud.</li>
+      <li><b>Progress</b> is saved only in this browser on this device.</li>
+    </ol>
+  </details>
+
+  <div class="fc-focus">
+    <div class="fc-bar"><span id="fc-pos-lbl"></span><span class="fc-prog"><i id="fc-prog"></i></span><span id="fc-due"></span></div>
+    <div class="fc-stage" id="fc-stage" tabindex="0" aria-live="polite">
+      <p class="fc-msg" id="fc-msg">Loading the cards…</p>
+    </div>
+    <div class="fc-actions" id="fc-actions">
+      <button type="button" class="cbtn play" id="fc-flip">Show answer</button>
+      <div class="fc-grade" id="fc-grade" hidden>
+        <button type="button" class="g g1" data-q="1"><b>Again</b><small></small></button>
+        <button type="button" class="g g2" data-q="2"><b>Hard</b><small></small></button>
+        <button type="button" class="g g3" data-q="3"><b>Good</b><small></small></button>
+        <button type="button" class="g g4" data-q="4"><b>Easy</b><small></small></button>
+      </div>
+    </div>
+    <div class="fc-tools"><button type="button" class="linkbtn" id="fc-say">🔊 Hear it</button> · <button type="button" class="linkbtn" id="fc-skip">Skip</button> · <span id="fc-today"></span></div>
+  </div>
+
+  <section class="fc-setup box" id="fc-setup">
+    <h3>Deck settings</h3>
+    <div class="fc-row">
+      <div class="fc-field"><span class="fc-lab">Language</span>
+        <div class="seg" data-pref="lang"><button data-v="g"><span class="grc">Ἑλληνική</span> Greek</button><button data-v="l"><span class="lat">Latina</span> Latin</button><button data-v="b">Greek + Latin</button></div></div>
+      <div class="fc-field"><span class="fc-lab">Cards</span>
+        <div class="seg" data-pref="type"><button data-v="v">Vocabulary</button><button data-v="f">Word forms</button><button data-v="m">Build the form</button></div></div>
+    </div>
+    <div class="fc-row">
+      <label class="fc-field"><span class="fc-lab">Words</span>
+        <select id="fc-range"><option value="50">Top 50</option><option value="100">Top 100</option><option value="200">Top 200</option><option value="300">Top 300</option><option value="600">Top 600</option></select></label>
+      <label class="fc-field"><span class="fc-lab">Part of speech</span>
+        <select id="fc-pos"><option value="all">All</option><option value="noun">Nouns</option><option value="verb">Verbs</option><option value="adj">Adjectives</option><option value="pron">Pronouns &amp; article</option><option value="other">Little words (prepositions, conjunctions, adverbs)</option></select></label>
+      <label class="fc-field"><span class="fc-lab">Order</span>
+        <select id="fc-order"><option value="srs">Smart review (due cards first)</option><option value="freq">Most common first</option><option value="shuffle">Shuffle</option><option value="alpha">Alphabetical</option><option value="rare">Least common first</option></select></label>
+      <label class="fc-field" id="fc-new-wrap"><span class="fc-lab">New cards per day</span>
+        <select id="fc-new"><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="9999">No limit</option></select></label>
+      <label class="fc-field" id="fc-dir-wrap"><span class="fc-lab">Show first</span>
+        <select id="fc-dir"><option value="t">Greek/Latin side</option><option value="e">English side</option><option value="x">Mix both</option></select></label>
+    </div>
+    <div class="fc-row" id="fc-faces-wrap" hidden>
+      <div class="fc-field"><span class="fc-lab">Prism order <small>(the side you see first, then each turn)</small></span>
+        <ol class="fc-faces" id="fc-faces"></ol></div>
+    </div>
+    <div class="fc-forms" id="fc-forms" hidden>
+      <div class="fc-fgroup" data-g="kind"><span class="fc-lab">Word kinds</span></div>
+      <div class="fc-fgroup" data-g="t"><span class="fc-lab">Tense</span></div>
+      <div class="fc-fgroup" data-g="m"><span class="fc-lab">Mood</span></div>
+      <div class="fc-fgroup" data-g="v"><span class="fc-lab">Voice</span></div>
+      <div class="fc-fgroup" data-g="pe"><span class="fc-lab">Person</span></div>
+      <div class="fc-fgroup" data-g="c"><span class="fc-lab">Case</span></div>
+      <div class="fc-fgroup" data-g="n"><span class="fc-lab">Number</span></div>
+      <p class="pool">Tap to turn a choice on or off. Nothing selected in a row means all of it.</p>
+    </div>
+    <p class="pool" id="fc-count"></p>
+  </section>
+
+  <section class="box fc-stats">
+    <h3>Your progress <small style="text-transform:none;letter-spacing:0">(this device)</small></h3>
+    <div class="fc-nums" id="fc-nums"></div>
+    <p style="margin:.6rem 0 0"><button class="linkbtn" id="fc-reset" type="button">Reset progress for these cards</button></p>
+  </section>
+  {{ partial "lang-credits.html" . }}
+</div>
+<script>
+(function () {
+  var errs = [];
+  window.addEventListener('error', function (e) { errs.push(e.target && e.target.src ? 'Could not download ' + e.target.src.split('/').pop().split('?')[0] : (e.message || 'Script error')); }, true);
+  setTimeout(function () {
+    if (window.__fcStarted) return;
+    var m = document.getElementById('fc-msg'); if (!m) return;
+    m.innerHTML = '<b>The flashcards didn’t start on this browser.</b><br><button type="button" class="cbtn play" onclick="location.reload()">Reload the page</button>' + (errs.length ? '<br><small>Details: ' + errs.join(' · ').replace(/[<>&]/g, '') + '</small>' : '');
+  }, 12000);
+})();
+</script>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/flash.js" | relURL }}?v={{ (os.Stat "static/lang/flash.js").ModTime.Unix }}"></script>
+{{ end }}
