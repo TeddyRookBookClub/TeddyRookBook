@@ -152,23 +152,23 @@
     this.token++; try { this.audio.pause(); } catch (e) { }
     if (W.speechSynthesis) W.speechSynthesis.cancel();
   };
-  // Word timing: the browser reports each word as the voice starts it (the "boundary" event), so the
-  // highlight follows the real speech. Voices that don't report it (e.g. Chrome's online "Google" voices)
-  // simply get no highlight. BOUNDARY[kind] records what each voice did: true, false or undefined (unknown).
-  var BOUNDARY = {};
-  Player.prototype.speak = function (text, kind, rate, onWord) {
+  // Device voices are modern Greek: give them monotonic text (no breathings, one accent) so they read words
+  // instead of spelling out unfamiliar ancient characters letter by letter.
+  function monotonic(s) {
+    return s.normalize('NFD').replace(/[\u0313\u0314\u0345\u0306\u0304]/g, '').replace(/[\u0300\u0342]/g, '\u0301')
+      .replace(/\u0301(?=\u0301)/g, '').normalize('NFC').replace(/[\u1FBD\u1FBF\u2019\u02BC']/g, '');
+  }
+  Player.prototype.speak = function (text, kind, rate) {
     var self = this, tok = self.token;
     return new Promise(function (res) {
       if (!W.speechSynthesis) return res(false);
-      var u = new SpeechSynthesisUtterance(text), v = voiceFor(kind);
+      var v = voiceFor(kind);
+      // No Greek voice on this device: another language's voice would only spell the letters, so stay silent.
+      if (kind === 'g' && !v) { setTimeout(function () { res(tok === self.token); }, 600); return; }
+      var u = new SpeechSynthesisUtterance(kind === 'g' ? monotonic(text) : text);
       if (v) { u.voice = v; u.lang = v.lang; } else u.lang = { en: 'en-US', l: 'it-IT', g: 'el-GR' }[kind];
       u.rate = Math.max(0.1, Math.min(10, rate));
-      var got = false, vname = (u.voice && u.voice.name) || kind;
-      u.onboundary = function (e) {
-        if (tok !== self.token || (e.name && e.name !== 'word')) return;
-        got = true; BOUNDARY[vname] = true; if (onWord) onWord(e.charIndex, e.charLength);
-      };
-      var done = false; function fin() { if (!done) { done = true; clearInterval(k); if (onWord && tok === self.token) onWord(-1); if (!got && tok === self.token && text.length > 12 && BOUNDARY[vname] === undefined) BOUNDARY[vname] = false; res(tok === self.token); } }
+      var done = false; function fin() { if (!done) { done = true; clearInterval(k); res(tok === self.token); } }
       u.onend = fin; u.onerror = fin;
       // Chrome can stall long utterances; keep it alive and guard with a timeout.
       var k = setInterval(function () { if (tok !== self.token) { fin(); } else if (!W.speechSynthesis.speaking) { fin(); } }, 250);
@@ -228,12 +228,10 @@
   function latinText(toks) { return toks.map(function (t) { return (t[1] || '') + t[0] + (t[2] || ''); }).join('').trim(); }
   function greekText(toks) { return toks.map(function (t) { return t[0] + (t[1] || ''); }).join('').trim(); }
 
-  function voiceTiming(kind) { var v = voiceFor(kind); return BOUNDARY[(v && v.name) || kind]; }
-
   W.Gospels = {
     BOOKS: BOOKS, LATIN_BOOKS: LATIN_BOOKS, GREEK_BOOKS: GREEK_BOOKS, getJSON: getJSON, loadLex: loadLex, LEX: LEX,
     renderWords: renderWords, bindWords: bindWords, loadClassics: loadClassics, wordInfo: wordInfo, panelHTML: panelHTML, esc: esc,
-    Player: Player, voiceFor: voiceFor, voiceTiming: voiceTiming, loadProgress: loadProgress, saveProgress: saveProgress, sessionCount: sessionCount,
+    Player: Player, voiceFor: voiceFor, monotonic: monotonic, loadProgress: loadProgress, saveProgress: saveProgress, sessionCount: sessionCount,
     refLabel: refLabel, renderEnglish: renderEnglish, latinText: latinText, greekText: greekText, glossFor: glossFor
   };
 })(window, document);

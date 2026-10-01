@@ -19,7 +19,7 @@
   var PREF_KEY = 'trb-gospels-prefs';
   var prefs = { study: null, order: ['g', 'en', 'l'], red: true, show: { en: true, g: true, l: true }, play: { en: true, g: true, l: true },
     inc: { g: true, l: true }, speed: 1, gap: 2, reps: 1, src: 'ALL', book: 'ALL', passage: -1, mode: 'shuffle', text: 'always',
-    gaudio: 'human', sfs: 1 };
+    sfs: 1 };
   try { var sp = JSON.parse(W.localStorage.getItem(PREF_KEY)); if (sp) for (var k in sp) prefs[k] = sp[k]; } catch (e) { }
   if (!prefs.inc) prefs.inc = { g: true, l: true };
   if (prefs.order.length !== 3) prefs.order = ['g', 'en', 'l'];
@@ -265,58 +265,11 @@
     if (it.k === 'gos' && k === 'g') return G.greekText(it.v.g);
     return G.latinText(toks(it, k));
   }
-  // Character offsets of each word in the text handed to the voice, so a reported position maps to a word.
-  function spans(it, k, text) {
-    if (k === 'en') return null;
-    var tk = toks(it, k), out = [], pos = 0, gos = it.k === 'gos' && k === 'g';
-    var full = gos ? tk.map(function (t) { return t[0] + (t[1] || ''); }).join('') : tk.map(function (t) { return (t[1] || '') + t[0] + (t[2] || ''); }).join('');
-    var lead = full.length - full.replace(/^\s+/, '').length;
-    tk.forEach(function (t) {
-      if (!gos) pos += (t[1] || '').length;
-      out.push([pos - lead, pos - lead + t[0].length]);
-      pos += t[0].length + ((gos ? t[1] : t[2]) || '').length;
-    });
-    return out;
-  }
-  function clearHL() {
-    $$('.w.hl', $('#stage-rows')).forEach(function (el) { el.classList.remove('hl'); });
-    if (W.CSS && CSS.highlights) CSS.highlights.delete('trb-word');
-  }
-  function highlighter(it, k, text) {
-    var sp = spans(it, k, text);
-    return function (ci, cl) {
-      clearHL(); if (ci < 0) return;
-      var row = $('.row-' + k + ' .row-txt', $('#stage-rows')); if (!row) return;
-      if (sp) { // Latin / Greek: light up the word's own element
-        var idx = -1;
-        for (var i = 0; i < sp.length; i++) { if (ci < sp[i][1]) { idx = i; break; } }
-        var el = idx >= 0 && $('.w[data-i="' + idx + '"]', row); if (el) el.classList.add('hl');
-        return;
-      }
-      if (!(W.CSS && CSS.highlights && W.Highlight)) return; // English: highlight the text range itself
-      var end = ci + (cl || (text.slice(ci).match(/^[\w’'\-]+/) || [''])[0].length); if (end <= ci) return;
-      var walker = D.createTreeWalker(row, NodeFilter.SHOW_TEXT), n, at = 0, r = D.createRange(), started = false;
-      while ((n = walker.nextNode())) {
-        var len = n.nodeValue.length;
-        if (!started && ci < at + len) { r.setStart(n, ci - at); started = true; }
-        if (started && end <= at + len) { r.setEnd(n, end - at); CSS.highlights.set('trb-word', new Highlight(r)); return; }
-        at += len;
-      }
-    };
-  }
   function say(it, k) {
     var rate = prefs.speed;
-    if (k === 'g' && it.k === 'gos' && it.v.a && prefs.gaudio !== 'tts') return player.clip(it.v.a, rate);
-    var text = textFor(it, k), hl = highlighter(it, k, text);
-    var p = k === 'g' ? player.speak(text, 'g', rate, hl) : player.speak(text, k === 'en' ? 'en' : 'l', rate * (k === 'l' ? 0.9 : 1), hl);
-    return p.then(function (ok) { noteTiming(); return ok; });
-  }
-  function noteTiming() {
-    var off = ['l', 'g', 'en'].filter(function (k) { return G.voiceTiming(k) === false; });
-    var el = $('#hl-note'); if (!el) return;
-    el.hidden = !off.length;
-    el.textContent = off.length ? 'Word highlighting isn’t available for the ' + off.map(function (k) { return LANGS[k].name; }).join(' and ') +
-      ' voice on this browser: it doesn’t report when each word is spoken. Safari, and Chrome or Edge with a voice installed on the device, usually do.' : '';
+    if (k === 'g' && it.k === 'gos' && it.v.a) return player.clip(it.v.a, rate);
+    if (k === 'g') return player.speak(textFor(it, 'g'), 'g', rate);
+    return player.speak(textFor(it, k), k === 'en' ? 'en' : 'l', rate * (k === 'l' ? 0.9 : 1));
   }
   var creditSpoken = false;
   function runItem() {
@@ -356,7 +309,7 @@
   }
   function togglePlay() {
     if (cur == null) return;
-    if (playing) { playing = false; player.stop(); clearHL(); setPlayBtn(); renderStage(); return; }
+    if (playing) { playing = false; player.stop(); setPlayBtn(); renderStage(); return; }
     oneTok++; playing = true; setPlayBtn(); panel.classList.remove('open'); spoken = {}; renderStage(); runItem();
   }
 
@@ -395,8 +348,6 @@
     gp.addEventListener('input', function () { prefs.gap = +gp.value; sync(); savePrefs(); });
     rp.addEventListener('change', function () { prefs.reps = +rp.value; savePrefs(); });
     tx.addEventListener('change', function () { prefs.text = tx.value; savePrefs(); renderStage(); });
-    var ga = $('#g-audio'); ga.value = prefs.gaudio === 'tts' ? 'tts' : 'human';
-    ga.addEventListener('change', function () { prefs.gaudio = ga.value; savePrefs(); });
     // Text size inside the sentence box (separate from the site-wide Aa setting)
     var SF = [0.85, 1, 1.15, 1.3, 1.5, 1.75, 2];
     function applySfs() {
@@ -429,7 +380,7 @@
     setTimeout(function () {
       var l = G.voiceFor('l'), g = G.voiceFor('g'), e = G.voiceFor('en');
       voiceNote.textContent = 'Voices on this device: Latin ' + (l ? l.name + ' (' + l.lang + ')' : 'none found, using your default voice') +
-        ' · Greek ' + (g ? g.name + ' (' + g.lang + ')' : 'none found') + ' · English ' + (e ? e.name : 'default');
+        ' · Greek ' + (g ? g.name + ' (' + g.lang + ')' : 'none installed, so classical Greek plays silently (Gospel Greek uses the human recording)') + ' · English ' + (e ? e.name : 'default');
     }, 800);
   })();
 
