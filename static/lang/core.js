@@ -141,7 +141,8 @@
   }
   function score(v) { var n = v.name.toLowerCase(); return (/natural|neural|premium|enhanced|google/.test(n) ? 2 : 0) + (v.localService ? 1 : 0); }
   var VOICE_PREFS = { en: ['en-us', 'en-gb', 'en'], l: ['it-it', 'it', 'la', 'es'], g: ['el-gr', 'el'] };
-  function voiceFor(kind) { return pickVoice(VOICE_PREFS[kind]); }
+  // Re-read the voice list each time: some browsers (e.g. Brave) hand out a different list later than at page load.
+  function voiceFor(kind) { if (W.speechSynthesis) { var fresh = W.speechSynthesis.getVoices(); if (fresh && fresh.length) voices = fresh; } return pickVoice(VOICE_PREFS[kind]); }
 
   function Player() {
     this.audio = new Audio(); this.audio.preload = 'auto';
