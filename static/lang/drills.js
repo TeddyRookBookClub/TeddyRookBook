@@ -16,6 +16,8 @@
     grc: { name: 'Greek', langs: ['g', 'en'] },
     both: { name: 'Latin & Greek', langs: ['g', 'en', 'l'] }
   };
+  // Classical Greek sources are older dialects than the Koine of the New Testament; say so wherever they appear.
+  var DIALECT = { il: 'Homeric Greek', od: 'Homeric Greek', hdt: 'Ionic Greek', lyc: 'literary Atticizing Greek', alc: 'literary Atticizing Greek' };
   var PREF_KEY = 'trb-gospels-prefs';
   var prefs = { study: null, order: ['g', 'en', 'l'], red: true, show: { en: true, g: true, l: true }, play: { en: true, g: true, l: true },
     inc: { g: true, l: true }, speed: 1, gap: 2, reps: 1, src: 'ALL', book: 'ALL', passage: -1, mode: 'shuffle', text: 'always',
@@ -120,8 +122,8 @@
       if (!cls[lg] || (prefs.study === 'lat' && lg === 'G') || (prefs.study === 'grc' && lg === 'L')) return;
       Object.keys(cls[lg].works).forEach(function (w) { works.push([w, cls[lg].works[w]]); });
     });
-    ss.innerHTML = '<option value="ALL">All sources</option><option value="GOS">The Gospels (499 verses)</option><option value="CLS">All classical authors</option>' +
-      works.map(function (w) { return '<option value="' + w[0] + '">' + G.esc(w[1].a + ': ' + w[1].t) + ' (' + w[1].n + ')</option>'; }).join('');
+    ss.innerHTML = '<option value="ALL">All sources</option><option value="GOS">The Gospels (499 verses' + (prefs.study !== 'lat' ? ', Koine Greek' : '') + ')</option><option value="CLS">All classical authors</option>' +
+      works.map(function (w) { return '<option value="' + w[0] + '">' + G.esc(w[1].a + ': ' + w[1].t) + ' (' + w[1].n + (DIALECT[w[0]] ? ', ' + DIALECT[w[0]] : '') + ')</option>'; }).join('');
     ss.value = prefs.src; if (ss.value !== prefs.src) { prefs.src = 'ALL'; ss.value = 'ALL'; }
     bs.value = prefs.book;
     function fillPassages() {
@@ -218,7 +220,7 @@
       $('#st-title').textContent = data.passages[it.v.p][4];
     } else {
       $('#st-ref').textContent = it.work.a + ', ' + it.work.t + ' ' + it.s.r;
-      $('#st-title').textContent = it.work.la;
+      $('#st-title').textContent = it.work.la + (DIALECT[it.s.w] ? ' · ' + DIALECT[it.s.w] + ', not New Testament Koine' : '');
     }
     var h = '';
     rowsFor(it).forEach(function (k) {

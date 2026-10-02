@@ -35,7 +35,7 @@
       (saved ? '<p class="im-resume"><button type="button" class="im-btn pri" data-act="resume">Continue your saved game</button> <span>' + esc(scen(saved.sc).title) + ' · turn ' + saved.round + '</span></p>' : '') +
       '<h2>1 · Choose a war</h2><div class="im-scens">';
     ['Rome', 'Greece'].forEach(function (side) {
-      h += '<div class="im-grp"><h3>' + (side === 'Rome' ? 'Rome <small>played in Latin</small>' : 'Greece <small>played in Greek</small>') + '</h3>';
+      h += '<div class="im-grp"><h3>' + (side === 'Rome' ? 'Rome <small>played in Latin</small>' : 'Greece <small>played in classical (Attic) Greek, not Koine</small>') + '</h3>';
       I.SCENARIOS.filter(function (s) { return s.side === side; }).forEach(function (s) {
         h += '<button type="button" class="im-scen' + (s.id === sc.id ? ' on' : '') + '" data-sc="' + s.id + '"><b class="' + (s.lang === 'gr' ? 'grc' : 'lat') + '">' + esc(s.title) + '</b><span>' + esc(s.sub) + ' · ' + esc(s.date) + '</span><small>' +
           Object.keys(MAPS[s.map].terr).length + ' territories</small></button>';

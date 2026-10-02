@@ -5,7 +5,8 @@ import json, collections, re, sys, unicodedata
 D = sys.argv[1]
 G = json.load(open(D + '/grc-lex.json')); L = json.load(open(D + '/lat-lex.json'))
 BOOKS = ['MAT', 'MRK', 'LUK', 'JHN']
-NG, NL = 600, 600
+NG, NL = 99999, 99999   # every word in the Gospels (proper names left out)
+NF = 1000                # word forms are kept for the 1000 most common words of each language
 
 gt = collections.Counter(); lt = collections.Counter()
 gv = collections.Counter(); lv = collections.Counter(); co = collections.Counter()
@@ -109,7 +110,8 @@ def pair(i):
         y = OVR[lem]
         return LBY.get(y, -1) if y else -1
     d, y = best[i]
-    return y if (y is not None and d >= 0.6) else -1
+    if y is None or gv[i] < 3: return -1   # too rare to trust an automatic match
+    return y if d >= (0.6 if gv[i] >= 10 else 0.75) else -1
 
 # ---------- glosses ----------
 LG = {  # Gospel-appropriate meanings where Whitaker's first sense is misleading
@@ -225,13 +227,13 @@ for k, i in enumerate(grank):
 for k, i in enumerate(lrank):
     out['l']['lem'].append([L[i]['l'], lgloss(i), L[i]['p'], lt[i]])
 # forms: [lemma index, form, attrs, count, ref, snippet]
-for i in grank:
+for i in grank[:NF]:
     for (form, code), n in gforms[i].most_common():
         a = gattrs(code)
         if not a: continue
         ref, snip, _ = gex[(i, form, code)]
         out['g']['forms'].append([gidx[i], form, pack(a), n, ref, snip])
-for i in lrank[:NL]:
+for i in lrank[:NF]:
     for (form, m), n in lforms[i].most_common():
         a = lattrs(L[i]['p'], m)
         if not a: continue

@@ -13,12 +13,13 @@
     <ol>
       <li><b>Say the answer before you flip.</b> Trying to remember, even when you can’t, is what makes a word stick. Then flip and grade yourself honestly.</li>
       <li><b>Grade each card.</b> <i>Again</i> brings it back in a few cards. <i>Hard</i>, <i>Good</i> and <i>Easy</i> push it further out (the button shows when you’ll see it next). Cards you know well come back after days, then weeks; cards you miss come back soon. This is spaced repetition.</li>
-      <li><b>Little and often.</b> Ten minutes a day beats an hour once a week. <i>Smart review</i> shows the cards that are due first, then a few new ones (you choose how many per day).</li>
-      <li><b>Start with the most common words.</b> The words are ranked by how often they occur in the four Gospels: the top 100 make up about 70% of the text, the top 600 about 90%.</li>
+      <li><b>Little and often.</b> Ten minutes a day beats an hour once a week. Cards come shuffled by default. Choose <i>Smart review</i> under Order to see the cards that are due first, then a few new ones each day.</li>
+      <li><b>Start with the most common words.</b> The words are ranked by how often they occur in the four Gospels: the top 100 make up about 70% of the text, the top 500 nearly 90%, and <i>All</i> is every word in the Gospels except names. Word forms cover the 1,000 most common words.</li>
       <li><b>Then drill the forms.</b> <i>Word forms</i> shows a real form from the Gospels (say, <span class="grc">ἐλάλησεν</span>) and asks what it is; <i>Build the form</i> gives the dictionary word and a description (“aorist active indicative, 3rd singular”) and asks you to produce it. Narrow either one to a tense, mood, voice, person, case or number to practise one pattern at a time, then mix them.</li>
       <li><b>Both languages:</b> choose <i>Greek + Latin</i> and each vocabulary card becomes a three-sided prism. Tap to turn it: Greek, Latin and English, in the order you set. Only words with a clear match between the two languages are included.</li>
       <li><b>Every form is real.</b> Forms come from the Greek New Testament and the Latin Vulgate, with an example phrase and reference, so you only learn forms that actually occur.</li>
       <li><b>Pronunciation:</b> under each Greek word is the same word in Latin letters (παραδίδωμι → <i>paradídōmi</i>). The accent mark shows which syllable to stress; <i>ē</i> and <i>ō</i> are long e and o, <i>ch</i> is as in “loch”, and <i>y</i> is like French <i>u</i>. Latin is spelled as it sounds, so it has no separate guide.</li>
+      <li><b>Save a card as a picture:</b> the link under the card downloads an image with the word, its pronunciation, its meaning and (if ticked) the forms of it that occur in the Gospels. On <i>Greek + Latin</i> cards the picture shows all three languages.</li>
       <li><b>Keys:</b> Space or Enter flips; 1–4 grade (Again, Hard, Good, Easy); P plays the word aloud.</li>
       <li><b>Progress</b> is saved only in this browser on this device.</li>
     </ol>
@@ -38,7 +39,7 @@
         <button type="button" class="g g4" data-q="4"><b>Easy</b><small></small></button>
       </div>
     </div>
-    <div class="fc-tools"><button type="button" class="linkbtn" id="fc-say">🔊 Hear it</button> · <button type="button" class="linkbtn" id="fc-skip">Skip</button> · <span id="fc-today"></span></div>
+    <div class="fc-tools"><button type="button" class="linkbtn" id="fc-say">🔊 Hear it</button> · <button type="button" class="linkbtn" id="fc-skip">Skip</button> · <span id="fc-today"></span><br><button type="button" class="linkbtn" id="fc-pic">🖼 Save this card as a picture</button> <label class="fc-picopt"><input type="checkbox" id="fc-pic-forms" checked> include its forms</label></div>
   </div>
 
   <section class="fc-setup box" id="fc-setup">
@@ -51,11 +52,11 @@
     </div>
     <div class="fc-row">
       <label class="fc-field"><span class="fc-lab">Words</span>
-        <select id="fc-range"><option value="50">Top 50</option><option value="100">Top 100</option><option value="200">Top 200</option><option value="300">Top 300</option><option value="600">Top 600</option></select></label>
+        <select id="fc-range"><option value="50">Top 50</option><option value="100">Top 100</option><option value="250">Top 250</option><option value="500">Top 500</option><option value="1000">Top 1,000</option><option value="2500">Top 2,500</option><option value="all">All (about 2,600)</option></select></label>
       <label class="fc-field"><span class="fc-lab">Part of speech</span>
         <select id="fc-pos"><option value="all">All</option><option value="noun">Nouns</option><option value="verb">Verbs</option><option value="adj">Adjectives</option><option value="pron">Pronouns &amp; article</option><option value="other">Little words (prepositions, conjunctions, adverbs)</option></select></label>
       <label class="fc-field"><span class="fc-lab">Order</span>
-        <select id="fc-order"><option value="srs">Smart review (due cards first)</option><option value="freq">Most common first</option><option value="shuffle">Shuffle</option><option value="alpha">Alphabetical</option><option value="rare">Least common first</option></select></label>
+        <select id="fc-order"><option value="shuffle">Shuffle</option><option value="freq">Most common first</option><option value="srs">Smart review (due cards first)</option><option value="alpha">Alphabetical</option><option value="rare">Least common first</option></select></label>
       <label class="fc-field" id="fc-new-wrap"><span class="fc-lab">New cards per day</span>
         <select id="fc-new"><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="9999">No limit</option></select></label>
       <label class="fc-field" id="fc-dir-wrap"><span class="fc-lab">Show first</span>

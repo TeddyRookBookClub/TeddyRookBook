@@ -55,8 +55,10 @@
   try { st = JSON.parse(W.localStorage.getItem(KEY)); } catch (e) { }
   st = st || {};
   st.cards = st.cards || {}; st.prefs = st.prefs || {}; st.day = st.day || {};
-  var P = st.prefs, DEF = { lang: 'g', type: 'v', range: '100', pos: 'all', order: 'srs', nw: '20', dir: 't', faces: ['g', 'l', 'e'], f: {} };
+  var P = st.prefs, DEF = { lang: 'g', type: 'v', range: '100', pos: 'all', order: 'shuffle', nw: '20', dir: 't', faces: ['g', 'l', 'e'], f: {} };
   for (var k in DEF) if (P[k] == null) P[k] = DEF[k];
+  if (!P.v2) { P.v2 = 1; P.order = 'shuffle'; }            // shuffle became the default
+  if (['50', '100', '250', '500', '1000', '2500', 'all'].indexOf(String(P.range)) < 0) P.range = '100';
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
   function today() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
   function dayStats() { if (st.day.d !== today()) st.day = { d: today(), nw: 0, rv: 0 }; return st.day; }
@@ -89,7 +91,7 @@
   function vocabCards(lang, n, pos) {
     var out = [];
     data[lang].lem.slice(0, n).forEach(function (e, i) {
-      if (pos !== 'all' && posGroup(lang, e[2]) !== pos) return;
+      if (!e[1] || (pos !== 'all' && posGroup(lang, e[2]) !== pos)) return;
       out.push({ id: 'v:' + lang + ':' + e[0], k: 'v', lang: lang, i: i, rank: i, alpha: e[0] });
     });
     return out;
@@ -124,7 +126,7 @@
     return out;
   }
   function buildDeck() {
-    var n = +P.range, langs = P.lang === 'b' ? ['g', 'l'] : [P.lang];
+    var n = P.range === 'all' ? 1e9 : +P.range, langs = P.lang === 'b' ? ['g', 'l'] : [P.lang];
     if (P.type === 'v') deck = P.lang === 'b' ? bothCards(n, P.pos) : vocabCards(P.lang, n, P.pos);
     else { deck = []; langs.forEach(function (l) { deck = deck.concat(formCards(l, n, P.pos, P.type)); }); }
   }
@@ -277,6 +279,45 @@
     next();
   }
 
+  // ---------- save the card as a picture ----------
+  function savePicture() {
+    if (!cur) return;
+    var lang = cur.lang, g = lemOf(lang, cur.i), withForms = $('#fc-pic-forms').checked, dark = D.documentElement.dataset.theme === 'dark';
+    var lat = cur.k === 'b' ? lemOf('l', cur.li) : null;
+    var forms = withForms ? data[lang].forms.filter(function (f) { return f[0] === cur.i; }).sort(function (a, b) { return b[3] - a[3]; }).slice(0, 14) : [];
+    var Wd = 1200, pad = 70, H = 150 + (lang === 'g' ? 175 : 130) + (lat ? 120 : 0) + 170 + (forms.length ? 80 + Math.ceil(forms.length / 2) * 50 : 0) + 70;
+    var cv = D.createElement('canvas'); cv.width = Wd; cv.height = H; var c = cv.getContext('2d');
+    var bg = dark ? '#26332c' : '#f3ead2', ink = dark ? '#eef3ef' : '#1d2320', mut = dark ? '#a9b8af' : '#5d6862', gold = '#b8963e', wine = dark ? '#e9a0b1' : '#7a2338', grn = dark ? '#6cc79a' : '#004C2A';
+    c.fillStyle = bg; c.fillRect(0, 0, Wd, H); c.fillStyle = grn; c.fillRect(0, 0, Wd, 14);
+    var SER = '"Gentium Book Plus", Georgia, serif', SAN = 'system-ui, -apple-system, "Segoe UI", sans-serif', y = 80;
+    function line(txt, font, col, dy, x) { c.font = font; c.fillStyle = col; c.textAlign = x == null ? 'center' : 'left'; c.fillText(txt, x == null ? Wd / 2 : x, y); y += dy; }
+    function fit(txt, size, fam, bold) { do { c.font = (bold ? '700 ' : '') + size + 'px ' + fam; size -= 4; } while (c.measureText(txt).width > Wd - 2 * pad && size > 24); return c.font; }
+    line((lang === 'g' ? 'KOINE GREEK' : 'LATIN') + (lat ? ' · LATIN · ENGLISH' : ' · ENGLISH'), '600 22px ' + SAN, gold, 100);
+    line(g[0], fit(g[0], 110, SER), ink, lang === 'g' ? 62 : 90);
+    if (lang === 'g') line(translit(g[0]), 'italic 40px Georgia, serif', mut, 80);
+    if (lat) { line(lat[0], fit(lat[0], 84, SER), wine, 60); line('Latin', '600 20px ' + SAN, mut, 60); }
+    line(g[1], fit(g[1], 56, 'Georgia, serif'), grn, 62);
+    line(posName(lang, g[2]) + ' · #' + (cur.i + 1) + ' most common in the Gospels · ' + g[3] + ' times', '26px ' + SAN, mut, 50);
+    if (forms.length) {
+      c.strokeStyle = gold; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, y); c.lineTo(Wd - pad, y); c.stroke(); y += 46;
+      line('Forms found in the Gospels', '600 24px ' + SAN, mut, 44);
+      var y0 = y, half = Math.ceil(forms.length / 2);
+      forms.forEach(function (f, i) {
+        var x = i < half ? pad : Wd / 2 + 20; y = y0 + (i % half) * 50;
+        c.textAlign = 'left'; c.font = '34px ' + SER; c.fillStyle = ink; c.fillText(f[1], x, y);
+        var w = c.measureText(f[1]).width; c.font = '19px ' + SAN; c.fillStyle = mut;
+        var d = describe(lang, parseAttrs(f[2])).replace(' person ', ' ').replace(/ · /g, ', '), max = Wd / 2 - pad - w - 34;
+        while (c.measureText(d).width > max && d.length > 8) d = d.slice(0, -2); c.fillText(d, x + w + 14, y - 3);
+      });
+      y = y0 + half * 50;
+    }
+    c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbookclub.com', Wd / 2, H - 30);
+    cv.toBlob(function (b) {
+      var a = D.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'flashcard-' + (lang === 'g' ? translit(g[0]).normalize('NFD').replace(/[^a-z]/gi, '') : g[0]) + '.png';
+      D.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    }, 'image/png');
+  }
+
   // ---------- audio ----------
   var player = new G.Player();
   function say() {
@@ -352,6 +393,7 @@
   $('#fc-stage').addEventListener('click', function (e) { if (e.target.closest('button')) return; if (cur && (cur.k === 'b' || $('#fc-grade').hidden)) turn(); });
   $$('#fc-grade .g').forEach(function (b) { b.onclick = function () { grade(+b.dataset.q); }; });
   $('#fc-say').onclick = say;
+  $('#fc-pic').onclick = function () { (D.fonts && D.fonts.ready ? D.fonts.ready : Promise.resolve()).then(savePicture); };
   $('#fc-skip').onclick = function () { if (cur) { queue.push(cur); next(); } };
   $('#fc-reset').onclick = function () {
     if (W.confirm && !W.confirm('Forget your progress on the ' + deck.length + ' cards in this set?')) return;
