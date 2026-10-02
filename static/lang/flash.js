@@ -188,6 +188,32 @@
     return [{ lab: lab, lang: lang, html: '<div class="fc-q">Build the form</div><div class="fc-word ' + cls + ' sm">' + esc(e[0]) + '</div><div class="fc-sub">“' + esc(e[1]) + '”</div><div class="fc-ask">' + esc(parses[0]) + '</div>' },
       { lab: lab, lang: lang, html: '<div class="fc-ask sm">' + esc(e[0]) + ' · ' + esc(parses[0]) + '</div><div class="fc-word ' + cls + '">' + forms.map(esc).join(' <span class="fc-or">or</span> ') + '</div>' + exHTML }];
   }
+  // Greek written in Latin letters (standard scholarly transliteration), with the accent kept to show the stress.
+  var TR = { 'α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e', 'ζ': 'z', 'η': 'ē', 'θ': 'th', 'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x', 'ο': 'o', 'π': 'p', 'ρ': 'r', 'σ': 's', 'ς': 's', 'τ': 't', 'υ': 'y', 'φ': 'ph', 'χ': 'ch', 'ψ': 'ps', 'ω': 'ō' };
+  function translit(s) {
+    return s.split(/(\s+)/).map(function (w) {
+      var d = w.normalize('NFD'), out = '', prev = '', rough = d.indexOf('̔') >= 0, cap = /^[Α-Ω]/.test(d), started = false;
+      for (var i = 0; i < d.length; i++) {
+        var ch = d[i], lc = ch.toLowerCase(), r = TR[lc];
+        if (r == null) {
+          if (ch === '́' || ch === '̀' || ch === '͂') out += '́';       // any accent -> stress mark
+          else if (ch === '̈') out += '̈';
+          else if (ch === 'ͅ') out += 'i';                                             // iota subscript
+          else if (ch === '̓' || ch === '̔') { }                                   // breathings handled below
+          else if (ch === '’' || ch === '᾽' || ch === 'ʼ') out += '’';
+          else out += ch;
+          continue;
+        }
+        if (lc === 'γ' && /[γκξχ]/.test((d[i + 1] || '').toLowerCase())) r = 'n';
+        if (lc === 'υ' && /[αεοη]/.test(prev) && d[i + 1] !== '̈') r = 'u';
+        if (lc === 'υ' && /^[\u0300-\u036f]*ι(?![\u0300-\u036f]*\u0308)/.test(d.slice(i + 1).toLowerCase())) r = 'u';
+        if (!started) { started = true; if (rough) r = lc === 'ρ' ? 'rh' : 'h' + r; }
+        out += r; prev = lc;
+      }
+      out = out.normalize('NFC');
+      return cap ? out.charAt(0).toUpperCase() + out.slice(1) : out;
+    }).join('');
+  }
   function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
   function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h); }
 
@@ -213,6 +239,7 @@
         (prism ? '<span class="fc-dots">' + faces.map(function (_, j) { return '<i' + (j === i ? ' class="on"' : '') + '></i>'; }).join('') + '</span>' : '') + '</div>';
     });
     stage.innerHTML = h + '</div>';
+    $$('.fc-face .fc-word.grc, .fc-face .fc-ans.grc', stage).forEach(function (el) { var d = D.createElement('div'); d.className = 'fc-tr'; d.textContent = translit(el.textContent); d.title = 'The Greek in Latin letters. The accent mark shows the stressed syllable; ē and ō are long e and o.'; el.parentNode.insertBefore(d, el.nextSibling); });
     flip.hidden = false; grade.hidden = true; flip.textContent = prism ? 'Turn ↻' : 'Show answer';
     setTurn();
     var s = st.cards[cur.id], now = Date.now();
