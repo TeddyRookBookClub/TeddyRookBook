@@ -511,7 +511,7 @@
     $('#f-helpb').onclick = openHelp;
   }
   function labels() {
-    $('#f-brand').innerHTML = (S.setting === 'rome' ? '🏛️ ' : '🏺 ') + L(V.title);
+    $('#f-brand').innerHTML = (S.setting === 'rome' ? '🏛️ ' : '🏺 ') + 'Ancient Festival Tycoon';
     $('#f-speed').innerHTML = [['0', '❚❚', V.pause], ['1', '▶', V.slow], ['3', '▶▶', V.fast]].map(function (s) {
       return '<button type="button" class="f-btn sp' + (String(speed) === s[0] ? ' on' : '') + '" data-sp="' + s[0] + '" title="' + (s[2].e) + '">' + s[1] + '</button>';
     }).join('');
@@ -659,7 +659,7 @@
         '<button type="button" class="f-btn prim" data-new="' + s + '">' + L(V.newGame) + '</button>' +
         (sv ? '<button type="button" class="f-btn" data-go="' + s + '">' + L(V.resume) + ' · ' + L(V.day, 'inline') + ' ' + sv.day + '</button>' : '') + '</div>';
     };
-    st.innerHTML = '<div class="sbox"><h2>' + L(V.title, 'big') + '</h2>' +
+    st.innerHTML = '<div class="sbox"><h2>' + 'Ancient Festival Tycoon' + '</h2>' +
       '<div class="scs">' + card('greece', '🏺') + card('rome', '🏛️') + '</div>' +
       '<div class="slang"><b>' + L(V.langs) + '</b> <span id="s-langs"></span></div>' +
       '<p><button type="button" class="f-btn" id="s-help">? How to play</button></p>' +

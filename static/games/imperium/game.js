@@ -187,7 +187,7 @@
     var me = S.turn, human = S.players[me] && S.players[me].human && !busy;
     $$('.im-t').forEach(function (p) {
       var t = p.dataset.t, o = S.own[t];
-      p.style.fill = o < 0 ? (S.arm[t] === 0 && S.phase === 'claim' ? '#efe6cf' : mix(NEUTRAL, '#efe6cf', .55)) : mix(facOf(o).color, '#f3ead2', .5);
+      p.style.fill = o < 0 ? (S.arm[t] === 0 && S.phase === 'claim' ? '#efe6cf' : mix(NEUTRAL, '#efe6cf', .55)) : mix(facOf(o).color, '#f3ead2', .62);
       p.classList.toggle('sel', ui.sel === t); p.classList.toggle('tgt', ui.tgt === t);
       p.classList.toggle('can', human && canClick(t));
     });

@@ -320,7 +320,7 @@
   function hideTip() { var t = $('#tt-tip'); if (t) t.hidden = true; }
 
   function header() {
-    $('#tt-title').innerHTML = V ? '<span class="' + V.lang + ' t1">' + esc(V.title[0]) + '</span><span class="en">' + esc(V.title[1]) + ' · ' + esc(V.region) + '</span>' : '<span class="t1">The Thief of Time</span>';
+    $('#tt-title').innerHTML = V ? '<span class="t1">Time Thief</span><span class="en">' + esc(V.region) + '</span>' : '<span class="t1">Time Thief</span>';
     $('#tt-clock').innerHTML = C && !C.done ? clockHTML(C.t).replace('<span class="ck">', '<span class="ck">🕰️ ') + '<small>Deadline: Day 5, 18:00</small>' : '';
   }
   var curTab = 'investigate', curSpot = null;
@@ -393,10 +393,10 @@
     C = C && !C.done ? C : null;
     header();
     modal(function () {
-      return '<div class="tt-menu"><h2>The Thief of Time</h2><p class="lead">The <b>Klepsydra</b> gang is stealing treasures from across history. Named after the Greek water clock, [[κλεψύδρα|water clock (literally “water-thief”)]], they slip from century to century. Follow the clues, learn the language, and bring them to justice.</p>'.replace(/\[\[([^|\]]+)\|([^\]]+)\]\]/g, '<b class="grc">$1</b> <span class="en">($2)</span>') +
+      return '<div class="tt-menu"><h2>Time Thief</h2><p class="lead">The <b>Klepsydra</b> gang is stealing treasures from across history. Named after the Greek water clock, [[κλεψύδρα|water clock (literally “water-thief”)]], they slip from century to century. Follow the clues, learn the language, and bring them to justice.</p>'.replace(/\[\[([^|\]]+)\|([^\]]+)\]\]/g, '<b class="grc">$1</b> <span class="en">($2)</span>') +
         '<div class="tt-vers">' + ['greece', 'rome'].map(function (k) {
           var d = DATA[k], sv = store[k];
-          return '<button type="button" class="tt-ver v-' + k + (V && V.key === k ? ' sel' : '') + '" data-act="ver" data-v="' + k + '"><span class="' + d.lang + ' vt">' + esc(d.title[0]) + '</span><b>' + esc(d.region) + '</b><small>Learn ' + esc(d.langName) + ' · ' + d.places.length + ' cases<br>Played ' + sv.played.length + ' · solved ' + sv.solved + ' · ' + rank(sv.solved) + '</small></button>';
+          return '<button type="button" class="tt-ver v-' + k + (V && V.key === k ? ' sel' : '') + '" data-act="ver" data-v="' + k + '"><b>' + esc(d.region) + '</b><small>Learn ' + esc(d.langName) + ' · ' + d.places.length + ' cases<br>Played ' + sv.played.length + ' · solved ' + sv.solved + ' · ' + rank(sv.solved) + '</small></button>';
         }).join('') + '</div>' +
         (V ? '<div class="tt-row"><button type="button" class="tt-btn big" data-act="start">' + (C ? 'Abandon this case and take a new one' : 'Take a case in ' + esc(V.region) + ' →') + '</button>' + (C ? '<button type="button" class="tt-btn" data-act="close">Back to my case</button>' : '') + '</div>' : '<p class="hint">Choose an era to begin.</p>') +
         '<p class="small">Cases come in random order and none repeats until you have played them all. Progress is saved only in this browser. <button type="button" class="linkish" data-act="helpbtn">How to play</button></p></div>';

@@ -5,7 +5,7 @@
 
   // ---------- words (Latin kept to simple, standard forms) ----------
   var X = {
-    title: ['Saltus Teutoburgiensis', 'The Teutoburg Forest'],
+    title: ['Teutoburg', ''],
     start: ['Incipe!', 'Start!'], again: ['Iterum!', 'Again!'], next: ['Perge!', 'Continue!'], pause: ['Siste', 'Pause'],
     score: ['Gloria', 'Score'], lives: ['Vitae', 'Lives'], day: ['Dies', 'Day'], words: ['Verba', 'Words learned'],
     goal1: ['Collige nummos!', 'Collect the coins!'], goal2: ['Cave Germanos!', 'Beware the Germans!'], goal3: ['Cape aquilam!', 'Seize the eagle!'],
