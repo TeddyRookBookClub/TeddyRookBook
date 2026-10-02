@@ -52,7 +52,8 @@
     cards.forEach(function(card){card.style.display=(t==='all'||card.dataset.tags.split('|').indexOf(t)>-1)?'':'none';});
   });});
   var lb=document.getElementById('ig-lightbox'), img=document.getElementById('ig-lb-img');
-  function close(){lb.hidden=true;lb.classList.remove('zoom');img.src='';document.body.style.overflow='';}
+  var goBack=false;
+  function close(){if(goBack){goBack=false;history.back();return;}lb.hidden=true;lb.classList.remove('zoom');img.src='';document.body.style.overflow='';}
   document.querySelectorAll('.ig-open').forEach(function(a){a.addEventListener('click',function(e){
     e.preventDefault(); img.src=a.href; img.alt=a.dataset.title;
     document.getElementById('ig-lb-title').textContent=a.dataset.title;
@@ -67,7 +68,7 @@
   document.querySelectorAll('.ig-frame img').forEach(function(im){function f(){if(im.naturalWidth&&im.naturalHeight/im.naturalWidth>1.48)im.parentNode.classList.add('tall');}if(im.complete)f();else im.addEventListener('load',f);});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
   // open an infographic directly from a link like /infographics/#karamazov-whos-who
-  var h=decodeURIComponent(location.hash.slice(1)); if(h){var f=document.getElementById(h); if(f){var a=f.querySelector('.ig-open'); f.scrollIntoView({block:'center'}); if(a) a.click();}}
+  var h=decodeURIComponent(location.hash.slice(1)); if(h){var f=document.getElementById(h); if(f){var a=f.querySelector('.ig-open'); f.scrollIntoView({block:'center'}); if(a){a.click();try{var r=document.referrer?new URL(document.referrer):null;goBack=!!r&&r.origin===location.origin&&r.pathname!==location.pathname&&history.length>1;}catch(e){}}}}
 })();
 </script>
 {{ end }}
