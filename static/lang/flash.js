@@ -312,10 +312,19 @@
       y = y0 + half * 50;
     }
     c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbookclub.com', Wd / 2, H - 30);
-    cv.toBlob(function (b) {
-      var a = D.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'flashcard-' + (lang === 'g' ? translit(g[0]).normalize('NFD').replace(/[^a-z]/gi, '') : g[0]) + '.png';
-      D.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
-    }, 'image/png');
+    var name = 'flashcard-' + (lang === 'g' ? translit(g[0]).normalize('NFD').replace(/[^a-z]/gi, '') : g[0]) + '.png';
+    var box = $('#fc-prev');
+    if (!box) {
+      box = D.createElement('div'); box.id = 'fc-prev'; box.className = 'fc-prev';
+      box.innerHTML = '<div class="fc-prev-in" role="dialog" aria-label="Picture preview"><img alt="Preview of the flashcard picture"><p>This is exactly the picture you’ll get: a PNG image made in your browser, nothing else.</p><div class="fc-prev-btns"><a class="cbtn play" id="fc-prev-dl">⬇ Download picture</a><button type="button" class="cbtn" id="fc-prev-x">Close</button></div></div>';
+      D.body.appendChild(box);
+      box.addEventListener('click', function (e) { if (e.target === box || e.target.id === 'fc-prev-x') box.hidden = true; });
+      D.addEventListener('keydown', function (e) { if (e.key === 'Escape') box.hidden = true; });
+    }
+    var url = cv.toDataURL('image/png');
+    box.querySelector('img').src = url;
+    var dl = $('#fc-prev-dl'); dl.href = url; dl.download = name;
+    box.hidden = false;
   }
 
   // ---------- audio ----------
