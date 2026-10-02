@@ -369,9 +369,23 @@
     var box = $('#fc-prev');
     if (!box) {
       box = D.createElement('div'); box.id = 'fc-prev'; box.className = 'fc-prev';
-      box.innerHTML = '<div class="fc-prev-in" role="dialog" aria-label="Picture preview"><div class="fc-prev-opts"><span id="fc-prev-langs">Show: <label><input type="radio" name="fc-prev-l" value="b" checked> Greek + Latin</label> <label><input type="radio" name="fc-prev-l" value="g"> Greek only</label> <label><input type="radio" name="fc-prev-l" value="l"> Latin only</label></span> <label><input type="checkbox" id="fc-prev-forms"> include forms</label></div><img alt="Preview of the flashcard picture"><p>This is exactly the picture you’ll get: a PNG image made in your browser, nothing else.</p><div class="fc-prev-btns"><a class="cbtn play" id="fc-prev-dl">⬇ Download picture</a><button type="button" class="cbtn" id="fc-prev-x">Close</button></div></div>';
+      box.innerHTML = '<div class="fc-prev-in" role="dialog" aria-label="Picture preview"><div class="fc-prev-opts"><span id="fc-prev-langs">Show: <label><input type="radio" name="fc-prev-l" value="b" checked> Greek + Latin</label> <label><input type="radio" name="fc-prev-l" value="g"> Greek only</label> <label><input type="radio" name="fc-prev-l" value="l"> Latin only</label></span> <label><input type="checkbox" id="fc-prev-forms"> include forms</label></div><img alt="Preview of the flashcard picture"><p>This is exactly the picture you’ll get: a PNG image made in your browser, nothing else.</p><div class="fc-prev-btns"><button type="button" class="cbtn play" id="fc-prev-share" hidden>📲 Save to Photos / Share</button><a class="cbtn play" id="fc-prev-dl">⬇ Download picture</a><button type="button" class="cbtn" id="fc-prev-x">Close</button></div></div>';
       D.body.appendChild(box);
       box.addEventListener('click', function (e) { if (e.target === box || e.target.id === 'fc-prev-x') box.hidden = true; });
+      $('#fc-prev-share').onclick = function () {
+        var dl = $('#fc-prev-dl');
+        fetch(dl.href).then(function (r) { return r.blob(); }).then(function (b) {
+          var f = new File([b], dl.download, { type: 'image/png' });
+          return navigator.share({ files: [f] });
+        }).catch(function (e) { if (e && e.name !== 'AbortError') dl.click(); });
+      };
+      try {
+        var touch = matchMedia('(pointer: coarse)').matches;
+        if (touch && navigator.canShare && navigator.canShare({ files: [new File([new Blob(['x'], { type: 'image/png' })], 'x.png', { type: 'image/png' })] })) {
+          $('#fc-prev-share').hidden = false; $('#fc-prev-dl').className = 'cbtn'; $('#fc-prev-dl').textContent = '⬇ Download file';
+          box.querySelector('p').textContent = 'This is exactly the picture you’ll get. Tap “Save to Photos / Share”, then “Save Image” to put it in your photos.';
+        }
+      } catch (e) {}
       box.addEventListener('change', function (e) { if (e.target.id === 'fc-prev-forms') $('#fc-pic-forms').checked = e.target.checked; refreshPicture(); });
       D.addEventListener('keydown', function (e) { if (e.key === 'Escape') box.hidden = true; });
     }
