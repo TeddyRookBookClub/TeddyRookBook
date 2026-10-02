@@ -29,18 +29,20 @@
     for (var j = 0; j < g; j++) goals.push({ t: kinds[(n + j * 2) % 6], need: 8 + Math.min(14, Math.floor(n / 2)) + j * 2, got: 0 });
     return { kinds: kinds, goals: goals, moves: 16 + Math.min(10, Math.floor(n / 3)) + g * 3 };
   }
-  var G = null, busy = false, sel = null, uid = 0;
+  var G = null, busy = false, sel = null, uid = 0, hint = null;
+  // six clearly different colours, given to the six kinds in play (not tied to the word)
+  var PAL = ['#d32f2f', '#f0b400', '#2e9442', '#1e6fd6', '#8a3fc7', '#30363b'];
 
   // ---------- screens ----------
   function menu() {
     G = null;
-    root.innerHTML = '<div class="mm-menu"><h1>Mosaic Match</h1><p>Swap two neighbouring tiles to line up three or more of a kind. Every tile is a thing with a Latin or Greek name, and every match shows you the word.</p>' +
+    root.innerHTML = '<div class="mm-menu"><h1>Mosaic Match</h1><p>Swap two neighbouring tiles to line up three or more of a kind (or make a square of four). Every tile is a thing with a Latin or Greek name, and every match shows you the word.</p>' +
       '<div class="mm-opt"><span>Language</span><div class="mm-seg"><button data-l="la"' + (st.lang === 'la' ? ' class="on"' : '') + '>Latin</button><button data-l="gr"' + (st.lang === 'gr' ? ' class="on"' : '') + '>Koine Greek</button></div></div>' +
       '<div class="mm-opt"><span>Words on the tiles</span><div class="mm-seg"><button data-w="1"' + (st.labels ? ' class="on"' : '') + '>Show</button><button data-w="0"' + (!st.labels ? ' class="on"' : '') + '>Hide (harder)</button></div></div>' +
       '<div class="mm-btns"><button class="mm-btn pri" data-go="' + Math.min(st.best, LEVELS) + '">' + (st.best > 1 ? 'Continue: level ' + Math.min(st.best, LEVELS) : 'Start: level 1') + '</button><button class="mm-btn" data-go="0">Endless practice</button></div>' +
       '<div class="mm-levels">' + Array.apply(null, Array(LEVELS)).map(function (_, i) { var n = i + 1, open = n <= st.best; return '<button class="mm-lv' + (open ? '' : ' lock') + (n < st.best ? ' done' : '') + '" ' + (open ? 'data-go="' + n + '"' : 'disabled') + '>' + n + '</button>'; }).join('') + '</div>' +
       '<p class="mm-small">' + (st.hi ? 'Best endless score: ' + st.hi + '. ' : '') + 'Levels unlock one at a time. Endless practice has no move limit and uses every word. Progress is saved only in this browser.</p>' +
-      '<details class="mm-help"><summary>How to play</summary><ul><li>Tap a tile, then tap a neighbour to swap them (or swipe a tile). The swap must make a line of three or more.</li><li>Each level asks you to collect certain things, named in ' + (st.lang === 'la' ? 'Latin' : 'Greek') + ', before your moves run out.</li><li>Four in a row leaves a ⚡ tile: match it to clear its whole row and column.</li><li>After each level a quick question asks what one of the words means. A right answer gives bonus points.</li><li>The Greek words are all Koine: each one is found in the New Testament.</li></ul></details></div>';
+      '<details class="mm-help"><summary>How to play</summary><ul><li>Tap a tile, then tap a neighbour to swap them (or swipe a tile). The swap must make a line of three or more, or a two-by-two square.</li><li>Stuck? Tap 💡 Hint and the two tiles to swap will glow.</li><li>Each level asks you to collect certain things, named in ' + (st.lang === 'la' ? 'Latin' : 'Greek') + ', before your moves run out.</li><li>Four in a row leaves a ⚡ tile: match it to clear its whole row and column.</li><li>After each level a quick question asks what one of the words means. A right answer gives bonus points.</li><li>The Greek words are all Koine: each one is found in the New Testament.</li></ul></details></div>';
     root.querySelectorAll('[data-l]').forEach(function (b) { b.onclick = function () { st.lang = b.dataset.l; save(); menu(); }; });
     root.querySelectorAll('[data-w]').forEach(function (b) { b.onclick = function () { st.labels = b.dataset.w === '1'; save(); menu(); }; });
     root.querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { start(+b.dataset.go); }; });
@@ -48,9 +50,10 @@
   function start(level) {
     var def = level ? levelDef(level) : { kinds: null, goals: [], moves: Infinity };
     G = { level: level, kinds: def.kinds || pickKinds(), goals: def.goals, moves: def.moves, score: 0, grid: [], seen: {}, matches: 0 };
-    root.innerHTML = '<div class="mm-game"><div class="mm-top"><button class="mm-btn sm" id="mm-back">☰ Menu</button><div class="mm-info"><b>' + (level ? 'Level ' + level : 'Endless') + '</b><span id="mm-moves"></span><span id="mm-score"></span></div></div>' +
+    root.innerHTML = '<div class="mm-game"><div class="mm-top"><button class="mm-btn sm" id="mm-back">☰ Menu</button><div class="mm-info"><b>' + (level ? 'Level ' + level : 'Endless') + '</b><span id="mm-moves"></span><span id="mm-score"></span></div><button class="mm-btn sm" id="mm-hint">💡 Hint</button></div>' +
       '<div class="mm-goals" id="mm-goals"></div><div class="mm-word" id="mm-word">&nbsp;</div><div class="mm-boardwrap"><div class="mm-board" id="mm-board"></div></div><div class="mm-modal" id="mm-modal" hidden></div></div>';
     $('#mm-back').onclick = menu;
+    $('#mm-hint').onclick = function () { if (busy || !G) return; var mv = findMove(); if (!mv) return; hint = mv; sel = null; draw(); $('#mm-word').textContent = 'Swap the two glowing tiles.'; };
     var bd = $('#mm-board');
     bd.addEventListener('click', function (e) { var el = e.target.closest('.mm-tile'); if (el) tap(+el.dataset.r, +el.dataset.c); });
     var t0 = null;
@@ -68,7 +71,7 @@
   function fill(fresh) {
     do {
       G.grid = [];
-      for (var r = 0; r < N; r++) { G.grid.push([]); for (var c = 0; c < N; c++) { var t; do { t = G.kinds[rnd(6)]; } while ((c > 1 && G.grid[r][c - 1].t === t && G.grid[r][c - 2].t === t) || (r > 1 && G.grid[r - 1][c].t === t && G.grid[r - 2][c].t === t)); G.grid[r].push(mk(t)); } }
+      for (var r = 0; r < N; r++) { G.grid.push([]); for (var c = 0; c < N; c++) { var t; do { t = G.kinds[rnd(6)]; } while ((c > 1 && G.grid[r][c - 1].t === t && G.grid[r][c - 2].t === t) || (r > 1 && G.grid[r - 1][c].t === t && G.grid[r - 2][c].t === t) || (r > 0 && c > 0 && G.grid[r - 1][c].t === t && G.grid[r][c - 1].t === t && G.grid[r - 1][c - 1].t === t)); G.grid[r].push(mk(t)); } }
     } while (!hasMove());
   }
   // ---------- drawing ----------
@@ -84,9 +87,9 @@
       }
       delete have[t.id];
       var T = TILES[t.t];
-      el.innerHTML = '<span class="mm-in" style="--c:' + T[4] + '"><i>' + (t.sp ? '⚡' : T[0]) + '</i>' + (st.labels ? '<small class="' + cls() + '">' + esc(word(t.t)) + '</small>' : '') + '</span>';
+      el.innerHTML = '<span class="mm-in" style="--c:' + PAL[Math.max(0, G.kinds.indexOf(t.t))] + '"><i>' + (t.sp ? '⚡' : T[0]) + '</i>' + (st.labels ? '<small class="' + cls() + '">' + esc(word(t.t)) + '</small>' : '') + '</span>';
       el.setAttribute('aria-label', T[3] + (t.sp ? ' (lightning)' : ''));
-      el.dataset.r = r; el.dataset.c = c; el.classList.toggle('sel', !!sel && sel.r === r && sel.c === c); el.classList.toggle('sp', t.sp);
+      el.dataset.r = r; el.dataset.c = c; el.classList.toggle('sel', !!sel && sel.r === r && sel.c === c); el.classList.toggle('sp', t.sp); el.classList.toggle('hint', !!hint && ((hint[0] === r && hint[1] === c) || (hint[2] === r && hint[3] === c)));
       el.style.transform = 'translate(' + (c * 100) + '%,' + (r * 100) + '%)';
     }
     Object.keys(have).forEach(function (id) { var el = have[id]; el.classList.add('pop'); setTimeout(function () { el.remove(); }, 220); });
@@ -109,25 +112,37 @@
     }
     scan(function (r, c) { return G.grid[r][c]; }, function (r, c) { return [r, c]; });
     scan(function (c, r) { return G.grid[r][c]; }, function (c, r) { return [r, c]; });
+    // a two-by-two square of the same kind also counts
+    for (var r = 0; r < N - 1; r++) for (var c = 0; c < N - 1; c++) {
+      var q = [G.grid[r][c], G.grid[r][c + 1], G.grid[r + 1][c], G.grid[r + 1][c + 1]];
+      if (q[0] && q[1] && q[2] && q[3] && q[0].t === q[1].t && q[0].t === q[2].t && q[0].t === q[3].t) {
+        var cs = [[r, c], [r, c + 1], [r + 1, c], [r + 1, c + 1]];
+        if (cs.every(function (x) { return hit[x.join()]; })) continue;
+        cs.forEach(function (x) { hit[x.join()] = 1; }); runs.push({ t: q[0].t, cells: cs, sq: true });
+      }
+    }
     return { hit: hit, runs: runs };
   }
-  function hasMove() {
+  function findMove() { // the swap that clears the most tiles, or null
+    var best = null, bn = 0;
     for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) for (var d = 0; d < 2; d++) {
       var r2 = r + d, c2 = c + 1 - d; if (r2 >= N || c2 >= N) continue;
-      swap(r, c, r2, c2); var ok = findMatches().runs.length > 0; swap(r, c, r2, c2); if (ok) return true;
+      swap(r, c, r2, c2); var n = Object.keys(findMatches().hit).length; swap(r, c, r2, c2);
+      if (n > bn) { bn = n; best = [r, c, r2, c2]; }
     }
-    return false;
+    return best;
   }
+  function hasMove() { return !!findMove(); }
   function swap(r, c, r2, c2) { var t = G.grid[r][c]; G.grid[r][c] = G.grid[r2][c2]; G.grid[r2][c2] = t; }
   function tap(r, c) {
-    if (busy) return;
+    if (busy) return; hint = null;
     if (!sel) { sel = { r: r, c: c }; return draw(); }
     var a = sel; sel = null;
     if (Math.abs(a.r - r) + Math.abs(a.c - c) !== 1) { sel = (a.r === r && a.c === c) ? null : { r: r, c: c }; return draw(); }
     trySwap(a.r, a.c, r, c);
   }
   async function trySwap(r, c, r2, c2) {
-    if (busy || !G) return; busy = true; var game = G;
+    if (busy || !G) return; busy = true; hint = null; var game = G;
     swap(r, c, r2, c2); draw(); await sleep(180);
     if (!findMatches().runs.length) { swap(r, c, r2, c2); draw(); await sleep(180); busy = false; return; }
     if (G.level) G.moves--;
@@ -137,7 +152,7 @@
       var made = null;
       m.runs.forEach(function (run) {
         G.matches++; G.seen[run.t] = 1; showWord(run.t, run.cells.length);
-        if (run.cells.length >= 4 && !made) made = { t: run.t, cell: run.cells.filter(function (x) { return x[0] === at[0] && x[1] === at[1]; })[0] || run.cells[1] };
+        if (run.cells.length >= 4 && !run.sq && !made) made = { t: run.t, cell: run.cells.filter(function (x) { return x[0] === at[0] && x[1] === at[1]; })[0] || run.cells[1] };
       });
       // lightning tiles in the blast clear their row and column
       Object.keys(m.hit).forEach(function (k) { var p = k.split(','), t = G.grid[+p[0]][+p[1]]; if (t && t.sp) for (var i = 0; i < N; i++) { m.hit[p[0] + ',' + i] = 1; m.hit[i + ',' + p[1]] = 1; } });

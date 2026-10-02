@@ -28,8 +28,8 @@ html[data-theme="dark"] .mm{--g:#6cc79a;--ink:#e6ece8;--muted:#9fb0a6;--line:#48
 .mm-board{position:relative;width:min(100cqw,100cqh);aspect-ratio:1;background:#e9dfc8;border-radius:12px;box-shadow:inset 0 0 0 3px #b8963e;touch-action:none;overflow:hidden}
 html[data-theme="dark"] .mm-board{background:#2d3630}
 .mm-tile{position:absolute;left:0;top:0;width:14.2857%;height:14.2857%;padding:3%;border:0;background:none;cursor:pointer;transition:transform .2s ease-in,opacity .2s;-webkit-tap-highlight-color:transparent;padding:.35%}
-.mm-in{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;border-radius:16%;background:color-mix(in srgb,var(--c) 22%,#fffaf0);border:2px solid var(--c);box-sizing:border-box;line-height:1;overflow:hidden}
-html[data-theme="dark"] .mm-in{background:color-mix(in srgb,var(--c) 35%,#1f2622)}
+.mm-in{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;border-radius:16%;background:color-mix(in srgb,var(--c) 34%,#fffaf0);border:3px solid var(--c);box-sizing:border-box;line-height:1;overflow:hidden}
+html[data-theme="dark"] .mm-in{background:color-mix(in srgb,var(--c) 48%,#1f2622)}
 .mm-in i{font-style:normal;font-size:clamp(15px,5.2cqmin,34px)}
 .mm-in small{font-size:clamp(8px,2.3cqmin,14px);color:var(--ink);margin-top:6%;white-space:nowrap}
 .mm-tile.sel .mm-in{box-shadow:0 0 0 3px #fff,0 0 0 6px var(--gold);transform:scale(1.06)}
@@ -41,3 +41,7 @@ html[data-theme="dark"] .mm-in{background:color-mix(in srgb,var(--c) 35%,#1f2622
 .mm-q{margin:0;color:var(--muted);font-size:.9rem}.mm-qo{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin:.6rem 0}
 .mm-words{display:grid;grid-template-columns:1fr 1fr;gap:.25rem .8rem;text-align:left;font-size:.92rem;margin:.6rem 0}.mm-words b{font-size:1.1rem}
 @media (min-width:901px) and (min-height:561px){.mm{height:calc(100vh - 150px)}}
+html[data-theme="dark"] .mm-in{border-color:color-mix(in srgb,var(--c) 70%,#fff)}
+.mm-tile.hint .mm-in{animation:mmhint .7s ease-in-out infinite alternate;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--gold)}
+@keyframes mmhint{from{transform:scale(1)}to{transform:scale(1.1)}}
+.mm-tile.hint{z-index:2}
