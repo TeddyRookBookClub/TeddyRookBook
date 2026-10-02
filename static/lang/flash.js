@@ -280,51 +280,72 @@
   }
 
   // ---------- save the card as a picture ----------
-  function savePicture() {
-    if (!cur) return;
-    var lang = cur.lang, g = lemOf(lang, cur.i), withForms = $('#fc-pic-forms').checked, dark = D.documentElement.dataset.theme === 'dark';
-    var lat = cur.k === 'b' ? lemOf('l', cur.li) : null;
-    var forms = withForms ? data[lang].forms.filter(function (f) { return f[0] === cur.i; }).sort(function (a, b) { return b[3] - a[3]; }).slice(0, 14) : [];
-    var Wd = 1200, pad = 70, H = 150 + (lang === 'g' ? 175 : 130) + (lat ? 120 : 0) + 170 + (forms.length ? 80 + Math.ceil(forms.length / 2) * 50 : 0) + 70;
+  function drawPicture(mode, withForms) {
+    var dark = D.documentElement.dataset.theme === 'dark';
+    var gi = cur.k === 'b' ? cur.i : (cur.lang === 'g' ? cur.i : null), li = cur.k === 'b' ? cur.li : (cur.lang === 'l' ? cur.i : null);
+    var gr = mode !== 'l' && gi != null ? lemOf('g', gi) : null, la = mode !== 'g' && li != null ? lemOf('l', li) : null;
+    var main = gr || la, mainLang = gr ? 'g' : 'l';
+    function formsOf(lang, i) { return withForms ? data[lang].forms.filter(function (f) { return f[0] === i; }).sort(function (a, b) { return b[3] - a[3]; }).slice(0, 14) : []; }
+    var secs = [];
+    if (gr) { var fg = formsOf('g', gi); if (fg.length) secs.push(['g', fg, 'Greek forms found in the Gospels']); }
+    if (la) { var fl = formsOf('l', li); if (fl.length) secs.push(['l', fl, 'Latin forms found in the Gospels']); }
+    if (secs.length === 1) secs[0][2] = 'Forms found in the Gospels';
+    var Wd = 1200, pad = 70, H = 150 + (gr ? 175 : 0) + (la ? (gr ? 110 : 130) : 0) + 100 + (gr && la ? 100 : 60) + 10;
+    secs.forEach(function (s) { H += 100 + Math.ceil(s[1].length / 2) * 50; });
+    H += 70;
     var cv = D.createElement('canvas'); cv.width = Wd; cv.height = H; var c = cv.getContext('2d');
     var bg = dark ? '#26332c' : '#f3ead2', ink = dark ? '#eef3ef' : '#1d2320', mut = dark ? '#a9b8af' : '#5d6862', gold = '#b8963e', wine = dark ? '#e9a0b1' : '#7a2338', grn = dark ? '#6cc79a' : '#004C2A';
     c.fillStyle = bg; c.fillRect(0, 0, Wd, H); c.fillStyle = grn; c.fillRect(0, 0, Wd, 14);
     var SER = '"Gentium Book Plus", Georgia, serif', SAN = 'system-ui, -apple-system, "Segoe UI", sans-serif', y = 80;
-    function line(txt, font, col, dy, x) { c.font = font; c.fillStyle = col; c.textAlign = x == null ? 'center' : 'left'; c.fillText(txt, x == null ? Wd / 2 : x, y); y += dy; }
-    function fit(txt, size, fam, bold) { do { c.font = (bold ? '700 ' : '') + size + 'px ' + fam; size -= 4; } while (c.measureText(txt).width > Wd - 2 * pad && size > 24); return c.font; }
-    line((lang === 'g' ? 'KOINE GREEK' : 'LATIN') + (lat ? ' · LATIN · ENGLISH' : ' · ENGLISH'), '600 22px ' + SAN, gold, 100);
-    line(g[0], fit(g[0], 110, SER), ink, lang === 'g' ? 62 : 90);
-    if (lang === 'g') line(translit(g[0]), 'italic 40px Georgia, serif', mut, 80);
-    if (lat) { line(lat[0], fit(lat[0], 84, SER), wine, 60); line('Latin', '600 20px ' + SAN, mut, 60); }
-    line(g[1], fit(g[1], 56, 'Georgia, serif'), grn, 62);
-    line(posName(lang, g[2]) + ' · #' + (cur.i + 1) + ' most common in the Gospels · ' + g[3] + ' times', '26px ' + SAN, mut, 50);
-    if (forms.length) {
+    function line(txt, font, col, dy) { c.font = font; c.fillStyle = col; c.textAlign = 'center'; c.fillText(txt, Wd / 2, y); y += dy; }
+    function fit(txt, size, fam) { do { c.font = size + 'px ' + fam; size -= 4; } while (c.measureText(txt).width > Wd - 2 * pad && size > 24); return c.font; }
+    line((gr ? 'KOINE GREEK · ' : '') + (la ? 'LATIN · ' : '') + 'ENGLISH', '600 22px ' + SAN, gold, 100);
+    if (gr) { line(gr[0], fit(gr[0], 110, SER), ink, 62); line(translit(gr[0]), 'italic 40px Georgia, serif', mut, gr && la ? 95 : 80); }
+    if (la) line(la[0], fit(la[0], gr ? 84 : 110, SER), gr ? wine : ink, gr ? 85 : 90);
+    line(main[1], fit(main[1], 56, 'Georgia, serif'), grn, 62);
+    function freq(l, i, e, tag) { return (tag ? tag + ': ' : '') + '#' + (i + 1) + ' most common in the Gospels · ' + e[3] + ' times'; }
+    if (gr && la) { line(posName('g', gr[2]) + ' · ' + freq('g', gi, gr, 'Greek'), '24px ' + SAN, mut, 38); line(freq('l', li, la, 'Latin'), '24px ' + SAN, mut, 50); }
+    else line(posName(mainLang, main[2]) + ' · ' + freq(mainLang, gr ? gi : li, main), '26px ' + SAN, mut, 50);
+    secs.forEach(function (s) {
+      var lang = s[0], forms = s[1];
       c.strokeStyle = gold; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, y); c.lineTo(Wd - pad, y); c.stroke(); y += 46;
-      line('Forms found in the Gospels', '600 24px ' + SAN, mut, 44);
+      line(s[2], '600 24px ' + SAN, mut, 44);
       var y0 = y, half = Math.ceil(forms.length / 2);
       forms.forEach(function (f, i) {
-        var x = i < half ? pad : Wd / 2 + 20; y = y0 + (i % half) * 50;
-        c.textAlign = 'left'; c.font = '34px ' + SER; c.fillStyle = ink; c.fillText(f[1], x, y);
-        var w = c.measureText(f[1]).width; c.font = '19px ' + SAN; c.fillStyle = mut;
-        var d = describe(lang, parseAttrs(f[2])).replace(' person ', ' ').replace(/ · /g, ', '), max = Wd / 2 - pad - w - 34;
-        while (c.measureText(d).width > max && d.length > 8) d = d.slice(0, -2); c.fillText(d, x + w + 14, y - 3);
+        var x = i < half ? pad : Wd / 2 + 20, yy = y0 + (i % half) * 50;
+        c.textAlign = 'left'; c.font = '34px ' + SER; c.fillStyle = lang === 'l' && gr ? wine : ink; c.fillText(f[1], x, yy);
+        var w = c.measureText(f[1]).width, d = describe(lang, parseAttrs(f[2])).replace(' person ', ' ').replace(/ · /g, ', '), max = Wd / 2 - pad - w - 34, sz = 19;
+        c.fillStyle = mut; c.font = sz + 'px ' + SAN;
+        while (c.measureText(d).width > max && sz > 13) { sz--; c.font = sz + 'px ' + SAN; }
+        if (c.measureText(d).width > max) { while (c.measureText(d + '…').width > max && d.length > 8) d = d.slice(0, -1); d += '…'; }
+        c.fillText(d, x + w + 14, yy - 3);
       });
-      y = y0 + half * 50;
-    }
+      y = y0 + half * 50 + 10;
+    });
     c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbookclub.com', Wd / 2, H - 30);
-    var name = 'flashcard-' + (lang === 'g' ? translit(g[0]).normalize('NFD').replace(/[^a-z]/gi, '') : g[0]) + '.png';
+    function slug(e, l) { return l === 'g' ? translit(e[0]).normalize('NFD').replace(/[^a-z]/gi, '') : e[0]; }
+    return { url: cv.toDataURL('image/png'), name: 'flashcard-' + (gr ? slug(gr, 'g') : '') + (gr && la ? '-' : '') + (la ? slug(la, 'l') : '') + '.png' };
+  }
+  function savePicture() {
+    if (!cur) return;
     var box = $('#fc-prev');
     if (!box) {
       box = D.createElement('div'); box.id = 'fc-prev'; box.className = 'fc-prev';
-      box.innerHTML = '<div class="fc-prev-in" role="dialog" aria-label="Picture preview"><img alt="Preview of the flashcard picture"><p>This is exactly the picture you’ll get: a PNG image made in your browser, nothing else.</p><div class="fc-prev-btns"><a class="cbtn play" id="fc-prev-dl">⬇ Download picture</a><button type="button" class="cbtn" id="fc-prev-x">Close</button></div></div>';
+      box.innerHTML = '<div class="fc-prev-in" role="dialog" aria-label="Picture preview"><div class="fc-prev-opts"><span id="fc-prev-langs">Show: <label><input type="radio" name="fc-prev-l" value="b" checked> Greek + Latin</label> <label><input type="radio" name="fc-prev-l" value="g"> Greek only</label> <label><input type="radio" name="fc-prev-l" value="l"> Latin only</label></span> <label><input type="checkbox" id="fc-prev-forms"> include forms</label></div><img alt="Preview of the flashcard picture"><p>This is exactly the picture you’ll get: a PNG image made in your browser, nothing else.</p><div class="fc-prev-btns"><a class="cbtn play" id="fc-prev-dl">⬇ Download picture</a><button type="button" class="cbtn" id="fc-prev-x">Close</button></div></div>';
       D.body.appendChild(box);
       box.addEventListener('click', function (e) { if (e.target === box || e.target.id === 'fc-prev-x') box.hidden = true; });
+      box.addEventListener('change', function (e) { if (e.target.id === 'fc-prev-forms') $('#fc-pic-forms').checked = e.target.checked; refreshPicture(); });
       D.addEventListener('keydown', function (e) { if (e.key === 'Escape') box.hidden = true; });
     }
-    var url = cv.toDataURL('image/png');
-    box.querySelector('img').src = url;
-    var dl = $('#fc-prev-dl'); dl.href = url; dl.download = name;
-    box.hidden = false;
+    $('#fc-prev-langs').hidden = cur.k !== 'b';
+    $('#fc-prev-forms').checked = $('#fc-pic-forms').checked;
+    refreshPicture(); box.hidden = false;
+  }
+  function refreshPicture() {
+    var box = $('#fc-prev'), mode = cur.k === 'b' ? box.querySelector('input[name="fc-prev-l"]:checked').value : cur.lang;
+    var r = drawPicture(mode, $('#fc-prev-forms').checked);
+    box.querySelector('img').src = r.url;
+    var dl = $('#fc-prev-dl'); dl.href = r.url; dl.download = r.name;
   }
 
   // ---------- audio ----------
