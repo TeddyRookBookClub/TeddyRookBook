@@ -339,7 +339,7 @@
       });
       y = y0 + half * 50 + 10;
     });
-    c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbookclub.com', Wd / 2, H - 30);
+    c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbook.com', Wd / 2, H - 30);
     function slug(e, l) { return l === 'g' ? translit(e[0]).normalize('NFD').replace(/[^a-z]/gi, '') : e[0]; }
     return { url: cv.toDataURL('image/png'), name: 'flashcard-' + (gr ? slug(gr, 'g') : '') + (gr && la ? '-' : '') + (la ? slug(la, 'l') : '') + '.png' };
   }
@@ -376,7 +376,7 @@
     }
     col(pad + colW / 2, pad, 'KOINE GREEK', gr, gi, 'g', ink, fg);
     col(mid + 40 + colW / 2, mid + 40, 'LATIN', la, li, 'l', wine, fl);
-    c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbookclub.com', mid, H - 30);
+    c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbook.com', mid, H - 30);
     var sl = translit(gr[0]).normalize('NFD').replace(/[^a-z]/gi, '');
     return { url: cv.toDataURL('image/png'), name: 'flashcard-' + sl + '-' + la[0] + '.png' };
   }

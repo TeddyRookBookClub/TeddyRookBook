@@ -113,7 +113,7 @@ def fetch(sid, tries=3):
     last = None
     for i in range(tries):
         try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (teddyrookbookclub.com data fetch)'})
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (teddyrookbook.com data fetch)'})
             with urllib.request.urlopen(req, timeout=60) as r:
                 return r.read().decode('utf-8')
         except Exception as e:  # network hiccup: retry

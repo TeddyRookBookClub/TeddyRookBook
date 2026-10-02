@@ -1,6 +1,6 @@
 # Teddy Rook Book
 
-Source for **[teddyrookbookclub.com](https://teddyrookbookclub.com)**: a free, one-person project about great books and big ideas.
+Source for **[teddyrookbook.com](https://teddyrookbook.com)**: a free, one-person project about great books and big ideas.
 
 Despite the "club" in the address, it isn't a book club. There are no members, meetings or sign-ups. It's a resource anyone can pull from: book clubs, classes, homeschoolers, or people who just like to read.
 
@@ -8,11 +8,11 @@ Despite the "club" in the address, it isn't a book club. There are no members, m
 
 | Section | What it is |
 |---|---|
-| [Infographics](https://teddyrookbookclub.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
-| [Languages](https://teddyrookbookclub.com/languages/) | Koine Greek and Latin: listen-and-repeat sentence drills, a Gospel reader that explains every word, and spaced-repetition flashcards. |
-| [Games](https://teddyrookbookclub.com/games/) | Browser games set in the ancient world that teach vocabulary as you play: Imperium, Ancient Festival Tycoon, Teutoburg and Time Thief. |
-| [Library](https://teddyrookbookclub.com/books/) | A catalog of a home library, with editions, sets and translations. |
-| [Markets](https://teddyrookbookclub.com/markets/) | Stock screener and charts, economic indicators, Treasury yields and auctions, and calculators. |
+| [Infographics](https://teddyrookbook.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
+| [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: listen-and-repeat sentence drills, a Gospel reader that explains every word, and spaced-repetition flashcards. |
+| [Games](https://teddyrookbook.com/games/) | Browser games set in the ancient world that teach vocabulary as you play: Imperium, Ancient Festival Tycoon, Teutoburg and Time Thief. |
+| [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations. |
+| [Markets](https://teddyrookbook.com/markets/) | Stock screener and charts, economic indicators, Treasury yields and auctions, and calculators. |
 
 No accounts, no ads, no tracking. Progress in the drills, flashcards and games is saved only in the visitor's own browser.
 
