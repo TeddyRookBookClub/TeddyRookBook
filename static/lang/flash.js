@@ -286,6 +286,7 @@
     var gr = mode !== 'l' && gi != null ? lemOf('g', gi) : null, la = mode !== 'g' && li != null ? lemOf('l', li) : null;
     var main = gr || la, mainLang = gr ? 'g' : 'l';
     function formsOf(lang, i) { return withForms ? data[lang].forms.filter(function (f) { return f[0] === i; }).sort(function (a, b) { return b[3] - a[3]; }).slice(0, 14) : []; }
+    if (gr && la) return drawBoth(gr, la, gi, li, formsOf('g', gi), formsOf('l', li), dark);
     var secs = [];
     if (gr) { var fg = formsOf('g', gi); if (fg.length) secs.push(['g', fg, 'Greek forms found in the Gospels']); }
     if (la) { var fl = formsOf('l', li); if (fl.length) secs.push(['l', fl, 'Latin forms found in the Gospels']); }
@@ -325,6 +326,43 @@
     c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbookclub.com', Wd / 2, H - 30);
     function slug(e, l) { return l === 'g' ? translit(e[0]).normalize('NFD').replace(/[^a-z]/gi, '') : e[0]; }
     return { url: cv.toDataURL('image/png'), name: 'flashcard-' + (gr ? slug(gr, 'g') : '') + (gr && la ? '-' : '') + (la ? slug(la, 'l') : '') + '.png' };
+  }
+  function drawBoth(gr, la, gi, li, fg, fl, dark) {
+    var Wd = 1800, pad = 70, mid = Wd / 2, colW = mid - pad - 40, rows = Math.max(fg.length, fl.length);
+    var H = 250 + 330 + (rows ? 70 + rows * 50 : 0) + 80;
+    var cv = D.createElement('canvas'); cv.width = Wd; cv.height = H; var c = cv.getContext('2d');
+    var bg = dark ? '#26332c' : '#f3ead2', ink = dark ? '#eef3ef' : '#1d2320', mut = dark ? '#a9b8af' : '#5d6862', gold = '#b8963e', wine = dark ? '#e9a0b1' : '#7a2338', grn = dark ? '#6cc79a' : '#004C2A';
+    var SER = '"Gentium Book Plus", Georgia, serif', SAN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
+    c.fillStyle = bg; c.fillRect(0, 0, Wd, H); c.fillStyle = grn; c.fillRect(0, 0, Wd, 14);
+    function fit(txt, size, fam, max) { do { c.font = size + 'px ' + fam; size -= 4; } while (c.measureText(txt).width > max && size > 24); }
+    c.textAlign = 'center';
+    c.font = '600 22px ' + SAN; c.fillStyle = gold; c.fillText('ENGLISH', mid, 70);
+    fit(gr[1], 64, 'Georgia, serif', Wd - 2 * pad); c.fillStyle = grn; c.fillText(gr[1], mid, 140);
+    c.font = '26px ' + SAN; c.fillStyle = mut; c.fillText(posName('g', gr[2]), mid, 185);
+    c.strokeStyle = gold; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(pad, 215); c.lineTo(Wd - pad, 215); c.stroke();
+    c.beginPath(); c.moveTo(mid, 240); c.lineTo(mid, H - 80); c.stroke();
+    function col(cx, x0, label, e, idx, lang, colr, forms) {
+      c.textAlign = 'center';
+      c.font = '700 26px ' + SAN; c.fillStyle = gold; c.fillText(label, cx, 280);
+      fit(e[0], 104, SER, colW); c.fillStyle = colr; c.fillText(e[0], cx, 395);
+      if (lang === 'g') { c.font = 'italic 38px Georgia, serif'; c.fillStyle = mut; c.fillText(translit(e[0]), cx, 450); }
+      c.font = '24px ' + SAN; c.fillStyle = mut; c.fillText('#' + (idx + 1) + ' most common in the Gospels · ' + e[3] + ' times', cx, 505);
+      if (!rows) return;
+      c.font = '600 24px ' + SAN; c.fillText(forms.length ? 'Forms found in the Gospels' : 'This word does not change form', cx, 580);
+      forms.forEach(function (f, i) {
+        var yy = 650 + i * 50; c.textAlign = 'left'; c.font = '34px ' + SER; c.fillStyle = colr; c.fillText(f[1], x0, yy);
+        var w = c.measureText(f[1]).width, d = describe(lang, parseAttrs(f[2])).replace(' person ', ' ').replace(/ · /g, ', '), max = colW - w - 20, sz = 21;
+        c.fillStyle = mut; c.font = sz + 'px ' + SAN;
+        while (c.measureText(d).width > max && sz > 14) { sz--; c.font = sz + 'px ' + SAN; }
+        c.fillText(d, x0 + w + 16, yy - 3);
+      });
+    }
+    col(pad + colW / 2, pad, 'KOINE GREEK', gr, gi, 'g', ink, fg);
+    col(mid + 40 + colW / 2, mid + 40, 'LATIN', la, li, 'l', wine, fl);
+    c.textAlign = 'center'; c.font = '600 22px ' + SAN; c.fillStyle = mut; c.fillText('teddyrookbookclub.com', mid, H - 30);
+    var sl = translit(gr[0]).normalize('NFD').replace(/[^a-z]/gi, '');
+    return { url: cv.toDataURL('image/png'), name: 'flashcard-' + sl + '-' + la[0] + '.png' };
   }
   function savePicture() {
     if (!cur) return;
