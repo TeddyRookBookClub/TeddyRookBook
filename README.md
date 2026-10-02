@@ -50,10 +50,10 @@ hugo server
 
 Then open http://localhost:1313.
 
-The economic-data charts will be empty until you download the data. That step needs a free [FRED API key](https://fred.stlouisfed.org/docs/api/api_key.html):
+The economic-data charts and the stock-symbol search will be empty until you download their data (no API key needed):
 
 ```
-FRED_API_KEY=your_key python3 scripts/fetch_market_data.py
+python3 scripts/fetch_market_data.py
 ```
 
 Everything else works without it.
