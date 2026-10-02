@@ -1,0 +1,13 @@
+{{- /* On phones and small screens a game takes over the whole screen, with a slim bar to get back out. */ -}}
+<style>
+.gbar{display:none}
+@media (max-width:900px),(max-height:560px){
+  html.game-lock,html.game-lock body{overflow:hidden !important;overscroll-behavior:none}
+  .gwrap{position:fixed;inset:0;z-index:500;display:flex;flex-direction:column;background:var(--theme,#fff);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .gbar{display:flex;flex:none;align-items:center;gap:.6rem;height:28px;padding:0 .6rem;font:600 13px system-ui,sans-serif;background:#12251b;color:#cfe0d6}
+  .gbar a{color:#f3dfa3;text-decoration:none;box-shadow:none}
+  .gbar span{flex:1;text-align:right;opacity:.7;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .gwrap>.gbox{flex:1 1 auto;min-height:0 !important;height:auto !important;width:auto !important;border:0 !important;border-radius:0 !important;margin:0 !important}
+}
+</style>
+<script>(function(){var m=matchMedia('(max-width: 900px), (max-height: 560px)');function f(){document.documentElement.classList.toggle('game-lock',m.matches)}f();if(m.addEventListener)m.addEventListener('change',f);else m.addListener(f)})();</script>

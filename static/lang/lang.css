@@ -222,3 +222,17 @@ html[data-theme="dark"] #drills .sp-opt{background:#1f2622}
 .load-help .cbtn{height:2.4rem;font-size:.92rem}
 .load-help .cbtn.play{height:2.4rem}
 @media (max-width:600px){#drills .stage{padding:1rem .8rem 1.1rem}#drills .row{grid-template-columns:70px minmax(0,1fr);gap:.5rem}}
+/* phones: get to the exercise quickly and keep the main buttons in reach */
+@media (max-width:700px),(max-height:560px){
+  #drills .lang-hero,#fc .lang-hero{padding:.6rem .9rem;margin-bottom:.6rem;border-radius:10px}
+  #drills .lang-hero h1,#fc .lang-hero h1{font-size:1.15rem;margin:0}
+  #drills .lang-hero p:not(.lang-eyebrow),#fc .lang-hero p:not(.lang-eyebrow),#drills .lang-hero::after,#fc .lang-hero::after{display:none}
+  #drills .lang-notice,#fc .lang-notice{font-size:.76rem;padding:.4rem .6rem;margin-bottom:.6rem}
+  #drills .lang-help,#fc .lang-help{margin-bottom:.6rem}
+  #drills .lang-help summary,#fc .lang-help summary{padding:.3rem 0;font-size:.9rem}
+  #drills .controls{position:sticky;bottom:0;z-index:6;margin:.5rem -.4rem 0;padding:.45rem 0 max(.45rem,env(safe-area-inset-bottom));background:var(--theme,#fff);border-top:1px solid var(--line)}
+  #drills .stage .hint{display:none}
+  .fc-actions{position:sticky;bottom:0;z-index:6;margin:.5rem -.4rem 0;padding:.45rem .4rem max(.45rem,env(safe-area-inset-bottom));background:var(--theme,#fff);border-top:1px solid var(--line)}
+  .fc-focus{margin-top:.4rem}
+}
+@media (max-height:560px) and (orientation:landscape){.fc-stage,.fc-card{min-height:200px !important;height:200px !important}.fc-msg,.fc-done{min-height:190px}}

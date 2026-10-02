@@ -13,3 +13,14 @@ body{font-size:calc(18px * var(--fs,1))}
 .trb-fs-pop button:hover{border-color:#004C2A}
 .trb-fs-pop output{min-width:3.2em;text-align:center;color:var(--secondary);font-variant-numeric:tabular-nums}
 </style>
+<style>
+/* phones: keep the whole menu on screen */
+@media (max-width:520px){
+  .nav{flex-wrap:wrap;line-height:1.2}
+  .logo a{font-size:20px}
+  #menu{overflow-x:visible;flex-wrap:wrap;white-space:normal;margin:0;row-gap:0}
+  #menu li+li{margin-inline-start:12px}
+  #menu a{font-size:14px;line-height:2.2}
+  .logo,#menu{margin:0}
+}
+</style>

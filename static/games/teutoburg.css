@@ -97,3 +97,11 @@ table.gl td.la{color:var(--wine);font-size:1.05rem}
 .tb-zones span:nth-child(2){text-align:center}.tb-zones span:nth-child(3){text-align:right}
 .tb-spdv{font-size:.7rem;color:var(--muted)}
 .tb-flash.lv.lv-easy .la{color:#9be3b5}.tb-flash.lv.lv-med .la{color:#f3d58a}.tb-flash.lv.lv-hard .la{color:#ff9a8a}
+/* phones: keep the score on one line; in landscape the direction buttons sit beside the maze */
+@media (max-width:700px){.tb-hud{order:5;flex-basis:100%;flex-wrap:nowrap;justify-content:space-between;gap:.4rem}.tb-hud .hs{white-space:nowrap}.tb-top{padding:.3rem .6rem;gap:.4rem}.tb-title{flex:1}}
+@media (max-height:560px) and (orientation:landscape){
+  .teut{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr)}
+  .tb-top{grid-column:1/3;padding:.2rem .6rem}.tb-title .en{display:none}.tb-hud .hs{white-space:nowrap}
+  .tb-main{grid-column:1;grid-row:2;grid-template-columns:1fr}.tb-side{display:none}
+  .tb-pad{grid-column:2;grid-row:2;align-content:center;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px)}
+}
