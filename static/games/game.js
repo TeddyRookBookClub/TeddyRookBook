@@ -315,7 +315,7 @@
   }
   function resize() {
     dpr = Math.min(2, W.devicePixelRatio || 1);
-    cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr;
+    cv.width = Math.round(cv.clientWidth * dpr); cv.height = Math.round(cv.clientHeight * dpr);
   }
   function drawSprite(o) {
     var s = A.sprite(o.type, o.w, o.h, S.setting, o.seed), p = A.P(o.x, o.y, 0);
@@ -366,6 +366,8 @@
   function render(t) {
     if (groundDirty) buildGround();
     var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) resize(); // the stage changed size (phone toolbars, rotation, late layout)
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     var sky = ctx.createLinearGradient(0, 0, 0, h), dayf = S.time / DAY;
     var warm = Math.max(0, (dayf - 0.75) * 4);
@@ -511,7 +513,7 @@
     $('#f-helpb').onclick = openHelp;
   }
   function labels() {
-    $('#f-brand').innerHTML = (S.setting === 'rome' ? '🏛️ ' : '🏺 ') + 'Ancient Festival Tycoon';
+    $('#f-brand').innerHTML = (S.setting === 'rome' ? '🏛️ ' : '🏺 ') + '<span class="f-bt">Ancient Festival Tycoon</span>';
     $('#f-speed').innerHTML = [['0', '❚❚', V.pause], ['1', '▶', V.slow], ['3', '▶▶', V.fast]].map(function (s) {
       return '<button type="button" class="f-btn sp' + (String(speed) === s[0] ? ' on' : '') + '" data-sp="' + s[0] + '" title="' + (s[2].e) + '">' + s[1] + '</button>';
     }).join('');

@@ -119,7 +119,8 @@
       if (f[0] >= n) return;
       var lem = lemOf(lang, f[0]); if (pos !== 'all' && posGroup(lang, lem[2]) !== pos) return;
       var a = parseAttrs(f[2]); if (!formPass(a, F)) return;
-      var key = mode === 'f' ? f[0] + '|' + f[1] : f[0] + '|' + f[2];
+      // forms that differ only in accent or case (ζητεῖτε / ζητεῖτέ) are one card
+      var key = mode === 'f' ? f[0] + '|' + f[1].normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : f[0] + '|' + f[2];
       if (!by[key]) { by[key] = { id: mode + ':' + lang + ':' + lem[0] + '|' + (mode === 'f' ? f[1] : f[2]), k: mode, lang: lang, i: f[0], rank: f[0] + 1 / (1 + f[3]), alpha: mode === 'f' ? f[1] : lem[0], items: [] }; out.push(by[key]); }
       by[key].items.push({ form: f[1], a: a, attrs: f[2], n: f[3], ref: f[4], snip: f[5] });
     });
@@ -144,14 +145,29 @@
     }
     return o;
   }
+  // keep cards of the same word at least a few cards apart where the deck allows it
+  function spread(list) {
+    if (P.type === 'v' || P.order === 'alpha') return list;
+    var rest = list.slice(), out = [], GAP = 4;
+    while (rest.length) {
+      var pick = -1, lim = Math.min(rest.length, 60);
+      for (var i = 0; i < lim && pick < 0; i++) {
+        var ok = true, w = rest[i].lang + rest[i].i;
+        for (var j = out.length - 1; j >= 0 && j >= out.length - GAP; j--) if (out[j].lang + out[j].i === w) { ok = false; break; }
+        if (ok) pick = i;
+      }
+      out.push(rest.splice(pick < 0 ? 0 : pick, 1)[0]);
+    }
+    return out;
+  }
   function buildQueue() {
     var now = Date.now();
     if (P.order === 'srs') {
       var due = deck.filter(function (c) { var s = st.cards[c.id]; return s && s.d <= now; }).sort(function (a, b) { return st.cards[a.id].d - st.cards[b.id].d; });
       var left = Math.max(0, +P.nw - dayStats().nw);
       var fresh = ordered(deck.filter(function (c) { return !st.cards[c.id]; })).slice(0, left);
-      queue = due.concat(fresh);
-    } else queue = ordered(deck);
+      queue = spread(due.concat(fresh));
+    } else queue = spread(ordered(deck));
   }
   function counts() {
     var now = Date.now(), due = 0, nw = 0, learned = 0, mature = 0;
