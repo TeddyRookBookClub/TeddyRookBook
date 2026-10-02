@@ -47,7 +47,7 @@
       opt('Opponents', 'opp', range(1, maxOpp).map(function (n) { return [n, n]; })) +
       opt('Difficulty', 'diff', [['easy', 'Easy'], ['normal', 'Normal'], ['hard', 'Hard']]) +
       opt('Starting positions', 'start', [['hist', 'Historical'], ['rand', 'Random deal'], ['pick', 'I choose mine']]) +
-      opt(T.langName + ' on the map and in the story', 'lang', [[true, T.langName + ' + English'], [false, 'English only']]) +
+      opt('Language of the map and the story', 'lang', [[true, T.langName], [false, 'English']]) +
       opt('Word challenges', 'quiz', [[true, 'On (can be skipped)'], [false, 'Off']]) +
       opt('Computer’s moves', 'fast', [[false, 'Normal speed'], [true, 'Fast']]) +
       '</div><p class="im-note">' + startNote() + '</p>' +
@@ -71,10 +71,10 @@
     return '<details class="im-help"><summary>How to play</summary><ol>' +
       '<li><b>Goal:</b> defeat every rival. Independent (grey) lands don’t have to be taken, but they count towards your reinforcements.</li>' +
       '<li><b>Each turn has three steps.</b> <i>' + T.phasesEn[0] + '</i>: place your new soldiers (one for every three territories, at least three, plus a bonus for holding a whole region). <i>' + T.phasesEn[1] + '</i>: attack neighbouring lands as often as you like. <i>' + T.phasesEn[2] + '</i>: make one move of soldiers between your own connected lands.</li>' +
-      '<li><b>Battles</b> are settled with dice. The attacker rolls up to three and the defender up to two; the highest dice are compared, then the next highest, and the defender wins ties. Roll one exchange at a time, or press <i>Fight to the end</i>. One soldier always stays behind.</li>' +
+      '<li><b>Battles</b> are settled with dice. The attacker rolls up to three and the defender up to two; the highest dice are compared, then the next highest, and the defender wins ties. Roll one exchange at a time, or press <i>Roll to the end</i> to keep rolling until you win or have one soldier left. One soldier always stays behind.</li>' +
       '<li><b>The dice</b> are the six-sided cubes the ancients used, called <i>tesserae</i> in Latin and <i>κύβοι</i> in Greek. Like ours, opposite faces add up to seven.</li>' +
       '<li><b>Spoils:</b> if you take at least one territory in a turn you win a word card. Three of a kind, or one of each kind, can be traded for extra soldiers at the start of a turn.</li>' +
-      '<li><b>Learning is optional.</b> With ' + T.langName + ' on, the map and the story of the war appear in ' + T.langName + ' with English beside it. With word challenges on, each new card asks what its word means: a right answer earns one extra soldier, and you can always skip. Both can be switched off here or during the game.</li>' +
+      '<li><b>Learning is optional.</b> Choose ' + T.langName + ' and the map, the turn steps and the story of the war appear in ' + T.langName + '; the <i>English</i> button at the top switches back at any time (hover over a name to see it in the other language). With word challenges on, each new card asks what its word means: a right answer earns one extra soldier, and you can always skip. Both can be switched off here or during the game.</li>' +
       '<li><b>Sea routes</b> are the dashed lines. Territories joined by one count as neighbours.</li>' +
       '<li><b>History:</b> the sides, their leaders and their homelands follow the sources where a leader is known. Alliances are not part of the game, so every side fights for itself.</li></ol></details>';
   }
@@ -129,15 +129,17 @@
       names.map(function (t) { return '<path class="im-t" data-t="' + t + '" d="' + map.terr[t].d + '" fill-rule="evenodd"/>'; }).join('') + '</g><g id="im-arrow"></g><g id="im-tokens">' +
       names.map(function (t) { var m = map.terr[t]; return '<g class="im-tok" data-t="' + t + '" transform="translate(' + m.x + ' ' + m.y + ')"><text class="im-nm" y="21"></text><circle r="10.5"/><text class="im-n" y="4"></text></g>'; }).join('') + '</g></svg>';
     root.innerHTML = '<div class="im-game"><div class="im-top"><div class="im-title"><b class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '">' + esc(sc.title) + '</b><small>' + esc(sc.sub) + ' · ' + esc(sc.date) + '</small></div>' +
-      '<ol class="im-phases" id="im-phases"></ol><div class="im-tbtns"><button type="button" class="im-btn sm" data-act="zoom-" aria-label="Zoom out">−</button><button type="button" class="im-btn sm" data-act="zoom+" aria-label="Zoom in">+</button><button type="button" class="im-btn sm" data-act="opts">⚙ Options</button><button type="button" class="im-btn sm" data-act="quit">New game</button></div></div>' +
+      '<ol class="im-phases" id="im-phases"></ol><div class="im-tbtns"><button type="button" class="im-btn sm" data-act="zoom-" aria-label="Zoom out">−</button><button type="button" class="im-btn sm" data-act="zoom+" aria-label="Zoom in">+</button><button type="button" class="im-btn sm im-langbtn" data-act="lang"></button><button type="button" class="im-btn sm" data-act="opts">⚙ Options</button><button type="button" class="im-btn sm" data-act="quit">New game</button></div></div>' +
       '<div class="im-msg" id="im-msg"></div><div class="im-body"><div class="im-mapwrap" id="im-mapwrap">' + svg + '</div>' +
-      '<aside class="im-side"><div class="im-panel" id="im-battle" hidden></div><div class="im-panel" id="im-actions"></div><div class="im-panel" id="im-info"></div><div class="im-panel"><h3>The sides</h3><div id="im-players"></div></div>' +
+      '<aside class="im-side"><div class="im-panel" id="im-battle" hidden></div><div class="im-panel" id="im-actions"></div><div class="im-panel" id="im-info"></div><div class="im-panel"><h3>Who holds what</h3><div id="im-players"></div></div>' +
       '<div class="im-panel"><h3>Your spoils <small id="im-cardhint"></small></h3><div id="im-cards"></div></div><div class="im-panel"><h3>Regions</h3><div id="im-regions"></div></div><div class="im-panel"><h3>The story so far</h3><div id="im-log" class="im-log"></div></div></aside></div><div id="im-modal" class="im-modal" hidden></div></div>';
     $('#im-map').addEventListener('click', function (e) { var g = e.target.closest('[data-t]'); if (g) onTerr(g.dataset.t); });
     $('#im-map').addEventListener('mouseover', function (e) { var g = e.target.closest('[data-t]'); if (g) info(g.dataset.t); });
     $('[data-act="quit"]').onclick = function () { if (!W.confirm || W.confirm('Leave this game and set up a new one? Your saved game stays until you start another.')) { S = null; busy = false; setup(); } };
     $('[data-act="opts"]').onclick = optionsModal;
-    var z = 1; function zoom(d) { z = Math.max(1, Math.min(3.5, z + d)); $('#im-map').style.width = (z * 100) + '%'; }
+    $('[data-act="lang"]').onclick = function () { S.lang = !S.lang; prefs.lang = S.lang; savePrefs(); refresh(); if (ui.sel && ui.tgt) battlePanel(null); };
+    var z = 1; function zoom(d) { z = Math.max(1, Math.min(3.5, z + d)); var m = $('#im-map'); m.style.width = (z * 100) + '%'; m.style.height = z === 1 && W.innerWidth >= 900 ? '100%' : 'auto'; }
+    zoom(0); if (W.innerWidth >= 900) setTimeout(function () { var g = $('.im-game'); if (g) g.scrollIntoView({ block: 'start' }); }, 50);
     if (W.innerWidth < 700) zoom(1); // phones start zoomed in; drag to pan
     $('[data-act="zoom+"]').onclick = function () { zoom(.5); }; $('[data-act="zoom-"]').onclick = function () { zoom(-.5); };
     refresh();
@@ -161,28 +163,30 @@
     // phases
     var idx = { reinforce: 0, attack: 1, fortify: 2 }[S.phase];
     $('#im-phases').innerHTML = S.phase === 'claim' || S.phase === 'place' ? '<li class="on"><b>' + (S.phase === 'claim' ? 'Claim territories' : 'Place your soldiers') + '</b></li>' :
-      T.phases.map(function (p, i) { return '<li' + (i === idx ? ' class="on"' : '') + '>' + (S.lang ? '<b class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '">' + p + '</b><small>' + T.phasesEn[i] + '</small>' : '<b>' + T.phasesEn[i] + '</b>') + '</li>'; }).join('');
+      T.phases.map(function (p, i) { return '<li' + (i === idx ? ' class="on"' : '') + '>' + (S.lang ? '<b class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '" title="' + T.phasesEn[i] + '">' + p + '</b>' : '<b title="' + p + '">' + T.phasesEn[i] + '</b>') + '</li>'; }).join('');
     // players
-    $('#im-players').innerHTML = S.players.map(function (p, i) {
-      var f = facOf(i), ts = owned(i), n = ts.reduce(function (s, t) { return s + S.arm[t]; }, 0);
-      return '<div class="im-pl' + (i === S.turn && S.phase !== 'claim' ? ' cur' : '') + (p.alive ? '' : ' dead') + '"><i style="background:' + f.color + '"></i><div><b>' + esc(f.leader || f.en) + (p.human ? ' <em>you</em>' : '') + '</b><small>' + esc(f.leader ? f.en : '') + '</small></div><span title="territories">' + ts.length + ' ⚑</span><span title="soldiers">' + n + ' ⚔</span><span title="word cards">' + p.cards.length + ' ▤</span></div>';
-    }).join('');
+    $('#im-players').innerHTML = '<table class="im-stats"><thead><tr><th>Side</th><th title="Territories held">Lands</th><th title="Soldiers on the map">Troops</th><th title="Whole regions held">Regions</th><th title="New soldiers at the start of the next turn">Per turn</th><th title="Word cards">Cards</th></tr></thead><tbody>' + S.players.map(function (p, i) {
+      var f = facOf(i), ts = owned(i), n = ts.reduce(function (s, t) { return s + S.arm[t]; }, 0), rg = REG.filter(function (r) { return r.t.every(function (t) { return S.own[t] === i; }); });
+      return '<tr class="' + (i === S.turn && S.phase !== 'claim' ? 'cur' : '') + (p.alive ? '' : ' dead') + '"><td><i style="background:' + f.color + '"></i><b>' + esc(f.leader || f.en) + '</b>' + (p.human ? ' <em>you</em>' : '') + (f.leader ? '<small>' + esc(f.en) + '</small>' : '') + '</td><td>' + ts.length + '</td><td>' + n + '</td><td title="' + esc(rg.map(function (r) { return r.en; }).join(', ')) + '">' + rg.length + '</td><td>' + (p.alive ? '+' + income(i) : '–') + '</td><td>' + p.cards.length + '</td></tr>';
+    }).join('') + (function () { var ts = terrs().filter(function (t) { return S.own[t] < 0; }); return ts.length ? '<tr class="neu"><td><i style="background:#7d745f"></i>Independent</td><td>' + ts.length + '</td><td>' + ts.reduce(function (s, t) { return s + S.arm[t]; }, 0) + '</td><td></td><td></td><td></td></tr>' : ''; })() + '</tbody></table>';
     $('#im-regions').innerHTML = REG.map(function (r) {
-      var o = S.own[r.t[0]], whole = o >= 0 && r.t.every(function (t) { return S.own[t] === o; });
-      var mine = r.t.filter(function (t) { return S.own[t] === 0; }).length;
-      return '<div class="im-reg"><span>' + esc(r.en) + '</span><small>' + mine + '/' + r.t.length + '</small><b' + (whole ? ' style="color:' + facOf(o).color + '"' : '') + '>+' + r.bonus + (whole ? ' ' + esc(facOf(o).leader || facOf(o).en) : '') + '</b></div>';
+      var cnt = {}; r.t.forEach(function (t) { cnt[S.own[t]] = (cnt[S.own[t]] || 0) + 1; });
+      var o = S.own[r.t[0]], whole = o >= 0 && cnt[o] === r.t.length;
+      var bar = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a]; }).map(function (k) { return '<i style="flex:' + cnt[k] + ';background:' + (+k < 0 ? '#b9ae93' : facOf(+k).color) + '" title="' + esc(+k < 0 ? 'Independent' : facOf(+k).leader || facOf(+k).en) + ': ' + cnt[k] + '"></i>'; }).join('');
+      return '<div class="im-reg"><div><span>' + esc(r.en) + '</span><b>+' + r.bonus + ' per turn</b></div><div class="im-bar">' + bar + '</div><small>' + (whole ? 'Held by <b style="color:' + facOf(o).color + '">' + esc(facOf(o).leader || facOf(o).en) + '</b>' : 'You hold ' + (cnt[0] || 0) + ' of ' + r.t.length + '; nobody holds it all') + '</small></div>';
     }).join('');
+    var lb = $('[data-act="lang"]'); if (lb) lb.textContent = S.lang ? 'English' : T.langName;
     cardsPanel(); actions(); logPanel();
   }
   function info(t) {
     var o = S.own[t], r = REG.filter(function (r) { return r.t.indexOf(t) >= 0; })[0], n = NM[t];
-    $('#im-info').innerHTML = '<h3>' + (S.lang ? '<span class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '">' + esc(n.n) + '</span> <small>' + esc(n.en) + '</small>' : esc(n.en)) + '</h3><p>' +
-      (o < 0 ? 'Independent' : 'Held by <b style="color:' + facOf(o).color + '">' + esc(facOf(o).leader || facOf(o).en) + '</b>') + ' · ' + S.arm[t] + ' soldier' + (S.arm[t] === 1 ? '' : 's') + '<br><small>Region: ' + esc(r.en) + ' (+' + r.bonus + ' for all ' + r.t.length + ') · borders ' + ADJ[t].map(function (x) { return esc(NM[x].en); }).join(', ') + '</small></p>';
+    $('#im-info').innerHTML = '<h3>' + (S.lang ? '<span class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '" title="' + esc(n.en) + '">' + esc(n.n) + '</span>' : '<span title="' + esc(n.n) + '">' + esc(n.en) + '</span>') + '</h3><p>' +
+      (o < 0 ? 'Independent' : 'Held by <b style="color:' + facOf(o).color + '">' + esc(facOf(o).leader || facOf(o).en) + '</b>') + ' · ' + S.arm[t] + ' soldier' + (S.arm[t] === 1 ? '' : 's') + '<br><small>Region: ' + esc(r.en) + ' (+' + r.bonus + ' for all ' + r.t.length + ') · borders ' + ADJ[t].map(function (x) { return esc(tname(x)); }).join(', ') + '</small></p>';
   }
   function say(html) { var m = $('#im-msg'); if (m) m.innerHTML = html; }
   function log(en, x) { S.log.unshift({ en: en, x: x || '' }); if (S.log.length > 60) S.log.pop(); }
   function logPanel() {
-    $('#im-log').innerHTML = S.log.slice(0, 40).map(function (l) { return '<p>' + (S.lang && l.x ? '<span class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '">' + esc(l.x) + '</span> ' : '') + '<small>' + esc(l.en) + '</small></p>'; }).join('');
+    $('#im-log').innerHTML = S.log.slice(0, 40).map(function (l) { return '<p>' + (S.lang && l.x ? '<span class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '" title="' + esc(l.en) + '">' + esc(l.x) + '</span>' : '<small>' + esc(l.en) + '</small>') + '</p>'; }).join('');
   }
   function arrow(a, b) {
     var g = $('#im-arrow'); if (!g) return;
@@ -347,8 +351,8 @@
     el.innerHTML = '<h3>' + esc(tname(a)) + ' <span class="im-vs">→</span> ' + esc(tname(d)) + '</h3>' +
       '<div class="im-brow"><span style="color:' + fa.color + '"><b>' + S.arm[a] + '</b> attacking</span><span class="im-dice">' + (res ? diceHTML(res.A, 'att') : '') + '</span></div>' +
       '<div class="im-brow"><span style="color:' + (od < 0 ? '#6d654f' : facOf(od).color) + '"><b>' + S.arm[d] + '</b> defending</span><span class="im-dice">' + (res ? diceHTML(res.D, 'def') : '') + '</span></div>' +
-      (res ? '<p class="im-bres">' + (res.ld ? 'Defender loses ' + res.ld + '. ' : '') + (res.la ? 'Attacker loses ' + res.la + '.' : '') + '</p>' : '<p class="im-bres">' + (S.lang ? '<span class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '">' + T.dice + '</span> ' : '') + '<small>' + T.diceEn + '</small></p>') +
-      (human && can ? '<div class="im-bbtns"><button type="button" class="im-btn pri" id="im-roll">Roll' + (S.lang ? ' <small class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '">' + T.roll + '</small>' : '') + '</button><button type="button" class="im-btn" id="im-blitz">Fight to the end</button><button type="button" class="im-btn" id="im-stop">Stop</button></div>' :
+      (res ? '<p class="im-bres">' + 'Defender lost ' + res.ld + ' · attacker lost ' + res.la + '.' + '</p>' : '<p class="im-bres">' + (S.lang ? '<span class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '" title="' + T.diceEn + '">' + T.dice + '</span>' : '<small>' + T.diceEn + '</small>') + '</p>') +
+      (human && can ? '<div class="im-bbtns"><button type="button" class="im-btn" id="im-roll">Roll once</button><button type="button" class="im-btn pri" id="im-blitz" title="Keep rolling until you win or have one soldier left">Roll to the end ⏩</button><button type="button" class="im-btn" id="im-stop">Stop</button></div>' :
         human ? '<p class="im-bres">Not enough soldiers to attack again.</p>' : '');
     if (human && can) {
       $('#im-roll').onclick = function () { fight(false); }; $('#im-blitz').onclick = function () { fight(true); };
@@ -356,10 +360,14 @@
     }
   }
   var announced = null;
-  function fight(all) {
-    var a = ui.sel, d = ui.tgt, me = S.turn, res;
+  async function fight(all) {
+    var a = ui.sel, d = ui.tgt, me = S.turn, res, game = S;
     if (announced !== a + '>' + d + '@' + S.round) { announced = a + '>' + d + '@' + S.round; log(vb(facOf(me), 'attacks', 'attack') + NM[d].en + '.', T.attack(facOf(me), NM[d])); }
-    do { res = exchange(a, d); } while (all && S.arm[d] > 0 && S.arm[a] > 1);
+    if (all) { // keep rolling, quickly, until the territory falls or one soldier is left
+      busy = true; var la = 0, ld = 0;
+      while (S.arm[d] > 0 && S.arm[a] > 1) { res = exchange(a, d); la += res.la; ld += res.ld; battlePanel(res); refresh(); await sleep(110); if (S !== game) return; }
+      busy = false; res.la = la; res.ld = ld;
+    } else res = exchange(a, d);
     if (S.arm[d] === 0) {
       battlePanel(res);
       var min = Math.min(res.na, S.arm[a] - 1), max = S.arm[a] - 1;
@@ -404,7 +412,7 @@
     $('#im-qskip').onclick = go;
   }
   function optionsModal() {
-    modal('<h2>Options</h2><p><label><input type="checkbox" id="im-o-lang"' + (S.lang ? ' checked' : '') + '> ' + T.langName + ' names and story (with English)</label></p><p><label><input type="checkbox" id="im-o-quiz"' + (S.quiz ? ' checked' : '') + '> Word challenges when you win a card</label></p><p><label><input type="checkbox" id="im-o-fast"' + (S.fast ? ' checked' : '') + '> Fast computer moves</label></p><p><button type="button" class="im-btn pri" id="im-o-ok">Done</button></p>' + helpHTML(sc));
+    modal('<h2>Options</h2><p><label><input type="checkbox" id="im-o-lang"' + (S.lang ? ' checked' : '') + '> ' + T.langName + ' map names and story (untick for English)</label></p><p><label><input type="checkbox" id="im-o-quiz"' + (S.quiz ? ' checked' : '') + '> Word challenges when you win a card</label></p><p><label><input type="checkbox" id="im-o-fast"' + (S.fast ? ' checked' : '') + '> Fast computer moves</label></p><p><button type="button" class="im-btn pri" id="im-o-ok">Done</button></p>' + helpHTML(sc));
     $('#im-o-ok').onclick = function () { S.lang = $('#im-o-lang').checked; S.quiz = $('#im-o-quiz').checked; S.fast = $('#im-o-fast').checked; prefs.lang = S.lang; prefs.quiz = S.quiz; prefs.fast = S.fast; savePrefs(); closeModal(); refresh(); };
   }
 
