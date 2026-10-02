@@ -49,10 +49,10 @@ html[data-theme="dark"] .im-setup h2{color:#a8d5b8}
 .im-tbtns{display:flex;gap:.3rem}
 .im-msg{background:var(--paper);border:1px solid var(--line);border-top:0;padding:.5rem .8rem;font-size:.95rem;min-height:1.5rem}
 .im-body{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:.8rem;margin-top:.6rem;align-items:start}
-.im-mapwrap{border:1px solid var(--line);border-radius:10px;overflow:auto;background:#7fa9bd;height:calc(100vh - 128px);min-height:300px}
+.im-mapwrap{display:flex;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;overflow:auto;background:#7fa9bd;height:calc(100vh - 128px);min-height:300px}
 .im-game{scroll-margin-top:6px}
 @media (min-width:901px){.im-side{max-height:calc(100vh - 128px);overflow:auto}}
-#im-map{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none}
+#im-map{display:block;flex:none;margin:auto;user-select:none;-webkit-user-select:none}
 .im-t{stroke:#5a4a2c;stroke-width:1;transition:fill .25s}
 .im-t.can{cursor:pointer}.im-t.can:hover{filter:brightness(1.08)}
 .im-t.sel{stroke:#fff;stroke-width:3}.im-t.tgt{stroke:#b3261e;stroke-width:3}
@@ -99,8 +99,8 @@ html[data-theme="dark"] .im-setup h2{color:#a8d5b8}
 .im-mbox h2{margin:.2rem 0 .6rem;font:700 1.5rem Georgia,serif}.im-mbox h2.grc,.im-mbox h2.lat{font-size:2.2rem;font-family:"Gentium Book Plus",Georgia,serif}
 .im-slide{display:flex;align-items:center;gap:.5rem;justify-content:center}.im-slide input{flex:1;accent-color:var(--g)}.im-slide b{font-size:1.3rem;min-width:2ch}
 .im-qopts{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin:.6rem 0}.im-q{margin:0;color:var(--muted);font-size:.9rem}.im-qres{min-height:1.4rem;font-size:.92rem}.im-qoff{font-size:.8rem;color:var(--muted);margin-left:.6rem}
-@media (max-width:900px){.im-body{grid-template-columns:1fr}.im-scens{grid-template-columns:1fr}.im-mapwrap{height:auto;max-height:70vh}.im-head h1{font-size:1.8rem}
-  .im-side{display:grid;grid-template-columns:1fr}#im-battle,#im-actions{order:-1}}
+@media (max-width:900px){.im-body{grid-template-columns:1fr}.im-scens{grid-template-columns:1fr}.im-head h1{font-size:1.8rem}
+}
 .im-stats{width:100%;border-collapse:collapse;font-size:.82rem;margin:0;display:table}
 .im-stats th{font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;text-align:right;padding:.15rem .25rem;border-bottom:1px solid var(--line)}
 .im-stats th:first-child,.im-stats td:first-child{text-align:left}
@@ -112,3 +112,42 @@ html[data-theme="dark"] .im-setup h2{color:#a8d5b8}
 .im-bar{display:flex;height:7px;border-radius:99px;overflow:hidden;margin:.2rem 0;gap:1px}.im-bar i{display:block}
 .im-langbtn{background:#f3dfa3 !important;color:#3a1a12 !important;font-weight:700}
 .im-langseg{border-color:#f3dfa3}.im-langseg button{padding:.25rem .55rem;font-size:.8rem;color:var(--ink)}.im-langseg button.on{background:#f3dfa3;color:#3a1a12;font-weight:700}
+/* ---- phones and small screens: the game takes over the screen; map in the middle, status and buttons always visible */
+.im-menubtn,.im-drawerhead,.im-hud{display:none}
+html.im-lock,html.im-lock body{overflow:hidden !important;overscroll-behavior:none}
+.im-game.im-compact{position:fixed;inset:0;z-index:500;background:var(--paper);display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+.im-compact .im-top{border-radius:0;padding:.3rem .45rem;gap:.35rem;flex:none}
+.im-compact .im-title,.im-compact .im-desk{display:none}
+.im-compact .im-menubtn{display:inline-block}
+.im-compact .im-phases{gap:.2rem;flex-wrap:nowrap}
+.im-compact .im-phases li{padding:.2rem .45rem}.im-compact .im-phases li b{font-size:.8rem}.im-compact .im-phases li small{display:none}
+.im-compact .im-msg{flex:none;font-size:.84rem;padding:.3rem .55rem;border:0;border-bottom:1px solid var(--line)}
+.im-compact .im-body{flex:1;min-height:0;display:block;margin:0;position:relative}
+.im-compact .im-mapwrap{height:100%;min-height:0;max-height:none;border:0;border-radius:0}
+.im-compact .im-side{display:none}
+.im-compact.menu-open .im-side{display:flex;position:absolute;inset:0;z-index:5;overflow:auto;max-height:none;background:var(--paper);padding:.5rem}
+.im-compact .im-drawerhead{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;position:sticky;top:-.5rem;z-index:2}
+.im-compact .im-langseg button{color:var(--ink)}
+.im-dock{display:none}
+.im-compact .im-dock{display:flex;flex-direction:column;gap:.3rem;flex:none;background:var(--card);border-top:1px solid var(--line);padding:.35rem .5rem max(.4rem,env(safe-area-inset-bottom))}
+.im-compact .im-dock .im-panel{border:0;padding:0;background:none}
+.im-compact .im-hud{display:flex;flex-wrap:wrap;gap:.15rem .7rem;font-size:.78rem;color:var(--muted);align-items:center}
+.im-hud i{display:inline-block;width:.65rem;height:.65rem;border-radius:50%;margin-right:.25rem}.im-hud b{color:var(--ink)}
+.im-hud-info{flex-basis:100%}
+.im-compact #im-battle h3{font-size:.9rem;margin:0}
+.im-compact .im-brow{min-height:1.7rem;font-size:.82rem}.im-compact .im-die{width:1.5rem;height:1.5rem}.im-compact .im-die i{width:4px;height:4px}
+.im-compact .im-bres{margin:.1rem 0;font-size:.76rem}
+.im-compact .im-row{margin:0}
+.im-compact #im-actions{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}.im-compact #im-actions .im-btn{width:auto;flex:1}
+.im-compact .im-modal{z-index:600}
+@media (orientation:landscape){
+  .im-game.im-compact{display:grid;grid-template-columns:minmax(0,1fr) min(270px,42vw);grid-template-rows:auto auto minmax(0,1fr)}
+  .im-compact .im-body{grid-column:1;grid-row:1/4}
+  .im-compact .im-top{grid-column:2;grid-row:1;flex-wrap:wrap}.im-compact .im-msg{grid-column:2;grid-row:2}
+  .im-compact .im-dock{grid-column:2;grid-row:3;border-top:0;border-left:1px solid var(--line);overflow:auto;justify-content:flex-start}
+  .im-compact .im-top,.im-compact .im-msg{border-left:1px solid var(--line)}
+}
+.im-compact #im-battle:not([hidden]){display:grid;grid-template-columns:1fr 1fr;gap:0 .7rem}
+.im-compact #im-battle h3,.im-compact #im-battle .im-bres,.im-compact #im-battle .im-bbtns{grid-column:1/3}
+.im-compact .im-bbtns .im-btn,.im-compact #im-actions .im-btn{padding:.45rem .3rem;font-size:.86rem;white-space:nowrap}
+@media (orientation:landscape){.im-compact .im-phases li:not(.on){display:none}.im-compact .im-top{flex-wrap:nowrap}.im-compact .im-dock{padding-bottom:.4rem}}

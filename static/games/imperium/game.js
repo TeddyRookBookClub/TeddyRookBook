@@ -24,6 +24,7 @@
   // ------------------------------------------------------------------ setup screen
   function scen(id) { return I.SCENARIOS.filter(function (s) { return s.id === id; })[0] || I.SCENARIOS[0]; }
   function setup() {
+    D.documentElement.classList.remove('im-lock');
     var sc = scen(prefs.sc); prefs.sc = sc.id;
     if (!sc.factions.some(function (f) { return f.id === prefs.fac; })) prefs.fac = sc.factions[0].id;
     var maxOpp = Math.min(5, sc.factions.length - 1); if (prefs.opp > maxOpp) prefs.opp = maxOpp; if (prefs.opp < 1) prefs.opp = 1;
@@ -123,6 +124,7 @@
   function begin() { S.phase = 'reinforce'; S.turn = 0; S.round = 1; draw(); startTurn(); }
 
   // ------------------------------------------------------------------ rendering
+  var relayout = null;
   function draw() {
     var names = terrs();
     var svg = '<svg id="im-map" viewBox="0 0 ' + map.w + ' ' + map.h + '" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="im-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><rect width="7" height="7" fill="#e3dac2"/><line x1="0" y1="0" x2="0" y2="7" stroke="#cdc2a4" stroke-width="2"/></pattern>' +
@@ -132,19 +134,52 @@
       names.map(function (t) { return '<path class="im-t" data-t="' + t + '" d="' + map.terr[t].d + '" fill-rule="evenodd"/>'; }).join('') + '</g><g id="im-arrow"></g><g id="im-tokens">' +
       names.map(function (t) { var m = map.terr[t]; return '<g class="im-tok" data-t="' + t + '" transform="translate(' + m.x + ' ' + m.y + ')"><text class="im-nm" y="21"></text><circle r="10.5"/><text class="im-n" y="4"></text></g>'; }).join('') + '</g></svg>';
     root.innerHTML = '<div class="im-game"><div class="im-top"><div class="im-title"><b class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '">' + esc(sc.title) + '</b><small>' + esc(sc.sub) + ' · ' + esc(sc.date) + '</small></div>' +
-      '<ol class="im-phases" id="im-phases"></ol><div class="im-tbtns"><button type="button" class="im-btn sm" data-act="zoom-" aria-label="Zoom out">−</button><button type="button" class="im-btn sm" data-act="zoom+" aria-label="Zoom in">+</button><span class="im-seg im-langseg" id="im-lang"><button type="button" data-lang="x">' + T.langName + '</button><button type="button" data-lang="both">Both</button><button type="button" data-lang="en">English</button></span><button type="button" class="im-btn sm" data-act="opts">⚙ Options</button><button type="button" class="im-btn sm" data-act="quit">New game</button></div></div>' +
+      '<ol class="im-phases" id="im-phases"></ol><div class="im-tbtns"><button type="button" class="im-btn sm" data-act="zoom-" aria-label="Zoom out">−</button><button type="button" class="im-btn sm" data-act="zoom+" aria-label="Zoom in">+</button><span class="im-desk"><span class="im-seg im-langseg"><button type="button" data-lang="x">' + T.langName + '</button><button type="button" data-lang="both">Both</button><button type="button" data-lang="en">English</button></span><button type="button" class="im-btn sm" data-act="opts">⚙ Options</button><button type="button" class="im-btn sm" data-act="quit">New game</button></span><button type="button" class="im-btn sm im-menubtn" data-act="menu">☰ Info</button></div></div>' +
       '<div class="im-msg" id="im-msg"></div><div class="im-body"><div class="im-mapwrap" id="im-mapwrap">' + svg + '</div>' +
-      '<aside class="im-side"><div class="im-panel" id="im-battle" hidden></div><div class="im-panel" id="im-actions"></div><div class="im-panel" id="im-info"></div><div class="im-panel"><h3>Who holds what</h3><div id="im-players"></div></div>' +
-      '<div class="im-panel"><h3>Your spoils <small id="im-cardhint"></small></h3><div id="im-cards"></div></div><div class="im-panel"><h3>Regions</h3><div id="im-regions"></div></div><div class="im-panel"><h3>The story so far</h3><div id="im-log" class="im-log"></div></div></aside></div><div id="im-modal" class="im-modal" hidden></div></div>';
+      '<aside class="im-side"><div class="im-panel im-drawerhead"><button type="button" class="im-btn pri" data-act="menu">← Back to the map</button><span class="im-seg im-langseg"><button type="button" data-lang="x">' + T.langName + '</button><button type="button" data-lang="both">Both</button><button type="button" data-lang="en">English</button></span><button type="button" class="im-btn sm" data-act="opts">⚙ Options</button><button type="button" class="im-btn sm" data-act="quit">Leave game</button></div><div class="im-panel" id="im-battle" hidden></div><div class="im-panel" id="im-actions"></div><div class="im-panel" id="im-info"></div><div class="im-panel"><h3>Who holds what</h3><div id="im-players"></div></div>' +
+      '<div class="im-panel"><h3>Your spoils <small id="im-cardhint"></small></h3><div id="im-cards"></div></div><div class="im-panel"><h3>Regions</h3><div id="im-regions"></div></div><div class="im-panel"><h3>The story so far</h3><div id="im-log" class="im-log"></div></div></aside></div><div class="im-dock" id="im-dock"><div class="im-hud" id="im-hud"></div></div><div id="im-modal" class="im-modal" hidden></div></div>';
     $('#im-map').addEventListener('click', function (e) { var g = e.target.closest('[data-t]'); if (g) onTerr(g.dataset.t); });
     $('#im-map').addEventListener('mouseover', function (e) { var g = e.target.closest('[data-t]'); if (g) info(g.dataset.t); });
-    $('[data-act="quit"]').onclick = function () { if (!W.confirm || W.confirm('Leave this game and set up a new one? Your saved game stays until you start another.')) { S = null; busy = false; setup(); } };
-    $('[data-act="opts"]').onclick = optionsModal;
+    $$('[data-act="quit"]').forEach(function (b) { b.onclick = function () { if (!W.confirm || W.confirm('Leave this game and set up a new one? Your saved game stays until you start another.')) { S = null; busy = false; setup(); } }; });
+    $$('[data-act="opts"]').forEach(function (b) { b.onclick = optionsModal; });
+    $$('[data-act="menu"]').forEach(function (b) { b.onclick = function () { $('.im-game').classList.toggle('menu-open'); }; });
     $$('[data-lang]').forEach(function (b) { b.onclick = function () { S.lang = b.dataset.lang; prefs.lang = S.lang; savePrefs(); refresh(); if (ui.sel && ui.tgt) battlePanel(null); }; });
-    var z = 1; function zoom(d) { z = Math.max(1, Math.min(3.5, z + d)); var m = $('#im-map'); m.style.width = (z * 100) + '%'; m.style.height = z === 1 && W.innerWidth >= 900 ? '100%' : 'auto'; }
-    zoom(0); if (W.innerWidth >= 900) setTimeout(function () { var g = $('.im-game'); if (g) g.scrollIntoView({ block: 'start' }); }, 50);
-    if (W.innerWidth < 700) zoom(1); // phones start zoomed in; drag to pan
-    $('[data-act="zoom+"]').onclick = function () { zoom(.5); }; $('[data-act="zoom-"]').onclick = function () { zoom(-.5); };
+    // ---- map size: fits the space it has; + / − buttons or a two-finger pinch zoom it, dragging pans
+    var wrap = $('#im-mapwrap'), svgEl = $('#im-map'), asp = map.w / map.h, mapW = 0;
+    function contain() { return Math.max(120, Math.min(wrap.clientWidth, wrap.clientHeight * asp)); }
+    function setW(w, cx, cy) { // keep the point under (cx, cy) fixed while resizing
+      var r = svgEl.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+      if (cx == null) { cx = wr.left + wr.width / 2; cy = wr.top + wr.height / 2; }
+      var rx = r.width ? (cx - r.left) / r.width : .5, ry = r.height ? (cy - r.top) / r.height : .5, c = contain();
+      mapW = Math.max(c, Math.min(c * 6, w)); svgEl.style.width = mapW + 'px'; svgEl.style.height = (mapW / asp) + 'px';
+      var r2 = svgEl.getBoundingClientRect(); wrap.scrollLeft += r2.left + rx * r2.width - cx; wrap.scrollTop += r2.top + ry * r2.height - cy;
+    }
+    var mq = W.matchMedia('(max-width: 900px), (max-height: 560px)'), wasCompact = null;
+    function layout() {
+      var game = $('.im-game'); if (!game) return;
+      var c = mq.matches, dock = $('#im-dock'), side = $('.im-side'), bt = $('#im-battle'), ac = $('#im-actions');
+      game.classList.toggle('im-compact', c); D.documentElement.classList.toggle('im-lock', c);
+      if (c !== wasCompact) { if (c) { dock.appendChild(bt); dock.appendChild(ac); } else { side.insertBefore(ac, side.children[1]); side.insertBefore(bt, ac); game.classList.remove('menu-open'); } }
+      wasCompact = c;
+      var cn = contain(); mapW = 0; svgEl.style.width = cn + 'px'; svgEl.style.height = (cn / asp) + 'px'; mapW = cn;
+      if (c) setW(Math.min(Math.max(wrap.clientWidth, wrap.clientHeight * asp), cn * 2.2)); // on a phone start filling the space
+      if (c && ui.sel) centerOn(ui.sel);
+    }
+    function centerOn(t) { var g = $('.im-tok[data-t="' + t + '"]'); if (!g) return; var r = g.getBoundingClientRect(), wr = wrap.getBoundingClientRect(); wrap.scrollLeft += r.left + r.width / 2 - (wr.left + wr.width / 2); wrap.scrollTop += r.top + r.height / 2 - (wr.top + wr.height / 2); }
+    $('[data-act="zoom+"]').onclick = function () { setW(mapW * 1.4); }; $('[data-act="zoom-"]').onclick = function () { setW(mapW / 1.4); };
+    var pinch = null;
+    function tdist(e) { var a = e.touches[0], b = e.touches[1]; return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+    wrap.addEventListener('touchstart', function (e) { if (e.touches.length === 2) pinch = { d: tdist(e), w: mapW }; }, { passive: true });
+    wrap.addEventListener('touchmove', function (e) {
+      if (e.touches.length !== 2 || !pinch) return; e.preventDefault();
+      setW(pinch.w * tdist(e) / pinch.d, (e.touches[0].clientX + e.touches[1].clientX) / 2, (e.touches[0].clientY + e.touches[1].clientY) / 2);
+    }, { passive: false });
+    wrap.addEventListener('touchend', function (e) { if (e.touches.length < 2) pinch = null; });
+    wrap.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+    if (relayout) W.removeEventListener('resize', relayout);
+    var rt; relayout = function () { clearTimeout(rt); rt = setTimeout(layout, 120); }; W.addEventListener('resize', relayout);
+    layout();
+    if (!mq.matches) setTimeout(function () { var g = $('.im-game'); if (g) g.scrollIntoView({ block: 'start' }); }, 50);
     refresh();
   }
   function refresh() {
@@ -179,9 +214,14 @@
       return '<div class="im-reg"><div><span>' + esc(r.en) + '</span><b>+' + r.bonus + ' per turn</b></div><div class="im-bar">' + bar + '</div><small>' + (whole ? 'Held by <b style="color:' + facOf(o).color + '">' + esc(facOf(o).leader || facOf(o).en) + '</b>' : 'You hold ' + (cnt[0] || 0) + ' of ' + r.t.length + '; nobody holds it all') + '</small></div>';
     }).join('');
     $$('[data-lang]').forEach(function (b) { b.classList.toggle('on', b.dataset.lang === S.lang); });
+    var hud = $('#im-hud');
+    if (hud) { var mf = facOf(0), mt = owned(0), cf = facOf(S.turn);
+      hud.innerHTML = '<span class="im-hud-me"><i style="background:' + mf.color + '"></i><b>You</b> ' + mt.length + ' lands · ' + mt.reduce(function (s, t) { return s + S.arm[t]; }, 0) + ' troops · +' + income(0) + '/turn · ' + S.players[0].cards.length + ' cards</span>' +
+        (S.turn !== 0 && S.phase !== 'claim' ? '<span class="im-hud-turn"><i style="background:' + cf.color + '"></i>' + esc(cf.leader || cf.en) + '’s turn</span>' : '') + '<span class="im-hud-info" id="im-hud-info"></span>'; }
     cardsPanel(); actions(); logPanel();
   }
   function info(t) {
+    var hi = $('#im-hud-info'); if (hi) hi.innerHTML = '<b>' + esc(tname(t)) + '</b>: ' + (S.own[t] < 0 ? 'independent' : esc(facOf(S.own[t]).leader || facOf(S.own[t]).en)) + ', ' + S.arm[t] + ' soldier' + (S.arm[t] === 1 ? '' : 's');
     var o = S.own[t], r = REG.filter(function (r) { return r.t.indexOf(t) >= 0; })[0], n = NM[t];
     $('#im-info').innerHTML = '<h3>' + (X() ? '<span class="' + (sc.lang === 'gr' ? 'grc' : 'lat') + '" title="' + esc(n.en) + '">' + esc(n.n) + '</span>' + (B() ? ' <small>' + esc(n.en) + '</small>' : '') : '<span title="' + esc(n.n) + '">' + esc(n.en) + '</span>') + '</h3><p>' +
       (o < 0 ? 'Independent' : 'Held by <b style="color:' + facOf(o).color + '">' + esc(facOf(o).leader || facOf(o).en) + '</b>') + ' · ' + S.arm[t] + ' soldier' + (S.arm[t] === 1 ? '' : 's') + '<br><small>Region: ' + esc(r.en) + ' (+' + r.bonus + ' for all ' + r.t.length + ') · borders ' + ADJ[t].map(function (x) { return esc(tname(x)); }).join(', ') + '</small></p>';
