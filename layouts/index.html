@@ -139,7 +139,7 @@
     var X = function (i) { return 12 + i / (v.length - 1) * (w - 24); }, Y = function (x) { return h - 14 - (x - lo) / (hi - lo || 1) * (h - 44); };
     var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, 'rgba(0,105,58,.28)'); g.addColorStop(1, 'rgba(0,105,58,0)');
     c.beginPath(); v.forEach(function (x, i) { i ? c.lineTo(X(i), Y(x)) : c.moveTo(X(i), Y(x)); });
-    c.strokeStyle = '#00693a'; c.lineWidth = 2; c.stroke(); c.lineTo(X(v.length - 1), h); c.lineTo(X(0), h); c.fillStyle = g; c.fill();
+    c.strokeStyle = '#00562f'; c.lineWidth = 2; c.stroke(); c.lineTo(X(v.length - 1), h); c.lineTo(X(0), h); c.fillStyle = g; c.fill();
     document.getElementById('home-mk-l').textContent = 'S&P 500, last 2 years · ' + v[v.length - 1].toLocaleString('en-US', { maximumFractionDigits: 0 });
   }).catch(function () { });
 })();

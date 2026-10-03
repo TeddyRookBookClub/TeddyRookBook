@@ -8,7 +8,7 @@
 
 <article class="book-single" style="max-width: 820px; margin: 0 auto;">
   <nav style="margin-bottom: 1rem;">
-    <a href="/books/" style="color: #004C2A; text-decoration: none; font-size: 0.9rem;">← Back to Library</a>
+    <a href="/books/" style="color: #004225; text-decoration: none; font-size: 0.9rem;">← Back to Library</a>
   </nav>
 
   <header>
@@ -34,7 +34,7 @@
   {{ if or .Params.editions .Params.notes }}
   {{ $setKeys := dict }}{{ range site.Data.sets }}{{ $setKeys = merge $setKeys (dict .name .key) }}{{ end }}
   <section style="margin:0 0 1.5rem;padding:.8rem 1rem;border:1px solid #dde5df;border-left:4px solid #b8963e;border-radius:10px;">
-    <h2 style="font-size:1.05rem;color:#004C2A;margin:0 0 .4rem;">📚 Copies on my shelf</h2>
+    <h2 style="font-size:1.05rem;color:#004225;margin:0 0 .4rem;">📚 Copies on my shelf</h2>
     {{ with .Params.editions }}<ul style="margin:0;padding-left:1.1rem;">{{ range . }}{{ $k := index $setKeys .set }}<li>{{ if $k }}<a href="/books/#set-{{ $k }}">{{ .set }}{{ with .vol }}, Vol. {{ . }}{{ end }}</a>{{ else }}{{ .set }}{{ with .vol }}, Vol. {{ . }}{{ end }}{{ end }}{{ with .detail }} — {{ . }}{{ end }}</li>{{ end }}</ul>{{ end }}
     {{ with .Params.notes }}<p style="margin:.4rem 0 0;font-size:.92rem;color:#555;">{{ . }}</p>{{ end }}
   </section>
@@ -43,7 +43,7 @@
   {{ $igs := slice }}{{ range site.Data.infographics }}{{ if and .show (in (.books | default slice) $slug) }}{{ $igs = $igs | append . }}{{ end }}{{ end }}
   {{ with $igs }}
   <section style="margin: 0 0 1.5rem;">
-    <h2 style="font-size:1.15rem;color:#004C2A;margin:0 0 .6rem;">🖼️ Infographics about this book</h2>
+    <h2 style="font-size:1.15rem;color:#004225;margin:0 0 .6rem;">🖼️ Infographics about this book</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.8rem;">
       {{ range . }}<a href="/infographics/#{{ .file }}" style="display:block;text-decoration:none;color:inherit;border:1px solid #dde5df;border-radius:10px;overflow:hidden;">
         <img src="/img/infographics/{{ .file }}-thumb.jpg" alt="{{ .title }}" loading="lazy" style="display:block;width:100%;height:170px;object-fit:cover;object-position:top;margin:0;">
@@ -65,7 +65,7 @@
 
 
   <footer style="margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.85rem; color: #777;">
-    <a href="/books/" style="color: #004C2A;">← Return to the Library</a>
+    <a href="/books/" style="color: #004225;">← Return to the Library</a>
   </footer>
 </article>
 {{ end }}

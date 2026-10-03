@@ -311,7 +311,7 @@
     secs.forEach(function (s) { H += 100 + Math.ceil(s[1].length / 2) * 50; });
     H += 70;
     var cv = D.createElement('canvas'); cv.width = Wd; cv.height = H; var c = cv.getContext('2d');
-    var bg = dark ? '#26332c' : '#f3ead2', ink = dark ? '#eef3ef' : '#1d2320', mut = dark ? '#a9b8af' : '#5d6862', gold = '#b8963e', wine = dark ? '#e9a0b1' : '#7a2338', grn = dark ? '#6cc79a' : '#004C2A';
+    var bg = dark ? '#26332c' : '#f3ead2', ink = dark ? '#eef3ef' : '#1d2320', mut = dark ? '#a9b8af' : '#5d6862', gold = '#b8963e', wine = dark ? '#e9a0b1' : '#7a2338', grn = dark ? '#6cc79a' : '#004225';
     c.fillStyle = bg; c.fillRect(0, 0, Wd, H); c.fillStyle = grn; c.fillRect(0, 0, Wd, 14);
     var SER = '"Gentium Book Plus", Georgia, serif', SAN = 'system-ui, -apple-system, "Segoe UI", sans-serif', y = 80;
     function line(txt, font, col, dy) { c.font = font; c.fillStyle = col; c.textAlign = 'center'; c.fillText(txt, Wd / 2, y); y += dy; }
@@ -347,7 +347,7 @@
     var Wd = 1800, pad = 70, mid = Wd / 2, colW = mid - pad - 40, rows = Math.max(fg.length, fl.length);
     var H = 250 + 330 + (rows ? 70 + rows * 50 : 0) + 80;
     var cv = D.createElement('canvas'); cv.width = Wd; cv.height = H; var c = cv.getContext('2d');
-    var bg = dark ? '#26332c' : '#f3ead2', ink = dark ? '#eef3ef' : '#1d2320', mut = dark ? '#a9b8af' : '#5d6862', gold = '#b8963e', wine = dark ? '#e9a0b1' : '#7a2338', grn = dark ? '#6cc79a' : '#004C2A';
+    var bg = dark ? '#26332c' : '#f3ead2', ink = dark ? '#eef3ef' : '#1d2320', mut = dark ? '#a9b8af' : '#5d6862', gold = '#b8963e', wine = dark ? '#e9a0b1' : '#7a2338', grn = dark ? '#6cc79a' : '#004225';
     var SER = '"Gentium Book Plus", Georgia, serif', SAN = 'system-ui, -apple-system, "Segoe UI", sans-serif';
     c.fillStyle = bg; c.fillRect(0, 0, Wd, H); c.fillStyle = grn; c.fillRect(0, 0, Wd, 14);
     function fit(txt, size, fam, max) { do { c.font = size + 'px ' + fam; size -= 4; } while (c.measureText(txt).width > max && size > 24); }
