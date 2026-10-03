@@ -74,6 +74,33 @@
   try { var sv = JSON.parse(W.localStorage.getItem(KEY)); if (sv) for (var k in sv) st[k] = sv[k]; } catch (e) { }
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
   function word(t) { return TILES[t][st.lang === 'la' ? 1 : 2]; }
+  // Greek in Latin letters, as on the flashcards
+  var TR = { 'α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e', 'ζ': 'z', 'η': 'ē', 'θ': 'th', 'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x', 'ο': 'o', 'π': 'p', 'ρ': 'r', 'σ': 's', 'ς': 's', 'τ': 't', 'υ': 'y', 'φ': 'ph', 'χ': 'ch', 'ψ': 'ps', 'ω': 'ō' };
+  function translit(s) {
+    return s.split(/(\s+)/).map(function (w) {
+      var d = w.normalize('NFD'), out = '', prev = '', rough = d.indexOf('̔') >= 0, cap = /^[Α-Ω]/.test(d), started = false;
+      for (var i = 0; i < d.length; i++) {
+        var ch = d[i], lc = ch.toLowerCase(), r = TR[lc];
+        if (r == null) {
+          if (ch === '́' || ch === '̀' || ch === '͂') out += '́';       // any accent -> stress mark
+          else if (ch === '̈') out += '̈';
+          else if (ch === 'ͅ') out += 'i';                                             // iota subscript
+          else if (ch === '̓' || ch === '̔') { }                                   // breathings handled below
+          else if (ch === '’' || ch === '᾽' || ch === 'ʼ') out += '’';
+          else out += ch;
+          continue;
+        }
+        if (lc === 'γ' && /[γκξχ]/.test((d[i + 1] || '').toLowerCase())) r = 'n';
+        if (lc === 'υ' && /[αεοη]/.test(prev) && d[i + 1] !== '̈') r = 'u';
+        if (lc === 'υ' && /^[\u0300-\u036f]*ι(?![\u0300-\u036f]*\u0308)/.test(d.slice(i + 1).toLowerCase())) r = 'u';
+        if (!started) { started = true; if (rough) r = lc === 'ρ' ? 'rh' : 'h' + r; }
+        out += r; prev = lc;
+      }
+      out = out.normalize('NFC');
+      return cap ? out.charAt(0).toUpperCase() + out.slice(1) : out;
+    }).join('');
+  }
+  function pron(t) { return st.lang === 'gr' ? ' <i class="mm-tr">' + esc(translit(TILES[t][2])) + '</i>' : ''; }
   function cls() { return st.lang === 'la' ? 'la' : 'gr'; }
   var LEVELS = 30;
   function levelDef(n) { // n from 1; six tile kinds per level, all new on every level
@@ -95,8 +122,8 @@
       '<div class="mm-opt"><span>Words on the tiles</span><div class="mm-seg"><button data-w="1"' + (st.labels ? ' class="on"' : '') + '>Show</button><button data-w="0"' + (!st.labels ? ' class="on"' : '') + '>Hide (harder)</button></div></div>' +
       '<div class="mm-btns"><button class="mm-btn pri" data-go="' + Math.min(st.best, LEVELS) + '">' + (st.best > 1 ? 'Continue: level ' + Math.min(st.best, LEVELS) : 'Start: level 1') + '</button><button class="mm-btn" data-go="0">Endless practice</button></div>' +
       '<div class="mm-levels">' + Array.apply(null, Array(LEVELS)).map(function (_, i) { var n = i + 1, open = n <= st.best; return '<button class="mm-lv' + (open ? '' : ' lock') + (n < st.best ? ' done' : '') + '" ' + (open ? 'data-go="' + n + '"' : 'disabled') + '>' + n + '</button>'; }).join('') + '</div>' +
-      '<p class="mm-small">' + (st.hi ? 'Best endless score: ' + st.hi + '. ' : '') + 'Levels unlock one at a time, and every level has six new words (180 in all). Endless practice has no move limit and uses every word. Progress is saved only in this browser.</p>' +
-      '<details class="mm-help"><summary>How to play</summary><ul><li>Tap a tile, then tap a neighbour to swap them (or swipe a tile). The swap must make a line of three or more, or a two-by-two square.</li><li>Stuck? Tap 💡 Hint and the two tiles to swap will glow.</li><li>Each level asks you to collect certain things, named in ' + (st.lang === 'la' ? 'Latin' : 'Greek') + ', before your moves run out.</li><li>Bigger matches leave a special tile of the same kind. Match it later to set it off:<br>⚡ four in a row clears its whole row and column;<br>💥 an L, T or cross shape clears the tiles around it;<br>🌟 five or more in a row clears every tile of that kind on the board.</li><li>Special tiles caught in a blast go off too.</li><li>After each level a quick question asks what one of the words means. A right answer gives bonus points.</li><li>The Greek words are all Koine: each one is found in the New Testament.</li></ul></details></div>';
+      '<p class="mm-small">' + (st.hi ? 'Best endless score: ' + st.hi + '. ' : '') + 'Levels unlock one at a time, and every level has six new words (180 in all). Endless practice has no move limit: it starts with six random words and swaps in six new ones after every twelve matches, keeping the colours. Progress is saved only in this browser.</p>' +
+      '<details class="mm-help"><summary>How to play</summary><ul><li>Tap a tile, then tap a neighbour to swap them (or swipe a tile). The swap must make a line of three or more, or a two-by-two square.</li><li>Stuck? Tap 💡 Hint and the two tiles to swap will glow.</li><li>Each level asks you to collect certain things, named in ' + (st.lang === 'la' ? 'Latin' : 'Greek') + ', before your moves run out.</li><li>Bigger matches leave a special tile of the same kind. Match it later to set it off:<br>⚡ four in a row clears its whole row and column;<br>💥 an L, T or cross shape, or a square of four, clears the tiles around it;<br>🌟 five or more in a row clears every tile of that kind on the board, plus its own row and column.</li><li>Special tiles caught in a blast go off too.</li><li>After each level a quick question asks what one of the words means. A right answer gives bonus points.</li><li>The Greek words are all Koine: each one is found in the New Testament.</li></ul></details></div>';
     root.querySelectorAll('[data-l]').forEach(function (b) { b.onclick = function () { st.lang = b.dataset.l; save(); menu(); }; });
     root.querySelectorAll('[data-w]').forEach(function (b) { b.onclick = function () { st.labels = b.dataset.w === '1'; save(); menu(); }; });
     root.querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { start(+b.dataset.go); }; });
@@ -151,10 +178,10 @@
   function hud() {
     $('#mm-moves').textContent = G.level ? G.moves + ' moves left' : G.matches + ' matches';
     $('#mm-score').textContent = G.score + ' points';
-    $('#mm-goals').innerHTML = G.level ? G.goals.map(function (g) { var d = g.got >= g.need; return '<span class="mm-goal' + (d ? ' done' : '') + '"><i>' + TILES[g.t][0] + '</i><b class="' + cls() + '">' + esc(word(g.t)) + '</b> ' + (d ? '✓' : Math.min(g.got, g.need) + ' / ' + g.need) + '</span>'; }).join('') :
+    $('#mm-goals').innerHTML = G.level ? G.goals.map(function (g) { var d = g.got >= g.need; return '<span class="mm-goal' + (d ? ' done' : '') + '"><i>' + TILES[g.t][0] + '</i><b class="' + cls() + '">' + esc(word(g.t)) + '</b>' + pron(g.t) + ' ' + (d ? '✓' : Math.min(g.got, g.need) + ' / ' + g.need) + '</span>'; }).join('') :
       '<span class="mm-goal">Practice: match anything. Words learned: ' + Object.keys(G.seen).length + '</span>';
   }
-  function showWord(t, n) { var T = TILES[t]; $('#mm-word').innerHTML = T[0] + ' <b class="' + cls() + '">' + esc(word(t)) + '</b> = ' + esc(T[3]) + (n > 3 ? ' <em>×' + n + '!</em>' : ''); }
+  function showWord(t, n) { var T = TILES[t]; $('#mm-word').innerHTML = T[0] + ' <b class="' + cls() + '">' + esc(word(t)) + '</b>' + pron(t) + ' = ' + esc(T[3]) + (n > 3 ? ' <em>×' + n + '!</em>' : ''); }
   // ---------- rules ----------
   function findMatches() {
     var hit = {}, runs = [], lines = {}; // lines: how many straight runs each cell belongs to (2 = corner of an L, T or cross)
@@ -208,7 +235,7 @@
       function leave(kind, t, cell) { var k = cell.join(); if (usedCell[k]) return; usedCell[k] = 1; made.push({ sp: kind, t: t, cell: cell }); }
       m.runs.forEach(function (run) {
         G.matches++; G.seen[run.t] = 1; showWord(run.t, run.cells.length);
-        if (run.sq) return;
+        if (run.sq) return leave('b', run.t, run.cells.filter(function (x) { return x[0] === at[0] && x[1] === at[1]; })[0] || run.cells[0]);
         var here = run.cells.filter(function (x) { return x[0] === at[0] && x[1] === at[1]; })[0];
         var corner = run.cells.filter(function (x) { return m.lines[x.join()] > 1; })[0];
         if (run.cells.length >= 5) leave('s', run.t, here || run.cells[Math.floor(run.cells.length / 2)]);
@@ -216,20 +243,22 @@
         else if (run.cells.length === 4) leave('l', run.t, here || run.cells[1]);
       });
       // special tiles caught in a match go off, and can set each other off
-      var fired = {}, again = true;
+      var fired = {}, again = true, boomed = [];
       while (again) {
         again = false;
         Object.keys(m.hit).forEach(function (k) {
           var p = k.split(','), r = +p[0], c = +p[1], t = G.grid[r][c]; if (!t || !t.sp || fired[k]) return; fired[k] = 1; again = true;
           if (t.sp === 'l') for (var i = 0; i < N; i++) { m.hit[r + ',' + i] = 1; m.hit[i + ',' + c] = 1; }
           else if (t.sp === 'b') { for (var a = r - 1; a <= r + 1; a++) for (var b = c - 1; b <= c + 1; b++) if (a >= 0 && b >= 0 && a < N && b < N) m.hit[a + ',' + b] = 1; }
-          else if (t.sp === 's') { for (var a2 = 0; a2 < N; a2++) for (var b2 = 0; b2 < N; b2++) if (G.grid[a2][b2] && G.grid[a2][b2].t === t.t) m.hit[a2 + ',' + b2] = 1; }
+          else if (t.sp === 's') { for (var a2 = 0; a2 < N; a2++) for (var b2 = 0; b2 < N; b2++) if (a2 === r || b2 === c || (G.grid[a2][b2] && G.grid[a2][b2].t === t.t)) m.hit[a2 + ',' + b2] = 1; }
+          boomed.push(SPI[t.sp]);
         });
       }
       Object.keys(m.hit).forEach(function (k) {
         var p = k.split(','), t = G.grid[+p[0]][+p[1]]; if (!t) return;
         G.score += 10 * chain; G.goals.forEach(function (g) { if (g.t === t.t) g.got++; }); G.grid[+p[0]][+p[1]] = null;
       });
+      if (boomed.length) { G.score += 50 * boomed.length; $('#mm-word').innerHTML += ' <em>' + boomed.join('') + ' +' + Object.keys(m.hit).length + ' tiles</em>'; }
       made.forEach(function (x) { var s = mk(x.t); s.sp = x.sp; G.grid[x.cell[0]][x.cell[1]] = s; });
       draw(); hud(); await sleep(240); if (G !== game) return;
       for (var c0 = 0; c0 < N; c0++) { // gravity and refill
@@ -246,7 +275,15 @@
     if (G.level) {
       if (G.goals.every(function (g) { return g.got >= g.need; })) return win();
       if (G.moves <= 0) return over(false);
-    } else { if (G.score > st.hi) { st.hi = G.score; save(); } if (G.matches && G.matches % 12 === 0) quiz(function () { }); }
+    } else { if (G.score > st.hi) { st.hi = G.score; save(); } if (G.matches && Math.floor(G.matches / 12) > (G.rot || 0)) { G.rot = Math.floor(G.matches / 12); quiz(newWords); } }
+  }
+  function newWords() { // endless: swap in six new words; each colour keeps its place
+    if (!G || G.level) return;
+    var old = G.kinds, pool = TILES.map(function (_, i) { return i; }).filter(function (i) { return old.indexOf(i) < 0; }), next = [];
+    while (next.length < 6) next.push(pool.splice(rnd(pool.length), 1)[0]);
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) { var t = G.grid[r][c]; if (t) t.t = next[old.indexOf(t.t)]; }
+    G.kinds = next; draw(); hud();
+    $('#mm-word').innerHTML = 'New words: ' + next.map(function (k) { return TILES[k][0] + ' <b class="' + cls() + '">' + esc(word(k)) + '</b>'; }).join(' ');
   }
   // ---------- end of level, quiz ----------
   function modal(html) { var m = $('#mm-modal'); m.innerHTML = '<div class="mm-box">' + html + '</div>'; m.hidden = false; return m; }
@@ -255,13 +292,13 @@
     var t = seen[rnd(seen.length)], opts = [t];
     while (opts.length < 4) { var o = rnd(TILES.length); if (opts.indexOf(o) < 0) opts.push(o); }
     opts.sort(function () { return Math.random() - .5; });
-    var m = modal('<p class="mm-q">What does this word mean?</p><h2 class="' + cls() + '">' + esc(word(t)) + '</h2><div class="mm-qo">' + opts.map(function (o) { return '<button class="mm-btn" data-o="' + o + '">' + TILES[o][0] + ' ' + TILES[o][3] + '</button>'; }).join('') + '</div><p id="mm-qr"></p><button class="mm-btn" id="mm-qs">Skip</button>');
+    var m = modal('<p class="mm-q">What does this word mean?</p><h2 class="' + cls() + '">' + esc(word(t)) + '</h2>' + (st.lang === 'gr' ? '<p class="mm-q">' + pron(t) + '</p>' : '') + '<div class="mm-qo">' + opts.map(function (o) { return '<button class="mm-btn" data-o="' + o + '">' + TILES[o][0] + ' ' + TILES[o][3] + '</button>'; }).join('') + '</div><p id="mm-qr"></p><button class="mm-btn" id="mm-qs">Skip</button>');
     var done = false;
     m.querySelectorAll('[data-o]').forEach(function (b) { b.onclick = function () {
       if (done) return; done = true; var ok = +b.dataset.o === t; b.classList.add(ok ? 'right' : 'wrong');
       m.querySelectorAll('[data-o]').forEach(function (x) { if (+x.dataset.o === t) x.classList.add('right'); });
       if (ok) G.score += 100;
-      $('#mm-qr').innerHTML = (ok ? '<b>Right! +100 points.</b> ' : '<b>Not quite.</b> ') + '<span class="' + cls() + '">' + esc(word(t)) + '</span> means “' + TILES[t][3] + '”.'; $('#mm-qs').textContent = 'Continue'; $('#mm-qs').classList.add('pri'); if (G) hud();
+      $('#mm-qr').innerHTML = (ok ? '<b>Right! +100 points.</b> ' : '<b>Not quite.</b> ') + '<span class="' + cls() + '">' + esc(word(t)) + '</span>' + pron(t) + ' means “' + TILES[t][3] + '”.'; $('#mm-qs').textContent = 'Continue'; $('#mm-qs').classList.add('pri'); if (G) hud();
     }; });
     $('#mm-qs').onclick = function () { m.hidden = true; then(); };
   }
@@ -272,7 +309,7 @@
   }
   function over(won) {
     var lv = G.level, last = lv >= LEVELS;
-    var words = G.kinds.map(function (t) { return '<span>' + TILES[t][0] + ' <b class="' + cls() + '">' + esc(word(t)) + '</b> ' + TILES[t][3] + '</span>'; }).join('');
+    var words = G.kinds.map(function (t) { return '<span>' + TILES[t][0] + ' <b class="' + cls() + '">' + esc(word(t)) + '</b>' + pron(t) + ' ' + TILES[t][3] + '</span>'; }).join('');
     var m = modal('<h2>' + (won ? (last ? 'You finished every level!' : 'Level ' + lv + ' complete') : 'Out of moves') + '</h2><p>' + G.score + ' points</p><div class="mm-words">' + words + '</div><div class="mm-btns">' +
       (won && !last ? '<button class="mm-btn pri" data-n="' + (lv + 1) + '">Next level</button>' : '') + (!won ? '<button class="mm-btn pri" data-n="' + lv + '">Try again</button>' : '') + (won && last ? '<button class="mm-btn pri" data-n="0">Endless practice</button>' : '') + '<button class="mm-btn" data-n="-1">Menu</button></div>');
     m.querySelectorAll('[data-n]').forEach(function (b) { b.onclick = function () { busy = false; +b.dataset.n < 0 ? menu() : start(+b.dataset.n); }; });
