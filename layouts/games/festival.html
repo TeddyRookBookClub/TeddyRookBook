@@ -5,6 +5,7 @@
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="fest gbox" id="fest"><noscript>This game needs JavaScript.</noscript></div></div>
 <p style="font-size:.8rem;color:#777;margin-top:.5rem">Tips: drag to move around, scroll or pinch to zoom. With the path tool selected, drag to lay paths. Every building must touch a path. Space pauses. Progress is kept only in this browser.</p>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
 <script src="{{ "games/vocab.js" | relURL }}?v={{ (os.Stat "static/games/vocab.js").ModTime.Unix }}"></script>
 <script src="{{ "games/art.js" | relURL }}?v={{ (os.Stat "static/games/art.js").ModTime.Unix }}"></script>
 <script src="{{ "games/game.js" | relURL }}?v={{ (os.Stat "static/games/game.js").ModTime.Unix }}"></script>
