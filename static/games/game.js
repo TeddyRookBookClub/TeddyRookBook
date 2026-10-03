@@ -29,12 +29,13 @@
   var ICON = { hunger: '🍞', thirst: '💧', toilet: '🚻', energy: '💤', fun: '🎭', happy: '😊', sad: '😞', money: '🪙', pretty: '🌿', lost: '❓' };
 
   // ---------- language display ----------
-  var show = { g: true, l: true, e: true };
+  var show = { n: true, e: true }; // n: the setting's own language (Greek in Greece, Latin in Rome); e: English
+  var forceLang = null;
   function L(o, cls) {
     if (!o) return '';
-    var order = S && S.setting === 'rome' ? ['l', 'g'] : ['g', 'l'], h = '';
-    order.forEach(function (k) { if (show[k] && o[k]) h += '<span class="l' + k + '">' + o[k] + '</span>'; });
-    if (show.e && o.e) h += '<span class="le">' + o.e + '</span>';
+    var k = forceLang || (S && S.setting === 'rome' ? 'l' : 'g'), h = '';
+    if (show.n && o[k]) h += '<span class="l' + k + '">' + o[k] + '</span>';
+    if ((show.e || !h) && o.e) h += '<span class="le">' + o.e + '</span>';
     return '<span class="vx ' + (cls || '') + '">' + h + '</span>';
   }
 
@@ -518,13 +519,13 @@
       return '<button type="button" class="f-btn sp' + (String(speed) === s[0] ? ' on' : '') + '" data-sp="' + s[0] + '" title="' + (s[2].e) + '">' + s[1] + '</button>';
     }).join('');
     Array.prototype.forEach.call(root.querySelectorAll('[data-sp]'), function (b) { b.onclick = function () { setSpeed(+b.dataset.sp); }; });
-    $('#f-langs').innerHTML = [['g', 'Ελ', 'Greek'], ['l', 'La', 'Latin'], ['e', 'En', 'English']].map(function (k) {
+    $('#f-langs').innerHTML = [S.setting === 'rome' ? ['n', 'La', 'Latin'] : ['n', 'Ελ', 'Greek'], ['e', 'En', 'English']].map(function (k) {
       return '<label class="lt lt-' + k[0] + '" title="' + k[2] + '"><input type="checkbox" data-lang="' + k[0] + '"' + (show[k[0]] ? ' checked' : '') + '>' + k[1] + '</label>';
     }).join('');
     Array.prototype.forEach.call(root.querySelectorAll('[data-lang]'), function (c) {
       c.onchange = function () {
         show[c.dataset.lang] = c.checked;
-        if (!show.g && !show.l) { show[c.dataset.lang === 'g' ? 'l' : 'g'] = true; }
+        if (!show.n && !show.e) { show[c.dataset.lang === 'n' ? 'e' : 'n'] = true; }
         saveLangs(); labels(); buildTools(); renderGoals(); feedDirty = true; if (sel) select(sel);
       };
     });
@@ -632,7 +633,7 @@
       '<li>Use the <b>🔍 Inspect</b> tool to click a building (set its price, open or close it) or a visitor (see their needs and last thought).</li>' +
       '<li>Happy visitors raise your <b>fame</b> (⭐), which brings more visitors. Each day, buildings cost upkeep, so watch your coins.</li></ol>' +
       '<h3>Controls</h3><ul><li><b>Move:</b> drag the map (on a phone, drag with one finger while Inspect is selected).</li><li><b>Zoom:</b> mouse wheel, pinch, or the ＋/－ buttons.</li>' +
-      '<li><b>Speed:</b> ❚❚ pause, ▶ normal, ▶▶ fast. Space bar pauses too.</li><li><b>Languages:</b> the Ελ / La / En switches show Greek, Latin and English in any combination. Greek is blue, Latin is red, English is small and grey.</li>' +
+      '<li><b>Speed:</b> ❚❚ pause, ▶ normal, ▶▶ fast. Space bar pauses too.</li><li><b>Languages:</b> Greece is played in Greek and Rome in Latin; the two switches at the top turn that language and the English on or off. Greek is blue, Latin is red, English is small and grey.</li>' +
       '<li><b>Esc</b> returns to the Inspect tool.</li></ul>' +
       '<h3>Visitor needs</h3><p>' + ICON.hunger + ' hunger → bread stall · ' + ICON.thirst + ' thirst → tavern or fountain · ' + ICON.toilet + ' bathroom → latrine or baths · ' + ICON.energy + ' tiredness → bench or baths · ' + ICON.fun + ' boredom → attractions. If a price is higher than a visitor thinks fair, they walk away. Scenery (' + ICON.pretty + ') near paths makes visitors happier.</p>' +
       '<h3>Buildings</h3><table><thead><tr><th>Greek</th><th>Latin</th><th>English</th><th>Cost</th><th>Size</th><th>Gives</th></tr></thead><tbody>' + bl + '</tbody></table>' +
@@ -652,24 +653,25 @@
   }
   function loadGame(s) { try { return JSON.parse(W.localStorage.getItem(saveKey(s))); } catch (e) { return null; } }
   function saveLangs() { try { W.localStorage.setItem('panegyris-langs', JSON.stringify(show)); } catch (e) { } }
-  (function () { try { var l = JSON.parse(W.localStorage.getItem('panegyris-langs')); if (l && (l.g || l.l)) show = l; } catch (e) { } })();
+  (function () { try { var l = JSON.parse(W.localStorage.getItem('panegyris-langs')); if (l && ('n' in l) && (l.n || l.e)) show = { n: !!l.n, e: !!l.e }; } catch (e) { } })();
   function startScreen() {
     speed = 0; var st = $('#f-start'); st.hidden = false;
     var card = function (s, emoji) {
-      var sv = loadGame(s);
-      return '<div class="sc sc-' + s + '"><div class="se">' + emoji + '</div>' + L(V[s], 'big') +
+      var sv = loadGame(s); forceLang = s === 'rome' ? 'l' : 'g';
+      var h = '<div class="sc sc-' + s + '"><div class="se">' + emoji + '</div>' + L(V[s], 'big') +
         '<button type="button" class="f-btn prim" data-new="' + s + '">' + L(V.newGame) + '</button>' +
         (sv ? '<button type="button" class="f-btn" data-go="' + s + '">' + L(V.resume) + ' · ' + L(V.day, 'inline') + ' ' + sv.day + '</button>' : '') + '</div>';
+      forceLang = null; return h;
     };
     st.innerHTML = '<div class="sbox"><h2>' + 'Ancient Festival Tycoon' + '</h2>' +
       '<div class="scs">' + card('greece', '🏺') + card('rome', '🏛️') + '</div>' +
-      '<div class="slang"><b>' + L(V.langs) + '</b> <span id="s-langs"></span></div>' +
+      '<p class="sp">Greece is played in Greek and Rome in Latin.</p><div class="slang"><span id="s-langs"></span></div>' +
       '<p><button type="button" class="f-btn" id="s-help">? How to play</button></p>' +
       '<p class="snote">No account and nothing uploaded: your festival is saved only in this browser on this device. Clearing browser data or using a private window starts over.</p></div>';
-    $('#s-langs').innerHTML = [['g', 'Ἑλληνική (Greek)'], ['l', 'Latina (Latin)'], ['e', 'English help']].map(function (k) {
+    $('#s-langs').innerHTML = [['n', 'Show the Greek or Latin'], ['e', 'Show English']].map(function (k) {
       return '<label class="lt lt-' + k[0] + '"><input type="checkbox" data-sl="' + k[0] + '"' + (show[k[0]] ? ' checked' : '') + '> ' + k[1] + '</label>';
     }).join('');
-    Array.prototype.forEach.call(st.querySelectorAll('[data-sl]'), function (c) { c.onchange = function () { show[c.dataset.sl] = c.checked; if (!show.g && !show.l) { show.g = true; } saveLangs(); startScreen(); }; });
+    Array.prototype.forEach.call(st.querySelectorAll('[data-sl]'), function (c) { c.onchange = function () { show[c.dataset.sl] = c.checked; if (!show.n && !show.e) { show[c.dataset.sl === 'n' ? 'e' : 'n'] = true; } saveLangs(); startScreen(); }; });
     $('#s-help').onclick = openHelp;
     Array.prototype.forEach.call(st.querySelectorAll('[data-new]'), function (b) { b.onclick = function () { begin(newState(b.dataset.new)); }; });
     Array.prototype.forEach.call(st.querySelectorAll('[data-go]'), function (b) { b.onclick = function () { begin(loadGame(b.dataset.go)); }; });

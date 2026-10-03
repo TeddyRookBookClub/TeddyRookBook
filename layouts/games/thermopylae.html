@@ -1,0 +1,9 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "games/thermopylae/game.css" | relURL }}?v={{ (os.Stat "static/games/thermopylae/game.css").ModTime.Unix }}">
+{{ partial "game-shell.html" . }}
+<div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="th gbox" id="th"><noscript>This game needs JavaScript.</noscript></div></div>
+<p style="font-size:.8rem;color:#777;margin-top:.5rem">Mouse: aim and hold to throw. Keyboard: ← → turn, Space throws, P pauses. Phone: touch where you want to throw.</p>
+<script src="{{ "games/thermopylae/game.js" | relURL }}?v={{ (os.Stat "static/games/thermopylae/game.js").ModTime.Unix }}"></script>
+{{ end }}
