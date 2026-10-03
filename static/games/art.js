@@ -227,6 +227,88 @@
       c.fillRect(b[0] + 4, b[1] - 30, 2.5, 10); c.beginPath(); c.arc(b[0], b[1] - 26, 4, 0, Math.PI * 2); c.fill();
       c.fillStyle = shade(p.marbleD, -0.1); c.beginPath(); c.moveTo(b[0] - 5, b[1] - 22); c.lineTo(b[0] - 8, b[1] - 8); c.lineTo(b[0] - 4, b[1] - 8); c.fill();
     },
+    stadium: function (c, w, h, p) {
+      shadow(c, w, h);
+      poly(c, [P(0, 0, 1), P(w, 0, 1), P(w, h, 1), P(0, h, 1)], p.sand, shade(p.sand, -0.2));
+      mbox(c, 0, 0, w, 0.45, 0, 10, p.marbleS); mbox(c, 0, 0, w, 0.25, 10, 18, p.marbleS);
+      c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1;
+      for (var i = 1; i < 4; i++) { var a = P(0.3, 0.45 + (h - 0.8) * i / 4, 1), b = P(w - 0.3, 0.45 + (h - 0.8) * i / 4, 1); c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke(); }
+      column(c, 0.3, h / 2 + 0.2, 1, 16, p.marble, 2); column(c, w - 0.3, h / 2 + 0.2, 1, 16, p.marble, 2);
+      mbox(c, 0, h - 0.3, w, 0.3, 0, 8, p.marbleS);
+    },
+    library: function (c, w, h, p) {
+      shadow(c, w, h);
+      mbox(c, 0.05, 0.05, w - 0.1, h - 0.1, 0, 6, p.stone);
+      mbox(c, 0.2, 0.2, w - 0.4, h - 0.4, 6, 44, p.marbleS);
+      for (var i = 0; i < 4; i++) { var q = P(w - 0.2, 0.4 + i * 0.4, 16); c.fillStyle = shade(p.wood, -0.3); c.fillRect(q[0] - 3, q[1] - 14, 6, 12); c.fillStyle = p.accent2; c.fillRect(q[0] - 2, q[1] - 12, 4, 2); c.fillRect(q[0] - 2, q[1] - 8, 4, 2); }
+      for (i = 0; i <= 4; i++) column(c, 0.2 + (w - 0.4) * i / 4, h - 0.15, 6, 44, p.marble, 2.6);
+      box(c, 0.1, 0.1, w - 0.2, h - 0.2, 44, 50, shade(p.marble, 0.1), p.accent, shade(p.accent, -0.2));
+      gable(c, 0.1, 0.1, w - 0.2, h - 0.2, 50, 16, p.roof, p.marbleS);
+    },
+    amphitheater: function (c, w, h, p) {
+      shadow(c, w, h);
+      var o = P(w / 2, h / 2, 0), rx = (w / 2 - 0.1) * HW * Math.SQRT2, ry = (w / 2 - 0.1) * HH * Math.SQRT2, H = 48, i;
+      c.fillStyle = shade(p.marbleS, -0.12); c.beginPath(); c.ellipse(o[0], o[1], rx, ry, 0, 0, Math.PI); c.lineTo(o[0] - rx, o[1] - H); c.lineTo(o[0] + rx, o[1] - H); c.fill();
+      var g = c.createLinearGradient(o[0] - rx, 0, o[0] + rx, 0); g.addColorStop(0, shade(p.marbleS, 0.1)); g.addColorStop(1, shade(p.marbleD, -0.15));
+      c.fillStyle = g; c.beginPath(); c.ellipse(o[0], o[1], rx, ry, 0, 0, Math.PI); c.lineTo(o[0] - rx, o[1] - H); c.ellipse(o[0], o[1] - H, rx, ry, 0, Math.PI, 0, true); c.fill();
+      for (var row = 0; row < 2; row++) for (i = -5; i <= 5; i++) {
+        var x = o[0] + i * rx / 5.6, y = o[1] + ry * Math.sqrt(Math.max(0, 1 - Math.pow((x - o[0]) / rx, 2))) - 4 - row * 21;
+        c.fillStyle = shade(p.marbleD, -0.45); c.beginPath(); c.moveTo(x - 4, y); c.lineTo(x - 4, y - 10); c.arc(x, y - 10, 4, Math.PI, 0); c.lineTo(x + 4, y); c.fill();
+      }
+      c.fillStyle = shade(p.marble, 0.05); c.beginPath(); c.ellipse(o[0], o[1] - H, rx, ry, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = p.marbleD; c.beginPath(); c.ellipse(o[0], o[1] - H + 4, rx * 0.86, ry * 0.86, 0, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = shade(p.marbleD, -0.2); c.lineWidth = 0.8; [0.72, 0.6].forEach(function (k) { c.beginPath(); c.ellipse(o[0], o[1] - H + 8, rx * k, ry * k, 0, 0, Math.PI * 2); c.stroke(); });
+      c.fillStyle = p.sand; c.beginPath(); c.ellipse(o[0], o[1] - H + 12, rx * 0.46, ry * 0.46, 0, 0, Math.PI * 2); c.fill();
+    },
+    stoa: function (c, w, h, p) {
+      shadow(c, w, h, 0.3);
+      mbox(c, 0, 0, w, h, 0, 3, p.stone);
+      mbox(c, 0.05, 0.05, w - 0.1, 0.22, 3, 34, p.marbleS);
+      for (var i = 0; i <= w * 2; i++) column(c, 0.12 + (w - 0.24) * i / (w * 2), h - 0.14, 3, 32, p.marble, 2.4);
+      box(c, 0, 0, w, h, 32, 37, shade(p.roof, 0.05), p.roofD, shade(p.roofD, -0.1));
+    },
+    inn: function (c, w, h, p) {
+      shadow(c, w, h);
+      mbox(c, 0.12, 0.12, w - 0.24, h - 0.24, 0, 42, p.sand);
+      var i, q;
+      for (i = 0; i < 3; i++) { q = P(0.4 + i * 0.55, h - 0.12, 30); c.fillStyle = shade(p.wood, -0.35); c.fillRect(q[0] - 3, q[1] - 8, 6, 8); q = P(w - 0.12, 0.4 + i * 0.55, 30); c.fillRect(q[0] - 3, q[1] - 8, 6, 8); }
+      q = P(w - 0.12, h / 2, 0); poly(c, [q, P(w - 0.12, h / 2 + 0.32, 0), P(w - 0.12, h / 2 + 0.32, 20), P(w - 0.12, h / 2, 20)], shade(p.wood, -0.25));
+      hipRoof(c, 0.02, 0.02, w - 0.04, h - 0.04, 42, 22, p.roof);
+    },
+    altar: function (c, w, h, p) {
+      mbox(c, 0.22, 0.22, 0.56, 0.56, 0, 4, p.stone); mbox(c, 0.3, 0.3, 0.4, 0.4, 4, 18, p.marbleS); mbox(c, 0.26, 0.26, 0.48, 0.48, 18, 21, p.marble);
+      var f = P(0.5, 0.5, 21); c.fillStyle = '#e8862a'; c.beginPath(); c.moveTo(f[0] - 5, f[1]); c.quadraticCurveTo(f[0] - 2, f[1] - 9, f[0], f[1] - 15); c.quadraticCurveTo(f[0] + 3, f[1] - 8, f[0] + 5, f[1]); c.fill();
+      c.fillStyle = '#f6d24a'; c.beginPath(); c.moveTo(f[0] - 2.5, f[1]); c.lineTo(f[0], f[1] - 8); c.lineTo(f[0] + 2.5, f[1]); c.fill();
+    },
+    trophy: function (c, w, h, p) {
+      mbox(c, 0.25, 0.25, 0.5, 0.5, 0, 8, p.stone); mbox(c, 0.32, 0.32, 0.36, 0.36, 8, 14, p.marbleS);
+      column(c, 0.5, 0.5, 14, 62, p.marble, 4);
+      var t = P(0.5, 0.5, 64); c.fillStyle = p.accent2; c.beginPath(); c.arc(t[0], t[1] - 6, 5, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.moveTo(t[0] - 13, t[1] - 10); c.lineTo(t[0], t[1] - 5); c.lineTo(t[0] + 13, t[1] - 10); c.lineTo(t[0], t[1] - 1); c.fill();
+    },
+    curia: function (c, w, h, p) {
+      shadow(c, w, h);
+      mbox(c, 0.02, 0.02, w - 0.04, h - 0.04, 0, 5, p.stone); mbox(c, 0.1, 0.1, w - 0.2, h - 0.2, 5, 10, p.stone);
+      mbox(c, 0.3, 0.3, w - 0.75, h - 0.6, 10, 56, p.marbleS);
+      var d = P(w - 0.45, h / 2 - 0.2, 10), d2 = P(w - 0.45, h / 2 + 0.2, 10); poly(c, [d, d2, [d2[0], d2[1] - 30], [d[0], d[1] - 30]], p.accent2, shade(p.accent2, -0.4));
+      for (var i = 0; i <= 4; i++) column(c, w - 0.25, 0.3 + (h - 0.6) * i / 4, 10, 56, p.marble, 3);
+      box(c, 0.2, 0.2, w - 0.4, h - 0.4, 56, 63, shade(p.marble, 0.1), p.accent, shade(p.accent, -0.2));
+      gable(c, 0.15, 0.15, w - 0.3, h - 0.3, 63, 20, p.roof, p.marbleS);
+    },
+    barracks: function (c, w, h, p) {
+      shadow(c, w, h);
+      poly(c, [P(0, 0, 1), P(w, 0, 1), P(w, h, 1), P(0, h, 1)], shade(p.sand, -0.08));
+      mbox(c, 0, 0, w, 0.15, 0, 20, p.wood); mbox(c, 0, 0.15, 0.15, h - 0.15, 0, 20, p.wood);
+      mbox(c, 0, 0, 0.4, 0.4, 0, 38, p.wood);
+      [[0.8, 0.8], [1.6, 0.9], [0.9, 1.7], [1.8, 1.8]].forEach(function (q, k) {
+        var a = P(q[0] - 0.3, q[1] + 0.3, 1), b = P(q[0] + 0.3, q[1] + 0.3, 1), d2 = P(q[0] + 0.3, q[1] - 0.3, 1), t = P(q[0], q[1], 22);
+        poly(c, [a, b, t], k % 2 ? p.cloth[1] : shade(p.cloth[1], -0.12), 'rgba(0,0,0,.25)', 0.6); poly(c, [b, d2, t], shade(p.cloth[0], -0.1), 'rgba(0,0,0,.25)', 0.6);
+      });
+      mbox(c, w - 0.15, 0, 0.15, h, 0, 20, p.wood); mbox(c, 0, h - 0.15, w / 2 - 0.3, 0.15, 0, 20, p.wood); mbox(c, w / 2 + 0.3, h - 0.15, w / 2 - 0.3, 0.15, 0, 20, p.wood);
+      mbox(c, w - 0.4, h - 0.4, 0.4, 0.4, 0, 38, p.wood);
+      var f = P(w - 0.2, h - 0.2, 38); c.strokeStyle = '#3a2a16'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(f[0], f[1]); c.lineTo(f[0], f[1] - 24); c.stroke();
+      c.fillStyle = p.accent; c.beginPath(); c.moveTo(f[0], f[1] - 24); c.lineTo(f[0] + 14, f[1] - 20); c.lineTo(f[0], f[1] - 15); c.fill();
+    },
     flowers: function (c, w, h, p, seed) {
       var r = mulberry(seed || 3), cols = ['#d14d5b', '#f0c330', '#ffffff', '#b565c2', '#e58a3a'];
       poly(c, [P(0.12, 0.12, 1), P(0.88, 0.12, 1), P(0.88, 0.88, 1), P(0.12, 0.88, 1)], shade(p.leaf, -0.05));

@@ -3,7 +3,7 @@
   'use strict';
   var FV = W.FestVocab, A = W.FestArt, V = FV.V, B = FV.B, T = FV.T;
   var root = D.getElementById('fest'); if (!root) return;
-  var N = 28, TW = A.TW, TH = A.TH;
+  var N = 44, TW = A.TW, TH = A.TH;
   var DAY = 180; // game seconds per day
 
   var DEF = {
@@ -23,9 +23,21 @@
     olive: { size: [1, 1], cost: 25, kind: 'decor', decor: 1.2, group: 'gDecor' },
     cypress: { size: [1, 1], cost: 25, kind: 'decor', decor: 1, group: 'gDecor' },
     statue: { size: [1, 1], cost: 150, kind: 'decor', decor: 2.5, group: 'gDecor' },
-    flowers: { size: [1, 1], cost: 30, kind: 'decor', decor: 1.5, group: 'gDecor' }
+    flowers: { size: [1, 1], cost: 30, kind: 'decor', decor: 1.5, group: 'gDecor' },
+    // unlocked by rank
+    stadium: { size: [5, 2], cost: 1200, upkeep: 50, kind: 'show', fun: 60, energy: -8, dur: 14, cap: 30, price: 9, value: 14, group: 'gShows', appeal: 6, rank: 2 },
+    library: { size: [2, 2], cost: 650, upkeep: 22, kind: 'show', fun: 38, energy: 8, dur: 10, cap: 10, price: 4, value: 8, group: 'gShows', appeal: 4, rank: 2 },
+    amphitheater: { size: [4, 4], cost: 3000, upkeep: 120, kind: 'show', fun: 90, dur: 18, cap: 60, price: 15, value: 24, group: 'gShows', appeal: 10, rank: 4 },
+    stoa: { size: [3, 1], cost: 350, upkeep: 8, kind: 'rest', energy: 35, dur: 6, cap: 8, price: 0, value: 0, group: 'gCare', decor: 1.5, rank: 2 },
+    inn: { size: [2, 2], cost: 700, upkeep: 25, kind: 'rest', energy: 70, hunger: -30, dur: 14, cap: 8, price: 8, value: 12, group: 'gCare', rank: 2 },
+    altar: { size: [1, 1], cost: 120, kind: 'decor', decor: 2, group: 'gDecor', rank: 2 },
+    trophy: { size: [1, 1], cost: 600, kind: 'decor', decor: 5, group: 'gDecor', rank: 4 },
+    curia: { size: [3, 2], cost: 1500, upkeep: 40, kind: 'civic', group: 'gCity', rank: 3 },
+    barracks: { size: [3, 3], cost: 1200, upkeep: 60, kind: 'civic', group: 'gCity', rank: 3 }
   };
-  var GROUPS = ['gWays', 'gShows', 'gFood', 'gCare', 'gDecor'];
+  var GROUPS = ['gWays', 'gShows', 'gFood', 'gCare', 'gDecor', 'gCity'];
+  // Land: the festival starts on the middle plot; each campaign pushes the boundary out. [x0, y0, x1, y1] inclusive.
+  var LAND = [[8, 16, 35, 43], [4, 10, 39, 43], [0, 4, 43, 43], [0, 0, 43, 43]], LANDCOST = [1500, 3500, 7000];
   var ICON = { hunger: '🍞', thirst: '💧', toilet: '🚻', energy: '💤', fun: '🎭', happy: '😊', sad: '😞', money: '🪙', pretty: '🌿', lost: '❓' };
 
   // ---------- language display ----------
@@ -42,16 +54,19 @@
   // ---------- state ----------
   var S = null, occ, pathG, objById = {}, nextId = 1, vid = 1;
   function idx(x, y) { return y * N + x; }
-  function inb(x, y) { return x >= 0 && y >= 0 && x < N && y < N; }
-  var GATE = { x: 13, y: N - 1 };
+  function inMap(x, y) { return x >= 0 && y >= 0 && x < N && y < N; }
+  function inb(x, y) { var b = LAND[S ? S.land || 0 : 0]; return x >= b[0] && y >= b[1] && x <= b[2] && y <= b[3]; } // inside the land you hold
+  var GATE = { x: 21, y: N - 1 };
+  function rankOf(s) { var r = 1; FV.RANKS.forEach(function (k, i) { if (i && s.totalVisitors >= k.v && s.fame >= k.f) r = Math.max(r, i + 1); }); return r; }
+  function has(type) { return S.objects.some(function (o) { return o.type === type; }); }
 
   function newState(setting) {
-    var s = { setting: setting, coins: 3000, day: 1, time: 0, fame: 50, totalVisitors: 0, entryFee: 10, objects: [], paths: [], goals: {}, lifetimeIncome: 0 };
+    var s = { setting: setting, coins: 3000, day: 1, time: 0, fame: 50, totalVisitors: 0, entryFee: 10, objects: [], paths: [], goals: {}, lifetimeIncome: 0, v: 2, land: 0, rank: 1 };
     for (var y = N - 2; y >= N - 7; y--) s.paths.push(idx(GATE.x, y));
     for (var x = GATE.x - 3; x <= GATE.x + 3; x++) if (x !== GATE.x) s.paths.push(idx(x, N - 7));
     // some starting trees
     var r = A.mulberry(setting === 'rome' ? 11 : 5);
-    for (var i = 0; i < 26; i++) {
+    for (var i = 0; i < 70; i++) {
       var tx = Math.floor(r() * N), ty = Math.floor(r() * N);
       if (Math.abs(tx - GATE.x) < 5 && ty > N - 10) continue;
       s.objects.push({ type: r() < 0.6 ? 'olive' : 'cypress', x: tx, y: ty, seed: Math.floor(r() * 1000), wild: 1 });
@@ -65,7 +80,7 @@
     var keep = [];
     S.objects.forEach(function (o) {
       var d = DEF[o.type], w = d.size[0], h = d.size[1];
-      if (!fits(o.x, o.y, w, h, true)) return;
+      if (!fits(o.x, o.y, w, h, true, o.wild)) return;
       o.id = o.id || nextId++; nextId = Math.max(nextId, o.id + 1);
       o.w = w; o.h = h; o.inside = []; o.served = o.served || 0; o.income = o.income || 0;
       if (o.price == null) o.price = d.price || 0; if (o.open == null) o.open = true;
@@ -74,9 +89,9 @@
     });
     S.objects = keep; groundDirty = true;
   }
-  function fits(x, y, w, h, strict) {
+  function fits(x, y, w, h, strict, anywhere) {
     for (var yy = y; yy < y + h; yy++) for (var xx = x; xx < x + w; xx++) {
-      if (!inb(xx, yy)) return false;
+      if (!(anywhere ? inMap(xx, yy) : inb(xx, yy))) return false;
       var i = idx(xx, yy); if (pathG[i]) return false;
       if (occ[i] && (strict || !objById[occ[i]] || !objById[occ[i]].wild)) return false;
     }
@@ -233,9 +248,10 @@
     simClock += dt; S.time += dt;
     if (S.time >= DAY) endDay();
     var shows = S.objects.filter(function (o) { return DEF[o.type].kind === 'show'; }).length;
-    var rate = 0.14 * (0.35 + S.fame / 100) * Math.min(1.4, 0.35 + shows * 0.3) * Math.max(0.15, 1.35 - S.entryFee / 35);
+    var rate = 0.14 * (0.35 + S.fame / 100) * Math.min(1.4, 0.35 + shows * 0.3) * Math.max(0.15, 1.35 - S.entryFee / 35) * (S.event === 'rain' ? 0.55 : S.event === 'feast' ? 1.6 : 1);
+    if (S.campaign) { S.campaign -= dt; if (S.campaign <= 0) { S.campaign = 0; S.land = Math.min(3, (S.land || 0) + 1); S.fame = Math.min(100, S.fame + 3); groundDirty = true; toast('🏆 ' + L(V.won)); buildTools(); } }
     spawnAcc += rate * dt;
-    while (spawnAcc > 1) { spawnAcc -= 1; if (visitors.length < 140) spawn(); }
+    while (spawnAcc > 1) { spawnAcc -= 1; if (visitors.length < 140 + (S.land || 0) * 40) spawn(); }
     for (var i = visitors.length - 1; i >= 0; i--) updateVisitor(visitors[i], dt);
   }
   function updateVisitor(v, dt) {
@@ -270,11 +286,20 @@
     S.time -= DAY; S.day++;
     var up = 0; S.objects.forEach(function (o) { up += DEF[o.type].upkeep || 0; });
     S.coins -= up;
-    toast(L(V.day) + ' ' + (S.day - 1) + ' · ' + L(V.income) + ' +' + todayIncome + ' · ' + L(V.upkeep) + ' −' + up);
+    if (has('curia')) S.fame = Math.min(100, S.fame + 2);
+    var msg = L(V.day) + ' ' + (S.day - 1) + ' · ' + L(V.income) + ' +' + todayIncome + ' · ' + L(V.upkeep) + ' −' + up;
+    // something different can happen each day
+    var r = Math.random(); S.event = S.day < 3 ? null : r < 0.14 ? 'rain' : r < 0.3 ? 'feast' : r < 0.38 ? 'athlete' : r < 0.45 ? 'tax' : null;
+    if (S.event === 'athlete') S.fame = Math.min(100, S.fame + 4);
+    if (S.event === 'tax') { var tax = Math.min(400, Math.max(0, Math.floor(S.coins * 0.04))); S.coins -= tax; msg += '<br>📜 ' + L(V.evTax) + ' −' + tax; }
+    else if (S.event) msg += '<br>' + EVI[S.event] + ' ' + L(V[{ rain: 'evRain', feast: 'evFeast', athlete: 'evAthlete' }[S.event]]);
+    toast(msg); toastT = S.event ? 6 : 3.2;
     todayIncome = 0;
   }
+  var EVI = { rain: '🌧️', feast: '🎉', athlete: '🏅', tax: '📜' };
   function checkGoals() {
-    var st = { totalVisitors: S.totalVisitors, coins: S.coins, fame: S.fame, day: S.day, showCount: S.objects.filter(function (o) { return DEF[o.type].kind === 'show'; }).length };
+    var rk = rankOf(S); if (rk > (S.rank || 1)) { S.rank = rk; toast('🏅 ' + L(V.newRank) + ': ' + L(FV.RANKS[rk - 1])); toastT = 6; buildTools(); renderGoals(); }
+    var st = { land: S.land || 0, totalVisitors: S.totalVisitors, coins: S.coins, fame: S.fame, day: S.day, showCount: S.objects.filter(function (o) { return DEF[o.type].kind === 'show'; }).length };
     FV.GOALS.forEach(function (g) { if (!S.goals[g.id] && g.test(st)) { S.goals[g.id] = 1; toast('🌿 ' + L(g)); renderGoals(); } });
   }
 
@@ -302,10 +327,14 @@
         });
       } else {
         var gcol = p.grass[(x * 7 + y * 13 + ((x * y) % 5)) % p.grass.length];
+        if (!inb(x, y)) gcol = A.shade(gcol, -0.3 - ((x * 5 + y * 3) % 3) * 0.04); // land you do not hold yet
         A.poly(c, pts, gcol);
         if (r() < 0.35) { var t = A.P(x + r(), y + r()); c.fillStyle = A.shade(gcol, -0.15); c.fillRect(t[0], t[1] - 3, 1, 3); c.fillRect(t[0] + 2, t[1] - 4, 1, 4); }
       }
     }
+    // boundary stones around the land you hold
+    var bd = LAND[S.land || 0], cs = [A.P(bd[0], bd[1]), A.P(bd[2] + 1, bd[1]), A.P(bd[2] + 1, bd[3] + 1), A.P(bd[0], bd[3] + 1)];
+    if ((S.land || 0) < 3) { c.setLineDash([10, 6]); A.poly(c, cs, null, 'rgba(255,248,220,.85)', 2.5); c.setLineDash([]); }
     c.restore(); groundDirty = false;
   }
   function worldToScreen(wx, wy) { return [(wx - cam.x) * cam.z + cv.clientWidth / 2, (wy - cam.y) * cam.z + cv.clientHeight / 2]; }
@@ -414,8 +443,17 @@
     }
     if (hit) rebuild();
   }
+  function expand() {
+    var lv = S.land || 0;
+    if (lv >= 3 || (S.rank || 1) < 3) return toast(L(V.locked));
+    if (S.campaign) return toast('⚔️ ' + L(V.marched));
+    if (!has('barracks') || (lv >= 1 && !has('curia'))) return toast(L(V.needArmy));
+    if (S.coins < LANDCOST[lv]) return toast(L(V.noMoney));
+    S.coins -= LANDCOST[lv]; S.campaign = DAY * 0.5; toast('⚔️ ' + L(V.marched)); toastT = 5;
+  }
   function place(type, x, y) {
     var d = DEF[type];
+    if ((d.rank || 1) > (S.rank || 1)) { toast('🔒 ' + L(V.locked)); return; }
     if (inb(x, y) && inb(x + d.size[0] - 1, y + d.size[1] - 1)) clearWild(x, y, d.size[0], d.size[1]);
     if (!fits(x, y, d.size[0], d.size[1])) { toast(L(V.blocked)); return; }
     if (S.coins < d.cost) { toast(L(V.noMoney)); return; }
@@ -472,7 +510,7 @@
       if (e.code === 'Space') { e.preventDefault(); setSpeed(speed ? 0 : 1); }
     });
   }
-  function clampZ(z) { return Math.max(0.45, Math.min(2.4, z)); }
+  function clampZ(z) { return Math.max(0.28, Math.min(2.4, z)); }
   function clampCam() { var m = N * TW / 2; cam.x = Math.max(-m, Math.min(m, cam.x)); cam.y = Math.max(0, Math.min(N * TH, cam.y)); }
   function click(sx, sy) {
     var t = screenToTile(sx, sy);
@@ -538,18 +576,20 @@
       h += '<div class="tg"><h4>' + L(V[g]) + '</h4>';
       Object.keys(DEF).forEach(function (k) {
         var d = DEF[k]; if (d.group !== g) return;
-        h += '<button type="button" class="tool' + (tool === k ? ' on' : '') + '" data-t="' + k + '">' +
+        var lock = (d.rank || 1) > (S.rank || 1);
+        h += '<button type="button" class="tool' + (tool === k ? ' on' : '') + (lock ? ' lock' : '') + '" data-t="' + k + '"' + (lock ? ' title="Unlocks at rank ' + d.rank + ': ' + FV.RANKS[d.rank - 1].e + '"' : '') + '>' +
           (k === 'path' ? '<span class="ti">🟫</span>' : '<canvas width="56" height="44" data-icon="' + k + '"></canvas>') +
-          '<span class="tn">' + L(B[k]) + '</span><span class="tc">' + d.cost + '</span></button>';
+          '<span class="tn">' + L(B[k]) + '</span><span class="tc' + (lock ? ' lk' : '') + '">' + (lock ? '🔒 ' + d.rank : d.cost) + '</span></button>';
       });
+      if (g === 'gCity' && (S.land || 0) < 3) h += '<button type="button" class="tool act' + ((S.rank || 1) < 3 ? ' lock' : '') + '" id="f-expand"><span class="ti">⚔️</span><span class="tn">' + L(V.expand) + '</span><span class="tc' + ((S.rank || 1) < 3 ? ' lk' : '') + '">' + ((S.rank || 1) < 3 ? '🔒 3' : LANDCOST[S.land || 0]) + '</span></button>';
       h += '</div>';
     });
     $('#f-tools').innerHTML = h;
     Array.prototype.forEach.call(root.querySelectorAll('[data-icon]'), function (c) { var d = DEF[c.dataset.icon]; A.icon(c, c.dataset.icon, d.size[0], d.size[1], S.setting); });
-    Array.prototype.forEach.call(root.querySelectorAll('.tool'), function (b) { b.onclick = function () { setTool(b.dataset.t); }; });
+    Array.prototype.forEach.call(root.querySelectorAll('.tool'), function (b) { b.onclick = function () { if (b.id === 'f-expand') return expand(); if (b.classList.contains('lock')) return toast('🔒 ' + L(V.locked) + ' <span class="le">' + b.title + '</span>'); setTool(b.dataset.t); }; });
   }
   function setTool(t) {
-    tool = t; Array.prototype.forEach.call(root.querySelectorAll('.tool'), function (b) { b.classList.toggle('on', b.dataset.t === t); });
+    tool = t; Array.prototype.forEach.call(root.querySelectorAll('.tool'), function (b) { b.classList.toggle('on', !!b.dataset.t && b.dataset.t === t); });
     if (t !== 'look') select(null);
   }
   function setSpeed(s) { speed = s; labels(); }
@@ -573,7 +613,8 @@
       var o = sel.o, d = DEF[o.type];
       if (!objById[o.id]) return select(null);
       h += '<div class="ih"><canvas width="64" height="50" id="info-ic"></canvas><div>' + L(B[o.type], 'big') + '</div></div>';
-      if (d.kind !== 'decor') {
+      if (d.kind === 'civic') h += '<dl class="needs"><dt>' + L(V.upkeep) + '</dt><dd>🪙 ' + d.upkeep + '</dd></dl><p class="le">' + (o.type === 'curia' ? 'The council adds 2 fame every day and is needed for the later campaigns.' : 'Soldiers camp here. With a camp you can send them out to win more land.') + '</p>';
+      else if (d.kind !== 'decor') {
         h += '<dl class="needs"><dt>' + L(V.price) + '</dt><dd><input type="range" min="0" max="30" step="1" value="' + o.price + '" id="i-price"> <b id="i-pv">' + (o.price || L(V.free)) + '</b></dd>' +
           '<dt>' + L(V.inside) + '</dt><dd>' + o.inside.length + ' / ' + d.cap + '</dd><dt>' + L(V.served) + '</dt><dd>' + o.served + '</dd>' +
           '<dt>' + L(V.income) + '</dt><dd>🪙 ' + o.income + '</dd><dt>' + L(V.upkeep) + '</dt><dd>🪙 ' + (d.upkeep || 0) + '</dd></dl>' +
@@ -589,7 +630,7 @@
         var op = $('#i-open'); if (op) op.onclick = function () { sel.o.open = !sel.o.open; box.dataset.sig = ''; updateInfo(); };
       }
     } else if (sel.v) { box.innerHTML = h; $('.f-x', box).onclick = function () { select(null); }; }
-    else { var dd = box.querySelectorAll('.needs dd'); if (dd[1]) dd[1].textContent = sel.o.inside.length + ' / ' + DEF[sel.o.type].cap; if (dd[2]) dd[2].textContent = sel.o.served; if (dd[3]) dd[3].textContent = '🪙 ' + sel.o.income; }
+    else if (DEF[sel.o.type].kind !== 'civic') { var dd = box.querySelectorAll('.needs dd'); if (dd[1]) dd[1].textContent = sel.o.inside.length + ' / ' + DEF[sel.o.type].cap; if (dd[2]) dd[2].textContent = sel.o.served; if (dd[3]) dd[3].textContent = '🪙 ' + sel.o.income; }
   }
   function sigOf() { return sel ? (sel.v ? 'v' + sel.v.id : 'o' + sel.o.id + sel.o.open) + JSON.stringify(show) : ''; }
   function renderFeed() {
@@ -600,14 +641,15 @@
   }
   function renderGoals() {
     if (!S) return;
-    $('#f-goals').innerHTML = FV.GOALS.map(function (g) { return '<li class="' + (S.goals[g.id] ? 'won' : '') + '">' + (S.goals[g.id] ? '🌿' : '○') + ' ' + L(g) + '</li>'; }).join('');
+    var rk = S.rank || 1, nx = FV.RANKS[rk];
+    $('#f-goals').innerHTML = '<li class="won">🏅 ' + L(V.rank, 'inline') + ' ' + rk + ': ' + L(FV.RANKS[rk - 1], 'inline') + (nx ? '<br><small class="le">Next: ' + nx.e + ' at ' + nx.need + '</small>' : '') + '</li>' + FV.GOALS.map(function (g) { return '<li class="' + (S.goals[g.id] ? 'won' : '') + '">' + (S.goals[g.id] ? '🌿' : '○') + ' ' + L(g) + '</li>'; }).join('');
   }
   function renderStats() {
     var avg = visitors.length ? visitors.reduce(function (a, v) { return a + v.happy; }, 0) / visitors.length : 0;
     $('#st-coins').innerHTML = '🪙 <b' + (S.coins < 0 ? ' class="neg"' : '') + '>' + Math.floor(S.coins) + '</b> ' + L(V.coins, 'inline');
     $('#st-vis').innerHTML = '👥 <b>' + visitors.length + '</b> ' + L(V.visitors, 'inline');
-    $('#st-fame').innerHTML = '⭐ <b>' + Math.round(S.fame) + '</b> ' + L(V.fame, 'inline') + (visitors.length ? ' · 😊 <b>' + Math.round(avg) + '</b>' : '');
-    $('#st-day').innerHTML = '☀️ ' + L(V.day, 'inline') + ' <b>' + S.day + '</b><span class="dayp"><i style="width:' + (S.time / DAY * 100).toFixed(0) + '%"></i></span>';
+    $('#st-fame').innerHTML = '🏅 <b>' + (S.rank || 1) + '</b> ⭐ <b>' + Math.round(S.fame) + '</b> ' + L(V.fame, 'inline') + (visitors.length ? ' · 😊 <b>' + Math.round(avg) + '</b>' : '');
+    $('#st-day').innerHTML = (S.event ? EVI[S.event] : '☀️') + ' ' + L(V.day, 'inline') + ' <b>' + S.day + '</b><span class="dayp"><i style="width:' + (S.time / DAY * 100).toFixed(0) + '%"></i></span>';
   }
   var toastT = 0;
   function toast(html) { var t = $('#f-toast'); t.innerHTML = html; t.classList.add('on'); toastT = 3.2; }
@@ -633,7 +675,7 @@
       '<li>Use the <b>🔍 Inspect</b> tool to click a building (set its price, open or close it) or a visitor (see their needs and last thought).</li>' +
       '<li>Happy visitors raise your <b>fame</b> (⭐), which brings more visitors. Each day, buildings cost upkeep, so watch your coins.</li></ol>' +
       '<h3>Controls</h3><ul><li><b>Move:</b> drag the map (on a phone, drag with one finger while Inspect is selected).</li><li><b>Zoom:</b> mouse wheel, pinch, or the ＋/－ buttons.</li>' +
-      '<li><b>Speed:</b> ❚❚ pause, ▶ normal, ▶▶ fast. Space bar pauses too.</li><li><b>Languages:</b> Greece is played in Greek and Rome in Latin; the two switches at the top turn that language and the English on or off. Greek is blue, Latin is red, English is small and grey.</li>' +
+      '<li><b>Speed:</b> ❚❚ pause, ▶ normal, ▶▶ fast. Space bar pauses too.</li><li><b>Languages:</b> Greece is played in Greek and Rome in Latin; the two switches at the top turn that language and the English on or off.</li><li><b>Ranks:</b> as more visitors come and your fame grows you rise from citizen to market overseer, magistrate and general. Each rank unlocks buildings marked 🔒.</li><li><b>More land:</b> from rank 3, build an army camp and press ⚔️ to send the soldiers out. Half a day later the boundary moves outward. Later campaigns also need a council house.</li><li><b>Each day is different:</b> rain keeps people home, feast days bring crowds, a famous athlete lifts your fame, and now and then the tax collector calls. Greek is blue, Latin is red, English is small and grey.</li>' +
       '<li><b>Esc</b> returns to the Inspect tool.</li></ul>' +
       '<h3>Visitor needs</h3><p>' + ICON.hunger + ' hunger → bread stall · ' + ICON.thirst + ' thirst → tavern or fountain · ' + ICON.toilet + ' bathroom → latrine or baths · ' + ICON.energy + ' tiredness → bench or baths · ' + ICON.fun + ' boredom → attractions. If a price is higher than a visitor thinks fair, they walk away. Scenery (' + ICON.pretty + ') near paths makes visitors happier.</p>' +
       '<h3>Buildings</h3><table><thead><tr><th>Greek</th><th>Latin</th><th>English</th><th>Cost</th><th>Size</th><th>Gives</th></tr></thead><tbody>' + bl + '</tbody></table>' +
@@ -651,7 +693,16 @@
     var o = JSON.parse(JSON.stringify(S, function (k, v) { return k === 'inside' ? undefined : v; }));
     try { W.localStorage.setItem(saveKey(S.setting), JSON.stringify(o)); } catch (e) { }
   }
-  function loadGame(s) { try { return JSON.parse(W.localStorage.getItem(saveKey(s))); } catch (e) { return null; } }
+  function loadGame(s) {
+    var o; try { o = JSON.parse(W.localStorage.getItem(saveKey(s))); } catch (e) { return null; }
+    if (o && !o.v) { // a festival saved on the old 28-tile map: move it onto the middle plot of the bigger one
+      o.paths = o.paths.map(function (i) { return ((i / 28 | 0) + 16) * N + (i % 28) + 8; });
+      o.objects.forEach(function (q) { q.x += 8; q.y += 16; });
+      var r = A.mulberry(21); for (var i = 0; i < 45; i++) { var tx = Math.floor(r() * N), ty = Math.floor(r() * N); if (tx < 8 || tx > 35 || ty < 16) o.objects.push({ type: r() < 0.6 ? 'olive' : 'cypress', x: tx, y: ty, seed: Math.floor(r() * 1000), wild: 1 }); }
+      o.v = 2; o.land = 0; o.rank = 1;
+    }
+    return o;
+  }
   function saveLangs() { try { W.localStorage.setItem('panegyris-langs', JSON.stringify(show)); } catch (e) { } }
   (function () { try { var l = JSON.parse(W.localStorage.getItem('panegyris-langs')); if (l && ('n' in l) && (l.n || l.e)) show = { n: !!l.n, e: !!l.e }; } catch (e) { } })();
   function startScreen() {
