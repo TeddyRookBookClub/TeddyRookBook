@@ -1,0 +1,51 @@
+/* Shared look for the board games (chess, tabula, terni lapilli) */
+main.main:has(.bg){max-width:1100px}
+.bg{--g:#004225;--gold:#b8963e;--ink:#1d2320;--muted:#5d6862;--line:#dde5df;--card:#fff;--paper:#fbf8f0;--wine:#7a2338;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:.7rem;overflow:auto;-webkit-user-select:none;user-select:none}
+html[data-theme="dark"] .bg{--g:#6cc79a;--ink:#e6ece8;--muted:#9fb0a6;--line:#48574e;--card:#272e2a;--paper:#1f2622;--wine:#e9a0b1}
+.bg .gr,.bg .la{font-family:"Gentium Book Plus",Georgia,serif}
+.bg [hidden]{display:none !important}
+.bg-top{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-bottom:.6rem}
+.bg-top h1{margin:0 .4rem 0 0;font:700 1.35rem Georgia,serif;color:var(--g)}
+.bg-top select,.bg-btn{font:inherit;font-size:.9rem;padding:.35rem .6rem;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.bg-btn.on{background:#004225;color:#fff;border-color:#004225}.bg-btn.pri{background:#004225;color:#fff;border-color:#004225;font-weight:700}
+.bg-btn:disabled{opacity:.45;cursor:default}
+.bg-main{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:.8rem;align-items:start}
+@media (max-width:860px){.bg-main{grid-template-columns:1fr}}
+.bg-msg{min-height:2.6rem;text-align:center;font-size:1rem;margin:.4rem 0;line-height:1.3}
+.bg-msg b.gr,.bg-msg b.la{font-size:1.3rem;font-weight:400;color:var(--g)}.bg-msg i{color:var(--muted);font-size:.85em}
+.bg-side{display:flex;flex-direction:column;gap:.6rem}
+.bg-box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.6rem .75rem;font-size:.9rem}
+.bg-box h3{margin:0 0 .4rem;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.bg-box table{width:100%;border-collapse:collapse}.bg-box td{padding:.14rem 0;vertical-align:top}.bg-box td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.bg-bar{height:10px;border-radius:5px;background:#7a2338;overflow:hidden;margin:.3rem 0}.bg-bar i{display:block;height:100%;background:#2f7d4f}
+.bg-hints{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto}
+.bg-hints li{display:flex;gap:.45rem;align-items:center;padding:.18rem .2rem;border-radius:6px;cursor:pointer}.bg-hints li:hover{background:rgba(184,150,62,.18)}
+.bg-hints li span:nth-child(2){flex:1}.bg-hints li b{font-variant-numeric:tabular-nums}
+.sw{display:inline-block;width:.85rem;height:.85rem;border-radius:3px;flex:none}
+.q0{background:#1a8a4a}.q1{background:#8fbf3f}.q2{background:#e2b800}.q3{background:#e8862a}.q4{background:#c0392b}
+.bg-legend{display:flex;gap:.6rem;flex-wrap:wrap;font-size:.75rem;color:var(--muted);margin-top:.4rem}.bg-legend span{display:inline-flex;align-items:center;gap:.25rem}
+.bg-rules{font-size:.9rem;line-height:1.5}.bg-rules summary{cursor:pointer;font-weight:700;color:var(--g)}.bg-rules li{margin:.2rem 0}.bg-rules h4{margin:.7rem 0 .2rem;font-size:.95rem}
+.bg-rules table{border-collapse:collapse;width:100%}.bg-rules td,.bg-rules th{border-bottom:1px solid var(--line);padding:.25rem .4rem;text-align:left;font-size:.88rem}
+.bg-small{font-size:.78rem;color:var(--muted)}
+/* chess */
+.ch-board{display:grid;grid-template-columns:repeat(8,1fr);width:min(100%,calc(100vh - 230px));min-width:260px;aspect-ratio:1;margin:0 auto;border:4px solid #6b4d14;border-radius:6px;overflow:hidden;touch-action:manipulation}
+.ch-sq{position:relative;display:flex;align-items:center;justify-content:center;border:0;padding:0;margin:0;font-size:min(8.4vw,calc((100vh - 230px)/10.5));line-height:1;cursor:pointer;background:#efe6d0;color:inherit;container-type:size}
+.ch-sq.dk{background:#b9a077}
+.ch-sq .pc{font-family:"Segoe UI Symbol","Noto Sans Symbols 2","DejaVu Sans",serif;pointer-events:none}
+.ch-sq .pc.w{color:#fbf6e6;text-shadow:0 0 1.5px #000,0 0 1.5px #000,0 1px 2px #000}
+.ch-sq .pc.b{color:#5a1020;text-shadow:0 0 1px #f3dfa3}
+.ch-sq.sel{outline:3px solid #f3dfa3;outline-offset:-3px;background:#d8c36a}
+.ch-sq.last{box-shadow:inset 0 0 0 3px rgba(0,66,37,.45)}
+.ch-sq.chk{background:#e0766a}
+.ch-sq .dot{position:absolute;inset:34%;border-radius:50%;background:rgba(0,0,0,.28);pointer-events:none}
+.ch-sq .ring{position:absolute;inset:6%;border-radius:50%;border:4px solid;pointer-events:none}
+.ch-sq .pct{position:absolute;left:2px;bottom:1px;font:700 10px system-ui;color:#fff;padding:0 3px;border-radius:3px;pointer-events:none}
+.ch-sq .co{position:absolute;right:2px;top:1px;font:600 9px system-ui;color:rgba(0,0,0,.45);pointer-events:none}
+.ch-sq .ring.r0{border-color:#1a8a4a}.ch-sq .ring.r1{border-color:#8fbf3f}.ch-sq .ring.r2{border-color:#e2b800}.ch-sq .ring.r3{border-color:#e8862a}.ch-sq .ring.r4{border-color:#c0392b}
+.ch-cap{min-height:1.4rem;font-size:1.2rem;letter-spacing:1px;text-align:center}
+/* tabula */
+.tb-wrap{max-width:min(100%,calc((100vh - 260px)*1.5));margin:0 auto}.tb-wrap svg{display:block;width:100%;height:auto}
+.tb-pt{cursor:pointer}
+/* terni lapilli */
+.tl-wrap{max-width:min(100%,calc(100vh - 300px),440px);margin:0 auto}.tl-wrap svg{display:block;width:100%;height:auto}
+.tl-pt{cursor:pointer}

@@ -55,7 +55,7 @@
   try { st = JSON.parse(W.localStorage.getItem(KEY)); } catch (e) { }
   st = st || {};
   st.cards = st.cards || {}; st.prefs = st.prefs || {}; st.day = st.day || {};
-  var P = st.prefs, DEF = { lang: 'g', type: 'v', range: '100', pos: 'all', order: 'shuffle', nw: '20', dir: 't', faces: ['g', 'l', 'e'], f: {} };
+  var P = st.prefs, DEF = { lang: 'g', type: 'v', range: '100', pos: 'all', order: 'shuffle', nw: '20', dir: 't', faces: ['g', 'l', 'e'], f: {}, src: 'gos' };
   for (var k in DEF) if (P[k] == null) P[k] = DEF[k];
   if (!P.v2) { P.v2 = 1; P.order = 'shuffle'; }            // shuffle became the default
   if (['50', '100', '250', '500', '1000', '2500', 'all'].indexOf(String(P.range)) < 0) P.range = '100';
@@ -85,6 +85,35 @@
   }
 
   // ---------- data & decks ----------
+  // ---------- sources: the Gospels (full data) or one classical work (vocabulary only) ----------
+  var WORKS = { g: [['hdt', 'Herodotus: Histories', 'Ionic Greek'], ['il', 'Homer: Iliad', 'Homeric Greek'], ['od', 'Homer: Odyssey', 'Homeric Greek'], ['lyc', 'Plutarch: Lycurgus', 'literary Atticizing Greek'], ['alc', 'Plutarch: Alcibiades', 'literary Atticizing Greek']],
+    l: [['caes', 'Caesar: Gallic War'], ['cat', 'Cicero: Against Catiline'], ['att', 'Cicero: Letters to Atticus'], ['aen', 'Virgil: Aeneid'], ['met', 'Ovid: Metamorphoses']] };
+  var gos = null, clsCache = {};
+  function workOf() { if (P.lang === 'b' || P.src === 'gos') return null; var w = WORKS[P.lang].filter(function (x) { return x[0] === P.src; })[0]; return w || null; }
+  function whereTxt() { var w = workOf(); return w ? 'the ' + w[1].split(': ')[1] + ' sentences' : 'the Gospels'; }
+  function dialectTxt() { var w = workOf(); return w && w[2] ? w[2] + ', not New Testament Koine' : ''; }
+  function clsPos(lang, p) { // treebank part of speech -> the codes the Gospel data uses
+    var two = p.length === 2, c = p[0];
+    if (lang === 'l') return two ? p : ({ n: 'Nb', v: 'V-', a: 'A-', d: 'Df', r: 'R-', c: 'C-', p: 'Pp', m: 'Ma', i: 'I-', e: 'I-' }[c] || 'Df');
+    if (two) return { N: 'noun', V: 'verb', A: 'adj', P: 'pron', S: 'det', R: 'prep', C: 'conj', G: 'conj', D: 'adv', M: 'num', I: 'intj' }[c] || 'ptcl';
+    return { n: 'noun', v: 'verb', a: 'adj', d: 'adv', r: 'prep', c: 'conj', p: 'pron', l: 'det', m: 'num', i: 'intj', e: 'intj' }[c] || 'ptcl';
+  }
+  function shortGloss(g) { g = g.replace(/\s*\[[^\]]*\]/g, '').trim(); if (g.length <= 64) return g; var parts = g.split(/;\s*/), out = parts[0]; for (var i = 1; i < parts.length && (out + '; ' + parts[i]).length <= 64; i++) out += '; ' + parts[i]; return out.length > 80 ? out.slice(0, 77) + '…' : out; }
+  function useSource() { // resolves when `data` holds the chosen source
+    var w = workOf();
+    if (!w) { data = gos; return Promise.resolve(); }
+    var lang = P.lang, name = lang === 'g' ? 'grc' : 'lat';
+    clsCache[name] = clsCache[name] || Promise.all([G.getJSON('cls-' + name + '.json'), G.getJSON('cls-' + name + '-lex.json')]);
+    return clsCache[name].then(function (r) {
+      var n = {}, lex = r[1];
+      r[0].s.forEach(function (s) { if (s.w === w[0]) s.t.forEach(function (tk) { n[tk[3]] = (n[tk[3]] || 0) + 1; }); });
+      var lem = Object.keys(n).map(function (i) { var e = lex[i]; return [e.l, shortGloss(e.g || ''), clsPos(lang, e.p), n[i], -1, e.p]; })
+        .filter(function (e) { return e[1] && e[1] !== '(proper name)' && e[5] !== 'Ne' && !(e[5].length === 1 && /^[A-ZΑ-Ω]/.test(e[0].normalize('NFD'))); })
+        .sort(function (a, b) { return b[3] - a[3]; });
+      data = { g: gos.g, l: gos.l }; data[lang] = { lem: lem, forms: [] };
+    });
+  }
+
   var data = null, deck = [], queue = [], cur = null, shown = 0, faces = [], seenThisSession = {};
   function lemOf(lang, i) { return data[lang].lem[i]; }
   // vocabulary cards
@@ -128,6 +157,7 @@
   }
   function buildDeck() {
     var n = P.range === 'all' ? 1e9 : +P.range, langs = P.lang === 'b' ? ['g', 'l'] : [P.lang];
+    if (workOf()) P.type = 'v';
     if (P.type === 'v') deck = P.lang === 'b' ? bothCards(n, P.pos) : vocabCards(P.lang, n, P.pos);
     else { deck = []; langs.forEach(function (l) { deck = deck.concat(formCards(l, n, P.pos, P.type)); }); }
   }
@@ -185,9 +215,9 @@
       return P.faces.map(function (k) { return f[k]; });
     }
     var lang = c.lang, e = lemOf(lang, c.i), cls = lang === 'g' ? 'grc' : 'lat', lab = lang === 'g' ? 'ΕΛΛ' : 'LAT';
-    var freq = '#' + (c.i + 1) + ' · ' + e[3] + '× in the Gospels';
+    var freq = '#' + (c.i + 1) + ' · ' + e[3] + '× in ' + whereTxt() + (dialectTxt() ? '<br><b class="fc-dial">' + dialectTxt() + '</b>' : '');
     if (c.k === 'v') {
-      var t = { lab: lab, lang: lang, html: '<div class="fc-word ' + cls + '">' + esc(e[0]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + '</div>' };
+      var t = { lab: lab, lang: lang, html: '<div class="fc-word ' + cls + '">' + esc(e[0]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + (dialectTxt() ? '<br><b class="fc-dial">' + dialectTxt() + '</b>' : '') + '</div>' };
       var en = { lab: 'EN', lang: 'e', html: '<div class="fc-word en">' + esc(e[1]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + ' · ' + freq + '</div>' };
       var back = { lab: 'EN', lang: lang, html: '<div class="fc-word ' + cls + ' sm">' + esc(e[0]) + '</div><div class="fc-ans en">' + esc(e[1]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + ' · ' + freq + '</div>' };
       var backT = { lab: lab, lang: lang, html: '<div class="fc-word en sm">' + esc(e[1]) + '</div><div class="fc-ans ' + cls + '">' + esc(e[0]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + ' · ' + freq + '</div>' };
@@ -196,15 +226,15 @@
     }
     var it = c.items[0], parses = uniq(c.items.map(function (x) { return describe(lang, x.a); }));
     var ex = c.items.slice().sort(function (a, b) { return b.n - a.n; })[0];
-    var exHTML = '<div class="fc-ex"><span class="' + cls + '">' + snipHTML(ex.snip) + '</span> <small>' + esc(refLabel(ex.ref)) + '</small></div>';
+    var exHTML = '<div class="fc-ex"><span class="' + cls + '">' + snipHTML(ex.snip) + '</span> <small>' + esc(refLabel(ex.ref)) + '</small>' + (lang === 'g' ? '<div class="fc-tr sm">' + esc(translit(ex.snip.replace(/[\[\]]/g, ''))) + '</div>' : '') + '</div>';
     if (c.k === 'f') {
       return [{ lab: lab, lang: lang, html: '<div class="fc-q">What form is this?</div><div class="fc-word ' + cls + '">' + esc(it.form) + '</div><div class="fc-sub">from the Gospels · ' + c.items.reduce(function (s, x) { return s + x.n; }, 0) + '×</div>' },
         { lab: lab, lang: lang, html: '<div class="fc-word ' + cls + ' sm">' + esc(it.form) + '</div><div class="fc-ans">' + parses.map(esc).join('<br><span class="fc-or">or</span> ') + '</div>' +
-          '<div class="fc-lemma">from <b class="' + cls + '">' + esc(e[0]) + '</b> “' + esc(e[1]) + '”</div>' + exHTML }];
+          '<div class="fc-lemma">from <b class="' + cls + '">' + esc(e[0]) + '</b>' + trInline(lang, e[0]) + ' “' + esc(e[1]) + '”</div>' + exHTML }];
     }
     var forms = uniq(c.items.map(function (x) { return x.form; }));
     return [{ lab: lab, lang: lang, html: '<div class="fc-q">Build the form</div><div class="fc-word ' + cls + ' sm">' + esc(e[0]) + '</div><div class="fc-sub">“' + esc(e[1]) + '”</div><div class="fc-ask">' + esc(parses[0]) + '</div>' },
-      { lab: lab, lang: lang, html: '<div class="fc-ask sm">' + esc(e[0]) + ' · ' + esc(parses[0]) + '</div><div class="fc-word ' + cls + '">' + forms.map(esc).join(' <span class="fc-or">or</span> ') + '</div>' + exHTML }];
+      { lab: lab, lang: lang, html: '<div class="fc-ask sm"><span class="' + cls + '">' + esc(e[0]) + '</span>' + trInline(lang, e[0]) + ' · ' + esc(parses[0]) + '</div><div class="fc-word ' + cls + '">' + forms.map(esc).join(' <span class="fc-or">or</span> ') + '</div>' + exHTML }];
   }
   // Greek written in Latin letters (standard scholarly transliteration), with the accent kept to show the stress.
   var TR = { 'α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e', 'ζ': 'z', 'η': 'ē', 'θ': 'th', 'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x', 'ο': 'o', 'π': 'p', 'ρ': 'r', 'σ': 's', 'ς': 's', 'τ': 't', 'υ': 'y', 'φ': 'ph', 'χ': 'ch', 'ψ': 'ps', 'ω': 'ō' };
@@ -233,6 +263,7 @@
     }).join('');
   }
   function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
+  function trInline(lang, w) { return lang === 'g' ? ' <i class="fc-tri">' + esc(translit(w)) + '</i>' : ''; }
   function hash(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h); }
 
   function render() {
@@ -320,7 +351,7 @@
     if (gr) { line(gr[0], fit(gr[0], 110, SER), ink, 62); line(translit(gr[0]), 'italic 40px Georgia, serif', mut, gr && la ? 95 : 80); }
     if (la) line(la[0], fit(la[0], gr ? 84 : 110, SER), gr ? wine : ink, gr ? 85 : 90);
     line(main[1], fit(main[1], 56, 'Georgia, serif'), grn, 62);
-    function freq(l, i, e, tag) { return (tag ? tag + ': ' : '') + '#' + (i + 1) + ' most common in the Gospels · ' + e[3] + ' times'; }
+    function freq(l, i, e, tag) { return (tag ? tag + ': ' : '') + '#' + (i + 1) + ' most common in ' + whereTxt() + ' · ' + e[3] + ' times'; }
     if (gr && la) { line(posName('g', gr[2]) + ' · ' + freq('g', gi, gr, 'Greek'), '24px ' + SAN, mut, 38); line(freq('l', li, la, 'Latin'), '24px ' + SAN, mut, 50); }
     else line(posName(mainLang, main[2]) + ' · ' + freq(mainLang, gr ? gi : li, main), '26px ' + SAN, mut, 50);
     secs.forEach(function (s) {
@@ -363,7 +394,7 @@
       c.font = '700 26px ' + SAN; c.fillStyle = gold; c.fillText(label, cx, 280);
       fit(e[0], 104, SER, colW); c.fillStyle = colr; c.fillText(e[0], cx, 395);
       if (lang === 'g') { c.font = 'italic 38px Georgia, serif'; c.fillStyle = mut; c.fillText(translit(e[0]), cx, 450); }
-      c.font = '24px ' + SAN; c.fillStyle = mut; c.fillText('#' + (idx + 1) + ' most common in the Gospels · ' + e[3] + ' times', cx, 505);
+      c.font = '24px ' + SAN; c.fillStyle = mut; c.fillText('#' + (idx + 1) + ' most common in ' + whereTxt() + ' · ' + e[3] + ' times', cx, 505);
       if (!rows) return;
       c.font = '600 24px ' + SAN; c.fillText(forms.length ? 'Forms found in the Gospels' : 'This word does not change form', cx, 580);
       forms.forEach(function (f, i) {
@@ -478,13 +509,28 @@
     $$('.seg').forEach(function (s) { $$('button', s).forEach(function (b) { b.classList.toggle('on', P[s.dataset.pref] === b.dataset.v); b.setAttribute('aria-pressed', P[s.dataset.pref] === b.dataset.v); }); });
     $('#fc-range').value = P.range; $('#fc-pos').value = P.pos; $('#fc-order').value = P.order; $('#fc-new').value = P.nw; $('#fc-dir').value = P.dir;
     $('#fc-new-wrap').hidden = P.order !== 'srs';
+    var ss = $('#fc-src'), sw = $('#fc-src-wrap');
+    if (ss) {
+      sw.hidden = P.lang === 'b';
+      if (P.lang !== 'b') {
+        if (!workOf()) P.src = 'gos';
+        ss.innerHTML = '<option value="gos">The Gospels' + (P.lang === 'g' ? ' (Koine Greek)' : ' (Vulgate)') + '</option>' + WORKS[P.lang].map(function (w) { return '<option value="' + w[0] + '">' + w[1] + (w[2] ? ' (' + w[2] + ')' : '') + '</option>'; }).join('');
+        ss.value = P.src;
+      }
+      var cl = !!workOf(); $$('.seg[data-pref="type"] button').forEach(function (b) { b.disabled = cl && b.dataset.v !== 'v'; b.title = b.disabled ? 'Word-form cards are only available for the Gospels.' : ''; });
+      $('#fc-src-note').hidden = !cl;
+    }
     buildFaces(); buildFormFilters();
   }
-  function restart() { buildDeck(); buildQueue(); seenThisSession = {}; syncSetup(); next(); }
+  function restart() {
+    if (!gos) return;
+    useSource().then(function () { buildDeck(); buildQueue(); seenThisSession = {}; syncSetup(); next(); })
+      .catch(function () { P.src = 'gos'; data = gos; buildDeck(); buildQueue(); syncSetup(); next(); });
+  }
   $$('.seg').forEach(function (s) {
     $$('button', s).forEach(function (b) { b.type = 'button'; b.onclick = function () { P[s.dataset.pref] = b.dataset.v; save(); restart(); }; });
   });
-  [['#fc-range', 'range'], ['#fc-pos', 'pos'], ['#fc-order', 'order'], ['#fc-new', 'nw'], ['#fc-dir', 'dir']].forEach(function (x) {
+  [['#fc-src', 'src'], ['#fc-range', 'range'], ['#fc-pos', 'pos'], ['#fc-order', 'order'], ['#fc-new', 'nw'], ['#fc-dir', 'dir']].forEach(function (x) {
     $(x[0]).addEventListener('change', function () { P[x[1]] = this.value; save(); restart(); });
   });
   $('#fc-flip').onclick = turn;
@@ -508,7 +554,7 @@
   function load(retry) {
     $('#fc-stage').innerHTML = '<p class="fc-msg" id="fc-msg">Loading the cards…</p>';
     var slow = setTimeout(function () { var m = $('#fc-msg'); if (m) m.innerHTML = 'Still loading… a slow connection can take a while. <button type="button" class="cbtn" id="fc-retry">Try again</button>'; var r = $('#fc-retry'); if (r) r.onclick = function () { load(true); }; }, 15000);
-    G.getJSON('flash.json', retry).then(function (d) { clearTimeout(slow); data = d; restart(); }).catch(function (e) {
+    G.getJSON('flash.json', retry).then(function (d) { clearTimeout(slow); gos = data = d; restart(); }).catch(function (e) {
       clearTimeout(slow);
       $('#fc-stage').innerHTML = '<p class="fc-msg err"><b>The cards didn’t download.</b> (' + esc(e.message) + ')<br><button type="button" class="cbtn play" id="fc-retry">Try again</button></p>';
       $('#fc-retry').onclick = function () { load(true); };

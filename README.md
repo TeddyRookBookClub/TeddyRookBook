@@ -10,7 +10,7 @@ Despite the "club" in the address, it isn't a book club. There are no members, m
 |---|---|
 | [Infographics](https://teddyrookbook.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
 | [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: listen-and-repeat sentence drills, a Gospel reader that explains every word, and spaced-repetition flashcards. |
-| [Games](https://teddyrookbook.com/games/) | Browser games set in the ancient world that teach vocabulary as you play: Imperium, Ancient Festival Tycoon, Mosaic Match, Teutoburg, Thermopylae and Time Thief. |
+| [Games](https://teddyrookbook.com/games/) | Browser games set in the ancient world that teach vocabulary as you play: Imperium, Ancient Festival Tycoon, Mosaic Match, Teutoburg, Thermopylae, Time Thief, and three board games with move statistics (Chess of the Ancients, Tabula, Terni Lapilli). |
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations. |
 | [Markets](https://teddyrookbook.com/markets/) | Stock screener and charts, economic indicators, Treasury yields and auctions, and calculators. |
 
