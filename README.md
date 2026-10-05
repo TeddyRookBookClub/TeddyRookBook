@@ -2,19 +2,42 @@
 
 Source for **[teddyrookbook.com](https://teddyrookbook.com)**: a free, one-person project about great books and big ideas.
 
-Despite the "club" in the address, it isn't a book club. There are no members, meetings or sign-ups. It's a resource anyone can pull from: book clubs, classes, homeschoolers, or people who just like to read.
+It isn't a book club, despite the repository's name: there are no members, meetings or sign-ups. It's a resource anyone can pull from: book clubs, classes, homeschoolers, or people who just like to read.
 
 ## What's on the site
 
 | Section | What it is |
 |---|---|
 | [Infographics](https://teddyrookbook.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
-| [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: listen-and-repeat sentence drills, a Gospel reader that explains every word, and spaced-repetition flashcards. |
-| [Games](https://teddyrookbook.com/games/) | Browser games set in the ancient world that teach vocabulary as you play: Imperium, Ancient Festival Tycoon, Mosaic Match, Teutoburg, Thermopylae, Time Thief, and three board games with move statistics (Chess of the Ancients, Tabula, Terni Lapilli). |
+| [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: sentence drills, a Gospel reader that explains every word, and flashcards. Details below. |
+| [Games](https://teddyrookbook.com/games/) | Nine browser games set in the ancient world. Details below. |
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations. |
 | [Markets](https://teddyrookbook.com/markets/) | Stock screener and charts, economic indicators, Treasury yields and auctions, and calculators. |
+| [Resources](https://teddyrookbook.com/resources/) | Links to other free places to learn Latin and Greek, read the great books and explore ancient history. |
 
 No accounts, no ads, no tracking. Progress in the drills, flashcards and games is saved only in the visitor's own browser.
+
+### Languages
+
+- **Sentence practice:** listen-and-repeat drills from the Gospels (Koine Greek and the Latin Vulgate) and from Caesar, Cicero, Virgil, Ovid, Herodotus, Homer and Plutarch, with English alongside. Every Greek sentence that is not Koine is labelled with its dialect.
+- **Gospel reader:** the four Gospels in Greek and Latin; tap any word for its dictionary form, meaning and grammar.
+- **Flashcards:** vocabulary ranked by frequency, real word forms, "build the form" cards and three-sided Greek–Latin–English cards, with spaced repetition. Words can come from the Gospels or from one of the classical works. Greek is also shown in Latin letters for pronunciation, and any card can be saved as a picture.
+
+### Games
+
+| Game | What you do | Language |
+|---|---|---|
+| Imperium | Conquer the ancient world territory by territory, with dice | Latin or Greek, by scenario |
+| Ancient Festival Tycoon | Build festival grounds, rise through the ranks, win more land | Greek in Greece, Latin in Rome |
+| Mosaic Match | Match-three with 180 pictured words over 30 levels, plus endless practice | Latin or Koine Greek |
+| Teutoburg | Maze chase through the Teutoburg Forest, AD 9 | Latin |
+| Thermopylae | Hold the pass as Leonidas while the Persians close in | Greek |
+| Time Thief | Chase a thief through history by following clues | Greek or Latin |
+| Chess of the Ancients | Chess with Greek or Roman armies | Greek or Latin piece names |
+| Tabula | Backgammon, descended from the Roman game | Latin |
+| Terni Lapilli | The Roman three-in-a-row that Ovid mentions | Latin |
+
+The three board games have a "move statistics" switch that ranks and colour-codes every move, a statistics panel for the game in progress, and the rules and history beside the board. Terni Lapilli is fully solved, so its statistics are exact; the chess and Tabula figures are engine estimates.
 
 ## How it's built
 
@@ -22,17 +45,20 @@ The site is static: [Hugo](https://gohugo.io) with the [PaperMod](https://github
 
 GitHub Actions builds and publishes it to GitHub Pages on every push to `main`, and again twice each weekday so the Markets pages get fresh economic data.
 
+The site lives at teddyrookbook.com. The older address, teddyrookbookclub.com, forwards to it.
+
 ## Where things live
 
 ```
 content/            Pages. One Markdown file per book in content/books/.
-data/               infographics.yaml (the gallery) and sets.yaml (book sets and editions).
+data/               infographics.yaml (the gallery), sets.yaml (book sets and editions) and resources.yaml (the Resources page).
 layouts/            Hugo templates, one folder per section.
 static/
   css/              Styles for the home page, library and infographics.
   img/              Images, including the infographics.
   lang/             Sentence drills, Gospel reader and flashcards (code and data).
-  games/            The games. Each has its own script and stylesheet.
+  games/            The games. Each has its own script and stylesheet; the three board games share games/board/.
+  js/               Shared scripts, including the Greek pronunciation helper.
   markets/          Markets pages: charts, rates, indicators, calculators.
 scripts/            Python scripts that generate data files (see below).
 themes/PaperMod/    The theme.
@@ -62,6 +88,7 @@ Everything else works without it.
 
 - **Add a book:** run `hugo new books/the-title.md`, then fill in the fields at the top of the new file. `editions` lists each copy (set, volume, translation).
 - **Add an infographic:** put `name.jpg` (1600 px wide) and `name-thumb.jpg` (520 px wide) in `static/img/infographics/`, then add an entry to `data/infographics.yaml`.
+- **Add a link to the Resources page:** add it to `data/resources.yaml` under the right group.
 - **Add a book set:** add it to `data/sets.yaml`. The `name` must match the `set:` value used in the book files.
 
 ## Generated files
