@@ -362,7 +362,8 @@
       forms.forEach(function (f, i) {
         var x = i < half ? pad : Wd / 2 + 20, yy = y0 + (i % half) * 50;
         c.textAlign = 'left'; c.font = '34px ' + SER; c.fillStyle = lang === 'l' && gr ? wine : ink; c.fillText(f[1], x, yy);
-        var w = c.measureText(f[1]).width, d = describe(lang, parseAttrs(f[2])).replace(' person ', ' ').replace(/ · /g, ', '), max = Wd / 2 - pad - w - 34, sz = 19;
+        var w = c.measureText(f[1]).width; if (lang === 'g') { var tl = translit(f[1]); c.font = 'italic 21px Georgia, serif'; c.fillStyle = mut; c.fillText(tl, x + w + 10, yy - 2); w += c.measureText(tl).width + 10; }
+        var d = describe(lang, parseAttrs(f[2])).replace(' person ', ' ').replace(/ · /g, ', '), max = Wd / 2 - pad - w - 34, sz = 19;
         c.fillStyle = mut; c.font = sz + 'px ' + SAN;
         while (c.measureText(d).width > max && sz > 13) { sz--; c.font = sz + 'px ' + SAN; }
         if (c.measureText(d).width > max) { while (c.measureText(d + '…').width > max && d.length > 8) d = d.slice(0, -1); d += '…'; }
@@ -399,7 +400,8 @@
       c.font = '600 24px ' + SAN; c.fillText(forms.length ? 'Forms found in the Gospels' : 'This word does not change form', cx, 580);
       forms.forEach(function (f, i) {
         var yy = 650 + i * 50; c.textAlign = 'left'; c.font = '34px ' + SER; c.fillStyle = colr; c.fillText(f[1], x0, yy);
-        var w = c.measureText(f[1]).width, d = describe(lang, parseAttrs(f[2])).replace(' person ', ' ').replace(/ · /g, ', '), max = colW - w - 20, sz = 21;
+        var w = c.measureText(f[1]).width; if (lang === 'g') { var tl = translit(f[1]); c.font = 'italic 23px Georgia, serif'; c.fillStyle = mut; c.fillText(tl, x0 + w + 10, yy - 2); w += c.measureText(tl).width + 10; }
+        var d = describe(lang, parseAttrs(f[2])).replace(' person ', ' ').replace(/ · /g, ', '), max = colW - w - 20, sz = 21;
         c.fillStyle = mut; c.font = sz + 'px ' + SAN;
         while (c.measureText(d).width > max && sz > 14) { sz--; c.font = sz + 'px ' + SAN; }
         c.fillText(d, x0 + w + 16, yy - 3);
