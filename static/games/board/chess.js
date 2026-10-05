@@ -79,7 +79,7 @@
       var p = S.b[i], h = p ? '<span class="pc ' + E.side(p) + '">' + GLY[p.toLowerCase()] + '</span>' : '';
       var mv = moves.filter(function (m) { return m.t === i; })[0];
       if (mv) { var x = byTo[i]; h += x ? '<span class="ring r' + x.q + '"></span><span class="pct q' + x.q + '">' + Math.round(x.w * 100) + '%</span>' : '<span class="dot"></span>'; }
-      else if (sel < 0 && byPiece[i] && S.turn === 'w' && !over) h += '<span class="ring r' + byPiece[i].q + '"></span>';
+      else if (sel < 0 && byPiece[i] && S.turn === 'w' && !over) h += '<span class="ring r' + byPiece[i].q + '"></span><span class="pct q' + byPiece[i].q + '">' + Math.round(byPiece[i].w * 100) + '%</span>';
       if ((i & 7) === 0) h += '<span class="co">' + (8 - (i >> 3)) + '</span>'; if ((i >> 3) === 7) h += '<span class="co" style="top:auto;bottom:1px">' + 'abcdefgh'[i & 7] + '</span>';
       el.innerHTML = h;
       el.className = 'ch-sq' + ((((i >> 3) + (i & 7)) % 2) ? ' dk' : '') + (i === sel ? ' sel' : '') + (last && (last.f === i || last.t === i) ? ' last' : '') + (i === kchk ? ' chk' : '');
@@ -129,7 +129,7 @@
       '<table><tbody>' + rows + '</tbody></table>' +
       '<h4>Winning</h4><ul><li><b>Check</b>: a king is attacked and must escape at once (move, block, or capture the attacker).</li><li><b>Checkmate</b>: the king is in check and cannot escape. The game is over.</li><li><b>Draws</b>: stalemate (no legal move, but not in check), too few pieces to mate, or fifty moves with no capture or pawn move.</li></ul>' +
       '<h4>Special moves</h4><ul><li><b>Castling</b>: if neither has moved, the king goes two squares toward a rook and the rook jumps over it. Not allowed out of, through or into check. Tap the king, then the square two away.</li><li><b>En passant</b>: a pawn that has just advanced two squares can be captured by an enemy pawn beside it, as if it had moved one.</li><li><b>Promotion</b>: a pawn that reaches the far side becomes a queen (this game always chooses the queen).</li></ul>' +
-      '<h4>The move statistics</h4><p>With 💡 on, the engine tries every move you could make and looks three moves ahead. Rings on your pieces show how good each piece’s best move is; tap a piece and each square it can reach is coloured and shows your estimated winning chances. Green is best, red is worst. The list beside the board ranks every move, and you can tap a line to play it.</p>' +
+      '<h4>The move statistics</h4><p>With 💡 on, the engine tries every move you could make and looks three moves ahead. Each piece that can move gets a ring and a percentage: your estimated winning chances after that piece’s best move. Tap a piece and each square it can reach is coloured and shows your estimated winning chances. Green is best, red is worst. The list beside the board ranks every move, and you can tap a line to play it.</p>' +
       '<h4>Is chess ancient?</h4><p>No. Chess grew out of an Indian game around AD 600 and reached Europe through Persia and the Arab world, long after classical Greece and Rome. The Greeks played <i>petteia</i> and the Romans <i>ludus latrunculorum</i>, board games of capture whose exact rules are lost. The armies and piece names here are a theme, not history; the archer stands in for the bishop.</p>';
   }
   $('#c-theme').value = pref.theme; $('#c-level').value = pref.level;

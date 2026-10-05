@@ -49,3 +49,22 @@ html[data-theme="dark"] .bg{--g:#6cc79a;--ink:#e6ece8;--muted:#9fb0a6;--line:#48
 /* terni lapilli */
 .tl-wrap{max-width:min(100%,calc(100vh - 300px),440px);margin:0 auto}.tl-wrap svg{display:block;width:100%;height:auto}
 .tl-pt{cursor:pointer}
+
+/* ---------- ancient dress: meander bands, inscription lettering, mosaic and marble ---------- */
+.bg{position:relative;padding-top:1.9rem;padding-bottom:1.9rem;background-image:radial-gradient(rgba(120,90,40,.07) 1px,transparent 1.2px);background-size:7px 7px}
+.bg::before,.bg::after{content:"";position:absolute;left:0;right:0;height:18px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='18'%3E%3Crect width='24' height='18' fill='%23004225'/%3E%3Cpath d='M0 15H20V3H8V11H14V7' fill='none' stroke='%23d8b860' stroke-width='2'/%3E%3C/svg%3E") repeat-x;background-size:24px 18px}
+.bg::before{top:0}.bg::after{bottom:0;transform:scaleY(-1)}
+.bg-top h1{font-variant:small-caps;letter-spacing:.09em;font-size:1.5rem}
+.bg-top h1::before{content:"❦ ";color:var(--gold)}
+.bg-box{border-radius:4px;border:1px solid var(--gold);box-shadow:inset 0 0 0 3px var(--card),inset 0 0 0 4px rgba(184,150,62,.45)}
+.bg-box h3{font-family:Georgia,serif;font-variant:small-caps;letter-spacing:.12em;font-size:.9rem;color:var(--g);text-transform:none;border-bottom:1px solid rgba(184,150,62,.5);padding-bottom:.25rem}
+.bg-btn,.bg-top select{border-radius:3px;border-color:var(--gold);font-family:Georgia,serif}
+.bg-msg{font-family:Georgia,serif}
+/* chess: a mosaic floor in a meander frame */
+.ch-board{border:11px solid #004225;border-radius:0;outline:2px solid #d8b860;outline-offset:-7px;box-shadow:0 0 0 3px #6b4d14,0 6px 18px rgba(0,0,0,.3)}
+.ch-sq{background-color:#efe3c6;background-image:linear-gradient(rgba(90,60,20,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(90,60,20,.13) 1px,transparent 1px);background-size:25% 25%}
+.ch-sq.dk{background-color:#a5553a}
+.ch-sq.sel{background-color:#d8c36a}.ch-sq.chk{background-color:#e0766a}
+.ch-sq .pc.b{color:#1d2a44;text-shadow:0 0 1px #f3dfa3,0 0 2px #f3dfa3}
+.ch-sq .pct{font-size:clamp(9px,18cqw,13px)}
+.tb-wrap svg,.tl-wrap svg{box-shadow:0 6px 18px rgba(0,0,0,.3)}
