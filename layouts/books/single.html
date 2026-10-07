@@ -13,6 +13,7 @@
 
   <header>
     <h1 style="font-size: 2.1rem; line-height: 1.15; margin: 0 0 0.25rem;">{{ .Title }}</h1>
+    <p style="margin:.1rem 0 .5rem;font-size:.9rem"><a href="{{ "free-books/" | relURL }}?q={{ .Title | urlquery }}">Look for a free ebook or audiobook of this →</a></p>
     <p style="font-size: 1.25rem; color: #444; margin: 0 0 1rem;">
       {{ if $author }}{{ $author }}{{ end }}
     </p>

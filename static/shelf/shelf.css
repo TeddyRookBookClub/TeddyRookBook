@@ -1,0 +1,39 @@
+main.main:has(.sh){max-width:1100px}
+.sh{--g:#004225;--gold:#b8963e;--ink:#1d2320;--muted:#5d6862;--line:#dde5df;--card:#fff;--paper:#fbf8f0;color:var(--ink);padding-bottom:1rem}
+html[data-theme="dark"] .sh{--g:#6cc79a;--ink:#e6ece8;--muted:#9fb0a6;--line:#48574e;--card:#272e2a;--paper:#2d3630}
+.sh-vh{position:absolute;left:-9999px}
+.sh-hero{background:linear-gradient(135deg,#004225,#00562f);color:#fff;border-radius:14px;padding:1.3rem 1.5rem;margin-bottom:.9rem}
+.sh-hero h1{margin:0 0 .3rem;font:700 2.1rem Georgia,serif;color:#fff}.sh-hero p{margin:0 0 .9rem;color:#d3e6da;max-width:46rem;line-height:1.5}
+.sh-form{display:flex;gap:.5rem;flex-wrap:wrap}
+.sh-form input{flex:1 1 16rem;min-width:0;font:inherit;font-size:1.05rem;padding:.6rem .8rem;border-radius:10px;border:0;background:#fff;color:#1d2320}
+.sh-form select{font:inherit;padding:.6rem .5rem;border-radius:10px;border:0;background:#fff;color:#1d2320}
+.sh-form button{font:inherit;font-weight:700;padding:.6rem 1.2rem;border-radius:10px;border:0;background:#f3dfa3;color:#1d2320;cursor:pointer}
+.sh-chips{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.7rem}
+.sh-chips button{font:inherit;font-size:.82rem;padding:.2rem .65rem;border-radius:99px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.sh-chips button:hover{background:rgba(255,255,255,.25)}
+.sh-tabs{display:flex;gap:.3rem;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:.7rem}
+.sh-tabs button{font:inherit;font-size:.95rem;padding:.45rem .9rem;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);cursor:pointer}
+.sh-tabs button.on{color:var(--g);border-bottom-color:var(--g);font-weight:700}
+.sh-status{color:var(--muted);margin:.4rem 0;min-height:1.3rem}
+.sh-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:.8rem}
+.sh-book{display:grid;grid-template-columns:84px 1fr;gap:.8rem;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem}
+.sh-cover{width:84px;height:124px;object-fit:cover;border-radius:5px;background:var(--paper);border:1px solid var(--line)}
+.sh-nocover{display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--muted)}
+.sh-book h3{margin:0;font:700 1.05rem Georgia,serif;line-height:1.25}
+.sh-by{margin:.15rem 0 .3rem;color:var(--muted);font-size:.88rem}
+.sh-sum{font-size:.82rem;color:var(--muted);line-height:1.4;margin:0 0 .4rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sh-acts{display:flex;gap:.3rem;flex-wrap:wrap}
+.sh-btn,.sh-acts a,.sh-acts button{font:inherit;font-size:.82rem;padding:.28rem .6rem;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;text-decoration:none;box-shadow:none;line-height:1.3}
+.sh-acts .pri{background:#004225;border-color:#004225;color:#fff;font-weight:600}
+html[data-theme="dark"] .sh-acts .pri{background:#6cc79a;border-color:#6cc79a;color:#0b1f14}
+.sh-acts .on{border-color:var(--gold);background:rgba(184,150,62,.2)}
+.sh-else{font-size:.76rem;color:var(--muted);margin:.4rem 0 0}.sh-else a{color:var(--g)}
+.sh-more{text-align:center;margin:1rem 0}.sh-btn{font-size:.95rem;padding:.5rem 1.1rem}
+.sh-help h2{font:700 1.15rem Georgia,serif;color:var(--g);margin:.9rem 0 .3rem}.sh-help li{margin:.3rem 0;line-height:1.5}.sh-help a{color:var(--g)}.sh-help p{line-height:1.55}
+.sh-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 1.4rem}
+.sh-player{position:sticky;bottom:0;z-index:20;background:var(--card);border:1px solid var(--gold);border-radius:12px 12px 0 0;padding:.6rem .8rem;margin-top:1rem;box-shadow:0 -6px 20px rgba(0,0,0,.18)}
+.sh-player h3{margin:0;font:700 1rem Georgia,serif}.sh-player .sh-by{margin:.1rem 0 .4rem}
+.sh-player iframe{width:100%;height:min(38vh,250px);border:0;border-radius:8px;background:#000}
+.sh-phead{display:flex;gap:.5rem;align-items:flex-start}.sh-phead>div{flex:1;min-width:0}
+.sh-foot{font-size:.8rem;color:var(--muted);margin-top:1rem;text-align:center}
+@media (max-width:520px){.sh-list{grid-template-columns:1fr}.sh-hero h1{font-size:1.7rem}}

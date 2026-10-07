@@ -12,6 +12,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 | [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: sentence drills, a Gospel reader that explains every word, and flashcards. Details below. |
 | [Games](https://teddyrookbook.com/games/) | Nine browser games set in the ancient world. Details below. |
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations. |
+| [Free Books](https://teddyrookbook.com/free-books/) | Search public-domain ebooks (Project Gutenberg, via Gutendex) and audiobooks (LibriVox, via the Internet Archive). Nothing is hosted here; the visitor's browser calls those catalogues directly. |
 | [Markets](https://teddyrookbook.com/markets/) | Stock screener and charts, economic indicators, Treasury yields and auctions, and calculators. |
 | [Resources](https://teddyrookbook.com/resources/) | Links to other free places to learn Latin and Greek, read the great books and explore ancient history. |
 | [PhotoCraft](https://teddyrookbook.com/photocraft/) | A hosted copy of [PhotoCraft](https://github.com/storytold/photocraft), an open-source image editor by the ArtCraft Team (MIT / Apache-2.0). It runs in the browser; pictures stay on the visitor's device. Not affiliated with Adobe. |

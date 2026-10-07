@@ -1,0 +1,64 @@
+{{ define "main" }}
+<link rel="stylesheet" href="{{ "shelf/shelf.css" | relURL }}?v={{ (os.Stat "static/shelf/shelf.css").ModTime.Unix }}">
+<div class="sh" id="shelf">
+  <header class="sh-hero">
+    <h1>Free Books</h1>
+    <p>Search more than 75,000 free public-domain books. Read one in your browser, send it to your e-reader, or listen to a volunteer recording. Nothing to sign up for.</p>
+    <form class="sh-form" id="sh-form" role="search">
+      <label class="sh-vh" for="sh-q">Book title or author</label>
+      <input id="sh-q" type="search" placeholder="Title or author, e.g. Odyssey, Jane Austen" autocomplete="off" required>
+      <select id="sh-lang" aria-label="Language">
+        <option value="en">English</option><option value="">Any language</option><option value="la">Latin</option><option value="el,grc">Greek</option><option value="fr">French</option><option value="de">German</option><option value="es">Spanish</option><option value="it">Italian</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+    <div class="sh-chips" id="sh-chips"></div>
+  </header>
+
+  <nav class="sh-tabs" role="tablist"><button type="button" class="on" data-tab="find">Search</button><button type="button" data-tab="mine">My shelf <span id="sh-count"></span></button><button type="button" data-tab="help">How to read and listen</button></nav>
+
+  <section id="sh-find">
+    <p class="sh-status" id="sh-status" aria-live="polite"></p>
+    <ul class="sh-list" id="sh-list"></ul>
+    <p class="sh-more"><button type="button" class="sh-btn" id="sh-more" hidden>Show more</button></p>
+  </section>
+
+  <section id="sh-mine" hidden>
+    <p class="sh-status">Books you save are remembered in this browser only.</p>
+    <ul class="sh-list" id="sh-saved"></ul>
+  </section>
+
+  <section id="sh-help" hidden class="sh-help">
+    <div class="sh-cols">
+      <div><h2>Reading</h2><ul>
+        <li><b>Read online</b> opens the book as a web page. Nothing to install.</li>
+        <li><b>EPUB</b> is the file for Apple Books, Kobo, Nook, Google Play Books and most reading apps. On an iPhone or iPad, tap the download and choose “Open in Books”.</li>
+        <li><b>Kindle:</b> download the EPUB, then send it to your Kindle with Amazon’s free <a href="https://www.amazon.com/sendtokindle" target="_blank" rel="noopener">Send to Kindle</a> page or app.</li>
+        <li><b>Plain text</b> is the smallest file and works anywhere.</li>
+        <li>Free reading apps: <a href="https://koreader.rocks/" target="_blank" rel="noopener">KOReader</a> (e-readers and Android), <a href="https://thorium.edrlab.org/" target="_blank" rel="noopener">Thorium Reader</a> (Windows, Mac, Linux), and <a href="https://calibre-ebook.com/" target="_blank" rel="noopener">Calibre</a> to organise and convert a collection.</li>
+      </ul></div>
+      <div><h2>Listening</h2><ul>
+        <li><b>Find a recording</b> looks for the book among LibriVox’s volunteer recordings and plays it here, chapter by chapter.</li>
+        <li>A title can match the wrong book or a different translation. Check the reader and author shown, and use <b>Try another</b> if it isn’t right.</li>
+        <li>For listening on the go, the free <a href="https://librivox.org/pages/librivox-apps/" target="_blank" rel="noopener">LibriVox apps</a> download whole books to your phone.</li>
+        <li>Recordings vary: most are a single volunteer, some are full casts. Many books have several versions to choose from.</li>
+      </ul></div>
+      <div><h2>More free libraries</h2><ul>
+        <li><a href="https://standardebooks.org/" target="_blank" rel="noopener">Standard Ebooks</a>: the best-looking editions, carefully proofread.</li>
+        <li><a href="https://www.gutenberg.org/" target="_blank" rel="noopener">Project Gutenberg</a>: the original, with over 75,000 books.</li>
+        <li><a href="https://librivox.org/" target="_blank" rel="noopener">LibriVox</a>: free audiobooks read by volunteers.</li>
+        <li><a href="https://archive.org/details/texts" target="_blank" rel="noopener">Internet Archive</a>: millions of scanned books, including old editions.</li>
+        <li><a href="https://openlibrary.org/" target="_blank" rel="noopener">Open Library</a>: borrow newer books free with an account.</li>
+        <li><a href="https://www.overdrive.com/apps/libby" target="_blank" rel="noopener">Libby</a>: current ebooks and audiobooks with your public-library card.</li>
+        <li><a href="https://www.loyalbooks.com/" target="_blank" rel="noopener">Loyal Books</a> and <a href="https://www.perseus.tufts.edu/" target="_blank" rel="noopener">Perseus</a> (Greek and Latin texts). More on the <a href="{{ "resources/" | relURL }}">Resources</a> page.</li>
+      </ul></div>
+    </div>
+    <h2>Where the books come from</h2>
+    <p>This site stores no books. Searches go straight from your browser to <a href="https://gutendex.com/" target="_blank" rel="noopener">Gutendex</a>, a free catalogue of Project Gutenberg, and to the Internet Archive’s LibriVox collection. Texts: Project Gutenberg. Recordings: LibriVox volunteers; files and player: Internet Archive. These books are in the public domain in the United States; if you live elsewhere, check your own country’s rules.</p>
+  </section>
+
+  <div class="sh-player" id="sh-player" hidden></div>
+  <p class="sh-foot">Text: Project Gutenberg, via Gutendex. Audio: LibriVox / Internet Archive. Public domain in the United States.</p>
+</div>
+<script src="{{ "shelf/shelf.js" | relURL }}?v={{ (os.Stat "static/shelf/shelf.js").ModTime.Unix }}"></script>
+{{ end }}

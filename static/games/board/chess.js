@@ -17,7 +17,7 @@
   var pref = { theme: 'g', level: 2, hints: true, first: 'you' };
   try { var sv = JSON.parse(W.localStorage.getItem('trb-chess')); if (sv) for (var k in sv) pref[k] = sv[k]; } catch (e) { }
   function save() { try { W.localStorage.setItem('trb-chess', JSON.stringify(pref)); } catch (e) { } }
-  var me = 'w', opp = 'b'; // the side you play; the first mover is always the engine's "white"
+  var me = 'w', opp = 'b'; // the side you play; white (the pale pieces) always moves first
   var S, sel = -1, hist = [], an = null, last = null, over = null, thinking = false, quality = [], caps = { w: [], b: [] };
   function T() { return THEMES[pref.theme]; }
   function sqName(i) { return 'abcdefgh'[i & 7] + (8 - (i >> 3)); }
@@ -81,7 +81,7 @@
     var byPiece = {}, byTo = {};
     if (pref.hints && an) an.forEach(function (x) { if (!(x.m.f in byPiece)) byPiece[x.m.f] = x; if (x.m.f === sel) byTo[x.m.t] = x; });
     Array.prototype.forEach.call(bd.children, function (el, k) {
-      var i = me === 'b' ? 63 - k : k, p = S.b[i], h = p ? '<span class="pc ' + (E.side(p) === me ? 'w' : 'b') + '">' + GLY[p.toLowerCase()] + '</span>' : '';
+      var i = me === 'b' ? 63 - k : k, p = S.b[i], h = p ? '<span class="pc ' + E.side(p) + '">' + GLY[p.toLowerCase()] + '</span>' : '';
       var mv = moves.filter(function (m) { return m.t === i; })[0];
       if (mv) { var x = byTo[i]; h += x ? '<span class="ring r' + x.q + '"></span><span class="pct q' + x.q + '">' + Math.round(x.w * 100) + '%</span>' : '<span class="dot"></span>'; }
       else if (sel < 0 && byPiece[i] && S.turn === me && !over) h += '<span class="ring r' + byPiece[i].q + '"></span><span class="pct q' + byPiece[i].q + '">' + Math.round(byPiece[i].w * 100) + '%</span>';
@@ -90,7 +90,7 @@
       el.className = 'ch-sq' + ((((i >> 3) + (i & 7)) % 2) ? ' dk' : '') + (i === sel ? ' sel' : '') + (last && (last.f === i || last.t === i) ? ' last' : '') + (i === kchk ? ' chk' : '');
       el.setAttribute('aria-label', sqName(i) + (p ? ' ' + (E.side(p) === me ? t.you : t.them) + ' ' + CHESS[p.toLowerCase()] : ''));
     });
-    $('#c-capw').innerHTML = caps[me].map(function (p) { return '<span style="color:var(--wine)">' + GLY[p.toLowerCase()] + '</span>'; }).join('');
+    $('#c-capw').innerHTML = caps[me].map(function (p) { return GLY[p.toLowerCase()]; }).join('');
     $('#c-capb').innerHTML = caps[opp].map(function (p) { return GLY[p.toLowerCase()]; }).join('');
     var msg;
     if (over === 'mate') msg = S.turn === opp ? '<b class="' + t.cls + '">' + t.win + '</b> ' + (pref.theme === 'g' ? '<i>' + tr(t.win) + '</i> ' : '') + '= ' + t.winE + '. Checkmate: ' + t.kings[1] + ' has fallen.' : '<b class="' + t.cls + '">' + t.lose + '</b> ' + (pref.theme === 'g' ? '<i>' + tr(t.lose) + '</i> ' : '') + '= ' + t.loseE + '. Checkmate: ' + t.kings[0] + ' has fallen.';
@@ -130,7 +130,7 @@
       var mv = { k: 'One square in any direction. It may never move into attack.', q: 'Any distance in a straight line or diagonally.', r: 'Any distance in a straight line.', b: 'Any distance diagonally.', n: 'An L shape (two squares one way, one square across). The only piece that jumps over others.', p: 'One square forward (two on its first move); captures one square diagonally forward.' }[p];
       return '<tr><td style="font-size:1.4rem">' + GLY[p] + '</td><td><span class="' + t.cls + '">' + t.p[p][0] + '</span>' + (pref.theme === 'g' ? ' <i>' + tr(t.p[p][0]) + '</i>' : '') + '<br><span class="bg-small">' + t.p[p][1] + ' · ' + CHESS[p] + ' · ' + PTS[p] + (p === 'k' ? '' : ' pt') + '</span></td><td>' + mv + '</td></tr>';
     }).join('');
-    $('#c-rules').innerHTML = '<summary>Rules and the pieces</summary><p>You command the ' + t.you + ' (the pale army, moving up the board) against the ' + t.them + '. Tap a piece, then tap where it should go.</p>' +
+    $('#c-rules').innerHTML = '<summary>Rules and the pieces</summary><p>You command the ' + t.you + ', who start at the bottom of the board, against the ' + t.them + '. As in every chess game, the pale pieces move first: you have them when you move first, and the dark ones when your opponent does. Tap a piece, then tap where it should go.</p>' +
       '<table><tbody>' + rows + '</tbody></table>' +
       '<h4>Winning</h4><ul><li><b>Check</b>: a king is attacked and must escape at once (move, block, or capture the attacker).</li><li><b>Checkmate</b>: the king is in check and cannot escape. The game is over.</li><li><b>Draws</b>: stalemate (no legal move, but not in check), too few pieces to mate, or fifty moves with no capture or pawn move.</li></ul>' +
       '<h4>Special moves</h4><ul><li><b>Castling</b>: if neither has moved, the king goes two squares toward a rook and the rook jumps over it. Not allowed out of, through or into check. Tap the king, then the square two away.</li><li><b>En passant</b>: a pawn that has just advanced two squares can be captured by an enemy pawn beside it, as if it had moved one.</li><li><b>Promotion</b>: a pawn that reaches the far side becomes a queen (this game always chooses the queen).</li></ul>' +
