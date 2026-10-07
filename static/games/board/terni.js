@@ -50,7 +50,8 @@
 
   var D = root.document, el = D.getElementById('terni'); if (!el) return;
   function $(s) { return el.querySelector(s); }
-  var pref = { level: 2, hints: true, first: 'you', nc: true };
+  var pref = { level: 2, hints: true, first: 'you', nc: null }; // nc null: follow the default for whoever starts
+  function ncNow() { return pref.nc == null ? pref.first !== 'you' : !!pref.nc; }
   try { var sv = JSON.parse(root.localStorage.getItem('trb-terni')); if (sv) for (var k in sv) pref[k] = sv[k]; } catch (e) { }
   function save() { try { root.localStorage.setItem('trb-terni', JSON.stringify(pref)); } catch (e) { } }
   var B, turn, me, sel, over, busy, an, st, seen, score = { w: 0, l: 0, d: 0 };
@@ -63,7 +64,7 @@
     '<p class="bg-small">These are exact. The game has only a few thousand positions, so every one has been worked out to the end.</p></div>' +
     '<details class="bg-box bg-rules" id="l-rules"></details></div></div>';
   var XY = [[50, 50], [150, 50], [250, 50], [50, 150], [150, 150], [250, 150], [50, 250], [150, 250], [250, 250]], QC = { 1: '#1a8a4a', 0: '#e2b800', '-1': '#c0392b' }, QN = { 1: 0, 0: 2, '-1': 4 };
-  function newGame() { RULE.nc = !!pref.nc; B = '.........'; me = pref.first === 'you' ? 'X' : 'O'; turn = 'X'; sel = -1; over = null; busy = false; seen = {}; st = { n: 0, kept: 0, slips: 0, last: null }; step(); }
+  function newGame() { if (pref.v !== 2) { pref.v = 2; pref.nc = null; } RULE.nc = ncNow(); B = '.........'; me = pref.first === 'you' ? 'X' : 'O'; turn = 'X'; sel = -1; over = null; busy = false; seen = {}; st = { n: 0, kept: 0, slips: 0, last: null }; step(); }
   function step() {
     var other = turn === 'X' ? 'O' : 'X';
     if (won(B, other)) over = other === me ? 'win' : 'lose';
@@ -121,14 +122,14 @@
   var NAMES = ['top left', 'top', 'top right', 'left', 'centre', 'right', 'bottom left', 'bottom', 'bottom right'];
   $('#l-rules').innerHTML = '<summary>Rules and the history</summary>' +
     '<p>Each player has three pebbles. You are the pale ones.</p><ul><li><b>First, place.</b> Take turns putting one pebble on any empty point until all six are down.</li><li><b>Then, move.</b> Take turns sliding one of your pebbles along a line to the next point, if it is empty. The centre connects to every point; a corner connects to the centre and the two points beside it.</li><li><b>Three in a line wins</b>, across, down or through the centre, whether you get it by placing or by moving.</li><li>If you cannot move at all, you lose.</li></ul>' +
-    '<h4>The move statistics</h4><p>With 💡 on, every point you could play shows what follows with perfect play on both sides: green wins (the number is how many moves it takes, counting both sides), yellow “=” is a draw, red loses. Unlike the chess and tabula figures, these are exact, because the whole game has been solved. If the first pebble may go anywhere, whoever starts wins by taking the centre. That is why the game is usually played with the centre closed for the first pebble, which is how it starts here. With that rule neither side can force a win: like noughts and crosses, the game is a contest of who slips first. The easy and medium opponents do slip (about three moves in five, and one in five), so you can beat them by never leaving a yellow move for a red one and pouncing when a green one appears. The perfect opponent never slips; against it a draw is the best possible result, and it is there to practise on. A game is drawn when the same position comes up three times.</p>' +
+    '<h4>The move statistics</h4><p>With 💡 on, every point you could play shows what follows with perfect play on both sides: green wins (the number is how many moves it takes, counting both sides), yellow “=” is a draw, red loses. Unlike the chess and tabula figures, these are exact, because the whole game has been solved. If the first pebble may go anywhere, whoever starts wins by taking the centre. So when you start, the first pebble may go anywhere and the win is there for you to find; when your opponent starts, the centre is closed for the first pebble. You can change either with the “First pebble” choice. With the centre closed neither side can force a win: like noughts and crosses, the game is a contest of who slips first. The easy and medium opponents do slip (about three moves in five, and one in five), so you can beat them by never leaving a yellow move for a red one and pouncing when a green one appears. The perfect opponent never slips; against it a draw is the best possible result, and it is there to practise on. A game is drawn when the same position comes up three times.</p>' +
     '<h4>Words</h4><table><tbody><tr><td class="la">terni lapilli</td><td>three pebbles each</td></tr><tr><td class="la">lapillus</td><td>a little stone, a pebble</td></tr><tr><td class="la">pono, ponere</td><td>to place</td></tr><tr><td class="la">moveo, movere</td><td>to move</td></tr><tr><td class="la">vinco, vincere</td><td>to win</td></tr></tbody></table>' +
     '<h4>Is this an ancient game?</h4><p>Yes, and it is still played, as three men’s morris. Boards for it are scratched into the paving and steps of Roman buildings all over the empire. Ovid mentions it in the <i>Art of Love</i> (3.365–366):</p>' +
     '<p class="la" style="font-size:1.1rem">Parva tabella capit ternos utrimque lapillos,<br>in qua vicisse est continuasse suos.</p><p>“A little board takes three pebbles for each side; on it, to win is to have lined up your own.”</p><p>The modern name <i>terni lapilli</i> comes from that couplet. Noughts and crosses (tic-tac-toe) is its simpler descendant, without the moving.</p>';
-  $('#l-level').value = pref.level; $('#l-first').value = pref.first; $('#l-nc').value = pref.nc ? '1' : '0';
+  $('#l-level').value = pref.level; $('#l-first').value = pref.first; $('#l-nc').value = ncNow() ? '1' : '0';
   $('#l-nc').onchange = function () { pref.nc = this.value === '1'; save(); newGame(); };
   $('#l-level').onchange = function () { pref.level = +this.value; save(); };
-  $('#l-first').onchange = function () { pref.first = this.value; save(); newGame(); };
+  $('#l-first').onchange = function () { pref.first = this.value; pref.nc = null; $('#l-nc').value = ncNow() ? '1' : '0'; save(); newGame(); };
   $('#l-hint').onclick = function () { pref.hints = !pref.hints; save(); draw(); };
   $('#l-new').onclick = newGame;
   root.__terni = { get B() { return B; }, tap: tap, get an() { return an; } };

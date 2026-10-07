@@ -14,6 +14,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations. |
 | [Markets](https://teddyrookbook.com/markets/) | Stock screener and charts, economic indicators, Treasury yields and auctions, and calculators. |
 | [Resources](https://teddyrookbook.com/resources/) | Links to other free places to learn Latin and Greek, read the great books and explore ancient history. |
+| [PhotoCraft](https://teddyrookbook.com/photocraft/) | A hosted copy of [PhotoCraft](https://github.com/storytold/photocraft), an open-source image editor by the ArtCraft Team (MIT / Apache-2.0). It runs in the browser; pictures stay on the visitor's device. Not affiliated with Adobe. |
 
 No accounts, no ads, no tracking. Progress in the drills, flashcards and games is saved only in the visitor's own browser.
 
@@ -59,6 +60,7 @@ static/
   lang/             Sentence drills, Gospel reader and flashcards (code and data).
   games/            The games. Each has its own script and stylesheet; the three board games share games/board/.
   js/               Shared scripts, including the Greek pronunciation helper.
+  photocraft/       The PhotoCraft browser build (app/) and its licences (licenses/). Third-party code; see NOTICE.txt there.
   markets/          Markets pages: charts, rates, indicators, calculators.
 scripts/            Python scripts that generate data files (see below).
 themes/PaperMod/    The theme.

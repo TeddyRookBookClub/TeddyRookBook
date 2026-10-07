@@ -1,0 +1,57 @@
+{{ define "main" }}
+<style>
+main.main:has(.pcx){max-width:1500px}
+.pcx{--g:#004225;--muted:#5d6862;--line:#dde5df;--card:#fff}
+html[data-theme="dark"] .pcx{--g:#6cc79a;--muted:#9fb0a6;--line:#48574e;--card:#272e2a}
+.pcx-head{display:flex;gap:.6rem 1.2rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.5rem}
+.pcx-head h1{margin:0;font:700 1.7rem Georgia,serif;color:var(--g)}
+.pcx-head p{margin:0;color:var(--muted);font-size:.92rem;flex:1;min-width:16rem;line-height:1.45}
+.pcx-btn{font:inherit;font-size:.88rem;padding:.35rem .7rem;border-radius:9px;border:1px solid var(--line);background:var(--card);color:inherit;cursor:pointer;text-decoration:none;box-shadow:none}
+.pcx-frame{position:relative;width:100%;height:calc(100vh - 215px);min-height:520px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#262626}
+.pcx-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.pcx-start{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;color:#ddd;text-align:center;padding:1rem;font-family:system-ui,sans-serif}
+.pcx-start button{font:600 1.05rem system-ui;padding:.7rem 1.4rem;border-radius:10px;border:0;background:#6cc79a;color:#0b1f14;cursor:pointer}
+.pcx-start small{color:#aaa;max-width:30rem;line-height:1.45}
+.pcx-note{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.8rem;margin-top:.9rem}
+.pcx-note div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;font-size:.9rem;line-height:1.5}
+.pcx-note h2{margin:0 0 .3rem;font:700 1rem Georgia,serif;color:var(--g)}
+.pcx-note a{color:var(--g)}
+.pcx-fs .pcx-frame{position:fixed;inset:0;z-index:600;height:auto;border-radius:0;border:0}
+.pcx-fs .pcx-exit{position:fixed;right:8px;bottom:8px;z-index:601;display:block}
+.pcx-exit{display:none}
+</style>
+<div class="pcx" id="pcx">
+  <div class="pcx-head">
+    <h1>PhotoCraft</h1>
+    <p>A free, open-source image editor made by the <a href="https://github.com/storytold/photocraft" target="_blank" rel="noopener">ArtCraft Team and the PhotoCraft contributors</a>, not by this site. It runs entirely in your browser: pictures you open are not uploaded anywhere.</p>
+    <button type="button" class="pcx-btn" id="pcx-full">⛶ Fill the window</button>
+    <a class="pcx-btn" href="{{ "photocraft/app/" | relURL }}" target="_blank" rel="noopener">Open in its own tab ↗</a>
+  </div>
+  <div class="pcx-frame" id="pcx-frame">
+    <div class="pcx-start" id="pcx-start">
+      <button type="button" id="pcx-go">Start PhotoCraft</button>
+      <small>This downloads the editor once (about 21 MB, less when compressed), so it can take a little while on a slow connection. It works best on a computer with a recent version of Chrome, Edge, Brave, Safari or Firefox; it is not designed for phones.</small>
+    </div>
+  </div>
+  <button type="button" class="pcx-btn pcx-exit" id="pcx-exit">✕ Back to the page</button>
+  <div class="pcx-note">
+    <div><h2>How to use it</h2>Press <b>Open…</b> (or drag a picture onto the editor) to load an image or a PSD file from your device. Edit it, then use <b>File → Export</b> or <b>Save As</b>; the result arrives as an ordinary download. Nothing is stored on this site, so save your work before you close the tab.</div>
+    <div><h2>Your pictures stay with you</h2>The editor has no server behind it. Opening a file reads it inside your own browser, and it never leaves your device. This site keeps no copy and cannot see it. Features of the editor that say they contact an outside service are the PhotoCraft project’s own and are not run by this site.</div>
+    <div><h2>Credit and licence</h2>PhotoCraft © 2026 ArtCraft Team and the PhotoCraft contributors, used under the <a href="{{ "photocraft/licenses/LICENSE-MIT.txt" | relURL }}">MIT</a> / <a href="{{ "photocraft/licenses/LICENSE-APACHE.txt" | relURL }}">Apache 2.0</a> licence. This is the project’s unmodified browser build, version 0.1.0. <a href="{{ "photocraft/licenses/NOTICE.txt" | relURL }}">Full notices and third-party licences</a> · <a href="https://github.com/storytold/photocraft" target="_blank" rel="noopener">Source code and desktop downloads</a>. Please report problems with the editor to the project, not to this site.</div>
+    <div><h2>Not Adobe</h2>PhotoCraft is an independent open-source project. It is not affiliated with, sponsored by or endorsed by Adobe Inc.; Adobe and Photoshop are trademarks of Adobe Inc. Teddy Rook Book hosts this copy as a convenience and is not affiliated with the ArtCraft Team or with Adobe.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var box = document.getElementById('pcx'), frame = document.getElementById('pcx-frame');
+  document.getElementById('pcx-go').onclick = function () {
+    var f = document.createElement('iframe'); f.src = '{{ "photocraft/app/" | relURL }}'; f.title = 'PhotoCraft image editor';
+    f.allow = 'fullscreen; clipboard-read; clipboard-write'; f.setAttribute('allowfullscreen', '');
+    document.getElementById('pcx-start').remove(); frame.appendChild(f); f.focus();
+  };
+  function full(on) { box.classList.toggle('pcx-fs', on); document.documentElement.style.overflow = on ? 'hidden' : ''; }
+  document.getElementById('pcx-full').onclick = function () { full(true); };
+  document.getElementById('pcx-exit').onclick = function () { full(false); };
+})();
+</script>
+{{ end }}
