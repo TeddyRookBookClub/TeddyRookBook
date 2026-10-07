@@ -24,3 +24,14 @@ body{font-size:calc(18px * var(--fs,1))}
   .logo,#menu{margin:0}
 }
 </style>
+<style>
+/* British racing green is the site's main colour: the header band everywhere, and a green-black page in dark mode. */
+:root{--brg:#004225}
+header.header{background:#004225}
+header.header .logo a,header.header #menu a,header.header .trb-fs-btn,header.header #theme-toggle{color:#f3ead2}
+header.header #menu .active{border-bottom-color:#d8b860}
+header.header .trb-fs-btn:hover{background:rgba(255,255,255,.14)}
+:root[data-theme="dark"]{--theme:#0b1a13;--entry:#12261b;--primary:#e6ece8;--secondary:#a9b8af;--tertiary:#1b3426;--content:#dfe7e2;--code-block-bg:#12261b;--code-bg:#1b3426;--border:#2a4636}
+[data-theme="dark"] .list{background:var(--theme)}
+[data-theme="dark"] header.header{background:#00331c;border-bottom:1px solid #1f4a35}
+</style>

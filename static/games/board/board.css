@@ -68,3 +68,16 @@ html[data-theme="dark"] .bg{--g:#6cc79a;--ink:#e6ece8;--muted:#9fb0a6;--line:#48
 .ch-sq .pc.b{color:#1d2a44;text-shadow:0 0 1px #f3dfa3,0 0 2px #f3dfa3}
 .ch-sq .pct{font-size:clamp(9px,18cqw,13px)}
 .tb-wrap svg,.tl-wrap svg{box-shadow:0 6px 18px rgba(0,0,0,.3)}
+
+/* short screens (a phone on its side): board on the left, panels on the right, no decorative bands */
+@media (max-height:560px){
+  .bg{padding:.4rem .5rem}.bg::before,.bg::after{display:none}
+  .bg-top{margin-bottom:.3rem;gap:.3rem}.bg-top h1{font-size:1.05rem}.bg-top select,.bg-btn{padding:.2rem .4rem;font-size:.8rem}
+  .bg-main{grid-template-columns:minmax(0,1fr) minmax(200px,38%)}
+  .bg-msg{min-height:0;margin:.2rem 0;font-size:.85rem}
+  .ch-board{width:min(100%,calc(100vh - 150px));min-width:200px;border-width:6px}
+  .ch-sq{font-size:calc((100vh - 150px)/10.5)}
+  .tb-wrap{max-width:min(100%,calc((100vh - 130px)*1.55))}
+  .tl-wrap{max-width:min(100%,calc(100vh - 130px))}
+}
+.ch-sq .pct{font-size:clamp(7px,24cqw,13px);white-space:nowrap;padding:0 2px;line-height:1.25}

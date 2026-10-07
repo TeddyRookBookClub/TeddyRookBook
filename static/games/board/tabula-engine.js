@@ -63,10 +63,18 @@
   function evaluate(s) {
     var pp = pips(s), sc = pp[1] - pp[0], p = s.pts, i;
     if (s.off === 15) return 1000;
+    // Every play of the same dice moves the same number of pips, so these terms decide which checkers to move:
+    // bring men home, bear them off, and run for home once the opponent is close to finishing.
+    var outside = s.bar, back = 0, oppHome = !s.obar, oppLate;
+    for (i = 6; i < 24; i++) if (p[i] > 0) { outside += p[i]; if (i >= 18) back += p[i]; }
+    for (i = 0; i < 18; i++) if (p[i] < 0) { oppHome = false; break; }
+    oppLate = Math.max(0, Math.min(1, (130 - pp[1]) / 90));
+    sc += s.off * 3 - outside * (0.4 + 1.2 * oppLate) - back * (pp[0] < pp[1] ? 1.5 : 0.3) - back * 2.5 * oppLate;
+    if (oppHome && s.off === 0) sc -= outside * 4 + back * 4;      // the opponent is bearing off: avoid the double loss
     if (!contact(s)) return sc - 4;              // a pure race: only the count matters (and it is the opponent's turn: about 8 pips)
     var closed = 0; for (i = 0; i < 6; i++) if (p[i] >= 2) closed++;
     for (i = 0; i < 24; i++) {
-      if (p[i] === 1) { var pr = shots(s, i) / 36; sc -= pr * ((24 - i) * 0.9 + 6 + closedOpp(s) * 2); }
+      if (p[i] === 1) { var pr = shots(s, i) / 36; sc -= pr * ((24 - i) * 1.2 + 8 + closedOpp(s) * 4); }
       else if (p[i] >= 2) { sc += i < 6 ? 5 : i < 12 ? 3.5 : 1.5; if (i > 0 && p[i - 1] >= 2) sc += 2.5; if (p[i] > 4) sc -= (p[i] - 4) * 1.5; }
     }
     sc += s.obar * (6 + closed * 3.5);

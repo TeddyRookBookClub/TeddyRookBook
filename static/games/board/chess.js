@@ -143,6 +143,6 @@
   $('#c-level').onchange = function () { pref.level = +this.value; save(); };
   $('#c-hint').onclick = function () { pref.hints = !pref.hints; save(); draw(); };
   $('#c-undo').onclick = undo; $('#c-new').onclick = newGame;
-  W.__chess = { get S() { return S; }, play: play, get an() { return an; }, get over() { return over; } };
+  W.__chess = { load: function (fen) { S = E.fromFEN(fen); hist = []; sel = -1; last = null; over = null; thinking = false; quality = []; caps = { w: [], b: [] }; check(); if (!over && S.turn !== me) { thinking = true; draw(); setTimeout(reply, 200); } else analyse(); }, get me() { return me; }, get S() { return S; }, play: play, get an() { return an; }, get over() { return over; } };
   rules(); newGame();
 })(window, document);
