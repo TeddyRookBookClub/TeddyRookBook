@@ -150,7 +150,7 @@
       A.c.forEach(function (c) {
         var r1x = c.p.x - a.p.x, r1y = c.p.y - a.p.y, r2x = c.p.x - b.p.x, r2y = c.p.y - b.p.y;
         var ux = b.v.x - b.w0 * r2y - a.v.x + a.w0 * r1y, uy = b.v.y + b.w0 * r2x - a.v.y - a.w0 * r1x;
-        c.vn0 = ux * c.n.x + uy * c.n.y;
+        c.vn0 = ux * c.n.x + uy * c.n.y; c.vr0 = Math.hypot(ux, uy);
       });
     });
     arbs.forEach(function (A) {
@@ -191,7 +191,7 @@
     // integrate
     B.forEach(function (x) { if (!x.im) return; x.p.x += dt * x.v.x; x.p.y += dt * x.v.y; x.a += dt * x.w0; });
     // report hard hits: the closing speed at first touch, weighted by the lighter body
-    if (this.onImpulse) { var cb = this.onImpulse; arbs.forEach(function (A) { var mx = 0; A.c.forEach(function (c) { if (-c.vn0 > mx) mx = -c.vn0; }); if (mx > 0.5) cb(A.a, A.b, mx); }); }
+    if (this.onImpulse) { var cb = this.onImpulse; arbs.forEach(function (A) { var mx = 0, vr = 0; A.c.forEach(function (c) { if (-c.vn0 > mx) { mx = -c.vn0; } if (c.vr0 > vr) vr = c.vr0; }); if (mx > 0.5 || vr > 6) cb(A.a, A.b, mx, vr); }); }
   };
   World.prototype.query = function (x, y) { // the body under a point
     for (var i = this.bodies.length - 1; i >= 0; i--) {

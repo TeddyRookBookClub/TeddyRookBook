@@ -175,9 +175,9 @@
   function missionIdx() { var d = st.done[G.city] || []; for (var i = 0; i < G.m.missions.length; i++) if (d.indexOf(G.m.missions[i].id) < 0) return i; return -1; }
   function offerMission() {
     var i = missionIdx(), list = G.m.missions, done = st.done[G.city] || [];
-    var opts = list.map(function (M, j) { var ok = j === i || done.indexOf(M.id) >= 0 || (i < 0); return '<button class="ct-mb" data-j="' + j + '"' + (ok ? '' : ' disabled') + '><b>' + (j + 1) + '. ' + esc(M.title) + '</b>' + (done.indexOf(M.id) >= 0 ? ' ✓' : ok ? '' : ' 🔒') + '</button>'; }).join('');
+    var opts = list.map(function (M, j) { var ok = true; return '<button class="ct-mb" data-j="' + j + '"' + (ok ? '' : ' disabled') + '><b>' + (j + 1) + '. ' + esc(M.title) + '</b>' + (done.indexOf(M.id) >= 0 ? ' ✓' : ok ? '' : ' 🔒') + '</button>'; }).join('');
     var who = G.city === 'rome' ? 'Gaius the merchant' : 'Nikias the merchant';
-    var o = ov('<h2>' + who + '</h2><p class="ct-small">' + (i < 0 ? 'You have done every job. Play any of them again, or explore the city.' : 'Choose a job. Finish one to unlock the next.') + '</p><div class="ct-ms">' + opts + '</div><button class="ct-btn" id="ct-close">Explore the city</button>');
+    var o = ov('<h2>' + who + '</h2><p class="ct-small">' + (i < 0 ? 'You have done every job. Play any of them again, or explore the city.' : 'Choose a job. They can be done in any order.') + '</p><div class="ct-ms">' + opts + '</div><button class="ct-btn" id="ct-close">Explore the city</button>');
     o.querySelectorAll('.ct-mb').forEach(function (b) { b.addEventListener('click', function () { brief(+b.dataset.j); }); });
     $('#ct-close').addEventListener('click', function () { closeOv(); G.patronCool = 2.5; });
   }

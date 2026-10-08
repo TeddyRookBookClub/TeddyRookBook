@@ -882,7 +882,7 @@
   function title() {
     var cur = st.set;
     function lvButtons(set) {
-      return SET[set].levels.map(function (l, i) { var open = i < (st.open[set] || 1), done = st.done[set + i]; return '<button class="hr-lvb" data-set="' + set + '" data-lv="' + i + '"' + (open ? '' : ' disabled') + '><b>' + (i + 1) + '</b> ' + esc(l.name) + (done ? ' ✓' : open ? '' : ' 🔒') + '</button>'; }).join('');
+      return SET[set].levels.map(function (l, i) { var open = true, done = st.done[set + i]; return '<button class="hr-lvb" data-set="' + set + '" data-lv="' + i + '"' + (open ? '' : ' disabled') + '><b>' + (i + 1) + '</b> ' + esc(l.name) + (done ? ' ✓' : open ? '' : ' 🔒') + '</button>'; }).join('');
     }
     var o = ov('<h1>Hero’s Road</h1><p class="hr-sub">Run, jump and stomp through ancient Greece or Rome, or sail with Odysseus. Bump the amphora blocks for words, and pick the right door at each gate.</p>' +
       '<div class="hr-sets">' + ORDER.map(function (s) { var S2 = SET[s]; return '<div class="hr-set hr-' + s + (s === cur ? ' sel' : '') + '" data-set="' + s + '"><h2>' + S2.name + '</h2><p>' + ({ gr: 'Theseus on the road to Athens, then into the Labyrinth to face the Minotaur. Words in Koine Greek, with pronunciation.', ro: 'Hercules by the Tiber, then into the cave of Cacus, the fire-breathing cattle thief. Words in Latin.', od: 'Odysseus sailing home from Troy, island to island, to the cave of the Cyclops. Words in Koine Greek, with pronunciation.' })[s] + '</p><div class="hr-lvs">' + lvButtons(s) + '</div></div>'; }).join('') + '</div>' +

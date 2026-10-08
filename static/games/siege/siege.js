@@ -35,31 +35,31 @@
   // ---------- the sieges ----------
   // y is measured from the ground; x from the engine. Helpers: wood/stone(x centre, y bottom, w, h), frame, target(x, y bottom), fixed (static scenery).
   var LV = [
-    { id: 'motya', name: 'Motya', when: '397 BC', eng: 'gastra', shots: 4, three: 2, two: 3, lang: 'g', side: 'You are with Dionysius I of Syracuse.',
+    { id: 'motya', name: 'Motya', when: '397 BC', eng: 'gastra', shots: 6, three: 3, two: 4, lang: 'g', side: 'You are with Dionysius I of Syracuse.',
       story: 'Dionysius, the ruler of Syracuse, besieged the Carthaginian island town of Motya, off the west of Sicily. The historian Diodorus says his engineers had just invented the catapult, and that its bolts did great damage among the defenders. Knock the defenders off their wooden towers.',
       words: [['τεῖχος', 'wall'], ['βέλος', 'arrow, dart']], sky: ['#7ec3ea', '#f3e6c4'], ground: '#c9a86a', hills: '#a8b88a',
-      build: function (B) { B.frame(22, 0, 2.4, 2.2); B.target(22, 2.5); B.frame(27, 0, 2.2, 2); B.frame(27, 2.3, 1.8, 1.8); B.target(27, 4.4); B.target(27, 0); B.wood(30.4, 0, 0.4, 1.6); B.target(31.6, 0); } },
-    { id: 'rhodes', name: 'Rhodes', when: '305 BC', eng: 'ballista', shots: 4, three: 2, two: 3, lang: 'g', side: 'You are with the defenders of Rhodes.',
+      build: function (B) { B.frame(20, 0, 2.4, 1.8); B.target(20, 2.1); B.target(24.5, 0); B.frame(29, 0, 2.4, 2.2); B.target(29, 2.5); B.target(29, 0); } },
+    { id: 'rhodes', name: 'Rhodes', when: '305 BC', eng: 'ballista', shots: 5, three: 2, two: 3, lang: 'g', side: 'You are with the defenders of Rhodes.',
       story: 'Demetrius, called the Besieger, brought the Helepolis, “Taker of Cities”, against Rhodes: a giant armoured tower on wheels, nine storeys high, full of engines. The Rhodians held out for a year, and with the money from the engines Demetrius left behind they built the Colossus of Rhodes. Bring down the tower.',
       words: [['πύργος', 'tower'], ['λίθος', 'stone']], sky: ['#6db6e2', '#eaf3f6'], ground: '#bfa77a', hills: '#9fb59a',
       build: function (B) { B.stone(29, 0, 1, 1); B.stone(31, 0, 1, 1); var y = 1; for (var i = 0; i < 3; i++) { B.frame(30, y, 3, 2); B.target(30, y); y += 2.3; } B.target(30, y); } },
-    { id: 'syracuse', name: 'Syracuse', when: '213 BC', eng: 'ballista', shots: 5, three: 3, two: 4, lang: 'g', side: 'You are with Archimedes, defending Syracuse.',
+    { id: 'syracuse', name: 'Syracuse', when: '213 BC', eng: 'ballista', shots: 7, three: 3, two: 5, lang: 'g', side: 'You are with Archimedes, defending Syracuse.',
       story: 'The Romans attacked Syracuse from the sea, with ladders called sambucae mounted on pairs of ships. The mathematician Archimedes built engines for every range, and a giant claw that lifted ships out of the water. Stop the ships. Anything that falls in the sea is out of the fight.',
       words: [['πλοῖον', 'ship'], ['θάλασσα', 'sea']], sky: ['#5aa9de', '#e3f1f8'], ground: '#b8a27a', hills: '#93ab88', water: 15,
       build: function (B) { B.fixed(23, 0, 5, 0.8, 'hull'); B.frame(23, 0.8, 2.6, 2.2); B.target(23, 0.8); B.target(23, 3.3); B.fixed(33, 0, 6, 0.8, 'hull'); B.frame(32, 0.8, 2.2, 2.4); B.frame(32, 3.5, 2.2, 2); B.target(32, 5.8); B.wood(34.8, 0.8, 0.3, 3.2); B.target(35.6, 0.8); } },
-    { id: 'carthage', name: 'Carthage', when: '146 BC', eng: 'ballista', shots: 5, three: 3, two: 4, lang: 'l', side: 'You are with Scipio’s Roman army.',
+    { id: 'carthage', name: 'Carthage', when: '146 BC', eng: 'ballista', shots: 7, three: 3, two: 5, lang: 'l', side: 'You are with Scipio’s Roman army.',
       story: 'The Third Punic War ended with Rome besieging Carthage for three years. Appian tells how the women of Carthage cut off their hair to make the twisted ropes for the city’s own catapults. Get over the wall and knock out the defenders behind it.',
       words: [['murus', 'wall'], ['saxum', 'rock']], sky: ['#79b9e0', '#f6e7c8'], ground: '#d1b27a', hills: '#c8b48a',
       build: function (B) { for (var y = 0; y < 4; y++) { B.stone(24, y, 1, 1); B.stone(25, y, 1, 1); } B.frame(24.5, 4, 2, 1.4); B.target(24.5, 4); B.frame(29, 0, 2.4, 2); B.target(29, 0); B.target(29, 2.3); B.frame(33, 0, 2, 1.6); B.target(33, 0); B.wood(33, 1.9, 2.6, 0.3); B.target(33, 2.2); } },
-    { id: 'alesia', name: 'Alesia', when: '52 BC', eng: 'ballista', shots: 5, three: 3, two: 4, lang: 'l', side: 'You are with Julius Caesar.',
+    { id: 'alesia', name: 'Alesia', when: '52 BC', eng: 'ballista', shots: 7, three: 3, two: 5, lang: 'l', side: 'You are with Julius Caesar.',
       story: 'Vercingetorix and the Gauls held the hilltop town of Alesia. Caesar ringed it with two lines of walls, one facing in and one facing out, and starved it into surrender. Gallic walls were built of timber beams and stone in layers, which Caesar describes in his Gallic War. Break the wall and the camp on the hill.',
       words: [['castra', 'camp'], ['vallum', 'rampart']], sky: ['#8cbfe0', '#e8ecd8'], ground: '#7f9a52', hills: '#6d8a4a',
       build: function (B) { for (var y = 0, i = 0; i < 4; i++) { B.stone(22.5, y, 1, 0.8); B.stone(23.5, y, 1, 0.8); y += 0.8; B.wood(23, y, 2.6, 0.3); y += 0.3; } B.target(23, y); B.fixed(33, 0, 10, 2, 'hill'); B.frame(30.5, 2, 2, 1.8); B.target(30.5, 2); B.target(30.5, 4.1); B.frame(34.5, 2, 2.4, 1.6); B.target(34.5, 2); B.target(36.6, 2); } },
-    { id: 'amida', name: 'Amida', when: 'AD 359', eng: 'onager', shots: 4, three: 2, two: 3, lang: 'l', side: 'You are with the Roman garrison of Amida.',
+    { id: 'amida', name: 'Amida', when: 'AD 359', eng: 'onager', shots: 6, three: 2, two: 4, lang: 'l', side: 'You are with the Roman garrison of Amida.',
       story: 'The Persian king Shapur II besieged the Roman city of Amida, on the upper Tigris, with siege towers and a great earth mound. The historian Ammianus Marcellinus was inside the walls and wrote it all down. The Persian towers stand behind their mound: lob your stones over it.',
       words: [['turris', 'tower'], ['onager', 'wild donkey; a catapult']], sky: ['#e8a86a', '#f7e3c0'], ground: '#c79e62', hills: '#b88d58',
       build: function (B) { B.fixed(26, 0, 4, 3.2, 'mound'); B.stone(33, 0, 1, 1); B.stone(35, 0, 1, 1); var y = 1; for (var i = 0; i < 3; i++) { B.frame(34, y, 2.6, 2); y += 2.3; } B.target(34, 1); B.target(34, 3.3); B.target(34, 5.6); B.target(34, y); B.target(38, 0); } },
-    { id: 'castle', name: 'A medieval castle', when: 'about AD 1200', eng: 'trebuchet', shots: 4, three: 2, two: 3, lang: 'l', bonus: true, side: 'A bonus level, long after the ancient world.',
+    { id: 'castle', name: 'A medieval castle', when: 'about AD 1200', eng: 'trebuchet', shots: 6, three: 2, two: 4, lang: 'l', bonus: true, side: 'A bonus level, long after the ancient world.',
       story: 'Not an ancient siege: a look at what came later. By around 1200, European armies used counterweight trebuchets that could knock down stone walls, something ancient torsion engines rarely managed. Bring down the stone keep.',
       words: [['machina', 'machine'], ['castellum', 'fort']], sky: ['#9cb7cf', '#e9eef0'], ground: '#8a9a5a', hills: '#7a8c5a',
       build: function (B) { for (var y = 0; y < 5; y++) for (var x = 0; x < 4; x++) B.stone(30.5 + x, y, 1, 1); B.stone(30.5, 5, 0.6, 0.6); B.stone(33.5, 5, 0.6, 0.6); B.target(32, 5); B.frame(27, 0, 2, 1.8); B.target(27, 0); B.target(35.6, 0); } }
@@ -73,8 +73,8 @@
   var KEY = 'trb-siege-v1', st = { done: {}, words: true, guide: 'short' };
   try { var sv = JSON.parse(W.localStorage.getItem(KEY) || 'null'); if (sv) for (var k in sv) st[k] = sv[k]; } catch (e) { }
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
-  function opened(i) { return i === 0 || !!st.done[LV[i - 1].id]; }
-  function engUnlocked(e) { return LV.some(function (l, i) { return l.eng === e && (st.done[l.id] || opened(i)); }); }
+  function opened(i) { return true; } // every siege can be played in any order
+  function engUnlocked(e) { return true; }
 
   // ---------- game state ----------
   var cv = $('canvas'), c = cv.getContext('2d'), dpr = 1, Wd = 0, Ht = 0, S = 20, gy = 0, X0 = -1.5, VIEW = 44;
@@ -83,7 +83,7 @@
     dpr = Math.min(2, W.devicePixelRatio || 1); Wd = cv.clientWidth; Ht = cv.clientHeight;
     cv.width = Math.round(Wd * dpr); cv.height = Math.round(Ht * dpr);
     var need = G ? G.need : 13;
-    S = Math.min(Wd / VIEW, (Ht - 50) / need); X0 = -1.5; gy = Ht - Math.max(28, Ht * 0.07);
+    S = Math.min(Wd / VIEW, (Ht - 50) / need); X0 = -1.5; gy = Ht - Math.max(62, Ht * 0.1); // the ground sits above the aiming buttons
   }
   W.addEventListener('resize', fit);
   function sx(x) { return (x - X0) * S; }
@@ -97,7 +97,7 @@
       wood: function (x, y, w, h) { return B.body({ x: x, y: y + h / 2, w: w, h: h, density: 0.7, friction: 0.7, data: { mat: 'wood', hp: 40 + 30 * w * h } }); },
       stone: function (x, y, w, h) { return B.body({ x: x, y: y + h / 2, w: w, h: h, density: 2.2, friction: 0.8, data: { mat: 'stone', hp: 280 * Math.max(0.4, w * h) } }); },
       frame: function (x, y, w, h) { B.wood(x - w / 2 + 0.15, y, 0.3, h); B.wood(x + w / 2 - 0.15, y, 0.3, h); B.wood(x, y + h, w + 0.3, 0.3); },
-      target: function (x, y) { G.targets++; return B.body({ x: x, y: y + 0.36, w: 0.72, h: 0.72, density: 0.9, friction: 0.6, data: { mat: 'target', hp: 8, side: L.lang } }); },
+      target: function (x, y) { G.targets++; return B.body({ x: x, y: y + 0.36, w: 0.72, h: 0.72, density: 0.9, friction: 0.6, data: { mat: 'target', hp: 5, side: L.lang } }); },
       fixed: function (x, y, w, h, kind) { return B.body({ static: true, x: x, y: y + h / 2, w: w, h: h, friction: 0.8, data: { mat: kind } }); }
     };
     return B;
@@ -112,7 +112,7 @@
     world.add({ static: true, x: (wl - 60) / 2, y: -0.5, w: wl + 60, h: 1, friction: 0.8, data: { mat: 'ground' } });
     L.build(makeBuilder(world, L));
     var mx = 0, my = 0; world.bodies.forEach(function (b) { if (b.data.mat === 'ground') return; var bb = b.aabb(); mx = Math.max(mx, bb[2]); my = Math.max(my, bb[3]); });
-    VIEW = Math.max(30, mx + 3) + 1.5; G.need = Math.max(9, my + 3.5, ENG[G.eng].ly + 3); fit();
+    VIEW = Math.max(30, mx + 3) + 1.5; G.right = VIEW - 1.5 + 0.2; G.need = Math.max(9, my + 3.5, ENG[G.eng].ly + 3); fit();
     world.onImpulse = hit;
     G.t = 0; G.phase = 'settle';
     hud(); say('');
@@ -125,7 +125,7 @@
     b.data.hp -= e;
     if (b.data.hp <= 0) breakBody(b);
   }
-  function hit(a, b, v) { damage(a, b, v); damage(b, a, v); }
+  function hit(a, b, v, vr) { if ((a.data.proj || b.data.proj) && vr > v) v = 0.5 * (v + vr); damage(a, b, v); damage(b, a, v); } // a shot striking at a slant still does damage
 
   function breakBody(b) {
     if (b.dead) return;
@@ -177,7 +177,9 @@
     var wl = G.L.water;
     w.bodies.forEach(function (b) {
       if (!b.im || b.dead) return;
-      var gone = b.p.y < -4 || b.p.x > 60 || b.p.x < -10 || (wl && b.p.x > wl && b.p.y < (b.r || b.h / 2 || 0.3) - 0.2 - 0.3);
+      var gone = b.p.y < -4 || b.p.x > G.right || b.p.x < -10 || (wl && b.p.x > wl && b.p.y < (b.r || b.h / 2 || 0.3) - 0.2 - 0.3);
+      // a defender pushed off the field, or knocked flat on his side, is out of the fight
+      if (!gone && b.data.mat === 'target' && G.phase !== 'settle' && Math.abs(b.a) > 1.1) { breakBody(b); return; }
       if (gone) { if (b.data.mat === 'target') { splash(b); breakBody(b); } else { if (wl && b.p.x > wl) splash(b); b.dead = true; } }
     });
     G.fx.forEach(function (f) { f.life -= dt; f.x += f.vx * dt; f.y += f.vy * dt; f.vy -= 14 * dt; }); G.fx = G.fx.filter(function (f) { return f.life > 0; });
@@ -385,15 +387,16 @@
     $('#sg-back').addEventListener('click', title);
   }
   function result() {
-    var L = G.L, won = G.phase === 'won', n = won ? (G.used <= L.three ? 3 : G.used <= L.two ? 2 : 1) : 0;
+    var L = G.L, won = G.phase === 'won', n = won ? (G.extra ? 1 : G.used <= L.three ? 3 : G.used <= L.two ? 2 : 1) : 0;
     if (won && n > (st.done[L.id] || 0)) { st.done[L.id] = n; save(); }
     var next = G.i + 1 < LV.length;
-    var o = ov('<h2>' + (won ? (G.eng !== L.eng ? 'Done, with a different machine!' : L.name + ' has fallen!') : 'Out of shots') + '</h2>' + (won ? '<div class="sg-stars">' + stars(n) + '</div><p>' + G.used + ' shot' + (G.used === 1 ? '' : 's') + '.</p>' : '<p>' + (G.targets - G.killed) + ' defender' + (G.targets - G.killed === 1 ? ' is' : 's are') + ' still standing. Try a different angle, or a stronger shot.</p>') +
+    var o = ov('<h2>' + (won ? (G.eng !== L.eng ? 'Done, with a different machine!' : L.name + ' has fallen!') : 'Out of shots') + '</h2>' + (won ? '<div class="sg-stars">' + stars(n) + '</div><p>' + G.used + ' shot' + (G.used === 1 ? '' : 's') + '.</p>' : '<p>' + (G.targets - G.killed) + ' defender' + (G.targets - G.killed === 1 ? ' is' : 's are') + ' still standing. Try a different angle, or a stronger shot.</p><p><button class="sg-btn pri" id="sg-more">Keep going: 3 more shots</button><br><span class="sg-small">(You can still win, but only for one star.)</span></p>') +
       (st.words && G.words.length ? '<p class="sg-small">Words from this siege</p>' + '<div class="sg-words">' + G.words.map(function (f) { var w = L.words.concat([WORDS[L.lang].wood, WORDS[L.lang].stone, WORDS[L.lang].target]).filter(function (x) { return x[0] === f; })[0]; return w ? '<span><b>' + esc(w[0]) + '</b> = ' + esc(w[1]) + '</span>' : ''; }).join('') + '</div>' : '') +
-      '<p>' + (won && next ? '<button class="sg-btn pri" id="sg-next">Next siege</button> ' : '') + '<button class="sg-btn' + (won && next ? '' : ' pri') + '" id="sg-again">Play again</button> ' +
+      '<p>' + (won && next ? '<button class="sg-btn pri" id="sg-next">Next siege</button> ' : '') + '<button class="sg-btn' + (won && !next ? ' pri' : '') + '" id="sg-again">Play again</button> ' +
       (won ? '<button class="sg-btn" id="sg-other">Try another machine</button> ' : '') + '<button class="sg-btn" id="sg-menu">All sieges</button></p>');
     if ($('#sg-next')) $('#sg-next').addEventListener('click', function () { intro(G.i + 1); });
     $('#sg-again').addEventListener('click', function () { closeOv(); newLevel(G.i, G.eng); });
+    if ($('#sg-more')) $('#sg-more').addEventListener('click', function () { G.shots += 3; G.extra = true; G.over = false; G.phase = 'aim'; closeOv(); hud(); });
     if ($('#sg-other')) $('#sg-other').addEventListener('click', function () { var opts = ENG_ORDER.filter(engUnlocked), k = (opts.indexOf(G.eng) + 1) % opts.length; intro(G.i, opts[k]); });
     $('#sg-menu').addEventListener('click', title);
   }
