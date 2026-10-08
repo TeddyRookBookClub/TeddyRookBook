@@ -1,4 +1,4 @@
-/* Streets of Rome and Athens: a top-down city game in the style of the first Grand Theft Auto, made family-friendly.
+/* Charioteer: a top-down city game in the style of the first Grand Theft Auto, made family-friendly.
    Walk the streets, take chariots from the stables, run errands for a patron, race, catch thieves and lose the watch.
    People in the street greet you in Latin or Koine Greek. Map data and missions in city-data.js. */
 (function (W, D) {
@@ -175,11 +175,23 @@
   function missionIdx() { var d = st.done[G.city] || []; for (var i = 0; i < G.m.missions.length; i++) if (d.indexOf(G.m.missions[i].id) < 0) return i; return -1; }
   function offerMission() {
     var i = missionIdx(), list = G.m.missions, done = st.done[G.city] || [];
-    var opts = list.map(function (M, j) { var ok = true; return '<button class="ct-mb" data-j="' + j + '"' + (ok ? '' : ' disabled') + '><b>' + (j + 1) + '. ' + esc(M.title) + '</b>' + (done.indexOf(M.id) >= 0 ? ' ✓' : ok ? '' : ' 🔒') + '</button>'; }).join('');
+    var opts = jobButtons(list, done);
     var who = G.city === 'rome' ? 'Gaius the merchant' : 'Nikias the merchant';
     var o = ov('<h2>' + who + '</h2><p class="ct-small">' + (i < 0 ? 'You have done every job. Play any of them again, or explore the city.' : 'Choose a job. They can be done in any order.') + '</p><div class="ct-ms">' + opts + '</div><button class="ct-btn" id="ct-close">Explore the city</button>');
     o.querySelectorAll('.ct-mb').forEach(function (b) { b.addEventListener('click', function () { brief(+b.dataset.j); }); });
     $('#ct-close').addEventListener('click', function () { closeOv(); G.patronCool = 2.5; });
+  }
+  // the list of jobs, as buttons that open the briefing
+  function jobButtons(list, done) {
+    var cur = G && G.mission ? G.mission.j : -1;
+    return list.map(function (M, j) { var d = done.indexOf(M.id) >= 0; return '<button class="ct-mb" data-j="' + j + '"><b>' + (j + 1) + '. ' + esc(M.title) + '</b>' + (d ? ' <span class="ct-ok">✓ done</span>' : '') + (j === cur ? ' <span class="ct-now">▶ now</span>' : '') + '<small>' + esc(M.sum) + '</small></button>'; }).join('');
+  }
+  function jobsMenu() {
+    if (!G || !$('#ct-ov').hidden) return;
+    var done = st.done[G.city] || [];
+    var o = ov('<h2>Jobs in ' + esc(G.m.name) + '</h2><p class="ct-small">' + done.length + ' of ' + G.m.missions.length + ' done. Pick any job; you can start it from where you are.' + (G.mission ? ' Starting another gives up the one you are doing.' : '') + '</p><div class="ct-ms">' + jobButtons(G.m.missions, done) + '</div><button class="ct-btn pri" id="ct-close">Back to the city</button>');
+    o.querySelectorAll('.ct-mb').forEach(function (b) { b.addEventListener('click', function () { if (G.mission && +b.dataset.j === G.mission.j) { closeOv(); return; } if (G.mission) { endMission(); setWanted(0); } brief(+b.dataset.j); }); });
+    $('#ct-close').addEventListener('click', closeOv);
   }
   function brief(j) {
     var M = G.m.missions[j], gk = G.m.lang === 'g';
@@ -541,19 +553,25 @@
   function ov(html) { var o = $('#ct-ov'); o.innerHTML = '<div class="ct-box">' + html + '</div>'; o.hidden = false; paused = true; keys = {}; return o; }
   function closeOv() { $('#ct-ov').hidden = true; paused = false; last = 0; }
   function title() {
-    var o = ov('<h1>Streets of Rome and Athens</h1><p class="ct-sub">Walk the streets of an ancient city, borrow a chariot from the stables, and run errands for a merchant: deliveries, races, a thief to catch, and the watch to escape. The people you pass talk to you in Latin or Greek.</p>' +
-      '<div class="ct-cities"><button class="ct-city" data-c="rome"><b>Rome</b><span>About AD 110, under the emperor Trajan. The Forum, the Colosseum, the Circus Maximus. Latin.</span><small>' + (st.done.rome || []).length + ' of 7 jobs done</small></button>' +
-      '<button class="ct-city" data-c="athens"><b>Athens</b><span>About AD 50, when the apostle Paul visited. The market, the Acropolis, the Areopagus, the stadium. Koine Greek.</span><small>' + (st.done.athens || []).length + ' of 7 jobs done</small></button></div>' +
+    function card(c, name, blurb) {
+      var ms = CD[c]().missions, done = st.done[c] || [];
+      return '<div class="ct-city"><b>' + name + '</b><span>' + blurb + '</span>' +
+        '<ol class="ct-jobs">' + ms.map(function (M) { var d = done.indexOf(M.id) >= 0; return '<li' + (d ? ' class="done"' : '') + '><b class="' + (c === 'athens' ? 'gk' : 'la') + '">' + esc(M.title) + '</b>' + (d ? ' ✓' : '') + ' <span>' + esc(M.sum) + '</span></li>'; }).join('') + '</ol>' +
+        '<small>' + done.length + ' of ' + ms.length + ' jobs done</small><button class="ct-btn pri" data-c="' + c + '">Play in ' + name + '</button></div>';
+    }
+    var o = ov('<h1>Charioteer</h1><p class="ct-sub">Walk the streets of ancient Rome or Athens, take a chariot from the stables, and do jobs for a merchant: deliveries, races, a thief to catch, and the watch to escape. The people you pass talk to you in Latin or Greek.</p>' +
+      '<div class="ct-cities">' + card('rome', 'Rome', 'About AD 110, under the emperor Trajan. The Forum, the Colosseum, the Circus Maximus. Latin.') + card('athens', 'Athens', 'About AD 50, when the apostle Paul visited. The market, the Acropolis, the Areopagus, the stadium. Koine Greek.') + '</div>' +
       '<div class="ct-opts"><label><input type="checkbox" id="ct-w"' + (st.words ? ' checked' : '') + '> Latin and Greek words</label><label><input type="checkbox" id="ct-s"' + (st.sound ? ' checked' : '') + '> Sound</label></div>' +
-      '<details><summary>How to play</summary><ul><li><b>Keyboard:</b> arrow keys or WASD to walk; hold Shift to run. <b>E</b> or Enter gets into a chariot or out of it. In a chariot, ↑ goes forward, ↓ slows down and reverses, ← → turn, Shift brakes. P pauses.</li><li><b>Phone:</b> drag the left half of the screen to move or steer; the chariot heads the way you point. Use the buttons to get in and out and to run.</li><li>The ! on the map is your patron. Walk into it for a job. The ★ marks where to go next; the arrow at the edge of the screen points to it.</li><li>Knocking people over with a chariot brings out the watch (🛡️). Get out of their sight for a while and they give up; if they catch you, you pay a fine.</li><li>Your progress is saved in this browser.</li></ul></details>' +
+      '<details><summary>How to play</summary><ul><li><b>Keyboard:</b> arrow keys or WASD to walk; hold Shift to run. <b>E</b> or Enter gets into a chariot or out of it. In a chariot, ↑ goes forward, ↓ slows down and reverses, ← → turn, Shift brakes. P pauses.</li><li><b>Phone:</b> drag the left half of the screen to move or steer; the chariot heads the way you point. Use the buttons to get in and out and to run.</li><li>The 📜 Jobs button (or J) lists all seven jobs; start any of them from wherever you are, or walk into the ! on the map, your patron. The ★ marks where to go next; the arrow at the edge of the screen points to it.</li><li>Knocking people over with a chariot brings out the watch (🛡️). Get out of their sight for a while and they give up; if they catch you, you pay a fine.</li><li>Your progress is saved in this browser.</li></ul></details>' +
       '<p class="ct-small">This is a cartoon city. The street plan is invented; the great buildings are in roughly the right places, and the history is real.</p>');
-    o.querySelectorAll('.ct-city').forEach(function (b) { b.addEventListener('click', function () { startCity(b.dataset.c); closeOv(); }); });
+    o.querySelectorAll('.ct-city button[data-c]').forEach(function (b) { b.addEventListener('click', function () { startCity(b.dataset.c); closeOv(); }); });
     $('#ct-w').addEventListener('change', function () { st.words = this.checked; save(); });
     $('#ct-s').addEventListener('change', function () { st.sound = this.checked; save(); if (st.sound) beep('ok'); });
   }
   function pause() {
     if (!G || !$('#ct-ov').hidden) return;
-    var o = ov('<h2>Paused</h2><p class="ct-small">' + esc(G.m.name) + ', ' + esc(G.m.when) + '</p><button class="ct-btn pri" id="ct-res">Continue</button> ' + (G.mission ? '<button class="ct-btn" id="ct-quit">Give up this job</button> ' : '') + '<button class="ct-btn" id="ct-menu2">Choose a city</button>');
+    var o = ov('<h2>Paused</h2><p class="ct-small">' + esc(G.m.name) + ', ' + esc(G.m.when) + '</p><button class="ct-btn pri" id="ct-res">Continue</button> ' + (G.mission ? '<button class="ct-btn" id="ct-quit">Give up this job</button> ' : '') + '<button class="ct-btn" id="ct-jobs2">Jobs</button> <button class="ct-btn" id="ct-menu2">Choose a city</button>');
+    $('#ct-jobs2').addEventListener('click', function () { closeOv(); jobsMenu(); });
     $('#ct-res').addEventListener('click', closeOv);
     if ($('#ct-quit')) $('#ct-quit').addEventListener('click', function () { endMission(); setWanted(0); closeOv(); });
     $('#ct-menu2').addEventListener('click', function () { G = null; title(); });
@@ -567,6 +585,7 @@
     if (e.code === 'KeyP' || e.code === 'Escape') { if (!paused) pause(); else if ($('#ct-res')) closeOv(); e.preventDefault(); return; }
     if (paused) return;
     if (e.code === 'KeyE' || e.code === 'Enter') { action(); e.preventDefault(); return; }
+    if (e.code === 'KeyJ') { jobsMenu(); e.preventDefault(); return; }
     var k = KM[e.code]; if (!k) return; keys[k] = true; e.preventDefault();
   });
   D.addEventListener('keyup', function (e) { var k = KM[e.code]; if (k) keys[k] = false; });
@@ -583,6 +602,7 @@
   runB.addEventListener('pointerdown', function (e) { e.preventDefault(); keys.run = true; runB.classList.add('on'); });
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { runB.addEventListener(ev, function () { keys.run = false; runB.classList.remove('on'); }); });
   $('#ct-pause').addEventListener('click', pause);
+  $('#ct-jobs').addEventListener('click', jobsMenu);
   if (touch) root.classList.add('touch');
 
   // ---------- loop ----------

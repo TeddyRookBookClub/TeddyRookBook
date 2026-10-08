@@ -36,17 +36,19 @@
     root.innerHTML =
       '<div class="dw-top"><h1>Daily Word Puzzle</h1>' +
       '<div class="dw-langs" role="group" aria-label="Language"><button class="bg-btn" data-l="l">Latin</button><button class="bg-btn" data-l="g">Greek</button></div>' +
-      '<button class="bg-btn" id="dw-help-b" aria-expanded="false">How to play</button></div>' +
+      '<button class="bg-btn" id="dw-bank-b" aria-pressed="false">Word bank</button><button class="bg-btn" id="dw-help-b" aria-expanded="false">How to play</button></div>' +
       '<div class="dw-help" id="dw-help" hidden><p>Guess today’s five-letter word in six tries. Each guess must be a real word form. After each guess the tiles change colour:</p>' +
       '<p><span class="dw-mini s2">A</span> right letter, right place &nbsp; <span class="dw-mini s1">A</span> in the word, wrong place &nbsp; <span class="dw-mini s0">A</span> not in the word</p>' +
       '<p>Accents and breathings are ignored: you only guess the letters. In Latin, U and V count as one letter, as they did for the Romans, and so do I and J. In Greek, Σ and ς are one letter. Type Greek with a Greek keyboard, the buttons below, or Latin keys in the usual Greek layout (a = α, u = θ, j = ξ, c = ψ, v = ω, w = ς).</p>' +
-      '<p>The answers are common words: Latin nouns and adjectives from classical authors, and Greek words found in the New Testament (Koine). Guesses may be any five-letter form found in the Perseus and PROIEL treebanks. Everyone gets the same word each day, with a new Latin and a new Greek word at midnight.</p></div>' +
+      '<p>The answers are common words: Latin nouns and adjectives from classical authors, and Greek words found in the New Testament (Koine). Guesses may be any five-letter form found in the Perseus and PROIEL treebanks. Everyone gets the same word each day, with a new Latin and a new Greek word at midnight.</p><p>Stuck? The <b>Word bank</b> lists every possible answer with its meaning, and crosses out the ones your tiles have ruled out.</p></div>' +
       '<div class="dw-msg" id="dw-msg" role="status" aria-live="polite"></div>' +
       '<div class="dw-grid" id="dw-grid" aria-label="Guesses"></div>' +
       '<div class="dw-end" id="dw-end" hidden></div>' +
       '<div class="dw-kb" id="dw-kb"></div>' +
+      '<div class="dw-bank" id="dw-bank" hidden></div>' +
       '<div class="dw-stats bg-small" id="dw-stats"></div>';
     root.querySelectorAll('[data-l]').forEach(function (b) { b.onclick = function () { setLang(b.getAttribute('data-l')); }; });
+    var bb = D.getElementById('dw-bank-b'); bb.onclick = function () { bankOn = !bankOn; try { W.localStorage.setItem('trb-daily-bank', bankOn ? '1' : ''); } catch (e) { } bank(); };
     var hb = D.getElementById('dw-help-b'); hb.onclick = function () { var h = D.getElementById('dw-help'); h.hidden = !h.hidden; hb.setAttribute('aria-expanded', String(!h.hidden)); };
   }
 
@@ -86,7 +88,23 @@
       b.classList.remove('s0', 's1', 's2'); if (s != null) b.classList.add('s' + s);
     });
     D.getElementById('dw-kb').hidden = !!g.done;
+    bank();
     end(); stats();
+  }
+
+  // The word bank: every word that can be an answer in this language, with its meaning. Words that no longer fit
+  // the coloured tiles are crossed out; tap a word to type it in.
+  var bankOn = false; try { bankOn = !!W.localStorage.getItem('trb-daily-bank'); } catch (e) { }
+  function bank() {
+    var el = D.getElementById('dw-bank'), b = D.getElementById('dw-bank-b'); if (!el || !data) return;
+    b.classList.toggle('on', bankOn); b.setAttribute('aria-pressed', String(bankOn)); el.hidden = !bankOn; if (!bankOn) return;
+    var g = game(), ans = norm(answer(lang, today())[0], lang), L = LANGS[lang];
+    var res = g.g.map(function (w) { var n = norm(w, lang); return [n, score(n, ans).join('')]; });
+    var list = data[lang].ans.slice().sort(function (a, b) { return norm(a[0], lang) < norm(b[0], lang) ? -1 : 1; });
+    var fit = 0;
+    var h = list.map(function (a) { var n = norm(a[0], lang), ok = res.every(function (r) { return score(r[0], n).join('') === r[1]; }); if (ok) fit++; return '<button class="dw-bw' + (ok ? '' : ' out') + '" data-w="' + (lang === 'g' ? n : strip(a[0])) + '"' + (ok ? '' : ' aria-label="' + a[0] + ', ruled out"') + '><b class="' + L.cls + '" lang="' + (lang === 'g' ? 'grc' : 'la') + '">' + a[0] + '</b><small>' + a[1] + '</small></button>'; }).join('');
+    el.innerHTML = '<p class="bg-small">Every possible answer in ' + L.name + ' (' + list.length + ' words). ' + (res.length ? fit + ' still fit your tiles; the rest are crossed out. ' : '') + (g.done ? '' : 'Tap a word to type it in.') + '</p><div class="dw-bws">' + h + '</div>';
+    el.querySelectorAll('.dw-bw').forEach(function (bt) { bt.onclick = function () { if (game().done) return; cur = bt.getAttribute('data-w'); render(); }; });
   }
 
   function key(k) {

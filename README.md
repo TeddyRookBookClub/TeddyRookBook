@@ -48,7 +48,7 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Royal Game of Ur | The Mesopotamian race game, with the rules from a Babylonian tablet | — |
 | Knucklebones | Augustus's dinner-table game from Suetonius, and a modern variant | Latin |
 | Daily Word Puzzle | Guess the day's five-letter word in six tries | Latin or Koine Greek |
-| Streets of Rome and Athens | Top-down city game: chariots, errands, races, a thief and the watch | Latin or Koine Greek |
+| Charioteer | Top-down city game: chariots, errands, races, a thief and the watch | Latin or Koine Greek |
 | Siege | Fire ancient siege engines at real sieges; learn how the machines differ | Latin or Koine Greek, optional |
 
 Hero's Road has three settings: Theseus in Greece, Hercules in Rome, and Odysseus sailing to the Cyclops' cave.

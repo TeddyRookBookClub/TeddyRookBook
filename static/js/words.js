@@ -5,7 +5,7 @@
 (function (W) {
   'use strict';
   var KEY = 'trb-words-v1';
-  var GAMES = { hero: 'Hero’s Road', mosaic: 'Mosaic Match', thermopylae: 'Thermopylae', teutoburg: 'Teutoburg', thief: 'Time Thief', chess: 'Chess of the Ancients', daily: 'Daily Word Puzzle', alphabet: 'Greek Alphabet', siege: 'Siege', city: 'Streets of Rome and Athens' };
+  var GAMES = { hero: 'Hero’s Road', mosaic: 'Mosaic Match', thermopylae: 'Thermopylae', teutoburg: 'Teutoburg', thief: 'Time Thief', chess: 'Chess of the Ancients', daily: 'Daily Word Puzzle', alphabet: 'Greek Alphabet', siege: 'Siege', city: 'Charioteer' };
   function read() { try { var d = JSON.parse(W.localStorage.getItem(KEY)); if (d && d.w) return d; } catch (e) { } return { v: 1, w: {} }; }
   function write(d) { try { W.localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) { } }
   function clean(s) { return String(s || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(); }

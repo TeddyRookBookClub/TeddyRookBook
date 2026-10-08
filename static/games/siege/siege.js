@@ -404,16 +404,29 @@
   // ---------- input ----------
   var drag = null;
   function pt(e) { var r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
-  cv.addEventListener('pointerdown', function (e) { if (!G || paused || G.phase !== 'aim') return; drag = { s: pt(e), a: G.aim.a, p: G.aim.p }; cv.setPointerCapture(e.pointerId); e.preventDefault(); });
-  cv.addEventListener('pointermove', function (e) {
-    if (!drag) return; var q = pt(e), dx = drag.s.x - q.x, dy = q.y - drag.s.y, len = Math.hypot(dx, dy), E = ENG[G.eng];
+  // Aiming: press, pull back, let go. The drag always ends when the button comes up, wherever the pointer is,
+  // and a mouse that moves with no button held never changes the aim.
+  cv.addEventListener('pointerdown', function (e) {
+    if (!G || paused || G.phase !== 'aim' || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    drag = { id: e.pointerId, s: pt(e), a: G.aim.a, p: G.aim.p, moved: 0 };
+    try { cv.setPointerCapture(e.pointerId); } catch (er) { }
+    e.preventDefault();
+  });
+  W.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    if (e.pointerType === 'mouse' && !(e.buttons & 1)) { drag = null; return; } // the button was released somewhere we did not hear about
+    var q = pt(e), dx = drag.s.x - q.x, dy = q.y - drag.s.y, len = Math.hypot(dx, dy), E = ENG[G.eng];
+    drag.moved = Math.max(drag.moved, len);
     if (len < 8) return;
     G.aim.a = clamp(Math.atan2(dy, dx) * 180 / Math.PI, E.amin, E.amax);
     G.aim.p = clamp(len / (Math.min(Wd, Ht) * 0.45), 0.05, 1);
     aimText();
   });
-  function up(e) { if (!drag) return; var q = pt(e), moved = Math.hypot(q.x - drag.s.x, q.y - drag.s.y); drag = null; if (moved >= 8) fire(); }
-  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', function () { drag = null; });
+  function up(e) { if (!drag || e.pointerId !== drag.id) return; var d = drag; drag = null; try { cv.releasePointerCapture(e.pointerId); } catch (er) { } if (d.moved >= 8) fire(); }
+  W.addEventListener('pointerup', up);
+  W.addEventListener('pointercancel', function () { drag = null; });
+  cv.addEventListener('lostpointercapture', function (e) { if (drag && e.pointerId === drag.id && e.pointerType !== 'mouse') drag = null; });
+  W.addEventListener('blur', function () { drag = null; });
   function nudge(da, dp) { if (!G || G.phase !== 'aim') return; var E = ENG[G.eng]; G.aim.a = clamp(G.aim.a + da, E.amin, E.amax); G.aim.p = clamp(G.aim.p + dp, 0.05, 1); aimText(); }
   D.addEventListener('keydown', function (e) {
     if (!G || paused || /INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '')) return;
