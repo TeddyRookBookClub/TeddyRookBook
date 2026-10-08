@@ -37,7 +37,7 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Ancient Festival Tycoon | Build festival grounds, rise through the ranks, win more land | Greek in Greece, Latin in Rome |
 | Mosaic Match | Match-three with 180 pictured words over 30 levels, plus endless practice | Latin or Koine Greek |
 | Teutoburg | Maze chase through the Teutoburg Forest, AD 9 | Latin |
-| Hero's Road | Side-scrolling platformer: Theseus (Greece), Hercules (Rome) or Odysseus, four levels each with a boss | Greek or Latin |
+| Hero's Road | Side-scrolling platformer: Theseus (Greece), Hercules (Rome) or Odysseus, ten levels each, with bosses | Greek or Latin |
 | Thermopylae | Hold the pass as Leonidas while the Persians close in | Greek |
 | Time Thief | Chase a thief through history by following clues | Greek or Latin |
 | Chess of the Ancients | Chess with Greek or Roman armies | Greek or Latin piece names |

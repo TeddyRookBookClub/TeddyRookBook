@@ -16,18 +16,42 @@
   var VOC = {"sun": ["ἥλιος", "sol"], "tree": ["δένδρον", "arbor"], "olive": ["ἐλαία", "oliva"], "wheat": ["σῖτος", "triticum"], "flower": ["ἄνθος", "flos"], "sheep": ["πρόβατον", "ovis"], "ox": ["βοῦς", "bos"], "horse": ["ἵππος", "equus"], "water": ["ὕδωρ", "aqua"], "road": ["ὁδός", "via"], "bread": ["ἄρτος", "panis"], "honey": ["μέλι", "mel"], "grass": ["χόρτος", "herba"], "house": ["οἶκος", "domus"], "river": ["ποταμός", "flumen"], "wine": ["οἶνος", "vinum"], "stone": ["λίθος", "lapis"], "mountain": ["ὄρος", "mons"], "sea": ["θάλασσα", "mare"], "ship": ["πλοῖον", "navis"], "wind": ["ἄνεμος", "ventus"], "cloud": ["νεφέλη", "nubes"], "rain": ["βροχή", "pluvia"], "island": ["νῆσος", "insula"], "shore": ["αἰγιαλός", "litus"], "fish": ["ἰχθύς", "piscis"], "anchor": ["ἄγκυρα", "ancora"], "net": ["δίκτυον", "rete"], "small boat": ["πλοιάριον", "navicula"], "eagle": ["ἀετός", "aquila"], "wall": ["τεῖχος", "murus"], "tower": ["πύργος", "turris"], "city": ["πόλις", "civitas"], "village": ["κώμη", "vicus"], "king": ["βασιλεύς", "rex"], "queen": ["βασίλισσα", "regina"], "crown": ["στέφανος", "corona"], "sword": ["μάχαιρα", "gladius"], "shield": ["θυρεός", "scutum"], "helmet": ["περικεφαλαία", "galea"], "spring": ["πηγή", "fons"], "lamp": ["λύχνος", "lucerna"], "light": ["φῶς", "lux"], "night": ["νύξ", "nox"], "key": ["κλείς", "clavis"], "chain": ["ἅλυσις", "catena"], "well": ["φρέαρ", "puteus"], "snake": ["ὄφις", "serpens"], "scorpion": ["σκορπίος", "scorpio"], "worm": ["σκώληξ", "vermis"], "sleep": ["ὕπνος", "somnus"], "eye": ["ὀφθαλμός", "oculus"], "hand": ["χείρ", "manus"], "foot": ["πούς", "pes"], "rope": ["σχοινίον", "funiculus"], "door": ["θύρα", "ostium"], "tomb": ["μνημεῖον", "monumentum"], "fire": ["πῦρ", "ignis"], "bow": ["τόξον", "arcus"], "trumpet": ["σάλπιγξ", "tuba"], "war": ["πόλεμος", "bellum"], "chariot": ["ἅρμα", "currus"], "wheel": ["τροχός", "rota"], "axe": ["ἀξίνη", "securis"], "cup": ["ποτήριον", "calix"], "ring": ["δακτύλιος", "anulus"], "gift": ["δῶρον", "donum"], "table": ["τράπεζα", "mensa"], "seat": ["καθέδρα", "cathedra"], "heart": ["καρδία", "cor"], "wolf": ["λύκος", "lupus"], "fox": ["ἀλώπηξ", "vulpes"], "frog": ["βάτραχος", "rana"], "locust": ["ἀκρίς", "locusta"], "sandal": ["ὑπόδημα", "calceamentum"]};
   VOC.coin = ['δραχμή', 'denarius'];
 
+  // More words for the new levels. Every Greek word appears in the New Testament; the Latin is in dictionary form.
+  var VOC2 = { lion: ['λέων', 'leo'], bull: ['ταῦρος', 'taurus'], bird: ['πετεινόν', 'avis'], goat: ['τράγος', 'caper'], dog: ['κύων', 'canis'], bear: ['ἄρκος', 'ursus'], gold: ['χρυσός', 'aurum'],
+    wave: ['κῦμα', 'fluctus'], storm: ['λαῖλαψ', 'procella'], arrow: ['βέλος', 'sagitta'], shepherd: ['ποιμήν', 'pastor'], spear: ['λόγχη', 'lancea'], gate: ['πύλη', 'porta'], temple: ['ναός', 'templum'],
+    garden: ['κῆπος', 'hortus'], snow: ['χιών', 'nix'], moon: ['σελήνη', 'luna'], blood: ['αἷμα', 'sanguis'], salt: ['ἅλας', 'sal'], pig: ['χοῖρος', 'porcus'], wing: ['πτέρυξ', 'ala'],
+    voice: ['φωνή', 'vox'], song: ['ᾠδή', 'canticum'], lyre: ['κιθάρα', 'cithara'], tear: ['δάκρυον', 'lacrima'], dream: ['ὄναρ', 'somnium'], staff: ['ῥάβδος', 'baculum'], bed: ['κλίνη', 'lectus'],
+    poison: ['ἰός', 'venenum'], death: ['θάνατος', 'mors'], life: ['ζωή', 'vita'], father: ['πατήρ', 'pater'], son: ['υἱός', 'filius'], mother: ['μήτηρ', 'mater'], friend: ['φίλος', 'amicus'],
+    enemy: ['ἐχθρός', 'inimicus'], shadow: ['σκιά', 'umbra'], bag: ['πήρα', 'pera'], rock: ['πέτρα', 'saxum'], horn: ['κέρας', 'cornu'], feast: ['δεῖπνον', 'cena'], dung: ['κόπριον', 'stercus'],
+    star: ['ἀστήρ', 'stella'], field: ['ἀγρός', 'ager'], silver: ['ἀργύριον', 'argentum'], thorn: ['ἄκανθα', 'spina'], grave: ['μνῆμα', 'sepulcrum'], altar: ['θυσιαστήριον', 'altare'], cave: ['σπήλαιον', 'spelunca'], head: ['κεφαλή', 'caput'], sky: ['οὐρανός', 'caelum'] };
+  for (var vk in VOC2) VOC[vk] = VOC2[vk];
+
   // ---------- settings and levels ----------
+  // Ten levels per hero. Each level's layout is built from its own seed (see makeLevel), so no two levels are alike.
+  // kind: field, cliff, sea, cave or castle (the theme and its hazards). boss: the level ends with a boss instead of a flag.
   var SET = {
     gr: {
       name: 'Greece', hero: 'Theseus', lang: 'Koine Greek', coin: 'drachma', flyer: 'eagle', boss: 'the Minotaur',
       levels: [
-        { name: 'The Road from Troezen', kind: 'field', words: ['sun', 'tree', 'olive', 'wheat', 'flower', 'sheep', 'ox', 'horse', 'water', 'road', 'bread', 'honey', 'grass', 'house', 'river', 'wine'],
-          story: 'Theseus grew up in Troezen. To reach his father in Athens he chose the dangerous coast road instead of the sea, clearing it of bandits as he went.' },
-        { name: 'The Cliffs of Sciron', kind: 'cliff', words: ['stone', 'mountain', 'sea', 'ship', 'wind', 'cloud', 'rain', 'island', 'shore', 'fish', 'anchor', 'net', 'small boat', 'eagle', 'wall', 'tower'],
+        { name: 'The Rock at Troezen', kind: 'field', words: ['rock', 'sword', 'sandal', 'father', 'mother', 'son', 'sun', 'tree', 'olive', 'flower', 'sheep', 'road', 'house', 'water', 'bread', 'grass'],
+          story: 'Before he left Troezen, King Aegeus of Athens hid his sword and sandals under a great rock. When his son Theseus was strong enough to lift it, he would know who his father was. Theseus lifted it, and set out for Athens.' },
+        { name: 'Periphetes the Club-Bearer', kind: 'field', words: ['staff', 'road', 'stone', 'tree', 'wolf', 'fox', 'river', 'horse', 'ox', 'wheat', 'honey', 'wine', 'field', 'village', 'foot', 'hand'],
+          story: 'At Epidaurus the bandit Periphetes clubbed travellers with a bronze club. Theseus took the club from him and carried it ever after.' },
+        { name: 'Sinis the Pine-Bender', kind: 'field', words: ['tree', 'rope', 'wind', 'mountain', 'sea', 'shore', 'bird', 'cloud', 'rain', 'stone', 'road', 'thorn', 'flower', 'grass', 'eagle', 'death'],
+          story: 'At the Isthmus of Corinth, Sinis bent pine trees down to the ground, tied travellers to them and let them go. Theseus gave him the same treatment.' },
+        { name: 'The Sow of Crommyon', kind: 'field', words: ['pig', 'field', 'grass', 'wheat', 'bread', 'village', 'house', 'well', 'spear', 'shield', 'horse', 'ox', 'sheep', 'fox', 'frog', 'river'],
+          story: 'A monstrous wild sow, called Phaea, terrorised the farms of Crommyon. Theseus hunted it down.' },
+        { name: 'The Cliffs of Sciron', kind: 'cliff', words: ['rock', 'sea', 'wave', 'foot', 'water', 'ship', 'wind', 'island', 'shore', 'fish', 'eagle', 'wall', 'tower', 'cloud', 'storm', 'stone'],
           story: 'On the cliffs near Megara the bandit Sciron made travellers wash his feet, then kicked them into the sea. Theseus threw him off his own cliff.' },
+        { name: 'Cercyon the Wrestler', kind: 'field', words: ['hand', 'foot', 'king', 'crown', 'seat', 'heart', 'enemy', 'friend', 'voice', 'temple', 'gate', 'city', 'road', 'wheat', 'olive', 'cup'],
+          story: 'At Eleusis King Cercyon challenged every passer-by to wrestle, and killed those he beat. Theseus won by skill rather than strength.' },
+        { name: 'The Bed of Procrustes', kind: 'cave', words: ['bed', 'house', 'door', 'lamp', 'night', 'sleep', 'dream', 'key', 'chain', 'rope', 'axe', 'table', 'cup', 'wine', 'feast', 'shadow'],
+          story: 'Procrustes offered travellers a bed for the night, then stretched them or cut them down to fit it. Theseus made him fit his own bed.' },
+        { name: 'Athens and the Bull of Marathon', kind: 'field', words: ['bull', 'horn', 'city', 'king', 'poison', 'cup', 'sword', 'father', 'feast', 'temple', 'altar', 'gate', 'wall', 'tower', 'horse', 'chariot'],
+          story: 'In Athens the sorceress Medea tried to poison Theseus, but Aegeus knew his own sword just in time. Theseus then captured the wild bull that was ravaging the plain of Marathon.' },
         { name: 'The Labyrinth', kind: 'cave', words: ['lamp', 'light', 'night', 'key', 'chain', 'well', 'snake', 'scorpion', 'worm', 'sleep', 'eye', 'hand', 'foot', 'rope', 'door', 'tomb'],
-          story: 'In Crete, King Minos fed young Athenians to the Minotaur in the Labyrinth. Ariadne gave Theseus a ball of thread so he could find his way out again.' },
-        { name: 'The Minotaur’s Hall', kind: 'castle', words: ['fire', 'bow', 'trumpet', 'war', 'chariot', 'wheel', 'axe', 'king', 'crown', 'cup', 'ring', 'gift', 'table', 'seat', 'heart', 'sword'],
+          story: 'In Crete, King Minos fed young Athenians to the Minotaur in the Labyrinth. Theseus sailed with them, and the king’s daughter Ariadne gave him a ball of thread to find his way out again.' },
+        { name: 'The Minotaur’s Hall', kind: 'castle', boss: 1, words: ['fire', 'bow', 'trumpet', 'war', 'chariot', 'wheel', 'axe', 'king', 'crown', 'cup', 'ring', 'gift', 'table', 'seat', 'heart', 'sword'],
           story: 'At the heart of the Labyrinth waits the Minotaur, half man and half bull. Pull the lever behind him, or wear him down with stones.' }
       ],
       ending: 'Theseus killed the Minotaur and followed Ariadne’s thread back out of the Labyrinth. On the way home he forgot to change his black sails to white, and his father Aegeus, seeing them, threw himself into the sea that now bears his name.'
@@ -35,13 +59,25 @@
     ro: {
       name: 'Rome', hero: 'Hercules', lang: 'Latin', coin: 'denarius', flyer: 'locust', boss: 'Cacus',
       levels: [
-        { name: 'Along the Tiber', kind: 'field', words: ['sun', 'tree', 'olive', 'wheat', 'flower', 'sheep', 'ox', 'horse', 'water', 'road', 'bread', 'honey', 'grass', 'house', 'river', 'wine'],
-          story: 'Hercules was driving the cattle of Geryon home from Spain. In Italy he rested them in the grassy meadows by the Tiber, where Rome would one day stand.' },
-        { name: 'Evander’s Hills', kind: 'cliff', words: ['stone', 'mountain', 'wall', 'tower', 'city', 'village', 'king', 'queen', 'crown', 'sword', 'shield', 'helmet', 'spring', 'wind', 'cloud', 'rain'],
-          story: 'King Evander ruled a small town on the Palatine. While Hercules slept, some of his cattle went missing, dragged backwards by their tails so the tracks would mislead him.' },
+        { name: 'The Nemean Lion', kind: 'field', words: ['lion', 'sword', 'arrow', 'bow', 'staff', 'mountain', 'tree', 'rock', 'sun', 'grass', 'wolf', 'fox', 'shepherd', 'sheep', 'village', 'road'],
+          story: 'To make up for a terrible crime, Hercules had to serve King Eurystheus and perform twelve labours. The first was the lion of Nemea, whose skin no weapon could pierce. Hercules wrestled it, and wore its skin from then on.' },
+        { name: 'The Hydra of Lerna', kind: 'cave', words: ['snake', 'water', 'fire', 'blood', 'arrow', 'poison', 'head', 'river', 'frog', 'worm', 'tree', 'rock', 'night', 'lamp', 'friend', 'sword'],
+          story: 'In the marshes of Lerna lived the Hydra, a water snake with many heads: cut one off and two grew back. Hercules’ nephew Iolaus burned each stump with a torch so it could not grow again.' },
+        { name: 'The Golden-Horned Hind', kind: 'field', words: ['horn', 'gold', 'field', 'tree', 'flower', 'river', 'spring', 'mountain', 'snow', 'moon', 'star', 'sun', 'arrow', 'foot', 'road', 'grass'],
+          story: 'The hind of Ceryneia, sacred to Diana, had golden horns and was so swift that no hunter could catch it. Hercules chased it for a whole year before he caught it without harming it.' },
+        { name: 'The Erymanthian Boar', kind: 'cliff', words: ['pig', 'snow', 'mountain', 'rock', 'net', 'rope', 'spear', 'wind', 'cloud', 'tree', 'shepherd', 'goat', 'bear', 'wolf', 'cave', 'stone'],
+          story: 'On snowy Mount Erymanthus, Hercules drove a huge wild boar into deep snow, trapped it in a net, and carried it back alive.' },
+        { name: 'The Stables of Augeas', kind: 'field', words: ['dung', 'ox', 'horse', 'river', 'water', 'house', 'door', 'wall', 'king', 'gold', 'field', 'grass', 'wheat', 'well', 'sun', 'cloud'],
+          story: 'King Augeas had thousands of cattle and stables that had not been cleaned for years. Hercules cleaned them in a single day by turning two rivers, the Alpheus and the Peneus, through them.' },
+        { name: 'The Birds of Stymphalus', kind: 'sea', words: ['bird', 'wing', 'arrow', 'bow', 'water', 'tree', 'cloud', 'wind', 'voice', 'trumpet', 'fish', 'frog', 'small boat', 'shore', 'rain', 'sky'],
+          story: 'Man-eating birds flocked over the lake of Stymphalus. Minerva gave Hercules a pair of bronze rattles; their noise drove the birds into the air, where he shot them down.' },
+        { name: 'The Cretan Bull', kind: 'sea', words: ['bull', 'ship', 'sea', 'wave', 'island', 'king', 'horn', 'storm', 'anchor', 'net', 'shore', 'fish', 'wind', 'rope', 'altar', 'temple'],
+          story: 'King Minos of Crete had kept back a magnificent bull that he should have sacrificed, and the bull ran wild. Hercules sailed to Crete, caught it, and brought it back over the sea.' },
+        { name: 'The Cattle of Geryon', kind: 'cliff', words: ['ox', 'dog', 'sun', 'gold', 'cup', 'sea', 'island', 'rock', 'mountain', 'shepherd', 'staff', 'arrow', 'bow', 'wave', 'road', 'river'],
+          story: 'Far in the west lived Geryon, a giant with three bodies, and his red cattle. On the way Hercules set up the Pillars of Hercules at the Strait of Gibraltar, then drove the cattle home across Spain, Gaul and Italy.' },
         { name: 'Cacus’ Cave', kind: 'cave', words: ['lamp', 'light', 'night', 'key', 'chain', 'well', 'snake', 'scorpion', 'worm', 'sleep', 'eye', 'hand', 'foot', 'rope', 'door', 'tomb'],
-          story: 'A lowing from inside the Aventine gave the thief away. Hercules tore the roof off the cave to get in.' },
-        { name: 'The Fires of Cacus', kind: 'castle', words: ['fire', 'bow', 'trumpet', 'war', 'chariot', 'wheel', 'axe', 'king', 'crown', 'cup', 'ring', 'gift', 'table', 'seat', 'heart', 'sword'],
+          story: 'Resting by the Tiber, Hercules lost some of his cattle to the thief Cacus, who dragged them backwards by their tails into his cave on the Aventine. A lowing from inside gave the thief away.' },
+        { name: 'The Fires of Cacus', kind: 'castle', boss: 1, words: ['fire', 'bow', 'trumpet', 'war', 'chariot', 'wheel', 'axe', 'king', 'crown', 'cup', 'ring', 'gift', 'table', 'seat', 'heart', 'sword'],
           story: 'Cacus, a son of Vulcan, breathes fire and smoke. Pull the lever behind him, or wear him down with stones.' }
       ],
       ending: 'Hercules choked Cacus in his own smoke-filled cave and freed the cattle. Virgil tells the story in Aeneid 8, and Livy in his first book: Evander’s people honoured Hercules at the Great Altar, the Ara Maxima, beside the cattle market.'
@@ -49,16 +85,29 @@
     od: {
       name: 'The Odyssey', hero: 'Odysseus', lang: 'Koine Greek', coin: 'drachma', flyer: 'eagle', boss: 'the Cyclops',
       levels: [
+        { name: 'The Cicones', kind: 'field', words: ['city', 'wall', 'ship', 'shore', 'wine', 'sheep', 'ox', 'war', 'spear', 'shield', 'sword', 'horse', 'chariot', 'feast', 'friend', 'enemy'],
+          story: 'Sailing home from Troy, Odysseus and his men raided Ismarus, the city of the Cicones. They stayed too long feasting on the shore, and the Cicones came back with help and drove them to their ships.' },
         { name: 'The Lotus-Eaters', kind: 'field', words: ['sun', 'flower', 'honey', 'tree', 'olive', 'water', 'bread', 'fish', 'wine', 'grass', 'river', 'sheep', 'road', 'house', 'island', 'shore'],
-          story: 'Sailing home from Troy, Odysseus was blown off course to the land of the Lotus-Eaters. Whoever tasted the honey-sweet lotus forgot all about going home, so Odysseus had to drag his men back to the ships.' },
-        { name: 'Island to Island', kind: 'sea', words: ['sea', 'ship', 'small boat', 'wind', 'cloud', 'rain', 'island', 'shore', 'anchor', 'net', 'fish', 'eagle', 'stone', 'mountain', 'spring', 'water'],
+          story: 'A storm blew them to the land of the Lotus-Eaters. Whoever tasted the honey-sweet lotus forgot all about going home, so Odysseus had to drag his men back to the ships.' },
+        { name: 'Island to Island', kind: 'sea', words: ['sea', 'ship', 'small boat', 'wind', 'cloud', 'rain', 'island', 'shore', 'anchor', 'net', 'fish', 'eagle', 'stone', 'mountain', 'spring', 'goat'],
           story: 'Next they reached a wooded island full of wild goats, lying just off the land of the Cyclopes. Cross the strait from boat to boat and rock to rock.' },
         { name: 'The Cyclops’ Cave', kind: 'cave', words: ['lamp', 'fire', 'night', 'sheep', 'eye', 'sleep', 'cup', 'wine', 'door', 'stone', 'hand', 'foot', 'rope', 'key', 'chain', 'well'],
           story: 'Odysseus took twelve men into a huge cave full of cheeses and lambs. Its owner, the one-eyed giant Polyphemus, came home, rolled a great stone across the doorway and ate two of the men.' },
-        { name: 'Polyphemus', kind: 'castle', words: ['fire', 'bow', 'war', 'king', 'queen', 'crown', 'ring', 'gift', 'table', 'seat', 'heart', 'sword', 'shield', 'helmet', 'tower', 'wall'],
-          story: 'Odysseus gave the giant strong wine and told him his name was Nobody. Now get past Polyphemus and his hurled rocks: pull the lever behind him to tip him into the fire pit, or wear him down with stones.' }
+        { name: 'Polyphemus', kind: 'castle', boss: 1, words: ['fire', 'bow', 'war', 'king', 'queen', 'crown', 'ring', 'gift', 'table', 'seat', 'heart', 'sword', 'shield', 'helmet', 'tower', 'wall'],
+          story: 'Odysseus gave the giant strong wine and told him his name was Nobody. Now get past Polyphemus and his hurled rocks: pull the lever behind him to tip him into the fire pit, or wear him down with stones.',
+          after: 'While Polyphemus slept, Odysseus and his men drove a sharpened olive stake into his one eye. When the other Cyclopes came running, he shouted that Nobody was hurting him, so they went away, and the Greeks slipped out tied under the bellies of his rams.' },
+        { name: 'The Bag of Winds', kind: 'sea', words: ['bag', 'wind', 'storm', 'gift', 'king', 'island', 'wall', 'ship', 'sea', 'wave', 'sleep', 'gold', 'silver', 'friend', 'cloud', 'star'],
+          story: 'Aeolus, keeper of the winds, gave Odysseus all the storm winds tied in a leather bag. Within sight of home, while Odysseus slept, his crew opened it, thinking it held gold, and the winds blew them all the way back.' },
+        { name: 'Circe’s Island', kind: 'field', words: ['pig', 'house', 'cup', 'feast', 'wine', 'garden', 'tree', 'flower', 'wolf', 'lion', 'voice', 'song', 'staff', 'friend', 'bread', 'honey'],
+          story: 'The enchantress Circe turned half of Odysseus’ crew into pigs with a magic drink and a tap of her wand. The god Hermes gave Odysseus a herb called moly to protect him, and he made her turn them back.' },
+        { name: 'The Land of the Dead', kind: 'cave', words: ['shadow', 'death', 'life', 'blood', 'grave', 'mother', 'night', 'lamp', 'tear', 'voice', 'dream', 'sleep', 'river', 'tree', 'gate', 'door'],
+          story: 'To learn the way home, Odysseus sailed to the edge of the world and called up the spirits of the dead. The prophet Teiresias told him what lay ahead, and he met the ghost of his own mother.' },
+        { name: 'The Sirens, Scylla and Charybdis', kind: 'sea', words: ['song', 'voice', 'lyre', 'rope', 'ship', 'sea', 'wave', 'rock', 'bird', 'wind', 'storm', 'shore', 'island', 'net', 'anchor', 'salt'],
+          story: 'Odysseus had his men plug their ears with wax and tie him to the mast so he could hear the Sirens’ song and live. Then they rowed between Scylla, a six-headed monster on the cliff, and the whirlpool Charybdis.' },
+        { name: 'Home to Ithaca', kind: 'field', words: ['house', 'son', 'dog', 'bow', 'arrow', 'feast', 'table', 'door', 'king', 'queen', 'olive', 'tree', 'bed', 'gate', 'shepherd', 'goat'],
+          story: 'After twenty years away, Odysseus came home to Ithaca disguised as a beggar. Only his old dog Argos knew him at once. His palace was full of suitors who wanted to marry his wife Penelope.' }
       ],
-      ending: 'While Polyphemus slept, Odysseus and his men drove a sharpened olive stake into his one eye. When the other Cyclopes came running, he shouted that Nobody was hurting him, so they went away. Next morning the Greeks slipped out tied under the bellies of his rams. Homer tells the story in book 9 of the Odyssey; it took Odysseus ten years in all to sail home to Ithaca.'
+      ending: 'Penelope set the suitors a test: string Odysseus’ great bow and shoot an arrow through twelve axe-heads. None of them could even bend it. Odysseus strung it easily, shot through the axes, and with his son Telemachus won back his house. Homer tells it all in the Odyssey; it took Odysseus ten years to sail home.'
     }
   };
   var ORDER = ['gr', 'ro', 'od'];
@@ -113,89 +162,49 @@
     this.ents.push({ k: 'pole', x: px + 0.5, y: GY - 1 }); this.goalX = px; this.noCeil = px - 10; return this;
   };
 
+  // Each level is put together from short stretches (runs, pits, ledges, boats, columns, steps, fire bars...),
+  // chosen and sized by a random generator seeded with the level's own number, so the same level is always the same,
+  // no two levels match, and later levels get longer and harder.
+  function seeded(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var SEG_W = {
+    field: { run: 3, pit: 2, cols: 2, steps: 1, bricks: 2, ledges: 1, boat: 0.5 },
+    cliff: { run: 2, pit: 2, ledges: 3, boat: 1.5, steps: 1.5, cols: 0.5 },
+    sea: { run: 1.5, boat: 3, ledges: 2, pit: 1, bricks: 0.5 },
+    cave: { run: 2, cols: 2, pit: 2, bricks: 2, blocks: 1.5, ledges: 1 },
+    castle: { run: 1.5, bar: 2, lava: 2, ledges: 1, pit: 1, blocks: 1 }
+  };
   function makeLevel(li) {
-    var kind = SET[G.set].levels[li].kind, b = new Build(kind), fl = G.set === 'ro' ? 'locust' : 'eagle';
-    if (G.set === 'od' && li === 1) {
-      // island to island: boats (moving platforms), rocks and small islets
-      b.flat(14).at(6, 8, '?!?').en(11, 'frog')
-        .mplat(9, 10, 1, 5)
-        .flat(6).at(2, 8, '?').en(4, 'wolf')
-        .ledges(11, [[1, 10, 2], [5, 9, 2], [9, 10, 2]]).at(5, 7, 'oo')
-        .flat(8).en(5, fl, 7).at(3, 8, 'B?B')
-        .mplat(12, 9, 1, 8)
-        .flat(10).en(4, 'fox').check(7)
-        .mplat(10, 10, 1, 6).at(4, 6, 'ooo')
-        .flat(6).at(2, 8, '*')
-        .gate()
-        .flat(6).en(3, 'frog')
-        .ledges(12, [[1, 10, 2], [4, 8, 2], [8, 9, 1], [10, 10, 2]])
-        .flat(8).en(4, fl, 6).at(2, 8, '?B?')
-        .mplat(11, 9, 1, 7)
-        .flat(8).col(3, 3, true).en(6, 'wolf')
-        .mplat(10, 10, 1, 6)
-        .flat(4).goal();
-    } else if (li === 0) {
-      b.flat(22).at(12, 8, '?').at(16, 8, 'B!B?B').at(18, 4, '?').en(19, 'wolf')
-        .flat(10).col(2, 2).col(7, 3).en(5, 'wolf')
-        .flat(10).col(6, 4).en(2, 'wolf').en(4, 'wolf')
-        .flat(6).pit(2).at(0, 9, 'oo')
-        .flat(16).at(2, 8, 'B?B').at(6, 4, 'BBBBBBBB').at(7, 3, 'oooooo').en(7, 'wolf').en(9, 'wolf')
-        .pit(3).at(0, 9, 'ooo')
-        .flat(14).at(3, 8, 'BB?B').at(9, 8, '?').en(6, 'fox').check(12)
-        .flat(12).at(2, 8, '?').at(5, 8, '?').at(5, 4, '*').at(8, 8, '?').en(10, 'frog')
-        .gate()
-        .flat(6).up(4).pit(2).down(4)
-        .flat(12).at(3, 8, 'BB?B').en(6, 'wolf').en(8, 'wolf')
-        .flat(6).col(2, 2)
-        .flat(4).goal();
-    } else if (li === 1) {
-      b.flat(14).at(6, 8, '?!?').en(11, 'wolf')
-        .ledges(10, [[1, 9, 3], [6, 8, 3]]).at(6, 6, 'ooo')
-        .flat(8).en(5, 'frog')
-        .pit(3).at(0, 8, 'ooo')
-        .flat(8).en(5, fl, 7)
-        .mplat(9, 9, 1, 5)
-        .flat(12).at(3, 8, 'B?B').at(4, 4, '?').en(7, 'wolf').en(9, 'frog').check(1)
-        .ledges(12, [[1, 10, 2], [5, 8, 2], [9, 10, 2]])
-        .flat(10).col(3, 3, true).en(7, 'fox')
-        .gate()
-        .flat(8).en(4, fl, 6).at(2, 8, '?*')
-        .pit(4).at(1, 8, 'oo')
-        .flat(6).en(3, 'frog')
-        .mplat(10, 8, 1, 6)
-        .flat(6).up(5).pit(3).down(5)
-        .flat(8).en(4, 'wolf').en(6, fl, 7)
-        .flat(4).goal();
-    } else if (li === 2) {
-      b.flat(12).at(5, 8, '?!?')
-        .flat(14).at(0, 8, 'BBBBBBBBBBBBBB').at(1, 6, 'oooooooooooo').en(6, 'wolf').en(10, 'scorp')
-        .flat(12).col(2, 3, true).col(8, 2, true).en(5, 'wolf')
-        .pit(3)
-        .flat(10).en(3, 'scorp').en(6, 'wolf').at(4, 8, 'B?B')
-        .flat(12).at(2, 10, 'X').at(4, 9, 'XX').at(7, 8, 'XXX').at(7, 5, '*').en(10, 'scorp').check(0)
-        .pit(3)
-        .flat(6)
-        .gate()
-        .flat(12).en(3, 'wolf').en(5, 'wolf').en(8, 'scorp').at(3, 8, 'B?B?B')
-        .ledges(10, [[2, 9, 2], [6, 9, 2]]).at(2, 7, 'oo').at(6, 7, 'oo')
-        .flat(10).col(3, 4, true).en(7, 'fox')
-        .flat(8).at(2, 8, '?').en(6, 'scorp')
-        .flat(4).goal();
-    } else {
-      b.flat(8).at(4, 8, '?')
-        .pit(3).podo(1)
-        .flat(8).bar(4, 8)
-        .pit(3).podo(1)
-        .flat(12).at(3, 8, '?!?').en(7, 'wolf').en(9, 'scorp').check(11)
-        .flat(10).bar(5, 7).at(1, 4, '*')
-        .pit(4).podo(1).podo(3)
-        .flat(6)
-        .gate()
-        .flat(8).bar(4, 9).en(7, 'scorp')
-        .ledges(10, [[2, 10, 2], [6, 9, 2]]).podo(4).podo(8)
-        .flat(6).at(2, 8, '?!')
-        .boss();
+    var lv = SET[G.set].levels[li], kind = lv.kind, b = new Build(kind), fl = G.set === 'ro' ? 'locust' : 'eagle';
+    var r = seeded(({ gr: 1000, ro: 2000, od: 3000 })[G.set] + li * 97 + 13), diff = li / 9;
+    function ri(a, z) { return a + Math.floor(r() * (z - a + 1)); }
+    function pickW(w) { var tot = 0, k; for (k in w) tot += w[k]; var x = r() * tot; for (k in w) { x -= w[k]; if (x <= 0) return k; } return k; }
+    var foes = { field: ['wolf', 'wolf', 'fox', 'frog', fl], cliff: ['frog', 'wolf', fl, fl, 'fox'], sea: ['frog', fl, fl, 'wolf'], cave: ['wolf', 'scorp', 'scorp', 'fox'], castle: ['scorp', 'scorp', 'wolf'] }[kind];
+    function foe(n) { var k = foes[Math.floor(r() * foes.length)]; return k; }
+    function jars(dx) { var p = r(), pat = p < 0.12 ? '?!?' : p < 0.2 ? 'B*B' : p < 0.45 ? 'B?B' : p < 0.65 ? '?B?' : p < 0.8 ? 'BB?B' : '?'; b.at(dx, 8, pat); if (r() < 0.35) b.at(dx, 4, 'o'.repeat(pat.length)); }
+    function enemies(n, from, to) { for (var i = 0; i < n; i++) { var k = foe(), dx = ri(from, to); if (k === fl) b.en(dx, k, ri(6, 7)); else b.en(dx, k); } }
+    var seg = {
+      run: function () { var n = ri(9, 15); b.flat(n); if (r() < 0.6) jars(ri(2, Math.max(2, n - 6))); enemies(1 + (r() < diff ? 1 : 0) + (diff > 0.55 && r() < 0.5 ? 1 : 0), 4, n - 2); },
+      pit: function () { var w = Math.min(4, ri(2, 3 + (diff > 0.5 ? 1 : 0))); b.pit(w); if (r() < 0.6) b.at(0, 9, 'o'.repeat(w)); if (kind === 'castle' && w >= 3) b.podo(1); b.flat(ri(5, 7)); if (r() < 0.4) enemies(1, 3, 4); },
+      cols: function () { b.flat(13); var h1 = ri(2, 3), h2 = ri(2, 3 + Math.round(diff)), sn = kind === 'cave' || kind === 'castle'; b.col(2, h1, sn && r() < 0.5).col(8, h2, sn && r() < 0.5); if (r() < 0.5) b.at(5, GY - h1 - 3, 'oo'); enemies(1, 5, 6); },
+      steps: function () { var h = ri(3, 4 + (diff > 0.6 ? 1 : 0)); b.flat(5).up(h).pit(ri(2, 3)).down(h).flat(5); if (r() < 0.5) enemies(1, 2, 3); },
+      bricks: function () { var n = ri(12, 15); b.flat(n); var len = ri(5, 9), s0 = ri(1, n - len - 1), row = ''; for (var i = 0; i < len; i++) row += r() < 0.25 ? '?' : 'B'; b.at(s0, 8, row); if (r() < 0.6) b.at(s0 + 1, 6, 'o'.repeat(Math.max(1, len - 2))); enemies(1 + (r() < diff ? 1 : 0), 3, n - 2); },
+      ledges: function () { var w = ri(10, 12), list = [], x = 1, y = ri(8, 10); while (x < w - 2) { var len = ri(2, 3); if (x + len > w - 1) len = w - 1 - x; if (len < 1) break; list.push([x, y, len]); x += len + ri(1, 2); y = Math.max(8, Math.min(10, y + ri(-1, 1))); } b.ledges(w, list); if (r() < 0.6) { var L = list[Math.floor(list.length / 2)]; b.at(L[0], L[1] - 2, 'o'.repeat(L[2])); } b.flat(ri(5, 7)); },
+      boat: function () { var w = ri(9, 12); b.mplat(w, ri(9, 10), 1, w - 4); if (r() < 0.5) b.at(Math.floor(w / 2), 6, 'ooo'); b.flat(ri(5, 7)); if (kind !== 'sea' && r() < 0.4) enemies(1, 2, 3); },
+      blocks: function () { b.flat(13); var h = ri(0, 1); b.at(2, 10 - h, 'X').at(4, 9 - h, 'XX').at(7, 8 - h, 'XXX'); if (r() < 0.5) b.at(7, 5 - h, r() < 0.3 ? '*' : '?'); enemies(1, 10, 11); },
+      bar: function () { b.flat(9).bar(4, ri(7, 9)); if (r() < 0.5) b.at(1, 8, '?'); if (r() < 0.5) enemies(1, 7, 8); },
+      lava: function () { var w = ri(3, 4); b.pit(w).podo(1); if (w >= 4 && diff > 0.3) b.podo(3); b.flat(ri(6, 8)); }
+    };
+    // start: open ground and a row of jars
+    b.flat(12).at(5, 8, r() < 0.5 ? '?!?' : 'B?!B');
+    var n = 8 + Math.round(diff * 6), gateAt = Math.round(n * 0.62), chkAt = Math.round(n * 0.4), last = '';
+    for (var i = 0; i < n; i++) {
+      if (i === chkAt) { b.flat(6).check(3); }
+      if (i === gateAt) { b.gate(); }
+      var w = {}, k; for (k in SEG_W[kind]) if (k !== last || k === 'run') w[k] = SEG_W[kind][k];
+      k = pickW(w); seg[k](); last = k;
     }
+    if (lv.boss) b.flat(8).at(2, 8, '?!').boss();
+    else b.flat(6).goal();
     if (kind === 'cave' || kind === 'castle') for (var x = 0; x < b.g.length; x++) if (x < b.noCeil) { b.set(x, 0, '#'); b.set(x, 1, '#'); }
     for (x = 0; x < b.g.length; x++) b.colm(x);
     return b;
@@ -499,10 +508,10 @@
     moveBody(e, dt);
     e.cd -= dt; // its own attack timer (entStep already advances e.t)
     if (e.cd <= 0 && e.on && !G.leverOn) {
-      e.cd = rnd(1.4, 2.4); var r = Math.random();
+      e.cd = rnd(1.9, 3.0); var r = Math.random();
       if (r < 0.35) e.vy = -13;
-      else if (G.set === 'od') { G.ents.push({ k: 'rock', x: e.x + (e.face < 0 ? -0.6 : e.w), y: e.y + 0.2, w: 0.6, h: 0.6, vx: e.face * rnd(4, 7.5), vy: -rnd(6, 10), t: 0, act: true }); sfx('throw'); }
-      else if (G.set === 'ro') { G.ents.push({ k: 'fire', x: e.x + (e.face < 0 ? -0.6 : e.w), y: e.y + rnd(0.1, 1.3), w: 0.7, h: 0.4, vx: e.face * 6.5, t: 0, act: true }); sfx('fire'); }
+      else if (G.set === 'od') { G.ents.push({ k: 'rock', x: e.x + (e.face < 0 ? -0.6 : e.w), y: e.y + 0.2, w: 0.6, h: 0.6, vx: e.face * rnd(3.5, 6.5), vy: -rnd(6, 10), t: 0, act: true }); sfx('throw'); }
+      else if (G.set === 'ro') { G.ents.push({ k: 'fire', x: e.x + (e.face < 0 ? -0.6 : e.w), y: e.y + rnd(0.1, 1.3), w: 0.7, h: 0.4, vx: e.face * 5.2, t: 0, act: true }); sfx('fire'); }
       else { e.charge = 0.7; sfx('fire'); }
     }
     if (e.y > ROWS) { e.alive = false; G.bossDead = 1.2; return; }
@@ -513,12 +522,14 @@
   // ---------- drawing ----------
   var PAL = {
     gr: {
+      sea: { sky: ['#5fb0e0', '#dff1fb'], far: '#8fa9b8', sea: '#1f6fa8', mid: '#8a9a7a', top: '#a8b46a', soil: '#cfc2a4', soilD: '#a99b7b', brick: '#f1ebdc', mortar: '#c2b79c', block: '#e9e2d0', blockD: '#b9ae95' },
       field: { sky: ['#6dbbe6', '#e6f4fb'], far: '#9fb9cf', sea: '#2f7fb5', mid: '#6f8f4a', top: '#8fae4f', soil: '#d8b27a', soilD: '#bf955c', brick: '#f1ebdc', mortar: '#c2b79c', block: '#e9e2d0', blockD: '#b9ae95' },
       cliff: { sky: ['#5fb0e0', '#dff1fb'], far: '#b8c9d6', sea: '#1f6fa8', mid: '#8a9a7a', top: '#a8b46a', soil: '#cfc2a4', soilD: '#a99b7b', brick: '#f1ebdc', mortar: '#c2b79c', block: '#e9e2d0', blockD: '#b9ae95' },
       cave: { sky: ['#141c28', '#26324a'], far: '#2b3850', top: '#7d8aa0', soil: '#56647c', soilD: '#3e4a60', brick: '#8f9bb0', mortar: '#4a556b', block: '#7a879c', blockD: '#4f5a70' },
       castle: { sky: ['#160d10', '#3a1d1a'], far: '#3a2626', top: '#8b8378', soil: '#635b52', soilD: '#463f38', brick: '#9a9184', mortar: '#4e463e', block: '#867d70', blockD: '#5a5248' }
     },
     ro: {
+      sea: { sky: ['#e8a95f', '#f8e8cc'], far: '#9a7a5a', sea: '#2f6f8f', mid: '#004225', top: '#00562f', soil: '#9a5a35', soilD: '#6f3d22', brick: '#a54a2a', mortar: '#6e2e18', block: '#d6b98a', blockD: '#9c7f52' },
       field: { sky: ['#f0b96a', '#fbefd6'], far: '#c98a5c', sea: '#5f8a5a', mid: '#2e5f3a', top: '#00562f', soil: '#a4532f', soilD: '#7f3d22', brick: '#a54a2a', mortar: '#6e2e18', block: '#d6b98a', blockD: '#9c7f52' },
       cliff: { sky: ['#e8a95f', '#f8e8cc'], far: '#b97a4f', sea: '#4d7a4a', mid: '#004225', top: '#00562f', soil: '#9a5a35', soilD: '#6f3d22', brick: '#a54a2a', mortar: '#6e2e18', block: '#d6b98a', blockD: '#9c7f52' },
       cave: { sky: ['#1d140f', '#3a2a1e'], far: '#3c2b1f', top: '#9a7a58', soil: '#6e5139', soilD: '#4d3826', brick: '#8f5a3a', mortar: '#4a2f1d', block: '#8a6c4c', blockD: '#5c4530' },
@@ -541,7 +552,7 @@
     var gr = c.createLinearGradient(0, 0, 0, Ht); gr.addColorStop(0, P.sky[0]); gr.addColorStop(1, P.sky[1]);
     c.fillStyle = gr; c.fillRect(0, 0, Wd, Ht);
     drawBG(P, k);
-    if (G.set === 'od' && (k === 'field' || k === 'sea')) { var wy = sy(13.1) + Math.sin(G.t * 2) * S * 0.06; c.fillStyle = P.sea; c.fillRect(0, wy, Wd, Ht - wy); c.fillStyle = 'rgba(255,255,255,.35)'; for (var wi = -1; wi < viewCols + 1; wi++) c.fillRect((wi - (G.camX % 1)) * S + ((G.t * 0.8) % 1) * S * 0.5, wy, S * 0.4, 2); }
+    if ((G.set === 'od' && k === 'field') || k === 'sea') { var wy = sy(13.1) + Math.sin(G.t * 2) * S * 0.06; c.fillStyle = P.sea; c.fillRect(0, wy, Wd, Ht - wy); c.fillStyle = 'rgba(255,255,255,.35)'; for (var wi = -1; wi < viewCols + 1; wi++) c.fillRect((wi - (G.camX % 1)) * S + ((G.t * 0.8) % 1) * S * 0.5, wy, S * 0.4, 2); }
     // below the map (tall screens)
     if (oy + ROWS * S < Ht) { c.fillStyle = P.soilD; c.fillRect(0, oy + ROWS * S, Wd, Ht - oy - ROWS * S); }
     var x0 = Math.max(0, Math.floor(G.camX)), x1 = Math.min(G.L.g.length - 1, Math.ceil(G.camX + viewCols));
@@ -573,12 +584,12 @@
       // clouds
       c.fillStyle = 'rgba(255,255,255,.75)';
       for (i = 0; i < 6; i++) { x = ((i * 9.3 - G.camX * 0.15 + t * 0.15) % 60 + 60) % 60 * S - 3 * S; var y = sy(1.5 + (i % 3) * 1.2); c.beginPath(); c.ellipse(x, y, S * 1.4, S * 0.45, 0, 0, 7); c.ellipse(x + S * 0.9, y - S * 0.25, S * 0.9, S * 0.45, 0, 0, 7); c.fill(); }
-      if (G.set === 'od') {
+      if (G.set === 'od' || k === 'sea') {
         // the open sea with distant islands
         c.fillStyle = P.sea; c.fillRect(0, sy(8.6), Wd, Ht);
         for (i = -1; i < 6; i++) { x = ((i * 23 - G.camX * 0.1) % 120 + 120) % 120 * S - 10 * S; c.fillStyle = P.far; c.beginPath(); c.ellipse(x, sy(8.65), S * (3 + (i & 1) * 2), S * (1 + (i % 3) * 0.4), 0, Math.PI, 0); c.fill(); }
         c.fillStyle = 'rgba(255,255,255,.3)'; for (i = 0; i < 10; i++) c.fillRect(((i * 6.7 - G.camX * 0.3 + t * 0.4) % 60 + 60) % 60 * S - 5 * S, sy(9.2 + (i % 5) * 0.9), S * 1.1, 2);
-        if (k === 'field') { hills(0.35, 11, 0.7, P.mid, 0.4, 5); for (i = -2; i < viewCols / 5 + 2; i++) { x = (Math.floor(G.camX * 0.5 / 5) + i) * 5; lotus((x - G.camX * 0.5) * S + S, sy(11)); } }
+        if (k === 'field') { hills(0.35, 11, 0.7, P.mid, 0.4, 5); for (i = -2; i < viewCols / 5 + 2; i++) { x = (Math.floor(G.camX * 0.5 / 5) + i) * 5; if (G.li === 1) lotus((x - G.camX * 0.5) * S + S, sy(11)); else olive((x - G.camX * 0.5) * S + S, sy(10.9)); } }
       } else if (G.set === 'gr') {
         hills(0.12, k === 'cliff' ? 8.4 : 9.1, k === 'cliff' ? 0.9 : 1.6, P.far, 0.25, 1);
         c.fillStyle = P.sea; c.fillRect(0, sy(k === 'cliff' ? 8.4 : 9.2), Wd, Ht);
@@ -716,7 +727,7 @@
   function cow(X, Y) { c.fillStyle = '#e8e0d0'; c.fillRect(X - S * 0.6, Y - S * 0.9, S * 1.2, S * 0.55); c.fillStyle = '#6b4a2a'; c.fillRect(X - S * 0.2, Y - S * 0.85, S * 0.35, S * 0.3); c.fillStyle = '#e8e0d0'; c.fillRect(X + S * 0.5, Y - S * 1.15, S * 0.4, S * 0.4); c.fillStyle = '#444'; c.fillRect(X - S * 0.5, Y - S * 0.35, S * 0.1, S * 0.35); c.fillRect(X + S * 0.35, Y - S * 0.35, S * 0.1, S * 0.35); }
 
   function drawEnt(e, P) {
-    if (e.k === 'plat' && G.set === 'od') { var BX = sx(e.x), BY = sy(e.y), bw = e.w * S; c.fillStyle = '#5a3a22'; c.fillRect(BX, BY, bw, S * 0.22); c.fillStyle = '#3a2416'; c.beginPath(); c.moveTo(BX - S * 0.2, BY + S * 0.2); c.lineTo(BX + bw + S * 0.2, BY + S * 0.2); c.lineTo(BX + bw - S * 0.3, BY + S * 0.6); c.lineTo(BX + S * 0.3, BY + S * 0.6); c.fill(); c.strokeStyle = '#d8c9a8'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(BX + S * 0.5, BY + S * 0.3); c.lineTo(BX + S * 0.1, BY + S * 0.9); c.moveTo(BX + bw - S * 0.5, BY + S * 0.3); c.lineTo(BX + bw - S * 0.1, BY + S * 0.9); c.stroke(); return; }
+    if (e.k === 'plat' && (G.set === 'od' || G.L.kind === 'sea')) { var BX = sx(e.x), BY = sy(e.y), bw = e.w * S; c.fillStyle = '#5a3a22'; c.fillRect(BX, BY, bw, S * 0.22); c.fillStyle = '#3a2416'; c.beginPath(); c.moveTo(BX - S * 0.2, BY + S * 0.2); c.lineTo(BX + bw + S * 0.2, BY + S * 0.2); c.lineTo(BX + bw - S * 0.3, BY + S * 0.6); c.lineTo(BX + S * 0.3, BY + S * 0.6); c.fill(); c.strokeStyle = '#d8c9a8'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(BX + S * 0.5, BY + S * 0.3); c.lineTo(BX + S * 0.1, BY + S * 0.9); c.moveTo(BX + bw - S * 0.5, BY + S * 0.3); c.lineTo(BX + bw - S * 0.1, BY + S * 0.9); c.stroke(); return; }
     if (e.k === 'plat') { var X = sx(e.x), Y = sy(e.y); c.fillStyle = P.block; c.fillRect(X, Y, e.w * S, S * 0.4); c.fillStyle = P.blockD; c.fillRect(X, Y + S * 0.3, e.w * S, S * 0.1); c.strokeStyle = '#6b5a3e'; c.lineWidth = 1; c.beginPath(); c.moveTo(X + S * 0.3, Y); c.lineTo(X + S * 0.3, Y - S * 0.6); c.moveTo(X + e.w * S - S * 0.3, Y); c.lineTo(X + e.w * S - S * 0.3, Y - S * 0.6); c.stroke(); return; }
     if (e.k === 'check') { var cx = sx(e.x + 0.5), cy = sy(e.y); c.fillStyle = '#6b5a3e'; c.fillRect(cx - 2, cy - S * 2.6, 4, S * 2.6); c.fillStyle = e.on ? (G.set !== 'ro' ? '#1f6fa8' : '#a8201a') : '#bbb'; c.beginPath(); c.moveTo(cx + 2, cy - S * 2.6); c.lineTo(cx + S * 1.1, cy - S * 2.25); c.lineTo(cx + 2, cy - S * 1.9); c.fill(); return; }
     if (e.k === 'pole') {
@@ -902,18 +913,18 @@
   }
   function intro(li) {
     var set = st.set, lv = SET[set].levels[li];
-    var o = ov('<p class="hr-small">' + SET[set].name + ' · level ' + (li + 1) + ' of 4</p><h2>' + esc(lv.name) + '</h2><p>' + esc(lv.story) + '</p><button class="hr-btn pri" id="hr-go">Start</button> <button class="hr-btn" id="hr-back">Back</button>');
+    var o = ov('<p class="hr-small">' + SET[set].name + ' · level ' + (li + 1) + ' of ' + SET[set].levels.length + '</p><h2>' + esc(lv.name) + '</h2><p>' + esc(lv.story) + '</p><button class="hr-btn pri" id="hr-go">Start</button> <button class="hr-btn" id="hr-back">Back</button>');
     $('#hr-go').addEventListener('click', function () { closeOv(); newRun(set, li); });
     $('#hr-back').addEventListener('click', title);
   }
   function levelClear() {
     var set = G.set, li = G.li, lv = SET[set].levels[li];
-    st.done[set + li] = 1; st.open[set] = Math.max(st.open[set] || 1, Math.min(4, li + 2)); save();
+    st.done[set + li] = 1; st.open[set] = Math.max(st.open[set] || 1, Math.min(SET[set].levels.length, li + 2)); save();
     var words = G.seenL.slice(), list = words.map(function (e) { var w = word(e); return '<tr><td class="' + (set !== 'ro' ? 'gk' : 'la') + '">' + esc(w.f) + (w.p ? '<br><i>' + esc(w.p) + '</i>' : '') + '</td><td>' + esc(w.e) + '</td></tr>'; }).join('');
     var m = Math.floor(G.time / 60), s = Math.floor(G.time % 60);
     var stats = '<p class="hr-stats">🪙 ' + G.coins + ' coins · ⏱ ' + m + ':' + (s < 10 ? '0' : '') + s + (G.gatesN ? ' · gates ' + G.gatesOK + ' of ' + G.gatesN + ' right' : '') + ' · falls ' + G.falls + '</p>';
-    var last = li === 3;
-    var o = ov('<h2>' + (last ? ({ gr: 'The Minotaur is defeated!', ro: 'Cacus is defeated!', od: 'You escaped the Cyclops!' })[set] : 'Level complete') + '</h2>' + (last ? '<p>' + esc(SET[set].ending) + '</p>' : '') + stats +
+    var last = li === SET[set].levels.length - 1, boss = !!lv.boss;
+    var o = ov('<h2>' + (boss ? ({ gr: 'The Minotaur is defeated!', ro: 'Cacus is defeated!', od: 'You escaped the Cyclops!' })[set] : last ? ({ gr: 'Theseus has won!', ro: 'Hercules has won!', od: 'Odysseus is home!' })[set] : 'Level complete') + '</h2>' + (lv.after ? '<p>' + esc(lv.after) + '</p>' : '') + (last ? '<p>' + esc(SET[set].ending) + '</p>' : '') + stats +
       (st.words && words.length ? '<p class="hr-small">Words you met in this level</p><table class="hr-wl">' + list + '</table>' : '') +
       (last ? '<button class="hr-btn pri" id="hr-other">Play ' + SET[ORDER[(ORDER.indexOf(set) + 1) % 3]].name + '</button>' : '<button class="hr-btn pri" id="hr-next">Next level</button>') +
       ' <button class="hr-btn" id="hr-again">Play again</button> <button class="hr-btn" id="hr-menu">Menu</button>');
