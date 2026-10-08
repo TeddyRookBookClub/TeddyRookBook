@@ -95,8 +95,9 @@
     l: [['caes', 'Caesar: Gallic War'], ['cat', 'Cicero: Against Catiline'], ['att', 'Cicero: Letters to Atticus'], ['aen', 'Virgil: Aeneid'], ['met', 'Ovid: Metamorphoses']] };
   var gos = null, clsCache = {};
   function gameSrc() { return P.lang !== 'b' && /^games/.test(P.src) ? (P.src.split(':')[1] || '') : null; }
-  function workOf() { if (P.lang === 'b' || P.src === 'gos' || gameSrc() != null) return null; var w = WORKS[P.lang].filter(function (x) { return x[0] === P.src; })[0]; return w || null; }
-  function whereTxt() { var gs = gameSrc(); if (gs != null) return gs ? (W.TRBWords.GAMES[gs] || 'that game') : 'the games'; var w = workOf(); return w ? 'the ' + w[1].split(': ')[1] + ' sentences' : 'the Gospels'; }
+  function isAll() { return P.lang !== 'b' && P.src === 'all'; }
+  function workOf() { if (P.lang === 'b' || P.src === 'gos' || P.src === 'all' || gameSrc() != null) return null; var w = WORKS[P.lang].filter(function (x) { return x[0] === P.src; })[0]; return w || null; }
+  function whereTxt() { var gs = gameSrc(); if (gs != null) return gs ? (W.TRBWords.GAMES[gs] || 'that game') : 'the games'; if (isAll()) return 'all the sources'; var w = workOf(); return w ? 'the ' + w[1].split(': ')[1] + ' sentences' : 'the Gospels'; }
   function dialectTxt() { if (gameSrc() != null) return ''; var w = workOf(); return w && w[2] ? w[2] + ', not New Testament Koine' : ''; }
   function clsPos(lang, p) { // treebank part of speech -> the codes the Gospel data uses
     var two = p.length === 2, c = p[0];
@@ -113,7 +114,29 @@
       .map(function (e) { var n = game ? e.g[game] : e.n; return [e.f, e.e, gl[e.f.normalize('NFC')] || '', n, -1, '']; })
       .sort(function (a, b) { return b[3] - a[3]; });
   }
+  // "All": the Gospels, every classical work and the game words in one deck, merged by dictionary form.
+  // Each word remembers where it was found, shown on the card, so Koine and other dialects are never mixed up silently.
+  function allSource() {
+    var lang = P.lang, name = lang === 'g' ? 'grc' : 'lat', by = {}, list = [];
+    function add(l, gl, pos, n, src, tag) { var k = l.normalize('NFC'), e = by[k]; if (!e) { e = by[k] = [l, gl, pos, 0, -1, tag || '', []]; list.push(e); } if (!e[1] && gl) e[1] = gl; e[3] += n; if (e[6].indexOf(src) < 0) e[6].push(src); }
+    gos[lang].lem.forEach(function (e) { add(e[0], e[1], e[2], e[3], lang === 'g' ? 'Gospels (Koine)' : 'Gospels (Vulgate)'); });
+    clsCache[name] = clsCache[name] || Promise.all([G.getJSON('cls-' + name + '.json'), G.getJSON('cls-' + name + '-lex.json')]);
+    return clsCache[name].then(function (r) {
+      var lex = r[1], names = {}; WORKS[lang].forEach(function (w) { names[w[0]] = w[1].split(': ')[1] + (w[2] ? ' (' + w[2] + ')' : ''); });
+      var n = {};
+      r[0].s.forEach(function (s) { if (!names[s.w]) return; s.t.forEach(function (tk) { var k = s.w + '|' + tk[3]; n[k] = (n[k] || 0) + 1; }); });
+      Object.keys(n).forEach(function (k) {
+        var w = k.split('|')[0], e = lex[k.split('|')[1]]; if (!e) return;
+        var gl = shortGloss(e.g || ''); if (!gl || gl === '(proper name)' || e.p === 'Ne' || (e.p.length === 1 && /^[A-ZΑ-Ω]/.test(e.l.normalize('NFD')))) return;
+        add(e.l, gl, clsPos(lang, e.p), n[k], names[w], e.p);
+      });
+      gameLem(lang, '').forEach(function (e) { add(e[0], e[1], e[2], e[3], 'the games'); });
+      list.sort(function (a, b) { return b[3] - a[3]; });
+      data = { g: gos.g, l: gos.l }; data[lang] = { lem: list, forms: [] };
+    });
+  }
   function useSource() { // resolves when `data` holds the chosen source
+    if (isAll()) return allSource();
     var gs = gameSrc();
     if (gs != null) { data = { g: gos.g, l: gos.l }; data[P.lang] = { lem: gameLem(P.lang, gs), forms: [] }; return Promise.resolve(); }
     var w = workOf();
@@ -173,7 +196,7 @@
   }
   function buildDeck() {
     var n = P.range === 'all' ? 1e9 : +P.range, langs = P.lang === 'b' ? ['g', 'l'] : [P.lang];
-    if (workOf()) P.type = 'v';
+    if (workOf() || isAll()) P.type = 'v';
     if (P.type === 'v') deck = P.lang === 'b' ? bothCards(n, P.pos) : vocabCards(P.lang, n, P.pos);
     else { deck = []; langs.forEach(function (l) { deck = deck.concat(formCards(l, n, P.pos, P.type)); }); }
   }
@@ -231,7 +254,7 @@
       return P.faces.map(function (k) { return f[k]; });
     }
     var lang = c.lang, e = lemOf(lang, c.i), cls = lang === 'g' ? 'grc' : 'lat', lab = lang === 'g' ? 'ΕΛΛ' : 'LAT';
-    var freq = '#' + (c.i + 1) + ' · ' + e[3] + '× in ' + whereTxt() + (dialectTxt() ? '<br><b class="fc-dial">' + dialectTxt() + '</b>' : '');
+    var freq = '#' + (c.i + 1) + ' · ' + e[3] + '× in ' + whereTxt() + (isAll() && e[6] ? '<br><b class="fc-dial">Found in: ' + esc(e[6].join(', ')) + '</b>' : '') + (dialectTxt() ? '<br><b class="fc-dial">' + dialectTxt() + '</b>' : '');
     if (c.k === 'v') {
       var t = { lab: lab, lang: lang, html: '<div class="fc-word ' + cls + '">' + esc(e[0]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + (dialectTxt() ? '<br><b class="fc-dial">' + dialectTxt() + '</b>' : '') + '</div>' };
       var en = { lab: 'EN', lang: 'e', html: '<div class="fc-word en">' + esc(e[1]) + '</div><div class="fc-sub">' + (posName(lang, e[2]) ? esc(posName(lang, e[2])) + ' · ' : '') + freq + '</div>' };
@@ -531,18 +554,18 @@
     if (ss) {
       sw.hidden = P.lang === 'b';
       if (P.lang !== 'b') {
-        if (!workOf() && gameSrc() == null) P.src = 'gos';
+        if (!workOf() && gameSrc() == null && !isAll()) P.src = 'gos';
         var gw = W.TRBWords ? W.TRBWords.all().filter(function (e) { return e.l === P.lang; }) : [], per = {};
         gw.forEach(function (e) { for (var g in e.g) per[g] = (per[g] || 0) + 1; });
-        ss.innerHTML = '<option value="gos">The Gospels' + (P.lang === 'g' ? ' (Koine Greek)' : ' (Vulgate)') + '</option>' + WORKS[P.lang].map(function (w) { return '<option value="' + w[0] + '">' + w[1] + (w[2] ? ' (' + w[2] + ')' : '') + '</option>'; }).join('') +
+        ss.innerHTML = '<option value="all">All: the Gospels, every work below and your game words</option><option value="gos">The Gospels' + (P.lang === 'g' ? ' (Koine Greek)' : ' (Vulgate)') + '</option>' + WORKS[P.lang].map(function (w) { return '<option value="' + w[0] + '">' + w[1] + (w[2] ? ' (' + w[2] + ')' : '') + '</option>'; }).join('') +
           '<optgroup label="Words I met in the games"><option value="games"' + (gw.length ? '' : ' disabled') + '>All games (' + gw.length + ' words)</option>' +
           Object.keys(per).map(function (g) { return '<option value="games:' + g + '">' + esc(W.TRBWords.GAMES[g] || g) + ' (' + per[g] + ')</option>'; }).join('') + '</optgroup>';
         if (gameSrc() != null && !gw.length) P.src = 'gos';
         ss.value = P.src; if (ss.value !== P.src) { P.src = 'gos'; ss.value = 'gos'; }
       }
-      var cl = !!workOf() || gameSrc() != null; $$('.seg[data-pref="type"] button').forEach(function (b) { b.disabled = cl && b.dataset.v !== 'v'; b.title = b.disabled ? 'Word-form cards are only available for the Gospels.' : ''; });
+      var cl = !!workOf() || gameSrc() != null || isAll(); $$('.seg[data-pref="type"] button').forEach(function (b) { b.disabled = cl && b.dataset.v !== 'v'; b.title = b.disabled ? 'Word-form cards are only available for the Gospels.' : ''; });
       $('#fc-src-note').hidden = !cl;
-      $('#fc-src-note').textContent = gameSrc() != null ? 'Vocabulary cards for the words you have met in the games on this device, most often met first. Play more to add words.' : 'Vocabulary cards only for this source. Words are ranked by how often they occur in the site’s sentences from this work, not the whole work.';
+      $('#fc-src-note').textContent = isAll() ? 'Vocabulary cards only. Every word from every source in one deck, most common first. Each card says where the word was found' + (P.lang === 'g' ? ', so you can tell New Testament Koine from Homer, Herodotus and Plutarch.' : '.') : gameSrc() != null ? 'Vocabulary cards for the words you have met in the games on this device, most often met first. Play more to add words.' : 'Vocabulary cards only for this source. Words are ranked by how often they occur in the site’s sentences from this work, not the whole work.';
     }
     buildFaces(); buildFormFilters();
   }

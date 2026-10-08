@@ -10,7 +10,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 |---|---|
 | [Infographics](https://teddyrookbook.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
 | [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: the Greek alphabet, sentence drills, a Gospel reader and short readings that explain every word, sentence trees, and flashcards. Details below. |
-| [Games](https://teddyrookbook.com/games/) | Fifteen browser games set in the ancient world, including a daily word puzzle. Details below. |
+| [Games](https://teddyrookbook.com/games/) | Seventeen browser games set in the ancient world, including a daily word puzzle. Details below. |
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations, and [reading paths](https://teddyrookbook.com/books/paths/) through it. |
 | [Free Books](https://teddyrookbook.com/free-books/) | Search public-domain ebooks (Project Gutenberg, via Gutendex) and audiobooks (LibriVox, via the Internet Archive). Nothing is hosted here; the visitor's browser calls those catalogues directly. |
 | [Timeline](https://teddyrookbook.com/timeline/) | The ancient world from the pyramids to the fall of Rome, each event linked to the books, games and readings about it. |
@@ -27,7 +27,7 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 - **Greek alphabet:** six short lessons with quizzes.
 - **Readings:** Aesop's fables in Greek, Phaedrus in Latin, the Lord's Prayer and Psalm 23, word by word.
 - **Sentence trees:** see how a sentence is built, in English, Greek and Latin, then build trees yourself.
-- **Flashcards:** vocabulary ranked by frequency, real word forms, "build the form" cards and three-sided Greek–Latin–English cards, with spaced repetition. Words can come from the Gospels or from one of the classical works. Greek is also shown in Latin letters for pronunciation, and any card can be saved as a picture.
+- **Flashcards:** vocabulary ranked by frequency, real word forms, "build the form" cards and three-sided Greek–Latin–English cards, with spaced repetition. Words can come from the Gospels, from one of the classical works, from the games, or from all of them at once. Greek is also shown in Latin letters for pronunciation, and any card can be saved as a picture.
 
 ### Games
 
@@ -48,6 +48,8 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Royal Game of Ur | The Mesopotamian race game, with the rules from a Babylonian tablet | — |
 | Knucklebones | Augustus's dinner-table game from Suetonius, and a modern variant | Latin |
 | Daily Word Puzzle | Guess the day's five-letter word in six tries | Latin or Koine Greek |
+| Streets of Rome and Athens | Top-down city game: chariots, errands, races, a thief and the watch | Latin or Koine Greek |
+| Siege | Fire ancient siege engines at real sieges; learn how the machines differ | Latin or Koine Greek, optional |
 
 Hero's Road has three settings: Theseus in Greece, Hercules in Rome, and Odysseus sailing to the Cyclops' cave.
 

@@ -1,0 +1,20 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "games/city/city.css" | relURL }}?v={{ (os.Stat "static/games/city/city.css").ModTime.Unix }}">
+{{ partial "game-shell.html" . }}
+<div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="ct gbox" id="ct">
+  <canvas aria-label="Streets of Rome and Athens game"></canvas>
+  <div class="ct-hud"><span id="ct-city"></span><span id="ct-want"></span><span class="sp"></span><span id="ct-time"></span><span id="ct-coins"></span><button id="ct-pause" aria-label="Pause">❚❚</button></div>
+  <div class="ct-obj" id="ct-obj" hidden></div>
+  <div class="ct-word" id="ct-word" aria-live="polite"></div>
+  <div class="ct-pad"><button id="ct-run" aria-label="Run, or brake in a chariot">Run</button><button id="ct-act">Get in</button></div>
+  <div class="ct-ov" id="ct-ov" hidden></div>
+  <noscript>This game needs JavaScript.</noscript>
+</div></div>
+<p style="font-size:.8rem;color:#777;margin-top:.5rem">Keyboard: arrows or WASD to move, Shift to run (or brake), E to get in or out of a chariot, P pauses. Phone: drag to move or steer.</p>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
+<script src="{{ "games/city/city-data.js" | relURL }}?v={{ (os.Stat "static/games/city/city-data.js").ModTime.Unix }}"></script>
+<script src="{{ "games/city/city.js" | relURL }}?v={{ (os.Stat "static/games/city/city.js").ModTime.Unix }}"></script>
+{{ end }}

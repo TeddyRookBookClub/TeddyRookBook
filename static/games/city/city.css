@@ -1,0 +1,51 @@
+/* Streets of Rome and Athens */
+main.main:has(.ct){max-width:1100px}
+.ct{position:relative;height:calc(100vh - 150px);min-height:460px;border-radius:14px;overflow:hidden;background:#2a2218;color:#f4ecd8;user-select:none;-webkit-user-select:none;font-family:system-ui,sans-serif}
+.ct canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.ct .gk,.ct .la{font-family:"Gentium Book Plus",Georgia,serif}
+.ct-hud{position:absolute;left:0;right:0;top:0;display:flex;gap:.7rem;align-items:center;padding:.4rem .6rem;font-weight:600;font-size:.92rem;text-shadow:0 1px 3px #000,0 0 2px #000;z-index:2;pointer-events:none}
+.ct-hud span{white-space:nowrap}.ct-hud .sp{flex:1}
+.ct-hud button{pointer-events:auto;font:inherit;font-size:.85rem;background:rgba(0,0,0,.5);color:#f4ecd8;border:1px solid rgba(244,236,216,.4);border-radius:8px;padding:.2rem .6rem;cursor:pointer;text-shadow:none}
+.ct-obj{position:absolute;left:.6rem;top:2.3rem;max-width:min(60%,520px);z-index:2;background:rgba(15,25,20,.8);border:1px solid rgba(243,223,163,.45);border-radius:10px;padding:.3rem .7rem;font-size:.9rem;line-height:1.35;pointer-events:none}
+.ct-obj[hidden]{display:none}
+.ct-word{position:absolute;left:50%;bottom:4.2rem;transform:translate(-50%,8px);max-width:min(560px,92%);text-align:center;pointer-events:none;background:rgba(15,25,20,.85);border:1px solid rgba(243,223,163,.4);border-radius:12px;padding:.35rem .9rem;font-size:1rem;opacity:0;transition:opacity .25s,transform .25s;z-index:2}
+.ct-word.on{opacity:1;transform:translate(-50%,0)}
+.ct-word b{font-size:1.4rem;color:#f3dfa3;font-weight:400}
+.ct-word i{color:#cfe0d6;font-family:Georgia,serif}
+.ct-pad{position:absolute;right:.7rem;bottom:.7rem;display:flex;gap:.5rem;z-index:2}
+.ct-pad button{font:700 .95rem system-ui,sans-serif;min-width:4.4rem;height:3rem;border-radius:12px;border:1px solid rgba(244,236,216,.45);background:rgba(0,0,0,.5);color:#fff;cursor:pointer;touch-action:none;-webkit-tap-highlight-color:transparent}
+.ct-pad button:disabled{opacity:.35;cursor:default}
+.ct-pad button.on{background:rgba(243,223,163,.45)}
+#ct-run{display:none}.ct.touch #ct-run{display:block}
+.ct-ov{position:absolute;inset:0;background:rgba(20,14,8,.84);display:flex;align-items:flex-start;justify-content:center;padding:1rem;overflow:auto;z-index:4}
+.ct-ov[hidden]{display:none}
+.ct-box{margin:auto;max-width:680px;width:100%;background:#f6efdc;color:#1d2320;border-radius:14px;padding:1.1rem 1.3rem;text-align:center;border-top:6px solid #b5583a}
+.ct-box h1{margin:.1rem 0 .3rem;font:700 1.9rem Georgia,serif;color:#7a2a14;font-variant:small-caps;letter-spacing:.03em}
+.ct-box h2{margin:.1rem 0 .4rem;font:700 1.35rem Georgia,serif;color:#004225}
+.ct-box p{line-height:1.5;margin:.45rem 0}
+.ct-sub{color:#3d4a43}
+.ct-cities{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.8rem 0}
+.ct-city{font:inherit;text-align:left;border:2px solid #d8ccb0;border-radius:12px;padding:.7rem .8rem;background:#fffaf0;color:#1d2320;cursor:pointer;display:flex;flex-direction:column;gap:.3rem}
+.ct-city b{font:700 1.25rem Georgia,serif;color:#7a2a14}
+.ct-city span{font-size:.88rem;color:#3d4a43;line-height:1.4}
+.ct-city small{color:#5d6862}
+.ct-city:hover{border-color:#004225;box-shadow:0 0 0 2px #004225}
+.ct-ms{display:flex;flex-direction:column;gap:.35rem;margin:.6rem 0}
+.ct-mb{font:inherit;text-align:left;padding:.45rem .7rem;border-radius:9px;border:1px solid #c9bfa5;background:#fff;color:#1d2320;cursor:pointer}
+.ct-mb b{font-family:"Gentium Book Plus",Georgia,serif;font-size:1.05rem}
+.ct-mb:hover:not([disabled]){border-color:#004225;background:#eef6f0}
+.ct-mb[disabled]{opacity:.5;cursor:default}
+.ct-btn{font:inherit;font-size:1rem;padding:.55rem 1.1rem;border-radius:10px;border:1px solid #c9bfa5;background:#fff;color:#1d2320;cursor:pointer;margin:.2rem}
+.ct-btn.pri{background:#004225;border-color:#004225;color:#fff;font-weight:700}
+.ct-small{font-size:.82rem;color:#5d6862}
+.ct-opts{display:flex;flex-wrap:wrap;gap:.4rem 1.1rem;justify-content:center;font-size:.92rem;margin:.4rem 0}
+.ct-words{display:flex;flex-wrap:wrap;gap:.3rem 1rem;justify-content:center;margin:.3rem 0}
+.ct-words b{font-weight:400;font-size:1.3rem;color:#7a2a14}.ct-words i{font-size:.82rem;color:#5d6862}
+.ct-box details{text-align:left;font-size:.92rem;margin-top:.5rem}.ct-box summary{cursor:pointer;font-weight:700;color:#004225}
+.ct-box ul{line-height:1.5;padding-left:1.2rem}
+@media (max-width:640px){.ct-cities{grid-template-columns:1fr}.ct-box{padding:.9rem .8rem}.ct-box h1{font-size:1.5rem}.ct-hud{font-size:.8rem;gap:.4rem}.ct-obj{max-width:70%;font-size:.82rem}}
+:root[data-theme="dark"] .ct-box{background:#1b2b22;color:#e6ece8}
+:root[data-theme="dark"] .ct-box h2,:root[data-theme="dark"] .ct-box summary{color:#6cc79a}
+:root[data-theme="dark"] .ct-box h1,:root[data-theme="dark"] .ct-city b,:root[data-theme="dark"] .ct-words b{color:#f0a08c}
+:root[data-theme="dark"] .ct-sub,:root[data-theme="dark"] .ct-small,:root[data-theme="dark"] .ct-city span,:root[data-theme="dark"] .ct-city small{color:#a9b8af}
+:root[data-theme="dark"] .ct-city,:root[data-theme="dark"] .ct-mb,:root[data-theme="dark"] .ct-btn:not(.pri){background:#0b1a13;color:#e6ece8;border-color:#2a4636}

@@ -1,0 +1,21 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "games/siege/siege.css" | relURL }}?v={{ (os.Stat "static/games/siege/siege.css").ModTime.Unix }}">
+{{ partial "game-shell.html" . }}
+<div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="sg gbox" id="sg">
+  <canvas aria-label="Siege game: pull back and release to fire"></canvas>
+  <div class="sg-hud"><span id="sg-lv"></span><span class="sp"></span><span id="sg-tg"></span><span id="sg-shots"></span><select id="sg-eng" aria-label="Machine"></select><button id="sg-menu" aria-label="Pause">❚❚</button></div>
+  <div class="sg-word" id="sg-word" aria-live="polite"></div>
+  <div class="sg-aim" id="sg-aim" aria-live="polite"></div>
+  <div class="sg-rot">↻ Turn your phone sideways for a bigger view</div>
+  <div class="sg-ctl"><button data-n="2,0" aria-label="Aim higher">▲</button><button data-n="-2,0" aria-label="Aim lower">▼</button><button data-n="0,-0.02" aria-label="Less power">−</button><button data-n="0,0.02" aria-label="More power">+</button><button class="fire" id="sg-fire">Fire</button></div>
+  <div class="sg-ov" id="sg-ov" hidden></div>
+  <noscript>This game needs JavaScript.</noscript>
+</div></div>
+<p style="font-size:.8rem;color:#777;margin-top:.5rem">Pull back and let go to fire. Keyboard: ↑ ↓ angle, ← → power, Space fires, P pauses.</p>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
+<script src="{{ "games/siege/physics.js" | relURL }}?v={{ (os.Stat "static/games/siege/physics.js").ModTime.Unix }}"></script>
+<script src="{{ "games/siege/siege.js" | relURL }}?v={{ (os.Stat "static/games/siege/siege.js").ModTime.Unix }}"></script>
+{{ end }}
