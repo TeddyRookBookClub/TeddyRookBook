@@ -5,5 +5,6 @@
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="teut gbox" id="teut"><noscript>This game needs JavaScript.</noscript></div></div>
 <p style="font-size:.8rem;color:#777;margin-top:.5rem">Arrow keys or WASD to move, P to pause. On a phone, swipe or use the direction buttons. Press <b>?</b> for help and the history of the battle.</p>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
 <script src="{{ "games/teutoburg.js" | relURL }}?v={{ (os.Stat "static/games/teutoburg.js").ModTime.Unix }}"></script>
 {{ end }}

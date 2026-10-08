@@ -1,0 +1,393 @@
+# The Timeline page (/timeline/) and the site search read this file.
+# Each event: id (anchor), year (negative = BC, for sorting), when (as shown), era, place (filter), title, text,
+# and links: [kind, label, url] where kind is game, book, infographic, language or page.
+eras:
+  - id: bronze
+    name: "The Bronze Age"
+    span: "to c. 1100 BC"
+  - id: archaic
+    name: "Early Greece and the Founding of Rome"
+    span: "c. 1100 to 500 BC"
+  - id: classical
+    name: "Classical Greece"
+    span: "500 to 323 BC"
+  - id: hellenistic
+    name: "Alexander's Heirs and the Roman Republic"
+    span: "323 to 27 BC"
+  - id: empire
+    name: "The Early Roman Empire"
+    span: "27 BC to AD 180"
+  - id: late
+    name: "Late Antiquity"
+    span: "AD 180 to 500"
+places:
+  - [greece, "Greece"]
+  - [rome, "Rome"]
+  - [bible, "Bible and Church"]
+  - [east, "Egypt and the Near East"]
+events:
+  - id: giza
+    year: -2560
+    when: "c. 2560 BC"
+    era: bronze
+    place: east
+    title: "The Great Pyramid of Giza"
+    text: "Built for the pharaoh Khufu, it stayed the tallest building in the world for almost four thousand years."
+    links:
+      - [infographic, "Gods of Egypt", "/infographics/gods-of-egypt/"]
+  - id: ur
+    year: -2500
+    when: "c. 2600–2400 BC"
+    era: bronze
+    place: east
+    title: "The Royal Game of Ur"
+    text: "Game boards are buried with the dead in the Royal Cemetery at Ur, in what is now southern Iraq. More than two thousand years later a Babylonian tablet still records how the game was played."
+    links:
+      - [game, "Play the Royal Game of Ur", "/games/ur/"]
+  - id: knossos
+    year: -1700
+    when: "c. 1700–1450 BC"
+    era: bronze
+    place: greece
+    title: "The palace of Knossos"
+    text: "The great palace of Minoan Crete. Its maze of rooms may lie behind the legend of the Labyrinth, where Theseus fought the Minotaur."
+    links:
+      - [game, "Hero's Road: Greece", "/games/hero/"]
+      - [game, "Time Thief", "/games/thief/"]
+  - id: troy
+    year: -1184
+    when: "c. 1200 BC"
+    era: bronze
+    place: greece
+    title: "The Trojan War, in legend"
+    text: "Ancient writers dated the fall of Troy to around 1184 BC. Troy itself was real, and was destroyed more than once; how much of Homer's war happened is still argued over."
+    links:
+      - [book, "The Iliad", "/books/the-iliad/"]
+      - [infographic, "The Iliad: What Followed", "/infographics/iliad-what-followed/"]
+      - [infographic, "The Armorers", "/infographics/the-armorers/"]
+      - [game, "Imperium: sail against Troy", "/games/imperium/"]
+  - id: odysseus
+    year: -1180
+    when: "after the fall of Troy"
+    era: bronze
+    place: greece
+    title: "Odysseus's ten years at sea, in legend"
+    text: "The Lotus-Eaters, the Cyclops, Circe, Scylla and Charybdis, and at last the suitors waiting in his own house on Ithaca."
+    links:
+      - [book, "The Odyssey", "/books/the-odyssey/"]
+      - [infographic, "House Under Siege", "/infographics/house-under-siege/"]
+      - [game, "Hero's Road: The Odyssey", "/games/hero/"]
+  - id: olympics
+    year: -776
+    when: "776 BC"
+    era: archaic
+    place: greece
+    title: "The first Olympic Games"
+    text: "The traditional date of the first games at Olympia, held every four years in honour of Zeus. Greeks later counted years in Olympiads."
+    links:
+      - [game, "Ancient Festival Tycoon", "/games/festival/"]
+  - id: rome-founded
+    year: -753
+    when: "753 BC"
+    era: archaic
+    place: rome
+    title: "The founding of Rome"
+    text: "The traditional date when Romulus founded the city on the Palatine Hill. Close by, in legend, Hercules had once killed the fire-breathing Cacus."
+    links:
+      - [game, "Hero's Road: Rome", "/games/hero/"]
+      - [game, "Time Thief", "/games/thief/"]
+  - id: homer
+    year: -725
+    when: "c. 750–700 BC"
+    era: archaic
+    place: greece
+    title: "Homer's poems take shape"
+    text: "The Iliad and the Odyssey, the oldest works of Greek literature, are composed in a mixed poetic dialect much older than Koine."
+    links:
+      - [book, "The Iliad", "/books/the-iliad/"]
+      - [book, "The Odyssey", "/books/the-odyssey/"]
+      - [language, "Sentences from Homer", "/languages/sentences/"]
+  - id: aesop
+    year: -570
+    when: "6th century BC"
+    era: archaic
+    place: greece
+    title: "Aesop tells his fables"
+    text: "Aesop was said to be a slave from Samos. The fables collected under his name were retold for centuries, in Greek prose and in Latin verse."
+    links:
+      - [book, "Aesop's Fables", "/books/aesops-fables/"]
+      - [language, "Read Aesop in Greek", "/languages/readings/"]
+      - [infographic, "The Fairy Tale Shelf", "/infographics/fairy-tale-shelf/"]
+  - id: republic
+    year: -509
+    when: "509 BC"
+    era: archaic
+    place: rome
+    title: "Rome becomes a republic"
+    text: "The Romans drive out their last king, Tarquin the Proud, and are governed from now on by two consuls elected each year."
+    links:
+      - [book, "On the Republic, On the Laws", "/books/on-the-republic-on-the-laws/"]
+  - id: marathon
+    year: -490
+    when: "490 BC"
+    era: classical
+    place: greece
+    title: "Marathon"
+    text: "The Athenians defeat the first Persian invasion on the plain of Marathon."
+    links: []
+  - id: thermopylae
+    year: -480
+    when: "480 BC"
+    era: classical
+    place: greece
+    title: "Thermopylae and Salamis"
+    text: "Leonidas and his Spartans hold the pass at Thermopylae for three days; weeks later the Greek fleet beats the Persians at Salamis."
+    links:
+      - [game, "Thermopylae", "/games/thermopylae/"]
+  - id: herodotus
+    year: -430
+    when: "c. 430 BC"
+    era: classical
+    place: greece
+    title: "Herodotus writes his Histories"
+    text: "The story of the Persian Wars, and the first great work of history. Herodotus wrote in the Ionic dialect."
+    links:
+      - [language, "Sentences from Herodotus", "/languages/sentences/"]
+  - id: peloponnesian
+    year: -431
+    when: "431–404 BC"
+    era: classical
+    place: greece
+    title: "The Peloponnesian War"
+    text: "Athens and Sparta, with their allies, fight for nearly thirty years. Sparta wins."
+    links:
+      - [game, "Imperium: Athens or Sparta", "/games/imperium/"]
+  - id: anabasis
+    year: -401
+    when: "401–399 BC"
+    era: classical
+    place: greece
+    title: "The march of the Ten Thousand"
+    text: "Greek soldiers hired by a Persian prince are stranded deep in Persia and fight their way home to the Black Sea. Xenophon, one of them, wrote it all down."
+    links:
+      - [book, "Anabasis", "/books/anabasis/"]
+  - id: socrates
+    year: -399
+    when: "399 BC"
+    era: classical
+    place: greece
+    title: "The death of Socrates"
+    text: "Socrates is tried in Athens and condemned to drink hemlock. His pupil Plato makes him the speaker of his dialogues."
+    links:
+      - [book, "The Republic", "/books/the-republic/"]
+  - id: plato
+    year: -375
+    when: "c. 375 BC"
+    era: classical
+    place: greece
+    title: "Plato's Republic"
+    text: "What is justice, and what would a just city look like? Plato's answer includes philosopher-kings and the allegory of the cave."
+    links:
+      - [book, "The Republic", "/books/the-republic/"]
+      - [infographic, "Plato's Republic on One Page", "/infographics/plato-republic-one-page/"]
+  - id: aristotle
+    year: -340
+    when: "c. 340 BC"
+    era: classical
+    place: greece
+    title: "Aristotle's Ethics"
+    text: "Aristotle, Plato's pupil and Alexander's tutor, asks what a good human life is, and answers: a life of virtue, lived in friendship."
+    links:
+      - [book, "Nicomachean Ethics", "/books/nicomachean-ethics/"]
+  - id: alexander
+    year: -334
+    when: "334–323 BC"
+    era: classical
+    place: greece
+    title: "Alexander the Great"
+    text: "Alexander conquers the Persian Empire as far as India. After him, Koine, the common Greek, becomes the language of the eastern Mediterranean."
+    links:
+      - [infographic, "Koine Greek and Latin", "/infographics/koine-greek-and-latin/"]
+      - [language, "Learn the Greek alphabet", "/languages/alphabet/"]
+  - id: septuagint
+    year: -250
+    when: "3rd–2nd century BC"
+    era: hellenistic
+    place: bible
+    title: "The Septuagint"
+    text: "Jewish scholars in Alexandria translate the Hebrew Scriptures into Koine Greek. It became the Old Testament of the early Church."
+    links:
+      - [language, "Read Psalm 23 in Greek", "/languages/readings/"]
+  - id: pyrrhus
+    year: -280
+    when: "280–275 BC"
+    era: hellenistic
+    place: rome
+    title: "Pyrrhus invades Italy"
+    text: "King Pyrrhus of Epirus beats the Romans twice, at such a cost that a costly win is still called a Pyrrhic victory."
+    links:
+      - [game, "Imperium: fight Pyrrhus", "/games/imperium/"]
+  - id: hannibal
+    year: -218
+    when: "218 BC"
+    era: hellenistic
+    place: rome
+    title: "Hannibal crosses the Alps"
+    text: "In the Second Punic War the Carthaginian general marches elephants over the Alps and beats Rome at Cannae, but Rome wins at Zama in 202 BC."
+    links:
+      - [game, "Imperium: march with Hannibal", "/games/imperium/"]
+  - id: gallic-war
+    year: -58
+    when: "58–50 BC"
+    era: hellenistic
+    place: rome
+    title: "Caesar conquers Gaul"
+    text: "Julius Caesar's own account, written in the third person, is still a first book for Latin students."
+    links:
+      - [book, "The Gallic War", "/books/the-gallic-war/"]
+      - [language, "Sentences from Caesar", "/languages/sentences/"]
+  - id: ides
+    year: -44
+    when: "44 BC"
+    era: hellenistic
+    place: rome
+    title: "The Ides of March"
+    text: "Caesar is murdered in the Senate. That same year Cicero writes On Duties for his son; he is killed the next year."
+    links:
+      - [book, "On Duties", "/books/on-duties/"]
+      - [language, "Sentences from Cicero", "/languages/sentences/"]
+  - id: augustus
+    year: -27
+    when: "27 BC"
+    era: hellenistic
+    place: rome
+    title: "Augustus, the first emperor"
+    text: "Caesar's adopted son Octavian wins the civil wars and takes the name Augustus. Suetonius tells how he liked to play knucklebones with friends at dinner."
+    links:
+      - [game, "Knucklebones", "/games/knucklebones/"]
+      - [game, "Imperium: Caesar's inheritance", "/games/imperium/"]
+  - id: virgil
+    year: -19
+    when: "29–19 BC"
+    era: empire
+    place: rome
+    title: "Virgil's Georgics and Aeneid"
+    text: "Virgil tells how Aeneas fled burning Troy to found the Roman people. He died before he could finish revising the Aeneid."
+    links:
+      - [book, "The Aeneid", "/books/the-aeneid/"]
+      - [book, "Eclogues and Georgics", "/books/eclogues-and-georgics/"]
+  - id: ovid
+    year: 8
+    when: "AD 8"
+    era: empire
+    place: rome
+    title: "Ovid's Metamorphoses, and his exile"
+    text: "Ovid finishes his poem of transformations and is banished by Augustus to the Black Sea. His poems mention the board games Romans played, including three-in-a-row and the game of soldiers."
+    links:
+      - [book, "Metamorphoses", "/books/metamorphoses/"]
+      - [game, "Terni Lapilli", "/games/terni/"]
+      - [game, "Latrunculi", "/games/latrunculi/"]
+  - id: teutoburg
+    year: 9
+    when: "AD 9"
+    era: empire
+    place: rome
+    title: "The Teutoburg Forest"
+    text: "Arminius leads the Germanic tribes in destroying three Roman legions under Varus. Rome gave up its plan to make Germany a province."
+    links:
+      - [game, "Teutoburg", "/games/teutoburg/"]
+  - id: phaedrus
+    year: 25
+    when: "early 1st century AD"
+    era: empire
+    place: rome
+    title: "Phaedrus puts Aesop into Latin verse"
+    text: "A freed slave of Augustus's household, Phaedrus retold the old fables, and added some of his own."
+    links:
+      - [language, "Read Phaedrus in Latin", "/languages/readings/"]
+  - id: jesus
+    year: 30
+    when: "c. AD 30"
+    era: empire
+    place: bible
+    title: "The ministry and death of Jesus"
+    text: "Jesus teaches in Galilee and Judea and is crucified in Jerusalem under Pontius Pilate."
+    links:
+      - [language, "The Lord's Prayer in Greek and Latin", "/languages/readings/"]
+  - id: new-testament
+    year: 70
+    when: "c. AD 50–100"
+    era: empire
+    place: bible
+    title: "The New Testament is written"
+    text: "Paul's letters and then the four Gospels, all in Koine Greek."
+    links:
+      - [language, "Gospel reader", "/languages/reader/"]
+      - [language, "Flashcards", "/languages/flashcards/"]
+      - [game, "Daily Word Puzzle", "/games/daily/"]
+  - id: seneca
+    year: 65
+    when: "c. AD 62–65"
+    era: empire
+    place: rome
+    title: "Seneca's Moral Letters"
+    text: "Nero's former tutor writes 124 letters on how to live as a Stoic, shortly before Nero orders his death."
+    links:
+      - [book, "Moral Letters to Lucilius", "/books/moral-letters-to-lucilius/"]
+  - id: plutarch
+    year: 100
+    when: "c. AD 100"
+    era: empire
+    place: greece
+    title: "Plutarch's Parallel Lives"
+    text: "Plutarch pairs famous Greeks with famous Romans, and compares them. Shakespeare took the plots of his Roman plays from them."
+    links:
+      - [book, "Plutarch's Lives", "/books/plutarchs-lives/"]
+      - [language, "Sentences from Plutarch", "/languages/sentences/"]
+  - id: marcus
+    year: 175
+    when: "c. AD 170–180"
+    era: empire
+    place: rome
+    title: "Marcus Aurelius's Meditations"
+    text: "The emperor writes notes to himself, in Greek, on campaign along the Danube. They were never meant to be published."
+    links:
+      - [book, "Meditations", "/books/meditations/"]
+  - id: vulgate
+    year: 390
+    when: "c. AD 382–405"
+    era: late
+    place: bible
+    title: "Jerome's Vulgate"
+    text: "Jerome translates the Bible into Latin. His version became the Bible of the Western Church for a thousand years."
+    links:
+      - [language, "Gospel reader (Latin)", "/languages/reader/"]
+  - id: city-of-god
+    year: 413
+    when: "AD 410–426"
+    era: late
+    place: bible
+    title: "Rome is sacked, and Augustine answers"
+    text: "The Visigoths sack Rome in 410. Pagans blamed the Christians; Augustine replied with The City of God."
+    links:
+      - [book, "City of God", "/books/city-of-god/"]
+      - [infographic, "City of God on One Page", "/infographics/city-of-god-one-page/"]
+  - id: fall
+    year: 476
+    when: "AD 476"
+    era: late
+    place: rome
+    title: "The last Western emperor"
+    text: "The boy emperor Romulus Augustulus is deposed by Odoacer. The empire in the East went on for nearly a thousand years more."
+    links:
+      - [book, "The Decline and Fall of the Roman Empire", "/books/the-decline-and-fall-of-the-roman-empire/"]
+      - [game, "Time Thief", "/games/thief/"]
+  - id: zeno
+    year: 480
+    when: "c. AD 480"
+    era: late
+    place: rome
+    title: "The emperor Zeno's unlucky throw"
+    text: "A Greek poem records one throw in a game of tabula played by the Eastern emperor Zeno, so bad that it left eight of his pieces standing alone, open to capture. It is the oldest backgammon position we know."
+    links:
+      - [game, "Tabula", "/games/tabula/"]

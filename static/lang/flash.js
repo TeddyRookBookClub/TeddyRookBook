@@ -59,6 +59,11 @@
   for (var k in DEF) if (P[k] == null) P[k] = DEF[k];
   if (!P.v2) { P.v2 = 1; P.order = 'shuffle'; }            // shuffle became the default
   if (['50', '100', '250', '500', '1000', '2500', 'all'].indexOf(String(P.range)) < 0) P.range = '100';
+  (function () { // links like ?lang=g&src=games:hero (from My Progress) open that deck
+    var q = {}; W.location.search.replace(/^\?/, '').split('&').forEach(function (kv) { var p = kv.split('='); if (p[0]) q[p[0]] = decodeURIComponent(p[1] || ''); });
+    if (q.lang === 'g' || q.lang === 'l') P.lang = q.lang;
+    if (q.src) { P.src = q.src; P.type = 'v'; P.range = 'all'; P.pos = 'all'; }
+  })();
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
   function today() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
   function dayStats() { if (st.day.d !== today()) st.day = { d: today(), nw: 0, rv: 0 }; return st.day; }
@@ -89,9 +94,10 @@
   var WORKS = { g: [['hdt', 'Herodotus: Histories', 'Ionic Greek'], ['il', 'Homer: Iliad', 'Homeric Greek'], ['od', 'Homer: Odyssey', 'Homeric Greek'], ['lyc', 'Plutarch: Lycurgus', 'literary Atticizing Greek'], ['alc', 'Plutarch: Alcibiades', 'literary Atticizing Greek']],
     l: [['caes', 'Caesar: Gallic War'], ['cat', 'Cicero: Against Catiline'], ['att', 'Cicero: Letters to Atticus'], ['aen', 'Virgil: Aeneid'], ['met', 'Ovid: Metamorphoses']] };
   var gos = null, clsCache = {};
-  function workOf() { if (P.lang === 'b' || P.src === 'gos') return null; var w = WORKS[P.lang].filter(function (x) { return x[0] === P.src; })[0]; return w || null; }
-  function whereTxt() { var w = workOf(); return w ? 'the ' + w[1].split(': ')[1] + ' sentences' : 'the Gospels'; }
-  function dialectTxt() { var w = workOf(); return w && w[2] ? w[2] + ', not New Testament Koine' : ''; }
+  function gameSrc() { return P.lang !== 'b' && /^games/.test(P.src) ? (P.src.split(':')[1] || '') : null; }
+  function workOf() { if (P.lang === 'b' || P.src === 'gos' || gameSrc() != null) return null; var w = WORKS[P.lang].filter(function (x) { return x[0] === P.src; })[0]; return w || null; }
+  function whereTxt() { var gs = gameSrc(); if (gs != null) return gs ? (W.TRBWords.GAMES[gs] || 'that game') : 'the games'; var w = workOf(); return w ? 'the ' + w[1].split(': ')[1] + ' sentences' : 'the Gospels'; }
+  function dialectTxt() { if (gameSrc() != null) return ''; var w = workOf(); return w && w[2] ? w[2] + ', not New Testament Koine' : ''; }
   function clsPos(lang, p) { // treebank part of speech -> the codes the Gospel data uses
     var two = p.length === 2, c = p[0];
     if (lang === 'l') return two ? p : ({ n: 'Nb', v: 'V-', a: 'A-', d: 'Df', r: 'R-', c: 'C-', p: 'Pp', m: 'Ma', i: 'I-', e: 'I-' }[c] || 'Df');
@@ -99,7 +105,17 @@
     return { n: 'noun', v: 'verb', a: 'adj', d: 'adv', r: 'prep', c: 'conj', p: 'pron', l: 'det', m: 'num', i: 'intj', e: 'intj' }[c] || 'ptcl';
   }
   function shortGloss(g) { g = g.replace(/\s*\[[^\]]*\]/g, '').trim(); if (g.length <= 64) return g; var parts = g.split(/;\s*/), out = parts[0]; for (var i = 1; i < parts.length && (out + '; ' + parts[i]).length <= 64; i++) out += '; ' + parts[i]; return out.length > 80 ? out.slice(0, 77) + '…' : out; }
+  // Words met in the games (TRBWords, kept in this browser): vocabulary cards, most-met first.
+  function gameLem(lang, game) {
+    if (!W.TRBWords) return [];
+    var gl = {}; (gos && gos[lang] ? gos[lang].lem : []).forEach(function (e) { gl[e[0].normalize('NFC')] = e[2]; });
+    return W.TRBWords.all().filter(function (e) { return e.l === lang && (!game || e.g[game]); })
+      .map(function (e) { var n = game ? e.g[game] : e.n; return [e.f, e.e, gl[e.f.normalize('NFC')] || '', n, -1, '']; })
+      .sort(function (a, b) { return b[3] - a[3]; });
+  }
   function useSource() { // resolves when `data` holds the chosen source
+    var gs = gameSrc();
+    if (gs != null) { data = { g: gos.g, l: gos.l }; data[P.lang] = { lem: gameLem(P.lang, gs), forms: [] }; return Promise.resolve(); }
     var w = workOf();
     if (!w) { data = gos; return Promise.resolve(); }
     var lang = P.lang, name = lang === 'g' ? 'grc' : 'lat';
@@ -218,9 +234,9 @@
     var freq = '#' + (c.i + 1) + ' · ' + e[3] + '× in ' + whereTxt() + (dialectTxt() ? '<br><b class="fc-dial">' + dialectTxt() + '</b>' : '');
     if (c.k === 'v') {
       var t = { lab: lab, lang: lang, html: '<div class="fc-word ' + cls + '">' + esc(e[0]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + (dialectTxt() ? '<br><b class="fc-dial">' + dialectTxt() + '</b>' : '') + '</div>' };
-      var en = { lab: 'EN', lang: 'e', html: '<div class="fc-word en">' + esc(e[1]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + ' · ' + freq + '</div>' };
-      var back = { lab: 'EN', lang: lang, html: '<div class="fc-word ' + cls + ' sm">' + esc(e[0]) + '</div><div class="fc-ans en">' + esc(e[1]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + ' · ' + freq + '</div>' };
-      var backT = { lab: lab, lang: lang, html: '<div class="fc-word en sm">' + esc(e[1]) + '</div><div class="fc-ans ' + cls + '">' + esc(e[0]) + '</div><div class="fc-sub">' + esc(posName(lang, e[2])) + ' · ' + freq + '</div>' };
+      var en = { lab: 'EN', lang: 'e', html: '<div class="fc-word en">' + esc(e[1]) + '</div><div class="fc-sub">' + (posName(lang, e[2]) ? esc(posName(lang, e[2])) + ' · ' : '') + freq + '</div>' };
+      var back = { lab: 'EN', lang: lang, html: '<div class="fc-word ' + cls + ' sm">' + esc(e[0]) + '</div><div class="fc-ans en">' + esc(e[1]) + '</div><div class="fc-sub">' + (posName(lang, e[2]) ? esc(posName(lang, e[2])) + ' · ' : '') + freq + '</div>' };
+      var backT = { lab: lab, lang: lang, html: '<div class="fc-word en sm">' + esc(e[1]) + '</div><div class="fc-ans ' + cls + '">' + esc(e[0]) + '</div><div class="fc-sub">' + (posName(lang, e[2]) ? esc(posName(lang, e[2])) + ' · ' : '') + freq + '</div>' };
       var dir = P.dir === 'x' ? (hash(c.id) % 2 ? 'e' : 't') : P.dir;
       return dir === 'e' ? [en, backT] : [t, back];
     }
@@ -515,12 +531,18 @@
     if (ss) {
       sw.hidden = P.lang === 'b';
       if (P.lang !== 'b') {
-        if (!workOf()) P.src = 'gos';
-        ss.innerHTML = '<option value="gos">The Gospels' + (P.lang === 'g' ? ' (Koine Greek)' : ' (Vulgate)') + '</option>' + WORKS[P.lang].map(function (w) { return '<option value="' + w[0] + '">' + w[1] + (w[2] ? ' (' + w[2] + ')' : '') + '</option>'; }).join('');
-        ss.value = P.src;
+        if (!workOf() && gameSrc() == null) P.src = 'gos';
+        var gw = W.TRBWords ? W.TRBWords.all().filter(function (e) { return e.l === P.lang; }) : [], per = {};
+        gw.forEach(function (e) { for (var g in e.g) per[g] = (per[g] || 0) + 1; });
+        ss.innerHTML = '<option value="gos">The Gospels' + (P.lang === 'g' ? ' (Koine Greek)' : ' (Vulgate)') + '</option>' + WORKS[P.lang].map(function (w) { return '<option value="' + w[0] + '">' + w[1] + (w[2] ? ' (' + w[2] + ')' : '') + '</option>'; }).join('') +
+          '<optgroup label="Words I met in the games"><option value="games"' + (gw.length ? '' : ' disabled') + '>All games (' + gw.length + ' words)</option>' +
+          Object.keys(per).map(function (g) { return '<option value="games:' + g + '">' + esc(W.TRBWords.GAMES[g] || g) + ' (' + per[g] + ')</option>'; }).join('') + '</optgroup>';
+        if (gameSrc() != null && !gw.length) P.src = 'gos';
+        ss.value = P.src; if (ss.value !== P.src) { P.src = 'gos'; ss.value = 'gos'; }
       }
-      var cl = !!workOf(); $$('.seg[data-pref="type"] button').forEach(function (b) { b.disabled = cl && b.dataset.v !== 'v'; b.title = b.disabled ? 'Word-form cards are only available for the Gospels.' : ''; });
+      var cl = !!workOf() || gameSrc() != null; $$('.seg[data-pref="type"] button').forEach(function (b) { b.disabled = cl && b.dataset.v !== 'v'; b.title = b.disabled ? 'Word-form cards are only available for the Gospels.' : ''; });
       $('#fc-src-note').hidden = !cl;
+      $('#fc-src-note').textContent = gameSrc() != null ? 'Vocabulary cards for the words you have met in the games on this device, most often met first. Play more to add words.' : 'Vocabulary cards only for this source. Words are ranked by how often they occur in the site’s sentences from this work, not the whole work.';
     }
     buildFaces(); buildFormFilters();
   }

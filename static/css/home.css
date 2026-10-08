@@ -89,3 +89,20 @@ html[data-theme="dark"] .about-more a{color:#a8d5b8}
 @media (max-width:900px){.tiles-3,.about-list{grid-template-columns:1fr}}
 
 html[data-theme="dark"] .home{--g:#6cc79a;--card:#272e2a;--paper:#2d3630;--line:#48574e}
+/* Today: word of the day, daily puzzle, alphabet */
+.today-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+@media (max-width:860px){.today-grid{grid-template-columns:1fr}}
+.td-card{display:flex;flex-direction:column;gap:.35rem;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem 1.15rem;color:inherit;text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+a.td-card{transition:transform .15s,border-color .15s}a.td-card:hover{transform:translateY(-2px);border-color:var(--g)}
+.td-card p{margin:0;line-height:1.5;color:var(--muted)}
+.td-card .go{margin-top:auto;padding-top:.3rem;font-weight:700;color:var(--g)}
+.td-pic{font-size:2.4rem;line-height:1}
+.td-g b{font:400 1.7rem "Gentium Book Plus",Georgia,serif;color:var(--ink)}.td-tr{font:italic .95rem Georgia,serif;color:var(--muted)}
+.td-l b{font:400 1.35rem "Gentium Book Plus",Georgia,serif;color:var(--wine)}
+.td-e{font-size:1.05rem;color:var(--ink) !important}
+.td-links{display:flex;gap:1rem;margin-top:auto !important;padding-top:.3rem}.td-links a{font-weight:700;color:var(--g);box-shadow:none}
+.td-tiles{display:flex;gap:.3rem;margin:.3rem 0}.td-tiles i{width:2.2rem;height:2.2rem;display:grid;place-items:center;font:700 1.1rem Georgia,serif;font-style:normal;border-radius:6px;background:#3a7d44;color:#fff}
+.td-tiles i:nth-child(2),.td-tiles i:nth-child(4){background:#c9a43a}.td-tiles i:nth-child(5){background:#7a8580}
+.td-abc{font:400 2rem "Gentium Book Plus",Georgia,serif;color:var(--g);letter-spacing:.15em}
+html[data-theme="dark"] .td-card .go,html[data-theme="dark"] .td-links a,html[data-theme="dark"] .td-abc{color:#6cc79a}
+html[data-theme="dark"] .td-l b{color:#e08a9e}

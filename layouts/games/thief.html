@@ -5,6 +5,7 @@
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="tt gbox" id="tt"><noscript>This game needs JavaScript.</noscript></div></div>
 <p style="font-size:.8rem;color:#777;margin-top:.5rem">Progress (cases played and words collected) is kept only in this browser. Press <b>?</b> for how to play.</p>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
 <script src="{{ "games/thief/tt-greece.js" | relURL }}?v={{ (os.Stat "static/games/thief/tt-greece.js").ModTime.Unix }}"></script>
 <script src="{{ "games/thief/tt-rome.js" | relURL }}?v={{ (os.Stat "static/games/thief/tt-rome.js").ModTime.Unix }}"></script>
 <script src="{{ "games/thief/tt.js" | relURL }}?v={{ (os.Stat "static/games/thief/tt.js").ModTime.Unix }}"></script>

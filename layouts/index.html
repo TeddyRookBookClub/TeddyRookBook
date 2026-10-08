@@ -61,10 +61,36 @@
       <div class="tile-vis gamevis" aria-hidden="true"><canvas id="home-temple" width="220" height="150"></canvas><canvas id="home-theater" width="200" height="140"></canvas></div>
       <div class="tile-body">
         <h2>🏛️ Games</h2>
-        <p>Build a festival in ancient Greece or Rome, conquer the Roman or Greek world with dice, escape the Teutoburg Forest in AD 9, hold the pass at Thermopylae, or chase a thief through time, learning Greek and Latin as you play.</p>
+        <p>Run and jump as Theseus, Hercules or Odysseus, build a festival in Greece or Rome, conquer the ancient world with dice, play the board games of antiquity, or solve the daily word puzzle, learning Greek and Latin as you play.</p>
         <span class="go">Play →</span>
       </div>
     </a>
+  </section>
+
+  <section class="hs today" aria-labelledby="today-h">
+    <div class="hs-head"><h2 id="today-h">Today</h2><span class="hs-note" id="today-date"></span></div>
+    <div class="today-grid">
+      <div class="td-card td-word" id="wotd">
+        <span class="v-lab">Word of the day</span>
+        <div class="td-pic" aria-hidden="true"></div>
+        <p class="td-g"><b class="grc"></b> <i class="td-tr"></i></p>
+        <p class="td-l"><b class="lat"></b></p>
+        <p class="td-e"></p>
+        <p class="td-links"><a href="/languages/flashcards/">Flashcards →</a> <a href="/games/mosaic/">Mosaic Match →</a></p>
+      </div>
+      <a class="td-card td-puzzle" href="/games/daily/">
+        <span class="v-lab">Daily Word Puzzle</span>
+        <div class="td-tiles" aria-hidden="true"><i>?</i><i>?</i><i>?</i><i>?</i><i>?</i></div>
+        <p>Guess today’s Latin or Greek word in six tries. A new word for everyone each day.</p>
+        <span class="go">Play today’s puzzle →</span>
+      </a>
+      <a class="td-card td-alpha" href="/languages/alphabet/">
+        <span class="v-lab">New to Greek?</span>
+        <div class="td-abc grc" aria-hidden="true">α β γ δ</div>
+        <p>Learn to read the Greek alphabet in six short lessons, then try the <b>Short Readings</b>: Aesop, Phaedrus, Psalm 23 and the Lord’s Prayer.</p>
+        <span class="go">Start the alphabet →</span>
+      </a>
+    </div>
   </section>
 
   <section class="hs">
@@ -112,6 +138,7 @@
   </section>
 
 </div>
+<script src="/js/translit.js?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
 <script src="/games/vocab.js?v={{ (os.Stat "static/games/vocab.js").ModTime.Unix }}"></script>
 <script src="/games/art.js?v={{ (os.Stat "static/games/art.js").ModTime.Unix }}"></script>
 <script>
@@ -122,6 +149,13 @@
       FestArt.icon(document.getElementById('home-theater'), 'theater', 3, 3, 'rome');
     }
   } catch (e) {}
+  fetch('/lang/data/words-day.json').then(function (r) { return r.json(); }).then(function (list) {
+    var d = new Date(), n = Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())) / 864e5), w = list[(n * 7) % list.length], box = document.getElementById('wotd');
+    box.querySelector('.td-pic').textContent = w[0]; box.querySelector('.td-g b').textContent = w[2];
+    box.querySelector('.td-tr').textContent = window.grTranslit ? window.grTranslit(w[2]) : '';
+    box.querySelector('.td-l b').textContent = w[1]; box.querySelector('.td-e').textContent = w[3];
+    document.getElementById('today-date').textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  }).catch(function () { var b = document.getElementById('wotd'); if (b) b.style.display = 'none'; });
   fetch('/lang/data/votd.json').then(function (r) { return r.json(); }).then(function (list) {
     var d = new Date(), n = Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())) / 864e5), v = list[n % list.length], box = document.getElementById('votd');
     box.querySelector('.v-g').textContent = v.g; box.querySelector('.v-l').textContent = v.l; box.querySelector('.v-e').textContent = v.en;

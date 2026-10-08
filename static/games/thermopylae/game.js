@@ -56,7 +56,7 @@
     var sp = d.sp * (1 + Math.min(1.2, G.wave * 0.05)) * rnd(0.85, 1.15);
     G.foes.push({ type: type, x: x, y: y, r: d.r, sp: sp, sw: type === 'a' ? 0 : rnd(-0.5, 0.5), ph: rnd(0, 6), col: pick(['#6a3d9a', '#c9a227', '#1f8a70', '#b5532a']), dir: dir });
   }
-  function say(type) { var d = DEF[type]; G.seen[d.w] = 1; $('#th-word').innerHTML = '<b class="gr">' + d.w + '</b> = ' + d.e; wordT = 2.5; }
+  function say(type) { var d = DEF[type]; if (!G.seen[d.w] && W.TRBWords) W.TRBWords.log('thermopylae', 'g', d.w, d.e); G.seen[d.w] = 1; $('#th-word').innerHTML = '<b class="gr">' + d.w + '</b> = ' + d.e; wordT = 2.5; }
   var wordT = 0;
   function hud() {
     $('#th-wave').textContent = 'Wave ' + G.wave; $('#th-score').textContent = G.score + ' points';

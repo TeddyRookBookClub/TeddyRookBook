@@ -14,17 +14,26 @@
       kings: ['Scipio', 'Hannibal'] }
   };
   var CHESS = { k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn' }, GLY = { k: '♚\uFE0E', q: '♛\uFE0E', r: '♜\uFE0E', b: '♝\uFE0E', n: '♞\uFE0E', p: '♟\uFE0E' }, PTS = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
-  var pref = { theme: 'g', level: 2, hints: true, first: 'you' };
+  var pref = { theme: 'g', level: 2, hints: true, first: 'you', mode: 'cpu', stats: { w: 0, l: 0, d: 0 } };
   try { var sv = JSON.parse(W.localStorage.getItem('trb-chess')); if (sv) for (var k in sv) pref[k] = sv[k]; } catch (e) { }
   function save() { try { W.localStorage.setItem('trb-chess', JSON.stringify(pref)); } catch (e) { } }
   var me = 'w', opp = 'b'; // the side you play; white (the pale pieces) always moves first
   var S, sel = -1, hist = [], an = null, last = null, over = null, thinking = false, quality = [], caps = { w: [], b: [] };
-  function T() { return THEMES[pref.theme]; }
+  function two() { return pref.mode === 'two'; }
+  function T() { // in a two-player game the side to move is "you": swap the army names when dark is to move
+    var t = THEMES[pref.theme]; if (!two() || me === 'w') return t;
+    var o = {}; for (var k in t) o[k] = t[k]; o.you = t.them; o.them = t.you; o.kings = [t.kings[1], t.kings[0]]; return o;
+  }
+  var recorded = false;
+  function recordResult() {
+    if (!over || recorded || two()) return; recorded = true;
+    var r = over === 'mate' ? (S.turn === opp ? 'w' : 'l') : 'd'; pref.stats[r]++; save();
+  }
   function sqName(i) { return 'abcdefgh'[i & 7] + (8 - (i >> 3)); }
-  function nameOf(p) { var t = T(), n = t.p[p.toLowerCase()]; return '<b class="' + t.cls + '">' + n[0] + '</b>' + (pref.theme === 'g' ? ' <i>' + tr(n[0]) + '</i>' : '') + ' = ' + n[1] + ' <i>(the ' + CHESS[p.toLowerCase()] + ')</i>'; }
+  function nameOf(p) { var t = T(), n = t.p[p.toLowerCase()]; if (W.TRBWords) W.TRBWords.log('chess', pref.theme === 'l' ? 'l' : 'g', n[0], n[1]); return '<b class="' + t.cls + '">' + n[0] + '</b>' + (pref.theme === 'g' ? ' <i>' + tr(n[0]) + '</i>' : '') + ' = ' + n[1] + ' <i>(the ' + CHESS[p.toLowerCase()] + ')</i>'; }
   root.innerHTML = '<div class="bg-top"><h1>Chess of the Ancients</h1><select id="c-theme" aria-label="Armies"><option value="g">Trojan War (Greek names)</option><option value="l">Punic War (Latin names)</option></select>' +
     '<select id="c-level" aria-label="Opponent"><option value="1">Opponent: easy</option><option value="2">Opponent: medium</option><option value="3">Opponent: hard</option></select>' +
-    '<select id="c-first" aria-label="Who moves first"><option value="you">You move first</option><option value="them">Opponent moves first</option></select><button type="button" class="bg-btn" id="c-hint">💡 Move statistics</button><button type="button" class="bg-btn" id="c-undo">↶ Undo</button><button type="button" class="bg-btn" id="c-new">New game</button></div>' +
+    '<select id="c-mode" aria-label="Players"><option value="cpu">Against the computer</option><option value="two">Two players, one device</option></select><select id="c-first" aria-label="Who moves first"><option value="you">You move first</option><option value="them">Opponent moves first</option></select><button type="button" class="bg-btn" id="c-hint">💡 Move statistics</button><button type="button" class="bg-btn" id="c-undo">↶ Undo</button><button type="button" class="bg-btn" id="c-new">New game</button></div>' +
     '<div class="bg-main"><div><div class="ch-cap" id="c-capb"></div><div class="ch-board" id="c-board"></div><div class="ch-cap" id="c-capw"></div><div class="bg-msg" id="c-msg"></div></div>' +
     '<div class="bg-side"><div class="bg-box" id="c-stats"></div><div class="bg-box" id="c-hbox"><h3>Your moves, best first</h3><ol class="bg-hints" id="c-hints"></ol>' +
     '<div class="bg-legend"><span><i class="sw q0"></i>best</span><span><i class="sw q1"></i>good</span><span><i class="sw q2"></i>fair</span><span><i class="sw q3"></i>weak</span><span><i class="sw q4"></i>bad</span></div>' +
@@ -35,7 +44,7 @@
   bd.addEventListener('click', function (e) { var el = e.target.closest('.ch-sq'); if (el) tap(me === 'b' ? 63 - el.dataset.i : +el.dataset.i); });
   function qual(d) { return d <= 0.03 ? 0 : d <= 0.08 ? 1 : d <= 0.15 ? 2 : d <= 0.3 ? 3 : 4; } // drop in winning chance against the best move
   function newGame() { S = E.start(); sel = -1; hist = []; an = null; last = null; over = null; quality = []; caps = { w: [], b: [] }; thinking = false;
-    me = pref.first === 'them' ? 'b' : 'w'; opp = me === 'w' ? 'b' : 'w';
+    me = pref.first === 'them' && !two() ? 'b' : 'w'; opp = me === 'w' ? 'b' : 'w'; recorded = false;
     if (me === 'b') { thinking = true; draw(); setTimeout(reply, 500); } else { draw(); analyse(); }
   }
   function analyse() { // rank every legal move for the player
@@ -58,18 +67,20 @@
   function record(m) { if (m.c) caps[E.side(m.p)].push(m.c); }
   function play(m) {
     if (an) { var x = an.filter(function (y) { return y.m.f === m.f && y.m.t === m.t; })[0]; if (x) quality.push({ n: x.n, of: an.length, d: an[0].w - x.w, q: x.q }); else quality.push(null); } else quality.push(null);
-    hist.push({ m: m, u: E.make(S, m) }); record(m); last = m; sel = -1; an = null; check();
+    hist.push({ m: m, u: E.make(S, m) }); record(m); last = m; sel = -1; an = null; check(); recordResult();
+    if (two()) { me = S.turn; opp = me === 'w' ? 'b' : 'w'; analyse(); return; }
     draw(); if (over) return;
     thinking = true; setTimeout(reply, 250);
   }
   function reply() {
     var depth = [1, 2, 4][pref.level - 1], a = E.analyse(S, depth), m;
     if (pref.level === 1 && a.length > 1 && Math.random() < 0.45) m = a[Math.min(a.length - 1, 1 + Math.floor(Math.random() * 3))].m; else m = a[0].m;
-    hist.push({ m: m, u: E.make(S, m) }); record(m); last = m; thinking = false; check(); analyse();
+    hist.push({ m: m, u: E.make(S, m) }); record(m); last = m; thinking = false; check(); recordResult(); analyse();
   }
   function check() { var s = E.status(S); over = s === 'mate' || s === 'stalemate' || s === 'draw50' || s === 'drawMat' ? s : null; }
   function undo() {
     if (thinking || hist.length < 1) return;
+    if (two()) { var h1 = hist.pop(); E.unmake(S, h1.m, h1.u); if (h1.m.c) caps[E.side(h1.m.p)].pop(); quality.pop(); me = S.turn; opp = me === 'w' ? 'b' : 'w'; last = hist.length ? hist[hist.length - 1].m : null; over = null; sel = -1; return analyse(); }
     var n = S.turn === me ? 2 : 1; if (over && S.turn === opp) n = 1;
     if (me === 'b' && hist.length - n < 1) return; // keep the opponent's opening move
     while (n-- && hist.length) { var h = hist.pop(); E.unmake(S, h.m, h.u); if (h.m.c) caps[E.side(h.m.p)].pop(); if (E.side(h.m.p) === me) quality.pop(); }
@@ -93,7 +104,8 @@
     $('#c-capw').innerHTML = caps[me].map(function (p) { return GLY[p.toLowerCase()]; }).join('');
     $('#c-capb').innerHTML = caps[opp].map(function (p) { return GLY[p.toLowerCase()]; }).join('');
     var msg;
-    if (over === 'mate') msg = S.turn === opp ? '<b class="' + t.cls + '">' + t.win + '</b> ' + (pref.theme === 'g' ? '<i>' + tr(t.win) + '</i> ' : '') + '= ' + t.winE + '. Checkmate: ' + t.kings[1] + ' has fallen.' : '<b class="' + t.cls + '">' + t.lose + '</b> ' + (pref.theme === 'g' ? '<i>' + tr(t.lose) + '</i> ' : '') + '= ' + t.loseE + '. Checkmate: ' + t.kings[0] + ' has fallen.';
+    if (over === 'mate' && two()) msg = 'Checkmate! <b>' + (S.turn === 'w' ? THEMES[pref.theme].them : THEMES[pref.theme].you) + '</b> win: ' + (S.turn === 'w' ? THEMES[pref.theme].kings[0] : THEMES[pref.theme].kings[1]) + ' has fallen.';
+    else if (over === 'mate') msg = S.turn === opp ? '<b class="' + t.cls + '">' + t.win + '</b> ' + (pref.theme === 'g' ? '<i>' + tr(t.win) + '</i> ' : '') + '= ' + t.winE + '. Checkmate: ' + t.kings[1] + ' has fallen.' : '<b class="' + t.cls + '">' + t.lose + '</b> ' + (pref.theme === 'g' ? '<i>' + tr(t.lose) + '</i> ' : '') + '= ' + t.loseE + '. Checkmate: ' + t.kings[0] + ' has fallen.';
     else if (over) msg = 'Draw' + (over === 'stalemate' ? ' by stalemate: the side to move has no legal move but is not in check.' : over === 'draw50' ? ' by the fifty-move rule.' : ': neither side has enough pieces to give checkmate.');
     else if (thinking || S.turn === opp) msg = 'The ' + t.them + ' are thinking…';
     else if (sel >= 0) msg = nameOf(S.b[sel]);
@@ -112,6 +124,7 @@
         '<tr><td>Times you chose the best move</td><td>' + bestN + ' of ' + done.length + '</td></tr>' +
         '<tr><td>Average chances given up per move</td><td>' + (done.length ? (avg * 100).toFixed(1) + ' pts' : '–') + '</td></tr>' +
         (lastQ ? '<tr><td>Your last move</td><td><i class="sw q' + lastQ.q + '"></i> ' + ord(lastQ.n + 1) + ' best of ' + lastQ.of + '</td></tr>' : '') : '') + '</table>' +
+      (!two() ? '<table><tr><td>Your record against the computer (won, drawn, lost)</td><td>' + pref.stats.w + ', ' + pref.stats.d + ', ' + pref.stats.l + '</td></tr></table>' : '<p class="bg-small">Two players: the board turns round after every move, so the side to move is always at the bottom.</p>') +
       '<p class="bg-small">Material counts pawn 1, knight and bishop 3, rook 5, queen 9.</p>';
   }
   function ord(n) { return n + (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th'); }
@@ -138,6 +151,9 @@
       '<h4>Is chess ancient?</h4><p>No. Chess grew out of an Indian game around AD 600 and reached Europe through Persia and the Arab world, long after classical Greece and Rome. The Greeks played <i>petteia</i> and the Romans <i>ludus latrunculorum</i>, board games of capture whose exact rules are lost. The armies and piece names here are a theme, not history; the archer stands in for the bishop.</p>';
   }
   $('#c-first').value = pref.first; $('#c-first').onchange = function () { pref.first = this.value; save(); newGame(); };
+  $('#c-mode').value = pref.mode; $('#c-mode').onchange = function () { pref.mode = this.value; save(); syncMode(); newGame(); };
+  function syncMode() { $('#c-level').hidden = two(); $('#c-first').hidden = two(); }
+  syncMode();
   $('#c-theme').value = pref.theme; $('#c-level').value = pref.level;
   $('#c-theme').onchange = function () { pref.theme = this.value; save(); rules(); draw(); };
   $('#c-level').onchange = function () { pref.level = +this.value; save(); };

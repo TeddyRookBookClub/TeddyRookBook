@@ -4,5 +4,7 @@
 <link rel="stylesheet" href="{{ "games/mosaic/game.css" | relURL }}?v={{ (os.Stat "static/games/mosaic/game.css").ModTime.Unix }}">
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="mm gbox" id="mm"><noscript>This game needs JavaScript.</noscript></div></div>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
 <script src="{{ "games/mosaic/game.js" | relURL }}?v={{ (os.Stat "static/games/mosaic/game.js").ModTime.Unix }}"></script>
+<script src="{{ "js/keys.js" | relURL }}?v={{ (os.Stat "static/js/keys.js").ModTime.Unix }}" data-sel=".mm-tile" data-board=".mm-board"></script>
 {{ end }}

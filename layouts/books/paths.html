@@ -1,0 +1,73 @@
+{{ define "main" }}
+<style>
+.rp{max-width:980px;margin:0 auto}
+.rp h1{font:700 2rem Georgia,serif;color:#004225;margin:.2rem 0 .3rem}
+.rp-lead{color:var(--secondary);line-height:1.55;margin:0 0 .8rem}
+.rp-nav{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 1rem}
+.rp-nav a{font-size:.88rem;padding:.28rem .7rem;border-radius:999px;border:1px solid var(--border);background:var(--entry);text-decoration:none;box-shadow:none;color:var(--primary)}
+.rp-nav a:hover{border-color:#004225}
+.rp-path{background:var(--entry);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:0 0 1.2rem;scroll-margin-top:1rem}
+.rp-path:target{box-shadow:0 0 0 3px #b8963e}
+.rp-path h2{font:700 1.35rem Georgia,serif;color:#004225;margin:0}
+.rp-path>p{margin:.2rem 0 .7rem;color:var(--secondary)}
+.rp-steps{list-style:none;margin:0;padding:0;counter-reset:st}
+.rp-step{display:grid;grid-template-columns:2rem minmax(0,1fr) auto;gap:.2rem .7rem;align-items:start;padding:.55rem 0;border-top:1px dashed var(--border);counter-increment:st}
+.rp-step::before{content:counter(st);display:flex;align-items:center;justify-content:center;width:1.7rem;height:1.7rem;border-radius:50%;background:#004225;color:#fff;font:700 .85rem system-ui,sans-serif}
+.rp-step h3{font:700 1.05rem Georgia,serif;margin:0}
+.rp-step h3 a{box-shadow:none;color:inherit}
+.rp-step h3 small{font:400 .82rem system-ui,sans-serif;color:var(--secondary);margin-left:.3rem}
+.rp-step p{margin:.15rem 0 0;line-height:1.5;font-size:.95rem}
+.rp-acts{display:flex;flex-direction:column;gap:.3rem;align-items:flex-end}
+.rp-acts a,.rp-done{font-size:.8rem;padding:.2rem .55rem;border-radius:8px;border:1px solid var(--border);background:var(--theme);text-decoration:none;box-shadow:none;color:var(--primary);white-space:nowrap;cursor:pointer;font-family:inherit}
+.rp-acts a:hover,.rp-done:hover{border-color:#004225}
+.rp-done[aria-pressed="true"]{background:#e6f4ea;border-color:#2e7d32;color:#2e7d32}
+.rp-step.read h3 a{text-decoration:line-through;text-decoration-color:rgba(46,125,50,.6)}
+.rp-step.read::before{background:#2e7d32;content:"✓"}
+.rp-extra{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.7rem;padding-top:.6rem;border-top:1px solid var(--border)}
+.rp-extra a{font-size:.83rem;padding:.2rem .6rem;border-radius:8px;border:1px solid var(--border);background:var(--theme);text-decoration:none;box-shadow:none;color:var(--primary)}
+.rp-prog{font-size:.85rem;color:var(--secondary);margin-left:.4rem;font-family:system-ui,sans-serif;font-weight:400}
+[data-theme="dark"] .rp h1,[data-theme="dark"] .rp-path h2{color:#6cc79a}
+[data-theme="dark"] .rp-step::before{background:#00562f}
+[data-theme="dark"] .rp-done[aria-pressed="true"]{background:#1d3a28;color:#8fd6a8;border-color:#2e7d32}
+@media (max-width:640px){.rp-step{grid-template-columns:2rem minmax(0,1fr)}.rp-acts{grid-column:2;flex-direction:row;flex-wrap:wrap;align-items:center}}
+</style>
+<div class="rp">
+  <nav style="margin-bottom:.6rem"><a href="{{ "books/" | relURL }}" style="font-size:.9rem;box-shadow:none">← Back to Library</a></nav>
+  <h1>{{ .Title }}</h1>
+  <p class="rp-lead">Not sure where to start? Each path is a short route through books in the Library, in a sensible reading order, with a line on why each one is there. Older books link to free copies; tick off what you have read, and it is remembered in this browser.</p>
+  <nav class="rp-nav" aria-label="Paths">{{ range site.Data.paths }}<a href="#{{ .id }}">{{ .icon }} {{ .title }}</a>{{ end }}</nav>
+  {{ range site.Data.paths }}
+  <section class="rp-path" id="{{ .id }}" data-path="{{ .id }}">
+    <h2>{{ .icon }} {{ .title }} <span class="rp-prog"></span></h2>
+    <p>{{ .blurb }}</p>
+    <ol class="rp-steps">
+      {{ range .steps }}{{ $b := site.GetPage (printf "/books/%s" .book) }}
+      {{ if $b }}
+      <li class="rp-step" data-book="{{ .book }}">
+        <div><h3><a href="{{ $b.RelPermalink }}">{{ $b.Title }}</a><small>{{ $b.Params.author }}{{ with $b.Params.year }}{{ $y := int . }} · {{ if lt $y 0 }}{{ mul $y -1 }} BC{{ else if lt $y 500 }}AD {{ $y }}{{ else }}{{ $y }}{{ end }}{{ end }}</small></h3><p>{{ .note }}</p></div>
+        <div class="rp-acts">{{ if .free }}<a href="{{ "free-books/" | relURL }}?q={{ $b.Title | urlquery }}">📗 Free copy</a>{{ end }}<button class="rp-done" type="button" aria-pressed="false">Mark as read</button></div>
+      </li>
+      {{ else }}{{ warnf "paths.yaml: no book %s" .book }}{{ end }}
+      {{ end }}
+    </ol>
+    {{ with .extra }}<div class="rp-extra">{{ range . }}<a href="{{ index . 1 }}">{{ index . 0 }}</a>{{ end }}</div>{{ end }}
+  </section>
+  {{ end }}
+</div>
+<script>
+(function () {
+  var KEY = 'trb-paths-v1', done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) { } }
+  function paint() {
+    document.querySelectorAll('.rp-path').forEach(function (s) {
+      var st = s.querySelectorAll('.rp-step'), n = 0;
+      st.forEach(function (li) { var on = !!done[li.getAttribute('data-book')]; if (on) n++; li.classList.toggle('read', on); var b = li.querySelector('.rp-done'); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '✓ Read' : 'Mark as read'; });
+      s.querySelector('.rp-prog').textContent = n ? n + ' of ' + st.length + ' read' : '';
+    });
+  }
+  document.querySelectorAll('.rp-done').forEach(function (b) { b.addEventListener('click', function () { var k = b.closest('.rp-step').getAttribute('data-book'); if (done[k]) delete done[k]; else done[k] = 1; save(); paint(); }); });
+  paint();
+})();
+</script>
+{{ end }}

@@ -1,0 +1,27 @@
+{{- /* Site-search index: every page, plus each infographic and timeline entry. k = kind, t = title, u = url, d = description, x = extra words to match. */ -}}
+{{- $out := slice -}}
+{{- range site.Pages -}}
+  {{- if or .Params.searchHidden (eq .Kind "taxonomy") (eq .Kind "term") (eq .Kind "home") -}}{{- continue -}}{{- end -}}
+  {{- if and .Params.isListPage (not .Params.searchable) -}}{{- continue -}}{{- end -}}
+  {{- $k := .Section | humanize -}}
+  {{- if eq .Section "books" }}{{ $k = "Library" }}{{ end -}}
+  {{- if eq .Section "games" }}{{ $k = "Game" }}{{ end -}}
+  {{- if eq .Section "languages" }}{{ $k = "Languages" }}{{ end -}}
+  {{- if eq .Section "markets" }}{{ $k = "Markets" }}{{ end -}}
+  {{- if eq .Section "infographics" }}{{ $k = "Infographic" }}{{ end -}}
+  {{- if not .Section }}{{ $k = "Page" }}{{ end -}}
+  {{- $x := slice -}}
+  {{- with .Params.author }}{{ $x = $x | append . }}{{ end -}}
+  {{- with .Params.country }}{{ $x = $x | append . }}{{ end -}}
+  {{- with .Params.year }}{{ $x = $x | append (string .) }}{{ end -}}
+  {{- with .Params.tags }}{{ $x = $x | append . }}{{ end -}}
+  {{- with .Params.keywords }}{{ $x = $x | append . }}{{ end -}}
+  {{- $out = $out | append (dict "k" $k "t" .Title "u" .RelPermalink "d" (.Description | default "" | plainify) "x" (delimit $x " ")) -}}
+{{- end -}}
+{{- range where site.Data.infographics "show" true -}}
+  {{- $out = $out | append (dict "k" "Infographic" "t" .title "u" (printf "/infographics/%s/" .file) "d" .description "x" (delimit (.tags | default slice) " ") "i" (printf "/img/infographics/%s-thumb.jpg" .file)) -}}
+{{- end -}}
+{{- with site.Data.timeline -}}{{- range .events -}}
+  {{- $out = $out | append (dict "k" "Timeline" "t" (printf "%s · %s" .when .title) "u" (printf "/timeline/#%s" .id) "d" .text "x" "") -}}
+{{- end -}}{{- end -}}
+{{- $out | jsonify -}}

@@ -27,6 +27,8 @@
         <span>{{ delimit .tags " · " }}</span>
         {{ with .description }}<p class="ig-desc">{{ . }}</p>{{ end }}
         {{ with .pdf }}<a class="ig-pdf" href="/pdfs/{{ . }}" target="_blank" rel="noopener">📄 Read the full paper (PDF)</a>{{ end }}
+        {{ $it := . }}{{ with .link }}<a class="ig-pagelink ig-rel" href="{{ . }}">✨ {{ $it.link_text | default "Related page" }} →</a>{{ end }}
+        <a class="ig-pagelink" href="/infographics/{{ .file }}/">🔗 Own page, to share or bookmark</a>
         {{ with .books }}<span class="ig-books">📚 {{ range $i, $b := . }}{{ with site.GetPage (printf "/books/%s" $b) }}{{ if $i }} · {{ end }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}</span>{{ end }}
       </figcaption>
     </figure>
@@ -38,7 +40,7 @@
     <div class="ig-lb-inner">
       <img id="ig-lb-img" alt="">
       <div class="ig-lb-caption"><strong id="ig-lb-title"></strong><p id="ig-lb-desc"></p>
-        <a id="ig-lb-full" target="_blank" rel="noopener">Open full size ↗</a>
+        <a id="ig-lb-full" target="_blank" rel="noopener">Open full size ↗</a> · <a id="ig-lb-page">Own page, to share ↗</a>
         <a id="ig-lb-pdf" class="ig-pdf" target="_blank" rel="noopener" hidden></a></div>
     </div>
   </div>
@@ -58,7 +60,7 @@
     e.preventDefault(); img.src=a.href; img.alt=a.dataset.title;
     document.getElementById('ig-lb-title').textContent=a.dataset.title;
     document.getElementById('ig-lb-desc').textContent=a.dataset.desc||'';
-    document.getElementById('ig-lb-full').href=a.href;
+    document.getElementById('ig-lb-full').href=a.href; document.getElementById('ig-lb-page').href='/infographics/'+a.closest('.ig-card').id+'/';
     var pl=document.getElementById('ig-lb-pdf');
     if(a.dataset.pdf){pl.href=a.dataset.pdf;pl.textContent='📄 '+(a.dataset.pdftitle||'Read the full paper (PDF)');pl.hidden=false;}else{pl.hidden=true;} lb.hidden=false; document.body.style.overflow='hidden';
   });});

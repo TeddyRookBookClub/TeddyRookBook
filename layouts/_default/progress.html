@@ -1,0 +1,124 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
+<style>
+.pg{max-width:980px;margin:0 auto}
+.pg h1{font:700 2rem Georgia,serif;color:#004225;margin:.2rem 0 .3rem}
+.pg-lead{color:var(--secondary);line-height:1.55;margin:0 0 1rem}
+.pg-card{background:var(--entry);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:0 0 1rem}
+.pg-card h2{font:700 1.25rem Georgia,serif;margin:0 0 .5rem;color:#004225}
+.pg-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:.4rem 0 .2rem}
+.pg-stat{border:1px solid var(--border);border-radius:10px;padding:.55rem .7rem;background:var(--theme)}
+.pg-stat b{display:block;font:700 1.45rem Georgia,serif;color:#004225}
+.pg-stat span{display:block;font-size:.85rem;line-height:1.3;color:var(--secondary)}
+.pg-bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.6rem 0}
+.pg-bar select,.pg-btn{font:inherit;font-size:.9rem;padding:.38rem .7rem;border-radius:9px;border:1px solid var(--border);background:var(--theme);color:var(--primary)}
+.pg-btn{cursor:pointer;text-decoration:none;box-shadow:none;display:inline-block}
+.pg-btn.pri{background:#004225;border-color:#004225;color:#fff;font-weight:600}
+.pg-btn:hover{border-color:#004225}
+table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
+.pg-tab th{text-align:left;font:600 .78rem system-ui;text-transform:uppercase;letter-spacing:.04em;color:var(--secondary);border-bottom:1px solid var(--border);padding:.35rem .4rem}
+.pg-tab td{border-bottom:1px dashed var(--border);padding:.38rem .4rem;vertical-align:top}
+.pg-tab .w{font-family:"Gentium Book Plus",Georgia,serif;font-size:1.15rem}
+.pg-tab .tr{display:block;font:italic .8rem Georgia,serif;color:var(--secondary)}
+.pg-tab .gm{font-size:.82rem;color:var(--secondary)}
+.pg-empty{color:var(--secondary);font-style:italic}
+.pg-list{margin:.2rem 0;padding-left:1.1rem;line-height:1.7}
+.pg-note{font-size:.85rem;color:var(--secondary);line-height:1.5}
+.pg-msg{font-weight:600;margin-left:.3rem}
+[data-theme="dark"] .pg h1,[data-theme="dark"] .pg-card h2,[data-theme="dark"] .pg-stat b{color:#6cc79a}
+@media (max-width:600px){.pg-tab .gm{display:none}}
+</style>
+<div class="pg" id="pg">
+  <h1>{{ .Title }}</h1>
+  <p class="pg-lead">Everything here is kept in this browser on this device; nothing is sent anywhere. To carry it to another phone or computer, save it to a file below and load the file there.</p>
+
+  <section class="pg-card">
+    <h2>Words I met in the games</h2>
+    <div class="pg-stats" id="pg-wstats"></div>
+    <div class="pg-bar">
+      <select id="pg-lang" aria-label="Language"><option value="g">Greek</option><option value="l">Latin</option></select>
+      <select id="pg-game" aria-label="Game"><option value="">All games</option></select>
+      <a class="pg-btn pri" id="pg-study" href="/languages/flashcards/">Study these as flashcards →</a>
+    </div>
+    <div id="pg-words"></div>
+  </section>
+
+  <section class="pg-card">
+    <h2>Progress in the tools and games</h2>
+    <ul class="pg-list" id="pg-other"></ul>
+  </section>
+
+  <section class="pg-card">
+    <h2>Save or move my progress</h2>
+    <p class="pg-note">The file holds your flashcard schedule, game saves and settings, and the words list. Loading a file replaces those on this device with the ones in the file.</p>
+    <div class="pg-bar">
+      <button type="button" class="pg-btn pri" id="pg-save">⬇ Save my progress to a file</button>
+      <label class="pg-btn">⬆ Load progress from a file<input type="file" id="pg-load" accept=".json,application/json" hidden></label>
+      <button type="button" class="pg-btn" id="pg-clear">Clear the words list</button>
+      <span class="pg-msg" id="pg-msg" aria-live="polite"></span>
+    </div>
+  </section>
+</div>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
+<script>
+(function (W, D) {
+  var $ = function (s) { return D.querySelector(s); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function get(k) { try { return JSON.parse(W.localStorage.getItem(k)); } catch (e) { return null; } }
+  var GN = W.TRBWords.GAMES;
+  function words() {
+    var all = W.TRBWords.all(), lang = $('#pg-lang').value, game = $('#pg-game').value;
+    var g = all.filter(function (e) { return e.l === 'g'; }).length, l = all.length - g, per = {};
+    all.forEach(function (e) { if (e.l === lang) for (var k in e.g) per[k] = (per[k] || 0) + 1; });
+    $('#pg-wstats').innerHTML = '<div class="pg-stat"><b>' + all.length + '</b><span>words met in all</span></div><div class="pg-stat"><b>' + g + '</b><span>Greek</span></div><div class="pg-stat"><b>' + l + '</b><span>Latin</span></div>' +
+      '<div class="pg-stat"><b>' + Object.keys(per).length + '</b><span>games with ' + (lang === 'g' ? 'Greek' : 'Latin') + ' words</span></div>';
+    var gs = $('#pg-game'), keep = gs.value;
+    gs.innerHTML = '<option value="">All games</option>' + Object.keys(per).map(function (k) { return '<option value="' + k + '">' + esc(GN[k] || k) + ' (' + per[k] + ')</option>'; }).join('');
+    gs.value = per[keep] ? keep : ''; game = gs.value;
+    var list = all.filter(function (e) { return e.l === lang && (!game || e.g[game]); });
+    $('#pg-study').href = '/languages/flashcards/?lang=' + lang + '&src=' + encodeURIComponent(game ? 'games:' + game : 'games');
+    $('#pg-study').style.display = list.length ? '' : 'none';
+    if (!list.length) { $('#pg-words').innerHTML = '<p class="pg-empty">No ' + (lang === 'g' ? 'Greek' : 'Latin') + ' words yet. Play <a href="/games/hero/">Hero’s Road</a>, <a href="/games/mosaic/">Mosaic Match</a>, <a href="/games/thermopylae/">Thermopylae</a>, <a href="/games/teutoburg/">Teutoburg</a>, <a href="/games/thief/">Time Thief</a>, <a href="/games/chess/">Chess of the Ancients</a> or the <a href="/games/daily/">Daily Word Puzzle</a>, and the words you meet will appear here.</p>'; return; }
+    $('#pg-words').innerHTML = '<table class="pg-tab"><thead><tr><th>' + (lang === 'g' ? 'Greek' : 'Latin') + '</th><th>Meaning</th><th class="gm">Where</th><th>Seen</th></tr></thead><tbody>' +
+      list.map(function (e) { var tr = lang === 'g' && W.grTranslit ? '<span class="tr">' + esc(W.grTranslit(e.f)) + '</span>' : ''; return '<tr><td><span class="w">' + esc(e.f) + '</span>' + tr + '</td><td>' + esc(e.e) + '</td><td class="gm">' + Object.keys(e.g).map(function (k) { return esc(GN[k] || k); }).join(', ') + '</td><td>' + (game ? e.g[game] : e.n) + '×</td></tr>'; }).join('') + '</tbody></table>';
+  }
+  function other() {
+    var out = [], f = get('trb-flash-v1'), now = Date.now();
+    if (f && f.cards) { var ids = Object.keys(f.cards), due = ids.filter(function (k) { return f.cards[k].d <= now; }).length; out.push('<b>Flashcards:</b> ' + ids.length + ' cards studied, ' + due + ' due now. <a href="/languages/flashcards/">Open the flashcards</a>'); }
+    var h = get('trb-hero-v1'); if (h && h.done) { var gd = Object.keys(h.done).filter(function (k) { return /^gr/.test(k); }).length, rd = Object.keys(h.done).filter(function (k) { return /^ro/.test(k); }).length, od = Object.keys(h.done).filter(function (k) { return /^od/.test(k); }).length; if (gd + rd + od) out.push('<b>Hero’s Road:</b> Greece ' + gd + '/4, Rome ' + rd + '/4, Odysseus ' + od + '/4 levels finished.'); }
+    var m = get('trb-mosaic-v1'); if (m && m.best > 1) out.push('<b>Mosaic Match:</b> reached level ' + m.best + (m.hi ? ', best score ' + m.hi.toLocaleString() : '') + '.');
+    var t = get('trb-thermo-v1'); if (t && (t.wave || t.hi)) out.push('<b>Thermopylae:</b> best wave ' + (t.wave || 0) + (t.hi ? ', best score ' + t.hi.toLocaleString() : '') + '.');
+    var tt = get('tt-v1'); if (tt) { var s = 0, n = 0; ['greece', 'rome'].forEach(function (k) { if (tt[k]) { s += tt[k].solved || 0; n += (tt[k].played || []).length; } }); if (n) out.push('<b>Time Thief:</b> ' + s + ' cases solved.'); }
+    var d = get('trb-daily-v1'); if (d && d.played) out.push('<b>Daily Word Puzzle:</b> ' + d.played + ' played, ' + (d.won || 0) + ' solved, current streak ' + (d.streak || 0) + '.');
+    var a = get('trb-alpha-v1'); if (a && a.done) out.push('<b>Greek Alphabet:</b> ' + Object.keys(a.done).length + ' lessons finished.');
+    ['chess', 'tabula', 'terni', 'ur', 'morris', 'latrunculi', 'knucklebones'].forEach(function (k) { var b = get('trb-' + k); if (b && b.stats && (b.stats.w || b.stats.l || b.stats.d)) out.push('<b>' + ({ chess: 'Chess of the Ancients', tabula: 'Tabula', terni: 'Terni Lapilli', ur: 'Royal Game of Ur', morris: 'Nine Men’s Morris', latrunculi: 'Latrunculi', knucklebones: 'Knucklebones' }[k]) + ':</b> ' + (b.stats.w || 0) + ' won, ' + (b.stats.l || 0) + ' lost' + (b.stats.d ? ', ' + b.stats.d + ' drawn' : '') + '.'); });
+    $('#pg-other').innerHTML = out.length ? out.map(function (x) { return '<li>' + x + '</li>'; }).join('') : '<li class="pg-empty">Nothing yet on this device.</li>';
+  }
+  function msg(t) { $('#pg-msg').textContent = t; setTimeout(function () { if ($('#pg-msg').textContent === t) $('#pg-msg').textContent = ''; }, 5000); }
+  $('#pg-save').onclick = function () {
+    var o = { site: 'teddyrookbook.com', saved: new Date().toISOString(), data: {} };
+    for (var i = 0; i < W.localStorage.length; i++) { var k = W.localStorage.key(i); o.data[k] = W.localStorage.getItem(k); }
+    var blob = new Blob([JSON.stringify(o)], { type: 'application/json' }), a = D.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'teddy-rook-book-progress-' + new Date().toISOString().slice(0, 10) + '.json';
+    D.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    msg('Saved ' + Object.keys(o.data).length + ' items.');
+  };
+  $('#pg-load').onchange = function () {
+    var f = this.files[0]; if (!f) return; var self = this;
+    f.text().then(function (t) {
+      var o = JSON.parse(t); if (!o || o.site !== 'teddyrookbook.com' || typeof o.data !== 'object') throw new Error('not a progress file');
+      var keys = Object.keys(o.data);
+      if (W.confirm && !W.confirm('Load ' + keys.length + ' items saved on ' + String(o.saved || '').slice(0, 10) + '? They replace the same items on this device.')) return;
+      keys.forEach(function (k) { if (typeof o.data[k] === 'string') W.localStorage.setItem(k, o.data[k]); });
+      msg('Loaded ' + keys.length + ' items.'); words(); other();
+    }).catch(function () { msg('That file is not a Teddy Rook Book progress file.'); }).then(function () { self.value = ''; });
+  };
+  $('#pg-clear').onclick = function () { if (W.confirm && !W.confirm('Clear the list of words met in the games? Your flashcard schedule and game saves are kept.')) return; W.TRBWords.clear(); words(); msg('Cleared.'); };
+  $('#pg-lang').onchange = words; $('#pg-game').onchange = words;
+  var all = W.TRBWords.all(); if (all.length && !all.some(function (e) { return e.l === 'g'; })) $('#pg-lang').value = 'l';
+  words(); other();
+})(window, document);
+</script>
+{{ end }}

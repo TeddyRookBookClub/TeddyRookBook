@@ -33,3 +33,74 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') pop.hidden = true; });
 })();
 </script>
+<script>
+/* "More" menu: close when clicking elsewhere or pressing Escape. */
+(function () {
+  var d = document.querySelector('#menu .trb-more details'); if (!d) return;
+  document.addEventListener('click', function (e) { if (d.open && !d.contains(e.target)) d.open = false; });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary').focus(); } });
+})();
+/* Site search: a button in the header (or press /) opens a search box over the page. The index is /index.json. */
+(function () {
+  var sw = document.querySelector('.logo-switches'); if (!sw) return;
+  var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'trb-sbtn'; btn.title = 'Search the site (/)'; btn.setAttribute('aria-label', 'Search the site');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
+  sw.insertBefore(btn, sw.firstChild);
+  var ov = document.createElement('div'); ov.className = 'trb-search'; ov.hidden = true; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', 'Search');
+  ov.innerHTML = '<div class="trb-sbox"><form role="search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="color:var(--secondary)"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Search books, infographics, games, lessons…" aria-label="Search" autocomplete="off"><kbd>Esc</kbd><button type="button" class="trb-sclose" aria-label="Close">×</button></form><ul class="trb-sres"></ul></div>';
+  document.body.appendChild(ov);
+  var inp = ov.querySelector('input'), res = ov.querySelector('.trb-sres'), idx = null, loading = null, sel = -1, last = null;
+  function norm(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  function esc(s) { return String(s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function load() {
+    if (!loading) loading = fetch('/index.json').then(function (r) { return r.json(); }).then(function (d) {
+      idx = d.map(function (e) { e.nt = norm(e.t); e.nd = norm(e.d); e.nx = norm(e.x); return e; }); return idx;
+    }).catch(function () { loading = null; res.innerHTML = '<li class="trb-snote">Search could not load. Check your connection and try again.</li>'; });
+    return loading;
+  }
+  function hl(s, terms) { var h = esc(s); terms.forEach(function (t) { if (t.length < 2) return; var re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'); h = h.replace(re, '<mark>$1</mark>'); }); return h; }
+  function search(q) {
+    var terms = norm(q).split(/\s+/).filter(Boolean); if (!terms.length) { res.innerHTML = '<li class="trb-snote">Try a book, author, word, game or topic, for example <i>Homer</i>, <i>chess</i>, <i>VIX</i> or <i>Rome</i>.</li>'; return; }
+    var out = [];
+    idx.forEach(function (e) {
+      var sc = 0;
+      for (var i = 0; i < terms.length; i++) {
+        var t = terms[i], s = 0;
+        if (e.nt.indexOf(t) === 0) s = 10; else if (e.nt.indexOf(' ' + t) >= 0) s = 8; else if (e.nt.indexOf(t) >= 0) s = 6;
+        else if (e.nx.indexOf(t) >= 0) s = 4; else if (e.nd.indexOf(t) >= 0) s = 2;
+        if (!s) return; sc += s;
+      }
+      if (e.k !== 'Library') sc += 1;
+      out.push([sc, e]);
+    });
+    out.sort(function (a, b) { return b[0] - a[0] || a[1].t.length - b[1].t.length; });
+    sel = -1;
+    var rawTerms = q.trim().split(/\s+/);
+    res.innerHTML = out.length ? out.slice(0, 30).map(function (r) { var e = r[1]; return '<li><a href="' + esc(e.u) + '"><span class="k ' + esc(e.k) + '">' + esc(e.k) + '</span><span><b>' + hl(e.t, rawTerms) + '</b>' + (e.d ? '<small>' + hl(e.d.length > 160 ? e.d.slice(0, 157) + '…' : e.d, rawTerms) + '</small>' : '') + '</span></a></li>'; }).join('')
+      : '<li class="trb-snote">Nothing found for “' + esc(q) + '”.</li>';
+  }
+  function open(q) {
+    last = document.activeElement; ov.hidden = false; document.documentElement.style.overflow = 'hidden';
+    if (q != null) inp.value = q; inp.focus(); inp.select();
+    load().then(function () { if (idx) search(inp.value); });
+  }
+  function close() { ov.hidden = true; document.documentElement.style.overflow = ''; if (last && last.focus) last.focus(); }
+  btn.addEventListener('click', function () { open(); });
+  ov.addEventListener('click', function (e) { if (e.target === ov || e.target.closest('.trb-sclose')) close(); });
+  ov.querySelector('form').addEventListener('submit', function (e) { e.preventDefault(); var a = res.querySelectorAll('a')[Math.max(0, sel)]; if (a) location.href = a.href; });
+  inp.addEventListener('input', function () { if (idx) search(inp.value); });
+  inp.addEventListener('keydown', function (e) {
+    var as = res.querySelectorAll('a'); if (!as.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (sel >= 0) as[sel].classList.remove('sel'); sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + as.length) % as.length; as[sel].classList.add('sel'); as[sel].scrollIntoView({ block: 'nearest' }); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !ov.hidden) { close(); return; }
+    if (e.key === '/' && ov.hidden && !/INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '') && !e.target.isContentEditable && !document.querySelector('canvas:focus')) {
+      if (document.querySelector('.gwrap, .hr, .th, #chess, #tabula')) return; // games use their own keys
+      e.preventDefault(); open();
+    }
+  });
+  var m = /[?&]search=([^&]*)/.exec(location.search); if (m) open(decodeURIComponent(m[1].replace(/\+/g, ' ')));
+  window.trbSearch = open;
+})();
+</script>

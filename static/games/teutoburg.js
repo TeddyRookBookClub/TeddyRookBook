@@ -225,6 +225,7 @@
     var left = VOCAB.filter(function (w) { return learned.indexOf(w) < 0; });
     var w = left.length ? left[Math.floor(Math.random() * left.length)] : VOCAB[Math.floor(Math.random() * VOCAB.length)];
     if (learned.indexOf(w) < 0) learned.push(w);
+    if (window.TRBWords) window.TRBWords.log('teutoburg', 'l', w[0], w[1]);
     flash(w[0], w[1], 'word');
     renderHud();
   }

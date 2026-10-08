@@ -1,0 +1,21 @@
+{{- /* Link-preview pictures. An infographic page gets a 1200×630 picture cropped from the top of its infographic;
+       pages with images: [...] use those; everything else falls back to the site picture. */ -}}
+{{- $imgs := slice }}
+{{- with .Params.igfile }}
+  {{- with resources.Get (printf "infographics/%s.jpg" .) }}
+    {{- $c := (.Resize "1200x").Crop "1200x630 top" }}
+    {{- $imgs = $imgs | append (dict "Image" $c "RelPermalink" $c.RelPermalink "Permalink" $c.Permalink) }}
+  {{- end }}
+{{- end }}
+{{- if not $imgs }}
+  {{- $imgParams := .Params.images | default (first 1 (site.Params.images | default slice)) }}
+  {{- range $imgParams }}
+    {{- $url := urls.Parse . }}
+    {{- if eq $url.Scheme "" }}
+      {{- $imgs = $imgs | append (dict "RelPermalink" (relURL .) "Permalink" (absURL .)) }}
+    {{- else }}
+      {{- $imgs = $imgs | append (dict "RelPermalink" . "Permalink" .) }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- return $imgs }}

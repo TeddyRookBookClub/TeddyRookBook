@@ -1,0 +1,29 @@
+{{ define "main" }}
+<link rel="stylesheet" href="/css/infographics.css?v={{ (os.Stat "static/css/infographics.css").ModTime.Unix }}">
+<article class="ig-one">
+  <p class="ig-one-back"><a href="/infographics/#{{ .Params.igfile }}">‹ All infographics</a></p>
+  <h1>{{ .Title }}</h1>
+  <p class="ig-one-desc">{{ .Params.description }}</p>
+  <p class="ig-one-meta">{{ delimit .Params.igtags " · " }}
+    {{ with .Params.igbooks }} · 📚 {{ range $i, $b := . }}{{ with site.GetPage (printf "/books/%s" $b) }}{{ if $i }}, {{ end }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}{{ end }}
+    {{ with .Params.igpdf }} · <a href="/pdfs/{{ . }}" target="_blank" rel="noopener">📄 {{ $.Params.igpdftitle | default "Read the full paper (PDF)" }}</a>{{ end }}
+  </p>
+  <div class="ig-one-actions">
+    <a class="ig-one-btn" href="/img/infographics/{{ .Params.igfile }}.jpg" target="_blank" rel="noopener">Open full size ↗</a>
+    {{ with .Params.iglink }}<a class="ig-one-btn ig-one-pri" href="{{ . }}">{{ $.Params.iglinktext | default "Related page" }} →</a>{{ end }}
+    <button type="button" class="ig-one-btn" id="ig-share" data-url="{{ .Permalink }}" data-title="{{ .Title }}">Share this page</button>
+  </div>
+  <a href="/img/infographics/{{ .Params.igfile }}.jpg" target="_blank" rel="noopener"><img class="ig-one-img" src="/img/infographics/{{ .Params.igfile }}.jpg" alt="{{ .Title }}"></a>
+</article>
+<script>
+(function () {
+  var b = document.getElementById('ig-share'); if (!b) return;
+  b.addEventListener('click', function () {
+    var u = b.dataset.url, t = b.dataset.title;
+    if (navigator.share) { navigator.share({ title: t, url: u }).catch(function () {}); return; }
+    (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b.textContent = 'Link copied ✓'; setTimeout(function () { b.textContent = 'Share this page'; }, 2000); })
+      .catch(function () { window.prompt('Copy this link:', u); });
+  });
+})();
+</script>
+{{ end }}

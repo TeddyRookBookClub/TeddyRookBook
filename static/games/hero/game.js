@@ -1,6 +1,7 @@
-/* Hero's Road: a side-scrolling platformer in two settings.
+/* Hero's Road: a side-scrolling platformer in three settings.
    Greece: Theseus on the road to Athens and into the Labyrinth, with Koine Greek words.
    Rome: Hercules on the road to the Tiber and into Cacus' cave, with Latin words.
+   The Odyssey: Odysseus sailing island to island to the Cyclops' cave, with Koine Greek words.
    Every Greek and Latin word comes from Mosaic Match's list: Latin in its dictionary form, every Greek word found in the New Testament. */
 (function (W, D) {
   'use strict';
@@ -44,16 +45,32 @@
           story: 'Cacus, a son of Vulcan, breathes fire and smoke. Pull the lever behind him, or wear him down with stones.' }
       ],
       ending: 'Hercules choked Cacus in his own smoke-filled cave and freed the cattle. Virgil tells the story in Aeneid 8, and Livy in his first book: Evander’s people honoured Hercules at the Great Altar, the Ara Maxima, beside the cattle market.'
+    },
+    od: {
+      name: 'The Odyssey', hero: 'Odysseus', lang: 'Koine Greek', coin: 'drachma', flyer: 'eagle', boss: 'the Cyclops',
+      levels: [
+        { name: 'The Lotus-Eaters', kind: 'field', words: ['sun', 'flower', 'honey', 'tree', 'olive', 'water', 'bread', 'fish', 'wine', 'grass', 'river', 'sheep', 'road', 'house', 'island', 'shore'],
+          story: 'Sailing home from Troy, Odysseus was blown off course to the land of the Lotus-Eaters. Whoever tasted the honey-sweet lotus forgot all about going home, so Odysseus had to drag his men back to the ships.' },
+        { name: 'Island to Island', kind: 'sea', words: ['sea', 'ship', 'small boat', 'wind', 'cloud', 'rain', 'island', 'shore', 'anchor', 'net', 'fish', 'eagle', 'stone', 'mountain', 'spring', 'water'],
+          story: 'Next they reached a wooded island full of wild goats, lying just off the land of the Cyclopes. Cross the strait from boat to boat and rock to rock.' },
+        { name: 'The Cyclops’ Cave', kind: 'cave', words: ['lamp', 'fire', 'night', 'sheep', 'eye', 'sleep', 'cup', 'wine', 'door', 'stone', 'hand', 'foot', 'rope', 'key', 'chain', 'well'],
+          story: 'Odysseus took twelve men into a huge cave full of cheeses and lambs. Its owner, the one-eyed giant Polyphemus, came home, rolled a great stone across the doorway and ate two of the men.' },
+        { name: 'Polyphemus', kind: 'castle', words: ['fire', 'bow', 'war', 'king', 'queen', 'crown', 'ring', 'gift', 'table', 'seat', 'heart', 'sword', 'shield', 'helmet', 'tower', 'wall'],
+          story: 'Odysseus gave the giant strong wine and told him his name was Nobody. Now get past Polyphemus and his hurled rocks: pull the lever behind him to tip him into the fire pit, or wear him down with stones.' }
+      ],
+      ending: 'While Polyphemus slept, Odysseus and his men drove a sharpened olive stake into his one eye. When the other Cyclopes came running, he shouted that Nobody was hurting him, so they went away. Next morning the Greeks slipped out tied under the bellies of his rams. Homer tells the story in book 9 of the Odyssey; it took Odysseus ten years in all to sail home to Ithaca.'
     }
   };
+  var ORDER = ['gr', 'ro', 'od'];
+  function lat() { return G && G.set === 'ro'; }
   var ENW = { wolf: 'wolf', fox: 'fox', frog: 'frog', scorp: 'scorpion', snake: 'snake', podo: 'fire', bar: 'fire' };
 
   // ---------- save ----------
-  var KEY = 'trb-hero-v1', st = { set: 'gr', words: true, open: { gr: 1, ro: 1 }, done: {}, seen: {} };
+  var KEY = 'trb-hero-v1', st = { set: 'gr', words: true, open: { gr: 1, ro: 1, od: 1 }, done: {}, seen: {} };
   try { var sv = JSON.parse(W.localStorage.getItem(KEY) || 'null'); if (sv) for (var k in sv) st[k] = sv[k]; } catch (e) { }
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
 
-  function word(eng) { var v = VOC[eng]; var g = G && G.set === 'ro' ? v[1] : v[0]; return { f: g, e: eng === 'coin' ? (G.set === 'gr' ? 'drachma, a silver coin' : 'denarius, a silver coin') : eng, p: G && G.set === 'gr' ? TR(g) : '' }; }
+  function word(eng) { var v = VOC[eng]; var g = G && G.set === 'ro' ? v[1] : v[0]; return { f: g, e: eng === 'coin' ? (G.set !== 'ro' ? 'drachma, a silver coin' : 'denarius, a silver coin') : eng, p: G && G.set !== 'ro' ? TR(g) : '' }; }
 
   // ---------- level building ----------
   var GY = 12, ROWS = 15;
@@ -97,8 +114,27 @@
   };
 
   function makeLevel(li) {
-    var kind = SET[G.set].levels[li].kind, b = new Build(kind), fl = G.set === 'gr' ? 'eagle' : 'locust';
-    if (li === 0) {
+    var kind = SET[G.set].levels[li].kind, b = new Build(kind), fl = G.set === 'ro' ? 'locust' : 'eagle';
+    if (G.set === 'od' && li === 1) {
+      // island to island: boats (moving platforms), rocks and small islets
+      b.flat(14).at(6, 8, '?!?').en(11, 'frog')
+        .mplat(9, 10, 1, 5)
+        .flat(6).at(2, 8, '?').en(4, 'wolf')
+        .ledges(11, [[1, 10, 2], [5, 9, 2], [9, 10, 2]]).at(5, 7, 'oo')
+        .flat(8).en(5, fl, 7).at(3, 8, 'B?B')
+        .mplat(12, 9, 1, 8)
+        .flat(10).en(4, 'fox').check(7)
+        .mplat(10, 10, 1, 6).at(4, 6, 'ooo')
+        .flat(6).at(2, 8, '*')
+        .gate()
+        .flat(6).en(3, 'frog')
+        .ledges(12, [[1, 10, 2], [4, 8, 2], [8, 9, 1], [10, 10, 2]])
+        .flat(8).en(4, fl, 6).at(2, 8, '?B?')
+        .mplat(11, 9, 1, 7)
+        .flat(8).col(3, 3, true).en(6, 'wolf')
+        .mplat(10, 10, 1, 6)
+        .flat(4).goal();
+    } else if (li === 0) {
       b.flat(22).at(12, 8, '?').at(16, 8, 'B!B?B').at(18, 4, '?').en(19, 'wolf')
         .flat(10).col(2, 2).col(7, 3).en(5, 'wolf')
         .flat(10).col(6, 4).en(2, 'wolf').en(4, 'wolf')
@@ -358,7 +394,7 @@
     var e = fresh.length ? fresh[0] : pick(lw); if (fresh.length) G.seenL.push(e);
     var w = word(e); G.floats.push({ x: x, y: y - 1, t: w.f, life: 2.2 }); say(w); note(e);
   }
-  function note(e) { st.seen[G.set + ':' + e] = 1; save(); if (G.seenL.indexOf(e) < 0) G.seenL.push(e); hud(); }
+  function note(e) { st.seen[G.set + ':' + e] = 1; save(); try { var nw = word(e); if (W.TRBWords) W.TRBWords.log('hero', G.set === 'ro' ? 'l' : 'g', nw.f, nw.e); } catch (er) { } if (G.seenL.indexOf(e) < 0) G.seenL.push(e); hud(); }
   function coin(x, y, pop, n) {
     G.coins += n || 1; if (st.words && !G.coinSaid && !pop) { G.coinSaid = true; say(word('coin')); note('coin'); if (G.seenL.indexOf('coin') < 0) G.seenL.push('coin'); } if (pop) G.fx.push({ coin: 1, x: x, y: y, vx: 0, vy: -9, life: 0.45 }); sfx('coin'); hud();
   }
@@ -420,6 +456,7 @@
       else { e.vy += 30 * dt; e.y += e.vy * dt; }
       if (overlap(p, e)) hurt(); return;
     }
+    if (e.k === 'rock') { e.t += dt; e.vy += 22 * dt; e.x += e.vx * dt; e.y += e.vy * dt; if (e.y > ROWS || e.t > 4) e.alive = false; if (overlap(p, e)) hurt(); return; }
     if (e.k === 'fire') { e.x += e.vx * dt; e.y += Math.sin(e.t * 6) * dt * 0.8; if (e.x < G.camX - 2 || e.t > 5) e.alive = false; if (overlap(p, e)) hurt(); return; }
     if (e.k === 'snake') {
       var near = Math.abs(p.x + p.w / 2 - (e.x + e.w / 2)) < 1.6;
@@ -453,17 +490,18 @@
   function bossStep(e, dt) {
     var L = G.L, minX = L.bridge + 2, maxX = L.bridge + 12;
     if (e.hit) e.hit = Math.max(0, e.hit - dt);
-    if (!e.awake) { if (p.x > L.bridge - 6) { e.awake = true; e.t = 1; } else return; }
+    if (!e.awake) { if (p.x > L.bridge - 6) { e.awake = true; e.cd = 1; } else return; }
     e.face = p.x < e.x ? -1 : 1;
     e.vy = Math.min(18, e.vy + 35 * dt);
     if (e.charge > 0) { e.charge -= dt; e.vx = e.face * 7; if (e.charge <= 0) e.vx = 0; }
     else e.vx = (e.home - e.x) * 1.5 + Math.sin(G.t * 1.3) * 1.5;
     if (e.x < minX && e.vx < 0) e.vx = 0; if (e.x > maxX && e.vx > 0) e.vx = 0;
     moveBody(e, dt);
-    e.t -= dt;
-    if (e.t <= 0 && e.on && !G.leverOn) {
-      e.t = rnd(1.4, 2.4); var r = Math.random();
+    e.cd -= dt; // its own attack timer (entStep already advances e.t)
+    if (e.cd <= 0 && e.on && !G.leverOn) {
+      e.cd = rnd(1.4, 2.4); var r = Math.random();
       if (r < 0.35) e.vy = -13;
+      else if (G.set === 'od') { G.ents.push({ k: 'rock', x: e.x + (e.face < 0 ? -0.6 : e.w), y: e.y + 0.2, w: 0.6, h: 0.6, vx: e.face * rnd(4, 7.5), vy: -rnd(6, 10), t: 0, act: true }); sfx('throw'); }
       else if (G.set === 'ro') { G.ents.push({ k: 'fire', x: e.x + (e.face < 0 ? -0.6 : e.w), y: e.y + rnd(0.1, 1.3), w: 0.7, h: 0.4, vx: e.face * 6.5, t: 0, act: true }); sfx('fire'); }
       else { e.charge = 0.7; sfx('fire'); }
     }
@@ -485,6 +523,12 @@
       cliff: { sky: ['#e8a95f', '#f8e8cc'], far: '#b97a4f', sea: '#4d7a4a', mid: '#004225', top: '#00562f', soil: '#9a5a35', soilD: '#6f3d22', brick: '#a54a2a', mortar: '#6e2e18', block: '#d6b98a', blockD: '#9c7f52' },
       cave: { sky: ['#1d140f', '#3a2a1e'], far: '#3c2b1f', top: '#9a7a58', soil: '#6e5139', soilD: '#4d3826', brick: '#8f5a3a', mortar: '#4a2f1d', block: '#8a6c4c', blockD: '#5c4530' },
       castle: { sky: ['#1a0c08', '#4a1a10'], far: '#4a2418', top: '#8a6a58', soil: '#5e4436', soilD: '#40291e', brick: '#93503a', mortar: '#4a2418', block: '#8a6c58', blockD: '#5a4232' }
+    },
+    od: {
+      field: { sky: ['#4aa6d8', '#f6ecd2'], far: '#7fa58a', sea: '#1c5f99', mid: '#5f8a3a', top: '#8fb04a', soil: '#d9b98a', soilD: '#b8956a', brick: '#f1ebdc', mortar: '#c2b79c', block: '#e9e2d0', blockD: '#b9ae95' },
+      sea: { sky: ['#3d8fc8', '#d9eef7'], far: '#6f8f7f', sea: '#164f86', mid: '#4f6f3a', top: '#9aa86a', soil: '#b9ab8c', soilD: '#8f826a', brick: '#e9e2d0', mortar: '#a99b7b', block: '#c9c0aa', blockD: '#8f866f' },
+      cave: { sky: ['#17150f', '#2e2a1e'], far: '#2e2a20', top: '#8a8068', soil: '#5c5442', soilD: '#3e382c', brick: '#857a62', mortar: '#3e382c', block: '#7a705a', blockD: '#4e4738' },
+      castle: { sky: ['#140f0a', '#3a2614'], far: '#3a2a1a', top: '#8f8068', soil: '#615644', soilD: '#433b2e', brick: '#8f8068', mortar: '#433b2e', block: '#7f735e', blockD: '#554c3c' }
     }
   };
   function pal() { return PAL[G.set][G.L.kind]; }
@@ -497,6 +541,7 @@
     var gr = c.createLinearGradient(0, 0, 0, Ht); gr.addColorStop(0, P.sky[0]); gr.addColorStop(1, P.sky[1]);
     c.fillStyle = gr; c.fillRect(0, 0, Wd, Ht);
     drawBG(P, k);
+    if (G.set === 'od' && (k === 'field' || k === 'sea')) { var wy = sy(13.1) + Math.sin(G.t * 2) * S * 0.06; c.fillStyle = P.sea; c.fillRect(0, wy, Wd, Ht - wy); c.fillStyle = 'rgba(255,255,255,.35)'; for (var wi = -1; wi < viewCols + 1; wi++) c.fillRect((wi - (G.camX % 1)) * S + ((G.t * 0.8) % 1) * S * 0.5, wy, S * 0.4, 2); }
     // below the map (tall screens)
     if (oy + ROWS * S < Ht) { c.fillStyle = P.soilD; c.fillRect(0, oy + ROWS * S, Wd, Ht - oy - ROWS * S); }
     var x0 = Math.max(0, Math.floor(G.camX)), x1 = Math.min(G.L.g.length - 1, Math.ceil(G.camX + viewCols));
@@ -524,11 +569,17 @@
   }
   function drawBG(P, k) {
     var t = G.t, i, off, x;
-    if (k === 'field' || k === 'cliff') {
+    if (k === 'field' || k === 'cliff' || k === 'sea') {
       // clouds
       c.fillStyle = 'rgba(255,255,255,.75)';
       for (i = 0; i < 6; i++) { x = ((i * 9.3 - G.camX * 0.15 + t * 0.15) % 60 + 60) % 60 * S - 3 * S; var y = sy(1.5 + (i % 3) * 1.2); c.beginPath(); c.ellipse(x, y, S * 1.4, S * 0.45, 0, 0, 7); c.ellipse(x + S * 0.9, y - S * 0.25, S * 0.9, S * 0.45, 0, 0, 7); c.fill(); }
-      if (G.set === 'gr') {
+      if (G.set === 'od') {
+        // the open sea with distant islands
+        c.fillStyle = P.sea; c.fillRect(0, sy(8.6), Wd, Ht);
+        for (i = -1; i < 6; i++) { x = ((i * 23 - G.camX * 0.1) % 120 + 120) % 120 * S - 10 * S; c.fillStyle = P.far; c.beginPath(); c.ellipse(x, sy(8.65), S * (3 + (i & 1) * 2), S * (1 + (i % 3) * 0.4), 0, Math.PI, 0); c.fill(); }
+        c.fillStyle = 'rgba(255,255,255,.3)'; for (i = 0; i < 10; i++) c.fillRect(((i * 6.7 - G.camX * 0.3 + t * 0.4) % 60 + 60) % 60 * S - 5 * S, sy(9.2 + (i % 5) * 0.9), S * 1.1, 2);
+        if (k === 'field') { hills(0.35, 11, 0.7, P.mid, 0.4, 5); for (i = -2; i < viewCols / 5 + 2; i++) { x = (Math.floor(G.camX * 0.5 / 5) + i) * 5; lotus((x - G.camX * 0.5) * S + S, sy(11)); } }
+      } else if (G.set === 'gr') {
         hills(0.12, k === 'cliff' ? 8.4 : 9.1, k === 'cliff' ? 0.9 : 1.6, P.far, 0.25, 1);
         c.fillStyle = P.sea; c.fillRect(0, sy(k === 'cliff' ? 8.4 : 9.2), Wd, Ht);
         // a distant temple on a hill
@@ -560,6 +611,9 @@
   }
   function meander(y, a) { c.strokeStyle = 'rgba(214,170,90,' + a + ')'; c.lineWidth = Math.max(1.5, S * 0.08); var u = S * 0.35, off = (G.camX * 0.5 * S) % (u * 4); c.beginPath(); for (var x = -u * 4 - off; x < Wd + u * 4; x += u * 4) { c.moveTo(x, y + u * 2); c.lineTo(x, y); c.lineTo(x + u * 3, y); c.lineTo(x + u * 3, y + u * 2); c.lineTo(x + u, y + u * 2); c.lineTo(x + u, y + u); c.lineTo(x + u * 2, y + u); c.lineTo(x + u * 2, y + u * 2); c.lineTo(x + u * 4, y + u * 2); } c.stroke(); }
   function olive(x, y) { c.fillStyle = '#6b5a3e'; c.fillRect(x - S * 0.08, y - S * 0.9, S * 0.16, S * 0.9); c.fillStyle = '#7f9a62'; c.beginPath(); c.ellipse(x, y - S * 1.1, S * 0.75, S * 0.45, 0, 0, 7); c.ellipse(x - S * 0.4, y - S * 0.9, S * 0.4, S * 0.3, 0, 0, 7); c.fill(); }
+  function lotus(x, y) { c.fillStyle = '#4f6f2a'; c.fillRect(x - S * 0.05, y - S * 0.8, S * 0.1, S * 0.8); c.fillStyle = '#e7a7b8'; for (var i = -1; i <= 1; i++) { c.beginPath(); c.ellipse(x + i * S * 0.16, y - S * 0.95, S * 0.12, S * 0.26, i * 0.5, 0, 7); c.fill(); } }
+  function ship(X, Y, s) { c.fillStyle = '#2a1e16'; c.beginPath(); c.moveTo(X - s * 2.2, Y - s * 0.9); c.quadraticCurveTo(X, Y + s * 0.1, X + s * 2.2, Y - s * 0.9); c.lineTo(X + s * 2.5, Y - s * 1.4); c.lineTo(X + s * 1.6, Y - s * 0.75); c.lineTo(X - s * 1.6, Y - s * 0.75); c.lineTo(X - s * 2.6, Y - s * 1.2); c.closePath(); c.fill(); c.fillStyle = '#5a4030'; c.fillRect(X - s * 0.06, Y - s * 3.6, s * 0.12, s * 2.9); c.fillStyle = '#f2ead6'; c.fillRect(X - s * 1.1, Y - s * 3.4, s * 2.2, s * 1.6); c.fillStyle = '#c94c3a'; c.beginPath(); c.arc(X - s * 1.9, Y - s * 0.95, s * 0.12, 0, 7); c.fill(); }
+  function ram(X, Y) { c.fillStyle = '#ece6d6'; c.beginPath(); c.ellipse(X, Y - S * 0.6, S * 0.6, S * 0.35, 0, 0, 7); c.fill(); c.fillStyle = '#3a3028'; c.fillRect(X + S * 0.45, Y - S * 0.95, S * 0.3, S * 0.3); c.fillRect(X - S * 0.4, Y - S * 0.3, S * 0.09, S * 0.3); c.fillRect(X + S * 0.3, Y - S * 0.3, S * 0.09, S * 0.3); c.strokeStyle = '#8a7a5a'; c.lineWidth = S * 0.08; c.beginPath(); c.arc(X + S * 0.55, Y - S * 0.9, S * 0.13, 0, 5); c.stroke(); }
   function cypress(x, y) { c.fillStyle = '#1f4a2c'; c.beginPath(); c.ellipse(x, y - S * 1.3, S * 0.28, S * 1.3, 0, 0, 7); c.fill(); }
   function pine(x, y) { c.fillStyle = '#5a4030'; c.fillRect(x - S * 0.06, y - S * 1.6, S * 0.12, S * 1.6); c.fillStyle = '#2a5a36'; c.beginPath(); c.ellipse(x, y - S * 1.7, S * 0.9, S * 0.35, 0, 0, 7); c.fill(); }
   function drawTemple(x, y, s, col) {
@@ -589,10 +643,10 @@
       if (ch === 'W') { c.strokeStyle = P.blockD; c.lineWidth = 1; c.strokeRect(X + 0.5, Y + 0.5, s - 1, s - 1); }
     } else if (ch === 'P') {
       var top = tile(x, y - 1) !== 'P', left = tile(x - 1, y) !== 'P';
-      c.fillStyle = G.set === 'gr' ? '#f4f1e8' : '#efe0c2'; c.fillRect(X, Y, s + 1, s + 1);
+      c.fillStyle = G.set !== 'ro' ? '#f4f1e8' : '#efe0c2'; c.fillRect(X, Y, s + 1, s + 1);
       c.fillStyle = 'rgba(0,0,0,.12)'; for (var f = 0; f < 3; f++) c.fillRect(X + s * (left ? 0.15 : 0.05) + f * s * 0.3, Y, s * 0.08, s + 1);
       if (left) { c.fillStyle = 'rgba(0,0,0,.08)'; c.fillRect(X, Y, s * 0.1, s + 1); } else { c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(X + s * 0.88, Y, s * 0.12, s + 1); }
-      if (top) { c.fillStyle = G.set === 'gr' ? '#e3ddcc' : '#dccaa5'; c.fillRect(X - (left ? s * 0.15 : 0), Y, s * 1.15, s * 0.35); c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X - (left ? s * 0.15 : 0), Y + s * 0.3, s * 1.15, s * 0.06); }
+      if (top) { c.fillStyle = G.set !== 'ro' ? '#e3ddcc' : '#dccaa5'; c.fillRect(X - (left ? s * 0.15 : 0), Y, s * 1.15, s * 0.35); c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(X - (left ? s * 0.15 : 0), Y + s * 0.3, s * 1.15, s * 0.06); }
     } else if (ch === '-') {
       c.fillStyle = P.block; c.fillRect(X, Y, s + 1, s * 0.32); c.fillStyle = P.blockD; c.fillRect(X, Y + s * 0.26, s + 1, s * 0.08);
     } else if (ch === 'o') { drawCoin(x + 0.5, y + 0.5, 1);
@@ -613,7 +667,7 @@
     var w = Math.abs(Math.sin(G.t * 3 + x)) * 0.32 * S * sc + S * 0.06, X = sx(x), Y = sy(y);
     c.fillStyle = '#e8b830'; c.beginPath(); c.ellipse(X, Y, w, S * 0.36 * sc, 0, 0, 7); c.fill();
     c.strokeStyle = '#9a6a10'; c.lineWidth = Math.max(1, S * 0.05); c.stroke();
-    if (w > S * 0.2) { c.fillStyle = '#9a6a10'; c.font = 'bold ' + Math.round(S * 0.4 * sc) + 'px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; if (G.set === 'gr') { c.beginPath(); c.arc(X - S * 0.08, Y - S * 0.05, S * 0.06, 0, 7); c.arc(X + S * 0.08, Y - S * 0.05, S * 0.06, 0, 7); c.fill(); c.fillRect(X - S * 0.03, Y + S * 0.03, S * 0.06, S * 0.12); } else c.fillText('X', X, Y + 1); c.textBaseline = 'alphabetic'; }
+    if (w > S * 0.2) { c.fillStyle = '#9a6a10'; c.font = 'bold ' + Math.round(S * 0.4 * sc) + 'px Georgia,serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; if (G.set !== 'ro') { c.beginPath(); c.arc(X - S * 0.08, Y - S * 0.05, S * 0.06, 0, 7); c.arc(X + S * 0.08, Y - S * 0.05, S * 0.06, 0, 7); c.fill(); c.fillRect(X - S * 0.03, Y + S * 0.03, S * 0.06, S * 0.12); } else c.fillText('X', X, Y + 1); c.textBaseline = 'alphabetic'; }
   }
   function drawGate(g) {
     if (!st.words || !g.e) return;
@@ -645,12 +699,14 @@
       var X = sx(gx + 3), Y = sy(GY);
       if (X > -4 * S && X < Wd + 4 * S) {
         if (G.set === 'gr') { c.strokeStyle = '#d33'; c.lineWidth = 2; c.beginPath(); c.moveTo(X - S * 6, Y - S * 0.1); for (var i = 0; i < 12; i++) c.lineTo(X - S * 6 + i * S * 0.9, Y - S * (0.1 + 0.15 * Math.sin(i * 1.7))); c.stroke(); person(X + S * 2, Y, '#f2e3c5', '#b23a48'); }
+        else if (G.set === 'od') { for (var j2 = 0; j2 < 3; j2++) ram(X + j2 * S * 1.6, Y); }
         else { for (var j = 0; j < 3; j++) cow(X + j * S * 1.6, Y); }
       }
       return;
     }
     var X2 = sx(gx + 8), Y2 = sy(GY);
-    if (G.set === 'gr') drawTemple(X2, Y2, S * 1.6, '#f4f1e8');
+    if (G.set === 'od') ship(X2, Y2 + S * 0.9, S);
+    else if (G.set === 'gr') drawTemple(X2, Y2, S * 1.6, '#f4f1e8');
     else { // a triumphal arch
       c.fillStyle = '#e6d3ae'; c.fillRect(X2 - S * 2.4, Y2 - S * 4.4, S * 4.8, S * 4.4); c.fillStyle = '#2a1a10'; c.beginPath(); c.moveTo(X2 - S, Y2); c.lineTo(X2 - S, Y2 - S * 2.2); c.arc(X2, Y2 - S * 2.2, S, Math.PI, 0); c.lineTo(X2 + S, Y2); c.fill();
       c.fillStyle = '#c9b48a'; c.fillRect(X2 - S * 2.6, Y2 - S * 4.6, S * 5.2, S * 0.4); c.fillStyle = '#00562f'; c.fillRect(X2 - S * 1.6, Y2 - S * 4.1, S * 3.2, S * 0.6);
@@ -660,18 +716,20 @@
   function cow(X, Y) { c.fillStyle = '#e8e0d0'; c.fillRect(X - S * 0.6, Y - S * 0.9, S * 1.2, S * 0.55); c.fillStyle = '#6b4a2a'; c.fillRect(X - S * 0.2, Y - S * 0.85, S * 0.35, S * 0.3); c.fillStyle = '#e8e0d0'; c.fillRect(X + S * 0.5, Y - S * 1.15, S * 0.4, S * 0.4); c.fillStyle = '#444'; c.fillRect(X - S * 0.5, Y - S * 0.35, S * 0.1, S * 0.35); c.fillRect(X + S * 0.35, Y - S * 0.35, S * 0.1, S * 0.35); }
 
   function drawEnt(e, P) {
+    if (e.k === 'plat' && G.set === 'od') { var BX = sx(e.x), BY = sy(e.y), bw = e.w * S; c.fillStyle = '#5a3a22'; c.fillRect(BX, BY, bw, S * 0.22); c.fillStyle = '#3a2416'; c.beginPath(); c.moveTo(BX - S * 0.2, BY + S * 0.2); c.lineTo(BX + bw + S * 0.2, BY + S * 0.2); c.lineTo(BX + bw - S * 0.3, BY + S * 0.6); c.lineTo(BX + S * 0.3, BY + S * 0.6); c.fill(); c.strokeStyle = '#d8c9a8'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(BX + S * 0.5, BY + S * 0.3); c.lineTo(BX + S * 0.1, BY + S * 0.9); c.moveTo(BX + bw - S * 0.5, BY + S * 0.3); c.lineTo(BX + bw - S * 0.1, BY + S * 0.9); c.stroke(); return; }
     if (e.k === 'plat') { var X = sx(e.x), Y = sy(e.y); c.fillStyle = P.block; c.fillRect(X, Y, e.w * S, S * 0.4); c.fillStyle = P.blockD; c.fillRect(X, Y + S * 0.3, e.w * S, S * 0.1); c.strokeStyle = '#6b5a3e'; c.lineWidth = 1; c.beginPath(); c.moveTo(X + S * 0.3, Y); c.lineTo(X + S * 0.3, Y - S * 0.6); c.moveTo(X + e.w * S - S * 0.3, Y); c.lineTo(X + e.w * S - S * 0.3, Y - S * 0.6); c.stroke(); return; }
-    if (e.k === 'check') { var cx = sx(e.x + 0.5), cy = sy(e.y); c.fillStyle = '#6b5a3e'; c.fillRect(cx - 2, cy - S * 2.6, 4, S * 2.6); c.fillStyle = e.on ? (G.set === 'gr' ? '#1f6fa8' : '#a8201a') : '#bbb'; c.beginPath(); c.moveTo(cx + 2, cy - S * 2.6); c.lineTo(cx + S * 1.1, cy - S * 2.25); c.lineTo(cx + 2, cy - S * 1.9); c.fill(); return; }
+    if (e.k === 'check') { var cx = sx(e.x + 0.5), cy = sy(e.y); c.fillStyle = '#6b5a3e'; c.fillRect(cx - 2, cy - S * 2.6, 4, S * 2.6); c.fillStyle = e.on ? (G.set !== 'ro' ? '#1f6fa8' : '#a8201a') : '#bbb'; c.beginPath(); c.moveTo(cx + 2, cy - S * 2.6); c.lineTo(cx + S * 1.1, cy - S * 2.25); c.lineTo(cx + 2, cy - S * 1.9); c.fill(); return; }
     if (e.k === 'pole') {
       var px = sx(e.x), top = sy(2.2), bot = sy(e.y);
       c.fillStyle = '#d9c9a0'; c.fillRect(px - S * 0.07, top, S * 0.14, bot - top);
-      if (G.set === 'gr') { c.strokeStyle = '#4f7a32'; c.lineWidth = S * 0.14; c.beginPath(); c.arc(px, top - S * 0.1, S * 0.38, 0, 7); c.stroke(); }
+      if (G.set !== 'ro') { c.strokeStyle = '#4f7a32'; c.lineWidth = S * 0.14; c.beginPath(); c.arc(px, top - S * 0.1, S * 0.38, 0, 7); c.stroke(); }
       else { c.fillStyle = '#c9973a'; c.beginPath(); c.moveTo(px - S * 0.5, top); c.lineTo(px, top - S * 0.5); c.lineTo(px + S * 0.5, top); c.lineTo(px, top - S * 0.15); c.fill(); c.fillStyle = '#a8201a'; c.fillRect(px - S * 0.45, top + S * 0.4, S * 0.9, S * 0.8); }
       return;
     }
     if (e.k === 'lever') { var lx = sx(e.x), ly = sy(e.y); c.fillStyle = '#555'; c.fillRect(lx - S * 0.3, ly - S * 0.3, S * 0.6, S * 0.3); c.strokeStyle = '#c9973a'; c.lineWidth = S * 0.12; c.beginPath(); c.moveTo(lx, ly - S * 0.3); var a = G.leverOn ? 0.6 : -0.6; c.lineTo(lx + Math.sin(a) * S, ly - S * 0.3 - Math.cos(a) * S); c.stroke(); c.fillStyle = '#d33'; c.beginPath(); c.arc(lx + Math.sin(a) * S, ly - S * 0.3 - Math.cos(a) * S, S * 0.16, 0, 7); c.fill(); return; }
     if (e.k === 'bar') { for (var r = 0; r <= 3; r += 0.6) fireball(e.x + Math.cos(e.a) * r, e.y + Math.sin(e.a) * r, 0.28); return; }
     if (e.k === 'podo') { if (e.y < 14.4) fireball(e.x + 0.3, e.y + 0.3, 0.36); return; }
+    if (e.k === 'rock') { c.fillStyle = '#7d766a'; c.beginPath(); c.arc(sx(e.x + 0.3), sy(e.y + 0.3), S * 0.32, 0, 7); c.fill(); c.fillStyle = '#a59e90'; c.beginPath(); c.arc(sx(e.x + 0.22), sy(e.y + 0.2), S * 0.11, 0, 7); c.fill(); return; }
     if (e.k === 'fire') { fireball(e.x + 0.35, e.y + 0.2, 0.3); fireball(e.x + 0.6, e.y + 0.2, 0.2); return; }
     if (e.k === 'stone') { c.fillStyle = '#9a948a'; c.beginPath(); c.arc(sx(e.x + 0.17), sy(e.y + 0.17), S * 0.18, 0, 7); c.fill(); c.fillStyle = '#c9c3b8'; c.beginPath(); c.arc(sx(e.x + 0.12), sy(e.y + 0.12), S * 0.07, 0, 7); c.fill(); return; }
     if (e.k === 'item') { drawItem(e); return; }
@@ -681,7 +739,7 @@
   function fireball(x, y, r) { var X = sx(x), Y = sy(y); c.fillStyle = '#f39a2b'; c.beginPath(); c.arc(X, Y, S * r, 0, 7); c.fill(); c.fillStyle = '#ffe28a'; c.beginPath(); c.arc(X, Y, S * r * 0.5, 0, 7); c.fill(); }
   function drawItem(e) {
     var X = sx(e.x + 0.4), Y = sy(e.y + 0.4);
-    if (e.type === 'shield') { c.fillStyle = '#c9973a'; c.beginPath(); c.arc(X, Y, S * 0.4, 0, 7); c.fill(); c.strokeStyle = '#7a5a20'; c.lineWidth = S * 0.07; c.stroke(); c.fillStyle = G.set === 'gr' ? '#1f6fa8' : '#a8201a'; c.beginPath(); c.arc(X, Y, S * 0.18, 0, 7); c.fill(); }
+    if (e.type === 'shield') { c.fillStyle = '#c9973a'; c.beginPath(); c.arc(X, Y, S * 0.4, 0, 7); c.fill(); c.strokeStyle = '#7a5a20'; c.lineWidth = S * 0.07; c.stroke(); c.fillStyle = G.set !== 'ro' ? '#1f6fa8' : '#a8201a'; c.beginPath(); c.arc(X, Y, S * 0.18, 0, 7); c.fill(); }
     else if (e.type === 'stones') { [[-0.15, 0.1], [0.15, 0.1], [0, -0.12]].forEach(function (o) { c.fillStyle = '#8f8a80'; c.beginPath(); c.arc(X + o[0] * S, Y + o[1] * S, S * 0.17, 0, 7); c.fill(); }); }
     else { c.fillStyle = '#8a5a2b'; c.fillRect(X - S * 0.3, Y, S * 0.6, S * 0.2); c.fillStyle = '#fff'; c.beginPath(); c.moveTo(X - S * 0.1, Y); c.lineTo(X - S * 0.45, Y - S * 0.35 - Math.sin(G.t * 12) * S * 0.1); c.lineTo(X + S * 0.1, Y - S * 0.1); c.fill(); }
   }
@@ -723,7 +781,14 @@
       c.fillStyle = '#ffde4a'; c.fillRect(w * 0.35, S * 0.1, S * 0.07, S * 0.07); c.strokeStyle = '#d33'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(w * 0.3, S * 0.25); c.lineTo(w * 0.12, S * 0.3 + Math.sin(t * 20) * 2); c.stroke();
     } else if (e.k === 'boss') {
       if (e.hit) c.globalAlpha = 0.6;
-      if (G.set === 'gr') { // the Minotaur
+      if (G.set === 'od') { // Polyphemus, the one-eyed giant
+        c.fillStyle = '#6a5a3a'; c.fillRect(w * 0.15, h * 0.32, w * 0.7, h * 0.48); c.fillStyle = '#ece6d6'; c.fillRect(w * 0.15, h * 0.32, w * 0.7, h * 0.1);
+        c.fillStyle = '#b98a62'; c.fillRect(w * 0.25 + leg, h * 0.78, w * 0.18, h * 0.22); c.fillRect(w * 0.58 - leg, h * 0.78, w * 0.18, h * 0.22);
+        c.fillStyle = '#c89a72'; c.beginPath(); c.arc(w * 0.38, h * 0.18, w * 0.24, 0, 7); c.fill();
+        c.fillStyle = '#4a3a2a'; c.beginPath(); c.arc(w * 0.38, h * 0.26, w * 0.2, 0.1, Math.PI - 0.1); c.fill();
+        c.fillStyle = '#fff'; c.beginPath(); c.arc(w * 0.3, h * 0.13, S * 0.2, 0, 7); c.fill(); c.fillStyle = '#2a1a10'; c.beginPath(); c.arc(w * 0.26, h * 0.13, S * 0.09, 0, 7); c.fill();
+        c.strokeStyle = '#5a3a1a'; c.lineWidth = S * 0.18; c.beginPath(); c.moveTo(w * 0.8, h * 0.4); c.lineTo(w * 1.05, -h * 0.05); c.stroke();
+      } else if (G.set === 'gr') { // the Minotaur
         c.fillStyle = '#7a4a2a'; c.fillRect(w * 0.2, h * 0.35, w * 0.6, h * 0.45); c.fillStyle = '#c9a07a'; c.fillRect(w * 0.25, h * 0.45, w * 0.5, h * 0.1);
         c.fillStyle = '#5a3418'; c.fillRect(w * 0.25 + leg, h * 0.78, w * 0.16, h * 0.22); c.fillRect(w * 0.6 - leg, h * 0.78, w * 0.16, h * 0.22);
         c.fillStyle = '#6b3e20'; c.beginPath(); c.ellipse(w * 0.32, h * 0.22, w * 0.24, h * 0.15, 0, 0, 7); c.fill();
@@ -745,12 +810,12 @@
     c.restore();
   }
   function drawHero() {
-    var X = sx(p.x + p.w / 2), Y = sy(p.y + p.h), s = S, gr = G.set === 'gr', moving = Math.abs(p.vx) > 0.3 && p.on;
+    var X = sx(p.x + p.w / 2), Y = sy(p.y + p.h), s = S, gr = G.set !== 'ro', od = G.set === 'od', moving = Math.abs(p.vx) > 0.3 && p.on;
     if (p.inv > 0 && Math.floor(p.inv * 12) % 2) return;
     var step = moving ? Math.sin(p.walk * 3) * s * 0.12 : 0;
     c.save(); c.translate(X, Y); c.scale(p.face, 1);
     if (p.star > 0) { c.shadowColor = '#fff2a0'; c.shadowBlur = s * 0.5; }
-    var tunic = gr ? (p.power === 2 ? '#5aa0e0' : '#1f5fa8') : (p.power === 2 ? '#e0603a' : '#a8201a');
+    var tunic = od ? (p.power === 2 ? '#d98a4a' : '#9a4a1e') : gr ? (p.power === 2 ? '#5aa0e0' : '#1f5fa8') : (p.power === 2 ? '#e0603a' : '#a8201a');
     // legs
     c.fillStyle = '#c99a72'; c.fillRect(-s * 0.18 + step, -s * 0.32, s * 0.13, s * 0.32); c.fillRect(s * 0.06 - step, -s * 0.32, s * 0.13, s * 0.32);
     c.fillStyle = '#6b4a2a'; c.fillRect(-s * 0.2 + step, -s * 0.08, s * 0.17, s * 0.08); c.fillRect(s * 0.04 - step, -s * 0.08, s * 0.17, s * 0.08);
@@ -767,7 +832,10 @@
     // head
     c.fillStyle = '#d9a982'; c.beginPath(); c.arc(0, -s * 0.84, s * 0.17, 0, 7); c.fill();
     c.fillStyle = '#111'; c.fillRect(s * 0.06, -s * 0.88, s * 0.05, s * 0.05);
-    if (gr) { // bronze helmet with a crest
+    if (od) { // a sailor's felt cap (pilos), as Odysseus wears on Greek vases
+      c.fillStyle = '#7a5a34'; c.beginPath(); c.moveTo(-s * 0.2, -s * 0.9); c.lineTo(s * 0.02, -s * 1.28); c.lineTo(s * 0.2, -s * 0.9); c.fill(); c.fillStyle = '#5a3f22'; c.fillRect(-s * 0.21, -s * 0.93, s * 0.42, s * 0.06);
+      c.fillStyle = '#5a3f22'; c.beginPath(); c.arc(s * 0.02, -s * 0.72, s * 0.14, 0.2, Math.PI - 0.2); c.fill();
+    } else if (gr) { // bronze helmet with a crest
       c.fillStyle = '#c9973a'; c.beginPath(); c.arc(0, -s * 0.88, s * 0.19, Math.PI, 0); c.fill(); c.fillRect(-s * 0.19, -s * 0.9, s * 0.08, s * 0.2);
       c.fillStyle = '#b8322a'; c.beginPath(); c.moveTo(-s * 0.28, -s * 0.98); c.quadraticCurveTo(0, -s * 1.32, s * 0.18, -s * 1.04); c.lineTo(s * 0.1, -s * 1.0); c.quadraticCurveTo(-s * 0.05, -s * 1.15, -s * 0.24, -s * 0.92); c.fill();
     } else { // lion's head as a hood
@@ -804,7 +872,7 @@
   var sayT = null;
   function say(w, extra) {
     var el = $('#hr-word');
-    el.innerHTML = (w ? '<b class="' + (G.set === 'gr' ? 'gk' : 'la') + '">' + esc(w.f) + '</b>' + (w.p ? ' <i>' + esc(w.p) + '</i>' : '') + ' = ' + esc(w.e) : '') + (extra ? '<span class="ex">' + esc(extra) + '</span>' : '');
+    el.innerHTML = (w ? '<b class="' + (G.set !== 'ro' ? 'gk' : 'la') + '">' + esc(w.f) + '</b>' + (w.p ? ' <i>' + esc(w.p) + '</i>' : '') + ' = ' + esc(w.e) : '') + (extra ? '<span class="ex">' + esc(extra) + '</span>' : '');
     el.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(function () { el.classList.remove('on'); }, extra ? 3800 : 2800);
   }
 
@@ -816,8 +884,8 @@
     function lvButtons(set) {
       return SET[set].levels.map(function (l, i) { var open = i < (st.open[set] || 1), done = st.done[set + i]; return '<button class="hr-lvb" data-set="' + set + '" data-lv="' + i + '"' + (open ? '' : ' disabled') + '><b>' + (i + 1) + '</b> ' + esc(l.name) + (done ? ' ✓' : open ? '' : ' 🔒') + '</button>'; }).join('');
     }
-    var o = ov('<h1>Hero’s Road</h1><p class="hr-sub">Run, jump and stomp through ancient Greece or Rome. Bump the amphora blocks for words, and pick the right door at each gate.</p>' +
-      '<div class="hr-sets">' + ['gr', 'ro'].map(function (s) { var S2 = SET[s]; return '<div class="hr-set hr-' + s + (s === cur ? ' sel' : '') + '" data-set="' + s + '"><h2>' + S2.name + '</h2><p>' + (s === 'gr' ? 'Theseus on the road to Athens, then into the Labyrinth to face the Minotaur. Words in Koine Greek, with pronunciation.' : 'Hercules by the Tiber, then into the cave of Cacus, the fire-breathing cattle thief. Words in Latin.') + '</p><div class="hr-lvs">' + lvButtons(s) + '</div></div>'; }).join('') + '</div>' +
+    var o = ov('<h1>Hero’s Road</h1><p class="hr-sub">Run, jump and stomp through ancient Greece or Rome, or sail with Odysseus. Bump the amphora blocks for words, and pick the right door at each gate.</p>' +
+      '<div class="hr-sets">' + ORDER.map(function (s) { var S2 = SET[s]; return '<div class="hr-set hr-' + s + (s === cur ? ' sel' : '') + '" data-set="' + s + '"><h2>' + S2.name + '</h2><p>' + ({ gr: 'Theseus on the road to Athens, then into the Labyrinth to face the Minotaur. Words in Koine Greek, with pronunciation.', ro: 'Hercules by the Tiber, then into the cave of Cacus, the fire-breathing cattle thief. Words in Latin.', od: 'Odysseus sailing home from Troy, island to island, to the cave of the Cyclops. Words in Koine Greek, with pronunciation.' })[s] + '</p><div class="hr-lvs">' + lvButtons(s) + '</div></div>'; }).join('') + '</div>' +
       '<div class="hr-opts"><label><input type="radio" name="hr-w" value="1"' + (st.words ? ' checked' : '') + '> Words on (study)</label><label><input type="radio" name="hr-w" value="0"' + (st.words ? '' : ' checked') + '> Words off (just play)</label><label><input type="checkbox" id="hr-snd"' + (st.sound ? ' checked' : '') + '> Sound</label></div>' +
       '<details><summary>How to play</summary><ul>' +
       '<li><b>Keyboard:</b> ← → or A D to move, Space, ↑ or W to jump (hold for higher), Shift or X to run and throw stones, P to pause.</li>' +
@@ -826,7 +894,7 @@
       '<li><b>Gates:</b> the wall shows a word. Go through the door marked with its meaning. The right door fills your path with coins; the wrong one lets the guards out.</li>' +
       '<li><b>Enemies:</b> jump on wolves, foxes, frogs and birds. Scorpions, snakes and fire can’t be stomped: jump over them or throw stones.</li>' +
       '<li>The flag halfway along is a checkpoint. Progress is saved in this browser.</li></ul>' +
-      '<p class="hr-small">The Greek words are Koine: every one appears in the New Testament. The Latin words are in their dictionary forms.</p></details>');
+      '<p class="hr-small">The Greek words are Koine, in both Greek settings: every one appears in the New Testament. Homer’s own Greek is older and differs in places. The Latin words are in their dictionary forms.</p></details>');
     o.querySelectorAll('.hr-set').forEach(function (el) { el.addEventListener('click', function (ev) { if (ev.target.closest('button')) return; st.set = el.dataset.set; save(); title(); }); });
     o.querySelectorAll('input[name=hr-w]').forEach(function (r) { r.addEventListener('change', function () { st.words = r.value === '1'; save(); }); });
     $('#hr-snd').addEventListener('change', function () { st.sound = this.checked; save(); if (st.sound) sfx('coin'); });
@@ -841,15 +909,15 @@
   function levelClear() {
     var set = G.set, li = G.li, lv = SET[set].levels[li];
     st.done[set + li] = 1; st.open[set] = Math.max(st.open[set] || 1, Math.min(4, li + 2)); save();
-    var words = G.seenL.slice(), list = words.map(function (e) { var w = word(e); return '<tr><td class="' + (set === 'gr' ? 'gk' : 'la') + '">' + esc(w.f) + (w.p ? '<br><i>' + esc(w.p) + '</i>' : '') + '</td><td>' + esc(w.e) + '</td></tr>'; }).join('');
+    var words = G.seenL.slice(), list = words.map(function (e) { var w = word(e); return '<tr><td class="' + (set !== 'ro' ? 'gk' : 'la') + '">' + esc(w.f) + (w.p ? '<br><i>' + esc(w.p) + '</i>' : '') + '</td><td>' + esc(w.e) + '</td></tr>'; }).join('');
     var m = Math.floor(G.time / 60), s = Math.floor(G.time % 60);
     var stats = '<p class="hr-stats">🪙 ' + G.coins + ' coins · ⏱ ' + m + ':' + (s < 10 ? '0' : '') + s + (G.gatesN ? ' · gates ' + G.gatesOK + ' of ' + G.gatesN + ' right' : '') + ' · falls ' + G.falls + '</p>';
     var last = li === 3;
-    var o = ov('<h2>' + (last ? (set === 'gr' ? 'The Minotaur is defeated!' : 'Cacus is defeated!') : 'Level complete') + '</h2>' + (last ? '<p>' + esc(SET[set].ending) + '</p>' : '') + stats +
+    var o = ov('<h2>' + (last ? ({ gr: 'The Minotaur is defeated!', ro: 'Cacus is defeated!', od: 'You escaped the Cyclops!' })[set] : 'Level complete') + '</h2>' + (last ? '<p>' + esc(SET[set].ending) + '</p>' : '') + stats +
       (st.words && words.length ? '<p class="hr-small">Words you met in this level</p><table class="hr-wl">' + list + '</table>' : '') +
-      (last ? '<button class="hr-btn pri" id="hr-other">Play ' + (set === 'gr' ? 'Rome' : 'Greece') + '</button>' : '<button class="hr-btn pri" id="hr-next">Next level</button>') +
+      (last ? '<button class="hr-btn pri" id="hr-other">Play ' + SET[ORDER[(ORDER.indexOf(set) + 1) % 3]].name + '</button>' : '<button class="hr-btn pri" id="hr-next">Next level</button>') +
       ' <button class="hr-btn" id="hr-again">Play again</button> <button class="hr-btn" id="hr-menu">Menu</button>');
-    if (last) $('#hr-other').addEventListener('click', function () { st.set = set === 'gr' ? 'ro' : 'gr'; save(); intro(0); });
+    if (last) $('#hr-other').addEventListener('click', function () { st.set = ORDER[(ORDER.indexOf(set) + 1) % 3]; save(); intro(0); });
     else $('#hr-next').addEventListener('click', function () { intro(li + 1); });
     $('#hr-again').addEventListener('click', function () { closeOv(); newRun(set, li); });
     $('#hr-menu').addEventListener('click', title);

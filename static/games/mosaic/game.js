@@ -181,7 +181,7 @@
     $('#mm-goals').innerHTML = G.level ? G.goals.map(function (g) { var d = g.got >= g.need; return '<span class="mm-goal' + (d ? ' done' : '') + '"><i>' + TILES[g.t][0] + '</i><b class="' + cls() + '">' + esc(word(g.t)) + '</b>' + pron(g.t) + ' ' + (d ? '✓' : Math.min(g.got, g.need) + ' / ' + g.need) + '</span>'; }).join('') :
       '<span class="mm-goal">Practice: match anything. Words learned: ' + Object.keys(G.seen).length + '</span>';
   }
-  function showWord(t, n) { var T = TILES[t]; $('#mm-word').innerHTML = T[0] + ' <b class="' + cls() + '">' + esc(word(t)) + '</b>' + pron(t) + ' = ' + esc(T[3]) + (n > 3 ? ' <em>×' + n + '!</em>' : ''); }
+  function showWord(t, n) { var T = TILES[t]; if (W.TRBWords) W.TRBWords.log('mosaic', st.lang === 'la' ? 'l' : 'g', word(t), T[3]); $('#mm-word').innerHTML = T[0] + ' <b class="' + cls() + '">' + esc(word(t)) + '</b>' + pron(t) + ' = ' + esc(T[3]) + (n > 3 ? ' <em>×' + n + '!</em>' : ''); }
   // ---------- rules ----------
   function findMatches() {
     var hit = {}, runs = [], lines = {}; // lines: how many straight runs each cell belongs to (2 = corner of an L, T or cross)

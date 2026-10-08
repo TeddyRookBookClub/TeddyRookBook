@@ -11,12 +11,7 @@ summaryLength = 30
 [pagination]
   pagerSize = 10
 
-# Menu
-[[menu.main]]
-name = "Library"
-url = "/books/"
-weight = 4
-
+# Menu: the first five show in the bar; entries with params.more go under "More".
 [[menu.main]]
 name = "Infographics"
 url = "/infographics/"
@@ -33,9 +28,9 @@ url = "/games/"
 weight = 3
 
 [[menu.main]]
-name = "Resources"
-url = "/resources/"
-weight = 7
+name = "Library"
+url = "/books/"
+weight = 4
 
 [[menu.main]]
 name = "Free Books"
@@ -43,14 +38,60 @@ url = "/free-books/"
 weight = 5
 
 [[menu.main]]
-name = "PhotoCraft"
-url = "/photocraft/"
+name = "Timeline"
+url = "/timeline/"
+weight = 6
+[menu.main.params]
+more = true
+note = "The ancient world, era by era"
+
+[[menu.main]]
+name = "Reading Paths"
+url = "/books/paths/"
+weight = 7
+[menu.main.params]
+more = true
+note = "Guided routes through the Library"
+
+[[menu.main]]
+name = "My Progress"
+url = "/progress/"
 weight = 8
+[menu.main.params]
+more = true
+note = "Words met in games, save or load progress"
+
+[[menu.main]]
+name = "What's New"
+url = "/new/"
+weight = 9
+[menu.main.params]
+more = true
+note = "Latest infographics, games and tools"
 
 [[menu.main]]
 name = "Markets"
 url = "/markets/"
-weight = 6
+weight = 10
+[menu.main.params]
+more = true
+note = "Charts, indicators and calculators"
+
+[[menu.main]]
+name = "Resources"
+url = "/resources/"
+weight = 11
+[menu.main.params]
+more = true
+note = "Free resources elsewhere"
+
+[[menu.main]]
+name = "PhotoCraft"
+url = "/photocraft/"
+weight = 12
+[menu.main.params]
+more = true
+note = "Free image editor in your browser"
 
 # PaperMod settings
 [params]
@@ -73,3 +114,18 @@ weight = 6
   # Branding colors — British Racing Green
   [params.style]
     mainColor = "#004225"      # British Racing Green
+# The home page also writes /index.json, the site-search index.
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+# Infographic images are also mounted as assets so Hugo can crop link-preview pictures from them.
+[module]
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  [[module.mounts]]
+    source = "static/img/infographics"
+    target = "assets/infographics"

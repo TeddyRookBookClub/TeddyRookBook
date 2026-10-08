@@ -12,6 +12,7 @@
   <noscript>This game needs JavaScript.</noscript>
 </div></div>
 <p style="font-size:.8rem;color:#777;margin-top:.5rem">Keyboard: ← → move, Space jumps, Shift runs and throws, P pauses. Phone: use the buttons; hold a direction to run.</p>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
 <script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
 <script src="{{ "games/hero/game.js" | relURL }}?v={{ (os.Stat "static/games/hero/game.js").ModTime.Unix }}"></script>
 {{ end }}

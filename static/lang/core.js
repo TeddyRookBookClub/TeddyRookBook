@@ -66,7 +66,7 @@
       return {
         lang: lang === 'L' ? 'Latin' : 'Ancient Greek', word: t[0], lemma: ce.l, gloss: shortGloss(ce.g), def: ce.g, pos: ct.pos, parts: ct.parts, notes: ct.notes,
         cls: lang === 'L' ? W.Grammar.latinClass(ce.l, co === 'V' ? 'V-' : co === 'N' ? 'Nb' : '') : W.Grammar.greekClass(ce.l, co),
-        freq: ce.n, freqNote: 'in the classical sentences', code: t[5]
+        freq: ce.n, freqNote: LEX.note || 'in the classical sentences', code: t[5]
       };
     }
     var le = LEX.l[t[3]] || {}, lt = W.Grammar.latin(t[4], t[5], t[6]);

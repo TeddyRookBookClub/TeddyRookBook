@@ -81,3 +81,34 @@ html[data-theme="dark"] .bg{--g:#6cc79a;--ink:#e6ece8;--muted:#9fb0a6;--line:#48
   .tl-wrap{max-width:min(100%,calc(100vh - 130px))}
 }
 .ch-sq .pct{font-size:clamp(7px,24cqw,13px);white-space:nowrap;padding:0 2px;line-height:1.25}
+/* Royal Game of Ur */
+.ur-wrap{max-width:min(100%,calc((100vh - 260px)*2.7),760px);margin:0 auto}.ur-wrap svg{display:block;width:100%;height:auto;box-shadow:0 6px 18px rgba(0,0,0,.3);border-radius:8px}
+.ur-pc.can{cursor:pointer}.ur-pc.can circle:first-child{stroke:#d8b860;stroke-width:5}
+.ur-pct{font:700 13px system-ui,sans-serif;text-anchor:middle;paint-order:stroke;stroke:#3a2414;stroke-width:3px}
+.ur-n{font:600 13px system-ui;fill:#e9dcc0;text-anchor:middle}.ur-home{font:600 12px system-ui;fill:#e9dcc0;text-anchor:middle}.ur-home.b{font-size:16px;font-weight:700}
+.ur-dice{display:inline-flex;gap:4px;vertical-align:middle}.ur-dice i{width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-bottom:19px solid #6b4a2a;position:relative}
+.ur-dice i.up::after{content:"";position:absolute;left:-3px;top:2px;width:6px;height:6px;border-radius:50%;background:#f6efdc}
+/* Nine men's morris */
+.mo-wrap{max-width:min(100%,calc(100vh - 300px),480px);margin:0 auto}.mo-wrap svg{display:block;width:100%;height:auto;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.mo-pt{cursor:pointer}
+/* Latrunculi */
+.lt-board{display:grid;grid-template-columns:repeat(8,1fr);width:min(100%,calc(100vh - 240px),560px);min-width:260px;aspect-ratio:1;margin:0 auto;border:11px solid #004225;outline:2px solid #d8b860;outline-offset:-7px;box-shadow:0 0 0 3px #6b4d14,0 6px 18px rgba(0,0,0,.3)}
+.lt-sq{position:relative;border:0;padding:0;margin:0;background:#e7dcc2;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(90,60,20,.25)}
+.lt-sq.dk{background:#d9caa7}.lt-sq.last{box-shadow:inset 0 0 0 3px rgba(0,66,37,.45)}
+.lt-pc{width:70%;height:70%;border-radius:50%;pointer-events:none}
+.lt-pc.p1{background:radial-gradient(circle at 35% 35%,#fffaf0,#d8ccb0);border:2px solid #8a7a55}
+.lt-pc.p2{background:radial-gradient(circle at 35% 35%,#a83a48,#5a1020);border:2px solid #3d0c14}
+.lt-pc.sel{outline:3px solid #f3dfa3;outline-offset:2px}
+.lt-dot{width:34%;height:34%;border-radius:50%;opacity:.85;display:grid;place-items:center;color:#fff;font:700 12px system-ui;pointer-events:none}
+.lt-pct{position:absolute;left:2px;bottom:1px;font:700 10px system-ui;color:#fff;background:rgba(0,0,0,.55);padding:0 3px;border-radius:3px;pointer-events:none}
+/* Knucklebones */
+.kb-table{background:radial-gradient(ellipse at center,#2f5a3f,#1d3a28);border:8px solid #6b4d14;border-radius:14px;padding:1.2rem .6rem;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;max-width:620px;margin:0 auto}
+.kb-bones{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center}
+.kb-bone{background:none;border:3px solid transparent;border-radius:14px;padding:.25rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;color:#f3dfa3}
+.kb-bone svg{width:84px;height:70px}.kb-bone text{font:700 17px Georgia,serif;fill:#3a2a1a}
+.kb-bone small{font:italic .8rem Georgia,serif}
+.kb-bone.kept{border-color:#f3dfa3;background:rgba(243,223,163,.15)}
+.kb-ghost{display:inline-block;width:84px;height:70px;border:2px dashed rgba(243,223,163,.35);border-radius:14px}
+.kb-pot{color:#f3dfa3;font:600 1rem Georgia,serif}.kb-pot b{font-size:1.3rem}
+.kb-acts{text-align:center;margin:.3rem 0}
+@media (max-height:560px){.ur-wrap{max-width:min(100%,calc((100vh - 120px)*2.7))}.mo-wrap{max-width:min(100%,calc(100vh - 130px))}.lt-board{width:min(100%,calc(100vh - 150px));min-width:200px;border-width:6px}.kb-bone svg{width:64px;height:54px}.kb-table{min-height:120px;padding:.5rem}}

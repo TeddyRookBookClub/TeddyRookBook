@@ -1,0 +1,57 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<style>
+.rd-side-nav{display:flex;flex-direction:column;gap:.5rem}
+#rd-text{font:inherit;font-size:.95rem;font-weight:600}
+#rd-list{list-style:none;margin:.3rem 0 0;padding:0;max-height:52vh;overflow:auto;font-size:.9rem}
+#rd-list a{display:block;padding:.3rem .45rem;border-radius:7px;color:inherit;text-decoration:none;box-shadow:none;line-height:1.3}
+#rd-list a span{display:inline-block;min-width:2.4em;color:var(--muted);font-size:.8rem}
+#rd-list a:hover{background:var(--soft)}#rd-list a[aria-current]{background:var(--g);color:#fff}#rd-list a[aria-current] span{color:#cfe0d6}
+.rd-head h2{font:700 1.5rem Georgia,serif;color:var(--g);margin:.1rem 0 .3rem}.rd-head h2 small{font:400 .9rem system-ui,sans-serif;color:var(--muted)}
+.rd-grp{margin:0;font:600 .72rem system-ui;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rd-note{color:var(--muted);font-size:.92rem;line-height:1.5;margin:.2rem 0 .8rem}
+.rd-item h3{font:700 1.2rem Georgia,serif;margin:.4rem 0 .6rem}.rd-item h3 small{font:400 .82rem system-ui;color:var(--muted)}
+.rd-text{line-height:2.1;font-size:1.12rem}
+.rd-text.verse{white-space:pre-line;line-height:1.9}
+.lang .rd-text.grc{font-size:1.22rem}
+.rd-en{line-height:1.6;font-size:.95rem;color:var(--ink);margin:.3rem 0}
+.rd-enp{background:var(--paper);border-left:4px solid var(--gold);border-radius:8px;padding:.7rem .9rem;margin-top:.9rem}
+.rd-pn{display:flex;justify-content:space-between;align-items:center;margin:1rem 0;color:var(--muted);font-size:.9rem}
+.rd-vs{display:flex;gap:.6rem;padding:.6rem 0;border-bottom:1px solid var(--line)}
+.rd-vs .vn{flex:none;width:1.6rem;color:var(--muted);font-size:.8rem;padding-top:.3rem}
+.rd-vcols{flex:1;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:1rem;line-height:2}
+.rd-cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-left:2.2rem;font:600 .72rem system-ui;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.rd-src{font-size:.85rem;color:var(--muted);line-height:1.5;margin-top:.8rem}
+.rd-play.on{opacity:1;color:var(--g)}
+.lang .w-tr{display:block;font:italic .62rem/1.2 Georgia,serif;color:var(--muted);white-space:nowrap}
+.w.sel .w-tr{color:#d3e6da}
+@media (max-width:760px){.rd-vcols{grid-template-columns:1fr}.rd-cols3{display:none}}
+</style>
+<div class="lang" id="rd">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Short Readings</p>
+    <h1><span class="grc">Ἀνάγνωσις</span> · <span class="lat">Lectio</span></h1>
+    <p>Short texts to read with help on every word: the Lord’s Prayer and Psalm 23 in Greek and Latin, 23 of Aesop’s fables in Greek and the first book of Phaedrus’s fables in Latin. Hover or tap a word for its dictionary form, meaning and grammar.</p>
+  </header>
+  <div class="rbar">
+    <select id="rd-text" aria-label="Text"></select>
+    <label><input type="checkbox" id="rd-en"> English</label>
+    <label><input type="checkbox" id="rd-inter"> Glosses</label>
+    <label><input type="checkbox" id="rd-pron"> Greek pronunciation</label>
+    <span class="sep"></span>
+    <span class="speed">Speed <input type="range" id="rd-speed" min="0.5" max="2" step="0.1" value="1"><b id="rd-speed-v">1.0×</b></span>
+  </div>
+  <div class="lang-grid">
+    <div><div id="rd-main"><p class="muted">Loading…</p></div></div>
+    <aside class="side">
+      <div class="box rd-side-nav" id="rd-navbox"><h3>In this collection</h3><ol id="rd-list" hidden></ol></div>
+      <div class="box"><h3>Word study</h3><div class="wpanel" id="word-panel"><p class="wp-empty">Hover over a word for a quick look, or tap it for the full breakdown.</p></div></div>
+    </aside>
+  </div>
+  <p class="rd-src">Sources: Aesop (Chambry’s edition) and Phaedrus (Mueller’s edition) with lemmas and grammar from the Perseus Ancient Greek and Latin Dependency Treebanks (CC BY-SA 3.0); dictionary meanings from Liddell–Scott–Jones (Perseus, CC BY-SA 4.0) and William Whitaker’s WORDS. The Lord’s Prayer from the site’s Gospel data (Nestle 1904 with MACULA Greek; PROIEL Vulgate) with the ESV. Psalm 23 tagged by hand for this site. Listening uses your device’s voices: modern Greek for Greek and Italian for Latin, so it is only an approximation.</p>
+</div>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/readings.js" | relURL }}?v={{ (os.Stat "static/lang/readings.js").ModTime.Unix }}"></script>
+{{ end }}

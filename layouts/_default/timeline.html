@@ -1,0 +1,76 @@
+{{ define "main" }}
+{{ $T := site.Data.timeline }}
+<style>
+.tl{max-width:900px;margin:0 auto}
+.tl h1{font:700 2rem Georgia,serif;color:#004225;margin:.2rem 0 .3rem}
+.tl-lead{color:var(--secondary);line-height:1.55;margin:0 0 .8rem}
+.tl-bar{position:sticky;top:0;z-index:5;background:var(--theme);padding:.5rem 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:.4rem}
+.tl-row{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.tl-row b{font:600 .75rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--secondary);margin-right:.2rem}
+.tl-chip{font:inherit;font-size:.85rem;padding:.25rem .65rem;border-radius:999px;border:1px solid var(--border);background:var(--entry);color:var(--primary);cursor:pointer;text-decoration:none;box-shadow:none;white-space:nowrap}
+.tl-chip:hover{border-color:#004225}
+.tl-chip.on{background:#004225;border-color:#004225;color:#fff}
+.tl-era{margin:1.4rem 0 .2rem;scroll-margin-top:7rem}
+.tl-era h2{font:700 1.35rem Georgia,serif;color:#004225;margin:0}
+.tl-era p{margin:0;color:var(--secondary);font-size:.9rem}
+.tl-list{list-style:none;margin:.6rem 0 0;padding:0 0 0 1.4rem;border-left:3px solid #c9b07a;position:relative}
+.tl-ev{position:relative;margin:0 0 .9rem;padding:.7rem .9rem;background:var(--entry);border:1px solid var(--border);border-radius:12px;scroll-margin-top:7rem}
+.tl-ev::before{content:"";position:absolute;left:calc(-1.4rem - 9px);top:1rem;width:13px;height:13px;border-radius:50%;background:#004225;border:2px solid var(--theme)}
+.tl-ev.greece::before{background:#1f5fa8}.tl-ev.rome::before{background:#a8201a}.tl-ev.bible::before{background:#b8963e}.tl-ev.east::before{background:#7a5a20}
+.tl-ev:target{box-shadow:0 0 0 3px #b8963e}
+.tl-when{font:600 .8rem system-ui,sans-serif;color:var(--secondary);letter-spacing:.02em}
+.tl-when i{font-style:normal;margin-left:.4rem;padding:.05rem .45rem;border-radius:999px;border:1px solid var(--border);font-size:.72rem}
+.tl-ev h3{font:700 1.12rem Georgia,serif;margin:.15rem 0 .3rem}
+.tl-ev h3 a{box-shadow:none;color:inherit}
+.tl-ev p{margin:0;line-height:1.55}
+.tl-links{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem}
+.tl-links a{font-size:.82rem;padding:.2rem .55rem;border-radius:8px;border:1px solid var(--border);background:var(--theme);text-decoration:none;box-shadow:none;color:var(--primary)}
+.tl-links a:hover{border-color:#004225}
+.tl-empty{color:var(--secondary);font-style:italic;display:none}
+[data-theme="dark"] .tl h1,[data-theme="dark"] .tl-era h2{color:#6cc79a}
+[data-theme="dark"] .tl-chip.on{background:#00562f;border-color:#00562f}
+[data-theme="dark"] .tl-ev::before{background:#6cc79a}
+[data-theme="dark"] .tl-ev.greece::before{background:#8cc4f0}[data-theme="dark"] .tl-ev.rome::before{background:#f0a08c}[data-theme="dark"] .tl-ev.bible::before{background:#e0c27a}[data-theme="dark"] .tl-ev.east::before{background:#c9a36a}
+@media (max-width:600px){.tl-bar{position:static}.tl-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:.2rem}.tl-list{padding-left:1rem}.tl-ev::before{left:calc(-1rem - 9px)}}
+</style>
+{{ $icons := dict "game" "🎲" "book" "📖" "infographic" "🖼️" "language" "🗣️" "page" "🔗" }}
+{{ $placeName := dict }}{{ range $T.places }}{{ $placeName = merge $placeName (dict (index . 0) (index . 1)) }}{{ end }}
+<div class="tl">
+  <h1>{{ .Title }}</h1>
+  <p class="tl-lead">The events behind the books, games, readings and infographics on this site, from the pyramids to the fall of Rome. Each one links to what you can read or play about it here. Early dates are approximate, and the dates of legends are the ones ancient writers gave.</p>
+  <div class="tl-bar">
+    <div class="tl-row" role="group" aria-label="Show"><b>Show</b><button class="tl-chip on" data-p="">Everything</button>{{ range $T.places }}<button class="tl-chip" data-p="{{ index . 0 }}">{{ index . 1 }}</button>{{ end }}</div>
+    <div class="tl-row" aria-label="Jump to an era"><b>Eras</b>{{ range $T.eras }}<a class="tl-chip" href="#era-{{ .id }}">{{ .name }}</a>{{ end }}</div>
+  </div>
+  {{ range $T.eras }}{{ $era := . }}
+  {{ $evs := sort (where $T.events "era" $era.id) "year" }}
+  <section class="tl-era" id="era-{{ $era.id }}" data-era>
+    <h2>{{ $era.name }}</h2><p>{{ $era.span }}</p>
+    <ol class="tl-list">
+      {{ range $evs }}
+      <li class="tl-ev {{ .place }}" id="{{ .id }}" data-p="{{ .place }}">
+        <div class="tl-when">{{ .when }}<i>{{ index $placeName .place }}</i></div>
+        <h3><a href="#{{ .id }}">{{ .title }}</a></h3>
+        <p>{{ .text }}</p>
+        {{ with .links }}<div class="tl-links">{{ range . }}<a href="{{ index . 2 }}">{{ index $icons (index . 0) }} {{ index . 1 }}</a>{{ end }}</div>{{ end }}
+      </li>
+      {{ end }}
+    </ol>
+  </section>
+  {{ end }}
+  <p class="tl-empty" id="tl-empty">Nothing to show.</p>
+</div>
+<script>
+(function () {
+  var chips = document.querySelectorAll('.tl-chip[data-p]');
+  function show(p) {
+    chips.forEach(function (c) { var on = c.getAttribute('data-p') === p; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+    document.querySelectorAll('.tl-ev').forEach(function (e) { e.hidden = !!p && e.getAttribute('data-p') !== p; });
+    document.querySelectorAll('[data-era]').forEach(function (s) { s.hidden = !s.querySelector('.tl-ev:not([hidden])'); });
+    try { history.replaceState(null, '', p ? '?show=' + p + location.hash : location.pathname + location.hash); } catch (e) { }
+  }
+  chips.forEach(function (c) { c.addEventListener('click', function () { show(c.getAttribute('data-p')); }); });
+  var q = (location.search.match(/[?&]show=(\w+)/) || [])[1]; if (q) show(q);
+})();
+</script>
+{{ end }}

@@ -1,0 +1,11 @@
+{{- /* One page per infographic at /infographics/<file>/, so each can be linked and shared with its own preview picture. */ -}}
+{{- range where site.Data.infographics "show" true -}}
+  {{- $p := dict
+    "kind" "page"
+    "path" .file
+    "title" .title
+    "layout" "infographic"
+    "params" (dict "description" .description "igfile" .file "igtags" (.tags | default slice) "igbooks" (.books | default slice) "igpdf" (.pdf | default "") "igpdftitle" (.pdf_title | default "") "iglink" (.link | default "") "iglinktext" (.link_text | default "") "searchHidden" true)
+  -}}
+  {{- $.AddPage $p -}}
+{{- end -}}

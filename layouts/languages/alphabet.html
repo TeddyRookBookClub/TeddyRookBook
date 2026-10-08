@@ -1,0 +1,61 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<style>
+.ab-wrap{max-width:980px;margin:0 auto}
+.ab-prog{color:var(--muted);margin:.2rem 0 .7rem}
+.ab-lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.7rem}
+.ab-les{display:flex;gap:.8rem;align-items:center;text-align:left;font:inherit;padding:.85rem 1rem;border-radius:12px;border:1px solid var(--line);background:var(--card);color:inherit;cursor:pointer}
+.ab-les:hover{border-color:var(--g)}
+.ab-les b{display:block;font:700 1.08rem Georgia,serif;color:var(--g)}
+.ab-les small{display:block;color:var(--muted);font-size:.86rem;margin-top:.15rem}
+.ab-n{flex:none;width:2.2rem;height:2.2rem;border-radius:50%;display:grid;place-items:center;font:700 1.05rem Georgia,serif;background:var(--g);color:#fff}
+.ab-les.done .ab-n{background:#1a8a4a}
+.ab-all{margin:1.2rem 0 .5rem}.ab-all summary{cursor:pointer;font-weight:700;color:var(--g)}
+.ab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.6rem;margin:.7rem 0}
+.ab-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem}
+.ab-card h3{margin:0 0 .3rem;font:700 1.05rem Georgia,serif;color:var(--g)}
+.ab-card p{margin:.3rem 0;font-size:.92rem;line-height:1.5}
+.lang .ab-big{font-size:2.3rem;line-height:1.1;color:var(--g)}
+.ab-name{font-size:.95rem;color:var(--muted)}.ab-name b{color:inherit;font-size:1.05rem}
+.ab-ex i{color:var(--muted)}
+.ab-marks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.7rem;margin:.7rem 0}
+.ab-marks .big{font-size:1.5em}
+.ab-note{font-size:.86rem;color:var(--muted);line-height:1.5;margin-top:1rem}
+.ab-back{font:inherit;font-size:.9rem;background:none;border:0;color:var(--g);cursor:pointer;padding:0;margin-bottom:.4rem}
+.ab-les-view h2,.ab-end h2{font:700 1.5rem Georgia,serif;color:var(--g);margin:.2rem 0 .4rem}
+.ab-intro{line-height:1.55;max-width:46rem}
+.ab-go{margin:1rem 0}
+.ab-btn{font:inherit;font-size:1rem;padding:.55rem 1.1rem;border-radius:10px;border:1px solid var(--line);background:var(--card);color:inherit;cursor:pointer;margin:.15rem}
+.ab-btn.pri{background:var(--g);border-color:var(--g);color:#fff;font-weight:700}
+.ab-quiz{max-width:620px;margin:0 auto;text-align:center}
+.ab-qhead{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.9rem}
+.ab-q{margin:1.2rem 0 .3rem}
+.lang .ab-qbig{font-size:3.6rem;line-height:1.2}
+span.ab-qbig:not(.grc){font:700 2.6rem Georgia,serif;color:var(--g)}
+.ab-ask{color:var(--muted);margin:.2rem 0 .8rem}
+.ab-opts{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+.ab-opt{font:inherit;font-size:1.25rem;padding:.75rem .5rem;border-radius:12px;border:2px solid var(--line);background:var(--card);color:inherit;cursor:pointer}
+.lang .ab-opt.grc{font-size:1.8rem;padding:.4rem}
+.ab-opt:hover:not([disabled]){border-color:var(--g)}
+.ab-opt.right{border-color:#1a8a4a;background:#e3f4e9}
+.ab-opt.wrong{border-color:#c0392b;background:#fbe4e1}
+[data-theme="dark"] .ab-opt.right{background:#16402a}[data-theme="dark"] .ab-opt.wrong{background:#4a1d18}
+.ab-after{min-height:3rem;margin:.9rem 0;line-height:1.6}
+.ab-after .ok{color:#1a8a4a}.ab-after .no{color:#c0392b}
+.ab-score{font:700 1.4rem Georgia,serif}
+html[data-theme="dark"] .ab-wrap{--g:#6cc79a}
+html[data-theme="dark"] .ab-btn.pri,html[data-theme="dark"] .ab-n{background:#00562f;border-color:#00562f;color:#fff}
+</style>
+<div class="lang ab-wrap">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Greek Alphabet</p>
+    <h1><span class="grc">Γράμματα</span> · the Greek alphabet</h1>
+    <p>Six short lessons, from the letters to reading real words from the New Testament. Each lesson ends with a quick quiz; get 8 in 10 right to finish it.</p>
+  </header>
+  <div id="ab"><noscript>The lessons need JavaScript.</noscript></div>
+  <p class="ab-note">Γράμματα (grámmata), “letters”, is the word used in John 7:15. Example words in these lessons are all found in the New Testament.</p>
+</div>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/alphabet.js" | relURL }}?v={{ (os.Stat "static/lang/alphabet.js").ModTime.Unix }}"></script>
+{{ end }}

@@ -5,6 +5,7 @@
 {{ partial "game-shell.html" . }}
 <div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="th gbox" id="th"><noscript>This game needs JavaScript.</noscript></div></div>
 <p style="font-size:.8rem;color:#777;margin-top:.5rem">Mouse: aim and hold to throw. Keyboard: ← → turn, Space throws, P pauses. Phone: touch where you want to throw.</p>
+<script src="{{ "js/words.js" | relURL }}?v={{ (os.Stat "static/js/words.js").ModTime.Unix }}"></script>
 <script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
 <script src="{{ "games/thermopylae/game.js" | relURL }}?v={{ (os.Stat "static/games/thermopylae/game.js").ModTime.Unix }}"></script>
 {{ end }}

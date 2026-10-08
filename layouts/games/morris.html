@@ -1,0 +1,10 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "games/board/board.css" | relURL }}?v={{ (os.Stat "static/games/board/board.css").ModTime.Unix }}">
+{{ partial "game-shell.html" . }}
+<div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="bg gbox" id="morris"><noscript>This game needs JavaScript.</noscript></div></div>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
+<script src="{{ "games/board/morris.js" | relURL }}?v={{ (os.Stat "static/games/board/morris.js").ModTime.Unix }}"></script>
+<script src="{{ "js/keys.js" | relURL }}?v={{ (os.Stat "static/js/keys.js").ModTime.Unix }}" data-sel=".mo-pt,li[data-k]" data-board="svg"></script>
+{{ end }}

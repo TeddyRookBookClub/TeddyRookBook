@@ -1,0 +1,19 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Teddy Rook Book: What's New</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ .Description }}</description>
+    <language>en</language>
+    <atom:link href="{{ .Permalink }}index.xml" rel="self" type="application/rss+xml" />
+    {{- range first 40 site.Data.whatsnew }}
+    <item>
+      <title>{{ .kind }}: {{ .title }}</title>
+      <link>{{ .url | absURL }}</link>
+      <pubDate>{{ (time.AsTime .date).Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      <guid isPermaLink="false">{{ .url | absURL }}#{{ .date }}</guid>
+      <description>{{ .text }}</description>
+    </item>
+    {{- end }}
+  </channel>
+</rss>

@@ -44,6 +44,7 @@
     return '<span class="' + V.lang + ' ' + (cls || '') + '">' + esc(pair[0]) + '</span>' + (store.en && pair[1] ? ' <span class="en">' + esc(pair[1]) + '</span>' : '');
   }
   function addWord(w, g) {
+    if (window.TRBWords) window.TRBWords.log('thief', V.lang === 'grc' ? 'g' : 'l', w, g);
     if (C && !C.words.some(function (x) { return x[0] === w; })) C.words.push([w, g]);
     var sv = store[V.key].words; if (!sv[w]) { sv[w] = g; save(); }
   }

@@ -1,0 +1,91 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<style>
+.tr-sec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin:0 0 1.2rem}
+.tr-sec h2{font:700 1.35rem Georgia,serif;color:var(--g);margin:.1rem 0 .3rem}
+.tr-sec .lead{color:var(--muted);line-height:1.55;margin:.2rem 0 .7rem;max-width:52rem}
+.tr-bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.4rem 0 .6rem}
+.tr-bar select{font:inherit;font-size:.92rem;padding:.4rem .5rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);max-width:100%}
+.seg2{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg2 button{font:inherit;font-size:.88rem;padding:.38rem .7rem;border:0;background:var(--card);color:var(--ink);cursor:pointer}
+.seg2 button+button{border-left:1px solid var(--line)}
+.seg2 button.on{background:var(--g);color:#fff;font-weight:600}
+.tr-bar label{font-size:.88rem;color:var(--muted);display:flex;gap:.3rem;align-items:center}
+.tr-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:.4rem}
+.tr-scroll svg{display:block;margin:0 auto}
+#ps-svg line{stroke:#6b756f;stroke-width:1.6}#ps-svg line.el{stroke-dasharray:4 4;opacity:.6}
+#ps-svg .lf rect{fill:#fff6dd;stroke:#c9a43a;stroke-width:1.2}#ps-svg .lf text{font:600 14px system-ui,sans-serif;fill:#1d2320;text-anchor:middle}
+#ps-svg .lf.el rect{fill:transparent;stroke-dasharray:4 3}#ps-svg .lf.el text{fill:#8a938e;font-style:italic}
+#ps-svg .nd text{font:700 12px system-ui,sans-serif;text-anchor:middle}#ps-svg .nd rect{stroke-width:1.4}#ps-svg .nd.el rect{stroke-dasharray:4 3}
+.ps-out{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;margin:.5rem 0 0;font-size:.92rem}
+.ps-out b{color:var(--g)}
+#ps-msg{color:var(--muted)}
+#ps-step{accent-color:var(--g);width:140px}
+.tr-btn{font:inherit;font-size:.88rem;padding:.38rem .75rem;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tr-btn:hover{border-color:var(--g)}
+#dp-svg line{stroke:#7a8580;stroke-width:1.5}
+#dp-svg .dw{font:20px "Gentium Book Plus",Georgia,serif;text-anchor:middle;fill:var(--ink)}
+#dp-svg .dr{font:600 11px system-ui,sans-serif;text-anchor:middle;fill:var(--muted)}
+#dp-svg .dn{cursor:pointer}#dp-svg .dn:focus{outline:none}#dp-svg .dn:focus .dw{text-decoration:underline}
+#dp-svg .dn.sel .dw{fill:var(--g);font-weight:700}#dp-svg .dn.head .dw{fill:#b8963e}#dp-svg .dn.kid .dw{fill:#7a2338}
+.dp-words{display:flex;flex-wrap:wrap;gap:.4rem;margin:.7rem 0 .3rem}
+.dpw{font:inherit;font-size:1.15rem;padding:.3rem .65rem;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-family:"Gentium Book Plus",Georgia,serif}
+.dpw:hover{border-color:var(--g)}.dpw.cur{background:#f3dfa3;border-color:#b8963e;color:#1d2320}.dpw.done{opacity:.55}.dpw.sel{background:var(--g);color:#fff}
+.dp-q{min-height:2.6rem;line-height:1.55;margin:.4rem 0}
+.dp-q .ok{color:#1a8a4a}.dp-q .dim{color:var(--muted)}
+.dp-en{font-style:italic;color:var(--muted);margin:.2rem 0}
+.dp-ref{font-size:.8rem;color:var(--muted)}
+.dp-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:1rem;align-items:start}
+@media (max-width:860px){.dp-grid{grid-template-columns:minmax(0,1fr)}}
+.dp-rel{font-weight:600;margin:0 0 .5rem}
+.tr-note{font-size:.85rem;color:var(--muted);line-height:1.5}
+html[data-theme="dark"] .tr-sec h2,html[data-theme="dark"] .ps-out b{color:#6cc79a}
+html[data-theme="dark"] .seg2 button.on{background:#00562f}
+html[data-theme="dark"] #ps-svg .lf rect{fill:#2b2a1d}html[data-theme="dark"] #ps-svg .lf text{fill:#f1ead2}
+</style>
+<div class="lang" id="tr">
+  <header class="lang-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Sentence Trees</p>
+    <h1>Sentence Trees</h1>
+    <p>A sentence is not just a row of words: some words belong together. Build English trees step by step and watch the missing words appear, then explore real Latin and Greek sentences, or build their trees yourself.</p>
+  </header>
+
+  <section class="tr-sec">
+    <h2>1. English: one sentence, two trees</h2>
+    <p class="lead">From the infographic <a href="/infographics/syntax-trees-cows-and-sharks/">How Syntax Trees Work</a>. After “than”, English lets you leave out words the listener can rebuild. Switch between the two readings to see where the missing words go, and use the steps to build the tree from the words up.</p>
+    <div class="tr-bar">
+      <select id="ps-sent" aria-label="Sentence"></select>
+      <span class="seg2"><button type="button" data-r="A" class="on">Reading A</button><button type="button" data-r="B">Reading B</button></span>
+      <label><input type="checkbox" id="ps-gaps" checked> Show the missing words</label>
+    </div>
+    <div class="tr-scroll" id="ps-svg"></div>
+    <div class="ps-out"><b id="ps-reading"></b></div>
+    <div class="tr-bar"><button type="button" class="tr-btn" id="ps-play">▶ Build it step by step</button><label>Step <input type="range" id="ps-step" min="1" max="7" value="7"></label><span id="ps-msg"></span></div>
+    <p class="tr-note">TP is the whole clause, T the tense, VP the verb and what it acts on, NP a noun phrase, CP a clause introduced by a word like “than”, Deg a degree word like “more”. These trees follow the X-bar style taught in introductory syntax courses; textbooks differ in the details for comparatives.</p>
+  </section>
+
+  <section class="tr-sec">
+    <h2>2. Latin and Greek: what hangs from what</h2>
+    <p class="lead">Latin and Greek word order is free, so these trees show which word each word depends on: subjects and objects hang from their verb, adjectives from their noun, nouns from their preposition. Explore a tree, or build it yourself one word at a time.</p>
+    <div class="tr-bar">
+      <span class="seg2"><button type="button" data-lang="L" class="on">Latin</button><button type="button" data-lang="G">Greek</button></span>
+      <span class="seg2"><button type="button" data-mode="explore" class="on">Explore</button><button type="button" data-mode="build">Build it</button></span>
+      <select id="dp-sent" aria-label="Sentence"></select>
+      <button type="button" class="tr-btn" id="dp-prev" aria-label="Previous sentence">‹</button><button type="button" class="tr-btn" id="dp-next" aria-label="Next sentence">›</button>
+    </div>
+    <div class="dp-grid">
+      <div>
+        <p class="dp-en"><span id="dp-en"></span> <span class="dp-ref" id="dp-ref"></span></p>
+        <div class="dp-q" id="dp-q" aria-live="polite"></div>
+        <div class="dp-words" id="dp-words"></div>
+        <div class="tr-scroll" id="dp-svg"></div>
+      </div>
+      <aside class="box"><h3>Word study</h3><div class="wpanel" id="dp-panel"></div></aside>
+    </div>
+    <p class="tr-note">The Latin sentences are from Phaedrus’s fables, the Greek from Aesop’s; trees and grammar from the Perseus Latin and Ancient Greek Dependency Treebanks (CC BY-SA 3.0), which follow their own conventions: for example, words joined by “and” hang from the “and”. The Greek of Aesop’s fables is post-classical prose, close to Koine but not New Testament Greek. English translations written for this site.</p>
+  </section>
+</div>
+<script src="{{ "lang/grammar.js" | relURL }}?v={{ (os.Stat "static/lang/grammar.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/core.js" | relURL }}?v={{ (os.Stat "static/lang/core.js").ModTime.Unix }}"></script>
+<script src="{{ "lang/trees.js" | relURL }}?v={{ (os.Stat "static/lang/trees.js").ModTime.Unix }}"></script>
+{{ end }}
