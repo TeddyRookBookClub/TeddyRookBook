@@ -1,12 +1,13 @@
 /* Daily Word Puzzle: guess today's five-letter Latin or Greek word in six tries.
-   Everyone gets the same word on the same day. Saved under localStorage 'trb-daily-v1'. */
+   Everyone gets the same word on the same day. Saved under localStorage 'trb-daily-v1'.
+   Practice words (as many as you like) use a random answer and never touch the stats or the streak. */
 (function (W, D) {
   'use strict';
   var KEY = 'trb-daily-v1', EPOCH = Date.UTC(2026, 9, 8), TRIES = 6, LEN = 5;
   var root = D.getElementById('daily'); if (!root) return;
   var LANGS = {
     l: { name: 'Latin', rows: ['QERTYUIOP', 'ASDFGHKL', 'ZXCVBNM'], cls: 'la' },
-    g: { name: 'Greek', rows: ['ΕΡΤΥΘΙΟΠ', 'ΑΣΔΦΓΗΞΚΛ', 'ΖΧΨΩΒΝΜ'], cls: 'gr' }
+    g: { name: 'Greek', rows: ['ερτυθιοπ', 'ασδφγηξκλ', 'ζχψωβνμ'], cls: 'gr' } // lower case, as the words are written in the word bank
   };
   /* A Greek keyboard on a Latin layout: the usual Greek typing positions. */
   var GKEY = { a: 'α', b: 'β', g: 'γ', d: 'δ', e: 'ε', z: 'ζ', h: 'η', u: 'θ', i: 'ι', k: 'κ', l: 'λ', m: 'μ', n: 'ν', j: 'ξ', o: 'ο', p: 'π', r: 'ρ', s: 'σ', w: 'σ', t: 'τ', y: 'υ', f: 'φ', x: 'χ', c: 'ψ', v: 'ω' };
@@ -21,7 +22,16 @@
 
   function load() { var d; try { d = JSON.parse(W.localStorage.getItem(KEY)); } catch (e) { } d = d && typeof d === 'object' ? d : {}; d.played = d.played || 0; d.won = d.won || 0; d.streak = d.streak || 0; d.max = d.max || 0; d.dist = d.dist || [0, 0, 0, 0, 0, 0]; d.games = d.games || {}; return d; }
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
-  function game() { var k = lang + today(); return st.games[k] || (st.games[k] = { g: [], done: 0 }); }
+  var prac = null; // { lg, a: [word, meaning], g: [], done } while playing a practice word
+  function isPrac() { return !!(prac && prac.lg === lang); }
+  function curAns() { return isPrac() ? prac.a : answer(lang, today()); }
+  function game() { if (isPrac()) return prac; var k = lang + today(); return st.games[k] || (st.games[k] = { g: [], done: 0 }); }
+  function practice() {
+    var A = data[lang].ans, t = norm(answer(lang, today())[0], lang), last = prac && prac.lg === lang ? norm(prac.a[0], lang) : '', a;
+    do { a = A[Math.floor(Math.random() * A.length)]; } while (A.length > 2 && (norm(a[0], lang) === t || norm(a[0], lang) === last));
+    prac = { lg: lang, a: a, g: [], done: 0 }; cur = ''; msg(''); render();
+  }
+  function backToToday() { prac = null; cur = ''; msg(''); render(); }
   function prune() { var t = today(); Object.keys(st.games).forEach(function (k) { if (+k.slice(1) < t - 40) delete st.games[k]; }); }
 
   function score(guess, ans) {
@@ -30,17 +40,18 @@
     for (i = 0; i < LEN; i++) if (res[i] !== 2 && left[guess[i]]) { res[i] = 1; left[guess[i]]--; }
     return res;
   }
-  function show(ch) { return lang === 'g' ? ch.toUpperCase() : ch.toUpperCase(); }
+  function show(ch, i) { return lang === 'g' ? (ch === 'σ' && i === LEN - 1 ? 'ς' : ch) : ch.toUpperCase(); }
 
   function build() {
     root.innerHTML =
       '<div class="dw-top"><h1>Daily Word Puzzle</h1>' +
       '<div class="dw-langs" role="group" aria-label="Language"><button class="bg-btn" data-l="l">Latin</button><button class="bg-btn" data-l="g">Greek</button></div>' +
-      '<button class="bg-btn" id="dw-bank-b" aria-pressed="false">Word bank</button><button class="bg-btn" id="dw-help-b" aria-expanded="false">How to play</button></div>' +
+      '<button class="bg-btn" id="dw-prac-b">Practice word</button><button class="bg-btn" id="dw-bank-b" aria-pressed="false">Word bank</button><button class="bg-btn" id="dw-help-b" aria-expanded="false">How to play</button></div>' +
       '<div class="dw-help" id="dw-help" hidden><p>Guess today’s five-letter word in six tries. Each guess must be a real word form. After each guess the tiles change colour:</p>' +
       '<p><span class="dw-mini s2">A</span> right letter, right place &nbsp; <span class="dw-mini s1">A</span> in the word, wrong place &nbsp; <span class="dw-mini s0">A</span> not in the word</p>' +
-      '<p>Accents and breathings are ignored: you only guess the letters. In Latin, U and V count as one letter, as they did for the Romans, and so do I and J. In Greek, Σ and ς are one letter. Type Greek with a Greek keyboard, the buttons below, or Latin keys in the usual Greek layout (a = α, u = θ, j = ξ, c = ψ, v = ω, w = ς).</p>' +
-      '<p>The answers are common words: Latin nouns and adjectives from classical authors, and Greek words found in the New Testament (Koine). Guesses may be any five-letter form found in the Perseus and PROIEL treebanks. Everyone gets the same word each day, with a new Latin and a new Greek word at midnight.</p><p>Stuck? The <b>Word bank</b> lists every possible answer with its meaning, and crosses out the ones your tiles have ruled out.</p></div>' +
+      '<p>Accents and breathings are ignored: you only guess the letters. In Latin, U and V count as one letter, as they did for the Romans, and so do I and J. In Greek, σ and ς are one letter, and the letters are shown in lower case, as the words are usually printed. Type Greek with a Greek keyboard, the buttons below, or Latin keys in the usual Greek layout (a = α, u = θ, j = ξ, c = ψ, v = ω, w = ς).</p>' +
+      '<p>The answers are common words: Latin nouns and adjectives from classical authors, and Greek words found in the New Testament (Koine). Guesses may be any five-letter form found in the Perseus and PROIEL treebanks. Everyone gets the same word each day, with a new Latin and a new Greek word at midnight.</p><p>Want more? <b>Practice word</b> gives you a random word to play as often as you like; practice games don’t count towards your streak.</p><p>Stuck? The <b>Word bank</b> lists every possible answer with its meaning, and can cross out the ones your tiles have ruled out.</p></div>' +
+      '<div class="dw-mode" id="dw-mode" hidden></div>' +
       '<div class="dw-msg" id="dw-msg" role="status" aria-live="polite"></div>' +
       '<div class="dw-grid" id="dw-grid" aria-label="Guesses"></div>' +
       '<div class="dw-end" id="dw-end" hidden></div>' +
@@ -48,11 +59,13 @@
       '<div class="dw-bank" id="dw-bank" hidden></div>' +
       '<div class="dw-stats bg-small" id="dw-stats"></div>';
     root.querySelectorAll('[data-l]').forEach(function (b) { b.onclick = function () { setLang(b.getAttribute('data-l')); }; });
+    D.getElementById('dw-prac-b').onclick = function () { if (isPrac() && prac.g.length && !prac.done && !W.confirm('Start a new practice word? This one will be lost.')) return; practice(); };
     var bb = D.getElementById('dw-bank-b'); bb.onclick = function () { bankOn = !bankOn; try { W.localStorage.setItem('trb-daily-bank', bankOn ? '1' : ''); } catch (e) { } bank(); };
     var hb = D.getElementById('dw-help-b'); hb.onclick = function () { var h = D.getElementById('dw-help'); h.hidden = !h.hidden; hb.setAttribute('aria-expanded', String(!h.hidden)); };
   }
 
   function setLang(lg) {
+    if (prac && prac.lg !== lg) prac = null; // switching language goes back to that language's daily word
     lang = lg; cur = ''; try { W.localStorage.setItem('trb-daily-lang', lg); } catch (e) { }
     root.querySelectorAll('[data-l]').forEach(function (b) { var on = b.getAttribute('data-l') === lg; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
     root.classList.toggle('is-g', lg === 'g');
@@ -69,13 +82,15 @@
   function msg(t, keep) { var m = D.getElementById('dw-msg'); m.innerHTML = t; clearTimeout(msg.t); if (t && !keep) msg.t = setTimeout(function () { m.innerHTML = ''; }, 2200); }
 
   function render() {
-    var g = game(), ans = norm(answer(lang, today())[0], lang), grid = D.getElementById('dw-grid'), h = '', r, i, keys = {};
+    var g = game(), ans = norm(curAns()[0], lang), grid = D.getElementById('dw-grid'), h = '', r, i, keys = {};
+    var md = D.getElementById('dw-mode'); md.hidden = !isPrac();
+    if (isPrac()) { md.innerHTML = '<span>Practice word: it doesn’t count towards your streak.</span> <button class="bg-btn" id="dw-today">Back to today’s word</button>'; D.getElementById('dw-today').onclick = backToToday; }
     for (r = 0; r < TRIES; r++) {
       var word = g.g[r], sc = word ? score(norm(word, lang), ans) : null, typing = !word && r === g.g.length && !g.done;
       h += '<div class="dw-line' + (typing ? ' cur' : '') + '">';
       for (i = 0; i < LEN; i++) {
         var ch = word ? word[i] : typing ? cur[i] || '' : '';
-        h += '<span class="dw-t' + (sc ? ' s' + sc[i] : ch ? ' full' : '') + (word && r === g.g.length - 1 && render.flip ? ' flip' : '') + '" style="--d:' + (i * 90) + 'ms">' + (ch ? show(ch) : '') + '</span>';
+        h += '<span class="dw-t' + (sc ? ' s' + sc[i] : ch ? ' full' : '') + (word && r === g.g.length - 1 && render.flip ? ' flip' : '') + '" style="--d:' + (i * 90) + 'ms">' + (ch ? show(ch, i) : '') + '</span>';
         if (sc) { var nk = norm(word[i], lang); keys[nk] = Math.max(keys[nk] == null ? -1 : keys[nk], sc[i]); }
       }
       h += '</div>';
@@ -94,16 +109,18 @@
 
   // The word bank: every word that can be an answer in this language, with its meaning. Words that no longer fit
   // the coloured tiles are crossed out; tap a word to type it in.
-  var bankOn = false; try { bankOn = !!W.localStorage.getItem('trb-daily-bank'); } catch (e) { }
+  var bankOn = false, crossOn = true; try { bankOn = !!W.localStorage.getItem('trb-daily-bank'); crossOn = W.localStorage.getItem('trb-daily-cross') !== '0'; } catch (e) { }
   function bank() {
     var el = D.getElementById('dw-bank'), b = D.getElementById('dw-bank-b'); if (!el || !data) return;
     b.classList.toggle('on', bankOn); b.setAttribute('aria-pressed', String(bankOn)); el.hidden = !bankOn; if (!bankOn) return;
-    var g = game(), ans = norm(answer(lang, today())[0], lang), L = LANGS[lang];
+    var g = game(), ans = norm(curAns()[0], lang), L = LANGS[lang];
     var res = g.g.map(function (w) { var n = norm(w, lang); return [n, score(n, ans).join('')]; });
     var list = data[lang].ans.slice().sort(function (a, b) { return norm(a[0], lang) < norm(b[0], lang) ? -1 : 1; });
     var fit = 0;
-    var h = list.map(function (a) { var n = norm(a[0], lang), ok = res.every(function (r) { return score(r[0], n).join('') === r[1]; }); if (ok) fit++; return '<button class="dw-bw' + (ok ? '' : ' out') + '" data-w="' + (lang === 'g' ? n : strip(a[0])) + '"' + (ok ? '' : ' aria-label="' + a[0] + ', ruled out"') + '><b class="' + L.cls + '" lang="' + (lang === 'g' ? 'grc' : 'la') + '">' + a[0] + '</b><small>' + a[1] + '</small></button>'; }).join('');
-    el.innerHTML = '<p class="bg-small">Every possible answer in ' + L.name + ' (' + list.length + ' words). ' + (res.length ? fit + ' still fit your tiles; the rest are crossed out. ' : '') + (g.done ? '' : 'Tap a word to type it in.') + '</p><div class="dw-bws">' + h + '</div>';
+    var h = list.map(function (a) { var n = norm(a[0], lang), ok = !crossOn || res.every(function (r) { return score(r[0], n).join('') === r[1]; }); if (ok) fit++; return '<button class="dw-bw' + (ok ? '' : ' out') + '" data-w="' + (lang === 'g' ? n : strip(a[0])) + '"' + (ok ? '' : ' aria-label="' + a[0] + ', ruled out"') + '><b class="' + L.cls + '" lang="' + (lang === 'g' ? 'grc' : 'la') + '">' + a[0] + '</b><small>' + a[1] + '</small></button>'; }).join('');
+    el.innerHTML = '<p class="bg-small">Every possible answer in ' + L.name + ' (' + list.length + ' words). ' + (res.length && crossOn ? fit + ' still fit your tiles; the rest are crossed out. ' : '') + (g.done ? '' : 'Tap a word to type it in.') + '</p>' +
+      '<p class="bg-small dw-cross"><label><input type="checkbox" id="dw-cross"' + (crossOn ? ' checked' : '') + '> Cross out words that no longer fit my guesses</label></p><div class="dw-bws">' + h + '</div>';
+    D.getElementById('dw-cross').onchange = function () { crossOn = this.checked; try { W.localStorage.setItem('trb-daily-cross', crossOn ? '1' : '0'); } catch (e) { } bank(); };
     el.querySelectorAll('.dw-bw').forEach(function (bt) { bt.onclick = function () { if (game().done) return; cur = bt.getAttribute('data-w'); render(); }; });
   }
 
@@ -118,10 +135,11 @@
     var g = game(), n = norm(cur, lang);
     if (cur.length < LEN) { msg('Not enough letters'); shake(); return; }
     if (!okSet[lang][n]) { msg('Not in the word list'); shake(); return; }
-    var ans = answer(lang, today()), a = norm(ans[0], lang);
+    var ans = curAns(), a = norm(ans[0], lang);
     g.g.push(cur); cur = ''; render.flip = !W.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var won = n === a;
-    if (won || g.g.length >= TRIES) {
+    if ((won || g.g.length >= TRIES) && isPrac()) { g.done = won ? 1 : 2; if (W.TRBWords) W.TRBWords.log('daily', lang, ans[0], ans[1]); }
+    else if (won || g.g.length >= TRIES) {
       g.done = won ? 1 : 2; st.played++;
       if (won) {
         st.won++; st.dist[g.g.length - 1]++;
@@ -143,15 +161,18 @@
 
   function end() {
     var g = game(), box = D.getElementById('dw-end'); if (!g.done) { box.hidden = true; return; }
-    var a = answer(lang, today()), other = lang === 'l' ? 'g' : 'l', og = st.games[other + today()];
+    var a = curAns(), other = lang === 'l' ? 'g' : 'l', og = st.games[other + today()], pr = isPrac();
     box.hidden = false;
     box.innerHTML = '<p>' + (g.done === 1 ? 'Solved in ' + g.g.length + (g.g.length === 1 ? ' try' : ' tries') + '.' : 'Not this time. The word was') + '</p>' +
       '<p class="dw-ans ' + LANGS[lang].cls + '" lang="' + (lang === 'g' ? 'grc' : 'la') + '">' + a[0] + '</p><p class="dw-eng">“' + a[1] + '”</p>' +
-      '<p class="dw-btns"><button class="bg-btn pri" id="dw-share">Share result</button>' +
-      (og && og.done ? '' : '<button class="bg-btn" id="dw-other">Try today’s ' + LANGS[other].name + ' word</button>') +
+      '<p class="dw-btns">' + (pr ? '<button class="bg-btn pri" id="dw-again">Another practice word</button><button class="bg-btn" id="dw-today2">Back to today’s word</button>' :
+        '<button class="bg-btn pri" id="dw-share">Share result</button><button class="bg-btn" id="dw-again">Play a practice word</button>' +
+        (og && og.done ? '' : '<button class="bg-btn" id="dw-other">Try today’s ' + LANGS[other].name + ' word</button>')) +
       '<a class="bg-btn" href="/languages/flashcards/?lang=' + lang + '&src=games:daily">Study it in the flashcards</a></p>' +
-      '<p class="bg-small" id="dw-next"></p>';
-    D.getElementById('dw-share').onclick = share;
+      (pr ? '' : '<p class="bg-small" id="dw-next"></p>');
+    if (!pr) D.getElementById('dw-share').onclick = share;
+    D.getElementById('dw-again').onclick = practice;
+    if (pr) D.getElementById('dw-today2').onclick = backToToday;
     var ob = D.getElementById('dw-other'); if (ob) ob.onclick = function () { setLang(other); };
     tick();
   }
@@ -193,6 +214,6 @@
     var q = (location.search.match(/[?&]lang=([lg])/) || [])[1], saved; try { saved = W.localStorage.getItem('trb-daily-lang'); } catch (e) { }
     setLang(q || saved || 'l');
     var shown = today(); setInterval(function () { if (today() !== shown) { shown = today(); cur = ''; render(); } tick(); }, 30000);
-    W.__daily = { answer: answer, today: today, norm: norm };
+    W.__daily = { answer: answer, today: today, norm: norm, get prac() { return prac; } };
   }).catch(function () { root.querySelector('#dw-msg').textContent = 'Could not load the word list. Please reload the page.'; });
 })(window, document);
