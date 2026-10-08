@@ -10,7 +10,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 |---|---|
 | [Infographics](https://teddyrookbook.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
 | [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: the Greek alphabet, sentence drills, a Gospel reader and short readings that explain every word, sentence trees, and flashcards. Details below. |
-| [Games](https://teddyrookbook.com/games/) | Seventeen browser games set in the ancient world, including a daily word puzzle. Details below. |
+| [Games](https://teddyrookbook.com/games/) | Sixteen browser games set in the ancient world, including a daily word puzzle. Details below. |
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations, and [reading paths](https://teddyrookbook.com/books/paths/) through it. |
 | [Free Books](https://teddyrookbook.com/free-books/) | Search public-domain ebooks (Project Gutenberg, via Gutendex) and audiobooks (LibriVox, via the Internet Archive). Nothing is hosted here; the visitor's browser calls those catalogues directly. |
 | [Timeline](https://teddyrookbook.com/timeline/) | The ancient world from the pyramids to the fall of Rome, each event linked to the books, games and readings about it. |
@@ -45,7 +45,6 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Terni Lapilli | The Roman three-in-a-row that Ovid mentions | Latin |
 | Nine Men's Morris | Place, slide and make mills | Latin |
 | Latrunculi | The Roman "game of soldiers", in a modern reconstruction | Latin |
-| Royal Game of Ur | The Mesopotamian race game, with the rules from a Babylonian tablet | — |
 | Knucklebones | Augustus's dinner-table game from Suetonius, and a modern variant | Latin |
 | Daily Word Puzzle | Guess the day's five-letter word in six tries | Latin or Koine Greek |
 | Charioteer | Top-down city game: chariots, errands, races, a thief and the watch | Latin or Koine Greek |
