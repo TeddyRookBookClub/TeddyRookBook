@@ -18,7 +18,9 @@ editions:
   - set: "Harvard Classics"
     vol: "49"
     detail: "in Epic and Saga"
-notes: ""
+  - set: "Amber Books Illustrated"
+    detail: "Beowulf Illustrated"
+notes: "2 copies"
 ---
 
 # Beowulf
