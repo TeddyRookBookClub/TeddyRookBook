@@ -1,0 +1,17 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "games/hero/game.css" | relURL }}?v={{ (os.Stat "static/games/hero/game.css").ModTime.Unix }}">
+{{ partial "game-shell.html" . }}
+<div class="gwrap"><div class="gbar"><a href="{{ "games/" | relURL }}">‹ All games</a><span>{{ .Title }}</span></div><div class="hr gbox" id="hr">
+  <canvas aria-label="Hero's Road game"></canvas>
+  <div class="hr-hud"><span id="hr-lv"></span><span class="sp"></span><span id="hr-pw"></span><span id="hr-words"></span><span id="hr-coins"></span><button id="hr-pause" aria-label="Pause">❚❚</button></div>
+  <div class="hr-word" id="hr-word" aria-live="polite"></div>
+  <div class="hr-pad"><div><button data-k="left" aria-label="Left">◀</button><button data-k="right" aria-label="Right">▶</button></div><div><button data-k="run" aria-label="Run and throw">✊</button><button data-k="jump" class="jump" aria-label="Jump">⤒</button></div></div>
+  <div class="hr-ov" id="hr-ov" hidden></div>
+  <noscript>This game needs JavaScript.</noscript>
+</div></div>
+<p style="font-size:.8rem;color:#777;margin-top:.5rem">Keyboard: ← → move, Space jumps, Shift runs and throws, P pauses. Phone: use the buttons; hold a direction to run.</p>
+<script src="{{ "js/translit.js" | relURL }}?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
+<script src="{{ "games/hero/game.js" | relURL }}?v={{ (os.Stat "static/games/hero/game.js").ModTime.Unix }}"></script>
+{{ end }}
