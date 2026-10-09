@@ -1,7 +1,7 @@
 /* Hero's Road: a side-scrolling platformer in three settings.
    Greece: Theseus on the road to Athens and into the Labyrinth, with Koine Greek words.
    Rome: Hercules on the road to the Tiber and into Cacus' cave, with Latin words.
-   The Odyssey: Odysseus sailing island to island to the Cyclops' cave, with Koine Greek words.
+   The Odyssey: Odysseus sailing home from Troy to Ithaca, with words in Homer's own Greek (HOM below).
    Every Greek and Latin word comes from Mosaic Match's list: Latin in its dictionary form, every Greek word found in the New Testament. */
 (function (W, D) {
   'use strict';
@@ -25,6 +25,19 @@
     enemy: ['ἐχθρός', 'inimicus'], shadow: ['σκιά', 'umbra'], bag: ['πήρα', 'pera'], rock: ['πέτρα', 'saxum'], horn: ['κέρας', 'cornu'], feast: ['δεῖπνον', 'cena'], dung: ['κόπριον', 'stercus'],
     star: ['ἀστήρ', 'stella'], field: ['ἀγρός', 'ager'], silver: ['ἀργύριον', 'argentum'], thorn: ['ἄκανθα', 'spina'], grave: ['μνῆμα', 'sepulcrum'], altar: ['θυσιαστήριον', 'altare'], cave: ['σπήλαιον', 'spelunca'], head: ['κεφαλή', 'caput'], sky: ['οὐρανός', 'caelum'] };
   for (var vk in VOC2) VOC[vk] = VOC2[vk];
+  // The Odyssey setting uses Homer's Greek, not Koine: English -> [Homeric dictionary form, note or '']. Only words Homer uses.
+  // Things Homer has no word for (fox, frog, scorpion) are simply not named in this setting.
+  var HOM = { anchor: ['εὐναί', 'mooring stones (Homer’s ships had no anchors)'], arrow: ['ὀϊστός'], bag: ['ἀσκός', 'bag, wineskin'], bed: ['λέχος'], bird: ['ὄρνις'], blood: ['αἷμα'], bow: ['τόξον'],
+    bread: ['σῖτος', 'bread, food'], chain: ['δεσμός', 'bond, chain'], chariot: ['ἅρμα'], city: ['πόλις'], cloud: ['νεφέλη'], crown: ['στεφάνη', 'circlet, crown'], cup: ['δέπας'], death: ['θάνατος'],
+    dog: ['κύων'], door: ['θύρη'], dream: ['ὄνειρος'], eagle: ['αἰετός'], enemy: ['ἐχθρός', 'enemy, hateful'], eye: ['ὀφθαλμός'], feast: ['δαίς'], fire: ['πῦρ'], fish: ['ἰχθύς'], flower: ['ἄνθος'],
+    foot: ['πούς'], friend: ['ἑταῖρος', 'comrade, friend'], garden: ['κῆπος'], gate: ['πύλαι', 'gates'], gift: ['δῶρον'], goat: ['αἴξ'], gold: ['χρυσός'], grass: ['ποίη'], grave: ['τύμβος', 'grave mound'],
+    hand: ['χείρ'], heart: ['κῆρ'], helmet: ['κόρυς'], honey: ['μέλι'], horse: ['ἵππος'], house: ['δόμος'], island: ['νῆσος'], key: ['κληΐς'], king: ['ἄναξ', 'lord, king'], lamp: ['λύχνος'],
+    life: ['βίοτος'], lion: ['λέων'], lyre: ['φόρμιγξ'], mother: ['μήτηρ'], mountain: ['ὄρος'], net: ['δίκτυον'], night: ['νύξ'], olive: ['ἐλαίη', 'olive tree'], ox: ['βοῦς'], pig: ['σῦς'],
+    queen: ['ἄνασσα', 'queen, lady'], rain: ['ὄμβρος'], ring: ['κρίκος'], river: ['ποταμός'], road: ['ὁδός'], rock: ['πέτρη'], rope: ['πεῖσμα', 'rope, ship’s cable'], salt: ['ἅλς', 'salt; the sea'],
+    sea: ['θάλασσα'], seat: ['θρόνος', 'chair, seat'], shadow: ['σκιή'], sheep: ['ὄϊς'], shepherd: ['ποιμήν'], shield: ['ἀσπίς'], ship: ['νηῦς'], shore: ['αἰγιαλός'], silver: ['ἄργυρος'], sleep: ['ὕπνος'],
+    'small boat': ['σχεδίη', 'raft'], son: ['υἱός'], song: ['ἀοιδή'], spear: ['ἔγχος'], spring: ['κρήνη'], staff: ['ῥάβδος', 'staff, wand'], star: ['ἀστήρ'], stone: ['λᾶας'], storm: ['θύελλα'],
+    sun: ['ἠέλιος'], sword: ['ξίφος'], table: ['τράπεζα'], tear: ['δάκρυ'], tower: ['πύργος'], tree: ['δένδρεον'], voice: ['αὐδή'], wall: ['τεῖχος'], war: ['πόλεμος'], water: ['ὕδωρ'], wave: ['κῦμα'],
+    well: ['φρεῖαρ'], wind: ['ἄνεμος'], wine: ['οἶνος'], wolf: ['λύκος'], snake: ['ὄφις'], sandal: ['πέδιλον', 'sandal'], coin: ['τάλαντον', 'talent, a weight of gold (Homer has no coins)'] };
 
   // ---------- settings and levels ----------
   // Ten levels per hero. Each level's layout is built from its own seed (see makeLevel), so no two levels are alike.
@@ -83,7 +96,7 @@
       ending: 'Hercules choked Cacus in his own smoke-filled cave and freed the cattle. Virgil tells the story in Aeneid 8, and Livy in his first book: Evander’s people honoured Hercules at the Great Altar, the Ara Maxima, beside the cattle market.'
     },
     od: {
-      name: 'The Odyssey', hero: 'Odysseus', lang: 'Koine Greek', coin: 'drachma', flyer: 'eagle', boss: 'the Cyclops',
+      name: 'The Odyssey', hero: 'Odysseus', lang: 'Homeric Greek', coin: 'talent', flyer: 'eagle', boss: 'the Cyclops',
       levels: [
         { name: 'The Cicones', kind: 'field', words: ['city', 'wall', 'ship', 'shore', 'wine', 'sheep', 'ox', 'war', 'spear', 'shield', 'sword', 'horse', 'chariot', 'feast', 'friend', 'enemy'],
           story: 'Sailing home from Troy, Odysseus and his men raided Ismarus, the city of the Cicones. They stayed too long feasting on the shore, and the Cicones came back with help and drove them to their ships.' },
@@ -119,7 +132,10 @@
   try { var sv = JSON.parse(W.localStorage.getItem(KEY) || 'null'); if (sv) for (var k in sv) st[k] = sv[k]; } catch (e) { }
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
 
-  function word(eng) { var v = VOC[eng]; var g = G && G.set === 'ro' ? v[1] : v[0]; return { f: g, e: eng === 'coin' ? (G.set !== 'ro' ? 'drachma, a silver coin' : 'denarius, a silver coin') : eng, p: G && G.set !== 'ro' ? TR(g) : '' }; }
+  function word(eng) {
+    if (G && G.set === 'od') { var h = HOM[eng]; if (!h) return null; return { f: h[0], e: h[1] || eng, p: TR(h[0]), hom: true }; }
+    var v = VOC[eng]; var g = G && G.set === 'ro' ? v[1] : v[0]; return { f: g, e: eng === 'coin' ? (G.set !== 'ro' ? 'drachma, a silver coin' : 'denarius, a silver coin') : eng, p: G && G.set !== 'ro' ? TR(g) : '' };
+  }
 
   // ---------- level building ----------
   var GY = 12, ROWS = 15;
@@ -403,7 +419,7 @@
     var e = fresh.length ? fresh[0] : pick(lw); if (fresh.length) G.seenL.push(e);
     var w = word(e); G.floats.push({ x: x, y: y - 1, t: w.f, life: 2.2 }); say(w); note(e);
   }
-  function note(e) { st.seen[G.set + ':' + e] = 1; save(); try { var nw = word(e); if (W.TRBWords) W.TRBWords.log('hero', G.set === 'ro' ? 'l' : 'g', nw.f, nw.e); } catch (er) { } if (G.seenL.indexOf(e) < 0) G.seenL.push(e); hud(); }
+  function note(e) { st.seen[G.set + ':' + e] = 1; save(); try { var nw = word(e); if (nw && W.TRBWords) W.TRBWords.log('hero', G.set === 'ro' ? 'l' : 'g', nw.f, nw.e + (nw.hom ? ' (Homeric Greek)' : '')); } catch (er) { } if (G.seenL.indexOf(e) < 0) G.seenL.push(e); hud(); }
   function coin(x, y, pop, n) {
     G.coins += n || 1; if (st.words && !G.coinSaid && !pop) { G.coinSaid = true; say(word('coin')); note('coin'); if (G.seenL.indexOf('coin') < 0) G.seenL.push('coin'); } if (pop) G.fx.push({ coin: 1, x: x, y: y, vx: 0, vy: -9, life: 0.45 }); sfx('coin'); hud();
   }
@@ -411,7 +427,7 @@
     if (!e.alive) return; e.alive = false;
     G.fx.push({ corpse: e.k, x: e.x, y: e.y, w: e.w, h: e.h, vx: flip ? 0 : 0, vy: flip ? -8 : 0, life: flip ? 1.2 : 0.4, squash: !flip, g: flip ? 30 : 0 });
     var en = e.k === 'eagle' || e.k === 'locust' ? e.k : ENW[e.k];
-    if (st.words && en && G.t - (G.wordQ || -9) > 2.5) { G.wordQ = G.t; var w = word(en); say(w); G.floats.push({ x: e.x + e.w / 2, y: e.y - 0.3, t: w.f, life: 1.6 }); note(en); if (G.seenL.indexOf(en) < 0) G.seenL.push(en); }
+    if (st.words && en && word(en) && G.t - (G.wordQ || -9) > 2.5) { G.wordQ = G.t; var w = word(en); say(w); G.floats.push({ x: e.x + e.w / 2, y: e.y - 0.3, t: w.f, life: 1.6 }); note(en); if (G.seenL.indexOf(en) < 0) G.seenL.push(en); }
     sfx('stomp');
   }
   function burst(x, y, col, n) { for (var i = 0; i < n; i++) G.fx.push({ x: x, y: y, vx: rnd(-4, 4), vy: rnd(-10, -3), life: 0.8, col: col, size: rnd(0.12, 0.25) }); }
@@ -896,7 +912,7 @@
       return SET[set].levels.map(function (l, i) { var open = true, done = st.done[set + i]; return '<button class="hr-lvb" data-set="' + set + '" data-lv="' + i + '"' + (open ? '' : ' disabled') + '><b>' + (i + 1) + '</b> ' + esc(l.name) + (done ? ' ✓' : open ? '' : ' 🔒') + '</button>'; }).join('');
     }
     var o = ov('<h1>Hero’s Road</h1><p class="hr-sub">Run, jump and stomp through ancient Greece or Rome, or sail with Odysseus. Bump the amphora blocks for words, and pick the right door at each gate.</p>' +
-      '<div class="hr-sets">' + ORDER.map(function (s) { var S2 = SET[s]; return '<div class="hr-set hr-' + s + (s === cur ? ' sel' : '') + '" data-set="' + s + '"><h2>' + S2.name + '</h2><p>' + ({ gr: 'Theseus on the road to Athens, then into the Labyrinth to face the Minotaur. Words in Koine Greek, with pronunciation.', ro: 'Hercules by the Tiber, then into the cave of Cacus, the fire-breathing cattle thief. Words in Latin.', od: 'Odysseus sailing home from Troy, island to island, to the cave of the Cyclops. Words in Koine Greek, with pronunciation.' })[s] + '</p><div class="hr-lvs">' + lvButtons(s) + '</div></div>'; }).join('') + '</div>' +
+      '<div class="hr-sets">' + ORDER.map(function (s) { var S2 = SET[s]; return '<div class="hr-set hr-' + s + (s === cur ? ' sel' : '') + '" data-set="' + s + '"><h2>' + S2.name + '</h2><p>' + ({ gr: 'Theseus on the road to Athens, then into the Labyrinth to face the Minotaur. Words in Koine Greek, with pronunciation.', ro: 'Hercules by the Tiber, then into the cave of Cacus, the fire-breathing cattle thief. Words in Latin.', od: 'Odysseus sailing home from Troy, past the Cyclops, Circe and the Sirens, to Ithaca. Words in Homeric Greek, the Greek of the Odyssey itself, with pronunciation.' })[s] + '</p><div class="hr-lvs">' + lvButtons(s) + '</div></div>'; }).join('') + '</div>' +
       '<div class="hr-opts"><label><input type="radio" name="hr-w" value="1"' + (st.words ? ' checked' : '') + '> Words on (study)</label><label><input type="radio" name="hr-w" value="0"' + (st.words ? '' : ' checked') + '> Words off (just play)</label><label><input type="checkbox" id="hr-snd"' + (st.sound ? ' checked' : '') + '> Sound</label></div>' +
       '<details><summary>How to play</summary><ul>' +
       '<li><b>Keyboard:</b> ← → or A D to move, Space, ↑ or W to jump (hold for higher), Shift or X to run and throw stones, P to pause.</li>' +
@@ -905,7 +921,7 @@
       '<li><b>Gates:</b> the wall shows a word. Go through the door marked with its meaning. The right door fills your path with coins; the wrong one lets the guards out.</li>' +
       '<li><b>Enemies:</b> jump on wolves, foxes, frogs and birds. Scorpions, snakes and fire can’t be stomped: jump over them or throw stones.</li>' +
       '<li>The flag halfway along is a checkpoint. Progress is saved in this browser.</li></ul>' +
-      '<p class="hr-small">The Greek words are Koine, in both Greek settings: every one appears in the New Testament. Homer’s own Greek is older and differs in places. The Latin words are in their dictionary forms.</p></details>');
+      '<p class="hr-small">Theseus’ words are Koine, the Greek of the New Testament: every one appears there. Odysseus’ words are Homeric Greek, from the Iliad and Odyssey, about seven hundred years older: it has its own words and spellings, such as νηῦς for “ship” (Koine πλοῖον) and ἠέλιος for “sun” (Koine ἥλιος). The Latin words are in their dictionary forms.</p></details>');
     o.querySelectorAll('.hr-set').forEach(function (el) { el.addEventListener('click', function (ev) { if (ev.target.closest('button')) return; st.set = el.dataset.set; save(); title(); }); });
     o.querySelectorAll('input[name=hr-w]').forEach(function (r) { r.addEventListener('change', function () { st.words = r.value === '1'; save(); }); });
     $('#hr-snd').addEventListener('change', function () { st.sound = this.checked; save(); if (st.sound) sfx('coin'); });

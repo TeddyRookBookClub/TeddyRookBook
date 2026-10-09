@@ -37,7 +37,7 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Ancient Festival Tycoon | Build festival grounds, rise through the ranks, win more land | Greek in Greece, Latin in Rome |
 | Mosaic Match | Match-three with 180 pictured words over 30 levels, plus endless practice | Latin or Koine Greek |
 | Teutoburg | Maze chase through the Teutoburg Forest, AD 9 | Latin |
-| Hero's Road | Side-scrolling platformer: Theseus (Greece), Hercules (Rome) or Odysseus, ten levels each, with bosses | Greek or Latin |
+| Hero's Road | Side-scrolling platformer: Theseus (Greece), Hercules (Rome) or Odysseus, ten levels each, with bosses | Koine Greek (Theseus), Latin (Hercules), Homeric Greek (Odysseus) |
 | Thermopylae | Hold the pass as Leonidas while the Persians close in | Greek |
 | Time Thief | Chase a thief through history by following clues | Greek or Latin |
 | Chess of the Ancients | Chess with Greek or Roman armies | Greek or Latin piece names |
@@ -50,7 +50,7 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Charioteer | Top-down city game: chariots, errands, races, a thief and the watch | Latin or Koine Greek |
 | Siege | Fire ancient siege engines at 25 sieges from history and literature, each with a lesson | Latin or Koine Greek, optional |
 
-Hero's Road has three settings: Theseus in Greece, Hercules in Rome, and Odysseus sailing to the Cyclops' cave.
+Hero's Road has three settings: Theseus in Greece, Hercules in Rome, and Odysseus sailing home from Troy to Ithaca, with words in Homeric Greek.
 
 The board games have a "move statistics" switch that ranks and colour-codes every move, a statistics panel for the game in progress, the rules and history beside the board, and a two-player mode for two people on one device. Terni Lapilli is fully solved, so its statistics are exact; the others are estimates from searches or from playing each move out many times. Words met in the games are collected on the My Progress page and can be studied as flashcards.
 

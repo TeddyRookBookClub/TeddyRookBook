@@ -98,6 +98,14 @@
   function isAll() { return P.lang !== 'b' && P.src === 'all'; }
   function workOf() { if (P.lang === 'b' || P.src === 'gos' || P.src === 'all' || gameSrc() != null) return null; var w = WORKS[P.lang].filter(function (x) { return x[0] === P.src; })[0]; return w || null; }
   function whereTxt() { var gs = gameSrc(); if (gs != null) return gs ? (W.TRBWords.GAMES[gs] || 'that game') : 'the games'; if (isAll()) return 'all the sources'; var w = workOf(); return w ? 'the ' + w[1].split(': ')[1] + ' sentences' : 'the Gospels'; }
+  // The label on a saved picture: which Greek this word is. Koine only when it really is Koine.
+  function grLabel(e) {
+    var w = workOf(); if (w) return (w[2] || 'Greek').toUpperCase();
+    function one(src) { return /Koine/.test(src) ? 'KOINE' : /Homeric/.test(src) ? 'HOMERIC' : /Ionic/.test(src) ? 'IONIC' : /Atticizing/.test(src) ? 'LITERARY ATTICIZING' : /Homeric/.test(e[1] || '') ? 'HOMERIC' : 'KOINE'; }
+    if (isAll() && e && e[6] && e[6].length) { var ds = []; e[6].forEach(function (x) { var d = one(x); if (ds.indexOf(d) < 0) ds.push(d); }); return ds.length === 1 ? ds[0] + ' GREEK' : 'GREEK'; }
+    if (gameSrc() != null && e && /Homeric/.test(e[1] || '')) return 'HOMERIC GREEK';
+    return 'KOINE GREEK';
+  }
   function dialectTxt() { if (gameSrc() != null) return ''; var w = workOf(); return w && w[2] ? w[2] + ', not New Testament Koine' : ''; }
   function clsPos(lang, p) { // treebank part of speech -> the codes the Gospel data uses
     var two = p.length === 2, c = p[0];
@@ -379,20 +387,26 @@
     if (secs.length === 1) secs[0][2] = 'Forms found in the Gospels';
     var Wd = 1200, pad = 70, H = 150 + (gr ? 175 : 0) + (la ? (gr ? 110 : 130) : 0) + 100 + (gr && la ? 100 : 60) + 10;
     secs.forEach(function (s) { H += 100 + Math.ceil(s[1].length / 2) * 50; });
-    H += 70;
+    H += 70; var found = [];
+    if (gr && isAll() && gr[6] && gr[6].length) { // "Found in", wrapped to the card's width
+      var mc = D.createElement('canvas').getContext('2d'), cur2 = 'Found in:'; mc.font = '22px system-ui, -apple-system, "Segoe UI", sans-serif';
+      gr[6].forEach(function (x, k) { var t = cur2 + ' ' + x + (k < gr[6].length - 1 ? ',' : ''); if (mc.measureText(t).width > Wd - 2 * pad && cur2) { found.push(cur2); cur2 = x + (k < gr[6].length - 1 ? ',' : ''); } else cur2 = t; });
+      found.push(cur2); H += found.length * 32 + 10;
+    }
     var cv = D.createElement('canvas'); cv.width = Wd; cv.height = H; var c = cv.getContext('2d');
     var bg = dark ? '#26332c' : '#f3ead2', ink = dark ? '#eef3ef' : '#1d2320', mut = dark ? '#a9b8af' : '#5d6862', gold = '#b8963e', wine = dark ? '#e9a0b1' : '#7a2338', grn = dark ? '#6cc79a' : '#004225';
     c.fillStyle = bg; c.fillRect(0, 0, Wd, H); c.fillStyle = grn; c.fillRect(0, 0, Wd, 14);
     var SER = '"Gentium Book Plus", Georgia, serif', SAN = 'system-ui, -apple-system, "Segoe UI", sans-serif', y = 80;
     function line(txt, font, col, dy) { c.font = font; c.fillStyle = col; c.textAlign = 'center'; c.fillText(txt, Wd / 2, y); y += dy; }
     function fit(txt, size, fam) { do { c.font = size + 'px ' + fam; size -= 4; } while (c.measureText(txt).width > Wd - 2 * pad && size > 24); return c.font; }
-    line((gr ? 'KOINE GREEK · ' : '') + (la ? 'LATIN · ' : '') + 'ENGLISH', '600 22px ' + SAN, gold, 100);
+    line((gr ? grLabel(gr) + ' · ' : '') + (la ? 'LATIN · ' : '') + 'ENGLISH', '600 22px ' + SAN, gold, 100);
     if (gr) { line(gr[0], fit(gr[0], 110, SER), ink, 62); line(translit(gr[0]), 'italic 40px Georgia, serif', mut, gr && la ? 95 : 80); }
     if (la) line(la[0], fit(la[0], gr ? 84 : 110, SER), gr ? wine : ink, gr ? 85 : 90);
     line(main[1], fit(main[1], 56, 'Georgia, serif'), grn, 62);
     function freq(l, i, e, tag) { return (tag ? tag + ': ' : '') + '#' + (i + 1) + ' most common in ' + whereTxt() + ' · ' + e[3] + ' times'; }
     if (gr && la) { line(posName('g', gr[2]) + ' · ' + freq('g', gi, gr, 'Greek'), '24px ' + SAN, mut, 38); line(freq('l', li, la, 'Latin'), '24px ' + SAN, mut, 50); }
-    else line(posName(mainLang, main[2]) + ' · ' + freq(mainLang, gr ? gi : li, main), '26px ' + SAN, mut, 50);
+    else line(posName(mainLang, main[2]) + ' · ' + freq(mainLang, gr ? gi : li, main), '26px ' + SAN, mut, found.length ? 40 : 50);
+    found.forEach(function (t, k) { line(t, '22px ' + SAN, mut, k === found.length - 1 ? 50 : 32); });
     secs.forEach(function (s) {
       var lang = s[0], forms = s[1];
       c.strokeStyle = gold; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, y); c.lineTo(Wd - pad, y); c.stroke(); y += 46;
