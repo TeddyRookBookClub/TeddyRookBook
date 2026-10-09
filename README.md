@@ -48,7 +48,7 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Knucklebones | Augustus's dinner-table game from Suetonius, and a modern variant | Latin |
 | Daily Word Puzzle | Guess the day's five-letter word in six tries | Latin or Koine Greek |
 | Charioteer | Top-down city game: chariots, errands, races, a thief and the watch | Latin or Koine Greek |
-| Siege | Fire ancient siege engines at real sieges; learn how the machines differ | Latin or Koine Greek, optional |
+| Siege | Fire ancient siege engines at 25 sieges from history and literature, each with a lesson | Latin or Koine Greek, optional |
 
 Hero's Road has three settings: Theseus in Greece, Hercules in Rome, and Odysseus sailing to the Cyclops' cave.
 
