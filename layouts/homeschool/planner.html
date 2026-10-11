@@ -1,0 +1,73 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/planner.css" | relURL }}?v={{ (os.Stat "static/homeschool/planner.css").ModTime.Unix }}">
+{{- $subs := slice -}}
+{{- range site.Data.hs_planner.subjects -}}
+  {{- $cs := slice -}}
+  {{- range .courses -}}
+    {{- $d := index site.Data .data -}}
+    {{- $ls := slice -}}
+    {{- range $d.lessons -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" .mins) -}}{{- end -}}
+    {{- $cs = $cs | append (dict "key" .key "name" .name "url" (.url | relURL) "from" .from "to" .to "rep" .rep "word" (cond (isset $d.book "lessonword") ($d.book.lessonword | default "") "Lesson") "lessons" $ls) -}}
+  {{- end -}}
+  {{- $subs = $subs | append (dict "key" .key "name" .name "icon" .icon "start" (.start | default 0) "mins" .mins "courses" $cs) -}}
+{{- end -}}
+<div class="hs pl" id="pl">
+  <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Lesson planner</nav>
+  <header class="hs-hero hs-noprint">
+    <p class="hs-eyebrow">Homeschool · Planner</p>
+    <h1>Lesson planner</h1>
+    <p>Tell it who you're teaching and how much time you have, and it lays out every lesson, week by week, through the books on this site. Change anything and the plan updates. It's saved in this browser, and you can print it, save it as a PDF or picture, add it to your calendar, or keep a plan file.</p>
+  </header>
+
+  <section class="hs-sec pl-step hs-noprint">
+    <h2><span class="pl-n">1</span> Your children</h2>
+    <div id="pl-kids"></div>
+    <button type="button" class="hs-btn" id="pl-addkid">＋ Add a child</button>
+  </section>
+
+  <section class="hs-sec pl-step hs-noprint">
+    <h2><span class="pl-n">2</span> Your school week</h2>
+    <div class="pl-week">
+      <fieldset class="pl-days"><legend>School days</legend><div id="pl-days"></div></fieldset>
+      <fieldset><legend>Start</legend>
+        <label class="pl-r"><input type="radio" name="pl-start" value="week" id="pl-s-week"> Just number the weeks (Week 1, Week 2…)</label>
+        <label class="pl-r"><input type="radio" name="pl-start" value="date" id="pl-s-date"> Start on a date: <input type="date" id="pl-date"></label>
+        <div id="pl-offbox"><p class="hs-small">Weeks off (holidays, vacations): any school week that includes one of these dates is skipped.</p><div id="pl-offs"></div><button type="button" class="hs-btn ghost" id="pl-addoff">＋ Add a week off</button></div>
+      </fieldset>
+      <fieldset><legend>How far ahead</legend>
+        <label class="pl-r">Plan <select id="pl-len"><option value="12">12 weeks</option><option value="36">one school year (36 weeks)</option><option value="72">two school years</option><option value="0">until every book is finished</option></select></label>
+        <p class="hs-small">Each subject moves on to the next book in the series when one is finished.</p>
+      </fieldset>
+    </div>
+  </section>
+
+  <section class="hs-sec pl-out" id="pl-out">
+    <div class="pl-printhead"><b>Teddy Rook Book · Lesson plan</b> <span id="pl-printsum"></span></div>
+    <h2 class="hs-noprint"><span class="pl-n">3</span> Your plan</h2>
+    <div class="pl-tabs hs-noprint" role="tablist">
+      <button type="button" role="tab" data-v="overview">Overview</button>
+      <button type="button" role="tab" data-v="week">Week by week</button>
+      <button type="button" role="tab" data-v="all">Full plan</button>
+    </div>
+    <div class="pl-export hs-noprint">
+      <button type="button" class="hs-btn" id="pl-print">🖨 Print or save as PDF</button>
+      <button type="button" class="hs-btn" id="pl-png">🖼 Save as picture</button>
+      <button type="button" class="hs-btn" id="pl-ics">📅 Add to calendar</button>
+      <button type="button" class="hs-btn" id="pl-csv">📊 Spreadsheet</button>
+      <details class="pl-more"><summary class="hs-btn ghost">More…</summary>
+        <div class="pl-morebox">
+          <button type="button" class="hs-btn" id="pl-save">💾 Save plan file</button>
+          <label class="hs-btn">📂 Open plan file<input type="file" id="pl-open" accept=".json,application/json" hidden></label>
+          <button type="button" class="hs-btn" id="pl-link">🔗 Copy a link to this plan</button>
+          <button type="button" class="hs-btn ghost" id="pl-reset">Start over</button>
+        </div>
+      </details>
+      <span class="hs-small" id="pl-msg" aria-live="polite"></span>
+    </div>
+    <div id="pl-view"></div>
+  </section>
+  <script type="application/json" id="pl-data">{{ dict "subjects" $subs | jsonify | safeJS }}</script>
+</div>
+<script src="{{ "homeschool/planner.js" | relURL }}?v={{ (os.Stat "static/homeschool/planner.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,47 @@
+# Lesson planner: subjects, the books in order, suggested ages and pace.
+# data = the data file with the lessons; url = the course page; rep = sittings per guide on a normal pace
+# (Ray's says to repeat lessons freely, so the young courses count two sittings per guide).
+# mins = suggested minutes per week by age: [age up to, minutes], first match wins.
+subjects:
+- key: reading
+  name: Reading
+  icon: "📖"
+  mins: [[6, 75], [8, 90], [10, 120], [99, 150]]
+  courses:
+  - {key: mcg-primer, data: hs_mcg_primer, url: /homeschool/mcguffey/primer/, name: "McGuffey's Primer", from: 4, to: 6, rep: 2}
+  - {key: mcg-first, data: hs_mcg_first, url: /homeschool/mcguffey/first-reader/, name: "McGuffey's First Reader", from: 6, to: 7, rep: 1.5}
+  - {key: mcg-second, data: hs_mcg_second, url: /homeschool/mcguffey/second-reader/, name: "McGuffey's Second Reader", from: 7, to: 8, rep: 1.25}
+  - {key: mcg-third, data: hs_mcg_third, url: /homeschool/mcguffey/third-reader/, name: "McGuffey's Third Reader", from: 8, to: 10, rep: 1.25}
+  - {key: mcg-fourth, data: hs_mcg_fourth, url: /homeschool/mcguffey/fourth-reader/, name: "McGuffey's Fourth Reader", from: 10, to: 11, rep: 1}
+  - {key: mcg-fifth, data: hs_mcg_fifth, url: /homeschool/mcguffey/fifth-reader/, name: "McGuffey's Fifth Reader", from: 11, to: 13, rep: 1}
+  - {key: mcg-sixth, data: hs_mcg_sixth, url: /homeschool/mcguffey/sixth-reader/, name: "McGuffey's Sixth Reader", from: 13, to: 99, rep: 1}
+- key: spelling
+  name: Phonics and spelling
+  icon: "✏️"
+  mins: [[7, 60], [99, 60]]
+  courses:
+  - {key: webster, data: hs_webster, url: /homeschool/spelling-and-grammar/webster/, name: "Webster's Speller", from: 4, to: 8, rep: 1.5}
+  - {key: mcg-speller, data: hs_mcg_speller, url: /homeschool/mcguffey/speller/, name: "McGuffey's Speller", from: 8, to: 99, rep: 1}
+- key: grammar
+  name: Grammar and composition
+  icon: "📝"
+  start: 9
+  mins: [[99, 75]]
+  courses:
+  - {key: harvey-elem, data: hs_harvey, url: /homeschool/spelling-and-grammar/harvey/, name: "Harvey's Elementary Grammar", from: 9, to: 99, rep: 1.5}
+- key: arithmetic
+  name: Arithmetic
+  icon: "🧮"
+  mins: [[6, 75], [8, 100], [11, 150], [99, 180]]
+  courses:
+  - {key: primary, data: rays_primary, url: /homeschool/rays-arithmetic/primary/, name: "Ray's Primary Arithmetic", from: 4, to: 7, rep: 2}
+  - {key: intellectual, data: rays_intellectual, url: /homeschool/rays-arithmetic/intellectual/, name: "Ray's Intellectual Arithmetic", from: 7, to: 9, rep: 2}
+  - {key: practical, data: rays_practical, url: /homeschool/rays-arithmetic/practical/, name: "Ray's Practical Arithmetic", from: 9, to: 12, rep: 1.5}
+  - {key: higher, data: rays_higher, url: /homeschool/rays-arithmetic/higher/, name: "Ray's Higher Arithmetic", from: 12, to: 99, rep: 1.5}
+- key: latin
+  name: Latin
+  icon: "🏛️"
+  start: 10
+  mins: [[99, 120]]
+  courses:
+  - {key: dooge, data: hs_dooge, url: /homeschool/latin/latin-for-beginners/, name: "D'Ooge's Latin for Beginners", from: 10, to: 99, rep: 1.5}
