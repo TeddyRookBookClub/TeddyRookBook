@@ -758,6 +758,14 @@ for l in lessons:
     l['unit'] = next(u['id'] for u in UNITS if u['from'] <= l['num'] <= u['to'])
     for k in [k for k, v in list(l.items()) if v is None]: del l[k]
 import yaml
-yaml.safe_dump({'book': {'id': 'raysnewprimarya00raygoog', 'title': "Ray's New Primary Arithmetic", 'year': 1877}, 'units': UNITS, 'lessons': lessons},
+BOOK = {'id': 'raysnewprimarya00raygoog', 'title': "Ray's New Primary Arithmetic", 'year': 1877, 'key': 'primary', 'short': 'Primary',
+    'eyebrow': "Ray's Arithmetic · Book 1 · 1877",
+    'hero': '89 short lessons, from counting to ten to money and measures, for children about 5 to 7. Each one has a guide you can follow step by step, with the right page of the book beside it.',
+    'how': ['<b>A little, often.</b> About 15 minutes a day, three to five days a week. That covers the book in about a school year.',
+            '<b>Repeat freely.</b> Most table lessons take two or three days before the facts come easily. Move on when they do, not before.',
+            '<b>Real things first.</b> Have a cup of about 40 counters ready (dried beans, buttons or pennies), and a slate, small whiteboard or paper.',
+            '<b>Out loud.</b> Ray\'s children said every answer in a full sentence: “3 and 2 are 5.” The guides keep that habit.',
+            '<b>Skip what\'s history.</b> A few lessons near the end teach old measures (English money, troy weight). They\'re marked optional.']}
+yaml.safe_dump({'book': BOOK, 'units': UNITS, 'lessons': lessons},
           open(sys.argv[1], 'w'), allow_unicode=True, sort_keys=False, width=1000)
 print(len(lessons), 'lessons')
