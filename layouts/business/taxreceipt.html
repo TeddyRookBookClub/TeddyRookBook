@@ -1,0 +1,49 @@
+{{ define "main" }}
+<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (os.Stat "static/business/biz.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/receipt.css" | relURL }}?v={{ (os.Stat "static/business/receipt.css").ModTime.Unix }}">
+<div class="bz tr">
+  <nav class="bz-crumbs"><a href="{{ "business/" | relURL }}">Business</a> › Your tax receipt</nav>
+  <header class="bz-hero">
+    <p class="bz-eyebrow">Business · Your tax receipt</p>
+    <h1>Where did my taxes go?</h1>
+    <p>Enter the federal income tax you paid and the year. You get an itemized receipt that splits your tax the same way the federal government split its spending that year. Click any line to see what's inside, down to individual programs.</p>
+  </header>
+  <form class="tr-form" id="tr-form" onsubmit="return false">
+    <label>Federal income tax you paid ($)<input type="number" id="tr-amt" min="0" step="any" value="10000" inputmode="decimal"></label>
+    <label>Year<select id="tr-fy"></select></label>
+    <label class="tr-chk"><input type="checkbox" id="tr-ss" checked> Include Social Security and Medicare</label>
+  </form>
+  <p class="bz-small tr-hint">On your Form 1040 this is usually the “total tax” line. Social Security and Medicare are mostly paid for by the separate payroll taxes on your paycheck. Untick the box to split your income tax among everything else.</p>
+  <div class="tr-wrap">
+    <article class="tr-receipt" id="tr-receipt" aria-live="polite">
+      <header class="tr-head">
+        <p class="tr-store">UNITED STATES GOVERNMENT</p>
+        <p class="tr-sub">Your share of federal spending</p>
+        <p class="tr-meta" id="tr-meta"></p>
+      </header>
+      <div class="tr-dash"></div>
+      <ul class="tr-lines" id="tr-lines"><li class="tr-msg">Loading spending data…</li></ul>
+      <div class="tr-dash"></div>
+      <p class="tr-total"><span>TOTAL</span><span id="tr-total"></span></p>
+      <p class="tr-borrow" id="tr-borrow"></p>
+      <div class="tr-dash"></div>
+      <p class="tr-thanks">THANK YOU, TAXPAYER</p>
+      <p class="tr-foot">teddyrookbook.com/business/tax-receipt</p>
+    </article>
+    <aside class="tr-side">
+      <div class="tr-acts">
+        <button type="button" class="bz-btn" id="tr-pic">🖼 Save as picture</button>
+        <button type="button" class="bz-btn ghost" onclick="window.print()">🖨 Print</button>
+        <button type="button" class="bz-btn ghost" id="tr-collapse">Collapse all</button>
+      </div>
+      <section class="bz-note">
+        <h2>How this works</h2>
+        <p>Money is pooled, so no dollar is really earmarked. This receipt shows your tax split in the same proportions as the government's spending for that fiscal year (October to September). It uses what each agency committed to spend (its obligations), as reported to <a href="https://www.usaspending.gov/explorer" target="_blank" rel="noopener">USAspending.gov</a>, with each budget function broken down into subfunctions, federal accounts and program activities.</p>
+        <p>The government spends more than it collects. The note under the total uses the Treasury's year-end figures from <a href="https://fiscaldata.treasury.gov/" target="_blank" rel="noopener">FiscalData</a> to show how much of each dollar spent was borrowed.</p>
+        <p class="bz-small">The data loads live from those two government sites when you open this page. Nothing you type is sent anywhere: the split is worked out in your browser. Spending that agencies haven't tied to a budget function, and small negative adjustments, are left out. This is an illustration, not tax advice.</p>
+      </section>
+    </aside>
+  </div>
+</div>
+<script src="{{ "business/receipt.js" | relURL }}?v={{ (os.Stat "static/business/receipt.js").ModTime.Unix }}" defer></script>
+{{ end }}
