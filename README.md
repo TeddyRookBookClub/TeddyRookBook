@@ -11,6 +11,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 | [Infographics](https://teddyrookbook.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
 | [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: the Greek alphabet, sentence drills, a Gospel reader and short readings that explain every word, sentence trees, and flashcards. Details below. |
 | [Games](https://teddyrookbook.com/games/) | Sixteen browser games set in the ancient world, including a daily word puzzle. Details below. |
+| [Homeschool](https://teddyrookbook.com/homeschool/) | Free public-domain schoolbooks with step-by-step teaching guides. First: Ray's Arithmetic (1877), all six books to read or download, and a guide for each of the 89 lessons of the Primary book, with a "Teach this lesson" mode. |
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations, and [reading paths](https://teddyrookbook.com/books/paths/) through it. |
 | [Free Books](https://teddyrookbook.com/free-books/) | Search public-domain ebooks (Project Gutenberg, via Gutendex) and audiobooks (LibriVox, via the Internet Archive). Nothing is hosted here; the visitor's browser calls those catalogues directly. |
 | [Timeline](https://teddyrookbook.com/timeline/) | The ancient world from the pyramids to the fall of Rome, each event linked to the books, games and readings about it. |
@@ -112,12 +113,13 @@ Everything else works without it.
 
 ## Generated files
 
-Three data files are produced by scripts and shouldn't be edited by hand:
+Four data files are produced by scripts and shouldn't be edited by hand:
 
 | File | Script |
 |---|---|
 | `static/lang/data/flash.json` | `python3 scripts/build_flashcards.py static/lang/data` |
 | `static/games/imperium/maps.js` | `python3 scripts/build_imperium_maps.py static/games/imperium/maps.js` (needs NumPy and SciPy) |
+| `data/rays_primary.yaml` | `python3 scripts/build_rays_primary.py data/rays_primary.yaml` (the Ray's Arithmetic lesson guides; edit the script, not the YAML) |
 | `static/markets/data/` | `python3 scripts/fetch_market_data.py` (run automatically at each build; not stored in the repository) |
 
 ## Sources and licences

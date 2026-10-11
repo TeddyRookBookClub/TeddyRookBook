@@ -1,0 +1,6 @@
+{{- /* Render a step body: lines "Say: ..." are things to say aloud; lines "~ ..." are problems from the book. */ -}}
+{{- range split . "\n" -}}
+  {{- if hasPrefix . "Say: " -}}<p class="hs-say"><span>Say</span>{{ strings.TrimPrefix "Say: " . }}</p>
+  {{- else if hasPrefix . "~ " -}}<p class="hs-prob">{{ strings.TrimPrefix "~ " . }}</p>
+  {{- else -}}<p>{{ . }}</p>{{- end -}}
+{{- end -}}

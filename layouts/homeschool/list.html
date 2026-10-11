@@ -1,0 +1,23 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<div class="hs">
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool</p>
+    <h1>Old books, taught today</h1>
+    <p>Free, public-domain schoolbooks that families have trusted for generations. Read them here or download them, then use a step-by-step guide to teach each lesson: what to get out, what to say, and which page to open.</p>
+  </header>
+  <section class="hs-cards">
+    <a class="hs-card" href="{{ "homeschool/rays-arithmetic/" | relURL }}">
+      <span class="big" aria-hidden="true">🧮</span>
+      <h2>Ray's Arithmetic</h2>
+      <p>The best-known American arithmetic series of the 1800s, by Joseph Ray. All six books of the 1877 “New” series to read or download, plus guides for every lesson of the Primary book, for children about 5 to 7.</p>
+      <span class="go">Start with Ray's →</span>
+    </a>
+    <div class="hs-card soon">
+      <span class="big" aria-hidden="true">📚</span>
+      <h2>More to come</h2>
+      <p>This section will grow, one book at a time, each with its own teaching guides. On the rest of the site, see the <a href="{{ "languages/" | relURL }}">Latin and Greek tools</a>, the <a href="{{ "games/" | relURL }}">learning games</a>, the <a href="{{ "free-books/" | relURL }}">free books</a> and the <a href="{{ "infographics/remember-it-on-purpose/" | relURL }}">memory-work infographic</a>.</p>
+    </div>
+  </section>
+</div>
+{{ end }}

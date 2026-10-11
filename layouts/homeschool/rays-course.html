@@ -1,0 +1,49 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $d := site.Data.rays_primary }}
+{{ $book := index (where site.Data.rays_books.new "id" $d.book.id) 0 }}
+<div class="hs" data-course="primary" data-total="{{ len $d.lessons }}">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/rays-arithmetic/" | relURL }}">Ray's Arithmetic</a> › Primary</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Ray's Arithmetic · Book 1 · 1877</p>
+    <h1>Ray's New Primary Arithmetic</h1>
+    <p>89 short lessons, from counting to ten to money and measures, for children about 5 to 7. Each one has a guide you can follow step by step, with the right page of the book beside it.</p>
+  </header>
+
+  <section class="hs-progress" aria-live="polite">
+    <div class="hs-bar"><b style="width:0%"></b></div>
+    <p><span id="hs-done-n">0</span> of {{ len $d.lessons }} lessons done <span class="hs-small">(saved in this browser)</span> <a id="hs-next-link" class="hs-btn pri" href="{{ "homeschool/rays-arithmetic/primary/lesson-1/" | relURL }}">Start Lesson 1 →</a></p>
+  </section>
+
+  <section class="hs-sec">
+    <h2>How to use it</h2>
+    <ul class="hs-how">
+      <li><b>A little, often.</b> About 15 minutes a day, three to five days a week. That covers the book in about a school year.</li>
+      <li><b>Repeat freely.</b> Most table lessons take two or three days before the facts come easily. Move on when they do, not before.</li>
+      <li><b>Real things first.</b> Have a cup of about 40 counters ready (dried beans, buttons or pennies), and a slate, small whiteboard or paper.</li>
+      <li><b>Out loud.</b> Ray's children said every answer in a full sentence: “3 and 2 are 5.” The guides keep that habit.</li>
+      <li><b>Skip what's history.</b> A few lessons near the end teach old measures (English money, troy weight). They're marked optional.</li>
+    </ul>
+  </section>
+
+  {{ range $d.units }}
+  {{ $u := . }}
+  <section class="hs-unit">
+    <h2><span>Unit {{ $u.id }}</span> {{ $u.name }}</h2>
+    <p class="hs-small">{{ $u.text }} Lessons {{ $u.from }}–{{ $u.to }}.</p>
+    <ol class="hs-lessons">
+      {{ range where $d.lessons "unit" $u.id }}
+      <li data-n="{{ .num }}"><a href="{{ printf "homeschool/rays-arithmetic/primary/lesson-%d/" .num | relURL }}"><span class="num">{{ .num }}</span><span class="t">{{ .title }}{{ if .optional }} <em class="hs-opt">optional</em>{{ end }}</span><span class="rn">Lesson {{ .roman }}</span><span class="ck" aria-label="done">✓</span></a></li>
+      {{ end }}
+    </ol>
+  </section>
+  {{ end }}
+
+  <section class="hs-sec">
+    <h2>The book itself</h2>
+    {{ partial "hs-book.html" $book }}
+  </section>
+  <p class="hs-small">Lesson numbers match the book's Roman numerals: Lesson 3 is the book's Lesson III. The guides are written for this site; the book is in the public domain.</p>
+</div>
+<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,55 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $books := site.Data.rays_books }}
+<div class="hs">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Ray's Arithmetic</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Math</p>
+    <h1>Ray's Arithmetic</h1>
+    <p>The arithmetic books generations of American children learned from, now free to read and download. Start with the Primary book and its step-by-step teaching guides.</p>
+  </header>
+
+  <section class="hs-start">
+    <div>
+      <h2>Start here</h2>
+      <p>For a young child, begin with <b>Ray's New Primary Arithmetic</b>. Every lesson has a guide that tells you what to get out, what to say, and which page of the book to open. Most take about fifteen minutes.</p>
+      <a class="hs-btn pri big" href="{{ "homeschool/rays-arithmetic/primary/" | relURL }}">Open the Primary course →</a>
+    </div>
+    <ol class="hs-steps-mini">
+      <li>Pick a lesson (start with Lesson 1).</li>
+      <li>Press <b>Teach this lesson</b>.</li>
+      <li>Follow the steps one screen at a time, with the book page beside you.</li>
+    </ol>
+  </section>
+
+  <section class="hs-sec">
+    <h2>What is Ray's Arithmetic?</h2>
+    <div class="hs-cols">
+      <p>Joseph Ray (1807–1855) grew up on a farm in what is now West Virginia, studied medicine, and then spent his life teaching mathematics in Cincinnati, at Woodward High School and Woodward College. His first arithmetic came out in 1834. Over the next decades it grew into a series, from a first book for small children to a higher arithmetic for older students, and it became one of the most widely used schoolbooks in America, alongside McGuffey's Readers from the same Cincinnati publishers.</p>
+      <p>After Ray's death the series was revised and reissued in 1877 as <i>Ray's New Arithmetics</i>, the edition most homeschoolers use today, and the one on this page. The method is simple and thorough: count real things first, learn each table by heart, then use it straight away in short story problems, and explain every answer in a full sentence. Old prices and measures aside, the arithmetic is the same today.</p>
+    </div>
+  </section>
+
+  <section class="hs-sec">
+    <h2>The six books of the 1877 series</h2>
+    <p class="hs-small">In the usual order. Ages are rough guides; go by what your child can do.</p>
+    <div class="hs-books">
+      {{ range $books.new }}{{ partial "hs-book.html" . }}{{ end }}
+    </div>
+  </section>
+
+  <section class="hs-sec">
+    <h2>The 1850s editions</h2>
+    <p>If you have heard of Ray's from the 1850s, these are the books from before the 1877 revision. They teach the same way, with older wording.</p>
+    <div class="hs-books">
+      {{ range $books.old }}{{ partial "hs-book.html" . }}{{ end }}
+    </div>
+  </section>
+
+  <section class="hs-sec hs-note">
+    <h2>About these copies</h2>
+    <p>Every book here was published in the United States before 1930, so it is in the public domain there: free to read, print and share. The scans are kept by the <a href="https://archive.org/" target="_blank" rel="noopener">Internet Archive</a>, which shows them on this page and supplies the PDF downloads. The teaching guides are written for this site. Modern reprints are also sold, if you prefer a clean printed copy.</p>
+  </section>
+</div>
+<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
+{{ end }}

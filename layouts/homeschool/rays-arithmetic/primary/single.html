@@ -1,0 +1,63 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $d := site.Data.rays_primary }}
+{{ $n := .Params.lesson }}
+{{ $l := index (where $d.lessons "num" $n) 0 }}
+{{ $u := index (where $d.units "id" $l.unit) 0 }}
+{{ $total := len $d.lessons }}
+{{ $base := "homeschool/rays-arithmetic/primary/" }}
+{{ $id := $d.book.id }}
+{{ $next := "" }}{{ $nextTitle := "" }}{{ if lt $n $total }}{{ $next = printf "%slesson-%d/" $base (add $n 1) | relURL }}{{ $nextTitle = (index (where $d.lessons "num" (add $n 1)) 0).title }}{{ end }}
+<div class="hs hs-lesson" data-course="primary" data-n="{{ $n }}" data-total="{{ $total }}">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/rays-arithmetic/" | relURL }}">Ray's Arithmetic</a> › <a href="{{ $base | relURL }}">Primary</a> › Lesson {{ $n }}</nav>
+  <header class="hs-lhead">
+    <p class="hs-eyebrow">Ray's New Primary Arithmetic · Lesson {{ $l.roman }} · Unit {{ $u.id }}: {{ $u.name }}</p>
+    <h1>{{ $n }}. {{ $l.title }}{{ if $l.optional }} <em class="hs-opt">optional</em>{{ end }}</h1>
+    <p class="hs-goal"><b>Goal:</b> {{ $l.goal }}</p>
+    <p class="hs-meta">⏱ About {{ $l.mins }} minutes · {{ len $l.steps }} steps</p>
+    <div class="hs-actions">
+      <button type="button" class="hs-btn pri big" id="hs-teach">▶ Teach this lesson</button>
+      <button type="button" class="hs-btn" data-scan="https://archive.org/embed/{{ $id }}#page/n{{ $l.idx }}/mode/1up" data-page="https://archive.org/details/{{ $id }}/page/n{{ $l.idx }}/mode/1up" aria-expanded="false">📖 Show the page in the book</button>
+      <a class="hs-btn ghost" href="https://archive.org/details/{{ $id }}/page/n{{ $l.idx }}/mode/1up" target="_blank" rel="noopener">Open it at the Internet Archive ↗</a>
+    </div>
+    <div class="hs-scan" hidden></div>
+  </header>
+
+  <div class="hs-grid">
+    <section class="hs-box">
+      <h2>You'll need</h2>
+      <ul>{{ range $l.materials }}<li>{{ . }}</li>{{ end }}</ul>
+    </section>
+    <section class="hs-box">
+      <h2>What's in the book</h2>
+      <p>{{ $l.book }}</p>
+    </section>
+  </div>
+
+  <section class="hs-sec">
+    <h2>The lesson, step by step</h2>
+    <ol class="hs-steps">
+      {{ range $l.steps }}<li><h3>{{ index . 0 }}</h3>{{ partial "hs-body.html" (index . 1) }}</li>{{ end }}
+    </ol>
+  </section>
+
+  <div class="hs-grid">
+    {{ with $l.practice }}<section class="hs-box"><h2>Afterwards</h2><p>{{ . }}</p></section>{{ end }}
+    {{ with $l.tip }}<section class="hs-box tip"><h2>Tip</h2><p>{{ . }}</p></section>{{ end }}
+  </div>
+  {{ with $l.answers }}<details class="hs-ans"><summary>Answers to the book's problems</summary><p>{{ . }}</p><p class="hs-small">Worked out for this site from the scan. If a number in your copy differs, trust the book.</p></details>{{ end }}
+
+  <div class="hs-done-row">
+    <label class="hs-check"><input type="checkbox" id="hs-done"> Mark this lesson done</label>
+  </div>
+
+  <nav class="hs-pn">
+    {{ if gt $n 1 }}<a href="{{ printf "%slesson-%d/" $base (sub $n 1) | relURL }}">← Lesson {{ sub $n 1 }}</a>{{ else }}<span></span>{{ end }}
+    <a href="{{ $base | relURL }}">All lessons</a>
+    {{ if lt $n $total }}<a href="{{ printf "%slesson-%d/" $base (add $n 1) | relURL }}">Lesson {{ add $n 1 }} →</a>{{ else }}<span></span>{{ end }}
+  </nav>
+
+  <script type="application/json" id="hs-data">{{ dict "n" $n "title" $l.title "steps" $l.steps "practice" ($l.practice | default "") "materials" $l.materials "scan" (printf "https://archive.org/embed/%s#page/n%d/mode/1up" $id $l.idx) "page" (printf "https://archive.org/details/%s/page/n%d/mode/1up" $id $l.idx) "next" $next "nextTitle" $nextTitle | jsonify | safeJS }}</script>
+</div>
+<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
+{{ end }}

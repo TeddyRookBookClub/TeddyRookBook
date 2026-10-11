@@ -1,0 +1,19 @@
+{{- /* A Ray's book card: read the scan here, download the PDF, or open the teaching guides. */ -}}
+{{- $b := . -}}
+<article class="hs-book" id="{{ $b.id }}">
+  <div class="hs-book-top">
+    <div>
+      <h3>{{ $b.title }}</h3>
+      <p class="hs-meta">{{ $b.year }}{{ with $b.level }} · {{ . }}{{ end }}</p>
+    </div>
+  </div>
+  <p>{{ $b.what }}</p>
+  <div class="hs-actions">
+    {{ with $b.guides }}<a class="hs-btn pri" href="{{ . | relURL }}">🧑‍🏫 Teaching guides</a>{{ end }}
+    <button type="button" class="hs-btn" data-scan="https://archive.org/embed/{{ $b.id }}" aria-expanded="false">📖 Read it here</button>
+    <a class="hs-btn" href="https://archive.org/download/{{ $b.id }}/{{ $b.id }}.pdf" rel="noopener">⬇ Download PDF{{ with $b.mb }} ({{ . }} MB){{ end }}</a>
+    <a class="hs-btn ghost" href="https://archive.org/details/{{ $b.id }}" target="_blank" rel="noopener">Internet Archive ↗</a>
+  </div>
+  <div class="hs-scan" hidden></div>
+  {{ with $b.scan }}<p class="hs-small">{{ . }}</p>{{ end }}
+</article>

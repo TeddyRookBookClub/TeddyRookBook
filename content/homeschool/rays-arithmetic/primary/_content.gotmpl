@@ -1,0 +1,11 @@
+{{/* One page per lesson of Ray's New Primary Arithmetic, from data/rays_primary.yaml */}}
+{{ $d := site.Data.rays_primary }}
+{{ range $d.lessons }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" (printf "lesson-%d" .num)
+    "title" (printf "Lesson %d: %s" .num .title)
+    "params" (dict "lesson" .num "description" (printf "How to teach Lesson %s of Ray's New Primary Arithmetic (1877), step by step: %s" .roman .goal))
+    "dates" (dict "date" (time.AsTime "2026-10-10"))
+  ) }}
+{{ end }}

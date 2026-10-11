@@ -93,6 +93,7 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
     var tt = get('tt-v1'); if (tt) { var s = 0, n = 0; ['greece', 'rome'].forEach(function (k) { if (tt[k]) { s += tt[k].solved || 0; n += (tt[k].played || []).length; } }); if (n) out.push('<b>Time Thief:</b> ' + s + ' cases solved.'); }
     var d = get('trb-daily-v1'); if (d && d.played) out.push('<b>Daily Word Puzzle:</b> ' + d.played + ' played, ' + (d.won || 0) + ' solved, current streak ' + (d.streak || 0) + '.');
     var a = get('trb-alpha-v1'); if (a && a.done) out.push('<b>Greek Alphabet:</b> ' + Object.keys(a.done).length + ' lessons finished.');
+    var hs = get('trb-homeschool-v1'); if (hs && hs.done && hs.done.primary) { var hn = Object.keys(hs.done.primary).length; if (hn) out.push('<b>Ray’s New Primary Arithmetic:</b> ' + hn + ' of 89 lessons taught.'); }
     ['chess', 'tabula', 'terni', 'morris', 'latrunculi', 'knucklebones'].forEach(function (k) { var b = get('trb-' + k); if (b && b.stats && (b.stats.w || b.stats.l || b.stats.d)) out.push('<b>' + ({ chess: 'Chess of the Ancients', tabula: 'Tabula', terni: 'Terni Lapilli', ur: 'Royal Game of Ur', morris: 'Nine Men’s Morris', latrunculi: 'Latrunculi', knucklebones: 'Knucklebones' }[k]) + ':</b> ' + (b.stats.w || 0) + ' won, ' + (b.stats.l || 0) + ' lost' + (b.stats.d ? ', ' + b.stats.d + ' drawn' : '') + '.'); });
     $('#pg-other').innerHTML = out.length ? out.map(function (x) { return '<li>' + x + '</li>'; }).join('') : '<li class="pg-empty">Nothing yet on this device.</li>';
   }
