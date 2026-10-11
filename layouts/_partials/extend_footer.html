@@ -36,9 +36,10 @@
 <script>
 /* "More" menu: close when clicking elsewhere or pressing Escape. */
 (function () {
-  var d = document.querySelector('#menu .trb-more details'); if (!d) return;
-  document.addEventListener('click', function (e) { if (d.open && !d.contains(e.target)) d.open = false; });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary').focus(); } });
+  var ds = document.querySelectorAll('#menu .trb-more details'); if (!ds.length) return;
+  ds.forEach(function (d) { d.addEventListener('toggle', function () { if (d.open) ds.forEach(function (o) { if (o !== d) o.open = false; }); }); });
+  document.addEventListener('click', function (e) { ds.forEach(function (d) { if (d.open && !d.contains(e.target)) d.open = false; }); });
+  document.addEventListener('keydown', function (e) { if (e.key !== 'Escape') return; ds.forEach(function (d) { if (d.open) { d.open = false; d.querySelector('summary').focus(); } }); });
 })();
 /* Site search: a button in the header (or press /) opens a search box over the page. The index is /index.json. */
 (function () {

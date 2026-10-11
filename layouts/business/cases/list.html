@@ -1,0 +1,37 @@
+{{ define "main" }}
+<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (os.Stat "static/business/biz.css").ModTime.Unix }}">
+{{ $d := site.Data.business_cases }}
+{{ $tags := slice }}{{ range $d.cases }}{{ range .tags }}{{ if not (in $tags .) }}{{ $tags = $tags | append . }}{{ end }}{{ end }}{{ end }}
+<div class="bz">
+  <nav class="bz-crumbs"><a href="{{ "business/" | relURL }}">Business</a> › Cases</nav>
+  <header class="bz-hero">
+    <p class="bz-eyebrow">Business · Cases</p>
+    <h1>Business cases</h1>
+    <p>{{ len $d.cases }} true stories from real companies, each with a one-line lesson, like a business Aesop's fable. Open one for the full story, the numbers, the lessons learned and questions to talk over, or save its card as a picture.</p>
+  </header>
+  <div class="bz-tools">
+    <input type="search" id="bz-q" placeholder="Search companies, people, ideas…" aria-label="Search the cases">
+    <div class="bz-chips" role="group" aria-label="Filter by theme"><button type="button" class="on" data-t="">All</button>{{ range sort $tags }}<button type="button" data-t="{{ . }}">{{ . }}</button>{{ end }}</div>
+  </div>
+  <div class="bz-grid" id="bz-grid">
+    {{ range sort $d.cases "year" }}
+    <article class="bz-card" data-tags="{{ delimit .tags "|" }}" data-q="{{ lower (printf "%s %s %s %s %s" .title .company .industry .summary .moral) }}">
+      <p class="bz-meta">{{ range .tags }}<span class="bz-tag">{{ . }}</span>{{ end }}</p>
+      <h2><a href="{{ printf "business/cases/%s/" .slug | relURL }}">{{ .title }}</a></h2>
+      <p class="bz-co">{{ .company }} · {{ .year }}</p>
+      <p class="bz-sum">{{ .summary }}</p>
+      <p class="bz-moral"><span>The lesson</span>{{ .moral }}</p>
+      <p class="bz-act"><a href="{{ printf "business/cases/%s/" .slug | relURL }}">Read the case →</a> <button type="button" class="bz-save" data-card="{{ dict "title" .title "co" (printf "%s · %s" .company .year) "sum" .summary "moral" .moral "slug" .slug | jsonify }}">🖼 Save card</button></p>
+    </article>
+    {{ end }}
+  </div>
+  <p class="bz-none" id="bz-none" hidden>No cases match. Try another word or theme.</p>
+  <section class="bz-sec">
+    <h2>More free cases elsewhere</h2>
+    <p class="bz-small">Business schools that publish cases free to read. Most are copyrighted (read them on their sites); a few are openly licensed.</p>
+    <ul class="bz-libs">{{ range $d.libraries }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a> <span class="bz-small">· {{ .who }} · {{ .license }}</span><br><span class="bz-small">{{ .what }}</span></li>{{ end }}</ul>
+  </section>
+  <p class="bz-small">These cases are written for this site from public reporting, court and regulator records and company statements, listed at the end of each case. They are summaries for learning, not legal or financial advice.</p>
+</div>
+<script src="{{ "business/biz.js" | relURL }}?v={{ (os.Stat "static/business/biz.js").ModTime.Unix }}" defer></script>
+{{ end }}

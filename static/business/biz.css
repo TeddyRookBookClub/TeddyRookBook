@@ -1,0 +1,66 @@
+/* Business section */
+main.main:has(.bz){max-width:1100px}
+.bz{--g:#004225;--g2:#00562f;--gold:#b8963e;--ink:#1d2320;--muted:#5d6862;--line:#dde5df;--card:#fff;--paper:#fbf8f0;--soft:#e7f0ea;color:var(--ink)}
+html[data-theme="dark"] .bz{--g:#6cc79a;--g2:#6cc79a;--ink:#e6ece8;--muted:#a9b8af;--line:#2f4a3b;--card:#1b2b22;--paper:#16241c;--soft:#1f3328}
+.bz a{color:var(--g)}
+.bz-crumbs{font-size:.9rem;margin:.2rem 0 .8rem;color:var(--muted)}
+.bz-hero{background:linear-gradient(135deg,#004225,#00562f);color:#f3ead2;border-radius:16px;padding:1.6rem 1.8rem;margin-bottom:1.4rem}
+.bz-hero h1{margin:.2rem 0 .5rem;color:#fff;font-size:2rem}
+.bz-hero p{margin:0;color:#d3e6da;max-width:48rem;line-height:1.55}
+.bz-eyebrow{text-transform:uppercase;letter-spacing:.1em;font-size:.75rem;color:#d8b860!important;margin-bottom:.2rem!important}
+.bz-hero .bz-meta{margin-top:.7rem}
+.bz-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
+.bz-big{display:block;text-decoration:none;color:inherit!important;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.3rem 1.4rem;box-shadow:0 1px 6px rgba(0,0,0,.05);transition:transform .15s,border-color .15s}
+.bz-big:hover{transform:translateY(-2px);border-color:var(--g)}
+.bz-big h2{margin:.3rem 0}.bz-big p{color:var(--muted);line-height:1.5}.bz-ic{font-size:2rem}.bz-go{font-weight:700;color:var(--g)}
+.bz-sec{margin:2rem 0}
+.bz-sec h2{color:var(--g);margin:0 0 .6rem}
+.bz-note{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem}
+.bz-small{font-size:.85rem;color:var(--muted)}
+.bz-morals{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.8rem}
+.bz-morals a{display:block;text-decoration:none;background:var(--paper);border-left:4px solid var(--gold);border-radius:10px;padding:.9rem 1rem;color:var(--ink)!important}
+.bz-morals q{display:block;font-family:Georgia,serif;font-size:1.08rem;font-style:italic;line-height:1.4;quotes:"“" "”"}
+.bz-morals span{display:block;margin-top:.4rem;font-size:.8rem;color:var(--muted)}
+.bz-tools{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+#bz-q{font:inherit;padding:.6rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);max-width:28rem}
+.bz-chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.bz-chips button{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:.3rem .75rem;cursor:pointer}
+.bz-chips button.on{background:var(--g);border-color:var(--g);color:#fff}
+html[data-theme="dark"] .bz-chips button.on{color:#0f1a14}
+.bz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.bz-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.bz-card h2{font-size:1.15rem;margin:.3rem 0 .1rem;line-height:1.3}.bz-card h2 a{color:var(--ink);text-decoration:none}
+.bz-co{margin:0 0 .5rem;font-size:.85rem;color:var(--muted)}
+.bz-sum{margin:0 0 .7rem;line-height:1.5;font-size:.93rem}
+.bz-moral{margin:auto 0 .6rem;background:var(--paper);border-left:4px solid var(--gold);border-radius:8px;padding:.6rem .75rem;font-family:Georgia,serif;font-style:italic;line-height:1.4}
+.bz-moral span,.bz-lesson>span{display:block;font-family:system-ui,sans-serif;font-style:normal;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.15rem}
+.bz-act{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin:0;font-size:.9rem}
+.bz-act a{font-weight:700;text-decoration:none}
+.bz-save{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:.3rem .6rem;font:inherit;font-size:.82rem;cursor:pointer}
+.bz-tag{display:inline-block;font-size:.72rem;font-weight:600;padding:.1rem .5rem;border-radius:999px;background:var(--soft);color:var(--g);margin:0 .25rem .2rem 0}
+.bz-tag.on{background:rgba(255,255,255,.15);color:#f3ead2}
+.bz-none{color:var(--muted)}
+.bz-libs{padding-left:1.1rem}.bz-libs li{margin:.5rem 0}
+.bz-lesson{background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--gold);border-radius:14px;padding:1rem 1.3rem;margin:0 0 1.6rem}
+.bz-lesson p{font-family:Georgia,serif;font-style:italic;font-size:1.45rem;line-height:1.35;margin:.2rem 0 .8rem}
+.bz-btn{font:inherit;font-size:.9rem;border:1px solid var(--g);background:var(--g);color:#fff;border-radius:8px;padding:.45rem .8rem;cursor:pointer}
+.bz-btn.ghost{background:var(--card);color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .bz-btn{color:#0f1a14}html[data-theme="dark"] .bz-btn.ghost{color:var(--ink)}
+.bz-body{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:2rem;align-items:start}
+.bz-story h2,.bz-side h2{color:var(--g);margin:0 0 .6rem}
+.bz-story p{line-height:1.7;font-size:1.05rem;margin:0 0 1em}
+.bz-side section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1rem}
+.bz-nums{margin:0;display:grid;gap:.6rem}
+.bz-nums div{border-bottom:1px solid var(--line);padding-bottom:.5rem}.bz-nums div:last-child{border:0;padding:0}
+.bz-nums dt{font-size:.8rem;color:var(--muted)}.bz-nums dd{margin:0;font-size:1.15rem;font-weight:700;color:var(--g)}
+.bz-tl{list-style:none;margin:0;padding:0 0 0 .9rem;border-left:2px solid var(--line)}
+.bz-tl li{position:relative;margin:0 0 .7rem;font-size:.92rem;line-height:1.45}
+.bz-tl li::before{content:"";position:absolute;left:-1.25rem;top:.4rem;width:.6rem;height:.6rem;border-radius:50%;background:var(--gold)}
+.bz-tl b{display:block;color:var(--g);font-size:.85rem}
+.bz-lessons{padding-left:1.2rem}.bz-lessons li,.bz-qs li{margin:.5rem 0;line-height:1.55}
+.bz-src li{margin:.3rem 0}
+.bz-pn{display:flex;justify-content:space-between;gap:1rem;border-top:1px solid var(--line);padding-top:1rem;margin-top:2rem;flex-wrap:wrap}
+.bz-pn a{font-weight:700;text-decoration:none}
+@media (max-width:800px){.bz-body{grid-template-columns:1fr}.bz-hero{padding:1.2rem}.bz-hero h1{font-size:1.6rem}.bz-lesson p{font-size:1.2rem}}
+@media print{.bz-acts,.bz-pn,.bz-crumbs{display:none}.bz-hero{background:none;color:#000;padding:0}.bz-hero h1,.bz-hero p{color:#000}.bz-body{grid-template-columns:1fr}}
+.bz-lessons li,.bz-qs li,.bz-libs li{list-style:revert}.bz-lessons,.bz-qs{margin:0}.bz-sec p{margin:0 0 .8em}

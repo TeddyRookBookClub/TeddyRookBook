@@ -1,0 +1,3 @@
+{{ range site.Data.business_cases.cases }}
+  {{ $.AddPage (dict "kind" "page" "path" .slug "title" .title "params" (dict "case" .slug "description" .summary) "dates" (dict "date" (time.AsTime "2026-10-11"))) }}
+{{ end }}

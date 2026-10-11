@@ -16,6 +16,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 | [Free Books](https://teddyrookbook.com/free-books/) | Search public-domain ebooks (Project Gutenberg, via Gutendex) and audiobooks (LibriVox, via the Internet Archive). Nothing is hosted here; the visitor's browser calls those catalogues directly. |
 | [Timeline](https://teddyrookbook.com/timeline/) | The ancient world from the pyramids to the fall of Rome, each event linked to the books, games and readings about it. |
 | [Markets](https://teddyrookbook.com/markets/) | Stock screener and charts, economic indicators, Treasury yields and auctions, and calculators. |
+| [Business](https://teddyrookbook.com/business/) | Business cases: original write-ups of real company stories with the lesson, numbers, timeline, questions and sources, and a card to save as a picture (`data/business_cases.yaml`, `static/business/`). |
 | [Resources](https://teddyrookbook.com/resources/) | Links to other free places to learn Latin and Greek, read the great books and explore ancient history. |
 | [PhotoCraft](https://teddyrookbook.com/photocraft/) | A hosted copy of [PhotoCraft](https://github.com/storytold/photocraft), an open-source image editor by the ArtCraft Team (MIT / Apache-2.0). It runs in the browser; pictures stay on the visitor's device. Not affiliated with Adobe. |
 
@@ -77,6 +78,7 @@ static/
   js/               Shared scripts, including the Greek pronunciation helper.
   photocraft/       The PhotoCraft browser build (app/) and its licences (licenses/). Third-party code; see NOTICE.txt there.
   markets/          Markets pages: charts, rates, indicators, calculators.
+  business/         Business hub and the business cases (pages made from data/business_cases.yaml).
 scripts/            Python scripts that generate data files (see below).
 themes/PaperMod/    The theme.
 ```
@@ -138,3 +140,6 @@ Because some of that data is licensed for non-commercial use only, the site as a
 ## Contact
 
 [@teddyrookbook on X](https://x.com/teddyrookbook)
+
+
+The top menu is grouped: each `[[menu.main]]` entry in `hugo.toml` has a `group` (Education, Business, Games, Miscellaneous), and `params.menugroups` sets their order. A group with one item of the same name (Games) shows as a plain link; the others are dropdowns.

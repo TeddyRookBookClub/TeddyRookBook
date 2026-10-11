@@ -87,29 +87,26 @@
         {{- $currentPage := . }}
         <ul id="menu" class="menu">
             {{- $page_url := $currentPage.Permalink | absLangURL }}
-            {{- $more := slice }}
-            {{- range site.Menus.main }}
-            {{- if .Params.more }}{{ $more = $more | append . }}{{ continue }}{{ end }}
-            {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL) ) | absLangURL }}
-            <li>
-                <a href="{{ .URL | absLangURL }}" title="{{ .Title | default .Name }}">
-                    <span {{- if or (eq $menu_item_url $page_url) (hasPrefix $page_url $menu_item_url) }} class="active" {{- end }}>{{ .Name }}</span>
-                </a>
-            </li>
+            {{- range $gi, $g := site.Params.menugroups }}
+            {{- $items := slice }}{{ range site.Menus.main }}{{ if eq .Params.group $g }}{{ $items = $items | append . }}{{ end }}{{ end }}
+            {{- if and (eq (len $items) 1) (eq (index $items 0).Name $g) }}
+            {{- with index $items 0 }}{{ $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}
+            <li><a href="{{ .URL | absLangURL }}" title="{{ .Name }}"><span {{- if hasPrefix $page_url $u }} class="active" {{- end }}>{{ .Name }}</span></a></li>
             {{- end }}
-            {{- with $more }}
-            {{- $inMore := false }}{{ range . }}{{ $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}{{ if hasPrefix $page_url $u }}{{ $inMore = true }}{{ end }}{{ end }}
-            <li class="trb-more">
+            {{- else if $items }}
+            {{- $in := false }}{{ range $items }}{{ $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}{{ if hasPrefix $page_url $u }}{{ $in = true }}{{ end }}{{ end }}
+            <li class="trb-more{{ if lt $gi 2 }} l{{ end }}">
                 <details>
-                    <summary><span{{ if $inMore }} class="active"{{ end }}>More</span><svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></summary>
+                    <summary><span{{ if $in }} class="active"{{ end }}>{{ $g }}</span><svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></summary>
                     <ul>
-                        {{- range . }}
+                        {{- range $items }}
                         {{- $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}
                         <li><a href="{{ .URL | absLangURL }}"{{ if hasPrefix $page_url $u }} aria-current="page"{{ end }}><b>{{ .Name }}</b>{{ with .Params.note }}<small>{{ . }}</small>{{ end }}</a></li>
                         {{- end }}
                     </ul>
                 </details>
             </li>
+            {{- end }}
             {{- end }}
         </ul>
     </nav>

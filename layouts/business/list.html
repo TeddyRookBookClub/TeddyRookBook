@@ -1,0 +1,35 @@
+{{ define "main" }}
+<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (os.Stat "static/business/biz.css").ModTime.Unix }}">
+{{ $d := site.Data.business_cases }}
+<div class="bz">
+  <header class="bz-hero">
+    <p class="bz-eyebrow">Business</p>
+    <h1>Lessons from real businesses</h1>
+    <p>True stories of companies that got it right, got it wrong, or both, each told in a few minutes with the lesson up front. Plus free charts, economic data and calculators for running a household or a business.</p>
+  </header>
+  <section class="bz-two">
+    <a class="bz-big" href="{{ "business/cases/" | relURL }}">
+      <span class="bz-ic" aria-hidden="true">📚</span>
+      <h2>Business Cases</h2>
+      <p>{{ len $d.cases }} short cases, from the Tylenol recall to Toyota's andon cord. Each has a summary, the full story, the numbers, the lessons learned and questions to talk over, and a card you can save as a picture, like a business Aesop's fable.</p>
+      <span class="bz-go">Read the cases →</span>
+    </a>
+    <a class="bz-big" href="{{ "markets/" | relURL }}">
+      <span class="bz-ic" aria-hidden="true">📈</span>
+      <h2>Markets &amp; Economy</h2>
+      <p>Live charts, a stock screener, economic data and an economic calendar, Treasury rates, and calculators for loans, bonds, compounding and more.</p>
+      <span class="bz-go">Open the tools →</span>
+    </a>
+  </section>
+  <section class="bz-sec">
+    <h2>A few of the lessons</h2>
+    <div class="bz-morals">
+      {{ range first 6 (shuffle $d.cases) }}<a href="{{ printf "business/cases/%s/" .slug | relURL }}"><q>{{ .moral }}</q><span>{{ .company }}, {{ .year }}</span></a>{{ end }}
+    </div>
+  </section>
+  <section class="bz-sec bz-note">
+    <h2>For families</h2>
+    <p>Many homeschooling parents also run a business, and these cases make good reading for teenagers: read one a week together, talk through the questions at the end, and ask what they would have done. They pair well with the arithmetic of percentage, interest and profit in <a href="{{ "homeschool/rays-arithmetic/practical/" | relURL }}">Ray's Practical Arithmetic</a>.</p>
+  </section>
+</div>
+{{ end }}

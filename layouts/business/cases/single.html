@@ -1,0 +1,49 @@
+{{ define "main" }}
+<link rel="stylesheet" href="{{ "business/biz.css" | relURL }}?v={{ (os.Stat "static/business/biz.css").ModTime.Unix }}">
+{{ $all := sort site.Data.business_cases.cases "year" }}{{ $c := index (where $all "slug" .Params.case) 0 }}
+{{ $prev := dict }}{{ $next := dict }}{{ range $i, $x := $all }}{{ if eq $x.slug $c.slug }}{{ if gt $i 0 }}{{ $prev = index $all (sub $i 1) }}{{ end }}{{ if lt (add $i 1) (len $all) }}{{ $next = index $all (add $i 1) }}{{ end }}{{ end }}{{ end }}
+<article class="bz bz-case">
+  <nav class="bz-crumbs"><a href="{{ "business/" | relURL }}">Business</a> › <a href="{{ "business/cases/" | relURL }}">Cases</a> › {{ $c.company }}</nav>
+  <header class="bz-hero">
+    <p class="bz-eyebrow">{{ $c.company }} · {{ $c.year }} · {{ $c.industry }}</p>
+    <h1>{{ $c.title }}</h1>
+    <p>{{ $c.summary }}</p>
+    <p class="bz-meta">{{ range $c.tags }}<span class="bz-tag on">{{ . }}</span>{{ end }}</p>
+  </header>
+  <div class="bz-lesson">
+    <span>The lesson</span>
+    <p>{{ $c.moral }}</p>
+    <div class="bz-acts"><button type="button" class="bz-btn bz-save" data-card="{{ dict "title" $c.title "co" (printf "%s · %s" $c.company $c.year) "sum" $c.summary "moral" $c.moral "slug" $c.slug | jsonify }}">🖼 Save the card as a picture</button> <button type="button" class="bz-btn ghost" onclick="window.print()">🖨 Print</button></div>
+  </div>
+  <div class="bz-body">
+    <section class="bz-story">
+      <h2>The story</h2>
+      {{ range split $c.story "\n" }}{{ with trim . " " }}<p>{{ . }}</p>{{ end }}{{ end }}
+    </section>
+    <aside class="bz-side">
+      {{ with $c.numbers }}<section><h2>By the numbers</h2><dl class="bz-nums">{{ range . }}<div><dt>{{ index . 0 }}</dt><dd>{{ index . 1 }}</dd></div>{{ end }}</dl></section>{{ end }}
+      <section><h2>Timeline</h2><ol class="bz-tl">{{ range $c.timeline }}<li><b>{{ index . 0 }}</b> {{ index . 1 }}</li>{{ end }}</ol></section>
+    </aside>
+  </div>
+  <section class="bz-sec">
+    <h2>Lessons learned</h2>
+    <ul class="bz-lessons">{{ range $c.lessons }}{{ $p := split . ": " }}<li>{{ if gt (len $p) 1 }}{{ $r := delimit (after 1 $p) ": " }}<b>{{ index $p 0 }}.</b> {{ upper (substr $r 0 1) }}{{ substr $r 1 }}{{ else }}{{ . }}{{ end }}</li>{{ end }}</ul>
+  </section>
+  <section class="bz-sec">
+    <h2>Talk about it</h2>
+    <ol class="bz-qs">{{ range $c.questions }}<li>{{ . }}</li>{{ end }}</ol>
+  </section>
+  {{ with $c.note }}<section class="bz-sec bz-note"><h2>Worth knowing</h2><p>{{ . }}</p></section>{{ end }}
+  <section class="bz-sec">
+    <h2>Sources</h2>
+    <ul class="bz-src">{{ range $c.sources }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a></li>{{ end }}</ul>
+    <p class="bz-small">Written for this site from the sources above. A summary for learning, not legal or financial advice.</p>
+  </section>
+  <nav class="bz-pn">
+    {{ with $prev }}<a href="{{ printf "business/cases/%s/" .slug | relURL }}">← {{ .company }}, {{ .year }}</a>{{ else }}<span></span>{{ end }}
+    <a href="{{ "business/cases/" | relURL }}">All cases</a>
+    {{ with $next }}<a href="{{ printf "business/cases/%s/" .slug | relURL }}">{{ .company }}, {{ .year }} →</a>{{ else }}<span></span>{{ end }}
+  </nav>
+</article>
+<script src="{{ "business/biz.js" | relURL }}?v={{ (os.Stat "static/business/biz.js").ModTime.Unix }}" defer></script>
+{{ end }}

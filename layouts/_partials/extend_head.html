@@ -50,8 +50,13 @@ header.header .trb-fs-btn:hover{background:rgba(255,255,255,.14)}
 #menu .trb-more ul b{display:block;font-weight:600}
 #menu .trb-more ul small{display:block;color:var(--secondary);font-size:12.5px;margin-top:1px}
 #menu{overflow:visible !important}
+#menu .trb-more.l ul{left:0;right:auto}
+#menu{align-items:center}
+#menu>li{display:flex;align-items:center}
+#menu .trb-more ul{max-height:calc(100vh - 80px);overflow-y:auto}
+#menu .trb-more+.trb-more,#menu li+.trb-more{margin-left:0}
 @media (max-width:700px){#menu{position:relative}#menu .trb-more,#menu .trb-more details{position:static}#menu .trb-more ul{left:0;right:0;top:100%;min-width:0}}
-@media (max-width:520px){#menu .trb-more summary{font-size:14px;line-height:2.2}}
+@media (max-width:520px){#menu .trb-more summary,#menu>li>a{font-size:14px;line-height:2.2}}
 .trb-sbox input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
 /* search */
 .trb-sbtn{background:none;border:0;cursor:pointer;color:#f3ead2;padding:4px 6px;border-radius:6px;margin-left:.35rem;display:inline-flex;align-items:center}
