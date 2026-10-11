@@ -88,18 +88,35 @@
       $('#rl-out').innerHTML = 'Real return: <b>' + (((1 + n) / (1 + i) - 1) * 100).toFixed(2) + '%</b> (the quick estimate, nominal − inflation, gives ' + ((n - i) * 100).toFixed(2) + '%)';
     }
   };
-  // inflation calculator uses CPI from FRED
-  var CPI = null;
+  // inflation calculator: monthly CPI-U (not seasonally adjusted) from FRED, falling back to the seasonally adjusted series
+  var CPI = null, CPIM = {}, MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function ym(t) { var d = new Date(t); return d.getUTCFullYear() * 12 + d.getUTCMonth(); }
+  function ymLabel(k) { return MON[k % 12] + ' ' + Math.floor(k / 12); }
   CALCS.infl = function () {
-    if (!CPI) { $('#in-out').textContent = 'Loading CPI…'; return; }
-    var amt = val('in-a'), a = val('in-f'), b = val('in-t');
-    var avg = function (y) { var v = CPI.filter(function (p) { return new Date(p[0]).getUTCFullYear() === y; }).map(function (p) { return p[1]; }); return v.length ? v.reduce(function (s, x) { return s + x; }, 0) / v.length : null; };
-    var ca = avg(a), cb = avg(b);
-    if (!ca || !cb) { $('#in-out').textContent = 'CPI data covers ' + new Date(CPI[0][0]).getUTCFullYear() + ' to ' + new Date(CPI[CPI.length - 1][0]).getUTCFullYear() + '.'; return; }
-    var out = amt * cb / ca, yrs = b - a;
-    $('#in-out').innerHTML = money(amt) + ' in ' + a + ' is worth about <b>' + money(out) + '</b> in ' + b + ' dollars.<br>Prices changed ' + ((cb / ca - 1) * 100).toFixed(1) + '%' + (yrs ? ', or ' + ((Math.pow(cb / ca, 1 / Math.abs(yrs)) - 1) * 100 * Math.sign(yrs)).toFixed(2) + '% a year' : '') + ' (CPI-U, annual averages).';
+    var out = $('#in-out');
+    if (!CPI) { out.textContent = 'Loading CPI…'; return; }
+    var amt = val('in-a'), a = val('in-f') * 12 + val('in-fm'), b = val('in-t') * 12 + val('in-tm');
+    var first = ym(CPI[0][0]), last = ym(CPI[CPI.length - 1][0]);
+    if (!(a >= first && a <= last && b >= first && b <= last)) { out.innerHTML = 'CPI data runs from <b>' + ymLabel(first) + '</b> to <b>' + ymLabel(last) + '</b>. Pick dates in that range.'; if (W._inChart) W._inChart.set([], { emptyText: '' }); return; }
+    var ca = CPIM[a], cb = CPIM[b], res = amt * cb / ca, lo0 = Math.min(a, b), hi0 = Math.max(a, b), up = CPIM[hi0] / CPIM[lo0], yrs = (hi0 - lo0) / 12;
+    var rate = yrs ? (Math.pow(up, 1 / yrs) - 1) * 100 : 0;
+    out.innerHTML = money(amt) + ' in ' + ymLabel(a) + ' had the same buying power as <b>' + money(res) + '</b> in ' + ymLabel(b) + '.<br>' +
+      (a === b ? 'Same month, so no change.' : 'From ' + ymLabel(lo0) + ' to ' + ymLabel(hi0) + ', prices ' + (up >= 1 ? 'rose' : 'fell') + ' ' + Math.abs((up - 1) * 100).toFixed(1) + '% (' + (yrs < 2 ? (hi0 - lo0) + ' months' : yrs.toFixed(1) + ' years') + ', about ' + Math.abs(rate).toFixed(2) + '% a year on average). A dollar in ' + ymLabel(hi0) + ' buys what ' + money(1 / up) + ' bought in ' + ymLabel(lo0) + '.');
+    // chart: the amount's equivalent value, month by month, between the two dates
+    var lo = Math.min(a, b), hi = Math.max(a, b), pts = [];
+    if (hi === lo) { lo = Math.max(first, lo - 12); hi = Math.min(last, hi + 12); }
+    CPI.forEach(function (p) { var k = ym(p[0]); if (k >= lo && k <= hi) pts.push([p[0], amt * p[1] / ca]); });
+    if (!W._inChart) W._inChart = new MChart($('#in-chart'), { fmtLeft: function (v) { return '$' + f(v, v < 10 ? 2 : 0); } });
+    W._inChart.set([{ name: money(amt) + ' of ' + ymLabel(a) + ' money', pts: pts, color: '#1f6fb2', type: 'area', fmt: function (v) { return money(v); } }], { logLeft: (pts.length && pts[pts.length - 1][1] / pts[0][1] > 20) });
   };
-  MK.fred('CPIAUCSL').then(function (p) { CPI = p; var ly = new Date(p[p.length - 1][0]).getUTCFullYear(); var t = D.getElementById('in-t'); if (t) t.value = ly; CALCS.infl(); }).catch(function () { var o = D.getElementById('in-out'); if (o) o.textContent = 'CPI data appears after the next site build.'; });
+  function loadCPI(p) { CPI = p; CPIM = {}; p.forEach(function (x) { CPIM[ym(x[0])] = x[1]; }); var l = ym(p[p.length - 1][0]); var t = D.getElementById('in-t'), tm = D.getElementById('in-tm'); if (t) { t.value = Math.floor(l / 12); tm.value = l % 12; t.max = Math.floor(l / 12); D.getElementById('in-f').max = Math.floor(l / 12); } var fy = Math.floor(ym(p[0][0]) / 12); D.getElementById('in-f').min = fy; if (t) t.min = fy; CALCS.infl(); }
+  if (D.getElementById('in-out')) {
+    MK.fred('CPIAUCNS').catch(function () { return MK.fred('CPIAUCSL'); }).then(loadCPI).catch(function () { var o = D.getElementById('in-out'); if (o) o.textContent = 'CPI data appears after the next site build.'; });
+    D.getElementById('in-swap').addEventListener('click', function () {
+      var f1 = D.getElementById('in-f'), m1 = D.getElementById('in-fm'), t1 = D.getElementById('in-t'), m2 = D.getElementById('in-tm');
+      var y = f1.value, m = m1.value; f1.value = t1.value; m1.value = m2.value; t1.value = y; m2.value = m; CALCS.infl();
+    });
+  }
 
   Object.keys(CALCS).forEach(function (k) {
     var box = D.querySelector('[data-calc="' + k + '"]'); if (!box) return;

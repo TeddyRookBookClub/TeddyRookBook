@@ -110,3 +110,9 @@ html[data-theme="dark"] .mk{--g:#6cc79a;--card:#272e2a;--paper:#2d3630;--line:#4
 html[data-theme="dark"] .mk-nav a.on,html[data-theme="dark"] .mk-btn.on,html[data-theme="dark"] .mk-btn.pri,html[data-theme="dark"] .mk-seg button.on{color:#0b1f14}
 html[data-theme="dark"] .mk-stat{background:#1f2622}
 .mk-tv iframe{color-scheme:light}
+.infl-calc{grid-template-columns:minmax(120px,1fr) minmax(190px,1.4fr) auto minmax(190px,1.4fr)}
+.infl-when{border:0;margin:0;padding:0;display:flex;gap:.35rem;min-width:0}
+.infl-when legend{font-size:.8rem;color:var(--muted);padding:0;margin-bottom:.2rem}
+.infl-when select{flex:1.4;min-width:0}.infl-when input{flex:1;min-width:4.5rem}
+.infl-swap{align-self:end;height:2.2rem;padding:0 .7rem;border:1px solid var(--border,#ccc);border-radius:8px;background:none;color:inherit;cursor:pointer;font-size:1.1rem}
+@media (max-width:640px){.infl-calc{grid-template-columns:1fr auto}.infl-calc>label{grid-column:1/-1}.infl-calc .infl-when{grid-column:1/2}.infl-swap{grid-column:2;grid-row:2/4}}

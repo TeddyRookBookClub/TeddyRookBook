@@ -37,6 +37,7 @@ SERIES = [
     ('CES0500000003', 'Average Hourly Earnings, Private', '$ per hour', 'Labor', 'M', 'Use “YoY %” for wage growth.'),
     # Inflation
     ('CPIAUCSL', 'CPI: All Items', 'Index 1982-84=100', 'Inflation', 'M', 'Use “YoY %” for the headline inflation rate.'),
+    ('CPIAUCNS', 'CPI: All Items (not seasonally adjusted)', 'Index 1982-84=100', 'Inflation', 'M', 'Back to 1913. The series behind the official inflation calculator, and ours.'),
     ('CPILFESL', 'Core CPI (ex food & energy)', 'Index 1982-84=100', 'Inflation', 'M', 'Use “YoY %”.'),
     ('PCEPI', 'PCE Price Index', 'Index 2017=100', 'Inflation', 'M', 'Use “YoY %”.'),
     ('PCEPILFE', 'Core PCE Price Index (the Fed’s target gauge)', 'Index 2017=100', 'Inflation', 'M', 'Use “YoY %”; the Fed targets 2%.'),

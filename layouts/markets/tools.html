@@ -61,13 +61,16 @@
     <div class="calc-out" id="ps-out"></div>
   </section>
   <section class="mk-box" data-calc="infl">
-    <h2>🛒 Inflation: what’s it worth today?</h2>
-    <div class="calc">
-      <label>Amount ($)<input type="number" id="in-a" value="100" step="any"></label>
-      <label>In year<input type="number" id="in-f" value="1990" min="1947"></label>
-      <label>Worth in year<input type="number" id="in-t" value="2025" min="1947"></label>
+    <h2>🛒 Inflation: what's it worth, then and now?</h2>
+    <div class="calc infl-calc">
+      <label>Amount ($)<input type="number" id="in-a" value="100" step="any" min="0"></label>
+      <fieldset class="infl-when"><legend>In</legend><select id="in-fm" aria-label="Starting month"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select><input type="number" id="in-f" value="1990" min="1913" aria-label="Starting year"></fieldset>
+      <button type="button" class="infl-swap" id="in-swap" title="Swap the two dates" aria-label="Swap the two dates">⇄</button>
+      <fieldset class="infl-when"><legend>Is worth, in</legend><select id="in-tm" aria-label="Ending month"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select><input type="number" id="in-t" value="2025" min="1913" aria-label="Ending year"></fieldset>
     </div>
     <div class="calc-out" id="in-out"></div>
+    <div class="mc" id="in-chart" style="height:260px;margin-top:.5rem"></div>
+    <p class="mk-note">Uses the Consumer Price Index for All Urban Consumers (CPI-U), monthly, not seasonally adjusted, from the Bureau of Labor Statistics via FRED, back to January 1913. Either date can come first: go forward to see what an old amount is worth now, or backward to see what today's money would have been then.</p>
   </section>
   <section class="mk-box" data-calc="cagr">
     <h2>📊 Annualized return (CAGR)</h2>
