@@ -21,7 +21,8 @@
     DATA.subjects.forEach(function (s) {
       var c = s.courses.filter(function (c) { return age <= c.to; })[0] || s.courses[s.courses.length - 1];
       var m = 60; for (var i = 0; i < s.mins.length; i++) if (age <= s.mins[i][0]) { m = s.mins[i][1]; break; }
-      o[s.key] = { on: age >= (s.start || s.courses[0].from), course: c.key, lesson: 1, mins: m, pace: 1 };
+      var hw = 10; (s.hw || []).some(function (r) { if (age <= r[0]) { hw = r[1]; return true; } });
+      o[s.key] = { on: age >= (s.start || s.courses[0].from), course: c.key, lesson: 1, mins: m, pace: 1, hw: hw };
     });
     return o;
   }
@@ -30,7 +31,7 @@
   function fresh() { return { kids: [newKid(1, 7)], days: [1, 2, 3, 4, 5], mode: 'week', date: nextMonday(), offs: [], len: 36, view: 'overview', week: 0 }; }
   function valid(s) { return s && Array.isArray(s.kids) && s.kids.length && Array.isArray(s.days); }
   function fix(s) { // fill gaps from older or hand-edited plans
-    s.kids.forEach(function (k, i) { k.name = k.name || 'Child ' + (i + 1); k.age = +k.age || 7; var d = defSubs(k.age); k.subs = k.subs || {}; for (var key in d) { if (!k.subs[key] || !COURSE[k.subs[key].course]) k.subs[key] = d[key]; } });
+    s.kids.forEach(function (k, i) { k.name = k.name || 'Child ' + (i + 1); k.age = +k.age || 7; var d = defSubs(k.age); k.subs = k.subs || {}; for (var key in d) { if (!k.subs[key] || !COURSE[k.subs[key].course]) k.subs[key] = d[key]; if (k.subs[key].hw == null) k.subs[key].hw = d[key].hw; } });
     s.offs = s.offs || []; s.len = s.len == null ? 36 : +s.len; s.view = s.view || 'overview'; s.week = +s.week || 0; s.mode = s.mode === 'date' ? 'date' : 'week'; s.date = s.date || nextMonday();
     return s;
   }
@@ -60,6 +61,7 @@
         '<label class="pl-f"><span>Book</span><select data-f="course">' + opts + '</select></label>' +
         '<label class="pl-f pl-sm"><span>From lesson</span><input type="number" min="1" max="' + c.lessons.length + '" value="' + x.lesson + '" data-f="lesson"></label>' +
         '<label class="pl-f pl-sm"><span>Minutes a week</span><input type="number" min="0" max="1200" step="5" value="' + x.mins + '" data-f="mins"></label>' +
+        '<label class="pl-f pl-sm"><span>Study a day</span><input type="number" min="0" max="240" step="5" value="' + (x.hw || 0) + '" data-f="hw" title="Minutes of practice or study (rereading, drill, memory work) on days with a lesson"></label>' +
         '<label class="pl-f pl-sm"><span>Pace</span><select data-f="pace">' + paces + '</select></label>' +
         '<button type="button" class="pl-resume" data-f="resume" title="Start after the last lesson marked done on this site">↻ Pick up where we left off</button>' +
         '</div>';
@@ -98,6 +100,7 @@
     if (f === 'lesson') { var n = COURSE[x.course].lessons.length; x.lesson = Math.max(1, Math.min(n, Math.round(+t.value) || 1)); t.value = x.lesson; }
     if (f === 'mins') x.mins = Math.max(0, +t.value || 0);
     if (f === 'pace') x.pace = +t.value;
+    if (f === 'hw') x.hw = Math.max(0, +t.value || 0);
     update();
   }
   $('#pl-addkid').addEventListener('click', function () { st.kids.push(newKid(st.kids.length + 1, 7)); renderKids(); update(); var n = root.querySelectorAll('.pl-name'); n[n.length - 1].select(); });
@@ -141,12 +144,12 @@
           var bud = per, list = [];
           while (q < items.length) {
             var it = items[q];
-            if (rem <= bud + 0.25 * per) { list.push({ it: it, cont: rem < it.e - it.s - 0.01, fin: true }); bud -= rem; q++; rem = q < items.length ? items[q].e - items[q].s : 0; if (bud < 0.25 * per) break; }
-            else { if (bud < 0.25 * per && list.length) break; list.push({ it: it, cont: rem < it.e - it.s - 0.01, fin: false }); rem -= bud; bud = 0; break; }
+            if (rem <= bud + 0.25 * per) { list.push({ it: it, cont: rem < it.e - it.s - 0.01, fin: true, m: rem }); bud -= rem; q++; rem = q < items.length ? items[q].e - items[q].s : 0; if (bud < 0.25 * per) break; }
+            else { if (bud < 0.25 * per && list.length) break; list.push({ it: it, cont: rem < it.e - it.s - 0.01, fin: false, m: bud }); rem -= bud; bud = 0; break; }
           }
           plan.push(list);
         }
-        tracks.push({ k: ki, s: s, items: items, per: per, plan: plan, days: plan.length });
+        tracks.push({ k: ki, s: s, items: items, per: per, plan: plan, days: plan.length, hw: +x.hw || 0 });
       });
     });
     var need = tracks.reduce(function (m, tr) { return Math.max(m, tr.days); }, 0);
@@ -172,7 +175,7 @@
     // what happens on each day
     cal.forEach(function (d) { d.kids = st.kids.map(function () { return []; }); });
     tracks.forEach(function (tr) {
-      for (var di = 0; di < cal.length && di < tr.plan.length; di++) if (tr.plan[di].length) cal[di].kids[tr.k].push({ s: tr.s, list: tr.plan[di] });
+      for (var di = 0; di < cal.length && di < tr.plan.length; di++) if (tr.plan[di].length) cal[di].kids[tr.k].push({ s: tr.s, list: tr.plan[di], hw: tr.hw, m: tr.plan[di].reduce(function (a, e) { return a + e.m; }, 0) });
       tr.books = [];
       tr.plan.forEach(function (list, di) {
         list.forEach(function (e) {
@@ -191,6 +194,8 @@
     if (di >= P.cal.length) return 'after this plan';
     var d = P.cal[di], w = P.weeks[d.w]; return 'week ' + w.n + (d.date ? ' (' + fmtDate(d.date) + ')' : '');
   }
+  function fm(m) { m = Math.round(m / 5) * 5 || (m > 0 ? 5 : 0); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + m % 60 + ' min' : '') : m + ' min'; }
+  function dayTotals(groups) { var l = 0, h = 0; groups.forEach(function (g) { l += g.m; h += g.hw; }); return { l: l, h: h }; }
   function lessonText(e) { return 'Lesson ' + e.it.l[0] + ': ' + e.it.l[1]; }
   function lessonURL(e) { return e.it.c.url + 'lesson-' + e.it.l[0] + '/'; }
 
@@ -208,10 +213,10 @@
     if (P.cut) note += '<p class="pl-note">This plan shows ' + P.weeks.length + ' weeks. Everything to the end of the last book takes about ' + Math.ceil(P.need / P.nd) + ' school weeks; choose “until every book is finished” to see it all.</p>';
     st.kids.forEach(function (k, ki) {
       var trs = P.tracks.filter(function (t) { return t.k === ki; }); if (!trs.length) return;
-      var mins = trs.reduce(function (s, t) { return s + st.kids[ki].subs[t.s.key].mins; }, 0);
-      h += '<div class="pl-ov" style="--kc:' + COLORS[ki % COLORS.length] + '"><h3><span class="pl-dot"></span>' + esc(k.name) + ' <small>age ' + k.age + ' · about ' + Math.round(mins / 60 * 10) / 10 + ' hours a week, ' + Math.round(mins / P.nd) + ' minutes a school day</small></h3>';
+      var mins = trs.reduce(function (s, t) { return s + st.kids[ki].subs[t.s.key].mins; }, 0), hwk = trs.reduce(function (s, t) { return s + t.hw * P.nd; }, 0);
+      h += '<div class="pl-ov" style="--kc:' + COLORS[ki % COLORS.length] + '"><h3><span class="pl-dot"></span>' + esc(k.name) + ' <small>age ' + k.age + ' · lessons about ' + fm(mins) + ' a week (' + fm(mins / P.nd) + ' a day)' + (hwk ? ', plus up to ' + fm(hwk) + ' of study (' + fm(hwk / P.nd) + ' a day)' : '') + '</small></h3>';
       trs.forEach(function (t) {
-        h += '<div class="pl-ovrow"><div class="pl-ovs">' + t.s.icon + ' ' + esc(t.s.name) + '<small>' + st.kids[ki].subs[t.s.key].mins + ' min a week</small></div><div class="pl-bars">';
+        h += '<div class="pl-ovrow"><div class="pl-ovs">' + t.s.icon + ' ' + esc(t.s.name) + '<small>' + st.kids[ki].subs[t.s.key].mins + ' min a week' + (t.hw ? ' + ' + t.hw + ' min study a day' : '') + '</small></div><div class="pl-bars">';
         t.books.forEach(function (b, bi) {
           if (b.d0 >= total) return;
           var l = 100 * b.d0 / total, w = Math.max(1.5, 100 * (Math.min(b.d1 + 1, total) - b.d0) / total);
@@ -235,13 +240,14 @@
   }
   function dayCell(d, ki, dn) {
     var groups = d.kids[ki]; if (!groups.length) return '';
+    var tt = dayTotals(groups);
     return groups.map(function (g) {
-      return '<div class="pl-g"><span class="pl-gi" title="' + esc(g.s.name) + '">' + g.s.icon + '</span><div>' + g.list.map(function (e) {
+      return '<div class="pl-g"><span class="pl-gi" title="' + esc(g.s.name) + '">' + g.s.icon + '</span><div><div class="pl-gt">' + esc(g.s.name) + ' · ≈ ' + fm(g.m) + ' lesson' + (g.hw ? ' + ' + fm(g.hw) + ' study' : '') + '</div>' + g.list.map(function (e) {
         var isD = dn[e.it.c.key] && dn[e.it.c.key][e.it.l[0]];
         return '<div class="pl-l' + (isD ? ' done' : '') + '">' + (e.fin ? '<input type="checkbox" class="pl-ck" data-c="' + e.it.c.key + '" data-n="' + e.it.l[0] + '"' + (isD ? ' checked' : '') + ' aria-label="Done">' : '<span class="pl-ckph"></span>') +
           '<a href="' + esc(lessonURL(e)) + '">' + esc(lessonText(e)) + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small></div>';
       }).join('') + '</div></div>';
-    }).join('');
+    }).join('') + '<div class="pl-tot">Total ≈ ' + fm(tt.l + tt.h) + ' <span>(' + fm(tt.l) + ' lessons' + (tt.h ? ' + ' + fm(tt.h) + ' study' : '') + ')</span></div>';
   }
   function weekHTML() {
     var w = P.weeks[st.week], dn = done(); if (!w) return '';
@@ -289,9 +295,9 @@
     setTimeout(function () { W.print(); root.classList.remove('pl-printing'); if (prev !== 'all') { st.view = prev; render(); } }, 50);
   });
   $('#pl-csv').addEventListener('click', function () {
-    var rows = [['Week', 'Date', 'Day', 'Child', 'Subject', 'Book', 'Lesson', 'Title', 'Part', 'Link']];
+    var rows = [['Week', 'Date', 'Day', 'Child', 'Subject', 'Book', 'Lesson', 'Title', 'Part', 'Lesson minutes', 'Study minutes (subject, that day)', 'Link']];
     P.cal.forEach(function (d) {
-      st.kids.forEach(function (k, ki) { d.kids[ki].forEach(function (g) { g.list.forEach(function (e) { rows.push([P.weeks[d.w].n, d.date ? iso(d.date) : '', DOWL[d.dow], k.name, g.s.name, e.it.c.name, e.it.l[0], e.it.l[1], e.cont ? 'continued' : 'new', location.origin + lessonURL(e)]); }); }); });
+      st.kids.forEach(function (k, ki) { d.kids[ki].forEach(function (g) { g.list.forEach(function (e) { rows.push([P.weeks[d.w].n, d.date ? iso(d.date) : '', DOWL[d.dow], k.name, g.s.name, e.it.c.name, e.it.l[0], e.it.l[1], e.cont ? 'continued' : 'new', Math.round(e.m), g.hw, location.origin + lessonURL(e)]); }); }); });
     });
     download(slug() + '.csv', 'text/csv', '﻿' + rows.map(function (r) { return r.map(function (c) { c = String(c); return /[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(','); }).join('\r\n'));
     msg('Spreadsheet saved. It opens in Excel, Numbers or Google Sheets.');
@@ -306,7 +312,7 @@
         var g = d.kids[ki]; if (!g.length) return;
         var next = new Date(d.date); next.setDate(next.getDate() + 1);
         var sum = k.name + ': ' + g.map(function (x) { return x.s.name + ' ' + x.list.map(function (e) { return e.it.l[0]; }).join(', '); }).join(' · ');
-        var desc = g.map(function (x) { return x.list.map(function (e) { return x.s.name + ': ' + e.it.c.name + ', ' + lessonText(e) + (e.cont ? ' (continued)' : '') + '\n' + location.origin + lessonURL(e); }).join('\n'); }).join('\n\n');
+        var tt = dayTotals(g), desc = 'About ' + fm(tt.l) + ' of lessons' + (tt.h ? ' + ' + fm(tt.h) + ' of study' : '') + '\n\n' + g.map(function (x) { return x.s.name + ' (≈ ' + fm(x.m) + (x.hw ? ' + ' + fm(x.hw) + ' study' : '') + ')\n' + x.list.map(function (e) { return e.it.c.name + ', ' + lessonText(e) + (e.cont ? ' (continued)' : '') + '\n' + location.origin + lessonURL(e); }).join('\n'); }).join('\n\n');
         L.push('BEGIN:VEVENT', 'UID:trb-' + st.date + '-' + di + '-' + ki + '@teddyrookbook.com', 'DTSTAMP:' + stamp, 'DTSTART;VALUE=DATE:' + iso(d.date).replace(/-/g, ''), 'DTEND;VALUE=DATE:' + iso(next).replace(/-/g, ''), fold('SUMMARY:' + icsEsc(sum)), fold('DESCRIPTION:' + icsEsc(desc)), 'TRANSP:TRANSPARENT', 'END:VEVENT');
       });
     });
@@ -328,8 +334,8 @@
   $('#pl-reset').addEventListener('click', function () { if (W.confirm('Start a new plan? This clears the plan saved in this browser (lessons marked done are kept).')) { st = fresh(); renderKids(); renderWeek(); update(); } });
 
   // picture: draw the current view (overview, or the selected week) on a canvas
-  $('#pl-png').addEventListener('click', function () {
-    var view = st.view === 'week' ? 'week' : 'overview', S = 2, Wd = 1200, pad = 40, lines = [];
+  function makePicture(view) {
+    var S = 2, Wd = 1200, pad = 40, lines = [];
     // build a list of drawing instructions, then size the canvas
     function add(t, o) { lines.push(Object.assign({ t: t, size: 18, color: '#1d2320', bold: false, indent: 0, gap: 6 }, o || {})); }
     add('Lesson plan', { size: 34, bold: true, color: '#004225', gap: 4, serif: true });
@@ -339,7 +345,7 @@
         var trs = P.tracks.filter(function (t) { return t.k === ki; }); if (!trs.length) return;
         add(k.name + ', age ' + k.age, { size: 24, bold: true, color: COLORS[ki % COLORS.length], gap: 8, serif: true });
         trs.forEach(function (t) {
-          add(t.s.icon + ' ' + t.s.name + ' · ' + st.kids[ki].subs[t.s.key].mins + ' min a week', { bold: true, indent: 12, gap: 4 });
+          add(t.s.icon + ' ' + t.s.name + ' · ' + st.kids[ki].subs[t.s.key].mins + ' min a week' + (t.hw ? ' + ' + t.hw + ' min study a day' : ''), { bold: true, indent: 12, gap: 4 });
           var lat = []; t.books.forEach(function (b) { if (b.d0 >= P.cal.length) lat.push(b.c.name); else add(b.c.name + ': lessons ' + b.first + '–' + b.lastL + ', ' + whenDay(b.d0) + ' to ' + (b.d1 >= P.cal.length ? 'beyond this plan' : whenDay(b.d1)), { indent: 36, size: 16 }); });
           if (lat.length) add('Then: ' + lat.join(', '), { indent: 36, size: 16, color: '#5d6862' });
           lines[lines.length - 1].gap = 12;
@@ -353,8 +359,9 @@
         var d = P.cal[i]; add(dayLabel(d), { size: 20, bold: true, gap: 6, serif: true });
         st.kids.forEach(function (k, ki) {
           if (!d.kids[ki].length) return;
-          add(k.name, { bold: true, indent: 12, color: COLORS[ki % COLORS.length], gap: 3 });
-          d.kids[ki].forEach(function (g) { g.list.forEach(function (e) { add('☐ ' + g.s.name + ': ' + lessonText(e) + (e.cont ? ' (continued)' : '') + ' — ' + e.it.c.name, { indent: 36, size: 16, gap: 3 }); }); });
+          var tt = dayTotals(d.kids[ki]);
+          add(k.name + '  ·  about ' + fm(tt.l + tt.h) + ' (' + fm(tt.l) + ' lessons' + (tt.h ? ' + ' + fm(tt.h) + ' study' : '') + ')', { bold: true, indent: 12, color: COLORS[ki % COLORS.length], gap: 3 });
+          d.kids[ki].forEach(function (g) { g.list.forEach(function (e) { add('☐ ' + g.s.name + ': ' + lessonText(e) + (e.cont ? ' (continued)' : '') + ' — ' + e.it.c.name + '  (≈ ' + fm(e.m) + ')', { indent: 36, size: 16, gap: 3 }); }); if (g.hw) add('   + ' + fm(g.hw) + ' ' + g.s.name.toLowerCase() + ' study', { indent: 36, size: 15, gap: 3, color: '#5d6862' }); });
           lines[lines.length - 1].gap = 10;
         });
         lines[lines.length - 1].gap = 18;
@@ -370,12 +377,44 @@
       rows.push({ l: l, t: cur, x: pad + l.indent + (first ? 0 : 18), h: l.size * 1.35, gap: l.gap });
     });
     var H = pad * 2 + 8 + rows.reduce(function (s, r) { return s + r.h + r.gap; }, 0);
-    if (H > 30000) { msg('That is too long for one picture; try the week view, or a shorter plan.'); return; }
+    if (H > 30000) return null;
     cv.width = Wd * S; cv.height = Math.ceil(H * S); g.scale(S, S);
     g.fillStyle = '#fbf8f0'; g.fillRect(0, 0, Wd, H); g.fillStyle = '#004225'; g.fillRect(0, 0, Wd, 8);
     var y = pad + 8; g.textBaseline = 'top';
     rows.forEach(function (r) { g.font = font(r.l); g.fillStyle = r.l.color; g.fillText(r.t, r.x, y); y += r.h + r.gap; });
-    cv.toBlob(function (b) { download(slug() + (view === 'week' ? '-week-' + P.weeks[st.week].n : '-overview') + '.png', 'image/png', b); msg('Picture saved.'); }, 'image/png');
+    return cv;
+  }
+  var pv = null, pvFile = null, pvView = 'week';
+  function picName(view) { return slug() + (view === 'week' ? '-week-' + P.weeks[st.week].n : '-overview') + '.png'; }
+  function refreshPic() {
+    var cv = makePicture(pvView), img = pv.querySelector('img'), note = pv.querySelector('.pl-pv-note');
+    pvFile = null;
+    if (!cv) { img.removeAttribute('src'); note.textContent = 'That plan is too long for one picture. Choose “This week”, or a shorter plan.'; return; }
+    note.textContent = canShareFiles() ? 'Tap “Save to Photos / Share”, then “Save Image” to put it in your photos.' : 'This is exactly the picture you’ll get, made in your browser.';
+    img.src = cv.toDataURL('image/png');
+    cv.toBlob(function (b) { pvFile = new File([b], picName(pvView), { type: 'image/png' }); }, 'image/png');
+  }
+  function canShareFiles() {
+    try { return matchMedia('(pointer: coarse)').matches && navigator.canShare && navigator.canShare({ files: [new File([new Blob(['x'], { type: 'image/png' })], 'x.png', { type: 'image/png' })] }); } catch (e) { return false; }
+  }
+  $('#pl-png').addEventListener('click', function () {
+    if (!pv) {
+      pv = D.createElement('div'); pv.className = 'pl-pv'; pv.hidden = true;
+      pv.innerHTML = '<div class="pl-pv-in" role="dialog" aria-label="Save the plan as a picture"><div class="pl-pv-opts"><label><input type="radio" name="pl-pv" value="week"> This week</label> <label><input type="radio" name="pl-pv" value="overview"> The overview</label></div><div class="pl-pv-img"><img alt="Preview of the plan picture"></div><p class="pl-pv-note hs-small"></p><div class="pl-pv-btns"><button type="button" class="hs-btn pri" id="pl-pv-share" hidden>📲 Save to Photos / Share</button><button type="button" class="hs-btn" id="pl-pv-dl">⬇ Download picture</button><button type="button" class="hs-btn ghost" id="pl-pv-x">Close</button></div></div>';
+      root.appendChild(pv);
+      pv.addEventListener('click', function (e) { if (e.target === pv || e.target.id === 'pl-pv-x') pv.hidden = true; });
+      pv.addEventListener('change', function (e) { if (e.target.name === 'pl-pv') { pvView = e.target.value; refreshPic(); } });
+      D.addEventListener('keydown', function (e) { if (e.key === 'Escape' && pv && !pv.hidden) pv.hidden = true; });
+      pv.querySelector('#pl-pv-share').addEventListener('click', function () {
+        if (!pvFile) return;
+        navigator.share({ files: [pvFile], title: 'Lesson plan' }).catch(function (e) { if (e && e.name !== 'AbortError') download(pvFile.name, 'image/png', pvFile); });
+      });
+      pv.querySelector('#pl-pv-dl').addEventListener('click', function () { if (pvFile) { download(pvFile.name, 'image/png', pvFile); msg('Picture saved.'); } });
+      if (canShareFiles()) { pv.querySelector('#pl-pv-share').hidden = false; pv.querySelector('#pl-pv-dl').classList.remove('pri'); pv.querySelector('#pl-pv-dl').textContent = '⬇ Download file'; }
+    }
+    pvView = st.view === 'week' ? 'week' : 'overview';
+    pv.querySelector('input[value="' + pvView + '"]').checked = true;
+    pv.hidden = false; refreshPic();
   });
 
   // ---------- start ----------

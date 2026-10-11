@@ -10,7 +10,7 @@
     {{- range $d.lessons -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" .mins) -}}{{- end -}}
     {{- $cs = $cs | append (dict "key" .key "name" .name "url" (.url | relURL) "from" .from "to" .to "rep" .rep "word" (cond (isset $d.book "lessonword") ($d.book.lessonword | default "") "Lesson") "lessons" $ls) -}}
   {{- end -}}
-  {{- $subs = $subs | append (dict "key" .key "name" .name "icon" .icon "start" (.start | default 0) "mins" .mins "courses" $cs) -}}
+  {{- $subs = $subs | append (dict "key" .key "name" .name "icon" .icon "start" (.start | default 0) "mins" .mins "hw" (.hw | default (slice (slice 99 10))) "courses" $cs) -}}
 {{- end -}}
 <div class="hs pl" id="pl">
   <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Lesson planner</nav>
