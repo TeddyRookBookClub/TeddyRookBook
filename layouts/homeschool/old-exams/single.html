@@ -29,7 +29,7 @@
     <h2>About this exam</h2>
     <p>{{ $e.notes }}</p>
     <p>Source: <a href="{{ $e.source.url }}" target="_blank" rel="noopener">{{ $e.source.name }}</a>{{ range $e.other_sources }}; <a href="{{ .url }}" target="_blank" rel="noopener">{{ .name | truncate 80 }}</a>{{ end }}.</p>
-    {{ if eq $k "bullitt-1912" }}<p>The museum publishes its own suggested answers: <a href="https://www.bullittcountyhistory.org/bchistory/schoolexam1912ans.html" target="_blank" rel="noopener">Bullitt County History Museum answers ↗</a>.</p>{{ else }}<p class="hs-small">The answer notes were written for this site. Where the question's wording is unclear in the surviving copies, the note says so.</p>{{ end }}
+    <p class="hs-small">The answer notes were written for this site. Where the question's wording is unclear in the surviving copies, the note says so.{{ if eq $k "bullitt-1912" }} The museum also publishes its own suggested answers: <a href="https://www.bullittcountyhistory.org/bchistory/schoolexam1912ans.html" target="_blank" rel="noopener">Bullitt County History Museum answers ↗</a>.{{ end }}</p>
   </section>
 </div>
 <script src="{{ "homeschool/exams.js" | relURL }}?v={{ (os.Stat "static/homeschool/exams.js").ModTime.Unix }}" defer></script>
