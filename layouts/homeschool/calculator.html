@@ -1,0 +1,170 @@
+{{ define "main" }}
+<link rel="stylesheet" href="{{ "homeschool/calc/calc.css" | relURL }}?v={{ (os.Stat "static/homeschool/calc/calc.css").ModTime.Unix }}">
+<div class="cx-head"><a href="{{ "homeschool/" | relURL }}">‹ Homeschool</a><h1>{{ .Title }}</h1></div>
+<div class="calc" id="calc">
+  <div class="cx-top">
+    <div class="cx-tabs" role="tablist" aria-label="Calculator screens">
+      <button type="button" class="cx-tab" role="tab" data-tab="graph">📈 Graph</button>
+      <button type="button" class="cx-tab" role="tab" data-tab="home">🧮 Calculate</button>
+      <button type="button" class="cx-tab" role="tab" data-tab="help">💡 Examples</button>
+    </div>
+    <div class="cx-set">
+      <button type="button" class="cx-btn" id="cx-deg" aria-pressed="false" title="Angles in radians or degrees">Radians</button>
+      <button type="button" class="cx-btn" id="cx-keysbtn" aria-pressed="false" title="Show the math keys">⌨ Keys</button>
+    </div>
+  </div>
+
+  <div class="cx-graph">
+    <aside class="cx-list">
+      <div class="cx-rows"></div>
+      <div class="cx-lbar"><button type="button" class="cx-btn" id="cx-add">＋ Add a row</button><button type="button" class="cx-btn" id="cx-tbl" aria-pressed="false">Table</button><button type="button" class="cx-btn ghost" id="cx-clear">Clear all</button></div>
+      <div class="cx-table" hidden></div>
+    </aside>
+    <div class="cx-plot">
+      <canvas id="cx-cv" aria-label="Graph. Drag to move around, scroll or pinch to zoom, click a curve to see a point on it."></canvas>
+      <div class="cx-zoom"><button type="button" id="cx-zin" aria-label="Zoom in">+</button><button type="button" id="cx-zout" aria-label="Zoom out">−</button><button type="button" id="cx-home" aria-label="Back to the start view">⌂</button></div>
+      <div class="cx-tip" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div class="cx-home" hidden>
+    <div class="cx-hbar"><button type="button" class="cx-btn" id="cx-dec" aria-pressed="false">Showing exact answers</button><button type="button" class="cx-btn ghost" id="cx-hclear">Clear</button></div>
+    <div class="cx-hist" aria-live="polite"></div>
+    <div class="cx-inrow"><input id="cx-in" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Type a calculation" placeholder="Type here, then press Enter"><button type="button" class="cx-btn pri" id="cx-go">=</button></div>
+  </div>
+
+  <div class="cx-help" hidden>
+    <p class="cx-lead">Click any example to try it. Graph examples open on the Graph screen; the rest run on the Calculate screen. Change the numbers and see what happens!</p>
+    <div class="cx-ex-grid">
+      <section><h2>Graphing</h2>
+        <button data-g="y = x^2">y = x²</button>
+        <button data-fresh="1" data-g="y = a x^2 + b x + c&#10;a = 1&#10;b = 0&#10;c = -2" data-view="0,0,40">y = ax² + bx + c, with sliders</button>
+        <button data-g="y = sin(x)&#10;y = cos(x)">sin and cos</button>
+        <button data-fresh="1" data-g="y = a sin(b x)&#10;a = 2&#10;b = 1">y = a·sin(bx), with sliders</button>
+        <button data-g="y = 1/x">y = 1/x</button>
+        <button data-g="y = tan(x)">y = tan(x)</button>
+        <button data-g="y = 2^x&#10;y = log(x, 2)">2ˣ and its inverse</button>
+        <button data-g="x^2 + y^2 = 25">A circle: x² + y² = 25</button>
+        <button data-g="x^2/16 + y^2/9 = 1">An ellipse</button>
+        <button data-g="x^2 - y^2 = 4">A hyperbola</button>
+        <button data-g="x = y^2 - 3">x = y² − 3 (sideways)</button>
+        <button data-g="y > x^2 - 4">Shade: y &gt; x² − 4</button>
+        <button data-g="x^2 + y^2 < 9&#10;y < x">Two shaded regions</button>
+        <button data-g="y = x^2 {-2 < x < 2}">Only part of a curve: {−2 &lt; x &lt; 2}</button>
+        <button data-g="r = 1 + cos(θ)">Polar: a heart shape (cardioid)</button>
+        <button data-g="r = 3 sin(4θ)">Polar: an 8-petal rose</button>
+        <button data-g="(cos(3t), sin(2t))">Parametric: a Lissajous figure</button>
+        <button data-g="(t cos(t)/2, t sin(t)/2)">Parametric: a spiral</button>
+        <button data-g="(1, 2)&#10;(-3, 1)">Points</button>
+        <button data-fresh="1" data-g="f(x) = x^3 - 3x&#10;f'(x)&#10;f''(x)" data-view="0,0,40">A function and its derivatives</button>
+        <button data-fresh="1" data-g="y = sin(x)&#10;y = taylor(sin(x), x, 0, n)&#10;n = 3" data-view="0,0,40">Taylor polynomials closing in on sin(x)</button>
+        <button data-fresh="1" data-g="f(x) = x^2/4&#10;y = f'(a)(x - a) + f(a)&#10;(a, f(a))&#10;a = 1" data-view="0,0,40">A tangent line that slides</button>
+        <button data-fresh="1" data-g="xs = {1, 2, 3, 4, 5, 6}&#10;ys = {2.1, 3.9, 6.2, 7.8, 10.1, 12.2}&#10;(xs, ys)&#10;linreg(xs, ys)" data-view="3,6,35">Data points and a line of best fit</button>
+        <button data-g="y = {1, 2, 3} x^2">A family of curves</button>
+      </section>
+      <section><h2>Algebra</h2>
+        <button data-c="expand((x + 2)^5)">expand((x + 2)⁵)</button>
+        <button data-c="factor(x^3 - 7x + 6)">factor(x³ − 7x + 6)</button>
+        <button data-c="factor(x^4 - 16)">factor(x⁴ − 16)</button>
+        <button data-c="simplify((x^2 - 9)/(x - 3))">simplify((x² − 9)/(x − 3))</button>
+        <button data-c="comdenom(1/x + 2/(x + 1))">Add fractions: comdenom(1/x + 2/(x+1))</button>
+        <button data-c="solve(x^2 + x - 6 = 0)">solve(x² + x − 6 = 0)</button>
+        <button data-c="solve(x^2 + 2x + 5 = 0)">solve with complex answers</button>
+        <button data-c="solve(x^2 = 7)">solve(x² = 7)</button>
+        <button data-c="solve(2^x = 32)">solve(2ˣ = 32)</button>
+        <button data-c="solve(3e^(2x) - 1 = 11)">solve(3e²ˣ − 1 = 11)</button>
+        <button data-c="solve({2x + 3y = 12, x - y = 1}, {x, y})">Two equations at once</button>
+        <button data-c="x^2 - 4 > 0">An inequality: x² − 4 &gt; 0</button>
+        <button data-c="solve(x^5 - x - 1 = 0)">solve(x⁵ − x − 1 = 0)</button>
+        <button data-c="solve(cos(x) = x)">solve(cos(x) = x)</button>
+      </section>
+      <section><h2>Calculus</h2>
+        <button data-c="d(x^3 sin(x))">Derivative: d(x³·sin(x))</button>
+        <button data-c="d(e^(x^2), x, 2)">Second derivative</button>
+        <button data-c="d(x^2 + 3x, x = 2)">Slope at a point: d(x² + 3x, x = 2)</button>
+        <button data-c="int(x e^x)">Integral: int(x·eˣ)</button>
+        <button data-c="int(sin(x)^2)">int(sin(x)²)</button>
+        <button data-c="int(1/(x^2 + 4))">int(1/(x² + 4))</button>
+        <button data-c="int(x^2, x, 0, 3)">Area: int(x², x, 0, 3)</button>
+        <button data-c="int(e^(-x^2), x, -inf, inf)">int(e^(−x²), x, −∞, ∞)</button>
+        <button data-c="limit(sin(x)/x, x, 0)">limit(sin(x)/x, x, 0)</button>
+        <button data-c="limit((1 + 1/n)^n, n, inf)">limit((1 + 1/n)ⁿ, n, ∞)</button>
+        <button data-c="taylor(cos(x), x, 0, 8)">Taylor series of cos(x)</button>
+        <button data-c="tangent(x^3, 1)">Tangent line to x³ at x = 1</button>
+        <button data-c="sum(1/k^2, k, 1, 1000)">sum(1/k², k, 1, 1000)</button>
+        <button data-c="sum(k, k, 1, 100)">Add 1 to 100</button>
+      </section>
+      <section><h2>Matrices and vectors</h2>
+        <button data-c="det([[1, 2], [3, 4]])">det([[1, 2], [3, 4]])</button>
+        <button data-c="inv([[2, 1], [1, 1]])">inverse</button>
+        <button data-c="[[1, 2], [3, 4]] * [[5, 6], [7, 8]]">multiply two matrices</button>
+        <button data-c="[[1, 1], [1, 0]]^10">[[1,1],[1,0]]¹⁰ (Fibonacci!)</button>
+        <button data-c="rref([[1, 2, 3], [4, 5, 6]])">rref</button>
+        <button data-c="eigenvalues([[2, 1], [1, 2]])">eigenvalues</button>
+        <button data-c="det([[a, b], [c, d]])">det with letters</button>
+        <button data-c="cross({1, 2, 3}, {4, 5, 6})">cross product</button>
+        <button data-c="dot({1, 2, 3}, {4, 5, 6})">dot product</button>
+        <button data-c="norm({3, 4})">length of a vector</button>
+      </section>
+      <section><h2>Numbers</h2>
+        <button data-c="100!">100!</button>
+        <button data-c="2^200">2²⁰⁰</button>
+        <button data-c="1/3 + 1/6 + 1/9">Fractions stay exact</button>
+        <button data-c="sqrt(72)">√72</button>
+        <button data-c="factor(2024)">factor(2024)</button>
+        <button data-c="isprime(2027)">isprime(2027)</button>
+        <button data-c="gcd(84, 120)">gcd(84, 120)</button>
+        <button data-c="lcm(4, 6, 10)">lcm(4, 6, 10)</button>
+        <button data-c="17 mod 5">17 mod 5</button>
+        <button data-c="nCr(52, 5)">Poker hands: nCr(52, 5)</button>
+        <button data-c="hex(255)">hex(255)</button>
+        <button data-c="bin(42)">bin(42)</button>
+        <button data-c="(3 + 4i)/(1 - 2i)">Complex numbers</button>
+        <button data-c="sqrt(-16)">√−16</button>
+        <button data-c="e^(i π)">e^(iπ)</button>
+        <button data-c="approx(π)">π as a decimal</button>
+        <button data-c="sin(π/3)">sin(π/3), exactly</button>
+      </section>
+      <section><h2>Statistics</h2>
+        <button data-c="scores := {72, 85, 90, 66, 85, 94, 78}&#10;mean(scores)&#10;median(scores)&#10;stdev(scores)">Mean, median and spread</button>
+        <button data-c="mode({1, 2, 2, 3, 3, 3, 4})">mode</button>
+        <button data-c="linreg({1, 2, 3, 4, 5}, {2.1, 3.9, 6.2, 7.8, 10.1})">Line of best fit</button>
+        <button data-c="quadreg({0, 1, 2, 3, 4}, {1, 2.1, 5.2, 9.8, 17.1})">Quadratic fit</button>
+        <button data-c="seq(k^2, k, 1, 10)">A list: seq(k², k, 1, 10)</button>
+        <button data-c="sort({5, 3, 9, 1})">sort a list</button>
+      </section>
+      <section><h2>Your own names</h2>
+        <button data-c="f(x) := x^2 - 2x&#10;f(5)&#10;f'(x)">f(x) := x² − 2x, then f(5) and f′(x)</button>
+        <button data-c="a := 7&#10;a^2 + 1">a := 7, then use a</button>
+        <button data-c="ans * 2">ans (the last answer)</button>
+      </section>
+    </div>
+    <details class="cx-how"><summary>How to type things</summary>
+      <ul>
+        <li><b>Powers:</b> <code>x^2</code> or <code>x²</code>. <b>Roots:</b> <code>sqrt(x)</code>, <code>√x</code>, <code>cbrt(x)</code>, <code>nthroot(x, 5)</code>.</li>
+        <li><b>Multiplying:</b> <code>2x</code>, <code>3(x+1)</code> and <code>x y</code> all multiply; <code>*</code> works too.</li>
+        <li><b>Constants:</b> <code>pi</code> or <code>π</code>, <code>e</code>, <code>i</code> (√−1), <code>inf</code> (∞).</li>
+        <li><b>Functions:</b> sin cos tan sec csc cot, asin acos atan, sinh cosh tanh, ln, log (base 10), <code>log(x, b)</code>, exp, abs or <code>|x|</code>, floor, ceil, round, <code>n!</code>.</li>
+        <li><b>On the Graph screen:</b> <code>y = …</code>, <code>x = …</code>, <code>r = …θ…</code> (polar), <code>(x(t), y(t))</code> (parametric), any equation in x and y, inequalities, points, <code>a = 3</code> for a slider, <code>f(x) = …</code> for a function, and <code>{-1 &lt; x &lt; 2}</code> at the end to show only part.</li>
+        <li><b>On the Calculate screen:</b> use <code>:=</code> to store: <code>a := 5</code>, <code>f(x) := x^2</code>. A longer name, like <code>scores = {…}</code>, can use <code>=</code>. <code>ans</code> is the last answer. Arrow up brings back what you typed before.</li>
+        <li><b>Calculus and algebra:</b> d, int, limit, taylor, sum, product, solve, nsolve, roots, factor, expand, simplify, comdenom, tangent.</li>
+        <li><b>Matrices:</b> <code>[[1,2],[3,4]]</code>; det, inv, transpose, rref, trace, eigenvalues, identity(3), dot, cross, norm.</li>
+        <li><b>Lists and statistics:</b> <code>{1,2,3}</code>; mean, median, mode, stdev, variance, total, sort, seq, linreg, quadreg, expreg.</li>
+        <li><b>Numbers:</b> gcd, lcm, mod, isprime, factor, nCr, nPr, hex, bin, oct, real, imag, conj, arg, approx, exact, propfrac, random, randint.</li>
+        <li>The <b>Radians/Degrees</b> button sets how angles are measured. Your work is saved in this browser.</li>
+      </ul>
+    </details>
+  </div>
+
+  <div class="cx-keys" hidden>
+    <button data-k="x">x</button><button data-k="y">y</button><button data-k="θ">θ</button><button data-k="t">t</button><button data-k="π">π</button><button data-k="e">e</button><button data-k="i">i</button><button data-k="^">^</button><button data-k="²">x²</button><button data-k="sqrt()">√</button>
+    <button data-k="(">(</button><button data-k=")">)</button><button data-k=",">,</button><button data-k="=">=</button><button data-k="<">&lt;</button><button data-k=">">&gt;</button><button data-k="|">|x|</button><button data-k="!">!</button><button data-k="/">÷</button><button data-k="*">×</button>
+    <button data-k="sin()">sin</button><button data-k="cos()">cos</button><button data-k="tan()">tan</button><button data-k="ln()">ln</button><button data-k="log()">log</button><button data-k="e^()">eˣ</button><button data-k="{}">{ }</button><button data-k="[]">[ ]</button><button data-k="-">−</button><button data-k="+">+</button>
+    <button class="w" data-k="d()">d</button><button class="w" data-k="int()">∫ int</button><button class="w" data-k="solve()">solve</button><button class="w" data-k="factor()">factor</button><button class="w" data-k="expand()">expand</button><button class="w" data-k="limit()">limit</button><button data-k="L" aria-label="Left">←</button><button data-k="R" aria-label="Right">→</button><button data-k="BS" aria-label="Delete">⌫</button><button class="ent" data-k="ENT" aria-label="Enter">⏎</button>
+  </div>
+  <noscript><p>The calculator needs JavaScript.</p></noscript>
+</div>
+<p class="cx-foot">Made for the Teddy Rook Book homeschool pages. Everything runs in your browser, with nothing sent anywhere. It's a learning tool: check anything important with a second method.</p>
+<script src="{{ "homeschool/calc/cas.js" | relURL }}?v={{ (os.Stat "static/homeschool/calc/cas.js").ModTime.Unix }}"></script>
+<script src="{{ "homeschool/calc/calc.js" | relURL }}?v={{ (os.Stat "static/homeschool/calc/calc.js").ModTime.Unix }}"></script>
+{{ end }}
