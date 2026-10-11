@@ -185,7 +185,7 @@
   var SEG_W = {
     field: { run: 3, pit: 2, cols: 2, steps: 1, bricks: 2, ledges: 1, boat: 0.5 },
     cliff: { run: 2, pit: 2, ledges: 3, boat: 1.5, steps: 1.5, cols: 0.5 },
-    sea: { run: 1.5, boat: 3, ledges: 2, pit: 1, bricks: 0.5 },
+    sea: { run: 2.5, boat: 2.5, ledges: 2, pit: 1, bricks: 1 },
     cave: { run: 2, cols: 2, pit: 2, bricks: 2, blocks: 1.5, ledges: 1 },
     castle: { run: 1.5, bar: 2, lava: 2, ledges: 1, pit: 1, blocks: 1 }
   };
@@ -204,8 +204,8 @@
       cols: function () { b.flat(13); var h1 = ri(2, 3), h2 = ri(2, 3 + Math.round(diff)), sn = kind === 'cave' || kind === 'castle'; b.col(2, h1, sn && r() < 0.5).col(8, h2, sn && r() < 0.5); if (r() < 0.5) b.at(5, GY - h1 - 3, 'oo'); enemies(1, 5, 6); },
       steps: function () { var h = ri(3, 4 + (diff > 0.6 ? 1 : 0)); b.flat(5).up(h).pit(ri(2, 3)).down(h).flat(5); if (r() < 0.5) enemies(1, 2, 3); },
       bricks: function () { var n = ri(12, 15); b.flat(n); var len = ri(5, 9), s0 = ri(1, n - len - 1), row = ''; for (var i = 0; i < len; i++) row += r() < 0.25 ? '?' : 'B'; b.at(s0, 8, row); if (r() < 0.6) b.at(s0 + 1, 6, 'o'.repeat(Math.max(1, len - 2))); enemies(1 + (r() < diff ? 1 : 0), 3, n - 2); },
-      ledges: function () { var w = ri(10, 12), list = [], x = 1, y = ri(8, 10); while (x < w - 2) { var len = ri(2, 3); if (x + len > w - 1) len = w - 1 - x; if (len < 1) break; list.push([x, y, len]); x += len + ri(1, 2); y = Math.max(8, Math.min(10, y + ri(-1, 1))); } b.ledges(w, list); if (r() < 0.6) { var L = list[Math.floor(list.length / 2)]; b.at(L[0], L[1] - 2, 'o'.repeat(L[2])); } b.flat(ri(5, 7)); },
-      boat: function () { var w = ri(9, 12); b.mplat(w, ri(9, 10), 1, w - 4); if (r() < 0.5) b.at(Math.floor(w / 2), 6, 'ooo'); b.flat(ri(5, 7)); if (kind !== 'sea' && r() < 0.4) enemies(1, 2, 3); },
+      ledges: function () { var w = ri(10, 12), list = [], x = 1, y = ri(8, 10); while (x < w - 2) { var len = ri(2, 3); if (x + len > w - 1) len = w - 1 - x; if (len < 1) break; list.push([x, y, len]); x += len + ri(1, 2); y = Math.max(8, Math.min(10, y + ri(-1, 1))); } b.ledges(w, list); if (r() < 0.6) { var L = list[Math.floor(list.length / 2)]; b.at(L[0], L[1] - 2, 'o'.repeat(L[2])); } if (kind === 'sea' && r() < 0.5) b.en(ri(2, w - 2), fl, ri(5, 6)); b.flat(ri(5, 7)); if (kind === 'sea' && r() < 0.5) enemies(1, 2, 3); },
+      boat: function () { var w = ri(9, 12); b.mplat(w, ri(9, 10), 1, w - 4); if (r() < 0.7) b.at(Math.floor(w / 2), 6, 'ooo'); if (kind === 'sea' && r() < 0.8) b.en(ri(2, w - 2), fl, ri(5, 6)); b.flat(ri(5, 7)); if (r() < (kind === 'sea' ? 0.7 : 0.4)) enemies(1, 2, 3); }, // birds over the water on sea levels
       blocks: function () { b.flat(13); var h = ri(0, 1); b.at(2, 10 - h, 'X').at(4, 9 - h, 'XX').at(7, 8 - h, 'XXX'); if (r() < 0.5) b.at(7, 5 - h, r() < 0.3 ? '*' : '?'); enemies(1, 10, 11); },
       bar: function () { b.flat(9).bar(4, ri(7, 9)); if (r() < 0.5) b.at(1, 8, '?'); if (r() < 0.5) enemies(1, 7, 8); },
       lava: function () { var w = ri(3, 4); b.pit(w).podo(1); if (w >= 4 && diff > 0.3) b.podo(3); b.flat(ri(6, 8)); }
@@ -497,8 +497,8 @@
     if (e.fly) { e.x += e.vx * dt; e.y = e.base + Math.sin(e.t * 2.2) * 1.4; if (e.x < G.camX - 4) e.alive = false; }
     else {
       if (e.k === 'frog') {
-        if (e.on) { e.vx = 0; if (e.t > 1.1) { e.t = 0; e.vy = -11; e.vx = (p.x < e.x ? -1 : 1) * 2.6; } }
-      }
+        if (e.on) { e.vx = 0; if (e.t > 1.1) { e.t = 0; var fd = p.x < e.x ? -1 : 1; if (!safeHop(e, fd)) fd = safeHop(e, -fd) ? -fd : 0; e.vy = -11; e.vx = fd * 2.6; } }
+      } else if (e.on && e.vx && (!groundAhead(e, e.vx > 0 ? 1 : -1, 0.1) || (G.L.bridge && e.vx > 0 && e.x > G.L.bridge - 3))) e.vx = -e.vx; // walkers turn back at the edge of a drop, and keep off the boss's bridge
       e.vy = Math.min(18, e.vy + 40 * dt);
       var sv = e.vx; if (moveBody(e, dt)) e.vx = -sv;
       if (e.k === 'frog' && !e.on) e.vx = sv;
@@ -512,6 +512,10 @@
       else hurt();
     }
   }
+  // Animals never walk or hop off the ground: they check for ground ahead first.
+  function standable(x, y) { var ch = tile(Math.floor(x), Math.floor(y)); return solid(ch) || ch === '-'; }
+  function groundAhead(e, dir, d) { var fx = dir > 0 ? e.x + e.w + d : e.x - d, fy = e.y + e.h + 0.1; return standable(fx, fy) || standable(fx, fy + 1); }
+  function safeHop(e, dir) { for (var d = 0.4; d <= 1.6; d += 0.4) if (!groundAhead(e, dir, d)) return false; return true; }
   function bossStep(e, dt) {
     var L = G.L, minX = L.bridge + 2, maxX = L.bridge + 12;
     if (e.hit) e.hit = Math.max(0, e.hit - dt);

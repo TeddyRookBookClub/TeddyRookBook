@@ -222,7 +222,7 @@
     G.fx.forEach(function (f) { f.life -= dt; f.x += f.vx * dt; f.y += f.vy * dt; f.vy -= 14 * dt; }); G.fx = G.fx.filter(function (f) { return f.life > 0; });
     G.floats.forEach(function (f) { f.life -= dt; f.y += dt * 0.7; }); G.floats = G.floats.filter(function (f) { return f.life > 0; });
     // phases
-    if (G.phase === 'settle' && G.t > 0.8) { G.phase = 'aim'; }
+    if (G.phase === 'settle' && G.t > 0.8) { G.phase = 'aim'; hud(); } // the Fire button is ready for the first shot
     if (G.phase === 'fly') {
       G.fired += dt;
       var moving = w.bodies.some(function (b) { return b.im && !b.dead && (Math.hypot(b.v.x, b.v.y) > 0.25 || Math.abs(b.w0) > 0.4); });
