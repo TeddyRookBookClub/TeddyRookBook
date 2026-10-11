@@ -1,0 +1,89 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $ex := site.Data.hs_exams.exams }}
+<div class="hs">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › The old exams</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Where it all leads</p>
+    <h1>The old eighth-grade exams</h1>
+    <p>A hundred years ago, many American children finished school at about fourteen by passing a county or state exam in arithmetic, grammar, spelling, geography, history and more. Here are real ones to try, with notes for parents, and a free path to being ready for them using the books on this site.</p>
+  </header>
+
+  <section class="hs-sec">
+    <h2>Try an exam</h2>
+    <div class="hs-cards">
+      {{ range $ex }}
+      <a class="hs-card" href="{{ printf "homeschool/old-exams/%s/" .slug | relURL }}">
+        <span class="big" aria-hidden="true">📝</span>
+        <h2>{{ .display }}</h2>
+        <p>{{ len .sections }} subjects{{ $n := 0 }}{{ range .sections }}{{ $n = add $n (len .questions) }}{{ end }}, {{ $n }} questions: {{ range $i, $s := .sections }}{{ if $i }}, {{ end }}{{ lower $s.name }}{{ end }}.</p>
+        <span class="go">Try it →</span>
+      </a>
+      {{ end }}
+    </div>
+    <p class="hs-small">The Kansas exam is the famous one that goes around online. Its wording here was checked against several copies. The Ohio exam is from the official book of state questions. The Kentucky one comes from the Bullitt County History Museum, which also publishes its own answers.</p>
+  </section>
+
+  <section class="hs-sec">
+    <h2>How to use them</h2>
+    <ul class="hs-how">
+      <li><b>As a goal, not a test to cram for.</b> These exams show what a well-taught fourteen-year-old could do: work real-life arithmetic in their head and on paper, write clean sentences, spell, and know the map and the main events of history.</li>
+      <li><b>Try one section at a time.</b> Each page lets your child work a subject on paper, with the old time limit if you like, and then you check the answers together.</li>
+      <li><b>Some facts have changed.</b> The number of states, borders, names and prices are from their own time. The answer notes say what was right then and what is true now. The skills are the same.</li>
+      <li><b>Once or twice a year</b> is plenty. Try a section, note what was hard, and go back to the matching book.</li>
+    </ul>
+  </section>
+
+  <section class="hs-sec">
+    <h2>A path to get there, by age</h2>
+    <p>A flexible plan, not a schedule. Go at your child's pace. Everything linked is free.</p>
+    <div class="hs-path">
+      <div class="hs-box"><h3>About ages 5 to 8</h3><ul>
+        <li>Reading: <a href="{{ "homeschool/mcguffey/primer/" | relURL }}">McGuffey's Primer</a>, then the <a href="{{ "homeschool/mcguffey/first-reader/" | relURL }}">First</a> and <a href="{{ "homeschool/mcguffey/second-reader/" | relURL }}">Second Readers</a>.</li>
+        <li>Phonics and spelling: <a href="{{ "homeschool/spelling-and-grammar/webster/" | relURL }}">Webster's Speller</a>, a few minutes a day.</li>
+        <li>Arithmetic: <a href="{{ "homeschool/rays-arithmetic/primary/" | relURL }}">Ray's New Primary Arithmetic</a>.</li>
+        <li>Copywork from the readers; tell stories back in their own words; nature walks and poetry.</li>
+      </ul></div>
+      <div class="hs-box"><h3>About ages 8 to 11</h3><ul>
+        <li>Reading: McGuffey's <a href="{{ "homeschool/mcguffey/third-reader/" | relURL }}">Third</a> and <a href="{{ "homeschool/mcguffey/fourth-reader/" | relURL }}">Fourth Readers</a>, plus whole books from the <a href="{{ "free-books/" | relURL }}">free books</a>.</li>
+        <li>Spelling: the <a href="{{ "homeschool/mcguffey/speller/" | relURL }}">McGuffey Speller</a>, with dictation.</li>
+        <li>Arithmetic: <a href="{{ "homeschool/rays-arithmetic/intellectual/" | relURL }}">Ray's New Intellectual Arithmetic</a> (mental arithmetic and fractions).</li>
+        <li>Grammar: <a href="{{ "homeschool/spelling-and-grammar/harvey/" | relURL }}">Harvey's Elementary Grammar</a>, from about age 9.</li>
+        <li>History and geography through good books and the <a href="{{ "timeline/" | relURL }}">timeline</a>; learn the map.</li>
+      </ul></div>
+      <div class="hs-box"><h3>About ages 11 to 14</h3><ul>
+        <li>Reading: McGuffey's <a href="{{ "homeschool/mcguffey/fifth-reader/" | relURL }}">Fifth</a> and <a href="{{ "homeschool/mcguffey/sixth-reader/" | relURL }}">Sixth Readers</a>: great writers, read aloud well.</li>
+        <li>Arithmetic: <a href="{{ "homeschool/rays-arithmetic/" | relURL }}">Ray's Practical and Higher Arithmetic</a>: percentage, interest, measurement and business problems, just like the exams.</li>
+        <li>Grammar: finish Harvey; write letters, descriptions and short compositions every week.</li>
+        <li>Latin, if you like: <a href="{{ "homeschool/latin/latin-for-beginners/" | relURL }}">D'Ooge's Latin for Beginners</a>.</li>
+        <li>Practice: try one section of an old exam each term.</li>
+      </ul></div>
+      <div class="hs-box"><h3>Beyond: the classical track</h3><ul>
+        <li>Algebra and <a href="{{ "homeschool/geometry/" | relURL }}">Wentworth's Geometry</a>, with the <a href="{{ "homeschool/calculator/" | relURL }}">graphing calculator</a> for checking.</li>
+        <li>Latin past the first year, and <a href="{{ "homeschool/greek/" | relURL }}">New Testament Greek</a>, with the site's <a href="{{ "languages/" | relURL }}">language tools</a>.</li>
+        <li>Great books, poetry and history: the <a href="{{ "books/" | relURL }}">book guides</a>, <a href="{{ "books/paths/" | relURL }}">reading paths</a> and <a href="{{ "free-books/" | relURL }}">free books</a>.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="hs-sec">
+    <h2>Each exam subject, and where to learn it</h2>
+    <div class="hs-tablewrap"><table class="hs-table">
+      <thead><tr><th>Subject</th><th>On this site</th><th>Also free</th></tr></thead>
+      <tbody>
+        <tr><td>Arithmetic</td><td><a href="{{ "homeschool/rays-arithmetic/" | relURL }}">Ray's Arithmetic</a>, with guides; the <a href="{{ "homeschool/calculator/" | relURL }}">calculator</a> for checking</td><td>Ray's Key (answers) at the Internet Archive</td></tr>
+        <tr><td>Reading</td><td><a href="{{ "homeschool/mcguffey/" | relURL }}">McGuffey's Readers</a>, with guides; <a href="{{ "free-books/" | relURL }}">free books</a></td><td><a href="https://www.amblesideonline.org/" target="_blank" rel="noopener">Ambleside Online</a> reading lists</td></tr>
+        <tr><td>Grammar and composition</td><td><a href="{{ "homeschool/spelling-and-grammar/harvey/" | relURL }}">Harvey's Grammar</a>, with guides</td><td></td></tr>
+        <tr><td>Spelling (orthography)</td><td><a href="{{ "homeschool/spelling-and-grammar/webster/" | relURL }}">Webster's</a> and <a href="{{ "homeschool/mcguffey/speller/" | relURL }}">McGuffey's</a> spellers, with guides</td><td></td></tr>
+        <tr><td>Geography, history, civics, physiology</td><td><a href="{{ "timeline/" | relURL }}">Timeline</a>, <a href="{{ "infographics/" | relURL }}">infographics</a></td><td><a href="https://digital.library.pitt.edu/collection/19th-century-schoolbooks" target="_blank" rel="noopener">Pitt's 19th-century schoolbooks</a> (old geographies, histories and physiologies)</td></tr>
+        <tr><td>Latin and Greek</td><td><a href="{{ "homeschool/latin/" | relURL }}">Latin</a>, <a href="{{ "homeschool/greek/" | relURL }}">Greek</a>, <a href="{{ "languages/" | relURL }}">language tools</a></td><td><a href="https://www.perseus.tufts.edu/" target="_blank" rel="noopener">Perseus Digital Library</a></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="hs-sec hs-note">
+    <h2>A fair note</h2>
+    <p>These exams show what was expected of a child finishing common school, not that every child passed. Many didn't, and many never sat them. And as the fact-checking site Snopes notes, an adult struggling with them today doesn't prove that schools have declined; it mostly reflects what each generation was taught. We use them as a clear, worthwhile target.</p>
+  </section>
+</div>
+{{ end }}

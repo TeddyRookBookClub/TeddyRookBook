@@ -1,17 +1,17 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-{{ $key := .CurrentSection.Params.course }}{{ $d := index site.Data (printf "rays_%s" $key) }}
+{{ $cs := .CurrentSection }}{{ $key := $cs.Params.course }}{{ $d := index site.Data ($cs.Params.data | default (printf "rays_%s" $key)) }}{{ $ser := $cs.Parent }}{{ $sd := index site.Data.hs_series ($ser.Params.series | default "rays") }}
 {{ $n := .Params.lesson }}
 {{ $l := index (where $d.lessons "num" $n) 0 }}
 {{ $u := index (where $d.units "id" $l.unit) 0 }}
 {{ $total := len $d.lessons }}
-{{ $base := printf "homeschool/rays-arithmetic/%s/" $key }}
+{{ $base := $cs.RelPermalink }}
 {{ $id := $d.book.id }}
-{{ $next := "" }}{{ $nextTitle := "" }}{{ if lt $n $total }}{{ $next = printf "%slesson-%d/" $base (add $n 1) | relURL }}{{ $nextTitle = (index (where $d.lessons "num" (add $n 1)) 0).title }}{{ end }}
+{{ $next := "" }}{{ $nextTitle := "" }}{{ if lt $n $total }}{{ $next = printf "%slesson-%d/" $base (add $n 1) }}{{ $nextTitle = (index (where $d.lessons "num" (add $n 1)) 0).title }}{{ end }}
 <div class="hs hs-lesson" data-course="{{ $key }}" data-n="{{ $n }}" data-total="{{ $total }}">
-  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/rays-arithmetic/" | relURL }}">Ray's Arithmetic</a> › <a href="{{ $base | relURL }}">{{ $d.book.short }}</a> › Lesson {{ $n }}</nav>
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ $ser.RelPermalink }}">{{ $sd.crumb | default $ser.Title }}</a> › <a href="{{ $base }}">{{ $d.book.short }}</a> › Lesson {{ $n }}</nav>
   <header class="hs-lhead">
-    <p class="hs-eyebrow">{{ $d.book.title }} · Lesson {{ $l.roman }} · Unit {{ $u.id }}: {{ $u.name }}</p>
+    <p class="hs-eyebrow">{{ $d.book.title }} · {{ if isset $d.book "lessonword" }}{{ with $d.book.lessonword }}{{ . }} {{ end }}{{ else }}Lesson {{ end }}{{ $l.roman }} · {{ $d.book.unitword | default "Unit" }} {{ $u.id }}: {{ $u.name }}</p>
     <h1>{{ $n }}. {{ $l.title }}{{ if $l.optional }} <em class="hs-opt">optional</em>{{ end }}</h1>
     <p class="hs-goal"><b>Goal:</b> {{ $l.goal }}</p>
     <p class="hs-meta">⏱ About {{ $l.mins }} minutes · {{ len $l.steps }} steps</p>
@@ -29,7 +29,7 @@
       <ul>{{ range $l.materials }}<li>{{ . }}</li>{{ end }}</ul>
     </section>
     <section class="hs-box">
-      <h2>What's in the book</h2>
+      <h2>{{ $d.book.inbook | default "What's in the book" }}</h2>
       <p>{{ $l.book }}</p>
     </section>
   </div>
@@ -45,16 +45,16 @@
     {{ with $l.practice }}<section class="hs-box"><h2>Afterwards</h2><p>{{ . }}</p></section>{{ end }}
     {{ with $l.tip }}<section class="hs-box tip"><h2>Tip</h2><p>{{ . }}</p></section>{{ end }}
   </div>
-  {{ with $l.answers }}<details class="hs-ans"><summary>Answers to the book's problems</summary><p>{{ . }}</p><p class="hs-small">Worked out for this site from the scan. If a number in your copy differs, trust the book.{{ with $d.book.key_id }} Every answer is in Ray's own <a href="https://archive.org/details/{{ . }}" target="_blank" rel="noopener">Key ↗</a>.{{ end }}</p></details>{{ end }}
+  {{ with $l.answers }}<details class="hs-ans"><summary>{{ $d.book.answersword | default "Answers to the book's problems" }}</summary><p>{{ . }}</p><p class="hs-small">Worked out for this site from the scan. If a number in your copy differs, trust the book.{{ with $d.book.key_id }} Every answer is in the <a href="https://archive.org/details/{{ . }}" target="_blank" rel="noopener">Key ↗</a>.{{ end }}</p></details>{{ end }}
 
   <div class="hs-done-row">
     <label class="hs-check"><input type="checkbox" id="hs-done"> Mark this lesson done</label>
   </div>
 
   <nav class="hs-pn">
-    {{ if gt $n 1 }}<a href="{{ printf "%slesson-%d/" $base (sub $n 1) | relURL }}">← Lesson {{ sub $n 1 }}</a>{{ else }}<span></span>{{ end }}
-    <a href="{{ $base | relURL }}">All lessons</a>
-    {{ if lt $n $total }}<a href="{{ printf "%slesson-%d/" $base (add $n 1) | relURL }}">Lesson {{ add $n 1 }} →</a>{{ else }}<span></span>{{ end }}
+    {{ if gt $n 1 }}<a href="{{ printf "%slesson-%d/" $base (sub $n 1) }}">← Lesson {{ sub $n 1 }}</a>{{ else }}<span></span>{{ end }}
+    <a href="{{ $base }}">All lessons</a>
+    {{ if lt $n $total }}<a href="{{ printf "%slesson-%d/" $base (add $n 1) }}">Lesson {{ add $n 1 }} →</a>{{ else }}<span></span>{{ end }}
   </nav>
 
   <script type="application/json" id="hs-data">{{ dict "n" $n "title" $l.title "steps" $l.steps "practice" ($l.practice | default "") "materials" $l.materials "scan" (printf "https://archive.org/embed/%s#page/n%d/mode/1up" $id $l.idx) "page" (printf "https://archive.org/details/%s/page/n%d/mode/1up" $id $l.idx) "next" $next "nextTitle" $nextTitle | jsonify | safeJS }}</script>

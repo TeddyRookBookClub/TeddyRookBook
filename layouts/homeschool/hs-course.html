@@ -1,0 +1,45 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $key := .Params.course }}{{ $d := index site.Data (.Params.data | default (printf "rays_%s" $key)) }}{{ $base := .RelPermalink }}
+{{ $ser := .Parent }}{{ $sd := index site.Data.hs_series ($ser.Params.series | default "rays") }}
+{{ $book := dict }}{{ $keybook := dict }}{{ range $sd.groups }}{{ range .books }}{{ if eq .id $d.book.id }}{{ $book = . }}{{ end }}{{ if eq .id ($d.book.key_id | default "-") }}{{ $keybook = . }}{{ end }}{{ end }}{{ end }}
+<div class="hs" data-course="{{ $key }}" data-total="{{ len $d.lessons }}">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ $ser.RelPermalink }}">{{ $sd.crumb | default $ser.Title }}</a> › {{ $d.book.short }}</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">{{ $d.book.eyebrow }}</p>
+    <h1>{{ $d.book.title }}</h1>
+    <p>{{ $d.book.hero }}</p>
+  </header>
+
+  <section class="hs-progress" aria-live="polite">
+    <div class="hs-bar"><b style="width:0%"></b></div>
+    <p><span id="hs-done-n">0</span> of {{ len $d.lessons }} lessons done <span class="hs-small">(saved in this browser)</span> <a id="hs-next-link" class="hs-btn pri" href="{{ printf "%slesson-1/" $base }}">Start Lesson 1 →</a></p>
+  </section>
+
+  <section class="hs-sec">
+    <h2>How to use it</h2>
+    <ul class="hs-how">{{ range $d.book.how }}<li>{{ . | safeHTML }}</li>{{ end }}</ul>
+  </section>
+
+  {{ range $d.units }}
+  {{ $u := . }}
+  <section class="hs-unit">
+    <h2><span>{{ $d.book.unitword | default "Unit" }} {{ $u.id }}</span> {{ $u.name }}</h2>
+    <p class="hs-small">{{ $u.text }} Lessons {{ $u.from }}–{{ $u.to }}.</p>
+    <ol class="hs-lessons">
+      {{ range where $d.lessons "unit" $u.id }}
+      <li data-n="{{ .num }}"><a href="{{ printf "%slesson-%d/" $base .num }}"><span class="num">{{ .num }}</span><span class="t">{{ .title }}{{ if .optional }} <em class="hs-opt">optional</em>{{ end }}</span><span class="rn">{{ if isset $d.book "lessonword" }}{{ with $d.book.lessonword }}{{ . }} {{ end }}{{ else }}Lesson {{ end }}{{ .roman }}</span><span class="ck" aria-label="done">✓</span></a></li>
+      {{ end }}
+    </ol>
+  </section>
+  {{ end }}
+
+  <section class="hs-sec">
+    <h2>The book itself</h2>
+    {{ with $book }}{{ partial "hs-book.html" . }}{{ end }}
+  </section>
+  {{ with $keybook }}<section class="hs-sec"><h2>The answers</h2>{{ partial "hs-book.html" . }}</section>{{ end }}
+  <p class="hs-small">{{ $d.book.numnote | default "Lesson numbers match the book's Roman numerals: Lesson 3 is the book's Lesson III." }} The guides are written for this site; the book is in the public domain.</p>
+</div>
+<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
+{{ end }}

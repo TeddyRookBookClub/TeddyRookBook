@@ -1,0 +1,3 @@
+{{ range site.Data.hs_exams.exams }}
+  {{ $.AddPage (dict "kind" "page" "path" .slug "title" (printf "The %s exam" .display) "params" (dict "exam" .key "description" (printf "Try the %s exam at home: every question, with answer notes for parents." .display)) "dates" (dict "date" (time.AsTime "2026-10-11"))) }}
+{{ end }}

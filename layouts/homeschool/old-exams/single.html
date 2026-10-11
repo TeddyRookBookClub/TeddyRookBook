@@ -1,0 +1,36 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $k := .Params.exam }}{{ $e := index (where site.Data.hs_exams.exams "key" $k) 0 }}
+<div class="hs hs-exam" data-exam="{{ $k }}">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/old-exams/" | relURL }}">The old exams</a> › {{ $e.year }}</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">The old exams · {{ $e.sub }}</p>
+    <h1>{{ $e.display }}</h1>
+    <p class="hs-small" style="color:#d3e6da;margin:0 0 .4rem">{{ $e.title }}</p>
+    <p>Work each subject on paper, then open the answer notes to check. Tick the questions your child got right; the ticks are saved in this browser.</p>
+  </header>
+  <div class="hs-actions hs-noprint"><button type="button" class="hs-btn" onclick="window.print()">🖨 Print the questions</button> <span class="hs-small" id="hx-score"></span></div>
+  {{ with $e.instructions }}<pre class="hx-head">{{ . }}</pre>{{ end }}
+  {{ range $si, $s := $e.sections }}
+  <section class="hs-sec hx-sec" data-s="{{ $si }}">
+    <h2>{{ $s.name }}{{ with $s.time }} <span class="hx-time">· {{ . }}</span>{{ end }}</h2>
+    {{ with $s.time }}<p class="hs-noprint"><button type="button" class="hs-btn hx-timer" data-t="{{ . }}">⏱ Start the clock</button> <span class="hx-left"></span></p>{{ end }}
+    <ol class="hx-qs">
+      {{ range $qi, $q := $s.questions }}
+      <li data-q="{{ $si }}-{{ $qi }}"><p class="hx-q">{{ $q.q }}</p>
+        {{ if $q.answer }}<details class="hs-ans hs-noprint"><summary>Answer notes</summary><p>{{ $q.answer }}</p>{{ with $q.then }}<p><b>Then:</b> {{ . }}</p>{{ end }}{{ with $q.now }}<p><b>Now:</b> {{ . }}</p>{{ end }}{{ with $q.study }}<p class="hs-small"><b>Study:</b> {{ . }}</p>{{ end }}</details>
+        <label class="hs-check hs-noprint"><input type="checkbox"> Got it right</label>{{ end }}
+      </li>
+      {{ end }}
+    </ol>
+  </section>
+  {{ end }}
+  <section class="hs-sec hs-note">
+    <h2>About this exam</h2>
+    <p>{{ $e.notes }}</p>
+    <p>Source: <a href="{{ $e.source.url }}" target="_blank" rel="noopener">{{ $e.source.name }}</a>{{ range $e.other_sources }}; <a href="{{ .url }}" target="_blank" rel="noopener">{{ .name | truncate 80 }}</a>{{ end }}.</p>
+    {{ if eq $k "bullitt-1912" }}<p>The museum publishes its own suggested answers: <a href="https://www.bullittcountyhistory.org/bchistory/schoolexam1912ans.html" target="_blank" rel="noopener">Bullitt County History Museum answers ↗</a>.</p>{{ else }}<p class="hs-small">The answer notes were written for this site. Where the question's wording is unclear in the surviving copies, the note says so.</p>{{ end }}
+  </section>
+</div>
+<script src="{{ "homeschool/exams.js" | relURL }}?v={{ (os.Stat "static/homeschool/exams.js").ModTime.Unix }}" defer></script>
+{{ end }}

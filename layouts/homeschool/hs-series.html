@@ -1,0 +1,47 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $s := index site.Data.hs_series .Params.series }}
+<div class="hs">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › {{ $s.crumb | default .Title }}</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">{{ $s.eyebrow }}</p>
+    <h1>{{ $s.title | default .Title }}</h1>
+    <p>{{ $s.hero | safeHTML }}</p>
+  </header>
+
+  {{ with $s.start }}
+  <section class="hs-start">
+    <div>
+      <h2>{{ .title | default "Start here" }}</h2>
+      {{ range .paras }}<p>{{ . | safeHTML }}</p>{{ end }}
+      {{ with .buttons }}<div class="hs-actions">{{ range $i, $b := . }}{{ if $i }} {{ end }}<a class="hs-btn{{ if $b.pri }} pri{{ end }} big" href="{{ $b.url | relURL }}">{{ $b.label }}</a>{{ end }}</div>{{ end }}
+    </div>
+    {{ with .steps }}<ol class="hs-steps-mini">{{ range . }}<li>{{ . | safeHTML }}</li>{{ end }}</ol>{{ end }}
+  </section>
+  {{ end }}
+
+  {{ with $s.about }}
+  <section class="hs-sec">
+    <h2>{{ .title }}</h2>
+    <div class="hs-cols">{{ range .paras }}<p>{{ . | safeHTML }}</p>{{ end }}</div>
+  </section>
+  {{ end }}
+
+  {{ range $s.groups }}
+  <section class="hs-sec">
+    <h2>{{ .title }}</h2>
+    {{ with .note }}<p class="hs-small">{{ . | safeHTML }}</p>{{ end }}
+    <div class="hs-books">
+      {{ range .books }}{{ partial "hs-book.html" . }}{{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  <section class="hs-sec hs-note">
+    <h2>About these copies</h2>
+    {{ with $s.note }}<p>{{ . | safeHTML }}</p>{{ end }}
+    <p>Every book here was published in the United States before 1930, so it is in the public domain there: free to read, print and share. The scans are kept by the <a href="https://archive.org/" target="_blank" rel="noopener">Internet Archive</a>, which shows them on this page and supplies the PDF downloads. The teaching guides are written for this site. Modern reprints are also sold, if you prefer a clean printed copy.</p>
+  </section>
+</div>
+<script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
+{{ end }}

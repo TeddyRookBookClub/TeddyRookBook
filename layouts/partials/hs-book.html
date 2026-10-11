@@ -4,7 +4,7 @@
   <div class="hs-book-top">
     <div>
       <h3>{{ $b.title }}</h3>
-      <p class="hs-meta">{{ $b.year }}{{ with $b.level }} · {{ . }}{{ end }}</p>
+      <p class="hs-meta">{{ $b.year }}{{ with $b.level }} · {{ . }}{{ end }}{{ with $b.label }} <span class="hs-tag">{{ . }}</span>{{ end }}</p>
     </div>
   </div>
   <p>{{ $b.what }}</p>
