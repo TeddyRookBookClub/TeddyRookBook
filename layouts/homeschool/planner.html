@@ -5,12 +5,21 @@
 {{- range site.Data.hs_planner.subjects -}}
   {{- $cs := slice -}}
   {{- range .courses -}}
-    {{- $d := index site.Data .data -}}
-    {{- $ls := slice -}}
-    {{- range $d.lessons -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" .mins) -}}{{- end -}}
-    {{- $cs = $cs | append (dict "key" .key "name" .name "url" (.url | relURL) "from" .from "to" .to "rep" .rep "word" (cond (isset $d.book "lessonword") ($d.book.lessonword | default "") "Lesson") "lessons" $ls) -}}
+    {{- $ls := slice -}}{{ $word := "Lesson" }}
+    {{- if .ar -}}
+      {{- /* Hannah Ward's Actual Reading: each lesson is a PDF on her site (data/hs_hannah.yaml) */ -}}
+      {{- $m := .mins -}}
+      {{- range where site.Data.hs_hannah.curricula "key" .ar -}}{{- range .groups -}}{{- range .lessons -}}{{- $l := . -}}{{- with index $l 1 -}}
+        {{- $ls = $ls | append (dict "n" (index $l 0) "t" "" "m" $m "u" .) -}}
+      {{- end -}}{{- end -}}{{- end -}}{{- end -}}
+    {{- else -}}
+      {{- $d := index site.Data .data -}}
+      {{- range $d.lessons -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" .mins) -}}{{- end -}}
+      {{- $word = cond (isset $d.book "lessonword") ($d.book.lessonword | default "") "Lesson" -}}
+    {{- end -}}
+    {{- $cs = $cs | append (dict "key" .key "name" .name "url" (.url | relURL) "from" .from "to" .to "rep" .rep "alt" (.alt | default false) "word" $word "lessons" $ls) -}}
   {{- end -}}
-  {{- $subs = $subs | append (dict "key" .key "name" .name "icon" .icon "start" (.start | default 0) "mins" .mins "hw" (.hw | default (slice (slice 99 10))) "courses" $cs) -}}
+  {{- $subs = $subs | append (dict "key" .key "name" .name "icon" .icon "start" (.start | default 0) "until" (.until | default 99) "replaces" (.replaces | default slice) "mins" .mins "hw" (.hw | default (slice (slice 99 10))) "courses" $cs) -}}
 {{- end -}}
 <div class="hs pl" id="pl">
   <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Lesson planner</nav>
@@ -22,6 +31,7 @@
 
   <section class="hs-sec pl-step hs-noprint">
     <h2><span class="pl-n">1</span> Your children</h2>
+    <p class="hs-small">For ages 3 to 5 the planner suggests <a href="{{ "homeschool/actual-reading/" | relURL }}">Hannah Ward's Actual Reading</a> curricula (Little House Pre-K and Kindergarten cover math and English together, so Arithmetic and Phonics start switched off), then the classic schoolbooks. Every subject's Book menu lists all the choices.</p>
     <div id="pl-kids"></div>
     <button type="button" class="hs-btn" id="pl-addkid">＋ Add a child</button>
   </section>

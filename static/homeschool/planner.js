@@ -10,7 +10,7 @@
   var $ = function (s, el) { return (el || root).querySelector(s); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   var SUB = {}, COURSE = {};
-  DATA.subjects.forEach(function (s) { SUB[s.key] = s; s.courses.forEach(function (c, i) { c.sub = s.key; c.i = i; COURSE[c.key] = c; c.lessons = c.lessons.map(function (l) { return [l.n, l.t, l.m]; }); }); });
+  DATA.subjects.forEach(function (s) { SUB[s.key] = s; s.courses.forEach(function (c, i) { c.sub = s.key; c.i = i; COURSE[c.key] = c; c.lessons = c.lessons.map(function (l) { return l.u ? [l.n, l.t, l.m, l.u] : [l.n, l.t, l.m]; }); }); });
 
   // ---------- state ----------
   function iso(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
@@ -19,11 +19,14 @@
   function defSubs(age) {
     var o = {};
     DATA.subjects.forEach(function (s) {
-      var c = s.courses.filter(function (c) { return age <= c.to; })[0] || s.courses[s.courses.length - 1];
+      var main = s.courses.filter(function (c) { return !c.alt; });
+      var c = main.filter(function (c) { return age <= c.to; })[0] || main[main.length - 1];
       var m = 60; for (var i = 0; i < s.mins.length; i++) if (age <= s.mins[i][0]) { m = s.mins[i][1]; break; }
       var hw = 10; (s.hw || []).some(function (r) { if (age <= r[0]) { hw = r[1]; return true; } });
-      o[s.key] = { on: age >= (s.start || s.courses[0].from), course: c.key, lesson: 1, mins: m, pace: 1, hw: hw };
+      o[s.key] = { on: age >= (s.start || s.courses[0].from) && age <= (s.until || 99), course: c.key, lesson: 1, mins: m, pace: 1, hw: hw };
     });
+    // a subject that already covers others (Little House covers math and English) switches them off by default
+    DATA.subjects.forEach(function (s) { if (o[s.key].on) (s.replaces || []).forEach(function (r) { if (o[r]) o[r].on = false; }); });
     return o;
   }
   function newKid(n, age) { return { name: 'Child ' + n, age: age, subs: defSubs(age) }; }
@@ -31,7 +34,8 @@
   function fresh() { return { kids: [newKid(1, 7)], days: [1, 2, 3, 4, 5], mode: 'week', date: nextMonday(), offs: [], len: 36, view: 'overview', week: 0 }; }
   function valid(s) { return s && Array.isArray(s.kids) && s.kids.length && Array.isArray(s.days); }
   function fix(s) { // fill gaps from older or hand-edited plans
-    s.kids.forEach(function (k, i) { k.name = k.name || 'Child ' + (i + 1); k.age = +k.age || 7; var d = defSubs(k.age); k.subs = k.subs || {}; for (var key in d) { if (!k.subs[key] || !COURSE[k.subs[key].course]) k.subs[key] = d[key]; if (k.subs[key].hw == null) k.subs[key].hw = d[key].hw; } });
+    s.kids.forEach(function (k, i) { k.name = k.name || 'Child ' + (i + 1); k.age = +k.age || 7; var d = defSubs(k.age); k.subs = k.subs || {}; for (var key in d) { if (!k.subs[key]) { k.subs[key] = d[key]; k.subs[key].on = false; } else if (!COURSE[k.subs[key].course]) k.subs[key] = d[key]; // subjects added since a plan was saved start switched off
+      if (k.subs[key].hw == null) k.subs[key].hw = d[key].hw; } });
     s.offs = s.offs || []; s.len = s.len == null ? 36 : +s.len; s.view = s.view || 'overview'; s.week = +s.week || 0; s.mode = s.mode === 'date' ? 'date' : 'week'; s.date = s.date || nextMonday();
     return s;
   }
@@ -51,7 +55,7 @@
 
   // ---------- step 1: children ----------
   function kidHTML(k, i) {
-    var ages = ''; for (var a = 4; a <= 18; a++) ages += '<option value="' + a + '"' + (a === k.age ? ' selected' : '') + '>' + a + '</option>';
+    var ages = ''; for (var a = 3; a <= 18; a++) ages += '<option value="' + a + '"' + (a === k.age ? ' selected' : '') + '>' + a + '</option>';
     var rows = DATA.subjects.map(function (s) {
       var x = k.subs[s.key], c = COURSE[x.course];
       var opts = s.courses.map(function (cc) { return '<option value="' + cc.key + '"' + (cc.key === x.course ? ' selected' : '') + '>' + esc(cc.name) + '</option>'; }).join('');
@@ -59,7 +63,7 @@
       return '<div class="pl-sub' + (x.on ? '' : ' off') + '" data-s="' + s.key + '">' +
         '<label class="pl-on"><input type="checkbox" data-f="on"' + (x.on ? ' checked' : '') + '> <span>' + s.icon + ' ' + esc(s.name) + '</span></label>' +
         '<label class="pl-f"><span>Book</span><select data-f="course">' + opts + '</select></label>' +
-        '<label class="pl-f pl-sm"><span>From lesson</span><input type="number" min="1" max="' + c.lessons.length + '" value="' + x.lesson + '" data-f="lesson"></label>' +
+        '<label class="pl-f pl-sm"><span>From lesson</span><input type="number" min="1" max="' + c.lessons[c.lessons.length - 1][0] + '" value="' + x.lesson + '" data-f="lesson"></label>' +
         '<label class="pl-f pl-sm"><span>Minutes a week</span><input type="number" min="0" max="1200" step="5" value="' + x.mins + '" data-f="mins"></label>' +
         '<label class="pl-f pl-sm"><span>Study a day</span><input type="number" min="0" max="240" step="5" value="' + (x.hw || 0) + '" data-f="hw" title="Minutes of practice or study (rereading, drill, memory work) on days with a lesson"></label>' +
         '<label class="pl-f pl-sm"><span>Pace</span><select data-f="pace">' + paces + '</select></label>' +
@@ -85,7 +89,7 @@
       var s = SUB[b.closest('.pl-sub').dataset.s], dn = done(), best = null;
       s.courses.forEach(function (c) { var d = dn[c.key]; if (!d) return; c.lessons.forEach(function (l, j) { if (d[l[0]]) best = { c: c, j: j }; }); });
       if (!best) { msg('Nothing in ' + s.name + ' is marked done yet in this browser.'); return; }
-      var c = best.c, j = best.j + 1; if (j >= c.lessons.length) { var nc = s.courses[c.i + 1]; if (nc) { c = nc; j = 0; } else { msg('That subject is all done!'); return; } }
+      var c = best.c, j = best.j + 1; if (j >= c.lessons.length) { var nc = c.alt ? null : s.courses.filter(function (q) { return q.i > c.i && !q.alt; })[0]; if (nc) { c = nc; j = 0; } else { msg('That subject is all done!'); return; } }
       var x = k.subs[s.key]; x.course = c.key; x.lesson = c.lessons[j][0]; x.on = true; renderKids(); update();
       msg(k.name + ': ' + s.name + ' now starts at ' + c.name + ', lesson ' + x.lesson + '.');
     }
@@ -97,7 +101,7 @@
     var x = k.subs[t.closest('.pl-sub').dataset.s];
     if (f === 'on') { x.on = t.checked; t.closest('.pl-sub').classList.toggle('off', !t.checked); }
     if (f === 'course') { x.course = t.value; x.lesson = 1; renderKids(); }
-    if (f === 'lesson') { var n = COURSE[x.course].lessons.length; x.lesson = Math.max(1, Math.min(n, Math.round(+t.value) || 1)); t.value = x.lesson; }
+    if (f === 'lesson') { var cl = COURSE[x.course].lessons, n = cl[cl.length - 1][0]; x.lesson = Math.max(1, Math.min(n, Math.round(+t.value) || 1)); t.value = x.lesson; }
     if (f === 'mins') x.mins = Math.max(0, +t.value || 0);
     if (f === 'pace') x.pace = +t.value;
     if (f === 'hw') x.hw = Math.max(0, +t.value || 0);
@@ -132,6 +136,7 @@
         var c0 = COURSE[x.course], items = [], t = 0;
         for (var ci = c0.i; ci < s.courses.length; ci++) {
           var c = s.courses[ci];
+          if (ci > c0.i && (c.alt || c0.alt)) continue; // an "also try" course is never moved into, and doesn't lead on
           c.lessons.forEach(function (l) {
             if (ci === c0.i && l[0] < x.lesson) return;
             var e = (l[2] || 20) * (c.rep || 1) * (x.pace || 1); items.push({ c: c, l: l, s: t, e: t + e }); t += e;
@@ -196,8 +201,9 @@
   }
   function fm(m) { m = Math.round(m / 5) * 5 || (m > 0 ? 5 : 0); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + m % 60 + ' min' : '') : m + ' min'; }
   function dayTotals(groups) { var l = 0, h = 0; groups.forEach(function (g) { l += g.m; h += g.hw; }); return { l: l, h: h }; }
-  function lessonText(e) { return 'Lesson ' + e.it.l[0] + ': ' + e.it.l[1]; }
-  function lessonURL(e) { return e.it.c.url + 'lesson-' + e.it.l[0] + '/'; }
+  function lessonText(e) { return 'Lesson ' + e.it.l[0] + (e.it.l[1] ? ': ' + e.it.l[1] : ''); }
+  function lessonURL(e) { return e.it.l[3] || e.it.c.url + 'lesson-' + e.it.l[0] + '/'; } // Hannah Ward's lessons are PDFs on her site
+  function absURL(e) { var u = lessonURL(e); return /^https?:/.test(u) ? u : location.origin + u; }
 
   // ---------- views ----------
   function update() { save(); compute(); render(); }
@@ -220,7 +226,7 @@
         t.books.forEach(function (b, bi) {
           if (b.d0 >= total) return;
           var l = 100 * b.d0 / total, w = Math.max(1.5, 100 * (Math.min(b.d1 + 1, total) - b.d0) / total);
-          h += '<a class="pl-bar b' + (bi % 3) + '" href="' + esc(b.c.url) + '" style="left:' + l + '%;width:' + w + '%" title="' + esc(b.c.name + ': ' + whenDay(b.d0) + ' to ' + whenDay(b.d1)) + '"><span>' + esc(b.c.name.replace(/^(McGuffey's|Ray's|Webster's|Harvey's|D'Ooge's) /, '')) + '</span></a>';
+          h += '<a class="pl-bar b' + (bi % 3) + '" href="' + esc(b.c.url) + '" style="left:' + l + '%;width:' + w + '%" title="' + esc(b.c.name + ': ' + whenDay(b.d0) + ' to ' + whenDay(b.d1)) + '"><span>' + esc(b.c.name.replace(/^(McGuffey's|Ray's|Webster's|Harvey's|D'Ooge's) /, '').replace(/ \(Hannah Ward\).*$/, '')) + '</span></a>';
         });
         h += '</div></div><ul class="pl-ovlist">';
         var later = [];
@@ -245,7 +251,7 @@
       return '<div class="pl-g"><span class="pl-gi" title="' + esc(g.s.name) + '">' + g.s.icon + '</span><div><div class="pl-gt">' + esc(g.s.name) + ' · ≈ ' + fm(g.m) + ' lesson' + (g.hw ? ' + ' + fm(g.hw) + ' study' : '') + '</div>' + g.list.map(function (e) {
         var isD = dn[e.it.c.key] && dn[e.it.c.key][e.it.l[0]];
         return '<div class="pl-l' + (isD ? ' done' : '') + '">' + (e.fin ? '<input type="checkbox" class="pl-ck" data-c="' + e.it.c.key + '" data-n="' + e.it.l[0] + '"' + (isD ? ' checked' : '') + ' aria-label="Done">' : '<span class="pl-ckph"></span>') +
-          '<a href="' + esc(lessonURL(e)) + '">' + esc(lessonText(e)) + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small></div>';
+          '<a href="' + esc(lessonURL(e)) + '"' + (e.it.l[3] ? ' target="_blank" rel="noopener" title="Opens the lesson PDF on Hannah Ward’s site"' : '') + '>' + esc(lessonText(e)) + (e.it.l[3] ? ' ↗' : '') + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small></div>';
       }).join('') + '</div></div>';
     }).join('') + '<div class="pl-tot">Total ≈ ' + fm(tt.l + tt.h) + ' <span>(' + fm(tt.l) + ' lessons' + (tt.h ? ' + ' + fm(tt.h) + ' study' : '') + ')</span></div>';
   }
@@ -297,7 +303,7 @@
   $('#pl-csv').addEventListener('click', function () {
     var rows = [['Week', 'Date', 'Day', 'Child', 'Subject', 'Book', 'Lesson', 'Title', 'Part', 'Lesson minutes', 'Study minutes (subject, that day)', 'Link']];
     P.cal.forEach(function (d) {
-      st.kids.forEach(function (k, ki) { d.kids[ki].forEach(function (g) { g.list.forEach(function (e) { rows.push([P.weeks[d.w].n, d.date ? iso(d.date) : '', DOWL[d.dow], k.name, g.s.name, e.it.c.name, e.it.l[0], e.it.l[1], e.cont ? 'continued' : 'new', Math.round(e.m), g.hw, location.origin + lessonURL(e)]); }); }); });
+      st.kids.forEach(function (k, ki) { d.kids[ki].forEach(function (g) { g.list.forEach(function (e) { rows.push([P.weeks[d.w].n, d.date ? iso(d.date) : '', DOWL[d.dow], k.name, g.s.name, e.it.c.name, e.it.l[0], e.it.l[1], e.cont ? 'continued' : 'new', Math.round(e.m), g.hw, absURL(e)]); }); }); });
     });
     download(slug() + '.csv', 'text/csv', '﻿' + rows.map(function (r) { return r.map(function (c) { c = String(c); return /[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(','); }).join('\r\n'));
     msg('Spreadsheet saved. It opens in Excel, Numbers or Google Sheets.');
@@ -312,7 +318,7 @@
         var g = d.kids[ki]; if (!g.length) return;
         var next = new Date(d.date); next.setDate(next.getDate() + 1);
         var sum = k.name + ': ' + g.map(function (x) { return x.s.name + ' ' + x.list.map(function (e) { return e.it.l[0]; }).join(', '); }).join(' · ');
-        var tt = dayTotals(g), desc = 'About ' + fm(tt.l) + ' of lessons' + (tt.h ? ' + ' + fm(tt.h) + ' of study' : '') + '\n\n' + g.map(function (x) { return x.s.name + ' (≈ ' + fm(x.m) + (x.hw ? ' + ' + fm(x.hw) + ' study' : '') + ')\n' + x.list.map(function (e) { return e.it.c.name + ', ' + lessonText(e) + (e.cont ? ' (continued)' : '') + '\n' + location.origin + lessonURL(e); }).join('\n'); }).join('\n\n');
+        var tt = dayTotals(g), desc = 'About ' + fm(tt.l) + ' of lessons' + (tt.h ? ' + ' + fm(tt.h) + ' of study' : '') + '\n\n' + g.map(function (x) { return x.s.name + ' (≈ ' + fm(x.m) + (x.hw ? ' + ' + fm(x.hw) + ' study' : '') + ')\n' + x.list.map(function (e) { return e.it.c.name + ', ' + lessonText(e) + (e.cont ? ' (continued)' : '') + '\n' + absURL(e); }).join('\n'); }).join('\n\n');
         L.push('BEGIN:VEVENT', 'UID:trb-' + st.date + '-' + di + '-' + ki + '@teddyrookbook.com', 'DTSTAMP:' + stamp, 'DTSTART;VALUE=DATE:' + iso(d.date).replace(/-/g, ''), 'DTEND;VALUE=DATE:' + iso(next).replace(/-/g, ''), fold('SUMMARY:' + icsEsc(sum)), fold('DESCRIPTION:' + icsEsc(desc)), 'TRANSP:TRANSPARENT', 'END:VEVENT');
       });
     });
