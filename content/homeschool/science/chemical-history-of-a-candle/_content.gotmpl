@@ -1,0 +1,11 @@
+{{/* One page per lesson, from data/hs_candle.yaml */}}
+{{ $d := index site.Data "hs_candle" }}
+{{ range $d.lessons }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" (printf "lesson-%d" .num)
+    "title" (printf "Lesson %d: %s" .num .title)
+    "params" (dict "lesson" .num "description" (printf "How to teach %s from %s, step by step: %s" .title $d.book.title .goal))
+    "dates" (dict "date" (time.AsTime "2026-10-11"))
+  ) }}
+{{ end }}

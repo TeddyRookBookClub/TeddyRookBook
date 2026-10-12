@@ -37,10 +37,27 @@
   </section>
   {{ end }}
 
+  {{ with $s.open }}
+  <section class="hs-sec">
+    <h2>Modern open textbooks</h2>
+    <p class="hs-small">Free, current textbooks for older students, published under open licenses. They open on their publishers' own sites.</p>
+    <div class="hs-books">
+      {{ range . }}
+      <article class="hs-book">
+        <div class="hs-book-top"><div><h3>{{ .title }}</h3><p class="hs-meta">{{ .publisher }}{{ with .level }} · {{ . }}{{ end }} <span class="hs-tag">{{ .license }}</span></p></div></div>
+        <p>{{ .what }}</p>
+        <div class="hs-actions"><a class="hs-btn pri" href="{{ .url }}" target="_blank" rel="noopener">📖 Read it free ↗</a></div>
+        {{ with .credit }}<p class="hs-small">{{ . }}</p>{{ end }}
+      </article>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
   <section class="hs-sec hs-note">
     <h2>About these copies</h2>
     {{ with $s.note }}<p>{{ . | safeHTML }}</p>{{ end }}
-    <p>Every book here was published in the United States before 1930, so it is in the public domain there: free to read, print and share. The scans are kept by the <a href="https://archive.org/" target="_blank" rel="noopener">Internet Archive</a>, which shows them on this page and supplies the PDF downloads. The teaching guides are written for this site. Modern reprints are also sold, if you prefer a clean printed copy.</p>
+    <p>Every {{ if $s.open }}old {{ end }}book here was published before 1931, so it is in the public domain in the United States: free to read, print and share. The scans are kept by the <a href="https://archive.org/" target="_blank" rel="noopener">Internet Archive</a>, which shows them on this page and supplies the PDF downloads. The teaching guides are written for this site. Modern reprints are also sold, if you prefer a clean printed copy.</p>
   </section>
 </div>
 <script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
