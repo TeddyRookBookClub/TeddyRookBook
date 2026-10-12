@@ -136,3 +136,41 @@ html:not([data-theme="dark"]) .hs-card{border:1.5px solid #9dbba9}
 html:not([data-theme="dark"]) .hs-card.feat{border-left:5px solid var(--gold)}
 html:not([data-theme="dark"]) a.hs-card:hover{border-color:#00562f}
 html:not([data-theme="dark"]) .hs-card.feat:hover{border-left-color:var(--gold)}
+/* Simple step-by-step setting */
+.hs-sw{display:inline-flex;align-items:center;gap:.45rem;font:600 .95rem system-ui,sans-serif;padding:.45rem .85rem .45rem .5rem;border-radius:999px;border:1.5px solid var(--g);background:var(--card);color:var(--ink);cursor:pointer;line-height:1.2}
+.hs-sw-knob{width:2.1rem;height:1.2rem;border-radius:999px;background:var(--line);position:relative;transition:background .2s;flex:none}
+.hs-sw-knob::after{content:"";position:absolute;top:2px;left:2px;width:calc(1.2rem - 4px);height:calc(1.2rem - 4px);border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:left .2s}
+.hs-sw[aria-pressed="true"] .hs-sw-knob{background:var(--g)}
+.hs-sw[aria-pressed="true"] .hs-sw-knob::after{left:calc(100% - 1.2rem + 2px)}
+.hs-sw-row{margin:.7rem 0 0 !important;display:flex !important;flex-wrap:wrap;gap:.6rem;align-items:center}
+.hs-lesson.simple .hs-not-simple{display:none}
+.hs-simple{margin:1.2rem 0}
+.hs-s-top{background:var(--soft);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1rem}
+.hs-s-top h2{margin:0 0 .3rem}.hs-s-top p{margin:0 0 .6rem}
+.hs-s-tools{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.hs-s-prog{font-weight:700;margin-right:auto}
+.hs-s-part{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:.9rem 1rem;margin-bottom:.9rem}
+html:not([data-theme="dark"]) .hs-s-part{border-color:#9dbba9}
+.hs-s-part h3{margin:0 0 .5rem;display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;font-size:1.15rem}
+.hs-s-part h3>span{display:inline-grid;place-items:center;min-width:1.8rem;height:1.8rem;border-radius:50%;background:var(--g);color:#fff;font:700 .95rem system-ui,sans-serif}
+html[data-theme="dark"] .hs-s-part h3>span{color:#0f1a14}
+.hs-s-part h3 small{font-weight:400;color:var(--muted);font-size:.85rem}
+.hs-s-part.next{background:var(--paper)}
+.hs-s-list{list-style:none;margin:0;padding:0}
+.hs-s-list li{border-top:1px solid var(--line);padding:.55rem 0;line-height:1.5;font-size:1.05rem}
+.hs-s-list li:first-child{border-top:0}
+.hs-s-list label{display:flex;gap:.7rem;align-items:flex-start;cursor:pointer}
+.hs-s-list input{width:1.35rem;height:1.35rem;flex:none;margin-top:.15rem;accent-color:#004225}
+.hs-s-list li.ticked>label>span{opacity:.55;text-decoration:line-through;text-decoration-thickness:1px}
+.hs-s-list li.say.ticked>label>span{text-decoration:none}
+.hs-s-lbl{display:block;font:700 .75rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--g);margin-bottom:.15rem}
+.hs-s-say{display:block;background:var(--soft);border-left:4px solid var(--g);border-radius:8px;padding:.45rem .7rem;font-size:1.12rem}
+.hs-s-list li.book,.hs-s-list li.if{padding-left:2.05rem}
+.hs-s-quote{display:block;font-family:Georgia,serif;font-style:italic;border-left:3px solid var(--gold);padding-left:.7rem}
+.hs-s-list li.if{color:var(--muted);font-size:.98rem}
+.hs-s-help{margin:0;padding-left:1.2rem;line-height:1.5}.hs-s-help li{margin:.3rem 0}
+.hs-s-tomorrow{font-size:1.1rem;margin:.4rem 0 1rem}
+/* Actual Reading: the daily checklist shows only with the setting on */
+.ar-daily{display:none;margin-top:.9rem;text-align:left}
+html.hs-simple-on .ar-daily{display:block}
+@media print{.hs-sw,.hs-s-tools{display:none}}

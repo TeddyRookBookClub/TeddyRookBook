@@ -14,6 +14,7 @@
   <section class="hs-progress" aria-live="polite">
     <div class="hs-bar"><b style="width:0%"></b></div>
     <p><span id="hs-done-n">0</span> of {{ len $d.lessons }} lessons done <span class="hs-small">(saved in this browser)</span> <a id="hs-next-link" class="hs-btn pri" href="{{ printf "%slesson-1/" $base }}">Start Lesson 1 →</a></p>
+    <p class="hs-sw-row"><button type="button" class="hs-sw" data-simple-switch aria-pressed="false" title="Shows each lesson as a checklist: one small action per line, with exactly what to say. Handy the first time you teach a subject, on a busy day, or when someone else is filling in."><span class="hs-sw-knob" aria-hidden="true"></span>Simple step-by-step: <b class="hs-sw-state">Off</b></button> <span class="hs-small">Turn this on to see every lesson as a simple checklist: what to get out, what to do and what to say, one line at a time.</span></p>
   </section>
 
   <section class="hs-sec">
@@ -42,4 +43,5 @@
   <p class="hs-small">{{ $d.book.numnote | default "Lesson numbers match the book's Roman numerals: Lesson 3 is the book's Lesson III." }} The guides are written for this site; the book is in the public domain.</p>
 </div>
 <script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (os.Stat "static/homeschool/simple.js").ModTime.Unix }}" defer></script>
 {{ end }}

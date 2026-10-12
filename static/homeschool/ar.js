@@ -47,6 +47,7 @@
     $('ar-done').checked = !!done[cur];
     $('ar-prev').disabled = cur <= 1; $('ar-next').disabled = cur >= total;
     if (shown) view();
+    D.querySelectorAll('.ar-daily input').forEach(function (x) { x.checked = false; x.closest('li').classList.remove('ticked'); }); // a fresh checklist for each lesson
     try { var p = JSON.parse(W.localStorage.getItem(posKey) || '{}'); p[course] = cur; W.localStorage.setItem(posKey, JSON.stringify(p)); } catch (e) { }
     paint();
     if (scroll) $('ar-today').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -64,6 +65,7 @@
     save(); paint();
     if (this.checked && cur < total) { var me = cur; setTimeout(function () { if (cur === me) go(firstUndone()); }, 450); }
   });
+  D.querySelectorAll('.ar-daily input').forEach(function (x) { x.addEventListener('change', function () { x.closest('li').classList.toggle('ticked', x.checked); }); });
   var start = firstUndone();
   try { var p = JSON.parse(W.localStorage.getItem(posKey) || '{}'); if (p[course] && !done[p[course]]) start = p[course]; } catch (e) { }
   go(start);

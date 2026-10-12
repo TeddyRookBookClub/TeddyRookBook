@@ -17,13 +17,14 @@
     <p class="hs-meta">⏱ About {{ $l.mins }} minutes · {{ len $l.steps }} steps</p>
     <div class="hs-actions">
       <button type="button" class="hs-btn pri big" id="hs-teach">▶ Teach this lesson</button>
+      <button type="button" class="hs-sw" data-simple-switch aria-pressed="false" title="Shows each lesson as a checklist: one small action per line, with exactly what to say. Handy the first time you teach a subject, on a busy day, or when someone else is filling in."><span class="hs-sw-knob" aria-hidden="true"></span>Simple step-by-step: <b class="hs-sw-state">Off</b></button>
       <button type="button" class="hs-btn" data-scan="https://archive.org/embed/{{ $id }}#page/n{{ $l.idx }}/mode/1up" data-page="https://archive.org/details/{{ $id }}/page/n{{ $l.idx }}/mode/1up" aria-expanded="false">📖 Show the page in the book</button>
       <a class="hs-btn ghost" href="https://archive.org/details/{{ $id }}/page/n{{ $l.idx }}/mode/1up" target="_blank" rel="noopener">Open it at the Internet Archive ↗</a>
     </div>
     <div class="hs-scan" hidden></div>
   </header>
 
-  <div class="hs-grid">
+  <div class="hs-grid hs-not-simple">
     <section class="hs-box">
       <h2>You'll need</h2>
       <ul>{{ range $l.materials }}<li>{{ . }}</li>{{ end }}</ul>
@@ -34,20 +35,20 @@
     </section>
   </div>
 
-  <section class="hs-sec">
+  <section class="hs-sec hs-not-simple">
     <h2>The lesson, step by step</h2>
     <ol class="hs-steps">
       {{ range $l.steps }}<li><h3>{{ index . 0 }}</h3>{{ partial "hs-body.html" (index . 1) }}</li>{{ end }}
     </ol>
   </section>
 
-  <div class="hs-grid">
+  <div class="hs-grid hs-not-simple">
     {{ with $l.practice }}<section class="hs-box"><h2>Afterwards</h2><p>{{ . }}</p></section>{{ end }}
     {{ with $l.tip }}<section class="hs-box tip"><h2>Tip</h2><p>{{ . }}</p></section>{{ end }}
   </div>
   {{ with $l.answers }}<details class="hs-ans"><summary>{{ $d.book.answersword | default "Answers to the book's problems" }}</summary><p>{{ . }}</p><p class="hs-small">Worked out for this site from the scan. If a number in your copy differs, trust the book.{{ with $d.book.key_id }} Every answer is in the <a href="https://archive.org/details/{{ . }}" target="_blank" rel="noopener">Key ↗</a>.{{ end }}</p></details>{{ end }}
 
-  <div class="hs-done-row">
+  <div class="hs-done-row hs-not-simple">
     <label class="hs-check"><input type="checkbox" id="hs-done"> Mark this lesson done</label>
   </div>
 
@@ -57,7 +58,8 @@
     {{ if lt $n $total }}<a href="{{ printf "%slesson-%d/" $base (add $n 1) }}">Lesson {{ add $n 1 }} →</a>{{ else }}<span></span>{{ end }}
   </nav>
 
-  <script type="application/json" id="hs-data">{{ dict "n" $n "title" $l.title "steps" $l.steps "practice" ($l.practice | default "") "materials" $l.materials "scan" (printf "https://archive.org/embed/%s#page/n%d/mode/1up" $id $l.idx) "page" (printf "https://archive.org/details/%s/page/n%d/mode/1up" $id $l.idx) "next" $next "nextTitle" $nextTitle | jsonify | safeJS }}</script>
+  <script type="application/json" id="hs-data">{{ dict "n" $n "title" $l.title "steps" $l.steps "practice" ($l.practice | default "") "materials" $l.materials "goal" $l.goal "mins" $l.mins "book" $l.book "tip" ($l.tip | default "") "scan" (printf "https://archive.org/embed/%s#page/n%d/mode/1up" $id $l.idx) "page" (printf "https://archive.org/details/%s/page/n%d/mode/1up" $id $l.idx) "next" $next "nextTitle" $nextTitle | jsonify | safeJS }}</script>
 </div>
 <script src="{{ "homeschool/hs.js" | relURL }}?v={{ (os.Stat "static/homeschool/hs.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (os.Stat "static/homeschool/simple.js").ModTime.Unix }}" defer></script>
 {{ end }}

@@ -29,6 +29,7 @@
   <section class="hs-progress" aria-live="polite">
     <div class="hs-bar"><b style="width:0%"></b></div>
     <p><span id="ar-done-n">0</span> of {{ $c.total }} lessons done <span class="hs-small">(saved in this browser)</span></p>
+    <p class="hs-sw-row"><button type="button" class="hs-sw" data-simple-switch aria-pressed="false" title="Shows each lesson as a checklist: one small action per line, with exactly what to say. Handy the first time you teach a subject, on a busy day, or when someone else is filling in."><span class="hs-sw-knob" aria-hidden="true"></span>Simple step-by-step: <b class="hs-sw-state">Off</b></button> <span class="hs-small">Turn this on for a checklist of exactly what to do each day.</span></p>
   </section>
 
   <section class="ar-today" id="ar-today">
@@ -45,6 +46,7 @@
     </div>
     <p class="ar-miss" id="ar-miss" hidden>Hannah's page doesn't have a download for this lesson yet. <a href="{{ $c.source }}" target="_blank" rel="noopener">Check her page ↗</a> or skip to the next one.</p>
     <div class="ar-view" id="ar-view" hidden></div>
+    {{ with $c.daily }}<div class="ar-daily"><h3>Today, step by step</h3><ol class="hs-s-list">{{ range $i, $t := . }}<li><label><input type="checkbox" data-d="{{ $i }}"><span>{{ $t }}</span></label></li>{{ end }}</ol></div>{{ end }}
   </section>
 
   {{ range $c.groups }}
@@ -95,5 +97,6 @@
 
   {{ with $c.paperback }}<p class="hs-small">There's also <a href="{{ . }}" target="_blank" rel="noopener sponsored">a paperback edition on Amazon</a>, with the alphabet chart printed on the back cover.</p>{{ end }}
 </div>
+<script src="{{ "homeschool/simple.js" | relURL }}?v={{ (os.Stat "static/homeschool/simple.js").ModTime.Unix }}" defer></script>
 <script src="{{ "homeschool/ar.js" | relURL }}?v={{ (os.Stat "static/homeschool/ar.js").ModTime.Unix }}" defer></script>
 {{ end }}
