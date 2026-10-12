@@ -142,6 +142,8 @@ Because some of that data is licensed for non-commercial use only, the site as a
 [@teddyrookbook on X](https://x.com/teddyrookbook)
 
 
+Outdoor Skills (`/homeschool/outdoor-skills/`): free ideas for outdoor skills in `data/outdoor_skills.yaml`, a page per skill from `content/homeschool/outdoor-skills/_content.gotmpl`, and optional ticks in `static/homeschool/outdoor.js` (`trb-outdoor-v1`). By design there are no badges, certificates or awards, nothing that looks official, and no first-aid or safety lessons; any safety note must be well-established guidance. Not affiliated with any scouting organization.
+
 Placement check (`/homeschool/placement/`, `data/hs_placement.yaml`, `static/homeschool/placement.js`): parent-judged ladders for reading, spelling and arithmetic; "Put these in the lesson planner" stores `trb-placement-v1`, which `planner.js` applies on load. Practice sheets (`/homeschool/practice-sheets/`, `static/homeschool/sheets.js`): copywork/tracing, dictation, handwriting paper and arithmetic drills; the page template publishes `homeschool/sheets-data.json` with every guided lesson's book passages ("~" lines). Nature Study, Geography and Writing series use the same `hs-series`/`hs-course` templates (`hs_comstock`, `hs_long_geography`, `hs_mother_tongue`, `hs_palmer`).
 
 Simple step-by-step (`static/homeschool/simple.js`): a switch on lesson, course and Actual Reading pages (stored in `trb-hs-simple`) that turns each guide into a day's checklist, splitting step bodies into one action per line ("Say:" lines become read-aloud boxes, "~" lines book quotes, "If…" sentences tips); ticks are kept per lesson in `trb-hs-simple-ticks`. Hannah's curricula have a `daily:` checklist in `data/hs_hannah.yaml`.

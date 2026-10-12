@@ -1,0 +1,38 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $d := site.Data.outdoor_skills }}
+<div class="hs os" id="os-hub">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Outdoor Skills</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Outdoor Skills</p>
+    <h1>Outdoor Skills</h1>
+    <p>Things to learn and do outdoors and around home, from tying knots and reading a map to finding the North Star, cooking over coals and growing something to eat.</p>
+  </header>
+  <section class="hs-sec">
+    <div class="hs-cols">{{ range $d.about.paragraphs }}<p>{{ . }}</p>{{ end }}</div>
+  </section>
+  {{ range $d.groups }}{{ $g := .key }}
+  <section class="hs-sec">
+    <h2>{{ .title }}</h2>
+    <div class="os-grid">
+      {{ range where $d.skills "group" $g }}
+      <a class="os-card" href="{{ printf "homeschool/outdoor-skills/%s/" .key | relURL }}" data-skill="{{ .key }}" data-n="{{ len .steps }}">
+        <span class="os-icon" aria-hidden="true">{{ .icon }}</span>
+        <b>{{ .name }}</b>
+        <small>Ages {{ .ages }}</small>
+        <span class="os-blurb">{{ .blurb }}</span>
+        <span class="os-prog" hidden></span>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+  <section class="hs-sec hs-note">
+    <h2>Where these come from</h2>
+    <p>The ideas are inspired by early handbooks of camping, woodcraft and nature that are now in the public domain:</p>
+    <ul>{{ range $d.sources }}<li><a href="https://archive.org/details/{{ .id }}" target="_blank" rel="noopener">{{ .title }}</a> ({{ .year }})</li>{{ end }}</ul>
+    <p class="hs-small">{{ $d.about.disclaimer }}</p>
+  </section>
+</div>
+<script src="{{ "homeschool/outdoor.js" | relURL }}?v={{ (os.Stat "static/homeschool/outdoor.js").ModTime.Unix }}" defer></script>
+{{ end }}

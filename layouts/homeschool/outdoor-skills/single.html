@@ -1,0 +1,36 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $d := site.Data.outdoor_skills }}{{ $b := index (where $d.skills "key" .Params.skill) 0 }}
+<div class="hs os" id="os-skill" data-skill="{{ $b.key }}">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/outdoor-skills/" | relURL }}">Outdoor Skills</a> › {{ $b.name }}</nav>
+  <header class="hs-hero os-hero">
+    <span class="os-icon big" aria-hidden="true">{{ $b.icon }}</span>
+    <div>
+      <p class="hs-eyebrow">Outdoor Skills · Ages {{ $b.ages }}</p>
+      <h1>{{ $b.name }}</h1>
+      <p>{{ $b.blurb }}</p>
+    </div>
+  </header>
+  <section class="hs-sec"><p>{{ $b.intro }}</p>{{ with $b.grownup }}<p class="os-grown"><b>For grown-ups:</b> {{ . }}</p>{{ end }}</section>
+  <section class="hs-sec">
+    <h2>Things to try</h2>
+    <p class="hs-small">In any order, at your own pace. Tick what you've tried if you like keeping track; ticks stay on this device.</p>
+    <ol class="os-steps">
+      {{ range $i, $s := $b.steps }}<li><label><input type="checkbox" data-i="{{ $i }}"><span><b>{{ $s.t }}</b>{{ $s.how }}</span></label></li>{{ end }}
+    </ol>
+  </section>
+  {{ range $b.tables }}
+  <section class="hs-sec"><h2>{{ .title }}</h2>
+    {{ if and (eq (len .columns) 2) (gt (len .rows) 20) }}<div class="os-chips">{{ range .rows }}<span><b>{{ index . 0 }}</b> {{ index . 1 }}</span>{{ end }}</div>{{ else }}
+    <div class="os-table-wrap"><table class="hs-table os-table"><thead><tr>{{ range .columns }}<th>{{ . }}</th>{{ end }}</tr></thead><tbody>{{ range .rows }}<tr>{{ range . }}<td>{{ . }}</td>{{ end }}</tr>{{ end }}</tbody></table></div>{{ end }}
+  </section>
+  {{ end }}
+  <section class="hs-sec">
+    <h2>Read about it in the old books</h2>
+    <ul class="os-learn">{{ range $b.learn }}{{ if .id }}<li><a href="https://archive.org/details/{{ .id }}/page/n{{ .leaf }}/mode/1up" target="_blank" rel="noopener">📖 {{ .label }} ↗</a></li>{{ else if .url }}<li><a href="{{ .url | relURL }}">🔗 {{ .label }}</a></li>{{ end }}{{ end }}</ul>
+  </section>
+  <nav class="hs-pn"><a href="{{ "homeschool/outdoor-skills/" | relURL }}">← All outdoor skills</a></nav>
+  <p class="hs-small">{{ $d.about.disclaimer }}</p>
+</div>
+<script src="{{ "homeschool/outdoor.js" | relURL }}?v={{ (os.Stat "static/homeschool/outdoor.js").ModTime.Unix }}" defer></script>
+{{ end }}

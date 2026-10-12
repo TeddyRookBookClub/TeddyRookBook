@@ -243,3 +243,29 @@ html:not([data-theme="dark"]) .ps-opts{border-color:#9dbba9}
 .ps .pl-tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:.45rem .9rem;font:inherit;cursor:pointer}
 .ps .pl-tabs button[aria-selected="true"]{background:var(--g);color:#fff;border-color:var(--g)}
 html[data-theme="dark"] .ps .pl-tabs button[aria-selected="true"]{color:#0f1a14}
+/* Outdoor Skills */
+.os-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.9rem;margin-top:.5rem}
+.os-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.25rem;padding:1rem .9rem;background:var(--card);border:1.5px solid var(--line);border-radius:14px;text-decoration:none !important;color:var(--ink) !important;box-shadow:0 1px 6px rgba(0,0,0,.05);transition:transform .15s,border-color .15s}
+html:not([data-theme="dark"]) .os-card{border-color:#9dbba9}
+.os-card:hover{transform:translateY(-2px);border-color:var(--g)}
+.os-card b{font:700 1.1rem Georgia,serif;color:var(--g)}
+.os-card small{color:var(--muted)}
+.os-blurb{font-size:.9rem;color:var(--muted);line-height:1.4}
+.os-prog{font-size:.8rem;font-weight:600;background:var(--soft);border-radius:20px;padding:.1rem .6rem;margin-top:.2rem}
+.os-prog[hidden]{display:none}
+.os-icon{font-size:2.2rem;line-height:1.1}
+.os-icon.big{font-size:3.6rem;flex:none}
+.os-hero{display:flex;gap:1.2rem;align-items:center}
+@media (max-width:520px){.os-hero{flex-direction:column;align-items:flex-start}}
+.os-grown{background:var(--paper);border-left:4px solid var(--gold);padding:.5rem .8rem;border-radius:8px}
+.os-steps{list-style:none;counter-reset:s;padding:0;margin:0}
+.os-steps li{counter-increment:s;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.7rem .9rem;margin-bottom:.6rem}
+html:not([data-theme="dark"]) .os-steps li{border-color:#9dbba9}
+.os-steps label{display:flex;gap:.8rem;align-items:flex-start;cursor:pointer;line-height:1.5}
+.os-steps input{width:1.4rem;height:1.4rem;flex:none;margin-top:.2rem;accent-color:#004225}
+.os-steps b{display:block;font-size:1.05rem;margin-bottom:.15rem}
+.os-steps b::before{content:counter(s) ". ";color:var(--g)}
+.os-steps li.ticked{background:var(--soft)}
+.os-table-wrap{overflow-x:auto}
+.os-learn{list-style:none;padding:0;margin:0}.os-learn li{margin:.35rem 0}
+.os-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr));gap:.4rem}.os-chips span{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.35rem .6rem;font-size:1.05rem;white-space:nowrap}.os-chips b{display:inline-block;min-width:1.4rem;color:var(--g)}

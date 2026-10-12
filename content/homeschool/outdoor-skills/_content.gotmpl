@@ -1,0 +1,10 @@
+{{/* One page per skill, from data/outdoor_skills.yaml */}}
+{{ range site.Data.outdoor_skills.skills }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" .key
+    "title" .name
+    "params" (dict "skill" .key "description" (printf "%s: things to learn and try at home and outdoors. %s" .name .blurb))
+    "dates" (dict "date" (time.AsTime "2026-10-12"))
+  ) }}
+{{ end }}
