@@ -5,7 +5,7 @@
     "path" .file
     "title" .title
     "layout" "infographic"
-    "params" (dict "description" .description "igfile" .file "igtags" (.tags | default slice) "igbooks" (.books | default slice) "igpdf" (.pdf | default "") "igpdftitle" (.pdf_title | default "") "iglink" (.link | default "") "iglinktext" (.link_text | default "") "searchHidden" true)
+    "params" (dict "description" .description "igfile" .file "igtags" (.tags | default slice) "igbooks" (.books | default slice) "igpdf" (.pdf | default "") "igpdftitle" (.pdf_title | default "") "iglink" (.link | default "") "iglinktext" (.link_text | default "") "igvideo" (.video | default "") "searchHidden" true)
   -}}
   {{- $.AddPage $p -}}
 {{- end -}}

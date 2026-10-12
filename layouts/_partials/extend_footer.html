@@ -1,3 +1,14 @@
+<script>
+/* Click-to-play videos: swap the picture for the player only when pressed. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest && e.target.closest('.trb-video-play'); if (!b) return;
+  var f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(b.dataset.yt) + '?autoplay=1&rel=0';
+  f.title = b.getAttribute('aria-label').replace(/^Play the video: /, '');
+  f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; f.allowFullscreen = true; f.referrerPolicy = 'strict-origin-when-cross-origin';
+  b.replaceWith(f);
+});
+</script>
 <div class="trb-social">
   <a href="https://x.com/teddyrookbook" target="_blank" rel="noopener me" title="Teddy Rook on X">{{ partial "svg.html" (dict "name" "x") }}<span>@teddyrookbook</span></a>
   <a href="https://github.com/TeddyRookBookClub" target="_blank" rel="noopener me" title="Teddy Rook Book on GitHub">{{ partial "svg.html" (dict "name" "github") }}<span>GitHub</span></a>

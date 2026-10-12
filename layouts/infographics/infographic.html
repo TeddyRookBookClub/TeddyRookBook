@@ -13,6 +13,7 @@
     {{ with .Params.iglink }}<a class="ig-one-btn ig-one-pri" href="{{ . }}">{{ $.Params.iglinktext | default "Related page" }} →</a>{{ end }}
     <button type="button" class="ig-one-btn" id="ig-share" data-url="{{ .Permalink }}" data-title="{{ .Title }}">Share this page</button>
   </div>
+  {{ with .Params.igvideo }}{{ partial "video.html" . }}{{ end }}
   <a href="/img/infographics/{{ .Params.igfile }}.jpg" target="_blank" rel="noopener"><img class="ig-one-img" src="/img/infographics/{{ .Params.igfile }}.jpg" alt="{{ .Title }}"></a>
 </article>
 <script>

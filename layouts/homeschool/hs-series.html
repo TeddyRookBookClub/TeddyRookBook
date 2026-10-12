@@ -27,6 +27,13 @@
   </section>
   {{ end }}
 
+  {{ with $s.video }}
+  <section class="hs-sec">
+    <h2>{{ $s.videotitle | default "Watch" }}</h2>
+    {{ partial "video.html" . }}
+  </section>
+  {{ end }}
+
   {{ range $s.groups }}
   <section class="hs-sec">
     <h2>{{ .title }}</h2>
