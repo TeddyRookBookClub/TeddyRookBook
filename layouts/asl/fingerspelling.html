@@ -1,0 +1,55 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<div class="hs asl fs" id="fs">
+  <nav class="hs-crumbs"><a href="{{ "asl/" | relURL }}">Sign Language</a> › Fingerspelling practice</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Sign language · Fingerspelling</p>
+    <h1>Fingerspelling practice</h1>
+    <p>The 26 handshapes of the ASL alphabet, a reading game that shows a word one handshape at a time, and words to spell yourself.</p>
+  </header>
+  <div class="pl-tabs" role="tablist">
+    <button type="button" role="tab" data-m="abc" aria-selected="true">🔤 Alphabet</button>
+    <button type="button" role="tab" data-m="read">👀 Read it</button>
+    <button type="button" role="tab" data-m="spell">✋ Spell it</button>
+    <button type="button" role="tab" data-m="any">✏️ Any word</button>
+  </div>
+  <section class="hs-sec fs-pane" data-p="abc">
+    <p class="hs-small">Tap a letter to see it large. <label class="fs-cb"><input type="checkbox" id="fs-hide"> Hide the letters (quiz yourself)</label></p>
+    <div class="fs-grid" id="fs-grid"></div>
+  </section>
+  <section class="hs-sec fs-pane" data-p="read" hidden>
+    <div class="fs-row"><label>Words {{/* */}}<select id="fs-lvl"><option value="3">Three letters</option><option value="4">Four and five letters</option><option value="6">Longer words</option></select></label>
+      <label>Speed <select id="fs-speed"><option value="1300">Slow</option><option value="850" selected>Medium</option><option value="550">Fast</option></select></label></div>
+    <div class="fs-stage" id="fs-stage" aria-live="polite"><p class="hs-small">Press “New word” to start.</p></div>
+    <div class="fs-row">
+      <button type="button" class="hs-btn pri" id="fs-new">▶ New word</button>
+      <button type="button" class="hs-btn" id="fs-again">↻ Show it again</button>
+      <input type="text" id="fs-guess" placeholder="What word was it?" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button type="button" class="hs-btn" id="fs-check">Check</button>
+      <span id="fs-score" class="hs-small"></span>
+    </div>
+  </section>
+  <section class="hs-sec fs-pane" data-p="spell" hidden>
+    <p>Fingerspell this word to someone, then press “Show me” to check your handshapes.</p>
+    <p class="fs-word" id="fs-sword"></p>
+    <div class="fs-row"><button type="button" class="hs-btn pri" id="fs-snew">New word</button><button type="button" class="hs-btn" id="fs-show">Show me</button></div>
+    <div class="fs-strip" id="fs-sstrip"></div>
+  </section>
+  <section class="hs-sec fs-pane" data-p="any" hidden>
+    <p>Type a name or word to see it in handshapes.</p>
+    <input type="text" id="fs-any" maxlength="24" placeholder="Your name" autocomplete="off">
+    <div class="fs-strip" id="fs-astrip"></div>
+  </section>
+  <section class="hs-sec hs-note">
+    <h2>Good to know</h2>
+    <ul>
+      <li>The drawings show a right-handed signer as you see them, facing you. Left-handed signers use the mirror image.</li>
+      <li>J and Z move: J traces a hook with the little finger, and Z draws a Z in the air with the index finger. The arrows show the motion.</li>
+      <li>Real fingerspelling flows from one letter to the next and is read as a whole shape, not letter by letter. To see it moving, watch a fluent signer, for example in <a href="https://www.lifeprint.com/asl101/lessons/lesson01.htm" target="_blank" rel="noopener">Lifeprint's lessons ↗</a>.</li>
+    </ul>
+    <p class="hs-small">Handshape drawings: public domain, by Paul Sherman (wpclipart.com), via <a href="https://commons.wikimedia.org/wiki/File:Sign_language_A.svg" target="_blank" rel="noopener">Wikimedia Commons</a>.</p>
+  </section>
+  <script type="application/json" id="fs-base">{{ "asl/" | relURL | jsonify | safeJS }}</script>
+</div>
+<script src="{{ "asl/fingerspell.js" | relURL }}?v={{ (os.Stat "static/asl/fingerspell.js").ModTime.Unix }}" defer></script>
+{{ end }}

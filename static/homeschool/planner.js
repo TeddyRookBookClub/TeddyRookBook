@@ -226,7 +226,7 @@
         t.books.forEach(function (b, bi) {
           if (b.d0 >= total) return;
           var l = 100 * b.d0 / total, w = Math.max(1.5, 100 * (Math.min(b.d1 + 1, total) - b.d0) / total);
-          h += '<a class="pl-bar b' + (bi % 3) + '" href="' + esc(b.c.url) + '" style="left:' + l + '%;width:' + w + '%" title="' + esc(b.c.name + ': ' + whenDay(b.d0) + ' to ' + whenDay(b.d1)) + '"><span>' + esc(b.c.name.replace(/^(McGuffey's|Ray's|Webster's|Harvey's|D'Ooge's) /, '').replace(/ \(Hannah Ward\).*$/, '')) + '</span></a>';
+          h += '<a class="pl-bar b' + (bi % 3) + '" href="' + esc(b.c.url) + '" style="left:' + l + '%;width:' + w + '%" title="' + esc(b.c.name + ': ' + whenDay(b.d0) + ' to ' + whenDay(b.d1)) + '"><span>' + esc(b.c.name.replace(/^(McGuffey's|Ray's|Webster's|Harvey's|D'Ooge's) /, '').replace(/ \((Hannah Ward|Dr\. Bill Vicars)\).*$/, '')) + '</span></a>';
         });
         h += '</div></div><ul class="pl-ovlist">';
         var later = [];
@@ -251,7 +251,7 @@
       return '<div class="pl-g"><span class="pl-gi" title="' + esc(g.s.name) + '">' + g.s.icon + '</span><div><div class="pl-gt">' + esc(g.s.name) + ' · ≈ ' + fm(g.m) + ' lesson' + (g.hw ? ' + ' + fm(g.hw) + ' study' : '') + '</div>' + g.list.map(function (e) {
         var isD = dn[e.it.c.key] && dn[e.it.c.key][e.it.l[0]];
         return '<div class="pl-l' + (isD ? ' done' : '') + '">' + (e.fin ? '<input type="checkbox" class="pl-ck" data-c="' + e.it.c.key + '" data-n="' + e.it.l[0] + '"' + (isD ? ' checked' : '') + ' aria-label="Done">' : '<span class="pl-ckph"></span>') +
-          '<a href="' + esc(lessonURL(e)) + '"' + (e.it.l[3] ? ' target="_blank" rel="noopener" title="Opens the lesson PDF on Hannah Ward’s site"' : '') + '>' + esc(lessonText(e)) + (e.it.l[3] ? ' ↗' : '') + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small></div>';
+          '<a href="' + esc(lessonURL(e)) + '"' + (e.it.l[3] ? ' target="_blank" rel="noopener" title="Opens the lesson on another site"' : '') + '>' + esc(lessonText(e)) + (e.it.l[3] ? ' ↗' : '') + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small></div>';
       }).join('') + '</div></div>';
     }).join('') + '<div class="pl-tot">Total ≈ ' + fm(tt.l + tt.h) + ' <span>(' + fm(tt.l) + ' lessons' + (tt.h ? ' + ' + fm(tt.h) + ' study' : '') + ')</span></div>';
   }

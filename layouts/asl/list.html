@@ -1,0 +1,28 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $d := site.Data.asl }}
+<div class="hs asl">
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Education · Sign language</p>
+    <h1>American Sign Language</h1>
+    <p>A free path for families learning ASL together, from the alphabet to Lifeprint's 60 lessons, with stories, dictionaries and fingerspelling practice.</p>
+  </header>
+  <section class="hs-sec"><div class="hs-cols">{{ range $d.about }}<p>{{ . }}</p>{{ end }}</div></section>
+  <section class="hs-sec">
+    <h2>A path for families</h2>
+    <ol class="asl-path">
+      {{ range $d.path }}<li><h3>{{ .title }}</h3><p>{{ .text }}</p><p class="asl-links">{{ range .links }}<a class="hs-btn{{ if not .ext }} pri{{ end }}" href="{{ if .ext }}{{ .url }}{{ else }}{{ .url | relURL }}{{ end }}"{{ if .ext }} target="_blank" rel="noopener"{{ end }}>{{ .label }}{{ if .ext }} ↗{{ end }}</a>{{ end }}</p></li>{{ end }}
+    </ol>
+  </section>
+  <section class="hs-sec">
+    <h2>Tips for practicing at home</h2>
+    <ul class="hs-how">{{ range $d.tips }}<li>{{ . | safeHTML }}</li>{{ end }}</ul>
+  </section>
+  <section class="hs-sec hs-note">
+    <h2>For families with a deaf or hard-of-hearing child</h2>
+    <p>{{ $d.families }}</p>
+    <p class="asl-links">{{ range $d.familylinks }}<a class="hs-btn" href="{{ .url }}" target="_blank" rel="noopener">{{ .label }} ↗</a>{{ end }}</p>
+  </section>
+  <p class="hs-small">More free sign-language links are on the <a href="{{ "resources/" | relURL }}">Resources</a> page. Teddy Rook Book links to these sites but isn't connected to any of them.</p>
+</div>
+{{ end }}

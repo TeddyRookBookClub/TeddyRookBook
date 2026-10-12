@@ -12,6 +12,10 @@
       {{- range where site.Data.hs_hannah.curricula "key" .ar -}}{{- range .groups -}}{{- range .lessons -}}{{- $l := . -}}{{- with index $l 1 -}}
         {{- $ls = $ls | append (dict "n" (index $l 0) "t" "" "m" $m "u" .) -}}
       {{- end -}}{{- end -}}{{- end -}}{{- end -}}
+    {{- else if .ext -}}
+      {{- /* a free course elsewhere: each lesson links to its page there (data/<ext>.yaml) */ -}}
+      {{- $m := .mins -}}
+      {{- range (index site.Data .ext).lessons -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" $m "u" .url) -}}{{- end -}}
     {{- else -}}
       {{- $d := index site.Data .data -}}
       {{- range $d.lessons -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" .mins) -}}{{- end -}}

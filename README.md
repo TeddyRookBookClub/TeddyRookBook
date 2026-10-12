@@ -142,6 +142,8 @@ Because some of that data is licensed for non-commercial use only, the site as a
 [@teddyrookbook on X](https://x.com/teddyrookbook)
 
 
+Sign Language (`/asl/`): `data/asl.yaml` (the family path, tips and links; link out only, never copy other sites' signs or videos), fingerspelling practice (`layouts/asl/fingerspelling.html`, `static/asl/fingerspell.js`) using the public-domain handshape drawings `static/asl/a.svg`–`z.svg` (Paul Sherman, wpclipart.com, via Wikimedia Commons), and the planner's ASL subject, whose lessons link to Lifeprint's free lessons (`data/hs_lifeprint.yaml`; planner courses with `ext:` take lessons from such a data file).
+
 Videos: list YouTube videos in `data/videos.yaml` and show one with `{{ partial "video.html" "<id>" }}` (a click-to-play picture; the player loads from youtube-nocookie.com only when pressed). Infographics take `video:` in `data/infographics.yaml`; homeschool series take `video:`/`videotitle:`.
 
 Outdoor Skills (`/homeschool/outdoor-skills/`): free ideas for outdoor skills in `data/outdoor_skills.yaml`, a page per skill from `content/homeschool/outdoor-skills/_content.gotmpl`, and optional ticks in `static/homeschool/outdoor.js` (`trb-outdoor-v1`). By design there are no badges, certificates or awards, nothing that looks official, and no first-aid or safety lessons; any safety note must be well-established guidance. Not affiliated with any scouting organization.
