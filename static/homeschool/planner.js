@@ -423,6 +423,25 @@
     pv.hidden = false; refreshPic();
   });
 
+  // ---------- a placement from the "Where should we start?" page ----------
+  var placed = null;
+  try { placed = JSON.parse(W.localStorage.getItem('trb-placement-v1') || 'null'); W.localStorage.removeItem('trb-placement-v1'); } catch (e) { }
+  if (placed && placed.picks) {
+    var nm = String(placed.name || '').trim(), age = Math.max(3, Math.min(18, +placed.age || 7)), kid = null;
+    st.kids.forEach(function (k) { if (nm && k.name.toLowerCase() === nm.toLowerCase()) kid = k; });
+    if (!kid) {
+      var blank = st.kids.length === 1 && /^Child \d+$/.test(st.kids[0].name) && !W.localStorage.getItem(KEY);
+      kid = newKid(st.kids.length + 1, age); if (nm) kid.name = nm;
+      if (blank) st.kids = [kid]; else st.kids.push(kid);
+    } else if (kid.age !== age) { kid.age = age; }
+    var said = [];
+    Object.keys(placed.picks).forEach(function (sk) {
+      var pk = placed.picks[sk], x = kid.subs[sk], c = COURSE[pk.course]; if (!x || !c) return;
+      x.course = c.key; x.lesson = Math.max(1, +pk.lesson || 1); x.on = true; said.push(SUB[sk].name + ': ' + c.name + ', lesson ' + x.lesson);
+    });
+    setTimeout(function () { msg(kid.name + ' is set to start at ' + said.join('; ') + '.'); }, 50);
+  }
+
   // ---------- start ----------
   renderKids(); renderWeek(); update();
 })(window, document);

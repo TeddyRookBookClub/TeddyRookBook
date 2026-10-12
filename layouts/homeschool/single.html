@@ -20,6 +20,8 @@
       <button type="button" class="hs-sw" data-simple-switch aria-pressed="false" title="Shows each lesson as a checklist: one small action per line, with exactly what to say. Handy the first time you teach a subject, on a busy day, or when someone else is filling in."><span class="hs-sw-knob" aria-hidden="true"></span>Simple step-by-step: <b class="hs-sw-state">Off</b></button>
       <button type="button" class="hs-btn" data-scan="https://archive.org/embed/{{ $id }}#page/n{{ $l.idx }}/mode/1up" data-page="https://archive.org/details/{{ $id }}/page/n{{ $l.idx }}/mode/1up" aria-expanded="false">📖 Show the page in the book</button>
       <a class="hs-btn ghost" href="https://archive.org/details/{{ $id }}/page/n{{ $l.idx }}/mode/1up" target="_blank" rel="noopener">Open it at the Internet Archive ↗</a>
+      {{- $hasq := false }}{{ range $l.steps }}{{ range split (index . 1) "\n" }}{{ if hasPrefix . "~ " }}{{ $hasq = true }}{{ end }}{{ end }}{{ end }}
+      {{ if $hasq }}<a class="hs-btn ghost" href="{{ "homeschool/practice-sheets/" | relURL }}?c={{ $key }}&amp;l={{ $n }}">🖨 Copywork sheet</a>{{ end }}
     </div>
     <div class="hs-scan" hidden></div>
   </header>

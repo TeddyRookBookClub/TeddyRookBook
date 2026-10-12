@@ -1,0 +1,37 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{- $urls := dict -}}{{- $names := dict -}}
+{{- range site.Data.hs_planner.subjects -}}{{- range .courses -}}{{- $urls = merge $urls (dict .key (.url | relURL)) -}}{{- $names = merge $names (dict .key .name) -}}{{- end -}}{{- end -}}
+<div class="hs pc" id="pc">
+  <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Where should we start?</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Placement</p>
+    <h1>Where should we start?</h1>
+    <p>A short, relaxed check, about 10 minutes, that finds the right starting point in reading, spelling and arithmetic. Your child reads a few lines, spells a few words or works a few sums; you say how it went; the page moves up or down until it finds the level that is just right. Then it can set everything up in the lesson planner.</p>
+  </header>
+
+  <section class="hs-sec pc-step" id="pc-who">
+    <h2>Who are we checking?</h2>
+    <div class="pc-form">
+      <label>Name <input type="text" id="pc-name" maxlength="30" placeholder="First name"></label>
+      <label>Age <select id="pc-age">{{ range seq 3 18 }}<option value="{{ . }}"{{ if eq . 7 }} selected{{ end }}>{{ . }}</option>{{ end }}</select></label>
+    </div>
+    <fieldset class="pc-subs"><legend>Check</legend>
+      {{ range site.Data.hs_placement.subjects }}<label><input type="checkbox" value="{{ .key }}" checked> {{ .icon }} {{ .name }}</label>{{ end }}
+    </fieldset>
+    <p class="hs-small">Tips: do it on a good day, at the table, not right before a meal. Tell your child it isn't a test; you're just finding the right page. It's fine to stop and come back.</p>
+    <button type="button" class="hs-btn pri big" id="pc-go">Start →</button>
+  </section>
+
+  <section class="hs-sec pc-step" id="pc-run" hidden></section>
+  <section class="hs-sec pc-step" id="pc-res" hidden></section>
+
+  <section class="hs-sec hs-note hs-noprint">
+    <h2>How it works</h2>
+    <p>Each subject is a ladder of short checks taken from the books themselves: lines from McGuffey's Readers, words from Webster's and McGuffey's spellers, and sums at the level of each part of Ray's Arithmetic. It starts near your child's age. If a check is easy it moves up; if it's too hard it moves down; it stops at the level where your child needs a little help, or at the last one that felt comfortable, so the first few lessons build confidence. You are the judge: you know when your child is guessing or struggling.</p>
+    <p>For history, science, nature study, geography, writing and Latin, there's no need to check: start at Lesson 1 of the book the planner suggests for your child's age.</p>
+  </section>
+  <script type="application/json" id="pc-data">{{ dict "subjects" site.Data.hs_placement.subjects "urls" $urls "names" $names | jsonify | safeJS }}</script>
+</div>
+<script src="{{ "homeschool/placement.js" | relURL }}?v={{ (os.Stat "static/homeschool/placement.js").ModTime.Unix }}" defer></script>
+{{ end }}

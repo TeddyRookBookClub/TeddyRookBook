@@ -1,0 +1,62 @@
+# "Where should we start?" placement check. Each subject is a ladder of checkpoints from easiest to hardest.
+# course = the lesson planner's course key; lesson = where to start if this checkpoint is the right level.
+# Reading and spelling lines are the books' own words (from the guides' quotations). Arithmetic problems are written
+# for this page in the style of Ray's, at the level of the lesson named.
+subjects:
+- key: reading
+  name: Reading
+  icon: 📖
+  how: Hand your child the screen (or read the lines off it) and ask them to read them aloud to you. Don't help yet; just listen.
+  judge: [Read it smoothly, Read it with some help, Too hard]
+  start: [[4, 0], [5, 1], [6, 3], [7, 6], [8, 9], [9, 11], [10, 13], [11, 14], [12, 15], [99, 16]]
+  points:
+  - {course: ar-teach-your-child-the-alphabet, lesson: 1, book: "Hannah Ward's The Alphabet in 60 Lessons", ask: "Point to each letter and ask, “What letter is this?”", lines: ["B   a   M   t   S   o   r   E   d   F   g   P"], big: true}
+  - {course: ar-teach-your-child-to-read, lesson: 1, book: "Hannah Ward's Teach Your Child to Read in 120 Lessons", ask: "Point to each letter and ask, “What sound does this letter make?” Then say the sounds “m… a… t” slowly and ask what word they make.", lines: ["m   s   a   t   f   o   p   e", "m · a · t  =  ?"], big: true}
+  - {course: mcg-primer, lesson: 6, book: "McGuffey's Primer, Lesson 6", lines: ["The lad has a fat dog.", "The dog has Nat's cap."]}
+  - {course: mcg-primer, lesson: 28, book: "McGuffey's Primer, Lesson 28", lines: ["Their skates roll on the floor.", "The girl with the new black dress is Jane Bell."]}
+  - {course: mcg-primer, lesson: 47, book: "McGuffey's Primer, Lesson 47", lines: ["One day John went to the pond to fish.", "Watch sprang in to save him."]}
+  - {course: mcg-first, lesson: 7, book: "McGuffey's First Reader, Lesson 7", lines: ["Ned has fed the hen.", "She has left the nest.", "See the eggs in the nest!"]}
+  - {course: mcg-first, lesson: 32, book: "McGuffey's First Reader, Lesson 32", lines: ["What a bright June day!"]}
+  - {course: mcg-first, lesson: 54, book: "McGuffey's First Reader, Lesson 54", lines: ["One day, Willie's father saw a boy at the market with four little white rabbits in a basket.", "Willie's father bought them, and carried them home."]}
+  - {course: mcg-second, lesson: 8, book: "McGuffey's Second Reader, Lesson 8", lines: ["Poor puss was nearly tired out, and could carry them no longer.", "Was not the strange cat kind to puss?"]}
+  - {course: mcg-second, lesson: 36, book: "McGuffey's Second Reader, Lesson 36", lines: ["Two fast friends were Willie Brown and his little dog Bounce.", "Then he started, as fast as he could run, up the street to the store."]}
+  - {course: mcg-second, lesson: 61, book: "McGuffey's Second Reader, Lesson 61", lines: ["George Ellet had a bright silver dollar for a New-year gift.", "George started off, and felt much happier for having made up his mind to do what was right."]}
+  - {course: mcg-third, lesson: 9, book: "McGuffey's Third Reader, Lesson 9", lines: ["The beaver is found chiefly in North America."]}
+  - {course: mcg-third, lesson: 40, book: "McGuffey's Third Reader, Lesson 40", lines: ["\"Don't you hate splitting wood?\" asked Charlie, as he sat down on a log to hinder Rob for a while.", "\"Wood has to be sawed and split before it can be burned,\" said Rob."]}
+  - {course: mcg-fourth, lesson: 12, book: "McGuffey's Fourth Reader, Lesson 12", lines: ["The monkey is a very cunning little animal, and is found in many parts of the world.", "This monkey, like all others, was very fond of mischief and of doing whatever he saw others do."]}
+  - {course: mcg-fourth, lesson: 80, book: "McGuffey's Fourth Reader, Lesson 80", lines: ["The price of admission to the \"Rivermouth Theater\" was twenty pins.", "I can see poor little Pepper now, as he stood without flinching, waiting for me to perform my great feat."]}
+  - {course: mcg-fifth, lesson: 62, book: "McGuffey's Fifth Reader, Lesson 62", lines: ["The bear, a ten-foot mass in tolerable proportion, seemed to be regularly beset by a pack of hungry little swells.", "The spectacle is terrific and magnificent."]}
+  - {course: mcg-sixth, lesson: 73, book: "McGuffey's Sixth Reader, Lesson 73", lines: ["Let us then, fellow-citizens, unite with one heart and one mind.", "But every difference of opinion is not a difference of principle."]}
+- key: spelling
+  name: Spelling
+  icon: ✏️
+  how: Say each word clearly, use it in a short sentence if it helps, and have your child write it down without looking. Then check together.
+  judge: [Spelled them all (or all but one), Got about half, Got few or none]
+  start: [[6, 0], [7, 1], [8, 2], [10, 3], [12, 4], [99, 5]]
+  points:
+  - {course: webster, lesson: 5, book: "Webster's Speller, Lesson 5 (first syllables)", ask: "Ask your child to write these short sounds as you say them.", lines: ["ba   be   bi   bo   bu", "la   le   li   lo   lu"], dictate: true}
+  - {course: webster, lesson: 20, book: "Webster's Speller, Lesson 20", lines: ["deed, feed, need, bee, see, deep, sheep, steer"], dictate: true}
+  - {course: webster, lesson: 35, book: "Webster's Speller, Lesson 35", lines: ["year, near, fair, wait, float, east, flew, crew"], dictate: true}
+  - {course: webster, lesson: 64, book: "Webster's Speller, Lesson 64", lines: ["cinnamon, ravenous, vigorous, numerous, humorous, hazardous"], dictate: true}
+  - {course: webster, lesson: 80, book: "Webster's Speller, Lesson 80", lines: ["venerate, estimate, nominate, desolate, irritate, hesitate, graduate"], dictate: true}
+  - {course: mcg-speller, lesson: 140, book: "McGuffey's Speller, Lesson 140", lines: ["making, seizing, ruling, refusing, hedging, hoeing, changeable"], dictate: true}
+- key: arithmetic
+  name: Arithmetic
+  icon: 🧮
+  how: Let your child work these on paper (or in their head for the first ones). Give no hints; then press “Show answers” and check together.
+  judge: [All right, quickly, Some right, or slowly, Mostly wrong or stuck]
+  start: [[5, 0], [6, 1], [7, 3], [8, 5], [9, 6], [10, 7], [11, 9], [12, 10], [99, 11]]
+  points:
+  - {course: primary, lesson: 1, book: "Ray's Primary Arithmetic, Lesson 1", ask: "Put out 7 buttons or beans. Ask your child to count them, touching each one, then write the numbers 1 to 10.", lines: ["Count 7 things, one at a time.", "Write 1 2 3 4 5 6 7 8 9 10."], answers: ["7", "1 2 3 4 5 6 7 8 9 10"]}
+  - {course: primary, lesson: 10, book: "Ray's Primary Arithmetic, Lesson 10 (adding)", lines: ["4 + 3 =", "6 + 2 =", "5 + 5 =", "9 + 3 =", "3 boys and 4 girls: how many children?"], answers: ["7", "8", "10", "12", "7 children"]}
+  - {course: primary, lesson: 25, book: "Ray's Primary Arithmetic, Lesson 25 (subtracting)", lines: ["9 − 4 =", "12 − 5 =", "15 − 7 =", "Sam had 11 marbles and lost 3: how many are left?"], answers: ["5", "7", "8", "8 marbles"]}
+  - {course: primary, lesson: 40, book: "Ray's Primary Arithmetic, Lesson 40 (multiplying)", lines: ["3 × 4 =", "5 × 6 =", "8 × 3 =", "One apple costs 6 cents: what do 4 apples cost?"], answers: ["12", "30", "24", "24 cents"]}
+  - {course: primary, lesson: 52, book: "Ray's Primary Arithmetic, Lesson 52 (dividing)", lines: ["20 ÷ 4 =", "35 ÷ 7 =", "48 ÷ 6 =", "18 pears shared equally by 3 children: how many each?"], answers: ["5", "5", "8", "6 pears"]}
+  - {course: intellectual, lesson: 13, book: "Ray's Intellectual Arithmetic, Lesson 13 (tables to 12)", lines: ["7 × 8 =", "9 × 12 =", "11 × 6 =", "84 ÷ 7 =", "A pencil costs 6 cents: how much do 9 pencils cost?"], answers: ["56", "108", "66", "12", "54 cents"]}
+  - {course: intellectual, lesson: 22, book: "Ray's Intellectual Arithmetic, Lesson 22 (a fraction of a number)", lines: ["½ of 18 =", "⅓ of 21 =", "¾ of 12 =", "If 4 yards of cloth cost 20 cents, what do 7 yards cost?"], answers: ["9", "7", "9", "35 cents"]}
+  - {course: practical, lesson: 16, book: "Ray's Practical Arithmetic, Lesson 16 (long multiplication)", lines: ["4,056 + 987 + 1,325 =", "6,004 − 2,867 =", "327 × 23 =", "608 × 45 ="], answers: ["6,368", "3,137", "7,521", "27,360"]}
+  - {course: practical, lesson: 22, book: "Ray's Practical Arithmetic, Lesson 22 (long division)", lines: ["7,488 ÷ 24 =", "9,135 ÷ 35 =", "A farm of 6,048 acres is divided into 112 equal fields: how many acres in each?"], answers: ["312", "261", "54 acres"]}
+  - {course: practical, lesson: 58, book: "Ray's Practical Arithmetic, Lesson 58 (fractions)", lines: ["⅔ × ¾ =", "1½ + 2¼ =", "⅚ − ¼ =", "Reduce 18/24 to lowest terms."], answers: ["½ (6/12)", "3¾", "7/12", "¾"]}
+  - {course: practical, lesson: 67, book: "Ray's Practical Arithmetic, Lesson 67 (decimals)", lines: ["3.25 + 0.8 =", "6 − 2.75 =", "4.5 × 1.2 =", "7.2 ÷ 0.9 ="], answers: ["4.05", "3.25", "5.4", "8"]}
+  - {course: practical, lesson: 79, book: "Ray's Practical Arithmetic, Lesson 79 (per cent)", lines: ["15% of 80 =", "12 is what per cent of 48?", "A coat bought for $40 is sold for $50: what per cent is the gain?"], answers: ["12", "25%", "25%"]}
+  - {course: higher, lesson: 61, book: "Ray's Higher Arithmetic, Lesson 61 (proportion and roots)", lines: ["3 : 5 = 12 : ?", "If 8 men build a wall in 15 days, how long would 12 men take?", "Square root of 144 =", "Interest on $200 at 6% for 1½ years ="], answers: ["20", "10 days", "12", "$18"]}

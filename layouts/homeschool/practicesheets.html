@@ -1,0 +1,35 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Playwrite+US+Trad&display=swap">
+{{- /* every guided course's passages from the book (the guides' "~" lines), as a JSON file the page loads */ -}}
+{{- $cs := slice -}}
+{{- range where site.Pages "Layout" "hs-course" -}}
+  {{- $d := index site.Data (.Params.data | default (printf "rays_%s" .Params.course)) -}}
+  {{- $ls := slice -}}
+  {{- range $d.lessons -}}{{- $q := slice -}}
+    {{- range .steps -}}{{- range split (index . 1) "\n" -}}{{- if hasPrefix . "~ " -}}{{- $q = $q | append (strings.TrimPrefix "~ " .) -}}{{- end -}}{{- end -}}{{- end -}}
+    {{- if $q -}}{{- $ls = $ls | append (dict "n" .num "t" .title "q" $q) -}}{{- end -}}
+  {{- end -}}
+  {{- if $ls -}}{{- $cs = $cs | append (dict "key" .Params.course "name" $d.book.title "group" .Parent.Title "lessons" $ls) -}}{{- end -}}
+{{- end -}}
+{{- $json := resources.FromString "homeschool/sheets-data.json" (dict "courses" (sort $cs "group") | jsonify) -}}
+<div class="hs ps" id="ps" data-src="{{ $json.RelPermalink }}">
+  <nav class="hs-crumbs ps-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Practice sheets</nav>
+  <header class="hs-hero ps-noprint">
+    <p class="hs-eyebrow">Homeschool · Printables</p>
+    <h1>Practice sheets</h1>
+    <p>Make a page to print: copywork or tracing from any lesson's passage, a dictation page, plain handwriting paper, or an arithmetic drill with its answer key. Choose, check the preview, and print.</p>
+  </header>
+  <div class="pl-tabs ps-noprint" role="tablist">
+    <button type="button" role="tab" data-t="copy" aria-selected="true">✍️ Copywork &amp; tracing</button>
+    <button type="button" role="tab" data-t="dict">🗣 Dictation</button>
+    <button type="button" role="tab" data-t="lines">📄 Handwriting paper</button>
+    <button type="button" role="tab" data-t="math">🧮 Arithmetic drill</button>
+  </div>
+  <section class="ps-opts ps-noprint" id="ps-opts"></section>
+  <div class="hs-actions ps-noprint"><button type="button" class="hs-btn pri big" id="ps-print">🖨 Print</button><span class="hs-small" id="ps-note"></span></div>
+  <div class="ps-preview" id="ps-preview"></div>
+</div>
+<script src="{{ "homeschool/sheets.js" | relURL }}?v={{ (os.Stat "static/homeschool/sheets.js").ModTime.Unix }}" defer></script>
+{{ end }}
