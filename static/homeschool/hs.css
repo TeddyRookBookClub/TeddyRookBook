@@ -131,3 +131,8 @@ html[data-theme="dark"] .hs-teach .hs-say{background:#1f3328;color:#e6ece8}
 .hx-left{font-variant-numeric:tabular-nums;font-weight:600;color:var(--g)}
 @media print{.hs-noprint,header.site-header,.header,footer,.hs-crumbs{display:none!important}.hx-qs>li{break-inside:avoid}}
 .hs-card.feat{border-left:5px solid var(--gold);background:var(--paper)}
+/* light mode: a soft racing-green edge so white cards stand out on the light page */
+html:not([data-theme="dark"]) .hs-card{border:1.5px solid #9dbba9}
+html:not([data-theme="dark"]) .hs-card.feat{border-left:5px solid var(--gold)}
+html:not([data-theme="dark"]) a.hs-card:hover{border-color:#00562f}
+html:not([data-theme="dark"]) .hs-card.feat:hover{border-left-color:var(--gold)}
