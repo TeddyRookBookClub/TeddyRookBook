@@ -28,6 +28,10 @@
     </a>
   </section>
   <section class="bz-sec">
+    <h2>Everything in Business</h2>
+    {{ partial "group-tiles.html" (dict "group" "Business") }}
+  </section>
+  <section class="bz-sec">
     <h2>A few of the lessons</h2>
     <div class="bz-morals">
       {{ range first 6 (shuffle $d.cases) }}<a href="{{ printf "business/cases/%s/" .slug | relURL }}"><q>{{ .moral }}</q><span>{{ .company }}, {{ .year }}</span></a>{{ end }}

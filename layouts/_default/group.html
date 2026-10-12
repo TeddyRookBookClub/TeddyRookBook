@@ -1,0 +1,11 @@
+{{ define "main" }}
+<div class="trb-group">
+  <header class="trb-ghero">
+    <p class="trb-geyebrow">{{ .Params.eyebrow | default "Teddy Rook Book" }}</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.lead }}<p>{{ . }}</p>{{ end }}
+  </header>
+  {{ partial "group-tiles.html" (dict "group" .Params.group) }}
+  {{ with .Content }}<div class="trb-gnote">{{ . }}</div>{{ end }}
+</div>
+{{ end }}

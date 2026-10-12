@@ -1,0 +1,11 @@
+{{- /* Tiles for every menu item in a menu group. Context: dict "group" "Education" "skip" (slice of URLs to leave out) */ -}}
+{{- $g := .group }}{{ $skip := .skip | default slice }}
+<div class="trb-tiles">
+{{- range site.Menus.main }}{{ if and (eq .Params.group $g) (not (in $skip .URL)) }}
+  <a class="trb-tile" href="{{ .URL | absLangURL }}">
+    <span class="trb-ti" aria-hidden="true">{{ .Params.icon | default "•" }}</span>
+    <b>{{ .Name }}</b>
+    {{- with .Params.note }}<small>{{ . }}</small>{{ end }}
+  </a>
+{{- end }}{{ end }}
+</div>

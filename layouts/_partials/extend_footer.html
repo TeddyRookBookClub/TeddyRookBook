@@ -37,6 +37,13 @@
 /* "More" menu: close when clicking elsewhere or pressing Escape. */
 (function () {
   var ds = document.querySelectorAll('#menu .trb-more details'); if (!ds.length) return;
+  // the group name is a link to that group's page; the arrow (or hovering, with a mouse) opens the list
+  ds.forEach(function (d) { var a = d.querySelector('summary a.trb-gl'); if (a) a.addEventListener('click', function (e) { e.stopPropagation(); }); });
+  if (window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches) ds.forEach(function (d) {
+    var li = d.parentNode, t = 0;
+    li.addEventListener('mouseenter', function () { clearTimeout(t); d.open = true; });
+    li.addEventListener('mouseleave', function () { t = setTimeout(function () { d.open = false; }, 200); });
+  });
   ds.forEach(function (d) { d.addEventListener('toggle', function () { if (d.open) ds.forEach(function (o) { if (o !== d) o.open = false; }); }); });
   document.addEventListener('click', function (e) { ds.forEach(function (d) { if (d.open && !d.contains(e.target)) d.open = false; }); });
   document.addEventListener('keydown', function (e) { if (e.key !== 'Escape') return; ds.forEach(function (d) { if (d.open) { d.open = false; d.querySelector('summary').focus(); } }); });

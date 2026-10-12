@@ -19,6 +19,7 @@ weight = 1
 [menu.main.params]
 group = "Education"
 note = "One-page guides to great books and big ideas"
+icon = "🖼"
 
 [[menu.main]]
 name = "Languages"
@@ -27,6 +28,7 @@ weight = 2
 [menu.main.params]
 group = "Education"
 note = "Koine Greek and Latin: flashcards, drills, readers"
+icon = "🏛"
 
 [[menu.main]]
 name = "Homeschool"
@@ -35,6 +37,7 @@ weight = 3
 [menu.main.params]
 group = "Education"
 note = "Classic schoolbooks with lesson guides, planner, exams"
+icon = "🏫"
 
 [[menu.main]]
 name = "Library"
@@ -43,6 +46,7 @@ weight = 4
 [menu.main.params]
 group = "Education"
 note = "Guides to the great books"
+icon = "📚"
 
 [[menu.main]]
 name = "Free Books"
@@ -51,6 +55,7 @@ weight = 5
 [menu.main.params]
 group = "Education"
 note = "Find free e-books and audiobooks"
+icon = "📖"
 
 [[menu.main]]
 name = "Reading Paths"
@@ -59,6 +64,7 @@ weight = 6
 [menu.main.params]
 group = "Education"
 note = "Guided routes through the Library"
+icon = "🧭"
 
 [[menu.main]]
 name = "Timeline"
@@ -67,6 +73,7 @@ weight = 7
 [menu.main.params]
 group = "Education"
 note = "The ancient world, era by era"
+icon = "⏳"
 
 [[menu.main]]
 name = "Resources"
@@ -75,6 +82,7 @@ weight = 8
 [menu.main.params]
 group = "Education"
 note = "Free resources elsewhere"
+icon = "🔗"
 
 [[menu.main]]
 name = "My Progress"
@@ -83,6 +91,7 @@ weight = 9
 [menu.main.params]
 group = "Education"
 note = "Lessons taught and words met, save or load"
+icon = "✅"
 
 [[menu.main]]
 name = "What's New"
@@ -91,6 +100,7 @@ weight = 10
 [menu.main.params]
 group = "Education"
 note = "Latest infographics, games and tools"
+icon = "✨"
 
 [[menu.main]]
 name = "Business Cases"
@@ -99,6 +109,7 @@ weight = 10
 [menu.main.params]
 group = "Business"
 note = "Real company stories and the lessons they teach"
+icon = "💼"
 
 [[menu.main]]
 name = "Your Tax Receipt"
@@ -107,6 +118,7 @@ weight = 11
 [menu.main.params]
 group = "Business"
 note = "See what your income tax paid for"
+icon = "🧾"
 
 [[menu.main]]
 name = "Markets & Economy"
@@ -115,6 +127,7 @@ weight = 12
 [menu.main.params]
 group = "Business"
 note = "Charts, indicators and calculators"
+icon = "📈"
 
 [[menu.main]]
 name = "Stock Screener"
@@ -123,6 +136,7 @@ weight = 13
 [menu.main.params]
 group = "Business"
 note = "Filter stocks by the numbers"
+icon = "🔎"
 
 [[menu.main]]
 name = "Stock Chart"
@@ -131,6 +145,7 @@ weight = 14
 [menu.main.params]
 group = "Business"
 note = "Price history for any stock"
+icon = "📉"
 
 [[menu.main]]
 name = "Economic Data"
@@ -139,6 +154,7 @@ weight = 15
 [menu.main.params]
 group = "Business"
 note = "Jobs, inflation, growth and more"
+icon = "📊"
 
 [[menu.main]]
 name = "Economic Calendar"
@@ -147,6 +163,7 @@ weight = 16
 [menu.main.params]
 group = "Business"
 note = "Upcoming reports and releases"
+icon = "📅"
 
 [[menu.main]]
 name = "Treasuries"
@@ -155,6 +172,7 @@ weight = 17
 [menu.main.params]
 group = "Business"
 note = "The yield curve, rates and auctions"
+icon = "🏦"
 
 [[menu.main]]
 name = "Calculators & Links"
@@ -163,6 +181,7 @@ weight = 18
 [menu.main.params]
 group = "Business"
 note = "Options, bonds, loans, compounding and more"
+icon = "🧮"
 
 [[menu.main]]
 name = "Games"
@@ -170,6 +189,7 @@ url = "/games/"
 weight = 19
 [menu.main.params]
 group = "Games"
+icon = "♟"
 
 [[menu.main]]
 name = "PhotoCraft"
@@ -178,6 +198,7 @@ weight = 20
 [menu.main.params]
 group = "Miscellaneous"
 note = "Free image editor in your browser"
+icon = "🎨"
 
 # PaperMod settings
 [params]
@@ -191,6 +212,12 @@ note = "Free image editor in your browser"
   ShowCodeCopyButtons = true
   ShowToc = true
   images = ["img/share.jpg"]   # default link-preview image (X, iMessage, etc.)
+
+  # each group's own page of tiles (clicking the group name in the menu goes here)
+  [params.menugroupurls]
+    Education = "/education/"
+    Business = "/business/"
+    Miscellaneous = "/miscellaneous/"
 
   [params.assets]
     favicon = "/favicon.ico"

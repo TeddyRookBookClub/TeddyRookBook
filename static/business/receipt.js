@@ -1,10 +1,16 @@
 /* Your tax receipt: split an income-tax amount in proportion to federal spending, with live drill-down.
-   Data: USAspending.gov Spending Explorer API (obligations by budget function > subfunction > federal account >
-   program activity) and Treasury FiscalData (Monthly Treasury Statement year-end receipts and outlays). */
+   Top level: Treasury's official net outlays by budget function (Monthly Treasury Statement, Table 9, September =
+   full fiscal year). These are the government's own spending totals, net of offsetting collections, so a function
+   can be negative (e.g. Commerce and Housing Credit when FDIC and mortgage-insurance receipts exceed spending).
+   Drill-down: USAspending.gov Spending Explorer (subfunction > federal account > program activity), used only to
+   split each function's official total in proportion; its obligation dollars are not used as totals. */
 (function (W, D) {
   'use strict';
   var API = 'https://api.usaspending.gov/api/v2/spending/';
   var MTS = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_1';
+  var MTS9 = 'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_9';
+  var CODES = { 'National Defense': '050', 'International Affairs': '150', 'General Science, Space, and Technology': '250', 'Energy': '270', 'Natural Resources and Environment': '300', 'Agriculture': '350', 'Commerce and Housing Credit': '370', 'Transportation': '400', 'Community and Regional Development': '450', 'Education, Training, Employment, and Social Services': '500', 'Health': '550', 'Medicare': '570', 'Income Security': '600', 'Social Security': '650', 'Veterans Benefits and Services': '700', 'Administration of Justice': '750', 'General Government': '800', 'Net Interest': '900' };
+  var NOTES = { '370': 'This area took in more than it spent this year (deposit-insurance premiums, mortgage-insurance fees and loan repayments), so it reduced the bill.', '950': 'Money the government collects that is not counted under any one area: federal agencies’ own retirement contributions, offshore oil and gas royalties, spectrum auctions and similar. It reduces the bill.' };
   var FIRST = 2017, KEY = 'trb-taxreceipt-v1';
   var $ = function (s) { return D.querySelector(s); };
   var LEVELS = ['budget_function', 'budget_subfunction', 'federal_account', 'program_activity'];
@@ -14,7 +20,7 @@
     if (!cache[k]) cache[k] = fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: k }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
     return cache[k];
   }
-  function money(v) { return '$' + (Math.round(v * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function money(v) { return (v < 0 ? '−$' : '$') + (Math.round(Math.abs(v) * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function big(v) { var a = Math.abs(v); return a >= 1e12 ? '$' + (v / 1e12).toFixed(2) + ' trillion' : a >= 1e9 ? '$' + (v / 1e9).toFixed(1) + ' billion' : '$' + Math.round(v / 1e6) + ' million'; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function nice(name) { // program activities come in capitals
@@ -33,11 +39,28 @@
 
   // a node: {name, code, id, level, filters, amount (government $), share (your $), children}
   var root = null, gen = 0;
+  function top(node) { // official net outlays by function for the year
+    return fetch(MTS9 + '?filter=record_fiscal_year:eq:' + st.fy + ',record_calendar_month:eq:09&page[size]=200').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
+      var d = j.data || [], net = d.filter(function (x) { return x.classification_desc === 'Net Outlays'; })[0]; if (!net) throw new Error('no data');
+      var rows = d.filter(function (x) { return x.parent_id === net.classification_id && x.classification_desc !== 'Total' && x.current_fytd_rcpt_outly_amt !== 'null'; }).map(function (x) {
+        var nm = x.classification_desc, code = CODES[nm] || (/^Undistributed/.test(nm) ? '950' : null);
+        return { name: code === '950' ? 'Undistributed offsetting receipts' : nm, code: code, amount: +x.current_fytd_rcpt_outly_amt };
+      });
+      if (!st.ss) rows = rows.filter(function (r) { return r.code !== '570' && r.code !== '650'; });
+      var sum = rows.reduce(function (s, r) { return s + r.amount; }, 0);
+      node.children = rows.sort(function (a, b) { return b.amount - a.amount; }).map(function (r) {
+        var nf = r.code && r.code !== '950' && r.amount > 0 ? { budget_function: r.code } : null;
+        return { name: r.name, code: r.code, level: 0, filters: nf, amount: r.amount, share: node.share * r.amount / sum, children: null, open: false, note: NOTES[r.code] && r.amount < 0 ? NOTES[r.code] : null };
+      });
+      node.govTotal = sum;
+      return node;
+    });
+  }
   function load(node) { // fetch children of node (or the top level when node is root)
+    if (node.level < 0) return top(node);
     var level = node.level + 1, f = Object.assign({ fy: String(st.fy), period: '12' }, node.filters || {});
     return post({ type: LEVELS[level], filters: f }).then(function (res) {
-      var rows = (res.results || []).filter(function (r) { return r.amount > 0 && r.code != null && r.name !== 'Governmental Receipts'; });
-      if (level === 0 && !st.ss) rows = rows.filter(function (r) { return r.code !== '570' && r.code !== '650'; });
+      var rows = (res.results || []).filter(function (r) { return r.amount > 0 && r.code != null; });
       var sum = rows.reduce(function (s, r) { return s + r.amount; }, 0);
       node.children = rows.sort(function (a, b) { return b.amount - a.amount; }).map(function (r) {
         var nf = Object.assign({}, node.filters || {}); nf[LEVELS[level]] = LEVELS[level] === 'federal_account' ? r.id : r.code;
@@ -48,11 +71,12 @@
     });
   }
   function lineHTML(n, path) {
-    var can = n.level < LEVELS.length - 1;
-    var h = '<li class="tr-li lv' + n.level + (n.open ? ' open' : '') + '" data-p="' + path + '">' +
+    var can = n.level < LEVELS.length - 1 && !!n.filters, neg = n.share < 0;
+    var h = '<li class="tr-li lv' + n.level + (n.open ? ' open' : '') + (neg ? ' neg' : '') + '" data-p="' + path + '">' +
       '<button type="button" class="tr-line"' + (can ? ' aria-expanded="' + (n.open ? 'true' : 'false') + '"' : ' disabled') + '>' +
       '<span class="tr-n">' + (can ? '<i>' + (n.open ? '−' : '+') + '</i>' : '') + esc(n.name) + '</span><span class="tr-d"></span><span class="tr-a">' + money(n.share) + '</span></button>' +
-      '<span class="tr-bar" style="--w:' + Math.max(0.5, 100 * n.share / root.share).toFixed(2) + '%"></span>';
+      '<span class="tr-bar" style="--w:' + Math.max(0.5, 100 * Math.abs(n.share) / (root.share || 1)).toFixed(2) + '%"></span>' +
+      (n.note ? '<span class="tr-note">' + esc(n.note) + '</span>' : '');
     if (n.open) {
       if (n.loading) h += '<ul><li class="tr-msg">Loading…</li></ul>';
       else if (n.err) h += '<ul><li class="tr-msg">Couldn’t load this. <button type="button" class="tr-retry" data-p="' + path + '">Try again</button></li></ul>';
@@ -79,7 +103,7 @@
     root = { level: -1, share: st.amt, filters: {}, children: null };
     $('#tr-lines').innerHTML = '<li class="tr-msg">Loading spending data for ' + st.fy + '…</li>';
     render();
-    load(root).then(function () { if (my === gen) render(); }).catch(function () { if (my === gen) $('#tr-lines').innerHTML = '<li class="tr-msg">Couldn’t reach USAspending.gov just now. Check your connection and try again in a moment.</li>'; });
+    load(root).then(function () { if (my === gen) render(); }).catch(function () { if (my === gen) $('#tr-lines').innerHTML = '<li class="tr-msg">Couldn’t reach the Treasury’s data service just now. Check your connection and try again in a moment.</li>'; });
     borrow(st.fy, my);
   }
   function borrow(fy, my) {
@@ -105,6 +129,7 @@
   $('#tr-amt').addEventListener('input', function () { // amount changes just rescale; no refetch
     st.amt = Math.max(0, +this.value || 0); save();
     if (!root || !root.children) return;
+    if (!root.share) { start(); return; }
     var k = st.amt / (root.share || 1); root.share = st.amt;
     (function walk(n) { (n.children || []).forEach(function (c) { c.share *= k; walk(c); }); })(root);
     render(); clearTimeout(t); t = setTimeout(function () { borrow(st.fy, gen); }, 300);
