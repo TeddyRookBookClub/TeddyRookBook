@@ -1,0 +1,10 @@
+{{/* One page per curriculum, from data/hs_hannah.yaml */}}
+{{ range site.Data.hs_hannah.curricula }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" .slug
+    "title" .title
+    "params" (dict "course" .key "description" (printf "%s, by Hannah Ward (Actual Reading), free and shared with permission. Ages %s. %s" .title .ages .blurb))
+    "dates" (dict "date" (time.AsTime "2026-10-11"))
+  ) }}
+{{ end }}

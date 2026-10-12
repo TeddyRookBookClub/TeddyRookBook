@@ -1,0 +1,10 @@
+{{- /* Credit box for Hannah Ward's Actual Reading curricula. Context: site.Data.hs_hannah.site, or a dict with "s" (that) and "c" (a curriculum) */ -}}
+{{- $s := . }}{{ $c := dict }}{{ with .s }}{{ $s = . }}{{ $c = $.c }}{{ end -}}
+<aside class="ar-credit">
+  <p><b>By Hannah Ward, {{ $s.creds }}, of Actual Reading.</b> Shared here with her kind permission. The lessons are Hannah's work (© Actual Reading) and open from <a href="{{ $s.url }}" target="_blank" rel="noopener">her website, hannahwardeducation.com</a>; Teddy Rook Book doesn't keep copies, so you always get her latest version.</p>
+  <p class="ar-links">
+    {{- with $c.source }}<a class="hs-btn" href="{{ . }}" target="_blank" rel="noopener">This curriculum on Hannah's site ↗</a>{{ else }}<a class="hs-btn" href="{{ $s.url }}" target="_blank" rel="noopener">Hannah's website ↗</a>{{ end }}
+    {{- with $c.buy }}<a class="hs-btn ghost" href="{{ . }}" target="_blank" rel="noopener">Buy the print-quality PDF set ↗</a>{{ else }}<a class="hs-btn ghost" href="{{ $s.shop }}" target="_blank" rel="noopener">Actual Reading shop ↗</a>{{ end }}
+    <a class="hs-btn ghost" href="{{ $s.contact }}" target="_blank" rel="noopener">Contact Hannah ↗</a>
+  </p>
+</aside>

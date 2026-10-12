@@ -1,0 +1,99 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/ar.css" | relURL }}?v={{ (os.Stat "static/homeschool/ar.css").ModTime.Unix }}">
+{{ $d := site.Data.hs_hannah }}{{ $key := .Params.course }}{{ $c := index (where $d.curricula "key" $key) 0 }}
+<div class="hs ar"{{ if eq $c.kind "lessons" }} data-ar="{{ $c.key }}" data-total="{{ $c.total }}"{{ end }}>
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › {{ $c.short }}</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Actual Reading · {{ $c.level }} · Ages {{ $c.ages }}</p>
+    <h1>{{ $c.title }}</h1>
+    <p>{{ $c.blurb }}</p>
+  </header>
+
+  {{ partial "ar-credit.html" (dict "s" $d.site "c" $c) }}
+
+  {{ with $c.guide }}
+  <section class="hs-sec ar-first">
+    <h2>Start here: the teacher guide</h2>
+    <p>Hannah's free three-page guide explains the lesson symbols, a suggested daily schedule, the reading guide, and how to place your child. It comes from her Gumroad page, where the price is "pay what you want": you can enter $0.</p>
+    <p><a class="hs-btn pri" href="{{ . }}" target="_blank" rel="noopener">Get the free teacher guide ↗</a></p>
+  </section>
+  {{ end }}
+
+  <section class="hs-sec">
+    <h2>How to use it</h2>
+    <ul class="hs-how">{{ range $c.how }}<li>{{ . | safeHTML }}</li>{{ end }}</ul>
+  </section>
+
+  {{ if eq $c.kind "lessons" }}
+  <section class="hs-progress" aria-live="polite">
+    <div class="hs-bar"><b style="width:0%"></b></div>
+    <p><span id="ar-done-n">0</span> of {{ $c.total }} lessons done <span class="hs-small">(saved in this browser)</span></p>
+  </section>
+
+  <section class="ar-today" id="ar-today">
+    <div class="ar-th">
+      <button type="button" class="hs-btn ghost" id="ar-prev" aria-label="Previous lesson">←</button>
+      <h2 id="ar-title">Lesson 1</h2>
+      <button type="button" class="hs-btn ghost" id="ar-next" aria-label="Next lesson">→</button>
+    </div>
+    <p class="hs-small" id="ar-where"></p>
+    <div class="ar-acts">
+      <a class="hs-btn pri" id="ar-open" href="#" target="_blank" rel="noopener">📄 Open the lesson PDF ↗</a>
+      <button type="button" class="hs-btn" id="ar-show" aria-expanded="false">👁 Show it here</button>
+      <label class="hs-btn ar-ck"><input type="checkbox" id="ar-done"> Done</label>
+    </div>
+    <p class="ar-miss" id="ar-miss" hidden>Hannah's page doesn't have a download for this lesson yet. <a href="{{ $c.source }}" target="_blank" rel="noopener">Check her page ↗</a> or skip to the next one.</p>
+    <div class="ar-view" id="ar-view" hidden></div>
+  </section>
+
+  {{ range $c.groups }}
+  <section class="hs-unit">
+    <h2>{{ .title }}</h2>
+    <ol class="ar-grid">
+      {{ range .lessons }}{{ $n := index . 0 }}{{ $u := index . 1 }}
+      <li><button type="button" data-n="{{ $n }}"{{ with $u }} data-u="{{ . }}"{{ else }} class="miss"{{ end }} aria-label="Lesson {{ $n }}">{{ $n }}</button></li>
+      {{ end }}
+    </ol>
+  </section>
+  {{ end }}
+  <p class="hs-small">Tap a number to pick that lesson. Ticks are saved in this browser, and they show on <a href="{{ "progress/" | relURL }}">My Progress</a>, where you can save them to a file.</p>
+  {{ end }}
+
+  {{ with $c.readalouds }}
+  <section class="hs-sec">
+    <h2>Read-alouds for Level 1</h2>
+    <p class="hs-small">Hannah's suggestions for you to read to your child. Links are Hannah's Amazon affiliate links, which support her; most are at any library too.</p>
+    <ul class="ar-books">{{ range . }}<li><a href="{{ index . 1 }}" target="_blank" rel="noopener sponsored">{{ index . 0 }}</a></li>{{ end }}</ul>
+  </section>
+  {{ end }}
+  {{ with $c.independent }}
+  <section class="hs-sec">
+    <h2>Books for reading on their own</h2>
+    <ul class="ar-books">{{ range . }}<li><a href="{{ index . 1 }}" target="_blank" rel="noopener sponsored">{{ index . 0 }}</a></li>{{ end }}</ul>
+  </section>
+  {{ end }}
+
+  {{ if eq $c.kind "file" }}
+  <section class="hs-sec ar-first">
+    <h2>Download the workbook</h2>
+    <p>It's one PDF of {{ $c.size }}, so it's best downloaded once on Wi-Fi and saved. It can take a few minutes.</p>
+    <p><a class="hs-btn pri" href="{{ $c.file }}" target="_blank" rel="noopener">📥 Download the Crystal and Shell workbook ↗</a></p>
+    <p class="hs-small">This free workbook is one part of Hannah's larger Great Big Pre-Reading Workbook and Activity Bundle{{ with $c.buy }}, which <a href="{{ . }}" target="_blank" rel="noopener">you can buy at Actual Reading</a>{{ end }}.</p>
+  </section>
+  {{ end }}
+
+  {{ if eq $c.kind "books" }}
+  {{ range $c.lists }}
+  <section class="hs-sec">
+    <h2>Top 100 read-aloud picture books · {{ .title }}</h2>
+    <ol class="ar-books num">{{ range .books }}<li><a href="{{ index . 1 }}" target="_blank" rel="noopener sponsored">{{ index . 0 }}</a></li>{{ end }}</ol>
+  </section>
+  {{ end }}
+  <p class="hs-small">In no particular order. See them with Hannah's notes on her site: {{ range $i, $p := $c.pages }}{{ if $i }} · {{ end }}<a href="{{ index $p 1 }}" target="_blank" rel="noopener">{{ cond (eq $i 0) "Part 1" "Part 2" }} ↗</a>{{ end }}.</p>
+  {{ end }}
+
+  {{ with $c.paperback }}<p class="hs-small">There's also <a href="{{ . }}" target="_blank" rel="noopener sponsored">a paperback edition on Amazon</a>, with the alphabet chart printed on the back cover.</p>{{ end }}
+</div>
+<script src="{{ "homeschool/ar.js" | relURL }}?v={{ (os.Stat "static/homeschool/ar.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,45 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/ar.css" | relURL }}?v={{ (os.Stat "static/homeschool/ar.css").ModTime.Unix }}">
+{{ $d := site.Data.hs_hannah }}{{ $s := $d.site }}
+<div class="hs ar">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Actual Reading</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Early reading and elementary</p>
+    <h1>Actual Reading, by Hannah Ward</h1>
+    <p>Complete, free curricula for teaching young children to read, write and count, from the first letters to reading on their own, plus a phonics course for older learners. Every lesson is a printable PDF, and each one is written so that any parent who can read can teach it.</p>
+  </header>
+
+  {{ partial "ar-credit.html" $s }}
+
+  <section class="hs-sec">
+    <h2>Where to start</h2>
+    <ol class="ar-path">
+      <li><b>Ages 2–5:</b> the <a href="{{ "homeschool/actual-reading/pre-reading-workbook/" | relURL }}">Pre-Reading Workbook</a> and <a href="{{ "homeschool/actual-reading/teach-your-child-the-alphabet/" | relURL }}">the Alphabet in 60 Lessons</a> for letters and sounds, or <a href="{{ "homeschool/actual-reading/little-house-pre-k/" | relURL }}">Little House Pre-K</a> for a whole preschool year.</li>
+      <li><b>Ready to read:</b> <a href="{{ "homeschool/actual-reading/teach-your-child-to-read/" | relURL }}">Teach Your Child to Read in 120 Lessons</a>. Begin when your child knows the letters and shows signs of being ready, not at a set age. <a href="{{ "homeschool/actual-reading/little-house-kindergarten/" | relURL }}">Little House Kindergarten</a> is the full kindergarten year.</li>
+      <li><b>Grades 1–3:</b> <a href="{{ "homeschool/actual-reading/american-pioneer-level-1/" | relURL }}">American Pioneer, Level 1</a>, then on to <a href="{{ "homeschool/mcguffey/" | relURL }}">McGuffey's Readers</a> on this site.</li>
+      <li><b>Older children and adults</b> who struggle to read: <a href="{{ "homeschool/actual-reading/phonics-reading-boot-camp/" | relURL }}">Phonics Reading Boot Camp</a>.</li>
+      <li><b>Every day, at every age:</b> read aloud together. <a href="{{ "homeschool/actual-reading/hannahs-book-lists/" | relURL }}">Hannah's book lists</a> will keep you going for a long time.</li>
+    </ol>
+  </section>
+
+  <section class="hs-cards ar-cards">
+    {{ range $d.curricula }}
+    <a class="hs-card" href="{{ printf "homeschool/actual-reading/%s/" .slug | relURL }}" data-ar="{{ .key }}"{{ with .total }} data-total="{{ . }}"{{ end }}>
+      <span class="big" aria-hidden="true">{{ .icon }}</span>
+      <p class="ar-lvl">{{ .level }} · Ages {{ .ages }}</p>
+      <h2>{{ .title }}</h2>
+      <p>{{ .blurb }}</p>
+      <span class="go">{{ if eq .kind "lessons" }}{{ .total }} lessons →{{ else if eq .kind "file" }}Get the workbook →{{ else }}See the lists →{{ end }}</span>
+      <span class="ar-prog" hidden></span>
+    </a>
+    {{ end }}
+  </section>
+
+  <section class="hs-sec">
+    <h2>About Hannah</h2>
+    <p>Hannah Ward is a homeschooling mother and English teacher who has taught from preschool to university level. She is TESOL-certified and holds an M.Ed. in Education Technology and Instructional Design. She gives these curricula away, lesson by lesson, so that families who cannot pay can still teach their children. High-quality bundled PDFs and printed books are for sale at <a href="{{ $s.shop }}" target="_blank" rel="noopener">Actual Reading</a>, and buying them is the best way to support her work.</p>
+  </section>
+</div>
+<script src="{{ "homeschool/ar.js" | relURL }}?v={{ (os.Stat "static/homeschool/ar.js").ModTime.Unix }}" defer></script>
+{{ end }}

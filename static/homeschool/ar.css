@@ -1,0 +1,34 @@
+/* Actual Reading (Hannah Ward) pages */
+.ar-credit{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--g);border-radius:12px;padding:.9rem 1.1rem;margin:0 0 1.2rem}
+.ar-credit p{margin:0 0 .6rem;line-height:1.5}
+.ar-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 !important}
+.ar-path{margin:.3rem 0 0;padding-left:1.3rem;line-height:1.55}.ar-path li{margin:.35rem 0}
+.ar-lvl{font-size:.78rem !important;text-transform:uppercase;letter-spacing:.06em;color:var(--g) !important;margin:.2rem 0 0 !important;font-weight:700}
+.ar-prog{display:inline-block;margin-left:.6rem;font-size:.82rem;background:var(--soft);border-radius:20px;padding:.1rem .55rem;color:var(--ink)}
+.ar-prog[hidden]{display:none}
+.ar-first{border-left:5px solid var(--gold)}
+.ar-today{background:var(--card);border:2px solid var(--g);border-radius:14px;padding:.9rem 1rem 1rem;margin:0 0 1.2rem;scroll-margin-top:70px}
+.ar-th{display:flex;align-items:center;gap:.6rem}
+.ar-th h2{margin:0;flex:1;text-align:center;font-size:1.5rem}
+.ar-th .hs-btn{min-width:2.6rem;justify-content:center}
+.ar-th .hs-btn:disabled{opacity:.35;cursor:default}
+#ar-where{text-align:center;margin:.1rem 0 .7rem}
+.ar-acts{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.ar-acts [hidden]{display:none}
+.ar-ck{cursor:pointer;gap:.4rem}.ar-ck input{width:1.1rem;height:1.1rem;accent-color:var(--g)}
+.ar-miss{text-align:center;margin:.7rem 0 0;color:var(--muted)}
+.ar-miss[hidden],.ar-view[hidden]{display:none}
+.ar-view{margin-top:.9rem}
+.ar-view iframe{width:100%;height:80vh;min-height:420px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.ar-grid{list-style:none;margin:.4rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(3rem,1fr));gap:.35rem}
+.ar-grid button{width:100%;padding:.5rem 0;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:700 1rem Georgia,serif;cursor:pointer;position:relative}
+.ar-grid button:hover{border-color:var(--g)}
+.ar-grid button.done{background:var(--g);border-color:var(--g);color:#fff}
+.ar-grid button.done::after{content:"✓";position:absolute;top:1px;right:4px;font:700 .65rem system-ui,sans-serif}
+.ar-grid button.cur{outline:3px solid var(--gold);outline-offset:1px}
+.ar-grid button.miss{opacity:.45;border-style:dashed}
+.ar-books{columns:2 260px;column-gap:2rem;padding-left:1.2rem;margin:.4rem 0 0;line-height:1.45}
+.ar-books li{break-inside:avoid;margin:0 0 .3rem}
+.ar-books:not(.num){list-style:disc}
+@media print{.ar-today,.ar-grid,.ar-credit .ar-links{display:none}}
+html[data-theme="dark"] .ar-grid button.done{color:#0f1a14}
