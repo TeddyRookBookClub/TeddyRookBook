@@ -83,13 +83,14 @@
   W.TRBconvertUnits = convert;
 
   // ---------- apply to the page ----------
-  var nodes = [];
+  var nodes = [], found = false;
   function skip(n) { var p = n.parentNode; return !p || /^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION|CODE|PRE)$/.test(p.nodeName) || (p.closest && p.closest('[data-nounits]')); }
   function doNode(n) {
     if (n.__trbOut !== undefined && n.nodeValue === n.__trbOut) return;
     if (skip(n)) return;
     if (n.__trbOrig === undefined) nodes.push(n);
     n.__trbOrig = n.nodeValue;
+    if (!found && convert(n.__trbOrig, 'both') !== n.__trbOrig) found = true;
     var out = convert(n.__trbOrig, mode);
     n.__trbOut = out; if (out !== n.nodeValue) n.nodeValue = out;
   }
@@ -118,8 +119,6 @@
   function init() {
     var roots = D.querySelectorAll('[data-units]'); if (!roots.length) return;
     var slots = D.querySelectorAll('[data-units-ui]');
-    if (slots.length) slots.forEach(function (s) { s.appendChild(picker()); });
-    else { var r = roots[0], h = r.querySelector('.hs-hero') || r.querySelector('.hs-crumbs') || r.querySelector('h1'); var p = picker(); p.classList.add('un-float'); if (h && h.parentNode) h.parentNode.insertBefore(p, h.nextSibling); else r.insertBefore(p, r.firstChild); }
     roots.forEach(function (r) {
       walk(r);
       new MutationObserver(function (ms) {
@@ -129,6 +128,9 @@
         });
       }).observe(r, { childList: true, subtree: true, characterData: true });
     });
+    // show the switch only where there is something to convert (pages can reserve a spot with data-units-ui)
+    if (slots.length) slots.forEach(function (s) { s.appendChild(picker()); });
+    else if (found) { var r = roots[0], h = r.querySelector('.hs-hero') || r.querySelector('.hs-crumbs') || r.querySelector('h1'); var p = picker(); p.classList.add('un-float'); if (h && h.parentNode) h.parentNode.insertBefore(p, h.nextSibling); else r.insertBefore(p, r.firstChild); }
     if (mode !== 'both') D.dispatchEvent(new CustomEvent('trb-units', { detail: mode }));
   }
   if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', init); else init();

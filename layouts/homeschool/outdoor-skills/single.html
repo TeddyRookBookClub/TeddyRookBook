@@ -19,8 +19,9 @@
       {{ range $i, $s := $b.steps }}<li><label><input type="checkbox" data-i="{{ $i }}"><span><b>{{ $s.t }}</b>{{ $s.how }}</span></label></li>{{ end }}
     </ol>
   </section>
+  {{ if eq $b.key "signaling" }}<section class="hs-sec os-callout"><p>📡 <b>Hear it and learn it by ear:</b> the <a href="{{ "homeschool/outdoor-skills/morse-code/" | relURL }}">Morse code course</a> plays any message as beeps or a flashing light, and teaches every letter in 17 short lessons with a tap key to practice sending. Tap any letter in the table below to hear it.</p></section>{{ end }}
   {{ range $b.tables }}
-  <section class="hs-sec"><h2>{{ .title }}</h2>
+  <section class="hs-sec"{{ if eq $b.key "signaling" }} data-morse-chips{{ end }}><h2>{{ .title }}</h2>
     {{ if and (eq (len .columns) 2) (gt (len .rows) 20) }}<div class="os-chips">{{ range .rows }}<span><b>{{ index . 0 }}</b> {{ index . 1 }}</span>{{ end }}</div>{{ else }}
     <div class="os-table-wrap"><table class="hs-table os-table"><thead><tr>{{ range .columns }}<th>{{ . }}</th>{{ end }}</tr></thead><tbody>{{ range .rows }}<tr>{{ range . }}<td>{{ . }}</td>{{ end }}</tr>{{ end }}</tbody></table></div>{{ end }}
   </section>
@@ -33,4 +34,5 @@
   <p class="hs-small">{{ $d.about.disclaimer }}</p>
 </div>
 <script src="{{ "homeschool/outdoor.js" | relURL }}?v={{ (os.Stat "static/homeschool/outdoor.js").ModTime.Unix }}" defer></script>
+{{ if eq $b.key "signaling" }}<link rel="stylesheet" href="{{ "homeschool/morse.css" | relURL }}?v={{ (os.Stat "static/homeschool/morse.css").ModTime.Unix }}"><script src="{{ "homeschool/morse.js" | relURL }}?v={{ (os.Stat "static/homeschool/morse.js").ModTime.Unix }}" defer></script>{{ end }}
 {{ end }}

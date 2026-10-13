@@ -1,0 +1,60 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (os.Stat "static/homeschool/hex.css").ModTime.Unix }}">
+<div class="hs hx">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Hexadecimal and Binary</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Math · Ages 10 and up</p>
+    <h1>Hexadecimal and Binary</h1>
+    <p>Computers count in twos; people who work with them read those numbers in sixteens. Learn how other number bases work, convert between them, read color codes and letter codes, and send a message the way an astronaut stranded on Mars might.</p>
+  </header>
+
+  <section class="hs-sec">
+    <h2>🔢 Try it: the converter</h2>
+    <p class="hs-small">Type in any box and the others follow. Whole numbers from 0 up to 4,294,967,295 (that's FFFFFFFF in hex).</p>
+    <div class="hx-conv">
+      <label>Decimal <small>base 10</small><input id="hx-dec" inputmode="numeric" autocomplete="off" spellcheck="false" value="255"></label>
+      <label>Hexadecimal <small>base 16</small><input id="hx-hex" autocomplete="off" spellcheck="false"></label>
+      <label>Binary <small>base 2</small><input id="hx-bin" inputmode="numeric" autocomplete="off" spellcheck="false"></label>
+      <label>Octal <small>base 8</small><input id="hx-oct" inputmode="numeric" autocomplete="off" spellcheck="false"></label>
+    </div>
+    <div class="hx-work" id="hx-work" aria-live="polite"></div>
+    <div class="hx-bits" id="hx-bits" aria-label="The binary digits, click to flip"></div>
+  </section>
+
+  <section class="hs-sec" id="hx-lessons">
+    <h2>📘 Lessons</h2>
+    <p>Eight short lessons. Each ends with practice you can repeat as often as you like; a ✓ marks the ones you've finished with 8 out of 10 right (kept on this device only).</p>
+    <div class="hx-ltabs" id="hx-ltabs"></div>
+    <div class="hx-lesson" id="hx-lesson"></div>
+  </section>
+
+  <section class="hs-sec" id="hx-mars">
+    <h2>🚀 Talk like a Mars castaway</h2>
+    <p>In Andy Weir's novel <i>The Martian</i> (2011) and the 2015 film, an astronaut stranded on Mars has an old lander camera that can only turn to point at things. Every letter on a keyboard has a number, its ASCII code, and every code fits in two hex digits. So he set out the sixteen hex digits in a circle around the camera: to send a letter, point at its two digits in turn. Try it: type a message and watch the pointer spell it out.</p>
+    <div class="hx-mars">
+      <div class="hx-dialwrap"><svg id="hx-dial" viewBox="-110 -110 220 220" role="img" aria-label="A dial of the sixteen hex digits with a pointer"></svg></div>
+      <div class="hx-mside">
+        <input id="hx-msg" class="hx-in" value="ARE YOU RECEIVING" maxlength="60" aria-label="Message to send" spellcheck="false">
+        <p><button type="button" class="hs-btn" id="hx-send">▶ Send it</button> <button type="button" class="hs-btn ghost" id="hx-mstop">■ Stop</button> <label class="hx-cb"><input type="checkbox" id="hx-slow" checked> Slow</label></p>
+        <div class="hx-pairs" id="hx-pairs"></div>
+        <h3>Your turn to receive</h3>
+        <p class="hs-small">The pointer will spell a mystery word. Write down each pair of hex digits, then look them up in the ASCII table below (or work them out: 41 is A, and each letter after adds one).</p>
+        <p><button type="button" class="hs-btn ghost" id="hx-mystery">▶ Play a mystery word</button> <input id="hx-guess" class="hx-in sm" placeholder="Your answer" aria-label="Your answer" spellcheck="false"> <span id="hx-gres"></span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec">
+    <h2>🔤 ASCII codes for letters and numbers</h2>
+    <p class="hs-small">ASCII (1963) gave each character a number from 0 to 127, and Unicode still uses the same numbers for these. Capital letters run from 41 to 5A in hex, small letters from 61 to 7A, and the digits 0 to 9 from 30 to 39. A space is 20.</p>
+    <div class="hx-ascii" id="hx-ascii"></div>
+  </section>
+
+  <section class="hs-sec hs-note">
+    <h2>Where it goes from here</h2>
+    <p>Hex shows up in web colors, computer memory addresses, network addresses, error codes and Unicode character numbers (U+0041 is A). Morse code is another way to turn letters into signals: try the <a href="{{ "homeschool/outdoor-skills/morse-code/" | relURL }}">Morse code course</a>. For more math, see <a href="{{ "homeschool/rays-arithmetic/" | relURL }}">Ray's Arithmetic</a> and the <a href="{{ "homeschool/calculator/" | relURL }}">graphing calculator</a>; for more computing, <a href="https://www.khanacademy.org/computing" target="_blank" rel="noopener">Khan Academy's computing courses ↗</a> are free.</p>
+  </section>
+</div>
+<script src="{{ "homeschool/hex.js" | relURL }}?v={{ (os.Stat "static/homeschool/hex.js").ModTime.Unix }}" defer></script>
+{{ end }}

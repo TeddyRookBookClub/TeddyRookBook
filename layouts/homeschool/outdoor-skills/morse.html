@@ -1,0 +1,61 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/morse.css" | relURL }}?v={{ (os.Stat "static/homeschool/morse.css").ModTime.Unix }}">
+<div class="hs os mc">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/outdoor-skills/" | relURL }}">Outdoor Skills</a> › <a href="{{ "homeschool/outdoor-skills/signaling/" | relURL }}">Signaling</a> › Morse Code</nav>
+  <header class="hs-hero os-hero">
+    <span class="os-icon big" aria-hidden="true">📡</span>
+    <div>
+      <p class="hs-eyebrow">Outdoor Skills · Signaling · Ages 7 and up</p>
+      <h1>Morse Code</h1>
+      <p>Type a message and hear it, learn every letter by ear in 17 short lessons, and practice sending with a tap key. Turn your sound on.</p>
+    </div>
+  </header>
+
+  <section class="hs-sec mc-sbar"><div class="mc-settings"></div>
+    <p class="hs-small">Letter speed is how fast each character is sent; spacing speed stretches the gaps between characters so beginners hear each letter at full speed with time to think (the Farnsworth method). The ARRL suggests learning at a letter speed of about 15 words per minute with extra spacing, then closing the gaps as you get faster.</p></section>
+
+  <section class="hs-sec" id="mc-tr">
+    <h2>✍️ Type and listen</h2>
+    <textarea id="mc-in" rows="2" class="mc-ta" aria-label="Your message" spellcheck="false">SOS. Hello from the backyard!</textarea>
+    <p>{{ "" }}<button type="button" class="hs-btn" id="mc-play">▶ Play</button> <button type="button" class="hs-btn ghost" id="mc-stop">■ Stop</button> <button type="button" class="hs-btn ghost" id="mc-copy">Copy the dots and dashes</button> <span class="mc-lamp" aria-hidden="true"></span> <span class="hs-small" id="mc-time"></span></p>
+    <div class="mc-out" id="mc-out" aria-live="off"></div>
+    <p class="hs-small" id="mc-skip"></p>
+    <details class="mc-decode"><summary>Decode dots and dashes</summary>
+      <p class="hs-small">Type dots and dashes with spaces between letters and a slash between words, like <code>... --- ...</code> or <code>.... .. / - .... . .-. .</code></p>
+      <input type="text" id="mc-dec" class="mc-in1" spellcheck="false" aria-label="Dots and dashes to decode"> <b id="mc-decout" class="mc-decout"></b>
+    </details>
+  </section>
+
+  <section class="hs-sec" id="mc-course">
+    <h2>🎧 The course</h2>
+    <p>Seventeen short lessons, two new characters at a time. In each one: <b>learn</b> the new sounds, <b>copy</b> them by ear (aim for 90 percent), hear whole <b>words</b> made from what you know, and practice <b>sending</b>. Ten or fifteen minutes a day works better than an hour once a week. A ✓ marks lessons you’ve copied at 90 percent; it stays on this device.</p>
+    <div class="mc-lessons" id="mc-lessons"></div>
+    <div class="mc-panel" id="mc-panel">
+      <div class="mc-phead"><h3 id="mc-ptitle"></h3>
+        <div class="mc-tabs" id="mc-tabs" role="group" aria-label="Practice"><button type="button" data-m="learn">Learn</button><button type="button" data-m="copy">Copy by ear</button><button type="button" data-m="words">Words</button><button type="button" data-m="send">Send</button></div></div>
+      <div id="mc-pbody"></div>
+    </div>
+  </section>
+
+  <section class="hs-sec">
+    <h2>📋 Every character</h2>
+    <p class="hs-small">Tap any one to hear it. The sound words (di, dit, dah) are how operators say Morse out loud: learn the rhythm, not the picture.</p>
+    <div id="mc-chart"></div>
+  </section>
+
+  <section class="hs-sec">
+    <h2>📖 How Morse works</h2>
+    <ul class="sw-list">
+      <li><b>Timing is everything.</b> A dah lasts three times as long as a dit. The gap inside a letter is one dit long, the gap between letters is three, and the gap between words is seven. Speed is measured in words per minute, timed with the word PARIS.</li>
+      <li><b>Learn by ear.</b> The ARRL’s advice is to learn each character as a sound and never to write dots and dashes. Charts are handy to look things up, but learning the sounds means you won’t have to translate in your head.</li>
+      <li><b>Full speed, extra space.</b> Hearing letters at a real speed with long gaps between them (the Farnsworth method) teaches the rhythm of each letter from the start; you speed up by closing the gaps.</li>
+      <li><b>Not just sound.</b> The same code works with a flashlight, a whistle, a mirror in the sun, or taps on a wall. Flip on <i>Flash a light</i> above to practice by sight.</li>
+      <li><b>Two Morse codes.</b> Samuel Morse and Alfred Vail’s original American Morse code was used on telegraph wires in the United States. The International Morse code taught here became the world standard for radio, and it is still used by ham radio operators.</li>
+    </ul>
+    <p class="hs-small">Sources: <a href="https://www.itu.int/rec/R-REC-M.1677-1-200910-I/" target="_blank" rel="noopener">ITU-R M.1677-1, International Morse code</a> · <a href="https://ARRL.org/files/file/Morse/LearningMorseCode.pdf" target="_blank" rel="noopener">ARRL: Tips for learning Morse code</a> · <a href="https://morsecode.world/international/timing/farnsworth.html" target="_blank" rel="noopener">Farnsworth timing</a>. Want to keep going? Licensed amateur radio operators still send Morse every day; the ARRL has more on getting started.</p>
+  </section>
+  <nav class="hs-pn"><a href="{{ "homeschool/outdoor-skills/signaling/" | relURL }}">← Signaling</a><a href="{{ "homeschool/outdoor-skills/" | relURL }}">All outdoor skills →</a></nav>
+</div>
+<script src="{{ "homeschool/morse.js" | relURL }}?v={{ (os.Stat "static/homeschool/morse.js").ModTime.Unix }}" defer></script>
+{{ end }}

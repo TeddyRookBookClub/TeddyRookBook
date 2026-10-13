@@ -13,7 +13,7 @@
   <div class="bz-lesson">
     <span>Key takeaway</span>
     <p>{{ $c.moral }}</p>
-    <div class="bz-acts"><button type="button" class="bz-btn bz-save" data-card="{{ dict "title" $c.title "co" (printf "%s · %s" $c.company $c.year) "sum" $c.summary "moral" $c.moral "slug" $c.slug | jsonify }}">🖼 Save the card as a picture</button> <button type="button" class="bz-btn ghost" onclick="window.print()">🖨 Print</button></div>
+    <div class="bz-acts"><button type="button" class="bz-btn bz-save" data-card="{{ dict "title" $c.title "co" (printf "%s · %s" $c.company $c.year) "sum" $c.summary "moral" $c.moral "slug" $c.slug | jsonify }}">🖼 Save the card</button> <button type="button" class="bz-btn bz-save" data-kind="page" data-card="{{ dict "title" $c.title "co" (printf "%s · %s" $c.company $c.year) "sum" $c.summary "moral" $c.moral "slug" $c.slug "nums" $c.numbers "tl" $c.timeline "lessons" $c.lessons | jsonify }}">🖼 Save a one-page summary</button> <button type="button" class="bz-btn ghost" onclick="window.print()">🖨 Print the full case</button></div>
   </div>
   <div class="bz-body">
     <section class="bz-story">
