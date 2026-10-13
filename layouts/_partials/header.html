@@ -101,11 +101,11 @@
                     {{- if $gu }}{{ if hasPrefix $page_url ($gu | absLangURL) }}{{ $in = true }}{{ end }}{{ end }}
                     <summary>{{ if $gu }}<a class="trb-gl" href="{{ $gu | absLangURL }}"><span{{ if $in }} class="active"{{ end }}>{{ $g }}</span></a>{{ else }}<span{{ if $in }} class="active"{{ end }}>{{ $g }}</span>{{ end }}<svg aria-hidden="true" viewBox="0 0 12 12" width="10" height="10"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></summary>
                     <ul>
-                        {{- range $items }}
+                        {{- range first 10 $items }}
                         {{- $u := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}
                         <li><a href="{{ .URL | absLangURL }}"{{ if hasPrefix $page_url $u }} aria-current="page"{{ end }}><b>{{ .Name }}</b>{{ with .Params.note }}<small>{{ . }}</small>{{ end }}</a></li>
                         {{- end }}
-                        {{- with $gu }}<li class="trb-all"><a href="{{ . | absLangURL }}"><b>All of {{ $g }} →</b></a></li>{{ end }}
+                        {{- with $gu }}<li class="trb-all"><a href="{{ . | absLangURL }}"><b>All of {{ $g }}{{ if gt (len $items) 10 }} ({{ len $items }}){{ end }} →</b></a></li>{{ end }}
                     </ul>
                 </details>
             </li>

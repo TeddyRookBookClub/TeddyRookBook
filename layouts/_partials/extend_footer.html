@@ -19,6 +19,9 @@
     b.addEventListener('click', function () { var v = vis(), open = v.every(function (d) { return d.open; }); v.forEach(function (d) { d.open = !open; }); upd(); });
     list.forEach(function (d) { d.addEventListener('toggle', upd); });
     parent.insertBefore(w, before);
+    // put the button on the same line as the heading just above it
+    var h = w.previousElementSibling;
+    if (h && /^H[2-4]$/.test(h.tagName)) { var row = D.createElement('div'); row.className = 'xa-head'; h.parentNode.insertBefore(row, h); row.appendChild(h); row.appendChild(w); }
     upd(); ups.push(upd);
   }
   var ups = [], tm;
@@ -56,6 +59,10 @@
 <style>
 .xa-bar{display:flex;justify-content:flex-end;margin:.25rem 0 .4rem}
 .xa-bar[hidden]{display:none}
+.xa-head{display:flex;align-items:center;justify-content:space-between;gap:.4rem .8rem;flex-wrap:wrap}
+.xa-head>h2,.xa-head>h3,.xa-head>h4{margin-top:0 !important;margin-bottom:.5rem}
+.xa-head>.xa-bar{margin:0 0 .5rem auto}
+* + .xa-head{margin-top:1.8rem}
 .xa-btn{font:inherit;font-size:.85rem;font-weight:600;padding:.25rem .8rem;border-radius:999px;border:1.5px solid #9dbba9;background:transparent;color:#004225;cursor:pointer}
 .xa-btn:hover{background:rgba(0,66,37,.07)}
 [data-theme="dark"] .xa-btn{border-color:#3c5a49;color:#6cc79a}
