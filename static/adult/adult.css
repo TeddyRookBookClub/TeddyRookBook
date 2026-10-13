@@ -1,0 +1,112 @@
+/* Being an Adult 101 (builds on hs.css and the Outdoor Skills card/step styles) */
+.ad{--sd-fab:#e7efe9;--sd-pale:#f7f6f1;--sd-th:#004225;--sd-th2:#a8741a;--sd-edge:#8fb09b;--sd-ink:#1d2320;--sd-red:#b5482f;--sd-blue:#3c6e9e;--sd-water:#d6e8f2}
+html[data-theme="dark"] .ad{--sd-fab:#22332a;--sd-pale:#1a241e;--sd-th:#6cc79a;--sd-th2:#e3b45c;--sd-edge:#55745f;--sd-ink:#e6ece8;--sd-red:#ff9e88;--sd-blue:#8ab8e0;--sd-water:#1f3340}
+.ad .hs-hero::after{content:"🔧";font-size:5rem;top:.6rem;opacity:.35;color:inherit}
+.ad-age{background:var(--paper);border-left:4px solid var(--g);border-radius:8px;padding:.5rem .8rem;line-height:1.5;margin:.8rem 0}
+.ad-bar{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.ad-jump{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}
+.ad-jump a{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .8rem;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font-weight:600;box-shadow:none}
+.ad-jump a:hover{border-color:var(--g)}
+.ad-card-subj{font-size:.8rem;color:var(--muted);line-height:1.3}
+.ad-before{background:var(--paper);border-radius:12px;padding:.2rem 1rem .5rem}
+.ad-how{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:.4rem 1.1rem .8rem}
+html:not([data-theme="dark"]) .ad-how{border-color:#9dbba9}
+.ad-subj{display:inline-block;margin:.6rem 0 0;font:700 .72rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.1em;background:var(--g);color:#fff;border-radius:6px;padding:.15rem .5rem}
+html[data-theme="dark"] .ad-subj{color:#0f1a14}
+.ad-how h2{margin-top:.4rem}
+.ad-formula{font:600 1.02rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--paper);border-left:4px solid var(--gold,#c99a2e);border-radius:8px;padding:.5rem .8rem;line-height:1.6;overflow-x:auto}
+.ad-try{background:var(--soft);border-radius:10px;padding:.5rem .8rem}
+.ad-pro{background:var(--paper);border-radius:12px;padding:.2rem 1rem .5rem}
+/* calculator */
+.ad-calc{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:.3rem 1.1rem .9rem}
+html:not([data-theme="dark"]) .ad-calc{border-color:#9dbba9}
+.ad-calc h2{margin-top:.6rem}
+.ad-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.6rem .9rem;margin:.4rem 0 .6rem}
+.ad-fields label{display:flex;flex-direction:column;gap:.2rem;font-weight:600;font-size:.92rem}
+.ad-fields label.ad-chk{flex-direction:row;align-items:center;gap:.45rem}
+.ad-calc input:not([type=checkbox]),.ad-calc select{font:inherit;font-weight:400;padding:.35rem .5rem;border-radius:8px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);width:100%;box-sizing:border-box}
+.ad-rows{width:100%;border-collapse:collapse;margin:.3rem 0 .6rem;font-size:.92rem}
+.ad-rows th{text-align:left;font-size:.82rem;color:var(--muted);padding:.2rem .3rem}
+.ad-rows td{padding:.2rem .3rem}
+.ad-out{background:var(--paper);border-radius:10px;padding:.6rem .85rem;line-height:1.6}
+.ad-out p{margin:.25rem 0}
+.ad-out .big{font:700 1.3rem Georgia,serif;color:var(--g)}
+.ad-out .warn{color:#a6402a;font-weight:600}html[data-theme="dark"] .ad-out .warn{color:#ff9e88}
+.ad-out .ok{color:#1f7a45;font-weight:600}html[data-theme="dark"] .ad-out .ok{color:#7fdca6}
+.ad-out table{border-collapse:collapse;width:100%;font-size:.92rem}.ad-out td,.ad-out th{padding:.2rem .4rem;border-bottom:1px solid var(--line);text-align:left}.ad-out td.r,.ad-out th.r{text-align:right}
+.ad-barv{height:.8rem;border-radius:6px;background:var(--soft);position:relative;overflow:hidden;margin:.2rem 0 .4rem}
+.ad-barv span{position:absolute;left:0;top:0;bottom:0;background:var(--g);border-radius:6px}
+.ad-barv i{position:absolute;top:-2px;bottom:-2px;width:2px;background:#a6402a}
+.ad-note{font-size:.85rem;color:var(--muted)}
+.ad-tabs{display:flex;gap:.4rem;margin:.3rem 0 .6rem}.ad-tabs button{font:inherit;font-size:.92rem;padding:.3rem .8rem;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.ad-tabs button[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:#fff}html[data-theme="dark"] .ad-tabs button[aria-pressed="true"]{color:#0f1a14}
+/* skills checklist */
+.ad-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.4rem 1.4rem}
+.ad-lgroup h3{margin:.6rem 0 .3rem}
+.ad-lgroup ul{list-style:none;padding:0;margin:0}
+.ad-lgroup li{display:flex;justify-content:space-between;gap:.5rem;padding:.25rem 0;border-bottom:1px dashed var(--line)}
+.ad-lgroup label{display:flex;gap:.45rem;align-items:flex-start;cursor:pointer;line-height:1.4}
+.ad-lgroup input{width:1.1rem;height:1.1rem;flex:none;margin-top:.1rem;accent-color:#004225}
+.ad-when{display:none;color:#666;font-size:.8rem;white-space:nowrap}
+.ad-print-only{display:none}
+.ad-check{display:none}
+/* diagrams */
+.ad-diag{margin-top:1.2rem}
+.sd{margin:0}.sd svg{display:block;width:100%;max-width:560px;height:auto}
+.sd figcaption{font-size:.88rem;color:var(--muted);margin-top:.35rem;line-height:1.4}
+.sd text{fill:var(--muted);font:600 10.5px system-ui,sans-serif}.sd text.em{fill:var(--sd-th)}.sd text.w,.sd text.bnum{fill:#fff;font:700 9.5px system-ui,sans-serif}
+html[data-theme="dark"] .sd text.bnum{fill:#0f1a14}
+.sd .num{font-family:ui-monospace,Menlo,Consolas,monospace}
+.sd .fab{fill:var(--sd-fab)}.sd .pale{fill:var(--sd-pale)}.sd .ol{stroke:var(--sd-edge);stroke-width:1.4}
+.sd .hl{fill:none;stroke:var(--sd-th2);stroke-width:3}
+.sd .hnd,.sd .dk,.sd .stick{fill:var(--sd-ink)}
+.sd .arrow,.sd .arrow2{stroke:var(--sd-th2);stroke-width:2.2;fill:none;marker-end:none}
+.sd .arrow2{stroke-width:3;stroke-linecap:round}.sd .ah2{fill:var(--sd-th2)}
+.sd .btn-t{fill:var(--sd-ink)}.sd .btn-r{fill:var(--sd-red)}
+.sd .pipe{fill:var(--sd-edge)}.sd .lever{fill:var(--sd-red)}.sd .ring2{fill:none;stroke:var(--sd-red);stroke-width:5}.sd .spoke{stroke:var(--sd-red);stroke-width:3}
+.sd .water{fill:var(--sd-water)}.sd .wline{stroke:var(--sd-blue);stroke-width:2;stroke-dasharray:5 4}
+.sd .part{fill:var(--sd-fab);stroke:var(--sd-edge);stroke-width:1.4}.sd .float{fill:var(--sd-pale);stroke:var(--sd-th);stroke-width:2}
+.sd .flap{fill:var(--sd-red)}.sd .chain{stroke:var(--sd-ink);stroke-width:1.6;stroke-dasharray:3 2;fill:none}
+.sd .dimline{stroke:var(--sd-th2);stroke-width:1.6;fill:none}
+.sd .lead{stroke:var(--sd-edge);stroke-width:1;fill:none}
+.sd .rubber{fill:var(--sd-red)}
+.sd .filt{fill:var(--sd-pale);stroke:var(--sd-th2);stroke-width:2}.sd .hatch{stroke:var(--sd-edge);stroke-width:1}
+.sd .flow{stroke:var(--sd-blue);stroke-width:3;fill:none}.sd .arrowhead{fill:var(--sd-blue)}
+.sd .stud{fill:none;stroke:var(--sd-edge);stroke-width:1.6;stroke-dasharray:5 4}
+.sd .frame{fill:var(--sd-th2)}.sd .wire{stroke:var(--sd-ink);stroke-width:1.4;fill:none}.sd .dot{fill:var(--sd-th)}
+.sd .oil{fill:var(--sd-th2)}.sd .mark,.sd .rule{stroke:var(--sd-ink);stroke-width:1.6;fill:none}
+.sd .tire{fill:#3a3d3b}html[data-theme="dark"] .sd .tire{fill:#4c524e}.sd .groove{stroke:var(--sd-edge);stroke-width:1.5}
+.sd .coin{fill:#c98a4a;stroke:#8a5a2b;stroke-width:1.5}.sd .head{fill:#8a5a2b}
+.sd .star{fill:none;stroke:var(--sd-th2);stroke-width:1.8;stroke-dasharray:5 4}.sd .badge{fill:var(--sd-th)}
+.sd .batt{fill:var(--sd-fab);stroke:var(--sd-ink);stroke-width:1.6}.sd .pos{fill:var(--sd-red)}.sd .neg{fill:var(--sd-ink)}.sd .metal{fill:var(--sd-pale);stroke:var(--sd-edge);stroke-width:1.6}
+.sd .cred{stroke:var(--sd-red);stroke-width:4;fill:none;stroke-linecap:round}.sd .cblk{stroke:var(--sd-ink);stroke-width:4;fill:none;stroke-linecap:round}
+.sd .fill{fill:var(--sd-th);opacity:.35}
+.sd .meat{fill:#e8b4a0;stroke:#b0705a;stroke-width:1.5}html[data-theme="dark"] .sd .meat{fill:#7a4c3e;stroke:#c48a74}
+.sd .probe{stroke:var(--sd-ink);stroke-width:3;stroke-linecap:round}.sd .tip{fill:var(--sd-th2)}
+.sd .cold{fill:var(--sd-blue)}.sd .danger{fill:var(--sd-red);opacity:.75}.sd .hot{fill:var(--sd-th2)}
+.sd .tail{stroke:var(--sd-th2);stroke-width:3;stroke-linecap:round}.sd .headw{fill:var(--sd-blue)}
+/* printing */
+@media print{
+  body.ad-printing-check header,body.ad-printing-check footer,body.ad-printing-check .ad>:not(.ad-check),body.ad-printing-check .top-link,body.ad-printing-check .trb-social{display:none!important}
+  body.ad-printing-check .ad-check{display:block;color:#000;font-size:10.5pt;line-height:1.35}
+  .ad-check ul:not(.ad-boxes){list-style:disc;padding-left:1.3rem}.ad-check ul:not(.ad-boxes) li{margin:.15rem 0}
+  .ad-check h2{font-size:16pt;margin:0 0 .2rem}.ad-check h3{font-size:12pt;margin:.7rem 0 .2rem}
+  .ad-boxes{list-style:none;padding-left:0}.ad-boxes li{padding-left:1.6rem;position:relative;margin:.25rem 0;break-inside:avoid}
+  .ad-boxes li::before{content:"";position:absolute;left:0;top:.15rem;width:.85rem;height:.85rem;border:1.5px solid #000}
+  ol.ad-boxes{counter-reset:c}ol.ad-boxes li{counter-increment:c}ol.ad-boxes li b::before{content:counter(c) ". "}
+  .ad-check-foot{font-size:8pt;color:#555;margin-top:1rem}
+  body.ad-printing-list header,body.ad-printing-list footer,body.ad-printing-list .ad>:not(#checklist),body.ad-printing-list #checklist>:not(.ad-list),body.ad-printing-list .top-link,body.ad-printing-list .trb-social{display:none!important}
+  body.ad-printing-list .ad-list{display:grid;grid-template-columns:1fr 1fr;gap:0 1.2rem;color:#000;font-size:9.5pt}
+  body.ad-printing-list .ad-list>h2,body.ad-printing-list .ad-list>p{grid-column:1/-1;margin:.1rem 0}
+  body.ad-printing-list .ad-print-only{display:block}
+  body.ad-printing-list .ad-when{display:inline}
+  body.ad-printing-list .ad-lgroup{break-inside:avoid}
+  .ad-lgroup li{border-bottom:1px dashed #999}
+}
+/* layout helpers shared with the sewing guides */
+.ad .sw-top{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:0 1.4rem;align-items:start}
+.ad .sw-top>.sw-need:only-child{grid-column:1/-1}
+@media (max-width:760px){.ad .sw-top{grid-template-columns:1fr}}
+.ad .sw-need ul,.ad .sw-list{line-height:1.55;padding-left:1.2rem}.ad .sw-list li{margin:.3rem 0}
+.ad .sw-src-list{font-size:.88rem;line-height:1.6;padding-left:1.2rem}
+.ad-how p{line-height:1.6}

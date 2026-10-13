@@ -1,0 +1,138 @@
+{{- /* Original diagrams for Being an Adult 101 (inline SVG, colors from adult.css). Context: the diagram name. */ -}}
+{{- if eq . "breaker" }}<figure class="sd"><svg data-nounits viewBox="0 0 360 230" role="img" aria-label="A breaker panel with one tripped breaker, and the three handle positions" xmlns="http://www.w3.org/2000/svg">
+<rect class="fab ol" x="12" y="8" width="168" height="214" rx="8"/><rect class="pale ol" x="62" y="20" width="68" height="26" rx="4"/><text x="96" y="37" text-anchor="middle">MAIN</text>
+{{ range $r := seq 0 5 }}{{ $y := add 58 (mul $r 26) }}<rect class="pale ol" x="26" y="{{ $y }}" width="64" height="20" rx="3"/><rect class="pale ol" x="102" y="{{ $y }}" width="64" height="20" rx="3"/>{{ if eq $r 3 }}<rect class="hl" x="102" y="{{ $y }}" width="64" height="20" rx="3"/><rect class="hnd" x="128" y="{{ add $y 4 }}" width="12" height="12" rx="2"/>{{ else }}<rect class="hnd" x="30" y="{{ add $y 4 }}" width="12" height="12" rx="2"/><rect class="hnd" x="106" y="{{ add $y 4 }}" width="12" height="12" rx="2"/>{{ end }}{{ end }}
+<path class="arrow" d="M170 146 L200 146"/><text class="em" x="205" y="140">Tripped: the handle</text><text class="em" x="205" y="153">sits in the middle</text>
+<g transform="translate(214,172)"><rect class="pale ol" x="0" y="0" width="40" height="20" rx="3"/><rect class="hnd" x="3" y="4" width="11" height="12" rx="2"/><text x="20" y="34" text-anchor="middle">ON</text>
+<rect class="pale ol" x="48" y="0" width="40" height="20" rx="3"/><rect class="hl" x="48" y="0" width="40" height="20" rx="3"/><rect class="hnd" x="62" y="4" width="11" height="12" rx="2"/><text x="68" y="34" text-anchor="middle">TRIPPED</text>
+<rect class="pale ol" x="96" y="0" width="40" height="20" rx="3"/><rect class="hnd" x="122" y="4" width="11" height="12" rx="2"/><text x="116" y="34" text-anchor="middle">OFF</text></g>
+</svg><figcaption>A tripped breaker sits in the middle or at OFF. Push it firmly to OFF, then back to ON. Handle positions and labels vary from panel to panel.</figcaption></figure>
+{{- else if eq . "gfci" }}<figure class="sd"><svg data-nounits viewBox="0 0 340 220" role="img" aria-label="A GFCI outlet with TEST and RESET buttons between two sockets" xmlns="http://www.w3.org/2000/svg">
+<rect class="pale ol" x="30" y="10" width="120" height="200" rx="10"/>
+<g><rect class="fab ol" x="55" y="24" width="70" height="52" rx="14"/><rect class="dk" x="72" y="36" width="5" height="16" rx="1"/><rect class="dk" x="103" y="36" width="5" height="18" rx="1"/><path class="dk" d="M84 60 a6 6 0 0 1 12 0 v6 h-12z"/></g>
+<rect class="btn-t" x="66" y="92" width="48" height="16" rx="3"/><text class="w" x="90" y="104" text-anchor="middle">TEST</text>
+<rect class="btn-r" x="66" y="114" width="48" height="16" rx="3"/><text class="w" x="90" y="126" text-anchor="middle">RESET</text>
+<g><rect class="fab ol" x="55" y="144" width="70" height="52" rx="14"/><rect class="dk" x="72" y="156" width="5" height="16" rx="1"/><rect class="dk" x="103" y="156" width="5" height="18" rx="1"/><path class="dk" d="M84 180 a6 6 0 0 1 12 0 v6 h-12z"/></g>
+<path class="arrow" d="M118 100 L170 72"/><text class="em" x="174" y="62">1. Press TEST</text><text x="174" y="76">The lamp should go out.</text>
+<path class="arrow" d="M118 122 L170 140"/><text class="em" x="174" y="140">2. Press RESET</text><text x="174" y="154">The lamp comes back on.</text>
+<text x="174" y="184">Lamp stays on after TEST?</text><text x="174" y="198">Have it fixed.</text>
+</svg><figcaption>Test each GFCI once a month with a lamp plugged in.</figcaption></figure>
+{{- else if eq . "valves" }}<figure class="sd"><svg data-nounits viewBox="0 0 360 200" role="img" aria-label="A wheel valve and a lever valve, open and closed" xmlns="http://www.w3.org/2000/svg">
+<text class="em" x="80" y="18" text-anchor="middle">Wheel handle</text>
+<rect class="pipe" x="10" y="110" width="140" height="18" rx="3"/><rect class="pale ol" x="66" y="90" width="28" height="24" rx="3"/><rect class="pale ol" x="76" y="70" width="8" height="22"/>
+<circle class="ring2" cx="80" cy="56" r="26"/><path class="spoke" d="M80 30 V82 M54 56 H106 M62 38 L98 74 M98 38 L62 74"/>
+<path class="arrow" d="M58 24 A34 34 0 0 1 112 40"/><text x="80" y="152" text-anchor="middle">Turn clockwise to close.</text><text x="80" y="166" text-anchor="middle">It may take several turns.</text>
+<text class="em" x="270" y="18" text-anchor="middle">Lever handle</text>
+<rect class="pipe" x="200" y="56" width="140" height="16" rx="3"/><rect class="pale ol" x="258" y="52" width="24" height="24" rx="4"/><rect class="lever" x="226" y="44" width="84" height="8" rx="4"/><text x="270" y="94" text-anchor="middle">Lever along the pipe: OPEN</text>
+<rect class="pipe" x="200" y="130" width="140" height="16" rx="3"/><rect class="pale ol" x="258" y="126" width="24" height="24" rx="4"/><rect class="lever" x="266" y="104" width="8" height="66" rx="4"/><text x="270" y="190" text-anchor="middle">Lever across the pipe: CLOSED</text>
+</svg><figcaption>A lever valve needs only a quarter turn. Find your main valve before you ever need it.</figcaption></figure>
+{{- else if eq . "toilet" }}<figure class="sd"><svg data-nounits viewBox="0 0 380 240" role="img" aria-label="Inside a toilet tank: fill valve and float, overflow tube, flapper and chain" xmlns="http://www.w3.org/2000/svg">
+<rect class="pale ol" x="20" y="20" width="250" height="200" rx="10"/><rect class="water" x="24" y="78" width="242" height="138" rx="6"/>
+<path class="wline" d="M24 78 H266"/>
+<rect class="part" x="44" y="40" width="16" height="170" rx="4"/><rect class="float" x="36" y="88" width="32" height="26" rx="5"/><text x="52" y="232" text-anchor="middle">fill valve</text>
+<rect class="part" x="166" y="56" width="14" height="140" rx="3"/><path class="dimline" d="M190 56 V78"/><text class="em" x="194" y="70">½ to 1 inch</text>
+<path class="part" d="M140 204 q33 -26 66 0 z"/><rect class="flap" x="148" y="196" width="50" height="10" rx="4"/>
+<path class="chain" d="M168 196 L120 52"/><rect class="part" x="98" y="40" width="70" height="8" rx="3"/><rect class="part" x="4" y="36" width="24" height="16" rx="4"/>
+<text x="292" y="62">overflow tube</text><path class="lead" d="M290 58 L182 64"/>
+<text x="292" y="104">float</text><path class="lead" d="M290 100 L70 100"/>
+<text x="292" y="150">chain</text><path class="lead" d="M290 146 L146 130"/>
+<text x="292" y="200">flapper</text><path class="lead" d="M290 196 L200 200"/>
+<text x="292" y="28">handle</text><path class="lead" d="M290 24 L30 40"/>
+</svg><figcaption>The water should stop ½ to 1 inch below the top of the overflow tube. A worn flapper lets water leak into the bowl.</figcaption></figure>
+{{- else if eq . "plungers" }}<figure class="sd"><svg data-nounits viewBox="0 0 360 200" role="img" aria-label="A cup plunger and a flange plunger" xmlns="http://www.w3.org/2000/svg">
+<rect class="stick" x="81" y="10" width="10" height="110"/><path class="rubber" d="M36 160 Q36 112 86 112 Q136 112 136 160 Z"/>
+<text class="em" x="86" y="180" text-anchor="middle">Cup plunger</text><text x="86" y="194" text-anchor="middle">sinks, tubs, showers</text>
+<rect class="stick" x="263" y="10" width="10" height="100"/><path class="rubber" d="M218 150 Q218 102 268 102 Q318 102 318 150 Z"/><rect class="rubber" x="252" y="148" width="32" height="16" rx="4"/>
+<text class="em" x="268" y="180" text-anchor="middle">Flange plunger</text><text x="268" y="194" text-anchor="middle">toilets</text>
+</svg><figcaption>Cover the cup with water, seal it over the drain, then push smoothly and pull sharply.</figcaption></figure>
+{{- else if eq . "filter" }}<figure class="sd"><svg data-nounits viewBox="0 0 360 170" role="img" aria-label="Air flows from the rooms through the return duct and filter into the furnace" xmlns="http://www.w3.org/2000/svg">
+<rect class="pale ol" x="10" y="60" width="80" height="44" rx="6"/><text x="50" y="80" text-anchor="middle">air from</text><text x="50" y="94" text-anchor="middle">your rooms</text>
+<rect class="fab ol" x="110" y="66" width="70" height="32"/><text x="145" y="86" text-anchor="middle">return duct</text>
+<rect class="filt" x="186" y="52" width="16" height="60"/><path class="hatch" d="M186 60 l16 8 M186 72 l16 8 M186 84 l16 8 M186 96 l16 8"/>
+<rect class="pale ol" x="210" y="40" width="80" height="84" rx="6"/><text x="250" y="80" text-anchor="middle">furnace or</text><text x="250" y="94" text-anchor="middle">air handler</text>
+<path class="flow" d="M92 82 H108 M182 82 H184 M292 82 H340"/><path class="arrowhead" d="M340 76 L352 82 L340 88 Z"/>
+<path class="arrow2" d="M168 32 H214"/><path class="ah2" d="M212 26 L224 32 L212 38 Z"/><text class="em" x="194" y="22" text-anchor="middle">arrow on the filter</text>
+<text x="194" y="150" text-anchor="middle">Point the filter's arrow toward the furnace,</text><text x="194" y="164" text-anchor="middle">the way the air moves.</text>
+</svg><figcaption>The filter sits where the return duct meets the furnace. Its size is printed on the frame.</figcaption></figure>
+{{- else if eq . "studs" }}<figure class="sd"><svg data-nounits viewBox="0 0 360 220" role="img" aria-label="Studs behind a wall, 16 inches apart, and how to work out the hook height" xmlns="http://www.w3.org/2000/svg">
+<rect class="fab ol" x="10" y="10" width="340" height="200"/>
+{{ range $i := seq 0 4 }}<rect class="stud" x="{{ add 30 (mul $i 76) }}" y="10" width="14" height="200"/>{{ end }}
+<path class="dimline" d="M37 200 H113"/><text class="em" x="75" y="196" text-anchor="middle">16 in on center</text>
+<rect class="frame" x="150" y="40" width="120" height="84" rx="2"/><rect class="pale" x="160" y="50" width="100" height="64"/>
+<path class="wire" d="M160 70 L210 56 L260 70"/><circle class="dot" cx="210" cy="56" r="3.5"/>
+<path class="dimline" d="M286 40 V56"/><text x="292" y="52">wire to top</text>
+<path class="dimline" d="M300 56 V210"/><text x="306" y="150">hook</text><text x="306" y="164">height</text>
+<text x="210" y="148" text-anchor="middle">hook height = height of the</text><text x="210" y="162" text-anchor="middle">frame's top − wire to top</text>
+</svg><figcaption>Studs are usually 16 or 24 inches apart, measured center to center. Pull the wire tight before you measure.</figcaption></figure>
+{{- else if eq . "dipstick" }}<figure class="sd"><svg data-nounits viewBox="0 0 360 120" role="img" aria-label="A dipstick with the oil film between the low and full marks" xmlns="http://www.w3.org/2000/svg">
+<circle class="ring2" cx="26" cy="54" r="14"/><rect class="stick" x="40" y="50" width="290" height="8" rx="3"/>
+<rect class="oil" x="244" y="48" width="86" height="12" rx="3"/>
+<path class="mark" d="M236 40 V68 M292 40 V68"/><text x="236" y="84" text-anchor="middle">low</text><text x="292" y="84" text-anchor="middle">full</text>
+<text class="em" x="264" y="30" text-anchor="middle">oil between the marks: OK</text>
+<text x="160" y="106" text-anchor="middle">Wipe, dip again, then read where the oil film stops.</text>
+</svg><figcaption>Marks differ by car (dots, holes, MIN and MAX, or L and F). Your owner's manual shows yours.</figcaption></figure>
+{{- else if eq . "tread" }}<figure class="sd"><svg data-nounits viewBox="0 0 380 190" role="img" aria-label="The penny test: with deep tread Lincoln's head is hidden, with worn tread it shows" xmlns="http://www.w3.org/2000/svg">
+<g><circle class="coin" cx="70" cy="74" r="32"/><path class="head" d="M52 60 q18 -16 36 0 v6 h-36z"/><circle class="head" cx="70" cy="80" r="9"/><rect class="tire" x="14" y="72" width="112" height="60" rx="4"/><path class="groove" d="M14 72 H126"/>
+<text class="em" x="70" y="154" text-anchor="middle">Deep tread:</text><text x="70" y="168" text-anchor="middle">head hidden, OK</text></g>
+<g transform="translate(140,0)"><circle class="coin" cx="70" cy="74" r="32"/><path class="head" d="M52 60 q18 -16 36 0 v6 h-36z"/><circle class="head" cx="70" cy="80" r="9"/><rect class="tire" x="14" y="96" width="112" height="36" rx="4"/><path class="groove" d="M14 96 H126"/>
+<text class="em" x="70" y="154" text-anchor="middle">Worn tread:</text><text x="70" y="168" text-anchor="middle">head shows, replace</text></g>
+<text x="276" y="56">Put the penny in</text><text x="276" y="70">a groove with</text><text x="276" y="84">Lincoln's head</text><text x="276" y="98">upside down,</text><text x="276" y="112">facing you.</text>
+</svg><figcaption>If you can see the top of his head, the tread is worn to about 2/32 inch or less and it's time for new tires.</figcaption></figure>
+{{- else if eq . "lugs" }}<figure class="sd"><svg data-nounits viewBox="0 0 380 210" role="img" aria-label="Five lug nuts tightened in a star pattern" xmlns="http://www.w3.org/2000/svg">
+<circle class="tire" cx="110" cy="105" r="96"/><circle class="pale ol" cx="110" cy="105" r="70"/><circle class="fab ol" cx="110" cy="105" r="18"/>
+{{ $pts := slice (slice 110 59) (slice 158.5 94.2) (slice 140 151.3) (slice 80 151.3) (slice 61.5 94.2) }}{{ $ord := slice 0 2 4 1 3 }}
+<path class="star" d="M110 59 L140 151.3 L61.5 94.2 L158.5 94.2 L80 151.3 Z"/>
+{{ range $i, $k := $ord }}{{ $p := index $pts $k }}<circle class="badge" cx="{{ index $p 0 }}" cy="{{ index $p 1 }}" r="10"/><text class="bnum" x="{{ index $p 0 }}" y="{{ add (index $p 1) 3.5 }}" text-anchor="middle">{{ add $i 1 }}</text>{{ end }}
+<text class="em" x="222" y="70">Tighten in a star,</text><text class="em" x="222" y="84">not around the circle.</text>
+<text x="222" y="110">1 → 2 → 3 → 4 → 5,</text><text x="222" y="124">then go around the</text><text x="222" y="138">star again.</text>
+</svg><figcaption>A star pattern pulls the wheel flat against the hub. Loosen the nuts before you jack the car up, and tighten them fully once it's back down.</figcaption></figure>
+{{- else if eq . "jumper" }}<figure class="sd"><svg data-nounits viewBox="0 0 380 260" role="img" aria-label="Jumper cable order: red to dead plus, red to good plus, black to good minus, black to bare metal" xmlns="http://www.w3.org/2000/svg">
+<rect class="batt" x="20" y="60" width="110" height="56" rx="5"/><rect class="pos" x="34" y="50" width="16" height="10"/><rect class="neg" x="100" y="50" width="16" height="10"/><text x="42" y="80" text-anchor="middle">+</text><text x="108" y="80" text-anchor="middle">−</text><text class="em" x="75" y="104" text-anchor="middle">Dead car</text>
+<rect class="batt" x="240" y="60" width="110" height="56" rx="5"/><rect class="pos" x="254" y="50" width="16" height="10"/><rect class="neg" x="320" y="50" width="16" height="10"/><text x="262" y="80" text-anchor="middle">+</text><text x="328" y="80" text-anchor="middle">−</text><text class="em" x="295" y="104" text-anchor="middle">Good car</text>
+<rect class="metal" x="20" y="146" width="130" height="36" rx="4"/><text x="85" y="161" text-anchor="middle">bare metal on the</text><text x="85" y="174" text-anchor="middle">dead car's engine</text>
+<path class="cred" d="M42 48 C70 6 240 6 262 48"/><path class="cblk" d="M328 48 C374 110 330 178 152 166"/>
+<circle class="badge" cx="42" cy="44" r="9"/><text class="bnum" x="42" y="47.5" text-anchor="middle">1</text>
+<circle class="badge" cx="262" cy="44" r="9"/><text class="bnum" x="262" y="47.5" text-anchor="middle">2</text>
+<circle class="badge" cx="328" cy="44" r="9"/><text class="bnum" x="328" y="47.5" text-anchor="middle">3</text>
+<circle class="badge" cx="152" cy="166" r="9"/><text class="bnum" x="152" y="169.5" text-anchor="middle">4</text>
+<text x="20" y="204">1 Red to the dead battery's +</text><text x="20" y="219">2 Red to the good battery's +</text><text x="20" y="234">3 Black to the good battery's −</text><text x="20" y="249">4 Black to bare metal, away from the dead battery</text>
+</svg><figcaption>Take the clamps off in reverse order: 4, 3, 2, 1. Your owner's manual comes first.</figcaption></figure>
+{{- else if eq . "paystub" }}<figure class="sd"><svg data-nounits viewBox="0 0 340 214" role="img" aria-label="A sample pay stub from gross pay to net pay" xmlns="http://www.w3.org/2000/svg">
+<rect class="pale ol" x="10" y="8" width="320" height="198" rx="6"/><text class="em" x="24" y="30">Sample pay stub (made-up numbers)</text>
+<text x="24" y="58">Gross pay</text><text class="num" x="310" y="58" text-anchor="end">$1,000.00</text><path class="rule" d="M24 66 H310"/>
+<text x="24" y="86">Social Security (6.2%)</text><text class="num" x="310" y="86" text-anchor="end">− $62.00</text>
+<text x="24" y="106">Medicare (1.45%)</text><text class="num" x="310" y="106" text-anchor="end">− $14.50</text>
+<text x="24" y="126">Federal income tax withheld</text><text class="num" x="310" y="126" text-anchor="end">− $60.00</text>
+<text x="24" y="146">State income tax withheld</text><text class="num" x="310" y="146" text-anchor="end">− $30.00</text><path class="rule" d="M24 156 H310"/>
+<text class="em" x="24" y="180">Net pay (take-home)</text><text class="num em" x="310" y="180" text-anchor="end">$833.50</text>
+<text x="24" y="198">Social Security + Medicare = FICA</text>
+</svg><figcaption>Gross pay minus every deduction equals net pay. Budget with net pay.</figcaption></figure>
+{{- else if eq . "brackets" }}<figure class="sd"><svg data-nounits viewBox="0 0 360 230" role="img" aria-label="Tax brackets as buckets that fill from the bottom" xmlns="http://www.w3.org/2000/svg">
+<text class="em" x="10" y="16">Tax year 2026, single filer (not to scale)</text>
+<rect class="pale ol" x="20" y="148" width="130" height="60"/><rect class="fill" x="20" y="148" width="130" height="60"/><text x="160" y="172">10% on the first $12,400</text><text x="160" y="186">of taxable income</text>
+<rect class="pale ol" x="20" y="84" width="130" height="60"/><rect class="fill" x="20" y="116" width="130" height="28"/><text x="160" y="108">12% on $12,400 to $50,400</text>
+<rect class="pale ol" x="20" y="28" width="130" height="52"/><text x="160" y="52">22% on $50,400 to $105,700,</text><text x="160" y="66">then 24%, 32%, 35%, 37%</text>
+<text x="10" y="226">Example: $23,900 taxable → $1,240 + $1,380 = $2,620 tax</text>
+</svg><figcaption>Income fills the buckets from the bottom. A raise into a higher bracket only taxes the dollars above that line at the higher rate.</figcaption></figure>
+{{- else if eq . "thermometer" }}<figure class="sd"><svg data-nounits viewBox="0 0 380 190" role="img" aria-label="Where to put a food thermometer in a chicken breast and a burger" xmlns="http://www.w3.org/2000/svg">
+<path class="meat" d="M30 130 C30 70 130 60 180 100 C200 118 180 140 130 142 C90 144 30 150 30 130 Z"/><circle class="tip" cx="98" cy="114" r="4"/><path class="probe" d="M98 114 L36 52"/><rect class="pale ol" x="22" y="30" width="20" height="26" rx="4" transform="rotate(-45 32 43)"/>
+<text class="em" x="105" y="168" text-anchor="middle">Thickest part,</text><text class="em" x="105" y="182" text-anchor="middle">away from bone</text>
+<rect class="meat" x="220" y="96" width="120" height="30" rx="14"/><circle class="tip" cx="280" cy="111" r="4"/><path class="probe" d="M280 111 L370 111"/>
+<text x="280" y="84" text-anchor="middle">tip in the center</text><text class="em" x="290" y="168" text-anchor="middle">Thin foods: in</text><text class="em" x="290" y="182" text-anchor="middle">from the side</text>
+</svg><figcaption>Poultry 165 °F, ground meat 160 °F, whole cuts 145 °F with a 3-minute rest, fish 145 °F.</figcaption></figure>
+{{- else if eq . "dangerzone" }}<figure class="sd"><svg data-nounits viewBox="0 0 340 250" role="img" aria-label="A thermometer showing the freezer, the fridge, the danger zone and cooking temperatures" xmlns="http://www.w3.org/2000/svg">
+<rect class="pale ol" x="60" y="10" width="34" height="220" rx="17"/>
+<rect class="cold" x="64" y="186" width="26" height="40" rx="10"/><rect class="danger" x="64" y="70" width="26" height="116"/><rect class="hot" x="64" y="20" width="26" height="50" rx="10"/>
+<path class="mark" d="M94 214 H112 M94 186 H112 M94 70 H112 M94 40 H112 M94 26 H112"/>
+<text x="116" y="218">0 °F: freezer</text><text x="116" y="190">40 °F: fridge, or colder</text>
+<text class="em" x="116" y="126">40 °F to 140 °F: the danger zone</text><text x="116" y="140">bacteria can double in 20 minutes</text>
+<text x="116" y="74">140 °F</text><text x="116" y="44">160 °F: ground meat, egg dishes</text><text x="116" y="28">165 °F: poultry, leftovers</text>
+</svg><figcaption>Get leftovers into the fridge within 2 hours (1 hour above 90 °F), and reheat them to 165 °F.</figcaption></figure>
+{{- else if eq . "micelle" }}<figure class="sd"><svg data-nounits viewBox="0 0 340 200" role="img" aria-label="Detergent molecules surround a drop of oil" xmlns="http://www.w3.org/2000/svg">
+<circle class="oil" cx="110" cy="100" r="40"/><text x="110" y="104" text-anchor="middle" class="em">grease</text>
+{{ range $i := seq 0 11 }}{{ $a := mul $i 30 }}<g transform="rotate({{ $a }} 110 100)"><path class="tail" d="M110 66 L110 44"/><circle class="headw" cx="110" cy="38" r="7"/></g>{{ end }}
+<text x="196" y="70">water-loving heads</text><text x="196" y="84">face the water</text>
+<text x="196" y="124">oil-loving tails</text><text x="196" y="138">grab the grease</text>
+<path class="lead" d="M194 74 L124 40 M194 128 L140 112"/>
+</svg><figcaption>Detergent wraps grease in tiny balls called micelles, so the wash water can carry it away.</figcaption></figure>
+{{- end }}

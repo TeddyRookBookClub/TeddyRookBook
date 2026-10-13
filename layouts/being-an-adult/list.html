@@ -1,0 +1,56 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "adult/adult.css" | relURL }}?v={{ (os.Stat "static/adult/adult.css").ModTime.Unix }}">
+{{ $areas := slice "house" "car" "money" "everyday" }}{{ $n := 0 }}{{ range $areas }}{{ $n = add $n (len (index site.Data.adult .).guides) }}{{ end }}
+<div class="hs os ad" id="ad-hub" data-units>
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Being an Adult 101</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Life skills · For parents and kids</p>
+    <h1>Being an Adult 101</h1>
+    <p>The things a good parent teaches before a kid leaves home: fixing what breaks around the house, looking after a car, handling money and taxes, cooking safely, and the first grown-up steps like renting a place and registering to vote.</p>
+  </header>
+  <section class="hs-sec">
+    <p>Plenty of adults can tell you that the mitochondria is the powerhouse of the cell but have never changed a tire or filed a tax return. Both kinds of knowledge matter, and they connect: a tripped breaker is a lesson in watts and amps, a car jack is a lever, and a credit card balance is compound interest working against you.</p>
+    <p>Each of these {{ $n }} guides gives the tools, the steps, the common mistakes, when to call a pro, and the science or math behind it, with a suggestion of when a child can watch, help, and do it alone. Many have a small calculator, and every one prints as a one-page checklist. The steps come from U.S. government, university extension and other reliable sources, listed on every page.</p>
+    <nav class="ad-jump" aria-label="Areas">{{ range $areas }}{{ $a := (index site.Data.adult .).area }}<a href="#{{ $a.key }}"><span aria-hidden="true">{{ $a.icon }}</span> {{ $a.name }}</a>{{ end }}<a href="#checklist"><span aria-hidden="true">✅</span> Skills checklist</a></nav>
+  </section>
+  {{ range $areas }}{{ $d := index site.Data.adult . }}
+  <section class="hs-sec" id="{{ $d.area.key }}">
+    <h2>{{ $d.area.icon }} {{ $d.area.name }}</h2>
+    <p>{{ $d.area.intro }}</p>
+    <div class="os-grid">
+      {{ range $d.guides }}
+      <a class="os-card" href="{{ printf "being-an-adult/%s/" .key | relURL }}" data-skill="{{ .key }}" data-n="{{ len .steps }}">
+        <span class="os-icon" aria-hidden="true">{{ .icon }}</span>
+        <b>{{ .name }}</b>
+        <small>{{ .level | strings.FirstUpper }} · {{ .time }}</small>
+        <small class="ad-card-subj">{{ .how_it_works.subject }}: {{ .how_it_works.title }}</small>
+        <span class="os-prog" hidden></span>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+  <section class="hs-sec" id="checklist">
+    <h2>✅ Skills checklist</h2>
+    <p>A list of every skill here, to tick off as each child learns it. Print one per child and keep it on the fridge. Ticks you make on screen stay on this device only.</p>
+    <p class="hs-noprint"><button type="button" class="hs-btn" id="ad-print-list">🖨 Print the checklist</button></p>
+    <div class="ad-list">
+      <h2 class="ad-print-only">Being an Adult 101: skills checklist</h2>
+      <p class="ad-print-only ad-check-name">Name ____________________</p>
+      {{ range $areas }}{{ $d := index site.Data.adult . }}
+      <div class="ad-lgroup">
+        <h3>{{ $d.area.icon }} {{ $d.area.name }}</h3>
+        <ul>{{ range $d.guides }}<li><label><input type="checkbox" data-learned="{{ .key }}"> <span>{{ .name }}</span></label><span class="ad-when">learned ________</span></li>{{ end }}</ul>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+  <section class="hs-sec hs-note hs-noprint">
+    <h2>More hands-on skills</h2>
+    <p>Grow food with the <a href="{{ "garden/" | relURL }}">Food Garden Planner</a>, keep clothes going with <a href="{{ "sewing/" | relURL }}">Sewing &amp; Knitting</a>, and learn knots, fire, navigation and signaling in <a href="{{ "homeschool/outdoor-skills/" | relURL }}">Outdoor Skills</a>. For school subjects, start at <a href="{{ "homeschool/" | relURL }}">Homeschool</a>.</p>
+  </section>
+  <p class="hs-small">Free how-to guides for families, with nothing to earn, pass or send in. They follow U.S. rules and sources; your owner's manual, product labels and state and local rules come first. The money guides explain how things work and aren't personal financial, tax or legal advice.</p>
+</div>
+<script src="{{ "adult/adult.js" | relURL }}?v={{ (os.Stat "static/adult/adult.js").ModTime.Unix }}" defer></script>
+{{ end }}

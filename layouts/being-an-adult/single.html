@@ -1,0 +1,70 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "adult/adult.css" | relURL }}?v={{ (os.Stat "static/adult/adult.css").ModTime.Unix }}">
+{{ $area := index site.Data.adult .Params.area }}{{ $g := index (where $area.guides "key" .Params.guide) 0 }}
+{{ $prev := "" }}{{ $next := "" }}{{ $found := false }}
+{{ range $area.guides }}{{ if $found }}{{ if not $next }}{{ $next = . }}{{ end }}{{ else if eq .key $g.key }}{{ $found = true }}{{ else }}{{ $prev = . }}{{ end }}{{ end }}
+{{ $h := $g.how_it_works }}
+{{ $learn := dict "Physics" (slice "homeschool/science/" "Science") "Chemistry" (slice "homeschool/science/" "Science") "Biology" (slice "homeschool/science/" "Science") "Earth science" (slice "homeschool/science/" "Science") "Math" (slice "homeschool/rays-arithmetic/" "Ray's Arithmetic") "Economics" (slice "business/cases/" "Business Cases") "Civics" (slice "homeschool/history/" "History") }}
+<div class="hs os ad" id="os-skill" data-skill="{{ $g.key }}" data-units>
+  <nav class="hs-crumbs"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › <a href="{{ printf "being-an-adult/#%s" $area.area.key | relURL }}">{{ $area.area.name }}</a> › {{ $g.name }}</nav>
+  <header class="hs-hero os-hero">
+    <span class="os-icon big" aria-hidden="true">{{ $g.icon }}</span>
+    <div>
+      <p class="hs-eyebrow">{{ $area.area.name }} · {{ $g.level | strings.FirstUpper }} · {{ $g.time }}</p>
+      <h1>{{ $g.name }}</h1>
+      <p>{{ $g.intro }}</p>
+    </div>
+  </header>
+  <p class="ad-age"><span aria-hidden="true">👪</span> <b>When to teach it:</b> {{ $g.teach_age }}</p>
+  <p class="ad-bar hs-noprint"><button type="button" class="hs-btn ghost" id="ad-print">🖨 Print a checklist</button>{{ with $g.how_it_works.subject }} <a class="hs-btn ghost" href="#how">🔬 The {{ lower . }} behind it</a>{{ end }}</p>
+
+  <div class="sw-top">
+    {{ with $g.diagram }}<section class="hs-sec ad-diag">{{ partial "adult-diagram.html" . }}</section>{{ end }}
+    {{ with $g.need }}<section class="hs-sec sw-need"><h2>You'll need</h2><ul>{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+  </div>
+  {{ with $g.before }}<section class="hs-sec ad-before"><h2>Before you start</h2><ul class="sw-list">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+
+  <section class="hs-sec">
+    <h2>Step by step</h2>
+    <p class="hs-small">Tick each step as you go if you like; ticks stay on this device.</p>
+    <ol class="os-steps">
+      {{ range $i, $s := $g.steps }}<li><label><input type="checkbox" data-i="{{ $i }}"><span><b>{{ $s.t }}</b>{{ $s.how }}</span></label></li>{{ end }}
+    </ol>
+  </section>
+
+  <section class="hs-sec ad-calc" id="ad-calc" data-calc="{{ $g.key }}" hidden></section>
+
+  <section class="hs-sec ad-how" id="how">
+    <p class="ad-subj">{{ $h.subject }}</p>
+    <h2>How it works: {{ $h.title }}</h2>
+    {{ range $h.body }}<p>{{ . }}</p>{{ end }}
+    {{ with $h.formula }}<p class="ad-formula">{{ . }}</p>{{ end }}
+    {{ with $h.try }}<p class="ad-try"><b>Try it:</b> {{ . }}</p>{{ end }}
+    {{ with index $learn $h.subject }}<p class="hs-small">Keep learning: <a href="{{ index . 0 | relURL }}">{{ index . 1 }}</a>{{ if eq $g.key "file-your-taxes" }} · <a href="{{ "business/tax-receipt/" | relURL }}">Your Tax Receipt</a>, to see what federal income tax pays for{{ end }}{{ if eq $g.key "how-interest-works" }} · <a href="{{ "business/cases/" | relURL }}">Business Cases</a>{{ end }}</p>{{ end }}
+  </section>
+
+  {{ with $g.teach }}<section class="hs-sec ad-teach"><h2>Teaching it to your kids</h2><ul class="sw-list">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+  {{ with $g.tips }}<section class="hs-sec"><h2>Tips</h2><ul class="sw-list">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+  {{ with $g.mistakes }}<section class="hs-sec"><h2>Common mistakes</h2><div class="os-table-wrap"><table class="hs-table"><thead><tr><th>Mistake</th><th>Instead</th></tr></thead><tbody>{{ range . }}<tr><td>{{ .problem }}</td><td>{{ .fix }}</td></tr>{{ end }}</tbody></table></div></section>{{ end }}
+  {{ with $g.safety }}<section class="hs-sec"><h2>Safe habits</h2><ul class="sw-list">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+  {{ with $g.pro }}<section class="hs-sec ad-pro"><h2>{{ if in (slice "house" "car") $g.group }}When to call a pro{{ else }}Where to get help{{ end }}</h2><ul class="sw-list">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+  <section class="hs-sec"><h2>Sources</h2><ul class="sw-src-list">{{ range $g.sources }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a></li>{{ end }}</ul></section>
+  <nav class="hs-pn">
+    {{ with $prev }}<a href="{{ printf "being-an-adult/%s/" .key | relURL }}">← {{ .name }}</a>{{ else }}<a href="{{ "being-an-adult/" | relURL }}">← All guides</a>{{ end }}
+    {{ with $next }}<a href="{{ printf "being-an-adult/%s/" .key | relURL }}">{{ .name }} →</a>{{ else }}<a href="{{ "being-an-adult/" | relURL }}">All guides →</a>{{ end }}
+  </nav>
+  <p class="hs-small">Free how-to guides for families, with nothing to earn, pass or send in. They follow U.S. rules and sources; your owner's manual, product labels and state and local rules come first.{{ if eq $g.group "money" }} This guide explains how things work; it isn't personal financial, tax or legal advice.{{ end }}</p>
+
+  <div class="ad-check" aria-hidden="true">
+    <h2>{{ $g.icon }} {{ $g.name }}</h2>
+    <p class="ad-check-name">Name ____________________ Date __________</p>
+    {{ with $g.need }}<h3>You'll need</h3><ul class="ad-boxes">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
+    {{ with $g.before }}<h3>Before you start</h3><ul>{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
+    <h3>Steps</h3><ol class="ad-boxes">{{ range $g.steps }}<li><b>{{ .t }}.</b> {{ .how }}</li>{{ end }}</ol>
+    {{ with $g.safety }}<h3>Safe habits</h3><ul>{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
+    <p class="ad-check-foot">teddyrookbook.com/being-an-adult/{{ $g.key }}/</p>
+  </div>
+</div>
+<script src="{{ "adult/adult.js" | relURL }}?v={{ (os.Stat "static/adult/adult.js").ModTime.Unix }}" defer></script>
+{{ end }}

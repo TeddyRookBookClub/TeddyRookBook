@@ -36,9 +36,11 @@
     oz: { to: 28.3495, pick: function (a) { return a < 1000 ? ['g', 1, 0] : ['kg', 1000, 1]; } },
     gal: { to: 3.78541, pick: function (a) { return Math.abs(a) < 1 ? ['L', 1, 1] : ['L', 1, 0]; } },
     qt: { to: 0.946353, pick: function (a) { return ['L', 1, 1]; } },
+    psi: { to: 6.89476, pick: function () { return ['kPa', 1, 0]; } },
     F: { temp: true }
   };
   var WORD = [
+    ['psi', 'psi|pounds per square inch'],
     ['sqft', 'square feet|square foot|sq\\.? ?ft'], ['acre', 'acres|acre'],
     ['in', 'inches|inch|in\\.?(?=\\s*(?:deep|wide|long|tall|high|apart|thick|across|diameter|in diameter|from|below|above|of|off|on|each|band|x\\s|×|\\)|,|;|:|\\.(?!\\d)|$))|″'],
     ['ft', 'feet|foot|ft'], ['yd', 'yards|yard|yd'], ['mi', 'miles|mile'],
@@ -50,8 +52,8 @@
   var SEP = '\\s*(?:–|-|—|to|or|and)\\s*';
   var UNIT = '(' + WORD.map(function (w) { return w[1]; }).join('|') + ')';
   // 1) "5-gallon", "6-ft", "1/4-inch": hyphenated adjectives; 2) values, ranges and A x B dimensions followed by a unit
-  var HAS = '(\\s*\\((?:about\\s*|≈\\s*)?[-–\\d.,\\s\\/x×to]+\\s*(?:mm|cm|m|km|m²|ha|L|ml|g|kg|°\\s?C)\\))?';
-  var RE = new RegExp('(^|[^\\w/.])(-?' + N + '(?:' + SEP + '-?' + N + ')*(?:\\s*[x×]\\s*' + N + ')*)(\\s?-\\s?|\\s*)' + UNIT + '(?![A-Za-z])' + HAS, 'g');
+  var HAS = '(\\s*\\((?:about\\s*|≈\\s*)?[-–\\d.,\\s\\/x×to]+\\s*(?:mm|cm|m|km|m²|ha|L|ml|g|kg|kPa|°\\s?C)\\))?';
+  var RE = new RegExp('(^|[^\\w/.])([-−]?' + N + '(?:' + SEP + '[-−]?' + N + ')*(?:\\s*[x×]\\s*' + N + ')*)(\\s?-\\s?|\\s*)' + UNIT + '(?![A-Za-z])(?!-f(?:eet|oot))' + HAS, 'g');
   function kind(u) { for (var i = 0; i < WORD.length; i++) if (new RegExp('^(?:' + WORD[i][1] + ')$', 'i').test(u)) return WORD[i][0]; return null; }
   function metric(nums, joins, k) {
     if (k === 'F') return nums.map(function (f) { return fmt((f - 32) * 5 / 9, 0); }).join(' to ') + '°C';
@@ -67,7 +69,8 @@
       var k = kind(unit.replace(/\s+/g, ' ')); if (!k) return all;
       var rest = str.slice(off + all.length);
       if (k === 'in' && /^in$/i.test(unit) && /^\s*(?:the|a|an|this|that|your|my|our|their)\b/i.test(rest)) return all;
-      var lead = /^-/.test(numtxt), body = lead ? numtxt.slice(1) : numtxt;
+      if (k === 'F' && /\b(?:per|every)\s*$/i.test(str.slice(0, off + pre.length))) return all; // a temperature change, not a temperature
+      var lead = /^[-−]/.test(numtxt), body = lead ? numtxt.slice(1) : numtxt;
       if (lead && k !== 'F') return all;
       var parts = body.split(/\s*(–|-|—|\bto\b|\bor\b|\band\b|x|×)\s*/).filter(function (x) { return x !== ''; });
       var nums = [], joins = [];

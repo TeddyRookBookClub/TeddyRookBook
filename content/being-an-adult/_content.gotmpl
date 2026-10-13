@@ -1,0 +1,13 @@
+{{/* One page per guide, from data/adult/*.json */}}
+{{ range slice "house" "car" "money" "everyday" }}
+  {{ $area := index site.Data.adult . }}
+  {{ range $area.guides }}
+    {{ $.AddPage (dict
+      "kind" "page"
+      "path" .key
+      "title" .name
+      "params" (dict "guide" .key "area" .group "description" (printf "%s: a free step-by-step guide, with the science or math behind it. %s" .name .intro))
+      "dates" (dict "date" (time.AsTime "2026-10-13"))
+    ) }}
+  {{ end }}
+{{ end }}
