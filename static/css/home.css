@@ -116,3 +116,10 @@ a.td-card{transition:transform .15s,border-color .15s}a.td-card:hover{transform:
 .td-abc{font:400 2rem "Gentium Book Plus",Georgia,serif;color:var(--g);letter-spacing:.15em}
 html[data-theme="dark"] .td-card .go,html[data-theme="dark"] .td-links a,html[data-theme="dark"] .td-abc{color:#6cc79a}
 html[data-theme="dark"] .td-l b{color:#e08a9e}
+/* Whole "What is this?" box is clickable: the title link stretches over the box; other links inside stay clickable on top. */
+.about-list li{position:relative;transition:border-color .15s,transform .15s,box-shadow .15s}
+.about-list li b a::after{content:"";position:absolute;inset:0;border-radius:12px}
+.about-list li a:not(b a){position:relative;z-index:1}
+.about-list li:hover{border-color:var(--g,#004225);transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.about-list li:has(b a:focus-visible){outline:3px solid #d8b860;outline-offset:2px}
+.about-list li b a:focus-visible{outline:none}
