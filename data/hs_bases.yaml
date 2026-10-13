@@ -1,0 +1,112 @@
+# Teaching guide for number bases (Hexadecimal and Binary page). Steps use "Say: " for lines to read aloud.
+intro: "Five short lessons a parent can teach at the kitchen table, no computer needed. Each starts with something to hold, then the same idea on paper, then a quick check and a link to practice. Teach one lesson a day and let your child do the counting and writing."
+tips:
+  - "<b>Hands first, paper second.</b> Bundling beans into cups makes place value something a child can see. Once the bundling makes sense, the written numbers follow."
+  - "<b>Say the base out loud.</b> Read 10 in binary as “one-zero,” not “ten,” so it doesn’t sound like the number ten. Some people write the base small after the number: 10₂ is two, 10₁₀ is ten."
+  - "<b>Use the converter to check, not to answer.</b> Work it out on paper first, then type it into the converter above to see if you were right."
+  - "<b>Keep it short.</b> Ten or fifteen minutes is plenty. Stop while it’s still fun, and use Code Quest as a treat."
+units:
+  - key: base10
+    title: "Lesson 1: Base 10, the numbers we already use"
+    ages: "6 and up"
+    time: "15 minutes"
+    goal: "See that each place in a number is a bundle ten times bigger than the place to its right."
+    materials: ["About 40 small things to count, like dried beans or buttons", "A few paper cups", "Paper and a pencil"]
+    steps:
+      - t: "Count out a pile"
+        body: "Count out 23 beans together, one at a time.\nSay: Counting one by one is slow. Let’s find a faster way to see how many there are."
+      - t: "Bundle by tens"
+        body: "Put beans into cups ten at a time until you can’t make another full cup. You’ll have 2 full cups and 3 loose beans.\nSay: Every time we have ten, we bundle them into one cup. A cup means ten."
+      - t: "Write what you see"
+        body: "Draw two columns and label them Tens and Ones. Write 2 under Tens and 3 under Ones.\nSay: The 2 tells how many cups of ten, and the 3 tells how many loose ones. Together they say twenty-three."
+      - t: "Make a bigger bundle"
+        body: "Ask what would happen with ten full cups. They’d make one bigger bundle: a hundred. Add a Hundreds column to the left.\nSay: Each place is worth ten of the place to its right: ones, tens, hundreds, thousands."
+      - t: "Notice the digits"
+        body: "Ask why we never write a single digit bigger than 9.\nSay: As soon as we have ten of anything, we bundle it and move one place to the left. So each place only needs the digits 0 to 9. That’s why it’s called base 10."
+    check: ["In 345, what is the 4 worth? (4 tens, or 40)", "Show 132 with beans and cups. (1 bundle of a hundred, 3 cups of ten, 2 loose)"]
+    mixups: ["Thinking the 4 in 345 is worth 4. It’s worth 4 tens. Point to its column."]
+    practice: {label: "Try the place-value lesson", url: "/homeschool/hexadecimal/#hx-lessons"}
+  - key: base2
+    title: "Lesson 2: Base 2, binary"
+    ages: "7 and up"
+    time: "20 to 30 minutes"
+    goal: "Count, read and write numbers in binary, where every place is worth twice the one to its right."
+    materials: ["Beans and cups again", "A strip of paper with four boxes labeled 8, 4, 2, 1 (right to left: 1, 2, 4, 8)", "Four coins, or cards with a blank side"]
+    steps:
+      - t: "Same game, new rule"
+        body: "Play the bundling game again, but now bundle by twos. Start with 5 beans: two make a pair, two pairs make a bundle of four.\nSay: In binary, as soon as we have two of something, we bundle it. So each place can only hold 0 or 1."
+      - t: "Learn the places"
+        body: "Show the strip: 8, 4, 2, 1. Each place is double the one to its right, and you could keep going: 16, 32, 64, 128.\nSay: In base 10 the places grow by tens. In binary they grow by twos."
+      - t: "Count to eight together"
+        body: "Use the coins on the strip, heads for 1 and tails for 0. Count: 0, 1, 10, 11, 100, 101, 110, 111, 1000.\nSay: Watch the right-hand coin. When it would go past 1, it flips back to 0 and we carry one to the left, like a car’s mileage counter."
+      - t: "Read a binary number"
+        body: "Lay out 1011 on the strip. Add up the places that have a 1: 8 + 2 + 1 = 11.\nSay: A 1 means take this place. A 0 means skip it. So 1011 is eight, plus two, plus one: eleven."
+      - t: "Write a number in binary"
+        body: "To write 13, start at the biggest place that fits. 8 fits, leaving 5, so put a 1 in the 8s. 4 fits, leaving 1: a 1 in the 4s. 2 doesn’t fit: a 0. 1 fits: a 1. So 13 is 1101.\nSay: Biggest place first. If it fits, write 1 and take it away. If it doesn’t, write 0 and move on."
+      - t: "Count on your fingers"
+        body: "Give each finger on one hand a place: thumb 1, pointer 2, middle 4, ring 8, little finger 16. A raised finger is a 1. Count up as high as you can.\nSay: With five fingers you can count to 31, because 16 + 8 + 4 + 2 + 1 is 31."
+    check: ["What is 110 in binary as an ordinary number? (6)", "Write 9 in binary. (1001)", "What is the biggest number four bits can hold? (1111, which is 15)"]
+    mixups: ["Starting the places from the left. The ones place is always on the right.", "Dropping zeros in the middle: 13 is 1101, not 111."]
+    practice: {label: "Practice binary and decimal", url: "/homeschool/code-practice/?p=conv|2,10|easy"}
+  - key: base8
+    title: "Lesson 3: Base 8, octal"
+    ages: "9 and up"
+    time: "20 minutes"
+    goal: "Use the same place-value idea with bundles of eight, and see how octal groups binary in threes."
+    materials: ["Beans and cups", "Paper and a pencil"]
+    steps:
+      - t: "Bundle by eights"
+        body: "Count out 19 beans and bundle them by eights: 2 full cups and 3 loose. So 19 is written 23 in octal.\nSay: In octal we bundle by eight, so we only use the digits 0 to 7."
+      - t: "Learn the places"
+        body: "Write the places from right to left: 1, 8, 64, 512. Each is eight times the one before."
+      - t: "Count past seven"
+        body: "Count aloud and write as you go: …, 6, 7, 10, 11, …, 17, 20.\nSay: After 7 there’s no digit 8, so we write 10: one bundle of eight and nothing left over. Octal 17 is fifteen, and octal 20 is sixteen."
+      - t: "Octal to ordinary numbers"
+        body: "For 157 in octal, multiply each digit by its place and add: 1 × 64 + 5 × 8 + 7 × 1 = 64 + 40 + 7 = 111."
+      - t: "Ordinary numbers to octal"
+        body: "Divide by 8 and keep the remainder each time, then read the remainders from the bottom up. For 100: 100 ÷ 8 = 12 remainder 4; 12 ÷ 8 = 1 remainder 4; 1 ÷ 8 = 0 remainder 1. Reading up: 144.\nSay: The first remainder is the ones digit, so it goes on the right."
+      - t: "The binary shortcut"
+        body: "Each octal digit is exactly three bits, because 8 is 2 × 2 × 2. So 57 in octal is 5 = 101 and 7 = 111: 101 111.\nSay: Octal is a short way to write binary, three bits at a time."
+    check: ["What is 21 in octal as an ordinary number? (2 × 8 + 1 = 17)", "Write 20 in octal. (24)", "Is 19 a real octal number? (No: octal has no digit 9)"]
+    mixups: ["Writing an 8 or 9 in an octal number. The digits stop at 7."]
+    practice: {label: "Practice octal", url: "/homeschool/code-practice/?p=conv|2,8,10|easy"}
+  - key: base16
+    title: "Lesson 4: Base 16, hexadecimal"
+    ages: "10 and up"
+    time: "25 minutes"
+    goal: "Count and convert in hex, with the letters A to F standing for ten to fifteen."
+    materials: ["Paper and a pencil", "A card strip showing A = 10, B = 11, C = 12, D = 13, E = 14, F = 15"]
+    steps:
+      - t: "We need more digits"
+        body: "Ask: if we bundle by sixteen, each place can hold up to fifteen. What single symbol can we write for ten, eleven or fifteen?\nSay: Hex borrows letters. A is ten, B is eleven, and so on up to F, which is fifteen."
+      - t: "Count past nine"
+        body: "Count and write: …, 8, 9, A, B, C, D, E, F, 10, 11, …, 19, 1A, …, 1F, 20.\nSay: After F comes 10: one bundle of sixteen and nothing left. Hex 1F is thirty-one, and hex 20 is thirty-two."
+      - t: "Learn the places"
+        body: "Write the places from right to left: 1, 16, 256, 4,096. Each is sixteen times the one before. Two hex digits go up to FF, which is 255."
+      - t: "Hex to ordinary numbers"
+        body: "For 2B: 2 × 16 + B × 1 = 32 + 11 = 43. For 1A0: 1 × 256 + 10 × 16 + 0 = 416.\nSay: Change any letters to their values first, then multiply by the places and add."
+      - t: "Ordinary numbers to hex"
+        body: "Divide by 16 and keep the remainders, writing 10 to 15 as A to F. For 300: 300 ÷ 16 = 18 remainder 12 (C); 18 ÷ 16 = 1 remainder 2; 1 ÷ 16 = 0 remainder 1. Reading up: 12C."
+      - t: "The binary shortcut"
+        body: "Each hex digit is exactly four bits, because 16 is 2 × 2 × 2 × 2. Split 1010 0111 into fours: 1010 is A and 0111 is 7, so it’s A7.\nSay: That’s why programmers like hex: it’s binary, four bits at a time, and much easier to read."
+    check: ["What is hex 1F as an ordinary number? (31)", "Write 200 in hex. (C8)", "What is 1111 1111 in hex? (FF)"]
+    mixups: ["Reading hex 10 as ten. It’s sixteen.", "Forgetting the letter values. Keep the A to F strip handy until they stick."]
+    practice: {label: "Practice hex", url: "/homeschool/code-practice/?p=conv|2,16|med"}
+  - key: anybase
+    title: "Lesson 5: From any base to any base"
+    ages: "10 and up"
+    time: "20 minutes"
+    goal: "Choose the easiest route between bases and check the answer by converting back."
+    materials: ["Paper and a pencil"]
+    steps:
+      - t: "The safe route: through base 10"
+        body: "To change from one base to another, first turn the number into an ordinary base 10 number (multiply each digit by its place and add). Then turn that into the new base (divide again and again, keeping remainders).\nSay: Base 10 is home base. You can always get anywhere by going home first."
+      - t: "The shortcuts: through binary"
+        body: "Between binary and hex, group bits in fours. Between binary and octal, group them in threes. Always group from the right, and add zeros on the left to fill the last group: 10111 becomes 0001 0111, which is 17 in hex."
+      - t: "Octal to hex"
+        body: "Go through binary: 57 in octal is 101 111. Regroup in fours from the right: 0010 1111. That’s 2F in hex. Check it in base 10: 57 in octal is 47, and 2F in hex is 2 × 16 + 15 = 47."
+      - t: "Always check"
+        body: "Convert your answer back the other way, or type it into the converter above.\nSay: If you can get back to where you started, you know it’s right."
+    check: ["Change binary 1101 0011 to hex. (D3)", "Change octal 17 to binary. (001 111, or 1111)", "Change hex A to octal. (12)"]
+    mixups: ["Grouping bits from the left. Always start from the right."]
+    practice: {label: "Practice any base to any base", url: "/homeschool/code-practice/?p=conv|2,8,10,16|med"}

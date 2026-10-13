@@ -1,0 +1,82 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $d := site.Data.hs_bases }}
+<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (os.Stat "static/homeschool/hex.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/bases.css" | relURL }}?v={{ (os.Stat "static/homeschool/bases.css").ModTime.Unix }}">
+<div class="hs nb">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> › Teach It Step by Step</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Math · For parents and kids, ages 6 and up</p>
+    <h1>Teach Number Bases Step by Step</h1>
+    <p>Binary, octal, decimal and hex are all the same idea: bundle things into groups and write down how many bundles you have. These lessons teach that idea with beans and cups first, then on paper, in words a parent can read aloud and a child can follow.</p>
+  </header>
+
+  <section class="hs-sec">
+    <p>{{ $d.intro }}</p>
+    <nav class="nb-toc" aria-label="Lessons">
+      {{ range $i, $u := $d.units }}<a href="#{{ $u.key }}"><span>{{ add $i 1 }}</span>{{ index (split $u.title ": ") 1 }}</a>{{ end }}
+    </nav>
+    <p class="hs-noprint"><button type="button" class="hs-btn" id="nb-print">🖨 Print the guide</button> <button type="button" class="hs-btn ghost" id="nb-printkit">✂️ Print the cut-out kit</button></p>
+  </section>
+
+  <section class="hs-sec hs-note">
+    <h2>Before you start</h2>
+    <ul class="nb-tips">{{ range $d.tips }}<li>{{ . | safeHTML }}</li>{{ end }}</ul>
+    <p class="hs-small">Lines marked <span class="nb-saytag">Say</span> are suggestions for what to say out loud. Use your own words if they come more easily.</p>
+  </section>
+
+  {{ range $i, $u := $d.units }}
+  <section class="hs-sec nb-unit" id="{{ $u.key }}">
+    <h2>{{ $u.title }}</h2>
+    <p class="nb-meta"><span>👤 Ages {{ $u.ages }}</span><span>⏱ {{ $u.time }}</span></p>
+    <p class="nb-goal"><b>Goal:</b> {{ $u.goal }}</p>
+    <div class="nb-get"><b>Get out:</b><ul>{{ range $u.materials }}<li>{{ . }}</li>{{ end }}</ul></div>
+    <ol class="nb-steps">
+      {{ range $u.steps }}
+      <li><h3>{{ .t }}</h3>
+        {{ range split .body "\n" }}{{ if hasPrefix . "Say: " }}<p class="hs-say"><span>Say</span>{{ strings.TrimPrefix "Say: " . }}</p>{{ else }}<p>{{ . }}</p>{{ end }}{{ end }}
+      </li>
+      {{ end }}
+    </ol>
+    {{ $base := index (dict "base10" 10 "base2" 2 "base8" 8 "base16" 16) $u.key }}
+    {{ with $base }}
+    <div class="nb-try hs-noprint" data-base="{{ . }}">
+      <h3>🫘 Try it on screen: the bundling machine</h3>
+      <p class="hs-small">Press +1 to add a bean. Every time a place fills up to {{ . }}, the beans are bundled and carried one place to the left. Or type a number to see it bundled.</p>
+      <div class="nb-ctl"><button type="button" class="hs-btn" data-a="-1">−1</button><button type="button" class="hs-btn" data-a="1">+1</button><label>Number <input class="hx-in sm" type="number" min="0" max="{{ if eq . 10 }}999{{ else if eq . 2 }}63{{ else if eq . 8 }}511{{ else }}4095{{ end }}" inputmode="numeric" value="{{ if eq . 10 }}23{{ else if eq . 2 }}5{{ else if eq . 8 }}19{{ else }}43{{ end }}" aria-label="Number of beans"></label></div>
+      <div class="nb-cols" aria-live="polite"></div>
+      <p class="nb-out"></p>
+    </div>
+    {{ end }}
+    <div class="nb-check">
+      <h3>✔️ Quick check</h3>
+      <ol>{{ range $u.check }}{{ $m := findRESubmatch `^(.*)\s\((.*)\)$` . }}{{ if $m }}<li>{{ index (index $m 0) 1 }}</li>{{ else }}<li>{{ . }}</li>{{ end }}{{ end }}</ol>
+      <details class="nb-ans"><summary>Show the answers</summary><ol>{{ range $u.check }}{{ $m := findRESubmatch `^(.*)\s\((.*)\)$` . }}<li>{{ if $m }}{{ index (index $m 0) 2 }}{{ end }}</li>{{ end }}</ol></details>
+    </div>
+    {{ with $u.mixups }}<div class="nb-watch"><b>⚠️ Watch for:</b><ul>{{ range . }}<li>{{ . }}</li>{{ end }}</ul></div>{{ end }}
+    {{ with $u.practice }}<p class="nb-go hs-noprint"><a class="hs-btn" href="{{ strings.TrimPrefix "/" .url | relURL | replaceRE `\|` "%7C" }}">▶ {{ .label }}</a>{{ if gt (len $d.units) (add $i 1) }} <a class="hs-btn ghost" href="#{{ (index $d.units (add $i 1)).key }}">Next lesson ↓</a>{{ end }}</p>{{ end }}
+  </section>
+  {{ end }}
+
+  <section class="hs-sec" id="kit">
+    <h2>✂️ The cut-out kit</h2>
+    <p>Print this page, cut out the pieces, and keep them in an envelope. The binary cards are the star: lay them out with the dots showing for 1, face down for 0.</p>
+    <div class="nb-kit" id="nb-kit">
+      <h3 class="nb-kprint">Number bases kit · teddyrookbook.com</h3>
+      <p class="nb-klab">Binary cards (one for each place)</p>
+      <div class="nb-cards">
+        {{ range slice 16 8 4 2 1 }}<div class="nb-card"><div class="nb-dots">{{ range seq . }}<i></i>{{ end }}</div><b>{{ . }}</b></div>{{ end }}
+      </div>
+      <p class="nb-klab">Hex digits</p>
+      <div class="nb-hexstrip">{{ range $i, $c := split "0123456789ABCDEF" "" }}<span><b>{{ $c }}</b>{{ $i }}</span>{{ end }}</div>
+      <p class="nb-klab">Place-value mats (put beans or cards in the boxes)</p>
+      {{ range slice (slice "Base 10" "1000s" "100s" "10s" "1s") (slice "Base 8" "512s" "64s" "8s" "1s") (slice "Base 16" "4096s" "256s" "16s" "1s") (slice "Base 2" "16s" "8s" "4s" "2s" "1s") }}
+      <div class="nb-mat"><b>{{ index . 0 }}</b><div>{{ range after 1 . }}<span>{{ . }}</span>{{ end }}</div></div>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="hs-sec os-callout hs-noprint"><p>🗝️ <b>After the lessons:</b> the <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> page has a live converter and nine short lessons with practice, <a href="{{ "homeschool/code-practice/" | relURL }}">Code Practice</a> has rounds and printable worksheets with answer keys, and <a href="{{ "homeschool/code-quest/" | relURL }}">Code Quest</a> is a puzzle trail that uses all four bases.</p></section>
+</div>
+<script src="{{ "homeschool/bases.js" | relURL }}?v={{ (os.Stat "static/homeschool/bases.js").ModTime.Unix }}" defer></script>
+{{ end }}

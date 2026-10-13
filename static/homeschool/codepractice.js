@@ -76,8 +76,18 @@
     if (!st.kinds.length) st.kinds = ['conv'];
     save(); syncForm();
   });
+  function preset(v, go) {
+    var p = String(v).split('|'), k = p[0].split(',').filter(function (x) { return MAKERS[x]; });
+    if (!k.length) return false;
+    st.kinds = k;
+    var bs = (p[1] || '').split(',').map(Number).filter(function (x) { return [2, 8, 10, 16].indexOf(x) >= 0; });
+    if (bs.length >= 2) st.bases = bs;
+    if (/^(easy|med|hard)$/.test(p[2] || '')) st.lv = p[2];
+    save(); syncForm(); if (go) { start(); $('cp-run').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    return true;
+  }
   D.querySelectorAll('[data-preset]').forEach(function (b) {
-    b.addEventListener('click', function () { var p = b.dataset.preset.split('|'); st.kinds = p[0].split(','); if (p[1]) st.bases = p[1].split(',').map(Number); st.lv = p[2] || st.lv; save(); syncForm(); start(); $('cp-run').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    b.addEventListener('click', function () { preset(b.dataset.preset, true); });
   });
   syncForm();
   function make() { var k = pick(st.kinds); return MAKERS[k](st.lv, st); }
@@ -117,6 +127,8 @@
   $('cp-again').addEventListener('click', start);
   $('cp-next').addEventListener('click', function () { if (/next level/.test(this.textContent)) { st.lv = st.lv === 'easy' ? 'med' : 'hard'; save(); syncForm(); } start(); });
 
+  // A link like ?p=conv|2,8,10|easy (from the teaching guide) sets up and starts a round.
+  try { var qp = new URLSearchParams(W.location.search).get('p'); if (qp && preset(qp, false)) { start(); var lk = $('cp-linked'); if (lk) lk.hidden = false; } } catch (e) { }
   // ---------- printable worksheet ----------
   $('cp-print').addEventListener('click', function () {
     var n = Math.max(10, st.n), qs = [];
