@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 {{ $d := site.Data.outdoor_skills }}{{ $b := index (where $d.skills "key" .Params.skill) 0 }}
-<div class="hs os" id="os-skill" data-skill="{{ $b.key }}">
+<div class="hs os" id="os-skill" data-skill="{{ $b.key }}" data-units>
   <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/outdoor-skills/" | relURL }}">Outdoor Skills</a> › {{ $b.name }}</nav>
   <header class="hs-hero os-hero">
     <span class="os-icon big" aria-hidden="true">{{ $b.icon }}</span>

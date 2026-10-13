@@ -14,14 +14,14 @@ html[data-theme="dark"] .res{--g:#6cc79a;--muted:#9fb0a6;--line:#48574e;--card:#
 .res-foot{font-size:.85rem;color:var(--muted);margin-top:1rem}
 </style>
 <div class="res">
-  <header class="res-hero"><h1>{{ .Title }}</h1><p>Other free places to teach at home, learn science and math, learn Latin and Greek, read the great books and explore the ancient world. None of these are mine, and I’m not paid to list them; they’re just good.</p></header>
+  <header class="res-hero"><h1>{{ .Title }}</h1><p>Other free places to teach at home, learn science and math, sign, grow food, raise chickens and bees, sew and knit, learn Latin and Greek, read the great books and explore the ancient world, with this site’s own guides marked →. None of the others are mine, and I’m not paid to list them; they’re just good.</p></header>
   <div class="res-grid">
     {{ range site.Data.resources }}
     <section class="res-box"><h2>{{ .icon }} {{ .title }}</h2><ul>
-      {{ range .links }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }} ↗</a><span>{{ .note }}</span></li>{{ end }}
+      {{ range .links }}<li>{{ if .site }}<a href="{{ .url | relURL }}">{{ .name }} →</a>{{ else }}<a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }} ↗</a>{{ end }}<span>{{ .note }}</span></li>{{ end }}
     </ul></section>
     {{ end }}
   </div>
-  <p class="res-foot">On this site, see also the <a href="/homeschool/">homeschool books and guides</a>, the <a href="/languages/">language tools</a>, <a href="/games/">games</a> and <a href="/infographics/">infographics</a>.</p>
+  <p class="res-foot">On this site, see also the <a href="{{ "homeschool/" | relURL }}">homeschool books and guides</a>, the <a href="{{ "languages/" | relURL }}">language tools</a>, <a href="{{ "videos/" | relURL }}">videos</a>, <a href="{{ "infographics/" | relURL }}">infographics</a>, the <a href="{{ "books/" | relURL }}">Library</a>, <a href="{{ "free-books/" | relURL }}">free books</a> and <a href="{{ "games/" | relURL }}">games</a>.</p>
 </div>
 {{ end }}

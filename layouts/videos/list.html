@@ -1,0 +1,30 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $vs := slice }}{{ range $id, $v := site.Data.videos }}{{ $vs = $vs | append (merge $v (dict "id" $id)) }}{{ end }}
+{{ $vs = sort $vs "date" "desc" }}
+<div class="hs vd">
+  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › Videos</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Watch and learn</p>
+    <h1>Videos</h1>
+    <p>Walk-throughs of the infographics and the ideas behind them. Most are long, so each has a short trailer where there is one: watch that first to see if it's for you.</p>
+  </header>
+  <section class="hs-sec">
+    <div class="vd-grid">
+      {{ range $vs }}
+      <a class="vd-card" href="{{ printf "videos/%s/" .slug | relURL }}">
+        <span class="vd-thumb"><img src="https://i.ytimg.com/vi/{{ .id }}/hqdefault.jpg" alt="" loading="lazy" width="480" height="360"><span class="vd-play" aria-hidden="true">▶</span></span>
+        <b>{{ .title }}</b>
+        <small>{{ with .topics }}{{ delimit . " · " }}{{ end }}{{ with .length }} · {{ . }}{{ end }}{{ if .trailer }} · trailer{{ with .trailer_length }} ({{ . }}){{ end }}{{ end }}</small>
+        <span class="vd-about">{{ .about }}</span>
+      </a>
+      {{ end }}
+    </div>
+    <p class="hs-small">More videos are on the way. Videos play from YouTube's privacy-enhanced mode, and nothing loads from YouTube until you press play.</p>
+  </section>
+  <section class="hs-sec hs-note">
+    <h2>Read and explore</h2>
+    <p>Each video goes with something on the site: the <a href="{{ "infographics/" | relURL }}">infographics</a> it walks through, the <a href="{{ "languages/" | relURL }}">language tools</a>, the <a href="{{ "books/" | relURL }}">Library</a> and <a href="{{ "books/paths/" | relURL }}">reading paths</a>, and the <a href="{{ "homeschool/" | relURL }}">homeschool lessons</a>.</p>
+  </section>
+</div>
+{{ end }}

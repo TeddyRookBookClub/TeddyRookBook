@@ -1,0 +1,29 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $id := .Params.vid }}{{ $v := index site.Data.videos $id }}
+<div class="hs vd">
+  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "videos/" | relURL }}">Videos</a> › {{ $v.title }}</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Video{{ with $v.topics }} · {{ delimit . " · " }}{{ end }}{{ with $v.length }} · {{ . }}{{ end }}</p>
+    <h1>{{ $v.title }}</h1>
+    <p>{{ $v.about }}</p>
+  </header>
+  {{ with $v.trailer }}
+  <section class="hs-sec">
+    <h2>Short on time? Watch the trailer{{ with $v.trailer_length }} ({{ . }}){{ end }}</h2>
+    {{ partial "video.html" (dict "id" . "title" (printf "Trailer: %s" $v.title) "about" "" "nolink" true) }}
+  </section>
+  {{ end }}
+  <section class="hs-sec">
+    {{ if $v.trailer }}<h2>The full video</h2>{{ end }}
+    {{ partial "video.html" (dict "id" $id "nolink" true) }}
+  </section>
+  {{ with $v.related }}
+  <section class="hs-sec">
+    <h2>Go with it</h2>
+    <ul class="os-learn">{{ range . }}<li><a href="{{ .url | relURL }}">🔗 {{ .label }}</a></li>{{ end }}</ul>
+  </section>
+  {{ end }}
+  <nav class="hs-pn"><a href="{{ "videos/" | relURL }}">← All videos</a><a href="{{ "education/" | relURL }}">Education →</a></nav>
+</div>
+{{ end }}

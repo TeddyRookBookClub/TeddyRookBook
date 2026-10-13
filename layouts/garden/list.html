@@ -2,7 +2,8 @@
 <link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
 <link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (os.Stat "static/garden/garden.css").ModTime.Unix }}">
 {{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}{{ $c := site.Data.garden.crops }}
-<div class="hs gd" id="gd">
+<div class="hs gd" id="gd" data-units>
+  <nav class="hs-crumbs"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Food Garden Planner</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Grow your own food</p>
     <h1>Food Garden Planner</h1>
@@ -10,6 +11,7 @@
   </header>
 
   <section class="hs-sec gd-form" id="gd-form">
+    <div class="gd-unitrow" data-units-ui></div>
     <h2><span class="pl-n">1</span> Your space</h2>
     <div class="gd-where" role="radiogroup" aria-label="Where will you grow?">
       <label><input type="radio" name="where" value="indoor"><span>🪴<b>Indoors</b><small>windowsill or grow lights</small></span></label>
@@ -18,11 +20,18 @@
       <label><input type="radio" name="where" value="farm"><span>🚜<b>Small farm</b><small>an acre or more</small></span></label>
     </div>
     <div class="gd-row">
-      <span class="gd-size" data-for="indoor balcony"><label>Growing space <input type="number" id="gd-sqft" min="1" max="2000" step="1"> sq ft</label></span>
-      <span class="gd-size" data-for="garden"><label>Beds <input type="number" id="gd-w" min="1" max="500" step="0.5"> ft wide ×</label> <label><input type="number" id="gd-l" min="1" max="2000" step="0.5"> ft long</label> <span class="hs-small" id="gd-area"></span></span>
-      <span class="gd-size" data-for="farm"><label>Land to plant <input type="number" id="gd-acres" min="0.25" max="200" step="0.25"> acres</label></span>
-      <label class="gd-zone">Climate <select id="gd-zone">{{ $cl := dict "3" "Very cold" "4" "Very cold" "5" "Cold winters" "6" "Cold winters" "7" "Cool winters" "8" "Mild winters" "9" "Warm winters, light frost" "10" "Warm winters, rare frost" "11" "Frost-free" }}{{ range $c.zones }}<option value="{{ .zone }}">{{ index $cl (string .zone) }} · Zone {{ .zone }}: lows {{ .min_F }} to {{ .max_F }}°F ({{ math.Round .min_C }} to {{ math.Round .max_C }}°C)</option>{{ end }}</select></label>
+      <span class="gd-size gd-plan-by" data-for="indoor balcony" role="radiogroup" aria-label="Plan by"><label class="gd-cb"><input type="radio" name="planby" value="area"> Total space</label> <label class="gd-cb"><input type="radio" name="planby" value="cont"> My containers</label></span>
+      <span class="gd-size" data-for="indoor balcony" data-by="area"><label>Growing space <input type="number" id="gd-sqft" min="0.1" max="2000" step="1"> <span class="gd-u" data-u="sqft">sq ft</span></label></span>
+      <span class="gd-size" data-for="garden"><label>Beds <input type="number" id="gd-w" min="0.3" max="500" step="0.5"> <span class="gd-u" data-u="ft">ft</span> wide ×</label> <label><input type="number" id="gd-l" min="0.3" max="2000" step="0.5"> <span class="gd-u" data-u="ft">ft</span> long</label> <span class="hs-small" id="gd-area"></span></span>
+      <span class="gd-size" data-for="farm"><label>Land to plant <input type="number" id="gd-acres" min="0.1" max="200" step="0.25"> <span class="gd-u" data-u="acre">acres</span></label></span>
+      <label class="gd-zone">Climate <select id="gd-zone">{{ $cl := dict "3" "Very cold" "4" "Very cold" "5" "Cold winters" "6" "Cold winters" "7" "Cool winters" "8" "Mild winters" "9" "Warm winters, light frost" "10" "Warm winters, rare frost" "11" "Frost-free" }}{{ range $c.zones }}<option value="{{ .zone }}" data-lab="{{ index $cl (string .zone) }} · Zone {{ .zone }}: lows" data-f="{{ .min_F }} to {{ .max_F }}°F" data-c="{{ math.Round .min_C }} to {{ math.Round .max_C }}°C">{{ index $cl (string .zone) }} · Zone {{ .zone }}: lows {{ .min_F }} to {{ .max_F }}°F ({{ math.Round .min_C }} to {{ math.Round .max_C }}°C)</option>{{ end }}</select></label>
       <a class="hs-small gd-zone" href="https://planthardiness.ars.usda.gov/" target="_blank" rel="noopener">Find your zone (USDA map) ↗</a> <span class="hs-small gd-zone">Zones measure winter cold only; summer heat and rain vary within a zone.</span>
+    </div>
+    <div class="gd-conts" id="gd-conts" data-for="indoor balcony" data-by="cont">
+      <p class="hs-small">Add the containers you have or plan to buy. Sizes are typical; nursery “gallon” pots often hold a little less than a full gallon.</p>
+      <div id="gd-clist"></div>
+      <button type="button" class="hs-btn ghost" id="gd-cadd">+ Add containers</button>
+      <p class="gd-csum" id="gd-csum"></p>
     </div>
     <h2><span class="pl-n">2</span> Your household</h2>
     <div class="gd-row">
@@ -63,7 +72,7 @@
   <section class="hs-sec" id="gd-guides">
     <h2>Your guides</h2>
     <p class="hs-small">{{ $g.meta.disclaimer }} Everything here comes from university extension services, USDA and CDC; each section lists its sources.</p>
-    <p class="hs-small" id="gd-gnote"></p>
+    <p class="hs-small"><span id="gd-gnote"></span> All the guides are also on one page: <a href="{{ "garden/guides/" | relURL }}">Growing Guides</a>.</p>
     <label class="gd-cb hs-small"><input type="checkbox" id="gd-allg"> Show every guide, not just the ones for your plan</label>
     <div data-show="crops">{{ range $g.sections }}{{ partial "garden-sec.html" . }}{{ end }}</div>
     <div data-show="hens broil"><h2 id="g-chickens">Backyard chickens</h2>

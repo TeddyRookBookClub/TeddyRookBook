@@ -5,7 +5,7 @@
 {{ $sec := index (where $d.sections "key" $g.group) 0 }}
 {{ $sib := where $d.guides "group" $g.group }}{{ $prev := "" }}{{ $next := "" }}{{ $found := false }}
 {{ range $sib }}{{ if $found }}{{ if not $next }}{{ $next = . }}{{ end }}{{ else if eq .key $g.key }}{{ $found = true }}{{ else }}{{ $prev = . }}{{ end }}{{ end }}
-<div class="hs os sw" id="os-skill" data-skill="{{ $g.key }}">
+<div class="hs os sw" id="os-skill" data-skill="{{ $g.key }}" data-units>
   <nav class="hs-crumbs"><a href="{{ "sewing/" | relURL }}">Sewing &amp; Knitting</a> › <a href="{{ printf "sewing/#%s" $g.group | relURL }}">{{ $sec.name }}</a> › {{ $g.name }}</nav>
   <header class="hs-hero os-hero">
     <span class="os-icon big" aria-hidden="true">{{ $g.icon }}</span>

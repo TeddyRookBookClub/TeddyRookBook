@@ -1,0 +1,10 @@
+{{/* One page per video, from data/videos.yaml */}}
+{{ range $id, $v := site.Data.videos }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" $v.slug
+    "title" $v.title
+    "params" (dict "vid" $id "description" $v.about)
+    "dates" (dict "date" (time.AsTime $v.date))
+  ) }}
+{{ end }}

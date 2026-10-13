@@ -13,24 +13,115 @@
   function lc(n) { return n.replace(/ \(.*\)$/, '').toLowerCase(); }
   var KEY = 'trb-garden-v1';
   var st = { where: 'garden', sqft: 20, w: 5, l: 10, acres: 1, zone: 6, people: 2, goal: 'balanced', peren: true, trees: false, lights: false, mode: 'suggest',
-    must: ['potatoes', 'sweet_potatoes', 'carrots', 'strawberries'], hens: false, epw: 12, nhens: '', broil: false, nbroil: 25, bees: false, nhives: 2, allg: false };
+    must: ['potatoes', 'sweet_potatoes', 'carrots', 'strawberries'], hens: false, epw: 12, nhens: '', broil: false, nbroil: 25, bees: false, nhives: 2, allg: false, planby: 'area', conts: [{ p: 'bucket5', q: 2 }, { p: 'box24', q: 2 }, { p: 'pot2', q: 2 }] };
   try { var sv = JSON.parse(W.localStorage.getItem(KEY) || 'null'); if (sv) for (var k in sv) st[k] = sv[k]; } catch (e) { }
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
   var yard = function () { return st.where === 'garden' || st.where === 'farm'; };
 
   // ---------- form ----------
   function radios(name, key) { D.querySelectorAll('input[name=' + name + ']').forEach(function (r) { r.checked = r.value === st[key]; r.addEventListener('change', function () { st[key] = r.value; sync(); }); }); }
-  radios('where', 'where'); radios('mode', 'mode');
+  radios('where', 'where'); radios('mode', 'mode'); radios('planby', 'planby');
+  // ---------- units (US, metric or both; inputs switch to metric only in metric mode) ----------
+  function UN() { return W.TRBUnits ? W.TRBUnits.mode() : 'both'; }
+  function MET() { return UN() === 'metric'; }
+  var CF = { sqft: 0.092903, w: 0.3048, l: 0.3048, acres: 0.404686 }, ULAB = { sqft: ['sq ft', 'm²'], ft: ['ft', 'm'], acre: ['acres', 'ha'] };
+  function r2(v) { return Math.round(v * 100) / 100; }
+  function showInputs() {
+    Object.keys(CF).forEach(function (k) { var el = $({ sqft: 'gd-sqft', w: 'gd-w', l: 'gd-l', acres: 'gd-acres' }[k]); if (D.activeElement !== el) el.value = st[k] === '' ? '' : r2(MET() ? st[k] * CF[k] : st[k]); el.step = MET() ? (k === 'acres' ? 0.1 : k === 'sqft' ? 0.1 : 0.1) : (k === 'acres' ? 0.25 : k === 'sqft' ? 1 : 0.5); });
+    D.querySelectorAll('.gd-u').forEach(function (u) { u.textContent = ULAB[u.dataset.u][MET() ? 1 : 0]; });
+    D.querySelectorAll('#gd-zone option').forEach(function (o) { var m = UN(); o.textContent = o.dataset.lab + ' ' + (m === 'metric' ? o.dataset.c : m === 'us' ? o.dataset.f : o.dataset.f + ' (' + o.dataset.c + ')'); });
+  }
+  D.addEventListener('trb-units', function () { showInputs(); conts(); sync(); });
   var NUM = { 'gd-sqft': 'sqft', 'gd-w': 'w', 'gd-l': 'l', 'gd-acres': 'acres', 'gd-zone': 'zone', 'gd-people': 'people', 'an-epw': 'epw', 'an-hens': 'nhens', 'an-broil': 'nbroil', 'an-hives': 'nhives' };
   Object.keys(NUM).forEach(function (id) {
     var el = $(id), key = NUM[id]; el.value = st[key];
-    function upd() { st[key] = el.value === '' ? '' : +el.value; if (id === 'an-epw') { st.nhens = ''; $('an-hens').value = ''; } if (id === 'an-hens' && el.value !== '') { st.epw = ''; $('an-epw').value = ''; } sync(); }
+    function upd() { st[key] = el.value === '' ? '' : (CF[key] && MET() ? +el.value / CF[key] : +el.value); if (id === 'an-epw') { st.nhens = ''; $('an-hens').value = ''; } if (id === 'an-hens' && el.value !== '') { st.epw = ''; $('an-epw').value = ''; } sync(); }
     el.addEventListener('input', upd); if (el.tagName === 'SELECT') el.addEventListener('change', upd);
   });
   $('gd-goal').value = st.goal; $('gd-goal').addEventListener('change', function () { st.goal = this.value; sync(); });
   [['gd-peren', 'peren'], ['gd-trees', 'trees'], ['gd-lights', 'lights'], ['an-on-hens', 'hens'], ['an-on-broil', 'broil'], ['an-on-bees', 'bees'], ['gd-allg', 'allg']].forEach(function (p) {
     var el = $(p[0]); el.checked = !!st[p[1]]; el.addEventListener('change', function () { st[p[1]] = el.checked; sync(); });
   });
+
+  // ---------- containers (balcony and indoors) ----------
+  // Typical sizes; nursery "gallon" pots are trade sizes and often hold a little less. Dimensions in inches.
+  var PRE = [
+    { id: 'pot1', n: '1-gallon pot', gal: 1, sh: 'round', d: 6.5, h: 7 }, { id: 'pot2', n: '2-gallon pot', gal: 2, sh: 'round', d: 8.5, h: 8.5 },
+    { id: 'pot3', n: '3-gallon pot', gal: 3, sh: 'round', d: 10, h: 9.5 }, { id: 'bucket5', n: '5-gallon bucket', gal: 5, sh: 'round', d: 12, h: 14 },
+    { id: 'bag7', n: '7-gallon grow bag', gal: 7, sh: 'round', d: 14, h: 11 }, { id: 'bag10', n: '10-gallon grow bag', gal: 10, sh: 'round', d: 16, h: 12 },
+    { id: 'bag15', n: '15-gallon grow bag', gal: 15, sh: 'round', d: 18, h: 14 }, { id: 'bag20', n: '20-gallon grow bag', gal: 20, sh: 'round', d: 21, h: 14 },
+    { id: 'bag25', n: '25-gallon grow bag', gal: 25, sh: 'round', d: 24, h: 13 },
+    { id: 'box24', n: '24-inch window box', gal: 6.5, sh: 'rect', l: 24, w: 8, h: 8 }, { id: 'box36', n: '36-inch window box', gal: 10, sh: 'rect', l: 36, w: 8, h: 8 },
+    { id: 'plant24', n: '24 x 12-inch rectangular planter', gal: 15, sh: 'rect', l: 24, w: 12, h: 12 },
+    { id: 'tote18', n: '18-gallon storage tote', gal: 18, sh: 'rect', l: 23, w: 15, h: 12 },
+    { id: 'barrel', n: 'Half barrel', gal: 39, sh: 'round', d: 26, h: 17 },
+    { id: 'custom', n: 'Your own size…' }
+  ], PBY = {}; PRE.forEach(function (x) { PBY[x.id] = x; });
+  function cdims(c) { // resolves a container row to {n, gal, a (sq ft of soil), h (in)}
+    var x = c.p === 'custom' ? c : PBY[c.p]; if (!x) return null;
+    var top = x.sh === 'rect' ? (x.l || 0) * (x.w || 0) : Math.PI * Math.pow((x.d || 0) / 2, 2);
+    var gal = c.p === 'custom' ? top * (x.h || 0) / 231 : x.gal;
+    var nm = c.p === 'custom' ? (x.sh === 'rect' ? fx(x.l) + ' x ' + fx(x.w) + ' x ' + fx(x.h) + ' in container' : fx(x.d) + ' in round container, ' + fx(x.h) + ' in deep') : x.n;
+    return { n: nm, gal: gal, a: top / 144, h: x.h || 0 };
+  }
+  function fx(v) { return Math.round((+v || 0) * 10) / 10; }
+  function ins(v) { return MET() ? fx(v * 2.54) : fx(v); } // show inches (or cm) in inputs
+  function conts() {
+    var unit = MET() ? 'cm' : 'in', h = '';
+    st.conts.forEach(function (c, i) {
+      var x = PBY[c.p] || {}, desc = c.p === 'custom' ? '' : (x.sh === 'round' ? 'about ' + x.d + ' in across, ' + x.h + ' in deep' : 'about ' + x.l + ' x ' + x.w + ' in, ' + x.h + ' in deep');
+      h += '<div class="gd-crow" data-i="' + i + '"><label class="gd-cq"><input type="number" min="0" max="500" value="' + (c.q || 0) + '" data-f="q" aria-label="How many"> ×</label>' +
+        '<select data-f="p" aria-label="Container">' + PRE.map(function (o) { return '<option value="' + o.id + '"' + (o.id === c.p ? ' selected' : '') + '>' + esc(o.id === 'custom' ? o.n : (W.TRBUnits ? W.TRBUnits.convert(o.n, UN()) : o.n)) + '</option>'; }).join('') + '</select>' +
+        (c.p === 'custom' ? '<span class="gd-cust"><select data-f="sh" aria-label="Shape"><option value="round"' + (c.sh !== 'rect' ? ' selected' : '') + '>Round</option><option value="rect"' + (c.sh === 'rect' ? ' selected' : '') + '>Square or rectangle</option></select>' +
+          (c.sh === 'rect' ? '<label><input type="number" min="1" step="0.5" data-f="l" value="' + ins(c.l || 24) + '"> × </label><label><input type="number" min="1" step="0.5" data-f="w" value="' + ins(c.w || 12) + '"> ' + unit + '</label>' : '<label><input type="number" min="1" step="0.5" data-f="d" value="' + ins(c.d || 12) + '"> ' + unit + ' across</label>') +
+          '<label><input type="number" min="1" step="0.5" data-f="h" value="' + ins(c.h || 10) + '"> ' + unit + ' deep</label></span>' : '<small class="gd-cdesc">' + desc + '</small>') +
+        '<button type="button" class="gd-crm" data-f="rm" aria-label="Remove">✕</button></div>';
+    });
+    $('gd-clist').innerHTML = h;
+    csum();
+  }
+  function csum() {
+    var n = 0, a = 0, g = 0; st.conts.forEach(function (c) { var d = cdims(c); if (!d) return; n += +c.q || 0; a += (+c.q || 0) * d.a; g += (+c.q || 0) * d.gal; });
+    $('gd-csum').textContent = n ? n + ' container' + (n > 1 ? 's' : '') + ' · about ' + (a < 10 ? fx(a) : Math.round(a)) + ' sq ft of soil surface · about ' + Math.round(g) + ' gallons of potting mix' : 'No containers yet.';
+  }
+  $('gd-clist').addEventListener('input', function (e) {
+    var el = e.target, row = el.closest('.gd-crow'); if (!row) return;
+    var c = st.conts[+row.dataset.i], f = el.dataset.f;
+    if (f === 'q') c.q = +el.value || 0;
+    else if (f === 'p' || f === 'sh') { c[f] = el.value; if (f === 'p' && el.value === 'custom' && !c.sh) { c.sh = 'round'; c.d = 12; c.h = 10; } conts(); }
+    else if (f) c[f] = MET() ? (+el.value || 0) / 2.54 : +el.value || 0;
+    csum(); save(); render();
+  });
+  $('gd-clist').addEventListener('change', function (e) { if (e.target.tagName === 'SELECT') e.target.dispatchEvent(new Event('input', { bubbles: true })); });
+  $('gd-clist').addEventListener('click', function (e) { var b = e.target.closest('[data-f=rm]'); if (!b) return; st.conts.splice(+b.closest('.gd-crow').dataset.i, 1); conts(); save(); render(); });
+  $('gd-cadd').addEventListener('click', function () { st.conts.push({ p: 'bucket5', q: 1 }); conts(); save(); render(); });
+  var byCont = function () { return (st.where === 'indoor' || st.where === 'balcony') && st.planby === 'cont'; };
+  function units() { // every container as its own unit, biggest first
+    var u = []; st.conts.forEach(function (c) { var d = cdims(c); if (!d || !(d.a > 0)) return; for (var i = 0; i < Math.min(+c.q || 0, 500); i++) u.push({ n: d.n, gal: d.gal, a: d.a, h: d.h }); });
+    return u.sort(function (a, b) { return b.gal - a.gal; });
+  }
+  // match containers to the planned crops: crops needing the biggest containers choose first, taking the smallest that fit
+  function assign(picks) {
+    var free = units(), out = { none: [], spare: [] };
+    picks.slice().sort(function (a, b) { return (b.c.cg || 0) - (a.c.cg || 0); }).forEach(function (p) {
+      var need = p.a, got = [], gmin = p.c.cg || 0, dmin = p.c.cdep || 0;
+      var fit = free.filter(function (x) { return x.gal >= gmin - 0.01 && (!dmin || !x.h || x.h >= dmin); }).sort(function (a, b) { return a.gal - b.gal; });
+      var have = 0;
+      while (fit.length && (have < need * 0.85 || !got.length)) { var x = fit.shift(); got.push(x); have += x.a; free.splice(free.indexOf(x), 1); }
+      p.cont = got; p.a = have;
+      if (!got.length) { p.drop = true; var big = Math.max.apply(null, units().map(function (x) { return x.gal; }).concat([0])); out.none.push({ c: p.c, why: big < gmin ? 'needs at least a ' + gmin + '-gallon container' + (dmin ? ' ' + dmin + ' in deep' : '') : 'no containers left' }); }
+    });
+    out.spare = free;
+    return out;
+  }
+  function calc(p) {
+    var c = p.c;
+    p.lb = c.y != null ? c.y * p.a / 100 : null;
+    p.lbr = c.yr && c.y != null ? [c.yr[0] * p.a / 100, c.yr[1] * p.a / 100] : null;
+    p.kcal = c.kc != null ? c.kc * p.a / 100 : null;
+    p.plants = p.cont && p.cont.length && c.cper ? p.cont.length * c.cper : c.sq ? Math.max(1, Math.round(p.a / c.sq)) : null;
+  }
+  function tally(list) { var m = {}, o = []; list.forEach(function (x) { if (!m[x.n]) { m[x.n] = 0; o.push(x.n); } m[x.n]++; }); return o.map(function (n) { return n + (m[n] > 1 ? ' × ' + m[n] : ''); }); }
 
   // ---------- how well each crop suits the space ----------
   // ok: recommended here; iffy: possible, with a note; no: not for this space (hidden unless already picked)
@@ -72,7 +163,7 @@
       if (s.s === 'no' && !on) { hidden++; return; }
       if (s.s === 'iffy') iffy++;
       h += '<button type="button" class="gd-chip' + (i >= POPULAR.length && !on ? ' more' : '') + (s.s !== 'ok' ? ' ' + s.s : '') + '" data-k="' + k + '" aria-pressed="' + on + '"' +
-        (s.why ? ' title="' + esc(s.why) + '"' : '') + '>' + esc(c.n) + (s.s === 'iffy' ? ' <i>⚠</i>' : s.s === 'no' ? ' <i>✕</i>' : '') + (s.s !== 'ok' ? '<small>' + esc(s.why) + '</small>' : '') + '</button>';
+        (s.why ? ' title="' + esc(s.why) + '"' : '') + '>' + esc(c.n) + (s.s === 'iffy' ? ' <i>⚠</i>' : s.s === 'no' ? ' <i>✕</i>' : '') + (s.s !== 'ok' ? '<small>' + esc(short(s.why)) + '</small>' : '') + '</button>';
     });
     $('gd-must').innerHTML = h + '<button type="button" class="gd-chip gd-showmore" id="gd-more">' + (showAll ? '− fewer' : '+ more crops') + '</button>';
     $('gd-must').classList.toggle('all', showAll);
@@ -80,6 +171,7 @@
     $('gd-chipnote').innerHTML = (st.mode === 'only' ? 'Tap each crop you want; the plan uses only these. ' : 'Tapped crops are always included; the rest are suggested. ') +
       (iffy ? '⚠ means possible but not ideal ' + where + '. ' : '') + (hidden ? hidden + ' crop' + (hidden > 1 ? 's that don’t' : ' that doesn’t') + ' suit growing ' + where + (hidden > 1 ? ' are' : ' is') + ' hidden.' : '');
   }
+  function short(w) { return /grow lights/.test(w) ? 'needs grow lights' : /container guidance/.test(w) ? 'no pot size in sources' : /short season/.test(w) ? 'short season' : /too big/.test(w) ? 'too big for pots' : /indoors/.test(w) && /not suited/.test(w) ? 'not for indoors' : w; }
   $('gd-must').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
     if (b.id === 'gd-more') { showAll = !showAll; chips(); return; }
@@ -100,7 +192,8 @@
   function area() {
     if (st.where === 'farm') return Math.max(0.25, st.acres || 1) * 43560;
     if (st.where === 'garden') return Math.max(1, (st.w || 1) * (st.l || 1));
-    return Math.max(1, st.sqft || 1);
+    if (byCont()) return Math.max(0.1, units().reduce(function (s, x) { return s + x.a; }, 0));
+    return Math.max(0.1, st.sqft || 1);
   }
   function ycal(c) { return c.kc != null ? c.kc / 100 : 0; } // kcal per sq ft
   function nut(c) { return (c.nut.length + (c.fib >= 3 ? 0.5 : 0) + (c.pro >= 5 ? 0.5 : 0)) * (c.y || 0) / 100; }
@@ -128,14 +221,7 @@
       stp.forEach(function (p) { var room = Math.max(0, (need - have) / stp.length) / (p.c.kc / 100), add = Math.min(room, freed / stp.length); p.a += add; freed -= add; });
       spare = freed;
     }
-    picks.forEach(function (p) {
-      var c = p.c;
-      p.lb = c.y != null ? c.y * p.a / 100 : null;
-      p.lbr = c.yr && c.y != null ? [c.yr[0] * p.a / 100, c.yr[1] * p.a / 100] : null;
-      p.kcal = c.kc != null ? c.kc * p.a / 100 : null;
-      p.plants = c.sq ? Math.max(1, Math.round(p.a / c.sq)) : null;
-      p.st = status(c); p.notes = notes(c);
-    });
+    picks.forEach(function (p) { calc(p); p.st = status(p.c); p.notes = notes(p.c); });
     return spare > 1 ? spare : 0;
   }
 
@@ -187,6 +273,11 @@
     // fit as many as the space allows, most useful first (by your goal); the rest are listed as not fitting
     cand.sort(function (a, b) { return b._s - a._s; });
     var left = planted, picks = [], noRoom = [];
+    if (byCont()) {
+      var tw0 = cand.reduce(function (s, c) { return s + (c._s || 0) + 0.1; }, 0);
+      cand.forEach(function (c) { picks.push({ c: c, a: planted * ((c._s || 0) + 0.1) / tw0 }); });
+      return { picks: picks, spare: finish(picks), need: 0, noRoom: [], ideas: [], cand: cand, cont: true };
+    }
     cand.forEach(function (c) { var m = minA(c); if (m <= left) { picks.push({ c: c, a: m, trees: c.t === 'tree' ? 1 : 0 }); left -= m; } else noRoom.push(c); });
     var need = cand.reduce(function (s, c) { return s + minA(c); }, 0);
     // share out the room that's left, by goal score, up to what the household can use
@@ -331,6 +422,8 @@
   function render() {
     var A = area(), w = st.where, people = +st.people || 1, planted = w === 'farm' ? A * 0.8 : A;
     var P = st.mode === 'only' ? planOnly(A, planted) : planSuggest(A, planted);
+    var CA = null;
+    if (byCont()) { CA = assign(P.picks); P.picks = P.picks.filter(function (p) { return !p.drop; }); P.picks.forEach(calc); }
     var picks = P.picks.sort(function (a, b) { return b.a - a.a; });
     var mustOut = st.must.map(function (k) { return BY[k]; }).filter(function (c) { return c && status(c).s === 'no'; });
     var o = animalPlan(), h = '<h2><span class="pl-n">5</span> Your plan</h2>';
@@ -339,13 +432,15 @@
     var days = kcal / (people * 2000);
     if (picks.length || o.sum.length) {
       h += '<div class="gd-sum">' +
-        '<div><b>' + space(A) + '</b><span>' + (w === 'farm' ? 'about 80% planted, the rest paths and access' : 'growing space') + '</span></div>' +
+        '<div><b>' + space(A) + '</b><span>' + (w === 'farm' ? 'about 80% planted, the rest paths and access' : byCont() ? 'of soil in ' + units().length + ' container' + (units().length === 1 ? '' : 's') : 'growing space') + '</span></div>' +
         (picks.length ? '<div><b>' + picks.length + '</b><span>crop' + (picks.length > 1 ? 's' : '') + '</span></div>' : '') +
         (lb ? '<div><b>' + lbs(lb) + ' lb</b><span>rough harvest a season</span></div>' : '') +
         (anyK ? '<div><b>' + n0(kcal) + '</b><span>calories, ' + (days >= 1 ? 'about ' + n0(days) + ' day' + (days >= 1.5 ? 's' : '') : 'less than a day') + ' of food energy for ' + people + ' ' + (people > 1 ? 'people' : 'person') + ' at 2,000 a day</span></div>' : '') +
         o.sum.join('') + '</div>';
     }
-    if (st.mode === 'only' && P.cand.length) {
+    if (st.mode === 'only' && P.cand.length && P.cont) {
+      if (CA && !CA.none.length && picks.length) h += '<p class="gd-note gd-ok">✓ <b>Every crop has a container.</b> The containers are matched to what each crop needs, using the extension sizes noted under each crop.</p>';
+    } else if (st.mode === 'only' && P.cand.length) {
       if (!P.noRoom.length) h += '<p class="gd-note gd-ok">✓ <b>These fit.</b> They need at least about ' + space(P.need) + ' and you have ' + space(planted) + (P.spare >= 1 ? ', which leaves about <b>' + space(P.spare) + '</b> beyond what ' + people + ' ' + (people > 1 ? 'people' : 'person') + ' would likely eat of them' : '') + '.' +
         (P.spare >= 1 && P.ideas.length ? ' Ideas to fill it: ' + esc(list(P.ideas.map(function (c) { return lc(c.n); }))) + '.' : '') + '</p>';
       else h += '<p class="gd-note gd-bad"><b>Not everything fits.</b> All ' + P.cand.length + ' need at least about ' + space(P.need) + ', and you have ' + space(planted) + '. The plan below fits the ones that give the most for your aim; there’s no room left for ' +
@@ -357,13 +452,18 @@
     if (w === 'indoor' && picks.length) h += '<p class="gd-note">Indoors, plants give you fresh greens, herbs and flavor more than calories. ' + (st.lights ? 'With grow lights you can try fruiting crops too.' : 'With grow lights (tick the box above) you can try a few fruiting crops.') + '</p>';
     else if (anyK && days < 30 && st.mode !== 'only') h += '<p class="gd-note">Most home gardens supply vitamins, minerals, fiber and freshness more than total calories. Potatoes, sweet potatoes, winter squash, dry beans and corn give the most food energy for the space.</p>';
     if (st.mode !== 'only' && P.spare) h += '<p class="gd-note">That leaves about <b>' + space(P.spare) + '</b> beyond what ' + people + ' ' + (people > 1 ? 'people' : 'person') + ' would eat of these crops: room for a cover crop, ' + (o.hens ? 'more run for the hens, ' : '') + 'more to store, share or sell, or simply less to weed.</p>';
+    if (CA) {
+      if (!units().length) h += '<p class="gd-note gd-bad">Add your containers above to plan what goes in each.</p>';
+      if (CA.none.length) h += '<p class="gd-note gd-bad">No container for ' + esc(CA.none.map(function (x) { return lc(x.c.n) + ' (' + x.why + ')'; }).join('; ')) + '.</p>';
+      if (CA.spare.length) h += '<p class="gd-note">Not used yet: ' + esc(list(tally(CA.spare))) + '. Add another crop, or plant more of one you like.</p>';
+    }
     if (mustOut.length) h += '<p class="gd-note">Not in the plan: ' + esc(mustOut.map(function (c) { return c.n + ' (' + status(c).why + ')'; }).join('; ')) + '.</p>';
     if (picks.length) {
       h += '<div class="gd-tablewrap"><table class="hs-table gd-plan"><thead><tr><th>Crop</th><th>Space</th><th>Plants</th><th>Rough harvest</th><th>Calories</th><th>Rich in</th><th>Plant</th><th>Ready in</th></tr></thead><tbody>';
       picks.forEach(function (p) {
         var c = p.c, nt = p.notes.slice(); if (p.st.why) nt.unshift(p.st.why);
-        h += '<tr><td><b>' + esc(c.n) + '</b>' + (st.mode !== 'only' && st.must.indexOf(c.k) >= 0 ? ' <span class="gd-tag">your pick</span>' : '') + (nt.length ? '<small class="gd-warn">' + esc(nt.join('; ')) + '</small>' : '') + '</td>' +
-          '<td data-l="Space">' + space(p.a) + '</td>' +
+        h += '<tr><td><b>' + esc(c.n) + '</b>' + (st.mode !== 'only' && st.must.indexOf(c.k) >= 0 ? ' <span class="gd-tag">your pick</span>' : '') + (nt.length ? '<small class="gd-warn">' + esc(nt.join('; ')) + '</small>' : '') + ((w === 'balcony' || w === 'indoor') && c.cg ? '<small>Container: at least ' + c.cg + ' gallons' + (c.cdep ? ', ' + c.cdep + ' inches deep' : '') + (c.cper ? ', ' + c.cper + ' plant each' : '') + '</small>' : '') + '</td>' +
+          '<td data-l="Space">' + (p.cont && p.cont.length ? esc(tally(p.cont).join(', ')) + '<small>' + space(p.a) + ' of soil</small>' : space(p.a)) + '</td>' +
           '<td data-l="Plants">' + (p.trees ? p.trees + ' tree' + (p.trees > 1 ? 's' : '') : p.plants ? '≈ ' + n0(p.plants) : '—') + '</td>' +
           '<td data-l="Rough harvest">' + (p.lb != null ? (p.lbr && lbs(p.lbr[0]) !== lbs(p.lbr[1]) ? lbs(p.lbr[0]) + '–' + lbs(p.lbr[1]) : lbs(p.lb)) + ' lb' + (p.trees ? ' a year once mature' : '') : '—') + '</td>' +
           '<td data-l="Calories">' + (p.kcal != null ? n0(p.kcal) : '—') + '</td>' +
@@ -425,9 +525,10 @@
     D.querySelectorAll('#gd-form [data-for]').forEach(function (el) { el.hidden = el.dataset.for.split(' ').indexOf(st.where) < 0; });
     D.querySelectorAll('.gd-zone').forEach(function (el) { el.hidden = st.where === 'indoor'; });
     $('gd-area').textContent = st.where === 'garden' ? '= ' + n0(area()) + ' sq ft' : '';
+    D.querySelectorAll('#gd-form [data-by]').forEach(function (el) { if (!el.hidden) el.hidden = el.dataset.by !== st.planby; });
     $('gd-an').hidden = !yard(); $('gd-an-none').hidden = yard();
     D.querySelectorAll('.gd-ain').forEach(function (el) { el.hidden = !st[el.dataset.an]; });
     chips(); save(); render();
   }
-  sync(); refTable('');
+  showInputs(); conts(); sync(); refTable('');
 })(window, document);

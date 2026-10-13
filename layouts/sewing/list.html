@@ -2,7 +2,8 @@
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "sewing/sewing.css" | relURL }}?v={{ (os.Stat "static/sewing/sewing.css").ModTime.Unix }}">
 {{ $d := site.Data.sewing }}
-<div class="hs os sw" id="sw-hub">
+<div class="hs os sw" id="sw-hub" data-units>
+  <nav class="hs-crumbs"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Sewing &amp; Knitting</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Make and mend</p>
     <h1>{{ $d.meta.title }}</h1>

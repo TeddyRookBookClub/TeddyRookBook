@@ -1,3 +1,4 @@
+<script src="{{ "js/units.js" | relURL }}?v={{ (os.Stat "static/js/units.js").ModTime.Unix }}" defer></script>
 <script>
 /* "Expand all" for any group of two or more collapsible sections (<details>) on a page. */
 (function (D) {
@@ -59,7 +60,14 @@
 .xa-btn:hover{background:rgba(0,66,37,.07)}
 [data-theme="dark"] .xa-btn{border-color:#3c5a49;color:#6cc79a}
 [data-theme="dark"] .xa-btn:hover{background:rgba(108,199,154,.1)}
-@media print{.xa-bar{display:none}}
+@media print{.xa-bar,.un-pick{display:none}}
+.un-pick{display:inline-flex;align-items:center;gap:.25rem;font-size:.82rem;flex-wrap:wrap}
+.un-pick span{font-weight:600;opacity:.8;margin-right:.2rem}
+.un-pick button{font:inherit;font-weight:600;padding:.2rem .7rem;border-radius:999px;border:1.5px solid #9dbba9;background:transparent;color:#004225;cursor:pointer}
+.un-pick button[aria-pressed="true"]{background:#004225;border-color:#004225;color:#fff}
+[data-theme="dark"] .un-pick button{border-color:#3c5a49;color:#6cc79a}
+[data-theme="dark"] .un-pick button[aria-pressed="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.un-pick.un-float{display:flex;justify-content:flex-end;margin:.2rem 0 .5rem}
 </style>
 <script>
 /* Click-to-play videos: swap the picture for the player only when pressed. */
