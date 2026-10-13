@@ -1,4 +1,67 @@
 <script>
+/* "Expand all" for any group of two or more collapsible sections (<details>) on a page. */
+(function (D) {
+  function skip(d) { return d.closest('header, nav, .header, [data-noexpand]') || d.classList.contains('pl-more'); }
+  function isD(n) { return n && n.nodeType === 1 && n.tagName === 'DETAILS'; }
+  function nextEl(n) { n = n.nextSibling; while (n && n.nodeType !== 1) n = n.nextSibling; return n; }
+  function bar(list, before, parent) {
+    var answers = list.every(function (d) { return d.classList.contains('hs-ans'); });
+    var w = D.createElement('div'); w.className = 'xa-bar';
+    var b = D.createElement('button'); b.type = 'button'; b.className = 'xa-btn'; w.appendChild(b);
+    function vis() { return list.filter(function (d) { return d.getClientRects().length > 0; }); }
+    function upd() {
+      var v = vis(), open = v.length && v.every(function (d) { return d.open; });
+      b.textContent = open ? (answers ? '▴ Hide all answers' : '▴ Collapse all') : (answers ? '▾ Show all answers' : '▾ Expand all');
+      b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      w.hidden = v.length < 2;
+    }
+    b.addEventListener('click', function () { var v = vis(), open = v.every(function (d) { return d.open; }); v.forEach(function (d) { d.open = !open; }); upd(); });
+    list.forEach(function (d) { d.addEventListener('toggle', upd); });
+    parent.insertBefore(w, before);
+    upd(); ups.push(upd);
+  }
+  var ups = [], tm;
+  function again() { clearTimeout(tm); tm = setTimeout(function () { ups.forEach(function (f) { f(); }); }, 120); }
+  D.addEventListener('change', again); D.addEventListener('input', again); D.addEventListener('click', again);
+  function run() {
+    var all = [].slice.call(D.querySelectorAll('main details, #main details, .main details')).filter(function (d) { return !skip(d); });
+    var done = new Set();
+    // 1) runs of sibling sections
+    all.forEach(function (d) {
+      if (done.has(d)) return;
+      var p = d.previousElementSibling; if (isD(p) && !skip(p)) return; // not the start of a run
+      var runL = [d], n = nextEl(d);
+      while (isD(n) && !skip(n)) { runL.push(n); n = nextEl(n); }
+      if (runL.length >= 2) { runL.forEach(function (x) { done.add(x); }); bar(runL, d, d.parentNode); }
+    });
+    // 2) other sections that share a section, e.g. answer notes spread through a list
+    var groups = new Map();
+    all.forEach(function (d) {
+      if (done.has(d) || d.parentNode.closest('details')) return;
+      var c = d.parentNode.closest('section, article, .hs-sec') || d.closest('main, #main, .main');
+      if (!c) return;
+      if (!groups.has(c)) groups.set(c, []);
+      groups.get(c).push(d);
+    });
+    groups.forEach(function (list, c) {
+      if (list.length < 2) return;
+      var h = c.querySelector(':scope > h1, :scope > h2, :scope > h3');
+      bar(list, h ? h.nextSibling : c.firstChild, c);
+    });
+  }
+  if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', run); else run();
+})(document);
+</script>
+<style>
+.xa-bar{display:flex;justify-content:flex-end;margin:.25rem 0 .4rem}
+.xa-bar[hidden]{display:none}
+.xa-btn{font:inherit;font-size:.85rem;font-weight:600;padding:.25rem .8rem;border-radius:999px;border:1.5px solid #9dbba9;background:transparent;color:#004225;cursor:pointer}
+.xa-btn:hover{background:rgba(0,66,37,.07)}
+[data-theme="dark"] .xa-btn{border-color:#3c5a49;color:#6cc79a}
+[data-theme="dark"] .xa-btn:hover{background:rgba(108,199,154,.1)}
+@media print{.xa-bar{display:none}}
+</style>
+<script>
 /* Click-to-play videos: swap the picture for the player only when pressed. */
 document.addEventListener('click', function (e) {
   var b = e.target.closest && e.target.closest('.trb-video-play'); if (!b) return;
