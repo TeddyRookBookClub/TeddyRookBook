@@ -1,0 +1,43 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "sewing/sewing.css" | relURL }}?v={{ (os.Stat "static/sewing/sewing.css").ModTime.Unix }}">
+{{ $d := site.Data.sewing }}{{ $g := index (where $d.guides "key" .Params.guide) 0 }}
+{{ $sec := index (where $d.sections "key" $g.group) 0 }}
+{{ $sib := where $d.guides "group" $g.group }}{{ $prev := "" }}{{ $next := "" }}{{ $found := false }}
+{{ range $sib }}{{ if $found }}{{ if not $next }}{{ $next = . }}{{ end }}{{ else if eq .key $g.key }}{{ $found = true }}{{ else }}{{ $prev = . }}{{ end }}{{ end }}
+<div class="hs os sw" id="os-skill" data-skill="{{ $g.key }}">
+  <nav class="hs-crumbs"><a href="{{ "sewing/" | relURL }}">Sewing &amp; Knitting</a> › <a href="{{ printf "sewing/#%s" $g.group | relURL }}">{{ $sec.name }}</a> › {{ $g.name }}</nav>
+  <header class="hs-hero os-hero">
+    <span class="os-icon big" aria-hidden="true">{{ $g.icon }}</span>
+    <div>
+      <p class="hs-eyebrow">{{ $sec.name }} · {{ $g.level | strings.FirstUpper }} · {{ $g.time }}</p>
+      <h1>{{ $g.name }}</h1>
+      <p>{{ $g.intro }}</p>
+    </div>
+  </header>
+  <div class="sw-top">
+    {{ with $g.diagram }}<section class="hs-sec sw-diag">{{ if eq . "fabrics" }}{{ partial "sew-diagram.html" "fabrics" }}{{ else }}{{ partial "sew-diagram.html" . }}{{ end }}</section>{{ end }}
+    {{ with $g.need }}<section class="hs-sec sw-need"><h2>You'll need</h2><ul>{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+  </div>
+  {{ if eq $g.key "machine-basics" }}<section class="hs-sec"><details class="sw-parts"><summary>Parts of a sewing machine</summary>{{ partial "sew-diagram.html" "machine" }}{{ range $d.tools }}{{ range .items }}{{ with .parts }}<ol>{{ range . }}<li><b>{{ .name }}:</b> {{ .what }}</li>{{ end }}</ol>{{ end }}{{ end }}{{ end }}</details></section>{{ end }}
+  <section class="hs-sec">
+    <h2>Step by step</h2>
+    <p class="hs-small">Tick each step as you go if you like; ticks stay on this device.</p>
+    <ol class="os-steps">
+      {{ range $i, $s := $g.steps }}<li><label><input type="checkbox" data-i="{{ $i }}"><span><b>{{ $s.t }}</b>{{ $s.how }}</span></label></li>{{ end }}
+    </ol>
+  </section>
+  {{ with $g.tips }}<section class="hs-sec"><h2>Tips</h2><ul class="sw-list">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+  {{ with $g.mistakes }}<section class="hs-sec"><h2>If something goes wrong</h2><div class="os-table-wrap"><table class="hs-table"><thead><tr><th>Problem</th><th>Fix</th></tr></thead><tbody>{{ range . }}<tr><td>{{ .problem }}</td><td>{{ .fix }}</td></tr>{{ end }}</tbody></table></div></section>{{ end }}
+  {{ with $g.safety }}<section class="hs-sec"><h2>Safe habits</h2><ul class="sw-list">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
+  {{ with $g.learn }}<section class="hs-sec"><h2>See it in the old books</h2><p class="hs-small">Pictures and lessons from sewing and knitting books published more than a hundred years ago, free at the Internet Archive.</p>
+    <ul class="os-learn">{{ range . }}<li><a href="https://archive.org/details/{{ .id }}/page/n{{ .leaf }}/mode/1up" target="_blank" rel="noopener">📖 {{ .label }} ({{ .year }}) ↗</a></li>{{ end }}</ul></section>{{ end }}
+  <section class="hs-sec"><h2>Sources</h2><ul class="sw-src-list">{{ range $g.sources }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a></li>{{ end }}</ul></section>
+  <nav class="hs-pn">
+    {{ with $prev }}<a href="{{ printf "sewing/%s/" .key | relURL }}">← {{ .name }}</a>{{ else }}<a href="{{ "sewing/" | relURL }}">← All guides</a>{{ end }}
+    {{ with $next }}<a href="{{ printf "sewing/%s/" .key | relURL }}">{{ .name }} →</a>{{ else }}<a href="{{ "sewing/" | relURL }}">All guides →</a>{{ end }}
+  </nav>
+  <p class="hs-small">{{ $d.meta.disclaimer }}</p>
+</div>
+<script src="{{ "sewing/sewing.js" | relURL }}?v={{ (os.Stat "static/sewing/sewing.js").ModTime.Unix }}" defer></script>
+{{ end }}

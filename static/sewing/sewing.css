@@ -1,0 +1,43 @@
+/* Sewing & Knitting (builds on hs.css and the Outdoor Skills card/step styles) */
+.sw{--sd-fab:#e7efe9;--sd-fab2:#d2e1d7;--sd-th:#004225;--sd-th2:#a8741a;--sd-hid:#6f9381;--sd-edge:#8fb09b;--sd-bg:#fbfaf6}
+html[data-theme="dark"] .sw{--sd-fab:#22332a;--sd-fab2:#2d4537;--sd-th:#6cc79a;--sd-th2:#e3b45c;--sd-hid:#7fa08d;--sd-edge:#55745f;--sd-bg:#141c17}
+.sw-paths{display:grid;gap:.5rem;margin-top:.6rem}
+.sw-path{background:var(--paper);border-left:4px solid var(--g);border-radius:8px;padding:.5rem .8rem;line-height:1.6}
+.sw-filter{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .8rem}
+.sw-filter button{font:inherit;font-size:.92rem;padding:.35rem .8rem;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.sw-filter button[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:#fff}
+html[data-theme="dark"] .sw-filter button[aria-pressed="true"]{color:#0f1a14}
+.sw-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.8rem}
+.sw-tool{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.75rem .9rem}
+html:not([data-theme="dark"]) .sw-tool{border-color:#9dbba9}
+.sw-tool>b{display:block;font:700 1.05rem Georgia,serif;color:var(--g);margin:.25rem 0}
+.sw-tool p{margin:.3rem 0;line-height:1.45;font-size:.95rem}
+.sw-tip{color:var(--muted)}
+.sw-kind{font-size:.75rem;border-radius:10px;padding:.05rem .5rem;background:var(--soft);white-space:nowrap}
+.sw-k-old-fashioned{background:#f3e7c9;color:#5c4511}.sw-k-electric{background:#dde7f5;color:#1f3d63}
+html[data-theme="dark"] .sw-k-old-fashioned{background:#4a3c1c;color:#f3dfa3}html[data-theme="dark"] .sw-k-electric{background:#22344d;color:#cfe0f7}
+.sw-src{font-size:.78rem;color:var(--muted)}
+.sw-tgroup[hidden],.sw-tool[hidden]{display:none}
+.sw-parts summary{cursor:pointer;color:var(--g);font-weight:600}
+.sw-parts ol{padding-left:1.3rem;font-size:.92rem;line-height:1.45}
+.sw-table td,.sw-table th{vertical-align:top}.sw-hi{background:var(--soft)}
+.sw-abbr{grid-template-columns:repeat(auto-fill,minmax(14rem,1fr))}.sw-abbr span{white-space:normal;font-size:.92rem}
+.sw-top{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:0 1.2rem;align-items:start}
+.sw-top>.sw-need:only-child{grid-column:1/-1}
+@media (max-width:760px){.sw-top{grid-template-columns:1fr}}
+.sw-need ul,.sw-list{line-height:1.55;padding-left:1.2rem}.sw-list li{margin:.3rem 0}
+.sw-src-list{font-size:.88rem;line-height:1.6;padding-left:1.2rem}
+/* diagrams */
+.sd{margin:0}.sd svg{display:block;width:100%;max-width:560px;height:auto}
+.sd figcaption{font-size:.88rem;color:var(--muted);margin-top:.35rem;line-height:1.4}
+.sd .fab{fill:var(--sd-fab)}.sd .fab2{fill:var(--sd-fab2)}.sd .ol{stroke:var(--sd-edge);stroke-width:1.2}
+.sd .th{stroke:var(--sd-th);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.sd .th2{stroke:var(--sd-th2);stroke-width:2.6;stroke-linecap:round;fill:none}
+.sd .hid{stroke:var(--sd-hid);stroke-width:1.8;stroke-dasharray:4 4;fill:none}
+.sd .edge{stroke:var(--sd-edge);stroke-width:2;fill:none}
+.sd .dot{fill:var(--sd-th)}.sd .dot2{fill:var(--sd-th2)}.sd .ring{fill:none;stroke:var(--sd-th2);stroke-width:2}
+.sd .hole,.sd .holebg{fill:var(--sd-bg)}.sd .holebg{stroke:var(--sd-edge);stroke-width:1.5}
+.sd text{fill:var(--muted);font:600 10.5px system-ui,sans-serif}
+.sd .badge{fill:var(--sd-th)}.sd text.bnum{fill:#fff;font:700 9px system-ui,sans-serif}
+html[data-theme="dark"] .sd text.bnum{fill:#0f1a14}
+.sw .hs-hero::after{content:"🧵";font-size:5rem;top:.6rem;opacity:.35;color:inherit}

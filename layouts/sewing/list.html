@@ -1,0 +1,83 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "sewing/sewing.css" | relURL }}?v={{ (os.Stat "static/sewing/sewing.css").ModTime.Unix }}">
+{{ $d := site.Data.sewing }}
+<div class="hs os sw" id="sw-hub">
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Make and mend</p>
+    <h1>{{ $d.meta.title }}</h1>
+    <p>Step-by-step guides for hand stitches, buttons, hems, patches and darns, the sewing machine, knitting and a first crochet, with every tool explained, old-fashioned and electric.</p>
+  </header>
+  <section class="hs-sec">
+    {{ range $d.meta.intro }}<p>{{ . }}</p>{{ end }}
+    <div class="sw-paths">
+      {{ range $d.paths }}<div class="sw-path"><b>{{ .name }}:</b> {{ range $i, $k := .keys }}{{ $g := index (where $d.guides "key" $k) 0 }}{{ if $i }} <span aria-hidden="true">→</span> {{ end }}<a href="{{ printf "sewing/%s/" $k | relURL }}">{{ $g.name }}</a>{{ end }}</div>{{ end }}
+    </div>
+  </section>
+  {{ range $d.sections }}{{ $s := .key }}
+  <section class="hs-sec" id="{{ $s }}">
+    <h2>{{ .icon }} {{ .name }}</h2>
+    <p class="hs-small">{{ .blurb }}</p>
+    <div class="os-grid">
+      {{ range where $d.guides "group" $s }}
+      <a class="os-card" href="{{ printf "sewing/%s/" .key | relURL }}" data-skill="{{ .key }}" data-n="{{ len .steps }}">
+        <span class="os-icon" aria-hidden="true">{{ .icon }}</span>
+        <b>{{ .name }}</b>
+        <small>{{ .level | strings.FirstUpper }} · {{ .time }}</small>
+        <span class="os-prog" hidden></span>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+  <section class="hs-sec" id="tools">
+    <h2>🧰 Tools</h2>
+    <p>You can start with very little: a needle, thread, pins and scissors for sewing, or one pair of needles and a ball of yarn for knitting. Here's what each tool is for.</p>
+    <div class="sw-filter" role="group" aria-label="Show tools">
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="sewing" aria-pressed="false">Sewing</button>
+      <button type="button" data-f="knitting" aria-pressed="false">Knitting</button>
+      <button type="button" data-f="hand" aria-pressed="false">✋ Hand tools</button>
+      <button type="button" data-f="old-fashioned" aria-pressed="false">🕰️ Old-fashioned</button>
+      <button type="button" data-f="electric" aria-pressed="false">🔌 Electric</button>
+    </div>
+    {{ range $d.tools }}
+    <div class="sw-tgroup" data-craft="{{ .craft }}">
+      <h3>{{ .group }}</h3>
+      <div class="sw-tools">
+        {{ range .items }}
+        <div class="sw-tool" data-kind="{{ .kind }}">
+          <span class="sw-kind sw-k-{{ .kind }}">{{ if eq .kind "electric" }}🔌 Electric{{ else if eq .kind "old-fashioned" }}🕰️ Old-fashioned{{ else }}✋ Hand{{ end }}</span>
+          <b>{{ .name }}</b>
+          <p>{{ .what }}</p>
+          {{ with .tip }}<p class="sw-tip"><b>Tip:</b> {{ . }}</p>{{ end }}
+          {{ with .parts }}<details class="sw-parts"><summary>Parts of the machine</summary>{{ partial "sew-diagram.html" "machine" }}<ol>{{ range . }}<li><b>{{ .name }}:</b> {{ .what }}</li>{{ end }}</ol></details>{{ end }}
+          <p class="sw-src">{{ range $i, $u := .src }}{{ if $i }} · {{ end }}<a href="{{ $u }}" target="_blank" rel="noopener">source {{ add $i 1 }}</a>{{ end }}</p>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+  </section>
+  <section class="hs-sec" id="yarn">
+    <h2>🧶 Yarn weights</h2>
+    <p class="hs-small">Yarn labels show a number from 0 to 7. For a first project, pick 4 (medium or worsted).</p>
+    <div class="os-table-wrap"><table class="hs-table sw-table"><thead><tr><th>#</th><th>Name</th><th>Also called</th><th>Needles (US)</th><th>Needles (mm)</th><th>Stitches per 4 in</th><th>Good for</th></tr></thead><tbody>
+      {{ range $d.yarn_weights }}<tr{{ if eq .num 4 }} class="sw-hi"{{ end }}><td><b>{{ .num }}</b></td><td>{{ .name }}</td><td>{{ .also_called }}</td><td>{{ .needle_us }}</td><td>{{ .needle_mm }}</td><td>{{ .gauge_4in }}</td><td>{{ .use }}</td></tr>{{ end }}
+    </tbody></table></div>
+    <h3>Pattern shorthand</h3>
+    <div class="os-chips sw-abbr">{{ range $d.abbreviations }}<span><b>{{ .abbr }}</b> {{ .meaning }}</span>{{ end }}</div>
+    <p class="hs-small">{{ $d.meta.credit }}</p>
+  </section>
+  <section class="hs-sec">
+    <h2>For grown-ups</h2>
+    <p class="os-grown">{{ $d.meta.grownups_sewing }}</p>
+    <p class="os-grown">{{ $d.meta.grownups_knitting }}</p>
+    <h3>Safe habits</h3>
+    <ul>{{ range $d.safety }}<li>{{ . }}</li>{{ end }}</ul>
+    <p class="sw-src">Sources: {{ range $i, $u := $d.meta.grownups_sewing_sources }}{{ if $i }} · {{ end }}<a href="{{ $u }}" target="_blank" rel="noopener">{{ add $i 1 }}</a>{{ end }}{{ range $i, $u := $d.safety_sources }} · <a href="{{ $u }}" target="_blank" rel="noopener">{{ add $i 6 }}</a>{{ end }}</p>
+    <p class="hs-small">{{ $d.meta.disclaimer }}</p>
+  </section>
+</div>
+<script src="{{ "sewing/sewing.js" | relURL }}?v={{ (os.Stat "static/sewing/sewing.js").ModTime.Unix }}" defer></script>
+{{ end }}

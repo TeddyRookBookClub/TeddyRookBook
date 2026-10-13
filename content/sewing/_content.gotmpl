@@ -1,0 +1,10 @@
+{{/* One page per guide, from data/sewing.yaml */}}
+{{ range site.Data.sewing.guides }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" .key
+    "title" .name
+    "params" (dict "guide" .key "description" (printf "%s: a free step-by-step guide. %s" .name .intro))
+    "dates" (dict "date" (time.AsTime "2026-10-12"))
+  ) }}
+{{ end }}
