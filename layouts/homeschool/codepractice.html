@@ -1,0 +1,65 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (os.Stat "static/homeschool/hex.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/codes.css" | relURL }}?v={{ (os.Stat "static/homeschool/codes.css").ModTime.Unix }}">
+<div class="hs cp">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> › Code Practice</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Math and codes · Ages 9 and up</p>
+    <h1>Code Practice</h1>
+    <p>Convert between binary, octal, decimal and hex, add and subtract in binary and hex, read Morse by ear and by sight, and decode letter codes. Pick what to practice, then play a round or print a worksheet with an answer key.</p>
+  </header>
+  <section class="hs-sec">
+    <h2>Quick starts</h2>
+    <div class="cp-presets">
+      <button type="button" class="cp-pre" data-preset="conv|2,10|easy"><b>🔟 Binary and decimal</b><small>Up to 15: the first four bits</small></button>
+      <button type="button" class="cp-pre" data-preset="conv|2,16|med"><b>0x Binary and hex</b><small>Bytes, four bits at a time</small></button>
+      <button type="button" class="cp-pre" data-preset="conv|2,8,10,16|med"><b>🔀 Any base to any base</b><small>2, 8, 10 and 16</small></button>
+      <button type="button" class="cp-pre" data-preset="math||easy"><b>➕ Math in binary and hex</b><small>Carrying in base 2 and 16</small></button>
+      <button type="button" class="cp-pre" data-preset="morseEar,morseRead|"><b>📡 Morse</b><small>By ear and by sight</small></button>
+      <button type="button" class="cp-pre" data-preset="ascii,conv|2,16|"><b>🔤 Letter codes</b><small>ASCII words in hex</small></button>
+    </div>
+  </section>
+  <section class="hs-sec">
+    <h2>Or choose your own</h2>
+    <form id="cp-form" class="cp-form" onsubmit="return false">
+      <fieldset><legend>Practice</legend>
+        <label><input type="checkbox" name="kind" value="conv"> Convert between bases</label>
+        <label><input type="checkbox" name="kind" value="math"> Add and subtract in binary and hex</label>
+        <label><input type="checkbox" name="kind" value="ascii"> ASCII letter codes</label>
+        <label><input type="checkbox" name="kind" value="morseEar"> Morse by ear (sound on)</label>
+        <label><input type="checkbox" name="kind" value="morseRead"> Morse to letters</label>
+        <label><input type="checkbox" name="kind" value="morseWrite"> Letters to Morse</label>
+      </fieldset>
+      <fieldset id="cp-bases"><legend>Bases</legend>
+        <label><input type="checkbox" name="base" value="2"> Binary (2)</label>
+        <label><input type="checkbox" name="base" value="8"> Octal (8)</label>
+        <label><input type="checkbox" name="base" value="10"> Decimal (10)</label>
+        <label><input type="checkbox" name="base" value="16"> Hex (16)</label>
+      </fieldset>
+      <fieldset><legend>Level</legend>
+        <label><input type="radio" name="lv" value="easy"> Easy <small>(0–15, short words)</small></label>
+        <label><input type="radio" name="lv" value="med"> Medium <small>(up to 255)</small></label>
+        <label><input type="radio" name="lv" value="hard"> Hard <small>(up to 65,535)</small></label>
+        <label>Questions <select id="cp-n"><option>5</option><option>10</option><option>20</option><option>30</option></select></label>
+      </fieldset>
+    </form>
+    <p><button type="button" class="hs-btn" id="cp-start">▶ Start a round</button> <button type="button" class="hs-btn ghost" id="cp-print">🖨 Print a worksheet</button></p>
+    <div class="cp-run" id="cp-run" hidden>
+      <p class="cp-tag" id="cp-tag"></p>
+      <p class="cp-q" id="cp-q"></p>
+      <p><input id="cp-a" class="hx-in sm" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Your answer"> <button type="button" class="hs-btn" id="cp-check">Check</button></p>
+      <div id="cp-fb" aria-live="polite"></div>
+      <p class="hs-small" id="cp-stats"></p>
+    </div>
+    <div class="cp-run" id="cp-done" hidden><p class="cp-q" id="cp-score"></p><p><button type="button" class="hs-btn" id="cp-next">Another round</button> <button type="button" class="hs-btn ghost" id="cp-again">Same again</button></p></div>
+  </section>
+  <section class="hs-sec hs-note">
+    <h2>Need a refresher?</h2>
+    <p>The <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> lessons explain each step, and the <a href="{{ "homeschool/outdoor-skills/morse-code/" | relURL }}">Morse code course</a> teaches every letter by ear. When you’re ready for a challenge, try <a href="{{ "homeschool/code-quest/" | relURL }}">Code Quest</a>.</p>
+  </section>
+  <div id="cp-sheet" class="cp-sheet"></div>
+</div>
+<script src="{{ "homeschool/morse.js" | relURL }}?v={{ (os.Stat "static/homeschool/morse.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/codepractice.js" | relURL }}?v={{ (os.Stat "static/homeschool/codepractice.js").ModTime.Unix }}" defer></script>
+{{ end }}

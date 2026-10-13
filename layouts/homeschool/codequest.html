@@ -1,0 +1,50 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/hex.css" | relURL }}?v={{ (os.Stat "static/homeschool/hex.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/codes.css" | relURL }}?v={{ (os.Stat "static/homeschool/codes.css").ModTime.Unix }}">
+<div class="hs cq">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> › Code Quest</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Puzzles · Ages 8 and up</p>
+    <h1>Code Quest</h1>
+    <p>Crack ten codes to find your way home: binary, hex, octal, letter codes and Morse, with hints when you’re stuck. Then turn your own house into a code hunt with printable clue cards.</p>
+  </header>
+  <section class="hs-sec">
+    <h2>🧭 The trail home</h2>
+    <p class="hs-small">Paper and a pencil help. Your place on the trail is saved on this device.</p>
+    <div class="cq-trail" id="cq-trail" aria-hidden="true"></div>
+    <div class="cq-stage" id="cq-stage"></div>
+    <p><button type="button" class="hs-btn ghost" id="cq-restart">↺ Start the trail over</button></p>
+  </section>
+  <section class="hs-sec" id="cq-build">
+    <h2>🗺️ Make a code hunt at home</h2>
+    <p>List your hiding places in order. Each clue card gives the next place in a code; the hunter decodes it, finds the next card there, and so on to the prize. Use short names a child can read once decoded, like <i>mailbox</i> or <i>under the couch</i>.</p>
+    <div class="cq-form">
+      <label>Name of the hunt <input id="cq-title" class="hx-in" value="The Great Code Hunt" maxlength="40"></label>
+      <label>Hiding places, one per line, in order (up to 15)<textarea id="cq-places" class="hx-in" rows="6">front door
+mailbox
+under the couch
+bathtub
+cookie jar</textarea></label>
+      <label>The prize message <input id="cq-prize" class="hx-in" value="You cracked every code! Look in the oven mitt." maxlength="120"></label>
+      <fieldset><legend>Codes to use (they take turns)</legend>
+        <label><input type="checkbox" name="cqk" value="morse" checked> Morse code</label>
+        <label><input type="checkbox" name="cqk" value="num" checked> Numbers (A=1)</label>
+        <label><input type="checkbox" name="cqk" value="hex" checked> ASCII hex</label>
+        <label><input type="checkbox" name="cqk" value="caesar"> Shift by 3</label>
+        <label><input type="checkbox" name="cqk" value="back"> Mirror writing</label>
+        <label><input type="checkbox" name="cqk" value="binary"> ASCII binary (hard; short places only)</label>
+      </fieldset>
+      <label class="hx-cb"><input type="checkbox" id="cq-withkey" checked> Print a decoding key on each card</label>
+    </div>
+    <p><button type="button" class="hs-btn" id="cq-make">Make the clue cards</button></p>
+    <div id="cq-out"></div>
+  </section>
+  <section class="hs-sec hs-note">
+    <h2>Keep practicing</h2>
+    <p>Rounds of quick questions are on <a href="{{ "homeschool/code-practice/" | relURL }}">Code Practice</a>, with worksheets to print. Learn the steps in <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a>, and learn Morse by ear in the <a href="{{ "homeschool/outdoor-skills/morse-code/" | relURL }}">Morse code course</a>.</p>
+  </section>
+</div>
+<script src="{{ "homeschool/morse.js" | relURL }}?v={{ (os.Stat "static/homeschool/morse.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/codequest.js" | relURL }}?v={{ (os.Stat "static/homeschool/codequest.js").ModTime.Unix }}" defer></script>
+{{ end }}
