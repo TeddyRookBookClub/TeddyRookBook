@@ -24,6 +24,7 @@
       <label class="gd-zone">Climate <select id="gd-zone">{{ $cl := dict "3" "Very cold" "4" "Very cold" "5" "Cold winters" "6" "Cold winters" "7" "Cool winters" "8" "Mild winters" "9" "Warm winters, light frost" "10" "Warm winters, rare frost" "11" "Frost-free" }}{{ range $c.zones }}<option value="{{ .zone }}">{{ index $cl (string .zone) }} · Zone {{ .zone }}: lows {{ .min_F }} to {{ .max_F }}°F ({{ math.Round .min_C }} to {{ math.Round .max_C }}°C)</option>{{ end }}</select></label>
       <a class="hs-small gd-zone" href="https://planthardiness.ars.usda.gov/" target="_blank" rel="noopener">Find your zone (USDA map) ↗</a> <span class="hs-small gd-zone">Zones measure winter cold only; summer heat and rain vary within a zone.</span>
     </div>
+    <h2><span class="pl-n">2</span> Your household</h2>
     <div class="gd-row">
       <label>People eating <select id="gd-people">{{ range seq 1 12 }}<option value="{{ . }}">{{ . }}</option>{{ end }}</select></label>
       <label>Aim for <select id="gd-goal">
@@ -33,48 +34,43 @@
         <option value="money">Saving money on groceries</option>
         <option value="easy">Easy and fun (hobby, kids)</option>
       </select></label>
-      <label class="gd-cb" data-for="garden farm balcony"><input type="checkbox" id="gd-peren"> Berries and perennials</label>
-      <label class="gd-cb" data-for="garden farm balcony"><input type="checkbox" id="gd-trees"> Fruit and nut trees</label>
+      <label class="gd-cb" data-for="garden farm balcony"><input type="checkbox" id="gd-peren"> Suggest berries and perennials</label>
+      <label class="gd-cb" data-for="garden farm balcony"><input type="checkbox" id="gd-trees"> Suggest fruit and nut trees</label>
       <label class="gd-cb" data-for="indoor"><input type="checkbox" id="gd-lights"> I have grow lights</label>
     </div>
-    <h2><span class="pl-n">2</span> Must-grow crops <small class="hs-small">(optional: tap any you want included)</small></h2>
+    <h2><span class="pl-n">3</span> What to grow</h2>
+    <div class="gd-mode" role="radiogroup" aria-label="How to choose crops">
+      <label><input type="radio" name="mode" value="suggest"><span><b>Suggest a plan</b><small>always including any crops you tap</small></span></label>
+      <label><input type="radio" name="mode" value="only"><span><b>Only the crops I tap</b><small>check they fit and plan the space</small></span></label>
+    </div>
     <div class="gd-chips" id="gd-must"></div>
+    <p class="hs-small" id="gd-chipnote"></p>
+    <h2><span class="pl-n">4</span> Animals <small class="hs-small">(optional)</small></h2>
+    <p class="hs-small" id="gd-an-none">Chickens and bees need a yard. Choose “Garden beds” or “Small farm” above to plan for them.</p>
+    <div class="gd-acards" id="gd-an">
+      <div class="gd-acard"><label class="gd-cb gd-ahead"><input type="checkbox" id="an-on-hens"> 🥚 Laying hens</label>
+        <div class="gd-ain" data-an="hens"><label>Eggs you eat a week <input type="number" id="an-epw" min="0" max="200"></label><label>or number of hens <input type="number" id="an-hens" min="0" max="200"></label></div></div>
+      <div class="gd-acard"><label class="gd-cb gd-ahead"><input type="checkbox" id="an-on-broil"> 🍗 Meat chickens</label>
+        <div class="gd-ain" data-an="broil"><label>Birds per batch <input type="number" id="an-broil" min="1" max="500"></label></div></div>
+      <div class="gd-acard"><label class="gd-cb gd-ahead"><input type="checkbox" id="an-on-bees"> 🐝 Honeybees</label>
+        <div class="gd-ain" data-an="bees"><label>Hives <input type="number" id="an-hives" min="1" max="50"></label></div></div>
+    </div>
+    <p class="hs-small">Many towns have rules about chickens and bees. Check your local ordinances first.</p>
   </section>
 
   <section class="hs-sec" id="gd-out" aria-live="polite"></section>
 
-  <section class="hs-sec gd-animals" id="gd-animals">
-    <h2>🐔 Chickens and 🐝 bees</h2>
-    <p>Animals add eggs, meat and honey, but they need care every day, and many towns have rules about them. Check your local ordinances first.</p>
-    <div class="gd-acards">
-      <div class="gd-acard">
-        <h3>Laying hens</h3>
-        <label>Eggs your household eats a week <input type="number" id="an-epw" min="0" max="200" value="12"></label>
-        <label>or hens <input type="number" id="an-hens" min="0" max="200"></label>
-        <div id="an-hens-out"></div>
-      </div>
-      <div class="gd-acard">
-        <h3>Meat chickens</h3>
-        <label>Birds per batch <input type="number" id="an-broil" min="0" max="500" value="0"></label>
-        <div id="an-broil-out"></div>
-      </div>
-      <div class="gd-acard">
-        <h3>Honeybees</h3>
-        <label>Hives <input type="number" id="an-hives" min="0" max="50" value="0"></label>
-        <div id="an-hive-out"></div>
-      </div>
-    </div>
-  </section>
-
   <section class="hs-sec" id="gd-guides">
-    <h2>Guides</h2>
+    <h2>Your guides</h2>
     <p class="hs-small">{{ $g.meta.disclaimer }} Everything here comes from university extension services, USDA and CDC; each section lists its sources.</p>
-    {{ range $g.sections }}{{ partial "garden-sec.html" . }}{{ end }}
-    <h2 id="g-chickens">Backyard chickens</h2>
-    {{ range $a.chickens.sections }}{{ partial "garden-sec.html" . }}{{ end }}
-    <h2 id="g-bees">Honeybees</h2>
-    {{ range $a.bees.sections }}{{ partial "garden-sec.html" . }}{{ end }}
-    {{ with $a.bees.supporting_pollinators }}{{ partial "garden-sec.html" . }}{{ end }}
+    <p class="hs-small" id="gd-gnote"></p>
+    <label class="gd-cb hs-small"><input type="checkbox" id="gd-allg"> Show every guide, not just the ones for your plan</label>
+    <div data-show="crops">{{ range $g.sections }}{{ partial "garden-sec.html" . }}{{ end }}</div>
+    <div data-show="hens broil"><h2 id="g-chickens">Backyard chickens</h2>
+    {{ range $a.chickens.sections }}{{ partial "garden-sec.html" . }}{{ end }}</div>
+    <div data-show="bees"><h2 id="g-bees">Honeybees</h2>
+    {{ range $a.bees.sections }}{{ partial "garden-sec.html" . }}{{ end }}</div>
+    <div data-show="crops">{{ with $a.bees.supporting_pollinators }}{{ partial "garden-sec.html" . }}{{ end }}</div>
   </section>
 
   <section class="hs-sec" id="gd-ref">

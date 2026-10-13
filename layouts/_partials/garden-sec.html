@@ -3,10 +3,10 @@
   <summary><h3>{{ .title }}</h3></summary>
   {{ with .intro }}<p class="gd-intro">{{ . }}</p>{{ end }}
   {{ with .items }}<ul class="gd-items">{{ range . }}<li><b>{{ .t }}{{ if not (strings.HasSuffix .t "?") }}.{{ end }}</b> {{ .how }}</li>{{ end }}</ul>{{ end }}
-  {{ range .groups }}
+  {{ range .groups }}<div class="gd-grp" data-title="{{ .title }}">
     <h4>{{ .title }}</h4>{{ with .intro }}<p class="gd-intro">{{ . }}</p>{{ end }}
     <ol class="gd-items">{{ range .items }}<li><b>{{ .t }}{{ if not (strings.HasSuffix .t "?") }}.{{ end }}</b> {{ .how }}</li>{{ end }}</ol>
     {{ with .sources }}<p class="gd-src">Sources: {{ range $i, $s := . }}{{ if $i }} · {{ end }}{{ if reflect.IsMap $s }}<a href="{{ $s.url }}" target="_blank" rel="noopener">{{ $s.name }}</a>{{ else }}<a href="{{ $s }}" target="_blank" rel="noopener">{{ $s }}</a>{{ end }}{{ end }}</p>{{ end }}
-  {{ end }}
+  </div>{{ end }}
   {{ with .sources }}<p class="gd-src">Sources: {{ range $i, $s := . }}{{ if $i }} · {{ end }}{{ if reflect.IsMap $s }}<a href="{{ $s.url }}" target="_blank" rel="noopener">{{ $s.name }}</a>{{ else }}<a href="{{ $s }}" target="_blank" rel="noopener">{{ $s }}</a>{{ end }}{{ end }}</p>{{ end }}
 </details>

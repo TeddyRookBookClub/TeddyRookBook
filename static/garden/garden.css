@@ -3,6 +3,12 @@
 html[data-theme="dark"] .gd .pl-n{color:#0f1a14}
 .gd-form{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:1rem 1.1rem}
 html:not([data-theme="dark"]) .gd-form{border-color:#9dbba9}
+.gd-mode{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem;margin:.4rem 0 .7rem}
+.gd-mode label{cursor:pointer}.gd-mode input{position:absolute;opacity:0;pointer-events:none}
+.gd-mode span{display:block;padding:.55rem .8rem;border:1.5px solid var(--line);border-radius:12px;background:var(--card)}
+.gd-mode small{display:block;font-size:.82rem;color:var(--muted)}
+.gd-mode input:checked+span{border-color:var(--g);background:var(--soft);box-shadow:0 0 0 2px var(--g) inset}
+.gd-mode input:focus-visible+span{outline:3px solid var(--gold)}
 .gd-where{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:.4rem 0 .9rem}
 .gd-where label{cursor:pointer}
 .gd-where input{position:absolute;opacity:0;pointer-events:none}
@@ -23,6 +29,16 @@ html:not([data-theme="dark"]) .gd-form{border-color:#9dbba9}
 html[data-theme="dark"] .gd-chip[aria-pressed="true"]{color:#0f1a14}
 .gd-chip.more{display:none}.gd-chips.all .gd-chip.more{display:inline-block}
 .gd-showmore{border-style:dashed}
+.gd-chip i{font-style:normal}
+.gd-chip small{display:block;font-size:.72rem;line-height:1.2;opacity:.8}
+.gd-chip.iffy{border-style:dashed;border-color:#c9a24a}
+.gd-chip.no{text-decoration:line-through;opacity:.75}
+.gd-ok{border-left-color:#2e8b57 !important}.gd-bad{border-left-color:#b5482f !important}
+.gd-fit{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.2rem 1rem .1rem;margin:.6rem 0}
+html:not([data-theme="dark"]) .gd-fit{border-color:#9dbba9}
+.gd-fit h4{margin:.6rem 0 .2rem}.gd-fit ul{padding-left:1.1rem;line-height:1.55}.gd-fit li{margin:.3rem 0}
+.gd-ahead{font-size:1.05rem}
+.gd-ain{margin-top:.3rem}
 .gd-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem;margin:.6rem 0 1rem}
 .gd-sum div{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.7rem .9rem}
 html:not([data-theme="dark"]) .gd-sum div{border-color:#9dbba9}
@@ -55,7 +71,7 @@ html:not([data-theme="dark"]) .gd-sec{border-color:#9dbba9}
 .gd-sec h4{margin:.8rem .9rem .2rem}
 .gd-src{font-size:.8rem;color:var(--muted);line-height:1.5;padding-bottom:.7rem}
 #gd-q{width:100%;max-width:22rem;margin:.3rem 0}
-@media print{.gd-form,.gd-animals,#gd-guides,#gd-ref,.header,.footer{display:none !important}}
+@media print{.gd-form,#gd-guides,#gd-ref,.header,.footer{display:none !important}}
 .gd .hs-hero::after{content:"🌱";font-size:5rem;top:.6rem;opacity:.35;color:inherit}
 .gd-plan td:nth-child(2),.gd-plan td:nth-child(3),.gd-plan td:nth-child(4),.gd-plan td:nth-child(8){white-space:nowrap}
 #gd-out h3{margin-top:1.4rem}
@@ -72,3 +88,5 @@ html:not([data-theme="dark"]) .gd-sec{border-color:#9dbba9}
 .gd-rot th{border:0 !important;padding:.3rem .6rem;font-size:1.05rem}
 .gd-tablewrap:has(.gd-plan),.gd-tablewrap:has(.gd-rot){overflow:visible}
 }
+.gd-acard label.gd-ahead{justify-content:flex-start}
+.gd-acard input[type=checkbox]{width:1.15rem;height:1.15rem;padding:0}
