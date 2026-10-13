@@ -1,0 +1,140 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ $cats := slice (slice "animals" "Animals") (slice "nature" "Nature, weather and sky") (slice "things" "Things at home") (slice "food" "Food") (slice "places" "Places") (slice "people" "People and family") (slice "body" "The body") (slice "time" "Time") (slice "colors" "Colors") (slice "numbers" "Numbers") (slice "describing" "Describing words") (slice "actions" "Action words") (slice "ideas" "Ideas and feelings") (slice "school" "School") }}
+{{ $words := site.Data.langmix_words }}
+<link rel="stylesheet" href="{{ "homeschool/codes.css" | relURL }}?v={{ (os.Stat "static/homeschool/codes.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/langmix.css" | relURL }}?v={{ (os.Stat "static/homeschool/langmix.css").ModTime.Unix }}">
+<style id="lm-pagecss"></style>
+<div class="hs cp lm">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/code-practice/" | relURL }}">Code Practice</a> › Mix-and-Match Worksheets</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Languages and codes · All ages</p>
+    <h1>Mix-and-Match Worksheets</h1>
+    <p>Make your own practice sheet from English, Latin, Morse code, hexadecimal, binary and ASL fingerspelling, plus a few extra codes. Pick the languages, the words and the kind of puzzle, then save it as a PDF or as pictures. Every sheet can have an answer key and code charts.</p>
+  </header>
+
+  <section class="hs-sec">
+    <h2>Quick starts</h2>
+    <div class="cp-presets">
+      <button type="button" class="cp-pre" data-preset='{"langs":["en","la","morse","hex"],"n":25,"fmt":"table"}'><b>🔀 Latin, Morse and hex</b><small>25 words, fill in the rows</small></button>
+      <button type="button" class="cp-pre" data-preset='{"langs":["en","la"],"n":20,"fmt":"match","common":true,"maxL":7}'><b>🏛 First Latin words</b><small>Match 20 common words</small></button>
+      <button type="button" class="cp-pre" data-preset='{"langs":["en","asl"],"n":12,"fmt":"table","given":"asl","maxL":5,"big":true}'><b>🤟 Read the fingerspelling</b><small>12 short words in ASL</small></button>
+      <button type="button" class="cp-pre" data-preset='{"langs":["en","morse","bin"],"n":15,"fmt":"table","maxL":6,"cats":["animals"]}'><b>📡 Secret animal codes</b><small>Morse and binary</small></button>
+      <button type="button" class="cp-pre" data-preset='{"langs":["en","hex"],"n":10,"fmt":"table","given":"hex","maxL":6,"cats":["nature","food"]}'><b>🚀 Mars castaway</b><small>Decode hex like The Martian</small></button>
+      <button type="button" class="cp-pre" data-preset='{"langs":["en","la","asl"],"n":16,"fmt":"cards","maxL":6}'><b>🃏 Fold-over word cards</b><small>English, Latin and ASL</small></button>
+    </div>
+  </section>
+
+  <section class="hs-sec lm-make" id="lm-make">
+    <h2>Make your sheet</h2>
+    <div class="lm-wrap">
+      <form id="lm-form" class="lm-form" onsubmit="return false">
+        <fieldset><legend>1. Languages and codes</legend>
+          <div class="lm-chips">
+            <label><input type="checkbox" name="lang" value="en"> English</label>
+            <label><input type="checkbox" name="lang" value="la"> Latin</label>
+            <label><input type="checkbox" name="lang" value="morse"> Morse code</label>
+            <label><input type="checkbox" name="lang" value="hex"> Hexadecimal</label>
+            <label><input type="checkbox" name="lang" value="bin"> Binary</label>
+            <label><input type="checkbox" name="lang" value="asl"> ASL fingerspelling</label>
+          </div>
+          <details class="lm-more"><summary>More codes</summary>
+            <div class="lm-chips">
+              <label><input type="checkbox" name="lang" value="oct"> Octal</label>
+              <label><input type="checkbox" name="lang" value="dec"> Decimal</label>
+              <label><input type="checkbox" name="lang" value="caesar"> Caesar shift</label>
+              <label><input type="checkbox" name="lang" value="back"> Backwards</label>
+            </div>
+            <label data-for="caesar">Caesar shift by <input type="number" id="lm-shift" min="1" max="25" class="lm-num"> letters</label>
+          </details>
+          <p class="lm-sub">The codes spell the</p>
+          <label><input type="radio" name="src" value="en"> English word</label>
+          <label><input type="radio" name="src" value="la"> Latin word</label>
+          <label><input type="checkbox" data-b="caps"> Codes use capital letters <small>(A = 41 in hex)</small></label>
+        </fieldset>
+
+        <fieldset><legend>2. Words</legend>
+          <label><input type="radio" name="words" value="bank"> Random from the word bank</label>
+          <label><input type="radio" name="words" value="mine"> My own words</label>
+          <div data-for="bank">
+            <label>How many <input type="number" id="lm-n" min="1" max="100" class="lm-num"> <small id="lm-avail"></small></label>
+            <label>Letters from <input type="number" id="lm-min" min="1" max="20" class="lm-num"> to <input type="number" id="lm-max" min="1" max="20" class="lm-num"></label>
+            <label><input type="checkbox" data-b="common"> Only the most common Latin words</label>
+            <p class="lm-sub">Topics <button type="button" class="lm-all" data-all="1" data-name="cat">all</button> <button type="button" class="lm-all" data-all="0" data-name="cat">none</button></p>
+            <div class="lm-cats">
+              {{ range $cats }}<label><input type="checkbox" name="cat" value="{{ index . 0 }}"> {{ index . 1 }}</label>{{ end }}
+            </div>
+          </div>
+          <div data-for="mine">
+            <label for="lm-mine" class="lm-sub">One word per line. Words from the word bank get their Latin automatically; for others, add it after an equals sign.</label>
+            <textarea id="lm-mine" rows="6" spellcheck="false" placeholder="dog&#10;water&#10;castle&#10;cookie = crustulum"></textarea>
+            <p class="hs-small">Tip: tap words in the word bank below to add them here.</p>
+          </div>
+        </fieldset>
+
+        <fieldset><legend>3. Kind of puzzle</legend>
+          <label><input type="radio" name="fmt" value="table"> <span><b>Fill in the rows</b> <small>one box given, fill the rest</small></span></label>
+          <label><input type="radio" name="fmt" value="match"> <span><b>Matching</b> <small>connect the same words</small></span></label>
+          <label><input type="radio" name="fmt" value="cards"> <span><b>Fold-over cards</b> <small>cut, fold and quiz</small></span></label>
+          <div data-for="table">
+            <label>Given box <select id="lm-given"></select></label>
+            <label>Boxes given per row <input type="number" id="lm-clues" min="1" max="5" class="lm-num"></label>
+          </div>
+          <p class="hs-small" data-for="cards">The first language you ticked goes on the front, the rest on the back.</p>
+        </fieldset>
+
+        <fieldset><legend>4. The page</legend>
+          <label>Title <input type="text" id="lm-title" maxlength="80" autocomplete="off"></label>
+          <label>Instructions <textarea id="lm-instr" rows="3"></textarea></label>
+          <label><input type="checkbox" data-b="nameLine"> Name and date lines</label>
+          <label><input type="checkbox" data-b="key"> Answer key</label>
+          <label><input type="checkbox" data-b="ref"> Code charts (Morse, letter codes, ASL)</label>
+          <label><input type="checkbox" data-b="big"> Large print</label>
+          <label><input type="checkbox" data-b="toVerb"> Show action words as “to run”</label>
+          <label><input type="checkbox" data-b="code"> Sheet number in the footer <small>(to make it again)</small></label>
+          <p class="lm-sub">Paper</p>
+          <label><input type="radio" name="paper" value="letter"> US Letter</label>
+          <label><input type="radio" name="paper" value="a4"> A4</label>
+        </fieldset>
+      </form>
+
+      <div class="lm-out">
+        <div class="lm-bar">
+          <button type="button" class="hs-btn" id="lm-shuffle">🔀 New shuffle</button>
+          <button type="button" class="hs-btn" id="lm-pdf">🖨 Print or save as PDF</button>
+          <button type="button" class="hs-btn ghost" id="lm-png">🖼 Save all as images</button>
+          <button type="button" class="hs-btn ghost" id="lm-link">🔗 Copy link</button>
+        </div>
+        <p class="hs-small"><span id="lm-count"></span> <span id="lm-linkmsg" aria-live="polite"></span></p>
+        <div id="lm-notes" class="lm-notes" aria-live="polite"></div>
+        <div id="lm-pages" class="lm-pages"></div>
+        <p class="hs-small">To save a PDF, choose “Save as PDF” as the printer. Each page can also be saved as a PNG picture to share or print later.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec">
+    <details class="lm-bank">
+      <summary><b>Browse the word bank</b> ({{ len $words }} words with their Latin)</summary>
+      <p class="hs-small">Every word is an everyday word with a classical Latin match, checked against William Whitaker’s <a href="https://github.com/mk270/whitakers-words" target="_blank" rel="noopener">WORDS</a> Latin dictionary. Latin is given in its dictionary form: nouns in the nominative, verbs in the infinitive (amare, “to love”), describing words in the masculine. Tap a word to add it to your own list.</p>
+      <p><input type="search" id="lm-bq" class="lm-search" placeholder="Search English or Latin" aria-label="Search the word bank">
+        <select id="lm-bc" aria-label="Topic"><option value="">All topics</option>{{ range $cats }}<option value="{{ index . 0 }}">{{ index . 1 }}</option>{{ end }}</select> <span class="hs-small" id="lm-bn"></span></p>
+      <div class="lm-blist" id="lm-blist"></div>
+    </details>
+  </section>
+
+  <section class="hs-sec hs-note">
+    <h2>Good to know</h2>
+    <ul>
+      <li><b>Hex, binary, octal and decimal</b> give each letter its ASCII code, the number a computer stores for it. Capital A is 65 in decimal, 41 in hex and 01000001 in binary. Learn how they work on the <a href="{{ "homeschool/hexadecimal/" | relURL }}">Hexadecimal and Binary</a> page or <a href="{{ "homeschool/number-bases/" | relURL }}">teach them step by step</a>.</li>
+      <li><b>Morse code</b> is written with dots and dashes, a space between letters and a slash between words. Hear it on the <a href="{{ "homeschool/outdoor-skills/morse-code/" | relURL }}">Morse code course</a>.</li>
+      <li><b>ASL fingerspelling</b> spells English words letter by letter with the hand. It’s only one part of American Sign Language, which has its own signs and grammar. Practice reading it on the <a href="{{ "asl/fingerspelling/" | relURL }}">fingerspelling page</a>. Handshape drawings: public domain, by Paul Sherman (wpclipart.com), via Wikimedia Commons.</li>
+      <li><b>Latin</b> words here have no long marks (macrons), the way Romans wrote them. For reading and grammar, see <a href="{{ "languages/" | relURL }}">Languages</a>.</li>
+      <li>Want quick rounds instead of paper? Try <a href="{{ "homeschool/code-practice/" | relURL }}">Code Practice</a> and the <a href="{{ "homeschool/code-quest/" | relURL }}">Code Quest</a> puzzle trail.</li>
+    </ul>
+  </section>
+  <div id="lm-print" class="lm-print" aria-hidden="true"></div>
+  <script type="application/json" id="lm-data">{{ dict "words" $words "asl" ("asl/" | relURL) "cats" $cats | jsonify | safeJS }}</script>
+</div>
+<script src="{{ "homeschool/langmix.js" | relURL }}?v={{ (os.Stat "static/homeschool/langmix.js").ModTime.Unix }}" defer></script>
+{{ end }}
