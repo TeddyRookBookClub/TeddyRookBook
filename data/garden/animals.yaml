@@ -1,0 +1,1245 @@
+# Teddy Rook Book: Food Production Planner - backyard chickens (eggs, meat) and honeybees (honey)
+# Structure:
+#   chickens.numbers[] / bees.numbers[] -> {id, label, value, notes, sources[{name, url}]}
+#   chickens.sections[] / bees.sections[] -> {id, title, intro, items[{t, how}], sources[{name, url}]}
+#   bees.supporting_pollinators -> same shape as a section
+# Researched October 2026; see animal_sources.md for what each source supports and what was left out.
+meta:
+  page: 'Food Production Planner: Backyard Chickens and Honeybees'
+  site: Teddy Rook Book
+  spelling: American
+  researched: 2026-10
+  evidence_rule: Only well-established advice from university extension services, USDA (FSIS, APHIS), CDC, and the
+    Honey Bee Health Coalition is included. Numbers are typical ranges from those sources; where sources disagree,
+    the range or the more cautious figure is given. Local extension advice wins when it differs.
+  disclaimer: Rules for keeping animals, and for selling eggs, meat, and honey, vary by city and state. Check local
+    ordinances and your state department of agriculture before you start. Your county extension office is a free
+    source of help.
+chickens:
+  numbers:
+  - id: eggs_per_hen_year
+    label: Eggs per hen per year (backyard flock)
+    value:
+      typical_low: 200
+      typical_high: 240
+      unit: eggs per hen per year
+    notes: 'UF/IFAS gives 200 to 240 eggs (17 to 20 dozen) per hen per year for a small backyard flock, with some
+      breeds laying up to about 300 and others as few as 150. NC State is more cautious for a hen''s first laying
+      year: about two eggs every three days, up to about 15 dozen (180). Plan on the lower end for a home flock.'
+    sources:
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+  - id: eggs_by_breed
+    label: Approximate eggs per year by breed
+    value:
+      unit: eggs per hen per year
+      breeds:
+      - breed: White Leghorn
+        low: 250
+        high: 300
+      - breed: Rhode Island Red
+        low: 250
+        high: 280
+      - breed: Barred Rock
+        low: 200
+        high: 280
+      - breed: Black Australorp
+        low: 200
+        high: 280
+      - breed: Buff Orpington
+        low: 200
+        high: 280
+      - breed: Ameraucana / Easter Egger
+        low: 180
+        high: 200
+      - breed: Standard Cochin
+        low: 100
+        high: 160
+    notes: Figures from UNH Extension. Strains vary a lot. Penn State notes commercial sex-link hybrids lay about
+      240 to 280 eggs a year, while some heritage strains lay far fewer (Penn State cites 50 to 100) with great
+      variability.
+    sources:
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+    - name: 'Penn State Extension: Successfully Raising a Small Flock of Laying Chickens'
+      url: https://extension.psu.edu/successfully-raising-a-small-flock-of-laying-chickens
+  - id: laying_start_age
+    label: Age hens start laying
+    value:
+      low: 16
+      high: 24
+      unit: weeks
+    notes: 'NC State: pullets begin to lay at 16 to 24 weeks depending on breed and conditions; UF/IFAS PS029: about
+      18 to 22 weeks. Chicks bought in spring usually start laying in mid to late summer (UNH).'
+    sources:
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'UF/IFAS Extension PS029: Factors Affecting Egg Production in Backyard Chicken Flocks'
+      url: https://ask.ifas.ufl.edu/publication/PS029
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+  - id: laying_by_age
+    label: How laying changes with age
+    value:
+      year_1_dozen_max: 15
+      year_2_dozen_max: 12
+      trend: declines each year after
+    notes: 'NC State: up to about 15 dozen in the first laying year, up to about 12 dozen in year two, then fewer
+      each year. UF/IFAS: a flock peaks about 6 to 8 weeks after laying starts, falls to about 65 percent of hens
+      laying on a given day after 12 months, and many hens decline significantly after two or three years. Hens
+      can live 8 years or more (Penn State).'
+    sources:
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'UF/IFAS Extension PS029: Factors Affecting Egg Production in Backyard Chicken Flocks'
+      url: https://ask.ifas.ufl.edu/publication/PS029
+    - name: 'Penn State Extension: Successfully Raising a Small Flock of Laying Chickens'
+      url: https://extension.psu.edu/successfully-raising-a-small-flock-of-laying-chickens
+  - id: daylight_for_laying
+    label: Daylight needed for steady laying
+    value:
+      hours_per_day: 14
+      range_low: 14
+      range_high: 16
+      unit: hours of light per day
+    notes: Hens need about 14 hours of light a day to keep laying. Shortening fall days slow or stop laying and
+      often trigger a molt, a rest of roughly 6 to 8 weeks or more while hens regrow feathers. Added light can keep
+      hens laying, but NC State notes it is fine to let them rest in winter. If you add light, Penn State advises
+      not more than 16 hours.
+    sources:
+    - name: 'Poultry Extension: How Many Eggs Can a Hen Lay in One Day?'
+      url: https://poultry.extension.org/articles/poultry-related-youth-programs/how-many-eggs-can-a-chicken-lay-in-one-day/
+    - name: 'UF/IFAS Extension PS029: Factors Affecting Egg Production in Backyard Chicken Flocks'
+      url: https://ask.ifas.ufl.edu/publication/PS029
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'Penn State Extension: Successfully Raising a Small Flock of Laying Chickens'
+      url: https://extension.psu.edu/successfully-raising-a-small-flock-of-laying-chickens
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+  - id: feed_per_hen
+    label: Feed per laying hen
+    value:
+      lb_per_day_low: 0.25
+      lb_per_day_high: 0.33
+      lb_per_year_low: 90
+      lb_per_year_high: 120
+      unit: pounds of complete layer feed
+    notes: 'Oklahoma State: about 0.25 lb a day. NC State: about 1/3 lb a day while laying, or about 5 lb of feed
+      per dozen eggs. UNH: about 90 to 100 lb per hen over a laying cycle of about 13 months; a 50-lb bag lasts
+      10 hens about two to three weeks. The yearly range here is 0.25 to 0.33 lb times 365 days. Hens eat more in
+      cold weather (up to 25 percent more, per UMN) and less in heat.'
+    sources:
+    - name: 'Oklahoma State University Extension: Backyard Flock Production'
+      url: https://extension.okstate.edu/fact-sheets/backyard-flock-production
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+    - name: 'University of Minnesota Extension: Caring for Chickens in Cold Weather'
+      url: https://extension.umn.edu/small-scale-poultry/caring-chickens-cold-weather
+  - id: coop_floor_space
+    label: Coop (indoor) floor space per standard-size hen
+    value:
+      with_run_sqft_low: 3
+      with_run_sqft_high: 4
+      without_run_sqft_low: 8
+      without_run_sqft_high: 10
+      unit: square feet per bird
+    notes: At least 3 square feet per bird inside when hens also have an outdoor run (UF/IFAS, UNH, Oregon State);
+      NC State gives 2.5 to 3.5, UMN 3 to 5. If birds are kept inside with no run, Oregon State advises 8 to 10
+      square feet per bird. Bantams need less; large breeds need more.
+    sources:
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+    - name: 'Oregon State University Extension: Backyard Chicken Coop Design, Part 2'
+      url: https://extension.oregonstate.edu/podcast/living-land/backyard-chicken-coop-design-part-2
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'University of Minnesota Extension: Raising Chickens for Eggs'
+      url: https://extension.umn.edu/agriculture/animals-and-livestock/poultry/raising-chickens-for-eggs
+  - id: run_space
+    label: Outdoor run space per hen
+    value:
+      sqft_low: 8
+      sqft_high: 10
+      minimum_sqft: 4
+      unit: square feet per bird
+    notes: UF/IFAS and Oklahoma State suggest 8 to 10 square feet per bird in the run. NC State's bare minimum is
+      4 to 5 square feet per bird in addition to the coop.
+    sources:
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'Oklahoma State University Extension: Backyard Flock Production'
+      url: https://extension.okstate.edu/fact-sheets/backyard-flock-production
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+  - id: nest_boxes
+    label: Nest boxes
+    value:
+      hens_per_box: 4
+      range: 1 box per 4 to 5 hens
+      box_size_inches: about 12 x 12 to 12 x 14
+    notes: One nest box for every four hens is the most common figure (Oregon State, UNH, Oklahoma State); NC State
+      and UMN say four or five, UF/IFAS five. Boxes about 12 inches square, kept dark and filled with clean shavings
+      or straw.
+    sources:
+    - name: 'Oregon State University Extension: Backyard Chicken Coop Design, Part 2'
+      url: https://extension.oregonstate.edu/podcast/living-land/backyard-chicken-coop-design-part-2
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+    - name: 'Oklahoma State University Extension: Backyard Flock Production'
+      url: https://extension.okstate.edu/fact-sheets/backyard-flock-production
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+  - id: roost_space
+    label: Roost (perch) space per hen
+    value:
+      inches_low: 8
+      inches_high: 10
+      published_range: 6 to 12 inches
+      unit: inches of perch per bird
+    notes: 'NC State: at least 9 or 10 inches per bird with about 14 inches between perches. Oregon State: 5 to
+      10 inches; Penn State: 6 inches; UNH: 12 inches. Use 2 x 2 lumber or similar with rounded edges (Oregon State,
+      UNH).'
+    sources:
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'Oregon State University Extension: Backyard Chicken Coop Design, Part 2'
+      url: https://extension.oregonstate.edu/podcast/living-land/backyard-chicken-coop-design-part-2
+    - name: 'Penn State Extension: Successfully Raising a Small Flock of Laying Chickens'
+      url: https://extension.psu.edu/successfully-raising-a-small-flock-of-laying-chickens
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+  - id: water_per_hen
+    label: Water per hen per day
+    value:
+      gallons_per_25_hens: 1
+      approx_cups_per_hen: 0.6
+      unit: per day in mild weather
+    notes: 'UF/IFAS: 25 hens can drink about a gallon a day, which is about 5 ounces (a little over half a cup)
+      per hen. UGA: birds drink about twice as much as they eat by weight. Hens drink about 25 percent more above
+      80 F (UNH), and a single day without water cuts laying for several days. Keep clean water available at all
+      times.'
+    sources:
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'University of Georgia Extension C954: Nutrition for the Backyard Flock'
+      url: https://fieldreport.caes.uga.edu/publications/C954/nutrition-for-the-backyard-flock/
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+  - id: feeder_space
+    label: Feeder space
+    value:
+      adult_inches_per_bird: 3
+      chick_inches_start: 1
+      chick_inches_after_2_weeks: 2
+    notes: 'NC State and Penn State: about 3 linear inches of feeder per adult bird; chicks 1 inch at first, 2 inches
+      after two weeks.'
+    sources:
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'Penn State Extension: Successfully Raising a Small Flock of Laying Chickens'
+      url: https://extension.psu.edu/successfully-raising-a-small-flock-of-laying-chickens
+  - id: brooding_temperature
+    label: Brooder temperature for chicks
+    value:
+      week_1_f_low: 90
+      week_1_f_high: 95
+      drop_per_week_f: 5
+      end_f: about 65 to 70
+      unit: degrees F at chick level
+    notes: '90 to 95 F at chick level the first week, then about 5 F lower each week until chicks are feathered
+      (about 4 to 6 weeks) or the brooder matches room temperature of about 65 to 70 F. Watch the chicks: huddling
+      means too cold, crowding away from the heat means too hot.'
+    sources:
+    - name: 'UNH Extension: Brooding and Caring for Chicks'
+      url: https://extension.unh.edu/resource/brooding-and-caring-chicks
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'Oklahoma State University Extension: Backyard Flock Production'
+      url: https://extension.okstate.edu/fact-sheets/backyard-flock-production
+  - id: brooder_space
+    label: Brooder space per chick
+    value:
+      sqft_per_chick_start: 0.5
+      notes: about double by one month
+    notes: 'UMN: about 1/2 square foot per chick at first; UNH (meat chicks) uses 1 square foot per bird for the
+      first month and then doubles it. Give more room as chicks grow.'
+    sources:
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'UNH Extension: Raising Broilers'
+      url: https://extension.unh.edu/resource/raising-broilers
+  - id: feed_protein
+    label: Feed types and protein by age
+    value:
+      stages:
+      - stage: chick starter
+        ages: 0 to 6 weeks
+        protein_pct: 20 to 22
+      - stage: pullet grower
+        ages: 6 to about 18-20 weeks
+        protein_pct: 14 to 17
+      - stage: layer feed
+        ages: from first eggs (about 18-20 weeks)
+        protein_pct: 16 to 18
+        calcium_pct: about 3.5 to 4
+    notes: From University of Kentucky (Poultry Extension) and UGA tables. Layer feed has the extra calcium hens
+      need for shells; growing birds should not get layer feed because they need only about 1.2 percent calcium.
+    sources:
+    - name: 'Poultry Extension (Univ. of Kentucky): Feeding Chickens for Egg Production'
+      url: https://poultry.extension.org/articles/feeds-and-feeding-of-poultry/feeding-chickens-for-egg-production/
+    - name: 'University of Georgia Extension C954: Nutrition for the Backyard Flock'
+      url: https://fieldreport.caes.uga.edu/publications/C954/nutrition-for-the-backyard-flock/
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+  - id: broiler_weeks
+    label: 'Meat chickens (Cornish Cross type): weeks to processing'
+    value:
+      weeks_low: 6
+      weeks_high: 8
+    notes: 'UMN and Penn State: Cornish Cross reach processing size in 6 to 8 weeks. Penn State warns that keeping
+      them past 8 weeks raises the risk of lameness, heat stress, heart problems and sudden death.'
+    sources:
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'Penn State Extension: A Quick Guide to Raising Pastured Broilers'
+      url: https://extension.psu.edu/a-quick-guide-to-raising-pastured-broilers
+  - id: broiler_weights
+    label: 'Meat chickens (Cornish Cross type): live and dressed weight'
+    value:
+      live_lb_low: 4
+      live_lb_high: 6
+      dressed_pct_low: 70
+      dressed_pct_high: 75
+      typical_carcass_lb: 4
+    notes: 'UMN: 4 to 6 lb market weight in 6 to 8 weeks; ready-to-cook weight is about 70 to 75 percent of live
+      weight. Penn State: about 5.25 lb live at 6 weeks for a target carcass of about 4 lb (75 percent dressing).'
+    sources:
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'Penn State Extension: A Quick Guide to Raising Pastured Broilers'
+      url: https://extension.psu.edu/a-quick-guide-to-raising-pastured-broilers
+  - id: broiler_feed
+    label: 'Meat chickens: feed per bird and feed conversion'
+    value:
+      lb_feed_per_bird_low: 9
+      lb_feed_per_bird_high: 15
+      commercial_feed_conversion: about 1.9 lb feed per lb of live weight (commercial research flocks)
+    notes: 'Estimates vary with management. UMN: about 8 to 9 lb of feed per bird to 8 weeks for commercial strains.
+      Penn State''s pastured-broiler guide budgets about 15 lb per Cornish Cross to harvest (about 16 lb for slower-growing
+      birds). UF/IFAS commercial research flocks converted at about 1.9 lb of feed per lb of bird; a backyard flock
+      should not expect to match commercial numbers.'
+    sources:
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'Penn State Extension: A Quick Guide to Raising Pastured Broilers'
+      url: https://extension.psu.edu/a-quick-guide-to-raising-pastured-broilers
+    - name: 'UF/IFAS Extension VM099: Broiler Production Goals (commercial)'
+      url: https://ask.ifas.ufl.edu/publication/vm099
+  - id: slow_growing_meat
+    label: 'Slower-growing and dual-purpose meat birds: timing'
+    value:
+      slow_growing_broilers_weeks: about 8 to 12 (Freedom Ranger type; some guides say up to 15)
+      dual_purpose_weeks: 10 to 12 or longer
+    notes: 'Penn State: slower-growing broilers (such as Freedom Rangers) take 2 to 3 weeks longer than Cornish
+      Cross to reach a similar size and dress out at about 67 to 69 percent. UNH: Freedom Rangers can be grown over
+      12 to 15 weeks. UMN: traditional breeds such as Plymouth Rock, Rhode Island Red and New Hampshire grow more
+      slowly, use more feed per pound gained, and may take 10 to 12 weeks. Expect a smaller, leaner bird from dual-purpose
+      breeds.'
+    sources:
+    - name: 'Penn State Extension: A Quick Guide to Raising Pastured Broilers'
+      url: https://extension.psu.edu/a-quick-guide-to-raising-pastured-broilers
+    - name: 'UNH Extension: Raising Broilers'
+      url: https://extension.unh.edu/resource/raising-broilers
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'Poultry Extension (Univ. of Kentucky): Selecting a Chicken Breed for Small or Backyard Flocks'
+      url: https://poultry.extension.org/articles/getting-started-with-small-and-backyard-poultry/selecting-birds-to-get-for-a-small-or-backyard-poultry-flock/selecting-a-chicken-breed-for-small-or-backyard-poultry-flocks/
+  - id: costs
+    label: Costs
+    value:
+      feed_share_of_cost_pct: 70
+      dollar_figures: null
+    notes: No extension source we reviewed gave current dollar costs for a backyard laying flock. UF/IFAS and UGA
+      say feed is about 70 percent of the cost of raising chickens. Use your local feed price times the feed numbers
+      above to estimate.
+    sources:
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'University of Georgia Extension C954: Nutrition for the Backyard Flock'
+      url: https://fieldreport.caes.uga.edu/publications/C954/nutrition-for-the-backyard-flock/
+  sections:
+  - id: before_you_start
+    title: Before you start
+    intro: Chickens are rewarding, but they are animals that need care every single day for years. A little homework
+      now saves heartache later.
+    items:
+    - t: Check your local rules first
+      how: Look up your city or county ordinances, zoning, and any HOA rules before you buy a single chick. Many
+        places limit how many birds you can keep and how close the coop can be to property lines. Call your local
+        zoning or animal control office if the rules are unclear.
+    - t: Expect roosters to be off-limits
+      how: 'Many towns that allow hens ban roosters because of crowing and noise rules. You do not need a rooster:
+        hens lay eggs without one. NC State advises that small flocks (under ten hens) are better off without a
+        rooster anyway.'
+    - t: Talk with your neighbors
+      how: A quick, friendly conversation before the coop goes up helps a lot. Keep the coop clean so odor and flies
+        stay down, and a dozen eggs now and then goes a long way.
+    - t: Plan for daily care, every day
+      how: Someone has to feed, water, let the birds out, close them in at dusk, and collect eggs seven days a week.
+        Add weekly coop cleaning and a deeper cleaning once or twice a year.
+    - t: Line up vacation help
+      how: Before you get birds, find a neighbor, friend, or pet sitter who can do the daily chores when you travel.
+        Show them how to close the coop at night, since that is when predators strike.
+    - t: Find help for sick birds
+      how: CDC suggests finding a veterinarian who treats poultry before you need one. Your county extension office
+        is also a good free source of advice.
+    sources:
+    - name: 'CDC: Backyard Poultry (Healthy Pets, Healthy People)'
+      url: https://www.cdc.gov/healthy-pets/about/backyard-poultry.html
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'University of Minnesota Extension: Raising Chickens for Eggs'
+      url: https://extension.umn.edu/agriculture/animals-and-livestock/poultry/raising-chickens-for-eggs
+  - id: choosing_birds
+    title: Choosing your birds
+    intro: 'Decide first what you want most: eggs, meat, or a little of both. That choice points you to the right
+      kind of bird.'
+    items:
+    - t: Egg-laying breeds
+      how: Breeds and crosses bred for eggs, such as White Leghorns and sex-link hybrids, lay the most eggs for
+        the feed they eat. Brown-egg layers such as Rhode Island Reds and Plymouth Rocks are calm, popular choices
+        for families.
+    - t: Meat birds
+      how: Cornish Cross broilers grow very fast and are ready in about 6 to 8 weeks. They are bred only for meat,
+        do not lay well, and do not do well if kept long past processing age.
+    - t: Dual-purpose breeds
+      how: Breeds like Plymouth Rock, Rhode Island Red, New Hampshire, and Wyandotte lay fairly well, and extra
+        males can be raised for meat. They grow more slowly than broilers. Heavier breeds such as these and Orpingtons
+        also handle cold winters well.
+    - t: Chicks or started pullets
+      how: Day-old chicks are the least expensive and the most common choice, but they need a heated brooder and
+        about five months before the first egg. Started pullets (young hens near laying age) cost more but skip
+        the brooder stage. "Straight-run" chicks are not sorted by sex and are about half males, so order sexed
+        female chicks if you only want hens, and consider one or two extra to allow for losses.
+    - t: Buy from NPIP hatcheries
+      how: CDC and UF/IFAS recommend buying from hatcheries that take part in the USDA National Poultry Improvement
+        Plan (NPIP), which works to reduce Salmonella and other diseases in baby poultry. Choose birds that are
+        bright, alert, and active, with clean, smooth feathers.
+    sources:
+    - name: 'Poultry Extension (Univ. of Kentucky): Selecting a Chicken Breed for Small or Backyard Flocks'
+      url: https://poultry.extension.org/articles/getting-started-with-small-and-backyard-poultry/selecting-birds-to-get-for-a-small-or-backyard-poultry-flock/selecting-a-chicken-breed-for-small-or-backyard-poultry-flocks/
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'University of Minnesota Extension: Caring for Chickens in Cold Weather'
+      url: https://extension.umn.edu/small-scale-poultry/caring-chickens-cold-weather
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'CDC: Backyard Poultry (Healthy Pets, Healthy People)'
+      url: https://www.cdc.gov/healthy-pets/about/backyard-poultry.html
+  - id: brooding_chicks
+    title: Brooding chicks
+    intro: Baby chicks cannot keep themselves warm for their first couple of weeks. A brooder is simply a safe,
+      draft-free box or pen with a heat source, feed, and water.
+    items:
+    - t: Set up heat before chicks arrive
+      how: Keep it 90 to 95 F at chick level for the first week, then lower it about 5 F each week by raising the
+        lamp or adjusting the heater. Chicks are usually feathered and ready to do without heat at about 4 to 6
+        weeks, once the brooder is close to room temperature.
+    - t: Let the chicks tell you
+      how: Chicks huddled under the heat are cold. Chicks pressed against the far walls are too hot. Chicks crowded
+        to one side may be in a draft. Happy chicks are spread out, softly peeping, eating, and drinking.
+    - t: Use heat lamps safely
+      how: Heat lamps can start fires. Hang the lamp with a chain, never by its cord, use a guarded fixture, and
+        keep it well away from bedding. Radiant heaters made for poultry are another option.
+    - t: Give them room
+      how: Start with about 1/2 square foot per chick and give more space as they grow. A deep box or pen with clean
+        pine shavings works well.
+    - t: Water first, then starter feed
+      how: Have clean water ready and dip each chick's beak in it when they arrive. Feed chick starter (about 20
+        to 22 percent protein) for the first six weeks, then switch to grower feed. Clean and refill waterers daily.
+    - t: Keep the brooder out of the kitchen
+      how: Chicks can carry Salmonella even when they look healthy. CDC advises keeping poultry, including chicks,
+        out of the house, especially where food is made or eaten, and washing hands after every handling.
+    sources:
+    - name: 'UNH Extension: Brooding and Caring for Chicks'
+      url: https://extension.unh.edu/resource/brooding-and-caring-chicks
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'University of Minnesota Extension: Caring for Chickens in Cold Weather'
+      url: https://extension.umn.edu/small-scale-poultry/caring-chickens-cold-weather
+    - name: 'Poultry Extension (Univ. of Kentucky): Feeding Chickens for Egg Production'
+      url: https://poultry.extension.org/articles/feeds-and-feeding-of-poultry/feeding-chickens-for-egg-production/
+    - name: 'CDC: Backyard Poultry (Healthy Pets, Healthy People)'
+      url: https://www.cdc.gov/healthy-pets/about/backyard-poultry.html
+  - id: coop_and_run
+    title: Coop and run
+    intro: A good coop keeps birds dry, out of drafts, well ventilated, and safe from predators. Predators cause
+      more losses in small flocks than anything else, so build strong from the start.
+    items:
+    - t: Give enough space
+      how: Plan at least 3 square feet per hen inside the coop plus 8 to 10 square feet per hen in an outdoor run.
+        If birds will not have a run, plan 8 to 10 square feet each inside. Crowding leads to pecking and dirty
+        conditions.
+    - t: Nest boxes and roosts
+      how: Provide one nest box for about every four hens, roughly 12 inches square, dark, and filled with clean
+        shavings or straw. Chickens sleep on roosts, so give each bird about 8 to 10 inches of perch, placed higher
+        than the nest boxes and away from them.
+    - t: Ventilate without drafts
+      how: Chickens give off a lot of moisture and ammonia. Vents near the top of the coop let damp air out while
+        keeping wind off the birds where they roost. Damp air in winter is a main cause of frostbite.
+    - t: Use hardware cloth, not chicken wire, for safety
+      how: 'Chicken wire keeps chickens in but does not keep predators out: raccoons can reach through it and weasels
+        can slip through it. Use sturdy welded wire or hardware cloth with openings smaller than 1 inch on windows,
+        vents, and the run. The smaller the mesh, the smaller the predators it stops.'
+    - t: Stop diggers and climbers
+      how: Bury wire about 12 inches deep around the run, or lay a wire apron at least 12 inches out along the ground.
+        Cover the top of the run to keep out hawks, owls, raccoons, and climbing cats.
+    - t: Lock them in every night
+      how: Predators are most active at night. Close and latch the coop at dusk every evening. Chickens learn to
+        go in on their own, especially if you feed them there in the evening.
+    - t: Bedding and cleaning
+      how: Use a few inches of absorbent pine shavings or straw and replace wet spots promptly. CDC recommends cleaning
+        equipment outdoors, never in the kitchen or bathroom sink, and wearing gloves when cleaning the coop.
+    sources:
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'Oregon State University Extension: Backyard Chicken Coop Design, Part 2'
+      url: https://extension.oregonstate.edu/podcast/living-land/backyard-chicken-coop-design-part-2
+    - name: 'Oklahoma State University Extension: Backyard Flock Production'
+      url: https://extension.okstate.edu/fact-sheets/backyard-flock-production
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+    - name: 'University of Minnesota Extension: Caring for Chickens in Cold Weather'
+      url: https://extension.umn.edu/small-scale-poultry/caring-chickens-cold-weather
+    - name: 'Poultry Extension: Predator Management for Small and Backyard Flocks'
+      url: https://poultry.extension.org/articles/poultry-management/predator-management-for-small-and-backyard-poultry-flocks/
+    - name: 'Oklahoma State University Extension: Protecting Small Poultry Flocks from Predators'
+      url: https://extension.okstate.edu/fact-sheets/protecting-small-poultry-flocks-from-predators
+    - name: 'Penn State Extension: Summer Flock Care'
+      url: https://extension.psu.edu/summer-flock-care-keeping-your-birds-cool-and-comfortable
+    - name: 'CDC: Backyard Poultry (Healthy Pets, Healthy People)'
+      url: https://www.cdc.gov/healthy-pets/about/backyard-poultry.html
+  - id: feeding_and_water
+    title: Feeding and water
+    intro: A bagged, complete feed matched to the bird's age does nearly all the work. Treats and scraps are extras,
+      not the main meal.
+    items:
+    - t: Feed a complete layer ration
+      how: Once hens start laying, at around 18 to 20 weeks, switch to a layer feed with about 16 to 18 percent
+        protein. Each hen eats roughly 1/4 to 1/3 pound a day. Store feed in a dry, rodent-proof container and use
+        it within a few weeks so it stays fresh.
+    - t: Offer calcium if shells are thin
+      how: Layer feed already contains extra calcium. If you see thin or easily cracked shells, or as hens get older,
+        offer crushed oyster shell in a separate dish so hens can take what they need. Do not feed layer feed to
+        young growing birds.
+    - t: Provide grit
+      how: Chickens grind food in their gizzards with small stones. If they eat anything besides complete feed,
+        such as scraps, grain, or forage, offer poultry grit free-choice. Oyster shell is not a substitute for grit.
+    - t: Keep treats small
+      how: Scraps and scratch grains should be no more than about 10 percent of the diet, or only what the flock
+        finishes in about 20 minutes. Too many treats unbalance the diet. Avoid feeding extra cracked corn.
+    - t: Water, always
+      how: Hens need clean water at all times, and more in hot weather. A day without water can stop laying for
+        several days. In freezing weather, use a heated waterer or bring out fresh water morning and afternoon.
+    sources:
+    - name: 'Poultry Extension (Univ. of Kentucky): Feeding Chickens for Egg Production'
+      url: https://poultry.extension.org/articles/feeds-and-feeding-of-poultry/feeding-chickens-for-egg-production/
+    - name: 'University of Georgia Extension C954: Nutrition for the Backyard Flock'
+      url: https://fieldreport.caes.uga.edu/publications/C954/nutrition-for-the-backyard-flock/
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'Oklahoma State University Extension: Backyard Flock Production'
+      url: https://extension.okstate.edu/fact-sheets/backyard-flock-production
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+    - name: 'University of Minnesota Extension: Caring for Chickens in Cold Weather'
+      url: https://extension.umn.edu/small-scale-poultry/caring-chickens-cold-weather
+  - id: egg_safety
+    title: Egg handling and safety
+    intro: Fresh backyard eggs are a treat, but chickens can carry Salmonella even when they look healthy. A few
+      simple habits keep your family safe.
+    items:
+    - t: Collect eggs often
+      how: Gather eggs at least once a day, and twice if you can. Eggs left in the nest get dirty, cracked, or eaten.
+        Throw away cracked eggs, since germs get in more easily.
+    - t: Clean gently, and do not soak
+      how: Clean nest boxes keep eggs clean. Brush off dirt with a dry cloth, brush, or fine sandpaper. If you must
+        wash eggs, use water warmer than the egg (UF/IFAS says at least 20 F warmer), never soak them, and dry them
+        before storing. Cold water can pull germs in through the shell.
+    - t: Refrigerate right away
+      how: Refrigerate eggs as soon as you can after collecting, at 40 F or below, in a carton on an inside shelf
+        rather than the door. Once eggs are cold, keep them cold. Use raw eggs in the shell within about 3 to 5
+        weeks.
+    - t: Cook eggs thoroughly
+      how: Cook eggs until the yolk and white are firm, and cook egg dishes to 160 F. Use pasteurized eggs for recipes
+        that call for raw or lightly cooked eggs.
+    - t: Wash hands every time
+      how: Wash hands with soap and running water after touching chickens, eggs, feed, or anything in the coop.
+        Keep hand sanitizer by the coop for when soap is not handy, and supervise children's handwashing.
+    - t: Keep birds outside
+      how: Do not let chickens in the house, especially where food is made, served, or stored. Keep a pair of shoes
+        just for chore time and leave them outside. Do not kiss or snuggle birds and then touch your face.
+    - t: Protect young children
+      how: CDC advises that children younger than 5 should not handle or touch chicks or other poultry, because
+        they are more likely to get seriously sick. Always supervise older children around chickens and while they
+        wash up afterward.
+    sources:
+    - name: 'CDC: Backyard Poultry (Healthy Pets, Healthy People)'
+      url: https://www.cdc.gov/healthy-pets/about/backyard-poultry.html
+    - name: 'USDA FSIS: Shell Eggs from Farm to Table'
+      url: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/eggs/shell-eggs-farm-table
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+  - id: health_biosecurity
+    title: Health and biosecurity
+    intro: '"Biosecurity" just means keeping germs away from your birds. It is the best protection against bird
+      flu and other serious diseases.'
+    items:
+    - t: Know the signs of bird flu
+      how: USDA lists sudden death, low energy and appetite, a drop in eggs or soft or misshapen eggs, swelling
+        or purple color of the comb, wattles, or legs, trouble breathing, coughing or sneezing, twisting of the
+        head and neck, stumbling, and diarrhea. Highly pathogenic bird flu can kill a whole flock within days, so
+        act fast if you see these signs.
+    - t: Report sick or dying birds quickly
+      how: If birds get sick or die suddenly, contact your veterinarian, your state veterinarian, or USDA's toll-free
+        line at 1-866-536-7593. Avian influenza is a reportable disease. Wear gloves around sick or dead birds and
+        wash up well.
+    - t: Keep wild birds away
+      how: Wild birds can bring avian flu and other diseases to backyard flocks. Keep your birds apart from wild
+        birds and other people's poultry, and keep wild birds out of their feed and water. A covered run helps.
+    - t: Quarantine new birds
+      how: Keep new birds separate from your flock for at least 30 days. Care for your existing birds first, then
+        the new ones, and use separate gloves and boots or wash up in between.
+    - t: Do not haul disease home
+      how: Limit visitors to the coop, use dedicated chore shoes, and avoid borrowing or sharing tools and equipment
+        with other poultry owners. Clean cages and vehicles after shows or swaps.
+    - t: Watch for everyday warning signs
+      how: Sick birds often eat or drink less, have ruffled feathers, runny droppings, discharge from the eyes or
+        nose, or lay fewer or odd-looking eggs. Check birds monthly for lice and mites, and give them loose soil
+        or sand for dust bathing.
+    sources:
+    - name: 'USDA APHIS: Avian Influenza'
+      url: https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza
+    - name: 'USDA APHIS: Defend the Flock'
+      url: https://www.aphis.usda.gov/livestock-poultry-disease/avian/defend-the-flock
+    - name: 'CDC: Backyard Poultry (Healthy Pets, Healthy People)'
+      url: https://www.cdc.gov/healthy-pets/about/backyard-poultry.html
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+  - id: winter_and_heat
+    title: Winter and hot-weather care
+    intro: Healthy adult chickens handle cold better than heat. Dry air, steady water, and shade matter more than
+      fancy gear.
+    items:
+    - t: Keep the coop dry, not sealed
+      how: Seal drafts near the birds but keep vents open up high so moist air escapes. Frostbite on combs and toes
+        is mostly caused by cold plus dampness. Remove wet bedding and manure regularly.
+    - t: Keep water from freezing
+      how: Use a heated waterer or base made for poultry, or swap in fresh water several times a day. Hens eat up
+        to about 25 percent more feed in cold weather, so keep feeders full.
+    - t: Be careful with heat
+      how: If you add heat, use radiant heaters approved for poultry, hang lamps by a chain in a guarded fixture,
+        and keep cords and bulbs away from bedding and water. Have an electrician handle permanent coop wiring.
+    - t: Watch for heat stress
+      how: Heat stress can start in the 80s F. Warning signs are heavy panting, wings held away from the body, crouching,
+        and pale combs. Provide shade, good airflow, and cool, fresh water. Adding ice or frozen water bottles to
+        waterers helps during heat waves.
+    - t: Adjust feeding in heat
+      how: Feed in the cooler morning or evening and skip scratch grain and corn during heat waves, since digesting
+        them makes extra body heat. Frozen fruit or vegetable treats can help, in moderation.
+    sources:
+    - name: 'University of Minnesota Extension: Caring for Chickens in Cold Weather'
+      url: https://extension.umn.edu/small-scale-poultry/caring-chickens-cold-weather
+    - name: 'Penn State Extension: Summer Flock Care'
+      url: https://extension.psu.edu/summer-flock-care-keeping-your-birds-cool-and-comfortable
+    - name: 'UNH Extension: Producing Your Own Eggs'
+      url: https://extension.unh.edu/resource/producing-your-own-eggs
+  - id: meat_birds
+    title: Raising and processing meat birds
+    intro: Raising meat chickens is a short project, usually 6 to 12 weeks. It is worth planning the end of that
+      project, the processing, before the chicks arrive.
+    items:
+    - t: Raising broilers
+      how: Brood meat chicks like layer chicks, then give them more space as they grow. They need a high-protein
+        starter feed (about 20 to 24 percent protein) and plenty of water. Cornish Cross grow so fast that they
+        can develop leg and heart problems. Process them on time, around 6 to 8 weeks.
+    - t: Plan processing before you buy chicks
+      how: Decide whether you will process at home or use a poultry processor. Processors often book up months ahead,
+        so reserve a date before you order chicks. Many towns do not allow backyard slaughter, so check local rules.
+    - t: Humane processing basics
+      how: Extension guides advise removing feed (but not water) for several hours beforehand, handling birds calmly
+        to avoid bruising, and using a killing cone and a very sharp knife so the job is quick. If you have never
+        done it, learn from an experienced person or an extension workshop first.
+    - t: Keep it clean
+      how: Work in a clean area with good water, away from flies. Keep scald water at the right temperature (UMN
+        gives 125 to 130 F for 30 to 75 seconds for young birds). Remove the intestines carefully so they do not
+        tear, and wash hands, knives, and surfaces often.
+    - t: Chill fast
+      how: Chill carcasses in ice water right after processing until the meat is 40 F, then refrigerate or freeze.
+        A carcass should be below 45 F within about four hours. Cook chicken to 165 F.
+    - t: Selling meat or eggs is regulated
+      how: You can process birds for your own household without inspection, but selling poultry or eggs is regulated,
+        and rules differ by state. Before selling anything, check with your state department of agriculture or extension
+        office about licenses, labels, and limits.
+    sources:
+    - name: 'University of Minnesota Extension: Raising Chickens for Meat'
+      url: https://extension.umn.edu/small-scale-poultry/getting-started-broilers
+    - name: 'University of Minnesota Extension: Home Processing of Poultry'
+      url: https://extension.umn.edu/small-scale-poultry/home-processing-poultry
+    - name: 'Penn State Extension: A Quick Guide to Raising Pastured Broilers'
+      url: https://extension.psu.edu/a-quick-guide-to-raising-pastured-broilers
+    - name: 'Poultry Extension (Univ. of Kentucky): Food Safety of Poultry Meat from Backyard Flocks'
+      url: https://poultry.extension.org/articles/food-safety-with-poultry-meat-and-eggs/food-safety-of-poultry-meat-from-backyard-flocks/
+    - name: 'Oklahoma State University Extension: Backyard Flock Production'
+      url: https://extension.okstate.edu/fact-sheets/backyard-flock-production
+    - name: 'CDC: Backyard Poultry (Healthy Pets, Healthy People)'
+      url: https://www.cdc.gov/healthy-pets/about/backyard-poultry.html
+  - id: costs_honest
+    title: The honest truth about costs
+    intro: Most families keep chickens for the fresh eggs, the learning, and the fun, not to save money.
+    items:
+    - t: Home eggs usually cost more
+      how: Extension specialists are clear on this. Penn State says small-flock eggs will always cost more than
+        store eggs, Oklahoma State says home eggs and meat often cost more than retail, and NC State says you will
+        not make a profit or even recover costs from a small flock.
+    - t: Feed is the biggest ongoing cost
+      how: Feed is roughly 70 percent of the cost of raising chickens. The coop, fencing, feeders, waterers, and
+        chicks or pullets are the upfront costs.
+    - t: Older hens cost the same to feed
+      how: A hen eats about the same whether she lays five eggs a week or one. As hens age, their feed can cost
+        more than their eggs are worth.
+    - t: Budget for losses and the vet
+      how: Some flocks lose 10 percent or more of their birds to illness or predators. Order an extra chick or two,
+        and set aside a little for vet care and repairs.
+    sources:
+    - name: 'Penn State Extension: Successfully Raising a Small Flock of Laying Chickens'
+      url: https://extension.psu.edu/successfully-raising-a-small-flock-of-laying-chickens
+    - name: 'Oklahoma State University Extension: Backyard Flock Production'
+      url: https://extension.okstate.edu/fact-sheets/backyard-flock-production
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'University of Georgia Extension C954: Nutrition for the Backyard Flock'
+      url: https://fieldreport.caes.uga.edu/publications/C954/nutrition-for-the-backyard-flock/
+  - id: end_of_laying
+    title: When hens stop laying
+    intro: Hens lay best in their first two years and keep laying less each year after that, but they can live 8
+      years or more. It helps to decide ahead of time what you will do.
+    items:
+    - t: Keep them as part of the flock
+      how: Many families keep older hens for bug control, companionship, and the occasional egg. Plan for the feed
+        and coop space they will keep using.
+    - t: Process them for the table
+      how: Older hens of dual-purpose breeds can be used for stewing meat or broth. The meat is tougher than a young
+        broiler and is best cooked slowly.
+    - t: Rehome them
+      how: Some owners find new homes for older hens. Pass along health information, and remember the new owner
+        will need to quarantine them.
+    - t: Plan for natural deaths
+      how: Check your local and state rules for disposing of dead birds. If a bird dies suddenly, especially if
+        several do, contact your veterinarian or state veterinarian.
+    sources:
+    - name: 'University of Minnesota Extension: Raising Chickens for Eggs'
+      url: https://extension.umn.edu/agriculture/animals-and-livestock/poultry/raising-chickens-for-eggs
+    - name: 'Penn State Extension: Successfully Raising a Small Flock of Laying Chickens'
+      url: https://extension.psu.edu/successfully-raising-a-small-flock-of-laying-chickens
+    - name: 'NC State Extension: Keeping Garden Chickens in North Carolina'
+      url: https://content.ces.ncsu.edu/keeping-garden-chickens-in-north-carolina
+    - name: 'UF/IFAS Extension AN239: Raising Backyard Chickens for Eggs'
+      url: https://ask.ifas.ufl.edu/publication/AN239
+    - name: 'USDA APHIS: Defend the Flock'
+      url: https://www.aphis.usda.gov/livestock-poultry-disease/avian/defend-the-flock
+    - name: 'CDC: Backyard Poultry (Healthy Pets, Healthy People)'
+      url: https://www.cdc.gov/healthy-pets/about/backyard-poultry.html
+bees:
+  numbers:
+  - id: honey_per_colony
+    label: Honey per established colony per year
+    value:
+      surplus_lb_low: 50
+      surplus_lb_high: 100
+      unit: pounds of surplus honey per year
+    notes: 'University of Missouri: once established, a hive can produce 50 to 100 pounds of surplus honey a year.
+      Yields swing widely with weather, forage, and colony health, and some years bring little or none.'
+    sources:
+    - name: 'University of Missouri Extension G7600: Beekeeping Tips for Beginners'
+      url: https://extension.missouri.edu/publications/g7600
+  - id: first_year_honey
+    label: First-year honey
+    value:
+      expectation: little or none, especially from packages
+    notes: 'Penn State: there is little chance of a honey crop the first year from a package; a nuc may produce
+      some in a year with a strong nectar flow; a first-year crop from a swarm is unlikely. A new colony''s first
+      job is building comb and stores to survive its first winter.'
+    sources:
+    - name: 'Penn State Extension: Beekeeping - Honey Bees'
+      url: https://extension.psu.edu/beekeeping-honey-bees
+  - id: winter_stores
+    label: Honey to leave for winter
+    value:
+      by_region:
+      - region: Northern / cold-winter areas
+        amount: about 90 lb of honey, roughly one full deep box or two full medium supers (UF/IFAS, University of
+          Illinois)
+      - region: Midwest (Missouri)
+        amount: 40 to 80 lb per brood box, at minimum
+      - region: Southeast (Georgia)
+        amount: whole hive should weigh at least 100 lb in late fall
+    notes: Leave the colony's own winter food before you take any honey. Your local extension office or beekeeping
+      club can tell you the right amount for your area.
+    sources:
+    - name: 'UF/IFAS Extension IN1006: Overwintering Honey Bee Colonies in Northern Climates'
+      url: https://ask.ifas.ufl.edu/publication/in1006
+    - name: 'University of Illinois Extension: Prepare Your Bees for Winter'
+      url: https://extension.illinois.edu/blogs/know-how-know-more/2021-11-11-prepare-your-bees-winter
+    - name: 'University of Missouri Extension G7600: Beekeeping Tips for Beginners'
+      url: https://extension.missouri.edu/publications/g7600
+    - name: 'University of Georgia Bee Program: Honey Bee Management'
+      url: https://bees.caes.uga.edu/beekeeping-resources/getting-started-topics/getting-started-honey-bee-management.html
+  - id: hive_placement
+    label: Hive placement
+    value:
+      stand_height_inches: 18
+      water_within_miles: 0.25
+      flyway_barrier_height_ft: 6
+      barrier_extends_ft_each_side: 10
+      entrance_facing: east or south
+    notes: 'Missouri: face hives east or south with a windbreak on the north, raise them about 18 inches on a stand,
+      and make sure water is within a quarter mile. Oregon State: a solid barrier 6 feet or taller extending about
+      10 feet on each side sends bees up over people''s heads; in town, Missouri suggests an entrance about a foot
+      from a tall fence or hedge. Oregon State advises beginners to start with one or two colonies on a residential
+      lot.'
+    sources:
+    - name: 'University of Missouri Extension G7600: Beekeeping Tips for Beginners'
+      url: https://extension.missouri.edu/publications/g7600
+    - name: 'Oregon State University Extension EM 9186: Residential Beekeeping Best-Practice Guidelines'
+      url: https://extension.oregonstate.edu/catalog/em-9186-residential-beekeeping-best-practice-guidelines-nuisance-free-beekeeping-oregon
+  - id: startup_costs
+    label: Startup equipment and approximate costs
+    value:
+      equipment:
+      - 'hive: bottom board, deep brood box(es), frames with foundation, inner cover, outer cover'
+      - honey supers with frames (added as the colony grows)
+      - hive stand
+      - smoker
+      - hive tool
+      - bee brush
+      - feeder
+      - veil and gloves, or a jacket or full suit
+      - 'bees: a package or a nuc'
+      - white granulated sugar for syrup
+      - mite monitoring supplies
+      nc_state_estimates:
+        starter_hive_kit_usd: about 300 (deluxe about 600)
+        package_bees_usd: 100 to 125
+        nuc_usd: 150 to 200
+        swarm_usd: virtually free
+      oklahoma_state_2021:
+        bare_minimum_one_hive_usd: 458
+        first_year_total_usd: 520
+      extraction_equipment: extra; Oklahoma State example small-scale harvest setup totaled about $1,079
+    notes: Prices are from NC State and Oklahoma State (published 2021) and will have changed. Oklahoma State's
+      figures do not include honey-harvest equipment. NC State suggests starting with two hives so you can compare
+      them and borrow resources between them.
+    sources:
+    - name: 'NC State Extension: How to Become a Beekeeper in North Carolina'
+      url: https://content.ces.ncsu.edu/how-to-become-a-beekeeper-in-north-carolina
+    - name: 'Oklahoma State University Extension: Beginning Honey Beekeeping Equipment and Associated Costs (2021)'
+      url: https://extension.okstate.edu/fact-sheets/beginning-honey-beekeeping-equipment-and-associated-costs
+    - name: 'Oklahoma State University Extension: Beekeeping - Honey Harvest Methods, Costs and Breakeven'
+      url: https://extension.okstate.edu/fact-sheets/beekeeping-honey-harvest-methods-costs-and-breakeven-calculations
+  - id: varroa_thresholds
+    label: Varroa mite action levels (mites per 100 bees)
+    value:
+      sample: about 300 bees (1/2 cup) per alcohol or soap wash or sugar roll
+      thresholds:
+      - phase: dormant (winter)
+        act_above_pct: 1
+      - phase: population increase (spring)
+        act_above_pct: 2 to 3
+      - phase: peak population (summer)
+        act_above_pct: 3
+      - phase: population decrease (late summer/fall)
+        act_above_pct: 2 to 3
+      monitor_times_per_year_min: 4
+    notes: Honey Bee Health Coalition guide. Divide the mite count by 3 for a 300-bee sample to get mites per 100
+      bees. UMN Bee Lab suggests monthly checks and keeping levels below about 1 percent when you can.
+    sources:
+    - name: 'Honey Bee Health Coalition: Tools for Varroa Management guide (8th ed. PDF; 9th ed. now current)'
+      url: https://honeybeehealthcoalition.org/wp-content/uploads/2022/08/HBHC-Guide_Varroa-Mgmt_8thEd-082422.pdf
+    - name: 'University of Minnesota Bee Lab: Varroa Mite Testing and Management'
+      url: https://beelab.umn.edu/node/786
+  - id: syrup_ratios
+    label: Sugar syrup ratios
+    value:
+      spring_or_stimulative: 1 part sugar to 1 part water
+      fall_or_winter_stores: 2 parts sugar to 1 part water
+      sugar_type: white granulated sugar
+    notes: 'UGA Bee Program and UF/IFAS. Feed syrup only when bees need it. University of Illinois: bees can take
+      syrup until it falls below about 50 F.'
+    sources:
+    - name: 'University of Georgia Bee Program: Honey Bee Management'
+      url: https://bees.caes.uga.edu/beekeeping-resources/getting-started-topics/getting-started-honey-bee-management.html
+    - name: 'UF/IFAS Extension IN1006: Overwintering Honey Bee Colonies in Northern Climates'
+      url: https://ask.ifas.ufl.edu/publication/in1006
+    - name: 'University of Illinois Extension: Prepare Your Bees for Winter'
+      url: https://extension.illinois.edu/blogs/know-how-know-more/2021-11-11-prepare-your-bees-winter
+    - name: 'Oklahoma State University Extension: Beginning Honey Beekeeping Equipment and Associated Costs (2021)'
+      url: https://extension.okstate.edu/fact-sheets/beginning-honey-beekeeping-equipment-and-associated-costs
+  sections:
+  - id: before_you_start
+    title: Before you start
+    intro: Honeybees are fascinating and fairly low-maintenance compared with many animals, but they still need
+      regular care and good neighbor relations.
+    items:
+    - t: Check local rules
+      how: Look up city, county, and HOA rules before you buy bees. Some places limit the number of hives or require
+        them to sit a certain distance from property lines.
+    - t: Register if your state requires it
+      how: Many states ask or require beekeepers to register their hives with the state department of agriculture
+        or apiary inspector, including Pennsylvania and North Carolina. Some states also regulate honey-extracting
+        rooms. Your state apiarist or extension office can tell you what applies.
+    - t: Talk with your neighbors
+      how: Explain your plans before the hives arrive. Many "bee stings" people report are really from wasps, and
+        a friendly talk heads off worry. Oregon State also notes that not every homeowner's insurance policy covers
+        beekeeping, so check yours.
+    - t: Think about allergies
+      how: A little pain and swelling where you were stung is normal. A small share of people have serious allergic
+        reactions that need emergency care. If you or someone in your household has had a severe reaction to a sting,
+        talk with a doctor before keeping bees.
+    - t: Plan your time
+      how: Expect regular hive checks from spring through fall, about every two weeks during swarm season, plus
+        mite checks, feeding when needed, and harvest. Two hives take only a little more time than one.
+    sources:
+    - name: 'Penn State Extension: Beekeeping - Honey Bees'
+      url: https://extension.psu.edu/beekeeping-honey-bees
+    - name: 'NC State Extension: How to Become a Beekeeper in North Carolina'
+      url: https://content.ces.ncsu.edu/how-to-become-a-beekeeper-in-north-carolina
+    - name: 'Oregon State University Extension EM 9186: Residential Beekeeping Best-Practice Guidelines'
+      url: https://extension.oregonstate.edu/catalog/em-9186-residential-beekeeping-best-practice-guidelines-nuisance-free-beekeeping-oregon
+    - name: 'Penn State Extension: Honey Bee Management Throughout the Seasons'
+      url: https://extension.psu.edu/honey-bee-management-throughout-the-seasons
+  - id: learning
+    title: Learning the craft
+    intro: Beekeeping is easiest to learn from people who keep bees near you, because the timing of the season depends
+      on your local climate and flowers.
+    items:
+    - t: Take a beginner class
+      how: Extension offices and beekeeping clubs often run beginner courses, usually in winter before bees arrive
+        in spring. Some universities offer online courses too.
+    - t: Join a local club
+      how: Local and state beekeeping associations are the best place to find advice tuned to your area, plus mentors
+        and friendly help. In North Carolina alone, NC State counts more than 80 county chapters.
+    - t: Find a mentor
+      how: An experienced beekeeper who will open a hive with you is worth more than any book. Clubs can often pair
+        you with one.
+    - t: Read a good beginner book
+      how: Choose one that covers honey bee biology and seasonal management. Be choosy with online videos and check
+        what you learn against extension advice.
+    sources:
+    - name: 'University of Missouri Extension G7600: Beekeeping Tips for Beginners'
+      url: https://extension.missouri.edu/publications/g7600
+    - name: 'NC State Extension: How to Become a Beekeeper in North Carolina'
+      url: https://content.ces.ncsu.edu/how-to-become-a-beekeeper-in-north-carolina
+    - name: 'Penn State Extension: Beekeeping - Honey Bees'
+      url: https://extension.psu.edu/beekeeping-honey-bees
+  - id: getting_bees
+    title: Getting bees
+    intro: There are three common ways to start a colony. Order early, well before spring.
+    items:
+    - t: Packages
+      how: A package is about 3 pounds of worker bees plus a queen in a screened box. Packages are usually the least
+        expensive purchased option and unlikely to carry brood disease, but the colony starts from scratch, needs
+        feeding, and rarely makes a honey crop the first year.
+    - t: Nucs
+      how: A nuc (nucleus colony) is a small working colony, usually five frames of bees, brood, food, and a laying
+        queen. It costs more but builds up faster, lets you see the queen's laying pattern, and is less likely to
+        fail.
+    - t: Swarms
+      how: Swarms are free, usually caught in spring, and fun to collect, but you cannot judge the queen ahead of
+        time and supply is unpredictable. Ask your club to help with your first one.
+    - t: Order and set up early
+      how: Missouri suggests ordering bees in November or December for spring delivery and having hives assembled
+        and in place about a month before bees arrive. That gives you time to learn the parts before the bees show
+        up.
+    sources:
+    - name: 'Penn State Extension: Beekeeping - Honey Bees'
+      url: https://extension.psu.edu/beekeeping-honey-bees
+    - name: 'NC State Extension: How to Become a Beekeeper in North Carolina'
+      url: https://content.ces.ncsu.edu/how-to-become-a-beekeeper-in-north-carolina
+    - name: 'University of Missouri Extension G7600: Beekeeping Tips for Beginners'
+      url: https://extension.missouri.edu/publications/g7600
+  - id: equipment
+    title: Equipment and protective gear
+    intro: Most beginners in the U.S. use Langstroth hives, the stackable wooden boxes with removable frames. Standard
+      sizes make it easy to buy parts and get help.
+    items:
+    - t: The hive
+      how: A basic hive has a bottom board, one or two deep boxes for the brood nest, frames with foundation, an
+        inner cover, and a telescoping outer cover. Medium "honey supers" go on top when the colony is strong and
+        nectar is flowing. An entrance reducer helps in cold weather and against robbing.
+    - t: Tools
+      how: You will need a smoker, a hive tool for prying frames apart, a bee brush, and a feeder. Supplies for
+        mite checks are also essential.
+    - t: Protective gear
+      how: At minimum, wear a veil. Many beginners also like gloves and a jacket or full suit. Light colors are
+        better than dark ones.
+    - t: Paint and stand
+      how: Paint the outside of the boxes with a light-colored exterior paint. Set the hive on a sturdy stand about
+        18 inches up, and strap it down in windy areas.
+    - t: Harvest equipment can wait
+      how: Extracting equipment is a separate, larger cost. New colonies often make little or no extra honey the
+        first year, so you can usually put off buying it.
+    sources:
+    - name: 'University of Missouri Extension G7600: Beekeeping Tips for Beginners'
+      url: https://extension.missouri.edu/publications/g7600
+    - name: 'Oklahoma State University Extension: Beginning Honey Beekeeping Equipment and Associated Costs (2021)'
+      url: https://extension.okstate.edu/fact-sheets/beginning-honey-beekeeping-equipment-and-associated-costs
+    - name: 'NC State Extension: How to Become a Beekeeper in North Carolina'
+      url: https://content.ces.ncsu.edu/how-to-become-a-beekeeper-in-north-carolina
+  - id: placement
+    title: Where to put your hives
+    intro: A good spot keeps the bees healthy and keeps them out of the way of people and pets.
+    items:
+    - t: Morning sun, some shelter
+      how: Face the entrance east or south so the morning sun gets bees flying early. A windbreak on the north side
+        helps in winter, and light afternoon shade in summer is welcome.
+    - t: Provide water
+      how: Bees need water every day. Set up a shallow water source with floats, stones, or sticks to land on before
+        the bees start visiting your neighbor's pool or birdbath, and keep it from running dry.
+    - t: Steer the flight path
+      how: A solid fence or hedge about 6 feet tall near the hive makes bees fly up and over people. Keep hives
+        away from sidewalks, play areas, doors, and spots where people or pets pass often.
+    - t: Keep it level and dry
+      how: Set hives on a stand off the ground, level side to side with a slight forward tilt so rain drains out.
+        Make sure you can reach the hive easily with equipment.
+    sources:
+    - name: 'University of Missouri Extension G7600: Beekeeping Tips for Beginners'
+      url: https://extension.missouri.edu/publications/g7600
+    - name: 'Oregon State University Extension EM 9186: Residential Beekeeping Best-Practice Guidelines'
+      url: https://extension.oregonstate.edu/catalog/em-9186-residential-beekeeping-best-practice-guidelines-nuisance-free-beekeeping-oregon
+  - id: beekeeping_year
+    title: The beekeeping year
+    intro: Timing shifts by several weeks from south to north, so learn your local calendar from a nearby club or
+      extension office. This is the general pattern.
+    items:
+    - t: Late winter and early spring
+      how: Bees start raising brood again. On mild days, check that colonies are alive and have food. Feed syrup
+        or pollen substitute if stores are low. Install new packages or nucs in spring.
+    - t: Late spring and early summer
+      how: Colonies grow fast and this is swarm season. Inspect about every two weeks, add honey supers before the
+        main nectar flow, and consider splitting strong colonies.
+    - t: Summer
+      how: Harvest honey when supers are full and capped. Begin regular varroa mite checks.
+    - t: Late summer and fall
+      how: Nectar runs short and bees may rob weaker hives, so reduce entrances and keep inspections short. Check
+        and treat mites to protect the bees that will carry the colony through winter. Make sure each hive has enough
+        honey, feeding heavy syrup if needed, and combine weak colonies.
+    - t: Winter
+      how: Leave the cluster alone except for quick checks of food on mild days. Keep entrances clear, use a mouse
+        guard, and make sure moist air can escape from the top of the hive.
+    sources:
+    - name: 'Penn State Extension: Honey Bee Management Throughout the Seasons'
+      url: https://extension.psu.edu/honey-bee-management-throughout-the-seasons
+    - name: 'University of Georgia Bee Program: Honey Bee Management'
+      url: https://bees.caes.uga.edu/beekeeping-resources/getting-started-topics/getting-started-honey-bee-management.html
+    - name: 'UF/IFAS Extension IN1006: Overwintering Honey Bee Colonies in Northern Climates'
+      url: https://ask.ifas.ufl.edu/publication/in1006
+  - id: varroa
+    title: Varroa mites
+    intro: The University of Minnesota Bee Lab calls varroa mites a primary cause of honeybee colony deaths in the
+      U.S. Checking and managing mites is a core part of beekeeping, not an optional extra.
+    items:
+    - t: Why they matter
+      how: Varroa mites feed on developing and adult bees and spread viruses. Colonies with unchecked mite levels
+        often die in fall or winter, and mites spread to neighboring hives through drifting and robbing bees.
+    - t: Count your mites
+      how: Take about 300 bees (1/2 cup) from a brood frame and do an alcohol or soapy-water wash, the most reliable
+        method, or a powdered sugar roll, which lets most bees survive but works poorly in humid weather or during
+        a nectar flow. Divide the mites counted by 3 to get mites per 100 bees.
+    - t: Check regularly
+      how: Check at least four times a year, starting in spring, and monthly if you can. Check more often in late
+        summer and fall, and always recheck after a treatment to make sure it worked.
+    - t: Act at the right levels
+      how: The Honey Bee Health Coalition advises prompt control above about 2 to 3 mites per 100 bees in spring
+        and late summer, 3 in summer, and 1 in winter. Below about 2, you can usually keep watching instead of treating
+        right away.
+    - t: Use integrated pest management
+      how: Combine good practices, such as mite-tolerant stock, brood breaks, and drone brood removal, with registered
+        treatments when needed. Follow the label exactly, since using a product any other way is against federal
+        and state law, and rotate treatment types to slow resistance. The Honey Bee Health Coalition's free guide
+        and your extension office can help you choose.
+    sources:
+    - name: 'University of Minnesota Bee Lab: Varroa Mite Testing and Management'
+      url: https://beelab.umn.edu/node/786
+    - name: 'Honey Bee Health Coalition: Tools for Varroa Management guide (8th ed. PDF; 9th ed. now current)'
+      url: https://honeybeehealthcoalition.org/wp-content/uploads/2022/08/HBHC-Guide_Varroa-Mgmt_8thEd-082422.pdf
+    - name: 'Honey Bee Health Coalition: Varroa Management resources'
+      url: https://honeybeehealthcoalition.org/resources/varroa-management/
+  - id: swarming
+    title: Swarming basics
+    intro: 'Swarming is how honeybee colonies reproduce: the old queen leaves with a large part of the colony to
+      find a new home. Penn State notes the colony can shrink by half or more, which sharply cuts its strength and
+      honey crop, and swarms can worry neighbors.'
+    items:
+    - t: Know the season
+      how: Swarming happens mostly in spring and early summer, when colonies grow fast and get crowded. Queen cells
+        along the bottom edges of frames are a sign a swarm is coming soon.
+    - t: Give them room early
+      how: Add honey supers before the main nectar flow and before the top box is about two-thirds full. A crowded
+        brood nest is a main trigger.
+    - t: Split strong colonies
+      how: Dividing a strong colony into two in spring relieves crowding and gives you an extra colony. Penn State
+        calls a split the most effective step once a colony has started raising queens.
+    - t: If a swarm leaves
+      how: Swarms are usually very docile. Keep people back and call a local beekeeping club for help collecting
+        it, especially the first time.
+    sources:
+    - name: 'Penn State Extension: Honey Bee Management Throughout the Seasons'
+      url: https://extension.psu.edu/honey-bee-management-throughout-the-seasons
+    - name: 'Oregon State University Extension EM 9186: Residential Beekeeping Best-Practice Guidelines'
+      url: https://extension.oregonstate.edu/catalog/em-9186-residential-beekeeping-best-practice-guidelines-nuisance-free-beekeeping-oregon
+    - name: 'University of Georgia Bee Program: Honey Bee Management'
+      url: https://bees.caes.uga.edu/beekeeping-resources/getting-started-topics/getting-started-honey-bee-management.html
+  - id: feeding
+    title: Feeding your bees
+    intro: 'Bees do best on their own honey and pollen. Feed only when they need it: new colonies, spring shortages,
+      or light hives in fall.'
+    items:
+    - t: 'Spring: 1:1 syrup'
+      how: Mix 1 part white granulated sugar to 1 part water by volume to help new colonies build comb or tide over
+        colonies that run low in spring. Stop once natural nectar is flowing well.
+    - t: 'Fall: 2:1 syrup'
+      how: Mix 2 parts sugar to 1 part water for light colonies in fall. The thicker syrup is easier for bees to
+        store as winter food.
+    - t: Use plain white sugar
+      how: Use white granulated sugar. Bees can take syrup until temperatures fall below about 50 F. In the cold
+        of winter, beekeepers use fondant or hard sugar instead of liquid syrup.
+    sources:
+    - name: 'University of Georgia Bee Program: Honey Bee Management'
+      url: https://bees.caes.uga.edu/beekeeping-resources/getting-started-topics/getting-started-honey-bee-management.html
+    - name: 'UF/IFAS Extension IN1006: Overwintering Honey Bee Colonies in Northern Climates'
+      url: https://ask.ifas.ufl.edu/publication/in1006
+    - name: 'University of Illinois Extension: Prepare Your Bees for Winter'
+      url: https://extension.illinois.edu/blogs/know-how-know-more/2021-11-11-prepare-your-bees-winter
+    - name: 'Oklahoma State University Extension: Beginning Honey Beekeeping Equipment and Associated Costs (2021)'
+      url: https://extension.okstate.edu/fact-sheets/beginning-honey-beekeeping-equipment-and-associated-costs
+    - name: 'Penn State Extension: Honey Bee Management Throughout the Seasons'
+      url: https://extension.psu.edu/honey-bee-management-throughout-the-seasons
+  - id: harvesting
+    title: Harvesting and storing honey
+    intro: Harvest only true surplus. The bees' own winter food always comes first.
+    items:
+    - t: Leave enough for winter
+      how: In cold northern areas, a colony may need about 90 pounds of honey to get through winter, about one full
+        deep box or two full medium supers; in Missouri, at least 40 to 80 pounds per brood box; in Georgia, the
+        whole hive should weigh at least 100 pounds in late fall. Ask local beekeepers what works in your area.
+    - t: Take capped honey
+      how: Harvest frames that are at least 80 percent capped with wax. If nectar drips when you gently shake a
+        frame, it is not ready, so leave it in the hive. Uncured honey has too much water and can ferment.
+    - t: Clear the bees gently
+      how: Use a little smoke and brush or shake bees off the frames, or use a bee escape board the day before to
+        clear bees from the supers. Work calmly and keep the lids off only as long as needed.
+    - t: Extract and strain
+      how: Slice off the wax cappings, spin the frames in an extractor, and strain the honey through a fine strainer
+        to remove wax. Let it settle so air bubbles rise, then bottle it in clean, dry, airtight jars.
+    - t: Store it dry
+      how: Keep honey tightly sealed in a dry place; it does not need refrigeration and only ferments if it takes
+        on extra water. Honey that crystallizes has not spoiled. Set the jar in warm-to-the-touch water to soften
+        it, and do not overheat it.
+    sources:
+    - name: 'UF/IFAS Extension IN1006: Overwintering Honey Bee Colonies in Northern Climates'
+      url: https://ask.ifas.ufl.edu/publication/in1006
+    - name: 'University of Illinois Extension: Prepare Your Bees for Winter'
+      url: https://extension.illinois.edu/blogs/know-how-know-more/2021-11-11-prepare-your-bees-winter
+    - name: 'University of Missouri Extension G7600: Beekeeping Tips for Beginners'
+      url: https://extension.missouri.edu/publications/g7600
+    - name: 'University of Georgia Bee Program: Honey Bee Management'
+      url: https://bees.caes.uga.edu/beekeeping-resources/getting-started-topics/getting-started-honey-bee-management.html
+    - name: 'Oklahoma State University Extension: Beekeeping - Honey Harvest Methods, Costs and Breakeven'
+      url: https://extension.okstate.edu/fact-sheets/beekeeping-honey-harvest-methods-costs-and-breakeven-calculations
+    - name: 'UF/IFAS Extension AA154: Honey and Its Uses'
+      url: https://ask.ifas.ufl.edu/publication/AA154
+  - id: honey_safety_and_selling
+    title: Honey safety and selling
+    intro: Honey is a wonderful food for most of the family, with one important exception.
+    items:
+    - t: No honey for babies under 12 months
+      how: 'CDC: honey can cause infant botulism, a serious illness, in children younger than 12 months. Do not
+        give babies honey, and do not add it to their food, water, formula, or pacifier. This includes your own
+        raw honey.'
+    - t: 'Selling honey: check your state''s rules'
+      how: Rules for selling honey vary by state. Oklahoma, for example, lets small producers sell raw honey with
+        a specific label, while Pennsylvania requires honey-extracting rooms to be registered, even a home kitchen.
+        Check with your state department of agriculture or extension office before selling.
+    - t: Label clearly
+      how: In Oklahoma, small-producer honey labels must show the product name, net weight, the beekeeper's name,
+        phone number, and address, and a statement that it was packed in an uninspected facility. Other states have
+        their own label rules.
+    sources:
+    - name: 'CDC: Foods and Drinks to Avoid or Limit (infants and toddlers)'
+      url: https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/foods-and-drinks-to-avoid-or-limit.html
+    - name: 'Oklahoma State University Extension: Beekeeping - Honey Harvest Methods, Costs and Breakeven'
+      url: https://extension.okstate.edu/fact-sheets/beekeeping-honey-harvest-methods-costs-and-breakeven-calculations
+    - name: 'Penn State Extension: Beekeeping - Honey Bees'
+      url: https://extension.psu.edu/beekeeping-honey-bees
+  supporting_pollinators:
+    id: supporting_pollinators
+    title: Not ready for bees? Help pollinators instead
+    intro: You do not need a hive to help bees. More than 3,600 kinds of bees live in the U.S., and most are native
+      bees that need flowers, nesting spots, and fewer pesticides. Many of them nest in the ground.
+    items:
+    - t: Plant native flowers
+      how: Native plants offer plenty of nectar and pollen and are usually easy to care for. Plant them in clumps
+        so pollinators can find them.
+    - t: Keep something blooming all season
+      how: Aim for at least three kinds of plants flowering in each of spring, summer, and fall. Herbs such as oregano,
+        basil, and borage, and vegetables allowed to flower, help too.
+    - t: Leave places to nest
+      how: About 70 percent of U.S. bees nest in the ground. Leave a few sunny patches of bare, undisturbed soil,
+        and leave some plant stems and leaves standing over winter for insects that shelter in them.
+    - t: Use fewer pesticides
+      how: Not every pest problem needs a spray. Healthy plants, early scouting, and row covers prevent many problems.
+        If you do use a pesticide, read the label's bee and environmental warnings, never spray plants in bloom,
+        and spray when pollinators are not active.
+    - t: Offer shallow water
+      how: A shallow dish with stones or other good landing spots gives bees a safe place to drink. Butterflies
+        also use damp soil or mud for minerals.
+    - t: Mix flowers into the lawn
+      how: Lawns offer little food for pollinators. Letting clover, self-heal, or early dandelions bloom, or raising
+        the mower to about 4 inches, adds food for bees.
+    sources:
+    - name: 'USDA People''s Garden: The Importance of Pollinators'
+      url: https://www.usda.gov/about-usda/general-information/initiatives-and-highlighted-programs/peoples-garden/importance-pollinators
+    - name: 'University of Illinois Extension: 6 Ways to Support Native Pollinators'
+      url: https://extension.illinois.edu/blogs/ilriverhort/2024-03-05-6-ways-support-native-pollinators-illinois-and-beyond
+    - name: 'University of Illinois Extension: Protecting Pollinators from Pesticides'
+      url: https://extension.illinois.edu/blogs/pesticide-news/2025-04-04-protecting-pollinators-pesticides

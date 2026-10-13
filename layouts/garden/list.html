@@ -1,0 +1,90 @@
+{{ define "main" }}
+<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (os.Stat "static/garden/garden.css").ModTime.Unix }}">
+{{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}{{ $c := site.Data.garden.crops }}
+<div class="hs gd" id="gd">
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Grow your own food</p>
+    <h1>Food Garden Planner</h1>
+    <p>Tell it how much space you have and where you live, and it suggests what to grow for healthy, filling food, how much it might give you, and how to rotate it year to year. Then follow the step-by-step guides, from a windowsill to a family farm, with chickens and honeybees too.</p>
+  </header>
+
+  <section class="hs-sec gd-form" id="gd-form">
+    <h2><span class="pl-n">1</span> Your space</h2>
+    <div class="gd-where" role="radiogroup" aria-label="Where will you grow?">
+      <label><input type="radio" name="where" value="indoor"><span>🪴<b>Indoors</b><small>windowsill or grow lights</small></span></label>
+      <label><input type="radio" name="where" value="balcony"><span>🏙️<b>Balcony or patio</b><small>containers</small></span></label>
+      <label><input type="radio" name="where" value="garden"><span>🏡<b>Garden beds</b><small>backyard to large garden</small></span></label>
+      <label><input type="radio" name="where" value="farm"><span>🚜<b>Small farm</b><small>an acre or more</small></span></label>
+    </div>
+    <div class="gd-row">
+      <span class="gd-size" data-for="indoor balcony"><label>Growing space <input type="number" id="gd-sqft" min="1" max="2000" step="1"> sq ft</label></span>
+      <span class="gd-size" data-for="garden"><label>Beds <input type="number" id="gd-w" min="1" max="500" step="0.5"> ft wide ×</label> <label><input type="number" id="gd-l" min="1" max="2000" step="0.5"> ft long</label> <span class="hs-small" id="gd-area"></span></span>
+      <span class="gd-size" data-for="farm"><label>Land to plant <input type="number" id="gd-acres" min="0.25" max="200" step="0.25"> acres</label></span>
+      <label class="gd-zone">Climate <select id="gd-zone">{{ $cl := dict "3" "Very cold" "4" "Very cold" "5" "Cold winters" "6" "Cold winters" "7" "Cool winters" "8" "Mild winters" "9" "Warm winters, light frost" "10" "Warm winters, rare frost" "11" "Frost-free" }}{{ range $c.zones }}<option value="{{ .zone }}">{{ index $cl (string .zone) }} · Zone {{ .zone }}: lows {{ .min_F }} to {{ .max_F }}°F ({{ math.Round .min_C }} to {{ math.Round .max_C }}°C)</option>{{ end }}</select></label>
+      <a class="hs-small gd-zone" href="https://planthardiness.ars.usda.gov/" target="_blank" rel="noopener">Find your zone (USDA map) ↗</a> <span class="hs-small gd-zone">Zones measure winter cold only; summer heat and rain vary within a zone.</span>
+    </div>
+    <div class="gd-row">
+      <label>People eating <select id="gd-people">{{ range seq 1 12 }}<option value="{{ . }}">{{ . }}</option>{{ end }}</select></label>
+      <label>Aim for <select id="gd-goal">
+        <option value="balanced">A healthy mix (recommended)</option>
+        <option value="calories">The most food energy (calories)</option>
+        <option value="nutrition">The most vitamins and minerals</option>
+        <option value="money">Saving money on groceries</option>
+        <option value="easy">Easy and fun (hobby, kids)</option>
+      </select></label>
+      <label class="gd-cb" data-for="garden farm balcony"><input type="checkbox" id="gd-peren"> Berries and perennials</label>
+      <label class="gd-cb" data-for="garden farm balcony"><input type="checkbox" id="gd-trees"> Fruit and nut trees</label>
+      <label class="gd-cb" data-for="indoor"><input type="checkbox" id="gd-lights"> I have grow lights</label>
+    </div>
+    <h2><span class="pl-n">2</span> Must-grow crops <small class="hs-small">(optional: tap any you want included)</small></h2>
+    <div class="gd-chips" id="gd-must"></div>
+  </section>
+
+  <section class="hs-sec" id="gd-out" aria-live="polite"></section>
+
+  <section class="hs-sec gd-animals" id="gd-animals">
+    <h2>🐔 Chickens and 🐝 bees</h2>
+    <p>Animals add eggs, meat and honey, but they need care every day, and many towns have rules about them. Check your local ordinances first.</p>
+    <div class="gd-acards">
+      <div class="gd-acard">
+        <h3>Laying hens</h3>
+        <label>Eggs your household eats a week <input type="number" id="an-epw" min="0" max="200" value="12"></label>
+        <label>or hens <input type="number" id="an-hens" min="0" max="200"></label>
+        <div id="an-hens-out"></div>
+      </div>
+      <div class="gd-acard">
+        <h3>Meat chickens</h3>
+        <label>Birds per batch <input type="number" id="an-broil" min="0" max="500" value="0"></label>
+        <div id="an-broil-out"></div>
+      </div>
+      <div class="gd-acard">
+        <h3>Honeybees</h3>
+        <label>Hives <input type="number" id="an-hives" min="0" max="50" value="0"></label>
+        <div id="an-hive-out"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec" id="gd-guides">
+    <h2>Guides</h2>
+    <p class="hs-small">{{ $g.meta.disclaimer }} Everything here comes from university extension services, USDA and CDC; each section lists its sources.</p>
+    {{ range $g.sections }}{{ partial "garden-sec.html" . }}{{ end }}
+    <h2 id="g-chickens">Backyard chickens</h2>
+    {{ range $a.chickens.sections }}{{ partial "garden-sec.html" . }}{{ end }}
+    <h2 id="g-bees">Honeybees</h2>
+    {{ range $a.bees.sections }}{{ partial "garden-sec.html" . }}{{ end }}
+    {{ with $a.bees.supporting_pollinators }}{{ partial "garden-sec.html" . }}{{ end }}
+  </section>
+
+  <section class="hs-sec" id="gd-ref">
+    <h2>Crop reference</h2>
+    <p class="hs-small">Typical figures for a home garden from university extension yield tables (they vary a lot with variety, soil and weather; intensive beds can do better) and USDA FoodData Central nutrition, raw. “—” means no reputable figure was found.</p>
+    <input type="search" id="gd-q" placeholder="Search crops…" aria-label="Search crops">
+    <div class="gd-tablewrap"><table class="hs-table gd-table" id="gd-table"></table></div>
+  </section>
+  <p class="hs-small">Daily calories: {{ $c.kcal.text }}</p>
+  <script type="application/json" id="gd-data">{{ dict "crops" $c.crops "an" (dict "ch" $a.chickens.numbers "bee" $a.bees.numbers) | jsonify | safeJS }}</script>
+</div>
+<script src="{{ "garden/garden.js" | relURL }}?v={{ (os.Stat "static/garden/garden.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -3,6 +3,6 @@ title: "Miscellaneous"
 layout: "group"
 group: "Miscellaneous"
 eyebrow: "Teddy Rook Book"
-description: "Other free tools on Teddy Rook Book, including PhotoCraft, an image editor that runs in your browser."
+description: "Other free tools on Teddy Rook Book, including a food garden planner and PhotoCraft, an image editor that runs in your browser."
 lead: "Other free tools that don't fit anywhere else."
 ---

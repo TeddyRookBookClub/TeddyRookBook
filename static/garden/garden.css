@@ -1,0 +1,74 @@
+/* Food Garden Planner (uses the homeschool variables and buttons from hs.css) */
+.gd .pl-n{display:inline-grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--g);color:#fff;font:700 .95rem system-ui,sans-serif;margin-right:.4rem;vertical-align:.15em}
+html[data-theme="dark"] .gd .pl-n{color:#0f1a14}
+.gd-form{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:1rem 1.1rem}
+html:not([data-theme="dark"]) .gd-form{border-color:#9dbba9}
+.gd-where{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:.4rem 0 .9rem}
+.gd-where label{cursor:pointer}
+.gd-where input{position:absolute;opacity:0;pointer-events:none}
+.gd-where span{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.1rem;padding:.7rem .5rem;border:1.5px solid var(--line);border-radius:12px;font-size:1.6rem;background:var(--card)}
+.gd-where b{font-size:1rem}.gd-where small{font-size:.8rem;color:var(--muted)}
+.gd-where input:checked+span{border-color:var(--g);background:var(--soft);box-shadow:0 0 0 2px var(--g) inset}
+.gd-where input:focus-visible+span{outline:3px solid var(--gold)}
+.gd-row{display:flex;flex-wrap:wrap;gap:.7rem 1.2rem;align-items:center;margin:.5rem 0}
+.gd-row label{display:inline-flex;gap:.4rem;align-items:center;font-weight:600}
+.gd-row input[type=number]{width:5.5rem}
+.gd-row input,.gd-row select,#gd-q{font:inherit;font-weight:400;padding:.4rem .55rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.gd-row select{max-width:min(86vw,30rem)}
+.gd-cb input{width:1.15rem;height:1.15rem;accent-color:#004225}
+[hidden]{display:none !important}
+.gd-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem}
+.gd-chip{font:inherit;font-size:.92rem;padding:.35rem .75rem;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.gd-chip[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:#fff}
+html[data-theme="dark"] .gd-chip[aria-pressed="true"]{color:#0f1a14}
+.gd-chip.more{display:none}.gd-chips.all .gd-chip.more{display:inline-block}
+.gd-showmore{border-style:dashed}
+.gd-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem;margin:.6rem 0 1rem}
+.gd-sum div{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.7rem .9rem}
+html:not([data-theme="dark"]) .gd-sum div{border-color:#9dbba9}
+.gd-sum b{display:block;font:700 1.45rem Georgia,serif;color:var(--g)}.gd-sum span{font-size:.88rem;color:var(--muted)}
+.gd-note{background:var(--paper);border-left:4px solid var(--gold);border-radius:8px;padding:.55rem .8rem}
+.gd-tablewrap{overflow-x:auto;margin:.4rem 0}
+.gd-plan td,.gd-plan th,.gd-table td,.gd-table th,.gd-rot td,.gd-rot th{vertical-align:top}
+.gd-plan small,.gd-table small,.gd-rot small{display:block;color:var(--muted);font-size:.8rem;line-height:1.35}
+.gd-warn{color:#8a5a00 !important}
+html[data-theme="dark"] .gd-warn{color:#e3b45c !important}
+.gd-tag{font-size:.72rem;background:var(--soft);border-radius:10px;padding:.05rem .45rem;white-space:nowrap}
+.gd-steps{padding-left:1.3rem;line-height:1.55}
+.gd-acards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.9rem}
+.gd-acard{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:.9rem 1rem}
+html:not([data-theme="dark"]) .gd-acard{border-color:#9dbba9}
+.gd-acard h3{margin:0 0 .5rem}
+.gd-acard label{display:flex;justify-content:space-between;gap:.5rem;align-items:center;font-weight:600;margin:.3rem 0}
+.gd-acard input{width:5.5rem;font:inherit;padding:.35rem .5rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+.gd-acard ul{padding-left:1.1rem;margin:.6rem 0 0;line-height:1.5;font-size:.95rem}
+.gd-sec{border:1.5px solid var(--line);border-radius:12px;margin:.5rem 0;background:var(--card)}
+html:not([data-theme="dark"]) .gd-sec{border-color:#9dbba9}
+.gd-sec summary{cursor:pointer;padding:.6rem .9rem;list-style:none}
+.gd-sec summary::-webkit-details-marker{display:none}
+.gd-sec summary h3{display:inline;margin:0;font-size:1.08rem}
+.gd-sec summary::before{content:"▸ ";color:var(--g)}
+.gd-sec[open] summary::before{content:"▾ "}
+.gd-sec>*:not(summary){margin-left:.9rem;margin-right:.9rem}
+.gd-intro{color:var(--muted)}
+.gd-items{line-height:1.55;padding-left:1.2rem}.gd-items li{margin:.35rem 0}
+.gd-sec h4{margin:.8rem .9rem .2rem}
+.gd-src{font-size:.8rem;color:var(--muted);line-height:1.5;padding-bottom:.7rem}
+#gd-q{width:100%;max-width:22rem;margin:.3rem 0}
+@media print{.gd-form,.gd-animals,#gd-guides,#gd-ref,.header,.footer{display:none !important}}
+.gd .hs-hero::after{content:"🌱";font-size:5rem;top:.6rem;opacity:.35;color:inherit}
+.gd-plan td:nth-child(2),.gd-plan td:nth-child(3),.gd-plan td:nth-child(4),.gd-plan td:nth-child(8){white-space:nowrap}
+#gd-out h3{margin-top:1.4rem}
+@media (max-width:640px){
+.gd-row label:has(select){flex-wrap:wrap;width:100%}
+.gd-row select{width:100%;max-width:100%}
+.gd-plan thead,.gd-rot thead{display:none}
+.gd-plan,.gd-plan tbody,.gd-plan tr,.gd-plan td,.gd-rot,.gd-rot tbody,.gd-rot tr,.gd-rot td,.gd-rot th{display:block;width:auto}
+.gd-plan tr,.gd-rot tr{border:1.5px solid var(--line);border-radius:12px;margin:.6rem 0;padding:.3rem .2rem;background:var(--card)}
+.gd-plan td,.gd-rot td{border:0 !important;padding:.2rem .6rem;white-space:normal !important}
+.gd-plan td[data-l],.gd-rot td[data-l]{display:grid;grid-template-columns:7.5rem 1fr;gap:.5rem}
+.gd-plan td[data-l]::before,.gd-rot td[data-l]::before{content:attr(data-l);color:var(--muted);font-size:.85rem}
+.gd-rot td[data-l] small{grid-column:2}
+.gd-rot th{border:0 !important;padding:.3rem .6rem;font-size:1.05rem}
+.gd-tablewrap:has(.gd-plan),.gd-tablewrap:has(.gd-rot){overflow:visible}
+}

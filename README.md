@@ -18,6 +18,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 | [Markets](https://teddyrookbook.com/markets/) | Stock screener and charts, economic indicators, Treasury yields and auctions, and calculators. |
 | [Business](https://teddyrookbook.com/business/) | Business cases: original write-ups of real company stories with the lesson, numbers, timeline, questions and sources, and a card to save as a picture (`data/business_cases.yaml`, `static/business/`). Also “Your tax receipt” (`static/business/receipt.js`): splits an income-tax amount by federal spending, with the main lines from the Treasury's official net outlays by budget function (FiscalData, Monthly Treasury Statement Table 9; negative functions and undistributed offsetting receipts are credits, and lines add up to the amount paid) and the drill-down split in proportion to USAspending.gov obligations. |
 | [Resources](https://teddyrookbook.com/resources/) | Links to other free places to learn Latin and Greek, read the great books and explore ancient history. |
+| [Food Garden Planner](https://teddyrookbook.com/garden/) | Suggests what to grow for a space, climate zone and household, with rough harvests, calories and a crop rotation, plus calculators for laying hens, meat chickens and honeybees and step-by-step guides (`layouts/garden/list.html`, `static/garden/`). Crop, guide and animal data with sources are in `data/garden/`: yields from university extension tables, nutrition from USDA FoodData Central. |
 | [PhotoCraft](https://teddyrookbook.com/photocraft/) | A hosted copy of [PhotoCraft](https://github.com/storytold/photocraft), an open-source image editor by the ArtCraft Team (MIT / Apache-2.0). It runs in the browser; pictures stay on the visitor's device. Not affiliated with Adobe. |
 
 No accounts, no ads, no tracking. Progress in the drills, flashcards and games is saved only in the visitor's own browser; the [My Progress](https://teddyrookbook.com/progress/) page can save it to a file and load it on another device. The search button in the header searches every page, infographic and timeline entry.
@@ -133,6 +134,7 @@ The language data comes from openly licensed scholarly projects, and each keeps 
 - **Latin Vulgate and classical texts:** PROIEL Treebank (CC BY-NC-SA 3.0) and the Perseus treebanks (CC BY-SA 3.0).
 - **English Scripture:** 499 verses of the ESV, © Crossway, used under its quotation allowance. Please don't reuse these beyond that.
 - **Greek audio:** read by Marilyn Phemister, free for non-commercial use with credit.
+- **Garden data:** university extension publications, USDA FoodData Central and the CDC; each crop and guide section lists its sources.
 - **Market data:** FRED (Federal Reserve Bank of St. Louis), the US Treasury, and TradingView widgets.
 
 Because some of that data is licensed for non-commercial use only, the site as a whole is non-commercial. The infographics and written content are © Teddy Rook; please link to them rather than re-hosting.
