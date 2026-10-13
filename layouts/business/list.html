@@ -11,7 +11,7 @@
     <a class="bz-big" href="{{ "business/cases/" | relURL }}">
       <span class="bz-ic" aria-hidden="true">📚</span>
       <h2>Business Cases</h2>
-      <p>{{ len $d.cases }} short cases, from the Tylenol recall to Toyota's andon cord. Each has a summary, the full story, the numbers, the lessons learned and questions to talk over, and a card you can save as a picture, like a business Aesop's fable.</p>
+      <p>{{ len $d.cases }} short cases, from the Tylenol recall to Toyota's andon cord. Each opens with a short summary in the spirit of Aesop's fables, then the full story, the numbers, MBA-level lessons learned and discussion questions, with a card you can save as a picture.</p>
       <span class="bz-go">Read the cases →</span>
     </a>
     <a class="bz-big" href="{{ "business/tax-receipt/" | relURL }}">
@@ -32,14 +32,14 @@
     {{ partial "group-tiles.html" (dict "group" "Business") }}
   </section>
   <section class="bz-sec">
-    <h2>A few of the lessons</h2>
+    <h2>A few key takeaways</h2>
     <div class="bz-morals">
       {{ range first 6 (shuffle $d.cases) }}<a href="{{ printf "business/cases/%s/" .slug | relURL }}"><q>{{ .moral }}</q><span>{{ .company }}, {{ .year }}</span></a>{{ end }}
     </div>
   </section>
   <section class="bz-sec bz-note">
-    <h2>For families</h2>
-    <p>Many homeschooling parents also run a business, and these cases make good reading for teenagers: read one a week together, talk through the questions at the end, and ask what they would have done. They pair well with the arithmetic of percentage, interest and profit in <a href="{{ "homeschool/rays-arithmetic/practical/" | relURL }}">Ray's Practical Arithmetic</a>.</p>
+    <h2>For families and students</h2>
+    <p>Many homeschooling parents also run a business. The lessons and questions are written at the level of a business-school class, so the cases suit older students and adults: read one a week and work through the discussion questions together, deciding what you would have done. They pair well with the arithmetic of percentage, interest and profit in <a href="{{ "homeschool/rays-arithmetic/practical/" | relURL }}">Ray's Practical Arithmetic</a>.</p>
   </section>
 </div>
 {{ end }}

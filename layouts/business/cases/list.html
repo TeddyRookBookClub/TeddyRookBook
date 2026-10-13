@@ -7,7 +7,7 @@
   <header class="bz-hero">
     <p class="bz-eyebrow">Business · Cases</p>
     <h1>Business cases</h1>
-    <p>{{ len $d.cases }} true stories from real companies, each with a one-line lesson, like a business Aesop's fable. Open one for the full story, the numbers, the lessons learned and questions to talk over, or save its card as a picture.</p>
+    <p>{{ len $d.cases }} true stories from real companies, each told briefly, the way Aesop told a fable, with the takeaway a business-school class would draw from it. Open one for the full story, the numbers, the lessons learned and discussion questions, or save its card as a picture.</p>
   </header>
   <div class="bz-tools">
     <input type="search" id="bz-q" placeholder="Search companies, people, ideas…" aria-label="Search the cases">
@@ -20,7 +20,7 @@
       <h2><a href="{{ printf "business/cases/%s/" .slug | relURL }}">{{ .title }}</a></h2>
       <p class="bz-co">{{ .company }} · {{ .year }}</p>
       <p class="bz-sum">{{ .summary }}</p>
-      <p class="bz-moral"><span>The lesson</span>{{ .moral }}</p>
+      <p class="bz-moral"><span>Key takeaway</span>{{ .moral }}</p>
       <p class="bz-act"><a href="{{ printf "business/cases/%s/" .slug | relURL }}">Read the case →</a> <button type="button" class="bz-save" data-card="{{ dict "title" .title "co" (printf "%s · %s" .company .year) "sum" .summary "moral" .moral "slug" .slug | jsonify }}">🖼 Save card</button></p>
     </article>
     {{ end }}

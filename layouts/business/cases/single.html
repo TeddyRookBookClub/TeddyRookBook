@@ -11,7 +11,7 @@
     <p class="bz-meta">{{ range $c.tags }}<span class="bz-tag on">{{ . }}</span>{{ end }}</p>
   </header>
   <div class="bz-lesson">
-    <span>The lesson</span>
+    <span>Key takeaway</span>
     <p>{{ $c.moral }}</p>
     <div class="bz-acts"><button type="button" class="bz-btn bz-save" data-card="{{ dict "title" $c.title "co" (printf "%s · %s" $c.company $c.year) "sum" $c.summary "moral" $c.moral "slug" $c.slug | jsonify }}">🖼 Save the card as a picture</button> <button type="button" class="bz-btn ghost" onclick="window.print()">🖨 Print</button></div>
   </div>
@@ -30,7 +30,7 @@
     <ul class="bz-lessons">{{ range $c.lessons }}{{ $p := split . ": " }}<li>{{ if gt (len $p) 1 }}{{ $r := delimit (after 1 $p) ": " }}<b>{{ index $p 0 }}.</b> {{ upper (substr $r 0 1) }}{{ substr $r 1 }}{{ else }}{{ . }}{{ end }}</li>{{ end }}</ul>
   </section>
   <section class="bz-sec">
-    <h2>Talk about it</h2>
+    <h2>Discussion questions</h2>
     <ol class="bz-qs">{{ range $c.questions }}<li>{{ . }}</li>{{ end }}</ol>
   </section>
   {{ with $c.note }}<section class="bz-sec bz-note"><h2>Worth knowing</h2><p>{{ . }}</p></section>{{ end }}
