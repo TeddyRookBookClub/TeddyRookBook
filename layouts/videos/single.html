@@ -17,12 +17,18 @@
   <section class="hs-sec">
     {{ if $v.trailer }}<h2>The full video</h2>{{ end }}
     {{ partial "video.html" (dict "id" $id "nolink" true) }}
-    {{ with $v.chapters }}<h3>Chapters</h3><ol class="vd-ch">{{ range . }}{{ $p := split (index . 0) ":" }}{{ $sec := 0 }}{{ if eq (len $p) 3 }}{{ $sec = add (mul (int (index $p 0)) 3600) (add (mul (int (index $p 1)) 60) (int (strings.TrimLeft "0" (index $p 2) | default "0"))) }}{{ else }}{{ $sec = add (mul (int (strings.TrimLeft "0" (index $p 0) | default "0")) 60) (int (strings.TrimLeft "0" (index $p 1) | default "0")) }}{{ end }}<li><button type="button" class="trb-video-at" data-yt="{{ $id }}" data-start="{{ $sec }}"><b>{{ index . 0 }}</b> {{ index . 1 }}</button></li>{{ end }}</ol>{{ end }}
+    {{ with $v.chapters }}<h3>Chapters</h3><ol class="vd-ch">{{ range . }}{{ $p := split (index . 0) ":" }}{{ $sec := 0 }}{{ if eq (len $p) 3 }}{{ $sec = add (mul (int (strings.TrimLeft "0" (index $p 0) | default "0")) 3600) (add (mul (int (strings.TrimLeft "0" (index $p 1) | default "0")) 60) (int (strings.TrimLeft "0" (index $p 2) | default "0"))) }}{{ else }}{{ $sec = add (mul (int (strings.TrimLeft "0" (index $p 0) | default "0")) 60) (int (strings.TrimLeft "0" (index $p 1) | default "0")) }}{{ end }}<li><button type="button" class="trb-video-at" data-yt="{{ $id }}" data-start="{{ $sec }}"><b>{{ index . 0 }}</b> {{ index . 1 }}</button></li>{{ end }}</ol>{{ end }}
   </section>
+  {{ with $v.notes }}<section class="hs-sec">{{ range . }}<p>{{ . }}</p>{{ end }}</section>{{ end }}
   {{ with $v.related }}
   <section class="hs-sec">
     <h2>Go with it</h2>
     <ul class="os-learn">{{ range . }}<li><a href="{{ .url | relURL }}">🔗 {{ .label }}</a></li>{{ end }}</ul>
+  </section>
+  {{ end }}
+  {{ with $v.credits }}
+  <section class="hs-sec">
+    <details class="vd-credits"><summary>Texts, tools and credits</summary><ul class="hs-small">{{ range . }}<li>{{ . }}</li>{{ end }}</ul></details>
   </section>
   {{ end }}
   <nav class="hs-pn"><a href="{{ "videos/" | relURL }}">← All videos</a><a href="{{ "education/" | relURL }}">Education →</a></nav>

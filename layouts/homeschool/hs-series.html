@@ -27,10 +27,10 @@
   </section>
   {{ end }}
 
-  {{ with $s.video }}
+  {{ with $s.video }}{{ $vids := . }}{{ if not (reflect.IsSlice $vids) }}{{ $vids = slice $vids }}{{ end }}
   <section class="hs-sec">
     <h2>{{ $s.videotitle | default "Watch" }}</h2>
-    {{ partial "video.html" . }}
+    {{ range $vids }}{{ partial "video.html" . }}{{ end }}
   </section>
   {{ end }}
 
