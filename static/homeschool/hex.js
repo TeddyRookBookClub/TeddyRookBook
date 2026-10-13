@@ -36,7 +36,7 @@
     if (n === 0) steps.push('0 ÷ 16 = 0 remainder 0');
     while (n > 0 && steps.length < 9) { steps.push(n0(n) + ' ÷ 16 = ' + n0(Math.floor(n / 16)) + ' remainder ' + (n % 16) + (n % 16 > 9 ? ' (' + HX[n % 16] + ')' : '')); n = Math.floor(n / 16); }
     $('hx-work').innerHTML = '<div><b>Hex to decimal:</b> ' + parts.join(' + ') + ' = <b>' + n0(cur) + '</b></div>' +
-      '<div><b>Decimal to hex:</b> divide by 16 and keep the remainders, then read them from the bottom up: <span class="hx-steps">' + steps.map(esc).join('<br>') + '</span> → <b>' + h + '</b></div>';
+      '<div><b>Decimal to hex:</b> divide by 16 and keep the remainders, then read them from the bottom up:</div><div class="hx-steps">' + steps.map(esc).join('<br>') + '</div><div>Remainders from the bottom up → <b>' + h + '</b></div>';
   }
   function bits() {
     var nb = Math.max(8, Math.ceil(bin(cur).length / 4) * 4), b = pad(bin(cur), nb), h = '';
@@ -138,18 +138,35 @@
     var ptr = $('hx-ptr'), timers = [], ang = 0;
     function point(d) { var i = HX.indexOf(d), target = i * 22.5, diff = ((target - ang) % 360 + 540) % 360 - 180; ang += diff; ptr.style.transform = 'rotate(' + ang + 'deg)'; dial.querySelectorAll('.hx-card').forEach(function (c) { c.classList.toggle('on', c.dataset.d === d); }); }
     function stopM() { timers.forEach(clearTimeout); timers = []; dial.querySelectorAll('.hx-card.on').forEach(function (c) { c.classList.remove('on'); }); }
-    function send(text, showPairs, done) {
-      stopM(); var chars = text.split('').filter(function (c) { return c.charCodeAt(0) < 128; }), t = 0, step = $('hx-slow').checked ? 1100 : 550;
+    // Text mode: each character is sent as its two-digit ASCII code. Number mode: the whole number's value, in hex.
+    function units(text, asNum) {
+      if (asNum) { var n = parse(text, 10); if (n === null || !isFinite(n)) return null; return hex(n).split('').map(function (d) { return { lab: d, code: d }; }); }
+      return text.split('').filter(function (c) { return c.charCodeAt(0) < 128; }).map(function (c) { return { lab: c === ' ' ? '␣' : c, code: pad(hex(c.charCodeAt(0)), 2) }; });
+    }
+    function send(text, showPairs, done, asNum) {
+      stopM(); var chars = units(text, asNum), t = 0, step = $('hx-slow').checked ? 1100 : 550;
       var box = $('hx-pairs');
-      if (showPairs) box.innerHTML = chars.map(function (c, i) { return '<span data-i="' + i + '"><b>' + esc(c === ' ' ? '␣' : c) + '</b>' + pad(hex(c.charCodeAt(0)), 2) + '</span>'; }).join('');
-      chars.forEach(function (c, i) {
-        var h2 = pad(hex(c.charCodeAt(0)), 2);
+      if (!chars) { box.innerHTML = '<p class="bad">Number mode takes a whole number, like 8675309.</p>'; return; }
+      if (showPairs) box.innerHTML = asNum ? '<p class="hs-small">' + esc(n0(parse(text, 10))) + ' in hex is <b>' + hex(parse(text, 10)) + '</b>: one pointer move per hex digit.</p>' + chars.map(function (u, i) { return '<span data-i="' + i + '"><b>' + u.lab + '</b>digit ' + (i + 1) + '</span>'; }).join('') :
+        chars.map(function (u, i) { return '<span data-i="' + i + '"><b>' + esc(u.lab) + '</b>' + u.code + '</span>'; }).join('');
+      chars.forEach(function (u, i) {
+        var h2 = u.code;
         h2.split('').forEach(function (d) { timers.push(setTimeout(function () { point(d); if (showPairs) { box.querySelectorAll('.on').forEach(function (e) { e.classList.remove('on'); }); var el = box.querySelector('[data-i="' + i + '"]'); if (el) el.classList.add('on'); } }, t)); t += step; });
         t += step / 2;
       });
       timers.push(setTimeout(function () { stopM(); if (done) done(); }, t + 200));
     }
-    $('hx-send').addEventListener('click', function () { send($('hx-msg').value.toUpperCase(), true); });
+    function asNum() { return (D.querySelector('input[name=hx-mode]:checked') || {}).value === 'num'; }
+    function note() {
+      var v = $('hx-msg').value.trim(), digits = /^[\d,]+$/.test(v) && /\d/.test(v), el = $('hx-mnote');
+      if (asNum()) { var n = parse(v, 10); el.innerHTML = n !== null && isFinite(n) ? 'Number mode: the pointer spells the value <b>' + esc(n0(n)) + '</b> in hex, <b>' + hex(n) + '</b>, the same answer as the converter above.' : 'Number mode takes a whole number up to 4,294,967,295.'; return; }
+      el.innerHTML = digits ? '⚠ Text mode sends each character, so the digit “' + esc(v[0]) + '” goes as its ASCII code <b>' + pad(hex(v.charCodeAt(0)), 2) + '</b>, not as part of a number. That’s why this won’t match the converter above. To send the number’s value instead (' + (function () { var n = parse(v, 10); return n !== null && isFinite(n) ? hex(n) : '?'; })() + ' in hex), switch to <b>Number</b>.' :
+        'Text mode: each letter, digit, space or symbol is sent as its own two-digit ASCII code.';
+    }
+    $('hx-msg').addEventListener('input', note);
+    D.querySelectorAll('input[name=hx-mode]').forEach(function (r) { r.addEventListener('change', note); });
+    note();
+    $('hx-send').addEventListener('click', function () { send(asNum() ? $('hx-msg').value : $('hx-msg').value.toUpperCase(), true, null, asNum()); });
     $('hx-mstop').addEventListener('click', stopM);
     var MYST = ['HELLO', 'MARS', 'HOME', 'WATER', 'ROVER', 'SPACE', 'PLANET', 'POTATO', 'ORBIT', 'EARTH', 'HAB', 'ROCKET', 'SOLAR', 'SAFE', 'DUST'], word = '';
     $('hx-mystery').addEventListener('click', function () { word = MYST[Math.floor(Math.random() * MYST.length)]; $('hx-pairs').innerHTML = ''; $('hx-gres').textContent = 'Watch the pointer…'; send(word, false, function () { $('hx-gres').textContent = 'Done. What did it say?'; }); });

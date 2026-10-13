@@ -11,7 +11,7 @@
 
   <section class="hs-sec">
     <h2>🔢 Try it: the converter</h2>
-    <p class="hs-small">Type in any box and the others follow. Whole numbers from 0 up to 4,294,967,295 (that's FFFFFFFF in hex).</p>
+    <p class="hs-small">Type in any box and the others follow. This converts a number’s <b>value</b>: whole numbers from 0 up to 4,294,967,295 (that’s FFFFFFFF in hex). To turn letters or text into codes, use the Mars dial below, which sends each character as its own ASCII code.</p>
     <div class="hx-conv">
       <label>Decimal <small>base 10</small><input id="hx-dec" inputmode="numeric" autocomplete="off" spellcheck="false" value="255"></label>
       <label>Hexadecimal <small>base 16</small><input id="hx-hex" autocomplete="off" spellcheck="false"></label>
@@ -35,7 +35,9 @@
     <div class="hx-mars">
       <div class="hx-dialwrap"><svg id="hx-dial" viewBox="-110 -110 220 220" role="img" aria-label="A dial of the sixteen hex digits with a pointer"></svg></div>
       <div class="hx-mside">
+        <div class="hx-mode" role="radiogroup" aria-label="Send as"><label><input type="radio" name="hx-mode" value="text" checked> <b>Text</b> <small>each character’s ASCII code</small></label><label><input type="radio" name="hx-mode" value="num"> <b>Number</b> <small>its value in hex, like the converter</small></label></div>
         <input id="hx-msg" class="hx-in" value="ARE YOU RECEIVING" maxlength="60" aria-label="Message to send" spellcheck="false">
+        <p class="hs-small hx-mnote" id="hx-mnote" aria-live="polite"></p>
         <p><button type="button" class="hs-btn" id="hx-send">▶ Send it</button> <button type="button" class="hs-btn ghost" id="hx-mstop">■ Stop</button> <label class="hx-cb"><input type="checkbox" id="hx-slow" checked> Slow</label></p>
         <div class="hx-pairs" id="hx-pairs"></div>
         <h3>Your turn to receive</h3>
