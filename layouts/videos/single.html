@@ -17,6 +17,7 @@
   <section class="hs-sec">
     {{ if $v.trailer }}<h2>The full video</h2>{{ end }}
     {{ partial "video.html" (dict "id" $id "nolink" true) }}
+    {{ with $v.chapters }}<h3>Chapters</h3><ol class="vd-ch">{{ range . }}{{ $p := split (index . 0) ":" }}{{ $sec := 0 }}{{ if eq (len $p) 3 }}{{ $sec = add (mul (int (index $p 0)) 3600) (add (mul (int (index $p 1)) 60) (int (strings.TrimLeft "0" (index $p 2) | default "0"))) }}{{ else }}{{ $sec = add (mul (int (strings.TrimLeft "0" (index $p 0) | default "0")) 60) (int (strings.TrimLeft "0" (index $p 1) | default "0")) }}{{ end }}<li><button type="button" class="trb-video-at" data-yt="{{ $id }}" data-start="{{ $sec }}"><b>{{ index . 0 }}</b> {{ index . 1 }}</button></li>{{ end }}</ol>{{ end }}
   </section>
   {{ with $v.related }}
   <section class="hs-sec">
