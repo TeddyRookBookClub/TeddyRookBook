@@ -267,6 +267,69 @@
     return { rate: up.length ? Math.sqrt(up[0]) : 0, unstable: up.length, freqs: ev.filter(function (e) { return e < 0; }).map(function (e) { return Math.sqrt(-e) / (2 * Math.PI); }).sort(function (a, b) { return a - b; }) };
   };
 
+  // ---------- standing the whole stack straight: a linear-quadratic regulator (LQR) ----------
+  // Near straight up, the equations are almost linear: z' = A z + B a, with z = (x, θ1…θn, v, ω1…ωn) and a the cart's acceleration.
+  // The LQR finds the feedback a = −K·z that brings every book upright with the least "cost" Σ q z² + r a², balancing all the books
+  // at once, not just their centre of gravity. K comes from the Riccati equation, solved here by a doubling algorithm.
+  function mmul(A, B, n, m, p) { var C = new Float64Array(n * p), i, j, k, a; for (i = 0; i < n; i++) for (k = 0; k < m; k++) { a = A[i * m + k]; if (a === 0) continue; for (j = 0; j < p; j++) C[i * p + j] += a * B[k * p + j]; } return C; }
+  function mtr(A, n, m) { var T = new Float64Array(m * n); for (var i = 0; i < n; i++) for (var j = 0; j < m; j++) T[j * n + i] = A[i * m + j]; return T; }
+  function minv(A, n) {
+    var M = Float64Array.from(A), I = new Float64Array(n * n), c, r, j, p, mx, v, t, d, f; for (c = 0; c < n; c++) I[c * n + c] = 1;
+    for (c = 0; c < n; c++) {
+      p = c; mx = Math.abs(M[c * n + c]); for (r = c + 1; r < n; r++) { v = Math.abs(M[r * n + c]); if (v > mx) { mx = v; p = r; } }
+      if (!(mx > 0)) return null;
+      if (p !== c) for (j = 0; j < n; j++) { t = M[c * n + j]; M[c * n + j] = M[p * n + j]; M[p * n + j] = t; t = I[c * n + j]; I[c * n + j] = I[p * n + j]; I[p * n + j] = t; }
+      d = 1 / M[c * n + c]; for (j = 0; j < n; j++) { M[c * n + j] *= d; I[c * n + j] *= d; }
+      for (r = 0; r < n; r++) if (r !== c) { f = M[r * n + c]; if (f === 0) continue; for (j = 0; j < n; j++) { M[r * n + j] -= f * M[c * n + j]; I[r * n + j] -= f * I[c * n + j]; } }
+    }
+    return I;
+  }
+  function mexp(A, n) { // matrix exponential by scaling and squaring a Taylor series
+    var nrm = 0, i, j, k; for (i = 0; i < n; i++) { var sm = 0; for (j = 0; j < n; j++) sm += Math.abs(A[i * n + j]); if (sm > nrm) nrm = sm; }
+    var sq = Math.max(0, Math.ceil(Math.log2(nrm || 1)) + 2), sc = Math.pow(2, -sq), As = A.map(function (v) { return v * sc; });
+    var E = new Float64Array(n * n), T = new Float64Array(n * n); for (i = 0; i < n; i++) { E[i * n + i] = 1; T[i * n + i] = 1; }
+    for (k = 1; k <= 14; k++) { T = mmul(T, As, n, n, n); for (i = 0; i < n * n; i++) { T[i] /= k; E[i] += T[i]; } }
+    for (k = 0; k < sq; k++) E = mmul(E, E, n, n, n);
+    return E;
+  }
+  System.prototype.uprightGains = function (o) {
+    o = o || {}; var s = this, n = s.n, N = s.N, Z = 2 * N, j, k, i;
+    var M = new Float64Array(n * n), Kq = new Float64Array(n * n), Cq = new Float64Array(n * n), mu = new Float64Array(n);
+    for (j = 1; j <= n; j++) { mu[j - 1] = s.mu[j]; M[(j - 1) * n + j - 1] = s.D[j]; for (k = j + 1; k <= n; k++) M[(j - 1) * n + k - 1] = M[(k - 1) * n + j - 1] = s.l[j] * s.mu[k]; }
+    function spring(X, c, j) { var a = j - 1, b = j - 2; X[a * n + a] -= c; if (b >= 0) { X[a * n + b] += c; X[b * n + a] += c; X[b * n + b] -= c; } }
+    for (j = 1; j <= n; j++) { Kq[(j - 1) * n + j - 1] += s.g * s.mu[j]; spring(Kq, s.k[j], j); spring(Cq, s.c[j], j); }
+    var Mi = minv(M, n), Ki = minv(Kq, n); if (!Mi) return null;
+    var MK = mmul(Mi, Kq, n, n, n), MC = mmul(Mi, Cq, n, n, n), Mm = mmul(Mi, mu, n, n, 1);
+    // discretize [A B; 0 0] over dt
+    var dt = o.dt || 1 / 120, W = Z + 1, Aug = new Float64Array(W * W);
+    for (i = 0; i < N; i++) Aug[i * W + N + i] = dt;
+    Aug[N * W + Z] = dt;
+    for (j = 0; j < n; j++) { for (k = 0; k < n; k++) { Aug[(N + 1 + j) * W + 1 + k] = MK[j * n + k] * dt; Aug[(N + 1 + j) * W + N + 1 + k] = MC[j * n + k] * dt; } Aug[(N + 1 + j) * W + Z] = -Mm[j] * dt; }
+    var E = mexp(Aug, W), A = new Float64Array(Z * Z), B = new Float64Array(Z);
+    for (i = 0; i < Z; i++) { for (j = 0; j < Z; j++) A[i * Z + j] = E[i * W + j]; B[i] = E[i * W + Z]; }
+    var r = o.r || 1, H = new Float64Array(Z * Z), G = new Float64Array(Z * Z), Ak = A;
+    H[0] = o.qx === undefined ? 1 : o.qx; H[N * Z + N] = o.qv === undefined ? 0.5 : o.qv;
+    for (j = 1; j <= n; j++) { H[j * Z + j] = o.qth || 200; H[(N + j) * Z + N + j] = o.qw || 2; }
+    for (i = 0; i < Z; i++) for (j = 0; j < Z; j++) G[i * Z + j] = B[i] * B[j] / r;
+    for (var it = 0; it < 60; it++) { // structure-preserving doubling: H → the Riccati solution
+      var Wm = mmul(G, H, Z, Z, Z); for (i = 0; i < Z; i++) Wm[i * Z + i] += 1;
+      var Wi = minv(Wm, Z); if (!Wi) return null;
+      var AW = mmul(Ak, Wi, Z, Z, Z), AkT = mtr(Ak, Z, Z);
+      var Gn = mmul(mmul(AW, G, Z, Z, Z), AkT, Z, Z, Z), Hn = mmul(mmul(AkT, mmul(mtr(Wi, Z, Z), H, Z, Z, Z), Z, Z, Z), Ak, Z, Z, Z), ch = 0, nm = 0;
+      for (i = 0; i < Z * Z; i++) { Gn[i] += G[i]; Hn[i] += H[i]; ch = Math.max(ch, Math.abs(Hn[i] - H[i])); nm = Math.max(nm, Math.abs(Hn[i])); }
+      Ak = mmul(AW, Ak, Z, Z, Z); G = Gn; H = Hn;
+      if (!(nm < 1e300)) return null;
+      if (ch <= 1e-11 * nm) break;
+    }
+    var PB = mmul(H, B, Z, Z, 1), den = r, PA = mmul(H, A, Z, Z, Z), K = new Float64Array(Z);
+    for (i = 0; i < Z; i++) den += B[i] * PB[i];
+    for (j = 0; j < Z; j++) { var v = 0; for (i = 0; i < Z; i++) v += B[i] * PA[i * Z + j]; K[j] = v / den; if (!isFinite(K[j])) return null; }
+    // In a steady side wind the stack must lean into it to stand still: the lean per newton of wind on each book, θ* = −Kq⁻¹ τ,
+    // where τ is the wind's torque on each joint (from build) and Kq the gravity and spring stiffness of the straight stack.
+    K.wind = new Float64Array(n);
+    if (Ki) for (j = 0; j < n; j++) { var tw = 0; for (k = 0; k < n; k++) tw += Ki[j * n + k] * s.l[k + 1] * (n - 1 - k + 0.5); K.wind[j] = -tw; }
+    return K;
+  };
   // Drag on one book in a side wind: F = ½ ρ C_d A v², with air at 1.2 kg/m³, C_d ≈ 1.2 for a block, and A = height × thickness
   // (the wind blows along the track, so it meets the book's spine or page edge, not its cover).
   System.prototype.windForce = function (speed) { var A = 0, i; for (i = 0; i < this.n; i++) A += this.books[i].l * this.books[i].t; A /= this.n; return 0.5 * 1.2 * 1.2 * A * speed * Math.abs(speed); };

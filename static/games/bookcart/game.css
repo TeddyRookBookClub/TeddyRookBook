@@ -68,8 +68,10 @@ main.main:has(.bc){max-width:1200px}
 .bc-levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:.35rem;margin:.4rem 0}
 .bc-levels button{padding:.35rem 0;border-radius:9px;border:1px solid rgba(120,170,200,.35);background:#10263a;color:#fff;font-weight:700}
 .bc-levels button small{display:block;font-size:.62rem;color:#ffd479;font-weight:400;min-height:.8rem}
-.bc-levels button:disabled{opacity:.35;cursor:not-allowed}
 .bc-levels button.cur{border-color:#ffd479}
+.bc-timepick{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;margin:.55rem 0 .2rem;font-size:.82rem;color:#9ab7c8}
+.bc-timepick button{padding:.3rem .65rem;border-radius:999px;border:1.5px solid rgba(120,170,200,.35);background:#10263a;color:#e7f1f7;font:600 .8rem system-ui,sans-serif;cursor:pointer}
+.bc-timepick button[aria-pressed="true"]{border-color:#63e6be;background:#123a33;color:#fff}
 .bc-actions{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.7rem}
 .bc-actions button{padding:.5rem .9rem;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#173246;color:#fff;font-weight:600}
 .bc-actions button.go{background:#1f6b56;border-color:#63e6be}
