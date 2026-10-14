@@ -2,7 +2,8 @@
    on a straight track. Equations of motion from Lagrange's equations in generalized coordinates q = (x, θ1 … θn),
    where x is the cart position and θi is book i's angle from straight up (absolute, clockwise positive).
    M(q) q̈ = b(q, q̇) + F e_x, solved each step by Cholesky; integrated with an implicit Newmark (trapezoidal) step, or RK4.
-   The books stand with their covers facing you, so each one swings in the plane of its cover.
+   The books face you with their covers, so each one swings in the plane of its cover. The bottom book turns on a free pivot
+   on the cart, and can carry a counterweight on an arm reaching past the pivot the other way (rc metres, mc kilograms).
    SI units throughout: metres, kilograms, seconds, newtons, joules. */
 (function (root) {
   'use strict';
@@ -21,7 +22,7 @@
     return out;
   }
 
-  // Build a system. o: {books, M (cart kg), g, sBase, sBind, zeta, fric (rolling coefficient), aMax, xEnd}
+  // Build a system. o: {books, M (cart kg), g, sBase, sBind, zeta, fric (rolling coefficient), aMax, xEnd, mc, rc}
   function System(o) {
     var b = o.books, n = b.length, s = this;
     s.n = n; s.books = b; s.M = o.M || 15; s.g = o.g === undefined ? G_EARTH : o.g; s.fric = o.fric === undefined ? 0.012 : o.fric;
@@ -34,8 +35,8 @@
     s.mBooks = 0; for (i = 1; i <= n; i++) s.mBooks += s.m[i];
     for (i = 1; i <= n; i++) { s.mu[i] = s.l[i] * (s.m[i] / 2 + s.S[i]); s.D[i] = s.l[i] * s.l[i] * (s.m[i] / 4 + s.S[i]) + s.I[i]; }
     s.height = 0; for (i = 1; i <= n; i++) s.height += s.l[i];
-    s.mTot = s.M + s.mBooks;
-    s.aMax = o.aMax || 14; s.Fmax = s.mTot * s.aMax;
+    s.mu1 = s.mu[1]; s.D1 = s.D[1]; s.aMax = o.aMax || 14;
+    s.setCounterweight(o.mc || 0, o.rc || 0);
     s.xEnd = o.xEnd || Math.max(2.2, 0.55 * s.height + 1.2);
     s.kBump = 3000 * s.mTot; s.cBump = 2 * Math.sqrt(s.kBump * s.mTot) * 0.6;
     s.setStiffness(o.sBase || 0, o.sBind === undefined ? 1.6 : o.sBind, o.zeta === undefined ? 0.06 : o.zeta);
@@ -43,6 +44,17 @@
     s.bv = new Float64Array(s.N); s.z = new Float64Array(s.N); s.e = new Float64Array(s.N); s.tmp = new Float64Array(s.N);
     s.cs = new Float64Array(n + 1); s.sn = new Float64Array(n + 1);
   }
+  // A counterweight mc (kg) at distance rc (m) from the pivot, fixed to the bottom book and pointing the opposite way. It enters the
+  // equations exactly as if book 1 were less top-heavy (μ1 − mc·rc) and harder to turn (D1 + mc·rc²), and it adds to the moving mass.
+  System.prototype.setCounterweight = function (mc, rc) {
+    var s = this; s.mc = mc; s.rc = rc;
+    s.mu[1] = s.mu1 - mc * rc; s.D[1] = s.D1 + mc * rc * rc;
+    s.mTot = s.M + s.mBooks + mc; s.Fmax = s.mTot * s.aMax;
+    if (s.kBump) { s.kBump = 3000 * s.mTot; s.cBump = 2 * Math.sqrt(s.kBump * s.mTot) * 0.6; }
+  };
+  // The net "top-heaviness" about the pivot (kg·m) of the straight stack: books' mass × height of their centre, minus the counterweight's.
+  System.prototype.netMoment = function () { return this.mBooks * this.comHeight() - this.mc * this.rc; };
+  System.prototype.comHeight = function () { var d = 0, mh = 0; for (var j = 1; j <= this.n; j++) { mh += this.m[j] * (d + this.l[j] / 2); d += this.l[j]; } return mh / this.mBooks; };
   // Gravity's "tipping stiffness" at joint j: weight above × lever arm, for a straight stack (N·m per radian).
   // (Measured with Earth's gravity, so a stiffness setting means the same spring on the Moon.)
   System.prototype.gravStiff = function (j) {
@@ -199,7 +211,8 @@
       mx += s.m[j] * (x + sx * s.l[j] / 2); my += s.m[j] * (y + cy * s.l[j] / 2);
       x += sx * s.l[j]; y += cy * s.l[j]; pts.push([x, y]);
     }
-    return { pts: pts, com: [mx / s.mBooks, my / s.mBooks] };
+    var cw = [st[0] - Math.sin(st[1]) * s.rc, h0 - Math.cos(st[1]) * s.rc];
+    return { pts: pts, com: [mx / s.mBooks, my / s.mBooks], cw: cw };
   };
   // Centre of mass of the books relative to the pivot, and its velocity; lean angle from the pivot.
   System.prototype.comState = function (st) {
@@ -214,6 +227,16 @@
     var r2 = px * px + py * py, lean = Math.atan2(px, py), leanRate = (py * vx - px * vy) / r2;
     return { x: px, y: py, vx: vx, vy: vy, lean: lean, leanRate: leanRate, r: Math.sqrt(r2) };
   };
+
+  // The swing, treating the stack as one stiff pendulum: its angle ψ from straight up (the books' centre of gravity seen from the pivot),
+  // its rate, and its swing energy measured from hanging still, E = ½ J ψ̇² + g P (cos ψ + 1), where J is the moment of inertia about the
+  // pivot and P the net top-heaviness (books minus counterweight). Reaching the top and stopping there takes E = Etop = 2 g P.
+  System.prototype.swing = function (st) {
+    var s = this, c = s.comState(st), J = s.inertia(), P = s.netMoment();
+    return { psi: c.lean, rate: c.leanRate, E: 0.5 * J * c.leanRate * c.leanRate + s.g * P * (Math.cos(c.lean) + 1), Etop: 2 * s.g * P, J: J, P: P };
+  };
+  // Moment of inertia of the straight stack and counterweight about the pivot (kg·m²).
+  System.prototype.inertia = function () { var J = 0, d = 0; for (var j = 1; j <= this.n; j++) { J += this.m[j] * Math.pow(d + this.l[j] / 2, 2) + this.I[j]; d += this.l[j]; } return J + this.mc * this.rc * this.rc; };
 
   // ---------- linear stability with the cart held still: A θ̈ = (G − K) θ ----------
   function jacobiEig(a, n) { // symmetric n×n (row-major); returns eigenvalues

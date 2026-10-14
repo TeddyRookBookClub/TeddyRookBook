@@ -8,7 +8,7 @@
   <header class="hs-hero">
     <p class="hs-eyebrow">Homeschool · Science · Physics, ages about 10 and up</p>
     <h1>Why Things Fall Over</h1>
-    <p>A stack of books standing up in a rolling cart is a famous physics puzzle called the inverted pendulum, or the cart-pole. This lesson explains the physics behind the <a href="{{ $game }}" style="color:#f3dfa3">Book Cart</a> game: balance, why tall things are easier to balance than short ones, inertia, energy, wind and chaos. There are things to try at home, and experiments to run in the game's Lab.</p>
+    <p>A chain of books hanging from a rolling cart, swung up and balanced standing on top, is a famous physics puzzle called the inverted pendulum, or the cart-pole. This lesson explains the physics behind the <a href="{{ $game }}" style="color:#f3dfa3">Book Cart</a> game: balance, why tall things are easier to balance than short ones, swinging up, inertia, energy, wind and chaos. There are things to try at home, and experiments to run in the game's Lab.</p>
   </header>
 
   <section class="hs-start">
@@ -20,6 +20,7 @@
     <ol class="hs-steps-mini">
       <li><a href="#balance">Balance and the centre of gravity</a></li>
       <li><a href="#tall">Why tall things fall slower</a></li>
+      <li><a href="#swing">Swinging up</a></li>
       <li><a href="#doubling">A lean that doubles</a></li>
       <li><a href="#inertia">Moving the cart: inertia</a></li>
       <li><a href="#force">The push isn't just mass × acceleration</a></li>
@@ -85,7 +86,7 @@
     </div>
     <div class="bp-game">
       <h3>In the game</h3>
-      <p>Press 🔬 to open the live physics panel. <code>Lean φ</code> is the angle of the books' centre of gravity from straight up, and <code>Gravity torque</code> is <var>m g d</var>. Watch the torque grow as the lean grows.</p>
+      <p>Press 🔬 to open the live physics panel. <code>Angle from straight up</code> is the angle of the books' centre of gravity, seen from the pivot, and <code>Gravity torque</code> is <var>m g d</var>. Watch the torque grow as the lean grows.</p>
     </div>
     <p class="hs-small">Pairs with <a href="{{ $m }}lesson-4/">A First Course in Physics, Lesson 4: Gravitation, center of gravity and balance</a>.</p>
   </section>
@@ -127,13 +128,55 @@
     <div class="bp-game">
       <h3>In the Lab</h3>
       <p>The Lab's <b>Pencil</b> is a single book on a free pivot, and its <b>Broom</b> is six books stiffly bound into one tall stick. Look at <code>Doubling time</code> in the physics panel for each: about 0.10 s and 0.21 s. Then try the <b>Broom on the Moon</b>, where gravity is about a sixth of Earth's: the doubling time is about 0.52 s, since <var>t</var>₂ grows with 1 ÷ √<var>g</var>.</p>
-      <p><a class="bp-lab" href="{{ $game }}?lab=pencil">Pencil</a><a class="bp-lab" href="{{ $game }}?lab=broom">Broom</a><a class="bp-lab" href="{{ $game }}?lab=moon">Broom on the Moon</a></p>
+      <p>The <b>Counterweight</b> experiment hangs a 6 kg weight on an arm below the broom's pivot. The broom is now less top-heavy, so its lean doubles every 0.72 s instead of 0.21 s. A balancing toy works the same way. There's a catch: being less top-heavy also means a push of the cart turns it less, so it's harder to swing up.</p>
+      <p><a class="bp-lab" href="{{ $game }}?lab=pencil">Pencil</a><a class="bp-lab" href="{{ $game }}?lab=broom">Broom</a><a class="bp-lab" href="{{ $game }}?lab=moon">Broom on the Moon</a><a class="bp-lab" href="{{ $game }}?lab=counter">Counterweight</a></p>
     </div>
   </section>
 
   <!-- 3 -->
+  <section class="bp-sec" id="swing">
+    <h2><span class="n">3</span>Swinging up</h2>
+    <div class="bp-two">
+      <div>
+        <p>In the game the books start hanging down from the cart, like the ball on a cup-and-ball toy. To get them standing up, you have to swing them, and the way to swing anything higher is to push <b>in rhythm</b>. A hanging pendulum has its own natural swing time, its <b>period</b>, and small pushes that come once each swing, at the right moment, add up. That's called <b>resonance</b>, and it's how you pump a playground swing.</p>
+        <p>The right moment: roll the cart the <i>opposite</i> way to the books' swing. From the cart's point of view, the books get a shove in the direction they're already moving, so each swing climbs higher. Move the cart <i>with</i> the swing and you take energy out instead, which is how you slow them down.</p>
+        <div class="bp-eq"><var>T</var> = 2π √( 2<var>L</var> ÷ 3<var>g</var> )<small>The period of a straight, even stick of length <var>L</var> swinging from one end. Two books (47 cm) swing back and forth about once every 1.1 s; 25 books (6 m) take about 4 s. The physics panel shows it as <code>Swing period hanging</code>.</small></div>
+        <p>How high do they need to go? To stand straight up and stop there, the books' centre of gravity has to rise from below the pivot to the same distance above it, so the swing needs exactly enough energy for that climb:</p>
+        <div class="bp-eq"><var>E</var> = 2 <var>m g d</var><small><var>m</var> is the mass of the books and <var>d</var> the distance from the pivot to their centre of gravity. For two books that's about 9 J; for 16 books, about 630 J. The game's <b>Swing</b> bar compares the books' swing energy with this. When it reaches the line, they have just enough.</small></div>
+        <p>Too little and they fall back; too much and they go right over the top. Then you have to catch them as they arrive, which is where the balancing starts.</p>
+      </div>
+      <figure class="bp-fig">
+        <svg viewBox="0 0 360 230" role="img" aria-label="Three steps: a chain hanging and swinging right while the cart rolls left; a higher swing; the chain standing straight up above the cart.">
+          <g stroke-width="2.2">
+            <line x1="10" y1="120" x2="350" y2="120" class="ln" stroke-width="1.5"/>
+            <rect x="35" y="100" width="50" height="16" rx="3" fill="none" stroke="#5b8aa0"/><circle cx="45" cy="118" r="4" fill="none" stroke="#5b8aa0"/><circle cx="75" cy="118" r="4" fill="none" stroke="#5b8aa0"/>
+            <g transform="rotate(-25 60 100)"><rect x="55" y="100" width="10" height="34" rx="2" fill="#74c0fc" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/><rect x="55" y="134" width="10" height="34" rx="2" fill="#ffa94d" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/></g>
+            <path d="M74 186 Q96 182 108 170" fill="none" stroke="#b8963e"/><path d="M110 167 l-9 1 l5 7 z" fill="#b8963e" stroke="none"/>
+            <path d="M60 92 L30 92" stroke="#c2523c"/><path d="M28 92 l8 -5 v10 z" fill="#c2523c" stroke="none"/>
+            <rect x="150" y="100" width="50" height="16" rx="3" fill="none" stroke="#5b8aa0"/><circle cx="160" cy="118" r="4" fill="none" stroke="#5b8aa0"/><circle cx="190" cy="118" r="4" fill="none" stroke="#5b8aa0"/>
+            <g transform="rotate(-100 175 100)"><rect x="170" y="100" width="10" height="34" rx="2" fill="#74c0fc" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/><rect x="170" y="134" width="10" height="34" rx="2" fill="#ffa94d" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/></g>
+            <rect x="268" y="100" width="50" height="16" rx="3" fill="none" stroke="#5b8aa0"/><circle cx="278" cy="118" r="4" fill="none" stroke="#5b8aa0"/><circle cx="308" cy="118" r="4" fill="none" stroke="#5b8aa0"/>
+            <rect x="288" y="32" width="10" height="34" rx="2" fill="#ffa94d" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/><rect x="288" y="66" width="10" height="34" rx="2" fill="#74c0fc" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/>
+            <path d="M293 100 L271 24 A80 80 0 0 1 315 24 Z" fill="#63e6be" fill-opacity=".12" stroke="#3f9b6e" stroke-dasharray="4 4" stroke-width="1"/>
+          </g>
+          <g font-size="11" class="ink" text-anchor="middle"><text x="60" y="212">1. Roll against</text><text x="60" y="225">the swing</text><text x="175" y="212">2. Higher each</text><text x="175" y="225">time</text><text x="293" y="212">3. Catch it</text><text x="293" y="225">at the top</text></g>
+        </svg>
+        <figcaption>Roll the cart against the swing, in rhythm, and the books climb higher each time. Then catch them at the top and balance.</figcaption>
+      </figure>
+    </div>
+    <div class="bp-try">
+      <h3>Try it: swing a key on a string</h3>
+      <p>Hang a key or a small toy from a piece of string about 30 cm long and hold the end still. Now move your hand a little from side to side. Try fast, then slow, then in time with the swing. Only the rhythm that matches the swing makes it climb. Can you get it to go all the way round?</p>
+    </div>
+    <div class="bp-game">
+      <h3>In the game</h3>
+      <p>Watch the Swing bar while you rock the cart. It fills as the swing grows and lights up when the books have enough energy to reach the top. In the physics panel, <code>Swing energy</code> and <code>Needed to reach the top</code> show the same thing in joules. The 🤖 autopilot does it by the formula: it pushes against the swing until the energy is right, then switches to balancing.</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
   <section class="bp-sec" id="doubling">
-    <h2><span class="n">3</span>A lean that doubles</h2>
+    <h2><span class="n">4</span>A lean that doubles</h2>
     <div class="bp-two">
       <div>
         <p>When something unstable starts to lean, the lean doesn't grow at a steady speed. The more it leans, the harder gravity pulls it over, so it leans faster still. A lean of 1° becomes 2°, then 4°, 8°, 16° and 32°, doubling every <var>t</var>₂ seconds. This is called <b>exponential growth</b>.</p>
@@ -156,18 +199,18 @@
     </div>
     <div class="bp-game">
       <h3>In the game</h3>
-      <p>Each level's start card shows its doubling time. Level 1 (2 books) is 1.15 s, and each level is a little quicker, down to 0.55 s with 25 books. The lean graph in the physics panel shows the curve bending upward when you leave the books alone.</p>
+      <p>Each level's start card shows how fast a lean doubles at the top, in real time: about 0.13 s for 2 books, up to 0.44 s for 25 (taller is slower, as in section 2). That's quicker than anyone can react, so near the top the game slows time down, so that a lean looks as if it doubles every 0.9 s on the first level, down to 0.5 s on the last. The physics doesn't change; only the playback speed does, and the badge at the top of the game shows by how much.</p>
     </div>
   </section>
 
-  <!-- 4 -->
+  <!-- 5 -->
   <section class="bp-sec" id="inertia">
-    <h2><span class="n">4</span>Moving the cart: inertia</h2>
+    <h2><span class="n">5</span>Moving the cart: inertia</h2>
     <div class="bp-two">
       <div>
         <p>Newton's first law says that things keep doing what they're doing unless something pushes them. That's <b>inertia</b>. When the cart moves suddenly, the books stay where they were for a moment, so the cart slides out from under them and they lean the other way. (It's the same reason you lurch backward when a bus pulls away.)</p>
         <p>So to stop the books falling to the right, move the cart to the right, back under their centre of gravity. To travel somewhere, you first have to <b>nudge the wrong way</b>: to go right, give a small push left so the stack leans right, then follow it. Self-balancing scooters and robots do exactly this, and so does your hand when you walk with a broom balanced on it.</p>
-        <p>How far does a nudge tip the books? If the cart moves a distance <var>s</var> quickly, the stack tips back by an angle of about <var>s</var> ÷ <var>k</var> (in radians), where <var>k</var> is the stack's “pendulum length”, about two-thirds of its height. For a 47 cm stack of two books, <var>k</var> is about 32 cm, so a sudden 1 cm move tips it by about 1.8°. That's why the game gears your finger to the size of the stack.</p>
+        <p>How far does a nudge tip the books? If the cart moves a distance <var>s</var> quickly, the stack tips back by an angle of about <var>s</var> ÷ <var>k</var> (in radians), where <var>k</var> is the stack's “pendulum length”, about two-thirds of its height. For a 47 cm stack of two books, <var>k</var> is about 32 cm, so a sudden 1 cm move tips it by about 1.8°. Short stacks need tiny, careful moves; tall ones need big ones.</p>
       </div>
       <figure class="bp-fig">
         <svg viewBox="0 0 360 170" role="img" aria-label="Three steps: the stack stands upright; the cart nudges left so the stack leans right; the cart then follows to the right, moving under the stack.">
@@ -193,14 +236,14 @@
     </div>
     <div class="bp-game">
       <h3>In the game</h3>
-      <p>Hold ← for a moment and watch the books tip right. Then press <b>Let the autopilot try</b> after a fall and watch it nudge the wrong way first whenever it moves back to the middle.</p>
+      <p>Once the books are balanced, hold ← for a moment and watch them tip right. Turn on the 🤖 autopilot and watch how it nudges the wrong way first whenever it steers back toward the middle of the track.</p>
     </div>
     <p class="hs-small">Pairs with <a href="{{ $m }}lesson-6/">A First Course in Physics, Lesson 6: Newton's three laws of motion</a>.</p>
   </section>
 
-  <!-- 5 -->
+  <!-- 6 -->
   <section class="bp-sec" id="force">
-    <h2><span class="n">5</span>The push isn't just mass × acceleration</h2>
+    <h2><span class="n">6</span>The push isn't just mass × acceleration</h2>
     <p>Newton's second law, <var>F</var> = <var>m a</var>, says the force needed to speed something up is its mass times its acceleration. If the cart and books were one solid block, the motor would need <var>F</var> = (<var>M</var> + <var>m</var>) <var>a</var>, where <var>M</var> is the cart's 15 kg and <var>m</var> is the books.</p>
     <p>But the books aren't solid with the cart. When they lean or swing, they push and pull on it (Newton's third law: the cart pushes on the books, so the books push back on the cart). So the force the motor actually needs keeps changing, even while the cart's acceleration is steady.</p>
     <div class="bp-game">
@@ -209,21 +252,21 @@
     </div>
   </section>
 
-  <!-- 6 -->
+  <!-- 7 -->
   <section class="bp-sec" id="energy">
-    <h2><span class="n">6</span>Energy keeps the books honest</h2>
+    <h2><span class="n">7</span>Energy keeps the books honest</h2>
     <p>Energy is never made or destroyed, only moved from one kind to another. In Book Cart there are five kinds to keep track of:</p>
     <div class="hs-tablewrap"><table class="bp-tbl">
       <thead><tr><th>Kind</th><th>What it is</th><th>Formula</th></tr></thead>
       <tbody>
         <tr><td>Kinetic</td><td>Energy of motion: the rolling cart and the swinging books</td><td>½ <var>m v</var>²</td></tr>
         <tr><td>Gravitational</td><td>Energy of height: books lifted higher store more</td><td><var>m g h</var></td></tr>
-        <tr><td>Spring</td><td>Energy stored in the bent clamp and bindings</td><td>½ <var>k θ</var>²</td></tr>
+        <tr><td>Spring</td><td>Energy stored in the bent bindings between the books</td><td>½ <var>k θ</var>²</td></tr>
         <tr><td>Work in</td><td>Energy added by the motor (and taken away when it brakes), and by the wind</td><td><var>F</var> × distance</td></tr>
         <tr><td>Heat</td><td>Energy lost to rolling friction and the dampers in the bindings</td><td></td></tr>
       </tbody>
     </table></div>
-    <p>Add up the kinetic, gravitational and spring energy, take away the work put in, add the heat, and the total should never change. When the books topple, their gravitational energy turns into kinetic energy as they fall faster and faster.</p>
+    <p>Add up the kinetic, gravitational and spring energy, take away the work put in, add the heat, and the total should never change. As the books swing, energy flows back and forth between kinetic (fastest at the bottom) and gravitational (highest at the top), and the motor's work is what makes the total grow.</p>
     <div class="bp-game">
       <h3>In the game</h3>
       <p>The energy bars in the physics panel do this sum many times a second. The line under them says how far the sum has drifted, usually less than a tenth of a joule. That's a check that the simulation is obeying the laws of physics.</p>
@@ -231,52 +274,54 @@
     <p class="hs-small">Pairs with <a href="{{ $m }}lesson-25/">A First Course in Physics, Lesson 25: Power and energy</a>.</p>
   </section>
 
-  <!-- 7 -->
+  <!-- 8 -->
   <section class="bp-sec" id="wind">
-    <h2><span class="n">7</span>Wind</h2>
+    <h2><span class="n">8</span>Wind</h2>
     <p>Moving air pushes on anything in its way. The push, called <b>drag</b>, grows with the square of the wind speed:</p>
     <div class="bp-eq"><var>F</var> = ½ <var>ρ</var> <var>C</var><sub>d</sub> <var>A</var> <var>v</var>²<small><var>ρ</var> (rho) is the density of air, about 1.2 kg/m³; <var>C</var><sub>d</sub> is the drag coefficient, about 1.2 for a block shape; <var>A</var> is the area facing the wind; and <var>v</var> is the wind speed. Double the wind speed and the push is four times as strong.</small></div>
     <p>In the game the wind blows along the track, so it meets each book's spine or page edge. In a 4 m/s breeze, the push on one book is only about a tenth of a newton, the weight of a 10 gram coin. But it acts on every book, high up the stack, and it keeps going. To stay put, you have to lean the books slightly into the wind, just as you lean into a strong wind when you walk.</p>
     <div class="bp-game">
       <h3>In the Lab</h3>
-      <p>Open the <b>Windy tower</b> and watch the autopilot. The wind streaks show the gusts; <code>Lean φ</code> shows the books leaning into the wind to hold their ground.</p>
-      <p><a class="bp-lab" href="{{ $game }}?lab=wind">Windy tower</a></p>
-    </div>
-  </section>
-
-  <!-- 8 -->
-  <section class="bp-sec" id="chaos">
-    <h2><span class="n">8</span>Chaos</h2>
-    <p>Join books with free hinges and let them fall, and they flail about in a way that's very hard to predict. Start two copies only a thousandth of a degree apart, and after a few seconds they're doing completely different things. This is <b>chaos</b>: the laws are exact, but tiny differences at the start grow until they take over. It's one reason weather forecasts get less reliable the further ahead they look.</p>
-    <p>A hanging chain of books is different. Hanging down, it's stable, and it just swings like a pendulum. Each way it can swing has its own rhythm, which the physics panel calls a “wobble”.</p>
-    <div class="bp-game">
-      <h3>In the Lab</h3>
-      <p><b>Chaos</b> drops three books on free hinges, with a faint ghost twin started 0.001° away. Watch the two drift apart. <b>Free hinges</b> stands ten books up with nothing holding them: the physics panel shows they would double their lean every 0.013 s, far too fast for anyone. <b>Hanging</b> lets you swing a chain with the cart.</p>
-      <p><a class="bp-lab" href="{{ $game }}?lab=chaos">Chaos</a><a class="bp-lab" href="{{ $game }}?lab=free">Free hinges</a><a class="bp-lab" href="{{ $game }}?lab=hang">Hanging</a></p>
+      <p>Open <b>Windy</b> and watch the autopilot swing twelve books up and hold them in gusty wind. The wind streaks show the gusts; <code>Angle from straight up</code> shows the books leaning slightly into the wind to hold their ground.</p>
+      <p><a class="bp-lab" href="{{ $game }}?lab=wind">Windy</a></p>
     </div>
   </section>
 
   <!-- 9 -->
+  <section class="bp-sec" id="chaos">
+    <h2><span class="n">9</span>Chaos</h2>
+    <p>Join books with free hinges and let them fall, and they flail about in a way that's very hard to predict. Start two copies only a thousandth of a degree apart, and after a few seconds they're doing completely different things. This is <b>chaos</b>: the laws are exact, but tiny differences at the start grow until they take over. It's one reason weather forecasts get less reliable the further ahead they look.</p>
+    <p>A hanging chain of books is different. Hanging down, it's stable: nudge it and it swings back. Stood up, the very same chain is unstable. Same books and same hinges; the only difference is which side of the pivot the weight is on. The springy bindings in the game also make the chain wobble as it moves, and each way it can wobble has its own rhythm, which the physics panel lists as <code>Slowest wobble</code>.</p>
+    <div class="bp-game">
+      <h3>In the Lab</h3>
+      <p><b>Chaos</b> drops three books on free hinges from sideways, with a faint ghost twin started 0.001° away. Watch the two drift apart. <b>Free hinges</b> drops ten: the physics panel shows that, standing up, they would double their lean every 0.013 s, far too fast for anyone. <b>Swing-up</b> shows the autopilot swinging five books up from hanging.</p>
+      <p><a class="bp-lab" href="{{ $game }}?lab=chaos">Chaos</a><a class="bp-lab" href="{{ $game }}?lab=free">Free hinges</a><a class="bp-lab" href="{{ $game }}?lab=swing">Swing-up</a></p>
+    </div>
+  </section>
+
+  <!-- 10 -->
   <section class="bp-sec" id="model">
-    <h2><span class="n">9</span>How the game works</h2>
+    <h2><span class="n">10</span>How the game works</h2>
     <p>For older students and parents: what the simulation calculates, and what it simplifies.</p>
     <div class="bp-tech">
       <h3>The books and the cart</h3>
       <ul>
         <li>Every book is a solid slab with real proportions: 20 to 28 cm tall, 14 to 17 cm wide, 2.5 to 5 cm thick, made of paper and board at 650 to 800 kg per cubic metre (from about 0.5 to 1.9 kg each). They stand with their covers facing you. Each book's moment of inertia about its middle is <var>I</var> = <var>m</var>(<var>h</var>² + <var>w</var>²) ÷ 12.</li>
-        <li>The cart has a mass of 15 kg and rolls on a straight track with a little rolling resistance. There are padded stops at each end of the track.</li>
+        <li>The cart has a mass of 15 kg and rolls on a straight, raised track with a little rolling resistance, and padded stops at each end. The bottom book turns freely on a pivot on the cart, so the books can swing all the way round.</li>
         <li>Gravity is 9.80665 m/s² on Earth, 1.62 on the Moon, 3.71 on Mars and 24.79 on Jupiter.</li>
       </ul>
       <h3>What's simplified, and why</h3>
       <ul>
-        <li><b>Springs.</b> Real books on free hinges fall far too fast to balance: two books would double their lean about every 0.05 s, and 25 books every 0.008 s, with 25 different ways to fall at once. So in the game the bottom book sits in a springy clamp in the cart, and the books are joined by springy bindings. The springs don't hold the stack up on their own; they slow its fall. For each level the bindings are just stiff enough that there's only one way to fall, and the clamp is set so the lean doubles every 1.15 s (2 books) down to 0.55 s (25 books). Turn the springs off in the Lab to see the real thing.</li>
-        <li><b>The motor.</b> You don't push the cart directly. You move a target, and the cart's motor drives it there like a stiff spring with a shock absorber, up to a maximum force of 14 m/s² × the total mass. Sliding is geared so each pixel tips the books by about 0.12°, whatever their height.</li>
+        <li><b>Springy bindings.</b> Books joined by free hinges can fall in as many ways as there are books, all at once: standing up, two books would double their lean about every 0.05 s, and 25 books every 0.008 s. Nobody can balance that. So the books are joined by springy bindings, just stiff enough (times a safety margin that shrinks from 2.2 to 1.4 as the levels go on) that the standing chain has only one way to fall, like a bendy pole. The bindings don't hold the books up; they only keep them from folding. Set the bindings to zero in the Lab to see free hinges.</li>
+        <li><b>Slow motion.</b> Even as a bendy pole, real books fall fast: a lean doubles every 0.13 s for 2 books and 0.44 s for 25. So near the top the game plays time back slower, from ×0.14 on the first level to ×0.87 on the last, and a little faster during the swing. The simulation itself is unchanged; the badge at the top shows the playback speed, and the physics panel shows the simulated time.</li>
+        <li><b>The motor.</b> You don't push the cart directly. You move a target, and the cart's motor drives it there like a stiff spring with a shock absorber, up to a maximum force of 14 m/s² × the total mass. It's tuned in screen time, so the cart keeps up with your finger in slow motion too.</li>
+        <li><b>Balanced</b> means the books' centre of gravity is within 15° of straight up, no binding is bent more than 20°, and the top book is within 25° of straight up above the pivot, for 8 seconds in a row.</li>
         <li><b>A flat world.</b> Everything moves in one plane, the books never touch each other or the cart except at the hinges, and the bindings never break.</li>
       </ul>
       <h3>The equations</h3>
       <p>The motion comes from Lagrange's equations, written for the cart's position <var>x</var> and each book's angle <var>θ</var>₁ … <var>θ</var><sub><var>n</var></sub> from straight up. They take the form <b><var>M</var></b>(<var>q</var>) <var>q̈</var> = <var>b</var>(<var>q</var>, <var>q̇</var>) + <var>F</var>, where <b><var>M</var></b> is a mass matrix that changes as the books move, and <var>b</var> holds gravity, the springs and dampers, the spinning (centrifugal) effects, friction and wind. The game solves this set of equations (by Cholesky factorisation) 360 times per simulated second, stepping forward with an implicit trapezoidal method, which stays steady even with very stiff springs.</p>
       <p>The doubling time comes from a stability analysis of the straight-up stack with the cart held still: the books' equations are linearised to <b><var>A</var></b> <var>θ̈</var> = (<b><var>G</var></b> − <b><var>K</var></b>) <var>θ</var> (mass, gravity and spring matrices), and the largest growth rate <var>λ</var> gives <var>t</var>₂ = ln 2 ÷ <var>λ</var>. The other solutions are the wobbles, whose frequencies the panel shows.</p>
-      <p>The autopilot treats the whole stack as one leaning body and sets the cart's acceleration from the lean and how fast it's changing, with a gentle pull back toward the middle of the track. It clears all 24 levels.</p>
+      <p>The autopilot treats the whole chain as one pendulum. Away from the top, it pumps: it accelerates the cart against the swing whenever the swing energy is below what's needed to reach the top, and with the swing when it's above. Near the top it switches to balancing, setting the cart's acceleration from the angle and how fast it's changing, with a gentle pull back toward the middle of the track. In tests it swings up and balances every one of the 24 levels, even when it's made to react 0.15 s late, as a person would.</p>
       <h3>How we checked it</h3>
       <ul>
         <li>A single book hanging from a pivot swings with a period of 0.8408 s in the simulation; the textbook formula for a physical pendulum gives 0.8408 s.</li>

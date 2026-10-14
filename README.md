@@ -54,7 +54,7 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Latrunculi | The Roman "game of soldiers", in a modern reconstruction | Latin |
 | Knucklebones | Augustus's dinner-table game from Suetonius, and a modern variant | Latin |
 | Daily Word Puzzle | Guess the day's five-letter word in six tries | Latin or Koine Greek |
-| Book Cart | Balance 2 to 25 linked books in a rolling cart (an inverted pendulum), with live physics, a Tower mode and a Lab | English (physics) |
+| Book Cart | Swing a chain of 2 to 25 books up from a rolling cart and balance it (an inverted pendulum), with live physics and a Lab | English (physics) |
 | Charioteer | Top-down city game: chariots, errands, races, a thief and the watch | Latin or Koine Greek |
 | Siege | Fire ancient siege engines at 25 sieges from history and literature, each with a lesson | Latin or Koine Greek, optional |
 
@@ -161,7 +161,7 @@ Simple step-by-step (`static/homeschool/simple.js`): a switch on lesson, course 
 
 Science and History (`/homeschool/science/`, `/homeschool/history/`): series pages from `data/hs_series/science.yaml` and `history.yaml` (science also has an `open:` list of modern openly licensed textbooks, shown by `hs-series.html`), with guided courses `hs_giberne_stars`, `hs_giberne_geology`, `hs_candle`, `hs_millikan`, `hs_fmgreece` and `hs_fmrome`. Science guides mark dangerous old experiments "watch only". The series page can also show `extras:` cards (used for the physics lesson `/homeschool/science/balancing-physics/`, layout `homeschool/balancing.html`).
 
-Book Cart (`/games/book-cart/`): `static/games/bookcart/physics.js` is the simulation (Lagrange's equations for the cart and n books, an implicit Newmark step, energy bookkeeping and a stability analysis that gives each stack's doubling time); `game.js` has the levels, Tower, Lab, drawing and controls, with the level table (`LEVELS`, `TOWER`) computed offline so each level has one way to fall and a set doubling time. Progress is stored in `trb-bookcart-v1`; `?lab=<preset>` opens a Lab preset.
+Book Cart (`/games/book-cart/`): `static/games/bookcart/physics.js` is the simulation (Lagrange's equations for the cart and n books, an implicit Newmark step, energy bookkeeping and a stability analysis that gives each stack's doubling time); `game.js` has the levels, Lab, drawing, controls and autopilot (energy pumping, then balancing), with the level table (`LEVELS`) computed offline: bindings stiff enough for one way to fall, and a slow-motion factor near the top. Progress is stored in `trb-bookcart-v2`; `?lab=<preset>` opens a Lab preset.
 
 Actual Reading (`/homeschool/actual-reading/`): Hannah Ward's free curricula, linked with her permission. `data/hs_hannah.yaml` lists each curriculum and every lesson PDF (hosted on hannahwardeducation.com, not copied here); `content/homeschool/actual-reading/_content.gotmpl` makes a page per curriculum (`layouts/homeschool/actual-reading/`), and `static/homeschool/ar.js` picks, shows and ticks lessons (stored under `ar-<key>` in `trb-homeschool-v1`). Book links are Hannah's own Amazon affiliate links; keep them as they are. In the planner (`data/hs_planner.yaml`) her courses have `ar: <curriculum key>` instead of `data`, and lessons link straight to her PDFs; a subject can have `until` (last default age) and `replaces` (subjects it switches off by default), and a course with `alt: true` is an "also try" choice that the plan never moves into or on from.
 
