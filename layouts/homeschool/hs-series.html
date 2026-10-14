@@ -27,6 +27,16 @@
   </section>
   {{ end }}
 
+  {{ with $s.extras }}
+  <section class="hs-sec">
+    <h2>{{ .title }}</h2>
+    {{ with .note }}<p class="hs-small">{{ . | safeHTML }}</p>{{ end }}
+    <div class="hs-cards">
+      {{ range .items }}<a class="hs-card" href="{{ .url | relURL }}"><span class="big" aria-hidden="true">{{ .icon }}</span><h2>{{ .title }}</h2><p>{{ .what }}</p><span class="go">{{ .go | default "Open →" }}</span></a>{{ end }}
+    </div>
+  </section>
+  {{ end }}
+
   {{ with $s.video }}{{ $vids := . }}{{ if not (reflect.IsSlice $vids) }}{{ $vids = slice $vids }}{{ end }}
   <section class="hs-sec">
     <h2>{{ $s.videotitle | default "Watch" }}</h2>

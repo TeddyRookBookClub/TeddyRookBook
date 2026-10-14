@@ -1,0 +1,315 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/balancing.css" | relURL }}?v={{ (os.Stat "static/homeschool/balancing.css").ModTime.Unix }}">
+{{ $game := "games/book-cart/" | relURL }}
+{{ $m := "homeschool/science/first-course-in-physics/" | relURL }}
+<div class="hs bp">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/science/" | relURL }}">Science</a> › Why Things Fall Over</nav>
+  <header class="hs-hero">
+    <p class="hs-eyebrow">Homeschool · Science · Physics, ages about 10 and up</p>
+    <h1>Why Things Fall Over</h1>
+    <p>A stack of books standing up in a rolling cart is a famous physics puzzle called the inverted pendulum, or the cart-pole. This lesson explains the physics behind the <a href="{{ $game }}" style="color:#f3dfa3">Book Cart</a> game: balance, why tall things are easier to balance than short ones, inertia, energy, wind and chaos. There are things to try at home, and experiments to run in the game's Lab.</p>
+  </header>
+
+  <section class="hs-start">
+    <div>
+      <h2>Start here</h2>
+      <p>Play a level or two of Book Cart first, then read one section at a time. Each section ends with something to try, at home or in the game. Younger children can do the activities and the game; the formulas are for older students and parents, and you can skip them.</p>
+      <div class="hs-actions"><a class="hs-btn pri big" href="{{ $game }}">🛒 Play Book Cart</a><a class="hs-btn big" href="{{ $game }}?lab=pencil">🔬 Open the Lab</a></div>
+    </div>
+    <ol class="hs-steps-mini">
+      <li><a href="#balance">Balance and the centre of gravity</a></li>
+      <li><a href="#tall">Why tall things fall slower</a></li>
+      <li><a href="#doubling">A lean that doubles</a></li>
+      <li><a href="#inertia">Moving the cart: inertia</a></li>
+      <li><a href="#force">The push isn't just mass × acceleration</a></li>
+      <li><a href="#energy">Energy keeps the books honest</a></li>
+      <li><a href="#wind">Wind</a></li>
+      <li><a href="#chaos">Chaos</a></li>
+      <li><a href="#model">How the game works</a></li>
+    </ol>
+  </section>
+
+  <!-- 1 -->
+  <section class="bp-sec" id="balance">
+    <h2><span class="n">1</span>Balance and the centre of gravity</h2>
+    <div class="bp-two">
+      <div>
+        <p>Every object has a <b>centre of gravity</b>: the one point where its whole weight seems to act. For a book standing upright, it's in the middle. For a stack of books, it's partway up the stack.</p>
+        <p>Something is balanced when its centre of gravity is straight above (or straight below) the point holding it up. There are three kinds of balance:</p>
+        <ul>
+          <li><b>Stable:</b> tip it and it comes back, like a picture hanging from a nail. Its centre of gravity is below the support, and tipping it lifts the centre of gravity.</li>
+          <li><b>Neutral:</b> it stays wherever you put it, like a ball on a flat floor.</li>
+          <li><b>Unstable:</b> tip it even a little and it falls further, like a pencil standing on its point. Its centre of gravity is above the support, and tipping it lowers the centre of gravity.</li>
+        </ul>
+        <p>A stack of books standing in a cart is unstable. When it leans, its centre of gravity moves sideways by a distance <var>d</var> from the point that holds it, and gravity twists it further. That twist is a <b>torque</b>:</p>
+        <div class="bp-eq">τ = <var>m</var> <var>g</var> <var>d</var><small>τ is the torque in newton-metres, <var>m</var> the mass of the books in kilograms, <var>g</var> = 9.81 m/s² on Earth, and <var>d</var> the sideways distance in metres.</small></div>
+      </div>
+      <div>
+        <figure class="bp-fig">
+          <svg viewBox="0 0 360 300" role="img" aria-label="A stack of four books leaning in a cart. The centre of gravity has moved a distance d to the side of the pivot, and its weight m g pulls down there, twisting the stack further.">
+            <line x1="20" y1="282" x2="340" y2="282" class="ln" stroke-width="2"/>
+            <path d="M118 196 L242 196 L232 250 L128 250 Z" fill="none" stroke="#5b8aa0" stroke-width="2.5"/>
+            <path d="M118 196 L100 182" stroke="#5b8aa0" stroke-width="2.5"/><path d="M100 182 L94 178" stroke="#e8735a" stroke-width="5" stroke-linecap="round"/>
+            <line x1="132" y1="258" x2="228" y2="258" stroke="#5b8aa0" stroke-width="2.5"/>
+            <circle cx="142" cy="270" r="11" fill="none" stroke="#5b8aa0" stroke-width="2.5"/><circle cx="218" cy="270" r="11" fill="none" stroke="#5b8aa0" stroke-width="2.5"/>
+            <rect x="176" y="210" width="8" height="40" fill="#8a9ba5"/>
+            <line x1="180" y1="210" x2="180" y2="22" class="ln" stroke-width="1.2" stroke-dasharray="5 5" opacity=".6"/>
+            <line x1="218.7" y1="54.8" x2="225.4" y2="28.1" class="ln" stroke-width="1.2" stroke-dasharray="4 4" opacity=".6"/>
+            <g transform="rotate(14 180 210)">
+              <rect x="164" y="170" width="32" height="40" rx="3" fill="#74c0fc" stroke="#1d2320" stroke-opacity=".5"/>
+              <rect x="164" y="130" width="32" height="40" rx="3" fill="#ffa94d" stroke="#1d2320" stroke-opacity=".5"/>
+              <rect x="164" y="90" width="32" height="40" rx="3" fill="#63e6be" stroke="#1d2320" stroke-opacity=".5"/>
+              <rect x="164" y="50" width="32" height="40" rx="3" fill="#f783ac" stroke="#1d2320" stroke-opacity=".5"/>
+              <g fill="#fff8e6"><rect x="172" y="176" width="16" height="7"/><rect x="172" y="136" width="16" height="7"/><rect x="172" y="96" width="16" height="7"/><rect x="172" y="56" width="16" height="7"/></g>
+              <g fill="#1d2320"><circle cx="180" cy="170" r="2.6"/><circle cx="180" cy="130" r="2.6"/><circle cx="180" cy="90" r="2.6"/></g>
+            </g>
+            <circle cx="180" cy="210" r="4" class="ink"/>
+            <path d="M180 37 A173 173 0 0 1 221.9 42.1" fill="none" stroke="#b8963e" stroke-width="2"/>
+            <text x="194" y="30" font-size="15" fill="#b8963e" font-style="italic" font-weight="700">φ</text>
+            <circle cx="199.4" cy="132.4" r="6" fill="none" stroke="#c2523c" stroke-width="2.2"/><path d="M191 132.4h17M199.4 124v17" stroke="#c2523c" stroke-width="2"/>
+            <line x1="199.4" y1="140" x2="199.4" y2="192" stroke="#c2523c" stroke-width="2.5"/><path d="M193 186 L199.4 198 L205.8 186 Z" fill="#c2523c"/>
+            <text x="208" y="184" font-size="14" fill="#c2523c" font-style="italic">m g</text>
+            <path d="M180 112 L199.4 112" class="gs" stroke-width="2"/><path d="M180 107v10M199.4 107v10" class="gs" stroke-width="2"/>
+            <text x="184" y="105" font-size="14" class="gf" font-style="italic" font-weight="700">d</text>
+            <text x="224" y="138" font-size="12" class="ink">centre of gravity</text>
+            <text x="14" y="56" font-size="11" class="mut">dashed: straight up</text><text x="14" y="70" font-size="11" class="mut">from the pivot</text>
+          </svg>
+          <figcaption>The books lean by an angle <var>φ</var>. Their centre of gravity (red cross) is now <var>d</var> to the right of the pivot, so their weight twists them further right.</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="bp-try">
+      <h3>Try it: find the centre of gravity of a book</h3>
+      <p>Lay a hardback book flat on one finger and slide your finger around until it balances. That spot is right under its centre of gravity. Now hold a book upright on your flat hand and tip it a little: let go and it falls the way it leans, because its centre of gravity is no longer over your hand.</p>
+    </div>
+    <div class="bp-game">
+      <h3>In the game</h3>
+      <p>Press 🔬 to open the live physics panel. <code>Lean φ</code> is the angle of the books' centre of gravity from straight up, and <code>Gravity torque</code> is <var>m g d</var>. Watch the torque grow as the lean grows.</p>
+    </div>
+    <p class="hs-small">Pairs with <a href="{{ $m }}lesson-4/">A First Course in Physics, Lesson 4: Gravitation, center of gravity and balance</a>.</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="bp-sec" id="tall">
+    <h2><span class="n">2</span>Why tall things fall slower</h2>
+    <p>Try balancing a broom on your hand, bristles up, then try a pencil. The broom is much easier, even though it's bigger and heavier. A tall object tips over more slowly than a short one, so you have more time to catch it.</p>
+    <p>Physicists measure how fast a lean grows with its <b>doubling time</b>, <var>t</var>₂: the time it takes a small lean to double if nobody helps. For a straight, even stick standing on a pivot at its bottom end:</p>
+    <div class="bp-eq"><var>t</var>₂ = ln 2 ÷ <var>λ</var>, &nbsp; where &nbsp; <var>λ</var> = √( 3<var>g</var> ÷ 2<var>L</var> )<small><var>L</var> is the stick's length in metres, ln 2 ≈ 0.693, and <var>λ</var> (lambda) is the growth rate, per second. Because <var>L</var> is under the square root, a stick 4 times as long takes twice as long to fall.</small></div>
+    <div class="hs-tablewrap"><table class="bp-tbl">
+      <thead><tr><th>Stick</th><th>Length</th><th class="num">Doubling time</th></tr></thead>
+      <tbody>
+        <tr><td>Pencil</td><td>17.5 cm</td><td class="num">0.076 s</td></tr>
+        <tr><td>Ruler</td><td>30 cm</td><td class="num">0.099 s</td></tr>
+        <tr><td>Broom handle</td><td>1.4 m</td><td class="num">0.21 s</td></tr>
+        <tr><td>Long pole</td><td>3 m</td><td class="num">0.31 s</td></tr>
+      </tbody>
+    </table></div>
+    <p>Compare those with how quickly you can react, about 0.2 seconds for most people. You can't catch a pencil in time, but a broom gives you a chance, and a long pole is easier still.</p>
+    <div class="bp-calc" id="bp-calc">
+      <label for="bp-len">Stick length</label>
+      <input type="range" id="bp-len" min="5" max="400" value="140" aria-describedby="bp-out">
+      <output id="bp-out" for="bp-len"></output>
+      <div class="bp-meter" aria-hidden="true"><i id="bp-bar"></i><span id="bp-react"></span></div>
+      <p class="hs-small" style="grid-column:1/-1;margin:0">The bar is the doubling time on a scale of 0 to 0.5 seconds; the black line is a typical reaction time of 0.2 s.</p>
+    </div>
+    <div class="bp-try">
+      <h3>Try it: broom against pencil, and your reaction time</h3>
+      <ol>
+        <li>In a clear space, away from anything breakable, balance a broom on your flat palm, bristles up. Then try a long-handled spoon, then a pencil. Which can you keep up longest?</li>
+        <li>Measure your reaction time with a ruler. A helper holds a 30 cm ruler hanging down, with the zero end between your open thumb and finger. They let go without warning, and you pinch it as fast as you can. Read where you caught it, and look it up below. A falling ruler drops <var>d</var> = ½ <var>g t</var>², so <var>t</var> = √(2<var>d</var> ÷ <var>g</var>).</li>
+      </ol>
+      <div class="hs-tablewrap"><table class="bp-tbl">
+        <thead><tr><th>Caught at</th><td class="num">5 cm</td><td class="num">10 cm</td><td class="num">15 cm</td><td class="num">20 cm</td><td class="num">25 cm</td><td class="num">30 cm</td></tr></thead>
+        <tbody><tr><th>Reaction time</th><td class="num">0.10 s</td><td class="num">0.14 s</td><td class="num">0.17 s</td><td class="num">0.20 s</td><td class="num">0.23 s</td><td class="num">0.25 s</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="bp-game">
+      <h3>In the Lab</h3>
+      <p>The Lab's <b>Pencil</b> is a single book on a free pivot, and its <b>Broom</b> is six books stiffly bound into one tall stick. Look at <code>Doubling time</code> in the physics panel for each: about 0.10 s and 0.21 s. Then try the <b>Broom on the Moon</b>, where gravity is about a sixth of Earth's: the doubling time is about 0.52 s, since <var>t</var>₂ grows with 1 ÷ √<var>g</var>.</p>
+      <p><a class="bp-lab" href="{{ $game }}?lab=pencil">Pencil</a><a class="bp-lab" href="{{ $game }}?lab=broom">Broom</a><a class="bp-lab" href="{{ $game }}?lab=moon">Broom on the Moon</a></p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="bp-sec" id="doubling">
+    <h2><span class="n">3</span>A lean that doubles</h2>
+    <div class="bp-two">
+      <div>
+        <p>When something unstable starts to lean, the lean doesn't grow at a steady speed. The more it leans, the harder gravity pulls it over, so it leans faster still. A lean of 1° becomes 2°, then 4°, 8°, 16° and 32°, doubling every <var>t</var>₂ seconds. This is called <b>exponential growth</b>.</p>
+        <p>That's why small, early corrections work and big, late ones don't. If the doubling time is 1 second, a 1° lean takes 4 seconds to reach 16°, and only 1 more second to reach 32°.</p>
+        <div class="bp-eq"><var>φ</var>(<var>t</var>) = <var>φ</var>₀ × 2<sup><var>t</var> ÷ <var>t</var>₂</sup><small><var>φ</var>₀ is the starting lean. This is only true while the lean is small, but that's when it matters most.</small></div>
+      </div>
+      <figure class="bp-fig">
+        <svg viewBox="0 0 370 220" role="img" aria-label="Graph: a 1 degree lean doubles every second, reaching 32 degrees after 5 seconds; the books topple at 35 degrees.">
+          <g class="grid" stroke-width="1"><line x1="40" y1="190" x2="350" y2="190"/><line x1="40" y1="20" x2="40" y2="190"/></g>
+          <line x1="40" y1="41.3" x2="350" y2="41.3" stroke="#c2523c" stroke-dasharray="5 4"/>
+          <text x="346" y="36" font-size="11" fill="#c2523c" text-anchor="end">topples at 35°</text>
+          <path d="M40.0,185.8 L43.1,185.6 L46.1,185.4 L49.2,185.3 L52.2,185.1 L55.3,184.9 L58.4,184.7 L61.4,184.6 L64.5,184.4 L67.5,184.2 L70.6,183.9 L73.7,183.7 L76.7,183.5 L79.8,183.3 L82.8,183.0 L85.9,182.8 L89.0,182.5 L92.0,182.2 L95.1,182.0 L98.1,181.7 L101.2,181.4 L104.3,181.1 L107.3,180.7 L110.4,180.4 L113.4,180.1 L116.5,179.7 L119.6,179.3 L122.6,179.0 L125.7,178.6 L128.7,178.2 L131.8,177.7 L134.9,177.3 L137.9,176.8 L141.0,176.4 L144.0,175.9 L147.1,175.4 L150.2,174.8 L153.2,174.3 L156.3,173.7 L159.3,173.1 L162.4,172.5 L165.5,171.9 L168.5,171.2 L171.6,170.6 L174.6,169.9 L177.7,169.1 L180.8,168.4 L183.8,167.6 L186.9,166.8 L189.9,166.0 L193.0,165.1 L196.1,164.2 L199.1,163.3 L202.2,162.3 L205.2,161.3 L208.3,160.3 L211.4,159.2 L214.4,158.1 L217.5,157.0 L220.5,155.8 L223.6,154.6 L226.7,153.3 L229.7,152.0 L232.8,150.6 L235.8,149.2 L238.9,147.7 L242.0,146.2 L245.0,144.6 L248.1,143.0 L251.1,141.3 L254.2,139.5 L257.3,137.7 L260.3,135.8 L263.4,133.9 L266.4,131.9 L269.5,129.8 L272.6,127.6 L275.6,125.4 L278.7,123.0 L281.7,120.6 L284.8,118.1 L287.9,115.5 L290.9,112.9 L294.0,110.1 L297.0,107.2 L300.1,104.2 L303.2,101.1 L306.2,97.9 L309.3,94.6 L312.3,91.2 L315.4,87.6 L318.5,84.0 L321.5,80.1 L324.6,76.2 L327.6,72.1 L330.7,67.9 L333.8,63.5 L336.8,58.9 L339.9,54.2" fill="none" class="gs" stroke-width="3"/>
+          <g fill="#b8963e"><circle cx="40" cy="185.8" r="4"/><circle cx="100" cy="181.5" r="4"/><circle cx="160" cy="173" r="4"/><circle cx="220" cy="156" r="4"/><circle cx="280" cy="122" r="4"/><circle cx="340" cy="54" r="4"/></g>
+          <g font-size="11" class="ink"><text x="44" y="176">1°</text><text x="96" y="172">2°</text><text x="154" y="164">4°</text><text x="212" y="146">8°</text><text x="266" y="112">16°</text><text x="318" y="52">32°</text></g>
+          <g font-size="11" class="mut" text-anchor="middle"><text x="40" y="205">0</text><text x="100" y="205">1</text><text x="160" y="205">2</text><text x="220" y="205">3</text><text x="280" y="205">4</text><text x="340" y="205">5 s</text></g>
+          <text x="46" y="28" font-size="11" class="mut">lean</text>
+        </svg>
+        <figcaption>With a doubling time of 1 second, a 1° lean reaches 32° in 5 seconds. Most of the growth happens at the end.</figcaption>
+      </figure>
+    </div>
+    <div class="bp-game">
+      <h3>In the game</h3>
+      <p>Each level's start card shows its doubling time. Level 1 (2 books) is 1.15 s, and each level is a little quicker, down to 0.55 s with 25 books. The lean graph in the physics panel shows the curve bending upward when you leave the books alone.</p>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="bp-sec" id="inertia">
+    <h2><span class="n">4</span>Moving the cart: inertia</h2>
+    <div class="bp-two">
+      <div>
+        <p>Newton's first law says that things keep doing what they're doing unless something pushes them. That's <b>inertia</b>. When the cart moves suddenly, the books stay where they were for a moment, so the cart slides out from under them and they lean the other way. (It's the same reason you lurch backward when a bus pulls away.)</p>
+        <p>So to stop the books falling to the right, move the cart to the right, back under their centre of gravity. To travel somewhere, you first have to <b>nudge the wrong way</b>: to go right, give a small push left so the stack leans right, then follow it. Self-balancing scooters and robots do exactly this, and so does your hand when you walk with a broom balanced on it.</p>
+        <p>How far does a nudge tip the books? If the cart moves a distance <var>s</var> quickly, the stack tips back by an angle of about <var>s</var> ÷ <var>k</var> (in radians), where <var>k</var> is the stack's “pendulum length”, about two-thirds of its height. For a 47 cm stack of two books, <var>k</var> is about 32 cm, so a sudden 1 cm move tips it by about 1.8°. That's why the game gears your finger to the size of the stack.</p>
+      </div>
+      <figure class="bp-fig">
+        <svg viewBox="0 0 360 170" role="img" aria-label="Three steps: the stack stands upright; the cart nudges left so the stack leans right; the cart then follows to the right, moving under the stack.">
+          <g stroke-width="2.5">
+            <line x1="10" y1="132" x2="350" y2="132" class="ln" stroke-width="1.5"/>
+            <rect x="35" y="104" width="50" height="20" rx="3" fill="none" stroke="#5b8aa0"/><circle cx="45" cy="127" r="5" fill="none" stroke="#5b8aa0"/><circle cx="75" cy="127" r="5" fill="none" stroke="#5b8aa0"/>
+            <rect x="55" y="40" width="10" height="64" rx="2" fill="#ffa94d" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/>
+            <rect x="148" y="104" width="50" height="20" rx="3" fill="none" stroke="#5b8aa0"/><circle cx="158" cy="127" r="5" fill="none" stroke="#5b8aa0"/><circle cx="188" cy="127" r="5" fill="none" stroke="#5b8aa0"/>
+            <g transform="rotate(12 173 104)"><rect x="168" y="40" width="10" height="64" rx="2" fill="#ffa94d" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/></g>
+            <path d="M188 90 L160 90" stroke="#c2523c"/><path d="M160 90 l7 -5 v10 z" fill="#c2523c" stroke="none"/>
+            <rect x="270" y="104" width="50" height="20" rx="3" fill="none" stroke="#5b8aa0"/><circle cx="280" cy="127" r="5" fill="none" stroke="#5b8aa0"/><circle cx="310" cy="127" r="5" fill="none" stroke="#5b8aa0"/>
+            <g transform="rotate(6 295 104)"><rect x="290" y="40" width="10" height="64" rx="2" fill="#ffa94d" stroke="#1d2320" stroke-opacity=".5" stroke-width="1"/></g>
+            <path d="M262 90 L340 90" class="gs"/><path d="M342 90 l-8 -5 v10 z" class="gf" stroke="none"/>
+          </g>
+          <g font-size="11" class="ink" text-anchor="middle"><text x="60" y="152">1. Want to go right</text><text x="173" y="152">2. Nudge left:</text><text x="173" y="165">it leans right</text><text x="295" y="152">3. Follow it right</text></g>
+        </svg>
+        <figcaption>To move right, first nudge left. The stack tips toward where you want to go, and the cart follows underneath.</figcaption>
+      </figure>
+    </div>
+    <div class="bp-try">
+      <h3>Try it: the card and coin</h3>
+      <p>Put a playing card on top of a glass and a coin on the card. Flick the card sharply sideways. The coin drops into the glass, because its inertia keeps it where it was while the card shoots away.</p>
+    </div>
+    <div class="bp-game">
+      <h3>In the game</h3>
+      <p>Hold ← for a moment and watch the books tip right. Then press <b>Let the autopilot try</b> after a fall and watch it nudge the wrong way first whenever it moves back to the middle.</p>
+    </div>
+    <p class="hs-small">Pairs with <a href="{{ $m }}lesson-6/">A First Course in Physics, Lesson 6: Newton's three laws of motion</a>.</p>
+  </section>
+
+  <!-- 5 -->
+  <section class="bp-sec" id="force">
+    <h2><span class="n">5</span>The push isn't just mass × acceleration</h2>
+    <p>Newton's second law, <var>F</var> = <var>m a</var>, says the force needed to speed something up is its mass times its acceleration. If the cart and books were one solid block, the motor would need <var>F</var> = (<var>M</var> + <var>m</var>) <var>a</var>, where <var>M</var> is the cart's 15 kg and <var>m</var> is the books.</p>
+    <p>But the books aren't solid with the cart. When they lean or swing, they push and pull on it (Newton's third law: the cart pushes on the books, so the books push back on the cart). So the force the motor actually needs keeps changing, even while the cart's acceleration is steady.</p>
+    <div class="bp-game">
+      <h3>In the game</h3>
+      <p>In the physics panel, compare <code>Motor force F</code> with <code>F = (M+m)a would be</code>. When the stack is straight and still they're close; when it's leaning or wobbling, they're different. The difference is the books pulling on the cart.</p>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="bp-sec" id="energy">
+    <h2><span class="n">6</span>Energy keeps the books honest</h2>
+    <p>Energy is never made or destroyed, only moved from one kind to another. In Book Cart there are five kinds to keep track of:</p>
+    <div class="hs-tablewrap"><table class="bp-tbl">
+      <thead><tr><th>Kind</th><th>What it is</th><th>Formula</th></tr></thead>
+      <tbody>
+        <tr><td>Kinetic</td><td>Energy of motion: the rolling cart and the swinging books</td><td>½ <var>m v</var>²</td></tr>
+        <tr><td>Gravitational</td><td>Energy of height: books lifted higher store more</td><td><var>m g h</var></td></tr>
+        <tr><td>Spring</td><td>Energy stored in the bent clamp and bindings</td><td>½ <var>k θ</var>²</td></tr>
+        <tr><td>Work in</td><td>Energy added by the motor (and taken away when it brakes), and by the wind</td><td><var>F</var> × distance</td></tr>
+        <tr><td>Heat</td><td>Energy lost to rolling friction and the dampers in the bindings</td><td></td></tr>
+      </tbody>
+    </table></div>
+    <p>Add up the kinetic, gravitational and spring energy, take away the work put in, add the heat, and the total should never change. When the books topple, their gravitational energy turns into kinetic energy as they fall faster and faster.</p>
+    <div class="bp-game">
+      <h3>In the game</h3>
+      <p>The energy bars in the physics panel do this sum many times a second. The line under them says how far the sum has drifted, usually less than a tenth of a joule. That's a check that the simulation is obeying the laws of physics.</p>
+    </div>
+    <p class="hs-small">Pairs with <a href="{{ $m }}lesson-25/">A First Course in Physics, Lesson 25: Power and energy</a>.</p>
+  </section>
+
+  <!-- 7 -->
+  <section class="bp-sec" id="wind">
+    <h2><span class="n">7</span>Wind</h2>
+    <p>Moving air pushes on anything in its way. The push, called <b>drag</b>, grows with the square of the wind speed:</p>
+    <div class="bp-eq"><var>F</var> = ½ <var>ρ</var> <var>C</var><sub>d</sub> <var>A</var> <var>v</var>²<small><var>ρ</var> (rho) is the density of air, about 1.2 kg/m³; <var>C</var><sub>d</sub> is the drag coefficient, about 1.2 for a block shape; <var>A</var> is the area facing the wind; and <var>v</var> is the wind speed. Double the wind speed and the push is four times as strong.</small></div>
+    <p>In the game the wind blows along the track, so it meets each book's spine or page edge. In a 4 m/s breeze, the push on one book is only about a tenth of a newton, the weight of a 10 gram coin. But it acts on every book, high up the stack, and it keeps going. To stay put, you have to lean the books slightly into the wind, just as you lean into a strong wind when you walk.</p>
+    <div class="bp-game">
+      <h3>In the Lab</h3>
+      <p>Open the <b>Windy tower</b> and watch the autopilot. The wind streaks show the gusts; <code>Lean φ</code> shows the books leaning into the wind to hold their ground.</p>
+      <p><a class="bp-lab" href="{{ $game }}?lab=wind">Windy tower</a></p>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="bp-sec" id="chaos">
+    <h2><span class="n">8</span>Chaos</h2>
+    <p>Join books with free hinges and let them fall, and they flail about in a way that's very hard to predict. Start two copies only a thousandth of a degree apart, and after a few seconds they're doing completely different things. This is <b>chaos</b>: the laws are exact, but tiny differences at the start grow until they take over. It's one reason weather forecasts get less reliable the further ahead they look.</p>
+    <p>A hanging chain of books is different. Hanging down, it's stable, and it just swings like a pendulum. Each way it can swing has its own rhythm, which the physics panel calls a “wobble”.</p>
+    <div class="bp-game">
+      <h3>In the Lab</h3>
+      <p><b>Chaos</b> drops three books on free hinges, with a faint ghost twin started 0.001° away. Watch the two drift apart. <b>Free hinges</b> stands ten books up with nothing holding them: the physics panel shows they would double their lean every 0.013 s, far too fast for anyone. <b>Hanging</b> lets you swing a chain with the cart.</p>
+      <p><a class="bp-lab" href="{{ $game }}?lab=chaos">Chaos</a><a class="bp-lab" href="{{ $game }}?lab=free">Free hinges</a><a class="bp-lab" href="{{ $game }}?lab=hang">Hanging</a></p>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="bp-sec" id="model">
+    <h2><span class="n">9</span>How the game works</h2>
+    <p>For older students and parents: what the simulation calculates, and what it simplifies.</p>
+    <div class="bp-tech">
+      <h3>The books and the cart</h3>
+      <ul>
+        <li>Every book is a solid slab with real proportions: 20 to 28 cm tall, 14 to 17 cm wide, 2.5 to 5 cm thick, made of paper and board at 650 to 800 kg per cubic metre (from about 0.5 to 1.9 kg each). They stand with their covers facing you. Each book's moment of inertia about its middle is <var>I</var> = <var>m</var>(<var>h</var>² + <var>w</var>²) ÷ 12.</li>
+        <li>The cart has a mass of 15 kg and rolls on a straight track with a little rolling resistance. There are padded stops at each end of the track.</li>
+        <li>Gravity is 9.80665 m/s² on Earth, 1.62 on the Moon, 3.71 on Mars and 24.79 on Jupiter.</li>
+      </ul>
+      <h3>What's simplified, and why</h3>
+      <ul>
+        <li><b>Springs.</b> Real books on free hinges fall far too fast to balance: two books would double their lean about every 0.05 s, and 25 books every 0.008 s, with 25 different ways to fall at once. So in the game the bottom book sits in a springy clamp in the cart, and the books are joined by springy bindings. The springs don't hold the stack up on their own; they slow its fall. For each level the bindings are just stiff enough that there's only one way to fall, and the clamp is set so the lean doubles every 1.15 s (2 books) down to 0.55 s (25 books). Turn the springs off in the Lab to see the real thing.</li>
+        <li><b>The motor.</b> You don't push the cart directly. You move a target, and the cart's motor drives it there like a stiff spring with a shock absorber, up to a maximum force of 14 m/s² × the total mass. Sliding is geared so each pixel tips the books by about 0.12°, whatever their height.</li>
+        <li><b>A flat world.</b> Everything moves in one plane, the books never touch each other or the cart except at the hinges, and the bindings never break.</li>
+      </ul>
+      <h3>The equations</h3>
+      <p>The motion comes from Lagrange's equations, written for the cart's position <var>x</var> and each book's angle <var>θ</var>₁ … <var>θ</var><sub><var>n</var></sub> from straight up. They take the form <b><var>M</var></b>(<var>q</var>) <var>q̈</var> = <var>b</var>(<var>q</var>, <var>q̇</var>) + <var>F</var>, where <b><var>M</var></b> is a mass matrix that changes as the books move, and <var>b</var> holds gravity, the springs and dampers, the spinning (centrifugal) effects, friction and wind. The game solves this set of equations (by Cholesky factorisation) 360 times per simulated second, stepping forward with an implicit trapezoidal method, which stays steady even with very stiff springs.</p>
+      <p>The doubling time comes from a stability analysis of the straight-up stack with the cart held still: the books' equations are linearised to <b><var>A</var></b> <var>θ̈</var> = (<b><var>G</var></b> − <b><var>K</var></b>) <var>θ</var> (mass, gravity and spring matrices), and the largest growth rate <var>λ</var> gives <var>t</var>₂ = ln 2 ÷ <var>λ</var>. The other solutions are the wobbles, whose frequencies the panel shows.</p>
+      <p>The autopilot treats the whole stack as one leaning body and sets the cart's acceleration from the lean and how fast it's changing, with a gentle pull back toward the middle of the track. It clears all 24 levels.</p>
+      <h3>How we checked it</h3>
+      <ul>
+        <li>A single book hanging from a pivot swings with a period of 0.8408 s in the simulation; the textbook formula for a physical pendulum gives 0.8408 s.</li>
+        <li>An unbalanced stack left alone grows at the rate the stability analysis predicts, to within 0.5%.</li>
+        <li>With friction and springs switched off, a chain of six free books tumbling wildly for 10 seconds keeps its energy constant to within about 0.1%. With everything switched on, the energy sum in section 6 stays balanced to within a tenth of a joule over a whole level, while several joules flow in and out.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="bp-sec">
+    <h2>More physics to go with it</h2>
+    <div class="bp-lessons">
+      <a href="{{ $m }}lesson-4/"><b>Center of gravity and balance</b><span>Millikan, Lesson 4: stable, unstable and neutral equilibrium</span></a>
+      <a href="{{ $m }}lesson-5/"><b>Falling bodies</b><span>Millikan, Lesson 5: accelerated motion and <var>g</var></span></a>
+      <a href="{{ $m }}lesson-6/"><b>Newton's three laws</b><span>Millikan, Lesson 6: inertia, <var>F</var> = <var>m a</var>, action and reaction</span></a>
+      <a href="{{ $m }}lesson-25/"><b>Power and energy</b><span>Millikan, Lesson 25: potential and kinetic energy in a pendulum</span></a>
+    </div>
+    <div class="hs-actions"><a class="hs-btn pri big" href="{{ $game }}">🛒 Play Book Cart</a><a class="hs-btn big" href="{{ "homeschool/science/" | relURL }}">More science</a></div>
+  </section>
+</div>
+<script>
+(function () {
+  var r = document.getElementById('bp-len'), o = document.getElementById('bp-out'), bar = document.getElementById('bp-bar'), re = document.getElementById('bp-react');
+  if (!r) return;
+  var g = 9.80665;
+  function show() {
+    var L = r.value / 100, lam = Math.sqrt(3 * g / (2 * L)), t2 = Math.LN2 / lam, fall = Math.log(35) / lam;
+    var len = L < 1 ? Math.round(L * 100) + ' cm' : L.toFixed(2) + ' m';
+    var verdict = t2 < 0.12 ? 'Much too quick to catch by hand.' : t2 < 0.2 ? 'Quicker than most people can react: very hard.' : t2 < 0.3 ? 'Just about catchable, with practice.' : 'Plenty of time: quite easy to balance.';
+    o.innerHTML = 'A <b>' + len + '</b> stick: growth rate <b>' + lam.toFixed(2) + ' per second</b>, doubling time <b>' + t2.toFixed(3) + ' s</b>. From 1° to 35° takes <b>' + fall.toFixed(2) + ' s</b>. ' + verdict;
+    bar.style.width = Math.min(100, t2 / 0.5 * 100) + '%'; re.style.left = (0.2 / 0.5 * 100) + '%';
+  }
+  r.addEventListener('input', show); show();
+})();
+</script>
+{{ end }}

@@ -1,0 +1,61 @@
+/* Why Things Fall Over: the physics of Book Cart */
+.bp .hs-hero::after{content:"⚖";font-size:7rem;top:-.4rem}
+.bp p,.bp li{line-height:1.6}
+.bp-sec>p,.bp-two>div>p{margin:0 0 .8rem}
+.bp-sec ul{margin:.2rem 0 .8rem}
+.bp-toc{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 0;padding:0;list-style:none}
+.bp-toc a{display:inline-block;padding:.3rem .7rem;border:1px solid var(--line);border-radius:999px;background:var(--card);text-decoration:none;box-shadow:none;font:600 .85rem system-ui,sans-serif}
+.bp-toc a:hover{border-color:var(--g)}
+.bp-sec{margin:2rem 0;padding-top:.2rem}
+.bp-sec>h2 .n{display:inline-grid;place-items:center;width:1.7rem;height:1.7rem;margin-right:.45rem;border-radius:50%;background:#004225;color:#fff;font:700 .9rem system-ui,sans-serif;vertical-align:.15em}
+html[data-theme="dark"] .bp-sec>h2 .n{background:#6cc79a;color:#0e1a13}
+.bp-two{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1.2rem 1.8rem;align-items:start}
+.bp-fig{margin:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem}
+.bp-fig svg{display:block;width:100%;height:auto}
+.bp-fig figcaption{font-size:.85rem;color:var(--muted);margin-top:.45rem;line-height:1.45}
+.bp-eq{margin:.8rem 0;padding:.7rem 1rem;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--g);border-radius:10px;font:1.12rem/1.6 Georgia,"Times New Roman",serif}
+.bp-eq var{font-style:italic}
+.bp-eq small{display:block;font:.82rem/1.45 system-ui,sans-serif;color:var(--muted);margin-top:.2rem}
+.bp var{font-style:italic;font-family:Georgia,serif}
+.bp-try,.bp-game{border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0}
+.bp-try{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--gold)}
+.bp-game{background:#0b1b27;color:#d6e4ec;border:1px solid #23394a}
+.bp-try h3,.bp-game h3{margin:0 0 .35rem;font:700 1rem Georgia,serif}
+.bp-game h3{color:#fff}
+.bp-try p,.bp-game p{margin:.25rem 0}
+.bp-try ol,.bp-try ul,.bp-game ul{margin:.3rem 0;padding-left:1.2rem}
+.hs .bp-game a{color:#7fe3c6}
+.bp-game .bp-lab{display:inline-block;margin:.25rem .25rem 0 0;padding:.25rem .7rem;border-radius:999px;border:1px solid rgba(99,230,190,.55);color:#bff3e3;text-decoration:none;box-shadow:none;font:600 .85rem system-ui,sans-serif}
+.hs .bp-game a.bp-lab{color:#bff3e3}
+.bp-game .bp-lab:hover{background:rgba(99,230,190,.12)}
+.bp-game code{background:rgba(255,255,255,.08);color:#ffd479;padding:0 .3rem;border-radius:4px}
+.bp-tbl{border-collapse:collapse;width:100%;font-size:.93rem;margin:.6rem 0}
+.bp-tbl th,.bp-tbl td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left}
+.bp-tbl th{font:700 .78rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.bp-tbl td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bp-calc{display:grid;grid-template-columns:auto 1fr;gap:.5rem 1rem;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.9rem 1.1rem;margin:1rem 0}
+.bp-calc label{font-weight:600}
+.bp-calc input[type=range]{width:100%;accent-color:#004225}
+.bp-calc output{grid-column:1/-1;display:block;font-size:1rem;line-height:1.6}
+.bp-calc output b{font-variant-numeric:tabular-nums}
+.bp-meter{grid-column:1/-1;height:12px;border-radius:6px;background:var(--soft);overflow:hidden;position:relative}
+.bp-meter i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#c2523c,#e9b44c,#3f9b6e);border-radius:6px}
+.bp-meter span{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.bp-tech{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem}
+.bp-tech h3{margin-top:1rem}
+.bp-tech ul{padding-left:1.2rem}
+.bp-lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem;margin:.6rem 0}
+.bp-lessons a{display:block;padding:.6rem .8rem;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;box-shadow:none;color:var(--ink)}
+.hs .bp-lessons a{color:var(--ink)}
+.bp-lessons a b{display:block;color:var(--g)}
+.bp-lessons a span{font-size:.85rem;color:var(--muted)}
+.bp-lessons a:hover{border-color:var(--g)}
+.bp svg text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.bp svg .ink{fill:var(--ink)}
+.bp svg .mut{fill:var(--muted)}
+.bp svg .ln{stroke:var(--ink)}
+.bp svg .grid{stroke:var(--line)}
+.bp svg .gs{stroke:var(--g)}
+.bp svg .gf{fill:var(--g)}
+@media (max-width:760px){.bp-two{grid-template-columns:1fr}.bp .hs-hero::after{display:none}}
+@media print{.bp-game,.bp-calc,.bp-toc,.hs-actions{display:none !important}.bp-fig,.bp-try,.bp-eq{break-inside:avoid}}
