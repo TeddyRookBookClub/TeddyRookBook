@@ -1,0 +1,151 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<link rel="stylesheet" href="{{ "lang/jerome.css" | relURL }}?v={{ (os.Stat "static/lang/jerome.css").ModTime.Unix }}">
+{{- $d := site.Data.jerome }}{{ $jk := .Params.jk }}
+{{- $root := "languages/jerome/" }}
+{{- $pdf := "pdfs/Greek-and-Latin-with-Jerome-Study-Companion.pdf" | relURL }}
+{{- $yt := "IAxxfABk6Fc" }}
+<div class="lang jc{{ with .Params.lang }} {{ . }}{{ end }}" id="jc">
+{{ if eq $jk "passage" }}
+  {{- $all := $d.passages.passages }}{{ $p := index $all (sub (int .Params.n) 1) }}
+  {{- $book := "" }}{{ range $d.passages.books }}{{ if eq .key $p.bk }}{{ $book = .name }}{{ end }}{{ end }}
+  {{- $t := int $p.t }}{{ $mm := div $t 60 }}{{ $ss := mod $t 60 }}{{ $hh := div $mm 60 }}{{ $mm = mod $mm 60 }}
+  {{- $stamp := cond (gt $hh 0) (printf "%d:%02d:%02d" $hh $mm $ss) (printf "%d:%02d" $mm $ss) }}
+  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › <a href="{{ printf "%s%s/" $root $p.bk | relURL }}">{{ $book }}</a> › {{ $p.ref }}</nav>
+  <header class="jc-ph"><span class="jc-n">{{ $p.n }}</span><h1 style="margin:0;font:700 2rem Georgia,serif">{{ $p.ref }}</h1></header>
+  {{ with $p.ctx }}<p class="jc-sub" style="margin:.2rem 0 0;font-style:italic">{{ . }}</p>{{ end }}
+  <div class="jc-tools" role="group" aria-label="Show or hide">
+    <button type="button" data-t="nopron" aria-pressed="true">Pronunciation</button>
+    <button type="button" data-t="noen" aria-pressed="true">English</button>
+    <button type="button" class="trb-video-at" data-yt="{{ $yt }}" data-start="{{ $p.t }}">▶ Hear it in the video ({{ $stamp }})</button>
+  </div>
+  <div class="jc-text">
+    <p class="jc-lab g">Greek</p>
+    <div class="jc-il g" lang="grc">{{ range $p.gk }}<span><b>{{ index . 0 }}</b><i>{{ index . 1 }}</i></span>{{ end }}</div>
+    <p class="jc-lab l">Latin</p>
+    <div class="jc-il l" lang="la">{{ range $p.la }}<span><b>{{ index . 0 }}</b><i>{{ index . 1 }}</i></span>{{ end }}</div>
+    <p class="jc-lab e">English</p>
+    <p class="jc-en" title="Tap to show">{{ $p.en }}</p>
+  </div>
+
+  <section class="jc-sec">
+    <h2>Word by word</h2>
+    <table class="jc-notes">
+      <thead><tr><th>Greek</th><th>Latin</th><th>Note</th></tr></thead>
+      <tbody>
+      {{ range $p.rows }}
+        <tr>
+          <td class="g"><b lang="grc">{{ .g }}</b>{{ if .gl }}<small>{{ if ne .gl .g }}from {{ if .gs }}<a href="{{ printf "%sgreek/%s/" $root .gs | relURL }}" lang="grc">{{ .gl }}</a>{{ else }}<span lang="grc">{{ .gl }}</span>{{ end }}{{ with .gg }}, {{ end }}{{ else if .gs }}<a href="{{ printf "%sgreek/%s/" $root .gs | relURL }}">all forms</a>{{ with .gg }}, {{ end }}{{ end }}{{ with .gg }}“{{ . }}”{{ end }}</small>{{ end }}</td>
+          <td class="l"><b lang="la">{{ .l }}</b>{{ if .ll }}<small>{{ if ne .ll .l }}from {{ if .ls }}<a href="{{ printf "%slatin/%s/" $root .ls | relURL }}" lang="la">{{ .ll }}</a>{{ else }}<span lang="la">{{ .ll }}</span>{{ end }}{{ else if .ls }}<a href="{{ printf "%slatin/%s/" $root .ls | relURL }}">all forms</a>{{ end }}</small>{{ end }}</td>
+          <td class="n">{{ .note | safeHTML }}</td>
+        </tr>
+      {{ end }}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="jc-sec">
+    <h2>New core words</h2>
+    <div class="jc-new">
+      <div class="g"><h4>Greek</h4>{{ with $p.ng }}<div class="jc-chips">{{ range . }}<a class="jc-chip" href="{{ printf "%sgreek/%s/" $root .s | relURL }}"><b lang="grc">{{ .w }}</b> {{ .m }}</a>{{ end }}</div>{{ else }}<p class="jc-small">None new in this passage.</p>{{ end }}</div>
+      <div class="l"><h4>Latin</h4>{{ with $p.nl }}<div class="jc-chips">{{ range . }}<a class="jc-chip" href="{{ printf "%slatin/%s/" $root .s | relURL }}"><b lang="la">{{ .w }}</b> {{ .m }}</a>{{ end }}</div>{{ else }}<p class="jc-small">None new in this passage.</p>{{ end }}</div>
+    </div>
+    {{ $mg := index $p.met 0 }}{{ $ml := index $p.met 1 }}
+    <div class="jc-met">
+      <span>Greek core words met</span><span class="jc-bar g"><i style="width:{{ printf "%.1f" (mul 100.0 (div (float $mg) 345)) }}%"></i></span><b>{{ $mg }} / 345</b>
+      <span>Latin core words met</span><span class="jc-bar l"><i style="width:{{ printf "%.1f" (mul 100.0 (div (float $ml) 345)) }}%"></i></span><b>{{ $ml }} / 345</b>
+    </div>
+  </section>
+
+  <nav class="jc-pnav">
+    {{ if gt $p.n 1 }}{{ $q := index $all (sub (int $p.n) 2) }}<a class="prev" href="{{ printf "%s%s" $root $q.path | relURL }}"><small>← Passage {{ $q.n }}</small>{{ $q.ref }}</a>{{ else }}<a class="prev" href="{{ printf "%sfoundations/" $root | relURL }}"><small>← Part One</small>Foundations</a>{{ end }}
+    {{ if lt $p.n (len $all) }}{{ $q := index $all (int $p.n) }}{{ if ne $q.bk $p.bk }}<a class="next" href="{{ printf "%s%s/#practice" $root $p.bk | relURL }}"><small>Next →</small>Practice: {{ $book }}</a>{{ else }}<a class="next" href="{{ printf "%s%s" $root $q.path | relURL }}"><small>Passage {{ $q.n }} →</small>{{ $q.ref }}</a>{{ end }}{{ else }}<a class="next" href="{{ printf "%s%s/#practice" $root $p.bk | relURL }}"><small>Next →</small>Practice: {{ $book }}</a>{{ end }}
+  </nav>
+
+  <section class="jc-sec">
+    <h2>Watch it read aloud</h2>
+    <p class="jc-small">In the video, Jerome reads this passage in Greek, then Latin, then English, and takes it apart word by word. It starts at <button type="button" class="trb-video-at jc-btn" style="padding:.2rem .6rem;font-size:.85rem" data-yt="{{ $yt }}" data-start="{{ $p.t }}">▶ {{ $stamp }}</button> or <a href="https://www.youtube.com/watch?v={{ $yt }}&amp;t={{ $p.t }}s" target="_blank" rel="noopener">open it on YouTube</a>.</p>
+    {{ partial "video.html" $yt }}
+  </section>
+  <p class="jc-small">Passage {{ $p.n }} of 124 in the <a href="{{ $root | relURL }}">Greek and Latin with Jerome study companion</a> · PDF page {{ $p.page }} · <a href="{{ $pdf }}#page={{ $p.page }}">open the PDF here</a></p>
+
+{{ else if eq $jk "word" }}
+  {{- $lang := .Params.lang }}{{ $L := cond (eq $lang "greek") "Greek" "Latin" }}{{ $lc := cond (eq $lang "greek") "grc" "la" }}
+  {{- $f := index (index $d (printf "forms_%s" $lang)) .Params.slug }}
+  {{- $all := $d.passages.passages }}
+  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › <a href="{{ printf "%s%s/" $root $lang | relURL }}">{{ $L }} core words</a> › {{ $f.w }}</nav>
+  <header>
+    <p class="jc-small" style="margin:0">{{ $L }} core word #{{ $f.rank }}{{ with $f.pos }} · <i>{{ . }}</i>{{ end }} · {{ $f.nt }} times in the New Testament</p>
+    <div class="jc-wh"><h1 class="hw" lang="{{ $lc }}" style="margin:0">{{ $f.w }}</h1>{{ with $f.pron2 | default $f.pron }}<span class="pr">{{ . }}</span>{{ end }}</div>
+    <p class="jc-entry"><span lang="{{ $lc }}">{{ $f.entry | safeHTML }}</span> <span class="m">— {{ $f.mean }}</span></p>
+  </header>
+  {{ with $f.notes }}<ul class="jc-wnotes">{{ range . }}<li>{{ . | safeHTML }}</li>{{ end }}</ul>{{ end }}
+  {{ with $f.extra }}{{ range . }}<p>{{ . | safeHTML }}</p>{{ end }}{{ end }}
+  {{ with $f.tables }}
+  <p class="jc-legend">Forms in <b>bold</b> occur in the New Testament; the others complete the pattern. A dash (—) marks a form that does not exist.</p>
+  <div class="jc-tables">
+    {{ range . }}
+    <div class="jc-ftab">
+      {{ with .title }}<h3>{{ . }}</h3>{{ end }}
+      <div class="jc-tw"><table lang="{{ $lc }}">
+        <thead><tr>{{ range .head }}<th>{{ . }}</th>{{ end }}</tr></thead>
+        <tbody>{{ range .rows }}<tr>{{ range . }}<td>{{ . | safeHTML }}</td>{{ end }}</tr>{{ end }}</tbody>
+      </table></div>
+      {{ with .foot }}<div class="ft">{{ range . }}<p>{{ . | safeHTML }}</p>{{ end }}</div>{{ end }}
+    </div>
+    {{ end }}
+  </div>
+  {{ else }}
+  <p class="jc-legend">There is no table of forms for this word{{ with $f.pos }} ({{ . }}){{ end }}.</p>
+  {{ end }}
+  <section class="jc-sec">
+    <h2>Where you meet it</h2>
+    {{ with $f.first }}{{ $fp := index $all (sub (int .) 1) }}<p>First met in passage {{ $fp.n }}, <a href="{{ printf "%s%s" $root $fp.path | relURL }}">{{ $fp.ref }}</a>.</p>{{ end }}
+    {{ with $f.seen }}{{ if gt (len .) 1 }}<p class="jc-small">Explained in the notes of {{ len . }} passages:</p><ul class="jc-refs">{{ range . }}{{ $q := index $all (sub (int .) 1) }}<li><a href="{{ printf "%s%s" $root $q.path | relURL }}">{{ $q.ref }}</a></li>{{ end }}</ul>{{ end }}{{ end }}
+  </section>
+  <nav class="jc-pnav">
+    {{ with $f.prev }}<a class="prev" href="{{ printf "%s%s/%s/" $root $lang . | relURL }}"><small>← #{{ sub $f.rank 1 }}</small><span lang="{{ $lc }}">{{ $f.prevw }}</span></a>{{ else }}<a class="prev" href="{{ printf "%s%s/" $root $lang | relURL }}"><small>←</small>{{ $L }} core words</a>{{ end }}
+    {{ with $f.next }}<a class="next" href="{{ printf "%s%s/%s/" $root $lang . | relURL }}"><small>#{{ add $f.rank 1 }} →</small><span lang="{{ $lc }}">{{ $f.nextw }}</span></a>{{ else }}<a class="next" href="{{ printf "%s%s/" $root $lang | relURL }}"><small>→</small>{{ $L }} core words</a>{{ end }}
+  </nav>
+  <p class="jc-small">From Appendix B of the <a href="{{ $root | relURL }}">Greek and Latin with Jerome study companion</a> · PDF page {{ $f.page }} · <a href="{{ $pdf }}#page={{ $f.page }}">open the PDF here</a></p>
+
+{{ else if eq $jk "foundations" }}
+  {{- $F := $d.foundations }}
+  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › Part One</nav>
+  <header class="lang-hero">
+    <p class="lang-eyebrow">Part One</p>
+    <h1>Foundations</h1>
+    <p>How Koine Greek and Latin work, side by side. The marks = ≈ ≠ say whether the two languages work the same way, nearly the same way, or differently. This part follows the poster <a href="{{ "infographics/koine-greek-and-latin/" | relURL }}" style="color:#f3dfa3">Koine Greek &amp; Latin: A Side-by-Side 101</a>.</p>
+  </header>
+  <nav class="jc-box jc-toc" aria-label="Contents"><b>Contents</b>
+    <ul>{{ range $i, $s := $F }}{{ if $s.title }}<li><a href="#s{{ $i }}">{{ $s.title }}</a></li>{{ end }}{{ end }}<li><a href="#practice">Practice: Foundations</a></li></ul>
+  </nav>
+  <div class="jc-found">
+  {{ range $i, $s := $F }}
+    {{ if $s.title }}<section class="jc-sec" id="s{{ $i }}"><h2>{{ $s.title }}</h2>{{ $s.html | safeHTML }}</section>{{ end }}
+  {{ end }}
+  </div>
+  {{ partial "jc-practice.html" "foundations" }}
+  <nav class="jc-pnav">
+    <a class="prev" href="{{ $root | relURL }}"><small>←</small>Study companion</a>
+    {{ $q := index $d.passages.passages 0 }}<a class="next" href="{{ printf "%s%s" $root $q.path | relURL }}"><small>Part Two →</small>Passage 1: {{ $q.ref }}</a>
+  </nav>
+  <p class="jc-small">PDF pages 9–20 · <a href="{{ $pdf }}#page=9">open the PDF here</a></p>
+
+{{ else if eq $jk "review" }}
+  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › Final review</nav>
+  <header class="lang-hero">
+    <p class="lang-eyebrow">Practice</p>
+    <h1>Final review</h1>
+    <p>A review of the whole book: vocabulary, grammar, parsing and sight reading. Try each question before you open its answer.</p>
+  </header>
+  {{ partial "jc-practice.html" "review" }}
+  <nav class="jc-pnav">
+    <a class="prev" href="{{ printf "%srevelation/" $root | relURL }}"><small>← Previous part</small>Revelation</a>
+    <a class="next" href="{{ $root | relURL }}"><small>→</small>Study companion</a>
+  </nav>
+  <p class="jc-small">PDF page {{ (index $d.practice.sets "review").page }} · <a href="{{ $pdf }}#page={{ (index $d.practice.sets "review").page }}">open the PDF here</a></p>
+{{ end }}
+</div>
+<script src="{{ "lang/jerome.js" | relURL }}?v={{ (os.Stat "static/lang/jerome.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,20 @@
+{{/* The Study Companion as pages: from data/jerome/*.json, parsed from the PDF. */}}
+{{ $d := site.Data.jerome }}
+{{ $date := time.AsTime "2026-10-14" }}
+{{ $.AddPage (dict "type" "jerome" "kind" "page" "path" "foundations" "title" "Part One: Foundations" "params" (dict "jk" "foundations" "description" "How Koine Greek and Latin work, side by side: letters and sounds, why endings carry the meaning, nouns and cases, the article, adjectives and pronouns, verbs, building sentences, shared words and a four-year path, with a practice set and answers.") "dates" (dict "date" $date)) }}
+{{ $.AddPage (dict "type" "jerome" "kind" "page" "path" "review" "title" "Final review" "params" (dict "jk" "review" "description" "A cumulative review of the Greek and Latin with Jerome study companion: 40 questions on vocabulary, grammar, parsing and sight reading, with answers.") "dates" (dict "date" $date)) }}
+{{ range $d.passages.books }}
+  {{ $b := . }}
+  {{ $.AddPage (dict "type" "jerome" "kind" "section" "path" $b.key "title" $b.name "params" (dict "jk" "book" "bk" $b.key "description" (printf "%s in Greek and Latin: passages %d to %d of Greek and Latin with Jerome, each with pronunciation, an English translation and word-by-word notes, plus a practice set with answers." $b.name $b.from $b.to)) "dates" (dict "date" $date)) }}
+{{ end }}
+{{ range $d.passages.passages }}
+  {{ $g := slice }}{{ range .gk }}{{ $g = $g | append (index . 0) }}{{ end }}
+  {{ $.AddPage (dict "type" "jerome" "kind" "page" "path" (strings.TrimSuffix "/" .path) "title" (printf "%s in Greek and Latin" .ref) "params" (dict "jk" "passage" "n" .n "description" (printf "%s word by word: %s · %s" .ref (delimit $g " ") .en) "keywords" (slice .ref)) "dates" (dict "date" $date)) }}
+{{ end }}
+{{ range slice "greek" "latin" }}
+  {{ $lang := . }}{{ $L := cond (eq . "greek") "Greek" "Latin" }}
+  {{ $.AddPage (dict "type" "jerome" "kind" "section" "path" $lang "title" (printf "%s core words" $L) "params" (dict "jk" "vocab" "lang" $lang "description" (printf "The 345 most common %s words of the New Testament, in order of frequency, with pronunciation, meaning, how often each occurs, and every form of every word." $L)) "dates" (dict "date" $date)) }}
+  {{ range index $d (printf "forms_%s" $lang) }}
+    {{ $.AddPage (dict "type" "jerome" "kind" "page" "path" (printf "%s/%s" $lang .slug) "title" (printf "%s: %s forms" .w $L) "params" (dict "jk" "word" "lang" $lang "slug" .slug "searchHidden" true "description" (printf "%s (%s, “%s”): %s, every form, with the forms used in the New Testament in bold. #%d of the 345 most common %s words of the New Testament." .w .pos .mean (.entry | plainify) .rank $L)) "dates" (dict "date" $date)) }}
+  {{ end }}
+{{ end }}

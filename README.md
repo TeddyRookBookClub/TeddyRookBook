@@ -9,7 +9,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 | Section | What it is |
 |---|---|
 | [Infographics](https://teddyrookbook.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
-| [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: the Greek alphabet, sentence drills, a Gospel reader and short readings that explain every word, sentence trees, and flashcards. Details below. |
+| [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: the Greek alphabet, sentence drills, a Gospel reader and short readings that explain every word, sentence trees, flashcards, and the study companion to the video Greek and Latin with Jerome. Details below. |
 | [Games](https://teddyrookbook.com/games/) | Sixteen browser games set in the ancient world, including a daily word puzzle, and Book Cart, a physics game. Details below. |
 | [Homeschool](https://teddyrookbook.com/homeschool/) | Free public-domain schoolbooks with step-by-step teaching guides and a "Teach this lesson" mode: Ray's Arithmetic (guides for Primary and Intellectual), McGuffey's Readers and Speller, Webster's Speller, Harvey's Grammar and D'Ooge's Latin (guides for every lesson), plus Latin, Greek, geometry and algebra books to read or download; the old eighth-grade exams with answer notes; a lesson planner (`static/homeschool/planner.js`, subjects in `data/hs_planner.yaml`); and a graphing calculator with algebra and calculus (`static/homeschool/calc/`, no outside libraries). Series pages come from `data/hs_series/`, guides from `data/hs_*.yaml` and `data/rays_*.yaml`, exams from `data/hs_exams.yaml`. |
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations, and [reading paths](https://teddyrookbook.com/books/paths/) through it. |
@@ -29,6 +29,7 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 
 ### Languages
 
+- **Study companion:** the free book that goes with the video *Greek and Latin with Jerome*, as a PDF and as pages at `/languages/jerome/`: Part One (foundations), the 124 passages with pronunciation, English and word-by-word notes, the 345 most common Greek and 345 most common Latin words of the New Testament with every form, and the practice sets with their answers. The pages are made from `data/jerome/*.json` by `content/languages/jerome/_content.gotmpl` and `layouts/jerome/`.
 - **Sentence practice:** listen-and-repeat drills from the Gospels (Koine Greek and the Latin Vulgate) and from Caesar, Cicero, Virgil, Ovid, Herodotus, Homer and Plutarch, with English alongside. Every Greek sentence that is not Koine is labelled with its dialect.
 - **Gospel reader:** the four Gospels in Greek and Latin; tap any word for its dictionary form, meaning and grammar.
 - **Greek alphabet:** six short lessons with quizzes.
@@ -121,7 +122,7 @@ Everything else works without it.
 
 ## Generated files
 
-Five data files are produced by scripts and shouldn't be edited by hand:
+These data files are produced by scripts and shouldn't be edited by hand:
 
 | File | Script |
 |---|---|
@@ -129,6 +130,7 @@ Five data files are produced by scripts and shouldn't be edited by hand:
 | `static/games/imperium/maps.js` | `python3 scripts/build_imperium_maps.py static/games/imperium/maps.js` (needs NumPy and SciPy) |
 | `data/rays_primary.yaml` | `python3 scripts/build_rays_primary.py data/rays_primary.yaml` (the Ray's Arithmetic lesson guides; edit the script, not the YAML) |
 | `data/rays_intellectual.yaml` | `python3 scripts/build_rays_intellectual.py data/rays_intellectual.yaml` |
+| `data/jerome/*.json` | `python3 scripts/jerome/build.py` (reads the study companion PDF in `static/pdfs/`; needs pdfplumber) |
 | `static/markets/data/` | `python3 scripts/fetch_market_data.py` (run automatically at each build; not stored in the repository) |
 
 ## Sources and licences
@@ -139,6 +141,7 @@ The language data comes from openly licensed scholarly projects, and each keeps 
 - **Latin Vulgate and classical texts:** PROIEL Treebank (CC BY-NC-SA 3.0) and the Perseus treebanks (CC BY-SA 3.0).
 - **English Scripture:** 499 verses of the ESV, © Crossway, used under its quotation allowance. Please don't reuse these beyond that.
 - **Greek audio:** read by Marilyn Phemister, free for non-commercial use with credit.
+- **Study companion** (`static/pdfs/` and `data/jerome/`): Greek text from the SBL Greek New Testament (CC BY 4.0) with MorphGNT word analysis (CC BY-SA 3.0); Latin from the Clementine Vulgate (public domain); Latin forms from Collatinus (GNU GPL v3), corrected by hand. Full credits are on the companion's front page and at the end of the PDF.
 - **Garden data:** university extension publications, USDA FoodData Central and the CDC; each crop and guide section lists its sources.
 - **Market data:** FRED (Federal Reserve Bank of St. Louis), the US Treasury, and TradingView widgets.
 

@@ -1,0 +1,159 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<link rel="stylesheet" href="{{ "lang/jerome.css" | relURL }}?v={{ (os.Stat "static/lang/jerome.css").ModTime.Unix }}">
+{{- $d := site.Data.jerome }}{{ $jk := .Params.jk }}
+{{- $root := "languages/jerome/" }}
+{{- $pdf := "pdfs/Greek-and-Latin-with-Jerome-Study-Companion.pdf" | relURL }}
+{{- $yt := "IAxxfABk6Fc" }}
+<div class="lang jc{{ with .Params.lang }} {{ . }}{{ end }}">
+{{ if eq $jk "hub" }}
+  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › Study companion</nav>
+  <header class="lang-hero">
+    <p class="lang-eyebrow">Languages · Free study companion</p>
+    <h1>Greek and Latin with Jerome</h1>
+    <p class="jc-motto"><span class="grc">ἐν ἀρχῇ ἦν ὁ λόγος</span> · <span class="lat">In prīncipiō erat Verbum</span></p>
+    <p style="margin-top:.6rem">The written companion to the video <i>Greek and Latin with Jerome: Reading the New Testament</i>. The same 124 passages, translations and word-by-word notes, plus the 345 most common Greek and 345 most common Latin words with every form, and practice sets with answers. Read it here, page by page, or download the whole book as a PDF.</p>
+    <div class="jc-actions">
+      <a class="jc-btn pri" href="{{ $pdf }}" download>⬇ Download the PDF <small>(439 pages, 2 MB)</small></a>
+      <a class="jc-btn" href="{{ "videos/greek-and-latin-with-jerome/" | relURL }}">▶ Watch the video</a>
+      <a class="jc-btn" href="{{ printf "%sfoundations/" $root | relURL }}">Start reading →</a>
+    </div>
+  </header>
+
+  <section class="jc-sec">
+    <h2>What’s inside</h2>
+    <div class="jc-parts">
+      <a class="jc-part" href="{{ printf "%sfoundations/" $root | relURL }}"><p class="jc-k">Part One</p><b>Foundations</b><span>How Koine Greek and Latin work, side by side: letters and sounds, why endings carry the meaning, nouns and cases, the article, verbs, building sentences and shared words. With a practice set.</span></a>
+      <a class="jc-part" href="{{ printf "%sgreek/" $root | relURL }}"><p class="jc-k">Appendix A and B</p><b>Greek core words</b><span>The 345 most common Greek words of the New Testament in order of frequency, each with a page of every form.</span></a>
+      <a class="jc-part" href="{{ printf "%slatin/" $root | relURL }}"><p class="jc-k">Appendix A and B</p><b>Latin core words</b><span>The 345 most common Latin words of the New Testament, each with every declension or conjugation.</span></a>
+      <a class="jc-part" href="{{ printf "%sreview/" $root | relURL }}"><p class="jc-k">Practice</p><b>Final review</b><span>Forty questions on vocabulary, grammar, parsing and sight reading, with answers.</span></a>
+    </div>
+  </section>
+
+  <section class="jc-sec">
+    <h2>Part Two · Reading the New Testament</h2>
+    <p>124 passages in Bible order, each read in Greek and Latin with pronunciation under every word, an English translation and a note on every word. Each part ends with a practice set.</p>
+    <div class="jc-parts">
+    {{ range $d.passages.books }}{{ $b := . }}
+      <div class="jc-part">
+        <a class="jc-plain" href="{{ printf "%s%s/" $root .key | relURL }}"><p class="jc-k">Passages {{ .from }}–{{ .to }}</p><b>{{ .name }}</b></a>
+        <ul class="jc-refs">{{ range $d.passages.passages }}{{ if eq .bk $b.key }}<li><a href="{{ printf "%s%s" $root .path | relURL }}">{{ .ref }}</a></li>{{ end }}{{ end }}</ul>
+      </div>
+    {{ end }}
+    </div>
+  </section>
+
+  <section class="jc-sec">
+    <h2>How to use it</h2>
+    <div class="jc-cols">
+      <p><b>The goal.</b> The New Testament uses about 5,500 different Greek words, but a few hundred of them do most of the work. The 345 most common Greek words (names aside) make up about 80% of all the words in the Greek New Testament. The 345 most common Latin words make up about 77% of the Latin New Testament; Latin spreads its vocabulary a little more widely. Learn these words with their forms and you will recognize about four of every five Greek words and more than three of every four Latin words; a dictionary covers the rest.</p>
+      <p><b>Reading a passage.</b> Each passage gives the reference and, where it helps, a line of context, then the <span style="color:var(--c-g)">Greek</span> with its pronunciation under every word, the <span style="color:var(--c-l)">Latin</span> with its pronunciation, and an English translation kept close to the Greek. A table then takes the passage apart group by group: the Greek words, the Latin words Jerome used for them, and a note on each. Below it are the core words met for the first time, and two counters show how many of the 345 Greek and 345 Latin core words you have met so far.</p>
+      <p><b>Pronunciation.</b> The respelling under each word uses English letters; the syllable in capitals carries the stress. Greek follows the Erasmian pronunciation that most teachers use. Latin follows the classical pronunciation (c always as in cat, g as in go, v like English w). Long Latin vowels are marked with a macron (ā ē ī ō ū), except in the sight-reading verses of the practice sets, which are printed as in the Vulgate.</p>
+      <p><b>The forms tables.</b> On each word’s page, a form in bold actually occurs in the New Testament; the others complete the pattern so you can recognize any form you meet. Greek verbs show every tense they use in the New Testament, in every mood and voice, with infinitives and participles. Latin verbs show all six tenses of the indicative and the four of the subjunctive, active and (where the verb has one) passive, with imperatives, infinitives and participles.</p>
+      <p><b>A way to study.</b> Read Part One first, slowly, and do its practice set. Then take one or two passages a day: read the Greek and Latin aloud with the respellings, hide the English and try to translate, then check the notes. Learn the new core words of each passage before moving on. After each part of the readings, do its practice set without looking back, then open the answers.</p>
+      <p><b>Online or on paper.</b> Everything in the PDF is on these pages, and the PDF is free to download, print and share. Each page here gives its page number in the PDF, so you can print just the part you need.</p>
+    </div>
+  </section>
+
+  <section class="jc-sec">
+    <details class="jc-box"><summary><b>Abbreviations</b></summary>
+      <div class="jc-tw" style="margin-top:.6rem"><table class="jc-tbl"><tbody>
+        <tr><td>sg, pl</td><td>singular, plural</td></tr>
+        <tr><td>1, 2, 3</td><td>first, second, third person</td></tr>
+        <tr><td>nom, gen, dat, acc, abl, voc</td><td>nominative, genitive, dative, accusative, ablative, vocative</td></tr>
+        <tr><td>masc, fem, neut</td><td>masculine, feminine, neuter</td></tr>
+        <tr><td>ind, subj, opt, imp</td><td>indicative, subjunctive, optative, imperative</td></tr>
+        <tr><td>inf, ptc</td><td>infinitive, participle</td></tr>
+        <tr><td>impf., pf. / perf., plpf.</td><td>imperfect, perfect, pluperfect</td></tr>
+        <tr><td>adj., adv., conj., prep.</td><td>adjective, adverb, conjunction, preposition</td></tr>
+        <tr><td>comp., superl.</td><td>comparative, superlative</td></tr>
+        <tr><td>decl., conj. (verbs)</td><td>declension, conjugation</td></tr>
+        <tr><td>intrans., trans.</td><td>intransitive, transitive</td></tr>
+        <tr><td>NT</td><td>New Testament</td></tr>
+      </tbody></table></div>
+    </details>
+  </section>
+
+  <section class="jc-sec">
+    <details class="jc-box"><summary><b>Sources and credits</b></summary>
+      <ul class="jc-credits jc-small">
+        <li><b>Greek text.</b> The Greek New Testament: SBL Edition (SBLGNT), edited by Michael W. Holmes. © 2010 Society of Biblical Literature and Logos Bible Software. Licensed under CC BY 4.0. Text-critical signs were removed for display. The publishers do not endorse this book.</li>
+        <li><b>Greek word analysis.</b> MorphGNT: SBLGNT Edition, edited by James K. Tauber (doi:10.5281/zenodo.376200), CC BY-SA 3.0. Parsing codes descend from the CCAT tagging (University of Pennsylvania).</li>
+        <li><b>Greek verb forms.</b> Generated with James Tauber’s greek-inflexion and greek-accentuation libraries (MIT License) and its MorphGNT stem lexicon, extended and checked against every verb form in the SBLGNT.</li>
+        <li><b>Latin text.</b> Biblia Sacra juxta Vulgatam Clementinam (1592), electronic edition of the Clementine Text Project, via the public-domain vul reader by Luke Smith. Public domain.</li>
+        <li><b>Latin forms and vowel lengths.</b> Collatinus, by Yves Ouvrard and Philippe Verkerk (Biblissima), GNU GPL v3; corrected and completed by hand, and checked against every Latin form of the New Testament.</li>
+        <li><b>Foundations.</b> From the poster <a href="{{ "infographics/koine-greek-and-latin/" | relURL }}">Koine Greek &amp; Latin: A Side-by-Side 101</a>.</li>
+        <li><b>English.</b> An original literal translation made for the video and this book.</li>
+        <li><b>Pronunciation respellings.</b> Erasmian Greek and classical Latin, generated for the video and this book.</li>
+        <li><b>Typefaces.</b> Gentium Book Plus (SIL International) and DejaVu Sans, both under open font licences.</li>
+        <li><b>Writing and production assistance.</b> Claude (Anthropic).</li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="jc-sec">
+    <h2>The video</h2>
+    {{ partial "video.html" $yt }}
+  </section>
+
+{{ else if eq $jk "book" }}
+  {{- $bk := .Params.bk }}{{ $books := $d.passages.books }}
+  {{- $bi := 0 }}{{ range $i, $b := $books }}{{ if eq $b.key $bk }}{{ $bi = $i }}{{ end }}{{ end }}
+  {{- $b := index $books $bi }}
+  {{- $first := index $d.passages.passages (sub (int $b.from) 1) }}
+  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › {{ $b.name }}</nav>
+  <header class="lang-hero">
+    <p class="lang-eyebrow">Part Two · Reading the New Testament · Passages {{ $b.from }}–{{ $b.to }}</p>
+    <h1>{{ $b.name }}</h1>
+    <p>{{ add (sub $b.to $b.from) 1 }} passage{{ if ne $b.from $b.to }}s{{ end }} in Greek and Latin, each with pronunciation, an English translation and a note on every word, then a practice set with answers.</p>
+    <div class="jc-actions">
+      <a class="jc-btn pri" href="{{ printf "%s%s" $root $first.path | relURL }}">Start with {{ $first.ref }} →</a>
+      <a class="jc-btn" href="#practice">Practice: {{ $b.name }}</a>
+      <a class="jc-btn" href="https://www.youtube.com/watch?v={{ $yt }}&amp;t={{ $first.t }}s" target="_blank" rel="noopener">▶ {{ $b.name }} in the video</a>
+    </div>
+  </header>
+  <section class="jc-sec">
+    <ul class="jc-plist">
+    {{ range $d.passages.passages }}{{ if eq .bk $bk }}
+      <li><a href="{{ printf "%s%s" $root .path | relURL }}"><span class="jc-n">{{ .n }}</span><span class="r">{{ .ref }}</span><span class="gr" lang="grc">{{ range $i, $w := .gk }}{{ if $i }} {{ end }}{{ index $w 0 }}{{ end }}</span><span class="en">{{ .en }}</span></a></li>
+    {{ end }}{{ end }}
+    </ul>
+  </section>
+  {{ partial "jc-practice.html" $bk }}
+  {{ $pg := (index site.Data.jerome.practice.sets $bk).page }}
+  <p class="jc-small">In the PDF: passages from page {{ $first.page }}, practice set on page {{ $pg }}. <a href="{{ $pdf }}#page={{ $pg }}">Open the PDF at the practice set</a>.</p>
+  <nav class="jc-pnav">
+    {{ if gt $bi 0 }}{{ $p := index $books (sub (int $bi) 1) }}<a class="prev" href="{{ printf "%s%s/" $root $p.key | relURL }}"><small>← Previous part</small>{{ $p.name }}</a>{{ else }}<a class="prev" href="{{ printf "%sfoundations/" $root | relURL }}"><small>← Previous part</small>Part One: Foundations</a>{{ end }}
+    {{ if lt (add $bi 1) (len $books) }}{{ $n := index $books (add $bi 1) }}<a class="next" href="{{ printf "%s%s/" $root $n.key | relURL }}"><small>Next part →</small>{{ $n.name }}</a>{{ else }}<a class="next" href="{{ printf "%sreview/" $root | relURL }}"><small>Next →</small>Final review</a>{{ end }}
+  </nav>
+
+{{ else if eq $jk "vocab" }}
+  {{- $lang := .Params.lang }}{{ $L := cond (eq $lang "greek") "Greek" "Latin" }}{{ $O := cond (eq $lang "greek") "latin" "greek" }}
+  {{- $list := index $d.vocab $lang }}
+  <nav class="jc-crumbs"><a href="{{ "languages/" | relURL }}">Languages</a> › <a href="{{ $root | relURL }}">Study companion</a> › {{ $L }} core words</nav>
+  <header class="lang-hero">
+    <p class="lang-eyebrow">Appendix A · Core vocabulary</p>
+    <h1>{{ $L }} core words</h1>
+    <p>The 345 most common {{ $L }} words of the New Testament, in order of frequency (names are not counted). “NT” is how many times the word occurs in the {{ if eq $lang "greek" }}Greek New Testament (SBLGNT){{ else }}Latin New Testament (Clementine Vulgate){{ end }}. Open any word for every one of its forms.</p>
+    <div class="jc-actions"><a class="jc-btn" href="{{ printf "%s%s/" $root $O | relURL }}">{{ cond (eq $lang "greek") "Latin" "Greek" }} core words →</a><a class="jc-btn" href="{{ $pdf }}#page=164">Appendix A in the PDF</a></div>
+  </header>
+  <div class="jc-vtools">
+    <input type="search" id="jc-filter" placeholder="Find a word or meaning…" aria-label="Find a word or meaning">
+    <select id="jc-sort" aria-label="Sort"><option value="rank">Most common first</option><option value="alpha">Alphabetical</option><option value="first">In reading order</option></select>
+    <span class="jc-small" id="jc-count">{{ len $list }} words</span>
+  </div>
+  <div class="jc-tw">
+  <table class="jc-vocab {{ $lang }}">
+    <thead><tr><th>#</th><th>Word</th><th class="p">Say it</th><th>Meaning</th><th>NT</th><th class="f">First met</th></tr></thead>
+    <tbody>
+    {{ range $list }}{{ $fp := index $d.passages.passages (sub (int .first) 1) }}
+      <tr data-rank="{{ .rank }}" data-first="{{ .first }}" data-w="{{ .w }}"><td class="num">{{ .rank }}</td><td class="vw"><a href="{{ printf "%s%s/%s/" $root $lang .slug | relURL }}" lang="{{ cond (eq $lang "greek") "grc" "la" }}">{{ .w }}</a></td><td class="p">{{ .pron }}</td><td>{{ .mean }}</td><td class="num">{{ .nt }}</td><td class="f"><a href="{{ printf "%s%s" $root $fp.path | relURL }}">{{ $fp.ref }}</a></td></tr>
+    {{ end }}
+    </tbody>
+  </table>
+  </div>
+  <p class="jc-small" style="margin-top:1rem">Together these 345 words make up about {{ cond (eq $lang "greek") "80" "77" }}% of the words of the {{ $L }} New Testament.</p>
+{{ end }}
+</div>
+<script src="{{ "lang/jerome.js" | relURL }}?v={{ (os.Stat "static/lang/jerome.js").ModTime.Unix }}" defer></script>
+{{ end }}

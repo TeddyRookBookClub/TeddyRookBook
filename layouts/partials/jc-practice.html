@@ -1,0 +1,30 @@
+{{- /* A practice set of the Jerome study companion with its answer key. Context: the set key (foundations, matthew, … review). */ -}}
+{{- $key := . -}}{{- $P := site.Data.jerome.practice -}}
+{{- $s := index $P.sets . -}}{{- $ans := index $P.answers . -}}
+{{- $abc := split "abcdefghijklmnopqrstuvwxyz" "" -}}
+<section class="jc-sec jc-practice" id="practice">
+  <div class="jc-ph"><h2>{{ $s.title }}</h2><span class="jc-small">{{ len $s.qs }} questions · answers under each one</span></div>
+  {{ with $s.intro }}<p class="jc-small">{{ replace . "Answers are in the answer key." "Try each question first, then open its answer." }}</p>{{ end }}
+  {{ range $s.qs }}
+  {{- $a := index $ans (string .n) | default dict -}}
+  {{- $kind := "open" -}}{{- $ok := "" -}}
+  {{- if .left }}{{ $kind = "match" }}{{ else if .opts }}{{ $kind = "mc" }}{{ with findRESubmatch `^\(([a-z])\)` ($a.a | default "") 1 }}{{ $ok = index (index . 0) 1 }}{{ end }}{{ end -}}
+  <div class="jc-q" data-kind="{{ $kind }}"{{ with $ok }} data-ok="{{ . }}"{{ end }}{{ if eq $kind "match" }} data-ans="{{ $a.a }}"{{ end }} id="{{ $key }}-q{{ .n }}">
+    <p class="jc-qt"><b class="qn">{{ .n }}.</b> {{ .text }}</p>
+    {{- if eq $kind "match" }}
+    {{- $n := len .right }}
+    <div class="jc-match">
+      <ol>{{ range $i, $x := .left }}<li data-i="{{ add $i 1 }}">{{ $x }} <select aria-label="Match for {{ $x }}"><option value="">·</option>{{ range first $n $abc }}<option>{{ . }}</option>{{ end }}</select></li>{{ end }}</ol>
+      <ol class="ab">{{ range .right }}<li>{{ . }}</li>{{ end }}</ol>
+    </div>
+    <button type="button" class="jc-check">Check my matches</button><span class="jc-score" aria-live="polite"></span>
+    {{- else if eq $kind "mc" }}
+    <ol class="jc-opts">{{ range $i, $o := .opts }}{{ $l := index $abc $i }}<li><button type="button" data-l="{{ $l }}">({{ $l }}) {{ $o }}</button></li>{{ end }}</ol>
+    {{- end }}
+    {{- with .extra }}<div class="jc-extra">{{ range . }}{{ $m := findRESubmatch `^(Greek|Latin|Help|Hint): (.*)$` . 1 }}{{ if $m }}<p><b>{{ index (index $m 0) 1 }}:</b> {{ index (index $m 0) 2 }}</p>{{ else }}<p>{{ . }}</p>{{ end }}{{ end }}</div>{{ end }}
+    {{- with $a.a }}
+    <details class="jc-ans"><summary>Show the answer</summary><div class="a">{{ . }}{{ with $a.why }}<span class="why">{{ . }}</span>{{ end }}</div></details>
+    {{- end }}
+  </div>
+  {{ end }}
+</section>

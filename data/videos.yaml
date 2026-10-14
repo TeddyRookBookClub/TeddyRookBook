@@ -1,8 +1,8 @@
 # Teddy Rook Book videos on YouTube, keyed by the YouTube id. Shown on /videos/ (one page each, at /videos/<slug>/)
 # and embedded with the partial "video.html" (click to play; nothing loads from YouTube until then, and then only from youtube-nocookie.com).
 # Fields: slug, title, about, date (YYYY-MM-DD), length (e.g. "42 min", optional), topics, related [{label, url}],
-# chapters [["m:ss" or "h:mm:ss", label]], optional notes and credits (lists of strings), and optionally
-# trailer: <YouTube id of the short trailer> with trailer_length.
+# chapters [["m:ss" or "h:mm:ss", label]], optional notes and credits (lists of strings), optionally
+# trailer: <YouTube id of the short trailer> with trailer_length, and optionally companion {title, about, url, pdf, pdf_size}.
 IAxxfABk6Fc:
   slug: greek-and-latin-with-jerome
   title: "Greek and Latin with Jerome: Reading the New Testament"
@@ -40,7 +40,14 @@ IAxxfABk6Fc:
     - "Latin text: the Clementine Vulgate (1592), electronic edition of the Clementine Text Project. Public domain."
     - "Latin dictionary forms and vowel lengths: Collatinus, by Yves Ouvrard and Philippe Verkerk (Biblissima), GNU GPL v3, corrected by hand where needed."
     - "English: an original literal translation made for the video. Voices: Kokoro-82M text-to-speech."
+  companion:
+    title: "Free study companion"
+    about: "Everything the video teaches, to read at your own pace: the 124 passages with pronunciation, English and a note on every word; the 345 most common Greek and 345 most common Latin words with every form; and a practice set after each part, with answers. Read it on this site page by page, or download the whole book."
+    url: "/languages/jerome/"
+    pdf: "/pdfs/Greek-and-Latin-with-Jerome-Study-Companion.pdf"
+    pdf_size: "439 pages, 2 MB"
   related:
+    - {label: "Study companion: every passage, word and practice set, online", url: "/languages/jerome/"}
     - {label: "Gospel Reader: the four Gospels in Greek and Latin, word by word", url: "/languages/reader/"}
     - {label: "Flashcards: the most common words of the Gospels", url: "/languages/flashcards/"}
     - {label: "Sentence drills in Greek and Latin", url: "/languages/sentences/"}
