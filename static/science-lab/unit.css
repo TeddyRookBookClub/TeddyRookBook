@@ -1,0 +1,72 @@
+/* Science Lab units (Newton's Laws, Thermodynamics): the chapter strip, chapter cards, worked examples, quizzes
+   and the chapter footer. Loaded by layouts/partials/unit-head.html after the lab kit (lab.css). */
+.lab .u-nav{display:flex;align-items:center;gap:.6rem;margin:0 0 .9rem;flex-wrap:wrap}
+.lab .u-nav-home{display:inline-flex;align-items:center;gap:.35rem;font:700 .85rem system-ui,sans-serif;color:var(--acc);text-decoration:none;box-shadow:none;padding:.35rem .7rem;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.lab .u-nav-home span{font-size:1.05rem}
+.lab .u-nav ol{display:flex;gap:.35rem;list-style:none;margin:0;padding:0 0 .15rem;overflow-x:auto;scrollbar-width:thin;flex:1 1 0;min-width:0}
+.lab .u-nav li{flex:0 0 auto}
+.lab .u-nav ol a{display:flex;align-items:center;gap:.4rem;padding:.3rem .65rem .3rem .3rem;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);text-decoration:none;box-shadow:none;font:600 .8rem system-ui,sans-serif;white-space:nowrap;min-height:36px;box-sizing:border-box}
+.lab .u-nav ol a b{display:inline-flex;align-items:center;justify-content:center;width:1.55rem;height:1.55rem;border-radius:50%;background:var(--soft);color:var(--acc);font-size:.78rem}
+.lab .u-nav ol a:hover{border-color:var(--acc)}
+.lab .u-nav ol a[aria-current="page"]{background:#004225;border-color:#004225;color:#fff}
+.lab .u-nav ol a[aria-current="page"] b{background:rgba(255,255,255,.18);color:#fff}
+html[data-theme="dark"] .lab .u-nav ol a[aria-current="page"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+html[data-theme="dark"] .lab .u-nav ol a[aria-current="page"] b{background:rgba(0,0,0,.15);color:#0f1a14}
+.lab .u-nav ol a.done b{background:#2f9e6f;color:#fff}
+.lab .u-nav ol a.done b::after{content:"✓";font-size:.7rem;margin-left:1px}
+.lab .u-nav ol a.done b{font-size:0}.lab .u-nav ol a.done b::after{font-size:.8rem}
+@media (max-width:700px){.lab .u-nav ol a span{display:none}.lab .u-nav ol a[aria-current="page"] span{display:inline}.lab .u-nav ol a{padding-right:.3rem}.lab .u-nav ol a[aria-current="page"]{padding-right:.65rem}}
+
+/* chapter cards on a unit hub */
+.lab .u-chapters{list-style:none;margin:.6rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:.8rem}
+.lab .u-ch{position:relative;display:grid;grid-template-columns:2.6rem minmax(0,1fr);grid-template-rows:auto auto 1fr;gap:.15rem .7rem;height:100%;box-sizing:border-box;padding:.9rem 1rem .9rem .9rem;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.05);transition:transform .15s,border-color .15s}
+.lab .u-ch:hover{transform:translateY(-2px);border-color:var(--acc)}
+.lab .u-ch-n{position:absolute;right:.8rem;top:.6rem;font:700 .7rem system-ui,sans-serif;letter-spacing:.1em;color:var(--muted)}
+.lab .u-ch-n::before{content:"CHAPTER "}
+.lab .u-ch-ic{grid-row:span 3;font-size:2rem;line-height:1}
+.lab .u-ch b{font:700 1.08rem/1.25 Georgia,serif;color:var(--acc);padding-right:4.6rem}
+.lab .u-ch-t{color:var(--muted);font-size:.9rem;line-height:1.45}
+.lab .u-ch-done{display:none;justify-self:start;margin-top:.3rem;font:700 .72rem system-ui,sans-serif;color:#fff;background:#2f9e6f;border-radius:999px;padding:.1rem .5rem}
+.lab .u-ch.done .u-ch-done{display:inline-block}
+.lab .u-progress{font-size:.85rem;color:var(--muted);margin:.3rem 0 0}
+
+/* lesson pieces */
+.lab .u-ex{background:var(--card);border:1px solid var(--line);border-left:4px solid #74c0fc;border-radius:0 10px 10px 0;padding:.6rem .9rem;margin:.8rem 0}
+.lab .u-ex>b:first-child,.lab .u-ex h3:first-child{display:block;font:700 .75rem system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 .3rem}
+.lab .u-ex ol,.lab .u-ex ul{margin:.3rem 0 .4rem}
+.lab .u-big{font:1.35rem/1.5 "Cambria Math","STIX Two Math",Georgia,serif;text-align:center;margin:.8rem 0;padding:.7rem .8rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow-x:auto}
+.lab .u-big small{display:block;font:.85rem/1.4 system-ui,sans-serif;color:var(--muted);margin-top:.2rem}
+.lab .u-quote{margin:.8rem 0;padding:.7rem 1rem;border-left:4px solid var(--gold);background:var(--paper);border-radius:0 10px 10px 0}
+.lab .u-quote .u-la{font:italic 1.02rem/1.55 Georgia,serif;margin:0 0 .35rem}
+.lab .u-quote .u-en{margin:0;color:var(--ink)}
+.lab .u-quote cite{display:block;margin-top:.35rem;font-size:.82rem;color:var(--muted);font-style:normal}
+.lab .u-myth{background:var(--paper);border:1px solid var(--line);border-left:4px solid #ff8787;border-radius:0 10px 10px 0;padding:.6rem .9rem;margin:.8rem 0}
+.lab .u-myth>b:first-child{display:block;font:700 .75rem system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#c92a2a;margin-bottom:.25rem}
+html[data-theme="dark"] .lab .u-myth>b:first-child{color:#ff8787}
+.lab .u-key{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:.7rem;margin:.8rem 0}
+.lab .u-key>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem}
+.lab .u-key>div b{display:block;font:700 1rem Georgia,serif;color:var(--acc);margin-bottom:.2rem}
+.lab .u-key>div p{margin:0;font-size:.9rem;line-height:1.5}
+
+/* check yourself */
+.lab .u-quiz{list-style:none;counter-reset:uq;margin:.5rem 0 0;padding:0;display:grid;gap:.8rem}
+.lab .u-q{counter-increment:uq;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.75rem .9rem}
+.lab .u-q>p{margin:0 0 .5rem;font-weight:600;line-height:1.5}
+.lab .u-q>p::before{content:counter(uq) ". ";color:var(--acc)}
+.lab .u-opts{list-style:none;margin:0 0 .4rem;padding:0;display:grid;gap:.35rem}
+.lab .u-opts button{width:100%;text-align:left;font:inherit;font-size:.92rem;line-height:1.4;padding:.5rem .7rem;min-height:40px;border-radius:9px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.lab .u-opts button:hover{border-color:var(--acc)}
+.lab .u-opts button.right{background:#d3f0de;border-color:#2f9e6f;color:#0d3b22}
+.lab .u-opts button.wrong{background:#fde2e2;border-color:#e03131;color:#5c1010}
+html[data-theme="dark"] .lab .u-opts button.right{background:#173c2a;border-color:#6cc79a;color:#d9f5e5}
+html[data-theme="dark"] .lab .u-opts button.wrong{background:#3f1d1d;border-color:#ff8787;color:#ffe3e3}
+.lab .u-q details summary{cursor:pointer;font-size:.85rem;color:var(--muted)}
+.lab .u-q details p{margin:.4rem 0 0;font-size:.92rem;line-height:1.5}
+.lab .u-score{font-weight:600;color:var(--acc);min-height:1.4em}
+
+/* chapter footer */
+.lab .u-done{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;justify-content:space-between;margin:1.6rem 0 0;padding:.7rem .9rem;border:1px dashed var(--line);border-radius:12px}
+.lab .u-done label{display:flex;align-items:center;gap:.5rem;font-weight:600;cursor:pointer}
+.lab .u-done input{width:1.2rem;height:1.2rem;accent-color:#2f9e6f}
+@media print{.lab .u-nav,.lab .u-done{display:none}}
+@media (prefers-reduced-motion:reduce){.lab .u-ch{transition:none}.lab .u-ch:hover{transform:none}}

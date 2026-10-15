@@ -1,5 +1,6 @@
-/* Cars course: the systems map. Point at (or focus) a system in the drawing or the legend to highlight it;
-   click to open its lesson. The Gas car / Electric car switch swaps the drivetrain. Works as plain links without JS. */
+/* The Trades: the systems map on each course page. Point at (or focus) a system in the drawing or the legend to
+   highlight it; click to open its lesson. An optional switch (.tr-seg button[data-v]) swaps views, such as gas and
+   electric cars; each button's data-idle is the message shown while nothing is highlighted. Works as plain links without JS. */
 (function (D) {
   'use strict';
   D.querySelectorAll('.tr-map').forEach(function (map) {
@@ -28,7 +29,7 @@
         map.dataset.view = b.dataset.v;
         map.querySelectorAll('.tr-seg button[data-v]').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
         show(null);
-        idle = b.dataset.v === 'ev' ? 'Electric car: no engine, exhaust or fuel tank. A battery pack under the floor feeds a motor at the drive axle.' : 'Point at a part of the car.';
+        if (b.dataset.idle) idle = b.dataset.idle;
         if (info) info.textContent = idle;
       });
     });

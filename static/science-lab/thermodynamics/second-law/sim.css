@@ -1,0 +1,56 @@
+/* Entropy and the Second Law: only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#th3-lab .lab-view canvas:focus{outline:none}
+#th3-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#th3-lab .lab-tools button{min-width:36px;min-height:36px}
+#th3-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);color:var(--sim-acc)}
+#th3-lab .lab-hud{max-width:calc(100% - 9.5rem)}
+#th3-lab .lab-seg button{min-height:36px}
+#th3-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#th3-lab .lab-chk{min-height:36px;cursor:pointer}
+#th3-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#th3-lab .lab-btn{min-height:38px}
+#th3-lab .th3-acts{display:flex;flex-direction:column;gap:.4rem}
+#th3-lab .th3-acts .lab-btn{justify-content:flex-start;text-align:left}
+#th3-lab .lab-readout dd{white-space:nowrap}
+#th3-lab .lab-toast{top:4.2rem}
+/* the smaller simulations in the lesson */
+#th3-lab .th3-mini{margin:.9rem 0 1rem}
+#th3-lab .th3-mini .lab-view{height:340px;min-height:0}
+#th3-lab #th3-heat .lab-view{height:400px}
+#th3-lab #th3-demon .lab-view{height:330px;cursor:pointer}
+#th3-lab .th3-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1rem}
+#th3-lab .th3-row>*{min-width:0}
+#th3-lab .th3-grow{flex:1 1 260px}
+#th3-lab .th3-row .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#th3-lab .th3-row .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#th3-lab .th3-dbtns{display:flex;flex-direction:column;gap:.5rem}
+#th3-lab .th3-door{min-height:48px;font-size:1rem;touch-action:none;user-select:none;-webkit-user-select:none}
+#th3-lab .th3-door[aria-pressed="true"]{background:#c2255c;border-color:#c2255c}
+#th3-lab .th3-ledger h3 small{font-weight:400;text-transform:none;letter-spacing:0}
+#th3-lab .th3-ledger .lab-table{margin:.3rem 0 0}
+#th3-lab .th3-ledger th{background:none;font:400 .85rem system-ui,sans-serif;color:var(--ink)}
+#th3-lab .th3-ledger td{text-align:right;font:600 .85rem ui-monospace,Menlo,Consolas,monospace;white-space:nowrap}
+#th3-lab .th3-ledger tr.th3-tot th,#th3-lab .th3-ledger tr.th3-tot td{font-weight:700;border-bottom:0;color:var(--acc)}
+/* a short glow when a mission is done */
+#th3-lab .th3-win{animation:th3win 1.2s ease-out}
+@keyframes th3win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#th3-lab .lab-sec ul{padding-left:1.3rem}
+#th3-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+#th3-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #th3-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+}
+@media (max-width:600px){
+  #th3-lab .lab-hud{max-width:calc(100% - 1.2rem);top:3.2rem}
+  #th3-lab .lab-toast{top:7rem;font-size:.82rem;max-width:84%}
+  #th3-lab .th3-mini .lab-view{height:380px}
+  #th3-lab #th3-heat .lab-view{height:440px}
+  #th3-lab #th3-demon .lab-view{height:250px}
+}
+@media (prefers-reduced-motion:reduce){#th3-lab .th3-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#th3-lab .th3-main{grid-template-rows:auto 1fr}
+#th3-lab .th3-main>.lab-view{grid-column:1;grid-row:1}
+#th3-lab .th3-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#th3-lab .th3-main>.th3-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#th3-lab .th3-main{grid-template-rows:none}#th3-lab .th3-main>.lab-view,#th3-lab .th3-main>.lab-panel,#th3-lab .th3-main>.th3-under{grid-column:auto;grid-row:auto}}

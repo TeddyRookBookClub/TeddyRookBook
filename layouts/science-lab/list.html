@@ -1,6 +1,8 @@
 {{ define "main" }}
 {{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "css/sci-feature.css" | relURL }}?v={{ (os.Stat "static/css/sci-feature.css").ModTime.Unix }}">
 {{- $items := site.Data.science_lab }}
+{{- $units := slice site.Data.science_units.newton site.Data.science_units.thermo }}
 <div class="lab" id="science-lab">
   <header class="lab-hero">
     <p class="lab-eyebrow">Science Lab</p>
@@ -8,13 +10,40 @@
     <p>Simulations built on real physics, chemistry and biology, with live numbers to watch, missions to try, and a lesson with the equations under each one. Free, nothing to install, and they work on a phone.</p>
     <span class="lab-mark" aria-hidden="true">⚛️</span>
   </header>
+
+  <section class="sf-band sl-feat" aria-labelledby="sf-h">
+    <a class="sf-vis" href="{{ "games/magnetic-bottles/" | relURL }}" draggable="false">
+      <canvas id="sf-cv" role="img" aria-label="A glowing doughnut of twisted magnetic field, slowly turning: nested magnetic surfaces with field lines winding around them. Opens the Magnetic Bottles explorer."></canvas>
+      <span class="sf-hint" aria-hidden="true">Drag to turn it</span>
+    </a>
+    <div class="sf-text">
+      <p class="sf-eye">Featured · Physics</p>
+      <h2 id="sf-h">Magnetic Bottles for Fusion</h2>
+      <p class="sf-lead">To get energy from fusion, you have to hold a gas hotter than 100 million degrees without letting it touch anything. The bottle is a twisted doughnut of magnetic field. Turn, slice and mirror-test two exact ones from a 2026 paper, and see why the field lines must twist.</p>
+      <div class="sf-btns"><a class="sf-btn sf-prim" href="{{ "games/magnetic-bottles/" | relURL }}">Explore the bottle →</a></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="units">
+    <h2>Deep dives</h2>
+    <p class="lab-small">Whole units, chapter by chapter: a simulation at the top of every chapter, then the lesson, worked examples, a quiz and the history.</p>
+    <div class="sl-units">
+    {{- range $units }}{{ $u := . }}
+      <div class="sl-unit">
+        <a class="sl-unit-h" href="{{ printf "science-lab/%s/" $u.slug | relURL }}"><span class="sl-ic" aria-hidden="true">{{ $u.icon }}</span><b>{{ $u.title }}</b><span>{{ $u.card }}</span></a>
+        <ol>{{ range $u.chapters }}<li><a href="{{ printf "science-lab/%s/%s/" $u.slug .key | relURL }}"><i aria-hidden="true">{{ .icon }}</i>{{ .title }}</a></li>{{ end }}</ol>
+      </div>
+    {{- end }}
+    </div>
+  </section>
+
   {{ range slice (slice "physics" "Physics" "Motion, forces, energy, electricity and light.") (slice "chemistry" "Chemistry" "Atoms, gases, acids and bases, and reactions.") (slice "astronomy" "Astronomy" "Gravity, orbits, and the sky over your head.") (slice "biology" "Biology" "Living things and how populations change.") }}
   {{ $key := index . 0 }}
   <section class="lab-sec" id="{{ $key }}">
     <h2>{{ index . 1 }}</h2>
     <p class="lab-small">{{ index . 2 }}</p>
     <div class="sl-cards">
-    {{ range $items }}{{ if in .topic $key }}
+    {{ range $items }}{{ if and (in .topic $key) (ne .kind "unit") }}
       <a class="sl-card" href="{{ .url | relURL }}"><span class="sl-ic" aria-hidden="true">{{ .icon }}</span><b>{{ .title }}{{ if eq .kind "explorer" }} <small>explorer</small>{{ end }}</b><span>{{ .text }}</span></a>
     {{ end }}{{ end }}
     </div>
@@ -33,5 +62,20 @@
 #science-lab .sl-card b{font:700 1.08rem Georgia,serif;color:var(--acc)}
 #science-lab .sl-card b small{font:600 .68rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-left:.3rem}
 #science-lab .sl-card>span:last-child{color:var(--muted);font-size:.9rem;line-height:1.45}
+#science-lab .sl-feat{margin:0 0 1.2rem}
+#science-lab .sl-feat .sf-vis{min-height:330px}
+#science-lab .sl-units{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:.9rem}
+#science-lab .sl-unit{border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:14px;background:var(--card);padding:1rem 1.1rem;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+#science-lab .sl-unit-h{display:grid;grid-template-columns:2.6rem minmax(0,1fr);gap:.15rem .7rem;text-decoration:none;box-shadow:none;color:var(--ink)}
+#science-lab .sl-unit-h b{font:700 1.2rem Georgia,serif;color:var(--acc)}
+#science-lab .sl-unit-h>span:last-child{color:var(--muted);font-size:.92rem;line-height:1.45}
+#science-lab .sl-unit-h .sl-ic{font-size:2.2rem}
+#science-lab .sl-unit ol{list-style:none;margin:.7rem 0 0;padding:0;display:grid;gap:.3rem;counter-reset:ch}
+#science-lab .sl-unit li{counter-increment:ch}
+#science-lab .sl-unit li a{display:flex;align-items:center;gap:.5rem;padding:.35rem .55rem;min-height:36px;box-sizing:border-box;border-radius:9px;background:var(--paper);border:1px solid var(--line);color:var(--ink);text-decoration:none;box-shadow:none;font-size:.92rem}
+#science-lab .sl-unit li a::before{content:counter(ch);font:700 .75rem system-ui,sans-serif;color:var(--muted);min-width:1rem;text-align:right}
+#science-lab .sl-unit li a i{font-style:normal}
+#science-lab .sl-unit li a:hover{border-color:var(--acc)}
 </style>
+<script src="{{ "js/home-donut.js" | relURL }}?v={{ (os.Stat "static/js/home-donut.js").ModTime.Unix }}" defer></script>
 {{ end }}

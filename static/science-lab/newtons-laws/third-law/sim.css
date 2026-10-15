@@ -1,0 +1,54 @@
+/* Newton's Laws, Chapter 3 (Action and Reaction): only what this page adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#nl3-lab .lab-view canvas:focus{outline:none}
+#nl3-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#nl3-lab .lab-tools button{min-width:36px;min-height:36px}
+#nl3-lab .lab-seg button{min-height:36px}
+#nl3-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#nl3-lab .lab-chk{min-height:36px;cursor:pointer;line-height:1.3}
+#nl3-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc);flex:0 0 auto}
+#nl3-lab .lab-chk sub{font-size:.72em}
+#nl3-lab .lab-btn{min-height:38px}
+#nl3-lab .nl3-note{margin:0}
+#nl3-lab .lab-readout dd{white-space:nowrap}
+#nl3-lab .lab-hud{max-width:calc(100% - 7rem)}
+#nl3-lab .lab-toast{top:3.6rem}
+#nl3-lab .lab-sec ul{padding-left:1.3rem}
+#nl3-lab .lab-formula{overflow-wrap:anywhere}
+#nl3-lab .lab-src{overflow-wrap:anywhere}
+#nl3-lab .lab-view{cursor:pointer}
+/* the missions sit under the simulation on wide screens, and after the panel on narrow ones */
+#nl3-lab .nl3-main{grid-template-rows:auto 1fr}
+#nl3-lab .nl3-main>.lab-view{grid-column:1;grid-row:1}
+#nl3-lab .nl3-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#nl3-lab .nl3-main>.nl3-mbox{grid-column:1;grid-row:2;min-width:0}
+#nl3-lab .nl3-mbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.75rem .9rem .9rem;display:flex;flex-direction:column;gap:.45rem}
+#nl3-lab .nl3-mbox h3{margin:0;font:700 .78rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+#nl3-lab .nl3-mbox .lab-progress{margin:0}
+#nl3-lab .nl3-mbox .lab-missions{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
+#nl3-lab .lab-missions li button{min-height:32px;padding:.25rem .7rem}
+/* the horse and cart */
+#nl3-lab .nl3-hview{height:min(70vh,560px);min-height:460px;cursor:default}
+#nl3-lab .nl3-hstage .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+/* the demos */
+#nl3-lab .nl3-demos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin:.6rem 0 1rem}
+#nl3-lab .nl3-demo{margin:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+#nl3-lab .nl3-demo canvas{display:block;width:100%;height:190px;background:#06111a;touch-action:none}
+#nl3-lab .nl3-demo figcaption{padding:.6rem .8rem .7rem;display:flex;flex-direction:column;gap:.45rem}
+#nl3-lab .nl3-demo figcaption>b{font:700 1rem Georgia,serif;color:var(--acc)}
+#nl3-lab .nl3-demo .lab-small{margin:0}
+#nl3-lab .nl3-demo .lab-row{align-items:center}
+#nl3-lab .nl3-demo .lab-seg{flex:1 1 auto}
+@media (max-width:860px){
+  #nl3-lab .nl3-main{grid-template-rows:none}
+  #nl3-lab .nl3-main>.lab-view,#nl3-lab .nl3-main>.lab-panel,#nl3-lab .nl3-main>.nl3-mbox{grid-column:auto;grid-row:auto}
+  #nl3-lab .nl3-main .lab-view{height:min(80vh,600px);min-height:520px}
+  #nl3-lab .nl3-hview{height:620px}
+}
+@media (max-width:760px){#nl3-lab .nl3-demos{grid-template-columns:1fr}}
+@media (max-width:600px){
+  #nl3-lab .lab-hud{font-size:11px}
+  #nl3-lab .lab-toast{top:4.6rem;font-size:.8rem;max-width:84%}
+}
+#nl3-lab .nl3-go{position:absolute;right:.7rem;top:calc(60% - 3.4rem);min-height:40px;padding:.4rem 1.1rem;border-radius:999px;border:1px solid #ffd479;background:rgba(255,212,121,.92);color:#1d2320;font:700 .95rem system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 14px rgba(0,0,0,.35)}
+#nl3-lab .nl3-go:hover{background:#ffe3a3}
+#nl3-lab .nl3-go:focus-visible{outline:2px solid #fff;outline-offset:2px}

@@ -1,17 +1,23 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "trades/trades.css" | relURL }}?v={{ (os.Stat "static/trades/trades.css").ModTime.Unix }}">
-{{- $d := site.Data.trades.cars }}
+{{- $course := .Params.course | default "cars" }}
+{{- $d := index site.Data.trades $course }}
+{{- $c := $d.course }}
+{{- $css := printf "static/trades/%s/%s.css" $course $course }}
+{{- if fileExists $css }}
+<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" $course $course | relURL }}?v={{ (os.Stat $css).ModTime.Unix }}">
+{{- end }}
 {{- $B := strings.TrimSuffix "x" ("x" | relURL) }}
 {{- $L := index (where $d.lessons "key" .Params.lesson) 0 }}
 {{- $n := int $L.n }}{{ $tot := len $d.lessons }}
 {{- $prev := "" }}{{ $next := "" }}
 {{- range $d.lessons }}{{ if eq (int .n) (sub $n 1) }}{{ $prev = . }}{{ end }}{{ if eq (int .n) (add $n 1) }}{{ $next = . }}{{ end }}{{ end }}
-<div class="hs tr tr-lesson" id="tr-lesson" data-lesson="{{ $L.key }}" data-units data-base="{{ $B }}">
-  <nav class="hs-crumbs"><a href="{{ "trades/" | relURL }}">The Trades</a> › <a href="{{ "trades/cars/" | relURL }}">Cars</a> › Lesson {{ $n }}</nav>
+<div class="hs tr tr-lesson c-{{ $course }}" id="tr-lesson" data-course="{{ $course }}" data-lesson="{{ $L.key }}" data-units data-base="{{ $B }}">
+  <nav class="hs-crumbs"><a href="{{ "trades/" | relURL }}">The Trades</a> › <a href="{{ printf "trades/%s/" $course | relURL }}">{{ $c.short }}</a> › Lesson {{ $n }}</nav>
   <header class="tr-lhead">
     <span class="tr-lhead-icon" aria-hidden="true">{{ $L.icon }}</span>
-    <p class="hs-eyebrow"><span>Cars · Lesson {{ $n }} of {{ $tot }}</span><span class="tr-badge b-{{ lower $L.level }}">{{ $L.level }}</span><span>{{ $L.minutes }} min read</span></p>
+    <p class="hs-eyebrow"><span>{{ $c.short }} · Lesson {{ $n }} of {{ $tot }}</span><span class="tr-badge b-{{ lower $L.level }}">{{ $L.level }}</span><span>{{ $L.minutes }} min read</span></p>
     <h1>{{ $L.title }}</h1>
     <p class="tr-intro">{{ $L.intro }}</p>
   </header>
@@ -33,20 +39,15 @@
     <div class="hs-tablewrap"><table class="hs-table"><caption>{{ .cap }}</caption><thead><tr>{{ range .head }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead><tbody>{{ range .rows }}<tr>{{ range . }}<td>{{ . }}</td>{{ end }}</tr>{{ end }}</tbody></table></div>
     {{- else if eq .t "stats" }}
     <div class="tr-stats">{{ range $d.stats }}<div class="tr-stat"><b>{{ .b }}</b><span>{{ .s }}</span></div>{{ end }}</div>
-    <p class="hs-small">U.S. Bureau of Labor Statistics, Occupational Outlook Handbook, page updated August 27, 2026.</p>
+    <p class="hs-small">{{ $c.stats_note }}</p>
     {{- else if eq .t "ladder" }}
     {{ partial "inline/tr-ladder.html" (dict "d" $d "B" $B) }}
     {{- else if eq .t "widget" }}
       {{- if eq .w "map" }}
-      <div class="tr-map" data-view="gas" data-nounits>
-        <div class="tr-map-top"><div class="tr-seg" role="group" aria-label="Which car"><button type="button" data-v="gas" aria-pressed="true">Gas car</button><button type="button" data-v="ev" aria-pressed="false">Electric car</button></div></div>
-        <p class="tr-map-info" aria-live="polite">Point at a part of the car.</p>
-        {{ replace $d.map "%BASE%" $B | safeHTML }}
-        <ul class="tr-legend">{{ range $d.systems }}{{ $les := index (where $d.lessons "key" .lesson) 0 }}<li{{ if ne .view "both" }} data-view="{{ .view }}"{{ end }}><a href="{{ printf "trades/cars/%s/" .lesson | relURL }}" data-sys="{{ .key }}" data-desc="{{ .desc }}"><i aria-hidden="true"></i><span>{{ .name }}<small>Lesson {{ $les.n }}</small></span></a></li>{{ end }}</ul>
-      </div>
+      {{ partial "inline/tr-map.html" (dict "d" $d "B" $B "course" $course) }}
       <p class="tr-w-note">{{ .cap }}</p>
       {{- else if eq .w "finder" }}
-      {{ partial "inline/tr-finder.html" (dict "d" $d "B" $B) }}
+      {{ partial "inline/tr-finder.html" (dict "d" $d "B" $B "course" $course) }}
       <p class="tr-w-note">{{ .cap }}</p>
       {{- else }}
       <div class="tr-w" id="tr-w-{{ .w }}" data-widget="{{ .w }}" data-nounits><noscript><p>This interactive diagram needs JavaScript.</p></noscript></div>
@@ -77,19 +78,21 @@
     <section class="hs-sec" id="sources">
       <h2>Sources</h2>
       <ul class="tr-src">{{ range $L.sources }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a></li>{{ end }}</ul>
-      {{ if eq .Params.lesson "troubleshooting" }}<p class="hs-small">The finder also draws on these sources:</p><ul class="tr-src">{{ range $d.finder_sources }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a></li>{{ end }}</ul>{{ end }}
+      {{ if and $d.finder_sources (eq .Params.lesson $c.finder_lesson) }}<p class="hs-small">The finder also draws on these sources:</p><ul class="tr-src">{{ range $d.finder_sources }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a></li>{{ end }}</ul>{{ end }}
     </section>
   </div>
 
   <div class="tr-done"><label><input type="checkbox" id="tr-done-box"> I finished this lesson</label><span class="hs-small">Saved on this device only.</span></div>
   <nav class="hs-pn">
-    {{ with $prev }}<a href="{{ printf "trades/cars/%s/" .key | relURL }}">← {{ .n }}. {{ .title }}</a>{{ else }}<a href="{{ "trades/cars/" | relURL }}">← Course home</a>{{ end }}
-    {{ with $next }}<a href="{{ printf "trades/cars/%s/" .key | relURL }}">{{ .n }}. {{ .title }} →</a>{{ else }}<a href="{{ "trades/cars/" | relURL }}">Course home →</a>{{ end }}
+    {{ with $prev }}<a href="{{ printf "trades/%s/%s/" $course .key | relURL }}">← {{ .n }}. {{ .title }}</a>{{ else }}<a href="{{ printf "trades/%s/" $course | relURL }}">← Course home</a>{{ end }}
+    {{ with $next }}<a href="{{ printf "trades/%s/%s/" $course .key | relURL }}">{{ .n }}. {{ .title }} →</a>{{ else }}<a href="{{ printf "trades/%s/" $course | relURL }}">Course home →</a>{{ end }}
   </nav>
-  <p class="hs-small">A free course from Teddy Rook Book. It explains how cars work in general and follows U.S. sources; your owner’s manual and your vehicle’s service information are the final word for your car, along with state and local rules.</p>
+  <p class="hs-small">{{ $c.lesson_foot }}</p>
 </div>
 <script src="{{ "trades/trades.js" | relURL }}?v={{ (os.Stat "static/trades/trades.js").ModTime.Unix }}" defer></script>
 {{- range $L.widgets }}
-<script src="{{ printf "trades/cars/%s.js" . | relURL }}?v={{ (os.Stat (printf "static/trades/cars/%s.js" .)).ModTime.Unix }}" defer></script>
+{{- $p := printf "trades/%s/%s.js" $course . }}
+{{- if in (slice "map" "finder") . }}{{ $p = printf "trades/%s.js" . }}{{ end }}
+<script src="{{ $p | relURL }}?v={{ (os.Stat (printf "static/%s" $p)).ModTime.Unix }}" defer></script>
 {{- end }}
 {{ end }}

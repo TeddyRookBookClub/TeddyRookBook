@@ -1,5 +1,6 @@
 {{ define "main" }}
 <link rel="stylesheet" href="/css/home.css?v={{ (os.Stat "static/css/home.css").ModTime.Unix }}">
+<link rel="stylesheet" href="/css/sci-feature.css?v={{ (os.Stat "static/css/sci-feature.css").ModTime.Unix }}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:wght@400;700&display=swap">
 {{ $books := where (where site.RegularPages "Section" "books") "Params.isListPage" "!=" true }}
@@ -12,12 +13,13 @@
     <div class="hh-text">
       <p class="hh-eyebrow">Books · Ideas · Learning</p>
       <h1>Teddy Rook Book</h1>
-      <p class="hh-lead">Free resources for learning at any age: one-page infographics on great books and big ideas, a full homeschool day from classic schoolbooks, Koine Greek and Latin, science simulations, life skills and the trades, and games. Free to use, no sign-up.</p>
+      <p class="hh-lead">Free resources for learning at any age: a full homeschool day from classic schoolbooks, Koine Greek and Latin, science simulations, games, one-page infographics on great books and big ideas, and life skills and the trades. Free to use, no sign-up.</p>
       <div class="hh-btns">
-        <a class="hbtn prim" href="/infographics/">See the infographics</a>
-        <a class="hbtn" href="/homeschool/">Teach at home</a>
+        <a class="hbtn prim" href="/homeschool/">Teach at home</a>
         <a class="hbtn" href="/languages/">Learn Greek &amp; Latin</a>
+        <a class="hbtn" href="/science-lab/">Try the Science Lab</a>
         <a class="hbtn" href="/games/">Play a game</a>
+        <a class="hbtn" href="/infographics/">See the infographics</a>
       </div>
     </div>
   </header>
@@ -26,28 +28,52 @@
     <h2 id="about-h">What is this?</h2>
     <p>Teddy Rook Book is a free, one-person project about great books and big ideas. <b>It isn’t a book club</b>: there are no meetings, members or sign-ups. It’s a resource you can pull from, whether you run a book club, teach a class, homeschool, or just like to read.</p>
     <ul class="about-list">
+      <li><b>🧮 <a href="/homeschool/">Homeschool</a></b> A full school day from free public-domain schoolbooks, with a step-by-step guide for teaching each lesson: reading with McGuffey’s Readers, spelling, grammar and writing, Ray’s Arithmetic and geometry, science, nature study, history, geography, Latin and Greek. Plus Hannah Ward’s early-years curricula, <a href="/asl/">sign language</a>, a placement check, a lesson planner, practice sheets and the old eighth-grade exams to aim for.</li>
+      <li><b>🗣️ <a href="/languages/">Languages</a></b> Learn Koine Greek and Latin from the Gospels and the classics: listening drills, flashcards, a reader that explains every word, and a free <a href="/languages/jerome/">study companion</a> with 124 New Testament passages and every form of the 345 most common words of each language.</li>
+      <li><b>⚛️ <a href="/science-lab/">Science Lab</a></b> Simulations built on real physics, chemistry and biology, from <a href="/games/magnetic-bottles/">magnetic bottles for fusion</a> to orbits and rockets, a trebuchet, pendulums, circuits, light, gases, acids, atoms, the sky, and predators and prey, each with missions and a lesson with the equations. Plus whole units on <a href="/science-lab/newtons-laws/">Newton’s laws of motion</a> and <a href="/science-lab/thermodynamics/">the laws of thermodynamics</a>.</li>
+      <li><b>🏛️ <a href="/games/">Games</a></b> Browser games set in ancient Greece and Rome that teach Greek and Latin as you play, the board games of antiquity, a daily word puzzle, and <a href="/games/book-cart/">Book Cart</a>, a game of balance built on real physics.</li>
       <li><b>🖼️ <a href="/infographics/">Infographics</a></b> One-page visual guides: character maps, book-club companions, and explainers on faith, science and finance. Open one on a screen or print it for your group.</li>
       <li><b>🎬 <a href="/videos/">Videos</a></b> Walk-throughs of the infographics and the ideas behind them, and long read-alongs like <a href="/videos/greek-and-latin-with-jerome/">Greek and Latin with Jerome</a>, each with a short trailer where there is one.</li>
-      <li><b>🗣️ <a href="/languages/">Languages</a></b> Learn Koine Greek and Latin from the Gospels and the classics: listening drills, flashcards, a reader that explains every word, and a free <a href="/languages/jerome/">study companion</a> with 124 New Testament passages and every form of the 345 most common words of each language.</li>
-      <li><b>🏛️ <a href="/games/">Games</a></b> Browser games set in ancient Greece and Rome that teach Greek and Latin as you play, the board games of antiquity, a daily word puzzle, and <a href="/games/book-cart/">Book Cart</a>, a game of balance built on real physics.</li>
-      <li><b>⚛️ <a href="/science-lab/">Science Lab</a></b> Thirteen simulations built on real physics, chemistry and biology: orbits and rockets, a trebuchet, pendulums, circuits, light, gases, acids, atoms, the sky, predators and prey, and magnetic bottles for fusion, each with missions and a lesson with the equations.</li>
-      <li><b>🧮 <a href="/homeschool/">Homeschool</a></b> A full school day from free public-domain schoolbooks, with a step-by-step guide for teaching each lesson: reading with McGuffey’s Readers, spelling, grammar and writing, Ray’s Arithmetic and geometry, science, nature study, history, geography, Latin and Greek. Plus Hannah Ward’s early-years curricula, <a href="/asl/">sign language</a>, a placement check, a lesson planner, practice sheets and the old eighth-grade exams to aim for.</li>
-      <li><b>🔧 <a href="/being-an-adult/">Being an Adult 101</a></b> Step-by-step guides to what every adult should know, from resetting a breaker and changing a tire to reading a paycheck, filing taxes and cooking safely, each with the science or math behind it. For the next step, <a href="/trades/">The Trades</a> start with a full course on how cars work and how to fix them.</li>
+      <li><b>🔧 <a href="/being-an-adult/">Being an Adult 101</a></b> Step-by-step guides to what every adult should know, from resetting a breaker and changing a tire to reading a paycheck, filing taxes and cooking safely, each with the science or math behind it. For the next step, <a href="/trades/">The Trades</a> teach how things work and how to fix them, with full courses on cars, plumbing, electrical, HVAC and construction.</li>
       <li><b>🥕 <a href="/garden/">Grow and make</a></b> A <a href="/garden/">food garden planner</a> for any space, with guides for chickens and bees, and step-by-step <a href="/sewing/">sewing and knitting</a>.</li>
       <li><b>💼 <a href="/business/">Business</a></b> Short cases from real companies, each told briefly with an MBA-level takeaway, <a href="/business/tax-receipt/">your tax receipt</a>, plus market charts, economic data and finance calculators.</li>
     </ul>
     <p class="about-more">For readers: tens of thousands of <a href="/free-books/">free ebooks and audiobooks</a>, <a href="/books/paths/">reading paths</a> through the great books, and a <a href="/timeline/">timeline of the ancient world</a> linked to the books, games and infographics here. Also here: my <a href="/books/">home library</a> catalog and the <a href="/markets/">markets dashboards</a> I use myself. They’re mostly for me, but they’re public, so use them however you like. There’s also a page of <a href="/resources/">free resources elsewhere</a>, from homeschool curricula and science to gardening, Latin, Greek and the great books.</p>
   </section>
 
+  <section class="sf-band" aria-labelledby="sf-h">
+    <a class="sf-vis" href="/games/magnetic-bottles/" draggable="false">
+      <canvas id="sf-cv" role="img" aria-label="A glowing doughnut of twisted magnetic field, slowly turning: nested magnetic surfaces with field lines winding around them. Opens the Magnetic Bottles explorer."></canvas>
+      <span class="sf-hint" aria-hidden="true">Drag to turn it</span>
+    </a>
+    <div class="sf-text">
+      <p class="sf-eye">Featured · Science Lab</p>
+      <h2 id="sf-h">Can you hold a star in a bottle?</h2>
+      <p class="sf-lead">Fusion power means holding a gas hotter than 100 million degrees without letting it touch anything, and the bottle is a twisted doughnut of magnetic field. Turn, slice and test two exact ones, worked out in a 2026 physics paper.</p>
+      <div class="sf-btns">
+        <a class="sf-btn sf-prim" href="/games/magnetic-bottles/">Explore the bottle →</a>
+        <a class="sf-btn" href="/science-lab/">The whole Science Lab</a>
+      </div>
+      <ul class="sf-chips" aria-label="More in the Science Lab">
+        <li><a href="/science-lab/newtons-laws/"><i class="sf-new">New</i><span aria-hidden="true">🍎</span> Newton’s Laws of Motion <small>6 chapters</small></a></li>
+        <li><a href="/science-lab/thermodynamics/"><i class="sf-new">New</i><span aria-hidden="true">🔥</span> The Laws of Thermodynamics <small>5 chapters</small></a></li>
+        <li><a href="/games/book-cart/"><span aria-hidden="true">📚</span> Book Cart</a></li>
+        <li><a href="/games/orbits/"><span aria-hidden="true">🪐</span> Orbit Lab</a></li>
+        <li><a href="/games/rocket/"><span aria-hidden="true">🚀</span> Rocket Builder</a></li>
+      </ul>
+    </div>
+  </section>
+
   <section class="tiles tiles-4" aria-label="Main sections">
-    <a class="tile t-ig" href="/infographics/">
-      <div class="tile-vis mosaic" aria-hidden="true">
-        {{ range first 4 $ig }}<img src="/img/infographics/{{ .file }}-thumb.jpg" alt="" loading="lazy">{{ end }}
+    <a class="tile t-home" href="/homeschool/">
+      <div class="tile-vis slate" aria-hidden="true">
+        <div class="slate-board"><span>3 and 2 are 5</span><span>4 and 4 are 8</span><span class="sl-dim">7 less 3 are 4</span></div>
+        <div class="slate-beans"><i></i><i></i><i></i><b></b><i></i><i></i></div>
       </div>
       <div class="tile-body">
-        <h2>🖼️ Infographics</h2>
-        <p>{{ len $ig }} one-page explainers on books, faith, language, finance and more.</p>
-        <span class="go">Open the gallery →</span>
+        <h2>🧮 Homeschool</h2>
+        <p>Reading, writing, arithmetic, science, history, geography, Latin and Greek from classic schoolbooks, free to read and download, with a guide that walks you through teaching each lesson, one step at a time.</p>
+        <span class="go">Start teaching →</span>
       </div>
     </a>
     <a class="tile t-lang" href="/languages/">
@@ -72,15 +98,14 @@
         <span class="go">Play →</span>
       </div>
     </a>
-    <a class="tile t-home" href="/homeschool/">
-      <div class="tile-vis slate" aria-hidden="true">
-        <div class="slate-board"><span>3 and 2 are 5</span><span>4 and 4 are 8</span><span class="sl-dim">7 less 3 are 4</span></div>
-        <div class="slate-beans"><i></i><i></i><i></i><b></b><i></i><i></i></div>
+    <a class="tile t-ig" href="/infographics/">
+      <div class="tile-vis mosaic" aria-hidden="true">
+        {{ range first 4 $ig }}<img src="/img/infographics/{{ .file }}-thumb.jpg" alt="" loading="lazy">{{ end }}
       </div>
       <div class="tile-body">
-        <h2>🧮 Homeschool</h2>
-        <p>Reading, writing, arithmetic, science, history, geography, Latin and Greek from classic schoolbooks, free to read and download, with a guide that walks you through teaching each lesson, one step at a time.</p>
-        <span class="go">Start teaching →</span>
+        <h2>🖼️ Infographics</h2>
+        <p>{{ len $ig }} one-page explainers on books, faith, language, finance and more.</p>
+        <span class="go">Open the gallery →</span>
       </div>
     </a>
   </section>
@@ -159,6 +184,7 @@
 <script src="/js/translit.js?v={{ (os.Stat "static/js/translit.js").ModTime.Unix }}"></script>
 <script src="/games/vocab.js?v={{ (os.Stat "static/games/vocab.js").ModTime.Unix }}"></script>
 <script src="/games/art.js?v={{ (os.Stat "static/games/art.js").ModTime.Unix }}"></script>
+<script src="/js/home-donut.js?v={{ (os.Stat "static/js/home-donut.js").ModTime.Unix }}" defer></script>
 <script>
 (function () {
   try {

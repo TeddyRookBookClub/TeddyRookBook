@@ -1,0 +1,293 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/thermodynamics/first-law/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/first-law/sim.css").ModTime.Unix }}">
+<div class="lab" id="th2-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Thermodynamics · Chapter 2</p>
+    <h1>{{ .Title }}</h1>
+    <p>Rub your hands together and they warm up. Pump up a bike tire and the pump gets warm. You can heat a gas without any flame at all, just by squeezing it. Heat and work are two ways to move energy into or out of something, and the first law of thermodynamics keeps the books: energy is never made and never destroyed. Here you’ll heat, cool, squeeze and stretch a cylinder of gas, trace its path on a pressure–volume diagram, and watch the ledger balance to the last joule.</p>
+    <span class="lab-mark" aria-hidden="true">⚙️</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="th2-view">
+      <canvas id="th2-cv" tabindex="0" aria-label="A cylinder of helium gas under a piston, with the gas molecules flying around. Beside it, a pressure-volume diagram traces the gas's path and three energy bars show the heat in, the work done by the gas and the change in internal energy. Drag the piston up or down, or use the up and down arrow keys. Keys: F flame, I ice, B water bath, N insulated, L lock the piston, W weights, H your hand, plus and minus add or remove weights, Z zero the meters, P pause."></canvas>
+      <div class="lab-hud" id="th2-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="th2-pause" aria-label="Pause" title="Pause (P)">❚❚</button>
+        <button type="button" id="th2-reset" aria-label="Start this setup again" title="Start again">↺</button>
+      </div>
+    </div>
+
+    <div class="lab-panel" id="th2-panel">
+      <h3 id="th2-pre-h">Processes</h3>
+      <div class="lab-seg th2-pre" id="th2-presets" role="group" aria-labelledby="th2-pre-h">
+        <button type="button" data-pre="isochoric" aria-pressed="true">Constant volume</button>
+        <button type="button" data-pre="isobaric" aria-pressed="false">Constant pressure</button>
+        <button type="button" data-pre="isothermal" aria-pressed="false">Isothermal</button>
+        <button type="button" data-pre="adiabatic" aria-pressed="false">Adiabatic</button>
+      </div>
+      <p class="lab-small th2-note" id="th2-note"></p>
+      <div class="lab-field"><span id="th2-heat-h">Under the cylinder</span>
+        <div class="lab-seg" id="th2-heat" role="group" aria-labelledby="th2-heat-h">
+          <button type="button" data-h="insulated" aria-pressed="false">🧥 Insulated</button>
+          <button type="button" data-h="flame" aria-pressed="false">🔥 Flame</button>
+          <button type="button" data-h="ice" aria-pressed="false">🧊 Ice</button>
+          <button type="button" data-h="bath" aria-pressed="false">💧 Bath 300 K</button>
+        </div>
+      </div>
+      <div class="lab-field"><span id="th2-mode-h">The piston</span>
+        <div class="lab-seg" id="th2-mode" role="group" aria-labelledby="th2-mode-h">
+          <button type="button" data-m="locked" aria-pressed="false">🔒 Locked</button>
+          <button type="button" data-m="weights" aria-pressed="false">⚖️ Weights</button>
+          <button type="button" data-m="hand" aria-pressed="false">✋ Your hand</button>
+        </div>
+      </div>
+      <div class="lab-row th2-wrow" id="th2-wrow">
+        <button type="button" class="lab-btn" id="th2-wminus" aria-label="Take off a 20 kg weight">−</button>
+        <output id="th2-wcount" class="th2-wcount">0 weights</output>
+        <button type="button" class="lab-btn" id="th2-wplus" aria-label="Add a 20 kg weight">+</button>
+      </div>
+      <label class="lab-field" id="th2-vrow"><span>Piston position (volume) <output id="th2-v-o">2.46 L</output></span><input type="range" id="th2-v" min="0.4" max="5" step="0.01" value="2.46" aria-label="Volume of the gas in liters, set with your hand on the piston"></label>
+      <button type="button" class="lab-btn" id="th2-zero">Zero the meters and the trace</button>
+
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="th2-read">
+        <dt>Pressure P</dt><dd id="th2-rp">—</dd>
+        <dt>Volume V</dt><dd id="th2-rv">—</dd>
+        <dt>Temperature T</dt><dd id="th2-rt">—</dd>
+        <dt>Internal energy U</dt><dd id="th2-ru">—</dd>
+        <dt>Heat in Q</dt><dd id="th2-rq">—</dd>
+        <dt>Work by gas W</dt><dd id="th2-rw">—</dd>
+        <dt>ΔU</dt><dd id="th2-rdu">—</dd>
+        <dt>Q − W − ΔU</dt><dd id="th2-rchk">—</dd>
+      </dl>
+      <p class="lab-small">0.100 mol of helium, an ideal monatomic gas: U = (3/2) n R T. The air outside pushes with 101.3 kPa; each weight adds 19.6 kPa on the 100 cm² piston.</p>
+
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="th2-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The cylinder.</b> A tenth of a mole of helium (about 6 × 10<sup>22</sup> atoms) sits under a light piston 10 cm across. The dots stand in for the atoms. They are colored by speed, from <span class="th2-cold">blue</span> for slow to <span class="th2-hot">red</span> and <span class="th2-gold">gold</span> for fast, and they all speed up as the gas gets hotter. Under the cylinder you can put a flame, ice, a water bath at 300 K, or nothing but insulation. The piston can be locked, loaded with weights, or moved by your hand.</p>
+      <p><b>The P–V diagram.</b> Every state of the gas is a point: volume across, pressure up. As the gas changes, the point leaves a trail, <span class="th2-hot">red</span> where heat flows in, <span class="th2-cold">blue</span> where heat flows out, and <span class="th2-green">green</span> where no heat flows at all. The dashed gold curve is the <i>isotherm</i> through the current state: every point on it has the same temperature. The green shading under the path since your last change is the work the gas has done.</p>
+      <p><b>The energy bars.</b> <b>Q</b> is the heat that has flowed into the gas, <b>W</b> the work the gas has done on the piston, and <b>ΔU</b> the change in its internal energy, all counted from the last time you zeroed the meters. Whatever you do, Q − W equals ΔU.</p>
+      <p><b>Loops.</b> Bring the path back across itself and the loop fills in with gold. The area inside is the net work done in one trip around: positive if you went clockwise, which is what an engine does.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="science">
+    <h2>The first law</h2>
+    <p>A gas holds energy in the motion of its molecules. That total is its <i>internal energy</i>, <var>U</var>. There are only two ways to change it from outside: let heat flow in or out because of a temperature difference, or do work by pushing on it. The first law of thermodynamics says the books always balance:</p>
+    <div class="u-big">Δ<var>U</var> = <var>Q</var> − <var>W</var><small>change in internal energy (J) = heat added to the system (J) − work done by the system (J)</small></div>
+    <p>Heat in raises <var>U</var>. Work the gas does on its surroundings, pushing a piston out, lowers it. When you push the piston in, the gas does negative work, so −<var>W</var> is positive and <var>U</var> goes up. For an ideal gas made of single atoms, like helium, the internal energy depends only on temperature:</p>
+    <div class="lab-formula"><var>U</var> = (3/2) <var>n R T</var> &nbsp;&nbsp;&nbsp; <var>P V</var> = <var>n R T</var> &nbsp;&nbsp;&nbsp; <span class="lab-small">n in moles, R = 8.314 J/(mol·K), T in kelvins, P in pascals, V in cubic meters</span></div>
+    <p>So for this gas, “hotter” and “more internal energy” are the same thing. For molecules with more parts, such as the nitrogen in air, some energy also goes into spinning, and the 3/2 becomes 5/2.</p>
+
+    <h3 class="lab-h">Work is the area under the curve</h3>
+    <p>When a gas at pressure <var>P</var> pushes a piston of area <var>A</var> out by a distance <var>d</var>, the force is <var>P A</var> and the work is <var>P A d</var>. But <var>A d</var> is the change in volume, so</p>
+    <div class="lab-formula"><var>W</var> = <var>P</var> Δ<var>V</var> &nbsp;(constant pressure) &nbsp;&nbsp;&nbsp; <var>W</var> = ∫ <var>P</var> d<var>V</var> &nbsp;(in general: the area under the path on the P–V diagram)</div>
+    <p>The work depends on the path, not just on where you start and end. So does the heat. Only their difference, Δ<var>U</var>, is fixed by the two end states. That’s why a loop can turn heat into work: go around once, come back to the same state, and Δ<var>U</var> = 0, so the net heat in equals the net work out, which is the area inside the loop.</p>
+
+    <h3 class="lab-h">Four special processes</h3>
+    <div class="lab-tw"><table class="lab-table th2-ptable">
+      <thead><tr><th>Process</th><th>What’s held fixed</th><th>Work W</th><th>Heat Q</th><th>ΔU</th></tr></thead>
+      <tbody>
+        <tr><td><b>Constant volume</b> (isochoric)</td><td>V: piston locked</td><td>0</td><td>(3/2) n R ΔT</td><td>= Q</td></tr>
+        <tr><td><b>Constant pressure</b> (isobaric)</td><td>P: weights ride on the piston</td><td>P ΔV = n R ΔT</td><td>(5/2) n R ΔT</td><td>(3/2) n R ΔT</td></tr>
+        <tr><td><b>Isothermal</b></td><td>T: in a big water bath, slowly</td><td>n R T ln(V₂/V₁)</td><td>= W</td><td>0</td></tr>
+        <tr><td><b>Adiabatic</b></td><td>no heat: insulated, or too fast for heat to flow</td><td>−ΔU</td><td>0</td><td>(3/2) n R ΔT</td></tr>
+      </tbody>
+    </table></div>
+    <p>In an adiabatic process, <var>P V</var><sup>γ</sup> stays constant, with γ = 5/3 for helium (and 7/5 for air), so the curve is steeper than an isotherm. Squeeze a gas adiabatically and every bit of your work becomes internal energy: it gets hot. Let it expand and it pays for its work out of its own internal energy: it gets cold.</p>
+    <div class="u-ex"><b>Worked example: heating at constant pressure</b>
+      <p>Heat the simulation’s 0.100 mol of helium with no weights on the piston (P = 101.3 kPa) from 300 K to 400 K.</p>
+      <ol><li>ΔU = (3/2) n R ΔT = 1.5 × 0.100 × 8.314 × 100 = 124.7 J.</li>
+        <li>W = P ΔV = n R ΔT = 0.100 × 8.314 × 100 = 83.1 J. The volume grows from 2.46 L to 3.28 L.</li>
+        <li>Q = ΔU + W = 207.9 J. Only 60% of the heat stays in the gas; 40% goes out as work lifting the piston and pushing back the air.</li></ol>
+    </div>
+    <div class="u-ex"><b>Worked example: a bike pump</b>
+      <p>Squeeze the gas fast, before heat can leak out (adiabatic), from 2.46 L at 300 K down to 0.90 L.</p>
+      <ol><li>T V<sup>γ−1</sup> stays fixed: T₂ = 300 K × (2.46 / 0.90)<sup>2/3</sup> = 587 K, or 314 °C.</li>
+        <li>ΔU = (3/2) n R ΔT = 1.5 × 0.100 × 8.314 × 287 = 358 J, and Q = 0.</li>
+        <li>So W = −358 J: you did 358 J of work on the gas, and all of it became internal energy. That’s the <i>Bike pump</i> mission. A real pump’s air also leaks heat into the barrel, which is one reason the barrel gets warm.</li></ol>
+    </div>
+    <div class="u-ex"><b>Worked example: isothermal expansion</b>
+      <p>In the 300 K water bath, slowly pull the piston from 2.46 L to 4.92 L.</p>
+      <ol><li>T doesn’t change, so ΔU = 0.</li>
+        <li>W = n R T ln(V₂/V₁) = 0.100 × 8.314 × 300 × ln 2 = 172.9 J.</li>
+        <li>Q = W = 172.9 J: every joule of work the gas did came in from the bath as heat. In the simulation you get about 174 J if you pull at full speed, because the gas cools a little before the bath can catch up; go slowly and it closes in on 172.9 J.</li></ol>
+    </div>
+    <h3 class="lab-h">Signs: physics and chemistry</h3>
+    <p>This page, like OpenStax University Physics, counts <var>W</var> as work done <i>by</i> the gas, so Δ<var>U</var> = <var>Q</var> − <var>W</var>. That comes from steam engines, where work out is the point. Chemistry books usually count work done <i>on</i> the system, and write Δ<var>U</var> = <var>q</var> + <var>w</var>. It’s the same law with the opposite sign for work: <var>w</var> = −<var>W</var>. Always check which one a book uses.</p>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> choose <i>Adiabatic</i>, squeeze the gas to 1 L, then let it back out to where it started. The temperature comes right back, and the path runs back down the same curve: you got all your work back. Now do it with the flame on. Then try <i>Isothermal</i> and compare the slopes of the two curves.</div>
+  <div class="u-myth"><b>Common mistake</b><p>“If something got hotter, something must have heated it.” Not so. In the <i>Bike pump</i> mission the gas is wrapped in insulation, no heat gets in at all, and its temperature doubles. Work did it. Heat and work are two different doors into the same room, internal energy, and once energy is inside you can’t tell which door it came through. The opposite is true too: in the isothermal mission, heat flows in and the temperature doesn’t budge, because the gas spends it all on work.</p></div>
+
+  <section class="lab-sec" id="joule">
+    <h2>Joule’s paddle wheel</h2>
+    <p>If heat is just energy, then a fixed amount of work should always make the same amount of heat. In the 1840s, James Prescott Joule set out to measure that exchange rate. Falling weights turned paddles in an insulated tank of water. The churning water warmed up by a tiny amount, and Joule measured it with a very fine thermometer. Try it.</p>
+    <div class="lab-stage" id="th2-joule-stage">
+      <div class="lab-view th2-joule-view" id="th2-joule-view">
+        <canvas id="th2-joule-cv" tabindex="0" aria-label="Joule's apparatus: two weights hang on cords from pulleys and turn a paddle wheel inside an insulated tank of water as they fall. A thermometer shows the water's temperature. Press Drop to let the weights fall. Space drops them."></canvas>
+        <div class="lab-hud" id="th2-joule-hud" aria-hidden="true"></div>
+      </div>
+      <div class="lab-panel">
+        <h3>Apparatus</h3>
+        <label class="lab-field"><span>Each weight <output id="th2-jm-o">10 kg</output></span><input type="range" id="th2-jm" min="1" max="30" step="1" value="10" aria-label="Mass of each of the two weights in kilograms"></label>
+        <label class="lab-field"><span>Fall height <output id="th2-jh-o">1.5 m</output></span><input type="range" id="th2-jh" min="0.5" max="3" step="0.1" value="1.5" aria-label="How far the weights fall each time, in meters"></label>
+        <label class="lab-field"><span>Water in the tank <output id="th2-jw-o">1.0 kg</output></span><input type="range" id="th2-jw" min="0.5" max="5" step="0.1" value="1" aria-label="Mass of water in the tank in kilograms"></label>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="th2-jdrop">Drop</button><button type="button" class="lab-btn" id="th2-jdrop10">Drop 10 times</button><button type="button" class="lab-btn" id="th2-jreset">Fresh water</button></div>
+        <dl class="lab-readout">
+          <dt>Drops</dt><dd id="th2-jd">0</dd>
+          <dt>Work done (2 M g h)</dt><dd id="th2-jwk">0 J</dd>
+          <dt>Water warmed by</dt><dd id="th2-jdt">0.000 °C</dd>
+          <dt>Same, in calories</dt><dd id="th2-jcal">0 cal</dd>
+          <dt>Fall for +1 °C</dt><dd id="th2-jneed">—</dd>
+        </dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="th2-jmissions"></ol>
+      </div>
+    </div>
+    <p>Each drop, the two weights lose potential energy 2<var>M g h</var>. The paddles keep them falling slowly, so almost none of it is left as motion at the bottom; it all ends up churning the water, then as random jiggling of water molecules: internal energy. So</p>
+    <div class="lab-formula">2 <var>M g h</var> = <var>m</var><sub>water</sub> <var>c</var><sub>water</sub> Δ<var>T</var> &nbsp;⟹&nbsp; <var>h</var> = <var>m</var><sub>water</sub> <var>c</var><sub>water</sub> Δ<var>T</var> ÷ (2 <var>M g</var>)</div>
+    <div class="u-ex"><b>Worked example: one degree the hard way</b>
+      <p>Two 10 kg weights, 1.0 kg of water. How far must they fall to warm it by 1 °C?</p>
+      <ol><li>Energy needed: 1.0 × 4186 × 1 = 4186 J.</li>
+        <li>h = 4186 ÷ (2 × 10 × 9.81) = 21.3 m: about a seven-story building. That’s why Joule had to wind his weights up and drop them again and again, and why he needed such a sensitive thermometer.</li></ol>
+    </div>
+    <p>Joule reported in 1850 that the heat that warms a pound of water by 1 °F equals the work of 772 pound-weights falling one foot. In today’s units that is about 4.15 joules per calorie, within 1% of the modern value. The unit of energy is named after him.</p>
+    <h3 class="lab-h">Calories, joules and food</h3>
+    <p>The <i>calorie</i> was defined as the heat that warms 1 gram of water by 1 °C. Today it is defined in joules: the thermochemical calorie is exactly 4.184 J. The Calorie on a food label, with a capital C, is a kilocalorie:</p>
+    <div class="lab-formula">1 cal = 4.184 J &nbsp;&nbsp;&nbsp; 1 food Calorie = 1 kcal = 4184 J &nbsp;&nbsp;&nbsp; 1 BTU ≈ 1055 J</div>
+    <div class="th2-cal" id="th2-cal">
+      <label class="lab-field"><span>A snack with <output id="th2-cal-o">250 Calories</output></span><input type="range" id="th2-cal-in" min="10" max="1000" step="10" value="250" aria-label="Food Calories"></label>
+      <ul class="th2-cal-out" id="th2-cal-out" aria-live="polite"></ul>
+    </div>
+    <p class="lab-small">Your body can’t turn all of food’s energy into lifting; most of it ends up as heat. The first law still holds: it’s all accounted for somewhere.</p>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>Heat is motion: Rumford and Joule</h2>
+    <div class="lab-cols">
+      <p>Around 1800, many scientists pictured heat as <i>caloric</i>, a weightless fluid that flows out of hot things. Benjamin Thompson, Count Rumford, oversaw the military arsenal in Munich, where cannon barrels were bored out of solid metal. He noticed how hot the metal got. In an experiment he published in 1798, he set a blunt borer grinding inside a barrel sunk in a box of water, about 18.8 pounds of it. The water grew warmer and warmer, and finally boiled. He wrote:</p>
+      <div class="u-quote"><p class="u-en">“At two hours twenty minutes it was at 200; and at two hours thirty minutes it actually boiled!”</p><cite>Benjamin Thompson, Count Rumford, “An Inquiry concerning the Source of the Heat which is excited by Friction,” Philosophical Transactions of the Royal Society, 1798; as quoted in Popular Science Monthly, December 1877 (the 200 is degrees Fahrenheit)</cite></div>
+      <p>Friction seemed able to make heat without limit, for as long as the boring went on. A fluid stored in the metal should run out. Rumford concluded that heat could not be a substance at all; the only thing he could picture being made and passed along that way was motion.</p>
+      <p>The idea took decades to win. In the 1840s Joule measured the exchange rate between work and heat, again and again, with paddle wheels, electric currents and compressed air. At a meeting in Oxford in 1847, the young William Thomson, later Lord Kelvin, heard him and was intrigued but doubtful; within a few years Thomson was building the new science of thermodynamics on Joule’s results. In 1847 Hermann von Helmholtz published a general statement of the conservation of energy. Heat had become one more form of energy on the move.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="flow">
+    <h2>Where the energy goes in a car</h2>
+    <p>A gasoline car is a heat engine on wheels. Burning fuel releases energy, the hot gas pushes pistons, and the pistons turn the wheels. But most of the energy never reaches the wheels. The U.S. Department of Energy estimates that in combined city and highway driving only about 16 to 25 percent of the fuel’s energy gets to the wheels, and between 12 and 30 percent depending on the kind of driving. Watch where each packet of energy ends up. Tap a stream to read about it.</p>
+    <div class="lab-stage wide">
+      <div class="lab-view th2-flow-view" id="th2-flow-view">
+        <canvas id="th2-flow-cv" tabindex="0" aria-label="An energy-flow diagram for a gasoline car: packets of energy flow from the fuel into engine losses, idling, accessories, the drivetrain and the wheels, and in the end all of it becomes heat. Tap or use the left and right arrow keys to pick a stream."></canvas>
+      </div>
+    </div>
+    <p class="th2-flow-info" id="th2-flow-info" aria-live="polite"></p>
+    <div class="lab-tw"><table class="lab-table th2-ftable">
+      <thead><tr><th>Where it goes</th><th>Share of the fuel’s energy</th></tr></thead>
+      <tbody>
+        <tr><td>Engine losses: heat out the exhaust and radiator, pumping and friction</td><td>68–72%</td></tr>
+        <tr><td>Parasitic losses (accessories)</td><td>4–6%</td></tr>
+        <tr><td>Drivetrain losses</td><td>5–6%</td></tr>
+        <tr><td>Idling</td><td>3%</td></tr>
+        <tr><td>Auxiliary engine losses</td><td>0–2%</td></tr>
+        <tr><td>Power to the wheels</td><td>16–25%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="lab-small">Combined city and highway driving, from the U.S. Department of Energy’s Fact of the Week #1044 (2018), using fueleconomy.gov. The animation uses one set of numbers inside these ranges: 69, 5, 5, 3, 1 and 17 percent.</p>
+    <p>And the 17% that reaches the wheels? It pushes air out of the way, flexes the tires and, every time you brake, heats the brakes. On a trip that starts and ends parked on level ground, every joule from the fuel ends up as heat in the air and the road. That’s the first law: the energy is all still there, just spread out where it can’t do anything useful. Why an engine can’t turn all its heat into work is a second-law story, in Chapters 3 and 4. For how a real engine works, see <a href="{{ "trades/cars/engine/" | relURL }}">The Engine</a> in our Cars course; electric cars do much better: the Department of Energy puts them at about 87 to 91 percent efficient, counting the energy they win back while braking.</p>
+  </section>
+
+  <section class="lab-sec" id="perpetual">
+    <h2>Why perpetual-motion machines can’t work</h2>
+    <div class="lab-cols">
+      <p>For centuries inventors drew wheels with rolling balls, magnets and self-filling water tanks that would turn forever and do work for free. The first law says why none of them can: a machine that runs in a cycle comes back to the same state each time, so Δ<var>U</var> = 0, and the work it puts out over a cycle must equal the energy put in. Work from nothing would need energy from nothing.</p>
+      <p>A cleverer machine might take heat from the air or the sea, which hold enormous amounts of internal energy, and turn all of it into work. That doesn’t break the first law, but it breaks the second, as Chapter 3 explains. Real machines also lose some energy to friction along the way, which turns into heat. So no machine gives back more work than the energy you feed it, and real ones give back less.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="everyday">
+    <h2>Where you see it</h2>
+    <div class="u-key">
+      <div><b>Bike pumps and tires</b><p>Pumping does work on the air, raising its internal energy and temperature, as in the <i>Bike pump</i> mission.</p></div>
+      <div><b>Diesel engines</b><p>A diesel squeezes air so hard and so fast that it gets hot enough to light the fuel sprayed in, with no spark plug. OpenStax works out a gasoline engine’s compression: from 20 °C to about 330 °C.</p></div>
+      <div><b>Clouds</b><p>Rising air expands as the pressure around it drops, does work, and cools, with little time to take in heat. That’s the <i>Cool by expanding</i> mission, and it’s how many clouds form.</p></div>
+      <div><b>Engines</b><p>Every engine runs the gas around a loop on the P–V diagram, clockwise. The area of the loop is the work per cycle. See <a href="{{ "trades/cars/engine/" | relURL }}">The Engine</a> and Chapter 4.</p></div>
+      <div><b>Heat pumps</b><p>Run the loop counterclockwise and you spend work to move heat from cold to hot. That’s a refrigerator or a heat pump; see the <a href="{{ "trades/hvac/" | relURL }}">HVAC course</a>.</p></div>
+      <div><b>Your body</b><p>Food energy becomes work and heat. Even at rest you give off heat, which is why a full room warms up.</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The gas.</b> The numbers come from exact ideal-gas thermodynamics for 0.100 mol of helium: <var>P V</var> = <var>n R T</var> and <var>U</var> = (3/2)<var>n R T</var>, with <var>R</var> = 8.314462618 J/(mol·K), which has been exact since 2019. Every change is quasi-static: the gas is always in balance, with one pressure throughout. Each 2-millisecond step has two exact parts. First, heat flows at fixed volume: the gas relaxes toward the temperature of whatever touches it (a 1800 K flame, ice at 273.15 K, or a 300 K bath), following Newton’s law of cooling. Second, the piston moves along an adiabat, <var>T V</var><sup>2/3</sup> = constant, and the work is exactly the drop in internal energy along that curve. So Δ<var>U</var> = <var>Q</var> − <var>W</var> holds in every step.</p>
+      <p><b>The piston.</b> With weights, the piston moves to wherever the gas pressure balances the air plus the weights. Weights go on and off gently, like pouring sand, so the gas stays in balance. Your hand moves it at up to 2.5 liters per second. Stops hold the volume between 0.4 and 5 liters.</p>
+      <p><b>The dots.</b> They are for the look: 90 dots bouncing in the cylinder. Each frame their speeds are scaled so their average kinetic energy follows the gas’s real temperature, so they speed up and slow down exactly as the numbers say.</p>
+      <p><b>What’s simplified.</b> The cylinder and piston take no heat themselves, the piston has no friction, and a real flame or bath would have more complicated heat flow. A real gas compressed this hard would be a little less ideal.</p>
+      <p><b>How we checked it.</b> In tests, 400 random changes of heat source, piston mode, weights and volume over 12,000 frames kept Q − W − ΔU below 10<sup>−11</sup> J. Locked heating gave W = 0 and Q = ΔU. Heating with two weights gave W within 0.02% of PΔV and W/Q = 0.4000 (theory 2/5). Adiabatic squeezing kept P V<sup>5/3</sup> constant to 14 digits and reached 868.23 K, matching theory. Isothermal halving in the bath gave W = −177.9, −173.9 and −173.1 J at 2.5, 0.5 and 0.1 L/s, closing in on the exact −172.9 J. Around a closed loop, the net work (19.988 J) matched the area inside (19.980 J) and the net heat (19.988 J). In the page, loops are cut out exactly where the path crosses itself.</p>
+      <p><b>Joule’s apparatus</b> uses 2<var>M g h</var> = <var>m c</var> Δ<var>T</var> with <var>g</var> = 9.80665 m/s² and water’s 4186 J/(kg·K), ignoring the heat taken by the tank and paddles, which Joule measured and corrected for.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>A gas takes in 500 J of heat and does 200 J of work pushing a piston out. What is the change in its internal energy?</p>
+        <ul class="u-opts"><li><button type="button">700 J</button></li><li><button type="button">300 J</button></li><li><button type="button">−300 J</button></li></ul>
+        <details><summary>Show the answer</summary><p>ΔU = Q − W = 500 − 200 = 300 J.</p></details></li>
+      <li class="u-q" data-a="2"><p>You squeeze a gas inside an insulated cylinder. What happens?</p>
+        <ul class="u-opts"><li><button type="button">Nothing: with no heat flow, its temperature can’t change.</button></li><li><button type="button">It cools, because it is pushed together.</button></li><li><button type="button">It warms up: your work becomes internal energy.</button></li></ul>
+        <details><summary>Show the answer</summary><p>Q = 0 and W is negative (work is done on the gas), so ΔU = −W &gt; 0: the gas heats up. That’s a bike pump.</p></details></li>
+      <li class="u-q" data-a="0"><p>An ideal gas expands slowly at constant temperature and does 150 J of work. How much heat flowed in?</p>
+        <ul class="u-opts"><li><button type="button">150 J</button></li><li><button type="button">0 J</button></li><li><button type="button">−150 J</button></li></ul>
+        <details><summary>Show the answer</summary><p>At constant temperature an ideal gas’s internal energy doesn’t change, so Q = W = 150 J.</p></details></li>
+      <li class="u-q" data-a="1"><p>A gas goes once around a clockwise loop on a P–V diagram whose area is 80 J. What is the net heat into the gas?</p>
+        <ul class="u-opts"><li><button type="button">0 J, because it ends where it started</button></li><li><button type="button">80 J</button></li><li><button type="button">−80 J</button></li></ul>
+        <details><summary>Show the answer</summary><p>Around a loop ΔU = 0, so Q = W = the area, 80 J. It’s ΔU that’s zero, not Q.</p></details></li>
+      <li class="u-q" data-a="2"><p>How far must two 10 kg weights fall in Joule’s apparatus to warm 2.0 kg of water by 0.50 °C?</p>
+        <ul class="u-opts"><li><button type="button">10.7 cm</button></li><li><button type="button">2.1 m</button></li><li><button type="button">21.3 m</button></li></ul>
+        <details><summary>Show the answer</summary><p>h = m c ΔT ÷ (2 M g) = 2.0 × 4186 × 0.50 ÷ (2 × 10 × 9.81) = 21.3 m. Twice the water, half the warming: the same as 1 °C for 1 kg.</p></details></li>
+      <li class="u-q" data-a="0"><p>A chemistry book says a gas had w = +50 J. In this page’s physics convention, what is W?</p>
+        <ul class="u-opts"><li><button type="button">−50 J: 50 J of work was done on the gas.</button></li><li><button type="button">+50 J: the gas did 50 J of work.</button></li><li><button type="button">You can’t tell without the heat.</button></li></ul>
+        <details><summary>Show the answer</summary><p>Chemistry’s w is work done on the system, so W = −w = −50 J.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/3-1-thermodynamic-systems" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 3.1 Thermodynamic Systems</a></li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/3-2-work-heat-and-internal-energy" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 3.2 Work, Heat, and Internal Energy</a></li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/3-3-first-law-of-thermodynamics" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 3.3 First Law of Thermodynamics</a> (ΔE<sub>int</sub> = Q − W, with W done by the system)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/3-4-thermodynamic-processes" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 3.4 Thermodynamic Processes</a></li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/3-5-heat-capacities-of-an-ideal-gas" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 3.5 Heat Capacities of an Ideal Gas</a></li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/3-6-adiabatic-processes-for-an-ideal-gas" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 3.6 Adiabatic Processes for an Ideal Gas</a> (Example 3.7, engine compression)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/1-4-heat-transfer-specific-heat-and-calorimetry" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 1.4 Heat Transfer, Specific Heat, and Calorimetry</a> (Joule’s experiment; water’s specific heat)</li>
+      <li><a href="https://www.nist.gov/pml/special-publication-811/nist-guide-si-footnotes" target="_blank" rel="noopener">NIST Guide to the SI, footnotes</a> and <a href="https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8" target="_blank" rel="noopener">Appendix B.8</a> (calorie = 4.184 J exactly; food Calorie = kilocalorie; BTU; foot-pound)</li>
+      <li><a href="https://www.energy.gov/cmei/vehicles/articles/fotw-1044-august-27-2018-12-30-energy-put-conventional-car-used-move-car" target="_blank" rel="noopener">U.S. Department of Energy, Fact of the Week #1044: 12–30% of Energy Put into a Conventional Car Is Used to Move the Car Down the Road</a></li>
+      <li><a href="https://www.energy.gov/cmei/vehicles/articles/fotw-1360-sept-16-2024-typical-ev-87-91-efficient-compared-30-conventional" target="_blank" rel="noopener">U.S. Department of Energy, Fact of the Week #1360: A Typical EV Is 87%–91% Efficient</a></li>
+      <li><a href="https://en.wikisource.org/wiki/Popular_Science_Monthly/Volume_12/December_1877/History_of_the_Dynamical_Theory_of_Heat_I" target="_blank" rel="noopener">Popular Science Monthly (1877), History of the Dynamical Theory of Heat I, on Wikisource</a> (Rumford’s words)</li>
+      <li><a href="https://archive.org/details/philtrans00608634" target="_blank" rel="noopener">J. P. Joule, On the Mechanical Equivalent of Heat, Philosophical Transactions 140 (1850), on archive.org</a></li>
+      <li><a href="https://www.aps.org/apsnews/2015/06/joule-mechanical-equivalent-heat" target="_blank" rel="noopener">APS News: June 1849, James Prescott Joule and the Mechanical Equivalent of Heat</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/James_Prescott_Joule" target="_blank" rel="noopener">Wikipedia (secondary): James Prescott Joule</a> (772.692 ft·lbf per BTU, 1850; the 1847 Oxford meeting)</li>
+      <li><a href="https://en.wikipedia.org/wiki/An_Inquiry_Concerning_the_Source_of_the_Heat_Which_Is_Excited_by_Friction" target="_blank" rel="noopener">Wikipedia (secondary): An Inquiry Concerning the Source of the Heat Which Is Excited by Friction</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Timeline_of_thermodynamics" target="_blank" rel="noopener">Wikipedia (secondary): Timeline of thermodynamics</a> (Helmholtz, 1847)</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/thermodynamics/first-law/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/first-law/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/thermodynamics/first-law/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/first-law/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

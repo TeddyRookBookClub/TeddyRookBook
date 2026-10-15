@@ -1,0 +1,54 @@
+/* Engines, Refrigerators and Heat Pumps: only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#th4-lab .lab-view canvas:focus{outline:none}
+#th4-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#th4-lab .lab-tools button{min-width:36px;min-height:36px}
+#th4-lab .lab-hud{max-width:calc(100% - 9.5rem)}
+#th4-lab .lab-hud sub{font-size:.75em}
+#th4-lab .lab-seg button{min-height:36px}
+#th4-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#th4-lab .lab-chk{min-height:36px;cursor:pointer}
+#th4-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#th4-lab .lab-btn{min-height:38px}
+#th4-lab .lab-readout dd{white-space:nowrap}
+#th4-lab .th4-small{font-weight:400;text-transform:none;letter-spacing:0}
+#th4-lab .lab-toast{top:4.2rem}
+#th4-lab .th4-mini{margin:.9rem 0 1rem}
+#th4-lab .th4-mini .lab-view{height:380px;min-height:0}
+#th4-lab #th4-hp .lab-view{height:360px}
+#th4-lab .th4-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1rem}
+#th4-lab .th4-row>*{min-width:0}
+#th4-lab .th4-grow{flex:1 1 240px}
+#th4-lab .th4-row .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#th4-lab .th4-row .lab-readout dd{white-space:normal}
+/* real engines against the limit */
+#th4-lab .th4-bars{display:grid;gap:.45rem;margin:.6rem 0 .5rem}
+#th4-lab .th4-bar{display:grid;grid-template-columns:minmax(0,19rem) minmax(0,1fr) 6.5rem;gap:.7rem;align-items:center;font-size:.9rem}
+#th4-lab .th4-track{position:relative;height:16px;border-radius:8px;background:var(--soft);overflow:hidden}
+#th4-lab .th4-track i{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:linear-gradient(90deg,#ff8787,#ffd479)}
+#th4-lab .th4-track i.lim{background:repeating-linear-gradient(135deg,rgba(116,192,252,.85) 0 6px,rgba(116,192,252,.45) 6px 12px)}
+#th4-lab .th4-track i.rng{left:auto;position:relative;display:block;height:100%;background:linear-gradient(90deg,#f9a8d4,#ff8787)}
+#th4-lab .th4-bar b{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+#th4-lab .th4-win{animation:th4win 1.2s ease-out}
+@keyframes th4win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#th4-lab .lab-sec ul{padding-left:1.3rem}
+#th4-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+#th4-lab .lab-formula{overflow-wrap:anywhere}
+#th4-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){#th4-lab .lab-hud{font-size:11px;padding:.3rem .5rem}}
+@media (max-width:640px){
+  #th4-lab .th4-bar{grid-template-columns:minmax(0,1fr) 5.8rem;gap:.15rem .6rem}
+  #th4-lab .th4-bar>span:first-child{grid-column:1 / -1}
+}
+@media (max-width:600px){
+  #th4-lab .lab-hud{max-width:calc(100% - 1.2rem);top:3.2rem}
+  #th4-lab .lab-toast{top:7.4rem;font-size:.82rem;max-width:84%}
+  #th4-lab .th4-mini .lab-view{height:420px}
+  #th4-lab #th4-hp .lab-view{height:520px}
+}
+@media (prefers-reduced-motion:reduce){#th4-lab .th4-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#th4-lab .th4-main{grid-template-rows:auto 1fr}
+#th4-lab .th4-main>.lab-view{grid-column:1;grid-row:1}
+#th4-lab .th4-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#th4-lab .th4-main>.th4-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#th4-lab .th4-main{grid-template-rows:none}#th4-lab .th4-main>.lab-view,#th4-lab .th4-main>.lab-panel,#th4-lab .th4-main>.th4-under{grid-column:auto;grid-row:auto}}

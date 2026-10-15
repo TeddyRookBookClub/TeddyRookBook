@@ -1,0 +1,250 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/newtons-laws/momentum/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/momentum/sim.css").ModTime.Unix }}">
+<div class="lab" id="nl5-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Newton’s Laws · Chapter 5</p>
+    <h1>{{ .Title }}</h1>
+    <p>Crash two gliders together on an air track. They might bounce apart, stick together, or one might stop dead while the other shoots off. Yet one number comes through every crash exactly the same: the total momentum. Newton called it the “quantity of motion.” Here you’ll find out why it never changes, where the missing energy goes when things stick, why a pillow saves an egg and a crumple zone saves a driver, and why two pool balls split at a right angle.</p>
+    <span class="lab-mark" aria-hidden="true">🎱</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="nl5-view">
+      <canvas id="nl5-cv" tabindex="0" aria-label="An air track with two gliders, A on the left and B on the right, with velocity arrows, and below it bar charts of momentum and kinetic energy before and after the collision and a graph of the contact force. Keys: Enter launches, Space pauses, Z replays the collision in slow motion, R resets."></canvas>
+      <div class="lab-hud" id="nl5-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" class="nl5-launch" id="nl5-go2" title="Launch (Enter)">▶ Launch</button>
+        <button type="button" id="nl5-replay" aria-label="Replay the collision in slow motion" title="Replay the hit in slow motion (Z)" disabled>⟲</button>
+        <button type="button" id="nl5-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="nl5-reset" aria-label="Reset" title="Reset (R)">↺</button>
+      </div>
+      <noscript><p class="nl5-noscript">This simulation needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Gliders</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made collisions" id="nl5-pre">
+        <button type="button" data-pre="stick" aria-pressed="false">Sticky</button>
+        <button type="button" data-pre="bounce" aria-pressed="false">Bouncy</button>
+        <button type="button" data-pre="heavy" aria-pressed="false">Heavy → light</button>
+        <button type="button" data-pre="head" aria-pressed="false">Head-on</button>
+      </div>
+      <div class="lab-field nl5-a"><span><label for="nl5-m1">Mass of A</label><output id="nl5-m1-o" for="nl5-m1"></output></span><input type="range" id="nl5-m1" min="0.1" max="2" step="0.05" value="0.4"></div>
+      <div class="lab-field nl5-a"><span><label for="nl5-v1">Velocity of A</label><output id="nl5-v1-o" for="nl5-v1"></output></span><input type="range" id="nl5-v1" min="-1" max="1.5" step="0.05" value="0.6"></div>
+      <div class="lab-field nl5-b"><span><label for="nl5-m2">Mass of B</label><output id="nl5-m2-o" for="nl5-m2"></output></span><input type="range" id="nl5-m2" min="0.1" max="2" step="0.05" value="0.4"></div>
+      <div class="lab-field nl5-b"><span><label for="nl5-v2">Velocity of B</label><output id="nl5-v2-o" for="nl5-v2"></output></span><input type="range" id="nl5-v2" min="-1.5" max="1" step="0.05" value="0"></div>
+      <div class="lab-field"><span><label for="nl5-e">Bounciness e</label><output id="nl5-e-o" for="nl5-e"></output></span><input type="range" id="nl5-e" min="0" max="1" step="0.05" value="1"></div>
+      <label class="lab-chk"><input type="checkbox" id="nl5-slowmo" checked> Slow motion at the collision</label>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="nl5-go">▶ Launch</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="nl5-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="nl5-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The air track.</b> Air blows out of tiny holes in the track, so the gliders float on a thin cushion of air with almost no friction. That matters: with no outside force pushing along the track, the gliders only push on each other. Velocities to the right are positive and to the left negative. Each glider has a spring bumper; set the bounciness to 0 and they get Velcro pads instead, so they stick.</p>
+      <p><b>The center of mass.</b> The white triangle under the track marks the balance point of the two gliders. Watch it during a crash: it glides at the same steady speed before, during and after, whatever the gliders do. That is momentum conservation you can see.</p>
+      <p><b>The bars.</b> Momentum bars point up for rightward momentum and down for leftward. The white “total” bar never changes. The kinetic energy bars are different: in a sticky or squashy crash, part of the energy disappears into heat, sound and bent bumpers, shown as the red striped part.</p>
+      <p><b>The force graph.</b> In slow motion you can watch the push between the gliders rise and fall during the 60 milliseconds they touch. The area under that curve is the impulse: exactly the momentum that moves from one glider to the other.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="science">
+    <h2>Momentum: Newton’s “quantity of motion”</h2>
+    <p>Momentum is mass times velocity. A loaded truck crawling along can have more momentum than a fast baseball. Because velocity has a direction, so does momentum: two equal gliders moving toward each other at the same speed have a total momentum of zero.</p>
+    <div class="u-big"><var>p</var> = <var>m v</var><small>momentum (kg·m/s) = mass (kg) × velocity (m/s), and it points the way the object moves</small></div>
+    <p>Newton put this idea near the very start of the <i>Principia</i>, as his second definition, before any of his laws:</p>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Quantitas motus est mensura ejusdem orta ex velocitate et quantitate materiæ conjunctim.</p>
+      <p class="u-en">“The Quantity of Motion is the measure of the same, arising from the velocity and quantity of matter conjunctly.”</p>
+      <cite>Isaac Newton, <i>Principia</i> (1687), Definition II; English from Andrew Motte’s translation (1729). Newton goes on: “in a body double in quantity, with equal velocity, the motion is double; with twice the velocity, it is quadruple.”</cite>
+    </div>
+    <h3 class="lab-h">Why it never changes in a collision</h3>
+    <div class="lab-cols">
+      <div>
+        <p>While the gliders touch, A pushes B with a force <var>F</var>, and by the third law B pushes A with −<var>F</var>: the same size, the opposite way, at every instant. They touch for the same time Δ<var>t</var>. So B gains momentum <var>F</var>Δ<var>t</var>, and A loses exactly the same amount. Add them up and nothing has changed:</p>
+        <div class="u-big"><var>m</var>₁<var>v</var>₁ + <var>m</var>₂<var>v</var>₂ = <var>m</var>₁<var>v</var>₁′ + <var>m</var>₂<var>v</var>₂′<small>total momentum before = total momentum after (primes mean “after”)</small></div>
+        <p>This is true for every collision of any two things, as long as nothing outside them pushes along the line of motion. It doesn’t matter whether they bounce, stick or crumple.</p>
+      </div>
+      <div>
+        <p><b>Energy is another story.</b> Kinetic energy, ½<var>mv</var>², is kept only in a perfectly <i>elastic</i> collision. In every other collision some of it turns into heat, sound and dents. The bounciness, or <i>coefficient of restitution</i>, measures how much:</p>
+        <div class="lab-formula"><var>e</var> = (speed they separate at) ÷ (speed they meet at) &nbsp; 0 = they stick, 1 = perfectly elastic</div>
+        <p>Momentum and <var>e</var> together give the result of any head-on collision:</p>
+        <div class="lab-formula"><var>v</var>₁′ = [(<var>m</var>₁ − <var>e m</var>₂)<var>v</var>₁ + (1 + <var>e</var>)<var>m</var>₂<var>v</var>₂] / (<var>m</var>₁ + <var>m</var>₂)<br><var>v</var>₂′ = [(1 + <var>e</var>)<var>m</var>₁<var>v</var>₁ + (<var>m</var>₂ − <var>e m</var>₁)<var>v</var>₂] / (<var>m</var>₁ + <var>m</var>₂)</div>
+        <p>The kinetic energy lost is ½μ<var>u</var>²(1 − <var>e</var>²), where <var>u</var> is the closing speed and μ = <var>m</var>₁<var>m</var>₂/(<var>m</var>₁ + <var>m</var>₂).</p>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: the same crash, sticky and bouncy</b>
+      <p>Glider A (0.40 kg) moves right at 0.60 m/s toward glider B (0.40 kg), which is at rest. Momentum before: 0.40 × 0.60 = 0.24 kg·m/s. Kinetic energy before: ½ × 0.40 × 0.60² = 0.072 J.</p>
+      <ul>
+        <li><b>Sticky</b> (<var>e</var> = 0): the pair moves off together at 0.24 / 0.80 = 0.30 m/s. Kinetic energy after: ½ × 0.80 × 0.30² = 0.036 J. Exactly half the energy is gone, but all the momentum is still there.</li>
+        <li><b>Elastic</b> (<var>e</var> = 1): A stops dead and B moves off at 0.60 m/s. Momentum: 0.24 kg·m/s. Energy: 0.072 J. Both kept.</li>
+      </ul>
+    </div>
+    <div class="u-ex"><b>Worked example: a football tackle</b>
+      <p>A 90 kg linebacker running at 5.0 m/s meets a 70 kg running back coming the other way at 6.0 m/s, and they grab each other. Take the linebacker’s direction as positive: total momentum = 90 × 5.0 − 70 × 6.0 = 450 − 420 = +30 kg·m/s. Together they are 160 kg, so right after the hit they move at 30 / 160 = 0.19 m/s in the linebacker’s direction. The running back is driven backward, even though he was faster, because the linebacker had more momentum.</p>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> Press “Heavy → light” and launch. The 1.6 kg glider hardly slows down, and the 0.2 kg glider shoots away at nearly twice its speed. Then swap the masses: now the light glider bounces back from the heavy one, like a ball off a wall.</div>
+  <div class="lab-try"><b>Try this:</b> In a sticky collision, watch the kinetic energy bars during the slow-motion part. The energy dips while the Velcro squashes and never comes back. Set the bounciness to 1 and the dip refills completely: the springs give all of it back.</div>
+
+  <div class="u-myth"><b>Common mistake: “When things stop or stick, momentum is lost”</b>
+    <p>It is kinetic energy that gets lost, never momentum. When two equal gliders racing toward each other stick and stop, their momentum was zero before the crash: +0.24 and −0.24 add to zero. All their kinetic energy turned into heat and sound, but the total momentum was zero before and is zero after. A second mistake: “the heavy glider hits harder.” By the third law, the two forces are equal at every instant. The light glider’s velocity changes more only because it has less mass.</p>
+  </div>
+
+  <section class="lab-sec" id="impulse">
+    <h2>Impulse: the same stop, a gentler force</h2>
+    <p>To stop something, you must take away all its momentum. Push with force <var>F</var> for a time Δ<var>t</var> and you change its momentum by <var>F</var>Δ<var>t</var>, called the <i>impulse</i>. On a force–time graph, the impulse is the area under the curve.</p>
+    <div class="u-big"><var>F</var><sub>avg</sub> Δ<var>t</var> = Δ<var>p</var><small>average force (N) × time it acts (s) = change in momentum (kg·m/s)</small></div>
+    <p>The momentum you have to remove is fixed by the mass and the speed. So the only way to make the force smaller is to make the stop last longer. A stop that lasts ten times longer needs a force ten times smaller.</p>
+    <div class="lab-stage" id="nl5i">
+      <div class="lab-view nl5-short" id="nl5i-view">
+        <canvas id="nl5i-cv" aria-label="Two side-by-side stops: an egg dropped on a hard floor and on a cushion, or a car without and with a crumple zone hitting a wall, with a force–time graph of both stops below. Use the controls beside the picture; the table lists the numbers."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Compare two stops</h3>
+        <div class="lab-seg" role="group" aria-label="What to stop" id="nl5i-mode">
+          <button type="button" data-mode="egg" aria-pressed="true">🥚 Egg drop</button>
+          <button type="button" data-mode="car" aria-pressed="false">🚗 Car crash</button>
+        </div>
+        <div class="lab-field"><span><label for="nl5i-d" id="nl5i-d-l">How far the cushion squashes</label><output id="nl5i-d-o" for="nl5i-d"></output></span><input type="range" id="nl5i-d" min="0.005" max="0.15" step="0.005" value="0.03"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="nl5i-go">▶ Go</button></div>
+        <div class="lab-tw"><table class="lab-table nl5-tab" id="nl5i-tab"></table></div>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: an egg on a floor and on a pillow</b>
+      <p>A 60 g egg falls 1.0 m. It lands at <var>v</var> = √(2<var>gh</var>) = √(2 × 9.81 × 1.0) = 4.43 m/s, so it carries <var>p</var> = 0.060 × 4.43 = 0.266 kg·m/s of momentum that has to be taken away.</p>
+      <ul>
+        <li><b>Hard floor:</b> if the floor stops it within about 2 mm, the stop takes Δ<var>t</var> = 2<var>d</var>/<var>v</var> = 0.90 ms. Average force: 0.266 / 0.000903 = 294 N, about 500 times the egg’s own weight.</li>
+        <li><b>Pillow:</b> if the pillow squashes 10 cm, the stop takes 45 ms. Average force: 0.266 / 0.045 = 5.9 N. The impulse is the same; the force is 50 times smaller.</li>
+      </ul>
+      <p>(For a steady force, the stopping time is Δ<var>t</var> = 2<var>d</var>/<var>v</var>, because the average speed during the stop is <var>v</var>/2.) Please try this one on screen only.</p>
+    </div>
+    <h3 class="lab-h">Crumple zones, seat belts and airbags</h3>
+    <div class="lab-cols">
+      <p>A car that hits a wall at 50 km/h (31 mph) has to lose all its momentum. If its front were rigid and crushed only 10 cm, the stop would take 14 ms, and everything inside would slow down at about 100 times the strength of gravity (100 <var>g</var>). Modern cars have crumple zones: the front is built to fold up in a controlled way, so the cabin stops over a much longer distance. In this model, a 0.6 m crumple makes the stop last 86 ms and brings the average down to 16 <var>g</var>.</p>
+      <p>A seat belt makes you ride down with the car, using its crumple zone, instead of hitting the dashboard or windshield at full speed a moment later. The belt also stretches a little, and an airbag adds a soft, wide cushion. Each adds stopping time and spreads the force over strong parts of the body. The U.S. National Highway Traffic Safety Administration says that for front-seat passenger-car occupants, buckling up cuts the risk of being killed in a crash by 45%, and that seat belts saved an estimated 14,955 lives in 2017. It also says airbags are designed to work with seat belts, not replace them.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="pool">
+    <h2>Two dimensions: why pool balls split at a right angle</h2>
+    <p>Momentum has a direction, so in two dimensions it is conserved in each direction separately. When a moving ball hits an equal ball at rest, off-center and perfectly elastically, something neat happens: the two leave at exactly 90° to each other. Drag back from the white ball to aim and set the speed, then let go. Or tap where you want it to go and press Shoot. The faint lines predict where each ball will go.</p>
+    <div class="lab-stage" id="nl5b">
+      <div class="lab-view nl5-short" id="nl5b-view">
+        <canvas id="nl5b-cv" tabindex="0" aria-label="A pool table with a white ball and a gold ball. Drag back from the white ball like a slingshot and let go to shoot. Keys: left and right arrows aim, up and down change the speed, Space shoots, R resets the balls."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Table</h3>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="nl5b-shoot">● Shoot</button><button type="button" class="lab-btn" id="nl5b-reset">↺ Reset</button><button type="button" class="lab-btn" id="nl5b-new">🎲 New layout</button></div>
+        <div class="lab-field"><span><label for="nl5b-e">Ball bounciness e</label><output id="nl5b-e-o" for="nl5b-e">1.00 (ideal)</output></span><input type="range" id="nl5b-e" min="0.5" max="1" step="0.01" value="1"></div>
+        <dl class="lab-readout" id="nl5b-read"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="nl5b-missions"></ol>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <p><b>The proof is Pythagoras.</b> For two equal masses, the mass cancels from both conservation laws. With <b>v</b> the white ball’s velocity before, and <b>v</b>₁′, <b>v</b>₂′ the two velocities after:</p>
+        <div class="lab-formula">momentum: <b>v</b> = <b>v</b>₁′ + <b>v</b>₂′ &nbsp;&nbsp; energy: <var>v</var>² = <var>v</var>₁′² + <var>v</var>₂′²</div>
+        <p>The first says the three arrows form a triangle. The second says its sides obey Pythagoras’ theorem. So the triangle has a right angle between <b>v</b>₁′ and <b>v</b>₂′. Hit dead center and one side shrinks to zero: the white ball stops and the gold one takes all the speed, just like the gliders.</p>
+      </div>
+      <p><b>On a real table</b>, pool balls lose a little energy in each hit, and the white ball is usually rolling, so its spin bends its path a moment after the hit. The 90° rule works best for a ball that is sliding without spin when it hits. Lower the bounciness slider and the angle closes to less than 90°.</p>
+    </div>
+    <p><b>Newton’s cradle</b> works on the same two rules. Pull back one steel ball and let it go: one ball flies out the far end at the same speed. Why not two balls at half speed? That would carry the same momentum, but only half the kinetic energy. Steel balls lose very little energy, so the only way to keep both is one in, one out.</p>
+  </section>
+
+  <section class="lab-sec" id="rockets">
+    <h2>Rockets: pushing on what you throw away</h2>
+    <div class="lab-cols">
+      <p>A rocket in space has nothing to push against, yet it speeds up. It works by throwing hot gas out of its nozzle very fast. The gas gets momentum backward, so the rocket must get the same amount forward: the total stays what it was. A skater who throws a heavy ball while standing on ice glides backward the same way.</p>
+      <p>As the fuel burns, the rocket gets lighter, so each kilogram of exhaust speeds it up more. Adding it all up gives the rocket equation, Δ<var>v</var> = <var>u</var> ln(<var>m</var>₀/<var>m</var>), where <var>u</var> is the exhaust speed and <var>m</var>₀/<var>m</var> is the starting mass divided by the final mass. With exhaust leaving at 3 km/s and two thirds of the starting mass as fuel, Δ<var>v</var> = 3 × ln 3 = 3.3 km/s. Build and fly your own in the <a href="{{ "games/rocket/" | relURL }}">Rocket Builder</a>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <div class="lab-cols">
+      <p>René Descartes argued in the 1640s that the total “quantity of motion” in the world stays the same, but he measured it as size times speed, ignoring direction, and that doesn’t work. In 1668 the Royal Society in London asked for papers on how bodies collide, and John Wallis, Christopher Wren and Christiaan Huygens each sent in rules. Newton credits all three in the <i>Principia</i>.</p>
+      <p>Newton tested the rules himself, by hanging balls as pendulums, letting them swing into each other, and judging their speeds from how far they swung. For balls of tightly wound wool, he found they bounced apart at about 5/9 of the speed they met at; for glass balls, about 15/16. That ratio is the bounciness <var>e</var> on your slider.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <div class="lab-cols">
+      <p><b>Cars.</b> Crash tests, crumple zones, seat belts, airbags and the water-filled barrels in front of highway pillars are all impulse at work. The <a href="{{ "trades/cars/" | relURL }}">cars course</a> shows how the rest of a car works.</p>
+      <p><b>Sports.</b> Catching a fast ball, you pull your hands back to make the stop last longer. A gymnast lands on a thick mat for the same reason. A bat or racket does the opposite: its large mass and speed hand a lot of momentum to the ball in a very short time.</p>
+      <p><b>Space.</b> Rockets, and the small thrusters that turn spacecraft, all work by throwing mass one way to go the other. See <a href="{{ "games/orbits/" | relURL }}">Orbit Lab</a> for what happens next.</p>
+      <p><b>Pool and bowling.</b> Every break shot and every strike is a chain of collisions, each one passing momentum along. Players who aim cut shots are using the 90° rule from the table above.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The air track.</b> Each glider moves at a constant velocity until the bumpers touch. The contact is a smooth push that rises and falls like half a sine wave over 60 ms, with its area set to the impulse that the momentum and bounciness formulas require. The same force acts on both gliders in opposite directions, so the total momentum is the same at every instant. The motion during contact has an exact formula, so nothing is approximated step by step. Real bumpers don’t push in a perfect half sine, but any shape with the same area gives the same final velocities.</p>
+      <p><b>The crash stops.</b> Each stop uses the same half-sine force, lasting Δ<var>t</var> = 2<var>d</var>/<var>v</var> for a stopping distance <var>d</var>; its peak is π/2 times the average. The distances (2 mm for a floor, 10 cm for a rigid car front) are round numbers chosen to show the idea, not measurements. The egg cracks when the average force tops 25 N, a rough line, since real eggs vary a lot.</p>
+      <p><b>The pool table.</b> Balls are 57 mm smooth discs of equal mass. Collisions are instant and along the line joining the centers, so no spin is passed on. A gentle steady slowdown stands in for rolling resistance, and the cushions return 80% of the speed.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, all passed):</p>
+        <ul class="lab-small">
+          <li>1,000 random collisions: momentum conserved to 2 × 10⁻¹⁵ kg·m/s; kinetic energy lost matches ½μ<var>u</var>²(1 − <var>e</var>²) to 10⁻¹⁴ J.</li>
+          <li>OpenStax Example 9.11 (a 12 g puck at 2.5 m/s hits a 15 g puck at rest): 2.22 and −0.28 m/s, as in the book.</li>
+          <li>On the air track, total momentum stayed fixed to 6 × 10⁻¹⁷ kg·m/s through every frame of a collision, and the gliders left with exactly the formula velocities. The area under the force curve equals the impulse to 3 × 10⁻¹⁰ N·s.</li>
+          <li>500 random glancing hits of equal balls: the paths separate at 90° within 3 × 10⁻¹²°; with <var>e</var> = 0.8 the angle shrinks (80.5° in one test).</li>
+          <li>Integrating the half-sine stop step by step covers the stopping distance to 4 × 10⁻¹² m and ends at rest.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>A 2 kg cart moving at 3 m/s hits a 1 kg cart at rest and they stick. How fast do they move together?</p>
+        <ul class="u-opts"><li><button type="button">3 m/s</button></li><li><button type="button">1.5 m/s</button></li><li><button type="button">2 m/s</button></li><li><button type="button">1 m/s</button></li></ul>
+        <details><summary>Show the answer</summary><p>Momentum before: 2 × 3 = 6 kg·m/s. After, 3 kg share it: 6 / 3 = 2 m/s.</p></details></li>
+      <li class="u-q" data-a="1"><p>In that sticky collision, what happened to the kinetic energy?</p>
+        <ul class="u-opts"><li><button type="button">It stayed the same, like momentum</button></li><li><button type="button">A third of it turned into heat and sound</button></li><li><button type="button">All of it was lost</button></li></ul>
+        <details><summary>Show the answer</summary><p>Before: ½ × 2 × 3² = 9 J. After: ½ × 3 × 2² = 6 J. So 3 J, a third, became heat, sound and deformation.</p></details></li>
+      <li class="u-q" data-a="0"><p>A truck and a small car collide head-on. Which feels the bigger force?</p>
+        <ul class="u-opts"><li><button type="button">Neither: the forces are equal and opposite</button></li><li><button type="button">The car</button></li><li><button type="button">The truck</button></li></ul>
+        <details><summary>Show the answer</summary><p>Newton’s third law: the forces are equal at every instant. The car’s velocity changes much more because its mass is smaller, which is why it is far more dangerous to be in the car.</p></details></li>
+      <li class="u-q" data-a="2"><p>Why does an airbag reduce the force on a passenger?</p>
+        <ul class="u-opts"><li><button type="button">It reduces the passenger’s momentum before the crash</button></li><li><button type="button">It pushes the passenger backward</button></li><li><button type="button">It makes the stop take longer, so the same Δp needs a smaller force</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>F</var><sub>avg</sub> = Δ<var>p</var>/Δ<var>t</var>. The change in momentum is fixed by the passenger’s mass and speed; a longer, softer stop shrinks the force.</p></details></li>
+      <li class="u-q" data-a="1"><p>A white pool ball hits an identical ball at rest, off-center. Ignoring spin and energy loss, the two balls leave…</p>
+        <ul class="u-opts"><li><button type="button">in the same direction</button></li><li><button type="button">at 90° to each other</button></li><li><button type="button">at 45° to each other</button></li><li><button type="button">in opposite directions</button></li></ul>
+        <details><summary>Show the answer</summary><p>For equal masses, keeping both momentum and kinetic energy makes the velocity arrows form a right triangle, so the paths split at 90°.</p></details></li>
+      <li class="u-q" data-a="0"><p>An astronaut floating in space throws a wrench away from herself. What happens to her?</p>
+        <ul class="u-opts"><li><button type="button">She drifts the opposite way, with momentum equal and opposite to the wrench’s</button></li><li><button type="button">Nothing, because there is nothing to push against</button></li><li><button type="button">She follows the wrench</button></li></ul>
+        <details><summary>Show the answer</summary><p>The total momentum was zero and stays zero. The wrench’s momentum one way is balanced by hers the other way. She has more mass, so she moves more slowly. That is exactly how a rocket works.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/9-2-impulse-and-collisions" target="_blank" rel="noopener">University Physics Volume 1, 9.2 Impulse and Collisions</a>: impulse, the impulse–momentum theorem, airbags and seat belts.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/9-4-types-of-collisions" target="_blank" rel="noopener">9.4 Types of Collisions</a>: elastic, inelastic and perfectly inelastic collisions; Example 9.11.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/9-5-collisions-in-multiple-dimensions" target="_blank" rel="noopener">9.5 Collisions in Multiple Dimensions</a>: momentum conserved in each direction.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/9-7-rocket-propulsion" target="_blank" rel="noopener">9.7 Rocket Propulsion</a>: the rocket equation.</li>
+      <li>National Highway Traffic Safety Administration, <a href="https://www.nhtsa.gov/vehicle-safety/seat-belts" target="_blank" rel="noopener">Seat Belts</a>: the 45% figure, 14,955 lives saved in 2017, airbags work with seat belts.</li>
+      <li>I. Newton, <i>Philosophiæ Naturalis Principia Mathematica</i> (London, 1687), <a href="https://archive.org/details/philosophiaenat00newt" target="_blank" rel="noopener">scan at the Internet Archive</a>: Definition II. A. Motte, <i>The Mathematical Principles of Natural Philosophy</i> (London, 1729), <a href="https://archive.org/details/bub_gb_Tm0FAAAAQAAJ" target="_blank" rel="noopener">scan at the Internet Archive</a>: Definition II and the Scholium after the laws of motion.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/newtons-laws/momentum/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/momentum/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/newtons-laws/momentum/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/momentum/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,78 @@
+/* Newton's Laws of Motion, the unit hub: only what this page adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#nlh-lab .nlh-hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:1.2rem;align-items:center;padding:1.4rem 1.4rem 1.4rem 1.6rem}
+#nlh-lab .nlh-hero h1{font-size:2.4rem}
+#nlh-lab .nlh-hero-text>p:not(.lab-eyebrow){margin:.2rem 0 0}
+#nlh-lab .nlh-cta{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-top:1rem !important}
+#nlh-lab .nlh-go{display:inline-flex;align-items:center;min-height:42px;padding:.45rem 1rem;border-radius:12px;background:#ffd479;color:#1d2320;font:700 .95rem system-ui,sans-serif;text-decoration:none;box-shadow:0 3px 12px rgba(0,0,0,.2)}
+#nlh-lab .nlh-go:hover{background:#ffe3a3}
+#nlh-lab .nlh-link{color:#f3dfa3;font-weight:600}
+#nlh-lab .nlh-cradle{margin:0;background:#06111a;border-radius:14px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+#nlh-lab .nlh-cradle canvas{display:block;width:100%;height:300px;touch-action:none;cursor:default}
+#nlh-lab .nlh-cradle canvas:focus{outline:none}
+#nlh-lab .nlh-cradle canvas:focus-visible{outline:2px solid #63e6be;outline-offset:-2px}
+#nlh-lab .nlh-cradle figcaption{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.4rem;padding:.45rem .6rem .55rem;font:600 .82rem system-ui,sans-serif;color:#8fb3c6;border-top:1px solid rgba(120,170,200,.18)}
+#nlh-lab .nlh-lift{display:flex;flex-wrap:wrap;gap:.3rem}
+#nlh-lab .nlh-lift button{min-height:36px;min-width:36px;padding:.2rem .6rem;border-radius:999px;border:1px solid rgba(120,170,200,.35);background:#0b1b27;color:#dbe7ef;font:600 .78rem system-ui,sans-serif;cursor:pointer}
+#nlh-lab .nlh-lift button:hover{border-color:#63e6be}
+#nlh-lab .nlh-lift button[aria-pressed="true"]{border-color:#63e6be;color:#63e6be}
+/* the three laws */
+#nlh-lab .nlh-laws{display:grid;gap:.9rem;margin:.6rem 0 .5rem}
+#nlh-lab .nlh-law{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1rem;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem}
+#nlh-lab .nlh-law .u-quote{margin:0}
+#nlh-lab .nlh-law-main>p{margin:.35rem 0}
+#nlh-lab .nlh-law-n{display:flex;align-items:center;gap:.55rem;font:700 .78rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 .35rem !important}
+#nlh-lab .nlh-law-n span{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:50%;background:#004225;color:#ffd479;font:700 1.05rem Georgia,serif;letter-spacing:0}
+html[data-theme="dark"] #nlh-lab .nlh-law-n span{background:#6cc79a;color:#0f1a14}
+#nlh-lab .nlh-eq{font:1.2rem/1.4 "Cambria Math","STIX Two Math",Georgia,serif;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.4rem .7rem;margin:.5rem 0;display:inline-block}
+#nlh-lab .nlh-ex{color:var(--muted);font-size:.93rem}
+#nlh-lab .nlh-pic{display:block;width:100%;max-width:300px;height:auto;margin:.1rem 0 .3rem;background:#06111a;border-radius:10px}
+#nlh-lab .nlh-pic .nlh-ice{stroke:#74c0fc;stroke-width:2}
+#nlh-lab .nlh-pic .nlh-dots circle{fill:#ffd479;opacity:.7}
+#nlh-lab .nlh-pic .nlh-puck{fill:#dbe7ef}
+#nlh-lab .nlh-pic .nlh-v{stroke:#fff;stroke-width:2.5}
+#nlh-lab .nlh-pic .nlh-vh{fill:#fff}
+#nlh-lab .nlh-pic .nlh-f{stroke:#63e6be;stroke-width:3.5}
+#nlh-lab .nlh-pic .nlh-fh{fill:#63e6be}
+#nlh-lab .nlh-pic .nlh-cart{fill:#3d8ec9}
+#nlh-lab .nlh-pic .nlh-wh{fill:#0d1a24;stroke:#8fb3c6;stroke-width:1.5}
+#nlh-lab .nlh-pic .nlh-sk circle{fill:#f9a8d4}
+#nlh-lab .nlh-pic .nlh-sk path{stroke:#f9a8d4;stroke-width:4;stroke-linecap:round;fill:none}
+#nlh-lab .nlh-pic .nlh-skb circle{fill:#74c0fc}
+#nlh-lab .nlh-pic .nlh-skb path{stroke:#74c0fc}
+/* key equations and the "elsewhere" cards */
+#nlh-lab .nlh-eqs,#nlh-lab .nlh-more{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:.75rem;margin:.6rem 0}
+#nlh-lab .nlh-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;display:flex;flex-direction:column;gap:.25rem}
+#nlh-lab .nlh-card p{margin:0;font-size:.9rem;line-height:1.5;color:var(--muted)}
+#nlh-lab .nlh-card>b{font:700 1rem Georgia,serif;color:var(--acc)}
+#nlh-lab .nlh-card>a{font-size:.85rem;font-weight:600;margin-top:auto;padding-top:.3rem}
+#nlh-lab .nlh-f2{font:1.25rem/1.4 "Cambria Math","STIX Two Math",Georgia,serif;color:var(--ink);padding:.3rem 0 .35rem;border-bottom:1px dashed var(--line);margin-bottom:.3rem}
+#nlh-lab .nlh-go2{display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:.15rem .7rem;text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.05);color:var(--ink);transition:transform .15s,border-color .15s}
+#nlh-lab .nlh-go2:hover{transform:translateY(-2px);border-color:var(--acc)}
+#nlh-lab .nlh-go2 .nlh-ic{grid-row:span 2;font-size:2rem;line-height:1}
+#nlh-lab .nlh-go2 b{font:700 1.05rem Georgia,serif;color:var(--acc)}
+#nlh-lab .nlh-go2>span:last-child{color:var(--muted);font-size:.9rem;line-height:1.45}
+/* history */
+#nlh-lab .nlh-time{list-style:none;margin:.4rem 0 1rem;padding:0 0 0 1.2rem;border-left:3px solid var(--line)}
+#nlh-lab .nlh-time li{position:relative;margin:0 0 .8rem}
+#nlh-lab .nlh-time li::before{content:"";position:absolute;left:-1.62rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px var(--card)}
+#nlh-lab .nlh-time li>b{display:block;font:700 .8rem system-ui,sans-serif;letter-spacing:.08em;color:var(--gt);text-transform:uppercase}
+#nlh-lab .nlh-time li p{margin:.1rem 0 0}
+#nlh-lab .nlh-gwid{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem .95rem;display:flex;flex-direction:column;gap:.55rem;margin:.6rem 0}
+#nlh-lab .nlh-gwid .lab-seg button{min-height:36px}
+#nlh-lab .nlh-gwid input[type=range]{min-height:36px;margin:0}
+#nlh-lab .nlh-gwid .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#nlh-lab .nlh-gwid .lab-small{margin:0}
+#nlh-lab .nlh-track{height:10px;border-radius:6px;background:var(--paper);border:1px solid var(--line);overflow:hidden}
+#nlh-lab .nlh-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,#63e6be,#ffd479,#ff8787);border-radius:6px}
+#nlh-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #nlh-lab .nlh-hero{grid-template-columns:1fr}
+  #nlh-lab .nlh-cradle{order:-1}
+  #nlh-lab .nlh-hero h1{font-size:1.9rem}
+  #nlh-lab .nlh-law{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  #nlh-lab .nlh-hero{padding:1.1rem 1rem}
+  #nlh-lab .nlh-cradle canvas{height:230px}
+}
+@media (prefers-reduced-motion:reduce){#nlh-lab .nlh-go2{transition:none}#nlh-lab .nlh-go2:hover{transform:none}}

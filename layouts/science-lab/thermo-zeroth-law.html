@@ -1,0 +1,322 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/thermodynamics/zeroth-law/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/zeroth-law/sim.css").ModTime.Unix }}">
+<div class="lab" id="th1-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Thermodynamics · Chapter 1</p>
+    <h1>{{ .Title }}</h1>
+    <p>Pour hot cocoa into a cold mug. A minute later the mug is warm and the cocoa a little cooler. Wait long enough and they always end up at the same temperature. That plain fact is the zeroth law of thermodynamics, and it is the reason a thermometer can work at all. Here you’ll press blocks of copper, iron, granite, water and wood together, watch the heat flow from hot to cold, and learn to predict exactly where the temperatures will meet.</p>
+    <span class="lab-mark" aria-hidden="true">🌡️</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="th1-view">
+      <canvas id="th1-cv" tabindex="0" aria-label="Blocks of different materials on an insulating bench, colored like a thermal camera: blue is cold, red is warm, gold is hot. Press Touch, or Space with the canvas selected, to push them together and watch heat flow from hot to cold. Drag the thermometer into a block, or press T to move it. Below: a graph of each block's temperature over time and an energy ledger. Keys: Space touch or pull apart, T thermometer, M microscope, 1 2 3 choose a block, arrow keys change its starting temperature, P pause."></canvas>
+      <div class="lab-hud" id="th1-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="th1-pause" aria-label="Pause" title="Pause (P)">❚❚</button>
+        <button type="button" id="th1-reset" aria-label="Start this setup again" title="Start again">↺</button>
+      </div>
+    </div>
+
+    <div class="lab-panel" id="th1-panel">
+      <h3 id="th1-pre-h">Setups</h3>
+      <div class="lab-seg" id="th1-presets" role="group" aria-labelledby="th1-pre-h">
+        <button type="button" data-pre="hot" aria-pressed="true">Hot &amp; cold</button>
+        <button type="button" data-pre="water" aria-pressed="false">Iron &amp; water</button>
+        <button type="button" data-pre="three" aria-pressed="false">Three blocks</button>
+        <button type="button" data-pre="race" aria-pressed="false">Race</button>
+      </div>
+      <button type="button" class="lab-btn pri th1-touchbtn" id="th1-touch">Touch ▸◂</button>
+
+      <h3 id="th1-blk-h">Blocks</h3>
+      <div class="lab-seg th1-nb" id="th1-nb" role="group" aria-label="Number of blocks">
+        <button type="button" data-nb="2" aria-pressed="true">2 blocks</button>
+        <button type="button" data-nb="3" aria-pressed="false">3 blocks</button>
+      </div>
+      <div class="lab-seg th1-tabs" id="th1-tabs" role="group" aria-label="Choose a block to change">
+        <button type="button" data-b="0" aria-pressed="true"><i class="th1-sw th1-sw0"></i>A</button>
+        <button type="button" data-b="1" aria-pressed="false"><i class="th1-sw th1-sw1"></i>B</button>
+        <button type="button" data-b="2" aria-pressed="false"><i class="th1-sw th1-sw2"></i>C</button>
+      </div>
+      <label class="lab-field"><span>Material</span>
+        <select id="th1-mat" aria-label="Material of the chosen block">
+          <option value="copper">Copper · c = 387 J/(kg·K)</option>
+          <option value="aluminum">Aluminum · c = 900</option>
+          <option value="iron">Iron · c = 452</option>
+          <option value="granite">Granite · c = 840</option>
+          <option value="water">Water (stirred) · c = 4186</option>
+          <option value="wood">Wood (oak) · c = 1700</option>
+        </select>
+      </label>
+      <label class="lab-field"><span>Mass <output id="th1-m-o">1.0 kg</output></span><input type="range" id="th1-m" min="0.1" max="5" step="0.1" value="1" aria-label="Mass of the chosen block in kilograms"></label>
+      <label class="lab-field"><span>Starting temperature <output id="th1-t-o">90 °C</output></span><input type="range" id="th1-t" min="0" max="100" step="1" value="90" aria-label="Starting temperature of the chosen block in degrees Celsius"></label>
+
+      <h3 id="th1-th-h">Thermometer</h3>
+      <div class="lab-seg" id="th1-probe" role="group" aria-labelledby="th1-th-h">
+        <button type="button" data-p="-1" aria-pressed="true">In the air</button>
+        <button type="button" data-p="0" aria-pressed="false">In A</button>
+        <button type="button" data-p="1" aria-pressed="false">In B</button>
+        <button type="button" data-p="2" aria-pressed="false">In C</button>
+      </div>
+      <label class="lab-field th1-guess"><span>Your guess for the final temperature</span>
+        <span class="th1-guess-row"><input type="number" id="th1-guess" min="0" max="100" step="0.1" inputmode="decimal" placeholder="°C" aria-label="Your guess for the final temperature in degrees Celsius"> <small>°C, before you press Touch</small></span>
+      </label>
+      <label class="lab-chk"><input type="checkbox" id="th1-micro"> Microscope at the boundary</label>
+      <div class="lab-field"><span id="th1-sp-h">Clock speed</span>
+        <div class="lab-seg" id="th1-speed" role="group" aria-labelledby="th1-sp-h">
+          <button type="button" data-s="auto" aria-pressed="true">Auto</button>
+          <button type="button" data-s="1" aria-pressed="false">Real time</button>
+          <button type="button" data-s="60" aria-pressed="false">1 min/s</button>
+          <button type="button" data-s="3600" aria-pressed="false">1 h/s</button>
+        </div>
+      </div>
+
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="th1-read" aria-live="off">
+        <dt>Block A</dt><dd id="th1-r0">—</dd>
+        <dt>Block B</dt><dd id="th1-r1">—</dd>
+        <dt class="th1-rc">Block C</dt><dd class="th1-rc" id="th1-r2">—</dd>
+        <dt>Thermometer</dt><dd id="th1-rp">—</dd>
+        <dt>Heat flowing</dt><dd id="th1-rq">—</dd>
+        <dt>Σ m c T ÷ Σ m c</dt><dd id="th1-rf">—</dd>
+        <dt>Time</dt><dd id="th1-rt">—</dd>
+      </dl>
+
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="th1-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The blocks.</b> Each block is drawn to scale for its mass and density, so a kilogram of copper is a small cube and a kilogram of wood is a big one. Their colors work like a thermal camera: <span class="th1-cold">blue</span> at 0 °C, through gray-violet, to <span class="th1-hot">red</span> and <span class="th1-gold">gold</span> at 100 °C. Solid blocks are cut into thin slices, so you can see heat soak in from the touching face. The water is stirred, so it has one temperature all the way through.</p>
+      <p><b>The arrow and the sparks.</b> When blocks touch, a glowing arrow appears at each boundary. It always points from hot to cold, and it grows with the rate of heat flow, in watts (joules per second). The sparks are packets of energy crossing over. Turn on the microscope to see atoms on each side jiggling: faster on the hot side, slower on the cold side.</p>
+      <p><b>The graph and the ledger.</b> The graph shows each block’s average temperature over time; the dashed gold line is where they will all meet. The ledger shows how much energy each block has gained (red, to the right) or lost (blue, to the left). Add up the bars and you always get zero: energy moves around but none is made or lost.</p>
+      <p><b>The clock.</b> Heat is slow. Copper blocks settle in about a minute, but wood can take a whole day. On <i>Auto</i>, the clock speeds up when little is happening and slows down when things change fast, such as when you dip in the thermometer. The time in the corner is the real time it would take.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="science">
+    <h2>Heat and temperature</h2>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Temperature</h3>
+        <p>Temperature is how hot or cold something is: the number a thermometer reads. Deep down, it measures how hard the atoms and molecules are jiggling. In a gas, the average kinetic energy of a molecule’s motion is</p>
+        <div class="lab-formula">K<sub>avg</sub> = (3/2) <var>k</var><sub>B</sub> <var>T</var></div>
+        <p>where <var>T</var> is the temperature in kelvins and <var>k</var><sub>B</sub> is the Boltzmann constant. In a solid, the atoms can’t wander, but they vibrate about their places, more strongly the hotter it is.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Heat</h3>
+        <p><i>Heat</i> is energy on the move because of a temperature difference. It flows by itself only from hotter to colder. Once something has warmed up, we don’t say it “contains heat”; it has more <i>internal energy</i>, the total energy of all its jiggling particles. Heat is energy in transit, the way rain is water in transit before it’s part of the lake.</p>
+        <p>So heat and temperature are different things. A bathtub of warm water has far more internal energy than a cup of boiling water, but if you pour the cup into the tub, heat flows from the cup to the tub, because the cup is hotter.</p>
+      </div>
+    </div>
+
+    <h3 class="lab-h">The zeroth law</h3>
+    <p>Two things are in <i>thermal equilibrium</i> when no heat flows between them even though it could. Put any two things in contact and they head toward equilibrium. The zeroth law says equilibrium can be passed along:</p>
+    <div class="u-big">If A and C are in thermal equilibrium, and B and C are in thermal equilibrium, then A and B are in thermal equilibrium.<small>Things in thermal equilibrium have the same temperature, and things at the same temperature are in equilibrium.</small></div>
+    <p>It sounds too obvious to need saying, but everything rests on it. It’s why a temperature is a single number you can compare between things. Let C be a thermometer: dip it in A, wait until it stops changing, and it reads A’s temperature. Dip it in B and get the same reading, and you know, without ever touching them together, that no heat will flow between A and B. That’s the <i>Zeroth law</i> mission.</p>
+    <p>The law was used for centuries before anyone stated it as a law. By the 1930s the first, second and third laws already had their numbers, yet this idea comes before them all, so the British physicist Ralph Fowler suggested calling it the <i>zeroth</i> law. The name appears in print in the book <i>Statistical Thermodynamics</i> by Fowler and Edward Guggenheim (1939).</p>
+
+    <h3 class="lab-h">Specific heat: why water is stubborn</h3>
+    <p>The heat <var>Q</var> needed to change the temperature of a mass <var>m</var> by Δ<var>T</var> is</p>
+    <div class="lab-formula"><var>Q</var> = <var>m c</var> Δ<var>T</var> &nbsp;&nbsp;<span class="lab-small">Q in joules (J), m in kilograms (kg), ΔT in kelvins or °C (the same size), c in J/(kg·K)</span></div>
+    <p>The <i>specific heat</i> <var>c</var> is the energy it takes to warm one kilogram by one degree. Water’s is huge: 4186 J/(kg·K), more than ten times copper’s. A kilogram of water soaks up the same heat as 10.8 kg of copper for the same rise in temperature.</p>
+    <div class="lab-tw"><table class="lab-table th1-ctable">
+      <thead><tr><th>Substance</th><th>c, J/(kg·K)</th><th>Energy to warm 1 kg by 10 °C</th></tr></thead>
+      <tbody>
+        <tr><td>Water (liquid, 15 °C)</td><td>4186</td><td>41.9 kJ</td></tr>
+        <tr><td>Human body (average)</td><td>3500</td><td>35.0 kJ</td></tr>
+        <tr><td>Wood</td><td>1700</td><td>17.0 kJ</td></tr>
+        <tr><td>Aluminum</td><td>900</td><td>9.0 kJ</td></tr>
+        <tr><td>Glass; granite and concrete (average)</td><td>840</td><td>8.4 kJ</td></tr>
+        <tr><td>Iron, steel</td><td>452</td><td>4.5 kJ</td></tr>
+        <tr><td>Copper</td><td>387</td><td>3.9 kJ</td></tr>
+        <tr><td>Gold</td><td>129</td><td>1.3 kJ</td></tr>
+      </tbody>
+    </table></div>
+    <p class="lab-small">Values from OpenStax University Physics Volume 2, Table 1.3, and College Physics 2e, Table 14.1 (human body, granite).</p>
+
+    <h3 class="lab-h">Where the temperatures meet</h3>
+    <p>When blocks touch inside a perfectly insulated box, energy only moves between them. Every joule one block loses, another gains. So the heats add to zero, and the final temperature <var>T</var><sub>f</sub> is the same for all:</p>
+    <div class="lab-formula">Σ <var>m c</var> (<var>T</var><sub>f</sub> − <var>T</var>) = 0 &nbsp;⟹&nbsp; <var>T</var><sub>f</sub> = Σ <var>m c T</var> ÷ Σ <var>m c</var></div>
+    <p>It’s an average of the starting temperatures, weighted by each block’s heat capacity <var>m c</var>. Notice what’s missing: conductivity, shape and time. Copper or wood decides <i>how fast</i> you get there, not <i>where</i>.</p>
+    <div class="u-ex"><b>Worked example: iron and water</b>
+      <p>A 1.0 kg iron block at 90 °C touches 1.0 kg of water at 20 °C (the <i>Iron &amp; water</i> setup).</p>
+      <ol><li>Heat capacities: iron 1.0 × 452 = 452 J/K; water 1.0 × 4186 = 4186 J/K.</li>
+        <li><var>T</var><sub>f</sub> = (452 × 90 + 4186 × 20) ÷ (452 + 4186) = 124,400 ÷ 4638 = 26.8 °C.</li>
+        <li>Check: the iron loses 452 × 63.2 = 28.6 kJ; the water gains 4186 × 6.8 = 28.6 kJ. The iron cooled 63 degrees while the water warmed less than 7.</li></ol>
+    </div>
+    <div class="u-ex"><b>Worked example: cocoa in a cold mug</b>
+      <p>You pour 0.30 kg of hot cocoa at 80 °C into a 0.30 kg glass mug at 20 °C. Treat the cocoa as water and ignore the air.</p>
+      <ol><li>Heat capacities: cocoa 0.30 × 4186 = 1256 J/K; mug 0.30 × 840 = 252 J/K.</li>
+        <li><var>T</var><sub>f</sub> = (1256 × 80 + 252 × 20) ÷ (1256 + 252) = 105,500 ÷ 1508 = 70.0 °C.</li>
+        <li>The mug takes 10 degrees off the cocoa. Rinse the mug with hot water first and it takes much less.</li></ol>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> in the simulation, touch 1 kg of iron at 90 °C to 1 kg of water at 20 °C, then swap: 1 kg of water at 90 °C and iron at 20 °C. Where do they meet each time? Then find the mass of copper that warms 1 kg of water as much as 1 kg of iron did. (Hint: equal <var>m c</var>.)</div>
+
+  <section class="lab-sec" id="scales">
+    <h2>Three temperature scales</h2>
+    <p>Fahrenheit and Celsius put their zeros at handy everyday points. The Kelvin scale starts at the real bottom: <i>absolute zero</i>, where the jiggling of particles is as small as nature allows. A kelvin is the same size as a Celsius degree, so the two scales are just shifted:</p>
+    <div class="lab-formula"><var>T</var><sub>K</sub> = <var>T</var><sub>°C</sub> + 273.15 &nbsp;&nbsp;&nbsp; <var>T</var><sub>°F</sub> = (9/5) <var>T</var><sub>°C</sub> + 32 &nbsp;&nbsp;&nbsp; <var>T</var><sub>°C</sub> = (5/9)(<var>T</var><sub>°F</sub> − 32)</div>
+    <div class="th1-scales" id="th1-scales">
+      <div class="th1-sc-view"><canvas id="th1-sc-cv" aria-label="Three thermometer scales side by side, kelvin, Celsius and Fahrenheit, with a marker you can drag. Use the slider or the number boxes below."></canvas></div>
+      <div class="th1-sc-ctl">
+        <label class="lab-field"><span>Temperature <output id="th1-sc-o">20 °C</output></span><input type="range" id="th1-sc" min="0" max="400" step="0.05" value="293.15" aria-label="Temperature in kelvins"></label>
+        <div class="th1-sc-nums">
+          <label><input type="number" id="th1-sc-k" step="any" inputmode="decimal" aria-label="Kelvins"> K</label>
+          <label><input type="number" id="th1-sc-c" step="any" inputmode="decimal" aria-label="Degrees Celsius"> °C</label>
+          <label><input type="number" id="th1-sc-f" step="any" inputmode="decimal" aria-label="Degrees Fahrenheit"> °F</label>
+        </div>
+        <div class="lab-seg th1-sc-marks" id="th1-sc-marks" role="group" aria-label="Jump to a temperature"></div>
+        <p class="lab-small" id="th1-sc-note" aria-live="polite"></p>
+      </div>
+    </div>
+    <p>Since 2019, the kelvin itself is defined by fixing the Boltzmann constant at exactly <var>k</var><sub>B</sub> = 1.380649 × 10<sup>−23</sup> J/K. It is the exchange rate between energy and temperature. Before that, the kelvin was tied to the temperature at which ice, liquid water and water vapor can all exist together, set at 273.16 K. Now it rests on a constant of nature, like the meter and the kilogram.</p>
+    <div class="u-ex"><b>Worked example: how fast is the air?</b>
+      <p>Room air at 20 °C is at <var>T</var> = 293.15 K. Most of it is nitrogen, N₂, with a molecule mass <var>m</var> = 4.65 × 10<sup>−26</sup> kg.</p>
+      <ol><li>Average kinetic energy: (3/2) × 1.380649 × 10<sup>−23</sup> × 293.15 = 6.07 × 10<sup>−21</sup> J. Tiny, but every cubic meter of air holds about 2.5 × 10<sup>25</sup> molecules.</li>
+        <li>Typical speed (the root-mean-square speed): <var>v</var><sub>rms</sub> = √(3<var>k</var><sub>B</sub><var>T</var>/<var>m</var>) = √(3 × 1.380649 × 10<sup>−23</sup> × 293.15 ÷ 4.65 × 10<sup>−26</sup>) ≈ 511 m/s, about 1,140 miles per hour.</li></ol>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="molecules">
+    <h2>Molecules in motion</h2>
+    <p>Here is a flat gas of nitrogen-mass molecules, every one starting at exactly the same speed, 422 m/s, in a random direction. Watch the histogram. Collisions trade energy, some molecules speed up and some slow down, and the single spike spreads into a smooth curve: the Maxwell–Boltzmann distribution. Then heat or cool the walls.</p>
+    <div class="lab-stage" id="th1-gas-stage">
+      <div class="lab-view th1-gas-view" id="th1-gas-view">
+        <canvas id="th1-gas-cv" tabindex="0" aria-label="A flat gas of 200 molecules bouncing in a box, colored by speed from blue (slow) to gold (fast), and a histogram of their speeds with the Maxwell-Boltzmann curve. Use the buttons beside it to restart with one speed or to heat or cool the walls. Space pauses."></canvas>
+        <div class="lab-tools"><button type="button" id="th1-gas-pause" aria-label="Pause" title="Pause">❚❚</button></div>
+      </div>
+      <div class="lab-panel">
+        <h3>Gas</h3>
+        <button type="button" class="lab-btn pri" id="th1-gas-same">All at one speed</button>
+        <div class="lab-field"><span id="th1-gw-h">Walls</span>
+          <div class="lab-seg" id="th1-gas-walls" role="group" aria-labelledby="th1-gw-h">
+            <button type="button" data-w="mirror" aria-pressed="true">Insulated</button>
+            <button type="button" data-w="600" aria-pressed="false">Hot, 600 K</button>
+            <button type="button" data-w="150" aria-pressed="false">Cold, 150 K</button>
+          </div>
+        </div>
+        <label class="lab-chk"><input type="checkbox" id="th1-gas-slow"> Slow motion</label>
+        <dl class="lab-readout">
+          <dt>Temperature</dt><dd id="th1-g-t">—</dd>
+          <dt>Average kinetic energy</dt><dd id="th1-g-k">—</dd>
+          <dt>Average speed</dt><dd id="th1-g-v">—</dd>
+          <dt>Spread of speeds</dt><dd id="th1-g-s">—</dd>
+        </dl>
+        <p class="lab-small">In a flat, two-dimensional gas the average kinetic energy is <var>k</var><sub>B</sub><var>T</var>, not (3/2)<var>k</var><sub>B</sub><var>T</var>: a molecule can move in only two directions, and each direction holds ½<var>k</var><sub>B</sub><var>T</var> on average.</p>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <p>Temperature is not the speed of any one molecule. At any moment some molecules are nearly stopped and a few move three times faster than average. Temperature describes the whole crowd: it sets the average kinetic energy, and with it the shape of the curve. Heat the walls and the curve slides to higher speeds and spreads out; cool them and it bunches up near zero.</p>
+      <p>The curve for a flat gas is <var>f</var>(<var>v</var>) = (<var>m v</var> / <var>k</var><sub>B</sub><var>T</var>) e<sup>−<var>m v</var>²/(2<var>k</var><sub>B</sub><var>T</var>)</sup>. Real gases are three-dimensional, and their curve has a <var>v</var>² in front instead of <var>v</var>, but the idea is the same. For a bigger box with a piston, two gases and a pressure gauge, try <a href="{{ "games/gas/" | relURL }}">Gas in a Box</a>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="touch">
+    <h2>Why metal feels colder than wood</h2>
+    <p>Leave a metal spoon and a wooden spoon on the kitchen table for an hour. A thermometer says they’re both at room temperature. Touch them and the metal feels colder. Your skin isn’t a thermometer: it senses its own temperature, and that depends on how fast heat leaves your hand.</p>
+    <div class="th1-feel" id="th1-feel">
+      <div class="th1-touch-view"><canvas id="th1-touch-cv" aria-label="A fingertip pressed on a block. The colors show how the skin surface cools, and bars compare how cold each material feels at the same temperature."></canvas></div>
+      <div class="th1-touch-ctl">
+        <div class="lab-seg" id="th1-touch-mat" role="group" aria-label="Material you touch"></div>
+        <label class="lab-field"><span>Object’s temperature <output id="th1-touch-t-o">20 °C</output></span><input type="range" id="th1-touch-t" min="0" max="45" step="1" value="20" aria-label="Temperature of the object in degrees Celsius"></label>
+        <dl class="lab-readout">
+          <dt>Your skin, before</dt><dd>33.0 °C</dd>
+          <dt>Skin touching it</dt><dd id="th1-touch-tc">—</dd>
+          <dt>Heat leaving 1 cm² after 1 s</dt><dd id="th1-touch-q">—</dd>
+        </dl>
+      </div>
+    </div>
+    <p>When two thick objects touch, the surface where they meet jumps almost at once to a temperature in between, and stays there for a while:</p>
+    <div class="lab-formula"><var>T</var><sub>contact</sub> = (<var>e</var><sub>1</sub><var>T</var><sub>1</sub> + <var>e</var><sub>2</sub><var>T</var><sub>2</sub>) ÷ (<var>e</var><sub>1</sub> + <var>e</var><sub>2</sub>), &nbsp; with &nbsp;<var>e</var> = √(<var>k ρ c</var>)</div>
+    <p>Here <var>k</var> is the thermal conductivity (how well heat moves through it), ρ the density and <var>c</var> the specific heat. The number <var>e</var>, the <i>thermal effusivity</i>, measures how hard a material pulls heat from whatever touches it. Copper’s is about 40 times your skin’s, so where you touch it, your skin drops nearly all the way to the copper’s temperature. Wood’s is less than half your skin’s, so your skin barely cools. In the widget we treat skin as the “human body” and “fatty tissue” of the OpenStax tables, which is rough, but the order of the materials doesn’t change.</p>
+    <div class="u-myth"><b>Common mistake</b><p>“The cold flows into your hand.” There is no such thing as cold flowing. Heat, which is energy, flows out of your warm hand into the cooler metal. The metal feels cold because it carries your heat away quickly, not because it is colder than the wood. The same goes for a cold drink: it doesn’t give coldness to your hand; your hand gives heat to the drink. OpenStax makes the same point with a tile floor and a carpet at the same temperature: the tile feels colder because heat leaves your feet faster.</p></div>
+  </section>
+
+  <div class="lab-try"><b>Try this at home:</b> put a metal spoon, a wooden spoon and a plastic one on a table for an hour. Touch each with the back of your hand. Which feels coldest? Then hold each one in your hand for a minute and touch them again. The metal one warms fastest where you held it, because it has a small heat capacity and spreads the warmth quickly.</div>
+
+  <section class="lab-sec" id="everyday">
+    <h2>Where you see it</h2>
+    <div class="u-key">
+      <div><b>Waiting for the thermometer</b><p>A fever thermometer has to sit for a while. It has to come to thermal equilibrium with you before its reading means anything. In the simulation, dip the thermometer in and watch it climb.</p></div>
+      <div><b>Water in engines</b><p>A car engine is cooled by water mixed with antifreeze. Water’s big specific heat lets it carry a lot of heat to the radiator for a small rise in temperature. See <a href="{{ "trades/cars/cooling-and-oil/" | relURL }}">Cooling and Lubrication</a>.</p></div>
+      <div><b>Slow seasons</b><p>Lakes and seas warm and cool slowly through the year, because so much energy goes into each degree. It’s the stubborn-water mission, on the scale of an ocean.</p></div>
+      <div><b>Cast-iron pans</b><p>A heavy pan holds its temperature when you drop in cold food, because its <var>m c</var> is big. A thin pan cools fast and the food stews instead of searing.</p></div>
+      <div><b>Thermostats</b><p>The thermostat on a wall reads the air around it, assuming the room is in equilibrium. A heat pump or furnace then moves heat until it is. See the <a href="{{ "trades/hvac/" | relURL }}">HVAC course</a>.</p></div>
+      <div><b>Fusion plasma</b><p>The gas in a fusion machine is hotter than 100 million degrees. There, temperature is measured as the energy of the particles. See <a href="{{ "games/magnetic-bottles/" | relURL }}">Magnetic Bottles for Fusion</a>.</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A little history</h2>
+    <div class="lab-cols">
+      <p>For a long time, many scientists thought heat was an invisible fluid, called <i>caloric</i>, that flowed out of hot things into cold ones. The fluid picture explains the zeroth law nicely, and it got the bookkeeping of the cocoa and the mug right. It fails when you rub things together: friction makes heat with no end, as Chapter 2 shows.</p>
+      <p>In 1848 William Thomson, later Lord Kelvin, proposed a temperature scale that doesn’t depend on any particular substance, starting from an absolute zero. Its unit is named for him. In his 1871 book <i>Theory of Heat</i>, James Clerk Maxwell put the zeroth law’s idea plainly: all heat is of the same kind. Ralph Fowler gave the law its number in the 1930s, after the other three were named.</p>
+      <p>In 2019 the kelvin was redefined by fixing the Boltzmann constant exactly, after years of careful measurements of that constant in laboratories around the world.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The blocks.</b> Each solid block is a cube, its size set by its mass and density, cut into 12 slices. Heat flows between neighboring slices by Fourier’s law, <var>q</var> = <var>k A</var> Δ<var>T</var> / Δ<var>x</var>, with real thermal conductivities: copper 390, aluminum 220, iron 80, granite 2.8, wood 0.12 W/(m·K). Between two blocks it also crosses a thin contact layer, because touching surfaces meet only at tiny high points (we use 3000 W/(m²·K)). The water is stirred, so it is one cell, and heat crosses a film at its can’s wall (500 W/(m²·K)). The bench, the air and the walls of the world take no heat. Only the thermometer trades heat with the room air, at 20 °C.</p>
+      <p><b>The math.</b> Each step solves the heat equations for all the slices at once with the implicit (backward Euler) method. It stays stable even when the clock runs at an hour per second, and since every bit of heat leaves one slice and enters its neighbor, the total energy is conserved to the last digit the computer keeps. The thermometer, a 2 J/K glass bulb with a 5-second response time, trades heat with its slice exactly.</p>
+      <p><b>What’s simplified.</b> Real blocks lose heat to the air and the table, so in a kitchen they’d all drift to room temperature in the end. The contact and film numbers are typical, not measured. Water and wood stay within 0 to 100 °C, so nothing freezes, boils or burns. The microscope is a picture of the idea, with atoms jiggling more on the hotter side, not a calculation of real atoms.</p>
+      <p><b>How we checked it.</b> In tests, two 1 kg copper blocks at 90 and 10 °C met at 50.000 °C, with total energy constant to 1 part in 10<sup>13</sup>. Iron and water ended at 26.8219 °C, exactly Σ<var>mcT</var>/Σ<var>mc</var>. Three blocks with the thermometer moved around kept total energy, counting the air, to 1 part in 10<sup>11</sup>. A temperature wave in one aluminum block faded at 0.991 of the textbook rate, the small difference coming from the 12 slices. Steps from 0.05 s to 10 s gave the same wood temperature after an hour within 0.004 °C.</p>
+      <p><b>The gas.</b> 200 hard disks with the mass of a nitrogen molecule. They move in straight lines and bounce elastically off each other, found with a grid of cells. Insulated walls are mirrors; hot or cold walls send each disk back with a random velocity drawn from the wall’s temperature. Tests: with mirror walls, the kinetic energy stayed constant to 1 part in 10<sup>15</sup>; the speeds started all equal and relaxed until the ratio of average speed to rms speed was 0.889 (theory 0.886); and with 600 K walls the gas settled at 596 K.</p>
+      <p><b>The touch.</b> The contact temperature formula is exact for two thick bodies. We checked it against a fine-grained heat-flow calculation for skin on copper, granite and wood: both gave 20.30, 23.30 and 29.00 °C.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>A thermometer reads 40.0 °C in a pot of soup. Moved to a jar of honey, it settles at 40.0 °C again. What does the zeroth law tell you?</p>
+        <ul class="u-opts"><li><button type="button">The soup and the honey contain the same amount of heat.</button></li><li><button type="button">Heat will flow from the soup to the honey if they touch.</button></li><li><button type="button">If the soup and the honey touched, no heat would flow between them.</button></li></ul>
+        <details><summary>Show the answer</summary><p>Each is in equilibrium with the thermometer, so they’re in equilibrium with each other: same temperature, no net heat flow. They can hold very different amounts of internal energy.</p></details></li>
+      <li class="u-q" data-a="1"><p>1 kg of copper at 100 °C and 1 kg of water at 0 °C are put together in an insulated box. The final temperature is closest to</p>
+        <ul class="u-opts"><li><button type="button">50 °C</button></li><li><button type="button">8.5 °C</button></li><li><button type="button">91.5 °C</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>T</var><sub>f</sub> = (387 × 100 + 4186 × 0) ÷ (387 + 4186) = 38,700 ÷ 4573 ≈ 8.5 °C. Water’s heat capacity is almost 11 times bigger, so it barely moves.</p></details></li>
+      <li class="u-q" data-a="0"><p>Why does a metal railing feel colder than a wooden bench on the same cold morning?</p>
+        <ul class="u-opts"><li><button type="button">Metal pulls heat out of your hand faster, so your skin cools more.</button></li><li><button type="button">Metal is at a lower temperature than wood.</button></li><li><button type="button">Cold flows out of the metal into your hand.</button></li></ul>
+        <details><summary>Show the answer</summary><p>Both are at the air’s temperature. Metal conducts heat well and has a high effusivity, so your skin where you touch drops nearly to the metal’s temperature.</p></details></li>
+      <li class="u-q" data-a="2"><p>Which temperature is the same on the Celsius and Fahrenheit scales?</p>
+        <ul class="u-opts"><li><button type="button">0</button></li><li><button type="button">−273.15</button></li><li><button type="button">−40</button></li></ul>
+        <details><summary>Show the answer</summary><p>Set <var>F</var> = <var>C</var> in <var>F</var> = (9/5)<var>C</var> + 32: −(4/5)<var>C</var> = 32, so <var>C</var> = −40. Try it on the scales above.</p></details></li>
+      <li class="u-q" data-a="1"><p>A gas is heated from 300 K to 600 K. What happens to the average kinetic energy of its molecules?</p>
+        <ul class="u-opts"><li><button type="button">It goes up by about 1.4 times.</button></li><li><button type="button">It doubles.</button></li><li><button type="button">It stays the same; only the speeds change.</button></li></ul>
+        <details><summary>Show the answer</summary><p>Average kinetic energy is proportional to the kelvin temperature, so doubling <var>T</var> doubles it. The typical speed goes up by √2 ≈ 1.4.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/1-1-temperature-and-thermal-equilibrium" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 1.1 Temperature and Thermal Equilibrium</a> (the zeroth law; Fowler and the name)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/1-2-thermometers-and-temperature-scales" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 1.2 Thermometers and Temperature Scales</a></li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/1-4-heat-transfer-specific-heat-and-calorimetry" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 1.4 Heat Transfer, Specific Heat, and Calorimetry</a> (Table 1.3)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/1-5-phase-changes" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 1.5 Phase Changes</a> (boiling points of nitrogen and helium)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/1-6-mechanisms-of-heat-transfer" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 1.6 Mechanisms of Heat Transfer</a> (Table 1.5, thermal conductivities; tile and carpet)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/2-2-pressure-temperature-and-rms-speed" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 2.2 Pressure, Temperature, and RMS Speed</a></li>
+      <li><a href="https://openstax.org/books/university-physics-volume-2/pages/2-4-distribution-of-molecular-speeds" target="_blank" rel="noopener">OpenStax University Physics Volume 2, 2.4 Distribution of Molecular Speeds</a></li>
+      <li><a href="https://openstax.org/books/college-physics-2e/pages/14-2-temperature-change-and-heat-capacity" target="_blank" rel="noopener">OpenStax College Physics 2e, 14.2 Temperature Change and Heat Capacity</a> (Table 14.1: granite, human body)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/14-1-fluids-density-and-pressure" target="_blank" rel="noopener">OpenStax University Physics Volume 1, 14.1 Fluids, Density, and Pressure</a> (densities)</li>
+      <li><a href="https://www.nist.gov/si-redefinition/kelvin/kelvin-boltzmann-constant" target="_blank" rel="noopener">NIST: Kelvin: Boltzmann Constant</a> (the exact value and the 2019 redefinition)</li>
+      <li><a href="https://en.wikipedia.org/wiki/Zeroth_law_of_thermodynamics" target="_blank" rel="noopener">Wikipedia (secondary): Zeroth law of thermodynamics</a> (Fowler and Guggenheim, 1939; Maxwell, 1871)</li>
+      <li><a href="https://en.wikipedia.org/wiki/List_of_thermal_conductivities" target="_blank" rel="noopener">Wikipedia (secondary): List of thermal conductivities</a> (granite)</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/thermodynamics/zeroth-law/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/zeroth-law/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/thermodynamics/zeroth-law/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/zeroth-law/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

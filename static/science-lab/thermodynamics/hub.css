@@ -1,0 +1,56 @@
+/* The Laws of Thermodynamics: the unit hub. Adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#thh-lab .thh-hero{position:relative;overflow:hidden;border-radius:16px;background:#06111a;color:#fff;min-height:400px;margin:0 0 1.2rem;box-shadow:0 6px 28px rgba(6,17,26,.28);isolation:isolate}
+#thh-lab .thh-hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+#thh-lab .thh-hero-txt{position:relative;z-index:1;max-width:min(31rem,48%);padding:1.6rem 1.7rem 1.4rem}
+#thh-lab .thh-hero .lab-eyebrow{margin:0;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;color:#ffd479}
+#thh-lab .thh-hero h1{margin:.2rem 0 .5rem;font:700 2.3rem/1.12 Georgia,"Times New Roman",serif;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.5)}
+#thh-lab .thh-hero p{color:#d7e5ee;line-height:1.55;margin:0 0 .8rem;text-shadow:0 1px 10px rgba(6,17,26,.9)}
+#thh-lab .thh-cta{display:flex;flex-wrap:wrap;gap:.5rem;margin:.9rem 0 0}
+#thh-lab .thh-btn{display:inline-flex;align-items:center;min-height:40px;padding:.45rem .95rem;border-radius:999px;border:1px solid rgba(219,231,239,.45);color:#fff;text-decoration:none;box-shadow:none;font:600 .92rem system-ui,sans-serif;background:rgba(6,17,26,.55)}
+#thh-lab .thh-btn:hover{border-color:#ffd479}
+#thh-lab .thh-btn.pri{background:linear-gradient(135deg,#ff8787,#ffd479);border-color:transparent;color:#2a1306}
+#thh-lab .thh-cap{position:absolute;right:1rem;bottom:.6rem;margin:0;z-index:1;font:600 .75rem system-ui,sans-serif;color:#8fb3c6;letter-spacing:.02em;text-align:right;max-width:46%}
+@media (max-width:760px){
+  #thh-lab .thh-hero{min-height:0;padding-bottom:250px}
+  #thh-lab .thh-hero-txt{max-width:none;padding:1.2rem 1.1rem .4rem}
+  #thh-lab .thh-hero h1{font-size:1.85rem}
+  #thh-lab .thh-cap{left:1rem;right:1rem;max-width:none;text-align:center;bottom:.5rem}
+}
+/* the four laws */
+#thh-lab .thh-laws{list-style:none;margin:.7rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:.8rem}
+#thh-lab .thh-law{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1rem .9rem;overflow:hidden;display:flex;flex-direction:column;gap:.45rem}
+#thh-lab .thh-law::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--lc)}
+#thh-lab .thh-l0{--lc:#e0a800;--lt:#a8770c}#thh-lab .thh-l1{--lc:#2f9e6f;--lt:#1f7a52}#thh-lab .thh-l2{--lc:#e8590c;--lt:#c92a2a}#thh-lab .thh-l3{--lc:#1c7ed6;--lt:#1864ab}
+html[data-theme="dark"] #thh-lab .thh-l0{--lc:#ffd479;--lt:#ffd479}html[data-theme="dark"] #thh-lab .thh-l1{--lc:#63e6be;--lt:#63e6be}html[data-theme="dark"] #thh-lab .thh-l2{--lc:#ff8787;--lt:#ff8787}html[data-theme="dark"] #thh-lab .thh-l3{--lc:#74c0fc;--lt:#74c0fc}
+#thh-lab .thh-num{position:absolute;right:.7rem;top:.15rem;font:700 3.6rem/1 Georgia,serif;color:var(--lc);opacity:.22}
+#thh-lab .thh-law h3{margin:.1rem 0 0;font:700 1.12rem Georgia,serif;color:var(--lt)}
+#thh-lab .thh-law h3 small{display:block;font:700 .68rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.15rem}
+#thh-lab .thh-stmt{margin:0;font-weight:600;line-height:1.5}
+#thh-lab .thh-eq{margin:0;font:1.05rem/1.5 "Cambria Math","STIX Two Math",Georgia,serif;background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:.35rem .6rem;text-align:center;overflow-x:auto}
+#thh-lab .thh-ex{margin:0;font-size:.9rem;line-height:1.5;color:var(--ink)}
+#thh-lab .thh-law a{font:600 .85rem system-ui,sans-serif;text-decoration:none;box-shadow:none;color:var(--lt)}
+#thh-lab .thh-law a:hover{text-decoration:underline}
+#thh-lab .thh-law a:first-of-type{margin-top:auto}
+/* equations */
+#thh-lab .thh-eqs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:.7rem;margin:.6rem 0}
+#thh-lab .thh-eqs>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .85rem}
+#thh-lab .thh-eqs .thh-f{margin:0 0 .4rem;font:1.15rem/1.5 "Cambria Math","STIX Two Math",Georgia,serif;color:var(--acc);overflow-x:auto}
+#thh-lab .thh-eqs p:last-child{margin:0;font-size:.88rem;line-height:1.5}
+#thh-lab .thh-consts{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:.55rem .85rem;font-size:.9rem}
+#thh-lab .thh-consts p{margin:0}
+/* history */
+#thh-lab .thh-time{list-style:none;margin:.6rem 0 0;padding:0 0 0 .2rem;position:relative}
+#thh-lab .thh-time::before{content:"";position:absolute;left:calc(4.7rem - 1px);top:.4rem;bottom:.4rem;width:2px;background:linear-gradient(#ff8787,#ffd479 45%,#74c0fc)}
+#thh-lab .thh-time li{display:grid;grid-template-columns:3.6rem minmax(0,1fr);gap:1.8rem;margin:0 0 .8rem;position:relative}
+#thh-lab .thh-time li::before{content:"";position:absolute;left:calc(4.5rem - 7px);top:.4rem;width:14px;height:14px;box-sizing:border-box;border-radius:50%;background:var(--card);border:3px solid var(--acc)}
+#thh-lab .thh-yr{font:700 .95rem Georgia,serif;color:var(--acc);text-align:right;padding-top:.1rem}
+#thh-lab .thh-time p{margin:0;line-height:1.55}
+/* elsewhere */
+#thh-lab .thh-more{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:.8rem}
+#thh-lab .thh-card{display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:.15rem .7rem;align-items:start;padding:.9rem 1rem;border:1px solid var(--line);border-radius:14px;background:var(--card);text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.05);color:var(--ink);transition:transform .15s,border-color .15s}
+#thh-lab .thh-card:hover{transform:translateY(-2px);border-color:var(--acc)}
+#thh-lab .thh-ic{grid-row:span 2;font-size:1.9rem;line-height:1}
+#thh-lab .thh-card b{font:700 1.02rem Georgia,serif;color:var(--acc)}
+#thh-lab .thh-card>span:last-child{color:var(--muted);font-size:.88rem;line-height:1.45}
+#thh-lab .lab-src{overflow-wrap:anywhere}
+@media (prefers-reduced-motion:reduce){#thh-lab .thh-card{transition:none}#thh-lab .thh-card:hover{transform:none}}

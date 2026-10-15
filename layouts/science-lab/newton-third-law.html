@@ -1,0 +1,207 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/newtons-laws/third-law/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/third-law/sim.css").ModTime.Unix }}">
+<div class="lab" id="nl3-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Newton’s Laws · Chapter 3</p>
+    <h1>{{ .Title }}</h1>
+    <p>Push on a wall and the wall pushes back on you, exactly as hard. That is not a figure of speech: it is how you walk, swim, row and fly. Every force is one half of a pair, and the two halves act on different things. Here two skaters push off each other, a horse pulls a cart while the cart pulls back on the horse, and a balloon flies by shoving air the other way. Along the way you will untangle a puzzle that has confused people since Newton’s time: if every pull is matched by an equal pull back, how does anything ever get going?</p>
+    <span class="lab-mark" aria-hidden="true">⛸️</span>
+  </header>
+
+  <div class="lab-stage nl3-main">
+    <div class="lab-view" id="nl3-view">
+      <canvas id="nl3-cv" tabindex="0" aria-label="Two skaters on an ice rink, A on the left and B on the right, hands together. Press Push (or Space, or tap the picture) and they push off each other. During the push, two green arrows show the equal and opposite forces; afterward, white arrows show their velocities. Below, a graph of both forces against time and bars for each skater’s momentum and the total. R starts again. The numbers are also listed as text in the panel."></canvas>
+      <div class="lab-hud" id="nl3-hud" aria-hidden="true"></div>
+      <button type="button" class="nl3-go" id="nl3-push2">Push!</button>
+      <div class="lab-tools">
+        <button type="button" id="nl3-pause" aria-label="Pause" title="Pause">❚❚</button>
+        <button type="button" id="nl3-reset" aria-label="Put the skaters back together" title="Start again (R)">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>The skaters</h3>
+      <label class="lab-field"><span>Skater A, on the left <output id="nl3-mA-o">40 kg</output></span><input type="range" id="nl3-mA" min="20" max="120" step="1" value="40" aria-label="Mass of skater A, in kilograms"></label>
+      <label class="lab-field"><span>Skater B, on the right <output id="nl3-mB-o">80 kg</output></span><input type="range" id="nl3-mB" min="20" max="120" step="1" value="80" aria-label="Mass of skater B, in kilograms"></label>
+      <label class="lab-chk"><input type="checkbox" id="nl3-wall"> <span>Make B the rink wall</span></label>
+      <label class="lab-field"><span>Push strength (the peak force) <output id="nl3-F-o">200 N</output></span><input type="range" id="nl3-F" min="50" max="600" step="10" value="200" aria-label="Peak force of the push, in newtons"></label>
+      <label class="lab-field"><span>The push lasts <output id="nl3-T-o">0.50 s</output></span><input type="range" id="nl3-T" min="0.2" max="1" step="0.05" value="0.5" aria-label="How long the push lasts, in seconds"></label>
+      <label class="lab-chk"><input type="checkbox" id="nl3-fric"> <span>Ice friction (steel on ice, μ<sub>k</sub> = 0.02)</span></label>
+      <p class="lab-small nl3-note" id="nl3-pred"></p>
+      <button type="button" class="lab-btn pri" id="nl3-push">Push!</button>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="nl3-read"></dl>
+    </div>
+    <div class="nl3-mbox">
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="nl3-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing"><h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The skaters.</b> Two skaters stand on smooth ice with their hands together. When you press Push, they shove for half a second (you can change that). The push starts gently, peaks, and fades, the way a real push does. The ice has no friction unless you turn it on.</p>
+      <p><b>The green arrows.</b> During the push, the force of B on A and the force of A on B are drawn to scale. Watch them: they grow and shrink together and are always the same length, whatever the masses.</p>
+      <p><b>The force graph.</b> Blue is the force on B, pink the force on A. They are mirror images. The shaded area under each curve is the <i>impulse</i>, the total push, and it is the same for both.</p>
+      <p><b>The momentum bars.</b> Momentum is mass × velocity. The skaters start with none. Afterward, A has some going left and B the same amount going right, so the green total stays at zero.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="science"><h2>The third law</h2>
+    <p>Whenever one object pushes or pulls on a second object, the second pushes or pulls back on the first, just as hard, in the opposite direction, at the same moment.</p>
+    <div class="u-big"><var>F</var><sub>A on B</sub> = −<var>F</var><sub>B on A</sub><small>the force A exerts on B is equal in size and opposite in direction to the force B exerts on A</small></div>
+    <p>The old names “action” and “reaction” make it sound as if one comes first and the other answers. It doesn’t. The two forces are two sides of one interaction. Neither skater can push without being pushed; you cannot touch anything without it touching you back.</p>
+    <h3 class="lab-h">How to spot a third-law pair</h3>
+    <div class="u-key">
+      <div><b>Two objects</b><p>The two forces act on different objects: one on A, one on B. That is why they never cancel each other out.</p></div>
+      <div><b>Swap the names</b><p>If one is “A pushes B”, the other is “B pushes A”. Same two objects, roles swapped.</p></div>
+      <div><b>Same kind</b><p>Both are contact pushes, or both friction, or both gravity. A gravity force never pairs with a contact force.</p></div>
+      <div><b>Same size, same time</b><p>Equal in size, opposite in direction, and they start and stop together.</p></div>
+    </div>
+    <div class="u-ex"><b>Worked example: equal pushes, unequal speeds</b>
+      <p>A 40 kg skater and an 80 kg skater push off each other with a steady 120 N for 0.5 s. Each gets the same push, 120 N × 0.5 s = 60 N·s, in opposite directions. By the second law, the change in each one’s velocity is that push divided by the mass:</p>
+      <div class="lab-formula"><var>v</var><sub>A</sub> = 60 N·s ÷ 40 kg = <b>1.5 m/s</b> left &nbsp;&nbsp; <var>v</var><sub>B</sub> = 60 N·s ÷ 80 kg = <b>0.75 m/s</b> right</div>
+      <p>Same force, twice the mass, half the speed. And look at the momenta: 40 × 1.5 = 60 kg·m/s left and 80 × 0.75 = 60 kg·m/s right. They add to zero, the same total the skaters started with. That is no accident: equal and opposite forces for equal times always leave the total momentum unchanged. Chapter 5 builds on exactly this.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> the simulation’s push rises and falls like a real one, so its impulse is 2 × peak force × time ÷ π. With 200 N for 0.5 s that is 63.7 N·s: 1.59 m/s for 40 kg and 0.80 m/s for 80 kg. Turn B into the wall: the wall pushes A just as hard as A pushes it, and A leaves at 63.7 ÷ 40 = 1.59 m/s, the same speed as before. The wall, firmly attached to the building and the Earth, does not visibly move.</div>
+  </section>
+
+  <section class="lab-sec" id="horse"><h2>The horse-and-cart puzzle</h2>
+    <p>A horse pulls a cart. By the third law, the cart pulls back on the horse exactly as hard. So the forces cancel, and nothing should move. But horses do pull carts. What is wrong?</p>
+    <p>The mistake is adding forces that act on <i>different</i> things. To find out whether the horse speeds up, add only the forces <i>on the horse</i>. To find out about the cart, add only the forces <i>on the cart</i>. Use the slider and watch the two diagrams below the picture.</p>
+  </section>
+  <div class="lab-stage nl3-hstage">
+    <div class="lab-view nl3-hview" id="nl3-hview">
+      <canvas id="nl3-hcv" aria-label="A horse pulling a cart along a dirt road, with forces drawn where they act, and below, free-body diagrams of the horse and of the cart. Violet: the rope pulling the cart forward and the horse back (pair 1). Red: the ground pushing the horse’s hooves forward, and the hooves pushing the ground back (pair 2); also red: the road holding the cart back, and the wheels pushing the road forward (pair 3). Pink and blue: weight and the ground’s upward push, when shown. All the forces are listed as text in the panel."></canvas>
+    </div>
+    <div class="lab-panel">
+      <h3>The horse and the cart</h3>
+      <label class="lab-field"><span>Horse pushes back on the ground <output id="nl3-hFg-o">0 N</output></span><input type="range" id="nl3-hFg" min="0" max="2000" step="10" value="0" aria-label="How hard the horse pushes back on the ground with its hooves, in newtons"></label>
+      <div class="lab-field"><span id="nl3-hload-l">The cart</span>
+        <div class="lab-seg" id="nl3-hload" role="group" aria-labelledby="nl3-hload-l"><button type="button" data-mc="200" aria-pressed="true">Empty, 200 kg</button><button type="button" data-mc="600" aria-pressed="false">Loaded, 600 kg</button></div>
+      </div>
+      <label class="lab-chk"><input type="checkbox" id="nl3-hpairs" checked> <span>Show the third-law partners</span></label>
+      <label class="lab-chk"><input type="checkbox" id="nl3-hvert"> <span>Show the up-and-down forces too</span></label>
+      <button type="button" class="lab-btn" id="nl3-hreset">Stop and start again</button>
+      <dl class="lab-readout" id="nl3-hread"></dl>
+    </div>
+  </div>
+  <section class="lab-sec">
+    <p><b>The answer.</b> On the horse, two horizontal forces act: the ground pushes its hooves forward (that is the partner of the hooves pushing the ground backward), and the rope pulls it back. On the cart, the rope pulls it forward and the road holds it back. The horse speeds up when the ground pushes it forward harder than the rope pulls it back. The cart speeds up when the rope pulls it harder than the road holds it back. The rope’s pull on the horse and on the cart are always equal, and they never cancel, because they act on different bodies.</p>
+    <p>So what really moves the horse and cart forward? The ground. The horse pushes backward on the Earth, and the Earth pushes forward on the horse. (The Earth gets pushed backward too, but with a mass of 6 × 10<sup>24</sup> kg its change in motion is far too small to notice.)</p>
+    <div class="u-ex"><b>Worked example: a loaded cart</b>
+      <p>A 600 kg horse pulls a 600 kg loaded cart. The road holds the cart back with 0.05 of its weight: 0.05 × 600 kg × 9.81 m/s² = 294 N. The horse pushes back on the ground with 1,000 N, so the ground pushes it forward with 1,000 N. Taking horse and cart together, the rope’s pulls are inside the system and cancel, so</p>
+      <div class="lab-formula"><var>a</var> = (1,000 N − 294 N) ÷ (600 kg + 600 kg) = <b>0.59 m/s²</b></div>
+      <p>Now the cart alone: the rope must give it 600 × 0.59 = 353 N of net force on top of the 294 N of road friction, so the rope pulls with 647 N. And the horse alone: 1,000 N forward minus 647 N back is 353 N, and 353 ÷ 600 = 0.59 m/s². Both sides agree. Set the slider to 1,000 N with the loaded cart and read the same numbers in the panel.</p>
+    </div>
+    <div class="u-myth"><b>Common mistake</b><p>“A book’s weight and the table’s upward push on it are an action–reaction pair.” They are equal and opposite, but they are not a pair. Both act on the same object, the book, and they are different kinds of force: one is gravity, the other a contact push. They are equal because the book is not accelerating (the first law), and they stop being equal if you put the book in an elevator that is speeding up. The real partners: the Earth pulls the book down, so the book pulls the Earth up, just as hard. The table pushes the book up, so the book pushes the table down.</p></div>
+  </section>
+
+  <section class="lab-sec" id="newton"><h2>Newton’s own examples</h2>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Lex III. Actioni contrariam semper &amp; æqualem esse reactionem: sive corporum duorum actiones in se mutuo semper esse æquales &amp; in partes contrarias dirigi.</p>
+      <p class="u-en">Law III. To every Action there is always opposed an equal Reaction: or the mutual actions of two bodies upon each other are always equal, and directed to contrary parts.</p>
+      <cite>Isaac Newton, <i>Principia</i> (London, 1687), Axioms, or Laws of Motion. English by Andrew Motte (London, 1729).</cite>
+    </div>
+    <p>Newton followed the law with everyday examples. A stone and a horse, more than three hundred years before this page:</p>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Quicquid premit vel trahit alterum, tantundem ab eo premitur vel trahitur. Siquis lapidem digito premit, premitur &amp; hujus digitus a lapide. Si equus lapidem funi allegatum trahit, retrahetur etiam &amp; equus æqualiter in lapidem: nam funis utrinque distentus eodem relaxandi se conatu urgebit equum versus lapidem, ac lapidem versus equum, tantumque impediet progressum unius quantum promovet progressum alterius.</p>
+      <p class="u-en">Whatever draws or presses another is as much drawn or pressed by that other. If you press a stone with your finger, the finger is also pressed by the stone. If a horse draws a stone tied to a rope, the horse (if I may so say) will be equally drawn back towards the stone: for the distended rope, by the same endeavour to relax or unbend itself, will draw the horse as much towards the stone as it does the stone towards the horse and will obstruct the progress of the one as much as it advances that of the other.</p>
+      <cite>Newton, <i>Principia</i>, after Law III. The Latin is from the first edition (1687); Motte translated the third edition (1726), which differs in small ways, such as “if I may so say”.</cite>
+    </div>
+    <p>Notice the last line: the rope “will obstruct the progress of the one as much as it advances that of the other.” Newton is saying exactly what the free-body diagrams show. The rope helps the stone (or cart) as much as it holds back the horse. Whether the horse gets anywhere depends on the ground.</p>
+  </section>
+
+  <section class="lab-sec" id="pushing"><h2>Pushing off: walking, swimming, flying</h2>
+    <p>You cannot push yourself forward. To speed up, you have to push something else backward, and let it push you. Try these.</p>
+    <div class="nl3-demos" id="nl3-demos">
+      <figure class="nl3-demo">
+        <canvas id="nl3-d-scales" aria-label="Two spring scales hooked together, one end held by a wall or a hand, the other pulled by your hand. Drag on the picture or use the slider to set the pull; both scales show the same reading."></canvas>
+        <figcaption><b>Two spring scales</b>
+          <label class="lab-field"><span>Your pull <output id="nl3-d-scale-o">20 N</output></span><input type="range" id="nl3-d-scale-F" min="0" max="50" step="1" value="20" aria-label="How hard you pull on the right-hand scale, in newtons"></label>
+          <div class="lab-seg" id="nl3-d-scale-mode" role="group" aria-label="The left end is held by"><button type="button" data-end="wall" aria-pressed="true">Hooked to a wall</button><button type="button" data-end="hand" aria-pressed="false">Held by a friend</button></div>
+          <p class="lab-small">Both scales always read the same. Scale 1 pulls scale 2 exactly as hard as scale 2 pulls scale 1, and a friend holding the far end has to pull just as hard as the wall did.</p></figcaption>
+      </figure>
+      <figure class="nl3-demo">
+        <canvas id="nl3-d-balloon" aria-label="A balloon taped to a straw on a string. Let it go and it pushes air out the back; arrows show the balloon pushing the air back and the air pushing the balloon forward. Its speed is shown at the top."></canvas>
+        <figcaption><b>A balloon rocket</b>
+          <div class="lab-row"><button type="button" class="lab-btn" id="nl3-d-balloon-go">Let go</button></div>
+          <p class="lab-small">The stretched balloon squeezes air out of the back. It pushes the air backward, the air pushes it forward. Safe to build at home: a balloon, a drinking straw, tape and a long string.</p></figcaption>
+      </figure>
+      <figure class="nl3-demo">
+        <canvas id="nl3-d-walk" aria-label="A person starting to walk on a wood floor or on ice, with arrows for the foot pushing the ground back and the ground pushing the person forward. Pick the floor and press Walk; the caption explains what happens."></canvas>
+        <figcaption><b>Walking on wood and on ice</b>
+          <div class="lab-row"><div class="lab-seg" id="nl3-d-surf" role="group" aria-label="Floor"><button type="button" data-surf="wood" aria-pressed="true">Wood floor</button><button type="button" data-surf="ice" aria-pressed="false">Ice</button></div><button type="button" class="lab-btn" id="nl3-d-walk-go">Walk</button></div>
+          <p class="lab-small" id="nl3-d-walk-cap" aria-live="polite">A 50 kg walker tries to speed up at 1.5 m/s², which takes a 75 N push from the ground.</p></figcaption>
+      </figure>
+      <figure class="nl3-demo">
+        <canvas id="nl3-d-throw" aria-label="A skater on a skateboard throws a 5 kilogram medicine ball forward and rolls backward. Arrows show the hand pushing the ball and the ball pushing the hand. The speeds are shown at the top."></canvas>
+        <figcaption><b>Throwing from a skateboard</b>
+          <div class="lab-row"><button type="button" class="lab-btn" id="nl3-d-throw-go">Throw</button></div>
+          <p class="lab-small">A 50 kg skater (with the board) throws a 5 kg ball forward at 4 m/s. The ball pushes back just as hard, and the skater rolls backward at 5 × 4 ÷ 50 = 0.4 m/s.</p></figcaption>
+      </figure>
+    </div>
+    <div class="lab-cols">
+      <p><b>Walking.</b> Each step, your foot pushes the floor backward, and friction from the floor pushes you forward. On a wood floor, shoes can get a push of up to 0.9 times your weight. On ice, only about 0.1 times your weight, so if you try to start quickly, your foot slips backward instead. That is why you take tiny steps on ice.</p>
+      <p><b>Swimming and rowing.</b> A swimmer pushes water backward with hands and feet, and the water pushes the swimmer forward. A swimmer pushing off the pool wall uses the wall instead: the wall pushes back on the swimmer.</p>
+      <p><b>Rockets and jets.</b> A rocket engine pushes hot gas out of its nozzle at great speed, and the gas pushes the rocket the other way. A rocket does not push on the air behind it; it works even better in the vacuum of space. A jet engine does the same with air it sucks in and blasts out. Design your own in <a href="{{ "games/rocket/" | relURL }}">Rocket Builder</a>.</p>
+      <p><b>Recoil.</b> Throw a heavy ball from a skateboard, or step off a small boat onto a dock, and you move backward. The ball, or the boat, pushed back on you as hard as you pushed it.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where you see it</h2>
+    <ul>
+      <li><b>Cars</b> move because the tires push backward on the road and the road pushes forward on the tires. On ice, the road can’t push back much, so wheels spin. Brakes work the same way in reverse: see the <a href="{{ "trades/cars/brakes/" | relURL }}">Brakes lesson</a>.</li>
+      <li><b>A trebuchet</b> flings its stone forward, and the stone pulls back on the sling and the arm just as hard. Try the <a href="{{ "games/trebuchet/" | relURL }}">Trebuchet Workshop</a>.</li>
+      <li><b>Orbits</b>: the Earth pulls the Moon, and the Moon pulls the Earth just as hard. Both circle a point between them. See <a href="{{ "games/orbits/" | relURL }}">Orbit Lab</a> and Chapter 6.</li>
+      <li><b>Leaning on a wall, sitting on a chair</b>: you push down or sideways, and the wall or chair pushes back with exactly the force that keeps you in place.</li>
+      <li><b>Birds and helicopters</b> push air downward with their wings or blades, and the air pushes them up.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the simulation works</h2>
+    <p><b>The skaters.</b> During a push lasting <var>T</var>, each skater feels the same force, <var>F</var>(<var>t</var>) = <var>F</var><sub>peak</sub> sin(π<var>t</var> ÷ <var>T</var>), A to the left and B to the right. In each step of 1 ms the simulation adds the exact integral of that force, the impulse, to each skater’s momentum, and moves them. With ice friction on, each moving skater also slows by μ<sub>k</sub> <var>g</var> = 0.02 × 9.81 = 0.196 m/s² every second. The rink is 60 m long; a skater who reaches the boards stops there. The push plays at half speed so you can see it.</p>
+    <p><b>Checks.</b> For four pairs of masses (40 and 80 kg, 60 and 60, 30 and 90, 25 and 100), the total momentum stayed zero to better than 2 × 10<sup>−13</sup> kg·m/s at every step, the impulse matched 2<var>F</var><var>T</var> ÷ π to 10 decimal places, and the speed ratios came out 2, 1, 3 and 4 exactly. In every step the push given to A equaled the push given to B. After the push, the skaters coasted at constant speed. With friction, each skater’s final glide matched <var>v</var>² ÷ (2 μ<sub>k</sub> <var>g</var>) to a tenth of a millimeter.</p>
+    <p><b>The horse and cart</b> use <var>a</var> = (<var>F</var><sub>ground</sub> − <var>f</var>) ÷ (<var>m</var><sub>horse</sub> + <var>m</var><sub>cart</sub>) and rope tension = <var>m</var><sub>cart</sub> <var>a</var> + <var>f</var>, checked by confirming that each body separately obeys <var>F</var><sub>net</sub> = <var>ma</var>. The horse is 600 kg and the road holds the cart back with 0.05 of its weight; both are round numbers picked for the model, and a real horse, cart and road could be quite different. If the horse doesn’t push harder than that, nothing moves and the rope simply carries the horse’s push. At 5 m/s the horse eases off to a steady trot. <b>The demos</b> use OpenStax’s friction values for shoes on wood (μ<sub>s</sub> = 0.9) and on ice (μ<sub>s</sub> = 0.1, μ<sub>k</sub> = 0.05). The balloon is a 10 g model with a thrust falling from 0.3 N to zero in 1.2 s, and air drag; without drag, the balloon’s forward momentum and the air’s backward momentum summed to zero to 12 decimal places.</p>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>A 30 kg child and a 90 kg adult on skates push off each other. During the push, the force on the child is…</p>
+        <ul class="u-opts"><li><button type="button">three times the force on the adult</button></li><li><button type="button">the same size as the force on the adult</button></li><li><button type="button">a third of the force on the adult</button></li></ul>
+        <details><summary>Show the answer</summary><p>The two forces are a third-law pair: always equal in size, opposite in direction.</p></details></li>
+      <li class="u-q" data-a="0"><p>After that push, the child glides away…</p>
+        <ul class="u-opts"><li><button type="button">three times as fast as the adult</button></li><li><button type="button">at the same speed as the adult</button></li><li><button type="button">a third as fast as the adult</button></li></ul>
+        <details><summary>Show the answer</summary><p>The same push on a third of the mass gives three times the change in velocity (the second law).</p></details></li>
+      <li class="u-q" data-a="1"><p>A book rests on a table. The Earth pulls the book down. What is the third-law partner of that force?</p>
+        <ul class="u-opts"><li><button type="button">The table pushing up on the book</button></li><li><button type="button">The book pulling up on the Earth</button></li><li><button type="button">The book pushing down on the table</button></li></ul>
+        <details><summary>Show the answer</summary><p>Swap the names: “Earth pulls book” pairs with “book pulls Earth”, both gravity. The table’s push acts on the book too, so it cannot be its partner.</p></details></li>
+      <li class="u-q" data-a="0"><p>A horse pulls a cart and they speed up together. What pushes the horse forward?</p>
+        <ul class="u-opts"><li><button type="button">The ground, pushing on its hooves</button></li><li><button type="button">The rope, because the horse pulls harder than the cart pulls back</button></li><li><button type="button">Nothing; the forces cancel</button></li></ul>
+        <details><summary>Show the answer</summary><p>The rope pulls the horse and the cart equally hard. The horse speeds up because the ground pushes its hooves forward more than the rope pulls it back.</p></details></li>
+      <li class="u-q" data-a="2"><p>Why is it hard to start walking quickly on smooth ice?</p>
+        <ul class="u-opts"><li><button type="button">You weigh less on ice</button></li><li><button type="button">Ice pushes you backward</button></li><li><button type="button">Ice can’t push your foot forward very hard, so your foot slips</button></li></ul>
+        <details><summary>Show the answer</summary><p>To speed up, the ground must push you forward, and on ice friction limits that push to about a tenth of your weight.</p></details></li>
+      <li class="u-q" data-a="1"><p>How does a rocket speed up in empty space, where there is no air?</p>
+        <ul class="u-opts"><li><button type="button">It can’t; it needs air to push against</button></li><li><button type="button">It pushes exhaust gas backward, and the gas pushes it forward</button></li><li><button type="button">The Sun’s gravity pulls it along</button></li></ul>
+        <details><summary>Show the answer</summary><p>The rocket and its exhaust push on each other. Air is not needed; in fact, it only gets in the way.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/5-5-newtons-third-law" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 5.5 Newton’s Third Law</a> (pairs, the swimmer, walking, rockets)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/5-7-drawing-free-body-diagrams" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 5.7 Drawing Free-Body Diagrams</a></li>
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/6-2-friction" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 6.2 Friction</a> (shoes on wood and on ice; steel on ice)</li>
+      <li><a href="https://archive.org/details/PhilosophiaeNaturalisPrincipiaMathematica" target="_blank" rel="noopener">Isaac Newton, Philosophiæ Naturalis Principia Mathematica, London, 1687</a> (Internet Archive: Lex III and the examples after it)</li>
+      <li><a href="https://en.wikisource.org/wiki/The_Mathematical_Principles_of_Natural_Philosophy_(1729)/Axioms,_or_Laws_of_Motion" target="_blank" rel="noopener">Motte’s translation, 1729: Axioms, or Laws of Motion</a> (Wikisource)</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/newtons-laws/third-law/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/third-law/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/newtons-laws/third-law/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/third-law/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

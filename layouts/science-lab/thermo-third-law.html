@@ -1,0 +1,218 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/thermodynamics/third-law/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/third-law/sim.css").ModTime.Unix }}">
+<div class="lab" id="th5-lab" data-base="{{ "" | relURL }}">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Thermodynamics · Chapter 5</p>
+    <h1>{{ .Title }}</h1>
+    <p>How cold can anything get? There is a bottom: absolute zero, 0 kelvin, or −273.15 °C. Labs have come within 38 trillionths of a degree of it, but no one can ever quite arrive. Here you’ll climb down a cooling ladder one rung at a time and see why the last rung never comes. You’ll cool a cloud of atoms by letting the hottest ones escape, until they merge into a new state of matter. And you’ll explore a thermometer that runs from the coldest place ever made to the heart of a fusion reactor.</p>
+    <span class="lab-mark" aria-hidden="true">❄️</span>
+  </header>
+
+  <div class="lab-stage th5-main">
+    <div class="lab-view" id="th5-view">
+      <canvas id="th5-cv" tabindex="0" aria-label="The cooling ladder. Left: a crystal of tiny magnetic spins inside a magnet coil, connected to a cold bath by a heat switch, with its temperature. Right: entropy against temperature, with one curve for the magnet off and one for the magnet on, and the staircase path of the cooling rounds. Bottom: a log thermometer with a dot for each rung reached. Press Space, Enter or click to do the next step."></canvas>
+      <div class="lab-hud" id="th5-hud" aria-hidden="true"></div>
+      <div class="lab-tools"><button type="button" id="th5-reset" aria-label="Start over" title="Start over (N)">↺</button></div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="th5-start-h">Start from</h3>
+      <div class="lab-seg" id="th5-start" role="group" aria-labelledby="th5-start-h">
+        <button type="button" data-t="4.2">Liquid helium, 4.2 K</button><button type="button" data-t="1">Pumped helium, 1 K</button>
+      </div>
+      <div class="th5-acts">
+        <button type="button" class="lab-btn pri" id="th5-mag">1 · Magnetize (switch closed)</button>
+        <button type="button" class="lab-btn pri" id="th5-demag">2 · Demagnetize (switch open)</button>
+        <div class="lab-row"><button type="button" class="lab-btn" id="th5-auto" aria-pressed="false">Run 5 rounds by itself</button><button type="button" class="lab-btn" id="th5-restart">Start over</button></div>
+      </div>
+      <label class="lab-field"><span>Magnet strength B <output id="th5-B-o"></output></span><input type="range" id="th5-B" min="0.2" max="8" step="0.1" aria-label="Magnet strength in tesla"></label>
+      <label class="lab-field"><span>Spins’ pull on each other b <output id="th5-b-o"></output></span><input type="range" id="th5-b" min="0.02" max="0.5" step="0.01" aria-label="Internal field in tesla"></label>
+      <p class="lab-small th5-note" id="th5-ratio"></p>
+      <label class="lab-chk"><input type="checkbox" id="th5-lin"> Ordinary (not log) temperature scale</label>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="th5-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="th5-missions"></ol>
+    </div>
+    <section class="lab-sec th5-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The sample.</b> A crystal of a <i>paramagnetic salt</i>: each arrow is an atom that acts like a tiny compass needle, a <i>spin</i>. When it’s warm, the spins point every which way. A magnet (the coil) pulls them into line, and so does the spins’ pull on each other, shown by the setting <var>b</var>.</p>
+        <p><b>Rung 1: magnetize.</b> With the heat switch closed, the sample touches a cold bath. The magnet turns on and the spins line up. Lining up is a drop in entropy, and it releases heat, which flows into the bath, so the temperature stays the same. On the graph, the dot drops straight down from the pink curve to the green one.</p>
+        <p><b>Rung 2: demagnetize.</b> Now the switch opens, so no heat can get in or out, and the magnet turns off slowly. The spins’ entropy can’t change, so they stay just as lined up as before, and with a weaker field that’s only possible at a lower temperature. The crystal gets colder. On the graph, the dot slides left to the pink curve.</p>
+        <p><b>The ladder.</b> Each round divides the temperature by the same number, set by the magnet and by <var>b</var>. Here, the cold sample then becomes the bath for the next round. (A real lab uses separate stages, each cooled by the one before.) On the log thermometer at the bottom, every rung is the same size, and there are always more rungs below.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="law"><h2>The third law</h2>
+    <p>In 1906 the German chemist Walther Nernst noticed, from careful measurements of chemical reactions, that the entropy changes in a reaction get smaller and smaller as the temperature drops toward zero. That became the third law of thermodynamics:</p>
+    <div class="u-big"><var>S</var> → 0 as <var>T</var> → 0<small>the entropy of a perfect crystal approaches zero (or a constant minimum) as its temperature approaches absolute zero</small></div>
+    <p>In 1912 Nernst put it another way, which turns out to say the same thing. In the words of OpenStax: <i>absolute zero temperature cannot be reached through any finite number of cooling steps</i>. The graph shows why. Both entropy curves, magnet on and magnet off, sink to zero as the temperature does. Each rung of the staircase fits between them, and as the curves come together the rungs must shrink. You can take as many as you like, and there are always more.</p>
+    <p>If the spins didn’t pull on each other at all (<var>b</var> = 0), the magnet-off curve would stay at ln 2 all the way down, and one demagnetization would land exactly at zero. Real matter never behaves like that: something always makes the entropy fall to zero first. That’s the third law.</p>
+    <div class="u-ex"><b>Worked example: counting rungs</b>
+      <p>With the starting settings (B = 1 T, b = 0.1 T), each round multiplies the temperature by √(0.1² ÷ (1² + 0.1²)) = 0.0995, almost exactly ÷10.</p>
+      <ol><li>From 4.2 K: 0.42 K, then 42 mK, 4.2 mK, 0.42 mK. Below 1 mK after 4 rounds.</li>
+        <li>Rounds to reach 1 μK: you need 4.2 K × 0.0995<sup><var>n</var></sup> &lt; 10<sup>−6</sup> K, so <var>n</var> &gt; ln(4.2 × 10<sup>6</sup>) ÷ ln(10.05) = 15.25 ÷ 2.31 = 6.6, which means 7 rounds.</li>
+        <li>Rounds to reach 0 K: 0.0995<sup><var>n</var></sup> is never zero for any <var>n</var>. Infinitely many.</li></ol>
+    </div>
+    <div class="lab-try"><b>Try this:</b> watch the “heat squeezed out last round” number. It shrinks fast: by the time the sample is at a few millikelvin, the spins are already almost perfectly lined up, so there’s almost no entropy left to squeeze out. That’s the third law at work. In a real lab the tiny heat leaking in through wires and supports wins long before the model’s numbers get absurd.</div>
+    <h3 class="lab-h">Why heat capacities shrink toward zero</h3>
+    <p>The heat capacity says how much energy it takes to warm something by one degree. Near absolute zero it shrinks toward zero, which the third law requires. Think of the Einstein solid from <a href="{{ "science-lab/thermodynamics/second-law/" | relURL }}">Chapter 3</a>: energy comes in packets, and when the temperature is far below one packet’s worth, almost no atom can take one. Adding a little heat makes almost nothing happen. In 1912 Peter Debye showed that for ordinary solids the heat capacity near zero falls like <var>T</var><sup>3</sup>. A smaller heat capacity sounds helpful (less heat to remove), but the entropy you must remove shrinks too, so every method of cooling loses its grip as zero approaches.</p>
+  </section>
+
+  <section class="lab-sec" id="atoms"><h2>Cooling atoms by evaporation</h2>
+    <p>Blow on a spoonful of hot soup and it cools: the fastest molecules escape as vapor, carrying away more than their share of energy, and the ones left behind settle to a lower temperature. Physicists cool atoms to a billionth of a degree the same way. Laser light first slows a cloud of atoms to about ten millionths of a degree; then a magnetic trap holds them like marbles in a bowl, and the walls of the bowl are lowered bit by bit so the most energetic atoms spill over the rim.</p>
+    <div class="lab-stage wide th5-mini" id="th5-trap">
+      <div class="lab-view"><canvas id="th5-tc" aria-label="Left: a cloud of trapped rubidium atoms drawn as dots inside an energy bowl, each at the height of its energy, with a dashed rim showing the trap depth. Right: a histogram of the atoms' speeds, with the starting distribution as a dashed curve. When a condensate forms, a stylized bright peak appears at the bottom of the bowl."></canvas></div>
+      <div class="lab-panel th5-row">
+        <label class="lab-field th5-grow"><span>Trap depth (height of the rim) <output id="th5-depth-o"></output></span><input type="range" id="th5-depth" min="-7.3" max="-3.3" step="0.01" aria-label="Trap depth, on a log scale"></label>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="th5-auto2" aria-pressed="false">Lower the walls slowly</button><button type="button" class="lab-btn" id="th5-drop">Drop them 10× at once</button><button type="button" class="lab-btn" id="th5-tnew">Fresh cloud</button></div>
+        <dl class="lab-readout th5-grow" id="th5-tread"></dl>
+      </div>
+    </div>
+    <p>The cloud starts with 300 million rubidium-87 atoms at 50 μK in a trap that makes them swing back and forth 100 times a second. Lower the rim slowly and the atoms that escape take lots of energy with them; collisions spread out what’s left, and the cloud cools while keeping enough atoms. Drop the rim too fast and you just throw atoms away without giving the rest time to settle. Too slowly, and stray atoms of leftover gas in the vacuum chamber knock your atoms out first. Below a temperature <var>T</var><sub>c</sub> that depends on how many atoms remain, they pile into the lowest energy state together: a <i>Bose–Einstein condensate</i>.</p>
+    <div class="u-ex"><b>Worked example: how slow is slow?</b>
+      <p>The typical (root-mean-square) speed of an atom is <var>v</var> = √(3<var>kT</var>/<var>m</var>). A rubidium-87 atom has mass <var>m</var> = 86.909 u = 1.443 × 10<sup>−25</sup> kg.</p>
+      <ol><li>At room temperature, 293 K: <var>v</var> = √(3 × 1.380649 × 10<sup>−23</sup> × 293 ÷ 1.443 × 10<sup>−25</sup>) ≈ 290 m/s, faster than a jet airliner.</li>
+        <li>At 100 nK: <var>v</var> = √(3 × 1.380649 × 10<sup>−23</sup> × 10<sup>−7</sup> ÷ 1.443 × 10<sup>−25</sup>) ≈ 5.4 mm/s, slower than a crawling ant.</li></ol>
+    </div>
+    <p><b>The first one.</b> At 10:54 a.m. on June 5, 1995, at JILA in Boulder, Colorado, Eric Cornell and Carl Wieman’s team made the first Bose–Einstein condensate: about 2,000 rubidium atoms below 170 billionths of a degree above absolute zero, made exactly this way, with laser cooling first and evaporation second. Satyendra Nath Bose and Albert Einstein had predicted this state of matter in 1924–25. Cornell and Wieman shared the 2001 Nobel Prize in Physics with Wolfgang Ketterle of MIT, who made condensates of sodium soon after. In 2018 NASA’s Cold Atom Lab made them on the International Space Station.</p>
+    <p class="lab-small"><b>What’s stylized here:</b> the dots are classical particles, each standing for many atoms. A condensate is a quantum effect that this model can’t produce, so when the cloud is colder than <var>T</var><sub>c</sub> = 0.94 ħω<var>N</var><sup>1/3</sup>/<var>k</var> (the formula for an ideal gas in this kind of trap), the page draws a bright peak whose share of the atoms is 1 − (<var>T</var>/<var>T</var><sub>c</sub>)<sup>3</sup>. Its shape is only a picture.</p>
+  </section>
+
+  <section class="lab-sec" id="strange"><h2>Strange things near zero</h2>
+    <div class="u-key">
+      <div><b>Superconductors</b><p>In 1908 Heike Kamerlingh Onnes in Leiden became the first to liquefy helium, at about 4.2 K. In 1911 he found that mercury cooled to 4.2 K loses all electrical resistance: a current can flow in a loop with no battery at all. He won the 1913 Nobel Prize in Physics. Some materials found later, such as YBCO, superconduct below about 92 K, warm enough for liquid nitrogen (77 K).</p></div>
+      <div><b>Superfluid helium</b><p>Below 2.17 K, liquid helium-4 becomes a <i>superfluid</i>: it flows with no friction at all, through gaps too small for any ordinary liquid. Pyotr Kapitsa, and separately John Allen and Don Misener, discovered it in 1937.</p></div>
+      <div><b>Bose–Einstein condensates</b><p>Thousands to millions of atoms in one single quantum state, behaving like one giant “super-atom”. You can make one in the trap above (in stylized form).</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="ruler"><h2>The cosmic thermometer</h2>
+    <p>Every mark is a real temperature with its source. Drag to slide, use the buttons, a mouse wheel or two fingers to zoom, and tap a mark to read about it. Each step along the scale is ten times hotter than the last: from 38 trillionths of a kelvin to 150 million degrees, the scale covers 19 powers of ten.</p>
+    <div class="lab-stage wide th5-mini" id="th5-ruler">
+      <div class="lab-view"><canvas id="th5-rc" tabindex="0" aria-label="A log-scale thermometer from about ten trillionths of a kelvin to a billion kelvin, with marks for real temperatures. Drag or use the left and right arrow keys to slide; plus and minus, the wheel, or two fingers to zoom; up and down arrow keys step from mark to mark; tap a mark for details."></canvas></div>
+      <div class="lab-panel th5-row">
+        <div class="lab-row"><button type="button" class="lab-btn" id="th5-zin" aria-label="Zoom in">Zoom in ＋</button><button type="button" class="lab-btn" id="th5-zout" aria-label="Zoom out">Zoom out −</button><button type="button" class="lab-btn" id="th5-zall">Show everything</button></div>
+        <div class="th5-card th5-grow" id="th5-card" aria-live="polite"></div>
+      </div>
+    </div>
+    <details class="th5-list"><summary>All the marks as a list</summary>
+      <div class="lab-tw"><table class="lab-table"><thead><tr><th>Temperature</th><th>What</th><th>Source</th></tr></thead><tbody>
+        <tr><td>38 pK</td><td>Coldest ever made: a falling rubidium condensate, Bremen, 2021 (an effective temperature)</td><td><a href="https://physics.aps.org/articles/v14/119" target="_blank" rel="noopener">APS Physics</a></td></tr>
+        <tr><td>100 nK</td><td>NASA’s Cold Atom Lab on the space station, 2018</td><td><a href="https://www.nasa.gov/missions/station/iss-research/cold-atom-laboratory/space-station-experiment-reaches-ultracold-milestone/" target="_blank" rel="noopener">NASA</a></td></tr>
+        <tr><td>170 nK</td><td>First Bose–Einstein condensate, JILA, 1995</td><td><a href="https://www.nist.gov/news-events/news/1995/07/physicists-create-new-state-matter-record-low-temperature" target="_blank" rel="noopener">NIST</a></td></tr>
+        <tr><td>10 μK</td><td>Laser cooling of rubidium, before evaporation</td><td><a href="https://www.nist.gov/news-events/news/1995/07/physicists-create-new-state-matter-record-low-temperature" target="_blank" rel="noopener">NIST</a></td></tr>
+        <tr><td>6 mK</td><td>CUORE’s cubic meter of copper, 2014</td><td><a href="https://en.wikipedia.org/wiki/Absolute_zero" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>0.25 K</td><td>First magnetic cooling, Giauque and MacDougall, 1933</td><td><a href="https://en.wikipedia.org/wiki/Magnetic_refrigeration" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>1 K</td><td>Boomerang Nebula, coldest natural place known</td><td><a href="https://en.wikipedia.org/wiki/Absolute_zero" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>2.17 K</td><td>Helium-4 becomes superfluid</td><td><a href="https://en.wikipedia.org/wiki/Superfluid_helium-4" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>2.725 K</td><td>Cosmic microwave background</td><td><a href="https://lambda.gsfc.nasa.gov/product/cobe/about_firas.html" target="_blank" rel="noopener">NASA</a></td></tr>
+        <tr><td>4.2 K</td><td>Helium boils; mercury superconducts</td><td><a href="https://en.wikipedia.org/wiki/Heike_Kamerlingh_Onnes" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>48 K</td><td>Pluto’s mean surface (−225 °C)</td><td><a href="https://science.nasa.gov/solar-system/temperatures-across-our-solar-system/" target="_blank" rel="noopener">NASA</a></td></tr>
+        <tr><td>77 K</td><td>Liquid nitrogen boils</td><td><a href="https://en.wikipedia.org/wiki/Orders_of_magnitude_(temperature)" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>92 K</td><td>YBCO superconducts below this</td><td><a href="https://en.wikipedia.org/wiki/Orders_of_magnitude_(temperature)" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>184 K</td><td>Coldest air on Earth, Vostok, 1983 (−89.2 °C)</td><td><a href="https://science.nasa.gov/solar-system/temperatures-across-our-solar-system/" target="_blank" rel="noopener">NASA</a></td></tr>
+        <tr><td>194.6 K</td><td>Dry ice (−78.5 °C)</td><td><a href="https://en.wikipedia.org/wiki/Orders_of_magnitude_(temperature)" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>273.15 K</td><td>Water freezes (0 °C)</td><td><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.330-2019.pdf" target="_blank" rel="noopener">NIST SP 330</a></td></tr>
+        <tr><td>310 K</td><td>Human body (37 °C)</td><td><a href="https://en.wikipedia.org/wiki/Orders_of_magnitude_(temperature)" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>373 K</td><td>Water boils at sea level</td><td><a href="https://en.wikipedia.org/wiki/Orders_of_magnitude_(temperature)" target="_blank" rel="noopener">Wikipedia</a></td></tr>
+        <tr><td>737 K</td><td>Venus’s surface (464 °C)</td><td><a href="https://science.nasa.gov/solar-system/temperatures-across-our-solar-system/" target="_blank" rel="noopener">NASA</a></td></tr>
+        <tr><td>5,800 K</td><td>The Sun’s surface (5,500 °C)</td><td><a href="https://science.nasa.gov/sun/facts/" target="_blank" rel="noopener">NASA</a></td></tr>
+        <tr><td>2 million K</td><td>The Sun’s corona</td><td><a href="https://science.nasa.gov/sun/facts/" target="_blank" rel="noopener">NASA</a></td></tr>
+        <tr><td>15 million K</td><td>The Sun’s core</td><td><a href="https://science.nasa.gov/sun/facts/" target="_blank" rel="noopener">NASA</a></td></tr>
+        <tr><td>150 million K</td><td>ITER’s fusion plasma (see <a href="{{ "games/magnetic-bottles/" | relURL }}">Magnetic Bottles for Fusion</a>)</td><td><a href="https://www.iter.org/node/2303" target="_blank" rel="noopener">ITER</a></td></tr>
+      </tbody></table></div>
+    </details>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “At absolute zero, all motion stops”</b>
+    <p>It’s a natural picture: temperature measures jiggling, so zero temperature should mean no jiggling. But atoms obey quantum mechanics, and a quantum particle held in a small space can never sit perfectly still. Its lowest possible energy, the <i>zero-point energy</i>, is not zero. Even at absolute zero, atoms keep this leftover motion. You can see the result in helium: its atoms are so light, and pull on each other so weakly, that their zero-point motion keeps it liquid all the way down to absolute zero. It only freezes if you squeeze it at about 25 times normal air pressure. Absolute zero means the lowest possible energy, not no motion.</p>
+  </div>
+
+  <section class="lab-sec" id="kelvin"><h2>The kelvin scale</h2>
+    <p>In 1848 William Thomson, later Lord Kelvin, proposed a temperature scale that starts at the true bottom, absolute zero, instead of at freezing water. Today’s unit is named for him. One kelvin is the same size as one degree Celsius, so 0 K = −273.15 °C = −459.67 °F, and water freezes at 273.15 K.</p>
+    <p>From 1954 the kelvin was defined by fixing the temperature of water’s <i>triple point</i> (where ice, liquid water and vapor coexist) at exactly 273.16 K. Since May 20, 2019, it has been defined instead by giving Boltzmann’s constant an exact value:</p>
+    <div class="u-big"><var>k</var> = 1.380649 × 10<sup>−23</sup> J/K<small>exactly, by definition: one kelvin is the temperature change that changes <var>kT</var> by 1.380649 × 10<sup>−23</sup> joule</small></div>
+    <p>So a temperature is now tied directly to an energy, the energy of jiggling atoms, and not to any one substance. That matters most at the extremes, like the very cold temperatures on this page.</p>
+    <div class="u-ex"><b>Worked example: converting</b>
+      <p>Liquid nitrogen boils at 77 K. In Celsius: 77 − 273.15 = −196 °C. In Fahrenheit: −196.15 × 9/5 + 32 = −321 °F. The first Bose–Einstein condensate, 170 nK, was 0.000000170 K: in Celsius, −273.149999830 °C.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A little history</h2>
+    <div class="lab-cols">
+      <p><b>Nernst.</b> Walther Nernst stated his heat theorem in 1906 and his unattainability principle in 1912. He won the 1920 Nobel Prize in Chemistry for his work in thermochemistry.</p>
+      <p><b>Magnetic cooling.</b> Peter Debye (1926) and William Giauque (1927) each proposed cooling by demagnetizing a paramagnetic salt, the trick in the ladder above. Giauque and D. P. MacDougall did it in 1933 and reached 0.25 K. Salts reach about 1 to 100 millikelvin; demagnetizing the much weaker magnets inside atomic nuclei reaches about a microkelvin or below.</p>
+      <p><b>Atoms.</b> Laser cooling and evaporative cooling, developed in the 1980s and 1990s, opened up the nanokelvin world, and the first condensate followed in 1995.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where you see it</h2>
+    <ul>
+      <li><b>MRI scanners</b> in hospitals use superconducting magnets kept cold by liquid helium.</li>
+      <li><b>Cold atom clocks and sensors</b> use laser-cooled atoms. NASA’s Cold Atom Lab studies them in orbit, where they can float freely.</li>
+      <li><b>Magnetic refrigerators</b>, like the ladder above, cool instruments in labs, including detectors on some space telescopes.</li>
+      <li><b>Space itself</b> is not at absolute zero: the leftover glow of the Big Bang keeps it at 2.725 K, as the thermometer shows.</li>
+      <li><b>Engines</b>: absolute zero is also why no engine can be 100% efficient. See <a href="{{ "science-lab/thermodynamics/engines/" | relURL }}">Chapter 4</a>.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The ladder.</b> The sample is an ideal crystal of spin-½ atoms, each with a magnetic moment of one Bohr magneton (μ<sub>B</sub> = 9.2740100657 × 10<sup>−24</sup> J/T, CODATA 2022). The spins’ pull on each other is modeled as an extra field <var>b</var>, so each spin feels <var>B</var><sub>eff</sub> = √(<var>B</var>² + <var>b</var>²). With <var>x</var> = μ<sub>B</sub><var>B</var><sub>eff</sub>/<var>kT</var>, the entropy per spin is <var>S</var>/<var>Nk</var> = ln(2 cosh <var>x</var>) − <var>x</var> tanh <var>x</var>. Since <var>S</var> depends only on <var>B</var><sub>eff</sub>/<var>T</var>, demagnetizing with <var>S</var> fixed gives <var>T</var><sub>after</sub> = <var>T</var><sub>before</sub> × <var>b</var>/√(<var>B</var>² + <var>b</var>²). The heat given to the bath is <var>T</var>Δ<var>S</var>. Leaks of heat from outside, the crystal’s own vibrations and the limits of real salts are left out, which is why the model can go absurdly cold.</p>
+      <p><b>The trap.</b> 3,000 model atoms, each standing for 100,000 real ones at the start, move exactly along their orbits in a round harmonic trap. Random pairs collide, keeping momentum and energy; the collision rate grows with density and speed, like <var>N</var>/<var>T</var> in this trap, up to a limit. Any atom whose energy is above the rim leaves. Each frame, an atom also has a 1-in-4,000 chance of being knocked out by leftover gas. When fewer than 900 model atoms remain, each is split in two, with the copy turned by random rotations that keep its energy, so the picture stays full while each model atom stands for fewer real ones.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests):</p>
+        <ul class="lab-small">
+          <li>Entropy formula: <var>S</var>/<var>Nk</var> = ln 2 at <var>x</var> = 0 and matches ln(2 cosh 1) − tanh 1 to 12 digits; written so it never overflows (at <var>x</var> = 50 it gives 4 × 10<sup>−42</sup>).</li>
+          <li>Ladder: after each demagnetization the entropy matched the magnetized value to 10<sup>−16</sup>. With B = 1 T and b = 0.05 T each round multiplies <var>T</var> by 0.0499; from 4.2 K: 0.21 K, 10.5 mK, 0.52 mK, … ; 1 mK after 3 rounds, 1 μK after 6; still above zero after 30 rounds. The heat capacity at b = 0.05 T fell from 0.44<var>Nk</var> at 30 mK to 3 × 10<sup>−26</sup> <var>Nk</var> at 1 mK.</li>
+          <li>Trap, with no escape and no losses: total energy kept to 8 × 10<sup>−16</sup> over 400 frames of collisions; kinetic and potential temperatures agreed (0.995 and 1.000), and ⟨<var>v</var><sup>4</sup>⟩/⟨<var>v</var><sup>2</sup>⟩<sup>2</sup> = 1.670, against 5/3 for a Maxwell distribution. Splitting kept the mean energy per atom exactly.</li>
+          <li>Evaporation: lowering the rim from 500 μK to 500 nK over 300 frames (5 s) left 381 atoms and no condensate; over 900 frames, 3 × 10<sup>5</sup> atoms condensed; over 1,800 frames, 3 × 10<sup>6</sup>; over 7,200 frames, fewer again (2.5 × 10<sup>6</sup>) because of the background losses.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>Each round of a cooling ladder multiplies the temperature by 0.1. You start at 1 K. How many rounds does it take to reach exactly 0 K?</p>
+        <ul class="u-opts"><li><button type="button">10</button></li><li><button type="button">100</button></li><li><button type="button">No number of rounds is enough</button></li></ul>
+        <details><summary>Show the answer</summary><p>After <var>n</var> rounds the temperature is 0.1<sup><var>n</var></sup> K, which is never zero. That’s the unattainability form of the third law.</p></details></li>
+      <li class="u-q" data-a="1"><p>What does the third law say happens to the entropy of a perfect crystal as it approaches absolute zero?</p>
+        <ul class="u-opts"><li><button type="button">It grows without limit</button></li><li><button type="button">It approaches zero</button></li><li><button type="button">It stays at ln 2 per atom</button></li></ul>
+        <details><summary>Show the answer</summary><p>It approaches zero (or a constant minimum). Both curves on the graph sink to zero, which is why the cooling steps keep shrinking.</p></details></li>
+      <li class="u-q" data-a="0"><p>Why does blowing on hot soup cool it, and how does the same idea cool atoms?</p>
+        <ul class="u-opts"><li><button type="button">The fastest molecules escape, taking extra energy with them, so the rest are left cooler</button></li><li><button type="button">Your breath is colder than absolute zero</button></li><li><button type="button">Blowing removes the slowest molecules</button></li></ul>
+        <details><summary>Show the answer</summary><p>Evaporation removes the most energetic particles. Lowering the walls of an atom trap lets the hottest atoms spill out in just the same way.</p></details></li>
+      <li class="u-q" data-a="2"><p>At absolute zero, what happens to the motion of atoms?</p>
+        <ul class="u-opts"><li><button type="button">It stops completely</button></li><li><button type="button">It reverses direction</button></li><li><button type="button">A leftover quantum motion, the zero-point motion, remains</button></li></ul>
+        <details><summary>Show the answer</summary><p>Quantum particles can never be perfectly still. That’s why helium stays liquid at absolute zero unless it’s squeezed hard.</p></details></li>
+      <li class="u-q" data-a="1"><p>Since 2019, what defines the size of one kelvin?</p>
+        <ul class="u-opts"><li><button type="button">The freezing point of water</button></li><li><button type="button">An exact, fixed value of Boltzmann’s constant</button></li><li><button type="button">A metal bar kept in France</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>k</var> = 1.380649 × 10<sup>−23</sup> J/K exactly. Before that, the kelvin was tied to the triple point of water.</p></details></li>
+      <li class="u-q" data-a="0"><p>Which is colder: deep space (the cosmic microwave background) or the first Bose–Einstein condensate?</p>
+        <ul class="u-opts"><li><button type="button">The condensate, by more than ten million times</button></li><li><button type="button">Deep space</button></li><li><button type="button">They are the same temperature</button></li></ul>
+        <details><summary>Show the answer</summary><p>2.725 K ÷ 170 nK ≈ 16 million. Labs on Earth (and in orbit) are the coldest places we know of.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-7-entropy-on-a-microscopic-scale" target="_blank" rel="noopener">University Physics Volume 2, 4.7 Entropy on a Microscopic Scale</a>: the third law, “absolute zero temperature cannot be reached through any finite number of cooling steps”.</li>
+      <li>NIST, <a href="https://www.nist.gov/si-redefinition/kelvin/kelvin-boltzmann-constant" target="_blank" rel="noopener">Kelvin: Boltzmann Constant</a>, <a href="https://www.nist.gov/si-redefinition/kelvin-introduction" target="_blank" rel="noopener">Kelvin: Introduction</a> (the 1954 triple-point definition) and <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.330-2019.pdf" target="_blank" rel="noopener">SP 330, The International System of Units (2019)</a>: the new definitions took effect May 20, 2019.</li>
+      <li>NIST, <a href="https://www.nist.gov/news-events/news/1995/07/physicists-create-new-state-matter-record-low-temperature" target="_blank" rel="noopener">Physicists Create New State of Matter at Record Low Temperature</a> (July 1995): the first condensate, laser and evaporative cooling. NIST, <a href="https://physics.nist.gov/cuu/Constants/" target="_blank" rel="noopener">CODATA constants</a>: <var>k</var>, μ<sub>B</sub>, ħ and the atomic mass unit.</li>
+      <li>NASA, <a href="https://www.nasa.gov/missions/station/iss-research/cold-atom-laboratory/space-station-experiment-reaches-ultracold-milestone/" target="_blank" rel="noopener">Space Station Experiment Reaches Ultracold Milestone</a> (2018); <a href="https://lambda.gsfc.nasa.gov/product/cobe/about_firas.html" target="_blank" rel="noopener">COBE FIRAS</a>: 2.725 K; <a href="https://science.nasa.gov/sun/facts/" target="_blank" rel="noopener">Sun: Facts</a>; <a href="https://science.nasa.gov/solar-system/temperatures-across-our-solar-system/" target="_blank" rel="noopener">Temperatures Across Our Solar System</a>.</li>
+      <li>APS Physics, <a href="https://physics.aps.org/articles/v14/119" target="_blank" rel="noopener">Viewpoint on C. Deppner et al., Phys. Rev. Lett. 127, 100401 (2021)</a>: 38 pK.</li>
+      <li>ITER Organization, <a href="https://www.iter.org/node/2303" target="_blank" rel="noopener">The Machine</a>: 150 million °C.</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Third_law_of_thermodynamics" target="_blank" rel="noopener">Third law of thermodynamics</a> (Nernst, 1906–1912; heat capacities must vanish), <a href="https://en.wikipedia.org/wiki/Absolute_zero" target="_blank" rel="noopener">Absolute zero</a> (records, zero-point motion), <a href="https://en.wikipedia.org/wiki/Magnetic_refrigeration" target="_blank" rel="noopener">Magnetic refrigeration</a> (Debye, Giauque, 1933), <a href="https://en.wikipedia.org/wiki/Superfluid_helium-4" target="_blank" rel="noopener">Superfluid helium-4</a> (2.17 K, about 25 bar), <a href="https://en.wikipedia.org/wiki/Heike_Kamerlingh_Onnes" target="_blank" rel="noopener">Heike Kamerlingh Onnes</a> and <a href="https://en.wikipedia.org/wiki/Orders_of_magnitude_(temperature)" target="_blank" rel="noopener">Orders of magnitude (temperature)</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/thermodynamics/third-law/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/third-law/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/thermodynamics/third-law/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/third-law/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

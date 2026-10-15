@@ -1,0 +1,276 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/newtons-laws/forces/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/forces/sim.css").ModTime.Unix }}">
+<div class="lab" id="nl4-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Newton’s Laws · Chapter 4</p>
+    <h1>{{ .Title }}</h1>
+    <p>Almost nothing feels just one force. A book on a shelf is pulled down by gravity and pushed up by the shelf. A sled feels gravity, the snow, the rope and friction all at once. Newton’s second law only cares about their sum, and the free-body diagram is how you find it: draw the object as a dot, draw every force on it as an arrow, then add the arrows. Here you’ll tilt a ramp until a block slips, ride an elevator standing on a bathroom scale, race two weights over a pulley, and draw diagrams of your own.</p>
+    <span class="lab-mark" aria-hidden="true">🧗</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="nl4-view">
+      <canvas id="nl4-cv" tabindex="0" aria-label="The ramp lab: a block on a tilting ramp with its forces drawn as arrows, a free-body diagram in the corner, a friction meter and a speed graph. Drag the gold knob at the top of the ramp to tilt it. Keys: left and right arrows tilt the ramp, up and down arrows change the push (hold Shift for bigger steps), W shoves the block up the ramp, S shoves it down, 0 removes the push, Space pauses, R puts the block back."></canvas>
+      <div class="lab-hud" id="nl4-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="nl4-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="nl4-slow" aria-label="Slow motion" aria-pressed="false" title="Slow motion">🐢</button>
+        <button type="button" id="nl4-reset" aria-label="Put the block back" title="Put the block back (R)">↺</button>
+      </div>
+      <noscript><p class="nl4-noscript">This simulation needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Ramp</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made setups" id="nl4-pre">
+        <button type="button" data-pre="crate" aria-pressed="false">📦 Crate</button>
+        <button type="button" data-pre="tire" aria-pressed="false">🛞 Rubber</button>
+        <button type="button" data-pre="sled" aria-pressed="false">🛷 Sled</button>
+        <button type="button" data-pre="skate" aria-pressed="false">⛸️ Skate</button>
+      </div>
+      <div class="lab-field"><span><label for="nl4-mat">Surfaces (Table 6.1)</label></span><select id="nl4-mat"></select></div>
+      <div class="lab-field"><span><label for="nl4-th">Ramp angle θ</label><output id="nl4-th-o" for="nl4-th">20°</output></span><input type="range" id="nl4-th" min="0" max="75" step="0.5" value="20"></div>
+      <div class="lab-field"><span><label for="nl4-m">Mass m</label><output id="nl4-m-o" for="nl4-m">10 kg</output></span><input type="range" id="nl4-m" min="1" max="50" step="0.5" value="10"></div>
+      <div class="lab-field"><span><label for="nl4-p">Your push F (along the ramp)</label><output id="nl4-p-o" for="nl4-p">none</output></span><input type="range" id="nl4-p" min="-300" max="300" step="0.5" value="0"></div>
+      <div class="lab-row nl4-row">
+        <button type="button" class="lab-btn" id="nl4-up" title="Shove up (W)">▲ Shove up</button>
+        <button type="button" class="lab-btn" id="nl4-down" title="Shove down (S)">▼ Shove down</button>
+        <button type="button" class="lab-btn" id="nl4-nopush" title="No push (0)">No push</button>
+      </div>
+      <label class="lab-chk"><input type="checkbox" id="nl4-comp" checked> Split gravity into its two parts (dashed)</label>
+      <label class="lab-chk"><input type="checkbox" id="nl4-net" checked> Show the net force (gold)</label>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="nl4-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="nl4-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The ramp.</b> A block sits on a board that tilts on a hinge. Drag the gold knob at the top, or use the slider, to change the angle θ. The surfaces menu sets what rubs on what, with the friction numbers measured for real pairs of materials. The ramp is 6 m long; if the block reaches either end, it goes back to the middle.</p>
+      <p><b>The arrows.</b> Each color is one force, and each arrow’s length shows its size. <span class="nl4-k" style="--k:#f9a8d4">Pink</span> is gravity, the weight <var>mg</var>. Its two dashed parts are the pull along the ramp, <var>mg</var> sin θ, and the press into the ramp, <var>mg</var> cos θ. <span class="nl4-k" style="--k:#74c0fc">Blue</span> is the normal force <var>N</var>, the ramp pushing back. <span class="nl4-k" style="--k:#ff8787">Red</span> is friction. <span class="nl4-k" style="--k:#63e6be">Green</span> is your push <var>F</var>. <span class="nl4-k" style="--k:#ffd479">Gold</span> is the net force: the sum of all the others.</p>
+      <p><b>The free-body diagram.</b> The box in the corner shows the same forces with the block shrunk to a dot, on axes tilted to match the ramp. That is how physicists draw it: one object, every force on it, nothing else.</p>
+      <p><b>The friction meter.</b> Static friction is lazy: it pushes only as hard as it must to stop sliding, up to a limit, μ<sub>s</sub><var>N</var>. Watch the blue bar fill as you tilt. When it reaches the gold line, the block slips, and the bar drops to the smaller kinetic friction, μ<sub>k</sub><var>N</var>. The graph next to it shows the block’s speed: a flat line means constant speed, a sloping line means acceleration.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="forces">
+    <h2>The forces you’ll meet most</h2>
+    <p>A force is a push or a pull, measured in newtons (N). One newton is about the weight of a small apple. Almost every force in everyday life is one of these:</p>
+    <div class="u-key nl4-forces">
+      <div style="--k:#f9a8d4"><b>Gravity (weight) <var>w</var> = <var>mg</var></b><p>Earth pulls every mass straight down. On Earth <var>g</var> = 9.81 m/s², so a 10 kg block weighs 98.1 N. It acts without touching.</p></div>
+      <div style="--k:#74c0fc"><b>Normal force <var>N</var></b><p>A surface pushes back on whatever presses on it, straight out of the surface (“normal” means at right angles). It is only as big as it has to be to stop you sinking in.</p></div>
+      <div style="--k:#ff8787"><b>Friction <var>f</var></b><p>Acts along a surface, against sliding. Static friction: <var>f</var><sub>s</sub> ≤ μ<sub>s</sub><var>N</var>, as much as needed up to a limit. Kinetic friction while sliding: <var>f</var><sub>k</sub> = μ<sub>k</sub><var>N</var>.</p></div>
+      <div style="--k:#b197fc"><b>Tension <var>T</var></b><p>A rope, cable or chain pulls along its own length. It can pull but never push: you can’t push a rope.</p></div>
+      <div style="--k:#63e6be"><b>Applied force <var>F</var></b><p>A push or pull from a hand, a motor or anything else, in whatever direction it acts.</p></div>
+      <div style="--k:#c0eb75"><b>Drag <var>D</var></b><p>Air or water pushes against motion through it. It grows quickly with speed, which is why a falling skydiver reaches a top speed.</p></div>
+      <div style="--k:#66d9e8"><b>Spring force <var>F</var><sub>s</sub> = −<var>kx</var></b><p>Stretch or squeeze a spring by <var>x</var> and it pushes or pulls back in proportion (Hooke’s law). <var>k</var> is the spring’s stiffness in N/m.</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>Drawing a free-body diagram, and solving with it</h2>
+    <div class="lab-cols">
+      <div>
+        <ol class="nl4-steps">
+          <li><b>Pick one object.</b> Draw it as a dot.</li>
+          <li><b>Add every force on it</b> as an arrow from the dot: gravity, plus one force for each thing that touches it (a surface gives a normal force and maybe friction, a rope gives tension). Leave out forces the object puts on other things, and don’t draw the net force as an extra arrow.</li>
+          <li><b>Choose axes.</b> Point one along the way the object moves or would move. On a ramp, that means one axis along the ramp and one across it.</li>
+          <li><b>Split</b> any force that isn’t along an axis into two parts (components), using sine and cosine.</li>
+          <li><b>Apply the second law</b> along each axis, then solve. Check that the units and the size of the answer make sense.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="u-big">Σ<var>F</var><sub>x</sub> = <var>m a</var><sub>x</sub> &nbsp; Σ<var>F</var><sub>y</sub> = <var>m a</var><sub>y</sub><small>add up the forces along each axis; the total equals mass × acceleration along that axis</small></div>
+        <p>For the block on the ramp, with <var>x</var> pointing up the ramp:</p>
+        <div class="lab-formula">across: <var>N</var> − <var>mg</var> cos θ = 0, so <var>N</var> = <var>mg</var> cos θ<br>along: <var>F</var> − <var>mg</var> sin θ + <var>f</var> = <var>m a</var></div>
+        <p>With no push, the block starts to slip when <var>mg</var> sin θ is bigger than μ<sub>s</sub><var>mg</var> cos θ, which means</p>
+        <div class="lab-formula">tan θ &gt; μ<sub>s</sub> &nbsp; (it starts to slip) &nbsp;&nbsp; tan θ = μ<sub>k</sub> &nbsp; (a sliding block keeps a steady speed)</div>
+        <p>The mass cancels out. A heavy crate and a light one of the same materials slip at the same angle.</p>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: a crate on a wooden ramp</b>
+      <p>A 20 kg wooden crate rests on a wooden ramp tilted 15°. For wood on wood, μ<sub>s</sub> = 0.5 and μ<sub>k</sub> = 0.3.</p>
+      <ol>
+        <li>Weight: <var>mg</var> = 20 kg × 9.81 m/s² = 196.1 N.</li>
+        <li>Along the ramp: <var>mg</var> sin 15° = 50.8 N. Into the ramp: <var>mg</var> cos 15° = 189.4 N, so <var>N</var> = 189.4 N.</li>
+        <li>Most static friction can give: μ<sub>s</sub><var>N</var> = 0.5 × 189.4 = 94.7 N. That is more than the 50.8 N trying to slide it, so the crate stays put, and static friction is exactly 50.8 N, pointing up the ramp.</li>
+        <li>To start it moving up the ramp, a push must beat gravity’s 50.8 N and the full static friction: 50.8 + 94.7 = 145.5 N.</li>
+        <li>Once it moves, friction drops to μ<sub>k</sub><var>N</var> = 56.8 N, so 50.8 + 56.8 = 107.6 N keeps it going at a steady speed. Starting is harder than keeping going. Try it: the 📦 setup is this crate.</li>
+      </ol>
+    </div>
+    <div class="u-ex"><b>Worked example: a sled on a snowy hill</b>
+      <p>Waxed wood on wet snow has μ<sub>s</sub> = 0.14 and μ<sub>k</sub> = 0.10. A sled at rest starts to slide by itself on any hill steeper than tan⁻¹(0.14) = 8.0°. On a 10° hill, once it is going:</p>
+      <div class="lab-formula"><var>a</var> = <var>g</var>(sin 10° − μ<sub>k</sub> cos 10°) = 9.81 × (0.174 − 0.098) = 0.74 m/s²</div>
+      <p>After 5 seconds it is moving at 3.7 m/s (about 8 mph) and has gone 9.2 m. On a 5° hill, a sled at rest stays put; give it a shove and it slows down and stops, because tan 5° = 0.087 is less than μ<sub>k</sub>.</p>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> Pick the 🛞 rubber setup and tilt the ramp a half degree at a time. Watch the friction meter climb as tan θ grows. At 45°, tan θ = 1.0 = μ<sub>s</sub>, and one more half degree makes it slip. Now change the mass and do it again: the slip angle doesn’t change.</div>
+  <div class="lab-try"><b>Try this:</b> At 20° on wood, slowly raise the push. Static friction first shrinks, reaches zero when your push equals <var>mg</var> sin θ, then turns around and points down the ramp, holding the block against your push, until the push wins.</div>
+
+  <div class="u-myth"><b>Common mistake: “The normal force always equals <var>mg</var>”</b>
+    <p>The normal force is not a fixed amount. It is whatever push the surface needs to stop the object from sinking into it, and it equals <var>mg</var> only for an object resting on level ground with nothing else pushing up or down. On a ramp, the block presses in with only part of its weight, so <var>N</var> = <var>mg</var> cos θ: at 60°, that’s half the weight. Push down on a book and the table pushes up harder. Pull a sled with a rope angled upward and the snow pushes up less. In an elevator that speeds up going up, the floor pushes up with more than your weight, which is the next experiment. Always find <var>N</var> from the forces across the surface, never by habit.</p>
+  </div>
+
+  <section class="lab-sec" id="elevator">
+    <h2>The elevator scale: what a scale really measures</h2>
+    <p>A bathroom scale doesn’t measure your weight. It measures how hard it has to push up on your feet, and shows that as kilograms by dividing by <var>g</var>. Standing still, that push equals your weight. In an elevator, Newton’s second law for you says <var>N</var> − <var>mg</var> = <var>ma</var>, so</p>
+    <div class="u-big"><var>N</var> = <var>m</var>(<var>g</var> + <var>a</var>)<small>scale reading (N) = mass (kg) × (9.81 m/s² + the elevator’s upward acceleration)</small></div>
+    <div class="lab-stage" id="nl4e">
+      <div class="lab-view nl4-short" id="nl4e-view">
+        <canvas id="nl4e-cv" aria-label="An elevator ride: a person stands on a bathroom scale in an elevator. A dial shows the scale reading and a graph shows it through the ride. Choose a ride with the buttons beside the picture."></canvas>
+        <div class="lab-tools"><button type="button" id="nl4e-pause" aria-label="Pause">❚❚</button></div>
+      </div>
+      <div class="lab-panel">
+        <h3>Ride</h3>
+        <div class="lab-seg" role="group" aria-label="Choose a ride" id="nl4e-rides">
+          <button type="button" data-ride="up" aria-pressed="false">⬆ Ride up</button>
+          <button type="button" data-ride="down" aria-pressed="false">⬇ Ride down</button>
+          <button type="button" data-ride="drop" aria-pressed="false">🎢 Drop tower</button>
+        </div>
+        <div class="lab-field"><span><label for="nl4e-m">Rider’s mass</label><output id="nl4e-m-o" for="nl4e-m">40 kg</output></span><input type="range" id="nl4e-m" min="20" max="120" step="1" value="40"></div>
+        <dl class="lab-readout" id="nl4e-read"></dl>
+        <p class="lab-small" id="nl4e-note" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <p><b>Speeding up going up</b> (or slowing down going down): the acceleration points up, so the floor must push harder than your weight. You feel heavy. In this elevator, <var>a</var> = 1.2 m/s², and a 50 kg rider’s scale reads 50 × (9.81 + 1.2) = 550 N, which it shows as 56.1 kg.</p>
+      <p><b>Cruising at a steady speed</b>, up or down: <var>a</var> = 0, and the scale reads your weight, 490 N for 50 kg. Moving and accelerating are different things. Only acceleration changes the reading.</p>
+      <p><b>Speeding up going down</b> (or slowing down going up): the floor pushes less than your weight. The same rider reads 430 N, shown as 43.9 kg.</p>
+      <p><b>The drop tower.</b> On a drop-tower ride, the seats are let go and fall freely, with <var>a</var> = −<var>g</var>. Then <var>N</var> = <var>m</var>(<var>g</var> − <var>g</var>) = 0: the scale reads nothing, and riders feel weightless. Gravity hasn’t switched off. You and the seat fall together, so the seat has nothing to push on. In this model, brakes then stop the car at 2<var>g</var>, and the scale shows three times the rider’s weight. Astronauts in orbit feel weightless for the same reason: they are falling too, as Chapter 6 explains.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="atwood">
+    <h2>A pulley race: the Atwood machine</h2>
+    <p>Hang two masses on a rope over a pulley. The heavier one sinks, the lighter one rises, and both accelerate at the same rate, much more gently than free fall. The English mathematician George Atwood described this machine in 1784 as a way to slow falling down enough to time it.</p>
+    <div class="lab-stage" id="nl4a">
+      <div class="lab-view nl4-short" id="nl4a-view">
+        <canvas id="nl4a-cv" aria-label="An Atwood machine: two masses hang from a rope over a pulley, with their tension and weight arrows. Set the masses beside the picture and press Release."></canvas>
+        <div class="lab-hud" id="nl4a-hud" aria-hidden="true"></div>
+      </div>
+      <div class="lab-panel">
+        <h3>Masses</h3>
+        <div class="lab-field"><span><label for="nl4a-m1">Left mass m₁</label><output id="nl4a-m1-o" for="nl4a-m1">1.20 kg</output></span><input type="range" id="nl4a-m1" min="0.1" max="5" step="0.05" value="1.2"></div>
+        <div class="lab-field"><span><label for="nl4a-m2">Right mass m₂</label><output id="nl4a-m2-o" for="nl4a-m2">0.80 kg</output></span><input type="range" id="nl4a-m2" min="0.1" max="5" step="0.05" value="0.8"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="nl4a-go">▶ Release</button><button type="button" class="lab-btn" id="nl4a-reset">↺ Reset</button></div>
+        <dl class="lab-readout" id="nl4a-read"></dl>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <p>Draw one free-body diagram for each mass. Both feel the same tension <var>T</var> up, because a light rope over a frictionless pulley pulls equally at both ends. Taking the direction the heavier side moves as positive:</p>
+        <div class="lab-formula">left: <var>m</var>₁<var>g</var> − <var>T</var> = <var>m</var>₁<var>a</var> &nbsp;&nbsp; right: <var>T</var> − <var>m</var>₂<var>g</var> = <var>m</var>₂<var>a</var></div>
+        <p>Add the two equations and <var>T</var> cancels:</p>
+        <div class="lab-formula"><var>a</var> = (<var>m</var>₁ − <var>m</var>₂)<var>g</var> / (<var>m</var>₁ + <var>m</var>₂) &nbsp;&nbsp; <var>T</var> = 2<var>m</var>₁<var>m</var>₂<var>g</var> / (<var>m</var>₁ + <var>m</var>₂)</div>
+      </div>
+      <div class="u-ex"><b>Worked example</b>
+        <p>With 1.20 kg and 0.80 kg: <var>a</var> = (0.40 / 2.00) × 9.81 = 1.96 m/s², one fifth of <var>g</var>. The tension is 2 × 1.20 × 0.80 × 9.81 / 2.00 = 9.41 N, between the two weights (11.77 N and 7.85 N), as it must be: it holds the heavy one back and lifts the light one. Each mass moves 1 m in √(2 × 1 / 1.96) = 1.01 s. Press Release and compare.</p>
+      </div>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Make the two masses equal. Nothing happens, and the tension equals each weight. Now make them 1.10 kg and 0.90 kg: the acceleration is <var>g</var>/10, slow enough to time with a stopwatch. That was Atwood’s trick.</div>
+  </section>
+
+  <section class="lab-sec" id="builder">
+    <h2>Build your own free-body diagrams</h2>
+    <p>Pick a scene. Drag forces from the tray onto the picture, or tap a force and then tap where it should point. Drag an arrow’s tip to aim it. Tap a force again to remove it. Then press Check. The arrows here all have the same length: this is about which forces act and which way they point.</p>
+    <div class="nl4-fbd" id="nl4b">
+      <div class="lab-seg nl4-fbd-scenes" role="group" aria-label="Scene" id="nl4b-scenes"></div>
+      <div class="nl4-fbd-cv"><canvas id="nl4b-cv" tabindex="0" aria-label="The scene for your free-body diagram, with your force arrows drawn from the object’s center. After adding a force with the keyboard, use left and right arrows to aim it, N to pick the next arrow and Delete to remove it."></canvas></div>
+      <div class="nl4-fbd-tray" role="group" aria-label="Forces you can add" id="nl4b-tray"></div>
+      <div class="nl4-fbd-act">
+        <button type="button" class="lab-btn pri" id="nl4b-check">✓ Check</button>
+        <button type="button" class="lab-btn" id="nl4b-show">Show the answer</button>
+        <button type="button" class="lab-btn" id="nl4b-clear">Clear</button>
+      </div>
+      <p class="nl4-fbd-msg" id="nl4b-msg" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>Newton’s rule for adding forces</h2>
+    <p>Right after his three laws, Newton gave a rule for what happens when two forces act at once. Draw each force as an arrow, complete the parallelogram, and the object goes along its diagonal, exactly as if the two had been replaced by one. Today we call that adding vectors, and every free-body diagram relies on it.</p>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Corpus viribus conjunctis diagonalem parallelogrammi eodem tempore describere, quo latera separatis.</p>
+      <p class="u-en">“A body by two forces conjoined will describe the diagonal of a parallelogram, in the same time that it would describe the sides, by those forces apart.”</p>
+      <cite>Isaac Newton, <i>Philosophiæ Naturalis Principia Mathematica</i> (1687), Laws of Motion, Corollary I. English: Andrew Motte’s translation, 1729.</cite>
+    </div>
+    <p>Friction was measured long before Newton. Leonardo da Vinci sketched friction experiments around 1500, and Guillaume Amontons published the rules in 1699: friction is proportional to how hard the surfaces press together and doesn’t depend on how big the contact area is. Charles-Augustin de Coulomb tested these rules with great care in 1781, including the difference between starting a slide and keeping it going. The μ<sub>s</sub><var>N</var> and μ<sub>k</sub><var>N</var> you used above are their rules, still good approximations for dry surfaces.</p>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <div class="lab-cols">
+      <p><b>Tires and brakes.</b> Rubber on dry concrete has μ<sub>s</sub> ≈ 1.0, but on wet concrete it can drop to about half that. Antilock brakes keep the tires rolling instead of skidding, because a rolling tire grips with static friction, which is stronger than the kinetic friction of a skid. See <a href="{{ "trades/cars/brakes/" | relURL }}">how brakes work</a> and <a href="{{ "trades/cars/wheels-and-tires/" | relURL }}">wheels and tires</a> in the cars course.</p>
+      <p><b>Climbing and walking.</b> Rock-climbing shoes use soft, sticky rubber to raise μ<sub>s</sub>. Walking on ice is hard because shoes on ice have μ<sub>s</sub> ≈ 0.1: you can only push back on the ground with a tenth of your weight before your foot slips.</p>
+      <p><b>Ropes and pulleys.</b> Cranes, elevators and the counterweights in old windows are Atwood machines at heart. An elevator’s counterweight hangs on the other side of the pulley so the motor only has to lift the difference. The <a href="{{ "games/trebuchet/" | relURL }}">Trebuchet Workshop</a> uses a falling counterweight too.</p>
+      <p><b>Every other force problem.</b> Engineers checking a bridge, a ladder against a wall or a crane’s cable all begin with a free-body diagram. So does the <a href="{{ "games/book-cart/" | relURL }}">Book Cart</a> balancing game, and the <a href="{{ "games/rocket/" | relURL }}">Rocket Builder</a>, where thrust, weight and drag fight it out.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The ramp model.</b> The block is a single particle on a straight ramp. Gravity is split into parts along and across the ramp. Your push acts along the ramp, so it doesn’t change the normal force, and <var>N</var> = <var>mg</var> cos θ. When the block is at rest, the program finds the friction needed to keep it still. If that is no more than μ<sub>s</sub><var>N</var>, friction supplies exactly that much. If not, the block slips, and kinetic friction μ<sub>k</sub><var>N</var> opposes the sliding.</p>
+      <p><b>No guessing in the steps.</b> While the block slides one way, every force is constant, so the motion is exactly uniform acceleration: <var>x</var> = <var>x</var>₀ + <var>v</var>₀<var>t</var> + ½<var>at</var>². The only special moment is when a sliding block comes to rest. The program finds that moment exactly, stops the block there and asks static friction again. So the simulation has no step-size error at all.</p>
+      <p><b>What’s simplified.</b> The friction coefficients come from Table 6.1 of OpenStax <i>University Physics</i>. They are approximate, given to one or two digits. Real friction changes a little with speed, temperature and how clean the surfaces are. For rubber on wet concrete, the table gives a range (0.5–0.7 and 0.3–0.5), and the simulation uses the middle values. The ramp doesn’t bend, and the block doesn’t tip or roll.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, all passed):</p>
+        <ul class="lab-small">
+          <li>Rubber on dry concrete holds at 45° minus a millionth of a radian and slips at 45° plus one. Slip angles: 45° (μ<sub>s</sub> 1.0), 26.565° (0.5), 5.711° (0.1).</li>
+          <li>Wood on wood at 30°, from rest: after 1 s the speed is 2.355483 m/s, matching <var>g</var>(sin 30° − 0.3 cos 30°) to 4 × 10⁻¹⁵.</li>
+          <li>A block shoved up a 10° ramp at 2 m/s stops after 0.434763 s and 0.434763 m, as the formulas give, and stays put.</li>
+          <li>At tan θ = μ<sub>k</sub>, a sliding block keeps exactly 1 m/s for 3 s. A push of <var>mg</var>(sin θ + μ<sub>k</sub> cos θ) = 68.108 N (10 kg, 25°) keeps 0.5 m/s uphill, but can’t start the block from rest (that takes 85.88 N).</li>
+          <li>Energy: over 200 random runs, kinetic energy gained equals the work of the push, gravity and friction to a relative error below 2 × 10⁻¹⁴.</li>
+          <li>Elevator: each ride ends at rest; free fall reads 0 N. Atwood: the formulas satisfy both masses’ equations, and a simulated stiff rope gives the same speed after 1 s (1.96133 m/s).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>A 10 kg box rests on a ramp tilted 20°. How big is the static friction on it?</p>
+        <ul class="u-opts"><li><button type="button">Zero, because it isn’t moving</button></li><li><button type="button"><var>mg</var> sin 20° ≈ 33.5 N, pointing up the ramp</button></li><li><button type="button">μ<sub>s</sub><var>N</var>, the maximum</button></li><li><button type="button"><var>mg</var> = 98.1 N</button></li></ul>
+        <details><summary>Show the answer</summary><p>Static friction is only as big as it must be. Gravity pulls the box down the ramp with <var>mg</var> sin 20° = 33.5 N, so friction pushes up the ramp with exactly 33.5 N. It reaches μ<sub>s</sub><var>N</var> only at the moment of slipping.</p></details></li>
+      <li class="u-q" data-a="2"><p>A box sits on a level floor and you push straight down on its top with 20 N. The normal force from the floor is…</p>
+        <ul class="u-opts"><li><button type="button"><var>mg</var>, as always</button></li><li><button type="button"><var>mg</var> − 20 N</button></li><li><button type="button"><var>mg</var> + 20 N</button></li></ul>
+        <details><summary>Show the answer</summary><p>The box isn’t accelerating, so the forces on it balance: the floor pushes up with the box’s weight plus your 20 N. The normal force is whatever the surface needs to push.</p></details></li>
+      <li class="u-q" data-a="1"><p>You stand on a scale in an elevator that is going up but slowing down to stop at a floor. The scale reads…</p>
+        <ul class="u-opts"><li><button type="button">More than your weight</button></li><li><button type="button">Less than your weight</button></li><li><button type="button">Exactly your weight, since you’re still going up</button></li></ul>
+        <details><summary>Show the answer</summary><p>Slowing down while going up means the acceleration points down, so <var>a</var> is negative and <var>N</var> = <var>m</var>(<var>g</var> + <var>a</var>) is less than <var>mg</var>. The direction of motion doesn’t matter; the direction of acceleration does.</p></details></li>
+      <li class="u-q" data-a="2"><p>Which of these belongs on the free-body diagram of a book lying on a table?</p>
+        <ul class="u-opts"><li><button type="button">The book’s push down on the table</button></li><li><button type="button">The net force, as an extra arrow</button></li><li><button type="button">The table’s push up on the book</button></li><li><button type="button">Friction pointing sideways</button></li></ul>
+        <details><summary>Show the answer</summary><p>A free-body diagram shows only forces on the object: gravity, and the table’s normal force up on the book. The book’s push on the table acts on the table. The net force is the sum of the arrows, not another one. Nothing tries to slide the book, so there is no friction.</p></details></li>
+      <li class="u-q" data-a="0"><p>An Atwood machine holds 3 kg on one side and 1 kg on the other. What is the acceleration?</p>
+        <ul class="u-opts"><li><button type="button"><var>g</var>/2, about 4.9 m/s²</button></li><li><button type="button"><var>g</var>/3, about 3.3 m/s²</button></li><li><button type="button">2<var>g</var>/3, about 6.5 m/s²</button></li><li><button type="button"><var>g</var>, as in free fall</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>a</var> = (3 − 1)<var>g</var> / (3 + 1) = <var>g</var>/2. The 2 kg difference in weight has to accelerate all 4 kg.</p></details></li>
+      <li class="u-q" data-a="1"><p>Why does it take a bigger push to start a heavy crate sliding than to keep it sliding?</p>
+        <ul class="u-opts"><li><button type="button">The crate gets lighter once it moves</button></li><li><button type="button">The most static friction can give, μ<sub>s</sub><var>N</var>, is more than kinetic friction, μ<sub>k</sub><var>N</var></button></li><li><button type="button">Moving things need less force to keep moving</button></li></ul>
+        <details><summary>Show the answer</summary><p>For most pairs of surfaces μ<sub>s</sub> is bigger than μ<sub>k</sub>: wood on wood is 0.5 against 0.3. Once the crate slides, friction drops, so a smaller push balances it.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/6-2-friction" target="_blank" rel="noopener">University Physics Volume 1, 6.2 Friction</a>: Table 6.1, the friction coefficients used here; <var>f</var><sub>s</sub> ≤ μ<sub>s</sub><var>N</var> and <var>f</var><sub>k</sub> = μ<sub>k</sub><var>N</var>.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/5-6-common-forces" target="_blank" rel="noopener">5.6 Common Forces</a>: weight, the normal force on an incline (<var>N</var> = <var>mg</var> cos θ), tension and Hooke’s law.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/5-7-drawing-free-body-diagrams" target="_blank" rel="noopener">5.7 Drawing Free-Body Diagrams</a>: the steps and conventions for free-body diagrams.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/6-1-solving-problems-with-newtons-laws" target="_blank" rel="noopener">6.1 Solving Problems with Newton’s Laws</a>: the elevator and scale, the Atwood machine, the problem-solving strategy.</li>
+      <li>NASA, <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html" target="_blank" rel="noopener">Earth Fact Sheet</a>: standard gravity <var>g</var> = 9.80665 m/s² (exact by definition), used in all the calculations.</li>
+      <li>I. Newton, <i>Philosophiæ Naturalis Principia Mathematica</i> (London, 1687), <a href="https://archive.org/details/philosophiaenat00newt" target="_blank" rel="noopener">scan at the Internet Archive</a>: Corollary I. A. Motte, <i>The Mathematical Principles of Natural Philosophy</i> (London, 1729), <a href="https://archive.org/details/bub_gb_Tm0FAAAAQAAJ" target="_blank" rel="noopener">scan at the Internet Archive</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/newtons-laws/forces/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/forces/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/newtons-laws/forces/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/forces/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

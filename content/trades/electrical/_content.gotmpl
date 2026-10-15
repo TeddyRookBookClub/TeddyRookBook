@@ -1,0 +1,13 @@
+{{/* One page per lesson of the Electrical course, from data/trades/electrical.json. */}}
+{{ $d := site.Data.trades.electrical }}
+{{ $date := time.AsTime "2026-10-14" }}
+{{ range $d.lessons }}
+  {{ $.AddPage (dict
+    "type" "trades"
+    "kind" "page"
+    "path" .key
+    "title" (printf "%s: Home Electrical, Lesson %d" .title (int .n))
+    "params" (dict "course" "electrical" "lesson" .key "description" (printf "Lesson %d of a free course on how home electrical systems work. %s" (int .n) .short))
+    "dates" (dict "date" $date)
+  ) }}
+{{ end }}

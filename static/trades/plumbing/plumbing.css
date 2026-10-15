@@ -1,0 +1,307 @@
+/* The Trades, Plumbing course. Every rule is scoped under .c-plumbing; new class names start with pl-.
+   Builds on static/trades/trades.css (tr- classes, svg text classes tx-*, k-* shapes). */
+.c-plumbing{--p-cold:#2a74b8;--p-hot:#c9432a;--p-drain:#5f666c;--p-vent:#7a62b2;--p-sewer:#8a5a2b;--p-gas:#b0850c;--p-service:#0e8585;--p-heater:#d0661a;--p-fix:#2a8a59;
+  --p-water:#69b4e8;--p-water2:#3d8fd0;--p-ice:#d4ecfa;--p-soil:#e9dcc6;--p-soil2:#cdb995;--p-porc:#ffffff;--p-wall:#c9cfcb;--p-gas2:#f3e2a6;--p-sludge:#6b5133;--p-scum:#b9a27a;--p-eff:#b8c9a1}
+html[data-theme="dark"] .c-plumbing{--p-cold:#7dbcef;--p-hot:#ff8a70;--p-drain:#aab1ad;--p-vent:#bba8ee;--p-sewer:#d9a066;--p-gas:#e8bf4f;--p-service:#52d2d2;--p-heater:#ff9b3d;--p-fix:#62d09b;
+  --p-water:#3f86bd;--p-water2:#5aa3db;--p-ice:#2f5168;--p-soil:#2e271d;--p-soil2:#463a29;--p-porc:#e9eeeb;--p-wall:#3b4740;--p-gas2:#4a3c14;--p-sludge:#8a6a45;--p-scum:#6f6249;--p-eff:#4e5d3f}
+.c-plumbing .hs-hero::after{content:"🚰"}
+
+/* ---------- systems map ---------- */
+.c-plumbing .tr-map-svg .m-soil{fill:var(--p-soil)}
+.c-plumbing .tr-map-svg .m-street{fill:var(--tr-exh);opacity:.5}
+.c-plumbing .tr-map-svg .m-house{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .tr-map-svg .m-roof{fill:none;stroke:var(--tr-edge);stroke-width:5;stroke-linejoin:round;stroke-linecap:round}
+.c-plumbing .tr-map-svg .m-base{fill:var(--tr-metal);opacity:.55;stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .tr-map-svg .m-floor{stroke:var(--tr-edge);stroke-width:3}
+.c-plumbing .tr-map-svg .m-furn{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-plumbing .tr-map-svg .m-counter{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-plumbing .tr-map-svg .m-sewer{stroke:var(--p-sewer);stroke-width:8;fill:none;stroke-linecap:round}
+.c-plumbing .tr-map-svg .m-sewmain{fill:var(--p-sewer);stroke:var(--tr-pale);stroke-width:2}
+.c-plumbing .tr-map-svg .m-drain{stroke:var(--p-drain);stroke-width:6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.c-plumbing .tr-map-svg .m-co{stroke:var(--p-drain);stroke-width:4;fill:none}
+.c-plumbing .tr-map-svg .m-vent{stroke:var(--p-vent);stroke-width:5;fill:none;stroke-dasharray:9 5;stroke-linejoin:round}
+.c-plumbing .tr-map-svg .m-ventcap{stroke:var(--p-vent);stroke-width:5}
+.c-plumbing .tr-map-svg .m-wmain{fill:var(--p-service);stroke:var(--tr-pale);stroke-width:2}
+.c-plumbing .tr-map-svg .m-service{stroke:var(--p-service);stroke-width:5;fill:none}
+.c-plumbing .tr-map-svg .m-stopbox{stroke:var(--p-service);stroke-width:2;fill:none;opacity:.7}
+.c-plumbing .tr-map-svg .m-valve,.c-plumbing .tr-map-svg .m-valve2{fill:var(--p-service);stroke:var(--tr-pale);stroke-width:1}
+.c-plumbing .tr-map-svg .m-meter{fill:var(--tr-pale);stroke:var(--p-service);stroke-width:3}
+.c-plumbing .tr-map-svg .m-prv{fill:var(--p-service)}
+.c-plumbing .tr-map-svg .m-cold{stroke:var(--p-cold);stroke-width:3.5;fill:none;stroke-linejoin:round}
+.c-plumbing .tr-map-svg .m-hot{stroke:var(--p-hot);stroke-width:3.5;fill:none;stroke-linejoin:round}
+.c-plumbing .tr-map-svg .m-heater{fill:var(--p-hot)}
+
+.c-plumbing .tr-map-svg .m-bibb{stroke:var(--p-cold);stroke-width:3;fill:none}
+.c-plumbing .tr-map-svg .m-gas{stroke:var(--p-gas);stroke-width:3;fill:none;stroke-dasharray:7 4;stroke-linejoin:round}
+.c-plumbing .tr-map-svg .m-gmeter{fill:var(--p-gas)}
+.c-plumbing .tr-map-svg .m-fix{fill:var(--p-porc);stroke:var(--p-fix);stroke-width:3;stroke-linejoin:round}
+.c-plumbing .tr-map-svg .m-faucet{stroke:var(--p-fix);stroke-width:3;fill:none}
+.c-plumbing .tr-map-svg .m-door{fill:none;stroke:var(--p-fix);stroke-width:2.5}
+.c-plumbing .tr-map[data-view="supply"] .tr-map-svg [data-view="drain"],.c-plumbing .tr-map[data-view="drain"] .tr-map-svg [data-view="supply"]{display:none}
+.c-plumbing .tr-map[data-view="supply"] .tr-legend [data-view="drain"],.c-plumbing .tr-map[data-view="drain"] .tr-legend [data-view="supply"]{display:none}
+.c-plumbing .tr-legend [data-sys="service"] i{background:var(--p-service)}.c-plumbing .tr-legend [data-sys="cold"] i{background:var(--p-cold)}
+.c-plumbing .tr-legend [data-sys="hot"] i{background:var(--p-hot)}.c-plumbing .tr-legend [data-sys="gas"] i{background:var(--p-gas)}
+.c-plumbing .tr-legend [data-sys="fixtures"] i{background:var(--p-fix)}.c-plumbing .tr-legend [data-sys="drains"] i{background:var(--p-drain)}
+.c-plumbing .tr-legend [data-sys="vents"] i{background:var(--p-vent)}.c-plumbing .tr-legend [data-sys="sewer"] i{background:var(--p-sewer)}
+
+/* ---------- static figures ---------- */
+.c-plumbing svg .pl-ar{fill:var(--tr-edge)}.c-plumbing svg .pl-ar-c{fill:var(--p-cold)}.c-plumbing svg .pl-ar-h{fill:var(--p-hot)}
+.c-plumbing svg .pl-ar-d{fill:var(--p-drain)}.c-plumbing svg .pl-ar-g{fill:var(--p-gas)}.c-plumbing svg .pl-ar-v{fill:var(--p-vent)}
+.c-plumbing svg .pl-flow{stroke:var(--tr-edge);stroke-width:2;fill:none}
+.c-plumbing svg .pl-cold-ar{stroke:var(--p-cold);stroke-width:2;fill:none}
+.c-plumbing svg .pl-hot-ar{stroke:var(--p-hot);stroke-width:2;fill:none}
+.c-plumbing svg .pl-drain-ar{stroke:var(--p-drain);stroke-width:2;fill:none}
+.c-plumbing svg .pl-cold{stroke:var(--p-cold);stroke-width:6;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.c-plumbing svg .pl-hot{stroke:var(--p-hot);stroke-width:6;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.c-plumbing svg .pl-mix{stroke:var(--p-fix);stroke-width:6;fill:none}
+.c-plumbing svg .pl-drain{stroke:var(--p-drain);stroke-width:9;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.c-plumbing svg .pl-vent{stroke:var(--p-vent);stroke-width:7;fill:none;stroke-dasharray:10 6}
+.c-plumbing svg .pl-sewerp{stroke:var(--p-sewer);stroke-width:9;fill:none}
+.c-plumbing svg .pl-co{stroke:var(--p-drain);stroke-width:5;fill:none}
+.c-plumbing svg .pl-lead{stroke:#7d8790;stroke-width:9;fill:none}
+html[data-theme="dark"] .c-plumbing svg .pl-lead{stroke:#a7b0b8}
+.c-plumbing svg .pl-tank{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing svg .pl-leg{stroke:var(--tr-edge);stroke-width:3;fill:none}
+.c-plumbing svg .pl-wtr,.c-plumbing svg .pl-wtrp{fill:var(--p-water);opacity:.75}
+.c-plumbing svg .pl-fixline{stroke:var(--p-fix);stroke-width:4;fill:none}
+.c-plumbing svg .pl-fixture{fill:var(--p-porc);stroke:var(--tr-edge);stroke-width:2;stroke-linejoin:round}
+.c-plumbing svg .pl-soil{fill:var(--p-soil)}
+.c-plumbing svg .pl-wall{stroke:var(--tr-edge);stroke-width:8;fill:none;opacity:.7}
+.c-plumbing svg .pl-wall2{stroke:var(--tr-edge);stroke-width:6;fill:none}
+.c-plumbing svg .pl-wall3{fill:var(--p-wall);stroke:var(--tr-edge);stroke-width:1.5}
+.c-plumbing svg .pl-main{fill:var(--p-service);stroke:var(--tr-pale);stroke-width:2}
+.c-plumbing svg .pl-valve{fill:var(--p-service);stroke:var(--tr-ink);stroke-width:1}
+.c-plumbing svg .pl-valve-main{fill:var(--p-hot);stroke:var(--tr-ink);stroke-width:1}
+.c-plumbing svg .pl-box{stroke:var(--tr-edge);stroke-width:2.5;fill:none}
+.c-plumbing svg .pl-meter{fill:var(--tr-pale);stroke:var(--p-service);stroke-width:4}
+.c-plumbing svg .pl-prv{fill:var(--p-service)}.c-plumbing svg .pl-prvb{stroke:var(--p-service);stroke-width:8}
+.c-plumbing svg .pl-flood{stroke:var(--p-hot);stroke-width:1.5;stroke-dasharray:4 3;fill:none}
+.c-plumbing svg .pl-metalp{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-plumbing svg .pl-vb{fill:var(--p-fix);stroke:var(--tr-ink);stroke-width:1}
+.c-plumbing svg .pl-hose{stroke:#3f9a4b;stroke-width:7;fill:none;stroke-linecap:round}
+.c-plumbing svg .pl-bucket{fill:none;stroke:var(--tr-edge);stroke-width:3}
+.c-plumbing svg .pl-chem{fill:#9ac43a;opacity:.6}
+.c-plumbing svg .pl-pipe-o{stroke:var(--tr-edge);stroke-width:24;fill:none;stroke-linejoin:round}
+.c-plumbing svg .pl-pipe-i{stroke:var(--tr-pale);stroke-width:18;fill:none;stroke-linejoin:round}
+.c-plumbing svg .pl-seal{stroke:var(--p-water);stroke-width:18;fill:none;opacity:.85}
+.c-plumbing svg .pl-sewergas{stroke:#7aa33a;stroke-width:2.5;fill:none;opacity:.8}
+.c-plumbing svg .pl-roof{stroke:var(--tr-edge);stroke-width:5;fill:none;stroke-linejoin:round}
+.c-plumbing svg .pl-floor{stroke:var(--tr-edge);stroke-width:3;fill:none}
+.c-plumbing svg .pl-housebox{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing svg .pl-tankw{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:3}
+.c-plumbing svg .pl-scum{fill:var(--p-scum)}.c-plumbing svg .pl-eff{fill:var(--p-eff)}.c-plumbing svg .pl-sludge{fill:var(--p-sludge)}
+.c-plumbing svg .pl-tee{stroke:var(--p-drain);stroke-width:5;fill:none}
+.c-plumbing svg .pl-gravel{fill:var(--p-soil2)}
+.c-plumbing svg .pl-perf{stroke:var(--p-drain);stroke-width:5;stroke-dasharray:4 3;fill:none}
+.c-plumbing svg .pl-seep{stroke:var(--p-eff);stroke-width:3;fill:none;stroke-dasharray:3 3}
+.c-plumbing svg .pl-body{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing svg .pl-stem{stroke:var(--tr-ink);stroke-width:6;stroke-linecap:round}
+.c-plumbing svg .pl-thread,.c-plumbing svg .pl-thread2{stroke:var(--tr-pale);stroke-width:1.5}
+.c-plumbing svg .pl-washer{fill:#2b2b2b}
+html[data-theme="dark"] .c-plumbing svg .pl-washer{fill:#0d0d0d;stroke:#9aa59f}
+.c-plumbing svg .pl-seat{stroke:var(--tr-ink);stroke-width:4}
+.c-plumbing svg .pl-cart{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.c-plumbing svg .pl-port{fill:var(--p-water)}
+.c-plumbing svg .pl-oring{stroke:#2b2b2b;stroke-width:4}
+html[data-theme="dark"] .c-plumbing svg .pl-oring{stroke:#cfd6d2}
+.c-plumbing svg .pl-disc{fill:#e9e4d8;stroke:var(--tr-ink)}.c-plumbing svg .pl-disc2{fill:#d9d2c0;stroke:var(--tr-ink)}
+.c-plumbing svg .pl-hole{fill:var(--p-water)}
+.c-plumbing svg .pl-spool{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.c-plumbing svg .pl-wax{fill:#e3b75e;stroke:var(--tr-ink)}
+.c-plumbing svg .pl-spring{stroke:var(--tr-ink);stroke-width:2;fill:none}
+.c-plumbing svg .pl-tankb{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing svg .pl-hotw{fill:var(--p-hot);opacity:.55}.c-plumbing svg .pl-coolw{fill:var(--p-cold);opacity:.4}
+.c-plumbing svg .pl-flame{stroke:#f08a24;stroke-width:3;fill:none;stroke-linejoin:round}
+.c-plumbing svg .pl-hx{stroke:var(--p-hot);stroke-width:3;fill:none}
+.c-plumbing svg .pl-hpbox{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing svg .pl-fan{fill:none;stroke:var(--p-cold);stroke-width:2;stroke-dasharray:4 3}
+.c-plumbing svg .pl-bar0{fill:#c0392b}.c-plumbing svg .pl-bar1{fill:#d97a1e}.c-plumbing svg .pl-bar2{fill:#2e7d4f}
+html[data-theme="dark"] .c-plumbing svg .pl-bar0{fill:#ff8a7a}html[data-theme="dark"] .c-plumbing svg .pl-bar1{fill:#ffb35c}html[data-theme="dark"] .c-plumbing svg .pl-bar2{fill:#6cc79a}
+.c-plumbing svg .pl-bore{fill:var(--tr-stage)}
+.c-plumbing svg .pl-m-cu{fill:#c27a43}.c-plumbing svg .pl-m-pex{fill:#d9533b}.c-plumbing svg .pl-m-cpvc{fill:#e8d9a6;stroke:#b39a5a}
+.c-plumbing svg .pl-m-pvc{fill:#eef1f0;stroke:#8f9a94}.c-plumbing svg .pl-m-abs{fill:#2b2b2b}.c-plumbing svg .pl-m-ci{fill:#4b4f52}.c-plumbing svg .pl-m-gal{fill:#9fa8ad}
+html[data-theme="dark"] .c-plumbing svg .pl-m-abs{fill:#111;stroke:#7b847f}
+.c-plumbing svg .pl-card{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.3}
+.c-plumbing svg .pl-card2{fill:var(--p-gas2);stroke:var(--gold);stroke-width:1.5}
+.c-plumbing svg .pl-fit-cu{fill:#d99a68;stroke:#8a5a2b}.c-plumbing svg .pl-solder{stroke:#c0c6c9;stroke-width:4}
+.c-plumbing svg .pl-fit-st{fill:#7c858a;stroke:var(--tr-ink)}.c-plumbing svg .pl-fit-pvc{fill:#f7f7f2;stroke:#8f9a94}
+.c-plumbing svg .pl-glue{stroke:#7b5fbf;stroke-width:4}.c-plumbing svg .pl-ring{fill:#b8bfc2;stroke:var(--tr-ink)}
+.c-plumbing svg .pl-fit-br{fill:#c9a640;stroke:#7a6420}.c-plumbing svg .pl-fit-pf{fill:#c9a640;stroke:#7a6420}
+.c-plumbing svg .pl-sleeve{fill:#1e1e1e}.c-plumbing svg .pl-band{stroke:#c0c6c9;stroke-width:3}
+.c-plumbing svg .pl-solderdot{fill:#9aa3a8;stroke:var(--tr-ink)}
+.c-plumbing svg .pl-faucetb{fill:#c9a640;stroke:#7a6420}
+.c-plumbing svg .pl-h0{fill:#bfe3f7}.c-plumbing svg .pl-h1{fill:#8cc6e8}.c-plumbing svg .pl-h2{fill:#5aa0cf}.c-plumbing svg .pl-h3{fill:#2f6f9f}
+html[data-theme="dark"] .c-plumbing svg .pl-h0{fill:#24465c}html[data-theme="dark"] .c-plumbing svg .pl-h1{fill:#2f5f7f}html[data-theme="dark"] .c-plumbing svg .pl-h2{fill:#3d7ba5}html[data-theme="dark"] .c-plumbing svg .pl-h3{fill:#5aa3db}
+.c-plumbing svg .pl-meterbox{fill:var(--tr-pale);stroke:var(--p-service);stroke-width:3}
+.c-plumbing svg .pl-odo{fill:#1d2320}
+.c-plumbing svg text.pl-odotx{fill:#f3f3ea;font:700 17px ui-monospace,Menlo,Consolas,monospace}
+.c-plumbing svg .pl-u0{fill:var(--p-cold)}.c-plumbing svg .pl-u1{fill:var(--p-fix)}.c-plumbing svg .pl-u2{fill:var(--tr-metal)}
+.c-plumbing svg .pl-stick{stroke:#8a5a2b;stroke-width:7;stroke-linecap:round}
+.c-plumbing svg .pl-cup{fill:#b23a2e;opacity:.9}
+.c-plumbing svg .pl-clog{fill:#7a6a4f}
+.c-plumbing svg .pl-rag{stroke:var(--tr-ink);stroke-width:5;fill:none;stroke-linecap:round}
+.c-plumbing svg .pl-ice{fill:var(--p-ice);stroke:var(--p-cold);stroke-width:1.5}
+.c-plumbing svg .pl-crack{stroke:var(--p-hot);stroke-width:2.5;fill:none}
+.c-plumbing svg .pl-airch{fill:var(--tr-pale);stroke:var(--p-cold);stroke-width:3}
+.c-plumbing svg .pl-gasl{stroke:var(--p-gas);stroke-width:7;fill:none;stroke-linejoin:round}
+.c-plumbing svg .pl-gmeter{fill:var(--p-gas2);stroke:var(--p-gas);stroke-width:2.5}
+.c-plumbing svg .pl-gvalve{fill:var(--p-gas)}.c-plumbing svg .pl-gh{stroke:#c0392b;stroke-width:4;stroke-linecap:round}
+.c-plumbing svg .pl-conn{stroke:var(--p-gas);stroke-width:4;fill:none}
+.c-plumbing svg .pl-appl{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing svg .pl-flue{stroke:var(--tr-exh);stroke-width:5;fill:var(--tr-metal);stroke-linejoin:round}
+.c-plumbing svg .pl-intake{stroke:var(--p-cold);stroke-width:5;fill:none}
+.c-plumbing .tr-map-svg .m-chim{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-plumbing .tr-map-svg .m-vanity{fill:none;stroke:var(--p-fix);stroke-width:2;stroke-dasharray:3 2}
+.c-plumbing .tr-map-svg .m-flue{stroke:var(--tr-exh);stroke-width:4;fill:none;opacity:.8}
+.c-plumbing .tr-map-svg .m-fluecap{stroke:var(--tr-exh);stroke-width:4}
+
+/* ---------- widget: pressure and height (Lesson 2) ---------- */
+.c-plumbing .pl-pr .pl-pr-sky1{stop-color:#e8f2fa}.c-plumbing .pl-pr .pl-pr-sky2{stop-color:#f7faf8}
+html[data-theme="dark"] .c-plumbing .pl-pr .pl-pr-sky1{stop-color:#14242f}html[data-theme="dark"] .c-plumbing .pl-pr .pl-pr-sky2{stop-color:#13201a}
+.c-plumbing .pl-pr .pl-pr-ground{fill:var(--p-soil);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .pl-pr .pl-pr-main{fill:none;stroke:var(--p-cold);stroke-width:5;stroke-linejoin:round}
+.c-plumbing .pl-pr .pl-pr-hgl{stroke:var(--p-cold);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+.c-plumbing .pl-pr .pl-pr-leg{stroke:var(--tr-edge);stroke-width:4;fill:none}
+.c-plumbing .pl-pr .pl-pr-riser,.c-plumbing .pl-pr .pl-pr-riser2{stroke:var(--p-cold);stroke-width:5;fill:none}
+.c-plumbing .pl-pr .pl-pr-tank{cursor:ns-resize;touch-action:none}
+.c-plumbing .pl-pr .pl-pr-tankb{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .pl-pr .pl-pr-tankw{fill:var(--p-water)}
+.c-plumbing .pl-pr .pl-pr-grip{stroke:#fff;stroke-width:2;opacity:.7}
+.c-plumbing .pl-pr .pl-pr-tank:focus-visible .pl-pr-tankb{stroke:var(--gold);stroke-width:4}
+.c-plumbing .pl-pr .pl-pr-tank:focus{outline:none}
+.c-plumbing .pl-pr .pl-pr-bldg{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .pl-pr .pl-pr-fl{stroke:var(--tr-edge);stroke-width:1.5}
+.c-plumbing .pl-pr .pl-pr-tap{stroke:var(--p-cold);stroke-width:3;fill:none}
+.c-plumbing .pl-pr .pl-pr-prv{fill:var(--p-service)}
+.c-plumbing .pl-pr .pl-pr-scale path{stroke:var(--tr-edge);stroke-width:1.5}
+.c-plumbing .pl-pr text.pl-pr-t{font-size:11px;fill:var(--tr-ink);font-weight:600}
+.c-plumbing .pl-pr text.pl-pr-b{font-weight:800}
+.c-plumbing .pl-pr-ok{fill:#2e7d4f;background:#2e7d4f}.c-plumbing .pl-pr-lo{fill:#c98a14;background:#c98a14}.c-plumbing .pl-pr-lo2{fill:#c0392b;background:#c0392b}
+.c-plumbing .pl-pr-hi{fill:#c0392b;background:#c0392b}.c-plumbing .pl-pr-none{fill:var(--tr-edge)}
+html[data-theme="dark"] .c-plumbing .pl-pr-ok{fill:#6cc79a;background:#6cc79a}html[data-theme="dark"] .c-plumbing .pl-pr-lo{fill:#e3b75e;background:#e3b75e}
+html[data-theme="dark"] .c-plumbing .pl-pr-hi,html[data-theme="dark"] .c-plumbing .pl-pr-lo2{fill:#ff8a7a;background:#ff8a7a}
+.c-plumbing .pl-pr-k{display:inline-block;width:.8em;height:.8em;border-radius:3px;vertical-align:-.05em;margin:0 .15em 0 .4em}
+.c-plumbing .tr-w .tr-seg{margin:.1rem 0 .4rem}
+.c-plumbing .tr-w .hs-btn[aria-pressed="true"]{border-color:var(--g);box-shadow:inset 0 0 0 1px var(--g)}
+
+/* ---------- widget: trap and vent (Lesson 3) ---------- */
+.c-plumbing .pl-tp .pl-tp-roof{stroke:var(--tr-edge);stroke-width:6;fill:none;stroke-linecap:round}
+.c-plumbing .pl-tp .pl-tp-sink{fill:var(--p-porc);stroke:var(--tr-edge);stroke-width:2.5;stroke-linejoin:round}
+.c-plumbing .pl-tp .pl-tp-faucet{stroke:var(--tr-edge);stroke-width:5;fill:none;stroke-linecap:round}
+.c-plumbing .pl-tp .pl-tp-water{fill:var(--p-water);opacity:.8}
+.c-plumbing .pl-tp .pl-tp-po{stroke:var(--tr-edge);stroke-width:26;fill:none;stroke-linejoin:round}
+.c-plumbing .pl-tp .pl-tp-pi{stroke:var(--tr-pale);stroke-width:20;fill:none;stroke-linejoin:round}
+.c-plumbing .pl-tp .pl-tp-pi2{fill:var(--tr-pale)}
+.c-plumbing .pl-tp .pl-tp-tw{stroke:var(--p-water2);stroke-width:20;fill:none;opacity:.9}
+.c-plumbing .pl-tp .pl-tp-tw.low{opacity:.5}
+.c-plumbing .pl-tp .pl-tp-slug{stroke:var(--p-water2);stroke-width:18;fill:none;opacity:.85}
+.c-plumbing .pl-tp .pl-tp-slugr{fill:var(--p-water2);opacity:.85}
+.c-plumbing .pl-tp .pl-tp-cap{stroke:var(--tr-edge);stroke-width:5}
+.c-plumbing .pl-tp .pl-tp-nest{fill:#8a6a3c;stroke:#5a4322;stroke-width:1.5}
+html[data-theme="dark"] .c-plumbing .pl-tp .pl-tp-nest{fill:#a8824e;stroke:#d9b98a}
+.c-plumbing .pl-tp .pl-tp-dim{stroke:var(--gold);stroke-width:1.5;fill:none}
+.c-plumbing .pl-tp .pl-tp-air{stroke:var(--p-cold);stroke-width:2.5;fill:none}
+.c-plumbing .pl-tp .pl-tp-bub circle{fill:var(--tr-pale);stroke:var(--p-water2);stroke-width:1.5}
+.c-plumbing .pl-tp .pl-tp-gas circle{fill:#8bab3c}
+html[data-theme="dark"] .c-plumbing .pl-tp .pl-tp-gas circle{fill:#b5d667}
+.c-plumbing .pl-tp .pl-tp-gasp{fill:none;stroke:#8bab3c;stroke-width:3;stroke-dasharray:4 5;opacity:.8}
+.c-plumbing .pl-tp .pl-tp-gbox{fill:var(--card);stroke:var(--tr-edge);stroke-width:1.5}
+.c-plumbing .pl-tp text.pl-tp-t{font-size:11.5px;fill:var(--tr-ink);font-weight:600}
+.c-plumbing .pl-tp text.pl-tp-b{font-weight:800}
+.c-plumbing .pl-tp text.pl-tp-big{font:800 17px system-ui,sans-serif}
+.c-plumbing .pl-tp text.pl-tp-warn{fill:var(--tr-red)}
+.c-plumbing .tr-w button[disabled]{opacity:.5;cursor:default}
+
+/* ---------- widget: toilet (Lesson 4) ---------- */
+.c-plumbing .pl-to .pl-to-floor{stroke:var(--tr-edge);stroke-width:3}
+.c-plumbing .pl-to .pl-to-wall{stroke:var(--tr-edge);stroke-width:6;opacity:.5}
+.c-plumbing .pl-to .pl-to-china{fill:var(--p-porc);stroke:var(--tr-edge);stroke-width:2.5;stroke-linejoin:round}
+.c-plumbing .pl-to .pl-to-in{fill:var(--tr-stage);stroke:var(--tr-edge);stroke-width:1.5}
+.c-plumbing .pl-to .pl-to-w{fill:var(--p-water);opacity:.85}
+.c-plumbing .pl-to .pl-to-dye{fill:#1f8f4a}
+html[data-theme="dark"] .c-plumbing .pl-to .pl-to-dye{fill:#3ddc84}
+.c-plumbing .pl-to .pl-to-chan{stroke:var(--tr-edge);stroke-width:8;fill:none;opacity:.35;stroke-linecap:round}
+.c-plumbing .pl-to .pl-to-flow{stroke:var(--p-water2);stroke-width:3;fill:none;stroke-dasharray:8 6;stroke-linecap:round}
+.c-plumbing .pl-to .pl-to-flow.big{stroke-width:5}
+.c-plumbing .pl-to .pl-to-tpo{stroke:var(--tr-edge);stroke-width:22;fill:none;stroke-linecap:butt}
+.c-plumbing .pl-to .pl-to-tpi{stroke:var(--tr-stage);stroke-width:16;fill:none}
+.c-plumbing .pl-to .pl-to-tww{stroke:var(--p-water2);stroke-width:16;fill:none}
+.c-plumbing .pl-to .pl-to-tww.run{stroke-dasharray:30 8}
+.c-plumbing .pl-to .pl-to-mark{stroke:var(--p-hot);stroke-width:2}
+.c-plumbing .pl-to .pl-to-tube{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-plumbing .pl-to .pl-to-seat{stroke:var(--tr-ink);stroke-width:4}
+.c-plumbing .pl-to .pl-to-flap{fill:#b23a2e;stroke:#6e1f17;stroke-width:1.5}
+html[data-theme="dark"] .c-plumbing .pl-to .pl-to-flap{fill:#ff8a7a;stroke:#ffd0c8}
+.c-plumbing .pl-to .pl-to-valve{fill:var(--p-fix);stroke:var(--tr-ink);stroke-width:1}
+.c-plumbing .pl-to .pl-to-supply{stroke:var(--p-cold);stroke-width:5;fill:none}
+.c-plumbing .pl-to .pl-to-float{fill:var(--p-gas2);stroke:var(--p-gas);stroke-width:2}
+.c-plumbing .pl-to .pl-to-refill{stroke:var(--tr-ink);stroke-width:2.5;fill:none}
+.c-plumbing .pl-to .pl-to-lever{stroke:var(--tr-ink);stroke-width:4;stroke-linecap:round}
+.c-plumbing .pl-to .pl-to-handle{fill:var(--tr-metal);stroke:var(--tr-ink);stroke-width:1.5}
+.c-plumbing .pl-to .pl-to-chain{stroke:var(--tr-ink);stroke-width:1.6;fill:none;stroke-dasharray:3 2}
+.c-plumbing .pl-to text.pl-to-t{font-size:11.5px;fill:var(--tr-ink);font-weight:600}
+.c-plumbing .pl-to text.pl-to-b{font-weight:800}
+.c-plumbing .pl-to text.pl-to-gur{font:800 16px Georgia,serif;fill:var(--p-cold)}
+.c-plumbing .tr-stroke b{font-size:1.1rem;line-height:1.3}
+
+/* ---------- widget: water heater (Lesson 5) ---------- */
+.c-plumbing .wh-a,.c-plumbing .wh-b{margin-top:.6rem}
+.c-plumbing .pl-wh .pl-wh-floor{stroke:var(--tr-edge);stroke-width:3}
+.c-plumbing .pl-wh .pl-wh-jacket{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .pl-wh .pl-wh-inner{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .pl-wh .pl-wh-sed{fill:#9a8361}
+.c-plumbing .pl-wh .pl-wh-hotp{stroke:var(--p-hot);stroke-width:8;fill:none;stroke-linejoin:round}
+.c-plumbing .pl-wh .pl-wh-coldp{stroke:var(--p-cold);stroke-width:8;fill:none;stroke-linejoin:round}
+.c-plumbing .pl-wh .pl-wh-dip{stroke:var(--p-cold);stroke-width:6;fill:none;opacity:.85}
+.c-plumbing .pl-wh .pl-wh-flowh,.c-plumbing .pl-wh .pl-wh-flowc{stroke:#fff;stroke-width:2.5;fill:none;stroke-dasharray:6 6;opacity:.9}
+.c-plumbing .pl-wh .pl-wh-anode{stroke:#8f9a94;stroke-width:6;stroke-linecap:round}
+.c-plumbing .pl-wh .pl-wh-flue{stroke:var(--tr-exh);stroke-width:12;fill:none}
+.c-plumbing .pl-wh .pl-wh-hood{fill:var(--tr-metal);stroke:var(--tr-exh);stroke-width:4}
+.c-plumbing .pl-wh .pl-wh-chamber{fill:#2b2f2d;stroke:var(--tr-edge)}
+.c-plumbing .pl-wh .pl-wh-flame{stroke:#ffb020;stroke-width:4;fill:none;stroke-linejoin:round;transition:opacity .3s}
+.c-plumbing .pl-wh .pl-wh-ctl{fill:var(--p-fix);stroke:var(--tr-ink);stroke-width:1}
+.c-plumbing .pl-wh .pl-wh-gas{stroke:var(--p-gas);stroke-width:5;fill:none}
+.c-plumbing .pl-wh .pl-wh-el{stroke:#7d8a83;stroke-width:5;fill:none;stroke-linecap:round}
+.c-plumbing .pl-wh .pl-wh-el.on{stroke:#ff6a2b}
+.c-plumbing .pl-wh .pl-wh-hpbox{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .pl-wh .pl-wh-fanc{fill:none;stroke:var(--p-cold);stroke-width:2}
+.c-plumbing .pl-wh .pl-wh-fan{stroke:var(--p-cold);stroke-width:3;stroke-linecap:round}
+.c-plumbing .pl-wh .pl-wh-coil{stroke:#c27a43;stroke-width:3;stroke-dasharray:10 4;opacity:.8}
+.c-plumbing .pl-wh .pl-wh-tp{fill:#c9a640;stroke:#7a6420;stroke-width:1.5}
+.c-plumbing .pl-wh .pl-wh-lever{stroke:var(--tr-ink);stroke-width:2.5;fill:none}
+.c-plumbing .pl-wh .pl-wh-dis{stroke:#c27a43;stroke-width:6;fill:none;stroke-linejoin:round}
+.c-plumbing .pl-wh .pl-wh-cap{fill:#b23a2e}
+.c-plumbing .pl-wh .pl-wh-spray{stroke:var(--p-water2);stroke-width:3;fill:none;stroke-linecap:round}
+.c-plumbing .pl-wh .pl-wh-drain{stroke:var(--tr-ink);stroke-width:4;fill:none}
+.c-plumbing .pl-wh .pl-wh-hx{stroke:#c27a43;stroke-width:5;fill:none;stroke-linejoin:round}
+.c-plumbing .pl-wh .pl-wh-barbg{fill:var(--tr-pale);stroke:var(--tr-edge)}
+.c-plumbing .pl-wh .pl-wh-bar{fill:var(--p-hot)}
+.c-plumbing .pl-wh .pl-wh-warn rect{fill:var(--card);stroke:var(--tr-red);stroke-width:3}
+.c-plumbing .pl-wh text.pl-wh-wt{font:800 18px system-ui,sans-serif;fill:var(--tr-red)}
+.c-plumbing .pl-wh text.pl-wh-wt2{font:600 14px system-ui,sans-serif;fill:var(--tr-ink)}
+.c-plumbing .pl-wh text.pl-wh-t{font-size:11.5px;fill:var(--tr-ink);font-weight:600}
+.c-plumbing .pl-wh text.pl-wh-b{font-weight:800}
+.c-plumbing .pl-wh text.pl-wh-big{font:800 14px system-ui,sans-serif;fill:var(--p-hot)}
+.c-plumbing .wh-fault{margin:.6rem 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.4rem .7rem}
+.c-plumbing .wh-fault summary{cursor:pointer;font-weight:700;color:var(--g);min-height:2rem;display:flex;align-items:center}
+
+/* ---------- widget: leak counter (Lesson 8) ---------- */
+.c-plumbing .pl-lk .pl-lk-fau{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .pl-lk .pl-lk-hand{fill:var(--p-cold)}
+.c-plumbing .pl-lk .pl-lk-drop{fill:var(--p-water2)}
+.c-plumbing .pl-lk .pl-lk-stream{stroke:var(--p-water2);stroke-width:5;fill:none;stroke-linecap:round;opacity:.85}
+.c-plumbing .pl-lk .pl-lk-stream.thin{stroke-width:2}
+.c-plumbing .pl-lk .pl-lk-tank,.c-plumbing .pl-lk .pl-lk-bowl{fill:var(--p-porc);stroke:var(--tr-edge);stroke-width:2.5}
+.c-plumbing .pl-lk .pl-lk-tw{fill:var(--p-water);opacity:.7}
+.c-plumbing .pl-lk .pl-lk-jug{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-plumbing .pl-lk .pl-lk-jugb{fill:none;stroke:var(--tr-edge);stroke-width:3}
+.c-plumbing .pl-lk .pl-lk-w{fill:var(--p-water);opacity:.85}
+.c-plumbing .pl-lk text.pl-lk-t{font-size:12px;fill:var(--tr-ink);font-weight:600}
+.c-plumbing .pl-lk text.pl-lk-b{font-weight:800;font-size:15px}
+.c-plumbing .pl-lk text.pl-lk-sm{font-size:10.5px;fill:var(--muted)}
+.c-plumbing .pl-lk-cmp{height:12px;border-radius:6px;background:var(--tr-metal);overflow:hidden;margin:.4rem 0 .2rem;border:1px solid var(--line)}
+.c-plumbing .pl-lk-cmp span{display:block;height:100%;background:var(--p-cold)}
+.c-plumbing .lk-price input[type=number]{font:inherit;font-weight:400;padding:.45rem .6rem;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);max-width:10rem;min-height:2.4rem}
+html[data-theme="dark"] .c-plumbing svg .pl-sleeve{fill:#5d6460}
+html[data-theme="dark"] .c-plumbing svg .pl-m-ci{fill:#7a8084}
+.c-plumbing .pl-wh .pl-wh-lead{stroke:var(--tr-ink);stroke-width:1;stroke-dasharray:3 2;fill:none}

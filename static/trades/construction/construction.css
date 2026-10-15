@@ -1,0 +1,380 @@
+/* The Trades, Construction course. Every rule is scoped under .c-construction; new classes use the cn- prefix. */
+.c-construction{--s-site:#4f8a2e;--s-foundation:#6c777d;--s-framing:#b06f1f;--s-roughins:#0b8a8a;--s-roof:#a5392b;--s-envelope:#c23f78;--s-windows:#2a78bd;--s-finishes:#7656c4;
+  --cn-wood:#e3b46f;--cn-wood-e:#9a6526;--cn-wood2:#cf9a4e;--cn-conc:#c9cdcf;--cn-conc-e:#7c8589;--cn-soil:#d8c3a0;--cn-gravel:#a99f90;--cn-insul:#f3a6c5;--cn-insul-e:#c23f78;
+  --cn-glass:#cfe5f4;--cn-paint:#ece6f8;--cn-water:#2a78bd;--cn-steel:#6f7a80;--cn-grass:#4f8a2e;--cn-sky:#eef5f8;--cn-shingle:#8e3a2b;--cn-hot:#d4581f;--cn-cold:#2a78bd;--cn-ok:#2e7d4f;--cn-bad:#b23a2e;--cn-snow:#ffffff;--cn-snow-e:#9fb6c4}
+html[data-theme="dark"] .c-construction{--s-site:#8fd16a;--s-foundation:#b2bdc2;--s-framing:#e8ad62;--s-roughins:#4fd3d3;--s-roof:#f08a70;--s-envelope:#f28ab4;--s-windows:#7dbcef;--s-finishes:#b99cf0;
+  --cn-wood:#8d6434;--cn-wood-e:#e8ad62;--cn-wood2:#a8783e;--cn-conc:#4b5458;--cn-conc-e:#a7b1b5;--cn-soil:#4a3d2b;--cn-gravel:#6f675c;--cn-insul:#8f4766;--cn-insul-e:#f28ab4;
+  --cn-glass:#24455c;--cn-paint:#2c2840;--cn-water:#7dbcef;--cn-steel:#9aa6ac;--cn-grass:#8fd16a;--cn-sky:#15241c;--cn-shingle:#c96a55;--cn-hot:#ff9a66;--cn-cold:#7dbcef;--cn-ok:#6cc79a;--cn-bad:#ff8a7a;--cn-snow:#e8f1f6;--cn-snow-e:#8fb0c4}
+.c-construction .hs-hero::after{content:"⌂";font-size:8rem;top:-1.6rem}
+
+/* ---------- house map ---------- */
+.c-construction .tr-map[data-view="structure"] .tr-map-svg [data-view="finished"],.c-construction .tr-map[data-view="finished"] .tr-map-svg [data-view="structure"]{display:none}
+.c-construction .tr-map[data-view="structure"] .tr-legend [data-view="finished"],.c-construction .tr-map[data-view="finished"] .tr-legend [data-view="structure"]{display:none}
+.c-construction .tr-legend [data-sys="site"] i{background:var(--s-site)}.c-construction .tr-legend [data-sys="foundation"] i{background:var(--s-foundation)}
+.c-construction .tr-legend [data-sys="framing"] i{background:var(--s-framing)}.c-construction .tr-legend [data-sys="roughins"] i{background:var(--s-roughins)}
+.c-construction .tr-legend [data-sys="roof"] i{background:var(--s-roof)}.c-construction .tr-legend [data-sys="envelope"] i{background:var(--s-envelope)}
+.c-construction .tr-legend [data-sys="windows"] i{background:var(--s-windows)}.c-construction .tr-legend [data-sys="finishes"] i{background:var(--s-finishes)}
+.c-construction .cn-map .cn-soil{fill:var(--cn-soil);opacity:.55}
+.c-construction .cn-map .cn-base-in{fill:var(--tr-stage)}
+.c-construction .cn-map .cn-grade{stroke:var(--s-site);stroke-width:4;fill:none;stroke-linecap:round}
+.c-construction .cn-map .cn-flow{stroke:var(--s-site);stroke-width:2;fill:none;stroke-dasharray:5 3}
+.c-construction .cn-map .cn-flowh{fill:var(--s-site)}
+.c-construction .cn-map .cn-ds{stroke:var(--s-site);stroke-width:4;fill:none;stroke-linejoin:round}
+.c-construction .cn-map .cn-conc{fill:var(--s-foundation);fill-opacity:.55;stroke:var(--s-foundation);stroke-width:1.2}
+.c-construction .cn-map .cn-gravel{fill:var(--s-foundation);fill-opacity:.25;stroke:var(--s-foundation);stroke-width:.8;stroke-dasharray:2 2}
+.c-construction .cn-map .cn-steel{fill:var(--s-foundation)}
+.c-construction .cn-map .cn-damp{stroke:var(--s-foundation);stroke-width:2;stroke-dasharray:1 2}
+.c-construction .cn-map .cn-rebar{fill:var(--s-foundation)}
+.c-construction .cn-map .cn-tile{fill:none;stroke:var(--s-foundation);stroke-width:2}
+.c-construction .cn-map .cn-bolt{stroke:var(--s-foundation);stroke-width:1.5}
+.c-construction .cn-map .cn-wood{fill:var(--s-framing);fill-opacity:.8}
+.c-construction .cn-map .cn-wood2{fill:var(--s-framing)}
+.c-construction .cn-map .cn-sheath{fill:var(--s-framing);fill-opacity:.55}
+.c-construction .cn-map .cn-stringer{stroke:var(--s-framing);stroke-width:6;stroke-linecap:round}
+.c-construction .cn-map .cn-pipe{stroke:var(--s-roughins);stroke-width:5;fill:none;stroke-linecap:round}
+.c-construction .cn-map .cn-pipe2{stroke:var(--s-roughins);stroke-width:5;fill:none;opacity:.5}
+.c-construction .cn-map .cn-supply{stroke:var(--s-roughins);stroke-width:2.2;fill:none;stroke-dasharray:6 3}
+.c-construction .cn-map .cn-wire{stroke:var(--s-roughins);stroke-width:1.6;fill:none;stroke-dasharray:2 2}
+.c-construction .cn-map .cn-panel,.c-construction .cn-map .cn-box{fill:var(--s-roughins)}
+.c-construction .cn-map .cn-furn{fill:var(--s-roughins);fill-opacity:.35;stroke:var(--s-roughins);stroke-width:1.5}
+.c-construction .cn-map .cn-duct{stroke:var(--s-roughins);stroke-width:9;fill:none;opacity:.55;stroke-linejoin:round}
+.c-construction .cn-map .cn-reg{fill:var(--s-roughins)}
+.c-construction .cn-map .cn-siding{fill:var(--s-envelope);fill-opacity:.35;stroke:var(--s-envelope);stroke-width:1}
+.c-construction .cn-map .cn-wrb{stroke:var(--s-envelope);stroke-width:1.2;stroke-dasharray:3 2}
+.c-construction .cn-map .cn-insul{fill:var(--s-envelope);fill-opacity:.4;stroke:var(--s-envelope);stroke-width:1}
+.c-construction .cn-map .cn-paint{fill:var(--s-finishes);fill-opacity:.13}
+.c-construction .cn-map .cn-dry{fill:var(--s-finishes);fill-opacity:.6}
+.c-construction .cn-map .cn-trim{stroke:var(--s-finishes);stroke-width:4}
+.c-construction .cn-map .cn-floor{fill:var(--s-finishes)}
+.c-construction .cn-map .cn-stair{stroke:var(--s-finishes);stroke-width:2.5;fill:none;stroke-linejoin:round}
+.c-construction .cn-map .cn-rail{stroke:var(--s-finishes);stroke-width:2;fill:none}
+.c-construction .cn-map .cn-frame{fill:var(--s-finishes);fill-opacity:.25;stroke:var(--s-finishes);stroke-width:2}
+.c-construction .cn-map .cn-casing{fill:none;stroke:var(--s-windows);stroke-width:3}
+.c-construction .cn-map .cn-glass{fill:var(--s-windows);fill-opacity:.3;stroke:var(--s-windows);stroke-width:1.2}
+.c-construction .cn-map .cn-mull{stroke:var(--s-windows);stroke-width:2}
+.c-construction .cn-map .cn-door{fill:var(--s-windows);fill-opacity:.5;stroke:var(--s-windows);stroke-width:1.5}
+.c-construction .cn-map .cn-knob{fill:var(--s-windows)}
+.c-construction .cn-map .cn-chord{stroke:var(--s-roof);stroke-width:6;fill:none;stroke-linejoin:round;stroke-linecap:round;opacity:.75}
+.c-construction .cn-map .cn-chord2{stroke:var(--s-roof);stroke-width:4;fill:none;opacity:.75}
+.c-construction .cn-map .cn-web{stroke:var(--s-roof);stroke-width:3;fill:none;opacity:.65;stroke-linejoin:round}
+.c-construction .cn-map .cn-plate{fill:var(--s-roof)}
+.c-construction .cn-map .cn-deck{stroke:var(--s-roof);stroke-width:2.5;fill:none;stroke-linejoin:round}
+.c-construction .cn-map .cn-shingle{stroke:var(--s-roof);stroke-width:5;fill:none;stroke-dasharray:9 2;stroke-linejoin:round}
+.c-construction .cn-map .cn-ridge,.c-construction .cn-map .cn-gutter{fill:none;stroke:var(--s-roof);stroke-width:2.5}
+.c-construction .cn-map .cn-ridge{fill:var(--s-roof)}
+.c-construction .cn-map .cn-soffit{stroke:var(--s-roof);stroke-width:2.5;stroke-dasharray:3 2}
+.c-construction .tr-feat .cn-map{max-width:440px}
+
+/* ---------- widget: load path (Lesson 2) ---------- */
+.c-construction .cn-lp .cn-lp-soil{fill:var(--cn-soil);opacity:.6}
+.c-construction .cn-lp .cn-lp-room{fill:var(--card)}
+.c-construction .cn-lp .cn-lp-grade{stroke:var(--cn-grass);stroke-width:3}
+.c-construction .cn-lp .cn-lp-bulb{fill:var(--cn-hot);transition:opacity .2s}
+.c-construction .cn-lp .cn-lp-conc{fill:var(--cn-conc);stroke:var(--cn-conc-e);stroke-width:1}
+.c-construction .cn-lp .cn-lp-steel{fill:var(--cn-steel)}
+.c-construction .cn-lp .cn-lp-wood{fill:var(--cn-wood);stroke:var(--cn-wood-e);stroke-width:.8}
+.c-construction .cn-lp .cn-lp-wood2{fill:var(--cn-wood2);stroke:var(--cn-wood-e);stroke-width:.8}
+.c-construction .cn-lp .cn-lp-truss{stroke:var(--cn-wood-e);stroke-width:4;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.c-construction .cn-lp .cn-lp-snow{fill:var(--cn-snow);stroke:var(--cn-snow-e);stroke-width:1.2;transition:opacity .2s}
+.c-construction .cn-lp .cn-lp-snowi{fill:var(--cn-snow);stroke:var(--cn-snow-e);stroke-width:1}
+.c-construction .cn-lp .cn-lp-crate{fill:var(--cn-hot);fill-opacity:.25;stroke:var(--cn-hot);stroke-width:1}
+.c-construction .cn-lp .cn-lp-path{fill:none;stroke-linejoin:round;stroke-linecap:round}
+.c-construction .cn-lp .cn-lp-path.k1{stroke:var(--cn-water)}.c-construction .cn-lp .cn-lp-path.k2{stroke:var(--cn-hot)}
+.c-construction .cn-lp .cn-lp-dot.k1{fill:var(--cn-water)}.c-construction .cn-lp .cn-lp-dot.k2{fill:var(--cn-hot)}
+.c-construction .cn-lp .cn-lp-hdrw{fill:var(--s-framing);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction .cn-lp .cn-lp-glassw{fill:var(--cn-glass);stroke:var(--s-windows);stroke-width:1}
+.c-construction .cn-lp .cn-lp-jack{fill:var(--s-framing);stroke:var(--cn-wood-e);stroke-width:.8}
+.c-construction .cn-lp .cn-lp-crip{fill:var(--cn-wood);opacity:.7}
+.c-construction .cn-lp-key{display:flex;gap:1rem;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin:.3rem .3rem .1rem}
+.c-construction .cn-lp-key i{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;margin-right:.35rem;vertical-align:-.05rem}
+.c-construction .cn-lp-key i.k1{background:var(--cn-water)}.c-construction .cn-lp-key i.k2{background:var(--cn-hot)}
+.c-construction .cn-lp-ih{font-weight:700;margin:.1rem 0 .3rem;font-size:.92rem}
+.c-construction .cn-lp-inset{margin-bottom:.4rem}
+.c-construction .tr-out .cn-lp-hl{border-left:4px solid var(--gold);padding-left:.55rem}
+.c-construction .cn-lp-inset svg{max-width:360px;margin:0 auto}
+
+/* ---------- widget: beam (Lesson 2) ---------- */
+.c-construction .cn-bm-tag{margin:0 0 .6rem;padding:.45rem .7rem;border-radius:10px;background:var(--card);border:1px dashed var(--gold);font-size:.92rem;line-height:1.45}
+.c-construction .cn-bm .cn-bm-beam{fill:none;stroke:var(--cn-wood-e);stroke-width:1.5;stroke-linejoin:round}
+.c-construction .cn-bm .cn-bm-comp{fill:var(--cn-water);fill-opacity:.28}
+.c-construction .cn-bm .cn-bm-tens{fill:var(--cn-hot);fill-opacity:.28}
+.c-construction .cn-bm .cn-bm-na{fill:none;stroke:var(--cn-wood-e);stroke-width:1;stroke-dasharray:4 3}
+.c-construction .cn-bm .cn-bm-sup{fill:var(--cn-conc);stroke:var(--cn-conc-e);stroke-width:1.2}
+.c-construction .cn-bm .cn-bm-ghost{stroke:var(--tr-edge);stroke-width:1;stroke-dasharray:2 3;fill:none}
+.c-construction .cn-bm .cn-bm-dim{stroke:var(--gold);stroke-width:1.5;fill:none}
+.c-construction .cn-bm .cn-bm-sagl{stroke:var(--cn-bad);stroke-width:2;fill:none}
+.c-construction .tr svg text.cn-bm-tc,.c-construction.tr svg text.cn-bm-tc{fill:var(--cn-water)}
+.c-construction .tr svg text.cn-bm-tt,.c-construction.tr svg text.cn-bm-tt{fill:var(--cn-hot)}
+.c-construction .cn-bm .cn-bm-sec{fill:var(--cn-wood);stroke:var(--cn-wood-e);stroke-width:1.2}
+.c-construction .cn-bm .cn-bm-arr{stroke:var(--tr-edge);stroke-width:1.4;fill:none}
+.c-construction .cn-bm .cn-bm-arrl{stroke:var(--tr-edge);stroke-width:1;fill:none}
+.c-construction .cn-bm-bars{margin:.7rem 0 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.5rem .8rem .6rem}
+.c-construction .cn-bm-bh{margin:.1rem 0 .35rem;font-weight:700;font-size:.9rem}
+.c-construction .cn-bm-row{display:grid;grid-template-columns:3.2rem minmax(0,1fr) 4.6rem;gap:.5rem;align-items:center;font-size:.88rem;margin:.2rem 0;font-variant-numeric:tabular-nums}
+.c-construction .cn-bm-row i{display:block;height:.8rem;border-radius:4px;background:var(--tr-edge);opacity:.55;min-width:2px;transition:width .3s}
+.c-construction .cn-bm-row.on i{background:var(--cn-hot);opacity:1}
+.c-construction .cn-bm-row.on span,.c-construction .cn-bm-row.on b{color:var(--ink);font-weight:800}
+.c-construction .cn-bm-row b{text-align:right;font-weight:600}
+.c-construction .tr-out .cn-bm-hl{border-left:4px solid var(--gold);padding-left:.55rem}
+.c-construction .tr-field .tr-seg{margin-top:.25rem}
+.c-construction .tr-field select{font:inherit;font-weight:400;padding:.4rem .5rem;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);max-width:100%;min-height:2.3rem}
+
+/* ---------- widget: wall framing (Lesson 4) ---------- */
+.c-construction .cn-wl .cn-wl-p{stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction .cn-wl .cn-wl-p.pl{fill:var(--cn-wood2)}
+.c-construction .cn-wl .cn-wl-p.st{fill:var(--cn-wood)}
+.c-construction .cn-wl .cn-wl-p.k{fill:var(--cn-wood);stroke:var(--s-framing);stroke-width:2}
+.c-construction .cn-wl .cn-wl-p.j{fill:var(--cn-wood2)}
+.c-construction .cn-wl .cn-wl-p.cr{fill:var(--cn-wood);opacity:.85}
+.c-construction .cn-wl .cn-wl-p.hd{fill:var(--s-framing)}
+.c-construction .cn-wl .cn-wl-p.p2{fill:var(--cn-wood2);stroke-dasharray:3 2}
+.c-construction .cn-wl .cn-wl-mark{stroke:var(--cn-bad);stroke-width:1.6}
+.c-construction .cn-wl .cn-wl-ro{fill:var(--cn-glass);fill-opacity:.5;stroke:var(--s-windows);stroke-width:1;stroke-dasharray:4 3}
+.c-construction .cn-wl .cn-wl-floor{stroke:var(--tr-edge);stroke-width:2}
+.c-construction .cn-wl .cn-wl-in{animation:cn-drop .45s ease-out both}
+@keyframes cn-drop{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+.c-construction .cn-wl-ct{margin:.1rem 0 .2rem}
+.c-construction .cn-wl-list{list-style:none;margin:0;padding:0}
+.c-construction .cn-wl-list li{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px dashed var(--line);padding:.18rem 0}
+.c-construction .cn-wl-list li:last-child{border-bottom:0}
+.c-construction .cn-wl .hs-btn[disabled]{opacity:.45;cursor:default}
+@media (prefers-reduced-motion:reduce){.c-construction .cn-wl .cn-wl-in{animation:none}}
+
+/* ---------- widget: roof pitch (Lesson 5) ---------- */
+.c-construction .cn-rf .cn-rf-wall{fill:var(--cn-paint);stroke:var(--tr-edge);stroke-width:2}
+.c-construction .cn-rf .cn-rf-attic{fill:var(--s-roof);fill-opacity:.08}
+.c-construction .cn-rf .cn-rf-raf{stroke:var(--s-roof);stroke-width:7;stroke-linecap:round}
+.c-construction .cn-rf .cn-rf-tie{stroke:var(--cn-wood-e);stroke-width:4}
+.c-construction .cn-rf .cn-rf-dim{stroke:var(--gold);stroke-width:1.6;fill:none}
+.c-construction .cn-rf .cn-rf-ah{fill:var(--gold)}
+.c-construction .cn-rf .cn-rf-dim2{stroke:var(--s-roof);stroke-width:1.2;stroke-dasharray:4 3;fill:none}
+.c-construction .cn-rf .cn-rf-arc{stroke:var(--cn-water);stroke-width:2;fill:none}
+.c-construction .cn-rf .cn-rf-tri{fill:var(--card);stroke:var(--cn-water);stroke-width:1.5}
+.c-construction .tr svg text.cn-rf-tr,.c-construction.tr svg text.cn-rf-tr{fill:var(--s-roof)}
+.c-construction .tr svg text.cn-rf-tt,.c-construction.tr svg text.cn-rf-tt{fill:var(--cn-water);font-weight:700}
+.c-construction .tr svg text.cn-rf-badge,.c-construction.tr svg text.cn-rf-badge{font-size:13px}
+.c-construction .tr svg text.cn-rf-badge.lo,.c-construction.tr svg text.cn-rf-badge.lo{fill:var(--cn-ok)}
+.c-construction .tr svg text.cn-rf-badge.hi,.c-construction.tr svg text.cn-rf-badge.hi{fill:var(--cn-bad)}
+.c-construction .cn-rf .rf-pre{margin:.1rem 0 .4rem}
+
+/* ---------- widget: envelope (Lesson 6) ---------- */
+.c-construction .cn-ev-tabs{margin:0 0 .6rem}
+.c-construction .cn-ev .cn-ev-out{fill:var(--cn-sky)}
+.c-construction .cn-ev .cn-ev-in{fill:var(--cn-paint);opacity:.6}
+.c-construction .cn-ev .cn-ev-ground{stroke:var(--tr-edge);stroke-width:2}
+.c-construction .cn-ev .cn-ev-sheath{fill:var(--cn-wood2);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction .cn-ev .cn-ev-wet{fill:#5a3a1e}
+html[data-theme="dark"] .c-construction .cn-ev .cn-ev-wet{fill:#1a0f06}
+.c-construction .cn-ev .cn-ev-foam{fill:#9ec9e8;stroke:var(--cn-water);stroke-width:1}
+html[data-theme="dark"] .c-construction .cn-ev .cn-ev-foam{fill:#2e5a7a}
+.c-construction .cn-ev .cn-ev-ins{fill:var(--cn-insul);opacity:.75}
+.c-construction .cn-ev .cn-ev-instex{fill:none;stroke:var(--cn-insul-e);stroke-width:1;opacity:.45}
+.c-construction .cn-ev .cn-ev-plate{fill:var(--cn-wood);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction .cn-ev .cn-ev-vr{stroke:var(--s-finishes);stroke-width:2.5;stroke-dasharray:6 3}
+.c-construction .cn-ev .cn-ev-dw{fill:#e9e6df;stroke:var(--tr-edge);stroke-width:1}
+html[data-theme="dark"] .c-construction .cn-ev .cn-ev-dw{fill:#55605a}
+.c-construction .cn-ev .cn-ev-wrb{stroke:var(--s-envelope);stroke-width:2.5}
+.c-construction .cn-ev .cn-ev-siding{fill:var(--cn-wood);stroke:var(--cn-wood-e);stroke-width:1;stroke-linejoin:round}
+.c-construction .cn-ev .cn-ev-hole{fill:var(--card);stroke:var(--cn-bad);stroke-width:1.5;stroke-dasharray:3 2}
+.c-construction .cn-ev .cn-ev-box{fill:var(--tr-edge)}
+.c-construction .cn-ev .cn-ev-prof{fill:none;stroke:var(--cn-hot);stroke-width:2.5;stroke-linejoin:round}
+.c-construction .cn-ev .cn-ev-dew{fill:none;stroke:var(--cn-water);stroke-width:1.6;stroke-dasharray:6 4}
+.c-construction .cn-ev .cn-ev-condz{fill:var(--cn-water);opacity:.18}
+.c-construction .cn-ev .cn-ev-lead{stroke:var(--tr-edge);stroke-width:1;fill:none}
+.c-construction .tr svg text.cn-ev-hot,.c-construction.tr svg text.cn-ev-hot{fill:var(--cn-hot)}
+.c-construction .tr svg text.cn-ev-cold,.c-construction.tr svg text.cn-ev-cold,.c-construction .tr svg text.cn-ev-dewt,.c-construction.tr svg text.cn-ev-dewt{fill:var(--cn-water)}
+.c-construction .cn-ev .cn-ev-pt.w{fill:var(--cn-water)}
+.c-construction .cn-ev .cn-ev-pt.a{fill:#8aa0ad}
+html[data-theme="dark"] .c-construction .cn-ev .cn-ev-pt.a{fill:#c9d6de}
+.c-construction .cn-ev .cn-ev-pt.v{fill:var(--s-finishes);opacity:.75}
+.c-construction .cn-ev .cn-ev-pt.v.drop{fill:var(--cn-water);opacity:1}
+.c-construction .cn-ev .cn-ev-pt.h{fill:var(--cn-hot);opacity:.8}
+.c-construction .cn-ev .cn-ev-pt.h.stud{fill:var(--cn-bad);opacity:1}
+.c-construction .cn-ev-key{display:flex;gap:.9rem;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin:.3rem .3rem .1rem;min-height:1.2rem}
+.c-construction .cn-ev-key i{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;margin-right:.35rem;vertical-align:-.05rem}
+.c-construction .cn-ev-key i.k-w,.c-construction .cn-ev-key i.k-c{background:var(--cn-water)}.c-construction .cn-ev-key i.k-a{background:#8aa0ad}
+.c-construction .cn-ev-key i.k-v{background:var(--s-finishes)}.c-construction .cn-ev-key i.k-h{background:var(--cn-hot)}
+.c-construction .cn-ev-key i.k-t{background:var(--cn-hot);height:.2rem;border-radius:2px;vertical-align:.2rem}
+.c-construction .cn-ev-key i.k-d{background:var(--cn-water);height:.2rem;border-radius:2px;vertical-align:.2rem}
+.c-construction .cn-ev .ev-h{font-size:1.08rem}
+.c-construction .cn-ev .ev-p{margin:.2rem 0 .5rem;line-height:1.5}
+.c-construction .cn-ev .ev-ctrl{margin:.3rem 0 .6rem}
+.c-construction .cn-ev .ev-ctrl .tr-seg{margin:.2rem 0}
+
+/* ---------- widget: stairs (Lesson 7) ---------- */
+.c-construction .cn-stw .cn-stw-floor{stroke:var(--tr-edge);stroke-width:2}
+.c-construction .cn-stw .cn-stw-slab{fill:var(--cn-conc);opacity:.6}
+.c-construction .cn-stw .cn-stw-up{fill:var(--cn-wood2);stroke:var(--cn-wood-e)}
+.c-construction .cn-stw .cn-stw-str{fill:var(--cn-wood);fill-opacity:.55;stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction .cn-stw .cn-stw-steps{fill:none;stroke:var(--s-finishes);stroke-width:3;stroke-linejoin:round}
+.c-construction .cn-stw .cn-stw-rail{stroke:var(--s-finishes);stroke-width:2;stroke-dasharray:8 4;opacity:.7}
+.c-construction .cn-stw .cn-stw-dim{stroke:var(--gold);stroke-width:2}
+.c-construction .cn-stw .cn-stw-dim2{stroke:var(--tr-edge);stroke-width:1;stroke-dasharray:3 3}
+.c-construction .cn-stw .cn-stw-ball{fill:var(--cn-hot);stroke:var(--card);stroke-width:2}
+.c-construction .tr svg text.cn-stw-tr,.c-construction.tr svg text.cn-stw-tr,.c-construction .tr svg text.cn-stw-tt,.c-construction.tr svg text.cn-stw-tt{fill:#8a6a1e}
+html[data-theme="dark"] .c-construction .tr svg text.cn-stw-tr,html[data-theme="dark"] .c-construction.tr svg text.cn-stw-tr,html[data-theme="dark"] .c-construction .tr svg text.cn-stw-tt,html[data-theme="dark"] .c-construction.tr svg text.cn-stw-tt{fill:#e3c27a}
+
+/* ---------- widget: 3-4-5 squaring (Lesson 8) ---------- */
+.c-construction .cn-sq .cn-sq-line{stroke:var(--s-foundation);stroke-width:5;stroke-linecap:round}
+.c-construction .cn-sq .cn-sq-arc{stroke:var(--cn-water);stroke-width:2;fill:none}
+.c-construction .cn-sq .cn-sq-tape{stroke:#e2b93b;stroke-width:8;stroke-linecap:butt;fill:none}
+.c-construction .cn-sq .cn-sq-tape.c{stroke:#f0c94a;stroke-width:9}
+html[data-theme="dark"] .c-construction .cn-sq .cn-sq-tape{stroke:#c99e2a}
+.c-construction .cn-sq .cn-sq-tick{stroke:#3a2f12;stroke-width:1.6}
+.c-construction .cn-sq .cn-sq-mark{fill:var(--cn-bad);stroke:var(--card);stroke-width:2;transition:opacity .2s}
+.c-construction .cn-sq .cn-sq-corner{fill:var(--tr-ink)}
+.c-construction .tr svg text.cn-sq-read,.c-construction.tr svg text.cn-sq-read{font-size:17px;fill:var(--tr-ink)}
+.c-construction .tr svg text.cn-sq-ok,.c-construction.tr svg text.cn-sq-ok{font-size:18px}
+.c-construction .tr svg text.cn-sq-ok.y,.c-construction.tr svg text.cn-sq-ok.y{fill:var(--cn-ok)}
+.c-construction .tr svg text.cn-sq-ok.n,.c-construction.tr svg text.cn-sq-ok.n{fill:var(--cn-bad)}
+
+/* ---------- widget: dew point (Lesson 10) ---------- */
+.c-construction .cn-dp-sc{margin:0 0 .6rem}
+.c-construction .cn-dp .cn-dp-grid{stroke:var(--line);stroke-width:1;fill:none}
+.c-construction .cn-dp .cn-dp-axis{stroke:var(--tr-edge);stroke-width:1.5;fill:none}
+.c-construction .cn-dp .cn-dp-curve{stroke:var(--cn-water);stroke-width:3;fill:none}
+.c-construction .cn-dp .cn-dp-fogz{fill:var(--cn-water);opacity:.08}
+.c-construction .cn-dp .cn-dp-rh{stroke:var(--tr-edge);stroke-width:1.2;stroke-dasharray:4 4;fill:none}
+.c-construction .cn-dp .cn-dp-cool{stroke:var(--cn-water);stroke-width:2.5;stroke-dasharray:6 4;fill:none}
+.c-construction .cn-dp .cn-dp-surf{stroke:var(--cn-ok);stroke-width:3}
+.c-construction .cn-dp .cn-dp-surf.wet{stroke:var(--cn-bad)}
+.c-construction .cn-dp .cn-dp-dew{fill:var(--card);stroke:var(--cn-water);stroke-width:3}
+.c-construction .cn-dp .cn-dp-air{fill:var(--cn-hot);stroke:var(--card);stroke-width:2}
+.c-construction .tr svg text.cn-dp-ct,.c-construction.tr svg text.cn-dp-ct,.c-construction .tr svg text.cn-dp-dt,.c-construction.tr svg text.cn-dp-dt{fill:var(--cn-water)}
+.c-construction .tr svg text.cn-dp-st,.c-construction.tr svg text.cn-dp-st{fill:var(--tr-ink)}
+.c-construction .cn-dp-pic{margin-top:.5rem}
+.c-construction .cn-dp .cn-dp-frame{fill:var(--cn-wood2);stroke:var(--cn-wood-e)}
+.c-construction .cn-dp .cn-dp-frame2{stroke:var(--cn-wood2);stroke-width:8}
+.c-construction .cn-dp .cn-dp-glass{fill:var(--cn-glass);transition:fill .6s}
+.c-construction .cn-dp-pic.fogged .cn-dp-glass{fill:#e3eef4}
+html[data-theme="dark"] .c-construction .cn-dp-pic.fogged .cn-dp-glass{fill:#4a6272}
+.c-construction .cn-dp .cn-dp-conc{fill:var(--cn-conc);stroke:var(--cn-conc-e)}
+.c-construction .cn-dp .cn-dp-joint{stroke:var(--cn-conc-e);stroke-width:1;opacity:.6}
+.c-construction .cn-dp .cn-dp-pipe{fill:#b9c4ca;stroke:#7d8a91;stroke-width:1.5}
+html[data-theme="dark"] .c-construction .cn-dp .cn-dp-pipe{fill:#5d6b72;stroke:#9aa6ac}
+.c-construction .cn-dp .cn-dp-drop{fill:var(--cn-water);fill-opacity:.55;stroke:#fff;stroke-width:.8;stroke-opacity:.7}
+
+/* ---------- widget: estimating (Lesson 8) ---------- */
+.c-construction .cn-es-tabs{margin:0 0 .6rem}
+.c-construction .cn-es .cn-es-cube{fill:var(--cn-conc);stroke:var(--cn-conc-e);stroke-width:1}
+.c-construction .cn-es .cn-es-cube2{fill:var(--cn-conc-e);opacity:.55}
+.c-construction .cn-es .cn-es-cube3{fill:var(--cn-conc-e);opacity:.8}
+.c-construction .cn-es .cn-es-sheet{fill:#ece9e1;stroke:#9aa39d;stroke-width:1.2}
+html[data-theme="dark"] .c-construction .cn-es .cn-es-sheet{fill:#59625d;stroke:#a7b1ab}
+.c-construction .cn-es .cn-es-stud{fill:var(--cn-wood);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction .cn-es .es-ceil{margin:.2rem 0 .3rem}
+
+/* ---------- static figures ---------- */
+.c-construction svg .cn-f-num{fill:var(--g)}
+.c-construction svg .cn-f-insp{fill:var(--soft);stroke:var(--tr-acc);stroke-width:1.2}
+.c-construction .tr svg text.cn-f-inspt,.c-construction.tr svg text.cn-f-inspt{fill:var(--tr-acc)}
+.c-construction svg .cn-f-wood{fill:var(--cn-wood);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction svg .cn-f-wood2{fill:var(--cn-wood2);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction svg .cn-f-king{fill:var(--cn-wood);stroke:var(--s-framing);stroke-width:2}
+.c-construction svg .cn-f-jack{fill:var(--cn-wood2);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction svg .cn-f-hdr{fill:var(--s-framing);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction svg .cn-f-crip{fill:var(--cn-wood);stroke:var(--cn-wood-e);stroke-width:1;opacity:.85}
+.c-construction svg .cn-f-ro{fill:var(--cn-glass);opacity:.45}
+.c-construction svg .cn-f-steel{fill:var(--cn-steel)}
+.c-construction svg .cn-f-force{stroke:var(--cn-hot);stroke-width:3;fill:none}
+.c-construction svg .cn-f-comp{stroke:var(--cn-water);stroke-width:3;fill:none;stroke-dasharray:4 3}
+.c-construction svg .cn-f-tens{stroke:var(--cn-hot);stroke-width:3;fill:none;stroke-dasharray:4 3}
+.c-construction svg .cn-f-sup{fill:var(--cn-conc);stroke:var(--cn-conc-e)}
+.c-construction svg .cn-f-member{fill:none;stroke:var(--cn-wood-e);stroke-width:6;stroke-linejoin:round}
+.c-construction svg .cn-f-ghost{fill:none;stroke:var(--cn-bad);stroke-width:2;stroke-dasharray:6 4}
+.c-construction svg .cn-f-ghost2{fill:none;stroke:var(--tr-edge);stroke-width:1.2;stroke-dasharray:4 3}
+.c-construction svg .cn-f-pin{fill:var(--card);stroke:var(--tr-ink);stroke-width:2}
+.c-construction svg .cn-f-soil{fill:var(--cn-soil);opacity:.6}
+.c-construction svg .cn-f-grade{stroke:var(--cn-grass);stroke-width:3;fill:none}
+.c-construction svg .cn-f-grade2{stroke:var(--cn-grass);stroke-width:4;fill:none}
+.c-construction svg .cn-f-frost{stroke:var(--cn-water);stroke-width:1.6;stroke-dasharray:6 4;fill:none}
+.c-construction .tr svg text.cn-f-frostt,.c-construction.tr svg text.cn-f-frostt{fill:var(--cn-water)}
+.c-construction svg .cn-f-conc{fill:var(--cn-conc);stroke:var(--cn-conc-e);stroke-width:1}
+.c-construction svg .cn-f-gravel{fill:var(--cn-gravel);opacity:.7}
+.c-construction svg .cn-f-poly{stroke:var(--s-finishes);stroke-width:2.5;fill:none}
+.c-construction svg .cn-f-crawl,.c-construction svg .cn-f-room{fill:var(--card)}
+.c-construction svg .cn-f-tile{fill:none;stroke:var(--cn-conc-e);stroke-width:2}
+.c-construction svg .cn-f-bolt{stroke:var(--cn-steel);stroke-width:2.5;fill:none}
+.c-construction svg .cn-f-sheath{stroke:var(--cn-wood-e);stroke-width:4}
+.c-construction svg .cn-f-wall{fill:var(--cn-paint);stroke:var(--tr-edge);stroke-width:1.5}
+.c-construction svg .cn-f-wall2{stroke:var(--tr-edge);stroke-width:6}
+.c-construction svg .cn-f-insulb{fill:var(--cn-insul);stroke:var(--cn-insul-e);stroke-width:1;opacity:.8}
+.c-construction svg .cn-f-rafter{stroke:var(--cn-wood-e);stroke-width:12;fill:none}
+.c-construction svg .cn-f-deck{stroke:var(--cn-wood2);stroke-width:5;fill:none}
+.c-construction svg .cn-f-ice{stroke:var(--cn-water);stroke-width:3;fill:none}
+.c-construction svg .cn-f-under{stroke:var(--tr-ink);stroke-width:1.5;fill:none;stroke-dasharray:2 2}
+.c-construction svg .cn-f-shing{stroke:var(--cn-shingle);stroke-width:6;fill:none;stroke-dasharray:14 2}
+.c-construction svg .cn-f-drip{stroke:var(--cn-steel);stroke-width:2;fill:none}
+.c-construction svg .cn-f-gut{stroke:var(--cn-steel);stroke-width:3;fill:none}
+.c-construction svg .cn-f-soffit{stroke:var(--cn-wood-e);stroke-width:3;stroke-dasharray:4 3}
+.c-construction svg .cn-f-baffle{stroke:var(--s-roughins);stroke-width:2.5;fill:none}
+.c-construction svg .cn-f-air{stroke:var(--s-roughins);stroke-width:2;fill:none;stroke-dasharray:5 3}
+.c-construction svg .cn-f-wa{fill:var(--cn-water)}
+.c-construction svg .cn-f-roofsolid{fill:var(--cn-shingle);fill-opacity:.25;stroke:var(--cn-shingle);stroke-width:4;stroke-linejoin:round}
+.c-construction svg .cn-f-snow{fill:var(--cn-snow);stroke:var(--cn-snow-e);stroke-width:1.2}
+.c-construction svg .cn-f-icedam{fill:#bfe3f7;stroke:var(--cn-water);stroke-width:1.5}
+html[data-theme="dark"] .c-construction svg .cn-f-icedam{fill:#3d6f8f}
+.c-construction svg .cn-f-melt{stroke:var(--cn-water);stroke-width:3;stroke-dasharray:4 3;fill:none}
+.c-construction svg .cn-f-heat{stroke:var(--cn-hot);stroke-width:2.5;fill:none;stroke-linecap:round}
+.c-construction .tr svg text.cn-f-icet,.c-construction.tr svg text.cn-f-icet{fill:var(--cn-water)}
+.c-construction svg .cn-f-sheathbg{fill:var(--cn-wood2);opacity:.4}
+.c-construction svg .cn-f-wrbbg{fill:var(--s-envelope);opacity:.1}
+.c-construction svg .cn-f-ro2{fill:var(--cn-glass);stroke:var(--s-windows);stroke-width:1.5}
+.c-construction svg .cn-f-pan{fill:var(--s-envelope);fill-opacity:.55;stroke:var(--s-envelope);stroke-width:1}
+.c-construction svg .cn-f-jamb{fill:var(--s-envelope);fill-opacity:.35;stroke:var(--s-envelope);stroke-width:1}
+.c-construction svg .cn-f-headf{fill:var(--s-envelope);fill-opacity:.55;stroke:var(--s-envelope);stroke-width:1}
+.c-construction svg .cn-f-flap{fill:var(--s-envelope);fill-opacity:.2;stroke:var(--s-envelope);stroke-width:1.5;stroke-dasharray:5 3}
+.c-construction svg .cn-f-water{stroke:var(--cn-water);stroke-width:2.5;fill:none}
+.c-construction svg .cn-f-gyp{fill:#efece4;stroke:var(--tr-edge);stroke-width:1}
+html[data-theme="dark"] .c-construction svg .cn-f-gyp{fill:#4f5853}
+.c-construction svg .cn-f-paper{stroke:#b8a77e;stroke-width:2;fill:none}
+.c-construction svg .cn-f-mud1{fill:#d6d2c6}.c-construction svg .cn-f-mud2{fill:#e2ded3}.c-construction svg .cn-f-mud3{fill:#ece9e0}
+html[data-theme="dark"] .c-construction svg .cn-f-mud1{fill:#7d867f}html[data-theme="dark"] .c-construction svg .cn-f-mud2{fill:#6d766f}html[data-theme="dark"] .c-construction svg .cn-f-mud3{fill:#5f6862}
+.c-construction svg .cn-f-mud1,.c-construction svg .cn-f-mud2,.c-construction svg .cn-f-mud3{stroke:var(--tr-edge);stroke-width:.8}
+.c-construction svg .cn-f-tape{stroke:var(--cn-hot);stroke-width:3}
+.c-construction svg .cn-f-screw{stroke:var(--cn-steel);stroke-width:2.5}
+.c-construction svg .cn-f-floorl{stroke:var(--tr-edge);stroke-width:3}
+.c-construction svg .cn-f-stringer{fill:var(--cn-wood);fill-opacity:.6;stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction svg .cn-f-steps{fill:none;stroke:var(--s-finishes);stroke-width:3;stroke-linejoin:round}
+.c-construction svg .cn-f-rail{stroke:var(--s-finishes);stroke-width:5;stroke-linecap:round}
+.c-construction svg .cn-f-post{stroke:var(--s-finishes);stroke-width:4}
+.c-construction svg .cn-f-dimg{stroke:var(--gold);stroke-width:2.5;fill:none}
+.c-construction .tr svg text.cn-f-dimt,.c-construction.tr svg text.cn-f-dimt{fill:#8a6a1e}
+html[data-theme="dark"] .c-construction .tr svg text.cn-f-dimt,html[data-theme="dark"] .c-construction.tr svg text.cn-f-dimt{fill:#e3c27a}
+.c-construction svg .cn-f-nose{stroke:var(--cn-hot);stroke-width:3}
+.c-construction svg .cn-f-head{stroke:var(--cn-water);stroke-width:2;stroke-dasharray:4 3}
+.c-construction svg .cn-f-planw{fill:none;stroke:var(--tr-ink);stroke-width:5}
+.c-construction svg .cn-f-planw2{fill:var(--tr-ink);stroke:var(--tr-ink);stroke-width:1}
+.c-construction svg .cn-f-door{fill:none;stroke:var(--tr-edge);stroke-width:1.2;stroke-dasharray:3 2}
+.c-construction svg .cn-f-doorl{stroke:var(--tr-ink);stroke-width:2}
+.c-construction svg .cn-f-win{stroke:var(--cn-water);stroke-width:5}
+.c-construction svg .cn-f-winl{stroke:var(--cn-water);stroke-width:1.5}
+.c-construction svg .cn-f-dim2{stroke:var(--gold);stroke-width:1.5;fill:none}
+.c-construction svg .cn-f-elev{fill:var(--cn-paint);stroke:var(--tr-ink);stroke-width:2;stroke-linejoin:round}
+.c-construction svg .cn-f-winf{fill:var(--cn-glass);stroke:var(--cn-water);stroke-width:1.5}
+.c-construction svg .cn-f-cut{stroke:var(--cn-wood-e);stroke-width:3}
+.c-construction svg .cn-f-sym{fill:none;stroke:var(--tr-ink);stroke-width:1.5}
+.c-construction svg .cn-f-arrowl{stroke:var(--tr-edge);stroke-width:1.6;fill:none}
+.c-construction svg .cn-f-cutl{stroke:var(--tr-ink);stroke-width:2.5;stroke-dasharray:10 3 2 3}
+.c-construction svg .cn-f-tag{fill:var(--card);stroke:var(--tr-ink);stroke-width:1.5}
+.c-construction svg .cn-f-north{fill:var(--tr-ink)}
+.c-construction svg .cn-f-ico{fill:none;stroke:var(--cn-hot);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.c-construction svg .cn-f-ico2{fill:var(--cn-hot)}
+.c-construction svg .cn-f-roofedge{fill:var(--cn-shingle);opacity:.7}
+.c-construction svg .cn-f-ladder{stroke:var(--cn-steel);stroke-width:4;stroke-linecap:round}
+.c-construction svg .cn-f-rung{stroke:var(--cn-steel);stroke-width:2.5}
+.c-construction svg .cn-f-wallsec{fill:var(--cn-wood2);stroke:var(--cn-wood-e);stroke-width:1}
+.c-construction svg .cn-f-wdot{fill:var(--cn-water)}
+.c-construction svg .cn-f-wet{fill:var(--cn-water);opacity:.35}
+.c-construction svg .cn-f-airl{stroke:#8aa0ad;stroke-width:3;fill:none}
+.c-construction svg .cn-f-vdot{fill:var(--s-finishes);opacity:.8}
+.c-construction svg .cn-f-ds{stroke:var(--cn-steel);stroke-width:5;fill:none;stroke-linejoin:round}
+.c-construction svg .cn-f-gw{stroke:var(--cn-water);stroke-width:2;stroke-dasharray:8 4}
+.c-construction .tr svg text.cn-f-gwt,.c-construction.tr svg text.cn-f-gwt{fill:var(--cn-water)}
+.c-construction .tr svg text.cn-f-ct,.c-construction.tr svg text.cn-f-ct{fill:var(--cn-water)}
+.c-construction .tr svg text.cn-f-tt,.c-construction.tr svg text.cn-f-tt{fill:var(--cn-hot)}
+.c-construction .tr-fig svg{max-width:560px}
+.c-construction svg .cn-f-ceil{stroke:var(--tr-edge);stroke-width:3}
+.c-construction svg .cn-f-nosec{fill:var(--cn-hot)}
+@media (max-width:600px){.c-construction .tr-w svg text.tx-sm,.c-construction .tr-w svg text{font-size:13.5px}.c-construction .tr-w svg text.cn-sq-read{font-size:18px}}
+.c-construction .cn-wl .cn-wl-gh{fill:none;stroke:var(--tr-edge);stroke-width:1;stroke-dasharray:3 3;opacity:.55}

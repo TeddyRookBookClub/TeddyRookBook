@@ -66,7 +66,7 @@
   // ---------- lesson done ----------
   var lesson = D.getElementById('tr-lesson');
   if (lesson) {
-    var box = D.getElementById('tr-done-box'), k = 'cars/' + lesson.dataset.lesson, st = load();
+    var box = D.getElementById('tr-done-box'), k = (lesson.dataset.course || 'cars') + '/' + lesson.dataset.lesson, st = load();
     if (box) {
       box.checked = !!(st.done && st.done[k]);
       box.addEventListener('change', function () { var s = load(); s.done = s.done || {}; if (box.checked) s.done[k] = 1; else delete s.done[k]; save(s); });
@@ -76,8 +76,8 @@
   // ---------- course progress ----------
   var list = D.querySelector('.tr-lessons');
   if (list) {
-    var done = load().done || {}, items = list.querySelectorAll('li[data-lesson]'), c = 0;
-    items.forEach(function (li) { if (done['cars/' + li.dataset.lesson]) { li.classList.add('done'); c++; } });
+    var done = load().done || {}, items = list.querySelectorAll('li[data-lesson]'), c = 0, pre = (list.dataset.course || 'cars') + '/';
+    items.forEach(function (li) { if (done[pre + li.dataset.lesson]) { li.classList.add('done'); c++; } });
     var pr = D.querySelector('.tr-progress');
     if (pr && c) {
       pr.hidden = false;

@@ -1,0 +1,14 @@
+{{- /* The chapter cards on a unit's hub page. Context: (dict "unit" "newton") or the hub page itself (uses .Params.unit). */ -}}
+{{- $key := "" }}{{ if reflect.IsMap . }}{{ $key = .unit }}{{ else }}{{ $key = .Params.unit }}{{ end }}
+{{- $u := index site.Data.science_units $key }}
+<ol class="u-chapters" data-unit="{{ $u.key }}">
+  {{- range $u.chapters }}
+  <li><a class="u-ch" href="{{ printf "science-lab/%s/%s/" $u.slug .key | relURL }}" data-chapter="{{ .key }}">
+    <span class="u-ch-n" aria-hidden="true">{{ .num }}</span>
+    <span class="u-ch-ic" aria-hidden="true">{{ .icon }}</span>
+    <b>{{ .title }}</b>
+    <span class="u-ch-t">{{ .short }}</span>
+    <span class="u-ch-done">✓ Done</span>
+  </a></li>
+  {{- end }}
+</ol>

@@ -1,0 +1,208 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/thermodynamics/engines/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/engines/sim.css").ModTime.Unix }}">
+<div class="lab" id="th4-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Thermodynamics · Chapter 4</p>
+    <h1>{{ .Title }}</h1>
+    <p>Every car engine, power plant and refrigerator runs on one idea: heat flowing from hot to cold can be made to do work, and work can push heat back uphill. In 1824 a young French engineer, Sadi Carnot, worked out the best any such machine could ever do. Here you’ll run his ideal engine and watch the heat and work flow to scale. You’ll push it toward 100% and find out why it can never get there, then run it backward as a refrigerator and a heat pump. Then meet a Stirling engine that runs on a cup of coffee.</p>
+    <span class="lab-mark" aria-hidden="true">🚂</span>
+  </header>
+
+  <div class="lab-stage th4-main">
+    <div class="lab-view" id="th4-view">
+      <canvas id="th4-cv" tabindex="0" aria-label="A Carnot engine. Left: a cylinder of gas with a piston; under it slides a hot block, an insulating block or a cold block. Middle: a pressure–volume diagram that traces the four steps of the cycle, with the work shaded. Right: an energy-flow diagram with the heat in, the work out and the heat dumped, drawn to scale. Keys: Space pauses, left and right arrows change the cold temperature, up and down arrows change the hot temperature, M switches between engine and refrigerator."></canvas>
+      <div class="lab-hud" id="th4-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="th4-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="th4-step" aria-label="Skip to the next step of the cycle" title="Next step">⏭</button>
+        <button type="button" id="th4-reset" aria-label="Start the cycle again" title="Start the cycle again">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="th4-mode-h">Run it as</h3>
+      <div class="lab-seg" id="th4-mode" role="group" aria-labelledby="th4-mode-h">
+        <button type="button" data-m="engine">Engine</button><button type="button" data-m="fridge">Refrigerator / heat pump</button>
+      </div>
+      <label class="lab-field"><span>Hot side T<sub>h</sub> <output id="th4-th-o"></output></span><input type="range" id="th4-th" min="300" max="1500" step="10" aria-label="Hot side temperature in kelvin"></label>
+      <label class="lab-field"><span>Cold side T<sub>c</sub> <output id="th4-tc-o"></output></span><input type="range" id="th4-tc" min="10" max="1490" step="5" aria-label="Cold side temperature in kelvin"></label>
+      <label class="lab-field"><span>Expansion at T<sub>h</sub>, V₂/V₁ <output id="th4-r-o"></output></span><input type="range" id="th4-r" min="1.2" max="4" step="0.1" aria-label="Volume ratio during the hot expansion"></label>
+      <div class="lab-seg" id="th4-gas" role="group" aria-label="Gas in the cylinder">
+        <button type="button" data-g="he">Helium, γ = 5/3</button><button type="button" data-g="air">Air, γ = 7/5</button>
+      </div>
+      <label class="lab-field"><span>Speed <output id="th4-sp-o"></output></span><input type="range" id="th4-sp" min="0.25" max="3" step="0.25" aria-label="Animation speed"></label>
+      <label class="lab-chk"><input type="checkbox" id="th4-log"> Log scales on the P–V diagram</label>
+      <h3>Live numbers <small class="th4-small">(per cycle, 0.04 mol of gas)</small></h3>
+      <dl class="lab-readout" id="th4-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="th4-missions"></ol>
+    </div>
+    <section class="lab-sec th4-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The cylinder.</b> A little helium (0.04 mole, 0.16 gram) is trapped under a piston. Under the cylinder slides a strip with three blocks: a hot block at <var>T</var><sub>h</sub>, an insulating block, and a cold block at <var>T</var><sub>c</sub>. The gas glows red when hot and blue when cold, and its atoms jiggle faster when it’s hotter. Wavy arrows show heat crossing the bottom.</p>
+        <p><b>The four steps.</b> (1→2) On the hot block the gas expands slowly, staying at <var>T</var><sub>h</sub>: heat <var>Q</var><sub>h</sub> flows in and the gas pushes the piston out. (2→3) On the insulator the gas keeps expanding and cools down to <var>T</var><sub>c</sub>. (3→4) On the cold block the piston squeezes the gas, which gives heat <var>Q</var><sub>c</sub> to the cold block. (4→1) On the insulator again, the squeezing warms the gas back to <var>T</var><sub>h</sub>. This is the <i>Carnot cycle</i>.</p>
+        <p><b>The P–V diagram.</b> Pressure against volume. The red curve is the hot isotherm (constant temperature), blue is the cold one, and the two pale curves are the adiabats (no heat in or out). When the gas expands, it does work equal to the area under the curve; when it’s squeezed, work is done on it. The difference, the shaded area inside the loop, is the net work out per cycle.</p>
+        <p><b>The energy flow.</b> Band widths are to scale. <var>Q</var><sub>h</sub> enters from the hot side and splits: <var>W</var> leaves as work, and <var>Q</var><sub>c</sub> must go to the cold side. The bands light up as each part of the cycle happens. In the backward mode the arrows flip: work goes in, heat is taken from the cold side, and more heat comes out at the hot side.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="science"><h2>The best any engine can do</h2>
+    <p>A <i>heat engine</i> takes heat <var>Q</var><sub>h</sub> from something hot, turns part of it into work <var>W</var>, and gives the rest, <var>Q</var><sub>c</sub>, to something cold. Energy is conserved (the first law), so <var>W</var> = <var>Q</var><sub>h</sub> − <var>Q</var><sub>c</sub>. The efficiency is the share that becomes work:</p>
+    <div class="lab-formula"><var>e</var> = <var>W</var> / <var>Q</var><sub>h</sub> = 1 − <var>Q</var><sub>c</sub> / <var>Q</var><sub>h</sub></div>
+    <p>Why not make <var>Q</var><sub>c</sub> zero? That’s what the <b>Kelvin–Planck statement</b> of the second law forbids: no engine running in a cycle can turn heat from one source completely into work. Entropy explains it. Taking heat <var>Q</var><sub>h</sub> out of the hot side lowers its entropy by <var>Q</var><sub>h</sub>/<var>T</var><sub>h</sub>. The engine returns to its starting state every cycle, so its own entropy doesn’t change. The total can’t go down, so the cold side must gain at least as much: <var>Q</var><sub>c</sub>/<var>T</var><sub>c</sub> ≥ <var>Q</var><sub>h</sub>/<var>T</var><sub>h</sub>. The best case is equality, which a perfectly reversible engine like Carnot’s reaches. That gives the Carnot limit:</p>
+    <div class="u-big"><var>e</var><sub>Carnot</sub> = 1 − <var>T</var><sub>c</sub> / <var>T</var><sub>h</sub><small>maximum efficiency of any engine working between a hot side at <var>T</var><sub>h</sub> and a cold side at <var>T</var><sub>c</sub> (both in kelvin)</small></div>
+    <p>Nothing about the engine’s design appears in it, only the two temperatures. As Carnot wrote, the motive power of heat doesn’t depend on what you use to produce it. Steam, air, helium: the limit is the same.</p>
+    <div class="u-ex"><b>Worked example: a nuclear power plant</b>
+      <p>In OpenStax’s example, a reactor heats pressurized water to 300 °C (573 K), and the steam is condensed at 27 °C (300 K).</p>
+      <ol><li>Carnot limit: <var>e</var> = 1 − 300/573 = 0.476, or 47.6%.</li>
+        <li>Real plants: in 2024, U.S. nuclear plants burned 10,443 Btu of heat for every kilowatt-hour they made (their <i>heat rate</i>, from the EIA). One kilowatt-hour is 3,412 Btu, so <var>e</var> = 3,412/10,443 = 32.7%, about 0.7 of the limit.</li>
+        <li>Heat thrown away per kilowatt-hour sent out: 10,443 − 3,412 = 7,031 Btu, about 2.1 kWh.</li></ol>
+      <p>For every unit of electricity on the wires, about two units of heat go into the river, lake or air. That’s what cooling towers are for. They aren’t a sign of waste that better engineering could remove; the second law demands somewhere cold to dump <var>Q</var><sub>c</sub>.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> start at <var>T</var><sub>h</sub> = 600 K and <var>T</var><sub>c</sub> = 300 K (50%). Raise <var>T</var><sub>h</sub> by 100 K and note the efficiency. Put it back and lower <var>T</var><sub>c</sub> by 100 K instead. Lowering the cold side helps more (67% against 57%), because <var>T</var><sub>c</sub>/<var>T</var><sub>h</sub> changes more. But the cold side is usually the air or a river, and you can’t choose its temperature.</div>
+    <div class="lab-try"><b>Try this:</b> drag <var>T</var><sub>c</sub> toward zero and watch the cylinder. To cool the gas from <var>T</var><sub>h</sub> to <var>T</var><sub>c</sub> with no heat flow, it must expand by (<var>T</var><sub>h</sub>/<var>T</var><sub>c</sub>)<sup>1/(γ−1)</sup>. For helium going from 600 K to 20 K that’s 30<sup>1.5</sup> ≈ 164 times. At 0 K it would be infinite. Turn on the log scales to see the whole cycle.</div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “Better engineering could reach 100% efficiency”</b>
+    <p>Friction, leaks and heat lost through the walls all make real engines worse, and engineers fight them every day. But even a perfect engine with no friction at all can’t beat 1 − <var>T</var><sub>c</sub>/<var>T</var><sub>h</sub>. That limit isn’t about how well the engine is built; it comes from the second law. Reaching 100% would need a cold side at absolute zero, which can’t be reached in any finite number of steps (that’s <a href="{{ "science-lab/thermodynamics/third-law/" | relURL }}">Chapter 5</a>), and, as the cylinder shows, an infinitely long expansion.</p>
+  </div>
+
+  <section class="lab-sec" id="real"><h2>Real engines against the limit</h2>
+    <p>How close do real machines get? The bars show actual efficiencies from U.S. government data, beside a few limits worked out from the formulas on this page.</p>
+    <div class="th4-bars" role="table" aria-label="Efficiencies of real engines and their limits">
+      <div class="th4-bar" role="row"><span role="rowheader">Carnot engine on this page, 600 K → 300 K</span><span role="cell" class="th4-track"><i class="lim" style="width:50%"></i></span><b role="cell">50% limit</b></div>
+      <div class="th4-bar" role="row"><span role="rowheader">Nuclear plant, Carnot limit (300 °C steam, 27 °C cooling)</span><span role="cell" class="th4-track"><i class="lim" style="width:47.6%"></i></span><b role="cell">47.6% limit</b></div>
+      <div class="th4-bar" role="row"><span role="rowheader">U.S. nuclear plants, 2024 average</span><span role="cell" class="th4-track"><i style="width:32.7%"></i></span><b role="cell">32.7%</b></div>
+      <div class="th4-bar" role="row"><span role="rowheader">U.S. coal plants, 2024 average</span><span role="cell" class="th4-track"><i style="width:31.7%"></i></span><b role="cell">31.7%</b></div>
+      <div class="th4-bar" role="row"><span role="rowheader">Natural-gas turbines alone, 2024</span><span role="cell" class="th4-track"><i style="width:31.0%"></i></span><b role="cell">31.0%</b></div>
+      <div class="th4-bar" role="row"><span role="rowheader">Natural-gas combined-cycle plants, 2024</span><span role="cell" class="th4-track"><i style="width:45.2%"></i></span><b role="cell">45.2%</b></div>
+      <div class="th4-bar" role="row"><span role="rowheader">Ideal Otto cycle, compression ratio 10, air</span><span role="cell" class="th4-track"><i class="lim" style="width:60.2%"></i></span><b role="cell">60.2% ideal</b></div>
+      <div class="th4-bar" role="row"><span role="rowheader">Gasoline car: share of fuel energy that moves the car</span><span role="cell" class="th4-track"><i class="rng" style="margin-left:16%;width:9%"></i></span><b role="cell">16–25%</b></div>
+    </div>
+    <p class="lab-small">Striped bars are limits worked out from formulas; solid bars are real machines. Plant efficiencies are 3,412 Btu ÷ the EIA’s 2024 average heat rates: nuclear 10,443, coal 10,777, gas turbines 10,999 and combined cycle 7,548 Btu per kWh. A combined-cycle plant burns gas in a turbine, then uses the turbine’s hot exhaust to make steam for a second turbine, so it gets two engines out of one fire. The car figure is the DOE’s range for combined city and highway driving; most of the rest leaves as heat.</p>
+    <p><b>The Otto cycle.</b> A gasoline engine runs, roughly, on the <i>Otto cycle</i>: squeeze the air–fuel mixture fast (no time for heat to leave), burn it almost instantly, let the hot gas push the piston out, and throw out the exhaust. For an ideal Otto cycle the efficiency depends only on the compression ratio <var>r</var>:</p>
+    <div class="lab-formula"><var>e</var><sub>Otto</sub> = 1 − 1 / <var>r</var><sup>γ − 1</sup> &nbsp;&nbsp; with <var>r</var> = 10 and γ = 1.4: 1 − 10<sup>−0.4</sup> = 60.2%</div>
+    <p>Real car engines get far less than that, between friction, heat lost through the cylinder walls and coolant, pumping air in and out, and running at part throttle most of the time. See the engine up close in <a href="{{ "trades/cars/engine/" | relURL }}">How Cars Work: The Engine</a>, and feel a gas heat up when it’s squeezed fast in the bike-pump scene of <a href="{{ "games/gas/" | relURL }}">Gas in a Box</a>.</p>
+  </section>
+
+  <section class="lab-sec" id="stirling"><h2>A Stirling engine you can watch</h2>
+    <p>In 1816 Robert Stirling, a Scottish minister, patented an engine that runs on any outside heat source: air sealed inside is heated and cooled over and over, and never leaves. The patent also covered his “economiser”, a store of heat that the air passes through, now called a <i>regenerator</i>. The version below is a low-temperature-difference engine, the kind sold as desk toys that can run on a hot drink. The big foam disk is the <i>displacer</i>: it doesn’t push anything, it just shuffles the air between the hot bottom plate and the cool top plate. The small piston on top does the work. The two are connected to the flywheel a quarter turn apart.</p>
+    <div class="lab-stage wide th4-mini" id="th4-stir">
+      <div class="lab-view"><canvas id="th4-sc" aria-label="A Stirling engine on a heat source: a wide flat chamber with a foam displacer inside, a hot bottom plate and a cool top plate, a small power piston on top, and a flywheel above with two crank pins a quarter turn apart. On the right, its pressure–volume loop."></canvas></div>
+      <div class="lab-panel th4-row">
+        <div class="lab-seg th4-grow" id="th4-src" role="group" aria-label="What the engine sits on">
+          <button type="button" data-s="plate">Hot plate, 90 °C</button><button type="button" data-s="coffee">Cup of coffee, 60 °C</button><button type="button" data-s="room">Table, 22 °C</button><button type="button" data-s="ice">Bowl of ice, 0 °C</button>
+        </div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="th4-spin">Give it a spin ↻</button><button type="button" class="lab-btn" id="th4-spinb">Spin it backward ↺</button><button type="button" class="lab-btn" id="th4-brake">Stop it</button></div>
+        <dl class="lab-readout th4-grow" id="th4-sread"></dl>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <p><b>How it runs.</b> When the displacer rises, the air moves down to the hot plate, warms and expands, and pushes the piston up. When the displacer sinks, the air moves up to the cool plate, contracts, and the pressure drops, so the outside air pushes the piston back down. Because the displacer moves a quarter turn ahead of the piston, the pressure is high while the piston rises and low while it falls, so each turn leaves some work for the flywheel. That’s the loop on the pressure–volume graph: its area is the work per turn.</p>
+      <p><b>What to try.</b> On the coffee, give it a spin and it settles into a steady speed where the work per turn balances friction. On the hot plate it runs faster. On the table, nothing: with no temperature difference the loop has no area. On ice, the bottom plate is colder than the top, so the loop runs the other way. Spin it backward and it keeps going in reverse, taking heat from the warm room air and giving it to the ice.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="pumps"><h2>Refrigerators and heat pumps</h2>
+    <p>Run the cycle backward and it becomes a <i>refrigerator</i>: work goes in, heat <var>Q</var><sub>c</sub> is pulled out of the cold side, and heat <var>Q</var><sub>h</sub> = <var>Q</var><sub>c</sub> + <var>W</var> comes out at the hot side. A fridge’s cold side is the food; its hot side is the coils on the back, warming your kitchen. A <i>heat pump</i> is the same machine aimed the other way: the cold side is the outdoors and the hot side is your house. Both are rated by a <i>coefficient of performance</i>, what you get divided by what you pay for:</p>
+    <div class="lab-formula">refrigerator: <var>K</var><sub>R</sub> = <var>Q</var><sub>c</sub> / <var>W</var> ≤ <var>T</var><sub>c</sub> / (<var>T</var><sub>h</sub> − <var>T</var><sub>c</sub>) &nbsp;&nbsp;&nbsp; heat pump: <var>K</var><sub>P</sub> = <var>Q</var><sub>h</sub> / <var>W</var> ≤ <var>T</var><sub>h</sub> / (<var>T</var><sub>h</sub> − <var>T</var><sub>c</sub>)</div>
+    <p>The smaller the temperature difference, the bigger the COP. Unlike an efficiency, a COP is usually bigger than 1. Try the calculator:</p>
+    <div class="lab-stage wide th4-mini" id="th4-hp">
+      <div class="lab-view"><canvas id="th4-hc" aria-label="Left: a house with a heat pump's outdoor unit, and arrows for heat taken from outside air, electricity in, and heat delivered inside, for one kilowatt-hour of electricity at the best possible COP. Right: a graph of the best possible COP against outdoor temperature, with the line for an electric heater at COP 1 and the Department of Energy's cold-climate goal of COP 2.1 to 2.4 at minus 15 degrees Celsius."></canvas></div>
+      <div class="lab-panel th4-row">
+        <label class="lab-field th4-grow"><span>Outdoors <output id="th4-out-o"></output></span><input type="range" id="th4-out" min="-30" max="20" step="1" aria-label="Outdoor temperature in degrees Celsius"></label>
+        <label class="lab-field th4-grow"><span>Indoors <output id="th4-in-o"></output></span><input type="range" id="th4-in" min="16" max="24" step="1" aria-label="Indoor temperature in degrees Celsius"></label>
+        <dl class="lab-readout th4-grow" id="th4-hread"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: heating a house</b>
+      <p>Indoors 21 °C (294.15 K), outdoors 0 °C (273.15 K). The best possible heating COP is 294.15/(294.15 − 273.15) = 294.15/21 = 14.0.</p>
+      <p>Real heat pumps get far less. The DOE says they can provide up to three times more heat than the energy they use. Why the gap? Heat only flows from hot to cold, so the refrigerant in the outdoor coil must be colder than the outdoor air to soak up its heat, and the refrigerant indoors must be hotter than the room to give heat away. Suppose the coils run at −10 °C and 45 °C: then the limit is 318.15/55 = 5.8. Friction, the fans and the pump take the rest.</p>
+      <p>Now let it get cold: at −15 °C (5 °F) outside, the limit falls to 294.15/36 = 8.2. The DOE’s Cold Climate Heat Pump Challenge asked makers for a COP of at least 2.1 to 2.4 at that temperature. Even so, every unit of electricity brings in more than two units of heat. An electric baseboard heater gives exactly one.</p>
+    </div>
+    <div class="u-myth"><b>Common mistake: “A heat pump makes heat”</b>
+      <p>A heat pump doesn’t make heat; it moves it. A furnace or an electric heater turns fuel or electricity into heat, and can never give more heat than the energy you put in. A heat pump uses electricity to carry heat that’s already outdoors (yes, even in freezing air, which still holds plenty of thermal energy) up to the warmer house. The heat delivered is the heat moved plus the electricity used: <var>Q</var><sub>h</sub> = <var>Q</var><sub>c</sub> + <var>W</var>. Energy is conserved; nothing comes from nowhere. And it gets harder as the outdoors gets colder, because the heat must be lifted across a bigger temperature difference. The same machine runs backward in summer as an air conditioner. To learn how real systems are installed and serviced, see the <a href="{{ "trades/hvac/" | relURL }}">HVAC course</a>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A little history</h2>
+    <p>Sadi Carnot (1796–1832) was a French military engineer. In 1824, when steam engines were spreading fast but no one could say how good they could get, he published a short book, <i>Réflexions sur la puissance motrice du feu et sur les machines propres à développer cette puissance</i> (“Reflections on the motive power of fire and on machines fitted to develop that power”), in Paris. In it he imagined the ideal cycle now named for him, and saw that only the temperatures matter:</p>
+    <div class="u-quote">
+      <p class="u-la">La puissance motrice de la chaleur est indépendante des agens mis en œuvre pour la réaliser ; sa quantité est fixée uniquement par les températures des corps entre lesquels se fait en dernier résultat le transport du calorique.</p>
+      <p class="u-en">“The motive power of heat is independent of the agents employed to realize it; its quantity is fixed solely by the temperatures of the bodies between which is effected, finally, the transfer of the caloric.”</p>
+      <cite>Sadi Carnot, <i>Réflexions sur la puissance motrice du feu</i> (Paris: Bachelier, 1824); English from the translation edited by R. H. Thurston (1890; 2nd ed. 1897). The spelling “agens” is the 1824 original.</cite>
+    </div>
+    <p>Carnot still thought of heat as a fluid, “caloric”, that falls from hot to cold like water turning a mill wheel. That part was wrong, but his limit survived. The book got little notice at first, and Carnot died of cholera at 36. Émile Clapeyron drew his cycle on a pressure–volume graph in 1834. In the 1850s William Thomson (Lord Kelvin) and Rudolf Clausius rebuilt Carnot’s ideas on the conservation of energy, and the second law was born.</p>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where you see it</h2>
+    <ul>
+      <li><b>Cars:</b> the radiator and the hot tailpipe are where <var>Q</var><sub>c</sub> goes. <a href="{{ "trades/cars/engine/" | relURL }}">How Cars Work: The Engine</a> shows the four strokes.</li>
+      <li><b>Power plants:</b> coal, gas and nuclear plants are all heat engines, and most need a river, lake, sea or cooling tower for their cold side.</li>
+      <li><b>Refrigerators and air conditioners:</b> the warm coils on the back of a fridge and the hot air blowing out of an air conditioner’s outdoor unit are <var>Q</var><sub>h</sub>.</li>
+      <li><b>Heat pumps:</b> they heat homes in winter, cool them in summer, and heat water too. The <a href="{{ "trades/hvac/" | relURL }}">HVAC course</a> covers them in practice.</li>
+      <li><b>Bike pumps and diesel engines:</b> squeezing a gas fast warms it, like steps 4→1 here. A diesel squeezes air so hard that fuel sprayed in ignites by itself.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The Carnot engine.</b> Nothing here is stepped in time: the cycle follows exact formulas for 0.04 mol of ideal gas, starting from 1 liter at <var>T</var><sub>h</sub>. On the isotherms <var>PV</var> = <var>nRT</var> with <var>T</var> fixed, and the heat is <var>Q</var> = <var>nRT</var> ln(<var>V</var><sub>end</sub>/<var>V</var><sub>start</sub>). On the adiabats <var>TV</var><sup>γ−1</sup> stays the same and the work is <var>nC</var><sub>V</sub>Δ<var>T</var>. The animation moves the volume smoothly along each curve. Helium (γ = 5/3) and air (γ = 7/5) are treated as ideal gases; <var>R</var> = 8.314462618 J/(mol·K), exact.</p>
+      <p><b>The Stirling engine.</b> An ideal “isothermal” model: the air touching each plate has that plate’s temperature, the pressure is the same everywhere, <var>P</var> = <var>nR</var>/(<var>V</var><sub>hot</sub>/<var>T</var><sub>h</sub> + <var>V</var><sub>cold</sub>/<var>T</var><sub>c</sub>), and the air was sealed in at room temperature and pressure. The displacer sweeps 31 cm³, the piston is 16 mm across with a 12 mm stroke, and there are 16 cm³ of gaps. The flywheel (moment of inertia 10<sup>−4</sup> kg·m²) feels the gas torque, a small dry friction and a drag growing with speed; it is stepped 40 times per frame. Real air never fully takes on the plate temperatures, so real engines of this size turn slower and give less power than this ideal one.</p>
+      <p><b>The heat pump.</b> The curve is the Carnot limit between indoor and outdoor air. The pink mark is the DOE’s cold-climate requirement, not a measurement of any one machine.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests):</p>
+        <ul class="lab-small">
+          <li>Carnot cycle, four cases (600 K→300 K, 1500 K→300 K in air, 400 K→350 K, 600 K→20 K): ∮<var>P</var> d<var>V</var> by the midpoint rule with 80,000 steps matched <var>Q</var><sub>h</sub> − <var>Q</var><sub>c</sub> to 4 decimals (69.1578 J for 600→300 K); <var>W</var>/<var>Q</var><sub>h</sub> equaled 1 − <var>T</var><sub>c</sub>/<var>T</var><sub>h</sub>; <var>Q</var><sub>h</sub>/<var>T</var><sub>h</sub> − <var>Q</var><sub>c</sub>/<var>T</var><sub>c</sub> = 0; the gas’s entropy returned to its start (error 10<sup>−16</sup> J/K) and the cycle closed exactly.</li>
+          <li>Volume ratios: 5.7 for helium from 600 K to 300 K with <var>V</var><sub>2</sub>/<var>V</var><sub>1</sub> = 2; 329 when <var>T</var><sub>c</sub> = 20 K.</li>
+          <li>Stirling engine: the work per turn (Simpson’s rule) agreed to 14 digits with 720 and 7,200 slices; it was 15.7 mJ on the coffee, 28.0 mJ on the hot plate, exactly 0 on the table and −9.2 mJ on ice. Steady speeds: 3.1 turns per second on the coffee, 6.3 on the hot plate, 1.1 backward on ice, and it stops on the table. Over a 70-second run, the gas’s work equaled friction losses plus the flywheel’s change in kinetic energy to within 0.001%.</li>
+          <li>Heat rates: 3,412/10,443 = 32.7%, 3,412/10,777 = 31.7%, 3,412/10,999 = 31.0%, 3,412/7,548 = 45.2%; Otto with <var>r</var> = 10: 60.2%; heat pump limits for 21 °C indoors: 14.0 at 0 °C, 8.2 at −15 °C, 6.4 at −25 °C.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>An engine runs between 500 K and 300 K. What is the most efficient it could possibly be?</p>
+        <ul class="u-opts"><li><button type="button">60%</button></li><li><button type="button">40%</button></li><li><button type="button">100%, with good enough engineering</button></li><li><button type="button">20%</button></li></ul>
+        <details><summary>Show the answer</summary><p>1 − 300/500 = 0.40. No engine between these temperatures can do better, however well it’s built.</p></details></li>
+      <li class="u-q" data-a="2"><p>Why does a power plant need a cooling tower, a river or the sea?</p>
+        <ul class="u-opts"><li><button type="button">To stop the building from catching fire</button></li><li><button type="button">Because its engineers haven’t found a better design yet</button></li><li><button type="button">Because any heat engine must dump part of its heat into something colder</button></li></ul>
+        <details><summary>Show the answer</summary><p>That’s the Kelvin–Planck statement: no engine can turn all the heat it takes in into work. The rest, <var>Q</var><sub>c</sub>, must go somewhere colder.</p></details></li>
+      <li class="u-q" data-a="0"><p>A heat pump with a COP of 3 uses 1 kWh of electricity. Where do the 3 kWh of heat come from?</p>
+        <ul class="u-opts"><li><button type="button">1 kWh from the electricity and 2 kWh moved in from outdoors</button></li><li><button type="button">The heat pump creates 2 extra kWh of energy</button></li><li><button type="button">All 3 kWh come from the electricity</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>Q</var><sub>h</sub> = <var>Q</var><sub>c</sub> + <var>W</var>: the heat delivered is the heat moved from outdoors plus the electricity used. Energy is conserved.</p></details></li>
+      <li class="u-q" data-a="3"><p>Why does a heat pump’s COP fall in very cold weather?</p>
+        <ul class="u-opts"><li><button type="button">Cold air holds no heat at all</button></li><li><button type="button">Electricity is weaker in the cold</button></li><li><button type="button">The outdoor fan freezes solid</button></li><li><button type="button">It has to lift heat across a bigger temperature difference, so the limit T<sub>h</sub>/(T<sub>h</sub> − T<sub>c</sub>) shrinks</button></li></ul>
+        <details><summary>Show the answer</summary><p>The bigger <var>T</var><sub>h</sub> − <var>T</var><sub>c</sub>, the more work it takes to move each joule. Cold air still holds heat; it just takes more effort to pump it uphill.</p></details></li>
+      <li class="u-q" data-a="1"><p>A Carnot engine runs between 600 K and 300 K. Which raises its efficiency more?</p>
+        <ul class="u-opts"><li><button type="button">Raising the hot side to 700 K</button></li><li><button type="button">Lowering the cold side to 200 K</button></li><li><button type="button">Both raise it by the same amount</button></li></ul>
+        <details><summary>Show the answer</summary><p>1 − 300/700 = 57%, but 1 − 200/600 = 67%. A 100 K change at the cold end is a bigger fraction of its temperature.</p></details></li>
+      <li class="u-q" data-a="2"><p>The Stirling engine sits on a table at room temperature, the same as the air above it. What happens when you spin it?</p>
+        <ul class="u-opts"><li><button type="button">It speeds up</button></li><li><button type="button">It keeps turning at the same speed forever</button></li><li><button type="button">It slows down and stops</button></li></ul>
+        <details><summary>Show the answer</summary><p>With no temperature difference the pressure–volume loop has no area, so the gas does no net work. Friction stops it.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-2-heat-engines" target="_blank" rel="noopener">University Physics Volume 2, 4.2 Heat Engines</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-3-refrigerators-and-heat-pumps" target="_blank" rel="noopener">4.3 Refrigerators and Heat Pumps</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-4-statements-of-the-second-law-of-thermodynamics" target="_blank" rel="noopener">4.4 Statements of the Second Law</a> and <a href="https://openstax.org/books/university-physics-volume-2/pages/4-5-the-carnot-cycle" target="_blank" rel="noopener">4.5 The Carnot Cycle</a>: efficiency, COP formulas, the Kelvin statement and the Carnot limit.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/college-physics-2e/pages/15-3-introduction-to-the-second-law-of-thermodynamics-heat-engines-and-their-efficiency" target="_blank" rel="noopener">College Physics 2e, 15.3 Heat Engines and Their Efficiency</a> (the Otto cycle) and <a href="https://openstax.org/books/college-physics-2e/pages/15-4-carnots-perfect-heat-engine-the-second-law-of-thermodynamics-restated" target="_blank" rel="noopener">15.4 Carnot’s Perfect Heat Engine</a>: the 300 °C / 27 °C reactor example, 47.6%.</li>
+      <li>U.S. Energy Information Administration, <a href="https://www.eia.gov/electricity/annual/html/epa_08_01.html" target="_blank" rel="noopener">Electric Power Annual, Table 8.1</a> and <a href="https://www.eia.gov/electricity/annual/html/epa_08_02.html" target="_blank" rel="noopener">Table 8.2</a>: 2024 average heat rates; and <a href="https://www.eia.gov/tools/faqs/faq.php?id=107&t=3" target="_blank" rel="noopener">What is the efficiency of different types of power plants?</a>: 3,412 Btu per kWh.</li>
+      <li>U.S. Department of Energy, <a href="https://www.energy.gov/cmei/vehicles/articles/fotw-1044-august-27-2018-12-30-energy-put-conventional-car-used-move-car" target="_blank" rel="noopener">Fact of the Week #1044</a>: 16–25% of a gasoline car’s fuel energy moves it in combined driving; engine losses 68–72%.</li>
+      <li>U.S. Department of Energy, <a href="https://www.energy.gov/sites/default/files/2022-08/energy-saver-guide-2022.pdf" target="_blank" rel="noopener">Energy Saver Guide (2022)</a>: heat pumps provide up to three times more heat than the energy they use; and <a href="https://www.energy.gov/sites/default/files/2021-10/bto-cchp-tech-challenge-spec-102521.pdf" target="_blank" rel="noopener">Residential Cold-Climate Heat Pump Technology Challenge specification</a> (2021): COP of at least 2.1 to 2.4 at 5 °F (−15 °C).</li>
+      <li>S. Carnot, <a href="https://archive.org/details/bub_gb_QX9iIWF3yOMC" target="_blank" rel="noopener"><i>Réflexions sur la puissance motrice du feu</i></a> (Bachelier, Paris, 1824), Internet Archive; English: <a href="https://www.gutenberg.org/ebooks/78610" target="_blank" rel="noopener"><i>Reflections on the Motive Power of Heat</i></a>, ed. R. H. Thurston, Project Gutenberg.</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Reflections_on_the_Motive_Power_of_Fire" target="_blank" rel="noopener">Reflections on the Motive Power of Fire</a> (publication, Clapeyron 1834) and <a href="https://en.wikipedia.org/wiki/Robert_Stirling" target="_blank" rel="noopener">Robert Stirling</a> (the 1816 patent and the economiser).</li>
+      <li>NIST, <a href="https://physics.nist.gov/cgi-bin/cuu/Value?k" target="_blank" rel="noopener">Boltzmann constant</a>; <var>R</var> = <var>N</var><sub>A</sub><var>k</var> = 8.314462618 J/(mol·K), exact.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/thermodynamics/engines/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/engines/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/thermodynamics/engines/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/engines/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

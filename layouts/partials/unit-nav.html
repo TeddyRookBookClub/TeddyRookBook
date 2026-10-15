@@ -1,0 +1,9 @@
+{{- /* Breadcrumbs and the chapter strip at the top of a unit chapter page. Context: the page (needs .Params.unit and .Params.chapter). */ -}}
+{{- $u := index site.Data.science_units .Params.unit }}
+{{- $cur := .Params.chapter }}
+{{- $C := index (where $u.chapters "key" $cur) 0 }}
+<nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "science-lab/" | relURL }}">Science Lab</a> › <a href="{{ printf "science-lab/%s/" $u.slug | relURL }}">{{ $u.short }}</a> › Chapter {{ $C.num }}</nav>
+<nav class="u-nav" aria-label="Chapters of {{ $u.title }}" data-unit="{{ $u.key }}">
+  <a class="u-nav-home" href="{{ printf "science-lab/%s/" $u.slug | relURL }}"><span aria-hidden="true">{{ $u.icon }}</span>{{ $u.short }}</a>
+  <ol>{{ range $u.chapters }}<li><a href="{{ printf "science-lab/%s/%s/" $u.slug .key | relURL }}" data-chapter="{{ .key }}"{{ if eq .key $cur }} aria-current="page"{{ end }}><b>{{ .num }}</b><span>{{ .pill | default (index (split .title ":") 0) }}</span></a></li>{{ end }}</ol>
+</nav>

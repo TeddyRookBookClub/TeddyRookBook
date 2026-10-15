@@ -1,0 +1,51 @@
+/* Absolute Zero and the Third Law: only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#th5-lab .lab-view canvas:focus{outline:none}
+#th5-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#th5-lab #th5-view{cursor:pointer}
+#th5-lab .lab-tools button{min-width:36px;min-height:36px}
+#th5-lab .lab-hud{max-width:calc(100% - 4rem)}
+#th5-lab .lab-seg button{min-height:36px}
+#th5-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#th5-lab .lab-chk{min-height:36px;cursor:pointer}
+#th5-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#th5-lab .lab-btn{min-height:38px}
+#th5-lab .th5-acts{display:flex;flex-direction:column;gap:.4rem}
+#th5-lab .th5-acts>.lab-btn{justify-content:flex-start}
+#th5-lab .th5-note{margin:0}
+#th5-lab .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#th5-lab .lab-readout dd{white-space:nowrap}
+#th5-lab .lab-toast{top:4.2rem}
+#th5-lab .th5-mini{margin:.9rem 0 1rem}
+#th5-lab .th5-mini .lab-view{height:380px;min-height:0}
+#th5-lab #th5-ruler .lab-view{height:300px;cursor:grab}
+#th5-lab #th5-ruler .lab-view:active{cursor:grabbing}
+#th5-lab .th5-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1rem}
+#th5-lab .th5-row>*{min-width:0}
+#th5-lab .th5-grow{flex:1 1 260px}
+#th5-lab .th5-row .lab-readout dd{white-space:normal}
+#th5-lab .th5-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.55rem .75rem;font-size:.92rem}
+#th5-lab .th5-card b{font:700 1rem Georgia,serif;color:var(--acc)}
+#th5-lab .th5-card .th5-tval{font:600 .88rem ui-monospace,Menlo,Consolas,monospace;margin-left:.3rem}
+#th5-lab .th5-card p{margin:.3rem 0 0}
+#th5-lab .th5-list{margin:.4rem 0 0}
+#th5-lab .th5-list summary{cursor:pointer;color:var(--acc);font-weight:600;min-height:36px;display:flex;align-items:center}
+#th5-lab .th5-win{animation:th5win 1.2s ease-out}
+@keyframes th5win{0%{box-shadow:0 0 0 0 rgba(116,192,252,.9)}100%{box-shadow:0 0 0 18px rgba(116,192,252,0)}}
+#th5-lab .lab-sec ul{padding-left:1.3rem}
+#th5-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+#th5-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){#th5-lab .lab-hud{font-size:11px;padding:.3rem .5rem}}
+@media (max-width:600px){
+  #th5-lab .lab-hud{max-width:calc(100% - 4rem)}
+  #th5-lab .lab-toast{top:6.6rem;font-size:.82rem;max-width:84%}
+  #th5-lab #th5-view{height:660px}
+  #th5-lab .th5-mini .lab-view{height:470px}
+  #th5-lab #th5-ruler .lab-view{height:300px}
+}
+@media (prefers-reduced-motion:reduce){#th5-lab .th5-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#th5-lab .th5-main{grid-template-rows:auto 1fr}
+#th5-lab .th5-main>.lab-view{grid-column:1;grid-row:1}
+#th5-lab .th5-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#th5-lab .th5-main>.th5-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#th5-lab .th5-main{grid-template-rows:none}#th5-lab .th5-main>.lab-view,#th5-lab .th5-main>.lab-panel,#th5-lab .th5-main>.th5-under{grid-column:auto;grid-row:auto}}

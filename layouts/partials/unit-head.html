@@ -1,0 +1,4 @@
+{{- /* Science Lab units (Newton's Laws, Thermodynamics): the lab kit plus the unit styles and script. Use instead of lab-head.html. */ -}}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/unit.css" | relURL }}?v={{ (os.Stat "static/science-lab/unit.css").ModTime.Unix }}">
+<script src="{{ "science-lab/unit.js" | relURL }}?v={{ (os.Stat "static/science-lab/unit.js").ModTime.Unix }}" defer></script>

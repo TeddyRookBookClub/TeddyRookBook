@@ -1,0 +1,42 @@
+/* Thermodynamics, Chapter 2: only what this page adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#th2-lab .lab-view{background:radial-gradient(ellipse at 30% 40%,#0d2233 0%,#081826 50%,#06111a 85%)}
+#th2-lab .lab-view canvas:focus{outline:none}
+#th2-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#th2-lab #th2-view{height:min(74vh,660px);min-height:460px}
+#th2-lab .lab-tools button{min-width:36px;min-height:36px}
+#th2-lab .lab-hud{max-width:calc(100% - 7rem)}
+#th2-lab .lab-toast{top:3.4rem}
+#th2-lab .lab-seg button{min-height:36px}
+#th2-lab .th2-pre button{flex:1 1 45%}
+#th2-lab .th2-note{margin:0;min-height:2.6em}
+#th2-lab .lab-field input[type=range]{min-height:32px;margin:0}
+#th2-lab .th2-wrow{align-items:center;justify-content:space-between}
+#th2-lab .th2-wrow .lab-btn{min-height:38px;min-width:44px;flex:0 0 auto;font-size:1.15rem;padding:.3rem .8rem}
+#th2-lab .th2-wcount{flex:1 1 auto;font:600 .82rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink);text-align:center}
+#th2-lab #th2-zero{min-height:38px}
+#th2-lab .lab-readout dd{white-space:nowrap}
+#th2-lab .lab-readout dd.ok{color:#2f9e6f}
+html[data-theme="dark"] #th2-lab .lab-readout dd.ok{color:#6cc79a}
+#th2-lab .th2-hot{color:#c92a2a;font-weight:600}#th2-lab .th2-gold{color:#a8770c;font-weight:600}#th2-lab .th2-cold{color:#1c7ed6;font-weight:600}#th2-lab .th2-green{color:#2b8a5e;font-weight:600}
+html[data-theme="dark"] #th2-lab .th2-hot{color:#ff8787}html[data-theme="dark"] #th2-lab .th2-gold{color:#ffd479}html[data-theme="dark"] #th2-lab .th2-cold{color:#74c0fc}html[data-theme="dark"] #th2-lab .th2-green{color:#63e6be}
+#th2-lab .th2-ptable td,#th2-lab .th2-ptable th{white-space:normal}
+#th2-lab .th2-ptable td:nth-child(n+3){font-family:"Cambria Math","STIX Two Math",Georgia,serif;white-space:nowrap}
+/* Joule */
+#th2-lab .th2-joule-view{height:min(60vh,470px);min-height:380px}
+#th2-lab .th2-cal{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;margin:.8rem 0}
+#th2-lab .th2-cal-out{list-style:none;margin:.5rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:.5rem}
+#th2-lab .th2-cal-out li{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.45rem .65rem;font-size:.9rem;line-height:1.45;margin:0}
+#th2-lab .th2-cal-out b{display:block;font:700 1.05rem ui-monospace,Menlo,Consolas,monospace;color:var(--acc)}
+/* energy flow */
+#th2-lab .th2-flow-view{height:min(56vh,380px);min-height:300px;cursor:pointer}
+#th2-lab .th2-flow-info{min-height:3.2em;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:.5rem .8rem;margin:0 0 .8rem}
+#th2-lab .th2-ftable td:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (max-width:860px){
+  #th2-lab #th2-view{height:min(80vh,640px);min-height:560px}
+  #th2-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+}
+@media (max-width:600px){
+  #th2-lab .lab-toast{top:4.6rem;font-size:.8rem;max-width:84%}
+  #th2-lab .th2-flow-view{height:420px}
+}
+@media (min-width:861px){#th2-lab #th2-view{position:sticky;top:.8rem}}

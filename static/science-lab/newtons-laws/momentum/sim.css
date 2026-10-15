@@ -1,0 +1,35 @@
+/* Newton's Laws, Chapter 5 (Momentum and Collisions): only what this page adds to lab.css and unit.css. */
+#nl5-lab .lab-view canvas:focus{outline:none}
+#nl5-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#nl5-lab .lab-tools button{min-width:36px;min-height:36px}
+#nl5-lab .lab-tools button:disabled{opacity:.4;cursor:default}
+#nl5-lab .lab-tools .nl5-launch{width:auto;padding:0 .75rem;font:600 .88rem system-ui,sans-serif;border-color:var(--sim-acc);background:rgba(18,58,51,.92);color:#fff;box-shadow:0 0 14px rgba(99,230,190,.25)}
+#nl5-lab .lab-hud{max-width:calc(100% - 17rem)}
+#nl5-lab .lab-seg button{min-height:36px}
+#nl5-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#nl5-lab .lab-chk{min-height:36px;cursor:pointer}
+#nl5-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#nl5-lab .lab-btn{min-height:36px}
+#nl5-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#nl5-lab .lab-readout dd{white-space:nowrap}
+#nl5-lab .nl5-a>span label::before,#nl5-lab .nl5-b>span label::before{content:"";display:inline-block;width:.7rem;height:.7rem;border-radius:3px;margin-right:.35rem;vertical-align:-1px}
+#nl5-lab .nl5-a>span label::before{background:#f2b600}
+#nl5-lab .nl5-b>span label::before{background:#4dabf7}
+.nl5-noscript{position:absolute;inset:auto 0 45% 0;text-align:center;color:var(--sim-ink)}
+#nl5-lab .nl5-short{height:min(60vh,470px);min-height:340px}
+#nl5-lab .lab-sec .lab-stage{margin:1rem 0}
+#nl5-lab .nl5-tab{font-size:.8rem;margin:0}
+#nl5-lab .nl5-tab th,#nl5-lab .nl5-tab td{padding:.3rem .35rem}
+#nl5-lab .nl5-tab tbody th{font:600 .78rem system-ui,sans-serif;color:var(--muted);background:none}
+#nl5-lab .nl5-tab td{font-variant-numeric:tabular-nums;white-space:nowrap}
+#nl5-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+#nl5-lab .u-ex ul{padding-left:1.2rem}
+@media (max-width:860px){
+  #nl5-lab .lab-hud{display:none}
+  #nl5-lab .nl5-short{height:min(62vh,440px);min-height:330px}
+}
+@media (max-width:600px){
+  #nl5-lab #nl5b-view{height:auto;aspect-ratio:2/1.2;min-height:0}
+  #nl5-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem;top:3.2rem}
+}
+@media (min-width:861px){#nl5-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}

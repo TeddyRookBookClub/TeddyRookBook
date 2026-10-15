@@ -1,10 +1,18 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "trades/trades.css" | relURL }}?v={{ (os.Stat "static/trades/trades.css").ModTime.Unix }}">
-{{- $d := site.Data.trades.cars }}
 {{- $B := strings.TrimSuffix "x" ("x" | relURL) }}
-{{- $nles := len $d.lessons }}
+{{- /* The courses, in order. A course appears once data/trades/<key>.json exists; until then it shows as "coming next". */}}
+{{- $order := slice "cars" "plumbing" "electrical" "hvac" "construction" }}
+{{- $soon := dict
+  "plumbing" (dict "icon" "🚰" "name" "Plumbing" "text" "Supply and drain lines, traps and vents, fixtures, water heaters, and finding leaks.")
+  "electrical" (dict "icon" "💡" "name" "Electrical" "text" "How power reaches your outlets: service panels, circuits, grounding, GFCIs and safe testing.")
+  "hvac" (dict "icon" "🌬️" "name" "HVAC" "text" "Furnaces, air conditioners and heat pumps: how they move heat, and how to keep them running.")
+  "construction" (dict "icon" "🏗️" "name" "Construction" "text" "How a house is built: foundations, framing, roofs, walls, and reading plans.") }}
 {{- if eq .Params.tk "hub" }}
+{{- range $order }}{{ $hc := printf "static/trades/%s/%s.css" . . }}{{ if and (index site.Data.trades .) (fileExists $hc) }}
+<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" . . | relURL }}?v={{ (os.Stat $hc).ModTime.Unix }}">
+{{- end }}{{ end }}
 <div class="hs tr" id="tr-hub">
   <nav class="hs-crumbs"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › The Trades</nav>
   <header class="hs-hero">
@@ -18,24 +26,25 @@
   <section class="hs-sec">
     <h2>Courses</h2>
     <div class="tr-cards">
-      <a class="hs-card tr-feat" href="{{ "trades/cars/" | relURL }}">
+      {{- range $i, $k := $order }}
+      {{- with index site.Data.trades $k }}
+      {{- $c := .course }}
+      <a class="hs-card tr-feat c-{{ $k }}" href="{{ printf "trades/%s/" $k | relURL }}">
         <div>
-          <span class="big" aria-hidden="true">🚗</span>
-          <h2>Cars: How They Work and How to Fix Them</h2>
-          <p>{{ $nles }} lessons, from how a car turns fuel or electricity into motion, through every major system, to troubleshooting, doing your own work, and careers.</p>
-          <ul>
-            <li>An animated four-stroke engine you can run, step and take apart by name</li>
-            <li>A clickable map of every system in the car</li>
-            <li>A troubleshooting finder, a skill ladder and quizzes</li>
-          </ul>
+          <span class="big" aria-hidden="true">{{ $c.icon }}</span>
+          <h2>{{ $c.title }}</h2>
+          <p>{{ replace $c.card.text "%N%" (string (len .lessons)) }}</p>
+          <ul>{{ range $c.card.bullets }}<li>{{ . }}</li>{{ end }}</ul>
           <span class="go">Start the course →</span>
         </div>
-        <div class="tr-feat-art" aria-hidden="true">{{ $d.mapstatic | safeHTML }}</div>
+        <div class="tr-feat-art" aria-hidden="true">{{ .mapstatic | safeHTML }}</div>
       </a>
-      <div class="hs-card soon tr-soon"><span class="tr-soon-tag">Coming next</span><div class="big" aria-hidden="true">🚰</div><h2>Plumbing</h2><p>Supply and drain lines, traps and vents, fixtures, water heaters, and finding leaks.</p></div>
-      <div class="hs-card soon tr-soon"><span class="tr-soon-tag">Coming next</span><div class="big" aria-hidden="true">💡</div><h2>Electrical</h2><p>How power reaches your outlets: service panels, circuits, grounding, GFCIs and safe testing.</p></div>
-      <div class="hs-card soon tr-soon"><span class="tr-soon-tag">Coming next</span><div class="big" aria-hidden="true">🌬️</div><h2>HVAC</h2><p>Furnaces, air conditioners and heat pumps: how they move heat, and how to keep them running.</p></div>
-      <div class="hs-card soon tr-soon"><span class="tr-soon-tag">Coming next</span><div class="big" aria-hidden="true">🏗️</div><h2>Construction</h2><p>How a house is built: foundations, framing, roofs, walls, and reading plans.</p></div>
+      {{- else }}
+      {{- with index $soon $k }}
+      <div class="hs-card soon tr-soon"><span class="tr-soon-tag">Coming next</span><div class="big" aria-hidden="true">{{ .icon }}</div><h2>{{ .name }}</h2><p>{{ .text }}</p></div>
+      {{- end }}
+      {{- end }}
+      {{- end }}
     </div>
   </section>
   <section class="hs-sec hs-note">
@@ -51,7 +60,9 @@
       <li><a href="https://www.bls.gov/ooh/construction-and-extraction/carpenters.htm" target="_blank" rel="noopener">Carpenters</a></li>
       <li><a href="https://www.bls.gov/ooh/construction-and-extraction/construction-laborers-and-helpers.htm" target="_blank" rel="noopener">Construction laborers and helpers</a></li>
     </ul>
-    <p>The Cars course ends with a full lesson on <a href="{{ "trades/cars/careers/" | relURL }}">careers in auto repair</a>, with current pay and outlook figures and how ASE certification works.</p>
+    <p>Each course ends with a lesson on careers in that trade, with current pay and outlook figures and how training works:
+    {{- $first := true }}
+    {{- range $order }}{{ $k := . }}{{ with index site.Data.trades $k }}{{ if where .lessons "key" "careers" }}{{ if not $first }},{{ end }} <a href="{{ printf "trades/%s/careers/" $k | relURL }}">{{ lower .course.short }}</a>{{ $first = false }}{{ end }}{{ end }}{{ end }}.</p>
   </section>
   <section class="hs-sec">
     <h2>Start with the basics</h2>
@@ -60,42 +71,42 @@
   <p class="hs-small">Free courses from Teddy Rook Book, with nothing to buy or send in. They explain how things work in general; your owner’s manual, the service information for your equipment, and local codes and rules always come first. Work that needs a license or certification belongs with a licensed or certified professional.</p>
 </div>
 {{- else }}
+{{- $course := .Params.course | default "cars" }}
+{{- $d := index site.Data.trades $course }}
 {{- $c := $d.course }}
-<div class="hs tr" id="tr-course" data-units data-base="{{ $B }}">
-  <nav class="hs-crumbs"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › <a href="{{ "trades/" | relURL }}">The Trades</a> › Cars</nav>
+{{- $nles := len $d.lessons }}
+{{- $css := printf "static/trades/%s/%s.css" $course $course }}
+{{- if fileExists $css }}
+<link rel="stylesheet" href="{{ printf "trades/%s/%s.css" $course $course | relURL }}?v={{ (os.Stat $css).ModTime.Unix }}">
+{{- end }}
+<div class="hs tr c-{{ $course }}" id="tr-course" data-course="{{ $course }}" data-units data-base="{{ $B }}">
+  <nav class="hs-crumbs"><a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> › <a href="{{ "trades/" | relURL }}">The Trades</a> › {{ $c.short }}</nav>
   <header class="hs-hero">
-    <p class="hs-eyebrow">The Trades · Course 1 · {{ $nles }} lessons</p>
+    <p class="hs-eyebrow">The Trades · Course {{ $c.n }} · {{ $nles }} lessons</p>
     <h1>{{ $c.title }}</h1>
     <p>{{ $c.lead }}</p>
   </header>
   <nav class="tr-toc" aria-label="On this page">
-    <a href="#map">Systems map</a><a href="#lessons">Lessons</a><a href="#finder">Troubleshooting finder</a><a href="#ladder">Skill ladder</a><a href="#careers">Careers</a><a href="#sources">Sources</a>
+    <a href="#map">{{ $c.map_toc | default "Systems map" }}</a><a href="#lessons">Lessons</a>{{ with $d.finder }}<a href="#finder">Troubleshooting finder</a>{{ end }}<a href="#ladder">Skill ladder</a><a href="#careers">Careers</a><a href="#sources">Sources</a>
   </nav>
   <section class="hs-sec">
     <h2>What this course is</h2>
-    <p>{{ $c.who }} Each lesson explains the “why” as well as the “what”: the physics of a hydraulic brake, the chemistry of a catalytic converter, the math of gears. Facts and numbers come from U.S. government agencies, university automotive and engineering programs, OpenStax textbooks and ASE, and every lesson lists its sources.</p>
+    <p>{{ $c.who }} {{ $c.why }}</p>
     <h3>How to use it</h3>
     <ol class="tr-how">{{ range $c.how }}<li>{{ . }}</li>{{ end }}</ol>
-    <div class="tr-manual" style="margin-top:1rem"><p><b>Your owner’s manual is the final word.</b> This course explains how cars work in general. Your owner’s manual and your vehicle’s service information give the exact fluids, pressures, intervals and procedures for your car, and they come first.</p></div>
+    <div class="tr-manual" style="margin-top:1rem"><p>{{ replace $c.final "%BASE%" $B | safeHTML }}</p></div>
   </section>
   <section class="hs-sec" id="map">
-    <h2>Map of the car</h2>
-    <p>Every system, drawn inside one car. Point at a system or its name to see what it does; click to open its lesson.</p>
-    <div class="tr-map" data-view="gas" data-nounits>
-      <div class="tr-map-top">
-        <div class="tr-seg" role="group" aria-label="Which car"><button type="button" data-v="gas" aria-pressed="true">Gas car</button><button type="button" data-v="ev" aria-pressed="false">Electric car</button></div>
-      </div>
-      <p class="tr-map-info" aria-live="polite">Point at a part of the car.</p>
-      {{ replace $d.map "%BASE%" $B | safeHTML }}
-      <ul class="tr-legend">{{ range $d.systems }}{{ $les := index (where $d.lessons "key" .lesson) 0 }}<li{{ if ne .view "both" }} data-view="{{ .view }}"{{ end }}><a href="{{ printf "trades/cars/%s/" .lesson | relURL }}" data-sys="{{ .key }}" data-desc="{{ .desc }}"><i aria-hidden="true"></i><span>{{ .name }}<small>Lesson {{ $les.n }}</small></span></a></li>{{ end }}</ul>
-    </div>
+    <h2>{{ $c.map_h }}</h2>
+    <p>{{ $c.map_p }}</p>
+    {{ partial "inline/tr-map.html" (dict "d" $d "B" $B "course" $course) }}
   </section>
   <section class="hs-sec" id="lessons">
     <h2>The lessons</h2>
     <div class="tr-progress" hidden><span id="tr-prog-t"></span><div class="hs-bar"><b style="width:0"></b></div></div>
-    <ol class="tr-lessons">
+    <ol class="tr-lessons" data-course="{{ $course }}">
       {{ range $d.lessons }}
-      <li data-lesson="{{ .key }}"><a class="tr-les" href="{{ printf "trades/cars/%s/" .key | relURL }}">
+      <li data-lesson="{{ .key }}"><a class="tr-les" href="{{ printf "trades/%s/%s/" $course .key | relURL }}">
         <span class="tr-les-n" aria-hidden="true">{{ .n }}</span>
         <span><b>{{ .icon }} {{ .title }}</b><small>{{ .short }}</small></span>
         <span class="tr-les-meta"><span class="tr-badge b-{{ lower .level }}">{{ .level }}</span><span>{{ .minutes }} min</span><span class="tr-les-done">✓ Done</span></span>
@@ -103,21 +114,23 @@
       {{ end }}
     </ol>
   </section>
+  {{- with $d.finder }}
   <section class="hs-sec" id="finder">
     <h2>Troubleshooting finder</h2>
-    <p>Something seems wrong? Pick a symptom, answer a question, and see the likely causes, what you can safely check, and when to stop driving. <a href="{{ "trades/cars/troubleshooting/" | relURL }}">Lesson 12</a> explains how to think it through.</p>
-    {{ partial "inline/tr-finder.html" (dict "d" $d "B" $B) }}
+    <p>{{ replace $c.finder_p "%BASE%" $B | safeHTML }}</p>
+    {{ partial "inline/tr-finder.html" (dict "d" $d "B" $B "course" $course) }}
   </section>
+  {{- end }}
   <section class="hs-sec" id="ladder">
     <h2>The skill ladder</h2>
-    <p>Build skill one rung at a time, with an experienced helper and the service information the first time you do anything new. <a href="{{ "trades/cars/doing-your-own-work/" | relURL }}">Lesson 13</a> covers tools and garage safety.</p>
+    <p>{{ replace $c.ladder_p "%BASE%" $B | safeHTML }}</p>
     {{ partial "inline/tr-ladder.html" (dict "d" $d "B" $B) }}
   </section>
   <section class="hs-sec" id="careers">
     <h2>Careers</h2>
-    <p>Automotive service technicians and mechanics inspect, maintain and repair cars and light trucks. Here are the U.S. Bureau of Labor Statistics figures from its Occupational Outlook Handbook (page updated August 27, 2026):</p>
+    <p>{{ replace $c.careers_p "%BASE%" $B | safeHTML }}</p>
     <div class="tr-stats">{{ range $d.stats }}<div class="tr-stat"><b>{{ .b }}</b><span>{{ .s }}</span></div>{{ end }}</div>
-    <p>Technicians typically complete a program in automotive service technology at a high school, community college or technical institute; others train through manufacturer programs, apprenticeships or on the job, and certification may be required. <a href="{{ "trades/cars/careers/" | relURL }}">Lesson 14</a> has the details, the training paths and how ASE certification works.</p>
+    <p>{{ replace $c.careers_more "%BASE%" $B | safeHTML }}</p>
   </section>
   <section class="hs-sec" id="sources">
     <h2>Sources</h2>
@@ -126,21 +139,39 @@
     <ul class="tr-src">{{ range $d.sources }}<li><a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a></li>{{ end }}</ul>
     </details>
   </section>
-  <p class="hs-small">A free course from Teddy Rook Book, with nothing to buy or send in. It explains how cars work in general and follows U.S. sources; your owner’s manual, your vehicle’s service information and state and local rules come first. It isn’t a substitute for hands-on training, and some work needs a trained or certified technician.</p>
+  <p class="hs-small">{{ $c.foot }}</p>
 </div>
 <script src="{{ "trades/trades.js" | relURL }}?v={{ (os.Stat "static/trades/trades.js").ModTime.Unix }}" defer></script>
-<script src="{{ "trades/cars/map.js" | relURL }}?v={{ (os.Stat "static/trades/cars/map.js").ModTime.Unix }}" defer></script>
-<script src="{{ "trades/cars/finder.js" | relURL }}?v={{ (os.Stat "static/trades/cars/finder.js").ModTime.Unix }}" defer></script>
+<script src="{{ "trades/map.js" | relURL }}?v={{ (os.Stat "static/trades/map.js").ModTime.Unix }}" defer></script>
+{{- with $d.finder }}
+<script src="{{ "trades/finder.js" | relURL }}?v={{ (os.Stat "static/trades/finder.js").ModTime.Unix }}" defer></script>
+{{- end }}
+{{- range $c.course_widgets }}
+<script src="{{ printf "trades/%s/%s.js" $course . | relURL }}?v={{ (os.Stat (printf "static/trades/%s/%s.js" $course .)).ModTime.Unix }}" defer></script>
+{{- end }}
 {{- end }}
 {{ end }}
 
+{{- define "partials/inline/tr-map.html" }}
+{{- $d := .d }}{{ $B := .B }}{{ $c := $d.course }}{{ $course := .course }}
+<div class="tr-map"{{ with $c.views }} data-view="{{ (index . 0).v }}"{{ end }} data-nounits>
+  {{- with $c.views }}
+  <div class="tr-map-top"><div class="tr-seg" role="group" aria-label="{{ $c.views_label }}">{{ range $i, $v := . }}<button type="button" data-v="{{ $v.v }}" data-idle="{{ $v.idle }}" aria-pressed="{{ if eq $i 0 }}true{{ else }}false{{ end }}">{{ $v.label }}</button>{{ end }}</div></div>
+  {{- end }}
+  <p class="tr-map-info" aria-live="polite">{{ $c.map_idle }}</p>
+  {{ replace $d.map "%BASE%" $B | safeHTML }}
+  <ul class="tr-legend">{{ range $d.systems }}{{ $les := index (where $d.lessons "key" .lesson) 0 }}<li{{ if and .view (ne .view "both") }} data-view="{{ .view }}"{{ end }}><a href="{{ printf "trades/%s/%s/" $course .lesson | relURL }}" data-sys="{{ .key }}" data-desc="{{ .desc }}"><i aria-hidden="true"></i><span>{{ .name }}<small>Lesson {{ $les.n }}</small></span></a></li>{{ end }}</ul>
+</div>
+{{- end }}
+
 {{- define "partials/inline/tr-finder.html" }}
-{{- $d := .d }}{{ $B := .B }}
+{{- $d := .d }}{{ $B := .B }}{{ $c := $d.course }}{{ $course := .course }}
+{{- $fl := index (where $d.lessons "key" $c.finder_lesson) 0 }}
 <div class="tr-w tr-find" data-nounits data-base="{{ $B }}">
-  <noscript><p>The finder needs JavaScript. <a href="{{ $B }}trades/cars/troubleshooting/">Lesson 12</a> has the same clues as tables.</p></noscript>
+  <noscript><p>The finder needs JavaScript.{{ with $fl }} <a href="{{ $B }}trades/{{ $course }}/{{ .key }}/">Lesson {{ .n }}</a> has the same clues as tables.{{ end }}</p></noscript>
   {{- $mini := slice }}{{ range $d.lessons }}{{ $mini = $mini | append (dict "key" .key "n" .n "title" .title) }}{{ end }}
-  {{- $adult := dict }}{{ range site.Data.adult.car.guides }}{{ $adult = merge $adult (dict .key .name) }}{{ end }}
-  <script type="application/json" class="tr-find-data">{{ dict "symptoms" $d.finder "lessons" $mini "adult" $adult | jsonify | safeJS }}</script>
+  {{- $adult := dict }}{{ range site.Data.adult }}{{ range .guides }}{{ $adult = merge $adult (dict .key .name) }}{{ end }}{{ end }}
+  <script type="application/json" class="tr-find-data">{{ dict "course" $course "urg" $c.finder_urg "foot" $c.finder_foot "causes_h" $c.finder_causes_h "symptoms" $d.finder "lessons" $mini "adult" $adult | jsonify | safeJS }}</script>
 </div>
 {{- end }}
 

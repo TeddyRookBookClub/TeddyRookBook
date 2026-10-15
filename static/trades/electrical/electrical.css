@@ -1,0 +1,301 @@
+/* The Trades, Electrical course: system colors, the house map, figures and widgets. Every rule is scoped under .c-electrical;
+   new class names use the el- prefix (figures and widgets) or m- inside the map. Builds on static/trades/trades.css. */
+.c-electrical{--s-utility:#7a5c3a;--s-panel:#4f5b66;--s-circuits:#d4581f;--s-big:#8a5cc2;--s-devices:#b98a10;--s-modern:#5f8a1c;--s-ground:#2b9466;--s-gfci:#2f86c9;--s-afci:#c2185b;--s-alarms:#0f9b9b;
+  --el-wb:#262626;--el-ww:#f7f6f1;--el-wr:#c0392b;--el-wg:#2e8b3e;--el-wcu:#c47b3a;--el-edge:#6f6f6f;--el-earth:#e9e1cf;--el-wood:#8a7a66;--el-bus:#b08d57;
+  --el-lcd:#d9e8c9;--el-lcdt:#1f3a24;--el-tint1:#efe6db;--el-tint2:#e3e8ec;--el-tint3:#e3f2e8;--el-soltint:#e8f0d6}
+html[data-theme="dark"] .c-electrical{--s-utility:#c9a27a;--s-panel:#a9b6c2;--s-circuits:#ff9a66;--s-big:#b994ea;--s-devices:#e8bf4f;--s-modern:#a8d45a;--s-ground:#62d09b;--s-gfci:#72b6ec;--s-afci:#f2709c;--s-alarms:#52d2d2;
+  --el-wb:#1a1a1a;--el-ww:#f2f1ec;--el-wr:#e0584a;--el-wg:#4cbb63;--el-wcu:#d99a5c;--el-edge:#b9c2bd;--el-earth:#29231a;--el-wood:#9b8b76;--el-bus:#c9a46a;
+  --el-lcd:#1d2a18;--el-lcdt:#b7f0c8;--el-tint1:#2c241b;--el-tint2:#1f272d;--el-tint3:#173326;--el-soltint:#26331a}
+.c-electrical .hs-hero::after{content:"⚡"}
+
+/* ----- map ----- */
+.c-electrical .tr-map[data-view="power"] [data-view="protect"],.c-electrical .tr-map[data-view="protect"] [data-view="power"]{display:none}
+.c-electrical .tr-legend [data-sys="utility"] i{background:var(--s-utility)}.c-electrical .tr-legend [data-sys="panel"] i{background:var(--s-panel)}
+.c-electrical .tr-legend [data-sys="circuits"] i{background:var(--s-circuits)}.c-electrical .tr-legend [data-sys="big"] i{background:var(--s-big)}
+.c-electrical .tr-legend [data-sys="devices"] i{background:var(--s-devices)}.c-electrical .tr-legend [data-sys="modern"] i{background:var(--s-modern)}
+.c-electrical .tr-legend [data-sys="ground"] i{background:var(--s-ground)}.c-electrical .tr-legend [data-sys="gfci"] i{background:var(--s-gfci)}
+.c-electrical .tr-legend [data-sys="afci"] i{background:var(--s-afci)}.c-electrical .tr-legend [data-sys="alarms"] i{background:var(--s-alarms)}
+.c-electrical .tr-map-svg .m-earth{fill:var(--el-earth);opacity:.55}
+.c-electrical .tr-map-svg .m-roof{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5;stroke-linejoin:round}
+.c-electrical .tr-map-svg .m-body{fill-opacity:.92}
+.c-electrical .tr-map-svg .m-gdoor{stroke:var(--tr-edge);stroke-width:1;fill:none;opacity:.6}
+.c-electrical .tr-map-svg text.m-room{font-size:10.5px;font-weight:600;fill:var(--muted);opacity:.85}
+.c-electrical .tr-map-svg .m-pole{fill:var(--el-wood)}
+.c-electrical .tr-map-svg .m-pline{stroke:var(--tr-edge);stroke-width:1.5;fill:none}
+.c-electrical .tr-map-svg .m-pline2{stroke:var(--s-utility);stroke-width:2;fill:none}
+.c-electrical .tr-map-svg .m-xfmr{fill:var(--s-utility)}.c-electrical .tr-map-svg .m-xfmr0{fill:var(--tr-edge);opacity:.45}
+.c-electrical .tr-map-svg .m-drop{stroke:var(--s-utility);stroke-width:1.6;fill:none}
+.c-electrical .tr-map-svg .m-drop0{stroke:var(--tr-edge);stroke-width:2;fill:none;opacity:.5}
+.c-electrical .tr-map-svg .m-mast{stroke:var(--s-panel);stroke-width:4;fill:none}.c-electrical .tr-map-svg .m-whead{fill:var(--s-panel)}
+.c-electrical .tr-map-svg .m-meter{fill:var(--s-panel)}.c-electrical .tr-map-svg .m-meterf{fill:var(--tr-pale)}
+.c-electrical .tr-map-svg .m-panel{fill:var(--s-panel)}.c-electrical .tr-map-svg .m-brks{stroke:var(--tr-pale);stroke-width:2.5}
+.c-electrical .tr-map-svg .m-cir{stroke:var(--s-circuits);stroke-width:3;fill:none;stroke-linejoin:round}
+.c-electrical .tr-map-svg .m-cir2{stroke:var(--s-circuits);stroke-width:1.8;fill:none}
+.c-electrical .tr-map-svg .m-big{stroke:var(--s-big);stroke-width:4;fill:none;stroke-linejoin:round}
+.c-electrical .tr-map-svg .m-bigf{fill:var(--s-big)}.c-electrical .tr-map-svg .m-bigd{fill:none;stroke:var(--tr-pale);stroke-width:2}
+.c-electrical .tr-map-svg .m-bigd2{stroke:var(--tr-pale);stroke-width:2.5;fill:none}
+.c-electrical .tr-map-svg .m-dev{fill:var(--s-devices)}.c-electrical .tr-map-svg .m-dot{fill:var(--tr-pale)}
+.c-electrical .tr-map-svg .m-glow{stroke:var(--s-devices);stroke-width:1.5;fill:none;stroke-linecap:round}
+.c-electrical .tr-map-svg .m-sw{stroke:var(--tr-pale);stroke-width:1.6}
+.c-electrical .tr-map-svg .m-sol{fill:var(--s-modern)}.c-electrical .tr-map-svg .m-solg{stroke:var(--tr-pale);stroke-width:1}
+.c-electrical .tr-map-svg .m-dc{stroke:var(--s-modern);stroke-width:2;stroke-dasharray:4 3;fill:none}
+.c-electrical .tr-map-svg .m-inv,.c-electrical .tr-map-svg .m-ev{fill:var(--s-modern)}
+.c-electrical .tr-map-svg .m-evc{stroke:var(--s-modern);stroke-width:2;fill:none}
+.c-electrical .tr-map-svg .m-car{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.2}
+.c-electrical .tr-map-svg .m-wheel{fill:var(--tr-tire)}
+.c-electrical .tr-map-svg .m-gec{stroke:var(--s-ground);stroke-width:2.6;fill:none;stroke-linejoin:round}
+.c-electrical .tr-map-svg .m-rod{fill:var(--s-ground)}
+.c-electrical .tr-map-svg .m-gnd{stroke:var(--s-ground);stroke-width:2;stroke-dasharray:5 3;fill:none}
+.c-electrical .tr-map-svg .m-pipe{stroke:var(--tr-edge);stroke-width:6;stroke-linecap:round;opacity:.7}
+.c-electrical .tr-map-svg .m-clamp{fill:var(--s-ground)}
+.c-electrical .tr-map-svg .m-gfo,.c-electrical .tr-map-svg .m-gft{fill:var(--s-gfci)}
+.c-electrical .tr-map-svg .m-afo,.c-electrical .tr-map-svg .m-aft,.c-electrical .tr-map-svg .m-afb{fill:var(--s-afci)}
+.c-electrical .tr-map-svg .m-afw{stroke:var(--s-afci);stroke-width:2.6;fill:none;opacity:.85}
+.c-electrical .tr-map-svg .m-al{fill:var(--tr-pale);stroke:var(--s-alarms);stroke-width:2.5}.c-electrical .tr-map-svg .m-ald,.c-electrical .tr-map-svg .m-alt{fill:var(--s-alarms)}
+.c-electrical .tr-map-svg .m-alw{stroke:var(--s-alarms);stroke-width:1.3;stroke-dasharray:2 3;fill:none}
+.c-electrical .tr-map-svg text.m-tagt{font:800 8.5px system-ui,sans-serif;fill:#fff;letter-spacing:.03em}
+html[data-theme="dark"] .c-electrical .tr-map-svg text.m-tagt{fill:#0f1a14}
+.c-electrical .tr-map-svg .m-hit{fill:transparent}
+
+/* ----- figures ----- */
+.c-electrical svg .el-edge{stroke:var(--el-edge);fill:none;stroke-linecap:round;stroke-linejoin:round}
+.c-electrical svg .el-wb,.c-electrical svg .el-ww,.c-electrical svg .el-wr,.c-electrical svg .el-wg,.c-electrical svg .el-wcu{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.c-electrical svg .el-wb{stroke:var(--el-wb)}.c-electrical svg .el-ww{stroke:var(--el-ww)}.c-electrical svg .el-wr{stroke:var(--el-wr)}
+.c-electrical svg .el-wg{stroke:var(--el-wg)}.c-electrical svg .el-wcu{stroke:var(--el-wcu)}
+.c-electrical svg .el-arg{fill:var(--s-ground)}
+.c-electrical svg .el-b-tx{fill:var(--s-big)}.c-electrical svg .el-b-di{fill:var(--s-gfci)}.c-electrical svg .el-b-hm{fill:var(--s-circuits)}
+.c-electrical svg .el-step{stroke:var(--tr-edge);stroke-width:2;fill:none;stroke-dasharray:5 3}
+.c-electrical svg .el-gen{fill:var(--s-panel)}
+.c-electrical svg .el-coil{stroke:var(--tr-ink);stroke-width:2;fill:none}
+.c-electrical svg .el-wave1{stroke:var(--tr-hot);stroke-width:2.5;fill:none}
+.c-electrical svg .el-wave2{stroke:var(--tr-cool);stroke-width:2.5;fill:none;stroke-dasharray:6 4}
+.c-electrical svg .el-panel{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical svg .el-main{fill:var(--s-panel)}
+.c-electrical svg .el-bus{fill:var(--el-bus)}
+.c-electrical svg .el-brk,.c-electrical svg .el-brk2{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:1.2}
+.c-electrical svg .el-brk2{stroke-width:2}
+.c-electrical svg .el-brkt{fill:var(--tr-hot);stroke:var(--tr-ink);stroke-width:1.2}
+.c-electrical svg .el-hdl{fill:var(--tr-ink)}
+.c-electrical svg .el-tie{stroke:var(--tr-ink);stroke-width:3}
+.c-electrical svg .el-nbar{fill:#c9cdd0;stroke:var(--tr-edge)}.c-electrical svg .el-gbar{fill:#9cd3b0;stroke:var(--s-ground)}
+html[data-theme="dark"] .c-electrical svg .el-nbar{fill:#5c6670}html[data-theme="dark"] .c-electrical svg .el-gbar{fill:#2f6a4a}
+.c-electrical svg .el-scr{fill:var(--tr-edge)}
+.c-electrical svg .el-rod{fill:var(--el-wcu)}
+.c-electrical svg .el-case{fill:var(--tr-metal);stroke:var(--tr-ink);stroke-width:1.5}
+.c-electrical svg .el-spark{stroke:#f2a900;stroke-width:2.5;fill:none;stroke-linejoin:round}
+.c-electrical svg .el-person{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.c-electrical svg .el-personl{stroke:var(--tr-ink);stroke-width:3;stroke-linecap:round;fill:none}
+.c-electrical svg .el-shock{stroke:var(--tr-red);stroke-width:3;stroke-dasharray:5 4;fill:none}
+.c-electrical svg .el-arc{stroke:#f2a900;stroke-width:2.5;fill:none;stroke-linejoin:round}
+.c-electrical svg .el-glow{fill:#ffcf4a;opacity:.35}
+.c-electrical svg .el-lamp{fill:#ffe9a8;stroke:var(--tr-edge);stroke-width:1.5}
+html[data-theme="dark"] .c-electrical svg .el-lamp{fill:#8a7a3a}
+.c-electrical svg .el-plate{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical svg .el-face{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-electrical svg .el-slot{fill:var(--tr-ink)}.c-electrical svg .el-scr2{fill:var(--tr-edge)}
+.c-electrical svg .el-dev{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical svg .el-brass{fill:#c9a227;stroke:#8a6d12;stroke-width:1.5}.c-electrical svg .el-silver{fill:#d5dbe0;stroke:#7d878f;stroke-width:1.5}
+.c-electrical svg .el-green{fill:#2e8b3e;stroke:#1d5c28;stroke-width:1.5}
+.c-electrical svg .el-inc{fill:var(--tr-hot)}.c-electrical svg .el-led{fill:var(--tr-acc)}
+.c-electrical svg .el-e0{fill:#e6f0e9}.c-electrical svg .el-e1{fill:#d2e8d7}.c-electrical svg .el-e2{fill:#f3e6b5}.c-electrical svg .el-e3{fill:#f2cd88}.c-electrical svg .el-e3b{fill:#eeb46c}
+.c-electrical svg .el-e4{fill:#e8865e}.c-electrical svg .el-e4b{fill:#db6a4a}.c-electrical svg .el-e5{fill:#c0392b}.c-electrical svg .el-e6{fill:#8e1f14}
+html[data-theme="dark"] .c-electrical svg .el-e0{fill:#1f3027}html[data-theme="dark"] .c-electrical svg .el-e1{fill:#24402f}html[data-theme="dark"] .c-electrical svg .el-e2{fill:#4a4220}
+html[data-theme="dark"] .c-electrical svg .el-e3{fill:#5e4a1f}html[data-theme="dark"] .c-electrical svg .el-e3b{fill:#6b4420}html[data-theme="dark"] .c-electrical svg .el-e4{fill:#7a3622}
+html[data-theme="dark"] .c-electrical svg .el-e4b{fill:#8a2e1f}html[data-theme="dark"] .c-electrical svg .el-e5{fill:#a3271c}html[data-theme="dark"] .c-electrical svg .el-e6{fill:#c0392b}
+.c-electrical svg .el-mk1{stroke:var(--tr-acc);stroke-width:2}.c-electrical svg .el-mk1f{fill:var(--tr-acc)}
+.c-electrical svg .el-mk2{stroke:var(--s-gfci);stroke-width:2}.c-electrical svg .el-mk2f{fill:var(--s-gfci)}
+.c-electrical svg .el-mk3{stroke:var(--tr-red);stroke-width:2}.c-electrical svg .el-mk3f{fill:var(--tr-red)}
+.c-electrical svg .el-pole{fill:var(--el-wood)}
+.c-electrical svg .el-line{stroke:var(--tr-ink);stroke-width:1.5;fill:none}
+.c-electrical svg .el-ladder{stroke:var(--tr-oil);stroke-width:3;fill:none;stroke-linecap:round}
+.c-electrical svg .el-meter{fill:var(--tr-metal);stroke:var(--tr-ink);stroke-width:1.5}
+.c-electrical svg .el-lcd{fill:var(--el-lcd);stroke:var(--tr-edge)}
+.c-electrical svg text.el-ok{fill:var(--el-lcdt);font-size:14px}.c-electrical svg text.el-zero{fill:var(--el-lcdt);font-size:14px}
+.c-electrical svg .el-knob{fill:var(--tr-edge)}
+.c-electrical svg .el-probe{stroke:var(--tr-red);stroke-width:2.5;fill:none;stroke-linecap:round}
+.c-electrical svg .el-sol{fill:var(--el-soltint);stroke:var(--s-modern);stroke-width:1.5}
+.c-electrical svg .el-bad{stroke:var(--tr-red);stroke-width:5;stroke-linecap:round}
+.c-electrical svg .el-stopb{fill:var(--tr-red)}
+.c-electrical svg .el-z1{fill:var(--el-tint1);stroke:var(--s-utility);stroke-width:1.5}
+.c-electrical svg .el-z2{fill:var(--el-tint2);stroke:var(--s-panel);stroke-width:1.5}
+.c-electrical svg .el-z3{fill:var(--el-tint3);stroke:var(--tr-acc);stroke-width:1.5}
+.c-electrical svg .el-stab{stroke:var(--tr-ink);stroke-width:3;fill:none}
+.c-electrical svg tspan.el-tb{fill:var(--tr-ink);font-weight:700}
+
+/* ----- widgets (shared) ----- */
+.c-electrical .tr-w svg text{font:600 11.5px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--tr-ink)}
+.c-electrical .tr-w .tr-seg button{min-height:2.3rem}
+.c-electrical .tr-w h3{font-size:1.02rem}
+/* grid (Lesson 1) */
+.c-electrical .el-grid .el-g-ground{stroke:var(--tr-edge);stroke-width:2}
+.c-electrical .el-grid .el-g-bld{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.4}
+.c-electrical .el-grid .el-g-steam{fill:none;stroke:var(--tr-edge);stroke-width:5;stroke-linecap:round}
+.c-electrical .el-grid .el-g-gen{fill:var(--s-panel)}
+.c-electrical .el-grid .el-g-xf{fill:var(--s-utility)}
+.c-electrical .el-grid .el-g-fin{stroke:var(--tr-pale);stroke-width:1.5}
+.c-electrical .el-grid .el-g-tower{fill:none;stroke:var(--tr-edge);stroke-width:2;stroke-linejoin:round}
+.c-electrical .el-grid .el-g-fence{fill:none;stroke:var(--tr-edge);stroke-width:1.2;stroke-dasharray:3 3}
+.c-electrical .el-grid .el-g-pole{fill:none;stroke:var(--el-wood);stroke-width:4}
+.c-electrical .el-grid .el-g-house{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.6}
+.c-electrical .el-grid .el-g-win{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-electrical .el-grid .el-g-win.on{fill:#ffd25a}
+.c-electrical .el-grid .el-g-line{fill:none;stroke:var(--tr-ink);stroke-width:2.2}
+.c-electrical .el-grid .el-g-hot{fill:none;stroke:#ff6a2b;stroke-linecap:round}
+.c-electrical .el-grid .el-g-line2,.c-electrical .el-grid .el-g-line3{fill:none;stroke:var(--tr-ink);stroke-width:1.6}
+.c-electrical .el-grid .el-g-dot{fill:#f2a900}.c-electrical .el-grid .el-g-dot2{fill:#f2a900;opacity:.75}
+.c-electrical .el-g-ctrl{margin-top:.6rem}
+.c-electrical .el-g-bar{height:14px;border-radius:7px;background:var(--tr-acc);overflow:hidden;margin:.4rem 0}
+.c-electrical .el-g-bar b{display:block;height:100%;background:var(--tr-red)}
+/* kWh (Lesson 2) */
+.c-electrical .el-kmeter{display:block;width:100%;max-width:340px;height:auto;margin:0 auto .5rem}
+.c-electrical .el-kmeter .el-km-case{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-electrical .el-kmeter .el-km-lcd{fill:var(--el-lcd);stroke:var(--tr-edge)}
+.c-electrical .el-kmeter text.el-km-num{font:700 30px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:var(--el-lcdt)}
+.c-electrical .el-kmeter text.el-km-unit{font-size:12px;fill:var(--tr-ink)}
+.c-electrical .el-kmeter text.el-km-cost{font-size:12px;fill:var(--muted)}
+.c-electrical .el-kmeter .el-km-led{fill:#e0584a}
+.c-electrical .el-k-list{list-style:none;padding:0;margin:.2rem 0 .5rem;display:grid;gap:.35rem}
+.c-electrical .el-k-list li{display:grid;grid-template-columns:minmax(0,1fr) auto 2.4rem;gap:.15rem .5rem;align-items:center}
+.c-electrical .el-k-name{grid-column:1/-1;line-height:1.3}
+.c-electrical .el-k-name small{color:var(--muted);margin-left:.3rem}
+.c-electrical .el-k-bar{height:10px;border-radius:5px;background:var(--soft);overflow:hidden}
+.c-electrical .el-k-bar b{display:block;height:100%;background:var(--s-circuits);border-radius:5px}
+.c-electrical .el-k-c{font-size:.88rem;white-space:nowrap}
+.c-electrical .el-k-x{width:2.4rem;height:2.4rem;border-radius:50%;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font-size:1.1rem;cursor:pointer}
+.c-electrical .k-amps{min-height:2.8em}
+/* breaker (Lesson 3) */
+.c-electrical .el-brk .el-b-case{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-electrical .el-brk .el-b-handle{fill:var(--tr-ink)}
+.c-electrical .el-brk .el-b-pivot{fill:var(--tr-edge)}
+.c-electrical .el-brk text.el-b-ht{font-weight:800;fill:var(--tr-acc)}.c-electrical .el-brk text.el-b-ht.trip{fill:var(--tr-red)}
+.c-electrical .el-brk .el-b-spring{fill:none;stroke:var(--tr-edge);stroke-width:2;stroke-linejoin:round}
+.c-electrical .el-brk .el-b-latch{fill:var(--s-big)}
+.c-electrical .el-brk .el-b-strap{fill:none;stroke:var(--el-bus);stroke-width:7;stroke-linejoin:round}
+.c-electrical .el-brk .el-b-ct{fill:#c9a227;stroke:#8a6d12}
+.c-electrical .el-brk .el-b-arm{stroke:var(--el-bus);stroke-width:7;stroke-linecap:round}
+.c-electrical .el-brk .el-b-arc{fill:none;stroke:#ffb000;stroke-width:3;stroke-linejoin:round}
+.c-electrical .el-brk .el-b-braid{fill:none;stroke:var(--el-bus);stroke-width:3;stroke-dasharray:3 2}
+.c-electrical .el-brk .el-b-bim{fill:none;stroke-width:9;stroke-linecap:round}
+.c-electrical .el-brk .el-b-bim2{fill:none;stroke:var(--tr-pale);stroke-width:1.5;opacity:.7}
+.c-electrical .el-brk .el-b-core{fill:var(--tr-edge)}
+.c-electrical .el-brk .el-b-coil{stroke:var(--s-gfci);stroke-width:3.5;stroke-linecap:round}
+.c-electrical .el-brk .el-b-armat{fill:var(--s-panel)}
+.c-electrical .el-brk .el-b-link{stroke:var(--s-big);stroke-width:2;stroke-dasharray:4 3}
+.c-electrical .el-brk .el-b-stab,.c-electrical .el-brk .el-b-wire{fill:none;stroke:var(--el-bus);stroke-width:5}
+.c-electrical .el-brk .el-b-wire{stroke:var(--el-wb)}
+.c-electrical .el-brk .el-b-lug{fill:var(--tr-metal);stroke:var(--tr-edge)}.c-electrical .el-brk .el-b-screw{fill:var(--tr-edge)}
+.c-electrical .el-brk .el-b-dot{fill:#f2a900;stroke:var(--tr-pale);stroke-width:.8}
+.c-electrical .el-brk text.el-b-lab{font-size:10.5px;fill:var(--muted)}
+.c-electrical .el-bchart{display:block;width:100%;height:auto;margin:.5rem 0;background:var(--card);border:1px solid var(--line);border-radius:10px}
+.c-electrical .el-bchart .el-bc-grid{stroke:var(--line);stroke-width:1}
+.c-electrical .el-bchart text.el-bc-t{font-size:9.5px;font-weight:600;fill:var(--muted)}
+.c-electrical .el-bchart text.el-bc-tm{fill:var(--s-gfci)}.c-electrical .el-bchart text.el-bc-tu{fill:var(--tr-ink)}
+.c-electrical .el-bchart .el-bc-mag{fill:var(--s-gfci);opacity:.14}
+.c-electrical .el-bchart .el-bc-no{fill:var(--tr-acc);opacity:.12}
+.c-electrical .el-bchart .el-bc-curve{fill:none;stroke:var(--s-big);stroke-width:2.5;stroke-linejoin:round}
+.c-electrical .el-bchart .el-bc-ul{stroke:var(--tr-ink);stroke-width:2}
+.c-electrical .el-bchart .el-bc-op{stroke:var(--tr-hot);stroke-width:1.5;stroke-dasharray:4 3}
+.c-electrical .el-bchart .el-bc-dot{fill:var(--tr-hot);stroke:var(--card);stroke-width:1.5}
+.c-electrical .el-bchart .el-bc-heat{fill:var(--gold)}
+.c-electrical .el-b-pre{margin:.2rem 0 .3rem}
+.c-electrical .el-b-rate{margin-bottom:.2rem}
+/* kitchen load game (Lesson 4) */
+.c-electrical .el-load .el-l-panel{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical .el-load text.el-l-t{font-size:11px;fill:var(--muted)}
+.c-electrical .el-load .el-l-brk{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:1.5}
+.c-electrical .el-load .el-l-brk.trip{fill:var(--tr-red)}
+.c-electrical .el-load text.el-l-bt{font-weight:800;font-size:11px}
+.c-electrical .el-load .el-l-wire{fill:none;stroke-width:3;stroke-linejoin:round}
+.c-electrical .el-load .el-l-wire.c0{stroke:var(--s-circuits)}.c-electrical .el-load .el-l-wire.c1{stroke:var(--s-big)}
+.c-electrical .el-load .el-l-hot{fill:none;stroke:#ff3b1f;stroke-width:7;stroke-linejoin:round;opacity:.6}
+.c-electrical .el-load .el-l-zone{fill:var(--tr-pale);stroke-width:1.5;stroke-dasharray:6 4}
+.c-electrical .el-load .el-l-zone.c0{stroke:var(--s-circuits)}.c-electrical .el-load .el-l-zone.c1{stroke:var(--s-big)}
+.c-electrical .el-load .el-l-dim{fill:#0b1210}
+.c-electrical .el-load text.el-l-trip{font:800 20px system-ui,sans-serif;fill:#ff8a7a;letter-spacing:.08em}
+.c-electrical .el-load .el-l-outlet{fill:var(--s-devices)}
+.c-electrical .el-load .el-l-counter{fill:var(--tr-edge)}
+.c-electrical .el-load .el-l-app{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.3}
+.c-electrical .el-load .el-l-app.on{fill:#ffe9a8;stroke:#c99a1a}
+html[data-theme="dark"] .c-electrical .el-load .el-l-app.on{fill:#5a4a17;stroke:#e8bf4f}
+.c-electrical .el-load text.el-l-at{font-size:10.5px;font-weight:700}
+.c-electrical .el-load text.el-l-aw{font-size:9.5px;fill:var(--muted)}
+.c-electrical .el-load .el-l-cord{fill:none;stroke:var(--tr-edge);stroke-width:1.2;stroke-dasharray:3 3}
+.c-electrical .el-load .el-l-cord.on{stroke:var(--tr-ink);stroke-dasharray:none}
+.c-electrical .el-load .el-l-mbg{fill:var(--soft);stroke:var(--line)}
+.c-electrical .el-load .el-l-mfill.ok{fill:var(--tr-acc)}.c-electrical .el-load .el-l-mfill.warn{fill:#d99a1a}.c-electrical .el-load .el-l-mfill.over{fill:var(--tr-red)}
+.c-electrical .el-load .el-l-m80{stroke:var(--gold);stroke-width:2;stroke-dasharray:3 2}
+.c-electrical .el-load .el-l-m100{stroke:var(--tr-ink);stroke-width:2.5}
+.c-electrical .el-load text.el-l-mt{font-size:11.5px;font-weight:700}
+.c-electrical .el-l-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:.45rem;margin:.6rem 0}
+.c-electrical .el-l-card{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.45rem .6rem}
+.c-electrical .el-l-card p{margin:0 0 .35rem;line-height:1.25}
+.c-electrical .el-l-card small{display:block;color:var(--muted);font-variant-numeric:tabular-nums}
+.c-electrical .el-l-row{display:flex;gap:.4rem;align-items:center;justify-content:space-between}
+.c-electrical .el-l-on{font:700 .85rem system-ui,sans-serif;min-height:2.3rem;min-width:3.4rem;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.c-electrical .el-l-on[aria-pressed="true"]{background:#f2c94c;border-color:#c99a1a;color:#1d2320}
+.c-electrical .el-l-row .tr-seg button{padding:.3rem .7rem}
+.c-electrical .el-l-bottom .tr-w-ctrl b{min-width:5.2rem}
+/* GFCI (Lesson 6) */
+.c-electrical .el-gf text.el-gf-t{font-size:10.5px;fill:var(--muted)}
+.c-electrical .el-gf text.el-gf-th{font-size:12px;font-weight:800;fill:var(--tr-ink)}
+.c-electrical .el-gf text.el-gf-tl{fill:var(--tr-red)}
+.c-electrical .el-gf text.el-gf-diff{font-weight:800;fill:var(--tr-red);font-size:11px}
+.c-electrical .el-gf .el-gf-panel{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical .el-gf .el-gf-box{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical .el-gf .el-gf-coil,.c-electrical .el-gf .el-gf-coilb{fill:none;stroke:var(--s-gfci);stroke-width:8;stroke-linecap:round}
+.c-electrical .el-gf .el-gf-coilb{opacity:.45}
+.c-electrical .el-gf .el-gf-glow{fill:none;stroke:#ffb000;stroke-width:5;stroke-dasharray:6 4}
+.c-electrical .el-gf .el-gf-chip{fill:var(--s-panel)}
+.c-electrical .el-gf .el-gf-chip+text{fill:var(--tr-pale)}
+.c-electrical .el-gf .el-gf-sense{fill:none;stroke:var(--s-panel);stroke-width:1.5;stroke-dasharray:3 3}
+.c-electrical .el-gf .el-gf-blade{stroke:var(--tr-ink);stroke-width:4;stroke-linecap:round}
+.c-electrical .el-gf .el-gf-case{fill:var(--tr-metal);fill-opacity:.55;stroke:var(--tr-ink);stroke-width:2}
+.c-electrical .el-gf .el-gf-motor{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical .el-gf .el-gf-spark{fill:none;stroke:#f2a900;stroke-width:3;stroke-linejoin:round}
+.c-electrical .el-gf .el-gf-earth{fill:none;stroke:var(--tr-red);stroke-width:1.5;stroke-dasharray:4 4}
+.c-electrical .el-gf .el-gf-floor{stroke:var(--tr-edge);stroke-width:3}
+.c-electrical .el-gf .el-gf-dot{fill:#f2a900}
+.c-electrical .el-gf .el-gf-dotl{fill:var(--tr-red)}
+.c-electrical .el-gf .el-gf-btn{cursor:pointer}
+.c-electrical .el-gf .el-gf-btn rect{fill:var(--card);stroke:var(--tr-ink);stroke-width:1.5}
+.c-electrical .el-gf .el-gf-btn text{font-weight:800;font-size:11px}
+.c-electrical .el-gf .el-gf-btn:focus{outline:none}.c-electrical .el-gf .el-gf-btn:focus-visible rect,.c-electrical .el-gf .el-gf-btn:hover rect{stroke:var(--gold);stroke-width:3}
+.c-electrical .el-gf-tl{height:12px;border-radius:6px;background:var(--soft);overflow:hidden;margin:.3rem 0}
+.c-electrical .el-gf-tl b{display:block;height:100%;background:var(--s-gfci)}
+/* switches (Lesson 7) */
+.c-electrical .el-sw text.el-sw-t{font-size:11px;fill:var(--muted)}
+.c-electrical .el-sw text.el-sw-th{font-size:12px;font-weight:800;fill:var(--tr-ink)}
+.c-electrical .el-sw text.el-sw-tc{font-size:9.5px;fill:var(--muted)}
+.c-electrical .el-sw .el-sw-hall{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical .el-sw .el-sw-floor{stroke:var(--tr-edge);stroke-width:2}
+.c-electrical .el-sw .el-sw-cone{fill:#ffd25a;opacity:.18}
+.c-electrical .el-sw .el-sw-fix{fill:var(--tr-edge)}
+.c-electrical .el-sw .el-sw-bulb{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-electrical .el-sw .el-sw-bulb.on,.c-electrical .el-sw .el-sw-lamp.on{fill:#ffd25a;stroke:#c99a1a}
+.c-electrical .el-sw .el-sw-pl{fill:var(--card);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical .el-sw .el-sw-tog{fill:var(--tr-ink)}
+.c-electrical .el-sw .el-sw-plate,.c-electrical .el-sw .el-sw-sw{cursor:pointer}
+.c-electrical .el-sw .el-sw-plate:focus,.c-electrical .el-sw .el-sw-sw:focus{outline:none}
+.c-electrical .el-sw .el-sw-plate:focus-visible .el-sw-pl,.c-electrical .el-sw .el-sw-plate:hover .el-sw-pl,.c-electrical .el-sw .el-sw-sw:focus-visible .el-sw-body,.c-electrical .el-sw .el-sw-sw:hover .el-sw-body{stroke:var(--gold);stroke-width:3}
+.c-electrical .el-sw .el-sw-src{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical .el-sw .el-sw-body{fill:var(--card);stroke:var(--tr-edge);stroke-width:1.5}
+.c-electrical .el-sw .el-sw-lever{stroke:var(--tr-ink);stroke-width:4;stroke-linecap:round;fill:none}
+.c-electrical .el-sw .el-sw-term.c{fill:var(--tr-ink)}.c-electrical .el-sw .el-sw-term.b{fill:#c9a227;stroke:#8a6d12}
+.c-electrical .el-sw .el-sw-lamp{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.c-electrical .el-sw .el-sw-x{stroke:var(--tr-ink);stroke-width:1.5}
+.c-electrical .el-sw .el-sw-live{fill:none;stroke:#f2a900;stroke-width:3;stroke-dasharray:7 7;stroke-linejoin:round;opacity:.95}
+.c-electrical .el-sw-tt{font-size:.88rem;margin-top:.4rem}
+.c-electrical .el-sw-tt tr.cur td{background:var(--soft);font-weight:700}
+.c-electrical .el-sw-tt td,.c-electrical .el-sw-tt th{padding:.25rem .5rem}
+@media (max-width:560px){.c-electrical .el-l-cards{grid-template-columns:1fr 1fr}.c-electrical .el-l-card{padding:.4rem .45rem}.c-electrical .el-l-row{flex-wrap:wrap}}
+.c-electrical .tr-w .hs-btn[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:#fff}
+html[data-theme="dark"] .c-electrical .tr-w .hs-btn[aria-pressed="true"]{color:#0f1a14}
+.c-electrical .tr-w .hs-btn[aria-pressed]::before{content:"☐ ";font-weight:400}
+.c-electrical .tr-w .hs-btn[aria-pressed="true"]::before{content:"☑ "}
+.c-electrical .tr-w select{width:100%;min-width:0}
+.c-electrical .el-swipe{display:none;font-size:.8rem;color:var(--muted);margin:0 0 .3rem}
+@media (max-width:560px){
+  .c-electrical .el-wide{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  .c-electrical .el-wide svg{min-width:var(--el-mw,600px)}
+  .c-electrical .el-swipe{display:block}
+}

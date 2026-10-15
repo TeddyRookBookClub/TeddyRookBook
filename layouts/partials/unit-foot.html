@@ -1,0 +1,10 @@
+{{- /* The end of a unit chapter page: "I finished this chapter", previous and next chapter. Context: the page. */ -}}
+{{- $u := index site.Data.science_units .Params.unit }}
+{{- $C := index (where $u.chapters "key" .Params.chapter) 0 }}
+{{- $n := int $C.num }}{{ $prev := "" }}{{ $next := "" }}
+{{- range $u.chapters }}{{ if eq (int .num) (sub $n 1) }}{{ $prev = . }}{{ end }}{{ if eq (int .num) (add $n 1) }}{{ $next = . }}{{ end }}{{ end }}
+<div class="u-done" data-unit="{{ $u.key }}" data-chapter="{{ $C.key }}"><label><input type="checkbox" class="u-done-box"> I finished this chapter</label><span class="lab-small">Saved on this device only.</span></div>
+<nav class="lab-pn u-pn" aria-label="Chapters">
+  {{ with $prev }}<a href="{{ printf "science-lab/%s/%s/" $u.slug .key | relURL }}">← {{ .num }}. {{ .title }}</a>{{ else }}<a href="{{ printf "science-lab/%s/" $u.slug | relURL }}">← {{ $u.title }}</a>{{ end }}
+  {{ with $next }}<a href="{{ printf "science-lab/%s/%s/" $u.slug .key | relURL }}">{{ .num }}. {{ .title }} →</a>{{ else }}<a href="{{ printf "science-lab/%s/" $u.slug | relURL }}">{{ $u.title }} →</a>{{ end }}
+</nav>

@@ -1,0 +1,246 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/newtons-laws/second-law/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/second-law/sim.css").ModTime.Unix }}">
+<div class="lab" id="nl2-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Newton’s Laws · Chapter 2</p>
+    <h1>{{ .Title }}</h1>
+    <p>Push an empty shopping cart and it speeds up quickly. Push the same cart full of groceries just as hard and it speeds up slowly. Push twice as hard and it speeds up twice as fast. That is the whole second law, written in three letters: <i>F</i> = <i>ma</i>. Here you push a cart with a force probe and watch its motion turn into graphs as it happens, drop a hammer and a feather on the Moon, and fall with a skydiver until the air pushes up as hard as gravity pulls down.</p>
+    <span class="lab-mark" aria-hidden="true">🛒</span>
+  </header>
+
+  <div class="lab-stage nl2-main">
+    <div class="lab-view" id="nl2-view">
+      <canvas id="nl2-cv" tabindex="0" aria-label="A cart on a 4-meter track with force arrows drawn to scale: green for your push, red for friction, gold for the net force. Below it, four live graphs over the last 10 seconds: position, velocity, acceleration and net force. Drag on the track to push or pull the cart with a force probe: the farther you pull, the bigger the force. Keys: right and left arrows push while held, Space switches the steady push on or off, R starts again. The numbers are also listed as text in the panel."></canvas>
+      <div class="lab-hud" id="nl2-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="nl2-pause" aria-label="Pause" title="Pause">❚❚</button>
+        <button type="button" id="nl2-reset" aria-label="Put the cart back at the start" title="Start again (R)">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>The cart</h3>
+      <div class="lab-field"><span id="nl2-mass-l">Mass (a 1 kg cart plus 1 kg blocks)</span>
+        <div class="lab-seg" id="nl2-mass" role="group" aria-labelledby="nl2-mass-l"><button type="button" data-m="1" aria-pressed="true">1 kg</button><button type="button" data-m="2" aria-pressed="false">2 kg</button><button type="button" data-m="3" aria-pressed="false">3 kg</button><button type="button" data-m="4" aria-pressed="false">4 kg</button></div>
+      </div>
+      <label class="lab-field"><span>Steady push <output id="nl2-F-o">0.00 N</output></span><input type="range" id="nl2-F" min="-20" max="20" step="0.05" value="0" aria-label="Force of the steady push, in newtons; negative pushes to the left"></label>
+      <label class="lab-chk"><input type="checkbox" id="nl2-motor"> Switch on the steady push</label>
+      <label class="lab-chk"><input type="checkbox" id="nl2-fric"> <span>Friction pad: wood on wood (μ<sub>s</sub> = 0.5, μ<sub>k</sub> = 0.3)</span></label>
+      <button type="button" class="lab-btn" id="nl2-race">Match the graph</button>
+      <p class="lab-small nl2-note">Drag on the track to push or pull the cart by hand: the farther you pull, the harder the force probe pulls. Keys: → and ← push, Space switches the steady push.</p>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="nl2-read"></dl>
+    </div>
+    <div class="nl2-mbox">
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="nl2-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing"><h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The cart.</b> A 1 kg cart on a level track, with up to three 1 kg blocks stacked on it. You push it with a steady motor force, or by hand with a force probe: drag on the track and a spring stretches between your hand and the cart. Stretch it more and it pulls harder, up to 20 N.</p>
+      <p><b>The arrows.</b> Green is your push, red is friction, gold is the net force, the total of the two. They are drawn to the same scale, so you can add them by eye. The small pink and blue arrows are the cart’s weight and the track’s upward push. They always cancel here, so they are not drawn to scale.</p>
+      <p><b>The graphs.</b> Position, velocity, acceleration and net force over the last 10 seconds. Watch the bottom two: their shapes are always the same. Acceleration is the net force divided by the mass, at every moment.</p>
+      <p><b>The friction pad.</b> Wood on wood holds the cart still until the push beats 0.5 × the cart’s weight, then rubs back with 0.3 × the weight while it slides. Values from OpenStax’s table of friction coefficients.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="science"><h2>The second law</h2>
+    <p>The first law says what happens when the forces on something balance: nothing changes. The second law says what happens when they don’t. The net force speeds the object up, slows it down or turns it, and the change is bigger for a bigger force and smaller for a bigger mass:</p>
+    <div class="u-big"><var>F</var><sub>net</sub> = <var>m a</var><small>net force (newtons) = mass (kilograms) × acceleration (meters per second, per second)</small></div>
+    <p><b>Acceleration</b> is how fast the velocity changes. An acceleration of 2 m/s² means the velocity grows by 2 m/s every second: 0, 2, 4, 6 m/s. The acceleration always points the same way as the net force. Push backward on a cart rolling forward and the acceleration is backward: the cart slows down.</p>
+    <p>Written the other way round, <var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var>. Double the net force and the acceleration doubles. Double the mass and it halves. And when the net force is zero, the acceleration is zero: the first law is the second law’s special case.</p>
+    <div class="u-key">
+      <div><b>Net, not any</b><p>Only the total force counts. Push a heavy box with 100 N while friction pushes back with 100 N, and it does not speed up.</p></div>
+      <div><b>Same direction</b><p>The acceleration points where the net force points, not where the object is moving.</p></div>
+      <div><b>Mass resists</b><p>Mass is the same inertia as in Chapter 1, now with a number on it: it is the force needed per unit of acceleration.</p></div>
+    </div>
+    <h3 class="lab-h">The newton</h3>
+    <p>Forces are measured in newtons. One newton is the force that gives a 1 kilogram mass an acceleration of 1 m/s²:</p>
+    <div class="lab-formula">1 N = 1 kg × 1 m/s² = 1 kg·m/s²</div>
+    <p>A newton is about the weight of a medium apple: an apple of 102 g weighs 0.102 kg × 9.81 m/s² = 1.0 N. In U.S. units, one pound of force (lbf) is 4.448 N.</p>
+    <div class="u-ex"><b>Worked example: 0 to 60 mph</b>
+      <p>A 1,500 kg car goes from 0 to 60 mph in 8.0 s. Sixty miles per hour is 60 × 0.44704 = 26.82 m/s, so</p>
+      <div class="lab-formula"><var>a</var> = 26.82 m/s ÷ 8.0 s = 3.35 m/s² &nbsp; and &nbsp; <var>F</var><sub>net</sub> = 1,500 kg × 3.35 m/s² = <b>5,030 N</b> (about 1,130 lbf)</div>
+      <p>That is the <i>net</i> force: the push of the road on the drive wheels minus air drag and rolling resistance. The tires must push back on the road even harder than 5,030 N to win against those.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: pushing a stalled car</b>
+      <p>You push a 1,200 kg car with 400 N. Its tires and bearings resist with, say, 1.5% of its weight: 0.015 × 1,200 kg × 9.81 m/s² = 177 N. The net force is 400 − 177 = 223 N, so</p>
+      <div class="lab-formula"><var>a</var> = 223 N ÷ 1,200 kg = 0.19 m/s²; after 5 s, <var>v</var> = 0.19 × 5 = 0.93 m/s</div>
+      <p>A slow walk. A big mass needs a long push. Two friends pushing with 400 N each make the net force 623 N and the acceleration 0.52 m/s², nearly three times as much, because the 177 N of resistance stays the same.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> switch off friction, pick 1 kg, set the steady push to 2.00 N and switch it on. Read the acceleration: 2.00 m/s². Press ↺, pick 2 kg and run it again: 1.00 m/s². Then switch friction on and find the push that keeps the cart sliding at a steady speed: it is 0.3 × 1 kg × 9.81 m/s² = 2.94 N, so 2.95 N on the slider.</div>
+  </section>
+
+  <section class="lab-sec" id="graphs"><h2>Reading motion graphs</h2>
+    <p>A velocity–time graph tells the whole story of a trip along a line. Its <b>slope</b> is the acceleration: steep means a big acceleration, flat means none, sloping down means slowing (or speeding up backward). The <b>area</b> between the line and the time axis is the displacement, how far the object ends up from where it started. Area below the axis counts as backward. Drag the white dots up and down, then press Play to send the little blue cart along the track above.</p>
+    <div class="nl2-graphbox">
+      <canvas id="nl2-gcv" tabindex="0" aria-label="A velocity against time graph from 0 to 8 seconds with five points you can drag up or down. Each segment is labeled with its slope, the acceleration, and the area under it is shaded green when moving forward and red when moving backward. A small track above shows where a cart following the graph would be. Keys: left and right arrows pick a point, up and down arrows change its velocity. The displacement and distance are listed as text beside the graph."></canvas>
+      <div class="nl2-gside">
+        <button type="button" class="lab-btn pri" id="nl2-gplay">▶ Play it</button>
+        <dl class="lab-readout" id="nl2-gread"></dl>
+        <p class="lab-small">A flat piece means steady speed: zero acceleration, zero net force. Where the line crosses zero, the cart turns around.</p>
+      </div>
+    </div>
+    <p>The same rules link the other graphs in the cart simulation. The slope of the position graph is the velocity. And because <var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var>, the acceleration graph is just the net-force graph shrunk by the mass.</p>
+  </section>
+
+  <section class="lab-sec" id="weight"><h2>Weight: the force of gravity</h2>
+    <p>Near Earth’s surface, everything that falls freely, with no air drag, speeds up by about 9.8 m/s every second. That acceleration is called <var>g</var>. By the second law, the force that does this, gravity’s pull, must be</p>
+    <div class="u-big"><var>W</var> = <var>m g</var><small>weight (N) = mass (kg) × gravitational acceleration (m/s²)</small></div>
+    <p>The standard value, used for defining units and calibrating scales, is <var>g</var><sub>n</sub> = 9.80665 m/s², exactly. The real value changes a little from place to place: about 9.78 m/s² at sea level on the equator, where Earth spins fastest and bulges out, and about 9.83 m/s² at the poles. It is also slightly less on a high mountain. On the Moon it is 1.62 m/s².</p>
+    <div class="u-ex"><b>Worked example: your weight on the Moon</b>
+      <p>A student with a mass of 50 kg weighs 50 × 9.81 = 490 N on Earth (110 lbf). On the Moon: 50 × 1.62 = 81 N, about a sixth. Her mass is still 50 kg: she is just as hard to start, stop or turn. Only gravity’s pull has changed.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="falling"><h2>Hammer, feather, Moon</h2>
+    <p>Drop a hammer and a feather together and the hammer wins easily. Is that because it is heavier? Drop them where there is no air, and see.</p>
+  </section>
+  <div class="lab-stage nl2-fstage">
+    <div class="lab-view nl2-fview" id="nl2-fview">
+      <canvas id="nl2-fcv" tabindex="0" aria-label="Falling experiments. Hammer and feather mode: three side-by-side scenes, in air on Earth, in a vacuum chamber on Earth, and on the Moon, each dropping a hammer and a feather from 1.6 meters and showing the landing times. Skydiver mode: a skydiver with arrows for weight, air drag and net force, and a graph of speed against time that levels off at terminal speed. Press Space or Enter to drop or jump. The times and forces are listed as text in the panel."></canvas>
+    </div>
+    <div class="lab-panel">
+      <div class="lab-seg" id="nl2-fmode" role="group" aria-label="Experiment"><button type="button" data-mode="drop" aria-pressed="true">Hammer and feather</button><button type="button" data-mode="sky" aria-pressed="false">Skydiver</button></div>
+      <div id="nl2-fdrop-box" class="nl2-box">
+        <button type="button" class="lab-btn pri" id="nl2-fdrop">Drop both</button>
+        <label class="lab-chk"><input type="checkbox" id="nl2-fslow"> Slow motion (¼ speed)</label>
+        <p class="lab-small">A 1.32 kg hammer and a feather, let go together from 1.6 m, the height astronaut David Scott used on the Moon.</p>
+      </div>
+      <div id="nl2-fsky-box" class="nl2-box" hidden>
+        <button type="button" class="lab-btn pri" id="nl2-fjump">Jump</button>
+        <div class="lab-field"><span id="nl2-pose-l">Pose</span>
+          <div class="lab-seg" id="nl2-pose" role="group" aria-labelledby="nl2-pose-l"><button type="button" data-pose="head" aria-pressed="true">Head first</button><button type="button" data-pose="spread" aria-pressed="false">Spread-eagle</button><button type="button" data-pose="chute" aria-pressed="false">Open parachute</button></div>
+        </div>
+        <label class="lab-chk"><input type="checkbox" id="nl2-ffast"> 4× speed</label>
+        <p class="lab-small">A 75 kg skydiver jumping at 4,000 m. You can change pose while falling.</p>
+      </div>
+      <dl class="lab-readout" id="nl2-fread"></dl>
+    </div>
+  </div>
+  <section class="lab-sec">
+    <p>On August 2, 1971, at the end of the last moonwalk of Apollo 15, Commander David Scott held up a 1.32 kg aluminum geology hammer and a falcon feather, about 1.6 m above the ground, and let go of both at once. With no air on the Moon, they fell side by side and landed together, as Galileo had argued more than three centuries before. From the mission’s science report: “Within the accuracy of the simultaneous release, the objects were observed to undergo the same acceleration.”</p>
+    <p>The second law explains why. Gravity pulls harder on the hammer, but the hammer has more mass to move, in exactly the same proportion:</p>
+    <div class="lab-formula"><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var> = <var>m g</var> ÷ <var>m</var> = <var>g</var></div>
+    <p>The mass cancels. Without air, everything falls with the same acceleration, from a pin to a piano.</p>
+    <div class="u-ex"><b>Worked example: how long is the fall?</b>
+      <p>Starting from rest with constant acceleration, the distance fallen is <var>h</var> = ½ <var>g t</var>², so <var>t</var> = √(2<var>h</var> ÷ <var>g</var>). From 1.6 m on the Moon: √(2 × 1.6 ÷ 1.62) = <b>1.41 s</b>. On Earth, in a vacuum: √(2 × 1.6 ÷ 9.81) = <b>0.57 s</b>. Press Drop and compare with the times in the simulation.</p>
+    </div>
+    <div class="u-myth"><b>Common mistake</b><p>“Heavier things fall faster.” Aristotle taught it, and in air it often looks true: a hammer beats a feather, and a stone beats a leaf. But the cause is air drag, which matters far more for light, spread-out things. In a vacuum, or for compact objects dropped a short way, a heavy and a light object land together. Try it with a book and a sheet of paper laid flat on top of the book: the book shields the paper from the air, and they fall together.</p></div>
+  </section>
+
+  <section class="lab-sec" id="drag"><h2>Air drag and terminal speed</h2>
+    <p>In air, a falling object feels two forces: its weight pulling down, and air drag pushing up. Drag grows with speed. For a skydiver it is close to</p>
+    <div class="lab-formula"><var>F</var><sub>drag</sub> = ½ <var>C ρ A v</var>² &nbsp; so &nbsp; <var>F</var><sub>net</sub> = <var>m g</var> − ½ <var>C ρ A v</var>²</div>
+    <p>where ρ is the density of the air (1.21 kg/m³), <var>A</var> the area facing the air and <var>C</var> the drag coefficient, a number for the shape. At the start the drag is zero and the skydiver accelerates at <var>g</var>. As the speed grows the drag grows, the net force shrinks, and so does the acceleration. When the drag equals the weight, the net force is zero and the speed stops changing. That is the <b>terminal speed</b>:</p>
+    <div class="lab-formula"><var>v</var><sub>T</sub> = √(2 <var>m g</var> ÷ (<var>ρ C A</var>))</div>
+    <div class="u-ex"><b>Worked example: a skydiver, head first</b>
+      <p>OpenStax’s example: a 75 kg skydiver falling head first, with <var>C</var> = 0.70 and <var>A</var> = 0.18 m², in air of density 1.21 kg/m³:</p>
+      <div class="lab-formula"><var>v</var><sub>T</sub> = √(2 × 75 × 9.80 ÷ (1.21 × 0.70 × 0.18)) = <b>98 m/s</b>, about 350 km/h</div>
+      <p>Spread-eagle, with more area facing the air, the terminal speed drops to about 200 km/h. In the simulation that is <var>C</var> = 1.0 and <var>A</var> = 0.39 m². An open parachute (here <var>C</var> = 1.3 and <var>A</var> = 25 m²) brings it down to about 6 m/s.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> switch to Skydiver and press Jump. Watch the gold net-force arrow shrink as the light-green drag arrow grows. Then switch to spread-eagle: for a moment the drag is bigger than the weight, the net force points up, and the skydiver slows down while still falling. Open the parachute and the net force points up strongly, for about three seconds.</div>
+  </section>
+
+  <section class="lab-sec" id="tug"><h2>Adding forces: a tug-of-war</h2>
+    <p>Forces add like arrows. Forces in the same direction add up; forces in opposite directions subtract. Two teams of bears pull on a 200 kg crate on ice. Add bears to each side and watch the arrows line up head to tail. The gold arrow is the net force, and the crate’s acceleration is that net force divided by 200 kg.</p>
+  </section>
+  <div class="lab-stage nl2-tstage">
+    <div class="lab-view nl2-tview" id="nl2-tview">
+      <canvas id="nl2-tcv" aria-label="A tug-of-war: two teams of bears pull on ropes tied to a 200 kilogram crate on ice. Arrows above the crate show each team’s pulls head to tail and the net force in gold. The forces and the crate’s acceleration are listed as text in the panel."></canvas>
+    </div>
+    <div class="lab-panel">
+      <h3>Left team</h3>
+      <div class="lab-row"><button type="button" class="lab-btn" data-tug="left:150">+ Cub, 150 N</button><button type="button" class="lab-btn" data-tug="left:300">+ Big bear, 300 N</button><button type="button" class="lab-btn" data-tug="left:clear">Clear</button></div>
+      <h3>Right team</h3>
+      <div class="lab-row"><button type="button" class="lab-btn" data-tug="right:150">+ Cub, 150 N</button><button type="button" class="lab-btn" data-tug="right:300">+ Big bear, 300 N</button><button type="button" class="lab-btn" data-tug="right:clear">Clear</button></div>
+      <label class="lab-chk"><input type="checkbox" id="nl2-tfric" checked> <span>Steel runners on ice (μ<sub>s</sub> = 0.04, μ<sub>k</sub> = 0.02)</span></label>
+      <button type="button" class="lab-btn" id="nl2-treset">Back to the middle</button>
+      <dl class="lab-readout" id="nl2-tread"></dl>
+    </div>
+  </div>
+  <p class="lab-small nl2-after">It starts as a tie: 450 N each way, net force zero, and the crate does not move. One more cub on the right makes the net force 150 N; minus 39 N of ice friction, that is 111 N, and 111 N ÷ 200 kg = 0.55 m/s².</p>
+
+  <section class="lab-sec" id="newton"><h2>In Newton’s words</h2>
+    <p>Newton did not write <i>F</i> = <i>ma</i>. His second law is about the “motion” of a body, by which he meant its mass times its velocity, what we now call <b>momentum</b> (Chapter 5).</p>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Lex II. Mutationem motus proportionalem esse vi motrici impressæ, &amp; fieri secundum lineam rectam qua vis illa imprimitur.</p>
+      <p class="u-en">Law II. The alteration of motion is ever proportional to the motive force impress’d; and is made in the direction of the right line in which that force is impress’d.</p>
+      <cite>Isaac Newton, <i>Principia</i> (London, 1687), Axioms, or Laws of Motion. English by Andrew Motte (London, 1729).</cite>
+    </div>
+    <p>And right after it:</p>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Si vis aliqua motum quemvis generet, dupla duplum, tripla triplum generabit, sive simul &amp; semel, sive gradatim &amp; successive impressa fuerit.</p>
+      <p class="u-en">If any force generates a motion, a double force will generate double the motion, a triple force triple the motion, whether that force be impress’d altogether and at once, or gradually and successively.</p>
+      <cite>Newton, <i>Principia</i>, after Law II (1687); Motte’s translation (1729).</cite>
+    </div>
+    <p>In modern symbols, with momentum <var>p</var> = <var>m v</var>, Newton’s law reads</p>
+    <div class="lab-formula"><var>F</var><sub>net</sub> = Δ<var>p</var> ÷ Δ<var>t</var> &nbsp; or &nbsp; <var>F</var><sub>net</sub> Δ<var>t</var> = Δ<var>p</var></div>
+    <p>A force acting for a time changes the momentum. When the mass stays the same, Δ<var>p</var> = <var>m</var> Δ<var>v</var>, and dividing by Δ<var>t</var> gives back <var>F</var><sub>net</sub> = <var>m a</var>. The momentum form also works when the mass changes, as it does for a rocket burning fuel. The neat form <i>F</i> = <i>ma</i> was written down by mathematicians in the century after the <i>Principia</i>.</p>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where you see it</h2>
+    <ul>
+      <li><b>Rockets</b> accelerate upward only when the thrust beats the weight; the net force is thrust minus weight minus drag. Build one in <a href="{{ "games/rocket/" | relURL }}">Rocket Builder</a>.</li>
+      <li><b>Throwing machines</b> give a big force over a short distance. See how far it sends the stone in the <a href="{{ "games/trebuchet/" | relURL }}">Trebuchet Workshop</a>.</li>
+      <li><b>Cars</b>: the engine’s push through the tires speeds the car up, the brakes’ grip slows it down, and a heavier car needs more of both. See <a href="{{ "trades/cars/engine/" | relURL }}">The Engine</a> and <a href="{{ "trades/cars/brakes/" | relURL }}">Brakes</a>.</li>
+      <li><b>A rolling cart under a hanging load</b>: in <a href="{{ "games/book-cart/" | relURL }}">Book Cart</a>, the physics panel shows how the force on the cart differs from (M + m) a when the books swing.</li>
+      <li><b>Elevators and scales</b>: you feel heavier as an elevator speeds up going up, because the floor must push you with more than your weight to accelerate you. Chapter 4 works this out.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the simulation works</h2>
+    <p><b>The cart</b> obeys <var>a</var> = (<var>F</var> + <var>f</var>) ÷ <var>m</var>, where <var>F</var> is your push and <var>f</var> friction. With the pad on, friction holds the cart still while the push is no more than μ<sub>s</sub> <var>m g</var>; once it slides, friction is μ<sub>k</sub> <var>m g</var> against the motion. Between your inputs the force is constant, so each step of 1/600 s uses the exact constant-acceleration formulas. If friction would stop the cart part-way through a step, the step is split at the moment the velocity reaches zero. The ends of the track are padded bumpers that stop the cart dead.</p>
+    <p><b>Checks.</b> A 1 N push on 1 kg gave 1.0000 m/s², and after 2 s the cart had moved 2.000000 m at 2.000000 m/s, exactly ½<var>at</var>² and <var>at</var>; the same for 8 N on 4 kg and 2.5 N on 2 kg. With the pad, a 4.9 N push did not move 1 kg (static limit 4.903 N), while 5.0 N gave 2.0580 m/s², exactly (5 − 0.3 <var>g</var>) ÷ 1. A cart sliding at 2 m/s stopped after 0.679811 m, matching <var>v</var>² ÷ (2 μ<sub>k</sub> <var>g</var>), and stayed stopped. A push equal to the friction kept it at exactly 0.500000 m/s. A changing push lasting 1.5 s gave an impulse of 3.819717 N·s and exactly the same change of momentum.</p>
+    <p><b>Falling</b> uses <var>m a</var> = <var>m g</var> − <var>k v</var>|<var>v</var>| with <var>k</var> = ½ <var>C ρ A</var>, stepped with the fourth-order Runge–Kutta method. For a fall from rest this has an exact answer, <var>v</var> = <var>v</var><sub>T</sub> tanh(<var>g t</var> ÷ <var>v</var><sub>T</sub>); over 20 s the simulation matched it to better than 1 part in a billion for the head-first skydiver (<var>v</var><sub>T</sub> = 98.19 m/s), the spread-eagle one (55.81 m/s), the hammer and the feather. The feather is given a terminal speed of 0.5 m/s, a typical value for a feather; the hammer’s drag (<var>C</var> = 1, <var>A</var> = 0.003 m²) adds only 0.0002 s to its 1.6 m fall. A parachute here opens over 3 s, its drag growing with the cube of the time; opened from the spread-eagle speed the hardest slowing is about 3.4 <var>g</var>.</p>
+    <p><b>The tug-of-war</b> uses the cart model with a 200 kg crate; the steel runners on ice use OpenStax’s μ<sub>s</sub> = 0.04 and μ<sub>k</sub> = 0.02. <b>The graph</b> is made of straight pieces, so each slope and area is exact.</p>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>A 2 kg cart has a net force of 6 N on it. What is its acceleration?</p>
+        <ul class="u-opts"><li><button type="button">0.33 m/s²</button></li><li><button type="button">3 m/s²</button></li><li><button type="button">12 m/s²</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var> = 6 N ÷ 2 kg = 3 m/s².</p></details></li>
+      <li class="u-q" data-a="2"><p>You double the net force on a cart and also halve its mass. Its acceleration…</p>
+        <ul class="u-opts"><li><button type="button">stays the same</button></li><li><button type="button">doubles</button></li><li><button type="button">becomes four times as big</button></li></ul>
+        <details><summary>Show the answer</summary><p>Doubling the force doubles it, and halving the mass doubles it again: 2 × 2 = 4 times.</p></details></li>
+      <li class="u-q" data-a="0"><p>A car drives at a steady 100 km/h on a straight, level highway. What is the net force on it?</p>
+        <ul class="u-opts"><li><button type="button">Zero</button></li><li><button type="button">Forward, because it is moving forward</button></li><li><button type="button">Backward, because of air drag</button></li></ul>
+        <details><summary>Show the answer</summary><p>Steady speed in a straight line means zero acceleration, so the net force is zero. The road’s forward push on the tires exactly balances drag and rolling resistance.</p></details></li>
+      <li class="u-q" data-a="2"><p>On the Moon, a hammer and a feather are dropped together. Which lands first?</p>
+        <ul class="u-opts"><li><button type="button">The hammer, because it is heavier</button></li><li><button type="button">The feather, because the Moon’s gravity is weak</button></li><li><button type="button">They land together</button></li></ul>
+        <details><summary>Show the answer</summary><p>With no air, the only force is gravity, and <var>a</var> = <var>mg</var> ÷ <var>m</var> = <var>g</var> for both. Apollo 15 showed it in 1971.</p></details></li>
+      <li class="u-q" data-a="1"><p>A skydiver falls at a steady terminal speed. The upward air drag on her is…</p>
+        <ul class="u-opts"><li><button type="button">less than her weight</button></li><li><button type="button">equal to her weight</button></li><li><button type="button">more than her weight</button></li></ul>
+        <details><summary>Show the answer</summary><p>Steady speed means zero acceleration and zero net force, so drag and weight balance exactly.</p></details></li>
+      <li class="u-q" data-a="0"><p>On a velocity–time graph, what does the slope of the line tell you?</p>
+        <ul class="u-opts"><li><button type="button">The acceleration</button></li><li><button type="button">The distance traveled</button></li><li><button type="button">The position</button></li></ul>
+        <details><summary>Show the answer</summary><p>Slope = change in velocity ÷ change in time = acceleration. The area under the line is the displacement.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/5-3-newtons-second-law" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 5.3 Newton’s Second Law</a> (net force, the momentum form)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/5-4-mass-and-weight" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 5.4 Mass and Weight</a> (W = mg; g on the Moon)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/6-2-friction" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 6.2 Friction</a> (wood on wood; steel on ice)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/6-4-drag-force-and-terminal-speed" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 6.4 Drag Force and Terminal Speed</a> (the skydiver example)</li>
+      <li><a href="https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-4-two-classes-si-units-and-si-prefixes" target="_blank" rel="noopener">NIST Guide to the SI, Chapter 4</a> (the newton, m·kg·s⁻²)</li>
+      <li><a href="https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8" target="_blank" rel="noopener">NIST Guide to the SI, Appendix B.8</a> (standard gravity 9.80665 m/s²; mile per hour = 0.44704 m/s; pound-force = 4.448222 N)</li>
+      <li><a href="https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_15_feather_drop.html" target="_blank" rel="noopener">NASA NSSDCA, Apollo 15 Hammer-Feather Drop</a> (the 1.32 kg hammer, the height, the report)</li>
+      <li><a href="https://science.nasa.gov/resource/the-apollo-15-hammer-feather-drop/" target="_blank" rel="noopener">NASA Science, The Apollo 15 Hammer-Feather Drop</a></li>
+      <li><a href="https://archive.org/details/PhilosophiaeNaturalisPrincipiaMathematica" target="_blank" rel="noopener">Isaac Newton, Philosophiæ Naturalis Principia Mathematica, London, 1687</a> (Internet Archive)</li>
+      <li><a href="https://en.wikisource.org/wiki/The_Mathematical_Principles_of_Natural_Philosophy_(1729)/Axioms,_or_Laws_of_Motion" target="_blank" rel="noopener">Motte’s translation, 1729: Axioms, or Laws of Motion</a> (Wikisource)</li>
+      <li><a href="https://en.wikipedia.org/wiki/Theoretical_gravity" target="_blank" rel="noopener">Wikipedia, Theoretical gravity</a> (g from about 9.780 m/s² at the equator to 9.832 m/s² at the poles)</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/newtons-laws/second-law/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/second-law/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/newtons-laws/second-law/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/second-law/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,58 @@
+/* Newton's Laws, Chapter 4 (Forces at Work): only what this page adds to lab.css and unit.css. */
+#nl4-lab .lab-view canvas:focus{outline:none}
+#nl4-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#nl4-lab .lab-tools button{min-width:36px;min-height:36px}
+#nl4-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);background:#1f5c4e}
+#nl4-lab .lab-hud{max-width:calc(100% - 22rem)}
+#nl4-lab .lab-toast{top:3.3rem}
+#nl4-lab .lab-seg button{min-height:36px}
+#nl4-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#nl4-lab .lab-field select{min-height:36px;max-width:100%}
+#nl4-lab .lab-chk{min-height:36px;cursor:pointer}
+#nl4-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#nl4-lab .lab-btn{min-height:36px}
+#nl4-lab .nl4-row .lab-btn{flex:1 1 auto;padding:.4rem .55rem}
+#nl4-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#nl4-lab .lab-readout dd{white-space:nowrap}
+.nl4-noscript{position:absolute;inset:auto 0 45% 0;text-align:center;color:var(--sim-ink)}
+#nl4-lab .nl4-short{height:min(58vh,460px);min-height:340px}
+#nl4-lab .lab-sec .lab-stage{margin:1rem 0}
+/* the lesson */
+#nl4-lab .nl4-k{font-weight:700;color:var(--ink);border-bottom:3px solid var(--k)}
+#nl4-lab .nl4-forces>div{border-top:4px solid var(--k)}
+#nl4-lab .nl4-steps{padding-left:1.3rem}
+#nl4-lab .nl4-steps li{margin:.35rem 0}
+#nl4-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+/* the free-body-diagram builder */
+.nl4-fbd{background:var(--sim);color:var(--sim-ink);border-radius:14px;padding:.7rem;display:flex;flex-direction:column;gap:.6rem}
+.nl4-fbd .lab-seg button{background:rgba(255,255,255,.05);border-color:var(--sim-line);color:var(--sim-ink);min-height:36px}
+.nl4-fbd .lab-seg button[aria-pressed="true"]{background:#1f5c4e;border-color:var(--sim-acc);color:#fff}
+.nl4-fbd .lab-seg button.nl4-done::after{content:" ✓";color:var(--sim-acc)}
+.nl4-fbd-cv{position:relative;height:min(52vh,420px);min-height:300px;border-radius:12px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.nl4-fbd-cv canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.nl4-fbd-cv canvas:focus{outline:none}
+.nl4-fbd-cv canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:12px}
+.nl4-fbd-tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.4rem}
+.nl4-chip{display:flex;align-items:center;gap:.45rem;min-height:40px;padding:.35rem .6rem;border-radius:10px;border:1px solid var(--sim-line);background:rgba(255,255,255,.04);color:var(--sim-ink);font:600 .82rem system-ui,sans-serif;cursor:grab;text-align:left;touch-action:none}
+.nl4-chip i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;min-width:1.7rem;height:1.7rem;border-radius:50%;background:var(--chip);color:#06111a;font:700 .85rem Georgia,serif;flex:none}
+.nl4-chip[aria-pressed="true"]{border-color:var(--chip);box-shadow:inset 0 0 0 1px var(--chip);background:rgba(255,255,255,.09)}
+.nl4-chip.armed{border-color:var(--sim-gold);box-shadow:0 0 0 2px var(--sim-gold)}
+.nl4-chip:focus-visible{outline:2px solid var(--sim-gold);outline-offset:2px}
+.nl4-ghost{position:fixed;z-index:50;pointer-events:none;transform:translate(-50%,-50%);width:2.4rem;height:2.4rem;border-radius:50%;background:var(--chip);color:#06111a;display:flex;align-items:center;justify-content:center;font:700 1rem Georgia,serif;box-shadow:0 0 18px var(--chip)}
+.nl4-fbd-act{display:flex;flex-wrap:wrap;gap:.4rem}
+.nl4-fbd-act .lab-btn{background:rgba(255,255,255,.05);border-color:var(--sim-line);color:var(--sim-ink)}
+.nl4-fbd-act .lab-btn.pri{background:#1f5c4e;border-color:var(--sim-acc);color:#fff}
+.nl4-fbd-msg{margin:0;min-height:2.8em;font-size:.9rem;line-height:1.45;color:var(--sim-ink)}
+.nl4-fbd-msg.good{color:var(--sim-acc);font-weight:600}
+.nl4-fbd-msg.bad{color:#ffc9c9}
+@media (max-width:860px){
+  #nl4-lab .lab-hud{display:none}
+  #nl4-lab .nl4-short{height:min(60vh,420px);min-height:320px}
+}
+@media (max-width:600px){
+  .nl4-fbd{padding:.5rem}
+  .nl4-fbd-tray{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .nl4-chip{font-size:.78rem;padding:.3rem .45rem}
+  #nl4-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem}
+}
+@media (min-width:861px){#nl4-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}

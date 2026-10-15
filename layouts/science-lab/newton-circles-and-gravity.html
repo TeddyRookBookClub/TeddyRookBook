@@ -1,0 +1,317 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/newtons-laws/circles-and-gravity/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/circles-and-gravity/sim.css").ModTime.Unix }}">
+<div class="lab" id="nl6-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Newton’s Laws · Chapter 6</p>
+    <h1>{{ .Title }}</h1>
+    <p>Whirl a ball on a string and you have to keep pulling inward, even though the ball never comes any closer. Let go, and it doesn’t fly outward: it flies off straight along its path. Moving in a circle takes a force toward the center. Newton saw that the same idea explains the Moon. It is falling toward Earth all the time, pulled by the same gravity that drops an apple, and only its sideways speed keeps it from ever landing. Here you’ll cut strings to hit targets, take curves without skidding, repeat Newton’s Moon test with modern numbers, and watch Henry Cavendish weigh the Earth.</p>
+    <span class="lab-mark" aria-hidden="true">🌙</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="nl6-view">
+      <canvas id="nl6-cv" tabindex="0" aria-label="A ball whirled in a circle on a string, seen from above, with gold targets around it. The blue arrow is the ball’s velocity and the pink arrow is the string’s pull toward the hand. Tap the picture, press Space or press Cut to cut the string. Keys: left and right arrows change the speed, up and down arrows change the radius, P pauses."></canvas>
+      <div class="lab-hud" id="nl6-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="nl6-pause" aria-label="Pause" title="Pause (P)">❚❚</button>
+        <button type="button" id="nl6-slow" aria-label="Slow motion" aria-pressed="false" title="Slow motion">🐢</button>
+        <button type="button" id="nl6-reset" aria-label="New targets" title="New targets">↺</button>
+      </div>
+      <button type="button" class="nl6-cutbtn" id="nl6-cut2">✂ Cut</button>
+      <noscript><p class="nl6-noscript">This simulation needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Ball and string</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made setups" id="nl6-pre">
+        <button type="button" data-pre="easy" aria-pressed="false">Easy</button>
+        <button type="button" data-pre="fast" aria-pressed="false">Fast</button>
+        <button type="button" data-pre="weak" aria-pressed="false">Weak string</button>
+      </div>
+      <div class="lab-field"><span><label for="nl6-v">Speed v</label><output id="nl6-v-o" for="nl6-v"></output></span><input type="range" id="nl6-v" min="0.5" max="8" step="0.1" value="3"></div>
+      <div class="lab-field"><span><label for="nl6-r">Radius r</label><output id="nl6-r-o" for="nl6-r"></output></span><input type="range" id="nl6-r" min="0.3" max="1.5" step="0.05" value="0.8"></div>
+      <div class="lab-field"><span><label for="nl6-m">Mass m</label><output id="nl6-m-o" for="nl6-m"></output></span><input type="range" id="nl6-m" min="0.05" max="1" step="0.01" value="0.2"></div>
+      <div class="lab-field"><span><label for="nl6-s">String breaks at</label><output id="nl6-s-o" for="nl6-s"></output></span><input type="range" id="nl6-s" min="5" max="200" step="1" value="40"></div>
+      <label class="lab-chk"><input type="checkbox" id="nl6-unb"> Unbreakable string</label>
+      <label class="lab-chk"><input type="checkbox" id="nl6-aim" checked> Show the aim line (where it would go)</label>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="nl6-cut">✂ Cut the string</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="nl6-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="nl6-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The view from above.</b> A hand at the center whirls a ball around on a string, counterclockwise, like a ball swung over your head. The <span class="nl6-k" style="--k:#74c0fc">blue arrow</span> is the ball’s velocity: it always points along the circle, at right angles to the string. The <span class="nl6-k" style="--k:#f9a8d4">pink arrow</span> is the pull of the string, always toward the hand. The ring around the hand fills up as the pull gets close to what the string can take.</p>
+      <p><b>Cutting the string.</b> When you cut it, the pull vanishes, and nothing pushes the ball sideways anymore. It flies off in a straight line along the direction it was already going: along the tangent, the green dashed line. The red dashed line shows the path many people expect, straight out from the center. It never goes that way.</p>
+      <p><b>The targets.</b> To hit one, you must let go a quarter turn early, while the aim line, not the string, points at the target. Turn on slow motion to practice. Faster, tighter circles need much bigger pulls: watch the numbers as you change the speed and radius.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="science">
+    <h2>Why a circle needs a force</h2>
+    <div class="lab-cols">
+      <div>
+        <p>Acceleration means any change in velocity, and velocity includes direction. A ball going around a circle at a steady speed is changing direction every instant, so it is accelerating, toward the center of the circle. This is called <i>centripetal</i> acceleration, from Latin words meaning “center-seeking.” Its size is</p>
+        <div class="lab-formula"><var>a</var> = <var>v</var>² / <var>r</var> = 4π²<var>r</var> / <var>T</var>² &nbsp;&nbsp; (<var>T</var> = time for one turn = 2π<var>r</var>/<var>v</var>)</div>
+        <p>By the second law, something must supply a net force toward the center to make it happen:</p>
+        <div class="u-big"><var>F</var> = <var>m v</var>² / <var>r</var><small>the force toward the center (N) = mass (kg) × speed² (m²/s²) ÷ radius (m)</small></div>
+        <p>This isn’t a new kind of force. It is the job description, and some real force has to do it: the string’s tension, friction between tires and road, the push of a track, or gravity.</p>
+      </div>
+      <div>
+        <p><b>Speed counts double.</b> Because <var>v</var> is squared, doubling the speed makes the needed pull four times bigger. Halving the radius at the same speed doubles it. That is why sharp turns at high speed are so dangerous.</p>
+        <div class="u-ex"><b>Worked example: the ball on a string</b>
+          <p>A 0.20 kg ball is whirled at 3.0 m/s on a 0.80 m string. It goes around in 2π × 0.80 / 3.0 = 1.68 s. Its acceleration is 3.0² / 0.80 = 11.3 m/s², a little more than <var>g</var>. The string must pull with 0.20 × 11.3 = 2.25 N. Double the speed to 6.0 m/s and the pull is 9.0 N.</p>
+        </div>
+        <div class="u-ex"><b>Worked example: a car on a level curve</b>
+          <p>A 900 kg car drives around a curve of radius 500 m at 25 m/s (90 km/h, 56 mph). It needs <var>mv</var>²/<var>r</var> = 900 × 25² / 500 = 1,125 N toward the center. On a level road only friction can supply it, and friction can give at most μ<sub>s</sub><var>mg</var> = μ<sub>s</sub> × 8,830 N. So the tires need μ<sub>s</sub> of at least 1,125 / 8,830 = 0.13. (This is Example 6.15 in OpenStax <i>University Physics</i>.)</p>
+        </div>
+      </div>
+    </div>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Vis centripeta est qua corpus versus punctum aliquod tanquam ad centrum trahitur, impellitur, vel utcunque tendit.</p>
+      <p class="u-en">“A Centripetal force is that by which bodies are drawn or impelled, or any way tend, towards a point as to a centre.”</p>
+      <cite>Isaac Newton, <i>Principia</i>, Definition V. Latin from the first edition (1687); English from Andrew Motte’s 1729 translation of the third edition, whose wording differs slightly. Newton coined the word “centripetal.”</cite>
+    </div>
+    <p>Newton explains it with the same experiment as the simulation, only with a sling:</p>
+    <div class="u-quote">
+      <p class="u-en">“A stone, whirled about in a sling, endeavours to recede from the hand that turns it; and by that endeavour, distends the sling, and that with so much the greater force, as it is revolv’d with the greater velocity; and as soon as ever it is let go, flies away. That force which opposes it self to this endeavour, and by which the sling perpetually draws back the stone towards the hand, and retains it in its orbit, because ’tis directed to the hand as the centre of the orbit, I call the Centripetal force.”</p>
+      <cite>Newton, <i>Principia</i>, Definition V, in Andrew Motte’s translation (1729).</cite>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> Set the speed to 2 m/s and read the pull. Now 4 m/s: four times as much. Then keep 4 m/s and double the radius: the pull halves. Find two different circles that need exactly the same pull.</div>
+  <div class="lab-try"><b>Try this:</b> Pick “Weak string” and raise the speed slowly. The string snaps at the speed where <var>mv</var>²/<var>r</var> reaches 20 N. Where does the ball go? Along the tangent, just as when you cut it.</div>
+
+  <div class="u-myth"><b>Common mistake: “Centrifugal force throws things outward”</b>
+    <p>In a car turning left, you feel pressed against the right-hand door, and it is tempting to say a force pushed you outward. But look at it from outside the car. Your body, by the first law, tries to keep going straight. The car turns left underneath you, so the door comes to meet you, and then pushes you inward, to the left, so you go around the curve with the car. The only real sideways force on you points toward the center. The “outward push” is your own inertia. OpenStax puts it plainly: centrifugal force “does not actually exist” as a real force; it only appears if you describe things from inside the turning car. That is why the cut ball flies along the tangent: if a real outward force had been acting, the ball would fly straight out.</p>
+  </div>
+
+  <section class="lab-sec" id="curves">
+    <h2>Taking a curve: friction and banking</h2>
+    <p>A car turning a corner needs a sideways force of <var>mv</var>²/<var>r</var> toward the inside of the curve. On a flat road, all of it must come from friction between the tires and the road. The tires roll without sliding sideways, so this is static friction, and it can only give up to μ<sub>s</sub><var>N</var>. Set <var>mv</var>²/<var>r</var> = μ<sub>s</sub><var>mg</var> and the mass cancels:</p>
+    <div class="lab-formula">flat curve: <var>v</var><sub>max</sub> = √(μ<sub>s</sub> <var>g r</var>) &nbsp;&nbsp;&nbsp; banked curve with no friction needed: tan θ = <var>v</var>² / (<var>r g</var>)</div>
+    <p>Tilt the road toward the inside and the normal force, which pushes at right angles to the road, tips inward too. Part of it then points toward the center and helps turn the car. At one special speed it supplies all of <var>mv</var>²/<var>r</var> by itself, and the car could go around on ice.</p>
+    <div class="lab-stage" id="nl6c">
+      <div class="lab-view nl6-short" id="nl6c-view">
+        <canvas id="nl6c-cv" aria-label="A car going around a circular curve, seen from above on the left, and from behind on the right with its weight, normal force, friction and net force drawn as arrows. A gauge shows the friction needed against the friction available. Use the controls beside the picture."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>The curve</h3>
+        <div class="lab-seg" role="group" aria-label="Ready-made curves" id="nl6c-pre">
+          <button type="button" data-pre="flatdry" aria-pressed="false">Flat, dry</button>
+          <button type="button" data-pre="flatwet" aria-pressed="false">Flat, wet</button>
+          <button type="button" data-pre="banked" aria-pressed="false">Banked 31°</button>
+        </div>
+        <div class="lab-field"><span><label for="nl6c-v">Speed</label><output id="nl6c-v-o" for="nl6c-v"></output></span><input type="range" id="nl6c-v" min="10" max="250" step="1" value="60"></div>
+        <div class="lab-field"><span><label for="nl6c-r">Radius of the curve</label><output id="nl6c-r-o" for="nl6c-r"></output></span><input type="range" id="nl6c-r" min="20" max="500" step="5" value="100"></div>
+        <div class="lab-field"><span><label for="nl6c-b">Bank angle θ</label><output id="nl6c-b-o" for="nl6c-b"></output></span><input type="range" id="nl6c-b" min="0" max="45" step="1" value="0"></div>
+        <div class="lab-field"><span><label for="nl6c-s">Road</label></span><select id="nl6c-s"><option value="dry">Dry concrete (μs 1.0, μk 0.7)</option><option value="wet">Wet concrete (μs 0.6, μk 0.4)</option></select></div>
+        <dl class="lab-readout" id="nl6c-read"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="nl6c-missions"></ol>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div class="u-ex"><b>Worked example: a wet corner</b>
+        <p>A flat curve of radius 50 m. Dry concrete gives rubber tires μ<sub>s</sub> ≈ 1.0, so the top speed is √(1.0 × 9.81 × 50) = 22.1 m/s, about 80 km/h (50 mph). In the rain, μ<sub>s</sub> can drop to 0.5–0.7; with 0.6 the top speed falls to √(0.6 × 9.81 × 50) = 17.2 m/s, about 62 km/h (38 mph). A corner you take easily when dry can throw you off the road when wet. This is why speed limits on curves matter more in the rain.</p>
+      </div>
+      <div class="u-ex"><b>Worked example: a banked track</b>
+        <p>A curve of radius 100 m banked at 31°. The speed that needs no friction at all is <var>v</var> = √(<var>r g</var> tan θ) = √(100 × 9.81 × tan 31°) = 24.3 m/s, about 87 km/h (OpenStax Example 6.16). Go faster and friction must help by pushing down the slope; go slower and it pushes up the slope, or the car would slide down toward the inside.</p>
+      </div>
+    </div>
+    <div class="lab-try"><b>Try this:</b> In the simulation, take the flat dry curve too fast. Watch which way the car slides: not straight out from the center, but off along a wider curve, close to the tangent. Then bank the road and find the speed where the friction gauge reads zero.</div>
+  </section>
+
+  <section class="lab-sec" id="loop">
+    <h2>Upside down: the loop-the-loop</h2>
+    <div class="lab-cols">
+      <div>
+        <p>At the top of a roller-coaster loop, the car is upside down. Two forces point down, toward the center of the loop: gravity, and the push of the track. Together they must supply the centripetal force:</p>
+        <div class="lab-formula"><var>N</var> + <var>mg</var> = <var>mv</var>² / <var>r</var></div>
+        <p>The track can push but never pull, so <var>N</var> can’t be less than zero. The slowest the car can go over the top is when <var>N</var> = 0 and gravity alone does the job:</p>
+        <div class="lab-formula"><var>v</var><sub>min</sub> = √(<var>g r</var>)</div>
+      </div>
+      <div class="u-ex"><b>Worked example</b>
+        <p>For a loop whose top has a radius of 10 m, <var>v</var><sub>min</sub> = √(9.81 × 10) = 9.9 m/s, about 36 km/h (22 mph). At exactly that speed the riders feel weightless at the top. Faster, and the track pushes on them; at √(2<var>gr</var>) = 14 m/s the seat pushes up on them with their full weight, even though they are upside down. Real coasters go over the top faster than the minimum, and riders are held in by restraints as well.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="moon">
+    <h2>The apple and the Moon</h2>
+    <p>Newton’s great step was to wonder whether the force that pulls an apple down also reaches all the way to the Moon. If it does, the Moon is falling too. It never lands, because while it falls it also moves sideways, so fast that it falls around the Earth. That is exactly the ball on the string, with gravity as the string.</p>
+    <div class="lab-stage" id="nl6m">
+      <div class="lab-view nl6-short" id="nl6m-view">
+        <canvas id="nl6m-cv" aria-label="Side by side: an apple falling from a tree with a meter ruler, and the Moon moving along its orbit around Earth, with the straight line it would follow without gravity and its fall below that line. Use the buttons beside the picture to run one second or one minute."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Run the test</h3>
+        <div class="lab-seg" role="group" aria-label="How long to watch" id="nl6m-mode">
+          <button type="button" data-m="s1" aria-pressed="false">▶ 1 second</button>
+          <button type="button" data-m="s60" aria-pressed="false">▶ 1 minute</button>
+        </div>
+        <dl class="lab-readout" id="nl6m-read"></dl>
+        <div class="nl6-chart"><canvas id="nl6m-chart" aria-label="Chart with logarithmic axes: acceleration toward Earth against distance from Earth’s center in Earth radii. The green line is g divided by distance squared. The apple’s point sits at 1 Earth radius and 9.81 m/s²; the Moon’s point, worked out from its orbit, sits at 60.3 Earth radii and 0.00272 m/s², on the line."></canvas></div>
+        <p class="lab-small">The Moon’s point comes from its distance and orbit time alone, and it lands on the inverse-square line.</p>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">The test, step by step</h3>
+        <ol class="nl6-steps">
+          <li><b>How far?</b> The Moon is about 60 Earth radii from Earth’s center. With NASA’s figures, 384,400 km ÷ 6,371 km = 60.3.</li>
+          <li><b>The guess.</b> If gravity weakens with the square of the distance, at the Moon it should be 60² = 3,600 times weaker than at the surface: 9.81 ÷ 3,600 = 0.00272 m/s².</li>
+          <li><b>The check.</b> The Moon goes around once in 27.32 days (2,360,600 s) on a circle of radius 384,400 km. Its centripetal acceleration is 4π²<var>r</var>/<var>T</var>² = 4π² × 3.844 × 10⁸ / (2.3606 × 10⁶)² = 0.00272 m/s².</li>
+          <li><b>They agree.</b> Using the Moon’s true 60.3 Earth radii, <var>g</var>/60.3² = 0.00269 m/s², within about 1% of the measured value. The same gravity holds the Moon in its orbit.</li>
+        </ol>
+      </div>
+      <div>
+        <h3 class="lab-h">Falling, a little at a time</h3>
+        <p>In one second, an apple falls ½<var>gt</var>² = 4.9 m. In the same second, the Moon travels about 1 km along its orbit and drops below a straight line by ½ × 0.00272 × 1² = 1.36 mm, about the thickness of a coin. Wait a whole minute and it has dropped ½ × 0.00272 × 60² = 4.9 m: in one minute, the Moon falls as far as the apple falls in one second. Sixty times the time and 3,600 times weaker gravity cancel exactly.</p>
+        <p>Newton worked through this comparison in Book III of the <i>Principia</i> (Proposition IV). Late in his life he told his friend William Stukeley that the idea of gravitation had first come to him when he saw an apple fall.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="gravitation">
+    <h2>Universal gravitation</h2>
+    <p>Newton went further: every piece of matter pulls on every other piece. The pull grows with both masses and shrinks with the square of the distance between their centers:</p>
+    <div class="u-big"><var>F</var> = <var>G</var> <var>m</var>₁ <var>m</var>₂ / <var>r</var>²<small>force (N) = G × mass₁ (kg) × mass₂ (kg) ÷ distance² (m²), with G = 6.674 30 × 10⁻¹¹ N·m²/kg² (CODATA 2022)</small></div>
+    <div class="u-quote">
+      <p class="u-en">“That there is a power of gravity tending to all bodies, proportional to the several quantities of matter which they contain.”</p>
+      <cite>Newton, <i>Principia</i>, Book III, Proposition VII, in Andrew Motte’s translation (1729).</cite>
+    </div>
+    <div class="lab-cols">
+      <div class="u-ex"><b>Worked example: two people</b>
+        <p>Two 70 kg people stand 1 m apart. Their gravitational pull on each other is 6.674 × 10⁻¹¹ × 70 × 70 / 1² = 3.3 × 10⁻⁷ N, the weight of about 0.03 milligrams. Earth, 6,371 km away from your center but with 5.97 × 10²⁴ kg, pulls each of them with 687 N. <var>G</var> is so small that gravity only becomes strong when at least one mass is enormous.</p>
+      </div>
+      <p>That also makes <var>G</var> very hard to measure. Newton could check his law against the Moon and the planets, which only needed products like <var>G</var> × (Earth’s mass). To find <var>G</var> on its own, someone had to measure the pull between two masses on Earth, a pull equal to the weight of a few hundredths of a milligram.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="cavendish">
+    <h2>Weighing the Earth: the Cavendish experiment</h2>
+    <p>In 1797–98, Henry Cavendish used a torsion balance planned by the geologist John Michell, who had died before he could use it. A wooden rod 1.8 m long hung from a thin wire, with a small lead ball (0.73 kg) at each end. Two large lead balls (158 kg each) were swung close to the small ones. Their gravity pulled the small balls sideways and twisted the wire by a tiny angle. Cavendish sealed the apparatus in a shed and watched it through telescopes from outside, so that air currents and changes of temperature would not disturb it. In this simulation, a mirror on the wire bounces a light beam onto a scale, as later versions of the experiment do, and the twist is drawn 100 times larger than it is.</p>
+    <div class="lab-stage" id="nl6k">
+      <div class="lab-view nl6-short" id="nl6k-view">
+        <canvas id="nl6k-cv" aria-label="A torsion balance seen from above: a rod with small balls at its ends hangs from a wire, with two large lead balls that can be swung close to the small ones. A light beam reflects off a mirror on the wire. A graph shows the twist against time in minutes. Use the buttons beside the picture."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Big balls</h3>
+        <div class="lab-seg" role="group" aria-label="Where the big balls are" id="nl6k-pos">
+          <button type="button" data-pos="0" aria-pressed="true">Away</button>
+          <button type="button" data-pos="1" aria-pressed="false">Swing in ↺</button>
+          <button type="button" data-pos="-1" aria-pressed="false">Other side ↻</button>
+        </div>
+        <h3>Time</h3>
+        <div class="lab-seg" role="group" aria-label="Simulation speed" id="nl6k-speed">
+          <button type="button" data-sp="30" aria-pressed="false">×30</button>
+          <button type="button" data-sp="60" aria-pressed="true">×60</button>
+          <button type="button" data-sp="180" aria-pressed="false">×180</button>
+        </div>
+        <div class="lab-row"><button type="button" class="lab-btn" id="nl6k-reset">↺ Start over</button></div>
+        <dl class="lab-readout" id="nl6k-read"></dl>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <p><b>How the balance measures G.</b> The wire twists back with a torque proportional to the twist angle, κθ. A twisted rod swings back and forth like a slow pendulum; with Cavendish’s stiffer wire, one swing took about 7.5 minutes. The period gives the wire’s stiffness: κ = 4π²<var>I</var>/<var>T</var>², where <var>I</var> = 2<var>m</var>(<var>L</var>/2)² is the rod’s moment of inertia. When the big balls come close, the rod settles at a new angle θ where the wire’s torque balances the gravitational torque <var>F L</var>. Putting it together:</p>
+        <div class="lab-formula"><var>G</var> = 2π² <var>L d</var>² θ / (<var>M T</var>²)</div>
+        <p>With <var>L</var> = 1.8 m, <var>d</var> = 0.225 m between ball centers, <var>M</var> = 158 kg and <var>T</var> = 450 s, the pull between each pair of balls is 1.5 × 10⁻⁷ N, and the rod turns by only 0.0012 radians (0.07°): each small ball moves about 1 mm.</p>
+      </div>
+      <div>
+        <p><b>Weighing the Earth.</b> At Earth’s surface, <var>g</var> = <var>G M</var><sub>E</sub>/<var>R</var>². Once you know <var>G</var>, the Earth’s mass follows from things you can measure on the ground:</p>
+        <div class="lab-formula"><var>M</var><sub>E</sub> = <var>g R</var>² / <var>G</var> = 9.82 × (6.371 × 10⁶)² / (6.674 × 10⁻¹¹) = 5.97 × 10²⁴ kg</div>
+        <p>Divide by Earth’s volume and you get its average density: 5,510 kg/m³, about twice as dense as the rocks of the crust. So the inside of the Earth must be much denser than its surface, a clue to its iron core. Cavendish reported his result as Earth’s density: about 5.45 times that of water, once a small arithmetic slip in his paper (which printed 5.48) is corrected. He never wrote down <var>G</var> itself, but his numbers give a value within about 1% of today’s.</p>
+      </div>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Swing the big balls in and let the rod swing for a few periods. The panel measures the period and the middle of the swing, just as Cavendish did, and works out <var>G</var> and the mass of the Earth from them. Then swing the balls to the other side: the rod swings to the opposite angle, and the twist between the two positions is twice as big, which is easier to measure.</div>
+  </section>
+
+  <section class="lab-sec" id="orbits">
+    <h2>From the Moon to satellites</h2>
+    <div class="lab-cols">
+      <p>Newton imagined a cannon on a very tall mountain firing faster and faster. Each ball lands farther away, until one goes so fast that the ground curves away beneath it as fast as it falls, and it never lands. That is an orbit. Fire it yourself in <a href="{{ "games/orbits/" | relURL }}">Orbit Lab</a>, which also flies satellites, a trip to the Moon and a gravity assist, all with the law of gravitation.</p>
+      <p>Astronauts on the International Space Station, about 400 km up, still feel 88% of the gravity they feel on the ground (<var>g</var> ≈ 8.7 m/s² there). They float because they and the station are falling around Earth together, like riders in a drop tower that never reaches the ground. There is gravity in space; what is missing is the floor pushing back.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <div class="lab-cols">
+      <p><b>Roads and tracks.</b> Highway on-ramps and race tracks are banked so the road’s push helps turn the cars. Curve speed signs are set so cars don’t ask more of their tires than friction can give. See <a href="{{ "trades/cars/wheels-and-tires/" | relURL }}">wheels and tires</a> and <a href="{{ "trades/cars/steering-and-suspension/" | relURL }}">steering and suspension</a> in the cars course.</p>
+      <p><b>Spinning machines.</b> In a washing machine’s spin cycle or a salad spinner, the drum pushes the clothes or lettuce around in a circle. Water drops escape through the holes, where nothing pushes them, and fly off along the tangent. Laboratory centrifuges separate blood and other mixtures the same way.</p>
+      <p><b>Sports.</b> A hammer thrower spins and lets go at just the right moment, exactly like the targets above. A cyclist leans into a turn so the road’s push points partly toward the center.</p>
+      <p><b>Space.</b> Every moon, planet and satellite is in free fall around something heavier. The same formula, <var>F</var> = <var>Gm</var>₁<var>m</var>₂/<var>r</var>², steers spacecraft to Mars and predicts eclipses years ahead.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The ball on a string.</b> While the string holds, the ball moves exactly on its circle: its angle grows at <var>v</var>/<var>r</var> radians per second. When the string is cut, or when <var>mv</var>²/<var>r</var> exceeds its strength, the ball leaves with its velocity at that instant and moves in a straight line, since nothing else pushes it sideways on a smooth table seen from above. Whether it will hit a target is worked out exactly at the moment of release. Gravity and air are left out.</p>
+      <p><b>The car.</b> The forces are solved exactly for a car going around at a steady speed. If the friction needed is more than μ<sub>s</sub><var>N</var>, the car skids, and kinetic friction (μ<sub>k</sub><var>N</var>) gives the most sideways push it can, so the car follows a wider curve. The friction values are from OpenStax Table 6.1; for wet concrete, the middle of the table’s range. The car’s speed is kept steady, and the animation runs faster on big curves so a lap takes a few seconds.</p>
+      <p><b>The Moon test</b> uses NASA’s figures: a distance of 384,400 km, a sidereal month of 27.3217 days and an Earth radius of 6,371 km. The real orbit is a slightly stretched ellipse, tugged by the Sun; a circle is close enough for this test. The drawing of the Moon’s path is exaggerated, but every number is real.</p>
+      <p><b>The Cavendish balance</b> uses Cavendish’s masses and sizes, rounded, with a 7.5-minute swing, and adds light damping. The twist is computed step by step with the fourth-order Runge–Kutta method. The two pairs of balls are treated as points, and the pull of each big ball on the far small ball is ignored.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, all passed):</p>
+        <ul class="lab-small">
+          <li>The velocity is at right angles to the string to 4 × 10⁻¹⁶; the acceleration measured from the motion is <var>v</var>²/<var>r</var> to 10⁻⁷. After a cut, the distance from the hand grows as √(<var>r</var>² + (<var>vt</var>)²), so the ball never moves straight outward. Releasing at the tangent point hit 200 of 200 test targets.</li>
+          <li>OpenStax Examples 6.15 and 6.16: 1,125 N and μ<sub>s</sub> ≥ 0.13; 24.3 m/s on the 31° bank. At the top speed and the lowest speed, friction equals exactly ±μ<sub>s</sub><var>N</var> in 300 random cases.</li>
+          <li>Moon: 4π²<var>r</var>/<var>T</var>² = 0.00272333 m/s² against <var>g</var>/3600 = 0.00272407 m/s² (0.03% apart) and <var>g</var>/60.34² = 0.00269 m/s² (1.1%). The exact drop below the straight line after 1 s is 1.3617 mm, and after 60 s 4.902 m.</li>
+          <li>Cavendish: the simulated swing has a period of 450.36 s, as theory says for this damping, and the <var>G</var> worked out from it is within 0.2% of the true value. From <var>g</var>, <var>R</var> and <var>G</var>: <var>M</var><sub>E</sub> = 5.9722 × 10²⁴ kg and density 5,513 kg/m³, matching NASA.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>A ball whirls counterclockwise on a string, seen from above. At the moment it is at the far right of the circle, moving up the page, the string breaks. Where does the ball go?</p>
+        <ul class="u-opts"><li><button type="button">Straight to the right, away from the center</button></li><li><button type="button">Straight up the page, along the direction it was moving</button></li><li><button type="button">On around the circle for a while, then out</button></li></ul>
+        <details><summary>Show the answer</summary><p>With no string, no sideways force acts, so by the first law the ball keeps the velocity it had: straight up the page, along the tangent.</p></details></li>
+      <li class="u-q" data-a="2"><p>You double the speed of the whirling ball and keep the radius the same. The pull the string must supply…</p>
+        <ul class="u-opts"><li><button type="button">stays the same</button></li><li><button type="button">doubles</button></li><li><button type="button">becomes four times as big</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>F</var> = <var>mv</var>²/<var>r</var>. The speed is squared, so ×2 in speed means ×4 in force.</p></details></li>
+      <li class="u-q" data-a="1"><p>In a car turning left, you slide against the right-hand door. What is really going on?</p>
+        <ul class="u-opts"><li><button type="button">A centrifugal force pushes you outward to the right</button></li><li><button type="button">You tend to keep going straight; the door pushes you to the left, toward the center of the turn</button></li><li><button type="button">Friction from the seat pushes you to the right</button></li></ul>
+        <details><summary>Show the answer</summary><p>The real force on you is the door’s push toward the center. The feeling of being thrown outward is your own inertia, seen from inside the turning car.</p></details></li>
+      <li class="u-q" data-a="0"><p>The Moon is about 60 Earth radii away. Newton predicted that its acceleration toward Earth should be about…</p>
+        <ul class="u-opts"><li><button type="button"><var>g</var>/3600</button></li><li><button type="button"><var>g</var>/60</button></li><li><button type="button">zero, because it is in space</button></li><li><button type="button"><var>g</var></button></li></ul>
+        <details><summary>Show the answer</summary><p>Gravity weakens with the square of the distance: 60² = 3,600. And the Moon’s orbit gives 0.00272 m/s², which is 9.81/3,600.</p></details></li>
+      <li class="u-q" data-a="2"><p>On a banked curve, a car goes exactly at the curve’s ideal speed. The friction force on its tires is…</p>
+        <ul class="u-opts"><li><button type="button">pointing down the slope</button></li><li><button type="button">pointing up the slope</button></li><li><button type="button">zero: the normal force alone supplies <var>mv</var>²/<var>r</var></button></li></ul>
+        <details><summary>Show the answer</summary><p>That is what the ideal speed means: tan θ = <var>v</var>²/(<var>rg</var>), and the tilted normal force does all the turning.</p></details></li>
+      <li class="u-q" data-a="1"><p>Why did Cavendish’s rod twist by only about a thousandth of a radian?</p>
+        <ul class="u-opts"><li><button type="button">Lead is not affected by gravity much</button></li><li><button type="button"><var>G</var> is tiny, so the pull between everyday masses is very weak</button></li><li><button type="button">The Earth’s gravity cancelled it</button></li></ul>
+        <details><summary>Show the answer</summary><p>With <var>G</var> = 6.67 × 10⁻¹¹, even 158 kg balls pull with only about 1.5 × 10⁻⁷ N, so he needed a very thin wire and great care to see it.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/6-3-centripetal-force" target="_blank" rel="noopener">University Physics Volume 1, 6.3 Centripetal Force</a>: <var>F</var> = <var>mv</var>²/<var>r</var>, Examples 6.15 and 6.16, the ideal banking angle, and centrifugal force as a fictitious force.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/6-2-friction" target="_blank" rel="noopener">6.2 Friction</a>: Table 6.1, rubber on dry and wet concrete.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/13-1-newtons-law-of-universal-gravitation" target="_blank" rel="noopener">13.1 Newton’s Law of Universal Gravitation</a>: the law, Cavendish’s method, the Moon at 60 Earth radii.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/13-2-gravitation-near-earths-surface" target="_blank" rel="noopener">13.2 Gravitation Near Earth’s Surface</a>: weighing the Earth, gravity at the space station’s height, astronauts in free fall.</li>
+      <li>NASA, <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html" target="_blank" rel="noopener">Moon Fact Sheet</a> (distance 384,400 km, sidereal period 27.3217 days) and <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html" target="_blank" rel="noopener">Earth Fact Sheet</a> (radius 6,371 km, mass 5.9722 × 10²⁴ kg, GM, density 5,513 kg/m³).</li>
+      <li>NIST, <a href="https://physics.nist.gov/cuu/pdf/wall_2022.pdf" target="_blank" rel="noopener">CODATA 2022 recommended values</a>: <var>G</var> = 6.674 30(15) × 10⁻¹¹ m³ kg⁻¹ s⁻².</li>
+      <li>Wikipedia, <a href="https://en.wikipedia.org/wiki/Cavendish_experiment" target="_blank" rel="noopener">Cavendish experiment</a> (secondary source): Michell’s apparatus, the ball sizes and spacing, the shed and telescopes, Cavendish’s density result.</li>
+      <li>I. Newton, <i>Philosophiæ Naturalis Principia Mathematica</i> (London, 1687), <a href="https://archive.org/details/philosophiaenat00newt" target="_blank" rel="noopener">scan at the Internet Archive</a>: Definition V. A. Motte, <i>The Mathematical Principles of Natural Philosophy</i> (1729), <a href="https://archive.org/details/bub_gb_Tm0FAAAAQAAJ" target="_blank" rel="noopener">volume 1 at the Internet Archive</a> (Definition V) and <a href="https://en.wikisource.org/wiki/The_Mathematical_Principles_of_Natural_Philosophy_(1729)/Proposition_7:_Gravity_tending_to_all_Bodies" target="_blank" rel="noopener">Book III, Proposition VII at Wikisource</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/newtons-laws/circles-and-gravity/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/circles-and-gravity/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/newtons-laws/circles-and-gravity/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/circles-and-gravity/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

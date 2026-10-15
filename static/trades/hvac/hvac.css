@@ -1,0 +1,414 @@
+/* The Trades: HVAC course (course page, lessons, hub card). Every rule is scoped under .c-hvac; new class names start with hv- (figures, widgets) or hm- (house map). */
+.c-hvac{--hv-furn:#c8553d;--hv-ac:#2f7fc1;--hv-hp:#7b52c7;--hv-ref:#0f8f8f;--hv-duct:#a8760f;--hv-vent:#2b9466;--hv-ctl:#c2185b;--hv-env:#9a7458;
+  --hv-hot:#d4581f;--hv-warm:#e39a2d;--hv-cold:#2f7fc1;--hv-icy:#6fb8e0;--hv-gasc:#c99a00;--hv-flame:#f2994a;--hv-flameb:#3d7fe0;
+  --hv-soil:#e8dfcf;--hv-soil2:#d9ccb4;--hv-roof:#d9d1c4;--hv-base:#eef1ee;--hv-room:#fbfaf6;--hv-glass:#cfe3ef;--hv-ink:#1d2320;--hv-grid:#d5ddd8;
+  --hv-pro:#b23a2e;--hv-own:#2e7d4f;--hv-panel:#ffffff}
+html[data-theme="dark"] .c-hvac{--hv-furn:#f08a70;--hv-ac:#72b6ec;--hv-hp:#b994ea;--hv-ref:#4fd1d1;--hv-duct:#e8bf4f;--hv-vent:#62d09b;--hv-ctl:#f2709c;--hv-env:#d1ad92;
+  --hv-hot:#ff9a66;--hv-warm:#f3b860;--hv-cold:#7dbcef;--hv-icy:#9fd7f5;--hv-gasc:#ecc94b;--hv-flame:#ffad6b;--hv-flameb:#7fb2ff;
+  --hv-soil:#2a2620;--hv-soil2:#3a342a;--hv-roof:#3b3a35;--hv-base:#1c2620;--hv-room:#16201b;--hv-glass:#203543;--hv-ink:#e6ece8;--hv-grid:#2c3a32;
+  --hv-pro:#ff8a7a;--hv-own:#6cc79a;--hv-panel:#0f1914}
+.c-hvac .hs-hero::after{content:"❄"}
+
+/* ---------- legend swatches and views ---------- */
+.c-hvac .tr-legend [data-sys="furnace"] i{background:var(--hv-furn)}
+.c-hvac .tr-legend [data-sys="ac"] i{background:var(--hv-ac)}
+.c-hvac .tr-legend [data-sys="heatpump"] i{background:var(--hv-hp)}
+.c-hvac .tr-legend [data-sys="refrigerant"] i{background:var(--hv-ref)}
+.c-hvac .tr-legend [data-sys="ducts"] i{background:var(--hv-duct)}
+.c-hvac .tr-legend [data-sys="vent"] i{background:var(--hv-vent)}
+.c-hvac .tr-legend [data-sys="controls"] i{background:var(--hv-ctl)}
+.c-hvac .tr-legend [data-sys="envelope"] i{background:var(--hv-env)}
+.c-hvac .tr-map[data-view="fa"] [data-view="hp"],.c-hvac .tr-map[data-view="hp"] [data-view="fa"]{display:none}
+.tr-feat.c-hvac [data-view="hp"]{display:none}
+
+/* ---------- house map ---------- */
+.c-hvac .hm-map{max-width:780px;margin:0 auto}
+.c-hvac .hm-soil{fill:var(--hv-soil)}
+.c-hvac .hm-ground{stroke:var(--tr-edge);stroke-width:2}
+.c-hvac .hm-base{fill:var(--hv-base);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac .hm-roof{fill:var(--hv-roof);stroke:var(--tr-edge);stroke-width:2;stroke-linejoin:round}
+.c-hvac .hm-room{fill:var(--hv-room)}
+.c-hvac .hm-wall{stroke:var(--tr-edge);stroke-width:2;fill:none}
+.c-hvac .hm-win{fill:var(--hv-glass);stroke:var(--tr-edge);stroke-width:1}
+.c-hvac svg text.hm-lbl{font-size:10.5px;font-weight:600;fill:var(--muted);letter-spacing:.04em;text-transform:uppercase;opacity:.8}
+.c-hvac .hm-hit{fill:transparent}.c-hvac .hm-hitl{stroke:transparent;stroke-width:14;fill:none}
+.c-hvac .hm-insul{stroke:var(--hv-env);stroke-width:9;stroke-linecap:round;stroke-dasharray:1 4;fill:none}
+.c-hvac .hm-wallins{stroke:var(--hv-env);stroke-width:5;stroke-dasharray:4 3;fill:none}
+.c-hvac .hm-seal{stroke:var(--hv-env);stroke-width:3;fill:none}
+.c-hvac .hm-duct{stroke:var(--hv-duct);stroke-width:11;fill:none;stroke-linecap:round}
+.c-hvac .hm-ductb{stroke:var(--hv-duct);stroke-width:6;fill:none}
+.c-hvac .hm-reg{fill:var(--hv-duct)}
+.c-hvac .hm-ret{stroke:var(--hv-duct);stroke-width:6;fill:none;opacity:.6;stroke-linejoin:round}
+.c-hvac .hm-grille{fill:var(--hv-room);stroke:var(--hv-duct);stroke-width:2}
+.c-hvac .hm-filter{fill:var(--hv-duct)}
+.c-hvac .hm-furn{fill:var(--hv-furn)}
+.c-hvac .hm-flame{fill:#ffd27a}
+.c-hvac .hm-pvc{stroke:var(--hv-furn);stroke-width:4;fill:none;opacity:.8;stroke-linejoin:round}
+.c-hvac .hm-gas{stroke:var(--hv-gasc);stroke-width:3;fill:none}
+.c-hvac .hm-meter{fill:var(--hv-gasc)}
+.c-hvac .hm-coil{fill:var(--hv-ac)}.c-hvac .hm-acoil,.c-hvac .hm-acoil2{stroke:#fff;stroke-width:2;fill:none;opacity:.85}
+.c-hvac .hm-odu{fill:var(--hv-ac)}.c-hvac .hm-odu2{fill:var(--hv-hp)}
+.c-hvac .hm-fan,.c-hvac .hm-fan2{fill:none;stroke:var(--tr-ink);stroke-width:2;opacity:.6}
+.c-hvac .hm-fins,.c-hvac .hm-fins2{stroke:#fff;stroke-width:1.3;opacity:.45}
+.c-hvac .hm-cond{stroke:var(--hv-ac);stroke-width:2;fill:none;stroke-dasharray:3 3}
+.c-hvac .hm-cond2{stroke:var(--hv-hp);stroke-width:2;fill:none;stroke-dasharray:3 3}
+.c-hvac .hm-ah{fill:var(--hv-hp)}
+.c-hvac .hm-strip{stroke:#ffd27a;stroke-width:2.5;fill:none}
+.c-hvac .hm-line1{stroke:var(--hv-ref);stroke-width:4.5;fill:none;stroke-linejoin:round}
+.c-hvac .hm-line2{stroke:var(--hv-ref);stroke-width:2.2;fill:none;stroke-linejoin:round}
+.c-hvac .hm-fanbox,.c-hvac .hm-hood,.c-hvac .hm-hrv{fill:var(--hv-vent)}
+.c-hvac .hm-vduct{stroke:var(--hv-vent);stroke-width:3.5;fill:none;stroke-linejoin:round}
+.c-hvac .hm-vcap{stroke:var(--hv-vent);stroke-width:4}
+.c-hvac .hm-core{fill:#fff;opacity:.7}
+.c-hvac .hm-co{fill:var(--hv-vent);stroke:var(--hv-room);stroke-width:2}
+.c-hvac .hm-tstat{fill:var(--hv-ctl)}.c-hvac .hm-tdial{fill:#fff}
+.c-hvac .hm-wire{stroke:var(--hv-ctl);stroke-width:1.6;fill:none;stroke-dasharray:3 3}
+
+/* ---------- static figures ---------- */
+.c-hvac svg .hv-fh{fill:var(--hv-hot)}.c-hvac svg .hv-fc{fill:var(--hv-cold)}.c-hvac svg .hv-fg{fill:var(--tr-edge)}.c-hvac svg .hv-fr{fill:var(--hv-ref)}
+.c-hvac svg .hv-sh{stroke:var(--hv-hot);stroke-width:3;fill:none;stroke-linecap:round}
+.c-hvac svg .hv-sh2{stroke:var(--hv-hot);stroke-width:2;fill:none;stroke-dasharray:5 4}
+.c-hvac svg .hv-sw{stroke:var(--hv-warm);stroke-width:3;fill:none;stroke-linecap:round}
+.c-hvac svg .hv-sc{stroke:var(--hv-cold);stroke-width:3;fill:none;stroke-linecap:round}
+.c-hvac svg .hv-sa{stroke:var(--tr-edge);stroke-width:3;fill:none;stroke-linecap:round}
+.c-hvac svg .hv-sr{stroke:var(--hv-ref);stroke-width:3;fill:none}
+.c-hvac svg .hv-house{fill:var(--hv-room);stroke:var(--tr-edge);stroke-width:2;stroke-linejoin:round}
+.c-hvac svg .hv-glass{fill:var(--hv-glass);stroke:var(--tr-edge);stroke-width:1}
+.c-hvac svg .hv-door{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-hvac svg .hv-groundl{stroke:var(--tr-edge);stroke-width:2}
+.c-hvac svg .hv-bhot{fill:var(--hv-hot)}.c-hvac svg .hv-bcold{fill:var(--hv-cold)}
+.c-hvac svg .hv-sun{fill:#f6c343}
+.c-hvac svg .hv-room{fill:var(--hv-room);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac svg .hv-wallx{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-hvac svg .hv-rad{fill:var(--tr-metal);stroke:var(--hv-hot);stroke-width:2}
+.c-hvac svg .hv-radfin{stroke:var(--hv-hot);stroke-width:2;opacity:.6}
+.c-hvac svg .hv-rays{stroke:#e6a700;stroke-width:2.2;fill:none}
+html[data-theme="dark"] .c-hvac svg .hv-rays{stroke:#f6c343}
+.c-hvac svg .hv-rays2{stroke:var(--hv-cold);stroke-width:2;fill:none}
+.c-hvac svg .hv-person{fill:var(--tr-ink)}.c-hvac svg .hv-personb{stroke:var(--tr-ink);stroke-width:3;fill:none;stroke-linecap:round}
+.c-hvac svg .hv-burner{fill:var(--tr-edge)}
+.c-hvac svg .hv-flame{fill:var(--hv-flameb);opacity:.85}
+.c-hvac svg .hv-hx{stroke:var(--hv-furn);stroke-width:6;fill:none;stroke-linejoin:round;opacity:.85}
+.c-hvac svg .hv-hx2{fill:var(--hv-furn);opacity:.35;stroke:var(--hv-furn)}
+.c-hvac svg .hv-ind{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.c-hvac svg .hv-flue{stroke:var(--tr-edge);stroke-width:9;fill:none}
+.c-hvac svg .hv-pvc{stroke:#c9ced3;stroke-width:8;fill:none;stroke-linejoin:round}
+html[data-theme="dark"] .c-hvac svg .hv-pvc{stroke:#8e979f}
+.c-hvac svg .hv-drain{stroke:var(--hv-cold);stroke-width:2.2;fill:none;stroke-dasharray:4 3}
+.c-hvac svg .hv-gas{stroke:var(--hv-gasc);stroke-width:4;fill:none}
+.c-hvac svg .hv-pipeh,.c-hvac svg .hv-pipeh2{stroke:var(--hv-hot);stroke-width:5;fill:none;stroke-linejoin:round}
+.c-hvac svg .hv-pipec,.c-hvac svg .hv-pipec2{stroke:var(--hv-cold);stroke-width:5;fill:none;stroke-linejoin:round}
+.c-hvac svg .hv-floorloop{stroke:var(--hv-hot);stroke-width:3;fill:none;stroke-linejoin:round;opacity:.8}
+.c-hvac svg .hv-pump{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}.c-hvac svg .hv-pumpi{stroke:var(--hv-cold);stroke-width:3}
+.c-hvac svg .hv-tank{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac svg .hv-valve{fill:var(--gold)}
+.c-hvac svg .hv-axis{stroke:var(--tr-edge);stroke-width:1.6;fill:none}
+.c-hvac svg .hv-curve{stroke:var(--hv-ref);stroke-width:3.5;fill:none}
+.c-hvac svg .hv-dash{stroke:var(--tr-edge);stroke-width:1.2;fill:none;stroke-dasharray:5 4}
+.c-hvac svg .hv-ptc{fill:var(--hv-cold)}.c-hvac svg .hv-pth{fill:var(--hv-hot)}
+.c-hvac svg .hv-wallv{stroke:var(--tr-edge);stroke-width:2;stroke-dasharray:6 5;fill:none}
+.c-hvac svg .hv-blower{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac svg .hv-coilbox{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac svg .hv-acoil{stroke:var(--hv-cold);stroke-width:5;fill:none;stroke-linejoin:round}
+.c-hvac svg .hv-pan{stroke:var(--tr-ink);stroke-width:3}
+.c-hvac svg .hv-filter{fill:var(--hv-duct);opacity:.8}
+.c-hvac svg .hv-suction{stroke:var(--hv-ref);stroke-width:7;fill:none;stroke-linejoin:round}
+.c-hvac svg .hv-liquid{stroke:var(--hv-ref);stroke-width:3;fill:none;stroke-linejoin:round;opacity:.75}
+.c-hvac svg .hv-odu{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac svg .hv-fin{stroke:var(--tr-edge);stroke-width:1;opacity:.7}
+.c-hvac svg .hv-fan{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:1.5}
+.c-hvac svg .hv-comp{fill:var(--hv-ac)}
+.c-hvac svg .hv-belec{fill:#8a5cc2}.c-hvac svg .hv-bheat{fill:var(--hv-hot)}.c-hvac svg .hv-bout{fill:var(--hv-cold)}
+html[data-theme="dark"] .c-hvac svg .hv-belec{fill:#b994ea}
+.c-hvac svg .hv-soil{fill:var(--hv-soil)}
+.c-hvac svg .hv-loop{stroke:var(--hv-ref);stroke-width:3;fill:none;stroke-linejoin:round}
+.c-hvac svg .hv-pond{fill:var(--hv-glass);stroke:var(--hv-cold);stroke-width:1.5}
+.c-hvac svg .hv-well{stroke:var(--hv-cold);stroke-width:4;fill:none}
+.c-hvac svg .hv-plenum{fill:var(--tr-pale);stroke:var(--hv-duct);stroke-width:2}
+.c-hvac svg .hv-ductw{stroke:var(--hv-duct);stroke-width:12;fill:none;stroke-linecap:round}
+.c-hvac svg .hv-branch{stroke:var(--hv-duct);stroke-width:7;fill:none}
+.c-hvac svg .hv-reg{fill:var(--hv-duct)}
+.c-hvac svg .hv-damper{stroke:var(--tr-ink);stroke-width:3;stroke-linecap:round}
+.c-hvac svg .hv-grille{fill:var(--tr-pale);stroke:var(--hv-duct);stroke-width:2}.c-hvac svg .hv-gl{stroke:var(--hv-duct);stroke-width:1.5}
+.c-hvac svg .hv-ductr{stroke:var(--hv-duct);stroke-width:10;fill:none;opacity:.55;stroke-linejoin:round}
+.c-hvac svg .hv-leak{stroke:var(--tr-edge);stroke-width:2;fill:none;stroke-linecap:round}
+.c-hvac svg .hv-hrvbox{fill:var(--tr-pale);stroke:var(--hv-vent);stroke-width:2}
+.c-hvac svg .hv-core{fill:var(--tr-metal);stroke:var(--hv-vent);stroke-width:2}
+.c-hvac svg .hv-coreline{stroke:var(--hv-vent);stroke-width:1.2;opacity:.6}
+.c-hvac svg .hv-bad rect{fill:var(--tr-pale);stroke:var(--hv-pro);stroke-width:2.5}
+.c-hvac svg .hv-good rect{fill:var(--tr-pale);stroke:var(--hv-own);stroke-width:3}.c-hvac svg .hv-good circle{fill:none;stroke:var(--hv-own);stroke-width:2}
+.c-hvac svg .hv-lamp{stroke:var(--tr-ink);stroke-width:2;fill:#f6e3a3}
+.c-hvac svg .hv-onbar{fill:var(--hv-cold);opacity:.65}
+.c-hvac svg .hv-tline{stroke:var(--hv-hot);stroke-width:2;fill:none}
+.c-hvac svg .hv-hline{stroke:var(--hv-ref);stroke-width:2.5;fill:none;stroke-dasharray:6 3}
+.c-hvac svg .hv-bstop{fill:#b23a2e}.c-hvac svg .hv-bpro{fill:#2f6fa6}
+.c-hvac svg .hv-pro{fill:#b23a2e}.c-hvac svg .hv-own{fill:#2e7d4f}
+html[data-theme="dark"] .c-hvac svg .hv-bstop,html[data-theme="dark"] .c-hvac svg .hv-pro{fill:#c0574b}
+html[data-theme="dark"] .c-hvac svg .hv-bpro{fill:#4a86bd}html[data-theme="dark"] .c-hvac svg .hv-own{fill:#3d9a66}
+html[data-theme="dark"] .c-hvac svg text.tx-w{fill:#fff}
+
+/* ---------- widgets: shared bits ---------- */
+.c-hvac .hv-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .7rem;margin:0 0 .3rem}
+.c-hvac .hv-head h3{margin:0;font:700 1.15rem Georgia,serif;color:var(--g)}
+.c-hvac .hv-head span{color:var(--muted);font-size:.88rem}
+.c-hvac .hv-say{min-height:4.6em;line-height:1.5;margin:.25rem 0 .5rem;font-size:.97rem}
+.c-hvac .hv-say b{color:var(--ink)}
+.c-hvac .hv-row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.45rem 0}
+.c-hvac .hv-row .tr-field{flex:1 1 180px;margin:.2rem 0}
+.c-hvac .hv-chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(74px,1fr));gap:3px;margin:.35rem 0}
+.c-hvac .hv-chips span{font:700 .7rem system-ui,sans-serif;text-align:center;padding:.32rem .2rem;border-radius:6px;background:var(--tr-metal);color:var(--muted);line-height:1.2}
+.c-hvac .hv-chips span.done{background:var(--soft);color:var(--g)}
+.c-hvac .hv-chips span.on{background:var(--g);color:#fff;box-shadow:0 0 0 2px var(--gold)}
+html[data-theme="dark"] .c-hvac .hv-chips span.on{color:#0f1a14}
+.c-hvac .hv-chips span.bad{background:#b23a2e;color:#fff}
+.c-hvac .hv-kv{display:grid;grid-template-columns:auto 1fr;gap:.15rem .7rem;font-variant-numeric:tabular-nums}
+.c-hvac .hv-kv dt{color:var(--muted);font-size:.88rem}.c-hvac .hv-kv dd{margin:0;font-weight:700}
+.c-hvac .hv-big{font:700 1.5rem Georgia,serif;color:var(--g)}
+.c-hvac .hv-warn{color:var(--tr-red);font-weight:700}
+.c-hvac .hv-ok{color:var(--tr-acc);font-weight:700}
+.c-hvac .tr-w select{font:inherit;padding:.45rem .6rem;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);max-width:100%;min-height:2.4rem}
+.c-hvac .tr-w .hs-btn{min-height:2.4rem}
+.c-hvac .hv-legend{display:flex;flex-wrap:wrap;gap:.3rem .9rem;font-size:.8rem;color:var(--muted);margin:.35rem 0 0}
+.c-hvac .hv-legend i{display:inline-block;width:.8rem;height:.8rem;border-radius:3px;margin-right:.3rem;vertical-align:-.1em}
+.c-hvac svg text.hv-t{font-size:11.5px;fill:var(--tr-ink);font-weight:600}
+.c-hvac svg text.hv-ts{font-size:10px;fill:var(--muted);font-weight:500}
+.c-hvac svg text.hv-tb{font-weight:800}
+.c-hvac svg text.hv-tag{font:700 10.5px system-ui,sans-serif}
+@media (prefers-reduced-motion:reduce){.c-hvac .hv-anim{animation:none !important;transition:none !important}}
+
+/* ---------- refrigeration cycle (Lessons 4 and 6) ---------- */
+.c-hvac .hv-rc .rc-outbg{fill:var(--hv-soil);opacity:.45}
+.c-hvac .hv-rc .rc-wall{stroke:var(--tr-edge);stroke-width:2;stroke-dasharray:6 5}
+.c-hvac .hv-rc text.rc-cap{letter-spacing:.12em;font-size:10.5px;fill:var(--muted)}
+.c-hvac .hv-rc .rc-coil{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac .hv-rc .rc-fin{stroke:var(--tr-edge);stroke-width:1;opacity:.35}
+.c-hvac .hv-rc .rc-pipe{stroke:var(--tr-edge);stroke-width:10;fill:none;stroke-linejoin:round;stroke-linecap:round;opacity:.28}
+.c-hvac .hv-rc .rc-st{stroke-width:5;fill:none;stroke-linejoin:round;stroke-linecap:round;opacity:.92}
+.c-hvac .hv-rc .rc-hot{stroke:rgb(228,87,46)}.c-hvac .hv-rc .rc-cond{stroke:rgb(240,140,46)}.c-hvac .hv-rc .rc-liq{stroke:rgb(232,163,61)}
+.c-hvac .hv-rc .rc-mix{stroke:rgb(47,127,193)}.c-hvac .hv-rc .rc-vap{stroke:rgb(86,182,217)}
+.c-hvac .hv-rc .rc-dev{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:1.5}
+.c-hvac .hv-rc .rc-throat{stroke:var(--tr-ink);stroke-width:1.5;fill:none}
+.c-hvac .hv-rc .rc-valve{fill:var(--tr-pale);stroke:var(--hv-hp);stroke-width:2}
+.c-hvac .hv-rc .rc-vpath{stroke:var(--hv-hp);stroke-width:3;fill:none;stroke-linecap:round}
+.c-hvac .hv-rc .rc-dim{opacity:.38}
+.c-hvac .hv-rc .rc-dot{stroke:var(--card);stroke-width:1}
+.c-hvac .hv-rc .rc-comp{fill:#5d6b78}
+html[data-theme="dark"] .c-hvac .hv-rc .rc-comp{fill:#7d8c99}
+.c-hvac .hv-rc .rc-compl{stroke:rgba(255,255,255,.5);stroke-width:2}
+.c-hvac .hv-rc .rc-bolt{fill:#f6c343;stroke:#a77d1a;stroke-width:1}
+.c-hvac .hv-rc .rc-fanring{fill:none;stroke:var(--tr-edge);stroke-width:1.5;stroke-dasharray:4 3}
+.c-hvac .hv-rc .rc-blade{fill:var(--tr-edge);opacity:.7}
+.c-hvac .hv-rc .rc-hub{fill:var(--tr-ink)}
+.c-hvac .hv-rc .rc-air{stroke-width:3;fill:none;stroke-linecap:round}
+.c-hvac .hv-rc .rc-airh{stroke:var(--hv-warm)}.c-hvac .hv-rc .rc-airc{stroke:var(--hv-cold)}
+.c-hvac .hv-rc .rc-fh{fill:var(--hv-hot)}.c-hvac .hv-rc .rc-fc,.c-hvac .hv-rc .rc-fe{fill:var(--hv-cold)}.c-hvac .hv-rc .rc-fw{fill:var(--hv-warm)}
+.c-hvac .hv-rc .rc-q{stroke-width:2.5;fill:none;stroke-dasharray:5 3}
+.c-hvac .hv-rc .rc-qin{stroke:var(--hv-cold)}.c-hvac .hv-rc .rc-qout{stroke:var(--hv-hot)}
+.c-hvac .hv-rc text.rc-tcold{fill:var(--hv-cold)}.c-hvac .hv-rc text.rc-thot{fill:var(--hv-hot)}
+.c-hvac .hv-rc .rc-pill{stroke-width:1.2}
+.c-hvac .hv-rc .rc-phi{fill:rgba(228,87,46,.14);stroke:rgb(228,87,46)}.c-hvac .hv-rc .rc-plo{fill:rgba(47,127,193,.14);stroke:rgb(47,127,193)}
+.c-hvac .hv-rc text.rc-pillt{fill:var(--tr-ink);font-size:10px;letter-spacing:.03em}
+.c-hvac .hv-rc .rc-tracer{fill:none;stroke:var(--gold);stroke-width:3}
+.c-hvac .hv-rc .rc-act{filter:drop-shadow(0 0 3px rgba(217,169,59,.95))}
+
+/* ---------- furnace start-up (Lesson 3) ---------- */
+.c-hvac .hv-fu .fu-cab{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-hvac .hv-fu .fu-div{stroke:var(--tr-edge);stroke-width:1.5;stroke-dasharray:4 3}
+.c-hvac .hv-fu .fu-plen{fill:var(--tr-metal);stroke:var(--hv-duct);stroke-width:2}
+.c-hvac .hv-fu .fu-hx{stroke:var(--tr-edge);stroke-width:1.5;fill:rgb(150,160,155)}
+.c-hvac .hv-fu .fu-coll{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-hvac .hv-fu .fu-fp{fill:var(--tr-exh)}
+.c-hvac .hv-fu .fu-man{stroke:var(--tr-edge);stroke-width:5;stroke-linecap:round}
+.c-hvac .hv-fu .fu-bur{fill:#7d8a83;stroke:#4f5a54}
+.c-hvac .hv-fu .fu-flame{fill:var(--hv-flameb)}
+.c-hvac .hv-fu .fu-gpipe{stroke:var(--hv-gasc);stroke-width:5;fill:none}
+.c-hvac .hv-fu .fu-gv{fill:var(--hv-gasc);stroke:#7a5d00;stroke-width:1}
+.c-hvac .hv-fu .fu-gd{fill:#fff3b0;stroke:#a68100;stroke-width:.8}
+.c-hvac .hv-fu .fu-ign{fill:#9aa5a0;stroke:#4f5a54}
+.c-hvac .hv-fu .fu-ignon{fill:#ff8a2a;stroke:#ffd27a;filter:drop-shadow(0 0 4px #ff9a3d)}
+.c-hvac .hv-fu .fu-sen{stroke:var(--tr-ink);stroke-width:2.5;fill:none;stroke-linecap:round}
+.c-hvac .hv-fu .fu-ind0{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-hvac .hv-fu .fu-ind1{fill:#2e9e5b;stroke:#1d6b3c}
+.c-hvac .hv-fu .fu-ind2{fill:#d23b2e;stroke:#7e2219}
+.c-hvac .hv-fu .fu-lim{fill:var(--tr-metal);stroke:var(--tr-ink);stroke-width:1.5}
+.c-hvac .hv-fu .fu-limopen{fill:#d23b2e;stroke:#7e2219}
+.c-hvac .hv-fu .fu-vent{stroke:var(--tr-exh);stroke-width:11;fill:none}
+.c-hvac .hv-fu .fu-block{stroke:#d23b2e;stroke-width:4;stroke-linecap:round}
+.c-hvac .hv-fu .fu-indh{fill:var(--tr-metal);stroke:var(--tr-ink);stroke-width:1.5}
+.c-hvac .hv-fu .fu-indb{stroke:var(--tr-ink);stroke-width:3;stroke-linecap:round}
+.c-hvac .hv-fu .fu-hose{stroke:var(--tr-ink);stroke-width:2;fill:none;stroke-dasharray:2 2}
+.c-hvac .hv-fu .fu-psw{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:1.5}
+.c-hvac .hv-fu .fu-arm{stroke:var(--tr-ink);stroke-width:2.5;stroke-linecap:round}
+.c-hvac .hv-fu .fu-board{fill:#2f6b4a;stroke:#1d4a31}
+.c-hvac .hv-fu .fu-chip{fill:#1d2320;stroke:#9ad06a;stroke-width:1}
+.c-hvac .hv-fu .fu-led{fill:#3a4a42}.c-hvac .hv-fu .fu-ledon{fill:#7dff9a;filter:drop-shadow(0 0 3px #7dff9a)}
+.c-hvac .hv-fu .fu-ledf{fill:#ff5a4a;filter:drop-shadow(0 0 3px #ff5a4a)}
+.c-hvac .hv-fu .fu-blw{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.c-hvac .hv-fu .fu-blb{stroke:var(--tr-edge);stroke-width:2.5;fill:none}
+.c-hvac .hv-fu .fu-blm{fill:var(--tr-ink)}
+.c-hvac .hv-fu .fu-fil{fill:var(--hv-duct);opacity:.55}
+.c-hvac .hv-fu .fu-dirty{fill:#6b5a40;opacity:.95}
+.c-hvac .hv-fu .fu-filh{stroke:var(--tr-ink);stroke-width:1;opacity:.5}
+.c-hvac .hv-fu .fu-th{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-hvac .hv-fu .fu-thd{fill:var(--tr-metal);stroke:var(--tr-ink);stroke-width:1.5}
+.c-hvac .hv-fu .fu-on .fu-th{stroke:var(--hv-hot);stroke-width:3}
+.c-hvac .hv-fu .fu-wire{stroke:var(--hv-ctl);stroke-width:2;fill:none;stroke-dasharray:4 3;opacity:.5}
+.c-hvac .hv-fu .fu-live{opacity:1;stroke-width:3}
+.c-hvac .hv-fu text.fu-wl{fill:var(--hv-ctl)}
+.c-hvac .hv-fu .fu-lead{stroke:var(--tr-edge);stroke-width:1;fill:none}
+.c-hvac .hv-fu .fu-air{fill:none;stroke-linecap:round;stroke-dasharray:7 5}
+.c-hvac .hv-fu .fu-warm{stroke:var(--hv-hot)}.c-hvac .hv-fu .fu-cool{stroke:var(--hv-cold)}
+.c-hvac .hv-fu .fu-ah{fill:var(--hv-hot)}.c-hvac .hv-fu .fu-ac{fill:var(--hv-cold)}
+.c-hvac .hv-fu text.fu-state{fill:var(--g);letter-spacing:.06em}
+.c-hvac .hv-fu text.fu-statef{fill:var(--tr-red)}
+.c-hvac .hv-fu .fu-act{filter:drop-shadow(0 0 2px #d9a93b) drop-shadow(0 0 5px #d9a93b)}
+
+/* ---------- dew point lab (Lesson 2) ---------- */
+.c-hvac .hv-dp .dp-plot{fill:var(--card);stroke:var(--tr-edge);stroke-width:1}
+.c-hvac .hv-dp .dp-grid{stroke:var(--hv-grid);stroke-width:1}
+.c-hvac .hv-dp text.dp-c{fill:var(--hv-cold);font-size:9.5px}
+.c-hvac .hv-dp .dp-good{fill:#2e9e5b;opacity:.16}
+.c-hvac .hv-dp .dp-damp{fill:#d23b2e;opacity:.09}
+.c-hvac .hv-dp .dp-rh{stroke:var(--tr-edge);stroke-width:1.2;fill:none;stroke-dasharray:4 3}
+.c-hvac .hv-dp .dp-sat{stroke:var(--hv-cold);stroke-width:3;fill:none}
+.c-hvac .hv-dp text.dp-satl{fill:var(--hv-cold)}
+.c-hvac .hv-dp text.dp-goodl{fill:var(--tr-acc)}
+.c-hvac .hv-dp text.dp-dampl{fill:var(--tr-red)}
+.c-hvac .hv-dp .dp-freeze{stroke:var(--hv-icy);stroke-width:1.5;stroke-dasharray:2 3}
+.c-hvac .hv-dp .dp-surf{stroke:var(--hv-ref);stroke-width:2.5;stroke-dasharray:7 4}
+.c-hvac .hv-dp text.dp-surfl{fill:var(--hv-ref)}
+.c-hvac .hv-dp .dp-cz{fill:var(--hv-cold);opacity:.06}
+.c-hvac .hv-dp .dp-dline{stroke:var(--hv-cold);stroke-width:2.5;stroke-dasharray:5 4;fill:none}
+.c-hvac .hv-dp .dp-dpt{fill:var(--hv-cold);stroke:var(--card);stroke-width:2}
+.c-hvac .hv-dp text.dp-dlab{fill:var(--hv-cold)}
+.c-hvac .hv-dp .dp-pt{fill:var(--hv-hot);stroke:var(--card);stroke-width:2.5;pointer-events:none}
+.c-hvac .hv-dp .dp-hit{fill:transparent;cursor:grab;touch-action:none}
+.c-hvac .hv-dp text.dp-plab{fill:var(--tr-ink)}
+.c-hvac .hv-dp .dp-trail{stroke:var(--gold);stroke-width:3;fill:none;stroke-linejoin:round}
+.c-hvac .hv-dp .dp-parcel{fill:var(--gold);stroke:var(--card);stroke-width:2}
+.c-hvac .hv-dp .dp-g{fill:var(--hv-glass);stroke:var(--tr-edge);stroke-width:1.5;opacity:.9}
+.c-hvac .hv-dp .dp-gw{fill:var(--hv-icy);opacity:.6}
+.c-hvac .hv-dp .dp-drop{fill:var(--hv-cold)}
+.c-hvac .hv-dp .dp-frost{fill:none;stroke:#fff;stroke-width:3;stroke-dasharray:2 2;opacity:0}
+html:not([data-theme="dark"]) .c-hvac .hv-dp .dp-frost{stroke:#9fc6dd}
+.c-hvac .hv-dp{cursor:crosshair}
+.c-hvac .hv-stack>.tr-w-stage{max-width:780px;margin:0 auto}
+.c-hvac .hv-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:.3rem 1.3rem;margin-top:.6rem;align-items:start}
+
+/* ---------- airflow and ducts (Lesson 7) ---------- */
+.c-hvac .hv-af .af-zone{stroke-width:1.2;stroke-dasharray:5 4}
+.c-hvac .hv-af .af-attic{fill:#d23b2e;fill-opacity:.07;stroke:var(--tr-red)}
+.c-hvac .hv-af .af-inside{fill:#2e9e5b;fill-opacity:.08;stroke:var(--tr-acc)}
+.c-hvac .hv-af text.af-zonet{font-weight:700}
+.c-hvac .hv-af .af-room{fill:var(--hv-glass);stroke:var(--tr-edge)}
+.c-hvac .hv-af .af-duct{stroke:var(--hv-duct);stroke-width:16;fill:none;stroke-linejoin:round;opacity:.55}
+.c-hvac .hv-af .af-branch{stroke:var(--hv-duct);stroke-width:9;fill:none;opacity:.55}
+.c-hvac .hv-af .af-ret{stroke:var(--hv-duct);stroke-width:11;fill:none;opacity:.3;stroke-linejoin:round}
+.c-hvac .hv-af .af-grille{fill:var(--tr-pale);stroke:var(--hv-duct);stroke-width:2}
+.c-hvac .hv-af .af-reg{cursor:pointer}
+.c-hvac .hv-af .af-regb{fill:var(--hv-duct)}
+.c-hvac .hv-af .af-louver{stroke:var(--tr-pale);stroke-width:2;stroke-dasharray:3 2}
+.c-hvac .hv-af .af-closed .af-regb{fill:var(--tr-ink)}
+.c-hvac .hv-af .af-closed .af-louver{stroke:var(--tr-red);stroke-dasharray:none;stroke-width:3}
+.c-hvac .hv-af .af-hit{fill:transparent}
+.c-hvac .hv-af .af-reg:focus-visible{outline:none;filter:drop-shadow(0 0 3px #d9a93b)}
+.c-hvac .hv-af .af-cab{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-hvac .hv-af .af-coil{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-hvac .hv-af .af-acoil{stroke:var(--hv-cold);stroke-width:4;fill:none}
+.c-hvac .hv-af .af-fanr{fill:none;stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac .hv-af .af-blade{stroke:var(--tr-edge);stroke-width:2.5;fill:none}
+.c-hvac .hv-af .af-hub{fill:var(--tr-ink)}
+.c-hvac .hv-af .af-filt{stroke:var(--tr-ink);stroke-width:1}
+.c-hvac .hv-af .af-f-clean{fill:#efe9d6}.c-hvac .hv-af .af-f-dirty{fill:#a99772}.c-hvac .hv-af .af-f-clogged{fill:#5a4a33}
+html[data-theme="dark"] .c-hvac .hv-af .af-f-clean{fill:#d8d2c0}
+.c-hvac .hv-af .af-gauge{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.c-hvac .hv-af .af-gscale{stroke:var(--gold);stroke-width:4;fill:none}
+.c-hvac .hv-af .af-needle{stroke:var(--tr-red);stroke-width:3;stroke-linecap:round}
+.c-hvac .hv-af .af-ghub{fill:var(--tr-ink)}
+.c-hvac .hv-af .af-tube{stroke:var(--tr-ink);stroke-width:1.5;stroke-dasharray:2 2}
+.c-hvac .hv-af .af-p{fill:var(--hv-cold)}
+.c-hvac .hv-af .af-pr{fill:var(--hv-warm);opacity:.7}
+.c-hvac .hv-af .af-leak{stroke:var(--tr-edge);stroke-width:2.5;fill:none;stroke-linecap:round}
+.c-hvac .af-bars{display:grid;gap:.3rem;margin:.6rem 0 0}
+.c-hvac .af-bar{display:grid;grid-template-columns:5.6rem 1fr 4.6rem;gap:.5rem;align-items:center;font-size:.85rem}
+.c-hvac .af-bar>div{background:var(--tr-metal);border-radius:6px;height:.8rem;overflow:hidden}
+.c-hvac .af-bar b{display:block;height:100%;background:var(--hv-cold);border-radius:6px;transition:width .25s}
+.c-hvac .af-barl b{background:var(--tr-exh)}
+.c-hvac .af-bar em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--muted);text-align:right}
+@media (prefers-reduced-motion:reduce){.c-hvac .af-bar b{transition:none}}
+
+/* ---------- thermostat and controls (Lesson 9) ---------- */
+.c-hvac .hv-ts-w .th-body{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-hvac .hv-ts-w .th-screen{fill:#14231b}
+.c-hvac .hv-ts-w text.th-big{font:700 24px system-ui,sans-serif;fill:#9be3bb}
+.c-hvac .hv-ts-w text.th-small{font:600 10.5px system-ui,sans-serif;fill:#cfe9d9}
+.c-hvac .hv-ts-w text.th-mode{fill:#f3d27a}
+.c-hvac .hv-ts-w text.th-call{fill:var(--hv-ctl)}
+.c-hvac .hv-ts-w .th-block{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac .hv-ts-w text.th-term{font:800 13px ui-monospace,Menlo,Consolas,monospace;fill:var(--tr-ink)}
+.c-hvac .hv-ts-w .th-screw{fill:#c9a646;stroke:#7a5d00;stroke-width:1}
+.c-hvac .hv-ts-w .th-bus{stroke:var(--hv-ctl);stroke-width:3;fill:none;stroke-linecap:round}
+.c-hvac .hv-ts-w .th-unit{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5;stroke-dasharray:6 4}
+.c-hvac .hv-ts-w .th-coil{stroke:var(--tr-ink);stroke-width:2;fill:none}
+.c-hvac .hv-ts-w .th-core{stroke:var(--tr-edge);stroke-width:3}
+.c-hvac .hv-ts-w .th-line{stroke:var(--tr-ink);stroke-width:1.5;fill:none}
+.c-hvac .hv-ts-w .th-board{fill:#2f6b4a;stroke:#1d4a31}
+.c-hvac .hv-ts-w text.th-wt{fill:#e6f2ea}
+.c-hvac .hv-ts-w text.th-wt2{fill:#fff}
+.c-hvac .hv-ts-w .th-relay{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:1.5}
+.c-hvac .hv-ts-w text.th-rl{fill:var(--tr-ink)}
+.c-hvac .hv-ts-w .th-burner{fill:#7d8a83}
+.c-hvac .hv-ts-w .th-flame{fill:var(--hv-flameb);transition:opacity .3s}
+.c-hvac .hv-ts-w .th-strip{stroke:#8a958f;stroke-width:3;fill:none}
+.c-hvac .hv-ts-w .th-strip.th-hot{stroke:#ff8a2a;filter:drop-shadow(0 0 3px #ff9a3d)}
+.c-hvac .hv-ts-w .th-fanr{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.c-hvac .hv-ts-w .th-blade{stroke:var(--tr-ink);stroke-width:2.5;fill:none}
+.c-hvac .hv-ts-w .th-oblade{fill:var(--tr-edge)}
+.c-hvac .hv-ts-w .th-hub{fill:var(--tr-ink)}
+.c-hvac .hv-ts-w .th-conbar{stroke:var(--tr-ink);stroke-width:3;stroke-linecap:round}
+.c-hvac .hv-ts-w .th-comp{fill:#5d6b78}
+.c-hvac .hv-ts-w .th-comp.th-run{fill:var(--hv-ac);filter:drop-shadow(0 0 3px rgba(47,127,193,.8))}
+.c-hvac .hv-ts-w .th-rv{fill:var(--tr-pale);stroke:var(--hv-hp);stroke-width:2}
+.c-hvac .hv-ts-w .th-wire{stroke:var(--tr-edge);stroke-width:2;fill:none;opacity:.55;stroke-linejoin:round}
+.c-hvac .hv-ts-w .th-wire.th-on{opacity:1;stroke-width:3.2}
+.c-hvac .hv-ts-w .th-w-R.th-on{stroke:#d23b2e}.c-hvac .hv-ts-w .th-w-C.th-on{stroke:#3d4441}
+html[data-theme="dark"] .c-hvac .hv-ts-w .th-w-C.th-on{stroke:#aab1ad}
+.c-hvac .hv-ts-w .th-w-W.th-on,.c-hvac .hv-ts-w .th-w-W2.th-on{stroke:#e8a33d}.c-hvac .hv-ts-w .th-w-Y.th-on{stroke:#d9b400}
+.c-hvac .hv-ts-w .th-w-G.th-on{stroke:#2e9e5b}.c-hvac .hv-ts-w .th-w-O.th-on{stroke:var(--hv-hp)}
+.c-hvac .hv-ts-w .th-flow{stroke:#fff;stroke-width:1.6;fill:none;stroke-dasharray:3 7;opacity:.85;stroke-linejoin:round}
+.c-hvac .th-chart{display:block;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;margin:.5rem 0}
+.c-hvac .th-chart .th-chset{stroke:var(--hv-ctl);stroke-width:1.5;stroke-dasharray:5 4}
+.c-hvac .th-chart .th-chband{fill:var(--hv-ctl);opacity:.1}
+.c-hvac .th-chart .th-chline{stroke:var(--hv-hot);stroke-width:2.2;fill:none}
+.c-hvac .th-chart .th-chon{fill:var(--tr-acc);opacity:.75}
+
+/* ---------- heat-loss calculator (Lesson 10) ---------- */
+.c-hvac .hv-hl .hl-in,.c-hvac .hv-hl .hl-out{stroke:var(--tr-edge);stroke-width:1}
+.c-hvac .hv-hl .hl-warm{fill:#e8743b;fill-opacity:.14}
+.c-hvac .hv-hl .hl-cool{fill:#4f97d1;fill-opacity:.14}
+.c-hvac .hv-hl .hl-ins{stroke:var(--tr-ink);stroke-width:1;opacity:.9}
+.c-hvac .hv-hl .hl-insp{stroke:#fff;stroke-width:1.6;fill:none;opacity:.55}
+.c-hvac .hv-hl .hl-board{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-hvac .hv-hl .hl-arr{stroke:var(--hv-hot);fill:none;stroke-linecap:round;stroke-dasharray:14 7}
+.c-hvac .hv-hl .hl-ah{fill:var(--hv-hot)}
+.c-hvac .hv-hl text.hl-rv{fill:var(--tr-ink);font-size:12px}
+.c-hvac .hv-hl text.hl-q{fill:var(--hv-hot);font-size:12px}
+.c-hvac .hv-hl .hl-plot{fill:var(--card);stroke:var(--tr-edge)}
+.c-hvac .hv-hl .hl-grid{stroke:var(--hv-grid)}
+.c-hvac .hv-hl .hl-curve{stroke:var(--hv-hot);stroke-width:3;fill:none}
+.c-hvac .hv-hl .hl-mark{fill:var(--card);stroke:var(--hv-hot);stroke-width:2}
+.c-hvac .hv-hl .hl-cur{fill:var(--gold);stroke:var(--card);stroke-width:2.5}
+.c-hvac .hv-hl text.hl-curt{fill:var(--tr-ink)}
+.c-hvac .hv-hl .hl-rec{stroke:var(--tr-acc);stroke-width:2;stroke-dasharray:5 4}
+.c-hvac .hv-hl text.hl-rect{fill:var(--tr-acc)}
+.c-hvac .hv-ts-w .th-trace{stroke:#cfe9d9;stroke-width:1.5;fill:none;opacity:.55;stroke-linejoin:round}
+.c-hvac .hv-ts-w .th-trace.th-on{opacity:1;stroke-width:2.6}
+.c-hvac .hv-af .af-reg:focus{outline:none}
+.c-hvac .tr-w input[type=range]{min-height:2.3rem}
+.c-hvac .hm-flue{stroke:#8f979c;stroke-width:6;fill:none;stroke-linejoin:round}
+html[data-theme="dark"] .c-hvac .hm-flue{stroke:#a9b1b5}
+.c-hvac .hm-flue{stroke:var(--hv-furn);opacity:.75}
+.c-hvac .hm-fluecap{stroke:var(--hv-furn);stroke-width:4}
+.c-hvac .tr-fig svg text{font-size:12px}
+.c-hvac .tr-fig svg text.tx-sm{font-size:10.5px}
+.c-hvac .tr-fig svg{max-width:560px}

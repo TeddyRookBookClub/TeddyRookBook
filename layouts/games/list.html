@@ -113,7 +113,7 @@
       <span class="big" aria-hidden="true">{{ .icon }}</span>
       <h2>{{ .title }}</h2>
       <p>{{ .text }}</p>
-      <span class="go">{{ if eq .kind "explorer" }}Explore{{ else }}Play{{ end }} →</span>
+      <span class="go">{{ if eq .kind "explorer" }}Explore{{ else if eq .kind "unit" }}Start the unit{{ else }}Play{{ end }} →</span>
     </a>
   {{ end }}
   </section>

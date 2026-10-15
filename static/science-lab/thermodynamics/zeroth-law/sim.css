@@ -1,0 +1,59 @@
+/* Thermodynamics, Chapter 1: only what this page adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#th1-lab .lab-view{background:radial-gradient(ellipse at 50% 30%,#0d2233 0%,#081826 50%,#06111a 85%)}
+#th1-lab .lab-view canvas:focus{outline:none}
+#th1-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#th1-lab #th1-view{height:min(74vh,660px);min-height:440px;cursor:default}
+#th1-lab .lab-tools button{min-width:36px;min-height:36px}
+#th1-lab .lab-hud{max-width:calc(100% - 7rem)}
+#th1-lab .lab-hud .th1-eq{color:var(--sim-acc)}
+#th1-lab .lab-hud .th1-flow{color:var(--sim-red)}
+#th1-lab .lab-toast{top:3.4rem}
+/* panel */
+#th1-lab .lab-seg button{min-height:36px}
+#th1-lab .th1-touchbtn{min-height:44px;font-size:1rem;width:100%}
+#th1-lab #th1-touch[aria-pressed="true"]{background:#7a2e2e;border-color:#7a2e2e}
+html[data-theme="dark"] #th1-lab #th1-touch[aria-pressed="true"]{background:#ff8787;border-color:#ff8787;color:#2a0e0e}
+#th1-lab .th1-tabs button{display:inline-flex;align-items:center;justify-content:center;gap:.35rem}
+#th1-lab .th1-sw{display:inline-block;width:.7rem;height:.7rem;border-radius:3px}
+#th1-lab .th1-sw0{background:#63e6be}#th1-lab .th1-sw1{background:#f9a8d4}#th1-lab .th1-sw2{background:#b8a6ff}
+#th1-lab .lab-field input[type=range]{min-height:32px;margin:0}
+#th1-lab .lab-field select{min-height:38px}
+#th1-lab .th1-guess-row{display:flex !important;align-items:center;gap:.45rem;justify-content:flex-start !important}
+#th1-lab .th1-guess input{width:6.5rem;font:600 1rem ui-monospace,Menlo,Consolas,monospace;padding:.35rem .5rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:38px;box-sizing:border-box}
+#th1-lab .th1-guess small{font-size:.75rem;color:var(--muted)}
+#th1-lab .lab-chk{min-height:36px;cursor:pointer}
+#th1-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#th1-lab .lab-readout dd{white-space:nowrap}
+#th1-lab .th1-hot{color:#c92a2a;font-weight:600}#th1-lab .th1-gold{color:#a8770c;font-weight:600}#th1-lab .th1-cold{color:#1c7ed6;font-weight:600}
+html[data-theme="dark"] #th1-lab .th1-hot{color:#ff8787}html[data-theme="dark"] #th1-lab .th1-gold{color:#ffd479}html[data-theme="dark"] #th1-lab .th1-cold{color:#74c0fc}
+#th1-lab .th1-ctable td:nth-child(2),#th1-lab .th1-ctable td:nth-child(3){font-variant-numeric:tabular-nums}
+/* gas */
+#th1-lab .th1-gas-view{height:min(56vh,430px);min-height:320px}
+/* scales */
+#th1-lab .th1-scales{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:.9rem;align-items:start;margin:.8rem 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem}
+#th1-lab .th1-sc-view{background:#06111a;border-radius:12px;overflow:hidden}
+#th1-lab .th1-sc-view canvas{display:block;width:100%;height:300px;touch-action:none;cursor:ns-resize}
+#th1-lab .th1-sc-ctl{display:flex;flex-direction:column;gap:.6rem}
+#th1-lab .th1-sc-nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem}
+#th1-lab .th1-sc-nums label{display:flex;align-items:center;gap:.25rem;font:600 .85rem system-ui,sans-serif;color:var(--muted);white-space:nowrap}
+#th1-lab .th1-sc-nums input{width:100%;min-width:0;font:600 .95rem ui-monospace,Menlo,Consolas,monospace;padding:.35rem .4rem;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);min-height:38px;box-sizing:border-box}
+#th1-lab .th1-sc-marks button{font-size:.75rem;flex:1 1 auto}
+#th1-lab #th1-sc-note{margin:0;min-height:2.6em}
+/* touch */
+#th1-lab .th1-feel{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:.9rem;align-items:start;margin:.8rem 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem}
+#th1-lab .th1-touch-view{background:#06111a;border-radius:12px;overflow:hidden}
+#th1-lab .th1-touch-view canvas{display:block;width:100%;height:300px}
+#th1-lab .th1-touch-ctl{display:flex;flex-direction:column;gap:.6rem}
+#th1-lab .th1-touch-ctl .lab-seg button{font-size:.78rem}
+@media (max-width:760px){
+  #th1-lab .th1-scales,#th1-lab .th1-feel{grid-template-columns:1fr}
+  #th1-lab .th1-sc-view canvas,#th1-lab .th1-touch-view canvas{height:250px}
+}
+@media (max-width:860px){
+  #th1-lab #th1-view{height:min(78vh,600px);min-height:520px}
+  #th1-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+}
+@media (max-width:600px){
+  #th1-lab .lab-toast{top:4.6rem;font-size:.8rem;max-width:84%}
+}
+@media (min-width:861px){#th1-lab #th1-view{position:sticky;top:.8rem}}

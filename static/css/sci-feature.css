@@ -1,0 +1,26 @@
+/* The featured Science Lab band (the turning magnetic bottle): on the home page and on /science-lab/. Script: static/js/home-donut.js */
+.sf-band{display:grid;grid-template-columns:minmax(0,55fr) minmax(0,45fr);border-radius:16px;overflow:hidden;background:#06111a;color:#dbe7ef;border:1px solid #17324a;box-shadow:0 8px 30px rgba(6,17,26,.28);margin:0 0 1.4rem}
+.sf-vis{position:relative;display:block;min-height:380px;background:radial-gradient(ellipse at 50% 50%,#0f2a3c 0%,#08182a 50%,#06111a 100%);cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;box-shadow:none}
+.sf-vis:active{cursor:grabbing}
+.sf-vis canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sf-hint{position:absolute;left:.9rem;bottom:.75rem;font:600 .72rem/1 system-ui,-apple-system,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8fb3c6;opacity:.85;pointer-events:none}
+.sf-text{padding:1.9rem 2.1rem;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(155deg,#0b2a24 0%,#081b22 45%,#06111a 100%)}
+.sf-eye{margin:0;text-transform:uppercase;letter-spacing:.18em;font-size:.75rem;font-weight:600;color:#ffd479}
+.sf-band h2{margin:.35rem 0 .6rem;font:700 clamp(1.6rem,3vw,2.2rem)/1.12 Georgia,"Times New Roman",serif;color:#fff;text-wrap:balance}
+.sf-lead{margin:0 0 1.15rem;font-size:1.02rem;line-height:1.6;color:#c3d5df}
+.sf-btns{display:flex;flex-wrap:wrap;gap:.6rem;margin:0 0 1.2rem}
+.sf-btn{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:.45rem 1.05rem;font-size:.97rem;border-radius:999px;border:1px solid rgba(255,255,255,.38);color:#fff;text-decoration:none;font-weight:600;box-shadow:none}
+.sf-btn:hover{background:rgba(255,255,255,.1)}
+.sf-prim{background:#f3dfa3;border-color:#f3dfa3;color:#1d2320}
+.sf-prim:hover{background:#fff}
+.sf-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem}
+.sf-chips li{margin:0}
+.sf-chips a{display:inline-flex;flex-wrap:wrap;align-items:center;column-gap:.35rem;min-height:36px;padding:.3rem .7rem;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:#dbe7ef;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:none}
+.sf-chips a:hover{border-color:#63e6be;background:rgba(99,230,190,.1)}
+.sf-chips small{font-weight:400;font-size:.8rem;color:#8fb3c6}
+.sf-chips small::before{content:"· "}
+.sf-new{font:700 .62rem/1 system-ui,-apple-system,sans-serif;font-style:normal;text-transform:uppercase;letter-spacing:.08em;color:#06111a;background:#63e6be;border-radius:999px;padding:.22rem .42rem}
+.sf-band a:focus-visible{outline:3px solid #ffd479;outline-offset:2px}
+.sf-band .sf-vis:focus-visible{outline-offset:-3px}
+@media (max-width:900px){.sf-band{grid-template-columns:1fr}.sf-vis{min-height:0;height:clamp(300px,50vw,400px)}.sf-text{padding:1.3rem 1.2rem 1.4rem}}
+@media (max-width:480px){.sf-chips small{flex-basis:100%;padding-left:2.55rem}.sf-chips small::before{content:none}}

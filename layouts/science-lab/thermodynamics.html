@@ -1,0 +1,128 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/thermodynamics/hub.css" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/hub.css").ModTime.Unix }}">
+<div class="lab" id="thh-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Thermodynamics</nav>
+  <header class="thh-hero">
+    <canvas id="thh-cv" aria-hidden="true"></canvas>
+    <div class="thh-hero-txt">
+      <p class="lab-eyebrow">Science Lab · A five-chapter unit</p>
+      <h1>{{ .Title }}</h1>
+      <p>Why does hot cocoa cool down but never heat itself back up? Why can’t a car engine turn all of its fuel into motion? Why can nothing be colder than −273.15&nbsp;°C? Four laws answer all of it. In five chapters, each with simulations to play with, you’ll heat and squeeze gases, build engines and refrigerators, and meet entropy, the reason time seems to run only one way.</p>
+      <p class="thh-cta"><a class="thh-btn pri" href="{{ "science-lab/thermodynamics/zeroth-law/" | relURL }}">Start with Chapter 1 →</a> <a class="thh-btn" href="#laws">The four laws</a></p>
+    </div>
+    <p class="thh-cap" id="thh-cap" aria-hidden="true">Two boxes of gas share heat through the wall between them</p>
+  </header>
+
+  <section class="lab-sec" id="laws">
+    <h2>The four laws at a glance</h2>
+    <p>The laws were discovered out of order, which is why the first one is called the zeroth. Together they say what can and can’t happen whenever energy moves as heat.</p>
+    <ol class="thh-laws">
+      <li class="thh-law thh-l0">
+        <span class="thh-num" aria-hidden="true">0</span>
+        <h3>The zeroth law <small>temperature</small></h3>
+        <p class="thh-stmt">If two things are each in thermal equilibrium with a third, they are in thermal equilibrium with each other.</p>
+        <p class="thh-eq">T<sub>A</sub> = T<sub>C</sub> and T<sub>B</sub> = T<sub>C</sub><br>⟹ T<sub>A</sub> = T<sub>B</sub></p>
+        <p class="thh-ex"><b>Everyday:</b> a fever thermometer comes to your temperature under your tongue, then tells you what it is. That only works because equilibrium is passed along.</p>
+        <a href="{{ "science-lab/thermodynamics/zeroth-law/" | relURL }}">Chapter 1: Temperature and the Zeroth Law →</a>
+      </li>
+      <li class="thh-law thh-l1">
+        <span class="thh-num" aria-hidden="true">1</span>
+        <h3>The first law <small>energy</small></h3>
+        <p class="thh-stmt">Energy is conserved. The internal energy of a system changes only by the heat that flows in and the work it does.</p>
+        <p class="thh-eq">ΔU = Q − W</p>
+        <p class="thh-ex"><b>Everyday:</b> rub your hands together and the work you do becomes internal energy: they warm up. Squeeze a bike pump and the air inside heats up with no flame at all.</p>
+        <a href="{{ "science-lab/thermodynamics/first-law/" | relURL }}">Chapter 2: Energy and the First Law →</a>
+      </li>
+      <li class="thh-law thh-l2">
+        <span class="thh-num" aria-hidden="true">2</span>
+        <h3>The second law <small>entropy</small></h3>
+        <p class="thh-stmt">The entropy of an isolated system never decreases. Heat flows by itself only from hot to cold.</p>
+        <p class="thh-eq">ΔS ≥ 0 &nbsp;·&nbsp; η ≤ 1 − T<sub>c</sub>/T<sub>h</sub></p>
+        <p class="thh-ex"><b>Everyday:</b> an ice cube melts in a glass of lemonade; the lemonade never freezes itself while the room warms up. And no engine can turn all of its heat into work.</p>
+        <a href="{{ "science-lab/thermodynamics/second-law/" | relURL }}">Chapter 3: Entropy and the Second Law →</a>
+        <a href="{{ "science-lab/thermodynamics/engines/" | relURL }}">Chapter 4: Engines, Refrigerators and Heat Pumps →</a>
+      </li>
+      <li class="thh-law thh-l3">
+        <span class="thh-num" aria-hidden="true">3</span>
+        <h3>The third law <small>absolute zero</small></h3>
+        <p class="thh-stmt">You can’t reach absolute zero in a finite number of steps, and a system’s entropy approaches a constant as its temperature approaches absolute zero.</p>
+        <p class="thh-eq">T → 0 K: &nbsp;S → constant</p>
+        <p class="thh-ex"><b>Everyday:</b> each step of cooling gets harder than the last. Labs have cooled atoms to within a billionth of a degree of absolute zero, but never all the way.</p>
+        <a href="{{ "science-lab/thermodynamics/third-law/" | relURL }}">Chapter 5: Absolute Zero and the Third Law →</a>
+      </li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="chapters">
+    <h2>The chapters</h2>
+    <p class="u-progress"></p>
+    {{ partial "unit-chapters.html" . }}
+  </section>
+
+  <section class="lab-sec" id="equations">
+    <h2>Key equations</h2>
+    <p>The whole unit on one sheet. Temperatures in these formulas are in kelvins unless they appear only as a difference, ΔT, which is the same in kelvins and degrees Celsius.</p>
+    <div class="thh-eqs">
+      <div><p class="thh-f">Q = m c ΔT</p><p><b>Heat to change temperature.</b> Q in joules (J), mass m in kg, specific heat c in J/(kg·K), ΔT in K or °C. Water: c = 4186 J/(kg·K).</p></div>
+      <div><p class="thh-f">ΔU = Q − W</p><p><b>The first law.</b> Change in internal energy = heat added to the system − work done <i>by</i> the system, all in J. (Chemistry often writes ΔU = q + w, with w done <i>on</i> the system.)</p></div>
+      <div><p class="thh-f">W = P ΔV</p><p><b>Work by a gas at constant pressure.</b> P in pascals (Pa = N/m²), ΔV in m³; 1 Pa·m³ = 1 J, and 1 kPa·L = 1 J. In general, W is the area under the path on a P–V diagram.</p></div>
+      <div><p class="thh-f">P V = n R T</p><p><b>The ideal gas law.</b> n in moles, R = 8.314 J/(mol·K). The same law counting molecules: P V = N k<sub>B</sub> T.</p></div>
+      <div><p class="thh-f">η = W/Q<sub>h</sub> ≤ 1 − T<sub>c</sub>/T<sub>h</sub></p><p><b>Engine efficiency.</b> The work out per heat taken in from the hot side can never beat the Carnot limit. T<sub>h</sub> and T<sub>c</sub> are the hot and cold temperatures, in kelvins.</p></div>
+      <div><p class="thh-f">K = Q<sub>c</sub>/W ≤ T<sub>c</sub>/(T<sub>h</sub> − T<sub>c</sub>)<br>K<sub>p</sub> = Q<sub>h</sub>/W ≤ T<sub>h</sub>/(T<sub>h</sub> − T<sub>c</sub>)</p><p><b>Coefficient of performance (COP).</b> A refrigerator removes Q<sub>c</sub> from the cold side; a heat pump delivers Q<sub>h</sub> to the warm side, both per joule of work W. A COP above 1 is normal.</p></div>
+      <div><p class="thh-f">ΔS = Q / T</p><p><b>Entropy change</b> when heat Q flows reversibly into a system at a constant temperature T. S in J/K. For an isolated system, ΔS ≥ 0.</p></div>
+      <div><p class="thh-f">S = k<sub>B</sub> ln W</p><p><b>Boltzmann’s entropy.</b> W here is the number of microscopic arrangements (microstates) that look the same from outside, not work. More ways means more entropy.</p></div>
+      <div><p class="thh-f">K<sub>avg</sub> = (3/2) k<sub>B</sub> T</p><p><b>Temperature and motion.</b> The average kinetic energy of a gas molecule’s motion, in J. At 20 °C it is 6.07 × 10<sup>−21</sup> J.</p></div>
+      <div><p class="thh-f">T<sub>K</sub> = T<sub>°C</sub> + 273.15<br>T<sub>°F</sub> = 1.8 T<sub>°C</sub> + 32</p><p><b>The Kelvin scale</b> starts at absolute zero, 0 K = −273.15 °C = −459.67 °F. A kelvin is the same size as a degree Celsius.</p></div>
+    </div>
+    <div class="thh-consts">
+      <p><b>Constants.</b> Boltzmann constant k<sub>B</sub> = 1.380649 × 10<sup>−23</sup> J/K (exact since 2019). Avogadro constant N<sub>A</sub> = 6.02214076 × 10<sup>23</sup> per mole (exact). Gas constant R = N<sub>A</sub> k<sub>B</sub> = 8.314462618… J/(mol·K). Standard atmosphere: 101.325 kPa. 1 calorie = 4.184 J; 1 food Calorie = 1 kcal = 4184 J.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <ol class="thh-time">
+      <li><span class="thh-yr">1780s</span><p><b>Caloric.</b> Heat is pictured as an invisible, weightless fluid, “caloric,” that flows from hot things to cold ones. The idea explains a lot, and Antoine Lavoisier lists it among the elements.</p></li>
+      <li><span class="thh-yr">1798</span><p><b>Rumford bores cannon.</b> In Munich, Benjamin Thompson, Count Rumford, grinds a blunt borer inside a cannon barrel sunk in water, and boils the water by friction alone. Heat seems to come without limit, so he argues it must be motion, not a substance.</p></li>
+      <li><span class="thh-yr">1824</span><p><b>Carnot’s engine.</b> Sadi Carnot publishes <i>Reflections on the Motive Power of Fire</i>. He imagines a perfect, reversible engine and shows that its work depends on the temperatures it runs between: the seed of the second law.</p></li>
+      <li><span class="thh-yr">1840s</span><p><b>Joule’s paddle wheel.</b> James Prescott Joule lets falling weights churn water and measures the tiny rise in temperature: a fixed amount of work always makes the same amount of heat. In 1847 Hermann von Helmholtz states the conservation of energy in general.</p></li>
+      <li><span class="thh-yr">1848</span><p><b>An absolute scale.</b> William Thomson, later Lord Kelvin, proposes a temperature scale that starts from an absolute zero and doesn’t depend on any particular substance. Its unit is now the kelvin.</p></li>
+      <li><span class="thh-yr">1865</span><p><b>Entropy gets its name.</b> Rudolf Clausius names the quantity S <i>entropy</i>, after the Greek word τροπή (tropē), which he glossed as <i>Verwandlung</i>, “transformation,” and he chose the word to sound like “energy.”</p></li>
+      <li><span class="thh-yr">1877</span><p><b>Counting arrangements.</b> Ludwig Boltzmann connects entropy to probability: the more ways the molecules can be arranged, the higher the entropy. Max Planck later wrote it as S = k log W, which is carved on Boltzmann’s tombstone in Vienna.</p></li>
+      <li><span class="thh-yr">1906</span><p><b>Nernst’s heat theorem.</b> Walther Nernst describes how entropy changes vanish as temperature approaches absolute zero, the beginning of the third law.</p></li>
+      <li><span class="thh-yr">1930s</span><p><b>The zeroth law gets its number.</b> Ralph Fowler suggests calling the most basic law, about equilibrium and temperature, the zeroth law, since the first three were already named.</p></li>
+      <li><span class="thh-yr">2019</span><p><b>A constant fixed forever.</b> The SI is redefined, and the Boltzmann constant is now exactly 1.380649 × 10<sup>−23</sup> J/K. The kelvin is defined from it, no longer from the properties of water.</p></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="elsewhere">
+    <h2>Thermodynamics elsewhere on the site</h2>
+    <div class="thh-more">
+      <a class="thh-card" href="{{ "games/gas/" | relURL }}"><span class="thh-ic" aria-hidden="true">🫧</span><b>Gas in a Box</b><span>Helium and argon atoms to scale: push a piston, heat the walls, and watch pressure, temperature and the speed histogram respond.</span></a>
+      <a class="thh-card" href="{{ "trades/cars/engine/" | relURL }}"><span class="thh-ic" aria-hidden="true">🚗</span><b>How Cars Work: The Engine</b><span>The four-stroke cycle, compression and power: a real heat engine, part by part.</span></a>
+      <a class="thh-card" href="{{ "trades/cars/cooling-and-oil/" | relURL }}"><span class="thh-ic" aria-hidden="true">🌡️</span><b>How Cars Work: Cooling and Lubrication</b><span>Where an engine’s waste heat goes: radiator, coolant, water pump and thermostat.</span></a>
+      <a class="thh-card" href="{{ "trades/hvac/" | relURL }}"><span class="thh-ic" aria-hidden="true">❄️</span><b>The HVAC course</b><span>Heating, cooling and heat pumps in real buildings, for the trade.</span></a>
+      <a class="thh-card" href="{{ "games/magnetic-bottles/" | relURL }}"><span class="thh-ic" aria-hidden="true">🧲</span><b>Magnetic Bottles for Fusion</b><span>Holding a plasma hotter than 100 million degrees with nothing but magnetic field.</span></a>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax University Physics Volume 2: <a href="https://openstax.org/books/university-physics-volume-2/pages/1-1-temperature-and-thermal-equilibrium" target="_blank" rel="noopener">1.1 Temperature and Thermal Equilibrium</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/1-4-heat-transfer-specific-heat-and-calorimetry" target="_blank" rel="noopener">1.4 Heat Transfer, Specific Heat, and Calorimetry</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/2-2-pressure-temperature-and-rms-speed" target="_blank" rel="noopener">2.2 Pressure, Temperature, and RMS Speed</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/3-3-first-law-of-thermodynamics" target="_blank" rel="noopener">3.3 First Law of Thermodynamics</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-2-heat-engines" target="_blank" rel="noopener">4.2 Heat Engines</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-3-refrigerators-and-heat-pumps" target="_blank" rel="noopener">4.3 Refrigerators and Heat Pumps</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-5-the-carnot-cycle" target="_blank" rel="noopener">4.5 The Carnot Cycle</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-6-entropy" target="_blank" rel="noopener">4.6 Entropy</a>, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-7-entropy-on-a-microscopic-scale" target="_blank" rel="noopener">4.7 Entropy on a Microscopic Scale</a> (including the third law)</li>
+      <li><a href="https://www.nist.gov/si-redefinition/kelvin/kelvin-boltzmann-constant" target="_blank" rel="noopener">NIST: Kelvin: Boltzmann Constant</a></li>
+      <li><a href="https://www.nist.gov/pml/special-publication-811/nist-guide-si-footnotes" target="_blank" rel="noopener">NIST Guide to the SI, footnotes</a> (the calorie and the kilocalorie)</li>
+      <li><a href="https://en.wikisource.org/wiki/Popular_Science_Monthly/Volume_12/December_1877/History_of_the_Dynamical_Theory_of_Heat_I" target="_blank" rel="noopener">Popular Science Monthly (1877), History of the Dynamical Theory of Heat, on Wikisource</a> (Rumford)</li>
+      <li><a href="https://www.aps.org/apsnews/2015/06/joule-mechanical-equivalent-heat" target="_blank" rel="noopener">APS News: James Prescott Joule and the Mechanical Equivalent of Heat</a></li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Timeline_of_thermodynamics" target="_blank" rel="noopener">Timeline of thermodynamics</a>, <a href="https://en.wikipedia.org/wiki/History_of_entropy" target="_blank" rel="noopener">History of entropy</a>, <a href="https://en.wikipedia.org/wiki/Entropy" target="_blank" rel="noopener">Entropy</a> (Clausius’s 1865 footnote on τροπή), <a href="https://en.wikipedia.org/wiki/Boltzmann_constant" target="_blank" rel="noopener">Boltzmann constant</a>, <a href="https://en.wikipedia.org/wiki/Zeroth_law_of_thermodynamics" target="_blank" rel="noopener">Zeroth law of thermodynamics</a></li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More">
+    <a href="{{ "science-lab/" | relURL }}">← Science Lab</a>
+    <a href="{{ "science-lab/thermodynamics/zeroth-law/" | relURL }}">Chapter 1: Temperature and the Zeroth Law →</a>
+  </nav>
+</div>
+<script src="{{ "science-lab/thermodynamics/hub.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/hub.js").ModTime.Unix }}" defer></script>
+{{ end }}

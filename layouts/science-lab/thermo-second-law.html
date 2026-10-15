@@ -1,0 +1,237 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/thermodynamics/second-law/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/second-law/sim.css").ModTime.Unix }}">
+<div class="lab" id="th3-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Thermodynamics · Chapter 3</p>
+    <h1>{{ .Title }}</h1>
+    <p>Film a drop of food coloring spreading through water, play the film backward, and anyone can tell it’s backward. Yet the laws that move each molecule work just as well in reverse. So why does the world have a direction? Here you’ll run a gas backward and watch it un-spread, then spoil the trick by nudging one atom by a billionth. You’ll count arrangements, watch heat flow from hot to cold by pure chance, and play Maxwell’s demon to see why even a clever demon can’t beat the second law.</p>
+    <span class="lab-mark" aria-hidden="true">🎲</span>
+  </header>
+
+  <div class="lab-stage th3-main">
+    <div class="lab-view" id="th3-view">
+      <canvas id="th3-cv" tabindex="0" aria-label="A box of atoms. They start in the left half behind a divider. Open the divider and they spread through the whole box. A meter under the box shows the entropy, and a graph shows it over time. Keys: O opens the divider, R reverses time, B reverses time and nudges one atom by a billionth of the box, Space pauses, N starts again."></canvas>
+      <div class="lab-hud" id="th3-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="th3-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="th3-slow" aria-label="Slow motion" aria-pressed="false" title="Slow motion">🐢</button>
+        <button type="button" id="th3-reset" aria-label="Start again" title="Start again (N)">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="th3-n-h">Atoms</h3>
+      <div class="lab-seg" id="th3-n" role="group" aria-labelledby="th3-n-h">
+        <button type="button" data-n="6">6</button><button type="button" data-n="20">20</button><button type="button" data-n="60">60</button><button type="button" data-n="120">120</button><button type="button" data-n="250">250</button>
+      </div>
+      <div class="th3-acts">
+        <button type="button" class="lab-btn pri" id="th3-open">Open the divider</button>
+        <button type="button" class="lab-btn" id="th3-rev">⟲ Reverse time</button>
+        <button type="button" class="lab-btn" id="th3-nudge">⟲ Reverse + nudge one atom by a billionth</button>
+        <button type="button" class="lab-btn" id="th3-new">New start</button>
+      </div>
+      <label class="lab-field"><span>Speed <output id="th3-spd-o"></output></span><input type="range" id="th3-spd" min="1" max="12" step="1" aria-label="Simulation speed"></label>
+      <label class="lab-chk"><input type="checkbox" id="th3-trails"> Trails</label>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="th3-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="th3-missions"></ol>
+    </div>
+    <section class="lab-sec th3-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The atoms.</b> Each glowing dot is an atom. They push each other away when they get close and bounce off the walls, and that’s all. Their colors only show where each one started (blue near the bottom, pink near the top), so you can follow the mixing. Nothing pulls them to the right. When the divider opens, they spread because there’s room.</p>
+        <p><b>The entropy meter.</b> Split the box into a left and a right half and count the atoms in each. If <var>n</var> of the <var>N</var> atoms are on the left, the number of ways to pick which ones is <var>W</var> = <var>N</var>!/(<var>n</var>!(<var>N</var>−<var>n</var>)!). The meter shows ln <var>W</var>, the entropy in units of Boltzmann’s constant. With everything on the left, <var>W</var> = 1 and the entropy is zero. Half and half is the most arrangements, so the entropy is highest.</p>
+        <p><b>Reverse time.</b> This button flips the velocity of every atom at once. Each atom then retraces its path exactly, like a film run backward, and the crowd un-spreads into the left half. The laws of motion allow it. The entropy really goes down.</p>
+        <p><b>Reverse + nudge.</b> The same flip, but first one atom (circled in pink) is moved by one billionth of the box’s height. The outlines show where the atoms would be without the nudge. Watch the pink line on the graph: the gap between the two runs grows about tenfold with every collision an atom makes, until the two runs have nothing in common.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="law"><h2>The second law</h2>
+    <p>Heat goes from hot things to cold things, never the other way on its own. A hot pan cools in a cold kitchen; the kitchen never warms the pan above itself. That everyday fact is one form of the second law of thermodynamics. Physicists state it in two classic ways, which turn out to say the same thing:</p>
+    <div class="u-key">
+      <div><b>Clausius statement</b><p>Heat never flows by itself from a colder body to a hotter one. A refrigerator can move heat from cold to hot, but only with help from outside: work done by its motor.</p></div>
+      <div><b>Kelvin–Planck statement</b><p>No engine working in a cycle can take heat from a single source and turn all of it into work. Some heat must always be dumped into something colder. (That’s why power plants need cooling towers; see <a href="{{ "science-lab/thermodynamics/engines/" | relURL }}">Chapter 4</a>.)</p></div>
+      <div><b>Entropy statement</b><p>The total entropy of an isolated system never decreases. It grows in every real process and stays the same only in ideal, reversible ones.</p></div>
+    </div>
+    <p>If either of the first two statements could be broken, you could use that to break the other. Both say the same thing as the third: the entropy of the universe goes up.</p>
+    <div class="u-big">Δ<var>S</var> = <var>Q</var> / <var>T</var><small>change in entropy (J/K) = heat added reversibly (J) ÷ absolute temperature (K)</small></div>
+    <p>This is how Rudolf Clausius defined entropy in the 1860s, from heat and temperature. Adding heat to something cold raises its entropy more than adding the same heat to something hot, because you divide by a smaller <var>T</var>. That one fact explains why heat flows from hot to cold.</p>
+    <div class="u-ex"><b>Worked example: heat flowing downhill</b>
+      <p>1,000 J of heat leaks from a hot block at 400 K into a cool block at 300 K. Both blocks are big, so their temperatures barely change.</p>
+      <ol><li>The hot block loses entropy: Δ<var>S</var><sub>hot</sub> = −1,000 J ÷ 400 K = −2.50 J/K.</li>
+        <li>The cool block gains entropy: Δ<var>S</var><sub>cold</sub> = +1,000 J ÷ 300 K = +3.33 J/K.</li>
+        <li>Total: Δ<var>S</var> = +0.83 J/K. Positive, so this happens.</li></ol>
+      <p>Run it the other way, with heat flowing from cold to hot, and the total would be −0.83 J/K. That never happens on its own.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="counting"><h2>Counting arrangements</h2>
+    <p>Ludwig Boltzmann saw what entropy really counts. A <i>macrostate</i> is what you can see: “60 atoms on the left, 60 on the right”. A <i>microstate</i> is the full detail: exactly which atoms are where. Most macrostates can be made in many ways. Entropy measures how many:</p>
+    <div class="u-big"><var>S</var> = <var>k</var> ln <var>W</var><small>entropy = Boltzmann’s constant (<var>k</var> = 1.380649 × 10⁻²³ J/K, exact) × natural log of the number of microstates</small></div>
+    <p>Flip 100 coins. There is only one way for all of them to land heads, but about 10<sup>29</sup> ways to get 50 heads and 50 tails. Every single arrangement is equally likely, so “about half” wins by a landslide. The chance of all 100 on one particular side is 2<sup>−100</sup> ≈ 7.9 × 10<sup>−31</sup>. Atoms in a box work the same way, with “left” and “right” instead of heads and tails. Try it here:</p>
+    <div class="lab-stage wide th3-mini" id="th3-count">
+      <div class="lab-view"><canvas id="th3-cc" aria-label="Left: the latest toss, with coins that landed left in gold and right in blue. Right: a histogram of how many landed on the left in every round so far, with the exact prediction as a gold line."></canvas></div>
+      <div class="lab-panel th3-row">
+        <label class="lab-field th3-grow"><span>Number of coins <output id="th3-cn-o"></output></span><input type="range" id="th3-cn" min="2" max="200" step="1" aria-label="Number of coins"></label>
+        <div class="lab-row"><button type="button" class="lab-btn" id="th3-t1">Toss once</button><button type="button" class="lab-btn" id="th3-t100">Toss 100 times</button><button type="button" class="lab-btn pri" id="th3-t10k">Toss 10,000 times</button><button type="button" class="lab-btn" id="th3-tclr">Clear</button></div>
+        <dl class="lab-readout th3-grow" id="th3-cread"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: waiting for a miracle</b>
+      <p>Suppose a machine tossed 100 coins a billion times every second, for the whole age of the universe, about 13.8 billion years, or 4.4 × 10<sup>17</sup> seconds.</p>
+      <ol><li>Number of tosses: 10<sup>9</sup> per second × 4.4 × 10<sup>17</sup> s = 4.4 × 10<sup>26</sup>.</li>
+        <li>Chance per toss that all 100 land on one chosen side: 2<sup>−100</sup> ≈ 7.9 × 10<sup>−31</sup>.</li>
+        <li>Expected number of times it happens: 4.4 × 10<sup>26</sup> × 7.9 × 10<sup>−31</sup> ≈ 0.0003.</li></ol>
+      <p>Probably never. And a teaspoon of air holds about 10<sup>20</sup> molecules, not 100. That’s why the second law looks like an iron rule even though, deep down, it is about chances.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: a gas doubles its volume</b>
+      <p>One mole of gas (<var>N</var> = 6.022 × 10<sup>23</sup> molecules) rushes from one flask into two, like the divider opening in the simulation. Each molecule now has twice the room, so the number of arrangements is multiplied by 2 for every molecule: <var>W</var><sub>after</sub>/<var>W</var><sub>before</sub> = 2<sup><var>N</var></sup>.</p>
+      <p>Δ<var>S</var> = <var>k</var> ln 2<sup><var>N</var></sup> = <var>N k</var> ln 2 = <var>R</var> ln 2 = 8.314 J/(mol·K) × 0.693 ≈ 5.76 J/K.</p>
+      <p>The same answer comes from Δ<var>S</var> = <var>Q</var>/<var>T</var>: to double the volume slowly at constant temperature, a gas must absorb heat <var>Q</var> = <var>nRT</var> ln 2, so Δ<var>S</var> = <var>nR</var> ln 2. Clausius’s heat-based entropy and Boltzmann’s counting agree.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="heatflow"><h2>Heat flow as probability</h2>
+    <p>Why does heat flow from hot to cold? Here is the answer from counting, using the simplest model of a solid, the <i>Einstein solid</i>: a set of oscillators (think of atoms vibrating) that each hold energy in whole packets, called <i>quanta</i>. Two solids touch. At every step, one quantum hops from a random atom to another random atom, in either solid. Nothing pushes the energy anywhere. Watch what happens anyway:</p>
+    <div class="lab-stage wide th3-mini" id="th3-heat">
+      <div class="lab-view"><canvas id="th3-ec" aria-label="Two Einstein solids drawn as grids of oscillators. Each square's color shows how many quanta of energy it holds, from dark (none) to red, orange and white-gold (four or more). Below: a graph of the number of quanta in solid A over time, with the most likely value as a dashed line, and the chance of each value drawn sideways."></canvas></div>
+      <div class="lab-panel th3-row">
+        <div class="lab-seg th3-grow" id="th3-epre" role="group" aria-label="Size of the solids">
+          <button type="button" data-p="tiny">3 + 3 oscillators, 6 quanta</button><button type="button" data-p="ms">300 + 200, 100 quanta</button><button type="button" data-p="big">1,800 + 1,200, 600 quanta</button>
+        </div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="th3-eA">All energy in A</button><button type="button" class="lab-btn" id="th3-eB">All in B</button><button type="button" class="lab-btn" id="th3-eEven">Even per oscillator</button><button type="button" class="lab-btn" id="th3-epause">❚❚ Pause</button></div>
+        <label class="lab-field th3-grow"><span>Speed <output id="th3-esp-o"></output></span><input type="range" id="th3-esp" min="1" max="4" step="1" value="2" aria-label="Speed"></label>
+        <dl class="lab-readout th3-grow" id="th3-eread"></dl>
+      </div>
+    </div>
+    <p>Start with all 100 quanta in solid A. The energy drains into B until each solid has about the same energy <i>per oscillator</i>: about 60 quanta in A’s 300 oscillators and 40 in B’s 200. Then it jiggles around that split forever. There are about 10<sup>33</sup> times more ways to share the energy 60–40 than to keep it all in A, so that’s where the system spends its time. In a real object with 10<sup>23</sup> atoms, the peak is so sharp that you never see the energy wander back.</p>
+    <p>This is what temperature means. Whichever solid gains more arrangements per quantum it receives is the colder one, and energy flows into it. In symbols, 1/<var>T</var> = Δ<var>S</var>/Δ<var>U</var>: the temperature tells you how much entropy a bit of added energy buys. When the two solids reach the same temperature, moving a quantum either way doesn’t change the total number of arrangements, and the flow stops on average. This approach to temperature comes from Thomas Moore and Daniel Schroeder’s 1997 paper and Schroeder’s textbook (see Sources).</p>
+    <div class="lab-try"><b>Try this:</b> pick the tiny solids, 3 + 3 oscillators with 6 quanta. There are only 462 ways to arrange everything, and 100 of them have the quanta split 3–3. Press “All energy in A” and watch: the energy comes back to A again and again, about 6% of the time. With 300 + 200 oscillators, the chance of finding all 100 quanta back in A is about 10<sup>−20</sup>. Small systems break the “law” all the time. Big ones never do.</div>
+  </section>
+
+  <section class="lab-sec" id="arrow"><h2>The arrow of time</h2>
+    <p>Newton’s laws don’t care which way time runs. Film two billiard balls colliding, play it backward, and the backward film obeys the same laws. The main simulation proves it: flip every velocity and the gas un-spreads, all the way back. So the laws of motion can’t be where time’s arrow comes from.</p>
+    <p>The arrow comes from two things together. First, a starting point with very low entropy: all the atoms on one side. Second, counting: there are vastly more ways to be spread out than bunched up, so almost every path from a bunched start leads to spread out. To un-spread, every atom must move in exactly the right way at exactly the right time. The flip set that up perfectly. The nudge showed how fragile it is: one atom moved by a billionth of the box hits its neighbors at slightly different angles, they hit theirs, and the error multiplies at each collision. This is <i>chaos</i>. After about ten collisions per atom, roughly 3 seconds here, the billionth has grown to the size of the box. In a real gas, no one could ever set every velocity that precisely.</p>
+    <div class="lab-try"><b>Try this:</b> let 120 atoms spread for just 1 second, then press “Reverse + nudge”. They probably still get home, because there was no time for the error to grow. Then try 10 seconds. The longer the history, the more impossible it is to undo.</div>
+    <p>For the whole universe, the low-entropy start was the early universe itself. Every egg that breaks, every cup of coffee that cools, and every memory you make runs downhill from that.</p>
+  </section>
+
+  <section class="lab-sec" id="demon"><h2>Maxwell’s demon</h2>
+    <p>In a letter to his friend Peter Guthrie Tait in December 1867, James Clerk Maxwell imagined a tiny being guarding a small door between two boxes of gas. It watches the molecules. When a fast one comes from the left, it opens the door; when a slow one comes from the right, it opens the door. Otherwise the door stays shut. Without doing any work, the being sorts fast from slow, so the right side gets hot and the left side cold: heat flowing from cold to hot, against the second law. William Thomson (Lord Kelvin) later named it a “demon”. Now it’s your turn.</p>
+    <div class="lab-stage wide th3-mini" id="th3-demon">
+      <div class="lab-view"><canvas id="th3-dc" tabindex="0" aria-label="A box of 40 gas molecules split by a wall with a small door in the middle. Molecules are colored by speed: blue for slow, white for average, red and gold for fast. Each side shows its temperature. Hold the button, the Space key, or press on the box to open the door."></canvas></div>
+      <div class="lab-panel th3-row">
+        <div class="th3-grow th3-dbtns">
+          <button type="button" class="lab-btn pri th3-door" id="th3-door" aria-pressed="false">Hold to open the door</button>
+          <label class="lab-chk"><input type="checkbox" id="th3-robot"> Robot demon (it sorts by itself)</label>
+          <div class="lab-row"><button type="button" class="lab-btn" id="th3-erase">Erase the demon’s memory</button><button type="button" class="lab-btn" id="th3-dnew">Start over</button></div>
+          <dl class="lab-readout" id="th3-dread"></dl>
+        </div>
+        <div class="th3-grow th3-ledger">
+          <h3>Information ledger <small>(in units of k)</small></h3>
+          <table class="lab-table"><tbody id="th3-ledger"></tbody></table>
+        </div>
+      </div>
+    </div>
+    <p>Let fast (red) molecules from the left through to the right, and slow (blue) ones from the right through to the left. With patience, you can make one side 40 K hotter than the other. Did you just beat the second law?</p>
+    <p><b>The twist.</b> To decide, the demon has to <i>measure</i> each molecule that comes to the door and <i>remember</i> the result, at least long enough to work the door. That’s at least one bit of information per molecule. A notebook, a brain or a computer memory is finite, so sooner or later the demon must erase old records to make room. In 1961 Rolf Landauer at IBM showed that erasing one bit of information always releases at least</p>
+    <div class="u-big"><var>E</var> ≥ <var>k T</var> ln 2<small>at room temperature, 300 K: 1.380649 × 10⁻²³ J/K × 300 K × 0.693 ≈ 2.9 × 10⁻²¹ J per bit</small></div>
+    <p>of heat into the surroundings, raising their entropy by at least <var>k</var> ln 2 per bit. The ledger keeps score. The sorting lowers the gas’s entropy, but the notebook holds one bit for every molecule that reached the door, and erasing them pays it all back with interest. The total never drops below zero. Charles Bennett showed in 1982 that this erasure is exactly where every demon pays. In 2012, Antoine Bérut and colleagues at the École Normale Supérieure de Lyon in France, working with theorists in Germany, measured it. They stored one bit in which of two laser traps held a tiny silica bead, erased it, and found that the heat released came close to Landauer’s limit when they erased slowly, but never went below it.</p>
+    <div class="u-ex"><b>Worked example: the price of forgetting</b>
+      <p>A computer at room temperature (300 K) erases a gigabyte, 8 × 10<sup>9</sup> bits. Landauer’s minimum heat is 8 × 10<sup>9</sup> × 2.9 × 10<sup>−21</sup> J ≈ 2.3 × 10<sup>−11</sup> J. Real chips release far more than this minimum, but no chip can ever beat it.</p>
+    </div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “Entropy just means disorder”</b>
+    <p>“Disorder” is a handy picture, but it can mislead. Entropy counts microstates: the number of ways a system can be arranged at the atomic level while looking the same from outside. A messy bedroom doesn’t have more entropy than a tidy one in any way that matters, since rearranging socks hardly changes the number of ways its 10<sup>27</sup> or so atoms can share energy. And some things that look more orderly have more entropy. When a supercooled liquid suddenly freezes into neat crystals, it releases heat, and that heat raises the entropy of the surroundings by more than the crystals lose. Think “number of ways”, not “messiness”.</p>
+  </div>
+  <div class="u-myth"><b>Common mistake: “Living things break the second law”</b>
+    <p>A seed grows into an oak, putting carbon dioxide and water into the precise order of wood. Doesn’t that lower entropy? Inside the tree, yes. But the second law is about the total, and a tree isn’t isolated. It takes in sunlight, which carries a lot of energy and little entropy, and it gives off the same energy as heat at a much lower temperature. By Δ<var>S</var> = <var>Q</var>/<var>T</var>, heat released at a low temperature carries more entropy. Every living thing, you included, keeps its own order by exporting more entropy than it saves: you take in food and give off heat and waste. The total always goes up.</p>
+  </div>
+
+  <section class="lab-sec" id="history"><h2>A little history</h2>
+    <div class="lab-cols">
+      <p><b>The word.</b> Rudolf Clausius coined “entropy” in 1865, from the Greek τροπή (<i>tropē</i>), “a turning” or “transformation”. He wanted a word that sounded like “energy” because the two ideas are so closely linked. In his words, he proposed to call <var>S</var> the entropy of a body, after the Greek word for transformation.</p>
+      <p><b>Boltzmann’s counting.</b> In 1877 Ludwig Boltzmann connected entropy with the number of ways a gas can be arranged. He died in 1906 and is buried in Vienna’s Central Cemetery, where his tombstone carries the formula <var>S</var> = <var>k</var> log <var>W</var> (here “log” means the natural logarithm, ln). The neat short form, with the constant <var>k</var>, was actually written first by Max Planck in 1900–1901; Planck also named <var>k</var> after Boltzmann.</p>
+      <p><b>The demon.</b> Maxwell described the demon in an 1867 letter to Tait and later in his book <i>Theory of Heat</i>. Leo Szilard argued in 1929 that measuring costs entropy. Landauer (1961) and Bennett (1982) showed the real cost is in erasing memory, and Bérut and colleagues measured it in 2012.</p>
+      <p><b>Reversing a gas.</b> The trick this page uses, stepping atoms on a whole-number grid so the computer can undo every step exactly, comes from Dominique Levesque and Loup Verlet (1993). Verlet is the same physicist whose name is on the Verlet method of 1967, which molecular simulations have used ever since.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where you see it</h2>
+    <ul>
+      <li><b>Milk in coffee</b> mixes and never unmixes. So does the gas in <a href="{{ "games/gas/" | relURL }}">Gas in a Box</a>: try its “Two gases” scene and pull out the divider.</li>
+      <li><b>A refrigerator</b> moves heat from cold to hot, allowed by the Clausius statement only because a motor does work, and the back of the fridge dumps more heat into the kitchen than it removed from the food. That’s <a href="{{ "science-lab/thermodynamics/engines/" | relURL }}">Chapter 4</a>.</li>
+      <li><b>Car engines and power plants</b> must throw away heat. A car’s radiator and tailpipe and a power plant’s cooling tower are the second law made visible. See <a href="{{ "trades/cars/engine/" | relURL }}">How Cars Work: The Engine</a>.</li>
+      <li><b>Computers</b> warm up partly because erasing and overwriting bits has a minimum heat cost, though today’s chips are still far above Landauer’s limit.</li>
+      <li><b>Ice in a drink</b> melts because heat flows from the warm drink into the cold ice, raising the total entropy. The reverse, a drink that warms up while its ice grows, is never seen.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The gas.</b> The atoms push each other with a smooth, soft force: the energy of a pair is <var>U</var> = ε(1 − <var>r</var>²/<var>d</var>²)³ when they are closer than <var>d</var>, and zero otherwise. The walls push the same way. Each time step uses the leapfrog (velocity Verlet) method: change each velocity by the force, then move each atom by its velocity. This method is time-reversible: running a step with flipped velocities undoes it.</p>
+      <p><b>The whole-number trick.</b> On a computer, ordinary decimals get rounded at every step, and those rounding errors (about 1 part in 10<sup>16</sup>) act like tiny nudges. Chaos grows them. In our tests with ordinary decimals, a gas run for 1,000 steps came back fine, but after 3,000 steps only 74 of 120 atoms found their way home. So here, as Levesque and Verlet suggested, positions live on a grid 10<sup>9</sup> steps tall, velocities and forces are rounded to whole grid steps, and every pair force is rounded once and applied equal and opposite. Rounding depends only on positions, so a reversed run makes exactly the same roundings, and the reversal is perfect, bit for bit.</p>
+      <p><b>What’s simplified.</b> It’s a two-dimensional gas of soft disks, not real atoms; the entropy meter counts only left versus right, not positions and speeds in full detail. The Einstein solids are tiny, and their quanta move by a simple random rule. The demon’s molecules don’t collide with each other, and each side’s temperature and entropy are computed as if that side had settled down. Every molecule that reaches the door costs the demon one bit, whether it lets the molecule through or not.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests, run before the page was built):</p>
+        <ul class="lab-small">
+          <li>Exact reversal: 120 atoms run for 2,000, 10,000 and 40,000 steps, reversed and run back: every position and velocity returned to its starting value with an error of exactly 0 grid steps, and all 120 atoms were back on the left.</li>
+          <li>Nudged reversal (5 random starts each): after 300 steps of spreading, all came back; after 2,000 steps, 67 to 119 of 120 came back; after 4,000 steps, only 62 to 68 did. The gap from the perfect run grew from 10<sup>−9</sup> to 10<sup>−1</sup> of the box in about 1,000 steps (2.8 s of movie time), while each atom made about 9 collisions.</li>
+          <li>Energy: over 20,000 steps the total energy stayed within 0.6% (rounding to whole numbers adds tiny noise); the forces between atoms are exactly equal and opposite, so they never change the total momentum.</li>
+          <li>Equilibrium: averaged over 60,000 steps, 61.0 of 120 atoms were on the left, with a spread of 4.9 (independent atoms would give 5.5).</li>
+          <li>Counting: 2<sup>−100</sup> = 7.889 × 10<sup>−31</sup>; <var>W</var>(50 of 100) = 1.009 × 10<sup>29</sup>; the probabilities add to 1 within 10<sup>−12</sup>.</li>
+          <li>Einstein solids: for 3 + 3 oscillators and 6 quanta, 462 arrangements in all, 100 of them with a 3–3 split; 400,000 random moves gave probabilities within 0.001 of the exact ones. For 300 + 200 and 100 quanta, the most likely <var>q</var><sub>A</sub> is 60, Ω(60)/Ω(0) ≈ 10<sup>33.4</sup>, and the long-run average was 59.98 against an exact 60.00, matching Moore and Schroeder.</li>
+          <li>Demon: starting with both sides at exactly 300 K, a robot demon that sorts every molecule made 106 K and 514 K, lowering the gas entropy by 11.6 <var>k</var> while recording 349 bits (242 <var>k</var>). A greedy demon that opens the door only when that lowers the entropy squeezed every molecule into one side, saving 27.7 <var>k</var>, but recorded 558 bits (387 <var>k</var>). The total never fell below zero in any test.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>Ten coins are tossed. What is the chance that all ten land on the left side of the table?</p>
+        <ul class="u-opts"><li><button type="button">1 in 10</button></li><li><button type="button">1 in 20</button></li><li><button type="button">1 in 1,024</button></li><li><button type="button">1 in 100</button></li></ul>
+        <details><summary>Show the answer</summary><p>Each coin has a chance of ½, so ten together have (½)<sup>10</sup> = 1/1,024. Out of the 1,024 equally likely arrangements, only one has all ten on the left.</p></details></li>
+      <li class="u-q" data-a="1"><p>In the simulation, the gas un-spreads after “Reverse time”, but not after “Reverse + nudge”. Why?</p>
+        <ul class="u-opts"><li><button type="button">The nudge adds energy that pushes the atoms to the right</button></li><li><button type="button">Tiny differences grow at every collision, so a billionth soon becomes the size of the box</button></li><li><button type="button">Newton’s laws only work forward in time</button></li></ul>
+        <details><summary>Show the answer</summary><p>The motion is chaotic. Each collision magnifies a small change in angle, so the nudged run drifts away from the perfect reversal exponentially fast. Newton’s laws work fine backward; the nudged run just never finds the one special path home.</p></details></li>
+      <li class="u-q" data-a="0"><p>600 J of heat flows from a body at 600 K into a body at 300 K. What is the total entropy change?</p>
+        <ul class="u-opts"><li><button type="button">+1 J/K</button></li><li><button type="button">0 J/K</button></li><li><button type="button">−1 J/K</button></li><li><button type="button">+3 J/K</button></li></ul>
+        <details><summary>Show the answer</summary><p>The hot body loses 600/600 = 1 J/K; the cold body gains 600/300 = 2 J/K. Total: +1 J/K, so this flow happens on its own.</p></details></li>
+      <li class="u-q" data-a="2"><p>Two Einstein solids touch. Why does energy flow from the one with more quanta per oscillator to the other?</p>
+        <ul class="u-opts"><li><button type="button">A force pushes quanta from crowded atoms to empty ones</button></li><li><button type="button">Heat is a fluid that runs downhill</button></li><li><button type="button">Sharing the energy more evenly gives far more possible arrangements, so random hops almost always lead there</button></li></ul>
+        <details><summary>Show the answer</summary><p>No force is involved: each quantum hops at random. There are just overwhelmingly more arrangements near the even split, so that’s where the random wandering ends up.</p></details></li>
+      <li class="u-q" data-a="3"><p>What finally saves the second law from Maxwell’s demon?</p>
+        <ul class="u-opts"><li><button type="button">The door is too heavy to open</button></li><li><button type="button">Molecules are too small to see</button></li><li><button type="button">The demon gets tired</button></li><li><button type="button">Erasing the demon’s memory releases at least kT ln 2 of heat per bit</button></li></ul>
+        <details><summary>Show the answer</summary><p>Landauer’s principle: forgetting has a minimum cost. The entropy the demon must dump into its surroundings when it clears its notebook is always at least as large as the entropy it removed from the gas.</p></details></li>
+      <li class="u-q" data-a="1"><p>A growing plant builds ordered structures from simple molecules. How does that fit with the second law?</p>
+        <ul class="u-opts"><li><button type="button">Living things are an exception to the second law</button></li><li><button type="button">The plant gives off heat to its surroundings, raising their entropy by more than its own entropy falls</button></li><li><button type="button">Plants have no entropy</button></li></ul>
+        <details><summary>Show the answer</summary><p>The second law is about the total. A plant uses sunlight and gives off heat at a low temperature, exporting more entropy than it saves.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-4-statements-of-the-second-law-of-thermodynamics" target="_blank" rel="noopener">University Physics Volume 2, 4.4 Statements of the Second Law of Thermodynamics</a>: the Clausius and Kelvin statements.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-6-entropy" target="_blank" rel="noopener">University Physics Volume 2, 4.6 Entropy</a>: Δ<var>S</var> = <var>Q</var>/<var>T</var> and entropy changes in heat flow.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-2/pages/4-7-entropy-on-a-microscopic-scale" target="_blank" rel="noopener">University Physics Volume 2, 4.7 Entropy on a Microscopic Scale</a>: arrangements, free expansion and the third law.</li>
+      <li>T. A. Moore and D. V. Schroeder, <a href="https://physics.weber.edu/schroeder/statmech.pdf" target="_blank" rel="noopener">A different approach to introducing statistical mechanics</a>, Am. J. Phys. 65, 26–36 (1997), Weber State University: Einstein solids, 462 arrangements of 6 quanta in 3 + 3 oscillators, the 300 + 200 example and the 10<sup>33</sup> ratio.</li>
+      <li>D. V. Schroeder, <a href="https://physics.weber.edu/thermal/contents.html" target="_blank" rel="noopener">An Introduction to Thermal Physics</a>, chapters 2 and 3 (Weber State University): the Einstein solid, interacting systems and temperature from entropy.</li>
+      <li>H. Gould and J. Tobochnik, Clark University STP project, <a href="https://stp.clarku.edu/simulations/einsteinsolid/temperature.html" target="_blank" rel="noopener">Simple thermal interaction: Einstein solid</a>.</li>
+      <li>NIST, <a href="https://physics.nist.gov/cgi-bin/cuu/Value?k" target="_blank" rel="noopener">Boltzmann constant</a>: <var>k</var> = 1.380649 × 10<sup>−23</sup> J/K, exact since 2019.</li>
+      <li>A. Bérut, A. Arakelyan, A. Petrosyan, S. Ciliberto, R. Dillenschneider and E. Lutz, Experimental verification of Landauer’s principle linking information and thermodynamics, <i>Nature</i> 483, 187–190 (2012), <a href="https://doi.org/10.1038/nature10872" target="_blank" rel="noopener">doi:10.1038/nature10872</a>.</li>
+      <li>D. Levesque and L. Verlet, Molecular dynamics and time reversibility, <i>Journal of Statistical Physics</i> 72, 519–537 (1993): the bit-reversible whole-number method.</li>
+      <li>S. Ciliberto, ENS de Lyon, <a href="https://perso.ens-lyon.fr/sergio.ciliberto/Teaching/Cours_Phys_Stat/presentation_landauer_L3_ENSL.pdf" target="_blank" rel="noopener">Landauer’s principle: the experiment</a> (lecture slides): the silica bead in a two-well laser trap.</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Entropy" target="_blank" rel="noopener">Entropy</a> (Clausius, 1865, and τροπή), <a href="https://en.wikipedia.org/wiki/Maxwell's_demon" target="_blank" rel="noopener">Maxwell’s demon</a> (the 1867 letter to Tait, Kelvin’s name for it, Szilard, Bennett), <a href="https://en.wikipedia.org/wiki/Landauer's_principle" target="_blank" rel="noopener">Landauer’s principle</a>, <a href="https://en.wikipedia.org/wiki/Ludwig_Boltzmann" target="_blank" rel="noopener">Ludwig Boltzmann</a> and <a href="https://en.wikipedia.org/wiki/Boltzmann_constant" target="_blank" rel="noopener">Boltzmann constant</a> (the tombstone and Planck’s form of the formula).</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/thermodynamics/second-law/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/second-law/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/thermodynamics/second-law/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/thermodynamics/second-law/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,36 @@
+/* Newton's Laws, Chapter 6 (Circles and Gravity): only what this page adds to lab.css and unit.css. */
+#nl6-lab .lab-view canvas:focus{outline:none}
+#nl6-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#nl6-lab #nl6-view{cursor:crosshair}
+#nl6-lab .lab-tools button{min-width:36px;min-height:36px}
+#nl6-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);background:#1f5c4e}
+#nl6-lab .lab-hud{max-width:calc(100% - 10rem)}
+.nl6-cutbtn{position:absolute;right:.7rem;bottom:.7rem;min-height:42px;padding:.45rem 1.1rem;border-radius:12px;border:1px solid var(--sim-acc);background:rgba(18,58,51,.92);color:#fff;font:600 .95rem system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;box-shadow:0 0 18px rgba(99,230,190,.25)}
+.nl6-cutbtn:hover{background:#18493f}
+.nl6-cutbtn:focus-visible{outline:2px solid var(--sim-gold);outline-offset:2px}
+.nl6-noscript{position:absolute;inset:auto 0 45% 0;text-align:center;color:var(--sim-ink)}
+#nl6-lab .lab-seg button{min-height:36px}
+#nl6-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#nl6-lab .lab-field input[type=range]:disabled{opacity:.4}
+#nl6-lab .lab-field select{min-height:36px;max-width:100%}
+#nl6-lab .lab-chk{min-height:36px;cursor:pointer}
+#nl6-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#nl6-lab .lab-btn{min-height:36px}
+#nl6-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#nl6-lab .lab-readout dd{white-space:nowrap}
+#nl6-lab .nl6-short{height:min(60vh,470px);min-height:340px}
+#nl6-lab .lab-sec .lab-stage{margin:1rem 0}
+#nl6-lab .nl6-chart canvas{display:block;width:100%;height:170px}
+#nl6-lab .nl6-k{font-weight:700;color:var(--ink);border-bottom:3px solid var(--k)}
+#nl6-lab .nl6-steps{padding-left:1.3rem}
+#nl6-lab .nl6-steps li{margin:.35rem 0}
+#nl6-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+#nl6-lab .lab-cols>.u-ex{margin-top:0}
+@media (max-width:860px){
+  #nl6-lab .lab-hud{display:none}
+  #nl6-lab .nl6-short{height:min(64vh,480px);min-height:360px}
+}
+@media (max-width:600px){
+  #nl6-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem;top:3.2rem}
+}
+@media (min-width:861px){#nl6-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}

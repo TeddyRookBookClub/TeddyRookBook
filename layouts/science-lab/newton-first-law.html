@@ -1,0 +1,248 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "science-lab/newtons-laws/first-law/sim.css" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/first-law/sim.css").ModTime.Unix }}">
+<div class="lab" id="nl1-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Newton’s Laws · Chapter 1</p>
+    <h1>{{ .Title }}</h1>
+    <p>Slide a book across a table and it stops. So it seems obvious that a moving thing needs a push to keep going, and for two thousand years most people thought so. Galileo saw what was hiding in plain sight: friction. Take friction away and a moving thing keeps going, straight ahead at the same speed, forever. Here you can roll a ball between Galileo’s two ramps, coast a probe through deep space, and pull a tablecloth out from under the dishes. By the end you will see the first law everywhere, from seat belts to the spacecraft that is now farther from home than anything people have ever built.</p>
+    <span class="lab-mark" aria-hidden="true">🏒</span>
+  </header>
+
+  <div class="lab-stage nl1-main">
+    <div class="lab-view" id="nl1-view">
+      <canvas id="nl1-cv" tabindex="0" aria-label="Galileo’s two ramps: a ball rolls down the left ramp and up the right one. A dashed gold line marks its starting height, pink marks show where it turns around, and a graph below shows its speed over time with an energy bar. Drag the ball to change where it starts, or drag the gold handle on the right ramp to tilt it, down to flat. Keys: up and down arrows change the start height, left and right arrows change the right ramp’s angle, Space pauses, R rolls it again. The numbers are also listed as text in the panel."></canvas>
+      <div class="lab-hud" id="nl1-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="nl1-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="nl1-speed" aria-label="Playback speed 1 times. Press to change." title="Playback speed">1×</button>
+        <button type="button" id="nl1-reset" aria-label="Roll the ball again" title="Roll again (R)">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>Galileo’s ramps</h3>
+      <label class="lab-field"><span>Start height <output id="nl1-h-o">0.50 m</output></span><input type="range" id="nl1-h" min="0.1" max="1.1" step="0.01" value="0.5" aria-label="Height the ball starts from on the left ramp, in meters"></label>
+      <label class="lab-field"><span>Right ramp <output id="nl1-ang-o">30°</output></span><input type="range" id="nl1-ang" min="0" max="60" step="1" value="30" aria-label="Angle of the right ramp, in degrees; zero makes it flat"></label>
+      <div class="lab-seg" id="nl1-angs" role="group" aria-label="Right ramp angle">
+        <button type="button" data-ang="45" aria-pressed="false">45°</button><button type="button" data-ang="30" aria-pressed="true">30°</button><button type="button" data-ang="15" aria-pressed="false">15°</button><button type="button" data-ang="5" aria-pressed="false">5°</button><button type="button" data-ang="0" aria-pressed="false">Flat</button>
+      </div>
+      <div class="lab-field"><span id="nl1-surf-l">Surface</span>
+        <div class="lab-seg" id="nl1-surf" role="group" aria-labelledby="nl1-surf-l">
+          <button type="button" data-surf="carpet" aria-pressed="false">Carpet</button><button type="button" data-surf="wood" aria-pressed="false">Wood</button><button type="button" data-surf="ice" aria-pressed="false">Ice</button><button type="button" data-surf="none" aria-pressed="true">None</button>
+        </div>
+      </div>
+      <p class="lab-small nl1-note" id="nl1-surf-note">No friction at all: nothing on the track can slow the ball down.</p>
+      <button type="button" class="lab-btn pri" id="nl1-go">Roll it again</button>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="nl1-read"></dl>
+    </div>
+    <div class="nl1-mbox">
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="nl1-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing"><h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>Two ramps.</b> A ball rolls down the left ramp, across a short flat, and up the right ramp. The dashed gold line is the height it started from. Each time the ball turns around, a pink mark shows how high it got. With no friction, every mark sits on the gold line.</p>
+      <p><b>The right ramp.</b> Drag its gold handle, or use the slider, to make it gentler. The ball still climbs to the same height, but it has to roll farther to get there. Make it flat and there is no height to reach, so the ball never turns around.</p>
+      <p><b>The graph.</b> The green line is the ball’s speed. Going downhill it rises, going uphill it drops. On a flat, frictionless track it is a perfectly level line: the speed does not change at all.</p>
+      <p><b>The energy bar.</b> Blue is energy stored in height, green is energy of motion, red is energy turned into heat by friction. Without friction the bar never turns red; blue and green just trade places.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="science"><h2>The first law</h2>
+    <p>Newton’s first law says that an object keeps doing what it is doing unless a force makes it change. If it is still, it stays still. If it is moving, it keeps moving at the same speed in the same direction. Only a <i>net</i> force, the total of all the forces on it, can change that.</p>
+    <div class="u-big"><var>F</var><sub>net</sub> = 0 &nbsp;⇔&nbsp; <var>v</var> stays the same<small>no net force (in newtons) means no change in velocity (speed in meters per second, and direction)</small></div>
+    <p>Velocity means speed and direction together. So a car going around a bend at a steady 50 km/h is changing its velocity, and that needs a force (Chapter 6 is all about that). A puck sliding straight across ice at a steady 5 m/s has no net force on it, even though it is moving fast.</p>
+    <p>This stubbornness, the way things keep their motion, is called <b>inertia</b>. The amount of inertia is measured by <b>mass</b>. A 4,000 kg probe has four times the inertia of a 1,000 kg probe: the same push changes its speed only a quarter as much. Mass is measured in kilograms, and unlike weight, it is the same on Earth, on the Moon or in deep space.</p>
+    <div class="u-key">
+      <div><b>Rest is not special</b><p>Staying still and moving steadily in a straight line are the same thing to physics: both mean the net force is zero.</p></div>
+      <div><b>Forces change motion</b><p>A force is not what keeps something moving. A force is what starts it, stops it, speeds it up, slows it down or turns it.</p></div>
+      <div><b>Mass is inertia</b><p>The more mass something has, the harder it is to change its motion, in any direction.</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="probe"><h2>Coasting in deep space</h2>
+    <p>Far from planets and stars there is no air and no ground: nothing to rub against. Fly this probe with short thruster bursts. Each tap pushes with 500 N for half a second. Watch the gold dots: the probe drops one every second. When nothing pushes, they line up straight and evenly spaced.</p>
+  </section>
+  <div class="lab-stage nl1-main nl1-pstage">
+    <div class="lab-view nl1-pview" id="nl1-pview">
+      <canvas id="nl1-pcv" tabindex="0" aria-label="A space probe seen from above, with a space station to the right. Gold dots mark where the probe was each second, and a white arrow shows its velocity. Fire the thrusters with the arrow buttons or the arrow keys (or W, A, S, D); a tap fires for half a second, holding keeps firing. R starts again. Its speed is listed as text in the panel."></canvas>
+      <div class="lab-hud" id="nl1-phud" aria-hidden="true"></div>
+      <div class="lab-tools"><button type="button" id="nl1-preset" aria-label="Start the probe again" title="Start again (R)">↺</button></div>
+      <div class="nl1-pad" id="nl1-pad" role="group" aria-label="Thrusters">
+        <button type="button" data-dir="up" class="nl1-up" aria-label="Push up">▲</button>
+        <button type="button" data-dir="left" class="nl1-left" aria-label="Push left">◀</button>
+        <button type="button" data-dir="right" class="nl1-right" aria-label="Push right">▶</button>
+        <button type="button" data-dir="down" class="nl1-down" aria-label="Push down">▼</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>The probe</h3>
+      <div class="lab-field"><span id="nl1-pmass-l">Mass</span>
+        <div class="lab-seg" id="nl1-pmass" role="group" aria-labelledby="nl1-pmass-l"><button type="button" data-m="1000" aria-pressed="true">1,000 kg</button><button type="button" data-m="4000" aria-pressed="false">4,000 kg</button></div>
+      </div>
+      <label class="lab-chk"><input type="checkbox" id="nl1-pfr"> Friction on (as if it slid on a floor)</label>
+      <dl class="lab-readout" id="nl1-pread"></dl>
+    </div>
+    <div class="nl1-mbox">
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="nl1-pmissions"></ol>
+    </div>
+  </div>
+  <div class="lab-try"><b>Try this:</b> get the probe moving, then switch to 4,000 kg and tap the opposite thruster. Each tap now takes away only 0.0625 m/s instead of 0.25 m/s, so you need four times as many taps to stop. Same push, four times the mass, a quarter of the change: that is what more inertia means.</div>
+
+  <section class="lab-sec" id="galileo"><h2>Galileo’s ramps</h2>
+    <p>Galileo Galilei rolled balls down ramps in the early 1600s, and he also reasoned about ramps he could not build. A ball let go on one ramp rolls up a facing ramp to almost the height it started from. The smoother the surfaces, the closer it gets. So, with no friction at all, it would reach exactly the same height.</p>
+    <p>Now make the second ramp gentler. To reach the same height, the ball has to roll farther. Gentler still, and it rolls farther still. Now make the second ramp flat. There is no height to climb back to, so the ball has no reason ever to stop. Without friction, it would roll on at the same speed forever. That is the first law, found by pushing an everyday experiment to its limit.</p>
+    <div class="u-ex"><b>Worked example: how fast at the bottom?</b>
+      <p>The ball starts 0.50 m up. Its height energy per kilogram is <var>g h</var> = 9.81 m/s² × 0.50 m = 4.90 J/kg. A rolling ball also spins, and a solid ball’s spin takes 2/7 of its motion energy, so (7/5) × ½<var>v</var>² = 4.90 J/kg and</p>
+      <div class="lab-formula"><var>v</var> = √(10 <var>g h</var> / 7) = √(10 × 9.81 × 0.50 / 7) = <b>2.65 m/s</b></div>
+      <p>That is the level line on the graph when the right side is flat. A block sliding down without friction would not spin and would reach √(2<var>g h</var>) = 3.13 m/s. Either way, on a flat, frictionless track that speed never changes.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> set the surface to <i>None</i> and the start to 0.50 m, then try the right ramp at 45°, 15° and 5°. Read “Rolled up the right ramp” each time: 0.58 m, 1.89 m and 5.72 m. The turnaround height stays at 0.500 m.</div>
+  </section>
+
+  <section class="lab-sec" id="friction"><h2>Friction, the hidden force</h2>
+    <p>On Earth almost everything that moves rubs against something: the ground, the air, its own axle. Friction pushes backward on moving things, so they slow down and stop. Because friction is everywhere and invisible, it is easy to think that stopping is just what moving things do. It is not. Stopping is what a backward force does.</p>
+    <p>In the ramp simulation, carpet pushes back with 5% of the ball’s weight, wood 1.5% and ice 0.4%. On the flat, the ball then loses speed at a steady rate: on carpet 0.35 m/s every second, on ice only 0.028 m/s. From 2.65 m/s, that is 10 m of carpet but about 125 m of ice. Less friction, longer roll. No friction, endless roll.</p>
+    <div class="u-myth"><b>Common mistake</b><p>“A moving thing needs a force to keep it moving.” No: it needs a force to keep it moving <i>only when something else is pushing back</i>, such as friction or air drag. A bicycle on a flat road needs you to pedal because the air and the tires push back. If you match those forces exactly, the net force is zero and you cruise at a steady speed. Your pedaling is not what keeps you going; it cancels the forces that would stop you.</p></div>
+  </section>
+
+  <section class="lab-sec" id="demos"><h2>Inertia in everyday life</h2>
+    <p>Each of these is the first law in disguise. Press the buttons, and watch which things keep doing what they were doing.</p>
+    <div class="nl1-demos" id="nl1-demos">
+      <figure class="nl1-demo">
+        <canvas id="nl1-d-cloth" aria-label="A table with a plate and a cup on a tablecloth. Pull the cloth quickly or slowly with the buttons below; the caption says how far the dishes moved."></canvas>
+        <figcaption><b>The tablecloth trick</b>
+          <div class="lab-row"><button type="button" class="lab-btn" id="nl1-d-cloth-fast">Quick yank</button><button type="button" class="lab-btn" id="nl1-d-cloth-slow">Slow pull</button></div>
+          <p class="lab-small" id="nl1-d-cloth-cap" aria-live="polite">The dishes are at rest. Friction from the cloth can only move them while the cloth is still under them.</p></figcaption>
+      </figure>
+      <figure class="nl1-demo">
+        <canvas id="nl1-d-coin" aria-label="A coin on a card laid across the top of a cup. Flick the card or push it slowly with the buttons below; the caption says where the coin ends up."></canvas>
+        <figcaption><b>A coin, a card and a cup</b>
+          <div class="lab-row"><button type="button" class="lab-btn" id="nl1-d-coin-flick">Flick the card</button><button type="button" class="lab-btn" id="nl1-d-coin-slow">Push slowly</button></div>
+          <p class="lab-small" id="nl1-d-coin-cap" aria-live="polite">You can try this one at home with a plastic cup, a playing card and a coin.</p></figcaption>
+      </figure>
+      <figure class="nl1-demo">
+        <canvas id="nl1-d-car" aria-label="A car with a teddy bear passenger braking hard from 50 kilometers per hour. Choose seat belt on or off, then brake; the caption says what happens to the bear."></canvas>
+        <figcaption><b>Braking hard</b>
+          <div class="lab-row"><label class="lab-chk"><input type="checkbox" id="nl1-d-belt" checked> Seat belt</label><button type="button" class="lab-btn" id="nl1-d-car-go">Brake!</button></div>
+          <p class="lab-small" id="nl1-d-car-cap" aria-live="polite">50 km/h, braking hard at 0.7 g, about what skidding tires on dry concrete give.</p></figcaption>
+      </figure>
+      <figure class="nl1-demo">
+        <canvas id="nl1-d-train" aria-label="A ball dropped inside a train moving at a steady 30 meters per second, seen from inside the train or from the platform. The dotted trail shows its path in each view."></canvas>
+        <figcaption><b>A ball dropped on a smooth train</b>
+          <div class="lab-row"><div class="lab-seg" id="nl1-d-frame" role="group" aria-label="Watch from"><button type="button" data-frame="train" aria-pressed="true">From the train</button><button type="button" data-frame="platform" aria-pressed="false">From the platform</button></div><button type="button" class="lab-btn" id="nl1-d-train-go">Drop</button></div>
+          <p class="lab-small">The train goes at a steady 30 m/s (108 km/h). The ball is let go 1.5 m above the floor.</p></figcaption>
+      </figure>
+    </div>
+    <div class="lab-cols">
+      <p><b>The tablecloth.</b> Friction between cloth and dishes is a real force, but a force needs time to change motion. Yank the cloth fast enough and it is gone before the dishes have picked up much speed. (Practice with plastic cups, not your family’s plates.)</p>
+      <p><b>The coin.</b> Lay a playing card on a plastic cup, put a coin in the middle, and flick the card sideways with your finger. The card shoots away, and the coin stays put and drops into the cup. A slow push drags the coin along. It is a safe experiment for any kitchen table.</p>
+      <p><b>The braking car.</b> When a car brakes, the brakes and the tires slow the car, not you. Your body keeps moving forward at the speed you had until something pushes back on you. A seat belt is that something, pushing on your strong hips and chest and spreading the stop over the whole braking distance.</p>
+      <p><b>The train.</b> On a smooth train going straight at a steady speed, a dropped ball falls straight down at your feet. It was already moving forward at 30 m/s with you, and nothing took that away. From the platform, the same fall is a curve.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: no seat belt</b>
+      <p>A car going 50 km/h (13.9 m/s) brakes at 0.7 <var>g</var> = 6.9 m/s². It stops in 13.9 ÷ 6.9 = 2.0 s, after 13.9² ÷ (2 × 6.9) = 14 m. An unbelted passenger keeps going at 13.9 m/s. The car falls behind the passenger by ½ × 6.9 × <var>t</var>², so a 45 cm gap to the dashboard closes after √(2 × 0.45 ÷ 6.9) = 0.36 s, when the passenger is moving 6.9 × 0.36 = 2.5 m/s (9 km/h) faster than the car. In a crash, the car stops in a fraction of a second, and an unbelted person hits the inside of the car at nearly the full speed.</p>
+      <p>That is why belts matter. The U.S. National Highway Traffic Safety Administration estimates that seat belts saved 14,955 lives in 2017, and that for people in the front seat of a passenger car, buckling up reduces the risk of a fatal injury by 45%.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="frames"><h2>Moving or not? Inertial frames</h2>
+    <p>On a smooth plane at cruising speed, you can pour a drink, toss a ball and walk down the aisle as if you were standing still on the ground. Everything in the cabin is already moving with you, and keeps moving. If the windows were covered, no experiment inside a smoothly moving cabin could tell you how fast you were going.</p>
+    <p>A place where the first law works, where things at rest stay at rest and moving things go straight, is called an <b>inertial frame of reference</b>. Any frame moving at a steady velocity relative to an inertial frame is inertial too. A train speeding up, braking or turning is not: there, a ball on the floor starts rolling with no force pushing it. That is inertia showing up as a lurch.</p>
+  </section>
+
+  <section class="lab-sec" id="voyager"><h2>Voyager: the first law in space</h2>
+    <p>NASA’s Voyager 1 was launched on September 5, 1977. It flew past Jupiter in 1979 and Saturn in 1980, and in 2012 it became the first spacecraft to reach interstellar space. It has no engine pushing it along; its small thrusters only keep its antenna pointed at Earth. It just coasts, at nearly 38,000 mph (61,000 km/h). The Sun’s gravity still tugs back on it, but that far away the tug is tiny. On November 18, 2026, NASA expects Voyager 1 to be one light-day from Earth: about 26 billion kilometers, so far that its radio signals take a whole day to reach us.</p>
+    <div class="u-ex"><b>Worked example: a year of coasting</b>
+      <p>61,000 km/h ÷ 3,600 s/h = 16.9 km/s. A year is 365.25 × 24 × 3,600 = 31,557,600 s, so in one year Voyager 1 coasts</p>
+      <div class="lab-formula"><var>d</var> = <var>v t</var> = 16.9 km/s × 31,557,600 s ≈ 535 million km ≈ 3.6 AU</div>
+      <p>An AU is the average distance from Earth to the Sun, 149,597,870.7 km. NASA’s own figure for Voyager 1 is about 3.6 AU per year, the same answer. No fuel was burned for any of it.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>From Aristotle to Newton</h2>
+    <div class="lab-cols">
+      <p><b>Aristotle</b>, in Greece in the 300s BC, taught that an object on Earth moves only as long as something keeps pushing it. Stop pushing, and it settles back to rest, which he took to be its natural state. It matches what you see every day, because friction is everywhere, and it was taught for nearly two thousand years.</p>
+      <p><b>Galileo Galilei</b> (1564–1642) argued, in books published in 1632 and 1638, that a ball on a smooth, level surface would keep rolling unless something slowed it. Friction and air, not the nature of things, bring moving objects to rest.</p>
+      <p><b>René Descartes</b> wrote in his <i>Principles of Philosophy</i> (1644) that a body keeps its motion unless something changes it, and that motion on its own goes in a straight line.</p>
+      <p><b>Isaac Newton</b> made it the first of his three laws of motion in the <i>Principia</i>, published in London in 1687, and used it with the other two to explain the motion of everything from cannonballs to the Moon.</p>
+    </div>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Lex I. Corpus omne perseverare in statu suo quiescendi vel movendi uniformiter in directum, nisi quatenus a viribus impressis cogitur statum illum mutare.</p>
+      <p class="u-en">Law I. Every body perseveres in its state of rest, or of uniform motion in a right line, unless it is compelled to change that state by forces impress’d thereon.</p>
+      <cite>Isaac Newton, <i>Philosophiæ Naturalis Principia Mathematica</i> (London, 1687), Axioms, or Laws of Motion. English by Andrew Motte, <i>The Mathematical Principles of Natural Philosophy</i> (London, 1729). A “right line” is a straight line.</cite>
+    </div>
+    <p>Right after the law, Newton gives examples. The first is about air resistance and gravity, the forces that hide the first law from us every day:</p>
+    <div class="u-quote">
+      <p class="u-la" lang="la">Projectilia perseverant in motibus suis nisi quatenus a resistentia aeris retardantur &amp; vi gravitatis impelluntur deorsum.</p>
+      <p class="u-en">Projectiles persevere in their motions, so far as they are not retarded by the resistance of the air, or impelled downwards by the force of gravity.</p>
+      <cite>Newton, <i>Principia</i>, after Law I (1687); Motte’s translation (1729).</cite>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where you see it</h2>
+    <ul>
+      <li><b>Seat belts, airbags and headrests</b> all work on inertia: they push on you so that you slow down, or speed up, together with the car. The <a href="{{ "trades/cars/brakes/" | relURL }}">Brakes lesson</a> of the Cars course shows how a car makes the force that stops it.</li>
+      <li><b>Spacecraft</b> coast most of the way. Rocket engines burn for minutes; the trip to the Moon is mostly coasting, steered by gravity. Try it in <a href="{{ "games/orbits/" | relURL }}">Orbit Lab</a> and <a href="{{ "games/rocket/" | relURL }}">Rocket Builder</a>.</li>
+      <li><b>Hockey and curling</b>: on smooth ice, a puck or a stone keeps going a long way after one push, because ice friction is small.</li>
+      <li><b>Shaking off water</b>: when a dog shakes itself or you shake a wet umbrella, the drops keep going when the fur or the umbrella swings back.</li>
+      <li><b>Loads on a truck</b> slide forward when it brakes, which is why cargo is strapped down.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the simulation works</h2>
+    <p><b>The ramps.</b> The track is two straight ramps (the left one at 30°) joined to a 0.6 m flat by curves of 0.3 m radius, so the ball never hits a sharp corner. The ball is a solid ball rolling without slipping, so its motion energy is (7/5) × ½<var>mv</var>². Along the track it obeys</p>
+    <div class="lab-formula">(7/5) <var>a</var> = −<var>g</var> sin θ − <var>C</var> (<var>g</var> cos θ + <var>v</var>² κ) × (direction of motion)</div>
+    <p>where θ is the slope, κ the curvature of the track (zero on the straight parts) and <var>C</var> the rolling resistance, as a fraction of the push between ball and track. The surfaces use illustrative values of <var>C</var>: carpet 0.05, wood 0.015, ice 0.004. Real values depend on the ball. When the ball stops where the slope is gentler than the resistance can hold, it stays put. The equation is stepped forward 1,000 times per simulated second with the fourth-order Runge–Kutta method, with <var>g</var> = 9.80665 m/s², the standard value.</p>
+    <p><b>Checks.</b> With no friction, released from 0.500 m, the ball turned around at 0.50000 m on right ramps of 60°, 45°, 30°, 15°, 5° and 2°, after rolling 0.40, 0.58, 0.92, 1.89, 5.72 and 14.32 m up them. Its energy stayed constant to 3 parts in a million. Its speed on the flat was 2.64665 m/s, matching √(10<var>gh</var>/7), and did not change in the 12th decimal place over 100 simulated seconds. With friction, the stopping distances on the flat matched the formula 7<var>v</var>²/(10 <var>C g</var>) to better than 0.1%, and energy plus heat stayed constant to 0.02%. Run backward for 3 seconds, the ball came back to its starting point within a billionth of a meter.</p>
+    <p><b>The probe</b> feels no friction unless you switch it on (then it slows at 0.29 m/s² until it stops). In tests, a probe coasting for 100 s at 0.3 m/s right and 0.2 m/s down ended exactly 30 m right and 20 m down, and a 0.5 s, 500 N burst changed a 1,000 kg probe’s speed by exactly 0.25 m/s and a 4,000 kg probe’s by 0.0625 m/s. <b>The demos</b> use the same laws: the cloth and the card pull with friction (μ = 0.3, a typical value) only while they are under the dishes or the coin; the car brakes at 0.7 <var>g</var>; the train goes at a steady 30 m/s.</p>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>A puck slides across perfectly frictionless ice at 5 m/s. Nothing else touches it. What happens next?</p>
+        <ul class="u-opts"><li><button type="button">It slowly loses speed and stops</button></li><li><button type="button">It keeps going at 5 m/s in a straight line</button></li><li><button type="button">It speeds up</button></li></ul>
+        <details><summary>Show the answer</summary><p>With no net force, its velocity cannot change: same speed, same direction. Real pucks stop because real ice has a little friction.</p></details></li>
+      <li class="u-q" data-a="2"><p>A ball rolling across a carpet slows down and stops. Why?</p>
+        <ul class="u-opts"><li><button type="button">It runs out of the force you gave it</button></li><li><button type="button">Rest is the natural state of things</button></li><li><button type="button">Friction from the carpet pushes backward on it</button></li></ul>
+        <details><summary>Show the answer</summary><p>A moving object does not carry a supply of force. Friction is an outside force pushing backward, and it is what takes the speed away.</p></details></li>
+      <li class="u-q" data-a="0"><p>The same thruster burst is fired on a 1,000 kg probe and on a 4,000 kg probe. Which changes speed more?</p>
+        <ul class="u-opts"><li><button type="button">The 1,000 kg probe, four times as much</button></li><li><button type="button">The 4,000 kg probe</button></li><li><button type="button">Both the same</button></li></ul>
+        <details><summary>Show the answer</summary><p>More mass means more inertia. In the simulation one tap gives the light probe 0.25 m/s and the heavy one 0.0625 m/s.</p></details></li>
+      <li class="u-q" data-a="1"><p>You are on a smooth train going straight at a steady 100 km/h. You toss a coin straight up. Where does it land?</p>
+        <ul class="u-opts"><li><button type="button">Behind you, because the train moves forward under it</button></li><li><button type="button">Back in your hand</button></li><li><button type="button">In front of you</button></li></ul>
+        <details><summary>Show the answer</summary><p>The coin was already moving forward at 100 km/h with you and the train, and nothing takes that away (in a closed carriage the air moves with you too). A steadily moving train is an inertial frame.</p></details></li>
+      <li class="u-q" data-a="1"><p>In Galileo’s ramps with no friction, you make the second ramp much gentler. The ball…</p>
+        <ul class="u-opts"><li><button type="button">climbs less high, because the ramp is longer</button></li><li><button type="button">climbs to the same height, rolling farther to get there</button></li><li><button type="button">climbs higher</button></li></ul>
+        <details><summary>Show the answer</summary><p>It always gets back to its starting height. Make the ramp flat and it can never get there, so it rolls on forever.</p></details></li>
+      <li class="u-q" data-a="2"><p>Why do the dishes stay behind in the tablecloth trick?</p>
+        <ul class="u-opts"><li><button type="button">Gravity holds heavy things in place</button></li><li><button type="button">There is no friction between a cloth and a plate</button></li><li><button type="button">The cloth leaves so fast that friction acts too briefly to give them much speed</button></li></ul>
+        <details><summary>Show the answer</summary><p>Friction does pull the dishes, but only while the cloth is under them. A quick yank lasts about a tenth of a second, so they move only a few centimeters.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/5-2-newtons-first-law" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 5.2 Newton’s First Law</a> (inertia, inertial frames)</li>
+      <li><a href="https://openstax.org/books/university-physics-volume-1/pages/6-2-friction" target="_blank" rel="noopener">OpenStax, University Physics Volume 1, 6.2 Friction</a> (rubber on dry concrete, μ<sub>k</sub> ≈ 0.7)</li>
+      <li><a href="https://archive.org/details/PhilosophiaeNaturalisPrincipiaMathematica" target="_blank" rel="noopener">Isaac Newton, Philosophiæ Naturalis Principia Mathematica, London, 1687</a> (scan at the Internet Archive: Axiomata, sive Leges Motus)</li>
+      <li><a href="https://en.wikisource.org/wiki/The_Mathematical_Principles_of_Natural_Philosophy_(1729)/Axioms,_or_Laws_of_Motion" target="_blank" rel="noopener">The Mathematical Principles of Natural Philosophy, translated by Andrew Motte, 1729: Axioms, or Laws of Motion</a> (Wikisource)</li>
+      <li><a href="https://voyager.jpl.nasa.gov/frequently-asked-questions/fast-facts/" target="_blank" rel="noopener">NASA JPL, Voyager Fast Facts</a> (launch, interstellar space, 3.6 AU per year)</li>
+      <li><a href="https://science.nasa.gov/mission/voyager/voyager-1/voyager-1-what-is-a-light-day/" target="_blank" rel="noopener">NASA Science, Voyager 1: What Is a Light-Day?</a> (speed; one light-day on November 18, 2026)</li>
+      <li><a href="https://www.nhtsa.gov/vehicle-safety/seat-belts" target="_blank" rel="noopener">NHTSA, Seat Belts</a> (lives saved in 2017; 45% lower risk of fatal injury)</li>
+      <li><a href="https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8" target="_blank" rel="noopener">NIST Guide to the SI, Appendix B.8</a> (standard acceleration of gravity, 9.80665 m/s², exact)</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "science-lab/newtons-laws/first-law/physics.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/first-law/physics.js").ModTime.Unix }}" defer></script>
+<script src="{{ "science-lab/newtons-laws/first-law/sim.js" | relURL }}?v={{ (os.Stat "static/science-lab/newtons-laws/first-law/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

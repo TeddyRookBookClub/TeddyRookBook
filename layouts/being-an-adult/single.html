@@ -41,7 +41,7 @@
     {{ range $h.body }}<p>{{ . }}</p>{{ end }}
     {{ with $h.formula }}<p class="ad-formula">{{ . }}</p>{{ end }}
     {{ with $h.try }}<p class="ad-try"><b>Try it:</b> {{ . }}</p>{{ end }}
-    {{ with $g.deeper }}<p class="ad-deeper"><b>Go deeper:</b> {{ range $i, $d := . }}{{ if $i }} · {{ end }}<a href="{{ $d.url | relURL }}">{{ $d.label }}</a>{{ end }}, from the <a href="{{ "trades/cars/" | relURL }}">Cars course</a> in The Trades.</p>{{ end }}
+    {{ with $g.deeper }}{{ $cs := slice }}{{ range . }}{{ $cs = $cs | append (index (split (strings.Trim .url "/") "/") 1) }}{{ end }}{{ $cs = $cs | uniq }}{{ $last := sub (len $cs) 1 }}<p class="ad-deeper"><b>Go deeper:</b> {{ range $i, $d := . }}{{ if $i }} · {{ end }}<a href="{{ $d.url | relURL }}">{{ $d.label }}</a>{{ end }}, from the {{ range $i, $k := $cs }}{{ if $i }}{{ if eq $i $last }} and {{ else }}, {{ end }}{{ end }}<a href="{{ printf "trades/%s/" $k | relURL }}">{{ with index site.Data.trades $k }}{{ .course.short }}{{ end }}</a>{{ end }} course{{ if gt (len $cs) 1 }}s{{ end }} in The Trades.</p>{{ end }}
     {{ with index $learn $h.subject }}<p class="hs-small">Keep learning: <a href="{{ index . 0 | relURL }}">{{ index . 1 }}</a>{{ if eq $g.key "file-your-taxes" }} · <a href="{{ "business/tax-receipt/" | relURL }}">Your Tax Receipt</a>, to see what federal income tax pays for{{ end }}{{ if eq $g.key "how-interest-works" }} · <a href="{{ "business/cases/" | relURL }}">Business Cases</a>{{ end }}</p>{{ end }}
   </section>
 
