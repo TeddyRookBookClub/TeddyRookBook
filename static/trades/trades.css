@@ -1,0 +1,444 @@
+/* The Trades (hub, Cars course and lessons). Builds on static/homeschool/hs.css; everything new is tr- prefixed. */
+.tr{--tr-metal:#e4ebe6;--tr-pale:#f8f6f0;--tr-edge:#7c9787;--tr-ink:#1d2320;--tr-hot:#d4581f;--tr-cool:#2f7fc1;--tr-oil:#a5741a;--tr-exh:#6f757b;--tr-acc:#2e7d4f;--tr-red:#c0392b;--tr-hv:#e06f00;--tr-tire:#3a3f3c;--tr-stage:#f2f6f3;--tr-glass:#d8e8f1;
+  --s-engine:#c8553d;--s-fuel:#b98a10;--s-cooling:#2f86c9;--s-exhaust:#6f757b;--s-electrical:#8a5cc2;--s-drivetrain:#2b9466;--s-brakes:#c2185b;--s-steering:#0f9b9b;--s-tires:#3d4441;--s-ev:#e06f00}
+html[data-theme="dark"] .tr{--tr-metal:#2b3b32;--tr-pale:#1b2821;--tr-edge:#86a493;--tr-ink:#e6ece8;--tr-hot:#ff9a66;--tr-cool:#7dbcef;--tr-oil:#e3b75e;--tr-exh:#a3aaa6;--tr-acc:#6cc79a;--tr-red:#ff8a7a;--tr-hv:#ff9b3d;--tr-tire:#5d6862;--tr-stage:#13201a;--tr-glass:#203543;
+  --s-engine:#f08a70;--s-fuel:#e8bf4f;--s-cooling:#72b6ec;--s-exhaust:#aab1ad;--s-electrical:#b994ea;--s-drivetrain:#62d09b;--s-brakes:#f2709c;--s-steering:#52d2d2;--s-tires:#9aa59f;--s-ev:#ff9b3d}
+.tr .hs-hero::after{content:"⚙";font-size:7rem;top:-.4rem;right:1.4rem;opacity:.16;color:#f3dfa3;letter-spacing:0}
+.tr p,.tr li{line-height:1.6}
+.tr [hidden]{display:none !important}
+.tr h2{scroll-margin-top:1rem}
+.tr-lead{font-size:1.08rem}
+
+/* hub */
+.tr-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
+.tr-feat{grid-column:1/-1;display:grid !important;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:1rem 1.6rem;align-items:center;border-left:5px solid var(--gold) !important;background:var(--paper) !important}
+.tr-feat .tr-feat-art svg{display:block;width:100%;height:auto;max-width:420px;margin:0 auto}
+.tr-feat ul{margin:.2rem 0 .7rem;padding-left:1.1rem;color:var(--ink)}
+.tr-feat li{margin:.15rem 0}
+.tr-soon{position:relative}
+.tr-soon-tag{display:inline-block;font:700 .7rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border:1px dashed var(--line);border-radius:999px;padding:.12rem .55rem;margin-bottom:.35rem}
+.tr-soon .big{filter:grayscale(.35)}
+.tr-trades-jobs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.3rem 1.2rem;padding-left:1.1rem;margin:.4rem 0}
+@media (max-width:760px){.tr-feat{grid-template-columns:1fr}}
+
+/* level badges and lesson list */
+.tr-badge{display:inline-block;font:700 .7rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.07em;border-radius:999px;padding:.14rem .55rem;border:1px solid;vertical-align:.12em;white-space:nowrap}
+.tr-badge.b-beginner{color:#1f6b42;background:#e3f2e8;border-color:#a8d3b6}
+.tr-badge.b-intermediate{color:#7a5a0e;background:#f8efd6;border-color:#e2c983}
+.tr-badge.b-advanced{color:#7a2338;background:#f6e3e8;border-color:#dba9b6}
+html[data-theme="dark"] .tr-badge.b-beginner{color:#9be3bb;background:#173326;border-color:#2f6a4a}
+html[data-theme="dark"] .tr-badge.b-intermediate{color:#f0d38a;background:#33290f;border-color:#6c5620}
+html[data-theme="dark"] .tr-badge.b-advanced{color:#f3a9bb;background:#3a1820;border-color:#77404e}
+.tr-lessons{list-style:none;padding:0;margin:.6rem 0 0;display:grid;gap:.5rem}
+.tr-les{display:grid;grid-template-columns:2.6rem minmax(0,1fr) auto;gap:.4rem .8rem;align-items:center;text-decoration:none !important;box-shadow:none !important;color:var(--ink) !important;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.65rem .9rem;transition:border-color .15s,transform .15s}
+html:not([data-theme="dark"]) .tr-les{border-color:#b9cfc1}
+.tr-les:hover,.tr-les:focus-visible{border-color:var(--g);transform:translateY(-1px)}
+.tr-les-n{font:700 1.35rem Georgia,serif;color:var(--g);text-align:center;width:2.4rem;height:2.4rem;border-radius:50%;display:grid;place-items:center;background:var(--soft)}
+.tr-les b{font:700 1.08rem Georgia,serif;display:block}
+.tr-les small{display:block;color:var(--muted);line-height:1.4}
+.tr-les-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;font-size:.8rem;color:var(--muted);white-space:nowrap}
+.tr-les-done{display:none;font-weight:700;color:var(--tr-acc)}
+.tr-lessons li.done .tr-les{background:var(--soft)}
+.tr-lessons li.done .tr-les-done{display:inline}
+.tr-progress{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin:.4rem 0 .2rem;font-size:.92rem;color:var(--muted)}
+.tr-progress .hs-bar{flex:1;min-width:140px;max-width:340px}
+@media (max-width:560px){.tr-les{grid-template-columns:2.2rem minmax(0,1fr)}.tr-les-meta{grid-column:2;flex-direction:row;align-items:center;justify-content:flex-start;flex-wrap:wrap}.tr-les-n{width:2.1rem;height:2.1rem;font-size:1.15rem}}
+
+/* how to use */
+.tr h3+.tr-how,.tr p+h3{margin-top:1rem}
+.tr-how{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.8rem;counter-reset:h;padding:0;list-style:none;margin:.6rem 0 0}
+.tr-how li{counter-increment:h;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.8rem .9rem .8rem 3rem;position:relative;line-height:1.5}
+html:not([data-theme="dark"]) .tr-how li{border-color:#b9cfc1}
+.tr-how li::before{content:counter(h);position:absolute;left:.8rem;top:.8rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--g);color:#fff;font:700 .9rem system-ui;display:grid;place-items:center}
+html[data-theme="dark"] .tr-how li::before{color:#0f1a14}
+.tr-manual{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:.7rem 1rem;line-height:1.55}
+.tr-manual p{margin:.2rem 0}
+
+/* lesson header and contents */
+.tr-lhead{background:var(--paper);border:1px solid var(--line);border-top:5px solid #004225;border-radius:14px;padding:1.1rem 1.3rem;margin-bottom:1rem;display:grid;grid-template-columns:auto minmax(0,1fr);gap:.2rem 1.1rem;align-items:start}
+html[data-theme="dark"] .tr-lhead{border-top-color:#6cc79a}
+.tr-lhead-icon{font-size:3rem;line-height:1;grid-row:1/4}
+.tr-lhead .hs-eyebrow{color:var(--gold);display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:center}
+.tr-lhead h1{font:700 2rem/1.2 Georgia,serif;margin:.15rem 0 .4rem;color:var(--ink)}
+.tr-lhead p.tr-intro{margin:0;font-size:1.08rem;line-height:1.6}
+@media (max-width:600px){.tr-lhead{grid-template-columns:1fr}.tr-lhead-icon{grid-row:auto;font-size:2.4rem}.tr-lhead h1{font-size:1.55rem}}
+.tr-toc{display:flex;flex-wrap:wrap;gap:.35rem;margin:.6rem 0 0;padding:0;list-style:none}
+.tr-toc a{display:inline-block;font-size:.88rem;padding:.25rem .65rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink) !important;text-decoration:none !important;box-shadow:none !important}
+.tr-toc a:hover{border-color:var(--g)}
+.tr .hs-sec>p,.tr-call p,.tr-body .hs-sec li{max-width:46rem}
+.tr .hs-sec>p{margin:.7rem 0}
+.tr .hs-sec>h2+p{margin-top:.3rem}
+.tr-body .hs-sec ul,.tr-body .hs-sec ol{padding-left:1.25rem}
+.tr-body .hs-sec li{margin:.25rem 0}
+
+/* callouts, formulas, tables */
+.tr-call{border-radius:12px;padding:.7rem 1rem;margin:1.1rem 0;border:1px solid var(--line);border-left-width:5px;background:var(--paper)}
+.tr-call h3{margin:.1rem 0 .35rem;font-size:1.05rem}
+.tr-call p{margin:.3rem 0}.tr-call ul{margin:.3rem 0;padding-left:1.2rem}
+.tr-call.safe{border-left-color:var(--tr-acc)}
+.tr-call.stop{border-left-color:var(--tr-red)}
+.tr-call.why{border-left-color:var(--tr-cool)}
+.tr-call.note{border-left-color:var(--gold)}
+.tr-call .tr-call-k{display:inline-block;font:700 .68rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.1em;border-radius:5px;padding:.1rem .4rem;margin-right:.4rem;vertical-align:.15em;color:#fff}
+.tr-call.safe .tr-call-k{background:#2e7d4f}.tr-call.stop .tr-call-k{background:#b23a2e}.tr-call.why .tr-call-k{background:#2f6fa6}.tr-call.note .tr-call-k{background:#8a6a1e}
+.tr-formula{font:600 1rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--paper);border-left:4px solid var(--gold);border-radius:8px;padding:.55rem .85rem;line-height:1.7;overflow-x:auto;max-width:46rem}
+.tr-formula small{font:400 .85rem system-ui,sans-serif;color:var(--muted)}
+.tr-parts td:first-child{font-weight:700;white-space:nowrap}
+.tr-parts td{line-height:1.45}
+@media (max-width:600px){.tr-parts td:first-child{white-space:normal}.tr-parts{font-size:.88rem}.tr-parts th,.tr-parts td{padding:.4rem .45rem}}
+.tr .hs-table caption{caption-side:top;text-align:left;font-size:.88rem;color:var(--muted);padding:0 0 .35rem}
+
+/* figures */
+.tr-fig{margin:1rem 0 1.2rem;padding:0}
+.tr-fig .tr-fig-box{background:var(--tr-stage);border:1px solid var(--line);border-radius:14px;padding:.8rem;display:flex;justify-content:center}
+.tr-fig svg{display:block;width:100%;height:auto;max-width:520px}
+.tr-fig figcaption{font-size:.88rem;color:var(--muted);margin-top:.4rem;line-height:1.45;max-width:46rem}
+.tr svg text{fill:var(--muted);font:600 12.5px system-ui,-apple-system,"Segoe UI",sans-serif}
+.tr svg text.tx-sm{font-size:11px;font-weight:500}
+.tr svg text.tx-lg{font-size:14.5px}
+.tr svg text.tx-b{font-weight:700}
+.tr svg text.tx-ink{fill:var(--tr-ink)}
+.tr svg text.tx-em{fill:var(--g)}
+.tr svg text.tx-w{fill:#fff}
+.tr svg text.tx-hot{fill:var(--tr-hot)}.tr svg text.tx-cool{fill:var(--tr-cool)}.tr svg text.tx-oil{fill:var(--tr-oil)}
+html[data-theme="dark"] .tr svg text.tx-w{fill:#0f1a14}
+.tr svg .k-pale{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.3}
+.tr svg .k-metal{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.4}
+.tr svg .k-acc{fill:var(--tr-acc)}
+.tr svg .k-goldb{fill:#f1e2b4;stroke:var(--gold);stroke-width:1.5}
+html[data-theme="dark"] .tr svg .k-goldb{fill:#3a3015}
+.tr svg .k-exhb{fill:var(--tr-exh)}
+.tr svg .k-oilb{fill:var(--tr-oil)}
+.tr svg .k-hv{fill:var(--tr-hv)}
+.tr svg .k-arrow{fill:var(--tr-edge)}.tr svg .k-hotf{fill:var(--tr-hot)}.tr svg .k-coolf{fill:var(--tr-cool)}.tr svg .k-oilf{fill:var(--tr-oil)}
+.tr svg .k-flow{stroke:var(--tr-edge);stroke-width:2;fill:none}
+.tr svg .k-lead{stroke:var(--tr-edge);stroke-width:1;fill:none;stroke-dasharray:3 3}
+.tr svg .k-dash{stroke:var(--tr-edge);stroke-width:1.2;fill:none;stroke-dasharray:5 4}
+.tr svg .k-dim{stroke:var(--gold);stroke-width:2;fill:none}
+.tr svg .k-regen{stroke:var(--tr-acc);stroke-width:2;fill:none;stroke-dasharray:6 4}
+.tr svg .k-loss{fill:var(--tr-exh)}.tr svg .k-wheel{fill:var(--tr-acc)}.tr svg .k-wheel2{fill:var(--tr-acc);opacity:.45}
+.tr svg .k-frame{fill:none;stroke:var(--tr-edge);stroke-width:1}
+.tr svg .k-wall{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.tr svg .k-clear{fill:var(--tr-hot);opacity:.25}.tr svg .k-swept{fill:var(--tr-cool);opacity:.18}
+.tr svg .k-piston{fill:#8d9a93}.tr svg .k-ring{stroke:#5d6862;stroke-width:2}.tr svg .k-pin{fill:var(--tr-pale);stroke:#5d6862}.tr svg .k-rod{stroke:#6f7c75;stroke-width:12;stroke-linecap:round}
+html[data-theme="dark"] .tr svg .k-piston{fill:#7e8c84}
+.tr svg .k-sig{stroke:var(--tr-hot);stroke-width:2;fill:none;stroke-dasharray:6 4}
+.tr svg .k-sig2{stroke:var(--tr-edge);stroke-width:2;fill:none}
+.tr svg .k-cmd{stroke:var(--tr-cool);stroke-width:2;fill:none}
+.tr svg .k-oilp{stroke:var(--tr-oil);stroke-width:3;fill:none}
+.tr svg .k-drain{stroke:var(--tr-oil);stroke-width:2;fill:none;stroke-dasharray:5 4}
+.tr svg .k-exh{stroke:var(--tr-exh);stroke-width:5;fill:none}
+.tr svg .k-cat{fill:#8a6a1e}html[data-theme="dark"] .tr svg .k-cat{fill:#c79c3c}
+.tr svg .k-o2{fill:var(--tr-acc);stroke:var(--tr-pale);stroke-width:2}
+.tr svg .k-egr{stroke:var(--tr-hot);stroke-width:2.5;fill:none;stroke-dasharray:7 4}
+.tr svg .k-pcv{stroke:var(--tr-cool);stroke-width:2.5;fill:none;stroke-dasharray:7 4}
+.tr svg .k-wire{stroke:var(--tr-ink);stroke-width:2.2;fill:none;stroke-linecap:round}
+.tr svg .k-bat{stroke:var(--tr-ink);stroke-width:3;fill:none}
+.tr svg .k-fuse{stroke:var(--tr-hot);stroke-width:2;fill:none}
+.tr svg .k-node{fill:var(--tr-ink)}
+.tr svg .k-fil{stroke:var(--gold);stroke-width:2}
+.tr svg .k-curr{stroke:var(--tr-hot);stroke-width:2;fill:none}
+.tr svg .k-big{stroke:var(--tr-hot);stroke-width:5;fill:none}
+.tr svg .k-chg{stroke:var(--tr-cool);stroke-width:3;fill:none}
+.tr svg .k-body{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.6}
+.tr svg .k-tire{fill:var(--tr-tire)}
+.tr svg .k-tirec{fill:var(--tr-tire)}
+.tr svg .k-drive{fill:var(--tr-acc)}
+.tr svg .k-eng{fill:var(--s-engine)}.tr svg .k-trans{fill:var(--s-drivetrain)}.tr svg .k-tc{fill:var(--s-drivetrain);opacity:.7}
+.tr svg .k-shaft{stroke:var(--s-drivetrain);stroke-width:5;stroke-linecap:round}
+.tr svg .k-axle{stroke:var(--tr-edge);stroke-width:4}
+.tr svg .k-diff{fill:var(--s-drivetrain)}
+.tr svg .k-rotor{fill:#9aa5a0;stroke:#6f7b75}
+.tr svg .k-caliper{fill:var(--s-brakes);opacity:.85}
+.tr svg .k-pad{fill:#5b4636}html[data-theme="dark"] .tr svg .k-pad{fill:#a88466}
+.tr svg .k-pist{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.tr svg .k-fluid{stroke:var(--tr-hot);stroke-width:4;fill:none}
+.tr svg .k-drum{fill:#9aa5a0}.tr svg .k-shoe{fill:#5b4636}html[data-theme="dark"] .tr svg .k-shoe{fill:#a88466}
+.tr svg .k-axis{stroke:var(--tr-hot);stroke-width:3}
+.tr svg .k-knuckle{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.tr svg .k-shock{fill:var(--s-steering);opacity:.35;stroke:var(--s-steering)}
+.tr svg .k-spring{stroke:var(--s-steering);stroke-width:3;fill:none}
+.tr svg .k-arm{stroke:var(--tr-edge);stroke-width:8;stroke-linecap:round}
+.tr svg .k-ball{fill:var(--gold)}.tr svg .k-bush{fill:var(--tr-ink)}
+.tr svg .k-tie{stroke:var(--s-steering);stroke-width:5;stroke-linecap:round}
+.tr svg .k-rack{fill:var(--tr-metal);stroke:var(--tr-edge)}.tr svg .k-pinion{fill:var(--s-steering)}
+.tr svg .k-col{stroke:var(--tr-edge);stroke-width:5;stroke-linecap:round}
+.tr svg .k-tread{fill:#c3cbc6}html[data-theme="dark"] .tr svg .k-tread{fill:#c9d1cc}
+.tr svg .k-ac{stroke:var(--tr-edge);stroke-width:2.5;fill:none}
+.tr svg .k-dcf{stroke:var(--tr-hot);stroke-width:2.5;fill:none;stroke-dasharray:7 4}
+.tr svg .k-hvw{stroke:var(--tr-hv);stroke-width:4;fill:none}
+.tr svg .k-dg{fill:#9ad06a;stroke:#5f9a35}.tr svg .k-dbk{fill:#3a2a1c;stroke:#1d140c}.tr svg .k-dr{fill:#c0392b;stroke:#7e2219}.tr svg .k-dc{fill:#dcecf7;stroke:#8fb4cc}
+html[data-theme="dark"] .tr svg .k-dbk{stroke:#9a8270}
+.tr svg .k-ground{stroke:var(--tr-edge);stroke-width:2}
+.tr svg .k-stand{stroke:var(--tr-acc);stroke-width:4;fill:none;stroke-linecap:round}
+.tr svg .k-jack{stroke:var(--tr-edge);stroke-width:4;fill:none;stroke-linecap:round}
+.tr svg .k-chock{fill:var(--gold)}
+
+/* systems map */
+.tr-map{background:var(--tr-stage);border:1px solid var(--line);border-radius:16px;padding:.8rem;margin:.8rem 0}
+.tr-map-top{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between;margin-bottom:.3rem}
+.tr-map-info{min-height:3.2em;font-size:.95rem;line-height:1.45;margin:.2rem 0 .5rem}
+.tr-map-info b{color:var(--ink)}
+.tr-map-svg{display:block;width:100%;height:auto}
+.tr-map-svg .m-ground{stroke:var(--tr-edge);stroke-width:2}
+.tr-map-svg .m-body{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2;fill-opacity:.85}
+.tr-map-svg .m-glass{fill:var(--tr-glass);opacity:.7}
+.tr-map-svg .m-line{stroke:var(--tr-edge);stroke-width:1;stroke-dasharray:4 4;fill:none}
+.tr-map-svg .m-seat{fill:var(--tr-edge);opacity:.25}
+.tr-map-svg .m-hit{fill:transparent}
+.tr-map-svg .m-hitl{stroke:transparent;stroke-width:16;fill:none}
+.tr-map-svg .m-pipe{stroke:var(--s-exhaust);stroke-width:5;fill:none}
+.tr-map-svg .m-cat{fill:var(--s-exhaust)}.tr-map-svg .m-muff{fill:var(--s-exhaust)}
+.tr-map-svg .m-tank{fill:var(--s-fuel)}.tr-map-svg .m-fuel{stroke:var(--s-fuel);stroke-width:2.5;fill:none;stroke-dasharray:6 3}
+.tr-map-svg .m-air{fill:var(--s-fuel);opacity:.8}.tr-map-svg .m-intake{stroke:var(--s-fuel);stroke-width:5;fill:none;opacity:.8}
+.tr-map-svg .m-cap{fill:var(--s-fuel)}
+.tr-map-svg .m-rad{fill:var(--s-cooling)}.tr-map-svg .m-hose{stroke:var(--s-cooling);stroke-width:4;fill:none}.tr-map-svg .m-fan{fill:none;stroke:var(--s-cooling);stroke-width:2;stroke-dasharray:5 3}
+.tr-map-svg .m-eng{fill:var(--s-engine)}.tr-map-svg .m-head{fill:var(--s-engine);opacity:.75}.tr-map-svg .m-pan{fill:var(--s-engine);opacity:.6}
+.tr-map-svg .m-cyl{stroke:#fff;stroke-width:6;opacity:.35;stroke-linecap:round}
+.tr-map-svg .m-trans{fill:var(--s-drivetrain)}.tr-map-svg .m-shaft{stroke:var(--s-drivetrain);stroke-width:6;stroke-linecap:round}.tr-map-svg .m-diff{fill:var(--s-drivetrain);stroke:var(--tr-pale);stroke-width:2}
+.tr-map-svg .m-pack{fill:var(--s-ev)}.tr-map-svg .m-pack-l{stroke:var(--tr-pale);stroke-width:1.5;opacity:.7}
+.tr-map-svg .m-inv{fill:var(--s-ev);opacity:.85}.tr-map-svg .m-motor{fill:var(--s-ev);stroke:var(--tr-pale);stroke-width:2}.tr-map-svg .m-hv{stroke:var(--s-ev);stroke-width:3.5;fill:none}
+.tr-map-svg .m-port{fill:var(--s-ev)}
+.tr-map-svg .m-batt{fill:var(--s-electrical)}.tr-map-svg .m-term{stroke:var(--s-electrical);stroke-width:3}.tr-map-svg .m-alt{fill:var(--s-electrical)}
+.tr-map-svg .m-wire{stroke:var(--s-electrical);stroke-width:2;fill:none;stroke-dasharray:2 3}
+.tr-map-svg .m-light{fill:var(--s-electrical)}.tr-map-svg .m-light2{fill:var(--s-electrical)}
+.tr-map-svg .m-rotor{fill:none;stroke:var(--s-brakes);stroke-width:5}.tr-map-svg .m-caliper{stroke:var(--s-brakes);stroke-width:7;fill:none;stroke-linecap:round}
+.tr-map-svg .m-mc{fill:var(--s-brakes)}.tr-map-svg .m-bline{stroke:var(--s-brakes);stroke-width:2;fill:none;stroke-dasharray:4 3}
+.tr-map-svg .m-spring{stroke:var(--s-steering);stroke-width:3;fill:none}.tr-map-svg .m-col{stroke:var(--s-steering);stroke-width:4;stroke-linecap:round}
+.tr-map-svg .m-swheel{fill:none;stroke:var(--s-steering);stroke-width:4}.tr-map-svg .m-rack{fill:var(--s-steering)}
+.tr-map-svg .m-tire{fill:var(--s-tires)}.tr-map-svg .m-rim{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-map-svg .m-hub{fill:var(--tr-edge)}
+.tr-map-svg a{cursor:pointer;outline:none}
+.tr-map-svg a *{transition:opacity .18s}
+.tr-map[data-view="gas"] .tr-map-svg [data-view="ev"],.tr-map[data-view="ev"] .tr-map-svg [data-view="gas"]{display:none}
+.tr-map.hl .tr-map-svg a.tr-sys:not(.on) *{opacity:.13}
+.tr-map.hl .tr-map-svg a.tr-sys.on *{filter:drop-shadow(0 0 3px rgba(184,150,62,.9))}
+.tr-map-svg a:focus-visible *{filter:drop-shadow(0 0 3px rgba(184,150,62,1))}
+.tr-legend{list-style:none;margin:.6rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:.35rem}
+@media (max-width:560px){.tr-legend{grid-template-columns:1fr 1fr}.tr-legend a{font-size:.85rem;padding:.35rem .45rem}.tr-w,.tr-map{padding:.55rem}.tr-w-stage{padding:.15rem}.tr-fig .tr-fig-box{padding:.4rem}}
+.tr-legend a{display:flex;gap:.55rem;align-items:center;padding:.4rem .6rem;border-radius:10px;border:1px solid var(--line);background:var(--card);text-decoration:none !important;box-shadow:none !important;color:var(--ink) !important;font-size:.92rem;line-height:1.25}
+.tr-legend a:hover,.tr-legend a.on,.tr-legend a:focus-visible{border-color:var(--g)}
+.tr-legend i{flex:none;width:.95rem;height:.95rem;border-radius:4px;background:var(--tr-edge)}
+.tr-legend [data-sys="engine"] i{background:var(--s-engine)}.tr-legend [data-sys="fuel"] i{background:var(--s-fuel)}.tr-legend [data-sys="cooling"] i{background:var(--s-cooling)}.tr-legend [data-sys="exhaust"] i{background:var(--s-exhaust)}.tr-legend [data-sys="drivetrain"] i{background:var(--s-drivetrain)}.tr-legend [data-sys="ev"] i{background:var(--s-ev)}.tr-legend [data-sys="electrical"] i{background:var(--s-electrical)}.tr-legend [data-sys="brakes"] i{background:var(--s-brakes)}.tr-legend [data-sys="steering"] i{background:var(--s-steering)}.tr-legend [data-sys="tires"] i{background:var(--s-tires)}
+.tr-legend small{display:block;color:var(--muted);font-size:.78rem}
+.tr-map[data-view="gas"] .tr-legend [data-view="ev"],.tr-map[data-view="ev"] .tr-legend [data-view="gas"]{display:none}
+
+/* segmented buttons, shared by widgets */
+.tr-seg{display:inline-flex;flex-wrap:wrap;gap:.3rem}
+.tr-seg button{font:600 .88rem system-ui,sans-serif;padding:.4rem .8rem;min-height:2.3rem;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.tr-seg button[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:#fff}
+html[data-theme="dark"] .tr-seg button[aria-pressed="true"]{color:#0f1a14}
+.tr-seg button:focus-visible,.tr-w button:focus-visible,.tr-w input:focus-visible,.tr-w select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* interactive widgets (shared frame) */
+.tr-w{background:var(--tr-stage);border:1px solid var(--line);border-radius:16px;padding:.9rem;margin:1rem 0}
+.tr-w-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1rem;align-items:start}
+@media (max-width:820px){.tr-w-grid{grid-template-columns:1fr}}
+.tr-w-stage svg{display:block;width:100%;height:auto}
+.tr-w-stage{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.4rem;touch-action:manipulation}
+.tr-w h3{margin:.1rem 0 .4rem}
+.tr-w-ctrl{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.5rem 0}
+.tr-w-ctrl .hs-btn{min-height:2.4rem}
+.tr-field{display:flex;flex-direction:column;gap:.2rem;font-weight:600;font-size:.9rem;margin:.45rem 0}
+.tr-field span.v{font-weight:700;color:var(--g);font-variant-numeric:tabular-nums}
+.tr-field input[type=range]{width:100%;accent-color:#2e7d4f;min-height:1.8rem}
+.tr-field select,.tr-field input[type=text]{font:inherit;font-weight:400;padding:.45rem .6rem;border-radius:8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+.tr-out{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.6rem .8rem;line-height:1.55;font-variant-numeric:tabular-nums}
+.tr-out p{margin:.25rem 0}
+.tr-out .big{font:700 1.25rem Georgia,serif;color:var(--g)}
+.tr-out .warn{color:var(--tr-red);font-weight:700}.tr-out .ok{color:var(--tr-acc);font-weight:700}
+.tr-w-note{font-size:.85rem;color:var(--muted);margin:.5rem 0 0;line-height:1.45}
+.tr-stroke{display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;margin:.1rem 0 .3rem}
+.tr-stroke b{font:700 1.35rem Georgia,serif;color:var(--g)}
+.tr-stroke span{color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+.tr-partname{min-height:4.2em;background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:.5rem .7rem;font-size:.93rem;line-height:1.45;margin:.5rem 0}
+.tr-partname b{color:var(--ink)}
+.tr-cycle{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin:.4rem 0 .2rem;position:relative}
+.tr-cycle span{font:700 .72rem system-ui,sans-serif;text-align:center;padding:.3rem 0;border-radius:6px;color:#fff;opacity:.45}
+.tr-cycle span.on{opacity:1;box-shadow:0 0 0 2px var(--gold)}
+.tr-cycle .c1{background:#2f80c4}.tr-cycle .c2{background:#4c62b8}.tr-cycle .c3{background:#d4581f}.tr-cycle .c4{background:#6f757b}
+.tr-w [data-part]{cursor:pointer}
+.tr-w [data-part]:focus{outline:none}
+.tr-w [data-part]:focus-visible,.tr-w [data-part].sel{filter:drop-shadow(0 0 2px #d9a93b) drop-shadow(0 0 5px #d9a93b)}
+.tr-gauge-lbl{font:700 .8rem system-ui,sans-serif}
+
+/* troubleshooting finder */
+.tr-find-syms{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:.45rem;margin:.4rem 0 .8rem}
+.tr-find-syms button{display:flex;align-items:center;gap:.5rem;text-align:left;font:600 .92rem system-ui,sans-serif;padding:.55rem .7rem;min-height:2.8rem;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;line-height:1.2}
+.tr-find-syms button span{font-size:1.25rem}
+.tr-find-syms button[aria-pressed="true"]{border-color:var(--g);background:var(--soft);box-shadow:inset 0 0 0 1px var(--g)}
+.tr-find-q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;margin:.5rem 0}
+.tr-find-q p{margin:0 0 .5rem;font-weight:700}
+.tr-find-res{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:.4rem 1rem .8rem;margin:.6rem 0}
+.tr-find-res h3{margin:.6rem 0 .3rem}
+.tr-find-res ol,.tr-find-res ul{padding-left:1.2rem;margin:.3rem 0}
+.tr-find-res li{margin:.25rem 0}
+.tr-urg{display:inline-flex;align-items:center;gap:.4rem;font:700 .8rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;border-radius:999px;padding:.25rem .7rem;margin-top:.6rem}
+.tr-urg.u-stop{background:#b23a2e;color:#fff}.tr-urg.u-soon{background:#b8862e;color:#fff}.tr-urg.u-ok{background:#2e7d4f;color:#fff}
+.tr-find-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.2rem 1.4rem}
+.tr-find-foot{font-size:.85rem;color:var(--muted)}
+
+/* skill ladder */
+.tr-ladder{list-style:none;padding:0;margin:.6rem 0;display:grid;gap:.7rem}
+.tr-rung{display:grid;grid-template-columns:3.2rem minmax(0,1fr);gap:.8rem;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:.8rem 1rem}
+html:not([data-theme="dark"]) .tr-rung{border-color:#b9cfc1}
+.tr-rung-n{width:3rem;height:3rem;border-radius:12px;display:grid;place-items:center;font:700 1.4rem Georgia,serif;color:#fff;background:var(--tr-acc)}
+html[data-theme="dark"] .tr-rung-n{color:#0f1a14}
+.tr-rung.r2 .tr-rung-n{background:#b8862e}.tr-rung.r3 .tr-rung-n{background:#9a4a2a}.tr-rung.r4 .tr-rung-n{background:#7a2338}
+html[data-theme="dark"] .tr-rung.r2 .tr-rung-n{background:#e3b75e}html[data-theme="dark"] .tr-rung.r3 .tr-rung-n{background:#f08a70}html[data-theme="dark"] .tr-rung.r4 .tr-rung-n{background:#f2709c}
+.tr-rung h3{margin:.05rem 0 .2rem}
+.tr-rung p{margin:.1rem 0 .4rem;color:var(--muted)}
+.tr-rung ul{margin:0;padding-left:1.1rem;columns:2 240px;column-gap:1.4rem}
+.tr-rung li{margin:.15rem 0;break-inside:avoid}
+
+/* careers */
+.tr-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.6rem;margin:.6rem 0}
+.tr-stat{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:.7rem .9rem}
+html:not([data-theme="dark"]) .tr-stat{border-color:#b9cfc1}
+.tr-stat b{display:block;font:700 1.45rem Georgia,serif;color:var(--g)}
+.tr-stat span{font-size:.88rem;color:var(--muted);line-height:1.35;display:block}
+
+/* quiz */
+.tr-quiz{list-style:none;padding:0;margin:.4rem 0;counter-reset:q;display:grid;gap:.7rem}
+.tr-q{counter-increment:q;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:.7rem 1rem}
+html:not([data-theme="dark"]) .tr-q{border-color:#b9cfc1}
+.tr-q>p{margin:.1rem 0 .5rem;font-weight:700}
+.tr-q>p::before{content:counter(q) ". ";color:var(--g)}
+.tr-opts{display:flex;flex-direction:column;gap:.35rem;margin:0 0 .4rem;padding:0;list-style:none}
+.tr-opts button{width:100%;text-align:left;font:inherit;font-size:.97rem;padding:.5rem .75rem;min-height:2.6rem;border-radius:10px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;line-height:1.35}
+.tr-opts button:hover{border-color:var(--g)}
+.tr-opts button.right{border-color:#2e7d4f;background:#e3f2e8}
+.tr-opts button.wrong{border-color:#b23a2e;background:#f8e4e1}
+html[data-theme="dark"] .tr-opts button.right{background:#173326;border-color:#6cc79a}
+html[data-theme="dark"] .tr-opts button.wrong{background:#3a1c18;border-color:#ff8a7a}
+.tr-opts button[disabled]{cursor:default}
+.tr-q details{margin:.2rem 0 0}
+.tr-q summary{cursor:pointer;font-weight:600;color:var(--g)}
+.tr-q details p{margin:.35rem 0 .1rem}
+.tr-score{font-weight:700;color:var(--g)}
+
+/* sources, deeper, done */
+.tr-src{font-size:.88rem;line-height:1.55;padding-left:1.2rem}
+.tr-src li{margin:.2rem 0}
+.tr-deeper{padding-left:1.2rem}.tr-deeper li{margin:.3rem 0}
+.tr-deeper small{color:var(--muted)}
+.tr-done{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem;background:var(--soft);border-radius:12px;padding:.7rem 1rem;margin:1.2rem 0}
+.tr-done label{display:inline-flex;gap:.55rem;align-items:center;font-weight:700;cursor:pointer}
+.tr-done input{width:1.3rem;height:1.3rem;accent-color:#004225}
+@media print{.tr-w,.tr-map,.tr-done,.tr-toc{display:none !important}}
+@media (prefers-reduced-motion:reduce){.tr-les,.tr-map-svg a *{transition:none}}
+
+/* four-stroke engine (Lesson 2) */
+.tr-eng{--e-head:#bcc7c0;--e-metal2:#a6b0aa;--e-cam:#5d6862;--e-dark:#3d4441}
+html[data-theme="dark"] .tr-eng{--e-head:#45564c;--e-metal2:#8a978f;--e-cam:#9aa79f;--e-dark:#1d2320}
+.tr-eng .e-block{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-eng .e-case{fill:var(--tr-pale);stroke:var(--tr-metal);stroke-width:9;stroke-linejoin:round}
+.tr-eng .e-jacket{fill:var(--tr-cool);opacity:.3}
+.tr-eng .e-oil{fill:var(--tr-oil);opacity:.65}
+.tr-eng .e-pan{fill:none;stroke:var(--tr-edge);stroke-width:3}
+.tr-eng .e-head{fill:var(--e-head);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-eng .e-gasket{fill:var(--e-dark)}
+.tr-eng .e-port-in{fill:#2f80c4;fill-opacity:.2;stroke:#2f80c4;stroke-opacity:.55}
+.tr-eng .e-port-ex{fill:#7a7f86;fill-opacity:.25;stroke:#7a7f86;stroke-opacity:.7}
+.tr-eng .e-pin-in{fill:#2f80c4}.tr-eng .e-pex{fill:#6f757b}
+html[data-theme="dark"] .tr-eng .e-pin-in{fill:#7dbcef}html[data-theme="dark"] .tr-eng .e-pex{fill:#b7bdb9}
+.tr-eng .e-valve{fill:#7d8a83;stroke:#4f5a54;stroke-width:1}
+.tr-eng .e-bucket{fill:var(--e-metal2);stroke:#4f5a54}
+.tr-eng .e-spring{fill:none;stroke:var(--tr-edge);stroke-width:2.2}
+.tr-eng .e-cam{fill:var(--e-cam);stroke:var(--e-dark);stroke-width:1}
+.tr-eng .e-camc{fill:var(--tr-pale)}
+.tr-eng .e-plug-ins{fill:#f6f3ec;stroke:#8f9a94}.tr-eng .e-plug-m{fill:#8f9a94}
+.tr-eng .e-spark{stroke:#ffc21a;stroke-width:3;stroke-linecap:round}
+.tr-eng .e-piston{fill:var(--e-metal2);stroke:#5d6862;stroke-width:1.5}
+.tr-eng .e-ring{stroke:#4b5550;stroke-width:2}
+.tr svg text.e-dir{fill:#fff;font:700 14px system-ui,sans-serif;opacity:.8}
+.tr-eng .e-rod{stroke:#7f8b85;stroke-width:18;stroke-linecap:round}
+.tr-eng .e-rod2{stroke:#aab4af;stroke-width:6;stroke-linecap:round}
+.tr-eng .e-pinc{fill:#dfe5e1;stroke:#5d6862}
+.tr-eng .e-cw{fill:#8a958f;stroke:#5d6862}
+.tr-eng .e-crank{fill:#66726c;stroke:#3d4441}
+.tr-eng .e-crankpin{fill:#cfd6d2;stroke:#3d4441}
+.tr-eng .e-inset{fill:var(--tr-stage);stroke:var(--tr-edge);stroke-dasharray:3 3}
+.tr-eng .e-belt{fill:none;stroke:var(--tr-ink);stroke-width:2.5;stroke-dasharray:5 3}
+.tr-eng .e-spr{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.tr-eng .e-sprm{stroke:var(--tr-hot);stroke-width:3;stroke-linecap:round}
+.tr svg text.e-tiny{font-size:10.5px;font-weight:600}
+.tr svg text.e-lab{font-size:11.5px;fill:var(--tr-ink);font-weight:600}
+.tr-eng .e-lead{stroke:var(--tr-edge);stroke-width:1;fill:none}
+.tr svg text.e-stroke{font:700 16px Georgia,serif;fill:var(--g)}
+.tr-eng .e-arh{fill:var(--tr-edge)}
+/* cooling loop (Lesson 4) */
+.tr-cool .c-pipe{fill:none;stroke:var(--tr-edge);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+.tr-cool .c-pipe2{fill:none;stroke:var(--tr-edge);stroke-width:3}
+.tr-cool .c-rad{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-cool .c-fin{stroke:var(--tr-edge);stroke-width:1}
+.tr-cool .c-res{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-cool .c-cool{fill:#3fa9a0;opacity:.7}
+.tr-cool .c-fanring{fill:none;stroke:var(--tr-edge);stroke-width:1.5;stroke-dasharray:4 3}
+.tr-cool .c-blade{fill:var(--s-cooling);opacity:.75}
+.tr-cool .c-hub{fill:var(--tr-ink)}
+.tr-cool .c-eng{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-cool .c-glow{fill:#e8743b}
+.tr-cool .c-jacket{fill:none;stroke:var(--tr-cool);stroke-width:6;opacity:.45;stroke-linejoin:round}
+.tr-cool .c-cyl{fill:var(--tr-pale);stroke:var(--tr-edge)}
+.tr-cool .c-th{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.tr-cool .c-thv{stroke:var(--tr-hot);stroke-width:4;stroke-linecap:round}
+.tr-cool .c-pump{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.tr-cool .c-imp{stroke:var(--tr-cool);stroke-width:3;stroke-linecap:round}
+.tr-cool .c-heat{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-cool .c-gbg{fill:none;stroke:var(--tr-edge);stroke-width:8;opacity:.35}
+.tr-cool .c-gok{fill:none;stroke:var(--tr-acc);stroke-width:8}
+.tr-cool .c-ghot{fill:none;stroke:var(--tr-red);stroke-width:8}
+.tr-cool .c-needle{stroke:var(--tr-ink);stroke-width:3;stroke-linecap:round}
+.tr-cool .c-steam{fill:none;stroke:var(--tr-edge);stroke-width:2.5;stroke-linecap:round}
+.tr-cool .c-dot{stroke:var(--card);stroke-width:1}
+.tr svg text.c-lab{font-size:11.5px;fill:var(--tr-ink);font-weight:600}
+.tr svg text.c-sm{font-size:10px;fill:var(--muted);font-weight:500}
+.tr svg text.c-b{font-weight:800}
+.tr-w h3.c-title{margin:0 0 .2rem}
+/* brake hydraulics (Lesson 8) */
+.tr-brk .b-pivot{fill:var(--tr-ink)}
+.tr-brk .b-lever{stroke:var(--tr-edge);stroke-width:9;stroke-linecap:round}
+.tr-brk .b-pad{fill:var(--tr-ink)}
+.tr-brk .b-force{stroke:var(--tr-hot);fill:none;stroke-linecap:round}
+.tr-brk .b-arh{fill:var(--tr-hot)}
+.tr-brk .b-rod{stroke:var(--tr-edge);stroke-width:4}
+.tr-brk .b-cyl{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-brk .b-pist{fill:#8d9a93;stroke:#5d6862}
+.tr-brk .b-fluid{fill:#d9a441;opacity:.75}
+.tr-brk .b-line{fill:none;stroke:#d9a441;stroke-width:5;stroke-linejoin:round}
+.tr-brk .b-line2{stroke:#d9a441;stroke-width:3}
+.tr-brk .b-gauge{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.tr-brk .b-needle{stroke:var(--tr-red);stroke-width:3;stroke-linecap:round}
+.tr-brk .b-padm{fill:#5b4636}
+html[data-theme="dark"] .tr-brk .b-padm{fill:#a88466}
+.tr-brk .b-rotor{fill:#9aa5a0;stroke:#6f7b75}
+.tr svg text.b-t{font-size:11.5px;fill:var(--tr-ink);font-weight:600}
+.tr svg text.b-tb{font-weight:800}
+/* gears and differential (Lesson 7) */
+.tr-gear .gr-1{fill:var(--s-drivetrain);stroke:var(--tr-ink);stroke-width:1;opacity:.9}
+.tr-gear .gr-2{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.5}
+.tr-gear .gr-hub{fill:var(--tr-pale);stroke:var(--tr-ink);stroke-width:2}
+.tr-gear .gr-mark{stroke:var(--tr-hot);stroke-width:4;stroke-linecap:round}
+.tr svg text.gr-t{font-size:11.5px;fill:var(--tr-ink);font-weight:600}
+.tr-diff .df-trk{fill:none;stroke:var(--tr-edge);stroke-width:2;stroke-dasharray:6 5}
+.tr-diff .df-mid{fill:none;stroke:var(--gold);stroke-width:1.5;opacity:.6}
+.tr-diff .df-o{fill:var(--tr-ink)}
+.tr-diff .df-body{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:1.5;fill-opacity:.85}
+.tr-diff .df-axle{stroke:var(--tr-edge);stroke-width:3}
+.tr-diff .df-diff{fill:var(--s-drivetrain)}
+.tr-diff .df-tire{fill:var(--tr-tire)}.tr-diff .df-tire0{fill:var(--tr-tire);opacity:.6}
+.tr-diff .df-strip{stroke:#f1e2b4;stroke-width:2}
+.tr-diff .df-bar{fill:var(--tr-cool);opacity:.8}.tr-diff .df-barc{fill:var(--s-drivetrain)}
+/* tire decoder (Lesson 10) */
+.tr-tire .ti-tire{fill:var(--tr-tire)}
+.tr-tire .ti-rim{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:2}
+.tr-tire .ti-hub{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.tr-tire .ti-dim{fill:none;stroke:var(--gold);stroke-width:2}
+.tr-tire .ti-dim2{fill:none;stroke:var(--tr-cool);stroke-width:2;stroke-dasharray:5 3}
+.tr-tire .ti-dim3{fill:none;stroke:var(--tr-hot);stroke-width:3}
+.tr svg text.ti-t{font-size:12px;fill:var(--tr-ink);font-weight:700}
+.tr svg text.ti-code{font:800 21px ui-monospace,Menlo,Consolas,monospace}
+html[data-theme="dark"] .tr svg text.ti-code{filter:brightness(1.5)}
+.tr svg .k-group{fill:none;stroke:var(--tr-edge);stroke-width:1.5;stroke-dasharray:6 4}
+.tr-map-svg .m-hub{pointer-events:none}

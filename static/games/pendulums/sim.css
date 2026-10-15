@@ -1,0 +1,31 @@
+/* Pendulums and Resonance: only what this simulation adds to the shared lab kit (static/games/lab/lab.css). */
+#pendulums-lab .lab-hud{max-width:calc(100% - 9.5rem);font-size:11.5px}
+#pendulums-lab .lab-hud .pend-dim{color:var(--sim-muted)}
+#pendulums-lab #pend-cv{outline:none;cursor:grab}
+#pendulums-lab #pend-cv.pend-grabbing{cursor:grabbing}
+#pendulums-lab #pend-cv.pend-tap{cursor:pointer}
+#pendulums-lab #pend-cv:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-3px;border-radius:14px}
+#pendulums-lab .lab-tools button{width:auto;min-width:2.3rem;padding:0 .45rem;font:600 .9rem system-ui,sans-serif}
+#pendulums-lab .lab-seg button{min-height:36px}
+#pendulums-lab .lab-btn{min-height:36px}
+#pendulums-lab .lab-field input[type=range]{height:30px;margin:0;min-width:0}
+#pendulums-lab .lab-chk{min-height:36px}
+#pendulums-lab .lab-chk input{width:20px;height:20px;margin:0;accent-color:var(--acc)}
+#pendulums-lab .pend-note{margin:-.35rem 0 0;min-height:2.6em}
+#pendulums-lab .pend-ctl{display:flex;flex-direction:column;gap:.55rem}
+#pendulums-lab .pend-nudge{display:flex !important;align-items:center;gap:.35rem}
+#pendulums-lab .pend-nudge input{flex:1 1 auto}
+#pendulums-lab .pend-nudge .lab-btn{min-width:36px;padding:.2rem .5rem;font-size:1.05rem}
+#pendulums-lab .pend-f{margin:.1rem 0;font-size:.95rem;padding:.4rem .6rem}
+#pendulums-lab .lab-readout dt{line-height:1.3}
+#pendulums-lab .lab-readout dd{white-space:nowrap}
+#pendulums-lab .lab-missions li button{min-height:32px;padding:.25rem .8rem}
+#pendulums-lab .pend-push{position:absolute;left:.6rem;top:calc(56% - 3.3rem);min-width:5.5rem;min-height:44px;border-radius:12px;border:1px solid #f9a8d4;background:rgba(60,20,45,.82);color:#ffe3f1;font:700 .95rem system-ui,sans-serif;cursor:pointer;box-shadow:0 0 0 0 rgba(249,168,212,.5)}
+#pendulums-lab .pend-push:hover{background:rgba(90,30,65,.9)}
+#pendulums-lab .pend-push:active{transform:translateY(1px)}
+#pendulums-lab .lab-table td:first-child{min-width:12rem}
+#pendulums-lab .lab-sec p{margin:0 0 .75rem}#pendulums-lab .lab-sec .lab-small{margin-top:.4rem}
+/* keep the picture in view while scrolling the long panel on wide screens */
+@media (min-width:861px){#pendulums-lab .lab-view{position:sticky;top:.6rem}}
+@media (max-width:860px){#pendulums-lab .lab-view{height:min(74vh,600px);min-height:470px}}
+@media (max-width:420px){#pendulums-lab .lab-hero{padding:1.1rem 1.1rem}#pendulums-lab .lab-hero h1{font-size:1.6rem}#pendulums-lab .lab-hud{font-size:10.5px}#pendulums-lab .lab-table td:first-child{min-width:9rem}}

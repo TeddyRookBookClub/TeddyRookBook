@@ -1,0 +1,32 @@
+/* Optics Bench: only what this simulation adds to the shared lab kit (static/games/lab/lab.css). */
+#optics-lab .lab-hud{max-width:calc(100% - 10.5rem);font-size:11.5px}
+#optics-lab .lab-hud:empty{display:none}
+#optics-lab #optics-cv{outline:none;cursor:default}
+#optics-lab #optics-cv:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-3px;border-radius:14px}
+#optics-lab .lab-tools button{min-width:2.3rem;font:600 1rem system-ui,sans-serif}
+#optics-lab .lab-tools button[aria-pressed="false"]{opacity:.55}
+#optics-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);color:var(--sim-acc)}
+#optics-lab .lab-seg button{min-height:36px}
+#optics-lab .lab-btn{min-height:36px}
+#optics-lab .lab-chk{min-height:36px}
+#optics-lab .lab-chk input{width:20px;height:20px;margin:0;accent-color:var(--acc)}
+#optics-lab .lab-field input[type=range]{height:30px;margin:0}
+#optics-lab .lab-field select{min-height:36px}
+#optics-lab .optics-note{margin:-.35rem 0 0;min-height:2.6em}
+#optics-lab .optics-add{display:grid;grid-template-columns:repeat(auto-fill,minmax(7.4rem,1fr));gap:.3rem}
+#optics-lab .optics-add button{min-height:36px;font:600 .8rem system-ui,sans-serif;padding:.3rem .45rem;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;text-align:left}
+#optics-lab .optics-add button:hover{border-color:var(--acc)}
+#optics-lab .optics-add button::before{content:"+ ";color:var(--acc);font-weight:700}
+#optics-lab .optics-selbox{display:flex;flex-direction:column;gap:.5rem;padding:.6rem .65rem;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+#optics-lab #optics-sel{display:flex;flex-direction:column;gap:.5rem}
+#optics-lab #optics-sel:empty{display:none}
+#optics-lab .optics-mini button{flex:1 1 30%;font-size:.74rem;padding:.3rem .4rem;display:inline-flex;align-items:center;justify-content:center;gap:.3rem}
+#optics-lab .optics-sw{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;border:1px solid rgba(0,0,0,.25);flex:none}
+#optics-lab .lab-readout dt{line-height:1.3}
+#optics-lab .lab-readout dd{white-space:nowrap}
+#optics-lab .lab-missions li button{min-height:36px;padding:.25rem .8rem}
+#optics-lab .lab-table td:nth-child(2){font-variant-numeric:tabular-nums}
+#optics-lab .lab-sec p{margin:0 0 .75rem}
+@media (min-width:861px){#optics-lab .lab-view{position:sticky;top:.6rem}}
+@media (max-width:860px){#optics-lab .lab-view{height:min(64vh,500px);min-height:440px}}
+@media (max-width:420px){#optics-lab .lab-hero{padding:1.1rem 1.1rem}#optics-lab .lab-hero h1{font-size:1.6rem}#optics-lab .lab-hud{font-size:10.5px;max-width:calc(100% - 9.5rem)}}

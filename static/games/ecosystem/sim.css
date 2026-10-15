@@ -1,0 +1,38 @@
+/* Predators and Prey: only what this simulation adds to the shared lab kit (static/games/lab/lab.css). */
+#ecosystem-lab .lab-view{height:min(calc(100vh - 20px),800px);min-height:560px;touch-action:pan-y}
+#ecosystem-lab .lab-hud{max-width:calc(100% - 10.5rem);font-size:11.5px}
+#ecosystem-lab .lab-hud .eco-r{color:#ffd479}
+#ecosystem-lab .lab-hud .eco-f{color:#ff9f7a}
+#ecosystem-lab .lab-hud .eco-g{color:#63e6be}
+#ecosystem-lab .lab-hud .eco-dim{color:var(--sim-muted)}
+#ecosystem-lab .lab-toast{width:max-content;max-width:min(90%,32rem)}
+#ecosystem-lab #eco-cv{outline:none;cursor:pointer}
+#ecosystem-lab #eco-cv.eco-add{cursor:copy}
+#ecosystem-lab #eco-cv:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-3px;border-radius:14px}
+#ecosystem-lab .lab-tools button{width:auto;min-width:2.3rem;padding:0 .45rem;font:600 .9rem system-ui,sans-serif}
+#ecosystem-lab .lab-seg button{min-height:36px}
+#ecosystem-lab .lab-btn{min-height:36px}
+#ecosystem-lab .lab-field input[type=range]{height:30px;margin:0}
+#ecosystem-lab .lab-chk{min-height:36px;line-height:1.3}
+#ecosystem-lab .lab-chk input{width:20px;height:20px;margin:0;flex:none;accent-color:var(--acc)}
+#ecosystem-lab .eco-note{margin:-.35rem 0 0;min-height:2.6em}
+#ecosystem-lab .eco-eq{margin:-.2rem 0 0;font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:.86rem;color:var(--ink)}
+#ecosystem-lab .eco-seedrow{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem}
+#ecosystem-lab .eco-seedrow input[type=number]{width:6.2rem;min-height:36px;font:inherit;padding:.3rem .5rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+#ecosystem-lab .lab-readout dt{line-height:1.3}
+#ecosystem-lab .lab-readout dd{white-space:nowrap}
+#ecosystem-lab .eco-exp td,#ecosystem-lab .eco-exp th{padding:.3rem .45rem}
+#ecosystem-lab .eco-exp td:last-child{font-variant-numeric:tabular-nums}
+#ecosystem-lab .eco-exp tr.eco-best td{font-weight:700;color:var(--acc)}
+#ecosystem-lab .eco-exp tr.eco-run td{color:var(--muted);font-style:italic}
+#ecosystem-lab .lab-missions li button{min-height:32px;padding:.25rem .8rem}
+#ecosystem-lab .lab-sec ol,#ecosystem-lab .lab-sec ul:not(.lab-src){padding-left:1.4rem}
+#ecosystem-lab .lab-sec p{margin:0 0 .75rem}
+/* keep the meadow in view while scrolling the long panel on wide screens */
+@media (min-width:861px){#ecosystem-lab .lab-view{position:sticky;top:.6rem}}
+@media (max-width:620px){
+  #ecosystem-lab .lab-view{height:clamp(560px,calc((100vw - 32px) * 1.85),820px)}
+  #ecosystem-lab .lab-hud{font-size:10.5px;padding:.2rem .45rem;max-width:calc(100% - 9.5rem);top:.55rem;background:none;backdrop-filter:none}
+  #ecosystem-lab .lab-hud .eco-wide{display:none}
+}
+@media (max-width:420px){#ecosystem-lab .lab-hero{padding:1.1rem 1.1rem}#ecosystem-lab .lab-hero h1{font-size:1.6rem}}

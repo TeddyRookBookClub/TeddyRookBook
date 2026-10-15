@@ -1,0 +1,72 @@
+/* Rocket Builder: only what this simulation adds to the shared lab kit */
+#rocket-lab .lab-view{outline:none}
+#rocket-lab .lab-view:focus-visible{box-shadow:0 0 0 3px var(--sim-acc)}
+#rocket-lab .lab-hud{max-width:calc(100% - 13rem);font-size:12px}
+#rocket-lab .lab-hud .rk-ok{color:var(--sim-acc)}
+#rocket-lab .lab-hud .rk-no{color:var(--sim-red)}
+#rocket-lab .lab-tools button{width:2.4rem;height:2.4rem;font:600 .82rem system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+#rocket-lab #rk-warp{width:auto;min-width:2.4rem;padding:0 .45rem}
+#rocket-lab .lab-toast{top:7.2rem}
+/* a line of flight news, bottom left */
+.rk-msg{position:absolute;left:.6rem;bottom:4.6rem;max-width:min(30rem,calc(100% - 1.2rem));margin:0;background:rgba(6,17,26,.72);border:1px solid var(--sim-line);border-radius:10px;padding:.35rem .65rem;font:600 .82rem/1.4 system-ui,sans-serif;color:var(--sim-ink);opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;pointer-events:none}
+.rk-msg.on{opacity:1;transform:none}
+/* flight buttons, bottom right */
+.rk-pad{position:absolute;right:.6rem;bottom:.6rem;display:flex;gap:.35rem}
+.rk-pad button{min-width:2.5rem;height:2.5rem;border-radius:10px;border:1px solid var(--sim-line);background:rgba(11,27,39,.88);color:var(--sim-ink);font:700 1rem system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
+.rk-pad button:hover,.rk-pad button:focus-visible{border-color:var(--sim-acc)}
+.rk-pad .rk-stg{padding:0 .7rem;font-size:.85rem;background:#123a33;border-color:var(--sim-acc)}
+.rk-pad button:disabled{opacity:.4;cursor:default;border-color:var(--sim-line);background:rgba(11,27,39,.88)}
+/* the big launch button over the picture */
+.rk-bigl{position:absolute;left:50%;bottom:1rem;transform:translateX(-50%);padding:.65rem 1.3rem;border-radius:999px;border:0;background:linear-gradient(135deg,#ffd479,#ff9f5a);color:#1d1406;font:800 1.05rem system-ui,sans-serif;cursor:pointer;box-shadow:0 0 0 4px rgba(255,212,121,.18),0 6px 24px rgba(255,159,90,.35)}
+.rk-bigl:hover{filter:brightness(1.06)}
+.rk-bigl:focus-visible{outline:3px solid #fff;outline-offset:2px}
+/* the end-of-flight card */
+.rk-sum{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(24rem,calc(100% - 2rem));background:rgba(9,24,35,.94);border:1px solid var(--sim-line);border-radius:14px;padding:.9rem 1rem;color:var(--sim-ink);font:.9rem/1.5 system-ui,sans-serif;box-shadow:0 10px 40px rgba(0,0,0,.45)}
+.rk-sum h3{margin:0 0 .3rem;font:700 1.15rem Georgia,serif;color:var(--sim-gold)}
+.rk-sum p{margin:.3rem 0}
+.rk-sum b{color:#fff}
+.rk-sum .rk-sum-tip{color:var(--sim-muted);font-size:.84rem}
+.rk-sum .lab-btn{border-color:var(--sim-line);background:#0b1b27;color:var(--sim-ink)}
+.rk-sum .lab-btn.pri{background:#63e6be;border-color:#63e6be;color:#06231a}
+/* panel */
+#rocket-lab #rk-tabs button{font-size:.88rem;padding:.45rem .6rem;min-height:2.3rem}
+#rocket-lab #rk-build,#rocket-lab #rk-fly{display:flex;flex-direction:column;gap:.6rem}
+#rocket-lab #rk-stages{display:flex;flex-direction:column;gap:.5rem}
+.rk-st{border:1px solid var(--line);border-left:5px solid var(--stc);border-radius:10px;padding:.45rem .6rem .5rem;background:var(--paper);display:flex;flex-direction:column;gap:.3rem}
+.rk-st-h{display:flex;align-items:center;gap:.45rem}
+.rk-st-h b{font-size:.92rem}
+.rk-st-h span{font-size:.76rem;color:var(--muted);flex:1}
+.rk-x{width:2.25rem;height:2.25rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:.85rem}
+.rk-x:hover{border-color:#c2523c;color:#c2523c}
+.rk-st .lab-field>span{font-size:.8rem}
+#rocket-lab input[type=range]{height:2.25rem;margin:0}
+.rk-st-f{margin:0;font-size:.78rem;color:var(--muted);line-height:1.4}
+.rk-st-f b{color:var(--ink)}
+#rocket-lab .rk-add{align-self:flex-start;min-height:2.3rem}
+#rocket-lab .rk-add:disabled{display:none}
+#rocket-lab .rk-go{min-height:2.6rem;font-size:1rem}
+#rocket-lab .lab-readout dd.rk-bad{color:#c2523c}
+html[data-theme="dark"] #rocket-lab .lab-readout dd.rk-bad{color:#ff8787}
+#rocket-lab .rk-l{padding-left:.9rem;position:relative}
+#rocket-lab .rk-l::before{content:"";position:absolute;left:0;top:.38em;width:.55rem;height:.55rem;border-radius:2px}
+#rocket-lab .rk-lg::before{background:#e0b850}
+#rocket-lab .rk-ld::before{background:#e86a6a}
+#rocket-lab .rk-ls::before{background:#5aa7e6}
+#rocket-lab .lab-field select{min-height:2.3rem}
+#rocket-lab .lab-chk{min-height:2.3rem}
+#rocket-lab .lab-chk input{width:1.15rem;height:1.15rem;accent-color:var(--acc)}
+#rocket-lab .lab-row .lab-btn{min-height:2.4rem}
+#rocket-lab .lab-missions li button{min-height:2.3rem;padding:.25rem .8rem}
+#rocket-lab .lab-seg button{min-height:2.25rem}
+@media (max-width:600px){
+  #rocket-lab .lab-tools{flex-direction:column}
+  #rocket-lab .lab-hud{max-width:calc(100% - 4.2rem);font-size:11px}
+  .rk-msg{bottom:6.6rem;font-size:.78rem}
+  .rk-pad button{min-width:2.4rem;height:2.4rem}
+}
+@media (prefers-reduced-motion:reduce){.rk-msg{transition:none}}
+/* keep the picture in view while the long panel scrolls past (two-column layout only) */
+@media (min-width:861px){#rocket-lab .lab-view{position:sticky;top:.8rem}}
+#rocket-lab .lab-sec p{margin:.45rem 0 .75rem}
+#rocket-lab .lab-sec ul:not(.lab-src){padding-left:1.3rem;line-height:1.55}
+#rocket-lab .lab-note p{margin:.25rem 0}

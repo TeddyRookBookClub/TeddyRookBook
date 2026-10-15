@@ -1,0 +1,46 @@
+/* Orbit Lab: only what this simulation adds to the shared lab look (static/games/lab/lab.css). */
+#orbits-lab .lab-view{cursor:grab}
+#orbits-lab .lab-view:active{cursor:grabbing}
+#orbits-lab .lab-view canvas:focus{outline:none}
+#orbits-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#orbits-lab .lab-hud{line-height:1.5}
+#orbits-lab .lab-hud.bottom{max-width:calc(100% - 9.5rem)}
+#orbits-lab .lab-tools button{min-width:36px;min-height:36px}
+.orbits-act{position:absolute;right:.6rem;bottom:.6rem;min-height:40px;padding:.45rem .95rem;border-radius:12px;border:1px solid var(--sim-acc);background:rgba(18,58,51,.92);color:#fff;font:600 .92rem system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;box-shadow:0 0 18px rgba(99,230,190,.25)}
+.orbits-act:hover{background:#18493f}
+.orbits-act:focus-visible{outline:2px solid var(--sim-gold);outline-offset:2px}
+.orbits-noscript{position:absolute;inset:auto 0 45% 0;text-align:center;color:var(--sim-ink)}
+/* the panel */
+#orbits-lab .orbits-grp{display:flex;flex-direction:column;gap:.55rem}
+#orbits-lab .lab-seg button{min-height:36px}
+#orbits-lab .lab-field>span{align-items:center}
+#orbits-lab .lab-field>span label{color:var(--muted)}
+#orbits-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#orbits-lab .lab-field input[type=number]{width:6.2em;font:600 .85rem ui-monospace,Menlo,Consolas,monospace;text-align:right;padding:.2rem .3rem;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);min-height:30px}
+#orbits-lab .lab-field input[type=number]:disabled{opacity:.5}
+#orbits-lab .lab-field select{min-height:36px}
+#orbits-lab .lab-field output{font:600 .82rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink);text-align:right}
+#orbits-lab .lab-chk{min-height:36px;cursor:pointer}
+#orbits-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#orbits-lab .lab-btn{min-height:36px}
+#orbits-lab #orbits-tip{margin:0;min-height:2.9em}
+#orbits-lab .lab-readout dd{white-space:normal}
+#orbits-lab .orbits-chartbox canvas{display:block;width:100%;height:150px}
+#orbits-lab .orbits-chartbox p{margin:.3rem 0 0}
+#orbits-lab .orbits-mis{display:flex;flex-direction:column;gap:.45rem}
+#orbits-lab .orbits-mis .lab-progress{margin:0}
+#orbits-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+/* the lesson */
+#orbits-lab .orbits-inline{display:inline-block;margin:.25rem 0;padding:.1rem .55rem}
+#orbits-lab .lab-sec ol,#orbits-lab .lab-sec ul{padding-left:1.3rem}
+#orbits-lab .lab-sec li{margin:.2rem 0;line-height:1.5}
+#orbits-lab .lab-table caption{caption-side:bottom;text-align:left;padding-top:.35rem}
+@media (max-width:860px){
+  #orbits-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+  .orbits-act{font-size:.85rem;padding:.4rem .75rem}
+}
+#orbits-lab .lab-sec p{margin:0 0 .75rem}
+#orbits-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+#orbits-lab .lab-field>span b{white-space:nowrap}
+#orbits-lab .lab-toast{top:3.4rem}
+@media (max-width:600px){#orbits-lab .lab-toast{font-size:.8rem;max-width:72%;padding:.4rem .7rem}}

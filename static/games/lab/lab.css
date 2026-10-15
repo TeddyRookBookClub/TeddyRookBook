@@ -1,0 +1,89 @@
+/* Science Lab: shared look for the science simulations (orbits, rockets, circuits …). Each sim adds its own small stylesheet. */
+main.main:has(.lab){max-width:1200px}
+.lab{--g:#004225;--g2:#00562f;--acc:#004225;--gold:#b8963e;--gt:#8a6a1f;--ink:#1d2320;--muted:#5d6862;--line:#dde5df;--card:#fff;--paper:#fbf8f0;--soft:#e7f0ea;
+  --sim:#06111a;--sim2:#0b1b27;--sim-ink:#dbe7ef;--sim-muted:#8fb3c6;--sim-line:rgba(120,170,200,.25);--sim-acc:#63e6be;--sim-gold:#ffd479;--sim-pink:#f9a8d4;--sim-red:#ff8787;--sim-blue:#74c0fc;
+  color:var(--ink)}
+html[data-theme="dark"] .lab{--acc:#6cc79a;--gt:#e0c070;--ink:#e6ece8;--muted:#a9b8af;--line:#2f4a3b;--card:#1b2b22;--paper:#16241c;--soft:#1f3328}
+.lab [hidden]{display:none !important}
+.lab a{color:var(--acc)}
+.lab-crumbs{font-size:.85rem;color:var(--muted);margin:0 0 .6rem}.lab-crumbs a{color:inherit;text-decoration:none;box-shadow:none}.lab-crumbs a:hover{color:var(--acc)}
+.lab-hero{background:linear-gradient(135deg,#004225 0%,#00562f 100%);color:#fff;border-radius:14px;padding:1.3rem 1.6rem;margin-bottom:1rem;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,76,42,.18)}
+.lab-hero .lab-eyebrow{margin:0;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;color:#e6cf8f}
+.lab-hero h1{margin:.1rem 0 .3rem;font:700 2.1rem/1.15 Georgia,"Times New Roman",serif;color:#fff}
+.lab-hero p{margin:0;color:#d3e6da;max-width:48rem;line-height:1.5}
+.lab-hero a{color:#f3dfa3}
+.lab-hero .lab-mark{position:absolute;right:1.2rem;top:.2rem;font-size:4.2rem;opacity:.16;pointer-events:none}
+/* the simulation and its controls */
+.lab-stage{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:.8rem;align-items:start;margin:0 0 1rem}
+.lab-stage.wide{grid-template-columns:1fr}
+.lab-view{position:relative;background:var(--sim);color:var(--sim-ink);border-radius:14px;overflow:hidden;height:min(68vh,620px);min-height:380px;touch-action:none;user-select:none;-webkit-user-select:none}
+.lab-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.lab-hud{position:absolute;left:.6rem;top:.6rem;max-width:calc(100% - 1.2rem);background:rgba(6,17,26,.66);backdrop-filter:blur(4px);border-radius:10px;padding:.35rem .6rem;font:12px/1.45 ui-monospace,Menlo,Consolas,monospace;color:var(--sim-ink);pointer-events:none}
+.lab-hud b{color:var(--sim-gold);font-weight:600}
+.lab-hud.right{left:auto;right:.6rem}
+.lab-hud.bottom{top:auto;bottom:.6rem}
+.lab-tools{position:absolute;right:.6rem;top:.6rem;display:flex;gap:.35rem}
+.lab-tools button{width:2.3rem;height:2.3rem;border-radius:10px;border:1px solid var(--sim-line);background:rgba(11,27,39,.85);color:var(--sim-ink);font-size:1rem;cursor:pointer}
+.lab-tools button:hover{border-color:var(--sim-acc)}
+.lab-toast{position:absolute;left:50%;top:1rem;width:max-content;transform:translate(-50%,-10px);opacity:0;transition:opacity .3s,transform .3s;background:#123a33;border:1px solid var(--sim-acc);color:#fff;border-radius:12px;padding:.5rem .9rem;font:600 .9rem system-ui,sans-serif;pointer-events:none;max-width:90%;text-align:center}
+.lab-toast.on{opacity:1;transform:translate(-50%,0)}
+.lab-panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;display:flex;flex-direction:column;gap:.65rem;font-size:.9rem}
+.lab-panel h3{margin:0;font:700 .78rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lab-field{display:flex;flex-direction:column;gap:.15rem}
+.lab-field>span{display:flex;justify-content:space-between;gap:.5rem;font-size:.85rem;color:var(--muted)}
+.lab-field>span output,.lab-field>span b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600}
+.lab-field input[type=range]{width:100%;accent-color:var(--acc)}
+.lab-field select,.lab-panel select{font:inherit;padding:.35rem .5rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.lab-chk{display:flex;align-items:center;gap:.4rem;font-size:.88rem}
+.lab-row{display:flex;flex-wrap:wrap;gap:.4rem}
+.lab-btn{display:inline-flex;align-items:center;justify-content:center;gap:.3rem;font:600 .88rem system-ui,sans-serif;padding:.45rem .8rem;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;line-height:1.2;text-decoration:none;box-shadow:none}
+.lab-btn:hover{border-color:var(--acc)}
+.lab-btn.pri{background:#004225;border-color:#004225;color:#fff}
+.lab-btn.pri:hover{background:#00562f}
+html[data-theme="dark"] .lab-btn.pri{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.lab-btn[aria-pressed="true"]{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.lab-btn:disabled{opacity:.45;cursor:default}
+.lab-seg{display:flex;flex-wrap:wrap;gap:.3rem}
+.lab-seg button{flex:1 1 auto;font:600 .8rem system-ui,sans-serif;padding:.35rem .55rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.lab-seg button[aria-pressed="true"]{background:#004225;border-color:#004225;color:#fff}
+html[data-theme="dark"] .lab-seg button[aria-pressed="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.lab-readout{display:grid;grid-template-columns:1fr auto;gap:.15rem .7rem;margin:0;font-size:.85rem}
+.lab-readout dt{color:var(--muted)}
+.lab-readout dd{margin:0;text-align:right;font:600 .85rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+.lab-small{font-size:.82rem;color:var(--muted);line-height:1.45}
+/* missions */
+.lab-missions{list-style:none;margin:0;padding:0;display:grid;gap:.4rem}
+.lab-missions li{display:grid;grid-template-columns:1.6rem minmax(0,1fr);gap:.1rem .5rem;align-items:start;padding:.45rem .6rem;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.lab-missions li .ck{grid-row:span 2;width:1.4rem;height:1.4rem;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#fff}
+.lab-missions li.done .ck{background:#2f9e6f;border-color:#2f9e6f}
+.lab-missions li b{font-size:.88rem}
+.lab-missions li span{font-size:.8rem;color:var(--muted);line-height:1.4}
+.lab-missions li button{grid-column:2;justify-self:start;margin-top:.2rem;font:600 .75rem system-ui,sans-serif;padding:.2rem .55rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.lab-missions li.cur{border-color:var(--acc)}
+.lab-progress{font-size:.82rem;color:var(--muted)}
+/* the lesson below */
+.lab-sec{margin:1.6rem 0}
+.lab h2{font:700 1.35rem Georgia,serif;color:var(--acc);margin:0 0 .5rem}
+.lab h3.lab-h{font:700 1.05rem Georgia,serif;margin:1rem 0 .3rem;color:var(--ink)}
+.lab p{line-height:1.6}
+.lab-sec p,.lab-sec ul,.lab-sec ol{margin:0 0 .7rem}
+.lab-sec li{margin:.2rem 0;line-height:1.55}
+.lab-cols{columns:2 340px;column-gap:2rem}.lab-cols>*{break-inside:avoid}
+.lab-formula{font:1rem/1.6 "Cambria Math","STIX Two Math",Georgia,serif;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.55rem .8rem;margin:.6rem 0;overflow-x:auto}
+.lab-try{background:var(--soft);border-left:4px solid var(--acc);border-radius:0 10px 10px 0;padding:.6rem .9rem;margin:.8rem 0}
+.lab-note{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:.6rem .9rem;margin:.8rem 0;font-size:.92rem}
+.lab-table{border-collapse:collapse;width:100%;font-size:.9rem;margin:.5rem 0}
+.lab-table th,.lab-table td{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+.lab-table th{background:var(--paper);font:700 .78rem system-ui,sans-serif;color:var(--muted)}
+.lab-tw{overflow-x:auto}
+.lab-src{font-size:.85rem;color:var(--muted)}.lab-src li{margin:.2rem 0}
+.lab-pn{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin:1.6rem 0 .6rem}
+.lab-pn a{display:inline-block;padding:.5rem .9rem;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;box-shadow:none;color:var(--ink)}
+.lab-pn a:hover{border-color:var(--acc)}
+@media (max-width:860px){
+  .lab-stage{grid-template-columns:1fr}
+  .lab-view{height:min(62vh,520px);min-height:320px}
+  .lab-hero h1{font-size:1.7rem}
+}
+@media print{.lab-stage,.lab-tools{display:none !important}}
+@media (prefers-reduced-motion:reduce){.lab-toast{transition:none}}

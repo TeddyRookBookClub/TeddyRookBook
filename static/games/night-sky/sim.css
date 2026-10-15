@@ -1,0 +1,56 @@
+/* Sky and Solar System: only what this simulation adds to the shared lab look (static/games/lab/lab.css). */
+#night-sky-lab .lab-view{cursor:grab}
+#night-sky-lab .lab-view:active{cursor:grabbing}
+#night-sky-lab .lab-view canvas:focus{outline:none}
+#night-sky-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#night-sky-lab .lab-hud{line-height:1.5;max-width:calc(100% - 12rem)}
+#night-sky-lab .ns-ctx{color:var(--sim-acc)}
+#night-sky-lab .lab-tools button{min-width:36px;min-height:36px}
+#night-sky-lab .lab-toast{top:4.9rem}
+.ns-noscript{position:absolute;inset:auto 0 45% 0;text-align:center;color:var(--sim-ink)}
+/* the panel */
+#night-sky-lab .lab-seg button{min-height:36px}
+#night-sky-lab #ns-speed button{padding:.35rem .4rem;font-size:.76rem}
+#night-sky-lab #ns-tip{margin:0;min-height:2.9em}
+#night-sky-lab .ns-grp{display:flex;flex-direction:column;gap:.55rem}
+#night-sky-lab .lab-field>span{align-items:center}
+#night-sky-lab .lab-field>span label{color:var(--muted)}
+#night-sky-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#night-sky-lab .lab-field output{font:600 .82rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink);text-align:right}
+#night-sky-lab .lab-field select{min-height:36px}
+#night-sky-lab .ns-when{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+#night-sky-lab .ns-when input,#night-sky-lab .ns-year input{font:600 .88rem ui-monospace,Menlo,Consolas,monospace;padding:.3rem .4rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);min-height:36px;width:100%;box-sizing:border-box}
+#night-sky-lab .ns-year{display:flex;align-items:flex-end;gap:.35rem}
+#night-sky-lab .ns-year .lab-btn{min-height:36px;min-width:36px;padding:.3rem .6rem}
+#night-sky-lab .ns-yl{display:flex;flex-direction:column;gap:.15rem;flex:1;font-size:.85rem;color:var(--muted)}
+#night-sky-lab .lab-chk{min-height:36px;cursor:pointer}
+#night-sky-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#night-sky-lab .lab-readout dd{white-space:normal}
+#night-sky-lab .ns-list{font-size:.85rem}
+#night-sky-lab .ns-tab{font-size:.8rem;margin:0}
+#night-sky-lab .ns-tab th,#night-sky-lab .ns-tab td{padding:.25rem .35rem}
+#night-sky-lab .ns-tab td:first-child{white-space:nowrap}
+#night-sky-lab .ns-tab tr.ns-on td{background:var(--soft);font-weight:600}
+#night-sky-lab .ns-sw{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.35rem;vertical-align:baseline;box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+#night-sky-lab .ns-lh{margin:0 0 .25rem;font:700 .78rem system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+#night-sky-lab .ns-ul{list-style:none;margin:0;padding:0;display:grid;gap:.2rem}
+#night-sky-lab .ns-ul li{line-height:1.4}
+#night-sky-lab .ns-ul li b{margin-right:.25rem}
+#night-sky-lab .ns-ul li.ns-dim{color:var(--muted)}
+#night-sky-lab .ns-mis{display:flex;flex-direction:column;gap:.45rem}
+#night-sky-lab .ns-mis .lab-progress{margin:0}
+#night-sky-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+/* the lesson */
+#night-sky-lab .lab-sec ol,#night-sky-lab .lab-sec ul{padding-left:1.3rem}
+#night-sky-lab .lab-sec ul.lab-src{padding-left:1.1rem}
+#night-sky-lab .lab-table caption{caption-side:bottom;text-align:left;padding-top:.35rem}
+#night-sky-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+@media (max-width:860px){
+  #night-sky-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+  #night-sky-lab .lab-view{height:min(74vh,600px);min-height:440px}
+}
+@media (max-width:600px){
+  #night-sky-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem}
+  #night-sky-lab .lab-tools{flex-direction:column}
+  #night-sky-lab .lab-hud{max-width:calc(100% - 4.4rem)}
+}

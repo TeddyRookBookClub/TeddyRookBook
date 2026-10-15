@@ -1,0 +1,59 @@
+/* Trebuchet Workshop: only what this simulation adds to the shared lab look */
+#trebuchet-lab .lab-view{height:min(70vh,640px)}
+#trebuchet-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px}
+#trebuchet-lab .lab-hud{white-space:pre-line}
+#trebuchet-lab .tb-fire{position:absolute;right:.7rem;bottom:2.6rem;min-width:6.2rem;min-height:2.9rem;padding:.5rem 1.2rem;border-radius:999px;border:1px solid #ffd479;background:linear-gradient(180deg,#ffd479,#e0a93a);color:#2a1a04;font:800 1.05rem system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;box-shadow:0 4px 18px rgba(255,212,121,.35)}
+#trebuchet-lab .tb-fire:hover{filter:brightness(1.07)}
+#trebuchet-lab .tb-fire:focus-visible{outline:3px solid #fff;outline-offset:2px}
+#trebuchet-lab .tb-fire:disabled{opacity:.55;cursor:default;box-shadow:none}
+#trebuchet-lab .tb-speed{font:700 .72rem system-ui,sans-serif !important;letter-spacing:.02em}
+#trebuchet-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);box-shadow:inset 0 0 0 1px var(--sim-acc)}
+#trebuchet-lab .tb-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:-1px}
+/* energy bar over the picture */
+#trebuchet-lab .tb-energy{bottom:2.6rem;max-width:min(17rem,calc(100% - 9rem));display:flex;flex-direction:column;gap:.2rem;font-size:11px;transition:opacity .4s}
+#trebuchet-lab .tb-energy.off{opacity:0}
+#trebuchet-lab .tb-elabel{color:var(--sim-muted)}
+#trebuchet-lab .tb-ebar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:#1a2a36;width:15rem;max-width:100%}
+#trebuchet-lab .tb-ebar i{display:block;height:100%;width:0}
+#trebuchet-lab .tb-elegend{display:flex;flex-wrap:wrap;gap:.1rem .55rem}
+#trebuchet-lab .tb-elegend b{font-weight:500;color:var(--sim-ink)}
+#trebuchet-lab .tb-elegend b::before{content:"";display:inline-block;width:.55rem;height:.55rem;border-radius:2px;margin-right:.25rem;vertical-align:-1px;background:var(--c)}
+#trebuchet-lab .tb-ebar i{background:var(--c)}
+#trebuchet-lab .tb-c1{--c:#ffd479}#trebuchet-lab .tb-c2{--c:#74c0fc}#trebuchet-lab .tb-c3{--c:#63e6be}#trebuchet-lab .tb-c4{--c:#f9a8d4}#trebuchet-lab .tb-c5{--c:#5c6f7d}
+/* panel */
+#trebuchet-lab .lab-seg button{min-height:36px}
+#trebuchet-lab .tb-presets button{flex:1 1 auto;white-space:nowrap;font-size:.75rem;padding:.3rem .5rem}
+#trebuchet-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#trebuchet-lab .lab-chk{min-height:36px}
+#trebuchet-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#trebuchet-lab .tb-rel-ico{width:30px;height:25px;vertical-align:middle;margin-left:auto;margin-right:.3rem;overflow:visible}
+#trebuchet-lab .tb-rel-ico .tb-arm{stroke:#9a6a3a;stroke-width:4;stroke-linecap:round}
+#trebuchet-lab .tb-rel-ico .tb-ext{stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}
+#trebuchet-lab .tb-rel-ico .tb-sl{stroke:var(--muted);stroke-width:1.6}
+#trebuchet-lab .tb-rel-ico circle{fill:var(--muted)}
+#trebuchet-lab .lab-field>span{align-items:center}
+#trebuchet-lab .tb-more summary{cursor:pointer;font-size:.85rem;color:var(--muted);min-height:36px;display:flex;align-items:center}
+#trebuchet-lab .tb-more[open]{display:flex;flex-direction:column;gap:.5rem}
+#trebuchet-lab #tb-ctl-treb,#trebuchet-lab #tb-ctl-range{display:flex;flex-direction:column;gap:.55rem}
+#trebuchet-lab .tb-chart{display:block;width:100%;height:150px;border-radius:10px;background:#06111a}
+#trebuchet-lab .tb-hint{background:var(--soft);border-radius:8px;padding:.4rem .6rem;color:var(--ink);margin:0}
+#trebuchet-lab .lab-missions li button{min-height:36px;padding:.2rem .8rem}
+#trebuchet-lab .tb-keys{margin:-.4rem 0 0}
+#trebuchet-lab .tb-nw{white-space:nowrap}
+#trebuchet-lab .lab-sec p{margin:0 0 .7rem}
+#trebuchet-lab .lab-try p,#trebuchet-lab .lab-note p{margin:0}
+#trebuchet-lab .tb-cap{caption-side:top;text-align:left;padding:0 0 .3rem}
+#trebuchet-lab .lab-readout dd.tb-hit{color:#2f9e6f}
+html[data-theme="dark"] #trebuchet-lab .lab-readout dd.tb-hit{color:#63e6be}
+@media (max-width:860px){
+  #trebuchet-lab .lab-view{height:min(64vh,540px)}
+}
+@media (max-width:520px){
+  #trebuchet-lab .tb-fire{min-width:5rem;padding:.45rem .9rem;font-size:.95rem;bottom:2.5rem}
+  #trebuchet-lab .tb-energy{max-width:calc(100% - 7.6rem);padding:.3rem .45rem}
+  #trebuchet-lab .tb-elabel{display:none}
+  #trebuchet-lab .tb-elegend{font-size:10px;gap:0 .4rem}
+  #trebuchet-lab .lab-hud{font-size:11px}
+  #trebuchet-lab .lab-hud:not(.bottom){max-width:calc(100% - 11.2rem)}
+}
+@media (prefers-reduced-motion:reduce){#trebuchet-lab .tb-energy{transition:none}}

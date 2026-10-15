@@ -1,0 +1,55 @@
+/* Circuit Builder: only what this simulation adds to the shared lab look */
+#circuits-lab .lab-view{background:#06111a;height:min(62vh,600px)}
+#circuits-lab #circuits-cv{cursor:default;outline:none}
+#circuits-lab #circuits-cv:focus-visible{box-shadow:inset 0 0 0 2px #63e6be;border-radius:14px}
+#circuits-lab .circuits-hud{max-width:calc(100% - 9.6rem)}
+#circuits-lab .circuits-hud .circuits-hud2{color:#8fb3c6}
+#circuits-lab .lab-tools button{display:flex;align-items:center;justify-content:center;padding:0}
+#circuits-lab .lab-tools svg{width:1.15rem;height:1.15rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#circuits-lab .lab-tools svg .f{fill:currentColor;stroke:none}
+#circuits-lab .lab-tools button[aria-pressed="false"]{color:#8fb3c6}
+
+/* the parts tray along the bottom of the board */
+.circuits-tray{position:absolute;left:.5rem;right:.5rem;bottom:.5rem;display:flex;gap:.25rem;overflow-x:auto;overscroll-behavior-x:contain;touch-action:pan-x;padding:.3rem;background:rgba(11,27,39,.9);border:1px solid rgba(120,170,200,.25);border-radius:12px;scrollbar-width:thin;scrollbar-color:#2c4656 transparent}
+.circuits-tray button{flex:1 0 auto;min-width:3.5rem;height:3.25rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;padding:.15rem .3rem;border-radius:9px;border:1px solid transparent;background:transparent;color:#dbe7ef;font:600 .68rem/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;touch-action:pan-x}
+.circuits-tray button:hover{border-color:rgba(99,230,190,.45)}
+.circuits-tray button[aria-pressed="true"]{border-color:#63e6be;background:rgba(99,230,190,.14);color:#fff}
+.circuits-tray button:focus-visible{outline:2px solid #ffd479;outline-offset:-2px}
+#circuits-lab .circuits-tray canvas{position:static;inset:auto;width:46px;height:26px;display:block;pointer-events:none}
+.circuits-tray span{pointer-events:none;white-space:nowrap}
+
+/* small buttons next to the selected part */
+.circuits-pop{position:absolute;left:0;top:0;z-index:3;display:flex;align-items:center;gap:.25rem;padding:.25rem;background:rgba(11,27,39,.95);border:1px solid rgba(99,230,190,.55);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.circuits-pop button{min-width:2.3rem;height:2.3rem;border-radius:9px;border:1px solid rgba(120,170,200,.3);background:#10222f;color:#dbe7ef;font:600 1rem/1 system-ui,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 .35rem}
+.circuits-pop button.wide{font-size:.85rem;padding:0 .6rem}
+.circuits-pop button:hover{border-color:#63e6be}
+.circuits-pop button i{width:1rem;height:1rem;border-radius:50%;display:block;box-shadow:0 0 8px currentColor}
+.circuits-pop .circuits-pv{font:600 .8rem ui-monospace,Menlo,Consolas,monospace;color:#ffd479;min-width:3.6rem;text-align:center}
+
+/* short-circuit warning */
+.circuits-warn{position:absolute;left:50%;bottom:4.6rem;transform:translateX(-50%);width:min(32rem,calc(100% - 1.2rem));z-index:2;background:rgba(90,16,16,.93);border:1px solid #ff8787;color:#ffe3e3;border-radius:10px;padding:.45rem .7rem;font:600 .8rem/1.4 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 0 18px rgba(255,80,80,.35)}
+.circuits-sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* panel */
+#circuits-lab .circuits-hint{margin:0;padding:.5rem .65rem;border-radius:10px;background:var(--soft);border-left:4px solid var(--acc);font-size:.86rem;line-height:1.45}
+#circuits-lab .circuits-sel{display:flex;flex-direction:column;gap:.45rem}
+#circuits-lab .circuits-sel p{margin:0}
+#circuits-lab .circuits-selname b{font-size:.95rem}
+#circuits-lab .circuits-selname span{color:var(--muted);font-size:.82rem}
+#circuits-lab .circuits-opts{display:flex;flex-direction:column;gap:.35rem}
+#circuits-lab .circuits-key{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:#e0a920;box-shadow:0 0 0 2px rgba(255,212,121,.35)}
+#circuits-lab .circuits-key.e{background:#3d8fd6;box-shadow:0 0 0 2px rgba(116,192,252,.35)}
+#circuits-lab .circuits-help{margin:.2rem 0 0}
+#circuits-lab .lab-sec p{margin:0 0 .75rem}
+#circuits-lab .lab-try{margin:.6rem 0}
+#circuits-lab .lab-seg button{min-height:2.25rem}
+#circuits-lab .lab-btn{min-height:2.25rem}
+#circuits-lab .lab-chk input{width:1.1rem;height:1.1rem}
+
+@media (max-width:860px){
+  #circuits-lab .lab-view{height:min(74vh,640px);min-height:440px}
+}
+@media (max-width:480px){
+  .circuits-tray button{min-width:3.2rem;height:3rem}
+  .circuits-warn{font-size:.74rem;bottom:4.3rem}
+}

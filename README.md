@@ -10,7 +10,8 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 |---|---|
 | [Infographics](https://teddyrookbook.com/infographics/) | One-page visual guides: character maps, book companions, and explainers on faith, science and finance. |
 | [Languages](https://teddyrookbook.com/languages/) | Koine Greek and Latin: the Greek alphabet, sentence drills, a Gospel reader and short readings that explain every word, sentence trees, flashcards, and the study companion to the video Greek and Latin with Jerome. Details below. |
-| [Games](https://teddyrookbook.com/games/) | Sixteen browser games set in the ancient world, including a daily word puzzle, and Book Cart, a physics game. Details below. |
+| [Games](https://teddyrookbook.com/games/) | Sixteen browser games set in the ancient world, including a daily word puzzle. Details below. |
+| [Science Lab](https://teddyrookbook.com/science-lab/) | Thirteen simulations built on real physics, chemistry and biology, each with missions and a lesson with the equations. Details below. |
 | [Homeschool](https://teddyrookbook.com/homeschool/) | Free public-domain schoolbooks with step-by-step teaching guides and a "Teach this lesson" mode: Ray's Arithmetic (guides for Primary and Intellectual), McGuffey's Readers and Speller, Webster's Speller, Harvey's Grammar and D'Ooge's Latin (guides for every lesson), plus Latin, Greek, geometry and algebra books to read or download; the old eighth-grade exams with answer notes; a lesson planner (`static/homeschool/planner.js`, subjects in `data/hs_planner.yaml`); and a graphing calculator with algebra and calculus (`static/homeschool/calc/`, no outside libraries). Series pages come from `data/hs_series/`, guides from `data/hs_*.yaml` and `data/rays_*.yaml`, exams from `data/hs_exams.yaml`. |
 | [Library](https://teddyrookbook.com/books/) | A catalog of a home library, with editions, sets and translations, and [reading paths](https://teddyrookbook.com/books/paths/) through it. |
 | [Free Books](https://teddyrookbook.com/free-books/) | Search public-domain ebooks (Project Gutenberg, via Gutendex) and audiobooks (LibriVox, via the Internet Archive). Nothing is hosted here; the visitor's browser calls those catalogues directly. |
@@ -19,6 +20,7 @@ It isn't a book club, despite the repository's name: there are no members, meeti
 | [Business](https://teddyrookbook.com/business/) | Business cases: original write-ups of real company stories with the lesson, numbers, timeline, questions and sources, and a card to save as a picture (`data/business_cases.yaml`, `static/business/`). Also “Your tax receipt” (`static/business/receipt.js`): splits an income-tax amount by federal spending, with the main lines from the Treasury's official net outlays by budget function (FiscalData, Monthly Treasury Statement Table 9; negative functions and undistributed offsetting receipts are credits, and lines add up to the amount paid) and the drill-down split in proportion to USAspending.gov obligations. |
 | [Resources](https://teddyrookbook.com/resources/) | Links to other free places to learn Latin and Greek, read the great books and explore ancient history. |
 | [Videos](https://teddyrookbook.com/videos/) | The site's YouTube videos, one page each with an optional short trailer and links to what goes with them. Add a video to `data/videos.yaml` (keyed by YouTube id); pages come from `content/videos/_content.gotmpl`, and `layouts/_partials/video.html` embeds one anywhere (click to play, youtube-nocookie). |
+| [The Trades](https://teddyrookbook.com/trades/) | The next step after Being an Adult 101: courses on how things work and how to fix them, starting with a 14-lesson course on cars (systems, troubleshooting, doing your own work, careers). Plumbing, electrical, HVAC and construction are planned. |
 | [Food Garden Planner](https://teddyrookbook.com/garden/) | Suggests what to grow for a space, climate zone and household, with rough harvests, calories and a crop rotation, plus calculators for laying hens, meat chickens and honeybees and step-by-step guides (`layouts/garden/list.html`, `static/garden/`). Crop, guide and animal data with sources are in `data/garden/`: yields from university extension tables, nutrition from USDA FoodData Central. |
 | [Sewing & Knitting](https://teddyrookbook.com/sewing/) | Step-by-step guides for hand sewing, mending, hemming, the sewing machine, knitting and crochet, with the tools explained (hand, old-fashioned and electric), yarn weights and abbreviations. Guides and tools are in `data/sewing.yaml` with sources (extension and 4-H guides, Craft Yarn Council); pages come from `content/sewing/_content.gotmpl`; the stitch diagrams are original SVGs in `layouts/_partials/sew-diagram.html`. |
 | [PhotoCraft](https://teddyrookbook.com/photocraft/) | A hosted copy of [PhotoCraft](https://github.com/storytold/photocraft), an open-source image editor by the ArtCraft Team (MIT / Apache-2.0). It runs in the browser; pictures stay on the visitor's device. Not affiliated with Adobe. |
@@ -55,9 +57,28 @@ No accounts, no ads, no tracking. Progress in the drills, flashcards and games i
 | Latrunculi | The Roman "game of soldiers", in a modern reconstruction | Latin |
 | Knucklebones | Augustus's dinner-table game from Suetonius, and a modern variant | Latin |
 | Daily Word Puzzle | Guess the day's five-letter word in six tries | Latin or Koine Greek |
-| Book Cart | Swing a chain of 2 to 25 books up from a rolling cart and balance it (an inverted pendulum), with live physics and a Lab | English (physics) |
 | Charioteer | Top-down city game: chariots, errands, races, a thief and the watch | Latin or Koine Greek |
 | Siege | Fire ancient siege engines at 25 sieges from history and literature, each with a lesson | Latin or Koine Greek, optional |
+
+### Science Lab
+
+Listed in `data/science_lab.yaml` (shown on `/science-lab/`, the Games page and the homeschool Science page). Each simulation lives at `/games/<slug>/`, with `layouts/games/<slug>.html` and `static/games/<slug>/`, and shares `static/games/lab/` (styles and helpers: storage, canvas sizing, missions). The physics, chemistry or biology model is in its own file that also runs in node, so it can be tested.
+
+| Simulation | What you do |
+|---|---|
+| Book Cart | Swing a chain of 2 to 25 books up from a rolling cart and balance it, or stand every book straight (an inverted pendulum), with live physics, a Lab and an LQR autopilot |
+| Orbit Lab | Newton's cannon, Earth orbits, a trip to the Moon and a gravity assist, with Kepler's laws |
+| Rocket Builder | Build up to three stages and fly to space, orbit or escape; the rocket equation and Δv losses |
+| Trebuchet Workshop | A counterweight trebuchet with a sling (Lagrangian model) and a range finder with air drag |
+| Pendulums and Resonance | A pendulum wave, coupled pendulums and a driven swing with its resonance curve |
+| Circuit Builder | A breadboard solved by nodal analysis: bulbs, switches, resistors, an LED and meters |
+| Optics Bench | Ray tracing with Snell's law and Fresnel reflection: mirrors, lenses, prisms and a raindrop |
+| Gas in a Box | Hard-disk atoms at real scale: pressure, temperature, a piston and diffusion |
+| Mixing Lab | Indicators and pH, a titration curve, and collision-theory reaction rates |
+| Build an Atom | Elements 1 to 36 with their isotopes (NUBASE2020), electron shells, half-life and carbon dating |
+| Sky and Solar System | Planet positions from JPL's elements, Moon phases (Meeus), eclipse seasons and tonight's sky |
+| Predators and Prey | Grass, rabbits and foxes as agents, beside the Lotka–Volterra equations |
+| Magnetic Bottles for Fusion | An explorer (no missions) of the exact 3-D MHD equilibria in arXiv:2610.07304, checked numerically |
 
 Hero's Road has three settings: Theseus in Greece, Hercules in Rome, and Odysseus sailing home from Troy to Ithaca, with words in Homeric Greek.
 

@@ -1,0 +1,220 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "games/rocket/sim.css" | relURL }}?v={{ (os.Stat "static/games/rocket/sim.css").ModTime.Unix }}">
+<div class="lab" id="rocket-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "games/" | relURL }}">Games</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Rocket Builder</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Physics</p>
+    <h1>Rocket Builder</h1>
+    <p>Build a rocket from engines, tanks and up to three stages, then fly it from the equator. Will it lift off? Reach space? Stay up? The rocket equation decides how much speed your propellant can buy, and gravity, air and Earth's spin decide how much of it you need.</p>
+    <span class="lab-mark" aria-hidden="true">🚀</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="rk-view" tabindex="0" aria-label="Rocket view. Keys: Space launches or drops a stage, up and down arrows change the throttle, left and right arrows tip the nose, M switches between the rocket and the whole orbit, full stop and comma speed time up or down, P pauses, R goes back to the pad.">
+      <canvas id="rk-cv" role="img" aria-label="The rocket on its launch pad at the equator, and later its flight into space with its path and orbit. The numbers are also in the panel."></canvas>
+      <div class="lab-hud" id="rk-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="rk-pause" aria-label="Pause" title="Pause (P)">❚❚</button>
+        <button type="button" id="rk-warp" aria-label="Time warp" title="Speed up time (full stop, comma)">1×</button>
+        <button type="button" id="rk-viewbtn" aria-label="Show the whole orbit" title="Rocket or orbit view (M)">🌍</button>
+        <button type="button" id="rk-reset" aria-label="Back to the launch pad" title="Back to the pad (R)">↺</button>
+      </div>
+      <p class="rk-msg" id="rk-msg" role="status" aria-live="polite"></p>
+      <div class="rk-pad" id="rk-padbtns" hidden>
+        <button type="button" data-pad="pl" aria-label="Tip the nose up" title="Nose up (←)">↶</button>
+        <button type="button" data-pad="pr" aria-label="Tip the nose down towards east" title="Nose down (→)">↷</button>
+        <button type="button" data-pad="td" aria-label="Less throttle" title="Throttle down (↓)">−</button>
+        <button type="button" data-pad="tu" aria-label="More throttle" title="Throttle up (↑)">+</button>
+        <button type="button" data-pad="stage" class="rk-stg" aria-label="Drop the empty stage" title="Stage (Space)">Stage</button>
+      </div>
+      <button type="button" class="rk-bigl" id="rk-bigl">🚀 Launch</button>
+      <div class="rk-sum" id="rk-sum" hidden></div>
+    </div>
+
+    <div class="lab-panel" id="rk-panel">
+      <div class="lab-seg" id="rk-tabs" role="tablist" aria-label="Panel">
+        <button type="button" data-t="build" role="tab" aria-pressed="true" aria-selected="true">🔧 Build</button>
+        <button type="button" data-t="fly" role="tab" aria-pressed="false" aria-selected="false">🕹️ Fly</button>
+      </div>
+
+      <section id="rk-build" role="tabpanel" aria-label="Build the rocket">
+        <label class="lab-field"><span>Start from</span><select id="rk-preset" aria-label="Start from a ready-made rocket"></select></label>
+        <label class="lab-field"><span>Payload</span><select id="rk-payload" aria-label="Payload"></select></label>
+        <div id="rk-stages"></div>
+        <button type="button" class="lab-btn rk-add" id="rk-add">＋ Add a stage on top</button>
+        <p class="lab-small">The engines use typical values for each propellant: see the table under "The science".</p>
+        <dl class="lab-readout rk-design" aria-label="The design">
+          <dt>Liftoff mass</dt><dd id="rk-d-m0"></dd>
+          <dt>Thrust ÷ weight at liftoff</dt><dd id="rk-d-twr"></dd>
+          <dt>Δv in vacuum (ideal)</dt><dd id="rk-d-dv"></dd>
+          <dt>Same parts as one stage</dt><dd id="rk-d-one"></dd>
+          <dt>Payload share</dt><dd id="rk-d-pf"></dd>
+          <dt>Height × width</dt><dd id="rk-d-ht"></dd>
+        </dl>
+        <button type="button" class="lab-btn pri rk-go" id="rk-launch">🚀 Launch</button>
+      </section>
+
+      <section id="rk-fly" role="tabpanel" aria-label="Fly the rocket" hidden>
+        <div class="lab-field"><span>Steering</span>
+          <div class="lab-seg" id="rk-mode" role="group" aria-label="Steering">
+            <button type="button" data-m="auto" aria-pressed="true">Auto</button>
+            <button type="button" data-m="up" aria-pressed="false" title="Straight up">Up</button>
+            <button type="button" data-m="pro" aria-pressed="false">Prograde</button>
+            <button type="button" data-m="man" aria-pressed="false">Manual</button>
+          </div>
+        </div>
+        <label class="lab-field" id="rk-target-f"><span>Target orbit height <output id="rk-target-o">250 km</output></span><input type="range" id="rk-target" min="150" max="1000" step="10" value="250" aria-label="Target orbit height for the autopilot, km"></label>
+        <label class="lab-field" id="rk-pitch-f" hidden><span>Nose above the horizon <output id="rk-pitch-o">60°</output></span><input type="range" id="rk-pitch" min="0" max="90" value="60" aria-label="Pitch: angle of the nose above the horizon, degrees"></label>
+        <label class="lab-field"><span>Throttle <output id="rk-thr-o">100%</output></span><input type="range" id="rk-thr" min="0" max="100" step="5" value="100" aria-label="Throttle, percent"></label>
+        <label class="lab-chk"><input type="checkbox" id="rk-spin" checked> Earth spins (launch east from the equator)</label>
+        <label class="lab-chk"><input type="checkbox" id="rk-drag" checked> Air and drag</label>
+        <label class="lab-chk"><input type="checkbox" id="rk-autostage" checked> Drop empty stages by itself</label>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="rk-launch2">🚀 Launch</button><button type="button" class="lab-btn" id="rk-stage-btn" disabled>Stage</button></div>
+        <dl class="lab-readout" aria-label="Flight readouts">
+          <dt>Time</dt><dd id="rk-o-t">—</dd>
+          <dt>Altitude</dt><dd id="rk-o-alt">—</dd>
+          <dt>Speed over the ground</dt><dd id="rk-o-gs">—</dd>
+          <dt>Orbital speed</dt><dd id="rk-o-os">—</dd>
+          <dt>Apoapsis (highest point)</dt><dd id="rk-o-ap">—</dd>
+          <dt>Periapsis (lowest point)</dt><dd id="rk-o-pe">—</dd>
+          <dt>Thrust now</dt><dd id="rk-o-tw">—</dd>
+          <dt>Δv used</dt><dd id="rk-o-dv">—</dd>
+          <dt class="rk-l rk-lg">Gravity loss</dt><dd id="rk-o-lg">—</dd>
+          <dt class="rk-l rk-ld">Drag loss</dt><dd id="rk-o-ld">—</dd>
+          <dt class="rk-l rk-ls">Steering loss</dt><dd id="rk-o-ls">—</dd>
+          <dt>Max dynamic pressure</dt><dd id="rk-o-mq">—</dd>
+          <dt>Propellant left</dt><dd id="rk-o-prop">—</dd>
+        </dl>
+      </section>
+
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ul class="lab-missions" id="rk-missions"></ul>
+    </div>
+  </div>
+
+  <section class="lab-sec">
+    <h2>What you're seeing</h2>
+    <p>On the pad, your rocket is drawn to scale, with each stage marked in its own color: gold for stage 1 (the bottom one, which fires first), green for stage 2 and pink for stage 3. The bar on the left adds up the <b>Δv</b> (say "delta-v": the change in speed) that each stage can give in empty space.</p>
+    <p>Press Launch and the camera follows the rocket up, zooming out as it climbs. The sky darkens, the plume widens in the thinning air, and empty stages tumble away. Above 140 km the view switches to the whole Earth: the path you have flown, and a dashed curve showing where the rocket would go if the engines stopped now, with its highest point (<b>apoapsis</b>, Ap) and lowest point (<b>periapsis</b>, Pe). The bar at the bottom shows where your Δv went: green for speed you kept, gold for gravity, red for drag and blue for steering.</p>
+  </section>
+
+  <section class="lab-sec">
+    <h2>The science</h2>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Thrust must beat weight</h3>
+        <p>A rocket leaves the pad only if its engines push up harder than gravity pulls down. Engineers compare the two as the thrust-to-weight ratio:</p>
+        <p class="lab-formula">T/W = F ÷ (m · g₀), &nbsp; with g₀ = 9.80665 m/s²</p>
+        <p>The Two-stage orbiter weighs 135.8 t, and its two kerosene engines push with 1,806 kN at sea level, so T/W = 1,806,000 ÷ (135,800 × 9.80665) = 1.36. Big rockets usually lift off with T/W a little above 1, often around 1.2 to 1.5. Below 1 the rocket sits on the pad burning propellant. Just above 1 it climbs so slowly that gravity wastes much of its push.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Exhaust speed and specific impulse</h3>
+        <p>A rocket moves by throwing exhaust backward very fast. The faster the exhaust, the more push each kilogram of propellant gives. Rocket engineers measure this with the <b>specific impulse</b>, I<sub>sp</sub>, in seconds:</p>
+        <p class="lab-formula">exhaust speed v<sub>e</sub> = I<sub>sp</sub> · g₀</p>
+        <p>Hydrogen burning with oxygen gives the fastest exhaust of the common propellants, about 4.4 km/s in a vacuum. Engines also do better in a vacuum than at sea level, because outside air presses back on the exhaust leaving the nozzle. In the game, watch the "Thrust now" readout grow as the air thins.</p>
+      </div>
+    </div>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Engine in the game (typical values)</th><th>I<sub>sp</sub> sea level</th><th>I<sub>sp</sub> vacuum</th><th>A real engine for comparison</th></tr></thead>
+      <tbody>
+        <tr><td>Kerosene + oxygen: 1,000 kN in vacuum, 1 t</td><td>280 s</td><td>310 s</td><td>F-1 (Saturn V first stage): 263 s / 304 s</td></tr>
+        <tr><td>Hydrogen + oxygen: 500 kN in vacuum, 0.8 t</td><td>360 s</td><td>450 s</td><td>RS-25 (Space Shuttle, SLS): 366 s / 452 s</td></tr>
+        <tr><td>Solid motor: 10 t of propellant per segment, burns 100 s</td><td>242 s</td><td>268 s</td><td>Space Shuttle solid booster: 242 s / 268 s</td></tr>
+      </tbody>
+    </table></div>
+    <p class="lab-small">A tank holds 10 t of propellant. Kerosene tanks weigh 0.6 t each and hydrogen tanks 1 t, because liquid hydrogen is so light that it needs huge tanks; solid casings weigh 1.2 t per segment. These are close to real stages. A solid motor cannot be throttled or switched off once lit.</p>
+
+    <h3 class="lab-h">The rocket equation</h3>
+    <p>In 1903 Konstantin Tsiolkovsky worked out how much speed a rocket gains by burning its propellant, with no gravity or air in the way:</p>
+    <p class="lab-formula">Δv = I<sub>sp</sub> · g₀ · ln(m₀ ÷ m<sub>f</sub>)</p>
+    <p>Here m₀ is the mass with full tanks, m<sub>f</sub> the mass when they are empty, and ln is the natural logarithm. The logarithm is the hard part: doubling the propellant does not double the speed. The orbiter's second stage starts at 27.8 t and ends at 7.8 t, so it gives 450 × 9.80665 × ln(27.8 ÷ 7.8) = 5,610 m/s. Its first stage gives 4,050 m/s, for 9.66 km/s in all.</p>
+
+    <h3 class="lab-h">Why rockets drop stages</h3>
+    <p>Once a tank is empty it is dead weight, and the rocket equation punishes every kilogram you keep carrying. So rockets are built as a stack of smaller rockets: when the bottom one is empty, it falls away, and the next one starts much lighter. Try the two presets built from exactly the same parts (4 kerosene engines, 18 tanks, a 1 t satellite):</p>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Same parts</th><th>Liftoff mass</th><th>Δv in vacuum</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>One stage</td><td>195.8 t</td><td>7.65 km/s</td><td>Climbs to about 250 km and falls back</td></tr>
+        <tr><td>Two stages (3 engines + 14 tanks, then 1 + 4)</td><td>195.8 t</td><td>10.84 km/s</td><td>Reaches orbit with propellant to spare</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Orbit means going sideways, fast</h3>
+        <p>An orbit is not a place where gravity stops. It is a fall that never lands: you move sideways so fast that the ground curves away beneath you as quickly as you drop toward it. In a circle of radius r around Earth that takes</p>
+        <p class="lab-formula">v = √(GM ÷ r), &nbsp; GM = 3.986 × 10¹⁴ m³/s²</p>
+        <p>which is 7.67 km/s at 400 km up, one lap every 92.4 minutes. For any orbit, the <b>vis-viva equation</b> links speed v, distance r and the orbit's half-length a:</p>
+        <p class="lab-formula">v² = GM · (2 ÷ r − 1 ÷ a)</p>
+        <p>The game uses it to draw your orbit and its Ap and Pe. Fast enough, and the orbit stops closing: from the surface, the <b>escape speed</b> is √(2GM ÷ R) = 11.2 km/s.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Where the Δv goes</h3>
+        <p>A rocket needs about 7.8 km/s to circle Earth low down, yet it must carry more Δv than that. While the engines burn, the game splits the Δv used four ways:</p>
+        <p class="lab-formula">Δv used = speed gained + gravity loss + drag loss + steering loss</p>
+        <p><b>Gravity loss</b> is the push spent holding the rocket up while it climbs. <b>Drag loss</b> is the air's push back. <b>Steering loss</b> is push aimed away from the direction of travel. The orbiter, flown by the autopilot to a 250 km orbit, used 9.03 km/s: gravity took 1.49 km/s, drag 0.11 km/s and steering 0.08 km/s. Most of the drag comes near "max-Q", the moment of greatest air pressure on the nose, about 34 kPa for this rocket.</p>
+        <h3 class="lab-h">Earth's spin is a free gift</h3>
+        <p>Earth turns once every 23 hours 56 minutes, so the equator moves east at about 465 m/s. A rocket launched east starts with that speed for free. With the spin switched off, the same orbiter needed 9.48 km/s instead of 9.03.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Try this</h2>
+    <div class="lab-try"><b>Too heavy.</b> Pick "Too heavy" (T/W 0.71) and launch. The engine roars but the rocket stays put, burning propellant until it is light enough. How much did it waste before it lifted off? Now add engines until T/W is above 1.</div>
+    <div class="lab-try"><b>Straight up is not orbit.</b> Launch the Two-stage orbiter with the steering set to Up (straight up). It climbs far higher than the space station, yet falls back. Then fly it on Auto, which turns sideways early, and it stays up.</div>
+    <div class="lab-try"><b>The free 465 m/s.</b> Fly the orbiter on Auto, then switch off "Earth spins" and fly again. Compare the Δv used and the propellant left at the end.</div>
+    <div class="lab-try"><b>Kerosene or hydrogen?</b> Change the orbiter's second stage from hydrogen to kerosene and watch its Δv drop, even though the tanks hold the same 20 t. Then try a hydrogen first stage: lighter, but so bulky that the rocket gets much wider.</div>
+    <div class="lab-try"><b>Fly it yourself.</b> Choose Manual, tip the nose with ← and → (or the ↶ ↷ buttons), and try to reach orbit. Hint: start straight up, lean gently east, and be nearly level by about 60 km.</div>
+    <div class="lab-try"><b>At home: a balloon rocket.</b> Thread a drinking straw onto a long string stretched across a room, tape a blown-up balloon under the straw, and let go of its neck. The balloon pushes air out backward and the air pushes the balloon forward. NASA's multistage balloon activity (in the sources) shows how to add a second stage with a paper cup ring and a clothespin.</div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>A common misconception</h2>
+    <div class="lab-note"><p><b>"To get into orbit, a rocket has to fly high enough to escape gravity."</b></p>
+    <p>At 400 km, where the space station orbits, gravity is still about 89% as strong as on the ground (8.7 m/s² instead of 9.8). Astronauts float because they and their station are falling together, all the time, while moving sideways at 7.7 km/s. Going high is the easy part. The hard part is the sideways speed, which is why real rockets turn over soon after liftoff and spend most of their propellant pushing along the horizon.</p></div>
+    <div class="lab-note"><p><b>"Rockets push against the air."</b></p>
+    <p>They push against their own exhaust. That is why they work in space, and why every engine in the game gives more thrust in a vacuum than at sea level.</p></div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>How the simulation works</h2>
+    <p>The rocket flies in the plane of the equator around a round Earth of mean radius 6,371 km, with gravity GM/r² (GM = 3.986004418 × 10¹⁴ m³/s²). Earth spins unless you switch the spin off: it turns once per sidereal day (86,164 s), and the pad and the air turn with it, so the rocket starts with Earth's 465 m/s and the drag is worked out from its speed through the moving air. The air is an exponential atmosphere, ρ = 1.217 kg/m³ × e<sup>−h/8.5 km</sup>, and drag is ½ ρ v² C<sub>d</sub> A with C<sub>d</sub> = 0.5 and v the speed through the air. Each engine has a fixed mass flow; its specific impulse slides in a straight line from the sea-level value to the vacuum value as the air pressure drops, which is how a real fixed nozzle behaves.</p>
+    <p>Powered flight and flight in the air are stepped with the fourth-order Runge–Kutta method every 0.04 s, with the step cut short to land exactly on each burnout. Coasting above 200 km uses the leapfrog method, which keeps an orbit's energy steady lap after lap. The losses are counted against the speed over the ground, so that while the engines burn the four parts add up exactly to the Δv used.</p>
+    <p>The autopilot rises straight up to 50 m/s, then follows a pitch program that lowers the nose with height, staying within a few degrees of the direction of travel while the air is thick (a gravity turn). When the apoapsis reaches the target height it cuts the engines, coasts up, and burns sideways there to round off the orbit. Before launch it flies seven quick test flights with gentler or sharper turns and keeps the one that saves the most propellant without a very long coast.</p>
+    <p><b>What is simplified, and why:</b> the flight stays in one plane; Earth is a perfect ball with no mountains; the air does not change with weather, and above about 30 km it thins a little more slowly than real air (at 50 km the model's air is about three times too dense, but drag up there is tiny either way); C<sub>d</sub> stays fixed, while on real rockets it peaks near the speed of sound; staging is instant; and nothing in the rocket bends or breaks, however hard you fly. The engine and tank figures are typical rounded values, not those of any one rocket.</p>
+    <p><b>How it was checked</b> (automatic tests of the model):</p>
+    <ul>
+      <li>A burn with no gravity and no air: the speed gained matches Δv = I<sub>sp</sub> g₀ ln(m₀/m<sub>f</sub>) (7,289.7 m/s) to 1 part in 10⁹, and a two-stage burn matches the sum of the stages (9,661.6 m/s).</li>
+      <li>A straight-up hop with no air: the top height predicted from the energy at burnout, 1,027.86 km, matches the flight to 2 parts in 10⁹, and the energy at the top equals the energy at burnout to 2 parts in 10¹⁰.</li>
+      <li>Orbits: at 400 km the lap takes 5,544.85 s against 2π√(a³/GM) = 5,544.86 s, and the energy drifts by less than 2 parts in 10¹¹ over 100 laps. For a 200 × 2,000 km ellipse, the Ap and Pe readouts match the flown orbit within 0.04 km, and the speeds at Pe and Ap match the vis-viva equation to better than 1 part in a million.</li>
+      <li>Constants: circular speed at 400 km 7,672.6 m/s; escape speed from the surface 11,186 m/s; the geostationary radius from the same GM, 42,164 km.</li>
+      <li>The Δv budget adds up during a burn to within 10⁻¹⁰ m/s, and cutting the time step from 0.04 s to 0.005 s moves a full first-and-second-stage burn's end point by 0.09 km in height and 1.1 m/s in speed.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>NASA Glenn Research Center, Beginner's Guide to Aeronautics: <a href="https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/ideal-rocket-equation/" rel="noopener">Ideal Rocket Equation</a> and <a href="https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/specific-impulse/" rel="noopener">Specific Impulse</a>.</li>
+      <li>NASA Goddard, <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html" rel="noopener">Earth Fact Sheet</a>: mean radius 6,371 km, surface air density 1.217 kg/m³, scale height 8.5 km, escape speed 11.186 km/s.</li>
+      <li>NIST, <a href="https://physics.nist.gov/cgi-bin/cuu/Value?gn" rel="noopener">standard acceleration of gravity</a>, g₀ = 9.80665 m/s² (exact).</li>
+      <li>NASA JPL Solar System Dynamics, <a href="https://ssd.jpl.nasa.gov/astro_par.html" rel="noopener">Astrodynamic Parameters</a>: Earth's GM and the sidereal day, 86,164.09 s.</li>
+      <li>NASA, <a href="https://www.nasa.gov/wp-content/uploads/2020/09/final_sls_rs25_fact_sheet_508_07312015.pdf" rel="noopener">RS-25 engine fact sheet</a> (hydrogen and oxygen, 512,000 lbf of vacuum thrust).</li>
+      <li>ESA Education, <a href="https://www.esa.int/Education/Solid_and_liquid_fuel_rockets4" rel="noopener">Solid and liquid fuel rockets</a>: specific impulse of solid and liquid rockets, and throttling.</li>
+      <li>OpenStax, University Physics Volume 1: <a href="https://openstax.org/books/university-physics-volume-1/pages/9-7-rocket-propulsion" rel="noopener">9.7 Rocket Propulsion</a> and <a href="https://openstax.org/books/university-physics-volume-1/pages/13-4-satellite-orbits-and-energy" rel="noopener">13.4 Satellite Orbits and Energy</a>.</li>
+      <li>G. P. Sutton and O. Biblarz, <i>Rocket Propulsion Elements</i>, 9th ed., Wiley, 2017: typical specific impulses, and how thrust changes with outside pressure.</li>
+      <li>NASA, <a href="https://www.nasa.gov/wp-content/uploads/2021/11/sls-activity-three-build-a-multistage-balloon.pdf" rel="noopener">Build a Multistage Balloon Rocket</a> (classroom activity).</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More">
+    <a href="{{ "science-lab/" | relURL }}">← Science Lab</a>
+    <a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a>
+  </nav>
+</div>
+<script src="{{ "games/rocket/physics.js" | relURL }}?v={{ (os.Stat "static/games/rocket/physics.js").ModTime.Unix }}"></script>
+<script src="{{ "games/rocket/sim.js" | relURL }}?v={{ (os.Stat "static/games/rocket/sim.js").ModTime.Unix }}"></script>
+{{ end }}

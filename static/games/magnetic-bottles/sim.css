@@ -1,0 +1,74 @@
+/* Magnetic Bottles: only what this explorer adds to the shared lab look (static/games/lab/lab.css). */
+#magnetic-bottles-lab .lab-view{cursor:grab;background:radial-gradient(ellipse at 50% 45%,#0e2738 0%,#08182a 45%,#06111a 80%)}
+#magnetic-bottles-lab .lab-view:active{cursor:grabbing}
+#magnetic-bottles-lab .lab-view canvas:focus{outline:none}
+#magnetic-bottles-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#magnetic-bottles-lab .lab-tools button{min-width:36px;min-height:36px}
+#magnetic-bottles-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc)}
+#magnetic-bottles-lab .lab-hud{max-width:calc(100% - 11.5rem)}
+#magnetic-bottles-lab .lab-hud .mb-sym-ok{color:var(--sim-acc)}
+#magnetic-bottles-lab .lab-hud .mb-sym-no{color:var(--sim-pink)}
+#magnetic-bottles-lab .mb-legend{max-width:calc(100% - 1.2rem)}
+#magnetic-bottles-lab .mb-legend .mb-bar{display:inline-block;width:110px;height:9px;border-radius:5px;vertical-align:middle;margin:0 .35rem;border:1px solid rgba(255,255,255,.18)}
+#magnetic-bottles-lab .mb-legend i{font-style:normal;display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin:0 .25rem 0 .55rem}
+.mb-noscript{position:absolute;inset:auto 0 45% 0;text-align:center;color:var(--sim-ink)}
+/* the panel */
+#magnetic-bottles-lab .lab-seg button{min-height:36px}
+#magnetic-bottles-lab #mb-about{margin:0}
+#magnetic-bottles-lab .mb-presets{display:flex;flex-direction:column;gap:.3rem}
+#magnetic-bottles-lab .mb-presets .lab-small{margin:0}
+#magnetic-bottles-lab .mb-presets .lab-seg button{font-size:.78rem}
+#magnetic-bottles-lab .mb-sliders{display:flex;flex-direction:column;gap:.45rem}
+#magnetic-bottles-lab .lab-field>span{align-items:baseline}
+#magnetic-bottles-lab .lab-field>span label{color:var(--muted)}
+#magnetic-bottles-lab .lab-field>span small{font-weight:400;color:var(--muted);font-size:.75rem}
+#magnetic-bottles-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#magnetic-bottles-lab .lab-field output{font:600 .82rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink);text-align:right;white-space:nowrap}
+#magnetic-bottles-lab .mb-checks{display:flex;flex-direction:column;gap:0}
+#magnetic-bottles-lab .lab-chk{min-height:36px;cursor:pointer}
+#magnetic-bottles-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc);flex:0 0 auto}
+#magnetic-bottles-lab .lab-readout{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+#magnetic-bottles-lab .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#magnetic-bottles-lab .mb-iota canvas{display:block;width:100%;height:150px;border-radius:10px;background:#06111a}
+#magnetic-bottles-lab .mb-iota p{margin:.3rem 0 0}
+#magnetic-bottles-lab .mb-check{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.55rem .65rem;display:flex;flex-direction:column;gap:.45rem}
+#magnetic-bottles-lab .mb-check dd .ok{color:#2f9e6f}
+html[data-theme="dark"] #magnetic-bottles-lab .mb-check dd .ok{color:#6cc79a}
+#magnetic-bottles-lab .mb-check dd .bad{color:#c92a2a}
+#magnetic-bottles-lab .mb-check p{margin:0}
+#magnetic-bottles-lab .mb-check .lab-btn{min-height:36px;align-self:flex-start}
+#magnetic-bottles-lab .mb-units{margin:0}
+/* the slices sit under the 3-D view on wide screens, and after the panel on narrow ones */
+#magnetic-bottles-lab .lab-stage{grid-template-rows:auto 1fr}
+#magnetic-bottles-lab .lab-stage>.lab-view{grid-column:1;grid-row:1}
+#magnetic-bottles-lab .lab-stage>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#magnetic-bottles-lab .lab-stage>.mb-xs-wrap{grid-column:1;grid-row:2;margin:.4rem 0 0;min-width:0}
+#magnetic-bottles-lab .mb-xs-wrap h2{margin:0 0 .35rem}
+#magnetic-bottles-lab .mb-xs-intro{margin:0;font-size:.95rem}
+@media (max-width:860px){
+  #magnetic-bottles-lab .lab-stage{grid-template-rows:none}
+  #magnetic-bottles-lab .lab-stage>.lab-view,#magnetic-bottles-lab .lab-stage>.lab-panel,#magnetic-bottles-lab .lab-stage>.mb-xs-wrap{grid-column:auto;grid-row:auto}
+  #magnetic-bottles-lab .lab-stage>.mb-xs-wrap{margin:.6rem 0 0}
+}
+#magnetic-bottles-lab .mb-xs-box{background:#06111a;border-radius:14px;padding:.5rem;margin:.6rem 0 .4rem}
+#magnetic-bottles-lab .mb-xs-box canvas{display:block;width:100%;height:260px}
+#magnetic-bottles-lab #mb-xs-cap{margin:0}
+/* the lesson */
+#magnetic-bottles-lab .lab-sec ul{padding-left:1.3rem}
+#magnetic-bottles-lab .lab-sec li{margin:.2rem 0;line-height:1.5}
+#magnetic-bottles-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+#magnetic-bottles-lab .lab-formula{overflow-wrap:anywhere}
+#magnetic-bottles-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #magnetic-bottles-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+}
+@media (max-width:600px){
+  #magnetic-bottles-lab .lab-hud{max-width:calc(100% - 1.2rem);top:3.3rem}
+  #magnetic-bottles-lab .mb-legend{top:auto}
+  #magnetic-bottles-lab .mb-legend .mb-bar{width:70px}
+}
+#magnetic-bottles-lab .mb-key{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin:0 .2rem 0 .1rem}
+#magnetic-bottles-lab .mb-key.dash{border-top-style:dashed}
+#magnetic-bottles-lab .mb-nb{white-space:nowrap}
+#magnetic-bottles-lab .lab-toast{top:3.6rem}
+@media (max-width:600px){#magnetic-bottles-lab .lab-toast{top:6.4rem;font-size:.8rem;max-width:80%}}

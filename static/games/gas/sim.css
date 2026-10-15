@@ -1,0 +1,22 @@
+/* Gas in a Box: only what this simulation adds to the shared lab kit (static/games/lab/lab.css). */
+#gas-lab .lab-hud{max-width:calc(100% - 10rem);font-size:11.5px}
+#gas-lab .lab-hud .gas-dim{color:var(--sim-muted)}
+#gas-lab #gas-cv{outline:none;cursor:default}
+#gas-lab #gas-cv:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-3px;border-radius:14px}
+#gas-lab .lab-tools button{width:auto;min-width:2.3rem;padding:0 .45rem;font:600 .9rem system-ui,sans-serif}
+#gas-lab .lab-seg button{min-height:36px}
+#gas-lab .lab-btn{min-height:36px}
+#gas-lab .lab-field small{font-weight:400;opacity:.8}
+#gas-lab .lab-field input[type=range]{height:30px;margin:0}
+#gas-lab .lab-chk{min-height:36px}
+#gas-lab .lab-chk input{width:20px;height:20px;margin:0;accent-color:var(--acc)}
+#gas-lab .gas-note{margin:-.35rem 0 0;min-height:1.2em}
+#gas-lab .lab-readout dt{line-height:1.3}
+#gas-lab .lab-readout dd{white-space:nowrap}
+#gas-lab .lab-missions li button{min-height:32px;padding:.25rem .8rem}
+#gas-lab .lab-table td:nth-child(2){white-space:nowrap}
+/* keep the box in view while scrolling the long panel on wide screens */
+@media (min-width:861px){#gas-lab .lab-view{position:sticky;top:.6rem}}
+@media (max-width:860px){#gas-lab .lab-view{height:min(72vh,560px);min-height:440px}}
+@media (max-width:420px){#gas-lab .lab-hero{padding:1.1rem 1.1rem}#gas-lab .lab-hero h1{font-size:1.6rem}}
+#gas-lab .lab-sec p{margin:0 0 .75rem}#gas-lab .lab-sec .lab-small{margin-top:.4rem}

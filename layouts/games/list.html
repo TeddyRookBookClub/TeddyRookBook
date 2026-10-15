@@ -4,7 +4,7 @@
   <header class="lang-hero">
     <p class="lang-eyebrow">Games</p>
     <h1>Play in <span class="grc">Κοινή</span> &amp; <span class="lat">Latina</span></h1>
-    <p>Games that teach Koine Greek and Latin as you play, and one that teaches physics.</p>
+    <p>Games that teach Koine Greek and Latin as you play, the board games of antiquity, and a Science Lab of simulations built on real physics, chemistry and biology.</p>
   </header>
   <section class="lang-cards">
     <a class="lang-card" href="{{ "games/festival/" | relURL }}">
@@ -105,14 +105,17 @@
     </a>
   </section>
   <style>.lang-sub{margin:2rem 0 .8rem;font:700 1.5rem Georgia,serif;color:var(--g)}html[data-theme="dark"] .lang-sub{color:#a8d5b8}</style>
-  <h2 class="lang-sub">Science</h2>
+  <h2 class="lang-sub" id="science-lab">Science Lab</h2>
+  <p style="margin:-.4rem 0 .9rem;color:var(--muted)">Simulations built on real physics, chemistry and biology, each with missions and a lesson. <a href="{{ "science-lab/" | relURL }}">See them by subject →</a></p>
   <section class="lang-cards">
-    <a class="lang-card" href="{{ "games/book-cart/" | relURL }}">
-      <span class="big" aria-hidden="true">🛒</span>
-      <h2>Book Cart</h2>
-      <p>A chain of 2 to 25 books hangs from a rolling shopping cart. Swing it up and balance it on top, or stand every book dead straight: the physics puzzle called the inverted pendulum. Every book follows real physics, with live forces and energy on screen, a Lab for changing gravity, wind and weight, and a lesson on why things fall over.</p>
-      <span class="go">Play →</span>
+  {{ range site.Data.science_lab }}
+    <a class="lang-card" href="{{ .url | relURL }}">
+      <span class="big" aria-hidden="true">{{ .icon }}</span>
+      <h2>{{ .title }}</h2>
+      <p>{{ .text }}</p>
+      <span class="go">{{ if eq .kind "explorer" }}Explore{{ else }}Play{{ end }} →</span>
     </a>
+  {{ end }}
   </section>
 </div>
 {{ end }}

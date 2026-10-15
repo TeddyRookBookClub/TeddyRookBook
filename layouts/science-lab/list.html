@@ -1,0 +1,37 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+{{- $items := site.Data.science_lab }}
+<div class="lab" id="science-lab">
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab</p>
+    <h1>Try the science yourself</h1>
+    <p>Simulations built on real physics, chemistry and biology, with live numbers to watch, missions to try, and a lesson with the equations under each one. Free, nothing to install, and they work on a phone.</p>
+    <span class="lab-mark" aria-hidden="true">⚛️</span>
+  </header>
+  {{ range slice (slice "physics" "Physics" "Motion, forces, energy, electricity and light.") (slice "chemistry" "Chemistry" "Atoms, gases, acids and bases, and reactions.") (slice "astronomy" "Astronomy" "Gravity, orbits, and the sky over your head.") (slice "biology" "Biology" "Living things and how populations change.") }}
+  {{ $key := index . 0 }}
+  <section class="lab-sec" id="{{ $key }}">
+    <h2>{{ index . 1 }}</h2>
+    <p class="lab-small">{{ index . 2 }}</p>
+    <div class="sl-cards">
+    {{ range $items }}{{ if in .topic $key }}
+      <a class="sl-card" href="{{ .url | relURL }}"><span class="sl-ic" aria-hidden="true">{{ .icon }}</span><b>{{ .title }}{{ if eq .kind "explorer" }} <small>explorer</small>{{ end }}</b><span>{{ .text }}</span></a>
+    {{ end }}{{ end }}
+    </div>
+  </section>
+  {{ end }}
+  <section class="lab-sec">
+    <h2>Lessons and books</h2>
+    <p>For a lesson to read together, try <a href="{{ "homeschool/science/balancing-physics/" | relURL }}">Why Things Fall Over</a>, which goes with Book Cart. For whole courses, the <a href="{{ "homeschool/science/" | relURL }}">homeschool science</a> page has classic books on astronomy, geology, chemistry and physics with a guide for every session.</p>
+  </section>
+</div>
+<style>
+#science-lab .sl-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:.8rem}
+#science-lab .sl-card{display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:.15rem .7rem;align-items:start;padding:.9rem 1rem;border:1px solid var(--line);border-radius:14px;background:var(--card);text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.05);color:var(--ink);transition:transform .15s,border-color .15s}
+#science-lab .sl-card:hover{transform:translateY(-2px);border-color:var(--acc)}
+#science-lab .sl-ic{grid-row:span 2;font-size:2rem;line-height:1}
+#science-lab .sl-card b{font:700 1.08rem Georgia,serif;color:var(--acc)}
+#science-lab .sl-card b small{font:600 .68rem system-ui,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-left:.3rem}
+#science-lab .sl-card>span:last-child{color:var(--muted);font-size:.9rem;line-height:1.45}
+</style>
+{{ end }}
