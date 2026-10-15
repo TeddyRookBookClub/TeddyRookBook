@@ -1,0 +1,211 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/nash-equilibrium/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/nash-equilibrium/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt3-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 3</p>
+    <h1>{{ .Title }}</h1>
+    <p>Most games have no dominant action: what is best for you depends on what the other player does. John Nash’s answer, at age 21, was to look for a combination of choices where each player is already doing the best they can given what the others do. Nobody regrets their choice, so nobody wants to change it. Here you’ll find these equilibria by hand in games of every shape, from coordination and chicken to games that have none at all, and test your instinct for the focal points that help people pick one equilibrium out of many.</p>
+    <span class="lab-mark" aria-hidden="true">🤝</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="gt3-view">
+      <canvas id="gt3-cv" tabindex="0" aria-label="A payoff matrix for finding Nash equilibria. In Underline mode, click the left half of a cell to underline the row player’s payoff if it is the best in its column, and the right half to underline the column player’s payoff if it is the best in its row. Cells with both payoffs underlined are equilibria. In Spot mode, click the cells you think are equilibria and press Check. Keys: arrows move a cursor, 1 and 2 underline the row or column payoff, Enter picks a cell, C checks, A toggles the deviation arrows, N starts a new game."></canvas>
+      <div class="lab-tools"><button type="button" id="gt3-reset" aria-label="New game" title="New game (N)">↺</button></div>
+      <noscript><p class="lab-small">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Game</h3>
+      <div class="lab-seg" role="group" aria-label="Game" id="gt3-pre">
+        <button type="button" data-g="coord" aria-pressed="false">Coordination</button><button type="button" data-g="bos" aria-pressed="true">Bach or Stravinsky</button><button type="button" data-g="chicken" aria-pressed="false">Chicken</button><button type="button" data-g="stag" aria-pressed="false">Stag hunt</button><button type="button" data-g="pennies" aria-pressed="false">Matching pennies</button><button type="button" data-g="pd" aria-pressed="false">Prisoner’s dilemma</button><button type="button" data-g="rand" aria-pressed="false">🎲 Random</button>
+      </div>
+      <div class="lab-seg" role="group" aria-label="Size of the random game" id="gt3-size" hidden><button type="button" data-n="2" aria-pressed="false">2×2</button><button type="button" data-n="3" aria-pressed="true">3×3</button><button type="button" data-n="4" aria-pressed="false">4×4</button></div>
+      <p class="lab-small" id="gt3-story"></p>
+      <h3>How to play</h3>
+      <div class="lab-seg" role="group" aria-label="Mode" id="gt3-mode"><button type="button" data-m="mark" aria-pressed="true">Underline</button><button type="button" data-m="spot" aria-pressed="false">Spot</button></div>
+      <label class="lab-chk"><input type="checkbox" id="gt3-arrows"> Show deviation arrows</label>
+      <div class="lab-row" id="gt3-spotbox" hidden><button type="button" class="lab-btn pri" id="gt3-check">✓ Check</button><button type="button" class="lab-btn" id="gt3-none">No equilibrium</button></div>
+      <div class="lab-row"><button type="button" class="lab-btn" id="gt3-new">New game</button><button type="button" class="lab-btn" id="gt3-show">Show the answer</button></div>
+      <div class="gt3-key"><span><i style="background:#ffd479"></i>Row’s best response</span><span><i style="background:#74c0fc"></i>Column’s</span><span><i style="background:#63e6be"></i>equilibrium</span></div>
+      <dl class="lab-readout" id="gt3-read" aria-live="polite"></dl>
+      <p class="gt3-sr" id="gt3-msg" aria-live="polite"></p>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt3-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>Underlining.</b> For each column, ask: if Column plays this, which row is best for Row? Underline Row’s payoff there (gold). For each row, ask: if Row plays this, which column is best for Column? Underline Column’s payoff (blue). A cell with both payoffs underlined is a pair of mutual best responses: a Nash equilibrium, and it glows green when you finish.</p>
+      <p><b>Deviation arrows.</b> Turn them on and each cell shows where a player would rather be. A gold arrow points up or down to the row that Row would switch to; a blue arrow points left or right to Column’s better column. Equilibria are the cells with no arrows at all: no one wants to move.</p>
+      <p><b>Spot mode.</b> Skip the underlining and pick the equilibria directly. A wrong pick tells you who would deviate and how much they would gain.</p>
+      <p><b>The games.</b> The named games are the classic shapes. Random games use payoffs from 0 to 9; most have one or two equilibria, some have none, a few have three or more.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="br">
+    <h2>Best responses</h2>
+    <p>Fix what everyone else does, <i>a</i><sub>−<i>i</i></sub>. Player <i>i</i>’s <b>best responses</b> are the actions that give the highest payoff against it. Osborne writes the set of them as a function:</p>
+    <div class="lab-formula"><i>B<sub>i</sub></i>(<i>a</i><sub>−<i>i</i></sub>) = { <i>a<sub>i</sub></i> : <i>u<sub>i</sub></i>(<i>a<sub>i</sub></i>, <i>a</i><sub>−<i>i</i></sub>) ≥ <i>u<sub>i</sub></i>(<i>a′<sub>i</sub></i>, <i>a</i><sub>−<i>i</i></sub>) for every action <i>a′<sub>i</sub></i> }</div>
+    <p>It is a set because there can be ties. In a payoff matrix, Row’s best responses to a column are the rows with the largest gold number in that column; that is exactly what underlining finds.</p>
+    <h3 class="lab-h">Nash equilibrium</h3>
+    <div class="u-big"><i>u<sub>i</sub></i>(<i>a</i>*) ≥ <i>u<sub>i</sub></i>(<i>a<sub>i</sub></i>, <i>a</i>*<sub>−<i>i</i></sub>) for every action <i>a<sub>i</sub></i> of every player <i>i</i><small>an action profile <i>a</i>* is a Nash equilibrium if no player can do better by changing only their own action; equivalently, <i>a</i>*<sub><i>i</i></sub> ∈ <i>B<sub>i</sub></i>(<i>a</i>*<sub>−<i>i</i></sub>) for every <i>i</i></small></div>
+    <p>One useful way to read it: <b>no regrets</b>. After the game, each player learns what the others did and asks, “Could I have done better?” At a Nash equilibrium the answer is no, for everyone. Another way: it is a <b>self-enforcing agreement</b>. If the players agreed beforehand to play <i>a</i>*, nobody would want to break the agreement alone, even with no one to enforce it.</p>
+    <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Player 1 chooses a row, Player 2 chooses a column. In each cell, Player 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Player 2</th></tr><tr><th class="gth-p1" scope="col">Player 1</th><th scope="col">Bach</th><th scope="col">Stravinsky</th></tr></thead><tbody><tr><th scope="row">Bach</th><td class="gth-ne"><span class="gth-u1 gth-br">2</span>, <span class="gth-u2 gth-br">1</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">Stravinsky</th><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td><td class="gth-ne"><span class="gth-u1 gth-br">1</span>, <span class="gth-u2 gth-br">2</span></td></tr></tbody></table></div><figcaption>Bach or Stravinsky with every best response underlined. Two cells have both marks: two equilibria.</figcaption></figure>
+    <div class="u-ex"><b>Worked example: the underline method on a 3×3</b>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="3" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col">L</th><th scope="col">C</th><th scope="col">R</th></tr></thead><tbody><tr><th scope="row">T</th><td class="gth-ne"><span class="gth-u1 gth-br">3</span>, <span class="gth-u2 gth-br">3</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td></tr><tr><th scope="row">M</th><td><span class="gth-u1">0</span>, <span class="gth-u2">1</span></td><td class="gth-ne"><span class="gth-u1 gth-br">4</span>, <span class="gth-u2 gth-br">4</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">2</span></td></tr><tr><th scope="row">B</th><td><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2 gth-br">5</span></td><td><span class="gth-u1 gth-br">5</span>, <span class="gth-u2">4</span></td></tr></tbody></table></div></figure>
+      <ol>
+        <li><b>Row’s best responses.</b> Column L: the largest gold number is 3 (T). Column C: 4 (M). Column R: 5 (B). So <i>B</i><sub>1</sub>(L) = {T}, <i>B</i><sub>1</sub>(C) = {M}, <i>B</i><sub>1</sub>(R) = {B}.</li>
+        <li><b>Column’s best responses.</b> Row T: the largest blue number is 3 (L). Row M: 4 (C). Row B: 5 (C). So <i>B</i><sub>2</sub>(T) = {L}, <i>B</i><sub>2</sub>(M) = {C}, <i>B</i><sub>2</sub>(B) = {C}.</li>
+        <li><b>Both underlined:</b> (T, L) with payoffs (3, 3), and (M, C) with (4, 4). (B, R) is tempting, with Row’s best payoff of 5, but against B Column prefers C (5 &gt; 4), so it is not an equilibrium.</li>
+      </ol>
+      <p>Notice that no action in this game is dominated, so Chapter 2’s method gets nowhere. Nash equilibrium still narrows nine cells down to two.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Load the prisoner’s dilemma and turn on the arrows. Every arrow points toward (Fink, Fink): from any other cell, someone wants to fink. In Chapter 2’s language, the dominant-strategy equilibrium is also the only Nash equilibrium.</div>
+    <div class="lab-try"><b>Try this:</b> Load matching pennies with the arrows on. The arrows chase each other around the four cells in a circle, forever. There is no pure equilibrium; Chapter 4 finds one by letting players randomize.</div>
+  </section>
+
+  <section class="lab-sec" id="many">
+    <h2>Many equilibria, or none</h2>
+    <p>Unlike dominance, Nash equilibrium nearly always says <i>something</i>, but often it says “one of these.” Three shapes show up again and again.</p>
+    <div class="gth-mxs">
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Player 1 chooses a row, Player 2 chooses a column. In each cell, Player 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Player 2</th></tr><tr><th class="gth-p1" scope="col">Player 1</th><th scope="col">Café A</th><th scope="col">Café B</th></tr></thead><tbody><tr><th scope="row">Café A</th><td class="gth-ne"><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">Café B</th><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td><td class="gth-ne"><span class="gth-u1">1</span>, <span class="gth-u2">1</span></td></tr></tbody></table></div><figcaption>Coordination: both prefer A, but meeting anywhere beats missing each other.</figcaption></figure>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Driver 1 chooses a row, Driver 2 chooses a column. In each cell, Driver 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Driver 2</th></tr><tr><th class="gth-p1" scope="col">Driver 1</th><th scope="col">Swerve</th><th scope="col">Straight</th></tr></thead><tbody><tr><th scope="row">Swerve</th><td><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td><td class="gth-ne"><span class="gth-u1">1</span>, <span class="gth-u2">3</span></td></tr><tr><th scope="row">Straight</th><td class="gth-ne"><span class="gth-u1">3</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr></tbody></table></div><figcaption>Chicken: in each equilibrium one driver gives in.</figcaption></figure>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Player 1 chooses a row, Player 2 chooses a column. In each cell, Player 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Player 2</th></tr><tr><th class="gth-p1" scope="col">Player 1</th><th scope="col">Heads</th><th scope="col">Tails</th></tr></thead><tbody><tr><th scope="row">Heads</th><td><span class="gth-u1">1</span>, <span class="gth-u2">−1</span></td><td><span class="gth-u1">−1</span>, <span class="gth-u2">1</span></td></tr><tr><th scope="row">Tails</th><td><span class="gth-u1">−1</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">−1</span></td></tr></tbody></table></div><figcaption>Matching pennies: no cell is an equilibrium.</figcaption></figure>
+    </div>
+    <p><b>Coordination games</b> have equilibria the players rank the same way, yet they can still fail to coordinate if each expects the other to go elsewhere. <b>Bach or Stravinsky</b> adds conflict: both want to coordinate, but they disagree about where. <b>Chicken</b> (Osborne calls a version of it hawk–dove) has two equilibria in which one player backs down, and each prefers the one where the other does. <b>Matching pennies</b> has none: whatever cell you are in, the loser wants to switch.</p>
+    <div class="u-ex"><b>Worked example: two firms and a market for one</b>
+      <p>Two firms consider opening a store in a small town that can support only one. If both open, both lose $2 million; if one opens, it earns $5 million; staying out earns 0. (Invented numbers.)</p>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Firm 1 chooses a row, Firm 2 chooses a column. In each cell, Firm 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Firm 2</th></tr><tr><th class="gth-p1" scope="col">Firm 1</th><th scope="col">Enter</th><th scope="col">Stay out</th></tr></thead><tbody><tr><th scope="row">Enter</th><td><span class="gth-u1">−2</span>, <span class="gth-u2">−2</span></td><td class="gth-ne"><span class="gth-u1 gth-br">5</span>, <span class="gth-u2 gth-br">0</span></td></tr><tr><th scope="row">Stay out</th><td class="gth-ne"><span class="gth-u1 gth-br">0</span>, <span class="gth-u2 gth-br">5</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr></tbody></table></div></figure>
+      <p>If Firm 2 enters, Firm 1’s best response is to stay out (0 &gt; −2); if Firm 2 stays out, it is to enter (5 &gt; 0). The same holds for Firm 2. The equilibria are (Enter, Stay out) and (Stay out, Enter): exactly one store opens, but the theory doesn’t say which. In practice the answer often comes from outside the matrix: who moves first (Chapter 6), who can commit, or who is better known. It is a game of chicken.</p>
+    </div>
+    <h3 class="lab-h">The stag hunt: better versus safer</h3>
+    <p>The philosopher Jean-Jacques Rousseau described hunters who can catch a stag only if all of them stay at their posts, while any one of them can catch a hare alone. With payoffs Stag–Stag 4, Hare 3 whatever the other does, and Stag alone 0:</p>
+    <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Hunter 1 chooses a row, Hunter 2 chooses a column. In each cell, Hunter 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Hunter 2</th></tr><tr><th class="gth-p1" scope="col">Hunter 1</th><th scope="col">Stag</th><th scope="col">Hare</th></tr></thead><tbody><tr><th scope="row">Stag</th><td class="gth-ne"><span class="gth-u1 gth-br">4</span>, <span class="gth-u2 gth-br">4</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">3</span></td></tr><tr><th scope="row">Hare</th><td><span class="gth-u1">3</span>, <span class="gth-u2">0</span></td><td class="gth-ne"><span class="gth-u1 gth-br">3</span>, <span class="gth-u2 gth-br">3</span></td></tr></tbody></table></div></figure>
+    <p>Both (Stag, Stag) and (Hare, Hare) are equilibria. (Stag, Stag) is <b>Pareto-dominant</b>: better for both. But (Hare, Hare) is <b>risk-dominant</b>, a term from John Harsanyi and Reinhard Selten’s 1988 book on equilibrium selection: deviating from it costs less. If you hunt stag and your partner doesn’t, you lose 3 (from 3 to 0); if you hunt hare and your partner hunts stag, you lose only 1 (from 4 to 3). For two-by-two games like this one, the risk-dominant equilibrium compares the products of these losses, (3 − 0) × (3 − 0) = 9 against (4 − 3) × (4 − 3) = 1.</p>
+    <div class="u-ex"><b>Worked example: how sure must you be?</b>
+      <p>Two firms can each invest in a shared platform (Stag) or keep their own system (Hare), with the payoffs above in millions of dollars. Suppose you think your partner invests with probability <i>q</i>.</p>
+      <ol>
+        <li>Investing pays 4<i>q</i> + 0(1 − <i>q</i>) = 4<i>q</i>. Keeping your own system pays 3 for sure.</li>
+        <li>Invest only if 4<i>q</i> ≥ 3, that is, if <i>q</i> ≥ <b>3/4</b>. You need to be at least 75% sure of your partner.</li>
+        <li>At 50–50 beliefs, investing pays 2 and staying pays 3: that is what risk dominance means. A little doubt, and the better equilibrium unravels.</li>
+      </ol>
+    </div>
+    <h3 class="lab-h">Does an equilibrium always exist?</h3>
+    <p>Not in pure actions, as matching pennies shows. But <b>Nash’s theorem</b> (1950) guarantees that once players may randomize: <i>every strategic game with finitely many players, each with finitely many actions, has at least one Nash equilibrium in mixed strategies</i>. Nash proved it with a fixed-point theorem: the best-response map, which sends each strategy profile to the profiles of best responses to it, must leave some profile where it is. Chapter 4 shows how to compute these mixed equilibria.</p>
+  </section>
+
+  <section class="lab-sec" id="focal">
+    <h2>Focal points: choosing among equilibria</h2>
+    <p>When a game has several equilibria, how do people pick one? Thomas Schelling noticed that they often succeed far better than chance by choosing what stands out: a <b>focal point</b>. Try a few coordination puzzles. Your partners are simulated; where Schelling reported his students’ answers, the simulation follows them.</p>
+    <div class="gt3f" id="gt3f" role="group" aria-label="Focal point puzzles">
+      <div class="gt3f-top"><span id="gt3f-prog"></span><span id="gt3f-score" aria-live="polite"></span></div>
+      <p id="gt3f-q" tabindex="-1"></p>
+      <div id="gt3f-opts"></div>
+      <div id="gt3f-res" aria-live="polite"></div>
+      <div class="gt3f-foot"><button type="button" id="gt3f-next" hidden>Next puzzle →</button></div>
+    </div>
+    <p>Every one of these puzzles has many equilibria: if both of you name tails, that works just as well as heads. Nothing in the payoffs favors one equilibrium. What breaks the tie is shared culture, convention and imagination. Schelling put it this way in <i>The Strategy of Conflict</i>: people can often concert their intentions or expectations with others if each knows that the other is trying to do the same. Splitting $100 shows the same force in bargaining: any pair of claims adding up to $100 is an equilibrium, and 50–50 wins because it is the obvious one.</p>
+    <div class="lab-try"><b>Try this:</b> Before each puzzle, ask not “what do I like?” but “what will my partner expect me to expect them to choose?” That chain of reasoning is the same one as in the guessing game of Chapter 1, but here it converges on what stands out rather than spiraling down to zero.</div>
+  </section>
+
+  <section class="lab-sec" id="meaning">
+    <h2>What equilibrium does and doesn’t predict</h2>
+    <p>A Nash equilibrium is a <b>steady state</b>: if everyone expects it, nobody wants to change. Osborne’s favorite reading is a population of players who meet again and again, each with experience of how others behave: once behavior settles, it must be an equilibrium, since anyone who could do better would eventually notice. That reading explains why equilibrium predicts well in familiar, repeated situations (which side of the road to drive on, prices in a mature market) and less well in brand-new games played once by beginners, such as the guessing game of Chapter 1.</p>
+    <p>An equilibrium says nothing about <b>which</b> equilibrium will happen when there are several, nothing about <b>how</b> players get there, and nothing about whether the outcome is <b>good</b>. Equilibria can be terrible for everyone, as in the prisoner’s dilemma. Choosing among equilibria takes extra ideas: Pareto ranking, risk dominance, focal points, history, and in later chapters the timing of moves (Chapter 6) and repetition (Chapter 7).</p>
+    <div class="u-myth"><b>Common mistake: “A Nash equilibrium is the best outcome for the group”</b>
+      <p>It is only the outcome where no single player can do better by changing alone. Mutual finking is an equilibrium; mutual silence, better for both, is not. The well-known bar scene in the film <i>A Beautiful Mind</i> (2001) gets this backward: Nash proposes that none of the friends approach the most attractive woman, so that all do better. But if none of them approach her, any one of them would gain by switching, so that plan is not a Nash equilibrium at all.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <p><b>Antoine Augustin Cournot</b> found the equilibrium of a duopoly in 1838 (Chapter 5), but the general idea is <b>John Forbes Nash Jr.</b>’s. As a 21-year-old Princeton graduate student, he published a one-page proof of existence in the <i>Proceedings of the National Academy of Sciences</i> (1950), using Kakutani’s fixed-point theorem, then a fuller version with a proof based on Brouwer’s fixed-point theorem in the <i>Annals of Mathematics</i> (1951). Von Neumann and Morgenstern’s theory had handled zero-sum games and coalitions; Nash’s equilibrium worked for any game in which players act independently. He shared the 1994 Nobel prize in economics with John Harsanyi and Reinhard Selten. His life, including decades of mental illness and recovery, is told in Sylvia Nasar’s biography <i>A Beautiful Mind</i> (1998).</p>
+    <p><b>Thomas Schelling</b> introduced focal points in <i>The Strategy of Conflict</i> (1960) and shared the 2005 prize with Robert Aumann. <b>John Harsanyi and Reinhard Selten</b> developed a full theory of equilibrium selection, including risk dominance, in <i>A General Theory of Equilibrium Selection in Games</i> (1988).</p>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <ul>
+      <li><b>Business standards:</b> which video format, charging plug or software platform to back is a coordination game: what matters most is choosing what others choose. When Toshiba stopped making HD DVD players in 2008, the industry settled on Blu-ray. Platform battles in phones worked the same way (see the case <a href="{{ "business/cases/nokia-smartphones-2007-2013/" | relURL }}">Nokia and the Burning Platform</a>).</li>
+      <li><b>Entry and capacity:</b> a market with room for one new store, one new plant or one new airline route is a game of chicken. Firms announce plans early to claim the favorable equilibrium.</li>
+      <li><b>Policy:</b> on 3 September 1967 Sweden switched from driving on the left to driving on the right. Both are equilibria; moving a whole country from one to the other took years of preparation and a single coordinated morning. Bank runs are coordination failures too: if everyone expects a run, withdrawing early is each depositor’s best response.</li>
+      <li><b>Sports:</b> a soccer back line stepping up together to catch attackers offside is a coordination game: it works only if every defender moves at the same moment, and one defender who hangs back ruins it for all.</li>
+      <li><b>Daily life:</b> two people walking toward each other on a sidewalk, both stepping to the same side; a group choosing a meeting time without a chat thread; everyone leaving a stadium through the same gate. Conventions are equilibria that have become habits.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol>
+      <li><p><b>Find the equilibria.</b> Find every pure-strategy Nash equilibrium.</p>
+        <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="3" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col">L</th><th scope="col">C</th><th scope="col">R</th></tr></thead><tbody><tr><th scope="row">T</th><td><span class="gth-u1">1</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">3</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">M</th><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">B</th><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">3</span>, <span class="gth-u2">2</span></td></tr></tbody></table></div></figure>
+        <details><summary>Show the answer</summary><p>Row’s best responses: against L, M (2); against C, T (3); against R, B (3). Column’s: against T, L (2); against M, C (3); against B, R (2). The only cell with both marks is (B, R), with payoffs (3, 2). (M, C) looks good for Column, but against C Row prefers T (3 &gt; 2).</p></details></li>
+      <li><p><b>No pure equilibrium.</b> Show that this game has no pure-strategy Nash equilibrium by checking each cell for a profitable deviation.</p>
+        <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col">Left</th><th scope="col">Right</th></tr></thead><tbody><tr><th scope="row">Up</th><td><span class="gth-u1">5</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">4</span></td></tr><tr><th scope="row">Down</th><td><span class="gth-u1">4</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td></tr></tbody></table></div></figure>
+        <details><summary>Show the answer</summary><p>(Up, Left): Column switches to Right (4 &gt; 1). (Up, Right): Row switches to Down (2 &gt; 1). (Down, Right): Column switches to Left (3 &gt; 2). (Down, Left): Row switches to Up (5 &gt; 4). Every cell has someone who wants to move, like matching pennies. (In Chapter 4 you’ll find its mixed equilibrium: Row plays Up with probability 1/4, Column plays Left with probability 1/2.)</p></details></li>
+      <li><p><b>Risk dominance.</b> In a stag hunt, change the hare payoff from 3 to 2 (so Hare gives 2 whatever the other does). Which equilibrium is risk-dominant now? How sure of your partner must you be to hunt stag?</p>
+        <details><summary>Show the answer</summary><p>Losses from deviating: at (Stag, Stag), 4 − 2 = 2 for each player, product 4. At (Hare, Hare), 2 − 0 = 2 for each, product 4. It’s a tie: neither is risk-dominant. You hunt stag if 4<i>q</i> ≥ 2, that is <i>q</i> ≥ 1/2. Lower the hare payoff further and Stag becomes both the better and the safer equilibrium.</p></details></li>
+      <li><p><b>Dominance and equilibrium.</b> Explain why, if every player has a strictly dominant action, the profile of those actions is the game’s only Nash equilibrium.</p>
+        <details><summary>Show the answer</summary><p>A strictly dominant action is the unique best response to <i>every</i> profile of the others’ actions. So in any Nash equilibrium each player must be playing it, which leaves only one candidate; and that candidate is an equilibrium because each action is a best response to the others.</p></details></li>
+      <li><p><b>A best-response function.</b> Two partners each choose an effort level <i>e<sub>i</sub></i> ≥ 0. Partner <i>i</i>’s payoff is <i>u<sub>i</sub></i> = <i>e<sub>i</sub></i>(2 + <i>e<sub>j</sub></i>) − <i>e<sub>i</sub></i>², where <i>j</i> is the other partner: effort is more productive when the other works hard too. Find <i>B<sub>i</sub></i>(<i>e<sub>j</sub></i>) and the Nash equilibrium.</p>
+        <details><summary>Show the answer</summary><p>Setting the derivative with respect to <i>e<sub>i</sub></i> to zero: 2 + <i>e<sub>j</sub></i> − 2<i>e<sub>i</sub></i> = 0, so <i>B<sub>i</sub></i>(<i>e<sub>j</sub></i>) = (2 + <i>e<sub>j</sub></i>)/2 = 1 + <i>e<sub>j</sub></i>/2 (the second derivative, −2, confirms a maximum). In equilibrium each is a best response to the other: <i>e</i> = 1 + <i>e</i>/2, so <i>e</i>* = 2 for both, with payoffs 2 × 4 − 4 = 4 each. (Both would be better off at higher effort, for example 3 each gives 3 × 5 − 9 = 6: each partner ignores the boost their effort gives the other.)</p></details></li>
+      <li><p><b>Risk dominance and 50–50 beliefs.</b> In a symmetric 2×2 game with actions S and H, payoffs <i>a</i> = <i>u</i>(S, S), <i>b</i> = <i>u</i>(S, H), <i>c</i> = <i>u</i>(H, S), <i>d</i> = <i>u</i>(H, H), with <i>a</i> &gt; <i>c</i> and <i>d</i> &gt; <i>b</i> (two strict equilibria). Show that (S, S) is risk-dominant exactly when S is the best response to a partner who is equally likely to play S or H.</p>
+        <details><summary>Show the answer</summary><p>Risk dominance compares (<i>a</i> − <i>c</i>)² with (<i>d</i> − <i>b</i>)², so (S, S) is risk-dominant when <i>a</i> − <i>c</i> &gt; <i>d</i> − <i>b</i> (both differences are positive). Against a 50–50 partner, S pays (<i>a</i> + <i>b</i>)/2 and H pays (<i>c</i> + <i>d</i>)/2. S is better when <i>a</i> + <i>b</i> &gt; <i>c</i> + <i>d</i>, which rearranges to <i>a</i> − <i>c</i> &gt; <i>d</i> − <i>b</i>. The same condition.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the interactive works</h2>
+    <p><b>Equilibria.</b> For every column the program finds the rows with the highest row payoff (Row’s best responses, ties included), and for every row the columns with the highest column payoff. Pure-strategy Nash equilibria are the cells in both lists. A deviation arrow from a cell points to the best alternative for a player who is not already best responding there. Selection in 2×2 games compares the two equilibria’s payoffs (Pareto) and the products of each player’s loss from deviating (risk dominance).</p>
+    <p><b>Random games</b> draw each payoff uniformly from 0 to 9. About 85% of the time the generator keeps drawing until the game has at least one pure equilibrium, so that “no equilibrium” comes up now and then rather than one game in eight.</p>
+    <p><b>Focal points.</b> Your partner is drawn at random from fixed weights. For heads or tails, splitting $100, meeting in New York and the meeting time, the weights follow the answers Schelling reported; for the grid of squares and “name a number” they are a guess about what people find salient, and the puzzle says so.</p>
+    <p><b>Checks (node).</b> On 3,000 random games of size 2×2 to 4×4, the equilibria found by best responses matched a brute-force search for cells with no profitable deviation, and the cells with both underlines were exactly the equilibria. Among 5,000 random 3×3 games, 12% had no pure equilibrium, 49% had one, 31% had two and 8% had three or more. In the stag hunt the program reports (Stag, Stag) as Pareto-dominant and (Hare, Hare) as risk-dominant (products 1 and 9), with the stag threshold at <i>q</i> = 3/4.</p>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>An action profile is a Nash equilibrium when …</p>
+        <ul class="u-opts"><li><button type="button">it gives the highest total payoff</button></li><li><button type="button">no player can do better by changing only their own action</button></li><li><button type="button">every player is playing a dominant action</button></li></ul>
+        <details><summary>Show the answer</summary><p>Each action must be a best response to the others’ actions. Dominant actions are one way to get there, but most equilibria don’t involve them.</p></details></li>
+      <li class="u-q" data-a="2"><p>In a payoff matrix, a cell is a pure-strategy Nash equilibrium when …</p>
+        <ul class="u-opts"><li><button type="button">its two payoffs are equal</button></li><li><button type="button">its row payoff is the largest number in the whole matrix</button></li><li><button type="button">its row payoff is the largest in its column and its column payoff is the largest in its row</button></li></ul>
+        <details><summary>Show the answer</summary><p>That is the underline method: Row can’t gain by moving within the column, and Column can’t gain by moving within the row.</p></details></li>
+      <li class="u-q" data-a="0"><p>In the stag hunt above, (Hare, Hare) is risk-dominant because …</p>
+        <ul class="u-opts"><li><button type="button">hunting hare protects you if your partner doesn’t cooperate: the loss from a partner’s deviation is smaller</button></li><li><button type="button">it gives higher payoffs to both</button></li><li><button type="button">it is not really an equilibrium</button></li></ul>
+        <details><summary>Show the answer</summary><p>(Stag, Stag) pays more, but it is fragile: you need to be at least 75% sure of your partner. Hare pays 3 whatever happens.</p></details></li>
+      <li class="u-q" data-a="1"><p>What does Nash’s theorem guarantee?</p>
+        <ul class="u-opts"><li><button type="button">Every game has a pure-strategy equilibrium</button></li><li><button type="button">Every finite game has at least one equilibrium, possibly in mixed strategies</button></li><li><button type="button">Every game has exactly one equilibrium</button></li></ul>
+        <details><summary>Show the answer</summary><p>Matching pennies has no pure equilibrium, and coordination games have several. Existence is guaranteed only once randomizing is allowed.</p></details></li>
+      <li class="u-q" data-a="2"><p>Two people must meet in a city without communicating and both go to the main train station at noon. Game theory calls the station at noon …</p>
+        <ul class="u-opts"><li><button type="button">a dominant strategy</button></li><li><button type="button">the only Nash equilibrium</button></li><li><button type="button">a focal point: one equilibrium among many that stands out</button></li></ul>
+        <details><summary>Show the answer</summary><p>Meeting anywhere at any shared time is an equilibrium. The station at noon is Schelling’s focal point: it is chosen because each expects the other to choose it.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 2 (Nash equilibrium, best response functions, the stag hunt, hawk–dove) and chapter 4 (mixed strategy equilibrium).</li>
+      <li>J. F. Nash, “Equilibrium points in <i>n</i>-person games”, <i>Proceedings of the National Academy of Sciences</i> 36(1), 1950, 48–49; “Non-cooperative games”, <i>Annals of Mathematics</i> 54(2), 1951, 286–295.</li>
+      <li>T. C. Schelling, <i>The Strategy of Conflict</i> (Harvard University Press, 1960), chapter 3. The survey numbers are as summarized in <a href="https://en.wikipedia.org/wiki/Focal_point_(game_theory)" target="_blank" rel="noopener">Focal point (game theory)</a> (Wikipedia).</li>
+      <li>J. C. Harsanyi and R. Selten, <i>A General Theory of Equilibrium Selection in Games</i> (MIT Press, 1988).</li>
+      <li>J. Mehta, C. Starmer and R. Sugden, “The nature of salience: an experimental investigation of pure coordination games”, <i>American Economic Review</i> 84(3), 1994, 658–673.</li>
+      <li><a href="https://oyc.yale.edu/economics/econ-159/lecture-6" target="_blank" rel="noopener">Ben Polak, Yale ECON 159, Lecture 6: Nash Equilibrium: Dating and Cournot</a>.</li>
+      <li><a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2025/resources/mit14_12f12_chapter6_f12_pdf/" target="_blank" rel="noopener">MIT OpenCourseWare 14.12, Lecture notes, Chapter 6: Nash Equilibrium</a>.</li>
+      <li><a href="https://plato.stanford.edu/entries/game-theory/" target="_blank" rel="noopener">“Game Theory”, Stanford Encyclopedia of Philosophy</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/nash-equilibrium/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/nash-equilibrium/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/nash-equilibrium/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/nash-equilibrium/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,236 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/binary-outcomes/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/binary-outcomes/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec14-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 14</p>
+    <h1>{{ .Title }}</h1>
+    <p>Did the customer buy? Was the loan approved? Did the student pass? Many of the outcomes businesses care about are a plain yes or no. Fit an ordinary regression line to them and it soon predicts a 130% chance of buying, or a −20% chance of passing. Here you’ll put the straight line next to two S-shaped curves, logit and probit, drag the data around to see which one bends and which one breaks, and then climb a mountain of likelihood by hand and with Newton’s method to see how the S-curves are actually fitted.</p>
+    <span class="lab-mark" aria-hidden="true">🔘</span>
+  </header>
+
+  <div class="lab-stage ec14-main">
+    <div class="lab-view" id="ec14-view">
+      <canvas id="ec14-cv" tabindex="0" aria-label="Yes-or-no data: each dot is one person, at the top if the answer was yes and at the bottom if no, placed across by x. White circles are the share of yeses in each slice of x. Three fitted models: a violet straight line (the linear probability model), a green logit curve and a dashed gold probit curve. Red-tinted bands above 1 and below 0 mark impossible probabilities. Right: a table comparing the three models. Click to add a person (above the middle for yes, below for no), drag a dot to move it or flip it, double-click or drag it off the plot to delete it. Keys: arrows move the newest dot, space flips it, A adds one, Delete removes it, N new sample."></canvas>
+      <div class="lab-hud" id="ec14-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec14-new2" aria-label="New sample" title="New sample (N)">🎲</button>
+        <button type="button" id="ec14-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="ec14-pre-h">The story</h3>
+      <div class="lab-seg" id="ec14-pre" role="group" aria-labelledby="ec14-pre-h">
+        <button type="button" data-p="study">Practice → pass</button><button type="button" data-p="discount">Discount → buy</button><button type="button" data-p="credit">Credit score → loan</button>
+      </div>
+      <h3 id="ec14-link-h">The true model</h3>
+      <div class="lab-seg" id="ec14-link" role="group" aria-labelledby="ec14-link-h">
+        <button type="button" data-l="logit">Logistic errors</button><button type="button" data-l="probit">Normal errors</button>
+      </div>
+      <label class="lab-field"><span>How sharp the switch is <output id="ec14-steep-o"></output></span><input type="range" id="ec14-steep" min="0" max="3" step="0.1" aria-label="How sharply the probability switches from no to yes"></label>
+      <label class="lab-field"><span>People <output id="ec14-n-o"></output></span><input type="range" id="ec14-n" min="10" max="400" step="10" aria-label="Number of people"></label>
+      <div class="ec14-chks">
+        <label class="lab-chk"><input type="checkbox" id="ec14-s-lpm"> Straight line (LPM)</label>
+        <label class="lab-chk"><input type="checkbox" id="ec14-s-logit"> Logit</label>
+        <label class="lab-chk"><input type="checkbox" id="ec14-s-probit"> Probit</label>
+        <label class="lab-chk"><input type="checkbox" id="ec14-truth"> True probability</label>
+      </div>
+      <p class="lab-small">Click the plot to add a person: above the dotted middle line for a yes, below for a no. Drag a dot to move it or flip it; double-click it (or drag it off the plot) to remove it.</p>
+      <button type="button" class="lab-btn" id="ec14-new">New sample</button>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec14-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec14-missions"></ol>
+    </div>
+    <section class="lab-sec ec14-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The data.</b> Each dot is one simulated person. Yes answers sit at the top (1), no answers at the bottom (0); they’re spread a little up and down only so you can see them. The white circles show the share of yeses among people with similar x: that’s the probability we’re trying to trace.</p>
+        <p><b>The straight line.</b> The violet line is ordinary least squares on the 0s and 1s, called the <i>linear probability model</i>. It’s easy to read (the slope is the change in probability per unit of x) but it doesn’t know that probabilities stop at 0 and 1, so at the ends it wanders into the red zones.</p>
+        <p><b>The S-curves.</b> The green logit and the dashed gold probit curves are fitted by maximum likelihood. They bend to stay between 0 and 1, and are almost indistinguishable from each other in the middle. Their coefficients are on a different scale, so the table translates them into partial effects: how much the probability changes per unit of x.</p>
+        <p><b>Play with it.</b> Add a surprising yes far to the left and watch which model reacts most. Pull points apart until every yes is to the right of every no, and the S-curves have no finite answer at all: that’s called <i>perfect separation</i>.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="lpm"><h2>The straight line and its trouble</h2>
+    <p>With a 0/1 outcome, the population regression is a probability: E[<var>y</var> | <var>x</var>] = P(<var>y</var> = 1 | <var>x</var>). The <b>linear probability model</b> (LPM) sets it to a line, P(<var>y</var> = 1 | <var>x</var>) = <var>β</var>₀ + <var>β</var>₁<var>x</var>, and estimates it by OLS. Wooldridge (section 7.5) points out what is good and bad about it:</p>
+    <ul>
+      <li><b>Easy to read.</b> <var>β</var>₁ is the change in the probability for a one-unit change in <var>x</var>. A slope of 0.09 on hours of practice means each hour adds about 9 percentage points to the chance of passing.</li>
+      <li><b>Impossible predictions.</b> A line has to leave [0, 1] somewhere, often inside the range of the data, as the red bands show.</li>
+      <li><b>Constant effects.</b> The line says the 1st hour of practice and the 12th each add the same 9 points, which can’t be true when the chance is already near 100%.</li>
+      <li><b>Built-in heteroskedasticity.</b> For a 0/1 outcome, Var(<var>y</var> | <var>x</var>) = <var>p</var>(<var>x</var>)(1 − <var>p</var>(<var>x</var>)), which changes with <var>x</var>. So always use robust standard errors with an LPM (see <a href="{{ "business/econometrics/heteroskedasticity/" | relURL }}">Chapter 8</a>).</li>
+    </ul>
+    <p>In practice the LPM often gives average effects close to the logit’s and probit’s, especially when most probabilities are between 0.2 and 0.8. Its problems bite at the extremes.</p>
+  </section>
+
+  <section class="lab-sec" id="latent"><h2>The latent-variable model</h2>
+    <p>Imagine each person has a hidden score, <var>y</var>* = <var>β</var>₀ + <var>β</var>₁<var>x</var> + <var>e</var>: a customer’s net desire for the upgrade, a borrower’s creditworthiness. We only see whether it crosses zero: <var>y</var> = 1 if <var>y</var>* &gt; 0. If <var>e</var> is symmetric around zero with distribution function <var>G</var>, then</p>
+    <div class="u-big">P(<var>y</var> = 1 | <var>x</var>) = <var>G</var>(<var>β</var>₀ + <var>β</var>₁<var>x</var>)<small>a probability that always stays between 0 and 1</small></div>
+    <div class="u-key">
+      <div><b>Logit</b><p><var>e</var> has the logistic distribution: <var>G</var>(<var>z</var>) = Λ(<var>z</var>) = exp(<var>z</var>)/(1 + exp(<var>z</var>)). Its log-odds are linear: ln[<var>p</var>/(1 − <var>p</var>)] = <var>β</var>₀ + <var>β</var>₁<var>x</var>.</p></div>
+      <div><b>Probit</b><p><var>e</var> is standard normal: <var>G</var>(<var>z</var>) = Φ(<var>z</var>), the normal distribution function from <a href="{{ "business/econometrics/probability/" | relURL }}">Chapter 2</a>.</p></div>
+      <div><b>Same shape, different scale</b><p>The logistic distribution has standard deviation π/√3 ≈ 1.81, the normal 1. So logit coefficients come out bigger, by a factor of roughly 1.6 to 1.8. The scale of <var>y</var>* is never observed, so only ratios of coefficients and probabilities mean anything.</p></div>
+    </div>
+    <div class="u-myth"><b>Common mistake: “The logit coefficient is the change in probability”</b>
+      <p>A logit slope of 0.77 does not mean each extra hour raises the chance of passing by 77 percentage points. It raises the log-odds by 0.77. How much the probability moves depends on where you are on the S-curve: a lot in the middle, very little near 0 or 1. To talk in probabilities, compute partial effects, as below.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="ml"><h2>Maximum likelihood</h2>
+    <p>OLS minimizes squared errors; that doesn’t fit an S-curve well, because a 0/1 outcome is not a curve plus normal noise. Instead, ask: for a given (<var>β</var>₀, <var>β</var>₁), how probable is the data we actually saw? Person <var>i</var> said yes with probability <var>G</var>(<var>z</var><sub><var>i</var></sub>) and no with probability 1 − <var>G</var>(<var>z</var><sub><var>i</var></sub>), where <var>z</var><sub><var>i</var></sub> = <var>β</var>₀ + <var>β</var>₁<var>x</var><sub><var>i</var></sub>. People are independent, so multiply, and take logs to turn the product into a sum:</p>
+    <div class="u-big">ℓ(<var>β</var>) = Σ<sub><var>i</var></sub> [ <var>y</var><sub><var>i</var></sub> ln <var>G</var>(<var>z</var><sub><var>i</var></sub>) + (1 − <var>y</var><sub><var>i</var></sub>) ln(1 − <var>G</var>(<var>z</var><sub><var>i</var></sub>)) ]<small>the log-likelihood: the maximum likelihood estimator <var>β̂</var> is the (<var>β</var>₀, <var>β</var>₁) that makes it as large as possible</small></div>
+    <div class="u-ex"><b>Worked example: scoring two guesses</b>
+      <p>Five people practiced 1, 2, 3, 4 and 5 hours; they failed, passed, failed, passed, passed (<var>y</var> = 0, 1, 0, 1, 1). Score the logit guess (<var>β</var>₀, <var>β</var>₁) = (−2, 1):</p>
+      <ol><li>Person 1: <var>z</var> = −1, Λ = 0.269. They failed, so add ln(1 − 0.269) = −0.313.</li>
+        <li>Person 2: <var>z</var> = 0, Λ = 0.5, passed: ln 0.5 = −0.693. Person 3: <var>z</var> = 1, Λ = 0.731, failed: ln 0.269 = −1.313.</li>
+        <li>Person 4: Λ(2) = 0.881, passed: −0.127. Person 5: Λ(3) = 0.953, passed: −0.049.</li>
+        <li>Total: ℓ(−2, 1) = −2.495.</li></ol>
+      <p>The guess (−1, 0.5) scores −2.656, and the “coin flip” (0, 0) scores 5 ln 0.5 = −3.466. The first guess explains the data better. The best possible is ℓ = −2.422 at (<var>β̂</var>₀, <var>β̂</var>₁) = (−2.65, 1.09), the maximum likelihood estimate.</p>
+    </div>
+    <h3 class="lab-h">Climbing to the top</h3>
+    <p>There is no formula for the maximum, so computers climb. The <b>gradient</b> (the score) points uphill; the <b>Hessian</b> (the matrix of second derivatives) describes how the slope bends. <b>Newton’s method</b> fits a bowl to the hill at your current spot and jumps straight to the bowl’s top:</p>
+    <div class="lab-formula"><var>β</var><sub>new</sub> = <var>β</var> + [−∇²ℓ(<var>β</var>)]<sup>−1</sup> ∇ℓ(<var>β</var>), &nbsp;&nbsp; for logit: ∇ℓ = Σ (<var>y</var><sub><var>i</var></sub> − Λ<sub><var>i</var></sub>) <b>x</b><sub><var>i</var></sub>, &nbsp; −∇²ℓ = Σ Λ<sub><var>i</var></sub>(1 − Λ<sub><var>i</var></sub>) <b>x</b><sub><var>i</var></sub><b>x</b><sub><var>i</var></sub>′</div>
+    <p>The logit log-likelihood is <i>concave</i> (it has one hill and no false peaks), so Newton’s method reliably finds the top in a handful of steps. Plain gradient ascent, which just takes a small step uphill each time, can crawl. Try both here.</p>
+    <div class="lab-stage wide ec14-mini" id="ec14-ml">
+      <div class="lab-view" id="ec14-mlv"><canvas id="ec14-mc" tabindex="0" aria-label="Left: the data with the logit curve at your chosen point (pink) and at the maximum (green dashed). Right: a heat map of the logit log-likelihood over the intercept and the slope; brighter is higher, the green tint marks the 95% confidence region, a cross marks the maximum, and a pink path shows your climb. Click or drag on the map to choose a starting point. Keys: arrows move the point, Enter takes a Newton step, G takes a gradient step."></canvas></div>
+      <div class="lab-panel ec14-row">
+        <div class="ec14-grow">
+          <div class="lab-row"><button type="button" class="lab-btn pri" id="ec14-nt">Newton step</button><button type="button" class="lab-btn" id="ec14-gd">Gradient step</button><button type="button" class="lab-btn" id="ec14-gd10">10 gradient steps</button><button type="button" class="lab-btn" id="ec14-mlreset">New start</button></div>
+          <label class="lab-chk"><input type="checkbox" id="ec14-center"> Center x (measure it from its average)</label>
+          <p class="lab-small">The map uses the data from the simulation above, so edit the data there and the hill changes shape. Click anywhere on the map to start somewhere new.</p>
+        </div>
+        <dl class="lab-readout ec14-grow" id="ec14-mlread"></dl>
+      </div>
+    </div>
+    <div class="lab-try"><b>Try this:</b> with raw x, the high ground is a long, thin diagonal ridge: raising the intercept and lowering the slope nearly cancel. Gradient ascent bounces across the ridge and creeps along it; in our tests it took 677 steps to get within 0.01 of the top. Now tick “Center x”. The intercept now means the log-odds at the average x, the ridge becomes a round hill, and the same method arrives in about 20 steps. Newton’s method doesn’t care: it takes about 6 either way.</div>
+    <h3 class="lab-h">Why maximum likelihood?</h3>
+    <p>Under the model’s assumptions and in large samples, the MLE is <b>consistent</b> (it converges to the true <var>β</var>), <b>asymptotically normal</b>, and <b>efficient</b>: no other consistent estimator has a smaller variance in large samples. Its standard errors come from the curvature at the top: Var(<var>β̂</var>) ≈ [−∇²ℓ(<var>β̂</var>)]<sup>−1</sup>. A sharply peaked hill means a precise estimate; a flat ridge, an imprecise one. That’s why the 95% region on the map is so long and thin with raw x: the intercept and slope are hard to pin down separately, though the curve itself is well determined.</p>
+    <p>One case where it breaks: <b>perfect separation</b>. If some value of <var>x</var> splits all the yeses from all the nos, a steeper curve always fits a little better, and the likelihood keeps rising toward a cliff with no top. Software then reports enormous coefficients or fails to converge. The honest answer is that the data can’t tell you how steep the switch is.</p>
+  </section>
+
+  <section class="lab-sec" id="effects"><h2>Partial effects and odds ratios</h2>
+    <p>For a continuous <var>x</var><sub><var>j</var></sub>, the effect on the probability is the slope of the S-curve: ∂P(<var>y</var> = 1 | <b>x</b>)/∂<var>x</var><sub><var>j</var></sub> = <var>g</var>(<b>x</b><var>β</var>) <var>β</var><sub><var>j</var></sub>, where <var>g</var> is the density (Λ(1 − Λ) for logit, <var>φ</var> for probit). It changes with <b>x</b>, so economists report one of two summaries:</p>
+    <div class="u-key">
+      <div><b>Partial effect at the average (PEA)</b><p>Plug in the sample averages: <var>g</var>(<var>β̂</var>₀ + <var>x̄</var><var>β̂</var>₁) <var>β̂</var>₁. The effect for a made-up “average person”.</p></div>
+      <div><b>Average partial effect (APE)</b><p>Average the effect over everyone: <var>n</var><sup>−1</sup> Σ <var>g</var>(<var>β̂</var>₀ + <var>x</var><sub><var>i</var></sub><var>β̂</var>₁) <var>β̂</var>₁. Usually the better summary, and the one to compare with an LPM slope.</p></div>
+      <div><b>Odds ratio (logit only)</b><p>The odds are <var>p</var>/(1 − <var>p</var>). In a logit, raising <var>x</var> by 1 multiplies the odds by exp(<var>β</var>₁), wherever you start.</p></div>
+    </div>
+    <div class="u-ex"><b>Worked example: what one more hour of practice is worth</b>
+      <p>A logit for passing an exam gives <var>β̂</var>₀ = −3.69 and <var>β̂</var>₁ = 0.77 per hour (the default sample in the simulation).</p>
+      <ol><li>At 5 hours: <var>z</var> = −3.69 + 0.77 × 5 = 0.16, so P(pass) = Λ(0.16) = 0.540. The density is 0.540 × 0.460 = 0.248, and the partial effect is 0.248 × 0.77 = 0.191: one more hour adds about 19 percentage points.</li>
+        <li>At 1 hour: <var>z</var> = −2.92, P = 0.051, density 0.049, effect 0.037: under 4 points per hour. Same coefficient, very different effect.</li>
+        <li>Odds ratio: exp(0.77) = 2.16. At 5 hours the odds of passing are 0.540/0.460 = 1.17; at 6 hours P = Λ(0.93) = 0.717 and the odds are 2.53, which is 1.17 × 2.16.</li></ol>
+      <p>Because many people in this sample practiced little or a lot, the average partial effect (0.090) is much smaller than the effect at the average (0.159). Reporting the APE answers “what happens on average if everyone practices one more hour?”</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="fit"><h2>Goodness of fit and testing</h2>
+    <p><b>Percent correctly predicted.</b> Predict yes when <var>p̂</var> ≥ 0.5 and count the hits. Simple, but it can mislead: if 95% of loans are repaid, predicting “repaid” for everyone scores 95% while learning nothing.</p>
+    <p><b>McFadden’s pseudo-R².</b> Compare the log-likelihood with the one from a model with only an intercept: 1 − ℓ<sub>ur</sub>/ℓ<sub>0</sub>. It is 0 when <var>x</var> adds nothing; values of 0.2 to 0.4 already mean a good fit. It is not a share of variance explained.</p>
+    <p><b>Likelihood-ratio test.</b> To test <var>q</var> restrictions (for example, that a coefficient is zero), fit the model with and without them and compare log-likelihoods:</p>
+    <div class="u-big">LR = 2(ℓ<sub>ur</sub> − ℓ<sub>r</sub>) ~ χ²<sub><var>q</var></sub><small>under the null hypothesis, in large samples; reject at 5% with one restriction if LR &gt; 3.84</small></div>
+    <div class="u-ex"><b>Worked example: is practice related to passing?</b>
+      <p>In the default sample of 200 people, the logit’s log-likelihood is −74.48. With only an intercept (everyone gets the overall pass rate), it is −134.19.</p>
+      <ol><li>LR = 2 × (−74.48 − (−134.19)) = 119.4.</li>
+        <li>With one restriction (<var>β</var>₁ = 0), the 5% critical value of χ²₁ is 3.84. 119.4 is far beyond it: p &lt; 0.0001.</li>
+        <li>Pseudo-R² = 1 − (−74.48)/(−134.19) = 0.445.</li></ol>
+      <p>In the 5-person example above, LR = 2 × (−2.422 + 3.365) = 1.89 &lt; 3.84: with five people, you can’t tell.</p>
+    </div>
+    <p>On the likelihood map, the white dashed line is the restricted model <var>β</var>₁ = 0 (when it fits on the map), and its best point is the intercept-only model. The LR statistic is twice the height difference between that point and the top.</p>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>Probits from poisons.</b> Chester Bliss introduced the probit in 1934 to analyze how insects respond to doses of pesticide: the share killed rises along a normal S-curve in the log dose. (“Probit” is short for “probability unit”.)</p>
+      <p><b>Logits.</b> Joseph Berkson proposed the logistic curve for the same kind of dose-response data in 1944 and coined the word “logit”. The same Berkson later described a famous selection bias, Berkson’s paradox, which comes back in <a href="{{ "business/econometrics/modern-causal-inference/" | relURL }}">Chapter 17</a>. David Cox’s 1958 paper on the regression analysis of binary sequences helped make logistic regression a general-purpose tool.</p>
+      <p><b>Maximum likelihood.</b> Ronald Fisher developed the method between 1912 and 1922 and showed why it works so well in large samples. Newton’s method for finding the top is much older, from Isaac Newton and Joseph Raphson in the late 1600s.</p>
+      <p><b>Choices as economics.</b> Daniel McFadden built the logit into a theory of how people choose among options, the conditional logit (1974), and used it to forecast how many commuters would ride San Francisco’s BART trains before the system opened. He shared the 2000 Nobel memorial prize in economics with James Heckman; McFadden’s half was for his theory and methods for analyzing discrete choice.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Lending.</b> Credit scorecards that estimate the chance a borrower defaults are traditionally built with logistic regression, partly because the odds-ratio form is easy to explain and audit.</li>
+      <li><b>Marketing.</b> “Will this customer respond to the offer?” and “will this subscriber cancel next month?” are binary outcomes; logit models predict them and their partial effects tell you what a discount is worth.</li>
+      <li><b>Policy.</b> Labor economists model whether people work (Wooldridge’s textbook example is married women’s labor force participation), and transport planners model which mode commuters choose.</li>
+      <li><b>Sports.</b> Win-probability graphs on sports broadcasts come from models of a binary outcome (win or lose) given the score, time left and field position.</li>
+      <li><b>Medicine.</b> Risk scores for heart disease and many other conditions are logistic regressions of “developed the condition” on age, blood pressure, cholesterol and so on.</li>
+    </ul>
+    <p class="lab-small">Nothing here is financial or investment advice; the lending and marketing examples describe how models are built, not how to make decisions about money.</p>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <ol class="ec14-prob">
+      <li><p>An LPM for buying an upgrade gives <var>p̂</var> = 0.10 + 0.025 × discount (%). What does it predict for a 40% discount, and what’s wrong with that?</p>
+        <details><summary>Show the answer</summary><p>0.10 + 0.025 × 40 = 1.10, a 110% chance of buying, which is impossible. The LPM’s constant slope can’t hold all the way up; a logit or probit would bend toward 1 instead.</p></details></li>
+      <li><p>A logit gives P(buy) = Λ(−3 + 0.15 × discount). What is the probability of buying at a 20% discount?</p>
+        <details><summary>Show the answer</summary><p><var>z</var> = −3 + 0.15 × 20 = 0, so P = Λ(0) = 0.5.</p></details></li>
+      <li><p>Using the same model, what is the partial effect of one more point of discount at 20%, and at 0%?</p>
+        <details><summary>Show the answer</summary><p>At 20%: Λ(0)(1 − Λ(0)) × 0.15 = 0.25 × 0.15 = 0.0375, or 3.75 percentage points. At 0%: <var>z</var> = −3, Λ = 0.047, density 0.047 × 0.953 = 0.045, effect 0.045 × 0.15 = 0.0068, under 1 point. The S-curve is steepest in the middle.</p></details></li>
+      <li><p>In the same logit, what is the odds ratio for 10 more points of discount?</p>
+        <details><summary>Show the answer</summary><p>exp(0.15 × 10) = exp(1.5) = 4.48. Ten more points of discount multiply the odds of buying by about 4.5, at any starting discount.</p></details></li>
+      <li><p>A probit gives P(approve) = Φ(−4 + 0.6 × score), with score in hundreds above 0. Find the partial effect of the score at score = 7.</p>
+        <details><summary>Show the answer</summary><p><var>z</var> = −4 + 4.2 = 0.2; <var>φ</var>(0.2) = 0.391; effect = 0.391 × 0.6 = 0.235 per 100 points, or about 2.3 percentage points per 10 points of score near 700.</p></details></li>
+      <li><p>A model with three regressors has ℓ = −412.6. Dropping two of them gives ℓ = −418.9. Test whether the two matter, at 5%.</p>
+        <details><summary>Show the answer</summary><p>LR = 2 × (−412.6 + 418.9) = 12.6 with <var>q</var> = 2 restrictions. The 5% critical value of χ²₂ is 5.99, so reject: together the two regressors matter (p ≈ 0.002).</p></details></li>
+      <li><p>Your logit software reports a coefficient of 38.2 with a standard error of 4,105 after 25 iterations. What probably happened?</p>
+        <details><summary>Show the answer</summary><p>Perfect (or quasi-) separation: some value of that variable splits the outcomes perfectly, so the likelihood keeps rising as the coefficient grows, and the “estimate” is just where the algorithm stopped. Look at a cross-tabulation, consider whether the variable is effectively a proxy for the outcome, and use methods designed for separation (such as penalized likelihood) or say plainly in the report that the data are separated.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The data.</b> For each person, <var>x</var> is uniform over the middle 84% of the range, and <var>y</var> = 1 with probability Λ(<var>β</var>₁(<var>x</var> − <var>m</var>)) for logistic errors, or Φ(<var>β</var>₁(<var>x</var> − <var>m</var>)/1.81) for normal errors with the same spread, where <var>m</var> is the point where the chance is 50% and “how sharp the switch is” scales <var>β</var>₁.</p>
+      <p><b>The fits.</b> The LPM uses the course library’s OLS with HC1 robust standard errors; logit and probit use its maximum likelihood (Newton’s method), with standard errors from the inverse Hessian. Before fitting, the page checks for separation, since then the maximum doesn’t exist. Partial effects and LR tests are computed from the formulas above.</p>
+      <p><b>The map.</b> The log-likelihood is computed on a grid of about 170 × 120 points spanning 8 standard errors around the maximum each way; bands of color mark equal steps in log(1 + distance below the top). Newton steps halve their length if a full step would go downhill; gradient steps use a fixed rate of 1 over the largest eigenvalue of the information matrix at the top.</p>
+      <div><p><b>How it was checked</b> (Node.js, before the page was built):</p>
+        <ul class="lab-small">
+          <li>Partial effects match numerical derivatives of the fitted probabilities to four decimals (logit APE 0.0896, PEA 0.1586; probit APE 0.0905, PEA 0.1508). The page’s Newton steps reach the library’s maximum to six decimals in 6 steps from (0, 0) and 8 steps from a start 1,843 log-likelihood units below the top.</li>
+          <li>1,000 samples of 100 people with no true effect: the LR test rejected 5.6% of the time at 5%. With a true effect, Wald 95% intervals for <var>β</var>₁ covered the truth 96.5% of the time; the logit/probit coefficient ratio averaged 1.74, and the LPM slope was on average 0.02 above the logit’s APE.</li>
+          <li>Gradient ascent to within 0.01 of the top: 677 steps with raw <var>x</var> (condition number of the information matrix 208), 19 steps with centered <var>x</var> (condition number 7).</li>
+          <li>Separation checks: {1, 2, 3, 4} with outcomes 0, 0, 1, 1 is flagged complete; {1, 2, 2, 4} with 0, 0, 1, 1 quasi; and the fit refuses to report logit coefficients for separated data.</li>
+        </ul></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>Why can the linear probability model predict probabilities below 0 or above 1?</p>
+        <ul class="u-opts"><li><button type="button">Because OLS is biased for binary outcomes</button></li><li><button type="button">Because of heteroskedasticity</button></li><li><button type="button">Because a straight line keeps going while probabilities must stop at 0 and 1</button></li><li><button type="button">It can’t; OLS predictions are always between 0 and 1</button></li></ul>
+        <details><summary>Show the answer</summary><p>Any non-flat line eventually leaves [0, 1]. The S-shaped logit and probit curves flatten out instead.</p></details></li>
+      <li class="u-q" data-a="0"><p>In a logit with <var>β̂</var>₁ = 0.5, what does a one-unit increase in <var>x</var> do?</p>
+        <ul class="u-opts"><li><button type="button">Multiplies the odds of y = 1 by exp(0.5) ≈ 1.65</button></li><li><button type="button">Raises the probability by 0.5</button></li><li><button type="button">Raises the probability by 50%</button></li><li><button type="button">Raises the probability by 0.5 × 0.25 everywhere</button></li></ul>
+        <details><summary>Show the answer</summary><p>It adds 0.5 to the log-odds, so it multiplies the odds by exp(0.5). The change in probability depends on where you start; 0.5 × 0.25 is the change only at <var>p</var> = 0.5.</p></details></li>
+      <li class="u-q" data-a="3"><p>What does maximum likelihood choose?</p>
+        <ul class="u-opts"><li><button type="button">The coefficients that minimize the squared prediction errors</button></li><li><button type="button">The coefficients with the smallest standard errors</button></li><li><button type="button">The coefficients that predict the most outcomes correctly</button></li><li><button type="button">The coefficients under which the observed data would have been most probable</button></li></ul>
+        <details><summary>Show the answer</summary><p>The MLE maximizes the probability (likelihood) of the data actually observed, which for a binary outcome is the product of <var>G</var>(<var>z</var><sub><var>i</var></sub>) for the yeses and 1 − <var>G</var>(<var>z</var><sub><var>i</var></sub>) for the nos.</p></details></li>
+      <li class="u-q" data-a="1"><p>A logit has ℓ = −250 and the intercept-only model has ℓ = −260. What is the LR statistic for testing that all slopes are zero?</p>
+        <ul class="u-opts"><li><button type="button">10</button></li><li><button type="button">20</button></li><li><button type="button">0.04</button></li><li><button type="button">510</button></li></ul>
+        <details><summary>Show the answer</summary><p>LR = 2(ℓ<sub>ur</sub> − ℓ<sub>r</sub>) = 2(−250 + 260) = 20, compared with a χ² distribution whose degrees of freedom equal the number of slopes.</p></details></li>
+      <li class="u-q" data-a="2"><p>Why is the average partial effect usually preferred to the partial effect at the average?</p>
+        <ul class="u-opts"><li><button type="button">It is always larger</button></li><li><button type="button">It doesn’t need the coefficients</button></li><li><button type="button">It averages the actual effects across the people in the data, instead of evaluating one made-up average person</button></li><li><button type="button">It is the same as the logit coefficient</button></li></ul>
+        <details><summary>Show the answer</summary><p>The effect differs from person to person on an S-curve. The APE averages those effects; the PEA evaluates the curve at the mean of <var>x</var>, which may describe nobody (especially with dummy variables, where “0.4 of a college degree” isn’t a person).</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), section 7.5 (the linear probability model) and chapter 17.1 (logit and probit, partial effects, the likelihood ratio test, percent correctly predicted and pseudo-R²).</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), chapter 11 (regression with a binary dependent variable).</li>
+      <li>Penn State Eberly College of Science, <a href="https://online.stat.psu.edu/stat504/" target="_blank" rel="noopener">STAT 504: Analysis of Discrete Data</a> (logistic regression, odds ratios and likelihood ratio tests).</li>
+      <li>K. Train, <i>Discrete Choice Methods with Simulation</i>, 2nd ed. (Cambridge University Press, 2009), chapters 3 (logit) and 5 (probit); <a href="https://eml.berkeley.edu/books/choice2.html" target="_blank" rel="noopener">free online edition at UC Berkeley</a>.</li>
+      <li>C. I. Bliss, The method of probits, <i>Science</i> 79(2037), 38–39 (1934). J. Berkson, Application of the logistic function to bio-assay, <i>Journal of the American Statistical Association</i> 39(227), 357–365 (1944). D. R. Cox, The regression analysis of binary sequences, <i>Journal of the Royal Statistical Society B</i> 20(2), 215–242 (1958).</li>
+      <li>R. A. Fisher, On the mathematical foundations of theoretical statistics, <i>Philosophical Transactions of the Royal Society A</i> 222, 309–368 (1922).</li>
+      <li>D. McFadden, Conditional logit analysis of qualitative choice behavior, in P. Zarembka (ed.), <i>Frontiers in Econometrics</i> (Academic Press, 1974).</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Logistic_regression" target="_blank" rel="noopener">Logistic regression</a>, <a href="https://en.wikipedia.org/wiki/Probit_model" target="_blank" rel="noopener">Probit model</a>, <a href="https://en.wikipedia.org/wiki/Maximum_likelihood_estimation" target="_blank" rel="noopener">Maximum likelihood estimation</a>, <a href="https://en.wikipedia.org/wiki/Daniel_McFadden" target="_blank" rel="noopener">Daniel McFadden</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/binary-outcomes/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/binary-outcomes/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/binary-outcomes/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/binary-outcomes/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,65 @@
+/* Econometrics, the course hub: only what this page adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#ech-lab .ech-hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:1.2rem;align-items:center;padding:1.4rem 1.4rem 1.4rem 1.6rem}
+#ech-lab .ech-hero h1{font-size:2.3rem}
+#ech-lab .ech-hero-text>p:not(.lab-eyebrow){margin:.2rem 0 0}
+#ech-lab .ech-cta{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-top:1rem !important}
+#ech-lab .ech-go{display:inline-flex;align-items:center;min-height:42px;padding:.45rem 1rem;border-radius:12px;background:#ffd479;color:#1d2320;font:700 .95rem system-ui,sans-serif;text-decoration:none;box-shadow:0 3px 12px rgba(0,0,0,.2)}
+#ech-lab .ech-go:hover{background:#ffe3a3}
+#ech-lab .ech-link{color:#f3dfa3;font-weight:600}
+#ech-lab .ech-fig{margin:0;background:#06111a;border-radius:14px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+#ech-lab .ech-fig canvas{display:block;width:100%;height:320px;touch-action:manipulation;cursor:crosshair}
+#ech-lab .ech-fig canvas:focus{outline:none}
+#ech-lab .ech-fig canvas:focus-visible{outline:2px solid #63e6be;outline-offset:-2px}
+#ech-lab .ech-fig figcaption{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.4rem;padding:.45rem .6rem .55rem;font:600 .82rem system-ui,sans-serif;color:#8fb3c6;border-top:1px solid rgba(120,170,200,.18)}
+#ech-lab .ech-scenes{display:flex;flex-wrap:wrap;gap:.3rem}
+#ech-lab .ech-scenes button{min-height:36px;padding:.2rem .7rem;border-radius:999px;border:1px solid rgba(120,170,200,.35);background:#0b1b27;color:#dbe7ef;font:600 .78rem system-ui,sans-serif;cursor:pointer}
+#ech-lab .ech-scenes button:hover{border-color:#63e6be}
+#ech-lab .ech-scenes button[aria-pressed="true"]{border-color:#63e6be;color:#63e6be}
+/* what it is for */
+#ech-lab .ech-for p{font:1.12rem/1.65 Georgia,"Times New Roman",serif;max-width:56rem;border-left:4px solid var(--gold);padding:.2rem 0 .2rem 1rem;margin:0}
+/* the three levels, and the matching accent on each chapter card */
+#ech-lab .ech-levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin:.7rem 0 .4rem}
+#ech-lab .ech-lv{display:block;padding:.75rem .9rem;border-radius:12px;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--lv);text-decoration:none;box-shadow:none;color:var(--ink)}
+#ech-lab .ech-lv:hover{border-color:var(--lv)}
+#ech-lab .ech-lv b{display:block;font:700 1.02rem Georgia,serif;color:var(--acc)}
+#ech-lab .ech-lv span{display:block;font:700 .72rem system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--lvt);margin:.1rem 0 .3rem}
+#ech-lab .ech-lv p{margin:0;font-size:.9rem;line-height:1.45;color:var(--muted)}
+#ech-lab{--lv1:#2f9e6f;--lv2:#c9952b;--lv3:#c2255c;--lvt1:#237a55;--lvt2:#8a6a1f;--lvt3:#a61e4d}
+html[data-theme="dark"] #ech-lab{--lv1:#63e6be;--lv2:#ffd479;--lv3:#f9a8d4;--lvt1:#63e6be;--lvt2:#ffd479;--lvt3:#f9a8d4}
+#ech-lab .ech-lv1{--lv:var(--lv1);--lvt:var(--lvt1)}#ech-lab .ech-lv2{--lv:var(--lv2);--lvt:var(--lvt2)}#ech-lab .ech-lv3{--lv:var(--lv3);--lvt:var(--lvt3)}
+#ech-lab .u-chapters>li:nth-child(-n+5) .u-ch{--lv:var(--lv1);--lvt:var(--lvt1)}
+#ech-lab .u-chapters>li:nth-child(n+6):nth-child(-n+11) .u-ch{--lv:var(--lv2);--lvt:var(--lvt2)}
+#ech-lab .u-chapters>li:nth-child(n+12) .u-ch{--lv:var(--lv3);--lvt:var(--lvt3)}
+#ech-lab .u-ch{border-top:4px solid var(--lv);padding-bottom:1.7rem}
+#ech-lab .u-ch b{padding-right:5.6rem}
+#ech-lab .u-ch::after{position:absolute;right:.9rem;bottom:.55rem;font:700 .66rem system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--lvt)}
+#ech-lab .u-chapters>li:nth-child(-n+5) .u-ch::after{content:"Foundations"}
+#ech-lab .u-chapters>li:nth-child(n+6):nth-child(-n+11) .u-ch::after{content:"Core toolkit"}
+#ech-lab .u-chapters>li:nth-child(n+12) .u-ch::after{content:"Causal inference · advanced"}
+/* the toolkit */
+#ech-lab .ech-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:.75rem;margin:.6rem 0}
+#ech-lab .ech-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;display:flex;flex-direction:column;gap:.25rem;min-width:0}
+#ech-lab .ech-card p{margin:0;font-size:.9rem;line-height:1.5;color:var(--muted)}
+#ech-lab .ech-card>b{font:700 1rem Georgia,serif;color:var(--acc)}
+#ech-lab .ech-card>a{font-size:.85rem;font-weight:600;margin-top:auto;padding-top:.3rem}
+#ech-lab .ech-f{font:1.08rem/1.45 "Cambria Math","STIX Two Math",Georgia,serif;color:var(--ink);padding:.3rem 0 .4rem;border-bottom:1px dashed var(--line);margin-bottom:.3rem;overflow-wrap:anywhere}
+/* history */
+#ech-lab .ech-time{list-style:none;margin:.4rem 0 1rem;padding:0 0 0 1.2rem;border-left:3px solid var(--line)}
+#ech-lab .ech-time li{position:relative;margin:0 0 .8rem}
+#ech-lab .ech-time li::before{content:"";position:absolute;left:-1.62rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px var(--card)}
+#ech-lab .ech-time li>b{display:block;font:700 .8rem system-ui,sans-serif;letter-spacing:.08em;color:var(--gt);text-transform:uppercase}
+#ech-lab .ech-time li p{margin:.1rem 0 0}
+#ech-lab #further ul{padding-left:1.2rem}
+#ech-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #ech-lab .ech-hero{grid-template-columns:1fr}
+  #ech-lab .ech-fig{order:-1}
+  #ech-lab .ech-hero h1{font-size:1.85rem}
+  #ech-lab .ech-levels{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  #ech-lab .ech-hero{padding:1.1rem 1rem}
+  #ech-lab .ech-fig canvas{height:250px}
+  #ech-lab .ech-for p{font-size:1.02rem}
+}
+@media (prefers-reduced-motion:reduce){#ech-lab .ech-lv{transition:none}}

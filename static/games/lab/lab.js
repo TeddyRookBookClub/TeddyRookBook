@@ -2,7 +2,7 @@
    store(slug)            per-sim settings and progress in this browser: .get(key, default), .set(key, value);
                           every call with the same slug returns the same store (missions() uses key 'done')
    dark()                 true when the site is in dark mode; onTheme(fn) calls fn(dark) when it changes
-   canvas(el)             keeps a canvas sized to its box at the device's pixel ratio: returns {c, w, h, dpr, fit()}
+   canvas(el)             keeps a canvas sized to its box at the device's pixel ratio (window resize and ResizeObserver): returns {c, w, h, dpr, fit()}
    loop(fn, el)           calls fn(dt) every frame (dt in seconds, at most 0.05), paused while the tab is hidden or el is off screen
    missions(listEl, slug, items, onPick)  draws a mission list and remembers which are done: returns {done(id), isDone(id), count()}
    toast(viewEl, text)    a short message over the simulation
@@ -33,6 +33,7 @@
       o.w = w; o.h = h; o.dpr = dpr; o.c.setTransform(dpr, 0, 0, dpr, 0, 0); return o;
     };
     o.fit(); W.addEventListener('resize', o.fit);
+    if ('ResizeObserver' in W) { try { new ResizeObserver(function () { o.fit(); }).observe(el); } catch (e) { } } // also refit when the box changes without a window resize
     return o;
   }
   function loop(fn, el) {

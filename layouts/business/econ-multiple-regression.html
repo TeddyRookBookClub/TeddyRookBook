@@ -1,0 +1,305 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/multiple-regression/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/multiple-regression/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec6-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 6</p>
+    <h1>{{ .Title }}</h1>
+    <p>Does a year of school raise your pay, or do people who stay in school longer earn more for other reasons? Here you’ll run that fight yourself. You control a world where wages depend on schooling and on an “ability” that the data never shows. Leave ability out and the regression gets the wrong answer, and you’ll see by exactly how much: the gap matches the omitted-variable formula to the last decimal. Then you’ll watch partialling out happen point by point, and turn a fitted plane in 3-D.</p>
+    <span class="lab-mark" aria-hidden="true">🧮</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view ec6-tall" id="ec6-view">
+      <canvas id="ec6-cv" tabindex="0" aria-label="Left: a scatter of hourly wage against years of schooling for simulated workers, colored by their hidden ability, with the short regression (schooling only, pink), the long regression holding ability fixed (green) and the true $2 per year line (gold). Right: the omitted-variable formula with today’s numbers and the sign table. Bottom: histograms of the two slopes over 1,000 samples. Keys: N draws a new sample, M runs 1,000 samples, up and down arrows change ability’s effect, left and right arrows change its correlation with schooling."></canvas>
+      <div class="lab-tools">
+        <button type="button" id="ec6-new2" aria-label="Draw a new sample" title="New sample (N)">🎲</button>
+        <button type="button" id="ec6-mc2" aria-label="Run 1,000 samples" title="Run 1,000 samples (M)">▶</button>
+        <button type="button" id="ec6-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>The hidden factor</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made worlds" id="ec6-pre">
+        <button type="button" data-pre="bias" aria-pressed="false">Ability bias</button>
+        <button type="button" data-pre="nolink" aria-pressed="false">No link</button>
+        <button type="button" data-pre="irrelevant" aria-pressed="false">Irrelevant</button>
+        <button type="button" data-pre="reverse" aria-pressed="false">Reversed</button>
+      </div>
+      <div class="lab-field"><span><label for="ec6-b2">Ability’s effect on wages β₂</label><output id="ec6-b2-o" for="ec6-b2"></output></span><input type="range" id="ec6-b2" min="-6" max="8" step="0.5" value="4"></div>
+      <div class="lab-field"><span><label for="ec6-r">Correlation of ability with school</label><output id="ec6-r-o" for="ec6-r"></output></span><input type="range" id="ec6-r" min="-0.9" max="0.9" step="0.05" value="0.5"></div>
+      <div class="lab-field"><span><label for="ec6-n">Sample size</label><output id="ec6-n-o" for="ec6-n"></output></span><input type="range" id="ec6-n" min="0" max="6" step="1" value="3"></div>
+      <label class="lab-chk"><input type="checkbox" id="ec6-groups" checked> Lines for low and high ability</label>
+      <label class="lab-chk"><input type="checkbox" id="ec6-color" checked> Color workers by ability</label>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec6-new">🎲 New sample</button><button type="button" class="lab-btn pri" id="ec6-mc">▶ Run 1,000 samples</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec6-read"></dl>
+      <p class="ec6-sr" id="ec6-say" aria-live="polite"></p>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec6-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The workers.</b> Each dot is one simulated worker: years of schooling across, hourly wage up. Behind every dot is a number you never get to see in real data, the worker’s ability, shown here by color from blue (low) to gold (high). The true rule is wage = 8 + 2·school + β₂·ability + noise. So a year of school is truly worth exactly $2.00 an hour, the gold dotted line.</p>
+      <p><b>Two regressions.</b> The pink line is the <i>short</i> regression: wage on schooling alone, which is all you could run if ability is missing from your data. The green line is the <i>long</i> regression: wage on schooling and ability together, drawn for a worker of average ability. The dashed lines are the long regression for workers one standard deviation below and above average. They’re parallel: within an ability level, school pays $2.</p>
+      <p><b>The formula box.</b> The short slope always equals the long slope plus a correction, β̂₂ × δ̃₁: ability’s effect times how much ability rises with each year of school. The bars show that split on a dollar scale, and the table below shows which way the bias points.</p>
+      <p><b>The histograms.</b> One sample can mislead by chance. Press “Run 1,000 samples” to redraw the world a thousand times. The green pile (long) centers on the truth. The pink pile (short) centers somewhere else, on $2 plus the bias. That gap is bias, not bad luck.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>Holding other things constant</h2>
+    <p>Simple regression has one explanatory variable. Real outcomes have many causes. Multiple regression puts several of them in one equation, so you can ask what happens when one changes and the others don’t:</p>
+    <div class="u-big"><var>y</var> = β₀ + β₁<var>x</var>₁ + β₂<var>x</var>₂ + … + β<sub><var>k</var></sub><var>x</var><sub><var>k</var></sub> + <var>u</var><small>outcome = intercept + a slope for each explanatory variable + the error <var>u</var> (everything else)</small></div>
+    <div class="lab-cols">
+      <div>
+        <p>Ordinary least squares (OLS) picks the estimates β̂₀, β̂₁, …, β̂<sub><var>k</var></sub> that make the sum of squared residuals, Σ<var>û</var><sub><var>i</var></sub>², as small as possible. The fitted equation <var>ŷ</var> = β̂₀ + β̂₁<var>x</var>₁ + … + β̂<sub><var>k</var></sub><var>x</var><sub><var>k</var></sub> gives predicted changes:</p>
+        <div class="lab-formula">Δ<var>ŷ</var> = β̂₁Δ<var>x</var>₁ + β̂₂Δ<var>x</var>₂ + … &nbsp;&nbsp; so with Δ<var>x</var>₂ = … = 0: &nbsp; Δ<var>ŷ</var> = β̂₁Δ<var>x</var>₁</div>
+        <p>That is the meaning of each coefficient: <b>the predicted change in <var>y</var> when <var>x</var>₁ rises by one unit and the other included variables stay fixed.</b> Economists call this <i>ceteris paribus</i>, Latin for “other things being equal.”</p>
+      </div>
+      <div>
+        <p>Regression holds things fixed statistically, not physically. Nobody had to find two workers with identical experience; OLS compares everyone and sorts out the separate effects from how the variables move together in the data.</p>
+        <p>It can only hold fixed what is in the equation. Anything left out sits inside <var>u</var>. The key assumption for unbiased estimates is that the error has mean zero whatever the explanatory variables are:</p>
+        <div class="lab-formula">E(<var>u</var> | <var>x</var>₁, <var>x</var>₂, …, <var>x</var><sub><var>k</var></sub>) = 0 &nbsp;&nbsp; (zero conditional mean)</div>
+        <p>If something in <var>u</var> moves with <var>x</var>₁, this fails, and β̂₁ picks up part of that something’s effect.</p>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: reading a wage equation</b>
+      <p>Suppose a regression on 1,000 workers (a made-up but realistic equation) gives</p>
+      <p class="lab-formula">ŵage = −4.50 + 1.95·educ + 0.21·exper + 0.35·tenure</p>
+      <p>with wage in dollars per hour and the rest in years. Holding experience and tenure fixed, one more year of school predicts $1.95 more per hour. Now compare Ana (16 years of school, 5 years at her firm) with Ben (12 years of school, 2 years at his firm), both with 10 years of total experience. The predicted difference is 1.95 × 4 + 0.21 × 0 + 0.35 × 3 = 7.80 + 1.05 = <b>$8.85 an hour</b>. Over 2,000 hours a year, that is about $17,700.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="ovb">
+    <h2>Omitted-variable bias</h2>
+    <p>Suppose the true model is <var>y</var> = β₀ + β₁<var>x</var>₁ + β₂<var>x</var>₂ + <var>u</var>, but <var>x</var>₂ isn’t in your data, so you run the short regression of <var>y</var> on <var>x</var>₁ alone and get slope β̃₁. (The tilde marks the short regression; hats mark the long one.) Let δ̃₁ be the slope from regressing the left-out <var>x</var>₂ on <var>x</var>₁. Then, in every sample:</p>
+    <div class="u-big">β̃₁ = β̂₁ + β̂₂ δ̃₁ &nbsp;&nbsp; and &nbsp;&nbsp; E(β̃₁) = β₁ + β₂ δ̃₁<small>short slope = long slope + (effect of the omitted variable) × (how the omitted variable moves with <var>x</var>₁); the bias is β₂δ̃₁</small></div>
+    <div class="lab-cols">
+      <div>
+        <p><b>Why it works.</b> The short slope is Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁)<var>y</var><sub><var>i</var></sub> / Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁)². Put the true model in for <var>y</var><sub><var>i</var></sub>. The β₁ term comes back as β₁, the β₂<var>x</var><sub>i2</sub> term comes back as β₂ times the slope of <var>x</var>₂ on <var>x</var>₁ (that is δ̃₁), and the <var>u</var> term averages to zero under the zero-conditional-mean assumption. The identity with hats holds exactly in every sample; the simulation shows the two sides agree to about 10⁻¹³.</p>
+        <p><b>When there is no bias.</b> Either the left-out variable doesn’t affect <var>y</var> (β₂ = 0), or it is uncorrelated with <var>x</var>₁ in the sample (δ̃₁ = 0). Leaving out a variable that matters is harmless if it doesn’t move with what you kept.</p>
+      </div>
+      <div>
+        <p><b>Which way it points.</b> The sign of the bias is the sign of β₂ times the sign of the correlation between <var>x</var>₁ and <var>x</var>₂:</p>
+        <div class="lab-tw"><table class="lab-table ec6-signs">
+          <thead><tr><th></th><th>corr(<var>x</var>₁, <var>x</var>₂) &gt; 0</th><th>corr(<var>x</var>₁, <var>x</var>₂) &lt; 0</th></tr></thead>
+          <tbody><tr><th>β₂ &gt; 0</th><td>positive bias (too high)</td><td>negative bias (too low)</td></tr>
+          <tr><th>β₂ &lt; 0</th><td>negative bias (too low)</td><td>positive bias (too high)</td></tr></tbody>
+        </table></div>
+        <p>In the classic case, ability raises pay (β₂ &gt; 0) and more able people tend to stay in school longer (positive correlation), so the short regression <i>overstates</i> the return to schooling. Economists call this <i>ability bias</i>.</p>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: ability bias in dollars</b>
+      <p>A short regression of hourly wage on schooling gives $2.60 per year. Suppose ability raises wages by $3.00 per standard deviation (β₂ = 3), and in this sample each extra year of school goes with 0.25 standard deviations more ability (δ̃₁ = 0.25).</p>
+      <ol>
+        <li>Bias = β₂ × δ̃₁ = 3.00 × 0.25 = $0.75.</li>
+        <li>So the long regression would give about 2.60 − 0.75 = <b>$1.85</b> per year of school.</li>
+        <li>Over a 40-year career of 2,000 hours a year, the short regression overstates the value of one extra year by 0.75 × 2,000 × 40 = $60,000 (before any discounting).</li>
+      </ol>
+      <p>Set ability’s effect to 3 and push the correlation until δ̃₁ in the readout is near 0.25; the formula box shows the same split.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Press “No link.” Ability now matters a lot ($4 per standard deviation) but has no correlation with school. The pink and green lines nearly coincide: no bias. Then press “Irrelevant”: ability is strongly tied to school but has no effect on wages. Again no bias. Bias needs both ingredients.</div>
+    <div class="lab-try"><b>Try this:</b> Make a big bias, then slide the sample size to 2,000 and press “Run 1,000 samples.” The pink pile gets narrow, but it stays in the wrong place. More data shrinks noise, never bias.</div>
+    <div class="u-myth"><b>Common mistake: “Control for everything you can”</b>
+      <p>Adding a variable that truly belongs removes bias. But adding one that doesn’t belong costs precision when it is correlated with your variable of interest: press “Irrelevant” and run 1,000 samples, and the green pile comes out wider than the pink one. Worse are <i>bad controls</i>: variables that are themselves outcomes of the thing you’re studying. To measure the pay effect of a college degree, don’t control for occupation, since the degree is part of how people get into higher-paying occupations. Holding occupation fixed would hide part of the effect you wanted to measure. Choose controls that are fixed before the cause you study, and that affect the outcome.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="partial">
+    <h2>Partialling out: what “holding fixed” does inside OLS</h2>
+    <p>How does OLS manage to hold experience fixed? The Frisch–Waugh–Lovell theorem gives a clear answer: <b>β̂₁ in the multiple regression is the slope from a simple regression of <var>y</var> on the part of <var>x</var>₁ that the other regressors can’t explain.</b> Step through it below with 60 simulated workers whose wage = 2 + 1.80·school + 0.50·experience + noise, where people with more schooling have had fewer years to gain experience.</p>
+    <div class="lab-stage" id="ec6f">
+      <div class="lab-view ec6-mid" id="ec6f-view">
+        <canvas id="ec6f-cv" tabindex="0" aria-label="An animated scatter that walks through partialling out in four steps: wage against schooling; schooling against experience with a fitted line; the residual schooling; and wage against that residual, whose slope equals the multiple-regression coefficient. Left and right arrow keys step backward and forward."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Step through it</h3>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec6f-prev">◀ Back</button><button type="button" class="lab-btn pri" id="ec6f-next">Next ▶</button><button type="button" class="lab-btn" id="ec6f-play">▶ Play all</button></div>
+        <p class="ec6-step" id="ec6f-say" aria-live="polite"></p>
+        <div class="lab-field"><span><label for="ec6f-c">Correlation of school and experience</label><output id="ec6f-c-o" for="ec6f-c"></output></span><input type="range" id="ec6f-c" min="-0.9" max="0.9" step="0.05" value="-0.6"></div>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec6f-new">🎲 New workers</button></div>
+        <dl class="lab-readout" id="ec6f-read"></dl>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <p>In symbols: regress <var>x</var>₁ on the other regressors and save the residuals <var>r̂</var><sub>i1</sub>. Then</p>
+        <div class="lab-formula">β̂₁ = Σ <var>r̂</var><sub>i1</sub> <var>y</var><sub><var>i</var></sub> / Σ <var>r̂</var><sub>i1</sub>²</div>
+        <p>The residual <var>r̂</var><sub>i1</sub> is schooling with experience “partialled out”: the variation in school that has nothing to do with experience. Only that variation identifies β₁. This is why the simple slope (pink) and the multiple-regression slope (green) differ: the simple slope also picks up experience’s effect, because school and experience move together.</p>
+      </div>
+      <div>
+        <p>The theorem also explains what drives precision. The variance of β̂₁ is</p>
+        <div class="lab-formula">Var(β̂₁) = σ² / [SST₁ (1 − <var>R</var>₁²)]</div>
+        <p>where SST₁ = Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁)² is the total variation in <var>x</var>₁ and <var>R</var>₁² is the R² from regressing <var>x</var>₁ on the other regressors. 1 − <var>R</var>₁² is the share of <var>x</var>₁’s variation left over after partialling out. Push the correlation slider to −0.9: the residuals in step 2 shrink to a thin band, and the slope in step 3 rests on very little variation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="plane">
+    <h2>Seeing it in 3-D: a plane, not a line</h2>
+    <p>With two explanatory variables, the fitted equation is a flat plane floating over the floor of schooling and experience. Its tilt in the schooling direction is β̂₁; its tilt in the experience direction is β̂₂. Drag to turn it. Press “Look along experience” and the experience axis points straight at you: each slice of the plane at fixed experience is a line with slope β̂₁, which is what “holding experience fixed” looks like. Green sticks are positive residuals, red ones negative.</p>
+    <div class="lab-stage" id="ec6d">
+      <div class="lab-view ec6-mid" id="ec6d-view">
+        <canvas id="ec6d-cv" tabindex="0" aria-label="A rotatable 3-D scatter of wage against schooling and experience for the same 60 workers, with the fitted regression plane and residual sticks. Drag or use the arrow keys to turn it."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Turn the cube</h3>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec6d-alongx">Look along experience</button><button type="button" class="lab-btn" id="ec6d-alonge">Look along schooling</button><button type="button" class="lab-btn" id="ec6d-top">Angled view</button><button type="button" class="lab-btn" id="ec6d-spin" aria-pressed="true">⟳ Spin</button></div>
+        <label class="lab-chk"><input type="checkbox" id="ec6d-sticks" checked> Residual sticks</label>
+        <label class="lab-chk"><input type="checkbox" id="ec6d-plane" checked> Fitted plane</label>
+        <dl class="lab-readout" id="ec6d-read"></dl>
+        <p class="lab-small">These are the same 60 workers as in the partialling-out steps above; change the correlation there and the plane updates here.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="fit">
+    <h2>R² and adjusted R²</h2>
+    <div class="lab-cols">
+      <div>
+        <p>R² is the share of the variation in <var>y</var> that the regression explains: <var>R</var>² = 1 − SSR/SST, where SSR = Σ<var>û</var><sub><var>i</var></sub>² and SST = Σ(<var>y</var><sub><var>i</var></sub> − <var>ȳ</var>)². Adding a variable can never raise SSR, because OLS could always set its coefficient to zero. So <b>R² never falls when you add a regressor</b>, even a column of random numbers.</p>
+        <p>Adjusted R² charges for each extra regressor:</p>
+        <div class="lab-formula"><var>R̄</var>² = 1 − [SSR/(<var>n</var> − <var>k</var> − 1)] / [SST/(<var>n</var> − 1)] = 1 − (1 − <var>R</var>²)(<var>n</var> − 1)/(<var>n</var> − <var>k</var> − 1)</div>
+        <p>with <var>k</var> slope coefficients. It rises when a new variable’s |<var>t</var>| statistic is above 1 and falls when it is below 1.</p>
+      </div>
+      <div>
+        <div class="u-ex"><b>Worked example: when adding variables makes things worse</b>
+          <p>With <var>n</var> = 50 and <var>k</var> = 3, a regression has <var>R</var>² = 0.400. Adjusted: 1 − 0.600 × 49/46 = 1 − 0.639 = <b>0.361</b>.</p>
+          <p>Add two variables of pure noise and <var>R</var>² creeps up to 0.410. Adjusted: 1 − 0.590 × 49/44 = 1 − 0.657 = <b>0.343</b>. The plain R² went up; the adjusted one went down.</p>
+        </div>
+        <p><b>A low R² doesn’t mean bias, and a high one doesn’t mean causation.</b> In the simulation, ability bias appears with R² anywhere from 0.1 to 0.9. Whether β̂₁ is unbiased depends on what is in <var>u</var>, not on how big <var>u</var> is.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="collinear">
+    <h2>Multicollinearity</h2>
+    <div class="lab-cols">
+      <div>
+        <p><b>Perfect multicollinearity</b> means one regressor is an exact linear combination of the others. Then OLS has no unique answer and software drops a variable or refuses. Examples: total ad spending together with TV spending and online spending, when total = TV + online; income in dollars and income in thousands of dollars; or a dummy variable for every category plus an intercept (Chapter 7’s “dummy-variable trap”). The fix is to drop one redundant variable, and to think about what the remaining coefficients now mean: with total and TV spending in the model, the TV coefficient measures moving a dollar from online to TV, holding the total fixed.</p>
+      </div>
+      <div>
+        <p><b>Near multicollinearity</b> is high but not perfect correlation. It breaks nothing: OLS stays unbiased. It only makes the affected coefficients imprecise, through the 1/(1 − <var>R</var><sub><var>j</var></sub>²) factor in the variance, called the variance inflation factor (VIF).</p>
+        <div class="u-ex"><b>Worked example: how much precision you lose</b>
+          <p>If schooling and experience have <var>R</var>₁² = 0.90, the VIF is 1/(1 − 0.90) = 10, so the standard error of β̂₁ is √10 ≈ 3.2 times what it would be with uncorrelated regressors. At <var>R</var>₁² = 0.99 the VIF is 100 and the standard error is 10 times as large. You would need about 10 times (or 100 times) as many observations to get the precision back.</p>
+        </div>
+        <p>Chapter 9 returns to VIFs; Arthur Goldberger joked that the right name for near multicollinearity is “micronumerosity”: too little information in the data.</p>
+      </div>
+    </div>
+    <div class="u-key">
+      <div><b>MLR.1 Linear in parameters</b><p><var>y</var> = β₀ + β₁<var>x</var>₁ + … + β<sub><var>k</var></sub><var>x</var><sub><var>k</var></sub> + <var>u</var>. The <var>x</var>’s can be logs, squares or products (Chapter 7).</p></div>
+      <div><b>MLR.2 Random sampling</b><p>The data are a random sample of <var>n</var> observations from the population.</p></div>
+      <div><b>MLR.3 No perfect collinearity</b><p>No regressor is constant or an exact linear combination of the others.</p></div>
+      <div><b>MLR.4 Zero conditional mean</b><p>E(<var>u</var> | <var>x</var>₁, …, <var>x</var><sub><var>k</var></sub>) = 0. Omitted variables that move with the <var>x</var>’s break it.</p></div>
+      <div><b>MLR.5 Homoskedasticity</b><p>Var(<var>u</var> | <var>x</var>’s) = σ². With MLR.1–5, OLS is the best linear unbiased estimator (the Gauss–Markov theorem). Chapter 8 drops this one.</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>Least squares.</b> Adrien-Marie Legendre published the method of least squares in 1805, in an appendix on fitting the orbits of comets. Carl Friedrich Gauss published his own account in 1809 and said he had used it since 1795, which started a long priority dispute. Both were fitting astronomical data with several unknowns at once: multiple regression before it had the name.</p>
+      <p><b>Regression and “other things equal.”</b> Francis Galton gave us the word regression in the 1880s, from studying heights of parents and children. The statistician George Udny Yule then used least squares with several variables to study poverty in England, in an 1899 paper on whether more generous “outdoor relief” went with more pauperism once changes in population and age structure were held fixed. He was careful to say his results showed association, not proof of cause.</p>
+      <p><b>Partialling out.</b> Ragnar Frisch and Frederick Waugh showed in 1933, in the first volume of <i>Econometrica</i>, that detrending each variable and then regressing gives the same coefficients as putting a time trend in the regression. Michael Lovell generalized the result in 1963. Frisch shared the first Nobel memorial prize in economics in 1969.</p>
+      <p><b>Ability bias.</b> Whether schooling’s payoff is overstated because able people both study longer and earn more was a central question in labor economics after the 1950s. Zvi Griliches surveyed it in a 1977 <i>Econometrica</i> paper. Chapter 10 shows the instrumental-variables approach that later studies used to attack it.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where it shows up</h2>
+    <div class="lab-cols">
+      <p><b>Pay gaps.</b> A “raw” pay gap between two groups compares averages. An “adjusted” gap holds experience, hours and field fixed. The size of the adjusted gap depends on which controls go in, and some candidate controls, like job title, may be partly results of the very discrimination being measured: a bad-control problem.</p>
+      <p><b>Marketing.</b> Stores advertise most in the weeks when sales are high anyway, such as before holidays. Regress sales on ad spending without holding the season fixed and the ad effect comes out too big: the season is the omitted variable, positively tied to both.</p>
+      <p><b>House prices.</b> In a regression of price on square footage and the number of bedrooms, the bedroom coefficient can come out negative. That is not a mistake: holding square footage fixed, an extra bedroom means smaller rooms.</p>
+      <p><b>Firm comparisons.</b> Costco pays well above most retailers and says its workers stay longer and serve customers better (see the <a href="{{ "business/cases/costco-wages-membership/" | relURL }}">Costco case</a>). Comparing Costco with other chains can’t by itself prove that the pay causes the lower turnover: location, customers and who applies differ too. Each of those is a candidate omitted variable.</p>
+      <p><b>Health.</b> If coffee drinkers also smoke more, a study that links coffee to heart disease without holding smoking fixed will blame coffee for some of smoking’s harm. Epidemiologists call omitted variables <i>confounders</i>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec6-prac">
+      <li><p><span class="ec6-lvl">Warm-up</span> A fitted model is <var>ŷ</var> = 10 + 0.5<var>x</var>₁ − 2<var>x</var>₂. (a) What happens to <var>ŷ</var> if <var>x</var>₁ rises by 4 and <var>x</var>₂ stays fixed? (b) If <var>x</var>₁ rises by 4 and <var>x</var>₂ rises by 1?</p>
+        <details><summary>Show the answer</summary><div><p>(a) Δ<var>ŷ</var> = 0.5 × 4 = 2. (b) Δ<var>ŷ</var> = 0.5 × 4 − 2 × 1 = 0. The two changes cancel.</p></div></details></li>
+      <li><p><span class="ec6-lvl">Warm-up</span> A study regresses students’ test scores on class size, but family income is left out. Higher income raises scores, and richer districts tend to have smaller classes. Which way is the class-size coefficient biased?</p>
+        <details><summary>Show the answer</summary><div><p>Income’s effect on scores is positive (β₂ &gt; 0), and income is negatively correlated with class size. Positive × negative = negative bias. The estimated class-size coefficient is pushed down, so big classes look more harmful than they really are.</p></div></details></li>
+      <li><p><span class="ec6-lvl">Core</span> The short regression of log wage on schooling gives β̃₁ = 0.12. In the long regression with an ability test score, β̂₂ = 0.50, and the regression of the test score on schooling gives δ̃₁ = 0.08. What is the long-regression coefficient on schooling?</p>
+        <details><summary>Show the answer</summary><div><p>β̃₁ = β̂₁ + β̂₂δ̃₁, so β̂₁ = 0.12 − 0.50 × 0.08 = 0.12 − 0.04 = <b>0.08</b>. A third of the short-regression return was ability.</p></div></details></li>
+      <li><p><span class="ec6-lvl">Core</span> With <var>n</var> = 30, a regression with <var>k</var> = 4 slopes has <var>R</var>² = 0.52. Compute adjusted R². A fifth variable raises R² to 0.53. Does adjusted R² go up or down?</p>
+        <details><summary>Show the answer</summary><div><p>Before: 1 − 0.48 × 29/25 = 1 − 0.5568 = 0.443. After: 1 − 0.47 × 29/24 = 1 − 0.5679 = 0.432. It goes down, so the fifth variable’s |<var>t</var>| is below 1.</p></div></details></li>
+      <li><p><span class="ec6-lvl">Core</span> A marketing analyst regresses sales on total ad spending, TV spending and online spending, where total = TV + online. What goes wrong, and how should she fix it? After the fix, what does the TV coefficient mean?</p>
+        <details><summary>Show the answer</summary><div><p>Perfect multicollinearity: total is an exact linear combination of the other two, so OLS can’t separate the effects. Drop one of the three. If she keeps total and TV, the TV coefficient is the change in sales from moving one dollar from online to TV while keeping the total fixed. If she keeps TV and online, each coefficient is the effect of one more dollar on that channel with the other fixed.</p></div></details></li>
+      <li><p><span class="ec6-lvl">Challenge</span> In a regression of <var>y</var> on <var>x</var>₁ and <var>x</var>₂, σ̂ = 5, SST₁ = 400, and the R² from regressing <var>x</var>₁ on <var>x</var>₂ is 0.75. What is se(β̂₁)? What would it be if <var>x</var>₁ and <var>x</var>₂ were uncorrelated (same σ̂ and SST₁)?</p>
+        <details><summary>Show the answer</summary><div><p>se(β̂₁) = σ̂ / √[SST₁(1 − <var>R</var>₁²)] = 5 / √(400 × 0.25) = 5/10 = <b>0.50</b>. With <var>R</var>₁² = 0: 5/√400 = 0.25. The correlation doubled the standard error (VIF = 4, √4 = 2).</p></div></details></li>
+      <li><p><span class="ec6-lvl">Challenge</span> Derive the omitted-variable formula. Start from β̃₁ = Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁)<var>y</var><sub><var>i</var></sub> / SST₁ and the true model <var>y</var><sub><var>i</var></sub> = β₀ + β₁<var>x</var><sub>i1</sub> + β₂<var>x</var><sub>i2</sub> + <var>u</var><sub><var>i</var></sub>.</p>
+        <details><summary>Show the answer</summary><div><p>Substitute: β̃₁ = [β₀Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁) + β₁Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁)<var>x</var><sub>i1</sub> + β₂Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁)<var>x</var><sub>i2</sub> + Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁)<var>u</var><sub><var>i</var></sub>] / SST₁. The first sum is 0. The second is SST₁, giving β₁. The third over SST₁ is exactly δ̃₁, the slope of <var>x</var>₂ on <var>x</var>₁. So β̃₁ = β₁ + β₂δ̃₁ + Σ(<var>x</var><sub>i1</sub> − <var>x̄</var>₁)<var>u</var><sub><var>i</var></sub>/SST₁. Taking expectations given the <var>x</var>’s, with E(<var>u</var> | <var>x</var>₁, <var>x</var>₂) = 0, the last term has mean zero: E(β̃₁) = β₁ + β₂δ̃₁.</p></div></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The world.</b> Each worker gets an ability <var>a</var> from a standard normal distribution. Schooling is 13 + 2.5(<var>r a</var> + √(1 − <var>r</var>²) <var>e</var>) years, so its correlation with ability is exactly the slider value <var>r</var>. Wage = 8 + 2·school + β₂·<var>a</var> + 5<var>u</var>, with <var>e</var> and <var>u</var> standard normal. The population bias of the short slope is β₂ × cov(school, <var>a</var>)/var(school) = β₂<var>r</var>/2.5. The data are simulated with a known truth, so you can check every estimate against it. Real schooling comes in whole years and real wages can’t go below zero; the simulation skips both details to keep the formulas exact.</p>
+      <p><b>The estimates.</b> All regressions use the site’s shared statistics library (ordinary least squares with classic standard errors). The Monte Carlo redraws the whole sample 1,000 times with new random numbers and records both slopes. The partialling-out and 3-D pieces share 60 workers with wage = 2 + 1.8·school + 0.5·experience + 4<var>u</var>, and experience negatively correlated with school (kept at zero or above).</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, all passed):</p>
+        <ul class="lab-small">
+          <li>The identity β̃₁ = β̂₁ + β̂₂δ̃₁ held in 300 random samples with a worst error of 9.5 × 10⁻¹⁴.</li>
+          <li>Monte Carlo with 4,000 samples each: with <var>n</var> = 200, β₂ = 3, <var>r</var> = 0.6, the short slope averaged 2.7216 against the predicted 2.7200 (standard error 0.0025), and the long slope 2.0001. With <var>n</var> = 50, β₂ = 8, <var>r</var> = −0.7: short −0.2408 against −0.2400. With β₂ = 0 and <var>r</var> = 0.8 both were unbiased, but the long slope’s spread was 0.241 against 0.142 for the short one.</li>
+          <li>Frisch–Waugh–Lovell: the step-3 slope equaled the multiple-regression coefficient in 200 samples to 9 × 10⁻¹³.</li>
+          <li>Coefficients, standard errors, R² and adjusted R² matched NumPy’s least squares to 12 or more digits; se(β̂₁) matched σ̂/√[SST₁(1 − <var>R</var>₁²)] to 10⁻¹⁰.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>In ŵage = −4.5 + 1.95·educ + 0.21·exper, what does 1.95 mean?</p>
+        <ul class="u-opts"><li><button type="button">The average wage of people with one year of school</button></li><li><button type="button">The predicted change in wage from one more year of school, holding experience fixed</button></li><li><button type="button">The predicted change in wage from one more year of school, letting experience change as it usually does</button></li></ul>
+        <details><summary>Show the answer</summary><p>Each coefficient in a multiple regression is a ceteris paribus effect: the other included variables are held fixed.</p></details></li>
+      <li class="u-q" data-a="2"><p>The short regression of wage on school gives $2.80; the long one with ability gives $2.00. What must be true?</p>
+        <ul class="u-opts"><li><button type="button">Ability lowers wages and goes with more school</button></li><li><button type="button">The sample is too small</button></li><li><button type="button">β̂₂δ̃₁ = $0.80, for example ability raises wages and goes with more school</button></li></ul>
+        <details><summary>Show the answer</summary><p>β̃₁ − β̂₁ = β̂₂δ̃₁ = 0.80 &gt; 0, so β̂₂ and δ̃₁ have the same sign. The classic case is both positive. Sample size has nothing to do with this identity.</p></details></li>
+      <li class="u-q" data-a="0"><p>You leave out a variable that strongly affects <var>y</var> but is uncorrelated with <var>x</var>₁. The slope on <var>x</var>₁ is…</p>
+        <ul class="u-opts"><li><button type="button">unbiased (δ₁ = 0)</button></li><li><button type="button">biased upward</button></li><li><button type="button">biased toward zero</button></li></ul>
+        <details><summary>Show the answer</summary><p>Bias = β₂δ₁, and δ₁ = 0. Leaving the variable out makes the error bigger (so standard errors are larger) but causes no bias.</p></details></li>
+      <li class="u-q" data-a="1"><p>You add a column of random numbers to a regression. What happens?</p>
+        <ul class="u-opts"><li><button type="button">R² falls and adjusted R² rises</button></li><li><button type="button">R² rises a little (or stays the same); adjusted R² usually falls</button></li><li><button type="button">Both stay exactly the same</button></li></ul>
+        <details><summary>Show the answer</summary><p>R² can never fall when a regressor is added. Adjusted R² rises only if the new variable’s |<var>t</var>| exceeds 1, which pure noise rarely does.</p></details></li>
+      <li class="u-q" data-a="2"><p>Which of these regressions suffers from perfect multicollinearity?</p>
+        <ul class="u-opts"><li><button type="button">Wage on school and experience, which have correlation 0.95</button></li><li><button type="button">Wage on age and age²</button></li><li><button type="button">Wage on an intercept, a dummy for men and a dummy for women</button></li></ul>
+        <details><summary>Show the answer</summary><p>The two dummies add up to 1 for everyone, which is exactly the intercept column. Correlation of 0.95 is near, not perfect, collinearity; and age² is a nonlinear function of age, which is allowed.</p></details></li>
+      <li class="u-q" data-a="0"><p>Ability bias is $0.80 with samples of 200 workers. What happens with samples of 2,000?</p>
+        <ul class="u-opts"><li><button type="button">The estimates cluster more tightly, still around $0.80 too high</button></li><li><button type="button">The bias shrinks to about $0.25</button></li><li><button type="button">The bias disappears</button></li></ul>
+        <details><summary>Show the answer</summary><p>Bias doesn’t depend on <var>n</var>. The spread shrinks like 1/√<var>n</var>, but the center stays at β₁ + β₂δ₁. The short-regression estimator is inconsistent.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Chapter 3 (Multiple Regression Analysis: Estimation): interpretation, “partialling out,” omitted-variable bias and its sign table, the variance formula and multicollinearity, the Gauss–Markov assumptions; Section 6-3 on adjusted R².</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Chapter 6 (Linear Regression with Multiple Regressors): the omitted-variable bias formula and multicollinearity.</li>
+      <li>J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (Princeton University Press, 2009), Section 3.2: regression and causality, omitted-variables bias and “bad control.”</li>
+      <li>Penn State STAT 501, <a href="https://online.stat.psu.edu/stat501/Lesson05" target="_blank" rel="noopener">Lesson 5: Multiple Linear Regression</a> and <a href="https://online.stat.psu.edu/stat501/Lesson12" target="_blank" rel="noopener">Lesson 12: Multicollinearity and Other Regression Pitfalls</a>.</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-32-econometrics-spring-2007/" target="_blank" rel="noopener">14.32 Econometrics (Spring 2007)</a>: course materials on multiple regression.</li>
+      <li>R. Frisch and F. V. Waugh, “Partial Time Regressions as Compared with Individual Trends,” <i>Econometrica</i> 1(4), 1933, 387–401. M. C. Lovell, “Seasonal Adjustment of Economic Time Series and Multiple Regression Analysis,” <i>Journal of the American Statistical Association</i> 58, 1963, 993–1010.</li>
+      <li>G. U. Yule, “An Investigation into the Causes of Changes in Pauperism in England, Chiefly During the Last Two Intercensal Decades,” <i>Journal of the Royal Statistical Society</i> 62(2), 1899, 249–295.</li>
+      <li>Z. Griliches, “Estimating the Returns to Schooling: Some Econometric Problems,” <i>Econometrica</i> 45(1), 1977, 1–22.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/multiple-regression/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/multiple-regression/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/multiple-regression/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/multiple-regression/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

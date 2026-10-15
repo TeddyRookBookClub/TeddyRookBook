@@ -1,0 +1,226 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/heteroskedasticity/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/heteroskedasticity/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec8-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 8</p>
+    <h1>{{ .Title }}</h1>
+    <p>Rich households differ far more in how much they save than poor ones do. When the noise around a regression line fans out like that, OLS still aims at the right answer, but the standard errors your software prints can quietly lie. Here you’ll stretch the noise with a slider, then run 2,000 samples and watch the “95%” intervals miss the truth far more than 5% of the time, until robust standard errors put things right. Then you’ll test for the problem and fix it with weights.</p>
+    <span class="lab-mark" aria-hidden="true">📊</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view ec8-tall" id="ec8-view">
+      <canvas id="ec8-cv" tabindex="0" aria-label="Top left: annual saving against household income for simulated households, with the true line, the OLS fit and a shaded band where 95% of households fall. Top right: a ladder of 95% confidence intervals from the most recent samples, classic on the left and robust on the right, with misses in red. Bottom: how often each kind of interval covered the truth over 2,000 samples, and the average standard errors against the real spread of the estimates. Keys: N new sample, M or Enter runs 2,000 samples, up and down arrows change how uneven the noise is."></canvas>
+      <div class="lab-tools">
+        <button type="button" id="ec8-new2" aria-label="Draw a new sample" title="New sample (N)">🎲</button>
+        <button type="button" id="ec8-mc2" aria-label="Run 2,000 samples" title="Run 2,000 samples (M)">▶</button>
+        <button type="button" id="ec8-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>The noise</h3>
+      <div class="lab-seg" role="group" aria-label="Pattern of the noise" id="ec8-shape">
+        <button type="button" data-shape="fan" aria-pressed="true">Fan out</button>
+        <button type="button" data-shape="edges" aria-pressed="false">Bow tie</button>
+        <button type="button" data-shape="middle" aria-pressed="false">Football</button>
+      </div>
+      <div class="lab-field"><span><label for="ec8-g">How uneven the noise is</label><output id="ec8-g-o" for="ec8-g"></output></span><input type="range" id="ec8-g" min="0" max="1.5" step="0.05" value="1"></div>
+      <div class="lab-field"><span><label for="ec8-n">Sample size</label><output id="ec8-n-o" for="ec8-n"></output></span><input type="range" id="ec8-n" min="0" max="6" step="1" value="3"></div>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec8-new">🎲 New sample</button><button type="button" class="lab-btn pri" id="ec8-mc">▶ Run 2,000 samples</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec8-read"></dl>
+      <p class="ec8-sr" id="ec8-say" aria-live="polite"></p>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec8-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The households.</b> Each dot is a simulated household: income across, yearly saving up, both in thousands of dollars. The true rule is saving = −2 + 0.12 × income + <var>u</var>: each extra $1,000 of income adds $120 of saving on average. The gold band shows where 95% of households fall at each income. With “Fan out,” low-income households all save about the same, while high-income households range from big savers to people spending down their savings.</p>
+      <p><b>The ladder.</b> Each run draws a fresh sample, fits OLS, and builds two 95% confidence intervals for the slope: one from the classic standard error that assumes constant noise, and one from the robust (HC1) standard error that doesn’t. A good 95% interval should contain the gold truth line in 95% of samples. Misses show in red.</p>
+      <p><b>The scoreboard.</b> The coverage bars count how often each kind of interval caught the truth. The shaded strip from 94% to 96% is about how much a perfect 95% procedure would wobble over 2,000 tries. The bars on the right show why classic intervals fail: their average standard error is smaller than the real spread of the estimates.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="what">
+    <h2>What heteroskedasticity is</h2>
+    <p>The word joins the Greek <i>hetero-</i>, “different,” and <i>skedasis</i>, “scattering.” Homoskedasticity, assumption MLR.5 from Chapter 6, says the error has the same variance whatever the regressors are: Var(<var>u</var> | <var>x</var>) = σ². Heteroskedasticity means it doesn’t: Var(<var>u</var> | <var>x</var>) = σ²<var>h</var>(<var>x</var>), with the spread depending on <var>x</var>. Saving against income, spending against income, sales against firm size and test scores against school size all tend to be heteroskedastic.</p>
+    <div class="lab-cols">
+      <div>
+        <p><b>OLS is still unbiased.</b> The proof that E(β̂₁) = β₁ used only random sampling and E(<var>u</var> | <var>x</var>) = 0. It never needed a constant variance. So heteroskedasticity doesn’t move the center of the sampling distribution; mission “Still unbiased” checks that.</p>
+        <p><b>But the usual variance formula is wrong.</b> With Var(<var>u</var><sub><var>i</var></sub> | <var>x</var><sub><var>i</var></sub>) = σ<sub><var>i</var></sub>², the true variance of the slope in simple regression is</p>
+      </div>
+      <div>
+        <div class="u-big">Var(β̂₁) = Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)²σ<sub><var>i</var></sub>² / SST<sub><var>x</var></sub>²<small>this equals the textbook σ²/SST<sub><var>x</var></sub> only when every σ<sub><var>i</var></sub>² is the same</small></div>
+        <p>When the noise is biggest where <var>x</var> is far from its mean (fan, bow tie), the classic formula is too small, intervals are too narrow and <var>t</var> statistics too big. When the noise is biggest in the middle (football), it is too large. And OLS is no longer the most precise linear unbiased estimator: the Gauss–Markov theorem needs MLR.5.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="robust">
+    <h2>Robust standard errors</h2>
+    <div class="lab-cols">
+      <div>
+        <p>The fix, due to Friedhelm Eicker, Peter Huber and Halbert White, is to estimate each unknown σ<sub><var>i</var></sub>² with that observation’s own squared residual <var>û</var><sub><var>i</var></sub>²:</p>
+        <div class="lab-formula">se<sub>robust</sub>(β̂₁)² = [<var>n</var>/(<var>n</var> − 2)] · Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)²<var>û</var><sub><var>i</var></sub>² / SST<sub><var>x</var></sub>²</div>
+        <p>One <var>û</var><sub><var>i</var></sub>² is a terrible estimate of one σ<sub><var>i</var></sub>², but the weighted sum is a good estimate of the sum in large samples. The factor <var>n</var>/(<var>n</var> − <var>k</var> − 1) is the “HC1” small-sample adjustment that Stata’s <code>robust</code> option uses; without it the estimator is called HC0. In multiple regression the same idea gives a whole robust covariance matrix, and robust <var>t</var> and <var>F</var> (Wald) tests.</p>
+      </div>
+      <div class="u-ex"><b>Worked example: the same slope, two verdicts on precision</b>
+        <p>With 100 households, OLS gives β̂₁ = 0.121, a classic standard error of 0.010 and a robust one of 0.013. With 98 degrees of freedom the 97.5th percentile of <var>t</var> is 1.984.</p>
+        <ul>
+          <li>Classic: <var>t</var> = 12.1; 95% interval 0.121 ± 1.984 × 0.010 = [0.101, 0.141].</li>
+          <li>Robust: <var>t</var> = 9.3; 95% interval 0.121 ± 1.984 × 0.013 = [0.095, 0.147].</li>
+        </ul>
+        <p>Both say saving rises with income. But the classic interval is 23% too narrow, and for a smaller effect that could flip a “significant” result to an insignificant one.</p>
+      </div>
+    </div>
+    <p><b>Small samples.</b> Robust standard errors are a large-sample tool. With 20 or 30 observations under strong heteroskedasticity, HC1 intervals also cover less than 95% (mission “Small samples bite”). James MacKinnon and Halbert White proposed the HC2 and HC3 variants in 1985, which inflate the residuals of high-leverage points; J. Scott Long and Laurie Ervin’s simulations (2000) favored HC3 in samples below about 250. Many applied economists now report robust standard errors by default. For small samples, Angrist and Pischke suggest a rule of thumb: use the larger of the classic and robust standard errors.</p>
+    <div class="lab-try"><b>Try this:</b> Choose “Fan out,” push the strength to 1.5 and run 2,000 samples: classic coverage drops to about 87%, robust stays near 94%. Then choose “Football” and run again. Now the classic intervals cover almost 100%: too wide, wasting precision.</div>
+    <div class="u-myth"><b>Common mistake: “Heteroskedasticity biases the coefficients, so I need a different estimator”</b>
+      <p>It doesn’t. The coefficients are fine; only the standard errors, <var>t</var> statistics, intervals and <var>p</var>-values are off, and robust standard errors fix them in large samples. A second mistake is to think robust standard errors are always larger. They can be smaller, as in the football pattern. And if you see heteroskedasticity, also ask whether the model itself is wrong: a missing log or curve often shows up as a fan in the residuals (Chapter 7).</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="tests">
+    <h2>Testing for heteroskedasticity, and fixing it with weights</h2>
+    <div class="lab-cols">
+      <div>
+        <p><b>Breusch–Pagan test.</b> If the error variance moves with the regressors, squared residuals should too. Regress <var>û</var>² on the <var>x</var>’s and use</p>
+        <div class="lab-formula">LM = <var>n</var> · <var>R</var>²<sub><var>û</var>²</sub> &nbsp;~&nbsp; χ²<sub><var>k</var></sub> under homoskedasticity</div>
+        <p>(This <var>n</var>·<var>R</var>² form is Roger Koenker’s 1981 version of Trevor Breusch and Adrian Pagan’s 1979 test; an <var>F</var> test that all slopes in that regression are zero works too.) <b>White’s test</b> adds squares and cross products of the regressors; its special form regresses <var>û</var>² on <var>ŷ</var> and <var>ŷ</var>².</p>
+      </div>
+      <div class="u-ex"><b>Worked example: a Breusch–Pagan test by hand</b>
+        <p>With <var>n</var> = 100, regressing the squared residuals on income gives <var>R</var>² = 0.17. Then LM = 100 × 0.17 = 17.0. The 5% critical value of χ² with 1 degree of freedom is 3.84, so reject constant variance; the <var>p</var>-value is about 0.00004.</p>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <p><b>Weighted least squares.</b> If you know the form, Var(<var>u</var> | <var>x</var>) = σ²<var>h</var>(<var>x</var>), divide the whole equation by √<var>h</var>:</p>
+        <div class="lab-formula"><var>y</var><sub><var>i</var></sub>/√<var>h</var><sub><var>i</var></sub> = β₀(1/√<var>h</var><sub><var>i</var></sub>) + β₁(<var>x</var><sub><var>i</var></sub>/√<var>h</var><sub><var>i</var></sub>) + <var>u</var><sub><var>i</var></sub>/√<var>h</var><sub><var>i</var></sub></div>
+        <p>The new error has constant variance σ², so OLS on the transformed data, which is WLS, is the best linear unbiased estimator. Each observation gets weight 1/<var>h</var><sub><var>i</var></sub>: noisy observations count less. This is a case of generalized least squares (GLS), set out by Alexander Aitken in 1935.</p>
+      </div>
+      <div>
+        <p><b>Feasible GLS.</b> Usually <var>h</var> is unknown. Estimate it: regress log(<var>û</var>²) on the regressors (the simulation also adds the square, to catch U-shapes), set <var>ĥ</var> = exp(fitted value), and run WLS with weights 1/<var>ĥ</var>. FGLS is consistent and, in large samples, more efficient than OLS when the variance model is roughly right.</p>
+        <p>If the variance model is wrong, WLS and FGLS still estimate β consistently, but their usual standard errors are off. So many people report WLS with robust standard errors too.</p>
+      </div>
+    </div>
+    <div class="lab-stage" id="ec8b">
+      <div class="lab-view ec8-mid" id="ec8b-view">
+        <canvas id="ec8b-cv" tabindex="0" aria-label="Left: squared OLS residuals against income with the Breusch–Pagan auxiliary regression line and its test result. Right: the same sample with the OLS, weighted least squares and feasible GLS lines and the true line. Bottom: histograms of the three estimators over 1,000 samples after you press Compare. The sample is the one in the main simulation above."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>On the current sample</h3>
+        <dl class="lab-readout" id="ec8b-read"></dl>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="ec8b-cmp">▶ Compare 1,000 samples</button></div>
+        <p class="lab-small">This uses the sample and settings from the main simulation. Change the noise there and the test and fits update here.</p>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec8b-missions"></ol>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: weights from a known form</b>
+      <p>Suppose Var(<var>u</var> | inc) = σ²·inc, a classic assumption for saving. Then <var>h</var> = inc and the weights are 1/inc. A household earning $50,000 gets three times the weight of one earning $150,000, because its saving is three times less noisy in variance. Equivalently, divide saving, the constant and income by √inc and run OLS without an intercept. Group averages are another common case: if each observation is an average over <var>m</var><sub><var>i</var></sub> people, its variance is σ²/<var>m</var><sub><var>i</var></sub>, so weight by group size <var>m</var><sub><var>i</var></sub>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>Weights.</b> Gauss and Legendre already knew that measurements of unequal accuracy deserve unequal weights. Alexander Aitken gave the general matrix form, generalized least squares, in 1935.</p>
+      <p><b>Robust standard errors.</b> The statisticians Friedhelm Eicker (1967) and Peter Huber (1967) showed how to estimate variances without assuming constant noise. Halbert White brought the idea to econometrics in a 1980 <i>Econometrica</i> paper that also proposed his test; it became one of the most cited papers in economics, and robust standard errors are often called Eicker–Huber–White or “White” standard errors.</p>
+      <p><b>Tests.</b> Trevor Breusch and Adrian Pagan published their test in 1979, and Roger Koenker made it robust to non-normal errors in 1981. In time series, Robert Engle’s ARCH model (1982) let the variance itself follow a pattern over time; he shared the 2003 Nobel memorial prize for it.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where it shows up</h2>
+    <div class="lab-cols">
+      <p><b>Household surveys.</b> Spending, saving and wealth vary more among high earners. Any regression on income should report robust standard errors.</p>
+      <p><b>Firms.</b> Big firms’ sales, profits and investment swing by more dollars than small firms’. Taking logs (Chapter 7) often turns that into roughly constant percent noise.</p>
+      <p><b>Finance.</b> Market volatility comes in calm and stormy spells, so risk measured in calm times can badly understate risk in a crisis. The <a href="{{ "business/cases/ltcm-1998/" | relURL }}">Long-Term Capital Management case</a> shows how relying on calm-period history can end. Nothing on this page is financial or investment advice.</p>
+      <p><b>Yes-or-no outcomes.</b> When <var>y</var> is 0 or 1, the linear probability model is heteroskedastic by construction: Var(<var>u</var> | <var>x</var>) = <var>p</var>(<var>x</var>)[1 − <var>p</var>(<var>x</var>)]. Chapter 14 takes this up.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec8-prac">
+      <li><p><span class="ec8-lvl">Warm-up</span> A regression of yearly restaurant spending on income shows residuals that spread out as income rises. Which of these is affected: the OLS slope’s bias, its standard error, or both?</p>
+        <details><summary>Show the answer</summary><div><p>Only the standard error (and so <var>t</var> statistics, intervals and <var>p</var>-values). OLS stays unbiased because unbiasedness needs only E(<var>u</var> | <var>x</var>) = 0.</p></div></details></li>
+      <li><p><span class="ec8-lvl">Warm-up</span> β̂₁ = 0.45 with a robust standard error of 0.20 and <var>n</var> = 400. Is it significant at 5%? Give a 95% interval.</p>
+        <details><summary>Show the answer</summary><div><p><var>t</var> = 0.45/0.20 = 2.25 &gt; 1.97, so yes. Interval: 0.45 ± 1.97 × 0.20 = [0.06, 0.84].</p></div></details></li>
+      <li><p><span class="ec8-lvl">Core</span> With <var>n</var> = 250 and three regressors, the <var>R</var>² from regressing <var>û</var>² on the three regressors is 0.031. Carry out the Breusch–Pagan LM test at 5%.</p>
+        <details><summary>Show the answer</summary><div><p>LM = 250 × 0.031 = 7.75. The 5% critical value of χ²₃ is 7.81, so we just fail to reject (<var>p</var> ≈ 0.051). Borderline: reporting robust standard errors costs little and is the safe choice.</p></div></details></li>
+      <li><p><span class="ec8-lvl">Core</span> Each observation is the average test score of a school, and schools have between 50 and 2,000 students. If individual scores have constant variance σ², what is the variance of each school’s error, and what weights should WLS use?</p>
+        <details><summary>Show the answer</summary><div><p>An average of <var>m</var><sub><var>i</var></sub> independent scores has variance σ²/<var>m</var><sub><var>i</var></sub>, so <var>h</var><sub><var>i</var></sub> = 1/<var>m</var><sub><var>i</var></sub> and the weight 1/<var>h</var><sub><var>i</var></sub> = <var>m</var><sub><var>i</var></sub>, the school’s size. A 2,000-student school counts 40 times as much as a 50-student one.</p></div></details></li>
+      <li><p><span class="ec8-lvl">Core</span> Suppose Var(<var>u</var> | <var>x</var>) = σ²<var>x</var>² in <var>y</var> = β₀ + β₁<var>x</var> + <var>u</var>, with <var>x</var> &gt; 0. Write the transformed equation that WLS estimates by OLS. What happens to the intercept and slope?</p>
+        <details><summary>Show the answer</summary><div><p>Divide by <var>x</var>: <var>y</var>/<var>x</var> = β₀(1/<var>x</var>) + β₁ + <var>u</var>/<var>x</var>. The new error has variance σ². In the transformed regression, β₁ is the intercept and β₀ is the slope on 1/<var>x</var>.</p></div></details></li>
+      <li><p><span class="ec8-lvl">Challenge</span> Explain with the formula for Var(β̂₁) why the classic standard error is too small for the fan and bow-tie patterns but too large for the football pattern.</p>
+        <details><summary>Show the answer</summary><div><p>The true variance weights each σ<sub><var>i</var></sub>² by (<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)². The classic formula uses the plain average σ̄² instead. If σ<sub><var>i</var></sub>² is large exactly where (<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)² is large (both ends for the bow tie, the far end for the fan), the weighted sum exceeds σ̄²·SST<sub><var>x</var></sub>, so the classic variance is too small. If σ<sub><var>i</var></sub>² is largest near <var>x̄</var>, where the weights are small, the classic variance is too large. In the simulation’s fan at strength 1.5, the real spread is 1.29 times the classic standard error, so a nominal 95% interval covers about 2Φ(1.96/1.29) − 1 = 87%.</p></div></details></li>
+      <li><p><span class="ec8-lvl">Challenge</span> A colleague runs FGLS and finds β̂₁ = 0.118 (se 0.008), against OLS 0.121 (robust se 0.013). She concludes FGLS is better because its standard error is smaller. What else should she check?</p>
+        <details><summary>Show the answer</summary><div><p>FGLS standard errors are right only if the variance model is right. She should compare them with robust standard errors for the WLS fit, and check that the OLS and FGLS estimates are close (a big gap can signal misspecification, since both should estimate the same β₁). Here 0.118 and 0.121 are close, and the efficiency gain is plausible, as in the simulation, where FGLS cut the spread by more than half.</p></div></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The world.</b> Income is uniform between $20,000 and $160,000; saving = −2 + 0.12·income + <var>u</var> (in thousands). The noise <var>u</var> is normal with standard deviation 3·<var>g</var>(<var>z</var>), where <var>z</var> = (income − 90)/70 runs from −1 to 1: exp(γ<var>z</var>) for the fan, exp(γ(1.5<var>z</var>² − 0.5)) for the bow tie, and exp(γ(0.5 − 1.5<var>z</var>²)) for the football. γ = 0 is constant noise. The data are simulated with a known truth.</p>
+      <p><b>The estimates.</b> Each run fits OLS and builds 95% intervals as β̂₁ ± <var>t</var><sub>0.975, <var>n</var>−2</sub> × se, with the classic and the HC1 standard error. Weighted least squares uses the true variance function; FGLS regresses log(<var>û</var>²) on <var>z</var> and <var>z</var>², then weights by 1/exp(fitted). The fast slope and standard-error code used in the Monte Carlo is checked against the site’s shared statistics library.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, 10,000 samples per case, all passed):</p>
+        <ul class="lab-small">
+          <li>Slopes, classic and HC1 standard errors matched the shared library to 10⁻¹⁴, and HC1, the Breusch–Pagan statistic and WLS matched NumPy and SciPy to 12 or more digits.</li>
+          <li>Constant noise, <var>n</var> = 100: classic 94.9%, robust 94.5% coverage. Fan at 1.5: classic 86.7%, robust 94.0%. Bow tie at 1.5: 81.4% and 94.0%. Football at 1.5: 99.9% and 95.6%. Fan at 1.5 with <var>n</var> = 20: classic 86.8%, robust 91.0%.</li>
+          <li>With <var>n</var> = 500 the real spread was 1.287 times the average classic standard error, matching the formula’s 1.287 for this design.</li>
+          <li>The mean slope stayed within four standard errors of 0.12 in every case. The Breusch–Pagan test rejected 4.5% of the time at the 5% level under constant noise. Under the fan (1.5, <var>n</var> = 100), the spread of the estimates was 0.0175 for OLS, 0.0076 for WLS and 0.0080 for FGLS.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>Under heteroskedasticity, the OLS slope is…</p>
+        <ul class="u-opts"><li><button type="button">biased upward</button></li><li><button type="button">biased toward zero</button></li><li><button type="button">still unbiased, but the usual standard errors are wrong</button></li></ul>
+        <details><summary>Show the answer</summary><p>Unbiasedness needs only random sampling and E(<var>u</var> | <var>x</var>) = 0.</p></details></li>
+      <li class="u-q" data-a="0"><p>Classic 95% intervals covered the truth in 87% of 2,000 samples. Why?</p>
+        <ul class="u-opts"><li><button type="button">The classic standard errors were too small on average</button></li><li><button type="button">OLS was biased</button></li><li><button type="button">2,000 samples is too few to tell</button></li></ul>
+        <details><summary>Show the answer</summary><p>Too-small standard errors make intervals too narrow. 87% is far outside the 94–96% wobble expected from 2,000 tries.</p></details></li>
+      <li class="u-q" data-a="1"><p>Robust (HC1) standard errors work well…</p>
+        <ul class="u-opts"><li><button type="button">only when the errors are homoskedastic</button></li><li><button type="button">in large samples, whatever the form of heteroskedasticity</button></li><li><button type="button">only if you know the form of the variance</button></li></ul>
+        <details><summary>Show the answer</summary><p>They need no model of the variance, but they rely on large-sample approximations; in very small samples they can still be too small.</p></details></li>
+      <li class="u-q" data-a="2"><p>The Breusch–Pagan test regresses…</p>
+        <ul class="u-opts"><li><button type="button"><var>y</var>² on the regressors</button></li><li><button type="button">the residuals on the regressors</button></li><li><button type="button">the squared residuals on the regressors</button></li></ul>
+        <details><summary>Show the answer</summary><p>LM = <var>n</var>·<var>R</var>² from regressing <var>û</var>² on the <var>x</var>’s. (Plain residuals are uncorrelated with the regressors by construction.)</p></details></li>
+      <li class="u-q" data-a="1"><p>If Var(<var>u</var> | <var>x</var>) = σ²·<var>x</var>, WLS gives each observation a weight of…</p>
+        <ul class="u-opts"><li><button type="button"><var>x</var></button></li><li><button type="button">1/<var>x</var></button></li><li><button type="button">√<var>x</var></button></li></ul>
+        <details><summary>Show the answer</summary><p>Weights are 1/<var>h</var>(<var>x</var>) = 1/<var>x</var>, which is the same as dividing each variable by √<var>x</var>.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Chapter 8 (Heteroskedasticity): consequences for OLS, robust inference, the Breusch–Pagan and White tests, weighted least squares and feasible GLS.</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Section 5.4 (Heteroskedasticity and Homoskedasticity).</li>
+      <li>J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (Princeton University Press, 2009), Section 8.1 (the bias of robust standard errors).</li>
+      <li>Penn State STAT 501, <a href="https://online.stat.psu.edu/stat501/Lesson13" target="_blank" rel="noopener">Lesson 13: Weighted Least Squares</a>.</li>
+      <li>H. White, “A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity,” <i>Econometrica</i> 48(4), 1980, 817–838.</li>
+      <li>T. S. Breusch and A. R. Pagan, “A Simple Test for Heteroscedasticity and Random Coefficient Variation,” <i>Econometrica</i> 47(5), 1979, 1287–1294. R. Koenker, “A Note on Studentizing a Test for Heteroscedasticity,” <i>Journal of Econometrics</i> 17, 1981, 107–112.</li>
+      <li>J. G. MacKinnon and H. White, “Some Heteroskedasticity-Consistent Covariance Matrix Estimators with Improved Finite Sample Properties,” <i>Journal of Econometrics</i> 29, 1985, 305–325. J. S. Long and L. H. Ervin, “Using Heteroscedasticity Consistent Standard Errors in the Linear Regression Model,” <i>The American Statistician</i> 54(3), 2000, 217–224.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/heteroskedasticity/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/heteroskedasticity/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/heteroskedasticity/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/heteroskedasticity/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

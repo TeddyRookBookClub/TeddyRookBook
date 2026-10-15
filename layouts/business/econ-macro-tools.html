@@ -1,0 +1,233 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/macro-tools/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/macro-tools/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec16-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 16</p>
+    <h1>{{ .Title }}</h1>
+    <p>When a central bank raises interest rates, what happens to inflation, and when? Everything in the economy moves at once, so no single regression can answer. Vector autoregressions let every variable depend on the past of every other, then trace out what one surprise does over the following years. Here you’ll run a small simulated economy, hit it with shocks, and see how one quiet assumption, which variable moves first, can change the story. Then you’ll meet the generalized method of moments, the framework that unifies almost every estimator in this course, and use it to catch a bad instrument.</p>
+    <span class="lab-mark" aria-hidden="true">🌐</span>
+  </header>
+
+  <div class="lab-stage ec16-main">
+    <div class="lab-view" id="ec16-view">
+      <canvas id="ec16-cv" tabindex="0" aria-label="Left: a simulated economy running live, with the inflation gap in gold and the interest-rate gap in blue, one value per quarter; shocks you add are marked. Right: four impulse-response panels from a VAR estimated on the last 200 quarters: the response of inflation and of the interest rate to an inflation shock and to a rate shock, over 16 quarters, with a 90 percent bootstrap band and the true responses dashed in gold. Keys: I shocks inflation, R shocks the rate, space pauses."></canvas>
+      <div class="lab-hud" id="ec16-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec16-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="ec16-reset" aria-label="Start again" title="Start again">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="ec16-world-h">The economy</h3>
+      <div class="lab-seg" id="ec16-world" role="group" aria-labelledby="ec16-world-h">
+        <button type="button" data-w="taylor">Rate reacts to inflation</button><button type="button" data-w="nofeed">Rate has no effect</button><button type="button" data-w="news">Rate sees the future</button>
+      </div>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="ec16-shpi">Shock inflation ↑</button><button type="button" class="lab-btn pri" id="ec16-shi">Shock the rate ↑</button></div>
+      <h3 id="ec16-order-h">Cholesky ordering</h3>
+      <div class="lab-seg" id="ec16-order" role="group" aria-labelledby="ec16-order-h">
+        <button type="button" data-o="pi">Inflation first</button><button type="button" data-o="i">Rate first</button>
+      </div>
+      <label class="lab-field"><span>Correlation of the two surprises <output id="ec16-rho-o"></output></span><input type="range" id="ec16-rho" min="-0.8" max="0.8" step="0.05" aria-label="Correlation of the reduced-form errors"></label>
+      <label class="lab-chk"><input type="checkbox" id="ec16-truth"> Show the true responses</label>
+      <button type="button" class="lab-btn" id="ec16-newh">New history</button>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec16-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec16-missions"></ol>
+    </div>
+    <section class="lab-sec ec16-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The economy.</b> Two simulated numbers move each quarter: inflation and the interest rate, each measured as a gap from its normal level. Each depends on last quarter’s values of both, plus a surprise. In the default economy the central bank raises the rate when inflation is high, and a higher rate pulls inflation down a little later.</p>
+        <p><b>The VAR.</b> Every 20 quarters, the page estimates a vector autoregression on the last 200 quarters: one regression for each variable on the lagged values of both. It never sees the true model. From the estimates it computes <i>impulse responses</i>: what one standard-deviation surprise in one variable does to both variables over the next 16 quarters (green, with a 90% bootstrap band). The gold dashed lines are the truth.</p>
+        <p><b>Shocks.</b> “Shock inflation” adds a surprise of two standard deviations to inflation in the next quarter. Watch the gold line jump, the blue line follow, and both fade back: the same story the impulse-response panels tell from the estimates alone.</p>
+        <p><b>The ordering.</b> The surprises in inflation and the rate are correlated, and the data can’t say which caused which within a quarter. “Inflation first” assumes the rate can react to inflation within the quarter but not the reverse. Switch it and the panels change, even though the data and the regressions are the same.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="var"><h2>Vector autoregressions</h2>
+    <p>In 1980, Christopher Sims argued in “Macroeconomics and Reality” that the large models economists used then rested on restrictions that were “incredible”: assumptions about which variables affect which, imposed to make the models solvable rather than because anyone believed them. His alternative was to let the data speak first. Treat every variable as depending on the recent past of every variable:</p>
+    <div class="u-big"><b>y</b><sub><var>t</var></sub> = <b>c</b> + <var>A</var>₁<b>y</b><sub><var>t</var>−1</sub> + … + <var>A</var><sub><var>p</var></sub><b>y</b><sub><var>t</var>−<var>p</var></sub> + <b>u</b><sub><var>t</var></sub><small><b>y</b><sub><var>t</var></sub> is a list of variables (here inflation and the interest rate); each <var>A</var> is a matrix of coefficients; <b>u</b><sub><var>t</var></sub> are the surprises, with covariance matrix Σ</small></div>
+    <p>With the same regressors in every equation, the VAR is estimated by OLS one equation at a time. The simulation uses one lag:</p>
+    <div class="lab-formula">π<sub><var>t</var></sub> = <var>a</var>₁₁π<sub><var>t</var>−1</sub> + <var>a</var>₁₂<var>i</var><sub><var>t</var>−1</sub> + <var>u</var><sub>π<var>t</var></sub>, &nbsp;&nbsp; <var>i</var><sub><var>t</var></sub> = <var>a</var>₂₁π<sub><var>t</var>−1</sub> + <var>a</var>₂₂<var>i</var><sub><var>t</var>−1</sub> + <var>u</var><sub><var>it</var></sub></div>
+    <p>The coefficients themselves are hard to read, since effects pass back and forth between the variables. So VAR users summarize them in three ways: <b>impulse responses</b>, <b>forecast-error variance decompositions</b> (what share of the uncertainty in forecasting each variable comes from each kind of shock) and <b>Granger-causality tests</b>.</p>
+    <h3 class="lab-h">From surprises to shocks: identification</h3>
+    <p>The surprises <var>u</var><sub>π</sub> and <var>u</var><sub><var>i</var></sub> are correlated. If the rate surprise is partly a reaction to the inflation surprise, then “a rate surprise” mixes a policy shock with a response to inflation. To trace the effect of a pure policy shock, we write the surprises as combinations of uncorrelated <b>structural shocks</b>, <b>u</b><sub><var>t</var></sub> = <var>P</var><b>ε</b><sub><var>t</var></sub>, with Var(<b>ε</b>) = <var>I</var>, so that <var>PP</var>′ = Σ. The impulse response at horizon <var>h</var> is then</p>
+    <div class="u-big">Θ<sub><var>h</var></sub> = <var>A</var><sup><var>h</var></sup><var>P</var><small>column <var>k</var> of Θ<sub><var>h</var></sub> is the response of every variable, <var>h</var> periods later, to a one-standard-deviation shock <var>k</var> (for a VAR(1); with more lags the recursion is longer)</small></div>
+    <p>Here is the catch. Σ has three distinct numbers (two variances and a covariance), but <var>P</var> has four. One more assumption is needed, and the data can’t supply it. The most common choice is a <b>Cholesky (recursive) ordering</b>: make <var>P</var> lower triangular, which assumes the first variable doesn’t respond to the second variable’s shock within the period. “Inflation first” says prices are sticky within a quarter, so inflation can’t react to a policy surprise right away, while the central bank can react to inflation at once. That is the assumption built into the simulated economy, so that ordering recovers the truth there; the other ordering doesn’t.</p>
+    <div class="u-ex"><b>Worked example: an impulse response by hand</b>
+      <p>Take the default economy: <var>A</var> = [0.70 −0.15; 0.35 0.75], surprise standard deviations 0.5 (inflation) and 0.4 (rate), correlation 0.5. With inflation ordered first, the Cholesky factor is <var>P</var> = [0.5 0; 0.2 0.346], since 0.5 × 0.4 × 0.5 = 0.2 and 0.4√(1 − 0.25) = 0.346.</p>
+      <ol><li>Impact (<var>h</var> = 0) of an inflation shock: the first column of <var>P</var>, so inflation +0.50 and the rate +0.20.</li>
+        <li>One quarter later: <var>A</var> × (0.50, 0.20) = (0.70 × 0.5 − 0.15 × 0.2, 0.35 × 0.5 + 0.75 × 0.2) = (0.32, 0.325).</li>
+        <li>Two quarters later: <var>A</var> × (0.32, 0.325) = (0.175, 0.356). Inflation is fading; the rate is still rising.</li>
+        <li>Three quarters later: (0.069, 0.328). The higher rate keeps pushing inflation down.</li></ol>
+      <p>With the rate ordered first, the inflation shock has no effect on the rate on impact by assumption, and the whole path is different.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> set the correlation to 0 and switch the ordering: nothing changes, because with uncorrelated surprises there is nothing to disentangle. Now set it to 0.7 and switch again. With rate first, an inflation shock no longer moves the rate on impact, and a rate shock appears to push inflation up at once. Same data, same VAR, different story. Researchers in practice defend their ordering with economics, or use other identifying assumptions: long-run restrictions (Blanchard and Quah, 1989), sign restrictions (Uhlig, 2005), or outside measures of policy surprises such as interest-rate moves in the minutes around central bank announcements (Gertler and Karadi, 2015).</div>
+  </section>
+
+  <section class="lab-sec" id="granger"><h2>Granger causality, and what it doesn’t mean</h2>
+    <p>Clive Granger (1969) proposed a testable notion: <var>x</var> <b>Granger-causes</b> <var>y</var> if past values of <var>x</var> help predict <var>y</var> beyond what past values of <var>y</var> already do. In a VAR, test whether the coefficients on lagged <var>x</var> in the <var>y</var> equation are all zero, with an <var>F</var> test (with one lag, the square of the <var>t</var> statistic).</p>
+    <div class="u-myth"><b>Common mistake: “Granger causality is causality”</b>
+      <p>It is about prediction, not cause. Christmas card sales in November predict Christmas, but they don’t cause it. In the “Rate sees the future” economy, the central bank receives news about next quarter’s inflation and moves the rate today. Past rates then predict inflation strongly (the test rejects in about 100% of samples of 200 quarters), yet in that economy the rate has no effect on inflation whatsoever. Forward-looking variables (interest rates, stock prices, survey expectations) often Granger-cause the things they anticipate. The reverse also happens: a central bank that perfectly offsets inflation can make a real effect invisible.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> choose “Rate has no effect”. The rate equation still responds to inflation, but inflation ignores the rate. The Granger test of rate → inflation should reject only about 5% of the time (4.9% in our simulations), while inflation → rate rejects every time. Then pick “Rate sees the future” and watch rate → inflation light up.</div>
+  </section>
+
+  <section class="lab-sec" id="gmm"><h2>The generalized method of moments</h2>
+    <p>The oldest estimation idea in statistics is to match moments: if the population mean is <var>μ</var>, estimate it by the sample mean. Karl Pearson used it in 1894. Lars Peter Hansen (1982) turned the idea into a general framework. Write what the model says as <b>moment conditions</b>, expectations that equal zero at the true parameter <var>θ</var>₀:</p>
+    <div class="u-big">E[<b>g</b>(<b>w</b><sub><var>i</var></sub>, <var>θ</var>₀)] = <b>0</b> &nbsp;⟶&nbsp; <var>θ̂</var> = argmin<sub><var>θ</var></sub> <b>ḡ</b>(<var>θ</var>)′ <var>W</var> <b>ḡ</b>(<var>θ</var>), &nbsp; <b>ḡ</b>(<var>θ</var>) = <var>n</var><sup>−1</sup>Σ<b>g</b>(<b>w</b><sub><var>i</var></sub>, <var>θ</var>)<small>generalized method of moments: make the sample versions of the conditions as close to zero as possible, with weights <var>W</var></small></div>
+    <p>If there are as many conditions as parameters, you can usually make them all exactly zero, and <var>W</var> doesn’t matter. If there are more (the model is <b>overidentified</b>), you can’t, and <var>W</var> decides which conditions to trust most. Almost every estimator in this course is GMM in disguise: OLS uses E[<b>x</b><var>u</var>] = 0, instrumental variables uses E[<b>z</b><var>u</var>] = 0, and maximum likelihood sets the average score to zero.</p>
+    <div class="lab-stage wide ec16-mini" id="ec16-mm">
+      <div class="lab-view" id="ec16-mmv"><canvas id="ec16-mc" tabindex="0" aria-label="Left: a histogram of 200 observations with a normal curve at the mean and variance you choose, and bars showing the moment gaps. Right: a heat map of the GMM objective over the mean and variance; drag the pink point, or use the arrow keys, to make the gaps zero. A cross marks the GMM estimate."></canvas></div>
+      <div class="lab-panel ec16-row">
+        <div class="ec16-grow">
+          <h3 id="ec16-mmkind-h">Data</h3>
+          <div class="lab-seg" id="ec16-mmkind" role="group" aria-labelledby="ec16-mmkind-h"><button type="button" data-k="normal">Normal</button><button type="button" data-k="skew">Skewed</button></div>
+          <h3 id="ec16-mmk-h">Moment conditions</h3>
+          <div class="lab-seg" id="ec16-mmk" role="group" aria-labelledby="ec16-mmk-h"><button type="button" data-k="2">2: mean, variance</button><button type="button" data-k="3">3: + zero skewness</button></div>
+        </div>
+        <div class="ec16-grow">
+          <h3 id="ec16-mmw-h">Weighting</h3>
+          <div class="lab-seg" id="ec16-mmw" role="group" aria-labelledby="ec16-mmw-h"><button type="button" data-w="identity">Identity</button><button type="button" data-w="eff">Efficient (two-step)</button></div>
+          <div class="lab-row"><button type="button" class="lab-btn pri" id="ec16-mmjump">Jump to the GMM estimate</button><button type="button" class="lab-btn" id="ec16-mmnew">New data</button></div>
+        </div>
+        <dl class="lab-readout ec16-grow" id="ec16-mmread"></dl>
+      </div>
+    </div>
+    <p>With two conditions, <var>x</var> − <var>μ</var> and (<var>x</var> − <var>μ</var>)² − <var>σ</var>², the estimates are the sample mean and the sample variance (dividing by <var>n</var>). Add a third, (<var>x</var> − <var>μ</var>)³, which a normal distribution says should average zero (no skewness). Now there are three conditions and two parameters. For normal data the three can nearly agree; for skewed data they can’t, and the efficient weighting compromises.</p>
+    <div class="u-ex"><b>Worked example: moments by hand</b>
+      <p>In a sample, the average of <var>x</var> is 3.20 and the average of <var>x</var>² is 11.68.</p>
+      <ol><li>First condition: <var>x̄</var> − <var>μ̂</var> = 0, so <var>μ̂</var> = 3.20.</li>
+        <li>Second: the average of (<var>x</var> − <var>μ̂</var>)² equals <var>σ̂</var>². Since the average of (<var>x</var> − <var>μ̂</var>)² = (average of <var>x</var>²) − <var>μ̂</var>², <var>σ̂</var>² = 11.68 − 3.20² = 11.68 − 10.24 = 1.44, so <var>σ̂</var> = 1.2.</li></ol>
+      <p>Two equations, two unknowns, solved exactly. No weights needed.</p>
+    </div>
+    <h3 class="lab-h">Efficient weighting and Hansen’s J</h3>
+    <p>Conditions that are noisy (whose sample averages bounce around a lot) deserve less weight. Hansen showed that the best choice is <var>W</var> = <var>Ŝ</var><sup>−1</sup>, the inverse of the covariance matrix of the moment functions. Since <var>Ŝ</var> depends on <var>θ</var>, estimate in two steps: first with any <var>W</var> (such as the identity), then with <var>Ŝ</var><sup>−1</sup> computed at the first-step estimate. With efficient weights, the minimized objective has a known distribution if all the conditions are true:</p>
+    <div class="u-big"><var>J</var> = <var>n</var> · <b>ḡ</b>(<var>θ̂</var>)′ <var>Ŝ</var><sup>−1</sup> <b>ḡ</b>(<var>θ̂</var>) ~ χ²<sub><var>L</var>−<var>K</var></sub><small>Hansen’s test of overidentifying restrictions: <var>L</var> conditions, <var>K</var> parameters; a large <var>J</var> says the conditions can’t all hold together</small></div>
+    <div class="lab-try"><b>Try this:</b> choose skewed data, three moments and efficient weighting. <var>J</var> is large: no normal distribution can match this sample’s mean, variance and lack of symmetry at once. In our tests on samples of 200, <var>J</var> rejected the normal model in 97% of skewed samples and in 5.6% of normal ones. Now switch to the identity weighting: the estimate swings far from the sample mean, because the third moment is measured in cubed units and dominates an unweighted sum. That is why the weighting matters.</div>
+  </section>
+
+  <section class="lab-sec" id="ivgmm"><h2>Instrumental variables as GMM</h2>
+    <p>In <a href="{{ "business/econometrics/instrumental-variables/" | relURL }}">Chapter 10</a>, an instrument <var>z</var> had to be correlated with the endogenous regressor <var>x</var> and uncorrelated with the error <var>u</var>. That second requirement is a moment condition: E[<var>z</var>(<var>y</var> − <var>βx</var>)] = 0. With three instruments and one coefficient, there are three conditions and one unknown. Each instrument alone gives its own estimate (where its line crosses zero below); GMM combines them. 2SLS is GMM with <var>W</var> = (<var>Z</var>′<var>Z</var>/<var>n</var>)<sup>−1</sup>, which is the efficient choice only if the errors are homoskedastic.</p>
+    <div class="lab-stage wide ec16-mini" id="ec16-iv">
+      <div class="lab-view" id="ec16-ivv"><canvas id="ec16-ic" aria-label="Top left: the three sample moment conditions as lines in beta, each scaled by its standard error, crossing zero where that instrument alone would put beta. Bottom left: the efficient GMM objective in beta, whose minimum is Hansen's J, against the 5 percent critical value 5.99, with dashed markers at the 2SLS and identity-weighted estimates. Right: histograms of the 2SLS and efficient GMM estimates over many samples."></canvas></div>
+      <div class="lab-panel ec16-row">
+        <div class="ec16-grow">
+          <label class="lab-field"><span>Third instrument’s link to the error <output id="ec16-ivg-o"></output></span><input type="range" id="ec16-ivg" min="0" max="0.5" step="0.05" aria-label="How strongly the third instrument is correlated with the error"></label>
+          <label class="lab-field"><span>Observations <output id="ec16-ivn-o"></output></span><input type="range" id="ec16-ivn" min="100" max="2000" step="100" aria-label="Number of observations"></label>
+          <label class="lab-chk"><input type="checkbox" id="ec16-ivhet"> Heteroskedastic errors (noisier when |z₁| is large)</label>
+        </div>
+        <div class="ec16-grow">
+          <div class="lab-row"><button type="button" class="lab-btn" id="ec16-ivnew">New sample</button><button type="button" class="lab-btn pri" id="ec16-ivmc">Run 500 samples</button></div>
+          <dl class="lab-readout" id="ec16-ivread"></dl>
+        </div>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: reading a J test</b>
+      <p>A study estimates one coefficient with three instruments by efficient GMM and reports <var>J</var> = 7.3.</p>
+      <ol><li>Degrees of freedom: <var>L</var> − <var>K</var> = 3 − 1 = 2.</li>
+        <li>The 5% critical value of χ²₂ is 5.99, and 7.3 &gt; 5.99. The p-value is about 0.026.</li>
+        <li>Conclusion: the three instruments don’t agree on one value of <var>β</var>, so at least one is probably invalid.</li></ol>
+      <p>The test can’t say which one. And passing it is weak comfort: if all the instruments are invalid in the same direction, they can agree with each other and all be wrong.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> raise the third instrument’s link to the error to 0.3. Its line now crosses zero far from the others, <var>J</var> jumps past 5.99, and the estimate drifts away from 1. Then set it back to valid, tick heteroskedastic errors and run 500 samples. 2SLS still centers on 1, but efficient GMM, which down-weights the noisy first condition, has a smaller spread (in our tests, a standard deviation of 0.26 against 0.34).</div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>Moments.</b> Karl Pearson fitted distributions by matching moments in 1894. Ronald Fisher later showed that maximum likelihood is usually more efficient, and for decades the method of moments looked old-fashioned.</p>
+      <p><b>Instruments and overidentification.</b> Denis Sargan (1958) developed instrumental-variables estimation with more instruments than regressors and the first test of overidentifying restrictions, a forerunner of Hansen’s <var>J</var>.</p>
+      <p><b>GMM.</b> Hansen’s 1982 <i>Econometrica</i> paper gave the general theory, and Hansen and Kenneth Singleton (1982) used it to estimate how investors trade off consumption today against tomorrow directly from the conditions of an economic model, without assuming the full distribution of the data. Hansen shared the 2013 Nobel memorial prize in economics with Eugene Fama and Robert Shiller for their empirical analysis of asset prices.</p>
+      <p><b>VARs.</b> Granger’s 1969 paper introduced his causality test; Sims’s 1980 paper launched the VAR approach. Sims shared the 2011 Nobel memorial prize with Thomas Sargent for their empirical research on cause and effect in the macroeconomy. Granger shared the 2003 prize with Robert Engle (see <a href="{{ "business/econometrics/time-series/" | relURL }}">Chapter 15</a>).</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Central banks.</b> VARs with inflation, unemployment or output, and a policy interest rate are a standard tool for asking what monetary policy does and for forecasting; James Stock and Mark Watson’s 2001 survey uses exactly such a three-variable VAR.</li>
+      <li><b>Business.</b> A company can fit a VAR to its sales, advertising spending and prices to see how a surprise ad campaign ripples through sales over the next months, and whether sales “Granger-cause” ad budgets (often they do, because budgets are set from last quarter’s sales).</li>
+      <li><b>Finance.</b> GMM is the workhorse for testing asset-pricing models, which come as moment conditions: the expected discounted return on every asset should satisfy the same equation.</li>
+      <li><b>Policy.</b> Dynamic panel models (for example, how this year’s investment depends on last year’s) are estimated by GMM with lagged values as instruments (the Arellano–Bond estimator).</li>
+      <li><b>Daily life.</b> If you notice that a friend’s mood today predicts your own tomorrow, that’s Granger causality. Whether their mood causes yours, or you both react to the same news a day apart, is a separate question.</li>
+    </ul>
+    <p class="lab-small">Nothing on this page is financial or investment advice.</p>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <ol class="ec16-prob">
+      <li><p>A VAR(1) has <var>A</var> = [0.5 0.2; 0 0.8] and impact matrix <var>P</var> = [1 0; 0.3 0.6]. What is the response of the first variable to the second shock after one period?</p>
+        <details><summary>Show the answer</summary><p>Θ₁ = <var>AP</var>. Second column of <var>P</var>: (0, 0.6). First row of <var>A</var> times it: 0.5 × 0 + 0.2 × 0.6 = 0.12.</p></details></li>
+      <li><p>For a two-variable VAR, how many numbers does Σ contain, how many does <var>P</var> contain, and how many restrictions are needed?</p>
+        <details><summary>Show the answer</summary><p>Σ is symmetric 2 × 2: three distinct numbers. <var>P</var> is a general 2 × 2: four. <var>PP</var>′ = Σ gives three equations, so one restriction is needed; a Cholesky ordering sets one off-diagonal element of <var>P</var> to zero. With <var>k</var> variables you need <var>k</var>(<var>k</var> − 1)/2 restrictions.</p></details></li>
+      <li><p>In a VAR with 4 lags, testing whether the stock market Granger-causes GDP gives <var>F</var> = 3.4 with (4, 180) degrees of freedom (5% critical value about 2.42). What do you conclude?</p>
+        <details><summary>Show the answer</summary><p>Reject: past stock returns help predict GDP. This does not show that stock prices cause GDP; markets look ahead and may simply anticipate news about the economy.</p></details></li>
+      <li><p>Write the moment conditions that give the OLS estimator of <var>y</var> = <var>β</var>₀ + <var>β</var>₁<var>x</var> + <var>u</var>. Is the model exactly identified?</p>
+        <details><summary>Show the answer</summary><p>E[<var>y</var> − <var>β</var>₀ − <var>β</var>₁<var>x</var>] = 0 and E[<var>x</var>(<var>y</var> − <var>β</var>₀ − <var>β</var>₁<var>x</var>)] = 0. Their sample versions are the OLS normal equations. Two conditions, two parameters: exactly identified, so <var>W</var> doesn’t matter.</p></details></li>
+      <li><p>A GMM model has 5 instruments and 2 parameters, and <var>J</var> = 4.1. Test the overidentifying restrictions at 5% (χ²₃ critical value 7.81).</p>
+        <details><summary>Show the answer</summary><p>Degrees of freedom 5 − 2 = 3. 4.1 &lt; 7.81: no evidence against the instruments’ validity (p ≈ 0.25). It doesn’t prove they’re valid.</p></details></li>
+      <li><p>Why is 2SLS not the efficient GMM estimator when errors are heteroskedastic?</p>
+        <details><summary>Show the answer</summary><p>2SLS uses <var>W</var> = (<var>Z</var>′<var>Z</var>/<var>n</var>)<sup>−1</sup>, which is proportional to the inverse covariance of the moments <var>z</var><var>u</var> only when Var(<var>u</var> | <var>z</var>) is constant. With heteroskedasticity, Var(<var>zu</var>) = E[<var>u</var>²<var>zz</var>′] differs, and the efficient weight is its inverse. Some moments are noisier than 2SLS assumes and deserve less weight.</p></details></li>
+      <li><p>A forecaster says: “The rate Granger-causes inflation in our VAR, so raising rates will lower inflation.” Give two reasons this could be wrong.</p>
+        <details><summary>Show the answer</summary><p>(1) The rate may move because the central bank anticipates inflation (forward-looking behavior), so it predicts inflation without causing it. (2) Even if there is an effect, its sign and size depend on identifying structural shocks, which Granger tests don’t do; a reduced-form coefficient mixes policy shocks with the bank’s systematic reactions. And a policy change can itself change the estimated relationships (the Lucas critique).</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The economy.</b> Each quarter, <b>y</b><sub><var>t</var></sub> = <var>A</var><b>y</b><sub><var>t</var>−1</sub> + <var>P</var><b>ε</b><sub><var>t</var></sub> with independent standard normal shocks and <var>P</var> lower triangular with inflation first, so the truth satisfies the “inflation first” ordering. In the “Rate sees the future” economy, a third, unobserved news variable <var>n</var><sub><var>t</var></sub> raises the rate today (0.7<var>n</var><sub><var>t</var></sub>) and inflation next quarter (0.8<var>n</var><sub><var>t</var></sub>), while <var>A</var> has no rate term in the inflation equation. A shock button adds 2 to one shock in the next quarter.</p>
+      <p><b>The VAR.</b> A VAR(1) with constants is estimated by OLS on the last 200 quarters every 20 quarters. Bands are 5th and 95th percentiles of 200 residual-bootstrap replications. The GMM labs use two-step efficient GMM with the centered covariance of the moment functions; the IV lab’s robust standard error is (<var>G</var>′<var>WG</var>)<sup>−1</sup><var>G</var>′<var>WŜWG</var>(<var>G</var>′<var>WG</var>)<sup>−1</sup>/<var>n</var>.</p>
+      <div><p><b>How it was checked</b> (Node.js, before the page was built):</p>
+        <ul class="lab-small">
+          <li>With 20,000 quarters, the estimated <var>A</var> was [0.707 −0.150; 0.346 0.751] against the true [0.70 −0.15; 0.35 0.75]. Both Cholesky orderings reproduce Σ̂ exactly; impulse responses match direct matrix powers (0.175250 at <var>h</var> = 2); variance shares add to 1.</li>
+          <li>Granger tests over 1,000 samples of 200 quarters: rate → inflation rejected 4.9% of the time when the true coefficient is 0, and 100% in the “sees the future” economy.</li>
+          <li>With a correlation of 0.6, the impact of a rate shock on inflation was 0.000 (inflation first, the truth) vs 0.300 (rate first). The 90% bootstrap bands covered the true response of the rate to an inflation shock 89% / 84% / 77% of the time at horizons 0 / 2 / 6 (bootstrap bands for persistent VARs tend to be too narrow in samples this size).</li>
+          <li>Method of moments: with two conditions, GMM returns the sample mean and variance to six decimals with <var>J</var> = 0. With three, <var>J</var> rejected 5.6% of normal samples and 97% of skewed ones (<var>n</var> = 200).</li>
+          <li>IV: the GMM code’s 2SLS equals the shared library’s two-stage least squares (0.983371). Over 1,000 samples, <var>J</var> rejected 4.9% with valid instruments (4.7% with heteroskedasticity), 58% and 99.6% with the third instrument’s link at 0.15 and 0.3. With heteroskedasticity, the SD of 2SLS was 0.344 and of efficient GMM 0.260; robust 95% intervals covered 95.0% and 93.6%.</li>
+        </ul></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>Why does a Cholesky ordering matter for impulse responses?</p>
+        <ul class="u-opts"><li><button type="button">It changes the estimated VAR coefficients</button></li><li><button type="button">It changes the forecasts</button></li><li><button type="button">It decides which variable can react to which within the same period when the surprises are correlated</button></li><li><button type="button">It only matters with more than three variables</button></li></ul>
+        <details><summary>Show the answer</summary><p>The VAR coefficients and forecasts are the same under any ordering. The ordering only changes how correlated surprises are split into structural shocks, which changes the impulse responses.</p></details></li>
+      <li class="u-q" data-a="0"><p>Past interest rates help predict inflation in a VAR. What can you conclude?</p>
+        <ul class="u-opts"><li><button type="button">The rate Granger-causes inflation: it helps forecast it, which may or may not reflect a causal effect</button></li><li><button type="button">Raising rates lowers inflation</button></li><li><button type="button">Raising rates raises inflation</button></li><li><button type="button">Inflation does not affect rates</button></li></ul>
+        <details><summary>Show the answer</summary><p>Granger causality is predictive. Forward-looking policy can make the rate predict inflation without any causal effect.</p></details></li>
+      <li class="u-q" data-a="3"><p>With 4 moment conditions and 4 parameters, what is Hansen’s J statistic?</p>
+        <ul class="u-opts"><li><button type="button">It follows χ² with 4 degrees of freedom</button></li><li><button type="button">It is always large</button></li><li><button type="button">It depends on the weighting matrix</button></li><li><button type="button">It is zero: the model is exactly identified, so all conditions can be met exactly</button></li></ul>
+        <details><summary>Show the answer</summary><p>With as many conditions as parameters, the sample conditions can usually be set exactly to zero, so there is nothing left to test.</p></details></li>
+      <li class="u-q" data-a="1"><p>What weighting matrix makes GMM efficient?</p>
+        <ul class="u-opts"><li><button type="button">The identity matrix</button></li><li><button type="button">The inverse of the covariance matrix of the moment functions</button></li><li><button type="button">(Z′Z/n)⁻¹, always</button></li><li><button type="button">Any matrix, since all give the same answer</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>W</var> = <var>S</var><sup>−1</sup> gives noisier conditions less weight. 2SLS’s (<var>Z</var>′<var>Z</var>/<var>n</var>)<sup>−1</sup> is proportional to it only with homoskedastic errors.</p></details></li>
+      <li class="u-q" data-a="2"><p>For a VAR(1), the impulse response at horizon h to structural shocks is…</p>
+        <ul class="u-opts"><li><button type="button">A·h</button></li><li><button type="button">Σ^h</button></li><li><button type="button">A^h·P, where PP′ = Σ</button></li><li><button type="button">P^h</button></li></ul>
+        <details><summary>Show the answer</summary><p>A structural shock enters as <var>P</var><b>ε</b>; each period it passes through <var>A</var> once more, so after <var>h</var> periods the response is <var>A</var><sup><var>h</var></sup><var>P</var>.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. D. Hamilton, <i>Time Series Analysis</i> (Princeton, 1994), chapters 11 (vector autoregressions, impulse responses, variance decompositions, Granger causality) and 14 (generalized method of moments).</li>
+      <li>J. H. Stock and M. W. Watson, Vector autoregressions, <i>Journal of Economic Perspectives</i> 15(4), 101–115 (2001).</li>
+      <li>L. Kilian and H. Lütkepohl, <i>Structural Vector Autoregressive Analysis</i> (Cambridge University Press, 2017).</li>
+      <li>J. M. Wooldridge, <i>Econometric Analysis of Cross Section and Panel Data</i>, 2nd ed. (MIT Press, 2010), chapters 8 and 14 (system instrumental variables and generalized method of moments).</li>
+      <li>C. A. Sims, Macroeconomics and reality, <i>Econometrica</i> 48(1), 1–48 (1980). C. W. J. Granger, Investigating causal relations by econometric models and cross-spectral methods, <i>Econometrica</i> 37(3), 424–438 (1969).</li>
+      <li>L. P. Hansen, Large sample properties of generalized method of moments estimators, <i>Econometrica</i> 50(4), 1029–1054 (1982). L. P. Hansen and K. J. Singleton, Generalized instrumental variables estimation of nonlinear rational expectations models, <i>Econometrica</i> 50(5), 1269–1286 (1982).</li>
+      <li>O. J. Blanchard and D. Quah, The dynamic effects of aggregate demand and supply disturbances, <i>American Economic Review</i> 79(4), 655–673 (1989). H. Uhlig, What are the effects of monetary policy on output?, <i>Journal of Monetary Economics</i> 52(2), 381–419 (2005). M. Gertler and P. Karadi, Monetary policy surprises, credit costs, and economic activity, <i>American Economic Journal: Macroeconomics</i> 7(1), 44–76 (2015).</li>
+      <li>The Nobel Prize: <a href="https://www.nobelprize.org/prizes/economic-sciences/2011/summary/" target="_blank" rel="noopener">economic sciences 2011</a> (Sargent and Sims) and <a href="https://www.nobelprize.org/prizes/economic-sciences/2013/summary/" target="_blank" rel="noopener">2013</a> (Fama, Hansen and Shiller).</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Vector_autoregression" target="_blank" rel="noopener">Vector autoregression</a>, <a href="https://en.wikipedia.org/wiki/Granger_causality" target="_blank" rel="noopener">Granger causality</a>, <a href="https://en.wikipedia.org/wiki/Generalized_method_of_moments" target="_blank" rel="noopener">Generalized method of moments</a>, <a href="https://en.wikipedia.org/wiki/Lars_Peter_Hansen" target="_blank" rel="noopener">Lars Peter Hansen</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/macro-tools/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/macro-tools/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/macro-tools/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/macro-tools/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

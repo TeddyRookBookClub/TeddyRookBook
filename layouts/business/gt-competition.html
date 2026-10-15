@@ -1,0 +1,217 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/competition/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/competition/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt5-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 5</p>
+    <h1>{{ .Title }}</h1>
+    <p>Most markets are neither a monopoly nor a crowd of tiny firms. They are a handful of rivals, each watching the others: airlines on a route, phone carriers, cement plants, the two gas stations at an intersection. Here you’ll drop two firms anywhere on a map of possible outputs and watch them take turns best responding until they settle into equilibrium. Then you’ll start a price war that two firms can’t stop, and watch two ice-cream sellers on a beach squeeze toward the middle, the same force that pulls political candidates toward the median voter.</p>
+    <span class="lab-mark" aria-hidden="true">🏪</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="gt5-view">
+      <canvas id="gt5-cv" tabindex="0" aria-label="Cournot duopoly. A graph with firm 1’s output across and firm 2’s output up, firm 1’s best-response line in gold and firm 2’s in blue, crossing at the Nash equilibrium in green. The pink point is the current pair of outputs: drag it, or move it with the arrow keys; Enter starts or pauses the adjustment, S takes one step. Beside it, bars compare price, output, profit and consumer surplus under monopoly, Cournot competition and perfect competition."></canvas>
+      <div class="lab-tools"><button type="button" class="gt5-go" id="gt5-go2" title="Adjust (Enter)">▶ Adjust</button><button type="button" id="gt5-reset" aria-label="Reset everything" title="Reset">↺</button></div>
+      <noscript><p class="lab-small">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>The market</h3>
+      <div class="lab-field"><span><label for="gt5-a">Demand: price = <i>a</i> − total output, <i>a</i> =</label><output id="gt5-a-o" for="gt5-a"></output></span><input type="range" id="gt5-a" min="60" max="140" step="1" value="100"></div>
+      <div class="lab-field gt5-f1"><span><label for="gt5-c1">Firm 1’s cost per unit</label><output id="gt5-c1-o" for="gt5-c1"></output></span><input type="range" id="gt5-c1" min="0" max="50" step="1" value="10"></div>
+      <div class="lab-field gt5-f2"><span><label for="gt5-c2">Firm 2’s cost per unit</label><output id="gt5-c2-o" for="gt5-c2"></output></span><input type="range" id="gt5-c2" min="0" max="50" step="1" value="10"></div>
+      <h3>Adjusting</h3>
+      <div class="lab-seg" role="group" aria-label="How firms adjust" id="gt5-mode"><button type="button" data-m="alt" aria-pressed="true">Take turns</button><button type="button" data-m="sim" aria-pressed="false">Both at once</button></div>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="gt5-go">▶ Adjust</button><button type="button" class="lab-btn" id="gt5-step">Step</button><button type="button" class="lab-btn" id="gt5-cartel">Cartel point</button></div>
+      <label class="lab-chk"><input type="checkbox" id="gt5-iso"> Show firm 1’s isoprofit curves</label>
+      <label class="lab-chk"><input type="checkbox" id="gt5-hide"> Hide the curves (find it blind)</label>
+      <h3>Compare</h3>
+      <div class="lab-field"><span><label for="gt5-n">Number of firms in the comparison</label><output id="gt5-n-o" for="gt5-n"></output></span><input type="range" id="gt5-n" min="1" max="20" step="1" value="2"></div>
+      <dl class="lab-readout" id="gt5-read" aria-live="polite"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt5-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The map of outputs.</b> Every point is a pair of choices: firm 1’s output across, firm 2’s up. The price is whatever the market will pay for the total, <i>P</i> = <i>a</i> − (<i>q</i><sub>1</sub> + <i>q</i><sub>2</sub>), and each firm’s profit is (<i>P</i> − its cost) × its output.</p>
+      <p><b>The best-response lines.</b> The gold line shows, for each output of firm 2, the output that maximizes firm 1’s profit; the blue line does the same for firm 2. They slope down: the more your rival sells, the lower the price, and the less it pays you to sell. The equilibrium is where they cross, the only point where each firm is on its own best-response line.</p>
+      <p><b>Adjusting.</b> Press Adjust and the firms take turns jumping to their best response to the other’s current output. The pink staircase homes in on the crossing from wherever you start. “Both at once” makes them jump together; it converges too, along a zigzag.</p>
+      <p><b>The bars.</b> For equal costs, they compare a monopoly, Cournot competition among <i>n</i> firms (set by the slider) and perfect competition: price, total output, total profit and consumer surplus (the area between demand and the price). Every extra firm moves Cournot from the monopoly toward competition.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="cournot">
+    <h2>Cournot: competing on quantities</h2>
+    <p>In Antoine Augustin Cournot’s model (1838) each firm chooses how much to produce, and the market price adjusts so that everything sold finds a buyer. With linear inverse demand <i>P</i> = <i>a</i> − <i>b</i>(<i>q</i><sub>1</sub> + <i>q</i><sub>2</sub>) and a constant cost <i>c</i> per unit, firm 1’s profit is</p>
+    <div class="lab-formula">π<sub>1</sub>(<i>q</i><sub>1</sub>, <i>q</i><sub>2</sub>) = (<i>a</i> − <i>b</i><i>q</i><sub>1</sub> − <i>b</i><i>q</i><sub>2</sub> − <i>c</i>) <i>q</i><sub>1</sub></div>
+    <p>To find the best response, take the derivative with respect to <i>q</i><sub>1</sub> and set it to zero: <i>a</i> − 2<i>b</i><i>q</i><sub>1</sub> − <i>b</i><i>q</i><sub>2</sub> − <i>c</i> = 0. The profit is a downward parabola in <i>q</i><sub>1</sub>, so this is a maximum.</p>
+    <div class="u-big"><i>B</i><sub>1</sub>(<i>q</i><sub>2</sub>) = (<i>a</i> − <i>c</i> − <i>b</i><i>q</i><sub>2</sub>) ÷ 2<i>b</i> &nbsp;&nbsp;⇒&nbsp;&nbsp; <i>q</i>* = (<i>a</i> − <i>c</i>) ÷ 3<i>b</i> for each firm<small>(or 0 if the formula is negative). The equilibrium solves <i>q</i>* = <i>B</i>(<i>q</i>*): each firm produces a third of the competitive output</small></div>
+    <div class="u-ex"><b>Worked example: duopoly, monopoly and competition</b>
+      <p>Demand is <i>P</i> = 100 − <i>Q</i> (dollars, thousands of units a month) and each unit costs $10 to make.</p>
+      <ol>
+        <li><b>Cournot duopoly.</b> <i>B</i><sub>1</sub>(<i>q</i><sub>2</sub>) = (90 − <i>q</i><sub>2</sub>)/2. In equilibrium <i>q</i> = (90 − <i>q</i>)/2, so <i>q</i>* = <b>30</b> each, total 60, price 100 − 60 = <b>$40</b>, and each firm earns (40 − 10) × 30 = <b>900</b>.</li>
+        <li><b>Monopoly.</b> One firm maximizes (90 − <i>Q</i>)<i>Q</i>: <i>Q</i> = <b>45</b>, price <b>$55</b>, profit 45 × 45 = <b>2,025</b>.</li>
+        <li><b>Perfect competition.</b> Price falls to cost: <b>$10</b>, quantity <b>90</b>, no profit.</li>
+        <li><b>Consumers.</b> Consumer surplus is the triangle ½ × <i>Q</i> × (100 − <i>P</i>): 1,012.5 under monopoly, 1,800 under duopoly, 4,050 under competition.</li>
+      </ol>
+      <p>Two firms land between the extremes: more output and a lower price than a monopoly, but well short of competition.</p>
+    </div>
+    <h3 class="lab-h">More firms</h3>
+    <p>With <i>n</i> identical firms the same steps give each firm <i>q</i>* = (<i>a</i> − <i>c</i>)/((<i>n</i> + 1)<i>b</i>), total output <i>n</i>(<i>a</i> − <i>c</i>)/((<i>n</i> + 1)<i>b</i>) and price</p>
+    <div class="lab-formula"><i>P</i>* = (<i>a</i> + <i>n</i><i>c</i>) ÷ (<i>n</i> + 1) &nbsp;→&nbsp; <i>c</i> as <i>n</i> grows</div>
+    <p>The markup over cost is (<i>a</i> − <i>c</i>)/(<i>n</i> + 1): $45 with one firm, $30 with two, $22.50 with three, $9 with nine. A Cournot market with many firms behaves like a competitive one, which is a reassuring link between game theory and the supply-and-demand model of introductory economics.</p>
+    <div class="u-ex"><b>Worked example: the cartel and the cheater</b>
+      <ol>
+        <li>If the two firms in the example agree to act like a monopoly, they split 45 units: 22.5 each, price $55, profit 45 × 22.5 = <b>1,012.5</b> each, more than the 900 of the equilibrium.</li>
+        <li>But if firm 2 sticks to 22.5, firm 1’s best response is <i>B</i><sub>1</sub>(22.5) = (90 − 22.5)/2 = <b>33.75</b>. The price falls to 100 − 56.25 = $43.75, and firm 1 earns 33.75 × 33.75 ≈ <b>1,139</b>.</li>
+        <li>Both firms reason the same way. The cartel is not a Nash equilibrium: it is a prisoner’s dilemma in quantities. Restricting each firm to two choices, the cartel quota of 22.5 or the Cournot output of 30, shows it plainly:</li>
+      </ol>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Firm 1 chooses a row, Firm 2 chooses a column. In each cell, Firm 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Firm 2</th></tr><tr><th class="gth-p1" scope="col">Firm 1</th><th scope="col">Quota 22.5</th><th scope="col">Produce 30</th></tr></thead><tbody><tr><th scope="row">Quota 22.5</th><td><span class="gth-u1">1012.5</span>, <span class="gth-u2">1012.5</span></td><td><span class="gth-u1">843.75</span>, <span class="gth-u2">1125</span></td></tr><tr><th scope="row">Produce 30</th><td><span class="gth-u1">1125</span>, <span class="gth-u2">843.75</span></td><td class="gth-ne"><span class="gth-u1">900</span>, <span class="gth-u2">900</span></td></tr></tbody></table></div><figcaption>Profits in dollars. Producing 30 strictly dominates the quota for both firms (1,125 &gt; 1,012.5 and 900 &gt; 843.75), so both produce 30 and earn 900 instead of 1,012.5.</figcaption></figure>
+      <p>Real cartels know this, which is why they spend so much effort watching each other. In the lysine cartel of 1992–1995, producers including Archer Daniels Midland agreed on prices and divided sales volumes among themselves, and held meetings to monitor and enforce the agreement; in 1996 ADM agreed to plead guilty and pay a $100 million criminal fine for its part in the lysine and citric-acid conspiracies, then the largest criminal antitrust fine in U.S. history. Chapter 7 explains how the threat of future punishment can hold a cartel together, and why it often doesn’t.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Lower firm 1’s cost to $0 and raise firm 2’s to $40. Firm 1’s best-response line shifts out, and the equilibrium slides toward firm 1. A cost advantage is worth more than its own savings: it also makes the rival shrink.</div>
+    <div class="lab-try"><b>Try this:</b> Turn on the isoprofit curves. Each dashed curve joins the points where firm 1 earns the same profit; its best response to any <i>q</i><sub>2</sub> is where a horizontal line just touches the highest curve. At the cartel point the curves show room for both firms to gain, if only they could trust each other.</div>
+  </section>
+
+  <section class="lab-sec" id="bertrand">
+    <h2>Bertrand: competing on prices</h2>
+    <p>Joseph Bertrand, reviewing Cournot’s book in 1883, objected that firms set prices, not quantities. If two firms sell identical products and customers buy from the cheaper one, each firm can grab the whole market by undercutting the other by a cent. The only resting point is <b>price equal to marginal cost</b>: with two firms, the competitive outcome. This is the <b>Bertrand paradox</b>: two firms are enough for perfect competition.</p>
+    <div class="lab-stage" id="gt5b">
+      <div class="lab-view gt5-mid" id="gt5b-view">
+        <canvas id="gt5b-cv" aria-label="Bertrand price competition: the two firms’ prices, move by move, with dashed lines for marginal cost and the monopoly price."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Products</h3>
+        <div class="lab-seg" role="group" aria-label="Kind of competition" id="gt5b-kind"><button type="button" data-k="same" aria-pressed="true">Identical</button><button type="button" data-k="cap30" aria-pressed="false">Capacity 30</button><button type="button" data-k="cap50" aria-pressed="false">Capacity 50</button><button type="button" data-k="dif" aria-pressed="false">Differentiated</button></div>
+        <p id="gt5b-msg" aria-live="polite"></p>
+        <div class="lab-field gt5-f1"><span><label for="gt5b-p1">Firm 1’s starting price</label><output id="gt5b-p1-o" for="gt5b-p1"></output></span><input type="range" id="gt5b-p1" min="10" max="70" step="1" value="55"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="gt5b-go">▶ Run the price war</button><button type="button" class="lab-btn" id="gt5b-step">Step</button><button type="button" class="lab-btn" id="gt5b-reset">Reset</button></div>
+        <dl class="lab-readout" id="gt5b-read" aria-live="polite"></dl>
+      </div>
+    </div>
+    <p>Same demand as above (<i>Q</i> = 100 − <i>P</i>, cost $10), prices in whole dollars. The paradox goes away when the assumptions change:</p>
+    <ul>
+      <li><b>Capacity limits.</b> A firm that can’t serve the whole market gains little by undercutting. Francis Edgeworth (1897) showed that prices may then cycle: undercut, undercut, then jump back up to sell to the customers the rival can’t serve. David Kreps and José Scheinkman (1983) showed that if firms first choose capacities and then compete in prices, the outcome is Cournot’s. In the lab, capacities of 30 each (the Cournot quantities) stop the price war at about $40, the Cournot price.</li>
+      <li><b>Differentiated products.</b> If some customers prefer each firm, a slightly higher price loses only some of them. With demand <i>q<sub>i</sub></i> = 60 − <i>p<sub>i</sub></i> + 0.5<i>p<sub>j</sub></i>, the best reply is <i>p<sub>i</sub></i> = (70 + 0.5<i>p<sub>j</sub></i>)/2 and the equilibrium is $46.67, far above cost.</li>
+      <li><b>Repetition.</b> Firms that meet again and again can sustain prices above cost by threatening a price war (Chapter 7).</li>
+    </ul>
+    <h3 class="lab-h">Strategic substitutes and complements</h3>
+    <p>In Cournot competition, best responses slope <b>down</b>: if your rival produces more, you produce less. Quantities are <b>strategic substitutes</b>. In differentiated Bertrand competition, best responses slope <b>up</b>: if your rival raises its price, you can raise yours. Prices are <b>strategic complements</b>. Jeremy Bulow, John Geanakoplos and Paul Klemperer (1985) named the distinction, and it decides much of strategy: an investment that makes you tougher scares a rival into backing off when actions are substitutes, but provokes it into fighting back when they are complements.</p>
+    <div class="u-myth"><b>Common mistake: “In equilibrium, firms produce what is best for the industry”</b>
+      <p>Each firm maximizes its <i>own</i> profit, taking the others’ choices as given. When firm 1 sells one more unit, it lowers the price for everyone, but it only counts the loss on its own units. That is why equilibrium output is higher, and joint profit lower, than a cartel would choose. The gap is good news for customers and the reason competition policy cares about the number of firms.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="hotelling">
+    <h2>Hotelling’s beach and the median voter</h2>
+    <p>Harold Hotelling (1929) asked where two sellers on a long main street, or two ice-cream sellers on a beach, should set up. Customers are spread along the beach and walk to the nearest seller. Wherever your rival stands, your best response is to stand right next to them, on the side with more customers. Both end up back to back at the middle, even though customers would walk less if the sellers stood at the quarter points.</p>
+    <div class="lab-stage" id="gt5h">
+      <div class="lab-view gt5-beach" id="gt5h-view">
+        <canvas id="gt5h-cv" aria-label="Hotelling’s beach: customers spread along a line, colored by the seller they walk to, with the sellers as umbrellas you can drag and the median customer marked with a dashed line."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Customers</h3>
+        <div class="lab-seg" role="group" aria-label="Where customers are" id="gt5h-dist"><button type="button" data-d="uniform" aria-pressed="true">Even</button><button type="button" data-d="skewed" aria-pressed="false">Lopsided</button><button type="button" data-d="twotowns" aria-pressed="false">Two towns</button></div>
+        <h3>Sellers</h3>
+        <div class="lab-seg" role="group" aria-label="Number of sellers" id="gt5h-n"><button type="button" data-n="2" aria-pressed="true">Two</button><button type="button" data-n="3" aria-pressed="false">Three</button></div>
+        <label class="lab-chk"><input type="checkbox" id="gt5h-vote"> Make them voters and candidates</label>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="gt5h-go">▶ Let them move</button><button type="button" class="lab-btn" id="gt5h-reset">Reset</button></div>
+        <dl class="lab-readout" id="gt5h-read" aria-live="polite"></dl>
+      </div>
+    </div>
+    <p>Relabel the beach as a political spectrum and the sellers as candidates, and the same logic gives the <b>median voter theorem</b> of Duncan Black (1948) and Anthony Downs (1957): if voters care about one issue and vote for the closest candidate, two office-seeking candidates converge on the position of the median voter, the one with half the voters on each side. The median, not the average, is what matters: try the lopsided crowd.</p>
+    <div class="lab-try"><b>Try this:</b> Choose three sellers and press “Let them move.” They never settle: whoever is squeezed in the middle jumps outside, and the cycle starts again. With three sellers there is no pure-strategy equilibrium on a line, a reminder that the median voter result needs exactly two candidates.</div>
+    <p>Hotelling’s “principle of minimum differentiation” has limits. If sellers also choose prices, standing side by side would start a Bertrand price war, so they spread out; Claude d’Aspremont, Jean Gabszewicz and Jacques-François Thisse showed in 1979 that Hotelling’s own model, done carefully, pushes firms apart. Real candidates also face primaries, turnout and more than one issue.</p>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <p><b>Antoine Augustin Cournot</b>’s <i>Recherches sur les principes mathématiques de la théorie des richesses</i> (1838) analyzed two owners of mineral springs choosing how much water to sell, and found the equilibrium we now call Nash: a century before Nash, and largely ignored in its time. <b>Joseph Bertrand</b>’s 1883 review in the <i>Journal des Savants</i> made the price-setting objection. <b>Francis Ysidro Edgeworth</b> added capacity limits in 1897, <b>Harold Hotelling</b> added space in “Stability in Competition” (<i>Economic Journal</i>, 1929), and <b>Heinrich von Stackelberg</b> added timing in 1934 (Chapter 6). When John Nash defined his equilibrium, economists recognized that Cournot had found one, and the whole field of industrial organization was rebuilt on game theory from the 1970s on.</p>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <ul>
+      <li><b>Business:</b> industries where firms commit to capacity before competing for customers, such as cement, steel, chips and airline seats, are often modeled with Cournot; markets where products are nearly identical and prices are easy to compare behave more like Bertrand. When Japanese makers turned memory chips into a commodity in the 1980s, prices collapsed toward cost, and Intel chose to leave rather than fight on price (see the case <a href="{{ "business/cases/intel-exits-memory-1985/" | relURL }}">Intel Walks Out the Door and Comes Back In</a>). A cost advantage, like the one Walmart built in its warehouses (<a href="{{ "business/cases/walmart-logistics/" | relURL }}">Walmart: Low Prices Start in the Warehouse</a>), shifts the whole equilibrium in the low-cost firm’s favor.</li>
+      <li><b>Policy:</b> competition authorities use these models to predict how a merger will change prices. In a Cournot equilibrium the industry’s average markup equals the Herfindahl–Hirschman index (the sum of squared market shares) divided by the price elasticity of demand, one reason the HHI is used to screen mergers.</li>
+      <li><b>Politics:</b> the median voter theorem explains why two-party races in a single district often feature candidates who sound alike, and why primaries, which have their own medians, pull them apart.</li>
+      <li><b>Daily life:</b> gas stations on opposite corners of the same intersection, fast-food places side by side, and shops of the same kind clustered on one street are Hotelling’s beach in a city.</li>
+    </ul>
+    <p class="lab-small">Nothing here is financial or investment advice.</p>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol>
+      <li><p><b>A best response.</b> Demand is <i>P</i> = 120 − <i>Q</i> and costs are $20 per unit for both firms. Find firm 1’s best response to <i>q</i><sub>2</sub> = 40 and the Cournot equilibrium.</p>
+        <details><summary>Show the answer</summary><p><i>B</i><sub>1</sub>(<i>q</i><sub>2</sub>) = (120 − 20 − <i>q</i><sub>2</sub>)/2 = (100 − <i>q</i><sub>2</sub>)/2, so <i>B</i><sub>1</sub>(40) = 30. In equilibrium <i>q</i>* = 100/3 ≈ 33.3 each, total 66.7, price 120 − 66.7 ≈ $53.33, profit ≈ (53.33 − 20) × 33.3 ≈ 1,111 each.</p></details></li>
+      <li><p><b>Unequal costs.</b> With demand <i>P</i> = 100 − <i>Q</i>, firm 1’s cost is $4 and firm 2’s is $16. Find the equilibrium outputs, price and market shares.</p>
+        <details><summary>Show the answer</summary><p>Solve <i>q</i><sub>1</sub> = (96 − <i>q</i><sub>2</sub>)/2 and <i>q</i><sub>2</sub> = (84 − <i>q</i><sub>1</sub>)/2. Substituting, <i>q</i><sub>1</sub> = (100 − 2 × 4 + 16)/3 = 36 and <i>q</i><sub>2</sub> = (100 − 2 × 16 + 4)/3 = 24. Price 100 − 60 = $40. Shares: 60% and 40%. Profits: 36 × 36 = 1,296 and 24 × 24 = 576.</p></details></li>
+      <li><p><b>How many firms?</b> With <i>P</i> = 100 − <i>Q</i> and cost $10, how many identical Cournot firms are needed before the price is below $15?</p>
+        <details><summary>Show the answer</summary><p><i>P</i>* = (100 + 10<i>n</i>)/(<i>n</i> + 1) = 10 + 90/(<i>n</i> + 1). Below 15 means 90/(<i>n</i> + 1) &lt; 5, so <i>n</i> + 1 &gt; 18 and <i>n</i> ≥ 18.</p></details></li>
+      <li><p><b>Bertrand with different costs.</b> Two firms sell identical goods; firm 1’s cost is $10 and firm 2’s is $14; prices are in cents. What happens?</p>
+        <details><summary>Show the answer</summary><p>Firm 2 won’t price below $14. Firm 1 can take the whole market by pricing just under $14, at $13.99, and earns $3.99 a unit (assuming its monopoly price is higher than $14). Firm 2 sells nothing. The low-cost firm wins but its price is capped by the rival’s cost, not its own.</p></details></li>
+      <li><p><b>Differentiated prices.</b> Demand for firm <i>i</i> is <i>q<sub>i</sub></i> = 60 − <i>p<sub>i</sub></i> + 0.5<i>p<sub>j</sub></i> and cost is $10. Derive the best reply and the equilibrium price.</p>
+        <details><summary>Show the answer</summary><p>Profit (<i>p<sub>i</sub></i> − 10)(60 − <i>p<sub>i</sub></i> + 0.5<i>p<sub>j</sub></i>). The derivative is 60 − 2<i>p<sub>i</sub></i> + 0.5<i>p<sub>j</sub></i> + 10 = 0, so <i>p<sub>i</sub></i> = (70 + 0.5<i>p<sub>j</sub></i>)/2 = 35 + 0.25<i>p<sub>j</sub></i>, which slopes up. Symmetric equilibrium: <i>p</i> = 35 + 0.25<i>p</i>, so <i>p</i>* = 35/0.75 ≈ $46.67. Each sells 60 − 46.67 + 23.33 ≈ 36.7 and earns about 1,344.</p></details></li>
+      <li><p><b>The lopsided beach.</b> Customers on a 1 km beach are not spread evenly: 70% are on the first 400 meters, spread evenly there, and 30% on the remaining 600 meters. Where do two sellers end up?</p>
+        <details><summary>Show the answer</summary><p>At the median customer. The first 400 m hold 70%, so the median is at the point where 50% are to the left: 400 × 50/70 ≈ 286 m from the left end. Both sellers stand there, each serving half the customers.</p></details></li>
+      <li><p><b>Markups and market shares.</b> In a Cournot equilibrium with <i>n</i> firms and cost <i>c<sub>i</sub></i>, firm <i>i</i>’s first-order condition is <i>P</i> + <i>P</i>′(<i>Q</i>)<i>q<sub>i</sub></i> − <i>c<sub>i</sub></i> = 0. Show that its markup (<i>P</i> − <i>c<sub>i</sub></i>)/<i>P</i> equals its market share divided by the price elasticity of demand, and deduce the industry average for identical firms.</p>
+        <details><summary>Show the answer</summary><p>Rearrange: (<i>P</i> − <i>c<sub>i</sub></i>)/<i>P</i> = −<i>P</i>′(<i>Q</i>)<i>q<sub>i</sub></i>/<i>P</i> = (<i>q<sub>i</sub></i>/<i>Q</i>) × (−<i>P</i>′(<i>Q</i>)<i>Q</i>/<i>P</i>) = <i>s<sub>i</sub></i>/ε, where ε = −(<i>dQ</i>/<i>dP</i>)(<i>P</i>/<i>Q</i>) is the elasticity. With <i>n</i> identical firms each share is 1/<i>n</i>, so the markup is 1/(<i>n</i>ε). Weighting each firm’s markup by its share gives Σ<i>s<sub>i</sub></i>²/ε = HHI/ε.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the interactives work</h2>
+    <p><b>Cournot.</b> Demand is <i>P</i> = <i>a</i> − <i>Q</i> (so <i>b</i> = 1) with constant unit costs; best responses and the equilibrium use the formulas above, with outputs never below zero. “Take turns” moves one firm per step to its best response to the other’s current output; “both at once” moves both. Isoprofit curves are drawn at 40% to 170% of firm 1’s equilibrium profit. The comparison bars use the lower of the two costs for all firms.</p>
+    <p><b>Bertrand.</b> Demand is <i>Q</i> = 100 − <i>P</i>, cost $10, prices in whole dollars. The cheaper firm sells to everyone (up to its capacity); with equal prices they split the market. When capacity binds, the cheaper firm serves the customers who value the good most and the other faces what is left (efficient rationing). Each move, one firm replies with the profit-maximizing price on the dollar grid. Differentiated demand is <i>q<sub>i</sub></i> = 60 − <i>p<sub>i</sub></i> + 0.5<i>p<sub>j</sub></i>.</p>
+    <p><b>Hotelling.</b> Customers are spread over 400 small cells according to the chosen density; each goes to the nearest seller, and ties split. Sellers move one at a time to the best spot on a grid of 101 positions.</p>
+    <p><b>Checks (node).</b> With <i>a</i> = 100 and cost 10: equilibrium 30 and 30, price 40, profit 900; a brute-force search over firm 1’s outputs in steps of 0.01 found its best reply to 30 at exactly 30. Monopoly 45 at $55 (profit 2,025), competition 90 at $10, and the <i>n</i>-firm price 19 for <i>n</i> = 9. Both adjustment rules converge to (30, 30) from (80, 0). Costs 4 and 16 give 36 and 24. Cartel profits are 1,012.5 each and the cheater earns 1,139.06. The Bertrand price war from $55 reaches $11 and $11 in 44 moves; with capacity 50 prices cycle between $18 and $30; with capacity 30 they settle at $41; the differentiated equilibrium, $46.67, matched a brute-force search. On the even beach two sellers end at 0.50 and 0.50; on the lopsided one both end at 0.33, the median; three sellers never settle.</p>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="0"><p>In Cournot competition, why does a firm’s best-response output fall when its rival produces more?</p>
+        <ul class="u-opts"><li><button type="button">More output from the rival lowers the price, so each extra unit earns less</button></li><li><button type="button">The firm wants to punish its rival</button></li><li><button type="button">Costs rise when the rival produces more</button></li></ul>
+        <details><summary>Show the answer</summary><p>The rival’s output pushes the price down, which lowers the marginal revenue of your own output. Quantities are strategic substitutes.</p></details></li>
+      <li class="u-q" data-a="2"><p>With demand <i>P</i> = 100 − <i>Q</i> and cost $10, what is the Cournot duopoly price?</p>
+        <ul class="u-opts"><li><button type="button">$55</button></li><li><button type="button">$10</button></li><li><button type="button">$40</button></li></ul>
+        <details><summary>Show the answer</summary><p>Each firm makes (100 − 10)/3 = 30, total 60, so the price is $40. $55 is the monopoly price and $10 the competitive one.</p></details></li>
+      <li class="u-q" data-a="1"><p>The Bertrand paradox says that …</p>
+        <ul class="u-opts"><li><button type="button">prices rise when firms compete</button></li><li><button type="button">two firms selling identical products and competing on price end up pricing at marginal cost</button></li><li><button type="button">firms always form cartels</button></li></ul>
+        <details><summary>Show the answer</summary><p>Each firm can take the whole market by undercutting, so the only resting point is price = cost. Capacity limits, differentiation or repetition soften it.</p></details></li>
+      <li class="u-q" data-a="1"><p>Why isn’t the cartel point a Nash equilibrium?</p>
+        <ul class="u-opts"><li><button type="button">Because it gives the firms less profit than competition</button></li><li><button type="button">Because each firm’s best response to its partner’s cartel output is to produce more</button></li><li><button type="button">Because it is illegal</button></li></ul>
+        <details><summary>Show the answer</summary><p>At the cartel point a firm can raise its own profit by producing more, so it isn’t a best response. That is why cartels need enforcement.</p></details></li>
+      <li class="u-q" data-a="2"><p>Two candidates compete for votes on a single left–right issue, and voters choose the closer candidate. Where do the candidates end up?</p>
+        <ul class="u-opts"><li><button type="button">At the two extremes</button></li><li><button type="button">At the average voter’s position</button></li><li><button type="button">At the median voter’s position</button></li></ul>
+        <details><summary>Show the answer</summary><p>Any other position lets the rival take more than half by moving next to you on the median’s side. The median, not the mean, matters.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 3 (Cournot’s and Bertrand’s models of oligopoly, electoral competition).</li>
+      <li><a href="https://openstax.org/books/principles-economics-2e/pages/10-2-oligopoly" target="_blank" rel="noopener">OpenStax, Principles of Economics 2e, section 10.2: Oligopoly</a>.</li>
+      <li>A. A. Cournot, <i>Recherches sur les principes mathématiques de la théorie des richesses</i> (Paris, 1838). J. Bertrand, review of Cournot and Walras, <i>Journal des Savants</i>, 1883. H. Hotelling, “Stability in competition”, <i>Economic Journal</i> 39(153), 1929, 41–57.</li>
+      <li>D. M. Kreps and J. A. Scheinkman, “Quantity precommitment and Bertrand competition yield Cournot outcomes”, <i>Bell Journal of Economics</i> 14(2), 1983, 326–337.</li>
+      <li>J. I. Bulow, J. D. Geanakoplos and P. D. Klemperer, “Multimarket oligopoly: strategic substitutes and complements”, <i>Journal of Political Economy</i> 93(3), 1985, 488–511.</li>
+      <li>C. d’Aspremont, J. J. Gabszewicz and J.-F. Thisse, “On Hotelling’s ‘Stability in competition’”, <i>Econometrica</i> 47(5), 1979, 1145–1150. D. Black, “On the rationale of group decision-making”, <i>Journal of Political Economy</i> 56(1), 1948, 23–34. A. Downs, <i>An Economic Theory of Democracy</i> (Harper, 1957).</li>
+      <li><a href="https://www.justice.gov/archive/atr/public/press_releases/1996/0988.htm" target="_blank" rel="noopener">U.S. Department of Justice, “Archer Daniels Midland Co. to plead guilty and pay $100 million for role in two international price-fixing conspiracies”, October 15, 1996</a>.</li>
+      <li><a href="https://oyc.yale.edu/economics/econ-159/lecture-6" target="_blank" rel="noopener">Ben Polak, Yale ECON 159, Lecture 6: Nash Equilibrium: Dating and Cournot</a>, and <a href="https://oyc.yale.edu/economics/econ-159/lecture-8" target="_blank" rel="noopener">Lecture 8: Location, Segregation and Randomization</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/competition/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/competition/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/competition/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/competition/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

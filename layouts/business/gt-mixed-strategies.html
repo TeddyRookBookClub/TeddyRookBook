@@ -1,0 +1,233 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/mixed-strategies/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/mixed-strategies/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt4-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 4</p>
+    <h1>{{ .Title }}</h1>
+    <p>In rock, paper, scissors, any plan you can describe is a plan someone can beat. Here you’ll play against the Reader, a bot that watches for patterns and shows you exactly what it thinks you’ll do next. Then you’ll play a bot that randomizes perfectly, and see why it can’t be beaten, and can’t beat you. That is the idea of a mixed strategy: choosing at random, on purpose, in just the right proportions. You’ll learn how to compute those proportions in any two-by-two game, why a kicker’s best mix depends on the goalkeeper’s skills rather than his own, and the theorem with which John von Neumann founded game theory in 1928.</p>
+    <span class="lab-mark" aria-hidden="true">✊</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="gt4-view">
+      <canvas id="gt4-cv" tabindex="0" aria-label="Rock, paper, scissors. Top left: your move and the bot’s, and who won. Top right: the bot’s forecast of your next move, as bars. Bottom left: your mix of moves so far as a point in a triangle, with the equal mix at its center. Bottom right: your running score. Keys: R, P, S (or 1, 2, 3) play a move; X plays a random move."></canvas>
+      <div class="lab-tools"><button type="button" id="gt4-reset" aria-label="New game" title="New game">↺</button></div>
+      <noscript><p class="lab-small">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Opponent</h3>
+      <div class="lab-seg" role="group" aria-label="Opponent" id="gt4-bot"><button type="button" data-bot="reader" aria-pressed="true">🔍 The Reader</button><button type="button" data-bot="eq" aria-pressed="false">🎲 Equilibrium bot</button></div>
+      <h3>Your move</h3>
+      <div class="gt4-moves" id="gt4-moves" role="group" aria-label="Your move"><button type="button" class="lab-btn" data-m="0"><span aria-hidden="true">✊</span>Rock</button><button type="button" class="lab-btn" data-m="1"><span aria-hidden="true">✋</span>Paper</button><button type="button" class="lab-btn" data-m="2"><span aria-hidden="true">✌️</span>Scissors</button></div>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="gt4-rnd">🎲 Randomize for me</button><button type="button" class="lab-btn" id="gt4-new">New game</button></div>
+      <p class="gt4-sr" id="gt4-msg" aria-live="polite"></p>
+      <dl class="lab-readout" id="gt4-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt4-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The Reader’s model of you.</b> The Reader keeps five simple theories about how you play: that you favor some moves, that your next move depends on your last one, that you follow two-move patterns, that you react to winning or losing, and that you react to its last move. Each theory makes a forecast every round and earns points when it is right. The bars show the forecast of the theory with the best recent record, and the Reader plays whatever beats the move it expects.</p>
+      <p><b>The triangle.</b> Every mix of rock, paper and scissors is a point in the triangle: a corner means always playing that move, and the green circle in the middle is the even mix, one third each. The pink trail follows your mix as you play. Even a mix that sits right in the middle can be predictable if the <i>order</i> of your moves has a pattern, which is what the Reader looks for.</p>
+      <p><b>The Equilibrium bot</b> ignores you and plays each move with probability one third. Against it, every move you make wins a third of the time, draws a third and loses a third, so your expected score is zero, whatever you do.</p>
+      <p><b>The score.</b> The line shows your running total: +1 for a win, −1 for a loss. Against the Reader, a falling line means it has found your pattern.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="mixed">
+    <h2>Mixed strategies</h2>
+    <p>A <b>mixed strategy</b> is a probability distribution over a player’s actions: “Rock with probability 1/2, Paper 1/4, Scissors 1/4.” Playing one action for sure, a <b>pure strategy</b>, is the special case of probability 1. When the other players mix, your payoff is uncertain, so we compare strategies by their <b>expected payoff</b>: the average payoff, weighting each action profile by how likely it is. With two players mixing independently,</p>
+    <div class="lab-formula"><i>U</i><sub>1</sub>(α<sub>1</sub>, α<sub>2</sub>) = Σ<sub><i>a</i><sub>1</sub></sub> Σ<sub><i>a</i><sub>2</sub></sub> α<sub>1</sub>(<i>a</i><sub>1</sub>) α<sub>2</sub>(<i>a</i><sub>2</sub>) <i>u</i><sub>1</sub>(<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>)</div>
+    <p>Here payoffs must mean more than a ranking. Comparing a sure 2 with a fifty-fifty chance of 0 or 3 needs numbers that measure how much a player likes each outcome, so that averages make sense. Von Neumann and Morgenstern showed in 1944 that if a person’s choices among gambles obey a few consistency rules, there are such numbers; they are called <b>von Neumann–Morgenstern utilities</b> or Bernoulli payoffs.</p>
+    <p>A <b>mixed strategy Nash equilibrium</b> is a profile of mixed strategies in which each player’s mix is a best response to the others’ mixes. And here is the key fact for finding one.</p>
+    <div class="u-big">every action played with positive probability earns the same expected payoff, and no other action earns more<small>the indifference principle: in a mixed equilibrium, each player is indifferent among the actions in their mix</small></div>
+    <p>Why? If one action in your mix paid more than another, you could shift probability toward it and do better, so your mix wasn’t a best response. So at equilibrium, every action you mix must pay exactly the same. That gives equations you can solve.</p>
+    <div class="u-ex"><b>Worked example: rock, paper, scissors</b>
+      <p>Suppose the other player plays Rock, Paper and Scissors with probabilities <i>r</i>, <i>p</i> and <i>s</i>. Your expected payoff from Rock is <i>s</i> − <i>p</i> (win against scissors, lose against paper), from Paper <i>r</i> − <i>s</i>, from Scissors <i>p</i> − <i>r</i>. For you to be willing to mix all three, these must be equal; they also add up to zero, so each is 0, which means <i>r</i> = <i>p</i> = <i>s</i> = 1/3. The only equilibrium is for both players to play each move with probability 1/3, and the expected score is 0.</p>
+      <p>Notice what the equilibrium bot achieves: whatever you do, your expected payoff is exactly 0. It can’t be exploited. But it also can’t exploit <i>you</i>, however predictable you are. Against a predictable opponent, the Reader does far better than the equilibrium; against a random opponent, the Reader gets nothing.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Play Rock five times in a row against the Reader. Watch its bars: by the third or fourth round it expects Rock with high confidence and plays Paper. Now switch to a cycle, Rock, Paper, Scissors, Rock …: it takes the Reader a few rounds, but the “last move” theory catches on.</div>
+    <div class="lab-try"><b>Try this:</b> Press “Randomize for me” twenty times. The Reader’s forecasts hover around one third each and its hit rate falls toward 33%: there is nothing to learn. Then try to beat the Reader on your own. It is possible: the Reader always plays what beats its forecast, so if you can predict its forecast, you can beat it. That is thinking one level deeper than your opponent, as in Chapter 1.</div>
+  </section>
+
+  <section class="lab-sec" id="indiff">
+    <h2>Solving any 2×2 game: the indifference principle at work</h2>
+    <p>Let player 1 play the top row with probability <i>p</i>, and player 2 the left column with probability <i>q</i>. Player 2 is willing to mix only if both columns give the same expected payoff, and that pins down <i>p</i>. Player 1 is willing to mix only if both rows give the same payoff, and that pins down <i>q</i>:</p>
+    <div class="lab-formula"><i>p</i>* = (<i>u</i><sub>2</sub>(B, R) − <i>u</i><sub>2</sub>(B, L)) ÷ (<i>u</i><sub>2</sub>(T, L) − <i>u</i><sub>2</sub>(T, R) − <i>u</i><sub>2</sub>(B, L) + <i>u</i><sub>2</sub>(B, R)) &nbsp;and likewise for <i>q</i>* with <i>u</i><sub>1</sub></div>
+    <p>A surprise hides in that formula: <b>each player’s equilibrium mix is set by the other player’s payoffs</b>. Your mix is not chosen to help you (you are indifferent anyway); it is whatever leaves your opponent with no action worth exploiting. Slide <i>p</i> and <i>q</i> below, or drag on the charts, and watch the lines cross.</p>
+    <div class="lab-stage" id="gt4i">
+      <div class="lab-view gt4-ind" id="gt4i-view">
+        <canvas id="gt4i-cv" aria-label="The indifference principle. Top left: the payoff matrix. Top right: the best-response diagram, with player 1’s best responses in gold and player 2’s in blue; green dots mark all Nash equilibria, and the pink dot is the current pair of mixes. Bottom: each player’s expected payoff from each of their actions as the other mixes; the lines cross at the equilibrium mix. Drag on the diagram or the charts to change p and q."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Game</h3>
+        <div class="lab-seg" role="group" aria-label="Game" id="gt4i-pre"><button type="button" data-g="pennies" aria-pressed="true">Matching pennies</button><button type="button" data-g="bos" aria-pressed="false">Bach or Stravinsky</button><button type="button" data-g="chicken" aria-pressed="false">Chicken</button><button type="button" data-g="inspect" aria-pressed="false">Inspection</button><button type="button" data-g="tilted" aria-pressed="false">Up or down</button></div>
+        <div class="lab-row"><button type="button" class="lab-btn" id="gt4i-rnd">🎲 Random game</button><button type="button" class="lab-btn pri" id="gt4i-snap">Jump to the mixed equilibrium</button></div>
+        <h3>Mixes</h3>
+        <div class="lab-field"><span><label for="gt4i-p"><i>p</i> = P(Row plays the top row)</label><output id="gt4i-p-o" for="gt4i-p"></output></span><input type="range" id="gt4i-p" min="0" max="1" step="0.01" value="0.8"></div>
+        <div class="lab-field"><span><label for="gt4i-q"><i>q</i> = P(Column plays the left column)</label><output id="gt4i-q-o" for="gt4i-q"></output></span><input type="range" id="gt4i-q" min="0" max="1" step="0.01" value="0.3"></div>
+        <dl class="lab-readout" id="gt4i-read" aria-live="polite"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: Bach or Stravinsky, mixed</b>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Player 1 chooses a row, Player 2 chooses a column. In each cell, Player 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Player 2</th></tr><tr><th class="gth-p1" scope="col">Player 1</th><th scope="col">Bach</th><th scope="col">Stravinsky</th></tr></thead><tbody><tr><th scope="row">Bach</th><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">Stravinsky</th><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">2</span></td></tr></tbody></table></div></figure>
+      <ol>
+        <li><b>Player 2 indifferent.</b> If player 1 goes to Bach with probability <i>p</i>, player 2 gets 1 · <i>p</i> from Bach and 2 · (1 − <i>p</i>) from Stravinsky. Equal when <i>p</i> = 2(1 − <i>p</i>), so <i>p</i>* = <b>2/3</b>.</li>
+        <li><b>Player 1 indifferent.</b> If player 2 goes to Bach with probability <i>q</i>, player 1 gets 2<i>q</i> from Bach and 1 · (1 − <i>q</i>) from Stravinsky. Equal when <i>q</i>* = <b>1/3</b>.</li>
+        <li><b>The payoff.</b> Each player expects 2/3, less than the 1 they would get even in the worse of the two pure equilibria. They meet only when both pick Bach (2/3 × 1/3 = 2/9) or both pick Stravinsky (1/3 × 2/3 = 2/9): 4/9 of the time.</li>
+      </ol>
+      <p>So the game has three equilibria: the two pure ones and this mixed one. The best-response diagram above shows all three as the points where the gold and blue lines meet.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: audits and fines</b>
+      <p>An inspector chooses whether to Inspect a worker, at a cost; the worker chooses whether to Cheat or Work. In the “Inspection” game above (payoffs in thousands of dollars, invented), the inspector gains 2 from catching a cheat, loses 1 for a pointless inspection and loses 4 if cheating goes unnoticed; the worker gains 2 from cheating unnoticed and loses 3 if caught.</p>
+      <ol>
+        <li>The worker must be indifferent: cheating pays 2(1 − <i>p</i>) − 3<i>p</i>, working pays 0. So the inspection rate is <i>p</i>* = 2/5 = <b>40%</b>.</li>
+        <li>The inspector must be indifferent: inspecting pays 2<i>q</i> − (1 − <i>q</i>), trusting pays −4<i>q</i>. So the cheating rate is <i>q</i>* = 1/7 ≈ <b>14%</b>.</li>
+        <li>Now double the fine: the worker loses 8 instead of 3 when caught. The worker’s indifference now needs 2(1 − <i>p</i>) = 8<i>p</i>, so <i>p</i>* = 1/5 = 20%. The cheating rate, set by the inspector’s payoffs, stays at 1/7.</li>
+      </ol>
+      <p>In this simple model, a bigger fine doesn’t reduce cheating; it lets the inspector inspect less. The political scientist George Tsebelis made this point in 1989. Real policy is more complicated, but the logic of the indifference principle is worth knowing.</p>
+    </div>
+    <div class="u-myth"><b>Common mistake: “I should mix in a way that makes my own payoff as high as possible”</b>
+      <p>In a mixed equilibrium you are indifferent among the actions you mix, so any mix of them gives you the same payoff, given what the other player does. What pins down your mix is the <i>other</i> player: it must leave them indifferent, so that they have no reason to change and no action of theirs exploits you. That is why changing your own payoffs moves the other player’s mix, not yours.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="zerosum">
+    <h2>Zero-sum games and minimax</h2>
+    <p>In a <b>zero-sum</b> (or <b>strictly competitive</b>) game, one player’s gain is the other’s loss: rock, paper, scissors, matching pennies, chess, a penalty kick. We write only the row player’s payoffs; the column player gets the negative (or, when the payoff is a probability of winning, one minus it). A cautious row player might ask: whatever I choose, what is the <i>worst</i> that can happen, and which mix makes that worst case as good as possible? That is the <b>maxmin</b>. The column player asks the mirror question, the <b>minmax</b>.</p>
+    <div class="lab-formula">max<sub><i>p</i></sub> min<sub><i>q</i></sub> <i>U</i>(<i>p</i>, <i>q</i>) = min<sub><i>q</i></sub> max<sub><i>p</i></sub> <i>U</i>(<i>p</i>, <i>q</i>) = <i>v</i>, the value of the game</div>
+    <p><b>Von Neumann’s minimax theorem</b> (1928) says the two are always equal once mixing is allowed. The row player can guarantee <i>v</i>, the column player can hold the row player to <i>v</i>, and the mixes that do it form a Nash equilibrium. In zero-sum games, playing it safe and playing the equilibrium are the same thing. Sometimes no mixing is needed: if some cell is the smallest in its row and the largest in its column, it is a <b>saddle point</b> and its payoff is the value.</p>
+    <p>A penalty kick in soccer is a small zero-sum game. The kicker shoots to his natural side (for a right-footer, the goalkeeper’s right) or the other side; the keeper must dive before he sees the ball. The probabilities below are illustrative, but they have the shape studies report: most penalties go in, and a keeper who guesses right saves many of them.</p>
+    <div class="lab-stage" id="gt4k">
+      <div class="lab-view gt4-pk" id="gt4k-view">
+        <canvas id="gt4k-cv" aria-label="Penalty kicks. Left: the goal, the keeper and the ball, with each kick animated. Right: the chance of a goal as the kicker mixes, one line for each way the keeper can dive, with the lower envelope highlighted; its highest point is the kicker’s minimax mix. Click on the chart to set the kicker’s mix."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>The kicker’s mix</h3>
+        <div class="lab-field"><span><label for="gt4k-p">Kicks to the natural side</label><output id="gt4k-p-o" for="gt4k-p"></output></span><input type="range" id="gt4k-p" min="0" max="1" step="0.01" value="0.5"></div>
+        <h3>The keeper</h3>
+        <div class="lab-seg" role="group" aria-label="Keeper" id="gt4k-keeper"><button type="button" data-k="minimax" aria-pressed="true">Plays minimax</button><button type="button" data-k="exploit" aria-pressed="false">Reads your kicks</button></div>
+        <h3>Take a kick</h3>
+        <div class="gt4-kick"><button type="button" class="lab-btn" id="gt4k-n">⚽ Natural side</button><button type="button" class="lab-btn" id="gt4k-o">⚽ Other side</button></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="gt4k-mix">Kick with my mix</button><button type="button" class="lab-btn" id="gt4k-ten">Take 10</button></div>
+        <dl class="lab-readout" id="gt4k-read" aria-live="polite"></dl>
+      </div>
+    </div>
+    <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Kicker chooses a row, Keeper chooses a column. In each cell, Kicker’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Keeper</th></tr><tr><th class="gth-p1" scope="col">Kicker</th><th scope="col">Dive natural</th><th scope="col">Dive other</th></tr></thead><tbody><tr><th scope="row">Natural</th><td><span class="gth-u1">0.7</span>, <span class="gth-u2">0.3</span></td><td><span class="gth-u1">0.95</span>, <span class="gth-u2">0.05</span></td></tr><tr><th scope="row">Other</th><td><span class="gth-u1">0.92</span>, <span class="gth-u2">0.08</span></td><td><span class="gth-u1">0.58</span>, <span class="gth-u2">0.42</span></td></tr></tbody></table></div><figcaption>Probability of a goal for the kicker first, of a save or miss for the keeper second (illustrative numbers). The two always add to 1.</figcaption></figure>
+    <div class="u-ex"><b>Worked example: the kicker’s minimax mix</b>
+      <ol>
+        <li>If the kicker shoots natural with probability <i>p</i>, a keeper diving natural concedes 0.70<i>p</i> + 0.92(1 − <i>p</i>) = 0.92 − 0.22<i>p</i>; a keeper diving the other way concedes 0.95<i>p</i> + 0.58(1 − <i>p</i>) = 0.58 + 0.37<i>p</i>.</li>
+        <li>The kicker’s worst case is the lower of the two lines. It is highest where they cross: 0.92 − 0.22<i>p</i> = 0.58 + 0.37<i>p</i>, so <i>p</i>* = 0.34/0.59 ≈ <b>0.576</b>.</li>
+        <li>The value is 0.92 − 0.22 × 0.576 ≈ <b>0.793</b>: the kicker can guarantee a 79.3% chance of scoring. By the same method the keeper dives natural with probability 0.37/0.59 ≈ 0.627 and holds the kicker to exactly 79.3%.</li>
+      </ol>
+      <p>Notice the twist: the kicker shoots to his natural side only about 58% of the time, even though it is his stronger side. If he went there more, the keeper would dive there more, and the natural side would stop being the better bet.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Set your mix to 100% natural and take ten kicks against the keeper who reads your kicks. He soon dives natural every time and your scoring rate falls toward 70%. At the minimax mix (58%) he can do nothing: both dives concede the same.</div>
+    <p><b>What the data say.</b> Pierre-André Chiappori, Steven Levitt and Timothy Groseclose (<i>American Economic Review</i>, 2002) studied 459 penalty kicks from the top French and Italian leagues, and Ignacio Palacios-Huerta (<i>Review of Economic Studies</i>, 2003) studied a larger sample of professional kicks. Both found that the patterns fit minimax remarkably well: kickers scored at about the same rate whichever side they chose, and keepers saved about the same share whichever way they dove, which is exactly the indifference that equilibrium predicts. Palacios-Huerta also found that professionals’ choices were close to serially independent: they did not fall into the patterns that the Reader feeds on. Mark Walker and John Wooders (2001) found similar results for where top players serve at Wimbledon, though servers switched sides a little too often to be truly random.</p>
+  </section>
+
+  <section class="lab-sec" id="interpret">
+    <h2>What does it mean to mix?</h2>
+    <p>Penalty takers and poker players randomize on purpose. But firms don’t roll dice to set prices, so what does a mixed equilibrium mean there? Game theorists offer three readings.</p>
+    <div class="u-key">
+      <div><b>Deliberate randomizing</b><p>When being predictable is costly, a player can literally randomize: sports, audits, security patrols, bluffing in poker, surprise inspections.</p></div>
+      <div><b>Beliefs</b><p>A mixed strategy can describe what <i>others</i> believe about you. You may act on private information they can’t see; John Harsanyi showed in 1973 that mixed equilibria are what pure play looks like from outside when each player’s payoffs have a little private variation (“purification”).</p></div>
+      <div><b>Populations</b><p>In a large population, a mix can mean that 40% of people play one action and 60% another. That is the reading of evolutionary game theory (Chapter 14).</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <p>The French mathematician <b>Émile Borel</b> wrote about randomized strategies in a series of notes from 1921 to 1927 and solved small cases, but doubted that a general minimax result held. <b>John von Neumann</b> proved it in “Zur Theorie der Gesellschaftsspiele” (1928). With <b>Oskar Morgenstern</b> he built the expected-utility foundations in 1944. <b>John Nash</b> extended equilibrium in mixed strategies to all finite games in 1950. <b>John Harsanyi</b> explained in 1973 why mixed equilibria make sense even when nobody flips coins.</p>
+    <p>The field tests came much later. Mark Walker and John Wooders’ study of Wimbledon serves (2001), and the penalty-kick studies of Chiappori, Levitt and Groseclose (2002) and Palacios-Huerta (2003), showed professionals behaving much as minimax predicts.</p>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <ul>
+      <li><b>Sports:</b> penalty kicks, tennis serves, pitch selection in baseball, run or pass in football, which way to go on a fast break. The best players are hard to read, not because they never favor anything, but because they keep opponents indifferent.</li>
+      <li><b>Business:</b> stores run sales at irregular times. Hal Varian’s “A model of sales” (<i>American Economic Review</i>, 1980) explains this as a mixed strategy: if a store’s discount days were predictable, rivals could undercut it on exactly those days. Audits, mystery shoppers and quality inspections are randomized for the same reason as in the inspection game.</li>
+      <li><b>Security:</b> airport screening, patrol routes and ticket inspections on trains are randomized so that they can’t be timed. Some agencies use game-theory software to choose the mix.</li>
+      <li><b>Daily life:</b> a parent who checks homework on random days, a poker player who sometimes bluffs, a cat that hunts in different places. Predictability is an invitation to be exploited.</li>
+    </ul>
+    <p class="lab-small">Nothing here is financial or investment advice.</p>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol>
+      <li><p><b>A first mixed equilibrium.</b> Find the mixed equilibrium of this game (it has no pure one; see Chapter 3, Practice 2).</p>
+        <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col">Left</th><th scope="col">Right</th></tr></thead><tbody><tr><th scope="row">Up</th><td><span class="gth-u1">5</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">4</span></td></tr><tr><th scope="row">Down</th><td><span class="gth-u1">4</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td></tr></tbody></table></div></figure>
+        <details><summary>Show the answer</summary><p>Column indifferent: 1 · <i>p</i> + 3(1 − <i>p</i>) = 4<i>p</i> + 2(1 − <i>p</i>), so 3 − 2<i>p</i> = 2 + 2<i>p</i> and <i>p</i>* = 1/4 (Row plays Up 1/4 of the time). Row indifferent: 5<i>q</i> + (1 − <i>q</i>) = 4<i>q</i> + 2(1 − <i>q</i>), so 1 + 4<i>q</i> = 2 + 2<i>q</i> and <i>q</i>* = 1/2. Row’s expected payoff is 1 + 4 × 1/2 = 3, Column’s is 3 − 2 × 1/4 = 2.5. Check it with “Up or down” in the lab above.</p></details></li>
+      <li><p><b>Chicken, mixed.</b> In Chicken (Swerve–Swerve 2, 2; Swerve–Straight 1, 3; Straight–Swerve 3, 1; Straight–Straight 0, 0), find the mixed equilibrium, each player’s expected payoff, and the probability of a crash.</p>
+        <details><summary>Show the answer</summary><p>If the other swerves with probability <i>q</i>: Swerve pays 2<i>q</i> + (1 − <i>q</i>) = 1 + <i>q</i>, Straight pays 3<i>q</i>. Equal at <i>q</i> = 1/2. By symmetry each swerves with probability 1/2. Each expects 1 + 1/2 = 1.5, and they crash (both go straight) with probability 1/4.</p></details></li>
+      <li><p><b>Rock, paper, scissors with a bonus.</b> Suppose a win with Rock pays 2 instead of 1 (losses still cost 1, the game stays zero-sum: the loser pays the winner). Without solving fully, which move should the opponent play <i>more</i> often in equilibrium: the one that beats Rock, or the one that Rock beats?</p>
+        <details><summary>Show the answer</summary><p>Rock got better for you, so to keep you indifferent the opponent must make Rock less attractive: play more Paper (which beats Rock) and less Scissors (which Rock beats). Solving it: against the mix (<i>r</i>, <i>p</i>, <i>s</i>), Rock pays 2<i>s</i> − <i>p</i>, Paper <i>r</i> − <i>s</i>, Scissors <i>p</i> − 2<i>r</i>. The game is symmetric and zero-sum, so its value is 0 and all three must equal 0: <i>p</i> = 2<i>s</i> and <i>r</i> = <i>s</i>, giving Rock 1/4, Paper 1/2, Scissors 1/4 for both players. The twist: the move with the bonus, Rock, is itself played <i>less</i> than before.</p></details></li>
+      <li><p><b>A saddle point.</b> In this zero-sum game (Row’s payoffs shown; Column pays them), find each player’s guaranteed payoff with pure strategies. Is there a saddle point?</p>
+        <div class="lab-formula">Row 1: 4, 2, 5 &nbsp;&nbsp; Row 2: 1, 0, 3 &nbsp;&nbsp;(columns 1, 2, 3)</div>
+        <details><summary>Show the answer</summary><p>Row 1’s worst case is 2; Row 2’s is 0; so Row can guarantee 2 by playing Row 1. Column’s worst cases (largest payment) are 4, 2 and 5 for the three columns, so Column can hold Row to 2 by playing column 2. The maxmin equals the minmax: the cell (Row 1, column 2), with payoff 2, is a saddle point and the value is 2. No mixing needed.</p></details></li>
+      <li><p><b>Minimax in a 2×3 game.</b> Row’s payoffs: Row 1: 3, −1, 2; Row 2: −2, 4, 1. Find Row’s maxmin mix and the value.</p>
+        <details><summary>Show the answer</summary><p>If Row plays Row 1 with probability <i>p</i>, the three columns give 5<i>p</i> − 2, 4 − 5<i>p</i> and 1 + <i>p</i>. The lowest of these is highest where the first two cross: 5<i>p</i> − 2 = 4 − 5<i>p</i>, so <i>p</i> = 0.6, where both equal 1 (the third gives 1.6, so it doesn’t bind). The value is <b>1</b>. Column’s minimax mix uses only the first two columns, half and half: 0.5 × 3 + 0.5 × (−1) = 1 = 0.5 × (−2) + 0.5 × 4.</p></details></li>
+      <li><p><b>The fine and the inspector.</b> In the inspection game, the inspector’s cost of an inspection rises from 1 to 1.5 (inspecting a worker who works now pays −1.5). What happens to the cheating rate and to the inspection rate?</p>
+        <details><summary>Show the answer</summary><p>The inspection rate is set by the worker’s payoffs, which didn’t change: still 40%. The cheating rate is set by the inspector’s indifference: 2<i>q</i> − 1.5(1 − <i>q</i>) = −4<i>q</i>, so 7.5<i>q</i> = 1.5 and <i>q</i>* = 0.2. Costlier inspections mean more cheating (20% instead of 14%), not fewer inspections.</p></details></li>
+      <li><p><b>Why the indifference principle holds.</b> Suppose in some equilibrium player 1 mixes actions T and B with positive probabilities, and against player 2’s strategy T pays more than B. Show that this can’t be an equilibrium.</p>
+        <details><summary>Show the answer</summary><p>Player 1’s expected payoff is a weighted average of the payoffs of the actions in the mix. Moving all of B’s probability onto T raises the average, because T pays strictly more and B had positive weight. So player 1 has a profitable deviation and the profile isn’t an equilibrium. Hence all actions used with positive probability must pay the same, and that common payoff must be at least that of any unused action.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the interactives work</h2>
+    <p><b>The Reader</b> keeps counts of what you played next in each situation, for five theories: overall, after your last move, after your last two moves, after your last move and whether it won or lost, and after the Reader’s own last move. Each theory forecasts your next move from its counts (with half a count added to each move, so that new situations start near even). A theory’s score goes up by 1 when its most likely move is what you actually play and fades by 20% a round, so the Reader follows whichever theory has worked lately. It then plays the move with the highest expected payoff against that forecast. The Equilibrium bot draws each move with probability 1/3.</p>
+    <p><b>The indifference lab</b> computes all equilibria of the 2×2 game exactly: the four pure profiles are checked as best responses, and the mixed one comes from the two indifference equations. Degenerate games, where a player is indifferent over a whole range, are reported as a continuum. <b>The penalty lab</b> uses the illustrative probabilities in the table; the “reads your kicks” keeper dives wherever your observed kicking frequency makes the kicker less likely to score.</p>
+    <p><b>Checks (node).</b> Over 200 simulated matches of 60 rounds each, the Reader averaged a 59-point win against a player who always plays Rock, 54 points against a fixed cycle, 55 against a player who always plays what beats the Reader’s last move, and 54 against win-stay, lose-shift, with forecasts right 93% to 100% of the time. Against uniform random play its average result was a 0.3-point loss and its forecasts were right 33% of the time. Against the Equilibrium bot, “always Rock” averaged +0.6 over 300 matches of 60 rounds, close to the expected 0. In every named 2×2 game both players are exactly indifferent at the computed mixed equilibrium. In 500 random 2×2 zero-sum games, maxmin and minmax agreed to within 0.007 on a grid of 1,000 mixes, as von Neumann’s theorem says. In the penalty game the kicker’s minimax mix is 57.6% natural, the keeper’s 62.7% natural, and the value 79.3%.</p>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>In a mixed-strategy Nash equilibrium, a player who mixes between two actions …</p>
+        <ul class="u-opts"><li><button type="button">gets a higher payoff from one of them</button></li><li><button type="button">is choosing the mix that maximizes their own payoff, which is unique</button></li><li><button type="button">gets the same expected payoff from both, given the other player’s strategy</button></li></ul>
+        <details><summary>Show the answer</summary><p>That is the indifference principle. If one action paid more, the player would play it for sure.</p></details></li>
+      <li class="u-q" data-a="0"><p>In a 2×2 game, player 1’s equilibrium mix is determined by …</p>
+        <ul class="u-opts"><li><button type="button">player 2’s payoffs, since it must make player 2 indifferent</button></li><li><button type="button">player 1’s own payoffs</button></li><li><button type="button">the sum of both players’ payoffs</button></li></ul>
+        <details><summary>Show the answer</summary><p>Player 1 mixes to keep player 2 indifferent, so the formula for <i>p</i>* uses only <i>u</i><sub>2</sub>.</p></details></li>
+      <li class="u-q" data-a="1"><p>Against an opponent who plays rock, paper and scissors with probability 1/3 each, what is your expected score if you always play Rock?</p>
+        <ul class="u-opts"><li><button type="button">Positive: you’ll win most rounds</button></li><li><button type="button">Zero</button></li><li><button type="button">Negative: always Rock is a bad strategy</button></li></ul>
+        <details><summary>Show the answer</summary><p>You win 1/3, draw 1/3 and lose 1/3 of the time: 0. Against the equilibrium mix every strategy earns the same. Your predictability only costs you against an opponent who exploits it.</p></details></li>
+      <li class="u-q" data-a="2"><p>Von Neumann’s minimax theorem says that in a two-player zero-sum game with finitely many actions …</p>
+        <ul class="u-opts"><li><button type="button">there is always a saddle point in pure strategies</button></li><li><button type="button">the first player always wins</button></li><li><button type="button">once mixing is allowed, the most the row player can guarantee equals the least the column player can hold them to</button></li></ul>
+        <details><summary>Show the answer</summary><p>max min = min max = the value. Pure saddle points exist only sometimes, as matching pennies shows.</p></details></li>
+      <li class="u-q" data-a="1"><p>Studies of professional penalty kicks found that …</p>
+        <ul class="u-opts"><li><button type="button">kickers always shoot to their natural side</button></li><li><button type="button">scoring rates were about the same whichever side kickers chose, as minimax predicts</button></li><li><button type="button">keepers who stay in the middle save most penalties</button></li></ul>
+        <details><summary>Show the answer</summary><p>Equal success rates across sides are the signature of an equilibrium mix: if one side scored more often, kickers should go there more, and keepers would adjust.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 4 (mixed strategy equilibrium) and chapter 11 (strictly competitive games and maxminimization).</li>
+      <li>J. von Neumann, “Zur Theorie der Gesellschaftsspiele”, <i>Mathematische Annalen</i> 100, 1928, 295–320.</li>
+      <li>P.-A. Chiappori, S. Levitt and T. Groseclose, “Testing mixed-strategy equilibria when players are heterogeneous: the case of penalty kicks in soccer”, <i>American Economic Review</i> 92(4), 2002, 1138–1151.</li>
+      <li>I. Palacios-Huerta, “Professionals play minimax”, <i>Review of Economic Studies</i> 70(2), 2003, 395–415.</li>
+      <li>M. Walker and J. Wooders, “Minimax play at Wimbledon”, <i>American Economic Review</i> 91(5), 2001, 1521–1538.</li>
+      <li><a href="https://www.stat.berkeley.edu/~aldous/157/Papers/kovash.pdf" target="_blank" rel="noopener">K. Kovash and S. D. Levitt, “Professionals do not play minimax: evidence from Major League Baseball and the National Football League”</a> (NBER Working Paper 15347, 2009; copy at UC Berkeley), for a summary of the field evidence and the 459-kick sample.</li>
+      <li>H. R. Varian, “A model of sales”, <i>American Economic Review</i> 70(4), 1980, 651–659. G. Tsebelis, “The abuse of probability in political analysis: the Robinson Crusoe fallacy”, <i>American Political Science Review</i> 83(1), 1989, 77–91.</li>
+      <li>J. C. Harsanyi, “Games with randomly disturbed payoffs: a new rationale for mixed-strategy equilibrium points”, <i>International Journal of Game Theory</i> 2, 1973, 1–23.</li>
+      <li><a href="https://oyc.yale.edu/economics/econ-159/lecture-9" target="_blank" rel="noopener">Ben Polak, Yale ECON 159, Lecture 9: Mixed Strategies in Theory and Tennis</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/mixed-strategies/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/mixed-strategies/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/mixed-strategies/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/mixed-strategies/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

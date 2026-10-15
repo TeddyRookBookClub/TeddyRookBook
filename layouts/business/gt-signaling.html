@@ -1,0 +1,220 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/signaling/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/signaling/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt10-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 10</p>
+    <h1>{{ .Title }}</h1>
+    <p>Anyone can say “I’m a hard worker” or “our product is the best”. Words are cheap, so they convince no one. What convinces people is an action that would be too expensive for a pretender: years of school, a ten-year warranty, a costly ad. Here you’ll play employer and set how much education the good job requires, then watch twenty job seekers decide whether to go to school. You’ll find when a degree proves something and when it’s wasted, measure how much an advisor with a bias can credibly tell you, and design a menu of tickets that gets customers to sort themselves.</p>
+    <span class="lab-mark" aria-hidden="true">🎓</span>
+  </header>
+
+  <div class="lab-stage gt10-main">
+    <div class="lab-view" id="gt10-view">
+      <canvas id="gt10-cv" tabindex="0" aria-label="Spence's job market. Left: a chart of wages against years of school. The gold step is what employers pay: the low wage without the degree, a higher wage with it. Dashed lines show, for each type of worker, all the combinations that would make them just as well off as their choice. Right: twenty workers, green for high productivity and red for low, standing in the room they choose: no degree or degree. Bottom: a checklist of the conditions for an equilibrium. Drag the chart or use the left and right arrow keys to change how much school the degree takes."></canvas>
+      <div class="lab-hud" id="gt10-hud" aria-hidden="true"></div>
+      <div class="lab-tools"><button type="button" id="gt10-reset" aria-label="Back to the starting numbers" title="Back to the starting numbers">↺</button></div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="gt10-mode-h">Kind of equilibrium to try</h3>
+      <div class="lab-seg" id="gt10-mode" role="group" aria-labelledby="gt10-mode-h">
+        <button type="button" data-m="sep">Separating</button><button type="button" data-m="pool">Pooling</button><button type="button" data-m="semi">Semi-separating</button>
+      </div>
+      <label class="lab-field"><span>The degree takes <output id="gt10-es-o"></output></span><input type="range" id="gt10-es" min="0" max="4" step="0.05" aria-label="Years of school the degree takes"></label>
+      <label class="lab-field"><span>Share of high-productivity workers <output id="gt10-lam-o"></output></span><input type="range" id="gt10-lam" min="10" max="90" step="5" aria-label="Share of high-productivity workers, percent"></label>
+      <label class="lab-field"><span>A year of school costs a low type <output id="gt10-cl-o"></output></span><input type="range" id="gt10-cl" min="5" max="40" step="1" aria-label="Cost of a year of school for a low type, thousands of dollars"></label>
+      <label class="lab-field"><span>…and a high type <output id="gt10-ch-o"></output></span><input type="range" id="gt10-ch" min="5" max="40" step="1" aria-label="Cost of a year of school for a high type, thousands of dollars"></label>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="gt10-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt10-missions"></ol>
+    </div>
+    <section class="lab-sec gt10-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The workers.</b> Half of the twenty job seekers (you can change the share) are high-productivity: each would produce $70,000 a year of value for an employer. The rest would produce $40,000. Each worker knows their own type; employers can’t tell. Here, school teaches nothing useful: it doesn’t change anyone’s productivity. Its only job is to send a signal.</p>
+        <p><b>The cost of school.</b> A year of school costs a low type more than a high type: $20,000 against $10,000 at the start. That’s not just tuition. It stands for effort and stress, which are higher for someone who finds the work harder.</p>
+        <p><b>The wages.</b> Employers compete for workers, so they pay what they expect each worker to be worth. You choose how many years the “degree” takes. In separating mode, employers pay $70,000 to anyone with the degree and $40,000 to everyone else. In pooling mode, they expect everyone to have it, so it gets the average wage. In semi-separating mode, the degree’s wage is set so that low types are exactly indifferent, and some of them gamble on it.</p>
+        <p><b>The check.</b> An equilibrium needs every worker to be choosing their best option given the wages, and the wages to match the workers who actually show up in each room. The rooms turn red when employers would be paying the wrong wage.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="spence"><h2>Why a costly signal can be believed</h2>
+    <p>Michael Spence’s 1973 insight: a signal works only if it costs the people who are pretending more than the people who are not. If school is equally easy for everyone, any worker can copy the high types and the degree proves nothing. If it’s harder for low types, there may be an amount of school that high types will put up with but low types won’t.</p>
+    <p>Say the productivities are θ<sub>L</sub> and θ<sub>H</sub>, with a gap Δ = θ<sub>H</sub> − θ<sub>L</sub>, and a year of school costs <var>c</var><sub>L</sub> or <var>c</var><sub>H</sub>. For a separating equilibrium with a degree that takes <var>e</var>* years, two incentive constraints must hold:</p>
+    <div class="lab-formula">low types don’t copy: θ<sub>L</sub> ≥ θ<sub>H</sub> − <var>c</var><sub>L</sub><var>e</var>* &nbsp; and &nbsp; high types still bother: θ<sub>H</sub> − <var>c</var><sub>H</sub><var>e</var>* ≥ θ<sub>L</sub></div>
+    <div class="u-big">Δ / <var>c</var><sub>L</sub> ≤ <var>e</var>* ≤ Δ / <var>c</var><sub>H</sub><small>a separating equilibrium exists exactly when this range is not empty, which needs <var>c</var><sub>L</sub> &gt; <var>c</var><sub>H</sub>: the signal must be cheaper for the type it identifies</small></div>
+    <p>Economists call the condition <var>c</var><sub>L</sub> &gt; <var>c</var><sub>H</sub> <b>single crossing</b>: the two types’ indifference lines cross only once, with the low type’s line steeper. On the chart, that’s why a step in the wage schedule can sit above the red dashed line but below the green one.</p>
+    <div class="u-ex"><b>Worked example: Spence’s numbers</b>
+      <p>θ<sub>L</sub> = $40k, θ<sub>H</sub> = $70k, <var>c</var><sub>L</sub> = $20k a year, <var>c</var><sub>H</sub> = $10k a year. The gap is Δ = $30k.</p>
+      <ol><li>Low types stop copying when 30/20 = 1.5 years or more are required.</li>
+        <li>High types still go when no more than 30/10 = 3 years are required.</li>
+        <li>So any requirement from 1.5 to 3 years separates. At 2 years: a low type gets $40k without the degree or $70k − $40k = $30k with it, so skips it; a high type gets $70k − $20k = $50k with it, more than $40k, so gets it.</li></ol>
+      <p>Notice the waste. School here produces nothing, yet each high type spends $15k to $30k worth of effort just to prove who they are. Everyone would be better off if employers could see productivity directly.</p>
+    </div>
+    <h3 class="lab-h">Perfect Bayesian equilibrium</h3>
+    <p>Signaling games are dynamic games with incomplete information: Nature picks the worker’s type, the worker chooses education, the employer sees the education (not the type) and sets a wage. The matching solution concept is <b>perfect Bayesian equilibrium</b> (PBE). It has two parts:</p>
+    <ul>
+      <li><b>Beliefs.</b> After every possible signal, the employer has a belief about the type. When the signal is one that some types send in equilibrium, the belief must follow from Bayes’ rule.</li>
+      <li><b>Sequential rationality.</b> Every player’s action is a best response at every point, given their beliefs and everyone else’s strategy.</li>
+    </ul>
+    <p>Bayes’ rule says nothing about signals that nobody sends in equilibrium, such as 0.7 years of school when everyone chooses 0 or 2. Beliefs there are free, and that freedom creates many equilibria. There are three families:</p>
+    <div class="u-key">
+      <div><b>Separating</b><p>Each type sends a different signal, so the signal reveals the type. Employers learn everything.</p></div>
+      <div><b>Pooling</b><p>All types send the same signal, which reveals nothing. Here, everyone gets the same education and the average wage.</p></div>
+      <div><b>Semi-separating</b><p>Some types mix, sending a signal with some probability. Employers learn something but not everything. Also called hybrid or partially pooling.</p></div>
+    </div>
+    <div class="u-ex"><b>Worked example: a semi-separating equilibrium</b>
+      <p>Same numbers, half the workers of each type, and a degree that takes 1 year. For low types to be willing to mix, they must be indifferent: the degree must pay θ<sub>L</sub> + <var>c</var><sub>L</sub> × 1 = $60k. A wage of $60k means employers believe a degree holder is high-productivity with probability μ, where 70μ + 40(1 − μ) = 60, so μ = 2/3. By Bayes’ rule, μ = 0.5 / (0.5 + 0.5π), where π is the share of low types who go to school. Solving, π = 0.5. Half of the low types get the degree, and the degree holders are two-thirds high types: exactly what employers expect.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="refine"><h2>Too many equilibria: the intuitive criterion</h2>
+    <p>With the starting numbers, separating equilibria exist for every requirement from 1.5 to 3 years, and pooling equilibria for every level from 0 to 0.75 years. Which is reasonable? In 1987 In-Koo Cho and David Kreps proposed a test. Take an equilibrium and an education level nobody chooses. If a low type would lose by choosing it <i>even if employers then treated them as a high type</i>, while a high type would gain if treated as a high type, then employers shouldn’t believe it comes from a low type.</p>
+    <p>Apply it to pooling at zero school, where everyone earns the average wage of $55k. A worker who shows up with 1 year of school says, in effect: “a low type would never do this, because even at $70k they’d net $70k − $20k = $50k, less than the $55k they get now. I would, because I’d net $70k − $10k = $60k.” Employers who think it through pay $70k, and the pooling equilibrium falls apart. The same argument kills every separating equilibrium that requires more than 1.5 years. The one that survives is the cheapest separating signal, Δ/<var>c</var><sub>L</sub>, often called the <b>Riley outcome</b> after John Riley’s 1979 paper.</p>
+    <div class="lab-try"><b>Try this:</b> in separating mode, drag the requirement from 3 years down to 1.5. Every point in the green band is an equilibrium, but the checklist’s last line is green only at 1.5. Then switch to pooling and try any level: the intuitive criterion always finds an education level that breaks it.</div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “This proves school is only a signal”</b>
+    <p>Spence’s model assumes school teaches nothing, to see what signaling alone can do. Real education both builds skills and signals them, and economists still argue about how much of the payoff to a degree is each. The model’s lesson is narrower and sharper: a credential can be valuable to its holder even if it adds nothing to their productivity, and the cost of earning it is part of what makes it believable.</p>
+  </div>
+
+  <section class="lab-sec" id="talk"><h2>Cheap talk: what words can do</h2>
+    <p>Words cost nothing to say, so can they carry any information? Vincent Crawford and Joel Sobel answered in 1982: yes, if the speaker and listener want similar things, and less the more their interests differ. In their model, an advisor knows the best choice θ for you, somewhere from 0 to 100, but would like you to choose a bit more: θ + <var>b</var>. A contractor recommending how big a renovation to do is a familiar example. The advisor can say anything. You know her bias.</p>
+    <p>If she could name the exact number, she would exaggerate it, and you would correct for it, so exact talk can’t be an equilibrium. What can be believed is a rough zone. In every equilibrium, she divides the line into zones and tells you which one θ is in; you choose the middle of that zone. The zones grow wider toward the top, because the advisor’s pull to the right has to be offset there.</p>
+    <div class="lab-formula">zone boundaries: <var>a</var><sub><var>i</var></sub> = <var>i</var>/<var>N</var> + 2<var>b</var> <var>i</var>(<var>i</var> − <var>N</var>), for <var>i</var> = 0, …, <var>N</var> &nbsp;·&nbsp; possible only when 2<var>b</var> <var>N</var>(<var>N</var> − 1) &lt; 1 (on a 0-to-1 scale)</div>
+    <div class="lab-stage wide gt10-mini" id="gt10-tview">
+      <div class="lab-view"><canvas id="gt10-tc" aria-label="A number line from 0 to 100 split into the zones the advisor can credibly name. Green triangles mark what you choose for each zone. When you ask, a white dot shows the best choice, a pink dot the advisor's favorite, and an arrow your choice. Below: bars of your average loss for each number of zones."></canvas></div>
+      <div class="lab-panel gt10-row">
+        <label class="lab-field gt10-grow"><span>Advisor’s bias b, on the 0–100 scale <output id="gt10-tb-o"></output></span><input type="range" id="gt10-tb" min="0" max="300" step="5" aria-label="Advisor's bias, on a scale where 300 means 30 points"></label>
+        <button type="button" class="lab-btn pri" id="gt10-ask">Ask the advisor</button>
+        <div class="lab-seg gt10-grow" id="gt10-tn" role="group" aria-label="Number of zones in use"></div>
+        <dl class="lab-readout gt10-grow" id="gt10-tread"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: a bias of 10 points</b>
+      <p>With <var>b</var> = 0.1 on a 0-to-1 scale, two zones are possible (2 × 0.1 × 2 × 1 = 0.4 &lt; 1) but not three (2 × 0.1 × 3 × 2 = 1.2). The boundary is <var>a</var><sub>1</sub> = 1/2 + 2 × 0.1 × 1 × (1 − 2) = 0.3. So the advisor says “low” for 0 to 30, and you choose 15, or “high” for 30 to 100, and you choose 65. Check the advisor at θ = 0.3 is indifferent: her favorite is 0.4, which is 0.25 from 0.15 and 0.25 from 0.65. Your average squared miss is (0.3³ + 0.7³)/12 ≈ 0.031, against 1/12 ≈ 0.083 if she said nothing useful. A bias of a quarter of the range or more makes all talk useless.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="screen"><h2>Screening: let customers sort themselves</h2>
+    <p>Signaling is when the informed side moves first. <b>Screening</b> is when the uninformed side moves first, offering a menu designed so that each type picks the option meant for it. Michael Rothschild and Joseph Stiglitz (1976) showed how this works in insurance: a company offers full coverage at a high price and partial coverage (a big deductible) at a low price. Risky customers take full coverage; safe customers accept the deductible because they rarely claim. They also showed something surprising: in a competitive insurance market there can never be a pooling equilibrium, and sometimes there is no equilibrium at all.</p>
+    <p>Airlines, software firms and carmakers do the same thing with quality. Below, you sell two kinds of tickets to two kinds of travelers. A low-value traveler values each unit of comfort at $100, a high-value one at $200. Comfort <var>q</var> costs you 100 × <var>q</var>²/2 dollars to provide. You can’t tell travelers apart, so each buys whichever ticket gives her the most value for the price.</p>
+    <div class="lab-stage wide gt10-mini" id="gt10-sview">
+      <div class="lab-view"><canvas id="gt10-sc" tabindex="0" aria-label="A chart of ticket price against comfort. Two tickets, E for economy and B for business, can be dragged. Dashed lines show, for each type of traveler, the tickets she would like exactly as much as the one she picks. A dashed curve shows the cost of comfort. Keys: 1 or E and 2 or B pick a ticket, arrow keys move it."></canvas></div>
+      <div class="lab-panel gt10-row">
+        <label class="lab-field gt10-grow"><span>Share of high-value travelers <output id="gt10-mu-o"></output></span><input type="range" id="gt10-mu" min="10" max="90" step="5" aria-label="Share of high-value travelers, percent"></label>
+        <label class="lab-chk"><input type="checkbox" id="gt10-ghost"> Show the best menu</label>
+        <button type="button" class="lab-btn" id="gt10-snap">Use the best menu</button>
+        <dl class="lab-readout gt10-grow" id="gt10-sread"></dl>
+      </div>
+    </div>
+    <p>The best menu has two famous features. <b>No distortion at the top:</b> business class gets exactly the comfort that’s efficient for high-value travelers (<var>q</var> = 2, where the value of more comfort equals its cost). <b>Distortion at the bottom:</b> economy gets <i>less</i> comfort than would be efficient, on purpose, to make it unattractive to high-value travelers, which lets you charge them more for business. High-value travelers still keep some surplus, their <b>information rent</b>: the price of their private information.</p>
+    <div class="lab-formula"><var>q</var><sub>H</sub> = θ<sub>H</sub>, &nbsp; <var>q</var><sub>L</sub> = θ<sub>L</sub> − μ/(1 − μ) × (θ<sub>H</sub> − θ<sub>L</sub>) (or 0 if that is negative), &nbsp; <var>t</var><sub>L</sub> = θ<sub>L</sub><var>q</var><sub>L</sub>, &nbsp; <var>t</var><sub>H</sub> = θ<sub>H</sub><var>q</var><sub>H</sub> − (θ<sub>H</sub> − θ<sub>L</sub>)<var>q</var><sub>L</sub></div>
+    <div class="u-ex"><b>Worked example: 30% business travelers</b>
+      <p>With θ<sub>L</sub> = 1, θ<sub>H</sub> = 2 (in $100s per unit of comfort) and μ = 0.3: <var>q</var><sub>L</sub> = 1 − (0.3/0.7) × 1 ≈ 0.571, sold at <var>t</var><sub>L</sub> ≈ $57; business has <var>q</var><sub>H</sub> = 2, sold at <var>t</var><sub>H</sub> = 4 − 0.571 ≈ 3.43, or $343. Profit per traveler: 0.7 × (57.1 − 16.3) + 0.3 × (342.9 − 200) ≈ $71. If you could tell travelers apart you would earn $95. The $24 gap is the cost of not knowing who is who: partly the information rent of $57 per business traveler, partly the comfort withheld from economy.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> drag economy (E) to the right, giving it more comfort. At some point the high-value traveler’s dashed line shows that she’d rather buy E, and your profit drops. Then raise the share of business travelers above 50%: the best menu drops economy altogether, because serving low-value travelers costs more in lost business-class revenue than it brings in.</div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A little history</h2>
+    <div class="lab-cols">
+      <p><b>Michael Spence</b> developed job-market signaling in his Harvard doctoral thesis and published it as “Job Market Signaling” in the <i>Quarterly Journal of Economics</i> in 1973. He shared the 2001 Nobel Memorial Prize in Economic Sciences with George Akerlof and Joseph Stiglitz.</p>
+      <p><b>Joseph Stiglitz</b> and <b>Michael Rothschild</b>’s “Equilibrium in Competitive Insurance Markets: An Essay on the Economics of Imperfect Information” (<i>QJE</i>, 1976) founded screening theory. Michael Mussa and Sherwin Rosen (1978) and Eric Maskin and John Riley (1984) worked out the monopoly menu used here.</p>
+      <p><b>Vincent Crawford</b> and <b>Joel Sobel</b> published “Strategic Information Transmission” in <i>Econometrica</i> in 1982. <b>In-Koo Cho</b> and <b>David Kreps</b> introduced the intuitive criterion in “Signaling Games and Stable Equilibria” (<i>QJE</i>, 1987).</p>
+      <p><b>In biology</b>, Amotz Zahavi argued in 1975 that a peacock’s tail works as a signal of fitness precisely because it is a handicap only a healthy bird can afford. Alan Grafen gave the idea a game-theoretic footing in 1990.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where signals and screens show up</h2>
+    <ul>
+      <li><b>Warranties and return policies.</b> A long warranty costs a maker of shoddy goods far more than a maker of reliable ones, so offering one is believable. Generous return policies work the same way for retailers.</li>
+      <li><b>Costly commitments.</b> Patagonia’s 2011 “Don’t Buy This Jacket” ad only made sense for a company prepared to back it with repairs and durable products; see <a href="{{ "business/cases/patagonia-dont-buy-this-jacket-2011/" | relURL }}">Patagonia Says ‘Don’t Buy This Jacket’</a>. Johnson &amp; Johnson’s $100 million Tylenol recall in 1982 signaled how seriously it took safety; see <a href="{{ "business/cases/tylenol-1982/" | relURL }}">the Tylenol case</a>.</li>
+      <li><b>Advertising.</b> Phillip Nelson (1974) and Paul Milgrom and John Roberts (1986) argued that lavish ads for a new product can signal quality: only a firm expecting repeat buyers can afford to spend so much attracting first-time ones.</li>
+      <li><b>Menus.</b> Airline fare classes, software “basic” and “pro” editions, and membership fees (see <a href="{{ "business/cases/costco-wages-membership/" | relURL }}">Costco’s membership model</a>) let customers sort themselves.</li>
+      <li><b>Insurance.</b> Deductibles screen safe drivers from risky ones, as Rothschild and Stiglitz predicted.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <p class="gt10-prob"><b>1.</b> Productivities are $30k and $50k, and a year of school costs a low type $10k and a high type $4k. Which requirements separate the types?</p>
+    <details class="gt10-ans"><summary>Show the answer</summary><p>Δ = 20, so <var>e</var>* must be at least 20/10 = 2 years (low types won’t copy) and at most 20/4 = 5 years (high types still bother). Any requirement from 2 to 5 years works; the intuitive criterion picks 2.</p></details>
+    <p class="gt10-prob"><b>2.</b> Same numbers, with a quarter of workers high types. Up to how many years of school can everyone be pooled?</p>
+    <details class="gt10-ans"><summary>Show the answer</summary><p>The average wage is 0.25 × 50 + 0.75 × 30 = $35k. Low types must prefer it to $30k with no school: 35 − 10<var>e</var> ≥ 30, so <var>e</var> ≤ 0.5 years. That is λΔ/<var>c</var><sub>L</sub> = 0.25 × 20/10.</p></details>
+    <p class="gt10-prob"><b>3.</b> A firm says its product is “the best on the market”. A rival offers a lifetime replacement guarantee. Which is a credible signal of quality, and why?</p>
+    <details class="gt10-ans"><summary>Show the answer</summary><p>The guarantee. The claim costs nothing for any firm to make, so it can’t separate good from bad. The guarantee is far more expensive for a firm whose products break often, which is exactly the cost difference a signal needs.</p></details>
+    <p class="gt10-prob"><b>4.</b> With the chapter’s starting numbers (θ<sub>L</sub> = 40, θ<sub>H</sub> = 70, <var>c</var><sub>L</sub> = 20, half high types), find the semi-separating equilibrium with a degree of 1.25 years.</p>
+    <details class="gt10-ans"><summary>Show the answer</summary><p>Low types must be indifferent, so the degree pays 40 + 20 × 1.25 = $65k. Then 70μ + 40(1 − μ) = 65 gives μ = 5/6. Bayes: 0.5/(0.5 + 0.5π) = 5/6, so π = 0.2. A fifth of the low types go to school.</p></details>
+    <p class="gt10-prob"><b>5.</b> In the cheap-talk model with <var>b</var> = 0.05, find the most informative equilibrium.</p>
+    <details class="gt10-ans"><summary>Show the answer</summary><p>We need 2 × 0.05 × <var>N</var>(<var>N</var> − 1) &lt; 1, so <var>N</var>(<var>N</var> − 1) &lt; 10: <var>N</var> = 3 works (6), <var>N</var> = 4 doesn’t (12). Boundaries: <var>a</var><sub>1</sub> = 1/3 + 0.1 × 1 × (−2) ≈ 0.133 and <var>a</var><sub>2</sub> = 2/3 + 0.1 × 2 × (−1) ≈ 0.467. Zones: 0–0.133, 0.133–0.467, 0.467–1, each wider than the one before by 4<var>b</var> = 0.2. Your average squared miss is about 0.016.</p></details>
+    <p class="gt10-prob"><b>6.</b> In the ticket problem, use 20% high-value travelers. Find the best menu and the profit per traveler.</p>
+    <details class="gt10-ans"><summary>Show the answer</summary><p><var>q</var><sub>L</sub> = 1 − (0.2/0.8) × 1 = 0.75, <var>t</var><sub>L</sub> = 0.75; <var>q</var><sub>H</sub> = 2, <var>t</var><sub>H</sub> = 4 − 0.75 = 3.25. Profit: 0.8 × (0.75 − 0.28125) + 0.2 × (3.25 − 2) = 0.375 + 0.25 = 0.625, or $62.50 per traveler, against $80 with perfect information.</p></details>
+    <p class="gt10-prob"><b>7.</b> (Harder) Derive the best two-type menu. Show that only the low type’s participation and the high type’s incentive constraint bind, and find <var>q</var><sub>L</sub>.</p>
+    <details class="gt10-ans"><summary>Show the answer</summary><p>Maximize (1 − μ)(<var>t</var><sub>L</sub> − <var>q</var><sub>L</sub>²/2) + μ(<var>t</var><sub>H</sub> − <var>q</var><sub>H</sub>²/2) subject to participation (θ<var>q</var> − <var>t</var> ≥ 0 for each type) and incentive constraints. The high type can always buy the low ticket and get (θ<sub>H</sub> − θ<sub>L</sub>)<var>q</var><sub>L</sub> + (θ<sub>L</sub><var>q</var><sub>L</sub> − <var>t</var><sub>L</sub>) ≥ 0, so her participation is automatic once the low type’s holds and her incentive constraint holds. Raise prices until <var>t</var><sub>L</sub> = θ<sub>L</sub><var>q</var><sub>L</sub> and <var>t</var><sub>H</sub> = θ<sub>H</sub><var>q</var><sub>H</sub> − (θ<sub>H</sub> − θ<sub>L</sub>)<var>q</var><sub>L</sub>. Substitute: profit = (1 − μ)(θ<sub>L</sub><var>q</var><sub>L</sub> − <var>q</var><sub>L</sub>²/2) + μ(θ<sub>H</sub><var>q</var><sub>H</sub> − <var>q</var><sub>H</sub>²/2 − (θ<sub>H</sub> − θ<sub>L</sub>)<var>q</var><sub>L</sub>). The first-order conditions give <var>q</var><sub>H</sub> = θ<sub>H</sub> and (1 − μ)(θ<sub>L</sub> − <var>q</var><sub>L</sub>) = μ(θ<sub>H</sub> − θ<sub>L</sub>), so <var>q</var><sub>L</sub> = θ<sub>L</sub> − μ(θ<sub>H</sub> − θ<sub>L</sub>)/(1 − μ). One checks that the low type’s incentive constraint then holds because <var>q</var><sub>H</sub> ≥ <var>q</var><sub>L</sub>.</p></details>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The job market.</b> Employers use a step belief: anyone with at least the required education is paid the degree wage; anyone below is treated as a low type. With that belief, the only sensible choices are no school or exactly the requirement. Each type picks the better one (in semi-separating mode, low types are made indifferent and the share π who go to school is found by Bayes’ rule). The rooms then check whether the wage paid matches the average productivity of the workers in them.</p>
+      <p><b>Cheap talk</b> uses the standard uniform-quadratic case: the state is uniform from 0 to 1, losses are squared distances, and the advisor’s favorite is θ + <var>b</var>. <b>The menu</b> uses a buyer value θ<var>q</var> − <var>t</var> and a cost <var>q</var>²/2; each traveler buys the ticket with the highest value, or nothing.</p>
+      <p><b>What’s simplified.</b> Two types instead of a continuum, education that is useless for productivity, and employers who compete away all profit. The intuitive criterion is applied only to the simple step beliefs shown.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests, run before the page was built):</p>
+        <ul class="lab-small">
+          <li>Scanning requirements in steps of 0.01 years: separating equilibria exist exactly from 1.50 to 3.00 years, pooling ones up to 0.75; with equal costs, only the knife edge of 1.5 years (both types indifferent) remains.</li>
+          <li>Semi-separating at 0.8, 1, 1.25 and 1.4 years: π = 0.875, 0.5, 0.2 and 0.071; in each, the wage equals the Bayes posterior expected productivity and low types are exactly indifferent.</li>
+          <li>Intuitive criterion, scanning all three modes in steps of 0.05: it passes only at 1.5 years, the Riley outcome.</li>
+          <li>No education level from 0 to 5 years (steps of 0.01) gives either type a profitable deviation at a requirement of 2 years.</li>
+          <li>Cheap talk: the most zones are 1, 2, 3 and 7 for <var>b</var> = 0.3, 0.2, 0.05 and 0.01; at every boundary the advisor is indifferent between the two neighboring choices (error below 10<sup>−16</sup>); 400,000 random draws gave an average loss of 0.01597 against the formula’s 0.01593.</li>
+          <li>Menus: for μ = 0.2, 0.3, 0.5 and 0.6, a grid search and 200,000 random two-ticket menus never beat the formula’s profit (0.625, 0.714, 1.000 and 1.200).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>What makes a costly action a credible signal?</p>
+        <ul class="u-opts"><li><button type="button">It is expensive for everyone</button></li><li><button type="button">It is required by law</button></li><li><button type="button">It costs the types being imitated less than the would-be imitators</button></li><li><button type="button">It is visible to everyone</button></li></ul>
+        <details><summary>Show the answer</summary><p>Single crossing: there has to be a level that the genuine type will pay for and the pretender won’t. If the cost is the same for both, anything one can afford, so can the other.</p></details></li>
+      <li class="u-q" data-a="0"><p>Productivities are $40k and $70k, school costs $20k a year for low types and $10k for high types. Which requirement is a separating equilibrium?</p>
+        <ul class="u-opts"><li><button type="button">2 years</button></li><li><button type="button">1 year</button></li><li><button type="button">4 years</button></li></ul>
+        <details><summary>Show the answer</summary><p>Separation needs 30/20 = 1.5 to 30/10 = 3 years. At 1 year, low types would copy; at 4, high types would skip school.</p></details></li>
+      <li class="u-q" data-a="1"><p>What’s the difference between signaling and screening?</p>
+        <ul class="u-opts"><li><button type="button">Signaling is legal and screening isn’t</button></li><li><button type="button">In signaling the informed side acts first; in screening the uninformed side offers a menu first</button></li><li><button type="button">There is no difference</button></li></ul>
+        <details><summary>Show the answer</summary><p>A job seeker choosing a degree is signaling. An insurer offering a menu of deductibles is screening.</p></details></li>
+      <li class="u-q" data-a="3"><p>An advisor’s bias grows. What happens to how much she can credibly tell you?</p>
+        <ul class="u-opts"><li><button type="button">Nothing changes, since talk is free</button></li><li><button type="button">She tells you more to make up for it</button></li><li><button type="button">She can still tell you the exact answer</button></li><li><button type="button">Fewer, wider zones; at a bias of a quarter of the range or more, nothing at all</button></li></ul>
+        <details><summary>Show the answer</summary><p>The number of credible zones falls as the bias grows, and with <var>b</var> ≥ 1/4 only babbling remains.</p></details></li>
+      <li class="u-q" data-a="2"><p>In the best ticket menu, which traveler gets less comfort than would be efficient?</p>
+        <ul class="u-opts"><li><button type="button">The high-value traveler</button></li><li><button type="button">Both</button></li><li><button type="button">The low-value traveler</button></li><li><button type="button">Neither</button></li></ul>
+        <details><summary>Show the answer</summary><p>No distortion at the top, distortion at the bottom: economy is made worse on purpose so that business travelers don’t trade down.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 10: signaling games, education as a signal of ability, and strategic information transmission.</li>
+      <li>R. Gibbons, <i>Game Theory for Applied Economists</i> (Princeton University Press, 1992), chapter 4: perfect Bayesian equilibrium, job-market signaling, cheap talk and refinements.</li>
+      <li>D. Fudenberg and J. Tirole, <i>Game Theory</i> (MIT Press, 1991), chapters 8 and 11: perfect Bayesian equilibrium and equilibrium refinements.</li>
+      <li>M. Spence, “Job Market Signaling”, <i>Quarterly Journal of Economics</i> 87(3), 355–374 (1973).</li>
+      <li>M. Rothschild and J. Stiglitz, “Equilibrium in Competitive Insurance Markets: An Essay on the Economics of Imperfect Information”, <i>Quarterly Journal of Economics</i> 90(4), 629–649 (1976).</li>
+      <li>V. P. Crawford and J. Sobel, “Strategic Information Transmission”, <i>Econometrica</i> 50(6), 1431–1451 (1982).</li>
+      <li>I.-K. Cho and D. M. Kreps, “Signaling Games and Stable Equilibria”, <i>Quarterly Journal of Economics</i> 102(2), 179–221 (1987); J. G. Riley, “Informational Equilibrium”, <i>Econometrica</i> 47(2), 331–359 (1979).</li>
+      <li>M. Mussa and S. Rosen, “Monopoly and Product Quality”, <i>Journal of Economic Theory</i> 18(2), 301–317 (1978); E. Maskin and J. Riley, “Monopoly with Incomplete Information”, <i>RAND Journal of Economics</i> 15(2), 171–196 (1984).</li>
+      <li>P. Nelson, “Advertising as Information”, <i>Journal of Political Economy</i> 82(4), 729–754 (1974); P. Milgrom and J. Roberts, “Price and Advertising Signals of Product Quality”, <i>Journal of Political Economy</i> 94(4), 796–821 (1986).</li>
+      <li>A. Zahavi, “Mate Selection: A Selection for a Handicap”, <i>Journal of Theoretical Biology</i> 53(1), 205–214 (1975); A. Grafen, “Biological Signals as Handicaps”, <i>Journal of Theoretical Biology</i> 144(4), 517–546 (1990).</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2012/" target="_blank" rel="noopener">14.12 Economic Applications of Game Theory</a>, lectures on perfect Bayesian equilibrium and signaling.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/principles-economics-3e/pages/16-2-insurance-and-imperfect-information" target="_blank" rel="noopener">Principles of Economics 3e, 16.2 Insurance and Imperfect Information</a>.</li>
+      <li>The Nobel Prize, <a href="https://www.nobelprize.org/prizes/economic-sciences/2001/summary/" target="_blank" rel="noopener">The Prize in Economic Sciences 2001</a>.</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Signalling_(economics)" target="_blank" rel="noopener">Signalling (economics)</a>, <a href="https://en.wikipedia.org/wiki/Cheap_talk" target="_blank" rel="noopener">Cheap talk</a>, <a href="https://en.wikipedia.org/wiki/Handicap_principle" target="_blank" rel="noopener">Handicap principle</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/signaling/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/signaling/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/signaling/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/signaling/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

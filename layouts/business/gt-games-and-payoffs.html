@@ -1,0 +1,270 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/games-and-payoffs/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/games-and-payoffs/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt1-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 1</p>
+    <h1>{{ .Title }}</h1>
+    <p>Pick a number from 0 to 100. Whoever comes closest to two thirds of the average of everyone’s numbers wins. What do you pick? That depends on what you think the others will pick, which depends on what they think you will pick, and so on. That loop is what turns a decision into a game. Here you’ll play the guessing game against a crowd that thinks at different depths, then build small games of your own and play them against computer opponents with distinct personalities. Along the way you’ll learn the language every later chapter uses: players, actions, payoffs and the payoff matrix.</p>
+    <span class="lab-mark" aria-hidden="true">🎲</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="gt1-view">
+      <canvas id="gt1-cv" tabindex="0" aria-label="The guessing game. A number line from 0 to 100. After each round the crowd’s guesses drop onto the line as colored dots, one color for each level of reasoning, and lines mark the average and the target, two thirds of the average. Your guess is the pink marker: drag it, or use the arrow keys (Shift for steps of 5). Enter plays a round, R starts a new game."></canvas>
+      <div class="lab-hud" id="gt1-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" class="gt1-go" id="gt1-play2" title="Play a round (Enter)">▶ Play</button>
+        <button type="button" id="gt1-reset" aria-label="New game" title="New game (R)">↺</button>
+      </div>
+      <noscript><p class="lab-small">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Your guess</h3>
+      <div class="lab-field gt1-you"><span><label for="gt1-guess">Your number</label><output id="gt1-guess-o" for="gt1-guess">50</output></span><input type="range" id="gt1-guess" min="0" max="100" step="0.5" value="50"></div>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="gt1-play">▶ Play</button><button type="button" class="lab-btn" id="gt1-new">New game</button></div>
+      <h3>The crowd</h3>
+      <div class="lab-seg" role="group" aria-label="Who is in the crowd" id="gt1-crowd">
+        <button type="button" data-crowd="beginners" aria-pressed="false">Beginners</button>
+        <button type="button" data-crowd="typical" aria-pressed="true">Typical crowd</button>
+        <button type="button" data-crowd="experts" aria-pressed="false">Game theorists</button>
+        <button type="button" data-crowd="rational" aria-pressed="false">All rational</button>
+      </div>
+      <p class="lab-small gt1-plab">The target is <i>p</i> × the average, with <i>p</i> =</p>
+      <div class="lab-seg" role="group" aria-label="The multiplier p" id="gt1-p">
+        <button type="button" data-p="1/2" aria-pressed="false">1/2</button>
+        <button type="button" data-p="2/3" aria-pressed="true">2/3</button>
+        <button type="button" data-p="4/3" aria-pressed="false">4/3</button>
+      </div>
+      <div class="lab-field"><span><label for="gt1-n">Crowd size</label><output id="gt1-n-o" for="gt1-n"></output></span><input type="range" id="gt1-n" min="5" max="200" step="1" value="40"></div>
+      <div class="lab-field"><span><label for="gt1-noise">Sloppiness of each guess</label><output id="gt1-noise-o" for="gt1-noise"></output></span><input type="range" id="gt1-noise" min="0" max="10" step="1" value="3"></div>
+      <label class="lab-chk"><input type="checkbox" id="gt1-learn" checked> The crowd learns from the last round</label>
+      <label class="lab-chk"><input type="checkbox" id="gt1-ladder" checked> Show the levels of reasoning</label>
+      <h3>Results</h3>
+      <dl class="lab-readout" id="gt1-read" aria-live="polite"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt1-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The crowd.</b> Each dot is one simulated player. Its color shows how deeply it thinks. Level 0 players (gray-blue) pick at random. Level 1 players (green) assume everyone else is level 0, so they expect an average of 50 and guess two thirds of it, about 33. Level 2 players (gold) assume everyone else is level 1 and guess two thirds of 33, about 22. Level 3 (violet) guesses about 15, level 4 (pink) about 10, and a few “equilibrium” players (red) go all the way to 0.</p>
+      <p><b>The lines.</b> After the dots land, a dashed white line marks the average of all the guesses, yours included, and the green line marks the target, <i>p</i> times the average. Whoever is closest to the green line wins; a gold ring marks the winners. The small chart in the corner tracks the target from round to round.</p>
+      <p><b>The staircase.</b> The dashed arcs above the axis show the levels of reasoning: each hop multiplies by <i>p</i>. Keep hopping and you end at the red triangle, the Nash equilibrium. With <i>p</i> = 2/3 that is 0; with <i>p</i> = 4/3 the staircase climbs instead, toward 100.</p>
+      <p><b>Learning.</b> With learning on, the crowd starts each new round from the last round’s average instead of 50, as the subjects in experiments do. The staircase shrinks every round, and the target slides toward the equilibrium. Turn learning off and every round is a fresh crowd.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="levels">
+    <h2>Thinking about what others think</h2>
+    <p>In most decisions you face nature: the weather, prices you can’t change, a machine. In a game you face other people who are thinking about you. The guessing game strips that down to its core. Nothing about the number 33 or 22 is special; what matters is what you expect everyone else to do.</p>
+    <p>One way to reason is in <b>levels</b>. A level-0 player doesn’t think strategically and picks at random, averaging 50. A level-1 player best responds to level-0 players, a level-2 player best responds to level-1 players, and so on. With target multiplier <i>p</i> and a starting average of 50:</p>
+    <div class="lab-formula">level <i>k</i> guesses 50 × <i>p</i><sup><i>k</i></sup> &nbsp;·&nbsp; with <i>p</i> = 2/3: 33.3, 22.2, 14.8, 9.9, 6.6, … &nbsp;·&nbsp; with <i>p</i> = 1/2: 25, 12.5, 6.25, 3.1, …</div>
+    <p>A different way to reason ignores psychology and asks what a fully rational player would do if everyone were fully rational and everyone knew it. The target can never be above two thirds of 100, so <b>no one should guess more than 66.7</b>. If no one guesses more than 66.7, the target can’t exceed two thirds of 66.7, so no one should guess more than 44.4. Then 29.6, then 19.8, and on and on, all the way down to 0. Everyone guessing 0 is the game’s only <b>Nash equilibrium</b>: if everyone else guesses 0, guessing anything else makes you lose, and any other common guess invites someone to undercut it (Practice problem 7 shows why). (That is for the version where any number in the range is allowed. With whole numbers only, everyone guessing 1 is an equilibrium too in groups of four or more, a quirk of rounding.) Chapter 2 calls this kind of argument <i>iterated elimination of dominated strategies</i>.</p>
+    <div class="u-ex"><b>Worked example: what a newspaper’s readers did</b>
+      <p>In 2005 the Danish newspaper <i>Politiken</i> ran the game with a prize of 5,000 kroner. 19,196 readers took part, and the average guess was about 33.</p>
+      <ol>
+        <li>The target was two thirds of the average: 2/3 × 33 = <b>22</b>. A reader who guessed 0, the equilibrium, missed by 22.</li>
+        <li>The guesses bunched at 33.3 (level 1) and, less, at 22.2 (level 2). The target, about 22, sat right on the level-2 number: it paid to be one step ahead of the crowd, not infinitely many.</li>
+        <li>Rosemarie Nagel’s classic experiments (<i>American Economic Review</i>, 1995) found the same picture: a first-round average of about 36 with <i>p</i> = 2/3, consistent with one or two steps of reasoning, and guesses falling toward 0 when the game was repeated.</li>
+      </ol>
+      <p>At Yale, Ben Polak plays the game with his game theory class. In fall 2007, in the first week of the course, the class average was about 13⅓ and the winning number was 9; in the three years before, the averages had been about 18.5, 21.5 and 23. The more a crowd has learned, the lower the winning number, but it is rarely 0.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> With the Typical crowd, play 33 and then 22 in a first round. Which wins more often? Then try the Game theorists crowd: being one step deeper than everyone else is the trick, but the right depth depends on the crowd.</div>
+    <div class="lab-try"><b>Try this:</b> Set <i>p</i> = 4/3. Now the target is <i>above</i> the average, so the staircase climbs: 66.7, 88.9, 100. The equilibrium is everyone guessing 100. Same logic, opposite direction.</div>
+  </section>
+
+  <section class="lab-sec" id="game">
+    <h2>What is a game?</h2>
+    <p>Game theory needs only three ingredients. Following Martin Osborne’s textbook, a <b>strategic game</b> (also called a game in <b>normal form</b> or <b>strategic form</b>) consists of</p>
+    <ul>
+      <li>a set of <b>players</b>: the people, firms or countries making decisions;</li>
+      <li>for each player, a set of <b>actions</b> the player can choose from; and</li>
+      <li>for each player, <b>preferences</b> over the possible combinations of everyone’s actions, the <b>action profiles</b>.</li>
+    </ul>
+    <div class="u-big"><i>G</i> = ⟨ <i>N</i>, (<i>A<sub>i</sub></i>), (<i>u<sub>i</sub></i>) ⟩<small><i>N</i>: the players · <i>A<sub>i</sub></i>: the actions of player <i>i</i> · <i>u<sub>i</sub></i>: player <i>i</i>’s payoff function, giving a number for every action profile</small></div>
+    <p>An action profile is written <i>a</i> = (<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>, …, <i>a<sub>n</sub></i>), one action for each player. When we focus on one player <i>i</i>, we write the profile as (<i>a<sub>i</sub></i>, <i>a</i><sub>−<i>i</i></sub>), where <i>a</i><sub>−<i>i</i></sub> lists what everyone else does. A <b>payoff function</b> <i>u<sub>i</sub></i> turns preferences into numbers: <i>u<sub>i</sub></i>(<i>a</i>) &gt; <i>u<sub>i</sub></i>(<i>b</i>) means player <i>i</i> prefers profile <i>a</i> to profile <i>b</i>. Only the order matters for now. Payoffs of 3, 2, 1, 0 and payoffs of 100, 50, 10, 0 describe the same preferences. (In Chapter 4, when players gamble, the sizes will matter too.)</p>
+    <h3 class="lab-h">The payoff matrix</h3>
+    <p>With two players and a few actions each, a game fits in a table. Player 1 picks a row, player 2 picks a column, and the cell where they meet holds both payoffs, <b>player 1’s first</b>. In this course player 1 is always gold and player 2 always blue. Here is Osborne’s “Bach or Stravinsky”: two friends want to go to a concert together, but one prefers Bach and the other Stravinsky.</p>
+    <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Player 1 chooses a row, Player 2 chooses a column. In each cell, Player 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Player 2</th></tr><tr><th class="gth-p1" scope="col">Player 1</th><th scope="col">Bach</th><th scope="col">Stravinsky</th></tr></thead><tbody><tr><th scope="row">Bach</th><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">Stravinsky</th><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">2</span></td></tr></tbody></table></div><figcaption>Read the top-left cell as u<sub>1</sub>(Bach, Bach) = 2 and u<sub>2</sub>(Bach, Bach) = 1. Going to different concerts is the worst outcome for both.</figcaption></figure>
+    <p>The matrix says nothing about money, time or happiness by itself; it just records who prefers what. It also says nothing about the order of moves: the players choose <b>simultaneously</b>, or at least without seeing each other’s choice.</p>
+    <div class="u-ex"><b>Worked example: two coffee shops</b>
+      <p>Brew and Bean sit on the same block and each sets the price of a latte for the week: $4 or $3. A latte costs $1 to make. About 600 people a day buy a latte on the block. If the prices are equal, they split the customers, 300 each. If one is cheaper, it gets 480 and the other 120. (The numbers are invented to keep the arithmetic clean.)</p>
+      <ol>
+        <li>Players: Brew (rows) and Bean (columns). Actions: {$4, $3} for each.</li>
+        <li>Payoff = daily profit = customers × (price − $1). Both at $4: 300 × $3 = <b>$900</b> each. Both at $3: 300 × $2 = <b>$600</b> each.</li>
+        <li>Brew at $3, Bean at $4: Brew earns 480 × $2 = <b>$960</b>, Bean earns 120 × $3 = <b>$360</b>. The opposite cell is the mirror image.</li>
+      </ol>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Brew chooses a row, Bean chooses a column. In each cell, Brew’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Bean</th></tr><tr><th class="gth-p1" scope="col">Brew</th><th scope="col">$4</th><th scope="col">$3</th></tr></thead><tbody><tr><th scope="row">$4</th><td><span class="gth-u1">900</span>, <span class="gth-u2">900</span></td><td><span class="gth-u1">360</span>, <span class="gth-u2">960</span></td></tr><tr><th scope="row">$3</th><td><span class="gth-u1">960</span>, <span class="gth-u2">360</span></td><td><span class="gth-u1">600</span>, <span class="gth-u2">600</span></td></tr></tbody></table></div><figcaption>Daily profit in dollars, Brew’s first.</figcaption></figure>
+      <p>Look at Brew’s numbers. If Bean charges $4, Brew earns more at $3 ($960 versus $900). If Bean charges $3, Brew again earns more at $3 ($600 versus $360). So both cut to $3 and earn $600 instead of $900. Writing the matrix already reveals the trap; Chapter 2 names it.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="build">
+    <h2>Build a game and play it</h2>
+    <p>Choose a game, or press “Edit the game” to write your own 2×2 or 3×3 game, then play it round after round against a computer opponent. You are the row player. Each opponent has a personality, a rule for choosing, and tells you its reasoning after every round.</p>
+    <div class="lab-stage" id="gt1e">
+      <div class="gt1-board" role="group" aria-label="The game you are playing">
+        <div class="gt1-bar"><span class="gt1-dseg" id="gt1e-pre" role="group" aria-label="Ready-made games">
+          <button type="button" data-g="pd" aria-pressed="true">Prisoner’s dilemma</button><button type="button" data-g="bos" aria-pressed="false">Bach or Stravinsky</button><button type="button" data-g="stag" aria-pressed="false">Stag hunt</button><button type="button" data-g="pennies" aria-pressed="false">Matching pennies</button><button type="button" data-g="rps" aria-pressed="false">Rock, paper, scissors</button><button type="button" data-g="three" aria-pressed="false">A 3×3</button></span></div>
+        <div class="gt1-bar"><span class="gt1-dseg" id="gt1e-size" role="group" aria-label="Size of the game"><button type="button" data-n="2" aria-pressed="true">2×2</button><button type="button" data-n="3" aria-pressed="false">3×3</button></span><button type="button" id="gt1e-edit" aria-pressed="false">✎ Edit the game</button></div>
+        <div id="gt1e-mx"></div>
+        <p class="gt1-res" id="gt1e-res" aria-live="polite">Pick a row to play it.</p>
+        <h4>Last rounds (you, then the opponent)</h4>
+        <div class="gt1-hist" id="gt1e-hist"></div>
+      </div>
+      <div class="lab-panel">
+        <h3>Opponent</h3>
+        <div class="lab-seg" role="group" aria-label="Opponent personality" id="gt1e-bots">
+          <button type="button" data-bot="copycat" aria-pressed="false">Copycat</button><button type="button" data-bot="greedy" aria-pressed="true">Greedy</button><button type="button" data-bot="cautious" aria-pressed="false">Cautious</button><button type="button" data-bot="hopeful" aria-pressed="false">Hopeful</button><button type="button" data-bot="learner" aria-pressed="false">Learner</button><button type="button" data-bot="rational" aria-pressed="false">Rational</button><button type="button" data-bot="wild" aria-pressed="false">Wild card</button>
+        </div>
+        <p class="lab-small" id="gt1e-blurb"></p>
+        <h3>Its reasoning</h3>
+        <p id="gt1e-why" aria-live="polite">—</p>
+        <h3>Score</h3>
+        <dl class="lab-readout" id="gt1e-read"></dl>
+        <div class="lab-row"><button type="button" class="lab-btn" id="gt1e-again">Clear the scores</button></div>
+        <h3>This game in symbols</h3>
+        <p id="gt1e-nf"></p>
+      </div>
+    </div>
+    <div class="lab-try"><b>Try this:</b> In Bach or Stravinsky against Greedy, play Stravinsky twice in a row. Greedy expects you to repeat, so it follows you, and you meet at your favorite concert. Against Copycat the same idea works one round later. Personalities are predictable, and predictable players can be led.</div>
+    <div class="lab-try"><b>Try this:</b> In the stag hunt, Cautious always hunts hare (it can’t get less than 3) while Hopeful always hunts stag (it might get 4). Neither is “irrational”; they just treat the unknown differently. Chapter 3 asks which of the two outcomes a theory should predict.</div>
+    <div class="lab-try"><b>Try this:</b> Play rock, paper, scissors against the Learner and always pick Rock. Watch its reasoning: within a few rounds it expects Rock and plays Paper every time. Chapter 4 is about how to avoid being read.</div>
+  </section>
+
+  <section class="lab-sec" id="ck">
+    <h2>Common knowledge</h2>
+    <p>The argument that pushes the guessing game down to 0 needs more than “everyone is rational.” It needs everyone to know that everyone is rational (so no one guesses above 66.7), everyone to know <i>that</i> (so no one guesses above 44.4), and so on without end. A fact with this property, where everyone knows it, everyone knows that everyone knows it, and so on forever, is called <b>common knowledge</b>. The philosopher David Lewis described it in <i>Convention</i> (1969), and Robert Aumann gave it a precise mathematical form in “Agreeing to disagree” (<i>Annals of Statistics</i>, 1976).</p>
+    <p>Standard game theory assumes that the game itself (the players, actions and payoffs) is common knowledge, and often that rationality is too. The guessing game shows how demanding that is. Even if you are perfectly rational, guessing 0 is a bad idea when you believe some of the others stop after one or two steps. Being rational means best responding to what you <i>expect</i>, and good expectations come from knowing your crowd.</p>
+    <div class="u-myth"><b>Common mistake: “Game theory assumes people are selfish and only care about money”</b>
+      <p>Payoffs are not dollars. They rank outcomes by what each player cares about, which can include fairness, reputation, a friend’s happiness or a dislike of being cheated. A parent who prefers their child to win has that preference in their payoffs. What game theory does assume is that players choose what they prefer, given what they expect others to do. When people seem “irrational” in an experiment, the first question to ask is whether the payoffs we wrote down were really their payoffs.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="timing">
+    <h2>Moving at the same time, or in turns</h2>
+    <p>In a <b>simultaneous</b> game each player chooses without seeing the others’ choices: sealed bids, rock, paper, scissors, two firms setting this week’s prices. The matrix is the natural picture. In a <b>sequential</b> game players move in turns and can see what came before: chess, a firm deciding whether to enter a market after seeing the incumbent’s capacity, a buyer and a seller trading offers. The natural picture is a <b>game tree</b>.</p>
+    <div class="gt1-pair">
+      <figure>
+        <figure class="gth-mx gt1-small"><div class="gth-mx-w"><table aria-label="Payoff matrix. Firm A chooses a row, Firm B chooses a column. In each cell, Firm A’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Firm B</th></tr><tr><th class="gth-p1" scope="col">Firm A</th><th scope="col">Fight</th><th scope="col">Share</th></tr></thead><tbody><tr><th scope="row">Enter</th><td><span class="gth-u1">−1</span>, <span class="gth-u2">−1</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">1</span></td></tr><tr><th scope="row">Stay out</th><td><span class="gth-u1">0</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">3</span></td></tr></tbody></table></div><figcaption>Simultaneous: B must choose without knowing whether A entered.</figcaption></figure>
+      </figure>
+      <figure>
+        <svg class="gt1-svg" viewBox="0 0 320 190" role="img" aria-label="A game tree. Firm A chooses Enter or Stay out. Stay out ends the game with payoffs 0 for A and 3 for B. After Enter, firm B chooses Fight, giving minus 1 and minus 1, or Share, giving 1 and 1.">
+          <g font-family="system-ui,sans-serif" font-size="12">
+            <line x1="60" y1="40" x2="40" y2="140" stroke="#ffd479" stroke-width="2"/><line x1="60" y1="40" x2="190" y2="90" stroke="#ffd479" stroke-width="2"/>
+            <line x1="190" y1="90" x2="140" y2="160" stroke="#74c0fc" stroke-width="2"/><line x1="190" y1="90" x2="270" y2="160" stroke="#74c0fc" stroke-width="2"/>
+            <circle cx="60" cy="40" r="9" fill="#ffd479"/><text x="60" y="44" text-anchor="middle" font-weight="700" fill="#06111a">A</text>
+            <circle cx="190" cy="90" r="9" fill="#74c0fc"/><text x="190" y="94" text-anchor="middle" font-weight="700" fill="#06111a">B</text>
+            <text x="34" y="96" fill="#ffd479" text-anchor="end">Stay out</text><text x="132" y="56" fill="#ffd479">Enter</text>
+            <text x="148" y="130" fill="#74c0fc" text-anchor="end">Fight</text><text x="238" y="122" fill="#74c0fc">Share</text>
+            <text x="40" y="160" text-anchor="middle" font-weight="700"><tspan fill="#ffd479">0</tspan><tspan fill="#8fb3c6">, </tspan><tspan fill="#74c0fc">3</tspan></text>
+            <text x="140" y="180" text-anchor="middle" font-weight="700"><tspan fill="#ffd479">−1</tspan><tspan fill="#8fb3c6">, </tspan><tspan fill="#74c0fc">−1</tspan></text>
+            <text x="270" y="180" text-anchor="middle" font-weight="700"><tspan fill="#ffd479">1</tspan><tspan fill="#8fb3c6">, </tspan><tspan fill="#74c0fc">1</tspan></text>
+          </g>
+        </svg>
+        <figcaption>Sequential: B moves only if A entered, and knows it. B will share, so A enters.</figcaption>
+      </figure>
+    </div>
+    <p>The same story can be a different game depending on who sees what. In the tree, B’s threat to fight is empty: once A is in, fighting costs B 2. In the simultaneous version, B can’t react, and the analysis changes. Chapter 6 develops game trees, strategies as complete plans, and threats that are or aren’t believable. Until then, we stay with simultaneous games.</p>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <p><b>John Maynard Keynes</b>, in chapter 12 of <i>The General Theory of Employment, Interest and Money</i> (1936), compared professional investing to a newspaper competition in which readers pick the prettiest faces from a hundred photographs and win if their picks match the most popular picks. The winning approach is not to choose the faces you find prettiest, but those you expect others to choose, or those you expect others to expect others to choose. Economists still call games like the one above <b>beauty contests</b>.</p>
+    <p><b>John von Neumann and Oskar Morgenstern</b> set out the language of players, strategies and payoffs in <i>Theory of Games and Economic Behavior</i> (1944). The normal form and the payoff matrix come from that work; writing the row player’s payoff first has been the convention in textbooks ever since. <b>John Nash</b>’s equilibrium (1950) gave the theory its central prediction.</p>
+    <p><b>Rosemarie Nagel</b>’s 1995 experiments made the guessing game famous among economists by showing, round by round, how people actually reason in it. Level-k models were developed by <b>Dale Stahl and Paul Wilson</b>, among others, in the 1990s, and <b>Colin Camerer, Teck-Hua Ho and Juin-Kuan Chong</b> proposed the related cognitive hierarchy model in 2004. These models don’t replace Nash equilibrium; they describe how people get there, or why they don’t.</p>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <ul>
+      <li><b>Business:</b> a firm setting prices, launching a product or bidding for a contract faces rivals who are thinking about it too. Writing down the players, the options and what each side gets is often the most useful step, because it shows whose choices matter and how. Games need not be pure conflict: in 1997 Microsoft put $150 million into Apple and committed to keep making Office for the Mac, a deal that helped both rivals (see the case <a href="{{ "business/cases/apple-1997/" | relURL }}">Steve Jobs Returns and Apple Learns to Say No</a>).</li>
+      <li><b>Markets:</b> Keynes’s point was that prices in speculative markets depend partly on what traders expect other traders to think. That is a reason for humility about forecasting, not a trading tip; nothing here is financial or investment advice.</li>
+      <li><b>Sports:</b> a coach calling a play, a pitcher choosing a pitch and a goalkeeper choosing which way to dive all face an opponent guessing at the same time. Chapter 4 shows how professionals handle it.</li>
+      <li><b>Policy:</b> a tax, a speed camera or a new rule is a move in a game. People respond to it, and a good policy anticipates the response.</li>
+      <li><b>Daily life:</b> choosing which checkout line to join, when to leave for a game everyone is going to, or which restaurant your friend will go to when you can’t reach them. Each is a small game whose answer depends on what you expect the others to do.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol>
+      <li><p><b>Roommates.</b> Ana and Ben each decide whether to Clean the kitchen or Skip it. A clean kitchen is worth 60 minutes of happiness to each of them. If both clean, each spends 30 minutes; if only one cleans, that person spends 60 minutes; if neither cleans, the kitchen stays dirty (worth 0). Payoffs are happiness minus time spent. Write the payoff matrix with Ana as the row player.</p>
+        <details><summary>Show the answer</summary>
+          <p>Both clean: 60 − 30 = 30 each. Ana cleans alone: Ana 60 − 60 = 0, Ben 60. Ben cleans alone: Ana 60, Ben 0. Neither: 0 each.</p>
+          <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Ana chooses a row, Ben chooses a column. In each cell, Ana’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Ben</th></tr><tr><th class="gth-p1" scope="col">Ana</th><th scope="col">Clean</th><th scope="col">Skip</th></tr></thead><tbody><tr><th scope="row">Clean</th><td><span class="gth-u1">30</span>, <span class="gth-u2">30</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">60</span></td></tr><tr><th scope="row">Skip</th><td><span class="gth-u1">60</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr></tbody></table></div></figure>
+          <p>Notice that Skip is never worse for Ana (60 &gt; 30, and 0 = 0). That is a <i>weakly dominant</i> action, a Chapter 2 idea.</p></details></li>
+      <li><p><b>Reading the matrix.</b> In Bach or Stravinsky above, what are <i>u</i><sub>1</sub>(Bach, Stravinsky) and <i>u</i><sub>2</sub>(Stravinsky, Stravinsky)? Which action profile does player 1 like best, and which does player 2 like best?</p>
+        <details><summary>Show the answer</summary><p><i>u</i><sub>1</sub>(Bach, Stravinsky) = 0 (row Bach, column Stravinsky, first number). <i>u</i><sub>2</sub>(Stravinsky, Stravinsky) = 2 (second number in the bottom-right cell). Player 1 likes (Bach, Bach) best, with payoff 2; player 2 likes (Stravinsky, Stravinsky) best, with payoff 2.</p></details></li>
+      <li><p><b>A different multiplier.</b> In the guessing game with <i>p</i> = 1/2 and level-0 players averaging 50, what do levels 1, 2 and 3 guess? What is the Nash equilibrium?</p>
+        <details><summary>Show the answer</summary><p>Level 1: 50 × 1/2 = 25. Level 2: 12.5. Level 3: 6.25. The equilibrium is still everyone guessing 0: any common guess above 0 is too high, because the target is half of it.</p></details></li>
+      <li><p><b>How many steps?</b> With <i>p</i> = 2/3, how many rounds of “no one should guess above two thirds of the previous bound” does it take before the bound, starting at 100, falls below 1?</p>
+        <details><summary>Show the answer</summary><p>After <i>k</i> steps the bound is 100 × (2/3)<sup><i>k</i></sup>. We need (2/3)<sup><i>k</i></sup> &lt; 0.01, so <i>k</i> &gt; ln 100 ÷ ln 1.5 = 4.605 ÷ 0.405 ≈ 11.4. It takes <b>12 steps</b>: 100 × (2/3)<sup>11</sup> ≈ 1.16, and 100 × (2/3)<sup>12</sup> ≈ 0.77. Real people rarely take more than two or three.</p></details></li>
+      <li><p><b>Only the order matters.</b> In the prisoner’s dilemma on the course home page, the payoffs are 3, 2, 1 and 0. Suppose you replace them with 100, 50, 10 and 0 (3 becomes 100, 2 becomes 50, and so on). Does any player’s preference between any two outcomes change? What if instead 2 became 4?</p>
+        <details><summary>Show the answer</summary><p>Replacing 3, 2, 1, 0 with 100, 50, 10, 0 keeps every comparison the same, so it is the same game as far as preferences go: Fink still beats Quiet whatever the other does. Changing 2 to 4 makes mutual quietness (4) better than finking on a quiet partner (3). That reverses a comparison, so it is a different game, the stag hunt of Chapter 3, with different predictions.</p></details></li>
+      <li><p><b>Counting profiles.</b> Three gas stations at an intersection each choose one of four prices. How many action profiles are there? How many payoff numbers does the full normal form contain?</p>
+        <details><summary>Show the answer</summary><p>Each station has 4 actions, so there are 4 × 4 × 4 = <b>64</b> action profiles. Each profile needs one payoff for each of the 3 players: 64 × 3 = <b>192</b> numbers. Normal forms grow fast, which is why we look for structure instead of listing everything.</p></details></li>
+      <li><p><b>Why 0 is the equilibrium.</b> In the guessing game with <i>n</i> ≥ 2 players, <i>p</i> = 2/3 and a prize split equally among those closest to the target (any number from 0 to 100 allowed), show (a) that everyone guessing 0 is a Nash equilibrium and (b) that everyone guessing the same number <i>x</i> &gt; 0 is not.</p>
+        <details><summary>Show the answer</summary>
+          <p>(a) If everyone guesses 0, all tie and each gets 1/<i>n</i> of the prize. Suppose you switch to <i>y</i> &gt; 0. The average becomes <i>y</i>/<i>n</i> and the target 2<i>y</i>/(3<i>n</i>) ≤ <i>y</i>/3. The others, at 0, are within <i>y</i>/3 of the target; you are at least 2<i>y</i>/3 away. You lose, so switching can’t help.</p>
+          <p>(b) If everyone guesses <i>x</i> &gt; 0, all tie and each gets 1/<i>n</i>. Switch to a slightly lower <i>y</i>, still above the new target <i>t</i> = (2/3)((<i>n</i> − 1)<i>x</i> + <i>y</i>)/<i>n</i>, which is below <i>x</i>. Your distance <i>y</i> − <i>t</i> is smaller than everyone else’s, <i>x</i> − <i>t</i>, so you win the whole prize instead of 1/<i>n</i> of it. A profitable deviation exists, so this is not an equilibrium.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the interactive works</h2>
+    <p><b>The crowd.</b> Each simulated player has a fixed level. In the first round level-0 players draw a number uniformly from 0 to 100; a level-<i>k</i> player guesses 50 × <i>p</i><sup><i>k</i></sup> plus a little random noise (the “sloppiness” slider sets its size); equilibrium players guess 0 (or 100 when <i>p</i> = 4/3). With learning on, later rounds start from the previous round’s average instead of 50: level-0 players draw uniformly from an interval centered on it, and level-<i>k</i> players guess the previous average × <i>p</i><sup><i>k</i></sup>. The presets set the mix of levels; the Typical crowd is 30% level 0, 35% level 1, 22% level 2, 8% level 3, 3% level 4 and 2% equilibrium players, chosen so that its average lands near the 33 seen in the <i>Politiken</i> contest. Your guess counts in the average, as it would in a real game. Ties share the win. All of this is simulated: there is no real crowd.</p>
+    <p><b>The opponents.</b> Copycat plays the column in the same position as your last row. Greedy best replies to your last move. Cautious maximizes its worst-case payoff (maximin); Hopeful maximizes its best-case payoff. Learner best replies to the frequencies of your past moves (a rule called fictitious play), starting from a count of one for each action. Rational plays a strictly dominant action if it has one, expects you to play yours if you have one, uses iterated elimination if it solves the game, then a unique pure equilibrium, and otherwise falls back on the Learner’s rule. Ties are broken at random.</p>
+    <p><b>Checks.</b> The model is tested in node. Level guesses with <i>p</i> = 2/3 come out at 33.33, 22.22 and 14.81. Over 4,000 simulated Typical crowds of 200, the average guess was 33.04 and the target 22.03. In a seeded run with learning on, the targets were 22.3, 15.3, 10.1, 6.6, 3.6, 2.8, 1.9 and 1.4 in rounds 1 to 8, the same unraveling Nagel saw. A crowd of equilibrium players and you at 0 produce a tie among all 31 players, and moving to 10 loses. Each opponent was checked on a known case: Rational finks in the prisoner’s dilemma, Cautious hunts hare and Hopeful hunts stag in the stag hunt, and Learner answers a Rock-lover with Paper.</p>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>In this course’s matrices, a cell in row Fink and column Quiet reads “3, 0”. What does it mean?</p>
+        <ul class="u-opts"><li><button type="button">Player 1 gets 0 and player 2 gets 3</button></li><li><button type="button">The row player, who chose Fink, gets 3; the column player, who chose Quiet, gets 0</button></li><li><button type="button">Both players get 3 minus 0</button></li></ul>
+        <details><summary>Show the answer</summary><p>The row player’s payoff always comes first, and the cell is where the row player’s action (Fink) meets the column player’s action (Quiet).</p></details></li>
+      <li class="u-q" data-a="2"><p>With <i>p</i> = 2/3 and level-0 players averaging 50, what does a level-2 player guess?</p>
+        <ul class="u-opts"><li><button type="button">33.3</button></li><li><button type="button">0</button></li><li><button type="button">22.2</button></li><li><button type="button">44.4</button></li></ul>
+        <details><summary>Show the answer</summary><p>Level 1 guesses 2/3 × 50 = 33.3; level 2 best responds to that: 2/3 × 33.3 = 22.2.</p></details></li>
+      <li class="u-q" data-a="0"><p>Why does guessing 0, the Nash equilibrium, rarely win against real people?</p>
+        <ul class="u-opts"><li><button type="button">Because most people take only a few steps of reasoning, so the target ends up well above 0</button></li><li><button type="button">Because the Nash equilibrium is calculated wrongly</button></li><li><button type="button">Because 0 is not allowed</button></li></ul>
+        <details><summary>Show the answer</summary><p>The equilibrium is the right answer if everyone is rational and that is common knowledge. When others stop after one or two steps, the best reply to what they actually do is a number like 20, not 0.</p></details></li>
+      <li class="u-q" data-a="2"><p>Which of these is <i>not</i> part of a strategic game’s description?</p>
+        <ul class="u-opts"><li><button type="button">The set of players</button></li><li><button type="button">Each player’s actions</button></li><li><button type="button">The amount of money each player has in the bank</button></li><li><button type="button">Each player’s preferences over action profiles</button></li></ul>
+        <details><summary>Show the answer</summary><p>A strategic game is players, actions and preferences (payoffs). Money matters only if it enters someone’s preferences.</p></details></li>
+      <li class="u-q" data-a="1"><p>A fact is common knowledge when …</p>
+        <ul class="u-opts"><li><button type="button">most people know it</button></li><li><button type="button">everyone knows it, everyone knows that everyone knows it, and so on without end</button></li><li><button type="button">it has been published</button></li></ul>
+        <details><summary>Show the answer</summary><p>Common knowledge is the infinite chain of “knowing that others know.” The guessing game’s equilibrium needs rationality to be common knowledge.</p></details></li>
+      <li class="u-q" data-a="0"><p>Every payoff in a two-player game is doubled. What happens to the players’ preferences over outcomes?</p>
+        <ul class="u-opts"><li><button type="button">Nothing: the order of the outcomes is unchanged</button></li><li><button type="button">The players now care twice as much, so they choose differently</button></li><li><button type="button">The game becomes zero-sum</button></li></ul>
+        <details><summary>Show the answer</summary><p>Doubling keeps every comparison the same, so each player still prefers exactly the same outcomes. (Any change that keeps the order does; Chapter 4 explains why gambling needs a bit more.)</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapters 1 and 2 (preferences and payoffs, strategic games, the prisoner’s dilemma, Bach or Stravinsky).</li>
+      <li>R. Nagel, “Unraveling in guessing games: an experimental study”, <i>American Economic Review</i> 85(5), 1995, 1313–1326.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Guess_2/3_of_the_average" target="_blank" rel="noopener">Guess 2/3 of the average</a> (Wikipedia; the <i>Politiken</i> contest and its numbers).</li>
+      <li><a href="https://oyc.yale.edu/economics/econ-159/lecture-2" target="_blank" rel="noopener">Ben Polak, Yale ECON 159, Lecture 2: Putting Yourselves into Other People’s Shoes</a> (the class results quoted above, from the transcript).</li>
+      <li>C. F. Camerer, T.-H. Ho and J.-K. Chong, “A cognitive hierarchy model of games”, <i>Quarterly Journal of Economics</i> 119(3), 2004, 861–898.</li>
+      <li>J. M. Keynes, <i>The General Theory of Employment, Interest and Money</i> (Macmillan, 1936), chapter 12.</li>
+      <li><a href="https://plato.stanford.edu/entries/common-knowledge/" target="_blank" rel="noopener">“Common Knowledge”, Stanford Encyclopedia of Philosophy</a>. D. Lewis, <i>Convention</i> (Harvard University Press, 1969). R. J. Aumann, “Agreeing to disagree”, <i>Annals of Statistics</i> 4(6), 1976, 1236–1239.</li>
+      <li><a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2025/" target="_blank" rel="noopener">MIT OpenCourseWare, 14.12 Economic Applications of Game Theory</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/games-and-payoffs/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/games-and-payoffs/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/games-and-payoffs/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/games-and-payoffs/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

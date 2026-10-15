@@ -1,0 +1,217 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/cooperative-games/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/cooperative-games/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt13-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 13</p>
+    <h1>{{ .Title }}</h1>
+    <p>Three firms merge, two airlines share a runway, a startup’s founders split the equity. Once people can sign binding agreements, the question is no longer how they will play, but which groups will form and how they’ll divide what they create together. Here you’ll let players walk into a room one at a time and pay each one what they add, which is Lloyd Shapley’s famous answer to “who deserves what”. Then you’ll look for splits that no group would reject, and measure how much power each member of a council really has, which can be very different from how many votes they hold.</p>
+    <span class="lab-mark" aria-hidden="true">🧩</span>
+  </header>
+
+  <div class="lab-stage gt13-main">
+    <div class="lab-view" id="gt13-view">
+      <canvas id="gt13-cv" tabindex="0" aria-label="Top left: a room that players enter one at a time in a given order; as each enters, the amount it adds to the group's worth appears above it. Top right: a table of every possible order of arrival with each player's marginal contribution. Bottom: bars showing each player's average marginal contribution over the orders done so far, with a white line at the Shapley value. Keys: Space or Enter runs the next order."></canvas>
+      <div class="lab-hud" id="gt13-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="gt13-pause" aria-label="Pause or play" title="Pause or play">❚❚</button>
+        <button type="button" id="gt13-reset" aria-label="Start again" title="Start again">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="gt13-pre-h">Games</h3>
+      <div class="lab-seg" id="gt13-pre" role="group" aria-labelledby="gt13-pre-h">
+        <button type="button" data-g="gloves">Gloves</button><button type="button" data-g="airport">Airport</button><button type="button" data-g="merger">Merger</button><button type="button" data-g="majority">Majority</button><button type="button" data-g="custom">Your own</button><button type="button" data-g="air4">Airport, 4 planes</button><button type="button" data-g="gl4">Gloves, 2 + 2</button>
+      </div>
+      <p class="lab-small gt13-note" id="gt13-note"></p>
+      <div id="gt13-edwrap">
+        <h3>What each coalition is worth</h3>
+        <div class="gt13-ed" id="gt13-ed"></div>
+        <p class="lab-small">Change any number to make your own game.</p>
+      </div>
+      <div class="gt13-acts"><button type="button" class="lab-btn pri" id="gt13-next">Next order</button><button type="button" class="lab-btn" id="gt13-all">Run all orders</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="gt13-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt13-missions"></ol>
+    </div>
+    <section class="lab-sec gt13-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The game.</b> A coalitional game lists what every group of players could earn on its own. In the glove game, Lefty owns a left glove and the two Rightys own right gloves; only a matched pair is worth anything, $1. So any group with Lefty and at least one Righty is worth $1, and every other group is worth $0.</p>
+        <p><b>The room.</b> Imagine the players arriving one at a time in a random order. Each one is paid what they add when they walk in: the group’s worth with them, minus its worth without them. That’s their <b>marginal contribution</b>. If Righty 1 arrives first, she adds nothing; if she arrives right after Lefty, she adds the whole $1.</p>
+        <p><b>The average.</b> Different orders pay different amounts. Average each player’s marginal contribution over all the orders (6 for three players, 24 for four), and you get the <b>Shapley value</b>. The bars show the running average and the white lines show where it ends up.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="tu"><h2>Coalitional games</h2>
+    <p>John von Neumann and Oskar Morgenstern introduced the idea in 1944. A <b>coalitional game with transferable payoff</b> has a set of players <var>N</var> and a <b>characteristic function</b> <var>v</var> that gives each coalition <var>S</var> ⊆ <var>N</var> its worth <var>v</var>(<var>S</var>), with <var>v</var>(∅) = 0. “Transferable” means the worth can be divided any way the members like, as with money. The game says nothing about how players act; it only lists what each group could guarantee itself.</p>
+    <ul>
+      <li>A game is <b>superadditive</b> if two separate groups can always do at least as well together: <var>v</var>(<var>S</var> ∪ <var>T</var>) ≥ <var>v</var>(<var>S</var>) + <var>v</var>(<var>T</var>) whenever <var>S</var> and <var>T</var> don’t overlap. Then the grand coalition of everyone is the natural one to form, and the question is how to split <var>v</var>(<var>N</var>).</li>
+      <li>An <b>imputation</b> is a split <var>x</var> = (<var>x</var><sub>1</sub>, …, <var>x</var><sub><var>n</var></sub>) of <var>v</var>(<var>N</var>) that gives each player at least what they could get alone: <var>x</var><sub><var>i</var></sub> ≥ <var>v</var>({<var>i</var>}).</li>
+    </ul>
+    <div class="u-ex"><b>Worked example: a three-firm merger</b>
+      <p>Firms A, B and C earn $10M, $20M and $30M a year alone. Any two merged earn more: A+B $40M, A+C $50M, B+C $60M. All three together earn $80M. The game is superadditive, so all three should merge. But how should they split $80M? Equal thirds (26.7 each) would give C less than it earns alone. Splitting in proportion to stand-alone profits (13.3, 26.7, 40) gives B and C together 66.7, more than the 60 they could get by merging without A, so they can afford it; is A getting enough? The next two sections give two different answers to “how much is fair” and “how much is safe”.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="core"><h2>The core: splits no group would reject</h2>
+    <p>A split is <b>stable</b> if no group of players can do better by breaking away. That set of splits is the <b>core</b>, introduced by Donald Gillies in his 1953 doctoral thesis (published 1959):</p>
+    <div class="u-big">Σ<sub><var>i</var>∈<var>S</var></sub> <var>x</var><sub><var>i</var></sub> ≥ <var>v</var>(<var>S</var>) for every coalition <var>S</var>, &nbsp; and &nbsp; Σ<sub><var>i</var>∈<var>N</var></sub> <var>x</var><sub><var>i</var></sub> = <var>v</var>(<var>N</var>)<small>the core: every coalition gets at least what it could earn on its own</small></div>
+    <p>With three players, every imputation is a point in a triangle: each corner gives all of the extra worth to one player. Each pair’s demand cuts off a slice of the triangle; what’s left is the core. Drag the white dot. If a group would walk out, the live numbers name it.</p>
+    <div class="lab-stage wide gt13-mini" id="gt13-tview">
+      <div class="lab-view"><canvas id="gt13-tc" tabindex="0" aria-label="The triangle of all splits of the grand coalition's worth among three players. Each corner gives all the extra worth to one player. Red dashed lines are the limits set by each pair; the green region is the core. The gold dot is the Shapley value. Drag the white dot, or use the arrow keys, to try a split; its ring turns green inside the core and red outside."></canvas></div>
+      <div class="lab-panel gt13-row">
+        <button type="button" class="lab-btn" id="gt13-tshap">Move to the Shapley value</button>
+        <dl class="lab-readout gt13-grow" id="gt13-tread"></dl>
+      </div>
+    </div>
+    <p class="lab-small">The triangle uses the game chosen in the main simulation above. Pick a three-player game there.</p>
+    <div class="u-ex"><b>Worked example: the merger’s core</b>
+      <p>The core needs <var>x</var><sub>A</sub> ≥ 10, <var>x</var><sub>B</sub> ≥ 20, <var>x</var><sub>C</sub> ≥ 30, and for each pair, say B and C, <var>x</var><sub>B</sub> + <var>x</var><sub>C</sub> ≥ 60. Since all three add to 80, that last condition means <var>x</var><sub>A</sub> ≤ 20. In the same way <var>x</var><sub>B</sub> ≤ 30 and <var>x</var><sub>C</sub> ≤ 40. The core is the small triangle with corners (20, 30, 30), (10, 30, 40) and (20, 20, 40), in $M. The proportional split (13.3, 26.7, 40) is inside it; equal thirds is not.</p>
+    </div>
+    <p><b>Empty cores.</b> In the majority game, any two of three players can take the whole $1. Whatever split you propose, the two players with the least can grab everything together; every pair needs at least $1, so the three pairs together need $3, but there is only $1 to go around. Olga Bondareva (1963) and Shapley (1967) found exactly when a core is non-empty: when the game is <b>balanced</b>. For three players whose singletons are worth 0, it comes down to a simple test: no pair is worth more than <var>v</var>(<var>N</var>), and the three pairs’ worths add to at most 2<var>v</var>(<var>N</var>).</p>
+  </section>
+
+  <section class="lab-sec" id="shapley"><h2>The Shapley value: a fair split</h2>
+    <p>The core asks what is stable. In 1953 Lloyd Shapley asked what is fair, and wrote down four properties a fair rule should have:</p>
+    <div class="u-key">
+      <div><b>Efficiency</b><p>The whole worth <var>v</var>(<var>N</var>) is divided, no more and no less.</p></div>
+      <div><b>Symmetry</b><p>Two players who add the same to every coalition get the same.</p></div>
+      <div><b>Null player</b><p>A player who adds nothing to any coalition gets nothing.</p></div>
+      <div><b>Additivity</b><p>If two games are played, a player’s share of the combined game is the sum of their shares of each.</p></div>
+    </div>
+    <p>He proved that exactly one rule has all four, and it is the average marginal contribution over all orders of arrival. Counting how many orders put exactly the coalition <var>S</var> ahead of player <var>i</var> gives the formula:</p>
+    <div class="u-big">φ<sub><var>i</var></sub>(<var>v</var>) = Σ<sub><var>S</var> ⊆ <var>N</var>∖{<var>i</var>}</sub> |<var>S</var>|! (<var>n</var> − |<var>S</var>| − 1)! / <var>n</var>! × [<var>v</var>(<var>S</var> ∪ {<var>i</var>}) − <var>v</var>(<var>S</var>)]<small>the Shapley value: each player’s marginal contribution, averaged over all <var>n</var>! orders of arrival</small></div>
+    <div class="u-ex"><b>Worked example: the glove game</b>
+      <p>Order the players and see who adds the $1:</p>
+      <div class="lab-tw"><table class="lab-table gt13-tbl"><thead><tr><th>Order</th><th>Lefty adds</th><th>Righty 1 adds</th><th>Righty 2 adds</th></tr></thead><tbody>
+        <tr><td>L, R1, R2</td><td>0</td><td>1</td><td>0</td></tr><tr><td>L, R2, R1</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>R1, L, R2</td><td>1</td><td>0</td><td>0</td></tr><tr><td>R1, R2, L</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>R2, L, R1</td><td>1</td><td>0</td><td>0</td></tr><tr><td>R2, R1, L</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><th>Average</th><th>4/6 = 2/3</th><th>1/6</th><th>1/6</th></tr></tbody></table></div>
+      <p>Lefty gets two thirds because left gloves are scarce. Notice that the core says something harsher: the only stable split is (1, 0, 0). If Lefty offered Righty 1 anything, Lefty and Righty 2 could do better together. Competition between the Rightys drives their share to zero, while the Shapley value rewards each for being needed in some orders.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: sharing a runway</b>
+      <p>A small, a medium and a large plane need runways costing $8M, $11M and $13M; one runway long enough for the largest serves all. Stephen Littlechild and Guillermo Owen (1973) showed that the Shapley value then has a simple form: split the first $8M of runway equally among all three planes, the next $3M between the two that need it, and the last $2M to the large plane alone. Shares: small 8/3 ≈ $2.67M, medium 2.67 + 1.5 = $4.17M, large 4.17 + 2 = $6.17M. They add to $13M. Littlechild and Gary Thompson (1977) used this idea to work out landing fees for Birmingham Airport in England.</p>
+    </div>
+    <p><b>Fair versus stable.</b> The Shapley value always exists and is unique; the core can be empty or contain many splits. When they overlap, everyone is happy. Shapley proved in 1971 that in <b>convex</b> games, where a player adds more to bigger coalitions (<var>v</var>(<var>S</var> ∪ <var>T</var>) + <var>v</var>(<var>S</var> ∩ <var>T</var>) ≥ <var>v</var>(<var>S</var>) + <var>v</var>(<var>T</var>)), the Shapley value is always in the core. The airport game is convex (as a cost game), and so is the merger. The glove game is not.</p>
+    <div class="lab-try"><b>Try this:</b> choose “Your own” and set v(1,2) = v(1,3) = 9 and v(1,2,3) = 10, with every other number 0. The core is a thin sliver near the top corner (player 1 must get at least 8), but the Shapley value gives player 1 only 6.33, so the gold dot falls outside. Then drag the white dot into the core in the triangle.</div>
+  </section>
+
+  <section class="lab-sec" id="power"><h2>Voting power</h2>
+    <p>A <b>weighted voting game</b> [<var>q</var>; <var>w</var><sub>1</sub>, …, <var>w</var><sub><var>n</var></sub>] gives member <var>i</var> <var>w</var><sub><var>i</var></sub> votes; a motion passes with at least <var>q</var>. Treat a winning coalition as worth 1 and a losing one as worth 0, and the Shapley value becomes a measure of power. Shapley and Martin Shubik proposed it in 1954: a member’s power is the share of orders in which they are <b>pivotal</b>, turning a losing group into a winning one as they join. In 1965 the lawyer John Banzhaf proposed a cousin: count the winning coalitions in which a member is a <b>swing</b> (the coalition would lose without them), and divide by the total number of swings.</p>
+    <div class="lab-stage wide gt13-mini" id="gt13-vview">
+      <div class="lab-view"><canvas id="gt13-vc" aria-label="A bar chart for each council member: their share of the votes in gray, their Shapley–Shubik power in gold and their Banzhaf power in blue. Members with no power are marked in red."></canvas></div>
+      <div class="lab-panel gt13-row">
+        <div class="lab-seg" id="gt13-vpre" role="group" aria-label="Councils"><button type="button" data-p="eec">European Economic Community, 1958</button><button type="button" data-p="nassau">Nassau County, 1964</button><button type="button" data-p="share">Shareholders 49/49/2</button><button type="button" data-p="council">A small council</button></div>
+        <div class="gt13-vw" id="gt13-vw"></div>
+        <label class="lab-field gt13-grow"><span>Votes needed to pass <output id="gt13-vq-o"></output></span><input type="range" id="gt13-vq" min="1" max="17" step="1" aria-label="Quota: votes needed to pass a motion"></label>
+        <dl class="lab-readout gt13-grow" id="gt13-vread"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: Luxembourg in 1958</b>
+      <p>Under the 1957 Treaty of Rome, the Council of the European Economic Community voted with France, Germany and Italy holding 4 votes each, Belgium and the Netherlands 2 each, and Luxembourg 1; a qualified majority needed 12 of the 17. Every other member’s votes are even, so every coalition without Luxembourg has an even total, and adding Luxembourg’s single vote to a total of 11 is impossible. Luxembourg could never be pivotal: its power was exactly zero, by both measures.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: Nassau County, 1964</b>
+      <p>Nassau County’s Board of Supervisors had weights 31, 31, 28, 21, 2 and 2, and a simple majority of 58 out of 115 votes passed a motion. Any two of the three biggest districts make at least 59, a majority. The other three together have only 25 votes, not enough to turn any losing group into a winner. So North Hempstead, with 21 votes, Long Beach and Glen Cove had no power at all; the three big districts had a third each. Banzhaf used this case to argue that weighted voting “doesn’t work”.</p>
+    </div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “More votes means proportionally more power”</b>
+    <p>Power depends on how often you can swing an outcome, not on your share of the votes. Two shareholders with 49% each and a third with 2% have exactly equal power when 51% is needed: any two of them win. A member with 18% of the votes can have none, as in Nassau County. When you look at a voting rule, count pivots, not votes.</p>
+  </div>
+
+  <section class="lab-sec" id="world"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Cost sharing.</b> Runways, pipelines, power lines and shared IT systems are paid for by users with different needs; the airport rule is the classic way to split them fairly.</li>
+      <li><b>Profit splitting.</b> Partnerships, joint ventures and mergers face the core’s question (will anyone leave?) and the Shapley value’s (does each partner get what they add?).</li>
+      <li><b>Voting rules.</b> Councils, shareholder meetings and international bodies use weighted votes; power indices have been used in court cases and in debates over the European Union’s voting rules.</li>
+      <li><b>Attributing results.</b> Whenever several causes produce an outcome together, from team members on a project to marketing channels behind a sale, the Shapley value is a principled way to credit each one.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A little history</h2>
+    <div class="lab-cols">
+      <p><b>John von Neumann</b> and <b>Oskar Morgenstern</b> introduced the characteristic function in <i>Theory of Games and Economic Behavior</i> (1944), most of which is about coalitions.</p>
+      <p><b>Lloyd Shapley</b> (1923–2016) published “A Value for <var>n</var>-Person Games” in 1953 in <i>Contributions to the Theory of Games II</i>, and with <b>Martin Shubik</b> applied it to voting in the <i>American Political Science Review</i> in 1954. He shared the 2012 Nobel Memorial Prize in Economic Sciences with Alvin Roth, mainly for his work on stable matching (<a href="{{ "business/game-theory/mechanism-design/" | relURL }}">Chapter 12</a>).</p>
+      <p><b>Donald Gillies</b> defined the core in his 1953 Princeton thesis; <b>Olga Bondareva</b> (1963) and Shapley (1967) characterized when it is non-empty. <b>John Banzhaf</b> published his index in the <i>Rutgers Law Review</i> in 1965.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <p class="gt13-prob"><b>1.</b> Three players: every single player and the pair {2, 3} are worth 0; {1, 2} and {1, 3} are worth 6; all three are worth 12. Find the Shapley value.</p>
+    <details class="gt13-ans"><summary>Show the answer</summary><p>Player 1 adds 0 when first (2 orders), 6 when second (2 orders) and 12 when last (2 orders): (0 + 0 + 6 + 6 + 12 + 12)/6 = 6. Player 2 adds 0 when first, 6 after player 1, 0 after player 3, and 12 − 6 = 6 when last (2 orders): (0 + 0 + 6 + 0 + 6 + 6)/6 = 3. Player 3 also gets 3 by symmetry. Check: 6 + 3 + 3 = 12.</p></details>
+    <p class="gt13-prob"><b>2.</b> Is the split (6, 3, 3) from problem 1 in the core?</p>
+    <details class="gt13-ans"><summary>Show the answer</summary><p>Yes. {1, 2} gets 9 ≥ 6, {1, 3} gets 9 ≥ 6, {2, 3} gets 6 ≥ 0, and everyone gets at least 0. The core is every split with <var>x</var><sub>2</sub> ≤ 6, <var>x</var><sub>3</sub> ≤ 6 and all shares non-negative.</p></details>
+    <p class="gt13-prob"><b>3.</b> Three planes need runways costing $6M, $10M and $16M. Split the $16M runway by the Shapley value.</p>
+    <details class="gt13-ans"><summary>Show the answer</summary><p>The first $6M is split three ways: $2M each. The next $4M is split by the two larger planes: $2M each. The last $6M goes to the largest. Shares: $2M, $4M and $10M.</p></details>
+    <p class="gt13-prob"><b>4.</b> Prove that the three-player majority game (any two players win $1) has an empty core.</p>
+    <details class="gt13-ans"><summary>Show the answer</summary><p>The core needs <var>x</var><sub>1</sub> + <var>x</var><sub>2</sub> ≥ 1, <var>x</var><sub>1</sub> + <var>x</var><sub>3</sub> ≥ 1 and <var>x</var><sub>2</sub> + <var>x</var><sub>3</sub> ≥ 1. Adding them: 2(<var>x</var><sub>1</sub> + <var>x</var><sub>2</sub> + <var>x</var><sub>3</sub>) ≥ 3, so the total must be at least 1.5. But only 1 is available.</p></details>
+    <p class="gt13-prob"><b>5.</b> A council has three members with 5, 3 and 2 votes; 6 votes pass a motion. Find the Shapley–Shubik and Banzhaf indices.</p>
+    <details class="gt13-ans"><summary>Show the answer</summary><p>Of the 6 orders, the 5-vote member is pivotal in 4 (whenever they are not first), and the other two in 1 each: Shapley–Shubik (2/3, 1/6, 1/6). Winning coalitions: {5, 3}, {5, 2} and {5, 3, 2}. Swings: the 5-vote member in all three, the 3-vote member only in {5, 3}, the 2-vote member only in {5, 2}: Banzhaf (3/5, 1/5, 1/5). The members with 3 and 2 votes have exactly the same power. Set this council up in the simulation to check.</p></details>
+    <p class="gt13-prob"><b>6.</b> Compute the Shapley value of the merger game (alone 10, 20, 30; pairs 40, 50, 60; all 80). Is it in the core?</p>
+    <details class="gt13-ans"><summary>Show the answer</summary><p>Firm A adds 10 first (2 orders), 20 after B, 20 after C, and 80 − 60 = 20 last (2 orders): (10 + 10 + 20 + 20 + 20 + 20)/6 = 16.67. Firm B adds 20, 20, 30 after A, 30 after C, and 30, 30 last: 26.67. Firm C gets 80 − 16.67 − 26.67 = 36.67. It satisfies every core condition (for example, A gets 16.67 ≤ 20), so yes; the merger game is convex.</p></details>
+    <p class="gt13-prob"><b>7.</b> (Harder) For three players whose singletons are worth 0 and whose pairs are worth no more than <var>v</var>(<var>N</var>), prove that the core is non-empty exactly when <var>v</var>(12) + <var>v</var>(13) + <var>v</var>(23) ≤ 2<var>v</var>(<var>N</var>).</p>
+    <details class="gt13-ans"><summary>Show the answer</summary><p>With Σ<var>x</var> = <var>v</var>(<var>N</var>), the pair condition <var>x</var><sub><var>i</var></sub> + <var>x</var><sub><var>j</var></sub> ≥ <var>v</var>(<var>ij</var>) is the same as <var>x</var><sub><var>k</var></sub> ≤ <var>y</var><sub><var>k</var></sub> := <var>v</var>(<var>N</var>) − <var>v</var>(<var>ij</var>), where <var>k</var> is the third player, and <var>y</var><sub><var>k</var></sub> ≥ 0. So the core is {<var>x</var>: 0 ≤ <var>x</var><sub><var>k</var></sub> ≤ <var>y</var><sub><var>k</var></sub>, Σ<var>x</var> = <var>v</var>(<var>N</var>)}, which is non-empty exactly when Σ<var>y</var><sub><var>k</var></sub> ≥ <var>v</var>(<var>N</var>), that is, 3<var>v</var>(<var>N</var>) − Σ<var>v</var>(<var>ij</var>) ≥ <var>v</var>(<var>N</var>). This is the three-player case of the Bondareva–Shapley theorem. Our test checked it against the triangle picture for 20,000 random games.</p></details>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The orders.</b> The simulation lists every order of arrival (6 or 24) and plays them in turn. Each player’s bar is the average of their marginal contributions over the orders done so far; after the last order it equals the Shapley value, which is also computed directly from the formula. For the airport games, which are about costs, the numbers are costs and the Shapley value is each plane’s share of the bill.</p>
+      <p><b>The triangle.</b> A split <var>x</var> of a three-player game is drawn by its shares of the extra worth <var>E</var> = <var>v</var>(<var>N</var>) − Σ<var>v</var>({<var>i</var>}). Each pair’s condition becomes a straight line; the core is the triangle clipped by the three lines. <b>Power indices</b> are computed exactly by listing all orders (up to 720) and all coalitions (up to 64).</p>
+      <p><b>What’s simplified.</b> Worth can be split freely (transferable payoff), and the grand coalition forms. Other solution ideas, like the nucleolus (the split that makes the unhappiest coalition as happy as possible), are left out.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests, run before the page was built):</p>
+        <ul class="lab-small">
+          <li>Gloves: (2/3, 1/6, 1/6) by the formula and by averaging the 6 orders; the core is the single point (1, 0, 0), and the Shapley value is not in it.</li>
+          <li>Airports: (2.667, 4.167, 6.167) for runways of 8, 11 and 13; (5, 15, 30, 70) for 20, 50, 80 and 120, matching Littlechild and Owen’s rule. Merger: (16.67, 26.67, 36.67), inside the core with corners (20, 30, 30), (10, 30, 40), (20, 20, 40). Majority: empty core.</li>
+          <li>20,000 random three-player games: the clipped triangle is empty exactly when the Bondareva–Shapley test says so, and its center is always in the core. 2,000 random four-player games satisfy efficiency, additivity and the null-player rule; 2,000 convex games always had the Shapley value in the core.</li>
+          <li>Voting: Luxembourg’s power is 0 in the 1958 Council (the big three 0.2333 each by Shapley–Shubik); Nassau’s three small districts have 0 and the big three 1/3 each; 49/49/2 gives equal thirds.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>What is a player’s marginal contribution to a coalition <var>S</var>?</p>
+        <ul class="u-opts"><li><button type="button">What the player could earn alone</button></li><li><button type="button"><var>v</var>(<var>S</var> ∪ {<var>i</var>}) − <var>v</var>(<var>S</var>): what the coalition gains when the player joins</button></li><li><button type="button">An equal share of <var>v</var>(<var>S</var>)</button></li></ul>
+        <details><summary>Show the answer</summary><p>It’s the difference the player makes. The Shapley value averages it over all orders of arrival.</p></details></li>
+      <li class="u-q" data-a="2"><p>In the glove game with one left glove and two right gloves, what does the left-glove owner get by the Shapley value?</p>
+        <ul class="u-opts"><li><button type="button">1/3</button></li><li><button type="button">1/2</button></li><li><button type="button">2/3</button></li><li><button type="button">All of it</button></li></ul>
+        <details><summary>Show the answer</summary><p>Lefty adds the $1 in 4 of the 6 orders. (The core, by contrast, gives Lefty everything.)</p></details></li>
+      <li class="u-q" data-a="0"><p>What does it mean for the core to be empty?</p>
+        <ul class="u-opts"><li><button type="button">Every possible split leaves some coalition able to do better on its own</button></li><li><button type="button">Nobody wants to cooperate</button></li><li><button type="button">The Shapley value is zero</button></li></ul>
+        <details><summary>Show the answer</summary><p>No split is stable. The majority game is the classic example.</p></details></li>
+      <li class="u-q" data-a="3"><p>Which property does <i>not</i> appear among Shapley’s axioms?</p>
+        <ul class="u-opts"><li><button type="button">Efficiency</button></li><li><button type="button">Symmetry</button></li><li><button type="button">Null player</button></li><li><button type="button">Stability against every coalition</button></li></ul>
+        <details><summary>Show the answer</summary><p>Stability is the core’s requirement, and the Shapley value can violate it.</p></details></li>
+      <li class="u-q" data-a="1"><p>Three shareholders own 49%, 49% and 2%, and 51% is needed. How is power divided?</p>
+        <ul class="u-opts"><li><button type="button">49%, 49%, 2%</button></li><li><button type="button">Equally: a third each</button></li><li><button type="button">The two big ones split it; the small one has none</button></li></ul>
+        <details><summary>Show the answer</summary><p>Any two shareholders together pass a motion, and no one alone can, so all three are in exactly the same position.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 8, “Coalitional Games and the Core”.</li>
+      <li>R. B. Myerson, <i>Game Theory: Analysis of Conflict</i> (Harvard University Press, 1991), chapter 9, “Coalitions in Cooperative Games”.</li>
+      <li>L. S. Shapley, “A Value for <var>n</var>-Person Games”, in H. W. Kuhn and A. W. Tucker (eds.), <i>Contributions to the Theory of Games II</i>, Annals of Mathematics Studies 28, 307–317 (Princeton University Press, 1953); “Cores of Convex Games”, <i>International Journal of Game Theory</i> 1, 11–26 (1971); “On Balanced Sets and Cores”, <i>Naval Research Logistics Quarterly</i> 14(4), 453–460 (1967).</li>
+      <li>L. S. Shapley and M. Shubik, “A Method for Evaluating the Distribution of Power in a Committee System”, <i>American Political Science Review</i> 48(3), 787–792 (1954).</li>
+      <li>J. F. Banzhaf III, “Weighted Voting Doesn’t Work: A Mathematical Analysis”, <i>Rutgers Law Review</i> 19(2), 317–343 (1965); University of Alabama at Birmingham, <a href="https://people.cas.uab.edu/~jcmayer/Weighted%20Voting%203.pdf" target="_blank" rel="noopener">Weighted Voting notes</a> (the Nassau County weights).</li>
+      <li>S. C. Littlechild and G. Owen, “A Simple Expression for the Shapley Value in a Special Case”, <i>Management Science</i> 20(3), 370–372 (1973); S. C. Littlechild and G. F. Thompson, “Aircraft Landing Fees: A Game Theory Approach”, <i>Bell Journal of Economics</i> 8(1), 186–204 (1977).</li>
+      <li>D. B. Gillies, “Solutions to General Non-Zero-Sum Games”, in <i>Contributions to the Theory of Games IV</i>, Annals of Mathematics Studies 40 (Princeton University Press, 1959); J. von Neumann and O. Morgenstern, <i>Theory of Games and Economic Behavior</i> (Princeton University Press, 1944).</li>
+      <li>Treaty establishing the European Economic Community (Rome, 1957), Article 148: the weighting of votes in the Council.</li>
+      <li>The Nobel Prize, <a href="https://www.nobelprize.org/prizes/economic-sciences/2012/summary/" target="_blank" rel="noopener">The Prize in Economic Sciences 2012</a>.</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Shapley_value" target="_blank" rel="noopener">Shapley value</a>, <a href="https://en.wikipedia.org/wiki/Core_(game_theory)" target="_blank" rel="noopener">Core (game theory)</a>, <a href="https://en.wikipedia.org/wiki/Banzhaf_power_index" target="_blank" rel="noopener">Banzhaf power index</a>, <a href="https://en.wikipedia.org/wiki/Shapley%E2%80%93Shubik_power_index" target="_blank" rel="noopener">Shapley–Shubik power index</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/cooperative-games/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/cooperative-games/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/cooperative-games/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/cooperative-games/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,254 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/incomplete-information/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/incomplete-information/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt8-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 8</p>
+    <h1>{{ .Title }}</h1>
+    <p>Until now, every player knew the whole game: who was playing, what they could do, and what everyone wanted. Real life is rarely that tidy. The seller knows whether the car is a lemon; you don’t. A rival knows its own costs; you can only guess. Here you’ll run a used-car market where only the sellers know the truth and watch it fall apart, one good car at a time. Then you’ll see how warranties and inspections can rescue it, sort a thousand cars with Bayes’ rule, and outguess a rival whose costs are secret. Along the way you’ll learn John Harsanyi’s trick for turning “I don’t know what game we’re playing” into a game you can solve.</p>
+    <span class="lab-mark" aria-hidden="true">🙈</span>
+  </header>
+
+  <div class="lab-stage gt8-main">
+    <div class="lab-view" id="gt8-view">
+      <canvas id="gt8-cv" tabindex="0" aria-label="A used-car lot with 40 cars, colored by their true quality from red lemons to green peaches. Each day buyers offer one price for any uncertified car, and owners whose cars are worth more than that take them home. Below: a chart of the price day by day, and a chart of each owner's three choices: keep the car, sell it as is, or certify it and sell. Keys: Space pauses, N or the right arrow goes to the next day, R restarts, the other arrow keys pick a car to inspect."></canvas>
+      <div class="lab-hud" id="gt8-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="gt8-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="gt8-step" aria-label="Next day" title="Next day (N)">⏭</button>
+        <button type="button" id="gt8-reset" aria-label="Start again" title="Start again (R)">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="gt8-pre-h">Markets</h3>
+      <div class="lab-seg" id="gt8-pre" role="group" aria-labelledby="gt8-pre-h">
+        <button type="button" data-pre="akerlof">Akerlof’s lemons</button><button type="button" data-pre="floor">A decent floor</button><button type="button" data-pre="lovers">Car lovers</button><button type="button" data-pre="warranty">Warranty</button><button type="button" data-pre="inspect">Inspection</button>
+      </div>
+      <label class="lab-field"><span>A buyer values a car at its owner’s value × <output id="gt8-b-o"></output></span><input type="range" id="gt8-b" min="1" max="2.4" step="0.05" aria-label="How many times its owner's value a car is worth to a buyer"></label>
+      <label class="lab-field"><span>Worst car on the lot is worth <output id="gt8-lo-o"></output></span><input type="range" id="gt8-lo" min="0" max="6000" step="500" aria-label="Value of the worst car, in dollars"></label>
+      <label class="lab-field"><span>Warranty pays <output id="gt8-w-o"></output></span><input type="range" id="gt8-w" min="0" max="100" step="1" aria-label="Warranty coverage in percent"></label>
+      <label class="lab-chk"><input type="checkbox" id="gt8-insp"> Owners can pay for an inspection</label>
+      <label class="lab-field" id="gt8-f-row"><span>Inspection fee <output id="gt8-f-o"></output></span><input type="range" id="gt8-f" min="0" max="3000" step="100" aria-label="Inspection fee in dollars"></label>
+      <div class="gt8-acts"><button type="button" class="lab-btn pri" id="gt8-next">Next day</button><button type="button" class="lab-btn" id="gt8-run">Run to the end</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="gt8-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt8-missions"></ol>
+    </div>
+    <section class="lab-sec gt8-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The lot.</b> Forty used cars, worth from the bottom slider’s value up to $10,000 to their owners, spread evenly. Each car’s color is its true quality: red for lemons, gold in the middle, green for peaches. Only its owner knows the color. A buyer sees forty cars that look the same.</p>
+        <p><b>The price.</b> Buyers value every car more than its owner does (1.5 times as much at the start), so every sale would leave both sides better off. But they can’t tell cars apart, so they pay one price for any uncertified car: what the cars that were offered yesterday were worth to buyers, on average. On the first day, they assume the lot is a fair sample of all cars.</p>
+        <p><b>The owners.</b> Each day, every owner picks the best of three options, shown in the bottom-right chart: keep the car (blue line, worth its quality), sell it as is (gold line, the price minus anything a warranty makes them pay), or, if inspections are allowed, pay the fee, prove the quality, and sell for what the car is really worth to a buyer (pink line). Owners of cars worth more than the price drive home, which lowers the average, which lowers tomorrow’s price.</p>
+        <p><b>Gains from trade.</b> Every car that changes hands creates value: a buyer who values it at $6,000 gets it from an owner who values it at $4,000. “Gains kept” compares the value created with the most that could be created if every car sold. An inspection fee is a real cost, so it is subtracted.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="lemons"><h2>The market for lemons</h2>
+    <p>In 1970 George Akerlof asked a simple question: why does a car that’s a week old sell for so much less than a new one? It hasn’t worn out. His answer: the person selling a nearly new car knows something you don’t. Owners who discover they bought a lemon are the most eager to sell. Buyers know this, so they discount every used car, which makes owners of good cars unwilling to sell, which makes the average car on offer worse still. Akerlof called this the market for “lemons”. Economists call it <b>adverse selection</b>: the quality of what’s offered depends on the price, and in the wrong direction.</p>
+    <p>Here is the logic in symbols. Suppose quality <var>q</var> is spread evenly (uniformly) from 0 to <var>H</var>. An owner values a car at <var>q</var>, a buyer at <var>b q</var> with <var>b</var> &gt; 1. At price <var>p</var>, only owners with <var>q</var> ≤ <var>p</var> sell, so the average quality on offer is <var>p</var>/2. Buyers will pay at most <var>b</var> × <var>p</var>/2. A price that buyers are willing to keep paying must satisfy</p>
+    <div class="u-big"><var>p</var> = <var>b</var> · E[<var>q</var> | <var>q</var> ≤ <var>p</var>] = <var>b p</var> / 2<small>so if <var>b</var> &lt; 2, the only solution is <var>p</var> = 0: the market for anything but the worst cars disappears</small></div>
+    <p>Even though every single sale would create value, almost none happen. Each day of the simulation multiplies the price by <var>b</var>/2, which is 0.75 in Akerlof’s market. If buyers value cars at least twice as much as owners (<var>b</var> ≥ 2), the average car is good enough to pay the best owner’s price, and nothing unravels.</p>
+    <div class="u-ex"><b>Worked example: a market that slides partway</b>
+      <p>Qualities run evenly from $2,000 to $10,000, and buyers value cars at 1.5 times their owners’ values. Where does the price settle?</p>
+      <ol><li>At a price <var>p</var>, the cars offered run from $2,000 to <var>p</var>, so their average quality is (2,000 + <var>p</var>)/2.</li>
+        <li>Buyers pay 1.5 times that: <var>p</var> = 1.5 × (2,000 + <var>p</var>)/2 = 1,500 + 0.75 <var>p</var>.</li>
+        <li>Solve: 0.25 <var>p</var> = 1,500, so <var>p</var> = $6,000.</li></ol>
+      <p>Cars worth $2,000 to $6,000 sell, half of the market. The owners of the best half keep their cars, even though buyers would gladly pay more than those owners’ values if only they could see the quality. Try it: pick “A decent floor”. With only 40 cars, the simulation settles at 22 of 40 (55%); with 2,000 cars in our tests it settled at 50.1%.</p>
+    </div>
+    <h3 class="lab-h">Fixing it: warranties and inspections</h3>
+    <p>Adverse selection is a problem of hidden information, so the cures make information visible or make lying expensive.</p>
+    <ul>
+      <li><b>Inspection (certification).</b> An owner pays a fee <var>f</var> to prove the car’s quality, then sells it for its full value <var>b q</var>. It’s worth it when <var>b q</var> − <var>f</var> beats both keeping the car and selling it unproven. Good cars certify; the uncertified pool still unravels, but only among the cheap cars left in it. The fee is a real cost, so certifying the very cheapest cars can waste more than it gains.</li>
+      <li><b>Warranty.</b> Here a warranty with coverage <var>w</var> pays the buyer <var>w</var>(<var>H</var> − <var>q</var>), a share of how far the car falls short of the best. That costs a lemon’s owner a lot and a peach’s owner almost nothing, so the price buyers will pay holds up. With qualities from 0 to <var>H</var>, the market keeps every car exactly when <var>w</var> ≥ 2 − <var>b</var>; for <var>b</var> = 1.5, a warranty covering half of the shortfall is enough. (Problem 4 below works it out.)</li>
+    </ul>
+    <div class="lab-try"><b>Try this:</b> pick “Inspection” and drag the fee from $0 up to $3,000. At a low fee, nearly every car is certified and almost all the gains survive. As the fee rises, a middle tier of owners finds certifying too expensive and the uncertified market too cheap, so they keep their cars. The readout “Gains kept” falls even though more cars are still worth trading.</div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “Sellers of lemons are cheating”</b>
+    <p>No one in the simulation lies. Every owner simply refuses to sell for less than the car is worth to them. The market fails because information is unevenly spread and the price can’t depend on what buyers can’t see. Honest people, each acting sensibly, produce the collapse. That’s why the fixes are about institutions (inspections, warranties, return policies, reputations) rather than about better morals.</p>
+  </div>
+
+  <section class="lab-sec" id="harsanyi"><h2>Types, beliefs and Harsanyi’s trick</h2>
+    <p>Games with private information looked hopeless at first. If I don’t know your payoffs, I have to guess them; then I have to guess what you guess about mine, and what you guess I guess about yours, and so on forever. In three papers in 1967 and 1968, John Harsanyi cut this knot. Imagine that before the game starts, a player called <b>Nature</b> draws each player’s private information from a probability distribution that everyone knows. Each player then learns only their own draw, called their <b>type</b>. A game of incomplete information becomes a game of imperfect information: everyone knows the rules, but not every move Nature made.</p>
+    <svg class="gt8-svg" viewBox="0 0 560 200" width="560" role="img" aria-label="Harsanyi's transformation: Nature draws firm 2's cost, high with probability theta or low with probability one minus theta. Firm 2 sees the draw; firm 1 does not, so firm 1's two decision points are joined by a dashed line showing it can't tell them apart.">
+      <circle class="nat" cx="280" cy="30" r="22"/><text x="280" y="35" text-anchor="middle">Nature</text>
+      <path class="ln" d="M262 44 L140 104 M298 44 L420 104"/>
+      <text x="170" y="66" class="mut">high cost, θ</text><text x="330" y="66" class="mut">low cost, 1 − θ</text>
+      <rect class="bx" x="80" y="104" width="120" height="34" rx="8"/><text x="140" y="126" text-anchor="middle">Firm 2: high</text>
+      <rect class="bx" x="360" y="104" width="120" height="34" rx="8"/><text x="420" y="126" text-anchor="middle">Firm 2: low</text>
+      <path class="ln" d="M140 138 L140 160 M420 138 L420 160"/>
+      <rect class="bx" x="80" y="160" width="120" height="30" rx="8"/><text x="140" y="180" text-anchor="middle">Firm 1</text>
+      <rect class="bx" x="360" y="160" width="120" height="30" rx="8"/><text x="420" y="180" text-anchor="middle">Firm 1</text>
+      <path class="ln" d="M200 175 L360 175" stroke-dasharray="6 5"/><text x="280" y="168" text-anchor="middle" class="mut">can’t tell which</text>
+    </svg>
+    <p>Following Osborne (<i>An Introduction to Game Theory</i>, chapter 9), a <b>Bayesian game</b> has:</p>
+    <ul>
+      <li>a set of players, and for each player a set of actions;</li>
+      <li>a set of <b>states</b> of the world, and a <b>prior</b> probability for each state;</li>
+      <li>for each player, a <b>type</b> (or signal) that depends on the state: what the player observes;</li>
+      <li>for each player, <b>beliefs</b>: given their type, the probabilities they assign to the states, found from the prior by Bayes’ rule;</li>
+      <li>for each player, payoffs that can depend on everyone’s actions and on the state.</li>
+    </ul>
+    <p>A strategy now says what to do for <i>every</i> type you might be, even the types you know you aren’t. That sounds odd, but your rival needs it: to predict your move, they must think about what each possible version of you would do.</p>
+    <div class="u-big"><var>s</var><sub><var>i</var></sub>(<var>t</var><sub><var>i</var></sub>) maximizes Σ<sub><var>t</var><sub>−<var>i</var></sub></sub> <var>p</var>(<var>t</var><sub>−<var>i</var></sub> | <var>t</var><sub><var>i</var></sub>) · <var>u</var><sub><var>i</var></sub>(<var>a</var><sub><var>i</var></sub>, <var>s</var><sub>−<var>i</var></sub>(<var>t</var><sub>−<var>i</var></sub>); <var>t</var><sub><var>i</var></sub>, <var>t</var><sub>−<var>i</var></sub>) for every type <var>t</var><sub><var>i</var></sub> of every player <var>i</var><small>a Bayesian Nash equilibrium: each type of each player makes a best response, on average over what it believes about the others’ types</small></div>
+    <p>A Bayesian Nash equilibrium is just a Nash equilibrium of the bigger game in which each type is treated as a separate player. Everything from <a href="{{ "business/game-theory/nash-equilibrium/" | relURL }}">Chapter 3</a> still applies: no type of any player can gain by changing its action, given the others’ strategies and its own beliefs.</p>
+    <p><b>The common prior.</b> Harsanyi’s setup assumes that all players start from the same prior and differ only in what they have observed. Robert Aumann showed in 1976 how strong that is: if two people share a prior and their posterior beliefs about an event are common knowledge, those posteriors must be equal. People with a common prior can’t “agree to disagree”. Many models in finance and politics drop the common prior on purpose for exactly that reason.</p>
+  </section>
+
+  <section class="lab-sec" id="bayes"><h2>Bayes’ rule: learning from a signal</h2>
+    <p>Beliefs change when you see something. If a mechanic’s test flags a car, how likely is it now to be a lemon? Bayes’ rule answers it:</p>
+    <div class="u-big">P(<var>A</var> | <var>B</var>) = P(<var>B</var> | <var>A</var>) P(<var>A</var>) ÷ P(<var>B</var>)<small>posterior = likelihood × prior ÷ the overall chance of the evidence</small></div>
+    <p>The hardest part is the bottom line: the test flags lemons, but it also flags some good cars, and good cars are far more common. The easiest way to see it is to count. Here are 1,000 cars:</p>
+    <div class="lab-stage wide gt8-mini" id="gt8-bview">
+      <div class="lab-view"><canvas id="gt8-bc" aria-label="A thousand dots, one per car: red for lemons and green for good cars. Run the test to sort them into the cars the mechanic flags and the cars that pass. Flagged cars get a gold ring. The labels show how many flagged cars are really lemons."></canvas></div>
+      <div class="lab-panel gt8-row">
+        <div class="lab-seg gt8-grow" id="gt8-bpre" role="group" aria-label="Examples">
+          <button type="button" data-pre="mech">Mechanic’s check</button><button type="button" data-pre="disease">Rare-disease screen</button><button type="button" data-pre="even">A coin-flip market</button>
+        </div>
+        <button type="button" class="lab-btn pri" id="gt8-test">Run the test on all 1,000</button>
+        <label class="lab-field gt8-grow"><span>Share of lemons (prior) <output id="gt8-prior-o"></output></span><input type="range" id="gt8-prior" min="0" max="100" step="1" aria-label="Share of lemons, percent"></label>
+        <label class="lab-field gt8-grow"><span>Test flags a lemon <output id="gt8-sens-o"></output></span><input type="range" id="gt8-sens" min="50" max="100" step="1" aria-label="Chance the test flags a lemon, percent"></label>
+        <label class="lab-field gt8-grow"><span>Test flags a good car by mistake <output id="gt8-fa-o"></output></span><input type="range" id="gt8-fa" min="0" max="50" step="1" aria-label="Chance the test wrongly flags a good car, percent"></label>
+        <dl class="lab-readout gt8-grow" id="gt8-bread"></dl>
+        <p class="gt8-f" id="gt8-bf" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: the mechanic</b>
+      <p>One car in five on a lot is a lemon. A mechanic’s check flags 90% of lemons, and wrongly flags 10% of good cars. The check flags your car. Count 1,000 cars:</p>
+      <ol><li>200 are lemons; the check flags 90% of them: 180.</li>
+        <li>800 are good; the check flags 10% of them: 80.</li>
+        <li>Flagged cars: 180 + 80 = 260, of which 180 are lemons. P(lemon | flagged) = 180/260 ≈ 69%.</li></ol>
+      <p>And if the check passes the car? 20 lemons among 740 passed cars: under 3%. A good test moves your belief a lot, in both directions.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: when the base rate is tiny</b>
+      <p>A screening test for a condition that 1 person in 100 has catches 90% of cases and wrongly flags 9% of healthy people. Out of 1,000 people: 10 have the condition and 9 of them test positive; 990 don’t, and about 89 of them test positive anyway. A positive test means about 9 / (9 + 89) ≈ 9%. Most positives are false alarms, because healthy people outnumber sick ones 99 to 1. (This is a made-up example about probability, not medical advice.)</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="cournot"><h2>A Bayesian game: competing against a secret cost</h2>
+    <p>Two firms sell the same product and choose quantities at the same time, as in Cournot’s model from <a href="{{ "business/game-theory/competition/" | relURL }}">Chapter 5</a>. The price is <var>P</var> = <var>a</var> − <var>q</var><sub>1</sub> − <var>q</var><sub>2</sub>. Firm 1’s cost per unit, <var>c</var><sub>1</sub>, is known to both. Firm 2’s cost is private: high (<var>c</var><sub>H</sub>) with probability θ, low (<var>c</var><sub>L</sub>) otherwise. This is the classic example in Gibbons’s <i>Game Theory for Applied Economists</i> (section 3.1.A).</p>
+    <p>Firm 2 has two types, so its strategy is a pair of quantities, <var>q</var><sub>2</sub>(<var>c</var><sub>H</sub>) and <var>q</var><sub>2</sub>(<var>c</var><sub>L</sub>). Each type best-responds to firm 1: <var>q</var><sub>2</sub>(<var>c</var>) = (<var>a</var> − <var>c</var> − <var>q</var><sub>1</sub>)/2. Firm 1 can’t see the type, so it best-responds to the <i>average</i>: <var>q</var><sub>1</sub> = (<var>a</var> − <var>c</var><sub>1</sub> − E[<var>q</var><sub>2</sub>])/2. Solving the three equations together:</p>
+    <div class="lab-formula"><var>q</var><sub>1</sub>* = [<var>a</var> − 2<var>c</var><sub>1</sub> + θ<var>c</var><sub>H</sub> + (1 − θ)<var>c</var><sub>L</sub>] / 3<br><var>q</var><sub>2</sub>*(<var>c</var><sub>H</sub>) = (<var>a</var> − 2<var>c</var><sub>H</sub> + <var>c</var><sub>1</sub>)/3 + (1 − θ)(<var>c</var><sub>H</sub> − <var>c</var><sub>L</sub>)/6<br><var>q</var><sub>2</sub>*(<var>c</var><sub>L</sub>) = (<var>a</var> − 2<var>c</var><sub>L</sub> + <var>c</var><sub>1</sub>)/3 − θ(<var>c</var><sub>H</sub> − <var>c</var><sub>L</sub>)/6</div>
+    <div class="lab-stage wide gt8-mini" id="gt8-cview">
+      <div class="lab-view"><canvas id="gt8-cc" tabindex="0" aria-label="Left: best-response lines. Red is firm 2 with a high cost, green is firm 2 with a low cost, blue is firm 1's best response to firm 2's average quantity. Filled dots mark the Bayesian Nash equilibrium; hollow dots mark what would happen if firm 1 knew the cost. Right: firm 1's expected profit for each quantity. Drag either chart, or use the left and right arrow keys, to choose firm 1's quantity."></canvas></div>
+      <div class="lab-panel gt8-row">
+        <label class="lab-field gt8-grow"><span>Chance firm 2’s cost is high, θ <output id="gt8-th-o"></output></span><input type="range" id="gt8-th" min="0" max="100" step="5" aria-label="Probability that firm 2's cost is high, percent"></label>
+        <label class="lab-field gt8-grow"><span>High cost <output id="gt8-ch-o"></output></span><input type="range" id="gt8-ch" min="20" max="60" step="1" aria-label="Firm 2's high cost per unit"></label>
+        <label class="lab-field gt8-grow"><span>Low cost <output id="gt8-cl-o"></output></span><input type="range" id="gt8-cl" min="0" max="40" step="1" aria-label="Firm 2's low cost per unit"></label>
+        <button type="button" class="lab-btn" id="gt8-cbest">Jump to the equilibrium</button>
+        <dl class="lab-readout gt8-grow" id="gt8-cread"></dl>
+      </div>
+    </div>
+    <p class="lab-small">Demand intercept <var>a</var> = 120 and firm 1’s cost <var>c</var><sub>1</sub> = $30 are fixed. Firm 2 chooses without seeing firm 1’s quantity; it plays its equilibrium quantities.</p>
+    <div class="u-ex"><b>Worked example: Gibbons’s numbers</b>
+      <p>Take <var>a</var> = 120, <var>c</var><sub>1</sub> = 30, <var>c</var><sub>H</sub> = 40, <var>c</var><sub>L</sub> = 20 and θ = ½.</p>
+      <ol><li><var>q</var><sub>1</sub>* = (120 − 60 + 20 + 10)/3 = 30.</li>
+        <li><var>q</var><sub>2</sub>*(<var>c</var><sub>H</sub>) = (120 − 80 + 30)/3 + ½ × 20/6 = 23.33 + 1.67 = 25.</li>
+        <li><var>q</var><sub>2</sub>*(<var>c</var><sub>L</sub>) = (120 − 40 + 30)/3 − ½ × 20/6 = 36.67 − 1.67 = 35.</li>
+        <li>Check: E[<var>q</var><sub>2</sub>] = 30, and firm 1’s best response is (120 − 30 − 30)/2 = 30. Each type of firm 2 is on its best-response line: (120 − 40 − 30)/2 = 25 and (120 − 20 − 30)/2 = 35.</li></ol>
+      <p>Compare complete information. Against a rival known to be high-cost, firm 1 would make (120 − 60 + 40)/3 = 33.3 and the rival 23.3. Under uncertainty, firm 1 hedges at 30, so the high-cost type faces less competition and expands to 25. The low-cost type is hurt by the same hedging: it makes 35 instead of 36.7.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> drag firm 1’s quantity across the right chart. The gold curve is the average of the two dashed ones, weighted by θ, and its peak sits exactly at the blue equilibrium dot. Then slide θ from 0% to 100%: the equilibrium dots slide from the green (low-cost) hollow dot toward the red one.</div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A little history</h2>
+    <div class="lab-cols">
+      <p><b>Thomas Bayes</b> (c. 1701–1761), an English minister, worked out how to reason from evidence back to causes. His friend Richard Price found the essay among his papers and published it in the <i>Philosophical Transactions of the Royal Society</i> in 1763. Pierre-Simon Laplace developed the same ideas independently and much further.</p>
+      <p><b>John Harsanyi</b> (1920–2000) survived the Second World War in Budapest, left Hungary in 1950, and rebuilt his career in Australia and then at Berkeley. His three-part paper, “Games with Incomplete Information Played by ‘Bayesian’ Players”, appeared in <i>Management Science</i> in 1967–68. He shared the 1994 Nobel Memorial Prize in Economic Sciences with John Nash and Reinhard Selten.</p>
+      <p><b>George Akerlof</b> wrote “The Market for ‘Lemons’: Quality Uncertainty and the Market Mechanism” as a young professor at Berkeley. In his own account, three journals turned it down, some reviewers finding it too trivial, before the <i>Quarterly Journal of Economics</i> published it in 1970. In 2001 he shared the Nobel prize with Michael Spence and Joseph Stiglitz for their analyses of markets with asymmetric information. You’ll meet Spence’s and Stiglitz’s ideas in <a href="{{ "business/game-theory/signaling/" | relURL }}">Chapter 10</a>.</p>
+      <p><b>Robert Aumann</b>’s “Agreeing to Disagree” (<i>Annals of Statistics</i>, 1976) is only a few pages long and is still argued over. Aumann shared the 2005 Nobel prize with Thomas Schelling.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Health insurance.</b> If premiums are set for the average person, the healthiest find coverage overpriced and drop out, raising the average cost of those who stay. Economists call the extreme version a “death spiral”, and it’s why many insurance systems pool risks through employers or require broad participation.</li>
+      <li><b>Lending.</b> A bank that raises its interest rate may drive away its safest borrowers first. Joseph Stiglitz and Andrew Weiss (1981) showed this can make banks ration credit rather than raise rates.</li>
+      <li><b>Online shopping.</b> Ratings, reviews and generous return policies exist to fight the lemons problem. Zappos sold shoes people couldn’t try on by giving them a year to send them back; see <a href="{{ "business/cases/zappos-customer-service/" | relURL }}">Zappos: Selling Shoes by Selling Happiness</a>.</li>
+      <li><b>Used cars today.</b> Certified pre-owned programs, vehicle history reports and dealer warranties are the inspection and warranty sliders in real life.</li>
+      <li><b>Hiring.</b> A firm that cuts wages may lose its best workers first, because they have the best outside offers. Adverse selection is one reason firms are slow to cut pay.</li>
+    </ul>
+    <p class="lab-small">These are teaching models of how markets work, not advice about insurance, loans or investments.</p>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <p class="gt8-prob"><b>1.</b> 5% of loan applicants will default. A credit check flags 80% of future defaulters and 10% of everyone else. An applicant is flagged. What is the chance they will default?</p>
+    <details class="gt8-ans"><summary>Show the answer</summary><p>Count 1,000 applicants: 50 will default and 40 of them are flagged; 950 won’t, and 95 of them are flagged. P(default | flagged) = 40/(40 + 95) = 40/135 ≈ 0.296, about 30%. Most flagged applicants would have repaid.</p></details>
+    <p class="gt8-prob"><b>2.</b> Car qualities run evenly from $0 to $20,000, and buyers value a car at 1.25 times its owner’s value. Buyers start by paying 1.25 times the average car, then each day pay 1.25 times the average of the cars offered the day before. Find the price on days 0, 1 and 2, and where it ends up.</p>
+    <details class="gt8-ans"><summary>Show the answer</summary><p>Day 0: 1.25 × $10,000 = $12,500. Owners with cars worth up to $12,500 sell; their average is $6,250, so day 1’s price is 1.25 × $6,250 = $7,812.50. Then cars up to $7,812.50 are offered, averaging $3,906.25, so day 2’s price is $4,882.81. Each day the price is multiplied by 1.25/2 = 0.625, so it heads to $0: the market unravels completely.</p></details>
+    <p class="gt8-prob"><b>3.</b> Qualities run evenly from $2,000 to $12,000 and <var>b</var> = 1.5. Find the price at which the market settles and the share of cars that trade.</p>
+    <details class="gt8-ans"><summary>Show the answer</summary><p>At price <var>p</var>, cars from $2,000 to <var>p</var> are offered, with average (2,000 + <var>p</var>)/2. Settling needs <var>p</var> = 1.5(2,000 + <var>p</var>)/2, so 0.25<var>p</var> = 1,500 and <var>p</var> = $6,000. Cars from $2,000 to $6,000 trade: 4,000/10,000 = 40% of the market.</p></details>
+    <p class="gt8-prob"><b>4.</b> Qualities run evenly from 0 to <var>H</var>. A warranty pays the buyer <var>w</var>(<var>H</var> − <var>q</var>). Show that every car trades exactly when <var>w</var> ≥ 2 − <var>b</var>.</p>
+    <details class="gt8-ans"><summary>Show the answer</summary><p>An owner sells if <var>p</var> − <var>w</var>(<var>H</var> − <var>q</var>) ≥ <var>q</var>, that is, if <var>q</var> ≤ <var>s</var> = (<var>p</var> − <var>wH</var>)/(1 − <var>w</var>). A buyer values a car at <var>bq</var> + <var>w</var>(<var>H</var> − <var>q</var>); the average over cars from 0 to <var>s</var> is <var>bs</var>/2 + <var>w</var>(<var>H</var> − <var>s</var>/2), which is the price. Put that price back into the cutoff: <var>s</var>′ = <var>s</var>(<var>b</var> − <var>w</var>)/(2(1 − <var>w</var>)). The cutoff shrinks toward 0 if (<var>b</var> − <var>w</var>) &lt; 2(1 − <var>w</var>), that is, if <var>w</var> &lt; 2 − <var>b</var>; otherwise it stays at <var>H</var> and every car trades. With 40 cars instead of a smooth spread, the simulation needs slightly less (48.7% instead of 50% for <var>b</var> = 1.5).</p></details>
+    <p class="gt8-prob"><b>5.</b> A variant of the coordination game Bach or Stravinsky. Player 1 gets 2 if both choose B, 1 if both choose S, 0 if they miss. Player 2 is one of two types. With probability <var>q</var> she wants to meet: she gets 1 at (B, B), 2 at (S, S), 0 otherwise. With probability 1 − <var>q</var> she wants to avoid player 1: she gets 1 at (B, S), 2 at (S, B), 0 otherwise. For which <var>q</var> is “player 1 plays B; the meeting type plays B; the avoiding type plays S” a Bayesian Nash equilibrium?</p>
+    <details class="gt8-ans"><summary>Show the answer</summary><p>Given player 1’s B, the meeting type gets 1 from B and 0 from S, so B is best; the avoiding type gets 1 from S and 0 from B, so S is best. Player 1 expects 2<var>q</var> from B (he meets only the meeting type) and 1 × (1 − <var>q</var>) from S (he meets only the avoiding type, who plays S). B is a best response when 2<var>q</var> ≥ 1 − <var>q</var>, so <var>q</var> ≥ 1/3. (Checking the mirror-image profile shows it’s an equilibrium only for <var>q</var> ≥ 2/3, so for <var>q</var> &lt; 1/3 there is no equilibrium in pure strategies.)</p></details>
+    <p class="gt8-prob"><b>6.</b> In the Cournot game with <var>a</var> = 100, <var>c</var><sub>1</sub> = 10, <var>c</var><sub>H</sub> = 25, <var>c</var><sub>L</sub> = 10 and θ = ½, find the Bayesian Nash equilibrium, and compare firm 2’s high-cost quantity with what it would make if firm 1 knew its cost.</p>
+    <details class="gt8-ans"><summary>Show the answer</summary><p><var>q</var><sub>1</sub>* = (100 − 20 + 12.5 + 5)/3 = 32.5. <var>q</var><sub>2</sub>*(<var>c</var><sub>H</sub>) = (100 − 50 + 10)/3 + ½ × 15/6 = 21.25. <var>q</var><sub>2</sub>*(<var>c</var><sub>L</sub>) = (100 − 20 + 10)/3 − ½ × 15/6 = 28.75. Check: E[<var>q</var><sub>2</sub>] = 25, and (100 − 10 − 25)/2 = 32.5. With complete information against the high-cost type, firm 1 would make (100 − 20 + 25)/3 = 35 and firm 2 would make (100 − 50 + 10)/3 = 20. The high-cost type gains from firm 1’s uncertainty: 21.25 instead of 20.</p></details>
+    <p class="gt8-prob"><b>7.</b> (Harder) In the general Bayesian Cournot game, show that firm 1’s equilibrium quantity is the same as its complete-information quantity against a rival with the <i>average</i> cost θ<var>c</var><sub>H</sub> + (1 − θ)<var>c</var><sub>L</sub>. Why does averaging work here?</p>
+    <details class="gt8-ans"><summary>Show the answer</summary><p>Firm 2’s best responses are linear: <var>q</var><sub>2</sub>(<var>c</var>) = (<var>a</var> − <var>c</var> − <var>q</var><sub>1</sub>)/2, so E[<var>q</var><sub>2</sub>] = (<var>a</var> − <var>c̄</var> − <var>q</var><sub>1</sub>)/2 where <var>c̄</var> is the average cost. Firm 1’s profit is linear in <var>q</var><sub>2</sub>, so it only cares about E[<var>q</var><sub>2</sub>]. Those are exactly the two equations of a complete-information Cournot game against a rival with cost <var>c̄</var>, whose solution is <var>q</var><sub>1</sub> = (<var>a</var> − 2<var>c</var><sub>1</sub> + <var>c̄</var>)/3. Averaging works because everything is linear; with a curved demand or a firm that dislikes risk, the spread of the cost would matter too.</p></details>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The lot.</b> The 40 cars sit at the midpoints of 40 equal slices of the range of qualities, so the lot is a smooth spread with no luck involved. On day 0 buyers pay the average value to a buyer of all 40 cars. After that they pay the average value of the uncertified cars offered the day before (if none were offered, they assume the worst car). Every owner then takes the best of keeping the car, selling it as is, and, when allowed, certifying it. The market has settled when no owner changes their mind and the price stops moving.</p>
+      <p><b>What’s simplified.</b> Buyers learn from yesterday’s cars, not instantly; this slow learning is what lets you watch the unraveling, and it ends at the same place an instant equilibrium would. The warranty is a cash payment that grows with the car’s shortfall from the best car, a simple stand-in for repairs that lemons need more often. The inspection is perfect. Real markets have many prices and many kinds of buyers.</p>
+      <p><b>The Bayes tool</b> rounds each count to a whole car. <b>The Cournot game</b> finds the equilibrium by iterating best responses, which here shrink errors by half each round.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests, run before the page was built):</p>
+        <ul class="lab-small">
+          <li>Akerlof’s market (<var>b</var> = 1.5, $0 to $10,000): prices $7,500 on day 0 and $5,625 on day 1, as the formula says; after 11 days only the 2 worst cars are left, at $375.</li>
+          <li>The floor ($2,000 to $10,000): the 40-car lot settles with 55% of cars trading; a 2,000-car lot gives 50.1%, against 50% for the smooth model.</li>
+          <li>Smallest warranty that saves every car: 0.795, 0.487 and 0.180 for <var>b</var> = 1.2, 1.5 and 1.8, against 2 − <var>b</var> = 0.80, 0.50 and 0.20 for a smooth spread of cars.</li>
+          <li>Inspection: a $200 fee keeps 92.4% of the gains (38 cars certified); a $2,000 fee splits the market into 24 certified, 2 sold as is and 14 kept, keeping 36% of the gains. At every settled market, no owner can do better by switching choices, and the price equals the average value of the cars offered.</li>
+          <li>Bayes: the mechanic example gives 0.6923 (flagged) and 0.0270 (passed); the screening example gives 0.0917.</li>
+          <li>Cournot: with Gibbons’s numbers the iteration gives 30, 25 and 35, matching the closed form to 10<sup>−9</sup>; the same holds for θ = 0.1, 0.3, 0.7 and 0.9. A search over every quantity in steps of 0.01 found no profitable deviation for firm 1 or either type of firm 2.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>In Harsanyi’s approach, what is a player’s “type”?</p>
+        <ul class="u-opts"><li><button type="button">Whether the player is rational</button></li><li><button type="button">The order in which the player moves</button></li><li><button type="button">The player’s private information, drawn by Nature from a distribution everyone knows</button></li><li><button type="button">The strategy the player chooses</button></li></ul>
+        <details><summary>Show the answer</summary><p>Nature draws each player’s private information (costs, values, quality) from a commonly known prior, and each player sees only their own draw. That turns uncertainty about the game into uncertainty about a move by Nature.</p></details></li>
+      <li class="u-q" data-a="1"><p>Why does the lemons market unravel even though every sale would create value?</p>
+        <ul class="u-opts"><li><button type="button">Sellers of lemons lie about their cars</button></li><li><button type="button">At any single price, the best cars are the first to be withdrawn, which lowers the average and the price buyers will pay</button></li><li><button type="button">Buyers don’t value cars as much as sellers do</button></li></ul>
+        <details><summary>Show the answer</summary><p>Owners of good cars have the most to lose from a price based on the average, so they leave first. The average quality falls, so the price falls, and the process repeats. No one has to lie.</p></details></li>
+      <li class="u-q" data-a="0"><p>One car in ten is a lemon. A test flags every lemon and also 10% of good cars. A car is flagged. Roughly how likely is it to be a lemon?</p>
+        <ul class="u-opts"><li><button type="button">About 53%</button></li><li><button type="button">About 90%</button></li><li><button type="button">100%</button></li><li><button type="button">About 10%</button></li></ul>
+        <details><summary>Show the answer</summary><p>Of 100 cars, 10 lemons are all flagged, and 9 of the 90 good cars are flagged. 10/(10 + 9) ≈ 53%.</p></details></li>
+      <li class="u-q" data-a="2"><p>In a Bayesian game, a player’s strategy must say:</p>
+        <ul class="u-opts"><li><button type="button">One action, the same whatever the player learns</button></li><li><button type="button">An action only for the type the player turns out to be</button></li><li><button type="button">An action for every type the player could be</button></li></ul>
+        <details><summary>Show the answer</summary><p>Others can’t see your type, so to predict your behavior they need to know what every possible type of you would do. An equilibrium checks every type’s choice.</p></details></li>
+      <li class="u-q" data-a="1"><p>In the simulation, raising the inspection fee can lower the gains from trade even while most cars still trade. Why?</p>
+        <ul class="u-opts"><li><button type="button">Inspectors make mistakes</button></li><li><button type="button">The fee is a real cost of proving quality, and a middle tier of owners stops trading altogether</button></li><li><button type="button">Buyers stop trusting certificates</button></li></ul>
+        <details><summary>Show the answer</summary><p>Proving quality uses up resources, and owners of middling cars find neither certifying nor selling as is worth it, so their cars stay home.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 9, “Bayesian Games”: definitions and notation used here.</li>
+      <li>R. Gibbons, <i>Game Theory for Applied Economists</i> (Princeton University Press, 1992), section 3.1: the Bayesian Cournot model and its closed form.</li>
+      <li>G. A. Akerlof, “The Market for ‘Lemons’: Quality Uncertainty and the Market Mechanism”, <i>Quarterly Journal of Economics</i> 84(3), 488–500 (1970).</li>
+      <li>J. C. Harsanyi, “Games with Incomplete Information Played by ‘Bayesian’ Players, I–III”, <i>Management Science</i> 14 (1967–68).</li>
+      <li>R. J. Aumann, “Agreeing to Disagree”, <i>Annals of Statistics</i> 4(6), 1236–1239 (1976).</li>
+      <li>J. E. Stiglitz and A. Weiss, “Credit Rationing in Markets with Imperfect Information”, <i>American Economic Review</i> 71(3), 393–410 (1981).</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2012/" target="_blank" rel="noopener">14.12 Economic Applications of Game Theory</a> (Muhamet Yildiz), lecture notes on static games of incomplete information.</li>
+      <li>Penn State STAT 414, Lesson 6, <a href="https://online.stat.psu.edu/stat414/Lesson06" target="_blank" rel="noopener">Bayes’ Theorem</a>.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/principles-economics-3e/pages/16-1-the-problem-of-imperfect-information-and-asymmetric-information" target="_blank" rel="noopener">Principles of Economics 3e, 16.1 The Problem of Imperfect Information and Asymmetric Information</a>.</li>
+      <li>The Nobel Prize, <a href="https://www.nobelprize.org/prizes/economic-sciences/2001/summary/" target="_blank" rel="noopener">The Prize in Economic Sciences 2001</a> and <a href="https://www.nobelprize.org/prizes/economic-sciences/1994/summary/" target="_blank" rel="noopener">1994</a>; G. A. Akerlof, “Writing ‘The Market for Lemons’: A Personal and Interpretive Essay” (nobelprize.org, 2003).</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/The_Market_for_Lemons" target="_blank" rel="noopener">The Market for Lemons</a>, <a href="https://en.wikipedia.org/wiki/Bayesian_game" target="_blank" rel="noopener">Bayesian game</a>, <a href="https://en.wikipedia.org/wiki/Thomas_Bayes" target="_blank" rel="noopener">Thomas Bayes</a>, <a href="https://en.wikipedia.org/wiki/John_Harsanyi" target="_blank" rel="noopener">John Harsanyi</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/incomplete-information/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/incomplete-information/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/incomplete-information/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/incomplete-information/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

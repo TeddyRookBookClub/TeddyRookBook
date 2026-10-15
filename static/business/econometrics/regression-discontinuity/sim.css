@@ -1,0 +1,57 @@
+/* Regression Discontinuity: only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#ec13-lab .lab-view canvas:focus{outline:none}
+#ec13-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#ec13-lab .lab-tools button{min-width:36px;min-height:36px}
+#ec13-lab .lab-hud{max-width:calc(100% - 7rem)}
+#ec13-lab .lab-seg button{min-height:36px}
+#ec13-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#ec13-lab .lab-chk{min-height:36px;cursor:pointer}
+#ec13-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#ec13-lab .lab-btn{min-height:38px}
+#ec13-lab .lab-readout dd{white-space:nowrap}
+#ec13-lab .lab-readout dd.ec13-bad{color:#c92a2a}
+#ec13-lab .lab-readout dd.ec13-warn{color:#b35c00}
+html[data-theme="dark"] #ec13-lab .lab-readout dd.ec13-bad{color:#ff8787}
+html[data-theme="dark"] #ec13-lab .lab-readout dd.ec13-warn{color:#ffa94d}
+#ec13-lab .lab-toast{top:4.2rem}
+#ec13-lab #ec13-view{height:min(78vh,680px)}
+/* the smaller simulations in the lesson */
+#ec13-lab .ec13-mini{margin:.9rem 0 1rem}
+#ec13-lab .ec13-mini .lab-view{height:380px;min-height:0}
+#ec13-lab #ec13-fzv{height:400px}
+#ec13-lab .ec13-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1.2rem}
+#ec13-lab .ec13-row>*{min-width:0}
+#ec13-lab .ec13-grow{flex:1 1 260px;display:flex;flex-direction:column;gap:.5rem}
+#ec13-lab .ec13-row .lab-readout{display:grid;grid-template-columns:minmax(0,1fr) auto}
+#ec13-lab .ec13-row .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#ec13-lab .ec13-row .lab-btn{align-self:flex-start}
+/* practice problems */
+#ec13-lab .ec13-prob{padding-left:1.4rem}
+#ec13-lab .ec13-prob>li{margin:0 0 .9rem}
+#ec13-lab .ec13-prob>li>p{margin:0 0 .3rem}
+#ec13-lab .ec13-prob details{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.35rem .7rem}
+#ec13-lab .ec13-prob summary{cursor:pointer;font-weight:600;color:var(--acc);min-height:28px;display:list-item}
+#ec13-lab .ec13-prob details p{margin:.4rem 0 .2rem}
+#ec13-lab .lab-table td,#ec13-lab .lab-table th{white-space:nowrap}
+/* a short glow when a mission is done */
+#ec13-lab .ec13-win{animation:ec13win 1.2s ease-out}
+@keyframes ec13win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#ec13-lab .lab-sec ul{padding-left:1.3rem}
+#ec13-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #ec13-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+  #ec13-lab #ec13-view{height:900px;max-height:none}
+}
+@media (max-width:600px){
+  #ec13-lab .lab-toast{top:3.4rem;font-size:.82rem;max-width:84%}
+  #ec13-lab .ec13-mini .lab-view{height:560px}
+  #ec13-lab #ec13-fzv{height:640px}
+  #ec13-lab .lab-hud{display:none}
+}
+@media (prefers-reduced-motion:reduce){#ec13-lab .ec13-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#ec13-lab .ec13-main{grid-template-rows:auto 1fr}
+#ec13-lab .ec13-main>.lab-view{grid-column:1;grid-row:1}
+#ec13-lab .ec13-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#ec13-lab .ec13-main>.ec13-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#ec13-lab .ec13-main{grid-template-rows:none}#ec13-lab .ec13-main>.lab-view,#ec13-lab .ec13-main>.lab-panel,#ec13-lab .ec13-main>.ec13-under{grid-column:auto;grid-row:auto}}

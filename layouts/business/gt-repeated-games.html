@@ -1,0 +1,210 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/repeated-games/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/repeated-games/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt7-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 7</p>
+    <h1>{{ .Title }}</h1>
+    <p>Played once, the prisoner’s dilemma ends in mutual defection. Played again and again, it doesn’t have to: today’s cooperation can be rewarded tomorrow, and today’s cheating punished. Around 1980 the political scientist Robert Axelrod invited experts to send in strategies for a repeated prisoner’s dilemma and let them play each other on a computer. The winner was the simplest entry of all. Here you’ll run your own tournament with the classic strategies and one you design, add mistakes, let successful strategies multiply over generations, and find the exact point at which the shadow of the future makes cooperation pay.</p>
+    <span class="lab-mark" aria-hidden="true">🔁</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="gt7-view">
+      <canvas id="gt7-cv" tabindex="0" aria-label="The repeated prisoner’s dilemma. In Tournament view, a colored grid of each strategy’s average points per round against every other, and a ranking. In Evolution view, the share of each strategy in the population over 200 generations. In Match view, two rows of green (cooperate) and red (defect) tiles, one per round. Press Enter to run."></canvas>
+      <div class="lab-tools"><button type="button" class="gt7-go" id="gt7-go2" title="Run (Enter)">▶ Run</button></div>
+      <noscript><p class="lab-small">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>View</h3>
+      <div class="lab-seg" role="group" aria-label="View" id="gt7-tab"><button type="button" data-t="tour" aria-pressed="true">Tournament</button><button type="button" data-t="evo" aria-pressed="false">Evolution</button><button type="button" data-t="match" aria-pressed="false">One match</button></div>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="gt7-go">▶ Run the tournament</button></div>
+      <p id="gt7-msg" aria-live="polite"></p>
+      <div id="gt7-sbox" hidden><div class="lab-seg" role="group" aria-label="Starting population" id="gt7-start"><button type="button" data-s="equal" aria-pressed="true">Equal shares</button><button type="button" data-s="hostile" aria-pressed="false">Hostile world: 90% ALLD</button></div></div>
+      <div id="gt7-mbox" class="gt7-sel" hidden><select id="gt7-ma" aria-label="First strategy"><option value="allc">Always cooperate</option><option value="alld">Always defect</option><option value="tft" selected>Tit for tat</option><option value="grim">Grim trigger</option><option value="wsls">Win-stay, lose-shift</option><option value="gtft">Generous tit for tat</option><option value="tf2t">Tit for two tats</option><option value="rand">Random</option><option value="yours">Your strategy</option></select><span>vs</span><select id="gt7-mb" aria-label="Second strategy"><option value="allc">Always cooperate</option><option value="alld">Always defect</option><option value="tft" selected>Tit for tat</option><option value="grim">Grim trigger</option><option value="wsls">Win-stay, lose-shift</option><option value="gtft">Generous tit for tat</option><option value="tf2t">Tit for two tats</option><option value="rand">Random</option><option value="yours">Your strategy</option></select></div>
+      <h3>Lineup</h3>
+      <div class="gt7-line" id="gt7-line" role="group" aria-label="Strategies in the tournament"><button type="button" data-k="allc"><i style="background:#63e6be"></i>ALLC</button><button type="button" data-k="alld"><i style="background:#ff8787"></i>ALLD</button><button type="button" data-k="tft"><i style="background:#74c0fc"></i>TFT</button><button type="button" data-k="grim"><i style="background:#b197fc"></i>GRIM</button><button type="button" data-k="wsls"><i style="background:#ffd479"></i>WSLS</button><button type="button" data-k="gtft"><i style="background:#38d9a9"></i>GTFT</button><button type="button" data-k="tf2t"><i style="background:#a5d8ff"></i>TF2T</button><button type="button" data-k="rand"><i style="background:#adb5bd"></i>RAND</button><button type="button" data-k="yours"><i style="background:#f9a8d4"></i>YOURS</button></div>
+      <h3>Your strategy</h3>
+      <div class="gt7-design">
+        <div><span>First move</span><span class="lab-seg" id="gt7-first"><button type="button" data-v="0">C</button><button type="button" data-v="1">D</button></span></div>
+        <div id="gt7-after">
+          <div style="display:grid;gap:.3rem;width:100%">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span>After we both cooperated</span><span class="lab-seg" data-i="0"><button type="button" data-v="0">C</button><button type="button" data-v="1">D</button></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span>After they cheated me</span><span class="lab-seg" data-i="1"><button type="button" data-v="0">C</button><button type="button" data-v="1">D</button></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span>After I cheated them</span><span class="lab-seg" data-i="2"><button type="button" data-v="0">C</button><button type="button" data-v="1">D</button></span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span>After we both defected</span><span class="lab-seg" data-i="3"><button type="button" data-v="0">C</button><button type="button" data-v="1">D</button></span></div>
+          </div>
+        </div>
+        <label class="lab-chk"><input type="checkbox" id="gt7-grudge"> Never forgive: once they defect, defect forever</label>
+      </div>
+      <h3>Rules of the game</h3>
+      <div class="lab-field"><span><label for="gt7-noise">Noise: chance a move comes out wrong</label><output id="gt7-noise-o" for="gt7-noise"></output></span><input type="range" id="gt7-noise" min="0" max="10" step="1" value="0"></div>
+      <div class="lab-seg" role="group" aria-label="Match length" id="gt7-len"><button type="button" data-l="fixed" aria-pressed="true">200 rounds</button><button type="button" data-l="uncertain" aria-pressed="false">Uncertain end</button></div>
+      <div class="lab-field" id="gt7-wbox" hidden><span><label for="gt7-w">Chance of another round, <i>w</i></label><output id="gt7-w-o" for="gt7-w"></output></span><input type="range" id="gt7-w" min="0.3" max="0.99" step="0.01" value="0.99"></div>
+      <dl class="lab-readout" id="gt7-read" aria-live="polite"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt7-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The game.</b> Each round is a prisoner’s dilemma with Axelrod’s payoffs (the matrix below): both cooperate, 3 each; both defect, 1 each; a defector against a cooperator gets 5 and the cooperator 0. A match is 200 rounds, or, with “uncertain end,” goes on to another round with probability <i>w</i>.</p>
+      <p><b>The strategies.</b> Always cooperate and Always defect never change. Tit for tat cooperates first, then copies the opponent’s last move. Grim trigger cooperates until the opponent defects once, then defects forever. Win-stay, lose-shift repeats its move after a good result (3 or 5) and switches after a bad one (0 or 1). Generous tit for tat is tit for tat that forgives a defection one time in three. Tit for two tats defects only after two defections in a row. Random flips a coin. Yours is whatever you design in the panel.</p>
+      <p><b>Tournament.</b> The grid shows the average points per round that the row strategy earned against the column strategy, from red (0) to green (5). Every strategy also plays itself, as in Axelrod’s tournaments. The ranking averages each row.</p>
+      <p><b>Evolution.</b> Imagine a population playing these strategies. Each generation, a strategy’s share grows in proportion to how well it scores against the current population. Watch who thrives once the weak have been eaten. <b>One match</b> shows every move of a single match, which is the best way to see an echo of retaliation.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="finite">
+    <h2>Why a known last round unravels everything</h2>
+    <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Player 1 chooses a row, Player 2 chooses a column. In each cell, Player 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Player 2</th></tr><tr><th class="gth-p1" scope="col">Player 1</th><th scope="col">Cooperate</th><th scope="col">Defect</th></tr></thead><tbody><tr><th scope="row">Cooperate</th><td><span class="gth-u1">3</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">5</span></td></tr><tr><th scope="row">Defect</th><td><span class="gth-u1">5</span>, <span class="gth-u2">0</span></td><td class="gth-ne"><span class="gth-u1">1</span>, <span class="gth-u2">1</span></td></tr></tbody></table></div><figcaption>One round of Axelrod’s game: T = 5, R = 3, P = 1, S = 0. Played once, defecting dominates.</figcaption></figure>
+    <p>Suppose two players know they will play the prisoner’s dilemma exactly 200 times. In round 200 there is no future to protect, so it is a one-shot game and both defect. Knowing that, round 199 has no future worth protecting either, since round 200 is going to be mutual defection anyway, so both defect there too. Backward induction (Chapter 6) unravels the whole game: <b>in the finitely repeated prisoner’s dilemma, the unique subgame perfect equilibrium is to defect in every round</b>, however long the game is.</p>
+    <p>That conclusion strikes most people as wrong, and real players don’t follow it: in experiments, cooperation usually survives until close to the end. Two things break the argument: an end that is uncertain, and a little doubt about whether the other player is fully rational.</p>
+  </section>
+
+  <section class="lab-sec" id="discount">
+    <h2>The shadow of the future</h2>
+    <p>If after each round the game continues with probability δ, or players value a payoff one round later at δ times its value today, then a stream of payoffs <i>u</i><sub>0</sub>, <i>u</i><sub>1</sub>, <i>u</i><sub>2</sub>, … is worth <i>u</i><sub>0</sub> + δ<i>u</i><sub>1</sub> + δ²<i>u</i><sub>2</sub> + … . The number δ, between 0 and 1, is the <b>discount factor</b>: how much the future counts. Axelrod called it the shadow of the future.</p>
+    <p>Consider <b>grim trigger</b>: cooperate until the other player defects, then defect forever. If both play it, both cooperate forever and each gets <i>R</i> + δ<i>R</i> + δ²<i>R</i> + … = <i>R</i>/(1 − δ). A player who defects today gets <i>T</i> now, but then mutual defection forever: <i>T</i> + δ<i>P</i>/(1 − δ). Cooperation is a best response when</p>
+    <div class="u-big"><i>R</i>/(1 − δ) ≥ <i>T</i> + δ<i>P</i>/(1 − δ) &nbsp;⇔&nbsp; δ ≥ (<i>T</i> − <i>R</i>)/(<i>T</i> − <i>P</i>)<small>grim trigger sustains cooperation as a subgame perfect equilibrium exactly when players are patient enough: the one-time gain <i>T</i> − <i>R</i> must be outweighed by the lost future, <i>R</i> − <i>P</i> per round</small></div>
+    <p>Is the punishment itself credible? Yes: once someone has defected, defecting forever is a best response to a partner who defects forever, so grim trigger is subgame perfect, not just a Nash equilibrium.</p>
+    <div class="lab-stage" id="gt7d">
+      <div class="lab-view gt7-dv" id="gt7d-view">
+        <canvas id="gt7d-cv" aria-label="The discount factor. Left: payoffs per round, shrinking by δ each round, for cooperating forever (green) and for defecting once and being punished forever (red). Right: the average payoff of each plan as δ goes from 0 to 1, crossing at the threshold δ star. Drag on the right chart to change δ."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Payoffs</h3>
+        <div class="lab-field"><span><label for="gt7d-T">Temptation T</label><output id="gt7d-T-o" for="gt7d-T"></output></span><input type="range" id="gt7d-T" min="2" max="10" step="0.5" value="5"></div>
+        <div class="lab-field"><span><label for="gt7d-R">Reward R</label><output id="gt7d-R-o" for="gt7d-R"></output></span><input type="range" id="gt7d-R" min="1" max="9" step="0.5" value="3"></div>
+        <div class="lab-field"><span><label for="gt7d-P">Punishment P</label><output id="gt7d-P-o" for="gt7d-P"></output></span><input type="range" id="gt7d-P" min="0" max="8" step="0.5" value="1"></div>
+        <h3>Patience</h3>
+        <div class="lab-field"><span><label for="gt7d-d">Discount factor δ</label><output id="gt7d-d-o" for="gt7d-d"></output></span><input type="range" id="gt7d-d" min="0" max="0.99" step="0.01" value="0.8"></div>
+        <dl class="lab-readout" id="gt7d-read" aria-live="polite"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: Axelrod’s payoffs and Osborne’s</b>
+      <p>With <i>T</i> = 5, <i>R</i> = 3, <i>P</i> = 1: δ* = (5 − 3)/(5 − 1) = <b>1/2</b>. At δ = 0.8, cooperating forever is worth 3/0.2 = 15; defecting is worth 5 + 0.8 × 1/0.2 = 9. With Osborne’s payoffs (3, 2, 1), δ* = (3 − 2)/(3 − 1) = 1/2 as well. A continuation probability of 1/2 means the game is expected to last only two rounds, and that is already enough for these payoffs.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: can the cartel of Chapter 5 hold?</b>
+      <p>Two Cournot firms (demand <i>P</i> = 100 − <i>Q</i>, cost $10) earn 1,012.5 each by sharing the monopoly output, 900 each in the Cournot equilibrium, and a firm that cheats on its partner earns 1,139.06 for one period. With grim trigger (“if you cheat, we produce the Cournot output forever”):</p>
+      <ol>
+        <li><i>T</i> = 1,139.06, <i>R</i> = 1,012.5, <i>P</i> = 900.</li>
+        <li>δ* = (1,139.06 − 1,012.5)/(1,139.06 − 900) = 126.56/239.06 ≈ <b>0.53</b> (exactly 9/17).</li>
+        <li>If the firms meet often enough, and expect the market to last, that is easy to satisfy, which is why antitrust authorities worry about markets with few firms and frequent, visible pricing. It is also why cartels collapse when detection is slow (cheating pays for longer), demand is shrinking (the future is worth less) or new entrants arrive.</li>
+      </ol>
+    </div>
+    <div class="lab-try"><b>Try this:</b> In the lab above, raise the temptation <i>T</i> and watch δ* climb toward 1: the bigger the gain from cheating, the more patient players must be. Then raise <i>P</i> toward <i>R</i>: a mild punishment needs very patient players to work.</div>
+    <h3 class="lab-h">The folk theorem</h3>
+    <p>Grim trigger is one equilibrium of the repeated game, but far from the only one. The <b>folk theorem</b>, so called because game theorists knew versions of it before anyone published them, says roughly: in an infinitely repeated game with patient enough players, <i>any</i> pattern of average payoffs that is feasible and gives every player more than the least that others could hold them to (their minmax payoff) can be sustained by a subgame perfect equilibrium. James Friedman proved a version with punishments that revert to a Nash equilibrium of the one-shot game (1971); Drew Fudenberg and Eric Maskin gave a general form (1986). Repetition explains how cooperation is possible; it does not say that cooperation will happen, because mutual defection forever remains an equilibrium too.</p>
+  </section>
+
+  <section class="lab-sec" id="axelrod">
+    <h2>Axelrod’s tournaments</h2>
+    <p>Around 1980 Robert Axelrod, a political scientist at the University of Michigan, invited game theorists to submit computer programs to play a repeated prisoner’s dilemma. In the first tournament 14 entries and a random strategy played each other, and themselves, in a round robin of 200-move matches. The winner, submitted by the mathematical psychologist Anatol Rapoport, was <b>tit for tat</b>, the simplest program entered. Axelrod published the results and held a second tournament, this time with matches of uncertain length; 62 entries arrived from six countries, many designed to beat tit for tat. Tit for tat won again. In his book <i>The Evolution of Cooperation</i> (1984) Axelrod drew lessons from the successful strategies:</p>
+    <div class="u-key">
+      <div><b>Be nice</b><p>Never be the first to defect. In the first tournament the top-ranking entries were all nice.</p></div>
+      <div><b>Retaliate</b><p>Answer a defection, so you can’t be exploited.</p></div>
+      <div><b>Forgive</b><p>Return to cooperation once the other side does, so that a single defection doesn’t start an endless feud.</p></div>
+      <div><b>Be clear, and don’t be envious</b><p>Simple behavior is easy for others to read and respond to. Aim at your own score, not at beating the other player.</p></div>
+    </div>
+    <p>He also ran an “ecological” analysis, letting each strategy’s share of the population grow with its score, the same thing the Evolution view does. Strategies that preyed on naive cooperators shrank once their prey disappeared, and nice, retaliating strategies came to dominate.</p>
+    <div class="u-myth"><b>Common mistake: “Tit for tat wins by beating its opponents”</b>
+      <p>Tit for tat never scores more than its opponent in any single match: it can only tie or lose (without noise, our tests never found an exception). It won Axelrod’s tournaments because it did reasonably well against everyone, drawing out cooperation from strategies that could cooperate and losing little to those that couldn’t. That is the point of “don’t be envious.”</p>
+    </div>
+    <p><b>The field matters.</b> Which strategy wins depends on who else is in the tournament. In this page’s small field without noise, grim trigger edges out tit for tat because it punishes the Random player harder; take Random out and see what changes. <b>Mistakes matter too.</b> When moves can come out wrong, tit for tat against itself falls into echoes: one accidental defection is answered, the answer is answered, and the pair alternates for a long time. Martin Nowak and Karl Sigmund showed that generous tit for tat (1992) and win-stay, lose-shift (1993) do better in noisy worlds because they recover from errors. In our tests with 5% noise, tit for tat averaged 2.30 points a round against itself, while generous tit for tat averaged 2.86 and win-stay, lose-shift 2.79.</p>
+    <div class="lab-try"><b>Try this:</b> In the One match view, set noise to 5% and play Tit for tat against itself: look for the red-green checkerboards. Then try Generous tit for tat against itself, and Win-stay, lose-shift against itself.</div>
+    <div class="lab-try"><b>Try this:</b> Design your own strategy. Start from tit for tat (C; then C, D, C, D) and change one rule at a time. Can you beat the classics without noise? With noise? What does your strategy do in the evolution?</div>
+  </section>
+
+  <section class="lab-sec" id="reputation">
+    <h2>Reputation, and cooperation in business</h2>
+    <p>The unraveling argument for a known last round assumes everyone is sure everyone else is rational. David Kreps, Paul Milgrom, John Roberts and Robert Wilson showed in 1982 that a small doubt changes everything: if there is even a modest chance that your partner is the kind of player who plays tit for tat no matter what, it pays a fully rational player to cooperate too, to keep the partner cooperating, until near the end. A <b>reputation</b> for cooperating is an asset, built slowly and lost quickly.</p>
+    <p>Long relationships are how most business works. Suppliers deliver quality they could skimp on, customers pay invoices they could delay, and firms keep promises to employees in hard times, because each side values the future of the relationship more than the gain from cheating today. When Southwest Airlines kept its employees after the 2001 attacks, it was honoring a commitment that was costly to keep; the case <a href="{{ "business/cases/southwest-no-layoffs-2001/" | relURL }}">Southwest Airlines Keeps Its People After 9/11</a> discusses how that built trust. The same logic holds cartels together, until it doesn’t: the lysine cartel in Chapter 5 held regular meetings to monitor each member’s sales.</p>
+    <p>Axelrod also described the “live and let live” system in the trenches of the First World War, drawing on the historian Tony Ashworth: units facing each other for long periods often held their fire, or fired at predictable times and places, and answered any real attack in kind. Soldiers in opposing armies were in a repeated game, and the high command, which wanted fighting, eventually broke it up, above all by ordering raids on the enemy trenches.</p>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <ul>
+      <li><b>Business:</b> supplier relationships, repeat customers, online reviews (a public reputation is a repeated game with everyone), price leadership in concentrated markets, and the tacit collusion that competition authorities look for.</li>
+      <li><b>Policy:</b> arms-control treaties with inspections, trade agreements with retaliation clauses, fishing quotas: repeated games with monitoring.</li>
+      <li><b>Biology:</b> Axelrod and the biologist W. D. Hamilton applied the same ideas to cooperation among animals (<i>Science</i>, 1981). Reciprocity needs repeated encounters with individuals who recognize each other.</li>
+      <li><b>Daily life:</b> neighbors, coworkers and roommates cooperate because they will see each other tomorrow. The last week of a job, or a one-time online purchase from a stranger, are where cooperation is most fragile.</li>
+    </ul>
+    <p class="lab-small">Nothing here is financial or investment advice.</p>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol>
+      <li><p><b>A threshold.</b> In a prisoner’s dilemma with <i>T</i> = 7, <i>R</i> = 4, <i>P</i> = 2, <i>S</i> = 0, how patient must players be for grim trigger to sustain cooperation?</p>
+        <details><summary>Show the answer</summary><p>δ* = (7 − 4)/(7 − 2) = 3/5 = 0.6. With δ = 0.6, cooperating is worth 4/0.4 = 10 and defecting 7 + 0.6 × 2/0.4 = 10: exactly equal.</p></details></li>
+      <li><p><b>Three rounds.</b> Two players play Osborne’s prisoner’s dilemma exactly three times and both know it. Explain why both defect in round 1.</p>
+        <details><summary>Show the answer</summary><p>Round 3 is a one-shot game: both defect. In round 2, whatever happens, round 3 will be mutual defection, so round 2 is effectively one-shot too: both defect. The same reasoning applies to round 1. Cooperation can’t be rewarded in a future that is already decided.</p></details></li>
+      <li><p><b>The cartel’s threshold.</b> Verify that the cartel of Chapter 5 can be held together by grim trigger exactly when δ ≥ 9/17.</p>
+        <details><summary>Show the answer</summary><p>Collusion: 22.5 each at a price of $55, profit 1,012.5. Cheating: 33.75 against 22.5, price $43.75, profit 33.75 × 33.75 = 1,139.0625. Cournot: 900. δ* = (1,139.0625 − 1,012.5)/(1,139.0625 − 900) = 126.5625/239.0625 = 9/17 ≈ 0.529.</p></details></li>
+      <li><p><b>How long is uncertain?</b> If after every round there is another with probability <i>w</i> = 0.95, how many rounds does a match last on average?</p>
+        <details><summary>Show the answer</summary><p>The number of rounds is geometric: the expected length is 1/(1 − <i>w</i>) = 1/0.05 = 20 rounds. (Our simulation checked <i>w</i> = 0.9: 4,000 matches averaged 10.00 rounds.)</p></details></li>
+      <li><p><b>How many reciprocators to invade?</b> In a population of Always defect and Tit for tat playing 200-round matches with Axelrod’s payoffs, TFT earns 600 against TFT and 199 against ALLD; ALLD earns 204 against TFT and 200 against ALLD. Above what share <i>x</i> of TFT does TFT do better?</p>
+        <details><summary>Show the answer</summary><p>TFT: 600<i>x</i> + 199(1 − <i>x</i>). ALLD: 204<i>x</i> + 200(1 − <i>x</i>). TFT is better when 401<i>x</i> + 199 &gt; 4<i>x</i> + 200, that is 397<i>x</i> &gt; 1, or <i>x</i> &gt; 1/397 ≈ 0.25%. A tiny cluster of reciprocators who meet each other can invade a world of defectors.</p></details></li>
+      <li><p><b>The folk theorem at work.</b> With Axelrod’s payoffs, can two patient players sustain average payoffs of (2.5, 2.5) by alternating (C, D) and (D, C)? What is each player’s minmax payoff?</p>
+        <details><summary>Show the answer</summary><p>Each player can guarantee at least <i>P</i> = 1 by always defecting, and the other can hold them to 1 by always defecting, so the minmax payoff is 1. Alternating gives each an average of (5 + 0)/2 = 2.5 &gt; 1, and it is feasible, so by the folk theorem it can be sustained for δ close enough to 1 (it is worse than mutual cooperation, 3 each, but it is an equilibrium too).</p></details></li>
+      <li><p><b>Tit for tat never wins a match.</b> Without noise, show that in any match tit for tat’s total is at most its opponent’s.</p>
+        <details><summary>Show the answer</summary><p>The scores differ only in rounds where one player defects and the other cooperates. Tit for tat defects against a cooperator only in a round right after the opponent defected. Look at the sequence of rounds where the two players’ moves differ: tit for tat copies with a one-round delay, so those rounds alternate, starting with the opponent defecting (tit for tat begins by cooperating). So the opponent is the defector in at least as many of them as tit for tat, and each of those rounds gives the defector 5 and the cooperator 0. Hence the opponent’s total is at least tit for tat’s.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the interactives work</h2>
+    <p><b>Matches.</b> Each round, both strategies choose from the history of what was actually played; with noise, each chosen move is flipped with the given probability before it is played. Payoffs are Axelrod’s: 5, 3, 1 and 0. Matches last 200 rounds, or continue with probability <i>w</i> after each round (capped at 3,000 rounds). Your strategy is “memory one”: its move depends only on the last round, unless you tick “never forgive.” The default rule is tit for tat.</p>
+    <p><b>Tournament.</b> Every pair plays, including each strategy against itself. Each pair plays several matches (3 without noise, 6 with it, 40 to 200 for uncertain lengths) and the grid shows the average payoff per round. A strategy’s score is the average of its row. <b>Evolution</b> uses the tournament grid: each generation, a strategy’s share is multiplied by its average payoff against the current population and divided by the population average (discrete replicator dynamics), for 200 generations. <b>The discount lab</b> plots <i>R</i> and (1 − δ)<i>T</i> + δ<i>P</i>, the average discounted payoffs of cooperating and of defecting once against grim trigger.</p>
+    <p><b>Checks (node).</b> Tit for tat against Always defect over 200 rounds scores 199 to 204; against itself, 600. Without noise, tit for tat never outscored its opponent in 50 matches against each strategy. In our classic field without noise the ranking was Grim 2.73, TFT 2.66, TF2T 2.61, WSLS 2.60, GTFT 2.58, ALLC 2.44, Random 2.24, ALLD 2.16; with <i>w</i> = 0.5, Always defect came first (3.28). From equal shares, evolution drove Always defect below 1%; starting with 90% Always defect, after 300 generations the reciprocators (TFT, Grim, TF2T) held almost the whole population. With <i>w</i> = 0.9, 4,000 matches averaged 10.00 rounds, as 1/(1 − <i>w</i>) predicts. The threshold δ* = 1/2 for Axelrod’s payoffs makes both values exactly equal.</p>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>In a prisoner’s dilemma repeated exactly 100 times, with the end known to both players, the subgame perfect equilibrium is …</p>
+        <ul class="u-opts"><li><button type="button">cooperate until round 100, then defect</button></li><li><button type="button">defect in every round</button></li><li><button type="button">tit for tat</button></li></ul>
+        <details><summary>Show the answer</summary><p>Backward induction unravels from the last round. Uncertainty about the end, or about the other player’s type, is what rescues cooperation.</p></details></li>
+      <li class="u-q" data-a="2"><p>With <i>T</i> = 5, <i>R</i> = 3, <i>P</i> = 1, grim trigger sustains cooperation if and only if …</p>
+        <ul class="u-opts"><li><button type="button">δ ≥ 3/5</button></li><li><button type="button">δ ≥ 1/5</button></li><li><button type="button">δ ≥ 1/2</button></li></ul>
+        <details><summary>Show the answer</summary><p>(<i>T</i> − <i>R</i>)/(<i>T</i> − <i>P</i>) = 2/4 = 1/2.</p></details></li>
+      <li class="u-q" data-a="0"><p>Why did tit for tat do so well in Axelrod’s tournaments?</p>
+        <ul class="u-opts"><li><button type="button">It was nice, retaliated against defection, forgave quickly and was easy to read, so it got cooperation from many opponents</button></li><li><button type="button">It beat every opponent head to head</button></li><li><button type="button">It defected more often than the others</button></li></ul>
+        <details><summary>Show the answer</summary><p>It never beats an opponent in a match. Its total was high because it rarely got into long fights.</p></details></li>
+      <li class="u-q" data-a="1"><p>When moves can come out wrong (noise), tit for tat against itself …</p>
+        <ul class="u-opts"><li><button type="button">keeps cooperating perfectly</button></li><li><button type="button">falls into echoes of alternating retaliation after a mistake</button></li><li><button type="button">switches to always defecting at once</button></li></ul>
+        <details><summary>Show the answer</summary><p>Each copies the other’s last move, so a single error bounces back and forth. Generous tit for tat and win-stay, lose-shift recover faster.</p></details></li>
+      <li class="u-q" data-a="2"><p>The folk theorem says that in an infinitely repeated game with patient players …</p>
+        <ul class="u-opts"><li><button type="button">cooperation is the only equilibrium</button></li><li><button type="button">only the one-shot Nash equilibrium can be repeated</button></li><li><button type="button">many outcomes, including full cooperation, can be sustained as equilibria, as long as each player gets more than their minmax payoff</button></li></ul>
+        <details><summary>Show the answer</summary><p>Repetition makes cooperation possible but not inevitable: there are many equilibria, including mutual defection forever.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapters 14 and 15 (repeated games: the prisoner’s dilemma; general results and the folk theorem).</li>
+      <li>R. Axelrod, “Effective choice in the prisoner’s dilemma” and “More effective choice in the prisoner’s dilemma”, <i>Journal of Conflict Resolution</i> 24, 1980; <i>The Evolution of Cooperation</i> (Basic Books, 1984). R. Axelrod and W. D. Hamilton, “The evolution of cooperation”, <i>Science</i> 211, 1981, 1390–1396.</li>
+      <li><a href="https://public.websites.umich.edu/~axe/research/Evolving.pdf" target="_blank" rel="noopener">R. Axelrod, “The Evolution of Strategies in the Iterated Prisoner’s Dilemma”</a> (University of Michigan; the entries in the two tournaments).</li>
+      <li><a href="https://en.wikipedia.org/wiki/The_Evolution_of_Cooperation" target="_blank" rel="noopener">The Evolution of Cooperation</a> (Wikipedia; the 200-move matches, Rapoport, and the properties of successful strategies).</li>
+      <li>M. Nowak and K. Sigmund, “Tit for tat in heterogeneous populations”, <i>Nature</i> 355, 1992, 250–253; “A strategy of win-stay, lose-shift that outperforms tit-for-tat in the Prisoner’s Dilemma game”, <i>Nature</i> 364, 1993, 56–58.</li>
+      <li>J. W. Friedman, “A non-cooperative equilibrium for supergames”, <i>Review of Economic Studies</i> 38(1), 1971, 1–12. D. Fudenberg and E. Maskin, “The folk theorem in repeated games with discounting or with incomplete information”, <i>Econometrica</i> 54(3), 1986, 533–554.</li>
+      <li>D. M. Kreps, P. Milgrom, J. Roberts and R. Wilson, “Rational cooperation in the finitely repeated prisoners’ dilemma”, <i>Journal of Economic Theory</i> 27(2), 1982, 245–252.</li>
+      <li><a href="https://plato.stanford.edu/entries/prisoner-dilemma/" target="_blank" rel="noopener">Steven Kuhn, “Prisoner’s Dilemma”, Stanford Encyclopedia of Philosophy</a> (iterated and evolutionary versions).</li>
+      <li><a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2025/" target="_blank" rel="noopener">MIT OpenCourseWare 14.12, Economic Applications of Game Theory</a> (repeated games and the folk theorem).</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/repeated-games/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/repeated-games/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/repeated-games/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/repeated-games/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,69 @@
+/* Game Theory, Chapter 1 (Games, Players and Payoffs): only what this page adds to lab.css, unit.css and ../hub.css. */
+#gt1-lab .lab-view canvas{cursor:ew-resize}
+#gt1-lab .lab-view canvas:focus{outline:none}
+#gt1-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt1-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt1-lab .lab-tools .gt1-go{width:auto;padding:0 .8rem;font:600 .88rem system-ui,sans-serif;border-color:var(--sim-acc);background:rgba(18,58,51,.92);color:#fff;box-shadow:0 0 14px rgba(99,230,190,.25)}
+#gt1-lab .lab-hud{max-width:calc(100% - 15rem)}
+#gt1-lab .lab-seg button{min-height:36px}
+#gt1-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#gt1-lab .lab-chk{min-height:36px;cursor:pointer}
+#gt1-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#gt1-lab .lab-btn{min-height:38px}
+#gt1-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#gt1-lab .lab-readout dd{white-space:nowrap}
+#gt1-lab .gt1-you>span label::before{content:"";display:inline-block;width:.7rem;height:.7rem;border-radius:3px;margin-right:.35rem;vertical-align:-1px;background:#f9a8d4}
+#gt1-lab .lab-sec .lab-stage{margin:1rem 0}
+#gt1-lab .gt1-svg{display:block;width:100%;max-width:560px;height:auto;margin:.6rem 0;background:#06111a;border-radius:12px}
+#gt1-lab .gt1-pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:.8rem;align-items:start}
+#gt1-lab .gt1-pair figure{margin:0}
+#gt1-lab .gt1-pair figcaption{font-size:.84rem;color:var(--muted);margin-top:.3rem}
+/* the game builder */
+#gt1-lab .gt1-board{background:var(--sim);color:var(--sim-ink);border-radius:14px;padding:.8rem .9rem 1rem;display:flex;flex-direction:column;gap:.6rem;min-width:0}
+#gt1-lab .gt1-bar{display:flex;flex-wrap:wrap;gap:.4rem .6rem;align-items:center}
+#gt1-lab .gt1-bar .gt1-dseg{display:flex;flex-wrap:wrap;gap:.3rem}
+#gt1-lab .gt1-board button{min-height:36px;padding:.25rem .65rem;border-radius:999px;border:1px solid rgba(120,170,200,.35);background:#0b1b27;color:#dbe7ef;font:600 .8rem system-ui,sans-serif;cursor:pointer}
+#gt1-lab .gt1-board button:hover{border-color:#63e6be}
+#gt1-lab .gt1-board button[aria-pressed="true"]{border-color:#63e6be;color:#63e6be;background:rgba(99,230,190,.08)}
+#gt1-lab .gt1-board h4{margin:.2rem 0 0;font:700 .72rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8fb3c6}
+#gt1-lab #gt1e-mx{min-height:150px;display:flex;justify-content:center}
+#gt1-lab #gt1e-mx .gth-mx{margin:.2rem 0}
+#gt1-lab #gt1e-mx .gth-mx td{min-width:4.4rem;padding:.65rem .7rem;font-size:1.08rem;transition:background .3s}
+#gt1-lab #gt1e-mx .gth-mx td.gth-hi{border-color:#f9a8d4;box-shadow:inset 0 0 0 1px #f9a8d4}
+#gt1-lab #gt1e-mx .gth-mx td.gt1-flash{background:rgba(249,168,212,.28)}
+#gt1-lab .gt1-row{border-color:#ffd479 !important;color:#ffd479 !important;white-space:nowrap}
+#gt1-lab .gt1-row:hover{background:rgba(255,212,121,.12) !important}
+#gt1-lab .gt1-res{margin:0;min-height:2.9em;font-size:.92rem;color:#dbe7ef;text-align:center;line-height:1.45}
+#gt1-lab .gt1-y{color:#ffd479}#gt1-lab .gt1-t{color:#74c0fc}
+#gt1-lab .gt1-hist{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;min-height:2.2rem}
+#gt1-lab .gt1-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.15rem .45rem;border-radius:8px;background:rgba(255,255,255,.06);font:600 .78rem ui-monospace,Menlo,monospace}
+#gt1-lab .gt1-chip i{font-style:normal;color:#8fb3c6}
+#gt1-lab .gt1-none{font-size:.82rem;color:#8fb3c6}
+#gt1-lab .gt1-ed{overflow-x:auto;max-width:100%}
+#gt1-lab .gt1-ed table{border-collapse:separate;border-spacing:4px;margin:0 auto}
+#gt1-lab .gt1-ed th,#gt1-lab .gt1-ed td{padding:0;border:0}
+#gt1-lab .gt1-ed td{background:rgba(255,255,255,.06);border-radius:10px;padding:.35rem .3rem;white-space:nowrap}
+#gt1-lab .gt1-ed input{font:600 .95rem system-ui,sans-serif;background:#0b1b27;color:#dbe7ef;border:1px solid rgba(120,170,200,.35);border-radius:7px;min-height:36px;box-sizing:border-box}
+#gt1-lab .gt1-ed input[type=number]{width:3.3rem;text-align:center;margin:0 .1rem;padding:0 .1rem}
+#gt1-lab .gt1-ed input.gt1-a{color:#ffd479;border-color:rgba(255,212,121,.5)}
+#gt1-lab .gt1-ed input.gt1-b{color:#74c0fc;border-color:rgba(116,192,252,.5)}
+#gt1-lab .gt1-ed input[type=text]{width:6.2rem;padding:0 .35rem}
+#gt1-lab .gt1-ed input.gt1-n1{color:#ffd479;text-align:right}
+#gt1-lab .gt1-ed input.gt1-n2{color:#74c0fc;text-align:center}
+#gt1-lab .gt1-edhint{margin:.4rem 0 0;text-align:center;font-size:.8rem;color:#8fb3c6}
+#gt1-lab #gt1e-why{margin:0;font-size:.88rem;line-height:1.5;min-height:3em}
+#gt1-lab #gt1e-nf{margin:0;font-size:.85rem;line-height:1.55;color:var(--ink)}
+#gt1-lab #gt1e-bots button{flex:1 1 30%}
+@media (max-width:860px){
+  #gt1-lab .lab-hud{display:none}
+}
+@media (max-width:600px){
+  #gt1-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem;top:3.2rem}
+  #gt1-lab .gt1-ed input[type=number]{width:2.6rem}
+  #gt1-lab .gt1-ed input[type=text]{width:4.6rem}
+  #gt1-lab #gt1e-mx .gth-mx td{min-width:3.4rem;padding:.55rem .4rem}
+  #gt1-lab .gt1-board{padding:.7rem .5rem .9rem}
+}
+@media (min-width:861px){#gt1-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}
+#gt1-lab .gt1-plab{margin:0 0 -.3rem}
+@media (min-width:700px){#gt1-lab .lab-view .lab-toast{left:auto;right:10.2rem;transform:translateY(-10px);max-width:46%}#gt1-lab .lab-view .lab-toast.on{transform:translateY(0)}}

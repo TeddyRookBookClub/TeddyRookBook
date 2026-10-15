@@ -1,0 +1,310 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/probability/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/probability/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec2-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 2</p>
+    <h1>{{ .Title }}</h1>
+    <p>Every number in econometrics, from a poll to a regression slope, is a draw from some probability distribution. Here you get a laboratory of seven of them. Change their shapes, drop thousands of random draws into a live histogram, and drag a shaded band to measure probability. Then watch the most surprising fact in statistics happen in front of you: averages of almost anything, however lopsided, pile up into the same bell curve.</p>
+    <span class="lab-mark" aria-hidden="true">🎲</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="ec2-view">
+      <canvas id="ec2-cv" tabindex="0" aria-label="A probability distribution drawn as a green curve or green bars, with its mean (gold dashed line) and one standard deviation either side (gold bracket). A green shaded band between two handles, a and b, shows a probability. Random draws fall in as gold dots and build a blue histogram. Drag the handles to change the band. Keys: Enter draws once, Space starts or stops drawing, C clears, left and right arrows move handle a, Shift with the arrows moves handle b."></canvas>
+      <div class="lab-hud" id="ec2-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec2-stream" aria-label="Keep drawing" title="Keep drawing (Space)">▶</button>
+        <button type="button" id="ec2-reset" aria-label="Clear the draws" title="Clear the draws (C)">↺</button>
+      </div>
+      <noscript><p class="ec2-noscript">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Distribution</h3>
+      <div class="lab-seg" role="group" aria-label="Distribution" id="ec2-dist">
+        <button type="button" data-d="normal">Normal</button><button type="button" data-d="uniform">Uniform</button><button type="button" data-d="exponential">Exponential</button><button type="button" data-d="binomial">Binomial</button><button type="button" data-d="poisson">Poisson</button><button type="button" data-d="t">t</button><button type="button" data-d="chi2">Chi-square</button>
+      </div>
+      <div id="ec2-params" class="ec2-params"></div>
+      <label class="lab-chk"><input type="checkbox" id="ec2-ov"> Normal curve with the same mean and sd</label>
+      <h3>Draw at random</h3>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="ec2-d1">Draw 1</button><button type="button" class="lab-btn" id="ec2-d100">100</button><button type="button" class="lab-btn" id="ec2-d1000">1,000</button><button type="button" class="lab-btn" id="ec2-clear">Clear</button></div>
+      <h3>Shade a probability</h3>
+      <div class="lab-seg" role="group" aria-label="Shade" id="ec2-shade">
+        <button type="button" data-z="1">±1 sd</button><button type="button" data-z="1.96">±1.96 sd</button><button type="button" data-z="2">±2 sd</button><button type="button" data-z="3">±3 sd</button><button type="button" data-z="tail">Right tail</button>
+      </div>
+      <div class="lab-field"><span><label for="ec2-a">From a</label><output id="ec2-a-o" for="ec2-a"></output></span><input type="range" id="ec2-a" min="-4" max="4" step="0.01" value="-1"></div>
+      <div class="lab-field"><span><label for="ec2-b">To b</label><output id="ec2-b-o" for="ec2-b"></output></span><input type="range" id="ec2-b" min="-4" max="4" step="0.01" value="1"></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec2-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec2-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The green shape</b> is a probability distribution: where a random quantity tends to land. For a continuous quantity it is a smooth curve called a density, and the probability of landing between two values is the area under the curve between them. For a count, it is a set of bars, and each bar’s height is the probability of that exact count.</p>
+      <p><b>The gold marks</b> show the mean (the dashed line, the balance point of the shape) and one standard deviation either side (the bracket at the top), a measure of how spread out the shape is.</p>
+      <p><b>The draws</b> fall in as gold dots, and the blue histogram counts where they landed, scaled so it can be compared with the curve. With a few dozen draws it is ragged; with thousands it hugs the curve. That is probability as long-run frequency.</p>
+      <p><b>The shaded band</b> is a probability you choose. Drag the round handles a and b, or use the presets. The panel shows the exact probability from the formula and the share of your draws that actually landed in the band.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="rv">
+    <h2>Random variables and their distributions</h2>
+    <p>A <b>random variable</b> is a number whose value depends on chance: the roll of a die, the number of customers in the next hour, tomorrow’s change in the price of gasoline, the wage of a worker picked at random. Capital letters like <var>X</var> stand for the random variable; small letters like <var>x</var> for a value it can take.</p>
+    <div class="lab-cols">
+      <p><b>Discrete</b> random variables take separate values, usually counts. Their distribution is a list of probabilities <var>p</var>(<var>x</var>) = P(<var>X</var> = <var>x</var>) that add up to 1. The binomial counts successes in <var>n</var> independent tries; the Poisson counts rare events in a fixed stretch of time or space.</p>
+      <p><b>Continuous</b> random variables can take any value in a range. Their distribution is a density <var>f</var>(<var>x</var>); probabilities are areas: P(<var>a</var> ≤ <var>X</var> ≤ <var>b</var>) = ∫<sub><var>a</var></sub><sup><var>b</var></sup> <var>f</var>(<var>x</var>) d<var>x</var>. The probability of any one exact value is zero. Both kinds have a <b>cumulative distribution function</b>, <var>F</var>(<var>x</var>) = P(<var>X</var> ≤ <var>x</var>).</p>
+    </div>
+    <h3 class="lab-h">Expected value: the long-run average</h3>
+    <div class="u-big">E(<var>X</var>) = Σ <var>x</var> · <var>p</var>(<var>x</var>) &nbsp;or&nbsp; ∫ <var>x</var> <var>f</var>(<var>x</var>) d<var>x</var> = μ<small>the mean: each possible value weighted by its probability</small></div>
+    <p>For a fair die, E(<var>X</var>) = (1 + 2 + 3 + 4 + 5 + 6)/6 = 3.5, a value the die can never show. The expected value is not what you expect on one roll; it is the average over many. Three rules carry most of econometrics:</p>
+    <div class="lab-formula">E(<var>aX</var> + <var>b</var>) = <var>a</var> E(<var>X</var>) + <var>b</var> &nbsp;&nbsp;·&nbsp;&nbsp; E(<var>X</var> + <var>Y</var>) = E(<var>X</var>) + E(<var>Y</var>), always &nbsp;&nbsp;·&nbsp;&nbsp; E(<var>XY</var>) = E(<var>X</var>)E(<var>Y</var>) if <var>X</var> and <var>Y</var> are independent</div>
+    <h3 class="lab-h">Variance: how far from the mean</h3>
+    <div class="u-big">Var(<var>X</var>) = E[(<var>X</var> − μ)²] = E(<var>X</var>²) − μ² = σ²<small>the average squared distance from the mean; its square root σ is the standard deviation, in the same units as <var>X</var></small></div>
+    <div class="lab-formula">Var(<var>aX</var> + <var>b</var>) = <var>a</var>² Var(<var>X</var>) &nbsp;&nbsp;·&nbsp;&nbsp; Var(<var>X</var> + <var>Y</var>) = Var(<var>X</var>) + Var(<var>Y</var>) + 2 Cov(<var>X</var>, <var>Y</var>)</div>
+    <p>Adding a constant shifts a distribution without spreading it, so <var>b</var> drops out. Doubling every value doubles the spread and quadruples the variance. For a fair die, E(<var>X</var>²) = (1 + 4 + 9 + 16 + 25 + 36)/6 = 91/6, so Var(<var>X</var>) = 91/6 − 3.5² = 35/12 ≈ 2.92 and σ ≈ 1.71.</p>
+    <div class="u-ex"><b>Worked example: why insurance works</b>
+      <p>An insurer sells a one-year policy for $300. With probability 1 in 100 the car is stolen and the insurer pays $20,000; otherwise it pays nothing. (These numbers are made up for the example.)</p>
+      <ul>
+        <li>Expected payout: 0.01 × $20,000 = <b>$200</b>, so the expected profit per policy is $100.</li>
+        <li>Variance of the payout: 20,000² × 0.01 × 0.99 = 3,960,000 dollars², so σ ≈ <b>$1,990</b>. One policy is a wild gamble: usually +$300, sometimes −$19,700.</li>
+        <li>Now sell 10,000 independent policies. The expected total payout is $2,000,000, and because variances of independent risks add, the standard deviation of the total is $1,990 × √10,000 = <b>$199,000</b>. To lose money, payouts must top the $3,000,000 in premiums, which is 5 standard deviations above the mean: by the normal approximation, a chance of less than one in a million.</li>
+      </ul>
+      <p>The spread of the total grows like √<var>n</var>, while the expected profit grows like <var>n</var>. That gap is the law of large numbers at work, and it is the business model of insurance. (Real thefts aren’t perfectly independent, which is why insurers also worry about floods and storms that hit many customers at once.)</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="cov">
+    <h2>Covariance, correlation and conditional expectation</h2>
+    <div class="lab-cols">
+      <div>
+        <p><b>Covariance</b> measures whether two random variables move together: Cov(<var>X</var>, <var>Y</var>) = E[(<var>X</var> − μ<sub><var>X</var></sub>)(<var>Y</var> − μ<sub><var>Y</var></sub>)]. It is positive when above-average <var>X</var> tends to come with above-average <var>Y</var>. Its units are awkward (dollars times years, say), so we usually rescale it:</p>
+        <div class="lab-formula">Corr(<var>X</var>, <var>Y</var>) = Cov(<var>X</var>, <var>Y</var>) ÷ (σ<sub><var>X</var></sub> σ<sub><var>Y</var></sub>), &nbsp; always between −1 and +1</div>
+        <p>Independent variables have zero covariance. The reverse is not true: if <var>X</var> is −1, 0 or 1 with equal chances and <var>Y</var> = <var>X</var>², then Cov(<var>X</var>, <var>Y</var>) = E(<var>X</var>³) − E(<var>X</var>)E(<var>X</var>²) = 0, yet <var>Y</var> is completely determined by <var>X</var>. Correlation measures only straight-line association.</p>
+      </div>
+      <div>
+        <p><b>Conditional expectation</b> is the average of <var>Y</var> among those with a given value of <var>X</var>: E(<var>Y</var> | <var>X</var> = <var>x</var>). The average wage of workers with 16 years of schooling is one number; with 12 years, another. As a function of <var>x</var> it is called the <b>conditional expectation function</b>, and it is the thing regression tries to estimate.</p>
+        <div class="lab-formula">Law of iterated expectations: E(<var>Y</var>) = E[ E(<var>Y</var> | <var>X</var>) ]</div>
+        <p>The overall average is the average of the group averages, weighted by group size. If 30% of workers have a degree and average $40 an hour, and the rest average $25, the overall average is 0.3 × 40 + 0.7 × 25 = $29.50.</p>
+      </div>
+    </div>
+
+    <div class="lab-stage wide ec2-sub" id="ec2e">
+      <div class="lab-view" id="ec2e-view">
+        <canvas id="ec2e-cv" aria-label="A scatter plot of 1,500 simulated workers: years of schooling across, hourly wage up. Gold diamonds mark the average wage at each level of schooling, and a dashed gold curve the true conditional mean. The selected column is green, with a sideways histogram of its wages on the right. Tap a column or use the slider below."></canvas>
+      </div>
+      <div class="lab-panel ec2-row">
+        <div class="ec2-grow">
+          <div class="lab-field"><span><label for="ec2e-x">Years of schooling</label><output id="ec2e-x-o" for="ec2e-x">12 years</output></span><input type="range" id="ec2e-x" min="8" max="20" step="1" value="12"></div>
+          <label class="lab-chk"><input type="checkbox" id="ec2e-line"> Fit a straight line too</label>
+        </div>
+        <dl class="lab-readout ec2-grow" id="ec2e-read" aria-live="polite"></dl>
+      </div>
+    </div>
+    <p>The gold diamonds are E(wage | schooling) estimated from the data; the dashed curve is the true one used to simulate the workers. At each level there is a whole spread of wages, but the average traces a smooth, rising curve. Tick “Fit a straight line too”: the line is the best straight-line approximation to that curve, which is exactly what regression gives you (Chapter 4). The data are simulated, loosely patterned on U.S. wages.</p>
+  </section>
+
+  <section class="lab-sec" id="normal">
+    <h2>The normal distribution and z-scores</h2>
+    <p>The bell-shaped normal distribution is described by just its mean μ and standard deviation σ, written <var>N</var>(μ, σ²). Its density is <var>f</var>(<var>x</var>) = exp[−(<var>x</var> − μ)²/(2σ²)] ÷ (σ√(2π)). Any normal can be turned into the <b>standard normal</b>, <var>N</var>(0, 1), by measuring distance from the mean in standard deviations:</p>
+    <div class="u-big"><var>Z</var> = (<var>X</var> − μ) ÷ σ &nbsp;~&nbsp; <var>N</var>(0, 1)<small>a z-score: how many standard deviations above (+) or below (−) the mean</small></div>
+    <div class="u-key">
+      <div><b>68%</b><p>within 1 standard deviation of the mean (68.27%).</p></div>
+      <div><b>95%</b><p>within 1.96 standard deviations (95.00%); within 2, 95.45%.</p></div>
+      <div><b>99.7%</b><p>within 3 standard deviations (99.73%).</p></div>
+    </div>
+    <p>Two more facts make the normal central to econometrics. A linear function of a normal is normal, and a sum of independent normals is normal. And, by the central limit theorem below, sums and averages of many independent things are approximately normal even when the things themselves are not.</p>
+    <div class="u-ex"><b>Worked example: how many men are over six feet?</b>
+      <p>American men aged 20 and over average 68.9 inches tall (CDC, National Health and Nutrition Examination Survey, 2021–2023). Suppose heights are roughly normal with a standard deviation of about 3 inches (an assumption for this example). Six feet is 72 inches, so <var>z</var> = (72 − 68.9) ÷ 3 = 1.03. The share of a standard normal above 1.03 is about <b>15%</b>.</p>
+      <p>Going the other way: the 90th percentile of a standard normal is 1.2816, so 90% of men would be shorter than 68.9 + 1.2816 × 3 ≈ <b>72.7 inches</b>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="families">
+    <h2>Counts, and the t and chi-square families</h2>
+    <div class="lab-cols">
+      <p><b>Binomial.</b> With <var>n</var> independent tries, each a success with probability <var>p</var>, the number of successes has mean <var>np</var> and variance <var>np</var>(1 − <var>p</var>). Defective parts in a batch, customers who click an ad, free throws made.</p>
+      <p><b>Poisson.</b> Counts of rare events in a fixed window: calls to a help line in a minute, typos on a page, claims on a policy. One number, λ, is both the mean and the variance, and P(<var>X</var> = <var>k</var>) = e<sup>−λ</sup> λ<sup><var>k</var></sup> ÷ <var>k</var>!.</p>
+      <p><b>Chi-square with <var>k</var> degrees of freedom</b> is the distribution of a sum of <var>k</var> squared independent standard normals, <var>Z</var>₁² + … + <var>Z</var><sub><var>k</var></sub>². Each <var>Z</var>² has mean 1 and variance 2, so the sum has mean <var>k</var> and variance 2<var>k</var>. Sample variances and many test statistics follow it.</p>
+      <p><b>Student’s t with ν degrees of freedom</b> is <var>Z</var> ÷ √(<var>Q</var>/ν), where <var>Q</var> is an independent chi-square with ν degrees of freedom. It is a bell with fatter tails, because dividing by an estimated spread adds uncertainty. As ν grows it becomes the standard normal.</p>
+    </div>
+    <p><b>Why they matter later.</b> When you estimate a mean or a regression slope, you also have to estimate how noisy the data are. Dividing an estimate by its estimated standard error gives a t statistic, and with normal errors it follows exactly a t distribution (Chapters 3 and 5). Tests of several restrictions at once use the F distribution, a ratio of two chi-squares (Chapter 6). In large samples all of them settle into the normal and chi-square shapes.</p>
+    <div class="u-ex"><b>Worked example: deaths by horse kick, the classic Poisson</b>
+      <p>In 1898 the statistician Ladislaus Bortkiewicz published counts of soldiers killed by horse kicks in the Prussian army corps over twenty years. In the ten corps usually analyzed there are 200 corps-years with 122 deaths, an average of λ = 0.61 per corps per year. If deaths are rare and independent, the Poisson formula predicts how many corps-years should show each count:</p>
+      <div class="lab-tw"><table class="lab-table ec2-mini">
+        <thead><tr><th>Deaths in a year</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+        <tbody><tr><td>Poisson prediction (200 × P)</td><td>108.7</td><td>66.3</td><td>20.2</td><td>4.1</td><td>0.6</td></tr><tr><td>Observed</td><td>109</td><td>65</td><td>22</td><td>3</td><td>1</td></tr></tbody>
+      </table></div>
+      <p>For example, 200 × e<sup>−0.61</sup> = 200 × 0.543 = 108.7. The fit is remarkable for a formula with one number in it.</p>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> Pick the binomial with <var>n</var> = 100 and <var>p</var> = 0.02, then the Poisson with λ = 2. They look almost the same: a binomial with many tries and a small chance is close to a Poisson with λ = <var>np</var>. Then pick t with ν = 1 and press ▶: every so often a draw lands far off the chart.</div>
+
+  <section class="lab-sec" id="clt">
+    <h2>The central limit theorem</h2>
+    <p>Take a sample of <var>n</var> independent draws from a population with mean μ and standard deviation σ, and compute their average <var>X̄</var>. Do it again and again. The averages have mean μ and standard deviation σ/√<var>n</var>, whatever the population looks like. And as <var>n</var> grows, their distribution approaches a normal curve:</p>
+    <div class="u-big"><var>X̄</var> is approximately <var>N</var>(μ, σ²/<var>n</var>) &nbsp; when <var>n</var> is large<small>formally, √<var>n</var>(<var>X̄</var> − μ)/σ converges in distribution to <var>N</var>(0, 1), for independent draws with finite variance</small></div>
+
+    <div class="lab-stage ec2-sub" id="ec2c">
+      <div class="lab-view" id="ec2c-view">
+        <canvas id="ec2c-cv" aria-label="Top: the population, drawn in blue, with the latest sample shown as white dots and its mean as a gold triangle. Bottom: a gold histogram of all the sample means so far, with a dashed pink normal curve whose spread is sigma over root n. Use the controls beside the picture; the numbers are listed there too."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Population</h3>
+        <div class="lab-seg" role="group" aria-label="Population" id="ec2c-pop">
+          <button type="button" data-p="expo">Waiting times</button><button type="button" data-p="logn">Incomes</button><button type="button" data-p="unif">Flat</button><button type="button" data-p="bimodal">Two humps</button><button type="button" data-p="bern">Yes or no</button><button type="button" data-p="die">A die</button>
+        </div>
+        <h3>Sample size n</h3>
+        <div class="lab-seg" role="group" aria-label="Sample size" id="ec2c-n">
+          <button type="button" data-n="1">1</button><button type="button" data-n="2">2</button><button type="button" data-n="5">5</button><button type="button" data-n="10">10</button><button type="button" data-n="30">30</button><button type="button" data-n="100">100</button>
+        </div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="ec2c-run">▶ Run</button><button type="button" class="lab-btn" id="ec2c-one">1 sample</button><button type="button" class="lab-btn" id="ec2c-k">1,000 samples</button><button type="button" class="lab-btn" id="ec2c-clear">Clear</button></div>
+        <label class="lab-chk"><input type="checkbox" id="ec2c-zoom"> Zoom in on the means</label>
+        <label class="lab-chk"><input type="checkbox" id="ec2c-curve" checked> Show the normal curve</label>
+        <dl class="lab-readout" id="ec2c-read"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec2c-missions"></ol>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <p><b>How fast is “large”?</b> It depends on how lopsided the population is. The skewness of an average of <var>n</var> independent draws is the population’s skewness divided by √<var>n</var>. A flat population gives bell-shaped means with <var>n</var> = 5; waiting times (skewness 2) need around 30; incomes (skewness above 3) need more. The popular rule “<var>n</var> ≥ 30 is enough” is a rough guide, not a theorem.</p>
+      <p><b>Why it matters.</b> The estimates in this course, means, proportions and regression slopes, are all averages of many small pieces. The central limit theorem is why their sampling distributions are close to normal in large samples, which is what makes confidence intervals and tests work even when the data themselves are not normal (Chapter 5).</p>
+    </div>
+    <div class="u-ex"><b>Worked example: the margin of error of a poll</b>
+      <p>A poll asks 1,000 people a yes-or-no question. Each answer is 1 (yes) or 0 (no); if the true share saying yes is 50%, each answer has σ = √(0.5 × 0.5) = 0.5. The share of yes answers in the poll is an average, so its standard deviation is 0.5/√1,000 = 0.0158, and by the central limit theorem it is close to normal. 95% of polls land within 1.96 × 0.0158 = <b>0.031</b> of the truth: the familiar “plus or minus 3 points.” To halve the margin, you need four times the people.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: when the approximation is rough</b>
+      <p>Waiting times at a help desk are exponential with mean 4 minutes (so σ = 4 too). What is the chance the average of 36 waits tops 5 minutes? The central limit theorem says <var>X̄</var> ≈ <var>N</var>(4, (4/6)²), so P(<var>X̄</var> &gt; 5) ≈ P(<var>Z</var> &gt; 1.5) = <b>0.067</b>. The exact answer (a sum of exponentials has a gamma distribution) is <b>0.074</b>. Close, but the skewed population still shows through at <var>n</var> = 36.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="lln">
+    <h2>The law of large numbers</h2>
+    <p>The central limit theorem describes the shape of the wobble in an average; the law of large numbers says the wobble dies out. As the number of independent draws grows, the sample average gets as close as you like to the population mean, with probability approaching 1. Jacob Bernoulli proved a version for coin-like events in <i>Ars Conjectandi</i>, published in 1713.</p>
+    <div class="lab-stage wide ec2-sub" id="ec2l">
+      <div class="lab-view" id="ec2l-view">
+        <canvas id="ec2l-cv" aria-label="The running average of die rolls (pink line) against the number of rolls on a log scale from 1 to 10,000, with the true mean 3.5 as a gold dashed line and a green funnel showing where 95% of running averages fall. Earlier runs stay as faint blue lines."></canvas>
+      </div>
+      <div class="lab-panel ec2-row">
+        <div class="ec2-grow">
+          <div class="lab-seg" role="group" aria-label="What to throw" id="ec2l-kind"><button type="button" data-k="die">🎲 A die</button><button type="button" data-k="coin">🪙 A coin</button></div>
+          <div class="lab-row" style="margin-top:.5rem"><button type="button" class="lab-btn pri" id="ec2l-go">Throw 10,000 times</button></div>
+        </div>
+        <dl class="lab-readout ec2-grow" id="ec2l-read"></dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “It has to even out”</b>
+    <p>After ten heads in a row, a fair coin is not “due” for tails; the next toss is still 50–50. The law of large numbers works by swamping early streaks with many later tosses, not by correcting them. Watch the readout: the <i>share</i> of sixes closes in on 1/6, but the <i>count</i> of sixes minus the expected count does not shrink. It typically grows, like √<var>n</var>. Believing otherwise is called the gambler’s fallacy.</p>
+  </div>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history, and the people</h2>
+    <div class="lab-cols">
+      <p><b>Games of chance.</b> In 1654 Blaise Pascal and Pierre de Fermat worked out, in letters to each other, how to split the stakes of an unfinished game fairly, and with it the idea of expected value. Jacob Bernoulli’s <i>Ars Conjectandi</i> (1713) proved the first law of large numbers.</p>
+      <p><b>The bell.</b> Abraham de Moivre found in 1733 that binomial probabilities for many tries follow a bell-shaped curve. Pierre-Simon Laplace generalized this into the central limit theorem, and Carl Friedrich Gauss used the normal curve for errors of measurement in 1809, which is why it is also called the Gaussian distribution.</p>
+      <p><b>Counts and small samples.</b> Siméon Denis Poisson published his distribution in 1837. In 1908 William Sealy Gosset, a chemist at the Guinness brewery in Dublin, published the t distribution in <i>Biometrika</i> under the pen name “Student,” because the brewery’s experiments gave him only small samples and he needed exact answers from them. Karl Pearson introduced the chi-square test in 1900.</p>
+      <p><b>Foundations.</b> In 1933 Andrey Kolmogorov set out the axioms that put probability on the same footing as the rest of mathematics. The same year, the first issue of <i>Econometrica</i> appeared.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <div class="lab-cols">
+      <p><b>Business.</b> Insurance and warranties rest on the law of large numbers. Call centers and stores staff up using Poisson arrivals. Quality control counts defects with the binomial. Spotting a cluster of rare failures early, before it becomes a crisis, is a Poisson question: how many failures would chance alone produce? (See <a href="{{ "business/cases/firestone-ford-explorer-2000/" | relURL }}">Firestone and the Ford Explorer</a>.)</p>
+      <p><b>Markets.</b> Daily stock returns have fatter tails than a normal curve: big moves happen far more often than a normal model predicts, which is one reason risk models built on the normal can fail in a crisis. Nothing here is financial or investment advice.</p>
+      <p><b>Polls and policy.</b> Every margin of error in a news story is the central limit theorem. Government surveys, like the monthly jobs survey, publish standard errors computed the same way.</p>
+      <p><b>Sports and daily life.</b> Goals in a soccer match are often modeled as Poisson counts. A batting average early in the season swings wildly and settles down by September: the law of large numbers.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec2-prac">
+      <li><p><b>A raffle.</b> A ticket costs $5. One ticket in 1,000 wins $2,000; the rest win nothing. What is the expected value of buying a ticket?</p>
+        <details><summary>Show the answer</summary><p>Expected winnings: $2,000 × 1/1,000 = $2. Net of the price, the expected value is $2 − $5 = <b>−$3</b> per ticket.</p></details></li>
+      <li><p><b>Rescaling.</b> <var>X</var> has mean 10 and standard deviation 2. What are the mean, variance and standard deviation of <var>Y</var> = 3<var>X</var> − 5?</p>
+        <details><summary>Show the answer</summary><p>E(<var>Y</var>) = 3 × 10 − 5 = <b>25</b>. Var(<var>Y</var>) = 3² × 2² = <b>36</b>, so sd(<var>Y</var>) = <b>6</b>. The −5 shifts but doesn’t spread.</p></details></li>
+      <li><p><b>Adding risks.</b> <var>X</var> and <var>Y</var> have standard deviations 3 and 4. What is the standard deviation of <var>X</var> + <var>Y</var> if they are independent? If their correlation is 0.5? And of <var>X</var> − <var>Y</var> when independent?</p>
+        <details><summary>Show the answer</summary><p>Independent: Var = 9 + 16 = 25, sd = <b>5</b>. With correlation 0.5, Cov = 0.5 × 3 × 4 = 6, so Var = 9 + 16 + 2 × 6 = 37, sd ≈ <b>6.08</b>. <var>X</var> − <var>Y</var> when independent: Var = 9 + 16 = 25 again, sd = <b>5</b>; subtracting an independent risk adds variance, it doesn’t cancel it.</p></details></li>
+      <li><p><b>z-scores.</b> Test scores are normal with mean 500 and standard deviation 100. What share score above 650? What score marks the 90th percentile?</p>
+        <details><summary>Show the answer</summary><p><var>z</var> = (650 − 500)/100 = 1.5, and P(<var>Z</var> &gt; 1.5) = <b>0.067</b>, about 6.7%. The 90th percentile of <var>Z</var> is 1.2816, so the score is 500 + 1.2816 × 100 ≈ <b>628</b>.</p></details></li>
+      <li><p><b>A help line.</b> Calls arrive at 4.5 per minute on average, as a Poisson count. What is the chance of a minute with no calls? With at most 2?</p>
+        <details><summary>Show the answer</summary><p>P(0) = e<sup>−4.5</sup> = <b>0.011</b>. P(≤ 2) = e<sup>−4.5</sup>(1 + 4.5 + 4.5²/2) = 0.0111 × 15.625 = <b>0.174</b>.</p></details></li>
+      <li><p><b>Group averages.</b> In a company, 40% of employees work in sales with an average salary of $70,000 and 60% in operations with an average of $55,000. What is the company’s average salary? Which rule did you use?</p>
+        <details><summary>Show the answer</summary><p>0.4 × 70,000 + 0.6 × 55,000 = 28,000 + 33,000 = <b>$61,000</b>. That is the law of iterated expectations: E(<var>Y</var>) = E[E(<var>Y</var> | <var>X</var>)].</p></details></li>
+      <li><p><b>The √n rule.</b> A population has σ = 12. How large a sample do you need for the sample mean to have a standard deviation of 1? Of 0.5?</p>
+        <details><summary>Show the answer</summary><p>σ/√<var>n</var> = 1 needs √<var>n</var> = 12, so <var>n</var> = <b>144</b>. Halving it to 0.5 needs √<var>n</var> = 24, <var>n</var> = <b>576</b>: four times the sample for twice the precision.</p></details></li>
+      <li><p><b>Chi-square from scratch.</b> If <var>Z</var> is standard normal, E(<var>Z</var>⁴) = 3. Use this to show that a chi-square with <var>k</var> degrees of freedom has mean <var>k</var> and variance 2<var>k</var>.</p>
+        <details><summary>Show the answer</summary><p>E(<var>Z</var>²) = Var(<var>Z</var>) + [E(<var>Z</var>)]² = 1. Var(<var>Z</var>²) = E(<var>Z</var>⁴) − [E(<var>Z</var>²)]² = 3 − 1 = 2. A chi-square is a sum of <var>k</var> independent <var>Z</var>², so its mean is <var>k</var> × 1 = <b><var>k</var></b> and, since variances of independent terms add, its variance is <var>k</var> × 2 = <b>2<var>k</var></b>. The mission “Mean k, variance 2k” checks this by simulation.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactives work</h2>
+    <div class="lab-cols">
+      <p><b>The distributions.</b> Densities, probabilities and cumulative probabilities come from exact formulas: the normal through the error function, the t and chi-square through the incomplete beta and gamma functions of the course’s shared statistics library, and binomial and Poisson probabilities through log-factorials. Normal draws use the polar method, exponential draws invert the cumulative distribution, Poisson draws invert it step by step, binomial draws count successes, chi-square draws add squared normals, and t draws divide a normal by the square root of an independent chi-square over its degrees of freedom. All random numbers come from a seeded generator, so a page reload starts the same way.</p>
+      <p><b>The central limit theorem</b> draws <var>n</var> values from the chosen population and averages them. “Incomes” are lognormal (the log is normal with sd 0.75), “two humps” is an even mix of two normals at ±2 with sd 0.6, and “yes or no” is 1 with probability 0.1. <b>The wages</b> are simulated with log wage = 1.85 + 0.10 × schooling + noise (sd 0.45), so the true E(wage | schooling) = exp(1.85 + 0.10 × schooling + 0.45²/2).</p>
+      <div>
+        <p><b>How it was checked</b> (node tests):</p>
+        <ul class="lab-small">
+          <li>Every density integrates to 1.0000 (every probability list sums to 1.00000), and the means and variances from numerical integration match the formulas to 4 decimals; the cumulative probabilities match the integrals to at least 5 × 10⁻⁷.</li>
+          <li>200,000 draws from each distribution: sample means and variances within 1% of the formulas (e.g. chi-square with 17 degrees of freedom: 17.02 and 34.09 vs 17 and 34).</li>
+          <li>Normal areas: 0.68269, 0.95000 and 0.99730 within 1, 1.96 and 3 sd. Binomial(10, 0.5): P(4 ≤ <var>X</var> ≤ 6) = 0.65625, matching 672/1,024 exactly.</li>
+          <li>Sample means, 20,000 per case: their spread matches σ/√<var>n</var> within 1%, and their skewness falls like skewness/√<var>n</var> (waiting times, <var>n</var> = 30: 0.38 vs 0.37).</li>
+          <li>The largest gap between the t density with 30 degrees of freedom and the normal is 0.0045.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>If E(<var>X</var>) = 5, what is E(2<var>X</var> + 3)?</p>
+        <ul class="u-opts"><li><button type="button">10</button></li><li><button type="button">8</button></li><li><button type="button">13</button></li></ul>
+        <details><summary>Show the answer</summary><p>E(2<var>X</var> + 3) = 2 E(<var>X</var>) + 3 = 13.</p></details></li>
+      <li class="u-q" data-a="1"><p>If Var(<var>X</var>) = 4, what is Var(2<var>X</var> + 3)?</p>
+        <ul class="u-opts"><li><button type="button">11</button></li><li><button type="button">16</button></li><li><button type="button">8</button></li></ul>
+        <details><summary>Show the answer</summary><p>Var(<var>aX</var> + <var>b</var>) = <var>a</var>² Var(<var>X</var>) = 4 × 4 = 16. The +3 shifts without spreading.</p></details></li>
+      <li class="u-q" data-a="0"><p>About 95% of a normal distribution lies within how many standard deviations of the mean?</p>
+        <ul class="u-opts"><li><button type="button">1.96</button></li><li><button type="button">1</button></li><li><button type="button">3</button></li></ul>
+        <details><summary>Show the answer</summary><p>±1.96 sd holds 95.0%; ±2 holds 95.45%, so “about 2” is the everyday version.</p></details></li>
+      <li class="u-q" data-a="2"><p>Two variables have a correlation of zero. Then…</p>
+        <ul class="u-opts"><li><button type="button">they must be independent</button></li><li><button type="button">one can’t predict the other at all</button></li><li><button type="button">there is no straight-line relationship, but there could be another kind</button></li></ul>
+        <details><summary>Show the answer</summary><p>Correlation only measures linear association. <var>Y</var> = <var>X</var>² with <var>X</var> symmetric around 0 has zero correlation with <var>X</var>.</p></details></li>
+      <li class="u-q" data-a="1"><p>The central limit theorem says that, for large samples…</p>
+        <ul class="u-opts"><li><button type="button">the population becomes normal</button></li><li><button type="button">the distribution of the sample mean is approximately normal</button></li><li><button type="button">every sample looks like the population</button></li></ul>
+        <details><summary>Show the answer</summary><p>It is about averages. The population keeps its shape; the means of many samples pile up into a bell with spread σ/√<var>n</var>.</p></details></li>
+      <li class="u-q" data-a="0"><p>A fair coin has landed heads ten times in a row. The chance of heads on the next toss is…</p>
+        <ul class="u-opts"><li><button type="button">1/2</button></li><li><button type="button">less than 1/2, because it has to even out</button></li><li><button type="button">more than 1/2, because it’s on a streak</button></li></ul>
+        <details><summary>Show the answer</summary><p>Tosses are independent. The law of large numbers dilutes streaks; it doesn’t correct them.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <i>Introductory Statistics 2e</i>: <a href="https://openstax.org/books/introductory-statistics-2e/pages/4-introduction" target="_blank" rel="noopener">Ch. 4 Discrete Random Variables</a>, <a href="https://openstax.org/books/introductory-statistics-2e/pages/6-introduction" target="_blank" rel="noopener">Ch. 6 The Normal Distribution</a>, <a href="https://openstax.org/books/introductory-statistics-2e/pages/7-introduction" target="_blank" rel="noopener">Ch. 7 The Central Limit Theorem</a>.</li>
+      <li>Penn State, STAT 414 Introduction to Probability Theory: <a href="https://online.stat.psu.edu/stat414/Lesson16" target="_blank" rel="noopener">Lesson 16, Normal Distributions</a> and <a href="https://online.stat.psu.edu/stat414/Lesson27" target="_blank" rel="noopener">Lesson 27, The Central Limit Theorem</a>.</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/" target="_blank" rel="noopener">18.05 Introduction to Probability and Statistics</a> (Spring 2022).</li>
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Math Refresher B, Fundamentals of Probability (Appendix B in earlier editions). J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed., Chapter 2.</li>
+      <li>CDC National Center for Health Statistics, <a href="https://www.cdc.gov/nchs/fastats/body-measurements.htm" target="_blank" rel="noopener">FastStats: Body Measurements</a> (mean height of men 20 and over, 2021–2023).</li>
+      <li>“Student” (W. S. Gosset), “The Probable Error of a Mean,” <i>Biometrika</i> 6 (1908). L. von Bortkiewicz, <i>Das Gesetz der kleinen Zahlen</i> (Leipzig, 1898); the horse-kick table is transcribed by the University of York’s history of statistics pages, <a href="https://www.york.ac.uk/depts/maths/histstat/bortkiewicz.htm" target="_blank" rel="noopener">Bortkiewicz on horse-kicks</a> (the ten corps in the example leave out corps G, I, VI and XI).</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/probability/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/probability/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/probability/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/probability/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

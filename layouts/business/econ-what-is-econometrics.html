@@ -1,0 +1,288 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/what-is-econometrics/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/what-is-econometrics/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec1-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 1</p>
+    <h1>{{ .Title }}</h1>
+    <p>In a summer beach town, the days when the ice-cream shop sells the most cones are also the days when lifeguards make the most rescues. Should the town ban ice cream? Run the summer, reveal what’s hiding in the data, and watch a strong correlation melt away. Then meet sixteen students, each with two possible test scores, and see why a coin flip can answer a question that a mountain of data cannot. This is what econometrics is for: using data to tell cause from coincidence.</p>
+    <span class="lab-mark" aria-hidden="true">🍦</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="ec1-view">
+      <canvas id="ec1-cv" tabindex="0" aria-label="A beach town over one or more summers. At the top, the daily temperature, ice-cream cones sold and lifeguard calls. Below, a scatter plot with one dot per day: cones sold across, lifeguard calls up, with the fitted line. Hover or tap a dot to read that day. Keys: Space plays or pauses the summer, R starts a new summer, V switches the view, C colors the days by temperature, and the left and right arrows move the temperature band."></canvas>
+      <div class="lab-hud ec1-hud" id="ec1-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec1-play" aria-label="Play the summer from day 1" title="Play or pause (Space)">▶</button>
+        <button type="button" id="ec1-skip" aria-label="Skip to the end of the summer" title="Skip to the end">⏭</button>
+        <button type="button" id="ec1-new" aria-label="A new summer" title="A new summer (R)">↺</button>
+      </div>
+      <noscript><p class="ec1-noscript">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>The town</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made towns" id="ec1-pre">
+        <button type="button" data-pre="classic">Hot summer</button>
+        <button type="button" data-pre="cool">Steady weather</button>
+        <button type="button" data-pre="dry">Indoor pool</button>
+        <button type="button" data-pre="real">A real effect</button>
+      </div>
+      <h3>How to look</h3>
+      <div class="lab-seg" role="group" aria-label="View" id="ec1-vw">
+        <button type="button" data-v="all">All days</button>
+        <button type="button" data-v="hold">Same temperature</button>
+        <button type="button" data-v="adj">Adjust for temperature</button>
+      </div>
+      <label class="lab-chk"><input type="checkbox" id="ec1-reveal"> Color the days by temperature</label>
+      <div id="ec1-bandf" class="ec1-band" hidden>
+        <div class="lab-field"><span><label for="ec1-bc">Only days from</label><output id="ec1-bc-o" for="ec1-bc"></output></span><input type="range" id="ec1-bc" min="14" max="36" step="0.5" value="25"></div>
+        <div class="lab-field"><span><label for="ec1-bw">Band</label><output id="ec1-bw-o" for="ec1-bw"></output></span><input type="range" id="ec1-bw" min="1" max="6" step="0.5" value="3"></div>
+      </div>
+      <h3>What drives what</h3>
+      <div class="lab-field"><span><label for="ec1-n">Days observed</label><output id="ec1-n-o" for="ec1-n"></output></span><input type="range" id="ec1-n" min="20" max="368" step="4" value="92"></div>
+      <div class="lab-field"><span><label for="ec1-amp">Weather swings</label><output id="ec1-amp-o" for="ec1-amp"></output></span><input type="range" id="ec1-amp" min="0" max="14" step="0.5" value="12"></div>
+      <div class="lab-field"><span><label for="ec1-bs">Heat → cones</label><output id="ec1-bs-o" for="ec1-bs"></output></span><input type="range" id="ec1-bs" min="0" max="40" step="1" value="25"></div>
+      <div class="lab-field"><span><label for="ec1-br">Heat → calls</label><output id="ec1-br-o" for="ec1-br"></output></span><input type="range" id="ec1-br" min="0" max="2" step="0.1" value="1.2"></div>
+      <div class="lab-field"><span><label for="ec1-th">Cones → calls (a real effect)</label><output id="ec1-th-o" for="ec1-th"></output></span><input type="range" id="ec1-th" min="0" max="4" step="0.1" value="0"></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec1-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec1-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The strip at the top</b> is the summer, day by day: the temperature (the warm-colored area), the ice-cream cones sold (pink) and the lifeguard calls at the beach (blue). On hot days people buy ice cream, and on hot days people go swimming. Watch the three lines rise and fall together.</p>
+      <p><b>The scatter plot</b> has one dot per day: cones sold across, lifeguard calls up. The pink line is the best-fitting straight line, and the correlation <var>r</var> measures how tightly the dots hug a line, from −1 to +1. In a hot summer it is around 0.8: a strong link.</p>
+      <p><b>“Same temperature”</b> keeps only the days in a narrow temperature band, say 24 to 26 °C. Among days with the same weather, cones and calls have almost nothing to do with each other. <b>“Adjust for temperature”</b> does the same thing with regression: it removes from both cones and calls the part the temperature predicts, and plots what is left.</p>
+      <p><b>The sliders</b> are the town’s hidden rules: how much heat sells cones, how much heat brings swimmers, and whether ice cream itself causes trouble. In the real town that last one is zero. You can set it to anything, then see whether the methods find it.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="what">
+    <h2>What econometrics is</h2>
+    <p>Econometrics is the use of statistics, economic reasoning and data to measure relationships, test ideas and forecast. It grew up in economics, where most data come from watching the world rather than from controlled experiments, so it is especially good at one hard problem: telling a cause from a coincidence when you can’t run the experiment yourself.</p>
+    <h3 class="lab-h">Two kinds of questions</h3>
+    <div class="u-key">
+      <div><b>Prediction</b><p>What will <var>y</var> be? Next month’s sales, which borrowers will fall behind on a loan, tomorrow’s electricity demand. You don’t need to know why, only what tends to go with what. The ice-cream sales would help predict a busy day for lifeguards.</p></div>
+      <div><b>Cause and effect</b><p>What would happen to <var>y</var> if we changed <var>x</var>? Does a price cut raise revenue? Does job training raise earnings? Would banning ice cream save swimmers? Here a correlation is not enough: you need to know what would happen in a world where only <var>x</var> changed.</p></div>
+    </div>
+    <p>Most of this course is about the second kind, because it is the harder one and the one decisions depend on. The phrase economists use is <i>ceteris paribus</i>, Latin for “other things being equal”: the effect of changing one thing while holding everything else fixed.</p>
+
+    <h3 class="lab-h">Kinds of data</h3>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Kind</th><th>What it is</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><b>Cross section</b></td><td>Many people, firms or places, observed once</td><td>A survey of 60,000 households in one month, like the Current Population Survey the Bureau of Labor Statistics uses for the unemployment rate</td></tr>
+        <tr><td><b>Time series</b></td><td>One unit observed over many periods, in order</td><td>The U.S. unemployment rate, month by month since 1948; a store’s daily sales; our town’s summer</td></tr>
+        <tr><td><b>Pooled cross sections</b></td><td>Fresh samples drawn at different times</td><td>The household survey from 2015 and from 2025, with different people each time</td></tr>
+        <tr><td><b>Panel (longitudinal)</b></td><td>The same units followed over time</td><td>The Panel Study of Income Dynamics, which has followed the same American families since 1968; every state’s unemployment rate, every year</td></tr>
+      </tbody>
+    </table></div>
+    <p>The order matters only for time series and panels, where yesterday can affect today. A cross section can be shuffled without losing anything. Chapters 11 and 15 deal with panels and time series; until then we work mostly with cross sections.</p>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>The regression model and the error term</h2>
+    <p>Almost every method in this course starts from one equation. It says that an outcome <var>y</var> depends on an explanatory variable <var>x</var> and on everything else, lumped into one term <var>u</var>:</p>
+    <div class="u-big"><var>y</var> = β₀ + β₁<var>x</var> + <var>u</var><small><var>y</var>: the dependent variable · <var>x</var>: the explanatory variable · β₀, β₁: the parameters we want to learn · <var>u</var>: the error term, all the other things that affect <var>y</var></small></div>
+    <div class="lab-cols">
+      <p><b>β₁ is the effect we are after.</b> If <var>x</var> goes up by one unit and nothing in <var>u</var> changes, <var>y</var> changes by β₁: Δ<var>y</var> = β₁Δ<var>x</var> when Δ<var>u</var> = 0. That is <i>ceteris paribus</i> written as math. In the town, <var>y</var> is lifeguard calls, <var>x</var> is cones sold, and β₁ is the real effect of ice cream, which is zero.</p>
+      <p><b>The error term is not a mistake.</b> It holds everything else: the temperature, whether it’s a weekend, how many tourists came, luck. Greek letters with no hat are the true values in the population. Later we estimate them from data and put a hat on the estimates: β̂₁ is our estimate of β₁.</p>
+    </div>
+    <p>The key question in every chapter is whether the things in <var>u</var> are related to <var>x</var>. If they aren’t, a regression of <var>y</var> on <var>x</var> recovers β₁. Wooldridge writes this condition as the <b>zero conditional mean assumption</b>:</p>
+    <div class="lab-formula">E(<var>u</var> | <var>x</var>) = 0 &nbsp; “knowing <var>x</var> tells you nothing about the average of everything else”</div>
+    <p>In the town it fails badly. Temperature is in <var>u</var>, and temperature is strongly related to cones sold: hot days have high cones <i>and</i> high <var>u</var>. So the line through the dots picks up the weather’s effect and credits it to ice cream. A variable like temperature, which affects both <var>x</var> and <var>y</var>, is called a <b>confounder</b>, and the false link it creates is <b>confounding</b>. Chapter 6 puts an exact number on the damage, the omitted-variable bias.</p>
+    <div class="u-ex"><b>Worked example: how much link can the weather fake?</b>
+      <p>Suppose each extra degree sells 25 more cones and brings 1.2 more lifeguard calls, ice cream itself does nothing, the temperature varies across the summer with a variance of 36 (a standard deviation of 6 °C), and other things move cone sales with a standard deviation of 40 cones. Then</p>
+      <ul>
+        <li>Cov(cones, calls) = 25 × 1.2 × 36 = 1,080, all of it through the weather;</li>
+        <li>Var(cones) = 25² × 36 + 40² = 22,500 + 1,600 = 24,100;</li>
+        <li>the slope of the line is Cov ÷ Var = 1,080 ÷ 24,100 = 0.045 calls per cone, or <b>4.5 extra calls for every 100 cones</b>.</li>
+      </ul>
+      <p>That is about what the simulation shows. Every bit of it is the weather. Hold the temperature fixed and the variance of 36 shrinks to almost nothing, and so does the slope.</p>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> Press ⏭ to finish the summer, then drag “Days observed” up to 368. The cloud gets thicker but the slope stays near 4.5. More data makes a confounded estimate more precise, not more right. Now switch to “Adjust for temperature” and watch the dots glide into a flat cloud.</div>
+  <div class="lab-try"><b>Try this:</b> Press “A real effect”: now each 100 cones really do cause 2 extra calls. The raw slope is about 6.5, mixing the real effect with the weather. Adjusting for temperature brings it back to about 2. Regression can find a real effect hiding inside a fake one, as long as the confounder is measured.</div>
+
+  <div class="u-myth"><b>Common mistake: “With enough data, the truth comes out”</b>
+    <p>A bigger sample shrinks random error, the wobble from one summer to the next. It does nothing about a systematic error like confounding. With 368 days, the slope ignoring the weather is pinned down very precisely, at the wrong number. Getting the right answer depends on the <i>design</i>, meaning what you compare with what, not on the size of the pile of data.</p>
+  </div>
+
+  <section class="lab-sec" id="potential">
+    <h2>Two outcomes for every person</h2>
+    <p>Here is a sharper way to think about cause and effect, from the statisticians Jerzy Neyman and Donald Rubin. Imagine a tutoring program before an exam. Each student <var>i</var> has two <b>potential outcomes</b>: the score they would get without tutoring, <var>Y</var><sub><var>i</var></sub>(0), and the score they would get with it, <var>Y</var><sub><var>i</var></sub>(1). The effect of tutoring on that student is the difference.</p>
+    <div class="u-big">effect on student <var>i</var> = <var>Y</var><sub><var>i</var></sub>(1) − <var>Y</var><sub><var>i</var></sub>(0) &nbsp;&nbsp; ATE = E[<var>Y</var>(1) − <var>Y</var>(0)]<small>the average treatment effect (ATE) is the average of the individual effects over everyone</small></div>
+    <p>The catch, which Paul Holland called the <b>fundamental problem of causal inference</b>: each student either takes the program or doesn’t, so we only ever see one of their two scores. The other is a <i>counterfactual</i>, what would have happened. Below, the dashed boxes with question marks are those missing scores. Tick “Show both outcomes” for the view no real study ever has.</p>
+
+    <div class="lab-stage ec1-pstage">
+      <div class="lab-view" id="ec1p-view">
+        <canvas id="ec1p-cv" aria-label="Sixteen students as tiles. Each tile has two bars: the exam score without tutoring (blue) and with tutoring (green). The score we can see is solid; the one we can’t see is a dashed box with a question mark. Below, a number line of the scores we observe for the tutored and untutored groups, with their averages, and a histogram of the comparisons from many coin-flip assignments. Use the buttons beside the picture; the numbers are listed there too."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Who gets tutoring?</h3>
+        <div class="lab-seg" role="group" aria-label="How students end up in the program" id="ec1p-mode">
+          <button type="button" data-m="gain">They choose: those who gain most</button>
+          <button type="button" data-m="keen">Keen students choose</button>
+          <button type="button" data-m="coin">Coin flip</button>
+        </div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="ec1p-flip">🪙 Flip the coins</button><button type="button" class="lab-btn" id="ec1p-k">Flip 1,000 times</button><button type="button" class="lab-btn" id="ec1p-new">🎲 New class</button></div>
+        <label class="lab-chk"><input type="checkbox" id="ec1p-both"> Show both outcomes (the view nobody has)</label>
+        <dl class="lab-readout" id="ec1p-read" aria-live="polite"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec1p-missions"></ol>
+      </div>
+    </div>
+
+    <h3 class="lab-h">Why letting people choose goes wrong</h3>
+    <p>The obvious estimate compares the average score of those who took the program with the average of those who didn’t. A little algebra splits it into two pieces (Angrist and Pischke, <i>Mostly Harmless Econometrics</i>, section 2.1):</p>
+    <div class="lab-formula">E[<var>Y</var> | took it] − E[<var>Y</var> | didn’t] = E[<var>Y</var>(1) − <var>Y</var>(0) | took it] + { E[<var>Y</var>(0) | took it] − E[<var>Y</var>(0) | didn’t] }<br>&nbsp; observed difference &nbsp;=&nbsp; effect on those who took it (ATT) &nbsp;+&nbsp; selection bias</div>
+    <p>Selection bias asks: would the two groups have differed even with no program at all? When the students who are furthest behind sign up, because they have the most to gain, their scores without tutoring were low to begin with. The selection bias is large and negative, and it can swamp a real benefit: the program can look harmful when it helps everyone. When keen, strong students sign up instead, the bias flips sign and the program looks like a miracle.</p>
+    <div class="u-ex"><b>Worked example: four students</b>
+      <div class="lab-tw"><table class="lab-table ec1-mini">
+        <thead><tr><th>Student</th><th><var>Y</var>(0) without</th><th><var>Y</var>(1) with</th><th>Effect</th></tr></thead>
+        <tbody><tr><td>Ana</td><td>60</td><td>72</td><td>+12</td></tr><tr><td>Bo</td><td>65</td><td>75</td><td>+10</td></tr><tr><td>Cy</td><td>80</td><td>84</td><td>+4</td></tr><tr><td>Di</td><td>85</td><td>87</td><td>+2</td></tr></tbody>
+      </table></div>
+      <p>The true average effect is (12 + 10 + 4 + 2) ÷ 4 = <b>+7 points</b>. Suppose Ana and Bo, who gain the most, sign up. We see their scores with tutoring (72, 75; average 73.5) and Cy’s and Di’s without (80, 85; average 82.5). The comparison says 73.5 − 82.5 = <b>−9</b>. Tutoring looks harmful.</p>
+      <p>Split it up: the effect on those who took it is (12 + 10) ÷ 2 = +11, and the selection bias is (60 + 65) ÷ 2 − (80 + 85) ÷ 2 = 62.5 − 82.5 = −20. Check: +11 − 20 = −9.</p>
+      <p>Now flip coins so that two of the four are tutored. There are six ways to pick two, and the comparison they give is −9, +3, +7, +7, +11 and +23. Any one of them can be far off, but their average is 42 ÷ 6 = <b>+7</b>, exactly the true effect.</p>
+    </div>
+    <h3 class="lab-h">Why a coin flip works</h3>
+    <p>A coin doesn’t know who is behind or who is keen. So who gets the program is unrelated to the students’ potential outcomes, and the two groups are alike in every way, on average, except the program. Then E[<var>Y</var>(0) | took it] = E[<var>Y</var>(0) | didn’t], the selection bias is zero, and the simple comparison is an unbiased estimate of the average effect. “On average” is doing real work: in any one class, luck can put more strong students on one side. The histogram shows that spread, and Chapter 3 shows how to measure it.</p>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> Choose “Coin flip” and press “Flip 1,000 times”. The comparisons pile up into a hill centered on the true effect (the green line), far from where self-selection put it (the red line). Then press “New class” and do it again: a different class, the same lesson.</div>
+
+  <section class="lab-sec" id="experiments">
+    <h2>Experiments and observational data</h2>
+    <div class="lab-cols">
+      <p><b>A randomized experiment</b> lets chance decide who is treated. Medicine has run randomized clinical trials since the mid-1900s, and economists use them too. In Tennessee’s Project STAR, from 1985 to 1989, kindergarten students and their teachers were randomly assigned to small or regular-size classes. In 2008 Oregon held a lottery for a limited number of places in its Medicaid health insurance program, which let researchers compare winners and losers who were alike in every way but luck. Online businesses run randomized “A/B tests” every day, showing visitors one of two versions of a page at random.</p>
+      <p><b>Observational data</b> come from watching what people choose. Most economic data are like this: we can’t randomly assign people to go to college, cities to raise the minimum wage, or countries to have recessions. Econometrics is the toolbox for getting as close as possible to an experiment anyway: controlling for confounders (Chapters 4 to 9), finding a source of variation that acts like a coin flip (instrumental variables, Chapter 10), comparing changes over time (panels and difference-in-differences, Chapters 11 and 12), and comparing people just either side of a cutoff (regression discontinuity, Chapter 13).</p>
+    </div>
+    <div class="u-ex"><b>Worked example: does a college degree pay?</b>
+      <p>In 2024, full-time workers aged 25 and over with a bachelor’s degree had median weekly earnings of <b>$1,543</b>; those with only a high school diploma, <b>$930</b> (Bureau of Labor Statistics, Current Population Survey). The gap is $613 a week, about 66% more, or roughly $32,000 a year.</p>
+      <p>Is $613 a week the effect of a degree? Write it the same way as the tutoring example: the observed gap = the effect of the degree on graduates + selection bias. People who finish college may differ from those who don’t in ways that would affect their earnings anyway: family background, health, where they live, persistence. Those differences live in <var>u</var>. The gap is a fact; the effect of a degree is a harder question, and economists have attacked it with twins, with lotteries and with quirks of school-leaving laws. You will meet some of those methods in Chapter 10.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history, and the people</h2>
+    <div class="lab-cols">
+      <p><b>A new word.</b> The Norwegian economist <b>Ragnar Frisch</b> helped found the Econometric Society in 1930 and edited its journal, <i>Econometrica</i>, from its first issue in 1933. He wanted economics to join theory, mathematics and statistics. The Dutch economist <b>Jan Tinbergen</b> built the first statistical model of a whole national economy, for the Netherlands, in 1936. In 1969 the two shared the first Nobel memorial prize in economics.</p>
+      <p><b>Probability enters.</b> In 1944 <b>Trygve Haavelmo</b>, a student of Frisch, published “The Probability Approach in Econometrics” as a supplement to <i>Econometrica</i>. He argued that economic data should be treated as draws from a probability model, which is what lets us ask how precise an estimate is. It won him the Nobel prize in 1989.</p>
+      <p><b>Two outcomes per person.</b> <b>Jerzy Neyman</b> wrote down potential outcomes in 1923, for field experiments in agriculture. <b>R. A. Fisher</b> made random assignment the foundation of experiments in <i>The Design of Experiments</i> (1935). <b>Donald Rubin</b> extended potential outcomes to observational studies in 1974, and <b>Paul Holland</b> named the fundamental problem of causal inference in 1986.</p>
+      <p><b>The credibility revolution.</b> From the 1990s, economists such as <b>David Card</b>, <b>Joshua Angrist</b> and <b>Guido Imbens</b> pushed the field toward “natural experiments”: real events that assign something almost at random. In 2021 they shared the Nobel prize, Card “for his empirical contributions to labour economics” and Angrist and Imbens “for their methodological contributions to the analysis of causal relationships.”</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <div class="lab-cols">
+      <p><b>Business.</b> Do ads cause purchases, or do they just reach people who were going to buy anyway? That is selection bias, and it is why large online companies test ads and page designs at random. When Henry Ford doubled pay to five dollars a day in 1914, quitting dropped, but a lot else changed that year too; economists Daniel Raff and Lawrence Summers later studied whether the pay itself did it (<a href="{{ "business/cases/ford-five-dollar-day-1914/" | relURL }}">the case</a>). Costco pays well and keeps its staff, but do high wages cause loyalty, or do well-run firms both pay more and keep people? (<a href="{{ "business/cases/costco-wages-membership/" | relURL }}">the case</a>).</p>
+      <p><b>Policy.</b> Job training, health insurance, class sizes, the minimum wage: each is a cause-and-effect question with billions of dollars riding on the answer, and each has been studied with experiments or natural experiments.</p>
+      <p><b>Science and health.</b> Randomized trials of new medicines use the same logic as the coin-flip classroom. Observational health studies face the ice-cream problem: people who take vitamins differ in many ways from people who don’t.</p>
+      <p><b>Daily life.</b> “Students who use the tutoring center get lower grades.” “People who own fitness trackers are healthier.” Before believing either, ask: who chose this, and would they have differed anyway?</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="road">
+    <h2>The ideas this course builds</h2>
+    <div class="u-key">
+      <div><b>Probability (Ch. 2–3)</b><p>Data are random draws, so estimates are random too. Distributions, the central limit theorem, confidence intervals and tests tell us how much to trust a number.</p></div>
+      <div><b>Regression (Ch. 4–9)</b><p>Fit a line, then many: hold other things fixed with multiple regression, and learn what breaks it, from omitted variables to bad standard errors.</p></div>
+      <div><b>Natural experiments (Ch. 10–13)</b><p>When you can’t control for everything, find variation that acts like a coin flip: instruments, panels, difference-in-differences and cutoffs.</p></div>
+      <div><b>Advanced tools (Ch. 14–17)</b><p>Yes-or-no outcomes and maximum likelihood, time series and forecasting, models of whole economies, and modern causal inference with machine learning.</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec1-prac">
+      <li><p><b>What kind of data?</b> (a) The U.S. monthly inflation rate from 1960 to 2025. (b) The prices of 400 houses sold in one city in May. (c) The test scores of the same 2,000 students in grades 3, 4 and 5.</p>
+        <details><summary>Show the answer</summary><p>(a) A time series: one unit, the U.S., observed month after month in order. (b) A cross section: many houses, observed once. (c) A panel: the same students followed over time.</p></details></li>
+      <li><p><b>Prediction or cause?</b> (a) A bank wants to know which applicants will repay a loan. (b) A city wants to know whether new bike lanes cut car traffic. (c) A grocery chain wants next week’s demand for milk. (d) A school board wants to know whether starting school later raises grades.</p>
+        <details><summary>Show the answer</summary><p>(a) Prediction: the bank only needs to rank applicants, not know why. (b) Cause: “what would traffic be with and without the lanes?” (c) Prediction. (d) Cause. For (b) and (d), a correlation in existing data could easily mislead, because cities and schools that make these changes may differ in other ways.</p></details></li>
+      <li><p><b>Find the confounder.</b> Across U.S. cities, those with more police officers per person tend to have more crime. Give two reasons this doesn’t show that police cause crime.</p>
+        <details><summary>Show the answer</summary><p>First, a confounder: big, dense cities tend to have both more crime and more police. Second, reverse causation: cities with a crime problem hire more police, so crime causes police, not the other way around. A better design compares the same city before and after a change in police that wasn’t caused by crime itself, such as a hiring program funded from outside.</p></details></li>
+      <li><p><b>Potential outcomes.</b> Six workers have these earnings (in $1,000 a year) without and with a training course: (30, 36), (32, 37), (35, 38), (40, 42), (45, 46), (50, 50). The first three take the course. Find the true average effect, the simple comparison, the effect on those trained and the selection bias.</p>
+        <details><summary>Show the answer</summary><p>Effects: 6, 5, 3, 2, 1, 0. ATE = 17 ÷ 6 = <b>2.83</b>. Comparison: trained average of <var>Y</var>(1) = (36 + 37 + 38) ÷ 3 = 37; untrained average of <var>Y</var>(0) = (40 + 45 + 50) ÷ 3 = 45; difference <b>−8</b>. ATT = (6 + 5 + 3) ÷ 3 = <b>4.67</b>. Selection bias = (30 + 32 + 35) ÷ 3 − 45 = 32.33 − 45 = <b>−12.67</b>. Check: 4.67 − 12.67 = −8.</p></details></li>
+      <li><p><b>What is in <var>u</var>?</b> In wage = β₀ + β₁ education + <var>u</var>, name three things in <var>u</var>. For each, is it likely related to education? If so, what does that mean for the slope of a simple line through the data?</p>
+        <details><summary>Show the answer</summary><p>Examples: experience, ability or persistence, family background, the local job market, health. Experience is probably negatively related to education (years in school are years not working). Ability and family background are probably positively related. If anything in <var>u</var> is related to education, E(<var>u</var> | education) ≠ 0, and the line’s slope mixes the effect of education with the effects of those things. With ability, the slope would likely overstate the effect of schooling.</p></details></li>
+      <li><p><b>The weather’s fake slope.</b> In the town, each degree adds <var>a</var> cones and <var>b</var> calls; temperature has variance <var>V</var>; other things move cones with variance σ²; ice cream does nothing. Show that the slope of calls on cones is <var>abV</var> ÷ (<var>a</var>²<var>V</var> + σ²). What happens as <var>V</var> → 0? And as σ² → 0?</p>
+        <details><summary>Show the answer</summary><p>Cones = <var>a</var>·T + other, calls = <var>b</var>·T + other (independent). Cov(cones, calls) = <var>ab</var> Var(T) = <var>abV</var>; Var(cones) = <var>a</var>²<var>V</var> + σ². Slope = Cov ÷ Var. As <var>V</var> → 0 the slope goes to 0: if the weather doesn’t vary, it can’t create a link (the “Steady weather” preset). As σ² → 0 the slope goes to <var>b</var>/<var>a</var>: cones become a perfect thermometer, and the slope just converts “cones” back into degrees and then into calls. With <var>a</var> = 25 and <var>b</var> = 1.2, that limit is 4.8 calls per 100 cones.</p></details></li>
+      <li><p><b>How lucky is a coin flip?</b> In the classroom, the comparisons from coin-flip classes of 16 students have a standard deviation of about 5 points. Roughly what would it be with 160 students, and why?</p>
+        <details><summary>Show the answer</summary><p>About 5 ÷ √10 ≈ <b>1.6 points</b>. Each group’s average is a mean of about half the students, and the standard deviation of a mean shrinks like 1 ÷ √<var>n</var>. Ten times the students means √10 ≈ 3.2 times less luck. Randomization removes the bias; a bigger sample shrinks the luck. Chapter 3 makes this precise.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactives work</h2>
+    <div class="lab-cols">
+      <p><b>The town.</b> Each day’s temperature follows a summer curve plus noise: <var>T</var> = 22 + <var>A</var>(sin π<var>s</var> − 0.6) + noise, where <var>s</var> runs from 0 to 1 over a 92-day summer, <var>A</var> is the weather swing, and <var>T</var> stays between 10 and 40 °C. Cones sold = 120 + <var>a</var>(<var>T</var> − 15) + noise with a standard deviation of 40, never below zero. Lifeguard calls are a Poisson count with mean 1 + <var>b</var>(<var>T</var> − 10) + θ × cones ÷ 100, so the regression of calls on cones and temperature is exactly right and the real effect is θ. Weather, sales and calls use three separate random streams, so moving a slider changes each day smoothly instead of reshuffling the summer. All the data are simulated; no real town is shown.</p>
+      <p><b>The estimates.</b> “Same temperature” fits a line to the days inside the band. “Adjust for temperature” regresses calls on cones and temperature by ordinary least squares, with the shared, tested statistics library of this course. The plotted dots are the parts of cones and calls the temperature doesn’t predict; by the Frisch–Waugh theorem (Chapter 6), the slope through them equals the regression coefficient on cones.</p>
+      <p><b>The classroom.</b> Scores without tutoring are drawn around 70 (standard deviation 11, between 45 and 95), and the gain is 3 + 0.4 × (80 − score) + noise, never below zero and never past 100, so students who are behind gain more. “They choose” enrolls the eight with the biggest gains, “keen” the eight with the highest scores without tutoring, and “coin flip” gives each student a fair coin (flipping again in the rare case that a group is empty).</p>
+      <div>
+        <p><b>How it was checked</b> (node tests):</p>
+        <ul class="lab-small">
+          <li>2,000 simulated hot summers: average correlation 0.84; slope ignoring the weather 4.53 calls per 100 cones; slope controlling for temperature −0.001 on average (sd 1.08), with its 95% interval covering the truth (zero) 94.3% of the time.</li>
+          <li>With a real effect of 2 per 100 cones (150 days, 1,000 runs): adjusted estimate 1.97 on average, coverage 95.2%; the raw slope 6.53.</li>
+          <li>Steady weather (swing ±1 °C): average correlation 0.26; with heat not driving calls: 0.00.</li>
+          <li>The slope through the adjusted dots equals the multiple-regression coefficient to 10⁻¹⁵.</li>
+          <li>The classroom, checked exactly over all 65,534 coin-flip assignments: the average comparison equals the true effect (+8.3125) to six decimals, with a standard deviation of 5.2. Self-selection gives −3.875 = ATT (+11.5) + selection bias (−15.375).</li>
+          <li>The Poisson sampler: mean and variance within 0.2% of λ in 200,000 draws.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>An online store shows each visitor one of two checkout pages, chosen at random, and compares how often people buy. This is…</p>
+        <ul class="u-opts"><li><button type="button">observational data</button></li><li><button type="button">a randomized experiment</button></li><li><button type="button">a time series</button></li></ul>
+        <details><summary>Show the answer</summary><p>Chance decides who sees which page, so the two groups of visitors are alike on average except for the page. That is a randomized experiment, an A/B test.</p></details></li>
+      <li class="u-q" data-a="2"><p>Across summer days, ice-cream sales and lifeguard calls have a correlation of 0.84. The best explanation is…</p>
+        <ul class="u-opts"><li><button type="button">ice cream makes swimming dangerous</button></li><li><button type="button">rescues make people hungry for ice cream</button></li><li><button type="button">hot weather drives both</button></li></ul>
+        <details><summary>Show the answer</summary><p>Temperature is a confounder. Among days with the same temperature, the link disappears.</p></details></li>
+      <li class="u-q" data-a="1"><p>In <var>y</var> = β₀ + β₁<var>x</var> + <var>u</var>, the error term <var>u</var> is…</p>
+        <ul class="u-opts"><li><button type="button">a typing mistake in the data</button></li><li><button type="button">everything other than <var>x</var> that affects <var>y</var></button></li><li><button type="button">the fitted value of <var>y</var></button></li></ul>
+        <details><summary>Show the answer</summary><p>It collects every other influence on <var>y</var>. The trouble starts when some of them are related to <var>x</var>.</p></details></li>
+      <li class="u-q" data-a="0"><p>Why does assigning a program by coin flip remove selection bias?</p>
+        <ul class="u-opts"><li><button type="button">Who is treated is unrelated to their potential outcomes, so the groups differ only by chance</button></li><li><button type="button">The two groups always end up identical</button></li><li><button type="button">Everyone benefits equally from the program</button></li></ul>
+        <details><summary>Show the answer</summary><p>Randomization makes treatment independent of <var>Y</var>(0) and <var>Y</var>(1). The groups can still differ by luck in a single draw, but not systematically.</p></details></li>
+      <li class="u-q" data-a="2"><p>In the confounded town, you observe four summers instead of one. The slope of calls on cones, ignoring the weather, will…</p>
+        <ul class="u-opts"><li><button type="button">shrink toward zero</button></li><li><button type="button">roughly quadruple</button></li><li><button type="button">stay about the same, just measured more precisely</button></li></ul>
+        <details><summary>Show the answer</summary><p>More data shrinks random error but not confounding. The slope settles near the same wrong value.</p></details></li>
+      <li class="u-q" data-a="1"><p>A survey that interviews the same 5,000 households every year is…</p>
+        <ul class="u-opts"><li><button type="button">a cross section</button></li><li><button type="button">panel data</button></li><li><button type="button">pooled cross sections</button></li></ul>
+        <details><summary>Show the answer</summary><p>The same units followed over time make a panel. New households each year would be pooled cross sections.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Chapter 1 (the nature of econometrics, data structures, causality and ceteris paribus) and Chapter 2 (the simple regression model and the zero conditional mean assumption).</li>
+      <li>J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (Princeton University Press, 2009), Chapter 2 (the experimental ideal and selection bias); and <i>Mastering ’Metrics</i> (2015), Chapter 1.</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Chapter 1.</li>
+      <li>U.S. Bureau of Labor Statistics, <a href="https://www.bls.gov/careeroutlook/2025/data-on-display/education-pays.htm" target="_blank" rel="noopener">Education pays, 2024</a> (median weekly earnings by education, Current Population Survey).</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-32-econometrics-spring-2007/" target="_blank" rel="noopener">14.32 Econometrics</a> (Spring 2007).</li>
+      <li>T. Haavelmo, “The Probability Approach in Econometrics,” <i>Econometrica</i> 12, supplement (1944). D. B. Rubin, “Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies,” <i>Journal of Educational Psychology</i> 66 (1974). P. W. Holland, “Statistics and Causal Inference,” <i>Journal of the American Statistical Association</i> 81 (1986). D. M. G. Raff and L. H. Summers, “Did Henry Ford Pay Efficiency Wages?” <i>Journal of Labor Economics</i> 5 (1987).</li>
+      <li>Wikipedia, <a href="https://en.wikipedia.org/wiki/List_of_Nobel_Memorial_Prize_laureates_in_Economic_Sciences" target="_blank" rel="noopener">List of Nobel Memorial Prize laureates in Economic Sciences</a> (prize years and citations).</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/what-is-econometrics/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/what-is-econometrics/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/what-is-econometrics/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/what-is-econometrics/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

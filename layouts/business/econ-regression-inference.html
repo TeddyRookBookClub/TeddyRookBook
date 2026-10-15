@@ -1,0 +1,261 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/regression-inference/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-inference/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec5-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 5</p>
+    <h1>{{ .Title }}</h1>
+    <p>A regression slope is a single number from a single sample. How much would it change with a different sample? Here you get to find out the way statisticians check their own formulas: by Monte Carlo. Set up a world where you know the true slope, draw thousands of samples, and watch the estimates pile up. Then break the assumptions one at a time and see which mistakes move the pile off the truth and which only make the standard errors lie.</p>
+    <span class="lab-mark" aria-hidden="true">📐</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="ec5-view">
+      <canvas id="ec5-cv" tabindex="0" aria-label="The Monte Carlo lab. On the left, the latest random sample of students, hours studied across and exam score up, with the true line in gold and the sample’s fitted line in pink. On the right, a histogram of the slope estimates from every sample so far, with the true slope of 4 in gold, the spread the standard error formula claims as a pink dashed curve, and a red arrow when the estimates are biased. At the bottom, the share of 95% confidence intervals that cover the true slope. Keys: Space pauses or resumes, Enter draws one sample, C clears."></canvas>
+      <div class="lab-hud ec5-hud" id="ec5-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec5-run" aria-label="Pause" title="Pause or resume (Space)">❚❚</button>
+        <button type="button" id="ec5-more" aria-label="Draw 1,000 more samples" title="1,000 more samples">⏭</button>
+        <button type="button" id="ec5-reset" aria-label="Clear the estimates" title="Clear (C)">↺</button>
+      </div>
+      <noscript><p class="ec5-noscript">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>The world</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made worlds" id="ec5-pre">
+        <button type="button" data-p="ideal">All assumptions hold</button><button type="button" data-p="curve">Curved truth</button><button type="button" data-p="hetero">Growing noise</button><button type="button" data-p="omitted">Left-out ability</button><button type="button" data-p="cluster">Classrooms</button>
+      </div>
+      <label class="lab-chk"><input type="checkbox" id="ec5-curve"> The truth bends (not linear)</label>
+      <label class="lab-chk"><input type="checkbox" id="ec5-het"> Noise grows with hours (heteroskedastic)</label>
+      <label class="lab-chk"><input type="checkbox" id="ec5-ovb"> Ability matters and is left out</label>
+      <label class="lab-chk"><input type="checkbox" id="ec5-clu"> Classmates share luck (correlated errors)</label>
+      <div class="lab-seg" role="group" aria-label="Shape of the errors" id="ec5-shape"><button type="button" data-e="normal">Normal errors</button><button type="button" data-e="skew">Skewed</button><button type="button" data-e="fat">Fat tails</button></div>
+      <h3>Each sample</h3>
+      <div class="lab-field"><span><label for="ec5-n">Students per sample</label><output id="ec5-n-o" for="ec5-n">n = 100</output></span><input type="range" id="ec5-n" min="0" max="7" step="1" value="4"></div>
+      <div class="lab-field"><span><label for="ec5-sg">Noise</label><output id="ec5-sg-o" for="ec5-sg">σ = 8 points</output></span><input type="range" id="ec5-sg" min="2" max="20" step="1" value="8"></div>
+      <div class="lab-field"><span><label for="ec5-sp">Hours studied range</label><output id="ec5-sp-o" for="ec5-sp">0.0 to 10.0 hours</output></span><input type="range" id="ec5-sp" min="0.5" max="5" step="0.5" value="5"></div>
+      <h3>Standard errors</h3>
+      <div class="lab-seg" role="group" aria-label="Standard errors" id="ec5-se"><button type="button" data-s="classic">Classic</button><button type="button" data-s="HC1">Robust</button><button type="button" data-s="cluster">Clustered</button></div>
+      <div class="lab-seg" role="group" aria-label="Speed" id="ec5-speed"><button type="button" data-v="slow">One at a time</button><button type="button" data-v="fast">Fast</button></div>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec5-one">Draw 1 sample</button><button type="button" class="lab-btn" id="ec5-k">+1,000</button><button type="button" class="lab-btn" id="ec5-clear">Clear</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec5-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec5-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The world.</b> In this simulated school, the true relationship is score = 50 + 4 × hours + <var>u</var>: every hour of study adds 4 points, and <var>u</var> is everything else, with standard deviation σ. Only the simulation knows that the slope is 4. Each sample is a fresh class of <var>n</var> students.</p>
+      <p><b>The left panel</b> shows the latest sample and its OLS line (pink), next to the true line (gold). Slow it down with “One at a time” and watch the pink line wobble from sample to sample.</p>
+      <p><b>The histogram</b> collects the slope β̂₁ from every sample: the <i>sampling distribution</i> of the estimator, which in real life you never get to see. If OLS is unbiased, the pile centers on the gold line. The pink dashed curve is what the standard error formula claims the spread is; when it matches the blue pile, the standard errors are telling the truth.</p>
+      <p><b>The gauge</b> counts how often the 95% confidence interval from each sample, β̂₁ ± <var>t</var>* × se, covers the true 4. Honest intervals cover about 95% of the time.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="assumptions">
+    <h2>The assumptions</h2>
+    <p>Wooldridge numbers the assumptions for simple regression SLR.1 to SLR.5. Each one buys something, and the switches in the lab break them one at a time.</p>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Assumption</th><th>In words</th><th>What it buys</th><th>Broken in the lab by</th></tr></thead>
+      <tbody>
+        <tr><td><b>SLR.1</b> Linear in parameters</td><td><var>y</var> = β₀ + β₁<var>x</var> + <var>u</var> in the population</td><td rowspan="4">Unbiasedness: E(β̂₁) = β₁</td><td>“The truth bends”</td></tr>
+        <tr><td><b>SLR.2</b> Random sampling</td><td>Each observation is an independent draw</td><td>“Classmates share luck” (this hurts the standard errors, not the bias)</td></tr>
+        <tr><td><b>SLR.3</b> Variation in <var>x</var></td><td>Not every <var>x</var><sub><var>i</var></sub> is the same</td><td>Shrink the hours range: the pile spreads out</td></tr>
+        <tr><td><b>SLR.4</b> Zero conditional mean</td><td>E(<var>u</var> | <var>x</var>) = 0: nothing in <var>u</var> is related to <var>x</var></td><td>“Ability is left out”</td></tr>
+        <tr><td><b>SLR.5</b> Homoskedasticity</td><td>Var(<var>u</var> | <var>x</var>) = σ², the same for every <var>x</var></td><td>The usual variance formula, and the Gauss–Markov theorem</td><td>“Noise grows with hours”</td></tr>
+        <tr><td><b>Normality</b> (MLR.6 in Wooldridge)</td><td><var>u</var> is normal and independent of <var>x</var></td><td>Exact t distributions in small samples</td><td>“Skewed” and “Fat tails”</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="lab-sec" id="unbiased">
+    <h2>Why OLS is unbiased</h2>
+    <p>Substitute the model <var>y</var><sub><var>i</var></sub> = β₀ + β₁<var>x</var><sub><var>i</var></sub> + <var>u</var><sub><var>i</var></sub> into the formula from Chapter 4. Because Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>) = 0 and Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)<var>x</var><sub><var>i</var></sub> = SST<sub><var>x</var></sub>, everything but the errors cancels:</p>
+    <div class="u-big">β̂₁ = β₁ + Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>) <var>u</var><sub><var>i</var></sub> ÷ SST<sub><var>x</var></sub><small>the estimate = the truth + a weighted average of the errors, with SST<sub><var>x</var></sub> = Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)²</small></div>
+    <p>Take expectations given the <var>x</var>’s. Under SLR.4 each E(<var>u</var><sub><var>i</var></sub> | <var>x</var>) = 0, so the second term averages to zero and E(β̂₁) = β₁. Notice what was <i>not</i> needed: constant variance, independence between observations, or normality. That is why heteroskedasticity and correlated errors leave the pile centered on 4. But if something in <var>u</var> moves with <var>x</var>, like ability that is higher among students who study more, the second term doesn’t average out, and the pile shifts. That is omitted-variable bias, the subject of Chapter 6.</p>
+  </section>
+
+  <section class="lab-sec" id="variance">
+    <h2>How much does β̂₁ wobble?</h2>
+    <p>Add homoskedasticity (SLR.5) and independent observations, and the variance of the weighted average of errors is easy to compute:</p>
+    <div class="u-big">Var(β̂₁) = σ² ÷ SST<sub><var>x</var></sub> &nbsp;&nbsp;&nbsp; se(β̂₁) = σ̂ ÷ √SST<sub><var>x</var></sub>, &nbsp; σ̂² = SSR ÷ (<var>n</var> − 2)<small>more noise (σ) means more wobble; more spread in <var>x</var>, or more observations, means less</small></div>
+    <div class="lab-cols">
+      <p>SST<sub><var>x</var></sub> is about <var>n</var> × Var(<var>x</var>), so the standard error shrinks like 1/√<var>n</var>, just like the standard error of a mean in Chapter 3. In the lab’s default world, with σ = 8 and hours spread evenly from 0 to 10 (variance 100/12), a sample of 100 gives a standard deviation of 8/√(100 × 100/12) = <b>0.28</b>; a sample of 400 halves it to 0.14.</p>
+      <p>We don’t know σ, so we estimate it from the residuals. We divide SSR by <var>n</var> − 2, not <var>n</var>, because the residuals had to satisfy two equations (they sum to zero and are uncorrelated with <var>x</var>), which uses up two degrees of freedom. With that correction σ̂² is unbiased for σ².</p>
+    </div>
+    <div class="u-ex"><b>Worked example: the five students from Chapter 4</b>
+      <p>The fitted line was <var>ŷ</var> = 46.2 + 5.6 × hours, with SSR = 34.4 and SST<sub><var>x</var></sub> = 10. Then σ̂² = 34.4/(5 − 2) = 11.47, σ̂ = 3.39, and se(β̂₁) = 3.39/√10 = <b>1.07</b>.</p>
+      <p>Test H₀: β₁ = 0. <var>t</var> = 5.6/1.07 = 5.23 with 3 degrees of freedom; the two-sided p-value is <b>0.014</b>. The 95% interval uses <var>t</var>* = 3.182: 5.6 ± 3.182 × 1.07 = <b>2.2 to 9.0 points per hour</b>. Significant, but with five students the interval is wide.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="tests">
+    <h2>t-tests and confidence intervals for a slope</h2>
+    <p>Under SLR.1 to SLR.5 plus normal errors, the standardized slope has an exact t distribution with <var>n</var> − 2 degrees of freedom:</p>
+    <div class="u-big">(β̂₁ − β₁) ÷ se(β̂₁) ~ <var>t</var><sub><var>n</var>−2</sub> &nbsp;&nbsp;&nbsp; 95% CI: β̂₁ ± <var>t</var>* × se(β̂₁)<small>to test H₀: β₁ = <var>b</var>, compute <var>t</var> = (β̂₁ − <var>b</var>)/se(β̂₁) and compare it with the critical value; the most common test is <var>b</var> = 0, “does <var>x</var> matter at all?”</small></div>
+    <div class="lab-stage wide ec5-sub" id="ec5c">
+      <div class="lab-panel ec5-calc">
+        <h3>Slope test calculator</h3>
+        <div class="ec5-cin">
+          <label class="lab-field"><span>Estimated slope β̂₁</span><input type="number" id="ec5c-b" value="2.35" step="0.01"></label>
+          <label class="lab-field"><span>Standard error</span><input type="number" id="ec5c-se" value="0.82" step="0.01" min="0"></label>
+          <label class="lab-field"><span>Observations n</span><input type="number" id="ec5c-n" value="30" step="1" min="3"></label>
+          <label class="lab-field"><span>Null value of β₁</span><input type="number" id="ec5c-h" value="0" step="0.1"></label>
+        </div>
+        <dl class="lab-readout" id="ec5c-out" aria-live="polite"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: do ads pay for themselves?</b>
+      <p>Thirty stores’ weekly sales (in $1,000s) are regressed on their weekly ad spending (in $1,000s): β̂₁ = 2.35 with se = 0.82 (the calculator’s starting numbers). Each $1,000 of ads goes with $2,350 more sales.</p>
+      <ul>
+        <li>Does advertising matter at all? <var>t</var> = 2.35/0.82 = 2.87 with 28 degrees of freedom, p = <b>0.008</b>. Reject β₁ = 0.</li>
+        <li>Does a dollar of ads bring back more than a dollar of sales? Test β₁ = 1: <var>t</var> = (2.35 − 1)/0.82 = 1.65, p = <b>0.11</b>. Not significant at 5%: the data can’t rule out break-even.</li>
+        <li>The 95% interval is 2.35 ± 2.048 × 0.82 = <b>0.67 to 4.03</b>. It contains 1, matching the second test.</li>
+      </ul>
+      <p>And remember Chapter 1: stores that advertise more may differ in other ways, so this slope is causal only if SLR.4 holds. Nothing here is financial advice.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="gauss-markov">
+    <h2>The Gauss–Markov theorem: OLS is BLUE</h2>
+    <p>OLS is a <b>linear</b> estimator: β̂₁ = Σ <var>w</var><sub><var>i</var></sub><var>y</var><sub><var>i</var></sub> with weights <var>w</var><sub><var>i</var></sub> = (<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)/SST<sub><var>x</var></sub> that depend only on the <var>x</var>’s. Many other linear estimators are unbiased too. The theorem says OLS wins:</p>
+    <div class="u-big">Under SLR.1 to SLR.5, OLS is the Best Linear Unbiased Estimator<small>no other estimator that is linear in <var>y</var> and unbiased has a smaller variance (Wooldridge, Theorem 3.4, for multiple regression)</small></div>
+    <div class="lab-stage ec5-sub" id="ec5r">
+      <div class="lab-view" id="ec5r-view">
+        <canvas id="ec5r-cv" aria-label="Histograms, drawn as outlines, of four slope estimators from the same samples of 50 students: OLS in pink, the two-halves estimator in blue, the two-endpoints estimator in gold and, when the noise grows with hours, weighted least squares in green. The dashed white line is the true slope of 4."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>The race</h3>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="ec5r-go">🏁 Run 2,000 samples</button></div>
+        <label class="lab-chk"><input type="checkbox" id="ec5r-het"> Noise grows with hours</label>
+        <dl class="lab-readout ec5-race" id="ec5r-read" aria-live="polite"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec5r-missions"></ol>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <p><b>The contestants.</b> “Two halves” (an idea of Abraham Wald’s) sorts the students by hours, and divides the difference in average scores between the top and bottom halves by the difference in average hours. “Two endpoints” draws the line through the students with the fewest and the most hours. Both are linear in the scores and unbiased, and both are beaten by OLS when the noise is constant.</p>
+      <p><b>When OLS loses.</b> Let the noise grow with hours. OLS stays unbiased but is no longer best: <b>weighted least squares</b>, which gives quiet observations more weight (weights 1/Var(<var>u</var> | <var>x</var>)), has a much smaller spread. In practice the weights are rarely known, so the usual fix is to keep OLS and use <b>robust standard errors</b>, which are valid whatever the pattern of the variance (Chapter 8).</p>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> In the main lab, press “Growing noise”. The pile still centers on 4, but it is wider than the pink curve, and the gauge drops below 90%. Switch the standard errors to “Robust”: the pink curve widens to match, and coverage comes back near 95%. The estimates didn’t change at all; only the honesty of the standard errors did.</div>
+  <div class="lab-try"><b>Try this:</b> Press “Classrooms”. Students in a classroom share part of their study habits and part of their luck, so 100 students carry much less independent information than 100 strangers. Classic standard errors pretend otherwise and cover only about 61% of the time. Clustered standard errors fix it, but they need many classrooms: with 10 they reach about 90%, with 50 about 94%.</div>
+
+  <section class="lab-sec" id="normality">
+    <h2>When normality matters, and when it doesn’t</h2>
+    <div class="lab-cols">
+      <p><b>Not for unbiasedness or BLUE.</b> Neither result uses normality. The normality assumption only buys the <i>exact</i> t distribution of the t statistic, which matters in small samples.</p>
+      <p><b>Not much in large samples.</b> β̂₁ is a weighted average of many independent errors, so the central limit theorem makes it approximately normal whatever the errors look like. Then the t statistic is approximately standard normal, and the usual tests and intervals work. Wooldridge calls this <i>asymptotic normality</i> (Chapter 5 of his book). In the lab, skewed or fat-tailed errors with 100 students still give about 95% coverage; with spread-out <var>x</var> values, even 10 students do well. Small samples with a few extreme <var>x</var> values or very heavy tails are where it can fail.</p>
+    </div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “Regression requires normally distributed data”</b>
+    <p>Neither <var>x</var> nor <var>y</var> needs to be normal, and even the errors needn’t be for OLS to be unbiased and best linear unbiased. What really matters is SLR.4, that the errors are unrelated to <var>x</var>, which no amount of data or normality can fix. A related mistake is to treat “significant” as “causal”: the left-out-ability world produces a very significant, very precise, wrong slope.</p>
+  </div>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history, and the people</h2>
+    <div class="lab-cols">
+      <p><b>Gauss and Markov.</b> Carl Friedrich Gauss proved in the 1820s that least squares gives the smallest variance among linear unbiased estimators. The Russian mathematician Andrey Markov presented the result again in the early 1900s, and the theorem now carries both names.</p>
+      <p><b>Small samples.</b> Gosset’s t distribution (1908) and R. A. Fisher’s work in the 1920s gave exact tests for regression coefficients with normal errors, the tests every regression program still prints.</p>
+      <p><b>Honest standard errors.</b> In 1980 the econometrician Halbert White published standard errors that stay valid under heteroskedasticity of unknown form, now used routinely. Brent Moulton showed in 1990 how badly classic standard errors can mislead when observations share group-level shocks, and clustered standard errors became standard practice in applied economics.</p>
+      <p><b>Monte Carlo.</b> The method of learning about a formula by simulating thousands of random samples was developed at Los Alamos in the 1940s by Stanislaw Ulam and John von Neumann, and Nicholas Metropolis named it after the casino in Monaco. Econometricians use it to check every new estimator.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <div class="lab-cols">
+      <p><b>Business.</b> A retailer testing a promotion across stores has customers clustered within stores and stores within regions; standard errors that ignore the clustering make weak results look strong. Analysts routinely report robust or clustered standard errors for that reason.</p>
+      <p><b>Policy.</b> When a policy changes for a whole state, every person in the state shares the change. In 2004 Marianne Bertrand, Esther Duflo and Sendhil Mullainathan showed that many published studies of such policies had standard errors that were far too small because they ignored correlation over time within states.</p>
+      <p><b>Science.</b> Laboratory and field experiments use the same t-tests on slopes, and the same Monte Carlo checks of new methods before they are trusted.</p>
+      <p><b>Reading the news.</b> When a study reports that something is “linked” to something else with p &lt; 0.05, the questions from this chapter apply: is the slope unbiased (what’s in <var>u</var>?), and are the standard errors honest (are the observations independent)?</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec5-prac">
+      <li><p><b>Standard error from scratch.</b> A regression with <var>n</var> = 32 has SSR = 450 and SST<sub><var>x</var></sub> = 200. Find σ̂ and se(β̂₁).</p>
+        <details><summary>Show the answer</summary><p>σ̂² = 450/(32 − 2) = 15, σ̂ = 3.87. se(β̂₁) = 3.87/√200 = <b>0.274</b>.</p></details></li>
+      <li><p><b>A t-test.</b> With <var>n</var> = 27, β̂₁ = 0.80 and se = 0.25. Test H₀: β₁ = 0 at 5%, two-sided, and give a 95% interval.</p>
+        <details><summary>Show the answer</summary><p><var>t</var> = 0.80/0.25 = 3.20 with 25 degrees of freedom, p = 0.004: reject. <var>t</var>* = 2.060, so the interval is 0.80 ± 0.52, or <b>0.28 to 1.32</b>.</p></details></li>
+      <li><p><b>Which assumption?</b> For each, say whether OLS stays unbiased and whether classic standard errors stay valid: (a) the error variance is larger for high-income households; (b) people who choose more of <var>x</var> also have more of something in <var>u</var>; (c) the errors are skewed and <var>n</var> = 2,000; (d) the data are 40 students from each of 25 classrooms.</p>
+        <details><summary>Show the answer</summary><p>(a) Unbiased; classic standard errors invalid (use robust). (b) <b>Biased</b>: SLR.4 fails. (c) Unbiased, and with 2,000 observations the usual inference is fine. (d) Unbiased if SLR.4 holds, but classic standard errors are too small; cluster by classroom.</p></details></li>
+      <li><p><b>Designing for precision.</b> With σ = 10 and <var>x</var> spread evenly between 0 and 20 (variance 400/12), how many observations give se(β̂₁) ≈ 0.1? What if you could choose half your <var>x</var>’s at 0 and half at 20?</p>
+        <details><summary>Show the answer</summary><p>se ≈ σ/√(<var>n</var> Var(<var>x</var>)) = 10/√(<var>n</var> × 33.3) = 0.1 needs <var>n</var> × 33.3 = 10,000, so <var>n</var> ≈ <b>300</b>. With half at each end, Var(<var>x</var>) = 100, so <var>n</var> = <b>100</b> is enough. Spreading <var>x</var> out buys precision, though with only two values you can no longer see whether the relationship is a straight line.</p></details></li>
+      <li><p><b>Unbiased, step by step.</b> Show that Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)<var>y</var><sub><var>i</var></sub> = β₁ SST<sub><var>x</var></sub> + Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)<var>u</var><sub><var>i</var></sub>, and conclude that β̂₁ = β₁ + Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)<var>u</var><sub><var>i</var></sub>/SST<sub><var>x</var></sub>.</p>
+        <details><summary>Show the answer</summary><p>Plug in <var>y</var><sub><var>i</var></sub> = β₀ + β₁<var>x</var><sub><var>i</var></sub> + <var>u</var><sub><var>i</var></sub>: Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)β₀ = 0, Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)β₁<var>x</var><sub><var>i</var></sub> = β₁Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)² = β₁SST<sub><var>x</var></sub>, and the error term stays. Since β̂₁ = Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)<var>y</var><sub><var>i</var></sub>/SST<sub><var>x</var></sub> (the <var>ȳ</var> term drops out for the same reason β₀ does), divide by SST<sub><var>x</var></sub>.</p></details></li>
+      <li><p><b>The variance formula.</b> Using the result of problem 5, independent observations and Var(<var>u</var><sub><var>i</var></sub> | <var>x</var>) = σ², show Var(β̂₁) = σ²/SST<sub><var>x</var></sub>. Which step fails under heteroskedasticity, and what replaces it?</p>
+        <details><summary>Show the answer</summary><p>Var(Σ<var>w</var><sub><var>i</var></sub><var>u</var><sub><var>i</var></sub>) with <var>w</var><sub><var>i</var></sub> = (<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)/SST<sub><var>x</var></sub> and independent errors is Σ<var>w</var><sub><var>i</var></sub>² Var(<var>u</var><sub><var>i</var></sub>) = σ² Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)²/SST<sub><var>x</var></sub>² = σ²/SST<sub><var>x</var></sub>. Under heteroskedasticity Var(<var>u</var><sub><var>i</var></sub>) = σ<sub><var>i</var></sub>² can’t be pulled out, leaving Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)²σ<sub><var>i</var></sub>²/SST<sub><var>x</var></sub>². White’s robust standard error estimates it by putting the squared residuals <var>û</var><sub><var>i</var></sub>² in place of σ<sub><var>i</var></sub>².</p></details></li>
+      <li><p><b>Another unbiased estimator.</b> Show that the “two endpoints” slope (<var>y</var><sub>b</sub> − <var>y</var><sub>a</sub>)/(<var>x</var><sub>b</sub> − <var>x</var><sub>a</sub>) is linear in the <var>y</var>’s and unbiased under SLR.1 and SLR.4. Why does Gauss–Markov say it can’t beat OLS?</p>
+        <details><summary>Show the answer</summary><p>It is a weighted sum of <var>y</var>’s with weights ±1/(<var>x</var><sub>b</sub> − <var>x</var><sub>a</sub>) on two observations and 0 on the rest: linear. Its expected value given the <var>x</var>’s is (β₁<var>x</var><sub>b</sub> − β₁<var>x</var><sub>a</sub>)/(<var>x</var><sub>b</sub> − <var>x</var><sub>a</sub>) = β₁: unbiased. Under SLR.1–SLR.5, OLS has the smallest variance in that class, so this estimator’s variance, 2σ²/(<var>x</var><sub>b</sub> − <var>x</var><sub>a</sub>)², can be no smaller than σ²/SST<sub><var>x</var></sub>. It throws away the other <var>n</var> − 2 observations.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactives work</h2>
+    <div class="lab-cols">
+      <p><b>The world.</b> Hours are spread evenly over the chosen range; score = 50 + 4 × hours + σ<var>e</var>, where <var>e</var> has mean 0 and variance 1 and is normal, a centered exponential (skewed) or a t with 3 degrees of freedom scaled to variance 1 (fat tails). The switches: “bends” adds −0.1 × hours²; “growing noise” multiplies <var>e</var> by (0.1 + <var>t</var>)², where <var>t</var> runs from 0 to 1 across the hours range, rescaled so the average variance is still σ²; “ability” adds 2 × (0.5 × (hours − 5) + <var>v</var>) with <var>v</var> standard normal; “classrooms” groups students in tens (fives when <var>n</var> &lt; 50), with 70% of the hours range and half the error variance shared within a classroom. All data are simulated with a known truth.</p>
+      <p><b>The estimates.</b> Each sample is fitted with the closed-form OLS formulas. Classic standard errors use σ̂²/SST<sub><var>x</var></sub>; robust ones are White’s HC1, Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)²<var>û</var><sub><var>i</var></sub>²/SST<sub><var>x</var></sub>² × <var>n</var>/(<var>n</var> − 2); clustered ones sum (<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)<var>û</var><sub><var>i</var></sub> within each classroom, with the usual small-sample factor and <var>G</var> − 1 degrees of freedom. The calculator uses the t distribution with <var>n</var> − 2 degrees of freedom.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests):</p>
+        <ul class="lab-small">
+          <li>The closed forms match the course library’s matrix OLS in 300 random samples: coefficients to 8 × 10⁻¹², classic, robust and clustered standard errors to 10⁻¹² (relative), with the same degrees of freedom.</li>
+          <li>20,000 samples of 100 per world. All assumptions: mean 4.000, sd 0.281, average se 0.279 (theory 0.277), coverage 94.9%. Bending truth: mean 3.000 (the average slope, as theory predicts), coverage of 4 just 6%. Growing noise: mean 3.997, sd 0.339, classic se 0.276, coverage 88.9%; robust se 0.333, coverage 94.1%. Ability left out: mean 4.996 (theory 5.0); at <var>n</var> = 500, 5.000 with coverage 0%. Classrooms: sd 0.849, classic se 0.373, coverage 61.1%; clustered, 90.4% with 10 classrooms and 94.1% with 50. Skewed errors at <var>n</var> = 100: 95.0%.</li>
+          <li>The race, 20,000 samples of 50: with constant noise, sd 0.398 (OLS), 0.465 (two halves), 1.18 (two endpoints), all centered on 4; with growing noise, OLS 0.483 and weighted least squares 0.163.</li>
+          <li>Five-student example: se 1.0708, p = 0.0136, the same as the library’s regression output.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>Which assumption is needed for OLS to be unbiased?</p>
+        <ul class="u-opts"><li><button type="button">Homoskedasticity, Var(<var>u</var> | <var>x</var>) = σ²</button></li><li><button type="button">Zero conditional mean, E(<var>u</var> | <var>x</var>) = 0</button></li><li><button type="button">Normally distributed errors</button></li></ul>
+        <details><summary>Show the answer</summary><p>SLR.4 (with SLR.1 to SLR.3). Homoskedasticity and normality matter for the variance and for exact inference, not for unbiasedness.</p></details></li>
+      <li class="u-q" data-a="2"><p>The noise in <var>y</var> grows with <var>x</var>. What happens to OLS?</p>
+        <ul class="u-opts"><li><button type="button">It becomes biased</button></li><li><button type="button">Nothing at all</button></li><li><button type="button">It stays unbiased, but classic standard errors are wrong</button></li></ul>
+        <details><summary>Show the answer</summary><p>Heteroskedasticity leaves the estimates centered on the truth but breaks the usual variance formula; use robust standard errors.</p></details></li>
+      <li class="u-q" data-a="0"><p>Doubling the spread of <var>x</var> (its standard deviation), with the same <var>n</var> and σ, makes se(β̂₁)…</p>
+        <ul class="u-opts"><li><button type="button">about half as large</button></li><li><button type="button">about twice as large</button></li><li><button type="button">unchanged</button></li></ul>
+        <details><summary>Show the answer</summary><p>SST<sub><var>x</var></sub> grows fourfold, and se = σ/√SST<sub><var>x</var></sub> halves.</p></details></li>
+      <li class="u-q" data-a="1"><p>“BLUE” in the Gauss–Markov theorem means OLS has the smallest variance among…</p>
+        <ul class="u-opts"><li><button type="button">all estimators</button></li><li><button type="button">estimators that are linear in <var>y</var> and unbiased</button></li><li><button type="button">estimators that use normal errors</button></li></ul>
+        <details><summary>Show the answer</summary><p>Best Linear Unbiased Estimator. A biased or nonlinear estimator could have smaller variance, and under heteroskedasticity weighted least squares beats OLS.</p></details></li>
+      <li class="u-q" data-a="2"><p>With 5,000 observations and clearly skewed errors, the usual t-test for a slope is…</p>
+        <ul class="u-opts"><li><button type="button">invalid, because the errors aren’t normal</button></li><li><button type="button">valid only after removing the skewed observations</button></li><li><button type="button">approximately valid, thanks to the central limit theorem</button></li></ul>
+        <details><summary>Show the answer</summary><p>In large samples β̂₁ is approximately normal whatever the error distribution, so t-tests and intervals work.</p></details></li>
+      <li class="u-q" data-a="0"><p>A study of 2,000 students from 20 schools uses classic standard errors. The likely problem is…</p>
+        <ul class="u-opts"><li><button type="button">standard errors that are too small, because students in a school share shocks</button></li><li><button type="button">a biased slope, because of the schools</button></li><li><button type="button">nothing; 2,000 is a big sample</button></li></ul>
+        <details><summary>Show the answer</summary><p>Correlated errors within schools make the effective sample smaller than 2,000. Cluster by school (and 20 clusters is on the low side).</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020): Chapter 2, section 2.5 (unbiasedness and variances of OLS); Chapter 3, section 3.5 (the Gauss–Markov theorem); Chapter 4 (MLR.6 and t tests); Chapter 5 (asymptotic normality); Chapter 8 (heteroskedasticity-robust inference).</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Chapter 5 and its appendix on the Gauss–Markov theorem.</li>
+      <li>Penn State, STAT 501 Regression Methods: <a href="https://online.stat.psu.edu/stat501/Lesson02" target="_blank" rel="noopener">Lesson 2, SLR Model Evaluation</a> and <a href="https://online.stat.psu.edu/stat501/Lesson04" target="_blank" rel="noopener">Lesson 4, SLR Model Assumptions</a>.</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-32-econometrics-spring-2007/" target="_blank" rel="noopener">14.32 Econometrics</a> (Spring 2007) and <a href="https://ocw.mit.edu/courses/14-382-econometrics-spring-2017/" target="_blank" rel="noopener">14.382 Econometrics</a> (Spring 2017).</li>
+      <li>H. White, “A Heteroskedasticity-Consistent Covariance Matrix Estimator and a Direct Test for Heteroskedasticity,” <i>Econometrica</i> 48 (1980). B. R. Moulton, “An Illustration of a Pitfall in Estimating the Effects of Aggregate Variables on Micro Units,” <i>Review of Economics and Statistics</i> 72 (1990). M. Bertrand, E. Duflo and S. Mullainathan, “How Much Should We Trust Differences-in-Differences Estimates?” <i>Quarterly Journal of Economics</i> 119 (2004).</li>
+      <li>A. C. Cameron and D. L. Miller, “A Practitioner’s Guide to Cluster-Robust Inference,” <i>Journal of Human Resources</i> 50 (2015).</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/regression-inference/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-inference/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/regression-inference/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-inference/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,76 @@
+/* Game Theory, Chapter 9 (Auctions): only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css).
+   The first part is shared by chapters 8 to 14; the chapter's own rules follow it. */
+#gt9-lab .lab-view canvas:focus{outline:none}
+#gt9-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt9-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt9-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);color:var(--sim-acc)}
+#gt9-lab .lab-hud{max-width:calc(100% - 9.5rem)}
+#gt9-lab .lab-seg button{min-height:36px}
+#gt9-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#gt9-lab .lab-chk{min-height:36px;cursor:pointer}
+#gt9-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#gt9-lab .lab-btn{min-height:38px}
+#gt9-lab .lab-missions li button{min-height:36px;padding:.3rem .8rem}
+#gt9-lab .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#gt9-lab .lab-readout dd{white-space:normal;max-width:10.5rem;overflow-wrap:break-word}
+#gt9-lab .lab-toast{top:4.4rem}
+#gt9-lab .gt9-off{opacity:.5}
+#gt9-lab .gt9-acts{display:flex;flex-wrap:wrap;gap:.4rem}
+#gt9-lab .gt9-acts .lab-btn{flex:1 1 auto}
+/* the smaller simulations in the lesson */
+#gt9-lab .gt9-mini{margin:.9rem 0 1rem}
+#gt9-lab .gt9-mini .lab-view{height:400px;min-height:0}
+#gt9-lab .gt9-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1rem}
+#gt9-lab .gt9-row>*{min-width:0}
+#gt9-lab .gt9-grow{flex:1 1 240px}
+#gt9-lab .gt9-row>.lab-seg{flex:1 1 100%}
+#gt9-lab .gt9-row .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#gt9-lab .gt9-row .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#gt9-lab .gt9-win{animation:gt9win 1.2s ease-out}
+@keyframes gt9win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#gt9-lab .lab-sec ul{padding-left:1.3rem}
+#gt9-lab .lab-src{overflow-wrap:anywhere}
+#gt9-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+/* practice problems */
+#gt9-lab .gt9-prob{margin:.9rem 0 .2rem}
+#gt9-lab .gt9-prob b:first-child{color:var(--acc)}
+#gt9-lab details.gt9-ans{margin:.3rem 0 .9rem;padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+#gt9-lab details.gt9-ans summary{cursor:pointer;font-weight:600;color:var(--acc);min-height:28px}
+#gt9-lab details.gt9-ans>*:last-child{margin-bottom:0}
+#gt9-lab details.gt9-ans p{margin:.4rem 0 0}
+/* inline diagrams follow the page theme */
+#gt9-lab .gt9-svg{display:block;max-width:100%;height:auto;margin:.6rem auto}
+#gt9-lab .gt9-svg text{fill:var(--ink);font:13px system-ui,sans-serif}
+#gt9-lab .gt9-svg .mut{fill:var(--muted)}
+#gt9-lab .gt9-svg .ln{stroke:var(--muted);fill:none;stroke-width:1.5}
+#gt9-lab .gt9-svg .bx{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+#gt9-lab .gt9-svg .nat{fill:var(--soft);stroke:var(--acc);stroke-width:1.5}
+#gt9-lab .gt9-svg .acc{stroke:var(--acc);fill:none;stroke-width:2.5}
+#gt9-lab .gt9-svg .accf{fill:var(--acc)}
+#gt9-lab .gt9-svg .gold{stroke:var(--gold);fill:none;stroke-width:2.5}
+#gt9-lab .gt9-svg .goldf{fill:var(--gold)}
+#gt9-lab .gt9-tbl{width:auto;min-width:min(100%,360px)}
+#gt9-lab .gt9-tbl td,#gt9-lab .gt9-tbl th{text-align:center}
+@media (max-width:860px){
+  #gt9-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+}
+@media (max-width:600px){
+  #gt9-lab .lab-hud{max-width:calc(100% - 1.2rem);top:3.2rem}
+  #gt9-lab .lab-toast{top:7.4rem;font-size:.82rem;max-width:84%}
+  #gt9-lab .gt9-mini .lab-view{height:520px}
+}
+@media (prefers-reduced-motion:reduce){#gt9-lab .gt9-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#gt9-lab .gt9-main{grid-template-rows:auto 1fr}
+#gt9-lab .gt9-main>.lab-view{grid-column:1;grid-row:1}
+#gt9-lab .gt9-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#gt9-lab .gt9-main>.gt9-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#gt9-lab .gt9-main{grid-template-rows:none}#gt9-lab .gt9-main>.lab-view,#gt9-lab .gt9-main>.lab-panel,#gt9-lab .gt9-main>.gt9-under{grid-column:auto;grid-row:auto}}
+/* this chapter */
+#gt9-lab #gt9-view{height:min(76vh,660px);min-height:620px}
+#gt9-lab #gt9-act{min-height:46px;font-size:1rem}
+#gt9-lab .gt9-bidrow output{font-size:1rem}
+@media (max-width:600px){
+  #gt9-lab #gt9-view{height:780px}
+  #gt9-lab #gt9-rview .lab-view,#gt9-lab #gt9-wview .lab-view{height:600px}
+}

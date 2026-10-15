@@ -1,0 +1,231 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/auctions/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/auctions/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt9-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 9</p>
+    <h1>{{ .Title }}</h1>
+    <p>Auctions sell paintings, cattle, oil fields, radio spectrum, government bonds and the ads next to your search results. Each one is a game with hidden information: you know what the prize is worth to you, but not what it’s worth to anyone else. Here you’ll bid against computer rivals in the four classic formats and find out when to bid your true value and when to hold back. Then you’ll run twenty thousand auctions in a few seconds to see a surprising theorem at work, and fall for the winner’s curse with a jar of coins.</p>
+    <span class="lab-mark" aria-hidden="true">🔨</span>
+  </header>
+
+  <div class="lab-stage gt9-main">
+    <div class="lab-view" id="gt9-view">
+      <canvas id="gt9-cv" tabindex="0" aria-label="An auction room. Each bidder has a bar showing what the prize is worth to them, on a scale from 0 to 100 dollars. Yours is gold and always visible; the computer bidders' values stay hidden until the end. Below: your expected profit for each possible bid, with the best bid marked, and a table of your last rounds. Keys: Space or Enter submits your bid, starts the clock, drops out or buys; the arrow keys change your bid."></canvas>
+      <div class="lab-hud" id="gt9-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="gt9-skip" aria-label="New values" title="New values for everyone">🎲</button>
+        <button type="button" id="gt9-reset" aria-label="Clear the scores" title="Clear the scores">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="gt9-fmt-h">Format</h3>
+      <div class="lab-seg" id="gt9-fmt" role="group" aria-labelledby="gt9-fmt-h">
+        <button type="button" data-f="fpa">First-price</button><button type="button" data-f="spa">Second-price</button><button type="button" data-f="eng">English</button><button type="button" data-f="dut">Dutch</button>
+      </div>
+      <h3 id="gt9-n-h">Bidders, counting you</h3>
+      <div class="lab-seg" id="gt9-n" role="group" aria-labelledby="gt9-n-h">
+        <button type="button" data-n="2">2</button><button type="button" data-n="3">3</button><button type="button" data-n="4">4</button><button type="button" data-n="5">5</button><button type="button" data-n="6">6</button>
+      </div>
+      <label class="lab-field gt9-bidrow" id="gt9-bid-row"><span>Your sealed bid <output id="gt9-bid-o"></output></span><input type="range" id="gt9-bid" min="0" max="100" step="0.5" aria-label="Your bid in dollars"></label>
+      <button type="button" class="lab-btn pri" id="gt9-act">Submit my bid</button>
+      <label class="lab-chk"><input type="checkbox" id="gt9-theory"> Show the best bid on the chart</label>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="gt9-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt9-missions"></ol>
+    </div>
+    <section class="lab-sec gt9-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The bidders.</b> You (gold star) and up to five computer bidders. Each round, everyone gets a private value for the prize, drawn at random and evenly from $0 to $100. The bar shows it. You see your own value; the others’ stay hidden until the auction ends, just as in a real auction.</p>
+        <p><b>The computer bidders</b> play by the book. In a first-price or Dutch auction, each one bids (<var>n</var> − 1)/<var>n</var> of its value, where <var>n</var> is the number of bidders: half with 2 bidders, three quarters with 4. In a second-price or English auction, each one bids exactly its value, or stays in the English auction until the price reaches it. You’ll see below why these are the equilibrium strategies.</p>
+        <p><b>The chart.</b> For your value this round, the blue curve shows how much profit each bid earns on average against these rivals: the chance of winning times what you keep when you win. The green dot is the best bid. In first-price auctions the peak sits well below your value. In second-price auctions it sits exactly at your value, and the curve is flat beyond it until you risk paying more than the prize is worth (the dashed red part dips below zero).</p>
+        <p><b>The score.</b> “Textbook” is what a bidder using the equilibrium strategy would have earned in your seat, with your values against the same rivals. Over many rounds, nobody can beat it on average. Lucky streaks are another matter.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="formats"><h2>Four ways to sell one thing</h2>
+    <div class="u-key">
+      <div><b>English (open ascending)</b><p>The price rises, out loud or on a clock, until only one bidder is left. Art houses, cattle sales and charity auctions work this way. eBay’s automatic bidding is close to it.</p></div>
+      <div><b>Dutch (open descending)</b><p>The price starts high and falls until someone stops it. The Dutch flower auctions at Aalsmeer made it famous, with a giant clock and a button at every seat.</p></div>
+      <div><b>First-price sealed bid</b><p>Everyone submits one secret bid; the highest wins and pays its bid. Governments often buy roads and buildings this way (lowest bid wins), and many sell timber, land and leases.</p></div>
+      <div><b>Second-price sealed bid</b><p>The highest secret bid wins but pays the <i>second</i>-highest bid. William Vickrey analyzed it in 1961, so it’s often called a Vickrey auction.</p></div>
+    </div>
+    <p>A second distinction matters as much as the rules. In a <b>private-value</b> auction, each bidder’s value is personal: what the painting is worth to <i>you</i>. Learning someone else’s value wouldn’t change yours. In a <b>common-value</b> auction, the prize is worth the same to everyone, but nobody knows exactly how much: the oil under a tract of sea floor, or the coins in a jar. The main game uses private values; the winner’s curse below needs common values.</p>
+  </section>
+
+  <section class="lab-sec" id="second"><h2>Second-price: tell the truth</h2>
+    <p>In a second-price auction, bidding your true value is a <b>weakly dominant strategy</b>: it’s at least as good as any other bid, whatever the others do.</p>
+    <div class="u-big"><var>b</var><sub><var>i</var></sub> = <var>v</var><sub><var>i</var></sub><small>in a second-price (Vickrey) auction, bid exactly what the prize is worth to you, no matter how many rivals there are or how they bid</small></div>
+    <p>Here’s why. Call the highest of the other bids <var>y</var>. Your bid decides only <i>whether</i> you win, never <i>what</i> you pay; you pay <var>y</var> if you win. Winning is good exactly when <var>v</var> &gt; <var>y</var>. Bidding <var>v</var> wins exactly in those cases. Bidding more adds only cases where <var>y</var> &gt; <var>v</var>, which lose money. Bidding less gives up only cases where <var>y</var> &lt; <var>v</var>, which would have made money. The English auction works the same way: stay in while the price is below your value, and the winner pays about the price where the second-to-last bidder quit, which is the second-highest value.</p>
+    <div class="u-ex"><b>Worked example: a second-price auction</b>
+      <p>Four bidders value a guitar at $310, $260, $240 and $180, and each bids their value. The $310 bidder wins and pays $260, the second-highest bid, keeping $50 of value. If she had shaded her bid to $250, she would have lost the guitar and the $50 for nothing. If the $260 bidder had overbid with $320, he would have won and paid $310 for a guitar worth $260 to him: a loss of $50.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="first"><h2>First-price: shade your bid</h2>
+    <p>In a first-price auction, bidding your value guarantees a profit of zero: when you win, you pay everything the prize is worth to you. So you bid less, trading a smaller chance of winning for a bigger profit when you do. How much less? Suppose your rivals each bid a fixed fraction of their values, and values are spread evenly from 0 to <var>V</var>. With one rival who bids half its value, a bid <var>b</var> wins when the rival’s value is below 2<var>b</var>, which happens with probability 2<var>b</var>/<var>V</var>. Your expected profit is</p>
+    <div class="lab-formula">(<var>v</var> − <var>b</var>) × 2<var>b</var>/<var>V</var>, which is largest where its slope is zero: 2(<var>v</var> − 2<var>b</var>)/<var>V</var> = 0, so <var>b</var> = <var>v</var>/2.</div>
+    <p>Bidding half your value is a best response to a rival who bids half its value: an equilibrium. With <var>n</var> bidders, the same steps give the rule the computer bidders use:</p>
+    <div class="u-big"><var>b</var>(<var>v</var>) = <var>v</var> (<var>n</var> − 1)/<var>n</var><small>the symmetric equilibrium bid in a first-price auction with <var>n</var> risk-neutral bidders whose values are independent and uniform</small></div>
+    <p>More rivals, less shading: 50% of your value with one rival, 75% with three, 90% with nine. There’s a neat way to read the formula. With uniform values, (<var>n</var> − 1)<var>v</var>/<var>n</var> is exactly the expected value of the highest rival value, given that it is below yours. In equilibrium you bid what you expect to pay in a second-price auction, if you win.</p>
+    <div class="u-ex"><b>Worked example: five bidders</b>
+      <p>Your value is $60 and there are five bidders. The equilibrium bid is 60 × 4/5 = $48. If you win, you keep $12. Bid $55 and you’d win a bit more often (the chance rises from (48·5/4/100)<sup>4</sup> = 0.6<sup>4</sup> ≈ 13% to (55·5/4/100)<sup>4</sup> ≈ 22%), but your expected profit drops from 13% × $12 ≈ $1.56 to 22% × $5 ≈ $1.11.</p>
+    </div>
+    <p><b>Dutch equals first-price.</b> In a Dutch auction, you decide in advance the price at which you’ll shout “Mine!”, and you learn nothing useful while the price falls (if someone else stops the clock first, the auction is over). So choosing a stopping price is the same as choosing a sealed bid, and the equilibrium is the same. Economists call the two formats <i>strategically equivalent</i>. English and second-price auctions are equivalent in the same way when values are private.</p>
+    <div class="lab-try"><b>Try this:</b> play a few first-price rounds with 2 bidders, then with 6. Watch the green dot on the chart move toward your value as rivals are added. Then switch to second-price: the dot jumps to your value and stays there.</div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “A second-price auction must earn the seller less”</b>
+    <p>It looks that way: the winner pays only the second-highest bid. But bidders know the rules. In a second-price auction they bid their full values, while in a first-price auction they shade. On average, the two effects cancel exactly, as the next simulation shows.</p>
+  </div>
+
+  <section class="lab-sec" id="equivalence"><h2>Revenue equivalence</h2>
+    <p>Which format should a seller pick? The answer, under the right conditions, is that it doesn’t matter. Vickrey found this for the standard formats in 1961; Roger Myerson, and separately John Riley and William Samuelson, proved the general version in 1981.</p>
+    <div class="u-big">E[revenue] = E[second-highest value] = <var>V</var> (<var>n</var> − 1)/(<var>n</var> + 1)<small>the revenue equivalence theorem, for values independent and uniform on [0, <var>V</var>]</small></div>
+    <p>The theorem says: if bidders are risk neutral, their values are independent and drawn from the same distribution, the prize always goes to the bidder with the highest value, and a bidder with the lowest possible value expects to get nothing, then every auction format gives the seller the same expected revenue. That includes odd formats like the <b>all-pay auction</b>, where everyone pays their bid, win or lose (think of lobbying, or teams racing for a patent). The averages match even though, as the histograms show, the spread of revenue is very different.</p>
+    <div class="lab-stage wide gt9-mini" id="gt9-rview">
+      <div class="lab-view"><canvas id="gt9-rc" aria-label="Left: the average revenue of three auction formats as more and more auctions are run, with dashed lines at the theoretical values. Right: histograms of what each auction raised, with the average marked."></canvas></div>
+      <div class="lab-panel gt9-row">
+        <div class="lab-seg" id="gt9-rn" role="group" aria-label="Number of bidders">
+          <button type="button" data-n="2">2 bidders</button><button type="button" data-n="3">3</button><button type="button" data-n="4">4</button><button type="button" data-n="6">6</button><button type="button" data-n="8">8</button>
+        </div>
+        <label class="lab-field gt9-grow"><span>Bidders’ attitude to risk <output id="gt9-ra-o"></output></span><input type="range" id="gt9-ra" min="0.3" max="1" step="0.05" aria-label="Risk attitude: 1 is risk neutral, lower is more risk averse"></label>
+        <label class="lab-field gt9-grow"><span>Reserve price <output id="gt9-rr-o"></output></span><input type="range" id="gt9-rr" min="0" max="90" step="5" aria-label="Reserve price in dollars"></label>
+        <div class="gt9-acts gt9-grow"><button type="button" class="lab-btn pri" id="gt9-rgo">▶ Run 20,000 auctions</button><button type="button" class="lab-btn" id="gt9-rclr">Clear</button></div>
+        <dl class="lab-readout gt9-grow" id="gt9-rread"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: four bidders</b>
+      <p>Values are uniform from $0 to $100. The expected second-highest of four values is 100 × 3/5 = $60. In a second-price auction, the price <i>is</i> the second-highest value, so the seller expects $60. In a first-price auction, the winner bids 3/4 of the highest value, which averages 100 × 4/5 = $80, so the seller expects 3/4 × $80 = $60. Same answer by a different road. Our 200,000-auction test gave $60.05 and $60.04.</p>
+    </div>
+    <h3 class="lab-h">What breaks it</h3>
+    <ul>
+      <li><b>Risk aversion.</b> Slide the risk attitude below 1. A first-price bidder who dislikes risk bids more to avoid the painful outcome of losing narrowly, so first-price revenue rises. In a second-price auction, bidding your value is still dominant, so nothing changes. With utility <var>u</var>(<var>x</var>) = <var>x</var><sup><var>a</var></sup>, the first-price bid becomes <var>v</var>(<var>n</var> − 1)/(<var>n</var> − 1 + <var>a</var>).</li>
+      <li><b>A reserve price</b> is a minimum bid. It sometimes leaves the item unsold, which breaks the “highest value always wins” condition, so revenue changes. Here it changes the same way in every standard format: first-price and second-price still match each other. With uniform values, the revenue-maximizing reserve is half of <var>V</var> however many bidders there are, a result of Myerson’s theory of optimal auctions (<a href="{{ "business/game-theory/mechanism-design/" | relURL }}">Chapter 12</a>). With two bidders, a $50 reserve raises expected revenue from $33.33 to $41.67.</li>
+      <li><b>Other things</b> the simulation leaves out: bidders who differ from one another, values that move together (Paul Milgrom and Robert Weber showed in 1982 that then English ≥ second-price ≥ first-price), budgets, and collusion among bidders.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="curse"><h2>The winner’s curse</h2>
+    <p>In 1971, three engineers at Atlantic Richfield, Ed Capen, Bob Clapp and Bill Campbell, published a paper asking why oil companies kept earning low returns on the offshore tracts they won at auction. Their answer: each company estimates how much oil lies under a tract, and the estimates scatter around the truth. Even if every estimate is right <i>on average</i>, the company that wins is the one with the most optimistic estimate, which is probably too high. Winning is bad news about your estimate.</p>
+    <div class="lab-stage wide gt9-mini" id="gt9-wview">
+      <div class="lab-view"><canvas id="gt9-wc" aria-label="Left: a jar of coins whose value is hidden, and a number line with each bidder's estimate as a blue dot. The highest estimate is red; its owner wins, bidding the estimate minus the shade. After the auction, the true value appears as a white line. Right: a histogram of the winner's profit over many auctions, red for losses and green for gains, with the average marked."></canvas></div>
+      <div class="lab-panel gt9-row">
+        <label class="lab-field gt9-grow"><span>Bidders <output id="gt9-wn-o"></output></span><input type="range" id="gt9-wn" min="2" max="20" step="1" aria-label="Number of bidders"></label>
+        <label class="lab-field gt9-grow"><span>Each estimate is off by up to <output id="gt9-we-o"></output></span><input type="range" id="gt9-we" min="5" max="50" step="1" aria-label="Largest estimate error in dollars"></label>
+        <label class="lab-field gt9-grow"><span>Everyone bids their estimate minus <output id="gt9-wm-o"></output></span><input type="range" id="gt9-wm" min="0" max="50" step="1" aria-label="How much bidders shade their estimate, in dollars"></label>
+        <div class="gt9-acts gt9-grow"><button type="button" class="lab-btn pri" id="gt9-w1">Hold one auction</button><button type="button" class="lab-btn" id="gt9-w1k">Hold 1,000</button><button type="button" class="lab-btn" id="gt9-wbe">Shade to break even</button><button type="button" class="lab-btn" id="gt9-wclr">Clear</button></div>
+        <dl class="lab-readout gt9-grow" id="gt9-wread"></dl>
+      </div>
+    </div>
+    <p>In the simulation, the jar holds between $60 and $140. Each bidder’s estimate is the true value plus an error drawn evenly from −<var>E</var> to +<var>E</var>, so it is right on average. Bidders bid their estimate minus a shade <var>m</var>, and the highest bid wins. The winner’s profit is <var>m</var> minus the largest error, and the largest of <var>n</var> such errors averages <var>E</var>(<var>n</var> − 1)/(<var>n</var> + 1). So naive bidders lose on average, and lose more when there are more of them:</p>
+    <div class="lab-formula">break-even shade = <var>E</var> (<var>n</var> − 1)/(<var>n</var> + 1) &nbsp;·&nbsp; with 8 bidders and errors up to ±$25, that’s $19.44</div>
+    <p>The cure is to ask the right question: not “what is this worth?” but “what is it worth, <i>given that my estimate turned out to be the highest</i>?” That’s an expected value conditional on winning, and it’s always lower. (This shade makes the winner break even on average; a full equilibrium analysis, as in Milgrom and Weber, works out the best bid against rivals who reason the same way.)</p>
+    <div class="u-ex"><b>Worked example: the jar of coins</b>
+      <p>Max Bazerman and William Samuelson ran a famous classroom test, published in 1983. MBA students bid in sealed-bid auctions for containers of coins or paper clips, each worth $8.00, with 4 to 26 bidders per auction. Across 48 auctions, the average winning bid was $10.01: the average winner paid $2.01 more than the prize was worth. Most students guessed low; the winners were the ones who guessed far too high.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> with 8 bidders, hold 1,000 auctions with no shade. Most winners lose money. Press “Shade to break even” and run 1,000 more: the average profit sits near zero. Now raise the number of bidders to 20 without changing the shade. More competition makes the curse worse, not better.</div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>The people and the prizes</h2>
+    <div class="lab-cols">
+      <p><b>William Vickrey</b> (1914–1996) of Columbia University published “Counterspeculation, Auctions, and Competitive Sealed Tenders” in the <i>Journal of Finance</i> in 1961. It introduced the second-price auction, the idea of revenue equivalence, and much of how economists think about auctions. He shared the 1996 Nobel Memorial Prize in Economic Sciences with James Mirrlees and died three days after it was announced.</p>
+      <p><b>Roger Myerson</b>’s “Optimal Auction Design” (1981) asked which auction earns a seller the most, and found the answer for any distribution of values; John Riley and William Samuelson reached the main results independently the same year. Myerson shared the 2007 Nobel prize for mechanism design (<a href="{{ "business/game-theory/mechanism-design/" | relURL }}">Chapter 12</a>).</p>
+      <p><b>Robert Wilson</b> analyzed common-value auctions starting in the late 1960s, and <b>Paul Milgrom</b>, his doctoral student at Stanford, developed the theory of auctions with interdependent values with Robert Weber. In the 1990s both helped design the simultaneous multiple-round auction the U.S. Federal Communications Commission adopted in 1994 to sell radio spectrum licenses, with Preston McAfee and others. In 2020 Milgrom and Wilson shared the Nobel prize “for improvements to auction theory and inventions of new auction formats”.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where auctions show up</h2>
+    <ul>
+      <li><b>Spectrum.</b> The FCC has auctioned licenses to use radio frequencies since 1994, using formats in which many licenses are sold at once over many rounds, so that a company can build a sensible set of licenses as prices emerge.</li>
+      <li><b>Government bonds.</b> Since November 2, 1998, the U.S. Treasury has sold all its marketable securities in single-price auctions, in which every winning bidder pays the same price.</li>
+      <li><b>Online ads.</b> Search engines auction ad slots every time someone searches. The “generalized second-price” auction they long used, studied by Benjamin Edelman, Michael Ostrovsky and Michael Schwarz and by Hal Varian in 2007, pays each winner roughly the next bid down.</li>
+      <li><b>eBay.</b> You tell the site your maximum and it bids for you, one step at a time, so the winner pays about one step above the second-highest maximum: very close to a second-price auction.</li>
+      <li><b>Takeovers and sports.</b> Bidding wars for companies, and free-agent bidding in sports, are common-value auctions in part. Both have been blamed for winners who overpaid.</li>
+    </ul>
+    <p class="lab-small">These are models for learning how auctions work, not advice on bidding for anything with your own money.</p>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <p class="gt9-prob"><b>1.</b> In a second-price auction, the bids are $45, $70, $52 and $68. Who wins, and what do they pay? What if it were first-price?</p>
+    <details class="gt9-ans"><summary>Show the answer</summary><p>The $70 bidder wins either way. In a second-price auction, they pay $68. In a first-price auction, they pay $70. (But in a first-price auction people would have bid differently in the first place.)</p></details>
+    <p class="gt9-prob"><b>2.</b> Five bidders, values uniform from $0 to $100, first-price rules. Your value is $60. What is the equilibrium bid, and what do you expect to pay if you win?</p>
+    <details class="gt9-ans"><summary>Show the answer</summary><p><var>b</var> = 60 × 4/5 = $48. You pay your bid, $48, keeping $12 if you win.</p></details>
+    <p class="gt9-prob"><b>3.</b> Three bidders, values uniform from $0 to $300. What revenue does the seller expect from an English auction? From a first-price auction?</p>
+    <details class="gt9-ans"><summary>Show the answer</summary><p>Both give 300 × (3 − 1)/(3 + 1) = $150. In the English auction the price is the second-highest value, which averages 300 × 2/4. In the first-price auction the winner bids 2/3 of the highest value, which averages 300 × 3/4 = $225, and 2/3 × 225 = $150.</p></details>
+    <p class="gt9-prob"><b>4.</b> Derive the first-price equilibrium for two bidders with values uniform on [0, 1], assuming the rival bids <var>kv</var> for some <var>k</var>.</p>
+    <details class="gt9-ans"><summary>Show the answer</summary><p>A bid <var>b</var> wins when <var>k v</var><sub>2</sub> &lt; <var>b</var>, that is when <var>v</var><sub>2</sub> &lt; <var>b</var>/<var>k</var>, with probability <var>b</var>/<var>k</var>. Expected profit: (<var>v</var> − <var>b</var>)<var>b</var>/<var>k</var>. The slope is (<var>v</var> − 2<var>b</var>)/<var>k</var>, zero at <var>b</var> = <var>v</var>/2. The best response is half your value whatever <var>k</var> is, so in equilibrium <var>k</var> = ½.</p></details>
+    <p class="gt9-prob"><b>5.</b> Two bidders, values uniform from $0 to $100, second-price rules with a reserve of $50. Find the expected revenue and compare it with no reserve.</p>
+    <details class="gt9-ans"><summary>Show the answer</summary><p>With values scaled to [0, 1], expected revenue is 2<var>n</var>(1 − <var>r</var><sup><var>n</var>+1</sup>)/(<var>n</var> + 1) − (1 − <var>r</var><sup><var>n</var></sup>). With <var>n</var> = 2 and <var>r</var> = ½: (4/3)(7/8) − 3/4 = 7/6 − 3/4 = 5/12 ≈ 0.4167, so $41.67, against 1/3 or $33.33 with no reserve. The reserve leaves the item unsold a quarter of the time (both values below $50), but it forces a higher price when only one bidder is above $50. Set the simulation to 2 bidders and a $50 reserve to check it.</p></details>
+    <p class="gt9-prob"><b>6.</b> Six firms bid for a tract. Each estimate of its value is the truth plus an error between −$12 million and +$12 million. Everyone bids their estimate minus the same shade. How big must the shade be for the winner to break even on average?</p>
+    <details class="gt9-ans"><summary>Show the answer</summary><p>The largest of six errors averages 12 × (6 − 1)/(6 + 1) ≈ $8.57 million. A shade of about $8.6 million makes the winner break even on average.</p></details>
+    <p class="gt9-prob"><b>7.</b> (Harder) Two bidders with values uniform on [0, 1] have utility <var>u</var>(<var>x</var>) = √<var>x</var>. In a first-price auction, check that bidding 2<var>v</var>/3 is an equilibrium, and compare the seller’s revenue with a second-price auction.</p>
+    <details class="gt9-ans"><summary>Show the answer</summary><p>If the rival bids 2<var>v</var>/3, a bid <var>b</var> wins with probability 3<var>b</var>/2. Maximize (<var>v</var> − <var>b</var>)<sup>½</sup> × 3<var>b</var>/2. The derivative of its log is −1/(2(<var>v</var> − <var>b</var>)) + 1/<var>b</var> = 0, so <var>b</var> = 2(<var>v</var> − <var>b</var>) and <var>b</var> = 2<var>v</var>/3. Revenue: 2/3 of the expected higher value, 2/3, so 4/9 ≈ 0.444. The second-price auction still earns 1/3 ≈ 0.333, since bidding your value stays dominant. Risk aversion favors the first-price format.</p></details>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The auction room.</b> Values are drawn evenly from $0 to $100 and rounded to the nearest 10 cents. The computer bidders bid (<var>n</var> − 1)<var>v</var>/<var>n</var> in first-price and Dutch auctions and <var>v</var> in second-price and English ones. The English clock rises at $10 a second (faster after you drop out) and the Dutch clock falls at $10 a second. The profit curve assumes the computer bidders use these strategies, which they do.</p>
+      <p><b>The revenue simulation</b> draws fresh values for every auction and computes each format’s equilibrium outcome directly. With risk aversion or a reserve price, the first-price bid is <var>β</var>(<var>v</var>) = <var>kv</var>/(<var>k</var> + 1) + <var>r</var><sup><var>k</var>+1</sup>/((<var>k</var> + 1)<var>v</var><sup><var>k</var></sup>) with <var>k</var> = (<var>n</var> − 1)/<var>a</var>, from the first-order condition. The all-pay auction is shown only for risk-neutral bidders and no reserve, where each bidder pays (<var>n</var> − 1)<var>v</var><sup><var>n</var></sup>/<var>n</var>.</p>
+      <p><b>What’s simplified.</b> Everyone knows how many rivals there are and how values are spread; real bidders often don’t. There is one item, and values are independent.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests, run before the page was built):</p>
+        <ul class="lab-small">
+          <li>Best responses: for 2, 3 and 5 bidders and values $20, $55 and $90, a search over bids in 1-cent steps found the best first-price bid at exactly (<var>n</var> − 1)<var>v</var>/<var>n</var>, and the best second-price bid at exactly <var>v</var>. In 20,000 random cases, no bid ever beat bidding your value in a second-price auction.</li>
+          <li>Revenue formulas: (<var>n</var> − 1)/(<var>n</var> + 1) for both formats with 2, 3, 5 and 8 bidders; 5/12 with 2 bidders and a reserve of ½; the best reserve is 0.500 for 2, 4 and 6 bidders.</li>
+          <li>Monte Carlo, 200,000 auctions each: 4 risk-neutral bidders gave 0.6005, 0.6004 and 0.6011 (first-price, second-price, all-pay; theory 0.6000). With risk attitude 0.5, first-price gave 0.6863 (theory 0.6857) and second-price 0.6004. Three bidders and a reserve of ½ gave 0.5313 in both formats (theory 0.5313).</li>
+          <li>Risk aversion: with 3 bidders and <var>a</var> = 0.5, a numerical search for the best reply to rivals bidding <var>β</var> gave 0.5600 for <var>v</var> = 0.7, matching the formula.</li>
+          <li>Winner’s curse, 100,000 auctions each: average winner’s profit −6.63, −13.31 and −24.57, against theory −6.67, −13.33 and −24.55 for (2 bidders, ±20), (5, ±20) and (10, ±30).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>In a second-price auction, your value is $80. What should you bid?</p>
+        <ul class="u-opts"><li><button type="button">Less than $80, to make a profit</button></li><li><button type="button">Exactly $80</button></li><li><button type="button">More than $80, to make sure you win</button></li><li><button type="button">It depends on how many rivals there are</button></li></ul>
+        <details><summary>Show the answer</summary><p>Your bid only decides whether you win; the price is set by others. Bidding $80 wins exactly when winning is profitable. It’s weakly dominant, whatever the rivals do.</p></details></li>
+      <li class="u-q" data-a="2"><p>Four bidders with values uniform from $0 to $100 play a first-price auction. Your value is $40. What is the equilibrium bid?</p>
+        <ul class="u-opts"><li><button type="button">$40</button></li><li><button type="button">$20</button></li><li><button type="button">$30</button></li><li><button type="button">$10</button></li></ul>
+        <details><summary>Show the answer</summary><p>(<var>n</var> − 1)/<var>n</var> × <var>v</var> = 3/4 × 40 = $30.</p></details></li>
+      <li class="u-q" data-a="0"><p>Which pairs of formats are strategically equivalent with private values?</p>
+        <ul class="u-opts"><li><button type="button">Dutch with first-price, and English with second-price</button></li><li><button type="button">Dutch with second-price, and English with first-price</button></li><li><button type="button">All four are equivalent</button></li></ul>
+        <details><summary>Show the answer</summary><p>In a Dutch auction you pick a price at which to stop the clock, just like a sealed first-price bid. In an English auction you stay in up to your value and pay about where the last rival quit, just like a second-price auction.</p></details></li>
+      <li class="u-q" data-a="3"><p>Which change makes a first-price auction raise more on average than a second-price auction?</p>
+        <ul class="u-opts"><li><button type="button">More bidders</button></li><li><button type="button">A reserve price</button></li><li><button type="button">Higher values for everyone</button></li><li><button type="button">Risk-averse bidders</button></li></ul>
+        <details><summary>Show the answer</summary><p>Risk-averse bidders bid more in a first-price auction to reduce the chance of losing, while second-price bidding doesn’t change. A reserve price changes both formats equally.</p></details></li>
+      <li class="u-q" data-a="1"><p>Why does the winner of a common-value auction tend to overpay, even if everyone’s estimates are right on average?</p>
+        <ul class="u-opts"><li><button type="button">Auctioneers push prices up</button></li><li><button type="button">The winner is the bidder with the most optimistic estimate, which is probably too high</button></li><li><button type="button">Bidders don’t care about money</button></li></ul>
+        <details><summary>Show the answer</summary><p>Winning selects the largest error. The fix is to bid on what the prize is worth given that your estimate is the highest.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), sections 3.5 and 9.6 on auctions.</li>
+      <li>V. Krishna, <i>Auction Theory</i>, 2nd ed. (Academic Press, 2010), chapters 2–4 (private values, revenue equivalence, reserve prices, risk aversion) and chapter 6 (interdependent values and the winner’s curse).</li>
+      <li>P. Milgrom, <i>Putting Auction Theory to Work</i> (Cambridge University Press, 2004).</li>
+      <li>W. Vickrey, “Counterspeculation, Auctions, and Competitive Sealed Tenders”, <i>Journal of Finance</i> 16(1), 8–37 (1961).</li>
+      <li>R. B. Myerson, “Optimal Auction Design”, <i>Mathematics of Operations Research</i> 6(1), 58–73 (1981); J. G. Riley and W. F. Samuelson, “Optimal Auctions”, <i>American Economic Review</i> 71(3), 381–392 (1981).</li>
+      <li>P. R. Milgrom and R. J. Weber, “A Theory of Auctions and Competitive Bidding”, <i>Econometrica</i> 50(5), 1089–1122 (1982).</li>
+      <li>E. C. Capen, R. V. Clapp and W. M. Campbell, “Competitive Bidding in High-Risk Situations”, <i>Journal of Petroleum Technology</i> 23(6), 641–653 (1971).</li>
+      <li>M. H. Bazerman and W. F. Samuelson, “I Won the Auction but Don’t Want the Prize”, <i>Journal of Conflict Resolution</i> 27(4), 618–634 (1983), <a href="https://www.cs.princeton.edu/courses/archive/spr10/cos444/papers/BazermanSamuelson83.pdf" target="_blank" rel="noopener">copy at Princeton University (COS 444)</a>; R. H. Thaler, “Anomalies: The Winner’s Curse”, <i>Journal of Economic Perspectives</i> 2(1), 191–202 (1988).</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2012/" target="_blank" rel="noopener">14.12 Economic Applications of Game Theory</a>, lectures on auctions.</li>
+      <li>U.S. Department of the Treasury, <a href="https://www.govinfo.gov/content/pkg/FR-1999-01-25/html/99-1441.htm" target="_blank" rel="noopener">Federal Register 64(15), January 25, 1999</a>: single-price auctions for all marketable securities from November 2, 1998.</li>
+      <li>Federal Communications Commission, <a href="https://www.fcc.gov/auctions" target="_blank" rel="noopener">Auctions</a>.</li>
+      <li>The Nobel Prize, <a href="https://www.nobelprize.org/prizes/economic-sciences/2020/press-release/" target="_blank" rel="noopener">Press release, 2020</a> (Milgrom and Wilson) and <a href="https://www.nobelprize.org/prizes/economic-sciences/1996/summary/" target="_blank" rel="noopener">1996</a> (Mirrlees and Vickrey).</li>
+      <li>B. Edelman, M. Ostrovsky and M. Schwarz, “Internet Advertising and the Generalized Second-Price Auction”, <i>American Economic Review</i> 97(1), 242–259 (2007); H. R. Varian, “Position Auctions”, <i>International Journal of Industrial Organization</i> 25(6), 1163–1178 (2007).</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Vickrey_auction" target="_blank" rel="noopener">Vickrey auction</a>, <a href="https://en.wikipedia.org/wiki/Revenue_equivalence" target="_blank" rel="noopener">Revenue equivalence</a>, <a href="https://en.wikipedia.org/wiki/Dutch_auction" target="_blank" rel="noopener">Dutch auction</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/auctions/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/auctions/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/auctions/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/auctions/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

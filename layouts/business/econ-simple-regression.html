@@ -1,0 +1,250 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/simple-regression/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/simple-regression/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec4-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 4</p>
+    <h1>{{ .Title }}</h1>
+    <p>Fitting a line through a cloud of points is the heart of econometrics. Here every mistake the line makes is drawn as a square, and ordinary least squares is the line that makes the total area of those squares as small as it can be. Drag the points and watch it refit. Draw your own line and try to beat it (you can’t, but you can tie). Then go back to 1886, when Francis Galton measured the heights of parents and their children and gave regression its strange name.</p>
+    <span class="lab-mark" aria-hidden="true">📏</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="ec4-view">
+      <canvas id="ec4-cv" tabindex="0" aria-label="A scatter plot with the least-squares line in pink and your own line in gold, dashed, with two gold handles. Each residual is drawn as a square. Drag a point to move it, tap an empty spot to add one, drag a point off the chart to delete it, and drag the gold handles up or down to move your line. Below, the bowl: the sum of squared residuals for every slope. Keys: N and P select a point, the arrow keys move it, Delete removes it, A adds one, Y shows or hides your line."></canvas>
+      <div class="lab-hud ec4-hud" id="ec4-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec4-reset" aria-label="Reset the points" title="Reset the points">↺</button>
+      </div>
+      <noscript><p class="ec4-noscript">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Data</h3>
+      <div class="lab-seg" role="group" aria-label="Data sets" id="ec4-pre">
+        <button type="button" data-p="study">Study time</button><button type="button" data-p="ads">Ads and sales</button><button type="button" data-p="outlier">An outlier</button><button type="button" data-p="none">No link</button><button type="button" data-p="line">Perfect line</button>
+      </div>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec4-add">＋ Add a point</button><button type="button" class="lab-btn" id="ec4-del">− Remove one</button></div>
+      <h3>Squares</h3>
+      <div class="lab-seg" role="group" aria-label="Which squares to draw" id="ec4-sq">
+        <button type="button" data-s="ols">OLS</button><button type="button" data-s="yours">Yours</button><button type="button" data-s="both">Both</button><button type="button" data-s="none">Just residuals</button>
+      </div>
+      <label class="lab-chk"><input type="checkbox" id="ec4-user" checked> Draw my own line (gold)</label>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec4-snap">Put my line on the OLS line</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec4-read"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec4-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The pink line</b> is the ordinary least squares (OLS) line. For each point, the vertical gap between the point and the line is a <b>residual</b>, the part of <var>y</var> the line doesn’t explain. Each residual is drawn as a square, so a residual twice as big makes a square four times as big. OLS picks the one line with the smallest total area of squares.</p>
+      <p><b>The gold dashed line</b> is yours. It starts flat at the average of <var>y</var>, which is the best you can do without using <var>x</var> at all. Drag its handles. The panel compares the two sums of squares; you can get as close as you like, but never below.</p>
+      <p><b>The gold cross</b> marks the point of means, (<var>x̄</var>, <var>ȳ</var>). The OLS line always passes through it, however you move the points.</p>
+      <p><b>The bowl</b> at the bottom plots the sum of squared residuals for every slope, using the best intercept for each. It is a parabola, and its lowest point is the OLS slope. Your line is the gold dot: it sits on the bowl when your line passes through the means, and above it otherwise.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="derive">
+    <h2>Deriving the least squares line</h2>
+    <p>From Chapter 1, the population model is <var>y</var> = β₀ + β₁<var>x</var> + <var>u</var>. We have a sample of <var>n</var> points (<var>x</var><sub><var>i</var></sub>, <var>y</var><sub><var>i</var></sub>). Any candidate line <var>b</var>₀ + <var>b</var>₁<var>x</var> leaves residuals <var>y</var><sub><var>i</var></sub> − <var>b</var>₀ − <var>b</var>₁<var>x</var><sub><var>i</var></sub>. Least squares chooses <var>b</var>₀ and <var>b</var>₁ to minimize the sum of their squares:</p>
+    <div class="lab-formula">SSR(<var>b</var>₀, <var>b</var>₁) = Σ<sub><var>i</var>=1</sub><sup><var>n</var></sup> (<var>y</var><sub><var>i</var></sub> − <var>b</var>₀ − <var>b</var>₁<var>x</var><sub><var>i</var></sub>)²</div>
+    <div class="lab-cols">
+      <div>
+        <p><b>Step 1: set the derivatives to zero.</b> Differentiating with respect to <var>b</var>₀ and <var>b</var>₁ and dividing by −2 gives the two <b>first-order conditions</b>:</p>
+        <div class="lab-formula">Σ (<var>y</var><sub><var>i</var></sub> − β̂₀ − β̂₁<var>x</var><sub><var>i</var></sub>) = 0 &nbsp;&nbsp; and &nbsp;&nbsp; Σ <var>x</var><sub><var>i</var></sub>(<var>y</var><sub><var>i</var></sub> − β̂₀ − β̂₁<var>x</var><sub><var>i</var></sub>) = 0</div>
+        <p>In words: the residuals add up to zero, and they are uncorrelated with <var>x</var>. These are exactly the sample versions of the population assumptions E(<var>u</var>) = 0 and E(<var>xu</var>) = 0, which is how Wooldridge derives OLS as a “method of moments” estimator.</p>
+      </div>
+      <div>
+        <p><b>Step 2: solve.</b> The first condition says <var>ȳ</var> = β̂₀ + β̂₁<var>x̄</var>, so β̂₀ = <var>ȳ</var> − β̂₁<var>x̄</var>: the line passes through the means. Put that into the second condition and rearrange (using Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>) = 0):</p>
+        <div class="lab-formula">Σ (<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)(<var>y</var><sub><var>i</var></sub> − <var>ȳ</var>) = β̂₁ Σ (<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)²</div>
+        <p><b>Step 3: check it’s a minimum.</b> SSR is a sum of squares, a bowl-shaped (convex) function of <var>b</var>₀ and <var>b</var>₁, so the point where the slopes are zero is the bottom. That is the bowl at the bottom of the interactive.</p>
+      </div>
+    </div>
+    <div class="u-big">β̂₁ = Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)(<var>y</var><sub><var>i</var></sub> − <var>ȳ</var>) ÷ Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)² = Cov(<var>x</var>, <var>y</var>) ÷ Var(<var>x</var>) &nbsp;&nbsp;&nbsp; β̂₀ = <var>ȳ</var> − β̂₁<var>x̄</var><small>the slope is the sample covariance of <var>x</var> and <var>y</var> over the sample variance of <var>x</var>; it needs some variation in <var>x</var>, or the denominator is zero</small></div>
+    <p>The fitted values are <var>ŷ</var><sub><var>i</var></sub> = β̂₀ + β̂₁<var>x</var><sub><var>i</var></sub> and the residuals are <var>û</var><sub><var>i</var></sub> = <var>y</var><sub><var>i</var></sub> − <var>ŷ</var><sub><var>i</var></sub>. Don’t confuse a residual <var>û</var>, which we compute, with the error <var>u</var>, which we never see: the residual is the gap to the estimated line, the error is the gap to the true one.</p>
+    <div class="u-ex"><b>Worked example: five students, by hand</b>
+      <p>Hours studied <var>x</var> = 1, 2, 3, 4, 5 and exam scores <var>y</var> = 52, 60, 58, 70, 75. Then <var>x̄</var> = 3 and <var>ȳ</var> = 63.</p>
+      <ul>
+        <li>Deviations: <var>x</var> − <var>x̄</var> = −2, −1, 0, 1, 2 and <var>y</var> − <var>ȳ</var> = −11, −3, −5, 7, 12.</li>
+        <li>Σ(<var>x</var> − <var>x̄</var>)(<var>y</var> − <var>ȳ</var>) = 22 + 3 + 0 + 7 + 24 = 56, and Σ(<var>x</var> − <var>x̄</var>)² = 4 + 1 + 0 + 1 + 4 = 10.</li>
+        <li>β̂₁ = 56/10 = <b>5.6 points per hour</b>; β̂₀ = 63 − 5.6 × 3 = <b>46.2</b>.</li>
+        <li>Fitted values 51.8, 57.4, 63.0, 68.6, 74.2; residuals 0.2, 2.6, −5.0, 1.4, 0.8. They add up to 0, as promised.</li>
+        <li>SSR = 0.04 + 6.76 + 25 + 1.96 + 0.64 = 34.4.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="r2">
+    <h2>How well does the line fit? R²</h2>
+    <p>Split the variation in <var>y</var> into the part the line explains and the part it leaves over. With Wooldridge’s names (other books swap the letters, so check):</p>
+    <div class="lab-formula">SST = Σ(<var>y</var><sub><var>i</var></sub> − <var>ȳ</var>)² (total) &nbsp;·&nbsp; SSE = Σ(<var>ŷ</var><sub><var>i</var></sub> − <var>ȳ</var>)² (explained) &nbsp;·&nbsp; SSR = Σ<var>û</var><sub><var>i</var></sub>² (residual) &nbsp;·&nbsp; SST = SSE + SSR</div>
+    <div class="u-big">R² = SSE ÷ SST = 1 − SSR ÷ SST<small>the share of the sample variation in <var>y</var> explained by <var>x</var>; between 0 and 1, and in simple regression equal to the squared correlation <var>r</var>²</small></div>
+    <p>In the five-student example, SST = 121 + 9 + 25 + 49 + 144 = 348 and SSR = 34.4, so R² = 1 − 34.4/348 = <b>0.90</b>. Your flat line at <var>ȳ</var> has SSR = SST, which is why it scores R² = 0: it uses no information from <var>x</var>.</p>
+    <div class="lab-cols">
+      <p><b>A low R² doesn’t make a regression useless.</b> Wages depend on so many things that education alone explains a small share of the differences between people, yet the slope can still be estimated precisely and matter a great deal.</p>
+      <p><b>A high R² doesn’t make it causal.</b> The ice-cream town in Chapter 1 had a high R² and no causal effect at all. R² measures fit, not truth.</p>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> Pick “Ads and sales”, choose “Both” squares, and drag one gold handle. Your squares (gold) grow on one side as they shrink on the other. Press “Put my line on the OLS line”: the two sets of squares become one, and the gold dot drops to the bottom of the bowl.</div>
+  <div class="lab-try"><b>Try this:</b> Pick “An outlier”. One student studied for 9.5 hours and scored 45. That single point drags the slope from about 4 down to 1.3. Drag it up toward the others and watch the line swing. Points far from <var>x̄</var> have the most leverage, because their squares grow fastest when the line tilts.</div>
+
+  <section class="lab-sec" id="units">
+    <h2>Units and interpretation</h2>
+    <p>The slope is measured in units of <var>y</var> per unit of <var>x</var>: “5.6 points per hour of study.” The intercept is the predicted <var>y</var> when <var>x</var> = 0, which may or may not make sense (a person with zero years of schooling, a store with zero square feet). Change the units and the numbers change in a predictable way: measure sales in dollars instead of thousands of dollars and both β̂₀ and β̂₁ are multiplied by 1,000; measure <var>x</var> in minutes instead of hours and β̂₁ is divided by 60. R² doesn’t change at all.</p>
+    <div class="u-ex"><b>Worked example: schooling and earnings, from government data</b>
+      <p>The Bureau of Labor Statistics reports median weekly earnings in 2024 for full-time workers aged 25 and over by education. Giving each level a typical number of years of school:</p>
+      <div class="lab-tw"><table class="lab-table ec4-mini">
+        <thead><tr><th>Education</th><th>Years (<var>x</var>)</th><th>Median weekly earnings (<var>y</var>)</th><th>Fitted <var>ŷ</var></th></tr></thead>
+        <tbody>
+          <tr><td>Less than high school</td><td>10</td><td>$738</td><td>$650</td></tr>
+          <tr><td>High school diploma</td><td>12</td><td>$930</td><td>$934</td></tr>
+          <tr><td>Some college, no degree</td><td>13</td><td>$1,020</td><td>$1,076</td></tr>
+          <tr><td>Associate’s degree</td><td>14</td><td>$1,099</td><td>$1,219</td></tr>
+          <tr><td>Bachelor’s degree</td><td>16</td><td>$1,543</td><td>$1,503</td></tr>
+          <tr><td>Master’s degree</td><td>18</td><td>$1,840</td><td>$1,788</td></tr>
+        </tbody>
+      </table></div>
+      <p>Here <var>x̄</var> = 13.83 and <var>ȳ</var> = $1,195. The sample covariance is 1,161.8 and the sample variance of <var>x</var> is 8.167, so β̂₁ = 1,161.8/8.167 = <b>$142 a week per extra year</b>, and β̂₀ = 1,195 − 142.26 × 13.83 = −$773. R² = 0.97. The intercept, earnings with zero schooling, is far outside the data and means nothing on its own.</p>
+      <p>Three cautions. These are six group medians, not individual workers, so the high R² says nothing about how well schooling predicts any one person’s pay. The line misses a pattern: the jumps at degrees are bigger than at in-between years (Chapter 7 handles that with logs and dummy variables). And as Chapter 1 warned, this is an association; whether a year of school causes $142 more a week is a harder question.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="galton">
+    <h2>Why it’s called “regression”</h2>
+    <p>In the 1880s Francis Galton, a cousin of Charles Darwin, collected the heights of 205 sets of parents and their 928 grown children. To compare men and women, he multiplied every female height by 1.08. He found that unusually tall parents tended to have children who were tall, but less so; unusually short parents had children who were short, but less so. He called this “regression towards mediocrity,” by which he meant toward the average. The name stuck to the method.</p>
+    <div class="u-quote">
+      <p class="u-la">“When Mid-Parents are taller than mediocrity, their Children tend to be shorter than they.”</p>
+      <p class="u-en">Galton’s “mid-parent” is the average of the father’s height and the mother’s height times 1.08. He estimated that the children’s deviations from the average were about two-thirds of their mid-parents’.</p>
+      <cite>Francis Galton, “Regression Towards Mediocrity in Hereditary Stature,” <i>Journal of the Anthropological Institute of Great Britain and Ireland</i> 15 (1886), pp. 246–263, as quoted by J. A. Hanley (2004).</cite>
+    </div>
+
+    <div class="lab-stage ec4-sub" id="ec4g">
+      <div class="lab-view" id="ec4g-view">
+        <canvas id="ec4g-cv" aria-label="Simulated heights of 900 families: parent’s height across, grown child’s height up, in inches. The gold dashed line is child equals parent; the pink line is the regression of child on parent. A green band picks out families; a white dot marks the average of the band, with a dashed line to the child-equals-parent line. Histograms of parents (top) and children (right) show their spreads. Drag across the picture to move the band."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Families</h3>
+        <div class="lab-seg" role="group" aria-label="Data" id="ec4g-set"><button type="button" data-k="fs">Parent and child</button><button type="button" data-k="galton">Galton’s mid-parents</button></div>
+        <div class="lab-seg" role="group" aria-label="Pick by" id="ec4g-ax"><button type="button" data-a="0">Pick parents</button><button type="button" data-a="1">Pick children</button></div>
+        <div class="lab-field"><span><label for="ec4g-c">Height band</label><output id="ec4g-c-o" for="ec4g-c">68–70 in</output></span><input type="range" id="ec4g-c" min="62" max="76" step="0.5" value="68.5"></div>
+        <label class="lab-chk"><input type="checkbox" id="ec4g-rev"> Show the regression of parent on child</label>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec4g-new">🎲 New families</button></div>
+        <dl class="lab-readout" id="ec4g-read" aria-live="polite"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec4g-missions"></ol>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <p><b>What’s going on.</b> A person’s height is partly inherited and partly luck: nutrition, health and the shuffle of genes. Parents who are very tall are, on average, tall partly by luck, and children don’t inherit their parents’ luck. So the children of tall parents are tall, but closer to the average. With a correlation of 0.5 between a parent’s height and a child’s, and equal spreads, the slope of the regression line is exactly 0.5: a parent 4 inches above average has children 2 inches above average, on average.</p>
+      <p><b>The paradox.</b> If every generation regressed toward the middle, wouldn’t everyone end up the same height? No: look at the histograms. The children are just as spread out as the parents, because new luck spreads them out again. And regression runs backward too: tick “Pick children”, choose tall children, and their parents are closer to the average. The regression of parent on child (blue) is not the same line as child on parent (pink). In general the two slopes multiply to <var>r</var>².</p>
+    </div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “Regression to the mean is a force that pulls things to the average”</b>
+    <p>Nothing pulls. Whenever two measurements are imperfectly correlated, the extremes of one will, on average, be less extreme in the other, purely because the luck that made them extreme doesn’t repeat. The danger is mistaking it for an effect. Send a consultant to your ten worst-performing stores this quarter and next quarter they will probably improve, consultant or not. Praise a salesperson after a record month and next month’s sales will probably dip. To know whether the consultant helped, you need a comparison group of bad stores that didn’t get one, the idea of Chapter 1.</p>
+  </div>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history, and the people</h2>
+    <div class="lab-cols">
+      <p><b>Least squares.</b> Adrien-Marie Legendre published the method of least squares in 1805, in an appendix to a book on the orbits of comets: choose the orbit that makes the sum of squared errors smallest. Carl Friedrich Gauss published it in 1809 and claimed he had been using it since 1795, setting off a famous priority dispute. Gauss also connected it to probability: least squares gives the most likely answer when errors follow the normal curve.</p>
+      <p><b>Regression and correlation.</b> Galton’s studies of sweet peas and of human heights in the 1870s and 1880s turned least squares from a tool for astronomers into a way to describe relationships between variables. Karl Pearson formalized the correlation coefficient in the 1890s, and George Udny Yule applied regression to social and economic data around 1900, including studies of poverty relief in England.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <div class="lab-cols">
+      <p><b>Business.</b> How much do sales rise with advertising, or fall with price? What does an extra square foot add to rent? A fitted line gives a first answer and a forecast, as long as you remember Chapter 1: the slope describes the data, and it is causal only under conditions we’ll study in Chapter 5 and beyond.</p>
+      <p><b>Sports.</b> The rookie of the year who has a weaker second season, the star whose magazine cover is followed by a slump: much of that is regression to the mean. An extreme season usually includes extra luck that doesn’t come back.</p>
+      <p><b>Health and policy.</b> People often try a remedy, or a program, when things are at their worst, and things then improve on their own. Studies without a comparison group can mistake regression to the mean for a cure.</p>
+      <p><b>Science.</b> Edwin Hubble’s 1929 plot of galaxies’ speeds against their distances was summed up by a straight line, and its slope, now called the Hubble constant, measures how fast the universe is expanding.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec4-prac">
+      <li><p><b>By hand.</b> Fit the OLS line to the points (1, 3), (2, 5), (3, 4), (4, 8).</p>
+        <details><summary>Show the answer</summary><p><var>x̄</var> = 2.5, <var>ȳ</var> = 5. Deviations: <var>x</var>: −1.5, −0.5, 0.5, 1.5; <var>y</var>: −2, 0, −1, 3. Σ(products) = 3 + 0 − 0.5 + 4.5 = 7; Σ(<var>x</var> − <var>x̄</var>)² = 2.25 + 0.25 + 0.25 + 2.25 = 5. β̂₁ = 7/5 = <b>1.4</b>, β̂₀ = 5 − 1.4 × 2.5 = <b>1.5</b>. So <var>ŷ</var> = 1.5 + 1.4<var>x</var>.</p></details></li>
+      <li><p><b>Residuals and R².</b> For the line in problem 1, find the residuals, check that they sum to zero, and compute R².</p>
+        <details><summary>Show the answer</summary><p>Fitted: 2.9, 4.3, 5.7, 7.1. Residuals: 0.1, 0.7, −1.7, 0.9, which sum to 0. SSR = 0.01 + 0.49 + 2.89 + 0.81 = 4.2. SST = 4 + 0 + 1 + 9 = 14. R² = 1 − 4.2/14 = <b>0.70</b>.</p></details></li>
+      <li><p><b>From summary numbers.</b> For 50 coffee shops, the sample covariance of daily foot traffic and daily revenue is 2,400 (people × dollars), the variance of foot traffic is 1,600 (people²), average traffic is 300 people and average revenue $2,100. Find the regression line and interpret the slope.</p>
+        <details><summary>Show the answer</summary><p>β̂₁ = 2,400/1,600 = <b>$1.50 per visitor</b>; β̂₀ = 2,100 − 1.5 × 300 = <b>$1,650</b>. Each extra visitor goes with $1.50 more revenue, on average. (The intercept, revenue with zero visitors, is outside the data and shouldn’t be taken literally.)</p></details></li>
+      <li><p><b>Changing units.</b> A regression of salary (in dollars) on experience (in years) gives β̂₀ = 42,000 and β̂₁ = 1,800. What are the coefficients if salary is measured in thousands of dollars? If experience is measured in months?</p>
+        <details><summary>Show the answer</summary><p>In thousands: β̂₀ = <b>42</b>, β̂₁ = <b>1.8</b>. In months (salary in dollars): β̂₀ = 42,000 is unchanged and β̂₁ = 1,800/12 = <b>$150 per month</b> of experience. R² is the same in every case.</p></details></li>
+      <li><p><b>Regression to the mean.</b> Heights of parents and grown children both have mean 68.9 inches and standard deviation 3, with correlation 0.5. Predict the height of a child whose parent is 75 inches tall. Then predict the height of a parent whose child is 75 inches tall.</p>
+        <details><summary>Show the answer</summary><p>The slope is <var>r</var> × sd(child)/sd(parent) = 0.5. Child: 68.9 + 0.5 × (75 − 68.9) = <b>71.95 inches</b>. Parent of a 75-inch child: by symmetry also <b>71.95 inches</b>. Both predictions regress toward 68.9. Neither line is the “inverse” of the other.</p></details></li>
+      <li><p><b>R² is r².</b> Show that in simple regression, SSE = β̂₁² Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)², and use it to show that R² equals the squared sample correlation.</p>
+        <details><summary>Show the answer</summary><p><var>ŷ</var><sub><var>i</var></sub> − <var>ȳ</var> = β̂₁(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>), since the line passes through the means. Squaring and summing gives SSE = β̂₁² <var>S</var><sub><var>xx</var></sub>. With β̂₁ = <var>S</var><sub><var>xy</var></sub>/<var>S</var><sub><var>xx</var></sub>: R² = SSE/SST = <var>S</var><sub><var>xy</var></sub>² / (<var>S</var><sub><var>xx</var></sub> <var>S</var><sub><var>yy</var></sub>) = <var>r</var>², where <var>S</var><sub><var>yy</var></sub> = SST.</p></details></li>
+      <li><p><b>Through the origin.</b> Some theories say <var>y</var> = β₁<var>x</var> with no intercept. Derive the least squares slope for that model. When does it equal the usual β̂₁?</p>
+        <details><summary>Show the answer</summary><p>Minimize Σ(<var>y</var><sub><var>i</var></sub> − <var>b</var><var>x</var><sub><var>i</var></sub>)². The first-order condition Σ<var>x</var><sub><var>i</var></sub>(<var>y</var><sub><var>i</var></sub> − <var>b</var><var>x</var><sub><var>i</var></sub>) = 0 gives <b><var>b</var> = Σ<var>x</var><sub><var>i</var></sub><var>y</var><sub><var>i</var></sub> / Σ<var>x</var><sub><var>i</var></sub>²</b>. It equals the usual slope when <var>x̄</var> = 0, or when the usual fitted intercept happens to be exactly zero. Otherwise forcing the line through the origin biases the slope if the true intercept isn’t zero, and the residuals no longer need to sum to zero.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactives work</h2>
+    <div class="lab-cols">
+      <p><b>The line.</b> Every time a point moves, the page recomputes <var>x̄</var>, <var>ȳ</var>, Σ(<var>x</var> − <var>x̄</var>)(<var>y</var> − <var>ȳ</var>) and Σ(<var>x</var> − <var>x̄</var>)², then β̂₁, β̂₀, SSR and R², using the formulas above. Each square’s side is the residual measured in screen pixels on the <var>y</var> scale, so all squares share one scale and their total area is proportional to SSR. The bowl is SSR(<var>b</var>) = SST − 2<var>b</var>·Σ(<var>x</var> − <var>x̄</var>)(<var>y</var> − <var>ȳ</var>) + <var>b</var>²·Σ(<var>x</var> − <var>x̄</var>)², the sum of squares of the line with slope <var>b</var> through (<var>x̄</var>, <var>ȳ</var>). The data sets are made up for the lesson.</p>
+      <p><b>The heights</b> are simulated. “Parent and child”: both normal with mean 68.9 inches (the average for U.S. men, CDC, 2021–2023) and standard deviation 3 inches (an assumption), correlation 0.5. “Galton’s mid-parents”: mid-parents normal with mean 68.3 and standard deviation 1.8, children = 68.3 + ⅔ × (mid-parent − 68.3) + noise with standard deviation 2.19, which reproduces Galton’s two-thirds and a children’s spread of 2.5 inches. They are not Galton’s actual measurements.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests):</p>
+        <ul class="lab-small">
+          <li>The closed-form slope and intercept match the course library’s matrix OLS, (<var>X</var>′<var>X</var>)⁻¹<var>X</var>′<var>y</var>, to 2 × 10⁻¹² on all five data sets and 500 random ones; residuals sum to zero and are orthogonal to <var>x</var> to 10⁻¹³; SST = SSE + SSR and R² = <var>r</var>² exactly.</li>
+          <li>100,000 random lines near the OLS line: none had a smaller sum of squares. The bowl formula matches the direct sum to 10⁻¹².</li>
+          <li>200,000 simulated parent–child pairs: slope 0.501, reverse slope 0.498, both spreads 3.0; parents from 71 to 73 inches (average 71.9) have children averaging 70.4. Galton’s version: slope 0.668, reverse slope 0.345.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>Ordinary least squares chooses the line that minimizes…</p>
+        <ul class="u-opts"><li><button type="button">the sum of the residuals</button></li><li><button type="button">the sum of the squared vertical distances to the points</button></li><li><button type="button">the sum of the perpendicular distances to the points</button></li></ul>
+        <details><summary>Show the answer</summary><p>Squared vertical residuals. (The plain sum of residuals is zero for any line through the means, so it can’t pick one.)</p></details></li>
+      <li class="u-q" data-a="2"><p>The OLS slope equals…</p>
+        <ul class="u-opts"><li><button type="button">Var(<var>x</var>) ÷ Cov(<var>x</var>, <var>y</var>)</button></li><li><button type="button">the correlation of <var>x</var> and <var>y</var></button></li><li><button type="button">Cov(<var>x</var>, <var>y</var>) ÷ Var(<var>x</var>)</button></li></ul>
+        <details><summary>Show the answer</summary><p>β̂₁ = Cov(<var>x</var>, <var>y</var>)/Var(<var>x</var>). It equals the correlation only when <var>x</var> and <var>y</var> have the same standard deviation.</p></details></li>
+      <li class="u-q" data-a="0"><p>The OLS line always passes through…</p>
+        <ul class="u-opts"><li><button type="button">the point (<var>x̄</var>, <var>ȳ</var>)</button></li><li><button type="button">the origin</button></li><li><button type="button">the point with the largest <var>y</var></button></li></ul>
+        <details><summary>Show the answer</summary><p>From the first-order condition: <var>ȳ</var> = β̂₀ + β̂₁<var>x̄</var>.</p></details></li>
+      <li class="u-q" data-a="1"><p>A regression has R² = 0.15. This means…</p>
+        <ul class="u-opts"><li><button type="button">the slope is wrong 85% of the time</button></li><li><button type="button"><var>x</var> explains 15% of the sample variation in <var>y</var></button></li><li><button type="button">the effect of <var>x</var> is small</button></li></ul>
+        <details><summary>Show the answer</summary><p>R² is the explained share of variation. A low R² can go with a large, precisely estimated slope.</p></details></li>
+      <li class="u-q" data-a="2"><p>A company gives a bonus to its 20 lowest-scoring call centers and sees their scores rise next quarter. The best explanation without more data is…</p>
+        <ul class="u-opts"><li><button type="button">the bonus worked</button></li><li><button type="button">the bonus backfired</button></li><li><button type="button">regression to the mean may explain some or all of it</button></li></ul>
+        <details><summary>Show the answer</summary><p>The worst scorers were partly unlucky, and luck doesn’t repeat. A comparison group of low scorers without the bonus is needed.</p></details></li>
+      <li class="u-q" data-a="0"><p>If you measure <var>y</var> in cents instead of dollars, the OLS slope…</p>
+        <ul class="u-opts"><li><button type="button">is multiplied by 100, and R² doesn’t change</button></li><li><button type="button">doesn’t change</button></li><li><button type="button">is divided by 100</button></li></ul>
+        <details><summary>Show the answer</summary><p>Rescaling <var>y</var> rescales both coefficients by the same factor; R² is unit-free.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Chapter 2, sections 2.2 to 2.4 (deriving OLS, its algebraic properties, goodness of fit and units of measurement).</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Chapter 4.</li>
+      <li>OpenStax, <i>Introductory Statistics 2e</i>, <a href="https://openstax.org/books/introductory-statistics-2e/pages/12-3-the-regression-equation" target="_blank" rel="noopener">12.3 The Regression Equation</a>.</li>
+      <li>Penn State, STAT 501 Regression Methods, <a href="https://online.stat.psu.edu/stat501/Lesson01" target="_blank" rel="noopener">Lesson 1: Simple Linear Regression</a>.</li>
+      <li>U.S. Bureau of Labor Statistics, <a href="https://www.bls.gov/careeroutlook/2025/data-on-display/education-pays.htm" target="_blank" rel="noopener">Education pays, 2024</a>. CDC, <a href="https://www.cdc.gov/nchs/fastats/body-measurements.htm" target="_blank" rel="noopener">FastStats: Body Measurements</a>.</li>
+      <li>F. Galton, “Regression Towards Mediocrity in Hereditary Stature,” <i>Journal of the Anthropological Institute of Great Britain and Ireland</i> 15 (1886): 246–263. J. A. Hanley, “‘Transmuting’ Women into Men: Galton’s Family Data on Human Stature,” <i>The American Statistician</i> 58 (2004), <a href="https://stat151a.berkeley.edu/fall-2024/datasets/height/Hanley_Article_Galton_Data.pdf" target="_blank" rel="noopener">copy at UC Berkeley</a>.</li>
+      <li>S. M. Stigler, <i>The History of Statistics: The Measurement of Uncertainty before 1900</i> (Harvard University Press, 1986), on Legendre, Gauss, Galton and Pearson.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/simple-regression/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/simple-regression/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/simple-regression/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/simple-regression/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

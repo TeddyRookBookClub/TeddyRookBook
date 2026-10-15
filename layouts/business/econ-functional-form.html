@@ -1,0 +1,291 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/functional-form/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/functional-form/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec7-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 7</p>
+    <h1>{{ .Title }}</h1>
+    <p>Real relationships bend. Pay grows by percents, not dollars; the hundredth ad dollar sells less than the first; a price cut sells more by a proportion. One trick handles all of it: take logs. Here you’ll fit four models to the same data, watch a curve snap into a straight line when the axes turn logarithmic, read every slope in plain English, play detective on mystery data, find the peak of a career’s earnings, and split one line into two with dummy variables.</p>
+    <span class="lab-mark" aria-hidden="true">〽️</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view ec7-tall" id="ec7-view">
+      <canvas id="ec7-cv" tabindex="0" aria-label="A scatter of simulated data with four fitted models: level–level (blue), log–level (gold), level–log (green) and log–log (pink), the true curve as white dashes, a plain-English reading of the chosen model’s slope, and optionally the chosen model’s residuals below. Tap a model name to choose it. In the experience-profile view, drag across the chart to move the slope marker. Keys: left and right arrows change the model (or move the marker), S straightens the axes, R shows residuals, N draws new data."></canvas>
+      <div class="lab-tools">
+        <button type="button" id="ec7-new2" aria-label="New data" title="New data (N)">🎲</button>
+        <button type="button" id="ec7-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <div class="lab-seg" role="group" aria-label="What to explore" id="ec7-mode">
+        <button type="button" data-mode="four" aria-pressed="true">Four models</button>
+        <button type="button" data-mode="xp" aria-pressed="false">Experience profile</button>
+      </div>
+      <div id="ec7-four">
+        <h3>Data</h3>
+        <div class="lab-seg" role="group" aria-label="Data set" id="ec7-data">
+          <button type="button" data-ds="taxi" aria-pressed="true">🚕 Taxi fares</button>
+          <button type="button" data-ds="wage" aria-pressed="false">💼 Wages</button>
+          <button type="button" data-ds="ads" aria-pressed="false">📣 Ad budgets</button>
+          <button type="button" data-ds="demand" aria-pressed="false">☕ Coffee demand</button>
+          <button type="button" data-ds="mystery" aria-pressed="false">❓ Mystery</button>
+        </div>
+        <h3>Model</h3>
+        <div class="lab-seg" role="group" aria-label="Model" id="ec7-model">
+          <button type="button" data-form="ll" aria-pressed="true">Level–level</button>
+          <button type="button" data-form="lg" aria-pressed="false">Log–level</button>
+          <button type="button" data-form="gl" aria-pressed="false">Level–log</button>
+          <button type="button" data-form="gg" aria-pressed="false">Log–log</button>
+        </div>
+        <div class="lab-field"><span><label for="ec7-eff" id="ec7-eff-l">Effect size</label><output id="ec7-eff-o" for="ec7-eff"></output></span><input type="range" id="ec7-eff" min="1" max="4" step="0.03" value="2.5"></div>
+        <label class="lab-chk"><input type="checkbox" id="ec7-straight"> Straighten the axes for this model</label>
+        <label class="lab-chk"><input type="checkbox" id="ec7-resid"> Show residuals</label>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec7-new">🎲 New data</button></div>
+        <div class="lab-row" id="ec7-mrow" hidden><button type="button" class="lab-btn pri" id="ec7-guess">Lock in</button><button type="button" class="lab-btn" id="ec7-nextm">❓ Next mystery</button></div>
+        <p class="ec7-step" id="ec7-say" aria-live="polite"></p>
+        <div class="lab-tw"><table class="lab-table ec7-tab" id="ec7-read"></table></div>
+      </div>
+      <div id="ec7-xp" hidden>
+        <h3>Experience profile</h3>
+        <div class="lab-field"><span><label for="ec7-peak">True peak of the wage profile</label><output id="ec7-peak-o" for="ec7-peak"></output></span><input type="range" id="ec7-peak" min="10" max="80" step="1" value="25"></div>
+        <div class="lab-field"><span><label for="ec7-at">Slope marker at</label><output id="ec7-at-o" for="ec7-at"></output></span><input type="range" id="ec7-at" min="0" max="40" step="0.5" value="10"></div>
+        <label class="lab-chk"><input type="checkbox" id="ec7-lin" checked> Show the straight-line fit</label>
+        <dl class="lab-readout" id="ec7-xread"></dl>
+      </div>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec7-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>One data set, four models.</b> Each data set is simulated from a known rule: taxi fares grow by a fixed amount per mile (level–level), pay grows by a fixed percent per year of school (log–level), sales grow by a fixed amount each time the ad budget doubles (level–log), and coffee sales fall by a fixed percent for each percent the price rises (log–log). All four models are fitted every time, and the chosen one is drawn thick. The white dashes show the true curve.</p>
+      <p><b>The plain-English box.</b> Each model’s slope means something different, and the box at the top of the chart says what, with today’s numbers. Move the effect-size slider and watch the sentence change.</p>
+      <p><b>Straighten the axes.</b> Tick the box and the axes the model takes logs of turn logarithmic. If the model is right, the cloud slides into a straight band around a straight line. That is what “linear in parameters” means: the model is a straight line in the right coordinates.</p>
+      <p><b>Residuals and the table.</b> A wrong model leaves a pattern in its residuals: the white line through them bends. The right one leaves a flat, patternless band. The table compares fit with R² computed in the original units for all four models, because R² for log <var>y</var> and for <var>y</var> measure different things and can’t be compared directly.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="logs">
+    <h2>Logs: percent changes and elasticities</h2>
+    <p>The natural log has one property that makes it the economist’s favorite function: a small change in log(<var>y</var>) is approximately the proportional change in <var>y</var>.</p>
+    <div class="u-big">Δlog(<var>y</var>) ≈ Δ<var>y</var>/<var>y</var> &nbsp;&nbsp; so &nbsp;&nbsp; 100·Δlog(<var>y</var>) ≈ %Δ<var>y</var><small>the change in the natural log, times 100, is about the percent change; the approximation is good for changes up to about 10%</small></div>
+    <p>So putting logs on one or both sides of a regression changes what the slope measures:</p>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Model</th><th>Equation</th><th>Reading of β₁</th><th>Typical use</th></tr></thead>
+      <tbody>
+        <tr><th>Level–level</th><td><var>y</var> = β₀ + β₁<var>x</var> + <var>u</var></td><td>Δ<var>y</var> = β₁Δ<var>x</var>: one more unit of <var>x</var>, β₁ more units of <var>y</var></td><td>Fares per mile, output per worker-hour</td></tr>
+        <tr><th>Log–level</th><td>log(<var>y</var>) = β₀ + β₁<var>x</var> + <var>u</var></td><td>%Δ<var>y</var> ≈ (100β₁)Δ<var>x</var>: one more unit of <var>x</var>, about 100β₁ percent more <var>y</var></td><td>Wages and years of school (a “semi-elasticity”)</td></tr>
+        <tr><th>Level–log</th><td><var>y</var> = β₀ + β₁log(<var>x</var>) + <var>u</var></td><td>Δ<var>y</var> ≈ (β₁/100)%Δ<var>x</var>: 1% more <var>x</var>, β₁/100 more units of <var>y</var></td><td>Diminishing returns to ad spending</td></tr>
+        <tr><th>Log–log</th><td>log(<var>y</var>) = β₀ + β₁log(<var>x</var>) + <var>u</var></td><td>%Δ<var>y</var> ≈ β₁%Δ<var>x</var>: β₁ is the elasticity</td><td>Demand and price, output and inputs</td></tr>
+      </tbody>
+    </table></div>
+    <div class="lab-cols">
+      <div>
+        <p><b>When 100·β is not good enough.</b> For a change in log(<var>y</var>) of size β̂Δ<var>x</var>, the exact percent change in <var>y</var> is</p>
+        <div class="lab-formula">%Δ<var>ŷ</var> = 100·[exp(β̂₁Δ<var>x</var>) − 1]</div>
+        <p>For β̂₁ = 0.05 that is 5.13%, close to 5%. For β̂₁ = 0.25 it is 28.4%, not 25%. For dummy variables in log models, where Δ<var>x</var> = 1 is never “small,” always use the exact form (Halvorsen and Palmquist pointed this out in 1980).</p>
+      </div>
+      <div class="u-ex"><b>Worked example: what a bachelor’s degree is worth, in percent</b>
+        <p>The Bureau of Labor Statistics reports that in 2025 the median full-time worker aged 25 and over with a bachelor’s degree earned $1,578 a week, against $966 for a high school diploma.</p>
+        <ol>
+          <li>Log difference: ln(1,578) − ln(966) = ln(1.634) = <b>0.491</b>.</li>
+          <li>The shortcut “100 × 0.491” says 49% more.</li>
+          <li>The exact gap is exp(0.491) − 1 = 1,578/966 − 1 = <b>63.4%</b> more.</li>
+        </ol>
+        <p>For a gap this large, the shortcut understates by 14 percentage points. (These are raw medians, not causal effects: Chapters 6 and 10 explain why.)</p>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: an elasticity and revenue</b>
+      <p>A coffee roaster estimates log(pounds) = 9.0 − 1.4·log(price). The elasticity is −1.4: a 1% higher price sells about 1.4% fewer pounds.</p>
+      <ol>
+        <li>A 10% price rise: the shortcut says 14% fewer pounds; exactly, 1.10<sup>−1.4</sup> − 1 = −12.5%.</li>
+        <li>Revenue = price × quantity changes by 1.10 × 0.875 − 1 = <b>−3.7%</b>. With demand more elastic than −1, raising the price lowers revenue.</li>
+        <li>At an elasticity of exactly −1, revenue doesn’t change with price. Try the “Unit elastic” mission.</li>
+      </ol>
+    </div>
+    <div class="lab-cols">
+      <p><b>When to take logs.</b> Logs suit positive variables that are skewed and grow by proportions: wages, prices, sales, firm size, population. Logged coefficients don’t depend on units (dollars or thousands of dollars give the same elasticity), and logging often tames outliers and uneven spread. Variables measured in years, or already in percents or proportions (an unemployment rate), are usually left in levels. You can’t take the log of zero or a negative number.</p>
+      <p><b>Predicting <var>y</var> from a log model.</b> exp(fitted log <var>y</var>) predicts the median, not the mean, of <var>y</var>. If the errors are normal with variance σ², the mean is exp(σ²/2) times larger. And never compare R² from a log(<var>y</var>) regression with R² from a <var>y</var> regression: they explain different things. Compare fits in the same units, as the table in the simulation does with the squared correlation between <var>y</var> and its prediction.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Choose Coffee demand, tick “Show residuals” and step through the four models. The level–level residuals form a smile: the model misses the curve at both ends. Log–log leaves a flat band. Then tick “Straighten the axes” on log–log.</div>
+    <div class="lab-try"><b>Try this:</b> Choose Wages and push the return to 25% a year. The sentence in the box now shows a gap of several points between 100·β̂ and the exact percent.</div>
+  </section>
+
+  <section class="lab-sec" id="quad">
+    <h2>Quadratics and turning points</h2>
+    <div class="lab-cols">
+      <div>
+        <p>Pay rises fast early in a career, then flattens and may dip. A straight line can’t do that; adding a squared term can:</p>
+        <div class="lab-formula"><var>y</var> = β₀ + β₁<var>x</var> + β₂<var>x</var>² + <var>u</var> &nbsp;&nbsp; Δ<var>ŷ</var> ≈ (β̂₁ + 2β̂₂<var>x</var>)Δ<var>x</var></div>
+        <p>The effect of <var>x</var> now depends on where you start. If β̂₁ &gt; 0 and β̂₂ &lt; 0 the curve is a hill whose top is at</p>
+        <div class="lab-formula"><var>x</var>* = −β̂₁ / (2β̂₂)</div>
+        <p>A turning point is only meaningful if it lies inside the data. If few people in the sample are beyond it, the “decline” after the peak is mostly the shape of a parabola, not evidence.</p>
+      </div>
+      <div class="u-ex"><b>Worked example: the peak of a pay profile</b>
+        <p>Suppose ŵage = 14.00 + 1.12·exper − 0.0224·exper² (the true curve in the simulation’s default).</p>
+        <ol>
+          <li>Turning point: 1.12 / (2 × 0.0224) = <b>25 years</b>.</li>
+          <li>At 5 years, one more year adds 1.12 − 2(0.0224)(5) = $0.90 an hour.</li>
+          <li>At 20 years it adds 1.12 − 0.896 = $0.22. At 30 years it subtracts $0.22.</li>
+          <li>Predicted wage at the peak: 14 + 1.12(25) − 0.0224(625) = $28.00.</li>
+        </ol>
+      </div>
+    </div>
+    <p>Jacob Mincer’s earnings equation, the most estimated equation in labor economics, combines this chapter’s tools: log(wage) = β₀ + β₁·school + β₂·exper + β₃·exper² + <var>u</var>. It is log–level in schooling and quadratic in experience.</p>
+  </section>
+
+  <section class="lab-sec" id="dummies">
+    <h2>Dummy variables and interactions</h2>
+    <div class="lab-cols">
+      <div>
+        <p>A <b>dummy variable</b> is 1 or 0: union member or not, treated or not, December or not. In <var>wage</var> = β₀ + β₁<var>exper</var> + δ₀<var>union</var> + <var>u</var>, δ₀ is the difference in expected wage between union and nonunion workers with the same experience. Graphically it shifts the intercept: two parallel lines.</p>
+        <p><b>Categories.</b> With <var>g</var> categories (four regions, say), include <var>g</var> − 1 dummies and an intercept. The left-out category is the <i>base group</i>, and each dummy’s coefficient is a difference from it. Include all <var>g</var> and the dummies add up to the intercept column: perfect collinearity, the <b>dummy-variable trap</b>.</p>
+      </div>
+      <div>
+        <p>An <b>interaction</b> lets a slope differ by group. Adding δ₁(<var>union</var> × <var>exper</var>) gives</p>
+        <div class="lab-formula">nonunion: E(wage) = β₀ + β₁·exper &nbsp;&nbsp; union: E(wage) = (β₀ + δ₀) + (β₁ + δ₁)·exper</div>
+        <p>δ₀ is the union gap at zero experience and δ₁ the difference in slopes. The gap at any experience level is δ₀ + δ₁·exper. Interactions of two continuous variables work the same way: in <var>y</var> = β₀ + β₁<var>x</var>₁ + β₂<var>x</var>₂ + β₃<var>x</var>₁<var>x</var>₂, the effect of <var>x</var>₁ is β₁ + β₃<var>x</var>₂, so β₁ alone is the effect at <var>x</var>₂ = 0.</p>
+      </div>
+    </div>
+    <div class="lab-stage" id="ec7b">
+      <div class="lab-view ec7-mid" id="ec7b-view">
+        <canvas id="ec7b-cv" tabindex="0" aria-label="Hourly wage against experience for union members (gold) and nonunion workers (blue), with the fitted lines of the chosen model and arrows showing the gap at 0 and 25 years of experience."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Model</h3>
+        <div class="lab-seg" role="group" aria-label="Model" id="ec7b-model">
+          <button type="button" data-m="pooled" aria-pressed="false">One line</button>
+          <button type="button" data-m="dummy" aria-pressed="false">+ dummy</button>
+          <button type="button" data-m="inter" aria-pressed="true">+ interaction</button>
+        </div>
+        <div class="lab-field"><span><label for="ec7b-d0">True union gap at 0 years (δ₀)</label><output id="ec7b-d0-o" for="ec7b-d0"></output></span><input type="range" id="ec7b-d0" min="-4" max="6" step="0.5" value="4"></div>
+        <div class="lab-field"><span><label for="ec7b-d1">True slope difference (δ₁)</label><output id="ec7b-d1-o" for="ec7b-d1"></output></span><input type="range" id="ec7b-d1" min="-0.3" max="0.3" step="0.02" value="-0.16"></div>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec7b-new">🎲 New workers</button><button type="button" class="lab-btn" id="ec7b-trap" aria-pressed="false">Add a nonunion dummy too</button></div>
+        <p class="ec7-step" id="ec7b-say" aria-live="polite"></p>
+        <div class="lab-tw"><table class="lab-table ec7-tab" id="ec7b-read"></table></div>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec7b-missions"></ol>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <p><b>Testing whether two groups need separate lines.</b> Gregory Chow’s test (1960) compares one pooled line with separate lines for each group. With SSR<sub>P</sub> from the pooled regression and SSR₁ + SSR₂ from separate regressions, each with <var>k</var> + 1 parameters:</p>
+      <div class="lab-formula"><var>F</var> = {[SSR<sub>P</sub> − (SSR₁ + SSR₂)] / (<var>k</var> + 1)} / {(SSR₁ + SSR₂) / [<var>n</var> − 2(<var>k</var> + 1)]}</div>
+      <p>It is the same as the <var>F</var> test that the dummy and all its interactions are zero in one regression. In the simulation, <var>k</var> = 1 and <var>n</var> = 140, so <var>F</var> has 2 and 136 degrees of freedom. The test assumes the error variance is the same in both groups.</p>
+      <div class="u-ex"><b>Worked example: a Chow test by hand</b>
+        <p>Pooled SSR = 1,200; union SSR = 500; nonunion SSR = 520; <var>n</var> = 140, one slope each. <var>F</var> = [(1,200 − 1,020)/2] / [1,020/136] = 90 / 7.5 = <b>12.0</b>. The 1% critical value of <var>F</var>(2, 136) is about 4.8, so the groups clearly need separate lines.</p>
+      </div>
+    </div>
+    <div class="u-myth"><b>Common mistake: “a dummy coefficient of 0.40 in a log-wage equation means 40% more pay”</b>
+      <p>For a jump of a whole unit (0 to 1), the log approximation is poor. The exact difference is exp(0.40) − 1 = 49%. For a negative coefficient of −0.30, it is exp(−0.30) − 1 = −25.9%, not −30%. A second mistake: reading δ₀ in an interaction model as “the union premium.” It is the gap at zero experience only; the gap at 25 years is δ₀ + 25δ₁, which can have the opposite sign.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>Logarithms</b> were published by John Napier in 1614 to speed up astronomers’ multiplication. Three centuries later they became the language of proportional change in economics.</p>
+      <p><b>Elasticity</b> as a measure of how responsive demand is to price was set out by Alfred Marshall in his <i>Principles of Economics</i> (1890). In 1928 Charles Cobb and Paul Douglas fitted a production function that is linear in logs, log(output) = constant + α·log(labor) + β·log(capital), whose coefficients are elasticities.</p>
+      <p><b>The earnings equation.</b> Jacob Mincer’s 1974 book <i>Schooling, Experience, and Earnings</i> made log wages, years of school and a quadratic in experience the standard way to study pay.</p>
+      <p><b>Testing for different lines.</b> Gregory Chow published his test for equality of coefficients in two regressions in <i>Econometrica</i> in 1960. Robert Halvorsen and Raymond Palmquist’s two-page 1980 note in the <i>American Economic Review</i> corrected the habit of reading dummy coefficients in log models as percents.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where it shows up</h2>
+    <div class="lab-cols">
+      <p><b>Pricing.</b> Price elasticities drive pricing. In textbook monopoly pricing, price over marginal cost equals ε/(1 + ε) for an elasticity ε below −1. Costco caps its markup on branded goods at about 14% over cost (see the <a href="{{ "business/cases/costco-wages-membership/" | relURL }}">Costco case</a>); under that textbook rule, a 14% markup would go with an elasticity of about −8. Costco instead chose thin markups as a strategy to sell memberships, which shows the limits of a one-line rule.</p>
+      <p><b>Marketing mix.</b> Models of sales against ad spending almost always use logs of spending, so that each doubling of the budget, not each dollar, adds a fixed amount: diminishing returns.</p>
+      <p><b>Growth and finance.</b> Growth rates are differences of logs: a series that grows 3% a year is a straight line on a log scale. Investors use log returns because they add up over time. (Nothing on this page is financial or investment advice.)</p>
+      <p><b>Policy.</b> Minimum-wage, tax and trade studies report elasticities: of employment to the wage, of taxable income to the tax rate, of imports to the exchange rate. Dummies and interactions measure whether a policy’s effect differs between groups or regions.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec7-prac">
+      <li><p><span class="ec7-lvl">Warm-up</span> In log(wage) = 0.58 + 0.062·educ, what does 0.062 mean? Give the approximate and exact percent.</p>
+        <details><summary>Show the answer</summary><div><p>One more year of school goes with about 6.2% higher wages; exactly 100·[exp(0.062) − 1] = 6.4%.</p></div></details></li>
+      <li><p><span class="ec7-lvl">Warm-up</span> In log(sales) = 7.1 − 0.8·log(price), what happens to sales if the price rises 5%?</p>
+        <details><summary>Show the answer</summary><div><p>The elasticity is −0.8, so sales fall about 0.8 × 5 = 4%. Exactly: 1.05<sup>−0.8</sup> − 1 = −3.8%. Demand is inelastic (|ε| &lt; 1), so revenue rises: 1.05 × 0.962 − 1 = +1.0%.</p></div></details></li>
+      <li><p><span class="ec7-lvl">Core</span> Monthly sales ($ thousands) = 150 + 40·log(ad spending). How much do sales rise when the ad budget goes from $10,000 to $20,000? From $50,000 to $51,000?</p>
+        <details><summary>Show the answer</summary><div><p>Doubling: 40 × ln 2 = 27.7, so about $27,700. From 50 to 51 (a 2% rise): 40 × ln(1.02) = 0.79, about $790. The shortcut β₁/100 per 1% gives 2 × 0.40 = 0.80, nearly the same.</p></div></details></li>
+      <li><p><span class="ec7-lvl">Core</span> In a log-wage regression the coefficient on a dummy for working part time is −0.30. By what percent do part-time workers earn less, other things equal?</p>
+        <details><summary>Show the answer</summary><div><p>100·[exp(−0.30) − 1] = −25.9%. Reading it as −30% overstates the gap by about 4 points.</p></div></details></li>
+      <li><p><span class="ec7-lvl">Core</span> ŵage = 5 + 0.60·exper − 0.012·exper². Find the turning point and the effect of one more year at 10 years of experience.</p>
+        <details><summary>Show the answer</summary><div><p>Turning point: 0.60/(2 × 0.012) = 25 years. At 10 years: 0.60 − 2 × 0.012 × 10 = $0.36 an hour.</p></div></details></li>
+      <li><p><span class="ec7-lvl">Core</span> A firm sells in four regions: North, South, East and West. An analyst puts an intercept and dummies for all four regions in a sales regression. What happens? Fix it, and say what the coefficient on South then means.</p>
+        <details><summary>Show the answer</summary><div><p>The four dummies add to 1 for every observation, which equals the intercept column: the dummy-variable trap. Drop one region, say North. The South coefficient is then the expected difference in sales between South and North, holding the other regressors fixed.</p></div></details></li>
+      <li><p><span class="ec7-lvl">Challenge</span> Pooled SSR = 2,400; the two groups’ separate regressions give SSR = 1,050 and 1,110; <var>n</var> = 200 and each regression has an intercept and two slopes. Compute the Chow statistic.</p>
+        <details><summary>Show the answer</summary><div><p><var>k</var> + 1 = 3. <var>F</var> = [(2,400 − 2,160)/3] / [2,160/(200 − 6)] = 80 / 11.13 = <b>7.19</b>, with 3 and 194 degrees of freedom. The 1% critical value is about 3.9, so reject equal coefficients.</p></div></details></li>
+      <li><p><span class="ec7-lvl">Challenge</span> In price = β₀ + β₁·sqft + β₂·age + β₃·(sqft × age), the estimates are β̂₁ = 120, β̂₃ = −1.5, with sqft in hundreds of square feet and age in years. What is the effect of 100 more square feet for a new house, and for a 40-year-old house? Why might you center age before running the regression?</p>
+        <details><summary>Show the answer</summary><div><p>The effect of sqft is β₁ + β₃·age: $120 for a new house and 120 − 1.5 × 40 = $60 for a 40-year-old one (in the units of price). β̂₁ by itself is the effect at age 0. Centering age (subtracting its mean) makes β̂₁ the effect at the average age, which is easier to report, and doesn’t change the fit.</p></div></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The data.</b> All data are simulated with a known truth (120 points each). Taxi fares: fare = 3.50 + rate × miles + noise (sd $1.60), trips of 0.5 to 20 miles. Wages: pay = 20·exp(<var>r</var>·(school − 12) + 0.3<var>u</var>), school 8 to 20 years. Ad budgets: sales = 150 + θ·log(ads) + 15<var>u</var>, with ad spending spread evenly on a log scale from $1,000 to $100,000. Coffee demand: pounds = 300·(price/12)<sup>ε</sup>·exp(0.2<var>u</var>), price $6 to $30. Mysteries draw one of the four forms with random strength. The experience profile is wage = 14 + 14·(2·exper/<var>P</var> − exper²/<var>P</var>²) + 3.5<var>u</var> for 150 workers with 0 to 40 years of experience, so the true peak is at <var>P</var>. The union data are 140 workers, half in a union.</p>
+      <p><b>The estimates.</b> Every model is ordinary least squares from the site’s shared statistics library, with the variables transformed first. Fitted curves for log(<var>y</var>) models are drawn as exp(fitted value). “R² in levels” is the squared correlation between <var>y</var> and that prediction, so all four models are compared in the same units.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, all passed):</p>
+        <ul class="lab-small">
+          <li>Over 1,000 samples each, the true model’s slope averaged 2.5008 (truth 2.5) for taxis, 0.0802 (0.08) for wages, 40.03 (40) for ads and −1.3988 (−1.4) for demand.</li>
+          <li>In 389 of 400 mystery data sets, the true form had the best fit in levels.</li>
+          <li>The estimated turning point had a median of 25.02 years over 1,000 samples with a true peak at 25; β̂₁ + 2β̂₂<var>x</var> matched a numerical derivative.</li>
+          <li>The Chow <var>F</var> from the interacted model equaled the <var>F</var> from two separate regressions to about 10⁻¹³, and with no true difference it rejected in 4.5% of 2,000 samples at the 5% level.</li>
+          <li>Log–log and level–log coefficients and standard errors matched NumPy to 12 or more digits.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>In log(<var>y</var>) = β₀ + 0.05<var>x</var>, one more unit of <var>x</var> goes with…</p>
+        <ul class="u-opts"><li><button type="button">0.05 more units of <var>y</var></button></li><li><button type="button">about 5% more <var>y</var></button></li><li><button type="button">0.05% more <var>y</var></button></li></ul>
+        <details><summary>Show the answer</summary><p>Log–level: %Δ<var>y</var> ≈ 100 × 0.05 = 5% (exactly 5.13%).</p></details></li>
+      <li class="u-q" data-a="2"><p>In log(<var>Q</var>) = β₀ + 0.8·log(<var>K</var>), a 10% increase in capital <var>K</var> goes with…</p>
+        <ul class="u-opts"><li><button type="button">0.8 more units of output</button></li><li><button type="button">80% more output</button></li><li><button type="button">about 8% more output</button></li></ul>
+        <details><summary>Show the answer</summary><p>Log–log: β₁ is the elasticity, so 0.8 × 10% = 8%.</p></details></li>
+      <li class="u-q" data-a="0"><p>In <var>y</var> = β₀ + 50·log(<var>x</var>), a 1% increase in <var>x</var> goes with…</p>
+        <ul class="u-opts"><li><button type="button">0.5 more units of <var>y</var></button></li><li><button type="button">50 more units of <var>y</var></button></li><li><button type="button">50% more <var>y</var></button></li></ul>
+        <details><summary>Show the answer</summary><p>Level–log: Δ<var>y</var> ≈ (β₁/100)·%Δ<var>x</var> = 50/100 = 0.5.</p></details></li>
+      <li class="u-q" data-a="1"><p>A regression has an intercept and a variable with three categories (small, medium, large). How many dummies should it include?</p>
+        <ul class="u-opts"><li><button type="button">Three</button></li><li><button type="button">Two</button></li><li><button type="button">One</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>g</var> − 1 = 2. Including all three falls into the dummy-variable trap; the left-out category is the base group.</p></details></li>
+      <li class="u-q" data-a="2"><p>In wage = β₀ + β₁·exper + δ₀·union + δ₁·union·exper, what is δ₁?</p>
+        <ul class="u-opts"><li><button type="button">The union wage premium</button></li><li><button type="button">The return to experience for union members</button></li><li><button type="button">How much more a year of experience is worth for union members than for others</button></li></ul>
+        <details><summary>Show the answer</summary><p>δ₁ is the difference in slopes. Union members’ slope is β₁ + δ₁; the gap between groups is δ₀ + δ₁·exper.</p></details></li>
+      <li class="u-q" data-a="0"><p>A fitted profile is ŵage = 10 + 0.8·exper − 0.02·exper². Where does it peak?</p>
+        <ul class="u-opts"><li><button type="button">20 years</button></li><li><button type="button">40 years</button></li><li><button type="button">16 years</button></li></ul>
+        <details><summary>Show the answer</summary><p>−β̂₁/(2β̂₂) = 0.8/0.04 = 20 years.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020): Section 2-4 (functional forms with logs), Chapter 6 (logs, quadratics, interaction terms, predicting <var>y</var> from log <var>y</var>, comparing R²) and Chapter 7 (dummy variables, interactions and the Chow test).</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Chapter 8 (Nonlinear Regression Functions).</li>
+      <li>U.S. Bureau of Labor Statistics, <a href="https://www.bls.gov/careeroutlook/2026/data-on-display/education-pays.htm" target="_blank" rel="noopener">Education pays, 2025</a> (Career Outlook): median usual weekly earnings of full-time wage and salary workers aged 25 and over, from the Current Population Survey.</li>
+      <li>Penn State STAT 501, <a href="https://online.stat.psu.edu/stat501/Lesson08" target="_blank" rel="noopener">Lesson 8: Categorical Predictors</a> and <a href="https://online.stat.psu.edu/stat501/lesson/9/9.1" target="_blank" rel="noopener">9.1: Log-transforming Only the Predictor</a>.</li>
+      <li>G. C. Chow, “Tests of Equality Between Sets of Coefficients in Two Linear Regressions,” <i>Econometrica</i> 28(3), 1960, 591–605.</li>
+      <li>R. Halvorsen and R. Palmquist, “The Interpretation of Dummy Variables in Semilogarithmic Equations,” <i>American Economic Review</i> 70(3), 1980, 474–475.</li>
+      <li>J. Mincer, <i>Schooling, Experience, and Earnings</i> (National Bureau of Economic Research, 1974). C. W. Cobb and P. H. Douglas, “A Theory of Production,” <i>American Economic Review</i> 18(1), Supplement, 1928, 139–165.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/functional-form/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/functional-form/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/functional-form/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/functional-form/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

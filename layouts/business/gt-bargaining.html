@@ -1,0 +1,206 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/bargaining/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/bargaining/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt11-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 11</p>
+    <h1>{{ .Title }}</h1>
+    <p>A buyer and a seller, a union and a firm, two business partners: whenever two sides can both gain from a deal, they still have to agree on how to split the gain. Who gets more? Here you’ll haggle over a $100 pie with computer opponents who differ in one thing only, how much they mind waiting. You’ll see why the patient side wins, why making the first offer helps, and why a deadline changes everything. Then you’ll find John Nash’s answer to the same question by drawing a rectangle.</p>
+    <span class="lab-mark" aria-hidden="true">🤲</span>
+  </header>
+
+  <div class="lab-stage gt11-main">
+    <div class="lab-view" id="gt11-view">
+      <canvas id="gt11-cv" tabindex="0" aria-label="Bargaining over a pie. Left: the pie, your share in gold and the bot's in its own color; on your turn, drag the edge of your slice to set your offer. The pie shrinks each round to show what a deal is worth to you in today's money. Right: a log of each round's offer, response and the bot's reasoning. Bottom: a chart of your equilibrium share for each level of your patience. Keys: Enter makes your offer or accepts the bot's, R rejects, the arrow keys change your offer."></canvas>
+      <div class="lab-hud" id="gt11-hud" aria-hidden="true"></div>
+      <div class="lab-tools"><button type="button" id="gt11-reset" aria-label="New game" title="New game">↺</button></div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="gt11-bot-h">Opponent</h3>
+      <div class="lab-seg" id="gt11-bot" role="group" aria-labelledby="gt11-bot-h">
+        <button type="button" data-b="hal">Hasty Hal · 0.60</button><button type="button" data-b="sam">Steady Sam · 0.90</button><button type="button" data-b="pat">Patient Pat · 0.97</button>
+      </div>
+      <label class="lab-field"><span>Your patience δ₁ ($1 next round is worth δ₁ now) <output id="gt11-d1-o"></output></span><input type="range" id="gt11-d1" min="0.3" max="0.99" step="0.01" aria-label="Your patience: what a dollar next round is worth to you today"></label>
+      <h3 id="gt11-first-h">Who makes the first offer</h3>
+      <div class="lab-seg" id="gt11-first" role="group" aria-labelledby="gt11-first-h"><button type="button" data-f="1">You</button><button type="button" data-f="2">The bot</button></div>
+      <h3 id="gt11-T-h">Rounds before the deal is off</h3>
+      <div class="lab-seg" id="gt11-T" role="group" aria-labelledby="gt11-T-h"><button type="button" data-t="1">1</button><button type="button" data-t="2">2</button><button type="button" data-t="3">3</button><button type="button" data-t="5">5</button><button type="button" data-t="inf">No limit</button></div>
+      <label class="lab-field" id="gt11-keep-row"><span>You keep <output id="gt11-keep-o"></output></span><input type="range" id="gt11-keep" min="0" max="100" step="0.1" aria-label="Your share of the pie in your offer, percent"></label>
+      <div class="gt11-acts"><button type="button" class="lab-btn pri" id="gt11-act">Offer</button><button type="button" class="lab-btn" id="gt11-rej" hidden>Reject</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="gt11-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt11-missions"></ol>
+    </div>
+    <section class="lab-sec gt11-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The game.</b> You and a bot take turns proposing how to split $100. If the responder accepts, that’s the deal. If not, a round passes and the responder becomes the proposer. With a limit on rounds, a rejection in the last round ends the game with nothing for either side.</p>
+        <p><b>Patience.</b> Waiting costs something. A share received one round later is worth only δ (delta) times as much today: with δ = 0.9, $1 next round is worth 90¢ now, $1 two rounds later 81¢. Hasty Hal has δ = 0.6, so he hates waiting; Patient Pat has 0.97. The pie on the left shrinks each round to show what it’s worth to you in today’s money.</p>
+        <p><b>The bots</b> play the subgame perfect equilibrium. As responders, they accept any offer at least as good as what they could get by rejecting and proposing next round, discounted by their δ. As proposers, they offer you exactly what you could get by rejecting, and keep the rest. The log tells you their reasoning in numbers.</p>
+        <p><b>The chart</b> shows Rubinstein’s formula: your equilibrium share for every level of your patience, against this opponent. The solid line is for when you propose first, the dashed line for when the bot does. The pink dot appears when there is a round limit.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="rubinstein"><h2>Alternating offers: Rubinstein’s answer</h2>
+    <p>In 1982 Ariel Rubinstein solved this game with no limit on rounds. Look for a pair of numbers: <var>x</var><sub>1</sub>, what player 1 keeps when she proposes, and <var>x</var><sub>2</sub>, what player 2 keeps when he proposes. When player 1 proposes, player 2 must be offered at least what he could get by rejecting: <var>x</var><sub>2</sub> next round, worth δ<sub>2</sub><var>x</var><sub>2</sub> today. Offering more is wasteful and offering less gets rejected, so 1 − <var>x</var><sub>1</sub> = δ<sub>2</sub><var>x</var><sub>2</sub>. By the same reasoning, 1 − <var>x</var><sub>2</sub> = δ<sub>1</sub><var>x</var><sub>1</sub>. Solve the two equations:</p>
+    <div class="u-big"><var>x</var><sub>1</sub> = (1 − δ<sub>2</sub>) / (1 − δ<sub>1</sub>δ<sub>2</sub>)<small>the share the first proposer keeps in the unique subgame perfect equilibrium; the other player accepts at once</small></div>
+    <p>Rubinstein proved that this is the <i>only</i> subgame perfect equilibrium, even though the game could go on forever and players could in principle use complicated strategies. Three lessons come straight out of the formula:</p>
+    <div class="u-key">
+      <div><b>No delay</b><p>The first offer is accepted. Waiting only shrinks the pie, so in equilibrium nobody wastes time.</p></div>
+      <div><b>Patience is power</b><p>Raise δ<sub>1</sub> and your share rises; make your opponent more patient and it falls. The side that can afford to wait does better.</p></div>
+      <div><b>First-mover advantage</b><p>With equal patience δ, the proposer keeps 1/(1 + δ), a bit more than half. The advantage shrinks as δ → 1.</p></div>
+    </div>
+    <div class="u-ex"><b>Worked example: three opponents</b>
+      <p>Your δ is 0.9 and you propose first.</p>
+      <ol><li>Against Steady Sam (δ<sub>2</sub> = 0.9): <var>x</var><sub>1</sub> = 0.1/(1 − 0.81) = 0.526. You keep $52.63, Sam accepts $47.37.</li>
+        <li>Against Hasty Hal (δ<sub>2</sub> = 0.6): <var>x</var><sub>1</sub> = 0.4/(1 − 0.54) = 0.870. You keep $86.96 and Hal accepts $13.04. Why so little? If he rejected, he would propose next round and keep (1 − 0.9)/(1 − 0.54) = 21.7%, but to Hal that is worth only 0.6 × 21.7% = 13.0% today.</li>
+        <li>Against Patient Pat (δ<sub>2</sub> = 0.97): <var>x</var><sub>1</sub> = 0.03/(1 − 0.873) = 0.236. Even though you move first, you keep only $23.62.</li></ol>
+    </div>
+    <h3 class="lab-h">Deadlines and backward induction</h3>
+    <p>With a fixed number of rounds, solve from the end, as in <a href="{{ "business/game-theory/sequential-games/" | relURL }}">Chapter 6</a>. In the last round, the proposer offers nothing and the responder accepts (anything beats nothing): that’s the ultimatum game. One round earlier, the proposer must offer the other player what they’d get as last-round proposer, discounted. Ingolf Ståhl worked out this finite version in 1972. As the number of rounds grows, the answer settles down to Rubinstein’s.</p>
+    <div class="u-ex"><b>Worked example: three rounds</b>
+      <p>δ<sub>1</sub> = 0.9, δ<sub>2</sub> = 0.8, you propose in rounds 1 and 3. Round 3: you keep 100%. Round 2: the bot must offer you 0.9 × 100% = 90%, so it keeps 10%. Round 1: you must offer the bot 0.8 × 10% = 8%, so you keep 92%. With no limit, you would keep 71.4%: the deadline helps whoever proposes last.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> set 1 round and propose: the bot accepts even 0.1%. Then 2 rounds: now it’s the bot who holds the last offer, and your best is to keep only 1 − δ<sub>2</sub>. Step through 3 and 5 rounds and watch the pink dot on the chart close in on the solid line.</div>
+    <p><b>Shorter rounds.</b> If offers can be made every Δ units of time and player <var>i</var> discounts at rate <var>r</var><sub><var>i</var></sub>, then δ<sub><var>i</var></sub> = e<sup>−<var>r</var><sub><var>i</var></sub>Δ</sup>. As Δ shrinks to zero, the first-mover advantage disappears and player 1’s share becomes</p>
+    <div class="lab-formula"><var>x</var><sub>1</sub> → <var>r</var><sub>2</sub> / (<var>r</var><sub>1</sub> + <var>r</var><sub>2</sub>) &nbsp;·&nbsp; equal impatience gives an even split; a player half as impatient as the other gets two thirds</div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “Bargaining power comes from saying no”</b>
+    <p>In the equilibrium, nobody ever says no. Every rejection just shrinks the pie for both sides. Power comes from what each side would lose by waiting and from what each could do instead. A negotiator who rejects a fair offer to look tough is not using power, only burning value, unless the rejection changes what the other side believes (a story for games with incomplete information, like those in <a href="{{ "business/game-theory/incomplete-information/" | relURL }}">Chapter 8</a>).</p>
+  </div>
+
+  <section class="lab-sec" id="nash"><h2>The Nash bargaining solution</h2>
+    <p>In 1950, John Nash took a completely different approach. Instead of modeling the haggling, he asked what any sensible agreement should look like, and wrote down four conditions:</p>
+    <ul>
+      <li><b>Efficiency:</b> no deal that both prefer is left on the table.</li>
+      <li><b>Symmetry:</b> if the two sides are in identical positions, they get the same.</li>
+      <li><b>Invariance:</b> measuring someone’s payoff in cents instead of dollars, or adding a constant to it, doesn’t change the deal.</li>
+      <li><b>Independence of irrelevant alternatives:</b> if the agreement would be chosen from a large set of possible deals, it is still chosen when some of the other deals become impossible.</li>
+    </ul>
+    <p>He proved that exactly one rule satisfies all four. Call the payoffs if talks fail the <b>disagreement point</b> <var>d</var> = (<var>d</var><sub>1</sub>, <var>d</var><sub>2</sub>). Then:</p>
+    <div class="u-big">maximize (<var>u</var><sub>1</sub> − <var>d</var><sub>1</sub>) × (<var>u</var><sub>2</sub> − <var>d</var><sub>2</sub>) over all possible deals<small>the Nash bargaining solution: the deal with the largest product of the two sides’ gains over disagreement</small></div>
+    <p>Geometrically, it’s the biggest rectangle you can draw with one corner at <var>d</var> and the opposite corner on the edge of the set of possible deals. Drag the blue deal along the edge below and watch its rectangle grow and shrink; the gold one is the largest.</p>
+    <div class="lab-stage wide gt11-mini" id="gt11-nview">
+      <div class="lab-view"><canvas id="gt11-nc" tabindex="0" aria-label="The set of possible deals, with your gain across and your partner's gain up. The blue curve is the edge of what's possible. The white dot is the disagreement point, which you can drag or move with the arrow keys. The gold dot is the Nash solution, with its rectangle of gains shaded and the matching curve of equal products dashed. The blue dot can be dragged along the edge to compare its rectangle. An optional pink dot shows the Kalai–Smorodinsky solution."></canvas></div>
+      <div class="lab-panel gt11-row">
+        <div class="lab-seg" id="gt11-fr" role="group" aria-label="Kind of deal">
+          <button type="button" data-fr="split">Split $100</button><button type="button" data-fr="risk">A risk-averse partner</button><button type="button" data-fr="curve">A curved deal set</button>
+        </div>
+        <label class="lab-field gt11-grow"><span>Your bargaining power, β <output id="gt11-beta-o"></output></span><input type="range" id="gt11-beta" min="0.1" max="0.9" step="0.05" aria-label="Your bargaining power, from 0.1 to 0.9"></label>
+        <label class="lab-chk"><input type="checkbox" id="gt11-ks"> Show Kalai–Smorodinsky</label>
+        <button type="button" class="lab-btn" id="gt11-nreset">Reset</button>
+        <dl class="lab-readout gt11-grow" id="gt11-nread"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: a partner who dislikes risk</b>
+      <p>You and a partner split $100. You value money as it is; your partner, who dislikes risk, values a share <var>s</var> of the pie at 100√<var>s</var> “utils”. If you take <var>x</var> dollars, the product of gains is <var>x</var> × 100√(1 − <var>x</var>/100). Its slope is zero where 2(100 − <var>x</var>) = <var>x</var>, so <var>x</var> = $66.67. The risk-averse partner gets $33.33. Rubinstein’s game gives the same tilt: a player who fears the deal collapsing settles for less. Pick “A risk-averse partner” to see it.</p>
+    </div>
+    <h3 class="lab-h">Outside options, two ways</h3>
+    <p>With a disagreement point of (20, 10) when splitting $100, the Nash solution gives each side its disagreement payoff plus half of what’s left: (55, 45). Better alternatives mean a bigger share. But what kind of alternative? Ken Binmore, Ariel Rubinstein and Asher Wolinsky (1986) showed that it depends on its timing. If <var>d</var> is what you receive <i>while</i> talks drag on (a striking worker’s strike pay, the rent a landlord collects while negotiating), it acts as the disagreement point. If it’s an option you can walk away to, like another buyer, Rubinstein’s game says it matters only if it’s worth more than what you would get anyway; then you get exactly the outside option. This is called the <b>outside option principle</b>, and experiments by Binmore, Avner Shaked and John Sutton (1989) supported it.</p>
+    <div class="u-ex"><b>Worked example: selling a house</b>
+      <p>A seller would part with her house for $250,000; a buyer would pay up to $300,000. The $50,000 of possible gains split evenly gives a price of $275,000.</p>
+      <ul><li>Another buyer offers $260,000. As an option the seller could take <i>instead</i> of this deal, it is worth $10,000 of gain to her, less than the $25,000 she gets anyway. By the outside option principle, the price stays at $275,000.</li>
+        <li>If the other offer were $285,000, it would bind: the seller gets $35,000 of gain and the price rises to $285,000.</li>
+        <li>Treating the $10,000 as a disagreement point instead would give the seller 10,000 + 40,000/2 = $30,000 of gain, a price of $280,000. The two models disagree here, and which is right depends on the situation.</li></ul>
+    </div>
+    <p><b>Bargaining power.</b> The “generalized” Nash solution maximizes (<var>u</var><sub>1</sub> − <var>d</var><sub>1</sub>)<sup>β</sup>(<var>u</var><sub>2</sub> − <var>d</var><sub>2</sub>)<sup>1−β</sup>. On a straight frontier, player 1 simply gets the share β of the gains. Binmore, Rubinstein and Wolinsky showed that Rubinstein’s game with very short rounds gives exactly this, with β = <var>r</var><sub>2</sub>/(<var>r</var><sub>1</sub> + <var>r</var><sub>2</sub>): the axioms and the haggling agree. In 1975 Ehud Kalai and Meir Smorodinsky proposed a different solution that replaces independence of irrelevant alternatives with a monotonicity condition: each side gets the same fraction of the most it could hope for. Tick “Show Kalai–Smorodinsky” on the curved deal set to see the two disagree.</p>
+  </section>
+
+  <section class="lab-sec" id="lessons"><h2>What it says about real negotiations</h2>
+    <p>These models are about perfectly informed, perfectly rational negotiators, so they don’t tell anyone how to negotiate. But a few of their lessons line up with what practitioners teach and what experiments find:</p>
+    <ul>
+      <li><b>Know your alternative.</b> Roger Fisher and William Ury’s <i>Getting to Yes</i> (1981) tells negotiators to know their BATNA, their best alternative to a negotiated agreement. In the models, that’s the disagreement point or outside option, and it shapes the deal.</li>
+      <li><b>Delay is costly to both sides.</b> Strikes, lockouts and long standoffs destroy value. In the complete-information models they never happen; in real life they happen when each side is unsure how strong the other is.</li>
+      <li><b>Deadlines concentrate minds.</b> In laboratory experiments reported by Alvin Roth, Keith Murnighan and Françoise Schoumaker (1988), a large share of agreements came in the final seconds before the deadline.</li>
+      <li><b>Fairness matters to people.</b> In ultimatum-game experiments, starting with Werner Güth, Rolf Schmittberger and Bernd Schwarze (1982), many responders reject small offers that would leave them better off than nothing, and many proposers offer close to half. The models count only money; people don’t.</li>
+      <li><b>Valuations differ.</b> In 2000, Netflix’s founders offered to sell their company to Blockbuster for $50 million and were turned down; see <a href="{{ "business/cases/netflix-blockbuster/" | relURL }}">Netflix, Blockbuster and the Offer That Was Turned Down</a>. A deal needs both sides to see gains from trade, and they often disagree about how big the pie is.</li>
+    </ul>
+    <p class="lab-small">These models are for learning, not advice for any particular negotiation or investment.</p>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A little history</h2>
+    <div class="lab-cols">
+      <p><b>John Nash</b> began “The Bargaining Problem” (<i>Econometrica</i>, 1950) from an idea in an international economics course he took as an undergraduate at the Carnegie Institute of Technology. In 1953 he showed in “Two-Person Cooperative Games” how the same solution could arise from a noncooperative game, starting what is now called the Nash program.</p>
+      <p><b>Ariel Rubinstein</b>’s “Perfect Equilibrium in a Bargaining Model” (<i>Econometrica</i>, 1982) gave the Nash program its most famous result. Ingolf Ståhl’s 1972 book <i>Bargaining Theory</i> had solved the version with a deadline. Rubinstein and Martin Osborne wrote the textbook <i>Bargaining and Markets</i> (1990).</p>
+      <p><b>Ehud Kalai</b> and <b>Meir Smorodinsky</b> published “Other Solutions to Nash’s Bargaining Problem” in <i>Econometrica</i> in 1975.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <p class="gt11-prob"><b>1.</b> Both players have δ = 0.8, no deadline. What does the first proposer keep?</p>
+    <details class="gt11-ans"><summary>Show the answer</summary><p>1/(1 + 0.8) = 0.556, so $55.56 of $100. The responder accepts $44.44, which equals 0.8 × $55.56, what they’d get by proposing next round.</p></details>
+    <p class="gt11-prob"><b>2.</b> δ<sub>1</sub> = 0.95 and δ<sub>2</sub> = 0.75, player 1 proposes first. Find both players’ shares, and player 2’s share if player 2 proposes first.</p>
+    <details class="gt11-ans"><summary>Show the answer</summary><p><var>x</var><sub>1</sub> = 0.25/(1 − 0.7125) = 0.870, so player 2 gets 0.130. If player 2 proposes first, he keeps (1 − 0.95)/(1 − 0.7125) = 0.174, and player 1 gets 0.826. Patience matters far more than moving first here.</p></details>
+    <p class="gt11-prob"><b>3.</b> Three rounds, δ<sub>1</sub> = 0.9, δ<sub>2</sub> = 0.7, player 1 proposes in rounds 1 and 3. Find the round-1 split by backward induction.</p>
+    <details class="gt11-ans"><summary>Show the answer</summary><p>Round 3: player 1 keeps 1. Round 2: player 2 must offer 0.9, keeping 0.1. Round 1: player 1 must offer 0.7 × 0.1 = 0.07, keeping 0.93.</p></details>
+    <p class="gt11-prob"><b>4.</b> Two partners split $100. If they fail to agree, one gets $20 and the other $10. Find the Nash bargaining solution.</p>
+    <details class="gt11-ans"><summary>Show the answer</summary><p>Maximize (<var>x</var> − 20)(100 − <var>x</var> − 10). The slope is zero where 90 − <var>x</var> = <var>x</var> − 20, so <var>x</var> = 55. The split is (55, 45): each gets their disagreement payoff plus half of the remaining $70.</p></details>
+    <p class="gt11-prob"><b>5.</b> Show that the Nash solution gives a risk-averse partner with utility 100√<var>s</var> (for a share <var>s</var> of $100) exactly $33.33, and explain the intuition.</p>
+    <details class="gt11-ans"><summary>Show the answer</summary><p>Maximize <var>x</var>√(1 − <var>x</var>/100). The derivative of its log is 1/<var>x</var> − 1/(2(100 − <var>x</var>)), zero at <var>x</var> = 200/3 ≈ 66.67. The partner gets 33.33. Each extra dollar matters less to a risk-averse partner when she has a lot, so the product of gains is maximized by giving her less. Bargaining models predict that whoever fears a breakdown most gives up the most.</p></details>
+    <p class="gt11-prob"><b>6.</b> In the house example, the seller’s other buyer offers $270,000. What price does the outside option principle predict? What does treating the offer as a disagreement point predict?</p>
+    <details class="gt11-ans"><summary>Show the answer</summary><p>The option gives the seller $20,000 of gain, less than the $25,000 she gets in the even split, so by the outside option principle the price stays $275,000. As a disagreement point: 20,000 + (50,000 − 20,000)/2 = $35,000 for the seller, a price of $285,000.</p></details>
+    <p class="gt11-prob"><b>7.</b> (Harder) Let δ<sub><var>i</var></sub> = e<sup>−<var>r</var><sub><var>i</var></sub>Δ</sup>. Show that player 1’s Rubinstein share tends to <var>r</var><sub>2</sub>/(<var>r</var><sub>1</sub> + <var>r</var><sub>2</sub>) as Δ → 0, and that this is the generalized Nash solution with β = <var>r</var><sub>2</sub>/(<var>r</var><sub>1</sub> + <var>r</var><sub>2</sub>) when splitting a pie.</p>
+    <details class="gt11-ans"><summary>Show the answer</summary><p><var>x</var><sub>1</sub> = (1 − e<sup>−<var>r</var><sub>2</sub>Δ</sup>)/(1 − e<sup>−(<var>r</var><sub>1</sub>+<var>r</var><sub>2</sub>)Δ</sup>). For small Δ, 1 − e<sup>−<var>a</var>Δ</sup> ≈ <var>a</var>Δ, so <var>x</var><sub>1</sub> → <var>r</var><sub>2</sub>Δ/((<var>r</var><sub>1</sub> + <var>r</var><sub>2</sub>)Δ) = <var>r</var><sub>2</sub>/(<var>r</var><sub>1</sub> + <var>r</var><sub>2</sub>). On the frontier <var>u</var><sub>2</sub> = 1 − <var>u</var><sub>1</sub> with <var>d</var> = 0, maximizing β ln <var>u</var><sub>1</sub> + (1 − β) ln(1 − <var>u</var><sub>1</sub>) gives β/<var>u</var><sub>1</sub> = (1 − β)/(1 − <var>u</var><sub>1</sub>), so <var>u</var><sub>1</sub> = β. With β = <var>r</var><sub>2</sub>/(<var>r</var><sub>1</sub> + <var>r</var><sub>2</sub>), the two answers match. Our test with <var>r</var><sub>1</sub> = 0.05 and <var>r</var><sub>2</sub> = 0.1 gave 0.683, 0.668 and 0.66668 for Δ = 1, 0.1 and 0.001, closing in on 2/3.</p></details>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The bots</b> compute the subgame perfect equilibrium for the current settings. With no deadline they use Rubinstein’s formula; with a deadline of <var>T</var> rounds they solve backward from round <var>T</var>. As responders they accept an offer if it gives them at least their discounted value of proposing next round (within 0.05 points, to allow for rounding); as proposers they offer you exactly your discounted value of proposing next round. Your payoff is your share times δ<sub>1</sub> raised to the number of rounds that passed.</p>
+      <p><b>The Nash panel</b> finds the solution by scanning the frontier in 2,000 steps and then narrowing in with a ternary search. The Kalai–Smorodinsky point is found by bisection along the line from <var>d</var> to the ideal point.</p>
+      <p><b>What’s simplified.</b> Both sides know everything about each other, including patience. Real negotiations involve uncertainty about the other side, which is exactly what produces delays and strikes in more advanced models.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests, run before the page was built):</p>
+        <ul class="lab-small">
+          <li>Rubinstein shares: 0.5263 for δ = 0.9 each; 0.7143 for (0.9, 0.8); 0.9302 for (0.95, 0.6). For three pairs of δ’s, the shares satisfy both equilibrium equations to 10<sup>−12</sup>.</li>
+          <li>Deadlines with (0.9, 0.8): the first proposer keeps 1, 0.2, 0.92, 0.576 and 0.71436 with 1, 2, 3, 10 and 51 rounds; with 201 rounds the share matches 0.71429 to 10<sup>−6</sup>.</li>
+          <li>The responder is offered exactly its reservation value for horizons of 3, 6 and no limit; a scan over all offers in steps of 0.001 found no profitable deviation for the proposer.</li>
+          <li>Nash: (50, 50) and (55, 45) for splitting $100 from (0, 0) and (20, 10); 66.6667 for the risk-averse partner; on the curved set from (10, 20), the product 2,245.78 matches a grid search to 0.001. The generalized solution with β = <var>r</var><sub>2</sub>/(<var>r</var><sub>1</sub> + <var>r</var><sub>2</sub>) matches the Rubinstein limit to 10<sup>−5</sup>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>In Rubinstein’s game with no deadline, when is agreement reached in equilibrium?</p>
+        <ul class="u-opts"><li><button type="button">After many rounds of tough offers</button></li><li><button type="button">Immediately, on the first offer</button></li><li><button type="button">Never</button></li><li><button type="button">Only if both are equally patient</button></li></ul>
+        <details><summary>Show the answer</summary><p>The proposer offers exactly what the responder would get by waiting, and the responder accepts. Delay would only shrink the pie.</p></details></li>
+      <li class="u-q" data-a="2"><p>Both players have δ = 0.9. What does the first proposer keep?</p>
+        <ul class="u-opts"><li><button type="button">50%</button></li><li><button type="button">90%</button></li><li><button type="button">About 52.6%</button></li><li><button type="button">About 47.4%</button></li></ul>
+        <details><summary>Show the answer</summary><p>1/(1 + 0.9) ≈ 0.526.</p></details></li>
+      <li class="u-q" data-a="0"><p>With a one-round deadline (an ultimatum), what does the proposer get in the subgame perfect equilibrium?</p>
+        <ul class="u-opts"><li><button type="button">Essentially everything</button></li><li><button type="button">Half</button></li><li><button type="button">Nothing</button></li></ul>
+        <details><summary>Show the answer</summary><p>The responder prefers any positive amount to nothing, so the proposer can keep almost all of it. (Real people often reject such offers, as experiments show.)</p></details></li>
+      <li class="u-q" data-a="3"><p>The Nash bargaining solution chooses the deal that maximizes:</p>
+        <ul class="u-opts"><li><button type="button">The sum of the two payoffs</button></li><li><button type="button">The smaller of the two payoffs</button></li><li><button type="button">Player 1’s payoff</button></li><li><button type="button">The product of the two gains over the disagreement point</button></li></ul>
+        <details><summary>Show the answer</summary><p>Maximize (<var>u</var><sub>1</sub> − <var>d</var><sub>1</sub>)(<var>u</var><sub>2</sub> − <var>d</var><sub>2</sub>): the largest rectangle from <var>d</var> to the frontier.</p></details></li>
+      <li class="u-q" data-a="1"><p>By the outside option principle, when does an alternative offer you could walk away to change the deal?</p>
+        <ul class="u-opts"><li><button type="button">Always, a little</button></li><li><button type="button">Only when it’s worth more than what you’d get without it</button></li><li><button type="button">Never</button></li></ul>
+        <details><summary>Show the answer</summary><p>A threat to leave for something worse than your equilibrium share isn’t credible, so it changes nothing. If the option is better, you get exactly the option.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 16, “Bargaining”.</li>
+      <li>M. J. Osborne and A. Rubinstein, <i>Bargaining and Markets</i> (Academic Press, 1990), chapters 2–4.</li>
+      <li>J. F. Nash, “The Bargaining Problem”, <i>Econometrica</i> 18(2), 155–162 (1950); “Two-Person Cooperative Games”, <i>Econometrica</i> 21(1), 128–140 (1953).</li>
+      <li>A. Rubinstein, “Perfect Equilibrium in a Bargaining Model”, <i>Econometrica</i> 50(1), 97–109 (1982); I. Ståhl, <i>Bargaining Theory</i> (Stockholm School of Economics, 1972).</li>
+      <li>K. Binmore, A. Rubinstein and A. Wolinsky, “The Nash Bargaining Solution in Economic Modelling”, <i>RAND Journal of Economics</i> 17(2), 176–188 (1986); K. Binmore, A. Shaked and J. Sutton, “An Outside Option Experiment”, <i>Quarterly Journal of Economics</i> 104(4), 753–770 (1989).</li>
+      <li>E. Kalai and M. Smorodinsky, “Other Solutions to Nash’s Bargaining Problem”, <i>Econometrica</i> 43(3), 513–518 (1975).</li>
+      <li>A. E. Roth, J. K. Murnighan and F. Schoumaker, “The Deadline Effect in Bargaining: Some Experimental Evidence”, <i>American Economic Review</i> 78(4), 806–823 (1988); W. Güth, R. Schmittberger and B. Schwarze, “An Experimental Analysis of Ultimatum Bargaining”, <i>Journal of Economic Behavior and Organization</i> 3(4), 367–388 (1982).</li>
+      <li>R. Fisher and W. Ury, <i>Getting to Yes: Negotiating Agreement Without Giving In</i> (Houghton Mifflin, 1981).</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2012/" target="_blank" rel="noopener">14.12 Economic Applications of Game Theory</a>, lecture on bargaining.</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Rubinstein_bargaining_model" target="_blank" rel="noopener">Rubinstein bargaining model</a>, <a href="https://en.wikipedia.org/wiki/Cooperative_bargaining" target="_blank" rel="noopener">Cooperative bargaining</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/bargaining/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/bargaining/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/bargaining/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/bargaining/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

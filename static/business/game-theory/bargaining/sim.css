@@ -1,0 +1,76 @@
+/* Game Theory, Chapter 11 (Bargaining): only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css).
+   The first part is shared by chapters 8 to 14; the chapter's own rules follow it. */
+#gt11-lab .lab-view canvas:focus{outline:none}
+#gt11-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt11-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt11-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);color:var(--sim-acc)}
+#gt11-lab .lab-hud{max-width:calc(100% - 9.5rem)}
+#gt11-lab .lab-seg button{min-height:36px}
+#gt11-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#gt11-lab .lab-chk{min-height:36px;cursor:pointer}
+#gt11-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#gt11-lab .lab-btn{min-height:38px}
+#gt11-lab .lab-missions li button{min-height:36px;padding:.3rem .8rem}
+#gt11-lab .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#gt11-lab .lab-readout dd{white-space:normal;max-width:10.5rem;overflow-wrap:break-word}
+#gt11-lab .lab-toast{top:4.4rem}
+#gt11-lab .gt11-off{opacity:.5}
+#gt11-lab .gt11-acts{display:flex;flex-wrap:wrap;gap:.4rem}
+#gt11-lab .gt11-acts .lab-btn{flex:1 1 auto}
+/* the smaller simulations in the lesson */
+#gt11-lab .gt11-mini{margin:.9rem 0 1rem}
+#gt11-lab .gt11-mini .lab-view{height:400px;min-height:0}
+#gt11-lab .gt11-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1rem}
+#gt11-lab .gt11-row>*{min-width:0}
+#gt11-lab .gt11-grow{flex:1 1 240px}
+#gt11-lab .gt11-row>.lab-seg{flex:1 1 100%}
+#gt11-lab .gt11-row .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#gt11-lab .gt11-row .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#gt11-lab .gt11-win{animation:gt11win 1.2s ease-out}
+@keyframes gt11win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#gt11-lab .lab-sec ul{padding-left:1.3rem}
+#gt11-lab .lab-src{overflow-wrap:anywhere}
+#gt11-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+/* practice problems */
+#gt11-lab .gt11-prob{margin:.9rem 0 .2rem}
+#gt11-lab .gt11-prob b:first-child{color:var(--acc)}
+#gt11-lab details.gt11-ans{margin:.3rem 0 .9rem;padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+#gt11-lab details.gt11-ans summary{cursor:pointer;font-weight:600;color:var(--acc);min-height:28px}
+#gt11-lab details.gt11-ans>*:last-child{margin-bottom:0}
+#gt11-lab details.gt11-ans p{margin:.4rem 0 0}
+/* inline diagrams follow the page theme */
+#gt11-lab .gt11-svg{display:block;max-width:100%;height:auto;margin:.6rem auto}
+#gt11-lab .gt11-svg text{fill:var(--ink);font:13px system-ui,sans-serif}
+#gt11-lab .gt11-svg .mut{fill:var(--muted)}
+#gt11-lab .gt11-svg .ln{stroke:var(--muted);fill:none;stroke-width:1.5}
+#gt11-lab .gt11-svg .bx{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+#gt11-lab .gt11-svg .nat{fill:var(--soft);stroke:var(--acc);stroke-width:1.5}
+#gt11-lab .gt11-svg .acc{stroke:var(--acc);fill:none;stroke-width:2.5}
+#gt11-lab .gt11-svg .accf{fill:var(--acc)}
+#gt11-lab .gt11-svg .gold{stroke:var(--gold);fill:none;stroke-width:2.5}
+#gt11-lab .gt11-svg .goldf{fill:var(--gold)}
+#gt11-lab .gt11-tbl{width:auto;min-width:min(100%,360px)}
+#gt11-lab .gt11-tbl td,#gt11-lab .gt11-tbl th{text-align:center}
+@media (max-width:860px){
+  #gt11-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+}
+@media (max-width:600px){
+  #gt11-lab .lab-hud{max-width:calc(100% - 1.2rem);top:3.2rem}
+  #gt11-lab .lab-toast{top:7.4rem;font-size:.82rem;max-width:84%}
+  #gt11-lab .gt11-mini .lab-view{height:520px}
+}
+@media (prefers-reduced-motion:reduce){#gt11-lab .gt11-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#gt11-lab .gt11-main{grid-template-rows:auto 1fr}
+#gt11-lab .gt11-main>.lab-view{grid-column:1;grid-row:1}
+#gt11-lab .gt11-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#gt11-lab .gt11-main>.gt11-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#gt11-lab .gt11-main{grid-template-rows:none}#gt11-lab .gt11-main>.lab-view,#gt11-lab .gt11-main>.lab-panel,#gt11-lab .gt11-main>.gt11-under{grid-column:auto;grid-row:auto}}
+/* this chapter */
+#gt11-lab #gt11-view{height:min(78vh,680px);min-height:640px}
+#gt11-lab #gt11-act{min-height:46px;font-size:1rem}
+#gt11-lab #gt11-nview .lab-view{height:470px}
+@media (max-width:600px){
+  #gt11-lab #gt11-view{height:780px}
+  #gt11-lab #gt11-nview .lab-view{height:400px}
+}

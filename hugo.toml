@@ -13,22 +13,13 @@ summaryLength = 30
 
 # Menu: the first five show in the bar; entries with params.more go under "More".
 [[menu.main]]
-name = "Infographics"
-url = "/infographics/"
+name = "Homeschool"
+url = "/homeschool/"
 weight = 1
 [menu.main.params]
 group = "Education"
-note = "One-page guides to great books and big ideas"
-icon = "🖼"
-
-[[menu.main]]
-name = "Videos"
-url = "/videos/"
-weight = 1
-[menu.main.params]
-group = "Education"
-note = "Walk-throughs and talks, with short trailers"
-icon = "🎬"
+note = "Lessons, planner and practice for every subject"
+icon = "🏫"
 
 [[menu.main]]
 name = "Languages"
@@ -40,37 +31,66 @@ note = "Koine Greek and Latin: flashcards, drills, readers"
 icon = "🏛"
 
 [[menu.main]]
-name = "Homeschool"
-url = "/homeschool/"
-weight = 3
-[menu.main.params]
-group = "Education"
-note = "Lessons, planner and practice for every subject"
-icon = "🏫"
-
-[[menu.main]]
 name = "Science Lab"
 identifier = "science-lab-edu"
 url = "/science-lab/"
 weight = 3
 [menu.main.params]
 group = "Education"
-note = "Simulations: orbits, rockets, circuits, atoms, light and more"
+note = "Simulations and deep dives: fusion, Newton’s laws, heat and more"
 icon = "⚛️"
 
 [[menu.main]]
 name = "Sign Language (ASL)"
 url = "/asl/"
-weight = 3
+weight = 4
 [menu.main.params]
 group = "Education"
 note = "A family path to ASL, fingerspelling practice, free lessons"
 icon = "🤟"
 
 [[menu.main]]
+name = "Econometrics"
+identifier = "econ-edu"
+url = "/business/econometrics/"
+weight = 5
+[menu.main.params]
+group = "Education"
+note = "A full course, from probability to causal inference"
+icon = "📈"
+
+[[menu.main]]
+name = "Game Theory"
+identifier = "gt-edu"
+url = "/business/game-theory/"
+weight = 6
+[menu.main.params]
+group = "Education"
+note = "A full course in strategy, from dilemmas to auctions"
+icon = "♟️"
+
+[[menu.main]]
+name = "Infographics"
+url = "/infographics/"
+weight = 7
+[menu.main.params]
+group = "Education"
+note = "One-page guides to great books and big ideas"
+icon = "🖼"
+
+[[menu.main]]
+name = "Videos"
+url = "/videos/"
+weight = 8
+[menu.main.params]
+group = "Education"
+note = "Walk-throughs and talks, with short trailers"
+icon = "🎬"
+
+[[menu.main]]
 name = "Library"
 url = "/books/"
-weight = 4
+weight = 9
 [menu.main.params]
 group = "Education"
 note = "Guides to the great books"
@@ -79,7 +99,7 @@ icon = "📚"
 [[menu.main]]
 name = "Free Books"
 url = "/free-books/"
-weight = 5
+weight = 10
 [menu.main.params]
 group = "Education"
 note = "Find free e-books and audiobooks"
@@ -88,7 +108,7 @@ icon = "📖"
 [[menu.main]]
 name = "Reading Paths"
 url = "/books/paths/"
-weight = 6
+weight = 11
 [menu.main.params]
 group = "Education"
 note = "Guided routes through the Library"
@@ -97,7 +117,7 @@ icon = "🧭"
 [[menu.main]]
 name = "Timeline"
 url = "/timeline/"
-weight = 7
+weight = 12
 [menu.main.params]
 group = "Education"
 note = "The ancient world, era by era"
@@ -106,7 +126,7 @@ icon = "⏳"
 [[menu.main]]
 name = "Resources"
 url = "/resources/"
-weight = 8
+weight = 13
 [menu.main.params]
 group = "Education"
 note = "Free resources elsewhere"
@@ -115,7 +135,7 @@ icon = "🔗"
 [[menu.main]]
 name = "My Progress"
 url = "/progress/"
-weight = 9
+weight = 14
 [menu.main.params]
 group = "Education"
 note = "Lessons taught and words met, save or load"
@@ -124,115 +144,53 @@ icon = "✅"
 [[menu.main]]
 name = "What's New"
 url = "/new/"
-weight = 10
+weight = 15
 [menu.main.params]
 group = "Education"
 note = "Latest infographics, games and tools"
 icon = "✨"
 
 [[menu.main]]
-name = "Business Cases"
-url = "/business/cases/"
-weight = 10
-[menu.main.params]
-group = "Business"
-note = "Real company stories and the lessons they teach"
-icon = "💼"
-
-[[menu.main]]
-name = "Your Tax Receipt"
-url = "/business/tax-receipt/"
-weight = 11
-[menu.main.params]
-group = "Business"
-note = "See what your income tax paid for"
-icon = "🧾"
-
-[[menu.main]]
-name = "Markets & Economy"
-url = "/markets/"
-weight = 12
-[menu.main.params]
-group = "Business"
-note = "Charts, indicators and calculators"
-icon = "📈"
-
-[[menu.main]]
-name = "Stock Screener"
-url = "/markets/screener/"
-weight = 13
-[menu.main.params]
-group = "Business"
-note = "Filter stocks by the numbers"
-icon = "🔎"
-
-[[menu.main]]
-name = "Stock Chart"
-url = "/markets/chart/"
-weight = 14
-[menu.main.params]
-group = "Business"
-note = "Price history for any stock"
-icon = "📉"
-
-[[menu.main]]
-name = "Economic Data"
-url = "/markets/indicators/"
-weight = 15
-[menu.main.params]
-group = "Business"
-note = "Jobs, inflation, growth and more"
-icon = "📊"
-
-[[menu.main]]
-name = "Economic Calendar"
-url = "/markets/calendar/"
-weight = 16
-[menu.main.params]
-group = "Business"
-note = "Upcoming reports and releases"
-icon = "📅"
-
-[[menu.main]]
-name = "Treasuries"
-url = "/markets/rates/"
-weight = 17
-[menu.main.params]
-group = "Business"
-note = "The yield curve, rates and auctions"
-icon = "🏦"
-
-[[menu.main]]
-name = "Calculators & Links"
-url = "/markets/tools/"
-weight = 18
-[menu.main.params]
-group = "Business"
-note = "Options, bonds, loans, compounding and more"
-icon = "🧮"
-
-[[menu.main]]
-name = "Ancient Festival Tycoon"
-url = "/games/festival/"
+name = "Science Lab"
+identifier = "science-lab-games"
+url = "/science-lab/"
 weight = 30
 [menu.main.params]
 group = "Games"
-note = "Build and run a Greek or Roman festival"
-icon = "🎭"
+note = "Simulations of physics, chemistry, space and life"
+icon = "⚛️"
+
+[[menu.main]]
+name = "Book Cart"
+url = "/games/book-cart/"
+weight = 31
+[menu.main.params]
+group = "Games"
+note = "Swing a chain of books up and balance it"
+icon = "🛒"
 
 [[menu.main]]
 name = "Hero's Road"
 url = "/games/hero/"
-weight = 31
+weight = 32
 [menu.main.params]
 group = "Games"
 note = "A platformer through Greece, Rome and the Odyssey"
 icon = "🏺"
 
 [[menu.main]]
+name = "Ancient Festival Tycoon"
+url = "/games/festival/"
+weight = 33
+[menu.main.params]
+group = "Games"
+note = "Build and run a Greek or Roman festival"
+icon = "🎭"
+
+[[menu.main]]
 name = "Thermopylae"
 url = "/games/thermopylae/"
-weight = 32
+weight = 34
 [menu.main.params]
 group = "Games"
 note = "Hold the pass with Leonidas, 480 BC"
@@ -241,7 +199,7 @@ icon = "🛡️"
 [[menu.main]]
 name = "Teutoburg"
 url = "/games/teutoburg/"
-weight = 33
+weight = 35
 [menu.main.params]
 group = "Games"
 note = "A maze chase through the forest, AD 9"
@@ -250,7 +208,7 @@ icon = "🌲"
 [[menu.main]]
 name = "Imperium"
 url = "/games/imperium/"
-weight = 34
+weight = 36
 [menu.main.params]
 group = "Games"
 note = "Conquest strategy on ancient maps"
@@ -259,7 +217,7 @@ icon = "🗺️"
 [[menu.main]]
 name = "Siege"
 url = "/games/siege/"
-weight = 35
+weight = 37
 [menu.main.params]
 group = "Games"
 note = "Fire siege engines at 25 historic sieges"
@@ -268,7 +226,7 @@ icon = "🏰"
 [[menu.main]]
 name = "Mosaic Match"
 url = "/games/mosaic/"
-weight = 36
+weight = 38
 [menu.main.params]
 group = "Games"
 note = "Match-three with a word in every match"
@@ -277,7 +235,7 @@ icon = "🧩"
 [[menu.main]]
 name = "Charioteer"
 url = "/games/charioteer/"
-weight = 37
+weight = 39
 [menu.main.params]
 group = "Games"
 note = "Walk Rome or Athens and race a chariot"
@@ -286,7 +244,7 @@ icon = "🐎"
 [[menu.main]]
 name = "Chess of the Ancients"
 url = "/games/chess/"
-weight = 38
+weight = 40
 [menu.main.params]
 group = "Games"
 note = "Chess with Greek or Roman armies"
@@ -295,7 +253,7 @@ icon = "♟️"
 [[menu.main]]
 name = "Daily Word Puzzle"
 url = "/games/daily/"
-weight = 39
+weight = 41
 [menu.main.params]
 group = "Games"
 note = "Today's five-letter Latin or Greek word"
@@ -304,7 +262,7 @@ icon = "🔤"
 [[menu.main]]
 name = "Terni Lapilli"
 url = "/games/terni/"
-weight = 40
+weight = 42
 [menu.main.params]
 group = "Games"
 note = "The Roman three-in-a-row, solved"
@@ -313,7 +271,7 @@ icon = "⭕"
 [[menu.main]]
 name = "Nine Men's Morris"
 url = "/games/morris/"
-weight = 41
+weight = 43
 [menu.main.params]
 group = "Games"
 note = "Make mills and take your opponent's pieces"
@@ -322,7 +280,7 @@ icon = "⚪"
 [[menu.main]]
 name = "Knucklebones"
 url = "/games/knucklebones/"
-weight = 42
+weight = 44
 [menu.main.params]
 group = "Games"
 note = "Throw for the Venus, Augustus's dice game"
@@ -331,7 +289,7 @@ icon = "🦴"
 [[menu.main]]
 name = "Latrunculi"
 url = "/games/latrunculi/"
-weight = 43
+weight = 45
 [menu.main.params]
 group = "Games"
 note = "The Roman game of soldiers"
@@ -340,7 +298,7 @@ icon = "⚔️"
 [[menu.main]]
 name = "Time Thief"
 url = "/games/thief/"
-weight = 44
+weight = 46
 [menu.main.params]
 group = "Games"
 note = "Chase a thief through ancient history"
@@ -349,44 +307,16 @@ icon = "🕵️"
 [[menu.main]]
 name = "Tabula"
 url = "/games/tabula/"
-weight = 45
+weight = 47
 [menu.main.params]
 group = "Games"
 note = "Backgammon in Roman dress"
 icon = "🎲"
 
 [[menu.main]]
-name = "Book Cart"
-url = "/games/book-cart/"
-weight = 46
-[menu.main.params]
-group = "Games"
-note = "Swing a chain of books up and balance it"
-icon = "🛒"
-
-[[menu.main]]
-name = "Science Lab"
-identifier = "science-lab-games"
-url = "/science-lab/"
-weight = 47
-[menu.main.params]
-group = "Games"
-note = "13 simulations: physics, chemistry, space and life"
-icon = "⚛️"
-
-[[menu.main]]
-name = "PhotoCraft"
-url = "/photocraft/"
-weight = 20
-[menu.main.params]
-group = "Miscellaneous"
-note = "Free image editor in your browser"
-icon = "🎨"
-
-[[menu.main]]
 name = "Being an Adult 101"
 url = "/being-an-adult/"
-weight = 19
+weight = 60
 [menu.main.params]
 group = "Miscellaneous"
 note = "Fix it, drive it, budget it: life skills step by step"
@@ -395,16 +325,16 @@ icon = "🔧"
 [[menu.main]]
 name = "The Trades"
 url = "/trades/"
-weight = 19
+weight = 61
 [menu.main.params]
 group = "Miscellaneous"
-note = "How cars work and how to fix them; more trades coming"
+note = "Cars, plumbing, electrical, HVAC and construction"
 icon = "🛠️"
 
 [[menu.main]]
 name = "Food Garden Planner"
 url = "/garden/"
-weight = 21
+weight = 62
 [menu.main.params]
 group = "Miscellaneous"
 note = "What to grow for your space, plus chickens and bees"
@@ -413,15 +343,126 @@ icon = "🥕"
 [[menu.main]]
 name = "Sewing & Knitting"
 url = "/sewing/"
-weight = 22
+weight = 63
 [menu.main.params]
 group = "Miscellaneous"
 note = "Step-by-step basics, and every tool explained"
 icon = "🧵"
 
 # PaperMod settings
+
+[[menu.main]]
+name = "PhotoCraft"
+url = "/photocraft/"
+weight = 64
+[menu.main.params]
+group = "Miscellaneous"
+note = "Free image editor in your browser"
+icon = "🎨"
+
+[[menu.main]]
+name = "Business Cases"
+url = "/business/cases/"
+weight = 80
+[menu.main.params]
+group = "Business"
+note = "Real company stories and the lessons they teach"
+icon = "💼"
+
+[[menu.main]]
+name = "Econometrics"
+identifier = "econ-biz"
+url = "/business/econometrics/"
+weight = 81
+[menu.main.params]
+group = "Business"
+note = "From data to cause and effect: a full course"
+icon = "📈"
+
+[[menu.main]]
+name = "Game Theory"
+identifier = "gt-biz"
+url = "/business/game-theory/"
+weight = 82
+[menu.main.params]
+group = "Business"
+note = "The science of strategy: a full course"
+icon = "♟️"
+
+[[menu.main]]
+name = "Your Tax Receipt"
+url = "/business/tax-receipt/"
+weight = 83
+[menu.main.params]
+group = "Business"
+note = "See what your income tax paid for"
+icon = "🧾"
+
+[[menu.main]]
+name = "Markets & Economy"
+url = "/markets/"
+weight = 84
+[menu.main.params]
+group = "Business"
+note = "Charts, indicators and calculators"
+icon = "📈"
+
+[[menu.main]]
+name = "Stock Screener"
+url = "/markets/screener/"
+weight = 85
+[menu.main.params]
+group = "Business"
+note = "Filter stocks by the numbers"
+icon = "🔎"
+
+[[menu.main]]
+name = "Stock Chart"
+url = "/markets/chart/"
+weight = 86
+[menu.main.params]
+group = "Business"
+note = "Price history for any stock"
+icon = "📉"
+
+[[menu.main]]
+name = "Economic Data"
+url = "/markets/indicators/"
+weight = 87
+[menu.main.params]
+group = "Business"
+note = "Jobs, inflation, growth and more"
+icon = "📊"
+
+[[menu.main]]
+name = "Economic Calendar"
+url = "/markets/calendar/"
+weight = 88
+[menu.main.params]
+group = "Business"
+note = "Upcoming reports and releases"
+icon = "📅"
+
+[[menu.main]]
+name = "Treasuries"
+url = "/markets/rates/"
+weight = 89
+[menu.main.params]
+group = "Business"
+note = "The yield curve, rates and auctions"
+icon = "🏦"
+
+[[menu.main]]
+name = "Calculators & Links"
+url = "/markets/tools/"
+weight = 90
+[menu.main.params]
+group = "Business"
+note = "Options, bonds, loans, compounding and more"
+icon = "🧮"
+
 [params]
-  menugroups = ["Education", "Business", "Games", "Miscellaneous"]
+  menugroups = ["Education", "Games", "Miscellaneous", "Business"]
   author = "Teddy Rook"
   description = "Free learning for every age: infographics on great books and big ideas, homeschool lessons from classic schoolbooks, Koine Greek and Latin, science simulations, life skills and the trades, and games."
   defaultTheme = "auto"        # light/dark/auto

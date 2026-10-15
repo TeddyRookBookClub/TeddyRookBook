@@ -1,0 +1,193 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/evolutionary-games/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/evolutionary-games/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt14-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 14</p>
+    <h1>{{ .Title }}</h1>
+    <p>Animals don’t solve for equilibria, yet a stag rarely fights to the death and a lizard population can cycle like a game of rock–paper–scissors. Evolutionary game theory explains how: strategies that earn more leave more copies, and over many generations the population settles into patterns that look like rational play. Here you’ll release a flock of hawks and doves and watch them find a balance, grow a living kaleidoscope of cooperators and defectors on a grid, and follow three lizard types chasing each other around a triangle. The same ideas describe how people and firms learn by copying what works.</p>
+    <span class="lab-mark" aria-hidden="true">🦅</span>
+  </header>
+
+  <div class="lab-stage gt14-main">
+    <div class="lab-view" id="gt14-view">
+      <canvas id="gt14-cv" tabindex="0" aria-label="Left: a meadow of 200 birds; red arrow-shaped birds are hawks and white-and-blue round ones are doves, with sparks where two hawks fight. Top right: the share of hawks over time, with the stable mix as a dashed gold line. Bottom right: the payoffs of hawks and doves for every share of hawks; arrows under the axis show which way the population moves, gold dots are stable rest points and hollow ones unstable. Keys: Space pauses, H adds a few hawks, D adds a few doves, R restarts."></canvas>
+      <div class="lab-hud" id="gt14-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="gt14-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="gt14-reset" aria-label="Start again" title="Start again (R)">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="gt14-pre-h">Worlds</h3>
+      <div class="lab-seg" id="gt14-pre" role="group" aria-labelledby="gt14-pre-h"><button type="button" data-p="classic">Classic (V 2, C 4)</button><button type="button" data-p="cheap">Cheap fights (V 4, C 2)</button><button type="button" data-p="costly">Deadly fights (V 2, C 12)</button></div>
+      <label class="lab-field"><span>Value of the prize, V <output id="gt14-V-o"></output></span><input type="range" id="gt14-V" min="0.5" max="10" step="0.5" aria-label="Value of the prize"></label>
+      <label class="lab-field"><span>Cost of losing a fight, C <output id="gt14-C-o"></output></span><input type="range" id="gt14-C" min="0" max="20" step="0.5" aria-label="Cost of losing a fight"></label>
+      <label class="lab-field"><span>Hawks at the start <output id="gt14-x0-o"></output></span><input type="range" id="gt14-x0" min="0" max="100" step="1" aria-label="Share of hawks at the start, percent"></label>
+      <h3 id="gt14-mode-h">Population</h3>
+      <div class="lab-seg" id="gt14-mode" role="group" aria-labelledby="gt14-mode-h"><button type="button" data-m="rep">Very large (replicator)</button><button type="button" data-m="pop">200 birds that imitate</button></div>
+      <label class="lab-field"><span>Speed <output id="gt14-sp-o"></output></span><input type="range" id="gt14-sp" min="0.5" max="6" step="0.5" aria-label="Simulation speed"></label>
+      <div class="gt14-acts"><button type="button" class="lab-btn pri" id="gt14-go">Restart from this share</button><button type="button" class="lab-btn" id="gt14-addh">+ a few hawks</button><button type="button" class="lab-btn" id="gt14-addd">+ a few doves</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="gt14-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt14-missions"></ol>
+    </div>
+    <section class="lab-sec gt14-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The contest.</b> Animals meet in pairs over a prize worth <var>V</var>, such as food or a nest site. A <b>hawk</b> always fights; a <b>dove</b> displays, and retreats if attacked. Two hawks fight until one is hurt: each wins half the time, so each expects (<var>V</var> − <var>C</var>)/2, where <var>C</var> is the cost of losing. A hawk takes everything from a dove. Two doves share, <var>V</var>/2 each.</p>
+        <p><b>Selection.</b> A strategy that earns more than the population average spreads; one that earns less shrinks. In the “very large” mode, the share of hawks follows the replicator equation exactly. In the “200 birds” mode, each bird meets a few random others each round, then sometimes compares itself with a random bird and copies it if that bird did better. Chance makes the share jitter, but it follows the same path on average.</p>
+        <p><b>The payoff chart.</b> The red line is what a hawk earns, the blue line what a dove earns, for each share of hawks. Where red is above blue, hawks spread (arrows point right); where blue is above, doves spread. Where they cross, the population stops changing.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="ess"><h2>Evolutionarily stable strategies</h2>
+    <p>In 1973 John Maynard Smith and George Price asked why animal contests are so often “limited wars”, with displays instead of fights to the death. Their answer used a new idea: an <b>evolutionarily stable strategy</b> (ESS), a strategy that, once everyone uses it, can’t be invaded by a small group of mutants playing something else. Write <var>u</var>(<var>a</var>, <var>b</var>) for the payoff of strategy <var>a</var> against <var>b</var>.</p>
+    <div class="u-big"><var>u</var>(σ, σ) &gt; <var>u</var>(μ, σ), &nbsp; or &nbsp; <var>u</var>(σ, σ) = <var>u</var>(μ, σ) and <var>u</var>(σ, μ) &gt; <var>u</var>(μ, μ)<small>σ is an ESS if, for every mutant strategy μ ≠ σ, one of these holds: the mutant does worse against the residents, or ties there but does worse against other mutants</small></div>
+    <p>The first condition says (σ, σ) is a Nash equilibrium of the game played against yourself, so every ESS is a Nash equilibrium. The second is a tie-breaker that makes it stricter: not every Nash equilibrium is an ESS.</p>
+    <p><b>Hawk–dove.</b> If <var>V</var> ≥ <var>C</var>, hawk is the ESS: fighting is worth it even against other hawks. If <var>V</var> &lt; <var>C</var>, neither pure strategy is stable. Among doves, a hawk wins every contest (<var>V</var> &gt; <var>V</var>/2). Among hawks, a dove avoids the costly fights (0 &gt; (<var>V</var> − <var>C</var>)/2). The stable state is a mix in which the two earn the same:</p>
+    <div class="lab-formula">payoff gap: π<sub>H</sub> − π<sub>D</sub> = (<var>V</var> − <var>C</var><var>x</var>)/2 &nbsp;⇒&nbsp; zero at <var>x</var>* = <var>V</var>/<var>C</var>, the share of hawks in the ESS</div>
+    <div class="u-ex"><b>Worked example: the classic numbers</b>
+      <p>With <var>V</var> = 2 and <var>C</var> = 4, the ESS has <var>x</var>* = 2/4 = 50% hawks. At that mix a hawk earns 0.5 × (2 − 4)/2 + 0.5 × 2 = 0.5, and a dove earns 0.5 × 2/2 = 0.5. Equal, as they must be. But a world of doves would give everyone <var>V</var>/2 = 1, twice as much. The stable outcome wastes half the prize on fighting, much like the prisoner’s dilemma in <a href="{{ "business/game-theory/dominance/" | relURL }}">Chapter 2</a>. A population of doves would be better off, but it can’t keep hawks out.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> pick “Deadly fights” (<var>V</var> = 2, <var>C</var> = 12). Hawks fall to 1 in 6, about 17%, and the average payoff climbs back toward the all-dove level. Raising the cost of conflict makes conflict rarer, which is one way biologists explain why venomous snakes often wrestle rather than bite in contests with rivals of their own species.</div>
+  </section>
+
+  <section class="lab-sec" id="replicator"><h2>The replicator equation</h2>
+    <p>Peter Taylor and Leo Jonker wrote down the dynamics in 1978, and Peter Schuster and Karl Sigmund named them in 1983. If <var>x</var><sub><var>i</var></sub> is the share of strategy <var>i</var> and <var>A</var> the payoff matrix, each share grows at a rate equal to how much better than average it does:</p>
+    <div class="u-big">d<var>x</var><sub><var>i</var></sub>/d<var>t</var> = <var>x</var><sub><var>i</var></sub> [ (<var>A</var><var>x</var>)<sub><var>i</var></sub> − <var>x</var><sup>⊤</sup><var>A</var><var>x</var> ]<small>the replicator equation: (<var>A</var><var>x</var>)<sub><var>i</var></sub> is strategy <var>i</var>’s payoff against the population, <var>x</var><sup>⊤</sup><var>A</var><var>x</var> the average payoff</small></div>
+    <p>For hawks and doves it becomes d<var>x</var>/d<var>t</var> = <var>x</var>(1 − <var>x</var>)(<var>V</var> − <var>C</var><var>x</var>)/2. It has three <b>rest points</b>, where nothing changes: all doves (<var>x</var> = 0), all hawks (<var>x</var> = 1) and the mix <var>x</var>* = <var>V</var>/<var>C</var>. A rest point is <b>stable</b> if the population returns after a small push. Here the slope of d<var>x</var>/d<var>t</var> at <var>x</var>* is −<var>x</var>*(1 − <var>x</var>*)<var>C</var>/2 &lt; 0, so pushes die out; at 0 and 1 the slope is positive, so a few mutants grow.</p>
+    <div class="u-ex"><b>Worked example: how fast it returns</b>
+      <p>With <var>V</var> = 2 and <var>C</var> = 4, the slope at <var>x</var>* = 0.5 is −0.5 × 0.5 × 4/2 = −0.5. A small gap from the ESS shrinks like e<sup>−0.5<var>t</var></sup>: it halves every ln 2/0.5 ≈ 1.4 time units. With <var>C</var> = 12 (and <var>x</var>* = 1/6) the slope is −(1/6)(5/6)(6) ≈ −0.83, so the population snaps back faster.</p>
+    </div>
+    <p>How do these dynamics relate to Nash equilibrium? Results often called the folk theorem of evolutionary game theory (Josef Hofbauer and Karl Sigmund collect them in their 1998 book) say, roughly: every Nash equilibrium is a rest point; every stable rest point is a Nash equilibrium; if a path that starts with every strategy present converges, it converges to a Nash equilibrium; and every ESS is asymptotically stable. The converse fails: some rest points (like all doves) are not equilibria, and some Nash equilibria are unstable.</p>
+    <p><b>Learning in games.</b> The same mathematics describes people. The “200 birds” mode uses imitation: copy a random other player with a probability proportional to how much better they did. Karl Schlag showed in 1998 that this rule produces the replicator dynamics on average. Other learning rules, like fictitious play (George Brown, 1951), where each player best-responds to the average of what others have done so far, lead to equilibria in many games but can cycle in others; Drew Fudenberg and David Levine’s <i>The Theory of Learning in Games</i> (1998) surveys them.</p>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “Evolution does what is best for the species”</b>
+    <p>Selection compares strategies with each other, not with what would be best for the group. In hawk–dove with costly fights, an all-dove population earns the most, yet any hawk born into it thrives. The stable mix wastes part of the prize on fighting. Evolution finds equilibria, and equilibria can be inefficient.</p>
+  </div>
+
+  <section class="lab-sec" id="spatial"><h2>Cooperation on a grid</h2>
+    <p>In a well-mixed population, the prisoner’s dilemma ends with everyone defecting: defectors always earn more than the cooperators they meet. In 1992 Martin Nowak and Robert May asked what happens if players interact only with their neighbors. Each cell of a grid is a cooperator or a defector. Each plays the dilemma with its 8 neighbors and itself (two cooperators get 1, a defector who meets a cooperator gets the temptation <var>b</var> while the cooperator gets 0, two defectors get 0), and then copies the strategy of the highest scorer around it.</p>
+    <div class="lab-stage wide gt14-mini" id="gt14-gview">
+      <div class="lab-view"><canvas id="gt14-gc" aria-label="A 99 by 99 grid of cooperators and defectors. Blue: cooperators that stayed cooperators. Red: defectors that stayed defectors. Yellow: cells that just turned defector. Green: cells that just turned cooperator. A chart shows the share of cooperators over the generations. Tap or drag on the grid to add defectors."></canvas></div>
+      <div class="lab-panel gt14-row">
+        <label class="lab-field gt14-grow"><span>Temptation to defect, b <output id="gt14-b-o"></output></span><input type="range" id="gt14-b" min="1" max="2.5" step="0.01" aria-label="Temptation to defect"></label>
+        <div class="lab-seg gt14-grow" id="gt14-start" role="group" aria-label="Starting pattern"><button type="button" data-s="one">One defector</button><button type="button" data-s="r10">10% defectors</button><button type="button" data-s="r50">50% defectors</button></div>
+        <div class="gt14-acts gt14-grow"><button type="button" class="lab-btn pri" id="gt14-gplay">❚❚ Pause</button><button type="button" class="lab-btn" id="gt14-gstep">Step</button><button type="button" class="lab-btn" id="gt14-grestart">Restart</button></div>
+        <label class="lab-field gt14-grow"><span>Generations <output id="gt14-gsp-o"></output></span><input type="range" id="gt14-gsp" min="1" max="30" step="1" aria-label="Generations per second"></label>
+        <dl class="lab-readout gt14-grow" id="gt14-gread"></dl>
+      </div>
+    </div>
+    <p>Clusters of cooperators protect each other: a cooperator inside a cluster earns a lot from its cooperative neighbors, and at the edges, cooperators and defectors trade ground. Nowak and May found that the two strategies can coexist forever over a wide range of <var>b</var>, in patterns that never settle. Starting from a single defector with <var>b</var> between 1.8 and 2, the grid grows a symmetric kaleidoscope. In our runs on a 100 × 100 grid starting with 10% defectors, the average share of cooperators was 98% at <var>b</var> = 1.1, 86% at 1.5, about 31% at 1.85 and 1.95, and 4% at 2.2.</p>
+    <div class="lab-try"><b>Try this:</b> start from one defector at <var>b</var> = 1.85 and watch the kaleidoscope grow. Then set <var>b</var> to 1.5 and start from 50% defectors: cooperators reclaim most of the grid. Push <var>b</var> above 2 and they shrink to a few stubborn clusters.</div>
+  </section>
+
+  <section class="lab-sec" id="rps"><h2>Rock–paper–scissors in nature</h2>
+    <p>Some games have no stable resting point at all. In rock–paper–scissors, every strategy is beaten by another. Barry Sinervo and Curt Lively reported in 1996 that males of the side-blotched lizard (<i>Uta stansburiana</i>) in a California population play this game with their throat colors. Orange-throated males are aggressive and hold large territories with many females. Blue-throated males guard a smaller territory and their mates closely. Yellow-throated males hold no territory and sneak matings, looking much like females. Orange beats blue by taking over territory; yellow beats orange, whose large territories can’t be watched everywhere; blue beats yellow by guarding its mates. They reported that the frequencies of the three types cycled over the years of the study.</p>
+    <div class="lab-stage wide gt14-mini" id="gt14-rview">
+      <div class="lab-view"><canvas id="gt14-rc" tabindex="0" aria-label="Left: a triangle in which every point is a mix of orange, yellow and blue lizards; faint arrows show the direction of change and a gold trail shows the population's path. Tap inside the triangle to start from that mix, or press Enter for a random start. Right: the three shares over time."></canvas></div>
+      <div class="lab-panel gt14-row">
+        <label class="lab-field gt14-grow"><span>Payoff of a win (a loss costs 1) <output id="gt14-w-o"></output></span><input type="range" id="gt14-w" min="0.5" max="1.5" step="0.05" aria-label="Payoff of a win, compared with the cost of a loss"></label>
+        <button type="button" class="lab-btn" id="gt14-rclr">Clear the trails</button>
+        <dl class="lab-readout gt14-grow" id="gt14-rread"></dl>
+      </div>
+    </div>
+    <p>With a win worth exactly what a loss costs, the replicator equation has a hidden conserved quantity: the product <var>x</var><sub>1</sub><var>x</var><sub>2</sub><var>x</var><sub>3</sub> never changes, so every path is a closed loop around the center. When wins count for more, paths spiral in to the even mix (1/3, 1/3, 1/3); when losses hurt more, they spiral out toward the edges, where one type nearly vanishes before it comes back. A similar three-way game has been demonstrated in the lab with strains of <i>E. coli</i> bacteria (Benjamin Kerr and colleagues, 2002), where the three strains coexisted when they lived on a plate and interacted locally, but not when they were mixed in a flask.</p>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A little history</h2>
+    <div class="lab-cols">
+      <p><b>John Maynard Smith</b> (1920–2004) trained as an aircraft engineer before becoming a biologist. With <b>George Price</b> he published “The Logic of Animal Conflict” in <i>Nature</i> in 1973, introducing the evolutionarily stable strategy. His book <i>Evolution and the Theory of Games</i> (1982) used the hawk–dove game to explain it and brought the field to a wide audience.</p>
+      <p><b>George Price</b> (1922–1975) was an American chemist and science writer who moved to London and taught himself population genetics; the Price equation (1970) is still a cornerstone of evolutionary theory.</p>
+      <p><b>Peter Taylor</b> and <b>Leo Jonker</b> introduced the replicator dynamics in <i>Mathematical Biosciences</i> in 1978. <b>Martin Nowak</b> and <b>Robert May</b> published “Evolutionary Games and Spatial Chaos” in <i>Nature</i> in 1992.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="life"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Animal behavior.</b> Ritualized contests, territorial displays and alternative mating strategies like the lizards’ are classic applications.</li>
+      <li><b>Microbes.</b> Bacteria that produce costly shared resources face a public-goods dilemma; “cheater” strains that don’t contribute can invade, much like hawks among doves.</li>
+      <li><b>Business.</b> Firms copy practices that seem to work for their rivals, an imitation dynamic. Aggressive pricing can spread through an industry the way hawks spread, even when every firm would earn more if all were less aggressive.</li>
+      <li><b>Social norms.</b> Conventions such as which side of the road to drive on are stable states of coordination games: once most people follow one, it pays everyone to follow it.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <p class="gt14-prob"><b>1.</b> With <var>V</var> = 6 and <var>C</var> = 10, what share of hawks is evolutionarily stable, and what does everyone earn there?</p>
+    <details class="gt14-ans"><summary>Show the answer</summary><p><var>x</var>* = 6/10 = 60%. A dove earns (1 − 0.6) × 6/2 = 1.2, and so does a hawk: 0.6 × (6 − 10)/2 + 0.4 × 6 = −1.2 + 2.4 = 1.2. An all-dove world would pay 3.</p></details>
+    <p class="gt14-prob"><b>2.</b> Show that “always dove” is not an ESS when <var>V</var> &gt; 0.</p>
+    <details class="gt14-ans"><summary>Show the answer</summary><p>Against doves, a dove earns <var>V</var>/2 but a hawk earns <var>V</var>, so <var>u</var>(H, D) &gt; <var>u</var>(D, D). The first ESS condition fails: a few hawks would spread.</p></details>
+    <p class="gt14-prob"><b>3.</b> With <var>V</var> = 10 and <var>C</var> = 4, find the ESS and compare it with an all-dove world.</p>
+    <details class="gt14-ans"><summary>Show the answer</summary><p>Hawk is a strict best reply to itself: (10 − 4)/2 = 3 &gt; 0, so all hawks is the ESS. Everyone earns 3, against 5 in an all-dove world. The game is a prisoner’s dilemma.</p></details>
+    <p class="gt14-prob"><b>4.</b> Derive d<var>x</var>/d<var>t</var> = <var>x</var>(1 − <var>x</var>)(<var>V</var> − <var>C</var><var>x</var>)/2 from the replicator equation, and show that <var>x</var>* = <var>V</var>/<var>C</var> is stable.</p>
+    <details class="gt14-ans"><summary>Show the answer</summary><p>With two strategies, d<var>x</var>/d<var>t</var> = <var>x</var>(π<sub>H</sub> − π̄) and π̄ = <var>x</var>π<sub>H</sub> + (1 − <var>x</var>)π<sub>D</sub>, so d<var>x</var>/d<var>t</var> = <var>x</var>(1 − <var>x</var>)(π<sub>H</sub> − π<sub>D</sub>). Here π<sub>H</sub> − π<sub>D</sub> = <var>x</var>(<var>V</var> − <var>C</var>)/2 + (1 − <var>x</var>)<var>V</var> − (1 − <var>x</var>)<var>V</var>/2 = (<var>V</var> − <var>C</var><var>x</var>)/2. The derivative of the right side at <var>x</var>* is <var>x</var>*(1 − <var>x</var>*)(−<var>C</var>/2) &lt; 0, so small deviations shrink.</p></details>
+    <p class="gt14-prob"><b>5.</b> In the coordination game where matching on A pays 2, matching on B pays 1 and mismatching pays 0, which strategies are ESS? Is the mixed equilibrium an ESS?</p>
+    <details class="gt14-ans"><summary>Show the answer</summary><p>Both pure strategies are strict Nash equilibria (2 &gt; 0 and 1 &gt; 0), so both are ESS. The mixed equilibrium plays A with probability 1/3 (where 2<var>p</var> = 1 − <var>p</var>). It isn’t an ESS: a mutant playing pure A ties against it and does better against itself than the mixed strategy does against A. Under the replicator dynamics, 1/3 is the unstable boundary between the two basins: start with more than a third playing A and everyone ends up on A.</p></details>
+    <p class="gt14-prob"><b>6.</b> In rock–paper–scissors with win = 1 and loss = −1, show that <var>x</var><sub>1</sub><var>x</var><sub>2</sub><var>x</var><sub>3</sub> stays constant under the replicator equation.</p>
+    <details class="gt14-ans"><summary>Show the answer</summary><p>d/d<var>t</var> ln(<var>x</var><sub>1</sub><var>x</var><sub>2</sub><var>x</var><sub>3</sub>) = Σ<sub><var>i</var></sub> [(<var>A</var><var>x</var>)<sub><var>i</var></sub> − <var>x</var><sup>⊤</sup><var>A</var><var>x</var>] = Σ<sub><var>i</var></sub>(<var>A</var><var>x</var>)<sub><var>i</var></sub> − 3<var>x</var><sup>⊤</sup><var>A</var><var>x</var>. The game is zero-sum, so <var>A</var> is antisymmetric and <var>x</var><sup>⊤</sup><var>A</var><var>x</var> = 0; and each column of <var>A</var> adds to 1 − 1 = 0, so Σ<sub><var>i</var></sub>(<var>A</var><var>x</var>)<sub><var>i</var></sub> = 0. Our test found the product changed by about 1 part in 10<sup>12</sup> over 200 time units.</p></details>
+    <p class="gt14-prob"><b>7.</b> (Harder) On the Nowak–May grid, a single defector sits among cooperators. For which temptations <var>b</var> do its 8 neighbors become defectors in the next generation?</p>
+    <details class="gt14-ans"><summary>Show the answer</summary><p>The defector meets 8 cooperators (and itself, a defector): score 8<var>b</var>. A neighboring cooperator meets 7 cooperators, itself, and the defector: score 8. A cooperator two steps away sees 9 cooperators: score 9. The neighbor copies the defector only if 8<var>b</var> beats every other score in its block, including the 9 of the cooperators beside it: 8<var>b</var> &gt; 9, so <var>b</var> &gt; 9/8 = 1.125. Our simulation agrees: at <var>b</var> = 1.12 the defector stays alone, at 1.13 it becomes a 3 × 3 block.</p></details>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>Hawks and doves.</b> The “very large” mode integrates d<var>x</var>/d<var>t</var> = <var>x</var>(1 − <var>x</var>)(<var>V</var> − <var>C</var><var>x</var>)/2 with the fourth-order Runge–Kutta method. The birds on screen are colored to match the share. In the “200 birds” mode, each round every bird meets 4 random others; then a quarter of the birds each look at one random bird and copy it with probability equal to the payoff difference divided by the largest possible difference. The birds’ flight is decoration.</p>
+      <p><b>The grid</b> wraps around at the edges and updates every cell at once. <b>Rock–paper–scissors</b> integrates the replicator equation with Runge–Kutta in small steps, renormalizing the shares to add to 1.</p>
+      <p><b>What’s simplified.</b> Real animals don’t reproduce in lockstep, payoffs aren’t fixed numbers, and strategies in nature are rarely pure. The lizard picture shows the mathematics of a rock–paper–scissors cycle, not fitted field data.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests, run before the page was built):</p>
+        <ul class="lab-small">
+          <li>Hawks and doves earn the same at <var>x</var> = <var>V</var>/<var>C</var> for (2, 4), (4, 10) and (3, 12). From five starting shares between 1% and 99%, the replicator equation reached 0.5 for <var>V</var> = 2, <var>C</var> = 4 with an error below 10<sup>−14</sup>; with <var>V</var> = 6 &gt; <var>C</var> = 4 hawks reached 100%. Rest points 0 and 1 are unstable, <var>V</var>/<var>C</var> stable.</li>
+          <li>The mix <var>V</var>/<var>C</var> passed both ESS conditions against 100 mutant mixes.</li>
+          <li>400 imitating animals with <var>V</var> = 2, <var>C</var> = 4 averaged 50.2% hawks over 2,500 rounds.</li>
+          <li>Grid: one defector at the center of a 99 × 99 grid with <var>b</var> = 1.85 stayed perfectly symmetric for 30 generations; the threshold for a lone defector to spread is between 1.12 and 1.13, matching 9/8.</li>
+          <li>Rock–paper–scissors: with win = loss, <var>x</var><sub>1</sub><var>x</var><sub>2</sub><var>x</var><sub>3</sub> drifted by 1.3 × 10<sup>−12</sup> (relative) over 200 time units; with win 1.3 the shares reached 1/3 each; with win 0.7 the smallest share fell below 10<sup>−9</sup>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>With <var>V</var> = 3 and <var>C</var> = 12, what share of hawks is stable?</p>
+        <ul class="u-opts"><li><button type="button">0%</button></li><li><button type="button">50%</button></li><li><button type="button">25%</button></li><li><button type="button">100%</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>V</var>/<var>C</var> = 3/12 = 25%.</p></details></li>
+      <li class="u-q" data-a="0"><p>What does it mean for a strategy to be evolutionarily stable?</p>
+        <ul class="u-opts"><li><button type="button">If everyone plays it, a small group of mutants playing anything else does worse and dies out</button></li><li><button type="button">It gives the highest possible payoff</button></li><li><button type="button">It is chosen by the smartest animals</button></li></ul>
+        <details><summary>Show the answer</summary><p>An ESS resists invasion: mutants either do worse against the residents, or tie there and do worse against each other.</p></details></li>
+      <li class="u-q" data-a="1"><p>In the replicator equation, a strategy’s share grows when:</p>
+        <ul class="u-opts"><li><button type="button">It is the most common strategy</button></li><li><button type="button">Its payoff is above the population average</button></li><li><button type="button">Its payoff is positive</button></li></ul>
+        <details><summary>Show the answer</summary><p>Growth rate = own payoff minus average payoff. A strategy with a negative payoff can still grow if others do even worse.</p></details></li>
+      <li class="u-q" data-a="3"><p>Why can cooperators survive in Nowak and May’s grid but not in a well-mixed population?</p>
+        <ul class="u-opts"><li><button type="button">Defectors on the grid are punished</button></li><li><button type="button">The game is repeated</button></li><li><button type="button">Cooperators on the grid are smarter</button></li><li><button type="button">Clusters of cooperators mostly meet each other, so they earn more than defectors at the cluster edges</button></li></ul>
+        <details><summary>Show the answer</summary><p>Local interaction lets cooperators enjoy each other’s company; in a mixed population, defectors meet cooperators at random and always earn more.</p></details></li>
+      <li class="u-q" data-a="2"><p>In rock–paper–scissors with wins worth exactly as much as losses cost, what does the population do?</p>
+        <ul class="u-opts"><li><button type="button">Settles at one third each</button></li><li><button type="button">Ends with one strategy taking over</button></li><li><button type="button">Cycles forever around the even mix</button></li></ul>
+        <details><summary>Show the answer</summary><p>The product of the three shares is conserved, so paths are closed loops.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 13, “Evolutionary Equilibrium”.</li>
+      <li>J. Maynard Smith and G. R. Price, “The Logic of Animal Conflict”, <i>Nature</i> 246, 15–18 (1973); J. Maynard Smith, <i>Evolution and the Theory of Games</i> (Cambridge University Press, 1982).</li>
+      <li>P. D. Taylor and L. B. Jonker, “Evolutionarily Stable Strategies and Game Dynamics”, <i>Mathematical Biosciences</i> 40(1–2), 145–156 (1978); J. Hofbauer and K. Sigmund, <i>Evolutionary Games and Population Dynamics</i> (Cambridge University Press, 1998).</li>
+      <li>K. H. Schlag, “Why Imitate, and If So, How?”, <i>Journal of Economic Theory</i> 78(1), 130–156 (1998); D. Fudenberg and D. K. Levine, <i>The Theory of Learning in Games</i> (MIT Press, 1998).</li>
+      <li>M. A. Nowak and R. M. May, “Evolutionary Games and Spatial Chaos”, <i>Nature</i> 359, 826–829 (1992); Yale University, <a href="https://gauss.math.yale.edu/fractals/Panorama/SocialSciences/PrisDil/PrisDil.html" target="_blank" rel="noopener">Spatial Prisoner’s Dilemma</a> (Fractal Geometry course pages): the rules and the color scheme.</li>
+      <li>B. Sinervo and C. M. Lively, “The Rock–Paper–Scissors Game and the Evolution of Alternative Male Strategies”, <i>Nature</i> 380, 240–243 (1996).</li>
+      <li>B. Kerr, M. A. Riley, M. W. Feldman and B. J. M. Bohannan, “Local Dispersal Promotes Biodiversity in a Real-Life Game of Rock–Paper–Scissors”, <i>Nature</i> 418, 171–174 (2002).</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2012/" target="_blank" rel="noopener">14.12 Economic Applications of Game Theory</a>.</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Evolutionarily_stable_strategy" target="_blank" rel="noopener">Evolutionarily stable strategy</a>, <a href="https://en.wikipedia.org/wiki/Replicator_equation" target="_blank" rel="noopener">Replicator equation</a>, <a href="https://en.wikipedia.org/wiki/Common_side-blotched_lizard" target="_blank" rel="noopener">Common side-blotched lizard</a>, <a href="https://en.wikipedia.org/wiki/George_R._Price" target="_blank" rel="noopener">George R. Price</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/evolutionary-games/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/evolutionary-games/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/evolutionary-games/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/evolutionary-games/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

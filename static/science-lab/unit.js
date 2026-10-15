@@ -41,6 +41,11 @@
     function mark(root, done) {
       root.querySelectorAll('[data-chapter]').forEach(function (a) { a.classList.toggle('done', !!done[a.dataset.chapter]); });
     }
+    // keep the current chapter's pill in view on narrow screens
+    D.querySelectorAll('.u-nav ol').forEach(function (ol) {
+      var cur = ol.querySelector('[aria-current="page"]'); if (!cur || ol.scrollWidth <= ol.clientWidth) return;
+      var li = cur.parentNode; ol.scrollLeft = Math.max(0, li.offsetLeft - ol.offsetLeft - (ol.clientWidth - li.offsetWidth) / 2);
+    });
     D.querySelectorAll('.u-nav[data-unit], .u-chapters[data-unit]').forEach(function (el) {
       var done = store(el.dataset.unit).get('chapters', {});
       mark(el, done);

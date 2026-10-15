@@ -1,0 +1,49 @@
+/* Econometrics, Chapter 11 (Panel Data: Fixed and Random Effects): only what this page adds to lab.css and unit.css. */
+#ec11-lab .lab-view canvas:focus{outline:none}
+#ec11-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#ec11-lab .lab-tools button{min-width:36px;min-height:36px}
+#ec11-lab .lab-tools button:disabled{opacity:.4;cursor:default}
+#ec11-lab .lab-seg button{min-height:36px}
+#ec11-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#ec11-lab .lab-chk{min-height:36px;cursor:pointer}
+#ec11-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc);flex:0 0 auto}
+#ec11-lab .lab-btn{min-height:36px}
+#ec11-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#ec11-lab .lab-readout dd{white-space:nowrap}
+#ec11-lab .lab-readout dt{line-height:1.35}
+#ec11-lab .lab-sec .lab-stage{margin:1rem 0}
+#ec11-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+#ec11-lab .u-ex ul,#ec11-lab .u-ex ol{padding-left:1.2rem}
+#ec11-lab .u-ex .lab-formula{margin:.4rem 0}
+#ec11-lab .ec11-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+#ec11-lab .ec11-pk{color:#c2255c}#ec11-lab .ec11-gr{color:#0b7a55}#ec11-lab .ec11-bl{color:#1971c2}#ec11-lab .ec11-gd{color:#9c6b00}#ec11-lab .ec11-rd{color:#c92a2a}
+html[data-theme="dark"] #ec11-lab .ec11-pk{color:#f9a8d4}html[data-theme="dark"] #ec11-lab .ec11-gr{color:#63e6be}html[data-theme="dark"] #ec11-lab .ec11-bl{color:#74c0fc}html[data-theme="dark"] #ec11-lab .ec11-gd{color:#ffd479}html[data-theme="dark"] #ec11-lab .ec11-rd{color:#ff8787}
+#ec11-lab .ec11-step{margin:0;font-size:.88rem;line-height:1.5;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.5rem .65rem;min-height:5.5em}
+#ec11-lab .ec11-prac{list-style:none;counter-reset:pq;padding:0;margin:.5rem 0;display:grid;gap:.7rem}
+#ec11-lab .ec11-prac>li{counter-increment:pq;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem}
+#ec11-lab .ec11-prac>li>p:first-child{margin:0 0 .3rem}
+#ec11-lab .ec11-prac>li>p:first-child::before{content:counter(pq) ". ";font-weight:700;color:var(--acc)}
+#ec11-lab .ec11-lvl{display:inline-block;font:700 .68rem system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--gt);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:.05rem .45rem;margin-right:.35rem;vertical-align:1px}
+#ec11-lab .ec11-prac summary{cursor:pointer;font-weight:600;color:var(--acc);padding:.35rem 0;font-size:.9rem}
+#ec11-lab .ec11-prac details>div{background:var(--paper);border-radius:8px;padding:.5rem .75rem;margin-top:.2rem}
+#ec11-lab .ec11-prac details>div p{margin:.25rem 0}
+#ec11-lab .ec11-mid{height:min(62vh,500px);min-height:360px}
+#ec11-lab .lab-table td,#ec11-lab .lab-table th{font-variant-numeric:tabular-nums}
+@media (max-width:860px){
+  #ec11-lab .lab-hud{display:none}
+  #ec11-lab .ec11-mid{height:min(64vh,460px);min-height:340px}
+}
+@media (max-width:600px){
+  #ec11-lab .lab-toast{font-size:.8rem;max-width:84%;padding:.4rem .7rem;top:3.2rem}
+  #ec11-lab .lab-hero .lab-mark{font-size:3rem}
+}
+@media (min-width:861px){#ec11-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}
+#ec11-lab .ec11-tall{height:min(78vh,660px);min-height:540px}
+#ec11-lab .ec11-mid{height:min(66vh,540px);min-height:440px}
+#ec11-lab .ec11-tab{font-size:.8rem;margin:0}
+#ec11-lab .ec11-tab th,#ec11-lab .ec11-tab td{padding:.26rem .32rem}
+#ec11-lab .ec11-tab tbody th{font:600 .78rem system-ui,sans-serif;color:var(--ink);background:none}
+#ec11-lab .ec11-tab td{white-space:nowrap}
+#ec11-lab .ec11-sw{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.3rem;vertical-align:0}
+@media (max-width:860px){#ec11-lab .ec11-tall{height:760px;max-height:none}#ec11-lab .ec11-mid{height:600px}}
+@media (max-width:600px){#ec11-lab .ec11-tall{height:800px}}

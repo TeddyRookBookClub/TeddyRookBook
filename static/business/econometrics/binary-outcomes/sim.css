@@ -1,0 +1,62 @@
+/* Binary Outcomes: Logit, Probit and Maximum Likelihood: only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#ec14-lab .lab-view canvas:focus{outline:none}
+#ec14-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#ec14-lab .lab-tools button{min-width:36px;min-height:36px}
+#ec14-lab .lab-hud{max-width:calc(100% - 7rem)}
+#ec14-lab .lab-seg button{min-height:36px}
+#ec14-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#ec14-lab .lab-chk{min-height:36px;cursor:pointer}
+#ec14-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#ec14-lab .lab-btn{min-height:38px}
+#ec14-lab .lab-readout dd{white-space:nowrap}
+#ec14-lab .lab-readout dd.ec14-bad{color:#c92a2a}
+#ec14-lab .lab-readout dd.ec14-warn{color:#b35c00}
+html[data-theme="dark"] #ec14-lab .lab-readout dd.ec14-bad{color:#ff8787}
+html[data-theme="dark"] #ec14-lab .lab-readout dd.ec14-warn{color:#ffa94d}
+#ec14-lab .lab-toast{top:4.2rem}
+#ec14-lab #ec14-view{height:min(74vh,640px)}
+/* the smaller simulations in the lesson */
+#ec14-lab .ec14-mini{margin:.9rem 0 1rem}
+#ec14-lab .ec14-mini .lab-view{height:380px;min-height:0}
+#ec14-lab #ec14-mlv{height:440px}
+#ec14-lab .ec14-chks{display:grid;grid-template-columns:1fr 1fr;gap:0 .6rem}
+#ec14-lab .lab-readout dd.ec14-bad{color:#c92a2a}
+html[data-theme="dark"] #ec14-lab .lab-readout dd.ec14-bad{color:#ff8787}
+#ec14-lab .lab-readout dd.ec14-good{color:#2f9e6f}
+#ec14-lab .ec14-row .lab-row .lab-btn{align-self:auto}
+#ec14-lab .ec14-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1.2rem}
+#ec14-lab .ec14-row>*{min-width:0}
+#ec14-lab .ec14-grow{flex:1 1 260px;display:flex;flex-direction:column;gap:.5rem}
+#ec14-lab .ec14-row .lab-readout{display:grid;grid-template-columns:minmax(0,1fr) auto}
+#ec14-lab .ec14-row .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#ec14-lab .ec14-row .lab-btn{align-self:flex-start}
+/* practice problems */
+#ec14-lab .ec14-prob{padding-left:1.4rem}
+#ec14-lab .ec14-prob>li{margin:0 0 .9rem}
+#ec14-lab .ec14-prob>li>p{margin:0 0 .3rem}
+#ec14-lab .ec14-prob details{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.35rem .7rem}
+#ec14-lab .ec14-prob summary{cursor:pointer;font-weight:600;color:var(--acc);min-height:28px;display:list-item}
+#ec14-lab .ec14-prob details p{margin:.4rem 0 .2rem}
+#ec14-lab .lab-table td,#ec14-lab .lab-table th{white-space:nowrap}
+/* a short glow when a mission is done */
+#ec14-lab .ec14-win{animation:ec14win 1.2s ease-out}
+@keyframes ec14win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#ec14-lab .lab-sec ul{padding-left:1.3rem}
+#ec14-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #ec14-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+  #ec14-lab #ec14-view{height:780px;max-height:none}
+}
+@media (max-width:600px){
+  #ec14-lab .lab-toast{top:3.4rem;font-size:.82rem;max-width:84%}
+  #ec14-lab .ec14-mini .lab-view{height:560px}
+  #ec14-lab #ec14-mlv{height:640px}
+  #ec14-lab .lab-hud{display:none}
+}
+@media (prefers-reduced-motion:reduce){#ec14-lab .ec14-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#ec14-lab .ec14-main{grid-template-rows:auto 1fr}
+#ec14-lab .ec14-main>.lab-view{grid-column:1;grid-row:1}
+#ec14-lab .ec14-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#ec14-lab .ec14-main>.ec14-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#ec14-lab .ec14-main{grid-template-rows:none}#ec14-lab .ec14-main>.lab-view,#ec14-lab .ec14-main>.lab-panel,#ec14-lab .ec14-main>.ec14-under{grid-column:auto;grid-row:auto}}

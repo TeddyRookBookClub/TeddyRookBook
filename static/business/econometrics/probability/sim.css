@@ -1,0 +1,47 @@
+/* Econometrics, Chapter 2: only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#ec2-lab .lab-view canvas:focus{outline:none}
+#ec2-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#ec2-lab .lab-tools button{min-width:36px;min-height:36px}
+#ec2-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);color:var(--sim-acc)}
+#ec2-lab .lab-seg button{min-height:36px}
+#ec2-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#ec2-lab .lab-chk{min-height:36px;cursor:pointer}
+#ec2-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#ec2-lab .lab-btn{min-height:38px}
+#ec2-lab .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#ec2-lab .lab-readout dt{line-height:1.3}
+#ec2-lab .lab-readout dd{white-space:nowrap}
+#ec2-lab .lab-toast{top:4.2rem}
+#ec2-lab .lab-hud{max-width:calc(100% - 7rem)}
+#ec2-lab #ec2-view{height:min(70vh,600px)}
+#ec2-lab .ec2-params{display:flex;flex-direction:column;gap:.5rem}
+#ec2-lab .ec2-noscript{position:absolute;inset:auto 1rem 1rem;color:var(--sim-ink)}
+#ec2-lab .ec2-win{animation:ec2win 1.2s ease-out}
+@keyframes ec2win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#ec2-lab .ec2-sub{margin:.9rem 0 1rem}
+#ec2-lab #ec2c-view{height:560px;min-height:0}
+#ec2-lab #ec2l-view{height:300px;min-height:0}
+#ec2-lab #ec2e-view{height:380px;min-height:0;cursor:pointer}
+#ec2-lab .ec2-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1.2rem}
+#ec2-lab .ec2-grow{flex:1 1 260px;min-width:0}
+#ec2-lab .ec2-mini td,#ec2-lab .ec2-mini th{text-align:center}
+#ec2-lab .ec2-mini td:first-child,#ec2-lab .ec2-mini th:first-child{text-align:left}
+#ec2-lab .ec2-prac{counter-reset:pr;list-style:none;margin:.4rem 0 0;padding:0;display:grid;gap:.7rem}
+#ec2-lab .ec2-prac>li{counter-increment:pr;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem .6rem 2.7rem;position:relative}
+#ec2-lab .ec2-prac>li::before{content:counter(pr);position:absolute;left:.75rem;top:.7rem;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--soft);color:var(--acc);font:700 .8rem system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+#ec2-lab .ec2-prac>li>p{margin:0 0 .35rem}
+#ec2-lab .ec2-prac details summary{cursor:pointer;font-size:.88rem;font-weight:600;color:var(--acc);min-height:32px;display:flex;align-items:center}
+#ec2-lab .ec2-prac details p{margin:.35rem 0 .2rem;font-size:.95rem}
+#ec2-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #ec2-lab #ec2-view{height:min(70vh,520px);min-height:420px}
+  #ec2-lab #ec2c-view{height:520px}
+  #ec2-lab #ec2e-view{height:340px}
+}
+@media (max-width:600px){
+  #ec2-lab .lab-toast{top:3.6rem;font-size:.82rem;max-width:86%}
+  #ec2-lab .lab-hud{font-size:11px}
+  #ec2-lab .ec2-prac>li{padding-left:2.4rem}
+}
+@media (prefers-reduced-motion:reduce){#ec2-lab .ec2-win{animation:none}}
+#ec2-lab .u-ex ul,#ec2-lab .u-ex ol{padding-left:1.3rem}

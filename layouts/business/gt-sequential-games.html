@@ -1,0 +1,209 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/sequential-games/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/sequential-games/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt6-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 6</p>
+    <h1>{{ .Title }}</h1>
+    <p>“If you enter my market, I’ll start a price war.” Should a newcomer believe that? Not if, once it has entered, a price war would hurt the incumbent more than sharing the market. In games played in turns, the way to think is to look ahead to the end and reason back. Here you’ll build game trees and watch them solved from the leaves up, find the equilibria that rest on empty threats, see how a commitment can make a threat believable, test the theory against how people play the ultimatum and centipede games, and find out when moving first pays.</p>
+    <span class="lab-mark" aria-hidden="true">🌳</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="gt6-view">
+      <canvas id="gt6-cv" tabindex="0" aria-label="A game tree, drawn from the top. Circles are decision nodes, gold for player 1 and blue for player 2; lines are actions; boxes at the bottom show the payoffs, player 1’s first. Press Solve, or Enter, to watch backward induction pick an action at each node from the bottom up. In You solve mode, click the action you think the player at the highlighted node would choose, or press its number key. Click any node to edit it."></canvas>
+      <div class="lab-tools"><button type="button" class="gt6-go" id="gt6-solve2" title="Solve (Enter)">▶ Solve</button><button type="button" id="gt6-reset" aria-label="Start this tree again" title="Start again (N)">↺</button></div>
+      <noscript><p class="lab-small">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Tree</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made trees" id="gt6-pre"><button type="button" data-g="entry" aria-pressed="true">Entry</button><button type="button" data-g="commit" aria-pressed="false">Commitment</button><button type="button" data-g="ultimatum" aria-pressed="false">Ultimatum</button><button type="button" data-g="centipede" aria-pressed="false">Centipede</button><button type="button" data-g="stack" aria-pressed="false">Stackelberg</button><button type="button" data-g="random" aria-pressed="false">🎲 Random</button></div>
+      <div class="lab-seg" role="group" aria-label="Mode" id="gt6-mode"><button type="button" data-m="watch" aria-pressed="true">Watch it solved</button><button type="button" data-m="you" aria-pressed="false">You solve</button></div>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="gt6-solve">▶ Solve</button><button type="button" class="lab-btn" id="gt6-clear">Clear</button><button type="button" class="lab-btn" id="gt6-rnd">New random tree</button></div>
+      <p class="gt6-sr" id="gt6-msg" aria-live="polite"></p>
+      <h3>Edit the selected node</h3>
+      <div id="gt6-edit"></div>
+      <h3>Strategic form</h3>
+      <div class="gt6-sfbox" id="gt6-sf"></div>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt6-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The tree.</b> The game starts at the top. Each circle is a decision: the number says whose (gold 1 or blue 2). Each line below it is an action, and the boxes at the bottom are the outcomes, with player 1’s payoff first. Everyone sees every earlier move: these are games of <b>perfect information</b>.</p>
+      <p><b>Solving.</b> Press Solve and the program starts at the decisions closest to the end. At each one it compares the payoffs the mover would get from each action, using the values already worked out below, keeps the best action (a thick colored line) and writes the resulting payoffs next to the node in green. Then it moves up a level. When it reaches the top, the thick lines show what every player would do at every point, and the green boxes show the path that is actually played.</p>
+      <p><b>You solve.</b> The same procedure, by hand: the highlighted node is the next one to decide. A wrong pick tells you what that action would have given the mover.</p>
+      <p><b>Editing.</b> Click any node or payoff box to change who moves, rename an action, change payoffs, add an action or turn an end into a new decision. The strategic form in the panel updates for small trees: click its cells to test which Nash equilibria survive backward induction.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="trees">
+    <h2>Game trees and strategies</h2>
+    <p>A game in which players move in turns is called an <b>extensive game</b>. With perfect information, Osborne describes it by its players, the possible sequences of actions (<b>histories</b>), which ones end the game (<b>terminal histories</b>), who moves after each non-terminal history (the <b>player function</b>), and each player’s preferences over terminal histories. The tree draws all of that.</p>
+    <p>A <b>strategy</b> in an extensive game is a complete plan: it specifies an action at <i>every</i> node where the player moves, including nodes that the plan itself makes sure are never reached. That sounds pedantic, but it is exactly what lets us ask whether a threat is believable: the plan “fight if you enter” has to say what happens at the node after entry, even if, because of the threat, entry never happens.</p>
+    <div class="u-ex"><b>Worked example: the entry game</b>
+      <p>A potential entrant decides whether to enter a market (In) or not (Out). If it enters, the incumbent can fight with a price war or accommodate. Payoffs in millions of dollars of profit (invented): Out gives the entrant 0 and the incumbent 4; In followed by Fight gives −1 and 1; In followed by Accommodate gives 1 and 2.</p>
+      <ol>
+        <li><b>Backward induction.</b> After entry, the incumbent compares Fight (1) with Accommodate (2) and accommodates. The entrant, foreseeing that, compares Out (0) with In (1) and enters. Outcome: (In, Accommodate), payoffs (1, 2).</li>
+        <li><b>The strategic form.</b> The entrant has two strategies, the incumbent two (Fight or Accommodate, “if entry happens”):</li>
+      </ol>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Entrant chooses a row, Incumbent chooses a column. In each cell, Entrant’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Incumbent</th></tr><tr><th class="gth-p1" scope="col">Entrant</th><th scope="col">Fight</th><th scope="col">Accommodate</th></tr></thead><tbody><tr><th scope="row">Out</th><td class="gth-ne"><span class="gth-u1 gth-br">0</span>, <span class="gth-u2 gth-br">4</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2 gth-br">4</span></td></tr><tr><th scope="row">In</th><td><span class="gth-u1">−1</span>, <span class="gth-u2">1</span></td><td class="gth-ne"><span class="gth-u1 gth-br">1</span>, <span class="gth-u2 gth-br">2</span></td></tr></tbody></table></div></figure>
+      <ol start="3">
+        <li><b>Two Nash equilibria.</b> (In, Accommodate), and also (Out, Fight): if the incumbent’s plan is to fight, staying out is the entrant’s best response, and given that the entrant stays out, the incumbent loses nothing by planning to fight, since the plan is never tested.</li>
+        <li><b>Only one is believable.</b> (Out, Fight) rests on a threat the incumbent would not carry out: at the node after entry, fighting gives it 1 instead of 2. Backward induction throws that equilibrium away.</li>
+      </ol>
+    </div>
+    <h3 class="lab-h">Subgame perfect equilibrium</h3>
+    <p>Every node of a perfect-information tree starts a smaller game, a <b>subgame</b>: the part of the tree below it. Reinhard Selten’s idea (1965) was to require equilibrium play not only in the whole game but in every subgame.</p>
+    <div class="u-big">a strategy profile is a subgame perfect equilibrium if it is a Nash equilibrium of every subgame<small>in a finite game of perfect information, backward induction finds the subgame perfect equilibria; if no player is ever indifferent, there is exactly one</small></div>
+    <p>The result that a finite game of perfect information can always be solved this way goes back to Ernst Zermelo’s 1913 paper on chess and was stated in general by Harold Kuhn (1953). It is why chess has a definite value, a win for White, a win for Black or a draw, even though nobody knows which.</p>
+    <div class="lab-try"><b>Try this:</b> In the entry game, click the incumbent’s Fight payoff box and change its 1 to 3. Solve again: now fighting is what the incumbent would really do, the threat is credible, and the entrant stays out.</div>
+    <div class="lab-try"><b>Try this:</b> Load the centipede game and solve it. Each player would rather take the pot now than pass it to an opponent who will take it next, so the game ends at the first move with (1, 0), though both could have had more by passing to the end.</div>
+  </section>
+
+  <section class="lab-sec" id="commit">
+    <h2>Credible threats and commitment</h2>
+    <p>A threat works only if it would be in the threatener’s interest to carry it out when the time comes. The cleverest strategic moves therefore change your <i>own</i> future payoffs. Thomas Schelling called this the paradox of commitment: by limiting your options, or making some of them costly, you can be better off, because others then believe what you say. Generals have burned bridges behind their armies so that retreat was impossible.</p>
+    <div class="u-ex"><b>Worked example: investing to deter entry</b>
+      <p>Before the entrant decides, the incumbent can invest in extra capacity. The investment costs it 1 (million dollars) but makes a price war cheaper to fight: after investing, fighting an entrant gives the incumbent 1.5 and accommodating, with expensive capacity standing idle, only 1. Load “Commitment” to see the tree.</p>
+      <ol>
+        <li><b>Without the investment</b>, the game is the entry game above: the entrant enters, the incumbent accommodates, and the incumbent gets 2.</li>
+        <li><b>With the investment</b>, the incumbent would fight (1.5 &gt; 1), so the entrant, expecting −1 from entering, stays out. The incumbent gets 4 − 1 = <b>3</b>.</li>
+        <li>3 &gt; 2, so the incumbent invests. The investment pays not because the extra capacity is used, but because it changes what the incumbent would do, and the entrant knows it.</li>
+      </ol>
+    </div>
+    <p>Business is full of commitments: capacity built ahead of demand, contracts that promise customers the lowest price, long-term supply agreements, public announcements that would be embarrassing to reverse. Tata Motors publicly committed to a price of 100,000 rupees for the Nano; the case <a href="{{ "business/cases/tata-nano/" | relURL }}">Tata Nano: The Car Nobody Wanted to Be Seen In</a> asks whether that commitment helped or hurt. Commitments are also costly: they take away flexibility when circumstances change.</p>
+    <div class="u-myth"><b>Common mistake: “Moving first is always an advantage”</b>
+      <p>Moving first lets you commit, and that helps when your commitment pushes the other player in a direction you like, as with the Stackelberg leader below. But moving first also reveals your choice. In matching pennies played in turns, the second player simply matches (or mismatches) and always wins. In price competition with differentiated products, the follower can undercut a leader’s announced price. Whether the first or the second mover has the advantage depends on the game.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="people">
+    <h2>What people actually do: ultimatums and centipedes</h2>
+    <p>Backward induction makes sharp predictions, and two famous games test them. In the <b>ultimatum game</b>, a proposer offers a split of $10 and a responder accepts or rejects; rejecting leaves both with nothing. A responder who cares only about money accepts any positive offer, so the proposer should offer the smallest possible amount. In the <b>centipede game</b>, players alternately choose between taking a growing pot and passing it on; backward induction says the first player takes at once.</p>
+    <div class="lab-stage wide" id="gt6u">
+      <div class="gt6-board" role="group" aria-label="Ultimatum and centipede games against simulated players">
+        <div class="lab-seg" role="group" aria-label="Game" id="gt6u-tab"><button type="button" data-t="propose" aria-pressed="true">Ultimatum: you propose</button><button type="button" data-t="respond" aria-pressed="false">Ultimatum: you respond</button><button type="button" data-t="cent" aria-pressed="false">Centipede</button></div>
+        <div class="lab-seg" role="group" aria-label="Responder" id="gt6u-bot"><button type="button" data-b="typical" aria-pressed="true">A typical person</button><button type="button" data-b="money" aria-pressed="false">A pure money-maximizer</button></div>
+        <div id="gt6u-body"></div>
+        <div class="gt6-chart"><canvas id="gt6u-cv" aria-label="The responder’s chance of accepting each possible offer, with your past offers as dots: green accepted, red rejected."></canvas></div>
+        <dl class="lab-readout" id="gt6u-read"></dl>
+      </div>
+    </div>
+    <p>In the experiment that started this literature, Werner Güth, Rolf Schmittberger and Bernd Schwarze (1982) found that proposers offered far more than the minimum and that low offers were often rejected. Hundreds of studies since agree: the most common offers are 40 to 50 percent of the pie, a review of 37 studies by Hessel Oosterbeek, Randolph Sloof and Gijs van de Kuilen (2004) found an average offer of about 40 percent, and offers below about 20 percent are rejected roughly half the time (Colin Camerer, <i>Behavioral Game Theory</i>, 2003). The simulated “typical” responder above has a curve with that shape; it isn’t fitted to any one study.</p>
+    <p>Does that refute backward induction? Not exactly. Backward induction is a statement about players whose payoffs are the dollar amounts. Rejecting an insulting offer says that the responder’s payoff includes something else, such as fairness or the satisfaction of punishing a greedy proposer, and a proposer who knows that is right to offer more. In the centipede game, Richard McKelvey and Thomas Palfrey (1992) found that very few players took at the first opportunity; most passed at least once. A small chance that the other player is an altruist who always passes can make passing rational, which is the same logic of reputation that Chapter 7 develops.</p>
+  </section>
+
+  <section class="lab-sec" id="stackelberg">
+    <h2>Stackelberg: the value of moving first</h2>
+    <p>Take the Cournot market of Chapter 5 (price = 100 − total output, cost $10), but let firm 1 choose its output first and firm 2 see it before choosing. Heinrich von Stackelberg studied this in 1934. Backward induction: the follower best responds to whatever it sees, <i>q</i><sub>2</sub> = (90 − <i>q</i><sub>1</sub>)/2, so the leader chooses the point on the follower’s best-response line that is best for itself.</p>
+    <div class="lab-stage" id="gt6s">
+      <div class="lab-view gt6-st" id="gt6s-view">
+        <canvas id="gt6s-cv" aria-label="Stackelberg leadership: the follower’s best-response line in blue, the Cournot and Stackelberg points, the leader’s isoprofit curves, and the leader’s profit as its output changes. Drag along the graph to choose the leader’s output."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>The leader’s choice</h3>
+        <div class="lab-field"><span><label for="gt6s-q">Leader’s output q₁</label><output id="gt6s-q-o" for="gt6s-q"></output></span><input type="range" id="gt6s-q" min="0" max="90" step="0.5" value="30"></div>
+        <dl class="lab-readout" id="gt6s-read" aria-live="polite"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: leader and follower</b>
+      <ol>
+        <li>The leader’s profit, given the follower’s reply, is (100 − <i>q</i><sub>1</sub> − (90 − <i>q</i><sub>1</sub>)/2 − 10)<i>q</i><sub>1</sub> = (45 − <i>q</i><sub>1</sub>/2)<i>q</i><sub>1</sub>.</li>
+        <li>Setting the derivative to zero: 45 − <i>q</i><sub>1</sub> = 0, so <i>q</i><sub>1</sub> = <b>45</b>, and the follower replies <i>q</i><sub>2</sub> = <b>22.5</b>.</li>
+        <li>Price 100 − 67.5 = <b>$32.50</b>. Profits: leader 22.5 × 45 = <b>1,012.5</b>, follower 22.5 × 22.5 = <b>506.25</b>, against 900 each in Cournot.</li>
+      </ol>
+      <p>The leader commits to producing a lot, and because quantities are strategic substitutes the follower backs off. Total output (67.5) is higher than under Cournot (60), so customers gain too. Note that the leader’s 45 is not a best response to 22.5 (that would be 33.75): the leader gains precisely because it can’t revise its choice. Without commitment, its lead would be worthless.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <p><b>Ernst Zermelo</b> (1913) analyzed chess as a finite game of perfect information. <b>John von Neumann and Oskar Morgenstern</b> (1944) introduced the extensive form, and <b>Harold Kuhn</b> (1953) gave the general definition of extensive games and proved that games of perfect information have equilibria in pure strategies, found by backward induction. <b>Heinrich von Stackelberg</b>’s <i>Marktform und Gleichgewicht</i> (1934) studied leadership in markets. <b>Thomas Schelling</b>’s <i>The Strategy of Conflict</i> (1960) made commitment and credibility central. <b>Reinhard Selten</b> defined subgame perfection in 1965, in a paper on an oligopoly with demand inertia, and in 1978 posed the “chain-store paradox”: an incumbent facing a long series of entrants should, by backward induction, accommodate every one, though intuition says it should fight early to build a reputation. Robert Rosenthal introduced the centipede game in 1981 in the same spirit. Explaining the paradoxes led to the theory of reputation (Chapter 7) and of incomplete information (Chapter 8).</p>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <ul>
+      <li><b>Business:</b> entry deterrence, capacity races, price-matching promises, exclusive contracts. Early movers can lock in customers and scale, as Amazon did when it began selling the computing infrastructure it had built for itself (<a href="{{ "business/cases/amazon-web-services-2006/" | relURL }}">Amazon Web Services</a>); Henry Ford’s five-dollar day was a first move in the labor market that rivals then had to match (<a href="{{ "business/cases/ford-five-dollar-day-1914/" | relURL }}">Henry Ford’s Five-Dollar Day</a>).</li>
+      <li><b>Negotiation:</b> “final offers” that aren’t final, deadlines, and the ultimatum game’s lesson that a lowball offer can be refused even when refusing costs the responder.</li>
+      <li><b>Politics:</b> veto threats, brinkmanship, and constitutional rules that commit future governments.</li>
+      <li><b>Games and sports:</b> chess and checkers endgames are solved by backward induction; computers solved checkers completely in 2007 (it is a draw with perfect play).</li>
+      <li><b>Daily life:</b> a parent’s threat to cancel a vacation if the kids don’t behave is credible only if the parent would really cancel it. Kids are good at backward induction.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol>
+      <li><p><b>Solve a tree.</b> Player 1 chooses L or R. After L, player 2 chooses a, giving (3, 1), or b, giving (0, 2). After R, player 2 chooses c, giving (2, 2), or d, giving (1, 3). Find the subgame perfect equilibrium.</p>
+        <details><summary>Show the answer</summary><p>After L, player 2 picks b (2 &gt; 1), so L leads to (0, 2). After R, player 2 picks d (3 &gt; 2), so R leads to (1, 3). Player 1 compares 0 and 1 and picks R. Equilibrium: player 1 plays R; player 2 plays b after L and d after R. Outcome (1, 3).</p></details></li>
+      <li><p><b>Counting strategies.</b> In the problem above, how many strategies does player 2 have? Write them all.</p>
+        <details><summary>Show the answer</summary><p>Player 2 moves at two nodes with two actions each: 2 × 2 = <b>4</b> strategies: (a, c), (a, d), (b, c), (b, d), each meaning “this after L, that after R.”</p></details></li>
+      <li><p><b>When is the threat credible?</b> In the entry game, the incumbent gets <i>x</i> from fighting an entrant (and 2 from accommodating, 4 if the entrant stays out). For which <i>x</i> does the entrant stay out in the subgame perfect equilibrium?</p>
+        <details><summary>Show the answer</summary><p>The incumbent fights if <i>x</i> &gt; 2. Then the entrant compares −1 (enter and be fought) with 0 (stay out) and stays out. So the entrant stays out exactly when <i>x</i> &gt; 2. (At <i>x</i> = 2 the incumbent is indifferent and there are two subgame perfect equilibria.)</p></details></li>
+      <li><p><b>Stackelberg with other numbers.</b> Demand is <i>P</i> = 120 − <i>Q</i> and cost is $20. Find the Stackelberg outputs and profits and compare them with Cournot.</p>
+        <details><summary>Show the answer</summary><p>Follower: <i>q</i><sub>2</sub> = (100 − <i>q</i><sub>1</sub>)/2. Leader maximizes (50 − <i>q</i><sub>1</sub>/2)<i>q</i><sub>1</sub>: <i>q</i><sub>1</sub> = 50, <i>q</i><sub>2</sub> = 25, price $45, profits 1,250 and 625. Cournot: 33.3 each, price $53.33, profit about 1,111 each. The leader gains 139, the follower loses 486, consumers gain from the lower price.</p></details></li>
+      <li><p><b>The ultimatum game on a grid.</b> The proposer must offer a whole number of dollars from $0 to $10, and the responder cares only about money. Find all subgame perfect equilibria.</p>
+        <details><summary>Show the answer</summary><p>The responder accepts any offer of $1 or more (something beats nothing). At $0 the responder is indifferent, so either reply is a best response. If the responder accepts $0, the proposer offers $0 and keeps $10. If the responder rejects $0, the proposer offers $1 and keeps $9. Both are subgame perfect.</p></details></li>
+      <li><p><b>Why pass in the centipede?</b> In the centipede tree of the interactive, suppose player 1 thinks player 2 will pass at the second node with probability π (and take otherwise), and that player 1 would then take at the third node, getting 3. For which π does player 1 prefer to pass at the first node?</p>
+        <details><summary>Show the answer</summary><p>Taking at once gives 1. Passing gives 3 with probability π (player 2 passes, then player 1 takes) and 0 with probability 1 − π. Pass if 3π &gt; 1, that is π &gt; 1/3. A modest doubt about the other player’s rationality, or a belief that they are kind, is enough to make passing sensible.</p></details></li>
+      <li><p><b>A second-mover advantage.</b> In matching pennies, player 1 wins (+1) if the coins match and player 2 wins if they differ. Suppose player 1 must show her coin before player 2 chooses. Solve the game and compare with the simultaneous version.</p>
+        <details><summary>Show the answer</summary><p>Whatever player 1 shows, player 2 picks the other side and wins. Backward induction: player 1 gets −1 whatever she does. In the simultaneous game each wins with probability 1/2 (expected payoff 0, Chapter 4). Moving first is a disadvantage when it reveals information that the other player can exploit.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the interactives work</h2>
+    <p><b>Trees.</b> Backward induction is computed recursively: each end node’s value is its payoffs; each decision node takes the value of the child that gives the mover the highest payoff (ties go to the first action listed, and the program says so). The strategic form lists every strategy (an action at each of a player’s nodes) and plays the tree out for every pair; pure Nash equilibria are found with the best-response test of Chapter 3, and the subgame perfect profile is the one matching backward induction at every node. Random trees have depth two or three, two or three actions per node, payoffs from 0 to 9, and no ties.</p>
+    <p><b>Bots.</b> The “typical” responder accepts an offer that is a share <i>s</i> of the pie with probability 0.02 + 0.97/(1 + e<sup>−22(<i>s</i> − 0.2)</sup>): about 12% for $1, 51% for $2, 89% for $3, and 98% or more from $4 up. The typical proposer offers $4 or $5 most of the time and $1 or $2 occasionally (mean about $4.03). The centipede bot passes early and takes later. The money-maximizer accepts any positive offer.</p>
+    <p><b>Checks (node).</b> The entry game solves to (In, Accommodate) with payoffs (1, 2); its strategic form has exactly two pure equilibria, and only (In, Accommodate) is subgame perfect. The commitment tree solves to Invest, then Out, with the incumbent getting 3. The centipede solves to Take at once with (1, 0); the ultimatum tree to the smallest offer; the discrete Stackelberg tree to the leader choosing 45. In 300 random trees, the backward-induction profile was always a Nash equilibrium of the strategic form. Stackelberg: 45 and 22.5 with profits 1,012.5 and 506.25; a brute-force search over the leader’s output in steps of 0.01 found the maximum at 45.</p>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>A strategy in an extensive game is …</p>
+        <ul class="u-opts"><li><button type="button">the first action a player takes</button></li><li><button type="button">the sequence of actions actually played</button></li><li><button type="button">a complete plan: an action at every node where the player might move</button></li></ul>
+        <details><summary>Show the answer</summary><p>Including nodes that are never reached. That is what makes it possible to ask whether a threat would really be carried out.</p></details></li>
+      <li class="u-q" data-a="0"><p>In the entry game, why isn’t (Out, Fight) subgame perfect?</p>
+        <ul class="u-opts"><li><button type="button">If entry happened, fighting would give the incumbent less than accommodating, so the threat isn’t credible</button></li><li><button type="button">Because the entrant gets 0</button></li><li><button type="button">Because it isn’t a Nash equilibrium</button></li></ul>
+        <details><summary>Show the answer</summary><p>It is a Nash equilibrium, but in the subgame after entry the incumbent’s planned action is not a best response.</p></details></li>
+      <li class="u-q" data-a="1"><p>The incumbent in the commitment game is better off investing because …</p>
+        <ul class="u-opts"><li><button type="button">the extra capacity lowers its costs in every case</button></li><li><button type="button">investing changes its own payoffs so that fighting becomes its best response, which makes the threat believable and deters entry</button></li><li><button type="button">investing is a dominant strategy</button></li></ul>
+        <details><summary>Show the answer</summary><p>The investment costs 1, but it turns an empty threat into a credible one, worth 4 − 1 = 3 instead of 2.</p></details></li>
+      <li class="u-q" data-a="2"><p>In ultimatum-game experiments, offers below about 20 percent of the pie are …</p>
+        <ul class="u-opts"><li><button type="button">almost always accepted, as backward induction predicts</button></li><li><button type="button">never made</button></li><li><button type="button">rejected roughly half the time</button></li></ul>
+        <details><summary>Show the answer</summary><p>People give up money to reject offers they see as unfair. Their payoffs aren’t just dollars.</p></details></li>
+      <li class="u-q" data-a="0"><p>In the Stackelberg example, the leader produces 45 and earns more than in Cournot. What makes this possible?</p>
+        <ul class="u-opts"><li><button type="button">The leader commits first, and the follower, whose best response slopes down, produces less in reply</button></li><li><button type="button">The leader has lower costs</button></li><li><button type="button">The follower is irrational</button></li></ul>
+        <details><summary>Show the answer</summary><p>Same costs, rational follower. The advantage comes entirely from commitment plus strategic substitutes.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapters 5 and 6 (extensive games with perfect information: theory and illustrations, including the ultimatum game and Stackelberg’s duopoly).</li>
+      <li>R. Selten, “Spieltheoretische Behandlung eines Oligopolmodells mit Nachfrageträgheit”, <i>Zeitschrift für die gesamte Staatswissenschaft</i> 121, 1965; “The chain store paradox”, <i>Theory and Decision</i> 9, 1978, 127–159.</li>
+      <li>H. W. Kuhn, “Extensive games and the problem of information”, in <i>Contributions to the Theory of Games II</i> (Princeton University Press, 1953).</li>
+      <li>W. Güth, R. Schmittberger and B. Schwarze, “An experimental analysis of ultimatum bargaining”, <i>Journal of Economic Behavior and Organization</i> 3(4), 1982, 367–388; <a href="https://en.wikipedia.org/wiki/Ultimatum_game" target="_blank" rel="noopener">Ultimatum game</a> (Wikipedia, for the review by Oosterbeek, Sloof and van de Kuilen, <i>Experimental Economics</i>, 2004).</li>
+      <li>C. F. Camerer, <i>Behavioral Game Theory</i> (Princeton University Press, 2003), chapter 2.</li>
+      <li>R. W. Rosenthal, “Games of perfect information, predatory pricing and the chain-store paradox”, <i>Journal of Economic Theory</i> 25(1), 1981, 92–100; R. D. McKelvey and T. R. Palfrey, “An experimental study of the centipede game”, <i>Econometrica</i> 60(4), 1992, 803–836; <a href="https://en.wikipedia.org/wiki/Centipede_game" target="_blank" rel="noopener">Centipede game</a> (Wikipedia).</li>
+      <li>H. von Stackelberg, <i>Marktform und Gleichgewicht</i> (Springer, 1934). T. C. Schelling, <i>The Strategy of Conflict</i> (Harvard University Press, 1960).</li>
+      <li><a href="https://oyc.yale.edu/economics/econ-159/lecture-16" target="_blank" rel="noopener">Ben Polak, Yale ECON 159, Lecture 16: Backward Induction: Reputation and Duels</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/sequential-games/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/sequential-games/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/sequential-games/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/sequential-games/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

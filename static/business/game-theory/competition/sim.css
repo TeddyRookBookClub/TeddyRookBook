@@ -1,0 +1,24 @@
+/* Game Theory, Chapter 5 (Competition: Cournot, Bertrand and Hotelling): only what this page adds to lab.css, unit.css and ../hub.css. */
+#gt5-lab .lab-view canvas{cursor:crosshair}
+#gt5-lab .lab-view canvas:focus{outline:none}
+#gt5-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt5-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt5-lab .lab-tools .gt5-go{width:auto;padding:0 .8rem;font:600 .88rem system-ui,sans-serif;border-color:var(--sim-acc);background:rgba(18,58,51,.92);color:#fff}
+#gt5-lab .lab-seg button{min-height:36px}
+#gt5-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#gt5-lab .lab-chk{min-height:36px;cursor:pointer}
+#gt5-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#gt5-lab .lab-btn{min-height:38px}
+#gt5-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#gt5-lab .lab-readout dd{white-space:nowrap}
+#gt5-lab .gt5-f1>span label::before,#gt5-lab .gt5-f2>span label::before{content:"";display:inline-block;width:.7rem;height:.7rem;border-radius:3px;margin-right:.35rem;vertical-align:-1px}
+#gt5-lab .gt5-f1>span label::before{background:#e0a800}
+#gt5-lab .gt5-f2>span label::before{background:#4dabf7}
+#gt5-lab .lab-sec .lab-stage{margin:1rem 0}
+#gt5-lab .gt5-mid{height:420px;min-height:0}
+#gt5-lab .gt5-beach{height:360px;min-height:0;touch-action:none}
+#gt5-lab #gt5b-msg{margin:0;font-size:.86rem;line-height:1.5;color:var(--muted)}
+@media (max-width:860px){#gt5-lab .lab-view{height:min(74vh,640px);min-height:520px}#gt5-lab .gt5-mid{height:400px;min-height:0}#gt5-lab .gt5-beach{height:340px;min-height:0}}
+@media (max-width:600px){#gt5-lab .lab-view{height:640px}#gt5-lab .gt5-mid{height:380px}#gt5-lab .gt5-beach{height:330px}#gt5-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem;top:3.2rem}}
+@media (min-width:861px){#gt5-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}
+@media (min-width:700px){#gt5-lab .lab-view .lab-toast{left:auto;right:9rem;transform:translateY(-10px);max-width:46%}#gt5-lab .lab-view .lab-toast.on{transform:translateY(0)}}

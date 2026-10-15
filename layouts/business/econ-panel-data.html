@@ -1,0 +1,267 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/panel-data/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/panel-data/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec11-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 11</p>
+    <h1>{{ .Title }}</h1>
+    <p>Cities with a lot of crime hire a lot of police. So if you line up cities and compare, more police seem to go with <i>more</i> crime. Follow the same cities over several years, though, and you can ask a sharper question: when a city adds officers, does its own crime fall? Here you’ll watch pooled OLS get the sign wrong, then slide each city’s cloud to the origin and see the true effect appear. You’ll meet first differences, random effects and the Hausman test, and run a Monte Carlo that shows why standard errors must respect the clusters in your data.</p>
+    <span class="lab-mark" aria-hidden="true">🗂️</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view ec11-tall" id="ec11-view">
+      <canvas id="ec11-cv" tabindex="0" aria-label="Left: crime against police for several simulated cities followed over several years, each city in its own color, in one of four views: raw data with the pooled OLS line, the within view where each city’s cloud slides to the origin, first differences, and city averages. Right: each estimator’s value and 95% interval against the true effect of −0.8, with the Hausman test result. Keys: left and right arrows switch the view, N new panel, M runs 500 panels."></canvas>
+      <div class="lab-tools">
+        <button type="button" id="ec11-new2" aria-label="Draw a new panel" title="New panel (N)">🎲</button>
+        <button type="button" id="ec11-mc2" aria-label="Run 500 panels" title="Run 500 panels (M)">▶</button>
+        <button type="button" id="ec11-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>View</h3>
+      <div class="lab-seg" role="group" aria-label="View" id="ec11-viewseg">
+        <button type="button" data-v="raw" aria-pressed="true">Raw data</button>
+        <button type="button" data-v="within" aria-pressed="false">Within</button>
+        <button type="button" data-v="fd" aria-pressed="false">First differences</button>
+        <button type="button" data-v="means" aria-pressed="false">City means</button>
+      </div>
+      <h3>The panel</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made panels" id="ec11-pre">
+        <button type="button" data-pre="police" aria-pressed="true">Police and crime</button>
+        <button type="button" data-pre="nolink" aria-pressed="false">No hidden link</button>
+        <button type="button" data-pre="two" aria-pressed="false">Two years</button>
+        <button type="button" data-pre="trend" aria-pressed="false">Nationwide trend</button>
+      </div>
+      <div class="lab-field"><span><label for="ec11-k">Hidden link: high-crime cities hire more police</label><output id="ec11-k-o" for="ec11-k"></output></span><input type="range" id="ec11-k" min="-0.95" max="0.95" step="0.05" value="0.9"></div>
+      <div class="lab-field"><span><label for="ec11-sa">Spread of the hidden baselines</label><output id="ec11-sa-o" for="ec11-sa"></output></span><input type="range" id="ec11-sa" min="1" max="10" step="0.5" value="6"></div>
+      <div class="lab-field"><span><label for="ec11-N">Cities</label><output id="ec11-N-o" for="ec11-N"></output></span><input type="range" id="ec11-N" min="4" max="30" step="1" value="8"></div>
+      <div class="lab-field"><span><label for="ec11-T">Years</label><output id="ec11-T-o" for="ec11-T"></output></span><input type="range" id="ec11-T" min="2" max="10" step="1" value="6"></div>
+      <label class="lab-chk"><input type="checkbox" id="ec11-lines"> Lines for each city (fixed effects)</label>
+      <label class="lab-chk"><input type="checkbox" id="ec11-trend"> Nationwide trend in the data</label>
+      <label class="lab-chk"><input type="checkbox" id="ec11-two"> Year effects (two-way fixed effects)</label>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec11-new">🎲 New panel</button><button type="button" class="lab-btn pri" id="ec11-mc">▶ Run 500 panels</button></div>
+      <h3>Estimates</h3>
+      <div class="lab-tw"><table class="lab-table ec11-tab" id="ec11-read"></table></div>
+      <p class="ec11-sr" id="ec11-say" aria-live="polite"></p>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec11-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The panel.</b> Each color is one simulated city, followed for several years. Each city has a hidden baseline level of crime, from local conditions the data don’t record. The true rule is crime = 40 − 0.8 × police + baseline + noise: one more officer per 10,000 residents lowers crime by 0.8 per 1,000 residents. The “hidden link” slider controls how much high-baseline cities hire extra police.</p>
+      <p><b>Four views.</b> <i>Raw data</i> shows every city-year and the pooled OLS line, which compares across cities and so mixes the baselines with the police effect. <i>Within</i> subtracts each city’s own averages, sliding every cloud to the origin; only changes inside a city are left, and the slope is the fixed-effects estimate. <i>First differences</i> plots each year’s change against the previous year. <i>City means</i> keeps one point per city: the between estimator, the worst of all here.</p>
+      <p><b>The scoreboard.</b> On the right, each estimator’s value and 95% interval against the gold truth. Run 500 panels and the shaded strips show where each estimator lands across samples. The Hausman test at the bottom asks whether random effects can be trusted.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>Panel data and unobserved heterogeneity</h2>
+    <p>A panel follows the same <var>N</var> units (people, firms, cities, countries) over <var>T</var> periods. Write the model with a time-constant unobserved effect <var>a</var><sub><var>i</var></sub>:</p>
+    <div class="u-big"><var>y</var><sub><var>it</var></sub> = β₀ + β₁<var>x</var><sub><var>it</var></sub> + <var>a</var><sub><var>i</var></sub> + <var>u</var><sub><var>it</var></sub><small><var>i</var> = unit, <var>t</var> = period; <var>a</var><sub><var>i</var></sub> is the unobserved effect (fixed over time); <var>u</var><sub><var>it</var></sub> is the idiosyncratic error</small></div>
+    <div class="lab-cols">
+      <p>Pooled OLS treats <var>a</var><sub><var>i</var></sub> + <var>u</var><sub><var>it</var></sub> as one error. If <var>a</var><sub><var>i</var></sub> is correlated with <var>x</var><sub><var>it</var></sub>, as when high-crime cities hire more police, pooled OLS suffers <b>heterogeneity bias</b>: omitted-variable bias from Chapter 6, where the omitted variable is everything fixed about the unit. Panel data let us remove <var>a</var><sub><var>i</var></sub> without ever measuring it.</p>
+      <p>The key assumption for the fixed-effects and first-difference estimators is <b>strict exogeneity</b>: E(<var>u</var><sub><var>it</var></sub> | <var>x</var><sub><var>i</var>1</sub>, …, <var>x</var><sub><var>iT</var></sub>, <var>a</var><sub><var>i</var></sub>) = 0. Today’s shock can’t be related to the regressors in any period. It rules out, for example, a city hiring police <i>because</i> of a crime spike last year that also shows up in this year’s error.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="fe">
+    <h2>Fixed effects: the within transformation</h2>
+    <div class="lab-cols">
+      <div>
+        <p>Average the equation over time for each unit: <var>ȳ</var><sub><var>i</var></sub> = β₀ + β₁<var>x̄</var><sub><var>i</var></sub> + <var>a</var><sub><var>i</var></sub> + <var>ū</var><sub><var>i</var></sub>. Subtract it from the original. The unobserved effect disappears, because it is the same in every period:</p>
+        <div class="lab-formula"><var>y</var><sub><var>it</var></sub> − <var>ȳ</var><sub><var>i</var></sub> = β₁(<var>x</var><sub><var>it</var></sub> − <var>x̄</var><sub><var>i</var></sub>) + (<var>u</var><sub><var>it</var></sub> − <var>ū</var><sub><var>i</var></sub>)</div>
+        <p>Pooled OLS on these time-demeaned data is the <b>fixed-effects</b> or <b>within</b> estimator. That is exactly what the “Within” view shows: each city’s cloud slides so its average sits at the origin.</p>
+        <p><b>Dummy variables give the same answer.</b> Regressing <var>y</var> on <var>x</var> and a dummy for each unit (dropping one, or the intercept) is the least-squares dummy variable (LSDV) regression. Its slope equals the within estimate exactly, and its standard errors come out right automatically. With demeaned data, the degrees of freedom must be corrected to <var>NT</var> − <var>N</var> − <var>k</var>.</p>
+      </div>
+      <div>
+        <p><b>What FE can’t do.</b> Any variable that never changes within a unit (a city’s region, a person’s birth year) is wiped out by demeaning, so its effect can’t be estimated. And FE uses only within variation: if <var>x</var> barely changes over time, the estimate is imprecise, and measurement error does more damage, because the true within signal is small next to the noise.</p>
+        <div class="u-ex"><b>Worked example: two cities, two years</b>
+          <p>City A goes from 20 to 24 officers per 10,000 and its crime rate from 60.0 to 56.8. City B goes from 30 to 28 officers and its crime from 80.0 to 81.6 (no noise, for clarity).</p>
+          <ul>
+            <li>Pooled OLS on the four city-years: slope = +2.52. More police, more crime?</li>
+            <li>First differences: A changes by (+4, −3.2), B by (−2, +1.6). Slope through the origin: [4 × (−3.2) + (−2) × 1.6] / (4² + 2²) = −16/20 = <b>−0.80</b>.</li>
+          </ul>
+          <p>City B simply has a higher baseline. Comparing each city with itself removes it.</p>
+        </div>
+      </div>
+    </div>
+    <div class="lab-try"><b>Try this:</b> With “Police and crime,” switch from Raw data to Within. The colored clouds slide to the center and the slope turns from positive to about −0.8. Then tick “Lines for each city”: each city’s thin line has the fixed-effects slope, shifted up or down by its own intercept. Those intercepts are the estimated fixed effects.</div>
+  </section>
+
+  <section class="lab-sec" id="fd">
+    <h2>First differences</h2>
+    <div class="lab-cols">
+      <p>Another way to remove <var>a</var><sub><var>i</var></sub> is to subtract last period from this period:</p>
+      <div class="lab-formula">Δ<var>y</var><sub><var>it</var></sub> = β₁Δ<var>x</var><sub><var>it</var></sub> + Δ<var>u</var><sub><var>it</var></sub> &nbsp;&nbsp; (with an intercept if there is a time trend)</div>
+      <p>With two periods, first differences and fixed effects give identical estimates and standard errors (when each uses the matching time effects). With more periods they differ. FE is more efficient when the <var>u</var><sub><var>it</var></sub> are serially uncorrelated; FD is better when the errors follow something close to a random walk. If the two are very different, strict exogeneity may be failing.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="re">
+    <h2>Random effects and the Hausman test</h2>
+    <div class="lab-cols">
+      <div>
+        <p><b>Random effects</b> makes a stronger assumption: <var>a</var><sub><var>i</var></sub> is uncorrelated with the regressors in every period. Then pooled OLS is consistent but inefficient, because the composite error <var>a</var><sub><var>i</var></sub> + <var>u</var><sub><var>it</var></sub> is correlated over time within a unit. Generalized least squares fixes this by subtracting only a fraction θ of each unit’s mean:</p>
+        <div class="lab-formula"><var>y</var><sub><var>it</var></sub> − θ<var>ȳ</var><sub><var>i</var></sub> = β₀(1 − θ) + β₁(<var>x</var><sub><var>it</var></sub> − θ<var>x̄</var><sub><var>i</var></sub>) + error, &nbsp; θ = 1 − √[σ²<sub><var>u</var></sub> / (σ²<sub><var>u</var></sub> + <var>T</var>σ²<sub><var>a</var></sub>)]</div>
+        <p>θ = 0 is pooled OLS; θ = 1 is fixed effects. Random effects can estimate effects of time-constant variables, and is more precise than FE when its assumption holds. In practice θ is estimated from the FE and between regressions.</p>
+      </div>
+      <div>
+        <p><b>The Hausman test</b> (Jerry Hausman, 1978) compares the two. If the RE assumption holds, both estimates are consistent and should be close; if it fails, only FE is consistent. With one coefficient:</p>
+        <div class="lab-formula"><var>H</var> = (β̂<sub>FE</sub> − β̂<sub>RE</sub>)² / [Var(β̂<sub>FE</sub>) − Var(β̂<sub>RE</sub>)] ~ χ²₁</div>
+        <div class="u-ex"><b>Worked example: a Hausman test</b>
+          <p>FE gives −0.81 (se 0.16) and RE −0.19 (se 0.13). <var>H</var> = (−0.81 + 0.19)² / (0.16² − 0.13²) = 0.3844 / 0.0087 = <b>44.2</b>. The 5% critical value of χ²₁ is 3.84: reject random effects and use fixed effects.</p>
+        </div>
+        <p>Failing to reject doesn’t prove RE is right; the test may just lack power. Many applied economists use FE by default when the units aren’t a random draw from a larger population (all 50 states, say) or when correlation with <var>a</var><sub><var>i</var></sub> is plausible.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="twoway">
+    <h2>Two-way fixed effects</h2>
+    <div class="lab-cols">
+      <p>Some shocks hit every unit at once: a recession, a national law, a nationwide drop in crime. If those shocks move with <var>x</var> over time (police forces grew while crime fell everywhere), one-way fixed effects mistakes the common trend for the effect of <var>x</var>. Adding a dummy for each period, λ<sub><var>t</var></sub>, removes everything common to all units in a year:</p>
+      <div class="lab-formula"><var>y</var><sub><var>it</var></sub> = β₁<var>x</var><sub><var>it</var></sub> + <var>a</var><sub><var>i</var></sub> + λ<sub><var>t</var></sub> + <var>u</var><sub><var>it</var></sub></div>
+      <p>In the simulation, tick “Nationwide trend”: police rise 0.6 a year and crime falls 1.5 a year in every city for reasons unrelated to police. One-way FE drifts to about −1.4. Tick “Year effects” and it returns to −0.8. Two-way fixed effects is also the workhorse behind difference-in-differences, the subject of <a href="{{ "business/econometrics/difference-in-differences/" | relURL }}">Chapter 12</a>, which also explains when it can mislead.</p>
+    </div>
+    <div class="u-myth"><b>Common mistake: “Fixed effects removes all the bias”</b>
+      <p>It removes only what is fixed over time within each unit. A confounder that changes over time (a new mayor who both hires police and launches other programs) survives. So does reverse causality from this year’s crime to this year’s hiring, and measurement error gets worse, not better. Fixed effects is a strong tool for one specific problem.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="cluster">
+    <h2>Clustered standard errors</h2>
+    <p>Observations from the same city, school or firm tend to share shocks, so they carry less independent information than their count suggests. If the regressor is also similar within groups, ordinary and even heteroskedasticity-robust standard errors are too small. Brent Moulton (1990) showed how much: with groups of size <var>m</var>, the variance is understated by roughly the <b>Moulton factor</b>.</p>
+    <div class="u-big">Var<sub>true</sub> / Var<sub>classic</sub> ≈ 1 + (<var>m</var> − 1)ρ<sub><var>x</var></sub>ρ<sub><var>u</var></sub><small>ρ<sub><var>x</var></sub> and ρ<sub><var>u</var></sub> are the within-group correlations of the regressor and the error</small></div>
+    <div class="lab-stage" id="ec11b">
+      <div class="lab-view ec11-mid" id="ec11b-view">
+        <canvas id="ec11b-cv" tabindex="0" aria-label="Three ladders of 95% confidence intervals from the latest 30 samples, using classic, robust and cluster-robust standard errors, with misses in red, and bars showing how often each kind covered the true slope of 0.5 over 1,000 samples."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Clusters</h3>
+        <div class="lab-field"><span><label for="ec11b-G">Number of clusters</label><output id="ec11b-G-o" for="ec11b-G"></output></span><input type="range" id="ec11b-G" min="0" max="5" step="1" value="4"></div>
+        <div class="lab-field"><span><label for="ec11b-m">Observations per cluster</label><output id="ec11b-m-o" for="ec11b-m"></output></span><input type="range" id="ec11b-m" min="0" max="3" step="1" value="2"></div>
+        <div class="lab-field"><span><label for="ec11b-rx">Within-cluster correlation of x</label><output id="ec11b-rx-o" for="ec11b-rx"></output></span><input type="range" id="ec11b-rx" min="0" max="1" step="0.05" value="0.5"></div>
+        <div class="lab-field"><span><label for="ec11b-ru">Within-cluster correlation of the error</label><output id="ec11b-ru-o" for="ec11b-ru"></output></span><input type="range" id="ec11b-ru" min="0" max="0.9" step="0.05" value="0.5"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="ec11b-run">▶ Run 1,000 samples</button></div>
+        <dl class="lab-readout" id="ec11b-read"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec11b-missions"></ol>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <p><b>The fix.</b> Cluster-robust standard errors (Kung-Yee Liang and Scott Zeger, 1986; Manuel Arellano, 1987 for panels) add up residual-weighted regressors within each cluster before squaring, so any correlation inside a cluster is allowed. They need many clusters, not many observations: with few clusters (under 20 to 50, depending on the setting) they are too small too, and methods like the wild cluster bootstrap help. The simulation’s clustered intervals use <var>t</var> critical values with <var>G</var> − 1 degrees of freedom, a common small-sample adjustment.</p>
+        <div class="u-ex"><b>Worked example: how wrong can it be?</b>
+          <p>Students in 50 schools, 20 per school. A policy is set by school, so its within-school correlation is 1, and test-score errors have a within-school correlation of 0.2. The Moulton factor is 1 + 19 × 1 × 0.2 = 4.8, so classic standard errors are √4.8 ≈ 2.2 times too small. A <var>t</var> statistic of 4 is really about 1.8: not significant at 5%.</p>
+        </div>
+      </div>
+      <div>
+        <p><b>Which level?</b> Cluster at the level where shocks are shared and where the regressor varies: if a policy changes by state, cluster by state even if the data are on people or counties. In panels, cluster by unit, which also handles serial correlation within each unit over time. Marianne Bertrand, Esther Duflo and Sendhil Mullainathan (2004) showed that ignoring serial correlation in state panels made placebo “laws” look significant far too often.</p>
+        <p>Colin Cameron and Douglas Miller’s 2015 practitioner’s guide is the standard reference.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>Fixed effects.</b> Yair Mundlak (1961) used farm panels to estimate production functions free of “management bias”: each farm’s unobserved management skill was a fixed effect, removed by comparing a farm with itself. In 1978 he showed that random effects with the unit means of the regressors added reproduces fixed effects, the “Mundlak device.”</p>
+      <p><b>Random effects.</b> Pietro Balestra and Marc Nerlove (1966) developed the GLS random-effects estimator to study the demand for natural gas across U.S. states. Jerry Hausman’s 1978 <i>Econometrica</i> paper on specification tests gave the test that bears his name.</p>
+      <p><b>Clustering.</b> Moulton’s 1990 note showed how badly ignoring group structure can mislead, and the 2004 paper by Bertrand, Duflo and Mullainathan made clustering standard practice in policy evaluation.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where it shows up</h2>
+    <div class="lab-cols">
+      <p><b>Firms and managers.</b> Firm fixed effects absorb management quality, culture and location. Studies of what a policy or investment does to productivity typically compare each firm or plant with itself before and after. Economists studying Henry Ford’s 1914 jump to a five-dollar day compared the same company’s turnover and absences before and after (see the <a href="{{ "business/cases/ford-five-dollar-day-1914/" | relURL }}">Ford case</a>).</p>
+      <p><b>Workers.</b> Wage panels follow the same people as they join or leave unions, move cities or change jobs; person fixed effects remove fixed ability, the problem from Chapter 6.</p>
+      <p><b>Marketing and sports.</b> Store fixed effects control for neighborhood and size when measuring promotions; player and team fixed effects separate talent from circumstance in sports analytics.</p>
+      <p><b>Policy.</b> State-year panels with state and year fixed effects, clustered by state, are the standard design for studying minimum wages, taxes and regulations.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec11-prac">
+      <li><p><span class="ec11-lvl">Warm-up</span> A city had police levels 20, 22 and 27 over three years. What are the time-demeaned values?</p>
+        <details><summary>Show the answer</summary><div><p>The mean is 23, so −3, −1 and +4. They sum to zero, as demeaned values always do.</p></div></details></li>
+      <li><p><span class="ec11-lvl">Warm-up</span> You run a fixed-effects regression of wages on hours trained, union status and gender, with worker fixed effects. Which coefficient can’t be estimated, and why?</p>
+        <details><summary>Show the answer</summary><div><p>Gender, which doesn’t change over time for a worker. Demeaning wipes it out; its effect is absorbed into the worker fixed effect.</p></div></details></li>
+      <li><p><span class="ec11-lvl">Core</span> Store A’s sales went from 100 to 112 when its ad budget went from 10 to 14; store B’s from 200 to 197 when its budget went from 30 to 29. Estimate the ad effect by first differences (no intercept).</p>
+        <details><summary>Show the answer</summary><div><p>Δ’s: A (4, 12), B (−1, −3). β̂ = (4 × 12 + (−1)(−3)) / (16 + 1) = 51/17 = <b>3.0</b> per unit of ad budget.</p></div></details></li>
+      <li><p><span class="ec11-lvl">Core</span> With σ²<sub><var>u</var></sub> = 4, σ²<sub><var>a</var></sub> = 36 and <var>T</var> = 6, compute the random-effects θ. Is RE closer to pooled OLS or to FE?</p>
+        <details><summary>Show the answer</summary><div><p>θ = 1 − √[4/(4 + 6 × 36)] = 1 − √(4/220) = 1 − 0.135 = 0.865: close to FE (θ = 1). Large unit effects relative to the noise push RE toward FE.</p></div></details></li>
+      <li><p><span class="ec11-lvl">Core</span> FE gives 0.42 (se 0.10) and RE gives 0.35 (se 0.08). Compute the Hausman statistic and decide at 5%.</p>
+        <details><summary>Show the answer</summary><div><p><var>H</var> = 0.07² / (0.0100 − 0.0064) = 0.0049 / 0.0036 = 1.36 &lt; 3.84. Don’t reject; RE is not contradicted by the data (which isn’t proof that it is right).</p></div></details></li>
+      <li><p><span class="ec11-lvl">Core</span> A study has 40 classrooms of 25 students; the treatment is assigned by classroom (ρ<sub><var>x</var></sub> = 1), and the error’s within-classroom correlation is 0.1. Compute the Moulton factor and the factor by which classic standard errors are too small.</p>
+        <details><summary>Show the answer</summary><div><p>1 + 24 × 1 × 0.1 = 3.4, so the standard errors are √3.4 ≈ 1.84 times too small. Even a modest within-class correlation matters when the treatment is at the class level.</p></div></details></li>
+      <li><p><span class="ec11-lvl">Challenge</span> Show that with <var>T</var> = 2, the within estimator equals the first-difference estimator (no intercept).</p>
+        <details><summary>Show the answer</summary><div><p>With two periods, <var>x</var><sub><var>i</var>1</sub> − <var>x̄</var><sub><var>i</var></sub> = −Δ<var>x</var><sub><var>i</var></sub>/2 and <var>x</var><sub><var>i</var>2</sub> − <var>x̄</var><sub><var>i</var></sub> = Δ<var>x</var><sub><var>i</var></sub>/2, and the same for <var>y</var>. So Σ<sub><var>i</var>,<var>t</var></sub> <var>ẍ</var><sub><var>it</var></sub><var>ÿ</var><sub><var>it</var></sub> = Σ<sub><var>i</var></sub> 2 × (Δ<var>x</var><sub><var>i</var></sub>/2)(Δ<var>y</var><sub><var>i</var></sub>/2) = ½ΣΔ<var>x</var><sub><var>i</var></sub>Δ<var>y</var><sub><var>i</var></sub>, and Σ<var>ẍ</var>² = ½ΣΔ<var>x</var><sub><var>i</var></sub>². The halves cancel: β̂<sub>FE</sub> = ΣΔ<var>x</var>Δ<var>y</var>/ΣΔ<var>x</var>² = β̂<sub>FD</sub>.</p></div></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The panel.</b> Each city gets a baseline <var>a</var><sub><var>i</var></sub>, normal with the chosen spread. Police = 25 + 3κ(<var>a</var><sub><var>i</var></sub>/σ<sub><var>a</var></sub>) + 2ξ<sub><var>it</var></sub>, so κ (the hidden link) sets how much baselines drive hiring; crime = 40 − 0.8 × police + <var>a</var><sub><var>i</var></sub> + 2<var>u</var><sub><var>it</var></sub>. The nationwide trend adds 0.6 officers and −1.5 crimes per year everywhere. Simulated with a known truth; the numbers are illustrative, not estimates for real cities. In large samples pooled OLS heads to −0.8 + 3κσ<sub><var>a</var></sub>/(9κ² + 4).</p>
+      <p><b>The estimators.</b> Fixed effects is the dummy-variable regression from the shared statistics library (the within estimate is shown alongside); first differences regress changes on changes; random effects quasi-demeans with Swamy–Arora variance components and uses the GLS variance; the Hausman test uses the classic variances. The clustering simulation fits <var>y</var> = 1 + 0.5<var>x</var> + <var>u</var>, where <var>x</var> and <var>u</var> each share a cluster component, and computes classic, HC1 and cluster-robust standard errors.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, all passed):</p>
+        <ul class="lab-small">
+          <li>The within slope equaled the dummy-variable slope (one- and two-way) to 5 × 10⁻¹³; with two years, FE equaled FD in coefficient and standard error to 3 × 10⁻¹³. Random effects matched full GLS in NumPy (coefficient and standard error) to 10⁻¹⁴.</li>
+          <li>1,000 panels of 8 cities × 6 years with κ = 0.9: FE averaged −0.813, FD −0.810, RE −0.189, pooled +0.500, between +1.233; Hausman rejected in 99.5%. With 300 cities pooled OLS averaged 0.633 against the formula’s 0.635. With a nationwide trend, one-way FE averaged −1.413 and two-way FE −0.815.</li>
+          <li>With κ = 0 and 30 cities, the Hausman test rejected in 5.8% of 2,000 panels (nominal 5%).</li>
+          <li>Classic, HC1 and clustered standard errors matched the shared library to 4 × 10⁻¹⁵. Over 4,000 samples of 50 clusters × 20 with both correlations 0.5: classic coverage 58.9%, robust 58.6%, clustered 93.8%; the spread was 2.37 times the classic standard error against √Moulton = 2.40. With 10 clusters, clustered coverage fell to 91.7%.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>Pooled OLS across cities shows more police with more crime. Fixed effects shows the opposite. The most likely explanation is…</p>
+        <ul class="u-opts"><li><button type="button">fixed effects is biased</button></li><li><button type="button">cities with high baseline crime hire more police, biasing the cross-city comparison</button></li><li><button type="button">the sample is too small</button></li></ul>
+        <details><summary>Show the answer</summary><p>The unobserved baseline is correlated with police. FE removes it by comparing each city with itself.</p></details></li>
+      <li class="u-q" data-a="0"><p>The within transformation subtracts…</p>
+        <ul class="u-opts"><li><button type="button">each unit’s own time average</button></li><li><button type="button">last period’s value</button></li><li><button type="button">the overall average of all observations</button></li></ul>
+        <details><summary>Show the answer</summary><p>Subtracting last period’s value is first differencing; subtracting the unit’s average is the within (FE) transformation.</p></details></li>
+      <li class="u-q" data-a="2"><p>Random effects is consistent only if…</p>
+        <ul class="u-opts"><li><button type="button">the unobserved effect is correlated with the regressors</button></li><li><button type="button">there are exactly two periods</button></li><li><button type="button">the unobserved effect is uncorrelated with the regressors</button></li></ul>
+        <details><summary>Show the answer</summary><p>That is the RE assumption; the Hausman test checks whether the data contradict it.</p></details></li>
+      <li class="u-q" data-a="1"><p>Police forces grew and crime fell in every city over the decade for unrelated reasons. One-way FE will…</p>
+        <ul class="u-opts"><li><button type="button">be unaffected</button></li><li><button type="button">confuse the common trend with the police effect; add year effects</button></li><li><button type="button">become identical to pooled OLS</button></li></ul>
+        <details><summary>Show the answer</summary><p>Within each city, police and crime both trend, so one-way FE picks up the trend. Year dummies absorb shocks common to all cities.</p></details></li>
+      <li class="u-q" data-a="0"><p>A state policy is studied with data on 100,000 workers in 50 states. Standard errors should be clustered by…</p>
+        <ul class="u-opts"><li><button type="button">state</button></li><li><button type="button">worker</button></li><li><button type="button">nothing: 100,000 observations is plenty</button></li></ul>
+        <details><summary>Show the answer</summary><p>The policy varies by state and workers in a state share shocks, so the effective sample is closer to 50 than to 100,000.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Chapter 13 (Pooling Cross Sections across Time: Simple Panel Data Methods) and Chapter 14 (Advanced Panel Data Methods): first differences, fixed effects, random effects, the Hausman test and clustering in panels.</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Chapter 10 (Regression with Panel Data), including a traffic-fatalities panel and clustered standard errors.</li>
+      <li>J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (Princeton University Press, 2009), Chapter 5 (Parallel Worlds: Fixed Effects, Differences-in-Differences, and Panel Data) and Section 8.2 (clustering and serial correlation).</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-32-econometrics-spring-2007/" target="_blank" rel="noopener">14.32 Econometrics (Spring 2007)</a>.</li>
+      <li>J. A. Hausman, “Specification Tests in Econometrics,” <i>Econometrica</i> 46(6), 1978, 1251–1271. Y. Mundlak, “On the Pooling of Time Series and Cross Section Data,” <i>Econometrica</i> 46(1), 1978, 69–85. P. Balestra and M. Nerlove, “Pooling Cross Section and Time Series Data in the Estimation of a Dynamic Model: The Demand for Natural Gas,” <i>Econometrica</i> 34(3), 1966, 585–612.</li>
+      <li>B. R. Moulton, “An Illustration of a Pitfall in Estimating the Effects of Aggregate Variables on Micro Units,” <i>Review of Economics and Statistics</i> 72(2), 1990, 334–338. M. Bertrand, E. Duflo and S. Mullainathan, “How Much Should We Trust Differences-in-Differences Estimates?” <i>Quarterly Journal of Economics</i> 119(1), 2004, 249–275.</li>
+      <li>A. C. Cameron and D. L. Miller, “A Practitioner’s Guide to Cluster-Robust Inference,” <i>Journal of Human Resources</i> 50(2), 2015, 317–372.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/panel-data/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/panel-data/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/panel-data/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/panel-data/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,75 @@
+/* Game Theory, Chapter 10 (Signaling and Screening): only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css).
+   The first part is shared by chapters 8 to 14; the chapter's own rules follow it. */
+#gt10-lab .lab-view canvas:focus{outline:none}
+#gt10-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt10-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt10-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);color:var(--sim-acc)}
+#gt10-lab .lab-hud{max-width:calc(100% - 9.5rem)}
+#gt10-lab .lab-seg button{min-height:36px}
+#gt10-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#gt10-lab .lab-chk{min-height:36px;cursor:pointer}
+#gt10-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#gt10-lab .lab-btn{min-height:38px}
+#gt10-lab .lab-missions li button{min-height:36px;padding:.3rem .8rem}
+#gt10-lab .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#gt10-lab .lab-readout dd{white-space:normal;max-width:10.5rem;overflow-wrap:break-word}
+#gt10-lab .lab-toast{top:4.4rem}
+#gt10-lab .gt10-off{opacity:.5}
+#gt10-lab .gt10-acts{display:flex;flex-wrap:wrap;gap:.4rem}
+#gt10-lab .gt10-acts .lab-btn{flex:1 1 auto}
+/* the smaller simulations in the lesson */
+#gt10-lab .gt10-mini{margin:.9rem 0 1rem}
+#gt10-lab .gt10-mini .lab-view{height:400px;min-height:0}
+#gt10-lab .gt10-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1rem}
+#gt10-lab .gt10-row>*{min-width:0}
+#gt10-lab .gt10-grow{flex:1 1 240px}
+#gt10-lab .gt10-row>.lab-seg{flex:1 1 100%}
+#gt10-lab .gt10-row .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#gt10-lab .gt10-row .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#gt10-lab .gt10-win{animation:gt10win 1.2s ease-out}
+@keyframes gt10win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#gt10-lab .lab-sec ul{padding-left:1.3rem}
+#gt10-lab .lab-src{overflow-wrap:anywhere}
+#gt10-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+/* practice problems */
+#gt10-lab .gt10-prob{margin:.9rem 0 .2rem}
+#gt10-lab .gt10-prob b:first-child{color:var(--acc)}
+#gt10-lab details.gt10-ans{margin:.3rem 0 .9rem;padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+#gt10-lab details.gt10-ans summary{cursor:pointer;font-weight:600;color:var(--acc);min-height:28px}
+#gt10-lab details.gt10-ans>*:last-child{margin-bottom:0}
+#gt10-lab details.gt10-ans p{margin:.4rem 0 0}
+/* inline diagrams follow the page theme */
+#gt10-lab .gt10-svg{display:block;max-width:100%;height:auto;margin:.6rem auto}
+#gt10-lab .gt10-svg text{fill:var(--ink);font:13px system-ui,sans-serif}
+#gt10-lab .gt10-svg .mut{fill:var(--muted)}
+#gt10-lab .gt10-svg .ln{stroke:var(--muted);fill:none;stroke-width:1.5}
+#gt10-lab .gt10-svg .bx{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+#gt10-lab .gt10-svg .nat{fill:var(--soft);stroke:var(--acc);stroke-width:1.5}
+#gt10-lab .gt10-svg .acc{stroke:var(--acc);fill:none;stroke-width:2.5}
+#gt10-lab .gt10-svg .accf{fill:var(--acc)}
+#gt10-lab .gt10-svg .gold{stroke:var(--gold);fill:none;stroke-width:2.5}
+#gt10-lab .gt10-svg .goldf{fill:var(--gold)}
+#gt10-lab .gt10-tbl{width:auto;min-width:min(100%,360px)}
+#gt10-lab .gt10-tbl td,#gt10-lab .gt10-tbl th{text-align:center}
+@media (max-width:860px){
+  #gt10-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+}
+@media (max-width:600px){
+  #gt10-lab .lab-hud{max-width:calc(100% - 1.2rem);top:3.2rem}
+  #gt10-lab .lab-toast{top:7.4rem;font-size:.82rem;max-width:84%}
+  #gt10-lab .gt10-mini .lab-view{height:520px}
+}
+@media (prefers-reduced-motion:reduce){#gt10-lab .gt10-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#gt10-lab .gt10-main{grid-template-rows:auto 1fr}
+#gt10-lab .gt10-main>.lab-view{grid-column:1;grid-row:1}
+#gt10-lab .gt10-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#gt10-lab .gt10-main>.gt10-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#gt10-lab .gt10-main{grid-template-rows:none}#gt10-lab .gt10-main>.lab-view,#gt10-lab .gt10-main>.lab-panel,#gt10-lab .gt10-main>.gt10-under{grid-column:auto;grid-row:auto}}
+/* this chapter */
+#gt10-lab #gt10-view{height:min(76vh,660px);min-height:600px}
+#gt10-lab #gt10-sview .lab-view{height:440px}
+@media (max-width:600px){
+  #gt10-lab #gt10-view{height:730px}
+  #gt10-lab #gt10-sview .lab-view{height:480px}
+}

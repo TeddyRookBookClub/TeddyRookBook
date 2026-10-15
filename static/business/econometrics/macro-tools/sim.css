@@ -1,0 +1,64 @@
+/* VARs and GMM: only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css). */
+#ec16-lab .lab-view canvas:focus{outline:none}
+#ec16-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#ec16-lab .lab-tools button{min-width:36px;min-height:36px}
+#ec16-lab .lab-hud{max-width:calc(100% - 7rem)}
+#ec16-lab .lab-seg button{min-height:36px}
+#ec16-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#ec16-lab .lab-chk{min-height:36px;cursor:pointer}
+#ec16-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#ec16-lab .lab-btn{min-height:38px}
+#ec16-lab .lab-readout dd.ec16-bad{color:#c92a2a}
+#ec16-lab .lab-readout dd.ec16-warn{color:#b35c00}
+html[data-theme="dark"] #ec16-lab .lab-readout dd.ec16-bad{color:#ff8787}
+html[data-theme="dark"] #ec16-lab .lab-readout dd.ec16-warn{color:#ffa94d}
+#ec16-lab .lab-toast{top:4.2rem}
+#ec16-lab #ec16-view{height:min(74vh,640px)}
+/* the smaller simulations in the lesson */
+#ec16-lab .ec16-mini{margin:.9rem 0 1rem}
+#ec16-lab .ec16-mini .lab-view{height:380px;min-height:0}
+#ec16-lab #ec16-mmv{height:420px}
+#ec16-lab #ec16-ivv{height:460px}
+#ec16-lab .lab-readout dd.ec16-bad{color:#c92a2a}
+html[data-theme="dark"] #ec16-lab .lab-readout dd.ec16-bad{color:#ff8787}
+#ec16-lab .lab-readout dd.ec16-good{color:#2f9e6f}
+html[data-theme="dark"] #ec16-lab .lab-readout dd.ec16-good{color:#63e6be}
+#ec16-lab .ec16-row .lab-row .lab-btn{align-self:auto}
+#ec16-lab .lab-readout dd{white-space:normal}
+#ec16-lab .ec16-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1.2rem}
+#ec16-lab .ec16-row>*{min-width:0}
+#ec16-lab .ec16-grow{flex:1 1 260px;display:flex;flex-direction:column;gap:.5rem}
+#ec16-lab .ec16-row .lab-readout{display:grid;grid-template-columns:minmax(0,1fr) auto}
+#ec16-lab .ec16-row .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#ec16-lab .ec16-row .lab-btn{align-self:flex-start}
+/* practice problems */
+#ec16-lab .ec16-prob{padding-left:1.4rem}
+#ec16-lab .ec16-prob>li{margin:0 0 .9rem}
+#ec16-lab .ec16-prob>li>p{margin:0 0 .3rem}
+#ec16-lab .ec16-prob details{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.35rem .7rem}
+#ec16-lab .ec16-prob summary{cursor:pointer;font-weight:600;color:var(--acc);min-height:28px;display:list-item}
+#ec16-lab .ec16-prob details p{margin:.4rem 0 .2rem}
+#ec16-lab .lab-table td,#ec16-lab .lab-table th{white-space:nowrap}
+/* a short glow when a mission is done */
+#ec16-lab .ec16-win{animation:ec16win 1.2s ease-out}
+@keyframes ec16win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#ec16-lab .lab-sec ul{padding-left:1.3rem}
+#ec16-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #ec16-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+  #ec16-lab #ec16-view{height:780px;max-height:none}
+}
+@media (max-width:600px){
+  #ec16-lab .lab-toast{top:3.4rem;font-size:.82rem;max-width:84%}
+  #ec16-lab .ec16-mini .lab-view{height:560px}
+  #ec16-lab #ec16-mmv{height:640px}
+  #ec16-lab #ec16-ivv{height:820px}
+  #ec16-lab .lab-hud{display:none}
+}
+@media (prefers-reduced-motion:reduce){#ec16-lab .ec16-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#ec16-lab .ec16-main{grid-template-rows:auto 1fr}
+#ec16-lab .ec16-main>.lab-view{grid-column:1;grid-row:1}
+#ec16-lab .ec16-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#ec16-lab .ec16-main>.ec16-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#ec16-lab .ec16-main{grid-template-rows:none}#ec16-lab .ec16-main>.lab-view,#ec16-lab .ec16-main>.lab-panel,#ec16-lab .ec16-main>.ec16-under{grid-column:auto;grid-row:auto}}

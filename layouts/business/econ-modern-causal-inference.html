@@ -1,0 +1,265 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/modern-causal-inference/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/modern-causal-inference/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec17-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 17</p>
+    <h1>{{ .Title }}</h1>
+    <p>“Control for everything” sounds safe. It isn’t. Some controls remove bias, some add it, and a few quietly change the question you’re answering. In this last chapter you’ll draw causal diagrams and let the page work out which variables to adjust for, then watch a simulation prove it right and catch the traps. You’ll match treated and untreated people on their propensity scores, build a synthetic twin for a state that changed its policy, and see why machine learning is great at prediction but needs a careful recipe before it can answer a causal question.</p>
+    <span class="lab-mark" aria-hidden="true">🧠</span>
+  </header>
+
+  <div class="lab-stage ec17-main">
+    <div class="lab-view" id="ec17-view">
+      <canvas id="ec17-cv" tabindex="0" aria-label="A causal diagram: circles are variables and arrows point from causes to effects. D is the treatment (gold), Y the outcome (blue); dashed circles are unobserved. Colored bands trace every path from D to Y: green for causal paths, red for open back-door paths, grey for blocked ones. Controlled variables are boxed in green. Right: the list of paths with their status, and the true effect compared with the regression you've chosen. Click a node to control for it, or switch to drawing arrows. Number keys 1 to 5 toggle control of the other variables."></canvas>
+      <div class="lab-hud" id="ec17-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec17-reset" aria-label="Reset this diagram" title="Reset this diagram">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="ec17-pre-h">Diagram</h3>
+      <div class="lab-seg" id="ec17-pre" role="group" aria-labelledby="ec17-pre-h">
+        <button type="button" data-p="confound">Confounder</button><button type="button" data-p="mediator">Mediator</button><button type="button" data-p="collider">Collider</button><button type="button" data-p="mbias">M-bias</button><button type="button" data-p="instrument">Hidden confounder</button><button type="button" data-p="build">Build your own</button>
+      </div>
+      <h3 id="ec17-mode-h">Clicking a node</h3>
+      <div class="lab-seg" id="ec17-mode" role="group" aria-labelledby="ec17-mode-h">
+        <button type="button" data-m="control">Controls for it</button><button type="button" data-m="arrow">Draws an arrow</button>
+      </div>
+      <h3>Control for</h3>
+      <div id="ec17-ctl" class="ec17-ctl"></div>
+      <button type="button" class="lab-btn pri" id="ec17-best">Use a valid adjustment set</button>
+      <div id="ec17-arrowbox" class="ec17-arrow">
+        <h3>Add, flip or remove an arrow</h3>
+        <div class="ec17-arow"><label class="lab-field"><span>From</span><select id="ec17-from" aria-label="Arrow starts at"></select></label><label class="lab-field"><span>To</span><select id="ec17-to" aria-label="Arrow points to"></select></label></div>
+        <button type="button" class="lab-btn" id="ec17-addarrow">Toggle this arrow</button>
+      </div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec17-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec17-missions"></ol>
+    </div>
+    <section class="lab-sec ec17-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The diagram.</b> Each circle is a variable; an arrow from A to B means A directly causes B. D is the treatment (a training program), Y the outcome (wages). Dashed circles are variables nobody measured. The page lists every path from D to Y, following arrows in either direction, and colors it: green paths carry the causal effect; red paths are open back doors that mix in other influences; grey paths are blocked.</p>
+        <p><b>The simulation.</b> Behind the diagram, the page creates 2,000 people whose variables follow it exactly: each variable is 0.8 times each of its causes (1.0 for D → Y), plus noise. So the true effect of D on Y is known. It then runs the regression you chose, Y on D plus whatever you control for, and plots the estimate against the truth. “Bias in a huge sample” computes what that regression would give with infinite data.</p>
+        <p><b>Your moves.</b> Click a node to control for it (put it in the regression), or switch to drawing arrows and click two nodes to connect them. The page applies the <i>backdoor criterion</i> and lists every set of observed variables that would give an unbiased answer.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="po"><h2>Potential outcomes and causal diagrams</h2>
+    <p>Two languages describe cause and effect, and modern econometrics uses both. The <b>potential outcomes</b> framework (Jerzy Neyman, 1923; Donald Rubin, 1974) gives every person two outcomes: <var>Y</var>(1) with the treatment and <var>Y</var>(0) without. Only one is ever seen. Comparing averages of the treated and untreated mixes the effect with selection:</p>
+    <div class="u-big">E[<var>Y</var> | <var>D</var>=1] − E[<var>Y</var> | <var>D</var>=0] = ATT + (E[<var>Y</var>(0) | <var>D</var>=1] − E[<var>Y</var>(0) | <var>D</var>=0])<small>naive comparison = average effect on the treated + selection bias (how the treated would have differed anyway)</small></div>
+    <p><b>Causal diagrams</b> (directed acyclic graphs, or DAGs), championed by Judea Pearl, show <i>why</i> there is selection bias and what would remove it. Every path between D and Y is built from three kinds of junctions:</p>
+    <div class="u-key">
+      <div><b>Chain: A → B → C</b><p>B passes A’s effect on to C. Controlling for B blocks the flow. If D → M → Y, controlling for M removes part of the effect you want.</p></div>
+      <div><b>Fork: A ← B → C</b><p>B causes both, so A and C move together even if neither causes the other. Controlling for B blocks the spurious link. This is a confounder.</p></div>
+      <div><b>Collider: A → B ← C</b><p>A and C both cause B. The path is blocked as long as you leave B (and everything B causes) alone. Controlling for B opens it and creates a link between A and C that isn’t causal.</p></div>
+    </div>
+    <p>A <b>back-door path</b> is a path from D to Y that starts with an arrow pointing <i>into</i> D. Those paths carry association that isn’t D’s effect. Pearl’s criterion tells you what to control for:</p>
+    <div class="u-big">Backdoor criterion: a set <var>Z</var> identifies the effect of D on Y if (1) no variable in <var>Z</var> is caused by D, and (2) <var>Z</var> blocks every back-door path<small>then comparing people with the same <var>Z</var> (for example, regressing Y on D and <var>Z</var> in a linear model) gives the causal effect</small></div>
+    <div class="u-ex"><b>Worked example: how big the confounding bias is</b>
+      <p>In the “Confounder” diagram, motivation X raises training (D = 0.8X + noise) and wages (Y = 1.0·D + 0.8X + noise), all noises with variance 1.</p>
+      <ol><li>Var(D) = 0.8² + 1 = 1.64, and Cov(X, D) = 0.8.</li>
+        <li>Regressing Y on D alone gives 1.0 + 0.8 × Cov(X, D)/Var(D) = 1.0 + 0.8 × 0.8/1.64 = 1.39. That’s the omitted-variable bias formula from <a href="{{ "business/econometrics/multiple-regression/" | relURL }}">Chapter 6</a>: 39% too high.</li>
+        <li>Controlling for X blocks D ← X → Y, the only back door, and the coefficient on D is exactly 1.0.</li></ol>
+      <p>The simulation reproduces both numbers: 1.391 and 0.998 with 200,000 simulated people.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> open “Mediator” and control for skills. The estimate falls from 1.14 to 0.50: you’ve measured only the part of training’s effect that doesn’t go through skills. Then open “Collider” and control for promotion: the estimate drops from 1.00 to 0.22, though nothing about training changed. Finally, open “M-bias”: the survey answer C is measured before training and looks like a harmless control, yet controlling for it opens D ← U1 → C ← U2 → Y and biases the estimate (0.88 instead of 1.00).</div>
+    <div class="u-myth"><b>Common mistake: “Control for every variable you have”</b>
+      <p>Adding controls is safe only if they are not caused by the treatment (no mediators and none of their consequences) and don’t open new paths (no colliders). Angrist and Pischke call variables that are themselves outcomes of the treatment “bad controls”. A classic example of collider bias is Berkson’s paradox: among hospital patients, two unrelated diseases can look negatively related, because having either one is a reason to be in the hospital. The fix is not a rule of thumb but a diagram: write down what causes what, then check the paths.</p>
+    </div>
+    <p>And when no observed set works? Choose “Hidden confounder”: ability (unobserved) drives both training and wages, so no regression on observables is unbiased, and controlling for the lottery Z makes it worse (1.39 instead of 1.28, a known effect called bias amplification). But the lottery is an <a href="{{ "business/econometrics/instrumental-variables/" | relURL }}">instrument</a>: it moves training and affects wages only through training. The page reports the IV estimate, which lands on the truth.</p>
+  </section>
+
+  <section class="lab-sec" id="matching"><h2>Selection on observables: matching and weighting</h2>
+    <p>If the back doors all run through variables you observe, two assumptions are enough. <b>Unconfoundedness</b>: given the covariates <var>X</var>, treatment is as good as random, (<var>Y</var>(0), <var>Y</var>(1)) ⊥ D | <var>X</var>. <b>Overlap</b>: everyone has some chance of each status, 0 &lt; P(D = 1 | <var>X</var>) &lt; 1. Then compare treated and untreated people with the same <var>X</var>. With many covariates, exact matches are rare, but Paul Rosenbaum and Donald Rubin (1983) proved you only need to match on one number, the <b>propensity score</b> <var>p</var>(<var>X</var>) = P(D = 1 | <var>X</var>): if treatment is unconfounded given <var>X</var>, it is unconfounded given <var>p</var>(<var>X</var>).</p>
+    <div class="lab-stage wide ec17-mini" id="ec17-ma">
+      <div class="lab-view" id="ec17-mav"><canvas id="ec17-mc" aria-label="Left: overlap plot, a histogram of propensity scores for treated people (gold, upward) and untreated people (blue, downward). Middle: balance, the standardized difference in each covariate between treated and untreated before matching (red) and after (green), with a band at plus or minus 0.1. Right: estimates of the effect from five methods against the true average effect on the treated and the true average effect."></canvas></div>
+      <div class="lab-panel ec17-row">
+        <div class="ec17-grow">
+          <label class="lab-field"><span>Selection strength <output id="ec17-mas-o"></output></span><input type="range" id="ec17-mas" min="0" max="3" step="0.1" aria-label="How strongly the covariates drive who gets treated"></label>
+          <label class="lab-field"><span>People <output id="ec17-man-o"></output></span><input type="range" id="ec17-man" min="300" max="3000" step="100" aria-label="Number of people"></label>
+          <label class="lab-chk"><input type="checkbox" id="ec17-macal"> Caliper: drop treated people with no control within 0.02 in score</label>
+          <button type="button" class="lab-btn" id="ec17-manew">New sample</button>
+        </div>
+        <dl class="lab-readout ec17-grow" id="ec17-maread"></dl>
+      </div>
+    </div>
+    <p>In this simulation, two covariates (think age and prior earnings) make people more likely to join a program, and also raise their earnings anyway. The program’s effect grows with the first covariate, so the average effect <i>on the treated</i> (ATT) is larger than the average effect for everyone (ATE). Each method answers a specific question: matching each treated person to the untreated person with the closest score estimates the ATT; inverse probability weighting can target either; a regression with the covariates gives a weighted average of effects that is neither, when effects vary.</p>
+    <div class="lab-formula">IPW: ATE = E[D·Y/<var>p</var>(<var>X</var>)] − E[(1 − D)·Y/(1 − <var>p</var>(<var>X</var>))], &nbsp; with the weights normalized to sum to 1 in each group</div>
+    <div class="u-ex"><b>Worked example: weighting by hand</b>
+      <p>Eight people. Four have <var>X</var> = 1 and a 75% chance of treatment: three treated (earning 10, 12 and 11) and one not (8). Four have <var>X</var> = 0 and a 25% chance: one treated (6) and three not (4, 5 and 3).</p>
+      <ol><li>Naive: treated average (10 + 12 + 11 + 6)/4 = 9.75; untreated (8 + 4 + 5 + 3)/4 = 5.0; difference 4.75.</li>
+        <li>Within groups: <var>X</var> = 1: 11 − 8 = 3; <var>X</var> = 0: 6 − 4 = 2. The groups are equal in size, so the ATE is 2.5.</li>
+        <li>Weights: treated people get 1/<var>p</var>: 1.33 each for <var>X</var> = 1, 4 for <var>X</var> = 0. Weighted treated mean = (1.33 × 33 + 4 × 6)/(1.33 × 3 + 4) = 68/8 = 8.5. Untreated get 1/(1 − <var>p</var>): 4 for <var>X</var> = 1, 1.33 each for <var>X</var> = 0: (4 × 8 + 1.33 × 12)/8 = 48/8 = 6.0.</li>
+        <li>IPW estimate: 8.5 − 6.0 = 2.5, the same as comparing within groups.</li></ol>
+      <p>The rare cases (the one treated person with <var>X</var> = 0) get large weights. If a score is near 0 or 1, one person can dominate the estimate: that is what poor overlap looks like.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> raise the selection strength to 1: matching balances both covariates (standardized differences fall from about 0.9 to under 0.1) and lands near the true ATT. Now push it to 3. The treated pile up near a score of 1, the untreated near 0, and few people overlap. Some untreated people get IPW weights near 100, the estimates wobble, and balance after matching gets worse. Tick the caliper: matching now drops treated people with no close control, which improves balance but changes whom the estimate describes. No method can create overlap that isn’t in the data.</div>
+    <p>A famous test of these methods: Robert LaLonde (1986) took a randomized job-training experiment, the National Supported Work Demonstration, replaced its control group with people from general surveys, and showed that many standard observational estimators failed to reproduce the experimental answer. Rajeev Dehejia and Sadek Wahba (1999) found that propensity-score methods came much closer on a subsample, a result later debated by Jeffrey Smith and Petra Todd (2005). The lesson both sides agree on: these methods are only as good as the covariates and the overlap.</p>
+  </section>
+
+  <section class="lab-sec" id="synth"><h2>Synthetic control: building a twin</h2>
+    <p>When one state or one company is treated, there may be no single good comparison. Alberto Abadie and Javier Gardeazabal (2003) and Abadie, Alexis Diamond and Jens Hainmueller (2010) proposed building one: a weighted average of untreated units, with weights that are non-negative and add to 1, chosen so that the average tracks the treated unit before the policy.</p>
+    <div class="u-big">min<sub><var>w</var></sub> Σ<sub><var>t</var> &lt; <var>T</var>₀</sub> (<var>Y</var><sub>1<var>t</var></sub> − Σ<sub><var>j</var></sub> <var>w</var><sub><var>j</var></sub><var>Y</var><sub><var>jt</var></sub>)², &nbsp; <var>w</var><sub><var>j</var></sub> ≥ 0, &nbsp; Σ<var>w</var><sub><var>j</var></sub> = 1<small>after <var>T</var>₀, the gap between the treated unit and its synthetic twin estimates the effect</small></div>
+    <div class="lab-stage wide ec17-mini" id="ec17-sc">
+      <div class="lab-view" id="ec17-scv"><canvas id="ec17-scc" aria-label="Left: the outcome over 30 years for the treated state (gold), its synthetic twin (green dashed) and 15 donor states (grey, brighter when they get more weight); a policy starts after year 20. Top right: a bar for each donor's weight, which you can drag. Bottom right: the gap between the treated state and its twin, with the true effect dashed in pink and, after running placebos, the gaps for every donor treated as if it had the policy."></canvas></div>
+      <div class="lab-panel ec17-row">
+        <div class="ec17-grow">
+          <h3 id="ec17-sceff-h">True effect of the policy</h3>
+          <div class="lab-seg" id="ec17-sceff" role="group" aria-labelledby="ec17-sceff-h"><button type="button" data-e="none">None</button><button type="button" data-e="drop">Drop of 3</button><button type="button" data-e="grow">Grows over time</button></div>
+          <div class="lab-row"><button type="button" class="lab-btn pri" id="ec17-scfit">Fit the weights</button><button type="button" class="lab-btn" id="ec17-sceq">Equal weights</button><button type="button" class="lab-btn" id="ec17-scplac">Run placebos</button><button type="button" class="lab-btn" id="ec17-scnew">New data</button></div>
+        </div>
+        <dl class="lab-readout ec17-grow" id="ec17-scread"></dl>
+      </div>
+    </div>
+    <p><b>Inference by placebos.</b> With one treated unit, there are no standard errors in the usual sense. Instead, pretend each donor was treated, build its own twin from the others, and see how big its post-policy gap is relative to its pre-policy fit. If the real treated unit’s ratio is the largest of 16, the chance of that happening by luck is 1/16 ≈ 0.06.</p>
+    <div class="u-ex"><b>Worked example: a twin by hand</b>
+      <p>The weights put 0.5 on state A, 0.3 on B and 0.2 on C. In the year before the policy, A, B and C had 120, 90 and 100 packs of cigarettes sold per person, and the treated state had 107.5.</p>
+      <ol><li>Synthetic value before: 0.5 × 120 + 0.3 × 90 + 0.2 × 100 = 60 + 27 + 20 = 107, close to 107.5.</li>
+        <li>Three years later, A, B and C sold 110, 85 and 95: synthetic = 55 + 25.5 + 19 = 99.5.</li>
+        <li>The treated state sold 92. Estimated effect: 92 − 99.5 = −7.5 packs per person.</li></ol>
+    </div>
+    <p>The original application studied California’s Proposition 99, a 1988 tobacco-control program that raised the cigarette tax by 25 cents a pack and funded anti-smoking efforts. Abadie, Diamond and Hainmueller built a synthetic California from other states and estimated that by 2000, annual cigarette sales in California were about 26 packs per person lower than they would have been without the program.</p>
+    <div class="lab-try"><b>Try this:</b> with equal weights, the twin is just the donors’ average and misses the treated state badly before the policy. Drag a few weight bars and watch the fit change, then press “Fit the weights”. The fit before the policy gets very close, but the weights the optimizer picks are not the ones the simulation used to build the treated state (0.5, 0.3, 0.2 on units 2, 5 and 9): with 20 years and a few underlying trends, many different blends fit equally well. What matters is the fit, and the placebo test.</div>
+  </section>
+
+  <section class="lab-sec" id="ml"><h2>Machine learning: prediction vs causation</h2>
+    <p>Machine learning is built to predict: given <var>x</var>, guess <var>y</var> as well as possible on <i>new</i> data. Causal questions are different: what happens to <var>y</var> if we change <var>d</var>? A model can predict brilliantly using variables that are consequences of <var>y</var>, or proxies for <var>d</var>, and be useless for that question. But ML can still help causal inference, if it is used only for the parts of the problem that are pure prediction.</p>
+    <p><b>The LASSO</b> (Robert Tibshirani, 1996) fits a regression while penalizing the size of the coefficients, which sets many of them exactly to zero:</p>
+    <div class="lab-formula">min<sub><var>b</var></sub> (1/2<var>n</var>) Σ(<var>y</var><sub><var>i</var></sub> − <b>x</b><sub><var>i</var></sub>′<var>b</var>)² + <var>λ</var> Σ<sub><var>j</var></sub> |<var>b</var><sub><var>j</var></sub>|</div>
+    <p>With λ = 0 it is OLS; as λ grows, coefficients shrink and drop out one by one. With 51 variables and only 100 observations, OLS nearly memorizes the training data (in our test, R² 0.96 there but 0.85 on new data); a moderate λ keeps about 15 variables and predicts new data better (0.93).</p>
+    <div class="lab-stage wide ec17-mini" id="ec17-ml">
+      <div class="lab-view" id="ec17-mlv"><canvas id="ec17-lc" aria-label="Top left: LASSO coefficient paths for 51 variables as the penalty changes; the treatment d in gold, three confounders in pink, three outcome predictors in blue, the rest grey. Bottom left: R squared on the training rows and on new data across penalties. Right: histograms of estimates of the treatment effect over many simulated studies, naive selection in red and double machine learning in green, with the truth at 1."></canvas></div>
+      <div class="lab-panel ec17-row">
+        <div class="ec17-grow">
+          <label class="lab-field"><span>Penalty λ <output id="ec17-lam-o"></output></span><input type="range" id="ec17-lam" min="-2.5" max="0.5" step="0.05" aria-label="LASSO penalty on a log scale"></label>
+          <div class="lab-row"><button type="button" class="lab-btn" id="ec17-mlnew">New data</button><button type="button" class="lab-btn pri" id="ec17-mlmc">Run 200 studies</button></div>
+        </div>
+        <dl class="lab-readout ec17-grow" id="ec17-mlread"></dl>
+      </div>
+    </div>
+    <h3 class="lab-h">Why naive selection fails, and how double/debiased ML fixes it</h3>
+    <p>Suppose we want the effect θ of a treatment <var>d</var> on <var>y</var>, with 50 possible controls. A tempting recipe: let LASSO pick the controls that predict <var>y</var>, then run OLS of <var>y</var> on <var>d</var> and those controls. It fails when a confounder strongly drives <var>d</var> but only mildly drives <var>y</var>: LASSO drops it as unimportant for predicting <var>y</var>, and its omitted-variable bias comes back. In the simulation, three such confounders push the naive estimate to about 1.23 for a true θ of 1, and its 95% intervals almost never contain the truth.</p>
+    <p><b>Double/debiased machine learning</b> (Victor Chernozhukov, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian Hansen, Whitney Newey and James Robins, 2018) builds on a partialling-out idea (Peter Robinson, 1988) in three steps:</p>
+    <ol>
+      <li>Predict <var>y</var> from the controls with any ML method, and keep the residual <var>ũ</var> = <var>y</var> − <var>ℓ̂</var>(<b>x</b>).</li>
+      <li>Predict <var>d</var> from the controls, and keep the residual <var>ṽ</var> = <var>d</var> − <var>m̂</var>(<b>x</b>). This step catches the confounders that drive <var>d</var>.</li>
+      <li>Regress <var>ũ</var> on <var>ṽ</var>: θ̂ = Σ<var>ṽ</var><sub><var>i</var></sub><var>ũ</var><sub><var>i</var></sub> / Σ<var>ṽ</var><sub><var>i</var></sub>². Use <i>cross-fitting</i>: predictions for each observation come from a model trained on the other part of the sample, so overfitting can’t leak into the estimate.</li>
+    </ol>
+    <p>The estimating equation is <i>Neyman-orthogonal</i>: small errors in the two predictions have no first-order effect on θ̂, so θ̂ is approximately normal with a usual standard error even though the predictions are imperfect. In our simulations with 400 observations, it averaged 0.995 and its intervals covered the truth 94% of the time. Two cautions, stated carefully: DML still needs unconfoundedness (all confounders among the controls), and the predictions must be reasonably good; it fixes the estimation problem, not the identification problem. (In our tests, using plain LASSO predictions instead of refitting the selected variables by OLS left visible shrinkage bias: coverage 73%.)</p>
+    <div class="u-ex"><b>Worked example: partialling out by hand</b>
+      <p>For five people, the residuals from predicting <var>y</var> are <var>ũ</var> = (2, −1, 0, 1, −2) and from predicting <var>d</var> are <var>ṽ</var> = (1, −1, 0.5, 0, −0.5).</p>
+      <ol><li>Σ<var>ṽũ</var> = 2 + 1 + 0 + 0 + 1 = 4.</li>
+        <li>Σ<var>ṽ</var>² = 1 + 1 + 0.25 + 0 + 0.25 = 2.5.</li>
+        <li>θ̂ = 4/2.5 = 1.6.</li></ol>
+      <p>This is the Frisch–Waugh–Lovell theorem from <a href="{{ "business/econometrics/multiple-regression/" | relURL }}">Chapter 6</a>, with machine-learned predictions in place of linear regressions.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="future"><h2>Where the field is going</h2>
+    <ul>
+      <li><b>Design first.</b> The “credibility revolution” put the research design (experiments, natural experiments, discontinuities, clean comparisons) ahead of the regression. David Card, Joshua Angrist and Guido Imbens shared the 2021 Nobel memorial prize in economics for this work.</li>
+      <li><b>Heterogeneous effects.</b> Methods such as causal forests (Stefan Wager and Susan Athey, 2018) estimate how effects vary across people, for targeting a program or a discount to those it helps most.</li>
+      <li><b>Combining designs.</b> Synthetic difference-in-differences (Dmitry Arkhangelsky and coauthors, 2021) blends the weights of synthetic control with the logic of <a href="{{ "business/econometrics/difference-in-differences/" | relURL }}">Chapter 12</a>.</li>
+      <li><b>Honest uncertainty.</b> Sensitivity analysis asks how strong an unmeasured confounder would have to be to overturn a result, instead of assuming there is none.</li>
+      <li><b>Experiments at scale.</b> Tech companies run thousands of randomized A/B tests a year, and the questions in this course (interference between users, long-run effects, heterogeneous effects) are now everyday business problems.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>Path diagrams.</b> The geneticist Sewall Wright drew arrows between variables and multiplied coefficients along paths in the 1920s, an ancestor of both DAGs and the simulation on this page.</p>
+      <p><b>Potential outcomes.</b> Jerzy Neyman wrote them down for agricultural experiments in 1923; Donald Rubin extended them to observational studies in the 1970s. Rosenbaum and Rubin’s propensity score followed in 1983.</p>
+      <p><b>Graphs.</b> Judea Pearl developed the graphical theory of causation, including the backdoor criterion, in the 1990s; his book <i>Causality</i> appeared in 2000. He received the 2011 Turing Award, in part for this work.</p>
+      <p><b>New tools.</b> Synthetic control (2003, 2010), the LASSO (1996), double selection (Alexandre Belloni, Chernozhukov and Hansen, 2014) and double/debiased machine learning (2018) brought the field to where it is today.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Business.</b> Did the loyalty program raise spending, or did loyal customers join it? Propensity scores and DAGs make that question precise. When a company changes policy in one market, synthetic control builds a comparison from the others. The “Don’t buy this jacket” campaign (<a href="{{ "business/cases/patagonia-dont-buy-this-jacket-2011/" | relURL }}">Patagonia</a>) is the kind of one-time move whose effect on sales you would want to compare with a synthetic twin rather than with last year.</li>
+      <li><b>Policy.</b> Tobacco taxes, minimum wages and immigration shocks in single states or cities are classic synthetic-control applications.</li>
+      <li><b>Medicine.</b> Observational studies of drugs use propensity scores and DAGs to choose adjustments; collider bias explains several famous paradoxes, such as low-birth-weight babies of smoking mothers appearing to do better than other low-birth-weight babies.</li>
+      <li><b>Technology.</b> Double machine learning is used to estimate price elasticities and advertising effects with thousands of possible controls.</li>
+      <li><b>Daily life.</b> “Students who hire tutors get lower grades, so tutoring hurts” ignores a fork: struggling students hire tutors. Draw the diagram before you draw the conclusion.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <ol class="ec17-prob">
+      <li><p>In the diagram A → D → Y, A → Y, what should you control for to estimate the effect of D on Y?</p>
+        <details><summary>Show the answer</summary><p>A. The path D ← A → Y is a back door (it starts with an arrow into D), and A is a fork on it; controlling for A blocks it. A is not caused by D, so the backdoor criterion holds.</p></details></li>
+      <li><p>D → M → Y and D → Y. A colleague controls for M. What does the coefficient on D now measure?</p>
+        <details><summary>Show the answer</summary><p>The direct effect of D on Y, not the total effect: controlling for the mediator blocks the path through M. If the question is “what does D do to Y in total?”, don’t control for M.</p></details></li>
+      <li><p>Talent and looks are independent in the population. A movie studio only casts actors who are talented or good-looking (or both). Among cast actors, why might talent and looks be negatively related?</p>
+        <details><summary>Show the answer</summary><p>Casting is a collider: Talent → Cast ← Looks. Looking only at cast actors conditions on it. An actor who isn’t good-looking must be talented to be cast, and vice versa, which creates a negative association among the cast that doesn’t exist in the population. That’s Berkson’s paradox.</p></details></li>
+      <li><p>Two people have propensity scores of 0.9 (treated) and 0.1 (untreated). What IPW weights do they get, and what does a score of 0.99 for an untreated person imply?</p>
+        <details><summary>Show the answer</summary><p>Treated: 1/0.9 ≈ 1.11. Untreated with 0.1: 1/(1 − 0.1) ≈ 1.11. An untreated person with a score of 0.99 gets 1/0.01 = 100: they stand in for 100 similar people who were treated, so the estimate depends heavily on one person. That signals poor overlap; consider trimming or a different target.</p></details></li>
+      <li><p>A synthetic control gives the treated state a post-policy gap of −8 and pre-policy RMSPE of 2. Its post/pre RMSPE ratio ranks 3rd of 40 placebos. What is the placebo p-value?</p>
+        <details><summary>Show the answer</summary><p>3/40 = 0.075. Two placebo states had larger ratios by chance, so the evidence is suggestive but not strong at the 5% level.</p></details></li>
+      <li><p>Residuals from predicting <var>y</var> and <var>d</var> with ML give Σ<var>ṽũ</var> = 12 and Σ<var>ṽ</var>² = 30. Estimate θ. Why must the predictions be cross-fitted?</p>
+        <details><summary>Show the answer</summary><p>θ̂ = 12/30 = 0.4. If the same data trained the prediction models and computed the residuals, a flexible model could fit the noise, making the residuals too small and correlated with each other, which biases θ̂. Cross-fitting uses predictions from models that never saw that observation.</p></details></li>
+      <li><p>An analyst says: “I used a neural network with 500 variables, so confounding isn’t a problem.” What is wrong?</p>
+        <details><summary>Show the answer</summary><p>Flexible prediction doesn’t identify causal effects. If a confounder isn’t among the 500 variables, no algorithm can adjust for it; if some of the 500 are mediators or colliders, adjusting for them adds bias. The design (which variables, which comparison) still decides whether the answer is causal.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>Diagrams.</b> The page lists every path between D and Y in the diagram, ignoring direction, and checks each junction: a path is blocked by a controlled chain or fork node, or by a collider that is not controlled and has no controlled descendant (Pearl’s d-separation). The backdoor criterion and all minimal valid adjustment sets are found by checking every subset of the observed variables. The simulation is a linear model in the diagram’s order with standard normal noise; “bias in a huge sample” uses the model’s exact covariance matrix, (<var>I</var> − <var>B</var>)<sup>−1</sup>(<var>I</var> − <var>B</var>)<sup>−′</sup>.</p>
+      <p><b>Matching.</b> The propensity score is a logit fitted with the course library; matching is one nearest neighbor on the score, with replacement; IPW is normalized. <b>Synthetic control.</b> Weights minimize the pre-period squared gap on the simplex by accelerated projected gradient, after removing each year’s cross-unit average (which doesn’t change the answer when weights add to 1, and makes it converge much faster). <b>ML.</b> LASSO by coordinate descent on standardized variables; the penalty for the causal estimators is 1.1 σ̂ √(2 ln <var>p</var>/<var>n</var>); DML uses 2-fold cross-fitting with post-LASSO predictions.</p>
+      <div><p><b>How it was checked</b> (Node.js, NumPy, SciPy and scikit-learn, before the page was built):</p>
+        <ul class="lab-small">
+          <li>With 200,000 simulated people, the regression matched the exact large-sample values in every diagram: confounder 1.391 / 0.998 (with X), mediator 1.141 / 0.504 (with M), collider 1.000 / 0.220 (with C), M-bias 1.000 / 0.877 (with C), hidden confounder 1.280 / 1.391 (with Z). The IV estimate was 0.995 (truth 1) and matched the shared library’s 2SLS to six decimals on a smaller sample.</li>
+          <li>Matching, 200 samples of 1,000 at selection strength 1: true ATT 1.359 and ATE 0.998; matching 1.373, IPW-ATT 1.362, IPW-ATE 1.020, regression 1.145, naive 2.943; median largest |SMD| after matching 0.088. At strength 3, the largest IPW weight had a median of 88 and IPW-ATE averaged 1.36.</li>
+          <li>Synthetic control: the weights matched SciPy’s constrained optimizer to 0.0015 with the same pre-period RMSPE (0.30430), and the optimality (KKT) conditions held. The treated unit’s post/pre ratio (13.1) was the largest of 16.</li>
+          <li>LASSO coefficients matched scikit-learn to 10<sup>−10</sup>. DML, 300 studies with 400 observations: mean 0.995, SD 0.053, coverage 94.0%; naive selection: mean 1.228, coverage 0%. With 200 observations: DML 1.000, coverage 90%.</li>
+        </ul></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>Which variable should you NOT control for when estimating the total effect of D on Y?</p>
+        <ul class="u-opts"><li><button type="button">A variable that causes both D and Y</button></li><li><button type="button">A variable that causes only Y</button></li><li><button type="button">A variable caused by D that in turn affects Y</button></li><li><button type="button">None: more controls are always better</button></li></ul>
+        <details><summary>Show the answer</summary><p>That’s a mediator. Controlling for it blocks part of the effect you want. A confounder should be controlled for; a variable that only causes Y is harmless and can improve precision.</p></details></li>
+      <li class="u-q" data-a="0"><p>What happens when you control for a collider on a path between D and Y?</p>
+        <ul class="u-opts"><li><button type="button">You open a path that was blocked, creating a non-causal association</button></li><li><button type="button">You block a back-door path</button></li><li><button type="button">Nothing changes</button></li><li><button type="button">You estimate the direct effect</button></li></ul>
+        <details><summary>Show the answer</summary><p>A collider blocks its path on its own. Conditioning on it (or on its consequences) opens the path.</p></details></li>
+      <li class="u-q" data-a="3"><p>The propensity score theorem says that if treatment is unconfounded given X, then…</p>
+        <ul class="u-opts"><li><button type="button">Any regression on X is unbiased</button></li><li><button type="button">Treatment is randomly assigned</button></li><li><button type="button">The propensity score equals 0.5 for everyone</button></li><li><button type="button">It is also unconfounded given the single number p(X)</button></li></ul>
+        <details><summary>Show the answer</summary><p>Rosenbaum and Rubin (1983): comparing treated and untreated people with the same propensity score is enough, which turns many covariates into one.</p></details></li>
+      <li class="u-q" data-a="1"><p>How is a synthetic control’s estimate judged, since there is only one treated unit?</p>
+        <ul class="u-opts"><li><button type="button">With the usual OLS standard error</button></li><li><button type="button">By placebo tests: applying the method to untreated units and comparing their gaps</button></li><li><button type="button">By the R² of the weights</button></li><li><button type="button">It can’t be judged at all</button></li></ul>
+        <details><summary>Show the answer</summary><p>If the treated unit’s gap (relative to its pre-period fit) is extreme compared with the gaps of units that had no policy, the effect is unlikely to be luck.</p></details></li>
+      <li class="u-q" data-a="2"><p>Why does “use LASSO to pick the controls that predict y, then run OLS” fail?</p>
+        <ul class="u-opts"><li><button type="button">LASSO can’t handle more than 10 variables</button></li><li><button type="button">OLS is biased after any selection</button></li><li><button type="button">It can drop confounders that strongly affect d but only weakly affect y, bringing back omitted-variable bias</button></li><li><button type="button">It always selects too many controls</button></li></ul>
+        <details><summary>Show the answer</summary><p>Prediction of y doesn’t prioritize what matters for confounding. Double selection or DML also models d, so those confounders are caught.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. Pearl, <i>Causality: Models, Reasoning, and Inference</i>, 2nd ed. (Cambridge University Press, 2009), chapter 3 (the backdoor criterion); J. Pearl, M. Glymour and N. P. Jewell, <i>Causal Inference in Statistics: A Primer</i> (Wiley, 2016).</li>
+      <li>G. W. Imbens and D. B. Rubin, <i>Causal Inference for Statistics, Social, and Biomedical Sciences</i> (Cambridge University Press, 2015).</li>
+      <li>J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (Princeton, 2009), chapter 3 (regression, matching, propensity scores and bad controls). S. Cunningham, <i>Causal Inference: The Mixtape</i> (Yale University Press, 2021), chapters on DAGs, matching and synthetic control.</li>
+      <li>Stanford Encyclopedia of Philosophy, <a href="https://plato.stanford.edu/entries/causal-models/" target="_blank" rel="noopener">Causal Models</a>.</li>
+      <li>P. R. Rosenbaum and D. B. Rubin, The central role of the propensity score in observational studies for causal effects, <i>Biometrika</i> 70(1), 41–55 (1983). R. J. LaLonde, Evaluating the econometric evaluations of training programs with experimental data, <i>American Economic Review</i> 76(4), 604–620 (1986). R. H. Dehejia and S. Wahba, Causal effects in nonexperimental studies, <i>Journal of the American Statistical Association</i> 94(448), 1053–1062 (1999). J. A. Smith and P. E. Todd, Does matching overcome LaLonde’s critique of nonexperimental estimators?, <i>Journal of Econometrics</i> 125(1–2), 305–353 (2005).</li>
+      <li>A. Abadie and J. Gardeazabal, The economic costs of conflict: a case study of the Basque Country, <i>American Economic Review</i> 93(1), 113–132 (2003). A. Abadie, A. Diamond and J. Hainmueller, Synthetic control methods for comparative case studies: estimating the effect of California’s tobacco control program, <i>Journal of the American Statistical Association</i> 105(490), 493–505 (2010).</li>
+      <li>R. Tibshirani, Regression shrinkage and selection via the lasso, <i>Journal of the Royal Statistical Society B</i> 58(1), 267–288 (1996). A. Belloni, V. Chernozhukov and C. Hansen, Inference on treatment effects after selection among high-dimensional controls, <i>Review of Economic Studies</i> 81(2), 608–650 (2014). V. Chernozhukov, D. Chetverikov, M. Demirer, E. Duflo, C. Hansen, W. Newey and J. Robins, Double/debiased machine learning for treatment and structural parameters, <i>Econometrics Journal</i> 21(1), C1–C68 (2018).</li>
+      <li>S. Wager and S. Athey, Estimation and inference of heterogeneous treatment effects using random forests, <i>Journal of the American Statistical Association</i> 113(523), 1228–1242 (2018). D. Arkhangelsky, S. Athey, D. A. Hirshberg, G. W. Imbens and S. Wager, Synthetic difference-in-differences, <i>American Economic Review</i> 111(12), 4088–4118 (2021).</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Rubin_causal_model" target="_blank" rel="noopener">Rubin causal model</a>, <a href="https://en.wikipedia.org/wiki/Collider_(statistics)" target="_blank" rel="noopener">Collider (statistics)</a>, <a href="https://en.wikipedia.org/wiki/Berkson%27s_paradox" target="_blank" rel="noopener">Berkson’s paradox</a>, <a href="https://en.wikipedia.org/wiki/Synthetic_control_method" target="_blank" rel="noopener">Synthetic control method</a>, <a href="https://en.wikipedia.org/wiki/Lasso_(statistics)" target="_blank" rel="noopener">Lasso (statistics)</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/modern-causal-inference/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/modern-causal-inference/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/modern-causal-inference/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/modern-causal-inference/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

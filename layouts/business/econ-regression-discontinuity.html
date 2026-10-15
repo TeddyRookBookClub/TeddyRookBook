@@ -1,0 +1,249 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/regression-discontinuity/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-discontinuity/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec13-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 13</p>
+    <h1>{{ .Title }}</h1>
+    <p>Score 49 on the exam and you get nothing. Score 50 and you get a free summer of tutoring. A student at 49 and a student at 50 are about as alike as two students can be, so if next year’s scores jump right at 50, the tutoring is the likely cause. Rules with cutoffs are everywhere: scholarships, class-size caps, loan approvals, elections won by one vote. Here you’ll measure a jump with lines you can stretch and shrink, find the bandwidth that balances bias against noise, catch students who game the cutoff, and handle the messy “fuzzy” case where not everyone follows the rule.</p>
+    <span class="lab-mark" aria-hidden="true">✂️</span>
+  </header>
+
+  <div class="lab-stage ec13-main">
+    <div class="lab-view" id="ec13-view">
+      <canvas id="ec13-cv" tabindex="0" aria-label="Scatter plot of next year's score against this year's exam score, with the cutoff at 50. Students below 50 are blue, students at 50 or above (who get tutoring) are gold. White circles are averages in bins of two points. Inside the shaded bandwidth window, a blue and a gold line are fitted on each side, and a green bracket marks the jump at 50. Below: a histogram of exam scores with the density test. Right: the estimate and a bias-variance chart. Drag the edges of the shaded window to change the bandwidth. Keys: left and right arrows change the bandwidth, up and down change the polynomial order, N new sample, S scan bandwidths."></canvas>
+      <div class="lab-hud" id="ec13-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec13-new2" aria-label="New sample" title="New sample (N)">🎲</button>
+        <button type="button" id="ec13-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="ec13-shape-h">True curve</h3>
+      <div class="lab-seg" id="ec13-shape" role="group" aria-labelledby="ec13-shape-h">
+        <button type="button" data-s="scurve">S-curve</button><button type="button" data-s="wiggly">Wiggly</button><button type="button" data-s="kink">Kink</button><button type="button" data-s="flat">Straight</button>
+      </div>
+      <h3 id="ec13-plot-h">Plot</h3>
+      <div class="lab-seg" id="ec13-plot" role="group" aria-labelledby="ec13-plot-h">
+        <button type="button" data-p="y">Outcome</button><button type="button" data-p="cov">Placebo covariate</button>
+      </div>
+      <label class="lab-field"><span>Bandwidth <output id="ec13-h-o"></output></span><input type="range" id="ec13-h" min="2" max="50" step="1" aria-label="Bandwidth in exam points on each side of the cutoff"></label>
+      <h3 id="ec13-ord-h">Polynomial order</h3>
+      <div class="lab-seg" id="ec13-ord" role="group" aria-labelledby="ec13-ord-h">
+        <button type="button" data-o="0">0 · flat</button><button type="button" data-o="1">1 · line</button><button type="button" data-o="2">2</button><button type="button" data-o="3">3</button><button type="button" data-o="4">4</button>
+      </div>
+      <div class="lab-seg" id="ec13-k" role="group" aria-label="Kernel">
+        <button type="button" data-k="tri">Triangular kernel</button><button type="button" data-k="uni">Uniform kernel</button>
+      </div>
+      <label class="lab-field"><span>True effect of tutoring <output id="ec13-tau-o"></output></span><input type="range" id="ec13-tau" min="-10" max="10" step="0.5" aria-label="True effect of tutoring in points"></label>
+      <label class="lab-field"><span>Students <output id="ec13-n-o"></output></span><input type="range" id="ec13-n" min="200" max="3000" step="100" aria-label="Number of students"></label>
+      <label class="lab-field"><span>Manipulation <output id="ec13-man-o"></output></span><input type="range" id="ec13-man" min="0" max="40" step="1" aria-label="Share of students just below 50 who manage to get pushed over the cutoff"></label>
+      <label class="lab-chk"><input type="checkbox" id="ec13-truth"> Show the true curve</label>
+      <label class="lab-chk"><input type="checkbox" id="ec13-showman"> Highlight students who moved over the line</label>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec13-new">New sample</button><button type="button" class="lab-btn pri" id="ec13-scan">Scan bandwidths</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec13-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec13-missions"></ol>
+    </div>
+    <section class="lab-sec ec13-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The rule.</b> Every student who scores 50 or more on this year’s exam gets free summer tutoring; nobody below 50 does. Each dot is one simulated student: this year’s score across, next year’s score up. The white circles are averages of students within two points of each other, which show the shape of the cloud.</p>
+        <p><b>The window and the lines.</b> The shaded strip is the <i>bandwidth</i>: only students within that many points of 50 are used. Inside it, a line (or a curve, if you raise the order) is fitted separately on each side, giving more weight to students closer to 50 (the triangular kernel). Where the two fits meet the cutoff, the green bracket measures the jump. That jump is the estimate of what tutoring does. Drag the edges of the strip to change it.</p>
+        <p><b>The truth.</b> The pink dashed curve is what the simulation knows and a researcher doesn’t: the average next-year score at each score, with the true jump built in. When your fitted lines miss the pink curve right at 50, the estimate is biased, and “bias from the curve” in the card says by how much.</p>
+        <p><b>The histogram.</b> Below the scatter is the number of students at each score. Without any gaming, it should flow smoothly through 50. Turn on manipulation and some students just below 50 get pushed over (a regrade, a retake, a friendly teacher): a pile appears right above the cutoff, and the density test flags it.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="idea"><h2>A jump at the cutoff</h2>
+    <p>A regression discontinuity design needs three things: a <b>running variable</b> <var>x</var> (here the exam score), a <b>cutoff</b> <var>c</var> (50), and a treatment that switches on at the cutoff. In a <b>sharp</b> design, the rule is followed exactly: <var>D</var> = 1 if <var>x</var> ≥ <var>c</var> and 0 otherwise. Students far from 50 are different in many ways, so comparing all tutored students with all others would mix tutoring with ability. But just around 50, the tutored and untutored are nearly the same people. The effect at the cutoff is the gap between the two sides of the curve:</p>
+    <div class="u-big"><var>τ</var><sub>SRD</sub> = lim<sub><var>x</var>↓<var>c</var></sub> E[<var>y</var> | <var>x</var>] − lim<sub><var>x</var>↑<var>c</var></sub> E[<var>y</var> | <var>x</var>]<small>the average outcome just above the cutoff minus the average just below</small></div>
+    <p>The assumption that makes this the causal effect is <b>continuity</b>: without the treatment, the average outcome would flow smoothly through the cutoff. In potential-outcomes terms, E[<var>y</var>(0) | <var>x</var>] and E[<var>y</var>(1) | <var>x</var>] are continuous at <var>c</var>. Nothing else may change at 50. If the same cutoff also decided who gets a laptop, the jump would mix tutoring with laptops.</p>
+    <h3 class="lab-h">Local randomization</h3>
+    <p>Why is continuity believable? David Lee (2008) gave the key argument: as long as people cannot <i>precisely</i> control their score, luck decides which side of 50 a student lands on. A student aiming for 50 might get 48 or 52 depending on a sleepy morning or a lucky guess. Near the cutoff, the treatment is then as good as randomly assigned, like a small randomized experiment hidden inside the rule. That also tells you what can break the design: anyone who can choose their side precisely (a teacher who regrades papers at 49, a firm that keeps its payroll at 49 workers to dodge a 50-worker rule).</p>
+    <h3 class="lab-h">Local linear regression</h3>
+    <p>You can’t observe the limit, so you estimate it. The standard tool is <b>local linear regression</b>: on each side, fit a line to the students within <var>h</var> points of the cutoff, weighting each by a kernel <var>K</var> that falls as distance grows, and read off where the line hits <var>c</var>. Below the cutoff, choose <var>a</var><sub>−</sub>, <var>b</var><sub>−</sub> to minimize</p>
+    <div class="lab-formula">Σ<sub><var>x</var><sub><var>i</var></sub> &lt; <var>c</var></sub> <var>K</var>((<var>x</var><sub><var>i</var></sub> − <var>c</var>)/<var>h</var>) · (<var>y</var><sub><var>i</var></sub> − <var>a</var><sub>−</sub> − <var>b</var><sub>−</sub>(<var>x</var><sub><var>i</var></sub> − <var>c</var>))², &nbsp; <var>K</var>(<var>t</var>) = max(0, 1 − |<var>t</var>|) &nbsp;(triangular)</div>
+    <p>do the same above, and estimate <var>τ̂</var> = <var>â</var><sub>+</sub> − <var>â</var><sub>−</sub>. With a uniform kernel this is the same as one OLS regression on the students in the window, <var>y</var> = <var>α</var> + <var>τ</var>·<var>D</var> + <var>β</var>(<var>x</var> − <var>c</var>) + <var>γ</var>·<var>D</var>·(<var>x</var> − <var>c</var>) + <var>u</var>, where the interaction lets the slopes differ on the two sides. Why a line and not just the average on each side? Because the outcome usually slopes upward through the cutoff. Averages over a window compare students at about 45 with students at about 55, and that gap counts the slope as if it were an effect. Choose “Kink” and order 0 in the simulation to see a big, confident, wrong answer.</p>
+    <div class="u-ex"><b>Worked example: reading the jump</b>
+      <p>Within 10 points of the cutoff, the two weighted fits are</p>
+      <div class="lab-formula">below 50: <var>ŷ</var> = 58.6 + 0.52(<var>x</var> − 50), &nbsp;&nbsp; at or above 50: <var>ŷ</var> = 64.9 + 0.31(<var>x</var> − 50)</div>
+      <ol><li>At <var>x</var> = 50 both slope terms are zero, so the fits reach 58.6 and 64.9.</li>
+        <li>The jump: <var>τ̂</var> = 64.9 − 58.6 = 6.3 points.</li>
+        <li>The two sides use different students, so their errors are independent: with intercept standard errors of 1.2 and 1.3, SE(<var>τ̂</var>) = √(1.2² + 1.3²) = √3.13 ≈ 1.77, and the 95% interval is 6.3 ± 1.96 × 1.77 ≈ [2.8, 9.8].</li></ol>
+      <p>The slopes differ (0.52 vs 0.31), and that is allowed: tutoring may help weaker students more. Only the gap at 50 is the estimate.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="bandwidth"><h2>Choosing the bandwidth: bias against variance</h2>
+    <p>The bandwidth is the main choice in any RD study, and it is a real trade-off. A <b>narrow</b> window uses only students very close to 50, so the line is a good local approximation (little bias), but there are few of them (lots of noise). A <b>wide</b> window has many students (little noise), but the true curve bends over a wide range, and a straight line through a bent curve misses at the cutoff (bias). The quantity that balances both is the mean squared error:</p>
+    <div class="u-big">MSE(<var>τ̂</var>) = Bias(<var>τ̂</var>)² + Var(<var>τ̂</var>)<small>squared bias grows with the bandwidth; variance shrinks with it</small></div>
+    <p>“Scan bandwidths” estimates both by brute force: for each of 14 bandwidths, it draws 150 fresh samples from the known truth and records how far the estimates land from it. Real researchers can’t do that, because they don’t know the truth, so they estimate the curvature from the data and use a formula for the MSE-optimal bandwidth (Imbens and Kalyanaraman, 2012). Sebastian Calonico, Matias Cattaneo and Rocío Titiunik (2014) then showed that the usual confidence interval is too narrow at that bandwidth, because the bias is not negligible there, and proposed “robust bias-corrected” intervals, now the default in their widely used <code>rdrobust</code> software.</p>
+    <div class="lab-try"><b>Try this:</b> with the S-curve, press “Scan bandwidths”. The gold bias² line climbs as the window widens, the blue variance line falls, and the green MSE line bottoms out around 10 to 15 points. Then drag the window to that spot. Now switch to “Kink” and scan again: a straight line is exactly right on each side of a kink, so there is no bias at any bandwidth, and wider is simply better.</div>
+    <div class="u-myth"><b>Common mistake: “Fit a high-order polynomial to all the data”</b>
+      <p>An older habit was to fit a 3rd- or 4th-order polynomial to the whole range and read the jump at the cutoff. It looks flexible, but the fit at the edge of each side is pulled around by students far from the cutoff, and the estimate is noisy and sensitive to the order you pick. Andrew Gelman and Guido Imbens (2019) argued against it. Try order 4 with a bandwidth of 50: the curve bends near 50 and the standard error is about twice that of a straight line (2.07 vs 0.97 in our tests). Local linear (or local quadratic) fits within a bandwidth are the modern default.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="checks"><h2>Checking the design</h2>
+    <p>The continuity assumption can’t be tested directly, but it has consequences you can check.</p>
+    <div class="u-key">
+      <div><b>No bunching</b><p>If people could push themselves over the cutoff, there would be too many just above it. Justin McCrary’s (2008) test estimates the density of the running variable on each side and tests whether it jumps: <var>θ̂</var> = ln <var>f̂</var><sub>+</sub> − ln <var>f̂</var><sub>−</sub>.</p></div>
+      <div><b>Balanced covariates</b><p>Anything fixed before the cutoff was applied (last year’s homework, age, family income) should not jump at the cutoff. Run the same RD on it as a placebo outcome.</p></div>
+      <div><b>Placebo cutoffs</b><p>Pretend the cutoff is at 40 or 60, where nothing happens. Estimated jumps there should be near zero.</p></div>
+      <div><b>Robustness</b><p>Report estimates over a range of bandwidths and polynomial orders, and a “donut” version that drops the students right at the cutoff, where any gaming happens.</p></div>
+    </div>
+    <div class="lab-try"><b>Try this:</b> set manipulation to 25%. Some students scoring 44 to 49 get pushed just over 50, and the more motivated ones (who would score higher next year anyway) are likelier to manage it. The histogram grows a step at 50 and the density test turns red. Switch the plot to the placebo covariate, last year’s homework hours, which tutoring can’t possibly affect: a jump appears there too. That jump is the sign that the students on the two sides are no longer comparable, and the outcome estimate is biased upward (by roughly 1.5 to 2 points at 25% in our tests).</div>
+    <div class="u-ex"><b>Worked example: is there a pile at the cutoff?</b>
+      <p>A histogram of 2-point bins shows 61 students at 46–47, 58 at 48–49, 97 at 50–51 and 63 at 52–53. If the density were smooth, the counts just below and just above 50 should be similar, around 60.</p>
+      <ol><li>The bin just above 50 has 97, about 37 more than its neighbors suggest.</li>
+        <li>Under a smooth density, a bin count of about 60 has a standard deviation near √60 ≈ 7.7, so 97 is about 4.8 standard deviations high.</li>
+        <li>The bin just below, 48–49, is a little low (58), as if students moved from below to above.</li></ol>
+      <p>This is a strong sign of manipulation. The fix is not statistical: find out how scores near 50 were produced, and report results without the students closest to the cutoff.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="fuzzy"><h2>Fuzzy RD: when the rule is only a nudge</h2>
+    <p>Often the cutoff changes the <i>chance</i> of treatment instead of switching it fully on. Tutoring may be offered at 50, but some offered students skip it, and some below 50 find tutoring elsewhere. Then the jump in outcomes is smaller than the effect of tutoring, because only some students’ tutoring status changed at 50. Jinyong Hahn, Petra Todd and Wilbert van der Klaauw (2001) showed how to scale it back up: divide the jump in outcomes by the jump in the share treated.</p>
+    <div class="u-big"><var>τ</var><sub>FRD</sub> = (jump in E[<var>y</var> | <var>x</var>] at <var>c</var>) ÷ (jump in E[<var>D</var> | <var>x</var>] at <var>c</var>)<small>reduced form ÷ first stage: instrumental variables at the cutoff</small></div>
+    <p>This is exactly <a href="{{ "business/econometrics/instrumental-variables/" | relURL }}">instrumental variables</a> (Chapter 10), with “being above the cutoff” as the instrument for treatment, and in practice it is estimated by two-stage least squares on the students in the window, controlling for the score on each side. It estimates a <b>local average treatment effect</b>: the effect for <i>compliers</i> at the cutoff, the students who take tutoring if they score 50 but wouldn’t at 49.</p>
+    <div class="lab-stage wide ec13-mini" id="ec13-fz">
+      <div class="lab-view" id="ec13-fzv"><canvas id="ec13-fc" aria-label="Fuzzy regression discontinuity. Left: the share of students who take up tutoring at each exam score, jumping at 50 by less than 100 percentage points, with local linear fits on each side. Right: next year's score by exam score, with its smaller jump. The fuzzy estimate is the outcome jump divided by the take-up jump."></canvas></div>
+      <div class="lab-panel ec13-row">
+        <div class="ec13-grow">
+          <label class="lab-field"><span>Jump in take-up at 50 <output id="ec13-fzj-o"></output></span><input type="range" id="ec13-fzj" min="0.02" max="0.8" step="0.02" aria-label="Jump in the take-up rate at the cutoff"></label>
+          <label class="lab-field"><span>Take-up just below 50 <output id="ec13-fzp-o"></output></span><input type="range" id="ec13-fzp" min="0" max="0.4" step="0.01" aria-label="Take-up rate just below the cutoff"></label>
+          <label class="lab-field"><span>True effect of tutoring <output id="ec13-fzt-o"></output></span><input type="range" id="ec13-fzt" min="0" max="10" step="0.5" aria-label="True effect of tutoring"></label>
+        </div>
+        <div class="ec13-grow">
+          <label class="lab-field"><span>Bandwidth <output id="ec13-fzh-o"></output></span><input type="range" id="ec13-fzh" min="5" max="40" step="1" aria-label="Bandwidth"></label>
+          <label class="lab-field"><span>Students <output id="ec13-fzn-o"></output></span><input type="range" id="ec13-fzn" min="500" max="5000" step="250" aria-label="Number of students"></label>
+          <button type="button" class="lab-btn" id="ec13-fznew">New sample</button>
+        </div>
+        <dl class="lab-readout ec13-grow" id="ec13-fzread"></dl>
+      </div>
+    </div>
+    <p>In this simulation, more motivated students are more likely to sign up for tutoring at any score, and motivation also raises next year’s score. So comparing students who took tutoring with those who didn’t, even within the window, credits tutoring with the motivation: that comparison is several points too high. The fuzzy RD only uses the part of take-up that the cutoff caused, and lands near the truth.</p>
+    <div class="u-ex"><b>Worked example: scaling up a small jump</b>
+      <p>Just below 50, 22% of students take tutoring; just above, 64%. Next year’s score jumps by 2.1 points at the cutoff (SE 0.9).</p>
+      <ol><li>First stage: 0.64 − 0.22 = 0.42. The cutoff moved 42% of students into tutoring.</li>
+        <li>Reduced form: 2.1 points for everyone at the cutoff, tutored or not.</li>
+        <li>Fuzzy RD: 2.1 ÷ 0.42 = 5.0 points for each student whose tutoring the cutoff changed. If the first stage is estimated precisely, the standard error is roughly 0.9 ÷ 0.42 ≈ 2.1.</li></ol>
+      <p>With a first stage of 0.05 instead, the same 2.1-point jump would mean 42 points, and the standard error would be 18: a weak first stage turns small noise into huge swings.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="famous"><h2>Two famous designs</h2>
+    <div class="u-ex"><b>Worked example: Maimonides’ rule and class size</b>
+      <p>Israeli public schools cap classes at 40 students, a rule that Joshua Angrist and Victor Lavy (1999) traced to the twelfth-century scholar Maimonides. When enrollment in a grade passes 40, the grade splits into two classes. Predicted class size for enrollment <var>e</var> is</p>
+      <div class="lab-formula"><var>f</var>(<var>e</var>) = <var>e</var> / (⌊(<var>e</var> − 1)/40⌋ + 1)</div>
+      <ol><li><var>e</var> = 40: one class of 40. <var>e</var> = 41: two classes, 41/2 = 20.5 students each.</li>
+        <li><var>e</var> = 80: two classes of 40. <var>e</var> = 81: three classes of 27.</li>
+        <li><var>e</var> = 120: three classes of 40. <var>e</var> = 121: four classes of about 30.</li></ol>
+      <p>Schools with 40 and 41 students in a grade are otherwise alike, yet their predicted class sizes differ by nearly half. Actual class sizes follow the rule only roughly, so Angrist and Lavy used the predicted size as an instrument: a fuzzy design. They found that smaller classes raised test scores of fourth and fifth graders, though not of third graders.</p>
+    </div>
+    <p><b>Close elections.</b> In a U.S. House race, the running variable is the Democratic share of the two-party vote, and the cutoff is 50%. Lee (2008) found that a party that barely wins a seat is much more likely to win the next election in that district than a party that barely loses: a large incumbency advantage. He also checked the design’s logic: districts barely won and barely lost look alike on things decided before the election, such as the party’s past vote shares.</p>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “RD tells you the effect for everyone”</b>
+    <p>A regression discontinuity estimates the effect <i>at the cutoff</i>: for students who score about 50, not for students at 20 or 90. Tutoring might help strugglers much more, or not at all. A fuzzy RD is narrower still: the effect for compliers at the cutoff. This is the price of RD’s credibility. Extrapolating away from the cutoff needs extra assumptions, and you should say so when you do it.</p>
+  </div>
+
+  <section class="lab-sec" id="history"><h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>The first RD.</b> Psychologists Donald Thistlethwaite and Donald Campbell introduced the design in 1960 to study National Merit Scholarship certificates of merit, which were awarded to students above a test-score cutoff. They compared students just above and just below to see whether the recognition changed their later plans.</p>
+      <p><b>Quiet decades.</b> The idea was well known in education research and evaluation but rarely used in economics for almost forty years.</p>
+      <p><b>The revival.</b> In the late 1990s, economists rediscovered it: Angrist and Lavy’s class-size study (1999), Wilbert van der Klaauw’s study of college financial aid offers (2002), the identification results of Hahn, Todd and van der Klaauw (2001), and Lee’s elections paper (2008). A 2008 special issue of the <i>Journal of Econometrics</i> collected guides by Guido Imbens and Thomas Lemieux and McCrary’s density test, and Lee and Lemieux’s 2010 survey in the <i>Journal of Economic Literature</i> made the design standard.</p>
+      <p><b>Today.</b> Work by Cattaneo, Calonico, Titiunik and coauthors on bandwidth choice, robust inference and local randomization turned RD into one of the most trusted designs for observational data.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Business.</b> Loyalty programs give perks above a spending threshold; lenders approve loans above a credit-score cutoff; a store offers free shipping above $35. Each creates a cutoff, and comparing customers just above and below it measures what the perk does. Firms sometimes discover their own customers bunching just above a threshold, which is the density test in real life.</li>
+      <li><b>Health policy.</b> Most Americans become eligible for Medicare at 65. David Card, Carlos Dobkin and Nicole Maestas (2008) used that age cutoff to study how insurance coverage changes the use of health care.</li>
+      <li><b>Alcohol and the law.</b> Christopher Carpenter and Carlos Dobkin (2009) found that deaths among young Americans jump just after their 21st birthday, when drinking becomes legal, driven largely by car accidents and alcohol-related causes.</li>
+      <li><b>Schools.</b> Exam-school admission cutoffs, class-size caps, test-based retention and scholarship thresholds have all been studied this way.</li>
+      <li><b>Daily life.</b> Children born just after a school-entry birthday cutoff start school almost a year later than children born a day earlier, which researchers use to study the effects of age at school entry.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <ol class="ec13-prob">
+      <li><p>Local linear fits give 71.4 just above a cutoff and 68.9 just below. What is the RD estimate, and what does it estimate?</p>
+        <details><summary>Show the answer</summary><p><var>τ̂</var> = 71.4 − 68.9 = 2.5. In a sharp design, it estimates the average effect of the treatment for units at the cutoff, if average outcomes without treatment would have been continuous there.</p></details></li>
+      <li><p>Using Maimonides’ rule, what are the predicted class sizes for grade enrollments of 160 and 161?</p>
+        <details><summary>Show the answer</summary><p>160: ⌊159/40⌋ + 1 = 3 + 1 = 4 classes, 160/4 = 40. 161: ⌊160/40⌋ + 1 = 5 classes, 161/5 = 32.2. One extra student cuts the predicted class size by almost 8.</p></details></li>
+      <li><p>Two estimates of the same jump: with a bandwidth of 5 points, 7.1 (SE 3.0); with 25 points, 4.2 (SE 1.1). Which do you report?</p>
+        <details><summary>Show the answer</summary><p>Neither alone. The narrow estimate has little bias but a wide interval (about 1.2 to 13.0); the wide estimate is precise but could be biased if the curve bends. They are not far apart relative to the noise (the difference, 2.9, is about one standard error of the narrow estimate), so they don’t contradict each other. Report an MSE-optimal bandwidth with a robust bias-corrected interval, plus a plot of estimates over a range of bandwidths so readers see the trade-off.</p></details></li>
+      <li><p>In a fuzzy RD, take-up jumps from 10% to 40% at the cutoff and the outcome jumps by 1.5. Estimate the effect of treatment, and say for whom.</p>
+        <details><summary>Show the answer</summary><p>First stage 0.30; effect = 1.5 / 0.30 = 5.0. It is the local average treatment effect for compliers at the cutoff: units whose treatment status the cutoff changed. It says nothing directly about the 10% who take treatment either way, or the 60% who never do.</p></details></li>
+      <li><p>You run your RD on mother’s education, measured before treatment, and find a jump with <var>t</var> = 3.1 at the cutoff. What does it suggest, and what would you do?</p>
+        <details><summary>Show the answer</summary><p>A pre-determined variable can’t be affected by the treatment, so a jump means the units on the two sides differ: possibly sorting around the cutoff, or another policy at the same cutoff. Check the density for bunching, look at how the running variable is produced, try a donut RD without the units closest to the cutoff, and treat the main estimate with suspicion. (With many covariates, one rejection at 5% can be chance; check them jointly.)</p></details></li>
+      <li><p>Show that with a uniform kernel, the local linear RD estimate equals the coefficient <var>τ</var> in the OLS regression <var>y</var> = <var>α</var> + <var>τ D</var> + <var>β</var>(<var>x</var> − <var>c</var>) + <var>γ D</var>(<var>x</var> − <var>c</var>) + <var>u</var> on units with |<var>x</var> − <var>c</var>| &lt; <var>h</var>.</p>
+        <details><summary>Show the answer</summary><p>For units below the cutoff (<var>D</var> = 0), the regression is <var>α</var> + <var>β</var>(<var>x</var> − <var>c</var>); above it, (<var>α</var> + <var>τ</var>) + (<var>β</var> + <var>γ</var>)(<var>x</var> − <var>c</var>). With the interactions, the parameters for the two sides are free of each other, so least squares fits a separate line to each side: <var>α̂</var> = <var>â</var><sub>−</sub> and <var>α̂</var> + <var>τ̂</var> = <var>â</var><sub>+</sub>. So <var>τ̂</var> = <var>â</var><sub>+</sub> − <var>â</var><sub>−</sub>. (A triangular kernel gives the same result with weighted least squares.)</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The students.</b> Scores are drawn from a normal distribution with mean 50 and spread 16, kept between 0 and 100. Next year’s score is <var>f</var>(<var>x</var> − 50) + <var>τ</var>·<var>D</var> + 4<var>u</var> + noise (spread 8), where <var>u</var> is motivation, unseen, and <var>f</var> is the curve you choose (the S-curve is 55 + 0.3<var>x</var> + 6 tanh(<var>x</var>/9)). The placebo covariate is 6 + 2.5<var>u</var> + 0.03<var>x</var> + noise. With manipulation <var>m</var>, each student between 44 and 50 is moved to between 50 and 53 with probability 2<var>m</var>Φ(<var>u</var>), so more motivated students move more often.</p>
+      <p><b>The estimates.</b> Weighted least squares on each side with the kernel weights, the jump as the difference in intercepts, and heteroskedasticity-robust (HC1) standard errors as in the pooled regression with interactions. “Bias from the curve” refits the same estimator to the noise-free outcome at the same scores. The density test follows McCrary (2008): 2-point bins, local linear fits of the normalized bin counts with a triangular kernel and a 12-point bandwidth, and <var>θ̂</var>’s standard error √((1/<var>nh</var>)(24/5)(1/<var>f̂</var><sub>+</sub> + 1/<var>f̂</var><sub>−</sub>)). The fuzzy estimate is local linear two-stage least squares with triangular weights.</p>
+      <p><b>What’s simplified.</b> The intervals are the conventional ones, not robust bias-corrected; the bandwidth scan uses the known truth, which no real study has; the density test uses fixed bin and bandwidth choices instead of McCrary’s data-driven rules.</p>
+      <div><p><b>How it was checked</b> (Node.js, before the page was built):</p>
+        <ul class="lab-small">
+          <li>The side-by-side fits reproduce the pooled weighted regression with the course library to six decimals, both estimate and HC1 standard error, for orders 0 to 4 and both kernels.</li>
+          <li>S-curve, 1,000 students, 300 samples per bandwidth: bias 0.11 / 0.52 / 1.31 / 2.18 / 3.79 and SD 1.94 / 1.58 / 1.32 / 1.15 / 0.98 at bandwidths 8 / 12 / 18 / 25 / 50, so RMSE is lowest (1.67) near 12; the 95% intervals covered the truth 94–95% of the time at small bandwidths and 2% at 50. Flat lines (order 0) at 10 points: bias 5.85. Order 4 over the whole range: SE 2.07 vs 0.97 for a line.</li>
+          <li>Density test, 500 samples without manipulation: rejected 5.0% of the time at the 5% level (5.3% with 3,000 students). With manipulation of 10% / 20% / 30%: 37% / 93% / 100%.</li>
+          <li>Placebo covariate at a 10-point bandwidth: rejected 5.0% of the time without manipulation, 71% with 30% manipulation, when the outcome estimate was 2.6 points too high (0.4 of that from the curve, the rest from the sorting).</li>
+          <li>Fuzzy RD: the IV estimate equals the ratio of the two jumps and the shared library’s 2SLS (3.916351 all three ways). Over 300 samples with a take-up jump of 0.5: median 4.91 for a truth of 5, coverage 94%, while the takers-vs-others comparison averaged 11.9. With a jump of 0.08, the middle half of the estimates ran from −6.3 to 15.9.</li>
+        </ul></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>What is the key assumption behind a sharp regression discontinuity?</p>
+        <ul class="u-opts"><li><button type="button">The treatment has the same effect for everyone</button></li><li><button type="button">Without the treatment, the average outcome would change smoothly through the cutoff</button></li><li><button type="button">The running variable is normally distributed</button></li><li><button type="button">The outcome is a straight line in the running variable</button></li></ul>
+        <details><summary>Show the answer</summary><p>Continuity of the potential outcomes at the cutoff. Then any jump in the observed average must come from the treatment.</p></details></li>
+      <li class="u-q" data-a="2"><p>Why is local linear regression preferred to comparing averages in a window on each side?</p>
+        <ul class="u-opts"><li><button type="button">It always has a smaller standard error</button></li><li><button type="button">It doesn’t need a bandwidth</button></li><li><button type="button">When the outcome slopes through the cutoff, window averages count the slope as part of the jump</button></li><li><button type="button">Averages can’t be computed near a cutoff</button></li></ul>
+        <details><summary>Show the answer</summary><p>Window averages compare units at, say, 45 and 55. If the outcome rises with the score, that difference is partly slope. A line on each side extrapolates to the cutoff itself.</p></details></li>
+      <li class="u-q" data-a="0"><p>The density test finds far more people just above the cutoff than just below. What does that suggest?</p>
+        <ul class="u-opts"><li><button type="button">People are sorting themselves to the favorable side, so the two sides may not be comparable</button></li><li><button type="button">The treatment effect is large</button></li><li><button type="button">The bandwidth is too narrow</button></li><li><button type="button">Nothing: densities always jump at cutoffs</button></li></ul>
+        <details><summary>Show the answer</summary><p>Bunching means some people controlled which side they landed on, breaking the local-randomization argument. Those who sort may differ in ways that also affect the outcome.</p></details></li>
+      <li class="u-q" data-a="3"><p>At a cutoff, take-up of a program rises by 25 percentage points and the outcome rises by 2. What is the fuzzy RD estimate?</p>
+        <ul class="u-opts"><li><button type="button">0.5</button></li><li><button type="button">2</button></li><li><button type="button">2.25</button></li><li><button type="button">8</button></li></ul>
+        <details><summary>Show the answer</summary><p>Reduced form ÷ first stage = 2 ÷ 0.25 = 8: the effect for compliers at the cutoff.</p></details></li>
+      <li class="u-q" data-a="1"><p>What happens when you widen the bandwidth?</p>
+        <ul class="u-opts"><li><button type="button">Both bias and variance fall</button></li><li><button type="button">Variance falls, but bias can grow if the true curve bends</button></li><li><button type="button">Bias falls, but variance grows</button></li><li><button type="button">Nothing changes if the sample is large</button></li></ul>
+        <details><summary>Show the answer</summary><p>More units means less noise; but units farther from the cutoff make a line a worse local approximation. The MSE-optimal bandwidth balances the two.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (Princeton, 2009), chapter 6 (regression discontinuity designs); and <i>Mastering ’Metrics</i> (Princeton, 2015), chapter 4.</li>
+      <li>M. D. Cattaneo, N. Idrobo and R. Titiunik, <i>A Practical Introduction to Regression Discontinuity Designs: Foundations</i> (Cambridge University Press, 2020).</li>
+      <li>D. L. Thistlethwaite and D. T. Campbell, Regression-discontinuity analysis: an alternative to the ex post facto experiment, <i>Journal of Educational Psychology</i> 51(6), 309–317 (1960).</li>
+      <li>J. Hahn, P. Todd and W. van der Klaauw, Identification and estimation of treatment effects with a regression-discontinuity design, <i>Econometrica</i> 69(1), 201–209 (2001).</li>
+      <li>J. D. Angrist and V. Lavy, Using Maimonides’ rule to estimate the effect of class size on scholastic achievement, <i>Quarterly Journal of Economics</i> 114(2), 533–575 (1999).</li>
+      <li>D. S. Lee, Randomized experiments from non-random selection in U.S. House elections, <i>Journal of Econometrics</i> 142(2), 675–697 (2008).</li>
+      <li>J. McCrary, Manipulation of the running variable in the regression discontinuity design: a density test, <i>Journal of Econometrics</i> 142(2), 698–714 (2008).</li>
+      <li>G. W. Imbens and T. Lemieux, Regression discontinuity designs: a guide to practice, <i>Journal of Econometrics</i> 142(2), 615–635 (2008); D. S. Lee and T. Lemieux, Regression discontinuity designs in economics, <i>Journal of Economic Literature</i> 48(2), 281–355 (2010).</li>
+      <li>G. Imbens and K. Kalyanaraman, Optimal bandwidth choice for the regression discontinuity estimator, <i>Review of Economic Studies</i> 79(3), 933–959 (2012); S. Calonico, M. D. Cattaneo and R. Titiunik, Robust nonparametric confidence intervals for regression-discontinuity designs, <i>Econometrica</i> 82(6), 2295–2326 (2014).</li>
+      <li>A. Gelman and G. Imbens, Why high-order polynomials should not be used in regression discontinuity designs, <i>Journal of Business &amp; Economic Statistics</i> 37(3), 447–456 (2019).</li>
+      <li>D. Card, C. Dobkin and N. Maestas, The impact of nearly universal insurance coverage on health care utilization: evidence from Medicare, <i>American Economic Review</i> 98(5), 2242–2258 (2008); C. Carpenter and C. Dobkin, The effect of alcohol consumption on mortality: regression discontinuity evidence from the minimum drinking age, <i>American Economic Journal: Applied Economics</i> 1(1), 164–182 (2009).</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Regression_discontinuity_design" target="_blank" rel="noopener">Regression discontinuity design</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/regression-discontinuity/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-discontinuity/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/regression-discontinuity/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/regression-discontinuity/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,139 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<div class="lab" id="gth-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "business/" | relURL }}">Business</a> › Game Theory</nav>
+  <header class="lab-hero gth-hero">
+    <div class="gth-hero-text">
+      <p class="lab-eyebrow">Business · A course in fourteen chapters</p>
+      <h1>{{ .Title }}</h1>
+      <p>Game theory is the study of choices that depend on other people’s choices: prices and bids, votes and threats, promises and penalty kicks. This course starts with a single table of payoffs and climbs, one chapter at a time, to the tools of a first-year PhD course: Nash equilibrium, backward induction, repeated games, Bayesian games, auctions, signaling and mechanism design. Every chapter opens with a game you play against the computer.</p>
+      <p class="gth-cta"><a class="gth-go" href="{{ "business/game-theory/games-and-payoffs/" | relURL }}">Start with Chapter 1 →</a><a class="gth-link" href="#ideas">The big ideas at a glance</a></p>
+    </div>
+    <figure class="gth-field">
+      <canvas id="gth-cv" tabindex="0" aria-label="A field of players in a repeated prisoner’s dilemma. Each square plays its eight neighbors and copies the best scorer nearby. Blue squares cooperate, red squares defect, green squares just switched to cooperating and gold squares just switched to defecting. Click or drag to drop in a patch of the other strategy. Keys: Space pauses, S steps one round, R restarts."></canvas>
+      <figcaption>
+        <div class="gth-fc-row"><span class="gth-legend" aria-hidden="true"><span><i style="background:#3f7fd6"></i>cooperates</span><span><i style="background:#e5484d"></i>defects</span><span><i style="background:#2fbf8f"></i>new cooperator</span><span><i style="background:#f2b938"></i>new defector</span></span><span id="gth-stat" aria-live="off"></span></div>
+        <div class="gth-fc-row">
+          <span class="gth-btns" role="group" aria-label="Starting patterns" id="gth-pre"><button type="button" data-pre="kaleido" aria-pressed="true">One defector</button><button type="button" data-pre="random" aria-pressed="false">Random</button><button type="button" data-pre="islands" aria-pressed="false">Islands of trust</button></span>
+          <span class="gth-btns"><button type="button" id="gth-step" aria-label="Step one round">+1</button><button type="button" id="gth-pause" aria-label="Pause">❚❚</button></span>
+        </div>
+        <div class="gth-fc-row"><span class="gth-bfield"><label for="gth-b">Temptation to defect, <i>b</i></label><input type="range" id="gth-b" min="1.05" max="2.6" step="0.01" value="1.85"><output id="gth-b-o" for="gth-b">1.85</output></span></div>
+      </figcaption>
+    </figure>
+  </header>
+
+  <section class="lab-sec" id="what"><h2>What game theory is</h2>
+    <div class="gth-intro">
+      <div>
+        <p class="gth-three">Game theory is the mathematics of strategic situations, where what is best for you depends on what others do, and what is best for them depends on you. A game is described by its players, the actions each one can take, and what each player gets from every combination of actions; the theory asks what sensible players will do, and when they will cooperate, compete, threaten or bluff. It began with parlor games and war planning and now shapes how economists think about markets, auctions, contracts, elections and even evolution.</p>
+        <p>The table on the right is the most famous game of all, the prisoner’s dilemma, written the way this course writes every game. The row player’s payoff comes first, in gold; the column player’s comes second, in blue. Each player does better by finking whatever the other does, yet both finking leaves them worse off than both staying quiet. Chapters 2 and 7 take that puzzle apart.</p>
+        <p class="lab-small">The field at the top of this page is that game played over and over on a grid, after Martin Nowak and Robert May (<i>Nature</i>, 1992). Each square scores 1 for every cooperating neighbor if it cooperates, and <i>b</i> for every cooperating neighbor if it defects, then copies the best scorer around it. Defectors win locally, but clusters of cooperators protect each other, and neither side takes over. Raise <i>b</i> and defection spreads; lower it and cooperation wins.</p>
+      </div>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Suspect 1 chooses a row, Suspect 2 chooses a column. In each cell, Suspect 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Suspect 2</th></tr><tr><th class="gth-p1" scope="col">Suspect 1</th><th scope="col">Quiet</th><th scope="col">Fink</th></tr></thead><tbody><tr><th scope="row">Quiet</th><td><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">3</span></td></tr><tr><th scope="row">Fink</th><td><span class="gth-u1">3</span>, <span class="gth-u2">0</span></td><td class="gth-ne"><span class="gth-u1">1</span>, <span class="gth-u2">1</span></td></tr></tbody></table></div><figcaption>The prisoner’s dilemma in Osborne’s numbers. Higher is better. The green cell is the only Nash equilibrium.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="chapters"><h2>The chapters</h2>
+    <p>Each chapter starts with an interactive and a list of missions, then teaches the ideas behind it with worked examples, practice problems with answers, more small games and a short quiz. The colors mark three levels. The first four chapters assume only high-school algebra; by the last ones you are working at the level of a first-year graduate course.</p>
+    <ul class="gth-levels" aria-label="Levels">
+      <li><i class="gth-lv1"></i><span><b>Level 1, chapters 1–4:</b> foundations</span></li>
+      <li><i class="gth-lv2"></i><span><b>Level 2, chapters 5–7:</b> dynamics and competition</span></li>
+      <li><i class="gth-lv3"></i><span><b>Level 3, chapters 8–14:</b> information, design and evolution</span></li>
+    </ul>
+    <p class="u-progress"></p>
+    {{ partial "unit-chapters.html" . }}
+  </section>
+
+  <section class="lab-sec" id="ideas"><h2>The big ideas at a glance</h2>
+    <p>Ten ideas carry most of the subject. Here is each in one line, in symbols, and where the course teaches it. In the symbols, <var>u<sub>i</sub></var> is player <var>i</var>’s payoff, <var>a<sub>i</sub></var> an action of player <var>i</var>, and <var>a<sub>−i</sub></var> the actions of everyone else.</p>
+    <div class="gth-ideas">
+      <div class="gth-card"><div class="gth-f"><var>u<sub>i</sub></var>(<var>a′<sub>i</sub></var>, <var>a<sub>−i</sub></var>) &gt; <var>u<sub>i</sub></var>(<var>a<sub>i</sub></var>, <var>a<sub>−i</sub></var>) for all <var>a<sub>−i</sub></var></div><b>Dominance</b><p>If one action beats another whatever the others do, never play the worse one, and expect others not to either.</p><a href="{{ "business/game-theory/dominance/" | relURL }}">Chapter 2</a></div>
+      <div class="gth-card"><div class="gth-f"><var>a*<sub>i</sub></var> ∈ <var>B<sub>i</sub></var>(<var>a*<sub>−i</sub></var>) for every <var>i</var></div><b>Nash equilibrium</b><p>A combination of choices where nobody can do better by changing only their own choice: no one has regrets.</p><a href="{{ "business/game-theory/nash-equilibrium/" | relURL }}">Chapter 3</a></div>
+      <div class="gth-card"><div class="gth-f">max<sub>p</sub> min<sub>q</sub> = min<sub>q</sub> max<sub>p</sub></div><b>Mixed strategies</b><p>When being predictable costs you, randomize, in exactly the proportions that leave your opponent with nothing to exploit.</p><a href="{{ "business/game-theory/mixed-strategies/" | relURL }}">Chapter 4</a></div>
+      <div class="gth-card"><div class="gth-f">solve the last move first</div><b>Backward induction</b><p>In a game played in turns, look ahead to the end and reason back. Threats you would not carry out are not believed.</p><a href="{{ "business/game-theory/sequential-games/" | relURL }}">Chapter 6</a></div>
+      <div class="gth-card"><div class="gth-f">δ ≥ (<var>T</var> − <var>R</var>) ÷ (<var>T</var> − <var>P</var>)</div><b>The shadow of the future</b><p>When people expect to meet again, the fear of losing future cooperation can hold up cooperation today.</p><a href="{{ "business/game-theory/repeated-games/" | relURL }}">Chapter 7</a></div>
+      <div class="gth-card"><div class="gth-f"><var>a<sub>i</sub></var>(<var>θ<sub>i</sub></var>) best against beliefs about <var>θ<sub>−i</sub></var></div><b>Bayesian games</b><p>When you don’t know what kind of player you face, you best respond to your beliefs about their type.</p><a href="{{ "business/game-theory/incomplete-information/" | relURL }}">Chapter 8</a></div>
+      <div class="gth-card"><div class="gth-f">signal cost depends on type</div><b>Signaling</b><p>An action that is cheaper for some types than for others can reveal what words alone cannot: a costly signal is a credible one.</p><a href="{{ "business/game-theory/signaling/" | relURL }}">Chapter 10</a></div>
+      <div class="gth-card"><div class="gth-f">truth-telling is a best response</div><b>Mechanism design</b><p>Turn game theory around: choose the rules so that self-interested players produce the outcome you want, such as an auction where bidding your true value is best.</p><a href="{{ "business/game-theory/mechanism-design/" | relURL }}">Chapter 12</a></div>
+      <div class="gth-card"><div class="gth-f">φ<sub><var>i</var></sub> = average marginal contribution</div><b>The Shapley value</b><p>A fair way to split what a team creates: each member gets what they add, averaged over every order in which the team could have formed.</p><a href="{{ "business/game-theory/cooperative-games/" | relURL }}">Chapter 13</a></div>
+      <div class="gth-card"><div class="gth-f"><var>u</var>(<var>s*</var>, <var>s*</var>) &gt; <var>u</var>(<var>s</var>, <var>s*</var>), or = and …</div><b>Evolutionary stability</b><p>A strategy that, once common, can’t be invaded by a rare mutant. No one needs to be rational: success simply spreads.</p><a href="{{ "business/game-theory/evolutionary-games/" | relURL }}">Chapter 14</a></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A short history</h2>
+    <ol class="gth-time">
+      <li><b>1838</b><p><b>Antoine Augustin Cournot</b> analyzed two firms choosing how much mineral water to sell, each reacting to the other. His solution is what we now call a Nash equilibrium, more than a century before the name (Chapter 5).</p></li>
+      <li><b>1913</b><p><b>Ernst Zermelo</b> proved that in chess either White can force a win, or Black can, or each side can force at least a draw. It is often called the first theorem of game theory, and it holds the seed of backward induction.</p></li>
+      <li><b>1928</b><p><b>John von Neumann</b>’s paper “Zur Theorie der Gesellschaftsspiele” (On the theory of games of strategy, <i>Mathematische Annalen</i>) proved the minimax theorem: in every two-person zero-sum game, each side has a randomized strategy that guarantees it the game’s value. Émile Borel had raised the question in the early 1920s (Chapter 4).</p></li>
+      <li><b>1944</b><p><b>Von Neumann and Oskar Morgenstern</b> published <i>Theory of Games and Economic Behavior</i> (Princeton University Press), which founded the field and gave economics its theory of expected utility.</p></li>
+      <li><b>1950</b><p>At the RAND Corporation, <b>Merrill Flood and Melvin Dresher</b> had colleagues play a game in which each player’s own interest pulls against their joint interest. <b>Albert W. Tucker</b> of Princeton told it as a story about two prisoners to make it accessible to an audience of Stanford psychologists, and the name “prisoner’s dilemma” stuck (Chapter 2).</p></li>
+      <li><b>1950–1951</b><p><b>John Nash</b>, a Princeton graduate student, defined the equilibrium that carries his name and proved that every finite game has one, possibly in mixed strategies, in “Equilibrium points in <i>n</i>-person games” (<i>Proceedings of the National Academy of Sciences</i>, 1950) and “Non-cooperative games” (<i>Annals of Mathematics</i>, 1951). His “The bargaining problem” (<i>Econometrica</i>, 1950) started the theory of bargaining (Chapters 3 and 11).</p></li>
+      <li><b>1953</b><p><b>Lloyd Shapley</b> defined the Shapley value, a fair division of what a coalition earns (Chapter 13). In 1962, with <b>David Gale</b>, he published the deferred-acceptance algorithm for stable matching (Chapter 12).</p></li>
+      <li><b>1960</b><p><b>Thomas Schelling</b>’s <i>The Strategy of Conflict</i> (Harvard University Press) brought focal points, commitment and credible threats into the study of bargaining, business and nuclear deterrence.</p></li>
+      <li><b>1965–1975</b><p><b>Reinhard Selten</b> introduced subgame perfection (1965) and trembling-hand perfection (1975), which rule out equilibria that rest on threats no one would carry out (Chapter 6).</p></li>
+      <li><b>1967–1968</b><p><b>John Harsanyi</b>’s three-part paper “Games with incomplete information played by ‘Bayesian’ players” (<i>Management Science</i>) showed how to analyze games where players don’t know each other’s payoffs (Chapter 8).</p></li>
+      <li><b>1973</b><p><b>John Maynard Smith and George Price</b>, in “The logic of animal conflict” (<i>Nature</i>), defined the evolutionarily stable strategy and carried game theory into biology (Chapter 14).</p></li>
+      <li><b>1980–1984</b><p><b>Robert Axelrod</b> ran two computer tournaments of the repeated prisoner’s dilemma. The first had 14 entries plus a random strategy; the second had 62 entries from six countries. Both were won by the simplest program entered, Tit for Tat, submitted by <b>Anatol Rapoport</b>. Axelrod told the story in <i>The Evolution of Cooperation</i> (1984) (Chapter 7).</p></li>
+      <li class="gth-nobel"><b>1994 to 2020</b><p>Five Nobel prizes in economics (the Sveriges Riksbank Prize in Economic Sciences in Memory of Alfred Nobel) have gone mainly for game theory:</p>
+        <div class="lab-tw"><table class="lab-table gth-nob"><thead><tr><th>Year</th><th>Laureates</th><th>The prize committee’s citation</th></tr></thead><tbody>
+          <tr><td>1994</td><td>John C. Harsanyi, John F. Nash Jr., Reinhard Selten</td><td>“for their pioneering analysis of equilibria in the theory of non-cooperative games”</td></tr>
+          <tr><td>2005</td><td>Robert J. Aumann, Thomas C. Schelling</td><td>“for having enhanced our understanding of conflict and cooperation through game-theory analysis”</td></tr>
+          <tr><td>2007</td><td>Leonid Hurwicz, Eric S. Maskin, Roger B. Myerson</td><td>“for having laid the foundations of mechanism design theory”</td></tr>
+          <tr><td>2012</td><td>Alvin E. Roth, Lloyd S. Shapley</td><td>“for the theory of stable allocations and the practice of market design”</td></tr>
+          <tr><td>2020</td><td>Paul R. Milgrom, Robert B. Wilson</td><td>“for improvements to auction theory and inventions of new auction formats”</td></tr>
+        </tbody></table></div>
+        <p class="lab-small">Others rest heavily on game theory too: 1996 (James Mirrlees and William Vickrey, incentives under asymmetric information, including Vickrey’s second-price auction), 2001 (George Akerlof, Michael Spence and Joseph Stiglitz, markets with asymmetric information, including Spence’s signaling) and 2014 (Jean Tirole, market power and regulation).</p></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="where"><h2>Where game theory shows up</h2>
+    <div class="gth-where">
+      <div><h3><span aria-hidden="true">🏢</span>Business</h3><p>Pricing against a rival, deciding how much capacity to build, whether to enter a market, how to read a competitor’s announcement, when a promise to customers or workers is believable. The site’s business cases have several: Intel leaving the memory-chip price war in <a href="{{ "business/cases/intel-exits-memory-1985/" | relURL }}">1985</a>, Tata’s public promise of a 100,000-rupee <a href="{{ "business/cases/tata-nano/" | relURL }}">Nano</a> as a commitment, and Southwest keeping its people after 9/11 as a <a href="{{ "business/cases/southwest-no-layoffs-2001/" | relURL }}">commitment that built trust</a>.</p></div>
+      <div><h3><span aria-hidden="true">🔨</span>Auctions and markets</h3><p>The U.S. Federal Communications Commission has sold licenses for radio spectrum by auction since 1994, in formats designed with the help of game theorists. Doctors in the United States are matched to residency programs by a deferred-acceptance algorithm, and kidney exchanges use matching theory to pair donors and patients (Chapters 9 and 12).</p></div>
+      <div><h3><span aria-hidden="true">⚽</span>Sports</h3><p>A penalty kick is a zero-sum game with mixed strategies. Studies of professional kickers and goalkeepers found choices close to what minimax theory predicts (Chapter 4). Tennis serves, pitch selection in baseball and run-or-pass calls in football have been studied the same way.</p></div>
+      <div><h3><span aria-hidden="true">🦅</span>Biology</h3><p>Animals don’t calculate, but natural selection rewards strategies that do well against the population. Hawks and doves, the sex ratio, and cooperation among relatives and strangers are all studied as evolutionary games (Chapter 14).</p></div>
+      <div><h3><span aria-hidden="true">🗳️</span>Politics and conflict</h3><p>Why two candidates drift toward the middle (Chapter 5), how deterrence and arms races work (Chapter 2), how committees vote and how much power each member really has (Chapter 13). Schelling’s work on commitment grew out of thinking about nuclear deterrence.</p></div>
+      <div><h3><span aria-hidden="true">🏠</span>Everyday life</h3><p>Merging into traffic, splitting the chores, negotiating a salary or a used car, deciding whether to stand at a concert when everyone in front of you stands, choosing a meeting spot with a friend whose phone is dead. Once you see the payoffs, you see games everywhere.</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="further"><h2>Free courses to go further</h2>
+    <ul>
+      <li><a href="https://oyc.yale.edu/economics/econ-159" target="_blank" rel="noopener">Yale Open Courses, ECON 159: Game Theory</a>, taught by Ben Polak and recorded in fall 2007: 24 lectures on video with transcripts and problem sets. Lively, with classroom games; a perfect companion to Chapters 1 to 7.</li>
+      <li><a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2025/" target="_blank" rel="noopener">MIT OpenCourseWare, 14.12: Economic Applications of Game Theory</a> (undergraduate), with lecture notes, slides and exams, and the graduate course <a href="https://ocw.mit.edu/courses/14-126-game-theory-spring-2016/" target="_blank" rel="noopener">14.126: Game Theory</a> for the level of the last chapters.</li>
+      <li>The Stanford Encyclopedia of Philosophy: <a href="https://plato.stanford.edu/entries/game-theory/" target="_blank" rel="noopener">Game Theory</a>, <a href="https://plato.stanford.edu/entries/prisoner-dilemma/" target="_blank" rel="noopener">Prisoner’s Dilemma</a>, <a href="https://plato.stanford.edu/entries/common-knowledge/" target="_blank" rel="noopener">Common Knowledge</a>, <a href="https://plato.stanford.edu/entries/epistemic-game/" target="_blank" rel="noopener">Epistemic Foundations of Game Theory</a> and <a href="https://plato.stanford.edu/entries/game-evolutionary/" target="_blank" rel="noopener">Evolutionary Game Theory</a>: careful, free and kept up to date.</li>
+    </ul>
+    <h3 class="lab-h">Textbooks</h3>
+    <ul class="gth-books">
+      <li>Martin J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004). This course follows its notation.</li>
+      <li>Avinash Dixit and Susan Skeath, with coauthors, <i>Games of Strategy</i> (W. W. Norton, several editions). Gentle, full of examples.</li>
+      <li>Robert Gibbons, <i>Game Theory for Applied Economists</i> (Princeton University Press, 1992). Short and clear, the classic bridge to graduate work.</li>
+      <li>Drew Fudenberg and Jean Tirole, <i>Game Theory</i> (MIT Press, 1991), and Roger B. Myerson, <i>Game Theory: Analysis of Conflict</i> (Harvard University Press, 1991): the graduate references.</li>
+      <li>Martin J. Osborne and Ariel Rubinstein, <i>A Course in Game Theory</i> (MIT Press, 1994), and Michael Maschler, Eilon Solan and Shmuel Zamir, <i>Game Theory</i> (Cambridge University Press, 2013).</li>
+      <li>Colin F. Camerer, <i>Behavioral Game Theory</i> (Princeton University Press, 2003): what real people do in the lab.</li>
+      <li>For reading in a chair: Thomas Schelling, <i>The Strategy of Conflict</i> (1960); Robert Axelrod, <i>The Evolution of Cooperation</i> (1984); Avinash Dixit and Barry Nalebuff, <i>Thinking Strategically</i> (1991) and <i>The Art of Strategy</i> (2008).</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li><a href="https://plato.stanford.edu/entries/prisoner-dilemma/" target="_blank" rel="noopener">Steven Kuhn, “Prisoner’s Dilemma”, Stanford Encyclopedia of Philosophy</a> (Flood, Dresher and Tucker).</li>
+      <li><a href="https://plato.stanford.edu/entries/game-theory/" target="_blank" rel="noopener">“Game Theory”, Stanford Encyclopedia of Philosophy</a>.</li>
+      <li><a href="https://en.wikipedia.org/wiki/List_of_Nobel_Memorial_Prize_laureates_in_Economic_Sciences" target="_blank" rel="noopener">List of Nobel Memorial Prize laureates in Economic Sciences</a> (Wikipedia; the citations quoted above).</li>
+      <li><a href="https://en.wikipedia.org/wiki/Game_theory" target="_blank" rel="noopener">Game theory</a> (Wikipedia; Zermelo, Borel and the early history).</li>
+      <li><a href="https://public.websites.umich.edu/~axe/research/Evolving.pdf" target="_blank" rel="noopener">Robert Axelrod, “The Evolution of Strategies in the Iterated Prisoner’s Dilemma”</a> (University of Michigan; the numbers of entries in the two tournaments).</li>
+      <li>J. von Neumann, “Zur Theorie der Gesellschaftsspiele”, <i>Mathematische Annalen</i> 100 (1928), 295–320. J. von Neumann and O. Morgenstern, <i>Theory of Games and Economic Behavior</i> (Princeton University Press, 1944).</li>
+      <li>J. F. Nash, “Equilibrium points in <i>n</i>-person games”, <i>PNAS</i> 36 (1950), 48–49; “Non-cooperative games”, <i>Annals of Mathematics</i> 54 (1951), 286–295.</li>
+      <li>M. A. Nowak and R. M. May, “Evolutionary games and spatial chaos”, <i>Nature</i> 359 (1992), 826–829 (the hero animation).</li>
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapters 1–2.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More">
+    <a href="{{ "business/" | relURL }}">← Business</a>
+    <a href="{{ "business/game-theory/games-and-payoffs/" | relURL }}">Chapter 1: Games, Players and Payoffs →</a>
+  </nav>
+</div>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+{{ end }}

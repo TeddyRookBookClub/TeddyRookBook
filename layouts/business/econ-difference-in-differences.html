@@ -1,0 +1,256 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/difference-in-differences/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/difference-in-differences/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec12-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 12</p>
+    <h1>{{ .Title }}</h1>
+    <p>A state raises its minimum wage. A year later, restaurants there employ a few more people per store. Did the law do that, or was everyone hiring anyway? You can’t rerun history without the law, but you can borrow a neighbor’s history. Here you’ll build that comparison with a dashed line, break the one assumption it rests on, read an event-study plot the way referees do, and watch the most popular regression in applied economics give the wrong sign when policies roll out at different times.</p>
+    <span class="lab-mark" aria-hidden="true">🍔</span>
+  </header>
+
+  <div class="lab-stage ec12-main">
+    <div class="lab-view" id="ec12-view">
+      <canvas id="ec12-cv" tabindex="0" aria-label="The two-by-two picture. Left: jobs per store for a treated group (gold) and a control group (blue), before and after a policy, with each store as a small dot and each group's average as a big dot. A dashed gold line shows the path the treated group is assumed to follow without the policy; a dotted pink line shows the true path, which only a simulation can know. A green bracket marks the estimate. Right: the difference-in-differences regression and the spread of estimates across many studies. Keys: N new sample, R run 1,000 studies, left and right arrows break the parallel trends, up and down arrows change the true effect."></canvas>
+      <div class="lab-hud" id="ec12-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec12-new2" aria-label="New sample" title="New sample (N)">🎲</button>
+        <button type="button" id="ec12-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="ec12-pre-h">Scenario</h3>
+      <div class="lab-seg" id="ec12-pre" role="group" aria-labelledby="ec12-pre-h">
+        <button type="button" data-p="clean">Clean</button><button type="button" data-p="trend">Diverging trends</button><button type="button" data-p="noisy">Noisy</button><button type="button" data-p="zero">No effect</button>
+      </div>
+      <h3 id="ec12-est-h">Comparison</h3>
+      <div class="lab-seg" id="ec12-est" role="group" aria-labelledby="ec12-est-h">
+        <button type="button" data-e="did">DiD</button><button type="button" data-e="ba">Before vs after</button><button type="button" data-e="cs">Treated vs control</button>
+      </div>
+      <label class="lab-field"><span>True effect of the policy <output id="ec12-tau-o"></output></span><input type="range" id="ec12-tau" min="-4" max="4" step="0.1" aria-label="True effect of the policy"></label>
+      <label class="lab-field"><span>Break parallel trends <output id="ec12-del-o"></output></span><input type="range" id="ec12-del" min="-3" max="3" step="0.1" aria-label="Extra change the treated group would have had anyway"></label>
+      <label class="lab-field"><span>Stores per group <output id="ec12-n-o"></output></span><input type="range" id="ec12-n" min="10" max="200" step="5" aria-label="Stores per group"></label>
+      <label class="lab-field"><span>Noise <output id="ec12-sd-o"></output></span><input type="range" id="ec12-sd" min="0.5" max="5" step="0.1" aria-label="Noise in each store's outcome"></label>
+      <label class="lab-chk"><input type="checkbox" id="ec12-truth"> Show the true path without the policy</label>
+      <label class="lab-chk"><input type="checkbox" id="ec12-paths"> Show each store’s path</label>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec12-new">New sample</button><button type="button" class="lab-btn pri" id="ec12-mc">Run 1,000 studies</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec12-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec12-missions"></ol>
+    </div>
+    <section class="lab-sec ec12-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The story.</b> Two groups of fast-food stores are surveyed twice. Between the surveys, a policy hits the gold stores (the <i>treated</i> group) but not the blue ones (the <i>control</i> group). Each small dot is one store; the big dots are the four group averages. Everything is simulated, so you set the truth: the policy’s real effect, and whether the two groups would have moved in parallel without it.</p>
+        <p><b>The dashed line.</b> We never see what the treated stores would have done without the policy. Difference-in-differences fills the gap by assuming they would have changed by the same amount as the control stores. That assumed path is the dashed gold line, and the estimate is the green bracket between where the treated group ended up and where the dashed line says it would have been.</p>
+        <p><b>The dotted line.</b> In a simulation you can peek at the truth: the pink dotted line is where the treated stores really would have gone. When the trends are parallel, dashed and dotted lines end in about the same place. Slide “Break parallel trends” and they split; the red gap is the bias, and no amount of data removes it.</p>
+        <p><b>The right side.</b> The regression card shows the same numbers as a regression with an interaction term, with standard errors clustered by store. “Run 1,000 studies” draws 1,000 fresh samples and piles up their estimates, so you can see whether the method is right on average and how often its 95% intervals catch the truth.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="idea"><h2>Two differences</h2>
+    <p>The question is causal: what did the policy do to the stores that got it? In the language of <a href="{{ "business/econometrics/what-is-econometrics/" | relURL }}">potential outcomes</a>, each treated store has an outcome with the policy, <var>y</var>(1), which we see, and one without it, <var>y</var>(0), which we don’t. The target is the <i>average treatment effect on the treated</i>, ATT = E[<var>y</var>(1) − <var>y</var>(0) | treated], in the period after the policy.</p>
+    <p>Two easy comparisons each fail. <b>Before vs after</b> for the treated stores mixes the policy with everything else that changed over the year (a recession, a new menu, the season). <b>Treated vs control</b> after the policy mixes the policy with any old difference between the groups (bigger stores, a different state). Difference-in-differences subtracts one from the other, and both problems cancel, as long as they are the same size in both groups:</p>
+    <div class="u-big"><var>δ̂</var><sub>1</sub> = (<var>ȳ</var><sub>T, after</sub> − <var>ȳ</var><sub>T, before</sub>) − (<var>ȳ</var><sub>C, after</sub> − <var>ȳ</var><sub>C, before</sub>)<small>the change for the treated group minus the change for the control group</small></div>
+    <p>The assumption that makes this work is called <b>parallel trends</b>: without the policy, the average outcome of the treated group would have changed by the same amount as the control group’s.</p>
+    <div class="lab-formula">E[<var>y</var><sub>after</sub>(0) − <var>y</var><sub>before</sub>(0) | treated] = E[<var>y</var><sub>after</sub>(0) − <var>y</var><sub>before</sub>(0) | control]</div>
+    <p>Notice what it does <i>not</i> require. The groups can start at different levels (in the simulation the treated stores start about 3 jobs lower), and the world can change for everyone (here every store loses about 2 jobs over the year). Only the <i>changes</i> must match. If the treated group would have gained an extra <var>d</var> anyway, the estimate is off by exactly <var>d</var>. That is the slider you’ve been moving.</p>
+    <h3 class="lab-h">The regression form</h3>
+    <p>Put the two periods in one dataset with a row for each store in each period, and let <var>d</var>2 = 1 in the second period and <var>dT</var> = 1 for the treated group. Following Wooldridge (chapter 13), estimate</p>
+    <div class="lab-formula"><var>y</var> = <var>β</var>₀ + <var>δ</var>₀·<var>d</var>2 + <var>β</var>₁·<var>dT</var> + <var>δ</var>₁·<var>d</var>2·<var>dT</var> + <var>u</var></div>
+    <p>With two groups and two periods this regression is <i>saturated</i>: it has one coefficient for each of the four cells, so it reproduces the four averages exactly. <var>β</var>₀ is the control group before, <var>β</var>₀ + <var>β</var>₁ the treated group before, <var>β</var>₀ + <var>δ</var>₀ the control group after, and <var>β</var>₀ + <var>δ</var>₀ + <var>β</var>₁ + <var>δ</var>₁ the treated group after. Subtract and you find that the interaction coefficient <var>δ̂</var>₁ <i>is</i> the difference-in-differences. The regression adds two things the table can’t: standard errors, and room for control variables (a store’s size, a city’s unemployment rate) that soak up noise.</p>
+    <div class="u-ex"><b>Worked example: New Jersey’s minimum wage, 1992</b>
+      <p>On April 1, 1992, New Jersey raised its minimum wage from $4.25 to $5.05 an hour. Pennsylvania next door did not. David Card and Alan Krueger surveyed about 400 fast-food restaurants (Burger King, KFC, Wendy’s and Roy Rogers) in both states in February–March 1992 and again in November–December. Their Table 3 reports average full-time-equivalent (FTE) employment per store:</p>
+      <div class="lab-tw"><table class="lab-table"><thead><tr><th></th><th>Before</th><th>After</th><th>Change</th></tr></thead><tbody>
+        <tr><td>New Jersey (treated)</td><td>20.44</td><td>21.03</td><td>+0.59</td></tr>
+        <tr><td>Pennsylvania (control)</td><td>23.33</td><td>21.17</td><td>−2.16</td></tr>
+        <tr><td>Difference</td><td>−2.89</td><td>−0.14</td><td><b>+2.76</b> (SE 1.36)</td></tr></tbody></table></div>
+      <ol><li>Before vs after in New Jersey: +0.59 jobs per store. That ignores whatever pulled Pennsylvania down by 2.16.</li>
+        <li>New Jersey vs Pennsylvania after: −0.14. That ignores that New Jersey stores were already 2.89 jobs smaller.</li>
+        <li>Difference-in-differences: 0.59 − (−2.16) = 2.75, which the paper reports as 2.76 from unrounded numbers.</li></ol>
+      <p>The estimate was positive, the opposite of what the simplest supply-and-demand model predicts, and it started a long debate. David Neumark and William Wascher re-examined it with payroll records and found employment fell; Card and Krueger replied with Bureau of Labor Statistics data that supported their original result (both papers appeared in the <i>American Economic Review</i> in 2000). The method itself became a staple, and in 2021 Card shared the Nobel memorial prize in economics, in part for this kind of “natural experiment”.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: reading the regression</b>
+      <p>A coffee chain tests a new scheduling app in 30 of its 80 stores for one quarter. Average weekly sales, in thousands of dollars: test stores 52.0 before and 55.5 after; the other 50 stores 50.0 before and 51.0 after. Estimating the regression on the 160 store-quarters gives</p>
+      <div class="lab-formula"><var>ŷ</var> = 50.0 + 1.0·<var>d</var>2 + 2.0·<var>dT</var> + 2.5·<var>d</var>2·<var>dT</var></div>
+      <ol><li><var>β̂</var>₀ = 50.0: the other stores before. <var>β̂</var>₁ = 2.0: test stores were already selling $2,000 more a week. Not the app’s doing.</li>
+        <li><var>δ̂</var>₀ = 1.0: sales rose $1,000 a week everywhere (the season, prices).</li>
+        <li><var>δ̂</var>₁ = 2.5: the app’s estimated effect, $2,500 a week per store, if the two kinds of stores would otherwise have grown alike.</li></ol>
+      <p>If the chain picked its 30 busiest, fastest-growing stores for the test, the parallel-trends assumption is in trouble, and the honest answer is “less than $2,500, by an unknown amount”. That’s why a company that can choose should pick test stores at random (see <a href="{{ "business/econometrics/what-is-econometrics/" | relURL }}">Chapter 1</a>).</p>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> press “Diverging trends”. The dashed and dotted lines split, and the red bracket is the bias: 2 jobs, larger than the true effect of 1.5. Now raise “Stores per group” to 200 and run 1,000 studies. The histogram gets narrower, but it stays centered on the wrong number. More data makes you more precise, not more right.</div>
+  <div class="lab-try"><b>Try this:</b> set the trend break to 0, switch the comparison to “Before vs after”, and watch the estimate miss by about −2: that’s the common change. “Treated vs control” misses by about −3: that’s the starting gap. Then switch back to DiD.</div>
+
+  <div class="u-myth"><b>Common mistake: “The two groups have to look alike”</b>
+    <p>Difference-in-differences does not need the treated and control groups to have the same level of the outcome. New Jersey’s stores were smaller than Pennsylvania’s, and that is fine: the fixed difference cancels. What it needs is that the gap would have <i>stayed the same</i> without the policy. Two groups that look identical in levels but are on different paths will mislead you; two groups at different levels moving in step won’t. (Groups that differ a lot in levels do make parallel trends less believable, and it also matters whether the outcome is in levels or logs: trends can be parallel in one and not the other.)</p>
+  </div>
+
+  <section class="lab-sec" id="assume"><h2>What has to be true</h2>
+    <div class="u-key">
+      <div><b>Parallel trends</b><p>Without the policy, both groups’ averages would have changed by the same amount. Untestable after the policy starts, because one of the two paths is never seen.</p></div>
+      <div><b>No anticipation</b><p>The treated group doesn’t react before the policy starts. If restaurants cut hiring the moment a law is announced, the “before” period is already contaminated.</p></div>
+      <div><b>No spillovers</b><p>The policy doesn’t change the control group. If New Jersey workers commuted to Pennsylvania jobs, both groups would move.</p></div>
+      <div><b>Stable groups</b><p>The same kind of units are in each group in both periods. If the policy closed the weakest stores, the treated group’s average rises with no one better off.</p></div>
+    </div>
+    <h3 class="lab-h">Clustered standard errors</h3>
+    <p>Outcomes of the same store in two periods are related: a big store is big both times. The usual OLS standard errors assume every row is independent, so they get the uncertainty wrong. The fix is to <i>cluster</i>: let errors be correlated in any way within a store (or a state), and treat only different clusters as independent. In the simulation, compare the regression card with the classic formula: with these settings, clustering gives an SE of about 0.44 for <var>δ̂</var>₁ while the classic formula says about 1.19. Here the classic formula is too <i>pessimistic</i>, because each store’s own level cancels in its before-after change.</p>
+    <p>With many periods, the danger runs the other way. Marianne Bertrand, Esther Duflo and Sendhil Mullainathan (2004) took 21 years of U.S. wage data from the Current Population Survey, made up fake state “laws” at random dates, and ran standard difference-in-differences regressions. With ordinary standard errors, up to 45% of these placebo laws came out “significant” at the 5% level, because outcomes within a state are correlated from year to year. Allowing for correlation within each state over time (clustering by state) fixed most of it when there were enough states. The rule of thumb: cluster at the level where the policy is assigned, and worry when there are only a handful of clusters (then use a method built for few clusters, such as the wild cluster bootstrap).</p>
+  </section>
+
+  <section class="lab-sec" id="event"><h2>Event studies: leads and lags</h2>
+    <p>With more than two periods, don’t squeeze everything into one number. Estimate a separate treated-minus-control difference for every period, relative to the last period before the policy:</p>
+    <div class="u-big"><var>y</var><sub><var>it</var></sub> = <var>α</var><sub><var>i</var></sub> + <var>λ</var><sub><var>t</var></sub> + Σ<sub><var>k</var> ≠ −1</sub> <var>β</var><sub><var>k</var></sub>·<var>dT</var><sub><var>i</var></sub>·1[<var>t</var> − <var>E</var> = <var>k</var>] + <var>u</var><sub><var>it</var></sub><small><var>α</var><sub><var>i</var></sub>: a fixed effect for each unit; <var>λ</var><sub><var>t</var></sub>: one for each period; <var>E</var>: the period the policy starts; <var>k</var>: periods since it started</small></div>
+    <p>The coefficients after the policy (<var>k</var> ≥ 0, the <i>lags</i>) trace out how the effect builds or fades. The coefficients before it (<var>k</var> ≤ −2, the <i>leads</i>) are a check: if the trends really were parallel before the policy, the leads should hover around zero. A clear slope in the leads is a warning that the groups were already drifting apart.</p>
+    <div class="lab-stage wide ec12-mini" id="ec12-ev">
+      <div class="lab-view" id="ec12-evv"><canvas id="ec12-ec" aria-label="Left: average outcome by period for the treated group (gold) and the control group (blue), with the policy starting after period minus one. Right: the event-study coefficients for each period with 95% confidence intervals, the reference period minus one fixed at zero, and the true values as a dashed gold line. Leads whose intervals miss zero turn red."></canvas></div>
+      <div class="lab-panel ec12-row">
+        <div class="ec12-grow">
+          <h3 id="ec12-evs-h">Shape of the effect</h3>
+          <div class="lab-seg" id="ec12-evshape" role="group" aria-labelledby="ec12-evs-h"><button type="button" data-s="jump">Jump</button><button type="button" data-s="grow">Grows</button><button type="button" data-s="fade">Fades</button><button type="button" data-s="antic">Anticipation</button></div>
+          <label class="lab-field"><span>Effect size <output id="ec12-evsize-o"></output></span><input type="range" id="ec12-evsize" min="0" max="4" step="0.1" aria-label="Effect size"></label>
+          <label class="lab-field"><span>Pre-trend of the treated group <output id="ec12-evpre-o"></output></span><input type="range" id="ec12-evpre" min="-0.4" max="0.4" step="0.02" aria-label="Pre-trend of the treated group"></label>
+        </div>
+        <div class="ec12-grow">
+          <label class="lab-field"><span>Serial correlation of errors <output id="ec12-evrho-o"></output></span><input type="range" id="ec12-evrho" min="0" max="0.9" step="0.05" aria-label="Serial correlation of each unit's errors"></label>
+          <label class="lab-field"><span>Units per group <output id="ec12-evn-o"></output></span><input type="range" id="ec12-evn" min="10" max="80" step="5" aria-label="Units per group"></label>
+          <button type="button" class="lab-btn" id="ec12-evnew">New sample</button>
+        </div>
+        <dl class="lab-readout ec12-grow" id="ec12-evread"></dl>
+      </div>
+    </div>
+    <p>The joint test asks whether all four leads are zero at once, using the clustered covariance matrix (a Wald test, reported as an <var>F</var> statistic). It is the formal version of eyeballing the left side of the plot.</p>
+    <div class="lab-try"><b>Try this:</b> choose “Anticipation”. Units start responding two periods early, so period −1 is already partly treated. Every later coefficient is measured against a contaminated baseline and comes out too small, and the lead at −2 dips below zero. Then set the pre-trend to +0.2 with a jump: the leads climb in a straight line toward zero and the lags keep climbing, so a naive reading would credit the policy with the drift.</div>
+    <div class="u-myth"><b>Common mistake: “The pre-trend test passed, so parallel trends holds”</b>
+      <p>A test that fails to reject is not proof. With few units or noisy data, the leads have wide intervals and a real pre-trend can hide inside them; turn “Units per group” down to 10 with a pre-trend of 0.1 and see. Jonathan Roth (2022) showed that studies that pass a pre-test can still be badly biased, and that selecting studies on passing the pre-test can make the bias worse. Modern practice reports how big a violation of parallel trends would have to be to overturn the conclusion (Rambachan and Roth, 2023) instead of treating the pre-test as a yes-or-no gate.</p>
+    </div>
+    <p>The leads have a famous real-world cousin: the <b>Ashenfelter dip</b>. Orley Ashenfelter (1978) noticed that people who enrolled in government job-training programs had unusually low earnings in the year just before enrolling, often because they had just lost a job. Their earnings would have bounced back anyway, so a before-after comparison flatters the program. An event study shows the dip as negative leads.</p>
+  </section>
+
+  <section class="lab-sec" id="stagger"><h2>Staggered adoption: when two-way fixed effects goes wrong</h2>
+    <p>Real policies rarely start everywhere on the same day. States adopt laws in different years; a company rolls out a new system store by store. For decades the standard tool was the <b>two-way fixed effects</b> (TWFE) regression</p>
+    <div class="lab-formula"><var>y</var><sub><var>it</var></sub> = <var>α</var><sub><var>i</var></sub> + <var>λ</var><sub><var>t</var></sub> + <var>β</var>·<var>D</var><sub><var>it</var></sub> + <var>u</var><sub><var>it</var></sub>, &nbsp; <var>D</var><sub><var>it</var></sub> = 1 once unit <var>i</var> is treated</div>
+    <p>and <var>β̂</var> was read as “the effect”. Around 2018–2021, several papers showed what <var>β̂</var> actually is when the effect differs across groups or changes over time. Andrew Goodman-Bacon (2021) proved that it is a weighted average of every possible two-group, two-period DiD in the data, including comparisons that use <i>already-treated</i> units as the control group. If the effect grows over time, those already-treated “controls” are still rising because of the policy, so subtracting their change pulls the estimate down, sometimes below zero. Clément de Chaisemartin and Xavier D’Haultfœuille (2020) showed the same thing another way: <var>β̂</var> is a weighted sum of the effects in each treated group and period, and some of the weights can be negative.</p>
+    <div class="lab-stage wide ec12-mini" id="ec12-st">
+      <div class="lab-view" id="ec12-sgv"><canvas id="ec12-sc" aria-label="Staggered adoption. Left: outcomes over ten periods for an early-adopting group (gold), a late-adopting group (pink) and, if switched on, a never-treated group (blue), with dashed lines showing each group's path without the policy. Top right: the Goodman-Bacon decomposition, each two-by-two comparison as a dot placed by its weight and its estimate, with lines for the TWFE estimate and the true average effect. Bottom right: the weight TWFE puts on each treated group and period; red cells have negative weights."></canvas></div>
+      <div class="lab-panel ec12-row">
+        <div class="ec12-grow">
+          <h3 id="ec12-sgk-h">The true effects</h3>
+          <div class="lab-seg" id="ec12-sgk" role="group" aria-labelledby="ec12-sgk-h"><button type="button" data-k="const">Same everywhere</button><button type="button" data-k="het">Bigger for early group</button><button type="button" data-k="grow">Grows each period</button></div>
+          <label class="lab-field"><span>Effect size <output id="ec12-sgS-o"></output></span><input type="range" id="ec12-sgS" min="0.5" max="3" step="0.1" aria-label="Effect size"></label>
+          <label class="lab-chk"><input type="checkbox" id="ec12-sgN"> Include a never-treated group</label>
+        </div>
+        <div class="ec12-grow">
+          <label class="lab-field"><span>Early group adopts in <output id="ec12-sgE-o"></output></span><input type="range" id="ec12-sgE" min="2" max="9" step="1" aria-label="Period when the early group adopts"></label>
+          <label class="lab-field"><span>Late group adopts in <output id="ec12-sgL-o"></output></span><input type="range" id="ec12-sgL" min="3" max="10" step="1" aria-label="Period when the late group adopts"></label>
+          <p class="lab-small" id="ec12-sgnote"></p>
+        </div>
+        <dl class="lab-readout ec12-grow" id="ec12-sgread"></dl>
+      </div>
+    </div>
+    <p>The dots in the top-right panel are the 2×2 comparisons. Green ones compare a treated group with the never-treated group: always clean. Violet compares the early group with the late group before the late group is treated: also clean. Red compares the late group with the early group <i>after</i> the early group is already treated, and is the “forbidden comparison”. When effects are the same everywhere and constant over time, every dot sits on the truth and TWFE is fine. When effects grow, the red dot falls, and with enough weight it drags TWFE with it.</p>
+    <div class="lab-try"><b>Try this:</b> pick “Grows each period”, switch off the never-treated group, and set the early group to adopt in period 2 and the late group in period 9. TWFE comes out negative although every true effect is positive. Now pick “Same everywhere”: all dots agree. Pick “Bigger for early group”: TWFE lands between the two groups’ effects, but at a weighted average that answers no particular question.</div>
+    <p><b>The fix: clean comparisons only.</b> Brantly Callaway and Pedro Sant’Anna (2021) estimate a separate effect for each adoption group <var>g</var> in each period <var>t</var>, comparing it only with units that are not yet or never treated, each time against the period just before <var>g</var> adopted:</p>
+    <div class="lab-formula">ATT(<var>g</var>, <var>t</var>) = (<var>ȳ</var><sub><var>g</var>, <var>t</var></sub> − <var>ȳ</var><sub><var>g</var>, <var>g</var>−1</sub>) − (<var>ȳ</var><sub>C, <var>t</var></sub> − <var>ȳ</var><sub>C, <var>g</var>−1</sub>)</div>
+    <p>Then they average these building blocks with weights the researcher chooses openly (by group size, by time since adoption, and so on). Liyang Sun and Sarah Abraham (2021) fixed event studies in the same spirit, and Kirill Borusyak, Xavier Jaravel and Jann Spiess (2024) proposed estimating the untreated outcomes from untreated observations only and then imputing. The common lesson: decide which comparisons you trust, and make sure the estimator uses only those.</p>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>A water company moves upstream.</b> John Snow’s 1855 study of cholera in London is often described as an early ancestor of the method. One water company moved its intake to a cleaner stretch of the Thames while another kept drawing sewage-laden water, and Snow compared death rates among their customers before and after.</p>
+      <p><b>Training programs.</b> Orley Ashenfelter (1978) and Ashenfelter and David Card (1985) used before-and-after comparisons of trainees and non-trainees to evaluate U.S. job-training programs, and found the dip in pre-program earnings that now carries Ashenfelter’s name.</p>
+      <p><b>Natural experiments.</b> Card (1990) compared Miami’s labor market with similar cities after the 1980 Mariel boatlift brought about 125,000 Cuban immigrants to the United States, many of whom settled in Miami. Card and Krueger (1994) studied the New Jersey minimum wage. These papers made “find a good comparison group” a central habit of empirical economics. Card received half of the 2021 Nobel memorial prize in economics for his empirical contributions to labor economics; Joshua Angrist and Guido Imbens shared the other half for methods of causal analysis.</p>
+      <p><b>The staggered-timing revolution.</b> Between 2018 and 2021, papers by Goodman-Bacon, de Chaisemartin and D’Haultfœuille, Callaway and Sant’Anna, Sun and Abraham, and Borusyak, Jaravel and Spiess changed how economists estimate difference-in-differences with many periods. Many older TWFE studies have been re-run with the new estimators; some conclusions held up and some did not.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Business.</b> A chain pilots a new price, layout or app in some regions first. Comparing pilot regions’ change with the rest’s change is DiD; staggered rollouts across regions are exactly the case where TWFE can mislead. Henry Ford’s 1914 wage jump (<a href="{{ "business/cases/ford-five-dollar-day-1914/" | relURL }}">Henry Ford’s Five-Dollar Day</a>) is the kind of one-firm change you would study by comparing Ford’s worker turnover before and after with other employers’.</li>
+      <li><b>Policy.</b> Minimum wages, Medicaid expansions that states adopted in different years, smoking bans, and school reforms are routinely studied with DiD and event studies.</li>
+      <li><b>Sports.</b> When one league changes a rule and a similar league doesn’t, the change in the first league minus the change in the second isolates the rule’s effect on scoring or injuries.</li>
+      <li><b>Science and health.</b> Environmental economists compare counties near a newly regulated plant with similar counties farther away, before and after.</li>
+      <li><b>Daily life.</b> If you start a new study routine and your grade rises, ask how much your classmates’ grades rose over the same weeks. That’s a one-person difference-in-differences.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <ol class="ec12-prob">
+      <li><p>A city bans plastic bags. Average weekly bag purchases per household: in the city, 9.0 before and 4.0 after; in a similar city with no ban, 8.0 before and 7.0 after. Estimate the effect of the ban by difference-in-differences.</p>
+        <details><summary>Show the answer</summary><p>Change in the treated city: 4.0 − 9.0 = −5.0. Change in the control city: 7.0 − 8.0 = −1.0. DiD = −5.0 − (−1.0) = −4.0 bags per household per week. The before-after comparison alone (−5.0) would credit the ban with the −1.0 that happened everywhere.</p></details></li>
+      <li><p>In the regression <var>y</var> = <var>β</var>₀ + <var>δ</var>₀·<var>d</var>2 + <var>β</var>₁·<var>dT</var> + <var>δ</var>₁·<var>d</var>2·<var>dT</var> + <var>u</var>, the estimates are <var>β̂</var>₀ = 12, <var>δ̂</var>₀ = 3, <var>β̂</var>₁ = −2, <var>δ̂</var>₁ = 1.5. What are the four cell averages?</p>
+        <details><summary>Show the answer</summary><p>Control before: 12. Control after: 12 + 3 = 15. Treated before: 12 − 2 = 10. Treated after: 12 + 3 − 2 + 1.5 = 14.5. Check: (14.5 − 10) − (15 − 12) = 4.5 − 3 = 1.5 = <var>δ̂</var>₁.</p></details></li>
+      <li><p>Using the Card and Krueger table above, by how much would “New Jersey after vs Pennsylvania after” have missed the DiD estimate, and why?</p>
+        <details><summary>Show the answer</summary><p>The after-only comparison is −0.14; the DiD is 2.76 (2.75 from the rounded table). It misses by about −2.9, which is the difference that already existed before the law (−2.89): New Jersey’s stores were smaller to begin with.</p></details></li>
+      <li><p>Before a training program, the earnings of future trainees grew by $500 a year faster than non-trainees’ for three years. The DiD estimate over one year is $1,200. If the faster growth would have continued, what is a better estimate, and what assumption did you make?</p>
+        <details><summary>Show the answer</summary><p>Subtract the extra trend: $1,200 − $500 = $700. The assumption is that the pre-period gap in growth would have continued unchanged, which is itself untestable. (If the faster growth was a bounce back from an Ashenfelter dip, the right correction could be different.) Reporting a range of answers under different trend assumptions is the honest approach.</p></details></li>
+      <li><p>A policy is assigned by state, and you have 40,000 workers from 8 states over 10 years. Why is clustering by worker not enough, and what goes wrong with only 8 clusters?</p>
+        <details><summary>Show the answer</summary><p>Workers in the same state share state-level shocks that persist over years, and the policy varies only at the state level, so the information is really about 8 states, not 40,000 workers. Clustering by worker treats different workers in the same state as independent and makes the standard errors far too small. Clustering by state is right in principle, but the cluster-robust formula relies on many clusters; with 8 it is unreliable, so use a method designed for few clusters, such as the wild cluster bootstrap, and be modest about precision.</p></details></li>
+      <li><p>Two groups, ten periods. Group E adopts in period 3, group L in period 8, no never-treated group. The effect is 1 in a unit’s first treated period and grows by 1 each period after. Compute the “forbidden” 2×2 comparison: L vs E, comparing periods 8–10 with periods 3–7 (ignore everything but the effects).</p>
+        <details><summary>Show the answer</summary><p>L’s effects in periods 8, 9, 10 are 1, 2, 3, average 2; before period 8 it had none, so L’s change is +2. E’s effects in periods 3–7 are 1 to 5 (average 3) and in periods 8–10 are 6, 7, 8 (average 7), so E’s change is +4. The comparison is 2 − 4 = −2: negative although every effect is positive. In the simulation with these settings, this comparison gets 60% of the weight, and TWFE comes out at 0.00 while the true average effect is 3.82.</p></details></li>
+      <li><p>In an event study with the policy at <var>k</var> = 0 and reference period <var>k</var> = −1, the leads are −0.6, −0.4, −0.2 at <var>k</var> = −4, −3, −2 and the lags are 0.2, 0.4, 0.6 at <var>k</var> = 0, 1, 2. What would you conclude?</p>
+        <details><summary>Show the answer</summary><p>The coefficients form one straight line rising by 0.2 per period, with no break at the policy. That is what a pre-existing difference in trends looks like, not a policy effect. Extrapolating the pre-trend predicts exactly the lags you see, so the evidence for any effect is weak.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The 2×2.</b> Store <var>i</var> has a level <var>a</var><sub><var>i</var></sub> drawn from a normal distribution (mean 23 jobs for control stores, 20 for treated, spread 3). Before: <var>y</var> = <var>a</var><sub><var>i</var></sub> + noise. After, without the policy: <var>y</var>(0) = <var>a</var><sub><var>i</var></sub> − 2 + (the trend break, for treated stores only) + noise; with it, <var>y</var>(1) = <var>y</var>(0) + the true effect. The regression uses the shared course library with standard errors clustered by store (CR1, the same small-sample factor Stata uses). Moving a slider keeps the same random draws, so you see the change, not new noise.</p>
+      <p><b>The event study.</b> Each unit has its own level, every period has a common shock, and each unit’s errors follow an AR(1) process with the serial correlation you choose. The treated group starts at period 0. The regression removes unit and period means (the two-way “within” transform, exact for a balanced panel) and clusters by unit. The dashed truth line is what each coefficient estimates: the effect in that period minus the effect in period −1, plus any pre-trend relative to period −1.</p>
+      <p><b>Staggered adoption.</b> Ten periods, groups of equal size, no noise, so every number on the screen is exact. TWFE is computed by the within transform; the Goodman-Bacon weights use the formulas in his Theorem 1; the cell weights are each treated cell’s residualized treatment, divided by their total.</p>
+      <div><p><b>How it was checked</b> (Node.js, before the page was built):</p>
+        <ul class="lab-small">
+          <li>The interaction coefficient equals the DiD of the four means (2.0037 both ways), and the fast Monte Carlo formula gives the same clustered SE as the full regression (0.4387).</li>
+          <li>4,000 simulated studies with parallel trends and a true effect of 2: mean estimate 2.011, clustered 95% intervals covered the truth 95.2% of the time (the classic intervals covered 100%: too wide). With the trend broken by 1.5: mean 3.511, coverage 11.6%.</li>
+          <li>Event study: the within-transform coefficients match a regression with all unit and period dummies to 10<sup>−13</sup>. In 400 samples without a pre-trend, the joint pre-test rejected 6.5% of the time at the 5% level, and the intervals covered the truth 94.6% of the time; with a pre-trend of 0.25, it rejected 40% of the time with 25 units per group.</li>
+          <li>Staggered adoption: the Goodman-Bacon weights add to 1.0000 and the weighted 2×2 estimates reproduce TWFE exactly, also with three adoption groups, unequal group sizes and noise, where TWFE matched a unit-level dummy regression to six decimals (0.874893). The cell weights reproduce TWFE too. With early adoption in period 3, late in 8, growing effects and no never-treated group, TWFE is 0.00 against a true ATT of 3.82; adopting in periods 2 and 9 gives −0.67 against 4.36. Callaway–Sant’Anna recovers the truth on every cell it can estimate.</li>
+        </ul></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>What does the parallel-trends assumption require?</p>
+        <ul class="u-opts"><li><button type="button">The treated and control groups have the same average outcome before the policy</button></li><li><button type="button">The policy has the same effect on every unit</button></li><li><button type="button">Without the policy, the two groups’ averages would have changed by the same amount</button></li><li><button type="button">The outcome has no trend over time</button></li></ul>
+        <details><summary>Show the answer</summary><p>Levels can differ and everyone can trend; only the untreated changes must match. That is what lets the control group’s change stand in for the treated group’s missing one.</p></details></li>
+      <li class="u-q" data-a="1"><p>In the regression <var>y</var> = <var>β</var>₀ + <var>δ</var>₀·<var>d</var>2 + <var>β</var>₁·<var>dT</var> + <var>δ</var>₁·<var>d</var>2·<var>dT</var> + <var>u</var>, which coefficient is the difference-in-differences estimate?</p>
+        <ul class="u-opts"><li><button type="button"><var>β</var>₁</button></li><li><button type="button"><var>δ</var>₁</button></li><li><button type="button"><var>δ</var>₀</button></li><li><button type="button"><var>β</var>₀ + <var>δ</var>₀</button></li></ul>
+        <details><summary>Show the answer</summary><p>The interaction <var>δ</var>₁ is the extra change for the treated group in the second period, which is exactly the DiD of the four cell averages.</p></details></li>
+      <li class="u-q" data-a="0"><p>You double the number of stores in a study where parallel trends fails by 2 jobs. What happens to the bias?</p>
+        <ul class="u-opts"><li><button type="button">Nothing: the estimate gets more precise around the wrong value</button></li><li><button type="button">It halves</button></li><li><button type="button">It shrinks by a factor of √2</button></li><li><button type="button">It disappears in large samples</button></li></ul>
+        <details><summary>Show the answer</summary><p>Bias comes from the design, not from sampling noise. More data narrows the histogram, so you become more confident in the wrong number.</p></details></li>
+      <li class="u-q" data-a="3"><p>In an event study, what are the coefficients before the policy (the leads) mainly used for?</p>
+        <ul class="u-opts"><li><button type="button">They measure the long-run effect</button></li><li><button type="button">They are always exactly zero by construction</button></li><li><button type="button">They estimate the effect of the announcement on the control group</button></li><li><button type="button">They check whether the groups were already drifting apart before the policy</button></li></ul>
+        <details><summary>Show the answer</summary><p>Only the reference period is set to zero. If trends were parallel and nobody anticipated the policy, the other leads should be near zero; a pattern in them is a warning.</p></details></li>
+      <li class="u-q" data-a="2"><p>Why can two-way fixed effects be badly biased when a policy is adopted at different times and its effect grows over time?</p>
+        <ul class="u-opts"><li><button type="button">The standard errors are not clustered</button></li><li><button type="button">There are too few periods</button></li><li><button type="button">It uses already-treated units as controls, and their still-growing effects get subtracted</button></li><li><button type="button">Fixed effects cannot handle more than two groups</button></li></ul>
+        <details><summary>Show the answer</summary><p>Goodman-Bacon’s decomposition shows that TWFE averages all 2×2 comparisons, including “late vs already-treated early”. When the early group’s effect keeps growing, that comparison is biased downward and can even flip the overall sign.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), chapter 13.2 (policy analysis with pooled cross sections, the DiD regression and its notation) and 14 (panel methods).</li>
+      <li>J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (Princeton, 2009), chapter 5.2 (differences-in-differences, the Card and Krueger table); and <i>Mastering ’Metrics</i> (Princeton, 2015), chapter 5.</li>
+      <li>D. Card and A. B. Krueger, Minimum wages and employment: a case study of the fast-food industry in New Jersey and Pennsylvania, <i>American Economic Review</i> 84(4), 772–793 (1994). D. Neumark and W. Wascher, and D. Card and A. B. Krueger, comment and reply, <i>American Economic Review</i> 90(5) (2000).</li>
+      <li>M. Bertrand, E. Duflo and S. Mullainathan, How much should we trust differences-in-differences estimates?, <i>Quarterly Journal of Economics</i> 119(1), 249–275 (2004).</li>
+      <li>O. Ashenfelter, Estimating the effect of training programs on earnings, <i>Review of Economics and Statistics</i> 60(1), 47–57 (1978).</li>
+      <li>A. Goodman-Bacon, Difference-in-differences with variation in treatment timing, <i>Journal of Econometrics</i> 225(2), 254–277 (2021).</li>
+      <li>B. Callaway and P. H. C. Sant’Anna, Difference-in-differences with multiple time periods, <i>Journal of Econometrics</i> 225(2), 200–230 (2021).</li>
+      <li>C. de Chaisemartin and X. D’Haultfœuille, Two-way fixed effects estimators with heterogeneous treatment effects, <i>American Economic Review</i> 110(9), 2964–2996 (2020).</li>
+      <li>L. Sun and S. Abraham, Estimating dynamic treatment effects in event studies with heterogeneous treatment effects, <i>Journal of Econometrics</i> 225(2), 175–199 (2021). K. Borusyak, X. Jaravel and J. Spiess, Revisiting event-study designs: robust and efficient estimation, <i>Review of Economic Studies</i> (2024).</li>
+      <li>J. Roth, Pretest with caution: event-study estimates after testing for parallel trends, <i>American Economic Review: Insights</i> 4(3), 305–322 (2022). A. Rambachan and J. Roth, A more credible approach to parallel trends, <i>Review of Economic Studies</i> 90(5), 2555–2591 (2023).</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Difference_in_differences" target="_blank" rel="noopener">Difference in differences</a>, <a href="https://en.wikipedia.org/wiki/David_Card" target="_blank" rel="noopener">David Card</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/difference-in-differences/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/difference-in-differences/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/difference-in-differences/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/difference-in-differences/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

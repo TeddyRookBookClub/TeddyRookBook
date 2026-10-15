@@ -1,0 +1,49 @@
+/* Game Theory, Chapter 3 (Nash Equilibrium): only what this page adds to lab.css, unit.css and ../hub.css. */
+#gt3-lab .lab-view canvas{cursor:pointer}
+#gt3-lab .lab-view canvas:focus{outline:none}
+#gt3-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt3-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt3-lab .lab-seg button{min-height:36px}
+#gt3-lab .lab-chk{min-height:36px;cursor:pointer}
+#gt3-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#gt3-lab .lab-btn{min-height:38px}
+#gt3-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#gt3-lab .lab-readout dd{white-space:normal;max-width:12rem}
+#gt3-lab #gt3-story{margin:0}
+#gt3-lab .gt3-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#gt3-lab .gt3-key{display:flex;flex-wrap:wrap;gap:.3rem .9rem;font-size:.8rem;color:var(--muted)}
+#gt3-lab .gt3-key i{display:inline-block;width:1rem;height:3px;vertical-align:3px;margin-right:.3rem;border-radius:2px}
+/* focal points */
+#gt3-lab .gt3f{background:var(--sim);color:var(--sim-ink);border-radius:14px;padding:1rem 1.1rem 1.1rem;display:flex;flex-direction:column;gap:.7rem;margin:1rem 0}
+#gt3-lab .gt3f-top{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;flex-wrap:wrap;font:600 .78rem system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8fb3c6}
+#gt3-lab #gt3f-q{margin:0;font:600 1.1rem/1.45 Georgia,serif;color:#fff}
+#gt3-lab #gt3f-opts{display:flex;flex-wrap:wrap;gap:.45rem}
+#gt3-lab #gt3f-opts>button{min-height:42px;padding:.4rem .85rem;border-radius:12px;border:1px solid rgba(120,170,200,.35);background:#0b1b27;color:#dbe7ef;font:600 .92rem system-ui,sans-serif;cursor:pointer}
+#gt3-lab #gt3f-opts button:hover:not(:disabled){border-color:#63e6be}
+#gt3-lab #gt3f-opts button:disabled{cursor:default;opacity:.75}
+#gt3-lab #gt3f-opts button.gt3f-you{border-color:#f9a8d4;box-shadow:inset 0 0 0 2px #f9a8d4;opacity:1}
+#gt3-lab #gt3f-opts button.gt3f-them{border-color:#74c0fc;box-shadow:0 0 0 3px rgba(116,192,252,.55);opacity:1}
+#gt3-lab #gt3f-opts button.gt3f-you.gt3f-them{box-shadow:inset 0 0 0 2px #f9a8d4,0 0 0 3px rgba(116,192,252,.6)}
+#gt3-lab .gt3f-grid{display:grid;grid-template-columns:repeat(4,44px);gap:6px}
+#gt3-lab .gt3f-grid button{width:44px;height:44px;border-radius:8px;border:1px solid rgba(120,170,200,.35);background:#2b4a63;cursor:pointer;padding:0}
+#gt3-lab .gt3f-grid button.gt3f-odd{background:#e5484d}
+#gt3-lab .gt3f-grid button.gt3f-you{box-shadow:inset 0 0 0 3px #f9a8d4}
+#gt3-lab .gt3f-grid button.gt3f-them{outline:3px solid #74c0fc;outline-offset:1px}
+#gt3-lab .gt3f-head{margin:0;font-weight:700}
+#gt3-lab .gt3f-ok{color:#63e6be}#gt3-lab .gt3f-no{color:#ffa8a8}
+#gt3-lab .gt3f-bars{display:grid;gap:.25rem;max-width:520px}
+#gt3-lab .gt3f-bars div{display:grid;grid-template-columns:minmax(6rem,11rem) minmax(0,1fr) 4.2rem;align-items:center;gap:.5rem;font-size:.82rem}
+#gt3-lab .gt3f-bars span{color:#a9c3d3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#gt3-lab .gt3f-bars i{display:block;height:10px;border-radius:5px;background:#74c0fc;min-width:2px}
+#gt3-lab .gt3f-bars b{font:600 .78rem ui-monospace,Menlo,monospace;color:#dbe7ef}
+#gt3-lab .gt3f-note{margin:0;font-size:.86rem;color:#a9c3d3;line-height:1.5}
+#gt3-lab .gt3f-foot{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem}
+#gt3-lab #gt3f-next{min-height:40px;padding:.4rem 1rem;border-radius:12px;border:1px solid #63e6be;background:rgba(18,58,51,.92);color:#fff;font:600 .9rem system-ui,sans-serif;cursor:pointer}
+#gt3-lab #gt3f-score{font-size:.85rem;color:#8fb3c6}
+@media (max-width:860px){#gt3-lab .lab-view{height:min(66vh,560px);min-height:440px}}
+@media (max-width:600px){
+  #gt3-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem;top:3.2rem}
+  #gt3-lab .gt3f-bars div{grid-template-columns:minmax(5rem,8rem) minmax(0,1fr) 3.8rem}
+}
+@media (min-width:861px){#gt3-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}
+@media (min-width:700px){#gt3-lab .lab-view .lab-toast{left:auto;right:3.4rem;transform:translateY(-10px);max-width:46%}#gt3-lab .lab-view .lab-toast.on{transform:translateY(0)}}

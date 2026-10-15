@@ -5,7 +5,7 @@
   <header class="bz-hero">
     <p class="bz-eyebrow">Business</p>
     <h1>Lessons from real businesses</h1>
-    <p>True stories of companies that got it right, got it wrong, or both, each told in a few minutes with the lesson up front. Plus free charts, economic data and calculators for running a household or a business.</p>
+    <p>True stories of companies that got it right, got it wrong, or both, each told in a few minutes with the lesson up front. Full courses in econometrics and game theory, built around live simulations. Plus free charts, economic data and calculators for running a household or a business.</p>
   </header>
   <section class="bz-two">
     <a class="bz-big" href="{{ "business/cases/" | relURL }}">
@@ -13,6 +13,19 @@
       <h2>Business Cases</h2>
       <p>{{ len $d.cases }} short cases, from the Tylenol recall to Toyota's andon cord. Each opens with a short summary in the spirit of Aesop's fables, then the full story, the numbers, MBA-level lessons learned and discussion questions, with a card you can save as a picture.</p>
       <span class="bz-go">Read the cases →</span>
+    </a>
+    {{- $ec := site.Data.science_units.econ }}{{ $gt := site.Data.science_units.gt }}
+    <a class="bz-big" href="{{ "business/econometrics/" | relURL }}">
+      <span class="bz-ic" aria-hidden="true">📈</span>
+      <h2>Econometrics</h2>
+      <p>A full course in {{ len $ec.chapters }} chapters, from probability and fitting a line to instrumental variables, difference-in-differences, regression discontinuity and machine learning. Every chapter has a live simulation, worked examples and practice with answers.</p>
+      <span class="bz-go">Start the course →</span>
+    </a>
+    <a class="bz-big" href="{{ "business/game-theory/" | relURL }}">
+      <span class="bz-ic" aria-hidden="true">♟️</span>
+      <h2>Game Theory</h2>
+      <p>A full course in {{ len $gt.chapters }} chapters, from the prisoner’s dilemma and Nash equilibrium to auctions, signaling, bargaining, matching markets and evolution, with a game to play against the computer in every chapter.</p>
+      <span class="bz-go">Start the course →</span>
     </a>
     <a class="bz-big" href="{{ "business/tax-receipt/" | relURL }}">
       <span class="bz-ic" aria-hidden="true">🧾</span>

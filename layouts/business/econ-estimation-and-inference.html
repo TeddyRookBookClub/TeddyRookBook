@@ -1,0 +1,254 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/estimation-and-inference/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/estimation-and-inference/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec3-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 3</p>
+    <h1>{{ .Title }}</h1>
+    <p>You never see the whole population, only a sample, so every estimate comes with a question: how far off might it be? Here is a machine that answers it. It draws 100 samples, builds 100 confidence intervals, and shows you which ones caught the truth. Then throw darts with four different estimators, and run hypothesis tests where you can see the p-value as an area, the two ways of being wrong, and the power to find what you’re looking for.</p>
+    <span class="lab-mark" aria-hidden="true">🎯</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="ec3-view">
+      <canvas id="ec3-cv" tabindex="0" aria-label="The confidence-interval machine. A gold vertical line marks the true mean of 30 minutes. Each horizontal line is a 95% (or other) confidence interval from one random sample, with a dot at the sample mean: green if it covers the true mean, red if it misses. A gauge at the bottom shows the long-run share that cover. Keys: Enter draws 100 intervals, Space runs the machine continuously, C clears the tally."></canvas>
+      <div class="lab-hud" id="ec3-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec3-run" aria-label="Run the machine continuously" title="Run continuously (Space)">▶</button>
+        <button type="button" id="ec3-reset" aria-label="Clear the tally" title="Clear the tally (C)">↺</button>
+      </div>
+      <noscript><p class="ec3-noscript">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>The population of commute times</h3>
+      <div class="lab-seg" role="group" aria-label="Population shape" id="ec3-pop"><button type="button" data-p="normal">Normal</button><button type="button" data-p="skewed">Skewed</button><button type="button" data-p="humps">Two humps</button></div>
+      <div class="lab-field"><span><label for="ec3-s">Spread of commute times</label><output id="ec3-s-o" for="ec3-s">σ = 10 min</output></span><input type="range" id="ec3-s" min="2" max="20" step="1" value="10"></div>
+      <h3>Each sample and its interval</h3>
+      <div class="lab-field"><span><label for="ec3-n">Sample size</label><output id="ec3-n-o" for="ec3-n">n = 10</output></span><input type="range" id="ec3-n" min="0" max="11" step="1" value="5"></div>
+      <div class="lab-seg" role="group" aria-label="Confidence level" id="ec3-lv"><button type="button" data-l="0.5">50%</button><button type="button" data-l="0.8">80%</button><button type="button" data-l="0.9">90%</button><button type="button" data-l="0.95">95%</button><button type="button" data-l="0.99">99%</button><button type="button" data-l="0.999">99.9%</button></div>
+      <div class="lab-seg" role="group" aria-label="Method" id="ec3-me"><button type="button" data-m="t">t with s (right)</button><button type="button" data-m="zs">z with s (naive)</button><button type="button" data-m="zk">z with known σ</button></div>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="ec3-go">Draw 100 intervals</button><button type="button" class="lab-btn" id="ec3-k">1,000 at once</button><button type="button" class="lab-btn" id="ec3-clear">Clear</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec3-read" aria-live="polite"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec3-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The population</b> is every commute in a city, and in this simulation we know its true mean: μ = 30 minutes, the gold line. In real life you would never know it. That is the point of estimating.</p>
+      <p><b>Each horizontal line</b> comes from one random sample of <var>n</var> commutes. The dot is the sample’s average; the line around it is a confidence interval built from that sample alone. Green lines caught the true mean; red ones missed. The intervals jump around because the samples do.</p>
+      <p><b>The gauge</b> at the bottom keeps a running tally across every batch. At 95% confidence, about 95 intervals in 100 catch the truth, in the long run. Which 95? You can’t tell from any one interval. That is what “95% confidence” means: a promise about the method, not about one interval.</p>
+      <p><b>The methods.</b> “t with s” is the correct recipe. “z with s” uses the normal’s 1.96 even though σ was estimated, and comes out too narrow in small samples. “z with known σ” cheats by using the true σ, which you rarely have.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="estimators">
+    <h2>Estimators and what makes them good</h2>
+    <p>An <b>estimator</b> is a recipe that turns a sample into a guess about a population number, called a <b>parameter</b>. The sample average <var>Ȳ</var> = (<var>Y</var>₁ + … + <var>Y</var><sub><var>n</var></sub>)/<var>n</var> is an estimator of the population mean μ; the number it gives for your data is an <b>estimate</b>. Because the sample is random, the estimator is a random variable with its own distribution, the <b>sampling distribution</b>. We judge estimators by that distribution:</p>
+    <div class="u-key">
+      <div><b>Unbiased</b><p>Right on average: E(θ̂) = θ. Over many samples the estimates center on the truth. The sample mean is unbiased: E(<var>Ȳ</var>) = μ.</p></div>
+      <div><b>Consistent</b><p>Closes in on the truth as the sample grows: for any margin, the chance θ̂ misses by more than it goes to zero. Var(<var>Ȳ</var>) = σ²/<var>n</var> shrinks to zero, so <var>Ȳ</var> is consistent.</p></div>
+      <div><b>Efficient</b><p>Among unbiased estimators, has the smallest variance. Using all <var>n</var> observations beats using one: Var(<var>Ȳ</var>) = σ²/<var>n</var> versus σ² for <var>Y</var>₁ alone.</p></div>
+    </div>
+    <p>Bias and variance combine into one measure of how far off an estimator tends to be, the <b>mean squared error</b>:</p>
+    <div class="u-big">MSE(θ̂) = E[(θ̂ − θ)²] = Var(θ̂) + [Bias(θ̂)]²<small>the average squared miss = spread + (how far the center is off)²</small></div>
+
+    <div class="lab-stage ec3-sub" id="ec3d">
+      <div class="lab-view" id="ec3d-view">
+        <canvas id="ec3d-cv" aria-label="Four dartboards, one for each estimator of the same target, the red bullseye. Each dart is the estimate from one random sample. A white cross marks the average dart. The panel lists each estimator’s bias, spread and root mean squared error."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Throw</h3>
+        <div class="lab-field"><span><label for="ec3d-n">People in each sample</label><output id="ec3d-n-o" for="ec3d-n">n = 10</output></span><input type="range" id="ec3d-n" min="1" max="100" step="1" value="10"></div>
+        <div class="lab-field"><span><label for="ec3d-l">Shrinking</label><output id="ec3d-l-o" for="ec3d-l">keep 50% of the data</output></span><input type="range" id="ec3d-l" min="0" max="1" step="0.05" value="0.5"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="ec3d-1">🎯 1 round</button><button type="button" class="lab-btn" id="ec3d-10">10</button><button type="button" class="lab-btn" id="ec3d-200">200</button><button type="button" class="lab-btn" id="ec3d-clear">Clear</button></div>
+        <dl class="lab-readout ec3-darts" id="ec3d-read" aria-live="polite"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec3d-missions"></ol>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <p><b>The four estimators</b> all try to hit the center of a population (two numbers at once, so it fits a dartboard; the population’s spread is 1 in each direction). The <b>sample mean</b> uses everyone. <b>First person only</b> ignores all but one person: still unbiased, never better as <var>n</var> grows. <b>Shrunk toward a guess</b> blends the sample mean with a fixed guess: λ<var>Ȳ</var> + (1 − λ) × guess. It is biased unless the guess is right, but less variable. <b>Volunteers only</b> averages people who chose to answer, and people with a larger first number are more likely to volunteer.</p>
+      <p><b>What to notice.</b> Raise <var>n</var> and the sample mean’s darts close in on the bullseye; the first-person darts don’t budge. The volunteers’ darts tighten too, around the wrong spot: a bigger biased sample is just a more confident wrong answer. And with tiny samples, the shrunk estimator can beat the sample mean on mean squared error. That bias-for-variance trade is the idea behind many modern methods (Chapter 17).</p>
+    </div>
+    <div class="u-ex"><b>Worked example: when a little bias pays</b>
+      <p>Take samples of <var>n</var> = 4 from the dartboard’s population. The sample mean has no bias and variance 1/4 in each direction, so its MSE (adding both directions) is 2 × 0.25 = 0.5, a typical miss of √0.5 = 0.71.</p>
+      <p>Shrink halfway to a guess that is 0.71 away from the truth. The variance falls to 0.5² × 0.5 = 0.125, and the bias is 0.5 × 0.71 = 0.355, so MSE = 0.125 + 0.355² = 0.25, a typical miss of <b>0.50</b>. Better, despite the bias. With <var>n</var> = 25 the sample mean’s MSE is only 0.08 and the shrunk estimator’s bias of 0.355 alone loses: its MSE is at least 0.126. The simulation agrees: root mean squared errors of 0.71 versus 0.50 at <var>n</var> = 4, and 0.28 versus 0.38 at <var>n</var> = 25.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="se">
+    <h2>Standard errors and confidence intervals</h2>
+    <p>The spread of an estimator’s sampling distribution is its <b>standard error</b>. For the sample mean it is σ/√<var>n</var>. We don’t know σ, so we estimate it with the sample standard deviation <var>s</var>, which divides by <var>n</var> − 1 rather than <var>n</var> (one degree of freedom goes into estimating the mean; with <var>n</var> − 1, <var>s</var>² is unbiased for σ²):</p>
+    <div class="lab-formula"><var>s</var>² = Σ(<var>Y</var><sub><var>i</var></sub> − <var>Ȳ</var>)² ÷ (<var>n</var> − 1) &nbsp;&nbsp;·&nbsp;&nbsp; se(<var>Ȳ</var>) = <var>s</var> ÷ √<var>n</var></div>
+    <p>If the data are normal, (<var>Ȳ</var> − μ)/se(<var>Ȳ</var>) has a t distribution with <var>n</var> − 1 degrees of freedom, so an interval that catches μ in 95% of samples is</p>
+    <div class="u-big"><var>Ȳ</var> ± <var>t</var>* × <var>s</var>/√<var>n</var><small><var>t</var>* = the 97.5th percentile of the t distribution with <var>n</var> − 1 degrees of freedom: 2.776 for <var>n</var> = 5, 2.064 for <var>n</var> = 25, close to 1.96 for large <var>n</var></small></div>
+    <p>For other levels, use other percentiles: a 99% interval uses the 99.5th, so it is wider. More confidence costs width; more data buys narrowness, but only at the rate √<var>n</var>.</p>
+    <div class="u-ex"><b>Worked example: a drive-through</b>
+      <p>A coffee chain times 25 drive-through orders at one store: average 3.8 minutes, standard deviation 1.5. The standard error is 1.5/√25 = 0.30. With 24 degrees of freedom, <var>t</var>* = 2.064, so the 95% interval is 3.8 ± 2.064 × 0.30 = 3.8 ± 0.62, or <b>3.18 to 4.42 minutes</b>. To cut the margin to ±0.2 minutes, you’d need about (2 × 1.5/0.2)² ≈ 225 orders.</p>
+    </div>
+  </section>
+
+  <div class="lab-try"><b>Try this:</b> Set <var>n</var> = 3 and switch between “t with s” and “z with s”, pressing “1,000 at once” each time. The t intervals are much wider, and cover about 95%; the z intervals cover only about 81%. With two degrees of freedom, <var>t</var>* = 4.30, not 1.96: that is how much extra room an estimated σ needs.</div>
+
+  <section class="lab-sec" id="tests">
+    <h2>Hypothesis tests and p-values</h2>
+    <p>A <b>hypothesis test</b> checks a claim about a parameter against the data. The <b>null hypothesis</b> H₀ is the claim being tested, often “no effect” (μ = μ₀); the <b>alternative</b> H₁ is what you conclude if the data are inconsistent with it (μ ≠ μ₀, or one-sided, μ &gt; μ₀). The test statistic measures how far the estimate is from μ₀ in standard errors:</p>
+    <div class="u-big"><var>t</var> = (<var>Ȳ</var> − μ₀) ÷ se(<var>Ȳ</var>)<small>reject H₀ at significance level α if |<var>t</var>| exceeds the critical value (1.96 for α = 5%, two-sided, in large samples)</small></div>
+    <p>The <b>p-value</b> is the probability, if H₀ were true, of a test statistic at least as extreme as the one observed. Small p-values mean the data would be surprising if the null were true. Reject when <var>p</var> &lt; α.</p>
+
+    <div class="lab-stage ec3-sub" id="ec3t">
+      <div class="lab-view" id="ec3t-view">
+        <canvas id="ec3t-cv" tabindex="0" aria-label="Top: the distribution of the test statistic if the null hypothesis is true (blue) and if the true effect is the size you set (pink, dashed). Red areas are the rejection regions, of total probability alpha. Gold areas beyond your observed z are the p-value. Green area under the pink curve is the power. Drag across the picture, or use the left and right arrow keys, to move the observed z. Bottom: the power curve against the true effect size, for your sample size and for four times as many."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>The test</h3>
+        <div class="lab-seg" role="group" aria-label="Significance level" id="ec3t-a"><button type="button" data-a="0.1">α = 10%</button><button type="button" data-a="0.05">5%</button><button type="button" data-a="0.01">1%</button></div>
+        <div class="lab-seg" role="group" aria-label="Sides" id="ec3t-s"><button type="button" data-s="2">Two-sided</button><button type="button" data-s="1">One-sided</button></div>
+        <div class="lab-field"><span><label for="ec3t-z">Observed test statistic</label><output id="ec3t-z-o" for="ec3t-z"></output></span><input type="range" id="ec3t-z" min="-4" max="6" step="0.01" value="1.2"></div>
+        <h3>The world and the study</h3>
+        <div class="lab-field"><span><label for="ec3t-d">True effect</label><output id="ec3t-d-o" for="ec3t-d"></output></span><input type="range" id="ec3t-d" min="0" max="1" step="0.01" value="0.3"></div>
+        <div class="lab-field"><span><label for="ec3t-n">Sample size</label><output id="ec3t-n-o" for="ec3t-n"></output></span><input type="range" id="ec3t-n" min="5" max="500" step="1" value="30"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="ec3t-run">Run 1,000 studies</button></div>
+        <dl class="lab-readout" id="ec3t-read" aria-live="polite"></dl>
+        <h3>Goals</h3>
+        <p class="lab-progress"></p>
+        <ol class="lab-missions" id="ec3t-missions"></ol>
+      </div>
+    </div>
+
+    <h3 class="lab-h">Two ways to be wrong</h3>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th></th><th>H₀ is true</th><th>H₀ is false</th></tr></thead>
+      <tbody>
+        <tr><td><b>Reject H₀</b></td><td>Type I error (false alarm). Probability α, which you choose.</td><td>Correct. Probability 1 − β, the <b>power</b>.</td></tr>
+        <tr><td><b>Don’t reject H₀</b></td><td>Correct.</td><td>Type II error (a miss). Probability β.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Lowering α makes false alarms rarer and misses more common. Power rises with the size of the true effect and with the sample size, and falls with noise. For a two-sided test of a mean with known σ, an effect of <var>d</var> standard deviations has power of about Φ(<var>d</var>√<var>n</var> − 1.96) at α = 5% (plus a tiny chance of rejecting in the wrong direction). For 80% power you need <var>d</var>√<var>n</var> ≈ 1.96 + 0.84 = 2.80.</p>
+    <div class="u-ex"><b>Worked example: is the drive-through slower than the 3.5-minute target?</b>
+      <p>H₀: μ = 3.5 against H₁: μ ≠ 3.5. With <var>Ȳ</var> = 3.8 and se = 0.30, <var>t</var> = (3.8 − 3.5)/0.30 = 1.00. With 24 degrees of freedom the two-sided p-value is <b>0.33</b>. Data like these would be common if the store really averaged 3.5 minutes, so we don’t reject. Notice that 3.5 lies inside the 95% interval of 3.18 to 4.42: a two-sided test at 5% rejects exactly when μ₀ falls outside the 95% interval.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: planning a study</b>
+      <p>A manager wants to detect a change of 0.3 standard deviations in average order time with 80% power, at α = 5%, two-sided. Solve <var>d</var>√<var>n</var> = 2.80: √<var>n</var> = 2.80/0.3 = 9.34, so <var>n</var> ≈ 87.2; round up to <b>88</b>. To detect half that effect, 0.15 sd, takes four times the data: about 349.</p>
+    </div>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “p = 0.03 means a 3% chance the null is true”</b>
+    <p>A p-value is computed assuming H₀ is true, so it can’t be the probability that H₀ is true. It is the chance of data at least this extreme <i>if</i> the null held. It also says nothing about how big or important an effect is, and a p-value above 0.05 is not evidence that there is no effect, only that the data can’t rule out zero. In 2016 the American Statistical Association issued a statement making these points, and warned against reducing research to “p &lt; 0.05” or not.</p>
+  </div>
+
+  <section class="lab-sec" id="practical">
+    <h2>Statistical versus practical significance</h2>
+    <div class="lab-cols">
+      <p><b>Statistically significant</b> means the data are hard to square with no effect. <b>Practically significant</b> means the effect is big enough to matter. With enough data, a tiny effect becomes statistically significant: a website with 10 million visitors can detect a change in click rates of a few hundredths of a percentage point. Whether that change is worth anything is a business question, not a statistical one. Always report the estimate and its confidence interval, not just whether <var>p</var> &lt; 0.05.</p>
+      <p><b>Precision is not validity.</b> Before launching New Coke in 1985, Coca-Cola ran nearly 200,000 blind taste tests. With that many people, the standard error of the share preferring the new taste was tiny. But a sip of an unlabeled cola measured the wrong thing: people buy a brand and drink whole cans. A huge sample estimated the wrong quantity very precisely (<a href="{{ "business/cases/new-coke-1985/" | relURL }}">the case</a>). No standard error can fix a question that doesn’t match the decision.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history, and the people</h2>
+    <div class="lab-cols">
+      <p><b>R. A. Fisher</b> popularized significance tests and p-values in <i>Statistical Methods for Research Workers</i> (1925), written for scientists at an agricultural research station. He treated the p-value as a graded measure of evidence and suggested 1 in 20 as a convenient line, which hardened into the 5% convention.</p>
+      <p><b>Jerzy Neyman and Egon Pearson</b> framed testing as a decision between two hypotheses in 1933, introducing the two kinds of error and the power of a test. Neyman added confidence intervals in 1937. Fisher and Neyman disagreed sharply about what these tools meant; modern practice blends their ideas.</p>
+      <p><b>William Sealy Gosset</b>, writing as “Student” in 1908, worked out the t distribution so that brewers could draw conclusions from a handful of measurements. Fisher later showed how to use it for regression coefficients, which is how you’ll meet it in Chapter 5.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <div class="lab-cols">
+      <p><b>Quality control.</b> A factory that stops the line whenever a measurement looks off trades false alarms (stopping for nothing) against misses (shipping defects). Toyota’s andon cord lets any worker stop the line, accepting more false alarms to catch problems early (<a href="{{ "business/cases/toyota-andon-cord/" | relURL }}">the case</a>).</p>
+      <p><b>A/B tests.</b> Online businesses test two versions of a page at random and use exactly these tests. Running many tests and reporting only the significant ones inflates false alarms: with α = 5%, one in twenty tests of changes that do nothing will look like a win.</p>
+      <p><b>Courts.</b> “Innocent until proven guilty” makes innocence the null hypothesis. Convicting an innocent person is a type I error; acquitting a guilty one is a type II error. A higher bar for proof means fewer of the first and more of the second.</p>
+      <p><b>Polls and government data.</b> Every margin of error is a confidence interval. The Bureau of Labor Statistics, for example, publishes how large a monthly change in employment must be to be statistically significant.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec3-prac">
+      <li><p><b>Standard error.</b> A sample of 64 households spends an average of $180 a week on groceries, with a standard deviation of $48. What is the standard error of the mean?</p>
+        <details><summary>Show the answer</summary><p>se = 48/√64 = 48/8 = <b>$6</b>.</p></details></li>
+      <li><p><b>An interval.</b> Build a 95% confidence interval for the households’ average weekly grocery spending (use <var>t</var>* ≈ 2.00 for 63 degrees of freedom). What would change for a 99% interval?</p>
+        <details><summary>Show the answer</summary><p>180 ± 2.00 × 6 = 180 ± 12, or <b>$168 to $192</b>. A 99% interval uses <var>t</var>* ≈ 2.66, giving 180 ± 16: wider, because more confidence costs width.</p></details></li>
+      <li><p><b>What does it mean?</b> A friend says: “There is a 95% probability that the true average is between $168 and $192.” What is the careful way to say it?</p>
+        <details><summary>Show the answer</summary><p>The true average is a fixed number; this particular interval either contains it or doesn’t. The 95% describes the method: intervals built this way catch the true mean in 95% of samples. The machine at the top shows exactly that.</p></details></li>
+      <li><p><b>A test.</b> A cereal maker claims boxes hold 500 g. In 36 boxes the average is 497.6 g with <var>s</var> = 6 g. Test the claim at 5%, two-sided.</p>
+        <details><summary>Show the answer</summary><p>se = 6/√36 = 1, so <var>t</var> = (497.6 − 500)/1 = −2.4. With 35 degrees of freedom the two-sided p-value is <b>0.022</b> &lt; 0.05: reject the claim. The 95% interval, 497.6 ± 2.03, runs from 495.6 to 499.6 and excludes 500, as it must.</p></details></li>
+      <li><p><b>Bias and consistency.</b> To estimate the mean, someone proposes (<var>Y</var>₁ + … + <var>Y</var><sub><var>n</var></sub>)/(<var>n</var> + 1). Is it unbiased? Consistent?</p>
+        <details><summary>Show the answer</summary><p>Its expected value is <var>n</var>μ/(<var>n</var> + 1), so it is <b>biased</b> toward zero by μ/(<var>n</var> + 1). But the bias and the variance (<var>n</var>σ²/(<var>n</var> + 1)²) both shrink to zero as <var>n</var> grows, so it is <b>consistent</b>. Biased in small samples, right in large ones.</p></details></li>
+      <li><p><b>Sample size for a poll.</b> How many people must a poll survey for a 95% margin of error of ±2 percentage points, if the true share is near 50%?</p>
+        <details><summary>Show the answer</summary><p>Margin = 1.96 × √(0.5 × 0.5/<var>n</var>) = 0.02, so √<var>n</var> = 1.96 × 0.5/0.02 = 49, and <var>n</var> = <b>2,401</b>. Compare ±3 points with about 1,067: shrinking the margin by a third more than doubles the cost.</p></details></li>
+      <li><p><b>Power.</b> A study has 80% power to detect an effect of 0.4 standard deviations at α = 5%, two-sided. About how much power does it have to detect an effect of 0.2? What sample size would restore 80%?</p>
+        <details><summary>Show the answer</summary><p>80% power means <var>d</var>√<var>n</var> ≈ 2.80, so √<var>n</var> = 7.0 and <var>n</var> ≈ 49. For <var>d</var> = 0.2, <var>d</var>√<var>n</var> = 1.4, and power ≈ Φ(1.4 − 1.96) = Φ(−0.56) ≈ <b>29%</b>. To get back to 80% you need √<var>n</var> = 14, so <var>n</var> ≈ <b>196</b>: half the effect takes four times the data.</p></details></li>
+      <li><p><b>Many tests.</b> A marketing team tests 20 new ad designs against the old one, each at α = 5%. None of the new designs is any better. What is the chance at least one looks significantly better or worse anyway (treat the tests as independent)?</p>
+        <details><summary>Show the answer</summary><p>Each test avoids a false alarm with probability 0.95, so all 20 do with probability 0.95²⁰ = 0.358. The chance of at least one false alarm is 1 − 0.358 = <b>64%</b>. That is why a lone “winner” among many tries deserves a fresh test before anyone celebrates.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactives work</h2>
+    <div class="lab-cols">
+      <p><b>The machine.</b> Commute times are simulated with mean 30 minutes and standard deviation σ, from a normal distribution, a skewed one (an exponential, shifted so its mean is 30, with skewness 2), or an even mix of two normals at 30 ± 0.8σ with spread 0.6σ. Each sample gives <var>Ȳ</var> ± (critical value) × (<var>s</var> or σ)/√<var>n</var>, with critical values from the t or normal distribution in the course’s shared statistics library.</p>
+      <p><b>The dartboard.</b> The population is two independent standard normals centered on the bullseye. The guess for shrinking is (0.55, 0.45). A volunteer is accepted with probability 1/(1 + e<sup>−2<var>x</var></sup>), where <var>x</var> is the first number. <b>The test</b> is a z test with known σ: under the true effect <var>d</var>, the statistic is normal with mean <var>d</var>√<var>n</var> and standard deviation 1, so power, p-values and β are exact normal areas.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, 40,000 intervals per case):</p>
+        <ul class="lab-small">
+          <li>Normal population, <var>n</var> = 5: t intervals cover 95.05%; “z with s” 87.6% (exact: 87.84%); <var>n</var> = 3, 81.1% (exact 81.09%). At 99% with <var>n</var> = 30: 99.09%. At 50%: 50.2%.</li>
+          <li>Skewed population with the t method: 88.5% at <var>n</var> = 5, 92.0% at 20, 93.5% at 50, 94.0% at 100, 94.6% at 200.</li>
+          <li>Darts, 20,000 rounds: the sample mean’s spread matches √(2/<var>n</var>) (0.283 at <var>n</var> = 25); shrinking halfway gives bias 0.355 (formula 0.355); the volunteers’ bias is 0.606 (exact by numerical integration: 0.6057).</li>
+          <li>Power for <var>d</var> = 0.3 and <var>n</var> = 88: 80.35%, and 100,000 simulated studies rejected 80.37% of the time. With no effect, 4.98% rejected (α = 5%).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>An estimator is unbiased if…</p>
+        <ul class="u-opts"><li><button type="button">it gives the right answer in every sample</button></li><li><button type="button">its average over many samples equals the true value</button></li><li><button type="button">it has the smallest possible variance</button></li></ul>
+        <details><summary>Show the answer</summary><p>Unbiased means E(θ̂) = θ: right on average, not every time. Smallest variance is efficiency.</p></details></li>
+      <li class="u-q" data-a="2"><p>To cut a confidence interval’s width in half, you need about…</p>
+        <ul class="u-opts"><li><button type="button">twice the sample</button></li><li><button type="button">half the sample</button></li><li><button type="button">four times the sample</button></li></ul>
+        <details><summary>Show the answer</summary><p>The width is proportional to 1/√<var>n</var>, so halving it takes four times as much data.</p></details></li>
+      <li class="u-q" data-a="0"><p>A p-value of 0.01 means…</p>
+        <ul class="u-opts"><li><button type="button">if H₀ were true, data at least this extreme would turn up 1% of the time</button></li><li><button type="button">there is a 1% chance H₀ is true</button></li><li><button type="button">the effect is large</button></li></ul>
+        <details><summary>Show the answer</summary><p>The p-value is computed assuming H₀. It is not the probability of H₀ and says nothing about the size of the effect.</p></details></li>
+      <li class="u-q" data-a="1"><p>Rejecting a true null hypothesis is…</p>
+        <ul class="u-opts"><li><button type="button">a type II error</button></li><li><button type="button">a type I error, with probability α</button></li><li><button type="button">power</button></li></ul>
+        <details><summary>Show the answer</summary><p>A false alarm is a type I error; you set its probability with α. Missing a real effect is a type II error.</p></details></li>
+      <li class="u-q" data-a="2"><p>Which change raises the power of a test?</p>
+        <ul class="u-opts"><li><button type="button">Lowering α from 5% to 1%</button></li><li><button type="button">Using a smaller sample</button></li><li><button type="button">Using a larger sample</button></li></ul>
+        <details><summary>Show the answer</summary><p>More data shrinks the standard error, so a real effect stands out more. A smaller α makes rejection harder, which lowers power.</p></details></li>
+      <li class="u-q" data-a="0"><p>With 2 million observations, an A/B test finds that a new button raises sales by 0.01% with p = 0.001. This is…</p>
+        <ul class="u-opts"><li><button type="button">statistically significant, but possibly too small to matter</button></li><li><button type="button">proof that the button is a big success</button></li><li><button type="button">a type I error</button></li></ul>
+        <details><summary>Show the answer</summary><p>Huge samples make tiny effects significant. Whether 0.01% is worth the change is a practical question.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>OpenStax, <i>Introductory Statistics 2e</i>: <a href="https://openstax.org/books/introductory-statistics-2e/pages/8-introduction" target="_blank" rel="noopener">Ch. 8 Confidence Intervals</a> and <a href="https://openstax.org/books/introductory-statistics-2e/pages/9-introduction" target="_blank" rel="noopener">Ch. 9 Hypothesis Testing with One Sample</a>.</li>
+      <li>Penn State, <a href="https://online.stat.psu.edu/stat415/" target="_blank" rel="noopener">STAT 415 Introduction to Mathematical Statistics</a> (estimators, confidence intervals, tests and power).</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/" target="_blank" rel="noopener">18.05 Introduction to Probability and Statistics</a> (Spring 2022).</li>
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Math Refresher C, Fundamentals of Mathematical Statistics (Appendix C in earlier editions). J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed., Chapter 3.</li>
+      <li>R. L. Wasserstein and N. A. Lazar, “The ASA Statement on p-Values: Context, Process, and Purpose,” <i>The American Statistician</i> 70 (2016).</li>
+      <li>R. A. Fisher, <i>Statistical Methods for Research Workers</i> (1925). J. Neyman and E. S. Pearson, “On the Problem of the Most Efficient Tests of Statistical Hypotheses,” <i>Philosophical Transactions of the Royal Society A</i> 231 (1933). J. Neyman, “Outline of a Theory of Statistical Estimation Based on the Classical Theory of Probability,” <i>Philosophical Transactions of the Royal Society A</i> 236 (1937).</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/estimation-and-inference/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/estimation-and-inference/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/estimation-and-inference/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/estimation-and-inference/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

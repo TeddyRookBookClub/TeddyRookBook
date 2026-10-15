@@ -1,0 +1,37 @@
+/* Game Theory, Chapter 2 (Dominance and the Prisoner's Dilemma): only what this page adds to lab.css, unit.css and ../hub.css. */
+#gt2-lab .lab-view canvas{cursor:pointer}
+#gt2-lab .lab-view canvas:focus{outline:none}
+#gt2-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt2-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt2-lab .lab-seg button{min-height:36px}
+#gt2-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#gt2-lab .lab-chk{min-height:36px;cursor:pointer}
+#gt2-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#gt2-lab .lab-btn{min-height:38px}
+#gt2-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#gt2-lab .lab-readout dd{white-space:nowrap}
+#gt2-lab .gt2-group{display:flex;flex-direction:column;gap:.55rem}
+#gt2-lab .gt2-big{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+#gt2-lab .gt2-big .lab-btn{min-height:46px;font-size:1rem}
+#gt2-lab .gt2-big .gt2-q{border-color:#74c0fc}
+#gt2-lab .gt2-big .gt2-f{border-color:#ff8787}
+#gt2-lab .gt2-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#gt2-lab .lab-sec .lab-stage{margin:1rem 0}
+#gt2-lab .gt2-short{height:min(64vh,560px);min-height:420px}
+#gt2-lab .gt2-pbox{display:flex;flex-direction:column;gap:.35rem;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.5rem .6rem}
+#gt2-lab .gt2-pbox>div{display:flex;align-items:center;justify-content:space-between;gap:.4rem}
+#gt2-lab .gt2-pbox b{font-size:.85rem}
+#gt2-lab .gt2-pbox span{display:flex;align-items:center;gap:.3rem}
+#gt2-lab .gt2-pbox button{min-width:36px;min-height:36px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 1rem system-ui,sans-serif;cursor:pointer}
+#gt2-lab .gt2-pbox output{min-width:1.4rem;text-align:center;font:700 .95rem ui-monospace,Menlo,monospace;color:#c92a2a}
+html[data-theme="dark"] #gt2-lab .gt2-pbox output{color:#ff8787}
+#gt2-lab #gt2p-msg{margin:0;font-size:.88rem;line-height:1.5}
+@media (max-width:860px){
+  #gt2-lab .lab-view{height:min(66vh,560px);min-height:430px}
+  #gt2-lab .gt2-short{height:min(70vh,560px);min-height:460px}
+}
+@media (max-width:600px){
+  #gt2-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem;top:3.2rem}
+}
+@media (min-width:861px){#gt2-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}
+@media (min-width:700px){#gt2-lab .lab-view .lab-toast{left:auto;right:3.4rem;transform:translateY(-10px);max-width:46%}#gt2-lab .lab-view .lab-toast.on{transform:translateY(0)}}

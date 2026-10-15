@@ -1,0 +1,77 @@
+/* Game Theory, Chapter 14 (Evolutionary Game Theory): only what this chapter adds to the lab kit (lab.css) and the unit styles (unit.css).
+   The first part is shared by chapters 8 to 14; the chapter's own rules follow it. */
+#gt14-lab .lab-view canvas:focus{outline:none}
+#gt14-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt14-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt14-lab .lab-tools button[aria-pressed="true"]{border-color:var(--sim-acc);color:var(--sim-acc)}
+#gt14-lab .lab-hud{max-width:calc(100% - 9.5rem)}
+#gt14-lab .lab-seg button{min-height:36px}
+#gt14-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#gt14-lab .lab-chk{min-height:36px;cursor:pointer}
+#gt14-lab .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#gt14-lab .lab-btn{min-height:38px}
+#gt14-lab .lab-missions li button{min-height:36px;padding:.3rem .8rem}
+#gt14-lab .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#gt14-lab .lab-readout dd{white-space:normal;max-width:10.5rem;overflow-wrap:break-word}
+#gt14-lab .lab-toast{top:4.4rem}
+#gt14-lab .gt14-off{opacity:.5}
+#gt14-lab .gt14-acts{display:flex;flex-wrap:wrap;gap:.4rem}
+#gt14-lab .gt14-acts .lab-btn{flex:1 1 auto}
+/* the smaller simulations in the lesson */
+#gt14-lab .gt14-mini{margin:.9rem 0 1rem}
+#gt14-lab .gt14-mini .lab-view{height:400px;min-height:0}
+#gt14-lab .gt14-row{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:.6rem 1rem}
+#gt14-lab .gt14-row>*{min-width:0}
+#gt14-lab .gt14-grow{flex:1 1 240px}
+#gt14-lab .gt14-row>.lab-seg{flex:1 1 100%}
+#gt14-lab .gt14-row .lab-readout{grid-template-columns:minmax(0,1fr) auto}
+#gt14-lab .gt14-row .lab-readout dd{white-space:normal;overflow-wrap:anywhere}
+#gt14-lab .gt14-win{animation:gt14win 1.2s ease-out}
+@keyframes gt14win{0%{box-shadow:0 0 0 0 rgba(99,230,190,.85)}100%{box-shadow:0 0 0 18px rgba(99,230,190,0)}}
+#gt14-lab .lab-sec ul{padding-left:1.3rem}
+#gt14-lab .lab-src{overflow-wrap:anywhere}
+#gt14-lab .lab-cols>div>p:last-child{margin-bottom:.9rem}
+/* practice problems */
+#gt14-lab .gt14-prob{margin:.9rem 0 .2rem}
+#gt14-lab .gt14-prob b:first-child{color:var(--acc)}
+#gt14-lab details.gt14-ans{margin:.3rem 0 .9rem;padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+#gt14-lab details.gt14-ans summary{cursor:pointer;font-weight:600;color:var(--acc);min-height:28px}
+#gt14-lab details.gt14-ans>*:last-child{margin-bottom:0}
+#gt14-lab details.gt14-ans p{margin:.4rem 0 0}
+/* inline diagrams follow the page theme */
+#gt14-lab .gt14-svg{display:block;max-width:100%;height:auto;margin:.6rem auto}
+#gt14-lab .gt14-svg text{fill:var(--ink);font:13px system-ui,sans-serif}
+#gt14-lab .gt14-svg .mut{fill:var(--muted)}
+#gt14-lab .gt14-svg .ln{stroke:var(--muted);fill:none;stroke-width:1.5}
+#gt14-lab .gt14-svg .bx{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+#gt14-lab .gt14-svg .nat{fill:var(--soft);stroke:var(--acc);stroke-width:1.5}
+#gt14-lab .gt14-svg .acc{stroke:var(--acc);fill:none;stroke-width:2.5}
+#gt14-lab .gt14-svg .accf{fill:var(--acc)}
+#gt14-lab .gt14-svg .gold{stroke:var(--gold);fill:none;stroke-width:2.5}
+#gt14-lab .gt14-svg .goldf{fill:var(--gold)}
+#gt14-lab .gt14-tbl{width:auto;min-width:min(100%,360px)}
+#gt14-lab .gt14-tbl td,#gt14-lab .gt14-tbl th{text-align:center}
+@media (max-width:860px){
+  #gt14-lab .lab-hud{font-size:11px;padding:.3rem .5rem}
+}
+@media (max-width:600px){
+  #gt14-lab .lab-hud{max-width:calc(100% - 1.2rem);top:3.2rem}
+  #gt14-lab .lab-toast{top:7.4rem;font-size:.82rem;max-width:84%}
+  #gt14-lab .gt14-mini .lab-view{height:520px}
+}
+@media (prefers-reduced-motion:reduce){#gt14-lab .gt14-win{animation:none}}
+/* "What you're seeing" sits under the simulation on wide screens, beside the long control panel */
+#gt14-lab .gt14-main{grid-template-rows:auto 1fr}
+#gt14-lab .gt14-main>.lab-view{grid-column:1;grid-row:1}
+#gt14-lab .gt14-main>.lab-panel{grid-column:2;grid-row:1 / span 2}
+#gt14-lab .gt14-main>.gt14-under{grid-column:1;grid-row:2;margin:.6rem 0 0;min-width:0}
+@media (max-width:860px){#gt14-lab .gt14-main{grid-template-rows:none}#gt14-lab .gt14-main>.lab-view,#gt14-lab .gt14-main>.lab-panel,#gt14-lab .gt14-main>.gt14-under{grid-column:auto;grid-row:auto}}
+/* this chapter */
+#gt14-lab #gt14-view{height:min(74vh,620px);min-height:560px}
+#gt14-lab #gt14-gview .lab-view{height:520px}
+#gt14-lab #gt14-rview .lab-view{height:440px}
+@media (max-width:600px){
+  #gt14-lab #gt14-view{height:760px}
+  #gt14-lab #gt14-gview .lab-view{height:580px}
+  #gt14-lab #gt14-rview .lab-view{height:600px}
+}

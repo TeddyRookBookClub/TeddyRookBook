@@ -1,0 +1,258 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/specification/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/specification/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec9-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 9</p>
+    <h1>{{ .Title }}</h1>
+    <p>Real data are messy. Incomes are misreported, one wild data point can swing a whole line, and a flexible enough model can fit last year’s numbers perfectly and next year’s terribly. Here you’ll blur a variable with noise and watch the slope shrink toward zero by an amount you can predict, drag an outlier around until it bends the regression to its will, and turn up a polynomial’s degree until it memorizes noise. Along the way: how to spot a wrong functional form, and how to choose among models.</p>
+    <span class="lab-mark" aria-hidden="true">🔧</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view ec9-tall" id="ec9-view">
+      <canvas id="ec9-cv" tabindex="0" aria-label="Consumption against measured income for simulated households. Gold dots are the true values and thin lines show how far measurement error moved each one. The green line is the fit to the measured data, the gold dashed line the true slope of 0.90, the pink dotted line the reliability ratio times the truth. On the right, a slope meter and a bar showing the reliability ratio. Keys: up and down arrows change the noise in income, left and right the noise in consumption, N new sample, M runs 1,000 samples."></canvas>
+      <div class="lab-tools">
+        <button type="button" id="ec9-new2" aria-label="Draw a new sample" title="New sample (N)">🎲</button>
+        <button type="button" id="ec9-mc2" aria-label="Run 1,000 samples" title="Run 1,000 samples (M)">▶</button>
+        <button type="button" id="ec9-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>Measurement error</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made settings" id="ec9-pre">
+        <button type="button" data-pre="clean" aria-pressed="false">Clean data</button>
+        <button type="button" data-pre="some" aria-pressed="true">Noisy income</button>
+        <button type="button" data-pre="half" aria-pressed="false">Half noise</button>
+        <button type="button" data-pre="ynoise" aria-pressed="false">Noisy consumption</button>
+      </div>
+      <div class="lab-field"><span><label for="ec9-se">Noise in measured income σₑ</label><output id="ec9-se-o" for="ec9-se"></output></span><input type="range" id="ec9-se" min="0" max="30" step="0.5" value="10"></div>
+      <div class="lab-field"><span><label for="ec9-sv">Noise in measured consumption</label><output id="ec9-sv-o" for="ec9-sv"></output></span><input type="range" id="ec9-sv" min="0" max="30" step="0.5" value="0"></div>
+      <div class="lab-field"><span><label for="ec9-n">Sample size</label><output id="ec9-n-o" for="ec9-n"></output></span><input type="range" id="ec9-n" min="0" max="4" step="1" value="2"></div>
+      <label class="lab-chk"><input type="checkbox" id="ec9-ghost" checked> Show the true values</label>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec9-new">🎲 New sample</button><button type="button" class="lab-btn pri" id="ec9-mc">▶ Run 1,000 samples</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec9-read"></dl>
+      <p class="ec9-sr" id="ec9-say" aria-live="polite"></p>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec9-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>Permanent and measured income.</b> Milton Friedman argued that people base their spending on their long-run, “permanent” income, not on this year’s ups and downs. In the simulation each household has a true permanent income (gold dots) and spends 8 + 0.90 × that, in thousands of dollars, plus a little noise. But a survey records this year’s income, which adds a random “transitory” part. Each blue dot is what the survey sees; the thin lines show how far the measurement error moved it.</p>
+      <p><b>The slope shrinks.</b> Add noise to income and the cloud stretches sideways but not up, so the fitted green line flattens. It flattens by a predictable factor: the reliability ratio λ, the share of measured income’s variance that is real. The pink dotted line is λ × 0.90, and the green fit hugs it. Add noise to consumption instead and the cloud only stretches up and down: the slope stays right, just noisier.</p>
+      <p><b>The slope meter.</b> The dot and white bar are this sample’s slope and 95% interval. Run 1,000 samples and the green histogram shows where slopes land: around λβ₁, not around the truth. Notice that the interval from a single sample is confidently wrong when λ is small.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="me">
+    <h2>Measurement error in <var>x</var> and in <var>y</var></h2>
+    <div class="lab-cols">
+      <div>
+        <p>Suppose the true model is <var>y</var> = β₀ + β₁<var>x</var>* + <var>u</var>, but we observe <var>x</var> = <var>x</var>* + <var>e</var>. In the <b>classical errors-in-variables</b> setup, the measurement error <var>e</var> has mean zero and is uncorrelated with the true <var>x</var>* and with <var>u</var>. Substitute <var>x</var>* = <var>x</var> − <var>e</var>:</p>
+        <div class="lab-formula"><var>y</var> = β₀ + β₁<var>x</var> + (<var>u</var> − β₁<var>e</var>)</div>
+        <p>The new error contains −β₁<var>e</var>, and <var>e</var> is part of <var>x</var>, so the error is correlated with the regressor. OLS is biased and inconsistent:</p>
+      </div>
+      <div>
+        <div class="u-big">plim β̂₁ = β₁ · σ²<sub><var>x</var>*</sub> / (σ²<sub><var>x</var>*</sub> + σ²<sub><var>e</var></sub>) = λβ₁<small>the reliability ratio λ is between 0 and 1, so the estimate is pulled toward zero: “attenuation bias”</small></div>
+        <p><b>Noise in <var>y</var></b> is different. If <var>y</var> = <var>y</var>* + <var>v</var> with <var>v</var> uncorrelated with <var>x</var>, the error just becomes <var>u</var> + <var>v</var>: no bias, only bigger standard errors.</p>
+        <p>With several regressors, error in one of them attenuates its own coefficient and can bias the others in either direction. And if the measurement error is not classical (people who earn more under-report more, say), the bias can go either way.</p>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: Friedman’s puzzle in numbers</b>
+      <p>Suppose the variance of permanent income across households is 225 (a standard deviation of $15,000) and the transitory part adds variance 75. Then λ = 225/(225 + 75) = 0.75. If households truly spend $0.90 of each extra permanent dollar, a regression on measured income finds about 0.75 × 0.90 = <b>0.675</b>. That is the pattern Friedman explained in 1957: in cross sections of households, consumption rises with measured income by less than the long-run spending share implies, partly because a lot of the measured income differences are temporary.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: correcting for a known reliability</b>
+      <p>If a validation study shows that self-reported schooling has a reliability ratio of 0.90, and a regression of log wages on self-reported schooling (alone) finds 0.072, then the attenuation-corrected estimate is 0.072/0.90 = <b>0.080</b>. With other regressors that are correlated with schooling the correction is larger, because the other regressors soak up part of schooling’s real variation and leave relatively more of the noise. A second, independent report of the same variable can also serve as an instrument (Chapter 10).</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Press “Half noise” (σₑ = 15, so λ = 0.5) and run 1,000 samples. The pile centers on 0.45. Then slide the sample size to 1,000 and run again: the pile narrows around 0.45, never 0.90. More data doesn’t cure measurement error.</div>
+    <h3 class="lab-h">Proxy variables</h3>
+    <div class="lab-cols">
+      <p>Chapter 6’s omitted ability can sometimes be partly fixed with a <b>proxy</b>: an observed variable related to the unobserved one, such as an IQ score for ability. Put the proxy in the regression. For this to remove the bias, once the proxy is in, the rest of the unobserved variable must be unrelated to the other regressors; and the proxy must not belong in the true equation itself. A proxy that captures part of ability usually shrinks the bias without eliminating it.</p>
+      <p>Proxies differ from measurement error. Measurement error is about the variable you want, recorded badly. A proxy is a different variable standing in for one you can’t see. Putting a noisy measure of ability in a wage regression is both: a proxy, measured with error.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="form">
+    <h2>A wrong functional form, and the RESET test</h2>
+    <div class="lab-cols">
+      <p>If the truth curves and you fit a line, the model is misspecified, and the slope you report averages over a relationship that changes. Residual plots are the first check (Chapter 7). James Ramsey’s <b>RESET</b> test (1969) is a formal one: add powers of the fitted values, <var>ŷ</var>² and <var>ŷ</var>³, to the regression and <var>F</var>-test them. If they help, the original model missed some nonlinearity.</p>
+      <div class="lab-formula"><var>y</var> = β₀ + β₁<var>x</var>₁ + … + β<sub><var>k</var></sub><var>x</var><sub><var>k</var></sub> + δ₁<var>ŷ</var>² + δ₂<var>ŷ</var>³ + error; &nbsp; test H₀: δ₁ = δ₂ = 0 with <var>F</var>(2, <var>n</var> − <var>k</var> − 3)</div>
+      <p>RESET tells you that something is wrong, not what. It has no power against omitted variables that enter linearly, and it is not a test for heteroskedasticity. In the polynomial lab below, the RESET <var>p</var>-value for a straight line is tiny; for degree 3 or more it usually isn’t.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="outliers">
+    <h2>Outliers, leverage and influence</h2>
+    <p>An outlier is a point far from the rest. Whether it matters depends on where it is. A point with an unusual <var>x</var> has high <b>leverage</b>: the line has to pass near it. A point with a big residual but an ordinary <var>x</var> pulls the line up or down a little but can’t tilt it much. <b>Influence</b> combines the two. Drag the points below.</p>
+    <div class="lab-stage" id="ec9b">
+      <div class="lab-view ec9-mid" id="ec9b-view">
+        <canvas id="ec9b-cv" tabindex="0" aria-label="A scatter of 16 points with the OLS line through all points (green), the OLS line without the ringed point (white dashes) and the least-absolute-deviations line (blue dashes). Halo size shows each point’s Cook’s distance; bars below show Cook’s distance by position. Drag any point. Keys: arrow keys move the ringed point, N rings the next point."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Outlier lab</h3>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec9b-lev">Add a high-leverage outlier</button><button type="button" class="lab-btn" id="ec9b-mid">Add an outlier in the middle</button><button type="button" class="lab-btn" id="ec9b-reset">↺ Reset</button></div>
+        <label class="lab-chk"><input type="checkbox" id="ec9b-lad" checked> Least absolute deviations line</label>
+        <dl class="lab-readout" id="ec9b-read"></dl>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <p>For simple regression with <var>n</var> points and <var>k</var> = 2 parameters:</p>
+        <div class="lab-formula">leverage <var>h</var><sub>ii</sub> = 1/<var>n</var> + (<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)² / SST<sub><var>x</var></sub> &nbsp;&nbsp; (they add up to <var>k</var>)</div>
+        <div class="lab-formula">studentized residual <var>r</var><sub><var>i</var></sub> = <var>û</var><sub><var>i</var></sub> / [σ̂√(1 − <var>h</var><sub>ii</sub>)]</div>
+        <div class="lab-formula">Cook’s distance <var>D</var><sub><var>i</var></sub> = <var>r</var><sub><var>i</var></sub>² · <var>h</var><sub>ii</sub> / [<var>k</var>(1 − <var>h</var><sub>ii</sub>)]</div>
+        <p>Cook’s distance measures how much all the fitted values move when point <var>i</var> is dropped. Common flags are <var>D</var> &gt; 4/<var>n</var> (look closer) and <var>D</var> &gt; 1 (strongly influential).</p>
+      </div>
+      <div>
+        <div class="u-ex"><b>Worked example: one point, half the slope</b>
+          <p>In the lab’s starting data, 16 points give a slope of about 0.84. Press “Add a high-leverage outlier”: a point at <var>x</var> = 14, far right of the others, with <var>y</var> = 3. Its leverage is 0.42 (the average is 2/17 = 0.12), its studentized residual −3.6, and its Cook’s distance about 4.6. The slope falls to about 0.40. Least absolute deviations, which minimizes Σ|<var>û</var><sub><var>i</var></sub>| instead of Σ<var>û</var><sub><var>i</var></sub>², gives about 0.80: it shrugs the outlier off.</p>
+        </div>
+        <p><b>What to do.</b> First check whether the point is a data error (a misplaced decimal, a wrong unit). If it is real, report results with and without it, and consider a robust method such as least absolute deviations, which estimates the conditional median rather than the mean. Taking logs often tames extreme values too.</p>
+      </div>
+    </div>
+    <div class="u-myth"><b>Common mistake: “If a point doesn’t fit, delete it”</b>
+      <p>Dropping inconvenient data until the result looks nice is a way to fool yourself. Some of the most important observations are the extreme ones: the biggest firm, the deepest recession. Fix true errors, but keep real observations, and be open about how much the conclusions depend on a few points. A second mistake runs the other way: assuming a big residual is dangerous. A point in the middle of the <var>x</var> range with a huge residual has low leverage and small influence. Try mission “Loud but harmless.”</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="vif">
+    <h2>Multicollinearity and the variance inflation factor</h2>
+    <div class="lab-cols">
+      <p>Chapter 6 showed Var(β̂<sub><var>j</var></sub>) = σ² / [SST<sub><var>j</var></sub>(1 − <var>R</var><sub><var>j</var></sub>²)]. The factor 1/(1 − <var>R</var><sub><var>j</var></sub>²) is the <b>variance inflation factor</b>: how much larger the variance is than it would be if <var>x</var><sub><var>j</var></sub> were uncorrelated with the other regressors. Software reports it for each variable. A common rule of thumb calls VIF above 10 a concern, but there is no magic cutoff: a VIF of 20 with a huge sample can still give a precise estimate, and high VIFs among control variables don’t hurt the coefficient you care about.</p>
+      <div class="u-ex"><b>Worked example: square footage and rooms</b>
+        <p>In a house-price regression, regressing square footage on the number of rooms and bathrooms gives <var>R</var>² = 0.95. VIF = 1/0.05 = 20, so the standard error on square footage is √20 ≈ 4.5 times what it would be with uncorrelated regressors. If the coefficient is still significant, fine. If not, the data simply can’t separate size from rooms; more data, or a different question (“the effect of size, letting rooms change too”), helps more than deleting variables that belong.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="choose">
+    <h2>Choosing among models: fit, penalties and out-of-sample tests</h2>
+    <p>A more flexible model always fits the data it was estimated on at least as well. The question is whether it predicts <i>new</i> data better. Fit a polynomial to 20 training points from a smooth curve and judge it on 300 fresh points.</p>
+    <div class="lab-stage" id="ec9c">
+      <div class="lab-view ec9-mid" id="ec9c-view">
+        <canvas id="ec9c-cv" tabindex="0" aria-label="Left: 20 training points (blue), 300 test points (gray), the true curve (gold dashes) and the fitted polynomial (green). Right: training and test error by polynomial degree on a log scale, with the degrees chosen by the test error, BIC and AIC marked. Keys: left and right arrows change the degree."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Polynomial lab</h3>
+        <div class="lab-field"><span><label for="ec9c-deg">Polynomial degree</label><output id="ec9c-deg-o" for="ec9c-deg"></output></span><input type="range" id="ec9c-deg" min="1" max="12" step="1" value="1"></div>
+        <div class="lab-field"><span><label for="ec9c-sd">Noise</label><output id="ec9c-sd-o" for="ec9c-sd"></output></span><input type="range" id="ec9c-sd" min="0.2" max="1" step="0.05" value="0.5"></div>
+        <label class="lab-chk"><input type="checkbox" id="ec9c-test" checked> Show the test points</label>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec9c-new">🎲 New training data</button></div>
+        <dl class="lab-readout" id="ec9c-read"></dl>
+      </div>
+    </div>
+    <div class="lab-cols">
+      <div>
+        <p><b>Penalized fit.</b> With SSR from a model with <var>k</var> parameters fitted to <var>n</var> points (lower is better):</p>
+        <div class="lab-formula">AIC = <var>n</var>·ln(SSR/<var>n</var>) + 2<var>k</var> &nbsp;&nbsp; BIC = <var>n</var>·ln(SSR/<var>n</var>) + <var>k</var>·ln(<var>n</var>)</div>
+        <p>Hirotugu Akaike’s criterion (1974) aims at good prediction; Gideon Schwarz’s (1978) charges more per parameter once <var>n</var> &gt; 7 (ln <var>n</var> &gt; 2) and picks the true model with probability approaching 1 as <var>n</var> grows, if it is among the candidates. Adjusted R² charges the least.</p>
+      </div>
+      <div>
+        <p><b>Out-of-sample checks.</b> The most direct test is to hold back data the model never saw, or to rotate which part is held back: <i>k</i>-fold cross-validation. In 200 simulated training sets of 20 points, test error was lowest at degree 3 to 5 in 177 of them. BIC chose degree 3 to 5 in 142, AIC in 73 and adjusted R² in only 55; with so few points, AIC and adjusted R² often chased the noise all the way to degree 12. Median test error rose from 0.29 at degree 4 to 2.5 at degree 12, while training error kept falling.</p>
+      </div>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Slide the degree from 1 to 12 slowly. Training error (blue) falls every step. Test error (red) falls, bottoms out, then shoots up as the curve starts wiggling between the training points and flailing at the edges. Then raise the noise: the best degree moves lower.</div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>Least absolute deviations</b> is older than least squares: the Croatian Jesuit scientist Ruđer Bošković (Roger Boscovich) proposed fitting a line by minimizing absolute deviations in the 1750s, studying the shape of the Earth.</p>
+      <p><b>Measurement error</b> shaped one of economics’ big debates. Milton Friedman’s <i>A Theory of the Consumption Function</i> (1957) used the distinction between permanent and transitory income to explain why measured consumption responds less to measured income in cross sections than over the long run. It contributed to his 1976 Nobel memorial prize.</p>
+      <p><b>Diagnostics.</b> James Ramsey published RESET in 1969. R. Dennis Cook introduced his distance in 1977. Hirotugu Akaike’s information criterion appeared in 1974 and Gideon Schwarz’s Bayesian criterion in 1978.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where it shows up</h2>
+    <div class="lab-cols">
+      <p><b>Surveys.</b> Self-reported income, hours, schooling and spending all carry measurement error, and recall gets worse with time. Attenuation is one reason estimated effects from surveys are often smaller than effects measured from administrative records.</p>
+      <p><b>Measuring the wrong thing.</b> A measure can be precise and still be the wrong variable. Coca-Cola’s nearly 200,000 blind taste tests measured which sip people preferred, not how they felt about their brand (see the <a href="{{ "business/cases/new-coke-1985/" | relURL }}">New Coke case</a>). A proxy is only as good as its link to what you really care about.</p>
+      <p><b>Prediction and finance.</b> A trading rule tuned on past data until it looks brilliant is the polynomial of degree 12: it fits the noise of the past. Tests on fresh data the rule never saw are the defense. Nothing on this page is financial or investment advice.</p>
+      <p><b>One big observation.</b> In data on firms, cities or countries, one giant (the largest company, the capital city) can have enormous leverage. Report results with and without it.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec9-prac">
+      <li><p><span class="ec9-lvl">Warm-up</span> True income has variance 400 and measurement error has variance 100. If the true slope is 0.5, what does OLS on measured income estimate in large samples?</p>
+        <details><summary>Show the answer</summary><div><p>λ = 400/(400 + 100) = 0.8, so plim β̂₁ = 0.8 × 0.5 = 0.40.</p></div></details></li>
+      <li><p><span class="ec9-lvl">Warm-up</span> A firm’s sales figures are recorded with random typing errors (unrelated to anything else). The firm regresses sales on advertising. Is the advertising coefficient biased?</p>
+        <details><summary>Show the answer</summary><div><p>No: the error is in the dependent variable and unrelated to advertising, so it joins the regression error. The estimate is unbiased but less precise.</p></div></details></li>
+      <li><p><span class="ec9-lvl">Core</span> With <var>n</var> = 50, <var>x̄</var> = 10 and SST<sub><var>x</var></sub> = 800, what is the leverage of a point at <var>x</var> = 30? Is that high?</p>
+        <details><summary>Show the answer</summary><div><p><var>h</var> = 1/50 + (30 − 10)²/800 = 0.02 + 0.5 = 0.52. The average leverage is <var>k</var>/<var>n</var> = 2/50 = 0.04, so this point is 13 times the average: very high.</p></div></details></li>
+      <li><p><span class="ec9-lvl">Core</span> A point has leverage 0.30 and studentized residual 2.5 in a simple regression. Compute Cook’s distance. Is it influential by the 4/<var>n</var> rule with <var>n</var> = 40? By <var>D</var> &gt; 1?</p>
+        <details><summary>Show the answer</summary><div><p><var>D</var> = 2.5² × 0.30 / [2 × 0.70] = 6.25 × 0.30 / 1.4 = 1.34. It exceeds 4/40 = 0.10 and also 1: strongly influential.</p></div></details></li>
+      <li><p><span class="ec9-lvl">Core</span> In a regression with three regressors, the <var>R</var>² from regressing <var>x</var>₁ on <var>x</var>₂ and <var>x</var>₃ is 0.90. What is the VIF for <var>x</var>₁, and by what factor is its standard error inflated?</p>
+        <details><summary>Show the answer</summary><div><p>VIF = 1/(1 − 0.90) = 10; the standard error is √10 ≈ 3.16 times as large as with uncorrelated regressors.</p></div></details></li>
+      <li><p><span class="ec9-lvl">Core</span> Two models fitted to <var>n</var> = 100 observations: model A has 3 parameters and SSR = 520; model B has 6 parameters and SSR = 480. Which does AIC prefer? BIC?</p>
+        <details><summary>Show the answer</summary><div><p>AIC: A = 100 ln(5.20) + 6 = 164.9 + 6 = 170.9; B = 100 ln(4.80) + 12 = 156.9 + 12 = 168.9. AIC prefers B. BIC: A = 164.9 + 3 ln 100 = 164.9 + 13.8 = 178.7; B = 156.9 + 6 × 4.61 = 156.9 + 27.6 = 184.5. BIC prefers A. The stronger penalty decides.</p></div></details></li>
+      <li><p><span class="ec9-lvl">Challenge</span> Show that classical measurement error in <var>x</var> attenuates the OLS slope. Start from <var>y</var> = β₀ + β₁<var>x</var>* + <var>u</var> and <var>x</var> = <var>x</var>* + <var>e</var>.</p>
+        <details><summary>Show the answer</summary><div><p>plim β̂₁ = Cov(<var>x</var>, <var>y</var>)/Var(<var>x</var>). Cov(<var>x</var>, <var>y</var>) = Cov(<var>x</var>* + <var>e</var>, β₀ + β₁<var>x</var>* + <var>u</var>) = β₁σ²<sub><var>x</var>*</sub>, because <var>e</var> is uncorrelated with <var>x</var>* and <var>u</var>, and <var>u</var> is uncorrelated with <var>x</var>*. Var(<var>x</var>) = σ²<sub><var>x</var>*</sub> + σ²<sub><var>e</var></sub>. So plim β̂₁ = β₁σ²<sub><var>x</var>*</sub>/(σ²<sub><var>x</var>*</sub> + σ²<sub><var>e</var></sub>) = λβ₁, with 0 &lt; λ &lt; 1 whenever σ²<sub><var>e</var></sub> &gt; 0.</p></div></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>Measurement error.</b> True permanent income is normal with mean $60,000 and standard deviation $15,000; consumption = 8 + 0.90 × income + 4<var>u</var> (thousands). Measured income adds σₑ times a standard normal; measured consumption adds its own noise. Each sample keeps its random draws, so moving a noise slider stretches the same errors smoothly. The data are simulated with a known truth.</p>
+      <p><b>Outliers and polynomials.</b> The outlier lab starts from 16 points around <var>y</var> = 2 + 0.8<var>x</var> with noise of standard deviation 0.8. Least absolute deviations is found exactly by checking every line through two data points, since an optimal line always passes through two of them. The polynomial lab draws 20 training points, one in each twentieth of [0, 4], and 300 test points from <var>y</var> = 2 + 1.2 sin(1.8<var>x</var>) − 0.25<var>x</var> plus noise; polynomials are fitted with Legendre polynomials (the same fits as powers of <var>x</var>, with better numerical accuracy).</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, all passed):</p>
+        <ul class="lab-small">
+          <li>Over 3,000 samples per case, the mean slope matched λβ₁: 0.4517 for λ = 0.5 (predicted 0.4500), 0.6228 for σₑ = 10 (0.6231), 0.2384 for σₑ = 25 (0.2382). With noise only in consumption: 0.9028 (truth 0.9000), but a spread of 0.123 against 0.019 with clean data.</li>
+          <li>Cook’s distance from the leverage formula equaled the leave-one-out definition to 4 × 10⁻¹⁵; leverages summed to 2; 2,000 random nearby lines never beat the LAD line.</li>
+          <li>RESET rejected a straight line for the curved data in 98.3% of 1,000 samples, and a correctly specified quadratic in 3.9% (nominal 5%). A VIF computed for two regressors with correlation 0.9 was 5.25 against the theoretical 5.26.</li>
+          <li>The Legendre basis reproduced the raw-power fit to 10⁻⁹.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>Classical measurement error in the regressor makes the OLS slope…</p>
+        <ul class="u-opts"><li><button type="button">unbiased but noisier</button></li><li><button type="button">biased toward zero</button></li><li><button type="button">biased away from zero</button></li></ul>
+        <details><summary>Show the answer</summary><p>plim β̂₁ = λβ₁ with λ &lt; 1: attenuation.</p></details></li>
+      <li class="u-q" data-a="0"><p>Classical measurement error in the dependent variable makes the OLS slope…</p>
+        <ul class="u-opts"><li><button type="button">unbiased, with larger standard errors</button></li><li><button type="button">biased toward zero</button></li><li><button type="button">exactly as precise as before</button></li></ul>
+        <details><summary>Show the answer</summary><p>The error just adds to <var>u</var>; nothing correlates with <var>x</var>.</p></details></li>
+      <li class="u-q" data-a="2"><p>Which point is most likely to be influential?</p>
+        <ul class="u-opts"><li><button type="button">A point with an average <var>x</var> and a large residual</button></li><li><button type="button">A point with an unusual <var>x</var> sitting right on the line</button></li><li><button type="button">A point with an unusual <var>x</var> and a large residual</button></li></ul>
+        <details><summary>Show the answer</summary><p>Influence needs both leverage (unusual <var>x</var>) and a residual. A high-leverage point on the line doesn’t move it.</p></details></li>
+      <li class="u-q" data-a="1"><p>As you add polynomial terms, training error keeps falling. What happens to error on new data?</p>
+        <ul class="u-opts"><li><button type="button">It keeps falling too</button></li><li><button type="button">It usually falls at first, then rises: overfitting</button></li><li><button type="button">It stays the same</button></li></ul>
+        <details><summary>Show the answer</summary><p>Past some point the extra flexibility fits noise, which doesn’t repeat in new data.</p></details></li>
+      <li class="u-q" data-a="0"><p>The RESET test adds what to the regression?</p>
+        <ul class="u-opts"><li><button type="button">Powers of the fitted values, such as <var>ŷ</var>² and <var>ŷ</var>³</button></li><li><button type="button">Squared residuals</button></li><li><button type="button">Lagged values of <var>y</var></button></li></ul>
+        <details><summary>Show the answer</summary><p>If <var>ŷ</var>² and <var>ŷ</var>³ are jointly significant, the model is missing some nonlinearity.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Chapter 9 (More on Specification and Data Issues): functional form and RESET, proxy variables, measurement error, outliers and least absolute deviations; Section 3-4 on the variance inflation factor; Section 6-3 on adjusted R² and choosing models.</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Chapter 9 (Assessing Studies Based on Multiple Regression): errors-in-variables and other threats to validity.</li>
+      <li>Penn State STAT 501, <a href="https://online.stat.psu.edu/stat501/Lesson11" target="_blank" rel="noopener">Lesson 11: Influential Points</a>, <a href="https://online.stat.psu.edu/stat501/Lesson12" target="_blank" rel="noopener">Lesson 12: Multicollinearity</a> and <a href="https://online.stat.psu.edu/stat501/Lesson10" target="_blank" rel="noopener">Lesson 10: Model Building</a>.</li>
+      <li>M. Friedman, <i>A Theory of the Consumption Function</i> (Princeton University Press for the National Bureau of Economic Research, 1957).</li>
+      <li>J. B. Ramsey, “Tests for Specification Errors in Classical Linear Least-Squares Regression Analysis,” <i>Journal of the Royal Statistical Society, Series B</i> 31(2), 1969, 350–371.</li>
+      <li>R. D. Cook, “Detection of Influential Observation in Linear Regression,” <i>Technometrics</i> 19(1), 1977, 15–18.</li>
+      <li>H. Akaike, “A New Look at the Statistical Model Identification,” <i>IEEE Transactions on Automatic Control</i> 19(6), 1974, 716–723. G. Schwarz, “Estimating the Dimension of a Model,” <i>Annals of Statistics</i> 6(2), 1978, 461–464.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/specification/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/specification/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/specification/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/specification/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

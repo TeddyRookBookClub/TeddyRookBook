@@ -1,0 +1,119 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/hub.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/hub.css").ModTime.Unix }}">
+<div class="lab" id="ech-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "business/" | relURL }}">Business</a> › Econometrics</nav>
+  <header class="lab-hero ech-hero">
+    <div class="ech-hero-text">
+      <p class="lab-eyebrow">Business · A course in seventeen chapters</p>
+      <h1>{{ .Title }}</h1>
+      <p>Does advertising raise sales, or do stores that sell more just advertise more? Does a training program raise wages? Will prices rise next quarter? Econometrics is the craft of answering questions like these with data. This course starts with a cloud of points and a straight line, and climbs, one chapter at a time, to the methods behind several Nobel prizes: instrumental variables, panel data, difference-in-differences, regression discontinuity, maximum likelihood, time series and modern causal inference. Every chapter opens with a live simulation you can break.</p>
+      <p class="ech-cta"><a class="ech-go" href="{{ "business/econometrics/what-is-econometrics/" | relURL }}">Start with Chapter 1 →</a><a class="ech-link" href="#toolkit">The toolkit at a glance</a></p>
+    </div>
+    <figure class="ech-fig">
+      <canvas id="ech-cv" tabindex="0" aria-label="A live scatter plot. Points fall in one at a time and the least-squares line refits and settles onto the true line, shown dashed in gold. Then a second scene: a steep upward line through three clouds of points turns into three downward slopes once a hidden group is revealed. Tap or click to drop your own point into the fit. Keys: Space switches scenes, Enter adds a point."></canvas>
+      <figcaption>
+        <span>Tap to drop a point into the fit.</span>
+        <span class="ech-scenes"><button type="button" data-scene="fit" aria-pressed="true">Fit a line</button><button type="button" data-scene="confound" aria-pressed="false">Hidden third factor</button></span>
+      </figcaption>
+    </figure>
+  </header>
+
+  <section class="lab-sec ech-for" id="for">
+    <h2>What econometrics is for</h2>
+    <p>Econometrics uses data to put numbers on economic relationships: how much demand falls when a price rises, how much a year of school adds to earnings, how fast inflation responds to interest rates. Its special strength is telling cause from coincidence when you can’t run an experiment, by finding comparisons that work like one. And it is honest about uncertainty: every estimate comes with a measure of how far off it could be.</p>
+  </section>
+
+  <section class="lab-sec" id="chapters">
+    <h2>The chapters</h2>
+    <p>Each chapter starts with an interactive and a list of missions, then teaches the ideas from first principles with worked examples, practice problems with full answers and a short quiz. The course climbs in three stages, from a curious beginner to the level of a first-year graduate course.</p>
+    <div class="ech-levels">
+      <a class="ech-lv ech-lv1" href="{{ "business/econometrics/what-is-econometrics/" | relURL }}"><b>Foundations</b><span>Chapters 1–5</span><p>Data and cause, probability, estimation and tests, and the regression line, built from scratch.</p></a>
+      <a class="ech-lv ech-lv2" href="{{ "business/econometrics/multiple-regression/" | relURL }}"><b>The core toolkit</b><span>Chapters 6–11</span><p>Multiple regression, functional form, robust standard errors, specification, instruments and panel data.</p></a>
+      <a class="ech-lv ech-lv3" href="{{ "business/econometrics/difference-in-differences/" | relURL }}"><b>Causal inference and advanced methods</b><span>Chapters 12–17</span><p>Difference-in-differences, regression discontinuity, maximum likelihood, time series, VARs and GMM, and machine learning for cause and effect.</p></a>
+    </div>
+    <p class="u-progress"></p>
+    {{ partial "unit-chapters.html" . }}
+  </section>
+
+  <section class="lab-sec" id="toolkit">
+    <h2>The toolkit at a glance</h2>
+    <p>The whole course on one sheet, in the notation of Wooldridge’s <i>Introductory Econometrics</i>: Greek letters are true values in the population, hats mark estimates from a sample, and <var>û</var> is a residual.</p>
+    <div class="ech-tools">
+      <div class="ech-card"><div class="ech-f">β̂₁ = Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)(<var>y</var><sub><var>i</var></sub> − <var>ȳ</var>) ÷ Σ(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)²</div><b>Ordinary least squares</b><p>The line that makes the sum of squared residuals as small as possible. With many regressors, β̂ = (<var>X</var>′<var>X</var>)⁻¹<var>X</var>′<var>y</var>.</p><a href="{{ "business/econometrics/simple-regression/" | relURL }}">Chapters 4 and 6</a></div>
+      <div class="ech-card"><div class="ech-f">se(β̂₁) = σ̂ ÷ √SST<sub><var>x</var></sub></div><b>Standard error</b><p>How much the slope would wobble from sample to sample; σ̂² = SSR/(<var>n</var> − 2).</p><a href="{{ "business/econometrics/regression-inference/" | relURL }}">Chapter 5</a></div>
+      <div class="ech-card"><div class="ech-f"><var>t</var> = (β̂<sub><var>j</var></sub> − β<sub><var>j</var></sub>) ÷ se(β̂<sub><var>j</var></sub>)</div><b>t statistic</b><p>How many standard errors an estimate is from a hypothesized value; beyond about ±2 is significant at 5%.</p><a href="{{ "business/econometrics/regression-inference/" | relURL }}">Chapter 5</a></div>
+      <div class="ech-card"><div class="ech-f">R² = 1 − SSR ÷ SST</div><b>R-squared</b><p>The share of the variation in <var>y</var> the regression explains. A measure of fit, not of cause.</p><a href="{{ "business/econometrics/simple-regression/" | relURL }}">Chapter 4</a></div>
+      <div class="ech-card"><div class="ech-f">E(β̃₁) = β₁ + β₂δ̃₁</div><b>Omitted-variable bias</b><p>Leave out <var>x</var>₂ and the slope on <var>x</var>₁ absorbs its effect β₂, times how <var>x</var>₂ moves with <var>x</var>₁ (δ̃₁).</p><a href="{{ "business/econometrics/multiple-regression/" | relURL }}">Chapter 6</a></div>
+      <div class="ech-card"><div class="ech-f">β̂<sub>IV</sub> = Cov(<var>z</var>, <var>y</var>) ÷ Cov(<var>z</var>, <var>x</var>)</div><b>Instrumental variables and 2SLS</b><p>Use only the part of <var>x</var> moved by an instrument <var>z</var> that affects <var>y</var> through <var>x</var> alone.</p><a href="{{ "business/econometrics/instrumental-variables/" | relURL }}">Chapter 10</a></div>
+      <div class="ech-card"><div class="ech-f"><var>ÿ</var><sub><var>it</var></sub> = β₁<var>ẍ</var><sub><var>it</var></sub> + <var>ü</var><sub><var>it</var></sub></div><b>Fixed effects</b><p>Subtract each unit’s own average over time, so every unit is compared only with itself.</p><a href="{{ "business/econometrics/panel-data/" | relURL }}">Chapter 11</a></div>
+      <div class="ech-card"><div class="ech-f">δ̂ = (<var>ȳ</var><sub>T,after</sub> − <var>ȳ</var><sub>T,before</sub>) − (<var>ȳ</var><sub>C,after</sub> − <var>ȳ</var><sub>C,before</sub>)</div><b>Difference-in-differences</b><p>The treated group’s change minus the comparison group’s change, assuming they would have trended alike.</p><a href="{{ "business/econometrics/difference-in-differences/" | relURL }}">Chapter 12</a></div>
+      <div class="ech-card"><div class="ech-f">τ = lim<sub><var>x</var>↓<var>c</var></sub> E(<var>y</var> | <var>x</var>) − lim<sub><var>x</var>↑<var>c</var></sub> E(<var>y</var> | <var>x</var>)</div><b>Regression discontinuity</b><p>The jump in outcomes at a cutoff, comparing people just above it with people just below.</p><a href="{{ "business/econometrics/regression-discontinuity/" | relURL }}">Chapter 13</a></div>
+      <div class="ech-card"><div class="ech-f">P(<var>y</var> = 1 | <var>x</var>) = e<sup><var>x</var>β</sup> ÷ (1 + e<sup><var>x</var>β</sup>)</div><b>Logit</b><p>A model for yes-or-no outcomes that keeps probabilities between 0 and 1, fitted by maximum likelihood.</p><a href="{{ "business/econometrics/binary-outcomes/" | relURL }}">Chapter 14</a></div>
+      <div class="ech-card"><div class="ech-f"><var>y</var><sub><var>t</var></sub> = ρ<var>y</var><sub><var>t</var>−1</sub> + <var>e</var><sub><var>t</var></sub>, |ρ| &lt; 1</div><b>AR(1)</b><p>Today depends on yesterday. With |ρ| &lt; 1 shocks fade away; with ρ = 1 they last forever (a unit root).</p><a href="{{ "business/econometrics/time-series/" | relURL }}">Chapter 15</a></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="first">
+    <h2>What to know first</h2>
+    <div class="lab-cols">
+      <p><b>To start:</b> high-school algebra, comfort with a graph, and the summation sign Σ. Chapters 2 and 3 teach the probability and statistics the course needs from the beginning, so you don’t need a statistics class first. A little calculus helps in Chapter 4, where setting a derivative to zero finds the best-fitting line, but each step is shown.</p>
+      <p><b>For the later chapters:</b> from Chapter 6 on, regressions with many variables are written with matrices, so some linear algebra pays off, and maximum likelihood in Chapter 14 uses logarithms and derivatives. For a refresher, the Math Ladder has courses on <a href="{{ "math/probability-and-statistics/" | relURL }}">Probability and Statistics</a> and <a href="{{ "math/linear-algebra/" | relURL }}">Linear Algebra</a>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <ol class="ech-time">
+      <li><b>1805 and 1809</b><p><b>Adrien-Marie Legendre</b> published the method of least squares for fitting comets’ orbits; <b>Carl Friedrich Gauss</b> published it in 1809, said he had used it since 1795, and tied it to the normal curve of errors.</p></li>
+      <li><b>1886</b><p><b>Francis Galton</b> found that tall parents have children who are tall, but less so, and called it regression toward the mean. The method has been called regression ever since (Chapter 4).</p></li>
+      <li><b>1920s and 1930s</b><p><b>R. A. Fisher</b> developed maximum likelihood, popularized significance tests, and made random assignment the foundation of experiments in <i>The Design of Experiments</i> (1935). In 1930 <b>Ragnar Frisch</b> and others founded the Econometric Society; its journal, <i>Econometrica</i>, began in 1933.</p></li>
+      <li><b>1944</b><p><b>Trygve Haavelmo</b>’s “The Probability Approach in Econometrics” argued that economic data should be treated as draws from probability models, the basis of everything in this course. It earned him the Nobel prize in 1989.</p></li>
+      <li><b>1969</b><p>The first Nobel memorial prize in economic sciences went to <b>Ragnar Frisch</b> and <b>Jan Tinbergen</b> “for having developed and applied dynamic models for the analysis of economic processes.”</p></li>
+      <li><b>2000</b><p><b>James Heckman</b>, “for his development of theory and methods for analyzing selective samples,” and <b>Daniel McFadden</b>, “for his development of theory and methods for analyzing discrete choice” (Chapter 14).</p></li>
+      <li><b>2003</b><p><b>Robert Engle</b>, “for methods of analyzing economic time series with time-varying volatility (ARCH),” and <b>Clive Granger</b>, “for methods of analyzing economic time series with common trends (cointegration)” (Chapter 15).</p></li>
+      <li><b>2011</b><p><b>Thomas Sargent</b> and <b>Christopher Sims</b>, “for their empirical research on cause and effect in the macroeconomy,” including the vector autoregressions of Chapter 16.</p></li>
+      <li><b>2021</b><p><b>David Card</b>, “for his empirical contributions to labour economics,” and <b>Joshua Angrist</b> and <b>Guido Imbens</b>, “for their methodological contributions to the analysis of causal relationships”: the natural experiments of Chapters 10 to 13.</p></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="further">
+    <h2>To go further</h2>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Free courses and books</h3>
+        <ul>
+          <li>MIT OpenCourseWare: <a href="https://ocw.mit.edu/courses/14-32-econometrics-spring-2007/" target="_blank" rel="noopener">14.32 Econometrics</a> (undergraduate), <a href="https://ocw.mit.edu/courses/14-382-econometrics-spring-2017/" target="_blank" rel="noopener">14.382 Econometrics</a> (graduate) and <a href="https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/" target="_blank" rel="noopener">18.05 Introduction to Probability and Statistics</a>.</li>
+          <li>Penn State’s online statistics courses: <a href="https://online.stat.psu.edu/stat414/" target="_blank" rel="noopener">STAT 414 Probability Theory</a>, <a href="https://online.stat.psu.edu/stat415/" target="_blank" rel="noopener">STAT 415 Mathematical Statistics</a>, <a href="https://online.stat.psu.edu/stat501/Lesson01" target="_blank" rel="noopener">STAT 501 Regression Methods</a> and <a href="https://online.stat.psu.edu/stat510/" target="_blank" rel="noopener">STAT 510 Applied Time Series Analysis</a>.</li>
+          <li>OpenStax, <a href="https://openstax.org/books/introductory-statistics-2e/pages/12-introduction" target="_blank" rel="noopener">Introductory Statistics 2e</a> and <a href="https://openstax.org/books/introductory-business-statistics-2e/pages/13-introduction" target="_blank" rel="noopener">Introductory Business Statistics 2e</a>, free textbooks.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="lab-h">The standard textbooks</h3>
+        <ul>
+          <li><b>Introductory:</b> J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i> (7th ed., 2020); J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i> (4th ed., 2019); J. D. Angrist and J.-S. Pischke, <i>Mastering ’Metrics</i> (2015).</li>
+          <li><b>Graduate:</b> J. M. Wooldridge, <i>Econometric Analysis of Cross Section and Panel Data</i> (2nd ed., 2010); W. H. Greene, <i>Econometric Analysis</i> (8th ed., 2018); F. Hayashi, <i>Econometrics</i> (2000); J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (2009); J. D. Hamilton, <i>Time Series Analysis</i> (1994).</li>
+          <li><b>Causal inference:</b> G. W. Imbens and D. B. Rubin, <i>Causal Inference for Statistics, Social, and Biomedical Sciences</i> (2015); S. Cunningham, <i>Causal Inference: The Mixtape</i> (2021) and N. Huntington-Klein, <i>The Effect</i> (2021), both also free to read online.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>Wikipedia, <a href="https://en.wikipedia.org/wiki/List_of_Nobel_Memorial_Prize_laureates_in_Economic_Sciences" target="_blank" rel="noopener">List of Nobel Memorial Prize laureates in Economic Sciences</a> (years and prize citations, as published by the Nobel Foundation).</li>
+      <li>S. M. Stigler, <i>The History of Statistics: The Measurement of Uncertainty before 1900</i> (Harvard University Press, 1986): Legendre, Gauss and Galton.</li>
+      <li>F. Galton, “Regression Towards Mediocrity in Hereditary Stature,” <i>Journal of the Anthropological Institute</i> 15 (1886). R. A. Fisher, <i>The Design of Experiments</i> (1935). T. Haavelmo, “The Probability Approach in Econometrics,” <i>Econometrica</i> 12, supplement (1944).</li>
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), for the notation and the formulas on this page.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More">
+    <a href="{{ "business/" | relURL }}">← Business</a>
+    <a href="{{ "business/econometrics/what-is-econometrics/" | relURL }}">Chapter 1: What Econometrics Is →</a>
+  </nav>
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/hub.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/hub.js").ModTime.Unix }}" defer></script>
+{{ end }}

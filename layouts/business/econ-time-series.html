@@ -1,0 +1,253 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/time-series/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/time-series/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec15-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 15</p>
+    <h1>{{ .Title }}</h1>
+    <p>Sales this month, unemployment this quarter, a price today: economic data come one period after another, and each value remembers the last. That memory is what lets us forecast, and it is also what fools careless regressions. Here you’ll turn one dial from white noise to a random walk and watch the memory appear in the autocorrelations, regress two series that have nothing to do with each other and get “significant” results most of the time, draw forecast fans that widen with the horizon, and find two wandering series held together by an invisible rubber band.</p>
+    <span class="lab-mark" aria-hidden="true">⏱️</span>
+  </header>
+
+  <div class="lab-stage ec15-main">
+    <div class="lab-view" id="ec15-view">
+      <canvas id="ec15-cv" tabindex="0" aria-label="Top: a time series streaming from left to right. Bottom: its autocorrelation function and partial autocorrelation function for lags 1 to 20, as bars, with dashed bands showing the range that pure chance would give and gold dots for the theoretical values. In spurious-regression mode, the top shows two independent series, the bottom left a scatter plot with the regression line, and the bottom right a histogram of t statistics from many regressions. Keys: left and right arrows change phi, space pauses, R runs 1,000 regressions, N draws a new pair."></canvas>
+      <div class="lab-hud" id="ec15-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ec15-pause" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="ec15-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="ec15-mode-h">Mode</h3>
+      <div class="lab-seg" id="ec15-mode" role="group" aria-labelledby="ec15-mode-h">
+        <button type="button" data-m="ar">One series: AR(1)</button><button type="button" data-m="spur">Two random walks</button>
+      </div>
+      <div data-mode="ar" class="ec15-group">
+        <label class="lab-field"><span>φ, the memory <output id="ec15-phi-o"></output></span><input type="range" id="ec15-phi" min="-1" max="1" step="0.01" aria-label="Autoregressive coefficient phi"></label>
+        <label class="lab-field"><span>θ, a moving-average part <output id="ec15-theta-o"></output></span><input type="range" id="ec15-theta" min="-0.9" max="0.9" step="0.05" aria-label="Moving-average coefficient theta"></label>
+      </div>
+      <div data-mode="spur" class="ec15-group" hidden>
+        <label class="lab-field"><span>Each series: φ <output id="ec15-sphi-o"></output></span><input type="range" id="ec15-sphi" min="0" max="1" step="0.05" aria-label="Autoregressive coefficient of each of the two series"></label>
+        <label class="lab-chk"><input type="checkbox" id="ec15-diff"> Difference both series first</label>
+        <div class="lab-seg" id="ec15-se" role="group" aria-label="Standard errors"><button type="button" data-s="ols">OLS standard errors</button><button type="button" data-s="nw">Newey–West</button></div>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec15-pair">New pair</button><button type="button" class="lab-btn pri" id="ec15-run">Run 1,000 regressions</button></div>
+      </div>
+      <label class="lab-field"><span>Length of the window, T <output id="ec15-T-o"></output></span><input type="range" id="ec15-T" min="50" max="500" step="10" aria-label="Number of periods used"></label>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec15-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec15-missions"></ol>
+    </div>
+    <section class="lab-sec ec15-under" id="seeing"><h2>What you’re seeing</h2>
+      <div class="lab-cols">
+        <p><b>The stream.</b> Each new value is <var>y</var><sub><var>t</var></sub> = φ<var>y</var><sub><var>t</var>−1</sub> + <var>e</var><sub><var>t</var></sub> + θ<var>e</var><sub><var>t</var>−1</sub>, where <var>e</var><sub><var>t</var></sub> is a fresh random shock. With φ = 0 and θ = 0 every value is new noise. Raise φ and each value keeps a share of the last one, so the line drifts in slow waves. At φ = 1 nothing is ever forgotten: that’s a random walk, and it can wander anywhere.</p>
+        <p><b>The bars.</b> The autocorrelation at lag <var>k</var> is the correlation between the series and itself <var>k</var> periods earlier. The dashed bands at ±1.96/√<var>T</var> show how big a correlation pure chance would produce in a window this long. The partial autocorrelation at lag <var>k</var> is what lag <var>k</var> adds after accounting for lags 1 to <var>k</var> − 1. The gold dots are the true values for the model you set.</p>
+        <p><b>Two random walks.</b> Switch the mode and the screen shows two series built completely separately. Regress one on the other and the slope often looks “significant”, because both wander and any two wanderers seem to move together for a while. The histogram collects the <var>t</var> statistics of many such regressions; a valid 5% test would put only 5% of them in the red tails.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="lab-sec" id="stationary"><h2>Stationarity and memory</h2>
+    <p>A time series is <b>(covariance) stationary</b> if its mean and variance don’t change over time and the covariance between <var>y</var><sub><var>t</var></sub> and <var>y</var><sub><var>t</var>−<var>k</var></sub> depends only on the gap <var>k</var>, not on <var>t</var>. Stationary series keep coming back to the same average, and their memory fades: values far apart are nearly independent (Wooldridge calls this <i>weak dependence</i>). Most of the tools from earlier chapters work for stationary, weakly dependent series. Trouble starts when a series has a trend or never forgets.</p>
+    <h3 class="lab-h">Trends and seasons</h3>
+    <p>Many series grow: GDP, prices, population. A <b>deterministic trend</b> model writes <var>y</var><sub><var>t</var></sub> = <var>α</var> + <var>βt</var> + <var>e</var><sub><var>t</var></sub>; including <var>t</var> (or working with growth rates) keeps the trend from masquerading as a relationship with any other trending variable. Many series also repeat within the year: retail sales jump every December, ice cream sales every July. Seasonal dummy variables, one for each month or quarter, absorb that pattern, which is also what government agencies remove when they publish “seasonally adjusted” numbers.</p>
+    <h3 class="lab-h">AR, MA and ARMA</h3>
+    <div class="u-key">
+      <div><b>AR(<var>p</var>): autoregressive</b><p><var>y</var><sub><var>t</var></sub> = <var>c</var> + φ₁<var>y</var><sub><var>t</var>−1</sub> + … + φ<sub><var>p</var></sub><var>y</var><sub><var>t</var>−<var>p</var></sub> + <var>e</var><sub><var>t</var></sub>. Today depends on the last <var>p</var> values. The ACF fades out gradually; the PACF cuts off after lag <var>p</var>.</p></div>
+      <div><b>MA(<var>q</var>): moving average</b><p><var>y</var><sub><var>t</var></sub> = <var>μ</var> + <var>e</var><sub><var>t</var></sub> + θ₁<var>e</var><sub><var>t</var>−1</sub> + … + θ<sub><var>q</var></sub><var>e</var><sub><var>t</var>−<var>q</var></sub>. A shock echoes for exactly <var>q</var> periods. The ACF cuts off after lag <var>q</var>; the PACF fades.</p></div>
+      <div><b>ARMA(<var>p</var>, <var>q</var>)</b><p>Both parts together: a compact way to describe a long memory with few numbers. George Box and Gwilym Jenkins (1970) turned choosing, fitting and checking these models into a method.</p></div>
+    </div>
+    <div class="u-big">AR(1): Var(<var>y</var>) = <var>σ</var>²/(1 − φ²), &nbsp; Corr(<var>y</var><sub><var>t</var></sub>, <var>y</var><sub><var>t</var>−<var>k</var></sub>) = φ<sup><var>k</var></sup><small>stationary only when |φ| &lt; 1; the closer φ is to 1, the bigger the swings and the longer the memory</small></div>
+    <div class="u-ex"><b>Worked example: how long a shock lasts</b>
+      <p>An AR(1) with φ = 0.8 and shock variance <var>σ</var>² = 1:</p>
+      <ol><li>Variance: 1/(1 − 0.64) = 2.78, so the series swings 2.78 times as much as one shock.</li>
+        <li>Autocorrelations: 0.8, 0.64, 0.51, 0.41, … at lags 1, 2, 3, 4.</li>
+        <li>Half-life of a shock: solve 0.8<sup><var>k</var></sup> = 0.5, so <var>k</var> = ln 0.5 / ln 0.8 ≈ 3.1 periods.</li></ol>
+      <p>With φ = 0.95 the half-life is 13.5 periods, and with φ = 0.99 it is 69. At φ = 1 it is infinite: the shock never fades.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> set φ = 0 and θ = 0.7. The autocorrelation is about 0.47 at lag 1 and then drops to nothing: an MA(1) remembers one shock for exactly one period. Now set θ = 0 and φ = 0.7: the ACF fades gradually (0.7, 0.49, 0.34, …) while the PACF has one bar at lag 1 and nothing after. Reading these two pictures is how Box and Jenkins picked a model.</div>
+  </section>
+
+  <section class="lab-sec" id="unitroot"><h2>Unit roots and the Dickey–Fuller test</h2>
+    <p>At φ = 1, the AR(1) becomes a <b>random walk</b>: <var>y</var><sub><var>t</var></sub> = <var>y</var><sub><var>t</var>−1</sub> + <var>e</var><sub><var>t</var></sub>. Every shock is permanent, the variance grows with time (Var(<var>y</var><sub><var>t</var></sub>) = <var>tσ</var>² from a fixed start), and the series has no average to return to. Such a series is said to have a <b>unit root</b>, or to be <i>integrated of order one</i>, I(1); its first difference Δ<var>y</var><sub><var>t</var></sub> = <var>e</var><sub><var>t</var></sub> is stationary, I(0). Many asset prices and some macroeconomic series behave much like this.</p>
+    <p>To test for a unit root, subtract <var>y</var><sub><var>t</var>−1</sub> from both sides and regress:</p>
+    <div class="u-big">Δ<var>y</var><sub><var>t</var></sub> = <var>α</var> + <var>θ</var><var>y</var><sub><var>t</var>−1</sub> + <var>e</var><sub><var>t</var></sub>, &nbsp; H₀: <var>θ</var> = 0 (unit root) vs H₁: <var>θ</var> &lt; 0<small>the Dickey–Fuller test; reject at 5% if the t statistic is below −2.86 (with a constant, large samples)</small></div>
+    <p>The catch, found by David Dickey and Wayne Fuller (1979): under the null, the <var>t</var> statistic does <i>not</i> follow a <var>t</var> or normal distribution, because <var>y</var><sub><var>t</var>−1</sub> is itself wandering. Its critical values are further left: −3.43 at 1%, −2.86 at 5%, −2.57 at 10% (compared with −2.33, −1.65 and −1.28 for a one-sided normal test). The <i>augmented</i> Dickey–Fuller test adds lagged differences Δ<var>y</var><sub><var>t</var>−<var>j</var></sub> to soak up extra short-run dynamics; with a time trend in the regression, the critical values shift further still.</p>
+    <div class="u-ex"><b>Worked example: can we reject a unit root?</b>
+      <p>For 200 quarters of a series, the Dickey–Fuller regression gives Δ<var>ŷ</var><sub><var>t</var></sub> = 0.21 − 0.034<var>y</var><sub><var>t</var>−1</sub>, with a standard error of 0.016 on the slope.</p>
+      <ol><li><var>t</var> = −0.034/0.016 = −2.13.</li>
+        <li>A normal table would call that significant at 5% (one-sided: below −1.65). The correct comparison is with −2.86.</li>
+        <li>−2.13 &gt; −2.86, so we can’t reject a unit root. The estimated φ = 1 − 0.034 = 0.966 is close to 1, and the test can’t tell it from 1 in 200 quarters.</li></ol>
+      <p>Unit-root tests have little power against φ just below 1: in our simulations with 200 periods, the test rejected only 35% of the time when φ = 0.95, 87% when φ = 0.9, and every time when φ = 0.8.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="spurious"><h2>Spurious regression</h2>
+    <p>In 1926 the statistician G. Udny Yule asked why we sometimes get nonsense correlations between time series. His example: in England and Wales from 1866 to 1911, the share of marriages performed in the Church of England and the mortality rate were correlated at about 0.95. Neither caused the other; both happened to decline over the same decades. Clive Granger and Paul Newbold (1974) showed by simulation that regressing one independent random walk on another produces “significant” slopes most of the time, and Peter Phillips (1986) proved why: with two I(1) series, the <var>t</var> statistic grows with the sample size instead of settling down, so more data makes it worse.</p>
+    <div class="u-myth"><b>Common mistake: “The trends match, so the variables must be related”</b>
+      <p>Two series that both wander, or both trend, will line up for long stretches by coincidence. A high <var>R</var>² and a large <var>t</var> statistic from regressing one on the other mean little. In our simulations of independent random walks, the slope was “significant” at 5% in 76% of regressions with 100 periods, 82% with 200 and 89% with 500. Granger and Newbold’s warning sign: an <var>R</var>² larger than the Durbin–Watson statistic. The fixes: difference the series (4.6% false alarms in our tests, as a 5% test should give), include trends, or test whether the series are cointegrated before trusting a levels regression.</p>
+    </div>
+    <h3 class="lab-h">Serial correlation and Newey–West standard errors</h3>
+    <p>Even with stationary data, regression errors in time series are usually correlated over time. OLS is still unbiased if the regressors are strictly exogenous, but the usual standard errors assume independent errors and are too small when errors are positively correlated. Whitney Newey and Kenneth West (1987) proposed standard errors that allow both heteroskedasticity and autocorrelation up to some lag <var>g</var> (HAC standard errors):</p>
+    <div class="lab-formula">Var(<var>β̂</var>) = (<var>X</var>′<var>X</var>)<sup>−1</sup> [ Σ<sub><var>t</var></sub> <var>û</var><sub><var>t</var></sub>² <b>x</b><sub><var>t</var></sub><b>x</b><sub><var>t</var></sub>′ + Σ<sub><var>h</var>=1</sub><sup><var>g</var></sup> (1 − <var>h</var>/(<var>g</var>+1)) Σ<sub><var>t</var></sub> <var>û</var><sub><var>t</var></sub><var>û</var><sub><var>t</var>−<var>h</var></sub>(<b>x</b><sub><var>t</var></sub><b>x</b><sub><var>t</var>−<var>h</var></sub>′ + <b>x</b><sub><var>t</var>−<var>h</var></sub><b>x</b><sub><var>t</var></sub>′) ] (<var>X</var>′<var>X</var>)<sup>−1</sup></div>
+    <p>The declining weights keep the estimate positive. Wooldridge suggests <var>g</var> = the integer part of 4(<var>n</var>/100)<sup>2/9</sup>, which is 4 for 100 to 200 observations. In the simulation, regressing one independent AR(1) series with φ = 0.9 on another (200 periods), the OLS test rejects 50% of the time; Newey–West cuts that to 27%. Better, though not perfect in a sample this size, and no help at all for two random walks (67%), where the regression itself is meaningless.</p>
+  </section>
+
+  <section class="lab-sec" id="forecast"><h2>Forecasting</h2>
+    <p>For a stationary AR model, the best forecast (in mean squared error) of a future value is its conditional expectation given today’s information. For an AR(1), <var>ŷ</var><sub><var>T</var>+<var>h</var>|<var>T</var></sub> = <var>μ</var> + φ<sup><var>h</var></sup>(<var>y</var><sub><var>T</var></sub> − <var>μ</var>): the forecast starts from today and decays toward the long-run mean <var>μ</var> = <var>c</var>/(1 − φ). The uncertainty grows with the horizon, because more unknown shocks pile up:</p>
+    <div class="u-big">Var(forecast error at <var>h</var>) = <var>σ</var>² (1 + <var>ψ</var>₁² + … + <var>ψ</var><sub><var>h</var>−1</sub>²)<small>the ψ’s say how much a shock still matters <var>j</var> periods later; for an AR(1), ψ<sub><var>j</var></sub> = φ<sup><var>j</var></sup>; for a random walk, all ψ = 1, so the variance is <var>hσ</var>²</small></div>
+    <div class="lab-stage wide ec15-mini" id="ec15-fc">
+      <div class="lab-view" id="ec15-fcv"><canvas id="ec15-fcc" aria-label="A simulated history of 100 periods (white), followed by a forecast for the next 24 periods (green dashed line) with shaded 50, 80 and 95 percent bands that widen with the horizon. After pressing Reveal the future, the actual path appears in pink, with values outside the 95 percent band marked in red."></canvas></div>
+      <div class="lab-panel ec15-row">
+        <div class="ec15-grow">
+          <h3 id="ec15-ftruth-h">What generated the data</h3>
+          <div class="lab-seg" id="ec15-ftruth" role="group" aria-labelledby="ec15-ftruth-h"><button type="button" data-t="growth">Growth rate</button><button type="button" data-t="persist">Unemployment</button><button type="button" data-t="rw">Price</button></div>
+          <h3 id="ec15-fp-h">Model you fit</h3>
+          <div class="lab-seg" id="ec15-fp" role="group" aria-labelledby="ec15-fp-h"><button type="button" data-p="1">AR(1)</button><button type="button" data-p="2">AR(2)</button><button type="button" data-p="4">AR(4)</button><button type="button" data-p="rw">Random walk</button></div>
+        </div>
+        <div class="ec15-grow">
+          <div class="lab-row"><button type="button" class="lab-btn" id="ec15-fnew">New history</button><button type="button" class="lab-btn" id="ec15-freveal">Reveal the future</button><button type="button" class="lab-btn pri" id="ec15-fmc">Run 500 forecast tests</button></div>
+          <dl class="lab-readout" id="ec15-fcread"></dl>
+        </div>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: forecasting unemployment</b>
+      <p>Suppose a monthly unemployment rate follows <var>u</var><sub><var>t</var></sub> = 0.25 + 0.95<var>u</var><sub><var>t</var>−1</sub> + <var>e</var><sub><var>t</var></sub> with <var>σ</var> = 0.5 percentage points, and this month it is 7%.</p>
+      <ol><li>Long-run mean: 0.25/(1 − 0.95) = 5%.</li>
+        <li>Forecasts: next month 0.25 + 0.95 × 7 = 6.90%; in general 5 + 2 × 0.95<sup><var>h</var></sup>, so in a year 5 + 2 × 0.540 = 6.08%.</li>
+        <li>Standard errors: 0.50 one month ahead, 0.5 × √(1 + 0.95²) = 0.69 two months ahead, 1.35 twelve months ahead. They level off at 0.5/√(1 − 0.95²) = 1.60, the spread of the series itself.</li>
+        <li>95% interval for a year from now: 6.08 ± 1.96 × 1.35, about 3.4% to 8.7%.</li></ol>
+      <p>For a random walk, the twelve-month standard error would be 0.5 × √12 = 1.73 and would keep growing, without limit.</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> choose “Unemployment” and fit AR(1), then run 500 forecast tests. One month ahead, the band catches about 95%; twelve ahead, fewer (86% in our tests). The formula treats the estimated φ as if it were the true one, and estimates of a φ near 1 are biased down in samples of 100, so long-horizon bands come out too narrow. Real forecasters widen them, or simulate the uncertainty in the estimates.</div>
+  </section>
+
+  <section class="lab-sec" id="coint"><h2>Cointegration and error correction</h2>
+    <p>Two series can each wander like random walks and still be tied together. The prices of the same commodity in two cities, short- and long-term interest rates, or a company’s two classes of shares each drift, but if they drift too far apart, buyers and sellers push them back. Robert Engle and Clive Granger (1987) called this <b>cointegration</b>: <var>x</var><sub><var>t</var></sub> and <var>y</var><sub><var>t</var></sub> are I(1), but some combination <var>y</var><sub><var>t</var></sub> − <var>βx</var><sub><var>t</var></sub> is stationary. The regression of <var>y</var> on <var>x</var> is then not spurious: <var>β̂</var> converges to the true <var>β</var> very fast (“super-consistency”).</p>
+    <div class="lab-stage wide ec15-mini" id="ec15-co">
+      <div class="lab-view" id="ec15-cov"><canvas id="ec15-coc" aria-label="Left: two series that wander together, x in blue and y in gold, with the fitted long-run relation dashed. Right: the spread between them, the residual from regressing y on x, with the Engle-Granger test statistic."></canvas></div>
+      <div class="lab-panel ec15-row">
+        <div class="ec15-grow">
+          <label class="lab-field"><span>ρ, persistence of the spread <output id="ec15-rho-o"></output></span><input type="range" id="ec15-rho" min="0" max="1" step="0.05" aria-label="Persistence of the spread"></label>
+          <label class="lab-field"><span>Long-run slope β <output id="ec15-cob-o"></output></span><input type="range" id="ec15-cob" min="0.5" max="2.5" step="0.1" aria-label="Long-run slope"></label>
+          <label class="lab-field"><span>Periods <output id="ec15-coT-o"></output></span><input type="range" id="ec15-coT" min="60" max="500" step="20" aria-label="Number of periods"></label>
+        </div>
+        <div class="ec15-grow">
+          <div class="lab-row"><button type="button" class="lab-btn" id="ec15-conew">New sample</button><button type="button" class="lab-btn pri" id="ec15-comc">Run 500 tests</button></div>
+          <dl class="lab-readout" id="ec15-coread"></dl>
+        </div>
+      </div>
+    </div>
+    <p><b>The Engle–Granger test</b> has two steps. First, regress <var>y</var><sub><var>t</var></sub> on <var>x</var><sub><var>t</var></sub> by OLS and keep the residuals <var>û</var><sub><var>t</var></sub>, the estimated spread. Second, run a Dickey–Fuller test on <var>û</var><sub><var>t</var></sub>. If the spread has a unit root, the two series are not cointegrated. Because <var>β̂</var> was chosen to make the spread look as stationary as possible, the critical values are stricter than Dickey–Fuller’s: −3.90 at 1%, −3.34 at 5% and −3.04 at 10% for two variables with a constant.</p>
+    <p><b>The error-correction model</b> then describes how the series move back together. With <var>û</var><sub><var>t</var>−1</sub> the gap from the long-run relation last period:</p>
+    <div class="lab-formula">Δ<var>y</var><sub><var>t</var></sub> = <var>α</var>₀ + <var>γ</var>Δ<var>x</var><sub><var>t</var></sub> + <var>δ</var><var>û</var><sub><var>t</var>−1</sub> + <var>e</var><sub><var>t</var></sub>, &nbsp; <var>δ</var> &lt; 0</div>
+    <p><var>γ</var> is the short-run effect of a change in <var>x</var>; <var>δ</var> is the speed of adjustment. If <var>y</var> is above its long-run level, <var>δ</var> &lt; 0 pulls it down next period. In the simulation, <var>δ</var> estimates <var>ρ</var> − 1.</p>
+    <div class="u-ex"><b>Worked example: closing a gap</b>
+      <p>An error-correction model gives Δ<var>ŷ</var><sub><var>t</var></sub> = 0.02 + 0.9Δ<var>x</var><sub><var>t</var></sub> − 0.25<var>û</var><sub><var>t</var>−1</sub>, and <var>y</var> is currently 2 units above its long-run relation with <var>x</var>.</p>
+      <ol><li>If <var>x</var> doesn’t change, <var>y</var> is expected to fall by 0.25 × 2 = 0.5 next period (plus the small drift of 0.02).</li>
+        <li>Each period, a quarter of the remaining gap closes, so the gap shrinks by a factor of 0.75: half of it is gone in ln 0.5/ln 0.75 ≈ 2.4 periods.</li>
+        <li>If <var>x</var> rises by 1, <var>y</var> rises by 0.9 at once, and the error-correction term handles the rest over time.</li></ol>
+    </div>
+    <div class="lab-try"><b>Try this:</b> set ρ = 1. The spread is now a random walk itself, the two series are not cointegrated, and the regression of <var>y</var> on <var>x</var> is spurious. Run 500 tests: the Engle–Granger test rejects about 5% of the time, as it should. Then set ρ = 0.8 and run them again (about 100% rejections with 200 periods). At ρ = 0.9 the test rejects only about two-thirds of the time: like all unit-root tests, it has trouble with spreads that revert slowly.</div>
+    <div class="lab-note"><b>Markets and money.</b> “Pairs trading” bets that a cointegrated spread will close. It can fail exactly when it matters most: relations estimated in calm times break in a crisis, and a spread can widen for longer than a trader can afford to wait. The fund in <a href="{{ "business/cases/ltcm-1998/" | relURL }}">Long-Term Capital Management: When Geniuses Borrow Too Much</a> made bets that similar prices would move back together, borrowed heavily, and nearly brought down Wall Street when they moved apart instead. Nothing on this page is financial or investment advice.</div>
+  </section>
+
+  <section class="lab-sec" id="history"><h2>A short history</h2>
+    <div class="lab-cols">
+      <p><b>The first models.</b> Yule fitted an autoregressive model to sunspot numbers in 1927, and in the same year the Russian economist Eugen Slutsky showed that summing random shocks (a moving average) can produce cycles that look like business cycles.</p>
+      <p><b>Box and Jenkins.</b> Their 1970 book <i>Time Series Analysis: Forecasting and Control</i> made ARMA models a practical forecasting method: identify a model from the ACF and PACF, estimate it, check the residuals, repeat.</p>
+      <p><b>Unit roots.</b> Dickey and Fuller’s test (1979), Granger and Newbold’s warning about spurious regressions (1974) and Phillips’s theory (1986) taught economists to check whether their series wander before regressing them on each other. Charles Nelson and Charles Plosser (1982) argued that many U.S. macroeconomic series look like they have unit roots, which started a long debate.</p>
+      <p><b>Cointegration.</b> Engle and Granger’s 1987 paper showed how to model wandering series that move together. In 2003, Granger received half of the Nobel memorial prize in economics for methods of analyzing time series with common trends (cointegration), and Engle the other half for methods of analyzing time series with time-varying volatility (ARCH).</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world"><h2>Where it shows up</h2>
+    <ul>
+      <li><b>Business.</b> Demand forecasting for inventory, staffing and budgets starts with trend, seasonality and AR terms. A retailer that forgets December’s seasonal jump will either run out of stock or overstaff January.</li>
+      <li><b>Policy.</b> Central banks and the Bureau of Labor Statistics publish seasonally adjusted series; forecasters model inflation and unemployment with autoregressions as a baseline that more elaborate models must beat.</li>
+      <li><b>Finance.</b> Whether stock prices are close to random walks is one of the oldest questions in finance; interest rates of different maturities tend to be cointegrated.</li>
+      <li><b>Science.</b> Climate scientists face spurious-regression issues when relating trending series, and use the same tools: differencing, trend terms and cointegration tests.</li>
+      <li><b>Daily life.</b> “Stock prices and ice cream sales both rose this decade” is a spurious regression waiting to happen. Before believing that two trending things are linked, ask whether they would line up just by both trending.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <ol class="ec15-prob">
+      <li><p>An AR(1) has φ = 0.6 and shock variance 4. What are its variance and its autocorrelation at lag 3?</p>
+        <details><summary>Show the answer</summary><p>Variance = 4/(1 − 0.36) = 6.25. Lag-3 autocorrelation = 0.6³ = 0.216.</p></details></li>
+      <li><p>A sample ACF has spikes at lags 1 and 2 and nothing after; the PACF fades out slowly. Which model fits?</p>
+        <details><summary>Show the answer</summary><p>An MA(2): the ACF of an MA(<var>q</var>) cuts off after lag <var>q</var> while its PACF tails off.</p></details></li>
+      <li><p>A Dickey–Fuller regression with a constant gives <var>t</var> = −3.1 for the coefficient on <var>y</var><sub><var>t</var>−1</sub>. Do you reject a unit root at 5%? At 1%?</p>
+        <details><summary>Show the answer</summary><p>At 5%: yes, −3.1 &lt; −2.86. At 1%: no, −3.1 &gt; −3.43. The evidence against a unit root is moderate.</p></details></li>
+      <li><p>Regressing a country’s GDP on the number of televisions sold, both in levels over 40 years, gives <var>R</var>² = 0.93 and a Durbin–Watson statistic of 0.21. What do you suspect, and what would you do?</p>
+        <details><summary>Show the answer</summary><p>Spurious regression: both series trend, the residuals are highly autocorrelated (DW far below 2) and <var>R</var>² &gt; DW, Granger and Newbold’s warning sign. Test both for unit roots; if they are I(1), either difference them (regress growth on growth) or test for cointegration before interpreting a levels regression.</p></details></li>
+      <li><p>A random walk has shock standard deviation 2. What is the standard error of the forecast 9 periods ahead? What if it were an AR(1) with φ = 0.5 instead?</p>
+        <details><summary>Show the answer</summary><p>Random walk: 2 × √9 = 6. AR(1) with φ = 0.5: 2 × √(1 + 0.25 + 0.0625 + …) for 9 terms ≈ 2 × √(1.3333) ≈ 2.31, because the forecast variance levels off at <var>σ</var>²/(1 − φ²) = 4/0.75.</p></details></li>
+      <li><p>With 150 observations, how many lags does Wooldridge’s rule of thumb suggest for Newey–West standard errors?</p>
+        <details><summary>Show the answer</summary><p>4 × (150/100)<sup>2/9</sup> = 4 × 1.094 = 4.38, so <var>g</var> = 4.</p></details></li>
+      <li><p>Engle–Granger step 2 gives <var>t</var> = −3.0 on the lagged residual (two variables, constant). An analyst compares it with −2.86 and declares the series cointegrated. What went wrong?</p>
+        <details><summary>Show the answer</summary><p>The residuals come from a regression chosen to make them look stationary, so the Dickey–Fuller critical values are too lenient. The Engle–Granger 5% critical value is −3.34; −3.0 does not reject “no cointegration” at 5% (only at about 10%, where the critical value is −3.04, it is borderline and still doesn’t reject).</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The stream.</b> Shocks are standard normal; the series follows <var>y</var><sub><var>t</var></sub> = φ<var>y</var><sub><var>t</var>−1</sub> + <var>e</var><sub><var>t</var></sub> + θ<var>e</var><sub><var>t</var>−1</sub>, 24 new values a second. The ACF uses the course library over the last <var>T</var> values; the PACF comes from the ACF by the Durbin–Levinson recursion; theoretical values use the ARMA(1,1) formulas. The Dickey–Fuller test is the regression with a constant and no extra lags, with large-sample critical values.</p>
+      <p><b>Spurious regressions.</b> Two series drawn with different seeds, each AR(φ) (a random walk at φ = 1) after a burn-in. The slope’s <var>t</var> statistic uses OLS or Newey–West standard errors (Bartlett weights, Wooldridge’s lag rule).</p>
+      <p><b>Forecasts and cointegration.</b> AR(<var>p</var>) models are fitted by OLS with a constant; intervals use the estimated coefficients as if they were true. In the cointegration lab, <var>x</var> is a random walk and <var>y</var> = 2 + <var>βx</var> + <var>u</var> with <var>u</var><sub><var>t</var></sub> = <var>ρu</var><sub><var>t</var>−1</sub> + noise; the Engle–Granger test is a Dickey–Fuller regression on the residuals without a constant.</p>
+      <div><p><b>How it was checked</b> (Node.js and NumPy, before the page was built):</p>
+        <ul class="lab-small">
+          <li>Theory: the PACF of an AR(1) with φ = 0.7 is 0.700, 0, 0, …; 200,000 draws of an ARMA(0.6, 0.4) gave sample autocorrelations 0.756, 0.453, 0.271 against theory 0.756, 0.454, 0.272, and variance 2.560 against 2.563.</li>
+          <li>Dickey–Fuller: 4,000 random walks of 500 periods gave 1%, 5% and 10% quantiles of −3.51, −2.85 and −2.54 (tables: −3.43, −2.86, −2.57); with 200 periods the test rejected 5.1% at 5%. Engle–Granger: 3,000 pairs gave −3.92, −3.36, −3.07 (tables: −3.90, −3.34, −3.04).</li>
+          <li>Spurious regression of independent random walks: 76.3% / 82.0% / 89.3% “significant” at <var>T</var> = 100 / 200 / 500; differenced, 4.6%. The Newey–West standard errors matched a NumPy implementation to ten digits, and equal HC0 with zero lags.</li>
+          <li>Forecast intervals: with the true model order and 100 periods of history, 95% bands covered 94.8% / 92.0% / 91.1% (AR(2)) and 94.6% / 91.1% / 86.1% (AR(1), φ = 0.95) at horizons 1 / 4 / 12; for a random walk, 95.0% / 95.3% / 95.9%.</li>
+          <li>Error correction: with ρ = 0.8 and 200 periods, the mean <var>δ̂</var> was −0.226 (truth −0.20) and <var>γ̂</var> 1.502 (truth 1.5).</li>
+        </ul></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>In an AR(1) with φ = 0.9, what is the autocorrelation at lag 2?</p>
+        <ul class="u-opts"><li><button type="button">0.9</button></li><li><button type="button">0.81</button></li><li><button type="button">1.8</button></li><li><button type="button">0.45</button></li></ul>
+        <details><summary>Show the answer</summary><p>φ<sup><var>k</var></sup> = 0.9² = 0.81.</p></details></li>
+      <li class="u-q" data-a="3"><p>Why can’t you use the usual −1.65 critical value for a Dickey–Fuller test?</p>
+        <ul class="u-opts"><li><button type="button">The test is two-sided</button></li><li><button type="button">The sample is always too small</button></li><li><button type="button">The errors are not normal</button></li><li><button type="button">Under a unit root, the t statistic doesn’t follow a t or normal distribution; its distribution sits further left</button></li></ul>
+        <details><summary>Show the answer</summary><p>With a unit root, the regressor <var>y</var><sub><var>t</var>−1</sub> wanders, and the <var>t</var> statistic has the Dickey–Fuller distribution, with a 5% critical value of about −2.86 (with a constant).</p></details></li>
+      <li class="u-q" data-a="0"><p>What happens to a spurious regression of two independent random walks as the sample gets longer?</p>
+        <ul class="u-opts"><li><button type="button">It rejects “no relation” even more often</button></li><li><button type="button">The problem disappears</button></li><li><button type="button">The slope converges to zero and the test becomes valid</button></li><li><button type="button">The R² goes to zero</button></li></ul>
+        <details><summary>Show the answer</summary><p>The <var>t</var> statistic grows with <var>T</var> (Phillips, 1986): in our simulations, 76% false alarms at 100 periods and 89% at 500.</p></details></li>
+      <li class="u-q" data-a="2"><p>For a random walk with shock standard deviation σ, the standard error of the h-step forecast is…</p>
+        <ul class="u-opts"><li><button type="button">σ, at every horizon</button></li><li><button type="button">hσ</button></li><li><button type="button">σ√h</button></li><li><button type="button">σ/√h</button></li></ul>
+        <details><summary>Show the answer</summary><p><var>h</var> independent shocks add up, so the variance is <var>hσ</var>² and the standard error is <var>σ</var>√<var>h</var>.</p></details></li>
+      <li class="u-q" data-a="1"><p>Two I(1) series are cointegrated. What does that mean?</p>
+        <ul class="u-opts"><li><button type="button">They are independent</button></li><li><button type="button">Each wanders, but some combination of them is stationary, so they can’t drift apart for long</button></li><li><button type="button">Their correlation is exactly 1</button></li><li><button type="button">Their first differences are identical</button></li></ul>
+        <details><summary>Show the answer</summary><p>Cointegration means <var>y</var><sub><var>t</var></sub> − <var>βx</var><sub><var>t</var></sub> is stationary: the series share a common stochastic trend, and the error-correction model describes how gaps close.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), chapters 10 (basic time series regression, trends and seasonality), 11 (stationarity, weak dependence, random walks), 12 (serial correlation and Newey–West standard errors) and 18 (unit roots, spurious regression, cointegration, error correction and forecasting).</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), chapters 15 and 16 (forecasting, autoregressions, nonstationarity and cointegration).</li>
+      <li>J. D. Hamilton, <i>Time Series Analysis</i> (Princeton, 1994), chapters 3 (ARMA processes), 4 (forecasting), 17 (unit roots) and 19 (cointegration).</li>
+      <li>Penn State Eberly College of Science, <a href="https://online.stat.psu.edu/stat510/" target="_blank" rel="noopener">STAT 510: Applied Time Series Analysis</a> (ACF and PACF, ARIMA models, forecasting).</li>
+      <li>G. U. Yule, Why do we sometimes get nonsense-correlations between time-series?, <i>Journal of the Royal Statistical Society</i> 89(1), 1–63 (1926).</li>
+      <li>C. W. J. Granger and P. Newbold, Spurious regressions in econometrics, <i>Journal of Econometrics</i> 2(2), 111–120 (1974). P. C. B. Phillips, Understanding spurious regressions in econometrics, <i>Journal of Econometrics</i> 33(3), 311–340 (1986).</li>
+      <li>D. A. Dickey and W. A. Fuller, Distribution of the estimators for autoregressive time series with a unit root, <i>Journal of the American Statistical Association</i> 74(366), 427–431 (1979).</li>
+      <li>R. F. Engle and C. W. J. Granger, Co-integration and error correction: representation, estimation, and testing, <i>Econometrica</i> 55(2), 251–276 (1987).</li>
+      <li>W. K. Newey and K. D. West, A simple, positive semi-definite, heteroskedasticity and autocorrelation consistent covariance matrix, <i>Econometrica</i> 55(3), 703–708 (1987).</li>
+      <li>G. E. P. Box and G. M. Jenkins, <i>Time Series Analysis: Forecasting and Control</i> (Holden-Day, 1970).</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Spurious_relationship" target="_blank" rel="noopener">Spurious relationship</a>, <a href="https://en.wikipedia.org/wiki/Dickey%E2%80%93Fuller_test" target="_blank" rel="noopener">Dickey–Fuller test</a>, <a href="https://en.wikipedia.org/wiki/Cointegration" target="_blank" rel="noopener">Cointegration</a>, <a href="https://en.wikipedia.org/wiki/Clive_Granger" target="_blank" rel="noopener">Clive Granger</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/time-series/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/time-series/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/time-series/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/time-series/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

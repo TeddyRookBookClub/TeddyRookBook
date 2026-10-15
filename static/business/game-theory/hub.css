@@ -1,0 +1,116 @@
+/* Game Theory course. Part 1: the payoff-matrix look shared by the hub and every chapter (.gth-mx, made by
+   GT.matrixHTML in hub.js). Row player (player 1) gold, column player (player 2) blue, the row payoff first.
+   Part 2: the hub page only (#gth-lab). */
+.lab{--gth-c1:#8a5d00;--gth-c2:#1864ab;--gth-ne:#2f9e6f;--gth-ne-bg:#d9f2e4}
+html[data-theme="dark"] .lab{--gth-c1:#ffd479;--gth-c2:#74c0fc;--gth-ne:#63e6be;--gth-ne-bg:#173c2a}
+.lab .gth-mx{margin:.8rem 0;padding:0;max-width:100%}
+.lab .gth-mx-w{overflow-x:auto;max-width:100%}
+.lab .gth-mx table{border-collapse:separate;border-spacing:5px;margin:0;width:auto;font:600 1rem system-ui,-apple-system,"Segoe UI",sans-serif;display:table}
+.lab .gth-mx th,.lab .gth-mx td{border:0;padding:0}
+.lab .gth-mx td{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.5rem .75rem;text-align:center;min-width:4.6rem;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted);line-height:1.3}
+.lab .gth-mx thead th{color:var(--gth-c2);font:700 .86rem system-ui,sans-serif;padding:.15rem .4rem;text-align:center;white-space:nowrap}
+.lab .gth-mx tbody th{color:var(--gth-c1);font:700 .86rem system-ui,sans-serif;padding:0 .5rem 0 .2rem;text-align:right;white-space:nowrap}
+.lab .gth-mx thead th.gth-p2{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:2px solid var(--gth-c2);padding-bottom:.2rem}
+.lab .gth-mx thead th.gth-p1{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gth-c1);text-align:right;vertical-align:bottom;padding-right:.5rem}
+.lab .gth-mx td.gth-mx-c,.lab .gth-mx.gth-dark td.gth-mx-c{border:0;background:none;box-shadow:none;min-width:0;padding:0}
+.lab .gth-mx .gth-u1{color:var(--gth-c1);font-weight:700}
+.lab .gth-mx .gth-u2{color:var(--gth-c2);font-weight:700}
+.lab .gth-mx .gth-br{text-decoration:underline;text-decoration-thickness:2.5px;text-underline-offset:4px}
+.lab .gth-mx td.gth-ne{background:var(--gth-ne-bg);border-color:var(--gth-ne);box-shadow:inset 0 0 0 1px var(--gth-ne)}
+.lab .gth-mx td.gth-hi{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.lab .gth-mx .gth-x{opacity:.38}
+.lab .gth-mx tr.gth-x th,.lab .gth-mx th.gth-x{text-decoration:line-through;text-decoration-color:#e03131;text-decoration-thickness:2px}
+.lab .gth-mx tr.gth-x td,.lab .gth-mx td.gth-x{background-image:linear-gradient(transparent calc(50% - 1px),rgba(224,49,49,.75) calc(50% - 1px),rgba(224,49,49,.75) calc(50% + 1px),transparent calc(50% + 1px))}
+.lab .gth-mx figcaption{font-size:.84rem;color:var(--muted);margin:.25rem 0 0 .3rem;line-height:1.45;max-width:40rem}
+.lab .gth-mxs{display:flex;flex-wrap:wrap;gap:.4rem 1.6rem;align-items:flex-start}
+.lab .gth-mxs>.gth-mx{margin:.4rem 0}
+/* the same matrix on a dark simulation panel */
+.lab .gth-mx.gth-dark td{background:rgba(255,255,255,.06);border-color:rgba(120,170,200,.22);color:#8fb3c6}
+.lab .gth-mx.gth-dark .gth-u1,.lab .gth-mx.gth-dark tbody th,.lab .gth-mx.gth-dark .gth-p1{color:#ffd479}
+.lab .gth-mx.gth-dark .gth-u2,.lab .gth-mx.gth-dark thead th{color:#74c0fc}
+.lab .gth-mx.gth-dark thead th.gth-p2{border-bottom-color:#74c0fc}
+.lab .gth-mx.gth-dark td.gth-ne{background:rgba(99,230,190,.14);border-color:#63e6be;box-shadow:inset 0 0 0 1px #63e6be}
+.lab .gth-mx.gth-dark figcaption{color:#8fb3c6}
+/* a player swatch for legends */
+.lab .gth-k1,.lab .gth-k2{font-weight:700}
+.lab .gth-k1{color:var(--gth-c1)}.lab .gth-k2{color:var(--gth-c2)}
+
+/* ---------- the hub ---------- */
+#gth-lab .gth-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);gap:1.2rem;align-items:center;padding:1.4rem 1.4rem 1.4rem 1.6rem}
+#gth-lab .gth-hero h1{font-size:2.35rem}
+#gth-lab .gth-hero-text>p:not(.lab-eyebrow){margin:.2rem 0 0}
+#gth-lab .gth-cta{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-top:1rem !important}
+#gth-lab .gth-go{display:inline-flex;align-items:center;min-height:42px;padding:.45rem 1rem;border-radius:12px;background:#ffd479;color:#1d2320;font:700 .95rem system-ui,sans-serif;text-decoration:none;box-shadow:0 3px 12px rgba(0,0,0,.2)}
+#gth-lab .gth-go:hover{background:#ffe3a3}
+#gth-lab .gth-link{color:#f3dfa3;font-weight:600}
+#gth-lab .gth-field{margin:0;background:#06111a;border-radius:14px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+#gth-lab .gth-field canvas{display:block;width:100%;height:310px;touch-action:none;cursor:crosshair}
+#gth-lab .gth-field canvas:focus{outline:none}
+#gth-lab .gth-field canvas:focus-visible{outline:2px solid #63e6be;outline-offset:-2px}
+#gth-lab .gth-field figcaption{display:flex;flex-direction:column;gap:.4rem;padding:.5rem .65rem .6rem;font:600 .8rem system-ui,sans-serif;color:#8fb3c6;border-top:1px solid rgba(120,170,200,.18)}
+#gth-lab .gth-fc-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.4rem .6rem}
+#gth-lab .gth-fc-row button{min-height:36px;min-width:36px;padding:.2rem .65rem;border-radius:999px;border:1px solid rgba(120,170,200,.35);background:#0b1b27;color:#dbe7ef;font:600 .78rem system-ui,sans-serif;cursor:pointer}
+#gth-lab .gth-fc-row button:hover{border-color:#63e6be}
+#gth-lab .gth-fc-row button[aria-pressed="true"]{border-color:#63e6be;color:#63e6be}
+#gth-lab .gth-btns{display:flex;flex-wrap:wrap;gap:.3rem}
+#gth-lab .gth-bfield{display:flex;align-items:center;gap:.5rem;flex:1 1 220px;min-width:0}
+#gth-lab .gth-bfield label{white-space:nowrap}
+#gth-lab .gth-bfield input{flex:1;min-width:0;min-height:36px;margin:0;accent-color:#63e6be}
+#gth-lab .gth-bfield output{color:#ffd479;font:600 .82rem ui-monospace,Menlo,monospace;min-width:2.6rem;text-align:right}
+#gth-lab .gth-legend{display:flex;flex-wrap:wrap;gap:.2rem .8rem;font-weight:500;color:#a9c3d3}
+#gth-lab .gth-legend i{display:inline-block;width:.7rem;height:.7rem;border-radius:2px;margin-right:.3rem;vertical-align:-1px}
+#gth-lab #gth-stat{color:#dbe7ef;font:600 .78rem ui-monospace,Menlo,monospace}
+/* intro */
+#gth-lab .gth-intro{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:1.2rem;align-items:start}
+#gth-lab .gth-intro .gth-mx{margin-top:.2rem}
+#gth-lab .gth-three{font-size:1.06rem}
+/* chapters with levels */
+#gth-lab .gth-levels{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;margin:.4rem 0 .2rem;padding:0;list-style:none;font-size:.88rem}
+#gth-lab .gth-levels li{display:flex;align-items:center;gap:.45rem;margin:0}
+#gth-lab .gth-levels i{display:inline-block;width:1.6rem;height:.45rem;border-radius:4px}
+#gth-lab .gth-lv1{background:#2f9e6f}#gth-lab .gth-lv2{background:#d4a72c}#gth-lab .gth-lv3{background:#c2255c}
+#gth-lab .u-chapters .u-ch{padding-bottom:2.1rem;border-top-width:4px}
+#gth-lab .u-chapters>li:nth-child(-n+4) .u-ch{border-top-color:#2f9e6f}
+#gth-lab .u-chapters>li:nth-child(n+5):nth-child(-n+7) .u-ch{border-top-color:#d4a72c}
+#gth-lab .u-chapters>li:nth-child(n+8) .u-ch{border-top-color:#c2255c}
+#gth-lab .u-chapters .u-ch::after{position:absolute;right:.8rem;bottom:.6rem;font:700 .66rem system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:.12rem .45rem;border-radius:999px;border:1px solid var(--line)}
+#gth-lab .u-chapters>li:nth-child(-n+4) .u-ch::after{content:"Level 1 · Foundations"}
+#gth-lab .u-chapters>li:nth-child(n+5):nth-child(-n+7) .u-ch::after{content:"Level 2 · Dynamics and competition"}
+#gth-lab .u-chapters>li:nth-child(n+8) .u-ch::after{content:"Level 3 · Information, design, evolution"}
+/* big ideas */
+#gth-lab .gth-ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,255px),1fr));gap:.75rem;margin:.6rem 0}
+#gth-lab .gth-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;display:flex;flex-direction:column;gap:.25rem}
+#gth-lab .gth-card p{margin:0;font-size:.9rem;line-height:1.5;color:var(--muted)}
+#gth-lab .gth-card>b{font:700 1.02rem Georgia,serif;color:var(--acc)}
+#gth-lab .gth-card>a{font-size:.85rem;font-weight:600;margin-top:auto;padding-top:.35rem}
+#gth-lab .gth-f{font:1.08rem/1.45 "Cambria Math","STIX Two Math",Georgia,serif;color:var(--ink);padding:.15rem 0 .4rem;border-bottom:1px dashed var(--line);margin-bottom:.3rem;overflow-x:auto;white-space:nowrap}
+#gth-lab .gth-n{display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--soft);color:var(--acc);font:700 .75rem system-ui,sans-serif;margin-right:.35rem;vertical-align:1px}
+/* history */
+#gth-lab .gth-time{list-style:none;margin:.4rem 0 1rem;padding:0 0 0 1.2rem;border-left:3px solid var(--line)}
+#gth-lab .gth-time li{position:relative;margin:0 0 .85rem}
+#gth-lab .gth-time li::before{content:"";position:absolute;left:-1.62rem;top:.3rem;width:.75rem;height:.75rem;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px var(--card)}
+#gth-lab .gth-time li.gth-nobel::before{background:#2f9e6f}
+#gth-lab .gth-time li>b{display:block;font:700 .8rem system-ui,sans-serif;letter-spacing:.08em;color:var(--gt);text-transform:uppercase}
+#gth-lab .gth-time li p{margin:.1rem 0 0}
+#gth-lab .gth-nob{width:100%}
+#gth-lab .gth-nob td:first-child{font-weight:700;white-space:nowrap}
+/* where it shows up, courses */
+#gth-lab .gth-where{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:.75rem;margin:.6rem 0}
+#gth-lab .gth-where>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.8rem .95rem}
+#gth-lab .gth-where h3{display:flex;align-items:center;gap:.5rem;margin:0 0 .3rem;font:700 1.02rem Georgia,serif;color:var(--acc)}
+#gth-lab .gth-where h3 span{font-size:1.45rem}
+#gth-lab .gth-where p{margin:0;font-size:.92rem;line-height:1.55}
+#gth-lab .gth-books{columns:2 320px;column-gap:2rem;padding-left:1.1rem}
+#gth-lab .gth-books li{break-inside:avoid}
+#gth-lab .lab-src{overflow-wrap:anywhere}
+@media (max-width:860px){
+  #gth-lab .gth-hero{grid-template-columns:1fr}
+  #gth-lab .gth-field{order:-1}
+  #gth-lab .gth-hero h1{font-size:1.9rem}
+  #gth-lab .gth-intro{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+  #gth-lab .gth-hero{padding:1.1rem 1rem}
+  #gth-lab .gth-field canvas{height:240px}
+  #gth-lab .u-chapters .u-ch::after{font-size:.6rem}
+}

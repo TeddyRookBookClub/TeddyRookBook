@@ -1,0 +1,48 @@
+/* Game Theory, Chapter 6 (Sequential Games and Backward Induction): only what this page adds to lab.css, unit.css and ../hub.css. */
+#gt6-lab .lab-view canvas{cursor:pointer}
+#gt6-lab .lab-view canvas:focus{outline:none}
+#gt6-lab .lab-view canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:14px}
+#gt6-lab .lab-tools button{min-width:36px;min-height:36px}
+#gt6-lab .lab-tools .gt6-go{width:auto;padding:0 .8rem;font:600 .88rem system-ui,sans-serif;border-color:var(--sim-acc);background:rgba(18,58,51,.92);color:#fff}
+#gt6-lab .lab-tools button:disabled{opacity:.4}
+#gt6-lab .lab-seg button{min-height:36px}
+#gt6-lab .lab-field input[type=range]{min-height:36px;margin:0}
+#gt6-lab .lab-btn{min-height:38px}
+#gt6-lab .lab-missions li button{min-height:36px;padding:.3rem .85rem}
+#gt6-lab .lab-readout dd{white-space:nowrap}
+#gt6-lab .gt6-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#gt6-lab #gt6-edit{display:flex;flex-direction:column;gap:.4rem;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.55rem .6rem}
+#gt6-lab #gt6-edit .lab-small{margin:0}
+#gt6-lab .gt6-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;font-size:.85rem}
+#gt6-lab .gt6-row input{font:inherit;width:7rem;min-height:36px;padding:0 .45rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-sizing:border-box}
+#gt6-lab .gt6-row input[type=number]{width:5rem}
+#gt6-lab .gt6-row .lab-seg{flex-wrap:nowrap}
+#gt6-lab .gt6-sfbox{margin:.2rem 0 0}
+#gt6-lab .gt6-sfbox .gth-mx td{cursor:pointer}
+#gt6-lab .gt6-sfbox .gth-mx td:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+#gt6-lab .lab-sec .lab-stage{margin:1rem 0}
+#gt6-lab .gt6-board{background:var(--sim);color:var(--sim-ink);border-radius:14px;padding:.9rem 1rem 1rem;display:flex;flex-direction:column;gap:.6rem;min-width:0}
+#gt6-lab .gt6-board p{margin:0;font-size:.93rem;line-height:1.5}
+#gt6-lab .gt6-board .lab-field>span{color:#a9c3d3}
+#gt6-lab .gt6-board .lab-field>span output{color:#fff}
+#gt6-lab .gt6-board .lab-btn{background:#0b1b27;color:#dbe7ef;border-color:rgba(120,170,200,.4)}
+#gt6-lab .gt6-board .lab-btn.pri{background:#2f9e6f;border-color:#2f9e6f;color:#fff}
+#gt6-lab .gt6-board .lab-btn:disabled{opacity:.4}
+#gt6-lab .gt6-board input[type=range]{accent-color:#63e6be}
+#gt6-lab .gt6-big{font-size:1.15rem;color:#ffd479}
+#gt6-lab #gt6u-res{min-height:3em;color:#dbe7ef}
+#gt6-lab .gt6-chart{position:relative;height:190px;border-radius:10px;overflow:hidden}
+#gt6-lab .gt6-chart canvas{position:absolute;inset:0;width:100%;height:100%}
+#gt6-lab .gt6-piles{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+#gt6-lab .gt6-piles div{background:rgba(255,255,255,.05);border-radius:10px;padding:.5rem .6rem;text-align:center}
+#gt6-lab .gt6-piles span{display:block;font-size:.75rem;color:#8fb3c6;text-transform:uppercase;letter-spacing:.08em}
+#gt6-lab .gt6-piles b{font:700 1.4rem system-ui,sans-serif;color:#ffd479}
+#gt6-lab .gt6-st{height:440px;min-height:0;touch-action:none}
+@media (max-width:860px){#gt6-lab .lab-view{height:min(66vh,560px);min-height:440px}#gt6-lab .gt6-st{height:440px}}
+@media (max-width:600px){#gt6-lab .gt6-st{height:620px}#gt6-lab .lab-toast{font-size:.8rem;max-width:80%;padding:.4rem .7rem;top:3.2rem}}
+@media (min-width:861px){#gt6-lab .lab-stage>.lab-view{position:sticky;top:.8rem}}
+@media (min-width:700px){#gt6-lab .lab-view .lab-toast{left:auto;right:9rem;transform:translateY(-10px);max-width:46%}#gt6-lab .lab-view .lab-toast.on{transform:translateY(0)}}
+#gt6-lab .gt6-board .lab-readout dt{color:#8fb3c6}
+#gt6-lab .gt6-board .lab-readout dd{color:#dbe7ef}
+#gt6-lab .gt6-board .lab-seg button{background:#0b1b27;color:#dbe7ef;border-color:rgba(120,170,200,.35)}
+#gt6-lab .gt6-board .lab-seg button[aria-pressed="true"]{background:rgba(99,230,190,.12);border-color:#63e6be;color:#63e6be}

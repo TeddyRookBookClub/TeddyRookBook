@@ -1,0 +1,271 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/econometrics/instrumental-variables/sim.css" | relURL }}?v={{ (os.Stat "static/business/econometrics/instrumental-variables/sim.css").ModTime.Unix }}">
+<div class="lab" id="ec10-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Econometrics · Chapter 10</p>
+    <h1>{{ .Title }}</h1>
+    <p>Chapter 6 left us stuck: schooling is tangled with ability, and ability is never in the data. The way out is a variable that nudges schooling but has nothing else to do with pay. The economist David Card used whether people grew up near a four-year college. Here you’ll run that idea in a world where you know the truth: watch OLS miss and two-stage least squares find the answer, then weaken the instrument until 2SLS scatters wildly, and break its key assumption to see how badly a bad instrument can mislead.</p>
+    <span class="lab-mark" aria-hidden="true">🎻</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view ec10-tall" id="ec10-view">
+      <canvas id="ec10-cv" tabindex="0" aria-label="Top left: a causal diagram with the instrument Z (grew up near a college), schooling S, log wage Y and unobserved ability A; arrow widths show the slider values, and a red dashed arrow from Z to Y appears when the exclusion restriction is broken. Top right: this sample’s OLS and 2SLS estimates with 95% intervals against the true return of 0.08, and a first-stage F gauge. Bottom: histograms of the OLS and 2SLS estimates over 1,000 samples. Keys: up and down arrows change instrument strength, left and right the direct effect, N new sample, M runs 1,000 samples."></canvas>
+      <div class="lab-tools">
+        <button type="button" id="ec10-new2" aria-label="Draw a new sample" title="New sample (N)">🎲</button>
+        <button type="button" id="ec10-mc2" aria-label="Run 1,000 samples" title="Run 1,000 samples (M)">▶</button>
+        <button type="button" id="ec10-reset" aria-label="Reset" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3>The world</h3>
+      <div class="lab-seg" role="group" aria-label="Ready-made worlds" id="ec10-pre">
+        <button type="button" data-pre="card" aria-pressed="true">Card-like</button>
+        <button type="button" data-pre="strong" aria-pressed="false">Strong</button>
+        <button type="button" data-pre="weak" aria-pressed="false">Weak</button>
+        <button type="button" data-pre="invalid" aria-pressed="false">Invalid</button>
+        <button type="button" data-pre="clean" aria-pressed="false">No confounding</button>
+      </div>
+      <div class="lab-field"><span><label for="ec10-pi">Instrument strength π (extra school near a college)</label><output id="ec10-pi-o" for="ec10-pi"></output></span><input type="range" id="ec10-pi" min="0" max="1.5" step="0.02" value="0.32"></div>
+      <div class="lab-field"><span><label for="ec10-g">Ability’s pull on schooling γ</label><output id="ec10-g-o" for="ec10-g"></output></span><input type="range" id="ec10-g" min="0" max="2.5" step="0.1" value="1.2"></div>
+      <div class="lab-field"><span><label for="ec10-d">Direct effect of the instrument on wages δ</label><output id="ec10-d-o" for="ec10-d"></output></span><input type="range" id="ec10-d" min="0" max="0.06" step="0.002" value="0"></div>
+      <div class="lab-field"><span><label for="ec10-n">Sample size</label><output id="ec10-n-o" for="ec10-n"></output></span><input type="range" id="ec10-n" min="0" max="4" step="1" value="3"></div>
+      <div class="lab-row"><button type="button" class="lab-btn" id="ec10-new">🎲 New sample</button><button type="button" class="lab-btn pri" id="ec10-mc">▶ Run 1,000 samples</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ec10-read"></dl>
+      <p class="ec10-sr" id="ec10-say" aria-live="polite"></p>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="ec10-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The causal story.</b> In this simulated world, a year of school truly raises log wages by 0.08 (about 8%). Ability (A, never observed) raises both schooling and wages, which is what fools OLS. Growing up near a college (Z) adds π years of school on average, and, as long as the red dashed arrow is absent, affects wages only through schooling. Arrow widths follow the sliders.</p>
+      <p><b>This sample.</b> One data set of the size you choose: the OLS and 2SLS estimates with their 95% intervals, against the gold truth. The gauge shows the first-stage <var>F</var> statistic, which measures how clearly the instrument moves schooling, with marks at the classic rule of thumb (10) and at 104.7, a stricter modern threshold explained below.</p>
+      <p><b>Many samples.</b> “Run 1,000 samples” redraws the world a thousand times. OLS (pink) forms a tall, narrow pile in the wrong place: precise and biased. 2SLS (green) is wider but centered on the truth when the instrument is strong and valid. Weaken or break the instrument and watch the green pile.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="endog">
+    <h2>Endogeneity: when the regressor is tangled with the error</h2>
+    <p>OLS needs the regressor to be uncorrelated with the error: Cov(<var>x</var>, <var>u</var>) = 0. A regressor that violates this is called <b>endogenous</b>, and OLS is then biased and inconsistent: more data won’t help. There are three classic sources:</p>
+    <div class="u-key">
+      <div><b>Omitted variables</b><p>Something in <var>u</var> (ability, motivation, family background) moves with <var>x</var>. Chapter 6.</p></div>
+      <div><b>Measurement error</b><p>A noisy <var>x</var> carries its error into <var>u</var>, attenuating the slope. Chapter 9.</p></div>
+      <div><b>Simultaneity</b><p><var>x</var> and <var>y</var> cause each other. Price and quantity are set together by supply and demand; cities with more crime hire more police.</p></div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="iv">
+    <h2>Instruments and the IV estimator</h2>
+    <div class="lab-cols">
+      <div>
+        <p>An <b>instrumental variable</b> <var>z</var> for the endogenous <var>x</var> in <var>y</var> = β₀ + β₁<var>x</var> + <var>u</var> must satisfy two conditions:</p>
+        <ol>
+          <li><b>Relevance:</b> Cov(<var>z</var>, <var>x</var>) ≠ 0. The instrument moves <var>x</var>. You can test this with the first-stage regression of <var>x</var> on <var>z</var>.</li>
+          <li><b>Exogeneity (the exclusion restriction):</b> Cov(<var>z</var>, <var>u</var>) = 0. The instrument is unrelated to everything else that drives <var>y</var>, and affects <var>y</var> only through <var>x</var>. With one instrument, this can’t be tested from the data; it has to be argued.</li>
+        </ol>
+        <p>Take the covariance of both sides of the model with <var>z</var>: Cov(<var>z</var>, <var>y</var>) = β₁Cov(<var>z</var>, <var>x</var>) + Cov(<var>z</var>, <var>u</var>). If the last term is zero,</p>
+      </div>
+      <div>
+        <div class="u-big">β₁ = Cov(<var>z</var>, <var>y</var>) / Cov(<var>z</var>, <var>x</var>) &nbsp;⟹&nbsp; β̂<sub>IV</sub> = Σ(<var>z</var><sub><var>i</var></sub> − <var>z̄</var>)(<var>y</var><sub><var>i</var></sub> − <var>ȳ</var>) / Σ(<var>z</var><sub><var>i</var></sub> − <var>z̄</var>)(<var>x</var><sub><var>i</var></sub> − <var>x̄</var>)<small>the effect of <var>z</var> on <var>y</var>, divided by the effect of <var>z</var> on <var>x</var></small></div>
+        <p><b>The Wald estimator.</b> With a yes-or-no instrument this becomes a ratio of differences in group averages:</p>
+        <div class="lab-formula">β̂<sub>IV</sub> = (<var>ȳ</var>₁ − <var>ȳ</var>₀) / (<var>x̄</var>₁ − <var>x̄</var>₀)</div>
+        <p>If growing up near a college raises wages by 2.56% and schooling by 0.32 years, and does nothing else, each year of schooling must be worth 2.56/0.32 = 8%.</p>
+        <p><b>If exclusion fails.</b> With a direct effect δ of the instrument on <var>y</var>, the IV estimate heads to β₁ + δ/π, where π is the instrument’s effect on <var>x</var>. A weak instrument (small π) magnifies even a tiny violation.</p>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: Card’s college-proximity estimate</b>
+      <p>David Card (1995) studied 3,010 men from the National Longitudinal Survey of Young Men, with wages measured in 1976. He used whether a man grew up near a four-year college as an instrument for his years of schooling, with controls for experience, race, region and other factors. As reported in Wooldridge’s textbook (Example 15.4):</p>
+      <ul>
+        <li>First stage: growing up near a college went with about 0.32 more years of school, with a <var>t</var> statistic of about 3.6 (so <var>F</var> ≈ 13).</li>
+        <li>OLS return to a year of school: about 0.075. IV return: about 0.132, with a standard error of about 0.055, so the 95% interval runs from about 0.024 to 0.240.</li>
+      </ul>
+      <p>Two lessons. The IV estimate is much less precise than OLS, as mission “The price of IV” shows. And it came out <i>larger</i> than OLS, the opposite of simple ability bias. One explanation, discussed by Card himself in a 2001 survey, is that IV measures the return for the people whose schooling the instrument moves, who may have had unusually high returns (see local average treatment effects below).</p>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Press “Card-like” and run 1,000 samples. The pink OLS pile sits near 0.128, the green 2SLS pile is centered on 0.080 but far wider, and the first stage clears <var>F</var> = 10 in roughly nine samples out of ten. Then press “No confounding” and run again: now OLS is right too, and much more precise.</div>
+  </section>
+
+  <section class="lab-sec" id="tsls">
+    <h2>Two-stage least squares, step by step</h2>
+    <div class="lab-cols">
+      <p>With extra exogenous controls <var>w</var>, or more than one instrument, IV generalizes to <b>two-stage least squares</b>. Stage 1: regress the endogenous <var>x</var> on all instruments and all exogenous controls, and save the fitted values <var>x̂</var>. Stage 2: regress <var>y</var> on <var>x̂</var> and the controls. With one instrument and one endogenous regressor, 2SLS equals the IV estimator above.</p>
+      <div class="lab-formula">Stage 1: <var>x</var> = π₀ + π₁<var>z</var> + π₂<var>w</var> + <var>v</var> &nbsp;→&nbsp; <var>x̂</var> &nbsp;&nbsp;&nbsp; Stage 2: <var>y</var> = β₀ + β₁<var>x̂</var> + β₂<var>w</var> + error</div>
+      <p>The idea: <var>x̂</var> keeps only the variation in <var>x</var> that comes from the instrument, which is clean, and throws away the part tangled with <var>u</var>. Don’t compute the standard errors from the second-stage OLS output, though: its residuals use <var>x̂</var> rather than <var>x</var>. Software that does 2SLS in one command gets them right.</p>
+    </div>
+    <div class="lab-stage" id="ec10b">
+      <div class="lab-view ec10-mid" id="ec10b-view">
+        <canvas id="ec10b-cv" tabindex="0" aria-label="An animated walk through two-stage least squares for 400 simulated people: the biased OLS line; schooling against the instrument; schooling replaced by its fitted value; the second-stage line through the two group averages; and the difference between the by-hand and correct standard errors. Left and right arrow keys step backward and forward."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Step through it</h3>
+        <div class="lab-row"><button type="button" class="lab-btn" id="ec10b-prev">◀ Back</button><button type="button" class="lab-btn pri" id="ec10b-next">Next ▶</button><button type="button" class="lab-btn" id="ec10b-new">🎲 New people</button></div>
+        <p class="ec10-step" id="ec10b-say" aria-live="polite"></p>
+        <dl class="lab-readout" id="ec10b-read"></dl>
+        <p class="lab-small">Uses the main simulation’s settings with 400 people and an instrument strength of at least 1 year.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="weak">
+    <h2>Weak instruments</h2>
+    <div class="lab-cols">
+      <div>
+        <p>When the instrument barely moves <var>x</var>, the denominator Cov(<var>z</var>, <var>x</var>) is small and noisy, and 2SLS behaves badly in three ways you can see in the simulation:</p>
+        <ul>
+          <li>its sampling distribution is wide, with long tails: occasional estimates are far off;</li>
+          <li>its center drifts toward the OLS estimate, so it is biased in the same direction as OLS;</li>
+          <li>its usual standard errors and <var>t</var> tests can’t be trusted. In this simulation weak instruments gave intervals so wide they almost always covered the truth while telling you little; in other settings, with stronger endogeneity, they cover far less than 95%.</li>
+        </ul>
+        <p>John Bound, David Jaeger and Regina Baker (1995) made the problem famous. They revisited a quarter-of-birth study that used many instruments, each weak, and showed that instruments made of random numbers, with no real link to schooling, produced estimates close to the original ones.</p>
+      </div>
+      <div>
+        <p><b>The first-stage F rule and its limits.</b> The first-stage <var>F</var> statistic tests whether the excluded instruments matter in stage 1. Be careful with the famous cutoff:</p>
+        <ul>
+          <li>Douglas Staiger and James Stock (1997) suggested treating a first-stage <var>F</var> below 10 as a sign of weak instruments. This became the standard rule of thumb.</li>
+          <li>Stock and Motohiro Yogo (2005) tabulated sharper cutoffs. With one endogenous regressor and one instrument, the <var>F</var> must exceed 16.38 for a nominal 5% test to reject a true hypothesis no more than 10% of the time.</li>
+          <li>David Lee, Justin McCrary, Marcelo Moreira and Jack Porter (2022) showed that with one instrument, the usual 5% <var>t</var> test only has a true 5% size if <var>F</var> exceeds 104.7, unless you use their adjusted critical values.</li>
+          <li>With heteroskedastic or clustered errors, the classic <var>F</var> is the wrong measure; use the “effective <var>F</var>” of José Luis Montiel Olea and Carolin Pflueger (2013). The Anderson–Rubin test (1949) stays valid however weak the instrument.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: a small leak, magnified</b>
+      <p>Suppose growing up near a college also raises wages directly by 1% (δ = 0.01), perhaps because colleges are in cities with higher pay. With a strong instrument, π = 1 year, 2SLS heads to 0.08 + 0.01/1 = 0.09: off by 0.01. With π = 0.2 years, it heads to 0.08 + 0.01/0.2 = <b>0.13</b>, off by 0.05, worse than OLS in this world. The “Small leak, weak pipe” mission shows exactly this.</p>
+    </div>
+    <div class="u-myth"><b>Common mistake: “The first stage is strong, so the instrument is good”</b>
+      <p>A strong first stage proves relevance, nothing more. Exogeneity is a separate claim that the first stage can’t check. In the “Invalid” world the first-stage <var>F</var> is about 50, and 2SLS still misses by more than OLS. The second mistake is the reverse: thinking any instrument beats OLS. A weak or slightly invalid instrument can produce an estimate that is both noisier and more biased than the OLS it replaced.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="more">
+    <h2>More instruments, endogeneity tests and overidentification</h2>
+    <div class="lab-cols">
+      <p><b>Testing for endogeneity.</b> If <var>x</var> is in fact exogenous, OLS and 2SLS estimate the same thing and OLS is more precise. A Hausman-type test compares them. The regression version: add the first-stage residual <var>v̂</var> to the structural equation; if its coefficient is significant, <var>x</var> is endogenous.</p>
+      <p><b>Overidentification.</b> With more instruments than endogenous regressors, each instrument alone would give its own IV estimate; if all are valid, they should agree up to sampling error. The Sargan test (1958), or Hansen’s <var>J</var> test (1982) with robust errors, regresses the 2SLS residuals on all exogenous variables: <var>n</var>·<var>R</var>² is χ² with (number of instruments − number of endogenous regressors) degrees of freedom. Passing doesn’t prove validity: if all the instruments are wrong in the same way, they will still agree.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="late">
+    <h2>A first look at local average treatment effects</h2>
+    <p>So far the effect of school was the same for everyone. If effects differ across people, what does IV estimate? Guido Imbens and Joshua Angrist (1994) gave the answer for a yes-or-no instrument and treatment. Sort people by how their treatment responds to the instrument:</p>
+    <div class="lab-tw"><table class="lab-table ec10-late">
+      <thead><tr><th>Type</th><th>Treated if <var>z</var> = 0?</th><th>Treated if <var>z</var> = 1?</th><th>Example (college near home)</th></tr></thead>
+      <tbody>
+        <tr><th>Always-takers</th><td>yes</td><td>yes</td><td>go to college wherever they live</td></tr>
+        <tr><th>Never-takers</th><td>no</td><td>no</td><td>never go, wherever they live</td></tr>
+        <tr class="ec10-on"><th>Compliers</th><td>no</td><td>yes</td><td>go only if a college is close by</td></tr>
+        <tr><th>Defiers</th><td>yes</td><td>no</td><td>go only if a college is <i>not</i> close (assumed not to exist)</td></tr>
+      </tbody>
+    </table></div>
+    <div class="lab-cols">
+      <p>The instrument changes the treatment only for compliers. With a valid instrument and no defiers (“monotonicity”), the Wald ratio equals the <b>local average treatment effect (LATE)</b>: the average effect for compliers. It is not the average effect for everyone. That is why different valid instruments can give different answers: each one has its own compliers.</p>
+      <p>In Card’s data the compliers are people who went further in school because a college was nearby. If they came from families with fewer resources, and gained more from extra schooling, the LATE can exceed the average return in the population: one explanation for IV coming out above OLS.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history and famous studies</h2>
+    <div class="lab-cols">
+      <p><b>Origins.</b> The first instrumental-variables estimator appeared in 1928, in Appendix B of Philip G. Wright’s book <i>The Tariff on Animal and Vegetable Oils</i>, to estimate supply and demand curves for butter and flaxseed. Whether Philip or his son, the geneticist Sewall Wright, wrote the appendix was debated; James Stock and Francesco Trebbi (2003) used the writing style to argue that Philip did. Olav Reiersøl and R. C. Geary developed the method in the 1940s; Henri Theil and Robert Basmann introduced two-stage least squares in the 1950s, and Denis Sargan his overidentification test in 1958.</p>
+      <p><b>Quarter of birth.</b> Joshua Angrist and Alan Krueger (1991) noticed that U.S. compulsory-schooling laws let students leave at a fixed age, usually 16. Children born early in the year start school older, so they reach that age having completed slightly less school. Using hundreds of thousands of men from the 1970 and 1980 censuses, they found small differences in schooling by quarter of birth and IV returns to schooling close to the OLS ones. Bound, Jaeger and Baker’s 1995 critique of the many-instrument versions launched the weak-instruments literature.</p>
+      <p><b>College proximity.</b> David Card’s 1995 study, described above, became a standard textbook example, with its data distributed with Wooldridge’s textbook.</p>
+      <p><b>Recognition.</b> The 2021 Nobel memorial prize in economics went half to David Card and half jointly to Joshua Angrist and Guido Imbens, the latter two for their methodological contributions to the analysis of causal relationships, including the LATE framework.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where it shows up</h2>
+    <div class="lab-cols">
+      <p><b>Demand and pricing.</b> Price and quantity are set together, so regressing quantity on price mixes supply and demand. Wright’s fix was to find a supply shifter that doesn’t shift demand. In a well-known study of New York’s Fulton Fish Market, Joshua Angrist, Kathryn Graddy and Guido Imbens (2000) used stormy weather at sea, which cuts the catch, as an instrument for the price of fish.</p>
+      <p><b>Experiments with imperfect compliance.</b> When a company randomly offers a new feature or discount and only some customers take it, the random offer is a perfect instrument for actually using it, and the Wald ratio gives the effect on compliers. Lottery-based studies use the same logic, such as Angrist’s 1990 study of the Vietnam-era draft lottery.</p>
+      <p><b>Health.</b> Mark McClellan, Barbara McNeil and Joseph Newhouse (1994) used how much closer a heart-attack patient lived to a hospital offering intensive treatment as an instrument for receiving it.</p>
+      <p><b>Policy.</b> Rainfall for farm income, distance for access, judges’ assignment for sentences, birth timing for schooling: much of modern applied economics is the search for credible instruments, and the debate over whether each one truly satisfies the exclusion restriction.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol class="ec10-prac">
+      <li><p><span class="ec10-lvl">Warm-up</span> People who won a scholarship lottery got on average 0.5 more years of school and earn 4% more than lottery losers. If the lottery affects earnings only through schooling, what is the implied return to a year of school?</p>
+        <details><summary>Show the answer</summary><div><p>Wald ratio: 0.04/0.5 = 0.08, or 8% per year, for the people whose schooling the lottery changed.</p></div></details></li>
+      <li><p><span class="ec10-lvl">Warm-up</span> Which condition for a valid instrument can you test with a regression, and which can’t you?</p>
+        <details><summary>Show the answer</summary><div><p>Relevance (Cov(<var>z</var>, <var>x</var>) ≠ 0) is tested with the first stage. Exogeneity (Cov(<var>z</var>, <var>u</var>) = 0) can’t be tested with a single instrument; it rests on argument and institutional knowledge.</p></div></details></li>
+      <li><p><span class="ec10-lvl">Core</span> A first-stage regression with one instrument gives π̂ = 0.25 with a standard error of 0.10. What is the first-stage <var>F</var>? Is the instrument weak by the rule of thumb? By the Stock–Yogo 10% size criterion?</p>
+        <details><summary>Show the answer</summary><div><p>With one instrument <var>F</var> = <var>t</var>² = (0.25/0.10)² = 6.25. That is below 10, so weak by the rule of thumb, and well below Stock and Yogo’s 16.38. Report weak-instrument-robust inference such as an Anderson–Rubin interval.</p></div></details></li>
+      <li><p><span class="ec10-lvl">Core</span> The instrument raises the treatment by π = 0.4 and has a small direct effect on the outcome of δ = 0.02. The true effect is 0.10. Where does the IV estimate head in large samples? What if π = 0.1?</p>
+        <details><summary>Show the answer</summary><div><p>β₁ + δ/π = 0.10 + 0.02/0.4 = 0.15. With π = 0.1: 0.10 + 0.2 = 0.30, three times the truth.</p></div></details></li>
+      <li><p><span class="ec10-lvl">Core</span> A company randomly emails a discount code to half its customers. 30% of those emailed use the code, and 2% of the others use it anyway (shared codes). Average spending is $4.20 higher in the emailed group. What is the effect of using the code, and for whom?</p>
+        <details><summary>Show the answer</summary><div><p>Wald: $4.20 / (0.30 − 0.02) = $4.20 / 0.28 = <b>$15.00</b> per user. It is the average effect for compliers: customers who used the code because they were emailed. The 2% who use it either way are always-takers.</p></div></details></li>
+      <li><p><span class="ec10-lvl">Challenge</span> Show that the IV estimator with a single binary instrument equals the Wald ratio (<var>ȳ</var>₁ − <var>ȳ</var>₀)/(<var>x̄</var>₁ − <var>x̄</var>₀).</p>
+        <details><summary>Show the answer</summary><div><p>Let <var>n</var>₁ observations have <var>z</var> = 1 and <var>n</var>₀ have <var>z</var> = 0, with <var>p</var> = <var>n</var>₁/<var>n</var>. Then Σ(<var>z</var><sub><var>i</var></sub> − <var>z̄</var>)(<var>y</var><sub><var>i</var></sub> − <var>ȳ</var>) = Σ(<var>z</var><sub><var>i</var></sub> − <var>p</var>)<var>y</var><sub><var>i</var></sub> = (1 − <var>p</var>)<var>n</var>₁<var>ȳ</var>₁ − <var>p</var><var>n</var>₀<var>ȳ</var>₀ = <var>n</var><var>p</var>(1 − <var>p</var>)(<var>ȳ</var>₁ − <var>ȳ</var>₀), using <var>n</var>₁ = <var>np</var> and <var>n</var>₀ = <var>n</var>(1 − <var>p</var>). The same steps give <var>np</var>(1 − <var>p</var>)(<var>x̄</var>₁ − <var>x̄</var>₀) for the denominator. The common factor cancels.</p></div></details></li>
+      <li><p><span class="ec10-lvl">Challenge</span> You run 2SLS by hand: regress <var>x</var> on <var>z</var>, save <var>x̂</var>, regress <var>y</var> on <var>x̂</var>. The slope is right. Why is the reported standard error wrong, and how do you fix it?</p>
+        <details><summary>Show the answer</summary><div><p>The second-stage OLS computes σ̂² from <var>y</var> − β̂₀ − β̂₁<var>x̂</var>. The structural error is <var>y</var> − β₀ − β₁<var>x</var>, so σ̂² should use <var>x</var>, not <var>x̂</var>. Recompute σ̂² with <var>x</var> and use Var(β̂₁) = σ̂²/[SST<sub><var>x</var></sub> <var>R</var>²<sub><var>x</var>,<var>z</var></sub>], or simply use a 2SLS command. In the step-by-step demo the by-hand standard error is noticeably off.</p></div></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="how">
+    <h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>The world.</b> Half the people grew up near a college (<var>Z</var> = 1). Ability <var>a</var> is standard normal. Schooling = 12.5 + π<var>Z</var> + γ<var>a</var> + 1.5<var>v</var>. Log wage = 1.2 + 0.08·schooling + 0.15<var>a</var> + δ<var>Z</var> + 0.25<var>u</var>, with <var>u</var> and <var>v</var> standard normal. The data are simulated with a known truth; the numbers are chosen to resemble a study like Card’s (a first stage of about 0.32 years with 3,000 people gives a first-stage <var>F</var> near 20), not taken from it. In this world OLS heads to 0.08 + 0.15γ/Var(schooling) and 2SLS to 0.08 + δ/π.</p>
+      <p><b>The estimates.</b> OLS, IV (2SLS) and the first-stage <var>F</var> use the textbook formulas with homoskedastic standard errors and 95% intervals of ±1.96 standard errors. The step-by-step demo uses the shared statistics library’s two-stage least squares on 400 people, with an instrument strength of at least 1 year so each step is visible.</p>
+      <div>
+        <p><b>How it was checked</b> (node tests, 2,000 samples per case, all passed):</p>
+        <ul class="lab-small">
+          <li>OLS, the 2SLS coefficient and standard error, the first-stage <var>F</var>, the Wald ratio and the by-hand two-step slope all matched the shared library’s 2SLS to 5 × 10⁻¹¹.</li>
+          <li>Strong instrument (π = 1, <var>n</var> = 3,000): 2SLS median 0.0798, OLS median 0.1257 (formula 0.1257); 2SLS intervals covered 95.3%, OLS ones 0%.</li>
+          <li>Card-like (π = 0.32): 2SLS median 0.0793, <var>F</var> &gt; 10 in 91.5% of samples, coverage 96.6%. Weak (π = 0.1): median <var>F</var> 2.1, 2SLS median 0.0887 with an interquartile range of 0.149 (OLS: 0.0036). Very weak (π = 0.05): median 0.112, two-thirds of the way to OLS.</li>
+          <li>Invalid (δ = 0.03, π = 0.5): 2SLS median 0.1402 against the formula’s 0.1400, with 17.8% coverage despite a median <var>F</var> of 51.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="2"><p>A valid instrument must be…</p>
+        <ul class="u-opts"><li><button type="button">correlated with the outcome and with the error</button></li><li><button type="button">uncorrelated with the endogenous regressor</button></li><li><button type="button">correlated with the endogenous regressor and uncorrelated with the error</button></li></ul>
+        <details><summary>Show the answer</summary><p>Relevance and exogeneity. It will be correlated with the outcome too, but only through the regressor.</p></details></li>
+      <li class="u-q" data-a="0"><p>Living near a college raises schooling by 0.4 years and log wages by 0.03. The IV estimate of the return to schooling is…</p>
+        <ul class="u-opts"><li><button type="button">0.075</button></li><li><button type="button">0.012</button></li><li><button type="button">0.43</button></li></ul>
+        <details><summary>Show the answer</summary><p>0.03/0.4 = 0.075.</p></details></li>
+      <li class="u-q" data-a="1"><p>With a weak instrument, 2SLS estimates tend to be…</p>
+        <ul class="u-opts"><li><button type="button">precise and unbiased</button></li><li><button type="button">widely spread and biased toward OLS</button></li><li><button type="button">exactly equal to OLS</button></li></ul>
+        <details><summary>Show the answer</summary><p>A small, noisy first stage makes 2SLS imprecise, and in finite samples its center is pulled toward the OLS estimate.</p></details></li>
+      <li class="u-q" data-a="2"><p>The first-stage F is 45. What can you conclude?</p>
+        <ul class="u-opts"><li><button type="button">The instrument is valid</button></li><li><button type="button">The exclusion restriction holds</button></li><li><button type="button">The instrument is not weak, but its validity still has to be argued</button></li></ul>
+        <details><summary>Show the answer</summary><p>F speaks only to relevance. (For a 5% <var>t</var> test to be exactly 5% with one instrument, Lee and coauthors put the bar at 104.7.)</p></details></li>
+      <li class="u-q" data-a="0"><p>With heterogeneous effects, a binary instrument and no defiers, IV estimates…</p>
+        <ul class="u-opts"><li><button type="button">the average effect for compliers</button></li><li><button type="button">the average effect for everyone</button></li><li><button type="button">the effect for always-takers</button></li></ul>
+        <details><summary>Show the answer</summary><p>The local average treatment effect: the instrument only changes compliers’ treatment, so only their effect shows up in the Wald ratio.</p></details></li>
+      <li class="u-q" data-a="1"><p>OLS and 2SLS give nearly the same estimate, but 2SLS has a standard error five times larger. If you are confident the regressor is exogenous, which should you report?</p>
+        <ul class="u-opts"><li><button type="button">2SLS, always</button></li><li><button type="button">OLS: it is consistent and more precise; a Hausman-type test can check the exogeneity claim</button></li><li><button type="button">Neither</button></li></ul>
+        <details><summary>Show the answer</summary><p>IV buys consistency under endogeneity at a big cost in precision. If the regressor is exogenous, OLS is better.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>J. M. Wooldridge, <i>Introductory Econometrics: A Modern Approach</i>, 7th ed. (Cengage, 2020), Chapter 15 (Instrumental Variables Estimation and Two-Stage Least Squares), including Example 15.4 on college proximity, testing for endogeneity and overidentifying restrictions.</li>
+      <li>J. H. Stock and M. W. Watson, <i>Introduction to Econometrics</i>, 4th ed. (Pearson, 2019), Chapter 12 (Instrumental Variables Regression).</li>
+      <li>J. D. Angrist and J.-S. Pischke, <i>Mostly Harmless Econometrics</i> (Princeton University Press, 2009), Chapter 4 (Instrumental Variables in Action), including the LATE theorem and weak instruments.</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-387-applied-econometrics-mostly-harmless-big-data-fall-2014/" target="_blank" rel="noopener">14.387 Applied Econometrics: Mostly Harmless Big Data (Fall 2014)</a>.</li>
+      <li>D. Card, “Using Geographic Variation in College Proximity to Estimate the Return to Schooling,” in L. N. Christofides, E. K. Grant and R. Swidinsky, eds., <i>Aspects of Labour Market Behaviour: Essays in Honour of John Vanderkamp</i> (University of Toronto Press, 1995). D. Card, “Estimating the Return to Schooling: Progress on Some Persistent Econometric Problems,” <i>Econometrica</i> 69(5), 2001, 1127–1160.</li>
+      <li>J. D. Angrist and A. B. Krueger, “Does Compulsory School Attendance Affect Schooling and Earnings?” <i>Quarterly Journal of Economics</i> 106(4), 1991, 979–1014. J. Bound, D. A. Jaeger and R. M. Baker, “Problems with Instrumental Variables Estimation When the Correlation Between the Instruments and the Endogenous Explanatory Variable Is Weak,” <i>Journal of the American Statistical Association</i> 90, 1995, 443–450.</li>
+      <li>D. Staiger and J. H. Stock, “Instrumental Variables Regression with Weak Instruments,” <i>Econometrica</i> 65(3), 1997, 557–586. J. H. Stock and M. Yogo, “Testing for Weak Instruments in Linear IV Regression,” in D. W. K. Andrews and J. H. Stock, eds., <i>Identification and Inference for Econometric Models</i> (Cambridge University Press, 2005). D. S. Lee, J. McCrary, M. J. Moreira and J. Porter, “Valid t-Ratio Inference for IV,” <i>American Economic Review</i> 112(10), 2022, 3260–3290. J. L. Montiel Olea and C. Pflueger, “A Robust Test for Weak Instruments,” <i>Journal of Business &amp; Economic Statistics</i> 31(3), 2013, 358–369.</li>
+      <li>G. W. Imbens and J. D. Angrist, “Identification and Estimation of Local Average Treatment Effects,” <i>Econometrica</i> 62(2), 1994, 467–475. J. H. Stock and F. Trebbi, “Who Invented Instrumental Variable Regression?” <i>Journal of Economic Perspectives</i> 17(3), 2003, 177–194.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/econometrics/stats.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/stats.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/instrumental-variables/model.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/instrumental-variables/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/econometrics/instrumental-variables/sim.js" | relURL }}?v={{ (os.Stat "static/business/econometrics/instrumental-variables/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,231 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/hub.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "business/game-theory/dominance/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/dominance/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt2-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 2</p>
+    <h1>{{ .Title }}</h1>
+    <p>Some choices are bad no matter what anyone else does. Spot them, cross them out, and assume your opponent does the same; often the game solves itself. Here you’ll cross out dominated actions in bigger and bigger games, first by yourself and then watching it done step by step. Then you’ll play the most famous game in the subject, the prisoner’s dilemma, where each player has an action that is always better, and yet both players end up worse off for choosing it.</p>
+    <span class="lab-mark" aria-hidden="true">⛓️</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="gt2-view">
+      <canvas id="gt2-cv" tabindex="0" aria-label="A payoff matrix. In the puzzle, click the name of a row or column to cross out a strictly dominated action; the explanation appears below the matrix. Keys: arrows move between action names, Enter crosses one out, H gives a hint, S does one step, N starts a new puzzle. In the prisoner’s dilemma, click a row or press Q for Quiet and F for Fink."></canvas>
+      <div class="lab-tools"><button type="button" id="gt2-reset" aria-label="New puzzle or new match" title="New (N)">↺</button></div>
+      <noscript><p class="lab-small">This interactive needs JavaScript.</p></noscript>
+    </div>
+    <div class="lab-panel">
+      <h3>Mode</h3>
+      <div class="lab-seg" role="group" aria-label="What to play" id="gt2-mode"><button type="button" data-mode="puzzle" aria-pressed="true">✂ Cross out</button><button type="button" data-mode="pd" aria-pressed="false">⛓ Prisoner’s dilemma</button></div>
+      <div class="gt2-group" id="gt2-pz">
+        <div class="lab-seg" role="group" aria-label="Puzzle size" id="gt2-kind"><button type="button" data-kind="3" aria-pressed="true">3×3</button><button type="button" data-kind="4" aria-pressed="false">4×4</button><button type="button" data-kind="rand" aria-pressed="false">Random 3×3</button></div>
+        <div class="lab-row"><button type="button" class="lab-btn" id="gt2-newp">New puzzle</button><button type="button" class="lab-btn" id="gt2-hint">Hint</button><button type="button" class="lab-btn" id="gt2-step">Step</button></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="gt2-watch">▶ Watch it solve</button><button type="button" class="lab-btn" id="gt2-none" hidden>Nothing left</button></div>
+        <dl class="lab-readout" id="gt2-pread"></dl>
+      </div>
+      <div class="gt2-group" id="gt2-pdg" hidden>
+        <div class="lab-seg" role="group" aria-label="Opponent" id="gt2-bots"><button type="button" data-bot="saint" aria-pressed="true">Saint</button><button type="button" data-bot="shark" aria-pressed="false">Shark</button><button type="button" data-bot="mirror" aria-pressed="false">Mirror</button><button type="button" data-bot="grudger" aria-pressed="false">Grudger</button><button type="button" data-bot="coin" aria-pressed="false">Coin</button></div>
+        <p class="lab-small" id="gt2-blurb"></p>
+        <div class="gt2-big"><button type="button" class="lab-btn gt2-q" id="gt2-q">🤐 Quiet</button><button type="button" class="lab-btn gt2-f" id="gt2-f">🗣 Fink</button></div>
+        <div class="lab-row"><button type="button" class="lab-btn" id="gt2-newm">New match</button></div>
+        <dl class="lab-readout" id="gt2-dread"></dl>
+      </div>
+      <p class="gt2-sr" id="gt2-msg" aria-live="polite"></p>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt2-missions"></ol>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The puzzle.</b> Each cell holds two payoffs: the row player’s in gold, the column player’s in blue. Click the name of an action you think no rational player would choose. If some other action of the same player pays more in every remaining cell, it is strictly dominated: gold or blue arrows show each comparison, and a red line crosses it out. If it isn’t, the cells that prove it light up and the explanation says why.</p>
+      <p><b>Iterating.</b> Crossing out one player’s action can make another player’s action dominated, because there are fewer cases left to compare. Keep going until nothing is dominated. In the 3×3 and 4×4 puzzles exactly one cell survives; in Random games you may get stuck with several. “Watch it solve” does the same thing, one step every two seconds, with the reason for each step.</p>
+      <p><b>The prisoner’s dilemma.</b> You are the row player against a bot with a fixed personality, for ten rounds. After each round a gold arrow points from Quiet to Fink in the column the bot chose, with the extra payoff finking brings: always +1. Bars and chips below keep score.</p>
+      <p><b>The text.</b> The explanation under the matrix is also read out to screen readers. Everything you click can be done with the keyboard.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="dominance">
+    <h2>Dominated actions</h2>
+    <p>Here is the prisoner’s dilemma as Osborne writes it. Two suspects are held in separate cells. If both stay quiet, each is convicted of a minor offense; if one finks, the other gets a long sentence and the fink goes free; if both fink, both get a medium sentence. The payoffs rank the outcomes for each suspect: 3 is best, 0 is worst.</p>
+    <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Suspect 1 chooses a row, Suspect 2 chooses a column. In each cell, Suspect 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Suspect 2</th></tr><tr><th class="gth-p1" scope="col">Suspect 1</th><th scope="col">Quiet</th><th scope="col">Fink</th></tr></thead><tbody><tr><th scope="row">Quiet</th><td><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2 gth-br">3</span></td></tr><tr><th scope="row">Fink</th><td><span class="gth-u1 gth-br">3</span>, <span class="gth-u2">0</span></td><td class="gth-ne"><span class="gth-u1 gth-br">1</span>, <span class="gth-u2 gth-br">1</span></td></tr></tbody></table></div><figcaption>Underlined: each player’s best payoff in each column (for Suspect 1) or row (for Suspect 2). Fink is underlined everywhere.</figcaption></figure>
+    <p>Look at Suspect 1’s payoffs. If Suspect 2 stays quiet, finking gives 3 instead of 2. If Suspect 2 finks, finking gives 1 instead of 0. Whatever the other does, Fink is better. We say Fink <b>strictly dominates</b> Quiet.</p>
+    <div class="u-big"><i>u<sub>i</sub></i>(<i>a″<sub>i</sub></i>, <i>a</i><sub>−<i>i</i></sub>) &gt; <i>u<sub>i</sub></i>(<i>a′<sub>i</sub></i>, <i>a</i><sub>−<i>i</i></sub>) for every <i>a</i><sub>−<i>i</i></sub><small>action <i>a″<sub>i</sub></i> strictly dominates action <i>a′<sub>i</sub></i>: it pays player <i>i</i> more whatever the other players do</small></div>
+    <p>A rational player never chooses a strictly dominated action: there is another action that does better in every case, so no belief about the others can make the dominated one the best choice. If one action strictly dominates <i>all</i> of a player’s other actions, it is a <b>strictly dominant</b> action, and if every player has one, the profile of dominant actions is a <b>dominant-strategy equilibrium</b>. In the prisoner’s dilemma that is (Fink, Fink).</p>
+    <p><b>Weak dominance</b> relaxes the inequality: <i>a″<sub>i</sub></i> weakly dominates <i>a′<sub>i</sub></i> if it is never worse, <i>u<sub>i</sub></i>(<i>a″<sub>i</sub></i>, <i>a</i><sub>−<i>i</i></sub>) ≥ <i>u<sub>i</sub></i>(<i>a′<sub>i</sub></i>, <i>a</i><sub>−<i>i</i></sub>) for every <i>a</i><sub>−<i>i</i></sub>, and strictly better in at least one case. Playing a weakly dominated action is not always a mistake, since the cases where it is just as good might be exactly the ones that happen, but it is risky.</p>
+    <h3 class="lab-h">Iterated elimination</h3>
+    <p>If you know your opponent is rational, you know they won’t play their dominated actions, so you can cross those out too and look again. If they know you know, they can go one step further. With rationality as common knowledge (Chapter 1), you can repeat the process until nothing more can be removed. This is <b>iterated elimination of strictly dominated actions</b>. When strict dominance is used, the order in which you remove things never changes what survives.</p>
+    <div class="u-ex"><b>Worked example: four steps to one cell</b>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="3" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col">L</th><th scope="col">C</th><th scope="col">R</th></tr></thead><tbody><tr><th scope="row">T</th><td><span class="gth-u1">4</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">3</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">2</span></td></tr><tr><th scope="row">M</th><td><span class="gth-u1">3</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">5</span></td></tr><tr><th scope="row">B</th><td><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">4</span></td><td><span class="gth-u1">6</span>, <span class="gth-u2">3</span></td></tr></tbody></table></div><figcaption>Before any elimination.</figcaption></figure>
+      <ol>
+        <li><b>Row’s M is dominated by T:</b> 4 &gt; 3, 3 &gt; 2, 1 &gt; 0. Cross out M. (You could instead start with Column’s L, which C beats in every row: 3 &gt; 1, 1 &gt; 0, 4 &gt; 2. The order doesn’t matter.)</li>
+        <li><b>Column’s L is dominated by C</b> (3 &gt; 1 against T, 4 &gt; 2 against B). Cross out L.</li>
+        <li>With M gone, <b>Column’s R is dominated by C:</b> 3 &gt; 2 against T and 4 &gt; 3 against B. Before, R was safe, because against M it paid 5. Cross out R.</li>
+        <li>Only C is left for Column, and against C, <b>Row’s B (1) is worse than T (3)</b>. Cross out B.</li>
+      </ol>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="3" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col" class="gth-x">L</th><th scope="col">C</th><th scope="col" class="gth-x">R</th></tr></thead><tbody><tr><th scope="row">T</th><td class="gth-x"><span class="gth-u1">4</span>, <span class="gth-u2">1</span></td><td class="gth-ne"><span class="gth-u1">3</span>, <span class="gth-u2">3</span></td><td class="gth-x"><span class="gth-u1">1</span>, <span class="gth-u2">2</span></td></tr><tr class="gth-x"><th scope="row">M</th><td class="gth-x"><span class="gth-u1">3</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td><td class="gth-x"><span class="gth-u1">0</span>, <span class="gth-u2">5</span></td></tr><tr class="gth-x"><th scope="row">B</th><td class="gth-x"><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">4</span></td><td class="gth-x"><span class="gth-u1">6</span>, <span class="gth-u2">3</span></td></tr></tbody></table></div><figcaption>What survives: (T, C), with payoffs 3 and 3. Notice that Row gives up the 6 in the corner: Column would never play R once M is gone.</figcaption></figure>
+    </div>
+    <div class="lab-try"><b>Try this:</b> Solve a few 3×3 puzzles yourself, then a 4×4. Some steps only become possible after another player’s action is gone; that is the “iterated” part. If you get stuck, press Hint: it points to an action that is dominated now.</div>
+    <div class="lab-try"><b>Try this:</b> Switch to Random 3×3 and press “Watch it solve” a few times. About three random games in four can’t be solved this way at all (in our tests, 24% could). Dominance is powerful when it works, but most games need the stronger idea of Chapter 3.</div>
+    <div class="u-ex"><b>Worked example: when weak dominance depends on the order</b>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col">L</th><th scope="col">R</th></tr></thead><tbody><tr><th scope="row">T</th><td><span class="gth-u1">1</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">M</th><td><span class="gth-u1">1</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td></tr><tr><th scope="row">B</th><td><span class="gth-u1">0</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td></tr></tbody></table></div><figcaption>No action is strictly dominated. T and B are each weakly dominated by M.</figcaption></figure>
+      <ul>
+        <li>Remove T first (M is never worse: 1 = 1 and 2 &gt; 0). Then, for Column, R weakly dominates L (1 = 1 against M, 1 &gt; 0 against B). Remove L, and the payoffs left are (2, 1).</li>
+        <li>Remove B first instead (M: 1 &gt; 0 and 2 = 2). Now L weakly dominates R for Column (1 &gt; 0 against T, 1 = 1 against M). Remove R, and the payoffs left are (1, 1).</li>
+      </ul>
+      <p>Two orders, two different answers. That is why iterated elimination is usually done with strict dominance, where the order never matters.</p>
+    </div>
+    <h3 class="lab-h">Dominated by a mixture, and rationalizability</h3>
+    <p>An action can be beaten by a combination of other actions without being beaten by any single one. Suppose Row’s payoffs are T: (3, 0), M: (1, 1) and B: (0, 3) against Left and Right. Neither T nor B dominates M, but flipping a fair coin between T and B pays 1.5 against either column, more than M’s 1. M is <b>strictly dominated by a mixed strategy</b> (Chapter 4 defines mixed strategies). Removing everything that is dominated this way, again and again, leaves the <b>rationalizable</b> actions, defined by Douglas Bernheim and David Pearce in 1984: the actions a player could choose if everyone is rational and that is common knowledge, but nothing more is assumed about beliefs. In two-player games the two procedures give the same answer.</p>
+  </section>
+
+  <section class="lab-sec" id="dilemma">
+    <h2>Why rational players end up worse off</h2>
+    <p>In the prisoner’s dilemma both suspects follow their dominant action and get 1 each, though both would get 2 if both stayed quiet. The outcome is <b>Pareto inefficient</b>: another outcome is better for everyone. Nothing went wrong in anyone’s reasoning. The problem is that each player’s gain from finking (+1) comes partly at the other’s expense (−2), and no one accounts for the harm they do to the other.</p>
+    <p>Any game with payoffs ranked <i>T</i> &gt; <i>R</i> &gt; <i>P</i> &gt; <i>S</i> has this structure, where <i>T</i> is the temptation to defect, <i>R</i> the reward for mutual cooperation, <i>P</i> the punishment for mutual defection and <i>S</i> the sucker’s payoff. In Osborne’s version, <i>T</i> = 3, <i>R</i> = 2, <i>P</i> = 1, <i>S</i> = 0.</p>
+    <div class="lab-formula"><i>T</i> &gt; <i>R</i> &gt; <i>P</i> &gt; <i>S</i> &nbsp;⇒&nbsp; Defect strictly dominates Cooperate, yet (<i>R</i>, <i>R</i>) is better for both than (<i>P</i>, <i>P</i>)</div>
+    <div class="u-myth"><b>Common mistake: “They fink because they can’t trust each other”</b>
+      <p>Trust isn’t the problem in a one-shot prisoner’s dilemma. Even if Suspect 1 knew <i>for certain</i> that Suspect 2 would stay quiet, finking would still pay more (3 instead of 2). A promise to stay quiet doesn’t help either, because keeping it is never in the promiser’s interest. What can help is changing the game: a contract with penalties, a repeated relationship (Chapter 7), or caring about the other player, which changes the payoffs themselves.</p>
+    </div>
+    <h3 class="lab-h">Real dilemmas</h3>
+    <ul>
+      <li><b>Arms races.</b> Each of two rival countries is safer if it arms, whatever the other does, yet both are poorer, and no safer, when both arm. Arms-control treaties with inspections try to change the payoffs.</li>
+      <li><b>Advertising.</b> When two firms mostly steal customers from each other, each does better advertising whatever the rival does, and both pay for campaigns that cancel out. Some economists have argued that the 1971 U.S. ban on cigarette advertising on television and radio helped the tobacco companies by ending a race none could quit alone (see R. Eckard, <i>Economic Inquiry</i>, 1991).</li>
+      <li><b>Overfishing.</b> Each boat catches more by fishing harder, whatever the others do; together they empty the sea. The northern cod off Newfoundland collapsed, and Canada closed the fishery in 1992. Garrett Hardin called this pattern “the tragedy of the commons” (<i>Science</i>, 1968).</li>
+      <li><b>Price wars.</b> Each firm gains by undercutting a rival that holds its price, and both lose margin when both cut. The coffee-shop example in Chapter 1 had exactly this structure. In the 1980s, falling memory-chip prices squeezed every maker; Intel’s answer was to leave the business (see the case <a href="{{ "business/cases/intel-exits-memory-1985/" | relURL }}">Intel Walks Out the Door and Comes Back In</a>).</li>
+    </ul>
+    <div class="u-ex"><b>Worked example: two firms and an ad budget</b>
+      <p>Two firms each decide whether to run an advertising campaign. Profits in millions of dollars (invented for the example): if neither advertises, each earns 5. If one advertises, it earns 6 and the other 2. If both advertise, the campaigns cancel out and each earns 3 after paying for its ads.</p>
+      <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Firm 1 chooses a row, Firm 2 chooses a column. In each cell, Firm 1’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="2" scope="colgroup">Firm 2</th></tr><tr><th class="gth-p1" scope="col">Firm 1</th><th scope="col">Advertise</th><th scope="col">Don’t</th></tr></thead><tbody><tr><th scope="row">Advertise</th><td class="gth-ne"><span class="gth-u1">3</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">6</span>, <span class="gth-u2">2</span></td></tr><tr><th scope="row">Don’t</th><td><span class="gth-u1">2</span>, <span class="gth-u2">6</span></td><td><span class="gth-u1">5</span>, <span class="gth-u2">5</span></td></tr></tbody></table></div></figure>
+      <ol>
+        <li>For Firm 1: against Advertise, 3 &gt; 2; against Don’t, 6 &gt; 5. Advertising strictly dominates.</li>
+        <li>The same holds for Firm 2, so both advertise and earn 3 each.</li>
+        <li>Both would earn 5 if neither advertised: together they lose 4 million to campaigns that cancel out. The ranking 6 &gt; 5 &gt; 3 &gt; 2 is <i>T</i> &gt; <i>R</i> &gt; <i>P</i> &gt; <i>S</i>: a prisoner’s dilemma.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="public">
+    <h2>A dilemma with many players: the public-goods game</h2>
+    <p>The prisoner’s dilemma has a many-player cousin used in hundreds of laboratory experiments. Four people each get 20 tokens. Each decides how many to put into a group project. Everything in the project is multiplied by 1.6 and shared equally among all four, whoever gave it. Ernst Fehr and Simon Gächter used these numbers in a famous study (<i>American Economic Review</i>, 2000).</p>
+    <div class="lab-formula">your earnings = 20 − <i>c</i><sub>you</sub> + 0.4 × (<i>c</i><sub>1</sub> + <i>c</i><sub>2</sub> + <i>c</i><sub>3</sub> + <i>c</i><sub>4</sub>)</div>
+    <p>Each token you give returns 0.4 tokens to you, so it costs you 0.6 net: giving nothing strictly dominates giving anything. But each token also returns 0.4 to each of the other three, so it creates 1.6 tokens in total. If everyone gives 20, everyone earns 0.4 × 80 = 32 tokens; if everyone gives 0, everyone keeps 20. Play it below with three simulated group members.</p>
+    <div class="lab-stage" id="gt2p">
+      <div class="lab-view gt2-short" id="gt2p-view">
+        <canvas id="gt2p-cv" aria-label="Your group of four around the project pot, with each member’s contribution and earnings, and red arrows for punishment. Below, a chart of the average contribution in each round for your group, with dashed lines for a simulated laboratory session with and without punishment."></canvas>
+      </div>
+      <div class="lab-panel">
+        <h3>Your move</h3>
+        <div class="lab-field"><span><label for="gt2p-c">Tokens you give</label><output id="gt2p-c-o" for="gt2p-c"></output></span><input type="range" id="gt2p-c" min="0" max="20" step="1" value="10"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="gt2p-go">▶ Contribute</button><button type="button" class="lab-btn" id="gt2p-auto">Auto-play the rest</button></div>
+        <div class="gt2-pbox" id="gt2p-pbox" hidden>
+          <div data-who="1"><b></b><span><button type="button" data-d="-1" aria-label="Fewer points for Ana">−</button><output>0</output><button type="button" data-d="1" aria-label="More points for Ana">+</button></span></div>
+          <div data-who="2"><b></b><span><button type="button" data-d="-1" aria-label="Fewer points for Ben">−</button><output>0</output><button type="button" data-d="1" aria-label="More points for Ben">+</button></span></div>
+          <div data-who="3"><b></b><span><button type="button" data-d="-1" aria-label="Fewer points for Cy">−</button><output>0</output><button type="button" data-d="1" aria-label="More points for Cy">+</button></span></div>
+        </div>
+        <p id="gt2p-msg" aria-live="polite"></p>
+        <h3>The group</h3>
+        <label class="lab-chk"><input type="checkbox" id="gt2p-pun"> Add a punishment stage</label>
+        <div class="lab-seg" role="group" aria-label="Free riders among the other three" id="gt2p-fr"><button type="button" data-fr="0" aria-pressed="false">No free riders</button><button type="button" data-fr="1" aria-pressed="true">1 free rider</button><button type="button" data-fr="2" aria-pressed="false">2</button></div>
+        <label class="lab-chk"><input type="checkbox" id="gt2p-types"> Show each member’s type</label>
+        <div class="lab-row"><button type="button" class="lab-btn" id="gt2p-new">New game</button></div>
+        <dl class="lab-readout" id="gt2p-read"></dl>
+      </div>
+    </div>
+    <p>The simulated members follow the types found by Urs Fischbacher, Simon Gächter and Ernst Fehr (<i>Economics Letters</i>, 2001), who asked people how much they would give for each possible average of the others: about half were <b>conditional cooperators</b>, who give more when others give more, and about a third were <b>free riders</b>, who give nothing. Our conditional cooperators give a bit less than the others gave last round, so a single free rider drags the whole group down, round after round. That decay is the most reliable result of public-goods experiments: contributions often start at 40 to 60 percent of the endowment and fall steadily over ten rounds.</p>
+    <p>Fehr and Gächter then added a stage where, after seeing the contributions, members could pay to punish each other. Punishing costs the punisher, so a purely selfish player never punishes, and knowing that, no one should fear punishment. Yet many people did punish free riders, and contributions rose instead of falling. Turn on the punishment stage to see the same effect in the simulation. The dashed lines show a simulated laboratory session of 40 such players, with and without punishment.</p>
+    <div class="lab-try"><b>Try this:</b> Give 20 every round with one free rider in your group. Watch the conditional cooperators slide down anyway, following the average. Then turn on punishment, punish the free rider in round 1 or 2, and watch what happens to their contributions and to your earnings.</div>
+  </section>
+
+  <section class="lab-sec" id="history">
+    <h2>A short history</h2>
+    <p>In early 1950, <b>Merrill Flood</b> and <b>Melvin Dresher</b> at the RAND Corporation persuaded two colleagues to play a game of this structure over and over, an informal experiment. <b>Albert W. Tucker</b> of Princeton, wanting to explain it to an audience of Stanford psychologists, made up the story of the two prisoners, and the name stuck.</p>
+    <p>The ecologist <b>Garrett Hardin</b>’s 1968 essay “The Tragedy of the Commons” described the many-player version with herders on a shared pasture; <b>Elinor Ostrom</b> later documented how real communities manage commons without either privatization or central control, work that earned her a share of the 2009 Nobel prize in economics. <b>Douglas Bernheim</b> and <b>David Pearce</b> independently defined rationalizability in 1984 (<i>Econometrica</i>). <b>Ernst Fehr</b> and <b>Simon Gächter</b>’s punishment experiments (2000, 2002) changed how economists think about cooperation among strangers.</p>
+  </section>
+
+  <section class="lab-sec" id="world">
+    <h2>Where you see it</h2>
+    <ul>
+      <li><b>Business:</b> price wars, advertising wars, bonus races for talent, and suppliers each tempted to cut quality slightly. A firm that sees a prisoner’s dilemma coming can try to change the game: long-term contracts, loyalty programs that reduce stealing customers, or industry standards.</li>
+      <li><b>Policy:</b> fisheries quotas, climate agreements and arms-control treaties are attempts to escape many-player dilemmas by adding rules, monitoring and penalties. Taxes on pollution change the payoffs directly.</li>
+      <li><b>Sports:</b> doping is often described as a prisoner’s dilemma: each athlete gains an edge by doping whatever the others do, and all of them bear the health risks for no relative gain. Testing is the outside enforcement.</li>
+      <li><b>Daily life:</b> standing up at a concert to see better, everyone driving to avoid a crowded bus, group projects where one member coasts. The public-goods game is any shared fridge, shared kitchen or shared spreadsheet.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice">
+    <h2>Practice</h2>
+    <ol>
+      <li><p><b>Spot the dominant action.</b> In the advertising game above, change the payoff when neither advertises from (5, 5) to (7, 7). Is advertising still dominant? Is it still a prisoner’s dilemma?</p>
+        <details><summary>Show the answer</summary><p>Against Don’t, Firm 1 now compares 6 (advertise) with 7 (don’t): not advertising is better. Against Advertise, it compares 3 with 2: advertising is better. Neither action dominates, so there is no dominant-strategy equilibrium. The ranking is now 7 &gt; 6 &gt; 3 &gt; 2, that is <i>R</i> &gt; <i>T</i>, so it is no longer a prisoner’s dilemma; it is a coordination game (Chapter 3).</p></details></li>
+      <li><p><b>Solve by elimination.</b> Use iterated elimination of strictly dominated actions:</p>
+        <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="3" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col">L</th><th scope="col">C</th><th scope="col">R</th></tr></thead><tbody><tr><th scope="row">T</th><td><span class="gth-u1">5</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">4</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">M</th><td><span class="gth-u1">3</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">4</span></td><td><span class="gth-u1">6</span>, <span class="gth-u2">1</span></td></tr><tr><th scope="row">B</th><td><span class="gth-u1">4</span>, <span class="gth-u2">5</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">2</span></td></tr></tbody></table></div></figure>
+        <details><summary>Show the answer</summary><ol><li>Row’s B is dominated by T: 5 &gt; 4, 2 &gt; 0, 4 &gt; 2.</li><li>With B gone, Column’s R is dominated by L: 3 &gt; 0 against T, 2 &gt; 1 against M.</li><li>With R gone, Row’s M is dominated by T: 5 &gt; 3, 2 &gt; 1.</li><li>Against T alone, Column’s C (1) is worse than L (3).</li></ol><p>What survives is (T, L), with payoffs (5, 3).</p></details></li>
+      <li><p><b>Stuck.</b> Is any action strictly dominated in this game? What does that tell you?</p>
+        <figure class="gth-mx"><div class="gth-mx-w"><table aria-label="Payoff matrix. Row chooses a row, Column chooses a column. In each cell, Row’s payoff is first."><thead><tr><td class="gth-mx-c"></td><th class="gth-p2" colspan="3" scope="colgroup">Column</th></tr><tr><th class="gth-p1" scope="col">Row</th><th scope="col">L</th><th scope="col">C</th><th scope="col">R</th></tr></thead><tbody><tr><th scope="row">T</th><td><span class="gth-u1">2</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">3</span></td><td><span class="gth-u1">4</span>, <span class="gth-u2">1</span></td></tr><tr><th scope="row">M</th><td><span class="gth-u1">3</span>, <span class="gth-u2">2</span></td><td><span class="gth-u1">0</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">1</span>, <span class="gth-u2">0</span></td></tr><tr><th scope="row">B</th><td><span class="gth-u1">1</span>, <span class="gth-u2">1</span></td><td><span class="gth-u1">2</span>, <span class="gth-u2">0</span></td><td><span class="gth-u1">3</span>, <span class="gth-u2">2</span></td></tr></tbody></table></div></figure>
+        <details><summary>Show the answer</summary><p>No. For Row, T beats B in column L but loses in column C; M is best in column L but worst in column C; and so on. For Column, L, C and R each are best against some row (L against M, C against T, R against B). Nothing can be crossed out, so dominance says nothing here. The game still has a Nash equilibrium, (M, L), which you’ll learn to find in Chapter 3.</p></details></li>
+      <li><p><b>Weak, not strict.</b> In the roommates game of Chapter 1 (Clean or Skip, payoffs (30, 30), (0, 60), (60, 0), (0, 0)), show that Skip weakly but not strictly dominates Clean for Ana.</p>
+        <details><summary>Show the answer</summary><p>If Ben cleans, Skip gives Ana 60 and Clean 30: Skip is better. If Ben skips, both give Ana 0: a tie. Skip is never worse and sometimes better, so it weakly dominates Clean; because of the tie it does not strictly dominate it.</p></details></li>
+      <li><p><b>When does the public good stop being a dilemma?</b> In the public-goods game with <i>n</i> players, each token in the project returns <i>m</i> to every player (above, <i>n</i> = 4 and <i>m</i> = 0.4). For which <i>m</i> is giving nothing dominant? For which <i>m</i> does the group gain from every token given?</p>
+        <details><summary>Show the answer</summary><p>A token you give changes your own earnings by −1 + <i>m</i>. If <i>m</i> &lt; 1, giving nothing strictly dominates. A token changes the group’s total by −1 + <i>nm</i>, which is positive when <i>m</i> &gt; 1/<i>n</i>. So the game is a social dilemma exactly when 1/<i>n</i> &lt; <i>m</i> &lt; 1. With <i>n</i> = 4: 0.25 &lt; <i>m</i> &lt; 1, and 0.4 is in that range.</p></details></li>
+      <li><p><b>Beaten by a mixture.</b> Row’s payoffs against (Left, Right) are T: (3, 0), M: (1, 1), B: (0, 3). For which probabilities <i>p</i> of playing T (and 1 − <i>p</i> of playing B) does the mixture strictly dominate M?</p>
+        <details><summary>Show the answer</summary><p>Against Left the mixture pays 3<i>p</i>, against Right 3(1 − <i>p</i>). We need 3<i>p</i> &gt; 1 and 3(1 − <i>p</i>) &gt; 1, so 1/3 &lt; <i>p</i> &lt; 2/3. Any mixture in that range beats M in both columns, although neither T nor B does on its own.</p></details></li>
+      <li><p><b>Elimination never removes an equilibrium.</b> Show that if (<i>a</i>*<sub>1</sub>, <i>a</i>*<sub>2</sub>) is a Nash equilibrium (each action is a best response to the other), then neither <i>a</i>*<sub>1</sub> nor <i>a</i>*<sub>2</sub> is ever removed by iterated elimination of strictly dominated actions.</p>
+        <details><summary>Show the answer</summary><p>Suppose not, and look at the first step at which an equilibrium action is removed, say <i>a</i>*<sub>1</sub>, dominated by some <i>b</i><sub>1</sub>. Before that step <i>a</i>*<sub>2</sub> is still present, so domination means <i>u</i><sub>1</sub>(<i>b</i><sub>1</sub>, <i>a</i>*<sub>2</sub>) &gt; <i>u</i><sub>1</sub>(<i>a</i>*<sub>1</sub>, <i>a</i>*<sub>2</sub>). But then <i>a</i>*<sub>1</sub> is not a best response to <i>a</i>*<sub>2</sub>, contradicting equilibrium. So equilibrium actions always survive, and if elimination leaves a single profile, that profile is the only Nash equilibrium.</p></details></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="model">
+    <h2>How the interactive works</h2>
+    <p><b>Puzzles.</b> The 3×3 and 4×4 puzzles are built backward. Starting from the cell that will survive, the generator adds one action at a time, alternating between the players in random order. Each new action is made strictly dominated, against the opponent’s actions present at that moment, by an action already there. Removing the actions in the opposite order is then a valid elimination path ending at one cell, and since strict elimination gives the same result in any order, every path ends there. Rows and columns are shuffled for display, and payoffs stay between 0 and 9. Random games draw every payoff from 0 to 9. Dominance is checked against pure actions only; the lesson explains dominance by mixtures.</p>
+    <p><b>Bots.</b> Saint always stays quiet, Shark always finks, Mirror plays tit for tat, Grudger stays quiet until you fink once, and Coin is a fair coin. The public-goods members are simplified versions of the experimental types, described in the comments of <code>model.js</code>: conditional cooperators give 85% of the others’ last average, free riders give nothing, altruists give 16 to 20; with punishment, cooperators punish anyone who gave at least 4 less than they did, and being punished makes members give more later.</p>
+    <p><b>Checks (node).</b> 2,000 generated 3×3 puzzles and 2,000 4×4 puzzles were all solved by elimination in exactly 4 and 6 steps, with the survivor equal to the game’s unique pure Nash equilibrium and every payoff between 0 and 9. In 500 4×4 puzzles, eliminating in a random order always gave the same survivor. Of 5,000 random 3×3 games, 24.2% could be solved by pure-strategy elimination. The public-goods earnings match the formula (32 each when all give 20, 44 for a lone free rider, 20 when nobody gives). Averaged over 200 simulated sessions of 40 players with 30% free riders, contributions fell from 9.1 to 4.5 tokens over ten rounds without punishment and rose from 9.1 to 12.7 with it, the same direction as in the experiments, though the simulated numbers are not meant to match any one study.</p>
+  </section>
+
+  <section class="lab-sec" id="check">
+    <h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>Action X strictly dominates action Y for a player when …</p>
+        <ul class="u-opts"><li><button type="button">X pays more than Y on average</button></li><li><button type="button">X pays more than Y against every combination of the other players’ actions</button></li><li><button type="button">X pays more than Y against the opponent’s most likely action</button></li></ul>
+        <details><summary>Show the answer</summary><p>Strict dominance is a comparison case by case: X must beat Y whatever the others do.</p></details></li>
+      <li class="u-q" data-a="2"><p>In the prisoner’s dilemma, suppose Suspect 1 knows for certain that Suspect 2 will stay quiet. What should a Suspect 1 who cares only about their own payoff do?</p>
+        <ul class="u-opts"><li><button type="button">Stay quiet, to reward the partner</button></li><li><button type="button">It depends on trust</button></li><li><button type="button">Fink: it pays 3 instead of 2</button></li></ul>
+        <details><summary>Show the answer</summary><p>Fink is dominant, so it is the best reply to Quiet too. The dilemma doesn’t come from distrust.</p></details></li>
+      <li class="u-q" data-a="0"><p>Why does the order of elimination not matter for strict dominance, but can matter for weak dominance?</p>
+        <ul class="u-opts"><li><button type="button">A strictly dominated action stays dominated after other actions are removed, so it is removed sooner or later anyway; weak dominance can disappear when a tie case is removed or appear when a deciding case is removed</button></li><li><button type="button">Because weak dominance is not allowed in game theory</button></li><li><button type="button">The order matters in both cases</button></li></ul>
+        <details><summary>Show the answer</summary><p>Removing opponent actions only removes comparisons, so strict dominance survives. With weak dominance, removing the one case where an action was strictly better can turn it into a tie, as in the T, M, B example.</p></details></li>
+      <li class="u-q" data-a="1"><p>In the public-goods game (4 players, each token returns 0.4 to everyone), what does a selfish player who expects others to give 20 each do?</p>
+        <ul class="u-opts"><li><button type="button">Give 20 to match the others</button></li><li><button type="button">Give 0: each token costs 1 and returns only 0.4</button></li><li><button type="button">Give 10</button></li></ul>
+        <details><summary>Show the answer</summary><p>Giving nothing is strictly dominant: whatever the others give, every token you give lowers your earnings by 0.6.</p></details></li>
+      <li class="u-q" data-a="2"><p>Iterated elimination of strictly dominated actions leaves exactly one action profile. What can you conclude?</p>
+        <ul class="u-opts"><li><button type="button">Nothing about Nash equilibria</button></li><li><button type="button">That profile gives every player their highest payoff</button></li><li><button type="button">That profile is the game’s only Nash equilibrium</button></li></ul>
+        <details><summary>Show the answer</summary><p>Equilibrium actions are never eliminated (Practice problem 7), so a unique survivor must be the unique equilibrium. It need not be good for anyone: in the prisoner’s dilemma it is (Fink, Fink).</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>M. J. Osborne, <i>An Introduction to Game Theory</i> (Oxford University Press, 2004), chapter 2 (the prisoner’s dilemma, dominated actions) and chapter 12 (rationalizability).</li>
+      <li>R. Gibbons, <i>Game Theory for Applied Economists</i> (Princeton University Press, 1992), section 1.1.B (iterated elimination of strictly dominated strategies).</li>
+      <li><a href="https://plato.stanford.edu/entries/prisoner-dilemma/" target="_blank" rel="noopener">Steven Kuhn, “Prisoner’s Dilemma”, Stanford Encyclopedia of Philosophy</a> (Flood, Dresher and Tucker).</li>
+      <li>E. Fehr and S. Gächter, “Cooperation and punishment in public goods experiments”, <i>American Economic Review</i> 90(4), 2000, 980–994; E. Fehr and S. Gächter, “Altruistic punishment in humans”, <i>Nature</i> 415, 2002, 137–140.</li>
+      <li>U. Fischbacher, S. Gächter and E. Fehr, “Are people conditionally cooperative? Evidence from a public goods experiment”, <i>Economics Letters</i> 71(3), 2001, 397–404.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Public_goods_game" target="_blank" rel="noopener">Public goods game</a> (Wikipedia).</li>
+      <li>B. D. Bernheim, “Rationalizable strategic behavior”, <i>Econometrica</i> 52(4), 1984, 1007–1028; D. G. Pearce, “Rationalizable strategic behavior and the problem of perfection”, <i>Econometrica</i> 52(4), 1984, 1029–1050.</li>
+      <li>G. Hardin, “The tragedy of the commons”, <i>Science</i> 162, 1968, 1243–1248. R. L. Eckard Jr., “Competition and the cigarette TV advertising ban”, <i>Economic Inquiry</i> 29(1), 1991.</li>
+      <li><a href="https://oyc.yale.edu/economics/econ-159" target="_blank" rel="noopener">Yale Open Courses, ECON 159: Game Theory</a> (Ben Polak), the first lectures on dominance.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/hub.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/hub.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/dominance/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/dominance/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/dominance/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/dominance/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}

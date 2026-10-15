@@ -1,0 +1,197 @@
+{{ define "main" }}
+{{ partial "unit-head.html" . }}
+<link rel="stylesheet" href="{{ "business/game-theory/mechanism-design/sim.css" | relURL }}?v={{ (os.Stat "static/business/game-theory/mechanism-design/sim.css").ModTime.Unix }}">
+<div class="lab" id="gt12-lab">
+  {{ partial "unit-nav.html" . }}
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Game Theory · Chapter 12</p>
+    <h1>{{ .Title }}</h1>
+    <p>So far we’ve taken the rules of a game as given and asked how people play. Mechanism design turns the question around: if you could write the rules, which rules would make self-interested people produce a good outcome, even when only they know what they want? Here you’ll run the algorithm that matches new doctors to hospitals and students to schools, try to cheat it and find out who can, then use a clever tax that makes honesty the best policy for everyone.</p>
+    <span class="lab-mark" aria-hidden="true">⚙️</span>
+  </header>
+
+  <div class="lab-stage gt12-main">
+    <div class="lab-view" id="gt12-view">
+      <canvas id="gt12-cv" tabindex="0" aria-label="Students on the left, schools on the right, each school with one seat. Next to each one, a row of chips shows its preference list, best first. During the algorithm, blue arrows are proposals, gold lines are tentative matches, crossed-out chips are rejections, and green lines are the final matching. In matching-by-hand mode, tap a student and then a school; red dashed lines show blocking pairs. Keys: Space or Enter steps the algorithm; in hand mode, the arrow keys move between people and Enter selects."></canvas>
+      <div class="lab-hud" id="gt12-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="gt12-pause" aria-label="Pause or play" title="Pause or play">❚❚</button>
+        <button type="button" id="gt12-reset" aria-label="Start again" title="Start again">↺</button>
+      </div>
+    </div>
+    <div class="lab-panel">
+      <h3 id="gt12-pre-h">Markets</h3>
+      <div class="lab-seg" id="gt12-pre" role="group" aria-labelledby="gt12-pre-h">
+        <button type="button" data-p="three">Three’s company</button><button type="button" data-p="four">Four and four</button><button type="button" data-p="oak">Everyone loves Oak</button>
+      </div>
+      <button type="button" class="lab-btn" id="gt12-rnd">🎲 Random market</button>
+      <h3 id="gt12-side-h">Who proposes</h3>
+      <div class="lab-seg" id="gt12-side" role="group" aria-labelledby="gt12-side-h"><button type="button" data-s="S">Students</button><button type="button" data-s="T">Schools</button></div>
+      <h3 id="gt12-mode-h">Mode</h3>
+      <div class="lab-seg" id="gt12-mode" role="group" aria-labelledby="gt12-mode-h"><button type="button" data-m="algo">Run the algorithm</button><button type="button" data-m="hand">Match by hand</button></div>
+      <div class="gt12-acts"><button type="button" class="lab-btn pri" id="gt12-step">Step</button><button type="button" class="lab-btn" id="gt12-play">Run to the end</button></div>
+      <h3>Lying</h3>
+      <label class="lab-field"><span>Who misreports</span><select id="gt12-liar" aria-label="Who misreports their preferences"></select></label>
+      <div class="lab-seg" id="gt12-liek" role="group" aria-label="How they lie"><button type="button" data-k="swap">Swap top two</button><button type="button" data-k="trunc1">List only the top one</button><button type="button" data-k="trunc2">List only the top two</button></div>
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="gt12-read" aria-live="off"></dl>
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ol class="lab-missions" id="gt12-missions"></ol>
+    </div>
+    <div class="gt12-under">
+      <div class="gt12-prefs" id="gt12-prefs" aria-label="Preference lists. Press a name to move it up one place."></div>
+      <p class="lab-small">These are everyone’s true preferences. Press a name to move it up one place in that list; the algorithm restarts. Lies set in the panel change only what is reported.</p>
+    </div>
+  </div>
+
+  <section class="lab-sec" id="seeing"><h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The market.</b> Each student ranks the schools and each school ranks the students; each school has one seat. A <b>matching</b> pairs students with schools. It’s <b>stable</b> if there is no <b>blocking pair</b>: a student and a school who both prefer each other to the partners they were given. A blocking pair would simply walk away from the official match and make their own deal, which is exactly how centralized markets have unraveled in the past.</p>
+      <p><b>The algorithm.</b> In David Gale and Lloyd Shapley’s deferred acceptance, each free student proposes to the best school that hasn’t yet rejected them. A school holds on to the best proposal it has received so far and rejects the rest. Holding is not accepting: if a better student proposes later, the school lets the held one go, and that student moves down their list. When nobody is free with a school left to try, the held proposals become final.</p>
+      <p><b>Lying.</b> Pick anyone in the panel and how they misreport. Their reported list is what the algorithm sees; their true list, in the editor, is what decides whether the lie helped. The live numbers tell you their true rank of what they got, with and without the lie.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="matching"><h2>Stable matching</h2>
+    <div class="u-big">deferred acceptance always ends with a stable matching<small>Gale and Shapley (1962), and the stable matching it finds is the best one for every proposer and the worst one for every receiver</small></div>
+    <p>Why stable? Suppose a student <var>s</var> prefers school <var>t</var> to the school she ended up with. Then she proposed to <var>t</var> earlier, and <var>t</var> rejected her, at that moment or later, for someone <var>t</var> liked better. Schools only ever trade up, so <var>t</var> ends with someone it prefers to <var>s</var>. So <var>s</var> and <var>t</var> can’t be a blocking pair. The algorithm also always ends: each student proposes to each school at most once.</p>
+    <p>A market can have many stable matchings. Gale and Shapley showed that when students propose, every student gets the best school they could get in <i>any</i> stable matching, and every school gets its worst. Swapping who proposes flips this. That’s why the choice of proposing side was a real policy question for the medical match.</p>
+    <div class="u-ex"><b>Worked example: “Four and four”</b>
+      <p>Students propose. Ana tries Oak, which holds her. Ben tries Oak; Oak prefers Ben, so Ana is let go and tries Elm, which holds her. Cai tries Elm, which prefers Ana and rejects him; Cai tries Oak, which prefers Cai to Ben and lets Ben go. Ben tries Pine, which holds him. Dee tries Oak (rejected, Oak prefers Cai), then Elm (rejected, Elm prefers Ana), then Bay, which holds her. Nobody is free: Ana–Elm, Ben–Pine, Cai–Oak, Dee–Bay, after 9 proposals. Step through it in the simulation and watch the chips get crossed out.</p>
+    </div>
+    <div class="u-ex"><b>Worked example: “Three’s company”</b>
+      <p>Ana likes Oak best, Ben likes Elm, Cai likes Pine. But Oak likes Ben best, Elm likes Cai, and Pine likes Ana. When students propose, each gets their first choice at once, and each school gets its last. When schools propose, each school gets its first choice, and each student gets their last. There is a third stable matching in between, where everyone gets their second choice. Find it by hand to complete a mission.</p>
+    </div>
+    <h3 class="lab-h">Who can game it?</h3>
+    <p>Lester Dubins and David Freedman (1981) and Alvin Roth (1982) proved that in deferred acceptance, no proposer can ever gain by misreporting: telling the truth is a dominant strategy for the proposing side. Roth also proved the bad news: no stable matching mechanism is strategy-proof for <i>both</i> sides. Receivers can sometimes gain by pretending to be pickier than they are. In “Three’s company”, Oak gets Ana, its last choice, when students propose. If Oak claims that only Ben is acceptable, Ana is rejected, the rejections cascade, and Oak ends up with Ben, its first choice.</p>
+    <div class="lab-try"><b>Try this:</b> in “Four and four” with students proposing, make any student lie in any of the three ways and run the algorithm. The live numbers report their true rank with and without the lie; it never improves. Then make Oak lie in “Three’s company” and watch the lie pay off. In our tests, every one of 41,200 possible misreports by a proposing student failed to help, while a receiving school could gain by shortening its list in 99 of 400 random markets.</p>
+  </section>
+
+  <section class="lab-sec" id="design"><h2>Mechanism design: writing the rules</h2>
+    <p>A designer wants an outcome that depends on information only the participants have: who values the item most, which schools students prefer, whether a park is worth its cost. A <b>mechanism</b> asks participants for messages and maps messages to an outcome and payments. The designer can’t force anyone to tell the truth, so the mechanism has to make the truth worth telling.</p>
+    <ul>
+      <li>A mechanism is <b>incentive compatible</b> if truthful reporting is an equilibrium. It’s <b>dominant-strategy</b> incentive compatible (strategy-proof) if truth is best whatever others do, as in a second-price auction or for proposers in deferred acceptance; <b>Bayesian</b> incentive compatible if truth is best on average given beliefs about others.</li>
+      <li>It’s <b>individually rational</b> if nobody is worse off for taking part.</li>
+    </ul>
+    <div class="u-big">anything any mechanism can achieve in equilibrium, a direct mechanism with truthful reporting can achieve too<small>the revelation principle (Gibbard 1973; Myerson 1979; Dasgupta, Hammond and Maskin 1979)</small></div>
+    <p>The idea is simple: take any mechanism and its equilibrium, and build a new one that asks you for your type and then plays your equilibrium strategy for you. Lying to the new mechanism is like deviating in the old one, which didn’t pay. So the designer can search among truthful direct mechanisms only, which turns a hopeless search into an optimization problem.</p>
+    <p>There are limits. The Gibbard–Satterthwaite theorem (1973, 1975) says that with three or more possible outcomes, any voting rule in which every outcome can win and nobody can gain by lying is a dictatorship. Money is what lets mechanisms like the next one escape it.</p>
+  </section>
+
+  <section class="lab-sec" id="vcg"><h2>VCG: pay for the harm you cause</h2>
+    <p>Three neighbors could build a $300 park and split the cost, $100 each. Who values it how much is private. Ask them and build if the total is at least $300? Then anyone who wants the park should exaggerate, and anyone who doesn’t should understate. The Vickrey–Clarke–Groves idea fixes this: build if the reported values cover the cost, and charge each person the harm their report does to everyone else.</p>
+    <div class="u-big"><var>t</var><sub><var>i</var></sub> = (what the others would get if <var>i</var> didn’t exist) − (what the others get now)<small>the Clarke pivot tax: zero unless your report changes the decision</small></div>
+    <p>Your payoff is then your own value plus the others’ values, minus something you can’t affect. Since the mechanism picks the decision that maximizes the sum of reported values, the best you can do is make it maximize the sum of <i>true</i> values, by telling the truth. William Vickrey’s second-price auction (<a href="{{ "business/game-theory/auctions/" | relURL }}">Chapter 9</a>) is the special case of selling one item: the winner pays the second-highest bid, which is exactly the value the others lose by not getting it. Edward Clarke (1971) and Theodore Groves (1973) developed the public-project version.</p>
+    <div class="lab-stage wide gt12-mini" id="gt12-vview">
+      <div class="lab-view"><canvas id="gt12-vc" tabindex="0" aria-label="Left: three neighbors' reported values for a $300 park, with the $100 cost share as a dashed line, whether the park is built, and what each pays. Right: your payoff for every value you could report, with the truth marked. Drag the right chart or use the left and right arrow keys to change your report."></canvas></div>
+      <div class="lab-panel gt12-row">
+        <div class="lab-seg" id="gt12-mech" role="group" aria-label="Rule"><button type="button" data-m="vcg">VCG (Clarke tax)</button><button type="button" data-m="prop">Pay in proportion to your report</button></div>
+        <label class="lab-field gt12-grow"><span>The park is truly worth to you <output id="gt12-v1-o"></output></span><input type="range" id="gt12-v1" min="0" max="300" step="5" aria-label="Your true value for the park"></label>
+        <label class="lab-field gt12-grow"><span>…to Bo <output id="gt12-v2-o"></output></span><input type="range" id="gt12-v2" min="0" max="300" step="5" aria-label="Bo's value for the park"></label>
+        <label class="lab-field gt12-grow"><span>…to Cy <output id="gt12-v3-o"></output></span><input type="range" id="gt12-v3" min="0" max="300" step="5" aria-label="Cy's value for the park"></label>
+        <label class="lab-field gt12-grow"><span>You report <output id="gt12-rep-o"></output></span><input type="range" id="gt12-rep" min="0" max="300" step="5" aria-label="The value you report"></label>
+        <button type="button" class="lab-btn" id="gt12-truth">Report the truth</button>
+        <dl class="lab-readout gt12-grow" id="gt12-vread"></dl>
+      </div>
+    </div>
+    <div class="u-ex"><b>Worked example: a pivotal neighbor</b>
+      <p>True values: you $150, Bo $120, Cy $60, so net of the $100 shares: +50, +20, −40. The total is +30, so the park is built. Without you, the others total 20 − 40 = −20 and the park wouldn’t be built: you are pivotal. Your report costs the others 20 in net value, so your Clarke tax is $20. Bo and Cy aren’t pivotal (without either of them, the park is still built), so they pay no tax. Your payoff is 50 − 20 = $30. Report $250 instead and the park is still built and your tax is still $20, so nothing changes. Report $110 and the total falls to −10: no park, no tax, payoff $0. You can’t do better than the truth.</p>
+    </div>
+    <p>VCG has real flaws. The taxes can’t be handed back to the participants without spoiling the incentives, so money is wasted (Jerry Green and Jean-Jacques Laffont showed in 1977 that no efficient, strategy-proof mechanism balances the budget in general). Groups can collude, and the payments can look arbitrary. That’s one reason VCG is more admired than used, though the logic behind it shapes many real designs.</p>
+    <div class="lab-try"><b>Try this:</b> switch to “Pay in proportion to your report”. Now the park is built if reports add up to $300 and each pays in proportion to what they said. With the starting values, the payoff curve peaks well below your true value: you’d gain by pretending to care less and letting the neighbors pay more. If everyone does that, the park isn’t built. That’s the free-rider problem that VCG solves.</p>
+    <h3 class="lab-h">Myerson’s optimal auction, in brief</h3>
+    <p>VCG aims at efficiency. A seller wants revenue. Roger Myerson (1981) showed how to find the revenue-maximizing auction for bidders with independent private values. For a value <var>v</var> drawn from a distribution <var>F</var> with density <var>f</var>, define the <b>virtual value</b></p>
+    <div class="lab-formula">φ(<var>v</var>) = <var>v</var> − (1 − <var>F</var>(<var>v</var>)) / <var>f</var>(<var>v</var>) &nbsp;·&nbsp; expected revenue = expected virtual value of the winner</div>
+    <p>The optimal auction gives the item to the bidder with the highest virtual value, if it is positive, and to no one otherwise. With symmetric bidders and a regular distribution, that’s a second-price auction with a reserve price <var>r</var> where φ(<var>r</var>) = 0. For values uniform from $0 to $200, φ(<var>v</var>) = 2<var>v</var> − 200, so the reserve is $100, whatever the number of bidders. That’s the reserve-price result you met in Chapter 9.</p>
+  </section>
+
+  <div class="u-myth"><b>Common mistake: “A good mechanism needs good people”</b>
+    <p>Mechanism design assumes the opposite: everyone pursues their own interest, and the rules are built so that self-interest produces the desired result. Deferred acceptance doesn’t ask proposers to be honest; it makes honesty their best strategy. When a mechanism relies on people not gaming it, as the old Boston school assignment system did, careful players game it and the honest ones lose out.</p>
+  </div>
+
+  <section class="lab-sec" id="world"><h2>Market design in the real world</h2>
+    <ul>
+      <li><b>The medical match.</b> In the United States, the National Resident Matching Program has matched graduating medical students to hospital residencies since 1952. Alvin Roth showed in 1984 that its algorithm was equivalent to deferred acceptance with hospitals proposing, which helps explain why the match survived when earlier systems had collapsed. Starting with the 1998 match, it switched to a design by Roth and Elliott Peranson in which applicants propose and couples can apply together.</li>
+      <li><b>School choice.</b> New York City’s high school match was redesigned around deferred acceptance starting in 2003, with Atila Abdulkadiroğlu, Parag Pathak and Roth. Boston adopted deferred acceptance in 2005, replacing a system that rewarded families for ranking schools strategically.</li>
+      <li><b>Kidney exchange.</b> A patient with a willing but incompatible donor can swap with another such pair. Roth, Tayfun Sönmez and Utku Ünver (2004) designed exchanges that find these swaps, including longer cycles and chains, and their work helped found the New England Program for Kidney Exchange in 2004.</li>
+      <li><b>Nobel prizes.</b> In 2007, Leonid Hurwicz, Eric Maskin and Roger Myerson shared the Nobel Memorial Prize in Economic Sciences “for having laid the foundations of mechanism design theory”. In 2012, Lloyd Shapley and Alvin Roth shared it “for the theory of stable allocations and the practice of market design”. David Gale had died in 2008; the prize is not awarded after death.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec" id="practice"><h2>Practice</h2>
+    <p class="gt12-prob"><b>1.</b> Two students and two schools. Ana: Oak > Elm. Ben: Oak > Elm. Oak: Ben > Ana. Elm: Ana > Ben. Run deferred acceptance with students proposing.</p>
+    <details class="gt12-ans"><summary>Show the answer</summary><p>Ana proposes to Oak, held. Ben proposes to Oak; Oak prefers Ben and lets Ana go. Ana proposes to Elm, held. Result: Ana–Elm, Ben–Oak, after 3 proposals. It is stable: Ana would rather have Oak, but Oak prefers Ben.</p></details>
+    <p class="gt12-prob"><b>2.</b> In “Three’s company”, is the matching Ana–Elm, Ben–Oak, Cai–Pine stable? If not, name a blocking pair.</p>
+    <details class="gt12-ans"><summary>Show the answer</summary><p>Not stable. Check each student who would like to move up. Ana prefers Oak to Elm, but Oak has Ben, its first choice. Ben has Oak, his last choice, so he’d prefer Elm or Pine. Elm has Ana and ranks Ben below her, so no. Pine has Cai, its last choice, and ranks Ben above Cai, so Ben–Pine is a blocking pair. Cai already has his first choice. Build this matching by hand in the simulation and it draws the Ben–Pine pair in red.</p></details>
+    <p class="gt12-prob"><b>3.</b> Explain in two sentences why no student can gain by lying when students propose, but a school sometimes can.</p>
+    <details class="gt12-ans"><summary>Show the answer</summary><p>Proposing students already get the best partner available to them in any stable matching, and a misreport can only get them a partner who would have rejected them for someone better. A receiving school, by rejecting proposals it would really accept, sets off a chain of new proposals that can bring it a student it prefers.</p></details>
+    <p class="gt12-prob"><b>4.</b> Three neighbors value a $300 park at $250, $80 and $40. Who pays a Clarke tax, and how much?</p>
+    <details class="gt12-ans"><summary>Show the answer</summary><p>Net values: +150, −20, −60; total +70, so it is built. Without neighbor 1, the others total −80 and it wouldn’t be built, so neighbor 1 is pivotal and pays $80, the net loss the park imposes on the others. Without neighbor 2, the total is +90: still built, no tax. Same for neighbor 3. Neighbor 1’s payoff: 150 − 80 = $70.</p></details>
+    <p class="gt12-prob"><b>5.</b> Show that a second-price auction is a VCG mechanism.</p>
+    <details class="gt12-ans"><summary>Show the answer</summary><p>VCG gives the item to the highest bidder (the efficient choice for the reported values). Losers impose no harm on others, so they pay 0. If the winner weren’t there, the item would go to the second-highest bidder, who would get value <var>b</var><sub>(2)</sub>; with the winner present, the others get 0. So the winner pays <var>b</var><sub>(2)</sub>, the second-highest bid.</p></details>
+    <p class="gt12-prob"><b>6.</b> Values are uniform from $0 to $200. What reserve price maximizes a seller’s expected revenue in a second-price auction, and why doesn’t it depend on the number of bidders?</p>
+    <details class="gt12-ans"><summary>Show the answer</summary><p><var>F</var>(<var>v</var>) = <var>v</var>/200 and <var>f</var>(<var>v</var>) = 1/200, so φ(<var>v</var>) = <var>v</var> − (200 − <var>v</var>) = 2<var>v</var> − 200, zero at <var>v</var> = $100. The reserve screens out bidders whose virtual values are negative, and whether a single bidder’s virtual value is negative depends only on their own value, not on how many others there are.</p></details>
+    <p class="gt12-prob"><b>7.</b> (Harder) Prove that in the Clarke mechanism with <var>N</var> people, reporting your true value is a dominant strategy.</p>
+    <details class="gt12-ans"><summary>Show the answer</summary><p>Let <var>n</var><sub><var>i</var></sub> be your true net value and <var>m</var> the sum of the others’ reported net values. If your report makes the decision “build”, your payoff is <var>n</var><sub><var>i</var></sub> − max(0, −<var>m</var>); if “don’t build”, it is 0 − max(0, <var>m</var>). In both cases that equals (value of the decision to you plus the others) − max(0, <var>m</var>), and max(0, <var>m</var>) doesn’t depend on your report. So you want the decision that maximizes <var>n</var><sub><var>i</var></sub> + <var>m</var> if built versus 0 if not, which is exactly what the mechanism picks when you report <var>n</var><sub><var>i</var></sub> truthfully. Our test checked 3,000 random cases against 121 possible reports each: the truth was never beaten.</p></details>
+  </section>
+
+  <section class="lab-sec" id="model"><h2>How the interactive works</h2>
+    <div class="lab-cols">
+      <p><b>Deferred acceptance</b> runs one proposal at a time: the free proposer with the lowest number makes the next proposal. (The final matching doesn’t depend on the order of proposals.) Each school has one seat. Blocking pairs are always checked against the <i>true</i> preferences in the editor. The count of stable matchings is found by checking every possible matching, which is quick for five a side.</p>
+      <p><b>The park</b> costs $300, split equally. Under VCG, the park is built if the reported net values add up to zero or more, and a pivotal neighbor pays the absolute value of the others’ total. Under the proportional rule, it’s built if reports add up to $300, and each pays $300 times their share of the reports.</p>
+      <p><b>What’s simplified.</b> One seat per school, complete preference lists (unless someone lies by truncating), and no couples or ties. Real school-choice systems break ties in schools’ priorities with lotteries, and the medical match handles couples.</p>
+      <div>
+        <p><b>How it was checked</b> (Node.js tests, run before the page was built):</p>
+        <ul class="lab-small">
+          <li>“Three’s company”: students proposing give everyone their first choice in 3 proposals; schools proposing give the reverse; exactly 3 stable matchings exist. “Four and four”: Ana–Elm, Ben–Pine, Cai–Oak, Dee–Bay in 9 proposals, stable.</li>
+          <li>400 random markets with 2 to 5 a side (592 stable matchings in all): deferred acceptance was always stable, best for every proposer and worst for every receiver among all stable matchings.</li>
+          <li>All 41,200 possible misreports (every reordering and truncation) by a proposing student: none ever got the student a better match. A receiving school gained by truncating in 99 of the 400 markets. Oak’s truncation in “Three’s company” gets it Ben.</li>
+          <li>Clarke: taxes [20, 0, 0] for values 150, 120, 60 and [80, 0, 0] for 250, 80, 40; truth never beaten in 3,000 random cases; the park is built exactly when true values cover the cost. Under the proportional rule with values 150, 120, 60, underreporting gains $16.36 over the truth.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="check"><h2>Check yourself</h2>
+    <ol class="u-quiz">
+      <li class="u-q" data-a="1"><p>What makes a matching unstable?</p>
+        <ul class="u-opts"><li><button type="button">Someone didn’t get their first choice</button></li><li><button type="button">A student and a school both prefer each other to their assigned partners</button></li><li><button type="button">The algorithm took many rounds</button></li></ul>
+        <details><summary>Show the answer</summary><p>That’s a blocking pair. Not getting your first choice is normal and doesn’t make a matching unstable.</p></details></li>
+      <li class="u-q" data-a="2"><p>When students propose in deferred acceptance, which statement is true?</p>
+        <ul class="u-opts"><li><button type="button">Schools get their best stable partners</button></li><li><button type="button">Students can gain by lying</button></li><li><button type="button">Each student gets the best school they can get in any stable matching</button></li><li><button type="button">The result may be unstable</button></li></ul>
+        <details><summary>Show the answer</summary><p>The proposing side gets its best stable outcome and can’t gain by lying; the receiving side gets its worst stable outcome.</p></details></li>
+      <li class="u-q" data-a="0"><p>What does the revelation principle say?</p>
+        <ul class="u-opts"><li><button type="button">Any outcome achievable in equilibrium by some mechanism can be achieved by a direct mechanism where truth-telling is an equilibrium</button></li><li><button type="button">People always reveal the truth</button></li><li><button type="button">Secret ballots are best</button></li></ul>
+        <details><summary>Show the answer</summary><p>A direct mechanism can “play your equilibrium strategy for you”, so the designer may look only at truthful direct mechanisms.</p></details></li>
+      <li class="u-q" data-a="3"><p>Under the Clarke tax, when do you pay?</p>
+        <ul class="u-opts"><li><button type="button">Always, in proportion to your value</button></li><li><button type="button">Only if the project is built</button></li><li><button type="button">Never</button></li><li><button type="button">Only when your report changes the decision; then you pay the net harm to the others</button></li></ul>
+        <details><summary>Show the answer</summary><p>You pay the harm your report imposes on everyone else, which is zero unless you’re pivotal.</p></details></li>
+      <li class="u-q" data-a="1"><p>Which famous mechanism is a special case of VCG?</p>
+        <ul class="u-opts"><li><button type="button">The first-price auction</button></li><li><button type="button">The second-price auction</button></li><li><button type="button">Majority voting</button></li></ul>
+        <details><summary>Show the answer</summary><p>The winner pays the value the others lose because of their presence: the second-highest bid.</p></details></li>
+    </ol>
+    <p class="u-score" aria-live="polite"></p>
+  </section>
+
+  <section class="lab-sec" id="sources"><h2>Sources</h2>
+    <ul class="lab-src">
+      <li>D. Gale and L. S. Shapley, “College Admissions and the Stability of Marriage”, <i>American Mathematical Monthly</i> 69(1), 9–15 (1962).</li>
+      <li>L. E. Dubins and D. A. Freedman, “Machiavelli and the Gale–Shapley Algorithm”, <i>American Mathematical Monthly</i> 88(7), 485–494 (1981); A. E. Roth, “The Economics of Matching: Stability and Incentives”, <i>Mathematics of Operations Research</i> 7(4), 617–628 (1982).</li>
+      <li>A. E. Roth, “The Evolution of the Labor Market for Medical Interns and Residents: A Case Study in Game Theory”, <i>Journal of Political Economy</i> 92(6), 991–1016 (1984); A. E. Roth and E. Peranson, “The Redesign of the Matching Market for American Physicians”, <i>American Economic Review</i> 89(4), 748–780 (1999).</li>
+      <li>A. E. Roth, T. Sönmez and M. U. Ünver, “Kidney Exchange”, <i>Quarterly Journal of Economics</i> 119(2), 457–488 (2004).</li>
+      <li>A. Abdulkadiroğlu, P. A. Pathak and A. E. Roth, “The New York City High School Match”, and A. Abdulkadiroğlu, P. A. Pathak, A. E. Roth and T. Sönmez, “The Boston Public School Match”, <i>American Economic Review</i> 95(2), 364–371 (2005).</li>
+      <li>A. Gibbard, “Manipulation of Voting Schemes”, <i>Econometrica</i> 41(4), 587–601 (1973); M. A. Satterthwaite, <i>Journal of Economic Theory</i> 10(2), 187–217 (1975); R. B. Myerson, “Incentive Compatibility and the Bargaining Problem”, <i>Econometrica</i> 47(1), 61–73 (1979); P. Dasgupta, P. Hammond and E. Maskin, <i>Review of Economic Studies</i> 46(2), 185–216 (1979).</li>
+      <li>E. H. Clarke, “Multipart Pricing of Public Goods”, <i>Public Choice</i> 11, 17–33 (1971); T. Groves, “Incentives in Teams”, <i>Econometrica</i> 41(4), 617–631 (1973); J. Green and J.-J. Laffont, <i>Econometrica</i> 45(2), 427–438 (1977).</li>
+      <li>R. B. Myerson, “Optimal Auction Design”, <i>Mathematics of Operations Research</i> 6(1), 58–73 (1981).</li>
+      <li>Textbooks: D. Fudenberg and J. Tirole, <i>Game Theory</i> (MIT Press, 1991), chapter 7; A. Mas-Colell, M. D. Whinston and J. R. Green, <i>Microeconomic Theory</i> (Oxford University Press, 1995), chapter 23; A. E. Roth and M. Sotomayor, <i>Two-Sided Matching</i> (Cambridge University Press, 1990).</li>
+      <li>The Nobel Prize, <a href="https://www.nobelprize.org/prizes/economic-sciences/2012/summary/" target="_blank" rel="noopener">The Prize in Economic Sciences 2012</a> and <a href="https://www.nobelprize.org/prizes/economic-sciences/2007/summary/" target="_blank" rel="noopener">2007</a>.</li>
+      <li>MIT OpenCourseWare, <a href="https://ocw.mit.edu/courses/14-12-economic-applications-of-game-theory-fall-2012/" target="_blank" rel="noopener">14.12 Economic Applications of Game Theory</a>.</li>
+      <li>Wikipedia (secondary): <a href="https://en.wikipedia.org/wiki/Stable_marriage_problem" target="_blank" rel="noopener">Stable marriage problem</a>, <a href="https://en.wikipedia.org/wiki/Revelation_principle" target="_blank" rel="noopener">Revelation principle</a>, <a href="https://en.wikipedia.org/wiki/Vickrey%E2%80%93Clarke%E2%80%93Groves_mechanism" target="_blank" rel="noopener">Vickrey–Clarke–Groves mechanism</a>, <a href="https://en.wikipedia.org/wiki/National_Resident_Matching_Program" target="_blank" rel="noopener">National Resident Matching Program</a>.</li>
+    </ul>
+  </section>
+  {{ partial "unit-foot.html" . }}
+</div>
+<script src="{{ "business/game-theory/mechanism-design/model.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/mechanism-design/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "business/game-theory/mechanism-design/sim.js" | relURL }}?v={{ (os.Stat "static/business/game-theory/mechanism-design/sim.js").ModTime.Unix }}" defer></script>
+{{ end }}
