@@ -1,0 +1,454 @@
+{
+  "course": "calc3",
+  "units": [
+    {"key":"space","title":"Vectors and Space","blurb":"Work with vectors, lines, planes and surfaces in three dimensions."},
+    {"key":"vector-functions","title":"Vector-Valued Functions","blurb":"Describe curves in space and the motion along them."},
+    {"key":"partials","title":"Partial Derivatives","blurb":"Study functions of several variables: limits, partial derivatives, the chain rule and gradients."},
+    {"key":"optimization","title":"Optimization","blurb":"Find and classify extreme values, with and without constraints."},
+    {"key":"multiple-integrals","title":"Multiple Integrals","blurb":"Integrate over regions in the plane and in space, in any coordinates."}
+  ],
+  "topics": [
+    {
+      "id": "calc3.space-coordinates",
+      "slug": "space-coordinates",
+      "unit": "space",
+      "title": "Three-Dimensional Coordinates",
+      "short": "Locate points with (x, y, z) and find distances in space.",
+      "prereqs": ["geo.distance-midpoint"],
+      "xp": 1,
+      "trouble": "Students sketch the axes so the right-hand rule fails, or drop the z term from the distance formula.",
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.vectors-in-space",
+      "slug": "vectors-in-space",
+      "unit": "space",
+      "title": "Vectors in Three Dimensions",
+      "short": "Add, scale and find the length of 3D vectors.",
+      "prereqs": ["calc3.space-coordinates","pre.vector-operations"],
+      "xp": 1,
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.dot-product-projections",
+      "slug": "dot-product-projections",
+      "unit": "space",
+      "title": "The Dot Product and Projections",
+      "short": "u · v = |u||v| cos θ, and the projection of one vector on another.",
+      "prereqs": ["calc3.vectors-in-space","pre.vector-projection"],
+      "xp": 2,
+      "trouble": "Students mix up the scalar projection and the vector projection.",
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.cross-product",
+      "slug": "cross-product",
+      "unit": "space",
+      "title": "The Cross Product",
+      "short": "u × v is perpendicular to both, with length equal to the parallelogram's area.",
+      "prereqs": ["calc3.dot-product-projections","pre.determinants"],
+      "xp": 2,
+      "trouble": "Students assume u × v = v × u, or lose the minus sign on the middle component.",
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.lines-in-space",
+      "slug": "lines-in-space",
+      "unit": "space",
+      "title": "Lines in Space",
+      "short": "r(t) = r₀ + tv.",
+      "prereqs": ["calc3.vectors-in-space"],
+      "xp": 2,
+      "trouble": "Students think two lines that do not meet must be parallel, missing skew lines.",
+      "viz": ["vectors3d","param3d"]
+    },
+    {
+      "id": "calc3.planes",
+      "slug": "planes",
+      "unit": "space",
+      "title": "Planes",
+      "short": "A normal vector and a point give a(x − x₀) + b(y − y₀) + c(z − z₀) = 0.",
+      "prereqs": ["calc3.cross-product","calc3.lines-in-space"],
+      "xp": 2,
+      "trouble": "Students use a vector lying in the plane as the normal vector.",
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.distance-to-plane",
+      "slug": "distance-to-plane",
+      "unit": "space",
+      "title": "Distances to Lines and Planes",
+      "short": "Project onto a normal to find the shortest distance.",
+      "prereqs": ["calc3.planes"],
+      "xp": 3,
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.quadric-surfaces",
+      "slug": "quadric-surfaces",
+      "unit": "space",
+      "title": "Cylinders and Quadric Surfaces",
+      "short": "Identify surfaces by their traces in the coordinate planes.",
+      "prereqs": ["calc3.space-coordinates","pre.classify-conics"],
+      "xp": 2,
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.cylindrical-spherical",
+      "slug": "cylindrical-spherical",
+      "unit": "space",
+      "title": "Cylindrical and Spherical Coordinates",
+      "short": "Describe points by (r, θ, z) or (ρ, θ, φ).",
+      "prereqs": ["calc3.space-coordinates","pre.polar-rectangular"],
+      "xp": 2,
+      "trouble": "Students mix up θ and φ, or measure φ from the xy-plane instead of the positive z-axis.",
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.vector-functions",
+      "slug": "vector-functions",
+      "unit": "vector-functions",
+      "title": "Vector-Valued Functions and Space Curves",
+      "short": "r(t) traces a curve as t changes.",
+      "prereqs": ["calc3.lines-in-space","pre.parametric-equations"],
+      "xp": 1,
+      "viz": ["param3d"]
+    },
+    {
+      "id": "calc3.vector-function-calculus",
+      "slug": "vector-function-calculus",
+      "unit": "vector-functions",
+      "title": "Derivatives and Integrals of Vector Functions",
+      "short": "Differentiate and integrate component by component.",
+      "prereqs": ["calc3.vector-functions","calc1.antiderivatives"],
+      "xp": 2,
+      "viz": ["param3d"]
+    },
+    {
+      "id": "calc3.space-arc-length",
+      "slug": "space-arc-length",
+      "unit": "vector-functions",
+      "title": "Arc Length in Space",
+      "short": "L = ∫|r′(t)| dt.",
+      "prereqs": ["calc3.vector-function-calculus","calc2.arc-length"],
+      "xp": 2,
+      "viz": ["param3d"]
+    },
+    {
+      "id": "calc3.curvature",
+      "slug": "curvature",
+      "unit": "vector-functions",
+      "title": "Curvature and the Unit Tangent and Normal",
+      "short": "Curvature measures how fast the direction turns.",
+      "prereqs": ["calc3.space-arc-length"],
+      "xp": 3,
+      "trouble": "Students forget to divide by |r′(t)|, so the \"unit\" tangent is not unit length.",
+      "viz": ["param3d"]
+    },
+    {
+      "id": "calc3.motion-in-space",
+      "slug": "motion-in-space",
+      "unit": "vector-functions",
+      "title": "Velocity and Acceleration in Space",
+      "short": "Split acceleration into tangential and normal parts.",
+      "prereqs": ["calc3.curvature","calc1.motion"],
+      "xp": 3,
+      "viz": ["param3d","vectors3d"]
+    },
+    {
+      "id": "calc3.multivariable-functions",
+      "slug": "multivariable-functions",
+      "unit": "partials",
+      "title": "Functions of Several Variables",
+      "short": "Read surfaces and level curves of z = f(x, y).",
+      "prereqs": ["calc3.quadric-surfaces"],
+      "xp": 1,
+      "trouble": "Students read level curves that are close together as a gentle slope.",
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.level-surfaces",
+      "slug": "level-surfaces",
+      "unit": "partials",
+      "title": "Functions of Three Variables and Level Surfaces",
+      "short": "f(x, y, z) = k describes a surface.",
+      "prereqs": ["calc3.multivariable-functions"],
+      "xp": 2,
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.multivariable-limits",
+      "slug": "multivariable-limits",
+      "unit": "partials",
+      "title": "Limits and Continuity",
+      "short": "A limit must agree along every path.",
+      "prereqs": ["calc3.multivariable-functions","calc1.epsilon-delta"],
+      "xp": 3,
+      "trouble": "Students check only straight-line paths and conclude a limit exists.",
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.partial-derivatives",
+      "slug": "partial-derivatives",
+      "unit": "partials",
+      "title": "Partial Derivatives",
+      "short": "Differentiate in one variable while holding the others fixed.",
+      "prereqs": ["calc3.multivariable-functions","calc1.chain-rule"],
+      "xp": 1,
+      "trouble": "Students differentiate the other variable too instead of treating it as a constant.",
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.higher-partials",
+      "slug": "higher-partials",
+      "unit": "partials",
+      "title": "Higher-Order Partials",
+      "short": "Mixed partials fxy and fyx agree for smooth functions.",
+      "prereqs": ["calc3.partial-derivatives"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "calc3.tangent-planes",
+      "slug": "tangent-planes",
+      "unit": "partials",
+      "title": "Tangent Planes and Linear Approximation",
+      "short": "z ≈ f(a, b) + fx(x − a) + fy(y − b).",
+      "prereqs": ["calc3.partial-derivatives","calc3.planes","calc1.linear-approximation"],
+      "xp": 2,
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.differentials-error",
+      "slug": "differentials-error",
+      "unit": "partials",
+      "title": "Differentials and Error Estimates",
+      "short": "Estimate how small errors in inputs affect the output.",
+      "prereqs": ["calc3.tangent-planes"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "calc3.multivariable-chain-rule",
+      "slug": "multivariable-chain-rule",
+      "unit": "partials",
+      "title": "The Chain Rule for Several Variables",
+      "short": "Add up the effects through every path of dependence.",
+      "prereqs": ["calc3.partial-derivatives"],
+      "xp": 3,
+      "trouble": "Students leave out one of the paths from the output to the variable.",
+      "viz": []
+    },
+    {
+      "id": "calc3.implicit-partials",
+      "slug": "implicit-partials",
+      "unit": "partials",
+      "title": "Implicit Differentiation with Partials",
+      "short": "dy/dx = −Fx/Fy.",
+      "prereqs": ["calc3.multivariable-chain-rule"],
+      "xp": 2,
+      "trouble": "Students forget the minus sign.",
+      "viz": []
+    },
+    {
+      "id": "calc3.directional-derivatives",
+      "slug": "directional-derivatives",
+      "unit": "partials",
+      "title": "Directional Derivatives",
+      "short": "The rate of change in the direction of a unit vector u.",
+      "prereqs": ["calc3.tangent-planes","calc3.dot-product-projections"],
+      "xp": 2,
+      "trouble": "Students use a direction vector that is not unit length.",
+      "viz": ["gradient"]
+    },
+    {
+      "id": "calc3.gradient",
+      "slug": "gradient",
+      "unit": "partials",
+      "title": "The Gradient",
+      "short": "∇f points uphill fastest, with length equal to the steepest rate.",
+      "prereqs": ["calc3.directional-derivatives"],
+      "xp": 2,
+      "trouble": "Students draw the gradient on the surface instead of in the domain.",
+      "viz": ["gradient","surface"]
+    },
+    {
+      "id": "calc3.gradient-normals",
+      "slug": "gradient-normals",
+      "unit": "partials",
+      "title": "Gradients, Level Sets and Normal Lines",
+      "short": "∇f is perpendicular to level curves and level surfaces.",
+      "prereqs": ["calc3.gradient","calc3.level-surfaces"],
+      "xp": 3,
+      "viz": ["gradient"]
+    },
+    {
+      "id": "calc3.critical-points",
+      "slug": "critical-points",
+      "unit": "optimization",
+      "title": "Local Extrema and the Second Derivative Test",
+      "short": "Use D = fxx·fyy − (fxy)² to classify critical points.",
+      "prereqs": ["calc3.higher-partials","calc3.gradient"],
+      "xp": 3,
+      "trouble": "Students forget that D < 0 means a saddle, or reach a conclusion when D = 0.",
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.absolute-extrema",
+      "slug": "absolute-extrema",
+      "unit": "optimization",
+      "title": "Absolute Extrema on Closed Regions",
+      "short": "Check critical points inside and the whole boundary.",
+      "prereqs": ["calc3.critical-points"],
+      "xp": 3,
+      "trouble": "Students skip the boundary or its corner points.",
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.lagrange-multipliers",
+      "slug": "lagrange-multipliers",
+      "unit": "optimization",
+      "title": "Lagrange Multipliers",
+      "short": "At a constrained extreme, ∇f is parallel to ∇g.",
+      "prereqs": ["calc3.gradient-normals","calc3.absolute-extrema"],
+      "xp": 3,
+      "trouble": "Students solve for λ but forget to check every solution of the system.",
+      "viz": ["gradient"]
+    },
+    {
+      "id": "calc3.lagrange-two-constraints",
+      "slug": "lagrange-two-constraints",
+      "unit": "optimization",
+      "title": "Lagrange Multipliers with Two Constraints",
+      "short": "∇f = λ∇g + μ∇h.",
+      "prereqs": ["calc3.lagrange-multipliers"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc3.double-integrals",
+      "slug": "double-integrals",
+      "unit": "multiple-integrals",
+      "title": "Double Integrals over Rectangles",
+      "short": "Volume under a surface as a limit of sums.",
+      "prereqs": ["calc3.multivariable-functions","calc1.definite-integral"],
+      "xp": 2,
+      "viz": ["surface","riemann"]
+    },
+    {
+      "id": "calc3.iterated-integrals",
+      "slug": "iterated-integrals",
+      "unit": "multiple-integrals",
+      "title": "Iterated Integrals and Fubini's Theorem",
+      "short": "Integrate one variable at a time.",
+      "prereqs": ["calc3.double-integrals"],
+      "xp": 1,
+      "viz": []
+    },
+    {
+      "id": "calc3.general-regions",
+      "slug": "general-regions",
+      "unit": "multiple-integrals",
+      "title": "Double Integrals over General Regions",
+      "short": "Let the inner limits depend on the outer variable.",
+      "prereqs": ["calc3.iterated-integrals","calc2.area-between-curves"],
+      "xp": 3,
+      "trouble": "Students put variables in the outer limits of integration.",
+      "viz": []
+    },
+    {
+      "id": "calc3.reverse-order",
+      "slug": "reverse-order",
+      "unit": "multiple-integrals",
+      "title": "Reversing the Order of Integration",
+      "short": "Redraw the region and describe it the other way.",
+      "prereqs": ["calc3.general-regions"],
+      "xp": 3,
+      "trouble": "Students swap the limits without redrawing the region.",
+      "viz": []
+    },
+    {
+      "id": "calc3.polar-double-integrals",
+      "slug": "polar-double-integrals",
+      "unit": "multiple-integrals",
+      "title": "Double Integrals in Polar Coordinates",
+      "short": "dA = r dr dθ.",
+      "prereqs": ["calc3.general-regions","calc3.cylindrical-spherical","calc2.polar-area"],
+      "xp": 3,
+      "trouble": "Students forget the extra factor r.",
+      "viz": ["polar"]
+    },
+    {
+      "id": "calc3.double-integral-applications",
+      "slug": "double-integral-applications",
+      "unit": "multiple-integrals",
+      "title": "Mass, Center of Mass and Probability",
+      "short": "Integrate density over a region.",
+      "prereqs": ["calc3.general-regions"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc3.surface-area-double",
+      "slug": "surface-area-double",
+      "unit": "multiple-integrals",
+      "title": "Surface Area of a Graph",
+      "short": "A = ∬√(1 + fx² + fy²) dA.",
+      "prereqs": ["calc3.general-regions","calc3.partial-derivatives"],
+      "xp": 3,
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc3.triple-integrals",
+      "slug": "triple-integrals",
+      "unit": "multiple-integrals",
+      "title": "Triple Integrals",
+      "short": "Integrate over solid regions.",
+      "prereqs": ["calc3.general-regions"],
+      "xp": 3,
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.triple-cylindrical",
+      "slug": "triple-cylindrical",
+      "unit": "multiple-integrals",
+      "title": "Triple Integrals in Cylindrical Coordinates",
+      "short": "dV = r dz dr dθ.",
+      "prereqs": ["calc3.triple-integrals","calc3.polar-double-integrals"],
+      "xp": 3,
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.triple-spherical",
+      "slug": "triple-spherical",
+      "unit": "multiple-integrals",
+      "title": "Triple Integrals in Spherical Coordinates",
+      "short": "dV = ρ² sin φ dρ dφ dθ.",
+      "prereqs": ["calc3.triple-cylindrical"],
+      "xp": 3,
+      "trouble": "Students forget the factor ρ² sin φ, or use the wrong range for φ.",
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "calc3.triple-applications",
+      "slug": "triple-applications",
+      "unit": "multiple-integrals",
+      "title": "Mass and Moments of Solids",
+      "short": "Find mass, centers of mass and moments of inertia.",
+      "prereqs": ["calc3.triple-integrals","calc3.double-integral-applications"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc3.change-of-variables",
+      "slug": "change-of-variables",
+      "unit": "multiple-integrals",
+      "title": "Change of Variables and the Jacobian",
+      "short": "Transform a region and scale by |∂(x, y)/∂(u, v)|.",
+      "prereqs": ["calc3.polar-double-integrals","pre.determinants"],
+      "xp": 3,
+      "trouble": "Students drop the absolute value of the Jacobian, or use its reciprocal.",
+      "viz": ["matrix2d"]
+    }
+  ]
+}

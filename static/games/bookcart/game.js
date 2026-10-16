@@ -25,7 +25,7 @@
     'Pumping a swing works best in rhythm. Push the cart the same way each time the books pass the bottom, and each swing climbs a little higher. That’s resonance.',
     'To stand straight up and stop there, the books need exactly enough swing energy to lift their centre of gravity from below the pivot to above it: E = 2 m g h. The Swing bar fills up as you get there.',
     'A tall stack tips more slowly than a short one: the time it takes to fall grows with the square root of its height. That’s why a broom is easier to balance on your hand than a pencil.',
-    'Real books on a free pivot fall very fast: a lean of two books doubles about every 0.13 s, quicker than anyone can react. So the game slows time down near the top. The physics is exactly the same, just shown in slow motion.',
+    'Real books on a free pivot fall very fast: a lean of two books doubles about every 0.13 s, quicker than anyone can react. So the lab slows time down near the top. The physics is exactly the same, just shown in slow motion.',
     'An unbalanced lean doesn’t grow at a steady speed; it doubles again and again. Small, early corrections beat big, late ones.',
     'To move the cart right without dropping the books, you first nudge it left so the stack leans right, then follow it. Self-balancing scooters and robots do the same thing.',
     'Human reaction time is about 0.2 seconds. Measure yours by catching a dropped ruler: it falls d = ½ g t², so 20 cm means about 0.2 s.',
@@ -551,7 +551,7 @@
       '<div class="bc-modes"><button type="button" data-mode="levels" class="on"><b>Levels</b><small>2 to 25 books, in any order. Swing them up, then balance them above the cart or stand every book straight.</small></button>' +
       '<button type="button" data-mode="lab"><b>Lab</b><small>Change gravity, stiffness, counterweight and wind. Stand the books up, watch chaos, or let the autopilot try.</small></button></div>' +
       '<h3>Pick a level <span class="small">(number of books)</span></h3>' + levelGrid() + timePick() +
-      '<p class="small">Phone or mouse: press anywhere on the game and slide left or right; the cart moves with you. Keyboard: hold ← →. 🔬 shows the live physics, 🤖 the autopilot. Stars are kept for each goal; ⚡ marks a level done in real time. <a href="' + LESSON + '">Learn the physics →</a></p>', 'menu');
+      '<p class="small">Phone or mouse: press anywhere on the scene and slide left or right; the cart moves with you. Keyboard: hold ← →. 🔬 shows the live physics, 🤖 the autopilot. Stars are kept for each goal; ⚡ marks a level done in real time. <a href="' + LESSON + '">Learn the physics →</a></p>', 'menu');
   }
   function showIntro() {
     var s = G.sys, L = lv(G.n);

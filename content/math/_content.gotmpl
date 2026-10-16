@@ -1,0 +1,12 @@
+{{- /* Math Ladder: one page per course (a section) and one per topic, from data/math/courses.yaml and data/math/topics/<key>.json.
+   Course pages: /math/<course slug>/ (layouts/math/list.html). Topic pages: /math/<course slug>/<topic slug>/ (layouts/math/single.html). */ -}}
+{{- $all := $.Site.Data.math.topics | default dict -}}
+{{- range $i, $c := $.Site.Data.math.courses -}}
+  {{- $d := index $all $c.key -}}
+  {{- $.AddPage (dict "path" $c.slug "kind" "section" "title" $c.title "description" (printf "%s Free %s lessons and practice on Math Ladder at Teddy Rook Book." $c.blurb $c.title) "params" (dict "course" $c.key) "weight" (add $i 1)) -}}
+  {{- with $d -}}
+    {{- range $j, $t := .topics -}}
+      {{- $.AddPage (dict "path" (printf "%s/%s" $c.slug $t.slug) "kind" "page" "title" $t.title "description" (printf "%s %s · Math Ladder" ($t.short | default "") $c.title) "weight" (add $j 1) "params" (dict "course" $c.key "topic" $t.id "unit" $t.unit)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

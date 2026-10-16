@@ -1,0 +1,84 @@
+{{- /* Math Ladder: shared inline partials (Hugo's inline partials are global). Not a page layout.
+  inline/ml-graph.html   (partialCached) builds /math/graph.json: every course and topic; returns { url, v, courses }
+  inline/ml-index.html   (partialCached) { T: id -> {id, title, url, course, unit, prereqs, xp}, kids: id -> [ids] }
+  inline/ml-head.html    styles for every Math Ladder page
+  inline/ml-cfg.html     <script id="ml-cfg"> with the site config the scripts read (base, graph url, available files, courses)
+  inline/ml-js.html      one deferred script from static/ with a cache-busting version
+  inline/ml-vizbase.html "basic" or "adv": the visuals file a course uses by default
+*/ -}}
+
+{{- define "_partials/inline/ml-graph.html" -}}
+{{- $courses := slice -}}{{- $topics := slice -}}
+{{- $all := site.Data.math.topics | default dict -}}
+{{- range site.Data.math.courses -}}
+  {{- $c := . -}}{{- $units := slice -}}{{- $n := 0 -}}
+  {{- with index $all .key -}}
+    {{- range .units }}{{ $units = $units | append (dict "key" .key "title" .title) }}{{ end -}}
+    {{- range .topics -}}
+      {{- $topics = $topics | append (dict "id" .id "course" $c.key "unit" .unit "title" .title "short" (.short | default "") "url" (printf "math/%s/%s/" $c.slug .slug | relURL) "prereqs" (.prereqs | default slice) "xp" (.xp | default 2)) -}}
+    {{- end -}}
+    {{- $n = len .topics -}}
+  {{- end -}}
+  {{- $courses = $courses | append (dict "key" .key "slug" .slug "title" .title "short" .short "band" .band "grade" (string .grade) "icon" .icon "color" .color "blurb" .blurb "after" (.after | default slice) "url" (printf "math/%s/" .slug | relURL) "n" $n "units" $units) -}}
+{{- end -}}
+{{- $json := dict "courses" $courses "topics" $topics | jsonify -}}
+{{- $r := resources.FromString "math/graph.json" $json -}}
+{{- return (dict "url" $r.RelPermalink "v" (substr (md5 $json) 0 10) "courses" $courses "n" (len $topics)) -}}
+{{- end -}}
+
+{{- define "_partials/inline/ml-index.html" -}}
+{{- $T := newScratch -}}{{- $K := newScratch -}}
+{{- $all := site.Data.math.topics | default dict -}}
+{{- range site.Data.math.courses -}}
+  {{- $c := . -}}
+  {{- with index $all .key -}}
+    {{- range .topics -}}
+      {{- $T.Set .id (dict "id" .id "title" .title "url" (printf "math/%s/%s/" $c.slug .slug | relURL) "course" $c.key "unit" .unit "prereqs" (.prereqs | default slice) "xp" (.xp | default 2) "short" (.short | default "")) -}}
+      {{- $id := .id -}}
+      {{- range .prereqs }}{{ $K.Add . (slice $id) }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "T" $T.Values "kids" $K.Values) -}}
+{{- end -}}
+
+{{- define "_partials/inline/ml-vizbase.html" -}}
+{{- $v := "adv" }}{{ if in (slice "k" "g1" "g2" "g3" "g4" "g5" "g6" "g7" "g8" "geo") . }}{{ $v = "basic" }}{{ end -}}
+{{- return $v -}}
+{{- end -}}
+
+{{- define "_partials/inline/ml-css.html" -}}
+{{- $p := printf "static/%s" . -}}
+{{- if fileExists $p }}<link rel="stylesheet" href="{{ . | relURL }}?v={{ (os.Stat $p).ModTime.Unix }}">{{ end -}}
+{{- end -}}
+
+{{- define "_partials/inline/ml-js.html" -}}
+{{- $p := printf "static/%s" . -}}
+{{- if fileExists $p }}<script src="{{ . | relURL }}?v={{ (os.Stat $p).ModTime.Unix }}" defer></script>
+{{ else }}<script src="{{ . | relURL }}" defer></script>
+{{ end -}}
+{{- end -}}
+
+{{- define "_partials/inline/ml-head.html" -}}
+{{ partial "hs-head.html" . }}
+{{ partial "inline/ml-css.html" "math/core/core.css" }}
+{{ partial "inline/ml-css.html" "math/viz/viz.css" }}
+{{ partial "inline/ml-css.html" "math/math.css" }}
+{{- end -}}
+
+{{- define "_partials/inline/ml-cfg.html" -}}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
+{{- $gen := dict -}}{{- $viz := dict -}}
+{{- range site.Data.math.courses -}}
+  {{- $f := printf "static/math/gen/%s.js" .key -}}{{- if fileExists $f }}{{ $gen = merge $gen (dict .key (os.Stat $f).ModTime.Unix) }}{{ end -}}
+  {{- $v := printf "static/math/viz/%s.js" .key -}}{{- if fileExists $v }}{{ $viz = merge $viz (dict .key (os.Stat $v).ModTime.Unix) }}{{ end -}}
+{{- end -}}
+{{- $vb := dict -}}
+{{- range slice "basic" "adv" -}}
+  {{- $f := printf "static/math/viz/%s.js" . -}}{{- if fileExists $f }}{{ $vb = merge $vb (dict . (os.Stat $f).ModTime.Unix) }}{{ end -}}
+  {{- $c := printf "static/math/viz/%s.css" . -}}{{- if fileExists $c }}{{ $vb = merge $vb (dict (printf "%s.css" .) (os.Stat $c).ModTime.Unix) }}{{ end -}}
+{{- end -}}
+{{- $courses := slice -}}
+{{- range $g.courses }}{{ $courses = $courses | append (dict "key" .key "slug" .slug "title" .title "short" .short "band" .band "grade" .grade "icon" .icon "color" .color "after" .after "url" .url "n" .n "viz" (partial "inline/ml-vizbase.html" .key)) }}{{ end -}}
+<script type="application/json" id="ml-cfg">{{ dict "base" ("math/" | relURL) "graph" (printf "%s?v=%s" $g.url $g.v) "gen" $gen "viz" $viz "vb" $vb "courses" $courses "page" . | jsonify | safeJS }}</script>
+{{- end -}}

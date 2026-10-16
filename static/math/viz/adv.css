@@ -1,0 +1,46 @@
+/* Math Ladder visuals, set B (static/math/viz/adv.js): extra styles on top of viz.css. Follows the site's light or dark theme. */
+.ml-viz.mla{--mla-ok:#00703c;--mla-red:#d6336c;--mla-green:#00703c;--mla-blue:#1c6fd6;overflow:hidden}
+html[data-theme="dark"] .ml-viz.mla{--mla-ok:#6cc79a;--mla-red:#ff8787;--mla-green:#6cc79a;--mla-blue:#74c0fc}
+.mla .mla-box{position:relative}
+.mla .mla-task{display:flex;gap:.55rem;align-items:flex-start;margin:0 0 .6rem;padding:.5rem .7rem;border-radius:10px;background:var(--mv-card);border:1px solid var(--mv-line);border-left:4px solid #b8963e;font-size:.95rem;line-height:1.45}
+.mla .mla-tk{flex:0 0 auto;width:1.25rem;height:1.25rem;margin-top:.1rem;border-radius:50%;border:2px solid #b8963e;box-sizing:border-box;position:relative}
+.mla .mla-task.ok{border-left-color:var(--mla-ok)}
+.mla .mla-task.ok .mla-tk{background:var(--mla-ok);border-color:var(--mla-ok)}
+.mla .mla-task.ok .mla-tk::after{content:"";position:absolute;left:.33rem;top:.12rem;width:.28rem;height:.55rem;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+html[data-theme="dark"] .mla .mla-task.ok .mla-tk::after{border-color:#0f1a14}
+.mla .mla-zoom{display:flex;gap:.35rem;flex:0 0 auto}
+.mla .mla-zoom .ml-btn{width:38px;height:38px;padding:0;border-radius:10px;font-size:1.05rem;line-height:1}
+.mla .mla-key{display:inline-block;width:.85em;height:.85em;border-radius:3px;background:var(--c);margin-right:.35em;vertical-align:-.05em}
+.mla .mla-r{color:var(--mla-red);font-weight:700}.mla .mla-g{color:var(--mla-green);font-weight:700}.mla .mla-b{color:var(--mla-blue);font-weight:700}
+.mla .ml-readout{overflow-wrap:anywhere}
+.mla .ml-readout b{font-variant-numeric:tabular-nums}
+.mla .ml-ctl:empty{display:none}
+.mla [hidden]{display:none!important}
+.mla .mla-tablewrap{margin:.6rem 0 0}
+.mla .mla-tbl{max-width:100%;overflow-x:auto;border:1px solid var(--mv-line);border-radius:10px;background:var(--mv-card)}
+.mla .mla-tbl table{border-collapse:collapse;width:100%;font-size:.85rem;font-variant-numeric:tabular-nums;margin:0}
+.mla .mla-tbl th,.mla .mla-tbl td{padding:.3rem .55rem;text-align:right;border-bottom:1px solid var(--mv-line);white-space:nowrap}
+.mla .mla-tbl th{color:var(--mv-muted);font-weight:600;background:var(--mv-paper)}
+.mla .mla-tbl tr:last-child td{border-bottom:0}
+.mla .mla-tbl tr.hi td{background:rgba(184,150,62,.16);font-weight:700}
+.mla .mla-chk{display:inline-flex;align-items:center;gap:.35rem;min-height:36px;font-size:.88rem;color:var(--mv-ink);cursor:pointer}
+.mla .mla-chk input{width:1.1rem;height:1.1rem;accent-color:var(--mv-acc);margin:0}
+.mla .mla-num{display:inline-flex;align-items:center;gap:.3rem;font-size:.88rem;color:var(--mv-muted)}
+.mla .mla-num input,.mla .mla-mat input{width:4.4rem;min-height:36px;box-sizing:border-box;padding:.25rem .4rem;border:1px solid var(--mv-line);border-radius:8px;background:var(--mv-card);color:var(--mv-ink);font:600 .95rem system-ui,sans-serif;font-variant-numeric:tabular-nums;text-align:center}
+.mla .mla-num input:focus-visible,.mla .mla-mat input:focus-visible,.mla .mla-tbl:focus-visible{outline:3px solid #b8963e;outline-offset:1px}
+.mla .mla-mat{display:inline-grid;grid-template-columns:auto auto;gap:.3rem;padding:.2rem .55rem;border-left:2px solid var(--mv-ink);border-right:2px solid var(--mv-ink);border-radius:6px}
+.mla .mla-matwrap{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.mla .mla-matwrap .mla-ml{font:italic 600 1.1rem Georgia,serif}
+.mla .mla-vec{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .45rem}
+.mla .mla-vec .mla-vl{font:italic 700 1rem Georgia,serif;min-width:1.4rem}
+.mla .mla-vec .mla-num input{width:3.9rem}
+.mla .mla-btns{display:flex;flex-wrap:wrap;gap:.4rem}
+.mla .mla-btns>.mla-btns{margin:0}
+.mla>.mla-btns{margin:.6rem 0 0}
+.mla .ml-btn[aria-pressed="true"]{background:rgba(0,112,60,.16);border-color:var(--mla-green)}
+.mla .ml-btn.mla-given{box-shadow:inset 0 -3px 0 var(--mla-blue)}
+.mla .mla-stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.4rem;margin:.55rem 0 0}
+.mla .mla-stat div{background:var(--mv-card);border:1px solid var(--mv-line);border-radius:10px;padding:.35rem .55rem;font-size:.8rem;color:var(--mv-muted);line-height:1.3}
+.mla .mla-stat b{display:block;color:var(--mv-ink);font-size:1.05rem;font-variant-numeric:tabular-nums}
+@media (max-width:480px){.mla .ml-sl{min-width:130px;flex-basis:130px}.ml-viz.mla{padding:.55rem}.mla .mla-task{font-size:.9rem}}
+@media (prefers-reduced-motion:reduce){.mla *{transition:none!important}}

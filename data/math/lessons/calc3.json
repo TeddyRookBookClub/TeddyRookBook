@@ -1,0 +1,3877 @@
+{
+ "calc3.space-coordinates": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In the plane you name a point with two numbers and measure distance with the <a href=\"/math/geometry/distance-midpoint/\">distance formula</a>, which is the Pythagorean theorem in disguise. Space needs one more number. A point is an ordered triple $(x, y, z)$: go $x$ units along the $x$-axis, $y$ units parallel to the $y$-axis, then $z$ units up (or down, if $z$ is negative)."
+   },
+   {
+    "t": "p",
+    "html": "The three axes are perpendicular, and their directions follow the <b>right-hand rule</b>: point the fingers of your right hand along the positive $x$-axis and curl them toward the positive $y$-axis; your thumb points along the positive $z$-axis. Every textbook picture and every formula later in this course (the cross product, orientations, Stokes' theorem) assumes this arrangement."
+   },
+   {
+    "t": "key",
+    "html": "A point in space is $(x, y, z)$. The distance between $(x_1, y_1, z_1)$ and $(x_2, y_2, z_2)$ is\n  $$d = \\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2 + (z_2 - z_1)^2}.$$\n  The sphere with center $(a, b, c)$ and radius $r$ is every point at distance $r$ from the center: $(x - a)^2 + (y - b)^2 + (z - c)^2 = r^2$."
+   },
+   {
+    "t": "why",
+    "html": "Use the Pythagorean theorem twice. Walk from $P$ to $Q$ in three legs: $\\Delta x$ along the $x$-direction, $\\Delta y$ along the $y$-direction, then $\\Delta z$ straight up. The first two legs lie in a horizontal floor and are perpendicular, so the floor diagonal has length $\\sqrt{(\\Delta x)^2 + (\\Delta y)^2}$. That diagonal is horizontal and the last leg is vertical, so they are perpendicular too, and\n  $$d^2 = \\left(\\sqrt{(\\Delta x)^2 + (\\Delta y)^2}\\right)^2 + (\\Delta z)^2 = (\\Delta x)^2 + (\\Delta y)^2 + (\\Delta z)^2.$$"
+   },
+   {
+    "t": "viz",
+    "name": "calc3-scene",
+    "opts": {
+     "points": [
+      {
+       "p": [
+        1,
+        2,
+        2
+       ],
+       "label": "P",
+       "box": true
+      },
+      {
+       "p": [
+        3,
+        -1,
+        4
+       ],
+       "label": "Q",
+       "color": "blue"
+      }
+     ],
+     "show": "distance",
+     "range": 4
+    },
+    "cap": "The three colored legs are $\\Delta x$, $\\Delta y$ and $\\Delta z$. Drag the picture to turn it: the legs always meet at right angles. The dashed box under $P$ shows how its coordinates are measured."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Equation",
+     "The set of points"
+    ],
+    "rows": [
+     [
+      "$z = 0$",
+      "the $xy$-plane (the floor)"
+     ],
+     [
+      "$x = 0$",
+      "the $yz$-plane"
+     ],
+     [
+      "$y = 0$",
+      "the $xz$-plane"
+     ],
+     [
+      "$x = 3$",
+      "a plane parallel to the $yz$-plane, 3 units in front of it"
+     ],
+     [
+      "$x = 0$ and $y = 0$",
+      "the $z$-axis"
+     ]
+    ],
+    "cap": "In space, one equation usually describes a surface, not a curve."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Distance",
+    "q": "Find the distance between $P(1, -2, 3)$ and $Q(4, 2, 15)$.",
+    "steps": [
+     "Differences: $\\Delta x = 3$, $\\Delta y = 4$, $\\Delta z = 12$.",
+     "Square and add: ${}9 + 16 + 144 = 169$.",
+     "$d = \\sqrt{169} = 13$."
+    ],
+    "a": "${}13$"
+   },
+   {
+    "t": "ex",
+    "title": "Center and radius of a sphere",
+    "q": "Find the center and radius of $x^2 + y^2 + z^2 - 4x + 6z - 3 = 0$.",
+    "steps": [
+     "Group by variable: $(x^2 - 4x) + y^2 + (z^2 + 6z) = 3$.",
+     "Complete each square: $x^2 - 4x = (x - 2)^2 - 4$ and $z^2 + 6z = (z + 3)^2 - 9$.",
+     "So $$(x - 2)^2 + y^2 + (z + 3)^2 = 3 + 4 + 9 = 16.$$",
+     "Center $(2, 0, -3)$ (the signs flip), radius $\\sqrt{16} = 4$."
+    ],
+    "a": "center $(2, 0, -3)$, radius ${}4$"
+   },
+   {
+    "t": "ex",
+    "title": "Distance to an axis and to a plane",
+    "q": "How far is $(3, -4, 5)$ from the $z$-axis, and from the $xy$-plane?",
+    "steps": [
+     "The nearest point of the $z$-axis is $(0, 0, 5)$: same height, $x = y = 0$.",
+     "So the distance to the axis is $\\sqrt{3^2 + (-4)^2} = 5$: only $x$ and $y$ count.",
+     "The nearest point of the $xy$-plane is $(3, -4, 0)$, straight below, so that distance is $|z| = 5$."
+    ],
+    "a": "${}5$ and ${}5$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dropping the $z$-term.</b> Using $\\sqrt{(\\Delta x)^2 + (\\Delta y)^2}$ in space gives the length of the shadow on the floor, not the distance. Check: the answer can never be smaller than $|\\Delta z|$.<br><b>Left-handed axes.</b> If your sketch has $x$ to the right, $y$ up the page and $z$ coming out of the page toward you, that is fine; but $z$ pointing into the page makes a left-handed system and later sign rules will fail. Test with the right-hand rule: curl from $x$ to $y$, and the thumb must point along $z$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.2 Vectors in Three Dimensions"
+   }
+  ]
+ },
+ "calc3.vectors-in-space": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You already know how to <a href=\"/math/precalculus/vector-operations/\">add and scale vectors in the plane</a>: work component by component. In space nothing changes except that a vector has three components, $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$. Think of it as a displacement: $v_1$ units in the $x$-direction, $v_2$ in the $y$-direction, $v_3$ in the $z$-direction. Where you start does not matter; only the size and direction of the move do."
+   },
+   {
+    "t": "key",
+    "html": "From $P$ to $Q$: $\\overrightarrow{PQ} = Q - P$ (\"end minus start\"). Vectors add and scale component by component, and\n  $$|\\mathbf{v}| = \\sqrt{v_1^2 + v_2^2 + v_3^2}, \\qquad \\text{unit vector in the direction of } \\mathbf{v}: \\ \\frac{\\mathbf{v}}{|\\mathbf{v}|}.$$\n  With $\\mathbf{i} = \\langle 1, 0, 0 \\rangle$, $\\mathbf{j} = \\langle 0, 1, 0 \\rangle$, $\\mathbf{k} = \\langle 0, 0, 1 \\rangle$, every vector is $v_1\\mathbf{i} + v_2\\mathbf{j} + v_3\\mathbf{k}$."
+   },
+   {
+    "t": "why",
+    "html": "Adding two displacements means doing one move and then the other. The $x$-parts of the two moves simply add, and so do the $y$-parts and the $z$-parts, because the three directions are independent. The length formula is the <a href=\"/math/calculus-3/space-coordinates/\">3-D distance formula</a> applied to the move from the tail $(0, 0, 0)$ to the tip $(v_1, v_2, v_3)$. Multiplying by $c$ multiplies every component, so it multiplies the length by $|c|$; dividing by $|\\mathbf{v}|$ therefore makes the length exactly ${}1$ without changing the direction."
+   },
+   {
+    "t": "viz",
+    "name": "vectors3d",
+    "opts": {
+     "u": [
+      2,
+      1,
+      0
+     ],
+     "v": [
+      0,
+      2,
+      1
+     ],
+     "op": "sum",
+     "ops": [
+      "sum"
+     ],
+     "range": 3
+    },
+    "cap": "Tip to tail: $\\mathbf{u} + \\mathbf{v}$ goes from the tail of $\\mathbf{u}$ to the tip of $\\mathbf{v}$. Change the components in the boxes and turn the picture to see it in 3-D."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From two points",
+    "q": "Find $\\overrightarrow{PQ}$, its length, and the unit vector in its direction for $P(2, -1, 4)$ and $Q(5, 3, 4)$.",
+    "steps": [
+     "$$\\overrightarrow{PQ} = \\langle 5 - 2, 3 - (-1), 4 - 4 \\rangle = \\langle 3, 4, 0 \\rangle.$$",
+     "$|\\overrightarrow{PQ}| = \\sqrt{9 + 16 + 0} = 5$.",
+     "Unit vector: $\\frac{1}{5}\\langle 3, 4, 0 \\rangle = \\left\\langle \\frac{3}{5}, \\frac{4}{5}, 0 \\right\\rangle$. Its length is $\\sqrt{\\frac{9}{25} + \\frac{16}{25}} = 1$."
+    ],
+    "a": "$\\langle 3, 4, 0 \\rangle$, length ${}5$, unit vector $\\left\\langle \\frac{3}{5}, \\frac{4}{5}, 0 \\right\\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "A combination",
+    "q": "For $\\mathbf{u} = \\langle 1, -2, 2 \\rangle$ and $\\mathbf{v} = \\langle 3, 0, -1 \\rangle$, find ${}2\\mathbf{u} - 3\\mathbf{v}$ and its length.",
+    "steps": [
+     "${}2\\mathbf{u} = \\langle 2, -4, 4 \\rangle$ and ${}3\\mathbf{v} = \\langle 9, 0, -3 \\rangle$.",
+     "Subtract matching components: $$\\langle 2 - 9, -4 - 0, 4 - (-3) \\rangle = \\langle -7, -4, 7 \\rangle.$$",
+     "Length: $\\sqrt{49 + 16 + 49} = \\sqrt{114}$."
+    ],
+    "a": "$\\langle -7, -4, 7 \\rangle$, length $\\sqrt{114}$"
+   },
+   {
+    "t": "ex",
+    "title": "A prescribed length",
+    "q": "Find the vector of length ${}10$ pointing the same way as $\\mathbf{w} = \\langle 2, -1, 2 \\rangle$.",
+    "steps": [
+     "$|\\mathbf{w}| = \\sqrt{4 + 1 + 4} = 3$, so the unit vector is $\\frac{1}{3}\\langle 2, -1, 2 \\rangle$.",
+     "Stretch it to length 10: $\\frac{10}{3}\\langle 2, -1, 2 \\rangle = \\left\\langle \\frac{20}{3}, -\\frac{10}{3}, \\frac{20}{3} \\right\\rangle$."
+    ],
+    "a": "$\\left\\langle \\frac{20}{3}, -\\frac{10}{3}, \\frac{20}{3} \\right\\rangle$"
+   },
+   {
+    "t": "p",
+    "html": "Two vectors are <b>parallel</b> when one is a scalar multiple of the other: $\\langle 2, -4, 6 \\rangle = 2\\langle 1, -2, 3 \\rangle$. A negative multiple points the opposite way but is still parallel."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Start minus end.</b> $P - Q$ is the vector from $Q$ to $P$, the opposite direction. Say \"end minus start\" out loud. <b>A half-made unit vector.</b> Dividing only some components by the length, or dividing by the sum of the components, gives a vector that is not length 1. Check by computing the length of your answer."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.2 Vectors in Three Dimensions"
+   }
+  ]
+ },
+ "calc3.dot-product-projections": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In precalculus you met <a href=\"/math/precalculus/dot-product/\">the dot product</a> and <a href=\"/math/precalculus/vector-projection/\">projections</a> in the plane. In space they work the same way with one more term: $\\mathbf{u} \\cdot \\mathbf{v} = u_1v_1 + u_2v_2 + u_3v_3$. The result is a number, and that number measures how much the two vectors point the same way."
+   },
+   {
+    "t": "key",
+    "html": "$$\\mathbf{u} \\cdot \\mathbf{v} = u_1v_1 + u_2v_2 + u_3v_3 = |\\mathbf{u}||\\mathbf{v}|\\cos\\theta.$$\n  Positive: the angle is acute. Zero: the vectors are <b>orthogonal</b>. Negative: obtuse. Projecting $\\mathbf{u}$ onto $\\mathbf{v}$:\n  $$\\operatorname{comp}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{|\\mathbf{v}|} \\ \\text{(a number)}, \\qquad \\operatorname{proj}_{\\mathbf{v}}\\mathbf{u} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{|\\mathbf{v}|^2}\\,\\mathbf{v} \\ \\text{(a vector)}.$$"
+   },
+   {
+    "t": "why",
+    "html": "Why does a sum of products know the angle? Put $\\mathbf{u}$, $\\mathbf{v}$ and $\\mathbf{u} - \\mathbf{v}$ into a triangle. The law of cosines says\n  $$|\\mathbf{u} - \\mathbf{v}|^2 = |\\mathbf{u}|^2 + |\\mathbf{v}|^2 - 2|\\mathbf{u}||\\mathbf{v}|\\cos\\theta.$$\n  Expanding the left side with components gives $$(u_1 - v_1)^2 + (u_2 - v_2)^2 + (u_3 - v_3)^2 = |\\mathbf{u}|^2 + |\\mathbf{v}|^2 - 2(u_1v_1 + u_2v_2 + u_3v_3).$$ Compare the two: $u_1v_1 + u_2v_2 + u_3v_3 = |\\mathbf{u}||\\mathbf{v}|\\cos\\theta$.<br>For the projection, the shadow of $\\mathbf{u}$ on the line of $\\mathbf{v}$ has signed length $|\\mathbf{u}|\\cos\\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{|\\mathbf{v}|}$. To turn that length into a vector, multiply by the unit vector $\\frac{\\mathbf{v}}{|\\mathbf{v}|}$: that is where $|\\mathbf{v}|^2$ comes from."
+   },
+   {
+    "t": "viz",
+    "name": "vectors3d",
+    "opts": {
+     "u": [
+      1,
+      2,
+      2
+     ],
+     "v": [
+      2,
+      -1,
+      1
+     ],
+     "op": "dot",
+     "ops": [
+      "dot"
+     ],
+     "range": 3
+    },
+    "cap": "The gold arrow is the projection of $\\mathbf{u}$ onto $\\mathbf{v}$. Change the components: when the dot product is negative, the shadow points against $\\mathbf{v}$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "Scalar projection",
+     "Vector projection"
+    ],
+    "rows": [
+     [
+      "Formula",
+      "$\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{|\\mathbf{v}|}$",
+      "$\\frac{\\mathbf{u} \\cdot \\mathbf{v}}{|\\mathbf{v}|^2}\\mathbf{v}$"
+     ],
+     [
+      "What it is",
+      "a signed length (a number)",
+      "an arrow along $\\mathbf{v}$"
+     ],
+     [
+      "Its size",
+      "$|\\mathbf{u}||\\cos\\theta|$",
+      "the same, $|\\mathbf{u}||\\cos\\theta|$"
+     ]
+    ],
+    "cap": "Same shadow, two ways to report it."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An angle",
+    "q": "Find the angle between $\\mathbf{u} = \\langle 1, 1, 0 \\rangle$ and $\\mathbf{v} = \\langle 1, 0, 1 \\rangle$.",
+    "steps": [
+     "$\\mathbf{u} \\cdot \\mathbf{v} = 1 + 0 + 0 = 1$; $|\\mathbf{u}| = |\\mathbf{v}| = \\sqrt{2}$.",
+     "$\\cos\\theta = \\frac{1}{\\sqrt{2}\\sqrt{2}} = \\frac{1}{2}$.",
+     "$\\theta = 60^\\circ$ (or $\\frac{\\pi}{3}$)."
+    ],
+    "a": "${}60^\\circ$"
+   },
+   {
+    "t": "ex",
+    "title": "Both projections",
+    "q": "Project $\\mathbf{u} = \\langle 4, 5, -1 \\rangle$ onto $\\mathbf{v} = \\langle 1, 2, 2 \\rangle$.",
+    "steps": [
+     "$\\mathbf{u} \\cdot \\mathbf{v} = 4 + 10 - 2 = 12$ and $|\\mathbf{v}| = 3$.",
+     "Scalar projection: $\\frac{12}{3} = 4$.",
+     "Vector projection: $\\frac{12}{9}\\langle 1, 2, 2 \\rangle = \\left\\langle \\frac{4}{3}, \\frac{8}{3}, \\frac{8}{3} \\right\\rangle$, which has length ${}4$.",
+     "Check: what is left, $\\mathbf{u} - \\operatorname{proj}_{\\mathbf{v}}\\mathbf{u} = \\left\\langle \\frac{8}{3}, \\frac{7}{3}, -\\frac{11}{3} \\right\\rangle$, is orthogonal to $\\mathbf{v}$: $\\frac{8 + 14 - 22}{3} = 0$."
+    ],
+    "a": "$\\operatorname{comp}_{\\mathbf{v}}\\mathbf{u} = 4$, $\\operatorname{proj}_{\\mathbf{v}}\\mathbf{u} = \\left\\langle \\frac{4}{3}, \\frac{8}{3}, \\frac{8}{3} \\right\\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "Work",
+    "q": "A constant force $\\mathbf{F} = \\langle 2, 0, 5 \\rangle$ N pushes a crate from $(0, 0, 0)$ to $(3, 4, 1)$ m. Find the work done.",
+    "steps": [
+     "Only the part of the force along the motion does work: $W = \\mathbf{F} \\cdot \\mathbf{D}$.",
+     "$\\mathbf{D} = \\langle 3, 4, 1 \\rangle$, so $W = 6 + 0 + 5 = 11$ J."
+    ],
+    "a": "${}11$ J"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Mixing up the two projections.</b> The scalar projection is a number; the vector projection is a vector. Dividing by $|\\mathbf{v}|$ once gives the number; dividing by $|\\mathbf{v}|^2$ and then multiplying by $\\mathbf{v}$ gives the vector. Quick check: the length of your vector projection must equal the absolute value of the scalar projection. Also watch the order: \"onto $\\mathbf{v}$\" means you divide by the length of $\\mathbf{v}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.3 The Dot Product"
+   }
+  ]
+ },
+ "calc3.cross-product": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The dot product turns two vectors into a number. In space there is a second product that turns two vectors into a <b>vector</b>: the cross product. It answers a question you will ask constantly in this course: <i>which direction is perpendicular to both of these?</i> Its formula is a <a href=\"/math/precalculus/determinants/\">3 × 3 determinant</a>."
+   },
+   {
+    "t": "key",
+    "html": "$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2v_3 - u_3v_2,\\ u_3v_1 - u_1v_3,\\ u_1v_2 - u_2v_1 \\rangle.$$\n  It is perpendicular to both $\\mathbf{u}$ and $\\mathbf{v}$, points by the right-hand rule, and its length $|\\mathbf{u}||\\mathbf{v}|\\sin\\theta$ is the area of the parallelogram they span."
+   },
+   {
+    "t": "why",
+    "html": "<b>Perpendicular:</b> dot the result with $\\mathbf{u}$:\n  $$u_1(u_2v_3 - u_3v_2) + u_2(u_3v_1 - u_1v_3) + u_3(u_1v_2 - u_2v_1) = 0,$$\n  because the six products cancel in pairs (it is a determinant with two equal rows). The same happens with $\\mathbf{v}$.<br>\n  <b>Length:</b> multiplying out gives Lagrange's identity $$|\\mathbf{u} \\times \\mathbf{v}|^2 = |\\mathbf{u}|^2|\\mathbf{v}|^2 - (\\mathbf{u} \\cdot \\mathbf{v})^2 = |\\mathbf{u}|^2|\\mathbf{v}|^2(1 - \\cos^2\\theta),$$ so $|\\mathbf{u} \\times \\mathbf{v}| = |\\mathbf{u}||\\mathbf{v}|\\sin\\theta$: base $|\\mathbf{u}|$ times height $|\\mathbf{v}|\\sin\\theta$."
+   },
+   {
+    "t": "viz",
+    "name": "vectors3d",
+    "opts": {
+     "u": [
+      2,
+      1,
+      0
+     ],
+     "v": [
+      0,
+      2,
+      1
+     ],
+     "op": "cross",
+     "ops": [
+      "cross"
+     ],
+     "range": 3
+    },
+    "cap": "The purple arrow $\\mathbf{u} \\times \\mathbf{v}$ stands straight up from the gold parallelogram, and its length equals the parallelogram's area. Swap the two vectors in the boxes and it flips over."
+   },
+   {
+    "t": "list",
+    "items": [
+     "$\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$: order matters (anticommutative).",
+     "$\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$, and parallel vectors have cross product $\\mathbf{0}$ ($\\sin 0 = 0$).",
+     "$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}$, $\\mathbf{j} \\times \\mathbf{k} = \\mathbf{i}$, $\\mathbf{k} \\times \\mathbf{i} = \\mathbf{j}$ (go around the circle $\\mathbf{i} \\to \\mathbf{j} \\to \\mathbf{k}$).",
+     "The volume of the box (parallelepiped) on $\\mathbf{u}$, $\\mathbf{v}$, $\\mathbf{w}$ is $|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})|$."
+    ]
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Compute and check",
+    "q": "Find $\\langle 1, 2, 3 \\rangle \\times \\langle 4, 5, 6 \\rangle$.",
+    "steps": [
+     "First: $u_2v_3 - u_3v_2 = 2 \\cdot 6 - 3 \\cdot 5 = -3$.",
+     "Second (careful): $u_3v_1 - u_1v_3 = 3 \\cdot 4 - 1 \\cdot 6 = 6$.",
+     "Third: $u_1v_2 - u_2v_1 = 1 \\cdot 5 - 2 \\cdot 4 = -3$.",
+     "Check with a dot product: $$\\langle -3, 6, -3 \\rangle \\cdot \\langle 1, 2, 3 \\rangle = -3 + 12 - 9 = 0.$$"
+    ],
+    "a": "$\\langle -3, 6, -3 \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "Area of a triangle",
+    "q": "Find the area of the triangle with vertices $P(1, 0, 0)$, $Q(0, 2, 0)$, $R(0, 0, 3)$.",
+    "steps": [
+     "Two sides from $P$: $\\overrightarrow{PQ} = \\langle -1, 2, 0 \\rangle$ and $\\overrightarrow{PR} = \\langle -1, 0, 3 \\rangle$.",
+     "$$\\overrightarrow{PQ} \\times \\overrightarrow{PR} = \\langle 2 \\cdot 3 - 0 \\cdot 0,\\ 0 \\cdot (-1) - (-1) \\cdot 3,\\ (-1) \\cdot 0 - 2 \\cdot (-1) \\rangle = \\langle 6, 3, 2 \\rangle.$$",
+     "Its length is $\\sqrt{36 + 9 + 4} = 7$: the parallelogram's area. The triangle is half: $\\frac{7}{2}$."
+    ],
+    "a": "$\\frac{7}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Volume of a box",
+    "q": "Find the volume of the parallelepiped with edges $\\mathbf{u} = \\langle 1, 1, 0 \\rangle$, $\\mathbf{v} = \\langle 0, 1, 1 \\rangle$, $\\mathbf{w} = \\langle 1, 0, 1 \\rangle$.",
+    "steps": [
+     "$$\\mathbf{v} \\times \\mathbf{w} = \\langle 1 \\cdot 1 - 1 \\cdot 0,\\ 1 \\cdot 1 - 0 \\cdot 1,\\ 0 \\cdot 0 - 1 \\cdot 1 \\rangle = \\langle 1, 1, -1 \\rangle\\text{:}$$ the base area times the unit normal.",
+     "$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 1 + 1 + 0 = 2$: base area times height.",
+     "Volume $= |2| = 2$."
+    ],
+    "a": "${}2$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Assuming $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{v} \\times \\mathbf{u}$.</b> Swapping the order turns the vector around: the right-hand rule now curls the other way. <b>Losing the minus sign in the middle.</b> Expanding the determinant along the top row gives $+\\mathbf{i}(\\ldots) - \\mathbf{j}(\\ldots) + \\mathbf{k}(\\ldots)$. If you write the middle component as $u_3v_1 - u_1v_3$ you have already included that sign. Always finish with the check: your answer dotted with each factor must give ${}0$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.4 The Cross Product"
+   }
+  ]
+ },
+ "calc3.lines-in-space": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In the plane a line is $y = mx + b$, but slope does not make sense in space: there is no single \"rise over run\". Instead, describe a line the way you would give directions: start at a point and keep moving in one direction. You already have the tools: a point and a <a href=\"/math/calculus-3/vectors-in-space/\">vector</a>."
+   },
+   {
+    "t": "key",
+    "html": "The line through $P_0 = (x_0, y_0, z_0)$ with direction $\\mathbf{v} = \\langle a, b, c \\rangle$ is\n  $$\\mathbf{r}(t) = \\langle x_0, y_0, z_0 \\rangle + t\\langle a, b, c \\rangle, \\quad\\text{that is}\\quad x = x_0 + at,\\ y = y_0 + bt,\\ z = z_0 + ct.$$\n  Through two points $P$ and $Q$: use $\\mathbf{v} = \\overrightarrow{PQ}$. When $a, b, c \\ne 0$, solving each equation for $t$ gives the symmetric form $\\frac{x - x_0}{a} = \\frac{y - y_0}{b} = \\frac{z - z_0}{c}$."
+   },
+   {
+    "t": "why",
+    "html": "A point $X$ is on the line exactly when the trip from $P_0$ to $X$ is some multiple of the direction: $\\overrightarrow{P_0X} = t\\mathbf{v}$ for a number $t$. Rearranged, $X = P_0 + t\\mathbf{v}$. Positive $t$ moves forward, negative $t$ backward, and every real $t$ gives one point. The parameter $t$ is like a clock: at $t = 0$ you are at $P_0$, at $t = 1$ you have made one full move $\\mathbf{v}$."
+   },
+   {
+    "t": "p",
+    "html": "Two lines in space can be <b>parallel</b> (directions are multiples), <b>intersecting</b> (they share a point) or <b>skew</b>: not parallel, yet they never meet, like a road passing over another road on a bridge. Skew lines are impossible in the plane, which is why they surprise people."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-scene",
+    "opts": {
+     "lines": [
+      {
+       "p": [
+        1,
+        0,
+        2
+       ],
+       "v": [
+        1,
+        1,
+        0
+       ],
+       "label": "L1"
+      },
+      {
+       "p": [
+        0,
+        1,
+        0
+       ],
+       "v": [
+        0,
+        1,
+        1
+       ],
+       "label": "L2",
+       "color": "teal"
+      }
+     ],
+     "show": "skew",
+     "range": 4
+    },
+    "cap": "Two skew lines. Turn the picture: from some angles they seem to cross, but the red segment, perpendicular to both, shows the gap that is always there."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A line through two points",
+    "q": "Find parametric equations for the line through $P(1, -2, 3)$ and $Q(4, 0, 1)$, and the point where it crosses the $xy$-plane.",
+    "steps": [
+     "Direction: $\\overrightarrow{PQ} = \\langle 3, 2, -2 \\rangle$.",
+     "$x = 1 + 3t$, $y = -2 + 2t$, $z = 3 - 2t$.",
+     "The $xy$-plane is $z = 0$: ${}3 - 2t = 0$, so $t = \\frac{3}{2}$.",
+     "Point: $\\left(1 + \\frac{9}{2}, -2 + 3, 0\\right) = \\left(\\frac{11}{2}, 1, 0\\right)$."
+    ],
+    "a": "$\\left(\\frac{11}{2}, 1, 0\\right)$"
+   },
+   {
+    "t": "ex",
+    "title": "Skew lines",
+    "q": "Classify $\\mathbf{r}_1(t) = \\langle 1, 0, 2 \\rangle + t\\langle 1, 1, 0 \\rangle$ and $\\mathbf{r}_2(s) = \\langle 0, 1, 0 \\rangle + s\\langle 0, 1, 1 \\rangle$.",
+    "steps": [
+     "The directions $\\langle 1, 1, 0 \\rangle$ and $\\langle 0, 1, 1 \\rangle$ are not multiples, so the lines are not parallel.",
+     "Use different parameters and set the coordinates equal: ${}1 + t = 0$, $t = 1 + s$, ${}2 = s$.",
+     "The first equation gives $t = -1$, the second then gives $s = -2$, but the third needs $s = 2$. No solution.",
+     "Not parallel and no common point: the lines are skew."
+    ],
+    "a": "skew"
+   },
+   {
+    "t": "ex",
+    "title": "Intersecting lines",
+    "q": "Where do $\\mathbf{r}_1(t) = \\langle 1, 0, 2 \\rangle + t\\langle 1, 1, 0 \\rangle$ and $\\mathbf{r}_3(s) = \\langle 0, 1, 0 \\rangle + s\\langle 1, 0, 1 \\rangle$ meet?",
+    "steps": [
+     "Equations: ${}1 + t = s$, $t = 1$, ${}2 = s$.",
+     "From the second, $t = 1$; then the first gives $s = 2$, and the third agrees.",
+     "Point: $\\mathbf{r}_1(1) = (2, 1, 2)$. Check: $\\mathbf{r}_3(2) = (2, 1, 2)$."
+    ],
+    "a": "$(2, 1, 2)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>\"They do not meet, so they are parallel.\"</b> In space that is false: skew lines never meet and are not parallel. Check the directions first. If they are not multiples of each other, the lines are either intersecting or skew, and only solving the equations decides. Also use <i>different</i> letters ($t$ and $s$) for the two parameters: the lines may pass the same point at different \"times\"."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.5 Equations of Lines and Planes in Space"
+   }
+  ]
+ },
+ "calc3.planes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A line is fixed by a point and a direction along it. A plane is fixed by a point and a direction <b>perpendicular</b> to it, called a <b>normal vector</b>. Once you know the normal, the <a href=\"/math/calculus-3/dot-product-projections/\">dot product</a> turns \"lies in the plane\" into an equation, and the <a href=\"/math/calculus-3/cross-product/\">cross product</a> produces a normal from two directions in the plane."
+   },
+   {
+    "t": "key",
+    "html": "The plane through $P_0 = (x_0, y_0, z_0)$ with normal $\\mathbf{n} = \\langle a, b, c \\rangle$:\n  $$a(x - x_0) + b(y - y_0) + c(z - z_0) = 0, \\quad\\text{or}\\quad ax + by + cz = d.$$\n  The coefficients of $x$, $y$, $z$ are a normal vector. Through three points $A$, $B$, $C$: $\\mathbf{n} = \\overrightarrow{AB} \\times \\overrightarrow{AC}$."
+   },
+   {
+    "t": "why",
+    "html": "Pick any point $X = (x, y, z)$. It lies in the plane exactly when the vector $\\overrightarrow{P_0X}$ runs along the plane, which means it is perpendicular to $\\mathbf{n}$: $\\mathbf{n} \\cdot \\overrightarrow{P_0X} = 0$. Writing that dot product out in components is the equation above. For three points, $\\overrightarrow{AB}$ and $\\overrightarrow{AC}$ both lie in the plane, and their cross product is perpendicular to both, so it is perpendicular to the whole plane."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-scene",
+    "opts": {
+     "planes": [
+      {
+       "n": [
+        1,
+        2,
+        2
+       ],
+       "d": 4
+      }
+     ],
+     "vectors": [
+      {
+       "from": [
+        0,
+        1,
+        1
+       ],
+       "v": [
+        0.8,
+        1.6,
+        1.6
+       ],
+       "label": "n",
+       "color": "red"
+      },
+      {
+       "from": [
+        0,
+        1,
+        1
+       ],
+       "v": [
+        2,
+        -1,
+        0
+       ],
+       "label": "in the plane",
+       "color": "gold"
+      },
+      {
+       "from": [
+        0,
+        1,
+        1
+       ],
+       "v": [
+        0,
+        1.5,
+        -1.5
+       ],
+       "color": "gold"
+      }
+     ],
+     "points": [
+      {
+       "p": [
+        0,
+        1,
+        1
+       ],
+       "label": "P0",
+       "color": "ink"
+      }
+     ],
+     "range": 3
+    },
+    "cap": "The plane $x + 2y + 2z = 4$. The red normal $\\mathbf{n} = \\langle 1, 2, 2 \\rangle$ sticks straight out; the gold vectors lie in the plane, and each has dot product ${}0$ with $\\mathbf{n}$. Turn the picture until the plane is seen edge-on: the normal is then perpendicular to that edge."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Point and normal",
+    "q": "Find the plane through $(2, -1, 3)$ with normal $\\langle 4, 1, -2 \\rangle$.",
+    "steps": [
+     "${}4(x - 2) + 1(y + 1) - 2(z - 3) = 0$.",
+     "Expand: ${}4x - 8 + y + 1 - 2z + 6 = 0$, so ${}4x + y - 2z = 1$.",
+     "Check the point: ${}8 - 1 - 6 = 1$."
+    ],
+    "a": "${}4x + y - 2z = 1$"
+   },
+   {
+    "t": "ex",
+    "title": "Three points",
+    "q": "Find the plane through $A(1, 0, 0)$, $B(0, 2, 0)$, $C(0, 0, 3)$.",
+    "steps": [
+     "$\\overrightarrow{AB} = \\langle -1, 2, 0 \\rangle$, $\\overrightarrow{AC} = \\langle -1, 0, 3 \\rangle$.",
+     "$\\mathbf{n} = \\overrightarrow{AB} \\times \\overrightarrow{AC} = \\langle 6, 3, 2 \\rangle$.",
+     "Use $A$: ${}6(x - 1) + 3y + 2z = 0$, so ${}6x + 3y + 2z = 6$.",
+     "Check $B$: ${}0 + 6 + 0 = 6$. Check $C$: ${}0 + 0 + 6 = 6$."
+    ],
+    "a": "${}6x + 3y + 2z = 6$"
+   },
+   {
+    "t": "ex",
+    "title": "Where a line meets a plane",
+    "q": "Where does $x = 1 + t$, $y = 2t$, $z = 3 - t$ meet ${}2x + y + z = 10$?",
+    "steps": [
+     "Substitute: ${}2(1 + t) + 2t + (3 - t) = 10$.",
+     "Simplify: ${}5 + 3t = 10$, so $t = \\frac{5}{3}$.",
+     "Point: $\\left(\\frac{8}{3}, \\frac{10}{3}, \\frac{4}{3}\\right)$. Check: $\\frac{16 + 10 + 4}{3} = 10$."
+    ],
+    "a": "$\\left(\\frac{8}{3}, \\frac{10}{3}, \\frac{4}{3}\\right)$"
+   },
+   {
+    "t": "p",
+    "html": "Two planes are parallel when their normals are parallel, and perpendicular when their normals are perpendicular. The angle between two planes is the angle between their normals (take the acute one)."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using a vector that lies in the plane as the normal.</b> For the plane through $A$, $B$, $C$, the vector $\\overrightarrow{AB}$ runs <i>along</i> the plane; putting its components in front of $x$, $y$, $z$ gives a different plane, one that crosses this plane. The normal comes from a cross product (or from the coefficients of a given equation). Check: your normal dotted with $\\overrightarrow{AB}$ and with $\\overrightarrow{AC}$ must be ${}0$, and all three points must satisfy your equation."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.5 Equations of Lines and Planes in Space"
+   }
+  ]
+ },
+ "calc3.distance-to-plane": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How far is a point from a plane? \"Distance\" always means the <b>shortest</b> distance, and the shortest path to a plane runs straight along its normal. So the question becomes a <a href=\"/math/calculus-3/dot-product-projections/\">projection</a> problem: how long is the part of a connecting vector that points along $\\mathbf{n}$? The same idea, with a cross product, handles distances to lines."
+   },
+   {
+    "t": "key",
+    "html": "Point $(x_0, y_0, z_0)$ to the plane $ax + by + cz = d$:\n  $$D = \\frac{|ax_0 + by_0 + cz_0 - d|}{\\sqrt{a^2 + b^2 + c^2}}.$$\n  Point $X$ to the line through $P_0$ with direction $\\mathbf{v}$: $D = \\dfrac{|\\overrightarrow{P_0X} \\times \\mathbf{v}|}{|\\mathbf{v}|}$."
+   },
+   {
+    "t": "why",
+    "html": "Choose any point $Q$ on the plane and let $\\mathbf{w} = \\overrightarrow{QX}$. The distance is the length of the shadow of $\\mathbf{w}$ on the normal line: $D = \\frac{|\\mathbf{w} \\cdot \\mathbf{n}|}{|\\mathbf{n}|}$. Now $$\\mathbf{w} \\cdot \\mathbf{n} = (ax_0 + by_0 + cz_0) - (a q_1 + b q_2 + c q_3) = ax_0 + by_0 + cz_0 - d,$$ because $Q$ is on the plane. Any choice of $Q$ gives the same answer, which is why the formula needs only $d$.<br>For a line, the parallelogram on $\\overrightarrow{P_0X}$ and $\\mathbf{v}$ has area $|\\overrightarrow{P_0X} \\times \\mathbf{v}|$ and base $|\\mathbf{v}|$; its height is the distance from $X$ to the line."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-scene",
+    "opts": {
+     "points": [
+      {
+       "p": [
+        2,
+        1,
+        3
+       ],
+       "label": "P"
+      }
+     ],
+     "planes": [
+      {
+       "n": [
+        1,
+        2,
+        2
+       ],
+       "d": 2
+      }
+     ],
+     "show": "foot",
+     "move": true,
+     "range": 4
+    },
+    "cap": "The red dashed segment drops from $P$ to the plane along the normal. Move $P$ with the sliders: points on the same side give $ax + by + cz - d$ of the same sign, and the distance is its size divided by $|\\mathbf{n}|$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Point to plane",
+    "q": "Find the distance from $(1, 2, 3)$ to the plane ${}2x - y + 2z = 1$.",
+    "steps": [
+     "Numerator: $|2(1) - 2 + 2(3) - 1| = |5| = 5$.",
+     "Denominator: $\\sqrt{4 + 1 + 4} = 3$.",
+     "$D = \\frac{5}{3}$."
+    ],
+    "a": "$\\frac{5}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Parallel planes",
+    "q": "Find the distance between $x + 2y - 2z = 3$ and ${}2x + 4y - 4z = 18$.",
+    "steps": [
+     "Divide the second by 2 so the normals match: $x + 2y - 2z = 9$.",
+     "The planes $\\mathbf{n} \\cdot X = 3$ and $\\mathbf{n} \\cdot X = 9$ are $\\frac{|9 - 3|}{|\\mathbf{n}|}$ apart.",
+     "$|\\mathbf{n}| = \\sqrt{1 + 4 + 4} = 3$, so $D = 2$."
+    ],
+    "a": "${}2$"
+   },
+   {
+    "t": "ex",
+    "title": "Point to line",
+    "q": "Find the distance from $X(1, 1, 1)$ to the line $\\mathbf{r}(t) = t\\langle 1, 2, 2 \\rangle$.",
+    "steps": [
+     "$P_0 = (0, 0, 0)$ is on the line, so $\\overrightarrow{P_0X} = \\langle 1, 1, 1 \\rangle$.",
+     "$\\langle 1, 1, 1 \\rangle \\times \\langle 1, 2, 2 \\rangle = \\langle 0, -1, 1 \\rangle$, length $\\sqrt{2}$.",
+     "$|\\mathbf{v}| = 3$, so $D = \\frac{\\sqrt{2}}{3}$."
+    ],
+    "a": "$\\frac{\\sqrt{2}}{3}$"
+   },
+   {
+    "t": "p",
+    "html": "For two skew lines, the shortest connection is perpendicular to both, so it runs along $\\mathbf{n} = \\mathbf{v}_1 \\times \\mathbf{v}_2$. Project the vector between any two base points onto $\\mathbf{n}$: $D = \\frac{|\\overrightarrow{P_1P_2} \\cdot \\mathbf{n}|}{|\\mathbf{n}|}$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Sign and form of the constant.</b> The formula above is for planes written $ax + by + cz = d$, so you subtract $d$. If a plane is written $ax + by + cz + D = 0$, you add $D$ instead. Mixing the two forms changes the answer. <b>Forgetting to divide by $|\\mathbf{n}|$.</b> The plane ${}2x + 4y + 4z = 4$ is the same plane as $x + 2y + 2z = 2$; your answer must not change when the equation is doubled, and only dividing by $|\\mathbf{n}|$ makes that true."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.5 Equations of Lines and Planes in Space"
+   }
+  ]
+ },
+ "calc3.quadric-surfaces": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In space, one equation in $x$, $y$, $z$ usually describes a surface. The second-degree ones are called <b>quadric surfaces</b>, the 3-D cousins of the conics you learned to <a href=\"/math/precalculus/classify-conics/\">identify from their equations</a>. The trick for picturing them: slice. Setting one variable to a constant gives a curve in that plane, called a <b>trace</b>, and the traces are conics you already know."
+   },
+   {
+    "t": "key",
+    "html": "Identify a quadric by its traces. In standard form (with the right side ${}1$ where there is a constant):"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Equation",
+     "Surface",
+     "Traces"
+    ],
+    "rows": [
+     [
+      "$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$",
+      "ellipsoid",
+      "all ellipses"
+     ],
+     [
+      "$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} - \\frac{z^2}{c^2} = 1$",
+      "hyperboloid of one sheet",
+      "ellipses across the $z$-axis, hyperbolas along it"
+     ],
+     [
+      "$-\\frac{x^2}{a^2} - \\frac{y^2}{b^2} + \\frac{z^2}{c^2} = 1$",
+      "hyperboloid of two sheets",
+      "no trace for $|z| < c$; ellipses beyond"
+     ],
+     [
+      "$\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = \\frac{z^2}{c^2}$",
+      "elliptic cone",
+      "ellipses; lines through the vertex"
+     ],
+     [
+      "$z = \\frac{x^2}{a^2} + \\frac{y^2}{b^2}$",
+      "elliptic paraboloid",
+      "ellipses and parabolas"
+     ],
+     [
+      "$z = \\frac{y^2}{b^2} - \\frac{x^2}{a^2}$",
+      "hyperbolic paraboloid (saddle)",
+      "parabolas opening up and down; hyperbolas"
+     ]
+    ],
+    "cap": "The variable with the odd sign (or the first power) tells you the axis."
+   },
+   {
+    "t": "why",
+    "html": "Take the one-sheet hyperboloid $x^2 + y^2 - z^2 = 1$ and slice it at height $z = k$: the trace is $x^2 + y^2 = 1 + k^2$, a circle whose radius $\\sqrt{1 + k^2}$ is never zero. Stacking these circles gives one connected surface, narrowest at $z = 0$. Now flip the signs: $z^2 - x^2 - y^2 = 1$ gives $x^2 + y^2 = k^2 - 1$, which has no points when $|k| < 1$. The surface misses the slab between $z = -1$ and $z = 1$ and splits into two pieces. Counting minus signs is just a shortcut for this slicing argument."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "surface": true,
+     "x": "sqrt(1+v^2)*cos(u)",
+     "y": "sqrt(1+v^2)*sin(u)",
+     "z": "v",
+     "u0": 0,
+     "u1": "2pi",
+     "v0": -1.5,
+     "v1": 1.5,
+     "u": 1,
+     "v": 0.5
+    },
+    "cap": "The hyperboloid of one sheet $x^2 + y^2 - z^2 = 1$. The red curve through the point is a circular trace (fixed $z$); turn the surface to see the waist at $z = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "y^2 - x^2",
+     "slice": "x",
+     "at": 1,
+     "contours": 8
+    },
+    "cap": "The saddle $z = y^2 - x^2$. The slice $x = c$ cuts a parabola opening upward; switch to slices $y = c$ for parabolas opening downward, or to the contour map to see the hyperbolas."
+   },
+   {
+    "t": "p",
+    "html": "Two more situations come up often. If one variable is <b>missing</b>, the surface is a <b>cylinder</b>: $x^2 + y^2 = 4$ has the same circle as its trace at every height, so it is a round pipe around the $z$-axis, and $z = y^2$ is a parabola swept along the $x$-axis, a trough. If the equation has <b>first-degree terms</b> in a squared variable, complete the square to find the center: $x^2 + y^2 + z^2 - 4y = 0$ becomes $x^2 + (y - 2)^2 + z^2 = 4$, a sphere of radius ${}2$ centered at $(0, 2, 0)$. A good routine: complete the squares, divide so the constant is ${}1$ (if there is one), count the squared terms and their signs, and check one or two traces to be sure."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Divide to reach standard form",
+    "q": "Identify ${}4x^2 + y^2 - z^2 = 4$.",
+    "steps": [
+     "Divide by 4: $x^2 + \\frac{y^2}{4} - \\frac{z^2}{4} = 1$.",
+     "Two plus signs, one minus, right side $+1$: a hyperboloid of one sheet.",
+     "The minus sign is on $z$, so its axis is the $z$-axis: traces $z = k$ are the ellipses $x^2 + \\frac{y^2}{4} = 1 + \\frac{k^2}{4}$."
+    ],
+    "a": "hyperboloid of one sheet around the $z$-axis"
+   },
+   {
+    "t": "ex",
+    "title": "A saddle",
+    "q": "Identify $z = y^2 - x^2$ and describe its traces.",
+    "steps": [
+     "$z$ appears to the first power and the squares have opposite signs: a hyperbolic paraboloid.",
+     "$x = k$: $z = y^2 - k^2$, parabolas opening up. $y = k$: $z = k^2 - x^2$, parabolas opening down.",
+     "$z = k$: $y^2 - x^2 = k$, hyperbolas (two crossing lines when $k = 0$)."
+    ],
+    "a": "hyperbolic paraboloid"
+   },
+   {
+    "t": "ex",
+    "title": "A missing variable",
+    "q": "Identify $x^2 + z^2 = 9$ in space.",
+    "steps": [
+     "$y$ does not appear, so every trace $y = k$ is the same circle $x^2 + z^2 = 9$.",
+     "Copying a circle along the $y$-axis gives a circular cylinder of radius 3."
+    ],
+    "a": "a cylinder around the $y$-axis"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Mixing up one sheet and two sheets.</b> First make the constant positive and equal to 1, then count: two plus signs and one minus is one sheet; one plus and two minuses is two sheets. Moving a term across the equals sign changes its sign, so rewrite before counting. <b>Calling $x^2 + z^2 = 9$ a circle.</b> In space, a missing variable is free: the equation describes a whole cylinder."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.6 Quadric Surfaces"
+   }
+  ]
+ },
+ "calc3.cylindrical-spherical": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Rectangular coordinates are not always the easiest way to describe a shape. You already know <a href=\"/math/precalculus/polar-rectangular/\">polar coordinates</a> for circles in the plane. Space has two natural extensions: <b>cylindrical</b> coordinates (polar in the floor, plus height) for things with an axis, like pipes and cans, and <b>spherical</b> coordinates (distance from the origin and two angles) for balls and cones."
+   },
+   {
+    "t": "key",
+    "html": "Cylindrical $(r, \\theta, z)$: $x = r\\cos\\theta$, $y = r\\sin\\theta$, $z = z$, with $r^2 = x^2 + y^2$.<br>\n  Spherical $(\\rho, \\theta, \\varphi)$: $\\rho$ is the distance from the origin, $\\theta$ the same angle as in polar coordinates, and $\\varphi$ the angle measured <b>down from the positive $z$-axis</b>, with $\\rho \\ge 0$ and ${}0 \\le \\varphi \\le \\pi$.\n  $$x = \\rho\\sin\\varphi\\cos\\theta, \\quad y = \\rho\\sin\\varphi\\sin\\theta, \\quad z = \\rho\\cos\\varphi, \\quad \\rho^2 = x^2 + y^2 + z^2.$$"
+   },
+   {
+    "t": "why",
+    "html": "Picture the vertical half-plane that contains the point and the $z$-axis. In it, the segment from the origin to the point has length $\\rho$ and makes angle $\\varphi$ with the $z$-axis. That right triangle has vertical leg $z = \\rho\\cos\\varphi$ and horizontal leg $r = \\rho\\sin\\varphi$, the distance from the $z$-axis. The horizontal leg points in the direction $\\theta$, so polar coordinates finish the job: $x = r\\cos\\theta$ and $y = r\\sin\\theta$."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-coords",
+    "opts": {
+     "mode": "sph",
+     "rho": 2.5,
+     "theta": 40,
+     "phi": 50,
+     "task": "Move the point to $\\rho = 2$, $\\theta = 90^\\circ$, $\\varphi = 135^\\circ$. Where is it compared with the $xy$-plane?",
+     "target": [
+      2,
+      90,
+      135
+     ]
+    },
+    "cap": "$\\varphi$ (purple) is measured from the positive $z$-axis. At $\\varphi = 90^\\circ$ the point lies in the $xy$-plane; beyond ${}90^\\circ$ it is below it."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Surface",
+     "Cylindrical",
+     "Spherical"
+    ],
+    "rows": [
+     [
+      "cylinder $x^2 + y^2 = 9$",
+      "$r = 3$",
+      ""
+     ],
+     [
+      "sphere $x^2 + y^2 + z^2 = 9$",
+      "",
+      "$\\rho = 3$"
+     ],
+     [
+      "cone $z = \\sqrt{x^2 + y^2}$",
+      "$z = r$",
+      "$\\varphi = \\frac{\\pi}{4}$"
+     ],
+     [
+      "half-plane through the $z$-axis",
+      "$\\theta = \\frac{\\pi}{3}$",
+      "$\\theta = \\frac{\\pi}{3}$"
+     ],
+     [
+      "plane $z = 2$",
+      "$z = 2$",
+      "$\\rho\\cos\\varphi = 2$"
+     ]
+    ],
+    "cap": "Each system makes some surfaces look simple."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Cylindrical to rectangular",
+    "q": "Convert $(r, \\theta, z) = \\left(4, \\frac{2\\pi}{3}, -1\\right)$.",
+    "steps": [
+     "$x = 4\\cos\\frac{2\\pi}{3} = 4\\left(-\\frac{1}{2}\\right) = -2$.",
+     "$y = 4\\sin\\frac{2\\pi}{3} = 4 \\cdot \\frac{\\sqrt{3}}{2} = 2\\sqrt{3}$.",
+     "$z = -1$ stays."
+    ],
+    "a": "$\\left(-2, 2\\sqrt{3}, -1\\right)$"
+   },
+   {
+    "t": "ex",
+    "title": "Spherical to rectangular",
+    "q": "Convert $(\\rho, \\theta, \\varphi) = \\left(6, \\frac{\\pi}{4}, \\frac{\\pi}{3}\\right)$.",
+    "steps": [
+     "$z = 6\\cos\\frac{\\pi}{3} = 3$ and $r = 6\\sin\\frac{\\pi}{3} = 3\\sqrt{3}$.",
+     "$x = r\\cos\\frac{\\pi}{4} = 3\\sqrt{3} \\cdot \\frac{\\sqrt{2}}{2} = \\frac{3\\sqrt{6}}{2}$, and $y$ is the same."
+    ],
+    "a": "$\\left(\\frac{3\\sqrt{6}}{2}, \\frac{3\\sqrt{6}}{2}, 3\\right)$"
+   },
+   {
+    "t": "ex",
+    "title": "Rectangular to spherical",
+    "q": "Convert $\\left(1, -1, \\sqrt{2}\\right)$.",
+    "steps": [
+     "$\\rho = \\sqrt{1 + 1 + 2} = 2$.",
+     "$\\cos\\varphi = \\frac{z}{\\rho} = \\frac{\\sqrt{2}}{2}$, so $\\varphi = \\frac{\\pi}{4}$.",
+     "$(x, y) = (1, -1)$ is in the fourth quadrant: $\\theta = \\frac{7\\pi}{4}$."
+    ],
+    "a": "$\\left(2, \\frac{7\\pi}{4}, \\frac{\\pi}{4}\\right)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Mixing up $\\theta$ and $\\varphi$, or measuring $\\varphi$ from the $xy$-plane.</b> $\\theta$ goes around the $z$-axis, exactly as in polar coordinates; $\\varphi$ tilts down from the north pole. A point above the $xy$-plane has $\\varphi < \\frac{\\pi}{2}$. Quick check: the sign of $z = \\rho\\cos\\varphi$ must match your point. If you measured from the $xy$-plane (latitude), you would get $\\frac{\\pi}{2} - \\varphi$ instead, and $z$ and $r$ swap roles."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 2.7 Cylindrical and Spherical Coordinates"
+   }
+  ]
+ },
+ "calc3.vector-functions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have already described <a href=\"/math/calculus-3/lines-in-space/\">lines in space</a> as $\\mathbf{r}(t) = P_0 + t\\mathbf{v}$, and curves in the plane with <a href=\"/math/precalculus/parametric-equations/\">parametric equations</a>. Put the two ideas together and let each coordinate be any function of $t$:\n  $$\\mathbf{r}(t) = \\langle f(t), g(t), h(t) \\rangle.$$\n  This is a <b>vector-valued function</b>. Think of $t$ as time and $\\mathbf{r}(t)$ as the position of a moving particle; the path it traces is a <b>space curve</b>."
+   },
+   {
+    "t": "key",
+    "html": "A vector function is three ordinary functions working together. Its domain is the set of $t$ where <b>all</b> components are defined, and limits and continuity work component by component:\n  $$\\lim_{t \\to a} \\mathbf{r}(t) = \\left\\langle \\lim_{t \\to a} f(t),\\ \\lim_{t \\to a} g(t),\\ \\lim_{t \\to a} h(t) \\right\\rangle.$$"
+   },
+   {
+    "t": "why",
+    "html": "Why can we take limits one component at a time? \"$\\mathbf{r}(t)$ approaches $\\mathbf{L}$\" means the distance $|\\mathbf{r}(t) - \\mathbf{L}|$ shrinks to ${}0$. Each component difference is at most that distance (a leg of a right triangle is never longer than the diagonal), and the distance is at most the sum of the three component differences. So the distance goes to ${}0$ exactly when all three component differences do."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "x": "2cos(t)",
+     "y": "2sin(t)",
+     "z": "t/3",
+     "t0": 0,
+     "t1": "4pi",
+     "t": 2,
+     "tangent": false,
+     "shadow": true
+    },
+    "cap": "The helix $\\mathbf{r}(t) = \\langle 2\\cos t, 2\\sin t, \\frac{t}{3} \\rangle$. Move the slider or press play: the shadow on the floor goes around a circle while the height grows steadily."
+   },
+   {
+    "t": "p",
+    "html": "A curve and its parametrization are not the same thing. $\\langle \\cos t, \\sin t, 0 \\rangle$ and $\\langle \\cos 2t, \\sin 2t, 0 \\rangle$ trace the same unit circle, the second twice as fast, and $\\langle \\cos t, -\\sin t, 0 \\rangle$ traces it the other way around. Vector functions also describe curves where two surfaces meet. The cylinder $x^2 + y^2 = 1$ and the plane $z = 1 + x$ meet in a curve: use $x = \\cos t$, $y = \\sin t$ to stay on the cylinder, and the plane then forces $z = 1 + \\cos t$. So $\\mathbf{r}(t) = \\langle \\cos t, \\sin t, 1 + \\cos t \\rangle$, ${}0 \\le t \\le 2\\pi$: an ellipse tilted in space."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Domain",
+    "q": "Find the domain of $\\mathbf{r}(t) = \\left\\langle \\sqrt{t - 1}, \\ln(4 - t), \\frac{1}{t - 2} \\right\\rangle$.",
+    "steps": [
+     "$\\sqrt{t - 1}$ needs $t \\ge 1$. $\\ln(4 - t)$ needs $t < 4$. $\\frac{1}{t - 2}$ needs $t \\ne 2$.",
+     "All three at once: ${}1 \\le t < 4$ with $t \\ne 2$."
+    ],
+    "a": "$[1, 2) \\cup (2, 4)$"
+   },
+   {
+    "t": "ex",
+    "title": "Recognize the curve",
+    "q": "Describe the curve $\\mathbf{r}(t) = \\langle 3\\cos t, 3\\sin t, 2t \\rangle$.",
+    "steps": [
+     "$x^2 + y^2 = 9\\cos^2 t + 9\\sin^2 t = 9$ for every $t$: the curve lies on the cylinder of radius 3 around the $z$-axis.",
+     "Meanwhile $z = 2t$ climbs at a steady rate.",
+     "So it is a helix; one full turn ($t$ increasing by ${}2\\pi$) raises it by ${}4\\pi$."
+    ],
+    "a": "a helix on the cylinder $x^2 + y^2 = 9$"
+   },
+   {
+    "t": "ex",
+    "title": "A limit",
+    "q": "Find $\\displaystyle\\lim_{t \\to 0} \\left\\langle \\frac{\\sin 2t}{t},\\ e^{t},\\ \\frac{t^2 + t}{t} \\right\\rangle$.",
+    "steps": [
+     "First component: $\\frac{\\sin 2t}{t} = 2 \\cdot \\frac{\\sin 2t}{2t} \\to 2$.",
+     "Second: $e^t$ is continuous, so the limit is $e^0 = 1$.",
+     "Third: $\\frac{t(t + 1)}{t} = t + 1 \\to 1$."
+    ],
+    "a": "$\\langle 2, 1, 1 \\rangle$"
+   },
+   {
+    "t": "p",
+    "html": "To see which surface a curve lives on, look for a relation among the components that does not involve $t$, as in the helix example. To find where a curve meets a surface, substitute the components into the surface's equation and solve for $t$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Reading $t$ as a coordinate.</b> The parameter is time, not a direction in space; the picture shows only the values $(x, y, z)$. Two different vector functions can trace the same curve at different speeds. <b>Taking the union of the domains.</b> The particle exists only when every component is defined, so the domain is the intersection."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 3.1 Vector-Valued Functions and Space Curves"
+   }
+  ]
+ },
+ "calc3.vector-function-calculus": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Calculus of vector functions needs nothing new: differentiate and integrate each component with the rules you learned for <a href=\"/math/calculus-1/antiderivatives/\">antiderivatives</a> and derivatives. What is new is the meaning. The derivative $\\mathbf{r}'(t)$ is the <b>velocity</b> of the moving point, and it is tangent to the curve."
+   },
+   {
+    "t": "key",
+    "html": "$$\\mathbf{r}'(t) = \\langle f'(t), g'(t), h'(t) \\rangle, \\qquad \\int \\mathbf{r}(t)\\,dt = \\left\\langle \\int f\\,dt, \\int g\\,dt, \\int h\\,dt \\right\\rangle + \\mathbf{C}.$$\n  $\\mathbf{r}'(t)$ points along the curve in the direction of motion. The tangent line at $t_0$ is $\\mathbf{L}(s) = \\mathbf{r}(t_0) + s\\,\\mathbf{r}'(t_0)$."
+   },
+   {
+    "t": "why",
+    "html": "The derivative is a limit of difference quotients:\n  $$\\mathbf{r}'(t) = \\lim_{h \\to 0} \\frac{\\mathbf{r}(t + h) - \\mathbf{r}(t)}{h}.$$\n  The vector $\\mathbf{r}(t + h) - \\mathbf{r}(t)$ is a secant arrow from one point of the curve to a nearby one. Dividing by $h$ rescales it, and as $h \\to 0$ the arrow swings into the tangent direction. Because limits go component by component, the result is the vector of ordinary derivatives. The usual rules follow; for example $(\\mathbf{u} \\cdot \\mathbf{v})' = \\mathbf{u}' \\cdot \\mathbf{v} + \\mathbf{u} \\cdot \\mathbf{v}'$, and the same pattern holds for cross products (keep the order)."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "x": "t",
+     "y": "t^2",
+     "z": "t^3/3",
+     "t0": -1.6,
+     "t1": 1.6,
+     "t": 0.6,
+     "tangent": true,
+     "shadow": true
+    },
+    "cap": "The red arrow is $\\mathbf{r}'(t)$ at the moving point. It always points along the curve, and it is longer where the point moves faster."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A derivative",
+    "q": "Differentiate $\\mathbf{r}(t) = \\langle t^3, e^{2t}, \\sin 3t \\rangle$.",
+    "steps": [
+     "Component by component: $\\frac{d}{dt}t^3 = 3t^2$, $\\frac{d}{dt}e^{2t} = 2e^{2t}$, $\\frac{d}{dt}\\sin 3t = 3\\cos 3t$."
+    ],
+    "a": "$\\mathbf{r}'(t) = \\langle 3t^2, 2e^{2t}, 3\\cos 3t \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "A tangent line",
+    "q": "Find the tangent line to the helix $\\mathbf{r}(t) = \\langle \\cos t, \\sin t, t \\rangle$ at $t = \\frac{\\pi}{2}$.",
+    "steps": [
+     "Point: $\\mathbf{r}\\left(\\frac{\\pi}{2}\\right) = \\left\\langle 0, 1, \\frac{\\pi}{2} \\right\\rangle$.",
+     "$\\mathbf{r}'(t) = \\langle -\\sin t, \\cos t, 1 \\rangle$, so $\\mathbf{r}'\\left(\\frac{\\pi}{2}\\right) = \\langle -1, 0, 1 \\rangle$.",
+     "$$\\mathbf{L}(s) = \\left\\langle 0, 1, \\frac{\\pi}{2} \\right\\rangle + s\\langle -1, 0, 1 \\rangle = \\left\\langle -s, 1, \\frac{\\pi}{2} + s \\right\\rangle.$$"
+    ],
+    "a": "$\\mathbf{L}(s) = \\left\\langle -s, 1, \\frac{\\pi}{2} + s \\right\\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "Recovering the position",
+    "q": "Find $\\mathbf{r}(t)$ if $\\mathbf{r}'(t) = \\langle 2t, 3, -\\sin t \\rangle$ and $\\mathbf{r}(0) = \\langle 1, 0, 2 \\rangle$.",
+    "steps": [
+     "Antidifferentiate: $\\mathbf{r}(t) = \\langle t^2 + C_1, 3t + C_2, \\cos t + C_3 \\rangle$, one constant per component.",
+     "At $t = 0$: $\\langle C_1, C_2, 1 + C_3 \\rangle = \\langle 1, 0, 2 \\rangle$, so $C_1 = 1$, $C_2 = 0$, $C_3 = 1$.",
+     "Check by differentiating, and by putting in $t = 0$."
+    ],
+    "a": "$\\mathbf{r}(t) = \\langle t^2 + 1, 3t, \\cos t + 1 \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "A definite integral",
+    "q": "Evaluate $\\displaystyle\\int_0^1 \\langle t, t^2, 6 \\rangle\\,dt$.",
+    "steps": [
+     "$\\int_0^1 t\\,dt = \\frac{1}{2}$, $\\int_0^1 t^2\\,dt = \\frac{1}{3}$, $\\int_0^1 6\\,dt = 6$."
+    ],
+    "a": "$\\left\\langle \\frac{1}{2}, \\frac{1}{3}, 6 \\right\\rangle$, a vector"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>One constant for the whole vector, then forgetting it.</b> An indefinite integral of a vector function needs a constant <i>vector</i> $\\mathbf{C} = \\langle C_1, C_2, C_3 \\rangle$, and an initial condition fixes all three. In the example, $\\cos 0 = 1$ means $C_3 = 1$, not ${}2$; plugging in $t = 0$ at the end catches this. <b>Treating $\\mathbf{r}'(t_0)$ as a point.</b> It is a direction; the tangent line starts at $\\mathbf{r}(t_0)$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 3.2 Calculus of Vector-Valued Functions"
+   }
+  ]
+ },
+ "calc3.space-arc-length": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Calculus 2 you found the <a href=\"/math/calculus-2/arc-length/\">length of a curve</a> in the plane. In space the idea is the same, and the velocity vector makes it look natural: distance traveled is speed times time, and the speed of a moving point is the length of its velocity, $|\\mathbf{r}'(t)|$."
+   },
+   {
+    "t": "key",
+    "html": "The length of the curve $\\mathbf{r}(t)$, $a \\le t \\le b$, traced once, is\n  $$L = \\int_a^b |\\mathbf{r}'(t)|\\,dt = \\int_a^b \\sqrt{f'(t)^2 + g'(t)^2 + h'(t)^2}\\,dt.$$\n  The arc length function $s(t) = \\int_a^t |\\mathbf{r}'(u)|\\,du$ measures distance along the curve, and $\\frac{ds}{dt} = |\\mathbf{r}'(t)|$."
+   },
+   {
+    "t": "why",
+    "html": "Chop the time interval into small pieces of length $\\Delta t$. Over one piece the point moves about $\\mathbf{r}'(t)\\,\\Delta t$ (velocity times time), a straight step of length $|\\mathbf{r}'(t)|\\,\\Delta t$. Adding the steps gives a Riemann sum $\\sum |\\mathbf{r}'(t_i)|\\,\\Delta t$, which becomes the integral as $\\Delta t \\to 0$. Speed, not velocity: a length is never negative and does not care about direction."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "x": "3cos(t)",
+     "y": "3sin(t)",
+     "z": "4t/3",
+     "t0": 0,
+     "t1": "2pi",
+     "t": 1,
+     "tangent": true,
+     "shadow": false
+    },
+    "cap": "A helix with constant speed. The readout shows the distance traveled since $t = 0$: it grows at the same rate at every moment, so arc length is simply speed × time here."
+   },
+   {
+    "t": "p",
+    "html": "Two facts are worth knowing. First, the length does not depend on how the curve is parametrized, as long as it is traced once: going twice as fast doubles $|\\mathbf{r}'(t)|$ but halves the time, and the substitution rule shows that the integral is unchanged. Second, the length is at least the straight-line distance between the endpoints, since $$|\\mathbf{r}(b) - \\mathbf{r}(a)| = \\left|\\int_a^b \\mathbf{r}'(t)\\,dt\\right| \\le \\int_a^b |\\mathbf{r}'(t)|\\,dt.$$ Equality holds only for a straight segment traced without turning back."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A helix",
+    "q": "Find the length of $\\mathbf{r}(t) = \\langle 3\\cos t, 3\\sin t, 4t \\rangle$ for ${}0 \\le t \\le 2\\pi$.",
+    "steps": [
+     "$\\mathbf{r}'(t) = \\langle -3\\sin t, 3\\cos t, 4 \\rangle$.",
+     "$$|\\mathbf{r}'(t)| = \\sqrt{9\\sin^2 t + 9\\cos^2 t + 16} = \\sqrt{25} = 5.$$",
+     "$L = \\int_0^{2\\pi} 5\\,dt = 10\\pi$."
+    ],
+    "a": "${}10\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "A perfect square under the root",
+    "q": "Find the length of $\\mathbf{r}(t) = \\left\\langle t, t^2, \\frac{2}{3}t^3 \\right\\rangle$ for ${}0 \\le t \\le 1$.",
+    "steps": [
+     "$\\mathbf{r}'(t) = \\langle 1, 2t, 2t^2 \\rangle$.",
+     "$|\\mathbf{r}'(t)|^2 = 1 + 4t^2 + 4t^4 = (1 + 2t^2)^2$, so $|\\mathbf{r}'(t)| = 1 + 2t^2$.",
+     "$L = \\int_0^1 (1 + 2t^2)\\,dt = 1 + \\frac{2}{3} = \\frac{5}{3}$."
+    ],
+    "a": "$\\frac{5}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Measuring by arc length",
+    "q": "For the helix of the first example, where is the point after traveling a distance $\\frac{5\\pi}{2}$ from $t = 0$?",
+    "steps": [
+     "Speed ${}5$, so $s = 5t$ and $t = \\frac{s}{5}$.",
+     "$s = \\frac{5\\pi}{2}$ gives $t = \\frac{\\pi}{2}$.",
+     "$\\mathbf{r}\\left(\\frac{\\pi}{2}\\right) = (0, 3, 2\\pi)$."
+    ],
+    "a": "$(0, 3, 2\\pi)$"
+   },
+   {
+    "t": "p",
+    "html": "Rewriting a curve with $s$ in place of $t$, here $\\mathbf{r}(s) = \\left\\langle 3\\cos\\frac{s}{5}, 3\\sin\\frac{s}{5}, \\frac{4s}{5} \\right\\rangle$, gives a parametrization with speed exactly ${}1$. Arc length is the parameter the curve itself prefers, which is why curvature is defined with it."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Integrating the velocity instead of the speed.</b> $\\int_a^b \\mathbf{r}'(t)\\,dt = \\mathbf{r}(b) - \\mathbf{r}(a)$ is a displacement vector, not a length. You must take the length $|\\mathbf{r}'(t)|$ first, then integrate. Check: the arc length is never shorter than the straight-line distance $|\\mathbf{r}(b) - \\mathbf{r}(a)|$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 3.3 Arc Length and Curvature"
+   }
+  ]
+ },
+ "calc3.curvature": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A road can be gently curved or tightly bent. <b>Curvature</b> puts a number on that: how fast the direction of travel turns per unit of distance. It builds on the <a href=\"/math/calculus-3/space-arc-length/\">arc length</a> you just met, because \"per unit of distance\" means per unit of $s$, not per unit of time."
+   },
+   {
+    "t": "key",
+    "html": "Unit tangent $\\mathbf{T}(t) = \\dfrac{\\mathbf{r}'(t)}{|\\mathbf{r}'(t)|}$. Curvature\n  $$\\kappa = \\left|\\frac{d\\mathbf{T}}{ds}\\right| = \\frac{|\\mathbf{T}'(t)|}{|\\mathbf{r}'(t)|} = \\frac{|\\mathbf{r}'(t) \\times \\mathbf{r}''(t)|}{|\\mathbf{r}'(t)|^3}.$$\n  For a graph $y = f(x)$: $\\kappa = \\dfrac{|f''(x)|}{\\left(1 + f'(x)^2\\right)^{3/2}}$. The unit normal $\\mathbf{N} = \\dfrac{\\mathbf{T}'}{|\\mathbf{T}'|}$ points toward the inside of the bend."
+   },
+   {
+    "t": "why",
+    "html": "$\\mathbf{T}$ only carries direction (length 1), so its rate of change measures turning. But $\\mathbf{T}'(t)$ is a rate per unit <i>time</i>: drive the same road twice as fast and it doubles. Dividing by the speed $\\frac{ds}{dt} = |\\mathbf{r}'(t)|$ converts it to a rate per unit <i>distance</i>, a property of the road alone.<br>\n  Check on a circle of radius $R$: $\\mathbf{r} = \\langle R\\cos t, R\\sin t \\rangle$ has speed $R$ and $\\mathbf{T} = \\langle -\\sin t, \\cos t \\rangle$, so $|\\mathbf{T}'| = 1$ and $\\kappa = \\frac{1}{R}$. Small circles bend sharply. Also, since $\\mathbf{T} \\cdot \\mathbf{T} = 1$, differentiating gives ${}2\\mathbf{T} \\cdot \\mathbf{T}' = 0$: $\\mathbf{T}'$ is perpendicular to $\\mathbf{T}$, which is why $\\mathbf{N}$ is a normal."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "x": "2cos(t)",
+     "y": "2sin(t)",
+     "z": "t/2",
+     "t0": 0,
+     "t1": "4pi",
+     "t": 1,
+     "tangent": true,
+     "frame": true,
+     "shadow": true
+    },
+    "cap": "The moving frame: $\\mathbf{T}$ along the path, $\\mathbf{N}$ toward the axis of the helix (the inside of the bend), and $\\mathbf{B} = \\mathbf{T} \\times \\mathbf{N}$. The readout gives $\\kappa$, which is constant for a helix."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A unit tangent",
+    "q": "Find $\\mathbf{T}(1)$ for $\\mathbf{r}(t) = \\left\\langle t, t^2, \\frac{2}{3}t^3 \\right\\rangle$.",
+    "steps": [
+     "$\\mathbf{r}'(t) = \\langle 1, 2t, 2t^2 \\rangle$, so $\\mathbf{r}'(1) = \\langle 1, 2, 2 \\rangle$.",
+     "Its length is ${}3$.",
+     "$\\mathbf{T}(1) = \\left\\langle \\frac{1}{3}, \\frac{2}{3}, \\frac{2}{3} \\right\\rangle$, length 1."
+    ],
+    "a": "$\\left\\langle \\frac{1}{3}, \\frac{2}{3}, \\frac{2}{3} \\right\\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "Curvature of a helix",
+    "q": "Find the curvature of $\\mathbf{r}(t) = \\langle 3\\cos t, 3\\sin t, 4t \\rangle$.",
+    "steps": [
+     "$\\mathbf{r}' = \\langle -3\\sin t, 3\\cos t, 4 \\rangle$, speed ${}5$; $\\mathbf{T} = \\frac{1}{5}\\langle -3\\sin t, 3\\cos t, 4 \\rangle$.",
+     "$\\mathbf{T}' = \\frac{1}{5}\\langle -3\\cos t, -3\\sin t, 0 \\rangle$, length $\\frac{3}{5}$.",
+     "$\\kappa = \\frac{3/5}{5} = \\frac{3}{25}$: less than $\\frac{1}{3}$, the curvature of the circle it winds around, because the climb straightens it."
+    ],
+    "a": "$\\frac{3}{25}$"
+   },
+   {
+    "t": "ex",
+    "title": "Curvature of a graph",
+    "q": "Find the curvature of $y = x^2$ at $x = 0$ and at $x = 1$.",
+    "steps": [
+     "$y' = 2x$, $y'' = 2$.",
+     "At $x = 0$: $\\kappa = \\frac{2}{(1 + 0)^{3/2}} = 2$.",
+     "At $x = 1$: $\\kappa = \\frac{2}{(1 + 4)^{3/2}} = \\frac{2}{5\\sqrt{5}} = \\frac{2\\sqrt{5}}{25} \\approx 0.18$: the parabola straightens out."
+    ],
+    "a": "${}2$ and $\\frac{2\\sqrt{5}}{25}$"
+   },
+   {
+    "t": "ex",
+    "title": "The cross product formula",
+    "q": "Find $\\kappa$ for $\\mathbf{r}(t) = \\langle t, t^2, t^3 \\rangle$ at $t = 0$.",
+    "steps": [
+     "$\\mathbf{r}'(0) = \\langle 1, 0, 0 \\rangle$ and $\\mathbf{r}''(0) = \\langle 0, 2, 0 \\rangle$.",
+     "$\\mathbf{r}' \\times \\mathbf{r}'' = \\langle 0, 0, 2 \\rangle$, length ${}2$; $|\\mathbf{r}'|^3 = 1$.",
+     "$\\kappa = 2$."
+    ],
+    "a": "${}2$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>A \"unit\" tangent that is not unit length.</b> $\\mathbf{T}$ is $\\mathbf{r}'$ divided by its length. Skipping the division gives a vector whose length is the speed, and every formula built on it (curvature, $\\mathbf{N}$) comes out wrong. Check: $|\\mathbf{T}| = 1$. Likewise, $\\kappa = |\\mathbf{T}'(t)|$ forgets the second division by $|\\mathbf{r}'(t)|$; test your formula on a circle of radius $R$, which must give $\\frac{1}{R}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 3.3 Arc Length and Curvature"
+   }
+  ]
+ },
+ "calc3.motion-in-space": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Back to physics. In <a href=\"/math/calculus-1/motion/\">one dimension</a> velocity and acceleration were numbers along a line. In space they are vectors: $\\mathbf{v}(t) = \\mathbf{r}'(t)$, speed $|\\mathbf{v}(t)|$, and $\\mathbf{a}(t) = \\mathbf{r}''(t)$. The new question is what acceleration <i>does</i>: part of it speeds you up or slows you down, and part of it turns you."
+   },
+   {
+    "t": "key",
+    "html": "Acceleration splits into a tangential part and a normal part:\n  $$\\mathbf{a} = a_T\\,\\mathbf{T} + a_N\\,\\mathbf{N}, \\qquad a_T = \\frac{d|\\mathbf{v}|}{dt} = \\frac{\\mathbf{v} \\cdot \\mathbf{a}}{|\\mathbf{v}|}, \\qquad a_N = \\kappa|\\mathbf{v}|^2 = \\frac{|\\mathbf{v} \\times \\mathbf{a}|}{|\\mathbf{v}|}.$$\n  $a_T$ changes the speed; $a_N \\ge 0$ changes the direction."
+   },
+   {
+    "t": "why",
+    "html": "Write the velocity as speed times direction: $\\mathbf{v} = |\\mathbf{v}|\\,\\mathbf{T}$. Differentiate with the product rule:\n  $$\\mathbf{a} = \\frac{d|\\mathbf{v}|}{dt}\\,\\mathbf{T} + |\\mathbf{v}|\\,\\mathbf{T}'.$$\n  From the <a href=\"/math/calculus-3/curvature/\">curvature</a> lesson, $\\mathbf{T}' = |\\mathbf{T}'|\\,\\mathbf{N} = \\kappa|\\mathbf{v}|\\,\\mathbf{N}$. So $\\mathbf{a} = \\frac{d|\\mathbf{v}|}{dt}\\mathbf{T} + \\kappa|\\mathbf{v}|^2\\mathbf{N}$. That is why a car taking a curve twice as fast needs four times the sideways force."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "x": "2t",
+     "y": "t",
+     "z": "4t - t^2",
+     "t0": 0,
+     "t1": 4,
+     "t": 1,
+     "tangent": true,
+     "frame": true,
+     "shadow": true
+    },
+    "cap": "A projectile path. $\\mathbf{T}$ follows the motion and $\\mathbf{N}$ points toward the inside of the curve, downward here. Gravity pulls straight down, so it has a tangential part (slowing the rise) and a normal part (bending the path)."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Velocity, speed and both components",
+    "q": "For $\\mathbf{r}(t) = \\langle t^2, 2t, \\ln t \\rangle$, find $\\mathbf{v}$, the speed, $a_T$ and $a_N$ at $t = 1$.",
+    "steps": [
+     "$\\mathbf{v} = \\left\\langle 2t, 2, \\frac{1}{t} \\right\\rangle$ and $\\mathbf{a} = \\left\\langle 2, 0, -\\frac{1}{t^2} \\right\\rangle$; at $t = 1$: $\\mathbf{v} = \\langle 2, 2, 1 \\rangle$, $\\mathbf{a} = \\langle 2, 0, -1 \\rangle$.",
+     "Speed $|\\mathbf{v}| = 3$.",
+     "$a_T = \\frac{\\mathbf{v} \\cdot \\mathbf{a}}{|\\mathbf{v}|} = \\frac{4 + 0 - 1}{3} = 1$: the speed grows by 1 unit per second per second.",
+     "$\\mathbf{v} \\times \\mathbf{a} = \\langle -2, 4, -4 \\rangle$ with length ${}6$, so $a_N = \\frac{6}{3} = 2$. Check: $a_T^2 + a_N^2 = 1 + 4 = 5 = |\\mathbf{a}|^2$."
+    ],
+    "a": "$\\mathbf{v} = \\langle 2, 2, 1 \\rangle$, speed ${}3$, $a_T = 1$, $a_N = 2$"
+   },
+   {
+    "t": "ex",
+    "title": "A projectile",
+    "q": "A ball leaves the ground with $\\mathbf{v}(0) = \\langle 20, 10, 64 \\rangle$ ft/s; gravity gives $\\mathbf{a} = \\langle 0, 0, -32 \\rangle$. Where does it land, and how high does it go?",
+    "steps": [
+     "Integrate: $\\mathbf{v}(t) = \\langle 20, 10, 64 - 32t \\rangle$ and, starting at the origin, $\\mathbf{r}(t) = \\langle 20t, 10t, 64t - 16t^2 \\rangle$.",
+     "Landing: ${}64t - 16t^2 = 16t(4 - t) = 0$ at $t = 4$ s, at $(80, 40, 0)$.",
+     "Top: vertical velocity ${}64 - 32t = 0$ at $t = 2$, height ${}128 - 64 = 64$ ft."
+    ],
+    "a": "lands at $(80, 40, 0)$; maximum height ${}64$ ft"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Thinking constant speed means no acceleration.</b> A car going around a circle at a steady 30 mph has $a_T = 0$, but its direction keeps changing, so $a_N = \\kappa|\\mathbf{v}|^2 \\ne 0$. Acceleration is the change in the velocity <i>vector</i>. Also: $a_N$ is never negative (it is a length along $\\mathbf{N}$), while a negative $a_T$ simply means slowing down. A useful check is $a_T^2 + a_N^2 = |\\mathbf{a}|^2$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 3.4 Motion in Space"
+   }
+  ]
+ },
+ "calc3.multivariable-functions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "So far a function took one number and returned one number. Many quantities depend on two: the height of land depends on east-west and north-south position; the temperature on a metal plate depends on $x$ and $y$. A <b>function of two variables</b> $z = f(x, y)$ assigns one number to each point of a region of the plane, its <b>domain</b>. Its graph is a surface in space, like the <a href=\"/math/calculus-3/quadric-surfaces/\">quadric surfaces</a> you have met."
+   },
+   {
+    "t": "p",
+    "html": "Surfaces are hard to draw by hand, so we borrow an idea from hiking maps. Slice the graph with horizontal planes $z = k$ and drop each slice onto the $xy$-plane. Each curve $f(x, y) = k$ is a <b>level curve</b> (contour), and a family of them is a <b>contour map</b>."
+   },
+   {
+    "t": "key",
+    "html": "The level curve $f(x, y) = k$ collects every point where $f$ has the value $k$. If the levels are equally spaced in height, then level curves that are <b>close together</b> mean the surface is <b>steep</b> there, and curves far apart mean it is gentle."
+   },
+   {
+    "t": "why",
+    "html": "Neighboring contours differ by the same height step $\\Delta z$. If you must walk a horizontal distance $d$ to get from one to the next, the average slope along that walk is $\\frac{\\Delta z}{d}$. Same rise, shorter run: a bigger slope. This is the same rise-over-run idea as the slope of a line, measured on the map."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "x^2 + y^2",
+     "view": "map",
+     "contours": 8,
+     "slice": "none"
+    },
+    "cap": "The contour map of $f(x, y) = x^2 + y^2$. The circles crowd together farther out, because the bowl gets steeper there. Switch to the 3-D view to see the same curves drawn on the surface."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Domain and range",
+    "q": "Find the domain and range of $f(x, y) = \\sqrt{9 - x^2 - y^2}$, and describe its graph.",
+    "steps": [
+     "The square root needs ${}9 - x^2 - y^2 \\ge 0$, that is $x^2 + y^2 \\le 9$: the closed disk of radius 3.",
+     "The quantity under the root runs from ${}0$ (on the edge) to ${}9$ (at the center), so $f$ runs from ${}0$ to ${}3$.",
+     "Squaring $z = \\sqrt{9 - x^2 - y^2}$ gives $x^2 + y^2 + z^2 = 9$ with $z \\ge 0$: the upper half of a sphere."
+    ],
+    "a": "domain: the disk $x^2 + y^2 \\le 9$; range $[0, 3]$; graph: a hemisphere"
+   },
+   {
+    "t": "ex",
+    "title": "Reading a contour map",
+    "q": "Describe the level curves of $f(x, y) = x^2 + y^2$ for $k = 1, 2, 3, 4$ and say where the surface is steepest.",
+    "steps": [
+     "$x^2 + y^2 = k$ is a circle of radius $\\sqrt{k}$: radii ${}1$, ${}1.41$, ${}1.73$, ${}2$.",
+     "The gaps between neighbors are ${}0.41$, ${}0.32$, ${}0.27$: they shrink as you move out.",
+     "Same height step, shorter gaps: the bowl is steeper farther from the origin."
+    ],
+    "a": "circles that crowd together outward; steeper away from the center"
+   },
+   {
+    "t": "ex",
+    "title": "The level curve through a point",
+    "q": "Which level curve of $f(x, y) = x^2 - 3xy$ passes through $(2, -1)$?",
+    "steps": [
+     "Evaluate $f$ there: ${}4 - 3(2)(-1) = 4 + 6 = 10$.",
+     "So the point is on the level curve $x^2 - 3xy = 10$."
+    ],
+    "a": "$k = 10$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Reading close level curves as a gentle slope.</b> On a contour map, crowded lines can look \"busy but flat\". They mean the opposite: the height changes by the same step over a shorter distance, so the ground is steep. Check: estimate rise over run between two neighboring curves."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.1 Functions of Several Variables"
+   }
+  ]
+ },
+ "calc3.level-surfaces": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A function of three variables, $w = f(x, y, z)$, gives a number at every point of space: the temperature in a room, the density inside a planet, the pressure in the air. Its graph would need four dimensions, so we use the idea that worked for <a href=\"/math/calculus-3/multivariable-functions/\">contour maps</a> one dimension up."
+   },
+   {
+    "t": "key",
+    "html": "A <b>level surface</b> of $f$ is the set $f(x, y, z) = k$. Through each point of the domain passes exactly one level surface: the one with $k$ equal to the value of $f$ there. Together, the level surfaces fill space in layers, like the skins of an onion."
+   },
+   {
+    "t": "why",
+    "html": "A point has only one value of $f$, so it cannot lie on two level surfaces with different $k$. That is why level surfaces never cross each other, just as contour lines on a map never cross. Picturing the layers tells you how $f$ changes: moving within one layer keeps $f$ constant, and moving across layers changes it."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$f(x, y, z)$",
+     "Level surfaces $f = k$"
+    ],
+    "rows": [
+     [
+      "$x^2 + y^2 + z^2$",
+      "spheres of radius $\\sqrt{k}$ around the origin ($k > 0$)"
+     ],
+     [
+      "$ax + by + cz$",
+      "parallel planes with normal $\\langle a, b, c \\rangle$"
+     ],
+     [
+      "$z - x^2 - y^2$",
+      "copies of one paraboloid, lifted by $k$"
+     ],
+     [
+      "$x^2 + y^2 - z^2$",
+      "one-sheet hyperboloids ($k > 0$), a cone ($k = 0$), two-sheet hyperboloids ($k < 0$)"
+     ]
+    ],
+    "cap": "Recognizing the layers is the same skill as naming quadric surfaces."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "surface": true,
+     "x": "sqrt(1+v^2)*cos(u)",
+     "y": "sqrt(1+v^2)*sin(u)",
+     "z": "v",
+     "u0": 0,
+     "u1": "2pi",
+     "v0": -1.4,
+     "v1": 1.4,
+     "u": 0.5,
+     "v": 0.4
+    },
+    "cap": "The level surface $x^2 + y^2 - z^2 = 1$ of $f = x^2 + y^2 - z^2$. Larger $k$ gives a fatter hyperboloid around this one; $k = 0$ pinches it into a cone."
+   },
+   {
+    "t": "p",
+    "html": "Level surfaces have physical names: in a temperature field they are <b>isothermal surfaces</b>, and for an electric potential they are <b>equipotential surfaces</b>. How closely the layers are packed shows how fast $f$ changes: tightly packed layers mean a steep change. Every graph is also a level surface: $z = g(x, y)$ is the level surface $F = 0$ of $F(x, y, z) = z - g(x, y)$. This point of view pays off with <a href=\"/math/calculus-3/gradient-normals/\">gradients and normal vectors</a>, where the gradient of $f$ turns out to be perpendicular to the level surface through each point."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A sphere",
+    "q": "For $f(x, y, z) = x^2 + y^2 + z^2$, describe the level surface through $(1, 2, 2)$.",
+    "steps": [
+     "$f(1, 2, 2) = 1 + 4 + 4 = 9$.",
+     "The level surface is $x^2 + y^2 + z^2 = 9$: the sphere of radius 3 around the origin."
+    ],
+    "a": "the sphere $x^2 + y^2 + z^2 = 9$"
+   },
+   {
+    "t": "ex",
+    "title": "Three kinds of levels",
+    "q": "Describe the level surfaces of $f(x, y, z) = x^2 + y^2 - z^2$ for $k = 1$, ${}0$ and $-1$.",
+    "steps": [
+     "$k = 1$: $x^2 + y^2 - z^2 = 1$, a hyperboloid of one sheet around the $z$-axis.",
+     "$k = 0$: $z^2 = x^2 + y^2$, a double cone.",
+     "$k = -1$: $z^2 - x^2 - y^2 = 1$, a hyperboloid of two sheets."
+    ],
+    "a": "one sheet, cone, two sheets"
+   },
+   {
+    "t": "ex",
+    "title": "A plane",
+    "q": "Find the level surface of $f(x, y, z) = 2x - y + 3z$ through $(1, 1, 1)$.",
+    "steps": [
+     "$k = f(1, 1, 1) = 2 - 1 + 3 = 4$.",
+     "The level surface is the plane ${}2x - y + 3z = 4$."
+    ],
+    "a": "${}2x - y + 3z = 4$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Treating a level surface as the graph of $f$.</b> The surface $x^2 + y^2 + z^2 = 9$ is not \"the graph of $f = x^2 + y^2 + z^2$\"; it is the set where that function equals ${}9$. The function's values are not drawn as heights at all; they label the layers. Check: every point on one level surface gives the same value of $f$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.1 Functions of Several Variables"
+   }
+  ]
+ },
+ "calc3.multivariable-limits": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In one variable, $x$ can approach $a$ from only two sides, and the <a href=\"/math/calculus-1/epsilon-delta/\">precise definition of a limit</a> asks for closeness on both. In the plane, a point can approach $(a, b)$ along infinitely many paths: straight lines from every direction, parabolas, spirals. A limit exists only if the function settles on <b>one</b> value no matter how you approach."
+   },
+   {
+    "t": "key",
+    "html": "$\\displaystyle\\lim_{(x, y) \\to (a, b)} f(x, y) = L$ means: for every $\\varepsilon > 0$ there is a $\\delta > 0$ such that $|f(x, y) - L| < \\varepsilon$ whenever ${}0 < \\sqrt{(x - a)^2 + (y - b)^2} < \\delta$.<br>\n  <b>To show a limit does not exist:</b> find two paths that give different values. <b>To show it exists:</b> squeeze it, often with polar coordinates $x = r\\cos\\theta$, $y = r\\sin\\theta$, where $(x, y) \\to (0, 0)$ means $r \\to 0$ for every $\\theta$."
+   },
+   {
+    "t": "why",
+    "html": "The definition talks about every point in a small disk around $(a, b)$, not about any particular path. If the limit is $L$, then any path into $(a, b)$ eventually stays inside the disk, so every path gives $L$. Turned around: two paths with different values make a limit impossible. But checking many paths can never prove a limit exists, because there are always paths you have not tried. A proof has to control all points at once, and a bound like $|f(x, y) - L| \\le C r$ does exactly that."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "2x^2*y/(x^4+y^2)",
+     "xmin": -1,
+     "xmax": 1,
+     "ymin": -1,
+     "ymax": 1,
+     "n": 31,
+     "contours": 10,
+     "slice": "none",
+     "zmin": -1.1,
+     "zmax": 1.1
+    },
+    "cap": "$z = \\frac{2x^2y}{x^4 + y^2}$. Along every straight line into the origin the height goes to ${}0$, but a ridge of height ${}1$ follows the parabola $y = x^2$ right into the origin, and a valley of depth $-1$ follows $y = -x^2$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Lines disagree",
+    "q": "Show that $\\displaystyle\\lim_{(x, y) \\to (0, 0)} \\frac{xy}{x^2 + y^2}$ does not exist.",
+    "steps": [
+     "Along $y = mx$ (with $x \\ne 0$): $\\frac{x \\cdot mx}{x^2 + m^2x^2} = \\frac{m}{1 + m^2}$.",
+     "$m = 0$ (the $x$-axis) gives ${}0$; $m = 1$ gives $\\frac{1}{2}$.",
+     "Two paths, two values: no limit."
+    ],
+    "a": "does not exist"
+   },
+   {
+    "t": "ex",
+    "title": "Lines agree, but a parabola does not",
+    "q": "Does $\\displaystyle\\lim_{(x, y) \\to (0, 0)} \\frac{x^2y}{x^4 + y^2}$ exist?",
+    "steps": [
+     "Along $y = mx$: $\\frac{mx^3}{x^4 + m^2x^2} = \\frac{mx}{x^2 + m^2} \\to 0$ for every $m$ (and the $y$-axis gives ${}0$ too).",
+     "Along $y = x^2$: $\\frac{x^4}{x^4 + x^4} = \\frac{1}{2}$ for every $x \\ne 0$.",
+     "Different values on two paths, so the limit does not exist."
+    ],
+    "a": "does not exist"
+   },
+   {
+    "t": "ex",
+    "title": "A squeeze in polar coordinates",
+    "q": "Find $\\displaystyle\\lim_{(x, y) \\to (0, 0)} \\frac{x^2y}{x^2 + y^2}$.",
+    "steps": [
+     "With $x = r\\cos\\theta$, $y = r\\sin\\theta$: $\\frac{r^3\\cos^2\\theta\\sin\\theta}{r^2} = r\\cos^2\\theta\\sin\\theta$.",
+     "$|\\cos^2\\theta\\sin\\theta| \\le 1$, so $|f(x, y)| \\le r$.",
+     "As $(x, y) \\to (0, 0)$, $r \\to 0$, so $f \\to 0$ along every path at once."
+    ],
+    "a": "${}0$"
+   },
+   {
+    "t": "p",
+    "html": "Polynomials are continuous everywhere, and so are rational functions wherever the denominator is not zero; sums, products and compositions of continuous functions are continuous. For those, the limit is just the value: substitute."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Checking only straight lines.</b> In the second example every line gives ${}0$, yet the limit does not exist: the parabola $y = x^2$ gives $\\frac{1}{2}$. Agreement along lines is evidence, not proof. Either find a path that disagrees (try $y = x^2$ or $x = y^2$ when the powers in the denominator differ) or prove the limit with a bound that holds for all points near the origin."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.2 Limits and Continuity"
+   }
+  ]
+ },
+ "calc3.partial-derivatives": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How fast does $f(x, y)$ change? It depends on which way you move. The simplest choice is to move in the $x$-direction only, keeping $y$ fixed, or in the $y$-direction only. Each choice turns $f$ into a function of one variable, and you already know how to differentiate those, including with the <a href=\"/math/calculus-1/chain-rule/\">chain rule</a>."
+   },
+   {
+    "t": "key",
+    "html": "$$f_x(a, b) = \\lim_{h \\to 0} \\frac{f(a + h, b) - f(a, b)}{h}, \\qquad f_y(a, b) = \\lim_{h \\to 0} \\frac{f(a, b + h) - f(a, b)}{h}.$$\n  To compute $f_x$, treat $y$ as a constant and differentiate with respect to $x$; for $f_y$, treat $x$ as a constant. Other notations: $\\frac{\\partial f}{\\partial x}$, $\\frac{\\partial z}{\\partial x}$."
+   },
+   {
+    "t": "why",
+    "html": "Fix $y = b$. Then $g(x) = f(x, b)$ is an ordinary function, and its graph is the curve where the vertical plane $y = b$ cuts the surface (the trace). The definition of $f_x(a, b)$ is exactly the definition of $g'(a)$. So $f_x(a, b)$ is the slope of that trace, rise in $z$ per unit step in $x$. Every rule from one-variable calculus applies, because during the computation $y$ really is just a number."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-tangent",
+    "opts": {
+     "f": "4 - x^2 - y^2/2",
+     "a": 1,
+     "b": 0.5,
+     "plane": false,
+     "traces": true
+    },
+    "cap": "The orange curve is the trace in the plane $y = b$; its tangent line has slope $f_x$. The purple trace lies in $x = a$, with slope $f_y$. Move the point with the sliders and watch both slopes in the readout."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A polynomial",
+    "q": "Find $f_x$ and $f_y$ for $f(x, y) = x^3y^2 + 4xy - 5y$.",
+    "steps": [
+     "$f_x$: $y$ is a constant. $\\frac{\\partial}{\\partial x}(x^3y^2) = 3x^2y^2$, $\\frac{\\partial}{\\partial x}(4xy) = 4y$, and $-5y$ has no $x$, so its derivative is ${}0$.",
+     "$f_y$: $x$ is a constant. $\\frac{\\partial}{\\partial y}(x^3y^2) = 2x^3y$, $\\frac{\\partial}{\\partial y}(4xy) = 4x$, $\\frac{\\partial}{\\partial y}(-5y) = -5$."
+    ],
+    "a": "$f_x = 3x^2y^2 + 4y$, $f_y = 2x^3y + 4x - 5$"
+   },
+   {
+    "t": "ex",
+    "title": "The chain rule inside",
+    "q": "Find $f_x$ and $f_y$ for $f(x, y) = e^{xy} + x\\sin y$.",
+    "steps": [
+     "$f_x$: the derivative of $e^{xy}$ with respect to $x$ is $e^{xy} \\cdot y$ (the inside $xy$ has $x$-derivative $y$). $\\frac{\\partial}{\\partial x}(x\\sin y) = \\sin y$.",
+     "$f_y$: $e^{xy} \\cdot x$ and $x\\cos y$."
+    ],
+    "a": "$f_x = ye^{xy} + \\sin y$, $f_y = xe^{xy} + x\\cos y$"
+   },
+   {
+    "t": "ex",
+    "title": "Slopes on a surface",
+    "q": "For $f(x, y) = 4 - x^2 - 2y^2$, find the slopes of the surface at $(1, 1)$ in the $x$- and $y$-directions.",
+    "steps": [
+     "$f_x = -2x$, so $f_x(1, 1) = -2$: stepping east, the surface drops 2 units per unit.",
+     "$f_y = -4y$, so $f_y(1, 1) = -4$: stepping north, it drops twice as fast."
+    ],
+    "a": "$-2$ and $-4$"
+   },
+   {
+    "t": "p",
+    "html": "Three variables work the same way: for $f(x, y, z) = xy^2z^3$, $f_z = 3xy^2z^2$, holding both $x$ and $y$ constant."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Differentiating the other variable too.</b> When computing $\\frac{\\partial}{\\partial x}(x^2y^3)$, the factor $y^3$ is a constant multiplier, so the answer is ${}2xy^3$, not ${}2x \\cdot 3y^2$. And a term with no $x$ at all, like $-5y$, is a constant whose $x$-derivative is ${}0$. Check: replace $y$ by a number like ${}2$ in the original, differentiate the one-variable function, and compare."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.3 Partial Derivatives"
+   }
+  ]
+ },
+ "calc3.higher-partials": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/calculus-3/partial-derivatives/\">partial derivatives</a> $f_x$ and $f_y$ are themselves functions of $x$ and $y$, so you can differentiate them again. That gives four second partials: $f_{xx}$, $f_{yy}$ and two <b>mixed</b> partials, $f_{xy}$ and $f_{yx}$."
+   },
+   {
+    "t": "key",
+    "html": "$f_{xy} = (f_x)_y$: differentiate in $x$ first, then $y$. In Leibniz notation this is $\\frac{\\partial^2 f}{\\partial y\\,\\partial x}$ (read right to left). <b>Clairaut's theorem:</b> if $f_{xy}$ and $f_{yx}$ are continuous near a point, they are equal there."
+   },
+   {
+    "t": "why",
+    "html": "Both mixed partials come from the same \"double difference\"\n  $$\\Delta = f(a + h, b + k) - f(a + h, b) - f(a, b + k) + f(a, b).$$\n  Group it as $$[f(a + h, b + k) - f(a, b + k)] - [f(a + h, b) - f(a, b)]$$ and it measures how an $x$-change depends on $y$; group it the other way and it measures how a $y$-change depends on $x$. Dividing by $hk$ and letting $h, k \\to 0$ in one order gives $f_{xy}$, in the other order $f_{yx}$. When the second partials are continuous, the order of the limits does not matter, so the two agree.<br>\n  Meaning: $f_{xx}$ is the concavity of the trace in the $x$-direction; $f_{xy}$ measures twist: how the $x$-slope changes as you step in $y$."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "x^2 - y^2",
+     "slice": "y",
+     "at": 0.5,
+     "contours": 8
+    },
+    "cap": "For the saddle $z = x^2 - y^2$, $f_{xx} = 2 > 0$: traces in the $x$-direction bend up (the red slice). Switch to slices $x = c$: they bend down, matching $f_{yy} = -2$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "All four second partials",
+    "q": "Find the second partials of $f(x, y) = x^3y^2 - 4xy^3$.",
+    "steps": [
+     "$f_x = 3x^2y^2 - 4y^3$ and $f_y = 2x^3y - 12xy^2$.",
+     "$f_{xx} = 6xy^2$ and $f_{yy} = 2x^3 - 24xy$.",
+     "$f_{xy} = (f_x)_y = 6x^2y - 12y^2$ and $f_{yx} = (f_y)_x = 6x^2y - 12y^2$: equal, as Clairaut promises."
+    ],
+    "a": "$f_{xx} = 6xy^2$, $f_{yy} = 2x^3 - 24xy$, $f_{xy} = f_{yx} = 6x^2y - 12y^2$"
+   },
+   {
+    "t": "ex",
+    "title": "With an exponential",
+    "q": "Find $f_{xx}$, $f_{yy}$ and $f_{xy}$ for $f(x, y) = e^{2x}\\sin y$.",
+    "steps": [
+     "$f_x = 2e^{2x}\\sin y$, so $f_{xx} = 4e^{2x}\\sin y$ and $f_{xy} = 2e^{2x}\\cos y$.",
+     "$f_y = e^{2x}\\cos y$, so $f_{yy} = -e^{2x}\\sin y$ (and $f_{yx} = 2e^{2x}\\cos y$ again)."
+    ],
+    "a": "${}4e^{2x}\\sin y$, $-e^{2x}\\sin y$, ${}2e^{2x}\\cos y$"
+   },
+   {
+    "t": "ex",
+    "title": "A consistency test",
+    "q": "Could $f_x = 2xy + y$ and $f_y = x^2 + 3y^2$ belong to one smooth function?",
+    "steps": [
+     "Clairaut requires $(f_x)_y = (f_y)_x$.",
+     "$(f_x)_y = 2x + 1$, but $(f_y)_x = 2x$.",
+     "They differ, so no smooth $f$ has these partials."
+    ],
+    "a": "no"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Reading the order backwards.</b> $f_{xy}$ means $x$ first, then $y$; $\\frac{\\partial^2 f}{\\partial y\\,\\partial x}$ means the same thing (the variable nearest $f$ goes first). For smooth functions the order does not change the answer, which makes this a perfect check on your algebra: compute both mixed partials, and if they differ, look for a mistake."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.3 Partial Derivatives"
+   }
+  ]
+ },
+ "calc3.tangent-planes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In one variable, the <a href=\"/math/calculus-1/linear-approximation/\">tangent line</a> is the best straight-line approximation of a curve near a point. For a smooth surface, the best flat approximation is a <b>tangent plane</b>. You know how to write a <a href=\"/math/calculus-3/planes/\">plane</a> from a point and a normal vector, and the two partial derivatives give you everything you need."
+   },
+   {
+    "t": "key",
+    "html": "The tangent plane to $z = f(x, y)$ at $(a, b, f(a, b))$ is\n  $$z = f(a, b) + f_x(a, b)(x - a) + f_y(a, b)(y - b).$$\n  Its right side is the <b>linearization</b> $L(x, y)$, and $f(x, y) \\approx L(x, y)$ near $(a, b)$. A normal vector is $\\langle f_x(a, b), f_y(a, b), -1 \\rangle$."
+   },
+   {
+    "t": "why",
+    "html": "The plane must contain the tangent lines of both traces. Along the $x$-trace, a step of ${}1$ in $x$ raises $z$ by $f_x$, so that tangent line has direction $\\langle 1, 0, f_x \\rangle$; the $y$-trace gives $\\langle 0, 1, f_y \\rangle$. Their <a href=\"/math/calculus-3/cross-product/\">cross product</a> is a normal:\n  $$\\langle 1, 0, f_x \\rangle \\times \\langle 0, 1, f_y \\rangle = \\langle -f_x, -f_y, 1 \\rangle.$$\n  The plane through $(a, b, z_0)$ with this normal is $$-f_x(x - a) - f_y(y - b) + (z - z_0) = 0,$$ which rearranges to the formula above."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-tangent",
+    "opts": {
+     "f": "4 - x^2 - y^2",
+     "a": 1,
+     "b": 0.5
+    },
+    "cap": "The red patch is the tangent plane. Both tangent lines (orange and purple) lie in it. Move the point: near it, the plane and the surface are nearly the same, which is why $L(x, y)$ approximates $f$ well for small steps."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A tangent plane",
+    "q": "Find the tangent plane to $z = x^2 + 3xy - y^2$ at $(1, 2)$.",
+    "steps": [
+     "$f(1, 2) = 1 + 6 - 4 = 3$.",
+     "$f_x = 2x + 3y = 8$ and $f_y = 3x - 2y = -1$ at $(1, 2)$.",
+     "$z = 3 + 8(x - 1) - (y - 2)$, which simplifies to $z = 8x - y - 3$."
+    ],
+    "a": "$z = 8x - y - 3$"
+   },
+   {
+    "t": "ex",
+    "title": "An estimate",
+    "q": "Use a linearization to estimate $\\sqrt{(3.1)^2 + (3.9)^2}$.",
+    "steps": [
+     "Let $f(x, y) = \\sqrt{x^2 + y^2}$ near the friendly point $(3, 4)$, where $f = 5$.",
+     "$f_x = \\frac{x}{\\sqrt{x^2 + y^2}} = \\frac{3}{5}$ and $f_y = \\frac{4}{5}$ there.",
+     "$$L(3.1, 3.9) = 5 + \\frac{3}{5}(0.1) + \\frac{4}{5}(-0.1) = 5 + 0.06 - 0.08 = 4.98.$$",
+     "A calculator gives ${}4.9820\\ldots$: very close."
+    ],
+    "a": "about ${}4.98$"
+   },
+   {
+    "t": "ex",
+    "title": "An exponential",
+    "q": "Find the linearization of $f(x, y) = e^{x - y}$ at $(1, 1)$.",
+    "steps": [
+     "$f(1, 1) = e^0 = 1$, $f_x = e^{x - y} = 1$, $f_y = -e^{x - y} = -1$ there.",
+     "$$L = 1 + (x - 1) - (y - 1) = x - y + 1.$$"
+    ],
+    "a": "$L(x, y) = x - y + 1$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Leaving $x$ and $y$ inside the slopes.</b> The coefficients in the tangent plane are the <i>numbers</i> $f_x(a, b)$ and $f_y(a, b)$. If your \"plane\" contains $x^2$ or $xy$, you forgot to evaluate them at the point. Check: a plane is linear in $x$, $y$, $z$, and it must pass through the point of tangency."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.4 Tangent Planes and Linear Approximations"
+   }
+  ]
+ },
+ "calc3.differentials-error": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Measurements are never exact. If you measure a can's radius and height, each a little off, how far off is the volume you compute? The <a href=\"/math/calculus-3/tangent-planes/\">tangent plane</a> answers this: for small changes, the surface is nearly flat, and the change along the plane is easy to compute."
+   },
+   {
+    "t": "key",
+    "html": "The <b>differential</b> of $z = f(x, y)$ is\n  $$dz = f_x\\,dx + f_y\\,dy.$$\n  For small changes $dx$, $dy$, the true change $\\Delta z$ is approximately $dz$. To bound the error in a computed quantity, use the largest possible measurement errors and add the sizes of the terms: $|dz| \\le |f_x||dx| + |f_y||dy|$."
+   },
+   {
+    "t": "why",
+    "html": "Moving from $(a, b)$ to $(a + dx, b + dy)$ along the tangent plane changes the height by $f_x\\,dx + f_y\\,dy$: the $x$-slope times the $x$-step plus the $y$-slope times the $y$-step. Since the plane hugs the surface near the point, the real change differs from $dz$ only by a much smaller amount (roughly the square of the step). Dividing by $z$ gives relative error: for $Q = kx^ay^b$, $\\frac{dQ}{Q} = a\\frac{dx}{x} + b\\frac{dy}{y}$, so percent errors add, each multiplied by its power."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-tangent",
+    "opts": {
+     "f": "x*y",
+     "a": 1.2,
+     "b": 0.8,
+     "xmin": 0,
+     "xmax": 2,
+     "ymin": 0,
+     "ymax": 2,
+     "traces": true,
+     "h": 0.35
+    },
+    "cap": "$z = xy$ (the area of an $x$ by $y$ rectangle). The red tangent plane is the \"differential\" world: for small steps, its rise $dz = y\\,dx + x\\,dy$ matches the surface's rise."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A differential",
+    "q": "For $z = x^2y$, compare $dz$ with $\\Delta z$ at $(2, 3)$ when $dx = 0.1$ and $dy = -0.05$.",
+    "steps": [
+     "$f_x = 2xy = 12$ and $f_y = x^2 = 4$ at $(2, 3)$.",
+     "$$dz = 12(0.1) + 4(-0.05) = 1.2 - 0.2 = 1.0.$$",
+     "Exact: $$(2.1)^2(2.95) - 12 = 13.0095 - 12 = 1.0095.$$ The differential is off by less than ${}0.01$."
+    ],
+    "a": "$dz = 1.0$, $\\Delta z = 1.0095$"
+   },
+   {
+    "t": "ex",
+    "title": "Error in a volume",
+    "q": "A can measures $r = 5$ cm and $h = 10$ cm, each to within ${}0.1$ cm and ${}0.2$ cm. Estimate the largest error in $V = \\pi r^2h$.",
+    "steps": [
+     "$V_r = 2\\pi rh = 100\\pi$ and $V_h = \\pi r^2 = 25\\pi$.",
+     "Worst case: $$|dV| \\le 100\\pi(0.1) + 25\\pi(0.2) = 10\\pi + 5\\pi = 15\\pi \\approx 47$$ cm$^3$.",
+     "Relative: $V = 250\\pi$, so the error is about $\\frac{15\\pi}{250\\pi} = 6\\%$, which is ${}2(2\\%) + 2\\%$, as the power rule predicts."
+    ],
+    "a": "about ${}15\\pi \\approx 47$ cm$^3$"
+   },
+   {
+    "t": "ex",
+    "title": "Percent errors",
+    "q": "The period of a pendulum is computed from $T = 2\\pi\\sqrt{L/g}$. If $L$ is off by at most ${}1\\%$ and $g$ by at most ${}0.5\\%$, how far off can $T$ be?",
+    "steps": [
+     "$T = 2\\pi L^{1/2}g^{-1/2}$, so $\\frac{dT}{T} = \\frac{1}{2}\\frac{dL}{L} - \\frac{1}{2}\\frac{dg}{g}$.",
+     "Worst case: $\\frac{1}{2}(1\\%) + \\frac{1}{2}(0.5\\%) = 0.75\\%$."
+    ],
+    "a": "about ${}0.75\\%$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Letting errors cancel.</b> In $dV = V_r\\,dr + V_h\\,dh$, the measurement errors could have either sign. To find the <i>largest possible</i> error, both must push the same way, so add the absolute values. Using the signs as given is right only when you know the actual changes."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.4 Tangent Planes and Linear Approximations"
+   }
+  ]
+ },
+ "calc3.multivariable-chain-rule": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Suppose the temperature at a point is $T(x, y)$ and you walk along a path $x(t)$, $y(t)$. How fast does the temperature you feel change? It changes because $x$ changes and because $y$ changes, and both effects add. This is the <a href=\"/math/calculus-3/partial-derivatives/\">partial derivative</a> version of the one-variable chain rule."
+   },
+   {
+    "t": "key",
+    "html": "If $z = f(x, y)$ with $x = x(t)$ and $y = y(t)$:\n  $$\\frac{dz}{dt} = \\frac{\\partial z}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial z}{\\partial y}\\frac{dy}{dt}.$$\n  If $x$ and $y$ depend on $s$ and $t$, then $\\frac{\\partial z}{\\partial s} = \\frac{\\partial z}{\\partial x}\\frac{\\partial x}{\\partial s} + \\frac{\\partial z}{\\partial y}\\frac{\\partial y}{\\partial s}$. In general: multiply along each path of a tree diagram and add over all paths."
+   },
+   {
+    "t": "why",
+    "html": "By the <a href=\"/math/calculus-3/differentials-error/\">linear approximation</a>, a small change gives $\\Delta z \\approx f_x\\,\\Delta x + f_y\\,\\Delta y$. Divide by $\\Delta t$:\n  $$\\frac{\\Delta z}{\\Delta t} \\approx f_x\\frac{\\Delta x}{\\Delta t} + f_y\\frac{\\Delta y}{\\Delta t}.$$\n  As $\\Delta t \\to 0$ the approximation becomes exact and each quotient becomes a derivative. Each term is one route by which $t$ influences $z$."
+   },
+   {
+    "t": "p",
+    "html": "A <b>tree diagram</b> keeps track of the routes. Put $z$ at the top, the intermediate variables in the middle, and the independent variables at the bottom. Label each branch with its derivative. For $\\frac{\\partial z}{\\partial s}$, follow every path from $z$ down to $s$, multiply the labels along it, and add.<svg viewBox=\"0 0 380 190\" role=\"img\" aria-label=\"Tree diagram: z branches to x and y; x and y each branch to s and t. Each branch is labeled with a partial derivative.\" style=\"width:100%;max-width:380px;display:block;margin:.4rem auto;color:currentColor\">\n<g stroke=\"currentColor\" stroke-width=\"1.6\" fill=\"none\" opacity=\".75\"><line x1=\"190\" y1=\"34\" x2=\"95\" y2=\"88\"/><line x1=\"190\" y1=\"34\" x2=\"285\" y2=\"88\"/><line x1=\"95\" y1=\"108\" x2=\"45\" y2=\"160\"/><line x1=\"95\" y1=\"108\" x2=\"145\" y2=\"160\"/><line x1=\"285\" y1=\"108\" x2=\"235\" y2=\"160\"/><line x1=\"285\" y1=\"108\" x2=\"335\" y2=\"160\"/></g>\n<g fill=\"currentColor\" font-family=\"Georgia,serif\" font-style=\"italic\" font-size=\"20\" text-anchor=\"middle\"><text x=\"190\" y=\"26\">z</text><text x=\"95\" y=\"104\">x</text><text x=\"285\" y=\"104\">y</text><text x=\"45\" y=\"180\">s</text><text x=\"145\" y=\"180\">t</text><text x=\"235\" y=\"180\">s</text><text x=\"335\" y=\"180\">t</text></g>\n<g fill=\"currentColor\" font-family=\"system-ui,sans-serif\" font-size=\"12\" text-anchor=\"middle\" opacity=\".85\"><text x=\"122\" y=\"56\">∂z/∂x</text><text x=\"262\" y=\"56\">∂z/∂y</text><text x=\"52\" y=\"134\">∂x/∂s</text><text x=\"142\" y=\"134\">∂x/∂t</text><text x=\"242\" y=\"134\">∂y/∂s</text><text x=\"332\" y=\"134\">∂y/∂t</text></g></svg>"
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Along a path",
+    "q": "Let $z = x^2y$ with $x = \\cos t$, $y = \\sin t$. Find $\\frac{dz}{dt}$, and its value at $t = 0$.",
+    "steps": [
+     "$\\frac{\\partial z}{\\partial x} = 2xy$, $\\frac{\\partial z}{\\partial y} = x^2$, $\\frac{dx}{dt} = -\\sin t$, $\\frac{dy}{dt} = \\cos t$.",
+     "$$\\frac{dz}{dt} = 2xy(-\\sin t) + x^2\\cos t = -2\\cos t\\sin^2 t + \\cos^3 t.$$",
+     "At $t = 0$: ${}0 + 1 = 1$. Check: $z(t) = \\cos^2 t\\sin t$, whose derivative at ${}0$ is also ${}1$."
+    ],
+    "a": "$\\frac{dz}{dt} = \\cos^3 t - 2\\cos t\\sin^2 t$; it equals ${}1$ at $t = 0$"
+   },
+   {
+    "t": "ex",
+    "title": "Two independent variables",
+    "q": "Let $z = x^2 + xy$ with $x = s + t$ and $y = st$. Find $\\frac{\\partial z}{\\partial s}$ at $(s, t) = (1, 2)$.",
+    "steps": [
+     "Paths to $s$: $z \\to x \\to s$ and $z \\to y \\to s$.",
+     "$\\frac{\\partial z}{\\partial x} = 2x + y$, $\\frac{\\partial x}{\\partial s} = 1$, $\\frac{\\partial z}{\\partial y} = x$, $\\frac{\\partial y}{\\partial s} = t$.",
+     "At $(1, 2)$: $x = 3$, $y = 2$, so $\\frac{\\partial z}{\\partial s} = (6 + 2)(1) + 3(2) = 14$."
+    ],
+    "a": "${}14$"
+   },
+   {
+    "t": "ex",
+    "title": "Three intermediate variables",
+    "q": "If $w = f(x, y, z)$ and $x$, $y$, $z$ are functions of $t$, write $\\frac{dw}{dt}$.",
+    "steps": [
+     "Three routes lead from $w$ to $t$, one through each intermediate variable.",
+     "$\\frac{dw}{dt} = \\frac{\\partial w}{\\partial x}\\frac{dx}{dt} + \\frac{\\partial w}{\\partial y}\\frac{dy}{dt} + \\frac{\\partial w}{\\partial z}\\frac{dz}{dt}$, which is $\\nabla w \\cdot \\mathbf{r}'(t)$."
+    ],
+    "a": "three terms, one per path"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Leaving out a path.</b> If $y$ also depends on $t$ but you write only $\\frac{\\partial z}{\\partial x}\\frac{dx}{dt}$, you have counted the change through $x$ and ignored the change through $y$. Draw the tree and count the paths from the top variable to the bottom one: that is the number of terms. Check with a direct substitution when the functions are simple."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.5 The Chain Rule"
+   }
+  ]
+ },
+ "calc3.implicit-partials": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Calculus 1 you found slopes of curves like $x^3 + y^3 = 6xy$ by <a href=\"/math/calculus-1/implicit-differentiation/\">implicit differentiation</a>. The <a href=\"/math/calculus-3/multivariable-chain-rule/\">multivariable chain rule</a> turns that process into a one-line formula, and it extends to surfaces given implicitly."
+   },
+   {
+    "t": "key",
+    "html": "If $F(x, y) = 0$ defines $y$ as a function of $x$ (and $F_y \\ne 0$):\n  $$\\frac{dy}{dx} = -\\frac{F_x}{F_y}.$$\n  If $F(x, y, z) = 0$ defines $z$ as a function of $x$ and $y$ (and $F_z \\ne 0$): $\\frac{\\partial z}{\\partial x} = -\\frac{F_x}{F_z}$ and $\\frac{\\partial z}{\\partial y} = -\\frac{F_y}{F_z}$."
+   },
+   {
+    "t": "why",
+    "html": "Along the curve, $F(x, y(x))$ stays equal to ${}0$, so its derivative with respect to $x$ is ${}0$. By the chain rule with the two paths $F \\to x$ and $F \\to y \\to x$:\n  $$F_x \\cdot 1 + F_y\\frac{dy}{dx} = 0.$$\n  Solve for $\\frac{dy}{dx}$: the minus sign comes from moving $F_x$ to the other side. For surfaces, hold $y$ fixed and do the same with $z(x, y)$: $F_x + F_z\\frac{\\partial z}{\\partial x} = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "gradient",
+    "opts": {
+     "f": "x^3 + y^3 - 6x*y",
+     "point": [
+      3,
+      3
+     ],
+     "dir": 135,
+     "xmin": -4,
+     "xmax": 5,
+     "ymin": -4,
+     "ymax": 5,
+     "levels": 14
+    },
+    "cap": "The bold curve through $(3, 3)$ is $x^3 + y^3 - 6xy = 0$, the folium. The blue direction $u$ at ${}135^\\circ$ runs along the curve there: its slope is $-1 = -\\frac{F_x}{F_y}$, and the directional derivative is ${}0$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A slope on a curve",
+    "q": "Find $\\frac{dy}{dx}$ for $x^3 + y^3 = 6xy$ at $(3, 3)$.",
+    "steps": [
+     "$F = x^3 + y^3 - 6xy$: $F_x = 3x^2 - 6y$, $F_y = 3y^2 - 6x$.",
+     "At $(3, 3)$: $F_x = 27 - 18 = 9$ and $F_y = 27 - 18 = 9$.",
+     "$\\frac{dy}{dx} = -\\frac{9}{9} = -1$."
+    ],
+    "a": "$-1$"
+   },
+   {
+    "t": "ex",
+    "title": "As an expression",
+    "q": "Find $\\frac{dy}{dx}$ for $x^2 + xy + y^2 = 7$.",
+    "steps": [
+     "$F = x^2 + xy + y^2 - 7$: $F_x = 2x + y$ and $F_y = x + 2y$.",
+     "$\\frac{dy}{dx} = -\\frac{2x + y}{x + 2y}$, the same as differentiating both sides with respect to $x$ and solving."
+    ],
+    "a": "$-\\frac{2x + y}{x + 2y}$"
+   },
+   {
+    "t": "ex",
+    "title": "A surface",
+    "q": "The sphere $x^2 + y^2 + z^2 = 9$ defines $z$ near $(1, 2, 2)$. Find $\\frac{\\partial z}{\\partial x}$ there.",
+    "steps": [
+     "$F = x^2 + y^2 + z^2 - 9$: $F_x = 2x$ and $F_z = 2z$.",
+     "$\\frac{\\partial z}{\\partial x} = -\\frac{2x}{2z} = -\\frac{x}{z} = -\\frac{1}{2}$ at the point.",
+     "Check: on the top half $z = \\sqrt{9 - x^2 - y^2}$, and $z_x = \\frac{-x}{\\sqrt{9 - x^2 - y^2}} = -\\frac{1}{2}$."
+    ],
+    "a": "$-\\frac{1}{2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting the minus sign.</b> It is easy to write $\\frac{F_x}{F_y}$. Test on a circle $x^2 + y^2 = 25$ at $(3, 4)$: the slope must be negative there (the top right of the circle slopes down), and $-\\frac{F_x}{F_y} = -\\frac{6}{8} = -\\frac{3}{4}$ is. Also keep the right variable in the denominator: $F_z$ for $\\frac{\\partial z}{\\partial x}$, $F_y$ for $\\frac{dy}{dx}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.5 The Chain Rule"
+   }
+  ]
+ },
+ "calc3.directional-derivatives": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/calculus-3/partial-derivatives/\">partial derivatives</a> measure change heading east ($f_x$) or north ($f_y$). A hiker can head any way. The <b>directional derivative</b> $D_{\\mathbf{u}}f$ measures the rate of change of $f$ per unit of distance in the direction of a <b>unit</b> vector $\\mathbf{u}$, using the <a href=\"/math/calculus-3/dot-product-projections/\">dot product</a>."
+   },
+   {
+    "t": "key",
+    "html": "For a unit vector $\\mathbf{u} = \\langle u_1, u_2 \\rangle$:\n  $$D_{\\mathbf{u}}f(a, b) = f_x(a, b)\\,u_1 + f_y(a, b)\\,u_2 = \\nabla f(a, b) \\cdot \\mathbf{u},$$\n  where $\\nabla f = \\langle f_x, f_y \\rangle$. If a direction is given by a vector $\\mathbf{v}$ that is not unit length, use $\\mathbf{u} = \\frac{\\mathbf{v}}{|\\mathbf{v}|}$. For an angle $\\theta$, $\\mathbf{u} = \\langle \\cos\\theta, \\sin\\theta \\rangle$."
+   },
+   {
+    "t": "why",
+    "html": "Walk from $(a, b)$ in direction $\\mathbf{u}$: after distance $s$ you are at $x = a + su_1$, $y = b + su_2$. The <a href=\"/math/calculus-3/multivariable-chain-rule/\">chain rule</a> gives\n  $$\\frac{d}{ds}f(a + su_1, b + su_2) = f_x\\frac{dx}{ds} + f_y\\frac{dy}{ds} = f_x u_1 + f_y u_2.$$\n  This is a rate per unit of distance because $s$ is distance, and $s$ is distance only when $|\\mathbf{u}| = 1$. With a longer vector, the \"distance\" would really be a multiple of $s$ and the rate would be scaled by that multiple."
+   },
+   {
+    "t": "viz",
+    "name": "gradient",
+    "opts": {
+     "f": "x^2 + 2y^2",
+     "point": [
+      1,
+      0.5
+     ],
+     "dir": 45
+    },
+    "cap": "Turn the blue unit vector $u$ with the slider. The readout shows $D_{\\mathbf{u}}f = \\nabla f \\cdot \\mathbf{u}$: largest when $u$ lines up with the red gradient, zero when $u$ runs along the level curve."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Direction given by a vector",
+    "q": "Find $D_{\\mathbf{u}}f$ for $f(x, y) = x^2y + y^3$ at $(1, 2)$ in the direction of $\\mathbf{v} = \\langle 3, 4 \\rangle$.",
+    "steps": [
+     "$\\nabla f = \\langle 2xy, x^2 + 3y^2 \\rangle = \\langle 4, 13 \\rangle$ at $(1, 2)$.",
+     "$|\\mathbf{v}| = 5$, so $\\mathbf{u} = \\left\\langle \\frac{3}{5}, \\frac{4}{5} \\right\\rangle$.",
+     "$D_{\\mathbf{u}}f = \\frac{12}{5} + \\frac{52}{5} = \\frac{64}{5}$."
+    ],
+    "a": "$\\frac{64}{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "Direction given by an angle",
+    "q": "Find the rate of change of $f(x, y) = xe^{y}$ at $(2, 0)$ in the direction $\\theta = \\frac{\\pi}{6}$.",
+    "steps": [
+     "$\\nabla f = \\langle e^y, xe^y \\rangle = \\langle 1, 2 \\rangle$ at $(2, 0)$.",
+     "$\\mathbf{u} = \\left\\langle \\frac{\\sqrt{3}}{2}, \\frac{1}{2} \\right\\rangle$, already a unit vector.",
+     "$D_{\\mathbf{u}}f = \\frac{\\sqrt{3}}{2} + 1$."
+    ],
+    "a": "$\\frac{\\sqrt{3}}{2} + 1 \\approx 1.87$"
+   },
+   {
+    "t": "ex",
+    "title": "Three variables",
+    "q": "Find the rate of change of $f(x, y, z) = xyz$ at $(1, 2, 3)$ toward $\\mathbf{v} = \\langle 2, -1, 2 \\rangle$.",
+    "steps": [
+     "$\\nabla f = \\langle yz, xz, xy \\rangle = \\langle 6, 3, 2 \\rangle$.",
+     "$|\\mathbf{v}| = 3$, so $D_{\\mathbf{u}}f = \\frac{1}{3}(12 - 3 + 4) = \\frac{13}{3}$."
+    ],
+    "a": "$\\frac{13}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using a direction vector that is not unit length.</b> Dotting with $\\mathbf{v} = \\langle 3, 4 \\rangle$ itself in the first example gives ${}64$, five times too big, because $|\\mathbf{v}| = 5$. The direction is the same, but the rate per unit distance is not. Check: in the directions $\\langle 1, 0 \\rangle$ and $\\langle 0, 1 \\rangle$ your formula must give $f_x$ and $f_y$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.6 Directional Derivatives and the Gradient"
+   }
+  ]
+ },
+ "calc3.gradient": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The vector $\\nabla f = \\langle f_x, f_y \\rangle$ that appeared in <a href=\"/math/calculus-3/directional-derivatives/\">directional derivatives</a> deserves its own name: the <b>gradient</b> (\"del $f$\"). It packs every directional derivative into one arrow, and that arrow has a clear meaning."
+   },
+   {
+    "t": "key",
+    "html": "At each point, $\\nabla f$ points in the direction in which $f$ increases fastest, and its length $|\\nabla f|$ is that fastest rate. $f$ decreases fastest in the direction $-\\nabla f$, and does not change at all in the directions perpendicular to $\\nabla f$."
+   },
+   {
+    "t": "why",
+    "html": "For a unit vector $\\mathbf{u}$ at angle $\\theta$ to the gradient,\n  $$D_{\\mathbf{u}}f = \\nabla f \\cdot \\mathbf{u} = |\\nabla f|\\,|\\mathbf{u}|\\cos\\theta = |\\nabla f|\\cos\\theta.$$\n  Since $\\cos\\theta$ is between $-1$ and ${}1$, the rate is largest ($|\\nabla f|$) at $\\theta = 0$, smallest ($-|\\nabla f|$) at $\\theta = \\pi$, and zero at $\\theta = \\pm\\frac{\\pi}{2}$. Nothing about the formula for $f$ entered: this is true for every differentiable function."
+   },
+   {
+    "t": "viz",
+    "name": "gradient",
+    "opts": {
+     "f": "x^2 + 2y^2",
+     "point": [
+      1.5,
+      1
+     ],
+     "dir": 200,
+     "ascent": true
+    },
+    "cap": "The red arrow is $\\nabla f$, drawn in the $xy$-plane, the map. The gold dashed path follows the gradient: the route of steepest climb, crossing every contour at a right angle. Drag the point to see how the arrow changes."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Fastest increase",
+    "q": "For $f(x, y) = x^2 + 2y^2$ at $(1, 1)$, find the direction and rate of fastest increase.",
+    "steps": [
+     "$\\nabla f = \\langle 2x, 4y \\rangle = \\langle 2, 4 \\rangle$.",
+     "Direction: $\\frac{\\langle 2, 4 \\rangle}{\\sqrt{20}} = \\left\\langle \\frac{1}{\\sqrt{5}}, \\frac{2}{\\sqrt{5}} \\right\\rangle$.",
+     "Rate: $|\\nabla f| = \\sqrt{20} = 2\\sqrt{5} \\approx 4.47$."
+    ],
+    "a": "direction $\\frac{1}{\\sqrt{5}}\\langle 1, 2 \\rangle$, rate ${}2\\sqrt{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "A hiker",
+    "q": "A hill has height $h(x, y) = 100 - 0.01x^2 - 0.02y^2$ meters, with $x$ east and $y$ north in meters. At $(30, 10)$, which way should a hiker head to climb most steeply, and how steep is it?",
+    "steps": [
+     "$$\\nabla h = \\langle -0.02x, -0.04y \\rangle = \\langle -0.6, -0.4 \\rangle$$ at $(30, 10)$: head west-southwest, toward the summit at the origin.",
+     "Steepest slope: $|\\nabla h| = \\sqrt{0.36 + 0.16} = \\sqrt{0.52} \\approx 0.72$ meters up per meter walked."
+    ],
+    "a": "toward $\\langle -0.6, -0.4 \\rangle$; slope about ${}0.72$"
+   },
+   {
+    "t": "ex",
+    "title": "No change",
+    "q": "In which directions is the rate of change of $f(x, y) = x^2 + 2y^2$ zero at $(1, 1)$?",
+    "steps": [
+     "Perpendicular to $\\nabla f = \\langle 2, 4 \\rangle$: swap the components and change one sign, $\\pm\\langle -4, 2 \\rangle$.",
+     "As unit vectors: $\\pm\\frac{1}{\\sqrt{5}}\\langle -2, 1 \\rangle$. These run along the level curve through $(1, 1)$."
+    ],
+    "a": "$\\pm\\frac{1}{\\sqrt{5}}\\langle -2, 1 \\rangle$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Drawing the gradient on the surface.</b> $\\nabla f$ has two components, so it lives in the $xy$-plane: it tells the hiker which way to step on the map. It is not tangent to the surface $z = f(x, y)$ and does not point up the hill in 3-D. (The steepest path on the surface rises above it, in the direction $\\langle f_x, f_y, |\\nabla f|^2 \\rangle$.) Check: your gradient arrow should cross the level curves of a contour map at right angles."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.6 Directional Derivatives and the Gradient"
+   }
+  ]
+ },
+ "calc3.gradient-normals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/calculus-3/gradient/\">gradient</a> points in the direction of fastest increase, and the rate of change is zero along a level curve. Put those together: the gradient must be perpendicular to the level curves. In three variables the same reasoning makes $\\nabla F$ perpendicular to <a href=\"/math/calculus-3/level-surfaces/\">level surfaces</a>, and that gives tangent planes to surfaces that are not graphs."
+   },
+   {
+    "t": "key",
+    "html": "$\\nabla F(P)$ is a normal vector to the level surface $F(x, y, z) = k$ at $P$. The tangent plane there is\n  $$F_x(P)(x - x_0) + F_y(P)(y - y_0) + F_z(P)(z - z_0) = 0,$$\n  and the normal line is $\\mathbf{r}(t) = P + t\\,\\nabla F(P)$. In two variables, $\\nabla f$ is perpendicular to the level curve through the point."
+   },
+   {
+    "t": "why",
+    "html": "Take any curve $\\mathbf{r}(t)$ lying in the level surface and passing through $P$. Along it, $F(\\mathbf{r}(t)) = k$ is constant, so by the chain rule\n  $$\\frac{d}{dt}F(\\mathbf{r}(t)) = \\nabla F \\cdot \\mathbf{r}'(t) = 0.$$\n  The gradient is perpendicular to the velocity of every curve in the surface through $P$, so it is perpendicular to the whole tangent plane. For a graph $z = f(x, y)$, use $F = f(x, y) - z$: $\\nabla F = \\langle f_x, f_y, -1 \\rangle$, the same normal as in <a href=\"/math/calculus-3/tangent-planes/\">tangent planes</a>."
+   },
+   {
+    "t": "viz",
+    "name": "gradient",
+    "opts": {
+     "f": "x^2 + 2y^2",
+     "point": [
+      1,
+      1
+     ],
+     "dir": 90
+    },
+    "cap": "The bold curve is the level curve through the point, and the red gradient meets it at a right angle. Drag the point anywhere: the right angle never changes."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Tangent plane to an ellipsoid",
+    "q": "Find the tangent plane to $x^2 + 2y^2 + 3z^2 = 6$ at $(1, 1, 1)$.",
+    "steps": [
+     "$F = x^2 + 2y^2 + 3z^2$: $\\nabla F = \\langle 2x, 4y, 6z \\rangle = \\langle 2, 4, 6 \\rangle$.",
+     "${}2(x - 1) + 4(y - 1) + 6(z - 1) = 0$.",
+     "Divide by 2 and expand: $x + 2y + 3z = 6$."
+    ],
+    "a": "$x + 2y + 3z = 6$"
+   },
+   {
+    "t": "ex",
+    "title": "The normal line",
+    "q": "Find the normal line to the same ellipsoid at $(1, 1, 1)$.",
+    "steps": [
+     "Direction $\\nabla F = \\langle 2, 4, 6 \\rangle$, or the simpler $\\langle 1, 2, 3 \\rangle$.",
+     "$\\mathbf{r}(t) = \\langle 1 + t, 1 + 2t, 1 + 3t \\rangle$."
+    ],
+    "a": "$\\mathbf{r}(t) = \\langle 1 + t, 1 + 2t, 1 + 3t \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "A tangent line to a level curve",
+    "q": "Find the tangent line to $x^2 - xy + y^2 = 7$ at $(3, 2)$.",
+    "steps": [
+     "$\\nabla F = \\langle 2x - y, -x + 2y \\rangle = \\langle 4, 1 \\rangle$ at $(3, 2)$, a normal to the curve.",
+     "${}4(x - 3) + 1(y - 2) = 0$, so ${}4x + y = 14$."
+    ],
+    "a": "${}4x + y = 14$"
+   },
+   {
+    "t": "ex",
+    "title": "A graph as a level surface",
+    "q": "Find the tangent plane to $z = x^2 + y^2$ at $(1, 2, 5)$.",
+    "steps": [
+     "$F = x^2 + y^2 - z$ has $\\nabla F = \\langle 2x, 2y, -1 \\rangle = \\langle 2, 4, -1 \\rangle$.",
+     "${}2(x - 1) + 4(y - 2) - (z - 5) = 0$, so $z = 2x + 4y - 5$."
+    ],
+    "a": "$z = 2x + 4y - 5$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using a two-component gradient as a normal in space.</b> For the surface $z = f(x, y)$, the vector $\\nabla f = \\langle f_x, f_y \\rangle$ is perpendicular to level curves in the plane, not to the surface. The surface's normal needs three components: write it as $F = f - z$ and use $\\nabla F = \\langle f_x, f_y, -1 \\rangle$. Check: the point must satisfy your tangent plane equation."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.6 Directional Derivatives and the Gradient"
+   }
+  ]
+ },
+ "calc3.critical-points": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In one variable, <a href=\"/math/calculus-1/critical-points-extrema/\">local extremes</a> happen where $f'(x) = 0$, and the second derivative test tells a valley from a peak. Surfaces have one new kind of flat spot: a <b>saddle point</b>, like the middle of a horse's saddle or a mountain pass, which is a low point in one direction and a high point in another."
+   },
+   {
+    "t": "key",
+    "html": "If $f$ has a local maximum or minimum at an interior point $(a, b)$ where it is differentiable, then $\\nabla f(a, b) = \\mathbf{0}$: a <b>critical point</b>. To classify it, compute\n  $$D = f_{xx}f_{yy} - (f_{xy})^2 \\text{ at } (a, b).$$\n  $D > 0$ and $f_{xx} > 0$: local minimum. $D > 0$ and $f_{xx} < 0$: local maximum. $D < 0$: saddle point. $D = 0$: the test says nothing."
+   },
+   {
+    "t": "why",
+    "html": "<b>Why $\\nabla f = \\mathbf{0}$:</b> if $f$ is largest at $(a, b)$ among nearby points, then in particular the trace $f(x, b)$ is largest at $x = a$, so $f_x(a, b) = 0$; likewise $f_y(a, b) = 0$.<br>\n  <b>Why $D$:</b> near a critical point, the second-order approximation is $f \\approx f(a, b) + \\frac{1}{2}(Ah^2 + 2Bhk + Ck^2)$ with $A = f_{xx}$, $B = f_{xy}$, $C = f_{yy}$ and steps $h$, $k$. Completing the square (for $A \\ne 0$):\n  $$Ah^2 + 2Bhk + Ck^2 = A\\left(h + \\frac{B}{A}k\\right)^2 + \\frac{AC - B^2}{A}k^2.$$\n  If $AC - B^2 > 0$, both terms have the sign of $A$ for every nonzero step: a bowl ($A > 0$) or a dome ($A < 0$). If $AC - B^2 < 0$, the two terms have opposite signs, so some steps go up and others go down: a saddle."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "x^3 - 3x + y^2",
+     "xmin": -2,
+     "xmax": 2,
+     "ymin": -1.6,
+     "ymax": 1.6,
+     "contours": 12,
+     "slice": "y",
+     "at": 0
+    },
+    "cap": "$f(x, y) = x^3 - 3x + y^2$ has a local minimum at $(1, 0)$ and a saddle at $(-1, 0)$. The slice $y = 0$ shows the trace $x^3 - 3x$: a valley at $x = 1$ and a peak at $x = -1$. But in the $y$-direction both points sit at the bottom of $y^2$; at $(-1, 0)$ that makes a saddle."
+   },
+   {
+    "t": "p",
+    "html": "Critical points also include points where a partial derivative does not exist, such as the tip of the cone $f(x, y) = \\sqrt{x^2 + y^2}$, which is a minimum even though $\\nabla f$ is undefined there. And not every critical point is an extreme value: at a saddle the tangent plane is horizontal, but the surface rises above it in some directions and falls below it in others. In applications, critical points mark equilibria, such as the lowest energy state of a physical system, and the test decides whether such an equilibrium is stable (a minimum of the energy) or not."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A quadratic",
+    "q": "Find and classify the critical points of $f(x, y) = x^2 + xy + y^2 - 3x$.",
+    "steps": [
+     "$f_x = 2x + y - 3 = 0$ and $f_y = x + 2y = 0$. From the second, $x = -2y$; then $-4y + y = 3$, so $y = -1$, $x = 2$.",
+     "$f_{xx} = 2$, $f_{yy} = 2$, $f_{xy} = 1$, so $D = 4 - 1 = 3 > 0$ with $f_{xx} > 0$.",
+     "Local minimum at $(2, -1)$, with value ${}4 - 2 + 1 - 6 = -3$."
+    ],
+    "a": "local minimum $-3$ at $(2, -1)$"
+   },
+   {
+    "t": "ex",
+    "title": "A minimum and a saddle",
+    "q": "Classify the critical points of $f(x, y) = x^3 - 3x + y^2$.",
+    "steps": [
+     "$f_x = 3x^2 - 3 = 0$ gives $x = \\pm 1$; $f_y = 2y = 0$ gives $y = 0$.",
+     "$f_{xx} = 6x$, $f_{yy} = 2$, $f_{xy} = 0$, so $D = 12x$.",
+     "At $(1, 0)$: $D = 12 > 0$, $f_{xx} = 6 > 0$: local minimum. At $(-1, 0)$: $D = -12 < 0$: saddle point."
+    ],
+    "a": "minimum at $(1, 0)$, saddle at $(-1, 0)$"
+   },
+   {
+    "t": "ex",
+    "title": "Two critical points",
+    "q": "Classify the critical points of $f(x, y) = x^3 + y^3 - 3xy$.",
+    "steps": [
+     "$f_x = 3x^2 - 3y = 0$ and $f_y = 3y^2 - 3x = 0$, so $y = x^2$ and $x = y^2 = x^4$: $x = 0$ or $x = 1$.",
+     "$f_{xx} = 6x$, $f_{yy} = 6y$, $f_{xy} = -3$.",
+     "$(0, 0)$: $D = 0 - 9 < 0$, a saddle. $(1, 1)$: $D = 36 - 9 = 27 > 0$ and $f_{xx} = 6 > 0$, a local minimum."
+    ],
+    "a": "saddle at $(0, 0)$, minimum at $(1, 1)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Misreading $D$.</b> When $D < 0$ the point is a saddle, whatever the sign of $f_{xx}$; $f_{xx}$ only matters when $D > 0$. When $D = 0$, do not conclude anything: $x^4 + y^4$, $-x^4 - y^4$ and $x^4 - y^4$ all have $D = 0$ at the origin, and they have a minimum, a maximum and a saddle there. Look at the function itself in that case."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.7 Maxima/Minima Problems"
+   }
+  ]
+ },
+ "calc3.absolute-extrema": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/calculus-3/critical-points/\">critical point</a> finds local highs and lows inside a region, but the highest point of a whole region is often on its edge. Think of a sloping field: its highest point is at a fence, where the gradient is not zero at all. As in Calculus 1, where you checked <a href=\"/math/calculus-1/critical-points-extrema/\">endpoints</a>, the boundary must be checked too."
+   },
+   {
+    "t": "key",
+    "html": "A continuous function on a <b>closed, bounded</b> region has an absolute maximum and an absolute minimum. To find them:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Find the critical points of $f$ <b>inside</b> the region and the values of $f$ there.",
+     "On each piece of the <b>boundary</b>, write $f$ as a function of one variable and find its critical points.",
+     "Include the <b>corners</b> (the endpoints of the boundary pieces).",
+     "The largest value in the whole list is the absolute maximum; the smallest is the absolute minimum."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Where can the maximum be? If it is at an interior point, $f$ is locally largest there, so $\\nabla f = \\mathbf{0}$: step 1 catches it. If it is on the boundary, it is in particular the largest value of $f$ along that edge, which is a one-variable problem: either a critical point of the edge function or an end of the edge, a corner. Steps 2 and 3 catch those. Nothing else is possible, so comparing the finite list is enough."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "x^2 + y^2 - 2x - 4y",
+     "xmin": 0,
+     "xmax": 3,
+     "ymin": 0,
+     "ymax": 3,
+     "contours": 10,
+     "slice": "x",
+     "at": 3
+    },
+    "cap": "$f = x^2 + y^2 - 2x - 4y$ over the square $[0, 3] \\times [0, 3]$. The bottom of the bowl is inside, at $(1, 2)$; the highest point is a corner. The red slice is the edge $x = 3$, where $f$ becomes the one-variable function $y^2 - 4y + 3$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "On a square",
+    "q": "Find the absolute extremes of $f(x, y) = x^2 + y^2 - 2x - 4y$ on ${}0 \\le x \\le 3$, ${}0 \\le y \\le 3$.",
+    "steps": [
+     "Inside: $f_x = 2x - 2 = 0$, $f_y = 2y - 4 = 0$ at $(1, 2)$, where $f = -5$.",
+     "Edge $y = 0$: $x^2 - 2x$, critical at $x = 1$: $f(1, 0) = -1$. Edge $x = 3$: $y^2 - 4y + 3$, critical at $y = 2$: $f(3, 2) = -1$.",
+     "Edge $y = 3$: $x^2 - 2x - 3$, critical at $x = 1$: $f(1, 3) = -4$. Edge $x = 0$: $y^2 - 4y$, critical at $y = 2$: $f(0, 2) = -4$.",
+     "Corners: $f(0, 0) = 0$, $f(3, 0) = 3$, $f(3, 3) = 0$, $f(0, 3) = -3$.",
+     "Compare everything: largest ${}3$, smallest $-5$."
+    ],
+    "a": "maximum ${}3$ at $(3, 0)$; minimum $-5$ at $(1, 2)$"
+   },
+   {
+    "t": "ex",
+    "title": "On a triangle",
+    "q": "Find the absolute extremes of $f(x, y) = 2x^2 + y^2 - 4x$ on the triangle with vertices $(0, 0)$, $(2, 0)$, $(0, 2)$.",
+    "steps": [
+     "Inside: $f_x = 4x - 4 = 0$ and $f_y = 2y = 0$ give $(1, 0)$, which is on the edge, not inside.",
+     "Edge $y = 0$: ${}2x^2 - 4x$, critical at $x = 1$: $f = -2$. Edge $x = 0$: $y^2$, no interior critical point.",
+     "Hypotenuse $y = 2 - x$: ${}2x^2 + (2 - x)^2 - 4x = 3x^2 - 8x + 4$, critical at $x = \\frac{4}{3}$: $f = -\\frac{4}{3}$.",
+     "Corners: $f(0, 0) = 0$, $f(2, 0) = 0$, $f(0, 2) = 4$.",
+     "Largest ${}4$, smallest $-2$."
+    ],
+    "a": "maximum ${}4$ at $(0, 2)$; minimum $-2$ at $(1, 0)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Skipping the boundary, or its corners.</b> Setting $\\nabla f = \\mathbf{0}$ only finds interior candidates. In the first example the maximum, ${}3$, is at a corner, where neither partial derivative is zero. Each edge needs its own one-variable search, and every corner must be on the list, because the edge functions are only defined on closed intervals."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.7 Maxima/Minima Problems"
+   }
+  ]
+ },
+ "calc3.lagrange-multipliers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Often you cannot go anywhere you like: you must stay on a curve or a surface. Maximize the area of a fence with a fixed length, or find the hottest point on a circular wire. That is <b>constrained optimization</b>: extremes of $f$ subject to $g(x, y) = k$. The key picture uses two facts you know: the <a href=\"/math/calculus-3/gradient-normals/\">gradient is perpendicular to level curves</a>, and a level curve of $f$ that crosses the constraint cannot mark an extreme."
+   },
+   {
+    "t": "key",
+    "html": "At a maximum or minimum of $f$ on the curve $g(x, y) = k$ (with $\\nabla g \\ne \\mathbf{0}$), the gradients are parallel:\n  $$\\nabla f = \\lambda\\nabla g, \\qquad g(x, y) = k.$$\n  Solve this system for $x$, $y$ and $\\lambda$ (the Lagrange multiplier), then evaluate $f$ at <b>every</b> solution and compare."
+   },
+   {
+    "t": "why",
+    "html": "Move along the constraint curve $\\mathbf{r}(t)$. If $f$ has its largest value on the curve at $\\mathbf{r}(t_0)$, then $\\frac{d}{dt}f(\\mathbf{r}(t)) = \\nabla f \\cdot \\mathbf{r}'(t)$ is ${}0$ at $t_0$: $\\nabla f$ is perpendicular to the curve. But $\\nabla g$ is also perpendicular to the curve, because the curve is a level curve of $g$. In the plane, two vectors perpendicular to the same direction are parallel, so $\\nabla f = \\lambda \\nabla g$. In pictures: at the extreme, the level curve of $f$ just <b>touches</b> the constraint curve without crossing it."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-lagrange",
+    "opts": {
+     "f": "x*y",
+     "g": "x^2+y^2",
+     "curve": {
+      "x": "2cos(t)",
+      "y": "2sin(t)",
+      "t0": 0,
+      "t1": "2pi"
+     },
+     "t": 0.35,
+     "task": "Slide the point around the circle until $\\nabla f$ and $\\nabla g$ line up. Is $f$ largest or smallest there?"
+    },
+    "cap": "Level curves of $f = xy$ (hyperbolas) and the constraint $x^2 + y^2 = 4$ (blue). Where the bold level curve crosses the circle, you can still climb along the circle; where it only touches, you cannot."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A linear function on a circle",
+    "q": "Find the maximum and minimum of $f(x, y) = 3x + 4y$ on $x^2 + y^2 = 25$.",
+    "steps": [
+     "$\\nabla f = \\lambda\\nabla g$: ${}3 = 2\\lambda x$ and ${}4 = 2\\lambda y$. So $\\lambda \\ne 0$ and $(x, y) = \\frac{1}{2\\lambda}(3, 4)$: parallel to $\\langle 3, 4 \\rangle$.",
+     "On the circle of radius 5 that gives $(3, 4)$ and $(-3, -4)$.",
+     "$f(3, 4) = 25$ and $f(-3, -4) = -25$."
+    ],
+    "a": "maximum ${}25$, minimum $-25$"
+   },
+   {
+    "t": "ex",
+    "title": "Check every solution",
+    "q": "Find the extremes of $f(x, y) = xy$ on $x^2 + y^2 = 8$.",
+    "steps": [
+     "$y = 2\\lambda x$ and $x = 2\\lambda y$. Then $y = 4\\lambda^2 y$, so $y = 0$ or $\\lambda = \\pm\\frac{1}{2}$.",
+     "$y = 0$ forces $x = 0$, which is not on the circle. $\\lambda = \\frac{1}{2}$ gives $y = x$; $\\lambda = -\\frac{1}{2}$ gives $y = -x$.",
+     "Points: $(2, 2)$, $(-2, -2)$ with $f = 4$; $(2, -2)$, $(-2, 2)$ with $f = -4$."
+    ],
+    "a": "maximum ${}4$, minimum $-4$"
+   },
+   {
+    "t": "ex",
+    "title": "Closest point on a plane",
+    "q": "Find the point of the plane $x + 2y + 2z = 9$ closest to the origin.",
+    "steps": [
+     "Minimize the squared distance $f = x^2 + y^2 + z^2$ with $g = x + 2y + 2z = 9$.",
+     "$\\langle 2x, 2y, 2z \\rangle = \\lambda\\langle 1, 2, 2 \\rangle$, so $(x, y, z) = \\frac{\\lambda}{2}(1, 2, 2)$.",
+     "The constraint gives $\\frac{\\lambda}{2}(1 + 4 + 4) = 9$, so $\\frac{\\lambda}{2} = 1$: the point $(1, 2, 2)$, at distance ${}3$."
+    ],
+    "a": "$(1, 2, 2)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Solving for $\\lambda$ and stopping.</b> The multiplier is a helper, not the answer. The system usually has several solutions; each is a candidate, and you must evaluate $f$ at all of them (as in the second example, where two give the maximum and two the minimum). Also watch for lost solutions: dividing an equation by $x$ or $y$ can throw away the case where that variable is ${}0$, so factor instead."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.8 Lagrange Multipliers"
+   }
+  ]
+ },
+ "calc3.lagrange-two-constraints": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two constraints in space, $g(x, y, z) = k_1$ and $h(x, y, z) = k_2$, are two surfaces; together they usually cut out a <b>curve</b>, like the ellipse where a plane slices a cylinder. Optimizing on that curve extends <a href=\"/math/calculus-3/lagrange-multipliers/\">Lagrange multipliers</a> with a second multiplier."
+   },
+   {
+    "t": "key",
+    "html": "At a maximum or minimum of $f$ on the curve where $g = k_1$ and $h = k_2$ (with $\\nabla g$, $\\nabla h$ not parallel):\n  $$\\nabla f = \\lambda\\nabla g + \\mu\\nabla h, \\qquad g = k_1, \\qquad h = k_2.$$\n  That is five equations in $x$, $y$, $z$, $\\lambda$, $\\mu$. Evaluate $f$ at every solution."
+   },
+   {
+    "t": "why",
+    "html": "Let $\\mathbf{T}$ be the tangent direction of the curve at the extreme point. As before, $\\nabla f \\cdot \\mathbf{T} = 0$. The curve lies in both surfaces, so $\\mathbf{T}$ is perpendicular to $\\nabla g$ and to $\\nabla h$. The vectors perpendicular to $\\mathbf{T}$ form a plane, and $\\nabla g$ and $\\nabla h$ span it (they are not parallel). So $\\nabla f$, which also lies in that plane, is a combination $\\lambda\\nabla g + \\mu\\nabla h$."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "x": "cos(t)",
+     "y": "sin(t)",
+     "z": "2 - cos(t) - sin(t)",
+     "t0": 0,
+     "t1": "2pi",
+     "t": 3.9,
+     "tangent": true,
+     "shadow": true
+    },
+    "cap": "The ellipse where the cylinder $x^2 + y^2 = 1$ meets the plane $x + y + z = 2$. Move the point: the height $z$ is largest at $t = \\frac{5\\pi}{4}$ (about ${}3.93$), where the tangent is horizontal."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Highest point on an ellipse",
+    "q": "Find the extremes of $f = z$ on the curve $x^2 + y^2 = 1$, $x + y + z = 2$.",
+    "steps": [
+     "$\\nabla f = \\langle 0, 0, 1 \\rangle$, $\\nabla g = \\langle 2x, 2y, 0 \\rangle$, $\\nabla h = \\langle 1, 1, 1 \\rangle$.",
+     "Components: ${}0 = 2\\lambda x + \\mu$, ${}0 = 2\\lambda y + \\mu$, ${}1 = \\mu$. So ${}2\\lambda x = 2\\lambda y = -1$, which forces $x = y$.",
+     "With $x^2 + y^2 = 1$: $x = y = \\pm\\frac{1}{\\sqrt{2}}$, and $z = 2 - x - y = 2 \\mp \\sqrt{2}$.",
+     "Maximum ${}2 + \\sqrt{2}$ at $\\left(-\\frac{1}{\\sqrt{2}}, -\\frac{1}{\\sqrt{2}}, 2 + \\sqrt{2}\\right)$; minimum ${}2 - \\sqrt{2}$."
+    ],
+    "a": "maximum ${}2 + \\sqrt{2}$, minimum ${}2 - \\sqrt{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Closest point of a line",
+    "q": "Minimize $x^2 + y^2 + z^2$ subject to $x + y + z = 3$ and $x - y = 1$.",
+    "steps": [
+     "${}2\\langle x, y, z \\rangle = \\lambda\\langle 1, 1, 1 \\rangle + \\mu\\langle 1, -1, 0 \\rangle$: $x = \\frac{\\lambda + \\mu}{2}$, $y = \\frac{\\lambda - \\mu}{2}$, $z = \\frac{\\lambda}{2}$.",
+     "First constraint: $\\frac{3\\lambda}{2} = 3$, so $\\lambda = 2$. Second: $x - y = \\mu = 1$.",
+     "Point $\\left(\\frac{3}{2}, \\frac{1}{2}, 1\\right)$; the minimum is $\\frac{9}{4} + \\frac{1}{4} + 1 = \\frac{7}{2}$."
+    ],
+    "a": "$\\frac{7}{2}$"
+   },
+   {
+    "t": "p",
+    "html": "Sometimes a constraint can simply be solved for one variable. In the first example, $z = 2 - x - y$ turns the problem into one constraint in the plane. Both routes give the same answer; Lagrange's method is the one that always works, even when solving is messy."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using only one multiplier.</b> Writing $\\nabla f = \\lambda\\nabla g$ and ignoring $h$ finds extremes on the whole surface $g = k_1$, not on the curve. Each constraint brings its own multiplier and its own equation. Count: unknowns $x, y, z, \\lambda, \\mu$ (five) must match equations (three gradient components plus two constraints)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 4.8 Lagrange Multipliers"
+   }
+  ]
+ },
+ "calc3.double-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Calculus 1 the <a href=\"/math/calculus-1/definite-integral/\">definite integral</a> was built from thin rectangles under a curve. A surface $z = f(x, y)$ over a rectangle $R$ in the plane encloses a solid, and its volume is built the same way from thin <b>boxes</b>."
+   },
+   {
+    "t": "key",
+    "html": "Divide $R$ into small rectangles of area $\\Delta A$, pick a sample point $(x_{ij}^*, y_{ij}^*)$ in each, and add up box volumes:\n  $$\\iint_R f(x, y)\\,dA = \\lim_{m, n \\to \\infty} \\sum_{i=1}^{m}\\sum_{j=1}^{n} f(x_{ij}^*, y_{ij}^*)\\,\\Delta A.$$\n  If $f \\ge 0$ this is the volume under the surface; parts below the $xy$-plane count as negative. The <b>average value</b> of $f$ on $R$ is $\\frac{1}{\\text{area}(R)}\\iint_R f\\,dA$."
+   },
+   {
+    "t": "why",
+    "html": "Over one small rectangle the surface is nearly flat, so the solid above it is nearly a box with base $\\Delta A$ and height $f$ at the sample point. Each box is slightly too tall or too short, but for a continuous $f$ the surface varies less and less across a smaller rectangle, so the total error goes to ${}0$ as the grid gets finer. The sums settle on one number, the double integral. Sums split and constants factor out, so the integral is linear: $$\\iint (af + bg)\\,dA = a\\iint f\\,dA + b\\iint g\\,dA.$$"
+   },
+   {
+    "t": "viz",
+    "name": "calc3-boxes",
+    "opts": {
+     "f": "4 - x^2/2 - y^2/4",
+     "a": 0,
+     "b": 2,
+     "c": 0,
+     "d": 2,
+     "n": 4,
+     "sample": "mid"
+    },
+    "cap": "Boxes under $z = 4 - \\frac{x^2}{2} - \\frac{y^2}{4}$ over $[0, 2] \\times [0, 2]$. Raise $n$ and the sum of the box volumes closes in on the integral; switch the sample point to see a cruder estimate."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The midpoint rule",
+    "q": "Estimate $\\iint_R (x + 2y)\\,dA$ on $R = [0, 2] \\times [0, 2]$ with a ${}2 \\times 2$ grid and midpoints.",
+    "steps": [
+     "Four unit squares, so $\\Delta A = 1$. Midpoints: $(0.5, 0.5)$, $(1.5, 0.5)$, $(0.5, 1.5)$, $(1.5, 1.5)$.",
+     "Values: ${}1.5$, ${}2.5$, ${}3.5$, ${}4.5$, with sum ${}12$.",
+     "Estimate $= 12 \\cdot 1 = 12$. (For a function like this, whose graph is a plane, the midpoint rule is exact.)"
+    ],
+    "a": "${}12$"
+   },
+   {
+    "t": "ex",
+    "title": "Average value",
+    "q": "Find the average value of $f(x, y) = xy$ on $R = [0, 2] \\times [0, 4]$.",
+    "steps": [
+     "$$\\iint_R xy\\,dA = \\left(\\int_0^2 x\\,dx\\right)\\left(\\int_0^4 y\\,dy\\right) = 2 \\cdot 8 = 16$$ (the integral of a product $g(x)h(y)$ over a rectangle splits).",
+     "Area $= 8$, so the average is $\\frac{16}{8} = 2$.",
+     "A flat box of height ${}2$ over $R$ holds the same volume as the region under the surface."
+    ],
+    "a": "${}2$"
+   },
+   {
+    "t": "ex",
+    "title": "Linearity",
+    "q": "If $\\iint_R f\\,dA = 5$ and $\\iint_R g\\,dA = -2$ on a rectangle of area ${}3$, find $\\iint_R (3f - 2g + 1)\\,dA$.",
+    "steps": [
+     "Split: ${}3(5) - 2(-2) + \\iint_R 1\\,dA$.",
+     "$\\iint_R 1\\,dA$ is the area, ${}3$. Total: ${}15 + 4 + 3 = 22$."
+    ],
+    "a": "${}22$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting $\\Delta A$ in a Riemann sum.</b> Adding the heights alone gives a number that changes when you refine the grid. Each term is a volume: height times base area. Check: doubling $m$ and $n$ should give a similar estimate, not one four times as big. Also remember that a double integral is a <i>signed</i> volume: if $f$ dips below zero, that part subtracts."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.1 Double Integrals over Rectangular Regions"
+   }
+  ]
+ },
+ "calc3.iterated-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Riemann sums define a <a href=\"/math/calculus-3/double-integrals/\">double integral</a>, but nobody computes one that way. Instead, integrate one variable at a time, the way you found <a href=\"/math/calculus-2/volume-slicing/\">volumes by slicing</a> in Calculus 2."
+   },
+   {
+    "t": "key",
+    "html": "<b>Fubini's theorem:</b> for continuous $f$ on $R = [a, b] \\times [c, d]$,\n  $$\\iint_R f\\,dA = \\int_a^b \\left(\\int_c^d f(x, y)\\,dy\\right) dx = \\int_c^d \\left(\\int_a^b f(x, y)\\,dx\\right) dy.$$\n  Work from the inside out; in the inner integral, the outer variable is a constant."
+   },
+   {
+    "t": "why",
+    "html": "Slice the solid with a plane $x = c$ (a constant). The slice is a region under the curve $z = f(x, y)$, $c \\le y \\le d$, with area $A(x) = \\int_c^d f(x, y)\\,dy$. A slab of thickness $\\Delta x$ has volume about $A(x)\\,\\Delta x$, and adding slabs gives $\\int_a^b A(x)\\,dx$. Slicing with planes $y = c$ instead gives the other order. Both compute the same volume, which is why the order does not change the answer."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "4 - x^2/2 - y^2/4",
+     "xmin": 0,
+     "xmax": 2,
+     "ymin": 0,
+     "ymax": 2,
+     "slice": "x",
+     "at": 1,
+     "contours": 8
+    },
+    "cap": "The red slice at $x = c$ has area $A(c) = \\int_0^2 f(c, y)\\,dy$, the inner integral. Slide it from $x = 0$ to $x = 2$: adding up those areas gives the volume."
+   },
+   {
+    "t": "p",
+    "html": "When the integrand is a product $g(x)h(y)$ over a rectangle, the iterated integral splits into two single integrals:\n  $$\\int_a^b \\int_c^d g(x)h(y)\\,dy\\,dx = \\left(\\int_a^b g(x)\\,dx\\right)\\left(\\int_c^d h(y)\\,dy\\right),$$\n  because in the inner integral $g(x)$ is a constant that can come outside. For example, $\\int_0^1 \\int_0^\\pi x\\sin y\\,dy\\,dx = \\frac{1}{2} \\cdot 2 = 1$. Fubini's theorem also allows switching the order, which matters when one order leads to an antiderivative you cannot find; the third example below shows this."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Inside out",
+    "q": "Evaluate $\\displaystyle\\int_0^2\\int_1^3 x^2y\\,dy\\,dx$.",
+    "steps": [
+     "Inner, in $y$ ($x$ is a constant): $\\int_1^3 x^2y\\,dy = x^2\\left[\\frac{y^2}{2}\\right]_1^3 = x^2 \\cdot 4 = 4x^2$.",
+     "Outer: $\\int_0^2 4x^2\\,dx = \\frac{32}{3}$."
+    ],
+    "a": "$\\frac{32}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "The other order",
+    "q": "Evaluate $\\displaystyle\\int_1^3\\int_0^2 x^2y\\,dx\\,dy$.",
+    "steps": [
+     "Inner, in $x$: $\\int_0^2 x^2y\\,dx = \\frac{8}{3}y$.",
+     "Outer: $\\int_1^3 \\frac{8}{3}y\\,dy = \\frac{8}{3} \\cdot 4 = \\frac{32}{3}$, the same, as Fubini promises."
+    ],
+    "a": "$\\frac{32}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Choosing the easy order",
+    "q": "Evaluate $\\displaystyle\\int_0^1\\int_0^2 xe^{xy}\\,dy\\,dx$.",
+    "steps": [
+     "Inner in $y$: $\\int_0^2 xe^{xy}\\,dy = \\left[e^{xy}\\right]_{y=0}^{y=2} = e^{2x} - 1$ (the $x$ in front is exactly the inner derivative).",
+     "Outer: $$\\int_0^1 (e^{2x} - 1)\\,dx = \\left[\\frac{e^{2x}}{2} - x\\right]_0^1 = \\frac{e^2}{2} - 1 - \\frac{1}{2} = \\frac{e^2 - 3}{2}.$$",
+     "Integrating $x$ first would need integration by parts: both orders are correct, but one is much easier."
+    ],
+    "a": "$\\frac{e^2 - 3}{2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Mismatching limits and differentials.</b> In $\\int_a^b\\int_c^d f\\,dy\\,dx$, the inner limits $c$ to $d$ belong to $y$ (the inner differential $dy$) and the outer limits to $x$. Writing $dx\\,dy$ while keeping the $x$-limits inside integrates over a different rectangle. Read from the inside out: innermost integral sign, innermost differential."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.1 Double Integrals over Rectangular Regions"
+   }
+  ]
+ },
+ "calc3.general-regions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Most regions are not rectangles. In <a href=\"/math/calculus-2/area-between-curves/\">area between curves</a> you sliced a region vertically, with each slice running from a lower curve to an upper curve. Do the same for a double integral, and let the inner limits be those curves."
+   },
+   {
+    "t": "key",
+    "html": "<b>Type I</b> (vertical slices): $D = \\{a \\le x \\le b,\\ g_1(x) \\le y \\le g_2(x)\\}$ gives $$\\displaystyle\\iint_D f\\,dA = \\int_a^b\\int_{g_1(x)}^{g_2(x)} f(x, y)\\,dy\\,dx.$$ <br>\n  <b>Type II</b> (horizontal slices): $D = \\{c \\le y \\le d,\\ h_1(y) \\le x \\le h_2(y)\\}$ gives $\\displaystyle\\int_c^d\\int_{h_1(y)}^{h_2(y)} f\\,dx\\,dy$.<br>\n  Inner limits may depend on the outer variable; <b>outer limits are always constants</b>. The area of $D$ is $\\iint_D 1\\,dA$."
+   },
+   {
+    "t": "why",
+    "html": "Fix $x$ and look at the vertical line through the region: it enters at the lower boundary $y = g_1(x)$ and leaves at the upper boundary $y = g_2(x)$. The inner integral adds $f$ along that slice only, so it naturally depends on $x$. The outer integral then sweeps the slices across, from the leftmost to the rightmost $x$ in the region; those are fixed numbers, because they describe the whole region, not one slice. After integrating, no variable may be left, and that happens only if the outer limits are constants."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-region",
+    "opts": {
+     "I": {
+      "lo": "x^2",
+      "hi": "x",
+      "a": 0,
+      "b": 1,
+      "loT": "y = x²",
+      "hiT": "y = x"
+     },
+     "II": {
+      "lo": "y",
+      "hi": "sqrt(y)",
+      "c": 0,
+      "d": 1,
+      "loT": "x = y",
+      "hiT": "x = √y"
+     },
+     "order": "dydx",
+     "xmin": -0.3,
+     "xmax": 1.4,
+     "ymin": -0.3,
+     "ymax": 1.25
+    },
+    "cap": "The region between $y = x^2$ and $y = x$. Move the slice: its ends always sit on the two curves. Switch to horizontal slices to describe the same region with $x$ inside."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Between two curves",
+    "q": "Evaluate $\\iint_D (x + y)\\,dA$ where $D$ is the region between $y = x^2$ and $y = x$.",
+    "steps": [
+     "The curves meet at $x = 0$ and $x = 1$, and $x \\ge x^2$ there: ${}0 \\le x \\le 1$, $x^2 \\le y \\le x$.",
+     "Inner: $$\\int_{x^2}^{x}(x + y)\\,dy = \\left[xy + \\frac{y^2}{2}\\right]_{x^2}^{x} = \\frac{3x^2}{2} - x^3 - \\frac{x^4}{2}.$$",
+     "Outer: $$\\int_0^1 \\left(\\frac{3x^2}{2} - x^3 - \\frac{x^4}{2}\\right) dx = \\frac{1}{2} - \\frac{1}{4} - \\frac{1}{10} = \\frac{3}{20}.$$"
+    ],
+    "a": "$\\frac{3}{20}$"
+   },
+   {
+    "t": "ex",
+    "title": "An area",
+    "q": "Find the area between $y = x^2$ and $y = 2x$.",
+    "steps": [
+     "They meet at $x = 0$ and $x = 2$; the line is on top.",
+     "Area $$= \\int_0^2\\int_{x^2}^{2x} dy\\,dx = \\int_0^2 (2x - x^2)\\,dx = 4 - \\frac{8}{3} = \\frac{4}{3}.$$"
+    ],
+    "a": "$\\frac{4}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Horizontal slices are easier",
+    "q": "Find the area of the region bounded by $x = y^2$ and $x = y + 2$.",
+    "steps": [
+     "Vertical slices would need two pieces, but horizontally the region runs from the parabola $x = y^2$ (left) to the line $x = y + 2$ (right).",
+     "They meet where $y^2 = y + 2$: $y = -1$ and $y = 2$.",
+     "Area $$= \\int_{-1}^{2} (y + 2 - y^2)\\,dy = \\left[\\frac{y^2}{2} + 2y - \\frac{y^3}{3}\\right]_{-1}^{2} = \\frac{10}{3} + \\frac{7}{6} = \\frac{9}{2}.$$"
+    ],
+    "a": "$\\frac{9}{2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Putting variables in the outer limits.</b> An answer like $\\int_{x^2}^{x}\\int_0^1 \\ldots\\,dy\\,dx$ is upside down: after the inner integral you would integrate in $x$ between limits that contain $x$, which makes no sense. The outer integral describes the whole region with numbers; the inner one describes a single slice with curves. Check: your final answer must be a number."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.2 Double Integrals over General Regions"
+   }
+  ]
+ },
+ "calc3.reverse-order": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sometimes the inner integral is impossible as written: $\\int e^{y^2}\\,dy$ and $\\int \\sin(x^2)\\,dx$ have no elementary antiderivative. But the region of integration can be sliced the other way. If you can describe a <a href=\"/math/calculus-3/general-regions/\">general region</a> with vertical slices, you can usually describe it with horizontal ones, and the integral may become easy."
+   },
+   {
+    "t": "key",
+    "html": "To reverse the order: <b>draw the region</b> from the given limits, then describe the same region with slices in the other direction. The new outer limits are the full range of the new outer variable; the new inner limits are the boundary curves solved for the inner variable."
+   },
+   {
+    "t": "why",
+    "html": "The value of a double integral depends only on the function and the region, not on how you slice it: both orders add up $f\\,dA$ over exactly the same points. So any correct description of the region gives the same number. Swapping the limits mechanically does not describe the same region, which is why the picture is essential."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-region",
+    "opts": {
+     "I": {
+      "lo": "x",
+      "hi": "1",
+      "a": 0,
+      "b": 1,
+      "loT": "y = x",
+      "hiT": "y = 1"
+     },
+     "II": {
+      "lo": "0",
+      "hi": "y",
+      "c": 0,
+      "d": 1,
+      "loT": "x = 0",
+      "hiT": "x = y"
+     },
+     "order": "dydx",
+     "xmin": -0.3,
+     "xmax": 1.4,
+     "ymin": -0.3,
+     "ymax": 1.25
+    },
+    "cap": "The triangle ${}0 \\le x \\le 1$, $x \\le y \\le 1$. Vertical slices run from $y = x$ up to $y = 1$; switch to horizontal slices and they run from $x = 0$ to $x = y$, for ${}0 \\le y \\le 1$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An impossible inner integral",
+    "q": "Evaluate $\\displaystyle\\int_0^1\\int_x^1 e^{y^2}\\,dy\\,dx$.",
+    "steps": [
+     "The region: ${}0 \\le x \\le 1$, $x \\le y \\le 1$, the triangle with vertices $(0, 0)$, $(0, 1)$, $(1, 1)$.",
+     "Horizontally: ${}0 \\le y \\le 1$ and ${}0 \\le x \\le y$.",
+     "$\\int_0^1\\int_0^y e^{y^2}\\,dx\\,dy = \\int_0^1 ye^{y^2}\\,dy$: the inner integral produced the factor $y$.",
+     "With $u = y^2$: $\\frac{1}{2}\\left[e^{y^2}\\right]_0^1 = \\frac{e - 1}{2}$."
+    ],
+    "a": "$\\frac{e - 1}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Just the limits",
+    "q": "Reverse the order in $\\displaystyle\\int_0^4\\int_{\\sqrt{y}}^{2} f(x, y)\\,dx\\,dy$.",
+    "steps": [
+     "Region: ${}0 \\le y \\le 4$, and $x$ from the curve $x = \\sqrt{y}$ (that is, $y = x^2$) to the line $x = 2$.",
+     "It is the region under the parabola $y = x^2$ for ${}0 \\le x \\le 2$.",
+     "Vertically: ${}0 \\le x \\le 2$ and ${}0 \\le y \\le x^2$."
+    ],
+    "a": "$\\displaystyle\\int_0^2\\int_0^{x^2} f(x, y)\\,dy\\,dx$"
+   },
+   {
+    "t": "ex",
+    "title": "A root",
+    "q": "Evaluate $\\displaystyle\\int_0^1\\int_{\\sqrt{y}}^1 \\sqrt{x^3 + 1}\\,dx\\,dy$.",
+    "steps": [
+     "Region: ${}0 \\le x \\le 1$, ${}0 \\le y \\le x^2$.",
+     "$$\\int_0^1\\int_0^{x^2} \\sqrt{x^3 + 1}\\,dy\\,dx = \\int_0^1 x^2\\sqrt{x^3 + 1}\\,dx.$$",
+     "With $u = x^3 + 1$: $\\frac{1}{3}\\int_1^2 \\sqrt{u}\\,du = \\frac{2}{9}\\left(2\\sqrt{2} - 1\\right)$."
+    ],
+    "a": "$\\frac{2}{9}\\left(2\\sqrt{2} - 1\\right)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Swapping the limits without redrawing the region.</b> Turning $\\int_0^1\\int_x^1 \\ldots\\,dy\\,dx$ into $\\int_x^1\\int_0^1 \\ldots\\,dx\\,dy$ leaves an $x$ in the outer limits; turning it into $\\int_0^1\\int_x^1 \\ldots\\,dx\\,dy$ describes a different region. Sketch first, read the extreme values of the new outer variable off the picture, then solve each boundary curve for the new inner variable. Check: both orders give the same area when you integrate ${}1$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.2 Double Integrals over General Regions"
+   }
+  ]
+ },
+ "calc3.polar-double-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Disks, rings and wedges are awkward in rectangular coordinates: the limits involve $\\sqrt{r^2 - x^2}$. In <a href=\"/math/calculus-3/cylindrical-spherical/\">polar coordinates</a> they are rectangles: $a \\le r \\le b$, $\\alpha \\le \\theta \\le \\beta$. You met polar area in <a href=\"/math/calculus-2/polar-area/\">Calculus 2</a>; now the integrand can be any function."
+   },
+   {
+    "t": "key",
+    "html": "$$\\iint_D f(x, y)\\,dA = \\int_\\alpha^\\beta\\int_{r_1(\\theta)}^{r_2(\\theta)} f(r\\cos\\theta, r\\sin\\theta)\\,r\\,dr\\,d\\theta.$$\n  The area element is $dA = r\\,dr\\,d\\theta$, with the extra factor $r$."
+   },
+   {
+    "t": "why",
+    "html": "Chop the region with circles ($r$ constant) and rays ($\\theta$ constant). A small piece is a \"polar rectangle\": $\\Delta r$ thick in the radial direction and, along the arc, $r\\,\\Delta\\theta$ long (arc length is radius times angle). Its area is about $(\\Delta r)(r\\,\\Delta\\theta) = r\\,\\Delta r\\,\\Delta\\theta$. Pieces far from the origin are bigger than pieces near it, even with the same $\\Delta r$ and $\\Delta\\theta$, and the factor $r$ accounts for that. (Exactly: the area between radii $r_1$ and $r_2$ is $\\frac{1}{2}(r_2^2 - r_1^2)\\Delta\\theta = \\bar{r}\\,\\Delta r\\,\\Delta\\theta$, with $\\bar{r}$ the middle radius.)"
+   },
+   {
+    "t": "viz",
+    "name": "calc3-region",
+    "opts": {
+     "polar": {
+      "lo": "1",
+      "hi": "2",
+      "a": 0,
+      "b": "pi/2",
+      "loT": "r = 1",
+      "hiT": "r = 2"
+     },
+     "xmin": -0.4,
+     "xmax": 2.4,
+     "ymin": -0.4,
+     "ymax": 2.4
+    },
+    "cap": "A quarter ring. The red polar box is $\\Delta r$ wide and $r\\,\\Delta\\theta$ long: sweep the ray outward and watch the boxes grow with $r$."
+   },
+   {
+    "t": "p",
+    "html": "When should you switch to polar? Look at both the region and the integrand. Disks, rings, sectors and regions bounded by curves like $r = 2\\cos\\theta$ have simple limits in polar form, and integrands built from $x^2 + y^2$ become functions of $r$ alone. The circle $x^2 + y^2 = 2x$ is $r^2 = 2r\\cos\\theta$, that is, $r = 2\\cos\\theta$ with $-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$. Its area is $$\\int_{-\\pi/2}^{\\pi/2} \\int_0^{2\\cos\\theta} r\\,dr\\,d\\theta = \\int_{-\\pi/2}^{\\pi/2} 2\\cos^2\\theta\\,d\\theta = \\pi,$$ as it should be for a circle of radius ${}1$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Over a disk",
+    "q": "Evaluate $\\iint_D (x^2 + y^2)\\,dA$ over the disk $x^2 + y^2 \\le 4$.",
+    "steps": [
+     "$x^2 + y^2 = r^2$, and the disk is ${}0 \\le r \\le 2$, ${}0 \\le \\theta \\le 2\\pi$.",
+     "$$\\int_0^{2\\pi}\\int_0^2 r^2 \\cdot r\\,dr\\,d\\theta = \\int_0^{2\\pi} \\left[\\frac{r^4}{4}\\right]_0^2 d\\theta = \\int_0^{2\\pi} 4\\,d\\theta = 8\\pi.$$"
+    ],
+    "a": "${}8\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "A Gaussian",
+    "q": "Evaluate $\\iint_D e^{-(x^2 + y^2)}\\,dA$ over the disk of radius $R$.",
+    "steps": [
+     "$\\int_0^{2\\pi}\\int_0^R e^{-r^2}\\,r\\,dr\\,d\\theta$: the $r$ from $dA$ makes the substitution $u = r^2$ work.",
+     "$\\int_0^R e^{-r^2}r\\,dr = \\frac{1}{2}\\left(1 - e^{-R^2}\\right)$, so the integral is $\\pi\\left(1 - e^{-R^2}\\right)$.",
+     "As $R \\to \\infty$ this tends to $\\pi$, the famous fact behind $\\int_{-\\infty}^{\\infty} e^{-x^2}\\,dx = \\sqrt{\\pi}$."
+    ],
+    "a": "$\\pi\\left(1 - e^{-R^2}\\right)$"
+   },
+   {
+    "t": "ex",
+    "title": "Half a ring",
+    "q": "Evaluate $\\iint_D y\\,dA$ over the upper half of the ring ${}1 \\le x^2 + y^2 \\le 4$.",
+    "steps": [
+     "${}1 \\le r \\le 2$, ${}0 \\le \\theta \\le \\pi$, and $y = r\\sin\\theta$.",
+     "$$\\int_0^{\\pi}\\int_1^2 r\\sin\\theta \\cdot r\\,dr\\,d\\theta = \\left(\\int_1^2 r^2\\,dr\\right)\\left(\\int_0^{\\pi}\\sin\\theta\\,d\\theta\\right) = \\frac{7}{3} \\cdot 2 = \\frac{14}{3}.$$"
+    ],
+    "a": "$\\frac{14}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting the extra factor $r$.</b> Writing $dA = dr\\,d\\theta$ treats every polar box as the same size. Quick check: $\\int_0^{2\\pi}\\int_0^R dr\\,d\\theta = 2\\pi R$, which is a length, not the disk's area $\\pi R^2$; with the factor $r$ you get $\\pi R^2$. Also use the radius (${}2$), not $r^2$ (${}4$), as the upper limit for $r$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.3 Double Integrals in Polar Coordinates"
+   }
+  ]
+ },
+ "calc3.double-integral-applications": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A double integral adds up \"something per unit area\" over a region. If that something is density, you get mass; weight it by position and you get the balance point. You did this in <a href=\"/math/calculus-2/center-of-mass/\">one dimension</a> with thin rods; now the objects are thin plates (laminas), and the same integrals measure probability for two random variables."
+   },
+   {
+    "t": "key",
+    "html": "For a plate on $D$ with density $\\rho(x, y)$ (mass per unit area):\n  $$m = \\iint_D \\rho\\,dA, \\qquad \\bar{x} = \\frac{1}{m}\\iint_D x\\rho\\,dA, \\qquad \\bar{y} = \\frac{1}{m}\\iint_D y\\rho\\,dA.$$\n  Moments of inertia: $I_x = \\iint_D y^2\\rho\\,dA$, $I_y = \\iint_D x^2\\rho\\,dA$. For a joint density $f(x, y)$, $P((X, Y) \\in E) = \\iint_E f\\,dA$, and $\\iint f\\,dA = 1$ over all outcomes."
+   },
+   {
+    "t": "why",
+    "html": "Chop the plate into small pieces. A piece of area $\\Delta A$ near $(x, y)$ has mass about $\\rho(x, y)\\,\\Delta A$; adding the pieces gives the mass. The balance point is a weighted average of positions, each piece weighted by its mass, just as the average of numbers weights each by how often it occurs: $\\bar{x} = \\frac{\\sum x\\,\\Delta m}{\\sum \\Delta m}$. Probability works the same way, with \"probability per unit area\" in place of mass per unit area."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-region",
+    "opts": {
+     "I": {
+      "lo": "0",
+      "hi": "1 - x",
+      "a": 0,
+      "b": 1,
+      "loT": "y = 0",
+      "hiT": "y = 1 − x"
+     },
+     "xmin": -0.3,
+     "xmax": 1.4,
+     "ymin": -0.3,
+     "ymax": 1.25
+    },
+    "cap": "The triangle of the first example, sliced vertically: each slice runs from $y = 0$ to $y = 1 - x$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Mass and center of mass",
+    "q": "A plate covers the triangle with vertices $(0, 0)$, $(1, 0)$, $(0, 1)$, with density $\\rho = y$. Find its mass and center of mass.",
+    "steps": [
+     "$$m = \\int_0^1\\int_0^{1 - x} y\\,dy\\,dx = \\int_0^1 \\frac{(1 - x)^2}{2}dx = \\frac{1}{6}.$$",
+     "$\\iint x\\rho\\,dA = \\int_0^1 x\\frac{(1 - x)^2}{2}dx = \\frac{1}{24}$, so $\\bar{x} = \\frac{1/24}{1/6} = \\frac{1}{4}$.",
+     "$$\\iint y\\rho\\,dA = \\int_0^1\\int_0^{1 - x} y^2\\,dy\\,dx = \\int_0^1 \\frac{(1 - x)^3}{3}dx = \\frac{1}{12},$$ so $\\bar{y} = \\frac{1}{2}$.",
+     "The plate is heavier near the top, so $\\bar{y} = \\frac{1}{2}$ is above the centroid of the triangle ($\\frac{1}{3}$)."
+    ],
+    "a": "$m = \\frac{1}{6}$, center $\\left(\\frac{1}{4}, \\frac{1}{2}\\right)$"
+   },
+   {
+    "t": "ex",
+    "title": "A probability",
+    "q": "Waiting times $X$ and $Y$ (minutes) have joint density $f(x, y) = 6e^{-2x - 3y}$ for $x, y \\ge 0$. Find $P(X \\le 1, Y \\le 1)$.",
+    "steps": [
+     "$$P = \\int_0^1\\int_0^1 6e^{-2x}e^{-3y}\\,dy\\,dx = \\left(\\int_0^1 2e^{-2x}dx\\right)\\left(\\int_0^1 3e^{-3y}dy\\right).$$",
+     "$= \\left(1 - e^{-2}\\right)\\left(1 - e^{-3}\\right) \\approx 0.82$."
+    ],
+    "a": "$\\left(1 - e^{-2}\\right)\\left(1 - e^{-3}\\right) \\approx 0.82$"
+   },
+   {
+    "t": "ex",
+    "title": "Making a density",
+    "q": "For which $k$ is $f(x, y) = k(x + y)$ a joint density on the unit square?",
+    "steps": [
+     "Total probability: $$\\int_0^1\\int_0^1 (x + y)\\,dy\\,dx = \\int_0^1 \\left(x + \\frac{1}{2}\\right)dx = 1.$$",
+     "So $k \\cdot 1 = 1$ and $k = 1$."
+    ],
+    "a": "$k = 1$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dividing by the area instead of the mass.</b> With a variable density, $\\bar{x} = \\frac{\\iint x\\rho\\,dA}{\\iint \\rho\\,dA}$; dividing by the area gives the geometric centroid only when $\\rho$ is constant. Check: the center of mass must move toward the heavy part of the plate, as $\\bar{y}$ did in the example."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.6 Calculating Centers of Mass and Moments of Inertia"
+   }
+  ]
+ },
+ "calc3.surface-area-double": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How much paint covers a curved roof? The <a href=\"/math/calculus-3/partial-derivatives/\">partial derivatives</a> tell how much a surface tilts, and tilting stretches area: a patch of the surface is larger than its shadow on the floor. A double integral adds up the stretched patches."
+   },
+   {
+    "t": "key",
+    "html": "The area of the part of $z = f(x, y)$ above a region $D$ is\n  $$A = \\iint_D \\sqrt{1 + f_x^2 + f_y^2}\\,dA.$$\n  The factor $\\sqrt{1 + f_x^2 + f_y^2}$ is how much a small patch of $D$ is stretched when lifted onto the surface."
+   },
+   {
+    "t": "why",
+    "html": "Over a small rectangle $\\Delta x$ by $\\Delta y$, the surface is nearly its tangent plane, a parallelogram with sides $\\langle \\Delta x, 0, f_x\\Delta x \\rangle$ and $\\langle 0, \\Delta y, f_y\\Delta y \\rangle$ (step in $x$, rise $f_x\\Delta x$; step in $y$, rise $f_y\\Delta y$). Its area is the length of the <a href=\"/math/calculus-3/cross-product/\">cross product</a>:\n  $$\\left|\\langle -f_x, -f_y, 1 \\rangle\\right|\\Delta x\\,\\Delta y = \\sqrt{1 + f_x^2 + f_y^2}\\;\\Delta x\\,\\Delta y.$$\n  Adding the parallelograms and refining gives the integral. A flat patch ($f_x = f_y = 0$) is not stretched at all."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "x^2 + y^2",
+     "xmin": -1.5,
+     "xmax": 1.5,
+     "ymin": -1.5,
+     "ymax": 1.5,
+     "contours": 8,
+     "slice": "none"
+    },
+    "cap": "The paraboloid $z = x^2 + y^2$. Near the bottom it is almost flat; farther out it is steep, so equal squares of the floor carry more and more surface."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A plane",
+    "q": "Find the area of the part of the plane $z = 5 - 2x - 2y$ above the rectangle ${}0 \\le x \\le 2$, ${}0 \\le y \\le 3$.",
+    "steps": [
+     "$f_x = -2$, $f_y = -2$: the factor is $\\sqrt{1 + 4 + 4} = 3$ everywhere.",
+     "Area $$= 3 \\times (\\text{area of the rectangle}) = 3 \\cdot 6 = 18.$$"
+    ],
+    "a": "${}18$"
+   },
+   {
+    "t": "ex",
+    "title": "A paraboloid",
+    "q": "Find the area of the part of $z = x^2 + y^2$ below the plane $z = 2$.",
+    "steps": [
+     "The shadow is the disk $x^2 + y^2 \\le 2$. The factor is $\\sqrt{1 + 4x^2 + 4y^2} = \\sqrt{1 + 4r^2}$.",
+     "In polar coordinates: $A = \\int_0^{2\\pi}\\int_0^{\\sqrt{2}} \\sqrt{1 + 4r^2}\\,r\\,dr\\,d\\theta$.",
+     "With $u = 1 + 4r^2$: $$\\int_0^{\\sqrt{2}} \\sqrt{1 + 4r^2}\\,r\\,dr = \\frac{1}{12}\\left[(1 + 4r^2)^{3/2}\\right]_0^{\\sqrt{2}} = \\frac{1}{12}(27 - 1) = \\frac{13}{6}.$$",
+     "$A = 2\\pi \\cdot \\frac{13}{6} = \\frac{13\\pi}{3}$."
+    ],
+    "a": "$\\frac{13\\pi}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "A cone",
+    "q": "Find the area of the cone $z = \\sqrt{x^2 + y^2}$ above the disk $x^2 + y^2 \\le 9$.",
+    "steps": [
+     "$f_x = \\frac{x}{\\sqrt{x^2 + y^2}}$, $f_y = \\frac{y}{\\sqrt{x^2 + y^2}}$, so ${}1 + f_x^2 + f_y^2 = 2$.",
+     "Area $= \\sqrt{2} \\cdot 9\\pi = 9\\sqrt{2}\\,\\pi$."
+    ],
+    "a": "${}9\\sqrt{2}\\,\\pi$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Integrating the shadow instead of the surface.</b> $\\iint_D dA$ is the area of the region on the floor, which is always smaller than (or equal to) the surface above it. The factor $\\sqrt{1 + f_x^2 + f_y^2} \\ge 1$ must be inside the integral, and the ${}1$ under the root must not be dropped. Check: for a tilted plane the answer is a constant multiple, bigger than 1, of the shadow's area."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.6 Calculating Centers of Mass and Moments of Inertia"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.02SC Multivariable Calculus, Part B: surface area"
+   }
+  ]
+ },
+ "calc3.triple-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Triple integrals add up a quantity over a solid region $E$ in space: mass from density, total charge, or simply volume. They are computed like <a href=\"/math/calculus-3/general-regions/\">double integrals over general regions</a>, one variable at a time, now with three nested integrals."
+   },
+   {
+    "t": "key",
+    "html": "$\\iiint_E f\\,dV$ is the limit of sums $\\sum f(x^*, y^*, z^*)\\,\\Delta V$ over small boxes. For $$E = \\{(x, y) \\in D,\\ u_1(x, y) \\le z \\le u_2(x, y)\\}\\text{:}$$ \n  $$\\iiint_E f\\,dV = \\iint_D \\left(\\int_{u_1(x, y)}^{u_2(x, y)} f(x, y, z)\\,dz\\right) dA.$$\n  The volume of $E$ is $\\iiint_E 1\\,dV$."
+   },
+   {
+    "t": "why",
+    "html": "Think of the solid as a bundle of vertical sticks. Above each point $(x, y)$ of the shadow $D$, a stick runs from the bottom surface $z = u_1$ to the top surface $z = u_2$; the inner integral adds $f$ along that stick. Then the double integral adds the sticks over the shadow, which you already know how to set up. The outermost limits must be numbers; the innermost may depend on both outer variables."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-scene",
+    "opts": {
+     "polys": [
+      {
+       "pts": [
+        [
+         0,
+         0,
+         0
+        ],
+        [
+         2,
+         0,
+         0
+        ],
+        [
+         0,
+         3,
+         0
+        ]
+       ],
+       "color": "gold",
+       "alpha": 0.3
+      },
+      {
+       "pts": [
+        [
+         0,
+         0,
+         0
+        ],
+        [
+         2,
+         0,
+         0
+        ],
+        [
+         0,
+         0,
+         6
+        ]
+       ],
+       "color": "blue",
+       "alpha": 0.18
+      },
+      {
+       "pts": [
+        [
+         0,
+         0,
+         0
+        ],
+        [
+         0,
+         3,
+         0
+        ],
+        [
+         0,
+         0,
+         6
+        ]
+       ],
+       "color": "blue",
+       "alpha": 0.18
+      },
+      {
+       "pts": [
+        [
+         2,
+         0,
+         0
+        ],
+        [
+         0,
+         3,
+         0
+        ],
+        [
+         0,
+         0,
+         6
+        ]
+       ],
+       "color": "green",
+       "alpha": 0.3
+      }
+     ],
+     "segs": [
+      {
+       "a": [
+        0.6,
+        0.8,
+        0
+       ],
+       "b": [
+        0.6,
+        0.8,
+        2.6
+       ],
+       "color": "red"
+      }
+     ],
+     "range": 4.5,
+     "yaw": -2,
+     "pitch": 0.3
+    },
+    "cap": "The tetrahedron under ${}3x + 2y + z = 6$. The gold shadow is $D$; the red stick runs from the floor $z = 0$ up to the slanted face $z = 6 - 3x - 2y$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Over a box",
+    "q": "Evaluate $\\iiint_B xyz\\,dV$ over $B = [0, 1] \\times [0, 2] \\times [0, 3]$.",
+    "steps": [
+     "All limits are constants and the integrand is a product, so it splits:",
+     "$$\\left(\\int_0^1 x\\,dx\\right)\\left(\\int_0^2 y\\,dy\\right)\\left(\\int_0^3 z\\,dz\\right) = \\frac{1}{2} \\cdot 2 \\cdot \\frac{9}{2} = \\frac{9}{2}.$$"
+    ],
+    "a": "$\\frac{9}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Volume of a tetrahedron",
+    "q": "Find the volume of the solid bounded by the coordinate planes and ${}3x + 2y + z = 6$.",
+    "steps": [
+     "Top: $z = 6 - 3x - 2y$. It meets the floor along ${}3x + 2y = 6$, so the shadow is ${}0 \\le x \\le 2$, ${}0 \\le y \\le 3 - \\frac{3x}{2}$.",
+     "Inner: $\\int_0^{6 - 3x - 2y} dz = 6 - 3x - 2y$. Middle: $\\int_0^{3 - 3x/2}(6 - 3x - 2y)\\,dy = \\left(3 - \\frac{3x}{2}\\right)^2$.",
+     "Outer: $\\int_0^2 \\left(3 - \\frac{3x}{2}\\right)^2 dx = 6$. Check: $\\frac{1}{6}$ of the box ${}2 \\times 3 \\times 6$ is ${}6$."
+    ],
+    "a": "${}6$"
+   },
+   {
+    "t": "ex",
+    "title": "An integral over it",
+    "q": "For the same tetrahedron $E$, find $\\iiint_E z\\,dV$ and the height of its centroid.",
+    "steps": [
+     "Inner: $\\int_0^{6 - 3x - 2y} z\\,dz = \\frac{1}{2}(6 - 3x - 2y)^2$.",
+     "Middle (with $w = 6 - 3x - 2y$): $\\frac{1}{12}(6 - 3x)^3$. Outer: $\\frac{1}{12}\\int_0^2 (6 - 3x)^3\\,dx = 9$.",
+     "Centroid height $\\bar{z} = \\frac{9}{6} = \\frac{3}{2}$, a quarter of the way up, as for every tetrahedron."
+    ],
+    "a": "${}9$; $\\bar{z} = \\frac{3}{2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Limits that do not nest.</b> The innermost limits may involve the two outer variables; the middle limits only the outermost one; the outermost are numbers. Writing $\\int_0^2\\int_0^3\\int_0^6 dz\\,dy\\,dx$ for the tetrahedron integrates over the whole box (volume 36). Check volumes against simple shapes, like $\\frac{1}{6}abc$ for a corner tetrahedron."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.4 Triple Integrals"
+   }
+  ]
+ },
+ "calc3.triple-cylindrical": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Solids with a vertical axis of symmetry (cans, pipes, bowls, cones) are described simply in <a href=\"/math/calculus-3/cylindrical-spherical/\">cylindrical coordinates</a>: polar coordinates for the floor plus the height $z$. Combining the <a href=\"/math/calculus-3/polar-double-integrals/\">polar area element</a> with a height step gives the volume element."
+   },
+   {
+    "t": "key",
+    "html": "$$\\iiint_E f\\,dV = \\int_\\alpha^\\beta\\int_{r_1(\\theta)}^{r_2(\\theta)}\\int_{u_1(r, \\theta)}^{u_2(r, \\theta)} f(r\\cos\\theta, r\\sin\\theta, z)\\,r\\,dz\\,dr\\,d\\theta,$$\n  so $dV = r\\,dz\\,dr\\,d\\theta$."
+   },
+   {
+    "t": "why",
+    "html": "A small cylindrical box has a polar rectangle as its base, with area about $r\\,\\Delta r\\,\\Delta\\theta$, and height $\\Delta z$. Its volume is base times height: $r\\,\\Delta z\\,\\Delta r\\,\\Delta\\theta$. As in the plane, boxes far from the axis are bigger, and the factor $r$ keeps count. In practice: describe the top and bottom surfaces as functions of $r$ (and $\\theta$), the shadow in polar coordinates, and integrate $z$ first."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-coords",
+    "opts": {
+     "mode": "cyl",
+     "r": 1.8,
+     "theta": 60,
+     "z": 1.4
+    },
+    "cap": "Cylindrical coordinates: $r$ is the distance from the $z$-axis, $\\theta$ the angle around it, $z$ the height. A small box with these sides has volume about $r\\,\\Delta r\\,\\Delta\\theta\\,\\Delta z$."
+   },
+   {
+    "t": "p",
+    "html": "To set up the limits, describe the solid in three stages. First, its shadow on the $xy$-plane, in polar form: this gives the limits for $\\theta$ and $r$. Second, for a point $(r, \\theta)$ in the shadow, the bottom and top surfaces above it: these give the limits for $z$, written in terms of $r$ and $\\theta$. Third, multiply the integrand by $r$. For example, the solid inside $x^2 + y^2 = 1$ between $z = 0$ and the plane $z = 2 + x$ has shadow ${}0 \\le r \\le 1$, ${}0 \\le \\theta \\le 2\\pi$, and ${}0 \\le z \\le 2 + r\\cos\\theta$. Its volume is $\\int_0^{2\\pi} \\int_0^1 (2 + r\\cos\\theta)\\,r\\,dr\\,d\\theta = 2\\pi$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Under a paraboloid",
+    "q": "Find the volume under $z = 4 - x^2 - y^2$ and above the $xy$-plane.",
+    "steps": [
+     "In cylindrical form the top is $z = 4 - r^2$, which meets the floor at $r = 2$.",
+     "$$V = \\int_0^{2\\pi}\\int_0^2\\int_0^{4 - r^2} r\\,dz\\,dr\\,d\\theta = \\int_0^{2\\pi}\\int_0^2 (4r - r^3)\\,dr\\,d\\theta.$$",
+     "$= 2\\pi\\left[2r^2 - \\frac{r^4}{4}\\right]_0^2 = 2\\pi(8 - 4) = 8\\pi$."
+    ],
+    "a": "${}8\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "A weighted cylinder",
+    "q": "Evaluate $\\iiint_E (x^2 + y^2)\\,dV$ over the cylinder $x^2 + y^2 \\le 4$, ${}0 \\le z \\le 3$.",
+    "steps": [
+     "$x^2 + y^2 = r^2$, so the integrand times $r$ is $r^3$.",
+     "$$\\int_0^{2\\pi}\\int_0^2\\int_0^3 r^3\\,dz\\,dr\\,d\\theta = 2\\pi \\cdot 4 \\cdot 3 = 24\\pi.$$"
+    ],
+    "a": "${}24\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "Between a cone and a sphere",
+    "q": "Find the volume above the cone $z = \\sqrt{x^2 + y^2}$ and below the sphere $x^2 + y^2 + z^2 = 2$.",
+    "steps": [
+     "Cylindrically: $r \\le z \\le \\sqrt{2 - r^2}$. The surfaces meet where $r^2 = 2 - r^2$, at $r = 1$.",
+     "$$V = 2\\pi\\int_0^1 \\left(r\\sqrt{2 - r^2} - r^2\\right) dr = 2\\pi\\left[-\\frac{(2 - r^2)^{3/2}}{3} - \\frac{r^3}{3}\\right]_0^1.$$",
+     "$$= 2\\pi\\left(-\\frac{1}{3} - \\frac{1}{3} + \\frac{2\\sqrt{2}}{3}\\right) = \\frac{4\\pi}{3}\\left(\\sqrt{2} - 1\\right).$$"
+    ],
+    "a": "$\\frac{4\\pi}{3}\\left(\\sqrt{2} - 1\\right)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dropping the $r$, or writing the top surface in $x$ and $y$.</b> Every integrand in cylindrical coordinates carries the factor $r$ from $dV$. And the limits for $z$ must be written in $r$ (and $\\theta$): $z = 4 - x^2 - y^2$ becomes $z = 4 - r^2$. Check with a cylinder of radius $R$ and height $H$: the integral of ${}1$ must give $\\pi R^2H$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.5 Triple Integrals in Cylindrical and Spherical Coordinates"
+   }
+  ]
+ },
+ "calc3.triple-spherical": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Balls, shells and cones with their tip at the origin are simplest in <a href=\"/math/calculus-3/cylindrical-spherical/\">spherical coordinates</a>: a ball of radius $a$ is just ${}0 \\le \\rho \\le a$. The volume element needs one careful picture."
+   },
+   {
+    "t": "key",
+    "html": "$$dV = \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta, \\qquad 0 \\le \\varphi \\le \\pi,\\ 0 \\le \\theta \\le 2\\pi,$$\n  with $x = \\rho\\sin\\varphi\\cos\\theta$, $y = \\rho\\sin\\varphi\\sin\\theta$, $z = \\rho\\cos\\varphi$ and $x^2 + y^2 + z^2 = \\rho^2$."
+   },
+   {
+    "t": "why",
+    "html": "A small spherical box has three nearly perpendicular edges. Changing $\\rho$ by $\\Delta\\rho$ moves you $\\Delta\\rho$ straight out. Changing $\\varphi$ by $\\Delta\\varphi$ moves you along a meridian, a circle of radius $\\rho$: distance $\\rho\\,\\Delta\\varphi$. Changing $\\theta$ by $\\Delta\\theta$ moves you along a circle of latitude, whose radius is the distance from the $z$-axis, $\\rho\\sin\\varphi$: distance $\\rho\\sin\\varphi\\,\\Delta\\theta$. Multiply the three edges: $\\Delta V \\approx \\rho^2\\sin\\varphi\\,\\Delta\\rho\\,\\Delta\\varphi\\,\\Delta\\theta$. Near the poles ($\\sin\\varphi \\approx 0$) the boxes are thin slivers, which the factor $\\sin\\varphi$ records."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-coords",
+    "opts": {
+     "mode": "sph",
+     "rho": 2.4,
+     "theta": 50,
+     "phi": 60
+    },
+    "cap": "The three directions of a spherical box: out along $\\rho$, down along the purple $\\varphi$ arc (radius $\\rho$), and around along the circle of radius $r = \\rho\\sin\\varphi$. Change $\\varphi$ toward ${}0$ and that last circle shrinks."
+   },
+   {
+    "t": "p",
+    "html": "Spherical limits are read off the same way. The angle $\\theta$ goes around the $z$-axis; $\\varphi$ is measured down from the positive $z$-axis, so the upper half of space is ${}0 \\le \\varphi \\le \\frac{\\pi}{2}$ and the cone $z = \\sqrt{x^2 + y^2}$ is $\\varphi = \\frac{\\pi}{4}$; $\\rho$ runs out from the origin to the outer surface. A sphere through the origin, such as $x^2 + y^2 + z^2 = 2z$, becomes $\\rho^2 = 2\\rho\\cos\\varphi$, that is, $\\rho = 2\\cos\\varphi$ with ${}0 \\le \\varphi \\le \\frac{\\pi}{2}$. Its volume is ${}2\\pi \\int_0^{\\pi/2} \\frac{8}{3}\\cos^3\\varphi\\sin\\varphi\\,d\\varphi = \\frac{4\\pi}{3}$, the volume of a ball of radius ${}1$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Volume of a ball",
+    "q": "Find the volume of the ball $\\rho \\le a$.",
+    "steps": [
+     "$\\int_0^{2\\pi}\\int_0^{\\pi}\\int_0^{a} \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta$: the three integrals separate.",
+     "$\\int_0^a \\rho^2\\,d\\rho = \\frac{a^3}{3}$, $\\int_0^{\\pi}\\sin\\varphi\\,d\\varphi = 2$, $\\int_0^{2\\pi}d\\theta = 2\\pi$.",
+     "$V = \\frac{a^3}{3} \\cdot 2 \\cdot 2\\pi = \\frac{4}{3}\\pi a^3$."
+    ],
+    "a": "$\\frac{4}{3}\\pi a^3$"
+   },
+   {
+    "t": "ex",
+    "title": "An ice cream cone",
+    "q": "Find the volume inside the sphere $\\rho = 2$ and the cone $\\varphi \\le \\frac{\\pi}{3}$.",
+    "steps": [
+     "Only the upper limit of $\\varphi$ changes: $\\int_0^{\\pi/3}\\sin\\varphi\\,d\\varphi = 1 - \\cos\\frac{\\pi}{3} = \\frac{1}{2}$.",
+     "$V = \\frac{8}{3} \\cdot \\frac{1}{2} \\cdot 2\\pi = \\frac{8\\pi}{3}$."
+    ],
+    "a": "$\\frac{8\\pi}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "A moment",
+    "q": "Evaluate $\\iiint_H z\\,dV$ over the upper half-ball $\\rho \\le a$, $z \\ge 0$.",
+    "steps": [
+     "$z = \\rho\\cos\\varphi$, and the upper half is ${}0 \\le \\varphi \\le \\frac{\\pi}{2}$.",
+     "$$\\int_0^{2\\pi}\\int_0^{\\pi/2}\\int_0^a \\rho^3\\cos\\varphi\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta = \\frac{a^4}{4} \\cdot \\frac{1}{2} \\cdot 2\\pi = \\frac{\\pi a^4}{4}.$$"
+    ],
+    "a": "$\\frac{\\pi a^4}{4}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting $\\rho^2\\sin\\varphi$, or letting $\\varphi$ run to ${}2\\pi$.</b> Without the factor, the \"volume\" of a ball comes out as ${}2\\pi^2a$, not even the right units. And $\\varphi$ is measured from the north pole to the south pole, so it runs from ${}0$ to $\\pi$; going to ${}2\\pi$ covers the ball twice and makes $\\int\\sin\\varphi\\,d\\varphi = 0$. Check every setup against $\\frac{4}{3}\\pi a^3$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.5 Triple Integrals in Cylindrical and Spherical Coordinates"
+   }
+  ]
+ },
+ "calc3.triple-applications": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The ideas from <a href=\"/math/calculus-3/double-integral-applications/\">plates</a> carry over to solid objects: integrate density to get mass, weight by position to find the balance point, and weight by squared distance from an axis to get the moment of inertia, which measures how hard the object is to spin."
+   },
+   {
+    "t": "key",
+    "html": "For a solid $E$ with density $\\rho(x, y, z)$ (mass per unit volume):\n  $$m = \\iiint_E \\rho\\,dV, \\qquad \\bar{z} = \\frac{1}{m}\\iiint_E z\\rho\\,dV \\ \\ (\\text{likewise } \\bar{x}, \\bar{y}), \\qquad I_z = \\iiint_E (x^2 + y^2)\\rho\\,dV.$$"
+   },
+   {
+    "t": "why",
+    "html": "A small piece of volume $\\Delta V$ has mass $\\rho\\,\\Delta V$. The center of mass averages positions weighted by mass. For spinning about the $z$-axis, a piece at distance $d$ from the axis moving at angular speed $\\omega$ has speed $d\\omega$ and kinetic energy $\\frac{1}{2}(\\rho\\,\\Delta V)(d\\omega)^2$; adding the pieces gives $\\frac{1}{2}I_z\\omega^2$ with $I_z = \\iiint d^2\\rho\\,dV$ and $d^2 = x^2 + y^2$. Mass far from the axis counts much more."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "surface": true,
+     "x": "2sin(u)*cos(v)",
+     "y": "2sin(u)*sin(v)",
+     "z": "2cos(u)",
+     "u0": 0,
+     "u1": "pi/2",
+     "v0": 0,
+     "v1": "2pi",
+     "u": 0.8,
+     "v": 1
+    },
+    "cap": "A solid half-ball of radius 2 (its curved surface shown). By symmetry its center of mass is on the $z$-axis; the second example finds it at height $\\frac{3}{8}$ of the radius."
+   },
+   {
+    "t": "p",
+    "html": "Two shortcuts save work. <b>Symmetry:</b> if the solid and its density are symmetric across a plane, the center of mass lies in that plane, so for a solid of revolution about the $z$-axis only $\\bar{z}$ needs computing. <b>Coordinates:</b> moments about the $z$-axis contain $x^2 + y^2 = r^2$, which is simplest in cylindrical coordinates, while balls and cones centered at the origin are simplest in spherical ones. For instance, a solid ball of radius $a$ and mass $m$ has $I_z = \\frac{2}{5}ma^2$, a standard result found in spherical coordinates, where $x^2 + y^2$ becomes the square of the distance to the axis."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Mass of a cube",
+    "q": "Find the mass of the cube $[0, 1]^3$ with density $\\rho = x + y + z$.",
+    "steps": [
+     "$m = \\int_0^1\\int_0^1\\int_0^1 (x + y + z)\\,dz\\,dy\\,dx$.",
+     "Each of the three terms integrates to $\\frac{1}{2}$ over the cube, so $m = \\frac{3}{2}$."
+    ],
+    "a": "$\\frac{3}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Balance point of a half-ball",
+    "q": "Find $\\bar{z}$ for the solid upper half-ball of radius $a$ with constant density.",
+    "steps": [
+     "Mass (density 1): the volume $\\frac{2}{3}\\pi a^3$.",
+     "Moment: $\\iiint z\\,dV = \\frac{\\pi a^4}{4}$ (from the spherical-coordinates lesson).",
+     "$\\bar{z} = \\frac{\\pi a^4/4}{2\\pi a^3/3} = \\frac{3a}{8}$: below the middle height $\\frac{a}{2}$, since the half-ball is wider at the bottom."
+    ],
+    "a": "$\\bar{z} = \\frac{3a}{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "Spinning a cylinder",
+    "q": "Find $I_z$ for the solid cylinder $x^2 + y^2 \\le R^2$, ${}0 \\le z \\le H$, with density ${}1$.",
+    "steps": [
+     "Cylindrical coordinates: $I_z = \\int_0^{2\\pi}\\int_0^R\\int_0^H r^2 \\cdot r\\,dz\\,dr\\,d\\theta$.",
+     "$= 2\\pi \\cdot H \\cdot \\frac{R^4}{4} = \\frac{\\pi R^4H}{2}$.",
+     "With mass $M = \\pi R^2H$, that is $\\frac{1}{2}MR^2$, the formula physics books quote."
+    ],
+    "a": "$\\frac{\\pi R^4H}{2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dividing by the volume when the density varies.</b> $\\bar{z} = \\frac{\\iiint z\\rho\\,dV}{\\iiint \\rho\\,dV}$; using the volume in the denominator is right only for constant density. Also, $I_z$ uses the squared distance from the axis, $x^2 + y^2$, not from the origin, $x^2 + y^2 + z^2$. Use symmetry as a check: a center of mass must lie on any axis of symmetry."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.6 Calculating Centers of Mass and Moments of Inertia"
+   }
+  ]
+ },
+ "calc3.change-of-variables": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Polar, cylindrical and spherical coordinates are special cases of one idea: describe the region with new variables in which it is simple, and correct for how the change stretches area. The correction is a <a href=\"/math/precalculus/determinants/\">determinant</a>, the <b>Jacobian</b>."
+   },
+   {
+    "t": "key",
+    "html": "If $x = x(u, v)$, $y = y(u, v)$ maps a region $S$ of the $uv$-plane one-to-one onto $R$, then\n  $$\\iint_R f(x, y)\\,dx\\,dy = \\iint_S f(x(u, v), y(u, v))\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv, \\qquad \\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} x_u & x_v \\\\ y_u & y_v \\end{vmatrix}.$$"
+   },
+   {
+    "t": "why",
+    "html": "A small rectangle $\\Delta u$ by $\\Delta v$ in the $uv$-plane maps to a small curved patch. Near a point, the map is nearly linear: moving $\\Delta u$ moves you by $\\mathbf{r}_u\\Delta u = \\langle x_u, y_u \\rangle\\Delta u$, and moving $\\Delta v$ by $\\mathbf{r}_v\\Delta v$. So the patch is nearly the parallelogram on those two vectors, with area $|x_uy_v - x_vy_u|\\,\\Delta u\\,\\Delta v$ (a 2-D cross product, which is the determinant). That number is the local stretch factor. Area cannot be negative, so take the absolute value. For polar coordinates, $\\begin{vmatrix} \\cos\\theta & -r\\sin\\theta \\\\ \\sin\\theta & r\\cos\\theta \\end{vmatrix} = r$: the familiar $dA = r\\,dr\\,d\\theta$."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-jacobian",
+    "opts": {
+     "map": "linear",
+     "m": [
+      [
+       0.5,
+       0.5
+      ],
+      [
+       0.5,
+       -0.5
+      ]
+     ],
+     "u": [
+      0,
+      2
+     ],
+     "v": [
+      0,
+      4
+     ],
+     "du": 0.25,
+     "dv": 0.5
+    },
+    "cap": "The map $x = \\frac{u + v}{2}$, $y = \\frac{u - v}{2}$ from the first example. Every cell of the $uv$ grid becomes a cell with half its area: $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| = \\frac{1}{2}$."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-jacobian",
+    "opts": {
+     "map": "polar",
+     "u": [
+      0,
+      2
+     ],
+     "v": [
+      0,
+      "pi/2"
+     ]
+    },
+    "cap": "Polar coordinates as a change of variables: cells farther out (bigger $r$) are stretched more, by exactly the factor $r$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A parallelogram",
+    "q": "Evaluate $\\iint_R (x + y)\\,dA$ where $R$ is ${}0 \\le x + y \\le 2$, ${}0 \\le x - y \\le 4$.",
+    "steps": [
+     "Let $u = x + y$ and $v = x - y$: $R$ becomes the rectangle ${}0 \\le u \\le 2$, ${}0 \\le v \\le 4$. Solving, $x = \\frac{u + v}{2}$, $y = \\frac{u - v}{2}$.",
+     "$\\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} \\frac{1}{2} & \\frac{1}{2} \\\\ \\frac{1}{2} & -\\frac{1}{2} \\end{vmatrix} = -\\frac{1}{2}$, so $dA = \\frac{1}{2}\\,du\\,dv$.",
+     "$\\int_0^4\\int_0^2 u \\cdot \\frac{1}{2}\\,du\\,dv = \\frac{1}{2} \\cdot 2 \\cdot 4 = 4$."
+    ],
+    "a": "${}4$"
+   },
+   {
+    "t": "ex",
+    "title": "Area of an ellipse",
+    "q": "Find the area inside $\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1$.",
+    "steps": [
+     "Let $x = au$, $y = bv$: the ellipse becomes the unit disk $u^2 + v^2 \\le 1$.",
+     "$\\frac{\\partial(x, y)}{\\partial(u, v)} = \\begin{vmatrix} a & 0 \\\\ 0 & b \\end{vmatrix} = ab$.",
+     "Area $= \\iint_{\\text{disk}} ab\\,du\\,dv = ab \\cdot \\pi = \\pi ab$."
+    ],
+    "a": "$\\pi ab$"
+   },
+   {
+    "t": "ex",
+    "title": "Using the inverse Jacobian",
+    "q": "If you only know $u = x + y$, $v = x - 2y$, how do you get $\\frac{\\partial(x, y)}{\\partial(u, v)}$?",
+    "steps": [
+     "Compute the easy one: $\\frac{\\partial(u, v)}{\\partial(x, y)} = \\begin{vmatrix} 1 & 1 \\\\ 1 & -2 \\end{vmatrix} = -3$.",
+     "The two maps undo each other, so their stretch factors multiply to ${}1$: $\\frac{\\partial(x, y)}{\\partial(u, v)} = -\\frac{1}{3}$.",
+     "So $dA = \\frac{1}{3}\\,du\\,dv$."
+    ],
+    "a": "$-\\frac{1}{3}$, so $dA = \\frac{1}{3}\\,du\\,dv$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dropping the absolute value, or using the reciprocal.</b> A negative Jacobian only means the map flips orientation; area is still positive, so use $\\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right|$. And the factor that goes with $du\\,dv$ is the Jacobian of $x, y$ <i>with respect to</i> $u, v$. If you computed $\\frac{\\partial(u, v)}{\\partial(x, y)}$ instead, take its reciprocal. Check with a simple case: the map $x = 2u$, $y = 2v$ must multiply areas by ${}4$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 5.7 Change of Variables in Multiple Integrals"
+   }
+  ]
+ }
+}

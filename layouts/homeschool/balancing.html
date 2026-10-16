@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "homeschool/balancing.css" | relURL }}?v={{ (os.Stat "static/homeschool/balancing.css").ModTime.Unix }}">
-{{ $game := "games/book-cart/" | relURL }}
+{{ $game := "science-lab/book-cart/" | relURL }}
 {{ $m := "homeschool/science/first-course-in-physics/" | relURL }}
 <div class="hs bp">
   <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/science/" | relURL }}">Science</a> › Why Things Fall Over</nav>

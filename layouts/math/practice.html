@@ -1,0 +1,29 @@
+{{- /* Math Ladder: /math/practice/ — the session: the next task from the engine, one problem card at a time. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "math/viz/basic.css" }}
+{{ partial "inline/ml-css.html" "math/viz/adv.css" }}
+<div class="mlp mlp-session" id="mlp-session">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>Practice</span></nav>
+  <header class="mlp-shead">
+    <div class="mlp-shead-text">
+      <h1>Practice</h1>
+      <p class="mlp-shead-course" id="mlp-scourse"></p>
+    </div>
+    <div class="mlp-shead-stats" id="mlp-sstats" aria-live="polite"></div>
+  </header>
+  <div id="mlp-task" class="mlp-task" aria-live="polite"><p class="mlp-loading">Finding your next step…</p></div>
+  <noscript><p class="mlp-soon">Math Ladder practice needs JavaScript turned on.</p></noscript>
+</div>
+{{ partial "inline/ml-cfg.html" "practice" }}
+{{ partial "inline/ml-js.html" "homeschool/calc/cas.js" }}
+{{ partial "inline/ml-js.html" "math/core/gen.js" }}
+{{ partial "inline/ml-js.html" "math/core/tex.js" }}
+{{ partial "inline/ml-js.html" "math/core/check.js" }}
+{{ partial "inline/ml-js.html" "math/core/input.js" }}
+{{ partial "inline/ml-js.html" "math/core/engine.js" }}
+{{ partial "inline/ml-js.html" "math/core/runner.js" }}
+{{ partial "inline/ml-js.html" "math/viz/core.js" }}
+{{ partial "inline/ml-js.html" "math/app/ui.js" }}
+{{ partial "inline/ml-js.html" "math/app/session.js" }}
+{{ end }}

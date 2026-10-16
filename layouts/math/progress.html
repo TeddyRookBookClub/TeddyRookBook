@@ -1,0 +1,32 @@
+{{- /* Math Ladder: /math/progress/ — XP by day, streak, course progress, reviews coming due, save code, reset. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+<div class="mlp mlp-progress" id="mlp-progress">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>Your progress</span></nav>
+  <header class="mlp-phead"><h1>Your math progress</h1><p class="mlp-sub">Everything here is saved in this browser only.</p></header>
+  <div class="mlp-stats" id="mlp-pstats" aria-live="polite"></div>
+  <section class="mlp-card-s" aria-labelledby="mlp-xp-h">
+    <div class="mlp-card-h"><h2 id="mlp-xp-h">XP, last 30 days</h2><div class="mlp-goal" id="mlp-goal"></div></div>
+    <div class="mlp-chart" id="mlp-chart"></div>
+  </section>
+  <div class="mlp-two">
+    <section class="mlp-card-s" aria-labelledby="mlp-cp-h"><h2 id="mlp-cp-h">Courses</h2><div id="mlp-pcourses"></div></section>
+    <section class="mlp-card-s" aria-labelledby="mlp-rv-h"><h2 id="mlp-rv-h">Reviews coming due</h2><div id="mlp-previews"></div></section>
+  </div>
+  <section class="mlp-card-s" aria-labelledby="mlp-sc-h">
+    <h2 id="mlp-sc-h">Save code</h2>
+    <p>Your save code holds all of your Math Ladder progress. Copy it or download it, then paste it in on another device or browser to carry on there.</p>
+    <div class="mlp-save mlp-save-full" id="mlp-save"></div>
+  </section>
+  <section class="mlp-card-s mlp-danger" aria-labelledby="mlp-rs-h">
+    <h2 id="mlp-rs-h">Start over</h2>
+    <p>Erase all Math Ladder progress in this browser: topics, reviews, XP and placement. Save a code first if you might want it back.</p>
+    <button type="button" class="mlp-btn warn" id="mlp-reset">Erase my Math Ladder progress…</button>
+    <p class="mlp-small" id="mlp-reset-msg" aria-live="polite"></p>
+  </section>
+</div>
+{{ partial "inline/ml-cfg.html" "progress" }}
+{{ partial "inline/ml-js.html" "math/core/engine.js" }}
+{{ partial "inline/ml-js.html" "math/app/ui.js" }}
+{{ partial "inline/ml-js.html" "math/app/progress.js" }}
+{{ end }}

@@ -1,0 +1,4708 @@
+{
+ "g7.unit-rates-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 6 you found <a href=\"/math/grade-6/unit-rate/\">unit rates</a> like \"120 miles in 3 hours is 40 miles per hour.\" A unit rate answers one question: <b>how much for 1?</b> Now the amounts can be fractions. Walking $\\frac{1}{2}$ mile in $\\frac{1}{4}$ hour is a rate too, and it has a unit rate."
+   },
+   {
+    "t": "key",
+    "html": "To find \"A per 1 B,\" divide: $\\text{A} \\div \\text{B}$. The quantity after the word \"per\" goes in the divisor. With fractions, divide the way you learned in <a href=\"/math/grade-6/divide-fractions/\">dividing fractions</a>: multiply by the reciprocal."
+   },
+   {
+    "t": "why",
+    "html": "In $\\frac{1}{4}$ hour you walk $\\frac{1}{2}$ mile. An hour holds 4 quarter hours, so in 1 hour you walk 4 times as far: $4 \\times \\frac{1}{2} = 2$ miles. Multiplying both amounts by 4 keeps the rate the same and turns $\\frac{1}{4}$ hour into 1 hour. That is exactly what $\\frac{1}{2} \\div \\frac{1}{4} = \\frac{1}{2} \\times 4 = 2$ does."
+   },
+   {
+    "t": "viz",
+    "name": "g7-rateline",
+    "opts": {
+     "a": "1/2",
+     "b": "1/4",
+     "names": [
+      "miles",
+      "hours"
+     ],
+     "one": [
+      "mile",
+      "hour"
+     ],
+     "max": 4
+    },
+    "cap": "Step along in equal batches of $\\frac{1}{2}$ mile per $\\frac{1}{4}$ hour. Press \"1 hour\" to jump to the unit rate, or \"1 mile\" to see the other unit rate."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A walking speed",
+    "q": "Ana walks $\\frac{1}{2}$ mile in $\\frac{1}{4}$ hour. What is her speed in miles per hour?",
+    "steps": [
+     "\"Miles per hour\" means miles for 1 hour, so hours go in the divisor: $\\frac{1}{2} \\div \\frac{1}{4}$.",
+     "Multiply by the reciprocal of $\\frac{1}{4}$: $\\frac{1}{2} \\times \\frac{4}{1} = \\frac{4}{2} = 2$.",
+     "Check: at 2 miles per hour, a quarter hour covers a quarter of 2 miles, which is $\\frac{1}{2}$ mile ✓."
+    ],
+    "a": "$2$ miles per hour"
+   },
+   {
+    "t": "ex",
+    "title": "A recipe rate",
+    "q": "A recipe uses $\\frac{3}{4}$ cup of sugar for every $\\frac{1}{2}$ cup of flour. How much sugar is that per cup of flour?",
+    "steps": [
+     "Sugar per 1 cup of flour: $\\frac{3}{4} \\div \\frac{1}{2}$.",
+     "$\\frac{3}{4} \\times \\frac{2}{1} = \\frac{6}{4} = 1\\frac{1}{2}$.",
+     "So each cup of flour goes with $1\\frac{1}{2}$ cups of sugar. That makes sense: 1 cup of flour is two half cups, so it needs twice $\\frac{3}{4}$."
+    ],
+    "a": "$1\\frac{1}{2}$ cups of sugar per cup of flour"
+   },
+   {
+    "t": "ex",
+    "title": "Mixed numbers",
+    "q": "A bike rider goes $2\\frac{1}{2}$ miles in $\\frac{3}{4}$ hour. What is the speed in miles per hour?",
+    "steps": [
+     "Write the mixed number as a fraction: $2\\frac{1}{2} = \\frac{5}{2}$.",
+     "Divide by the hours: $$\\frac{5}{2} \\div \\frac{3}{4} = \\frac{5}{2} \\times \\frac{4}{3} = \\frac{20}{6} = \\frac{10}{3}$$",
+     "$\\frac{10}{3} = 3\\frac{1}{3}$. Estimate to check: in a bit less than 1 hour the rider went $2\\frac{1}{2}$ miles, so in a full hour a bit more than that ✓."
+    ],
+    "a": "$3\\frac{1}{3}$ miles per hour"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing the other way: $\\frac{1}{4} \\div \\frac{1}{2} = \\frac{1}{2}$. That is a real rate, but it is <b>hours per mile</b> (half an hour for each mile), not miles per hour. Before you divide, say the units out loud: \"miles <i>per</i> hour\" means miles $\\div$ hours. A quick check: the two unit rates are reciprocals, $2$ and $\\frac{1}{2}$."
+   },
+   {
+    "t": "note",
+    "html": "You may see a rate written as a fraction of fractions, like $\\dfrac{\\frac{1}{2}}{\\frac{1}{4}}$. It means the same division: $\\frac{1}{2} \\div \\frac{1}{4}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.6 Ratios and Rate"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 4.2 Multiply and Divide Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.1"
+   }
+  ]
+ },
+ "g7.proportional-tables": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have built <a href=\"/math/grade-6/equivalent-ratios/\">ratio tables</a>: multiply both amounts by the same number and the ratio stays the same. A table like that shows a <b>proportional relationship</b>. Many tables look steady but are not proportional. Here is how to tell."
+   },
+   {
+    "t": "key",
+    "html": "Two quantities are proportional when $\\frac{y}{x}$ is the same number for every pair in the table. That number is the constant of proportionality."
+   },
+   {
+    "t": "why",
+    "html": "Proportional means \"scale one amount and the other scales the same way.\" If 2 tickets cost \\$30, then 4 tickets (twice as many) cost \\$60 (twice as much). This only works when every $y$ is the same multiple of its $x$, and that is the same as saying $\\frac{y}{x}$ never changes. Adding a fixed amount breaks it: with $y = x + 3$, going from $x = 1$ to $x = 2$ doubles $x$ but takes $y$ from 4 to 5."
+   },
+   {
+    "t": "viz",
+    "name": "ratiotable",
+    "opts": {
+     "a": 2,
+     "b": 5,
+     "names": [
+      "cups of flour",
+      "muffins"
+     ],
+     "max": 6,
+     "pins": [
+      1,
+      2,
+      3
+     ]
+    },
+    "cap": "Each batch uses 2 cups of flour for 5 muffins. Try \"What if we add instead?\" to see why adding the same amount to both does not keep the ratio."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A proportional table",
+    "q": "Is pay proportional to hours? $$\\begin{array}{l|ccc} \\text{Hours} & 2 & 3 & 5 \\\\ \\hline \\text{Pay (dollars)} & 30 & 45 & 75 \\end{array}$$",
+    "steps": [
+     "Divide each pay by its hours: $\\frac{30}{2} = 15$, $\\frac{45}{3} = 15$, $\\frac{75}{5} = 15$.",
+     "Every quotient is 15, so pay is proportional to hours: \\$15 for each hour."
+    ],
+    "a": "Yes, proportional"
+   },
+   {
+    "t": "ex",
+    "title": "Steady, but not proportional",
+    "q": "Is $y$ proportional to $x$? $$\\begin{array}{l|cccc} x & 1 & 2 & 3 & 4 \\\\ \\hline y & 4 & 5 & 6 & 7 \\end{array}$$",
+    "steps": [
+     "Divide: $\\frac{4}{1} = 4$, $\\frac{5}{2} = 2.5$, $\\frac{6}{3} = 2$, $\\frac{7}{4} = 1.75$.",
+     "The quotients change, so it is not proportional. Here $y$ is always $x + 3$: the table adds, it does not multiply."
+    ],
+    "a": "No, not proportional"
+   },
+   {
+    "t": "mistake",
+    "html": "Calling a table proportional because its values go up by the same amount each time. Steady growth is not enough. Check: divide $y$ by $x$ in at least two columns (all of them, to be sure). Another check: does $x = 0$ go with $y = 0$? For $y = x + 3$ it would go with $3$, so it is not proportional."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.5 Solve Proportions and their Applications"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.2a"
+   }
+  ]
+ },
+ "g7.proportional-graphs": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 6 you <a href=\"/math/grade-6/ratio-graphs/\">graphed ratio tables</a> and saw the points line up toward $(0, 0)$. That picture is the test for proportional relationships, and it has two parts."
+   },
+   {
+    "t": "key",
+    "html": "A graph shows a proportional relationship when it is a <b>straight line</b> (or points on one) <b>and</b> it passes through the origin, $(0, 0)$."
+   },
+   {
+    "t": "why",
+    "html": "A proportional relationship is $y = kx$. Put in $x = 0$: $y = k \\cdot 0 = 0$, so $(0, 0)$ is always on the graph. And each step of 1 to the right adds the same amount, $k$, to $y$, so the graph never bends. A line like $y = 2x + 3$ is straight, but it starts at $(0, 3)$, and the extra 3 breaks the \"same ratio\" rule."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      {
+       "f": "k*x",
+       "color": "blue"
+      },
+      {
+       "f": "0.5*x+3",
+       "color": "red",
+       "dash": true
+      }
+     ],
+     "params": {
+      "k": [
+       0.25,
+       3,
+       1.5,
+       0.25
+      ]
+     },
+     "xmin": -1,
+     "xmax": 10,
+     "ymin": -1,
+     "ymax": 14,
+     "zoom": false
+    },
+    "cap": "The blue line $f(x) = kx$ always passes through the origin; move the slider to change $k$. The dashed red line is straight but starts at $(0, 3)$, so it is not proportional."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Points through the origin",
+    "q": "A graph shows the points $(0, 0)$, $(2, 3)$, $(4, 6)$ and $(6, 9)$ on one straight line. Is it proportional?",
+    "steps": [
+     "The points line up, and the line passes through $(0, 0)$.",
+     "Check the ratios: $\\frac{3}{2} = \\frac{6}{4} = \\frac{9}{6} = 1.5$. They match, so $y = 1.5x$."
+    ],
+    "a": "Yes, proportional, with $k = 1.5$"
+   },
+   {
+    "t": "ex",
+    "title": "Straight, but misses the origin",
+    "q": "A straight line passes through $(0, 2)$ and $(3, 8)$. Is it proportional?",
+    "steps": [
+     "At $x = 0$ the line is at $y = 2$, not $0$.",
+     "So it is not proportional. Check the ratio at $(3, 8)$: $\\frac{8}{3}$. At a third point, $(6, 14)$, it is $\\frac{14}{6} = \\frac{7}{3}$. The ratios differ."
+    ],
+    "a": "No"
+   },
+   {
+    "t": "ex",
+    "title": "Through the origin, but curved",
+    "q": "A square's area $A$ is graphed against its side $s$: the points $(0, 0)$, $(1, 1)$, $(2, 4)$, $(3, 9)$. Is area proportional to side length?",
+    "steps": [
+     "The graph starts at the origin, but it curves upward.",
+     "$\\frac{1}{1} = 1$, $\\frac{4}{2} = 2$, $\\frac{9}{3} = 3$: the ratio grows, so it is not proportional."
+    ],
+    "a": "No"
+   },
+   {
+    "t": "mistake",
+    "html": "Accepting any straight line. A proportional graph must pass through $(0, 0)$, because zero of one quantity goes with zero of the other. Check by looking where the line crosses the $y$-axis: if it is not at $0$, the relationship is not proportional."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 11.2 Graphing Linear Equations"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.2a"
+   }
+  ]
+ },
+ "g7.constant-of-proportionality": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In a <a href=\"/math/grade-7/proportional-tables/\">proportional table</a>, $\\frac{y}{x}$ is the same for every pair. That fixed number is so useful that it has a name: the <b>constant of proportionality</b>, usually called $k$."
+   },
+   {
+    "t": "key",
+    "html": "$k = \\frac{y}{x}$ for any pair (with $x \\ne 0$). It is the unit rate: the amount of $y$ that goes with 1 of $x$."
+   },
+   {
+    "t": "why",
+    "html": "If every $y$ is $k$ times its $x$, then dividing $y$ by $x$ undoes the multiplying and leaves $k$. And when $x = 1$, $y = k \\times 1 = k$, so $k$ is \"how much for 1,\" the same <a href=\"/math/grade-6/unit-rate/\">unit rate</a> you already know."
+   },
+   {
+    "t": "viz",
+    "name": "ratiotable",
+    "opts": {
+     "a": 4,
+     "b": 10,
+     "names": [
+      "pounds",
+      "dollars"
+     ],
+     "max": 5,
+     "pins": [
+      1,
+      2
+     ]
+    },
+    "cap": "4 pounds of apples cost \\$10. Press \"Unit rate\" to see the price of 1 pound: that is $k = 2.5$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From a table",
+    "q": "$y$ is proportional to $x$. Find $k$. $$\\begin{array}{l|ccc} x & 3 & 5 & 8 \\\\ \\hline y & 12 & 20 & 32 \\end{array}$$",
+    "steps": [
+     "$k = \\frac{y}{x}$: $\\frac{12}{3} = 4$.",
+     "Check another column: $\\frac{32}{8} = 4$ ✓."
+    ],
+    "a": "$k = 4$"
+   },
+   {
+    "t": "ex",
+    "title": "From a story",
+    "q": "Rosa pays \\$7.50 for 3 pounds of grapes. What is the constant of proportionality, in dollars per pound?",
+    "steps": [
+     "Dollars per pound means dollars $\\div$ pounds: $7.50 \\div 3 = 2.50$.",
+     "Each pound costs \\$2.50, so $k = 2.5$."
+    ],
+    "a": "$k = 2.5$ dollars per pound"
+   },
+   {
+    "t": "ex",
+    "title": "From a graph",
+    "q": "A proportional graph passes through the origin and $(4, 10)$. Find $k$.",
+    "steps": [
+     "Every point on the line has the same ratio, so use $(4, 10)$: $k = \\frac{10}{4} = 2.5$.",
+     "The line also passes through $(1, 2.5)$, the unit rate."
+    ],
+    "a": "$k = 2.5$"
+   },
+   {
+    "t": "note",
+    "html": "$k$ does not have to be a whole number. It can be a fraction like $\\frac{3}{4}$ or a decimal like $0.4$. It is still the amount of $y$ for each 1 of $x$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.6 Ratios and Rate"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.2b"
+   }
+  ]
+ },
+ "g7.proportional-equations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once you know the <a href=\"/math/grade-7/constant-of-proportionality/\">constant of proportionality</a>, you can write the whole relationship as one short equation. It works for every row of the table at once."
+   },
+   {
+    "t": "key",
+    "html": "A proportional relationship can be written $y = kx$, where $k = \\frac{y}{x}$. Find $k$ from any pair, then write the equation."
+   },
+   {
+    "t": "why",
+    "html": "\"Proportional\" means each $y$ is $k$ times its $x$. The equation $y = kx$ says exactly that. It also lets you find a $y$ for any $x$, even one that is not in the table."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "k*x",
+     "params": {
+      "k": [
+       0.5,
+       5,
+       3.5,
+       0.5
+      ]
+     },
+     "xmin": -1,
+     "xmax": 10,
+     "ymin": -2,
+     "ymax": 40,
+     "table": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     "zoom": false
+    },
+    "cap": "Change $k$ and watch the table: every $y$-value is $k$ times its $x$-value, and the row for $x = 1$ shows $k$ itself."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From a table",
+    "q": "$y$ is proportional to $x$. Write an equation. $$\\begin{array}{l|ccc} x & 2 & 5 & 8 \\\\ \\hline y & 7 & 17.5 & 28 \\end{array}$$",
+    "steps": [
+     "$k = \\frac{y}{x} = \\frac{7}{2} = 3.5$.",
+     "Check: $3.5 \\times 8 = 28$ ✓.",
+     "The equation is $y = 3.5x$."
+    ],
+    "a": "$y = 3.5x$"
+   },
+   {
+    "t": "ex",
+    "title": "From a story",
+    "q": "4 movie tickets cost \\$34. Let $c$ be the cost in dollars and $n$ the number of tickets. Write an equation for $c$ in terms of $n$.",
+    "steps": [
+     "Cost per ticket: $k = 34 \\div 4 = 8.5$.",
+     "Each ticket adds \\$8.50, so $c = 8.5n$.",
+     "Check: $8.5 \\times 4 = 34$ ✓."
+    ],
+    "a": "$c = 8.5n$"
+   },
+   {
+    "t": "ex",
+    "title": "Watch the order",
+    "q": "$x$: $6, 9, 15$ and $y$: $2, 3, 5$. Write $y = kx$.",
+    "steps": [
+     "$k = \\frac{y}{x} = \\frac{2}{6} = \\frac{1}{3}$. Here $y$ is smaller than $x$, so $k$ is less than 1.",
+     "The equation is $y = \\frac{1}{3}x$. Check: $\\frac{1}{3} \\times 15 = 5$ ✓."
+    ],
+    "a": "$y = \\frac{1}{3}x$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing $x$ by $y$ and writing the reciprocal, like $y = 3x$ in the last example. Always check your equation with a row of the table: $3 \\times 6 = 18$, not $2$, so $y = 3x$ is wrong."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 11.2 Graphing Linear Equations"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.2c"
+   }
+  ]
+ },
+ "g7.proportional-points": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every point on a <a href=\"/math/grade-7/proportional-graphs/\">proportional graph</a> tells a small story. To read it, remember what each axis measures."
+   },
+   {
+    "t": "key",
+    "html": "A point $(x, y)$ means \"$x$ of the first quantity goes with $y$ of the second.\" The point $(1, k)$ shows the unit rate, and $(0, 0)$ means none of one goes with none of the other."
+   },
+   {
+    "t": "why",
+    "html": "The graph of $y = kx$ is made of all the pairs that fit the relationship. At $x = 1$ the equation gives $y = k$, so the unit rate always appears as the point $(1, k)$. At $x = 0$ it gives $y = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "12x",
+     "trace": {
+      "x": 1
+     },
+     "xmin": -0.5,
+     "xmax": 8,
+     "ymin": -5,
+     "ymax": 100,
+     "xlabel": "hours",
+     "ylabel": "dollars",
+     "zoom": false
+    },
+    "cap": "Maya earns \\$12 an hour. Drag the point along the line: at 1 hour it reads $(1, 12)$, the unit rate."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Reading a point",
+    "q": "Maya's pay graph (hours across, dollars up) passes through $(5, 60)$. What does that point mean?",
+    "steps": [
+     "The first number is hours and the second is dollars.",
+     "So in 5 hours, Maya earns \\$60."
+    ],
+    "a": "Working 5 hours earns \\$60."
+   },
+   {
+    "t": "ex",
+    "title": "Finding the unit rate point",
+    "q": "A proportional graph of pages read (up) against minutes (across) passes through $(4, 6)$. Which point shows the unit rate?",
+    "steps": [
+     "$k = \\frac{6}{4} = 1.5$ pages per minute.",
+     "The unit rate point is $(1, 1.5)$: in 1 minute, 1.5 pages."
+    ],
+    "a": "$(1, 1.5)$"
+   },
+   {
+    "t": "ex",
+    "title": "Using a point to predict",
+    "q": "The same graph passes through $(4, 6)$. How many pages are read in 10 minutes?",
+    "steps": [
+     "$y = 1.5x$, so $y = 1.5 \\times 10 = 15$.",
+     "The point $(10, 15)$ is on the line."
+    ],
+    "a": "15 pages"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading a point backwards. $(5, 60)$ on an hours-and-dollars graph does not mean \"\\$5 for 60 hours.\" The $x$-value always comes first. Check: does your sentence match the labels on the axes?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 11.1 Use the Rectangular Coordinate System"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.2d"
+   }
+  ]
+ },
+ "g7.solve-proportions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A typical problem gives three numbers from a proportional relationship and asks for the fourth: \"5 notebooks cost \\$8.75; how much for 7?\" You already know $y = kx$ from <a href=\"/math/grade-7/proportional-equations/\">writing equations</a>. Here are three ways to finish the job."
+   },
+   {
+    "t": "key",
+    "html": "Use the <b>unit rate</b> (find the amount for 1, then multiply), a <b>scale factor</b> (find what one amount was multiplied by), or <b>cross products</b> ($\\frac{a}{b} = \\frac{c}{d}$ means $ad = bc$). Each works only when the relationship is proportional."
+   },
+   {
+    "t": "why",
+    "html": "Why cross products work: start with $\\frac{a}{b} = \\frac{c}{d}$ and multiply both sides by $b$ and by $d$. The $b$ cancels on the left and the $d$ cancels on the right, leaving $ad = cb$. It is not a trick; it is two multiplications done to both sides at once."
+   },
+   {
+    "t": "viz",
+    "name": "ratiotable",
+    "opts": {
+     "a": 2,
+     "b": 3,
+     "names": [
+      "cups of rice",
+      "cups of water"
+     ],
+     "snap": "unit",
+     "max": 6,
+     "task": {
+      "a": 7
+     }
+    },
+    "cap": "2 cups of rice need 3 cups of water. How much water goes with 7 cups of rice? 7 is not a whole number of batches, so go through the unit rate."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Unit rate",
+    "q": "5 notebooks cost \\$8.75. How much do 7 notebooks cost?",
+    "steps": [
+     "One notebook: $8.75 \\div 5 = 1.75$ dollars.",
+     "Seven notebooks: $1.75 \\times 7 = 12.25$."
+    ],
+    "a": "\\$12.25"
+   },
+   {
+    "t": "ex",
+    "title": "Scale factor",
+    "q": "Solve $\\frac{3}{8} = \\frac{x}{40}$.",
+    "steps": [
+     "The denominator went from 8 to 40: that is $\\times 5$.",
+     "Do the same to the numerator: $x = 3 \\times 5 = 15$."
+    ],
+    "a": "$x = 15$"
+   },
+   {
+    "t": "ex",
+    "title": "Cross products",
+    "q": "Solve $\\frac{6}{x} = \\frac{9}{12}$.",
+    "steps": [
+     "Cross products are equal: $9x = 6 \\times 12 = 72$.",
+     "Divide by 9: $x = 8$. Check: $\\frac{6}{8} = \\frac{3}{4}$ and $\\frac{9}{12} = \\frac{3}{4}$ ✓."
+    ],
+    "a": "$x = 8$"
+   },
+   {
+    "t": "mistake",
+    "html": "Two traps. <b>Mismatched units:</b> setting miles over gallons equal to gallons over miles. Write the units next to each number; both ratios must compare the same things in the same order. <b>Not proportional:</b> a plant is 4 cm tall and grows 2 cm each week. After 3 weeks it is 10 cm, and after 6 weeks it is 16 cm. The proportion $\\frac{3}{10} = \\frac{6}{x}$ would say 20 cm, which is wrong, because the height is not a fixed multiple of the weeks. Ask first: does doubling one amount double the other?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.5 Solve Proportions and their Applications"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.3"
+   }
+  ]
+ },
+ "g7.percent-change": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know how to find <a href=\"/math/grade-6/percent-of-a-number/\">a percent of a number</a> and how to <a href=\"/math/grade-6/find-the-whole/\">find the whole from a part</a>. Percent change puts those together. It answers: compared with where we started, how big was the change?"
+   },
+   {
+    "t": "key",
+    "html": "$$\\text{percent change} = \\frac{\\text{amount of change}}{\\text{original amount}} \\times 100\\%$$ It is an <b>increase</b> when the new amount is bigger and a <b>decrease</b> when it is smaller."
+   },
+   {
+    "t": "why",
+    "html": "A percent always compares a part with a whole. \"By what percent did the price go up?\" means \"the increase is what percent of the price we started with?\" So the original amount is the whole, the 100%. After an increase of 25%, the new amount is $100\\% + 25\\% = 125\\%$ of the original."
+   },
+   {
+    "t": "viz",
+    "name": "percentbar",
+    "opts": {
+     "whole": 40,
+     "pct": 125,
+     "max": 150,
+     "step": 25,
+     "snap": 5,
+     "pre": "$"
+    },
+    "cap": "A \\$40 price grows to \\$50. The original \\$40 is 100%; the new price, \\$50, is 125% of it. The \\$10 increase is the extra 25%."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An increase",
+    "q": "A video game's price went from \\$40 to \\$50. Find the percent increase.",
+    "steps": [
+     "Change: $50 - 40 = 10$ dollars.",
+     "Divide by the original price, \\$40: $\\frac{10}{40} = 0.25$.",
+     "$0.25 = 25\\%$."
+    ],
+    "a": "A 25% increase"
+   },
+   {
+    "t": "ex",
+    "title": "A decrease",
+    "q": "A club had 80 members last year and has 60 now. Find the percent decrease.",
+    "steps": [
+     "Change: $80 - 60 = 20$ members fewer.",
+     "Divide by the original, 80: $\\frac{20}{80} = 0.25 = 25\\%$."
+    ],
+    "a": "A 25% decrease"
+   },
+   {
+    "t": "ex",
+    "title": "Finding the new amount",
+    "q": "A \\$60 coat goes up in price by 15%. What is the new price?",
+    "steps": [
+     "The new price is $100\\% + 15\\% = 115\\%$ of the old price.",
+     "$1.15 \\times 60 = 69$.",
+     "Check: 15% of 60 is 9, and $60 + 9 = 69$ ✓."
+    ],
+    "a": "\\$69"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing by the new amount. For \\$40 to \\$50, $\\frac{10}{50} = 20\\%$ is wrong. Check: 20% of the original \\$40 is only \\$8, and $40 + 8 = 48$, not 50. Always divide by the amount you started with."
+   },
+   {
+    "t": "note",
+    "html": "The same change can be different percents. Going from 40 to 50 is a 25% increase, but going from 50 back to 40 is a 20% decrease, because the starting amount changed."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.2 Solve General Applications of Percent"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.3"
+   }
+  ]
+ },
+ "g7.markup-discount-tax": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Stores use <a href=\"/math/grade-7/percent-change/\">percent change</a> all the time. A discount takes a percent off; sales tax, a tip or a markup adds a percent on. One multiplication can do each job."
+   },
+   {
+    "t": "key",
+    "html": "With $d\\%$ off, you pay $(100 - d)\\%$ of the price. With $t\\%$ added (tax, tip or markup), you pay $(100 + t)\\%$. Write that percent as a decimal and multiply."
+   },
+   {
+    "t": "why",
+    "html": "20% off a price $p$ is $p - 0.20p$. By the distributive property that is $(1 - 0.20)p = 0.80p$: you pay 80%. In the same way, 6% tax gives $p + 0.06p = 1.06p$. When there are two changes, the second percent is taken of the <b>new</b> price, so you multiply twice."
+   },
+   {
+    "t": "viz",
+    "name": "percentbar",
+    "opts": {
+     "whole": 60,
+     "pct": 80,
+     "step": 10,
+     "snap": 5,
+     "pre": "$"
+    },
+    "cap": "A \\$60 jacket at 20% off: you pay 80% of \\$60, which is \\$48. Drag the marker to try other discounts."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A discount",
+    "q": "A \\$60 jacket is on sale for 20% off. What is the sale price?",
+    "steps": [
+     "You pay $100\\% - 20\\% = 80\\%$.",
+     "$0.80 \\times 60 = 48$."
+    ],
+    "a": "\\$48"
+   },
+   {
+    "t": "ex",
+    "title": "Sales tax",
+    "q": "Shoes cost \\$35, and the sales tax is 6%. What is the total?",
+    "steps": [
+     "You pay $100\\% + 6\\% = 106\\%$.",
+     "$1.06 \\times 35 = 37.10$.",
+     "Check: the tax is $0.06 \\times 35 = 2.10$, and $35 + 2.10 = 37.10$ ✓."
+    ],
+    "a": "\\$37.10"
+   },
+   {
+    "t": "ex",
+    "title": "Two discounts in a row",
+    "q": "A \\$50 backpack is 20% off, and a coupon takes another 10% off the sale price. What is the final price?",
+    "steps": [
+     "After 20% off: $0.80 \\times 50 = 40$.",
+     "The coupon takes 10% off \\$40, not off \\$50: $0.90 \\times 40 = 36$.",
+     "In one step: $50 \\times 0.80 \\times 0.90 = 50 \\times 0.72 = 36$. You pay 72%, which is 28% off, not 30%."
+    ],
+    "a": "\\$36"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the discounts: \"20% off and then 10% off is 30% off.\" That would give \\$35, but the second discount comes off a smaller price, so it saves less. Check: 10% of \\$40 is \\$4, not \\$5."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Situation",
+     "Multiply the price by"
+    ],
+    "rows": [
+     [
+      "15% off",
+      "$0.85$"
+     ],
+     [
+      "8% sales tax",
+      "$1.08$"
+     ],
+     [
+      "20% tip",
+      "$1.20$ (for the total) or $0.20$ (for the tip alone)"
+     ],
+     [
+      "50% markup",
+      "$1.50$"
+     ]
+    ],
+    "cap": "Each percent change is one multiplication."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.3 Solve Sales Tax, Commission, and Discount Applications"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.3"
+   }
+  ]
+ },
+ "g7.simple-interest": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When you put money in a savings account, the bank pays you for using it. That payment is <b>interest</b>. With simple interest, each year you earn the same <a href=\"/math/grade-6/percent-of-a-number/\">percent of the amount</a> you put in."
+   },
+   {
+    "t": "key",
+    "html": "$$I = Prt$$ $I$ is the interest, $P$ the principal (the money you start with), $r$ the yearly rate as a decimal, and $t$ the time in years. The balance at the end is $P + I$."
+   },
+   {
+    "t": "why",
+    "html": "One year of interest is $r$ times the principal: $P \\times r$. Simple interest pays that same amount every year, so after $t$ years you have $t$ of them: $(P \\times r) \\times t$. (Many real accounts pay \"compound\" interest, which also earns interest on old interest. You will meet that later.)"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Year",
+     "Interest that year",
+     "Balance at the end of the year"
+    ],
+    "rows": [
+     [
+      "0",
+      "",
+      "\\$500"
+     ],
+     [
+      "1",
+      "\\$20",
+      "\\$520"
+     ],
+     [
+      "2",
+      "\\$20",
+      "\\$540"
+     ],
+     [
+      "3",
+      "\\$20",
+      "\\$560"
+     ]
+    ],
+    "cap": "\\$500 at 4% simple interest: each year adds 4% of \\$500, which is \\$20."
+   },
+   {
+    "t": "viz",
+    "name": "percentbar",
+    "opts": {
+     "whole": 500,
+     "pct": 4,
+     "step": 10,
+     "snap": 1,
+     "pre": "$"
+    },
+    "cap": "4% of \\$500 is \\$20, one year of interest. Move the marker to see other rates."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Interest and balance",
+    "q": "You deposit \\$800 at 3% simple interest per year. How much interest do you earn in 4 years, and what is the balance?",
+    "steps": [
+     "$P = 800$, $r = 3\\% = 0.03$, $t = 4$.",
+     "$I = 800 \\times 0.03 \\times 4 = 96$.",
+     "Balance: $800 + 96 = 896$."
+    ],
+    "a": "\\$96 of interest; balance \\$896"
+   },
+   {
+    "t": "ex",
+    "title": "Time in months",
+    "q": "\\$1,200 earns 2.5% simple interest per year. How much interest after 6 months?",
+    "steps": [
+     "Time must be in years: 6 months is $\\frac{6}{12} = 0.5$ year.",
+     "$I = 1200 \\times 0.025 \\times 0.5 = 15$."
+    ],
+    "a": "\\$15"
+   },
+   {
+    "t": "ex",
+    "title": "Finding the rate",
+    "q": "A \\$2,000 deposit earns \\$150 of simple interest in 3 years. What is the rate?",
+    "steps": [
+     "$150 = 2000 \\times r \\times 3$, so $150 = 6000r$.",
+     "$r = 150 \\div 6000 = 0.025$.",
+     "As a percent, $r = 2.5\\%$."
+    ],
+    "a": "2.5% per year"
+   },
+   {
+    "t": "mistake",
+    "html": "Two slips to watch: using $3$ instead of $0.03$ for 3% (the interest comes out 100 times too big), and using months as if they were years. Check: does the interest look like a small part of the principal?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.4 Solve Simple Interest Applications"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.3"
+   }
+  ]
+ },
+ "g7.percent-error": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Estimates and measurements are rarely perfect. Percent error tells how far off they are compared with the true value. It works like <a href=\"/math/grade-7/percent-change/\">percent change</a>, with the actual value as the whole."
+   },
+   {
+    "t": "key",
+    "html": "$$\\text{percent error} = \\frac{|\\text{estimate} - \\text{actual}|}{\\text{actual}} \\times 100\\%$$"
+   },
+   {
+    "t": "why",
+    "html": "Being off by 2 cm on a 10 cm pencil is a big miss: 20% of its length. Being off by 2 cm on a 200 cm door is tiny: 1%. Dividing by the actual value measures the error against the size of the real thing. The absolute value bars mean we only care how far off we were, not whether we guessed too high or too low."
+   },
+   {
+    "t": "viz",
+    "name": "percentbar",
+    "opts": {
+     "whole": 80,
+     "pct": 10,
+     "step": 10,
+     "snap": 5
+    },
+    "cap": "The actual count is 80. A guess of 72 is off by 8, and 8 is 10% of 80."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A guess",
+    "q": "Jo guesses there are 72 marbles in a jar. There are 80. What is the percent error?",
+    "steps": [
+     "Error: $|72 - 80| = 8$.",
+     "Divide by the actual value: $\\frac{8}{80} = 0.10$.",
+     "Percent error: $10\\%$."
+    ],
+    "a": "10%"
+   },
+   {
+    "t": "ex",
+    "title": "A measurement",
+    "q": "A student measures a board as 12 cm long. It is really 12.5 cm. What is the percent error?",
+    "steps": [
+     "Error: $|12 - 12.5| = 0.5$.",
+     "$\\frac{0.5}{12.5} = 0.04 = 4\\%$."
+    ],
+    "a": "4%"
+   },
+   {
+    "t": "ex",
+    "title": "Rounding",
+    "q": "An estimate of 50 people turns out to be 47. Find the percent error to the nearest tenth of a percent.",
+    "steps": [
+     "Error: $|50 - 47| = 3$.",
+     "$\\frac{3}{47} \\approx 0.06383$.",
+     "That is about $6.383\\%$, which rounds to $6.4\\%$."
+    ],
+    "a": "About 6.4%"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing by the estimate instead of the actual value. In the first example, $\\frac{8}{72} \\approx 11.1\\%$ is wrong. The actual value is the standard we compare against, so it is always the denominator."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.2 Solve General Applications of Percent"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.RP.A.3"
+   }
+  ]
+ },
+ "g7.scale-drawings": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Maps, floor plans and models show real things at a different size. A <b>scale</b> such as \"1 cm represents 5 m\" tells how lengths on the drawing match real lengths. Every scale problem is a <a href=\"/math/grade-7/solve-proportions/\">proportion</a>."
+   },
+   {
+    "t": "key",
+    "html": "Real length $=$ drawing length $\\times$ the scale, and drawing length $=$ real length $\\div$ the scale. Areas do not scale the same way: if lengths are multiplied by $k$, areas are multiplied by $k^2$."
+   },
+   {
+    "t": "why",
+    "html": "A rectangle has two lengths, and both of them grow. If each side becomes $k$ times as long, the area becomes $k \\times k = k^2$ times as big. On a grid you can see it: a copy at scale 2 holds $2 \\times 2 = 4$ copies of the original, and at scale 3 it holds 9."
+   },
+   {
+    "t": "viz",
+    "name": "g7-scalegrid",
+    "opts": {
+     "w": 3,
+     "h": 2,
+     "k": 2
+    },
+    "cap": "Change the scale factor. The sides grow by the factor, but the area grows by the factor squared."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Drawing to real life",
+    "q": "A park map uses the scale 1 cm represents 5 m. A path on the map is 4.5 cm long. How long is the real path?",
+    "steps": [
+     "Each centimeter on the map is 5 m.",
+     "$4.5 \\times 5 = 22.5$."
+    ],
+    "a": "22.5 m"
+   },
+   {
+    "t": "ex",
+    "title": "Real life to drawing",
+    "q": "An architect uses 1 cm represents 4 m. How long should an 18 m wall be on the plan?",
+    "steps": [
+     "Count the groups of 4 m: $18 \\div 4 = 4.5$.",
+     "The wall is 4.5 cm long on the plan."
+    ],
+    "a": "4.5 cm"
+   },
+   {
+    "t": "ex",
+    "title": "Area",
+    "q": "On a floor plan with scale 1 cm represents 2 m, a room is 3 cm by 4 cm. What is its real area?",
+    "steps": [
+     "Real lengths: $3 \\times 2 = 6$ m and $4 \\times 2 = 8$ m.",
+     "Real area: $6 \\times 8 = 48$ square meters.",
+     "Compare: the plan's area is $12$ square cm, and $12 \\times 2^2 = 48$ ✓."
+    ],
+    "a": "48 square meters"
+   },
+   {
+    "t": "mistake",
+    "html": "Multiplying an area by the scale instead of the scale squared. In the last example, $12 \\times 2 = 24$ is wrong. Safest habit: change each length to real size first, then find the area."
+   },
+   {
+    "t": "note",
+    "html": "A scale with no units, like $1 : 50$, means real lengths are 50 times the drawing lengths, in the same units: 1 cm on the drawing is 50 cm in real life."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.5 Solve Proportions and their Applications"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.A.1"
+   }
+  ]
+ },
+ "g7.opposites-make-zero": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 6 you met <a href=\"/math/grade-6/opposites/\">opposites</a>: $3$ and $-3$ are the same distance from $0$, on opposite sides. This lesson is about what happens when you add them. It is the key to adding any signed numbers."
+   },
+   {
+    "t": "key",
+    "html": "A number plus its opposite is zero: $a + (-a) = 0$. A $+1$ and a $-1$ together make a <b>zero pair</b>."
+   },
+   {
+    "t": "why",
+    "html": "Adding a positive number moves you right on the number line; adding a negative number moves you left. Start at $0$, move 5 right, then 5 left: you are back at $0$. With money it is the same: earn \\$5, spend \\$5, and you have the same amount as before."
+   },
+   {
+    "t": "viz",
+    "name": "integerline",
+    "opts": {
+     "a": 5,
+     "b": -5,
+     "op": "+"
+    },
+    "cap": "$5 + (-5)$: five steps right, then five steps left, back to $0$."
+   },
+   {
+    "t": "viz",
+    "name": "counters",
+    "opts": {
+     "mode": "zero",
+     "pos": 5,
+     "neg": 3,
+     "task": {
+      "target": -2,
+      "counters": 8
+     }
+    },
+    "cap": "Yellow counters are $+1$ and red counters are $-1$. Use 8 counters in all to show $-2$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A number and its opposite",
+    "q": "Find $-8 + 8$.",
+    "steps": [
+     "$-8$ and $8$ are opposites.",
+     "Opposites add to $0$."
+    ],
+    "a": "$0$"
+   },
+   {
+    "t": "ex",
+    "title": "Spotting a zero pair",
+    "q": "Find $6 + (-9) + (-6)$.",
+    "steps": [
+     "$6$ and $-6$ are opposites, so together they make $0$.",
+     "What is left is $-9$."
+    ],
+    "a": "$-9$"
+   },
+   {
+    "t": "ex",
+    "title": "Counters",
+    "q": "A bag holds 7 positive counters and 4 negative counters. What number does it show?",
+    "steps": [
+     "Match each negative counter with a positive one: 4 zero pairs, worth $0$.",
+     "3 positive counters are left over, so the bag shows $3$."
+    ],
+    "a": "$3$"
+   },
+   {
+    "t": "note",
+    "html": "This is why the number of counters can change while the value stays the same: adding a zero pair (one $+1$ and one $-1$) adds nothing."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 3.2 Add Integers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.1a"
+   }
+  ]
+ },
+ "g7.add-integers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Since <a href=\"/math/grade-7/opposites-make-zero/\">opposites make zero</a>, you can add any two signed numbers. Think of each number as a move on the number line: positive moves right, negative moves left."
+   },
+   {
+    "t": "key",
+    "html": "<b>Same signs:</b> add the absolute values and keep the sign. <b>Different signs:</b> subtract the smaller absolute value from the larger, and give the answer the sign of the number farther from $0$."
+   },
+   {
+    "t": "why",
+    "html": "With different signs the moves go opposite ways, so part of one cancels part of the other. In $-7 + 3$, three of the seven steps left are undone by the three steps right (three zero pairs). The 4 steps left that remain give $-4$. That is why you subtract: the cancelled part disappears."
+   },
+   {
+    "t": "viz",
+    "name": "integerline",
+    "opts": {
+     "a": -7,
+     "b": 3,
+     "op": "+",
+     "guess": true
+    },
+    "cap": "$-7 + 3$: drag the gold marker to where you think you land, then show the move."
+   },
+   {
+    "t": "viz",
+    "name": "counters",
+    "opts": {
+     "mode": "zero",
+     "pos": 3,
+     "neg": 7
+    },
+    "cap": "3 positive and 7 negative counters: 3 zero pairs cancel, and 4 negative counters are left, so the value is $-4$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Different signs",
+    "q": "Find $-7 + 3$.",
+    "steps": [
+     "The signs are different. Subtract the absolute values: $7 - 3 = 4$.",
+     "$-7$ is farther from $0$, so the answer is negative."
+    ],
+    "a": "$-4$"
+   },
+   {
+    "t": "ex",
+    "title": "Both negative",
+    "q": "Find $-5 + (-8)$.",
+    "steps": [
+     "Both moves go left. Add the absolute values: $5 + 8 = 13$.",
+     "Keep the negative sign."
+    ],
+    "a": "$-13$"
+   },
+   {
+    "t": "ex",
+    "title": "The positive one is smaller",
+    "q": "Find $9 + (-14)$.",
+    "steps": [
+     "Different signs: $14 - 9 = 5$.",
+     "$-14$ is farther from $0$, so the sum is negative."
+    ],
+    "a": "$-5$"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the absolute values when the signs are different, so that $-7 + 3$ comes out as $-10$. Picture the move: from $-7$, adding $3$ moves <b>right</b>, toward $0$, so the answer must be bigger than $-7$. Check your answer's size against a quick sketch."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 3.2 Add Integers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.1b"
+   }
+  ]
+ },
+ "g7.subtract-integers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-7/add-integers/\">add any signed numbers</a>. Subtracting turns out to be adding in disguise."
+   },
+   {
+    "t": "key",
+    "html": "Subtracting a number is the same as adding its opposite: $$a - b = a + (-b)$$ So $3 - (-5) = 3 + 5 = 8$, and $-4 - 6 = -4 + (-6) = -10$."
+   },
+   {
+    "t": "why",
+    "html": "Subtraction asks \"how far from $b$ to $a$?\" or \"what do I add to $b$ to get $a$?\" For $3 - (-5)$: from $-5$ to $3$ is 8 steps right, so the answer is $8$. With counters: to take 5 negative counters away from 3 positive ones, first add 5 zero pairs (that changes nothing), then remove the 5 negatives. Eight positives are left. Taking away a negative leaves you with more."
+   },
+   {
+    "t": "viz",
+    "name": "integerline",
+    "opts": {
+     "a": 3,
+     "b": -5,
+     "op": "-"
+    },
+    "cap": "$3 - (-5)$ is the same move as $3 + 5$: it goes right, the opposite way from adding $-5$."
+   },
+   {
+    "t": "viz",
+    "name": "counters",
+    "opts": {
+     "mode": "zero",
+     "pos": 3,
+     "neg": 0
+    },
+    "cap": "Try \"Take away −1\" five times. Each time, the counters ask for a zero pair first. You end with 8 positive counters."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Subtracting a negative",
+    "q": "Find $3 - (-5)$.",
+    "steps": [
+     "Add the opposite: $3 + 5$.",
+     "$3 + 5 = 8$."
+    ],
+    "a": "$8$"
+   },
+   {
+    "t": "ex",
+    "title": "Subtracting a positive",
+    "q": "Find $-4 - 6$.",
+    "steps": [
+     "Add the opposite: $-4 + (-6)$.",
+     "Both negative: $-(4 + 6) = -10$."
+    ],
+    "a": "$-10$"
+   },
+   {
+    "t": "ex",
+    "title": "A temperature difference",
+    "q": "The high was $-2^\\circ$F and the low was $-9^\\circ$F. How much warmer was the high?",
+    "steps": [
+     "Difference = high $-$ low: $-2 - (-9)$.",
+     "Add the opposite: $-2 + 9 = 7$.",
+     "Check on a thermometer: from $-9$ up to $-2$ is 7 degrees ✓."
+    ],
+    "a": "7 degrees"
+   },
+   {
+    "t": "mistake",
+    "html": "Treating \"minus a negative\" like \"minus a positive,\" so that $3 - (-5)$ becomes $-2$. Remember the two changes: the minus sign becomes plus, and $-5$ becomes $5$. Check: subtraction undoes addition, so $8 + (-5)$ should give back $3$ ✓."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 3.3 Subtract Integers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.1c"
+   }
+  ]
+ },
+ "g7.number-line-distance": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/grade-6/absolute-value/\">absolute value</a> of a number is its distance from $0$. With <a href=\"/math/grade-7/subtract-integers/\">subtraction</a> you can find the distance between any two numbers."
+   },
+   {
+    "t": "key",
+    "html": "The distance between $a$ and $b$ on a number line is $|a - b|$. Subtracting in either order works, because $|a - b| = |b - a|$."
+   },
+   {
+    "t": "why",
+    "html": "$a - b$ tells how far you move to get from $b$ to $a$, and its sign tells the direction. A distance has no direction, so we drop the sign with the absolute value. When the numbers are on opposite sides of $0$, you can also add their distances from $0$."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": -6,
+     "max": 9,
+     "step": 1,
+     "labels": "whole",
+     "points": [
+      {
+       "v": -4,
+       "label": "A",
+       "color": "red"
+      },
+      {
+       "v": 7,
+       "label": "B",
+       "color": "blue"
+      }
+     ],
+     "hops": [
+      {
+       "from": -4,
+       "by": 11,
+       "n": 1
+      }
+     ],
+     "value": false
+    },
+    "cap": "From $A = -4$ to $B = 7$ is one jump of 11: $|7 - (-4)| = 11$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Opposite sides of zero",
+    "q": "How far apart are $-4$ and $7$?",
+    "steps": [
+     "$|-4 - 7| = |-11| = 11$.",
+     "Check: $-4$ is 4 from $0$ and $7$ is 7 from $0$, and $4 + 7 = 11$ ✓."
+    ],
+    "a": "11"
+   },
+   {
+    "t": "ex",
+    "title": "Both negative",
+    "q": "How far apart are $-12$ and $-3$?",
+    "steps": [
+     "$|-12 - (-3)| = |-12 + 3| = |-9| = 9$.",
+     "Both are on the same side of $0$, so do not add their distances from $0$: $12 - 3 = 9$ ✓."
+    ],
+    "a": "9"
+   },
+   {
+    "t": "ex",
+    "title": "Above and below sea level",
+    "q": "A bird flies at 15 m above sea level and a fish swims at 6.5 m below ($-6.5$ m). How far apart are they?",
+    "steps": [
+     "$|15 - (-6.5)| = |15 + 6.5| = 21.5$."
+    ],
+    "a": "21.5 m"
+   },
+   {
+    "t": "mistake",
+    "html": "Getting a negative distance, like $-4 - 7 = -11$, and stopping there. Distances are never negative: take the absolute value. Another slip is adding the distances from $0$ when both numbers are on the same side."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 3.3 Subtract Integers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.1c"
+   }
+  ]
+ },
+ "g7.add-subtract-rationals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The rules for <a href=\"/math/grade-7/add-integers/\">adding</a> and <a href=\"/math/grade-7/subtract-integers/\">subtracting</a> integers work for every rational number: negative fractions, negative decimals and negative mixed numbers. You also need what you know about <a href=\"/math/grade-5/unlike-mixed-numbers/\">unlike denominators</a>."
+   },
+   {
+    "t": "key",
+    "html": "Change subtraction into adding the opposite. Then use the sign rules. For fractions, use a common denominator; for decimals, line up the decimal points."
+   },
+   {
+    "t": "why",
+    "html": "The sign rules come from moves on the number line. A move does not have to be a whole number of steps. Moving $\\frac{3}{4}$ to the left and then $\\frac{1}{6}$ to the right partly cancels, the same as with integers."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": -2,
+     "max": 1,
+     "step": 1,
+     "sub": 4,
+     "labels": "frac",
+     "points": [
+      {
+       "v": "-3/4",
+       "label": "start",
+       "color": "red"
+      }
+     ],
+     "hops": [
+      {
+       "from": "-3/4",
+       "by": "-5/4",
+       "n": 1
+      }
+     ],
+     "value": false
+    },
+    "cap": "$-\\frac{3}{4} + \\left(-\\frac{5}{4}\\right)$: a move of $\\frac{5}{4}$ to the left lands on $-2$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Fractions with different signs",
+    "q": "Find $-\\frac{3}{4} + \\frac{1}{6}$.",
+    "steps": [
+     "Common denominator 12: $-\\frac{9}{12} + \\frac{2}{12}$.",
+     "Different signs: $9 - 2 = 7$, and the negative part is bigger.",
+     "The sum is $-\\frac{7}{12}$."
+    ],
+    "a": "$-\\frac{7}{12}$"
+   },
+   {
+    "t": "ex",
+    "title": "Decimals",
+    "q": "Find $-2.5 - 1.75$.",
+    "steps": [
+     "Add the opposite: $-2.5 + (-1.75)$.",
+     "Both negative: $2.5 + 1.75 = 4.25$, so the answer is $-4.25$."
+    ],
+    "a": "$-4.25$"
+   },
+   {
+    "t": "ex",
+    "title": "Mixed numbers",
+    "q": "Find $-1\\frac{1}{2} - \\left(-3\\frac{1}{4}\\right)$.",
+    "steps": [
+     "Add the opposite: $-1\\frac{1}{2} + 3\\frac{1}{4}$.",
+     "As fractions: $-\\frac{6}{4} + \\frac{13}{4} = \\frac{7}{4}$.",
+     "$\\frac{7}{4} = 1\\frac{3}{4}$. Check the sign: $3\\frac{1}{4}$ is farther from $0$, so the answer is positive ✓."
+    ],
+    "a": "$1\\frac{3}{4}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Two slips: forgetting to change \"minus a negative\" into \"plus a positive,\" and adding denominators ($\\frac{1}{2} + \\frac{1}{4} \\ne \\frac{2}{6}$). Check with an estimate: $-\\frac{3}{4} + \\frac{1}{6}$ should be a little more than $-\\frac{3}{4}$, and $-\\frac{7}{12}$ is ✓."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 4.5 Add and Subtract Fractions with Different Denominators"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.2 Decimal Operations"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.1d"
+   }
+  ]
+ },
+ "g7.multiply-integers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Multiplying by a whole number is repeated <a href=\"/math/grade-7/add-integers/\">adding</a>: $3 \\times (-4)$ means three groups of $-4$, so $(-4) + (-4) + (-4) = -12$. But what could $(-3) \\times (-4)$ mean? Nobody can make \"negative three groups.\" A pattern answers the question."
+   },
+   {
+    "t": "key",
+    "html": "Multiply the absolute values. The product is <b>positive</b> when the signs are the same and <b>negative</b> when they are different. With more factors, an even number of negative signs gives a positive product; an odd number gives a negative one."
+   },
+   {
+    "t": "why",
+    "html": "Look at the pattern: $3 \\times (-4) = -12$, $2 \\times (-4) = -8$, $1 \\times (-4) = -4$, $0 \\times (-4) = 0$. Each time the first factor goes down by 1, we take away one group of $-4$, and the product goes <b>up</b> by 4. Keep the pattern going: $(-1) \\times (-4) = 4$ and $(-2) \\times (-4) = 8$.<br>The distributive property says the same thing: $$0 = (-1) \\times (4 + (-4)) = (-1)(4) + (-1)(-4) = -4 + (-1)(-4)$$ The only number that makes this true is $(-1)(-4) = 4$."
+   },
+   {
+    "t": "viz",
+    "name": "g7-signpattern",
+    "opts": {
+     "b": -4,
+     "rows": 4
+    },
+    "cap": "Press \"Next row\" to keep the pattern going past 0. Each row adds 4, so the products turn positive."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Different signs",
+    "q": "Find $(-6) \\times 7$.",
+    "steps": [
+     "Absolute values: $6 \\times 7 = 42$.",
+     "The signs are different, so the product is negative."
+    ],
+    "a": "$-42$"
+   },
+   {
+    "t": "ex",
+    "title": "Same signs",
+    "q": "Find $(-6) \\times (-7)$.",
+    "steps": [
+     "Absolute values: $6 \\times 7 = 42$.",
+     "Both factors are negative, so the product is positive."
+    ],
+    "a": "$42$"
+   },
+   {
+    "t": "ex",
+    "title": "Three factors",
+    "q": "Find $(-2) \\times (-3) \\times (-5)$.",
+    "steps": [
+     "Absolute values: $2 \\times 3 \\times 5 = 30$.",
+     "Three negative signs: the first two make a positive, and the third makes it negative again."
+    ],
+    "a": "$-30$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the multiplying rule when adding: \"two negatives make a positive,\" so $-3 + (-4) = 7$. Not so: adding two negatives is two moves to the left, $-3 + (-4) = -7$. The rule \"same signs give a positive\" is only for multiplying and dividing. Before you answer, name the operation."
+   },
+   {
+    "t": "note",
+    "html": "A story where a negative times a negative happens: the temperature falls 2 degrees every hour, a rate of $-2$. Three hours ago is time $-3$. The change from now to then is $(-3) \\times (-2) = 6$: it was 6 degrees warmer."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 3.4 Multiply and Divide Integers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.2a"
+   }
+  ]
+ },
+ "g7.divide-integers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Division undoes multiplication, so the sign rules you learned for <a href=\"/math/grade-7/multiply-integers/\">multiplying integers</a> carry straight over."
+   },
+   {
+    "t": "key",
+    "html": "Divide the absolute values. Same signs give a positive quotient; different signs give a negative one. Also, $-\\frac{a}{b} = \\frac{-a}{b} = \\frac{a}{-b}$."
+   },
+   {
+    "t": "why",
+    "html": "$-24 \\div 6$ asks: what times 6 is $-24$? Since $(-4) \\times 6 = -24$, the answer is $-4$. And $-24 \\div (-6)$ asks: what times $-6$ is $-24$? Since $4 \\times (-6) = -24$, the answer is $4$. Every division fact comes from a multiplication fact, so it follows the same sign rules."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": -14,
+     "max": 2,
+     "step": 2,
+     "labels": "whole",
+     "points": [
+      {
+       "v": -12,
+       "label": "−12",
+       "color": "red"
+      }
+     ],
+     "hops": [
+      {
+       "from": 0,
+       "by": -4,
+       "n": 3
+      }
+     ],
+     "value": false
+    },
+    "cap": "$-12 \\div 3$: split a move of 12 to the left into 3 equal moves. Each one is $-4$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Multiplication fact",
+     "Division facts it gives"
+    ],
+    "rows": [
+     [
+      "$(-4) \\times 6 = -24$",
+      "$-24 \\div 6 = -4$ and $-24 \\div (-4) = 6$"
+     ],
+     [
+      "$4 \\times (-6) = -24$",
+      "$-24 \\div (-6) = 4$ and $-24 \\div 4 = -6$"
+     ],
+     [
+      "$(-4) \\times (-6) = 24$",
+      "$24 \\div (-6) = -4$ and $24 \\div (-4) = -6$"
+     ]
+    ],
+    "cap": "One family of facts, three ways."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Different signs",
+    "q": "Find $-36 \\div 9$.",
+    "steps": [
+     "$36 \\div 9 = 4$.",
+     "Different signs: negative. Check: $(-4) \\times 9 = -36$ ✓."
+    ],
+    "a": "$-4$"
+   },
+   {
+    "t": "ex",
+    "title": "Same signs",
+    "q": "Find $\\frac{-56}{-8}$.",
+    "steps": [
+     "$56 \\div 8 = 7$.",
+     "Same signs: positive. Check: $7 \\times (-8) = -56$ ✓."
+    ],
+    "a": "$7$"
+   },
+   {
+    "t": "ex",
+    "title": "A steady drop",
+    "q": "A stock lost \\$18 in 6 days, the same amount each day. What was the change each day?",
+    "steps": [
+     "The total change is $-18$ dollars, split into 6 equal parts.",
+     "$-18 \\div 6 = -3$: down \\$3 a day."
+    ],
+    "a": "$-3$ dollars per day"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking that a negative divided by a negative is negative, so $-56 \\div (-8) = -7$. Check with multiplication: $-7 \\times (-8) = 56$, not $-56$. Every division can be checked this way."
+   },
+   {
+    "t": "note",
+    "html": "$\\frac{-3}{4}$, $\\frac{3}{-4}$ and $-\\frac{3}{4}$ are the same number: one negative sign anywhere makes the quotient negative. But $\\frac{-3}{-4} = \\frac{3}{4}$ is positive. And dividing by $0$ is never allowed: no number times $0$ gives $-24$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 3.4 Multiply and Divide Integers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.2b"
+   }
+  ]
+ },
+ "g7.multiply-divide-rationals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Fractions and decimals can be negative too. To multiply or divide them, combine the sign rules from <a href=\"/math/grade-7/divide-integers/\">integers</a> with what you know about <a href=\"/math/grade-6/divide-fractions/\">dividing fractions</a>."
+   },
+   {
+    "t": "key",
+    "html": "Decide the sign first (same signs: positive; different signs: negative). Then multiply or divide the absolute values the usual way."
+   },
+   {
+    "t": "why",
+    "html": "Rational numbers follow the same properties as integers, including the distributive property that forced $(-1)(-1) = 1$. Any negative number is $-1$ times a positive number, so $$\\left(-\\frac{2}{3}\\right)\\left(-\\frac{3}{4}\\right) = (-1)(-1) \\times \\frac{2}{3} \\times \\frac{3}{4} = 1 \\times \\frac{6}{12} = \\frac{1}{2}$$ The two factors of $-1$ make $1$, which is why two negatives give a positive product here too."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": -3,
+     "max": 1,
+     "step": 1,
+     "sub": 4,
+     "labels": "frac",
+     "points": [
+      {
+       "v": "-9/4",
+       "label": "3 × (−3/4)",
+       "color": "red"
+      }
+     ],
+     "hops": [
+      {
+       "from": 0,
+       "by": "-3/4",
+       "n": 3
+      }
+     ],
+     "value": false
+    },
+    "cap": "$3 \\times \\left(-\\frac{3}{4}\\right)$ is three jumps of $\\frac{3}{4}$ to the left: it lands on $-\\frac{9}{4} = -2\\frac{1}{4}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Fractions",
+    "q": "Find $-\\frac{3}{4} \\times \\frac{2}{5}$.",
+    "steps": [
+     "Different signs: the product is negative.",
+     "$\\frac{3}{4} \\times \\frac{2}{5} = \\frac{6}{20} = \\frac{3}{10}$."
+    ],
+    "a": "$-\\frac{3}{10}$"
+   },
+   {
+    "t": "ex",
+    "title": "Decimals",
+    "q": "Find $(-1.5) \\times (-0.4)$.",
+    "steps": [
+     "Same signs: positive.",
+     "$1.5 \\times 0.4 = 0.6$."
+    ],
+    "a": "$0.6$"
+   },
+   {
+    "t": "ex",
+    "title": "Dividing fractions",
+    "q": "Find $-\\frac{5}{6} \\div \\left(-\\frac{10}{3}\\right)$.",
+    "steps": [
+     "Same signs: positive.",
+     "Multiply by the reciprocal: $\\frac{5}{6} \\times \\frac{3}{10} = \\frac{15}{60} = \\frac{1}{4}$."
+    ],
+    "a": "$\\frac{1}{4}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Taking the reciprocal of the wrong number (the first one instead of the divisor), or losing the sign along the way. Settle the sign first and write it down, then work with positive numbers. Check the last example by multiplying back: $$\\frac{1}{4} \\times \\left(-\\frac{10}{3}\\right) = -\\frac{10}{12} = -\\frac{5}{6} \\checkmark$$"
+   },
+   {
+    "t": "note",
+    "html": "With mixed numbers, write them as fractions first: $$-2\\frac{1}{2} \\times 1\\frac{1}{5} = -\\frac{5}{2} \\times \\frac{6}{5} = -\\frac{30}{10} = -3$$ With decimals, a quick estimate places the decimal point: $(-1.5)(-0.4)$ is a bit more than $1 \\times 0.4$, so $0.6$ makes sense."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 4.2 Multiply and Divide Fractions"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.2 Decimal Operations"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.2c"
+   }
+  ]
+ },
+ "g7.fractions-to-decimals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/grade-5/fraction-as-division/\">A fraction is a division</a>: $\\frac{3}{8}$ means $3 \\div 8$. With <a href=\"/math/grade-6/long-division-fluency/\">long division</a> you can turn any fraction into a decimal. Sometimes the division stops; sometimes it goes on forever, in a pattern."
+   },
+   {
+    "t": "key",
+    "html": "Divide the numerator by the denominator. The decimal either <b>terminates</b> (the remainder reaches 0) or <b>repeats</b> (a block of digits repeats forever). A bar marks the repeating block: $\\frac{2}{3} = 0.\\overline{6}$ and $\\frac{1}{6} = 0.1\\overline{6}$."
+   },
+   {
+    "t": "why",
+    "html": "When you divide by 6, every remainder is one of $0, 1, 2, 3, 4, 5$. If a remainder is 0, the division ends. If not, a remainder must come back within a few steps, and from then on the division does exactly the same thing again, so the digits repeat. A fraction in lowest terms terminates exactly when its denominator has no prime factors except 2 and 5, the factors of 10."
+   },
+   {
+    "t": "viz",
+    "name": "g7-longdiv",
+    "opts": {
+     "n": 1,
+     "d": 6
+    },
+    "cap": "Press \"Next digit\" and watch the remainders. When one comes back, the digits repeat. Try other fractions too."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A terminating decimal",
+    "q": "Write $\\frac{3}{8}$ as a decimal.",
+    "steps": [
+     "$3 \\div 8$: $30 \\div 8 = 3$ remainder 6; $60 \\div 8 = 7$ remainder 4; $40 \\div 8 = 5$ remainder 0.",
+     "The remainder is 0, so it stops: $0.375$."
+    ],
+    "a": "$0.375$"
+   },
+   {
+    "t": "ex",
+    "title": "A repeating decimal",
+    "q": "Write $\\frac{2}{3}$ as a decimal.",
+    "steps": [
+     "$20 \\div 3 = 6$ remainder 2. Then $20 \\div 3 = 6$ remainder 2 again.",
+     "The remainder 2 keeps coming back, so the 6 repeats forever: $0.666\\ldots = 0.\\overline{6}$."
+    ],
+    "a": "$0.\\overline{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "The bar on part of it",
+    "q": "Write $\\frac{5}{11}$ as a decimal.",
+    "steps": [
+     "$50 \\div 11 = 4$ remainder 6; $60 \\div 11 = 5$ remainder 5.",
+     "Remainder 5 is where we started (5 ÷ 11), so \"45\" repeats: $0.4545\\ldots = 0.\\overline{45}$."
+    ],
+    "a": "$0.\\overline{45}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Stopping too early and writing $\\frac{2}{3} = 0.6$. That is only $\\frac{6}{10} = \\frac{3}{5}$. Even $0.67$ is a rounded value, not equal to $\\frac{2}{3}$. Keep dividing until the remainder is 0 or a remainder repeats."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Fraction",
+     "Decimal"
+    ],
+    "rows": [
+     [
+      "$\\frac{1}{3}$",
+      "$0.\\overline{3}$"
+     ],
+     [
+      "$\\frac{1}{6}$",
+      "$0.1\\overline{6}$"
+     ],
+     [
+      "$\\frac{1}{9}$",
+      "$0.\\overline{1}$"
+     ],
+     [
+      "$\\frac{1}{11}$",
+      "$0.\\overline{09}$"
+     ],
+     [
+      "$\\frac{1}{7}$",
+      "$0.\\overline{142857}$"
+     ]
+    ],
+    "cap": "Some repeating decimals worth knowing."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.3 Decimals and Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.2d"
+   }
+  ]
+ },
+ "g7.integer-operations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now you can <a href=\"/math/grade-7/add-subtract-rationals/\">add and subtract</a> and <a href=\"/math/grade-7/multiply-divide-rationals/\">multiply and divide</a> signed numbers. Real problems mix all four, so two old ideas come back: the <a href=\"/math/grade-6/order-of-operations-exponents/\">order of operations</a>, and choosing the right sign rule for each step."
+   },
+   {
+    "t": "key",
+    "html": "Work in order: parentheses, exponents, multiply and divide (left to right), add and subtract (left to right). At each step, use the sign rule for <b>that</b> operation."
+   },
+   {
+    "t": "why",
+    "html": "Each operation keeps its own meaning. In $-2 - 3$, the 3 is subtracted: a move of 3 to the left, ending at $-5$. In $(-2)(-3)$, two negatives are multiplied, and the product is $6$. Mixing them up changes the problem. Doing one step at a time keeps each meaning clear."
+   },
+   {
+    "t": "viz",
+    "name": "integerline",
+    "opts": {
+     "a": -2,
+     "b": 3,
+     "op": "-"
+    },
+    "cap": "$-2 - 3$ is a subtraction: from $-2$, move 3 to the left. It lands on $-5$, not on a positive number."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Multiply first",
+    "q": "Find $-2 - 3 \\times (-4)$.",
+    "steps": [
+     "Multiply first: $3 \\times (-4) = -12$.",
+     "Now subtract: $-2 - (-12) = -2 + 12 = 10$."
+    ],
+    "a": "$10$"
+   },
+   {
+    "t": "ex",
+    "title": "Parentheses first",
+    "q": "Find $\\frac{-6 + 2}{-2}$.",
+    "steps": [
+     "The fraction bar groups the top: $-6 + 2 = -4$.",
+     "Divide: $-4 \\div (-2) = 2$."
+    ],
+    "a": "$2$"
+   },
+   {
+    "t": "ex",
+    "title": "A diver",
+    "q": "A diver is at $-12$ m. She swims down 3 m per minute for 4 minutes, then up 5 m. Where does she end?",
+    "steps": [
+     "Write one expression: $-12 + 4 \\times (-3) + 5$.",
+     "Multiply: $4 \\times (-3) = -12$.",
+     "Add left to right: $-12 + (-12) = -24$, then $-24 + 5 = -19$. Estimate: she went down more than up, so she should end deeper than $-12$ ✓."
+    ],
+    "a": "$-19$ m"
+   },
+   {
+    "t": "mistake",
+    "html": "Using a multiplying rule in an adding step, such as reading $-2 - 3$ as \"two negatives make a positive.\" Name each operation before you use a rule: adding and subtracting are moves; multiplying and dividing use the sign rules for products."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 3.4 Multiply and Divide Integers"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 7.1 Rational and Irrational Numbers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.NS.A.3"
+   }
+  ]
+ },
+ "g7.combine-like-terms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 6 you saw that <a href=\"/math/grade-6/identify-equivalent-expressions/\">expressions can look different and still be equal</a>, like $y + y + y$ and $3y$. Combining like terms is the everyday way to make an expression shorter without changing its value. The coefficients can be negative, fractions or decimals, so you will use <a href=\"/math/grade-7/add-subtract-rationals/\">signed-number addition</a> too."
+   },
+   {
+    "t": "key",
+    "html": "Like terms have exactly the same variable part, such as $3x$ and $-5x$, or $4$ and $-7$. Combine like terms by adding their coefficients: $3x + 5x = 8x$. Unlike terms, such as $3x$ and $2$, stay separate."
+   },
+   {
+    "t": "why",
+    "html": "$3x + 5x$ is 3 groups of $x$ and 5 more groups of $x$: 8 groups in all. That is the distributive property, $3x + 5x = (3 + 5)x$. But $3x + 2$ is 3 groups of $x$ and 2 ones. Groups of $x$ and ones are different things, like cups and spoons, so they cannot be counted together."
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": "x",
+     "b": [
+      3,
+      5
+     ],
+     "x": 4
+    },
+    "cap": "$3x$ and $5x$ side by side make one rectangle that is $x$ tall and $3 + 5 = 8$ wide: $8x$. Move the slider to change $x$; it is $8x$ for every value."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two kinds of terms",
+    "q": "Simplify $3x + 5 - 7x + 2$.",
+    "steps": [
+     "Group the $x$-terms and the constants: $(3x - 7x) + (5 + 2)$.",
+     "$3 + (-7) = -4$, so the $x$-terms make $-4x$. The constants make $7$."
+    ],
+    "a": "$-4x + 7$"
+   },
+   {
+    "t": "ex",
+    "title": "Two variables",
+    "q": "Simplify $4a - 6b + a + 2b - 3$.",
+    "steps": [
+     "$a$-terms: $4a + a = 5a$ (remember $a$ means $1a$).",
+     "$b$-terms: $-6b + 2b = -4b$. Constant: $-3$."
+    ],
+    "a": "$5a - 4b - 3$"
+   },
+   {
+    "t": "ex",
+    "title": "Fraction coefficients",
+    "q": "Simplify $\\frac{1}{2}y + \\frac{3}{4} - \\frac{1}{4}y + 1$.",
+    "steps": [
+     "$y$-terms: $\\frac{1}{2} - \\frac{1}{4} = \\frac{2}{4} - \\frac{1}{4} = \\frac{1}{4}$, so $\\frac{1}{4}y$.",
+     "Constants: $\\frac{3}{4} + 1 = \\frac{7}{4}$."
+    ],
+    "a": "$\\frac{1}{4}y + \\frac{7}{4}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Two classic slips: $3x + 2 = 5x$ (adding unlike terms), and $x + x = x^2$ (adding is not multiplying: $x + x = 2x$, while $x \\cdot x = x^2$). Test with a number: if $x = 10$, then $3x + 2 = 32$ but $5x = 50$, so they are not equal."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 2.2 Evaluate, Simplify, and Translate Expressions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.A.1"
+   }
+  ]
+ },
+ "g7.expand-factor-linear": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 6 you used the <a href=\"/math/grade-6/equivalent-expressions/\">distributive property</a>: $3(x + 2) = 3x + 6$. Now the numbers can be negative or fractions, and you will also run it backward to factor."
+   },
+   {
+    "t": "key",
+    "html": "<b>Expand:</b> multiply the number outside by <b>every</b> term inside: $a(b + c) = ab + ac$. <b>Factor:</b> go the other way and pull out a common factor: $12x - 18 = 6(2x - 3)$. Check a factoring by expanding it again."
+   },
+   {
+    "t": "why",
+    "html": "A rectangle that is 3 wide and $x + 4$ long can be cut into two pieces, $3 \\times x$ and $3 \\times 4$. Its area is $3(x + 4)$ and also $3x + 12$. A minus sign in front of parentheses means $-1$ times the group, so $-(x - 4) = (-1)(x) + (-1)(-4) = -x + 4$: every sign inside flips."
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": 3,
+     "b": "x+4",
+     "x": 5
+    },
+    "cap": "$3(x + 4)$ split into $3x$ and $12$. Both pieces are multiplied by 3, not only the first."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Expanding with a negative",
+    "q": "Expand $-3(2x - 5)$.",
+    "steps": [
+     "$-3 \\times 2x = -6x$.",
+     "$-3 \\times (-5) = 15$.",
+     "Together: $-6x + 15$."
+    ],
+    "a": "$-6x + 15$"
+   },
+   {
+    "t": "ex",
+    "title": "Factoring",
+    "q": "Factor $12x - 18$ using the greatest common factor.",
+    "steps": [
+     "The greatest common factor of 12 and 18 is 6.",
+     "$12x \\div 6 = 2x$ and $-18 \\div 6 = -3$, so $12x - 18 = 6(2x - 3)$.",
+     "Check: $6(2x - 3) = 12x - 18$ ✓."
+    ],
+    "a": "$6(2x - 3)$"
+   },
+   {
+    "t": "ex",
+    "title": "Factoring out a negative",
+    "q": "Fill in the box: $-8x + 6 = -2(\\square)$.",
+    "steps": [
+     "Divide each term by $-2$: $-8x \\div (-2) = 4x$ and $6 \\div (-2) = -3$.",
+     "So $-8x + 6 = -2(4x - 3)$. Check: $-2 \\times 4x = -8x$ and $-2 \\times (-3) = 6$ ✓."
+    ],
+    "a": "$4x - 3$"
+   },
+   {
+    "t": "mistake",
+    "html": "Distributing to the first term only: $-(x - 4) = -x - 4$. The $-1$ multiplies both terms, so the answer is $-x + 4$. Check with $x = 10$: $-(10 - 4) = -6$, and $-10 + 4 = -6$ ✓, but $-10 - 4 = -14$ ✗."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 7.3 Distributive Property"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.A.1"
+   }
+  ]
+ },
+ "g7.add-subtract-expressions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Adding and subtracting whole expressions uses two things you know: <a href=\"/math/grade-7/expand-factor-linear/\">distributing a negative</a> and <a href=\"/math/grade-7/combine-like-terms/\">combining like terms</a>."
+   },
+   {
+    "t": "key",
+    "html": "To add expressions, drop the parentheses and combine like terms. To subtract an expression, subtract <b>every</b> term in it: $-(cx + d) = -cx - d$. Then combine like terms."
+   },
+   {
+    "t": "why",
+    "html": "Subtracting means adding the opposite, as with <a href=\"/math/grade-7/subtract-integers/\">numbers</a>. The opposite of a whole group is the opposite of each part: $-(x - 2)$ is $-1 \\times (x - 2) = -x + 2$. If you took away only the $x$, you would have taken away less than the whole group."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Step",
+     "$(3x + 5) - (x - 2)$"
+    ],
+    "rows": [
+     [
+      "Write the subtraction as adding the opposite",
+      "$(3x + 5) + (-x + 2)$"
+     ],
+     [
+      "Drop the parentheses",
+      "$3x + 5 - x + 2$"
+     ],
+     [
+      "Combine like terms",
+      "$2x + 7$"
+     ]
+    ],
+    "cap": "Subtracting a group, one step at a time."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Adding",
+    "q": "Simplify $(3x + 5) + (2x - 7)$.",
+    "steps": [
+     "Drop the parentheses: $3x + 5 + 2x - 7$.",
+     "Combine: $3x + 2x = 5x$ and $5 - 7 = -2$."
+    ],
+    "a": "$5x - 2$"
+   },
+   {
+    "t": "ex",
+    "title": "Subtracting",
+    "q": "Simplify $(3x + 5) - (x - 2)$.",
+    "steps": [
+     "Subtract both terms: $-(x - 2) = -x + 2$.",
+     "$3x + 5 - x + 2 = 2x + 7$.",
+     "Check with $x = 1$: $(3 + 5) - (1 - 2) = 8 - (-1) = 9$, and $2(1) + 7 = 9$ ✓."
+    ],
+    "a": "$2x + 7$"
+   },
+   {
+    "t": "ex",
+    "title": "\"Subtract from\"",
+    "q": "Subtract $(2x - 5)$ from $(7x + 3)$.",
+    "steps": [
+     "\"Subtract $B$ from $A$\" means $A - B$: $(7x + 3) - (2x - 5)$.",
+     "$7x + 3 - 2x + 5 = 5x + 8$."
+    ],
+    "a": "$5x + 8$"
+   },
+   {
+    "t": "note",
+    "html": "Why does testing one number work as a check? Equivalent expressions are equal for <b>every</b> value of $x$. If your answer and the original give different values for $x = 1$, something went wrong. (Matching for one number is not a full proof, but it catches almost every slip.)"
+   },
+   {
+    "t": "mistake",
+    "html": "Subtracting only the first term: $(3x + 5) - (x - 2) = 2x + 3$. The $-2$ inside also gets subtracted, which turns it into $+2$. A quick check is to substitute a number, like $x = 1$, into the original and into your answer."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 7.3 Distributive Property"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.A.1"
+   }
+  ]
+ },
+ "g7.rewrite-to-see-meaning": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two <a href=\"/math/grade-7/add-subtract-expressions/\">equivalent expressions</a> always have the same value, but they can tell different stories. Rewriting an expression can make its meaning easier to see, especially with <a href=\"/math/grade-7/percent-change/\">percent change</a>."
+   },
+   {
+    "t": "key",
+    "html": "$a + 0.05a = 1.05a$: adding 5% of an amount is the same as multiplying it by $1.05$. Likewise $p - 0.2p = 0.8p$: taking 20% off leaves 80%. Choose the form that shows what you need to see."
+   },
+   {
+    "t": "why",
+    "html": "It is the distributive property again: $a + 0.05a = 1a + 0.05a = (1 + 0.05)a = 1.05a$. The first form shows the price and the increase separately; the second shows the new price as one multiplication."
+   },
+   {
+    "t": "viz",
+    "name": "percentbar",
+    "opts": {
+     "whole": 80,
+     "pct": 105,
+     "max": 120,
+     "step": 10,
+     "snap": 5,
+     "pre": "$"
+    },
+    "cap": "An \\$80 price plus 5% more is 105% of \\$80: $80 + 0.05 \\times 80 = 1.05 \\times 80 = 84$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An increase",
+    "q": "Write $a + 0.05a$ as a single term. What does it mean?",
+    "steps": [
+     "$a + 0.05a = (1 + 0.05)a = 1.05a$.",
+     "Meaning: the new amount is 105% of $a$, a 5% increase."
+    ],
+    "a": "$1.05a$"
+   },
+   {
+    "t": "ex",
+    "title": "A discount",
+    "q": "A store marks every price $p$ down to $p - 0.2p$. Rewrite it and describe the sale.",
+    "steps": [
+     "$p - 0.2p = (1 - 0.2)p = 0.8p$.",
+     "You pay 80% of the price: the sale is 20% off."
+    ],
+    "a": "$0.8p$, which is 20% off"
+   },
+   {
+    "t": "ex",
+    "title": "Two stories, one total",
+    "q": "Four friends each buy a ticket for $x$ dollars and a \\$3 snack. Show that $4(x + 3)$ and $4x + 12$ both give the total.",
+    "steps": [
+     "$4(x + 3)$: each person spends $x + 3$, and there are 4 people.",
+     "$4x + 12$: the tickets cost $4x$ in all and the snacks cost $4 \\times 3 = 12$.",
+     "They are equal by the distributive property."
+    ],
+    "a": "Both are the total."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading a percent as a plain number: a 6% increase on $p$ is $p + 0.06p = 1.06p$, not $p + 6$. And $1.6p$ would be a 60% increase. Check with $p = 100$: a 6% increase should give 106."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 7.3 Distributive Property"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.2 Solve General Applications of Percent"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.A.2"
+   }
+  ]
+ },
+ "g7.one-step-rational": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 6 you solved <a href=\"/math/grade-6/one-step-multiply-divide/\">one-step equations</a> like $4x = 20$. The idea is the same now, but the numbers can be negative, fractions or decimals, so you need the <a href=\"/math/grade-7/integer-operations/\">signed-number rules</a> too."
+   },
+   {
+    "t": "key",
+    "html": "Undo what was done to $x$ by doing the inverse operation to <b>both sides</b>. Divide by the coefficient itself, sign and all. For a fraction coefficient, multiply both sides by its reciprocal."
+   },
+   {
+    "t": "why",
+    "html": "An equation is a balance: both sides have the same value. Doing the same thing to both sides keeps them equal. To get $x$ alone after it was multiplied by $-6$, divide by $-6$, because $\\frac{-6x}{-6} = x$. For $-\\frac{2}{3}x$, multiply by $-\\frac{3}{2}$, because $-\\frac{3}{2} \\times \\left(-\\frac{2}{3}\\right) = 1$."
+   },
+   {
+    "t": "viz",
+    "name": "balance",
+    "opts": {
+     "eq": "x - 4 = 3",
+     "oneSide": true
+    },
+    "cap": "$x - 4 = 3$: the balloon pulls the left side up by 4. Add 4 to both sides (pop the balloon and add 4 cubes on the right) and the scale stays level with $x$ alone."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Adding and subtracting decimals",
+    "q": "Solve $x - 4.5 = -2$.",
+    "steps": [
+     "Undo subtracting 4.5: add 4.5 to both sides.",
+     "$x = -2 + 4.5 = 2.5$.",
+     "Check: $2.5 - 4.5 = -2$ ✓."
+    ],
+    "a": "$x = 2.5$"
+   },
+   {
+    "t": "ex",
+    "title": "A negative coefficient",
+    "q": "Solve $-6x = 42$.",
+    "steps": [
+     "$x$ is multiplied by $-6$. Divide both sides by $-6$.",
+     "$x = 42 \\div (-6) = -7$.",
+     "Check: $-6 \\times (-7) = 42$ ✓."
+    ],
+    "a": "$x = -7$"
+   },
+   {
+    "t": "ex",
+    "title": "A fraction coefficient",
+    "q": "Solve $-\\frac{2}{3}x = 8$.",
+    "steps": [
+     "Multiply both sides by the reciprocal, $-\\frac{3}{2}$.",
+     "$x = 8 \\times \\left(-\\frac{3}{2}\\right) = -12$.",
+     "Check: $-\\frac{2}{3} \\times (-12) = 8$ ✓."
+    ],
+    "a": "$x = -12$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dropping the sign of the coefficient (dividing $-6x = 42$ by $6$ gives $x = 7$) or dividing by the opposite number. Always check by putting your answer back into the original equation: $-6 \\times 7 = -42$, not $42$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 3.5 Solve Equations Using Integers; The Division Property of Equality"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 8.2 Solve Equations Using the Division and Multiplication Properties of Equality"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.B.4a"
+   }
+  ]
+ },
+ "g7.two-step-equations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In $3x + 5 = 20$, two things happened to $x$: it was multiplied by 3, and then 5 was added. You know how to undo each one from <a href=\"/math/grade-7/one-step-rational/\">one-step equations</a>. The question is the order."
+   },
+   {
+    "t": "key",
+    "html": "Undo the steps in <b>reverse order</b>: first undo the adding or subtracting, then undo the multiplying or dividing. Do each step to the whole of both sides."
+   },
+   {
+    "t": "why",
+    "html": "Getting dressed, you put on socks, then shoes. Undressing, you take off the shoes first. Here $x$ was multiplied first and the 5 was added last, so the 5 comes off first. You could divide first, but then every term must be divided, $x + \\frac{5}{3} = \\frac{20}{3}$, which is correct but messier."
+   },
+   {
+    "t": "viz",
+    "name": "balance",
+    "opts": {
+     "eq": "3x + 5 = 20"
+    },
+    "cap": "Take 5 cubes off both sides, then split what is left into 3 equal parts."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "model": "equation",
+     "units": 3,
+     "extra": 5,
+     "total": 20
+    },
+    "cap": "The same equation as a tape: three equal boxes and 5 more make 20. Press \"Next step\"."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Positive numbers",
+    "q": "Solve $3x + 5 = 20$.",
+    "steps": [
+     "Subtract 5 from both sides: $3x = 15$.",
+     "Divide both sides by 3: $x = 5$.",
+     "Check: $3(5) + 5 = 20$ ✓."
+    ],
+    "a": "$x = 5$"
+   },
+   {
+    "t": "ex",
+    "title": "Negative numbers",
+    "q": "Solve $-4x - 7 = 13$.",
+    "steps": [
+     "Add 7 to both sides: $-4x = 20$.",
+     "Divide by $-4$: $x = -5$.",
+     "Check: $-4(-5) - 7 = 20 - 7 = 13$ ✓."
+    ],
+    "a": "$x = -5$"
+   },
+   {
+    "t": "ex",
+    "title": "Dividing instead of multiplying",
+    "q": "Solve $\\frac{x}{5} + 3 = -1$.",
+    "steps": [
+     "Subtract 3: $\\frac{x}{5} = -4$.",
+     "Multiply by 5: $x = -20$.",
+     "Check: $-20 \\div 5 + 3 = -4 + 3 = -1$ ✓."
+    ],
+    "a": "$x = -20$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing only part of a side: from $3x + 5 = 20$ writing $x + 5 = \\frac{20}{3}$. If you divide, you must divide every term. Safer: undo the $+5$ first. Always check by substituting your answer into the original equation."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 8.1 Solve Equations Using the Subtraction and Addition Properties of Equality"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 8.2 Solve Equations Using the Division and Multiplication Properties of Equality"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.B.4a"
+   }
+  ]
+ },
+ "g7.equations-with-parentheses": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some equations have a group in parentheses, like $3(x + 4) = 27$. You can solve them with <a href=\"/math/grade-7/two-step-equations/\">two steps</a>, or <a href=\"/math/grade-7/expand-factor-linear/\">distribute</a> first. Both roads lead to the same answer."
+   },
+   {
+    "t": "key",
+    "html": "For $p(x + q) = r$: either <b>divide both sides by $p$ first</b> and then undo the $q$, or <b>distribute first</b> ($px + pq = r$) and solve the two-step equation."
+   },
+   {
+    "t": "why",
+    "html": "In $3(x + 4)$, the order of operations says: add 4 to $x$, then multiply the whole group by 3. Undo in reverse: divide by 3, then subtract 4. Distributing first is also fine, because $3(x + 4)$ and $3x + 12$ are equal for every $x$."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        5,
+        4,
+        5,
+        4,
+        5,
+        4
+       ],
+       "labels": [
+        "x",
+        "4",
+        "x",
+        "4",
+        "x",
+        "4"
+       ],
+       "colors": [
+        "blue",
+        "gold",
+        "blue",
+        "gold",
+        "blue",
+        "gold"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 6,
+       "label": "27"
+      },
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 2,
+       "label": "x + 4",
+       "up": false
+      }
+     ],
+     "steps": [
+      "3(x + 4) = 27: three equal groups, each x + 4, make 27.",
+      "One group: 27 ÷ 3 = 9, so x + 4 = 9.",
+      "Take away the 4: x = 9 − 4 = 5."
+     ]
+    },
+    "cap": "$3(x + 4) = 27$ as three equal groups of $x + 4$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Divide first",
+    "q": "Solve $3(x + 4) = 27$.",
+    "steps": [
+     "Divide both sides by 3: $x + 4 = 9$.",
+     "Subtract 4: $x = 5$.",
+     "Check: $3(5 + 4) = 3 \\times 9 = 27$ ✓."
+    ],
+    "a": "$x = 5$"
+   },
+   {
+    "t": "ex",
+    "title": "Two ways with a negative",
+    "q": "Solve $-2(x - 5) = 18$.",
+    "steps": [
+     "Divide first: $x - 5 = 18 \\div (-2) = -9$, so $x = -4$.",
+     "Or distribute first: $-2x + 10 = 18$, so $-2x = 8$ and $x = -4$. Same answer.",
+     "Check: $-2(-4 - 5) = -2 \\times (-9) = 18$ ✓."
+    ],
+    "a": "$x = -4$"
+   },
+   {
+    "t": "ex",
+    "title": "A fraction outside",
+    "q": "Solve $\\frac{3}{4}(x + 8) = 9$.",
+    "steps": [
+     "Multiply both sides by the reciprocal $\\frac{4}{3}$: $x + 8 = 9 \\times \\frac{4}{3} = 12$.",
+     "Subtract 8: $x = 4$.",
+     "Check: $\\frac{3}{4}(12) = 9$ ✓."
+    ],
+    "a": "$x = 4$"
+   },
+   {
+    "t": "mistake",
+    "html": "Distributing to the first term only ($3(x + 4) = 27$ becoming $3x + 4 = 27$), or subtracting 4 before dividing ($3(x + 4) = 27$ becoming $3x = 23$). The 4 is inside the group, so it is multiplied by 3 too. Check your answer in the original equation."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 8.3 Solve Equations with Variables and Constants on Both Sides"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 7.3 Distributive Property"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.B.4a"
+   }
+  ]
+ },
+ "g7.equation-word-problems": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Word problems turn into the equations you can already solve: <a href=\"/math/grade-7/two-step-equations/\">two-step equations</a> and <a href=\"/math/grade-7/equations-with-parentheses/\">equations with parentheses</a>. The new skill is writing the equation."
+   },
+   {
+    "t": "key",
+    "html": "Name the unknown with a letter. Write the story as an equation, one piece at a time. Solve it, then check the answer in the story, not only in the equation."
+   },
+   {
+    "t": "why",
+    "html": "An equation records what happens in the story, in order. Solving it undoes those steps in reverse. That is exactly what you would do with arithmetic: \"take away the fee, then share by the price.\" The equation and the arithmetic are the same thinking written two ways."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        11,
+        3,
+        11,
+        3,
+        11,
+        3,
+        11,
+        3
+       ],
+       "labels": [
+        "x",
+        "3",
+        "x",
+        "3",
+        "x",
+        "3",
+        "x",
+        "3"
+       ],
+       "colors": [
+        "blue",
+        "gold",
+        "blue",
+        "gold",
+        "blue",
+        "gold",
+        "blue",
+        "gold"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 8,
+       "label": "56"
+      }
+     ],
+     "steps": [
+      "4 people each spend x + 3, and the total is 56: 4(x + 3) = 56.",
+      "One person spends 56 ÷ 4 = 14.",
+      "The ticket is 14 − 3 = 11 dollars."
+     ]
+    },
+    "cap": "Four friends each buy a ticket ($x$) and a \\$3 snack, \\$56 in all."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A fee plus a price per visit",
+    "q": "A climbing gym charges a \\$15 fee plus \\$8 per visit. Lena has paid \\$63. How many visits is that?",
+    "steps": [
+     "Let $v$ be the number of visits: $8v + 15 = 63$.",
+     "Subtract 15: $8v = 48$. Divide by 8: $v = 6$.",
+     "Arithmetic check: $63 - 15 = 48$ dollars were for visits, and $48 \\div 8 = 6$ ✓."
+    ],
+    "a": "6 visits"
+   },
+   {
+    "t": "ex",
+    "title": "Equal groups",
+    "q": "Four friends each buy a ticket and a \\$3 snack. Together they spend \\$56. How much is one ticket?",
+    "steps": [
+     "Let $x$ be the ticket price: $4(x + 3) = 56$.",
+     "Divide by 4: $x + 3 = 14$. Subtract 3: $x = 11$.",
+     "Check in the story: each spends $11 + 3 = 14$, and $4 \\times 14 = 56$ ✓."
+    ],
+    "a": "\\$11"
+   },
+   {
+    "t": "ex",
+    "title": "Perimeter",
+    "q": "A rectangle is 14 cm long and its perimeter is 46 cm. How wide is it?",
+    "steps": [
+     "Let $w$ be the width: $2(14) + 2w = 46$, so $28 + 2w = 46$.",
+     "Subtract 28: $2w = 18$. Divide by 2: $w = 9$.",
+     "Check: $14 + 9 + 14 + 9 = 46$ ✓."
+    ],
+    "a": "9 cm"
+   },
+   {
+    "t": "note",
+    "html": "Watch for amounts that happen once (a fee) and amounts that happen for each one (a price per visit). The ones that repeat get multiplied by the unknown."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.1 Use a Problem Solving Strategy"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.B.4a"
+   }
+  ]
+ },
+ "g7.two-step-inequalities": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "An inequality like $3x - 4 > 11$ has many solutions. You can solve it almost exactly like a <a href=\"/math/grade-7/two-step-equations/\">two-step equation</a>, and graph the answer the way you <a href=\"/math/grade-6/inequalities-number-line/\">graphed inequalities</a> in Grade 6. There is one new rule."
+   },
+   {
+    "t": "key",
+    "html": "Solve the way you would solve an equation. But when you <b>multiply or divide both sides by a negative number, reverse the inequality sign</b> ($<$ becomes $>$, $\\le$ becomes $\\ge$)."
+   },
+   {
+    "t": "why",
+    "html": "Adding or subtracting slides both sides the same way, so their order stays the same. Multiplying by a negative number flips the number line around $0$: $2 < 5$, but $-2 > -5$, because $-2$ is to the right of $-5$. So after multiplying or dividing by a negative, the bigger side becomes the smaller side, and the sign must turn around to stay true."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": -6,
+     "max": 6,
+     "step": 1,
+     "labels": "whole",
+     "points": [
+      {
+       "v": 2,
+       "label": "2",
+       "color": "blue"
+      },
+      {
+       "v": 5,
+       "label": "5",
+       "color": "blue"
+      },
+      {
+       "v": -2,
+       "label": "−2",
+       "color": "red"
+      },
+      {
+       "v": -5,
+       "label": "−5",
+       "color": "red"
+      }
+     ],
+     "value": false
+    },
+    "cap": "$2 < 5$, but their opposites are in the other order: $-2 > -5$. Multiplying by $-1$ flips the order."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "No flip needed",
+    "q": "Solve $3x - 4 > 11$.",
+    "steps": [
+     "Add 4 to both sides: $3x > 15$.",
+     "Divide by 3 (positive, so the sign stays): $x > 5$.",
+     "Check $x = 6$: $3(6) - 4 = 14 > 11$ ✓."
+    ],
+    "a": "$x > 5$"
+   },
+   {
+    "t": "ex",
+    "title": "Dividing by a negative",
+    "q": "Solve $-2x + 7 \\le 1$.",
+    "steps": [
+     "Subtract 7: $-2x \\le -6$.",
+     "Divide by $-2$ and <b>reverse</b> the sign: $x \\ge 3$.",
+     "Check $x = 4$: $-8 + 7 = -1 \\le 1$ ✓. Check $x = 0$ (not in the answer): $7 \\le 1$ is false ✓."
+    ],
+    "a": "$x \\ge 3$"
+   },
+   {
+    "t": "ex",
+    "title": "A word problem",
+    "q": "You have \\$40. A fair ticket costs \\$12 and each ride costs \\$3.50. How many rides can you take?",
+    "steps": [
+     "Let $r$ be the number of rides: $12 + 3.5r \\le 40$ (\"at most \\$40\").",
+     "Subtract 12: $3.5r \\le 28$. Divide by 3.5: $r \\le 8$.",
+     "You can take at most 8 rides."
+    ],
+    "a": "At most 8 rides"
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting to reverse the sign after dividing by a negative: $-2x \\le -6$ becoming $x \\le 3$. Test a number from your answer: $x = 0$ gives $7 \\le 1$, which is false, so $x \\le 3$ cannot be right. Testing one number catches this every time."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Elementary Algebra 2e, Section 2.7 Solve Linear Inequalities"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.B.4b"
+   }
+  ]
+ },
+ "g7.multistep-problems": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Real problems mix fractions, decimals and percents, and take several steps. You have every tool already: <a href=\"/math/grade-7/markup-discount-tax/\">percents in stores</a>, <a href=\"/math/grade-7/equation-word-problems/\">equations from stories</a> and <a href=\"/math/grade-7/integer-operations/\">all four operations</a>. The new part is planning and checking."
+   },
+   {
+    "t": "key",
+    "html": "Read, estimate, then solve one step at a time. Switch between fractions, decimals and percents when it makes a step easier ($25\\% = \\frac{1}{4} = 0.25$). Compare your answer with the estimate at the end."
+   },
+   {
+    "t": "why",
+    "html": "An estimate is a quick, rough answer you make before the exact one. Most slips in multistep problems, like a misplaced decimal point or a percent used as a whole number, make the answer far from the estimate, so the estimate catches them."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Fraction",
+     "Decimal",
+     "Percent"
+    ],
+    "rows": [
+     [
+      "$\\frac{1}{2}$",
+      "$0.5$",
+      "$50\\%$"
+     ],
+     [
+      "$\\frac{1}{4}$",
+      "$0.25$",
+      "$25\\%$"
+     ],
+     [
+      "$\\frac{3}{4}$",
+      "$0.75$",
+      "$75\\%$"
+     ],
+     [
+      "$\\frac{1}{5}$",
+      "$0.2$",
+      "$20\\%$"
+     ],
+     [
+      "$\\frac{1}{10}$",
+      "$0.1$",
+      "$10\\%$"
+     ]
+    ],
+    "cap": "Handy equivalents. Use whichever form makes the step easiest."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        1.75,
+        1.75,
+        1.75,
+        1.75,
+        1.75,
+        1.25
+       ],
+       "labels": [
+        "1¾",
+        "1¾",
+        "1¾",
+        "1¾",
+        "1¾",
+        "1¼"
+       ],
+       "colors": [
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "gold"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 6,
+       "label": "10 ft"
+      },
+      {
+       "tape": 0,
+       "from": 5,
+       "to": 6,
+       "label": "left over",
+       "up": false
+      }
+     ],
+     "steps": [
+      "A 10 ft board, cut into pieces 1¾ ft long.",
+      "Five pieces use 5 × 1¾ = 8¾ ft.",
+      "A sixth piece would need 10½ ft, so 1¼ ft is left over."
+     ]
+    },
+    "cap": "Cutting a 10 ft board into pieces $1\\frac{3}{4}$ ft long."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Discount, then tax",
+    "q": "A \\$45 jacket is 20% off, and then 6% sales tax is added. What is the total?",
+    "steps": [
+     "Estimate: 20% off \\$45 is about \\$36, plus a little tax, so about \\$38.",
+     "Sale price: $0.80 \\times 45 = 36$.",
+     "With tax: $1.06 \\times 36 = 38.16$. Close to the estimate ✓."
+    ],
+    "a": "\\$38.16"
+   },
+   {
+    "t": "ex",
+    "title": "A raise",
+    "q": "Omar earns \\$15 an hour and gets a 10% raise. How much does he earn for 30 hours at the new wage?",
+    "steps": [
+     "New wage: $15 \\times 1.10 = 16.50$ dollars per hour.",
+     "Pay: $16.50 \\times 30 = 495$.",
+     "Estimate: $15 \\times 30 = 450$, plus about 10% more, about 495 ✓."
+    ],
+    "a": "\\$495"
+   },
+   {
+    "t": "ex",
+    "title": "A leftover piece",
+    "q": "A 10 ft board is cut into as many $1\\frac{3}{4}$ ft pieces as possible. How much is left over?",
+    "steps": [
+     "How many pieces fit: $$10 \\div 1\\frac{3}{4} = 10 \\times \\frac{4}{7} = \\frac{40}{7} = 5\\frac{5}{7}$$ so 5 whole pieces.",
+     "They use $5 \\times 1\\frac{3}{4} = 8\\frac{3}{4}$ ft.",
+     "Left over: $10 - 8\\frac{3}{4} = 1\\frac{1}{4}$ ft. It is less than one piece ✓."
+    ],
+    "a": "$1\\frac{1}{4}$ ft"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.1 Use a Problem Solving Strategy"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 6.3 Solve Sales Tax, Commission, and Discount Applications"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.EE.B.3"
+   }
+  ]
+ },
+ "g7.angle-relationships": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 4 you learned that <a href=\"/math/grade-4/add-angles/\">angles that fit together add</a>. Some pairs of angles come up so often that they have names. Knowing them lets you find a missing angle without a protractor."
+   },
+   {
+    "t": "key",
+    "html": "<b>Complementary</b> angles add to $90^\\circ$ (they fill a right angle). <b>Supplementary</b> angles add to $180^\\circ$ (they make a straight line). <b>Vertical angles</b>, across from each other where two lines cross, are equal. Angles all the way around a point add to $360^\\circ$."
+   },
+   {
+    "t": "why",
+    "html": "Why are vertical angles equal? Call the angles around a crossing $\\angle 1$, $\\angle 2$, $\\angle 3$ and $\\angle 4$, in order. $\\angle 1$ and $\\angle 2$ make a straight line, so $\\angle 1 + \\angle 2 = 180^\\circ$. So do $\\angle 2$ and $\\angle 3$: $\\angle 2 + \\angle 3 = 180^\\circ$. Both $\\angle 1$ and $\\angle 3$ are \"$180^\\circ$ minus $\\angle 2$,\" so they are equal."
+   },
+   {
+    "t": "viz",
+    "name": "angle",
+    "opts": {
+     "mode": "comp",
+     "deg": 35
+    },
+    "cap": "Complementary: the two angles fill a right angle. Drag the ray; the sum stays $90^\\circ$."
+   },
+   {
+    "t": "viz",
+    "name": "angle",
+    "opts": {
+     "mode": "vertical",
+     "deg": 55
+    },
+    "cap": "Vertical angles are equal, and angles side by side add to $180^\\circ$. Drag a line to check."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A complement",
+    "q": "An angle measures $35^\\circ$. What is its complement?",
+    "steps": [
+     "Complementary angles add to $90^\\circ$.",
+     "$90 - 35 = 55$."
+    ],
+    "a": "$55^\\circ$"
+   },
+   {
+    "t": "ex",
+    "title": "A supplement",
+    "q": "An angle measures $112^\\circ$. What is its supplement?",
+    "steps": [
+     "Supplementary angles add to $180^\\circ$.",
+     "$180 - 112 = 68$."
+    ],
+    "a": "$68^\\circ$"
+   },
+   {
+    "t": "ex",
+    "title": "Crossing lines",
+    "q": "Two lines cross, and one angle is $48^\\circ$. Find the other three angles.",
+    "steps": [
+     "The angle across from it is a vertical angle: $48^\\circ$.",
+     "The angles next to it make a straight line with it: $180 - 48 = 132$, so both are $132^\\circ$.",
+     "Check: $48 + 132 + 48 + 132 = 360$ ✓."
+    ],
+    "a": "$48^\\circ$, $132^\\circ$ and $132^\\circ$"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing up complementary ($90^\\circ$) and supplementary ($180^\\circ$). One way to remember: <b>C</b>omplementary makes a <b>C</b>orner, and <b>S</b>upplementary makes a <b>S</b>traight line. Also, C comes before S, and 90 comes before 180."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.3 Use Properties of Angles, Triangles, and the Pythagorean Theorem"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.B.5"
+   }
+  ]
+ },
+ "g7.angle-equations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sometimes the angles in a diagram are labeled with expressions like $(2x + 10)^\\circ$. The <a href=\"/math/grade-7/angle-relationships/\">angle facts</a> give you an equation, and you know how to <a href=\"/math/grade-7/two-step-equations/\">solve it</a>."
+   },
+   {
+    "t": "key",
+    "html": "Use the angle fact to write an equation: the parts of a right angle add to 90, angles on a line add to 180, angles around a point add to 360, and vertical angles are equal. Solve for $x$, then substitute to find each angle."
+   },
+   {
+    "t": "why",
+    "html": "The labels describe the sizes of real angles. If two angles make a straight line, their sizes add to $180^\\circ$ no matter how they are written, so the expressions must add to 180. That sentence is the equation."
+   },
+   {
+    "t": "viz",
+    "name": "g7-angles",
+    "opts": {
+     "mode": "line",
+     "parts": [
+      70,
+      110
+     ],
+     "labels": [
+      "(2x + 10)°",
+      "(3x + 20)°"
+     ]
+    },
+    "cap": "Two angles on a straight line: $(2x + 10) + (3x + 20) = 180$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "On a straight line",
+    "q": "Two angles on a line measure $(2x + 10)^\\circ$ and $(3x + 20)^\\circ$. Find $x$ and both angles.",
+    "steps": [
+     "They add to $180$: $2x + 10 + 3x + 20 = 180$.",
+     "Combine like terms: $5x + 30 = 180$. Subtract 30: $5x = 150$. Divide: $x = 30$.",
+     "Angles: $2(30) + 10 = 70^\\circ$ and $3(30) + 20 = 110^\\circ$. Check: $70 + 110 = 180$ ✓."
+    ],
+    "a": "$x = 30$; the angles are $70^\\circ$ and $110^\\circ$"
+   },
+   {
+    "t": "ex",
+    "title": "In a right angle",
+    "q": "A right angle is split into $x^\\circ$ and $(2x + 15)^\\circ$. Find $x$.",
+    "steps": [
+     "The parts add to $90$: $x + 2x + 15 = 90$.",
+     "$3x + 15 = 90$, so $3x = 75$ and $x = 25$.",
+     "Check: $25 + (2 \\cdot 25 + 15) = 25 + 65 = 90$ ✓."
+    ],
+    "a": "$x = 25$"
+   },
+   {
+    "t": "ex",
+    "title": "Vertical angles",
+    "q": "Vertical angles measure $(4x - 10)^\\circ$ and $70^\\circ$. Find $x$.",
+    "steps": [
+     "Vertical angles are equal: $4x - 10 = 70$.",
+     "Add 10: $4x = 80$. Divide: $x = 20$."
+    ],
+    "a": "$x = 20$"
+   },
+   {
+    "t": "mistake",
+    "html": "Stopping at $x$ when the question asks for an angle. In the first example, $x = 30$ but the angles are $70^\\circ$ and $110^\\circ$. Reread the question, and check that your angles fit the fact you used."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.3 Use Properties of Angles, Triangles, and the Pythagorean Theorem"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.B.5"
+   }
+  ]
+ },
+ "g7.which-triangles-exist": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have <a href=\"/math/grade-4/classify-shapes/\">sorted triangles</a> by their sides and angles. Now a new question: given some measurements, can you build a triangle at all, and is there only one?"
+   },
+   {
+    "t": "key",
+    "html": "<b>Sides:</b> three lengths make a triangle only if the two shorter ones add to <b>more</b> than the longest. Then there is exactly one triangle. <b>Angles:</b> three angles fit a triangle only if they add to $180^\\circ$. Then there are many triangles: the same shape in different sizes."
+   },
+   {
+    "t": "why",
+    "html": "Lay the longest stick down. The other two are hinged at its ends and swing up. To make a corner, their free ends must meet above the long stick, and they can only reach each other if together they are longer than it. If they add to exactly the long side, they lie flat; if less, there is a gap. Angles alone cannot fix the size: a photo of a triangle, enlarged, has the same angles."
+   },
+   {
+    "t": "viz",
+    "name": "g7-sticks",
+    "opts": {
+     "a": 3,
+     "b": 4,
+     "c": 8
+    },
+    "cap": "Change the stick lengths. The triangle closes only when the two shorter sticks add to more than the longest."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "It works",
+    "q": "Can 4 cm, 5 cm and 8 cm be the sides of a triangle?",
+    "steps": [
+     "The two shorter sides: $4 + 5 = 9$.",
+     "$9 > 8$, so yes. The three lengths fix the triangle: exactly one triangle."
+    ],
+    "a": "Yes, exactly one triangle"
+   },
+   {
+    "t": "ex",
+    "title": "It does not",
+    "q": "Can 3 cm, 4 cm and 8 cm be the sides of a triangle?",
+    "steps": [
+     "$3 + 4 = 7$, which is less than $8$.",
+     "The short sides cannot reach each other: no triangle."
+    ],
+    "a": "No triangle"
+   },
+   {
+    "t": "ex",
+    "title": "Range for the third side",
+    "q": "Two sides of a triangle are 5 cm and 9 cm. What whole-number lengths can the third side have?",
+    "steps": [
+     "It must be less than $5 + 9 = 14$.",
+     "It must be more than $9 - 5 = 4$, or the 5 and the third side could not reach past the 9.",
+     "So it is 5, 6, 7, …, 13 cm."
+    ],
+    "a": "From 5 cm to 13 cm"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking any three lengths make a triangle, or that equal sums are enough ($3 + 5 = 8$ only lies flat). And three angles that add to $180^\\circ$ do not give <b>one</b> triangle: they give a whole family of different sizes. Check sides by adding the two shortest; check angles by adding all three."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.3 Use Properties of Angles, Triangles, and the Pythagorean Theorem"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.A.2"
+   }
+  ]
+ },
+ "g7.circumference": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The distance around a circle is its <b>circumference</b>. Every circle, from a coin to a Ferris wheel, follows the same rule, and finding it needs only <a href=\"/math/grade-5/multiply-decimals/\">multiplying decimals</a>."
+   },
+   {
+    "t": "key",
+    "html": "$$C = \\pi d = 2\\pi r$$ The diameter $d$ goes across through the center; the radius $r$ is half of it. $\\pi$ is about $3.14$ (or $\\frac{22}{7}$)."
+   },
+   {
+    "t": "why",
+    "html": "All circles are the same shape: each is a scaled copy of every other. So the ratio of circumference to diameter is the same for all of them. Roll any circle along a line for one turn: it covers a little more than 3 diameters. That number is $\\pi = 3.14159\\ldots$; its digits go on forever without repeating, so $3.14$ is only an approximation."
+   },
+   {
+    "t": "viz",
+    "name": "circlepi",
+    "opts": {
+     "d": 1,
+     "mode": "roll",
+     "r": true
+    },
+    "cap": "Unroll the circle: one full turn is a little more than 3 diameters. Change the size; the ratio stays the same."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From the diameter",
+    "q": "A plate has a diameter of 10 inches. Find its circumference.",
+    "steps": [
+     "$C = \\pi d = \\pi \\times 10 = 10\\pi$ inches (exact).",
+     "Using $3.14$: $C \\approx 3.14 \\times 10 = 31.4$ inches."
+    ],
+    "a": "$10\\pi \\approx 31.4$ inches"
+   },
+   {
+    "t": "ex",
+    "title": "From the radius",
+    "q": "A circle has a radius of 7 cm. Find its circumference. Use $3.14$.",
+    "steps": [
+     "The diameter is $2 \\times 7 = 14$ cm.",
+     "$C \\approx 3.14 \\times 14 = 43.96$ cm."
+    ],
+    "a": "$43.96$ cm"
+   },
+   {
+    "t": "ex",
+    "title": "Working backward",
+    "q": "A circular track is 47.1 m around. What is its diameter? Use $3.14$.",
+    "steps": [
+     "$C = \\pi d$, so $d = C \\div \\pi$.",
+     "$d \\approx 47.1 \\div 3.14 = 15$ m."
+    ],
+    "a": "15 m"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the radius where the formula needs the diameter ($3.14 \\times 7 = 21.98$ instead of $43.96$). Check: the circumference is always a little more than 3 times the <b>diameter</b>. Another slip is thinking $\\pi$ equals $3.14$ exactly; it only rounds to it."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.5 Solve Geometry Applications: Circles and Irregular Figures"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.B.4"
+   }
+  ]
+ },
+ "g7.circle-area": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know the <a href=\"/math/grade-7/circumference/\">circumference</a> of a circle and the <a href=\"/math/grade-6/area-parallelogram/\">area of a parallelogram</a>. Cutting a circle into slices connects the two."
+   },
+   {
+    "t": "key",
+    "html": "$$A = \\pi r^2$$ Square the radius, then multiply by $\\pi$. Area is measured in square units."
+   },
+   {
+    "t": "why",
+    "html": "Cut a circle into many thin slices, like a pizza, and line them up, points up and down. They make a shape that is almost a parallelogram, and nearly a rectangle when the slices are thin. Its height is the radius $r$. Its length is half the circumference, $\\frac{1}{2} \\times 2\\pi r = \\pi r$, because half the crust is on top and half on the bottom. Area $=$ length $\\times$ height $= \\pi r \\times r = \\pi r^2$."
+   },
+   {
+    "t": "viz",
+    "name": "areaformulas",
+    "opts": {
+     "shape": "circle",
+     "n": 16
+    },
+    "cap": "Slice the circle and rearrange: the near-rectangle is $\\pi r$ long and $r$ tall. More slices make it closer to a rectangle."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From the radius",
+    "q": "Find the area of a circle with radius 5 cm.",
+    "steps": [
+     "$A = \\pi r^2 = \\pi \\times 5^2 = 25\\pi$ square cm (exact).",
+     "Using $3.14$: $25 \\times 3.14 = 78.5$ square cm."
+    ],
+    "a": "$25\\pi \\approx 78.5$ square cm"
+   },
+   {
+    "t": "ex",
+    "title": "From the diameter",
+    "q": "A round rug has a diameter of 12 ft. What is its area? Use $3.14$.",
+    "steps": [
+     "The radius is half the diameter: $r = 6$ ft.",
+     "$A \\approx 3.14 \\times 6^2 = 3.14 \\times 36 = 113.04$ square ft."
+    ],
+    "a": "$113.04$ square ft"
+   },
+   {
+    "t": "ex",
+    "title": "Working backward",
+    "q": "A circle has an area of $49\\pi$ square inches. What is its radius?",
+    "steps": [
+     "$\\pi r^2 = 49\\pi$, so $r^2 = 49$.",
+     "$7 \\times 7 = 49$, so $r = 7$ inches."
+    ],
+    "a": "7 inches"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing up $2\\pi r$ (the distance around, in cm) and $\\pi r^2$ (the space inside, in square cm), or squaring the diameter. Squaring the diameter gives an area 4 times too big: $12^2 = 144$, but $6^2 = 36$. Check the units: area must be in square units."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.5 Solve Geometry Applications: Circles and Irregular Figures"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.B.4"
+   }
+  ]
+ },
+ "g7.cross-sections": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When you <a href=\"/math/grade-6/nets-surface-area/\">unfolded solids into nets</a>, you saw that prisms and pyramids have flat faces. Now imagine slicing straight through a solid with a knife. The flat face you uncover is a <b>cross-section</b>."
+   },
+   {
+    "t": "key",
+    "html": "A cross-section is the 2D shape where a flat plane cuts a solid. Each face the plane crosses gives the shape one side. A slice of a prism parallel to its base is a copy of the base; a slice of a pyramid parallel to its base is a smaller copy of the base."
+   },
+   {
+    "t": "why",
+    "html": "The plane meets each face it crosses along a straight segment, and those segments join up into a polygon. A prism's side faces stand straight up, so a slice at any height matches the base exactly. A pyramid's faces lean in toward the top point, so slices shrink as they go up."
+   },
+   {
+    "t": "viz",
+    "name": "g7-slice",
+    "opts": {
+     "solid": "prism",
+     "cut": "base",
+     "pos": 0.5
+    },
+    "cap": "Pick a solid and a direction, then move the plane. The gold shape is the cross-section; on the right it is shown face on."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A box, sliced parallel to the base",
+    "q": "A box 6 in. long, 4 in. wide and 3 in. tall is sliced parallel to its base. What is the cross-section?",
+    "steps": [
+     "The slice is a copy of the base: a 6 in. by 4 in. rectangle.",
+     "Its area is $6 \\times 4 = 24$ square inches, at any height."
+    ],
+    "a": "A 6 in. by 4 in. rectangle"
+   },
+   {
+    "t": "ex",
+    "title": "A pyramid, sliced through the top",
+    "q": "A square pyramid is sliced straight down through its top point, parallel to one edge of the base. What is the cross-section?",
+    "steps": [
+     "The slice crosses the base along a segment and passes through the top point.",
+     "So it has a flat bottom and a top corner: a triangle."
+    ],
+    "a": "A triangle"
+   },
+   {
+    "t": "ex",
+    "title": "A cube with a corner cut off",
+    "q": "A plane cuts the three edges that meet at one corner of a cube. What is the cross-section?",
+    "steps": [
+     "The plane crosses three faces near that corner.",
+     "Three faces give three sides: a triangle. (If the three cuts are the same distance from the corner, all three sides are equal.)"
+    ],
+    "a": "A triangle"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Solid",
+     "Slice",
+     "Cross-section"
+    ],
+    "rows": [
+     [
+      "Rectangular prism",
+      "parallel to the base",
+      "rectangle, same as the base"
+     ],
+     [
+      "Rectangular prism",
+      "straight down, parallel to a side",
+      "rectangle"
+     ],
+     [
+      "Square pyramid",
+      "parallel to the base",
+      "smaller square"
+     ],
+     [
+      "Square pyramid",
+      "straight down through the top",
+      "triangle"
+     ],
+     [
+      "Square pyramid",
+      "straight down, parallel to a base edge, not through the top",
+      "trapezoid"
+     ]
+    ],
+    "cap": "Common slices of prisms and pyramids."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.A.3"
+   }
+  ]
+ },
+ "g7.surface-area-problems": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can find the area of <a href=\"/math/grade-6/area-polygons/\">composite polygons</a> and the surface area of a solid from its <a href=\"/math/grade-6/nets-surface-area/\">net</a>. This lesson puts both to work on real shapes."
+   },
+   {
+    "t": "key",
+    "html": "<b>Area of a composite figure:</b> split it into rectangles and triangles and add, or start with a big rectangle and subtract the missing piece. <b>Surface area:</b> add the areas of all the faces, which is the area of the net."
+   },
+   {
+    "t": "why",
+    "html": "Area adds up when pieces do not overlap, so any way you cut a figure gives the same total. A solid's faces unfold into a flat net without overlapping, so the surface area is the area of that net."
+   },
+   {
+    "t": "viz",
+    "name": "g7-figure",
+    "opts": {
+     "kind": "2d",
+     "shapes": [
+      {
+       "pts": [
+        [
+         0,
+         0
+        ],
+        [
+         12,
+         0
+        ],
+        [
+         12,
+         6
+        ],
+        [
+         8,
+         6
+        ],
+        [
+         8,
+         10
+        ],
+        [
+         0,
+         10
+        ]
+       ]
+      }
+     ],
+     "dims": [
+      {
+       "a": [
+        0,
+        0
+       ],
+       "b": [
+        12,
+        0
+       ],
+       "text": "12 m"
+      },
+      {
+       "a": [
+        0,
+        10
+       ],
+       "b": [
+        0,
+        0
+       ],
+       "text": "10 m"
+      },
+      {
+       "a": [
+        8,
+        10
+       ],
+       "b": [
+        8,
+        6
+       ],
+       "text": "4 m"
+      },
+      {
+       "a": [
+        8,
+        6
+       ],
+       "b": [
+        12,
+        6
+       ],
+       "text": "4 m"
+      }
+     ]
+    },
+    "cap": "An L-shaped yard: a 12 m by 10 m rectangle with a 4 m by 4 m corner missing."
+   },
+   {
+    "t": "viz",
+    "name": "nets",
+    "opts": {
+     "solid": "prism",
+     "l": 8,
+     "w": 5,
+     "h": 4,
+     "fold": 0.5
+    },
+    "cap": "A box folds out into six rectangles in three matching pairs. Their areas add to the surface area."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An L-shaped yard",
+    "q": "Find the area of the L-shaped yard above.",
+    "steps": [
+     "Big rectangle: $12 \\times 10 = 120$. Missing corner: $4 \\times 4 = 16$.",
+     "Area: $120 - 16 = 104$ square meters.",
+     "Check by cutting it into two rectangles: $8 \\times 10 = 80$ and $4 \\times 6 = 24$, and $80 + 24 = 104$ ✓."
+    ],
+    "a": "104 square meters"
+   },
+   {
+    "t": "ex",
+    "title": "A box",
+    "q": "Find the surface area of a box 8 cm long, 5 cm wide and 4 cm tall.",
+    "steps": [
+     "Top and bottom: $8 \\times 5 = 40$ each. Front and back: $8 \\times 4 = 32$ each. Sides: $5 \\times 4 = 20$ each.",
+     "Total: $2(40 + 32 + 20) = 2 \\times 92 = 184$ square cm."
+    ],
+    "a": "184 square cm"
+   },
+   {
+    "t": "ex",
+    "title": "A triangular prism",
+    "q": "A tent is a triangular prism. Its ends are right triangles with sides 6 ft, 8 ft and 10 ft (legs 6 and 8), and it is 12 ft long. Find its surface area.",
+    "steps": [
+     "Two triangles: $2 \\times \\frac{1}{2} \\times 6 \\times 8 = 48$.",
+     "Three rectangles, each 12 ft long: $(6 + 8 + 10) \\times 12 = 288$.",
+     "Total: $48 + 288 = 336$ square ft."
+    ],
+    "a": "336 square ft"
+   },
+   {
+    "t": "note",
+    "html": "Surface area and area are measured in square units (square cm, square ft), because they count unit squares. A quick check: does every face of the net appear exactly once in your sum?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.6 Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.4 Use Properties of Rectangles, Triangles, and Trapezoids"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.B.6"
+   }
+  ]
+ },
+ "g7.volume-prisms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know that a box's volume is $V = lwh$, even with <a href=\"/math/grade-6/volume-fractional-edges/\">fractional edges</a>. That rule is part of a bigger one that works for every prism, including prisms with <a href=\"/math/grade-6/area-triangle/\">triangle</a> bases."
+   },
+   {
+    "t": "key",
+    "html": "For any right prism, $V = Bh$. $B$ is the area of the <b>base</b>, the face that is the same all the way through the prism, and $h$ is the distance between the two bases."
+   },
+   {
+    "t": "why",
+    "html": "Slice a prism into layers 1 unit thick, parallel to the base. Each layer is a copy of the base, so each holds $B$ cubic units. There are $h$ layers, so the volume is $B \\times h$. For a box, the base is a rectangle, $B = lw$, and $V = lwh$ is the same rule."
+   },
+   {
+    "t": "viz",
+    "name": "volume",
+    "opts": {
+     "l": 4,
+     "w": 3,
+     "h": 3,
+     "layers": true
+    },
+    "cap": "A box filled layer by layer: each layer holds $4 \\times 3 = 12$ cubes (the base area), and there are 3 layers."
+   },
+   {
+    "t": "viz",
+    "name": "g7-figure",
+    "opts": {
+     "kind": "prism",
+     "base": [
+      [
+       0,
+       0
+      ],
+      [
+       10,
+       0
+      ],
+      [
+       3.5,
+       6
+      ]
+     ],
+     "depth": 9,
+     "dscale": 0.5,
+     "heightLine": [
+      [
+       3.5,
+       6
+      ],
+      [
+       3.5,
+       0
+      ]
+     ],
+     "dims": [
+      {
+       "a": [
+        0,
+        0,
+        0
+       ],
+       "b": [
+        10,
+        0,
+        0
+       ],
+       "text": "10 in."
+      },
+      {
+       "a": [
+        3.5,
+        6,
+        0
+       ],
+       "b": [
+        3.5,
+        0,
+        0
+       ],
+       "text": "6 in.",
+       "inside": true
+      },
+      {
+       "a": [
+        10,
+        0,
+        0
+       ],
+       "b": [
+        10,
+        0,
+        1
+       ],
+       "text": "9 in."
+      }
+     ]
+    },
+    "cap": "A triangular prism. The bases are the two triangles; the prism's length, 9 in., is its height $h$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A box with a fraction",
+    "q": "Find the volume of a box $2\\frac{1}{2}$ ft long, 4 ft wide and 3 ft tall.",
+    "steps": [
+     "$B = 2\\frac{1}{2} \\times 4 = 10$ square ft.",
+     "$V = Bh = 10 \\times 3 = 30$ cubic ft."
+    ],
+    "a": "30 cubic ft"
+   },
+   {
+    "t": "ex",
+    "title": "A triangular prism",
+    "q": "The prism above has triangle bases with base 10 in. and height 6 in. It is 9 in. long. Find its volume.",
+    "steps": [
+     "The base is the triangle: $B = \\frac{1}{2} \\times 10 \\times 6 = 30$ square in.",
+     "$V = Bh = 30 \\times 9 = 270$ cubic in."
+    ],
+    "a": "270 cubic in."
+   },
+   {
+    "t": "ex",
+    "title": "Finding a height",
+    "q": "A fish tank holds 360 cubic inches. Its base is 9 in. by 8 in. How tall is it?",
+    "steps": [
+     "$B = 9 \\times 8 = 72$, so $72h = 360$.",
+     "$h = 360 \\div 72 = 5$ in."
+    ],
+    "a": "5 in."
+   },
+   {
+    "t": "mistake",
+    "html": "Using a rectangular side face as the base of a triangular prism. The base is the face that stays the same shape all the way through, here the triangle. Check: in $V = Bh$, $h$ must be the distance between the two bases, which is the prism's length."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 9.6 Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.G.B.6"
+   }
+  ]
+ },
+ "g7.random-samples": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/grade-6/statistical-questions/\">statistical question</a> is often about a big group: all the students in a school, all the voters in a town. Asking everyone is usually too slow or too costly, so we ask a smaller group and use it to learn about the whole."
+   },
+   {
+    "t": "key",
+    "html": "The whole group is the <b>population</b>; the part you study is a <b>sample</b>. In a <b>random sample</b>, every member of the population has the same chance to be chosen. Random samples tend to represent the population well. Samples chosen for convenience can be <b>biased</b>."
+   },
+   {
+    "t": "why",
+    "html": "If some members are more likely to be picked, the sample leans toward them. Ask only your friends how much they like your favorite band, and the answers lean high. Ask people at a gym how often they exercise, and the answers lean high too. Random choice gives no group an edge, so the sample's mix is likely to be close to the population's mix."
+   },
+   {
+    "t": "viz",
+    "name": "g7-bias",
+    "opts": {
+     "place": "the skate shop",
+     "size": 20
+    },
+    "cap": "A town votes on a skate park; each green dot says yes. Take several random samples, then several samples near the skate shop. Make the sample bigger: the skate-shop samples stay far too high."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Plan",
+     "Random?",
+     "Why"
+    ],
+    "rows": [
+     [
+      "Number all 800 students and let a computer pick 60 numbers",
+      "Yes",
+      "Every student has the same chance"
+     ],
+     [
+      "Ask 60 friends",
+      "No",
+      "Friends are often alike"
+     ],
+     [
+      "Ask the first 60 people to answer an online poll",
+      "No",
+      "People choose themselves; strong opinions answer more"
+     ],
+     [
+      "Ask everyone in one classroom",
+      "No",
+      "One class may not be like the whole school"
+     ]
+    ],
+    "cap": "Sampling plans for \"How much sleep do students at our school get?\""
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Choosing a plan",
+    "q": "A principal wants to know how 7th graders get to school. Which plan gives a random sample: (a) ask the students in the bike club, or (b) draw 50 names from a box holding every 7th grader's name?",
+    "steps": [
+     "In plan (b), every 7th grader has the same chance to be drawn.",
+     "Plan (a) leans toward students who bike."
+    ],
+    "a": "Plan (b)"
+   },
+   {
+    "t": "ex",
+    "title": "Big but biased",
+    "q": "A website poll gets 5,000 answers, and 85% say they like video games. Does this show that 85% of all people like video games?",
+    "steps": [
+     "The people who answered chose to visit that site and to reply.",
+     "They are likely to be more interested in video games than other people, so the sample is biased.",
+     "A large biased sample is still biased."
+    ],
+    "a": "No"
+   },
+   {
+    "t": "ex",
+    "title": "In a factory",
+    "q": "An inspector checks light bulbs for defects. Should she test the first 50 bulbs made in the morning, or 50 bulbs picked at random times through the day?",
+    "steps": [
+     "The machine could change during the day, so the morning bulbs may not be typical.",
+     "Bulbs picked at random times give every bulb the same chance."
+    ],
+    "a": "Random times through the day"
+   },
+   {
+    "t": "mistake",
+    "html": "Trusting a sample because it is large. Size helps only when the sample is random. A huge sample of volunteers or friends can be far off. Ask first: did every member of the population have the same chance to be chosen?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Introductory Statistics, Section 1.2 Data, Sampling, and Variation in Data and Sampling"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.A.1"
+   }
+  ]
+ },
+ "g7.sample-predictions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/grade-7/random-samples/\">random sample</a> is like a small copy of the population. So the fraction of the sample with some feature is a good estimate for the population. Turning that into a number is <a href=\"/math/grade-7/solve-proportions/\">solving a proportion</a>."
+   },
+   {
+    "t": "key",
+    "html": "Use the sample's proportion (or its mean) for the whole population: $$\\frac{\\text{part of sample}}{\\text{sample size}} = \\frac{\\text{part of population}}{\\text{population size}}$$ Different random samples give somewhat different results. Larger samples vary less."
+   },
+   {
+    "t": "why",
+    "html": "A random sample gives every member the same chance, so on average it has the same mix as the population. Any single sample can be a bit off, the way 10 coin flips rarely give exactly 5 heads. Taking several samples shows how much the estimates wobble."
+   },
+   {
+    "t": "viz",
+    "name": "sampling",
+    "opts": {
+     "pop": "coin",
+     "n": 20
+    },
+    "cap": "Each sample is 20 coin flips, and the dot is its proportion of heads. Samples vary, but they gather around $0.5$. Try larger samples: the spread shrinks."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Estimating a count",
+    "q": "In a random sample of 50 students, 18 prefer an afternoon recess. The school has 600 students. About how many prefer it?",
+    "steps": [
+     "Sample proportion: $\\frac{18}{50}$.",
+     "$\\frac{18}{50} \\times 600 = 18 \\times 12 = 216$."
+    ],
+    "a": "About 216 students"
+   },
+   {
+    "t": "ex",
+    "title": "Combining samples",
+    "q": "Three random samples of 40 students had 12, 15 and 9 students who play an instrument. Estimate the percent of all students who do.",
+    "steps": [
+     "The samples differ, which is normal. Combine them: $12 + 15 + 9 = 36$ out of $120$.",
+     "$\\frac{36}{120} = 0.3 = 30\\%$."
+    ],
+    "a": "About 30%"
+   },
+   {
+    "t": "ex",
+    "title": "Using a mean",
+    "q": "A random sample of families in a town has a mean of 1.6 pets per family. There are 450 families. Estimate the total number of pets.",
+    "steps": [
+     "About 1.6 pets for each family.",
+     "$1.6 \\times 450 = 720$ pets."
+    ],
+    "a": "About 720 pets"
+   },
+   {
+    "t": "mistake",
+    "html": "Expecting every sample to give the same answer, and deciding a sample is \"wrong\" when it differs from another. Random samples vary. Their results cluster around the true value, and with more or bigger samples the estimate gets steadier."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Introductory Statistics, Section 1.2 Data, Sampling, and Variation in Data and Sampling"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.A.2"
+   }
+  ]
+ },
+ "g7.compare-populations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-6/describe-distributions/\">describe a distribution</a> by its center and spread, and measure spread with the <a href=\"/math/grade-6/mean-absolute-deviation/\">mean absolute deviation</a> (MAD). To compare two groups, you need both."
+   },
+   {
+    "t": "key",
+    "html": "Compare the centers <b>relative to the spread</b>: divide the difference of the means by the MAD (or the difference of the medians by the IQR). A gap of about 2 or more MADs means the groups are clearly different. A gap well under 1 MAD means the groups overlap a lot."
+   },
+   {
+    "t": "why",
+    "html": "A difference of 3 points means a lot if each group's scores barely vary, and very little if scores spread over 30 points. Dividing by the spread measures the gap in \"typical distances from the mean.\" When the gap is many of those, most of one group is above most of the other."
+   },
+   {
+    "t": "viz",
+    "name": "boxplot",
+    "opts": {
+     "data": [
+      62,
+      65,
+      66,
+      68,
+      70,
+      71,
+      72,
+      73,
+      75,
+      78
+     ],
+     "data2": [
+      70,
+      72,
+      74,
+      76,
+      78,
+      79,
+      80,
+      82,
+      84,
+      85
+     ],
+     "names": [
+      "Class A",
+      "Class B"
+     ],
+     "dots": true
+    },
+    "cap": "Quiz scores for two classes. The means are 70 and 78, and both MADs are about 4: the centers are about 2 MADs apart, and the boxes (the middle halves) do not overlap."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Clearly different",
+    "q": "Plants with fertilizer A have a mean height of 64 cm; with fertilizer B, 72 cm. Both groups have a MAD of 4 cm. How different are they?",
+    "steps": [
+     "Difference of the means: $72 - 64 = 8$ cm.",
+     "In MADs: $8 \\div 4 = 2$.",
+     "Two MADs apart: the groups overlap only a little, so fertilizer B plants are clearly taller."
+    ],
+    "a": "2 MADs apart: clearly different"
+   },
+   {
+    "t": "ex",
+    "title": "A lot of overlap",
+    "q": "Two teams' jump distances have means of 70 and 72 inches. Both have a MAD of 6 inches. How different are they?",
+    "steps": [
+     "Difference: $72 - 70 = 2$ inches.",
+     "In MADs: $2 \\div 6 = \\frac{1}{3}$.",
+     "Only a third of a MAD: the groups overlap a lot, and the difference may be ordinary variation."
+    ],
+    "a": "About $\\frac{1}{3}$ MAD apart: lots of overlap"
+   },
+   {
+    "t": "ex",
+    "title": "With medians",
+    "q": "Two box plots have medians of 40 and 52, and both IQRs are 12. How many IQRs apart are the medians?",
+    "steps": [
+     "$52 - 40 = 12$.",
+     "$12 \\div 12 = 1$ IQR. That is a moderate gap: the groups still overlap some, so the difference is worth noticing but is not as clear as a gap of 2 or more."
+    ],
+    "a": "1 IQR"
+   },
+   {
+    "t": "mistake",
+    "html": "Calling two groups different because their means are different. Every two groups have slightly different means. Always compare the gap with the spread: divide by the MAD and look at how much the dot plots or box plots overlap."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Introductory Statistics, Section 2.7 Measures of the Spread of the Data"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.B.3"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.B.4"
+   }
+  ]
+ },
+ "g7.probability-scale": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How likely is rain tomorrow? Rolling a 6? Probability puts a number on chance. Like a <a href=\"/math/grade-6/percent-meaning/\">percent</a>, it can be written as a fraction, a decimal or a percent."
+   },
+   {
+    "t": "key",
+    "html": "A probability is a number from $0$ to $1$. $0$ means impossible, $1$ means certain, and $\\frac{1}{2}$ means as likely as not. Numbers near $0$ are unlikely; numbers near $1$ are likely."
+   },
+   {
+    "t": "why",
+    "html": "A probability tells what fraction of the time an event happens in the long run. An event that never happens has a fraction of $0$; one that always happens has a fraction of $1$; one that happens half the time has $\\frac{1}{2}$. Nothing can happen less than never or more than always, so a probability is never below $0$ or above $1$ (above $100\\%$)."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 0,
+     "max": 1,
+     "step": 1,
+     "sub": 4,
+     "labels": "frac",
+     "reduce": true,
+     "points": [
+      {
+       "v": "1/10",
+       "label": "unlikely",
+       "color": "orange"
+      },
+      {
+       "v": "1/2",
+       "label": "even chance",
+       "color": "purple"
+      },
+      {
+       "v": "9/10",
+       "label": "likely",
+       "color": "teal"
+      }
+     ],
+     "value": false
+    },
+    "cap": "The probability scale runs from $0$ (impossible) to $1$ (certain). Unlikely events sit near $0$, likely ones near $1$, and an even chance is $\\frac{1}{2}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An impossible event",
+    "q": "What is the probability of rolling a 7 on a number cube numbered 1 to 6?",
+    "steps": [
+     "No face shows 7, so it can never happen."
+    ],
+    "a": "$0$, impossible"
+   },
+   {
+    "t": "ex",
+    "title": "Reading a probability",
+    "q": "The chance of rain tomorrow is $0.85$. Describe it.",
+    "steps": [
+     "$0.85$ is close to $1$.",
+     "Rain is likely, but not certain."
+    ],
+    "a": "Likely"
+   },
+   {
+    "t": "ex",
+    "title": "Not a probability",
+    "q": "Which of these cannot be a probability: $0$, $\\frac{3}{7}$, $1.2$, $45\\%$?",
+    "steps": [
+     "$1.2$ is more than $1$: more than \"certain,\" which is impossible.",
+     "The others are between $0$ and $1$."
+    ],
+    "a": "$1.2$"
+   },
+   {
+    "t": "note",
+    "html": "$\\frac{1}{2}$, $0.5$ and $50\\%$ are three names for the same probability. Use whichever is easiest to compare."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.5 Averages and Probability"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.C.5"
+   }
+  ]
+ },
+ "g7.theoretical-probability": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Where do probability numbers come from? When all the outcomes are equally likely, like the faces of a fair number cube, you can work the probability out by counting. It is a number on the <a href=\"/math/grade-7/probability-scale/\">probability scale</a>."
+   },
+   {
+    "t": "key",
+    "html": "If all outcomes are equally likely, $$P(\\text{event}) = \\frac{\\text{number of favorable outcomes}}{\\text{total number of outcomes}}$$"
+   },
+   {
+    "t": "why",
+    "html": "Equally likely outcomes share the total probability, $1$, equally. With 6 faces, each face gets $\\frac{1}{6}$. An event that includes 3 of the faces gets 3 of those shares: $\\frac{3}{6}$. This only works when the outcomes really are equally likely."
+   },
+   {
+    "t": "viz",
+    "name": "dice",
+    "opts": {
+     "kind": "dice",
+     "n": 1,
+     "sides": 6,
+     "event": 6,
+     "theory": true
+    },
+    "cap": "Roll a fair number cube many times. Each face settles near $\\frac{1}{6}$ of the rolls."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A number cube",
+    "q": "What is the probability of rolling an even number on a fair number cube?",
+    "steps": [
+     "Outcomes: 1, 2, 3, 4, 5, 6, all equally likely.",
+     "Favorable: 2, 4, 6. That is 3 of 6.",
+     "$P = \\frac{3}{6} = \\frac{1}{2}$."
+    ],
+    "a": "$\\frac{1}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "A bag of marbles",
+    "q": "A bag has 3 red, 5 blue and 2 green marbles. What is the probability of picking blue?",
+    "steps": [
+     "There are $3 + 5 + 2 = 10$ marbles, each equally likely.",
+     "$P(\\text{blue}) = \\frac{5}{10} = \\frac{1}{2}$."
+    ],
+    "a": "$\\frac{1}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Numbered cards",
+    "q": "Cards numbered 1 to 20 are shuffled. What is the probability of drawing a multiple of 3?",
+    "steps": [
+     "Multiples of 3: 3, 6, 9, 12, 15, 18. That is 6 cards.",
+     "$P = \\frac{6}{20} = \\frac{3}{10}$."
+    ],
+    "a": "$\\frac{3}{10}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking any event with two outcomes has probability $\\frac{1}{2}$: \"a lottery ticket wins or loses, so my chance is $\\frac{1}{2}$.\" Favorable over total works only for <b>equally likely</b> outcomes, and winning is far less likely than losing. Ask: are these outcomes really equally likely?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.5 Averages and Probability"
+   },
+   {
+    "name": "OpenStax, Introductory Statistics, Section 3.1 Terminology"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.C.7a"
+   }
+  ]
+ },
+ "g7.experimental-probability": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/grade-7/theoretical-probability/\">Theoretical probability</a> needs equally likely outcomes. For a paper cup that can land up, down or on its side, we cannot count our way to an answer. We can run an experiment."
+   },
+   {
+    "t": "key",
+    "html": "$$\\text{experimental probability} = \\frac{\\text{number of times the event happened}}{\\text{number of trials}}$$ It changes from experiment to experiment. With many trials it tends to get close to the true probability."
+   },
+   {
+    "t": "why",
+    "html": "Each trial is a small piece of evidence. With only a few trials, luck can push the fraction far from the truth. With many trials, the lucky streaks in both directions tend to balance out, so the fraction settles down. This is called the law of large numbers."
+   },
+   {
+    "t": "viz",
+    "name": "dice",
+    "opts": {
+     "kind": "dice",
+     "n": 1,
+     "sides": 6,
+     "event": 6,
+     "theory": true
+    },
+    "cap": "Roll 10 times and look at the share of 6s, then roll 1000. The share wanders at first and settles near $\\frac{1}{6} \\approx 0.167$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A paper cup",
+    "q": "A paper cup is tossed 40 times and lands on its side 12 times. What is the experimental probability of landing on its side?",
+    "steps": [
+     "$\\frac{12}{40} = \\frac{3}{10} = 0.3$."
+    ],
+    "a": "$\\frac{3}{10}$"
+   },
+   {
+    "t": "ex",
+    "title": "Making a prediction",
+    "q": "A player made 18 of her last 25 free throws. About how many of her next 100 would you expect her to make?",
+    "steps": [
+     "Experimental probability: $\\frac{18}{25}$.",
+     "$\\frac{18}{25} \\times 100 = 72$."
+    ],
+    "a": "About 72"
+   },
+   {
+    "t": "ex",
+    "title": "Expected and actual",
+    "q": "A fair number cube is rolled 60 times. How many 6s do you expect? If it shows 13 sixes, is the cube unfair?",
+    "steps": [
+     "Expected: $\\frac{1}{6} \\times 60 = 10$.",
+     "13 is close to 10. Differences like this happen by chance all the time, so 13 sixes is no reason to call the cube unfair."
+    ],
+    "a": "About 10; 13 is still reasonable"
+   },
+   {
+    "t": "mistake",
+    "html": "Expecting exactly ten 6s in 60 rolls. Ten is what you expect <b>on average</b>; any one experiment will usually be a little above or below. Over thousands of rolls the <b>fraction</b> of 6s gets close to $\\frac{1}{6}$, but the exact count still varies."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.5 Averages and Probability"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.C.6"
+   }
+  ]
+ },
+ "g7.probability-models": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <b>probability model</b> lists the possible outcomes and gives each one a probability. Some models come from <a href=\"/math/grade-7/theoretical-probability/\">equally likely outcomes</a>; others come from <a href=\"/math/grade-7/experimental-probability/\">experiments</a>. Comparing a model with real results tells you whether to trust it."
+   },
+   {
+    "t": "key",
+    "html": "In a <b>uniform</b> model, every outcome has the same probability. In other models, probabilities differ, and they can be estimated from data. All the probabilities in a model add to 1. A model predicts about (probability × trials) occurrences; results far from that, over many trials, suggest the model is wrong."
+   },
+   {
+    "t": "why",
+    "html": "A model is a claim about how chance behaves. Small differences between the prediction and the data are normal, because results vary. But if a spinner with 4 \"equal\" parts lands on red 180 times in 400 spins instead of about 100, chance alone almost never does that: the parts are probably not equal."
+   },
+   {
+    "t": "viz",
+    "name": "dice",
+    "opts": {
+     "kind": "dice",
+     "n": 2,
+     "sides": 6,
+     "event": 7,
+     "theory": true
+    },
+    "cap": "The sum of two number cubes is a non-uniform model: 7 is the most likely sum ($\\frac{6}{36}$) and 2 and 12 the least ($\\frac{1}{36}$). The data settle onto the dashed model."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Does it fit?",
+    "q": "A spinner has 4 equal parts, one red. In 400 spins, it lands on red 103 times. Does the data fit the model?",
+    "steps": [
+     "The model predicts $\\frac{1}{4} \\times 400 = 100$ reds.",
+     "103 is close to 100, a normal amount of variation. The data fit the model."
+    ],
+    "a": "Yes"
+   },
+   {
+    "t": "ex",
+    "title": "It does not fit",
+    "q": "Another \"equal parts\" spinner lands on red 180 times in 400 spins. Does it fit?",
+    "steps": [
+     "Again the model predicts about 100.",
+     "180 is far from 100 after so many spins, so the model does not fit. The red part is probably bigger than a quarter."
+    ],
+    "a": "No"
+   },
+   {
+    "t": "ex",
+    "title": "A model from data",
+    "q": "A thumbtack lands point up 62 times in 100 drops. Make a model and predict the number of point-up landings in 500 drops.",
+    "steps": [
+     "The outcomes are not equally likely, so use the data: $P(\\text{up}) \\approx \\frac{62}{100} = 0.62$ and $P(\\text{down}) \\approx 0.38$. They add to 1 ✓.",
+     "Prediction: $0.62 \\times 500 = 310$."
+    ],
+    "a": "About 310"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Introductory Statistics, Section 3.1 Terminology"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.C.7a"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.C.7b"
+   }
+  ]
+ },
+ "g7.sample-spaces": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "For a <a href=\"/math/grade-7/theoretical-probability/\">theoretical probability</a> you need to count all the outcomes. With two or three steps, like flipping two coins, that takes an organized list."
+   },
+   {
+    "t": "key",
+    "html": "The <b>sample space</b> is the list of all possible outcomes. Organize it with a list, a table, or a tree diagram. When each step has a fixed number of choices, multiply: a coin and a number cube give $2 \\times 6 = 12$ outcomes."
+   },
+   {
+    "t": "why",
+    "html": "A tree branches at every step. Each of the 2 coin branches splits into 6 number-cube branches, so there are $2 \\times 6 = 12$ paths. Each path is one outcome. Order matters: \"heads on the first coin, tails on the second\" is a different path from \"tails, then heads.\""
+   },
+   {
+    "t": "viz",
+    "name": "tree",
+    "opts": {
+     "levels": [
+      [
+       "H",
+       "T"
+      ],
+      [
+       "H",
+       "T"
+      ]
+     ]
+    },
+    "cap": "Two coins: four outcomes, HH, HT, TH and TT, each with probability $\\frac{1}{4}$. Pick the outcomes with exactly one head."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two coins",
+    "q": "Two coins are flipped. How many outcomes have exactly one head?",
+    "steps": [
+     "Sample space: HH, HT, TH, TT.",
+     "Exactly one head: HT and TH. These are different outcomes (which coin shows the head)."
+    ],
+    "a": "2 outcomes"
+   },
+   {
+    "t": "ex",
+    "title": "Outfits",
+    "q": "Ana has 3 shirts and 4 pairs of pants. How many outfits of one shirt and one pair of pants can she make?",
+    "steps": [
+     "Each shirt can go with each of the 4 pairs of pants.",
+     "$3 \\times 4 = 12$ outfits."
+    ],
+    "a": "12"
+   },
+   {
+    "t": "ex",
+    "title": "Two number cubes",
+    "q": "Two number cubes are rolled. How many outcomes have a sum of 7?",
+    "steps": [
+     "The sample space is a 6-by-6 table: 36 outcomes.",
+     "Sum of 7: (1, 6), (2, 5), (3, 4), (4, 3), (5, 2), (6, 1)."
+    ],
+    "a": "6 outcomes"
+   },
+   {
+    "t": "mistake",
+    "html": "Listing \"one head and one tail\" only once. HT and TH are two different outcomes, which is why one head and one tail ($\\frac{2}{4} = \\frac{1}{2}$) is twice as likely as two heads ($\\frac{1}{4}$). Label the coins (first and second) to keep them apart."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Introductory Statistics, Section 3.5 Tree and Venn Diagrams"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.C.8b"
+   }
+  ]
+ },
+ "g7.compound-probability": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A compound event is made of two or more simple events, like \"heads <b>and</b> a 6.\" With a <a href=\"/math/grade-7/sample-spaces/\">sample space</a> you can find its probability by counting, and <a href=\"/math/grade-7/multiply-divide-rationals/\">multiplying fractions</a> gives a shortcut."
+   },
+   {
+    "t": "key",
+    "html": "For equally likely outcomes, $$P(\\text{event}) = \\frac{\\text{favorable outcomes}}{\\text{all outcomes in the sample space}}$$ When the events do not affect each other (independent events), $P(A \\text{ and } B) = P(A) \\times P(B)$."
+   },
+   {
+    "t": "why",
+    "html": "Half of all coin flips are heads, and $\\frac{1}{6}$ of those also come with a 6 on the number cube. A fraction of a fraction is a product: $\\frac{1}{6}$ of $\\frac{1}{2}$ is $\\frac{1}{2} \\times \\frac{1}{6} = \\frac{1}{12}$. The tree shows the same thing: multiply along a path."
+   },
+   {
+    "t": "viz",
+    "name": "tree",
+    "opts": {
+     "levels": [
+      [
+       "H",
+       "T"
+      ],
+      [
+       "H",
+       "T"
+      ],
+      [
+       "H",
+       "T"
+      ]
+     ],
+     "select": [
+      "H/H/H"
+     ]
+    },
+    "cap": "Three coins: 8 equally likely paths, each with probability $\\frac{1}{2} \\times \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{8}$. Select outcomes to build an event."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Coin and number cube",
+    "q": "A coin is flipped and a number cube is rolled. Find the probability of heads and a 6.",
+    "steps": [
+     "Sample space: $2 \\times 6 = 12$ equally likely outcomes. Only H6 fits.",
+     "$P = \\frac{1}{12}$. Shortcut: $\\frac{1}{2} \\times \\frac{1}{6} = \\frac{1}{12}$ ✓."
+    ],
+    "a": "$\\frac{1}{12}$"
+   },
+   {
+    "t": "ex",
+    "title": "At least one head",
+    "q": "Three coins are flipped. Find the probability of at least one head.",
+    "steps": [
+     "Of the 8 outcomes, only TTT has no head.",
+     "So 7 outcomes fit: $P = \\frac{7}{8}$."
+    ],
+    "a": "$\\frac{7}{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "Two number cubes",
+    "q": "Find the probability that two number cubes have a sum of 8.",
+    "steps": [
+     "Sum 8: (2, 6), (3, 5), (4, 4), (5, 3), (6, 2). That is 5 outcomes.",
+     "$P = \\frac{5}{36}$."
+    ],
+    "a": "$\\frac{5}{36}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding instead of multiplying for \"and\": $\\frac{1}{2} + \\frac{1}{6} = \\frac{2}{3}$ for heads and a 6. That is bigger than either chance alone, but needing <b>both</b> things to happen must be less likely than needing one. Check: is your answer smaller than each single probability?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Introductory Statistics, Section 3.5 Tree and Venn Diagrams"
+   },
+   {
+    "name": "OpenStax, Introductory Statistics, Section 3.2 Independent and Mutually Exclusive Events"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.C.8a"
+   }
+  ]
+ },
+ "g7.simulations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some probabilities are hard to count, like \"how likely is it to collect all 3 prizes in 5 cereal boxes?\" A <b>simulation</b> uses a simple random tool to act out the situation many times. It is an <a href=\"/math/grade-7/experimental-probability/\">experiment</a> that stands in for the real thing, built on <a href=\"/math/grade-7/compound-probability/\">compound events</a>."
+   },
+   {
+    "t": "key",
+    "html": "To simulate: (1) choose a random tool whose outcomes have the same probabilities as the real situation, (2) decide what counts as one trial and what counts as success, (3) run many trials, (4) estimate the probability as successes ÷ trials."
+   },
+   {
+    "t": "why",
+    "html": "A good simulation behaves like the real situation, because the chances match. And with many trials, an experimental probability gets close to the true one. So the fraction of successful trials estimates the real probability, even when no one can count it directly."
+   },
+   {
+    "t": "viz",
+    "name": "dice",
+    "opts": {
+     "kind": "coins",
+     "n": 3,
+     "event": 2,
+     "theory": true
+    },
+    "cap": "Simulate families with 3 children, with heads for a girl. Track how often there are exactly 2 heads; it settles near $\\frac{3}{8}$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Probability",
+     "A tool that matches"
+    ],
+    "rows": [
+     [
+      "$\\frac{1}{2}$",
+      "flip a coin: heads"
+     ],
+     [
+      "$\\frac{1}{6}$",
+      "roll a number cube: 6"
+     ],
+     [
+      "$\\frac{1}{3}$",
+      "roll a number cube: 1 or 2"
+     ],
+     [
+      "$30\\%$",
+      "pick a random digit 0 to 9: 0, 1 or 2"
+     ],
+     [
+      "$\\frac{1}{4}$",
+      "spin a spinner with 4 equal parts"
+     ]
+    ],
+    "cap": "Matching a tool to a probability."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Designing a simulation",
+    "q": "A player makes 70% of her free throws. How could you simulate one shot?",
+    "steps": [
+     "Use random digits 0 to 9; each is equally likely.",
+     "Let 0 through 6 (7 of the 10 digits) mean \"makes it\" and 7, 8, 9 mean \"misses.\""
+    ],
+    "a": "Random digits: 0–6 make, 7–9 miss"
+   },
+   {
+    "t": "ex",
+    "title": "Reading the results",
+    "q": "In 50 trials of a simulation of two free throws, the player made both shots in 24 trials. Estimate the probability of making both.",
+    "steps": [
+     "$\\frac{24}{50} = 0.48$.",
+     "(The exact answer is $0.7 \\times 0.7 = 0.49$, so the simulation came close.)"
+    ],
+    "a": "$0.48$"
+   },
+   {
+    "t": "ex",
+    "title": "Collecting prizes",
+    "q": "A cereal has 3 equally likely prizes. Each trial rolls a number cube (1–2, 3–4 and 5–6 stand for the prizes) until all 3 have appeared. In 20 trials, 12 needed 5 or fewer rolls. Estimate the probability of collecting all 3 prizes in 5 boxes or fewer.",
+    "steps": [
+     "Each roll stands for one box.",
+     "$\\frac{12}{20} = 0.6$."
+    ],
+    "a": "$0.6$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Prealgebra 2e, Section 5.5 Averages and Probability"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 7.SP.C.8c"
+   }
+  ]
+ }
+}

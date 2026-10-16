@@ -1,0 +1,4057 @@
+{
+ "calc2.area-between-curves": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/calculus-1/ftc-evaluate/\">Evaluating Integrals with FTC Part 2</a> you found $\\int_a^b f(x)\\,dx$, the signed area between a curve and the $x$-axis. Now the region sits between two curves, $y = f(x)$ on top and $y = g(x)$ underneath. The $x$-axis was just the special curve $g(x) = 0$."
+   },
+   {
+    "t": "why",
+    "html": "Cut the region into thin vertical strips of width $\\Delta x$. A strip at $x$ runs from the bottom curve up to the top curve, so its height is $f(x) - g(x)$ and its area is about $[f(x) - g(x)]\\,\\Delta x$. Adding the strips gives a Riemann sum, and as $\\Delta x \\to 0$ it becomes an integral:\n$$\\begin{aligned} A &= \\lim_{n\\to\\infty}\\sum_{i=1}^{n} \\left[f(x_i) - g(x_i)\\right]\\Delta x \\\\ &= \\int_a^b \\left[f(x) - g(x)\\right]dx. \\end{aligned}$$\nOnly the difference matters. If both curves sit below the axis, or one above and one below, the strip height is still top minus bottom, which is positive."
+   },
+   {
+    "t": "key",
+    "html": "If $f(x) \\ge g(x)$ on $[a, b]$, the area between them is\n$$A = \\int_a^b \\left[f(x) - g(x)\\right]dx$$ (top minus bottom).\nIf the curves cross, split the interval at each crossing so that every piece is top minus bottom. In one line: $A = \\int_a^b \\left|f(x) - g(x)\\right|dx$."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Find where the curves meet: solve $f(x) = g(x)$. These are often the limits $a$ and $b$.",
+     "Pick a test point in each piece to see which curve is on top.",
+     "Integrate top minus bottom on each piece and add the results."
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "A region enclosed by two curves",
+    "q": "Find the area enclosed by $y = x + 2$ and $y = x^{2}$.",
+    "steps": [
+     "Meeting points: $x^{2} = x + 2$, so $x^{2} - x - 2 = (x - 2)(x + 1) = 0$, giving $x = -1$ and $x = 2$.",
+     "Test $x = 0$: the line gives 2 and the parabola gives 0, so the line is on top.",
+     "$$\\begin{aligned} A &= \\int_{-1}^{2} (x + 2 - x^{2})\\,dx \\\\ &= \\left[\\frac{x^{2}}{2} + 2x - \\frac{x^{3}}{3}\\right]_{-1}^{2}. \\end{aligned}$$",
+     "At $2$: $2 + 4 - \\frac{8}{3} = \\frac{10}{3}$. At $-1$: $\\frac{1}{2} - 2 + \\frac{1}{3} = -\\frac{7}{6}$.",
+     "$A = \\frac{10}{3} + \\frac{7}{6} = \\frac{27}{6} = \\frac{9}{2}$."
+    ],
+    "a": "$\\frac{9}{2}$ square units"
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "x^2",
+      "2x"
+     ],
+     "shade": {
+      "fn": 0,
+      "fn2": 1,
+      "a": 0,
+      "b": 3
+     },
+     "intersections": true,
+     "xmin": -1,
+     "xmax": 4,
+     "ymin": -1,
+     "ymax": 10,
+     "zoom": false
+    },
+    "cap": "The parabola $y = x^{2}$ and the line $y = 2x$ cross at $x = 2$. On $[0, 2]$ the line is on top; on $[2, 3]$ the parabola is. Each shaded piece has positive area."
+   },
+   {
+    "t": "ex",
+    "title": "Curves that cross",
+    "q": "Find the total area between $y = x^{2}$ and $y = 2x$ from $x = 0$ to $x = 3$.",
+    "steps": [
+     "They cross where $x^{2} = 2x$: at $x = 0$ and $x = 2$. So split at $x = 2$.",
+     "On $[0, 2]$ the line is on top: $$\\begin{aligned} &\\int_0^2 (2x - x^{2})\\,dx \\\\ &= \\left[x^{2} - \\frac{x^{3}}{3}\\right]_0^2 \\\\ &= 4 - \\frac{8}{3} \\\\ &= \\frac{4}{3}. \\end{aligned}$$",
+     "On $[2, 3]$ the parabola is on top: $$\\begin{aligned} &\\int_2^3 (x^{2} - 2x)\\,dx \\\\ &= \\left[\\frac{x^{3}}{3} - x^{2}\\right]_2^3 \\\\ &= 0 - \\left(-\\frac{4}{3}\\right) \\\\ &= \\frac{4}{3}. \\end{aligned}$$",
+     "Total: $\\frac{4}{3} + \\frac{4}{3} = \\frac{8}{3}$."
+    ],
+    "a": "$\\frac{8}{3}$ square units"
+   },
+   {
+    "t": "mistake",
+    "html": "Writing one integral across a crossing point. Here $\\int_0^3 (x^{2} - 2x)\\,dx = 0$: the two pieces have equal size and opposite signs, so they cancel and the \"area\" vanishes. An area can never be zero or negative when there is a region there. Quick check: before integrating, make sure the integrand is $\\ge 0$ on every piece; if it changes sign, split."
+   },
+   {
+    "t": "h",
+    "text": "Integrating with respect to y"
+   },
+   {
+    "t": "p",
+    "html": "Some regions are easier to slice sideways. If the region lies between a left curve $x = g(y)$ and a right curve $x = f(y)$ for $c \\le y \\le d$, use horizontal strips of height $\\Delta y$ and length right minus left:\n$$A = \\int_c^d \\left[f(y) - g(y)\\right]dy.$$"
+   },
+   {
+    "t": "ex",
+    "title": "Right minus left",
+    "q": "Find the area enclosed by $x = y^{2}$ and $x = y + 2$.",
+    "steps": [
+     "They meet where $y^{2} = y + 2$, at $y = -1$ and $y = 2$.",
+     "At $y = 0$ the line gives $x = 2$ and the parabola $x = 0$, so the line is on the right.",
+     "$A = \\int_{-1}^{2} (y + 2 - y^{2})\\,dy = \\frac{9}{2}$, the same arithmetic as the first example.",
+     "That is no accident: this region is the first one reflected across the line $y = x$. Slicing in $x$ here would need two integrals, because the bottom boundary changes at $x = 1$."
+    ],
+    "a": "$\\frac{9}{2}$ square units"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.1: Areas between Curves"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Area Between Curves"
+   }
+  ]
+ },
+ "calc2.volume-slicing": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/geometry/cavalieri/\">Cavalieri's principle</a> says that two solids with equal cross-section areas at every height have the same volume. Calculus turns that idea into a formula: if you know the area $A(x)$ of every cross-section, you know the volume. This builds on <a href=\"/math/calculus-2/area-between-curves/\">Area Between Curves</a>, where you added thin strips; now you add thin slabs."
+   },
+   {
+    "t": "why",
+    "html": "Slice the solid perpendicular to the $x$-axis into slabs of thickness $\\Delta x$. A slab at $x$ is close to a prism (a \"cylinder\" in the general sense) whose base is the cross-section, so its volume is about $A(x)\\,\\Delta x$. Adding the slabs gives a Riemann sum:\n$$V \\approx \\sum_{i=1}^{n} A(x_i)\\,\\Delta x \\;\\longrightarrow\\; \\int_a^b A(x)\\,dx.$$\nCavalieri's principle follows at once: equal $A(x)$ gives equal integrals."
+   },
+   {
+    "t": "key",
+    "html": "$$V = \\int_a^b A(x)\\,dx,$$ where $A(x)$ is the area of the cross-section at $x$. All the work is in writing $A(x)$ as a formula in $x$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Cross-section with side (or diameter) $s$",
+     "Area"
+    ],
+    "rows": [
+     [
+      "square",
+      "$s^{2}$"
+     ],
+     [
+      "semicircle with diameter $s$",
+      "$\\frac{\\pi}{8}s^{2}$"
+     ],
+     [
+      "equilateral triangle",
+      "$\\frac{\\sqrt{3}}{4}s^{2}$"
+     ],
+     [
+      "isosceles right triangle, leg $s$",
+      "$\\frac{1}{2}s^{2}$"
+     ]
+    ],
+    "cap": "Areas you will use often."
+   },
+   {
+    "t": "ex",
+    "title": "A pyramid",
+    "q": "A pyramid has a square base of side 4 m and height 6 m. Find its volume by slicing.",
+    "steps": [
+     "Measure $y$ down from the top. By similar triangles the square at depth $y$ has side $4\\cdot\\frac{y}{6} = \\frac{2y}{3}$.",
+     "Its area is $A(y) = \\left(\\frac{2y}{3}\\right)^{2} = \\frac{4y^{2}}{9}$.",
+     "$V = \\int_0^6 \\frac{4y^{2}}{9}\\,dy = \\frac{4}{9}\\cdot\\frac{6^{3}}{3} = 32$.",
+     "Check: $\\frac{1}{3}(\\text{base})(\\text{height}) = \\frac{1}{3}\\cdot 16\\cdot 6 = 32$. The $\\frac{1}{3}$ in that formula comes from $\\int y^{2}\\,dy$."
+    ],
+    "a": "$32$ m³"
+   },
+   {
+    "t": "viz",
+    "name": "solids",
+    "opts": {
+     "f": "x/2",
+     "a": 0,
+     "b": 4,
+     "axis": "x",
+     "angle": 300,
+     "x0": 2.5
+    },
+    "cap": "A cone is a stack of thin disks. Move the slice: its radius is $\\frac{x}{2}$, so its area $\\pi\\frac{x^{2}}{4}$ grows like $x^{2}$, just like the squares in the pyramid."
+   },
+   {
+    "t": "ex",
+    "title": "Squares on a parabolic base",
+    "q": "The base of a solid is the region between $y = 4 - x^{2}$ and the $x$-axis. Cross-sections perpendicular to the $x$-axis are squares. Find the volume.",
+    "steps": [
+     "At $x$, the base is $4 - x^{2}$ tall, so the square has side $s = 4 - x^{2}$ and area $(4 - x^{2})^{2}$, for $-2 \\le x \\le 2$.",
+     "$$\\begin{aligned} V &= \\int_{-2}^{2} (4 - x^{2})^{2}\\,dx \\\\ &= 2\\int_0^2 (16 - 8x^{2} + x^{4})\\,dx \\end{aligned}$$ (the integrand is even).",
+     "$$\\begin{aligned}  &= 2\\left(32 - \\frac{64}{3} + \\frac{32}{5}\\right) \\\\ &= 2\\cdot\\frac{256}{15} \\\\ &= \\frac{512}{15}. \\end{aligned}$$"
+    ],
+    "a": "$\\frac{512}{15}$ cubic units"
+   },
+   {
+    "t": "ex",
+    "title": "Triangles on a disk",
+    "q": "A solid has the disk $x^{2} + y^{2} \\le 9$ as its base. Cross-sections perpendicular to the $x$-axis are equilateral triangles. Find the volume.",
+    "steps": [
+     "At $x$ the disk runs from $y = -\\sqrt{9 - x^{2}}$ to $y = \\sqrt{9 - x^{2}}$, so the side is $s = 2\\sqrt{9 - x^{2}}$ and $s^{2} = 4(9 - x^{2})$.",
+     "$$\\begin{aligned} A(x) &= \\frac{\\sqrt{3}}{4}\\cdot 4(9 - x^{2}) \\\\ &= \\sqrt{3}\\,(9 - x^{2}). \\end{aligned}$$",
+     "$$\\begin{aligned} V &= \\sqrt{3}\\int_{-3}^{3} (9 - x^{2})\\,dx \\\\ &= \\sqrt{3}\\,(54 - 18) \\\\ &= 36\\sqrt{3}. \\end{aligned}$$"
+    ],
+    "a": "$36\\sqrt{3}$ cubic units"
+   },
+   {
+    "t": "mistake",
+    "html": "Integrating the side length $s(x)$ instead of the area $A(x)$. That adds up lengths times thicknesses, which is an area, not a volume. Check the units: $A(x)$ is in square units and $dx$ in units, so $\\int A(x)\\,dx$ comes out in cubic units."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.2: Determining Volumes by Slicing"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Volumes of Solids of Revolution / Method of Rings"
+   }
+  ]
+ },
+ "calc2.disks-washers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When a flat region spins around a line, it sweeps out a solid of revolution. Every slice perpendicular to that line is round, so <a href=\"/math/calculus-2/volume-slicing/\">volume by slicing</a> gets an easy cross-section: a disk, or a disk with a hole (a washer)."
+   },
+   {
+    "t": "why",
+    "html": "Revolve a thin vertical strip of the region around the $x$-axis. If the strip reaches from the axis up to the curve $y = R(x)$, it sweeps out a disk of radius $R(x)$, with area $\\pi R(x)^{2}$. If the strip starts at an inner curve $r(x)$ instead, it sweeps out a washer: the big disk minus the hole,\n$$\\begin{aligned} A(x) &= \\pi R(x)^{2} - \\pi r(x)^{2} \\\\ &= \\pi\\left[R(x)^{2} - r(x)^{2}\\right]. \\end{aligned}$$\nThen $V = \\int A(x)\\,dx$, exactly as in slicing."
+   },
+   {
+    "t": "key",
+    "html": "Revolving about a horizontal axis:\n$$V = \\pi\\int_a^b \\left[R(x)^{2} - r(x)^{2}\\right]dx,$$\nwhere $R$ is the outer radius and $r$ the inner radius ($r = 0$ for disks). Both radii are distances from the axis of rotation."
+   },
+   {
+    "t": "ex",
+    "title": "A disk",
+    "q": "Revolve the region under $y = \\sqrt{x}$, $0 \\le x \\le 4$, about the $x$-axis. Find the volume.",
+    "steps": [
+     "Each slice is a disk of radius $R(x) = \\sqrt{x}$, so $R^{2} = x$.",
+     "$V = \\pi\\int_0^4 x\\,dx = \\pi\\cdot\\frac{16}{2} = 8\\pi$."
+    ],
+    "a": "$8\\pi$"
+   },
+   {
+    "t": "viz",
+    "name": "solids",
+    "opts": {
+     "f": "x",
+     "g": "x^2",
+     "a": 0,
+     "b": 1,
+     "axis": "x",
+     "angle": 270,
+     "x0": 0.5
+    },
+    "cap": "The region between $y = x$ and $y = x^{2}$ spun around the $x$-axis. The red slice is a washer: outer radius $x$, inner radius $x^{2}$. Turn the picture and slide the slice."
+   },
+   {
+    "t": "ex",
+    "title": "A washer",
+    "q": "Revolve the region between $y = x$ and $y = x^{2}$ ($0 \\le x \\le 1$) about the $x$-axis.",
+    "steps": [
+     "On $[0, 1]$, $x \\ge x^{2}$, so the outer radius is $R = x$ and the inner radius is $r = x^{2}$.",
+     "$$\\begin{aligned} V &= \\pi\\int_0^1 \\left(x^{2} - x^{4}\\right)dx \\\\ &= \\pi\\left(\\frac{1}{3} - \\frac{1}{5}\\right) \\\\ &= \\frac{2\\pi}{15}. \\end{aligned}$$"
+    ],
+    "a": "$\\frac{2\\pi}{15}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Squaring the difference: $\\pi\\int (R - r)^{2}\\,dx$. For the washer above that gives $\\pi\\int_0^1 (x - x^{2})^{2}\\,dx = \\frac{\\pi}{30}$, only a quarter of the true $\\frac{2\\pi}{15}$. A thin ring far from the axis has a large area (it goes all the way around), but $(R - r)^{2}$ treats it like a tiny disk whose radius is the ring's thickness. Check: area of a washer = big disk minus hole."
+   },
+   {
+    "t": "h",
+    "text": "When the axis is not a coordinate axis"
+   },
+   {
+    "t": "p",
+    "html": "Radii are always distances from the axis of rotation. If the axis is the line $y = k$ below the region, a point at height $y$ is $y - k$ from the axis. If the axis is above the region, the distance is $k - y$, and the curve that is lower on the graph becomes the outer one."
+   },
+   {
+    "t": "ex",
+    "title": "Spinning about y = −1",
+    "q": "Revolve the region between $y = x$ and $y = x^{2}$ ($0 \\le x \\le 1$) about the line $y = -1$.",
+    "steps": [
+     "Distances to the axis add 1: outer radius $R = x + 1$, inner radius $r = x^{2} + 1$.",
+     "$$\\begin{aligned} &R^{2} - r^{2} \\\\ &= (x^{2} + 2x + 1) - (x^{4} + 2x^{2} + 1) \\\\ &= -x^{4} - x^{2} + 2x. \\end{aligned}$$",
+     "$$\\begin{aligned} V &= \\pi\\int_0^1 (-x^{4} - x^{2} + 2x)\\,dx \\\\ &= \\pi\\left(-\\frac{1}{5} - \\frac{1}{3} + 1\\right) \\\\ &= \\frac{7\\pi}{15}. \\end{aligned}$$"
+    ],
+    "a": "$\\frac{7\\pi}{15}$, more than before, because the region now sweeps a wider circle."
+   },
+   {
+    "t": "viz",
+    "name": "solids",
+    "opts": {
+     "f": "x",
+     "g": "x^2",
+     "a": 0,
+     "b": 1,
+     "axis": "x",
+     "k": -1,
+     "angle": 300
+    },
+    "cap": "The same region spun around $y = -1$. The hole is now a cylinder of radius at least 1."
+   },
+   {
+    "t": "note",
+    "html": "To revolve about the $y$-axis with this method, slice horizontally: write the radii as functions of $y$ and integrate $\\pi\\int \\left[R(y)^{2} - r(y)^{2}\\right]dy$. The next topic, <a href=\"/math/calculus-2/shells/\">Cylindrical Shells</a>, offers a way that keeps $x$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.2: Determining Volumes by Slicing (the disk and washer methods)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Volumes of Solids of Revolution / Method of Rings"
+   }
+  ]
+ },
+ "calc2.shells": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "With <a href=\"/math/calculus-2/disks-washers/\">disks and washers</a> you slice across the axis of rotation. Sometimes that forces you to solve a curve for $x$ in terms of $y$, which can be hard or impossible. Cylindrical shells slice parallel to the axis instead."
+   },
+   {
+    "t": "why",
+    "html": "Take a thin vertical strip at $x$, of height $h(x)$ and width $\\Delta x$, and spin it around the $y$-axis. It sweeps out a thin-walled tube: a shell. Cut the shell down one side and unroll it. You get a nearly flat slab with length $2\\pi x$ (the circumference), height $h(x)$ and thickness $\\Delta x$. So its volume is about $2\\pi x\\,h(x)\\,\\Delta x$, and adding shells gives\n$$V = \\int_a^b 2\\pi x\\,h(x)\\,dx.$$"
+   },
+   {
+    "t": "key",
+    "html": "$$V = 2\\pi\\int_a^b (\\text{radius})(\\text{height})\\,dx,$$\nwhere the radius is the distance from the strip to the axis of rotation and the height is top curve minus bottom curve."
+   },
+   {
+    "t": "ex",
+    "title": "About the y-axis",
+    "q": "Revolve the region between $y = 2x - x^{2}$ and the $x$-axis about the $y$-axis.",
+    "steps": [
+     "The curve meets the axis at $x = 0$ and $x = 2$. A strip at $x$ has height $2x - x^{2}$ and radius $x$.",
+     "$$\\begin{aligned} V &= 2\\pi\\int_0^2 x(2x - x^{2})\\,dx \\\\ &= 2\\pi\\left[\\frac{2x^{3}}{3} - \\frac{x^{4}}{4}\\right]_0^2 \\\\ &= 2\\pi\\left(\\frac{16}{3} - 4\\right). \\end{aligned}$$",
+     "$V = \\frac{8\\pi}{3}$. With washers you would first have to solve $y = 2x - x^{2}$ for $x$, getting two branches $x = 1 \\pm\\sqrt{1 - y}$."
+    ],
+    "a": "$\\frac{8\\pi}{3}$"
+   },
+   {
+    "t": "viz",
+    "name": "solids",
+    "opts": {
+     "f": "2x-x^2",
+     "a": 0,
+     "b": 2,
+     "axis": "y",
+     "angle": 270,
+     "x0": 1.5
+    },
+    "cap": "Shells: each vertical strip spins into a thin cylinder around the $y$-axis. Slide the strip and watch the radius and height in the readout."
+   },
+   {
+    "t": "ex",
+    "title": "An axis to the left",
+    "q": "Revolve the same region about the line $x = -1$.",
+    "steps": [
+     "The axis is 1 unit to the left of the $y$-axis, so a strip at $x$ is $x + 1$ from it.",
+     "$$\\begin{aligned} V &= 2\\pi\\int_0^2 (x + 1)(2x - x^{2})\\,dx \\\\ &= 2\\pi\\int_0^2 (2x + x^{2} - x^{3})\\,dx. \\end{aligned}$$",
+     "$= 2\\pi\\left(4 + \\frac{8}{3} - 4\\right) = \\frac{16\\pi}{3}$."
+    ],
+    "a": "$\\frac{16\\pi}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $x$ as the radius when the axis is not the $y$-axis. The radius is a distance from the axis, so it must be 0 on the axis and grow as you move away. For the axis $x = -1$ the radius is $x + 1$; for an axis $x = 3$ to the right of the region it is $3 - x$. Check by plugging in one point: the strip at $x = 0$ is 1 unit from $x = -1$, and $0 + 1 = 1$."
+   },
+   {
+    "t": "ex",
+    "title": "An axis to the right",
+    "q": "Revolve the same region about the line $x = 3$.",
+    "steps": [
+     "Now the radius is $3 - x$.",
+     "$$\\begin{aligned} V &= 2\\pi\\int_0^2 (3 - x)(2x - x^{2})\\,dx \\\\ &= 2\\pi\\int_0^2 (6x - 5x^{2} + x^{3})\\,dx \\\\ &= 2\\pi\\left(12 - \\frac{40}{3} + 4\\right) \\\\ &= \\frac{16\\pi}{3}. \\end{aligned}$$",
+     "Same as for $x = -1$. The region is symmetric about $x = 1$, and both axes are 2 units from that center."
+    ],
+    "a": "$\\frac{16\\pi}{3}$"
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "Disks and washers",
+     "Shells"
+    ],
+    "rows": [
+     [
+      "Slices",
+      "perpendicular to the axis",
+      "parallel to the axis"
+     ],
+     [
+      "Piece",
+      "$\\pi(R^{2} - r^{2})\\,\\Delta x$",
+      "$2\\pi(\\text{radius})(\\text{height})\\,\\Delta x$"
+     ],
+     [
+      "Axis vertical: integrate in",
+      "$y$",
+      "$x$"
+     ],
+     [
+      "Axis horizontal: integrate in",
+      "$x$",
+      "$y$"
+     ]
+    ],
+    "cap": "Pick the method whose variable makes the curves easy to write."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.3: Volumes of Revolution: Cylindrical Shells"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Volumes of Solids of Revolution / Method of Cylinders"
+   }
+  ]
+ },
+ "calc2.arc-length": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How long is a curved path? Approximate it with short straight segments, find their lengths with the Pythagorean theorem, and let the segments shrink. The result is an integral, and evaluating it usually takes the <a href=\"/math/calculus-1/u-substitution/\">substitution</a> skills you already have."
+   },
+   {
+    "t": "why",
+    "html": "Over a small step $\\Delta x$, the curve $y = f(x)$ rises $\\Delta y$. The chord across that step has length\n$$\\sqrt{(\\Delta x)^{2} + (\\Delta y)^{2}} = \\sqrt{1 + \\left(\\frac{\\Delta y}{\\Delta x}\\right)^{2}}\\;\\Delta x.$$\nBy the <a href=\"/math/calculus-1/mean-value-theorem/\">Mean Value Theorem</a>, $\\frac{\\Delta y}{\\Delta x} = f'(c)$ for some $c$ in the step. So the total length of the chords is a Riemann sum for $\\int_a^b \\sqrt{1 + f'(x)^{2}}\\,dx$, and the chords hug the curve better and better as $\\Delta x \\to 0$."
+   },
+   {
+    "t": "key",
+    "html": "If $f'$ is continuous on $[a, b]$, the length of $y = f(x)$ from $x = a$ to $x = b$ is\n$$L = \\int_a^b \\sqrt{1 + \\left[f'(x)\\right]^{2}}\\,dx.$$"
+   },
+   {
+    "t": "viz",
+    "name": "calc2-arclength",
+    "opts": {
+     "f": "x^2/2",
+     "a": 0,
+     "b": 2,
+     "n": 2,
+     "maxN": 64
+    },
+    "cap": "The curve $y = \\frac{x^{2}}{2}$ on $[0, 2]$ and $n$ straight chords. Each chord has length $\\Delta x\\sqrt{1 + (\\Delta y/\\Delta x)^{2}}$. Raise $n$: the total creeps up toward the exact length $\\int_0^2\\sqrt{1 + x^{2}}\\,dx \\approx 2.958$."
+   },
+   {
+    "t": "ex",
+    "title": "A root that simplifies",
+    "q": "Find the length of $y = \\frac{2}{3}x^{3/2}$ from $x = 0$ to $x = 3$.",
+    "steps": [
+     "$f'(x) = x^{1/2}$, so $1 + f'(x)^{2} = 1 + x$.",
+     "$L = \\int_0^3 \\sqrt{1 + x}\\,dx = \\left[\\frac{2}{3}(1 + x)^{3/2}\\right]_0^3$.",
+     "$= \\frac{2}{3}(8 - 1) = \\frac{14}{3}$."
+    ],
+    "a": "$\\frac{14}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "A hidden perfect square",
+    "q": "Find the length of $y = \\frac{x^{3}}{6} + \\frac{1}{2x}$ from $x = 1$ to $x = 2$.",
+    "steps": [
+     "$f'(x) = \\frac{x^{2}}{2} - \\frac{1}{2x^{2}}$, so $f'(x)^{2} = \\frac{x^{4}}{4} - \\frac{1}{2} + \\frac{1}{4x^{4}}$.",
+     "Adding 1 flips the middle sign: $$\\begin{aligned} 1 + f'(x)^{2} &= \\frac{x^{4}}{4} + \\frac{1}{2} + \\frac{1}{4x^{4}} \\\\ &= \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)^{2}. \\end{aligned}$$",
+     "$$\\begin{aligned} L &= \\int_1^2 \\left(\\frac{x^{2}}{2} + \\frac{1}{2x^{2}}\\right)dx \\\\ &= \\left[\\frac{x^{3}}{6} - \\frac{1}{2x}\\right]_1^2 \\\\ &= \\left(\\frac{4}{3} - \\frac{1}{4}\\right) - \\left(\\frac{1}{6} - \\frac{1}{2}\\right) \\\\ &= \\frac{17}{12}. \\end{aligned}$$"
+    ],
+    "a": "$\\frac{17}{12}$"
+   },
+   {
+    "t": "ex",
+    "title": "A trig curve",
+    "q": "Find the length of $y = \\ln(\\cos x)$ from $x = 0$ to $x = \\frac{\\pi}{4}$.",
+    "steps": [
+     "$f'(x) = \\frac{-\\sin x}{\\cos x} = -\\tan x$, so $1 + f'(x)^{2} = 1 + \\tan^{2} x = \\sec^{2} x$.",
+     "On $\\left[0, \\frac{\\pi}{4}\\right]$, $\\sec x > 0$, so the root is $\\sec x$.",
+     "$$\\begin{aligned} L &= \\int_0^{\\pi/4} \\sec x\\,dx \\\\ &= \\Big[\\ln\\left|\\sec x + \\tan x\\right|\\Big]_0^{\\pi/4} \\\\ &= \\ln\\left(\\sqrt{2} + 1\\right) - \\ln 1. \\end{aligned}$$"
+    ],
+    "a": "$\\ln\\left(\\sqrt{2} + 1\\right) \\approx 0.881$, a bit longer than the straight-line distance from $(0, 0)$ to $\\left(\\frac{\\pi}{4}, -\\frac{\\ln 2}{2}\\right)$, about $0.86$."
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting to square the derivative: writing $\\sqrt{1 + f'(x)}$. Test the formula on a straight line, where you know the answer. For $y = 2x$ from 0 to 1 the length is $\\sqrt{1^{2} + 2^{2}} = \\sqrt{5}$. The correct formula gives $\\int_0^1\\sqrt{1 + 2^{2}}\\,dx = \\sqrt{5}$; the unsquared one gives $\\sqrt{3}$."
+   },
+   {
+    "t": "p",
+    "html": "Letting the upper limit vary gives the arc length function $s(x) = \\int_a^x \\sqrt{1 + f'(t)^{2}}\\,dt$. By the Fundamental Theorem, $\\frac{ds}{dx} = \\sqrt{1 + f'(x)^{2}}$, which is often written as $ds^{2} = dx^{2} + dy^{2}$: a tiny step along the curve is the hypotenuse of a tiny right triangle. That picture will return for <a href=\"/math/calculus-2/parametric-calculus/\">parametric curves</a> and polar curves."
+   },
+   {
+    "t": "note",
+    "html": "Most arc length integrals have no elementary antiderivative; even $y = x^{2}$ leads to a hard one. Textbook problems are chosen so that $1 + f'^{2}$ is a perfect square. In practice you set up the integral and evaluate it with <a href=\"/math/calculus-2/numerical-integration/\">the trapezoid or Simpson's rule</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.4: Arc Length of a Curve and Surface Area"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Arc Length"
+   }
+  ]
+ },
+ "calc2.surface-of-revolution": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Spin a curve (not a region) around the $x$-axis and it traces out a surface, like a lampshade or the skin of a vase. To find its area, combine two ideas you already have: the circles from <a href=\"/math/calculus-2/disks-washers/\">disks and washers</a> and the slanted pieces from <a href=\"/math/calculus-2/arc-length/\">arc length</a>."
+   },
+   {
+    "t": "why",
+    "html": "Cut the curve into short pieces. A piece of length $\\Delta s$ at height $y$ sweeps out a thin band, nearly a strip of a cone. Unrolled, the band is close to a rectangle whose length is the circumference $2\\pi y$ and whose width is the slanted length $\\Delta s$. So the band's area is about $2\\pi y\\,\\Delta s$. From arc length, $\\Delta s \\approx \\sqrt{1 + f'(x)^{2}}\\,\\Delta x$. Add the bands and let them shrink:\n$$S = \\int_a^b 2\\pi f(x)\\sqrt{1 + f'(x)^{2}}\\,dx.$$"
+   },
+   {
+    "t": "key",
+    "html": "Revolving $y = f(x) \\ge 0$, $a \\le x \\le b$, about the $x$-axis:\n$$\\begin{aligned} S &= 2\\pi\\int_a^b f(x)\\sqrt{1 + \\left[f'(x)\\right]^{2}}\\,dx \\\\ &= 2\\pi\\int (\\text{radius})\\,ds. \\end{aligned}$$"
+   },
+   {
+    "t": "ex",
+    "title": "A cone, checked by geometry",
+    "q": "Revolve $y = \\frac{3}{4}x$, $0 \\le x \\le 4$, about the $x$-axis. Find the area of the cone's side.",
+    "steps": [
+     "$f'(x) = \\frac{3}{4}$, so $\\sqrt{1 + f'^{2}} = \\sqrt{\\frac{25}{16}} = \\frac{5}{4}$.",
+     "$$\\begin{aligned} S &= 2\\pi\\int_0^4 \\frac{3x}{4}\\cdot\\frac{5}{4}\\,dx \\\\ &= 2\\pi\\cdot\\frac{15}{16}\\cdot 8 \\\\ &= 15\\pi. \\end{aligned}$$",
+     "Geometry agrees: the cone has radius $r = 3$ and slant height $\\ell = 5$, and its side has area $\\pi r\\ell = 15\\pi$."
+    ],
+    "a": "$15\\pi$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $dx$ instead of $ds$, as if the surface were made of flat rings: $2\\pi\\int f(x)\\,dx$. For the cone above that gives $2\\pi\\int_0^4 \\frac{3x}{4}\\,dx = 12\\pi$, too small, because each band is tilted and so is wider than $\\Delta x$. Volumes can use $dx$ (a thin slab's volume barely depends on its tilt); surface areas need the slanted length $ds$."
+   },
+   {
+    "t": "ex",
+    "title": "A band on a sphere",
+    "q": "Revolve $y = \\sqrt{r^{2} - x^{2}}$, $a \\le x \\le b$, about the $x$-axis (with $-r \\le a < b \\le r$).",
+    "steps": [
+     "$f'(x) = \\frac{-x}{\\sqrt{r^{2} - x^{2}}}$, so $1 + f'^{2} = \\frac{r^{2}}{r^{2} - x^{2}}$.",
+     "Then $$\\begin{aligned} f(x)\\sqrt{1 + f'^{2}} &= \\sqrt{r^{2} - x^{2}}\\cdot\\frac{r}{\\sqrt{r^{2} - x^{2}}} \\\\ &= r. \\end{aligned}$$",
+     "$S = 2\\pi\\int_a^b r\\,dx = 2\\pi r(b - a)$. With $a = -r$, $b = r$ this is the whole sphere: $4\\pi r^{2}$."
+    ],
+    "a": "$2\\pi r(b - a)$: every band of the same width has the same area, wherever it is on the sphere."
+   },
+   {
+    "t": "p",
+    "html": "Revolving about the $y$-axis instead, the radius of each band is $x$, so $S = 2\\pi\\int_a^b x\\sqrt{1 + f'(x)^{2}}\\,dx$. In every case: surface area is $2\\pi\\int(\\text{radius})\\,ds$, where the radius is the band's distance from the axis."
+   },
+   {
+    "t": "viz",
+    "name": "solids",
+    "opts": {
+     "f": "sqrt(x)",
+     "a": 0,
+     "b": 2,
+     "axis": "x",
+     "angle": 300,
+     "slice": false
+    },
+    "cap": "The curve $y = \\sqrt{x}$, $0 \\le x \\le 2$, spun around the $x$-axis. The surface is the curved skin of this solid; its area is $\\frac{13\\pi}{3}$ (the practice problems work this kind out)."
+   },
+   {
+    "t": "ex",
+    "title": "A root under the root",
+    "q": "Find the area of the surface made by revolving $y = \\sqrt{x}$, $0 \\le x \\le 2$, about the $x$-axis.",
+    "steps": [
+     "$f'(x) = \\frac{1}{2\\sqrt{x}}$, so $$\\begin{aligned} &f\\sqrt{1 + f'^{2}} \\\\ &= \\sqrt{x}\\sqrt{1 + \\frac{1}{4x}} \\\\ &= \\sqrt{x + \\frac{1}{4}}. \\end{aligned}$$",
+     "$$\\begin{aligned} S &= 2\\pi\\int_0^2 \\sqrt{x + \\tfrac{1}{4}}\\,dx \\\\ &= \\frac{4\\pi}{3}\\left[\\left(x + \\tfrac{1}{4}\\right)^{3/2}\\right]_0^2. \\end{aligned}$$",
+     "$= \\frac{4\\pi}{3}\\left(\\frac{27}{8} - \\frac{1}{8}\\right) = \\frac{13\\pi}{3}$."
+    ],
+    "a": "$\\frac{13\\pi}{3}$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.4: Arc Length of a Curve and Surface Area"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Surface Area"
+   }
+  ]
+ },
+ "calc2.work": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In physics, work is force times distance: lifting a 50 N box 2 m takes $W = 50 \\cdot 2 = 100$ joules (newton-meters). That rule needs a constant force over the whole distance. When the force changes as you go, or different parts of an object move different distances, you add up small pieces, which is what <a href=\"/math/calculus-1/ftc-evaluate/\">definite integrals</a> do."
+   },
+   {
+    "t": "why",
+    "html": "Split the motion from $x = a$ to $x = b$ into short steps $\\Delta x$. Over one short step the force hardly changes, so the work on that step is about $F(x_i)\\,\\Delta x$. Adding the steps gives a Riemann sum for $\\int_a^b F(x)\\,dx$.\nFor a tank of liquid, slice the liquid instead of the motion. A thin layer at height $y$ has a weight (density times volume) and must travel some distance $d(y)$ to the outlet. Its work is weight times $d(y)$. Different layers travel different distances, which is why you need an integral."
+   },
+   {
+    "t": "key",
+    "html": "Varying force: $W = \\int_a^b F(x)\\,dx$. Hooke's law for springs: $F(x) = kx$, with $x$ the stretch beyond natural length.\nPumping: $$W = \\int (\\text{layer weight})(\\text{lift distance}),$$ summed over thin layers of the liquid: each layer's weight times the distance it travels. Water weighs $9800$ N/m³ (or $62.4$ lb/ft³)."
+   },
+   {
+    "t": "ex",
+    "title": "A spring",
+    "q": "A force of 10 N holds a spring stretched 0.2 m beyond its natural length. How much work does it take to stretch it from 0.2 m to 0.5 m?",
+    "steps": [
+     "$10 = k(0.2)$, so $k = 50$ N/m.",
+     "$$\\begin{aligned} W &= \\int_{0.2}^{0.5} 50x\\,dx \\\\ &= 25\\left(0.5^{2} - 0.2^{2}\\right) \\\\ &= 25(0.21). \\end{aligned}$$",
+     "$W = 5.25$ J."
+    ],
+    "a": "$5.25$ J"
+   },
+   {
+    "t": "ex",
+    "title": "A hanging rope",
+    "q": "A 20 m rope weighing 3 N/m hangs from a roof. How much work does it take to pull it all up?",
+    "steps": [
+     "A short piece $y$ meters below the top weighs $3\\,\\Delta y$ newtons and travels $y$ meters.",
+     "$W = \\int_0^{20} 3y\\,dy = 3\\cdot\\frac{20^{2}}{2} = 600$ J."
+    ],
+    "a": "$600$ J"
+   },
+   {
+    "t": "ex",
+    "title": "Emptying a tank",
+    "q": "A cylindrical tank of radius 2 m and height 5 m is full of water. Find the work needed to pump all the water out over the top.",
+    "steps": [
+     "Measure $y$ up from the bottom. The layer at height $y$ is a disk of volume $\\pi(2)^{2}\\Delta y$ and weight $9800\\cdot 4\\pi\\,\\Delta y$ N.",
+     "That layer rises $5 - y$ meters to the top.",
+     "$$\\begin{aligned} W &= \\int_0^5 9800\\cdot 4\\pi\\,(5 - y)\\,dy \\\\ &= 39200\\pi\\left[5y - \\frac{y^{2}}{2}\\right]_0^5 \\\\ &= 39200\\pi\\cdot 12.5. \\end{aligned}$$",
+     "$W = 490000\\pi \\approx 1.54\\times 10^{6}$ J."
+    ],
+    "a": "$490000\\pi$ J"
+   },
+   {
+    "t": "viz",
+    "name": "calc2-tank",
+    "opts": {
+     "shape": "cylinder",
+     "H": 5,
+     "R": 2,
+     "y": 1
+    },
+    "cap": "The tank from the example, seen from the side. Slide the gold layer up and down: its weight stays the same, but its trip to the top changes, so its share of the work changes. The darker the layer, the farther it travels."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Layer at height $y$ (m)",
+     "Distance to the top (m)",
+     "Work for a $0.1$ m layer (J)"
+    ],
+    "rows": [
+     [
+      "$0.5$",
+      "$4.5$",
+      "$9800\\cdot 4\\pi\\cdot 0.1\\cdot 4.5 \\approx 55{,}400$"
+     ],
+     [
+      "$2.5$",
+      "$2.5$",
+      "$\\approx 30{,}800$"
+     ],
+     [
+      "$4.5$",
+      "$0.5$",
+      "$\\approx 6{,}200$"
+     ]
+    ],
+    "cap": "Layers near the bottom cost much more work than layers near the top."
+   },
+   {
+    "t": "mistake",
+    "html": "Using one distance for the whole tank, such as the full height. Here total weight times 5 m gives $9800\\cdot 20\\pi\\cdot 5 = 980000\\pi$ J, twice the right answer, because only the bottom layer travels the full 5 m. Check: set up the work of one thin layer, with its own distance, before integrating. Also keep $y$'s meaning fixed: if $y$ is the height from the bottom, the distance to the top is $5 - y$, not $y$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.5: Physical Applications (work)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Work"
+   }
+  ]
+ },
+ "calc2.fluid-force": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Water pushes harder the deeper you go. At depth $h$ the pressure is $p = \\rho g h$, where $\\rho g$ is the weight density ($9800$ N/m³ for water). On a flat plate lying horizontally, every point has the same depth, so the force is just pressure times area. A dam or an aquarium wall stands vertically, so different parts sit at different depths. Like <a href=\"/math/calculus-2/work/\">Work</a>, the fix is to slice."
+   },
+   {
+    "t": "why",
+    "html": "Cut the vertical plate into thin horizontal strips. A strip at depth $y$ with width $w(y)$ and height $\\Delta y$ is nearly at a single depth, so the pressure on it is about $\\rho g y$ and the force is about $\\rho g\\,y\\,w(y)\\,\\Delta y$. (Pressure in a fluid pushes equally in every direction, so the same formula holds for a wall as for a floor.) Adding the strips:\n$$F = \\int_a^b \\rho g\\,y\\,w(y)\\,dy.$$"
+   },
+   {
+    "t": "key",
+    "html": "$$F = \\int_a^b \\rho g\\cdot(\\text{depth})\\cdot(\\text{width})\\,dy,$$\nwith $y$ measured down from the surface and $a$, $b$ the depths of the top and bottom of the plate."
+   },
+   {
+    "t": "ex",
+    "title": "A rectangular plate",
+    "q": "A plate 3 m wide and 2 m tall is submerged vertically with its top edge 1 m below the surface. Find the force on one side.",
+    "steps": [
+     "Depths run from $y = 1$ to $y = 3$, and the width is always 3.",
+     "$$\\begin{aligned} F &= \\int_1^3 9800\\cdot y\\cdot 3\\,dy \\\\ &= 29400\\cdot\\frac{3^{2} - 1^{2}}{2} \\\\ &= 29400\\cdot 4. \\end{aligned}$$",
+     "$F = 117{,}600$ N."
+    ],
+    "a": "$117{,}600$ N"
+   },
+   {
+    "t": "ex",
+    "title": "A triangular plate",
+    "q": "A triangle with a 4 m base and a height of 3 m is submerged vertically, base along the surface and point down. Find the force on one side.",
+    "steps": [
+     "By similar triangles the width shrinks from 4 at the surface to 0 at depth 3: $w(y) = 4\\left(1 - \\frac{y}{3}\\right)$.",
+     "$$\\begin{aligned} F &= 9800\\int_0^3 y\\cdot 4\\left(1 - \\frac{y}{3}\\right)dy \\\\ &= 9800\\cdot 4\\left[\\frac{y^{2}}{2} - \\frac{y^{3}}{9}\\right]_0^3 \\\\ &= 9800\\cdot 4\\cdot\\frac{3}{2}. \\end{aligned}$$",
+     "$F = 58{,}800$ N."
+    ],
+    "a": "$58{,}800$ N"
+   },
+   {
+    "t": "mistake",
+    "html": "Using one pressure for the whole plate, such as the pressure at the bottom: $9800\\cdot 3\\cdot 6 = 176{,}400$ N for the triangle, three times too big. Another slip is measuring $y$ up from the bottom of the plate and then using $y$ as the depth. Check: the integrand must be the depth (which is 0 at the surface and grows downward) times the width at that same depth."
+   },
+   {
+    "t": "note",
+    "html": "A shortcut you can check against: the force equals $$\\rho g\\cdot(\\text{centroid depth})\\cdot(\\text{area}).$$ For the triangle the centroid is 1 m deep and the area is 6 m², giving $9800\\cdot 1\\cdot 6 = 58{,}800$ N. Centroids are the next topic, <a href=\"/math/calculus-2/center-of-mass/\">Moments and Centers of Mass</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.5: Physical Applications (hydrostatic force and pressure)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Hydrostatic Pressure and Force"
+   }
+  ]
+ },
+ "calc2.center-of-mass": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A seesaw balances when $m_1 d_1 = m_2 d_2$: mass times distance from the pivot must match on both sides. Mass times signed distance is called a moment. For a flat plate cut in a curved shape, the balance point (its centroid) comes from integrals, built with the same strips you used for <a href=\"/math/calculus-2/area-between-curves/\">area between curves</a>."
+   },
+   {
+    "t": "why",
+    "html": "For point masses $m_i$ at positions $x_i$, the balance point $\\bar{x}$ is where the total moment about it is zero: $\\sum m_i (x_i - \\bar{x}) = 0$, so\n$$\\bar{x} = \\frac{\\sum m_i x_i}{\\sum m_i} = \\frac{\\text{moment}}{\\text{mass}}.$$\nFor a plate of constant density $\\rho$ between $y = g(x)$ and $y = f(x)$, cut it into vertical strips. A strip at $x$ has mass $\\rho\\,(f - g)\\,\\Delta x$ and balances at its middle, $\\left(x, \\frac{f + g}{2}\\right)$. So the moments are\n$$M_y = \\rho\\int_a^b x\\,(f - g)\\,dx,$$ $$\\begin{aligned} M_x &= \\rho\\int_a^b \\frac{f + g}{2}(f - g)\\,dx \\\\ &= \\rho\\int_a^b \\frac{f^{2} - g^{2}}{2}\\,dx. \\end{aligned}$$\nDividing by the mass $\\rho A$ cancels $\\rho$, so the centroid depends only on the shape."
+   },
+   {
+    "t": "key",
+    "html": "For a plate between $y = g(x)$ and $y = f(x)$ with area $A$:\n$$\\bar{x} = \\frac{1}{A}\\int_a^b x\\left[f(x) - g(x)\\right]dx,$$ $$\\bar{y} = \\frac{1}{A}\\int_a^b \\frac{1}{2}\\left[f(x)^{2} - g(x)^{2}\\right]dx.$$"
+   },
+   {
+    "t": "ex",
+    "title": "Masses on a rod",
+    "q": "Masses of 2 kg, 3 kg and 5 kg sit at $x = -1$, $x = 2$ and $x = 4$. Find the center of mass.",
+    "steps": [
+     "Moment: $2(-1) + 3(2) + 5(4) = 24$.",
+     "Mass: $2 + 3 + 5 = 10$.",
+     "$\\bar{x} = \\frac{24}{10} = 2.4$."
+    ],
+    "a": "$\\bar{x} = 2.4$"
+   },
+   {
+    "t": "ex",
+    "title": "Under a parabola",
+    "q": "Find the centroid of the region under $y = x^{2}$ from $x = 0$ to $x = 2$.",
+    "steps": [
+     "Area: $A = \\int_0^2 x^{2}\\,dx = \\frac{8}{3}$.",
+     "$M_y = \\int_0^2 x\\cdot x^{2}\\,dx = 4$, so $\\bar{x} = 4 \\div \\frac{8}{3} = \\frac{3}{2}$.",
+     "$M_x = \\int_0^2 \\frac{1}{2}(x^{2})^{2}\\,dx = \\frac{1}{2}\\cdot\\frac{32}{5} = \\frac{16}{5}$, so $\\bar{y} = \\frac{16}{5}\\div\\frac{8}{3} = \\frac{6}{5}$."
+    ],
+    "a": "$\\left(\\frac{3}{2}, \\frac{6}{5}\\right)$"
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "x^2",
+     "shade": {
+      "fn": 0,
+      "a": 0,
+      "b": 2
+     },
+     "points": [
+      {
+       "x": 1.5,
+       "y": 1.2,
+       "label": "centroid",
+       "color": "red"
+      }
+     ],
+     "xmin": -0.5,
+     "xmax": 2.5,
+     "ymin": -0.5,
+     "ymax": 4.5,
+     "zoom": false
+    },
+    "cap": "The centroid $\\left(\\frac{3}{2}, \\frac{6}{5}\\right)$ sits to the right of the middle, where the region is taller, and low down, because most of the area is near the bottom."
+   },
+   {
+    "t": "ex",
+    "title": "Using symmetry",
+    "q": "Find the centroid of the region between $y = 4 - x^{2}$ and the $x$-axis.",
+    "steps": [
+     "The region is symmetric about the $y$-axis, so $\\bar{x} = 0$ (the moments of the two halves cancel).",
+     "$A = \\int_{-2}^{2} (4 - x^{2})\\,dx = \\frac{32}{3}$.",
+     "$$\\begin{aligned} M_x &= \\int_{-2}^{2} \\frac{1}{2}(4 - x^{2})^{2}\\,dx \\\\ &= \\frac{1}{2}\\cdot\\frac{512}{15} \\\\ &= \\frac{256}{15}, \\end{aligned}$$ so $\\bar{y} = \\frac{256}{15}\\div\\frac{32}{3} = \\frac{8}{5}$."
+    ],
+    "a": "$\\left(0, \\frac{8}{5}\\right)$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $\\int f(x)^{2}\\,dx$ for $M_x$ without the $\\frac{1}{2}$. A strip's mass sits at its middle height $\\frac{f}{2}$, not at its top. Check every answer: the centroid must lie inside the smallest box around the region, on any line of symmetry, and closer to where the region is thicker."
+   },
+   {
+    "t": "note",
+    "html": "The theorem of Pappus ties this to volumes: revolving a region of area $A$ about an axis it does not cross gives volume $V = 2\\pi\\bar{r}A$, where $\\bar{r}$ is the centroid's distance to the axis. For the region under $y = x^{2}$ on $[0, 2]$ about the $x$-axis: $2\\pi\\cdot\\frac{6}{5}\\cdot\\frac{8}{3} = \\frac{32\\pi}{5}$, matching the disk method."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.6: Moments and Centers of Mass"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Center of Mass"
+   }
+  ]
+ },
+ "calc2.hyperbolic-functions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two combinations of $e^{x}$ and $e^{-x}$ show up so often that they have names: the hyperbolic sine and cosine. A hanging chain takes the shape of $y = a\\cosh\\frac{x}{a}$, and these functions also turn up in special relativity and in solutions of differential equations. Everything about them follows from what you know about <a href=\"/math/calculus-1/exp-log-derivatives/\">derivatives of exponentials</a>."
+   },
+   {
+    "t": "p",
+    "html": "$$\\sinh x = \\frac{e^{x} - e^{-x}}{2},$$ $$\\cosh x = \\frac{e^{x} + e^{-x}}{2},$$ $$\\tanh x = \\frac{\\sinh x}{\\cosh x}.$$\n$\\cosh$ is even and always at least 1; $\\sinh$ is odd. Every function splits into an even part and an odd part, and for $e^{x}$ those parts are exactly $\\cosh x$ and $\\sinh x$: $e^{x} = \\cosh x + \\sinh x$."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "cosh(x)",
+      "sinh(x)",
+      {
+       "f": "e^x/2",
+       "dash": true,
+       "color": "gold",
+       "label": "eˣ/2"
+      },
+      {
+       "f": "e^(-x)/2",
+       "dash": true,
+       "color": "teal",
+       "label": "e⁻ˣ/2"
+      }
+     ],
+     "xmin": -3,
+     "xmax": 3,
+     "ymin": -4,
+     "ymax": 5,
+     "trace": true,
+     "zoom": false
+    },
+    "cap": "$\\cosh x$ is the average of the two dashed curves, so it is U-shaped and never below 1. $\\sinh x$ is half their difference: it passes through 0 and is odd. For large $x$ both hug $\\frac{e^{x}}{2}$."
+   },
+   {
+    "t": "why",
+    "html": "Square and subtract:\n$$\\begin{aligned} &\\cosh^{2} x - \\sinh^{2} x \\\\ &= \\frac{(e^{2x} + 2 + e^{-2x}) - (e^{2x} - 2 + e^{-2x})}{4} \\\\ &= \\frac{4}{4} \\\\ &= 1. \\end{aligned}$$\nSo the point $(\\cosh t, \\sinh t)$ always lies on the hyperbola $X^{2} - Y^{2} = 1$, just as $(\\cos t, \\sin t)$ lies on the circle $X^{2} + Y^{2} = 1$. That is the reason for the name. Differentiating the definitions term by term:\n$$\\frac{d}{dx}\\sinh x = \\frac{e^{x} + e^{-x}}{2} = \\cosh x,$$ $$\\frac{d}{dx}\\cosh x = \\frac{e^{x} - e^{-x}}{2} = \\sinh x.$$"
+   },
+   {
+    "t": "key",
+    "html": "$\\cosh^{2} x - \\sinh^{2} x = 1$; $\\;(\\sinh x)' = \\cosh x$; $\\;(\\cosh x)' = \\sinh x$ (no minus sign); $\\;(\\tanh x)' = \\operatorname{sech}^{2} x = \\frac{1}{\\cosh^{2} x}$. Integrals reverse these: $\\int\\cosh x\\,dx = \\sinh x + C$ and $\\int\\sinh x\\,dx = \\cosh x + C$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "Trig",
+     "Hyperbolic"
+    ],
+    "rows": [
+     [
+      "Basic identity",
+      "$\\cos^{2} x + \\sin^{2} x = 1$",
+      "$\\cosh^{2} x - \\sinh^{2} x = 1$"
+     ],
+     [
+      "Derivative of cos / cosh",
+      "$-\\sin x$",
+      "$+\\sinh x$"
+     ],
+     [
+      "Derivative of sin / sinh",
+      "$\\cos x$",
+      "$\\cosh x$"
+     ],
+     [
+      "Curve traced",
+      "circle",
+      "right branch of a hyperbola"
+     ]
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "An exact value",
+    "q": "Find $\\sinh(\\ln 3)$.",
+    "steps": [
+     "$e^{\\ln 3} = 3$ and $e^{-\\ln 3} = \\frac{1}{3}$.",
+     "$\\sinh(\\ln 3) = \\frac{1}{2}\\left(3 - \\frac{1}{3}\\right) = \\frac{1}{2}\\cdot\\frac{8}{3} = \\frac{4}{3}$."
+    ],
+    "a": "$\\frac{4}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Using the identity",
+    "q": "If $\\sinh x = \\frac{3}{4}$, find $\\cosh x$ and $\\tanh x$.",
+    "steps": [
+     "$\\cosh^{2} x = 1 + \\sinh^{2} x = 1 + \\frac{9}{16} = \\frac{25}{16}$.",
+     "$\\cosh x$ is always positive, so $\\cosh x = \\frac{5}{4}$.",
+     "$\\tanh x = \\frac{3/4}{5/4} = \\frac{3}{5}$."
+    ],
+    "a": "$\\cosh x = \\frac{5}{4}$, $\\tanh x = \\frac{3}{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "Calculus with them",
+    "q": "Find $\\frac{d}{dx}\\cosh(3x)$ and $\\int \\sinh x\\cosh^{2} x\\,dx$.",
+    "steps": [
+     "Chain rule: $\\frac{d}{dx}\\cosh(3x) = 3\\sinh(3x)$.",
+     "For the integral let $u = \\cosh x$, so $du = \\sinh x\\,dx$: $\\int u^{2}\\,du = \\frac{u^{3}}{3} + C = \\frac{\\cosh^{3} x}{3} + C$."
+    ],
+    "a": "$3\\sinh(3x)$ and $\\frac{\\cosh^{3} x}{3} + C$"
+   },
+   {
+    "t": "mistake",
+    "html": "Borrowing the trig identity unchanged: $\\cosh^{2} x + \\sinh^{2} x = 1$. Testing at $x = 0$ will not catch it (both versions give 1 there). Test at $x = \\ln 2$ instead: $\\cosh = \\frac{5}{4}$ and $\\sinh = \\frac{3}{4}$, so $\\frac{25}{16} - \\frac{9}{16} = 1$ but $\\frac{25}{16} + \\frac{9}{16} \\ne 1$. The same goes for derivatives: $\\cosh$ differentiates to $+\\sinh$."
+   },
+   {
+    "t": "note",
+    "html": "Hyperbolic functions make the chain curve friendly for <a href=\"/math/calculus-2/arc-length/\">arc length</a>: for $y = \\cosh x$, $1 + (y')^{2} = 1 + \\sinh^{2} x = \\cosh^{2} x$, so the length from 0 to $b$ is $\\int_0^b \\cosh x\\,dx = \\sinh b$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 2.9: Calculus of the Hyperbolic Functions"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Hyperbolic Functions (Calculus I review)"
+   }
+  ]
+ },
+ "calc2.integration-by-parts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/calculus-1/u-substitution/\">Substitution</a> undoes the chain rule. Integration by parts undoes the <a href=\"/math/calculus-1/product-rule/\">product rule</a>, so it is the tool for integrals of products like $x e^{x}$, $x\\cos x$ or $x^{2}\\ln x$, where no factor is the derivative of the other."
+   },
+   {
+    "t": "why",
+    "html": "The product rule says $(uv)' = u'v + uv'$. Integrate both sides:\n$$uv = \\int u'v\\,dx + \\int uv'\\,dx.$$\nMove one integral across, and write $du = u'\\,dx$, $dv = v'\\,dx$:\n$$\\int u\\,dv = uv - \\int v\\,du.$$\nNothing is integrated yet. The formula trades one integral for another, and it helps when the new one, $\\int v\\,du$, is simpler."
+   },
+   {
+    "t": "key",
+    "html": "$$\\int u\\,dv = uv - \\int v\\,du,$$ $$\\int_a^b u\\,dv = \\Big[uv\\Big]_a^b - \\int_a^b v\\,du.$$\nChoose $u$ to be a factor that gets simpler when you differentiate it, and $dv$ a factor you can integrate."
+   },
+   {
+    "t": "list",
+    "items": [
+     "A rule of thumb for $u$, first match wins: <b>L</b>ogarithms, <b>I</b>nverse trig, <b>A</b>lgebraic (powers of $x$), <b>T</b>rig, <b>E</b>xponentials (LIATE).",
+     "Write the four pieces $u$, $du$, $dv$, $v$ before you substitute. You never need a $+C$ in $v$.",
+     "Check the answer by differentiating it."
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "A power times a trig function",
+    "q": "Find $\\int x\\cos x\\,dx$.",
+    "steps": [
+     "$u = x$, $dv = \\cos x\\,dx$, so $du = dx$ and $v = \\sin x$.",
+     "$$\\begin{aligned} &\\int x\\cos x\\,dx \\\\ &= x\\sin x - \\int \\sin x\\,dx \\\\ &= x\\sin x + \\cos x + C. \\end{aligned}$$",
+     "Check: $$\\begin{aligned} &\\frac{d}{dx}(x\\sin x + \\cos x) \\\\ &= \\sin x + x\\cos x - \\sin x \\\\ &= x\\cos x. \\end{aligned}$$"
+    ],
+    "a": "$x\\sin x + \\cos x + C$"
+   },
+   {
+    "t": "ex",
+    "title": "A lone logarithm",
+    "q": "Find $\\int \\ln x\\,dx$.",
+    "steps": [
+     "There is only one factor, so let $u = \\ln x$ and $dv = dx$. Then $du = \\frac{1}{x}dx$ and $v = x$.",
+     "$$\\begin{aligned} \\int \\ln x\\,dx &= x\\ln x - \\int x\\cdot\\frac{1}{x}\\,dx \\\\ &= x\\ln x - x + C. \\end{aligned}$$"
+    ],
+    "a": "$x\\ln x - x + C$"
+   },
+   {
+    "t": "mistake",
+    "html": "Choosing $u$ so that the new integral is harder. For $\\int x e^{x}\\,dx$, the choice $u = e^{x}$, $dv = x\\,dx$ gives $\\frac{x^{2}}{2}e^{x} - \\int \\frac{x^{2}}{2}e^{x}\\,dx$: the power of $x$ went up, not down. If the new integral looks worse than the one you started with, swap your choices. With $u = x$ you get $x e^{x} - \\int e^{x}dx = e^{x}(x - 1) + C$."
+   },
+   {
+    "t": "ex",
+    "title": "Parts twice",
+    "q": "Find $\\int x^{2}e^{x}\\,dx$.",
+    "steps": [
+     "$u = x^{2}$, $dv = e^{x}dx$: $\\int x^{2}e^{x}dx = x^{2}e^{x} - \\int 2x e^{x}\\,dx$.",
+     "Again with $u = 2x$: $\\int 2x e^{x}dx = 2x e^{x} - 2e^{x}$.",
+     "Combine: $$\\begin{aligned} &x^{2}e^{x} - 2x e^{x} + 2e^{x} + C \\\\ &= e^{x}(x^{2} - 2x + 2) + C. \\end{aligned}$$"
+    ],
+    "a": "$e^{x}(x^{2} - 2x + 2) + C$"
+   },
+   {
+    "t": "ex",
+    "title": "When the integral comes back",
+    "q": "Find $I = \\int e^{x}\\sin x\\,dx$.",
+    "steps": [
+     "$u = \\sin x$, $dv = e^{x}dx$: $I = e^{x}\\sin x - \\int e^{x}\\cos x\\,dx$.",
+     "Again with $u = \\cos x$: $$\\begin{aligned} &\\int e^{x}\\cos x\\,dx \\\\ &= e^{x}\\cos x + \\int e^{x}\\sin x\\,dx \\\\ &= e^{x}\\cos x + I. \\end{aligned}$$",
+     "So $I = e^{x}\\sin x - e^{x}\\cos x - I$, and $2I = e^{x}(\\sin x - \\cos x)$.",
+     "$I = \\frac{e^{x}}{2}(\\sin x - \\cos x) + C$. Treat $I$ like an unknown and solve for it; keep the same kind of choice ($u$ = the trig factor) both times."
+    ],
+    "a": "$\\frac{e^{x}}{2}(\\sin x - \\cos x) + C$"
+   },
+   {
+    "t": "note",
+    "html": "For a definite integral, evaluate the $uv$ part at the limits too: $$\\begin{aligned} &\\int_0^{\\pi} x\\sin x\\,dx \\\\ &= \\Big[-x\\cos x\\Big]_0^{\\pi} + \\int_0^{\\pi}\\cos x\\,dx \\\\ &= \\pi + 0 \\\\ &= \\pi. \\end{aligned}$$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 3.1: Integration by Parts"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Integration by Parts"
+   }
+  ]
+ },
+ "calc2.trig-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Integrals like $\\int \\sin^{3}x\\cos^{2}x\\,dx$ or $\\int \\sin^{2}x\\,dx$ come up in physics, in Fourier series and inside <a href=\"/math/calculus-2/trig-substitution/\">trigonometric substitution</a>. Two tools handle almost all of them: <a href=\"/math/calculus-1/u-substitution/\">substitution</a> with $u = \\sin x$ or $u = \\cos x$, and the <a href=\"/math/precalculus/half-angle/\">power-reducing identities</a>."
+   },
+   {
+    "t": "why",
+    "html": "Substitution needs a spare factor to be $du$. If $\\sin x$ has an odd power, peel off one $\\sin x$ to go with $dx$ (since $d(\\cos x) = -\\sin x\\,dx$), and the remaining even power becomes a polynomial in $\\cos x$ through $\\sin^{2}x = 1 - \\cos^{2}x$. Then $u = \\cos x$ leaves a polynomial in $u$.\nIf both powers are even, there is no factor to spare. Instead lower the powers with\n$$\\sin^{2}x = \\frac{1 - \\cos 2x}{2},$$ $$\\cos^{2}x = \\frac{1 + \\cos 2x}{2},$$\nwhich trade a square for a single cosine of a double angle."
+   },
+   {
+    "t": "key",
+    "html": "For $\\int \\sin^{m}x\\cos^{n}x\\,dx$: if $m$ is odd, save one $\\sin x$ and let $u = \\cos x$; if $n$ is odd, save one $\\cos x$ and let $u = \\sin x$; if both are even, use the power-reducing identities."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Integrand",
+     "Save",
+     "Convert the rest with",
+     "Substitute"
+    ],
+    "rows": [
+     [
+      "$\\sin^{m}x\\cos^{n}x$, $m$ odd",
+      "$\\sin x\\,dx$",
+      "$\\sin^{2}x = 1 - \\cos^{2}x$",
+      "$u = \\cos x$"
+     ],
+     [
+      "$\\sin^{m}x\\cos^{n}x$, $n$ odd",
+      "$\\cos x\\,dx$",
+      "$\\cos^{2}x = 1 - \\sin^{2}x$",
+      "$u = \\sin x$"
+     ],
+     [
+      "$\\sin^{m}x\\cos^{n}x$, both even",
+      "—",
+      "$\\sin^{2}x = \\frac{1 - \\cos 2x}{2}$, $\\cos^{2}x = \\frac{1 + \\cos 2x}{2}$",
+      "—"
+     ],
+     [
+      "$\\tan^{m}x\\sec^{n}x$, $n$ even",
+      "$\\sec^{2}x\\,dx$",
+      "$\\sec^{2}x = 1 + \\tan^{2}x$",
+      "$u = \\tan x$"
+     ],
+     [
+      "$\\tan^{m}x\\sec^{n}x$, $m$ odd",
+      "$\\sec x\\tan x\\,dx$",
+      "$\\tan^{2}x = \\sec^{2}x - 1$",
+      "$u = \\sec x$"
+     ]
+    ],
+    "cap": "Which factor to save, and why: it becomes $du$."
+   },
+   {
+    "t": "ex",
+    "title": "An odd power of sine",
+    "q": "Find $\\int \\sin^{3}x\\cos^{2}x\\,dx$.",
+    "steps": [
+     "Save one $\\sin x$: $\\sin^{3}x = (1 - \\cos^{2}x)\\sin x$.",
+     "Let $u = \\cos x$, $du = -\\sin x\\,dx$: the integral becomes $-\\int (1 - u^{2})u^{2}\\,du = -\\int (u^{2} - u^{4})\\,du$.",
+     "$$\\begin{aligned}  &= -\\frac{u^{3}}{3} + \\frac{u^{5}}{5} + C \\\\ &= -\\frac{\\cos^{3}x}{3} + \\frac{\\cos^{5}x}{5} + C. \\end{aligned}$$"
+    ],
+    "a": "$-\\frac{\\cos^{3}x}{3} + \\frac{\\cos^{5}x}{5} + C$"
+   },
+   {
+    "t": "ex",
+    "title": "An even power",
+    "q": "Find $\\int \\sin^{2}x\\,dx$, then $\\int_0^{\\pi}\\sin^{2}x\\,dx$.",
+    "steps": [
+     "$\\int \\frac{1 - \\cos 2x}{2}\\,dx = \\frac{x}{2} - \\frac{\\sin 2x}{4} + C$.",
+     "From 0 to $\\pi$: $\\frac{\\pi}{2} - 0 - (0 - 0) = \\frac{\\pi}{2}$."
+    ],
+    "a": "$\\frac{x}{2} - \\frac{\\sin 2x}{4} + C$; the definite integral is $\\frac{\\pi}{2}$."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "sin(x)^2",
+      {
+       "f": "1/2",
+       "dash": true,
+       "color": "gold",
+       "label": "average ½"
+      }
+     ],
+     "shade": {
+      "fn": 0,
+      "a": 0,
+      "b": 3.14159
+     },
+     "xmin": -0.5,
+     "xmax": 6.8,
+     "ymin": -0.3,
+     "ymax": 1.3,
+     "zoom": false
+    },
+    "cap": "$\\sin^{2}x$ swings between 0 and 1 around the line $y = \\frac{1}{2}$, and the parts above and below that line balance. So over $[0, \\pi]$ the area is $\\frac{1}{2}\\cdot\\pi$, matching the identity $\\sin^{2}x = \\frac{1}{2} - \\frac{\\cos 2x}{2}$."
+   },
+   {
+    "t": "ex",
+    "title": "Tangent and secant",
+    "q": "Find $\\int \\tan^{3}x\\sec x\\,dx$.",
+    "steps": [
+     "The power of $\\tan x$ is odd: save $\\sec x\\tan x\\,dx$, which is $d(\\sec x)$.",
+     "What is left is $\\tan^{2}x = \\sec^{2}x - 1$. With $u = \\sec x$: $\\int (u^{2} - 1)\\,du = \\frac{u^{3}}{3} - u + C$.",
+     "$= \\frac{\\sec^{3}x}{3} - \\sec x + C$."
+    ],
+    "a": "$\\frac{\\sec^{3}x}{3} - \\sec x + C$"
+   },
+   {
+    "t": "mistake",
+    "html": "Substituting $u = \\cos x$ when no spare $\\sin x$ is available, as in $\\int \\cos^{2}x\\,dx$. Then $du = -\\sin x\\,dx$ has nothing to match, and you end up with leftover $x$'s next to $u$'s. Check after substituting: if any $x$ is left in the integrand, the substitution did not work. For even powers, reduce the power first."
+   },
+   {
+    "t": "note",
+    "html": "Products with different angles, like $\\int \\sin 3x\\cos x\\,dx$, use the product-to-sum identity $$\\begin{aligned} \\sin A\\cos B &= \\tfrac{1}{2}\\sin(A + B) \\\\ &\\quad + \\tfrac{1}{2}\\sin(A - B), \\end{aligned}$$ which turns the product into two easy terms."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 3.2: Trigonometric Integrals"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Integrals Involving Trig Functions"
+   }
+  ]
+ },
+ "calc2.trig-substitution": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Roots like $\\sqrt{9 - x^{2}}$ come from circles, and $\\sqrt{x^{2} + 4}$ shows up in arc lengths. A plain substitution fails when there is no spare factor of $x$. Trigonometric substitution uses a Pythagorean identity to remove the root, then the <a href=\"/math/calculus-2/trig-integrals/\">trig integral</a> skills finish the job. You return to $x$ with the right-triangle reasoning from <a href=\"/math/precalculus/inverse-trig-compositions/\">compositions with inverse trig</a>."
+   },
+   {
+    "t": "why",
+    "html": "If $x = a\\sin\\theta$ with $-\\frac{\\pi}{2} \\le \\theta \\le \\frac{\\pi}{2}$, then\n$$\\begin{aligned} a^{2} - x^{2} &= a^{2} - a^{2}\\sin^{2}\\theta \\\\ &= a^{2}\\cos^{2}\\theta, \\quad\\text{so}\\quad \\sqrt{a^{2} - x^{2}} \\\\ &= a\\cos\\theta, \\end{aligned}$$\nbecause $\\cos\\theta \\ge 0$ on that range. The root is gone. The same trick works with $1 + \\tan^{2}\\theta = \\sec^{2}\\theta$ and $\\sec^{2}\\theta - 1 = \\tan^{2}\\theta$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "The integral has",
+     "Substitute",
+     "Identity",
+     "The root becomes"
+    ],
+    "rows": [
+     [
+      "$\\sqrt{a^{2} - x^{2}}$",
+      "$x = a\\sin\\theta$",
+      "$1 - \\sin^{2}\\theta = \\cos^{2}\\theta$",
+      "$a\\cos\\theta$"
+     ],
+     [
+      "$\\sqrt{a^{2} + x^{2}}$",
+      "$x = a\\tan\\theta$",
+      "$1 + \\tan^{2}\\theta = \\sec^{2}\\theta$",
+      "$a\\sec\\theta$"
+     ],
+     [
+      "$\\sqrt{x^{2} - a^{2}}$",
+      "$x = a\\sec\\theta$",
+      "$\\sec^{2}\\theta - 1 = \\tan^{2}\\theta$",
+      "$a\\tan\\theta$"
+     ]
+    ]
+   },
+   {
+    "t": "key",
+    "html": "Substitute to remove the root, integrate in $\\theta$, then go back to $x$. Draw a right triangle from the substitution ($\\sin\\theta = \\frac{x}{a}$, $\\tan\\theta = \\frac{x}{a}$ or $\\sec\\theta = \\frac{x}{a}$) and read every other trig function off it."
+   },
+   {
+    "t": "ex",
+    "title": "Back to x with a triangle",
+    "q": "Find $\\int \\frac{dx}{x^{2}\\sqrt{9 - x^{2}}}$.",
+    "steps": [
+     "Let $x = 3\\sin\\theta$: $dx = 3\\cos\\theta\\,d\\theta$ and $\\sqrt{9 - x^{2}} = 3\\cos\\theta$.",
+     "The integral becomes $$\\begin{aligned} &\\int \\frac{3\\cos\\theta\\,d\\theta}{9\\sin^{2}\\theta\\cdot 3\\cos\\theta} \\\\ &= \\frac{1}{9}\\int \\csc^{2}\\theta\\,d\\theta \\\\ &= -\\frac{1}{9}\\cot\\theta + C. \\end{aligned}$$",
+     "Triangle: $\\sin\\theta = \\frac{x}{3}$, so the opposite side is $x$, the hypotenuse is 3 and the adjacent side is $\\sqrt{9 - x^{2}}$. Then $\\cot\\theta = \\frac{\\sqrt{9 - x^{2}}}{x}$.",
+     "Answer: $-\\frac{\\sqrt{9 - x^{2}}}{9x} + C$."
+    ],
+    "a": "$-\\frac{\\sqrt{9 - x^{2}}}{9x} + C$"
+   },
+   {
+    "t": "viz",
+    "name": "unitcircle",
+    "opts": {
+     "angle": 35,
+     "units": "rad",
+     "snap": 5,
+     "graph": "none",
+     "ref": false,
+     "play": false
+    },
+    "cap": "The triangle behind every substitution. On the unit circle the hypotenuse is 1, the vertical side is $\\sin\\theta$ and the horizontal side is $\\cos\\theta$. Scale everything by $a$: if $x = a\\sin\\theta$ is the vertical side, the horizontal side is $\\sqrt{a^{2} - x^{2}} = a\\cos\\theta$."
+   },
+   {
+    "t": "mistake",
+    "html": "Stopping in $\\theta$, or mixing variables. An answer like $-\\frac{1}{9}\\cot\\theta + C$ is not an antiderivative of a function of $x$ until you rewrite it in $x$. Writing $\\cot\\left(\\arcsin\\frac{x}{3}\\right)$ is correct but unfinished; the triangle turns it into $\\frac{\\sqrt{9 - x^{2}}}{x}$. Check: differentiate your final answer and compare with the integrand."
+   },
+   {
+    "t": "ex",
+    "title": "A definite integral: change the limits",
+    "q": "Evaluate $\\int_0^{3}\\sqrt{9 - x^{2}}\\,dx$.",
+    "steps": [
+     "Let $x = 3\\sin\\theta$. When $x = 0$, $\\theta = 0$; when $x = 3$, $\\theta = \\frac{\\pi}{2}$.",
+     "The integral becomes $$\\begin{aligned} &\\int_0^{\\pi/2} 9\\cos^{2}\\theta\\,d\\theta \\\\ &= 9\\left[\\frac{\\theta}{2} + \\frac{\\sin 2\\theta}{4}\\right]_0^{\\pi/2} \\\\ &= \\frac{9\\pi}{4}. \\end{aligned}$$",
+     "With new limits there is no need to go back to $x$. Check: this is a quarter of a disk of radius 3, area $\\frac{1}{4}\\pi\\cdot 9$."
+    ],
+    "a": "$\\frac{9\\pi}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "The tangent case",
+    "q": "Find $\\int \\frac{dx}{\\sqrt{x^{2} + 4}}$.",
+    "steps": [
+     "Let $x = 2\\tan\\theta$: $dx = 2\\sec^{2}\\theta\\,d\\theta$, $\\sqrt{x^{2} + 4} = 2\\sec\\theta$.",
+     "The integral becomes $\\int \\sec\\theta\\,d\\theta = \\ln\\left|\\sec\\theta + \\tan\\theta\\right| + C$.",
+     "Triangle: $\\tan\\theta = \\frac{x}{2}$, hypotenuse $\\sqrt{x^{2} + 4}$, so $\\sec\\theta = \\frac{\\sqrt{x^{2} + 4}}{2}$.",
+     "$$\\begin{aligned} &\\ln\\left|\\frac{x + \\sqrt{x^{2} + 4}}{2}\\right| + C \\\\ &= \\ln\\left|x + \\sqrt{x^{2} + 4}\\right| + C, \\end{aligned}$$ since $-\\ln 2$ joins the constant."
+    ],
+    "a": "$\\ln\\left|x + \\sqrt{x^{2} + 4}\\right| + C$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 3.3: Trigonometric Substitution"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Trig Substitutions"
+   }
+  ]
+ },
+ "calc2.partial-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/precalculus/partial-fractions/\">partial fraction decomposition</a> you split a rational expression into simpler fractions. Here is the payoff: each simple fraction has an antiderivative you already know, from <a href=\"/math/calculus-1/exp-log-integrals/\">integrals giving logarithms</a> and arctangents."
+   },
+   {
+    "t": "why",
+    "html": "Adding fractions merges denominators: $\\frac{2}{x - 1} + \\frac{3}{x + 1} = \\frac{5x - 1}{(x - 1)(x + 1)}$. Partial fractions runs that backward. It works because each simple piece is easy to integrate:\n$$\\begin{aligned} &\\int \\frac{A}{x - a}dx \\\\ &= A\\ln|x - a|, \\quad \\int \\frac{B}{(x - a)^{2}}dx \\\\ &= -\\frac{B}{x - a}, \\quad \\int \\frac{dx}{x^{2} + k^{2}} \\\\ &= \\frac{1}{k}\\arctan\\frac{x}{k}. \\end{aligned}$$\nThe decomposition only makes sense for a proper fraction (top degree less than bottom degree), because a sum of proper fractions is always proper."
+   },
+   {
+    "t": "key",
+    "html": "(1) If the top's degree is at least the bottom's, divide first. (2) Factor the bottom. (3) Write one term per factor: $\\frac{A}{x - a}$ for each linear factor, $\\frac{A}{x - a} + \\frac{B}{(x - a)^{2}}$ for a squared factor, $\\frac{Bx + D}{x^{2} + bx + c}$ for an irreducible quadratic. (4) Find the constants. (5) Integrate term by term."
+   },
+   {
+    "t": "ex",
+    "title": "Two linear factors",
+    "q": "Find $\\int \\frac{5x - 1}{(x - 1)(x + 1)}\\,dx$.",
+    "steps": [
+     "Write $\\frac{5x - 1}{(x - 1)(x + 1)} = \\frac{A}{x - 1} + \\frac{B}{x + 1}$, so $5x - 1 = A(x + 1) + B(x - 1)$.",
+     "$x = 1$: $4 = 2A$, so $A = 2$. $x = -1$: $-6 = -2B$, so $B = 3$.",
+     "$$\\begin{aligned} &\\int \\left(\\frac{2}{x - 1} + \\frac{3}{x + 1}\\right)dx \\\\ &= 2\\ln|x - 1| + 3\\ln|x + 1| + C. \\end{aligned}$$"
+    ],
+    "a": "$2\\ln|x - 1| + 3\\ln|x + 1| + C$"
+   },
+   {
+    "t": "mistake",
+    "html": "Splitting before dividing. For $\\frac{x^{2} + 1}{x^{2} - 1}$, trying $\\frac{A}{x - 1} + \\frac{B}{x + 1}$ cannot work: that sum always has a top of lower degree than the bottom, but this fraction does not. Check the degrees first. Here $\\frac{x^{2} + 1}{x^{2} - 1} = 1 + \\frac{2}{x^{2} - 1}$, and only the remainder gets split."
+   },
+   {
+    "t": "ex",
+    "title": "Divide first",
+    "q": "Find $\\int \\frac{x^{2} + 1}{x^{2} - 1}\\,dx$.",
+    "steps": [
+     "Same degree on top and bottom: $\\frac{x^{2} + 1}{x^{2} - 1} = 1 + \\frac{2}{x^{2} - 1}$.",
+     "$\\frac{2}{(x - 1)(x + 1)} = \\frac{1}{x - 1} - \\frac{1}{x + 1}$ (cover-up: $A = \\frac{2}{2}$, $B = \\frac{2}{-2}$).",
+     "$$\\begin{aligned} &\\int \\left(1 + \\frac{1}{x - 1} - \\frac{1}{x + 1}\\right)dx \\\\ &= x + \\ln|x - 1| - \\ln|x + 1| + C. \\end{aligned}$$"
+    ],
+    "a": "$x + \\ln\\left|\\frac{x - 1}{x + 1}\\right| + C$"
+   },
+   {
+    "t": "ex",
+    "title": "A repeated factor",
+    "q": "Find $\\int \\frac{x + 3}{x(x + 1)^{2}}\\,dx$.",
+    "steps": [
+     "$\\frac{x + 3}{x(x + 1)^{2}} = \\frac{A}{x} + \\frac{B}{x + 1} + \\frac{D}{(x + 1)^{2}}$, so $x + 3 = A(x + 1)^{2} + Bx(x + 1) + Dx$.",
+     "$x = 0$: $A = 3$. $x = -1$: $2 = -D$, so $D = -2$. The $x^{2}$ terms: $0 = A + B$, so $B = -3$.",
+     "$$\\begin{aligned} &\\int \\left(\\frac{3}{x} - \\frac{3}{x + 1} - \\frac{2}{(x + 1)^{2}}\\right)dx \\\\ &= 3\\ln|x| - 3\\ln|x + 1| + \\frac{2}{x + 1} + C. \\end{aligned}$$"
+    ],
+    "a": "$3\\ln|x| - 3\\ln|x + 1| + \\frac{2}{x + 1} + C$"
+   },
+   {
+    "t": "ex",
+    "title": "An irreducible quadratic",
+    "q": "Find $\\int \\frac{2x^{2} + 2x + 3}{x(x^{2} + 1)}\\,dx$.",
+    "steps": [
+     "$\\frac{2x^{2} + 2x + 3}{x(x^{2} + 1)} = \\frac{A}{x} + \\frac{Bx + D}{x^{2} + 1}$, so $$\\begin{aligned} &2x^{2} + 2x + 3 \\\\ &= A(x^{2} + 1) + (Bx + D)x. \\end{aligned}$$",
+     "$x = 0$: $A = 3$. Then $x^{2}$: $2 = A + B$, so $B = -1$; $x$: $D = 2$.",
+     "$\\int \\frac{-x}{x^{2} + 1}dx = -\\frac{1}{2}\\ln(x^{2} + 1)$ and $\\int \\frac{2}{x^{2} + 1}dx = 2\\arctan x$.",
+     "Answer: $$\\begin{aligned} &3\\ln|x| - \\frac{1}{2}\\ln(x^{2} + 1) \\\\ &\\quad + 2\\arctan x + C. \\end{aligned}$$"
+    ],
+    "a": "$3\\ln|x| - \\frac{1}{2}\\ln(x^{2} + 1) + 2\\arctan x + C$"
+   },
+   {
+    "t": "note",
+    "html": "We named the constants $A$, $B$, $D$ to keep $C$ free for the constant of integration."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 3.4: Partial Fractions"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Partial Fractions"
+   }
+  ]
+ },
+ "calc2.integration-strategy": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You now have several techniques: substitution, <a href=\"/math/calculus-2/integration-by-parts/\">parts</a>, <a href=\"/math/calculus-2/trig-integrals/\">trig identities</a>, <a href=\"/math/calculus-2/trig-substitution/\">trig substitution</a> and <a href=\"/math/calculus-2/partial-fractions/\">partial fractions</a>. In practice nobody tells you which one to use. Choosing is a skill of its own, and it improves with mixed practice."
+   },
+   {
+    "t": "why",
+    "html": "Every technique runs a differentiation rule backward, so each one leaves a fingerprint. Substitution undoes the chain rule: look for an inside function whose derivative is also present. Parts undoes the product rule: look for a product of unlike functions. Partial fractions undoes adding fractions: look for a rational function. Trig substitution undoes the Pythagorean identities: look for $a^{2} \\pm x^{2}$ or $x^{2} - a^{2}$ under a root."
+   },
+   {
+    "t": "key",
+    "html": "Ask in this order: (1) Can algebra make it a basic integral? (2) Is part of it the derivative of another part (substitution)? (3) A rational function (divide, then partial fractions)? (4) A product of unlike functions (parts)? (5) Powers of trig functions (identities)? (6) A root of $a^{2} \\pm x^{2}$ or $x^{2} - a^{2}$ (trig substitution)?"
+   },
+   {
+    "t": "table",
+    "head": [
+     "If you see",
+     "Try first"
+    ],
+    "rows": [
+     [
+      "$f(g(x))\\,g'(x)$, like $x e^{x^{2}}$ or $\\frac{\\ln x}{x}$",
+      "substitution"
+     ],
+     [
+      "a power of $x$ times $e^{x}$, $\\sin x$, $\\ln x$ or $\\arctan x$",
+      "parts"
+     ],
+     [
+      "a polynomial over a polynomial",
+      "division, then partial fractions"
+     ],
+     [
+      "$\\sin^{m}x\\cos^{n}x$ or $\\tan^{m}x\\sec^{n}x$",
+      "identities, then substitution"
+     ],
+     [
+      "$\\sqrt{a^{2} - x^{2}}$, $\\sqrt{a^{2} + x^{2}}$, $\\sqrt{x^{2} - a^{2}}$ with no spare $x$",
+      "trig substitution"
+     ]
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "Three look-alikes",
+    "q": "Find $\\int \\frac{x}{x^{2} + 4}dx$, $\\int \\frac{1}{x^{2} + 4}dx$ and $\\int \\frac{x^{2}}{x^{2} + 4}dx$.",
+    "steps": [
+     "First: the top is half the derivative of the bottom. With $u = x^{2} + 4$: $\\frac{1}{2}\\ln(x^{2} + 4) + C$.",
+     "Second: no spare $x$, but it matches the arctangent form: $\\frac{1}{2}\\arctan\\frac{x}{2} + C$.",
+     "Third: same degree on top, so divide: $\\frac{x^{2}}{x^{2} + 4} = 1 - \\frac{4}{x^{2} + 4}$, giving $x - 2\\arctan\\frac{x}{2} + C$."
+    ],
+    "a": "Small changes in the integrand call for different methods."
+   },
+   {
+    "t": "ex",
+    "title": "Two methods in a row",
+    "q": "Find $\\int e^{\\sqrt{x}}\\,dx$.",
+    "steps": [
+     "No technique fits directly, so simplify the inside first: let $w = \\sqrt{x}$, so $x = w^{2}$ and $dx = 2w\\,dw$.",
+     "The integral becomes $\\int 2w e^{w}\\,dw$, a product: use parts with $u = 2w$.",
+     "$$\\begin{aligned} &\\int 2w e^{w}dw \\\\ &= 2w e^{w} - 2e^{w} + C \\\\ &= 2e^{\\sqrt{x}}(\\sqrt{x} - 1) + C. \\end{aligned}$$"
+    ],
+    "a": "$2e^{\\sqrt{x}}(\\sqrt{x} - 1) + C$"
+   },
+   {
+    "t": "mistake",
+    "html": "Reaching for the heaviest tool first. For $\\int \\frac{x}{\\sqrt{x^{2} + 4}}\\,dx$, trig substitution works but takes a page; the substitution $u = x^{2} + 4$ gives $\\sqrt{x^{2} + 4} + C$ in one line. Quick check before any technique: is there an inner function whose derivative (up to a constant) is sitting outside?"
+   },
+   {
+    "t": "note",
+    "html": "Some integrals have no antiderivative made of familiar functions at all: $\\int e^{-x^{2}}dx$, $\\int \\frac{\\sin x}{x}dx$, $\\int \\sqrt{1 + x^{3}}\\,dx$. No technique will crack them. For their definite integrals, use <a href=\"/math/calculus-2/numerical-integration/\">numerical integration</a> or <a href=\"/math/calculus-2/series-applications/\">series</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 3.5: Other Strategies for Integration"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Integration Strategy"
+   }
+  ]
+ },
+ "calc2.numerical-integration": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Many definite integrals have no exact antiderivative to use, and data from a sensor has no formula at all. You already approximated area with rectangles in <a href=\"/math/calculus-1/riemann-sums/\">Riemann sums</a>. Two better shapes give much better estimates for the same work: trapezoids and parabolas."
+   },
+   {
+    "t": "why",
+    "html": "<b>Trapezoids.</b> Over each subinterval, replace the curve by the straight segment joining its endpoints. A trapezoid of width $\\Delta x$ has area $\\frac{\\Delta x}{2}(y_{i} + y_{i+1})$. Adding them, every inside point is counted twice:\n$$T_n = \\frac{\\Delta x}{2}\\left[y_0 + 2y_1 + \\cdots + 2y_{n-1} + y_n\\right].$$\nThis is also the average of the left and right Riemann sums.\n<b>Parabolas.</b> Through three neighboring points at $x = -h, 0, h$, fit $y = Ax^{2} + Bx + D$. Its area is $$\\begin{aligned} &\\int_{-h}^{h}(Ax^{2} + Bx + D)\\,dx \\\\ &= \\frac{2Ah^{3}}{3} + 2Dh. \\end{aligned}$$ Since $y_0 + y_2 = 2Ah^{2} + 2D$ and $y_1 = D$, that area equals $\\frac{h}{3}(y_0 + 4y_1 + y_2)$. Each parabola uses two subintervals, so $n$ must be even, and chaining them gives Simpson's rule."
+   },
+   {
+    "t": "key",
+    "html": "With $\\Delta x = \\frac{b - a}{n}$ and $y_i = f(a + i\\,\\Delta x)$:\n$$T_n = \\frac{\\Delta x}{2}\\left[y_0 + 2y_1 + \\cdots + 2y_{n-1} + y_n\\right],$$ $$\\begin{aligned} S_n = \\frac{\\Delta x}{3}\\Big[&y_0 + 4y_1 + 2y_2 + 4y_3 + \\cdots \\\\ &+ 2y_{n-2} + 4y_{n-1} + y_n\\Big] \\end{aligned}$$ with $n$ even.\nError bounds: $|E_T| \\le \\frac{K(b - a)^{3}}{12n^{2}}$ with $|f''| \\le K$; $\\ |E_S| \\le \\frac{K(b - a)^{5}}{180n^{4}}$ with $|f^{(4)}| \\le K$."
+   },
+   {
+    "t": "ex",
+    "title": "Trapezoids",
+    "q": "Estimate $\\int_0^2 x^{2}\\,dx$ with $T_4$.",
+    "steps": [
+     "$\\Delta x = 0.5$; the values at $0, 0.5, 1, 1.5, 2$ are $0, 0.25, 1, 2.25, 4$.",
+     "$$\\begin{aligned} T_4 &= \\tfrac{0.5}{2}\\big[0 + 2(0.25) + 2(1) \\\\ &\\qquad + 2(2.25) + 4\\big] \\\\ &= 0.25\\cdot 11 = 2.75. \\end{aligned}$$",
+     "The exact value is $\\frac{8}{3} \\approx 2.667$. The trapezoids sit above this curve because it bends upward."
+    ],
+    "a": "$2.75$"
+   },
+   {
+    "t": "ex",
+    "title": "Simpson",
+    "q": "Estimate the same integral with $S_4$.",
+    "steps": [
+     "Weights $1, 4, 2, 4, 1$: $$\\begin{aligned} S_4 &= \\tfrac{0.5}{3}\\big[0 + 4(0.25) + 2(1) \\\\ &\\qquad + 4(2.25) + 4\\big] \\\\ &= \\frac{1}{6}\\cdot 16. \\end{aligned}$$",
+     "$S_4 = \\frac{8}{3}$, exactly right. Simpson's rule is exact for every polynomial of degree 3 or less, since $f^{(4)} = 0$ makes its error bound 0."
+    ],
+    "a": "$\\frac{8}{3}$"
+   },
+   {
+    "t": "viz",
+    "name": "riemann",
+    "opts": {
+     "f": "1/x",
+     "a": 1,
+     "b": 2,
+     "n": 4,
+     "method": "trap",
+     "methods": [
+      "left",
+      "right",
+      "mid",
+      "trap"
+     ],
+     "compare": true,
+     "exact": true
+    },
+    "cap": "Trapezoids for $\\int_1^2 \\frac{dx}{x} = \\ln 2$. Compare the four rules in the table, then raise $n$: doubling $n$ cuts the trapezoid error to about a quarter."
+   },
+   {
+    "t": "ex",
+    "title": "Where it matters",
+    "q": "Estimate $\\ln 2 = \\int_1^2 \\frac{dx}{x}$ with $S_4$.",
+    "steps": [
+     "$\\Delta x = \\frac{1}{4}$; the values at $1, \\frac{5}{4}, \\frac{3}{2}, \\frac{7}{4}, 2$ are $1, \\frac{4}{5}, \\frac{2}{3}, \\frac{4}{7}, \\frac{1}{2}$.",
+     "$$\\begin{aligned} S_4 &= \\frac{1}{12}\\left[1 + \\frac{16}{5} + \\frac{4}{3} + \\frac{16}{7} + \\frac{1}{2}\\right] \\\\ &\\approx 0.693254. \\end{aligned}$$",
+     "$\\ln 2 \\approx 0.693147$, so the error is about $0.0001$ with just five function values."
+    ],
+    "a": "$S_4 \\approx 0.69325$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using Simpson's rule with an odd number of subintervals. Each parabola covers two subintervals, so with $n = 5$ one is left over and the $1, 4, 2, \\ldots, 4, 1$ pattern breaks: it would end on a weight of 2 or start the pattern wrong. Check: the weight list must start and end with 1, and the 4's must sit at the odd-numbered points."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 3.6: Numerical Integration"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Approximating Definite Integrals"
+   }
+  ]
+ },
+ "calc2.improper-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The Fundamental Theorem (<a href=\"/math/calculus-1/ftc-evaluate/\">FTC Part 2</a>) needs a continuous function on a closed, bounded interval. Two natural questions break those rules: what is the area under $\\frac{1}{x^{2}}$ all the way to infinity, and what is the area under $\\frac{1}{\\sqrt{x}}$ near $x = 0$, where the graph shoots up? Both answers are limits, like the ones in <a href=\"/math/calculus-1/limits-at-infinity/\">limits at infinity</a>."
+   },
+   {
+    "t": "why",
+    "html": "An ordinary integral over $[1, t]$ is a finite number for every $t$. Letting $t \\to \\infty$ asks whether those areas settle down. If the limit exists, the infinite region has a finite area, and the integral <i>converges</i>; if not, it <i>diverges</i>. The same idea handles a vertical asymptote: stop a little short of it, then let the stopping point slide up to it."
+   },
+   {
+    "t": "key",
+    "html": "$$\\int_a^{\\infty} f(x)\\,dx = \\lim_{t\\to\\infty}\\int_a^{t} f(x)\\,dx,$$ $$\\int_a^{b} f(x)\\,dx = \\lim_{s\\to a^{+}}\\int_s^{b} f(x)\\,dx$$ when $f$ blows up at $a$.\nIf the trouble is inside the interval, split there; the integral converges only if every piece does. Benchmarks: $\\int_1^{\\infty}\\frac{dx}{x^{p}}$ converges exactly when $p > 1$ (to $\\frac{1}{p - 1}$); $\\int_0^{1}\\frac{dx}{x^{p}}$ converges exactly when $p < 1$ (to $\\frac{1}{1 - p}$)."
+   },
+   {
+    "t": "ex",
+    "title": "An infinite interval",
+    "q": "Evaluate $\\int_1^{\\infty}\\frac{dx}{x^{2}}$.",
+    "steps": [
+     "$\\int_1^{t}\\frac{dx}{x^{2}} = \\left[-\\frac{1}{x}\\right]_1^{t} = 1 - \\frac{1}{t}$.",
+     "As $t \\to \\infty$, $\\frac{1}{t} \\to 0$, so the integral converges to 1."
+    ],
+    "a": "$1$"
+   },
+   {
+    "t": "viz",
+    "name": "ftc",
+    "opts": {
+     "f": "1/x^2",
+     "a": 1,
+     "x": 3,
+     "xmin": 0.5,
+     "xmax": 12,
+     "ymin": 0,
+     "ymax": 1.5,
+     "Amin": 0,
+     "Amax": 1.2,
+     "ghost": true,
+     "play": true
+    },
+    "cap": "The accumulated area $A(x) = \\int_1^{x}\\frac{dt}{t^{2}} = 1 - \\frac{1}{x}$ keeps growing but levels off toward 1. Play it and watch the lower graph flatten."
+   },
+   {
+    "t": "ex",
+    "title": "A divergent one",
+    "q": "Does $\\int_1^{\\infty}\\frac{dx}{x}$ converge?",
+    "steps": [
+     "$\\int_1^{t}\\frac{dx}{x} = \\ln t$.",
+     "$\\ln t \\to \\infty$ as $t \\to \\infty$, so the integral diverges, even though $\\frac{1}{x} \\to 0$."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "ex",
+    "title": "A vertical asymptote at an end",
+    "q": "Evaluate $\\int_0^{1}\\frac{dx}{\\sqrt{x}}$.",
+    "steps": [
+     "The integrand blows up at 0, so use $$\\begin{aligned} &\\lim_{s\\to 0^{+}}\\int_s^{1} x^{-1/2}\\,dx \\\\ &= \\lim_{s\\to 0^{+}}\\left(2 - 2\\sqrt{s}\\right). \\end{aligned}$$",
+     "The limit is 2: an unbounded function with a finite area."
+    ],
+    "a": "$2$"
+   },
+   {
+    "t": "mistake",
+    "html": "Integrating straight across a vertical asymptote. For $\\int_{-1}^{1}\\frac{dx}{x^{2}}$, plugging into $\\left[-\\frac{1}{x}\\right]_{-1}^{1}$ gives $-2$, a negative area for a positive function, which is impossible. The FTC does not apply, because $\\frac{1}{x^{2}}$ is not continuous at 0. Split at 0: $\\int_0^{1}\\frac{dx}{x^{2}} = \\lim_{s\\to 0^{+}}\\left(\\frac{1}{s} - 1\\right) = \\infty$, so the whole integral diverges. Check every integrand for points where it is undefined inside the interval before using the FTC."
+   },
+   {
+    "t": "ex",
+    "title": "Exponential decay",
+    "q": "Evaluate $\\int_0^{\\infty} e^{-2x}\\,dx$.",
+    "steps": [
+     "$$\\begin{aligned} &\\int_0^{t} e^{-2x}dx \\\\ &= \\left[-\\frac{1}{2}e^{-2x}\\right]_0^{t} \\\\ &= \\frac{1}{2} - \\frac{1}{2}e^{-2t}. \\end{aligned}$$",
+     "$e^{-2t} \\to 0$, so the integral converges to $\\frac{1}{2}$."
+    ],
+    "a": "$\\frac{1}{2}$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 3.7: Improper Integrals"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Improper Integrals"
+   }
+  ]
+ },
+ "calc2.improper-comparison": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Often you cannot find an antiderivative, yet you only need to know whether an <a href=\"/math/calculus-2/improper-integrals/\">improper integral</a> converges. Compare the integrand with a simpler function whose integral you already know."
+   },
+   {
+    "t": "why",
+    "html": "Suppose $0 \\le f(x) \\le g(x)$ for $x \\ge a$. The area under $f$ is part of the area under $g$. If $\\int_a^{\\infty} g$ is finite, then $F(t) = \\int_a^{t} f$ grows as $t$ grows (because $f \\ge 0$) but never passes $\\int_a^{\\infty} g$. A function that keeps increasing and stays below a ceiling must level off at a limit, so $\\int_a^{\\infty} f$ converges. In the other direction, if the smaller area $\\int_a^{\\infty} f$ is infinite, the larger one $\\int_a^{\\infty} g$ must be infinite too."
+   },
+   {
+    "t": "key",
+    "html": "If $0 \\le f(x) \\le g(x)$ on $[a, \\infty)$: $\\int_a^{\\infty} g$ converges $\\Rightarrow$ $\\int_a^{\\infty} f$ converges, and $\\int_a^{\\infty} f$ diverges $\\Rightarrow$ $\\int_a^{\\infty} g$ diverges. Smaller than a finite area, or bigger than an infinite one: those are the only two conclusions. The same holds near a vertical asymptote."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Benchmark",
+     "Behavior"
+    ],
+    "rows": [
+     [
+      "$\\int_1^{\\infty}\\frac{dx}{x^{p}}$",
+      "converges for $p > 1$, diverges for $p \\le 1$"
+     ],
+     [
+      "$\\int_0^{1}\\frac{dx}{x^{p}}$",
+      "converges for $p < 1$, diverges for $p \\ge 1$"
+     ],
+     [
+      "$\\int_0^{\\infty} e^{-cx}\\,dx$, $c > 0$",
+      "converges (to $\\frac{1}{c}$)"
+     ]
+    ],
+    "cap": "Functions to compare with."
+   },
+   {
+    "t": "ex",
+    "title": "Smaller than a convergent integral",
+    "q": "Does $\\int_1^{\\infty}\\frac{dx}{x^{2} + 3}$ converge?",
+    "steps": [
+     "For $x \\ge 1$, $x^{2} + 3 > x^{2}$, so $0 < \\frac{1}{x^{2} + 3} < \\frac{1}{x^{2}}$.",
+     "$\\int_1^{\\infty}\\frac{dx}{x^{2}}$ converges ($p = 2 > 1$), so the smaller integral converges too."
+    ],
+    "a": "It converges (to some number less than 1)."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "1/x^2",
+      "1/(x^2+3)"
+     ],
+     "shade": {
+      "fn": 1,
+      "a": 1,
+      "b": 10
+     },
+     "xmin": 0,
+     "xmax": 10,
+     "ymin": -0.1,
+     "ymax": 1.1,
+     "zoom": false
+    },
+    "cap": "The shaded area under $\\frac{1}{x^{2} + 3}$ lies inside the area under $\\frac{1}{x^{2}}$, which is exactly 1 from $x = 1$ on. A region inside a finite region is finite."
+   },
+   {
+    "t": "ex",
+    "title": "Bigger than a divergent integral",
+    "q": "Does $\\int_1^{\\infty}\\frac{2 + \\cos x}{x}\\,dx$ converge?",
+    "steps": [
+     "Since $\\cos x \\ge -1$, the integrand is at least $\\frac{1}{x} > 0$.",
+     "$\\int_1^{\\infty}\\frac{dx}{x}$ diverges, so the bigger integral diverges too."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "ex",
+    "title": "Beating a function with no antiderivative",
+    "q": "Does $\\int_1^{\\infty} e^{-x^{2}}\\,dx$ converge?",
+    "steps": [
+     "$e^{-x^{2}}$ has no elementary antiderivative, so compare. For $x \\ge 1$, $x^{2} \\ge x$, so $e^{-x^{2}} \\le e^{-x}$.",
+     "$\\int_1^{\\infty} e^{-x}dx = \\frac{1}{e}$ converges, so $\\int_1^{\\infty} e^{-x^{2}}dx$ converges (to less than $\\frac{1}{e}$)."
+    ],
+    "a": "It converges."
+   },
+   {
+    "t": "mistake",
+    "html": "Comparing in the wrong direction. \"$\\frac{1}{x^{2} + 3} < \\frac{1}{x}$ and $\\int\\frac{dx}{x}$ diverges\" proves nothing: being smaller than an infinite area allows any outcome. Likewise \"bigger than something that converges\" proves nothing. Check before concluding: convergence needs <i>smaller than convergent</i>; divergence needs <i>bigger than divergent</i>."
+   },
+   {
+    "t": "note",
+    "html": "When an inequality is awkward to set up, the limit comparison test helps: if $\\frac{f(x)}{g(x)} \\to L$ with $0 < L < \\infty$, then $\\int^{\\infty} f$ and $\\int^{\\infty} g$ both converge or both diverge. You will use the same idea for series in <a href=\"/math/calculus-2/comparison-tests/\">Comparison and Limit Comparison Tests</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 3.7: Improper Integrals (comparison theorem)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Comparison Test for Improper Integrals"
+   }
+  ]
+ },
+ "calc2.de-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/calculus-1/initial-value-antiderivatives/\">antiderivatives with initial conditions</a> you solved equations like $\\frac{dy}{dx} = 3x^{2}$, $y(0) = 5$. A differential equation is the general version: an equation that relates an unknown function to its own derivatives, such as $y' = 2y$ (growth in proportion to size) or $y'' = -9y$ (a spring). The unknown is a whole function, not a number."
+   },
+   {
+    "t": "why",
+    "html": "A solution must make the equation true for every $x$ in an interval, so you check it by substituting the whole function and its derivatives and simplifying until both sides match identically. For $y' = 2y$, try $y = Ce^{2x}$: then $y' = 2Ce^{2x} = 2y$ for every $x$ and every constant $C$. So one equation has a whole family of solutions. An initial condition such as $y(0) = 3$ picks one member: $C = 3$."
+   },
+   {
+    "t": "key",
+    "html": "A <b>differential equation</b> relates a function and its derivatives. Its <b>order</b> is the highest derivative that appears. A <b>solution</b> is a function that satisfies the equation identically on an interval. The <b>general solution</b> is the family of all solutions (usually with constants); an <b>initial value problem</b> adds conditions that pick one."
+   },
+   {
+    "t": "ex",
+    "title": "Checking a solution",
+    "q": "Show that $y = 3e^{2x}$ solves $y' = 2y$.",
+    "steps": [
+     "Differentiate: $y' = 6e^{2x}$.",
+     "Right side: $2y = 2\\cdot 3e^{2x} = 6e^{2x}$.",
+     "The two sides are equal for every $x$, so it is a solution."
+    ],
+    "a": "It satisfies the equation for all $x$."
+   },
+   {
+    "t": "mistake",
+    "html": "Checking at a single point. Plugging in $x = 0$ only shows that the equation holds there; the function $y = 3 + 6x$ also has $y(0) = 3$ and $y'(0) = 6 = 2y(0)$, yet it is not a solution, since $y' = 6$ while $2y = 6 + 12x$. Check: after substituting, simplify both sides as expressions in $x$ and make sure they agree everywhere."
+   },
+   {
+    "t": "ex",
+    "title": "Exponential guesses",
+    "q": "For which values of $r$ is $y = e^{rx}$ a solution of $y'' - y' - 6y = 0$?",
+    "steps": [
+     "$y' = re^{rx}$ and $y'' = r^{2}e^{rx}$.",
+     "Substitute: $(r^{2} - r - 6)e^{rx} = 0$. Since $e^{rx}$ is never 0, $r^{2} - r - 6 = 0$.",
+     "$(r - 3)(r + 2) = 0$, so $r = 3$ or $r = -2$."
+    ],
+    "a": "$r = 3$ and $r = -2$"
+   },
+   {
+    "t": "viz",
+    "name": "slopefield",
+    "opts": {
+     "f": "y",
+     "point": [
+      0,
+      1
+     ],
+     "curves": [
+      [
+       0,
+       -1
+      ],
+      [
+       0,
+       0.5
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "xmin": -3,
+     "xmax": 3,
+     "ymin": -4,
+     "ymax": 6
+    },
+    "cap": "Solutions of $y' = y$: the curves $y = Ce^{x}$. Each one follows the little slope marks. Drag the point (an initial condition) to pick a different member of the family."
+   },
+   {
+    "t": "ex",
+    "title": "An initial value problem",
+    "q": "Every solution of $y' = 4 - y$ has the form $y = Ce^{-x} + 4$. Find the solution with $y(0) = 1$.",
+    "steps": [
+     "Check the family: $y' = -Ce^{-x}$ and $4 - y = -Ce^{-x}$. They match.",
+     "At $x = 0$: $1 = C + 4$, so $C = -3$.",
+     "$y = 4 - 3e^{-x}$."
+    ],
+    "a": "$y = 4 - 3e^{-x}$"
+   },
+   {
+    "t": "note",
+    "html": "Constant functions are worth checking first. For $y' = y(3 - y)$ the constants $y = 0$ and $y = 3$ make the right side 0, and their derivative is 0, so they are solutions. These <b>equilibrium solutions</b> come back in <a href=\"/math/calculus-2/logistic-equation/\">the logistic equation</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 4.1: Basics of Differential Equations"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Differential Equations: Definitions (Calculus II, Basic Concepts)"
+   }
+  ]
+ },
+ "calc2.slope-fields-euler": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Most <a href=\"/math/calculus-2/de-intro/\">differential equations</a> cannot be solved with a formula. Two tools still tell you a lot: a <b>slope field</b>, which shows the shape of every solution at once, and <b>Euler's method</b>, which builds a numerical solution step by step from the same idea as <a href=\"/math/calculus-1/linear-approximation/\">linear approximation</a>."
+   },
+   {
+    "t": "why",
+    "html": "The equation $\\frac{dy}{dx} = f(x, y)$ tells you the slope of the solution curve through any point $(x, y)$, before you know the solution. Draw a short segment with that slope at many points and you get a slope field; every solution curve must run along those segments. Euler's method follows one segment for a short step $h$: over a small step the curve is close to its tangent line, so\n$$y_{n+1} = y_n + h\\cdot f(x_n, y_n),$$ $$x_{n+1} = x_n + h.$$\nThen repeat from the new point with its own slope."
+   },
+   {
+    "t": "key",
+    "html": "Slope field: at $(x, y)$ draw a segment of slope $f(x, y)$. Euler's method: $y_{n+1} = y_n + h\\,f(x_n, y_n)$, always using the slope at the point you are standing on. Smaller steps give better answers."
+   },
+   {
+    "t": "viz",
+    "name": "slopefield",
+    "opts": {
+     "f": "x - y",
+     "point": [
+      0,
+      1
+     ],
+     "euler": true,
+     "h": 0.5,
+     "xmin": -2,
+     "xmax": 4,
+     "ymin": -2,
+     "ymax": 4
+    },
+    "cap": "The slope field of $y' = x - y$, with the solution through $(0, 1)$ in blue and Euler's method in steps of $h = 0.5$. Shrink $h$ and watch the steps hug the curve."
+   },
+   {
+    "t": "ex",
+    "title": "Euler by hand",
+    "q": "Use Euler's method with $h = 0.5$ to estimate $y(1)$ for $y' = x + y$, $y(0) = 1$.",
+    "steps": [
+     "Step 1: at $(0, 1)$ the slope is $0 + 1 = 1$. $y_1 = 1 + 0.5(1) = 1.5$ at $x = 0.5$.",
+     "Step 2: at $(0.5, 1.5)$ the slope is $0.5 + 1.5 = 2$. $y_2 = 1.5 + 0.5(2) = 2.5$ at $x = 1$.",
+     "So $y(1) \\approx 2.5$. The exact solution is $y = 2e^{x} - x - 1$, with $y(1) = 2e - 2 \\approx 3.44$: Euler underestimates here because the solution bends upward away from its tangent lines."
+    ],
+    "a": "$y(1) \\approx 2.5$"
+   },
+   {
+    "t": "table",
+    "head": [
+     "$n$",
+     "$x_n$",
+     "$y_n$",
+     "slope $f(x_n, y_n)$",
+     "$y_{n+1} = y_n + 0.5\\cdot\\text{slope}$"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "1",
+      "1",
+      "1.5"
+     ],
+     [
+      "1",
+      "0.5",
+      "1.5",
+      "2",
+      "2.5"
+     ]
+    ],
+    "cap": "The same computation as a table: one row per step."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the slope at the new point instead of the current point. Euler's method only knows where you are now; the slope at $(x_{n+1}, y_{n+1})$ needs $y_{n+1}$, which is what you are trying to compute. Check each row: the slope column must be computed from the $x_n$ and $y_n$ in the same row."
+   },
+   {
+    "t": "ex",
+    "title": "Reading a slope field",
+    "q": "Where are the slopes of $y' = x - y$ equal to 0, and what happens above and below that line?",
+    "steps": [
+     "$x - y = 0$ on the line $y = x$, so the segments there are flat.",
+     "Below the line ($y < x$) the slopes are positive; above it they are negative.",
+     "So solutions rise when they are below $y = x$ and fall when they are above it: they all drift toward the line $y = x - 1$, which itself is a solution (check: $y' = 1$ and $x - y = 1$)."
+    ],
+    "a": "Flat along $y = x$; solutions approach $y = x - 1$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 4.2: Direction Fields and Numerical Methods"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Direction Fields; Euler's Method (Differential Equations notes)"
+   }
+  ]
+ },
+ "calc2.separable-equations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some <a href=\"/math/calculus-2/de-intro/\">differential equations</a> can be solved exactly by integrating. The simplest family is the separable equations, where the right side splits into a factor with only $x$ and a factor with only $y$: $\\frac{dy}{dx} = g(x)\\,h(y)$. You will use <a href=\"/math/calculus-1/exp-log-integrals/\">integrals that give logarithms</a> often."
+   },
+   {
+    "t": "why",
+    "html": "Divide by $h(y)$ (where it is not 0): $\\frac{1}{h(y)}\\frac{dy}{dx} = g(x)$. Integrate both sides with respect to $x$. On the left, the substitution rule turns $\\int \\frac{1}{h(y)}\\frac{dy}{dx}\\,dx$ into $\\int \\frac{dy}{h(y)}$. So\n$$\\int \\frac{dy}{h(y)} = \\int g(x)\\,dx.$$\nWriting \"$\\frac{dy}{h(y)} = g(x)\\,dx$\" is shorthand for exactly this use of the chain rule."
+   },
+   {
+    "t": "key",
+    "html": "(1) Separate: all $y$'s with $dy$, all $x$'s with $dx$. (2) Integrate both sides and add one constant right away. (3) Solve for $y$ if you can. (4) Use the initial condition. (5) Check any constant solutions you divided away."
+   },
+   {
+    "t": "ex",
+    "title": "Exponential growth",
+    "q": "Solve $\\frac{dy}{dx} = 2xy$, $y(0) = 3$.",
+    "steps": [
+     "Separate: $\\frac{dy}{y} = 2x\\,dx$.",
+     "Integrate: $\\ln|y| = x^{2} + C$.",
+     "Exponentiate: $|y| = e^{C}e^{x^{2}}$, so $y = Ke^{x^{2}}$ with $K = \\pm e^{C}$; $K = 0$ gives $y = 0$, which is also a solution.",
+     "$y(0) = 3$ gives $K = 3$: $y = 3e^{x^{2}}$."
+    ],
+    "a": "$y = 3e^{x^{2}}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the constant at the end instead of right after integrating. For $\\frac{dy}{dx} = xy^{2}$: integrating gives $-\\frac{1}{y} = \\frac{x^{2}}{2} + C$, so $y = \\frac{-1}{x^{2}/2 + C}$. If you solve $-\\frac{1}{y} = \\frac{x^{2}}{2}$ first and then write $y = -\\frac{2}{x^{2}} + C$, you get a family that does not satisfy the equation. Also watch for lost solutions: dividing by $y^{2}$ assumed $y \\ne 0$, but $y = 0$ is a solution too. Check by substituting into the original equation."
+   },
+   {
+    "t": "ex",
+    "title": "A square root",
+    "q": "Solve $\\frac{dy}{dx} = \\frac{x}{y}$, $y(0) = 2$.",
+    "steps": [
+     "Separate: $y\\,dy = x\\,dx$.",
+     "Integrate: $\\frac{y^{2}}{2} = \\frac{x^{2}}{2} + C$, so $y^{2} = x^{2} + 2C$.",
+     "At $x = 0$: $4 = 2C$. So $y^{2} = x^{2} + 4$.",
+     "$y(0) = 2 > 0$, so take the positive root: $y = \\sqrt{x^{2} + 4}$."
+    ],
+    "a": "$y = \\sqrt{x^{2} + 4}$"
+   },
+   {
+    "t": "viz",
+    "name": "slopefield",
+    "opts": {
+     "f": "x/y",
+     "point": [
+      0,
+      2
+     ],
+     "curves": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       -2
+      ]
+     ],
+     "xmin": -4,
+     "xmax": 4,
+     "ymin": -4,
+     "ymax": 4
+    },
+    "cap": "The slope field of $y' = \\frac{x}{y}$. The solution through $(0, 2)$ is the upper branch of the hyperbola $y^{2} - x^{2} = 4$. Drag the starting point to see other solutions."
+   },
+   {
+    "t": "ex",
+    "title": "Newton's law of cooling",
+    "q": "Coffee at $90^\\circ$C cools in a $20^\\circ$C room by $\\frac{dT}{dt} = -0.1(T - 20)$, with $t$ in minutes. Find $T(t)$.",
+    "steps": [
+     "Separate: $\\frac{dT}{T - 20} = -0.1\\,dt$.",
+     "Integrate: $\\ln|T - 20| = -0.1t + C$, so $T - 20 = Ke^{-0.1t}$.",
+     "At $t = 0$: $K = 90 - 20 = 70$. So $T = 20 + 70e^{-0.1t}$."
+    ],
+    "a": "$T(t) = 20 + 70e^{-0.1t}$; after 10 minutes, about $45.8^\\circ$C."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 4.3: Separable Equations"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Separable Differential Equations"
+   }
+  ]
+ },
+ "calc2.logistic-equation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The model $\\frac{dP}{dt} = rP$ predicts endless exponential growth. Real populations run out of food or room and level off. The logistic equation builds that limit in, and you can solve it with <a href=\"/math/calculus-2/separable-equations/\">separation of variables</a> and <a href=\"/math/calculus-2/partial-fractions/\">partial fractions</a>."
+   },
+   {
+    "t": "why",
+    "html": "Let the growth rate per individual, $\\frac{1}{P}\\frac{dP}{dt}$, start at $r$ when the population is small and fall in a straight line to 0 when $P$ reaches a carrying capacity $K$: $\\frac{1}{P}\\frac{dP}{dt} = r\\left(1 - \\frac{P}{K}\\right)$. That gives\n$$\\frac{dP}{dt} = rP\\left(1 - \\frac{P}{K}\\right).$$\nReading the right side: it is 0 at $P = 0$ and $P = K$ (equilibria); positive between them, so the population rises toward $K$; negative above $K$, so it falls back. As a function of $P$ it is a downward parabola, largest at $P = \\frac{K}{2}$: that is where growth is fastest."
+   },
+   {
+    "t": "key",
+    "html": "$\\frac{dP}{dt} = rP\\left(1 - \\frac{P}{K}\\right)$ has the solution\n$$P(t) = \\frac{K}{1 + Ae^{-rt}}, \\qquad A = \\frac{K - P_0}{P_0}.$$\nEquilibria: $P = 0$ and $P = K$. Growth is fastest when $P = \\frac{K}{2}$."
+   },
+   {
+    "t": "h",
+    "text": "Where the formula comes from"
+   },
+   {
+    "t": "p",
+    "html": "Separate: $\\frac{dP}{P(1 - P/K)} = r\\,dt$. Partial fractions give $$\\begin{aligned} &\\frac{1}{P(1 - P/K)} \\\\ &= \\frac{K}{P(K - P)} \\\\ &= \\frac{1}{P} + \\frac{1}{K - P}. \\end{aligned}$$ Integrate: $\\ln|P| - \\ln|K - P| = rt + C$, so $\\frac{P}{K - P} = Be^{rt}$. Solving for $P$ gives $P = \\frac{K}{1 + Ae^{-rt}}$ with $A = \\frac{1}{B}$, and $t = 0$ gives $A = \\frac{K - P_0}{P_0}$."
+   },
+   {
+    "t": "ex",
+    "title": "Solving a logistic model",
+    "q": "Solve $\\frac{dP}{dt} = 0.5P\\left(1 - \\frac{P}{100}\\right)$ with $P(0) = 20$.",
+    "steps": [
+     "$K = 100$, $r = 0.5$, and $A = \\frac{100 - 20}{20} = 4$.",
+     "$P(t) = \\frac{100}{1 + 4e^{-0.5t}}$.",
+     "Check: $P(0) = \\frac{100}{5} = 20$, and $P(t) \\to 100$ as $t \\to \\infty$."
+    ],
+    "a": "$P(t) = \\frac{100}{1 + 4e^{-0.5t}}$"
+   },
+   {
+    "t": "viz",
+    "name": "slopefield",
+    "opts": {
+     "f": "y*(1-y/10)/2",
+     "point": [
+      0,
+      1
+     ],
+     "curves": [
+      [
+       0,
+       14
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       0.3
+      ]
+     ],
+     "xmin": -1,
+     "xmax": 16,
+     "ymin": -1,
+     "ymax": 15
+    },
+    "cap": "Logistic solutions with $K = 10$: from below they rise in an S-shape and level off at 10; from above they fall to 10. The slopes are steepest along $P = 5$."
+   },
+   {
+    "t": "ex",
+    "title": "When is growth fastest?",
+    "q": "For the model above, when is the population growing fastest?",
+    "steps": [
+     "Fastest growth happens at $P = \\frac{K}{2} = 50$.",
+     "Solve $\\frac{100}{1 + 4e^{-0.5t}} = 50$: $1 + 4e^{-0.5t} = 2$, so $e^{-0.5t} = \\frac{1}{4}$.",
+     "$t = \\frac{\\ln 4}{0.5} = 2\\ln 4 \\approx 2.77$."
+    ],
+    "a": "$t = 2\\ln 4 \\approx 2.77$"
+   },
+   {
+    "t": "ex",
+    "title": "Reading K from an expanded form",
+    "q": "A population follows $\\frac{dP}{dt} = 0.03P - 0.0001P^{2}$. Find $r$ and $K$.",
+    "steps": [
+     "Factor out $0.03P$: $$\\begin{aligned} &0.03P\\left(1 - \\frac{0.0001}{0.03}P\\right) \\\\ &= 0.03P\\left(1 - \\frac{P}{300}\\right). \\end{aligned}$$",
+     "So $r = 0.03$ and $K = 300$."
+    ],
+    "a": "$r = 0.03$, $K = 300$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $A = \\frac{K}{P_0}$ instead of $A = \\frac{K - P_0}{P_0}$. With $K = 100$, $P_0 = 20$ that gives $A = 5$ and $P(0) = \\frac{100}{6} \\ne 20$. Quick check: put $t = 0$ into your formula; you must get $P_0$ back."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 4.4: The Logistic Equation"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Modeling with Differential Equations"
+   }
+  ]
+ },
+ "calc2.parametric-calculus": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A parametric curve gives both coordinates as functions of a third variable: $x = x(t)$, $y = y(t)$, like the position of a moving point at time $t$. In <a href=\"/math/precalculus/eliminate-parameter/\">eliminating the parameter</a> you turned such curves into one equation in $x$ and $y$. Often that is messy or impossible, so here you do calculus directly in $t$, using the <a href=\"/math/calculus-1/chain-rule/\">chain rule</a> and the idea behind <a href=\"/math/calculus-2/arc-length/\">arc length</a>."
+   },
+   {
+    "t": "why",
+    "html": "Near a point where $\\frac{dx}{dt} \\ne 0$, the curve is the graph of some function $y(x)$, and $y(t) = y(x(t))$. The chain rule says $\\frac{dy}{dt} = \\frac{dy}{dx}\\cdot\\frac{dx}{dt}$, so\n$$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}.$$\nRise over run: in a short time $\\Delta t$ the point moves about $\\frac{dx}{dt}\\Delta t$ across and $\\frac{dy}{dt}\\Delta t$ up, and the $\\Delta t$ cancels. The distance moved is $$\\begin{aligned} &\\sqrt{(\\Delta x)^{2} + (\\Delta y)^{2}} \\\\ &\\approx \\sqrt{x'(t)^{2} + y'(t)^{2}}\\,\\Delta t: \\end{aligned}$$ speed times time."
+   },
+   {
+    "t": "key",
+    "html": "$$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt},$$ $$L = \\int_a^b \\sqrt{\\left(\\frac{dx}{dt}\\right)^{2} + \\left(\\frac{dy}{dt}\\right)^{2}}\\,dt.$$\nHorizontal tangent: $\\frac{dy}{dt} = 0$ with $\\frac{dx}{dt} \\ne 0$. Vertical tangent: $\\frac{dx}{dt} = 0$ with $\\frac{dy}{dt} \\ne 0$."
+   },
+   {
+    "t": "ex",
+    "title": "A slope",
+    "q": "For $x = t^{2}$, $y = t^{3} - 3t$, find $\\frac{dy}{dx}$ at $t = 2$.",
+    "steps": [
+     "$\\frac{dx}{dt} = 2t$ and $\\frac{dy}{dt} = 3t^{2} - 3$.",
+     "$\\frac{dy}{dx} = \\frac{3t^{2} - 3}{2t}$. At $t = 2$: $\\frac{9}{4}$.",
+     "Horizontal tangents where $3t^{2} - 3 = 0$: $t = \\pm 1$. A vertical tangent at $t = 0$, where $\\frac{dx}{dt} = 0$ but $\\frac{dy}{dt} = -3$."
+    ],
+    "a": "$\\frac{9}{4}$"
+   },
+   {
+    "t": "viz",
+    "name": "calc2-param",
+    "opts": {
+     "x": "t^2",
+     "y": "t^3-3t",
+     "t0": -2.2,
+     "t1": 2.2,
+     "t": 1.6,
+     "xmin": -1,
+     "xmax": 5.5,
+     "ymin": -3.5,
+     "ymax": 3.5
+    },
+    "cap": "The curve $x = t^{2}$, $y = t^{3} - 3t$. The arrow is the velocity $\\left(\\frac{dx}{dt}, \\frac{dy}{dt}\\right)$; its slope is $\\frac{dy/dt}{dx/dt}$. Slide $t$ to $\\pm 1$ (horizontal tangents) and to $0$ (vertical tangent)."
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing the other way, $\\frac{dx/dt}{dy/dt}$. That gives $\\frac{dx}{dy}$, the reciprocal of the slope. Test with a curve you know: $x = t$, $y = 3t$ is the line $y = 3x$, slope 3. The correct formula gives $\\frac{3}{1} = 3$; the flipped one gives $\\frac{1}{3}$. Slope is always rise ($y$) over run ($x$)."
+   },
+   {
+    "t": "ex",
+    "title": "A tangent line",
+    "q": "Find the tangent line to $x = t^{2}$, $y = t^{3} - 3t$ at $t = 2$.",
+    "steps": [
+     "The point: $x = 4$, $y = 8 - 6 = 2$.",
+     "The slope from before: $\\frac{9}{4}$.",
+     "$y - 2 = \\frac{9}{4}(x - 4)$, that is $y = \\frac{9}{4}x - 7$."
+    ],
+    "a": "$y = \\frac{9}{4}x - 7$"
+   },
+   {
+    "t": "ex",
+    "title": "Arc length",
+    "q": "Find the length of $x = t^{2}$, $y = \\frac{2}{3}t^{3}$ for $0 \\le t \\le \\sqrt{3}$.",
+    "steps": [
+     "$\\frac{dx}{dt} = 2t$, $\\frac{dy}{dt} = 2t^{2}$, so the speed is $\\sqrt{4t^{2} + 4t^{4}} = 2t\\sqrt{1 + t^{2}}$ for $t \\ge 0$.",
+     "$$\\begin{aligned} L &= \\int_0^{\\sqrt{3}} 2t\\sqrt{1 + t^{2}}\\,dt \\\\ &= \\frac{2}{3}\\left[(1 + t^{2})^{3/2}\\right]_0^{\\sqrt{3}}. \\end{aligned}$$",
+     "$= \\frac{2}{3}(8 - 1) = \\frac{14}{3}$."
+    ],
+    "a": "$\\frac{14}{3}$"
+   },
+   {
+    "t": "note",
+    "html": "Second derivative: $\\frac{d^{2}y}{dx^{2}}$ is the derivative of $\\frac{dy}{dx}$ with respect to $x$, so differentiate $\\frac{dy}{dx}$ (a function of $t$) with respect to $t$ and divide by $\\frac{dx}{dt}$ again. For the first curve, $\\frac{d}{dt}\\left(\\frac{3t^{2} - 3}{2t}\\right) = \\frac{3}{2} + \\frac{3}{2t^{2}}$, and dividing by $2t$ gives $\\frac{3(t^{2} + 1)}{4t^{3}}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 7.2: Calculus of Parametric Curves"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Tangents with Parametric Equations; Arc Length with Parametric Equations"
+   }
+  ]
+ },
+ "calc2.polar-area": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know how to <a href=\"/math/precalculus/polar-graphs/\">graph polar curves</a> like cardioids and roses. To find the area they enclose, slice the region the way polar coordinates see it: not into vertical strips, but into thin wedges fanning out from the origin. Then add the wedges with a <a href=\"/math/calculus-1/ftc-evaluate/\">definite integral</a>."
+   },
+   {
+    "t": "why",
+    "html": "A sector of a circle with radius $r$ and angle $\\Delta\\theta$ (in radians) is the fraction $\\frac{\\Delta\\theta}{2\\pi}$ of the disk, so its area is $\\frac{\\Delta\\theta}{2\\pi}\\cdot\\pi r^{2} = \\frac{1}{2}r^{2}\\,\\Delta\\theta$. Cut the region between $\\theta = \\alpha$ and $\\theta = \\beta$ into thin wedges; each is close to a sector with radius $r(\\theta)$. Adding them:\n$$A = \\lim\\sum \\tfrac{1}{2}r(\\theta_i)^{2}\\,\\Delta\\theta = \\frac{1}{2}\\int_{\\alpha}^{\\beta} r(\\theta)^{2}\\,d\\theta.$$"
+   },
+   {
+    "t": "key",
+    "html": "$$A = \\frac{1}{2}\\int_{\\alpha}^{\\beta} r^{2}\\,d\\theta,$$\nwhere the ray sweeps the region exactly once as $\\theta$ goes from $\\alpha$ to $\\beta$. Between two curves: $A = \\frac{1}{2}\\int_{\\alpha}^{\\beta}\\left(r_{\\text{outer}}^{2} - r_{\\text{inner}}^{2}\\right)d\\theta$."
+   },
+   {
+    "t": "ex",
+    "title": "A cardioid",
+    "q": "Find the area inside $r = 1 + \\cos\\theta$.",
+    "steps": [
+     "The curve is traced once for $0 \\le \\theta \\le 2\\pi$.",
+     "$r^{2} = 1 + 2\\cos\\theta + \\cos^{2}\\theta$, and $\\cos^{2}\\theta = \\frac{1 + \\cos 2\\theta}{2}$.",
+     "$$\\begin{aligned} A &= \\frac{1}{2}\\int_0^{2\\pi}\\left(\\frac{3}{2} + 2\\cos\\theta + \\frac{\\cos 2\\theta}{2}\\right)d\\theta \\\\ &= \\frac{1}{2}\\cdot\\frac{3}{2}\\cdot 2\\pi \\\\ &= \\frac{3\\pi}{2}. \\end{aligned}$$"
+    ],
+    "a": "$\\frac{3\\pi}{2}$"
+   },
+   {
+    "t": "viz",
+    "name": "polar",
+    "opts": {
+     "r": "1+cos(theta)",
+     "theta": "2pi/3",
+     "rect": true,
+     "play": true
+    },
+    "cap": "The ray sweeps out the cardioid as $\\theta$ goes from 0 to $2\\pi$. Each thin wedge has area about $\\frac{1}{2}r^{2}\\Delta\\theta$. Play it, and watch the $r$-versus-$\\theta$ graph alongside."
+   },
+   {
+    "t": "ex",
+    "title": "One petal",
+    "q": "Find the area of one petal of $r = \\cos 3\\theta$.",
+    "steps": [
+     "$r = 0$ when $3\\theta = \\pm\\frac{\\pi}{2}$, so one petal runs over $-\\frac{\\pi}{6} \\le \\theta \\le \\frac{\\pi}{6}$.",
+     "$$\\begin{aligned} A &= \\frac{1}{2}\\int_{-\\pi/6}^{\\pi/6}\\cos^{2}3\\theta\\,d\\theta \\\\ &= \\frac{1}{2}\\int_{-\\pi/6}^{\\pi/6}\\frac{1 + \\cos 6\\theta}{2}\\,d\\theta. \\end{aligned}$$",
+     "$= \\frac{1}{4}\\cdot\\frac{\\pi}{3} + 0 = \\frac{\\pi}{12}$."
+    ],
+    "a": "$\\frac{\\pi}{12}$; the whole three-petal rose has area $\\frac{\\pi}{4}$."
+   },
+   {
+    "t": "mistake",
+    "html": "Using limits that trace part of the curve twice. The circle $r = 2\\cos\\theta$ is traced completely for $0 \\le \\theta \\le \\pi$; from $\\pi$ to $2\\pi$ it is traced again (with $r < 0$). So $\\frac{1}{2}\\int_0^{2\\pi}4\\cos^{2}\\theta\\,d\\theta = 2\\pi$, double the true area $\\pi$ of this circle of radius 1. Check: find where $r = 0$, sketch the curve, and compare with the area of a shape you know."
+   },
+   {
+    "t": "ex",
+    "title": "Between two curves",
+    "q": "Find the area inside $r = 3\\sin\\theta$ and outside $r = 1 + \\sin\\theta$.",
+    "steps": [
+     "They meet where $3\\sin\\theta = 1 + \\sin\\theta$, so $\\sin\\theta = \\frac{1}{2}$: $\\theta = \\frac{\\pi}{6}$ and $\\frac{5\\pi}{6}$.",
+     "$$\\begin{aligned} A &= \\tfrac{1}{2}\\int_{\\pi/6}^{5\\pi/6}\\left[9\\sin^{2}\\theta - (1 + \\sin\\theta)^{2}\\right]d\\theta \\\\ &= \\tfrac{1}{2}\\int_{\\pi/6}^{5\\pi/6}\\left(8\\sin^{2}\\theta - 2\\sin\\theta - 1\\right)d\\theta. \\end{aligned}$$",
+     "The three pieces are $\\frac{8\\pi}{3} + 2\\sqrt{3}$, $2\\sqrt{3}$ and $\\frac{2\\pi}{3}$, so $$\\begin{aligned} A &= \\frac{1}{2}\\left(\\frac{8\\pi}{3} + 2\\sqrt{3} - 2\\sqrt{3} - \\frac{2\\pi}{3}\\right) \\\\ &= \\pi. \\end{aligned}$$"
+    ],
+    "a": "$\\pi$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 7.4: Area and Arc Length in Polar Coordinates"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Area with Polar Coordinates"
+   }
+  ]
+ },
+ "calc2.polar-tangents-length": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A polar curve $r = f(\\theta)$ is really a <a href=\"/math/calculus-2/parametric-calculus/\">parametric curve</a> with $\\theta$ as the parameter. Once you write it that way, slopes and lengths come straight from the parametric formulas, and they pair well with <a href=\"/math/calculus-2/polar-area/\">polar area</a>."
+   },
+   {
+    "t": "why",
+    "html": "Write $x = r\\cos\\theta$ and $y = r\\sin\\theta$ with $r = f(\\theta)$. The product rule gives\n$$\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta,$$ $$\\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta.$$\nSquaring and adding, the cross terms $\\pm 2rr'\\sin\\theta\\cos\\theta$ cancel and $\\sin^{2} + \\cos^{2} = 1$, leaving\n$$\\left(\\frac{dx}{d\\theta}\\right)^{2} + \\left(\\frac{dy}{d\\theta}\\right)^{2} = r^{2} + (r')^{2}.$$\nThat makes sense: as $\\theta$ changes, the point moves out along the ray at rate $r'$ and around the circle at rate $r$, two directions at right angles."
+   },
+   {
+    "t": "key",
+    "html": "$$\\frac{dy}{dx} = \\frac{r'\\sin\\theta + r\\cos\\theta}{r'\\cos\\theta - r\\sin\\theta},$$ $$L = \\int_{\\alpha}^{\\beta}\\sqrt{r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2}}\\,d\\theta.$$"
+   },
+   {
+    "t": "ex",
+    "title": "A slope on a limaçon",
+    "q": "Find the slope of $r = 1 + \\sin\\theta$ at $\\theta = 0$.",
+    "steps": [
+     "At $\\theta = 0$: $r = 1$, $r' = \\cos 0 = 1$, $\\sin\\theta = 0$, $\\cos\\theta = 1$.",
+     "$\\frac{dy}{dx} = \\frac{(1)(0) + (1)(1)}{(1)(1) - (1)(0)} = 1$."
+    ],
+    "a": "$1$"
+   },
+   {
+    "t": "viz",
+    "name": "calc2-param",
+    "opts": {
+     "x": "(1+cos(t))*cos(t)",
+     "y": "(1+cos(t))*sin(t)",
+     "t0": 0,
+     "t1": "2pi",
+     "t": 1.2,
+     "tname": "θ",
+     "xmin": -1,
+     "xmax": 2.4,
+     "ymin": -1.6,
+     "ymax": 1.6,
+     "length": true
+    },
+    "cap": "The cardioid $r = 1 + \\cos\\theta$ drawn as $x = r\\cos\\theta$, $y = r\\sin\\theta$. The arrow is the velocity in $\\theta$, and the readout adds up the length so far. Slide to $\\theta = 2\\pi$: the total length is 8."
+   },
+   {
+    "t": "ex",
+    "title": "The length of a cardioid",
+    "q": "Find the length of $r = 1 + \\cos\\theta$.",
+    "steps": [
+     "$$\\begin{aligned} &r^{2} + (r')^{2} \\\\ &= (1 + \\cos\\theta)^{2} + \\sin^{2}\\theta \\\\ &= 2 + 2\\cos\\theta \\\\ &= 4\\cos^{2}\\frac{\\theta}{2}. \\end{aligned}$$",
+     "So the integrand is $2\\left|\\cos\\frac{\\theta}{2}\\right|$. By symmetry, double the length for $0 \\le \\theta \\le \\pi$, where $\\cos\\frac{\\theta}{2} \\ge 0$.",
+     "$L = 2\\int_0^{\\pi}2\\cos\\frac{\\theta}{2}\\,d\\theta = 2\\left[4\\sin\\frac{\\theta}{2}\\right]_0^{\\pi} = 8$."
+    ],
+    "a": "$8$"
+   },
+   {
+    "t": "ex",
+    "title": "A spiral",
+    "q": "Find the length of $r = \\theta^{2}$ for $0 \\le \\theta \\le \\sqrt{5}$.",
+    "steps": [
+     "$r^{2} + (r')^{2} = \\theta^{4} + 4\\theta^{2} = \\theta^{2}(\\theta^{2} + 4)$, so the integrand is $\\theta\\sqrt{\\theta^{2} + 4}$.",
+     "$$\\begin{aligned} L &= \\frac{1}{3}\\left[(\\theta^{2} + 4)^{3/2}\\right]_0^{\\sqrt{5}} \\\\ &= \\frac{1}{3}(27 - 8) \\\\ &= \\frac{19}{3}. \\end{aligned}$$"
+    ],
+    "a": "$\\frac{19}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the Cartesian formula $\\int\\sqrt{1 + (r')^{2}}\\,d\\theta$. Test on the circle $r = 3$ for $0 \\le \\theta \\le 2\\pi$, whose length is $6\\pi$: the correct integrand is $\\sqrt{9 + 0} = 3$, giving $6\\pi$; the wrong one gives $\\sqrt{1} = 1$ and only $2\\pi$. In polar form the \"1\" is replaced by $r^{2}$, because moving around a circle of radius $r$ covers distance $r\\,\\Delta\\theta$, not $\\Delta\\theta$."
+   },
+   {
+    "t": "note",
+    "html": "At the origin ($r = 0$) the slope formula simplifies to $\\frac{dy}{dx} = \\tan\\theta$: the curve leaves the pole along the ray at that angle. For the rose $r = \\cos 3\\theta$, the petals touch the pole along $\\theta = \\pm\\frac{\\pi}{6}$, $\\frac{\\pi}{2}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 7.4: Area and Arc Length in Polar Coordinates"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Tangents with Polar Coordinates; Arc Length with Polar Coordinates"
+   }
+  ]
+ },
+ "calc2.sequences": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A sequence is an endless list $a_1, a_2, a_3, \\ldots$, a function whose inputs are the whole numbers. You met them as <a href=\"/math/algebra-2/recursive-sequences/\">recursive formulas</a>. Here the question is where the terms are heading, which is a <a href=\"/math/calculus-1/limits-at-infinity/\">limit at infinity</a> with $n$ in place of $x$."
+   },
+   {
+    "t": "why",
+    "html": "\"$a_n \\to L$\" means: for any tolerance $\\varepsilon > 0$, no matter how small, there is a point in the list after which every term stays within $\\varepsilon$ of $L$. If the terms come from a function, $a_n = f(n)$, and $f(x) \\to L$ as $x \\to \\infty$, then $a_n \\to L$ too: the sequence just samples the function at whole numbers. That lets you use limit laws and L'Hôpital's rule on sequences."
+   },
+   {
+    "t": "key",
+    "html": "$\\lim_{n\\to\\infty} a_n = L$ means the terms get and stay as close to $L$ as you like. If no such $L$ exists, the sequence diverges. Useful facts: $r^{n} \\to 0$ when $|r| < 1$; $\\left(1 + \\frac{x}{n}\\right)^{n} \\to e^{x}$; the squeeze theorem works for sequences; if $a_n \\to L$ and $g$ is continuous, $g(a_n) \\to g(L)$."
+   },
+   {
+    "t": "ex",
+    "title": "A rational sequence",
+    "q": "Find $\\lim_{n\\to\\infty}\\frac{3n^{2} + 1}{2n^{2} - n}$.",
+    "steps": [
+     "Divide top and bottom by $n^{2}$: $\\frac{3 + 1/n^{2}}{2 - 1/n}$.",
+     "As $n \\to \\infty$, $\\frac{1}{n} \\to 0$ and $\\frac{1}{n^{2}} \\to 0$, so the limit is $\\frac{3}{2}$."
+    ],
+    "a": "$\\frac{3}{2}$"
+   },
+   {
+    "t": "viz",
+    "name": "sequence",
+    "opts": {
+     "type": "custom",
+     "f": "(3n^2+1)/(2n^2-n)",
+     "N": 15,
+     "maxN": 30,
+     "limit": 1.5,
+     "sliders": false
+    },
+    "cap": "The terms $\\frac{3n^{2} + 1}{2n^{2} - n}$ as dots: they start at 4 and settle onto the dashed line at $\\frac{3}{2}$."
+   },
+   {
+    "t": "ex",
+    "title": "The number e",
+    "q": "Find $\\lim_{n\\to\\infty}\\left(1 + \\frac{2}{n}\\right)^{n}$.",
+    "steps": [
+     "Take logs: $n\\ln\\left(1 + \\frac{2}{n}\\right) = \\frac{\\ln(1 + 2/n)}{1/n}$, a $\\frac{0}{0}$ form.",
+     "L'Hôpital (in $t = \\frac{1}{n}$): $\\frac{\\ln(1 + 2t)}{t} \\to 2$ as $t \\to 0$.",
+     "So the sequence tends to $e^{2}$."
+    ],
+    "a": "$e^{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Bouncing terms",
+    "q": "Does $a_n = (-1)^{n}\\frac{n}{n + 1}$ converge?",
+    "steps": [
+     "The size $\\frac{n}{n + 1} \\to 1$, but the sign flips every step.",
+     "So the terms crowd near $1$ for even $n$ and near $-1$ for odd $n$: there is no single number they approach."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "mistake",
+    "html": "Confusing the limit of the terms with the sum of the terms. For $a_n = \\frac{1}{2^{n}}$, the terms $\\frac{1}{2}, \\frac{1}{4}, \\frac{1}{8}, \\ldots$ approach $0$; the total $\\frac{1}{2} + \\frac{1}{4} + \\cdots$ approaches 1. Those are two different questions: this topic asks where the terms go; <a href=\"/math/calculus-2/series-partial-sums/\">series</a> ask what they add up to."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.1: Sequences"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Sequences"
+   }
+  ]
+ },
+ "calc2.monotone-bounded": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "For a <a href=\"/math/calculus-2/sequences/\">sequence</a> given by a recursive rule, such as $a_{n+1} = \\sqrt{2 + a_n}$, there may be no formula for $a_n$ at all. You can still prove that it converges, and then find the limit, using one of the most important facts about the real numbers."
+   },
+   {
+    "t": "why",
+    "html": "Suppose the terms only go up ($a_1 \\le a_2 \\le \\cdots$) and never pass some ceiling $M$. The set of terms has a least upper bound $L$ (this is the completeness of the real numbers: the number line has no gaps). For any $\\varepsilon > 0$, the number $L - \\varepsilon$ is not an upper bound, so some term $a_N$ is above it. Every later term is at least $a_N$ (the terms only rise) and at most $L$. So from $N$ on, all terms are within $\\varepsilon$ of $L$: the sequence converges to $L$."
+   },
+   {
+    "t": "key",
+    "html": "<b>Monotone convergence theorem:</b> a sequence that is increasing and bounded above converges; so does one that is decreasing and bounded below. For a recursive rule $a_{n+1} = g(a_n)$ with $g$ continuous, once you know the sequence converges, its limit satisfies $L = g(L)$."
+   },
+   {
+    "t": "ex",
+    "title": "A recursive sequence",
+    "q": "Let $a_1 = 0$ and $a_{n+1} = \\frac{a_n}{2} + 3$. Show it converges and find the limit.",
+    "steps": [
+     "The first terms are $0, 3, 4.5, 5.25, \\ldots$: they seem to rise toward 6.",
+     "Bounded: if $a_n < 6$ then $a_{n+1} < \\frac{6}{2} + 3 = 6$. So by induction every term is below 6.",
+     "Increasing: $a_{n+1} - a_n = 3 - \\frac{a_n}{2} > 0$ because $a_n < 6$.",
+     "So it converges, and the limit satisfies $L = \\frac{L}{2} + 3$, giving $L = 6$."
+    ],
+    "a": "It converges to $6$."
+   },
+   {
+    "t": "viz",
+    "name": "sequence",
+    "opts": {
+     "type": "custom",
+     "f": "6-6/2^(n-1)",
+     "N": 10,
+     "maxN": 30,
+     "limit": 6,
+     "sliders": false
+    },
+    "cap": "The terms of $a_{n+1} = \\frac{a_n}{2} + 3$ (here written as $6 - \\frac{6}{2^{n-1}}$): they rise every step and never cross the ceiling at 6, so they have to settle somewhere, and that somewhere is 6."
+   },
+   {
+    "t": "ex",
+    "title": "Nested roots",
+    "q": "Let $a_1 = 0$ and $a_{n+1} = \\sqrt{2 + a_n}$. Find the limit.",
+    "steps": [
+     "The terms $0, \\sqrt{2}, \\sqrt{2 + \\sqrt{2}}, \\ldots$ increase and stay below 2 (if $a_n < 2$, then $a_{n+1} < \\sqrt{4} = 2$).",
+     "So the limit exists and $L = \\sqrt{2 + L}$, that is $L^{2} - L - 2 = 0$, so $L = 2$ or $L = -1$.",
+     "The terms are not negative, so $L = 2$."
+    ],
+    "a": "$2$"
+   },
+   {
+    "t": "mistake",
+    "html": "Solving $L = g(L)$ before knowing the limit exists. For $a_1 = 1$, $a_{n+1} = 2a_n$, the equation $L = 2L$ gives $L = 0$, but the sequence is $1, 2, 4, 8, \\ldots$, which diverges. The equation only finds the limit if there is one. Also, bounded alone is not enough ($(-1)^{n}$ is bounded and diverges); you need monotone and bounded."
+   },
+   {
+    "t": "ex",
+    "title": "An explicit sequence",
+    "q": "Does $a_n = \\frac{n}{n + 1}$ converge?",
+    "steps": [
+     "$a_n = 1 - \\frac{1}{n + 1}$, and the subtracted part shrinks, so the terms increase.",
+     "Every term is less than 1, so the sequence is bounded above.",
+     "By the theorem it converges (here we can also see the limit directly: 1)."
+    ],
+    "a": "Yes, to 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.1: Sequences (bounded and monotone sequences)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: More on Sequences"
+   }
+  ]
+ },
+ "calc2.series-partial-sums": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "What could it mean to add infinitely many numbers? You cannot finish the addition. Instead, look at the running totals. This turns an infinite sum into a <a href=\"/math/calculus-2/sequences/\">sequence</a> whose limit you can study, written with <a href=\"/math/algebra-2/sigma-notation/\">sigma notation</a>."
+   },
+   {
+    "t": "why",
+    "html": "For a series $\\sum_{n=1}^{\\infty} a_n$, the partial sums are $S_1 = a_1$, $S_2 = a_1 + a_2$, and in general $S_N = a_1 + \\cdots + a_N$. These are ordinary finite sums. We <i>define</i> the sum of the series to be $\\lim_{N\\to\\infty} S_N$ when that limit exists. So \"the series converges\" means \"the running totals settle on a number\", and that number is what the infinite sum means."
+   },
+   {
+    "t": "key",
+    "html": "$$\\sum_{n=1}^{\\infty} a_n = \\lim_{N\\to\\infty} S_N, \\qquad S_N = \\sum_{n=1}^{N} a_n.$$\nThe series converges if the limit exists and diverges if it does not. Terms going to 0 is necessary for convergence, but not enough."
+   },
+   {
+    "t": "ex",
+    "title": "Partial sums with a pattern",
+    "q": "Find the sum of $\\sum_{n=1}^{\\infty}\\frac{1}{n(n + 1)}$.",
+    "steps": [
+     "The first partial sums: $S_1 = \\frac{1}{2}$, $S_2 = \\frac{1}{2} + \\frac{1}{6} = \\frac{2}{3}$, $S_3 = \\frac{2}{3} + \\frac{1}{12} = \\frac{3}{4}$.",
+     "The pattern is $S_N = \\frac{N}{N + 1} = 1 - \\frac{1}{N + 1}$ (because $\\frac{1}{n(n + 1)} = \\frac{1}{n} - \\frac{1}{n + 1}$, and the terms cancel in pairs).",
+     "$S_N \\to 1$, so the series converges to 1."
+    ],
+    "a": "$1$"
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "1/n",
+     "start": 1,
+     "N": 20,
+     "maxN": 60,
+     "presets": true
+    },
+    "cap": "Bars are the terms; the purple dots are the partial sums. For the harmonic series $\\sum\\frac{1}{n}$ the terms shrink to 0, yet the partial sums keep climbing. Try the other presets to see sums that settle."
+   },
+   {
+    "t": "ex",
+    "title": "The harmonic series diverges",
+    "q": "Show that $\\sum_{n=1}^{\\infty}\\frac{1}{n}$ diverges.",
+    "steps": [
+     "Group the terms: $$\\begin{aligned} &1 + \\frac{1}{2} + \\left(\\frac{1}{3} + \\frac{1}{4}\\right) + \\left(\\frac{1}{5} + \\cdots + \\frac{1}{8}\\right) \\\\ &\\quad + \\left(\\frac{1}{9} + \\cdots + \\frac{1}{16}\\right) + \\cdots \\end{aligned}$$",
+     "Each group is at least $\\frac{1}{2}$: for example $\\frac{1}{5} + \\cdots + \\frac{1}{8} \\ge 4\\cdot\\frac{1}{8} = \\frac{1}{2}$.",
+     "So $S_{2^{k}} \\ge 1 + \\frac{k}{2}$, which grows without bound. The partial sums do not settle."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "mistake",
+    "html": "Deciding that a series converges because its terms go to 0. The harmonic series has $\\frac{1}{n} \\to 0$ and still diverges. Terms shrinking only means each new step is small; many small steps can still add up to any amount. Check the partial sums (or use a test), not just the terms."
+   },
+   {
+    "t": "ex",
+    "title": "Partial sums that bounce",
+    "q": "Does $\\sum_{n=0}^{\\infty}(-1)^{n} = 1 - 1 + 1 - 1 + \\cdots$ converge?",
+    "steps": [
+     "$S_1 = 1$, $S_2 = 0$, $S_3 = 1$, $S_4 = 0$, and so on.",
+     "The partial sums never settle, so the series diverges. (Grouping the terms in pairs to get 0 changes the series; the definition uses partial sums.)"
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "note",
+    "html": "Two facts you will use often: multiplying every term by a constant multiplies the sum; and changing or dropping finitely many terms never changes whether a series converges (only, possibly, its sum)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.2: Infinite Series"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Series: The Basics; Convergence/Divergence"
+   }
+  ]
+ },
+ "calc2.geometric-telescoping": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "For most series you can never write $S_N$ in closed form. Two families are exceptions, and they are the workhorses of the subject: geometric series (you met <a href=\"/math/algebra-2/infinite-geometric-series/\">infinite geometric series</a> in algebra) and telescoping series. For both, you can find the <a href=\"/math/calculus-2/series-partial-sums/\">partial sums</a> exactly."
+   },
+   {
+    "t": "why",
+    "html": "<b>Geometric.</b> Let $S_N = a + ar + \\cdots + ar^{N-1}$. Then $rS_N = ar + \\cdots + ar^{N}$, and subtracting cancels everything in the middle: $S_N - rS_N = a - ar^{N}$, so $S_N = \\frac{a(1 - r^{N})}{1 - r}$ for $r \\ne 1$. If $|r| < 1$, $r^{N} \\to 0$ and $S_N \\to \\frac{a}{1 - r}$. If $|r| \\ge 1$, the terms do not go to 0 and the series diverges.\n<b>Telescoping.</b> If each term is a difference $b_n - b_{n+1}$, the partial sum collapses: $S_N = b_1 - b_{N+1}$. The series converges exactly when $b_{N+1}$ has a limit."
+   },
+   {
+    "t": "key",
+    "html": "$$\\sum_{n=0}^{\\infty} ar^{n} = \\frac{a}{1 - r} = \\frac{\\text{first term}}{1 - \\text{ratio}} \\quad (|r| < 1);$$\nit diverges for $|r| \\ge 1$. A telescoping series $\\sum (b_n - b_{n+1})$ has $S_N = b_1 - b_{N+1}$."
+   },
+   {
+    "t": "ex",
+    "title": "Mind the first term",
+    "q": "Find $\\sum_{n=1}^{\\infty} 3\\left(\\frac{2}{5}\\right)^{n}$.",
+    "steps": [
+     "Ratio $r = \\frac{2}{5}$, and $|r| < 1$.",
+     "First term ($n = 1$): $3\\cdot\\frac{2}{5} = \\frac{6}{5}$.",
+     "Sum: $\\frac{6/5}{1 - 2/5} = \\frac{6/5}{3/5} = 2$."
+    ],
+    "a": "$2$"
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "3*(2/5)^n",
+     "start": 1,
+     "N": 8,
+     "maxN": 30,
+     "limit": "2",
+     "view": "walk"
+    },
+    "cap": "Each arrow adds one term of $3\\left(\\frac{2}{5}\\right)^{n}$; each step is $\\frac{2}{5}$ as long as the one before, so the walk closes in on 2 and never passes it."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the coefficient instead of the first term. $\\sum_{n=1}^{\\infty} 3\\left(\\frac{2}{5}\\right)^{n} \\ne \\frac{3}{1 - 2/5} = 5$, because the series starts at $n = 1$, so its first term is $\\frac{6}{5}$, not 3. Check: write out $S_1$ and use it as the numerator."
+   },
+   {
+    "t": "ex",
+    "title": "A repeating decimal",
+    "q": "Write $0.\\overline{36}$ as a fraction.",
+    "steps": [
+     "$0.363636\\ldots = \\frac{36}{100} + \\frac{36}{100^{2}} + \\cdots$, geometric with first term $\\frac{36}{100}$ and ratio $\\frac{1}{100}$.",
+     "Sum: $\\frac{36/100}{1 - 1/100} = \\frac{36}{99} = \\frac{4}{11}$."
+    ],
+    "a": "$\\frac{4}{11}$"
+   },
+   {
+    "t": "ex",
+    "title": "Telescoping",
+    "q": "Find $\\sum_{n=1}^{\\infty}\\frac{1}{n(n + 2)}$.",
+    "steps": [
+     "Partial fractions: $\\frac{1}{n(n + 2)} = \\frac{1}{2}\\left(\\frac{1}{n} - \\frac{1}{n + 2}\\right)$.",
+     "In $S_N$, each $-\\frac{1}{n + 2}$ cancels the $+\\frac{1}{n}$ two terms later. What survives: $\\frac{1}{2}\\left(1 + \\frac{1}{2} - \\frac{1}{N + 1} - \\frac{1}{N + 2}\\right)$.",
+     "As $N \\to \\infty$: $\\frac{1}{2}\\cdot\\frac{3}{2} = \\frac{3}{4}$."
+    ],
+    "a": "$\\frac{3}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "When the ratio is too big",
+    "q": "What about $\\sum_{n=0}^{\\infty}\\left(-\\frac{3}{2}\\right)^{n}$?",
+    "steps": [
+     "Here $|r| = \\frac{3}{2} \\ge 1$, so the terms grow in size and the series diverges.",
+     "Plugging into $\\frac{a}{1 - r}$ would give $\\frac{1}{1 + 3/2} = \\frac{2}{5}$, a meaningless number: the formula only holds when $|r| < 1$."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.2: Infinite Series (geometric and telescoping series)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Special Series"
+   }
+  ]
+ },
+ "calc2.divergence-test": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Before any hard work on a series, check one thing: do its terms go to 0? If not, you are done. This test follows straight from the definition of <a href=\"/math/calculus-2/series-partial-sums/\">partial sums</a>."
+   },
+   {
+    "t": "why",
+    "html": "Each term is the difference of two neighboring partial sums: $a_n = S_n - S_{n-1}$. If the series converges to $S$, both $S_n$ and $S_{n-1}$ approach $S$, so $a_n \\to S - S = 0$. Turned around: if the terms do <i>not</i> go to 0, the series cannot converge."
+   },
+   {
+    "t": "key",
+    "html": "<b>Divergence test:</b> if $\\lim_{n\\to\\infty} a_n \\ne 0$ (or the limit does not exist), then $\\sum a_n$ diverges. If $\\lim a_n = 0$, the test says nothing."
+   },
+   {
+    "t": "ex",
+    "title": "Terms with a nonzero limit",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{n}{2n + 1}$ converge?",
+    "steps": [
+     "$\\frac{n}{2n + 1} \\to \\frac{1}{2}$, not 0.",
+     "So the series diverges: each new term adds about $\\frac{1}{2}$, and $S_N$ grows roughly like $\\frac{N}{2}$."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "n/(2n+1)",
+     "start": 1,
+     "N": 20,
+     "maxN": 60
+    },
+    "cap": "For $\\sum\\frac{n}{2n + 1}$ the bars (terms) level off near $\\frac{1}{2}$ instead of shrinking, so the partial sums climb in nearly equal steps forever."
+   },
+   {
+    "t": "ex",
+    "title": "A limit you have to work for",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\cos\\frac{1}{n}$ converge?",
+    "steps": [
+     "$\\frac{1}{n} \\to 0$ and cosine is continuous, so $\\cos\\frac{1}{n} \\to \\cos 0 = 1$.",
+     "The terms do not go to 0, so the series diverges."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the test to claim convergence. \"The terms of $\\sum\\frac{1}{n}$ go to 0, so it converges\" is wrong: the harmonic series diverges. And $\\sum\\frac{1}{n^{2}}$, whose terms also go to 0, converges. When $a_n \\to 0$ the test is silent; move on to another test. The test can only ever say \"diverges\"."
+   },
+   {
+    "t": "ex",
+    "title": "When the test is silent",
+    "q": "What does the divergence test say about $\\sum_{n=1}^{\\infty}\\frac{1}{\\sqrt{n}}$?",
+    "steps": [
+     "$\\frac{1}{\\sqrt{n}} \\to 0$.",
+     "So the test gives no conclusion. (The <a href=\"/math/calculus-2/integral-test/\">The Integral Test and p-Series</a> will show this series diverges.)"
+    ],
+    "a": "Nothing."
+   },
+   {
+    "t": "ex",
+    "title": "A limit that is a famous number",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\left(1 + \\frac{1}{n}\\right)^{n}$ converge?",
+    "steps": [
+     "The terms approach $e \\approx 2.718$, the limit that defines $e$.",
+     "So each term adds almost $2.7$ to the running total, and the series diverges."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "note",
+    "html": "Make the divergence test your first move on every series: it takes one limit. If the terms do not go to 0, stop. If they do, you have learned that you need a sharper tool, such as the integral, comparison or ratio test, which come next."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.3: The Divergence and Integral Tests"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Convergence/Divergence of Series (divergence test)"
+   }
+  ]
+ },
+ "calc2.integral-test": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When the terms of a series come from a nice function, $a_n = f(n)$, you can compare the series with an <a href=\"/math/calculus-2/improper-integrals/\">improper integral</a>. That settles the most useful family of all, the $p$-series $\\sum\\frac{1}{n^{p}}$, in cases where the <a href=\"/math/calculus-2/divergence-test/\">The Divergence Test</a> says nothing."
+   },
+   {
+    "t": "why",
+    "html": "Let $f$ be positive, continuous and decreasing for $x \\ge 1$. Draw rectangles of width 1 under the graph, using right endpoints: their heights are $a_2, a_3, \\ldots$, and they fit under the curve, so $a_2 + \\cdots + a_N \\le \\int_1^{N} f(x)\\,dx$. Rectangles with left endpoints stick out above the curve: $\\int_1^{N+1} f(x)\\,dx \\le a_1 + \\cdots + a_N$. So if the integral is finite, the partial sums are increasing and bounded, hence convergent; if the integral is infinite, the partial sums are too."
+   },
+   {
+    "t": "key",
+    "html": "<b>Integral test:</b> if $f$ is positive, continuous and decreasing on $[1, \\infty)$ and $a_n = f(n)$, then $\\sum a_n$ and $\\int_1^{\\infty} f(x)\\,dx$ both converge or both diverge. <b>$p$-series:</b> $\\sum\\frac{1}{n^{p}}$ converges when $p > 1$ and diverges when $p \\le 1$."
+   },
+   {
+    "t": "viz",
+    "name": "riemann",
+    "opts": {
+     "f": "1/x^2",
+     "a": 1,
+     "b": 8,
+     "n": 7,
+     "method": "left",
+     "methods": [
+      "left",
+      "right"
+     ],
+     "exact": true
+    },
+    "cap": "Left-endpoint rectangles of width 1 for $f(x) = \\frac{1}{x^{2}}$: their areas are $1, \\frac{1}{4}, \\frac{1}{9}, \\ldots$, the terms of $\\sum\\frac{1}{n^{2}}$. They sit above the curve. Switch to right endpoints: those rectangles fit under it."
+   },
+   {
+    "t": "ex",
+    "title": "p-series",
+    "q": "For which $p$ does $\\sum_{n=1}^{\\infty}\\frac{1}{n^{p}}$ converge?",
+    "steps": [
+     "For $p \\le 0$ the terms do not go to 0, so it diverges. For $p > 0$, $f(x) = x^{-p}$ is positive and decreasing.",
+     "$\\int_1^{\\infty}x^{-p}\\,dx$ converges exactly when $p > 1$ (it is $\\frac{1}{p - 1}$ then).",
+     "So the series converges exactly when $p > 1$. For example $\\sum\\frac{1}{n^{2}}$ converges and $\\sum\\frac{1}{\\sqrt{n}}$ diverges."
+    ],
+    "a": "$p > 1$"
+   },
+   {
+    "t": "ex",
+    "title": "A log in the denominator",
+    "q": "Does $\\sum_{n=2}^{\\infty}\\frac{1}{n\\ln n}$ converge?",
+    "steps": [
+     "$f(x) = \\frac{1}{x\\ln x}$ is positive and decreasing for $x \\ge 2$.",
+     "With $u = \\ln x$: $\\int_2^{t}\\frac{dx}{x\\ln x} = \\ln(\\ln t) - \\ln(\\ln 2)$, which grows without bound.",
+     "So the series diverges, though very slowly."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking the series equals the integral. $\\int_1^{\\infty}\\frac{dx}{x^{2}} = 1$, but $\\sum_{n=1}^{\\infty}\\frac{1}{n^{2}} = \\frac{\\pi^{2}}{6} \\approx 1.645$. The rectangles are not the region under the curve, so the test only tells you whether the series converges. The two numbers do bound each other: here $1 \\le \\sum\\frac{1}{n^{2}} \\le 1 + 1 = 2$."
+   },
+   {
+    "t": "ex",
+    "title": "An integral you can evaluate",
+    "q": "Does $\\sum_{n=1}^{\\infty} n e^{-n^{2}}$ converge?",
+    "steps": [
+     "$f(x) = xe^{-x^{2}}$ is positive, and $f'(x) = e^{-x^{2}}(1 - 2x^{2}) < 0$ for $x \\ge 1$, so it is decreasing.",
+     "$\\int_1^{\\infty}xe^{-x^{2}}dx = \\left[-\\frac{1}{2}e^{-x^{2}}\\right]_1^{\\infty} = \\frac{1}{2e}$, finite.",
+     "So the series converges."
+    ],
+    "a": "It converges."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.3: The Divergence and Integral Tests"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Integral Test"
+   }
+  ]
+ },
+ "calc2.comparison-tests": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Most series do not have a formula for their partial sums, and many have terms that are hard to integrate. But you know a lot of benchmark series: <a href=\"/math/calculus-2/geometric-telescoping/\">geometric series</a> and the $p$-series from the <a href=\"/math/calculus-2/integral-test/\">The Integral Test and p-Series</a>. Comparison tests let you borrow their behavior."
+   },
+   {
+    "t": "why",
+    "html": "Suppose $0 \\le a_n \\le b_n$. The partial sums of $\\sum a_n$ increase (the terms are not negative) and never exceed $\\sum b_n$. If that is finite, they are bounded, so they converge (by the monotone convergence theorem). If instead $\\sum a_n$ is infinite, the bigger $\\sum b_n$ must be infinite too.\nFor the limit version: if $\\frac{a_n}{b_n} \\to L$ with $0 < L < \\infty$, then eventually $\\frac{L}{2}b_n < a_n < \\frac{3L}{2}b_n$, so each series is trapped by a multiple of the other, and they behave the same way."
+   },
+   {
+    "t": "key",
+    "html": "<b>Direct comparison</b> ($0 \\le a_n \\le b_n$): $\\sum b_n$ converges $\\Rightarrow$ $\\sum a_n$ converges; $\\sum a_n$ diverges $\\Rightarrow$ $\\sum b_n$ diverges. <b>Limit comparison</b> ($a_n, b_n > 0$): if $\\frac{a_n}{b_n} \\to L$ with $0 < L < \\infty$, both converge or both diverge."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Your series is",
+     "than a series that",
+     "Conclusion"
+    ],
+    "rows": [
+     [
+      "smaller",
+      "converges",
+      "converges"
+     ],
+     [
+      "bigger",
+      "diverges",
+      "diverges"
+     ],
+     [
+      "smaller",
+      "diverges",
+      "nothing"
+     ],
+     [
+      "bigger",
+      "converges",
+      "nothing"
+     ]
+    ],
+    "cap": "Only two of the four comparisons tell you anything."
+   },
+   {
+    "t": "ex",
+    "title": "Direct comparison",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{1}{n^{2} + 5}$ converge?",
+    "steps": [
+     "$n^{2} + 5 > n^{2}$, so $0 < \\frac{1}{n^{2} + 5} < \\frac{1}{n^{2}}$.",
+     "$\\sum\\frac{1}{n^{2}}$ converges ($p = 2$), so the smaller series converges."
+    ],
+    "a": "It converges."
+   },
+   {
+    "t": "ex",
+    "title": "Limit comparison",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{2n^{2} + 1}{n^{4} + 3}$ converge?",
+    "steps": [
+     "For large $n$ the terms behave like $\\frac{2n^{2}}{n^{4}} = \\frac{2}{n^{2}}$, so compare with $b_n = \\frac{1}{n^{2}}$.",
+     "$\\frac{a_n}{b_n} = \\frac{2n^{4} + n^{2}}{n^{4} + 3} \\to 2$, a positive finite number.",
+     "$\\sum\\frac{1}{n^{2}}$ converges, so this series converges too."
+    ],
+    "a": "It converges."
+   },
+   {
+    "t": "mistake",
+    "html": "Comparing in the wrong direction. \"$\\frac{1}{n + 1} < \\frac{1}{n}$, and $\\sum\\frac{1}{n}$ diverges, so $\\sum\\frac{1}{n + 1}$ converges\" is not valid: being smaller than a divergent series proves nothing (and in fact $\\sum\\frac{1}{n + 1}$ diverges). Before concluding, say the inequality out loud and check it against the table above. When the inequality goes the useless way, try limit comparison instead."
+   },
+   {
+    "t": "ex",
+    "title": "Picking the comparison",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{1}{3n - 1}$ converge?",
+    "steps": [
+     "The terms behave like $\\frac{1}{3n}$. Limit comparison with $\\frac{1}{n}$: $\\frac{n}{3n - 1} \\to \\frac{1}{3}$.",
+     "$\\sum\\frac{1}{n}$ diverges, so this series diverges.",
+     "(Direct comparison also works here: $\\frac{1}{3n - 1} > \\frac{1}{3n}$, which is bigger than a divergent series.)"
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "1/(3n-1)",
+     "start": 1,
+     "N": 40,
+     "maxN": 60
+    },
+    "cap": "The partial sums of $\\sum\\frac{1}{3n - 1}$ keep growing, about like $\\frac{1}{3}\\ln N$: slow, but without bound, just like the harmonic series it was compared with."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.4: Comparison Tests"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Comparison Test/Limit Comparison Test"
+   }
+  ]
+ },
+ "calc2.alternating-series": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In an alternating series the signs take turns: $b_1 - b_2 + b_3 - b_4 + \\cdots$ with every $b_n > 0$. The canceling helps a lot: such a series can converge even when $\\sum b_n$ diverges. The test uses the <a href=\"/math/calculus-2/divergence-test/\">The Divergence Test</a> idea and <a href=\"/math/calculus-2/monotone-bounded/\">monotone sequences</a>."
+   },
+   {
+    "t": "why",
+    "html": "Suppose $b_n$ decreases to 0. Look at the even partial sums: $S_{2k+2} = S_{2k} + (b_{2k+1} - b_{2k+2}) \\ge S_{2k}$, so they increase. The odd ones decrease: $$S_{2k+3} = S_{2k+1} - (b_{2k+2} - b_{2k+3}) \\le S_{2k+1}.$$ And every even sum is below every odd sum. So the even sums rise to some limit, the odd sums fall to some limit, and the gap between them, a single term $b_{2k+1}$, goes to 0. Both limits are the same number $S$. Because $S$ always lies between two consecutive partial sums, $|S - S_N| \\le b_{N+1}$."
+   },
+   {
+    "t": "key",
+    "html": "<b>Alternating series test:</b> if $b_n > 0$, $b_{n+1} \\le b_n$ (eventually), and $b_n \\to 0$, then $\\sum(-1)^{n+1}b_n$ converges. <b>Error bound:</b> $|S - S_N| \\le b_{N+1}$, the first term left out."
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "(-1)^(n+1)/n",
+     "start": 1,
+     "N": 12,
+     "maxN": 60,
+     "limit": "ln(2)",
+     "view": "walk"
+    },
+    "cap": "The alternating harmonic series as a walk: forward 1, back $\\frac{1}{2}$, forward $\\frac{1}{3}$, … Each step is shorter than the last, so the walk zigzags in on $\\ln 2 \\approx 0.693$, always overshooting by less than the next step."
+   },
+   {
+    "t": "ex",
+    "title": "The alternating harmonic series",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{(-1)^{n+1}}{n}$ converge?",
+    "steps": [
+     "$b_n = \\frac{1}{n}$ is positive and decreasing, and $\\frac{1}{n} \\to 0$.",
+     "So it converges by the alternating series test (its sum is $\\ln 2$), even though $\\sum\\frac{1}{n}$ diverges."
+    ],
+    "a": "It converges."
+   },
+   {
+    "t": "ex",
+    "title": "Terms that do not shrink",
+    "q": "Does $\\sum_{n=1}^{\\infty}(-1)^{n}\\frac{n}{n + 1}$ converge?",
+    "steps": [
+     "The sizes $\\frac{n}{n + 1} \\to 1$, so the terms do not go to 0.",
+     "It diverges by the divergence test. Alternating signs cannot rescue terms that stay large."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "ex",
+    "title": "An error bound",
+    "q": "Estimate $\\sum_{n=1}^{\\infty}\\frac{(-1)^{n+1}}{n^{2}}$ with $S_5$, and bound the error.",
+    "steps": [
+     "$S_5 = 1 - \\frac{1}{4} + \\frac{1}{9} - \\frac{1}{16} + \\frac{1}{25} \\approx 0.8386$.",
+     "The error is at most $b_6 = \\frac{1}{36} \\approx 0.028$.",
+     "So the sum is between $0.8386 - 0.028$ and $0.8386 + 0.028$. (It is $\\frac{\\pi^{2}}{12} \\approx 0.8225$.)"
+    ],
+    "a": "$S_5 \\approx 0.8386$, error at most $\\frac{1}{36}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Skipping the check that the terms decrease. Take $1 - \\frac{1}{4} + \\frac{1}{3} - \\frac{1}{16} + \\frac{1}{5} - \\frac{1}{36} + \\cdots$ (odd terms $\\frac{1}{n}$, even terms $\\frac{1}{n^{2}}$). The signs alternate and the terms go to 0, but they do not decrease, and the series diverges: the positive terms alone add like a harmonic series. Check that $b_{n+1} \\le b_n$, for instance by showing $f'(x) < 0$ for the function that gives $b_n$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.5: Alternating Series"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Alternating Series Test"
+   }
+  ]
+ },
+ "calc2.absolute-conditional": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some series have signs that are neither all positive nor neatly alternating, like $\\sum\\frac{\\sin n}{n^{2}}$. The way in is to look at the sizes $|a_n|$, where the <a href=\"/math/calculus-2/comparison-tests/\">comparison tests</a> apply, and to remember the <a href=\"/math/calculus-2/alternating-series/\">alternating series test</a> for the cases where sizes alone are not enough."
+   },
+   {
+    "t": "why",
+    "html": "If $\\sum|a_n|$ converges, then so does $\\sum a_n$. Here is why: $0 \\le a_n + |a_n| \\le 2|a_n|$, so $\\sum(a_n + |a_n|)$ converges by comparison, and $a_n = (a_n + |a_n|) - |a_n|$ is the difference of two convergent series. Cancellation can only help a series converge, never hurt it."
+   },
+   {
+    "t": "key",
+    "html": "$\\sum a_n$ is <b>absolutely convergent</b> if $\\sum|a_n|$ converges (then $\\sum a_n$ converges too). It is <b>conditionally convergent</b> if $\\sum a_n$ converges but $\\sum|a_n|$ diverges. Otherwise it diverges."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Step 1: test $\\sum|a_n|$ (comparison, $p$-series, ratio test, …). If it converges, you are done: absolute convergence.",
+     "Step 2: if $\\sum|a_n|$ diverges, test $\\sum a_n$ itself, usually with the alternating series test. If it converges: conditional.",
+     "Step 3: if the terms do not go to 0, it diverges."
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "Absolutely convergent",
+    "q": "Classify $\\sum_{n=1}^{\\infty}\\frac{(-1)^{n}}{n^{2}}$.",
+    "steps": [
+     "$\\sum\\left|\\frac{(-1)^{n}}{n^{2}}\\right| = \\sum\\frac{1}{n^{2}}$ converges ($p = 2$).",
+     "So the series converges absolutely."
+    ],
+    "a": "Absolutely convergent"
+   },
+   {
+    "t": "ex",
+    "title": "Conditionally convergent",
+    "q": "Classify $\\sum_{n=1}^{\\infty}\\frac{(-1)^{n}}{\\sqrt{n}}$.",
+    "steps": [
+     "$\\sum\\frac{1}{\\sqrt{n}}$ diverges ($p = \\frac{1}{2}$), so it is not absolutely convergent.",
+     "But $\\frac{1}{\\sqrt{n}}$ decreases to 0, so the alternating series converges.",
+     "So it converges conditionally."
+    ],
+    "a": "Conditionally convergent"
+   },
+   {
+    "t": "ex",
+    "title": "Irregular signs",
+    "q": "Classify $\\sum_{n=1}^{\\infty}\\frac{\\sin n}{n^{2}}$.",
+    "steps": [
+     "The signs follow no simple pattern, so the alternating series test does not apply.",
+     "$\\left|\\frac{\\sin n}{n^{2}}\\right| \\le \\frac{1}{n^{2}}$, and $\\sum\\frac{1}{n^{2}}$ converges, so $\\sum\\left|\\frac{\\sin n}{n^{2}}\\right|$ converges by comparison.",
+     "So the series converges absolutely."
+    ],
+    "a": "Absolutely convergent"
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "sin(n)/n^2",
+     "start": 1,
+     "N": 30,
+     "maxN": 60
+    },
+    "cap": "The terms $\\frac{\\sin n}{n^{2}}$ jump between positive and negative with no pattern, but their sizes shrink like $\\frac{1}{n^{2}}$, so the partial sums settle quickly."
+   },
+   {
+    "t": "mistake",
+    "html": "Calling a series absolutely convergent because it passes the alternating series test. The alternating series test only shows convergence; $\\sum\\frac{(-1)^{n}}{n}$ passes it, yet $\\sum\\frac{1}{n}$ diverges, so that series is conditionally convergent. Absolute convergence is a statement about $\\sum|a_n|$, and you have to test that series separately."
+   },
+   {
+    "t": "note",
+    "html": "The difference matters: an absolutely convergent series has the same sum however you reorder its terms. A conditionally convergent one can be rearranged to add up to any number you like (Riemann's rearrangement theorem), so its sum depends on the order."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.5: Alternating Series (absolute and conditional convergence)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Absolute Convergence"
+   }
+  ]
+ },
+ "calc2.ratio-root-tests": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Factorials and $n$th powers make comparison awkward. The ratio and root tests compare a series with a <a href=\"/math/calculus-2/geometric-telescoping/\">geometric series</a> automatically, and they test <a href=\"/math/calculus-2/absolute-conditional/\">absolute convergence</a> directly."
+   },
+   {
+    "t": "why",
+    "html": "Suppose $\\left|\\frac{a_{n+1}}{a_n}\\right| \\to L < 1$. Pick a number $r$ with $L < r < 1$. From some point $N$ on, each term is at most $r$ times the one before, so $|a_{N+k}| \\le |a_N|\\,r^{k}$. That is a convergent geometric series, so $\\sum|a_n|$ converges by comparison. If $L > 1$, the terms eventually grow, so they cannot go to 0 and the series diverges. The root test uses $\\sqrt[n]{|a_n|} \\to L$ the same way: $|a_n| \\le r^{n}$ eventually."
+   },
+   {
+    "t": "key",
+    "html": "Let $L = \\lim\\left|\\frac{a_{n+1}}{a_n}\\right|$ (ratio test) or $L = \\lim\\sqrt[n]{|a_n|}$ (root test). If $L < 1$ the series converges absolutely; if $L > 1$ (or $L = \\infty$) it diverges; if $L = 1$ the test gives no conclusion."
+   },
+   {
+    "t": "ex",
+    "title": "Factorials",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{3^{n}}{n!}$ converge?",
+    "steps": [
+     "$\\frac{a_{n+1}}{a_n} = \\frac{3^{n+1}}{(n + 1)!}\\cdot\\frac{n!}{3^{n}} = \\frac{3}{n + 1}$.",
+     "$L = \\lim\\frac{3}{n + 1} = 0 < 1$, so it converges absolutely."
+    ],
+    "a": "It converges."
+   },
+   {
+    "t": "ex",
+    "title": "A ratio that needs e",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{n!}{n^{n}}$ converge?",
+    "steps": [
+     "$$\\begin{aligned} \\frac{a_{n+1}}{a_n} &= \\frac{(n + 1)!}{(n + 1)^{n+1}}\\cdot\\frac{n^{n}}{n!} \\\\ &= \\frac{n^{n}}{(n + 1)^{n}} \\\\ &= \\frac{1}{\\left(1 + \\frac{1}{n}\\right)^{n}}. \\end{aligned}$$",
+     "$L = \\frac{1}{e} < 1$, so the series converges."
+    ],
+    "a": "It converges."
+   },
+   {
+    "t": "ex",
+    "title": "The root test",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\left(\\frac{n}{2n + 1}\\right)^{n}$ converge?",
+    "steps": [
+     "$\\sqrt[n]{a_n} = \\frac{n}{2n + 1} \\to \\frac{1}{2}$.",
+     "$L = \\frac{1}{2} < 1$, so it converges."
+    ],
+    "a": "It converges."
+   },
+   {
+    "t": "mistake",
+    "html": "Drawing a conclusion when $L = 1$. For $\\sum\\frac{1}{n}$ and for $\\sum\\frac{1}{n^{2}}$, the ratio is $\\frac{n}{n + 1}$ or $\\frac{n^{2}}{(n + 1)^{2}}$, both tending to 1. One series diverges and the other converges, so $L = 1$ cannot decide anything. Whenever the terms are rational expressions in $n$, expect $L = 1$ and use a comparison test instead."
+   },
+   {
+    "t": "ex",
+    "title": "When the terms grow",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{n!}{10^{n}}$ converge?",
+    "steps": [
+     "$\\frac{a_{n+1}}{a_n} = \\frac{(n + 1)!}{10^{n+1}}\\cdot\\frac{10^{n}}{n!} = \\frac{n + 1}{10}$.",
+     "This grows without bound: $L = \\infty > 1$. The terms shrink at first (each is a tenth of $n$ times the last) but from $n = 10$ on they grow, so the series diverges."
+    ],
+    "a": "It diverges."
+   },
+   {
+    "t": "note",
+    "html": "Ratio or root? Use the ratio test when the term has factorials or products, because consecutive terms share most of their factors. Use the root test when the whole term is raised to the $n$th power. The fact $\\sqrt[n]{n} \\to 1$ handles stray powers of $n$ in the root test."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.6: Ratio and Root Tests"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Ratio Test; Root Test"
+   }
+  ]
+ },
+ "calc2.series-strategy": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You now have a full toolbox: the <a href=\"/math/calculus-2/divergence-test/\">The Divergence Test</a>, geometric and telescoping sums, the <a href=\"/math/calculus-2/integral-test/\">The Integral Test and p-Series</a> and $p$-series, <a href=\"/math/calculus-2/comparison-tests/\">comparison tests</a>, the <a href=\"/math/calculus-2/alternating-series/\">alternating series test</a>, and the <a href=\"/math/calculus-2/ratio-root-tests/\">ratio and root tests</a>. Choosing well saves a lot of work."
+   },
+   {
+    "t": "why",
+    "html": "Each test is built to detect one kind of structure. Terms that do not shrink: divergence test. Terms that are a fixed ratio apart: geometric. Terms like a power of $n$: compare with a $p$-series. Factorials and exponentials: the ratio test, because the ratio cancels most of them. Whole expressions raised to the $n$th power: the root test undoes the power. Alternating signs: the alternating series test. So look at the shape of the term first, and the test usually picks itself."
+   },
+   {
+    "t": "key",
+    "html": "Ask in order: (1) Do the terms go to 0? (2) Is it geometric, a $p$-series or telescoping? (3) Is it alternating? (4) Factorials or $c^{n}$: ratio test. $(\\ldots)^{n}$: root test. (5) A rational or root expression: compare (limit comparison) with a $p$-series. (6) An easy integral: integral test."
+   },
+   {
+    "t": "table",
+    "head": [
+     "The term looks like",
+     "Try"
+    ],
+    "rows": [
+     [
+      "$\\frac{n^{2}}{3n^{2} + 1}$ (limit not 0)",
+      "divergence test"
+     ],
+     [
+      "$\\frac{3^{n}}{4^{n}}$, $ar^{n}$",
+      "geometric series"
+     ],
+     [
+      "$\\frac{n + 1}{n^{3} + 2}$, $\\frac{\\sqrt{n}}{n^{2} + 1}$",
+      "limit comparison with $\\frac{1}{n^{p}}$"
+     ],
+     [
+      "$\\frac{(-1)^{n}}{\\ln n}$",
+      "alternating series test"
+     ],
+     [
+      "$\\frac{n^{5}}{2^{n}}$, $\\frac{n!}{10^{n}}$",
+      "ratio test"
+     ],
+     [
+      "$\\left(\\frac{n}{2n + 1}\\right)^{n}$",
+      "root test"
+     ],
+     [
+      "$\\frac{1}{n\\ln n}$, $ne^{-n^{2}}$",
+      "integral test"
+     ]
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "Quick decisions",
+    "q": "Decide whether each converges: (a) $\\sum\\frac{n}{n^{2} + 1}$, (b) $\\sum\\frac{n^{2}}{2^{n}}$, (c) $\\sum\\frac{(-1)^{n}}{\\ln n}$ ($n \\ge 2$), (d) $\\sum\\left(1 + \\frac{1}{n}\\right)^{n}$.",
+    "steps": [
+     "(a) Like $\\frac{1}{n}$: limit comparison gives $\\frac{n^{2}}{n^{2} + 1} \\to 1$, so it diverges.",
+     "(b) Ratio test: $\\frac{(n + 1)^{2}}{2n^{2}} \\to \\frac{1}{2} < 1$, so it converges.",
+     "(c) $\\frac{1}{\\ln n}$ decreases to 0, so it converges by the alternating series test (conditionally, since $\\frac{1}{\\ln n} > \\frac{1}{n}$).",
+     "(d) The terms tend to $e \\ne 0$, so it diverges."
+    ],
+    "a": "(a) diverges, (b) converges, (c) converges, (d) diverges"
+   },
+   {
+    "t": "mistake",
+    "html": "Reaching for the ratio test on everything. On $\\sum\\frac{n}{n^{2} + 1}$ it returns $L = 1$ and tells you nothing, after some algebra. The ratio test pays off when there are factorials or exponentials; for rational expressions, compare with a $p$-series right away. And always run the divergence test first: it takes seconds."
+   },
+   {
+    "t": "ex",
+    "title": "Combining tests",
+    "q": "Does $\\sum_{n=1}^{\\infty}\\frac{(-1)^{n}n}{n^{2} + 4}$ converge absolutely, conditionally, or not at all?",
+    "steps": [
+     "Sizes: $\\frac{n}{n^{2} + 4}$ behaves like $\\frac{1}{n}$ (limit comparison gives 1), so $\\sum|a_n|$ diverges.",
+     "The sizes go to 0 and decrease once $n \\ge 2$ (the derivative of $\\frac{x}{x^{2} + 4}$ is $\\frac{4 - x^{2}}{(x^{2} + 4)^{2}} \\le 0$ there).",
+     "So it converges by the alternating series test: conditionally."
+    ],
+    "a": "Conditionally"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.6: Ratio and Root Tests (choosing a convergence test)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Strategy for Series"
+   }
+  ]
+ },
+ "calc2.series-estimates": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Knowing that a series converges is only half the story; you usually want its value. A computer adds up $S_N$, but how big is the leftover tail? The <a href=\"/math/calculus-2/integral-test/\">The Integral Test and p-Series</a> and the <a href=\"/math/calculus-2/alternating-series/\">alternating series test</a> both come with error bounds."
+   },
+   {
+    "t": "why",
+    "html": "Write $S = S_N + R_N$, where the remainder $R_N = a_{N+1} + a_{N+2} + \\cdots$ is a tail of the series. For $a_n = f(n)$ with $f$ positive and decreasing, the same rectangle picture as in the integral test traps the tail between two integrals:\n$$\\int_{N+1}^{\\infty} f(x)\\,dx \\le R_N \\le \\int_{N}^{\\infty} f(x)\\,dx.$$\nFor an alternating series with decreasing terms, $S$ always sits between consecutive partial sums, so $|R_N| \\le b_{N+1}$. For a tail you can compare with a geometric series, use the geometric sum."
+   },
+   {
+    "t": "key",
+    "html": "Integral bound: $\\int_{N+1}^{\\infty} f \\le R_N \\le \\int_N^{\\infty} f$. Alternating bound: $|R_N| \\le b_{N+1}$. Comparison: if $0 \\le a_n \\le b_n$, then $R_N \\le \\sum_{n=N+1}^{\\infty} b_n$."
+   },
+   {
+    "t": "ex",
+    "title": "Integral bounds",
+    "q": "Estimate $\\sum_{n=1}^{\\infty}\\frac{1}{n^{3}}$ using $S_{10}$, and bound the error.",
+    "steps": [
+     "$\\int_M^{\\infty}\\frac{dx}{x^{3}} = \\frac{1}{2M^{2}}$. So $\\frac{1}{2\\cdot 11^{2}} \\le R_{10} \\le \\frac{1}{2\\cdot 10^{2}}$, that is $0.00413 \\le R_{10} \\le 0.005$.",
+     "$S_{10} \\approx 1.19753$, so $1.20166 \\le S \\le 1.20253$.",
+     "Taking the middle, $S \\approx 1.2021$; the true value is about $1.2020569$."
+    ],
+    "a": "$S \\approx 1.202$, with error under $0.0005$ using the midpoint"
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "1/n^3",
+     "start": 1,
+     "N": 10,
+     "maxN": 40,
+     "limit": "1.2020569"
+    },
+    "cap": "Partial sums of $\\sum\\frac{1}{n^{3}}$ creep up to about $1.202$. After 10 terms the gap is already less than $0.005$, just as the integral bound promised."
+   },
+   {
+    "t": "ex",
+    "title": "An alternating bound",
+    "q": "How close is $S_5$ to $\\sum_{n=0}^{\\infty}\\frac{(-1)^{n}}{n!}$?",
+    "steps": [
+     "The terms $\\frac{1}{n!}$ decrease to 0, so $|S - S_N| \\le b_{N+1}$.",
+     "$S_5$ uses $n = 0$ to $4$, so the first omitted term is $\\frac{1}{5!} = \\frac{1}{120} \\approx 0.0083$.",
+     "(The sum is $\\frac{1}{e} \\approx 0.3679$; $S_5 = 0.375$.)"
+    ],
+    "a": "Within $\\frac{1}{120}$"
+   },
+   {
+    "t": "ex",
+    "title": "How many terms?",
+    "q": "How many terms of $\\sum\\frac{1}{n^{2}}$ guarantee an error of at most $0.001$?",
+    "steps": [
+     "$R_N \\le \\int_N^{\\infty}\\frac{dx}{x^{2}} = \\frac{1}{N}$.",
+     "$\\frac{1}{N} \\le 0.001$ when $N \\ge 1000$.",
+     "So 1000 terms are enough. (Slowly converging series need many terms; this is why better methods matter.)"
+    ],
+    "a": "$N = 1000$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the alternating bound on a series that is not alternating, or off by one. For $\\sum\\frac{1}{n^{2}}$ the error after $N$ terms is not $a_{N+1}$; the tail is many terms, about $\\frac{1}{N}$ in total. And for alternating series the bound is the first term you left out, $b_{N+1}$, not the last one you used. Check which terms $S_N$ contains before writing the bound."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.3: The Divergence and Integral Tests (remainder estimate)"
+   },
+   {
+    "name": "OpenStax Calculus Volume 2, Section 5.5: Alternating Series (remainder estimate)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Estimating the Value of a Series"
+   }
+  ]
+ },
+ "calc2.power-series": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A power series is a series with a variable in it: $$\\begin{aligned} &\\sum_{n=0}^{\\infty} c_n(x - a)^{n} \\\\ &= c_0 + c_1(x - a) + c_2(x - a)^{2} + \\cdots, \\end{aligned}$$ an \"infinitely long polynomial\" centered at $a$. For each $x$ it is an ordinary series of numbers, so the question becomes: for which $x$ does it converge? The <a href=\"/math/calculus-2/ratio-root-tests/\">ratio test</a> answers most of that."
+   },
+   {
+    "t": "why",
+    "html": "Apply the ratio test with $x$ held fixed. For many series, $\\left|\\frac{a_{n+1}}{a_n}\\right| \\to \\frac{|x - a|}{R}$ for some number $R$. The series then converges absolutely when $|x - a| < R$ and diverges when $|x - a| > R$. In general (a theorem worth knowing), every power series converges only at $x = a$, or for all $x$, or exactly inside an interval $|x - a| < R$ and nowhere outside it. At the two endpoints $|x - a| = R$ the ratio test gives $L = 1$: it is silent there."
+   },
+   {
+    "t": "key",
+    "html": "The <b>radius of convergence</b> $R$: the series converges absolutely for $|x - a| < R$ and diverges for $|x - a| > R$ ($R$ can be 0 or $\\infty$). The <b>interval of convergence</b> is $(a - R, a + R)$ plus whichever endpoints converge; test each endpoint separately with a series test."
+   },
+   {
+    "t": "ex",
+    "title": "Radius and endpoints",
+    "q": "Find the interval of convergence of $\\sum_{n=1}^{\\infty}\\frac{x^{n}}{n}$.",
+    "steps": [
+     "Ratio: $\\left|\\frac{x^{n+1}}{n + 1}\\cdot\\frac{n}{x^{n}}\\right| = \\frac{n}{n + 1}|x| \\to |x|$. Converges for $|x| < 1$: $R = 1$.",
+     "$x = 1$: $\\sum\\frac{1}{n}$, the harmonic series, diverges.",
+     "$x = -1$: $\\sum\\frac{(-1)^{n}}{n}$ converges by the alternating series test.",
+     "Interval: $[-1, 1)$."
+    ],
+    "a": "$[-1, 1)$"
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "x^n/n",
+     "start": 1,
+     "N": 25,
+     "maxN": 60,
+     "params": {
+      "x": [
+       -1.2,
+       1.2,
+       0.6,
+       0.1
+      ]
+     }
+    },
+    "cap": "Partial sums of $\\sum\\frac{x^{n}}{n}$ for the $x$ you choose. Inside $(-1, 1)$ they settle; at $x = 1$ they creep upward forever; at $x = -1$ they zigzag and settle; past $\\pm 1$ they blow up."
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting to test the endpoints. The ratio test only covers $|x - a| < R$ and $|x - a| > R$; at the endpoints its limit is exactly 1. The two endpoints can behave differently, as in $[-1, 1)$ above. Check: substitute each endpoint into the series and apply a test for number series ($p$-series, alternating series test, divergence test)."
+   },
+   {
+    "t": "ex",
+    "title": "A shifted center",
+    "q": "Find the interval of convergence of $\\sum_{n=1}^{\\infty}\\frac{(x - 3)^{n}}{2^{n}n^{2}}$.",
+    "steps": [
+     "Ratio: $\\frac{|x - 3|}{2}\\cdot\\frac{n^{2}}{(n + 1)^{2}} \\to \\frac{|x - 3|}{2}$. Converges when $|x - 3| < 2$: center 3, radius 2.",
+     "$x = 5$: $\\sum\\frac{1}{n^{2}}$ converges. $x = 1$: $\\sum\\frac{(-1)^{n}}{n^{2}}$ converges absolutely.",
+     "Interval: $[1, 5]$."
+    ],
+    "a": "$[1, 5]$"
+   },
+   {
+    "t": "ex",
+    "title": "The two extremes",
+    "q": "Find the radius of convergence of $\\sum\\frac{x^{n}}{n!}$ and of $\\sum n!\\,x^{n}$.",
+    "steps": [
+     "$\\sum\\frac{x^{n}}{n!}$: the ratio is $\\frac{|x|}{n + 1} \\to 0$ for every $x$, so $R = \\infty$.",
+     "$\\sum n!\\,x^{n}$: the ratio is $(n + 1)|x| \\to \\infty$ unless $x = 0$, so $R = 0$."
+    ],
+    "a": "$R = \\infty$ and $R = 0$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 6.1: Power Series and Functions"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Power Series"
+   }
+  ]
+ },
+ "calc2.functions-as-series": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/calculus-2/geometric-telescoping/\">geometric series</a> formula, read backward, says that a function equals a power series:\n$$\\frac{1}{1 - x} = 1 + x + x^{2} + x^{3} + \\cdots,$$ $$(|x| < 1).$$\nMany other functions can be rewritten in the form $\\frac{c}{1 - u}$, and then their series come for free. This builds directly on <a href=\"/math/calculus-2/power-series/\">power series and intervals of convergence</a>."
+   },
+   {
+    "t": "why",
+    "html": "For $|x| < 1$, the partial sums of $\\sum x^{n}$ are $\\frac{1 - x^{N}}{1 - x}$, and $x^{N} \\to 0$, so the series converges to $\\frac{1}{1 - x}$. The identity holds only inside $(-1, 1)$: at $x = 2$ the left side is $-1$ while the right side diverges. Substituting any expression $u$ for $x$ keeps the identity true wherever $|u| < 1$, which also tells you the new interval of convergence."
+   },
+   {
+    "t": "key",
+    "html": "$$\\frac{1}{1 - u} = \\sum_{n=0}^{\\infty} u^{n} \\quad\\text{for } |u| < 1.$$\nRewrite the function as $\\frac{c}{1 - u}$ (factor constants out of the denominator first), substitute, and read the interval from $|u| < 1$."
+   },
+   {
+    "t": "ex",
+    "title": "Substitution",
+    "q": "Find a power series for $\\frac{1}{1 + x^{2}}$ and its interval of convergence.",
+    "steps": [
+     "$\\frac{1}{1 + x^{2}} = \\frac{1}{1 - (-x^{2})}$, so $u = -x^{2}$.",
+     "$$\\begin{aligned} &\\sum_{n=0}^{\\infty}(-x^{2})^{n} \\\\ &= 1 - x^{2} + x^{4} - x^{6} + \\cdots \\\\ &= \\sum_{n=0}^{\\infty}(-1)^{n}x^{2n}. \\end{aligned}$$",
+     "Valid when $|-x^{2}| < 1$, that is $-1 < x < 1$."
+    ],
+    "a": "$\\sum(-1)^{n}x^{2n}$ on $(-1, 1)$"
+   },
+   {
+    "t": "ex",
+    "title": "Factor out a constant",
+    "q": "Find a power series for $\\frac{3}{2 - x}$ centered at 0.",
+    "steps": [
+     "Factor 2 from the denominator: $\\frac{3}{2 - x} = \\frac{3}{2}\\cdot\\frac{1}{1 - \\frac{x}{2}}$.",
+     "$= \\frac{3}{2}\\sum_{n=0}^{\\infty}\\left(\\frac{x}{2}\\right)^{n} = \\sum_{n=0}^{\\infty}\\frac{3}{2^{n+1}}x^{n}$.",
+     "Valid when $\\left|\\frac{x}{2}\\right| < 1$: $|x| < 2$, so $R = 2$."
+    ],
+    "a": "$\\sum\\frac{3x^{n}}{2^{n+1}}$, $R = 2$"
+   },
+   {
+    "t": "viz",
+    "name": "taylor",
+    "opts": {
+     "f": "1/(1-x)",
+     "a": 0,
+     "n": 3,
+     "maxN": 15,
+     "x": 0.5,
+     "R": 1,
+     "xmin": -2,
+     "xmax": 2,
+     "ymin": -3,
+     "ymax": 6
+    },
+    "cap": "Partial sums $1 + x + \\cdots + x^{n}$ of the series for $\\frac{1}{1 - x}$. Add terms: inside the dashed lines ($|x| < 1$) they hug the curve better and better; outside they peel away no matter how many terms you use."
+   },
+   {
+    "t": "mistake",
+    "html": "Taking the radius to be 1 every time. The radius comes from $|u| < 1$: for $\\frac{3}{2 - x}$, $u = \\frac{x}{2}$, so $R = 2$. A quick check: the radius is the distance from the center to the nearest point where the function blows up (here $x = 2$)."
+   },
+   {
+    "t": "ex",
+    "title": "Multiply by a power of x",
+    "q": "Find a power series for $\\frac{x}{1 - x^{2}}$.",
+    "steps": [
+     "$\\frac{1}{1 - x^{2}} = 1 + x^{2} + x^{4} + \\cdots$ for $|x| < 1$.",
+     "Multiply by $x$: $x + x^{3} + x^{5} + \\cdots = \\sum_{n=0}^{\\infty}x^{2n+1}$, still for $|x| < 1$."
+    ],
+    "a": "$\\sum x^{2n+1}$"
+   },
+   {
+    "t": "note",
+    "html": "The same trick works around other centers. For $\\frac{1}{x}$ near $x = 1$, write $$\\begin{aligned} \\frac{1}{x} &= \\frac{1}{1 - (1 - x)} \\\\ &= \\sum_{n=0}^{\\infty}(1 - x)^{n} \\\\ &= \\sum_{n=0}^{\\infty}(-1)^{n}(x - 1)^{n}, \\end{aligned}$$ valid for $|x - 1| < 1$, that is $0 < x < 2$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 6.1: Power Series and Functions"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Power Series and Functions"
+   }
+  ]
+ },
+ "calc2.differentiate-integrate-series": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Inside its interval of convergence, a <a href=\"/math/calculus-2/functions-as-series/\">power series</a> behaves like a polynomial: you can differentiate it and integrate it one term at a time. Starting from the geometric series, that produces series for $\\ln(1 + x)$, $\\arctan x$ and more."
+   },
+   {
+    "t": "why",
+    "html": "Here is the idea. Differentiating $\\sum c_n x^{n}$ term by term gives $\\sum nc_nx^{n-1}$. The extra factor $n$ does not change the radius, because $\\sqrt[n]{n} \\to 1$, so the root test gives the same limit; integration divides by $n + 1$, which also leaves the radius alone. A theorem then guarantees that, for $|x| < R$, the new series really equals the derivative (or integral) of the function. Endpoints can change, so check them again."
+   },
+   {
+    "t": "key",
+    "html": "If $f(x) = \\sum c_n(x - a)^{n}$ for $|x - a| < R$, then on the same interval\n$$f'(x) = \\sum_{n=1}^{\\infty} nc_n(x - a)^{n-1},$$ $$\\int f(x)\\,dx = C + \\sum_{n=0}^{\\infty}\\frac{c_n}{n + 1}(x - a)^{n+1}.$$"
+   },
+   {
+    "t": "ex",
+    "title": "A logarithm",
+    "q": "Find a power series for $\\ln(1 + x)$.",
+    "steps": [
+     "$\\frac{1}{1 + x} = 1 - x + x^{2} - x^{3} + \\cdots$ for $|x| < 1$.",
+     "Integrate term by term: $\\ln(1 + x) = C + x - \\frac{x^{2}}{2} + \\frac{x^{3}}{3} - \\cdots$.",
+     "At $x = 0$ both sides are 0, so $C = 0$: $\\ln(1 + x) = \\sum_{n=1}^{\\infty}\\frac{(-1)^{n+1}x^{n}}{n}$, for $-1 < x \\le 1$ (the endpoint $x = 1$ now converges)."
+    ],
+    "a": "$x - \\frac{x^{2}}{2} + \\frac{x^{3}}{3} - \\cdots$"
+   },
+   {
+    "t": "ex",
+    "title": "Arctangent",
+    "q": "Find a power series for $\\arctan x$.",
+    "steps": [
+     "$\\frac{1}{1 + x^{2}} = 1 - x^{2} + x^{4} - \\cdots$ for $|x| < 1$.",
+     "Integrate: $\\arctan x = C + x - \\frac{x^{3}}{3} + \\frac{x^{5}}{5} - \\cdots$, and $\\arctan 0 = 0$ gives $C = 0$.",
+     "At $x = 1$: $\\frac{\\pi}{4} = 1 - \\frac{1}{3} + \\frac{1}{5} - \\cdots$, a famous (and very slowly converging) series for $\\pi$."
+    ],
+    "a": "$\\sum\\frac{(-1)^{n}x^{2n+1}}{2n + 1}$"
+   },
+   {
+    "t": "viz",
+    "name": "taylor",
+    "opts": {
+     "f": "ln(1+x)",
+     "a": 0,
+     "n": 4,
+     "maxN": 14,
+     "x": 0.8,
+     "R": 1,
+     "xmin": -1.5,
+     "xmax": 2.5,
+     "ymin": -3,
+     "ymax": 2
+    },
+    "cap": "Partial sums of the series for $\\ln(1 + x)$, built by integrating the geometric series. They match the curve on $(-1, 1]$; beyond $x = 1$ they swing wildly as you add terms."
+   },
+   {
+    "t": "ex",
+    "title": "Summing a series by differentiating",
+    "q": "Find $\\sum_{n=1}^{\\infty}\\frac{n}{2^{n}}$.",
+    "steps": [
+     "Differentiate $\\sum_{n=0}^{\\infty}x^{n} = \\frac{1}{1 - x}$: $\\sum_{n=1}^{\\infty}nx^{n-1} = \\frac{1}{(1 - x)^{2}}$.",
+     "Multiply by $x$: $\\sum_{n=1}^{\\infty}nx^{n} = \\frac{x}{(1 - x)^{2}}$, for $|x| < 1$.",
+     "At $x = \\frac{1}{2}$: $\\frac{1/2}{1/4} = 2$."
+    ],
+    "a": "$2$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dropping the constant of integration. Integrating $\\frac{1}{1 - x} = \\sum x^{n}$ gives $-\\ln(1 - x) = C + \\sum\\frac{x^{n+1}}{n + 1}$, and you find $C$ by plugging in the center: at $x = 0$, $-\\ln 1 = 0 = C$. For other functions $C$ is not 0; for example, starting from $\\int\\frac{dx}{1 + x}$ to get $\\ln(2 + x)$ would need $C = \\ln 2$. Always evaluate both sides at the center."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 6.2: Properties of Power Series"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Power Series and Functions"
+   }
+  ]
+ },
+ "calc2.taylor-series": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Not every function is a geometric series in disguise. Taylor series give a recipe for any function you can differentiate again and again: the coefficients come from its <a href=\"/math/calculus-1/higher-derivatives/\">higher derivatives</a> at the center, using <a href=\"/math/calculus-2/differentiate-integrate-series/\">term-by-term differentiation</a>."
+   },
+   {
+    "t": "why",
+    "html": "Suppose $$\\begin{aligned} f(x) = c_0 &+ c_1(x - a) + c_2(x - a)^{2} \\\\ &+ c_3(x - a)^{3} + \\cdots. \\end{aligned}$$ At $x = a$ every term but the first vanishes, so $c_0 = f(a)$. Differentiate once: $$\\begin{aligned} f'(x) = c_1 &+ 2c_2(x - a) \\\\ &+ 3c_3(x - a)^{2} + \\cdots, \\end{aligned}$$ so $c_1 = f'(a)$. Again: $f''(x) = 2c_2 + 3\\cdot 2\\,c_3(x - a) + \\cdots$, so $c_2 = \\frac{f''(a)}{2}$. After $n$ differentiations the term $c_n(x - a)^{n}$ has become $n!\\,c_n$, so\n$$c_n = \\frac{f^{(n)}(a)}{n!}.$$"
+   },
+   {
+    "t": "key",
+    "html": "The Taylor series of $f$ at $a$ is $\\sum_{n=0}^{\\infty}\\frac{f^{(n)}(a)}{n!}(x - a)^{n}$; at $a = 0$ it is called a Maclaurin series. The partial sum $T_n(x)$ is the Taylor polynomial of degree $n$: the polynomial that matches $f$ and its first $n$ derivatives at $a$."
+   },
+   {
+    "t": "ex",
+    "title": "The exponential",
+    "q": "Find the Maclaurin series of $e^{x}$.",
+    "steps": [
+     "Every derivative of $e^{x}$ is $e^{x}$, and $e^{0} = 1$.",
+     "So $c_n = \\frac{1}{n!}$: $e^{x} = 1 + x + \\frac{x^{2}}{2!} + \\frac{x^{3}}{3!} + \\cdots = \\sum\\frac{x^{n}}{n!}$.",
+     "The ratio test gives $R = \\infty$, and (see the next topic) the series equals $e^{x}$ for every $x$."
+    ],
+    "a": "$\\sum\\frac{x^{n}}{n!}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting the $n!$. Writing $e^{x} \\approx 1 + x + x^{2} + x^{3}$ uses $f^{(n)}(0)$ as the coefficient. At $x = 1$ that gives 4 instead of about $2.67$ (and $e \\approx 2.718$). The factorial undoes the $n!$ that appears when you differentiate $(x - a)^{n}$ $n$ times. Check by differentiating your polynomial at the center: you should get back $f^{(n)}(a)$."
+   },
+   {
+    "t": "ex",
+    "title": "Sine",
+    "q": "Find the Maclaurin series of $\\sin x$.",
+    "steps": [
+     "Derivatives at 0 cycle: $\\sin 0 = 0$, $\\cos 0 = 1$, $-\\sin 0 = 0$, $-\\cos 0 = -1$, then repeat.",
+     "Only odd powers survive, with alternating signs: $$\\begin{aligned} \\sin x &= x - \\frac{x^{3}}{3!} + \\frac{x^{5}}{5!} - \\cdots \\\\ &= \\sum\\frac{(-1)^{n}x^{2n+1}}{(2n + 1)!}. \\end{aligned}$$"
+    ],
+    "a": "$x - \\frac{x^{3}}{6} + \\frac{x^{5}}{120} - \\cdots$"
+   },
+   {
+    "t": "viz",
+    "name": "taylor",
+    "opts": {
+     "f": "sin(x)",
+     "a": 0,
+     "n": 3,
+     "maxN": 15,
+     "x": 2.5,
+     "xmin": -7,
+     "xmax": 7,
+     "ymin": -3,
+     "ymax": 3
+    },
+    "cap": "Taylor polynomials of $\\sin x$ at 0. Each new term bends the polynomial to follow the sine wave farther from the center. Move the probe point to see the error shrink."
+   },
+   {
+    "t": "ex",
+    "title": "Away from 0",
+    "q": "Find the Taylor polynomial $T_2$ of $\\sqrt{x}$ centered at 4.",
+    "steps": [
+     "$f(4) = 2$; $f'(x) = \\frac{1}{2\\sqrt{x}}$, so $f'(4) = \\frac{1}{4}$; $f''(x) = -\\frac{1}{4x^{3/2}}$, so $f''(4) = -\\frac{1}{32}$.",
+     "$T_2(x) = 2 + \\frac{1}{4}(x - 4) - \\frac{1}{64}(x - 4)^{2}$ (divide $f''(4)$ by $2!$).",
+     "Check: $$\\begin{aligned} &T_2(4.41) \\\\ &= 2 + 0.1025 - 0.00263 \\\\ &\\approx 2.0999, \\end{aligned}$$ close to $\\sqrt{4.41} = 2.1$."
+    ],
+    "a": "$2 + \\frac{x - 4}{4} - \\frac{(x - 4)^{2}}{64}$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 6.3: Taylor and Maclaurin Series"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Taylor Series"
+   }
+  ]
+ },
+ "calc2.taylor-error": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/calculus-2/taylor-series/\">Taylor polynomial</a> is an approximation. How good is it? Taylor's inequality bounds the error using the next derivative, much as the <a href=\"/math/calculus-1/mean-value-theorem/\">Mean Value Theorem</a> bounds how far a function can move."
+   },
+   {
+    "t": "why",
+    "html": "Write $f(x) = T_n(x) + R_n(x)$. Taylor's theorem says the remainder has the form\n$$R_n(x) = \\frac{f^{(n+1)}(c)}{(n + 1)!}(x - a)^{n+1}$$\nfor some $c$ between $a$ and $x$: it looks just like the next term of the series, with the derivative taken at an unknown point. (For $n = 0$ this is the Mean Value Theorem.) You do not know $c$, but if you know a bound $M$ for $|f^{(n+1)}|$ on the whole interval, you get a guaranteed error bound."
+   },
+   {
+    "t": "key",
+    "html": "<b>Taylor's inequality:</b> if $|f^{(n+1)}(t)| \\le M$ for all $t$ between $a$ and $x$, then\n$$|R_n(x)| \\le \\frac{M}{(n + 1)!}|x - a|^{n+1}.$$\nIf $R_n(x) \\to 0$ as $n \\to \\infty$, the Taylor series converges to $f(x)$."
+   },
+   {
+    "t": "ex",
+    "title": "A sine estimate",
+    "q": "Bound the error when $T_3(x) = x - \\frac{x^{3}}{6}$ approximates $\\sin(0.5)$.",
+    "steps": [
+     "Every derivative of $\\sin$ is $\\pm\\sin$ or $\\pm\\cos$, so $M = 1$ works.",
+     "$|R_3(0.5)| \\le \\frac{1}{4!}(0.5)^{4} = \\frac{1}{384} \\approx 0.0026$.",
+     "(Actually $T_3(0.5) = 0.479167$ and $\\sin 0.5 = 0.479426$: the true error is $0.00026$, well inside the bound.)"
+    ],
+    "a": "At most $\\frac{1}{384}$"
+   },
+   {
+    "t": "ex",
+    "title": "How many terms for e?",
+    "q": "How many terms of $e = \\sum\\frac{1}{n!}$ guarantee an error less than $0.001$?",
+    "steps": [
+     "For $f(x) = e^{x}$ on $[0, 1]$, every derivative is at most $e < 3$, so $M = 3$.",
+     "$|R_n(1)| \\le \\frac{3}{(n + 1)!}$. Need $(n + 1)! > 3000$: $6! = 720$ is too small, $7! = 5040$ works.",
+     "So $n = 6$: $$\\begin{aligned} T_6(1) &= 1 + 1 + \\frac{1}{2} + \\cdots + \\frac{1}{720} \\\\ &\\approx 2.71806, \\end{aligned}$$ within $0.001$ of $e = 2.71828$."
+    ],
+    "a": "$n = 6$ (seven terms)"
+   },
+   {
+    "t": "viz",
+    "name": "taylor",
+    "opts": {
+     "f": "e^x",
+     "a": 0,
+     "n": 3,
+     "maxN": 12,
+     "x": 1,
+     "xmin": -3,
+     "xmax": 3,
+     "ymin": -1,
+     "ymax": 10
+    },
+    "cap": "Taylor polynomials of $e^{x}$ with a probe at $x = 1$. The readout shows the actual error; compare it with the bound $\\frac{3}{(n + 1)!}$ as you raise $n$."
+   },
+   {
+    "t": "mistake",
+    "html": "Choosing $M$ from the value at the center only. For $e^{x}$ on $[0, 2]$, $f^{(n+1)}(0) = 1$, but the bound must hold for every $t$ in the interval, and $e^{t}$ reaches $e^{2} \\approx 7.39$. Using $M = 1$ would understate the error. Find the largest value of $|f^{(n+1)}|$ on the whole interval between $a$ and $x$ (or a convenient number above it)."
+   },
+   {
+    "t": "ex",
+    "title": "Why the series for e^x works",
+    "q": "Show that $\\sum\\frac{x^{n}}{n!}$ equals $e^{x}$ for every $x$.",
+    "steps": [
+     "On the interval between 0 and $x$, $|f^{(n+1)}| \\le e^{|x|}$, so $|R_n(x)| \\le e^{|x|}\\frac{|x|^{n+1}}{(n + 1)!}$.",
+     "For fixed $x$, $\\frac{|x|^{n+1}}{(n + 1)!} \\to 0$ (factorials beat powers).",
+     "So $R_n(x) \\to 0$, and the series converges to $e^{x}$."
+    ],
+    "a": "$e^{x} = \\sum\\frac{x^{n}}{n!}$ for all $x$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 6.3: Taylor and Maclaurin Series (Taylor's theorem with remainder)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Taylor Series (remainder)"
+   }
+  ]
+ },
+ "calc2.known-series": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Finding Taylor coefficients from derivatives is slow. Once you know a handful of <a href=\"/math/calculus-2/taylor-series/\">Maclaurin series</a>, you can build new ones by substituting, multiplying by powers of $x$, adding, and differentiating or integrating. That is how series are used in practice."
+   },
+   {
+    "t": "why",
+    "html": "A power series that converges to $f$ on an interval is unique: if two power series agree on an interval around the center, they have the same coefficients (they must, since $c_n = \\frac{f^{(n)}(a)}{n!}$ either way). So any honest way of producing a power series for a function, such as substituting $x^{2}$ into the series for $e^{x}$, gives <i>the</i> Taylor series."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Function",
+     "Maclaurin series",
+     "Converges for"
+    ],
+    "rows": [
+     [
+      "$\\frac{1}{1 - x}$",
+      "$1 + x + x^{2} + x^{3} + \\cdots$",
+      "$|x| < 1$"
+     ],
+     [
+      "$e^{x}$",
+      "$1 + x + \\frac{x^{2}}{2!} + \\frac{x^{3}}{3!} + \\cdots$",
+      "all $x$"
+     ],
+     [
+      "$\\sin x$",
+      "$x - \\frac{x^{3}}{3!} + \\frac{x^{5}}{5!} - \\cdots$",
+      "all $x$"
+     ],
+     [
+      "$\\cos x$",
+      "$1 - \\frac{x^{2}}{2!} + \\frac{x^{4}}{4!} - \\cdots$",
+      "all $x$"
+     ],
+     [
+      "$\\ln(1 + x)$",
+      "$x - \\frac{x^{2}}{2} + \\frac{x^{3}}{3} - \\cdots$",
+      "$-1 < x \\le 1$"
+     ],
+     [
+      "$\\arctan x$",
+      "$x - \\frac{x^{3}}{3} + \\frac{x^{5}}{5} - \\cdots$",
+      "$-1 \\le x \\le 1$"
+     ]
+    ],
+    "cap": "The series to know by heart."
+   },
+   {
+    "t": "key",
+    "html": "Build new series from known ones: substitute ($e^{-x^{2}}$ from $e^{u}$ with $u = -x^{2}$), multiply by a power of $x$, add or subtract, differentiate or integrate. The interval of convergence follows from the substitution."
+   },
+   {
+    "t": "ex",
+    "title": "Substitute",
+    "q": "Find the first three nonzero terms of the Maclaurin series of $e^{-x^{2}}$.",
+    "steps": [
+     "$e^{u} = 1 + u + \\frac{u^{2}}{2!} + \\cdots$ with $u = -x^{2}$.",
+     "$e^{-x^{2}} = 1 - x^{2} + \\frac{x^{4}}{2} - \\cdots$, valid for all $x$."
+    ],
+    "a": "$1 - x^{2} + \\frac{x^{4}}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Multiply",
+    "q": "Find the Maclaurin series of $x\\cos(2x)$.",
+    "steps": [
+     "$$\\begin{aligned} \\cos(2x) &= 1 - \\frac{(2x)^{2}}{2!} + \\frac{(2x)^{4}}{4!} - \\cdots \\\\ &= 1 - 2x^{2} + \\frac{2}{3}x^{4} - \\cdots. \\end{aligned}$$",
+     "Multiply by $x$: $x - 2x^{3} + \\frac{2}{3}x^{5} - \\cdots$."
+    ],
+    "a": "$x - 2x^{3} + \\frac{2}{3}x^{5} - \\cdots$"
+   },
+   {
+    "t": "viz",
+    "name": "taylor",
+    "opts": {
+     "f": "cos(x)",
+     "a": 0,
+     "n": 2,
+     "maxN": 16,
+     "x": 3,
+     "xmin": -7,
+     "xmax": 7,
+     "ymin": -3,
+     "ymax": 3
+    },
+    "cap": "Taylor polynomials of $\\cos x$: only even powers appear, because cosine is an even function."
+   },
+   {
+    "t": "ex",
+    "title": "Recognize a sum",
+    "q": "Find $\\sum_{n=0}^{\\infty}\\frac{(-1)^{n}\\pi^{2n}}{(2n)!}$.",
+    "steps": [
+     "This is $\\cos x = \\sum\\frac{(-1)^{n}x^{2n}}{(2n)!}$ with $x = \\pi$.",
+     "So the sum is $\\cos\\pi = -1$."
+    ],
+    "a": "$-1$"
+   },
+   {
+    "t": "mistake",
+    "html": "Substituting only into the first term, or forgetting to raise the coefficient. In $e^{2x}$, the term $\\frac{u^{3}}{3!}$ becomes $\\frac{(2x)^{3}}{6} = \\frac{8x^{3}}{6}$, not $\\frac{2x^{3}}{6}$. Write the substitution in parentheses, $(2x)^{n}$, and expand each term. A quick check: the coefficient of $x$ must be $f'(0)$, which for $e^{2x}$ is 2."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 6.4: Working with Taylor Series"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Taylor Series (known series)"
+   }
+  ]
+ },
+ "calc2.binomial-series": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/algebra-2/binomial-theorem/\">binomial theorem</a> expands $(1 + x)^{k}$ when $k$ is a whole number, and the expansion stops. Newton noticed that the same pattern works for any exponent, like $k = \\frac{1}{2}$ or $k = -1$, except that the series never stops. It is a <a href=\"/math/calculus-2/known-series/\">known series</a> you can build from Taylor coefficients."
+   },
+   {
+    "t": "why",
+    "html": "For $f(x) = (1 + x)^{k}$: $f'(x) = k(1 + x)^{k-1}$, $f''(x) = k(k - 1)(1 + x)^{k-2}$, and in general $f^{(n)}(0) = k(k - 1)\\cdots(k - n + 1)$. Dividing by $n!$ gives the coefficient\n$$\\binom{k}{n} = \\frac{k(k - 1)\\cdots(k - n + 1)}{n!}.$$\nWhen $k$ is a whole number, a factor $(k - k)$ eventually appears and every later coefficient is 0: the familiar finite expansion. Otherwise the series goes on forever, and the ratio test gives radius 1."
+   },
+   {
+    "t": "key",
+    "html": "$$\\begin{aligned} (1 + x)^{k} &= \\sum_{n=0}^{\\infty}\\binom{k}{n}x^{n} \\\\ &= 1 + kx + \\frac{k(k - 1)}{2!}x^{2} \\\\ &\\quad + \\frac{k(k - 1)(k - 2)}{3!}x^{3} + \\cdots \\end{aligned}$$ for $|x| < 1$."
+   },
+   {
+    "t": "ex",
+    "title": "A square root",
+    "q": "Find the first four terms of the series for $\\sqrt{1 + x}$.",
+    "steps": [
+     "$k = \\frac{1}{2}$: $\\binom{1/2}{1} = \\frac{1}{2}$, $\\binom{1/2}{2} = \\frac{\\frac{1}{2}\\cdot(-\\frac{1}{2})}{2} = -\\frac{1}{8}$, $\\binom{1/2}{3} = \\frac{\\frac{1}{2}(-\\frac{1}{2})(-\\frac{3}{2})}{6} = \\frac{1}{16}$.",
+     "$\\sqrt{1 + x} = 1 + \\frac{x}{2} - \\frac{x^{2}}{8} + \\frac{x^{3}}{16} - \\cdots$ for $|x| < 1$.",
+     "Estimate: $$\\begin{aligned} &\\sqrt{1.1} \\\\ &\\approx 1 + 0.05 - 0.00125 + 0.0000625 \\\\ &\\approx 1.04881 \\end{aligned}$$ (true value $1.048809\\ldots$)."
+    ],
+    "a": "$1 + \\frac{x}{2} - \\frac{x^{2}}{8} + \\frac{x^{3}}{16}$"
+   },
+   {
+    "t": "viz",
+    "name": "taylor",
+    "opts": {
+     "f": "sqrt(1+x)",
+     "a": 0,
+     "n": 2,
+     "maxN": 14,
+     "x": 0.6,
+     "R": 1,
+     "xmin": -1.5,
+     "xmax": 2.5,
+     "ymin": -1,
+     "ymax": 2.5
+    },
+    "cap": "Partial sums of the binomial series for $\\sqrt{1 + x}$. Inside $|x| < 1$ they close in on the curve; past $x = 1$ they eventually wander off."
+   },
+   {
+    "t": "ex",
+    "title": "Substituting",
+    "q": "Find the first three nonzero terms for $\\frac{1}{\\sqrt{1 - x^{2}}}$.",
+    "steps": [
+     "$k = -\\frac{1}{2}$, $u = -x^{2}$: $\\binom{-1/2}{1} = -\\frac{1}{2}$ and $\\binom{-1/2}{2} = \\frac{(-\\frac{1}{2})(-\\frac{3}{2})}{2} = \\frac{3}{8}$.",
+     "$$\\begin{aligned} (1 + u)^{-1/2} &= 1 - \\frac{u}{2} + \\frac{3u^{2}}{8} - \\cdots \\\\ &= 1 + \\frac{x^{2}}{2} + \\frac{3x^{4}}{8} + \\cdots. \\end{aligned}$$",
+     "Integrating this term by term gives the series for $\\arcsin x$."
+    ],
+    "a": "$1 + \\frac{x^{2}}{2} + \\frac{3x^{4}}{8}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the series on $(a + x)^{k}$ without factoring out $a$. The formula needs the form $(1 + u)^{k}$. For $\\sqrt{4 + x}$, write $2\\left(1 + \\frac{x}{4}\\right)^{1/2} = 2 + \\frac{x}{4} - \\frac{x^{2}}{64} + \\cdots$, which converges for $|x| < 4$, not $|x| < 1$. Check: at $x = 0$ the series must give $f(0) = 2$."
+   },
+   {
+    "t": "ex",
+    "title": "A single coefficient",
+    "q": "Find the coefficient of $x^{3}$ in $(1 + x)^{1/3}$.",
+    "steps": [
+     "$$\\begin{aligned} \\binom{1/3}{3} &= \\frac{\\frac{1}{3}\\left(\\frac{1}{3} - 1\\right)\\left(\\frac{1}{3} - 2\\right)}{3!} \\\\ &= \\frac{\\frac{1}{3}\\cdot\\left(-\\frac{2}{3}\\right)\\cdot\\left(-\\frac{5}{3}\\right)}{6}. \\end{aligned}$$",
+     "$= \\frac{10/27}{6} = \\frac{5}{81}$."
+    ],
+    "a": "$\\frac{5}{81}$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 6.4: Working with Taylor Series (the binomial series)"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Binomial Series"
+   }
+  ]
+ },
+ "calc2.series-applications": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Why go to all this trouble? Because a power series turns a hard function into a polynomial, and polynomials are easy to compute with, differentiate, integrate and take limits of. This topic puts <a href=\"/math/calculus-2/known-series/\">known series</a> and <a href=\"/math/calculus-2/taylor-error/\">error bounds</a> to work."
+   },
+   {
+    "t": "why",
+    "html": "Near the center, a few terms of the series already describe the function very well, and the error is controlled (by the alternating series bound or Taylor's inequality). So: a $\\frac{0}{0}$ limit becomes a ratio of polynomials where the leading terms decide everything; an integral with no elementary antiderivative becomes a sum of easy power integrals; and a hard value like $\\sqrt[3]{1.03}$ becomes a short arithmetic problem."
+   },
+   {
+    "t": "key",
+    "html": "Replace the function by enough terms of its series. For limits, keep terms up to the power in the denominator. For integrals, integrate term by term and use the error bound to decide how many terms you need."
+   },
+   {
+    "t": "ex",
+    "title": "A limit",
+    "q": "Find $\\lim_{x\\to 0}\\frac{\\sin x - x}{x^{3}}$.",
+    "steps": [
+     "$$\\begin{aligned} &\\sin x - x \\\\ &= \\left(x - \\frac{x^{3}}{6} + \\frac{x^{5}}{120} - \\cdots\\right) - x \\\\ &= -\\frac{x^{3}}{6} + \\frac{x^{5}}{120} - \\cdots. \\end{aligned}$$",
+     "Divide by $x^{3}$: $-\\frac{1}{6} + \\frac{x^{2}}{120} - \\cdots \\to -\\frac{1}{6}$."
+    ],
+    "a": "$-\\frac{1}{6}$ (three rounds of L'Hôpital would give the same)"
+   },
+   {
+    "t": "ex",
+    "title": "An integral with no antiderivative",
+    "q": "Estimate $\\int_0^{1}e^{-x^{2}}\\,dx$ to within $0.01$.",
+    "steps": [
+     "$e^{-x^{2}} = 1 - x^{2} + \\frac{x^{4}}{2} - \\frac{x^{6}}{6} + \\cdots$.",
+     "Integrate from 0 to 1: $1 - \\frac{1}{3} + \\frac{1}{10} - \\frac{1}{42} + \\frac{1}{216} - \\cdots$.",
+     "It alternates with shrinking terms, so stopping after $-\\frac{1}{42}$ leaves an error under $\\frac{1}{216} \\approx 0.005$.",
+     "Estimate: $1 - \\frac{1}{3} + \\frac{1}{10} - \\frac{1}{42} \\approx 0.7429$ (true value $0.7468$)."
+    ],
+    "a": "$\\approx 0.743$"
+   },
+   {
+    "t": "viz",
+    "name": "taylor",
+    "opts": {
+     "f": "e^(-x^2)",
+     "a": 0,
+     "n": 4,
+     "maxN": 14,
+     "x": 1,
+     "xmin": -2.5,
+     "xmax": 2.5,
+     "ymin": -1,
+     "ymax": 2
+    },
+    "cap": "Taylor polynomials of $e^{-x^{2}}$, the bell-shaped curve behind the normal distribution. On $[0, 1]$ a few terms already match it closely, which is why the series integral is so accurate."
+   },
+   {
+    "t": "ex",
+    "title": "A quick value",
+    "q": "Estimate $\\ln(1.1)$ with three terms, and bound the error.",
+    "steps": [
+     "$\\ln(1 + x) \\approx x - \\frac{x^{2}}{2} + \\frac{x^{3}}{3}$ at $x = 0.1$: $0.1 - 0.005 + 0.000333 = 0.095333$.",
+     "Alternating with decreasing terms, so the error is less than the next term, $\\frac{0.1^{4}}{4} = 0.000025$."
+    ],
+    "a": "$\\ln 1.1 \\approx 0.09533$ (true $0.0953102$)"
+   },
+   {
+    "t": "mistake",
+    "html": "Keeping too few terms in a limit. In $\\frac{\\sin x - x}{x^{3}}$, using only $\\sin x \\approx x$ gives $\\frac{0}{x^{3}}$, which suggests 0, the wrong answer. Keep terms until you reach the power in the denominator, here $x^{3}$. Check: after dividing, there must be a nonzero constant term (or you need more terms)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 2, Section 6.4: Working with Taylor Series"
+   },
+   {
+    "name": "Paul’s Online Math Notes (Lamar University), Calculus II: Applications of Series"
+   }
+  ]
+ }
+}

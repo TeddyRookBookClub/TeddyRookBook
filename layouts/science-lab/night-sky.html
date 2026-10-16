@@ -1,0 +1,245 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "games/night-sky/sim.css" | relURL }}?v={{ (os.Stat "static/games/night-sky/sim.css").ModTime.Unix }}">
+<div class="lab" id="night-sky-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Sky and Solar System</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Astronomy</p>
+    <h1>Sky and Solar System</h1>
+    <p>Pick any moment from 1800 to 2050 and see where the planets really were. Run time forward and watch Mercury race around the Sun, Mars seem to go backwards, and the Moon run through its phases. Then find out why the Sun, Earth and Moon only line up for an eclipse a few times a year. The positions come from the orbit formulas that NASA’s Jet Propulsion Laboratory publishes.</p>
+    <span class="lab-mark" aria-hidden="true">🪐</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="ns-view">
+      <canvas id="ns-cv" tabindex="0" aria-label="Sky and Solar System simulation. Keys: Space plays or pauses, left and right arrows step one day (with Shift, one hour), up and down arrows change the speed, 1 to 4 change the view, plus and minus zoom, N goes back to now. In the solar system view, drag to move and click a planet to follow it from Earth. In the Moon view, drag the Moon around its orbit. In the Eclipses view, drag the year chart to change the date and drag the picture to turn it."></canvas>
+      <div class="lab-hud" id="ns-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="ns-play" aria-label="Play" title="Play or pause (Space)">▶</button>
+        <button type="button" id="ns-now" aria-label="Go back to now" title="Now (N)">⟲</button>
+        <button type="button" id="ns-zin" aria-label="Zoom in" title="Zoom in (+)">＋</button>
+        <button type="button" id="ns-zout" aria-label="Zoom out" title="Zoom out (−)">−</button>
+      </div>
+      <noscript><p class="ns-noscript">This simulation needs JavaScript.</p></noscript>
+    </div>
+
+    <div class="lab-panel" id="ns-panel">
+      <h3>View</h3>
+      <div class="lab-seg" role="group" aria-label="View" id="ns-views">
+        <button type="button" data-view="orrery" aria-pressed="true">Solar system</button>
+        <button type="button" data-view="moon" aria-pressed="false">Moon</button>
+        <button type="button" data-view="eclipse" aria-pressed="false">Eclipses</button>
+        <button type="button" data-view="tonight" aria-pressed="false">Tonight</button>
+      </div>
+      <p class="lab-small" id="ns-tip"></p>
+
+      <h3>Date and time</h3>
+      <div class="ns-when">
+        <label class="lab-field"><span>Date</span><input type="date" id="ns-date" min="1800-01-01" max="2050-12-31" aria-label="Date"></label>
+        <label class="lab-field"><span>Time</span><input type="time" id="ns-time" aria-label="Time of day"></label>
+      </div>
+      <div class="lab-field">
+        <span><label for="ns-doy">Day of the year</label><output id="ns-doy-o" for="ns-doy"></output></span>
+        <input type="range" id="ns-doy" min="0" max="365" step="1" value="0">
+      </div>
+      <div class="ns-year">
+        <button type="button" class="lab-btn" id="ns-yprev" aria-label="One year earlier">‹</button>
+        <label class="ns-yl"><span>Year</span><input type="number" id="ns-year" min="1800" max="2050" step="1" aria-label="Year"></label>
+        <button type="button" class="lab-btn" id="ns-ynext" aria-label="One year later">›</button>
+        <button type="button" class="lab-btn" id="ns-today">Now</button>
+      </div>
+      <div class="lab-field"><span>Speed <b id="ns-speed-o"></b></span></div>
+      <div class="lab-seg" role="group" aria-label="Speed" id="ns-speed">
+        <button type="button" data-speed="0" aria-pressed="true">❚❚</button>
+        <button type="button" data-speed="h" aria-pressed="false">1 h/s</button>
+        <button type="button" data-speed="d" aria-pressed="false">1 day/s</button>
+        <button type="button" data-speed="w" aria-pressed="false">1 week/s</button>
+        <button type="button" data-speed="m" aria-pressed="false">1 month/s</button>
+      </div>
+      <label class="lab-chk"><input type="checkbox" id="ns-rev"> Run time backwards</label>
+      <div class="lab-field"><span><label for="ns-scene">Jump to a moment</label></span>
+        <select id="ns-scene">
+          <option value="">Choose…</option>
+          <option value="now">Right now</option>
+          <option value="apollo">Apollo 11 lands on the Moon (20 Jul 1969)</option>
+          <option value="mars2003">Mars at its closest (27 Aug 2003)</option>
+          <option value="transit">Venus crosses the Sun (6 Jun 2012)</option>
+          <option value="greatconj">Jupiter meets Saturn (21 Dec 2020)</option>
+          <option value="mars2027">Mars before it turns back (Dec 2026)</option>
+        </select>
+      </div>
+
+      <div class="ns-grp" data-for="orrery">
+        <h3>Solar system</h3>
+        <div class="lab-seg" role="group" aria-label="Distances" id="ns-scale">
+          <button type="button" data-scale="true" aria-pressed="true">To scale</button>
+          <button type="button" data-scale="spread" aria-pressed="false">Spread out</button>
+        </div>
+        <div class="lab-seg" role="group" aria-label="Zoom" id="ns-zoom">
+          <button type="button" data-zoom="inner" aria-pressed="true">Inner planets</button>
+          <button type="button" data-zoom="all" aria-pressed="false">All planets</button>
+        </div>
+        <div class="lab-field"><span><label for="ns-watch">Follow from Earth</label></span>
+          <select id="ns-watch">
+            <option value="-1">No planet</option>
+            <option value="0">Mercury</option><option value="1">Venus</option><option value="3">Mars</option><option value="4">Jupiter</option>
+            <option value="5">Saturn</option><option value="6">Uranus</option><option value="7">Neptune</option>
+          </select>
+        </div>
+        <label class="lab-chk"><input type="checkbox" id="ns-orbits" checked> Orbit paths</label>
+        <label class="lab-chk"><input type="checkbox" id="ns-labels" checked> Names</label>
+      </div>
+      <div class="ns-grp" data-for="moon">
+        <h3>Moon</h3>
+        <label class="lab-chk"><input type="checkbox" id="ns-south"> As seen from the Southern Hemisphere</label>
+      </div>
+      <div class="ns-grp" data-for="eclipse">
+        <h3>Eclipses</h3>
+        <label class="lab-chk"><input type="checkbox" id="ns-tilt" checked> Draw the 5° tilt 3 times bigger</label>
+      </div>
+      <div class="ns-grp" data-for="tonight">
+        <h3>Your sky</h3>
+        <div class="lab-seg" role="group" aria-label="When" id="ns-eve">
+          <button type="button" data-eve="1" aria-pressed="true">Evening</button>
+          <button type="button" data-eve="0" aria-pressed="false">Before dawn</button>
+        </div>
+        <div class="lab-field"><span><label for="ns-lat">Latitude</label><output id="ns-lat-o" for="ns-lat"></output></span><input type="range" id="ns-lat" min="-60" max="66" step="1" value="40"></div>
+        <div class="lab-field"><span><label for="ns-lon">Longitude</label><output id="ns-lon-o" for="ns-lon"></output></span><input type="range" id="ns-lon" min="-180" max="180" step="1" value="0"></div>
+      </div>
+
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="ns-read"></dl>
+      <div id="ns-list" class="ns-list"></div>
+
+      <div class="ns-mis">
+        <h3>Missions</h3>
+        <p class="lab-progress"></p>
+        <ul class="lab-missions" id="ns-missions"></ul>
+      </div>
+    </div>
+  </div>
+
+  <section class="lab-sec">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>Solar system.</b> The Sun and the eight planets seen from far above Earth’s North Pole, at their real places for the date you pick. Everything goes around the same way, counterclockwise. With <i>To scale</i>, distances are true and you can zoom; the planets are drawn far bigger than they really are, or you could not see them. With <i>Spread out</i>, distances are squeezed so all eight fit, but each planet still sits in its true direction from the Sun.</p>
+      <p><b>The strip along the bottom</b> shows the sky as seen from Earth: the band of stars along the ecliptic, the path the Sun, Moon and planets follow. East is on the left, as when you face south from the Northern Hemisphere. Pick a planet under <i>Follow from Earth</i> to zoom in on it, with the trail of where it has been over the last 150 days. Up and down are stretched to make small wobbles visible.</p>
+      <p><b>Moon.</b> On one side, the Moon as you see it from Earth. On the other, the view from far above: the Sun shines from the right, so one half of the Moon is always lit. The ring shows the eight named phases. You can drag the Moon around its orbit to move time.</p>
+      <p><b>Eclipses.</b> The top picture shows the Moon’s orbit around Earth, tilted against the plane of Earth’s orbit (the ecliptic). The two places where it crosses that plane are the nodes. The chart below follows the Moon’s height above or below the ecliptic through the whole year, with a dot at each new moon (●) and full moon (○). Drag the chart to change the date.</p>
+      <p><b>Tonight.</b> The whole sky above you, about an hour after sunset or an hour before dawn, for the latitude and longitude you choose. The middle of the circle is straight overhead and the edge is the horizon. Only the Moon, the five planets you can see without a telescope, and a few of the brightest stars are drawn.</p>
+      <p><b>Times</b> are shown in your device’s time zone. The date can go from 1800 to 2050, the range of the orbit table the planets come from.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>The science</h2>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Orbits are ellipses</h3>
+        <p>Every planet moves on an ellipse with the Sun at one focus. Six numbers describe each one: its size <var>a</var> (half the long axis), its stretch <var>e</var> (eccentricity), its tilt, which way it points, and where the planet is on it at a starting date. JPL gives these numbers for the year 2000 and how fast each one slowly changes. To find a planet on any date, the program solves Kepler’s equation for the angle <var>E</var>:</p>
+        <div class="lab-formula"><var>M</var> = <var>E</var> − <var>e</var> sin <var>E</var> &nbsp;then&nbsp; <var>x</var> = <var>a</var>(cos <var>E</var> − <var>e</var>), &nbsp;<var>y</var> = <var>a</var>√(1 − <var>e</var>²) sin <var>E</var></div>
+        <p><var>M</var>, the mean anomaly, grows at a steady rate through each orbit. A last turn by the orbit’s tilt and direction puts the planet in place among the others.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Kepler’s third law</h3>
+        <p>Planets close to the Sun go around faster, and they also have a shorter way to go. With the period <var>T</var> in years and the orbit size <var>a</var> in astronomical units (1 au = 149,597,870.7 km, about Earth’s distance from the Sun):</p>
+        <div class="lab-formula"><var>T</var>² = <var>a</var>³</div>
+        <p>Mercury: <var>a</var> = 0.387 au, so <var>T</var> = 0.387<sup>1.5</sup> = 0.241 years, or 88 days. Neptune: <var>a</var> = 30.07 au, <var>T</var> = 165 years. Mercury moves at about 47 km/s on average; Neptune at about 5.4 km/s.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Why planets seem to go backwards</h3>
+        <p>Night after night, a planet drifts slowly east among the stars. But every so often an outer planet stops, goes west for a while, and then turns east again. That is <i>retrograde</i> motion. Nothing about the planet changes: Earth, on the faster inside lane, is passing it, the way a slower car seems to slide backwards when you overtake it. It happens around <i>opposition</i>, when Earth is right between the Sun and the planet and the planet is up all night. Earth laps Mars once every 780 days, so Mars goes backwards about every 26 months. In the model, Mars runs backwards from 10 January to 1 April 2027, with opposition on 19 February.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">How far from the Sun can Venus get?</h3>
+        <p>Venus’s orbit is inside Earth’s, so from Earth it can never get far from the Sun. The biggest angle comes when our line of sight just touches its orbit:</p>
+        <div class="lab-formula">sin <var>θ</var><sub>max</sub> ≈ <var>a</var><sub>Venus</sub> / <var>a</var><sub>Earth</sub> = 0.723 &nbsp;→&nbsp; <var>θ</var><sub>max</sub> ≈ 46°</div>
+        <p>This is <i>greatest elongation</i>. Because the orbits are not quite circles, the real value runs from about 45° to 47°; on 15 August 2026 it is 45.9°. For Mercury, with its more stretched orbit, it ranges from about 18° to 28°. That is why Venus and Mercury are only seen in the evening after sunset or in the morning before dawn, never at midnight.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Moon phases</h3>
+        <p>The Sun always lights half of the Moon. How much of that lit half we see depends on the angle Sun–Moon–Earth, the phase angle <var>i</var>. The lit fraction of the disk is</p>
+        <div class="lab-formula"><var>k</var> = (1 + cos <var>i</var>) / 2</div>
+        <p>At new moon <var>i</var> is close to 180° and <var>k</var> ≈ 0; at full moon <var>i</var> is close to 0° and <var>k</var> ≈ 1. Phases are named from the angle between the Moon and the Sun as seen from Earth: 0° is new moon, 90° first quarter, 180° full moon and 270° last quarter. One full cycle takes 29.53 days on average, two days longer than the 27.32 days the Moon needs to go once around Earth, because Earth has moved along its own orbit in the meantime.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Why eclipses are rare</h3>
+        <p>A solar eclipse needs a new moon right in front of the Sun; a lunar eclipse needs a full moon right inside Earth’s shadow. But the Moon’s orbit is tilted 5.1° to Earth’s. Most months the new moon passes a little above or below the Sun, and the full moon above or below the shadow. For a solar eclipse the new moon has to be within about 1.5° of the ecliptic, and for the full moon to dip into the dark core of Earth’s shadow, within about 1°. That only happens near the nodes.</p>
+        <p>The line of nodes keeps nearly the same direction in space, so the Sun lines up with it twice a year, about 173 days apart: these are the <i>eclipse seasons</i>. Each lasts about 35 days, longer than one cycle of phases (29.5 days), so every season has at least one solar eclipse, usually with a lunar eclipse two weeks before or after. The nodes slowly slide backwards, once around in 18.6 years, so eclipse seasons come about 19 days earlier each year.</p>
+      </div>
+    </div>
+    <div class="lab-tw">
+      <table class="lab-table">
+        <caption class="lab-small">Eclipses of 2026 and 2027, worked out by this simulation (the same dates and types as NASA’s eclipse lists). Where on Earth each one can be seen is not part of the model.</caption>
+        <thead><tr><th>Date</th><th>Eclipse</th><th>Date</th><th>Eclipse</th></tr></thead>
+        <tbody>
+          <tr><td>17 Feb 2026</td><td>Annular solar</td><td>6 Feb 2027</td><td>Annular solar</td></tr>
+          <tr><td>3 Mar 2026</td><td>Total lunar</td><td>20 Feb 2027</td><td>Penumbral lunar</td></tr>
+          <tr><td>12 Aug 2026</td><td>Total solar</td><td>18 Jul 2027</td><td>Penumbral lunar</td></tr>
+          <tr><td>28 Aug 2026</td><td>Partial lunar</td><td>2 Aug 2027</td><td>Total solar</td></tr>
+          <tr><td></td><td></td><td>17 Aug 2027</td><td>Penumbral lunar</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Try this</h2>
+    <div class="lab-try"><b>A race around the Sun.</b> In Solar system, with Inner planets, set 1 week/s. Count Mercury’s laps while Earth goes once around. You should get a little over four (365 ÷ 88 = 4.15).</div>
+    <div class="lab-try"><b>Mars turns back.</b> Choose “Mars before it turns back” and follow Mars. Play at 1 day/s and watch its trail in the strip. Then look at the top view: Mars goes backwards just when Earth passes it on the inside.</div>
+    <div class="lab-try"><b>Evening star, morning star.</b> Follow Venus and play at 1 week/s through 2026. It climbs away from the Sun on the left (the evening sky), stops near 46°, swings back past the Sun in October and comes out on the right (the morning sky).</div>
+    <div class="lab-try"><b>A month of Moons.</b> In the Moon view, play at 1 day/s and say each phase out loud before its name appears. When does the Moon rise at sunset? (Hint: it’s opposite the Sun.)</div>
+    <div class="lab-try"><b>Eclipse seasons slide.</b> In Eclipses, look at 2026, where the seasons are in February–March and August. Step one year later with ›. The shaded seasons move about 19 days earlier each year.</div>
+    <div class="lab-try"><b>Moon phases with a lamp.</b> In a dark room, put a lamp without its shade on a table across the room (don’t touch the bulb; it gets hot). Hold a ball out at arm’s length and turn slowly around on the spot, watching the ball. You will see a crescent, a half, a full ball and a new moon. When the ball’s shadow falls on your head, that is a solar eclipse; when your head’s shadow falls on the ball, a lunar eclipse.</div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>A common mistake: “Phases are Earth’s shadow”</h2>
+    <p>Many people think the dark part of the Moon is Earth’s shadow falling on it. It isn’t. Earth’s shadow points straight away from the Sun, so it can only reach the Moon at full moon, when the Moon is on the far side of Earth. That is a lunar eclipse, and it happens only a few times a year.</p>
+    <p>The phases come from where we stand. The Sun always lights half the Moon. At new moon the lit half faces away from us. As the Moon moves around, we see more and more of the lit half, then less again. In the Moon view, look from above: every Moon on the ring is half lit, but from Earth they look completely different.</p>
+    <div class="lab-note"><b>Watching a solar eclipse.</b> Never look straight at the Sun, even when most of it is covered; it can hurt your eyes. Use proper eclipse glasses (made to the ISO 12312-2 standard) or a pinhole projector, a small hole in a card that throws an image of the Sun onto paper. The total phase of a total eclipse is the only time it is safe to look without them, and only until the first bit of Sun comes back.</div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The planets.</b> Each planet follows a Kepler ellipse whose six numbers change slowly with time, from Table 1 of JPL’s “Approximate Positions of the Planets” (valid from 1800 to 2050). JPL states the typical error of this table: 15″ in direction for Mercury, 20″ for Venus and Earth, 40″ for Mars, 400″ for Jupiter, 600″ for Saturn, 50″ for Uranus and 10″ for Neptune (1″ is 1/3600 of a degree). The table describes the center of mass of Earth and Moon; the program moves Earth 4,670 km from it, opposite the Moon. Seen from Earth, it allows for the time light takes to arrive and for Earth’s own motion (aberration).</p>
+      <p><b>The Moon.</b> The Moon is not a simple ellipse, because the Sun tugs on it. It follows the series in Jean Meeus’s <i>Astronomical Algorithms</i> (chapter 47): 128 sine terms for its direction and 46 cosine terms for its distance, good to about 10″. Phases and eclipses are found by searching for the moments when the Moon–Sun angle is 0°, 90°, 180° or 270°. Eclipse types come from the sizes of the Sun, Moon and shadows seen from Earth’s center, with Earth’s shadow made 1% bigger for its atmosphere, as NASA does.</p>
+      <p><b>What’s left out.</b> The pulls of the planets on one another beyond what JPL’s slowly changing numbers include; nutation (a small nod of Earth’s axis, under 20″); bending of light by the air, except at sunrise and sunset; and the tilt of the Moon’s lit side as it moves across the sky. The planets and Sun are drawn far larger than to scale. Time uses ΔT, the gap between clock time and the steady time of the orbits: about 69 seconds today.</p>
+      <div>
+        <p><b>How it was checked.</b> Written tests compare the model with published tables:</p>
+        <ul class="lab-small">
+          <li>Meeus’s worked example for the Moon (12 April 1992): all three sums and the answer agree to every digit (longitude 133.162655°, latitude −3.229126°, distance 368,409.7 km).</li>
+          <li>All 50 primary Moon phases of 2026 against the US Naval Observatory: every one within 1.5 minutes (average difference 0.4 min). The Observatory lists them to the minute.</li>
+          <li>All 44 eclipses of 2021–2030 on NASA’s eclipse lists: every one found, no extra ones, all 44 types right (including the rare hybrid eclipse of 20 April 2023), times within 1.5 minutes, lunar umbral magnitudes within 0.002.</li>
+          <li>17 conjunctions and oppositions of 2026 from the National Astronomical Observatory of Japan: Mercury, Venus and Uranus within 5 minutes; Mars, Jupiter and Neptune within 28 minutes; Saturn within 2 hours. In angle that is at most 53″, except Saturn at 311″, inside its 600″.</li>
+          <li>Greatest elongations of Mercury and Venus in 2026: the angles agree with the Observatory’s to within 0.4′ (Venus 45.89° against 45°53′).</li>
+          <li>Transit of Venus, 6 June 2012: closest to the Sun’s center at 01:35 UT, 9.2′ from it, against NASA’s 01:30 UT and 554″ (9.2′).</li>
+          <li>Sidereal time and the altitude of Venus in Meeus’s examples 12.a, 12.b and 13.b: equal to 0.0001°. Sunrise and sunset at 0° N, 0° E on 26 September 2026: 05:48 and 17:55 UT, the same minutes as the Naval Observatory; moonrise 17:49, also the same.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>E. M. Standish, NASA Jet Propulsion Laboratory, <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">Approximate Positions of the Planets</a>: the orbit elements and rates (Table 1, 1800–2050), the method, the error table and the obliquity 23.43928°.</li>
+      <li>J. Meeus, <i>Astronomical Algorithms</i>, 2nd edition (Willmann-Bell, 1998): the Moon (chapter 47), sidereal time (12), coordinates (13), precession (21) and the worked examples used for testing.</li>
+      <li>US Naval Observatory, <a href="https://aa.usno.navy.mil/calculated/moon/phases?year=2026">Dates of Primary Phases of the Moon, 2026</a>, and <a href="https://aa.usno.navy.mil/calculated/rstt/oneday?date=2026-09-26&amp;lat=0.0000&amp;lon=0.0000&amp;tz=0.00">Sun and Moon Data for One Day</a>.</li>
+      <li>NASA Goddard, F. Espenak, <a href="https://eclipse.gsfc.nasa.gov/SEdecade/SEdecade2021.html">Solar Eclipses: 2021–2030</a> and <a href="https://eclipse.gsfc.nasa.gov/LEdecade/LEdecade2021.html">Lunar Eclipses: 2021–2030</a> and <a href="https://eclipse.gsfc.nasa.gov/OH/transit12.html">the 2012 Transit of Venus</a>. ΔT before 2005 from F. Espenak and J. Meeus, “Polynomial Expressions for Delta T”, NASA Goddard.</li>
+      <li>National Astronomical Observatory of Japan, <a href="https://eco.mtk.nao.ac.jp/cgi-bin/koyomi/cande/phenomena_en.cgi">Celestial Phenomena 2026</a>: conjunctions, oppositions and greatest elongations.</li>
+      <li>NASA Goddard, <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/">Planetary Fact Sheet</a> and <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html">Moon Fact Sheet</a>: orbit sizes, speeds, the Moon’s 5.145° tilt and its months.</li>
+      <li>NASA Science, <a href="https://science.nasa.gov/solar-system/skywatching/whats-up-october-2026-skywatching-tips-from-nasa/">What’s Up: October 2026</a> (used to check the Tonight view).</li>
+      <li>OpenStax, <a href="https://openstax.org/books/astronomy-2e/pages/3-1-the-laws-of-planetary-motion">Astronomy 2e, 3.1 The Laws of Planetary Motion</a>, <a href="https://openstax.org/books/astronomy-2e/pages/4-5-phases-and-motions-of-the-moon">4.5 Phases and Motions of the Moon</a> and <a href="https://openstax.org/books/astronomy-2e/pages/4-7-eclipses-of-the-sun-and-moon">4.7 Eclipses of the Sun and Moon</a>.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More">
+    <a href="{{ "science-lab/" | relURL }}">← Science Lab</a>
+    <a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a>
+  </nav>
+</div>
+<script src="{{ "games/night-sky/sky.js" | relURL }}?v={{ (os.Stat "static/games/night-sky/sky.js").ModTime.Unix }}"></script>
+<script src="{{ "games/night-sky/sim.js" | relURL }}?v={{ (os.Stat "static/games/night-sky/sim.js").ModTime.Unix }}"></script>
+{{ end }}

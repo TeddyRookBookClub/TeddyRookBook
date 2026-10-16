@@ -1,0 +1,519 @@
+{
+  "course": "la",
+  "units": [
+    {"key":"systems","title":"Linear Systems","blurb":"Solve systems with row reduction and describe all their solutions."},
+    {"key":"vectors-matrices","title":"Vectors and Matrix Equations","blurb":"Combine vectors, describe spans, and test independence."},
+    {"key":"linear-maps","title":"Linear Transformations","blurb":"Describe linear maps by matrices and see their geometry."},
+    {"key":"determinants","title":"Determinants","blurb":"Compute determinants and see them as volume scale factors."},
+    {"key":"vector-spaces","title":"Vector Spaces","blurb":"Generalize to vector spaces, subspaces, bases, dimension and change of basis."},
+    {"key":"eigen","title":"Eigenvalues and Eigenvectors","blurb":"Find the directions a matrix only stretches, and diagonalize."},
+    {"key":"orthogonality","title":"Orthogonality and Least Squares","blurb":"Project onto subspaces, build orthonormal bases, and fit data by least squares."},
+    {"key":"symmetric-svd","title":"Symmetric Matrices and the SVD","blurb":"Diagonalize symmetric matrices, study quadratic forms, and use the SVD."}
+  ],
+  "topics": [
+    {
+      "id": "la.systems-pictures",
+      "slug": "systems-pictures",
+      "unit": "systems",
+      "title": "Linear Systems and Their Pictures",
+      "short": "See a system as intersecting lines and planes, or as combining columns.",
+      "prereqs": ["alg1.systems-elimination-multiply","pre.vector-operations"],
+      "xp": 1,
+      "viz": ["linesystem","span"]
+    },
+    {
+      "id": "la.augmented-matrices",
+      "slug": "augmented-matrices",
+      "unit": "systems",
+      "title": "Augmented Matrices and Row Operations",
+      "short": "Swap, scale and add rows without changing the solutions.",
+      "prereqs": ["la.systems-pictures","pre.gaussian-elimination"],
+      "xp": 1,
+      "trouble": "Students multiply a row by 0, subtract a row from itself, or copy one row over another, which throws away an equation and can change the solution set.",
+      "viz": []
+    },
+    {
+      "id": "la.echelon-form",
+      "slug": "echelon-form",
+      "unit": "systems",
+      "title": "Gaussian Elimination and Echelon Form",
+      "short": "Clear entries below each pivot.",
+      "prereqs": ["la.augmented-matrices"],
+      "xp": 2,
+      "trouble": "Students make arithmetic slips with fractions and never check by substitution.",
+      "viz": []
+    },
+    {
+      "id": "la.rref",
+      "slug": "rref",
+      "unit": "systems",
+      "title": "Reduced Row Echelon Form",
+      "short": "Make every pivot 1 with zeros above and below.",
+      "prereqs": ["la.echelon-form"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "la.parametric-solutions",
+      "slug": "parametric-solutions",
+      "unit": "systems",
+      "title": "Free Variables and Parametric Solutions",
+      "short": "Write every solution in terms of the free variables.",
+      "prereqs": ["la.rref"],
+      "xp": 2,
+      "trouble": "Students set free variables to 0 and report one solution as if it were all of them.",
+      "viz": ["span"]
+    },
+    {
+      "id": "la.existence-uniqueness",
+      "slug": "existence-uniqueness",
+      "unit": "systems",
+      "title": "When Solutions Exist and Are Unique",
+      "short": "Read the answer from the pivot positions.",
+      "prereqs": ["la.parametric-solutions"],
+      "xp": 2,
+      "trouble": "Students think a row of zeros always means no solution.",
+      "viz": []
+    },
+    {
+      "id": "la.linear-combinations",
+      "slug": "linear-combinations",
+      "unit": "vectors-matrices",
+      "title": "Vectors in Rⁿ and Linear Combinations",
+      "short": "Scale and add vectors to reach new ones.",
+      "prereqs": ["la.systems-pictures"],
+      "xp": 1,
+      "viz": ["span","vectors2d"]
+    },
+    {
+      "id": "la.span",
+      "slug": "span",
+      "unit": "vectors-matrices",
+      "title": "Span",
+      "short": "The span is every linear combination of a set of vectors.",
+      "prereqs": ["la.linear-combinations"],
+      "xp": 2,
+      "trouble": "Students think two vectors in R³ span all of R³.",
+      "viz": ["span"]
+    },
+    {
+      "id": "la.matrix-equation",
+      "slug": "matrix-equation",
+      "unit": "vectors-matrices",
+      "title": "The Matrix Equation Ax = b",
+      "short": "Ax is a combination of the columns of A.",
+      "prereqs": ["la.span","la.existence-uniqueness"],
+      "xp": 2,
+      "trouble": "Students compute Ax with rows of x, or mismatch sizes.",
+      "viz": ["matrix2d","span"]
+    },
+    {
+      "id": "la.homogeneous-systems",
+      "slug": "homogeneous-systems",
+      "unit": "vectors-matrices",
+      "title": "Homogeneous Systems",
+      "short": "Ax = 0 always has the zero solution; the question is whether there are others.",
+      "prereqs": ["la.matrix-equation","la.parametric-solutions"],
+      "xp": 2,
+      "viz": ["span"]
+    },
+    {
+      "id": "la.linear-independence",
+      "slug": "linear-independence",
+      "unit": "vectors-matrices",
+      "title": "Linear Independence",
+      "short": "No vector in the set is a combination of the others.",
+      "prereqs": ["la.homogeneous-systems"],
+      "xp": 2,
+      "trouble": "Students check only pairs of vectors for being multiples, missing dependence among three.",
+      "viz": ["span"]
+    },
+    {
+      "id": "la.matrix-algebra",
+      "slug": "matrix-algebra",
+      "unit": "vectors-matrices",
+      "title": "Matrix Operations and Transposes",
+      "short": "Add, multiply and transpose, minding the order.",
+      "prereqs": ["la.matrix-equation","pre.matrix-multiplication"],
+      "xp": 2,
+      "trouble": "Students assume AB = BA, or write (AB)ᵀ = AᵀBᵀ.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.matrix-inverse",
+      "slug": "matrix-inverse",
+      "unit": "vectors-matrices",
+      "title": "Inverses by Gauss–Jordan",
+      "short": "Row-reduce A next to I until A becomes I; then I has become A⁻¹.",
+      "prereqs": ["la.matrix-algebra","la.rref"],
+      "xp": 2,
+      "trouble": "Students write (AB)⁻¹ = A⁻¹B⁻¹ instead of B⁻¹A⁻¹.",
+      "viz": []
+    },
+    {
+      "id": "la.invertible-matrix-theorem",
+      "slug": "invertible-matrix-theorem",
+      "unit": "vectors-matrices",
+      "title": "The Invertible Matrix Theorem",
+      "short": "Many statements about a square matrix are all true or all false together.",
+      "prereqs": ["la.matrix-inverse","la.linear-independence"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "la.lu-factorization",
+      "slug": "lu-factorization",
+      "unit": "vectors-matrices",
+      "title": "Elementary Matrices and LU Factorization",
+      "short": "Record elimination as A = LU.",
+      "prereqs": ["la.matrix-inverse"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "la.linear-transformations",
+      "slug": "linear-transformations",
+      "unit": "linear-maps",
+      "title": "Linear Transformations",
+      "short": "T(u + v) = T(u) + T(v) and T(cu) = cT(u).",
+      "prereqs": ["la.matrix-equation"],
+      "xp": 2,
+      "trouble": "Students call a translation linear, though it moves the zero vector.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.standard-matrix",
+      "slug": "standard-matrix",
+      "unit": "linear-maps",
+      "title": "The Matrix of a Linear Transformation",
+      "short": "The columns are the images of the standard basis vectors.",
+      "prereqs": ["la.linear-transformations"],
+      "xp": 2,
+      "trouble": "Students write the images as rows instead of columns.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.geometric-maps",
+      "slug": "geometric-maps",
+      "unit": "linear-maps",
+      "title": "Rotations, Reflections, Shears and Projections",
+      "short": "Read and build matrices for common plane maps.",
+      "prereqs": ["la.standard-matrix","pre.matrix-transformations"],
+      "xp": 2,
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.composition-products",
+      "slug": "composition-products",
+      "unit": "linear-maps",
+      "title": "Composition as Matrix Multiplication",
+      "short": "Doing S after T has matrix ST.",
+      "prereqs": ["la.geometric-maps","la.matrix-algebra"],
+      "xp": 2,
+      "trouble": "Students multiply in the order the maps are applied, getting TS.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.one-to-one-onto",
+      "slug": "one-to-one-onto",
+      "unit": "linear-maps",
+      "title": "One-to-One and Onto",
+      "short": "Pivots in every column mean one-to-one; in every row mean onto.",
+      "prereqs": ["la.standard-matrix","la.existence-uniqueness"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "la.cofactor-expansion",
+      "slug": "cofactor-expansion",
+      "unit": "determinants",
+      "title": "Determinants by Cofactor Expansion",
+      "short": "Expand along any row or column.",
+      "prereqs": ["pre.determinants","la.matrix-algebra"],
+      "xp": 2,
+      "trouble": "Students forget the checkerboard of signs.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.determinant-properties",
+      "slug": "determinant-properties",
+      "unit": "determinants",
+      "title": "Properties of Determinants",
+      "short": "Row operations change the determinant in predictable ways; det(AB) = det A det B.",
+      "prereqs": ["la.cofactor-expansion","la.echelon-form"],
+      "xp": 2,
+      "trouble": "Students assume det(A + B) = det A + det B.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.determinant-geometry",
+      "slug": "determinant-geometry",
+      "unit": "determinants",
+      "title": "Determinants as Area and Volume",
+      "short": "|det A| is the factor by which A scales area or volume.",
+      "prereqs": ["la.determinant-properties","la.geometric-maps"],
+      "xp": 2,
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.cramers-rule",
+      "slug": "cramers-rule",
+      "unit": "determinants",
+      "title": "Cramer's Rule and the Adjugate",
+      "short": "Solve small systems and invert with determinants.",
+      "prereqs": ["la.determinant-properties","la.matrix-inverse"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "la.light-proofs",
+      "slug": "light-proofs",
+      "unit": "vector-spaces",
+      "title": "Writing Short Proofs",
+      "short": "Prove statements from definitions, one justified step at a time.",
+      "prereqs": ["la.linear-independence","geo.conditional-statements"],
+      "xp": 2,
+      "trouble": "Students check one example and call it a proof.",
+      "viz": []
+    },
+    {
+      "id": "la.vector-spaces",
+      "slug": "vector-spaces",
+      "unit": "vector-spaces",
+      "title": "Vector Spaces and Subspaces",
+      "short": "A subspace contains 0 and is closed under addition and scaling.",
+      "prereqs": ["la.light-proofs","la.span"],
+      "xp": 2,
+      "trouble": "Students forget to check that the zero vector is in the set.",
+      "viz": ["span"]
+    },
+    {
+      "id": "la.null-column-spaces",
+      "slug": "null-column-spaces",
+      "unit": "vector-spaces",
+      "title": "Null Space and Column Space",
+      "short": "Nul A solves Ax = 0; Col A is the span of the columns.",
+      "prereqs": ["la.vector-spaces","la.homogeneous-systems"],
+      "xp": 2,
+      "trouble": "Students take the pivot columns of the reduced matrix instead of the original A as a basis for Col A.",
+      "viz": ["span"]
+    },
+    {
+      "id": "la.basis",
+      "slug": "basis",
+      "unit": "vector-spaces",
+      "title": "Bases",
+      "short": "A basis spans and is independent.",
+      "prereqs": ["la.null-column-spaces","la.linear-independence"],
+      "xp": 2,
+      "viz": ["span"]
+    },
+    {
+      "id": "la.dimension-rank",
+      "slug": "dimension-rank",
+      "unit": "vector-spaces",
+      "title": "Dimension and Rank",
+      "short": "Every basis has the same size; rank is the dimension of the column space.",
+      "prereqs": ["la.basis"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "la.rank-nullity",
+      "slug": "rank-nullity",
+      "unit": "vector-spaces",
+      "title": "The Rank–Nullity Theorem and the Four Subspaces",
+      "short": "rank + nullity = number of columns.",
+      "prereqs": ["la.dimension-rank","la.one-to-one-onto"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "la.change-of-basis",
+      "slug": "change-of-basis",
+      "unit": "vector-spaces",
+      "title": "Coordinates and Change of Basis",
+      "short": "Describe vectors in a new basis with a change-of-coordinates matrix.",
+      "prereqs": ["la.basis","la.matrix-inverse"],
+      "xp": 3,
+      "trouble": "Students use the change-of-basis matrix in the wrong direction.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.eigen-intro",
+      "slug": "eigen-intro",
+      "unit": "eigen",
+      "title": "Eigenvectors and Eigenvalues",
+      "short": "Av = λv: A only stretches v.",
+      "prereqs": ["la.null-column-spaces"],
+      "xp": 2,
+      "trouble": "Students accept the zero vector as an eigenvector.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.characteristic-equation",
+      "slug": "characteristic-equation",
+      "unit": "eigen",
+      "title": "The Characteristic Equation",
+      "short": "Solve det(A − λI) = 0.",
+      "prereqs": ["la.eigen-intro","la.cofactor-expansion"],
+      "xp": 2,
+      "trouble": "Students subtract λ from every entry instead of only the diagonal.",
+      "viz": []
+    },
+    {
+      "id": "la.eigenspaces",
+      "slug": "eigenspaces",
+      "unit": "eigen",
+      "title": "Eigenspaces and Multiplicity",
+      "short": "Each eigenvalue has a space of eigenvectors.",
+      "prereqs": ["la.characteristic-equation"],
+      "xp": 2,
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.diagonalization",
+      "slug": "diagonalization",
+      "unit": "eigen",
+      "title": "Diagonalization",
+      "short": "A = PDP⁻¹ when there are enough independent eigenvectors.",
+      "prereqs": ["la.eigenspaces","la.change-of-basis"],
+      "xp": 3,
+      "trouble": "Students think a repeated eigenvalue always prevents diagonalizing, or never does.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.matrix-powers-markov",
+      "slug": "matrix-powers-markov",
+      "unit": "eigen",
+      "title": "Matrix Powers and Markov Chains",
+      "short": "Use Aᵏ = PDᵏP⁻¹ and find steady states.",
+      "prereqs": ["la.diagonalization"],
+      "xp": 3,
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.complex-eigenvalues",
+      "slug": "complex-eigenvalues",
+      "unit": "eigen",
+      "title": "Complex Eigenvalues",
+      "short": "Complex eigenvalues signal rotation.",
+      "prereqs": ["la.characteristic-equation","pre.complex-polar-form"],
+      "xp": 3,
+      "viz": ["matrix2d","complexplane"]
+    },
+    {
+      "id": "la.similar-matrices",
+      "slug": "similar-matrices",
+      "unit": "eigen",
+      "title": "Similar Matrices",
+      "short": "Similar matrices describe the same map in different bases.",
+      "prereqs": ["la.diagonalization"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "la.orthogonality",
+      "slug": "orthogonality",
+      "unit": "orthogonality",
+      "title": "Length and Orthogonality in Rⁿ",
+      "short": "Vectors are orthogonal when their dot product is 0.",
+      "prereqs": ["la.linear-combinations","pre.dot-product"],
+      "xp": 1,
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "la.orthogonal-complements",
+      "slug": "orthogonal-complements",
+      "unit": "orthogonality",
+      "title": "Orthogonal Complements",
+      "short": "Row space and null space are perpendicular.",
+      "prereqs": ["la.orthogonality","la.null-column-spaces"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "la.orthogonal-projections",
+      "slug": "orthogonal-projections",
+      "unit": "orthogonality",
+      "title": "Orthogonal Projections",
+      "short": "Find the closest point in a subspace.",
+      "prereqs": ["la.orthogonal-complements","la.basis"],
+      "xp": 3,
+      "trouble": "Students project onto a non-orthogonal basis one vector at a time and add.",
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "la.gram-schmidt-qr",
+      "slug": "gram-schmidt-qr",
+      "unit": "orthogonality",
+      "title": "Gram–Schmidt and QR",
+      "short": "Turn any basis into an orthonormal one.",
+      "prereqs": ["la.orthogonal-projections"],
+      "xp": 3,
+      "viz": ["vectors3d"]
+    },
+    {
+      "id": "la.least-squares",
+      "slug": "least-squares",
+      "unit": "orthogonality",
+      "title": "Least Squares",
+      "short": "Solve AᵀAx̂ = Aᵀb to fit data.",
+      "prereqs": ["la.orthogonal-projections","alg1.lines-of-fit-residuals"],
+      "xp": 3,
+      "trouble": "Students solve Ax = b directly when it has no solution.",
+      "viz": ["scatter"]
+    },
+    {
+      "id": "la.orthogonal-matrices",
+      "slug": "orthogonal-matrices",
+      "unit": "orthogonality",
+      "title": "Orthogonal Matrices",
+      "short": "QᵀQ = I: rotations and reflections preserve length.",
+      "prereqs": ["la.gram-schmidt-qr"],
+      "xp": 2,
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.spectral-theorem",
+      "slug": "spectral-theorem",
+      "unit": "symmetric-svd",
+      "title": "Symmetric Matrices and the Spectral Theorem",
+      "short": "A symmetric matrix has an orthonormal basis of eigenvectors.",
+      "prereqs": ["la.diagonalization","la.orthogonal-matrices"],
+      "xp": 3,
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.quadratic-forms",
+      "slug": "quadratic-forms",
+      "unit": "symmetric-svd",
+      "title": "Quadratic Forms and Positive Definite Matrices",
+      "short": "xᵀAx > 0 for all x ≠ 0 exactly when all eigenvalues are positive.",
+      "prereqs": ["la.spectral-theorem"],
+      "xp": 3,
+      "viz": ["surface"]
+    },
+    {
+      "id": "la.svd",
+      "slug": "svd",
+      "unit": "symmetric-svd",
+      "title": "The Singular Value Decomposition",
+      "short": "A = UΣVᵀ for every matrix.",
+      "prereqs": ["la.spectral-theorem"],
+      "xp": 3,
+      "trouble": "Students take singular values to be the eigenvalues of A instead of the square roots of the eigenvalues of AᵀA.",
+      "viz": ["matrix2d"]
+    },
+    {
+      "id": "la.svd-applications",
+      "slug": "svd-applications",
+      "unit": "symmetric-svd",
+      "title": "Low-Rank Approximation and Applications",
+      "short": "Keep the largest singular values to compress data.",
+      "prereqs": ["la.svd"],
+      "xp": 3,
+      "viz": []
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "games/atom/sim.css" | relURL }}?v={{ (os.Stat "static/games/atom/sim.css").ModTime.Unix }}">
+<div class="lab" id="atom-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Build an Atom</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Chemistry &amp; Physics</p>
+    <h1>Build an Atom</h1>
+    <p>Drag protons, neutrons and electrons together and see what you've made: the element, its place in the periodic table, its charge, its electron shells, and whether its nucleus holds together or is radioactive. Every isotope of the first 36 elements is here, with real half-lives. Then watch a radioactive sample decay, and use carbon-14 to find out how old something is.</p>
+    <span class="lab-mark" aria-hidden="true">⚛️</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="atom-view">
+      <canvas id="atom-cv" tabindex="0" aria-label="An atom you can build. On the left are trays of protons, neutrons and electrons: tap a tray or drag from it into the atom to add one, or drag a particle out of the atom to take it away. The card on the right names the element and says whether its nucleus is stable or radioactive. A chart of the nuclides and a periodic table of elements 1 to 36 can be tapped to jump to an atom. Keys: P, N, E add a proton, neutron or electron; with Shift they take one away; D lets a radioactive nucleus decay; M makes the atom neutral; V switches between shells and cloud."></canvas>
+      <div class="lab-tools">
+        <button type="button" id="atom-pause" aria-label="Pause" title="Pause (space)" hidden>❚❚</button>
+        <button type="button" id="atom-speed" aria-label="Playback speed: 1×" title="Playback speed" hidden>1×</button>
+        <button type="button" id="atom-reset" aria-label="Start over with an empty atom" title="Start over">↺</button>
+      </div>
+      <div class="atom-quiz" id="atom-quiz" role="group" aria-labelledby="atom-quiz-q" hidden>
+        <p id="atom-quiz-q"><b>Carbon-14 is radioactive.</b> Why?</p>
+        <div class="atom-quiz-a">
+          <button type="button" data-a="e">It has too many electrons</button>
+          <button type="button" data-a="n">It has too many neutrons for its 6 protons</button>
+          <button type="button" data-a="c">All carbon is radioactive</button>
+        </div>
+        <p class="atom-quiz-fb" id="atom-quiz-fb" aria-live="polite"></p>
+      </div>
+      <p class="atom-sr" id="atom-live" aria-live="polite"></p>
+    </div>
+
+    <div class="lab-panel" id="atom-panel">
+      <h3 id="atom-scenes-h">Scenes</h3>
+      <div class="lab-seg" id="atom-scenes" role="group" aria-labelledby="atom-scenes-h">
+        <button type="button" data-scene="build" aria-pressed="true">Build an atom</button>
+        <button type="button" data-scene="half" aria-pressed="false">Half-life</button>
+      </div>
+
+      <div id="atom-build" class="atom-group">
+        <div class="atom-steps">
+          <div class="atom-step"><span class="atom-dot p" aria-hidden="true"></span><span>Protons</span><button type="button" data-rem="p" aria-label="Take away a proton">−</button><b id="atom-p-n">0</b><button type="button" data-add="p" aria-label="Add a proton">+</button></div>
+          <div class="atom-step"><span class="atom-dot n" aria-hidden="true"></span><span>Neutrons</span><button type="button" data-rem="n" aria-label="Take away a neutron">−</button><b id="atom-n-n">0</b><button type="button" data-add="n" aria-label="Add a neutron">+</button></div>
+          <div class="atom-step"><span class="atom-dot e" aria-hidden="true"></span><span>Electrons</span><button type="button" data-rem="e" aria-label="Take away an electron">−</button><b id="atom-e-n">0</b><button type="button" data-add="e" aria-label="Add an electron">+</button></div>
+        </div>
+        <div class="lab-row">
+          <button type="button" class="lab-btn" id="atom-neutral">Make it neutral</button>
+          <button type="button" class="lab-btn pri" id="atom-decay">Let it decay</button>
+        </div>
+        <div class="lab-field"><span id="atom-views-l">Electrons</span>
+          <div class="lab-seg" id="atom-views" role="group" aria-labelledby="atom-views-l"><button type="button" data-view="shells" aria-pressed="true">Shells</button><button type="button" data-view="cloud" aria-pressed="false">Cloud</button></div>
+        </div>
+        <label class="lab-field"><span>Jump to an element</span>
+          <select id="atom-jump" aria-label="Jump to an element: builds its most common isotope as a neutral atom">
+            <option value="">Choose…</option>
+            <option value="1">1 · H · Hydrogen</option><option value="2">2 · He · Helium</option><option value="3">3 · Li · Lithium</option><option value="4">4 · Be · Beryllium</option><option value="5">5 · B · Boron</option><option value="6">6 · C · Carbon</option><option value="7">7 · N · Nitrogen</option><option value="8">8 · O · Oxygen</option><option value="9">9 · F · Fluorine</option><option value="10">10 · Ne · Neon</option><option value="11">11 · Na · Sodium</option><option value="12">12 · Mg · Magnesium</option><option value="13">13 · Al · Aluminum</option><option value="14">14 · Si · Silicon</option><option value="15">15 · P · Phosphorus</option><option value="16">16 · S · Sulfur</option><option value="17">17 · Cl · Chlorine</option><option value="18">18 · Ar · Argon</option><option value="19">19 · K · Potassium</option><option value="20">20 · Ca · Calcium</option><option value="21">21 · Sc · Scandium</option><option value="22">22 · Ti · Titanium</option><option value="23">23 · V · Vanadium</option><option value="24">24 · Cr · Chromium</option><option value="25">25 · Mn · Manganese</option><option value="26">26 · Fe · Iron</option><option value="27">27 · Co · Cobalt</option><option value="28">28 · Ni · Nickel</option><option value="29">29 · Cu · Copper</option><option value="30">30 · Zn · Zinc</option><option value="31">31 · Ga · Gallium</option><option value="32">32 · Ge · Germanium</option><option value="33">33 · As · Arsenic</option><option value="34">34 · Se · Selenium</option><option value="35">35 · Br · Bromine</option><option value="36">36 · Kr · Krypton</option>
+          </select>
+        </label>
+        <h3>Live numbers</h3>
+        <dl class="lab-readout atom-read">
+          <dt>Element</dt><dd id="atom-r-el">—</dd>
+          <dt>Isotope</dt><dd id="atom-r-iso">—</dd>
+          <dt>Mass number</dt><dd id="atom-r-a">—</dd>
+          <dt>Charge</dt><dd id="atom-r-q">—</dd>
+          <dt>Nucleus</dt><dd id="atom-r-nuc">—</dd>
+          <dt>Half-life, decay</dt><dd id="atom-r-hl">—</dd>
+          <dt>Share in nature</dt><dd id="atom-r-ab">—</dd>
+          <dt>Shells</dt><dd id="atom-r-sh">—</dd>
+          <dt>Configuration</dt><dd id="atom-r-cf">—</dd>
+        </dl>
+        <p class="lab-small atom-note" id="atom-note"></p>
+      </div>
+
+      <div id="atom-half" class="atom-group" hidden>
+        <div class="lab-field"><span id="atom-iso-l">Radioactive isotope</span>
+          <div class="lab-seg atom-iso" id="atom-iso" role="group" aria-labelledby="atom-iso-l">
+            <button type="button" data-iso="c14" aria-pressed="true">Carbon-14</button>
+            <button type="button" data-iso="h3" aria-pressed="false">Hydrogen-3</button>
+            <button type="button" data-iso="f18" aria-pressed="false">Fluorine-18</button>
+            <button type="button" data-iso="i131" aria-pressed="false">Iodine-131</button>
+            <button type="button" data-iso="co60" aria-pressed="false">Cobalt-60</button>
+            <button type="button" data-iso="rn222" aria-pressed="false">Radon-222</button>
+            <button type="button" data-iso="k40" aria-pressed="false">Potassium-40</button>
+            <button type="button" data-iso="u238" aria-pressed="false">Uranium-238</button>
+          </div>
+        </div>
+        <div class="lab-field"><span id="atom-size-l">Nuclei in the sample</span>
+          <div class="lab-seg" id="atom-size" role="group" aria-labelledby="atom-size-l">
+            <button type="button" data-n="1" aria-pressed="false">1</button><button type="button" data-n="10" aria-pressed="false">10</button><button type="button" data-n="100" aria-pressed="false">100</button><button type="button" data-n="1000" aria-pressed="true">1,000</button>
+          </div>
+        </div>
+        <div class="lab-row">
+          <button type="button" class="lab-btn" id="atom-new">New sample</button>
+          <button type="button" class="lab-btn pri" id="atom-date">Date a mystery sample</button>
+        </div>
+        <div class="atom-datebox" id="atom-datebox" hidden>
+          <label class="lab-field"><span>Your age estimate <output id="atom-guess-o">0 years</output></span><input type="range" id="atom-guess" min="0" max="35000" step="10" value="0" aria-label="Your estimate of the sample's age, in years"></label>
+          <button type="button" class="lab-btn pri" id="atom-check">Check my age</button>
+        </div>
+        <h3>Live numbers</h3>
+        <dl class="lab-readout atom-read">
+          <dt>Isotope</dt><dd id="atom-h-iso">—</dd>
+          <dt>Half-life</dt><dd id="atom-h-hl">—</dd>
+          <dt>Decays to</dt><dd id="atom-h-to">—</dd>
+          <dt>Time passed</dt><dd id="atom-h-t">—</dd>
+          <dt>Left</dt><dd id="atom-h-left">—</dd>
+          <dt>Expected left</dt><dd id="atom-h-exp">—</dd>
+          <dt>Half gone at</dt><dd id="atom-h-half">—</dd>
+        </dl>
+        <p class="lab-small" id="atom-h-use"></p>
+      </div>
+
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ul class="lab-missions" id="atom-missions"></ul>
+      <p class="lab-small">Keys, with the picture selected: P, N, E add a proton, neutron or electron (Shift takes one away), D decays, M makes the atom neutral, V switches shells and cloud. In Half-life: space pauses; ← → move the age line.</p>
+    </div>
+  </div>
+
+  <section class="lab-sec">
+    <h2>What you're seeing</h2>
+    <div class="lab-cols">
+      <p>Every atom has a tiny, heavy center, the <b>nucleus</b>, made of <b>protons</b> (red) and <b>neutrons</b> (gray). Around it are <b>electrons</b> (blue). A proton carries one unit of positive charge, an electron one unit of negative charge, and a neutron none at all.</p>
+      <p>The number of protons decides the element. One proton is always hydrogen, six is always carbon, 26 is always iron. Add or take away a proton and you have a different element, which is why the periodic table at the bottom lights up a new square.</p>
+      <p>Neutrons change the weight of the atom but not the element. Atoms of one element with different numbers of neutrons are called <b>isotopes</b>. Electrons change the charge: an atom with more or fewer electrons than protons is an <b>ion</b>.</p>
+      <p>The card says whether the nucleus is <b>stable</b> or <b>radioactive</b>, and the chart of the nuclides marks where it sits among the nearly 900 known nuclei of the first 36 elements. The picture is not to scale. If an atom were as wide as a football stadium, its nucleus would be about the size of a pea in the middle.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>The science</h2>
+    <h3 class="lab-h">Counting the parts</h3>
+    <p>Chemists write an atom with two numbers beside its symbol: the <b>mass number</b> <var>A</var> (protons plus neutrons) at the top, and the <b>atomic number</b> <var>Z</var> (protons) at the bottom. A charge goes at the top right.</p>
+    <div class="lab-formula"><var>A</var> = <var>Z</var> + <var>N</var> &nbsp;&nbsp;&nbsp;&nbsp; charge = protons − electrons &nbsp;&nbsp;&nbsp;&nbsp; <span class="atom-nt"><span>14</span><span>6</span></span>C has 6 protons and 8 neutrons; <sup>23</sup>Na<sup>+</sup> has 11 protons, 12 neutrons and 10 electrons</div>
+    <p>A proton has a mass of 1.6726 × 10<sup>−27</sup> kg and a neutron 1.6749 × 10<sup>−27</sup> kg, almost the same. An electron is about 1,836 times lighter, 9.109 × 10<sup>−31</sup> kg, so nearly all of an atom's mass is in its nucleus. The charge of a proton is exactly 1.602176634 × 10<sup>−19</sup> coulomb, and an electron's is the same with a minus sign.</p>
+
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Isotopes and atomic weight</h3>
+        <p>Most elements in nature are a mix of isotopes. Chlorine is 75.76% chlorine-35 and 24.24% chlorine-37, so the "atomic weight" printed in the periodic table is an average:</p>
+        <div class="lab-formula">0.7576 × 34.969 u + 0.2424 × 36.966 u = 35.45 u</div>
+        <p>That is why it isn't a whole number. The card shows each isotope's share in nature, and the tile shows the element's atomic weight.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">What holds a nucleus together</h3>
+        <p>Protons push each other apart, because like charges repel. They are held in by the <b>strong nuclear force</b>, which pulls protons and neutrons together but only reaches about the width of a nucleon. Neutrons add that pull without adding any push, so they act as glue. Light stable nuclei have about as many neutrons as protons; heavier ones need more. Krypton-84 has 48 neutrons for its 36 protons. On the chart, the stable nuclei form a narrow "valley" that bends away from the dashed line where <var>N</var> = <var>Z</var>.</p>
+      </div>
+    </div>
+
+    <h3 class="lab-h">How unstable nuclei decay</h3>
+    <p>A nucleus with the wrong mix of protons and neutrons changes into a better one, giving off radiation as it does. In the first 36 elements you'll meet three main ways:</p>
+    <div class="lab-formula">β⁻ (too many neutrons): n → p + e⁻ + ν̄ &nbsp;&nbsp;&nbsp; e.g. <sup>14</sup>C → <sup>14</sup>N<br>β⁺ (too few neutrons): p → n + e⁺ + ν &nbsp;&nbsp;&nbsp; e.g. <sup>18</sup>F → <sup>18</sup>O<br>electron capture (too few neutrons): p + e⁻ → n + ν &nbsp;&nbsp;&nbsp; e.g. <sup>7</sup>Be → <sup>7</sup>Li</div>
+    <p><b>Alpha decay</b>, where a helium-4 nucleus (2 protons and 2 neutrons) shoots out, is how most very heavy nuclei decay, like uranium-238 and radon-222 in the Half-life scene. Far from the stable isotopes, nuclei can't hold on at all and lose a neutron or a proton almost instantly. Beryllium-8 is a famous case: it splits into two helium-4 nuclei in about 10<sup>−16</sup> s.</p>
+
+    <h3 class="lab-h">Half-life</h3>
+    <p>No one can say when a single radioactive nucleus will decay. But each one has the same chance of decaying in any second, so a large sample shrinks in a very regular way: half of it is left after one <b>half-life</b>, a quarter after two, an eighth after three.</p>
+    <div class="lab-formula"><var>N</var>(<var>t</var>) = <var>N</var><sub>0</sub> · 2<sup>−<var>t</var> / <var>T</var>½</sup> = <var>N</var><sub>0</sub> · e<sup>−λ<var>t</var></sup>, &nbsp;&nbsp; λ = ln 2 / <var>T</var>½ &nbsp;&nbsp;&nbsp;&nbsp; average lifetime = <var>T</var>½ / ln 2 ≈ 1.44 <var>T</var>½</div>
+    <p>Half-lives range from far less than a second to far longer than the age of the universe. Fluorine-18, used in hospital PET scans, has a half-life of 109.7 minutes. Carbon-14's is 5,700 years (many textbooks give the older value, 5,730). Uranium-238's is 4.46 billion years, close to the age of Earth (4.54 billion years), so about half of the uranium-238 Earth started with is still here.</p>
+
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Carbon dating</h3>
+        <p>High in the air, neutrons from cosmic rays hit nitrogen-14 nuclei and turn them into carbon-14. Plants take it in with ordinary carbon, and animals eat the plants, so every living thing carries about the same tiny share of carbon-14 as the air. When a living thing dies, it stops taking in new carbon, and its carbon-14 starts to run down. Measure the fraction <var>f</var> that is left, and the age follows:</p>
+        <div class="lab-formula"><var>t</var> = <var>T</var>½ · log<sub>2</sub>(1 / <var>f</var>) &nbsp;&nbsp;&nbsp; <var>f</var> = 25% → <var>t</var> = 5,700 × 2 = 11,400 years</div>
+        <p>After about 50,000 years less than 0.3% is left, too little to measure well, so carbon dating stops there. The amount of carbon-14 in the air has not been perfectly steady, so real labs correct their results with a calibration curve built from tree rings and other records.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Electron shells</h3>
+        <p>Electrons are arranged in energy levels. In the simple shell picture, the first shell holds up to 2 electrons and the second up to 8. The third can hold 18, but after it has 8, the next two electrons go into the fourth shell first. That's why potassium is 2, 8, 8, 1 and calcium 2, 8, 8, 2. From scandium to zinc, the third shell fills up to 18.</p>
+        <p>The full description uses <b>orbitals</b> named s, p and d, written like 1s² 2s² 2p⁶ 3s¹ for sodium. Atoms with full outer shells, the noble gases helium, neon, argon and krypton, hardly react. Others gain or lose electrons to get there: sodium loses one and becomes Na⁺, chlorine gains one and becomes Cl⁻.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Try this</h2>
+    <div class="lab-try"><b>A walk through the isotopes.</b> Build carbon-12 and add neutrons one at a time. Carbon-13 is stable. Carbon-14 lasts thousands of years, carbon-15 about 2 seconds, carbon-16 less than one. Carbon-22 lasts 6 milliseconds, and it is the heaviest carbon nucleus that holds together: carbon-23 has never been seen. Watch the gold ring move to the right on the chart of the nuclides.</div>
+    <div class="lab-try"><b>A decay chain.</b> Build oxygen-22 (8 protons, 14 neutrons) and press <i>Let it decay</i> until the nucleus turns green. Each β⁻ decay turns a neutron into a proton, so the element changes each time: oxygen, fluorine, then stable neon. Notice the charge badge: the new atom is short of an electron.</div>
+    <div class="lab-try"><b>No electron, no capture.</b> Beryllium-7 decays only by electron capture. Take away all four of its electrons and try to make it decay. With no electron to capture, a bare beryllium-7 nucleus can't decay this way.</div>
+    <div class="lab-try"><b>The valley of stability.</b> Tap the white squares on the chart of the nuclides, then the blue ones to their right and the pink ones to their left. Blue nuclei have too many neutrons and decay by β⁻; pink ones have too few and decay by β⁺ or electron capture. Every decay moves a nucleus toward the white valley.</div>
+    <div class="lab-try"><b>One nucleus or a thousand.</b> In <i>Half-life</i>, run a sample of 1 nucleus several times. It might decay at once or last for many half-lives. Then try 10, 100 and 1,000, and compare where "half gone" lands with the true half-life.</div>
+    <div class="lab-note"><b>At home (safe and easy):</b> put 100 coins in a cup, shake them, pour them out and take away every coin that lands tails up. Count the rest and write the number down. Repeat until none are left. Each round is one "half-life": about half the coins go each time, but you can never tell which coin will go next. Plot your counts, and they follow the same curve as the graph.</div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Two common mix-ups</h2>
+    <p><b>"Electrons orbit the nucleus like planets around the Sun."</b> They don't. That picture, close to the model Niels Bohr proposed in 1913, gets the energy levels of hydrogen right, but electrons don't follow paths at all. Quantum mechanics only tells us where an electron is likely to be found, which gives a fuzzy cloud called an orbital. In fact, an electron that really circled the nucleus would give off light, lose energy and spiral inward. The shell picture in this simulation is a handy way to count electrons, not a photo of an atom. Switch to <i>Cloud</i> for a better (but still simplified) picture.</p>
+    <p><b>"After one half-life, the rest of the sample is about to decay."</b> Decay has no memory. A carbon-14 nucleus that has already lasted 10,000 years is no more likely to decay next year than one made yesterday. For one nucleus, decay is pure chance. For billions, the chances add up to a smooth and predictable curve: after two half-lives a quarter is left, not nothing.</p>
+  </section>
+
+  <section class="lab-sec">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The data.</b> For each element from hydrogen to krypton, the simulation holds every known nucleus, 888 in all, with its half-life and decay modes from the NUBASE2020 evaluation of nuclear data. Natural abundances come from NIST and CIAAW. When you build a nucleus that isn't in the table, it either sits among known isotopes (never observed) or lies beyond the last known one (never made).</p>
+      <p><b>The electrons.</b> Shells fill in the standard order (1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p), with the two known exceptions in this range, chromium and copper. Positive ions lose electrons from the outermost shell first, so iron's 4s electrons go before its 3d ones, as in real Fe²⁺ and Fe³⁺. The cloud view scatters dots around each shell's radius; real orbitals have more interesting shapes.</p>
+      <p><b>Decay.</b> <i>Let it decay</i> picks one of the nucleus's decay modes at random, weighted by how often each happens, and skips the waiting. In the Half-life scene, each nucleus gets its own random lifetime, <var>t</var> = −<var>T</var>½ · log<sub>2</sub>(<var>u</var>), where <var>u</var> is a random number between 0 and 1. That is exactly the rule real nuclei follow: memoryless and random, with half of them gone after one half-life on average.</p>
+      <p><b>What's simplified.</b> The nucleus is drawn as a flat cluster of balls, and the atom is far from scale. Nuclear isomers (excited, longer-lived states) are left out. Half-lives are shown to three significant figures, and some nuclides far from stability have only estimates. Iodine-131, radon-222 and uranium-238 appear only in the Half-life scene, since they are beyond krypton.</p>
+    </div>
+    <h3 class="lab-h">How it was checked</h3>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Test</th><th>Result</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>Stable nuclei, elements 1 to 36</td><td>93</td><td>93 (every one occurs in nature)</td></tr>
+        <tr><td>Natural abundances of each element add up to</td><td>100.000%</td><td>100%</td></tr>
+        <tr><td>Abundance-weighted mass number minus atomic weight, all 36 elements</td><td>−0.02 to +0.09</td><td>close to 0: an atom's mass in u is near its mass number, but not exactly equal</td></tr>
+        <tr><td>Electron shells of 18 atoms and configurations of 9 ions (K, Ca, Sc, Cr, Cu, Kr, Na⁺, Cl⁻, Fe²⁺, Fe³⁺, Zn²⁺ …)</td><td>all match</td><td>textbook configurations</td></tr>
+        <tr><td>Main decay mode of every radioactive nucleus points toward the stable ones; chains followed to the end</td><td>661 end stable, 64 leave the table at rubidium, 0 wrong</td><td>all reach stability</td></tr>
+        <tr><td>200,000 random lifetimes, <var>T</var>½ = 5,700 years: median</td><td>5,726 years</td><td>5,700 years</td></tr>
+        <tr><td>Same: average lifetime</td><td>8,235 years</td><td>5,700 / ln 2 = 8,223 years</td></tr>
+        <tr><td>Same: nuclei left after 3 half-lives</td><td>25,149</td><td>25,000 ± 194</td></tr>
+        <tr><td>"Half gone" time for samples of 10, 100 and 1,000 nuclei (2,000 runs each)</td><td>0.94 ± 0.45, 1.00 ± 0.14, 1.00 ± 0.05 <var>T</var>½</td><td>spread shrinks like 1/√<var>N</var></td></tr>
+        <tr><td>Uranium-238 left after 4.54 billion years</td><td>49.4%</td><td>2<sup>−4.54/4.463</sup> = 49.4%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="lab-small">For a sample of 10, "half gone" is when the 5th nucleus decays, which on average comes a little before one half-life (0.93 <var>T</var>½), so 0.94 is expected.</p>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>F. G. Kondev, M. Wang, W. J. Huang, S. Naimi and G. Audi, "The NUBASE2020 evaluation of nuclear physics properties," <i>Chinese Physics C</i> 45, 030001 (2021): half-lives and decay modes, as tabulated in Wikipedia's isotope tables, for example <a href="https://en.wikipedia.org/wiki/Isotopes_of_carbon">Isotopes of carbon</a>.</li>
+      <li>IAEA Nuclear Data Section, <a href="https://nds.iaea.org/livechart">LiveChart of Nuclides</a>, and Brookhaven National Laboratory, National Nuclear Data Center, <a href="https://www.nndc.bnl.gov/nudat3/">NuDat 3</a>.</li>
+      <li>NIST, <a href="https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl">Atomic Weights and Isotopic Compositions</a>, and CIAAW, <a href="https://www.ciaaw.org/isotopic-abundances.htm">Isotopic compositions of the elements</a>: natural abundances.</li>
+      <li>NIST, <a href="https://physics.nist.gov/cuu/Constants/">CODATA fundamental constants</a>: masses of the proton, neutron and electron, and the <a href="https://physics.nist.gov/cgi-bin/cuu/Value?e">elementary charge</a>.</li>
+      <li>OpenStax, <i>Chemistry 2e</i>: <a href="https://openstax.org/books/chemistry-2e/pages/2-3-atomic-structure-and-symbolism">2.3 Atomic Structure and Symbolism</a>, <a href="https://openstax.org/books/chemistry-2e/pages/2-6-ionic-and-molecular-compounds">2.6 Ionic and Molecular Compounds</a>, <a href="https://openstax.org/books/chemistry-2e/pages/6-2-the-bohr-model">6.2 The Bohr Model</a>, <a href="https://openstax.org/books/chemistry-2e/pages/6-4-electronic-structure-of-atoms-electron-configurations">6.4 Electron Configurations</a>, <a href="https://openstax.org/books/chemistry-2e/pages/21-1-nuclear-structure-and-stability">21.1 Nuclear Structure and Stability</a> and <a href="https://openstax.org/books/chemistry-2e/pages/21-3-radioactive-decay">21.3 Radioactive Decay</a>.</li>
+      <li>U.S. Geological Survey, <a href="https://pubs.usgs.gov/gip/geotime/age.html">Age of the Earth</a> (4.54 billion years).</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a></nav>
+</div>
+<script src="{{ "games/atom/model.js" | relURL }}?v={{ (os.Stat "static/games/atom/model.js").ModTime.Unix }}"></script>
+<script src="{{ "games/atom/sim.js" | relURL }}?v={{ (os.Stat "static/games/atom/sim.js").ModTime.Unix }}"></script>
+{{ end }}

@@ -1,4 +1,4 @@
-/* Magnetic Bottles (/games/magnetic-bottles/): the two families of exact 3-D ideal-MHD equilibria without
+/* Magnetic Bottles (/science-lab/magnetic-bottles/): the two families of exact 3-D ideal-MHD equilibria without
    stellarator symmetry from O. Issan, J. Citrin, M. Landreman and B. Tracey, arXiv:2610.07304 (2026).
    Everything is in the paper's dimensionless units, with mu0 = 1, so J = curl B and J x B = grad p.
    Browser: window.MagBottles. Node: module.exports.
@@ -11,7 +11,7 @@
      m.surf(r, th, ze, o)  the point on the surface psi = r^2 delta at poloidal angle th and toroidal angle ze
      m.line(r, th0, n)     a field line on psi = r^2 delta (flat array x, y, z, ...)
      m.volume, m.betaV     volume inside the boundary and volume-averaged beta (edge pressure p_b = 0)
-     m.iota(r)             rotational transform on psi = r^2 delta
+     m.iota(r)             rotational transform on psi = r^2 delta (Family 2: a ratio of fluxes; m.iotaODE(r) follows the paper's equation)
      m.dmax                nested tori need 0 < delta < dmax                                       */
 (function (root) {
   'use strict';
@@ -123,13 +123,10 @@
       var c = Math.cosh(nu), sn = Math.sin(chi);
       return (h + eps * Math.cos(2 * ze)) * Math.sqrt((1 - q * q * sn * sn) / (c * c - q * q));
     }
-    /* iota = average of d chi / d ze. The equation repeats every pi in ze, so follow chi over N such periods and
-       average the step per period with smooth weights (a weighted Birkhoff average, which converges much faster
-       than a plain average). */
-    var iotaCache = {};
-    function iota(r, N, steps) {
+    /* the same average by following chi along the field-line equation over N periods of pi in ze, with smooth weights (a
+       weighted Birkhoff average). Kept for the tests: it needs many steps per period near the edge of the allowed delta. */
+    function iotaODE(r, N, steps) {
       N = N || 200; steps = steps || 32;
-      var key = r + ':' + N + ':' + steps; if (iotaCache[key] !== undefined) return iotaCache[key];
       var q = r * Math.sqrt(2 * d), chi = 0, hs = PI / steps, sw = 0, sg = 0;
       for (var n = 0; n < N; n++) {
         var c0 = chi, ze = 0;
@@ -140,7 +137,41 @@
         var tt = (n + 0.5) / N, w = Math.exp(-1 / (tt * (1 - tt)));
         sw += w; sg += w * (chi - c0);
       }
-      return (iotaCache[key] = sg / sw / PI);
+      return sg / sw / PI;
+    }
+    /* iota as a ratio of two fluxes. Field lines on a flux surface keep the density J B^ze, so the average of
+       d chi / d ze = B^chi / B^ze is <J B^chi> / <J B^ze> over the surface: iota = dPhi_pol / dPhi_tor, with
+       J B^chi = B . (x_ze x x_r) and J B^ze = B . (x_r x x_chi) from the surface map. Both are smooth and periodic in
+       (chi, ze), so the plain trapezoid rule converges very fast; the grid gets finer where the surface gets sharp
+       (delta near its limit). On the axis the average is a single integral over ze. iota does not depend on lambda,
+       so it is always computed with lambda = 1 (exactly the same number for every lambda). acc < 1 is quicker and rougher. */
+    var iotaCache = {}, unit = null;
+    function iota(r, acc) {
+      acc = acc || 1;
+      var key = r + ':' + acc; if (iotaCache[key] !== undefined) return iotaCache[key];
+      if (lam !== 1) { unit = unit || fam2({ eps: eps, S: S, lam: 1, tau: t1, delta: d }); return (iotaCache[key] = unit.iota(r, acc)); }
+      var q = r * Math.sqrt(2 * d), v;
+      if (q === 0) {
+        var h0 = Math.sqrt(4 * S * S + eps * eps), sa = 0, na = 96;
+        for (var a = 0; a < na; a++) { var za = TAU * a / na; sa += (h0 + eps * Math.cos(2 * za)) / Math.cosh(eps * Math.sin(2 * za) / 2 + t1); }
+        v = sa / na;
+      } else {
+        var sq = Math.sqrt(1 - q * q), g = Math.max(0.01, S - Math.asin(q)), k = acc * (1 + 0.25 / g);
+        var nc = Math.min(256, Math.max(acc < 1 ? 16 : 24, Math.ceil(k * 12 * q / sq))), nz = Math.min(160, Math.max(acc < 1 ? 12 : 16, Math.ceil(k * 6 * Math.max(1, eps) / sq)));
+        var p = [0, 0, 0], A = [0, 0, 0], Bm = [0, 0, 0], Bf = [0, 0, 0], e = 1e-5, num = 0, den = 0;
+        var xr0, xr1, xr2, xc0, xc1, xc2, xz0, xz1, xz2;
+        for (var j = 0; j < nz; j++) for (var i = 0; i < nc; i++) {
+          var c = TAU * i / nc, z = PI * j / nz;
+          surf(r + e, c, z, A); surf(r - e, c, z, Bm); xr0 = A[0] - Bm[0]; xr1 = A[1] - Bm[1]; xr2 = A[2] - Bm[2];
+          surf(r, c + e, z, A); surf(r, c - e, z, Bm); xc0 = A[0] - Bm[0]; xc1 = A[1] - Bm[1]; xc2 = A[2] - Bm[2];
+          surf(r, c, z + e, A); surf(r, c, z - e, Bm); xz0 = A[0] - Bm[0]; xz1 = A[1] - Bm[1]; xz2 = A[2] - Bm[2];
+          surf(r, c, z, p); B(p[0], p[1], p[2], Bf);
+          num += Bf[0] * (xz1 * xr2 - xz2 * xr1) + Bf[1] * (xz2 * xr0 - xz0 * xr2) + Bf[2] * (xz0 * xr1 - xz1 * xr0);
+          den += Bf[0] * (xr1 * xc2 - xr2 * xc1) + Bf[1] * (xr2 * xc0 - xr0 * xc2) + Bf[2] * (xr0 * xc1 - xr1 * xc0);
+        }
+        v = num / den;
+      }
+      return (iotaCache[key] = v);
     }
     /* a field line: RK4 on dx/ds = B/|B| from the surface point (r, chi0, ze = 0), for `transits` turns around the torus */
     function trace(r, chi0, transits, ds, every) {
@@ -192,7 +223,7 @@
     var m = {
       fam: 'f2', P: P, B: B, Q: Q, psi: psi, surf: surf, line: line, trace: trace, kp: 1 / (lam * lam), delta: d,
       dmax: 0.5 * Math.pow(Math.sin(Math.min(S, PI / 2)), 2), Kof: Kof, ell: ell, dchi: dchi, averages: averages,
-      pAxis: d / (lam * lam), iota: iota,
+      pAxis: d / (lam * lam), iota: iota, iotaODE: iotaODE,
       axis: function (ze, o) { ell(S, ze, o); o[2] = 0; return o; },
       chiZeta: function (x, y, z, o) {                                 // (chi, ze) of a point, for tests
         parts(x, y, z, pp); Kof(x, y, cw);

@@ -1,0 +1,188 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "games/trebuchet/sim.css" | relURL }}?v={{ (os.Stat "static/games/trebuchet/sim.css").ModTime.Unix }}">
+<div class="lab" id="trebuchet-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Trebuchet Workshop</nav>
+
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Physics &amp; History</p>
+    <h1>Trebuchet Workshop</h1>
+    <p>Build the great stone-thrower of the Middle Ages and aim it at a tower down the field. Change the counterweight, the arms, the sling and the moment it lets go, then watch where the energy goes. Every swing comes from the real equations of motion, and every flight feels the air.</p>
+    <span class="lab-mark" aria-hidden="true">🏰</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="tb-view">
+      <canvas id="tb-cv" tabindex="0" role="img" aria-label="A counterweight trebuchet on a field, with a stone tower in the distance. Press Space or the Fire button to throw."></canvas>
+      <div class="lab-hud" id="tb-hud" aria-hidden="true"></div>
+      <div class="lab-hud bottom tb-energy" id="tb-energy" aria-hidden="true">
+        <span class="tb-elabel">Where the counterweight's energy goes</span>
+        <span class="tb-ebar"><i class="tb-c1"></i><i class="tb-c2"></i><i class="tb-c3"></i><i class="tb-c4"></i><i class="tb-c5"></i></span>
+        <span class="tb-elegend"><b class="tb-c1">stone</b> <b class="tb-c2">beam</b> <b class="tb-c3">counterweight</b> <b class="tb-c4">lifted</b> <b class="tb-c5">still stored</b></span>
+      </div>
+      <div class="lab-tools">
+        <button type="button" id="tb-pause" title="Pause (P)" aria-label="Pause">❚❚</button>
+        <button type="button" id="tb-reset" title="Reset (R)" aria-label="Reset the machine and clear the field">↺</button>
+        <button type="button" id="tb-speed" class="tb-speed" title="Playback speed" aria-label="Playback speed: auto, slow swing">Auto</button>
+        <button type="button" id="tb-field" title="Show the whole field (V)" aria-label="Show the whole field" aria-pressed="false">🔭</button>
+      </div>
+      <button type="button" class="tb-fire" id="tb-fire">Fire</button>
+      <p class="tb-sr" id="tb-live" aria-live="polite"></p>
+    </div>
+
+    <div class="lab-panel" id="tb-panel">
+      <div class="lab-seg" role="group" aria-label="Scene">
+        <button type="button" data-scene="treb" aria-pressed="true">🏰 Trebuchet</button>
+        <button type="button" data-scene="range" aria-pressed="false">🎯 Range finder</button>
+      </div>
+
+      <div id="tb-ctl-treb">
+        <div class="lab-seg tb-presets" role="group" aria-label="Machine presets">
+          <button type="button" data-preset="standard">Standard</button>
+          <button type="button" data-preset="fixed">Fixed weight</button>
+          <button type="button" data-preset="light">Light beam</button>
+          <button type="button" data-preset="heavy">Heavy stone</button>
+          <button type="button" data-preset="short">Short sling</button>
+        </div>
+        <label class="lab-field"><span>Counterweight <output data-o="M"></output></span><input type="range" data-k="M" min="100" max="3000" step="5" aria-label="Counterweight mass in kilograms"></label>
+        <label class="lab-field"><span>Stone <output data-o="m"></output></span><input type="range" data-k="m" min="1" max="60" step="1" aria-label="Stone mass in kilograms"></label>
+        <label class="lab-field"><span>Arm ratio (long ÷ short) <output data-o="ratio"></output></span><input type="range" data-k="ratio" min="2.5" max="6" step="0.1" aria-label="Arm ratio, long arm divided by short arm"></label>
+        <label class="lab-field"><span>Sling length <output data-o="sling"></output></span><input type="range" data-k="sling" min="3" max="8" step="0.1" aria-label="Sling length in meters"></label>
+        <label class="lab-field"><span>Release angle <svg class="tb-rel-ico" viewBox="0 0 48 40" aria-hidden="true"><line class="tb-arm" x1="38" y1="37" x2="26" y2="9"/><line class="tb-ext" x1="26" y1="9" x2="21" y2="-3"/><line id="tb-rel-sling" class="tb-sl" x1="26" y1="9" x2="9" y2="3"/><circle id="tb-rel-stone" cx="9" cy="3" r="3"/></svg> <output data-o="rel"></output></span><input type="range" data-k="rel" min="0" max="90" step="0.5" aria-label="Release angle: the angle between the sling and the arm when the sling lets go"></label>
+        <label class="lab-field"><span>Target tower <output data-o="target"></output></span><input type="range" data-k="target" min="50" max="450" step="1" aria-label="Distance to the target tower in meters"></label>
+        <label class="lab-chk"><input type="checkbox" data-k="hinged"> Hinged counterweight (untick: fixed to the arm)</label>
+        <label class="lab-chk"><input type="checkbox" data-k="drag"> Air drag</label>
+        <details class="tb-more">
+          <summary>More settings</summary>
+          <label class="lab-field"><span>Beam mass <output data-o="mb"></output></span><input type="range" data-k="mb" min="40" max="500" step="5" aria-label="Beam mass in kilograms"></label>
+          <label class="lab-field"><span>Hanger length <output data-o="L3"></output></span><input type="range" data-k="L3" min="0.6" max="1.8" step="0.05" aria-label="Length of the counterweight's hanger in meters"></label>
+          <p class="lab-small">The beam is 8 m long and its axle is 4.6 m up. The arm ratio moves the axle along the beam.</p>
+        </details>
+      </div>
+
+      <div id="tb-ctl-range" hidden>
+        <p class="lab-small">A perfect launcher at ground level. Drag on the picture to aim, or use the sliders.</p>
+        <label class="lab-field"><span>Launch speed <output data-o="v"></output></span><input type="range" data-k="v" min="5" max="100" step="1" aria-label="Launch speed in meters per second"></label>
+        <label class="lab-field"><span>Launch angle <output data-o="ang"></output></span><input type="range" data-k="ang" min="1" max="89" step="0.5" aria-label="Launch angle in degrees above the ground"></label>
+        <label class="lab-field"><span>Stone <output data-o="m"></output></span><input type="range" data-k="m" min="1" max="60" step="1" aria-label="Stone mass in kilograms"></label>
+        <label class="lab-chk"><input type="checkbox" data-k="drag"> Air drag</label>
+      </div>
+
+      <h3 id="tb-read-h">Last shot</h3>
+      <dl class="lab-readout" id="tb-read" aria-labelledby="tb-read-h"></dl>
+      <canvas class="tb-chart" id="tb-chart" role="img" aria-label="Chart of range against angle"></canvas>
+      <p class="lab-small" id="tb-chart-cap"></p>
+
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <p class="lab-small tb-hint" id="tb-hint" hidden></p>
+      <ul class="lab-missions" id="tb-missions"></ul>
+    </div>
+  </div>
+  <p class="lab-small tb-keys">Keyboard: click the picture, then <b>Space</b> fires, <b>↑ ↓</b> change the release angle (or the launch angle), <b>← →</b> change the counterweight (or the launch speed), <b>P</b> pauses, <b>R</b> resets and <b>V</b> shows the whole field.</p>
+
+  <section class="lab-sec">
+    <h2>What you're seeing</h2>
+    <div class="lab-cols">
+      <p>A trebuchet is a seesaw built for throwing. A long wooden beam turns on an axle. The short arm carries a heavy box of stones, the <b>counterweight</b>. The long arm ends in a <b>sling</b>: two ropes and a leather pouch holding the stone. One rope is tied to the arm, and the other ends in a loop that sits over an iron <b>prong</b> at the tip.</p>
+      <p>When the trigger lets go, the counterweight falls and the long arm whips up. First the stone slides along a <b>trough</b> under the frame. Then it lifts off and swings around the end of the arm, faster and faster. When the sling reaches the <b>release angle</b>, the loop slips off the prong, the pouch opens, and the stone flies free.</p>
+      <p>The bar in the bottom corner shows where the counterweight's energy goes during the swing: into the stone's motion (gold), the beam's spin (blue), the counterweight's own motion (green), lifting the stone and beam (pink), or still waiting in the raised counterweight (gray). At the moment of release, the gold part is the machine's <b>efficiency</b>.</p>
+      <p>The <b>Range finder</b> scene leaves the machine out. It throws a stone from the ground at any speed and angle you choose, so you can study the flight on its own.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>The science</h2>
+    <h3 class="lab-h">1. Energy in, energy out</h3>
+    <p>Winching the counterweight up stores <b>gravitational potential energy</b>. When it falls a height <var>h</var>, it gives up</p>
+    <div class="lab-formula"><var>E</var> = <var>M</var> <var>g</var> <var>h</var></div>
+    <p>where <var>M</var> is its mass in kilograms and <var>g</var> = 9.80665 m/s². In the standard machine, a 1,500 kg counterweight can drop 2.60 m, which stores 1,500 × 9.81 × 2.60 ≈ <b>38,200 joules</b>. The stone leaves with <b>kinetic energy</b></p>
+    <div class="lab-formula"><var>K</var> = ½ <var>m</var> <var>v</var>², &nbsp; and the efficiency is &nbsp; η = ½ <var>m</var> <var>v</var>² ÷ <var>M</var> <var>g</var> <var>h</var></div>
+    <p>The standard machine throws its 15 kg granite ball (22 cm across) at 51.6 m/s, about 186 km/h. That's ½ × 15 × 51.6² ≈ 20,000 J, or 52% of the stored energy. The rest is still in the swinging beam, in the moving counterweight, and in the height the stone and beam have gained. No machine can give the stone more energy than the counterweight loses.</p>
+
+    <h3 class="lab-h">2. A lever that trades force for speed</h3>
+    <p>The two arms turn together, so the tip of the long arm moves as many times faster than the short arm as it is longer. With an arm ratio of 4, the long arm's tip is four times as fast as the hinge where the counterweight hangs. The sling then acts like an extra length of arm that can bend: it trails behind at first, then swings around and overtakes the tip, adding its own speed. That whip is why a trebuchet throws far with a fairly short beam.</p>
+
+    <h3 class="lab-h">3. Why a hinge helps</h3>
+    <p>A <b>fixed</b> counterweight is bolted to the arm, so it has to travel around a circle. At the bottom it is still moving sideways fast, carrying energy that never reaches the stone. A <b>hinged</b> counterweight hangs from a pin, so it can fall more nearly straight down and come closer to stopping at the bottom. Around 1280, the writer Giles of Rome claimed that hinged counterweights threw farther. In this model the hinge wins clearly when the counterweight is about 80 or more times as heavy as the stone, as in the standard machine (1,500 kg against 15 kg). With a much lighter counterweight, a fixed one can do as well or better. Try it!</p>
+
+    <h3 class="lab-h">4. The flight</h3>
+    <p>Without air, a stone thrown from the ground at speed <var>v</var> and angle θ lands at a distance</p>
+    <div class="lab-formula"><var>R</var> = <var>v</var>² sin 2θ ÷ <var>g</var></div>
+    <p>which is largest at 45°, where sin 2θ = 1. At 50 m/s that's 50² ÷ 9.81 ≈ 255 m. Angles that add up to 90°, like 30° and 60°, land at the same spot. Air pushes back on the stone with a <b>drag force</b></p>
+    <div class="lab-formula"><var>F</var> = ½ ρ <var>C</var><sub>d</sub> <var>A</var> <var>v</var>²</div>
+    <p>with air density ρ = 1.2 kg/m³, drag coefficient <var>C</var><sub>d</sub> ≈ 0.47 for a ball, and <var>A</var> the ball's cross-section. For the 15 kg ball at 50 m/s, <var>F</var> ≈ 27 N, about a fifth of its weight (147 N). Drag grows with the square of speed and steals the most on long, high flights, so with air the best angle is a little lower than 45°. Light stones feel it most: a 1 kg stone launched at 90 m/s goes 826 m without air, but only 422 m with it, and its best angle drops to about 40°.</p>
+    <p>A handy estimate puts it all together. If the stone gets a share η of the energy, then <var>v</var>² = 2η(<var>M</var>/<var>m</var>)<var>g</var><var>h</var>, and a 45° throw in a vacuum goes about</p>
+    <div class="lab-formula"><var>R</var> ≈ 2 η (<var>M</var> ÷ <var>m</var>) <var>h</var> &nbsp; = 2 × 0.52 × 100 × 2.6 m ≈ 270 m for the standard machine</div>
+    <p>So range grows with the mass ratio, the drop height and the efficiency. The simulation, with no air, gets 272 m.</p>
+  </section>
+
+  <section class="lab-sec">
+    <h2>A short history</h2>
+    <div class="lab-cols">
+      <p>The first trebuchets had no counterweight. In a <b>traction trebuchet</b>, a team of people hauled on ropes tied to the short arm. These machines were used in China by the 4th century BC and are described in the writings of the Mohists. They spread west, and by the 6th and 7th centuries AD the Byzantines, Persians and Arabs used them too.</p>
+      <p>The <b>counterweight trebuchet</b> appeared around the Mediterranean, in both Christian and Muslim lands, in the 12th century AD. The earliest known description and drawing of one is by Mardi ibn Ali al-Tarsusi, from around 1187. Both fixed and hinged counterweights were built. Counterweight trebuchets reached China with the Mongol armies, during the long siege of Xiangyang and Fancheng (1268–1273).</p>
+      <p>Don't mix trebuchets up with <b>torsion catapults</b> such as the Greek and Roman ballista and the onager. Those are different machines: they store energy in twisted bundles of rope or sinew, not in a raised weight.</p>
+      <p>For 25 sieges from history, from Troy to Rome, play <a href="{{ "games/siege/" | relURL }}">Siege</a>.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Try this</h2>
+    <div class="lab-try"><b>Doubling.</b> Fire with a 1,000 kg counterweight, then 2,000 kg (release angle 45°, drag on). The stored energy doubles, but the range goes from about 129 m to 318 m. A heavier counterweight also throws at a better angle and wastes a smaller share of its energy.</div>
+    <div class="lab-try"><b>Draw the hill.</b> Keep everything the same and change only the release angle, 5° at a time. Your shots appear on the chart in the panel. Let go too early and the stone flies steeply up, or even backward; too late and it flies low and short. Find the top of the hill.</div>
+    <div class="lab-try"><b>Twin angles.</b> In the Range finder, turn drag off and launch at 40 m/s at 30°, then at 60°. Both land 141 m away. Turn drag on and try again with a 1 kg stone: now the 30° shot wins, 121 m to 115 m.</div>
+    <div class="lab-try"><b>Hinge or no hinge?</b> Fire the standard machine with and without the hinge: 235 m against 210 m. Then try a 600 kg counterweight with each. Which wins now, and why?</div>
+    <div class="lab-try"><b>Lighten the beam.</b> Open "More settings" and drop the beam's mass from 150 kg to 60 kg. Less energy goes into spinning the beam, so the efficiency jumps from 52% to about 69%.</div>
+    <div class="lab-try"><b>At home, with a soft ball.</b> In a garden or a big empty room, toss a rolled-up pair of socks gently, always with the same effort, at a low, a medium and a high angle. Mark where each lands. Which angle goes farthest? A light, fluffy ball feels a lot of air drag, so the answer may surprise you.</div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>A common mistake</h2>
+    <div class="lab-note"><p><b>"The best angle is always 45°."</b> Only in a vacuum, and only when the stone lands at the same height it started from. Air drag slows a stone most when it flies high and long, so with air the best angle is lower: about 44° for a 15 kg ball at 50 m/s, and about 40° for a 1 kg stone at 90 m/s. A stone that starts high above the ground, like one leaving a trebuchet's sling 14 m up, also does best a little below 45°. The Range finder shows both curves side by side.</p></div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The model.</b> The machine is described by three angles: the beam's, the counterweight hanger's and the sling's. From the kinetic energy <var>T</var> and the potential energy <var>V</var> of the beam, counterweight and stone, Lagrange's equations, <span class="tb-nw">d/d<var>t</var> (∂<var>L</var>/∂<var>q̇</var>) − ∂<var>L</var>/∂<var>q</var> = 0</span> with <var>L</var> = <var>T</var> − <var>V</var>, give the angular accelerations, solved as a small matrix system. While the stone slides in the trough, it is held on the floor by a constraint whose force is found with a Lagrange multiplier. When that force would have to pull down, the stone lifts off. The sling lets go when its angle to the arm drops to the release angle (0° means the sling points straight out along the arm). Then the stone flies under gravity and, if you choose, quadratic air drag.</p>
+      <p><b>The numbers.</b> The beam is 8 m long, a uniform rod of 150 kg, on an axle 4.6 m up; the cocked arm's tip rests 0.6 m above the ground. The hanger is 1.2 m long. Stones are granite balls (2,700 kg/m³), so a 15 kg stone is 22 cm across. Air is 1.2 kg/m³, <var>C</var><sub>d</sub> = 0.47, <var>g</var> = 9.80665 m/s². The swing is integrated with the classical Runge–Kutta method in steps of 0.5 ms, and the flight in steps of 2 ms. Range is measured from the axle to where the stone touches the ground.</p>
+      <p><b>What's left out, and why.</b> There is no friction in the axle, hinge or trough before release, the ropes don't stretch, and the frame doesn't move. The masses are points and the beam has the same thickness all along (it is drawn tapered). <var>C</var><sub>d</sub> is held fixed, although NASA notes that a sphere's drag coefficient ranges from about 0.07 to 0.5 with speed and size, and real stones are lumpy. There is no wind and no spin. After release, the beam's swing is slowed by extra friction so it settles; that doesn't change the shot. These choices keep the physics clear, so treat the ranges as good estimates, not predictions for a real machine.</p>
+      <p><b>How it was checked.</b> The equations of motion agree with a finite-difference Lagrangian built only from positions, to within 4 × 10⁻⁵ at 80 random states. Before release, the total energy stays constant to within 1 part in a billion of the stored energy, in five very different machines. Vacuum flights match <var>v</var>² sin 2θ ÷ <var>g</var>, the flight time and the peak height to within 2 × 10⁻⁷, and the best vacuum angle comes out at 45.0°. A 15 kg ball dropped from 3 km lands at 116.5 m/s, close to its terminal speed √(<var>g</var>/<var>k</var>) = 117.3 m/s. Cutting the time steps to a fifth changes the range by less than a millimeter.</p>
+    </div>
+    <div class="lab-tw"><table class="lab-table">
+      <caption class="lab-small tb-cap">Best range for a 15 kg stone with drag on, each at its own best release angle (model results)</caption>
+      <thead><tr><th>Counterweight</th><th>Mass ratio</th><th>Hinged</th><th>Fixed</th></tr></thead>
+      <tbody>
+        <tr><td>600 kg</td><td>40</td><td>61 m (efficiency 27%)</td><td>76 m (34%)</td></tr>
+        <tr><td>900 kg</td><td>60</td><td>131 m (42%)</td><td>136 m (44%)</td></tr>
+        <tr><td>1,200 kg</td><td>80</td><td>194 m (50%)</td><td>181 m (47%)</td></tr>
+        <tr><td>1,500 kg</td><td>100</td><td>249 m (53%)</td><td>217 m (46%)</td></tr>
+        <tr><td>2,000 kg</td><td>133</td><td>325 m (55%)</td><td>261 m (43%)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>NIST, <a href="https://physics.nist.gov/cgi-bin/cuu/Value?gn">standard acceleration of gravity</a>, <var>g</var> = 9.80665 m/s².</li>
+      <li>NASA Glenn Research Center, <a href="https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/shape-effects-on-drag/">Shape effects on drag</a> and <a href="https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-of-a-sphere">Drag of a sphere</a>: the drag equation, and a sphere's <var>C</var><sub>d</sub> from 0.07 to 0.5.</li>
+      <li>NASA Glenn Research Center, <a href="https://www.grc.nasa.gov/www/k-12/airplane/atmosmet.html">Earth atmosphere model</a>: sea-level air density (1.225 kg/m³ at 15 °C; about 1.2 kg/m³ at 20 °C).</li>
+      <li>OpenStax, <i>College Physics</i>, <a href="https://openstax.org/books/college-physics/pages/11-2-density">11.2 Density</a>: granite, 2.7 × 10³ kg/m³.</li>
+      <li>OpenStax, <i>University Physics Volume 1</i>, <a href="https://openstax.org/books/university-physics-volume-1/pages/4-3-projectile-motion">4.3 Projectile Motion</a>: the range equation.</li>
+      <li>J. R. Taylor, <i>Classical Mechanics</i>, University Science Books (2005), chapter 7: Lagrange's equations and constraints.</li>
+      <li>M. Denny, "Siege engine dynamics", <i>European Journal of Physics</i> 26, 561–577 (2005): the physics of trebuchets, fixed and hinged.</li>
+      <li>P. E. Chevedden, L. Eigenbrod, V. Foley and W. Soedel, "The Trebuchet", <i>Scientific American</i> 273, 66 (July 1995).</li>
+      <li>Wikipedia, <a href="https://en.wikipedia.org/wiki/Trebuchet">Trebuchet</a>: traction and counterweight trebuchets, al-Tarsusi, Giles of Rome, Xiangyang.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More">
+    <a href="{{ "science-lab/" | relURL }}">← Science Lab</a>
+    <a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a>
+  </nav>
+</div>
+<script src="{{ "games/trebuchet/physics.js" | relURL }}?v={{ (os.Stat "static/games/trebuchet/physics.js").ModTime.Unix }}"></script>
+<script src="{{ "games/trebuchet/sim.js" | relURL }}?v={{ (os.Stat "static/games/trebuchet/sim.js").ModTime.Unix }}"></script>
+{{ end }}

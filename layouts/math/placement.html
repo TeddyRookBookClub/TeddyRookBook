@@ -1,0 +1,35 @@
+{{- /* Math Ladder: /math/placement/ — "Find your rung": choose a starting point, the adaptive check, the result. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "math/viz/basic.css" }}
+{{ partial "inline/ml-css.html" "math/viz/adv.css" }}
+<div class="mlp mlp-place" id="mlp-place">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>Find your rung</span></nav>
+  <header class="mlp-hero mlp-hero-sm">
+    <div class="mlp-hero-text">
+      <p class="mlp-eyebrow">Math Ladder · Placement</p>
+      <h1>Find your rung</h1>
+      <p>A short check, at most 30 questions, that skips what you already know. Each answer tells us about many topics at once: get one right and the skills under it count as known; say you haven't learned one and the topics built on it wait for later. No hints, no XP, no pressure.</p>
+    </div>
+  </header>
+  <section id="mlp-pl-pick" class="mlp-pl-step" aria-labelledby="mlp-pl-h1">
+    <h2 id="mlp-pl-h1">Where should we look?</h2>
+    <p class="mlp-sub">Pick the course you're in or about to start. The check covers that course and the one before it.</p>
+    <div id="mlp-pl-courses" class="mlp-pl-courses"></div>
+  </section>
+  <section id="mlp-pl-run" class="mlp-pl-step" hidden aria-label="Placement check"></section>
+  <section id="mlp-pl-res" class="mlp-pl-step" hidden aria-label="Your result"></section>
+  <aside class="mlp-tip"><p><b>Tips.</b> Use scratch paper. If you've never seen a kind of problem, choose "I haven't learned this" instead of guessing: it makes the result better, not worse. You can stop and redo the check any time, or skip it and pick a course from the <a href="{{ "math/" | relURL }}">ladder</a>.</p></aside>
+</div>
+{{ partial "inline/ml-cfg.html" "placement" }}
+{{ partial "inline/ml-js.html" "homeschool/calc/cas.js" }}
+{{ partial "inline/ml-js.html" "math/core/gen.js" }}
+{{ partial "inline/ml-js.html" "math/core/tex.js" }}
+{{ partial "inline/ml-js.html" "math/core/check.js" }}
+{{ partial "inline/ml-js.html" "math/core/input.js" }}
+{{ partial "inline/ml-js.html" "math/core/engine.js" }}
+{{ partial "inline/ml-js.html" "math/core/runner.js" }}
+{{ partial "inline/ml-js.html" "math/viz/core.js" }}
+{{ partial "inline/ml-js.html" "math/app/ui.js" }}
+{{ partial "inline/ml-js.html" "math/app/placement.js" }}
+{{ end }}

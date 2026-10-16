@@ -1,0 +1,75 @@
+/* Math Ladder visuals, set A (static/math/viz/basic.js): styles on top of viz.css.
+   Light by default; html[data-theme="dark"] switches to the dark look. */
+.mlb{--mb-gold:#b8963e;--mb-ok:#1d7a4b;--mb-okbg:#e6f4ec;--mb-try:#8a5a00;--mb-trybg:#fff6e0;--mb-tab:#f1ece0;overflow:hidden}
+html[data-theme="dark"] .mlb{--mb-ok:#7fd6a6;--mb-okbg:#183427;--mb-try:#ffd479;--mb-trybg:#2c2a1c;--mb-tab:#22362b}
+.mlb .mlb-stage{position:relative;max-width:100%}
+.mlb .mlb-title{margin:0 0 .5rem;font:700 1.02rem/1.3 Georgia,"Times New Roman",serif;color:var(--mv-ink)}
+.mlb .mlb-ro{margin:.55rem .1rem 0;font-size:.95rem;line-height:1.55;overflow-wrap:anywhere}
+.mlb .mlb-ro b{font-weight:700}
+.mlb .mlb-ctl{gap:.45rem .6rem}
+.mlb .mlb-ctl:empty{display:none}
+.mlb .mlb-row{display:flex;flex-wrap:wrap;gap:.4rem .5rem;align-items:center;width:100%}
+.mlb .mlb-row:empty{display:none}
+.mlb .mlb-row .ml-sl{flex:1 1 150px;max-width:340px}
+.mlb .ml-btn:disabled,.mlb .ml-seg button:disabled{opacity:.42;cursor:default}
+.mlb .ml-btn.pri:hover{filter:brightness(1.08)}
+.mlb .mlb-tog[aria-pressed="true"]{background:var(--mb-tab);border-color:var(--mv-acc);color:var(--mv-ink);box-shadow:inset 0 0 0 1px var(--mv-acc)}
+.mlb .mlb-tog::before{content:"";display:inline-block;width:.62em;height:.62em;border-radius:50%;margin-right:.4em;border:2px solid currentColor;vertical-align:-.02em;opacity:.55}
+.mlb .mlb-tog[aria-pressed="true"]::before{background:var(--mv-acc);border-color:var(--mv-acc);opacity:1}
+.mlb .mlb-lab{font-size:.85rem;color:var(--mv-muted);margin-right:.1rem}
+
+/* keyboard handles laid over the drawing: invisible until focused with the keyboard */
+.mlb .mlb-h{position:absolute;z-index:2;padding:0;border:0;border-radius:50%;background:transparent;pointer-events:none;color:transparent;font-size:1px;-webkit-tap-highlight-color:transparent}
+.mlb .mlb-h.mlb-hit{pointer-events:auto;cursor:pointer}
+.mlb .mlb-h:focus{outline:none}
+.mlb .mlb-h:focus-visible{outline:3px solid var(--mb-gold);outline-offset:1px;box-shadow:0 0 0 6px rgba(184,150,62,.25)}
+
+/* −/+ steppers */
+.mlb .mlb-step{display:inline-flex;align-items:center;gap:.3rem;padding:.15rem .25rem .15rem .6rem;border:1px solid var(--mv-line);border-radius:999px;background:var(--mv-card)}
+.mlb .mlb-step-lab{font-size:.85rem;color:var(--mv-muted)}
+.mlb .mlb-step-val{min-width:1.8em;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.mlb .mlb-step .ml-btn{min-width:36px;min-height:36px;padding:0;font-size:1.1rem;line-height:1;border-radius:50%}
+
+/* fractions in text */
+.mlb .mlb-q{display:inline-block;vertical-align:middle;white-space:nowrap}
+.mlb .mlb-qv{display:inline-flex;align-items:center;gap:.12em}
+.mlb .mlb-qw{font-size:1.05em}
+.mlb .mlb-fr{display:inline-flex;flex-direction:column;align-items:center;font-size:.8em;line-height:1.08;vertical-align:middle;margin:0 .06em}
+.mlb .mlb-fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .14em}
+.mlb .mlb-fr>span:last-child{padding:0 .14em}
+.mlb .mlb-sr,.mlb-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* the task box */
+.mlb .mlb-task{margin:0 0 .6rem;padding:.55rem .75rem .6rem;border:1px solid var(--mv-line);border-left:4px solid var(--mb-gold);border-radius:10px;background:var(--mv-card)}
+.mlb .mlb-task-q{margin:0;display:flex;gap:.5rem;align-items:flex-start;font-weight:600;line-height:1.4}
+.mlb .mlb-task-ic{flex:0 0 auto;width:1.05em;height:1.05em;margin-top:.15em;border-radius:50%;background:radial-gradient(circle,var(--mb-gold) 0 22%,transparent 23% 45%,var(--mb-gold) 46% 60%,transparent 61%);box-shadow:inset 0 0 0 2px var(--mb-gold)}
+.mlb .mlb-task-row{display:flex;flex-wrap:wrap;gap:.4rem .7rem;align-items:center;margin-top:.45rem}
+.mlb .mlb-task-msg{margin:0;font-size:.92rem;line-height:1.45;flex:1 1 200px;min-height:1.2em}
+.mlb .mlb-task-msg.mlb-yes{color:var(--mb-ok);font-weight:600}
+.mlb .mlb-task-msg.mlb-try{color:var(--mb-try)}
+.mlb.mlb-done .mlb-task{border-left-color:var(--mb-ok);background:var(--mb-okbg)}
+
+/* tables (ratio table, statistics) */
+.mlb .mlb-tablewrap{max-width:100%;overflow-x:auto;margin:.5rem 0 0}
+.mlb table.mlb-tab{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.92rem;background:var(--mv-card);border-radius:8px}
+.mlb table.mlb-tab th,.mlb table.mlb-tab td{border:1px solid var(--mv-line);padding:.3rem .55rem;text-align:center;min-width:2.4em}
+.mlb table.mlb-tab th{background:var(--mb-tab);font-weight:600;text-align:left;white-space:nowrap}
+.mlb table.mlb-tab td.mlb-now{background:rgba(184,150,62,.18);font-weight:700}
+
+/* the young-learner look: larger buttons and text, rounder corners */
+.mlb.mlb-kid .ml-btn,.mlb.mlb-kid .ml-seg button{min-height:44px;font-size:.95rem;padding:.45rem .95rem}
+.mlb.mlb-kid .mlb-step .ml-btn{min-width:42px;min-height:42px;font-size:1.25rem;padding:0}
+.mlb.mlb-kid .mlb-ro{font-size:1.02rem}
+.mlb.mlb-kid .ml-cv{border-radius:14px}
+
+/* a small legend under some pictures */
+.mlb .mlb-legend{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin:.35rem .1rem 0;font-size:.82rem;color:var(--mv-muted)}
+.mlb .mlb-legend i{display:inline-block;width:.8em;height:.8em;border-radius:3px;margin-right:.3em;vertical-align:-.05em}
+
+@media (max-width:420px){
+  .mlb{padding:.55rem}
+  .mlb .mlb-ctl .ml-btn,.mlb .ml-seg button{padding:.35rem .6rem;font-size:.82rem}
+  .mlb.mlb-kid .ml-btn{padding:.4rem .7rem;font-size:.88rem}
+  .mlb .mlb-row .ml-sl{flex-basis:100%;max-width:none}
+}
+@media (prefers-reduced-motion:reduce){.mlb *{transition:none!important}}

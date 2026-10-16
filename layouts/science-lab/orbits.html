@@ -1,0 +1,222 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "games/orbits/sim.css" | relURL }}?v={{ (os.Stat "static/games/orbits/sim.css").ModTime.Unix }}">
+<div class="lab" id="orbits-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Orbit Lab</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Astronomy &amp; Physics</p>
+    <h1>Orbit Lab</h1>
+    <p>Fire a cannonball so fast that it falls all the way around the world. Throw satellites into orbit, find the one spot where a satellite hangs over Earth, fly to the Moon, and steal a little speed from a planet. Every path comes from one rule, Newton’s law of gravity, with real masses and distances.</p>
+    <span class="lab-mark" aria-hidden="true">🛰️</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="orbits-view">
+      <canvas id="orbits-cv" tabindex="0" aria-label="Orbit Lab simulation. Drag to move the view, scroll or pinch to zoom. Keys: Space pauses, F fires or burns, R starts the scene again, plus and minus zoom, 0 fits the view, 1 to 4 change the scene, arrow keys change speed and direction."></canvas>
+      <div class="lab-hud" id="orbits-hud" aria-hidden="true"></div>
+      <div class="lab-hud bottom" id="orbits-hud2" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="orbits-play" aria-label="Pause" title="Pause (Space)">❚❚</button>
+        <button type="button" id="orbits-reset" aria-label="Start the scene again" title="Start again (R)">↺</button>
+        <button type="button" id="orbits-zin" aria-label="Zoom in" title="Zoom in (+)">＋</button>
+        <button type="button" id="orbits-zout" aria-label="Zoom out" title="Zoom out (−)">−</button>
+        <button type="button" id="orbits-fit" aria-label="Fit the view" title="Fit the view (0)">⤢</button>
+      </div>
+      <button type="button" class="orbits-act" id="orbits-act">🔥 Fire</button>
+      <noscript><p class="orbits-noscript">This simulation needs JavaScript.</p></noscript>
+    </div>
+
+    <div class="lab-panel" id="orbits-panel">
+      <h3>Scene</h3>
+      <div class="lab-seg orbits-scenes" role="group" aria-label="Scene">
+        <button type="button" data-scene="cannon" aria-pressed="false">Cannon</button>
+        <button type="button" data-scene="orbit" aria-pressed="false">Earth orbit</button>
+        <button type="button" data-scene="moon" aria-pressed="false">To the Moon</button>
+        <button type="button" data-scene="assist" aria-pressed="false">Slingshot</button>
+      </div>
+      <p class="lab-small" id="orbits-tip"></p>
+
+      <div class="orbits-grp" data-for="cannon">
+        <div class="lab-field"><span><label for="orbits-h">Mountain height</label><b><input type="number" id="orbits-h-n" min="0" max="2000" step="10" aria-label="Mountain height in kilometers"> km</b></span><input type="range" id="orbits-h" min="0" max="2000" step="10" value="500"></div>
+        <div class="lab-field"><span><label for="orbits-v">Launch speed</label><b><input type="number" id="orbits-v-n" min="0" max="12" step="0.01" aria-label="Launch speed in kilometers per second"> km/s</b></span><input type="range" id="orbits-v" min="0" max="12" step="0.01" value="6.5"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="orbits-fire">🔥 Fire</button><button type="button" class="lab-btn" id="orbits-clear">Clear the shots</button></div>
+        <p class="lab-small" id="orbits-cannon-note"></p>
+      </div>
+
+      <div class="orbits-grp" data-for="orbit">
+        <div class="lab-field"><span><label for="orbits-alt0">Launch height</label><b><input type="number" id="orbits-alt0-n" min="50" max="500000" step="1" aria-label="Launch height in kilometers"> km</b></span><input type="range" id="orbits-alt0" min="0" max="1000" step="1" value="350"></div>
+        <div class="lab-field"><span><label for="orbits-sp">Launch speed</label><b><input type="number" id="orbits-sp-n" min="0" max="15" step="0.001" aria-label="Launch speed in kilometers per second"> km/s</b></span><input type="range" id="orbits-sp" min="0" max="15" step="0.01" value="8.6"></div>
+        <div class="lab-field"><span><label for="orbits-dir">Aim above level</label><b><input type="number" id="orbits-dir-n" min="-180" max="180" step="1" aria-label="Aim in degrees above level"> °</b></span><input type="range" id="orbits-dir" min="-180" max="180" step="1" value="0"></div>
+        <div class="lab-row"><button type="button" class="lab-btn" id="orbits-circ">◯ Circular</button><button type="button" class="lab-btn" id="orbits-relaunch">↺ Relaunch</button></div>
+        <label class="lab-chk"><input type="checkbox" id="orbits-areas"> Equal-area slices (Kepler’s second law)</label>
+      </div>
+
+      <div class="orbits-grp" data-for="moon">
+        <div class="lab-field"><span><label for="orbits-dv">Engine burn Δv</label><b><input type="number" id="orbits-dv-n" min="0" max="4" step="0.01" aria-label="Burn size in kilometers per second"> km/s</b></span><input type="range" id="orbits-dv" min="0" max="4" step="0.01" value="3.15"></div>
+        <div class="lab-seg" role="group" aria-label="Burn direction"><button type="button" data-dir="1">Speed up</button><button type="button" data-dir="-1">Slow down</button></div>
+        <div class="lab-field"><span><label for="orbits-ph">Moon ahead at the burn</label><b><input type="number" id="orbits-ph-n" min="0" max="359" step="1" aria-label="Moon ahead by, in degrees"> °</b></span><input type="range" id="orbits-ph" min="0" max="359" step="1" value="150"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="orbits-arm">Burn at the marker</button><button type="button" class="lab-btn" id="orbits-burn">🔥 Burn now</button></div>
+        <label class="lab-chk"><input type="checkbox" id="orbits-rot"> Turn with the Moon (rotating view)</label>
+      </div>
+
+      <div class="orbits-grp" data-for="assist">
+        <div class="lab-field"><span><label for="orbits-planet">Planet</label></span><select id="orbits-planet"><option value="venus">Venus</option><option value="earth">Earth</option><option value="mars">Mars</option></select></div>
+        <div class="lab-seg" role="group" aria-label="Which side to pass"><button type="button" data-side="1">Pass behind it</button><button type="button" data-side="-1">Pass in front</button></div>
+        <div class="lab-field"><span><label for="orbits-alt">Closest approach (height)</label><b><input type="number" id="orbits-alt-n" min="100" max="300000" step="1" value="3000" aria-label="Closest approach height in kilometers"> km</b></span><input type="range" id="orbits-alt" min="0" max="1000" step="1" value="474"></div>
+        <div class="lab-field"><span><label for="orbits-vinf">Approach speed v∞</label><b><input type="number" id="orbits-vinf-n" min="2" max="10" step="0.1" aria-label="Approach speed in kilometers per second"> km/s</b></span><input type="range" id="orbits-vinf" min="2" max="10" step="0.1" value="5"></div>
+        <div class="lab-row"><button type="button" class="lab-btn pri" id="orbits-again">↺ Fly it</button></div>
+      </div>
+
+      <div class="orbits-grp" data-for="moon assist">
+        <div class="lab-field"><span><label for="orbits-follow">Camera</label></span><select id="orbits-follow"></select></div>
+      </div>
+      <div class="lab-field"><span><label for="orbits-warp">Time speed</label><output id="orbits-warp-o" for="orbits-warp"></output></span><input type="range" id="orbits-warp" min="0" max="600" step="1" value="300"></div>
+      <label class="lab-chk"><input type="checkbox" id="orbits-arrows"> Velocity and gravity arrows</label>
+
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="orbits-read"></dl>
+      <div class="orbits-chartbox" id="orbits-chartbox">
+        <canvas id="orbits-chart" aria-label="Chart: in the cannon and orbit scenes, orbit period against orbit size on log scales; in the slingshot scene, speed against time."></canvas>
+        <p class="lab-small" id="orbits-chart-cap"></p>
+      </div>
+
+      <div class="orbits-mis">
+        <h3>Missions</h3>
+        <p class="lab-progress"></p>
+        <ul class="lab-missions" id="orbits-missions"></ul>
+      </div>
+    </div>
+  </div>
+
+  <section class="lab-sec">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>Cannon.</b> A cannon on a mountain fires sideways. Isaac Newton drew this picture to explain orbits, with a mountain far taller than any real one. Here the mountain is drawn to scale (500 km tall to start with; Mount Everest is under 9 km), and there is no air. A slow ball lands nearby. A faster one lands farther away, because the ground curves away beneath it. Fast enough, and the ground curves away as fast as the ball falls: it never lands.</p>
+      <p><b>Earth orbit.</b> Place a satellite and throw it. The green line is where it has been. The dashed gold line is the orbit it is on right now, worked out from its position and speed. The pink dot marks the lowest point, the blue dot the highest. Earth is seen from above the North Pole and spins once per sidereal day; the gold dot on Earth is one spot on the equator.</p>
+      <p><b>To the Moon.</b> The real Earth and Moon, 384,400 km apart, circling their shared center of mass. You start 200 km up. One push from the engine stretches your orbit out to the Moon’s distance. The dashed line shows where a burn would take you, and the close-up shows the burn point.</p>
+      <p><b>Slingshot.</b> The Sun, Mercury, Venus, Earth and Mars on their real-sized orbits. A spacecraft swings past a planet. The close-up shows the flyby as the planet sees it. The chart compares the speed measured from the Sun with the speed measured from the planet.</p>
+      <p><b>Arrows.</b> Green is velocity, the way the craft is moving. Pink is gravity. Gravity always points at the body pulling hardest, never along the path, and that is why the path bends.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>The science</h2>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">One law for everything</h3>
+        <p>Newton’s law of gravity says every mass pulls every other mass. For a small craft at distance <var>r</var> from the center of a planet, the pull gives it an acceleration</p>
+        <div class="lab-formula"><var>g</var> = <var>GM</var> / <var>r</var>²</div>
+        <p><var>GM</var> is the planet’s mass times the gravitational constant. Space agencies measure <var>GM</var> very precisely by tracking satellites. For Earth it is 3.986 004 418 × 10¹⁴ m³/s². At the surface (mean radius 6,371 km) that gives <var>g</var> = 9.82 m/s². At 400 km up it is still 8.69 m/s².</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Falling around the world</h3>
+        <p>To go in a circle, the craft must turn its path toward the center by exactly as much as gravity pulls. That happens at one speed:</p>
+        <div class="lab-formula"><var>v</var><sub>circle</sub> = √(<var>GM</var> / <var>r</var>) &nbsp;&nbsp;and&nbsp;&nbsp; <var>T</var> = 2π<var>r</var> / <var>v</var></div>
+        <p>At 400 km up: 7.67 km/s, once around in 92.4 minutes. Slower, and the orbit is an ellipse that dips lower. Too slow, and it hits the ground.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Escape speed and energy</h3>
+        <p>The energy per kilogram of a craft is its kinetic energy plus its (negative) gravitational energy:</p>
+        <div class="lab-formula">ε = <var>v</var>²/2 − <var>GM</var>/<var>r</var> = −<var>GM</var> / (2<var>a</var>)</div>
+        <p>While ε is negative the craft is trapped on an ellipse with semi-major axis <var>a</var>. At ε = 0 it escapes. The speed that makes ε = 0 is <var>v</var><sub>escape</sub> = √(2<var>GM</var>/<var>r</var>): 11.19 km/s at Earth’s surface, √2 times the circle speed.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Kepler’s three laws</h3>
+        <p>Johannes Kepler worked out these laws from careful observations of the planets, decades before Newton explained them. Newton showed that all three follow from his law of gravity, and they hold for anything orbiting Earth too.</p>
+        <ol>
+          <li>Orbits are ellipses, with the planet’s center at one focus.</li>
+          <li>A line from the planet to the craft sweeps out equal areas in equal times. Near the planet the craft moves fast; far away it moves slowly.</li>
+          <li>The period depends only on the size of the orbit: <span class="lab-formula orbits-inline"><var>T</var>² = (4π² / <var>GM</var>) · <var>a</var>³</span></li>
+        </ol>
+      </div>
+      <div>
+        <h3 class="lab-h">Geostationary orbit</h3>
+        <p>Earth spins once in a sidereal day: 23 h 56 min 4 s, or 86,164 s. Put that period into Kepler’s third law and you get one orbit radius:</p>
+        <div class="lab-formula"><var>r</var> = (<var>GM</var> <var>T</var>² / 4π²)<sup>1/3</sup> = 42,164 km</div>
+        <p>That is 35,786 km above the equator. A satellite there, going the same way Earth spins, stays over one spot. Weather and TV satellites use it.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">The slingshot</h3>
+        <p>Seen from the planet, the spacecraft leaves exactly as fast as it came. Only its direction changes, by a turn angle δ that grows when it passes closer or slower:</p>
+        <div class="lab-formula">sin(δ/2) = 1 / (1 + <var>r</var><sub>p</sub> <var>v</var><sub>∞</sub>² / <var>GM</var>)</div>
+        <p>Seen from the Sun, you add the planet’s own velocity (35 km/s for Venus). If the turn swings the craft’s velocity toward the way the planet is moving (passing behind it), the sum gets longer: the craft speeds up. Passing in front does the opposite. The planet loses or gains the same momentum, but it is so heavy that its change is far too small to measure.</p>
+      </div>
+    </div>
+    <div class="lab-tw">
+      <table class="lab-table">
+        <caption class="lab-small">Circular orbits around Earth, from the formulas above (heights above Earth’s mean radius, 6,371 km).</caption>
+        <thead><tr><th>Orbit</th><th>Height</th><th>Speed</th><th>Once around</th></tr></thead>
+        <tbody>
+          <tr><td>Low Earth orbit</td><td>400 km</td><td>7.67 km/s</td><td>92.4 min</td></tr>
+          <tr><td>GPS satellites</td><td>about 20,200 km</td><td>3.87 km/s</td><td>11 h 58 min</td></tr>
+          <tr><td>Geostationary</td><td>35,786 km above the equator</td><td>3.07 km/s</td><td>23 h 56 min</td></tr>
+          <tr><td>The Moon (measured)</td><td>384,400 km center to center</td><td>1.02 km/s</td><td>27.3 days</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Try this</h2>
+    <div class="lab-try"><b>Newton’s ladder of shots.</b> In the Cannon scene, fire at 3, 6, 7, 7.6, 9 and 10 km/s from the 500 km mountain. Each shot keeps its own color. Which one comes back to the mountain? Which one never comes back?</div>
+    <div class="lab-try"><b>Same start, different orbits.</b> In Earth orbit, launch level from 400 km at 7.67, 8.5, 9.5 and 10.5 km/s. The lowest point stays where you launched, while the highest point runs farther and farther out. Read the period each time.</div>
+    <div class="lab-try"><b>Straight up doesn’t work.</b> Aim the arrow straight up (90°) at 7.67 km/s. The satellite climbs and falls straight back. Orbit is about going sideways fast, not just getting high.</div>
+    <div class="lab-try"><b>Equal areas.</b> Turn on the slices and launch at about 9.8 km/s. Each slice takes one twelfth of the orbit. The slices near Earth are short and fat, the far ones long and thin, and the numbers on them match.</div>
+    <div class="lab-try"><b>Kepler’s third law.</b> Fly circular orbits at 400 km, 8,000 km and 35,786 km and watch the blue ring on the chart slide along the gold line. Doubling the size of an orbit makes its period 2.83 times as long (2<sup>1.5</sup>).</div>
+    <div class="lab-try"><b>A small change, far away.</b> In To the Moon, change the burn by just 0.02 km/s and watch the dashed path move near the Moon. Then turn on the rotating view, which keeps the Earth–Moon line still.</div>
+    <div class="lab-try"><b>Closer means stronger.</b> In Slingshot, pass behind Venus at 300 km and at 30,000 km, then try a slower approach. A closer or slower pass turns the craft more and changes its speed from the Sun more.</div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>A common mistake: “There’s no gravity in space”</h2>
+    <p>Astronauts float inside their station, so it is easy to think gravity has switched off up there. It hasn’t. At 400 km up, gravity is 88% as strong as on the ground (8.69 m/s² instead of 9.82). If it were gone, the station would fly off in a straight line.</p>
+    <p>Astronauts float because they and their station are falling together, at the same rate. Nothing pushes them against the floor, so they feel weightless. The station falls around Earth just like the cannonball that never lands. In the sim, turn on the arrows: the pink gravity arrow never disappears.</p>
+    <div class="lab-note"><b>See it at home.</b> Poke a small hole near the bottom of a paper cup, cover it with a finger and fill the cup with water. Outside or over a sink, let go of the hole: water pours out. Now drop the whole cup. While it falls, the water stops pouring, because the water and the cup fall together. That is what astronauts feel all the time.</div>
+    <p>A second mistake is that getting to orbit is mostly about going up. Lifting a kilogram to 400 km takes about 3.7 MJ of energy, but giving it 7.67 km/s of sideways speed takes about 29.4 MJ, eight times as much. That is why rockets turn sideways soon after launch.</p>
+  </section>
+
+  <section class="lab-sec">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The model.</b> Bodies are perfect spheres that pull like points. The spacecraft is so light that it does not pull back. In the Cannon and Earth orbit scenes Earth stands still. In To the Moon, Earth and Moon go around their shared center of mass on circles, 384,400 km apart; that gives the Moon a period of 27.29 days, close to the real 27.32. In Slingshot the Sun stands still and the planets move on circles at their average distances. Everything happens in one flat plane.</p>
+      <p><b>What’s left out, and why.</b> Air (so the cannon works at all), the boost from Earth’s spin at launch, Earth’s slightly flattened shape, the Sun’s pull in the Earth–Moon scene, the tilt and stretch of the real Moon’s orbit, and the planets’ pulls on one another. These change real missions a little but would hide the main ideas. Heights are measured from Earth’s mean radius, 6,371 km, so they can differ by a few kilometers from figures measured above the equator.</p>
+      <p><b>The math.</b> Each moment, the program adds up the pull of every body and moves the craft with the velocity Verlet method (also called leapfrog): half a kick from gravity, a drift, then another half kick. This method keeps energy from creeping up or down over thousands of orbits. Steps shrink near a body, to 1/200 of its free-fall time scale √(<var>r</var>³/<var>GM</var>), and each step size is chosen the same way forwards and backwards. When the craft crosses a surface, the program finds the exact crossing point. Time speeds up to what you choose, but slows near a planet so you can watch a close pass.</p>
+      <div>
+        <p><b>How it was checked.</b> The model was tested against the formulas on this page:</p>
+        <ul class="lab-small">
+          <li>Circle speed at 400 km: 7.6726 km/s; the radius stayed within 82 m over 10 orbits. Measured period 5,544.90 s vs 5,544.86 s from Kepler’s law.</li>
+          <li>Energy after 1,000 orbits (eccentricity 0.5): off by 6 parts in a million, with no steady drift. At eccentricity 0.9: 2 parts in 100,000.</li>
+          <li>Escape speed from the surface: 11.186 km/s. A shot straight up at 0.99 of it rose to 319,682 km; energy says 320,151 km, the same as a launch-speed error of 0.16 m/s.</li>
+          <li>Geostationary radius 42,164.17 km; measured period 86,164.8 s vs 86,164.1 s.</li>
+          <li>Equal areas: twelve slices of an orbit with eccentricity 0.7 agreed to 1 part in 10¹⁴.</li>
+          <li>Cannon at 6 km/s from 500 km: landed 3,263.48 km away vs 3,263.50 km from the exact ellipse, after 557.68 s (exact: 557.68 s).</li>
+          <li>Earth–Moon: the Jacobi constant, which stays fixed in this kind of system, changed by under 5 parts in a million during a 10-day trip.</li>
+          <li>Venus flyby at 5 km/s: closest approach within 1.5 km of the target; speed from Venus 5.112 km/s in and 5.101 km/s out at the edge of its sphere of influence (the Sun tugs a little there); turn angle 72.2° vs 72.2° from the formula.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>NASA Goddard, <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html">Earth Fact Sheet</a>: mean radius 6,371.0 km, GM 0.39860 × 10⁶ km³/s², surface gravity 9.82 m/s², escape speed 11.186 km/s.</li>
+      <li>NASA Goddard, <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html">Moon Fact Sheet</a>: mean distance 384,400 km, radius 1,737.4 km, period 27.32 days, orbital speed 1.022 km/s.</li>
+      <li>NASA Goddard, <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/">Planetary Fact Sheet</a>: sizes and distances of Mercury, Venus, Earth and Mars.</li>
+      <li>NASA JPL Solar System Dynamics, <a href="https://ssd.jpl.nasa.gov/astro_par.html">Astrodynamic Parameters</a>: GM of the Sun (1.32712440018 × 10²⁰ m³/s² used here), Moon (4,902.800118 km³/s²) and planets, the astronomical unit (149,597,870.7 km) and the sidereal day (86,164.0905 s). Earth’s GM here is the IERS Conventions value, 3.986004418 × 10¹⁴ m³/s².</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-1/pages/13-4-satellite-orbits-and-energy">University Physics Volume 1, 13.4 Satellite Orbits and Energy</a> and <a href="https://openstax.org/books/university-physics-volume-1/pages/13-5-keplers-laws-of-planetary-motion">13.5 Kepler’s Laws of Planetary Motion</a>.</li>
+      <li>NASA Science, <a href="https://science.nasa.gov/learn/basics-of-space-flight/primer/">Basics of Space Flight: A Gravity Assist Primer</a>.</li>
+      <li>GPS.gov, <a href="https://www.gps.gov/space-segment">Space Segment</a>: GPS satellites fly about 20,200 km up and circle Earth twice a day.</li>
+      <li>NASA, <a href="https://www.nasa.gov/learning-resources/for-kids-and-students/what-is-microgravity-grades-5-8/">What Is Microgravity?</a></li>
+      <li>University of Virginia physics, Galileo and Einstein lecture notes, <a href="https://galileoandeinstein.phys.virginia.edu/lectures/newton.pdf">Isaac Newton</a>: Newton’s cannon and the speed of a low orbit.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More">
+    <a href="{{ "science-lab/" | relURL }}">← Science Lab</a>
+    <a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a>
+  </nav>
+</div>
+<script src="{{ "games/orbits/physics.js" | relURL }}?v={{ (os.Stat "static/games/orbits/physics.js").ModTime.Unix }}"></script>
+<script src="{{ "games/orbits/sim.js" | relURL }}?v={{ (os.Stat "static/games/orbits/sim.js").ModTime.Unix }}"></script>
+{{ end }}

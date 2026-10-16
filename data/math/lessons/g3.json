@@ -1,0 +1,4271 @@
+{
+ "g3.round-10-100": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know where numbers sit on a number line (<a href=\"/math/grade-2/number-line-to-1000/\">numbers on a number line</a>) and what each digit is worth (<a href=\"/math/grade-2/place-value-hundreds/\">hundreds, tens and ones</a>). Rounding uses both. It swaps a number for the closest ten or hundred, so it is easy to think with."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 240,
+     "max": 250,
+     "step": 1,
+     "points": [
+      {
+       "v": 247,
+       "label": "A",
+       "drag": true
+      }
+     ]
+    },
+    "cap": "247 is 7 steps past 240 but only 3 steps from 250. It is closer to 250, so 247 rounds to 250. Drag A to other numbers and ask: which end is closer?"
+   },
+   {
+    "t": "why",
+    "html": "Rounding asks one question: which ten (or hundred) is closer? The ones digit tells you how many steps you are past the lower ten. With 0 to 4 steps you are closer to the lower ten. With 6 to 9 you are closer to the upper ten. A 5 is exactly halfway, and everyone agrees to round a halfway number up."
+   },
+   {
+    "t": "key",
+    "html": "To round to the nearest <b>ten</b>, look at the <b>ones</b> digit. To round to the nearest <b>hundred</b>, look at the <b>tens</b> digit. 0 to 4: round down. 5 to 9: round up."
+   },
+   {
+    "t": "ex",
+    "title": "Nearest ten",
+    "q": "Round $247$ to the nearest ten.",
+    "steps": [
+     "$247$ is between $240$ and $250$.",
+     "The ones digit is 7. That is 5 or more, so $247$ is closer to $250$."
+    ],
+    "a": "$250$"
+   },
+   {
+    "t": "ex",
+    "title": "Nearest hundred",
+    "q": "Round $381$ to the nearest hundred.",
+    "steps": [
+     "$381$ is between $300$ and $400$. Halfway is $350$.",
+     "Look at the tens digit: 8. That is 5 or more, so $381$ is past halfway.",
+     "It rounds up to $400$."
+    ],
+    "a": "$400$"
+   },
+   {
+    "t": "ex",
+    "title": "Right at halfway",
+    "q": "Round $450$ and $449$ to the nearest hundred.",
+    "steps": [
+     "$450$ is exactly halfway between $400$ and $500$. Halfway rounds up: $500$.",
+     "$449$ has tens digit 4, so it is just short of halfway. It rounds down: $400$."
+    ],
+    "a": "$450 \\to 500$ and $449 \\to 400$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Looking at the wrong digit.</b> To round $463$ to the nearest hundred, some people look at the ones digit (3) and round down to $400$. Look at the digit just right of the hundreds: the tens digit, 6. So $463$ rounds to $500$. Check with distance: $463$ is 63 away from $400$ but only 37 away from $500$.<br><b>Thinking 5 rounds down because it is \"in the middle.\"</b> A halfway number such as $450$ or $35$ always rounds up."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 300,
+     "max": 400,
+     "step": 10,
+     "points": [
+      {
+       "v": 380,
+       "label": "B",
+       "drag": true
+      }
+     ]
+    },
+    "cap": "Hundreds work the same way with bigger steps. Each small step here is 10. Drag B: everything from 350 up rounds to 400."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NBT.A.1 (round whole numbers to the nearest 10 or 100)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.1, Introduction to Whole Numbers (rounding)"
+   }
+  ]
+ },
+ "g3.add-within-1000": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You already <a href=\"/math/grade-2/add-3-digit/\">add three-digit numbers</a> with blocks or on paper. This topic makes it quick and sure: add ones to ones, tens to tens and hundreds to hundreds. The only tricky part is what happens when a place gets to <b>10 or more</b>."
+   },
+   {
+    "t": "viz",
+    "name": "base10",
+    "opts": {
+     "n": 247,
+     "add": 135
+    },
+    "cap": "Press \"Add 135\" to put in 1 hundred, 3 tens and 5 ones. The ones make 12. Tap the ones to trade 10 of them for 1 ten."
+   },
+   {
+    "t": "why",
+    "html": "Each place is worth 10 of the place to its right. So 10 ones and 1 ten are the same amount, and so are 10 tens and 1 hundred. Trading (regrouping) does not change the total. It only lets us write the number the usual way, with one digit in each place."
+   },
+   {
+    "t": "key",
+    "html": "Line the numbers up by place. Add the ones first, then the tens, then the hundreds. When a place makes 10 or more, write the ones of that total and regroup 1 to the next place."
+   },
+   {
+    "t": "ex",
+    "title": "One regroup",
+    "q": "Find $247 + 135$.",
+    "steps": [
+     "Ones: $7 + 5 = 12$. That is 1 ten and 2 ones. Write 2 and regroup 1 ten.",
+     "Tens: $4 + 3 + 1 = 8$ tens. Write 8.",
+     "Hundreds: $2 + 1 = 3$ hundreds. Write 3."
+    ],
+    "a": "$382$"
+   },
+   {
+    "t": "ex",
+    "title": "Two regroups",
+    "q": "Find $568 + 275$.",
+    "steps": [
+     "Ones: $8 + 5 = 13$. Write 3 and regroup 1 ten.",
+     "Tens: $6 + 7 + 1 = 14$ tens. That is 1 hundred and 4 tens. Write 4 and regroup 1 hundred.",
+     "Hundreds: $5 + 2 + 1 = 8$. Write 8.",
+     "Check: $570 + 280 = 850$, close to $843$."
+    ],
+    "a": "$843$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting the regrouped ten.</b> $247 + 135$ comes out as $372$ if the extra ten is dropped. A quick estimate catches it: $250 + 140 = 390$, and $372$ is too small.<br><b>Lining up by the left edge.</b> In $352 + 47$, the 4 means 4 tens, so it goes under the 5, not under the 3. Lined up wrong you get $822$; lined up by place you get $399$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Place",
+     "Add",
+     "Total",
+     "Write",
+     "Regroup"
+    ],
+    "rows": [
+     [
+      "Ones",
+      "8 + 5",
+      "13",
+      "3",
+      "1 ten"
+     ],
+     [
+      "Tens",
+      "6 + 7 + 1",
+      "14",
+      "4",
+      "1 hundred"
+     ],
+     [
+      "Hundreds",
+      "5 + 2 + 1",
+      "8",
+      "8",
+      "none"
+     ]
+    ],
+    "cap": "The second example, one place at a time."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NBT.A.2 (fluently add within 1000 using place value)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.2, Add Whole Numbers"
+   }
+  ]
+ },
+ "g3.subtract-within-1000": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have <a href=\"/math/grade-2/subtract-3-digit/\">subtracted three-digit numbers</a> by breaking a ten or a hundred apart. Now we do it on paper, one place at a time, and check the answer by adding."
+   },
+   {
+    "t": "viz",
+    "name": "base10",
+    "opts": {
+     "n": 352,
+     "take": 178
+    },
+    "cap": "Press \"Take away 178\". There are not enough ones, so you are asked to break a ten into 10 ones first. That is regrouping."
+   },
+   {
+    "t": "why",
+    "html": "$352$ is 3 hundreds, 5 tens and 2 ones. It is also 3 hundreds, 4 tens and 12 ones: we only broke one ten into ten ones. The amount is the same, but now there are enough ones to take 8 away. Regrouping changes how the number is shown, never how much it is."
+   },
+   {
+    "t": "key",
+    "html": "Start with the ones. If the top digit is smaller than the bottom digit, break 1 from the next place into 10. Then subtract each place. Check by adding your answer to the number you took away."
+   },
+   {
+    "t": "ex",
+    "title": "Regroup twice",
+    "q": "Find $352 - 178$.",
+    "steps": [
+     "Ones: 2 is less than 8. Break 1 ten into 10 ones: now 4 tens and 12 ones. $12 - 8 = 4$.",
+     "Tens: 4 is less than 7. Break 1 hundred into 10 tens: now 2 hundreds and 14 tens. $14 - 7 = 7$.",
+     "Hundreds: $2 - 1 = 1$.",
+     "Check: $174 + 178 = 352$."
+    ],
+    "a": "$174$"
+   },
+   {
+    "t": "ex",
+    "title": "Regroup once",
+    "q": "Find $645 - 281$.",
+    "steps": [
+     "Ones: $5 - 1 = 4$.",
+     "Tens: 4 is less than 8. Break 1 hundred: now 5 hundreds and 14 tens. $14 - 8 = 6$.",
+     "Hundreds: $5 - 2 = 3$.",
+     "Check: $364 + 281 = 645$."
+    ],
+    "a": "$364$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Taking the smaller digit from the larger one.</b> For $352 - 178$, some people do $8 - 2$, $7 - 5$ and $3 - 1$ and get $226$. But the 2 ones are on top; you cannot take 8 from 2 without regrouping. The add-back check shows the slip: $226 + 178 = 404$, not $352$."
+   },
+   {
+    "t": "note",
+    "html": "Another way: count up from the smaller number. From $178$, add 22 to reach $200$, then 152 more to reach $352$. $22 + 152 = 174$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NBT.A.2 (fluently subtract within 1000 using place value)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.3, Subtract Whole Numbers"
+   }
+  ]
+ },
+ "g3.subtract-across-zeros": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-3/subtract-within-1000/\">subtracting within 1,000</a> you broke a ten when you needed more ones. But what if there are <b>no tens</b> to break, as in $400 - 127$? Then you go one place further."
+   },
+   {
+    "t": "viz",
+    "name": "base10",
+    "opts": {
+     "n": 400,
+     "take": 127
+    },
+    "cap": "400 is 4 flats and nothing else. Tap a hundred flat to break it into 10 tens, then tap a ten to break it into 10 ones. Now take away 127."
+   },
+   {
+    "t": "why",
+    "html": "$400$ can be shown as 3 hundreds, 9 tens and 10 ones, because $300 + 90 + 10 = 400$. Breaking one hundred into 10 tens, and then one of those tens into 10 ones, leaves <b>9</b> tens and 10 ones. Nothing is lost. The number just has enough in each place to subtract."
+   },
+   {
+    "t": "key",
+    "html": "When you need ones and the tens place is 0, break 1 hundred into 10 tens, then break 1 of those tens into 10 ones. A 0 in the tens becomes 9."
+   },
+   {
+    "t": "ex",
+    "title": "From a hundred",
+    "q": "Find $400 - 127$.",
+    "steps": [
+     "Rewrite $400$ as 3 hundreds, 9 tens and 10 ones.",
+     "Ones: $10 - 7 = 3$.",
+     "Tens: $9 - 2 = 7$.",
+     "Hundreds: $3 - 1 = 2$.",
+     "Check: $273 + 127 = 400$."
+    ],
+    "a": "$273$"
+   },
+   {
+    "t": "ex",
+    "title": "A zero in the middle",
+    "q": "Find $503 - 268$.",
+    "steps": [
+     "Ones: 3 is less than 8, and there are 0 tens. Break 1 hundred into 10 tens, then 1 ten into 10 ones: now 4 hundreds, 9 tens and 13 ones.",
+     "Ones: $13 - 8 = 5$. Tens: $9 - 6 = 3$. Hundreds: $4 - 2 = 2$.",
+     "Check: $235 + 268 = 503$."
+    ],
+    "a": "$235$"
+   },
+   {
+    "t": "ex",
+    "title": "From a thousand",
+    "q": "Find $1,000 - 365$.",
+    "steps": [
+     "$1,000$ is 9 hundreds, 9 tens and 10 ones (break the thousand, then a hundred, then a ten).",
+     "Ones: $10 - 5 = 5$. Tens: $9 - 6 = 3$. Hundreds: $9 - 3 = 6$."
+    ],
+    "a": "$635$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Keeping 10 tens instead of 9.</b> After breaking a hundred into 10 tens, one of those tens goes to the ones place. Only 9 tens are left. Using 10 tens gives $400 - 127 = 283$. The add-back check shows it: $283 + 127 = 410$, not $400$."
+   },
+   {
+    "t": "note",
+    "html": "A shortcut for numbers like $400$: take 1 away from both numbers first. $400 - 127$ has the same answer as $399 - 126$, and that needs no regrouping at all: $273$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NBT.A.2 (subtract within 1000 using place value)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.3, Subtract Whole Numbers"
+   }
+  ]
+ },
+ "g3.estimate-sums-differences": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-3/round-10-100/\">round to the nearest 10 or 100</a>, and you can add and subtract three-digit numbers. Put them together and you get a fast check: round first, do the easy math in your head, and see if your exact answer is close."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 300,
+     "max": 500,
+     "step": 100,
+     "sub": 10,
+     "points": [
+      {
+       "v": 386,
+       "label": "A"
+      },
+      {
+       "v": 412,
+       "label": "B"
+      }
+     ]
+    },
+    "cap": "386 and 412 both sit close to 400. So $386 + 412$ should be close to $400 + 400 = 800$."
+   },
+   {
+    "t": "why",
+    "html": "Rounding moves each number only a little: at most 5 when you round to tens, at most 50 when you round to hundreds. So the rounded answer can only be a little off. If your exact answer is far from the estimate, something went wrong, often a missed regroup."
+   },
+   {
+    "t": "key",
+    "html": "Estimate = round each number, then add or subtract. The exact answer should be close to the estimate."
+   },
+   {
+    "t": "ex",
+    "title": "An estimate",
+    "q": "Estimate $386 + 412$ by rounding to the nearest hundred.",
+    "steps": [
+     "$386$ rounds to $400$; $412$ rounds to $400$.",
+     "$400 + 400 = 800$.",
+     "The exact sum is $798$, very close."
+    ],
+    "a": "about $800$"
+   },
+   {
+    "t": "ex",
+    "title": "Is it reasonable?",
+    "q": "Sam says $523 - 286 = 337$. Is that reasonable?",
+    "steps": [
+     "Round to tens: $520 - 290 = 230$.",
+     "$337$ is about 100 away from $230$, too far.",
+     "Redo it: $523 - 286 = 237$. Sam broke a hundred into tens but forgot to take it away from the hundreds."
+    ],
+    "a": "No; the answer is $237$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Skipping the estimate.</b> Some people think an estimate is just a wrong answer. It is a check! For $468 + 257$, forgetting the regrouped hundred gives $625$. The estimate $470 + 260 = 730$ shows right away that $625$ is too small. The right sum is $725$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.D.8 (assess the reasonableness of answers using mental computation and estimation, including rounding)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.2, Add Whole Numbers (estimation)"
+   }
+  ]
+ },
+ "g3.equal-groups": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-2/skip-count-5-10-100/\">skip count</a> and <a href=\"/math/grade-2/arrays-repeated-addition/\">add equal rows</a>. Multiplication is a short way to count <b>equal groups</b>. Look at the plates: each one has the same number of dots."
+   },
+   {
+    "t": "viz",
+    "name": "g3-groups",
+    "opts": {
+     "groups": 3,
+     "each": 4
+    },
+    "cap": "3 plates with 4 dots on each plate: 3 groups of 4."
+   },
+   {
+    "t": "why",
+    "html": "When every group has the same number, you do not need to count each dot. Count the groups, and count what is in one group. $3 \\times 4$ says \"3 groups of 4.\" It means $4 + 4 + 4$, and it equals 12."
+   },
+   {
+    "t": "key",
+    "html": "$a \\times b$ means $a$ equal groups with $b$ in each group. The answer is called the <b>product</b>."
+   },
+   {
+    "t": "ex",
+    "title": "Plates of dots",
+    "q": "What multiplication matches 3 plates with 4 dots on each? How many dots in all?",
+    "steps": [
+     "There are 3 groups. Each group has 4.",
+     "3 groups of 4 is $3 \\times 4$.",
+     "Skip count by 4s: 4, 8, 12."
+    ],
+    "a": "$3 \\times 4 = 12$"
+   },
+   {
+    "t": "ex",
+    "title": "A story",
+    "q": "There are 5 bags with 6 apples in each bag. How many apples are there?",
+    "steps": [
+     "5 equal groups with 6 in each: $5 \\times 6$.",
+     "Count by 6s: 6, 12, 18, 24, 30."
+    ],
+    "a": "$30$ apples"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Adding the two numbers.</b> 3 groups of 4 is not $3 + 4 = 7$. The 3 counts plates and the 4 counts dots on one plate, so adding them mixes plates with dots. Check by drawing it: 3 circles with 4 dots in each makes 12 dots."
+   },
+   {
+    "t": "viz",
+    "name": "arraygrid",
+    "opts": {
+     "rows": 3,
+     "cols": 4,
+     "groups": true,
+     "rotate": false,
+     "max": 6
+    },
+    "cap": "The same 12, lined up: each loop is one group. Add a row to make another group, or add a column to put one more in every group."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.A.1 (interpret products of whole numbers as equal groups)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.4, Multiply Whole Numbers"
+   }
+  ]
+ },
+ "g3.arrays-multiplication": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "An <b>array</b> is <a href=\"/math/grade-3/equal-groups/\">equal groups</a> lined up in rows. Every row has the same number, like seats in a theater or eggs in a carton."
+   },
+   {
+    "t": "viz",
+    "name": "g3-array",
+    "opts": {
+     "rows": 4,
+     "cols": 6,
+     "loops": true
+    },
+    "cap": "4 rows with 6 dots in each row. Each row is one equal group."
+   },
+   {
+    "t": "why",
+    "html": "Each row is a group, and every row is the same size. So an array with 4 rows of 6 is 4 groups of 6, which is $4 \\times 6$. You can count by rows instead of by dots: 6, 12, 18, 24."
+   },
+   {
+    "t": "key",
+    "html": "An array with $r$ rows and $c$ in each row shows $r \\times c$. Rows go across; columns go up and down."
+   },
+   {
+    "t": "ex",
+    "title": "Count by rows",
+    "q": "How many dots are in an array with 4 rows of 6?",
+    "steps": [
+     "Each row has 6. There are 4 rows.",
+     "Count by 6s, one count for each row: 6, 12, 18, 24.",
+     "So $4 \\times 6 = 24$."
+    ],
+    "a": "$24$ dots"
+   },
+   {
+    "t": "ex",
+    "title": "Seats",
+    "q": "A theater has 7 rows with 5 seats in each row. How many seats?",
+    "steps": [
+     "7 rows of 5 is $7 \\times 5$.",
+     "Count by 5s seven times: 5, 10, 15, 20, 25, 30, 35."
+    ],
+    "a": "$35$ seats"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Counting every dot one by one.</b> It works for small arrays, but it is slow and easy to lose your place. Find the size of one row, then count by that number once for each row."
+   },
+   {
+    "t": "viz",
+    "name": "arraygrid",
+    "opts": {
+     "rows": 3,
+     "cols": 4,
+     "rotate": false,
+     "max": 8,
+     "task": {
+      "target": 24
+     }
+    },
+    "cap": "Drag the gold corner (or use the buttons) to make an array with 24 dots. Is there more than one way?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.A.1 (interpret products, for example as arrays)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.A.3 (arrays in word problems)"
+   }
+  ]
+ },
+ "g3.commutative-multiplication": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Here is a surprise that saves a lot of work. An <a href=\"/math/grade-3/arrays-multiplication/\">array</a> of 3 rows of 5 has 15 dots. Turn it on its side, and you get 5 rows of 3. How many dots now?"
+   },
+   {
+    "t": "viz",
+    "name": "arraygrid",
+    "opts": {
+     "rows": 3,
+     "cols": 5,
+     "rotate": true,
+     "resize": false,
+     "max": 5
+    },
+    "cap": "Press \"Turn it.\" The rows become columns. No dot is added or taken away, so the total stays 15."
+   },
+   {
+    "t": "why",
+    "html": "Turning the array does not change the dots, only how we read them. Read across, it is 3 rows of 5: $3 \\times 5$. Read down, it is 5 columns of 3: $5 \\times 3$. They count the same dots, so $3 \\times 5 = 5 \\times 3$. That is also why $6 \\times 7 = 7 \\times 6$: turn a 6-by-7 array and it becomes 7-by-6."
+   },
+   {
+    "t": "key",
+    "html": "You can multiply two numbers in either order: $a \\times b = b \\times a$. These are <b>turn-around facts</b>."
+   },
+   {
+    "t": "ex",
+    "title": "Use a fact you know",
+    "q": "You know $6 \\times 7 = 42$. What is $7 \\times 6$?",
+    "steps": [
+     "$7 \\times 6$ uses the same two numbers in the other order.",
+     "Turning the array does not change the total."
+    ],
+    "a": "$7 \\times 6 = 42$"
+   },
+   {
+    "t": "ex",
+    "title": "Fill in the box",
+    "q": "$4 \\times 9 = 9 \\times \\square$",
+    "steps": [
+     "Both sides must use the same two factors.",
+     "So the box is 4. Check: both sides are 36."
+    ],
+    "a": "$4$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Learning $3 \\times 5$ and $5 \\times 3$ as two separate facts.</b> They are the same fact, turned. Once you know one, you know the other, so there are about half as many facts to learn."
+   },
+   {
+    "t": "note",
+    "html": "Turning works for adding and multiplying, but not for subtracting or dividing: $8 - 2$ is 6, but $2 - 8$ is not."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.B.5 (commutative property of multiplication)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 7.2, Commutative and Associative Properties"
+   }
+  ]
+ },
+ "g3.multiply-0-1": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Think about <a href=\"/math/grade-3/equal-groups/\">equal groups</a> again. What if every plate is empty? What if there is only one plate?"
+   },
+   {
+    "t": "viz",
+    "name": "g3-groups",
+    "opts": {
+     "groups": 4,
+     "each": 0
+    },
+    "cap": "4 plates with nothing on them: 4 groups of 0."
+   },
+   {
+    "t": "why",
+    "html": "$4 \\times 0$ means 4 groups with 0 in each. Four empty plates hold nothing, so the product is 0. $0 \\times 5$ means 0 groups of 5: no plates at all, so again nothing. And $1 \\times 7$ is one group of 7, which is just 7."
+   },
+   {
+    "t": "key",
+    "html": "Any number times 0 is 0. Any number times 1 is that same number."
+   },
+   {
+    "t": "ex",
+    "title": "Times 0",
+    "q": "Find $6 \\times 0$.",
+    "steps": [
+     "6 groups of 0: six empty plates.",
+     "$0 + 0 + 0 + 0 + 0 + 0 = 0$."
+    ],
+    "a": "$0$"
+   },
+   {
+    "t": "ex",
+    "title": "Times 1",
+    "q": "Find $1 \\times 9$ and $9 \\times 1$.",
+    "steps": [
+     "$1 \\times 9$ is one group of 9: that is 9.",
+     "$9 \\times 1$ is 9 groups with 1 in each: also 9."
+    ],
+    "a": "$9$ both ways"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Writing $6 \\times 0 = 6$.</b> That mixes up multiplying with adding. Adding 0 leaves a number the same: $6 + 0 = 6$. Multiplying by 0 means groups of nothing: $6 \\times 0 = 0$. Check by picturing six empty plates."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Fact",
+     "Means",
+     "Product"
+    ],
+    "rows": [
+     [
+      "$5 + 0$",
+      "5, then nothing more",
+      "5"
+     ],
+     [
+      "$5 \\times 0$",
+      "5 groups of nothing",
+      "0"
+     ],
+     [
+      "$5 \\times 1$",
+      "5 groups of one",
+      "5"
+     ]
+    ],
+    "cap": "Adding 0 and multiplying by 0 are different."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.B.5 (properties of operations)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 7.4, Properties of Identity, Inverses, and Zero"
+   }
+  ]
+ },
+ "g3.facts-2-5-10": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now we learn the facts so they come fast. Start with three easy families. You already know how to <a href=\"/math/grade-2/skip-count-5-10-100/\">count by 5s and 10s</a>, and with <a href=\"/math/grade-3/commutative-multiplication/\">turn-around facts</a> each fact does double duty."
+   },
+   {
+    "t": "viz",
+    "name": "hundredchart",
+    "opts": {
+     "skip": 5,
+     "skipPick": true
+    },
+    "cap": "The 5s are shaded: they end in 5 or 0 and make two columns. Switch to 2s and 10s to see their patterns."
+   },
+   {
+    "t": "why",
+    "html": "Times 2 is a <b>double</b>: $2 \\times 8 = 8 + 8$. Times 10 makes <b>tens</b>: $10 \\times 6$ is 6 tens, 60. Times 5 is <b>half of times 10</b>, because 5 is half of 10: $10 \\times 7 = 70$, so $5 \\times 7 = 35$."
+   },
+   {
+    "t": "key",
+    "html": "2s: double the number. 10s: that many tens. 5s: half of the 10s fact, or count by 5s."
+   },
+   {
+    "t": "ex",
+    "title": "A double",
+    "q": "Find $2 \\times 8$.",
+    "steps": [
+     "Double 8: $8 + 8 = 16$."
+    ],
+    "a": "$16$"
+   },
+   {
+    "t": "ex",
+    "title": "Half of ten",
+    "q": "Find $5 \\times 7$.",
+    "steps": [
+     "$10 \\times 7 = 70$.",
+     "5 sevens is half of 10 sevens: half of 70 is 35."
+    ],
+    "a": "$35$"
+   },
+   {
+    "t": "ex",
+    "title": "Tens",
+    "q": "Find $10 \\times 9$.",
+    "steps": [
+     "10 groups of 9 is the same as 9 groups of 10: 9 tens.",
+     "9 tens is 90."
+    ],
+    "a": "$90$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Losing count while skip counting.</b> For $5 \\times 8$, keep track of how many 5s you have said, on your fingers. Or use half of $10 \\times 8 = 80$, which is 40. Two ways that agree make a strong check."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.C.7 (fluently multiply within 100 using strategies)"
+   }
+  ]
+ },
+ "g3.facts-3-4-6": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/grade-3/facts-2-5-10/\">facts of 2, 5 and 10</a> are your building blocks. The 3s, 4s and 6s are built from them, so you never have to start from scratch."
+   },
+   {
+    "t": "viz",
+    "name": "arraygrid",
+    "opts": {
+     "rows": 4,
+     "cols": 7,
+     "split": "rows",
+     "at": 2,
+     "max": 8
+    },
+    "cap": "4 rows of 7 is two copies of 2 rows of 7. $4 \\times 7 = 14 + 14 = 28$."
+   },
+   {
+    "t": "why",
+    "html": "4 groups is 2 groups and 2 more groups, so a 4s fact is a 2s fact <b>doubled</b>. 3 groups is 2 groups and 1 more. 6 groups is 5 groups and 1 more. Splitting the groups never changes the total."
+   },
+   {
+    "t": "table",
+    "head": [
+     "To find",
+     "Think",
+     "Example"
+    ],
+    "rows": [
+     [
+      "$3 \\times n$",
+      "double $n$, then add one more $n$",
+      "$3 \\times 8 = 16 + 8 = 24$"
+     ],
+     [
+      "$4 \\times n$",
+      "double, then double again",
+      "$4 \\times 7 = 14 + 14 = 28$"
+     ],
+     [
+      "$6 \\times n$",
+      "$5 \\times n$, then one more $n$",
+      "$6 \\times 7 = 35 + 7 = 42$"
+     ]
+    ],
+    "cap": "Three strategies."
+   },
+   {
+    "t": "key",
+    "html": "Build hard facts from easy ones: 4s are double 2s; 3s are 2s plus one group; 6s are 5s plus one group."
+   },
+   {
+    "t": "ex",
+    "title": "Double, double",
+    "q": "Find $4 \\times 6$.",
+    "steps": [
+     "$2 \\times 6 = 12$.",
+     "Double it: $12 + 12 = 24$."
+    ],
+    "a": "$24$"
+   },
+   {
+    "t": "ex",
+    "title": "Five and one more",
+    "q": "Find $6 \\times 8$.",
+    "steps": [
+     "$5 \\times 8 = 40$.",
+     "One more group of 8: $40 + 8 = 48$."
+    ],
+    "a": "$48$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Adding 1 instead of one more group.</b> $6 \\times 8$ is not $40 + 1$. \"One more group\" means one more 8, so it is $40 + 8 = 48$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.C.7 (fluently multiply within 100 using strategies)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.B.5 (properties of operations as strategies)"
+   }
+  ]
+ },
+ "g3.distributive-facts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Here is the strategy behind the last topic, <a href=\"/math/grade-3/facts-3-4-6/\">building facts</a>: a hard fact can be <b>broken apart</b> into two easy ones. Look at 7 rows of 6."
+   },
+   {
+    "t": "viz",
+    "name": "arraygrid",
+    "opts": {
+     "rows": 7,
+     "cols": 6,
+     "split": "rows",
+     "at": 5,
+     "style": "squares",
+     "max": 8
+    },
+    "cap": "Drag the line to split the 7 rows. Split after 5 rows: $7 \\times 6 = 5 \\times 6 + 2 \\times 6 = 30 + 12 = 42$."
+   },
+   {
+    "t": "why",
+    "html": "Splitting the array does not add or remove any squares. The top part is 5 rows of 6 and the bottom part is 2 rows of 6. Every row in both parts still has 6, so <b>both</b> parts are multiplied by 6. Then the two parts add back to the whole."
+   },
+   {
+    "t": "key",
+    "html": "Break one factor into two parts. Multiply each part by the other factor, then add: $7 \\times 6 = 5 \\times 6 + 2 \\times 6$."
+   },
+   {
+    "t": "ex",
+    "title": "Break the 7",
+    "q": "Find $7 \\times 6$.",
+    "steps": [
+     "$7 = 5 + 2$.",
+     "$5 \\times 6 = 30$ and $2 \\times 6 = 12$.",
+     "$30 + 12 = 42$."
+    ],
+    "a": "$42$"
+   },
+   {
+    "t": "ex",
+    "title": "Break the 8",
+    "q": "Find $8 \\times 7$.",
+    "steps": [
+     "$8 = 5 + 3$.",
+     "$5 \\times 7 = 35$ and $3 \\times 7 = 21$.",
+     "$35 + 21 = 56$."
+    ],
+    "a": "$56$"
+   },
+   {
+    "t": "ex",
+    "title": "Bigger numbers",
+    "q": "Find $6 \\times 12$.",
+    "steps": [
+     "$12 = 10 + 2$.",
+     "$6 \\times 10 = 60$ and $6 \\times 2 = 12$.",
+     "$60 + 12 = 72$."
+    ],
+    "a": "$72$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Multiplying only one part.</b> Some people write $7 \\times 6 = 5 \\times 6 + 2 = 32$. But the 2 is 2 <b>rows of 6</b>, so it must be $2 \\times 6$. Check with the array: the bottom part has 12 squares, not 2."
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": [
+      5,
+      2
+     ],
+     "b": 6,
+     "split": false,
+     "grid": true
+    },
+    "cap": "The same idea as an area model: a 7-by-6 rectangle cut into a 5-by-6 part and a 2-by-6 part."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.B.5 (distributive property, for example 8 × 7 = 8 × 5 + 8 × 2)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 7.3, Distributive Property"
+   }
+  ]
+ },
+ "g3.facts-7-8-9": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "These are the facts people find hardest, but you already have the tools. <a href=\"/math/grade-3/distributive-facts/\">Breaking apart</a> and <a href=\"/math/grade-3/facts-3-4-6/\">doubling</a> handle every one of them."
+   },
+   {
+    "t": "table",
+    "head": [
+     "To find",
+     "Think",
+     "Example"
+    ],
+    "rows": [
+     [
+      "$9 \\times n$",
+      "$10 \\times n$, take away one $n$",
+      "$9 \\times 6 = 60 - 6 = 54$"
+     ],
+     [
+      "$8 \\times n$",
+      "double $4 \\times n$",
+      "$8 \\times 7 = 28 + 28 = 56$"
+     ],
+     [
+      "$7 \\times n$",
+      "$5 \\times n + 2 \\times n$",
+      "$7 \\times 7 = 35 + 14 = 49$"
+     ]
+    ],
+    "cap": "A strategy for each family."
+   },
+   {
+    "t": "why",
+    "html": "9 groups is one group less than 10 groups, so take one group away from the 10s fact. 8 groups is two sets of 4 groups, so double the 4s fact. 7 groups is 5 groups and 2 groups. Each strategy just splits or adjusts the groups, so the total is right."
+   },
+   {
+    "t": "viz",
+    "name": "hundredchart",
+    "opts": {
+     "skip": 9
+    },
+    "cap": "The 9s march down and to the left: each is 10 more, minus 1. Their digits always add to 9 (up to 90)."
+   },
+   {
+    "t": "key",
+    "html": "Nines: ten groups minus one. Eights: double the fours. Sevens: five groups plus two groups."
+   },
+   {
+    "t": "ex",
+    "title": "Nines",
+    "q": "Find $9 \\times 6$.",
+    "steps": [
+     "$10 \\times 6 = 60$.",
+     "Take away one 6: $60 - 6 = 54$.",
+     "Check: $5 + 4 = 9$."
+    ],
+    "a": "$54$"
+   },
+   {
+    "t": "ex",
+    "title": "Eights",
+    "q": "Find $8 \\times 7$.",
+    "steps": [
+     "$4 \\times 7 = 28$.",
+     "Double: $28 + 28 = 56$."
+    ],
+    "a": "$56$"
+   },
+   {
+    "t": "ex",
+    "title": "Sevens",
+    "q": "Find $7 \\times 8$.",
+    "steps": [
+     "$5 \\times 8 = 40$ and $2 \\times 8 = 16$.",
+     "$40 + 16 = 56$. (The same as $8 \\times 7$: a turn-around fact.)"
+    ],
+    "a": "$56$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Taking away the wrong number in the 9s.</b> $9 \\times 6$ is ten 6s minus <b>one 6</b>: $60 - 6 = 54$. Taking away 9 gives 51, which is wrong. The digit check catches it: $5 + 1 = 6$, not 9."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.C.7 (by the end of Grade 3, know from memory all products of two one-digit numbers)"
+   }
+  ]
+ },
+ "g3.associative-multiplication": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sometimes you multiply three numbers, like 2 boxes, each with 5 bags, each with 7 marbles. You have the <a href=\"/math/grade-3/facts-7-8-9/\">facts</a>; now the question is which two to multiply first."
+   },
+   {
+    "t": "viz",
+    "name": "volume",
+    "opts": {
+     "l": 5,
+     "w": 2,
+     "h": 3,
+     "layers": true
+    },
+    "cap": "A block of cubes: each layer is 2 rows of 5, which is 10 cubes, and there are 3 layers. $(2 \\times 5) \\times 3 = 10 \\times 3 = 30$. Drag to turn it."
+   },
+   {
+    "t": "why",
+    "html": "The block has the same cubes however you count them. Count by layers: $(2 \\times 5) \\times 3$. Count by the slices standing up: $2 \\times (5 \\times 3)$. Same block, same 30 cubes. So you may group the factors any way you like, and pick the easiest."
+   },
+   {
+    "t": "key",
+    "html": "When you multiply three numbers, you can multiply any two first: $(2 \\times 5) \\times 7 = 2 \\times (5 \\times 7)$. Look for a pair that makes 10."
+   },
+   {
+    "t": "ex",
+    "title": "Make a ten",
+    "q": "Find $2 \\times 7 \\times 5$.",
+    "steps": [
+     "Group the 2 and the 5: $2 \\times 5 = 10$.",
+     "$10 \\times 7 = 70$."
+    ],
+    "a": "$70$"
+   },
+   {
+    "t": "ex",
+    "title": "Another grouping",
+    "q": "Find $3 \\times 2 \\times 4$.",
+    "steps": [
+     "$3 \\times 2 = 6$, then $6 \\times 4 = 24$.",
+     "Or $2 \\times 4 = 8$, then $3 \\times 8 = 24$. Same answer."
+    ],
+    "a": "$24$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Adding when you meant to group.</b> $(2 \\times 3) \\times 4$ is 24, not $2 \\times 3 + 4 = 10$. The parentheses only show which two to multiply first; every number is still multiplied."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.B.5 (associative property of multiplication)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 7.2, Commutative and Associative Properties"
+   }
+  ]
+ },
+ "g3.multiply-by-multiples-of-10": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know <a href=\"/math/grade-2/place-value-hundreds/\">place value</a> and all your facts. Now use them for numbers like $4 \\times 30$. The trick is to think in <b>tens</b>."
+   },
+   {
+    "t": "viz",
+    "name": "base10",
+    "opts": {
+     "blocks": {
+      "t": 12
+     },
+     "edit": false
+    },
+    "cap": "$4 \\times 30$ is 4 groups of 3 tens: 12 tens. Tap the tens to trade 10 of them for a hundred: 1 hundred and 2 tens, which is 120."
+   },
+   {
+    "t": "why",
+    "html": "$30$ is 3 tens. So $4 \\times 30$ is 4 groups of 3 tens, which is $4 \\times 3 = 12$ tens. Twelve tens is 120. The fact $4 \\times 3$ does all the work; the tens tell you what kind of thing you have 12 of."
+   },
+   {
+    "t": "key",
+    "html": "To multiply by a multiple of 10, use the fact, then count tens: $6 \\times 70 = 6 \\times 7$ tens $= 42$ tens $= 420$."
+   },
+   {
+    "t": "ex",
+    "title": "Count tens",
+    "q": "Find $4 \\times 30$.",
+    "steps": [
+     "$30$ is 3 tens.",
+     "$4 \\times 3$ tens $= 12$ tens.",
+     "12 tens is 120."
+    ],
+    "a": "$120$"
+   },
+   {
+    "t": "ex",
+    "title": "Bigger",
+    "q": "Find $9 \\times 80$.",
+    "steps": [
+     "$9 \\times 8 = 72$, so $9 \\times 80$ is 72 tens.",
+     "72 tens is 720."
+    ],
+    "a": "$720$"
+   },
+   {
+    "t": "ex",
+    "title": "A missing factor",
+    "q": "$\\square \\times 50 = 300$",
+    "steps": [
+     "$300$ is 30 tens, and $50$ is 5 tens.",
+     "What times 5 makes 30? $6 \\times 5 = 30$."
+    ],
+    "a": "$6$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>\"Just add a zero\" without knowing why.</b> The zero is there because the answer is a number of <b>tens</b>: 12 tens is written 120. Thinking in tens keeps working later, when \"add a zero\" stops working (with decimals, for example)."
+   },
+   {
+    "t": "viz",
+    "name": "placevalue",
+    "opts": {
+     "n": 42,
+     "shift": true,
+     "edit": false
+    },
+    "cap": "Press \"× 10\" to see 42 become 420: every digit moves one place to the left."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NBT.A.3 (multiply one-digit numbers by multiples of 10 using place value)"
+   }
+  ]
+ },
+ "g3.division-sharing": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know <a href=\"/math/grade-3/equal-groups/\">equal groups</a>: 3 plates with 4 on each is 12. Division runs that backward. You start with the 12 and share them fairly."
+   },
+   {
+    "t": "viz",
+    "name": "g3-groups",
+    "opts": {
+     "groups": 3,
+     "each": 0,
+     "pile": 12
+    },
+    "cap": "12 strawberries to share on 3 plates. Each plate must get the same number."
+   },
+   {
+    "t": "why",
+    "html": "Share the way you deal cards: one for each plate, then another for each plate, and so on. Each round uses 3 strawberries. After 4 rounds all 12 are gone, so each plate has 4. We write $12 \\div 3 = 4$. It works because 3 groups of 4 is 12: $3 \\times 4 = 12$."
+   },
+   {
+    "t": "viz",
+    "name": "g3-groups",
+    "opts": {
+     "groups": 3,
+     "each": 4
+    },
+    "cap": "After sharing: 3 plates with 4 on each. $12 \\div 3 = 4$."
+   },
+   {
+    "t": "key",
+    "html": "$12 \\div 3$ can mean: share 12 into 3 equal groups. The answer tells how many are in each group."
+   },
+   {
+    "t": "ex",
+    "title": "Share crayons",
+    "q": "20 crayons are shared equally among 4 tables. How many does each table get?",
+    "steps": [
+     "Share 20 into 4 equal groups: $20 \\div 4$.",
+     "Deal one round at a time: 4, 8, 12, 16, 20. That is 5 rounds.",
+     "Check: $4 \\times 5 = 20$."
+    ],
+    "a": "$5$ crayons"
+   },
+   {
+    "t": "ex",
+    "title": "Read a division",
+    "q": "What does $18 \\div 6$ mean? Find it.",
+    "steps": [
+     "Share 18 things into 6 equal groups.",
+     "$6 \\times 3 = 18$, so each group gets 3."
+    ],
+    "a": "$3$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Shares that are not fair.</b> Division means every group gets the <b>same</b> number. If one plate gets 5 and another gets 3, that is not $12 \\div 3$. Check by multiplying: groups times the amount in each must give back the total."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.A.2 (interpret whole-number quotients as sharing equally)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.5, Divide Whole Numbers"
+   }
+  ]
+ },
+ "g3.division-grouping": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-3/division-sharing/\">fair sharing</a> you knew how many groups and found how many go in each. Division can also ask the other question: you know how big each group is, and you want to know <b>how many groups</b> you can make."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        4,
+        4,
+        4,
+        4,
+        4
+       ],
+       "labels": [
+        "4",
+        "4",
+        "4",
+        "4",
+        "4"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 5,
+       "label": "20 cookies"
+      }
+     ],
+     "steps": [
+      "20 cookies go into bags of 4.",
+      "Each bag uses 4: 4, 8, 12, 16, 20.",
+      "That is 5 bags, so 20 ÷ 4 = 5."
+     ]
+    },
+    "cap": "20 cookies cut into bags of 4. Press \"Next step\" to count the bags."
+   },
+   {
+    "t": "why",
+    "html": "Making groups of 4 from 20 means taking away 4 again and again until none are left. Each take-away makes one group. You can take 4 away 5 times, so there are 5 groups. It is still $20 \\div 4 = 5$, because $5 \\times 4 = 20$. The numbers are the same as sharing; only the question is different."
+   },
+   {
+    "t": "table",
+    "head": [
+     "The story tells you",
+     "Division finds",
+     "Example: $20 \\div 4 = 5$"
+    ],
+    "rows": [
+     [
+      "how many groups (4)",
+      "how many in each group",
+      "4 friends share 20 cookies: 5 each"
+     ],
+     [
+      "how many in each group (4)",
+      "how many groups",
+      "20 cookies, 4 per bag: 5 bags"
+     ]
+    ],
+    "cap": "Two meanings of the same division."
+   },
+   {
+    "t": "key",
+    "html": "$20 \\div 4$ can mean \"how many groups of 4 are in 20?\" The answer counts groups."
+   },
+   {
+    "t": "ex",
+    "title": "How many bags?",
+    "q": "There are 24 apples. Each bag holds 6. How many bags are needed?",
+    "steps": [
+     "The size of each group is known: 6. The number of groups is not.",
+     "Count by 6s to 24: 6, 12, 18, 24. That is 4 groups.",
+     "So $24 \\div 6 = 4$."
+    ],
+    "a": "$4$ bags"
+   },
+   {
+    "t": "ex",
+    "title": "Which question?",
+    "q": "28 students split into teams of 7. What does $28 \\div 7$ tell you?",
+    "steps": [
+     "The team size, 7, is given.",
+     "So the answer, 4, is the number of teams."
+    ],
+    "a": "how many teams (4)"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Mixing up the two meanings.</b> After dividing, ask: does my answer count <b>groups</b> or things <b>in a group</b>? Label it: \"4 bags,\" not just \"4.\" If the story already told you the number of groups, the answer is the size of a group, and the other way round."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.A.2 (interpret quotients as a number of shares or a number of groups)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.5, Divide Whole Numbers"
+   }
+  ]
+ },
+ "g3.division-missing-factor": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sharing and grouping both come back to one idea. Every division is a <a href=\"/math/grade-3/facts-3-4-6/\">multiplication fact</a> with a piece missing."
+   },
+   {
+    "t": "viz",
+    "name": "g3-array",
+    "opts": {
+     "rows": 4,
+     "cols": 6,
+     "labels": true
+    },
+    "cap": "24 dots in rows of 6. How many rows? $\\square \\times 6 = 24$, and $4 \\times 6 = 24$, so there are 4 rows."
+   },
+   {
+    "t": "why",
+    "html": "An array of 24 in rows of 6 is $\\square \\times 6 = 24$. Division asks for that missing number: $24 \\div 6 = \\square$. Multiplication puts groups together; division takes the total apart again. They undo each other, so any multiplication fact you know gives you a division fact for free."
+   },
+   {
+    "t": "key",
+    "html": "$24 \\div 6$ asks: what number times 6 makes 24? Since $4 \\times 6 = 24$, $24 \\div 6 = 4$."
+   },
+   {
+    "t": "ex",
+    "title": "Think multiplication",
+    "q": "Find $24 \\div 6$.",
+    "steps": [
+     "Think: $\\square \\times 6 = 24$.",
+     "$4 \\times 6 = 24$."
+    ],
+    "a": "$4$"
+   },
+   {
+    "t": "ex",
+    "title": "A harder fact",
+    "q": "Find $56 \\div 8$.",
+    "steps": [
+     "Think: $\\square \\times 8 = 56$.",
+     "You know $7 \\times 8 = 56$."
+    ],
+    "a": "$7$"
+   },
+   {
+    "t": "ex",
+    "title": "Count up if you need to",
+    "q": "Find $36 \\div 4$.",
+    "steps": [
+     "Think: $\\square \\times 4 = 36$.",
+     "If the fact does not come right away, count by 4s: 4, 8, 12, 16, 20, 24, 28, 32, 36. That is 9 fours.",
+     "So $9 \\times 4 = 36$."
+    ],
+    "a": "$9$"
+   },
+   {
+    "t": "note",
+    "html": "Every division fact has a partner multiplication fact. As you learn your multiplication facts, you are learning your division facts at the same time."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Subtracting instead of dividing.</b> $24 \\div 6$ is not $24 - 6 = 18$. Check any division by multiplying: $18 \\times 6$ is far more than 24, but $4 \\times 6 = 24$ fits."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.B.6 (understand division as an unknown-factor problem)"
+   }
+  ]
+ },
+ "g3.fact-families": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "One array can tell four stories. You have seen <a href=\"/math/grade-3/commutative-multiplication/\">turn-around facts</a> and <a href=\"/math/grade-3/division-missing-factor/\">division as a missing factor</a>. Put them together and three numbers give you four facts."
+   },
+   {
+    "t": "viz",
+    "name": "arraygrid",
+    "opts": {
+     "rows": 3,
+     "cols": 7,
+     "rotate": true,
+     "resize": false,
+     "max": 7
+    },
+    "cap": "3 rows of 7 is 21. Turn it: 7 rows of 3. The same 21 dots give $3 \\times 7$, $7 \\times 3$, $21 \\div 3$ and $21 \\div 7$."
+   },
+   {
+    "t": "why",
+    "html": "The array has 21 dots, 3 rows and 7 columns. Read it as rows or as columns and you get the two multiplications. Ask \"21 in 3 rows: how many in each?\" and \"21 in rows of 7: how many rows?\" and you get the two divisions. All four describe the same dots."
+   },
+   {
+    "t": "key",
+    "html": "A <b>fact family</b> is the four facts made from one array: for 3, 7 and 21 they are $3 \\times 7 = 21$, $7 \\times 3 = 21$, $21 \\div 3 = 7$ and $21 \\div 7 = 3$."
+   },
+   {
+    "t": "ex",
+    "title": "Write the family",
+    "q": "Write the fact family for 6, 7 and 42.",
+    "steps": [
+     "Multiplications: $6 \\times 7 = 42$ and $7 \\times 6 = 42$.",
+     "Divisions start with the biggest number: $42 \\div 6 = 7$ and $42 \\div 7 = 6$."
+    ],
+    "a": "four facts"
+   },
+   {
+    "t": "ex",
+    "title": "Find the missing number",
+    "q": "A fact family uses 8, $\\square$ and 72.",
+    "steps": [
+     "72 is the product of the other two: $8 \\times \\square = 72$.",
+     "$8 \\times 9 = 72$."
+    ],
+    "a": "$9$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dividing the small number by the big one.</b> $7 \\div 42 = 6$ is not in the family. In every division of the family, the biggest number (the product) is the one being divided."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.C.7 (know from memory all products of two one-digit numbers, and the related quotients)"
+   }
+  ]
+ },
+ "g3.divide-with-0-1": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know that <a href=\"/math/grade-3/multiply-0-1/\">times 0 is 0 and times 1 is the same number</a>. Because <a href=\"/math/grade-3/fact-families/\">division undoes multiplication</a>, we can work out the rules for 0 and 1 in division, and see why one division has no answer."
+   },
+   {
+    "t": "viz",
+    "name": "g3-groups",
+    "opts": {
+     "groups": 4,
+     "each": 0
+    },
+    "cap": "0 cookies shared among 4 plates: every plate gets 0. $0 \\div 4 = 0$."
+   },
+   {
+    "t": "why",
+    "html": "Turn each division into a multiplication. $0 \\div 4 = \\square$ means $\\square \\times 4 = 0$, so the box is 0. $9 \\div 1 = \\square$ means $\\square \\times 1 = 9$, so the box is 9. $9 \\div 9$ means $\\square \\times 9 = 9$, so the box is 1. Now try $5 \\div 0$: we need $\\square \\times 0 = 5$. But any number times 0 is 0, never 5. No number works, so dividing by 0 has no answer."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Division",
+     "Think",
+     "Answer"
+    ],
+    "rows": [
+     [
+      "$0 \\div 4$",
+      "$\\square \\times 4 = 0$",
+      "0"
+     ],
+     [
+      "$9 \\div 1$",
+      "$\\square \\times 1 = 9$",
+      "9"
+     ],
+     [
+      "$9 \\div 9$",
+      "$\\square \\times 9 = 9$",
+      "1"
+     ],
+     [
+      "$5 \\div 0$",
+      "$\\square \\times 0 = 5$",
+      "no number works"
+     ]
+    ],
+    "cap": "Four special divisions."
+   },
+   {
+    "t": "key",
+    "html": "0 divided by any number (not 0) is 0. A number divided by 1 is itself. A number divided by itself is 1. You cannot divide by 0."
+   },
+   {
+    "t": "ex",
+    "title": "Zero shared",
+    "q": "Find $0 \\div 7$.",
+    "steps": [
+     "Think: $\\square \\times 7 = 0$.",
+     "Only $0 \\times 7 = 0$."
+    ],
+    "a": "$0$"
+   },
+   {
+    "t": "ex",
+    "title": "Dividing by zero",
+    "q": "What is $6 \\div 0$?",
+    "steps": [
+     "Think: $\\square \\times 0 = 6$.",
+     "Every number times 0 is 0, so nothing works."
+    ],
+    "a": "It has no answer."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Saying $5 \\div 0 = 0$ or $5 \\div 0 = 5$.</b> Check by multiplying back: $0 \\times 0 = 0$ and $5 \\times 0 = 0$, neither is 5. That is why we say you cannot divide by 0. (But $0 \\div 5 = 0$ is fine: nothing shared is nothing each.)"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.C.7 (related quotients)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 7.4, Properties of Identity, Inverses, and Zero"
+   }
+  ]
+ },
+ "g3.unknown-in-equations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A box in an equation, like $8 \\times \\square = 48$, stands for a number we have not found yet. Your <a href=\"/math/grade-3/fact-families/\">fact families</a> find it."
+   },
+   {
+    "t": "viz",
+    "name": "balance",
+    "opts": {
+     "eq": "3x = 18",
+     "task": true
+    },
+    "cap": "3 bags with the same hidden weight balance 18 cubes. Press \"÷ both\" to share both sides into 3 equal groups: one bag balances 6 cubes."
+   },
+   {
+    "t": "why",
+    "html": "The equals sign means \"is the same amount as.\" It does not mean \"the answer comes next.\" So $56 = \\square \\times 7$ is a fine equation: 56 is the same as some number times 7. To find the box, ask what number makes both sides equal, and use a fact from the family."
+   },
+   {
+    "t": "key",
+    "html": "To find a missing number, turn the equation into a question. $8 \\times \\square = 48$ asks \"8 times what is 48?\" $35 \\div \\square = 5$ asks \"35 shared into how many groups gives 5?\""
+   },
+   {
+    "t": "ex",
+    "title": "A missing factor",
+    "q": "$8 \\times \\square = 48$",
+    "steps": [
+     "8 times what makes 48?",
+     "$8 \\times 6 = 48$."
+    ],
+    "a": "$6$"
+   },
+   {
+    "t": "ex",
+    "title": "A missing divisor",
+    "q": "$35 \\div \\square = 5$",
+    "steps": [
+     "35 divided by what gives 5? Same as: $5 \\times \\square = 35$.",
+     "$5 \\times 7 = 35$, so $35 \\div 7 = 5$."
+    ],
+    "a": "$7$"
+   },
+   {
+    "t": "ex",
+    "title": "The equals sign first",
+    "q": "$56 = \\square \\times 7$",
+    "steps": [
+     "Both sides are the same amount: 56 is something times 7.",
+     "$8 \\times 7 = 56$."
+    ],
+    "a": "$8$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Writing the product in the box.</b> For $8 \\times \\square = 48$, some people write 384 or 56 because they think \"the answer goes after the equals.\" But 48 is already on the right side. Check: put your number in the box and see if both sides match: $8 \\times 6 = 48$ does."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.A.4 (determine the unknown whole number in a multiplication or division equation)"
+   }
+  ]
+ },
+ "g3.mult-div-word-problems": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know what multiplying and dividing mean, and you have your <a href=\"/math/grade-3/fact-families/\">fact families</a>. A word problem is just a story about equal groups, arrays or equal lengths. The skill is to <b>picture the story</b>, then decide what is missing."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        6,
+        6,
+        6,
+        6
+       ],
+       "labels": [
+        "6",
+        "6",
+        "6",
+        "6"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 4,
+       "label": "?"
+      }
+     ],
+     "steps": [
+      "4 boxes with 6 eggs in each box.",
+      "The total is missing, so multiply: 4 × 6 = 24 eggs.",
+      "If instead the total (24) and the box size (6) were known, the number of boxes would be missing: 24 ÷ 6 = 4."
+     ]
+    },
+    "cap": "A tape diagram of 4 boxes with 6 eggs each. Press \"Next step.\""
+   },
+   {
+    "t": "why",
+    "html": "Every equal-groups story has three numbers: how many groups, how many in each group, and the total. The story gives you two of them. If the <b>total</b> is missing, multiply. If the total is known and one of the other two is missing, divide, because division finds a missing factor."
+   },
+   {
+    "t": "table",
+    "head": [
+     "What is missing?",
+     "Do this",
+     "Example"
+    ],
+    "rows": [
+     [
+      "the total",
+      "multiply",
+      "4 boxes of 6 eggs: $4 \\times 6 = 24$"
+     ],
+     [
+      "how many in each group",
+      "divide",
+      "24 eggs in 4 boxes: $24 \\div 4 = 6$ each"
+     ],
+     [
+      "how many groups",
+      "divide",
+      "24 eggs, 6 per box: $24 \\div 6 = 4$ boxes"
+     ]
+    ],
+    "cap": "One story, three questions."
+   },
+   {
+    "t": "key",
+    "html": "Picture the story. Find the groups, the size of each group and the total. Multiply to find a missing total; divide to find a missing group size or number of groups."
+   },
+   {
+    "t": "ex",
+    "title": "Total missing",
+    "q": "A parking lot has 7 rows with 8 cars in each row. How many cars?",
+    "steps": [
+     "An array: 7 rows of 8. The total is missing.",
+     "$7 \\times 8 = 56$."
+    ],
+    "a": "$56$ cars"
+   },
+   {
+    "t": "ex",
+    "title": "Group size missing",
+    "q": "A ribbon 36 inches long is cut into 4 equal pieces. How long is each piece?",
+    "steps": [
+     "The total length (36) and the number of pieces (4) are known.",
+     "Divide: $36 \\div 4 = 9$, because $4 \\times 9 = 36$."
+    ],
+    "a": "$9$ inches"
+   },
+   {
+    "t": "ex",
+    "title": "Number of groups missing",
+    "q": "Each box holds 6 eggs. How many boxes do 42 eggs fill?",
+    "steps": [
+     "The total (42) and the size of each box (6) are known.",
+     "Divide: $42 \\div 6 = 7$."
+    ],
+    "a": "$7$ boxes"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Hunting for key words.</b> \"Each\" shows up in multiplying stories (\"each box has 6, how many in 7 boxes?\") and in dividing stories (\"each box holds 6, how many boxes for 42?\"). Key words can fool you. Draw the groups instead, and ask which number is missing."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.A.3 (use multiplication and division within 100 to solve word problems)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 1.4 and 1.5, Multiply and Divide Whole Numbers"
+   }
+  ]
+ },
+ "g3.letter-for-unknown": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-3/unknown-in-equations/\">finding the unknown number</a> we used a box: $6 \\times \\square = 42$. Mathematicians often use a <b>letter</b> instead of a box. The letter is just a number we have not found yet."
+   },
+   {
+    "t": "viz",
+    "name": "balance",
+    "opts": {
+     "eq": "3n = 15",
+     "task": true
+    },
+    "cap": "3 bags, each holding the same number $n$, balance 15 cubes. Divide both sides by 3 to find $n$."
+   },
+   {
+    "t": "why",
+    "html": "A letter lets you write a story as an equation before you know the answer. \"Some packs of 6 cards make 42 cards\" becomes $p \\times 6 = 42$, where $p$ is the number of packs. Now the story is a missing-factor question, and you already know how to answer those."
+   },
+   {
+    "t": "key",
+    "html": "Pick a letter for the number you want. Write the story as an equation. Then find the number that makes the equation true, and check it."
+   },
+   {
+    "t": "ex",
+    "title": "From a story",
+    "q": "Ana has some packs of cards. Each pack has 6 cards. She has 42 cards. How many packs?",
+    "steps": [
+     "Let $p$ be the number of packs.",
+     "Packs times cards in a pack makes the total: $p \\times 6 = 42$.",
+     "$7 \\times 6 = 42$, so $p = 7$.",
+     "Check: 7 packs of 6 is 42 cards."
+    ],
+    "a": "$p = 7$ packs"
+   },
+   {
+    "t": "ex",
+    "title": "A letter being divided",
+    "q": "Find $n$: $n \\div 4 = 6$.",
+    "steps": [
+     "$n$ shared into 4 groups gives 6 in each.",
+     "So $n$ is 4 groups of 6: $n = 4 \\times 6 = 24$.",
+     "Check: $24 \\div 4 = 6$."
+    ],
+    "a": "$n = 24$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Treating the letter as a word.</b> In $p \\times 6 = 42$, $p$ is not \"packs.\" It is the <b>number</b> of packs, 7. Write your answer as $p = 7$, and say what it means: 7 packs."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.D.8 (represent problems using equations with a letter standing for the unknown quantity)"
+   }
+  ]
+ },
+ "g3.two-step-word-problems": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some stories need two steps. You will use what you know about <a href=\"/math/grade-3/letter-for-unknown/\">writing equations</a> and <a href=\"/math/grade-3/estimate-sums-differences/\">estimating</a> to plan, solve and check."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        8,
+        8,
+        8
+       ],
+       "labels": [
+        "8",
+        "8",
+        "8"
+       ],
+       "name": "Bought"
+      },
+      {
+       "parts": [
+        19,
+        5
+       ],
+       "labels": [
+        "left: ?",
+        "gave 5"
+       ],
+       "name": "Then"
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 3,
+       "label": "24"
+      }
+     ],
+     "steps": [
+      "Step 1: 3 packs of 8 stickers is 3 × 8 = 24 stickers.",
+      "Step 2: 5 are given away. 24 − 5 = 19 stickers are left.",
+      "The question asked how many are left, so the answer is 19, not 24."
+     ]
+    },
+    "cap": "Leo buys 3 packs of 8 stickers and gives 5 away. Press \"Next step.\""
+   },
+   {
+    "t": "why",
+    "html": "In a two-step problem, the answer to the first step is a tool, not the answer. The question tells you what to find at the end. Working backward from the question shows what you need first: to know what is left, you first need how many there were."
+   },
+   {
+    "t": "key",
+    "html": "Read the question. Find the number you need first. Use it to answer the question. Then check: is the answer about the size you expected, and does it answer the question asked?"
+   },
+   {
+    "t": "ex",
+    "title": "Buy, then give away",
+    "q": "Leo buys 3 packs of 8 stickers. He gives 5 to his sister. How many does he have now?",
+    "steps": [
+     "Step 1: stickers bought: $3 \\times 8 = 24$.",
+     "Step 2: $24 - 5 = 19$.",
+     "Check: fewer than 24, since he gave some away."
+    ],
+    "a": "$19$ stickers"
+   },
+   {
+    "t": "ex",
+    "title": "Change from a bill",
+    "q": "Maya buys 4 books for \\$6 each. She pays with a \\$50 bill. How much change does she get?",
+    "steps": [
+     "Step 1: cost: $4 \\times 6 = 24$, so \\$24.",
+     "Step 2: change: $50 - 24 = 26$, so \\$26.",
+     "Check: $24 + 26 = 50$."
+    ],
+    "a": "\\$26"
+   },
+   {
+    "t": "ex",
+    "title": "Take away, then share",
+    "q": "There are 30 cookies. 6 are eaten. The rest are shared equally by 4 friends. How many does each friend get?",
+    "steps": [
+     "Step 1: cookies left: $30 - 6 = 24$.",
+     "Step 2: share: $24 \\div 4 = 6$.",
+     "Check: $4 \\times 6 + 6 = 30$."
+    ],
+    "a": "$6$ cookies"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Stopping after the first step.</b> In the sticker problem, 24 is how many Leo bought, not how many he has now. Before you finish, read the question again and ask: does my number answer it?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.D.8 (solve two-step word problems using the four operations; assess reasonableness)"
+   }
+  ]
+ },
+ "g3.arithmetic-patterns": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once you know your <a href=\"/math/grade-3/fact-families/\">facts</a>, the multiplication table is full of patterns. A pattern is more useful when you can explain <b>why</b> it happens."
+   },
+   {
+    "t": "table",
+    "head": [
+     "×",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6"
+    ],
+    "rows": [
+     [
+      "2",
+      "2",
+      "4",
+      "6",
+      "8",
+      "10",
+      "12"
+     ],
+     [
+      "3",
+      "3",
+      "6",
+      "9",
+      "12",
+      "15",
+      "18"
+     ],
+     [
+      "4",
+      "4",
+      "8",
+      "12",
+      "16",
+      "20",
+      "24"
+     ],
+     [
+      "5",
+      "5",
+      "10",
+      "15",
+      "20",
+      "25",
+      "30"
+     ],
+     [
+      "6",
+      "6",
+      "12",
+      "18",
+      "24",
+      "30",
+      "36"
+     ]
+    ],
+    "cap": "Part of the multiplication table. Compare the 2s row with the 4s row, and the 3s row with the 6s row."
+   },
+   {
+    "t": "why",
+    "html": "Each number in the 4s row is double the number above it in the 2s row, because 4 groups is 2 groups twice. The 6s row is double the 3s row for the same reason. Every number in the 4s row is even, because 4 groups can be split into two equal halves. Even and odd come from pairs: an even number of things pairs up with none left over."
+   },
+   {
+    "t": "viz",
+    "name": "hundredchart",
+    "opts": {
+     "skip": 3,
+     "skipPick": true
+    },
+    "cap": "The 3s go odd, even, odd, even. Switch to 4s: every one is even. Switch to 5s: they end in 5 or 0."
+   },
+   {
+    "t": "key",
+    "html": "Patterns in the tables come from what multiplying means. Explain a pattern with equal groups or pairs, and you can trust it."
+   },
+   {
+    "t": "ex",
+    "title": "Why is 4 times any number even?",
+    "q": "Explain why $4 \\times 7$ is even.",
+    "steps": [
+     "$4 \\times 7$ is 4 groups of 7.",
+     "Split them into 2 groups of 7 and 2 groups of 7: two equal halves.",
+     "A number that splits into two equal halves is even. $4 \\times 7 = 28$."
+    ],
+    "a": "It is 2 equal halves, so it is even."
+   },
+   {
+    "t": "ex",
+    "title": "Continue a pattern",
+    "q": "What comes next: 6, 12, 18, 24, ?",
+    "steps": [
+     "Each number is 6 more than the one before.",
+     "These are the 6s facts. Next is $6 \\times 5 = 30$."
+    ],
+    "a": "$30$"
+   },
+   {
+    "t": "ex",
+    "title": "Sums of odd numbers",
+    "q": "Is $7 + 9$ even or odd? Is that always true for two odd numbers?",
+    "steps": [
+     "Each odd number is pairs plus one left over.",
+     "The two left-over ones make one more pair, so nothing is left over.",
+     "So the sum of two odd numbers is always even: $7 + 9 = 16$."
+    ],
+    "a": "always even"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Trusting a pattern too soon.</b> 3, 9 and 15 are odd, but \"the 3s are all odd\" is false: $3 \\times 2 = 6$. Look for a reason, or keep checking more numbers, before you believe a pattern."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.OA.D.9 (identify arithmetic patterns and explain them using properties of operations)"
+   }
+  ]
+ },
+ "g3.equal-parts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have cut shapes into <a href=\"/math/grade-2/equal-shares/\">halves, thirds and fourths</a>. Fractions start from one rule that is easy to forget: the parts must be the <b>same size</b>."
+   },
+   {
+    "t": "viz",
+    "name": "g3-frac",
+    "opts": {
+     "model": "circle",
+     "d": 3,
+     "n": 0,
+     "unequal": true
+    },
+    "cap": "A pizza cut into 3 pieces of different sizes. These are not thirds: one person would get much more."
+   },
+   {
+    "t": "viz",
+    "name": "g3-frac",
+    "opts": {
+     "model": "circle",
+     "d": 3,
+     "n": 0
+    },
+    "cap": "Now 3 pieces of the same size. Each piece is one third."
+   },
+   {
+    "t": "why",
+    "html": "A fraction tells how much of a whole you have. If the parts were different sizes, \"one part\" could be a big piece or a tiny one, so the name would not tell you how much. When all the parts are equal, every part is the same amount, and the number of parts names it: 3 equal parts are thirds, 4 equal parts are fourths."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Equal parts",
+     "Each part is called",
+     "Written"
+    ],
+    "rows": [
+     [
+      "2",
+      "a half",
+      "$\\frac{1}{2}$"
+     ],
+     [
+      "3",
+      "a third",
+      "$\\frac{1}{3}$"
+     ],
+     [
+      "4",
+      "a fourth (a quarter)",
+      "$\\frac{1}{4}$"
+     ],
+     [
+      "6",
+      "a sixth",
+      "$\\frac{1}{6}$"
+     ],
+     [
+      "8",
+      "an eighth",
+      "$\\frac{1}{8}$"
+     ]
+    ],
+    "cap": "Names of equal parts."
+   },
+   {
+    "t": "key",
+    "html": "A fraction needs a whole cut into <b>equal</b> parts. The number of equal parts gives the parts their name."
+   },
+   {
+    "t": "ex",
+    "title": "Name the parts",
+    "q": "A rectangle is cut into 6 equal parts. What is each part called?",
+    "steps": [
+     "There are 6 equal parts.",
+     "Each part is one sixth, $\\frac{1}{6}$."
+    ],
+    "a": "sixths"
+   },
+   {
+    "t": "ex",
+    "title": "Is it a fourth?",
+    "q": "A sandwich is cut into 4 pieces, and one piece is bigger than the rest. Is each piece a fourth?",
+    "steps": [
+     "The pieces are not the same size.",
+     "So they are not fourths. Fourths must be 4 equal parts."
+    ],
+    "a": "No"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Calling any split a fraction.</b> Cutting a cake into 3 pieces does not make thirds unless the pieces are the same size. Quick check: if each piece went to a different friend, would it be fair? If not, the parts are not equal."
+   },
+   {
+    "t": "viz",
+    "name": "g3-frac",
+    "opts": {
+     "model": "rect",
+     "d": 4,
+     "n": 1,
+     "pattern": "diag",
+     "square": true
+    },
+    "cap": "Equal parts can be any shape. Each triangle is one fourth of the square."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.G.A.2 (partition shapes into parts with equal areas)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.1 (a fraction 1/b as one of b equal parts)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 4.1, Visualize Fractions"
+   }
+  ]
+ },
+ "g3.unit-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When a whole is cut into <a href=\"/math/grade-3/equal-parts/\">equal parts</a>, one of those parts is a <b>unit fraction</b>. One of 4 equal parts is written $\\frac{1}{4}$: the bottom number says how many equal parts make the whole, and the top number says we have 1 of them."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "1/2",
+      "1/3",
+      "1/4",
+      "1/8"
+     ]
+    },
+    "cap": "Four bars of the same length, each with one part shaded. The more parts a bar is cut into, the smaller each part."
+   },
+   {
+    "t": "why",
+    "html": "Cutting the same whole into more pieces makes each piece smaller. A pizza for 8 people gives smaller slices than the same pizza for 4 people. So $\\frac{1}{8}$ is <b>less</b> than $\\frac{1}{4}$, even though 8 is more than 4, and $\\frac{1}{4}$ is less than $\\frac{1}{3}$: 4 equal parts of a whole are smaller than 3 equal parts. The bigger number counts more parts, and more parts means smaller parts."
+   },
+   {
+    "t": "key",
+    "html": "$\\frac{1}{b}$ is one of $b$ equal parts of a whole. The larger $b$ is, the smaller $\\frac{1}{b}$ is. It takes $b$ of them to make the whole."
+   },
+   {
+    "t": "ex",
+    "title": "Name it",
+    "q": "A bar is cut into 6 equal parts and 1 part is shaded. What fraction is shaded?",
+    "steps": [
+     "6 equal parts: each part is $\\frac{1}{6}$.",
+     "1 part is shaded."
+    ],
+    "a": "$\\frac{1}{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "Which is bigger?",
+    "q": "Which is greater, $\\frac{1}{3}$ or $\\frac{1}{8}$?",
+    "steps": [
+     "Both are one piece of the same whole.",
+     "Thirds are 3 parts; eighths are 8 parts, so eighths are smaller pieces."
+    ],
+    "a": "$\\frac{1}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Make a whole",
+    "q": "How many pieces of size $\\frac{1}{5}$ make one whole?",
+    "steps": [
+     "$\\frac{1}{5}$ is one of 5 equal parts.",
+     "All 5 parts make the whole."
+    ],
+    "a": "$5$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Thinking $\\frac{1}{8}$ is bigger than $\\frac{1}{4}$ because 8 is bigger than 4.</b> That habit works for whole numbers, but here the 8 means the whole is cut into more, smaller parts. Check with the bars: the $\\frac{1}{8}$ piece is half as long as the $\\frac{1}{4}$ piece."
+   },
+   {
+    "t": "viz",
+    "name": "fractioncircle",
+    "opts": {
+     "fracs": [
+      "1/3",
+      "1/8"
+     ],
+     "edit": false
+    },
+    "cap": "The same idea with circles: $\\frac{1}{3}$ of a circle is a much bigger slice than $\\frac{1}{8}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.1 (understand 1/b as the quantity formed by 1 part when a whole is partitioned into b equal parts)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 4.1, Visualize Fractions"
+   }
+  ]
+ },
+ "g3.build-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/grade-3/unit-fractions/\">unit fraction</a> is one piece. Now we put pieces together. $\\frac{3}{4}$ means 3 pieces, each of size $\\frac{1}{4}$."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "0/4"
+     ],
+     "task": "3/4"
+    },
+    "cap": "Tap parts to shade them. Shade 3 of the 4 equal parts to show three fourths."
+   },
+   {
+    "t": "why",
+    "html": "The bottom number (the <b>denominator</b>) tells the size of each piece: fourths. The top number (the <b>numerator</b>) counts how many of those pieces you have. So $\\frac{3}{4}$ is one amount, \"three fourths,\" just as \"3 apples\" is one amount: the 3 counts and the fourths say what is being counted."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Fraction",
+     "Say",
+     "Pieces"
+    ],
+    "rows": [
+     [
+      "$\\frac{3}{4}$",
+      "three fourths",
+      "3 pieces of $\\frac{1}{4}$"
+     ],
+     [
+      "$\\frac{5}{6}$",
+      "five sixths",
+      "5 pieces of $\\frac{1}{6}$"
+     ],
+     [
+      "$\\frac{2}{8}$",
+      "two eighths",
+      "2 pieces of $\\frac{1}{8}$"
+     ]
+    ],
+    "cap": "The numerator counts; the denominator names the piece."
+   },
+   {
+    "t": "key",
+    "html": "$\\frac{a}{b}$ is $a$ pieces, each of size $\\frac{1}{b}$."
+   },
+   {
+    "t": "ex",
+    "title": "Shaded parts",
+    "q": "A circle is cut into 8 equal parts and 5 are shaded. What fraction is shaded?",
+    "steps": [
+     "Each part is $\\frac{1}{8}$.",
+     "5 parts are shaded: 5 pieces of $\\frac{1}{8}$."
+    ],
+    "a": "$\\frac{5}{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "Count the pieces",
+    "q": "How many pieces of size $\\frac{1}{6}$ make $\\frac{4}{6}$?",
+    "steps": [
+     "The numerator, 4, counts the pieces."
+    ],
+    "a": "$4$"
+   },
+   {
+    "t": "ex",
+    "title": "What is left?",
+    "q": "3 of 5 equal parts are shaded. What fraction is not shaded?",
+    "steps": [
+     "$5 - 3 = 2$ parts are not shaded.",
+     "Each part is $\\frac{1}{5}$, so 2 parts make $\\frac{2}{5}$."
+    ],
+    "a": "$\\frac{2}{5}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Reading the two numbers separately.</b> $\\frac{3}{4}$ is not \"3 and 4\" and it is not bigger than 3. It is one number, less than 1: three of the four equal parts. Say it aloud as \"three fourths\" to keep it together."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.1 (understand a/b as the quantity formed by a parts of size 1/b)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 4.1, Visualize Fractions"
+   }
+  ]
+ },
+ "g3.unit-fractions-number-line": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have put whole numbers on a <a href=\"/math/grade-2/number-line-to-1000/\">number line</a>. Fractions live there too, between the whole numbers. First, the unit fractions: the space from 0 to 1 is the whole, and we cut it into <a href=\"/math/grade-3/unit-fractions/\">equal parts</a>."
+   },
+   {
+    "t": "viz",
+    "name": "fractionline",
+    "opts": {
+     "d": 4,
+     "max": 1,
+     "point": "1/4",
+     "hops": true
+    },
+    "cap": "The space from 0 to 1 is cut into 4 equal parts. The first mark after 0 is one part from 0, so it is at $\\frac{1}{4}$. Change the number of parts and watch the first mark move."
+   },
+   {
+    "t": "why",
+    "html": "On a number line, a number tells how far it is from 0. The whole is the length from 0 to 1. Cut it into 4 equal lengths, and each length is $\\frac{1}{4}$. The point that is one of those lengths from 0 is at $\\frac{1}{4}$. So $\\frac{1}{4}$ is a number, a distance from 0, just like 1 or 2."
+   },
+   {
+    "t": "key",
+    "html": "To place $\\frac{1}{b}$, cut the space from 0 to 1 into $b$ equal parts. $\\frac{1}{b}$ is at the end of the first part, one part away from 0."
+   },
+   {
+    "t": "ex",
+    "title": "Read the point",
+    "q": "The space from 0 to 1 is cut into 3 equal parts. Point A is at the first mark after 0. Where is A?",
+    "steps": [
+     "Each part is $\\frac{1}{3}$ long.",
+     "A is one part from 0."
+    ],
+    "a": "$\\frac{1}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Count spaces",
+    "q": "A line from 0 to 1 has 7 marks, counting the marks at 0 and at 1. How many equal parts is it cut into?",
+    "steps": [
+     "Count the spaces between the marks, not the marks.",
+     "7 marks make 6 spaces."
+    ],
+    "a": "$6$ parts, so each is $\\frac{1}{6}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Counting tick marks instead of spaces.</b> The line below has 5 marks (numbered under it), but only 4 spaces, so it shows fourths, not fifths. The marks at 0 and at 1 are ends, not parts. Count the jumps from 0 to 1."
+   },
+   {
+    "t": "viz",
+    "name": "g3-nline",
+    "opts": {
+     "max": 1,
+     "d": 4,
+     "tickNums": true
+    },
+    "cap": "5 tick marks, 4 equal spaces: this line is cut into fourths."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.2a (represent 1/b on a number line diagram)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 4.1, Visualize Fractions (fractions on the number line)"
+   }
+  ]
+ },
+ "g3.fractions-number-line": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can place <a href=\"/math/grade-3/unit-fractions-number-line/\">unit fractions on the number line</a>, and you know $\\frac{3}{4}$ is <a href=\"/math/grade-3/build-fractions/\">3 pieces of size $\\frac{1}{4}$</a>. Put those together: $\\frac{3}{4}$ is 3 lengths of $\\frac{1}{4}$, measured from 0."
+   },
+   {
+    "t": "viz",
+    "name": "fractionline",
+    "opts": {
+     "d": 4,
+     "max": 2,
+     "point": "3/4",
+     "hops": true
+    },
+    "cap": "Three jumps of $\\frac{1}{4}$ from 0 land on $\\frac{3}{4}$. Drag the point past 1: five jumps land on $\\frac{5}{4}$."
+   },
+   {
+    "t": "why",
+    "html": "A point on the number line shows a distance from 0. For $\\frac{3}{4}$, the distance is three pieces of length $\\frac{1}{4}$, laid end to end starting at 0. That is why fractions are numbers: each one is a single point, and fractions bigger than 1, like $\\frac{5}{4}$, simply keep going past 1."
+   },
+   {
+    "t": "key",
+    "html": "To place $\\frac{a}{b}$: cut each whole into $b$ equal parts, start at 0, and count $a$ parts."
+   },
+   {
+    "t": "ex",
+    "title": "Less than 1",
+    "q": "Where is $\\frac{3}{4}$?",
+    "steps": [
+     "Cut 0 to 1 into 4 equal parts.",
+     "Start at 0 and count 3 parts: one, two, three."
+    ],
+    "a": "the third mark after 0"
+   },
+   {
+    "t": "ex",
+    "title": "More than 1",
+    "q": "A line is cut into thirds. Point B is 2 marks past 1. What fraction is at B?",
+    "steps": [
+     "From 0 to 1 there are 3 thirds.",
+     "2 more thirds makes 5 thirds in all."
+    ],
+    "a": "$\\frac{5}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Starting to count at the first tick after 0.</b> If you count the first mark as \"one\" you are already one part from 0, and the count comes out one too many. $\\frac{1}{4}$ is the first mark because it is one jump from 0. Count jumps, starting at 0."
+   },
+   {
+    "t": "viz",
+    "name": "fractionline",
+    "opts": {
+     "d": 6,
+     "max": 1,
+     "point": "0/6",
+     "task": "5/6",
+     "hops": true
+    },
+    "cap": "Your turn: put the point at $\\frac{5}{6}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.2b (represent a/b on a number line by marking off a lengths 1/b from 0)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 4.1, Visualize Fractions"
+   }
+  ]
+ },
+ "g3.whole-numbers-as-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "On the <a href=\"/math/grade-3/fractions-number-line/\">number line</a>, fractions keep going past 1. So some fractions land exactly on whole numbers."
+   },
+   {
+    "t": "viz",
+    "name": "fractionline",
+    "opts": {
+     "d": 3,
+     "max": 2,
+     "point": "6/3",
+     "hops": true
+    },
+    "cap": "Six jumps of $\\frac{1}{3}$ land on 2. So $\\frac{6}{3} = 2$."
+   },
+   {
+    "t": "why",
+    "html": "$\\frac{3}{3}$ is all 3 of the 3 equal parts: the whole thing, so $\\frac{3}{3} = 1$. Six thirds is two wholes, so $\\frac{6}{3} = 2$. And $\\frac{5}{1}$ means each whole is just 1 part; 5 of those parts are 5 wholes, so $\\frac{5}{1} = 5$. A fraction and a whole number can name the same point."
+   },
+   {
+    "t": "key",
+    "html": "When the numerator and denominator are equal, the fraction is 1: $\\frac{4}{4} = 1$. Every $b$ pieces of $\\frac{1}{b}$ make one whole. And any whole number can be written over 1: $5 = \\frac{5}{1}$."
+   },
+   {
+    "t": "ex",
+    "title": "One whole",
+    "q": "What is $\\frac{4}{4}$?",
+    "steps": [
+     "4 fourths is all 4 equal parts of the whole."
+    ],
+    "a": "$1$"
+   },
+   {
+    "t": "ex",
+    "title": "Two wholes",
+    "q": "What whole number is $\\frac{8}{4}$?",
+    "steps": [
+     "Every 4 fourths make 1.",
+     "8 fourths make 2 wholes."
+    ],
+    "a": "$2$"
+   },
+   {
+    "t": "ex",
+    "title": "Write a whole number as a fraction",
+    "q": "Write 3 as a fraction with denominator 4.",
+    "steps": [
+     "One whole is 4 fourths.",
+     "3 wholes is $3 \\times 4 = 12$ fourths."
+    ],
+    "a": "$3 = \\frac{12}{4}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Believing a fraction is always less than 1.</b> $\\frac{5}{4}$ is one whole and one more fourth, more than 1. Check with bars: a single bar holds only 4 fourths, so $\\frac{5}{4}$ needs a second bar."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      {
+       "n": 5,
+       "d": 4,
+       "len": 2
+      }
+     ]
+    },
+    "cap": "$\\frac{5}{4}$ fills one whole bar and one part of the next."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.3c (express whole numbers as fractions and recognize fractions equivalent to whole numbers)"
+   }
+  ]
+ },
+ "g3.equivalent-fractions-models": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "On the <a href=\"/math/grade-3/whole-numbers-as-fractions/\">number line</a>, $\\frac{4}{4}$ and 1 named the same point. Different fractions can share a point too. They are called <b>equivalent fractions</b>."
+   },
+   {
+    "t": "viz",
+    "name": "fractionline",
+    "opts": {
+     "d": 4,
+     "max": 1,
+     "point": "2/4",
+     "lines": [
+      2,
+      8
+     ]
+    },
+    "cap": "$\\frac{2}{4}$ lines up with $\\frac{1}{2}$ and with $\\frac{4}{8}$ on the lines below. Same point, three names."
+   },
+   {
+    "t": "why",
+    "html": "Start with $\\frac{1}{2}$ of a bar. Cut each half into 2 equal pieces: now the bar has 4 pieces, and the shaded part is 2 of them, $\\frac{2}{4}$. You made <b>more pieces</b>, but each piece is <b>half as big</b>, so the shaded amount did not change. That is why bigger numbers in a fraction do not mean a bigger amount."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "1/2"
+     ],
+     "equiv": true
+    },
+    "cap": "Use \"Cut each part into\" to cut the halves into 2, 3 or 4 pieces. The shading stays the same size: $\\frac{1}{2} = \\frac{2}{4} = \\frac{3}{6} = \\frac{4}{8}$."
+   },
+   {
+    "t": "key",
+    "html": "Equivalent fractions are the same size and sit at the same point on the number line, like $\\frac{1}{2} = \\frac{2}{4}$ and $\\frac{2}{3} = \\frac{4}{6}$."
+   },
+   {
+    "t": "ex",
+    "title": "Halves and fourths",
+    "q": "$\\frac{1}{2} = \\frac{\\square}{4}$",
+    "steps": [
+     "Each half is the same as 2 fourths.",
+     "So 1 half is 2 fourths."
+    ],
+    "a": "$2$"
+   },
+   {
+    "t": "ex",
+    "title": "Thirds and sixths",
+    "q": "$\\frac{2}{3} = \\frac{\\square}{6}$",
+    "steps": [
+     "Each third is 2 sixths.",
+     "2 thirds is $2 \\times 2 = 4$ sixths."
+    ],
+    "a": "$4$"
+   },
+   {
+    "t": "ex",
+    "title": "Going back",
+    "q": "$\\frac{6}{8} = \\frac{\\square}{4}$",
+    "steps": [
+     "2 eighths make 1 fourth.",
+     "6 eighths make $6 \\div 2 = 3$ fourths."
+    ],
+    "a": "$3$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Thinking $\\frac{2}{4}$ is bigger than $\\frac{1}{2}$ because its numbers are bigger.</b> The 4 means smaller pieces. Line the bars up: the shading for $\\frac{2}{4}$ ends exactly where the shading for $\\frac{1}{2}$ ends."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.3a (two fractions are equivalent if they are the same size or the same point on a number line)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.3b (recognize and generate simple equivalent fractions)"
+   }
+  ]
+ },
+ "g3.compare-same-denominator": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When two fractions have the same denominator, the pieces are the <a href=\"/math/grade-3/build-fractions/\">same size</a>. Comparing them is like comparing 3 apples with 5 apples."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "3/8",
+      "5/8"
+     ],
+     "guide": true
+    },
+    "cap": "Both bars are cut into eighths. $\\frac{5}{8}$ has 2 more of the same pieces, so it is longer."
+   },
+   {
+    "t": "why",
+    "html": "Eighths are all the same size. So $\\frac{3}{8}$ is 3 of them and $\\frac{5}{8}$ is 5 of them. Five pieces of the same size are more than three. On the number line, $\\frac{5}{8}$ is two jumps farther from 0."
+   },
+   {
+    "t": "key",
+    "html": "Same denominator: compare the numerators. More pieces of the same size is more. ($>$ means \"is greater than,\" $<$ means \"is less than.\")"
+   },
+   {
+    "t": "ex",
+    "title": "Use a symbol",
+    "q": "Compare $\\frac{3}{8}$ and $\\frac{5}{8}$.",
+    "steps": [
+     "Both are eighths, so the pieces match.",
+     "3 pieces is fewer than 5 pieces."
+    ],
+    "a": "$\\frac{3}{8} < \\frac{5}{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "A story",
+    "q": "Ana ran $\\frac{3}{4}$ of a mile. Ben ran $\\frac{2}{4}$ of a mile. Who ran farther?",
+    "steps": [
+     "Both distances are in fourths of a mile.",
+     "3 fourths is more than 2 fourths."
+    ],
+    "a": "Ana"
+   },
+   {
+    "t": "ex",
+    "title": "Order three",
+    "q": "Put $\\frac{4}{6}$, $\\frac{1}{6}$ and $\\frac{5}{6}$ in order from least to greatest.",
+    "steps": [
+     "All are sixths, so compare the numerators: 1, 4, 5.",
+     "On a number line they sit 1, 4 and 5 jumps from 0."
+    ],
+    "a": "$\\frac{1}{6}, \\frac{4}{6}, \\frac{5}{6}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Comparing parts of different wholes.</b> $\\frac{1}{2}$ of a small pizza can be less than $\\frac{1}{4}$ of a giant one. Comparing fractions only makes sense when they are parts of the <b>same-size</b> whole."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.3d (compare two fractions with the same numerator or the same denominator)"
+   }
+  ]
+ },
+ "g3.compare-same-numerator": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now the numerators match and the denominators differ, like $\\frac{2}{3}$ and $\\frac{2}{5}$. You have the same <b>number</b> of pieces, so the question is: whose pieces are bigger? Remember <a href=\"/math/grade-3/unit-fractions/\">more parts means smaller parts</a>."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "2/3",
+      "2/5"
+     ],
+     "guide": true
+    },
+    "cap": "Two pieces each. Thirds are bigger pieces than fifths, so $\\frac{2}{3}$ reaches farther."
+   },
+   {
+    "t": "why",
+    "html": "Both fractions take 2 pieces of the same whole. A whole cut into 3 parts has bigger parts than a whole cut into 5. Two big pieces are more than two small pieces. So $\\frac{2}{3} > \\frac{2}{5}$, even though 5 is bigger than 3."
+   },
+   {
+    "t": "key",
+    "html": "Same numerator: the fraction with the <b>smaller</b> denominator is greater, because its pieces are bigger."
+   },
+   {
+    "t": "ex",
+    "title": "Use a symbol",
+    "q": "Compare $\\frac{2}{3}$ and $\\frac{2}{5}$.",
+    "steps": [
+     "2 pieces each.",
+     "Thirds are bigger than fifths."
+    ],
+    "a": "$\\frac{2}{3} > \\frac{2}{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "A story",
+    "q": "Two pans of cornbread are the same size. Leo ate $\\frac{3}{4}$ of one pan and Mia ate $\\frac{3}{8}$ of the other. Who ate more?",
+    "steps": [
+     "Both ate 3 pieces.",
+     "Fourths are bigger pieces than eighths."
+    ],
+    "a": "Leo"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Picking the bigger denominator as larger.</b> With whole numbers, 5 is more than 3. But in $\\frac{2}{5}$ the 5 means fifths, small pieces. Check with circles or bars of the same size: two fifths covers less than two thirds."
+   },
+   {
+    "t": "viz",
+    "name": "fractioncircle",
+    "opts": {
+     "fracs": [
+      "3/4",
+      "3/8"
+     ],
+     "edit": false
+    },
+    "cap": "$\\frac{3}{4}$ and $\\frac{3}{8}$ of the same-size circle: same number of slices, very different amounts."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.NF.A.3d (compare two fractions with the same numerator by reasoning about their size)"
+   }
+  ]
+ },
+ "g3.time-to-minute": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-2/time-five-minutes/\">tell time to five minutes</a> by counting by 5s. Now we read the clock to the exact minute, using the small marks between the numbers."
+   },
+   {
+    "t": "viz",
+    "name": "clock",
+    "opts": {
+     "time": "7:43",
+     "step": 1,
+     "ring": true
+    },
+    "cap": "The red numbers show the minutes. The long hand is 3 small marks past the 8 (40 minutes), so it is 43 minutes past 7. Drag the hands, or use the buttons, and read each new time."
+   },
+   {
+    "t": "why",
+    "html": "The minute hand goes all the way around in 60 minutes. The clock has 60 small marks, one for each minute, and a number every 5 marks. So count by 5s to the last number the minute hand passed, then count on by 1s. The short hour hand moves slowly all hour long: at 7:43 it has gone most of the way from 7 toward 8, but it is still 7 o'clock until it reaches 8."
+   },
+   {
+    "t": "key",
+    "html": "Hour: the last number the short hand has passed. Minutes: count by 5s to the last number the long hand passed, then count on by 1s."
+   },
+   {
+    "t": "ex",
+    "title": "Count on",
+    "q": "The long hand is 3 marks past the 8, and the short hand is between 7 and 8. What time is it?",
+    "steps": [
+     "Hour: the short hand has passed 7 but not 8. The hour is 7.",
+     "Minutes: count by 5s to the 8: 5, 10, …, 40. Then 41, 42, 43."
+    ],
+    "a": "7:43"
+   },
+   {
+    "t": "ex",
+    "title": "Close to the hour",
+    "q": "The long hand is 2 marks before the 12, and the short hand is almost at 5. What time is it?",
+    "steps": [
+     "The short hand has not reached 5 yet, so the hour is 4.",
+     "2 marks before the 12 is 58 minutes."
+    ],
+    "a": "4:58"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Reading the next hour too soon.</b> At 4:55 the short hand is very close to the 5, so it is tempting to say 5:55. But the hour changes only when the hand <b>reaches</b> the next number, at the same moment the minute hand reaches 12. Until then, it is still 4 o'clock."
+   },
+   {
+    "t": "viz",
+    "name": "clock",
+    "opts": {
+     "time": "4:00",
+     "step": 1,
+     "task": "4:57"
+    },
+    "cap": "Your turn: set the clock to 4:57. Watch where the hour hand ends up."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.A.1 (tell and write time to the nearest minute)"
+   }
+  ]
+ },
+ "g3.elapsed-time": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-3/time-to-minute/\">read a clock to the minute</a>. Elapsed time is how much time passes from a start time to an end time: how long recess lasts, or when a movie ends."
+   },
+   {
+    "t": "viz",
+    "name": "clock",
+    "opts": {
+     "time": "10:10",
+     "from": "9:50",
+     "step": 1
+    },
+    "cap": "The shaded part shows the time from 9:50 to 10:10: 10 minutes up to 10:00, then 10 more. That is 20 minutes."
+   },
+   {
+    "t": "why",
+    "html": "An hour has 60 minutes, not 100, so times cannot be subtracted like ordinary numbers. Instead, count up. Jump from the start time to the next o'clock, then jump on to the end time, and add the jumps. The o'clock is a friendly stepping stone, like a ten on the number line."
+   },
+   {
+    "t": "key",
+    "html": "Count up from the start to the next hour, then on to the end. Add the jumps. To find an end time, add minutes the same way: first up to the hour, then the rest."
+   },
+   {
+    "t": "ex",
+    "title": "Across the hour",
+    "q": "Recess starts at 9:50 and ends at 10:10. How long is it?",
+    "steps": [
+     "9:50 to 10:00 is 10 minutes.",
+     "10:00 to 10:10 is 10 minutes.",
+     "$10 + 10 = 20$."
+    ],
+    "a": "20 minutes"
+   },
+   {
+    "t": "ex",
+    "title": "Find the end",
+    "q": "A movie starts at 2:35 and lasts 50 minutes. When does it end?",
+    "steps": [
+     "2:35 to 3:00 is 25 minutes.",
+     "$50 - 25 = 25$ minutes are left.",
+     "3:00 plus 25 minutes is 3:25."
+    ],
+    "a": "3:25"
+   },
+   {
+    "t": "ex",
+    "title": "Find the start",
+    "q": "Practice ended at 4:10. It lasted 25 minutes. When did it start?",
+    "steps": [
+     "Go back 10 minutes from 4:10 to 4:00.",
+     "$25 - 10 = 15$ more minutes back: 15 minutes before 4:00 is 3:45."
+    ],
+    "a": "3:45"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Subtracting times like ordinary numbers.</b> $1010 - 950 = 60$, but 9:50 to 10:10 is only 20 minutes. The mistake treats an hour as 100 minutes. Count up through the o'clock instead."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.A.1 (measure time intervals in minutes; solve word problems with time intervals)"
+   }
+  ]
+ },
+ "g3.mass-and-liquid-volume": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have <a href=\"/math/grade-2/measure-length/\">measured length</a> with a ruler. Two other things we measure are <b>mass</b> (how heavy something is) and <b>liquid volume</b> (how much liquid a container holds). Word problems about them use the same <a href=\"/math/grade-3/mult-div-word-problems/\">operations</a> as always."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Unit",
+     "Measures",
+     "About as much as"
+    ],
+    "rows": [
+     [
+      "1 gram (g)",
+      "mass",
+      "a paper clip"
+     ],
+     [
+      "1 kilogram (kg)",
+      "mass",
+      "a big book; 1,000 grams"
+     ],
+     [
+      "1 liter (L)",
+      "liquid volume",
+      "a large water bottle"
+     ]
+    ],
+    "cap": "Benchmarks to estimate with."
+   },
+   {
+    "t": "viz",
+    "name": "g3-measure",
+    "opts": {
+     "kind": "scale",
+     "max": 10,
+     "step": 1,
+     "value": 4,
+     "unit": "kg"
+    },
+    "cap": "A scale in kilograms. The needle points to 4, so the mass is 4 kilograms."
+   },
+   {
+    "t": "why",
+    "html": "Mass is the amount of stuff in an object, not its size. A pillow is big but has little mass; a rock the size of your fist has much more. A scale or a balance measures mass. Liquid volume is the space a liquid fills, measured in liters with marks on a container."
+   },
+   {
+    "t": "viz",
+    "name": "g3-measure",
+    "opts": {
+     "kind": "beaker",
+     "max": 10,
+     "step": 2,
+     "minor": 1,
+     "value": 7,
+     "unit": "L"
+    },
+    "cap": "The numbered lines go up by 2, and each small mark between them is 1 liter. The water is at 7 liters."
+   },
+   {
+    "t": "key",
+    "html": "Mass: grams and kilograms. Liquid volume: liters. Read the scale: find what each mark is worth, then read where the needle or the water reaches."
+   },
+   {
+    "t": "ex",
+    "title": "Read the marks",
+    "q": "A container is marked 2, 4, 6, 8, 10 liters, with one small mark between each pair. The water is at the small mark between 6 and 8. How much water?",
+    "steps": [
+     "Between 6 and 8 there is one small mark, so each small mark is 1 liter.",
+     "The mark between 6 and 8 is 7."
+    ],
+    "a": "7 liters"
+   },
+   {
+    "t": "ex",
+    "title": "Equal groups",
+    "q": "Each bag of flour has a mass of 3 kg. What is the mass of 4 bags?",
+    "steps": [
+     "4 groups of 3 kg: $4 \\times 3 = 12$."
+    ],
+    "a": "12 kg"
+   },
+   {
+    "t": "ex",
+    "title": "Sharing liquid",
+    "q": "12 liters of water are poured equally into 3 buckets. How much is in each?",
+    "steps": [
+     "Share 12 into 3 equal groups: $12 \\div 3 = 4$."
+    ],
+    "a": "4 liters"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Thinking bigger means heavier.</b> A beach ball is bigger than a brick but has much less mass. Check by thinking about lifting it, or put both on a balance: the side that goes down has more mass. And a kilogram of feathers has exactly the same mass as a kilogram of rocks."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.A.2 (measure and estimate liquid volumes and masses in grams, kilograms and liters)"
+   }
+  ]
+ },
+ "g3.area-unit-squares": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have split rectangles into <a href=\"/math/grade-2/partition-rectangle/\">rows and columns of squares</a>. Counting those squares measures something new: <b>area</b>, the amount of flat space a shape covers."
+   },
+   {
+    "t": "viz",
+    "name": "g3-shape",
+    "opts": {
+     "rect": [
+      4,
+      3
+     ],
+     "grid": "squares",
+     "sides": false
+    },
+    "cap": "This rectangle is covered by 12 unit squares, with no gaps and no overlaps. Its area is 12 square units."
+   },
+   {
+    "t": "why",
+    "html": "To measure length we use a unit length, like 1 inch, and count how many fit end to end. To measure area we use a <b>unit square</b>, a square 1 unit on each side, and count how many cover the shape. The squares must not overlap and must not leave gaps, or the count would be too big or too small."
+   },
+   {
+    "t": "key",
+    "html": "Area is the number of unit squares that cover a shape with no gaps or overlaps. It is measured in square units: square centimeters, square inches, square feet, square meters."
+   },
+   {
+    "t": "ex",
+    "title": "Count the squares",
+    "q": "A rectangle is covered by 3 rows of 4 unit squares. What is its area?",
+    "steps": [
+     "Count by rows: 4, 8, 12.",
+     "12 unit squares cover it."
+    ],
+    "a": "12 square units"
+   },
+   {
+    "t": "ex",
+    "title": "A bent shape",
+    "q": "A shape is made of a row of 5 squares with a row of 2 squares on top. What is its area?",
+    "steps": [
+     "Count each part: $5 + 2 = 7$."
+    ],
+    "a": "7 square units"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Leaving gaps or overlapping tiles</b> gives the wrong count. Line the squares up edge to edge, like floor tiles.<br><b>Counting along the edge.</b> The squares along the border are only some of the squares. Area counts every square inside, the middle ones too."
+   },
+   {
+    "t": "viz",
+    "name": "arraygrid",
+    "opts": {
+     "rows": 2,
+     "cols": 3,
+     "style": "squares",
+     "rotate": false,
+     "max": 8,
+     "task": {
+      "target": 12,
+      "all": true
+     }
+    },
+    "cap": "Make every rectangle you can with exactly 12 unit squares. They all have an area of 12 square units, even though they look different."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.C.5 (area as an attribute; unit squares)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.C.6 (measure areas by counting unit squares)"
+   }
+  ]
+ },
+ "g3.area-by-multiplying": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Counting <a href=\"/math/grade-3/area-unit-squares/\">unit squares</a> one by one is slow. But the squares in a rectangle form an <a href=\"/math/grade-3/arrays-multiplication/\">array</a>, and you know how to count arrays fast."
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": 4,
+     "b": 6,
+     "split": false,
+     "grid": true
+    },
+    "cap": "A 6-by-4 rectangle: 4 rows of 6 unit squares. $4 \\times 6 = 24$ square units."
+   },
+   {
+    "t": "why",
+    "html": "If a rectangle is 6 units long, 6 unit squares fit along it in one row. If it is 4 units wide, 4 such rows fit. That is an array of 4 rows of 6, so the number of squares is $4 \\times 6$. The side lengths tell you the rows and columns without drawing a single square."
+   },
+   {
+    "t": "key",
+    "html": "Area of a rectangle = length $\\times$ width. The answer is in square units."
+   },
+   {
+    "t": "ex",
+    "title": "Use the side lengths",
+    "q": "A rectangle is 6 cm long and 4 cm wide. What is its area?",
+    "steps": [
+     "4 rows of 6 square centimeters.",
+     "$4 \\times 6 = 24$."
+    ],
+    "a": "24 square cm"
+   },
+   {
+    "t": "ex",
+    "title": "A rug",
+    "q": "A rug is 9 feet long and 7 feet wide. What is its area?",
+    "steps": [
+     "$9 \\times 7 = 63$."
+    ],
+    "a": "63 square feet"
+   },
+   {
+    "t": "ex",
+    "title": "Missing side",
+    "q": "A rectangle has an area of 24 square meters. One side is 4 meters. How long is the other side?",
+    "steps": [
+     "$4 \\times \\square = 24$.",
+     "$4 \\times 6 = 24$."
+    ],
+    "a": "6 meters"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting the \"square.\"</b> The sides are in centimeters, but the area counts squares, so it is in <b>square</b> centimeters. 24 cm would be a length; 24 square cm is an area."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.C.7a (find the area of a rectangle by tiling and show it equals multiplying the side lengths)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.C.7b (multiply side lengths to find areas)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 9.4, Use Properties of Rectangles, Triangles, and Trapezoids"
+   }
+  ]
+ },
+ "g3.area-distributive": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You <a href=\"/math/grade-3/distributive-facts/\">broke apart facts</a> like $7 \\times 6 = 5 \\times 6 + 2 \\times 6$, and you can find the <a href=\"/math/grade-3/area-by-multiplying/\">area of a rectangle</a>. Here the two ideas meet: cut a rectangle into two smaller rectangles."
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": 6,
+     "b": [
+      5,
+      3
+     ],
+     "grid": true
+    },
+    "cap": "A 6-by-8 rectangle cut into a 6-by-5 part and a 6-by-3 part. $30 + 18 = 48$, the same as $6 \\times 8$."
+   },
+   {
+    "t": "why",
+    "html": "Cutting a rectangle does not change how much space it covers. The two pieces together cover exactly the whole. Both pieces are 6 tall, so their areas are $6 \\times 5$ and $6 \\times 3$. Adding them gives the whole area: $6 \\times 8 = 6 \\times 5 + 6 \\times 3$. This is the same break-apart idea, drawn as area."
+   },
+   {
+    "t": "key",
+    "html": "$a \\times (b + c) = a \\times b + a \\times c$. To find a big area, cut the rectangle into two easier rectangles and add their areas."
+   },
+   {
+    "t": "ex",
+    "title": "Cut the long side",
+    "q": "Find the area of a 6 by 8 rectangle by cutting 8 into $5 + 3$.",
+    "steps": [
+     "Left part: $6 \\times 5 = 30$.",
+     "Right part: $6 \\times 3 = 18$.",
+     "Whole: $30 + 18 = 48$."
+    ],
+    "a": "48 square units"
+   },
+   {
+    "t": "ex",
+    "title": "Bigger numbers",
+    "q": "Find $7 \\times 13$ using area.",
+    "steps": [
+     "Cut 13 into $10 + 3$.",
+     "$7 \\times 10 = 70$ and $7 \\times 3 = 21$.",
+     "$70 + 21 = 91$."
+    ],
+    "a": "91"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Adding a side instead of an area.</b> $6 \\times 5 + 3$ leaves out most of the right part: that part is 6 rows of 3, not just 3. Each part is a rectangle, so find each area by multiplying."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.C.7c (use area models to represent the distributive property)"
+   }
+  ]
+ },
+ "g3.area-composite": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Not every shape is a rectangle. An L-shape is made of two rectangles stuck together, so you can <a href=\"/math/grade-3/area-distributive/\">cut it into rectangles</a>, find each area and add."
+   },
+   {
+    "t": "viz",
+    "name": "g3-shape",
+    "opts": {
+     "poly": [
+      [
+       0,
+       0
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       8,
+       2
+      ],
+      [
+       8,
+       6
+      ],
+      [
+       0,
+       6
+      ]
+     ],
+     "sides": [
+      "5 m",
+      "2 m",
+      "3 m",
+      "4 m",
+      "8 m",
+      "6 m"
+     ],
+     "parts": [
+      [
+       0,
+       0,
+       5,
+       6,
+       "blue"
+      ],
+      [
+       5,
+       2,
+       3,
+       4,
+       "gold"
+      ]
+     ],
+     "cuts": [
+      [
+       5,
+       2,
+       5,
+       6
+      ]
+     ],
+     "fill": "none"
+    },
+    "cap": "An L-shape cut into a 5-by-6 rectangle (blue) and a 3-by-4 rectangle (gold)."
+   },
+   {
+    "t": "why",
+    "html": "Area adds up: if a shape is made of two pieces that do not overlap, its area is the area of one piece plus the area of the other. A cut along a side of the corner turns the L into two rectangles, and you know how to find the area of a rectangle."
+   },
+   {
+    "t": "key",
+    "html": "To find the area of an L-shape: cut it into two rectangles, find the side lengths of each, multiply, and add."
+   },
+   {
+    "t": "ex",
+    "title": "Cut and add",
+    "q": "Find the area of the L-shape in the picture.",
+    "steps": [
+     "Blue rectangle: 5 wide and 6 tall: $5 \\times 6 = 30$.",
+     "Gold rectangle: 3 wide and 4 tall: $3 \\times 4 = 12$.",
+     "Add: $30 + 12 = 42$ square meters."
+    ],
+    "a": "42 square meters"
+   },
+   {
+    "t": "ex",
+    "title": "Another way: take away",
+    "q": "Find the same area by thinking of the whole 8-by-6 rectangle with a corner missing.",
+    "steps": [
+     "Whole rectangle: $8 \\times 6 = 48$.",
+     "Missing corner: 3 wide and 2 tall: $3 \\times 2 = 6$.",
+     "$48 - 6 = 42$. Same answer."
+    ],
+    "a": "42 square meters"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Multiplying the two longest sides.</b> $8 \\times 6 = 48$ is the area of a full rectangle, but this shape has a corner cut out. Check: does the shape fill the whole 8-by-6 box? It does not, so its area must be less than 48."
+   },
+   {
+    "t": "viz",
+    "name": "geoboard",
+    "opts": {
+     "points": {
+      "A": [
+       1,
+       1
+      ],
+      "B": [
+       7,
+       1
+      ],
+      "C": [
+       7,
+       4
+      ],
+      "D": [
+       4,
+       4
+      ],
+      "E": [
+       4,
+       6
+      ],
+      "F": [
+       1,
+       6
+      ]
+     },
+     "objects": [
+      [
+       "poly",
+       "A",
+       "B",
+       "C",
+       "D",
+       "E",
+       "F"
+      ]
+     ],
+     "show": {
+      "len": true,
+      "area": true,
+      "ang": false
+     },
+     "xmax": 9,
+     "ymax": 7
+    },
+    "cap": "Drag the corners to make other L-shapes. The board shows each side and the area; check them by cutting into rectangles."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.C.7d (find areas of rectilinear figures by decomposing them into non-overlapping rectangles)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 9.5, Solve Geometry Applications: Circles and Irregular Figures"
+   }
+  ]
+ },
+ "g3.perimeter": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Area measures the space inside a shape. <b>Perimeter</b> measures the distance all the way around it, like a fence around a garden. You already <a href=\"/math/grade-2/measure-length/\">measure lengths</a>; perimeter adds them up."
+   },
+   {
+    "t": "viz",
+    "name": "geoboard",
+    "opts": {
+     "points": {
+      "A": [
+       1,
+       1
+      ],
+      "B": [
+       6,
+       1
+      ],
+      "C": [
+       6,
+       4
+      ],
+      "D": [
+       1,
+       4
+      ]
+     },
+     "objects": [
+      [
+       "poly",
+       "A",
+       "B",
+       "C",
+       "D"
+      ]
+     ],
+     "show": {
+      "len": true,
+      "per": true,
+      "area": true,
+      "ang": false
+     },
+     "xmax": 8,
+     "ymax": 6
+    },
+    "cap": "A 5-by-3 rectangle: the sides add to $5 + 3 + 5 + 3 = 16$ units of perimeter, while 15 unit squares fill the inside. Drag a corner and watch both change."
+   },
+   {
+    "t": "why",
+    "html": "Walk around the edge of a shape and add up the length of each side you walk along. That total is the perimeter. It is a length, so it is measured in units like centimeters, not square units. Area and perimeter measure different things, so the same rectangle can have an area of 15 square units and a perimeter of 16 units."
+   },
+   {
+    "t": "key",
+    "html": "Perimeter = the sum of all the side lengths. In a rectangle, opposite sides are equal, so add length + width + length + width."
+   },
+   {
+    "t": "ex",
+    "title": "A rectangle",
+    "q": "A rectangle is 5 cm long and 3 cm wide. What is its perimeter?",
+    "steps": [
+     "Sides: 5, 3, 5 and 3 cm.",
+     "$5 + 3 + 5 + 3 = 16$."
+    ],
+    "a": "16 cm"
+   },
+   {
+    "t": "ex",
+    "title": "A triangle",
+    "q": "A triangle has sides of 4 in, 6 in and 7 in. What is its perimeter?",
+    "steps": [
+     "$4 + 6 + 7 = 17$."
+    ],
+    "a": "17 inches"
+   },
+   {
+    "t": "ex",
+    "title": "On a grid",
+    "q": "A shape on a grid of 1-centimeter squares has sides of 4, 2, 2, 1, 2 and 3 cm, going around. What is its perimeter?",
+    "steps": [
+     "Add every side once: $4 + 2 + 2 + 1 + 2 + 3 = 14$."
+    ],
+    "a": "14 cm"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Mixing up area and perimeter.</b> Area counts squares inside; perimeter adds lengths around. Ask: am I covering it or going around it?<br><b>Counting corner squares twice.</b> On a grid, count the unit <b>edges</b> along the outside, not the squares next to the edge. A corner square touches the edge on two sides, so counting squares gives the wrong total."
+   },
+   {
+    "t": "viz",
+    "name": "g3-shape",
+    "opts": {
+     "poly": [
+      [
+       0,
+       0
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       2,
+       2
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "grid": "squares",
+     "sides": "auto",
+     "unit": "cm"
+    },
+    "cap": "Count the edges: $4 + 2 + 2 + 1 + 2 + 3 = 14$ cm. There are 10 squares inside, but that is the area, not the perimeter."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.D.8 (solve problems involving perimeters of polygons)"
+   },
+   {
+    "name": "OpenStax, Prealgebra 2e, section 9.4, Use Properties of Rectangles, Triangles, and Trapezoids"
+   }
+  ]
+ },
+ "g3.perimeter-unknown-side": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "If you know the <a href=\"/math/grade-3/perimeter/\">perimeter</a> and all the sides but one, you can find the missing side. It is a missing-number problem, like the ones you solved with <a href=\"/math/grade-3/letter-for-unknown/\">a letter for the unknown</a>."
+   },
+   {
+    "t": "viz",
+    "name": "g3-shape",
+    "opts": {
+     "poly": [
+      [
+       0,
+       4
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       8,
+       0
+      ],
+      [
+       11,
+       4
+      ]
+     ],
+     "sides": [
+      "5 cm",
+      "5 cm",
+      "?",
+      "11 cm"
+     ]
+    },
+    "cap": "The perimeter is 26 cm. Three sides add to $5 + 5 + 11 = 21$, so the missing side is $26 - 21 = 5$ cm."
+   },
+   {
+    "t": "why",
+    "html": "The perimeter is all the sides added together. So the sides you know plus the missing side make the perimeter. Taking the known sides away from the perimeter leaves exactly the missing side. For a rectangle, use what you know about its shape: the two lengths are equal and the two widths are equal."
+   },
+   {
+    "t": "key",
+    "html": "Missing side = perimeter $-$ the sum of the sides you know. In a rectangle, take away both lengths, then split what is left into the two equal widths."
+   },
+   {
+    "t": "ex",
+    "title": "Any polygon",
+    "q": "A shape has sides of 5, 5 and 11 cm and one unknown side. Its perimeter is 26 cm. Find the unknown side.",
+    "steps": [
+     "Known sides: $5 + 5 + 11 = 21$.",
+     "$26 - 21 = 5$.",
+     "Check: $5 + 5 + 5 + 11 = 26$."
+    ],
+    "a": "5 cm"
+   },
+   {
+    "t": "ex",
+    "title": "A rectangle",
+    "q": "A rectangle has a perimeter of 30 m and a length of 9 m. What is its width?",
+    "steps": [
+     "Two lengths: $9 + 9 = 18$.",
+     "Two widths make the rest: $30 - 18 = 12$.",
+     "Each width: $12 \\div 2 = 6$.",
+     "Check: $9 + 6 + 9 + 6 = 30$."
+    ],
+    "a": "6 m"
+   },
+   {
+    "t": "ex",
+    "title": "A square",
+    "q": "A square has a perimeter of 28 in. How long is each side?",
+    "steps": [
+     "4 equal sides: $4 \\times \\square = 28$.",
+     "$28 \\div 4 = 7$."
+    ],
+    "a": "7 in"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting that a rectangle has two lengths.</b> $30 - 9 = 21$ is not the width. The perimeter goes around both lengths and both widths. Check your answer by adding all four sides."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.D.8 (find an unknown side length given the perimeter)"
+   }
+  ]
+ },
+ "g3.same-perimeter-different-area": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can find both the <a href=\"/math/grade-3/perimeter/\">perimeter</a> and the <a href=\"/math/grade-3/area-composite/\">area</a> of a shape. Here is a puzzle: if two rectangles have the same perimeter, must they have the same area?"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Rectangle",
+     "Perimeter",
+     "Area"
+    ],
+    "rows": [
+     [
+      "1 by 7",
+      "16",
+      "7"
+     ],
+     [
+      "2 by 6",
+      "16",
+      "12"
+     ],
+     [
+      "3 by 5",
+      "16",
+      "15"
+     ],
+     [
+      "4 by 4",
+      "16",
+      "16"
+     ]
+    ],
+    "cap": "Every rectangle with whole-number sides and a perimeter of 16 units."
+   },
+   {
+    "t": "why",
+    "html": "The perimeter only fixes the total length around. With 16 units of fence, the length and width must add to 8 (half of 16), but they can split 8 in different ways: 1 and 7, 2 and 6, 3 and 5, 4 and 4. A long, thin rectangle encloses little space. As the sides get closer to equal, the area grows, and the square encloses the most."
+   },
+   {
+    "t": "viz",
+    "name": "geoboard",
+    "opts": {
+     "points": {
+      "A": [
+       1,
+       1
+      ],
+      "B": [
+       7,
+       1
+      ],
+      "C": [
+       7,
+       3
+      ],
+      "D": [
+       1,
+       3
+      ]
+     },
+     "objects": [
+      [
+       "poly",
+       "A",
+       "B",
+       "C",
+       "D"
+      ]
+     ],
+     "show": {
+      "len": true,
+      "per": true,
+      "area": true,
+      "ang": false
+     },
+     "xmax": 9,
+     "ymax": 7
+    },
+    "cap": "A 6-by-2 rectangle: perimeter 16, area 12. Drag the corners to make a 4-by-4 square. The perimeter stays 16, but the area grows to 16."
+   },
+   {
+    "t": "key",
+    "html": "Rectangles with the same perimeter can have different areas, and rectangles with the same area can have different perimeters. Always work out the one you need."
+   },
+   {
+    "t": "ex",
+    "title": "Same perimeter",
+    "q": "A 2-by-6 rectangle and a 4-by-4 square both have a perimeter of 16. How much more area does the square have?",
+    "steps": [
+     "Rectangle: $2 \\times 6 = 12$.",
+     "Square: $4 \\times 4 = 16$.",
+     "$16 - 12 = 4$."
+    ],
+    "a": "4 square units more"
+   },
+   {
+    "t": "ex",
+    "title": "Same area",
+    "q": "A 2-by-6 and a 3-by-4 rectangle both have an area of 12. Compare their perimeters.",
+    "steps": [
+     "$2 + 6 + 2 + 6 = 16$.",
+     "$3 + 4 + 3 + 4 = 14$.",
+     "The 2-by-6 rectangle's perimeter is 2 units longer."
+    ],
+    "a": "16 and 14"
+   },
+   {
+    "t": "ex",
+    "title": "From the perimeter",
+    "q": "A rectangle has a perimeter of 20 cm and one side of 3 cm. What is its area?",
+    "steps": [
+     "Length plus width is half the perimeter: $20 \\div 2 = 10$.",
+     "The other side is $10 - 3 = 7$ cm.",
+     "Area: $3 \\times 7 = 21$ square cm."
+    ],
+    "a": "21 square cm"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Assuming the same perimeter means the same area.</b> The table shows four rectangles, all with perimeter 16, whose areas are 7, 12, 15 and 16. Check by working out both measures for each shape."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.D.8 (rectangles with the same perimeter and different areas, or the same area and different perimeters)"
+   }
+  ]
+ },
+ "g3.scaled-graphs": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have read <a href=\"/math/grade-2/picture-bar-graphs/\">picture graphs and bar graphs</a> where each picture or each square stood for 1. When the numbers get big, one picture can stand for several. Your <a href=\"/math/grade-3/facts-2-5-10/\">facts of 2, 5 and 10</a> make these graphs quick to read."
+   },
+   {
+    "t": "viz",
+    "name": "g3-graph",
+    "opts": {
+     "kind": "picture",
+     "cats": [
+      "Red",
+      "Blue",
+      "Green",
+      "Yellow"
+     ],
+     "vals": [
+      15,
+      25,
+      10,
+      20
+     ],
+     "scale": 5,
+     "symbol": "circle",
+     "key": "votes",
+     "title": "Favorite colors"
+    },
+    "cap": "Read the key first: each circle stands for 5 votes."
+   },
+   {
+    "t": "why",
+    "html": "Drawing 25 pictures for 25 votes takes a lot of room. If each picture stands for 5 votes, 5 pictures are enough. Reading the graph is then an equal-groups problem: 5 circles, each worth 5, is $5 \\times 5 = 25$. Half a picture stands for half as many: with a key of 10, half a picture is 5."
+   },
+   {
+    "t": "key",
+    "html": "Always read the key or the scale first. Multiply the number of symbols by what each one stands for. On a bar graph, check how much each line on the scale is worth."
+   },
+   {
+    "t": "ex",
+    "title": "Read a picture graph",
+    "q": "In the graph above, how many votes did Blue get? How many more than Green?",
+    "steps": [
+     "Blue has 5 circles. $5 \\times 5 = 25$ votes.",
+     "Green has 2 circles: $2 \\times 5 = 10$ votes.",
+     "$25 - 10 = 15$ more."
+    ],
+    "a": "25 votes; 15 more"
+   },
+   {
+    "t": "viz",
+    "name": "g3-graph",
+    "opts": {
+     "kind": "bar",
+     "cats": [
+      "Cats",
+      "Dogs",
+      "Fish",
+      "Birds"
+     ],
+     "vals": [
+      12,
+      7,
+      16,
+      9
+     ],
+     "step": 2,
+     "max": 16,
+     "title": "Class pets",
+     "ylabel": "Number of students"
+    },
+    "cap": "The scale goes up by 2. A bar that stops halfway between two lines shows an odd number."
+   },
+   {
+    "t": "ex",
+    "title": "Read a bar graph",
+    "q": "How many students chose Dogs?",
+    "steps": [
+     "Each line on the scale is 2 more.",
+     "The Dogs bar ends halfway between 6 and 8.",
+     "Halfway between 6 and 8 is 7."
+    ],
+    "a": "7 students"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Counting each picture as 1.</b> If the key says each circle is 5 votes, 3 circles are 15 votes, not 3. Check the key every time, because different graphs use different keys."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.B.3 (draw and read scaled picture and bar graphs; solve how-many-more problems)"
+   }
+  ]
+ },
+ "g3.measure-half-quarter-inch": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know how to <a href=\"/math/grade-2/measure-length/\">measure with a ruler</a> in whole inches, and you can place <a href=\"/math/grade-3/fractions-number-line/\">fractions on a number line</a>. A ruler is a number line, so the marks between the inches are halves and quarters."
+   },
+   {
+    "t": "viz",
+    "name": "g3-ruler",
+    "opts": {
+     "inches": 6,
+     "marks": 4,
+     "len": "2 3/4",
+     "object": "pencil",
+     "name": "pencil"
+    },
+    "cap": "The pencil starts at 0 and ends 3 quarter marks past 2. It is $2\\frac{3}{4}$ inches long."
+   },
+   {
+    "t": "why",
+    "html": "Each inch on the ruler is cut into 4 equal parts, so each small part is $\\frac{1}{4}$ inch, just like fourths on a number line. The middle mark of each inch is $\\frac{2}{4}$, which is the same as $\\frac{1}{2}$. When the object starts at 0, the mark at its other end tells its length."
+   },
+   {
+    "t": "key",
+    "html": "Line one end up with 0. Count the whole inches, then count the quarter marks past the last whole inch. 1 quarter is $\\frac{1}{4}$, 2 quarters is $\\frac{1}{2}$, 3 quarters is $\\frac{3}{4}$."
+   },
+   {
+    "t": "ex",
+    "title": "Quarters",
+    "q": "A pencil starts at 0 and ends 3 small marks past the 2. How long is it?",
+    "steps": [
+     "2 whole inches.",
+     "3 quarters more: $\\frac{3}{4}$."
+    ],
+    "a": "$2\\frac{3}{4}$ inches"
+   },
+   {
+    "t": "ex",
+    "title": "Not starting at 0",
+    "q": "A ribbon starts at the 1 and ends at the halfway mark between 3 and 4. How long is it?",
+    "steps": [
+     "From 1 to 3 is 2 inches.",
+     "From 3 to the halfway mark is $\\frac{1}{2}$ inch more."
+    ],
+    "a": "$2\\frac{1}{2}$ inches"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Starting at the 1 mark,</b> or not checking where the object starts: then the end mark is not the length. Subtract the start, or count the inches from where the object begins.<br><b>Counting marks instead of lengths.</b> The length is how far the end is from the start, not how many tick marks you see."
+   },
+   {
+    "t": "viz",
+    "name": "fractionline",
+    "opts": {
+     "d": 4,
+     "max": 3,
+     "point": "0/4",
+     "labels": "mixed",
+     "task": "9/4"
+    },
+    "cap": "A ruler is a number line in inches. Put the point at $2\\frac{1}{4}$ inches."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.B.4 (measure lengths using rulers marked with halves and fourths of an inch)"
+   }
+  ]
+ },
+ "g3.line-plots-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have made <a href=\"/math/grade-2/line-plots/\">line plots</a> of whole-inch lengths. Now that you can <a href=\"/math/grade-3/measure-half-quarter-inch/\">measure to the nearest quarter inch</a>, the line plot needs halves and quarters on its scale."
+   },
+   {
+    "t": "viz",
+    "name": "g3-lineplot",
+    "opts": {
+     "min": 0,
+     "max": 2,
+     "d": 4,
+     "data": [
+      "1/2",
+      "3/4",
+      "3/4",
+      "1",
+      "1",
+      "1",
+      "1 1/4",
+      "1 1/4",
+      "1 1/2",
+      "1 3/4"
+     ],
+     "caption": "Length of each leaf (inches)"
+    },
+    "cap": "Ten leaves measured to the nearest quarter inch. Each X is one leaf."
+   },
+   {
+    "t": "why",
+    "html": "A line plot is a number line with an X above the spot for each measurement. Measurements that are the same stack up, so you can see at a glance which lengths are common, which are rare, and how spread out they are. The scale must match the measurements: quarter-inch data needs quarter marks."
+   },
+   {
+    "t": "key",
+    "html": "Draw a number line marked in the same units as the data (halves or quarters). Put one X above the matching mark for each measurement. Then count Xs to answer questions."
+   },
+   {
+    "t": "ex",
+    "title": "Make the plot",
+    "q": "Leaf lengths: $\\frac{1}{2}$, $\\frac{3}{4}$, $\\frac{3}{4}$, 1, 1, 1, $1\\frac{1}{4}$, $1\\frac{1}{4}$, $1\\frac{1}{2}$, $1\\frac{3}{4}$ inches. How do you plot them?",
+    "steps": [
+     "Mark a line from 0 to 2 in quarter inches.",
+     "Put one X for each leaf: 1 at $\\frac{1}{2}$, 2 at $\\frac{3}{4}$, 3 at 1, 2 at $1\\frac{1}{4}$, 1 at $1\\frac{1}{2}$, 1 at $1\\frac{3}{4}$.",
+     "Check: $1 + 2 + 3 + 2 + 1 + 1 = 10$ Xs for 10 leaves."
+    ],
+    "a": "the plot above"
+   },
+   {
+    "t": "ex",
+    "title": "Read the plot",
+    "q": "How many leaves are longer than 1 inch?",
+    "steps": [
+     "Look to the right of 1, not at 1.",
+     "$2 + 1 + 1 = 4$."
+    ],
+    "a": "4 leaves"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Putting an X at the wrong mark.</b> On a quarter-inch scale, $\\frac{1}{2}$ is the second small mark, the same as $\\frac{2}{4}$. Count quarters from the whole number before it. And make sure the number of Xs matches the number of measurements."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.MD.B.4 (show measurement data on a line plot marked in whole numbers, halves or quarters)"
+   }
+  ]
+ },
+ "g3.quadrilaterals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can name <a href=\"/math/grade-2/shapes-attributes/\">shapes by their sides and corners</a>. A <b>quadrilateral</b> is any shape with 4 straight sides. Some quadrilaterals have special names, and the names come from their <b>attributes</b>: equal sides and right angles (square corners)."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Name",
+     "It must have"
+    ],
+    "rows": [
+     [
+      "quadrilateral",
+      "4 straight sides"
+     ],
+     [
+      "rectangle",
+      "4 sides and 4 right angles"
+     ],
+     [
+      "rhombus",
+      "4 sides, all the same length"
+     ],
+     [
+      "square",
+      "4 right angles and 4 equal sides"
+     ]
+    ],
+    "cap": "What each name requires."
+   },
+   {
+    "t": "viz",
+    "name": "shapes",
+    "opts": {
+     "shape": "square",
+     "show": [
+      "equal",
+      "right"
+     ],
+     "turn": true
+    },
+    "cap": "A square. Press \"Turn it\": it is still a square, because turning does not change its sides or angles. Drag a corner and watch the name change."
+   },
+   {
+    "t": "why",
+    "html": "A name is a promise about attributes. \"Rectangle\" promises 4 right angles, and nothing about the sides. A square has 4 right angles, so it keeps that promise: every square is a rectangle. A square also has 4 equal sides, so every square is a rhombus too. But a rectangle with two long sides and two short sides is not a square."
+   },
+   {
+    "t": "key",
+    "html": "Check the attributes, not the look. Squares are rectangles and rhombuses, and all of them are quadrilaterals. Some quadrilaterals are none of these: their sides are not all equal and their corners are not all right angles."
+   },
+   {
+    "t": "ex",
+    "title": "Is a square a rectangle?",
+    "q": "Is every square a rectangle?",
+    "steps": [
+     "A rectangle needs 4 right angles.",
+     "Every square has 4 right angles."
+    ],
+    "a": "Yes"
+   },
+   {
+    "t": "ex",
+    "title": "Name it",
+    "q": "A shape has 4 equal sides but its corners are not right angles. What is it?",
+    "steps": [
+     "4 equal sides: a rhombus.",
+     "No right angles, so it is not a square or a rectangle."
+    ],
+    "a": "a rhombus"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Saying a square is not a rectangle because it \"looks different.\"</b> Shapes are sorted by attributes. Check: does it have 4 right angles? A square does, so it is a rectangle, a special one with equal sides. Also, a square turned on its corner is still a square."
+   },
+   {
+    "t": "viz",
+    "name": "shapes",
+    "opts": {
+     "shape": "quadrilateral",
+     "show": [
+      "equal",
+      "right",
+      "parallel"
+     ],
+     "task": {
+      "target": "rectangle",
+      "not": "square"
+     }
+    },
+    "cap": "Your turn: drag the corners to make a rectangle that is not a square."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.G.A.1 (shapes in different categories share attributes; rhombuses, rectangles and squares as quadrilaterals)"
+   }
+  ]
+ },
+ "g3.partition-shapes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know <a href=\"/math/grade-3/equal-parts/\">equal parts</a> and <a href=\"/math/grade-3/unit-fractions/\">unit fractions</a>, and you can measure <a href=\"/math/grade-3/area-unit-squares/\">area</a>. Put them together: when a shape is split into parts with equal area, each part is a unit fraction of the whole area."
+   },
+   {
+    "t": "viz",
+    "name": "g3-frac",
+    "opts": {
+     "model": "rect",
+     "d": 4,
+     "n": 0,
+     "shade": [
+      0,
+      2
+     ],
+     "pattern": "mix4",
+     "square": true
+    },
+    "cap": "A square split into 4 parts: two small rectangles and two triangles. The shaded rectangle and the shaded triangle look different, but each is $\\frac{1}{4}$ of the square."
+   },
+   {
+    "t": "why",
+    "html": "What matters for a fraction of a shape is how much <b>space</b> each part covers, not what the part looks like. The left half of the square is cut into 2 equal rectangles, so each is half of a half: $\\frac{1}{4}$. The right half is cut corner to corner into 2 equal triangles, so each is also half of a half: $\\frac{1}{4}$. Different shapes, same area."
+   },
+   {
+    "t": "key",
+    "html": "If a shape is split into $b$ parts with equal area, each part is $\\frac{1}{b}$ of the area of the shape. The parts do not need to have the same shape."
+   },
+   {
+    "t": "ex",
+    "title": "Six parts",
+    "q": "A rectangle is split into 6 parts with equal area. What fraction of the area is one part?",
+    "steps": [
+     "6 equal-area parts.",
+     "Each part is $\\frac{1}{6}$ of the area."
+    ],
+    "a": "$\\frac{1}{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "Triangles",
+    "q": "A square is cut along both diagonals into 4 triangles. What fraction of the area is each triangle?",
+    "steps": [
+     "The 4 triangles are the same size.",
+     "So each is $\\frac{1}{4}$ of the square."
+    ],
+    "a": "$\\frac{1}{4}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Thinking equal parts must look the same.</b> A rectangle piece and a triangle piece can have the same area. Check by comparing each part with a half of the shape, or by counting unit squares, instead of by looking at the shapes."
+   },
+   {
+    "t": "viz",
+    "name": "g3-frac",
+    "opts": {
+     "model": "rect",
+     "d": 6,
+     "n": 1,
+     "pattern": "grid",
+     "gr": [
+      2,
+      3
+     ]
+    },
+    "cap": "6 parts with equal area: the shaded part is $\\frac{1}{6}$ of the rectangle."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 3, 3.G.A.2 (partition shapes into parts with equal areas; express the area of each part as a unit fraction)"
+   }
+  ]
+ }
+}

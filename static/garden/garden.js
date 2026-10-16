@@ -62,7 +62,7 @@
     var top = x.sh === 'rect' ? (x.l || 0) * (x.w || 0) : Math.PI * Math.pow((x.d || 0) / 2, 2);
     var gal = c.p === 'custom' ? top * (x.h || 0) / 231 : x.gal;
     var nm = c.p === 'custom' ? (x.sh === 'rect' ? fx(x.l) + ' x ' + fx(x.w) + ' x ' + fx(x.h) + ' in container' : fx(x.d) + ' in round container, ' + fx(x.h) + ' in deep') : x.n;
-    return { n: nm, gal: gal, a: top / 144, h: x.h || 0 };
+    return { n: nm, gal: gal, a: top / 144, h: x.h || 0, sh: x.sh === 'rect' ? 'rect' : 'round', d: x.d || 0, l: x.l || 0, w: x.w || 0 };
   }
   function fx(v) { return Math.round((+v || 0) * 10) / 10; }
   function ins(v) { return MET() ? fx(v * 2.54) : fx(v); } // show inches (or cm) in inputs
@@ -97,7 +97,7 @@
   $('gd-cadd').addEventListener('click', function () { st.conts.push({ p: 'bucket5', q: 1 }); conts(); save(); render(); });
   var byCont = function () { return (st.where === 'indoor' || st.where === 'balcony') && st.planby === 'cont'; };
   function units() { // every container as its own unit, biggest first
-    var u = []; st.conts.forEach(function (c) { var d = cdims(c); if (!d || !(d.a > 0)) return; for (var i = 0; i < Math.min(+c.q || 0, 500); i++) u.push({ n: d.n, gal: d.gal, a: d.a, h: d.h }); });
+    var u = []; st.conts.forEach(function (c) { var d = cdims(c); if (!d || !(d.a > 0)) return; for (var i = 0; i < Math.min(+c.q || 0, 500); i++) u.push({ n: d.n, gal: d.gal, a: d.a, h: d.h, sh: d.sh, d: d.d, l: d.l, w: d.w }); });
     return u.sort(function (a, b) { return b.gal - a.gal; });
   }
   // match containers to the planned crops: crops needing the biggest containers choose first, taking the smallest that fit
@@ -134,14 +134,34 @@
     }
     if (c.zmin && z < c.zmin) return { s: 'no', why: 'too cold below zone ' + c.zmin };
     if (c.zmax && z > c.zmax) return { s: 'no', why: 'needs zone ' + c.zmax + ' or colder' };
-    if (c.lw && z < c.lw - 1) return { s: 'no', why: 'season too short in zone ' + z };
+    var sf = seasonFit(c); if (sf && sf.s === 'no') return sf;
     if (w === 'balcony') {
       if (c.k === 'microgreens') return { s: 'iffy', why: 'easier indoors' };
       if (c.con === false || (c.t === 'tree' && c.con !== true)) return { s: 'no', why: 'too big for containers' };
       if (c.con !== true) return { s: 'iffy', why: 'no container guidance found; try a large container' };
     } else if (c.k === 'microgreens') return { s: 'no', why: 'an indoor crop' };
-    if (c.lw && z < c.lw) return { s: 'iffy', why: 'short season here: choose early varieties' };
+    if (sf) return sf;
     return { s: 'ok' };
+  }
+  // Season length. Zones measure winter cold, not the growing season, so once the gardener sets frost dates (in the
+  // calendar below the plan) frost-tender crops are checked against the real frost-free days: planted at the middle of
+  // their window, the earliest varieties must ripen before the first fall frost. Without frost dates the old rough
+  // guide from the zone stays, and says so.
+  function mdDay(s) { var m = /^(\d\d)-(\d\d)$/.exec(s || ''); if (!m) return 0; var dm = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; return dm[+m[1] - 1] + +m[2]; }
+  function season() { var L = mdDay(st.lsf), F = mdDay(st.fff); if (!L || !F) return 0; return F > L ? F - L : F + 365 - L; }
+  function seasonFit(c) {
+    var n = season(), v = ((DATA.viz || {}).crops || {})[c.k];
+    if (n && c.t === 'annual' && c.fr === 'tender' && c.dh && v && v.pw) {
+      var left = n - (v.pw[0] + v.pw[1]) / 2 * 7;
+      if (left < c.dh[0]) return { s: 'no', why: 'needs more than your ' + n + ' frost-free days' };
+      if (left < c.dh[1]) return { s: 'iffy', why: 'choose early varieties for your ' + n + '-day season' };
+      return null;
+    }
+    if (n || !c.lw) return null;
+    var z = +st.zone;
+    if (z < c.lw - 1) return { s: 'no', why: 'season likely too short in zone ' + z + ' (a rough guide; set your frost dates below to check)' };
+    if (z < c.lw) return { s: 'iffy', why: 'short season likely here: choose early varieties (set your frost dates below to check)' };
+    return null;
   }
   function notes(c) {
     var z = +st.zone, out = [];
@@ -171,7 +191,7 @@
     $('gd-chipnote').innerHTML = (st.mode === 'only' ? 'Tap each crop you want; the plan uses only these. ' : 'Tapped crops are always included; the rest are suggested. ') +
       (iffy ? '⚠ means possible but not ideal ' + where + '. ' : '') + (hidden ? hidden + ' crop' + (hidden > 1 ? 's that don’t' : ' that doesn’t') + ' suit growing ' + where + (hidden > 1 ? ' are' : ' is') + ' hidden.' : '');
   }
-  function short(w) { return /grow lights/.test(w) ? 'needs grow lights' : /container guidance/.test(w) ? 'no pot size in sources' : /short season/.test(w) ? 'short season' : /too big/.test(w) ? 'too big for pots' : /indoors/.test(w) && /not suited/.test(w) ? 'not for indoors' : w; }
+  function short(w) { return /grow lights/.test(w) ? 'needs grow lights' : /container guidance/.test(w) ? 'no pot size in sources' : /short season|too short|frost-free days|-day season/.test(w) ? 'short season' : /too big/.test(w) ? 'too big for pots' : /indoors/.test(w) && /not suited/.test(w) ? 'not for indoors' : w; }
   $('gd-must').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
     if (b.id === 'gd-more') { showAll = !showAll; chips(); return; }
@@ -310,7 +330,7 @@
     return s || '—';
   }
   var ROT = [['legume'], ['root', 'allium'], ['nightshade', 'cucurbit', 'grass'], ['brassica', 'leafy-other']];
-  var ROTN = ['Beans and peas', 'Roots and onions', 'Fruiting crops and corn', 'Cabbage family and leafy greens'];
+  var ROTN = ['Beans and peas', 'Roots and onions', 'Tomato family, squash and corn', 'Cabbage family and leafy greens'];
   function rotation(picks) {
     var annual = picks.filter(function (p) { return p.c.t === 'annual'; }), w = st.where;
     if (!annual.length) return '';
@@ -477,11 +497,14 @@
     if (o.cards.length) h += '<h3>Your animals</h3><div class="gd-acards">' + o.cards.join('') + '</div>';
     h += together(picks, o);
     var anyA = o.hens || o.broil || o.bees;
-    h += '<h3>Next steps</h3><ol class="gd-steps">' + (w === 'indoor' ? '<li>Find your sunniest window (4 to 6 hours of direct sun), or set up a grow light on a timer.</li><li>Use pots with drainage holes and fresh potting mix.</li>' : '<li>Find your average last spring frost date: ask your county extension office (see “Finding local help” below). Planting times above count from it.</li><li>Get a soil test through your extension office before you add fertilizer or lime.</li>') +
+    $('gd-out').innerHTML = h;
+    h = '<h3>Next steps</h3><ol class="gd-steps">' + (w === 'indoor' ? '<li>Find your sunniest window (4 to 6 hours of direct sun), or set up a grow light on a timer.</li><li>Use pots with drainage holes and fresh potting mix.</li>' : '<li>Find your average last spring and first fall frost dates: ask your county extension office (see “Finding local help” below). Planting times count from them; set them in the calendar above.</li><li>Get a soil test through your extension office before you add fertilizer or lime.</li>') +
       (anyA ? '<li>Check your town’s rules for ' + list([o.hens || o.broil ? 'chickens' : '', o.bees ? 'bees' : ''].filter(Boolean)) + ' before you buy anything.</li>' : '') +
       '<li>Read the guides below: they’re picked for your space and crops' + (anyA ? ' and animals' : '') + '.</li><li>Start smaller than you think: a garden you can keep up with gives more food than a big one that gets away from you.</li></ol>';
-    $('gd-out').innerHTML = h;
+    $('gd-next').innerHTML = h;
     guides(picks, o);
+    G.plan = { where: w, area: A, planted: planted, byCont: !!CA, picks: picks, spare: P.spare || 0, pots: CA ? CA.spare : null, hens: o.hens || 0, people: people, mode: st.mode };
+    D.dispatchEvent(new CustomEvent('trb-garden-plan'));
   }
 
   // ---------- guides: show the ones that match the plan ----------
@@ -530,5 +553,17 @@
     D.querySelectorAll('.gd-ain').forEach(function (el) { el.hidden = !st[el.dataset.an]; });
     chips(); save(); render();
   }
+  // ---------- pictures (static/garden/viz): loaded only when the section comes near the screen ----------
+  var G = W.TRBGarden = { st: st, save: save, sync: function () { sync(); }, data: DATA, by: BY, rot: ROT, rotn: ROTN, plan: null, units: function () { return UN(); } };
+  function loadViz() {
+    var box = $('gd-viz'); if (!box || box.dataset.loaded) return; box.dataset.loaded = '1';
+    (box.dataset.js || '').split(' ').filter(Boolean).reduce(function (prev, src) {
+      return prev.then(function () { return new Promise(function (ok, no) { var sc = D.createElement('script'); sc.src = src; sc.onload = ok; sc.onerror = no; D.body.appendChild(sc); }); });
+    }, Promise.resolve()).catch(function () { box.dataset.loaded = ''; });
+  }
   showInputs(); conts(); sync(); refTable('');
+  if ($('gd-viz')) {
+    if ('IntersectionObserver' in W) { var io = new IntersectionObserver(function (es) { if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); loadViz(); } }, { rootMargin: '900px 0px' }); io.observe($('gd-viz')); }
+    else loadViz();
+  }
 })(window, document);

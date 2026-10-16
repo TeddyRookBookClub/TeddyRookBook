@@ -1,0 +1,161 @@
+{{- /* Math Ladder: the hub (/math/) and every course page (/math/<course slug>/, made by content/math/_content.gotmpl). */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
+{{- $all := site.Data.math.topics | default dict -}}
+{{- if .Params.course }}
+{{- /* ======================= a course page ======================= */ -}}
+{{- $key := .Params.course -}}
+{{- $c := index (where site.Data.math.courses "key" $key) 0 -}}
+{{- $d := index $all $key -}}
+{{- $idx := partialCached "inline/ml-index.html" "index" -}}
+{{- $next := slice }}{{ range site.Data.math.courses }}{{ if in (.after | default slice) $key }}{{ $next = $next | append . }}{{ end }}{{ end -}}
+{{- $nT := 0 }}{{ $nU := 0 }}{{ with $d }}{{ $nT = len .topics }}{{ $nU = len .units }}{{ end -}}
+<div class="mlp mlp-course" id="mlp-course" data-course="{{ $key }}" style="--mc:{{ $c.color }}">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>{{ $c.title }}</span></nav>
+  <header class="mlp-chero">
+    <span class="mlp-chero-icon" aria-hidden="true">{{ $c.icon }}</span>
+    <p class="mlp-eyebrow">Math Ladder · {{ $c.band }}{{ if ne (string $c.grade) "College" }} · {{ if eq (string $c.grade) "K" }}Kindergarten{{ else }}Grade {{ $c.grade }}{{ end }}{{ end }}</p>
+    <h1>{{ $c.title }}</h1>
+    <p class="mlp-chero-blurb">{{ $c.blurb }}</p>
+    <div class="mlp-chero-row">
+      <div class="mlp-cprog" aria-live="polite"><div class="mlp-bar" role="progressbar" aria-label="Topics passed" aria-valuemin="0" aria-valuemax="{{ $nT }}" aria-valuenow="0"><b style="width:0"></b></div><p class="mlp-cprog-t"><span data-passed>0</span> of {{ $nT }} topics passed<span data-due></span></p></div>
+      <div class="mlp-chero-btns">
+        {{- if $nT }}<a class="mlp-btn pri big" id="mlp-cstart" href="{{ "math/practice/" | relURL }}?course={{ $key }}">Start this course</a>{{ end }}
+        <a class="mlp-btn ghost-l" href="{{ "math/map/" | relURL }}?course={{ $key }}">Skill map</a>
+      </div>
+    </div>
+  </header>
+
+  <p class="mlp-cnext" id="mlp-cnext" hidden></p>
+
+  <div class="mlp-cmeta">
+    <p><b>{{ $nT }}</b> topics in <b>{{ $nU }}</b> units.
+    {{- with $c.after }} Builds on {{ range $i, $k := . }}{{ $a := index (where site.Data.math.courses "key" $k) 0 }}{{ if $i }} and {{ end }}<a href="{{ printf "math/%s/" $a.slug | relURL }}">{{ $a.title }}</a>{{ end }}.{{ end }}
+    {{- with $next }} Leads to {{ range $i, $a := . }}{{ if $i }}{{ if eq (add $i 1) (len $next) }} and {{ else }}, {{ end }}{{ end }}<a href="{{ printf "math/%s/" $a.slug | relURL }}">{{ $a.title }}</a>{{ end }}.{{ end }}
+    Not sure this is the right course? <a href="{{ "math/placement/" | relURL }}">Find your rung</a>.</p>
+    <ul class="mlp-legend" aria-label="What the colors mean">
+      <li><i class="st-passed"></i>Passed</li><li><i class="st-due"></i>Review due</li><li><i class="st-learning"></i>Learning</li><li><i class="st-ready"></i>Ready to learn</li><li><i class="st-locked"></i>Needs an earlier topic</li>
+    </ul>
+  </div>
+
+  {{- with $d }}
+  {{- $topics := .topics }}
+  {{- range $ui, $u := .units }}
+  {{- $ts := where $topics "unit" $u.key }}
+  <section class="mlp-unit" id="unit-{{ $u.key }}" aria-labelledby="h-{{ $u.key }}">
+    <div class="mlp-unit-head">
+      <h2 id="h-{{ $u.key }}"><span class="mlp-unit-n">Unit {{ add $ui 1 }}</span> {{ $u.title }}</h2>
+      <p class="mlp-unit-count" data-unit="{{ $u.key }}">{{ len $ts }} topics</p>
+    </div>
+    {{ with $u.blurb }}<p class="mlp-unit-blurb">{{ . }}</p>{{ end }}
+    <ol class="mlp-chips">
+      {{- range $ts }}
+      <li><a class="mlp-chip" href="{{ printf "math/%s/%s/" $c.slug .slug | relURL }}" data-id="{{ .id }}" title="{{ .short }}"><i class="mlp-dot" aria-hidden="true"></i><span>{{ .title }}</span><em class="mlp-sr" data-st></em></a></li>
+      {{- end }}
+    </ol>
+  </section>
+  {{- end }}
+  {{- else }}
+  <section class="mlp-soon"><h2>Coming soon</h2><p>The skill map for {{ $c.title }} is being written. Meanwhile, <a href="{{ "math/" | relURL }}">pick another course</a> or <a href="{{ "math/placement/" | relURL }}">find your rung</a>.</p></section>
+  {{- end }}
+
+  <aside class="mlp-tip">
+    <p><b>How a topic works.</b> Read the short lesson and its worked examples, then practice. Three right answers, the last two in a row, pass the topic. Passed topics come back for quick reviews, spaced further apart each time, so you keep them.</p>
+  </aside>
+  {{- $T := slice }}
+  {{- with $d }}{{ range .topics }}{{ $T = $T | append (dict "id" .id "course" $key "unit" .unit "title" .title "url" (printf "math/%s/%s/" $c.slug .slug | relURL) "prereqs" (.prereqs | default slice) "xp" (.xp | default 2)) }}{{ end }}{{ end }}
+  {{- /* titles of prerequisites from other courses, for "First, …" */ -}}
+  {{- $ext := slice }}{{ range $T }}{{ range .prereqs }}{{ $p := index $idx.T . }}{{ if and $p (ne $p.course $key) }}{{ $ext = $ext | append (dict "id" $p.id "course" $p.course "unit" $p.unit "title" $p.title "url" $p.url "prereqs" $p.prereqs "xp" $p.xp) }}{{ end }}{{ end }}{{ end }}
+  <script type="application/json" id="ml-data">{{ dict "course" $key "title" $c.title "partial" true "topics" ($ext | append $T) | jsonify | safeJS }}</script>
+</div>
+{{ partial "inline/ml-cfg.html" "course" }}
+{{ partial "inline/ml-js.html" "math/core/engine.js" }}
+{{ partial "inline/ml-js.html" "math/app/ui.js" }}
+{{ partial "inline/ml-js.html" "math/app/course.js" }}
+
+{{- else }}
+{{- /* ======================= the hub ======================= */ -}}
+{{- $bands := slice "College" "High school" "Middle school" "Elementary" -}}
+<div class="mlp mlp-hub" id="mlp-hub">
+  <header class="mlp-hero">
+    <div class="mlp-hero-text">
+      <p class="mlp-eyebrow">Math Ladder · Free, Kindergarten to college</p>
+      <h1>Climb from counting to calculus, one rung at a time</h1>
+      <p>Short lessons that build each idea from the ground up, worked examples, and practice that checks your answers and shows every step. Pass a topic, and it comes back for quick reviews so it stays with you. No sign-up, nothing to pay.</p>
+      <div class="mlp-hero-btns">
+        <a class="mlp-btn gold big" href="{{ "math/placement/" | relURL }}" id="mlp-hfind">Find your rung</a>
+        <a class="mlp-btn light big" href="{{ "math/practice/" | relURL }}" id="mlp-hgo">Start practicing</a>
+      </div>
+    </div>
+    <svg class="mlp-hero-art" viewBox="0 0 160 200" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"><path d="M40 196 L64 6"/><path d="M120 196 L96 6"/></g><g stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M45 160h72"/><path d="M50 120h62"/><path d="M55 80h52"/><path d="M60 40h42"/></g></svg>
+  </header>
+
+  <section class="mlp-continue" id="mlp-continue" aria-label="Continue" hidden></section>
+
+  <div class="mlp-hub-grid">
+    <section class="mlp-ladder-wrap" aria-labelledby="mlp-ladder-h">
+      <h2 id="mlp-ladder-h">The ladder</h2>
+      <p class="mlp-sub">Each rung is a full course. Start where you are; topics from earlier rungs come back when you need them.</p>
+      <ol class="mlp-ladder" id="mlp-ladder" reversed>
+        {{- $list := site.Data.math.courses }}
+        {{- $n := len $list }}
+        {{- range $bi, $band := $bands }}
+          {{- $in := where $list "band" $band }}
+          {{- if $in }}
+          <li class="mlp-band"><span>{{ $band }}</span></li>
+          {{- range $k := seq (sub $n 1) -1 0 }}
+            {{- $c := index $list $k }}
+            {{- if eq $c.band $band }}
+            {{- $nt := 0 }}{{ with index $all $c.key }}{{ $nt = len .topics }}{{ end }}
+            <li class="mlp-rung-li"><a class="mlp-rung" href="{{ printf "math/%s/" $c.slug | relURL }}" data-course="{{ $c.key }}" data-n="{{ $nt }}" style="--c:{{ $c.color }}">
+              <span class="mlp-rung-icon" aria-hidden="true">{{ $c.icon }}</span>
+              <span class="mlp-rung-main"><b>{{ $c.title }}</b><small>{{ if not (or (in $c.title "Grade") (in $c.title "Kindergarten")) }}{{ if eq (string $c.grade) "College" }}College · {{ else }}Grade {{ $c.grade }} · {{ end }}{{ end }}{{ if $nt }}{{ $nt }} topics{{ else }}coming soon{{ end }}</small></span>
+              <span class="mlp-rung-prog"><span class="mlp-rung-bar"><b style="width:0"></b></span><small data-pct></small></span>
+              <span class="mlp-here" hidden>You are here</span>
+            </a></li>
+            {{- end }}
+          {{- end }}
+          {{- end }}
+        {{- end }}
+      </ol>
+    </section>
+
+    <div class="mlp-hub-side">
+      <section class="mlp-card-s mlp-how" aria-labelledby="mlp-how-h">
+        <h2 id="mlp-how-h">How Math Ladder works</h2>
+        <ol class="mlp-how-list">
+          <li><b>Find your rung.</b> A short check, at most 30 questions, skips what you already know and finds your starting point.</li>
+          <li><b>Learn from first principles.</b> Each topic is one small idea. The lesson shows why it works, then walks through worked examples one step at a time.</li>
+          <li><b>Master it before moving on.</b> Three right answers, the last two in a row, pass a topic. If a topic gets hard, we point you to the skill underneath it.</li>
+          <li><b>Review, spaced out.</b> Passed topics come back after 1 day, then 3, 7, 16 days and longer, for two quick problems each. Harder topics that use an older one count as practice for it.</li>
+          <li><b>Mix it up.</b> Reviews and checkpoint quizzes mix problems from different topics, so you learn to tell which method a problem needs.</li>
+          <li><b>Earn XP.</b> About one point per minute of focused work. Set a daily goal and keep your streak going.</li>
+        </ol>
+        <p class="mlp-src">Why these steps: the U.S. Institute of Education Sciences practice guide <a href="https://ies.ed.gov/ncee/wwc/PracticeGuide/1" rel="noopener">Organizing Instruction and Study to Improve Student Learning</a> (Pashler and others, NCER 2007-2004) recommends spacing reviews out over time, alternating worked examples with problems students solve on their own, pairing pictures with words, and using quizzes to bring key content back. Math Ladder is built around those ideas.</p>
+      </section>
+
+      <section class="mlp-card-s" aria-labelledby="mlp-hs-h">
+        <h2 id="mlp-hs-h">More math on Teddy Rook Book</h2>
+        <ul class="mlp-links">
+          <li><a href="{{ "homeschool/rays-arithmetic/" | relURL }}"><span aria-hidden="true">📘</span><span><b>Ray's Arithmetic</b><small>The classic arithmetic series with a guide for every lesson</small></span></a></li>
+          <li><a href="{{ "homeschool/calculator/" | relURL }}"><span aria-hidden="true">📈</span><span><b>Graphing calculator</b><small>Graph, solve, factor, and take derivatives</small></span></a></li>
+          <li><a href="{{ "homeschool/" | relURL }}"><span aria-hidden="true">🏫</span><span><b>Homeschool</b><small>Lessons, planner and practice for every subject</small></span></a></li>
+        </ul>
+      </section>
+
+      <section class="mlp-card-s mlp-saved" aria-labelledby="mlp-save-h">
+        <h2 id="mlp-save-h">Your progress is saved in this browser</h2>
+        <p>No account needed. To move to another device, or to keep a backup, copy your save code and paste it in on the other device.</p>
+        <div class="mlp-save" id="mlp-save"></div>
+        <p class="mlp-small"><a href="{{ "math/progress/" | relURL }}">See your progress</a> · The site's <a href="{{ "progress/" | relURL }}">My Progress</a> page backs up everything at once.</p>
+      </section>
+    </div>
+  </div>
+</div>
+{{ partial "inline/ml-cfg.html" "hub" }}
+{{ partial "inline/ml-js.html" "math/core/engine.js" }}
+{{ partial "inline/ml-js.html" "math/app/ui.js" }}
+{{ partial "inline/ml-js.html" "math/app/hub.js" }}
+{{- end }}
+{{ end }}

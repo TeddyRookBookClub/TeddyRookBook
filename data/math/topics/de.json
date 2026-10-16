@@ -1,0 +1,522 @@
+{
+  "course": "de",
+  "units": [
+    {"key":"first-order","title":"First-Order Equations","blurb":"Classify equations and solve linear, exact and substitution-type first-order equations."},
+    {"key":"first-order-models","title":"First-Order Models","blurb":"Build and solve models of mixing, growth, cooling and motion."},
+    {"key":"second-order","title":"Second-Order Linear Equations","blurb":"Solve constant-coefficient equations, homogeneous and forced, and model vibrations."},
+    {"key":"laplace","title":"Laplace Transforms","blurb":"Turn differential equations into algebra, including steps and impulses."},
+    {"key":"systems","title":"Systems of Differential Equations","blurb":"Solve linear systems with eigenvalues and read phase portraits, then study nonlinear systems."},
+    {"key":"series-solutions","title":"Series Solutions","blurb":"Solve equations with power series near ordinary and singular points."},
+    {"key":"fourier-pde","title":"Fourier Series and PDEs","blurb":"Expand functions in Fourier series and solve the heat, wave and Laplace equations."}
+  ],
+  "topics": [
+    {
+      "id": "de.classify-des",
+      "slug": "classify-des",
+      "unit": "first-order",
+      "title": "Order, Linearity and Solutions",
+      "short": "Classify a differential equation and check a proposed solution.",
+      "prereqs": ["calc2.de-intro"],
+      "xp": 1,
+      "trouble": "Students call y′ = y² linear because there is no product of derivatives.",
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "de.existence-uniqueness-de",
+      "slug": "existence-uniqueness-de",
+      "unit": "first-order",
+      "title": "Initial Value Problems, Existence and Uniqueness",
+      "short": "Know when exactly one solution passes through a point.",
+      "prereqs": ["de.classify-des","calc2.slope-fields-euler"],
+      "xp": 2,
+      "trouble": "Students assume every initial value problem has exactly one solution, missing cases like y′ = √y with y(0) = 0.",
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "de.linear-first-order",
+      "slug": "linear-first-order",
+      "unit": "first-order",
+      "title": "Linear Equations and Integrating Factors",
+      "short": "Multiply by e^(∫p dt) so the left side becomes a product's derivative.",
+      "prereqs": ["de.classify-des","calc2.separable-equations"],
+      "xp": 2,
+      "trouble": "Students use the integrating factor before putting the equation in standard form, or multiply only the left side.",
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "de.exact-equations",
+      "slug": "exact-equations",
+      "unit": "first-order",
+      "title": "Exact Equations",
+      "short": "M dx + N dy = 0 is exact when My = Nx.",
+      "prereqs": ["de.linear-first-order","calc3.higher-partials"],
+      "xp": 3,
+      "viz": ["gradient"]
+    },
+    {
+      "id": "de.substitutions",
+      "slug": "substitutions",
+      "unit": "first-order",
+      "title": "Homogeneous and Bernoulli Equations",
+      "short": "Change variables to reach a separable or linear equation.",
+      "prereqs": ["de.linear-first-order"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.autonomous-phase-line",
+      "slug": "autonomous-phase-line",
+      "unit": "first-order",
+      "title": "Autonomous Equations and the Phase Line",
+      "short": "Equilibria and their stability come from the sign of f(y).",
+      "prereqs": ["calc2.logistic-equation"],
+      "xp": 2,
+      "trouble": "Students call an equilibrium stable when solutions approach from only one side.",
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "de.numerical-methods",
+      "slug": "numerical-methods",
+      "unit": "first-order",
+      "title": "Improved Euler and Runge–Kutta Methods",
+      "short": "Average slopes for much better accuracy.",
+      "prereqs": ["calc2.slope-fields-euler"],
+      "xp": 2,
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "de.mixing-problems",
+      "slug": "mixing-problems",
+      "unit": "first-order-models",
+      "title": "Mixing Problems",
+      "short": "Rate of change = rate in − rate out.",
+      "prereqs": ["de.linear-first-order"],
+      "xp": 3,
+      "trouble": "Students subtract the outflow rate in liters instead of the amount of salt leaving per minute.",
+      "viz": []
+    },
+    {
+      "id": "de.growth-cooling",
+      "slug": "growth-cooling",
+      "unit": "first-order-models",
+      "title": "Growth, Decay and Newton's Law of Cooling",
+      "short": "Rate proportional to amount, or to the temperature difference.",
+      "prereqs": ["de.linear-first-order","alg2.exponential-log-models"],
+      "xp": 2,
+      "trouble": "Students forget the surrounding temperature and model the temperature itself as decaying to 0.",
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "de.population-harvesting",
+      "slug": "population-harvesting",
+      "unit": "first-order-models",
+      "title": "Population Models with Harvesting",
+      "short": "Add harvesting to logistic growth and find the new equilibria.",
+      "prereqs": ["de.autonomous-phase-line"],
+      "xp": 3,
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "de.motion-circuits",
+      "slug": "motion-circuits",
+      "unit": "first-order-models",
+      "title": "Falling Objects with Drag and RC Circuits",
+      "short": "Model velocity with air resistance and charging circuits.",
+      "prereqs": ["de.linear-first-order"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.second-order-intro",
+      "slug": "second-order-intro",
+      "unit": "second-order",
+      "title": "Second-Order Linear Equations and Superposition",
+      "short": "Combinations of solutions of a homogeneous linear equation are solutions.",
+      "prereqs": ["de.linear-first-order","la.linear-independence"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "de.wronskian",
+      "slug": "wronskian",
+      "unit": "second-order",
+      "title": "Independence and the Wronskian",
+      "short": "Two solutions form a basis when their Wronskian is not zero.",
+      "prereqs": ["de.second-order-intro","la.cofactor-expansion"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "de.real-roots",
+      "slug": "real-roots",
+      "unit": "second-order",
+      "title": "Constant Coefficients: Distinct Real Roots",
+      "short": "Try y = e^(rt) and solve the characteristic equation.",
+      "prereqs": ["de.second-order-intro"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "de.complex-roots-de",
+      "slug": "complex-roots-de",
+      "unit": "second-order",
+      "title": "Constant Coefficients: Complex Roots",
+      "short": "e^(αt)(c₁ cos βt + c₂ sin βt) from Euler's formula.",
+      "prereqs": ["de.real-roots","pre.complex-polar-form"],
+      "xp": 3,
+      "trouble": "Students use the whole complex root in the cosine, writing cos((α + iβ)t).",
+      "viz": ["trigwave"]
+    },
+    {
+      "id": "de.repeated-roots",
+      "slug": "repeated-roots",
+      "unit": "second-order",
+      "title": "Constant Coefficients: Repeated Roots",
+      "short": "A second solution is te^(rt).",
+      "prereqs": ["de.real-roots"],
+      "xp": 2,
+      "trouble": "Students write c₁e^(rt) + c₂e^(rt), which is only one solution.",
+      "viz": []
+    },
+    {
+      "id": "de.reduction-of-order",
+      "slug": "reduction-of-order",
+      "unit": "second-order",
+      "title": "Reduction of Order",
+      "short": "Use one known solution to find another.",
+      "prereqs": ["de.repeated-roots"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.undetermined-coefficients",
+      "slug": "undetermined-coefficients",
+      "unit": "second-order",
+      "title": "Undetermined Coefficients",
+      "short": "Guess a particular solution shaped like the forcing term.",
+      "prereqs": ["de.complex-roots-de","de.repeated-roots"],
+      "xp": 3,
+      "trouble": "Students guess a term that already solves the homogeneous equation and do not multiply by t.",
+      "viz": []
+    },
+    {
+      "id": "de.variation-of-parameters",
+      "slug": "variation-of-parameters",
+      "unit": "second-order",
+      "title": "Variation of Parameters",
+      "short": "A general method for any forcing term.",
+      "prereqs": ["de.undetermined-coefficients","de.wronskian"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.free-vibrations",
+      "slug": "free-vibrations",
+      "unit": "second-order",
+      "title": "Free Vibrations and Damping",
+      "short": "Underdamped, critically damped and overdamped springs.",
+      "prereqs": ["de.complex-roots-de"],
+      "xp": 2,
+      "viz": ["springmass"]
+    },
+    {
+      "id": "de.forced-resonance",
+      "slug": "forced-resonance",
+      "unit": "second-order",
+      "title": "Forced Vibrations and Resonance",
+      "short": "Driving near the natural frequency makes the amplitude grow.",
+      "prereqs": ["de.free-vibrations","de.undetermined-coefficients"],
+      "xp": 3,
+      "viz": ["springmass","trigwave"]
+    },
+    {
+      "id": "de.rlc-circuits",
+      "slug": "rlc-circuits",
+      "unit": "second-order",
+      "title": "RLC Circuits",
+      "short": "The same equation as a damped spring, in electrical form.",
+      "prereqs": ["de.forced-resonance"],
+      "xp": 3,
+      "viz": ["springmass"]
+    },
+    {
+      "id": "de.higher-order",
+      "slug": "higher-order",
+      "unit": "second-order",
+      "title": "Higher-Order Linear Equations",
+      "short": "Extend the characteristic-equation method to order n.",
+      "prereqs": ["de.undetermined-coefficients"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.laplace-definition",
+      "slug": "laplace-definition",
+      "unit": "laplace",
+      "title": "The Laplace Transform",
+      "short": "L{f}(s) = ∫₀^∞ e^(−st) f(t) dt.",
+      "prereqs": ["calc2.improper-integrals","calc2.integration-by-parts"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "de.laplace-properties",
+      "slug": "laplace-properties",
+      "unit": "laplace",
+      "title": "Transforms of Derivatives and Shifts",
+      "short": "L{y′} = sY − y(0), and the shift rules.",
+      "prereqs": ["de.laplace-definition"],
+      "xp": 3,
+      "trouble": "Students forget the initial-value terms in L{y″}.",
+      "viz": []
+    },
+    {
+      "id": "de.inverse-laplace",
+      "slug": "inverse-laplace",
+      "unit": "laplace",
+      "title": "Inverse Transforms",
+      "short": "Use partial fractions and tables to go back to t.",
+      "prereqs": ["de.laplace-properties","calc2.partial-fractions"],
+      "xp": 3,
+      "trouble": "Students complete the square incorrectly and miss a shifted sine or cosine.",
+      "viz": []
+    },
+    {
+      "id": "de.laplace-ivps",
+      "slug": "laplace-ivps",
+      "unit": "laplace",
+      "title": "Solving Initial Value Problems with Laplace",
+      "short": "Transform, solve for Y, and invert.",
+      "prereqs": ["de.inverse-laplace","de.real-roots"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.step-forcing",
+      "slug": "step-forcing",
+      "unit": "laplace",
+      "title": "Step Functions and Piecewise Forcing",
+      "short": "Use u(t − c) to switch forces on and off.",
+      "prereqs": ["de.laplace-ivps"],
+      "xp": 3,
+      "trouble": "Students write u(t − c)f(t) when the shift rule needs u(t − c)f(t − c).",
+      "viz": []
+    },
+    {
+      "id": "de.impulses",
+      "slug": "impulses",
+      "unit": "laplace",
+      "title": "Impulses and the Delta Function",
+      "short": "Model a sudden kick with δ(t − c).",
+      "prereqs": ["de.step-forcing"],
+      "xp": 3,
+      "viz": ["springmass"]
+    },
+    {
+      "id": "de.convolution",
+      "slug": "convolution",
+      "unit": "laplace",
+      "title": "Convolution",
+      "short": "The transform of a convolution is a product of transforms.",
+      "prereqs": ["de.laplace-ivps"],
+      "xp": 3,
+      "trouble": "Students think the transform of a product f·g is the product of the transforms.",
+      "viz": []
+    },
+    {
+      "id": "de.systems-matrix-form",
+      "slug": "systems-matrix-form",
+      "unit": "systems",
+      "title": "Systems in Matrix Form",
+      "short": "Write x′ = Ax, and rewrite a second-order equation as a system.",
+      "prereqs": ["de.second-order-intro","la.matrix-equation"],
+      "xp": 2,
+      "viz": ["phaseplane"]
+    },
+    {
+      "id": "de.eigen-solutions",
+      "slug": "eigen-solutions",
+      "unit": "systems",
+      "title": "Solving Systems with Real Eigenvalues",
+      "short": "x = c₁e^(λ₁t)v₁ + c₂e^(λ₂t)v₂.",
+      "prereqs": ["de.systems-matrix-form","la.diagonalization"],
+      "xp": 3,
+      "viz": ["phaseplane"]
+    },
+    {
+      "id": "de.phase-portraits",
+      "slug": "phase-portraits",
+      "unit": "systems",
+      "title": "Phase Portraits",
+      "short": "Nodes, saddles, spirals and centers from the eigenvalues.",
+      "prereqs": ["de.eigen-solutions"],
+      "xp": 3,
+      "trouble": "Students decide stability from the eigenvectors instead of the signs of the eigenvalues.",
+      "viz": ["phaseplane"]
+    },
+    {
+      "id": "de.complex-eigen-systems",
+      "slug": "complex-eigen-systems",
+      "unit": "systems",
+      "title": "Systems with Complex Eigenvalues",
+      "short": "Real and imaginary parts give spiraling solutions.",
+      "prereqs": ["de.phase-portraits","la.complex-eigenvalues"],
+      "xp": 3,
+      "viz": ["phaseplane"]
+    },
+    {
+      "id": "de.repeated-eigen-systems",
+      "slug": "repeated-eigen-systems",
+      "unit": "systems",
+      "title": "Systems with Repeated Eigenvalues",
+      "short": "Find a generalized eigenvector when one is missing.",
+      "prereqs": ["de.phase-portraits"],
+      "xp": 3,
+      "viz": ["phaseplane"]
+    },
+    {
+      "id": "de.matrix-exponential",
+      "slug": "matrix-exponential",
+      "unit": "systems",
+      "title": "The Matrix Exponential",
+      "short": "x(t) = e^(At)x(0).",
+      "prereqs": ["de.eigen-solutions","calc2.known-series"],
+      "xp": 3,
+      "trouble": "Students compute e^(At) by exponentiating each entry.",
+      "viz": []
+    },
+    {
+      "id": "de.nonhomogeneous-systems",
+      "slug": "nonhomogeneous-systems",
+      "unit": "systems",
+      "title": "Nonhomogeneous Systems",
+      "short": "Add a particular solution to the homogeneous solution.",
+      "prereqs": ["de.eigen-solutions","de.undetermined-coefficients"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.linearization",
+      "slug": "linearization",
+      "unit": "systems",
+      "title": "Nonlinear Systems and Linearization",
+      "short": "Classify equilibria with the Jacobian.",
+      "prereqs": ["de.phase-portraits","calc3.partial-derivatives"],
+      "xp": 3,
+      "viz": ["phaseplane"]
+    },
+    {
+      "id": "de.predator-prey-pendulum",
+      "slug": "predator-prey-pendulum",
+      "unit": "systems",
+      "title": "Predator–Prey and the Pendulum",
+      "short": "Study classic nonlinear models in the phase plane.",
+      "prereqs": ["de.linearization"],
+      "xp": 3,
+      "viz": ["phaseplane"]
+    },
+    {
+      "id": "de.series-solutions",
+      "slug": "series-solutions",
+      "unit": "series-solutions",
+      "title": "Power Series Solutions near Ordinary Points",
+      "short": "Substitute y = Σaₙxⁿ and find a recurrence.",
+      "prereqs": ["de.second-order-intro","calc2.differentiate-integrate-series"],
+      "xp": 3,
+      "trouble": "Students shift the summation index on one sum but not the others before matching coefficients.",
+      "viz": ["taylor"]
+    },
+    {
+      "id": "de.cauchy-euler",
+      "slug": "cauchy-euler",
+      "unit": "series-solutions",
+      "title": "Cauchy–Euler Equations",
+      "short": "Try y = xʳ for x²y″ + axy′ + by = 0.",
+      "prereqs": ["de.real-roots"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "de.frobenius",
+      "slug": "frobenius",
+      "unit": "series-solutions",
+      "title": "Regular Singular Points and Frobenius",
+      "short": "Use y = Σaₙx^(n + r) near a regular singular point.",
+      "prereqs": ["de.series-solutions","de.cauchy-euler"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.boundary-value-problems",
+      "slug": "boundary-value-problems",
+      "unit": "fourier-pde",
+      "title": "Boundary Value Problems and Eigenfunctions",
+      "short": "Some values of λ allow nonzero solutions with fixed ends.",
+      "prereqs": ["de.real-roots","de.complex-roots-de"],
+      "xp": 3,
+      "trouble": "Students miss the case λ = 0 or λ < 0 when finding eigenvalues.",
+      "viz": ["trigwave"]
+    },
+    {
+      "id": "de.fourier-series",
+      "slug": "fourier-series",
+      "unit": "fourier-pde",
+      "title": "Fourier Series",
+      "short": "Write a periodic function as a sum of sines and cosines.",
+      "prereqs": ["de.boundary-value-problems","calc2.integration-by-parts"],
+      "xp": 3,
+      "trouble": "Students use the wrong interval length in the coefficient formulas.",
+      "viz": ["trigwave","seriespartial"]
+    },
+    {
+      "id": "de.sine-cosine-series",
+      "slug": "sine-cosine-series",
+      "unit": "fourier-pde",
+      "title": "Fourier Sine and Cosine Series and Convergence",
+      "short": "Extend a function oddly or evenly; the series meets jumps halfway.",
+      "prereqs": ["de.fourier-series"],
+      "xp": 3,
+      "viz": ["trigwave","seriespartial"]
+    },
+    {
+      "id": "de.separation-of-variables",
+      "slug": "separation-of-variables",
+      "unit": "fourier-pde",
+      "title": "Separation of Variables",
+      "short": "Split u(x, t) = X(x)T(t) to get ODEs.",
+      "prereqs": ["de.boundary-value-problems"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "de.heat-equation",
+      "slug": "heat-equation",
+      "unit": "fourier-pde",
+      "title": "The Heat Equation",
+      "short": "Solve heat flow in a rod with Fourier series.",
+      "prereqs": ["de.separation-of-variables","de.sine-cosine-series"],
+      "xp": 3,
+      "viz": ["surface"]
+    },
+    {
+      "id": "de.wave-equation",
+      "slug": "wave-equation",
+      "unit": "fourier-pde",
+      "title": "The Wave Equation",
+      "short": "Model a vibrating string.",
+      "prereqs": ["de.heat-equation"],
+      "xp": 3,
+      "viz": ["surface"]
+    },
+    {
+      "id": "de.laplace-equation",
+      "slug": "laplace-equation",
+      "unit": "fourier-pde",
+      "title": "Laplace's Equation",
+      "short": "Find steady-state temperatures in a rectangle.",
+      "prereqs": ["de.heat-equation"],
+      "xp": 3,
+      "viz": ["surface"]
+    }
+  ]
+}

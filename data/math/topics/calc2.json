@@ -1,0 +1,488 @@
+{
+  "course": "calc2",
+  "units": [
+    {"key":"applications","title":"Applications of Integration","blurb":"Find areas, volumes, arc lengths, work, fluid force and centers of mass."},
+    {"key":"techniques","title":"Techniques of Integration","blurb":"Integrate by parts, with trig identities and substitutions, with partial fractions, and numerically."},
+    {"key":"first-de","title":"First Differential Equations","blurb":"Meet differential equations, slope fields, Euler's method, separable equations and logistic growth."},
+    {"key":"parametric-polar","title":"Parametric and Polar Calculus","blurb":"Find slopes, areas and lengths for parametric and polar curves."},
+    {"key":"sequences-series","title":"Sequences and Series","blurb":"Decide whether sequences and series converge, and estimate sums."},
+    {"key":"power-series","title":"Power Series","blurb":"Represent functions as power series and Taylor series, and use them."}
+  ],
+  "topics": [
+    {
+      "id": "calc2.area-between-curves",
+      "slug": "area-between-curves",
+      "unit": "applications",
+      "title": "Area Between Curves",
+      "short": "Integrate top minus bottom, or right minus left.",
+      "prereqs": ["calc1.ftc-evaluate"],
+      "xp": 2,
+      "trouble": "Students subtract in the wrong order where the curves cross, so pieces cancel.",
+      "viz": ["ftc","graph"]
+    },
+    {
+      "id": "calc2.volume-slicing",
+      "slug": "volume-slicing",
+      "unit": "applications",
+      "title": "Volume by Slicing",
+      "short": "Add up the areas of thin cross-sections.",
+      "prereqs": ["calc2.area-between-curves","geo.cavalieri"],
+      "xp": 2,
+      "viz": ["solids"]
+    },
+    {
+      "id": "calc2.disks-washers",
+      "slug": "disks-washers",
+      "unit": "applications",
+      "title": "Disks and Washers",
+      "short": "Revolve a region: V = π∫(R² − r²) dx.",
+      "prereqs": ["calc2.volume-slicing"],
+      "xp": 3,
+      "trouble": "Students square the difference, using (R − r)² instead of R² − r².",
+      "viz": ["solids"]
+    },
+    {
+      "id": "calc2.shells",
+      "slug": "shells",
+      "unit": "applications",
+      "title": "Cylindrical Shells",
+      "short": "V = 2π∫(radius)(height) dx.",
+      "prereqs": ["calc2.disks-washers"],
+      "xp": 3,
+      "trouble": "Students use the wrong radius when the axis of rotation is not an axis of coordinates.",
+      "viz": ["solids"]
+    },
+    {
+      "id": "calc2.arc-length",
+      "slug": "arc-length",
+      "unit": "applications",
+      "title": "Arc Length",
+      "short": "L = ∫√(1 + (f′(x))²) dx.",
+      "prereqs": ["calc1.u-substitution"],
+      "xp": 2,
+      "trouble": "Students forget to square the derivative inside the root.",
+      "viz": ["graph"]
+    },
+    {
+      "id": "calc2.surface-of-revolution",
+      "slug": "surface-of-revolution",
+      "unit": "applications",
+      "title": "Surface Area of Revolution",
+      "short": "S = 2π∫ f(x)√(1 + (f′(x))²) dx.",
+      "prereqs": ["calc2.arc-length","calc2.disks-washers"],
+      "xp": 3,
+      "viz": ["solids"]
+    },
+    {
+      "id": "calc2.work",
+      "slug": "work",
+      "unit": "applications",
+      "title": "Work",
+      "short": "Work is force times distance, added up over thin pieces.",
+      "prereqs": ["calc1.ftc-evaluate"],
+      "xp": 3,
+      "trouble": "Students use one distance for the whole tank when each layer of liquid travels a different distance.",
+      "viz": []
+    },
+    {
+      "id": "calc2.fluid-force",
+      "slug": "fluid-force",
+      "unit": "applications",
+      "title": "Hydrostatic Force",
+      "short": "Pressure grows with depth, so integrate strips across the surface.",
+      "prereqs": ["calc2.work"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc2.center-of-mass",
+      "slug": "center-of-mass",
+      "unit": "applications",
+      "title": "Moments and Centers of Mass",
+      "short": "Balance points of thin plates.",
+      "prereqs": ["calc2.area-between-curves"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc2.hyperbolic-functions",
+      "slug": "hyperbolic-functions",
+      "unit": "applications",
+      "title": "Hyperbolic Functions",
+      "short": "cosh and sinh, their identities and derivatives.",
+      "prereqs": ["calc1.exp-log-derivatives"],
+      "xp": 2,
+      "trouble": "Students borrow trig identities without changing the signs, writing cosh²x + sinh²x = 1.",
+      "viz": ["graph"]
+    },
+    {
+      "id": "calc2.integration-by-parts",
+      "slug": "integration-by-parts",
+      "unit": "techniques",
+      "title": "Integration by Parts",
+      "short": "∫u dv = uv − ∫v du reverses the product rule.",
+      "prereqs": ["calc1.u-substitution","calc1.product-rule"],
+      "xp": 2,
+      "trouble": "Students choose u so that the new integral is harder than the original.",
+      "viz": []
+    },
+    {
+      "id": "calc2.trig-integrals",
+      "slug": "trig-integrals",
+      "unit": "techniques",
+      "title": "Trigonometric Integrals",
+      "short": "Use identities for powers of sine, cosine, tangent and secant.",
+      "prereqs": ["calc1.u-substitution","pre.half-angle"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc2.trig-substitution",
+      "slug": "trig-substitution",
+      "unit": "techniques",
+      "title": "Trigonometric Substitution",
+      "short": "Replace √(a² − x²) and similar roots with trig functions.",
+      "prereqs": ["calc2.trig-integrals","pre.inverse-trig-compositions"],
+      "xp": 3,
+      "trouble": "Students forget to change back to x with a reference triangle.",
+      "viz": ["unitcircle"]
+    },
+    {
+      "id": "calc2.partial-fractions",
+      "slug": "partial-fractions",
+      "unit": "techniques",
+      "title": "Integration by Partial Fractions",
+      "short": "Split a rational function into pieces you can integrate.",
+      "prereqs": ["calc1.exp-log-integrals","pre.partial-fractions"],
+      "xp": 3,
+      "trouble": "Students try partial fractions before dividing when the numerator's degree is too high.",
+      "viz": []
+    },
+    {
+      "id": "calc2.integration-strategy",
+      "slug": "integration-strategy",
+      "unit": "techniques",
+      "title": "Choosing a Technique",
+      "short": "Recognize which method fits an integral.",
+      "prereqs": ["calc2.integration-by-parts","calc2.trig-substitution","calc2.partial-fractions"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc2.numerical-integration",
+      "slug": "numerical-integration",
+      "unit": "techniques",
+      "title": "Trapezoid and Simpson's Rules",
+      "short": "Approximate integrals with trapezoids and parabolas.",
+      "prereqs": ["calc1.riemann-sums"],
+      "xp": 2,
+      "trouble": "Students use an odd number of subintervals for Simpson's rule.",
+      "viz": ["riemann"]
+    },
+    {
+      "id": "calc2.improper-integrals",
+      "slug": "improper-integrals",
+      "unit": "techniques",
+      "title": "Improper Integrals",
+      "short": "Integrals over infinite intervals or across infinite values are limits.",
+      "prereqs": ["calc1.ftc-evaluate","calc1.limits-at-infinity"],
+      "xp": 3,
+      "trouble": "Students integrate straight across a vertical asymptote, so ∫ from −1 to 1 of 1/x² looks like −2.",
+      "viz": ["ftc","limit"]
+    },
+    {
+      "id": "calc2.improper-comparison",
+      "slug": "improper-comparison",
+      "unit": "techniques",
+      "title": "Comparison Test for Improper Integrals",
+      "short": "Compare with a simpler integral to decide convergence.",
+      "prereqs": ["calc2.improper-integrals"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc2.de-intro",
+      "slug": "de-intro",
+      "unit": "first-de",
+      "title": "What a Differential Equation Is",
+      "short": "An equation with a derivative; a solution is a function that satisfies it.",
+      "prereqs": ["calc1.initial-value-antiderivatives"],
+      "xp": 1,
+      "trouble": "Students check a solution by plugging in a number instead of the whole function.",
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "calc2.slope-fields-euler",
+      "slug": "slope-fields-euler",
+      "unit": "first-de",
+      "title": "Direction Fields and Euler's Method",
+      "short": "Sketch solutions from slopes, and step along them numerically.",
+      "prereqs": ["calc2.de-intro"],
+      "xp": 2,
+      "trouble": "Students use the slope at the new point instead of the current point in Euler's method.",
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "calc2.separable-equations",
+      "slug": "separable-equations",
+      "unit": "first-de",
+      "title": "Separable Equations",
+      "short": "Move each variable to its own side and integrate.",
+      "prereqs": ["calc2.de-intro","calc1.exp-log-integrals"],
+      "xp": 2,
+      "trouble": "Students add the constant after exponentiating, or lose solutions such as y = 0 when dividing.",
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "calc2.logistic-equation",
+      "slug": "logistic-equation",
+      "unit": "first-de",
+      "title": "The Logistic Equation",
+      "short": "dP/dt = rP(1 − P/K) models growth with a limit.",
+      "prereqs": ["calc2.separable-equations","calc2.partial-fractions"],
+      "xp": 3,
+      "viz": ["slopefield"]
+    },
+    {
+      "id": "calc2.parametric-calculus",
+      "slug": "parametric-calculus",
+      "unit": "parametric-polar",
+      "title": "Tangents and Arc Length for Parametric Curves",
+      "short": "dy/dx = (dy/dt)/(dx/dt).",
+      "prereqs": ["pre.eliminate-parameter","calc1.chain-rule","calc2.arc-length"],
+      "xp": 2,
+      "trouble": "Students divide dx/dt by dy/dt.",
+      "viz": ["graph"]
+    },
+    {
+      "id": "calc2.polar-area",
+      "slug": "polar-area",
+      "unit": "parametric-polar",
+      "title": "Area in Polar Coordinates",
+      "short": "A = ½∫r² dθ.",
+      "prereqs": ["pre.polar-graphs","calc1.ftc-evaluate"],
+      "xp": 3,
+      "trouble": "Students use the wrong θ limits and count a loop twice.",
+      "viz": ["polar"]
+    },
+    {
+      "id": "calc2.polar-tangents-length",
+      "slug": "polar-tangents-length",
+      "unit": "parametric-polar",
+      "title": "Polar Tangents and Arc Length",
+      "short": "Treat a polar curve as parametric in θ.",
+      "prereqs": ["calc2.polar-area","calc2.parametric-calculus"],
+      "xp": 3,
+      "viz": ["polar"]
+    },
+    {
+      "id": "calc2.sequences",
+      "slug": "sequences",
+      "unit": "sequences-series",
+      "title": "Sequences and Their Limits",
+      "short": "A sequence converges when its terms approach one number.",
+      "prereqs": ["calc1.limits-at-infinity","alg2.recursive-sequences"],
+      "xp": 1,
+      "trouble": "Students confuse the limit of the terms with the sum of the terms.",
+      "viz": ["sequence"]
+    },
+    {
+      "id": "calc2.monotone-bounded",
+      "slug": "monotone-bounded",
+      "unit": "sequences-series",
+      "title": "Monotone and Bounded Sequences",
+      "short": "An increasing sequence with an upper bound converges.",
+      "prereqs": ["calc2.sequences"],
+      "xp": 2,
+      "viz": ["sequence"]
+    },
+    {
+      "id": "calc2.series-partial-sums",
+      "slug": "series-partial-sums",
+      "unit": "sequences-series",
+      "title": "Series and Partial Sums",
+      "short": "A series converges when its partial sums approach a number.",
+      "prereqs": ["calc2.sequences","alg2.sigma-notation"],
+      "xp": 2,
+      "trouble": "Students think a series converges because its terms go to 0.",
+      "viz": ["seriespartial"]
+    },
+    {
+      "id": "calc2.geometric-telescoping",
+      "slug": "geometric-telescoping",
+      "unit": "sequences-series",
+      "title": "Geometric and Telescoping Series",
+      "short": "Sum geometric series and series whose terms cancel.",
+      "prereqs": ["calc2.series-partial-sums","alg2.infinite-geometric-series"],
+      "xp": 2,
+      "viz": ["seriespartial"]
+    },
+    {
+      "id": "calc2.divergence-test",
+      "slug": "divergence-test",
+      "unit": "sequences-series",
+      "title": "The Divergence Test",
+      "short": "If the terms do not go to 0, the series diverges.",
+      "prereqs": ["calc2.series-partial-sums"],
+      "xp": 1,
+      "trouble": "Students use the test to claim a series converges when its terms do go to 0.",
+      "viz": ["seriespartial"]
+    },
+    {
+      "id": "calc2.integral-test",
+      "slug": "integral-test",
+      "unit": "sequences-series",
+      "title": "The Integral Test and p-Series",
+      "short": "Compare a series with an improper integral; Σ1/nᵖ converges when p > 1.",
+      "prereqs": ["calc2.divergence-test","calc2.improper-integrals"],
+      "xp": 2,
+      "trouble": "Students think the series and the integral have the same value.",
+      "viz": ["riemann","seriespartial"]
+    },
+    {
+      "id": "calc2.comparison-tests",
+      "slug": "comparison-tests",
+      "unit": "sequences-series",
+      "title": "Comparison and Limit Comparison Tests",
+      "short": "Compare with a known series.",
+      "prereqs": ["calc2.integral-test"],
+      "xp": 3,
+      "trouble": "Students compare in the wrong direction, showing a series is smaller than a divergent one.",
+      "viz": ["seriespartial"]
+    },
+    {
+      "id": "calc2.alternating-series",
+      "slug": "alternating-series",
+      "unit": "sequences-series",
+      "title": "Alternating Series",
+      "short": "Terms that shrink to 0 and alternate in sign give a convergent series.",
+      "prereqs": ["calc2.divergence-test","calc2.monotone-bounded"],
+      "xp": 2,
+      "trouble": "Students skip checking that the terms decrease.",
+      "viz": ["seriespartial"]
+    },
+    {
+      "id": "calc2.absolute-conditional",
+      "slug": "absolute-conditional",
+      "unit": "sequences-series",
+      "title": "Absolute and Conditional Convergence",
+      "short": "Test Σ|aₙ| to learn how a series converges.",
+      "prereqs": ["calc2.alternating-series","calc2.comparison-tests"],
+      "xp": 2,
+      "viz": ["seriespartial"]
+    },
+    {
+      "id": "calc2.ratio-root-tests",
+      "slug": "ratio-root-tests",
+      "unit": "sequences-series",
+      "title": "Ratio and Root Tests",
+      "short": "Look at the limit of |aₙ₊₁/aₙ| or |aₙ|^(1/n).",
+      "prereqs": ["calc2.absolute-conditional"],
+      "xp": 2,
+      "trouble": "Students conclude convergence or divergence when the limit equals 1, where the test says nothing.",
+      "viz": []
+    },
+    {
+      "id": "calc2.series-strategy",
+      "slug": "series-strategy",
+      "unit": "sequences-series",
+      "title": "Choosing a Convergence Test",
+      "short": "Match the series to the test that fits.",
+      "prereqs": ["calc2.ratio-root-tests"],
+      "xp": 3,
+      "viz": []
+    },
+    {
+      "id": "calc2.series-estimates",
+      "slug": "series-estimates",
+      "unit": "sequences-series",
+      "title": "Estimating the Sum of a Series",
+      "short": "Bound the error of a partial sum.",
+      "prereqs": ["calc2.integral-test","calc2.alternating-series"],
+      "xp": 3,
+      "viz": ["seriespartial"]
+    },
+    {
+      "id": "calc2.power-series",
+      "slug": "power-series",
+      "unit": "power-series",
+      "title": "Power Series and Intervals of Convergence",
+      "short": "Find where Σcₙ(x − a)ⁿ converges.",
+      "prereqs": ["calc2.ratio-root-tests"],
+      "xp": 3,
+      "trouble": "Students forget to test the endpoints of the interval separately.",
+      "viz": ["taylor","seriespartial"]
+    },
+    {
+      "id": "calc2.functions-as-series",
+      "slug": "functions-as-series",
+      "unit": "power-series",
+      "title": "Representing Functions as Power Series",
+      "short": "Build series from 1/(1 − x).",
+      "prereqs": ["calc2.power-series","calc2.geometric-telescoping"],
+      "xp": 2,
+      "viz": ["taylor"]
+    },
+    {
+      "id": "calc2.differentiate-integrate-series",
+      "slug": "differentiate-integrate-series",
+      "unit": "power-series",
+      "title": "Differentiating and Integrating Power Series",
+      "short": "Work term by term inside the interval of convergence.",
+      "prereqs": ["calc2.functions-as-series"],
+      "xp": 3,
+      "viz": ["taylor"]
+    },
+    {
+      "id": "calc2.taylor-series",
+      "slug": "taylor-series",
+      "unit": "power-series",
+      "title": "Taylor and Maclaurin Series",
+      "short": "cₙ = f⁽ⁿ⁾(a)/n!.",
+      "prereqs": ["calc2.differentiate-integrate-series","calc1.higher-derivatives"],
+      "xp": 3,
+      "trouble": "Students forget the n! in the denominator.",
+      "viz": ["taylor"]
+    },
+    {
+      "id": "calc2.taylor-error",
+      "slug": "taylor-error",
+      "unit": "power-series",
+      "title": "Taylor's Inequality",
+      "short": "Bound the error of a Taylor polynomial.",
+      "prereqs": ["calc2.taylor-series"],
+      "xp": 3,
+      "viz": ["taylor"]
+    },
+    {
+      "id": "calc2.known-series",
+      "slug": "known-series",
+      "unit": "power-series",
+      "title": "Working with Known Series",
+      "short": "Build new series from those for eˣ, sin x, cos x and ln(1 + x).",
+      "prereqs": ["calc2.taylor-series"],
+      "xp": 2,
+      "viz": ["taylor"]
+    },
+    {
+      "id": "calc2.binomial-series",
+      "slug": "binomial-series",
+      "unit": "power-series",
+      "title": "The Binomial Series",
+      "short": "(1 + x)ᵏ as a series for any k.",
+      "prereqs": ["calc2.known-series","alg2.binomial-theorem"],
+      "xp": 3,
+      "viz": ["taylor"]
+    },
+    {
+      "id": "calc2.series-applications",
+      "slug": "series-applications",
+      "unit": "power-series",
+      "title": "Applications of Series",
+      "short": "Use series for limits, integrals and approximations.",
+      "prereqs": ["calc2.known-series","calc2.taylor-error"],
+      "xp": 3,
+      "viz": ["taylor"]
+    }
+  ]
+}

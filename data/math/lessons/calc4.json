@@ -1,0 +1,2714 @@
+{
+ "calc4.vector-fields": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A weather map with wind arrows, the current in a river, the pull of the Earth on a satellite: each one attaches a <b>vector</b> to every point of a region. You already know <a href=\"/math/calculus-3/vectors-in-space/\">vectors</a> and <a href=\"/math/calculus-3/multivariable-functions/\">functions of several variables</a>. A vector field puts the two together: a function whose input is a point and whose output is a vector."
+   },
+   {
+    "t": "key",
+    "html": "A <b>vector field</b> on a region $D$ in the plane assigns to each point $(x, y)$ a vector\n  $$\\mathbf{F}(x, y) = \\langle P(x, y), Q(x, y) \\rangle.$$\n  In space, $\\mathbf{F}(x, y, z) = \\langle P, Q, R \\rangle$. To draw it, pick points and draw the arrow $\\mathbf{F}(x, y)$ with its <b>tail at the point</b>. A <b>flow line</b> is a curve $\\mathbf{r}(t)$ whose velocity always matches the field: $\\mathbf{r}'(t) = \\mathbf{F}(\\mathbf{r}(t))$."
+   },
+   {
+    "t": "p",
+    "html": "The components $P$ and $Q$ are ordinary scalar functions, so everything you know about continuity and partial derivatives applies to each one. A field is continuous when its components are, and it is \"smooth\" when its components have continuous partial derivatives. Most fields in this course are smooth except perhaps at a few points, such as the origin for the field of a point charge."
+   },
+   {
+    "t": "p",
+    "html": "Some fields to know. The <b>rotation field</b> $\\langle -y, x \\rangle$ circles the origin counterclockwise. The <b>radial field</b> $\\langle x, y \\rangle$ points straight away from the origin. A <b>constant field</b> such as $\\langle 3, -1 \\rangle$ is the same arrow everywhere, like a steady wind. Newton's law of gravitation gives an <b>inverse-square field</b>: a mass $M$ at the origin pulls a mass $m$ at $\\mathbf{r} = \\langle x, y, z \\rangle$ with force\n  $$\\mathbf{F} = -\\frac{GMm}{|\\mathbf{r}|^3}\\,\\mathbf{r},$$\n  which points toward the origin and has length $GMm/|\\mathbf{r}|^2$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Why draw the tail at the point?</b> Think of a river. The arrow at $(x, y)$ is the velocity of the bit of water that is at $(x, y)$ right now. It says which way that water is heading and how fast, so it starts where the water is. A flow line is the path one bit of water actually takes. Its velocity at each moment is the arrow at the place where it is at that moment, which is exactly $\\mathbf{r}'(t) = \\mathbf{F}(\\mathbf{r}(t))$.<br>\n  <b>Why the rotation field circles:</b> $\\langle -y, x \\rangle \\cdot \\langle x, y \\rangle = -xy + yx = 0$, so each arrow is perpendicular to the line from the origin, and $|\\langle -y, x \\rangle| = \\sqrt{x^2 + y^2}$ is the distance to the origin. Arrows tangent to circles, longer farther out."
+   },
+   {
+    "t": "viz",
+    "name": "vectorfield",
+    "opts": {
+     "P": "-y",
+     "Q": "x",
+     "presets": true,
+     "probe": "div",
+     "at": [
+      1.5,
+      1
+     ],
+     "particles": true,
+     "task": "Watch the particles: each one follows a flow line, always tangent to the arrows. Then try the other fields."
+    },
+    "cap": "The rotation field $\\langle -y, x \\rangle$ with moving particles. No particle travels in a straight line along one arrow; each turns as the arrows under it turn. The buttons switch to other common fields."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Evaluating a field",
+    "q": "Find $\\mathbf{F}(2, -1)$ and its length for $\\mathbf{F}(x, y) = \\langle x - y, xy \\rangle$.",
+    "steps": [
+     "Substitute: $P(2, -1) = 2 - (-1) = 3$ and $Q(2, -1) = 2 \\cdot (-1) = -2$.",
+     "So the arrow at $(2, -1)$ is $\\langle 3, -2 \\rangle$, pointing right and down.",
+     "Its length is $\\sqrt{9 + 4} = \\sqrt{13}$. In a velocity field, that is the speed there."
+    ],
+    "a": "$\\langle 3, -2 \\rangle$, length $\\sqrt{13}$"
+   },
+   {
+    "t": "ex",
+    "title": "Sketching the rotation field",
+    "q": "Sketch $\\mathbf{F}(x, y) = \\langle -y, x \\rangle$ from a few arrows.",
+    "steps": [
+     "At $(1, 0)$: $\\langle 0, 1 \\rangle$, up. At $(0, 1)$: $\\langle -1, 0 \\rangle$, left. At $(-1, 0)$: $\\langle 0, -1 \\rangle$, down. At $(0, -1)$: $\\langle 1, 0 \\rangle$, right.",
+     "At $(2, 0)$: $\\langle 0, 2 \\rangle$, twice as long as at $(1, 0)$.",
+     "The arrows go around the origin counterclockwise, getting longer with distance, as the Why box shows."
+    ],
+    "a": "counterclockwise circles, length equal to the distance from the origin"
+   },
+   {
+    "t": "ex",
+    "title": "Checking a flow line",
+    "q": "Is $\\mathbf{r}(t) = \\langle 2\\cos t, 2\\sin t \\rangle$ a flow line of $\\mathbf{F} = \\langle -y, x \\rangle$?",
+    "steps": [
+     "$\\mathbf{r}'(t) = \\langle -2\\sin t, 2\\cos t \\rangle$.",
+     "$$\\mathbf{F}(\\mathbf{r}(t)) = \\langle -y, x \\rangle = \\langle -2\\sin t, 2\\cos t \\rangle.$$",
+     "They are equal for every $t$, so yes: a particle in this flow goes around the circle of radius ${}2$, counterclockwise."
+    ],
+    "a": "yes"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Reading an arrow as a path.</b> The arrow at a point is a velocity at that instant, not a trip. In the rotation field the arrow at $(1, 0)$ points straight up, but a particle starting there does not move straight up; one moment later it is at a new point with a new arrow, and it curves around the circle. To get paths, solve $\\mathbf{r}'(t) = \\mathbf{F}(\\mathbf{r}(t))$ or follow the arrows a little at a time."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.1 Vector Fields"
+   }
+  ]
+ },
+ "calc4.gradient-fields": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every differentiable function $f$ comes with a vector field: its <a href=\"/math/calculus-3/gradient/\">gradient</a> $\\nabla f$, computed at every point. These <b>gradient fields</b> are the most important vector fields in the course, because many physical fields are gradients: gravity, the electric field of charges, the flow of heat (which goes against the temperature gradient)."
+   },
+   {
+    "t": "key",
+    "html": "For $f(x, y)$, the <b>gradient field</b> is $\\nabla f = \\langle f_x, f_y \\rangle$; for $f(x, y, z)$ it is $\\langle f_x, f_y, f_z \\rangle$. A field $\\mathbf{F}$ is a gradient field (or <b>conservative</b>) when $\\mathbf{F} = \\nabla f$ for some $f$, called a <b>potential function</b> for $\\mathbf{F}$.<br>\n  At each point, $\\nabla f$ is <a href=\"/math/calculus-3/gradient-normals/\">perpendicular to the level curve</a> of $f$ through it and points in the direction in which $f$ increases fastest."
+   },
+   {
+    "t": "p",
+    "html": "A word about signs. In mathematics we call $f$ a potential when $\\mathbf{F} = \\nabla f$. Physicists usually write $\\mathbf{F} = -\\nabla U$ with a potential energy $U$, so that forces push toward lower energy. The two differ only by a minus sign: $U = -f$."
+   },
+   {
+    "t": "why",
+    "html": "<b>A quick test.</b> If $\\mathbf{F} = \\langle P, Q \\rangle = \\nabla f$ and $f$ has continuous second partial derivatives, then $P = f_x$ and $Q = f_y$, so\n  $$P_y = f_{xy} = f_{yx} = Q_x$$\n  by <a href=\"/math/calculus-3/higher-partials/\">Clairaut's theorem</a>. A field with $P_y \\ne Q_x$ cannot be a gradient field. (On regions without holes the converse is also true; that comes in <a href=\"/math/calculus-4/conservative-test/\">testing for conservative fields</a>.)<br>\n  <b>Why the arrows cross the level curves at right angles:</b> along a level curve $\\mathbf{r}(t)$, $f(\\mathbf{r}(t))$ is constant, so by the chain rule $\\nabla f \\cdot \\mathbf{r}'(t) = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "gradient",
+    "opts": {
+     "f": "x^2*y + y^3/3",
+     "point": [
+      1,
+      0.6
+     ],
+     "dir": 30,
+     "ascent": true,
+     "xmin": -2.5,
+     "xmax": 2.5,
+     "ymin": -2.5,
+     "ymax": 2.5
+    },
+    "cap": "Level curves of $f = x^2y + \\frac{1}{3}y^3$ with $\\nabla f = \\langle 2xy, x^2 + y^2 \\rangle$ at a point you drag. The gradient always crosses the level curve at a right angle, and the path of steepest ascent follows the gradient field."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A gradient field",
+    "q": "Find the gradient field of $f(x, y) = x^2y + y^3$.",
+    "steps": [
+     "$f_x = 2xy$ (treat $y$ as a constant) and $f_y = x^2 + 3y^2$.",
+     "$\\nabla f = \\langle 2xy, x^2 + 3y^2 \\rangle$.",
+     "Check the test: $P_y = 2x$ and $Q_x = 2x$. Equal, as they must be."
+    ],
+    "a": "$\\langle 2xy, x^2 + 3y^2 \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "In space, at a point",
+    "q": "For $f(x, y, z) = xyz + e^x$, find $\\nabla f$ and its value at $(0, 1, 2)$.",
+    "steps": [
+     "$f_x = yz + e^x$, $f_y = xz$, $f_z = xy$.",
+     "At $(0, 1, 2)$: $\\langle 2 + 1, 0, 0 \\rangle = \\langle 3, 0, 0 \\rangle$.",
+     "So at that point $f$ increases fastest in the $+x$ direction, at rate ${}3$."
+    ],
+    "a": "$\\langle yz + e^x, xz, xy \\rangle$; $\\langle 3, 0, 0 \\rangle$ at $(0, 1, 2)$"
+   },
+   {
+    "t": "ex",
+    "title": "Not a gradient field",
+    "q": "Is $\\mathbf{F} = \\langle y, -x \\rangle$ a gradient field?",
+    "steps": [
+     "$P = y$ gives $P_y = 1$; $Q = -x$ gives $Q_x = -1$.",
+     "$P_y \\ne Q_x$, so no function $f$ has $\\nabla f = \\mathbf{F}$.",
+     "Picture: this field circles the origin clockwise. A gradient field cannot circle back on itself, since following it always takes you uphill on $f$."
+    ],
+    "a": "no"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.1 Vector Fields"
+   },
+   {
+    "name": "OpenStax Calculus Volume 3, 6.3 Conservative Vector Fields"
+   }
+  ]
+ },
+ "calc4.divergence-curl": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A vector field has many partial derivatives: $P_x$, $P_y$, $Q_x$, and so on. Two combinations of them have a clear meaning and show up in every big theorem of this course. <b>Divergence</b> measures how much a field spreads out from a point, and <b>curl</b> measures how much it swirls. Both are written with the symbol $\\nabla = \\left\\langle \\frac{\\partial}{\\partial x}, \\frac{\\partial}{\\partial y}, \\frac{\\partial}{\\partial z} \\right\\rangle$, used like a vector whose \"components\" are derivatives. You need <a href=\"/math/calculus-3/higher-partials/\">partial derivatives</a> and the <a href=\"/math/calculus-3/cross-product/\">cross product</a>."
+   },
+   {
+    "t": "key",
+    "html": "For $\\mathbf{F} = \\langle P, Q, R \\rangle$:\n  $$\\nabla \\cdot \\mathbf{F} = P_x + Q_y + R_z \\quad \\text{(divergence: a scalar function)}$$\n  $$\\nabla \\times \\mathbf{F} = \\langle R_y - Q_z,\\ P_z - R_x,\\ Q_x - P_y \\rangle \\quad \\text{(curl: a vector field)}$$\n  In the plane, $\\mathbf{F} = \\langle P, Q \\rangle$ has divergence $P_x + Q_y$ and <b>scalar curl</b> $Q_x - P_y$, the $\\mathbf{k}$-component of the curl of $\\langle P, Q, 0 \\rangle$."
+   },
+   {
+    "t": "p",
+    "html": "The curl formula comes from the determinant pattern of a cross product:\n  $$\\nabla \\times \\mathbf{F} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ \\partial_x & \\partial_y & \\partial_z \\\\ P & Q & R \\end{vmatrix},$$\n  where \"multiplying\" $\\partial_y$ by $R$ means taking $R_y$. As with any ${}3 \\times 3$ determinant, the middle component carries a minus sign: $-(R_x - P_z) = P_z - R_x$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Two identities</b>, both from Clairaut's theorem (mixed partials are equal when continuous):<br>\n  $$\\nabla \\times (\\nabla f) = \\langle f_{zy} - f_{yz},\\ f_{xz} - f_{zx},\\ f_{yx} - f_{xy} \\rangle = \\mathbf{0}\\text{:}$$ gradient fields have zero curl.<br>\n  $$\\nabla \\cdot (\\nabla \\times \\mathbf{F}) = (R_y - Q_z)_x + (P_z - R_x)_y + (Q_x - P_y)_z = R_{yx} - Q_{zx} + P_{zy} - R_{xy} + Q_{xz} - P_{yz} = 0\\text{:}$$ the terms cancel in pairs.<br>\n  So a field with nonzero curl is not a gradient field, and a field with nonzero divergence is not a curl."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Operation",
+     "Takes",
+     "Gives",
+     "Measures"
+    ],
+    "rows": [
+     [
+      "gradient $\\nabla f$",
+      "a scalar function",
+      "a vector field",
+      "steepest increase"
+     ],
+     [
+      "divergence $\\nabla \\cdot \\mathbf{F}$",
+      "a vector field",
+      "a scalar function",
+      "spreading out (sources)"
+     ],
+     [
+      "curl $\\nabla \\times \\mathbf{F}$",
+      "a vector field",
+      "a vector field",
+      "swirling (rotation)"
+     ]
+    ]
+   },
+   {
+    "t": "viz",
+    "name": "vectorfield",
+    "opts": {
+     "P": "x*y",
+     "Q": "y - x",
+     "probe": "both",
+     "at": [
+      1,
+      1
+     ],
+     "presets": true
+    },
+    "cap": "$\\mathbf{F} = \\langle xy, y - x \\rangle$, with $\\nabla \\cdot \\mathbf{F} = y + 1$ and scalar curl $Q_x - P_y = -1 - x$. Drag the probe: the box shows the divergence, the paddle wheel the curl. Both change from point to point."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A divergence",
+    "q": "Find $\\nabla \\cdot \\mathbf{F}$ for $\\mathbf{F} = \\langle x^2y, yz, xz^2 \\rangle$.",
+    "steps": [
+     "$P_x = 2xy$, $Q_y = z$, $R_z = 2xz$.",
+     "$\\nabla \\cdot \\mathbf{F} = 2xy + z + 2xz$, a single number at each point."
+    ],
+    "a": "${}2xy + z + 2xz$"
+   },
+   {
+    "t": "ex",
+    "title": "A curl that vanishes",
+    "q": "Find $\\nabla \\times \\mathbf{F}$ for $\\mathbf{F} = \\langle yz, xz, xy \\rangle$.",
+    "steps": [
+     "$R_y - Q_z = x - x = 0$.",
+     "$P_z - R_x = y - y = 0$.",
+     "$Q_x - P_y = z - z = 0$.",
+     "$\\nabla \\times \\mathbf{F} = \\mathbf{0}$, as expected: $\\mathbf{F} = \\nabla(xyz)$."
+    ],
+    "a": "$\\mathbf{0}$"
+   },
+   {
+    "t": "ex",
+    "title": "Both at once",
+    "q": "Find the curl and divergence of $\\mathbf{F} = \\langle -y, x, z^2 \\rangle$.",
+    "steps": [
+     "Curl: $R_y - Q_z = 0$, $P_z - R_x = 0$, $Q_x - P_y = 1 - (-1) = 2$, so $\\nabla \\times \\mathbf{F} = \\langle 0, 0, 2 \\rangle$.",
+     "Divergence: ${}0 + 0 + 2z = 2z$.",
+     "The field spins about the $z$-axis everywhere and spreads out only where $z > 0$."
+    ],
+    "a": "curl $\\langle 0, 0, 2 \\rangle$, divergence ${}2z$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Mixing up the inputs and outputs.</b> Divergence and curl act on vector fields; \"$\\nabla \\cdot f$\" for a scalar function $f$ means nothing. And the divergence is one number at each point, not a vector: $\\nabla \\cdot \\langle x^2, y, z \\rangle = 2x + 1 + 1$, not $\\langle 2x, 1, 1 \\rangle$. If your divergence has three components, you forgot to add them."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.5 Divergence and Curl"
+   }
+  ]
+ },
+ "calc4.curl-divergence-meaning": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The formulas for <a href=\"/math/calculus-4/divergence-curl/\">divergence and curl</a> are easy to compute and easy to misread. Here is what they measure, in the language of a flowing fluid with velocity field $\\mathbf{F} = \\langle P, Q \\rangle$. Divergence is <b>net outflow per unit area</b>. Curl is <b>circulation per unit area</b>: how strongly the flow turns a tiny paddle wheel."
+   },
+   {
+    "t": "key",
+    "html": "Near a point, for a tiny region of area $\\Delta A$:\n  $$\\text{net outflow} \\approx (\\nabla \\cdot \\mathbf{F})\\,\\Delta A, \\qquad \\text{circulation counterclockwise} \\approx (Q_x - P_y)\\,\\Delta A.$$\n  $\\nabla \\cdot \\mathbf{F} > 0$: a <b>source</b> (more flows out than in). $\\nabla \\cdot \\mathbf{F} < 0$: a <b>sink</b>. $Q_x - P_y > 0$: a paddle wheel turns counterclockwise; $< 0$: clockwise. In space, the curl vector points along the axis of the spin (right-hand rule), and its length is twice the paddle wheel's angular speed."
+   },
+   {
+    "t": "why",
+    "html": "<b>Outflow from a small box</b> $[x, x + \\Delta x] \\times [y, y + \\Delta y]$. Out through the right side flows about $P(x + \\Delta x, y)\\,\\Delta y$; in through the left side about $P(x, y)\\,\\Delta y$. Net: $$[P(x + \\Delta x, y) - P(x, y)]\\,\\Delta y \\approx P_x\\,\\Delta x\\,\\Delta y.$$ Top and bottom give $Q_y\\,\\Delta x\\,\\Delta y$ the same way. Total: $(P_x + Q_y)\\,\\Delta A$.<br>\n  <b>Circulation around the same box</b>, counterclockwise: bottom $P(x, y)\\,\\Delta x$, top $-P(x, y + \\Delta y)\\,\\Delta x$, right $Q(x + \\Delta x, y)\\,\\Delta y$, left $-Q(x, y)\\,\\Delta y$. These add to about $(Q_x - P_y)\\,\\Delta A$.<br>\n  <b>A rigid rotation</b> $\\mathbf{v} = \\omega\\langle -y, x \\rangle$ has $Q_x - P_y = \\omega + \\omega = 2\\omega$: curl is twice the angular velocity."
+   },
+   {
+    "t": "viz",
+    "name": "vectorfield",
+    "opts": {
+     "P": "y",
+     "Q": "0",
+     "probe": "curl",
+     "at": [
+      0.5,
+      0.5
+     ],
+     "presets": true,
+     "task": "Straight arrows, yet the paddle wheel turns. Drag it around, then try the \"Rotation\" and \"Spiral out\" buttons."
+    },
+    "cap": "The shear field $\\langle y, 0 \\rangle$: like a river that flows faster near one bank. The top of the paddle wheel is pushed harder than the bottom, so it turns clockwise: $Q_x - P_y = 0 - 1 = -1$ everywhere."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Shear flow",
+    "q": "Find the divergence and scalar curl of $\\langle y, 0 \\rangle$ and describe the flow.",
+    "steps": [
+     "$P_x + Q_y = 0 + 0 = 0$: no spreading, no bunching.",
+     "$Q_x - P_y = 0 - 1 = -1$: a paddle wheel turns clockwise, at every point.",
+     "All arrows are horizontal, but they get longer as $y$ grows. The difference in speed across the wheel is what turns it."
+    ],
+    "a": "divergence ${}0$, curl $-1$"
+   },
+   {
+    "t": "ex",
+    "title": "Radial flow",
+    "q": "Describe $\\langle x, y \\rangle$ with divergence and curl.",
+    "steps": [
+     "$P_x + Q_y = 1 + 1 = 2$: every point is a source; any small region loses fluid at rate ${}2$ per unit area.",
+     "$Q_x - P_y = 0 - 0 = 0$: no spin anywhere."
+    ],
+    "a": "divergence ${}2$, curl ${}0$"
+   },
+   {
+    "t": "ex",
+    "title": "A whirlpool with no curl",
+    "q": "Find the scalar curl of $\\mathbf{F} = \\left\\langle \\frac{-y}{x^2 + y^2}, \\frac{x}{x^2 + y^2} \\right\\rangle$ away from the origin.",
+    "steps": [
+     "$Q_x = \\frac{(x^2 + y^2) - x \\cdot 2x}{(x^2 + y^2)^2} = \\frac{y^2 - x^2}{(x^2 + y^2)^2}$.",
+     "$P_y = -\\frac{(x^2 + y^2) - y \\cdot 2y}{(x^2 + y^2)^2} = \\frac{y^2 - x^2}{(x^2 + y^2)^2}$.",
+     "$Q_x - P_y = 0$. The arrows circle the origin, but their length ${}1/r$ drops off just fast enough that a paddle wheel away from the origin does not turn. (All the spin is concentrated at the origin; see <a href=\"/math/calculus-4/greens-holes/\">Green's theorem for regions with holes</a>.)"
+    ],
+    "a": "${}0$ for $(x, y) \\ne (0, 0)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Judging curl by the shape of the arrows.</b> Curved arrows do not mean curl, and straight arrows do not mean zero curl. The whirlpool field above circles the origin with zero curl; the shear field $\\langle y, 0 \\rangle$ has straight arrows and curl $-1$. Curl compares how the field changes across a point, so compute $Q_x - P_y$ rather than looking at the overall pattern."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.5 Divergence and Curl"
+   },
+   {
+    "name": "MIT OpenCourseWare, 18.02SC Multivariable Calculus (Fall 2010), Part C: Line Integrals and Green's Theorem"
+   }
+  ]
+ },
+ "calc4.parametrize-curves": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every integral along a curve starts the same way: describe the curve by a <a href=\"/math/calculus-3/vector-functions/\">vector function</a> $\\mathbf{r}(t)$, $a \\le t \\le b$. For line integrals of vector fields, the <b>direction</b> matters too: a curve from $A$ to $B$ is a different oriented curve from the same points traced from $B$ to $A$. So a parametrization has two jobs: trace the right points, and trace them the right way."
+   },
+   {
+    "t": "key",
+    "html": "Standard parametrizations:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Segment</b> from $A$ to $B$: $\\mathbf{r}(t) = A + t(B - A)$, ${}0 \\le t \\le 1$.",
+     "<b>Circle</b> with center $(h, k)$ and radius $R$, counterclockwise from $(h + R, k)$: $\\mathbf{r}(t) = \\langle h + R\\cos t, k + R\\sin t \\rangle$, ${}0 \\le t \\le 2\\pi$. Clockwise: $\\langle h + R\\cos t, k - R\\sin t \\rangle$.",
+     "<b>Graph</b> $y = g(x)$ from $x = a$ to $x = b$: $\\mathbf{r}(t) = \\langle t, g(t) \\rangle$, $a \\le t \\le b$.",
+     "<b>Helix</b> around the $z$-axis: $\\langle R\\cos t, R\\sin t, ct \\rangle$.",
+     "<b>Reversed curve</b> $-C$: if $\\mathbf{r}(t)$, $a \\le t \\le b$, traces $C$, then $\\mathbf{r}(a + b - t)$ traces the same points backward."
+    ]
+   },
+   {
+    "t": "p",
+    "html": "A curve made of several smooth pieces, such as the boundary of a triangle, is parametrized one piece at a time, each piece in its direction of travel. We write $C = C_1 + C_2 + C_3$, and an integral over $C$ is the sum of the integrals over the pieces."
+   },
+   {
+    "t": "why",
+    "html": "<b>Why $A + t(B - A)$ works:</b> at $t = 0$ it is $A$, at $t = 1$ it is $A + (B - A) = B$, and in between it moves a fraction $t$ of the displacement $B - A$, in a straight line at constant velocity $B - A$.<br>\n  <b>Why the reversal works:</b> $s = a + b - t$ runs from $b$ down to $a$ as $t$ runs from $a$ to $b$, so $\\mathbf{r}(s)$ visits the points in the opposite order. Its velocity is $-\\mathbf{r}'(s)$."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "x": "2cos(t)",
+     "y": "2sin(t)",
+     "z": "t/3",
+     "t0": 0,
+     "t1": "4pi",
+     "t": 2,
+     "tangent": true,
+     "shadow": true
+    },
+    "cap": "A helix $\\langle 2\\cos t, 2\\sin t, t/3 \\rangle$ with its velocity $\\mathbf{r}'(t)$. The tangent arrow shows the direction of travel; the same points traced with $t$ running backward would have every arrow reversed."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A segment",
+    "q": "Parametrize the segment from $(1, -2)$ to $(4, 2)$.",
+    "steps": [
+     "$B - A = \\langle 3, 4 \\rangle$.",
+     "$\\mathbf{r}(t) = \\langle 1 + 3t, -2 + 4t \\rangle$, ${}0 \\le t \\le 1$.",
+     "Check: $\\mathbf{r}(0) = (1, -2)$ and $\\mathbf{r}(1) = (4, 2)$. The speed is $|\\langle 3, 4 \\rangle| = 5$, the length of the segment."
+    ],
+    "a": "$\\langle 1 + 3t, -2 + 4t \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "A clockwise circle",
+    "q": "Parametrize the circle with center $(2, -1)$ and radius ${}3$, clockwise, starting at $(5, -1)$.",
+    "steps": [
+     "Counterclockwise from $(5, -1)$ would be $\\langle 2 + 3\\cos t, -1 + 3\\sin t \\rangle$.",
+     "Flip the sine to go clockwise: $\\mathbf{r}(t) = \\langle 2 + 3\\cos t, -1 - 3\\sin t \\rangle$, ${}0 \\le t \\le 2\\pi$.",
+     "Check: at $t = \\pi/2$ the point is $(2, -4)$, below the center, so the motion is clockwise."
+    ],
+    "a": "$\\langle 2 + 3\\cos t, -1 - 3\\sin t \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "A segment and its reverse in space",
+    "q": "Parametrize the segment from $A(0, 1, 2)$ to $B(3, -1, 2)$, and the same segment from $B$ to $A$.",
+    "steps": [
+     "$B - A = \\langle 3, -2, 0 \\rangle$, so $\\mathbf{r}(t) = \\langle 3t, 1 - 2t, 2 \\rangle$, ${}0 \\le t \\le 1$.",
+     "From $B$ to $A$: $B + t(A - B) = \\langle 3 - 3t, -1 + 2t, 2 \\rangle$, which is also $\\mathbf{r}(1 - t)$."
+    ],
+    "a": "$\\langle 3t, 1 - 2t, 2 \\rangle$ and $\\langle 3 - 3t, -1 + 2t, 2 \\rangle$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Running the curve backward.</b> If $C$ goes from $A$ to $B$, then $\\mathbf{r}(0)$ must be $A$. Writing $B + t(A - B)$ by habit traces the right segment in the wrong direction, and every line integral of a vector field along it comes out with the wrong sign. Always check $\\mathbf{r}$ at the first and last parameter values."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.2 Line Integrals"
+   }
+  ]
+ },
+ "calc4.scalar-line-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How much does a curved wire weigh if its density changes along its length? Cut it into small pieces, multiply each piece's length by its density, and add. That sum, in the limit, is a <b>line integral of a function</b> along a curve. It is the <a href=\"/math/calculus-3/space-arc-length/\">arc length</a> integral with a weight $f$ attached."
+   },
+   {
+    "t": "key",
+    "html": "For a smooth curve $C$ given by $\\mathbf{r}(t)$, $a \\le t \\le b$, and a continuous function $f$:\n  $$\\int_C f\\,ds = \\lim \\sum f(P_i^*)\\,\\Delta s_i = \\int_a^b f(\\mathbf{r}(t))\\,|\\mathbf{r}'(t)|\\,dt.$$\n  The value does not depend on the parametrization or on the direction of travel. With $f = 1$ it gives the length of $C$; with a density $\\delta$ it gives the mass of a wire."
+   },
+   {
+    "t": "why",
+    "html": "<b>Why the factor $|\\mathbf{r}'(t)|$:</b> a small step $\\Delta t$ in the parameter moves the point by about $\\mathbf{r}'(t)\\,\\Delta t$, a piece of curve of length $\\Delta s \\approx |\\mathbf{r}'(t)|\\,\\Delta t$. So $f\\,\\Delta s \\approx f(\\mathbf{r}(t))\\,|\\mathbf{r}'(t)|\\,\\Delta t$, and adding these gives the $t$-integral.<br>\n  <b>Why direction does not matter:</b> $\\Delta s$ is a length, always positive. Tracing $C$ backward visits the same pieces with the same lengths, so the sum is unchanged."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "x": "t",
+     "y": "t^2/2",
+     "z": "0",
+     "t0": -2,
+     "t1": 2,
+     "t": 1.5,
+     "tangent": true,
+     "shadow": false,
+     "pitch": 1.2
+    },
+    "cap": "The curve $\\langle t, t^2/2 \\rangle$ with its velocity $\\mathbf{r}'(t) = \\langle 1, t \\rangle$. Near $t = 0$ the arrow is short: a step $dt$ covers little curve. Near the ends it is long. The factor $|\\mathbf{r}'(t)| = \\sqrt{1 + t^2}$ in $ds$ converts steps in $t$ into length."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Along a segment",
+    "q": "Evaluate $\\int_C (x + y)\\,ds$, where $C$ is the segment from $(0, 0)$ to $(3, 4)$.",
+    "steps": [
+     "$\\mathbf{r}(t) = \\langle 3t, 4t \\rangle$, ${}0 \\le t \\le 1$, and $|\\mathbf{r}'(t)| = |\\langle 3, 4 \\rangle| = 5$.",
+     "On $C$, $x + y = 7t$.",
+     "$\\int_0^1 7t \\cdot 5\\,dt = \\frac{35}{2}$."
+    ],
+    "a": "$\\frac{35}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Along a quarter circle",
+    "q": "Evaluate $\\int_C xy\\,ds$, where $C$ is the part of $x^2 + y^2 = 4$ in the first quadrant.",
+    "steps": [
+     "$\\mathbf{r}(t) = \\langle 2\\cos t, 2\\sin t \\rangle$, ${}0 \\le t \\le \\frac{\\pi}{2}$, with $|\\mathbf{r}'(t)| = 2$.",
+     "$$\\int_0^{\\pi/2} (4\\cos t\\sin t)(2)\\,dt = 8 \\cdot \\frac{1}{2}\\left[\\sin^2 t\\right]_0^{\\pi/2} = 4.$$"
+    ],
+    "a": "${}4$"
+   },
+   {
+    "t": "ex",
+    "title": "Mass of a helical spring",
+    "q": "A wire has the shape $\\mathbf{r}(t) = \\langle \\cos t, \\sin t, t \\rangle$, ${}0 \\le t \\le 2\\pi$, and density $\\delta = z$. Find its mass.",
+    "steps": [
+     "$|\\mathbf{r}'(t)| = |\\langle -\\sin t, \\cos t, 1 \\rangle| = \\sqrt{2}$.",
+     "Mass $$= \\int_C z\\,ds = \\int_0^{2\\pi} t\\sqrt{2}\\,dt = \\sqrt{2} \\cdot \\frac{(2\\pi)^2}{2} = 2\\sqrt{2}\\,\\pi^2.$$"
+    ],
+    "a": "${}2\\sqrt{2}\\,\\pi^2$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dropping $|\\mathbf{r}'(t)|$.</b> Writing $ds$ as $dt$ treats every step in $t$ as one unit of length. In the first example that gives $\\int_0^1 7t\\,dt = \\frac{7}{2}$, off by the factor ${}5$, the length of the segment. A quick check: with $f = 1$, your integral should give the length of the curve."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.2 Line Integrals"
+   }
+  ]
+ },
+ "calc4.work-line-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A force pushes an object along a curved path. Only the part of the force along the direction of motion does work, and the force may change from point to point. The <b>line integral of a vector field</b> adds up that work. It builds on <a href=\"/math/calculus-4/scalar-line-integrals/\">line integrals of functions</a> and on the <a href=\"/math/calculus-3/dot-product-projections/\">dot product</a>."
+   },
+   {
+    "t": "key",
+    "html": "For a continuous field $\\mathbf{F}$ and a smooth oriented curve $C$ given by $\\mathbf{r}(t)$, $a \\le t \\le b$:\n  $$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\int_a^b \\mathbf{F}(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)\\,dt,$$\n  where $\\mathbf{T}$ is the unit tangent in the direction of travel and $d\\mathbf{r} = \\mathbf{r}'(t)\\,dt$. Reversing the direction changes the sign: $\\int_{-C} \\mathbf{F} \\cdot d\\mathbf{r} = -\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Where the formula comes from:</b> over a short piece of path the force is nearly constant and the displacement is $\\Delta\\mathbf{r} \\approx \\mathbf{r}'(t)\\,\\Delta t$, so the work is about $\\mathbf{F} \\cdot \\Delta\\mathbf{r}$ (force times displacement, counting only the component along the motion). Add and take the limit. In terms of arc length, $\\mathbf{r}'(t)\\,dt = \\mathbf{T}\\,|\\mathbf{r}'(t)|\\,dt = \\mathbf{T}\\,ds$: the work integral is the scalar line integral of the tangential component $\\mathbf{F} \\cdot \\mathbf{T}$.<br>\n  <b>Why the sign flips:</b> walking the other way reverses $\\mathbf{T}$ at every point, so $\\mathbf{F} \\cdot \\mathbf{T}$ changes sign while $ds$ does not."
+   },
+   {
+    "t": "viz",
+    "name": "lineintegral",
+    "opts": {
+     "P": "-y",
+     "Q": "x",
+     "curve": "figure8"
+    },
+    "cap": "The rotation field $\\langle -y, x \\rangle$ along a figure-eight. On the right loop the particle moves against the arrows and the running work drops; on the left loop it moves with them and the work climbs back. The total is ${}0$: the two loops are traced in opposite directions."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Along a segment",
+    "q": "Find $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle x^2, xy \\rangle$ along the segment from $(0, 0)$ to $(1, 2)$.",
+    "steps": [
+     "$\\mathbf{r}(t) = \\langle t, 2t \\rangle$ and $\\mathbf{r}'(t) = \\langle 1, 2 \\rangle$.",
+     "$\\mathbf{F}(\\mathbf{r}(t)) = \\langle t^2, 2t^2 \\rangle$, so $\\mathbf{F} \\cdot \\mathbf{r}' = t^2 + 4t^2 = 5t^2$.",
+     "$\\int_0^1 5t^2\\,dt = \\frac{5}{3}$."
+    ],
+    "a": "$\\frac{5}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "A half circle, both ways",
+    "q": "Find the work done by $\\mathbf{F} = \\langle -y, x \\rangle$ along the upper half of $x^2 + y^2 = 4$ from $(2, 0)$ to $(-2, 0)$, and then from $(-2, 0)$ to $(2, 0)$.",
+    "steps": [
+     "$\\mathbf{r}(t) = \\langle 2\\cos t, 2\\sin t \\rangle$, ${}0 \\le t \\le \\pi$; $\\mathbf{r}'(t) = \\langle -2\\sin t, 2\\cos t \\rangle$.",
+     "$\\mathbf{F} \\cdot \\mathbf{r}' = 4\\sin^2 t + 4\\cos^2 t = 4$, so the work is $\\int_0^\\pi 4\\,dt = 4\\pi$.",
+     "The field pushes along the motion all the way. In the other direction it pushes against it: $-4\\pi$."
+    ],
+    "a": "${}4\\pi$ and $-4\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "In space",
+    "q": "Find $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle z, x, y \\rangle$ along $\\mathbf{r}(t) = \\langle t, t^2, t^3 \\rangle$, ${}0 \\le t \\le 1$.",
+    "steps": [
+     "$\\mathbf{F}(\\mathbf{r}(t)) = \\langle t^3, t, t^2 \\rangle$ and $\\mathbf{r}'(t) = \\langle 1, 2t, 3t^2 \\rangle$.",
+     "$\\mathbf{F} \\cdot \\mathbf{r}' = t^3 + 2t^2 + 3t^4$.",
+     "$$\\int_0^1 (t^3 + 2t^2 + 3t^4)\\,dt = \\frac{1}{4} + \\frac{2}{3} + \\frac{3}{5} = \\frac{91}{60}.$$"
+    ],
+    "a": "$\\frac{91}{60}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Ignoring orientation.</b> Unlike $\\int_C f\\,ds$, the integral $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ depends on the direction of travel. A problem that says \"from $A$ to $B$\" fixes it. If you parametrize from $B$ to $A$, either redo the parametrization or flip the sign of your answer. In the second example the two directions give ${}4\\pi$ and $-4\\pi$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.2 Line Integrals"
+   }
+  ]
+ },
+ "calc4.differential-form": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Line integrals of vector fields are often written without vectors at all: $\\int_C P\\,dx + Q\\,dy$. This is the same thing as $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle P, Q \\rangle$, written component by component. The notation is handy when the curve is a graph or is made of horizontal and vertical pieces. It builds on <a href=\"/math/calculus-4/work-line-integrals/\">line integrals of vector fields</a>."
+   },
+   {
+    "t": "key",
+    "html": "With $d\\mathbf{r} = \\langle dx, dy, dz \\rangle$,\n  $$\\int_C \\mathbf{F} \\cdot d\\mathbf{r} = \\int_C P\\,dx + Q\\,dy + R\\,dz = \\int_a^b \\left[P\\,x'(t) + Q\\,y'(t) + R\\,z'(t)\\right] dt.$$\n  On a horizontal segment $dy = 0$; on a vertical segment $dx = 0$. On a graph $y = g(x)$ you can use $x$ itself as the parameter: $dy = g'(x)\\,dx$."
+   },
+   {
+    "t": "why",
+    "html": "$dx = x'(t)\\,dt$ is the differential of $x = x(t)$, the same substitution as in <a href=\"/math/calculus-1/u-substitution/\">u-substitution</a>. Writing $\\langle P, Q \\rangle \\cdot \\langle x'(t), y'(t) \\rangle\\,dt$ out in components gives $P\\,x'(t)\\,dt + Q\\,y'(t)\\,dt$, which is $P\\,dx + Q\\,dy$. On a horizontal segment $y$ is constant, so $y'(t) = 0$ and the $Q$ term disappears."
+   },
+   {
+    "t": "viz",
+    "name": "lineintegral",
+    "opts": {
+     "P": "y",
+     "Q": "x^2",
+     "x": "t",
+     "y": "t^2",
+     "t0": 0,
+     "t1": 1,
+     "xmin": -0.6,
+     "xmax": 1.6,
+     "ymin": -0.4,
+     "ymax": 1.4
+    },
+    "cap": "The field $\\langle y, x^2 \\rangle$ along the parabola $y = x^2$ from $(0, 0)$ to $(1, 1)$: the running total ends at $\\frac{5}{6}$, the value found in the first example."
+   },
+   {
+    "t": "p",
+    "html": "Orientation still matters in this notation: reversing the curve changes the sign of $\\int_C P\\,dx + Q\\,dy$, because every $dx$ and $dy$ changes sign. The pieces $\\int_C P\\,dx$ and $\\int_C Q\\,dy$ can also be computed separately and added, which helps when one of them is easy. For the path from $(0, 0)$ to $(1, 0)$ and then up to $(1, 1)$, $\\int_C y\\,dx$ is ${}0$ on the first piece (where $y = 0$) and ${}0$ on the second (where $dx = 0$), so only $\\int_C x^2\\,dy$ needs work. In space, $\\int_C P\\,dx + Q\\,dy + R\\,dz$ works the same way, with $dz = z'(t)\\,dt$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Along a parabola",
+    "q": "Evaluate $\\int_C y\\,dx + x^2\\,dy$, where $C$ is $y = x^2$ from $(0, 0)$ to $(1, 1)$.",
+    "steps": [
+     "Use $x$ as the parameter: $y = x^2$, $dy = 2x\\,dx$, $x$ from ${}0$ to ${}1$.",
+     "The integrand becomes $x^2\\,dx + x^2 \\cdot 2x\\,dx = (x^2 + 2x^3)\\,dx$.",
+     "$\\int_0^1 (x^2 + 2x^3)\\,dx = \\frac{1}{3} + \\frac{1}{2} = \\frac{5}{6}$."
+    ],
+    "a": "$\\frac{5}{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "Along two segments",
+    "q": "Evaluate the same integral $\\int_C y\\,dx + x^2\\,dy$ along $(0, 0) \\to (1, 0) \\to (1, 1)$.",
+    "steps": [
+     "First piece: $y = 0$, $dy = 0$, $x$ from ${}0$ to ${}1$: $\\int_0^1 0\\,dx = 0$.",
+     "Second piece: $x = 1$, $dx = 0$, $y$ from ${}0$ to ${}1$: $\\int_0^1 1\\,dy = 1$.",
+     "Total ${}1$, not $\\frac{5}{6}$: for this field the path matters."
+    ],
+    "a": "${}1$"
+   },
+   {
+    "t": "ex",
+    "title": "Around a circle",
+    "q": "Evaluate $\\oint_C x\\,dy - y\\,dx$ around the unit circle, counterclockwise.",
+    "steps": [
+     "$x = \\cos t$, $y = \\sin t$: $dx = -\\sin t\\,dt$, $dy = \\cos t\\,dt$.",
+     "$$x\\,dy - y\\,dx = (\\cos^2 t + \\sin^2 t)\\,dt = dt.$$",
+     "$\\int_0^{2\\pi} dt = 2\\pi$, twice the area of the disk. (<a href=\"/math/calculus-4/greens-area/\">Green's theorem</a> explains why.)"
+    ],
+    "a": "${}2\\pi$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.2 Line Integrals"
+   }
+  ]
+ },
+ "calc4.circulation-flux-curves": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A fluid moving in the plane can do two things relative to a curve: flow <b>along</b> it or flow <b>across</b> it. Along is measured by the tangential component $\\mathbf{F} \\cdot \\mathbf{T}$, which you met in <a href=\"/math/calculus-4/work-line-integrals/\">work integrals</a>. Across is measured by the normal component $\\mathbf{F} \\cdot \\mathbf{n}$. Around a closed curve, the first total is the <b>circulation</b>, and the second is the <b>flux</b>, the net rate at which fluid leaves the region inside."
+   },
+   {
+    "t": "key",
+    "html": "For a closed curve $C$ traced counterclockwise and $\\mathbf{F} = \\langle P, Q \\rangle$, with $\\mathbf{T}$ the unit tangent and $\\mathbf{n}$ the outward unit normal:\n  $$\\text{circulation} = \\oint_C \\mathbf{F} \\cdot \\mathbf{T}\\,ds = \\oint_C P\\,dx + Q\\,dy, \\qquad \\text{flux} = \\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C P\\,dy - Q\\,dx.$$\n  For a curve that is not closed, the flux $\\int_C P\\,dy - Q\\,dx$ uses the normal pointing to the right of the direction of travel."
+   },
+   {
+    "t": "why",
+    "html": "$\\mathbf{T}\\,ds = \\langle dx, dy \\rangle$. Turning a vector a quarter turn clockwise sends $\\langle a, b \\rangle$ to $\\langle b, -a \\rangle$ and keeps its length, so $\\mathbf{n}\\,ds = \\langle dy, -dx \\rangle$ is a normal of the same length, pointing to the right of the direction of travel. Walking counterclockwise around a region, the region is on your left, so the right side is the outside. Then $\\mathbf{F} \\cdot \\mathbf{n}\\,ds = P\\,dy - Q\\,dx$."
+   },
+   {
+    "t": "viz",
+    "name": "calc4-loop",
+    "opts": {
+     "P": "x",
+     "Q": "0",
+     "center": [
+      0,
+      0
+     ],
+     "r": 0.6,
+     "show": "both",
+     "task": "Resize the circle until the outward flux is about $3.14$.",
+     "target": {
+      "flux": 3.1416,
+      "tol": 0.04
+     }
+    },
+    "cap": "The field $\\langle x, 0 \\rangle$ pushes away from the $y$-axis. At the marked point you see $\\mathbf{T}$ (blue), the outward normal $\\mathbf{n}$ (red) and $\\mathbf{F}$. The circulation stays ${}0$ while the flux grows with the area: it equals the area of the circle, so radius ${}1$ gives $\\pi$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The radial field",
+    "q": "Find the circulation and the outward flux of $\\mathbf{F} = \\langle x, y \\rangle$ around the circle of radius $R$ centered at the origin.",
+    "steps": [
+     "$x = R\\cos t$, $y = R\\sin t$; $dx = -R\\sin t\\,dt$, $dy = R\\cos t\\,dt$.",
+     "Circulation: $$P\\,dx + Q\\,dy = (-R^2\\cos t\\sin t + R^2\\sin t\\cos t)\\,dt = 0.$$",
+     "Flux: $$P\\,dy - Q\\,dx = (R^2\\cos^2 t + R^2\\sin^2 t)\\,dt = R^2\\,dt,$$ so the flux is ${}2\\pi R^2$.",
+     "The field points straight out: it crosses the circle everywhere and never runs along it."
+    ],
+    "a": "circulation ${}0$, flux ${}2\\pi R^2$"
+   },
+   {
+    "t": "ex",
+    "title": "The rotation field",
+    "q": "Repeat for $\\mathbf{F} = \\langle -y, x \\rangle$.",
+    "steps": [
+     "Circulation: $$(-R\\sin t)(-R\\sin t) + (R\\cos t)(R\\cos t) = R^2$$ per $dt$: total ${}2\\pi R^2$.",
+     "Flux: $$P\\,dy - Q\\,dx = (-R\\sin t)(R\\cos t) - (R\\cos t)(-R\\sin t) = 0.$$"
+    ],
+    "a": "circulation ${}2\\pi R^2$, flux ${}0$"
+   },
+   {
+    "t": "ex",
+    "title": "Flux across a segment",
+    "q": "Find the flux of $\\mathbf{F} = \\langle x, y + 1 \\rangle$ across the segment from $(0, 0)$ to $(2, 0)$, normal to the right of travel.",
+    "steps": [
+     "$\\mathbf{r}(t) = \\langle 2t, 0 \\rangle$: $dx = 2\\,dt$, $dy = 0$, and $y = 0$.",
+     "$$P\\,dy - Q\\,dx = 0 - (0 + 1)(2)\\,dt = -2\\,dt,$$ so the flux is $\\int_0^1 -2\\,dt = -2$.",
+     "Check: traveling right, the right-hand normal points down, $\\langle 0, -1 \\rangle$. Then $\\mathbf{F} \\cdot \\mathbf{n} = -1$ along a segment of length ${}2$."
+    ],
+    "a": "$-2$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using the tangent for flux.</b> $\\oint P\\,dx + Q\\,dy$ is circulation, not flux. Flux across a curve needs the normal: $\\oint P\\,dy - Q\\,dx$. Mixing them up swaps the answers in the first two examples: the radial field would seem to circulate and the rotation field would seem to flow out."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.2 Line Integrals"
+   }
+  ]
+ },
+ "calc4.ftc-line-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Calculus 1 the <a href=\"/math/calculus-1/ftc-evaluate/\">fundamental theorem of calculus</a> says $\\int_a^b F'(x)\\,dx = F(b) - F(a)$: integrating a derivative only needs the endpoint values. Line integrals have the same shortcut when the field is a <a href=\"/math/calculus-4/gradient-fields/\">gradient field</a>. Then no parametrization is needed at all."
+   },
+   {
+    "t": "key",
+    "html": "<b>Fundamental theorem for line integrals.</b> If $C$ is a piecewise smooth curve from $A$ to $B$ and $f$ is continuously differentiable on an open region containing $C$, then\n  $$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A).$$\n  In particular, the integral is the same along every path from $A$ to $B$, and it is ${}0$ around every closed curve."
+   },
+   {
+    "t": "why",
+    "html": "Let $\\mathbf{r}(t)$, $a \\le t \\le b$, trace $C$. By the <a href=\"/math/calculus-3/multivariable-chain-rule/\">chain rule</a>,\n  $$\\frac{d}{dt} f(\\mathbf{r}(t)) = f_x x'(t) + f_y y'(t) + f_z z'(t) = \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t).$$\n  So $$\\int_a^b \\nabla f(\\mathbf{r}(t)) \\cdot \\mathbf{r}'(t)\\,dt = \\int_a^b \\frac{d}{dt} f(\\mathbf{r}(t))\\,dt = f(\\mathbf{r}(b)) - f(\\mathbf{r}(a))$$ by the one-variable theorem. For a piecewise smooth curve, apply this to each piece; the inside endpoints cancel."
+   },
+   {
+    "t": "viz",
+    "name": "lineintegral",
+    "opts": {
+     "P": "y",
+     "Q": "x",
+     "curve": "parabola"
+    },
+    "cap": "The gradient field $\\langle y, x \\rangle = \\nabla(xy)$ along a parabola from $(-1.5, 1.25)$ to $(1.5, 1.25)$. The running work wanders, but it ends at $$f(B) - f(A) = 1.875 - (-1.875) = 3.75,$$ whatever path connects those points."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Endpoints only",
+    "q": "Find $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle 2xy, x^2 + 3y^2 \\rangle$ along any curve from $(1, 0)$ to $(2, 1)$.",
+    "steps": [
+     "$\\mathbf{F} = \\nabla f$ with $f = x^2y + y^3$: $f_x = 2xy$ and $f_y = x^2 + 3y^2$.",
+     "$f(2, 1) - f(1, 0) = (4 + 1) - 0 = 5$."
+    ],
+    "a": "${}5$"
+   },
+   {
+    "t": "ex",
+    "title": "Along a helix",
+    "q": "Find $\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ for $\\mathbf{F} = \\langle yz, xz, xy + 2z \\rangle$ along $\\mathbf{r}(t) = \\langle \\cos t, \\sin t, t \\rangle$, ${}0 \\le t \\le 2\\pi$.",
+    "steps": [
+     "$\\mathbf{F} = \\nabla f$ with $f = xyz + z^2$ (check each partial derivative).",
+     "The curve runs from $\\mathbf{r}(0) = (1, 0, 0)$ to $\\mathbf{r}(2\\pi) = (1, 0, 2\\pi)$.",
+     "$$f(1, 0, 2\\pi) - f(1, 0, 0) = 4\\pi^2 - 0 = 4\\pi^2.$$"
+    ],
+    "a": "${}4\\pi^2$"
+   },
+   {
+    "t": "ex",
+    "title": "When the theorem does not apply",
+    "q": "Find $\\oint_C \\langle -y, x \\rangle \\cdot d\\mathbf{r}$ around the unit circle, counterclockwise.",
+    "steps": [
+     "Parametrize: $\\mathbf{F} \\cdot \\mathbf{r}' = \\sin^2 t + \\cos^2 t = 1$, so the integral is ${}2\\pi$.",
+     "A gradient field would give ${}0$ around a closed curve. So $\\langle -y, x \\rangle$ is not a gradient field, which matches $P_y = -1 \\ne 1 = Q_x$."
+    ],
+    "a": "${}2\\pi$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using $f(B) - f(A)$ for a field that is not a gradient.</b> The shortcut needs a potential function. For $\\langle -y, x \\rangle$ around a closed curve it would give ${}0$, but the true value is ${}2\\pi$. Before using endpoints, check that $\\mathbf{F} = \\nabla f$: find $f$, or at least check that $P_y = Q_x$ on a region without holes."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.3 Conservative Vector Fields"
+   }
+  ]
+ },
+ "calc4.conservative-test": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/calculus-4/ftc-line-integrals/\">fundamental theorem for line integrals</a> turns work into endpoint values, but only for gradient fields. How can you tell whether a field is a gradient field without finding the potential? Partial derivatives give a quick test, with one important condition on the shape of the region."
+   },
+   {
+    "t": "key",
+    "html": "Let $\\mathbf{F} = \\langle P, Q \\rangle$ have continuous partial derivatives on an open, <b>simply connected</b> region $D$ (connected, with no holes). Then\n  $$\\mathbf{F} \\text{ is conservative on } D \\iff P_y = Q_x \\text{ everywhere in } D.$$\n  In space: $\\mathbf{F} = \\langle P, Q, R \\rangle$ on a simply connected region (such as all of space) is conservative if and only if $\\nabla \\times \\mathbf{F} = \\mathbf{0}$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Necessary:</b> if $\\mathbf{F} = \\nabla f$, then $P_y = f_{xy} = f_{yx} = Q_x$ (Clairaut).<br>\n  <b>Sufficient, when there are no holes:</b> take any simple closed curve $C$ in $D$. Because $D$ has no holes, the whole region $R$ inside $C$ lies in $D$, so <a href=\"/math/calculus-4/greens-circulation/\">Green's theorem</a> gives $\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\pm\\iint_R (Q_x - P_y)\\,dA = 0$. Zero around every loop means <a href=\"/math/calculus-4/path-independence/\">path independence</a>, and a path-independent field is a gradient.<br>\n  <b>Where holes break it:</b> if the inside of $C$ contains a point where $\\mathbf{F}$ is not defined, Green's theorem cannot be applied to that region, and the circulation need not be ${}0$."
+   },
+   {
+    "t": "viz",
+    "name": "calc4-loop",
+    "opts": {
+     "sources": [
+      {
+       "x": 0,
+       "y": 0,
+       "q": "2pi",
+       "kind": "vortex"
+      }
+     ],
+     "center": [
+      0.3,
+      0.2
+     ],
+     "r": 1.2,
+     "show": "circ",
+     "task": "Drag the loop so it no longer surrounds the origin.",
+     "target": {
+      "circ": 0,
+      "tol": 0.01
+     }
+    },
+    "cap": "The field $\\left\\langle \\frac{-y}{x^2 + y^2}, \\frac{x}{x^2 + y^2} \\right\\rangle$ has $Q_x = P_y$ wherever it is defined. Around any loop that surrounds the origin its circulation is ${}2\\pi \\approx 6.283$; around a loop that does not, it is ${}0$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A conservative field",
+    "q": "Is $\\mathbf{F} = \\langle 2xy + y^2, x^2 + 2xy \\rangle$ conservative on the plane?",
+    "steps": [
+     "$P_y = 2x + 2y$ and $Q_x = 2x + 2y$.",
+     "They agree everywhere, and the plane has no holes, so yes. (A potential is $x^2y + xy^2$.)"
+    ],
+    "a": "yes"
+   },
+   {
+    "t": "ex",
+    "title": "A field that fails",
+    "q": "Is $\\mathbf{F} = \\langle y, 2x \\rangle$ conservative? Confirm with a loop.",
+    "steps": [
+     "$P_y = 1$, $Q_x = 2$: not equal, so no.",
+     "Around the unit circle: $$\\int_0^{2\\pi} (-\\sin^2 t + 2\\cos^2 t)\\,dt = -\\pi + 2\\pi = \\pi \\ne 0.$$"
+    ],
+    "a": "no; circulation $\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "In space",
+    "q": "Which of $\\mathbf{F} = \\langle yz, xz, xy \\rangle$ and $\\mathbf{G} = \\langle y, x, x \\rangle$ is conservative?",
+    "steps": [
+     "$\\nabla \\times \\mathbf{F} = \\langle x - x, y - y, z - z \\rangle = \\mathbf{0}$: conservative ($\\mathbf{F} = \\nabla(xyz)$).",
+     "$$\\nabla \\times \\mathbf{G} = \\langle 0 - 0, 0 - 1, 1 - 1 \\rangle = \\langle 0, -1, 0 \\rangle \\ne \\mathbf{0}\\text{:}$$ not conservative."
+    ],
+    "a": "$\\mathbf{F}$ only"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting the region.</b> The field $\\left\\langle \\frac{-y}{x^2 + y^2}, \\frac{x}{x^2 + y^2} \\right\\rangle$ passes the test $P_y = Q_x$ at every point where it is defined, yet its circulation around the unit circle is ${}2\\pi$, so it is not conservative on the plane without the origin. The test only guarantees a potential on a region with no holes. On the right half-plane $x > 0$, which has no hole, it is conservative: there it is $\\nabla \\arctan(y/x)$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.3 Conservative Vector Fields"
+   }
+  ]
+ },
+ "calc4.find-potential": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once a field passes the <a href=\"/math/calculus-4/conservative-test/\">test for conservative fields</a>, you can find a potential $f$ with $\\nabla f = \\mathbf{F}$ by integrating one variable at a time. The only subtle point is the \"constant\" of integration: when you integrate with respect to $x$, anything that does not depend on $x$ acts like a constant."
+   },
+   {
+    "t": "key",
+    "html": "To find $f$ with $\\nabla f = \\langle P, Q \\rangle$:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Integrate $P$ with respect to $x$: $f = \\int P\\,dx + g(y)$, where $g$ is an unknown function of $y$.",
+     "Differentiate that with respect to $y$ and set it equal to $Q$. This gives $g'(y)$.",
+     "Integrate to get $g(y)$ (up to a constant) and put it back. Check by computing $\\nabla f$.",
+     "In space, the unknown after the first step is $g(y, z)$; use $Q$ to find how it depends on $y$ (up to a function $h(z)$), then $R$ to find $h$."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "<b>Why $g$ depends on $y$:</b> $\\frac{\\partial}{\\partial x} g(y) = 0$, so adding any function of $y$ does not change $f_x$.<br>\n  <b>Why step 2 always works for a conservative field:</b> $g'(y) = Q - \\frac{\\partial}{\\partial y}\\int P\\,dx$ must not depend on $x$. Its $x$-derivative is $Q_x - \\frac{\\partial}{\\partial y}\\frac{\\partial}{\\partial x}\\int P\\,dx = Q_x - P_y$, which is ${}0$ exactly when the field passes the test. If you ever find $x$ left in $g'(y)$, the field is not conservative (or there is an arithmetic slip)."
+   },
+   {
+    "t": "viz",
+    "name": "gradient",
+    "opts": {
+     "f": "x^2*y + 3x + 2y^2",
+     "point": [
+      -1,
+      0.5
+     ],
+     "dir": 120,
+     "ascent": true,
+     "xmin": -3,
+     "xmax": 3,
+     "ymin": -3,
+     "ymax": 3
+    },
+    "cap": "Level curves of the potential $f = x^2y + 3x + 2y^2$ from the first example. The field $\\mathbf{F} = \\langle 2xy + 3, x^2 + 4y \\rangle$ is $\\nabla f$: at every point it crosses the level curve at a right angle."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "In the plane",
+    "q": "Find a potential for $\\mathbf{F} = \\langle 2xy + 3, x^2 + 4y \\rangle$.",
+    "steps": [
+     "$$f = \\int (2xy + 3)\\,dx = x^2y + 3x + g(y).$$",
+     "$f_y = x^2 + g'(y)$ must equal $x^2 + 4y$, so $g'(y) = 4y$ and $g(y) = 2y^2$.",
+     "$f = x^2y + 3x + 2y^2$ (plus any constant). Check: $\\nabla f = \\langle 2xy + 3, x^2 + 4y \\rangle$."
+    ],
+    "a": "$x^2y + 3x + 2y^2 + C$"
+   },
+   {
+    "t": "ex",
+    "title": "With an exponential",
+    "q": "Find a potential for $\\mathbf{F} = \\langle ye^{xy}, xe^{xy} + 2y \\rangle$.",
+    "steps": [
+     "$f = \\int ye^{xy}\\,dx = e^{xy} + g(y)$.",
+     "$f_y = xe^{xy} + g'(y) = xe^{xy} + 2y$, so $g'(y) = 2y$, $g = y^2$.",
+     "$f = e^{xy} + y^2$."
+    ],
+    "a": "$e^{xy} + y^2 + C$"
+   },
+   {
+    "t": "ex",
+    "title": "In space",
+    "q": "Find a potential for $\\mathbf{F} = \\langle 2x + yz, xz + z^2, xy + 2yz \\rangle$.",
+    "steps": [
+     "$$f = \\int (2x + yz)\\,dx = x^2 + xyz + g(y, z).$$",
+     "$f_y = xz + g_y = xz + z^2$, so $g_y = z^2$ and $g = yz^2 + h(z)$.",
+     "$f_z = xy + 2yz + h'(z) = xy + 2yz$, so $h' = 0$.",
+     "$f = x^2 + xyz + yz^2$."
+    ],
+    "a": "$x^2 + xyz + yz^2 + C$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Integrating each component and adding.</b> In the first example, $\\int P\\,dx = x^2y + 3x$ and $\\int Q\\,dy = x^2y + 2y^2$. Adding them gives ${}2x^2y + 3x + 2y^2$, whose gradient is $\\langle 4xy + 3, 2x^2 + 4y \\rangle$, not $\\mathbf{F}$: the shared term $x^2y$ was counted twice. A term that appears in several partial integrals belongs in $f$ once. Following the steps above, or checking $\\nabla f$ at the end, catches this."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.3 Conservative Vector Fields"
+   }
+  ]
+ },
+ "calc4.path-independence": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some forces do the same work no matter which route you take. Lifting a box from the floor to a shelf takes the same work against gravity whether you lift it straight up or carry it around the room first. Fields like this are called <b>path independent</b>, and they are exactly the <a href=\"/math/calculus-4/find-potential/\">fields with a potential</a>."
+   },
+   {
+    "t": "key",
+    "html": "For a continuous field $\\mathbf{F}$ on an open connected region $D$, these are equivalent:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "$\\int_C \\mathbf{F} \\cdot d\\mathbf{r}$ depends only on the endpoints of $C$ (path independence).",
+     "$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 0$ for every closed curve $C$ in $D$.",
+     "$\\mathbf{F} = \\nabla f$ for some function $f$ on $D$ (conservative)."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "<b>Path independence and loops:</b> two paths $C_1$, $C_2$ from $A$ to $B$ make a loop $C_1 - C_2$ (out along $C_1$, back along $C_2$ reversed), and $\\oint_{C_1 - C_2} = \\int_{C_1} - \\int_{C_2}$. So \"every loop gives ${}0$\" is the same as \"every two paths agree\".<br>\n  <b>Gradient implies independence:</b> the <a href=\"/math/calculus-4/ftc-line-integrals/\">fundamental theorem</a> gives $f(B) - f(A)$.<br>\n  <b>Independence implies gradient:</b> fix a point $A$ and define $f(x, y) = \\int \\mathbf{F} \\cdot d\\mathbf{r}$ along any path from $A$ to $(x, y)$. Choose a path whose last piece is horizontal, from $(x_0, y)$ to $(x, y)$: then $f(x, y) = \\text{(const)} + \\int_{x_0}^x P(s, y)\\,ds$, and $f_x = P$. A path ending in a vertical piece gives $f_y = Q$."
+   },
+   {
+    "t": "viz",
+    "name": "lineintegral",
+    "opts": {
+     "P": "2*x",
+     "Q": "2*y",
+     "x": "1+cos(t)",
+     "y": "sin(t)",
+     "t0": 0,
+     "t1": "2pi",
+     "xmin": -1.2,
+     "xmax": 3.2,
+     "ymin": -1.6,
+     "ymax": 1.6
+    },
+    "cap": "$\\nabla(x^2 + y^2) = \\langle 2x, 2y \\rangle$ around a circle through the origin. The running work goes up as the particle moves away from the origin and comes back down as it returns: around the full loop it is ${}0$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two paths, one answer",
+    "q": "Compute $\\int_C y\\,dx + x\\,dy$ from $(0, 0)$ to $(1, 2)$ along the segment and along $(0, 0) \\to (1, 0) \\to (1, 2)$.",
+    "steps": [
+     "Segment $\\langle t, 2t \\rangle$: $\\int_0^1 (2t \\cdot 1 + t \\cdot 2)\\,dt = 2$.",
+     "Broken path: on $y = 0$ the integrand is ${}0$; on $x = 1$ it is ${}1\\,dy$: $\\int_0^2 dy = 2$.",
+     "Both give ${}2 = f(1, 2) - f(0, 0)$ with $f = xy$."
+    ],
+    "a": "${}2$ both ways"
+   },
+   {
+    "t": "ex",
+    "title": "Two paths, two answers",
+    "q": "Repeat with $\\int_C y\\,dx - x\\,dy$.",
+    "steps": [
+     "Segment: $\\int_0^1 (2t - 2t)\\,dt = 0$.",
+     "Broken path: ${}0$ on the first piece, then $\\int_0^2 -1\\,dy = -2$.",
+     "Different answers, so $\\langle y, -x \\rangle$ is not path independent (and $P_y = 1 \\ne -1 = Q_x$)."
+    ],
+    "a": "${}0$ and $-2$"
+   },
+   {
+    "t": "ex",
+    "title": "Gravity",
+    "q": "Find the work done by gravity $\\mathbf{F} = \\langle 0, 0, -mg \\rangle$ on a mass moved from height $z = h_1$ to $z = h_2$ along any path.",
+    "steps": [
+     "$\\mathbf{F} = \\nabla f$ with $f = -mgz$.",
+     "Work $$= f(\\text{end}) - f(\\text{start}) = -mg(h_2 - h_1).$$",
+     "With potential energy $U = mgz = -f$, the work is $-\\Delta U$: the familiar statement that gravity's work equals the loss of potential energy."
+    ],
+    "a": "$-mg(h_2 - h_1)$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.3 Conservative Vector Fields"
+   }
+  ]
+ },
+ "calc4.greens-circulation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/calculus-4/curl-divergence-meaning/\">Curl</a> is circulation per unit area. Add up the tiny circulations of all the small cells that make up a region, and the inside edges cancel, because each one is traced twice in opposite directions. What is left is the circulation around the outer boundary. That is Green's theorem: a <a href=\"/math/calculus-4/differential-form/\">line integral</a> around a closed curve equals a <a href=\"/math/calculus-3/general-regions/\">double integral</a> over the region inside."
+   },
+   {
+    "t": "key",
+    "html": "<b>Green's theorem (circulation form).</b> Let $D$ be a bounded region whose boundary $C$ is a piecewise smooth simple closed curve, traced <b>counterclockwise</b> (positive orientation: the region stays on your left). If $P$ and $Q$ have continuous partial derivatives on an open region containing $D$, then\n  $$\\oint_C P\\,dx + Q\\,dy = \\iint_D \\left(\\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y}\\right) dA.$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>Proof for a rectangle</b> $D = [a, b] \\times [c, d]$. Take the $P$ part. On the bottom ($y = c$, left to right) and the top ($y = d$, right to left), and with $dx = 0$ on the sides:\n  $$\\oint_C P\\,dx = \\int_a^b P(x, c)\\,dx - \\int_a^b P(x, d)\\,dx = -\\int_a^b \\left[P(x, d) - P(x, c)\\right] dx = -\\int_a^b \\int_c^d P_y\\,dy\\,dx,$$\n  by the fundamental theorem of calculus in $y$. The same steps with the two vertical sides give $\\oint_C Q\\,dy = \\iint_D Q_x\\,dA$. Adding gives the theorem. A general region can be cut into many small rectangles (and thin slivers along a curved edge); the cell circulations add up, the shared edges cancel, and the theorem holds for the whole region."
+   },
+   {
+    "t": "viz",
+    "name": "calc4-green",
+    "opts": {
+     "P": "-y",
+     "Q": "x*y",
+     "box": [
+      0,
+      2,
+      0,
+      1.5
+     ],
+     "n": 3,
+     "task": "Raise $n$ to $8$: the cell circulations always add up to the boundary circulation.",
+     "target": {
+      "n": 8
+     }
+    },
+    "cap": "The field $\\langle -y, xy \\rangle$ over the rectangle $[0, 2] \\times [0, 1.5]$, cut into $n \\times n$ cells. Each cell's circulation is about $(Q_x - P_y)$ times its area, so their sum is a Riemann sum for the double integral; the inside edges cancel, so the same sum is the boundary circulation."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A rectangle, both ways",
+    "q": "Find $\\oint_C xy\\,dx + x^2\\,dy$, where $C$ is the boundary of $[0, 1] \\times [0, 2]$, counterclockwise.",
+    "steps": [
+     "Green: $Q_x - P_y = 2x - x = x$, and $\\int_0^1 \\int_0^2 x\\,dy\\,dx = 2 \\cdot \\frac{1}{2} = 1$.",
+     "Directly: bottom ($y = 0$): ${}0$. Right ($x = 1$, $y$ from ${}0$ to ${}2$): $\\int_0^2 1\\,dy = 2$. Top ($y = 2$, $x$ from ${}1$ to ${}0$): $\\int_1^0 2x\\,dx = -1$. Left ($x = 0$): ${}0$.",
+     "Total ${}2 - 1 = 1$, as Green's theorem said."
+    ],
+    "a": "${}1$"
+   },
+   {
+    "t": "ex",
+    "title": "A disk, in polar coordinates",
+    "q": "Find $\\oint_C -y^3\\,dx + x^3\\,dy$ around $x^2 + y^2 = 9$, counterclockwise.",
+    "steps": [
+     "$Q_x - P_y = 3x^2 + 3y^2 = 3r^2$.",
+     "$$\\int_0^{2\\pi} \\int_0^3 3r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot \\frac{3 \\cdot 81}{4} = \\frac{243\\pi}{2}.$$"
+    ],
+    "a": "$\\frac{243\\pi}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Clockwise",
+    "q": "Find $\\oint_C y^2\\,dx + 3xy\\,dy$ around the triangle with vertices $(0, 0)$, $(1, 0)$, $(0, 1)$, traced <b>clockwise</b>.",
+    "steps": [
+     "$Q_x - P_y = 3y - 2y = y$.",
+     "$$\\iint_D y\\,dA = \\int_0^1 \\int_0^{1 - x} y\\,dy\\,dx = \\int_0^1 \\frac{(1 - x)^2}{2}\\,dx = \\frac{1}{6}.$$",
+     "Clockwise is the negative orientation, so the answer is $-\\frac{1}{6}$."
+    ],
+    "a": "$-\\frac{1}{6}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Ignoring the direction.</b> Green's theorem as stated assumes counterclockwise travel. If the curve is traced clockwise, the line integral is the negative of the double integral. Before applying the theorem, check that the region is on your left as you walk along $C$; if not, put a minus sign in front."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.4 Green's Theorem"
+   }
+  ]
+ },
+ "calc4.greens-flux": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/calculus-4/circulation-flux-curves/\">Flux across a closed curve</a> measures net outflow, and divergence is outflow per unit area. Green's theorem has a second form that says what you would hope: the outward flux across the boundary equals the total divergence inside."
+   },
+   {
+    "t": "key",
+    "html": "<b>Green's theorem (flux form).</b> Under the same conditions as the <a href=\"/math/calculus-4/greens-circulation/\">circulation form</a>, with $\\mathbf{n}$ the outward unit normal,\n  $$\\oint_C \\mathbf{F} \\cdot \\mathbf{n}\\,ds = \\oint_C P\\,dy - Q\\,dx = \\iint_D \\left(\\frac{\\partial P}{\\partial x} + \\frac{\\partial Q}{\\partial y}\\right) dA.$$"
+   },
+   {
+    "t": "why",
+    "html": "Apply the circulation form to the field $\\mathbf{G} = \\langle -Q, P \\rangle$ (the field $\\mathbf{F}$ turned a quarter turn):\n  $$\\oint_C (-Q)\\,dx + P\\,dy = \\iint_D \\left(\\frac{\\partial P}{\\partial x} - \\frac{\\partial(-Q)}{\\partial y}\\right) dA = \\iint_D (P_x + Q_y)\\,dA.$$\n  The left side is exactly the flux integral $\\oint P\\,dy - Q\\,dx$. In words: the flow of $\\mathbf{F}$ across $C$ is the flow of the turned field along $C$."
+   },
+   {
+    "t": "viz",
+    "name": "calc4-green",
+    "opts": {
+     "P": "x^2",
+     "Q": "y",
+     "box": [
+      -1,
+      1,
+      0,
+      1
+     ],
+     "n": 4,
+     "mode": "flux"
+    },
+    "cap": "Outward flux of $\\langle x^2, y \\rangle$ from small cells. Flow that leaves one cell enters its neighbor, so inside edges cancel. Blue cells are sources (divergence ${}2x + 1 > 0$); red cells near $x = -1$ take in more than they give out."
+   },
+   {
+    "t": "p",
+    "html": "The two forms of Green's theorem match the two derivatives of a plane field. Circulation goes with the scalar curl $Q_x - P_y$; flux goes with the divergence $P_x + Q_y$. A field can have one without the other: the rotation field $\\langle -y, x \\rangle$ has curl ${}2$ and divergence ${}0$, so it circulates around every circle but has no net flow out of any region, while the radial field $\\langle x, y \\rangle$ is the reverse. Read physically, the flux form is a conservation law: in a region with no sources or sinks ($\\nabla \\cdot \\mathbf{F} = 0$), whatever flows in across the boundary must flow out somewhere else."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The radial field again",
+    "q": "Find the outward flux of $\\mathbf{F} = \\langle x, y \\rangle$ across the circle of radius $R$.",
+    "steps": [
+     "$P_x + Q_y = 2$.",
+     "$\\iint_D 2\\,dA = 2\\pi R^2$, the same as the direct computation in the lesson on circulation and flux."
+    ],
+    "a": "${}2\\pi R^2$"
+   },
+   {
+    "t": "ex",
+    "title": "A square",
+    "q": "Find the outward flux of $\\mathbf{F} = \\langle x^2, y^2 \\rangle$ across the boundary of $[0, 1] \\times [0, 1]$.",
+    "steps": [
+     "$P_x + Q_y = 2x + 2y$.",
+     "$\\int_0^1 \\int_0^1 (2x + 2y)\\,dy\\,dx = 1 + 1 = 2$.",
+     "Check: on the right side $\\mathbf{n} = \\langle 1, 0 \\rangle$ and $\\mathbf{F} \\cdot \\mathbf{n} = 1$; on the top $\\mathbf{F} \\cdot \\mathbf{n} = 1$; on the left and bottom $\\mathbf{F} \\cdot \\mathbf{n} = 0$. Total ${}2$."
+    ],
+    "a": "${}2$"
+   },
+   {
+    "t": "ex",
+    "title": "No net flux",
+    "q": "Show that $\\mathbf{F} = \\langle y^3, x \\rangle$ has zero outward flux across every simple closed curve.",
+    "steps": [
+     "$P_x + Q_y = 0 + 0 = 0$ everywhere.",
+     "By the flux form the outward flux is $\\iint_D 0\\,dA = 0$ for any region: whatever flows in also flows out."
+    ],
+    "a": "${}0$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.4 Green's Theorem"
+   }
+  ]
+ },
+ "calc4.greens-area": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Green's theorem can be read backward: a double integral over a region can be computed from a line integral around its edge. The simplest double integral, $\\iint_D 1\\,dA$, is the area. So any field with $Q_x - P_y = 1$ turns the area of a region into a line integral around its boundary. Surveyors' instruments called planimeters measure areas on a map this way, by tracing the outline. You need the <a href=\"/math/calculus-4/greens-circulation/\">circulation form</a>."
+   },
+   {
+    "t": "key",
+    "html": "For a region $D$ with counterclockwise boundary $C$:\n  $$\\text{Area}(D) = \\oint_C x\\,dy = -\\oint_C y\\,dx = \\frac{1}{2}\\oint_C x\\,dy - y\\,dx.$$\n  For a polygon with vertices $(x_1, y_1), \\ldots, (x_n, y_n)$ in counterclockwise order, this gives the <b>shoelace formula</b> $A = \\frac{1}{2}\\sum (x_i y_{i+1} - x_{i+1} y_i)$, with $(x_{n+1}, y_{n+1}) = (x_1, y_1)$."
+   },
+   {
+    "t": "why",
+    "html": "Each choice has $Q_x - P_y = 1$: for $\\langle 0, x \\rangle$, ${}1 - 0$; for $\\langle -y, 0 \\rangle$, ${}0 - (-1)$; for $\\frac{1}{2}\\langle -y, x \\rangle$, $\\frac{1}{2} + \\frac{1}{2}$. Green's theorem turns each line integral into $\\iint_D 1\\,dA$.<br>\n  <b>Shoelace:</b> on the segment $(x_1, y_1) + t(x_2 - x_1, y_2 - y_1)$, $$x\\,dy - y\\,dx = [x_1(y_2 - y_1) - y_1(x_2 - x_1)]\\,dt = (x_1 y_2 - x_2 y_1)\\,dt,$$ so each side contributes $x_1 y_2 - x_2 y_1$."
+   },
+   {
+    "t": "viz",
+    "name": "lineintegral",
+    "opts": {
+     "P": "-y/2",
+     "Q": "x/2",
+     "x": "2cos(t)",
+     "y": "sin(t)",
+     "t0": 0,
+     "t1": "2pi"
+    },
+    "cap": "The field $\\frac{1}{2}\\langle -y, x \\rangle$ around the ellipse $\\langle 2\\cos t, \\sin t \\rangle$. The work done around the loop is the area inside: ${}2\\pi \\approx 6.283$, which is $\\pi ab$ with $a = 2$, $b = 1$."
+   },
+   {
+    "t": "p",
+    "html": "The same idea gives other quantities of a region from its boundary. With $\\mathbf{F} = \\left\\langle 0, \\frac{x^2}{2} \\right\\rangle$, $Q_x - P_y = x$, so $\\oint_C \\frac{x^2}{2}\\,dy = \\iint_D x\\,dA$, the moment used to find the centroid $\\bar{x}$. Software that measures shapes in images works this way: it stores an outline as a list of points and computes areas and centroids from sums over the edges, without ever filling in the inside."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An ellipse",
+    "q": "Find the area inside $\\mathbf{r}(t) = \\langle a\\cos t, b\\sin t \\rangle$.",
+    "steps": [
+     "$$x\\,dy - y\\,dx = (a\\cos t)(b\\cos t)\\,dt - (b\\sin t)(-a\\sin t)\\,dt = ab\\,dt.$$",
+     "$A = \\frac{1}{2}\\int_0^{2\\pi} ab\\,dt = \\pi ab$."
+    ],
+    "a": "$\\pi ab$"
+   },
+   {
+    "t": "ex",
+    "title": "A triangle",
+    "q": "Find the area of the triangle with vertices $(0, 0)$, $(4, 1)$, $(1, 3)$.",
+    "steps": [
+     "The vertices go counterclockwise. Side terms: ${}0 \\cdot 1 - 4 \\cdot 0 = 0$; ${}4 \\cdot 3 - 1 \\cdot 1 = 11$; ${}1 \\cdot 0 - 0 \\cdot 3 = 0$.",
+     "$A = \\frac{1}{2}(0 + 11 + 0) = \\frac{11}{2}$."
+    ],
+    "a": "$\\frac{11}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "A loop",
+    "q": "The curve $\\mathbf{r}(t) = \\langle t^2 - 1, t^3 - t \\rangle$, $-1 \\le t \\le 1$, starts and ends at the origin and makes a loop. Find the area inside.",
+    "steps": [
+     "$$x\\,y' - y\\,x' = (t^2 - 1)(3t^2 - 1) - (t^3 - t)(2t) = t^4 - 2t^2 + 1 = (t^2 - 1)^2.$$",
+     "$A = \\frac{1}{2}\\int_{-1}^1 (t^2 - 1)^2\\,dt = \\frac{1}{2} \\cdot \\frac{16}{15} = \\frac{8}{15}$.",
+     "The integral came out positive, so this direction of travel is counterclockwise."
+    ],
+    "a": "$\\frac{8}{15}$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.4 Green's Theorem"
+   }
+  ]
+ },
+ "calc4.greens-holes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Green's theorem also works for regions with holes, such as a ring between two circles, as long as the whole boundary is used with the right orientation. This version explains how a field with zero curl can still circulate: all of its spin can be hidden inside a hole. You need <a href=\"/math/calculus-4/greens-circulation/\">Green's theorem</a> for regions without holes."
+   },
+   {
+    "t": "key",
+    "html": "If $D$ is bounded by an outer curve $C_1$ and inner curves $C_2, \\ldots$, the <b>positively oriented boundary</b> keeps $D$ on the left: the outer curve counterclockwise and each inner curve <b>clockwise</b>. With that orientation,\n  $$\\oint_{\\partial D} P\\,dx + Q\\,dy = \\iint_D (Q_x - P_y)\\,dA.$$\n  Consequence: if $Q_x = P_y$ throughout a ring, the circulations around the outer and inner circles, both counterclockwise, are equal."
+   },
+   {
+    "t": "why",
+    "html": "Cut the ring with two straight slits into two pieces without holes. Apply Green's theorem to each piece and add. Each slit is traced twice, once in each direction, so those integrals cancel. What remains is the outer circle counterclockwise and the inner circle clockwise, since walking around each piece with the piece on your left sends you clockwise along the inner arcs.<br>\n  For the consequence: $\\oint_{C_1, \\text{ccw}} + \\oint_{C_2, \\text{cw}} = 0$, and $\\oint_{C_2, \\text{cw}} = -\\oint_{C_2, \\text{ccw}}$."
+   },
+   {
+    "t": "viz",
+    "name": "calc4-loop",
+    "opts": {
+     "sources": [
+      {
+       "x": 0,
+       "y": 0,
+       "q": "2pi",
+       "kind": "vortex"
+      }
+     ],
+     "center": [
+      0.3,
+      0.2
+     ],
+     "r": 1.4,
+     "show": "circ",
+     "task": "Switch to the square, then move and resize it. While the origin is inside, the circulation stays $2\\pi$."
+    },
+    "cap": "The whirlpool field $\\frac{\\langle -y, x \\rangle}{x^2 + y^2}$ has zero curl away from the origin. Any loop around the origin can be shrunk to a tiny circle without changing the circulation (Green's theorem on the ring between them), so every such loop gives ${}2\\pi$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A ring",
+    "q": "Find $\\oint_{\\partial D} -y\\,dx + x\\,dy$, where $D$ is the ring ${}1 \\le x^2 + y^2 \\le 4$, positively oriented.",
+    "steps": [
+     "$Q_x - P_y = 1 + 1 = 2$, and the ring has area ${}4\\pi - \\pi = 3\\pi$, so the answer is ${}6\\pi$.",
+     "Check: the outer circle counterclockwise gives ${}2 \\cdot 4\\pi = 8\\pi$ (twice its area); the inner circle clockwise gives $-2\\pi$. Total ${}6\\pi$."
+    ],
+    "a": "${}6\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "The whirlpool field",
+    "q": "Find $\\oint_C \\frac{-y\\,dx + x\\,dy}{x^2 + y^2}$ around the ellipse $\\frac{x^2}{9} + \\frac{y^2}{4} = 1$, counterclockwise.",
+    "steps": [
+     "The integrand is not defined at the origin, which is inside the ellipse, so Green's theorem cannot be used on the whole inside.",
+     "Use the ring between the ellipse and a small circle $x^2 + y^2 = \\varepsilon^2$. There $Q_x - P_y = 0$, so the ellipse has the same counterclockwise circulation as the small circle.",
+     "On the small circle, $\\frac{-y\\,dx + x\\,dy}{x^2 + y^2} = \\frac{\\varepsilon^2\\,dt}{\\varepsilon^2} = dt$, giving ${}2\\pi$."
+    ],
+    "a": "${}2\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "From inner to outer",
+    "q": "In the ring ${}1 \\le x^2 + y^2 \\le 9$, a field has $Q_x - P_y = 1$. Its counterclockwise circulation around the inner circle is ${}5$. Find its counterclockwise circulation around the outer circle.",
+    "steps": [
+     "$$\\oint_{\\text{outer}} - \\oint_{\\text{inner}} = \\iint_{\\text{ring}} 1\\,dA = 9\\pi - \\pi = 8\\pi$$ (both circles counterclockwise).",
+     "So $\\oint_{\\text{outer}} = 5 + 8\\pi$."
+    ],
+    "a": "${}5 + 8\\pi$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Orienting the inner curve like the outer one.</b> With both circles counterclockwise, the theorem reads $\\oint_{\\text{outer}} - \\oint_{\\text{inner}} = \\iint (Q_x - P_y)\\,dA$, with a minus sign. In the ring example, adding ${}8\\pi$ and ${}2\\pi$ would give ${}10\\pi$ instead of the correct ${}6\\pi$. Walk each boundary curve with the region on your left."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.4 Green's Theorem"
+   }
+  ]
+ },
+ "calc4.parametric-surfaces": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A curve is traced by one parameter; a surface needs two. Just as $\\mathbf{r}(t)$ describes a <a href=\"/math/calculus-3/vector-functions/\">curve in space</a>, a function $\\mathbf{r}(u, v)$ of two parameters sweeps out a surface. This lets us describe the <a href=\"/math/calculus-3/quadric-surfaces/\">quadric surfaces</a> and many others in a form that is ready for integration."
+   },
+   {
+    "t": "key",
+    "html": "A <b>parametric surface</b> is given by $\\mathbf{r}(u, v) = \\langle x(u, v), y(u, v), z(u, v) \\rangle$ for $(u, v)$ in a region $D$ of the $uv$-plane. Its <b>tangent vectors</b> are $\\mathbf{r}_u$ and $\\mathbf{r}_v$, and\n  $$\\mathbf{N} = \\mathbf{r}_u \\times \\mathbf{r}_v$$\n  is a <b>normal vector</b>. The surface is smooth where $\\mathbf{N} \\ne \\mathbf{0}$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Surface",
+     "Parametrization",
+     "Parameters"
+    ],
+    "rows": [
+     [
+      "graph $z = f(x, y)$",
+      "$\\langle u, v, f(u, v) \\rangle$",
+      "$(u, v)$ in the domain"
+     ],
+     [
+      "cylinder $x^2 + y^2 = a^2$",
+      "$\\langle a\\cos u, a\\sin u, v \\rangle$",
+      "${}0 \\le u \\le 2\\pi$"
+     ],
+     [
+      "sphere $x^2 + y^2 + z^2 = a^2$",
+      "$\\langle a\\sin u\\cos v, a\\sin u\\sin v, a\\cos u \\rangle$",
+      "${}0 \\le u \\le \\pi$, ${}0 \\le v \\le 2\\pi$"
+     ],
+     [
+      "cone $z = \\sqrt{x^2 + y^2}$",
+      "$\\langle v\\cos u, v\\sin u, v \\rangle$",
+      "$v \\ge 0$"
+     ],
+     [
+      "plane through $P_0$ spanned by $\\mathbf{a}$, $\\mathbf{b}$",
+      "$P_0 + u\\mathbf{a} + v\\mathbf{b}$",
+      "all $u$, $v$"
+     ]
+    ]
+   },
+   {
+    "t": "why",
+    "html": "<b>Why $\\mathbf{r}_u \\times \\mathbf{r}_v$ is normal:</b> holding $v$ fixed and letting $u$ vary traces a curve on the surface (a \"$u$-curve\"), and $\\mathbf{r}_u$ is its tangent vector. Likewise $\\mathbf{r}_v$ is tangent to a $v$-curve. Both lie in the tangent plane, so their cross product is perpendicular to it. If they are parallel (or one is zero), the cross product vanishes and the grid of curves collapses there, as at the tip of a cone."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "surface": true,
+     "x": "sin(u)*cos(v)",
+     "y": "sin(u)*sin(v)",
+     "z": "cos(u)",
+     "u0": 0,
+     "u1": "pi",
+     "v0": 0,
+     "v1": "2pi",
+     "u": 1,
+     "v": 0.8
+    },
+    "cap": "The unit sphere $\\langle \\sin u\\cos v, \\sin u\\sin v, \\cos u \\rangle$ with the $u$-curve (a meridian) and the $v$-curve (a circle of latitude) through a point. The tangent vectors $\\mathbf{r}_u$ and $\\mathbf{r}_v$ point along them."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A plane",
+    "q": "Parametrize the plane through $(1, 0, 2)$ spanned by $\\langle 1, 1, 0 \\rangle$ and $\\langle 0, 1, -1 \\rangle$, and find a normal vector.",
+    "steps": [
+     "$\\mathbf{r}(u, v) = \\langle 1 + u, u + v, 2 - v \\rangle$.",
+     "$\\mathbf{r}_u = \\langle 1, 1, 0 \\rangle$, $\\mathbf{r}_v = \\langle 0, 1, -1 \\rangle$, and $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle -1, 1, 1 \\rangle$.",
+     "So the plane is $-(x - 1) + y + (z - 2) = 0$, that is, $-x + y + z = 1$."
+    ],
+    "a": "$\\langle 1 + u, u + v, 2 - v \\rangle$, normal $\\langle -1, 1, 1 \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "A cone",
+    "q": "Find $\\mathbf{r}_u \\times \\mathbf{r}_v$ for the cone $\\langle v\\cos u, v\\sin u, v \\rangle$. Where is it not smooth?",
+    "steps": [
+     "$\\mathbf{r}_u = \\langle -v\\sin u, v\\cos u, 0 \\rangle$, $\\mathbf{r}_v = \\langle \\cos u, \\sin u, 1 \\rangle$.",
+     "$\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle v\\cos u, v\\sin u, -v \\rangle$.",
+     "This is $\\mathbf{0}$ only when $v = 0$: the vertex, where the cone comes to a point."
+    ],
+    "a": "$\\langle v\\cos u, v\\sin u, -v \\rangle$; not smooth at the vertex"
+   },
+   {
+    "t": "ex",
+    "title": "Recognizing a surface",
+    "q": "What surface is $\\mathbf{r}(u, v) = \\langle 2\\cos u, 2\\sin u, v \\rangle$?",
+    "steps": [
+     "$x^2 + y^2 = 4\\cos^2 u + 4\\sin^2 u = 4$ for every $u$, while $z = v$ can be anything.",
+     "It is the cylinder of radius ${}2$ around the $z$-axis."
+    ],
+    "a": "the cylinder $x^2 + y^2 = 4$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.6 Surface Integrals"
+   }
+  ]
+ },
+ "calc4.parametric-surface-area": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "To find the area of a curved surface, cut the parameter region into small rectangles and look at what each one becomes on the surface: a small, nearly flat parallelogram. Its area comes from the <a href=\"/math/calculus-3/cross-product/\">cross product</a>, and adding them up gives a double integral. For graphs this is the formula from <a href=\"/math/calculus-3/surface-area-double/\">surface area by double integrals</a>; the parametric version covers every surface."
+   },
+   {
+    "t": "key",
+    "html": "For a smooth parametric surface $\\mathbf{r}(u, v)$, $(u, v)$ in $D$, covered once:\n  $$\\text{Area} = \\iint_D |\\mathbf{r}_u \\times \\mathbf{r}_v|\\,dA.$$\n  Useful values: sphere of radius $a$, $|\\mathbf{r}_\\varphi \\times \\mathbf{r}_\\theta| = a^2\\sin\\varphi$; cylinder of radius $a$, $|\\mathbf{r}_\\theta \\times \\mathbf{r}_z| = a$; graph $z = f(x, y)$, $\\sqrt{1 + f_x^2 + f_y^2}$."
+   },
+   {
+    "t": "why",
+    "html": "The parameter rectangle $[u, u + \\Delta u] \\times [v, v + \\Delta v]$ maps to a small patch with corners near $\\mathbf{r}(u, v)$, $\\mathbf{r}(u, v) + \\mathbf{r}_u\\Delta u$ and $\\mathbf{r}(u, v) + \\mathbf{r}_v\\Delta v$. That patch is almost the parallelogram with sides $\\mathbf{r}_u\\Delta u$ and $\\mathbf{r}_v\\Delta v$, whose area is $|\\mathbf{r}_u \\times \\mathbf{r}_v|\\,\\Delta u\\,\\Delta v$. Adding over all cells and letting them shrink gives the integral. (The same idea, in the plane, gave the <a href=\"/math/calculus-3/change-of-variables/\">Jacobian</a>.)"
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "surface": true,
+     "x": "v*cos(u)",
+     "y": "v*sin(u)",
+     "z": "v",
+     "u0": 0,
+     "u1": "2pi",
+     "v0": 0,
+     "v1": 2,
+     "u": 0.8,
+     "v": 1.2
+    },
+    "cap": "The cone $\\langle v\\cos u, v\\sin u, v \\rangle$, ${}0 \\le v \\le 2$. The grid cells get wider as $v$ grows: their area factor $|\\mathbf{r}_u \\times \\mathbf{r}_v| = \\sqrt{2}\\,v$ grows with the distance from the tip."
+   },
+   {
+    "t": "p",
+    "html": "For a graph $z = f(x, y)$, use $\\mathbf{r}(x, y) = \\langle x, y, f(x, y) \\rangle$: then $\\mathbf{r}_x \\times \\mathbf{r}_y = \\langle -f_x, -f_y, 1 \\rangle$ and the formula becomes $\\iint_D \\sqrt{1 + f_x^2 + f_y^2}\\,dA$, the one from Calculus 3. The parametric version is needed when the surface is not a graph over a region of the $xy$-plane: a whole sphere, a cylinder standing on the $xy$-plane, a surface that folds over itself. One caution: the formula counts area each time the parametrization covers it, so choose parameter ranges that cover the surface exactly once. On a sphere, ${}0 \\le \\varphi \\le \\pi$ and ${}0 \\le \\theta \\le 2\\pi$ do; letting $\\varphi$ run to ${}2\\pi$ would count the sphere twice."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A sphere",
+    "q": "Find the area of the sphere of radius $a$.",
+    "steps": [
+     "$$\\mathbf{r}(\\varphi, \\theta) = \\langle a\\sin\\varphi\\cos\\theta, a\\sin\\varphi\\sin\\theta, a\\cos\\varphi \\rangle,$$ and $|\\mathbf{r}_\\varphi \\times \\mathbf{r}_\\theta| = a^2\\sin\\varphi$.",
+     "$$\\int_0^{2\\pi} \\int_0^\\pi a^2\\sin\\varphi\\,d\\varphi\\,d\\theta = 2\\pi a^2 \\cdot 2 = 4\\pi a^2.$$"
+    ],
+    "a": "${}4\\pi a^2$"
+   },
+   {
+    "t": "ex",
+    "title": "A cone",
+    "q": "Find the area of the cone $z = \\sqrt{x^2 + y^2}$ for ${}0 \\le z \\le 2$.",
+    "steps": [
+     "From the previous lesson, $$|\\mathbf{r}_u \\times \\mathbf{r}_v| = |\\langle v\\cos u, v\\sin u, -v \\rangle| = \\sqrt{2}\\,v.$$",
+     "$$\\int_0^{2\\pi} \\int_0^2 \\sqrt{2}\\,v\\,dv\\,du = 2\\pi \\cdot \\sqrt{2} \\cdot 2 = 4\\sqrt{2}\\,\\pi.$$"
+    ],
+    "a": "${}4\\sqrt{2}\\,\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "A helicoid",
+    "q": "Find the area of the spiral ramp $\\mathbf{r}(u, v) = \\langle u\\cos v, u\\sin v, v \\rangle$, ${}0 \\le u \\le 1$, ${}0 \\le v \\le 2\\pi$.",
+    "steps": [
+     "$\\mathbf{r}_u = \\langle \\cos v, \\sin v, 0 \\rangle$, $\\mathbf{r}_v = \\langle -u\\sin v, u\\cos v, 1 \\rangle$, so $\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle \\sin v, -\\cos v, u \\rangle$ with length $\\sqrt{1 + u^2}$.",
+     "Area $$= 2\\pi\\int_0^1 \\sqrt{1 + u^2}\\,du = 2\\pi \\cdot \\frac{1}{2}\\left[\\sqrt{2} + \\ln(1 + \\sqrt{2})\\right] = \\pi\\left[\\sqrt{2} + \\ln(1 + \\sqrt{2})\\right] \\approx 7.21.$$"
+    ],
+    "a": "$\\pi\\left[\\sqrt{2} + \\ln(1 + \\sqrt{2})\\right]$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.6 Surface Integrals"
+   }
+  ]
+ },
+ "calc4.scalar-surface-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/calculus-4/scalar-line-integrals/\">line integral of a function</a> adds $f$ times small lengths along a curve. A surface integral of a function adds $f$ times small areas over a surface. It gives the mass of a thin curved sheet, the average temperature over a dome, or the charge on a curved plate. The area factor comes from <a href=\"/math/calculus-4/parametric-surface-area/\">surface area</a>."
+   },
+   {
+    "t": "key",
+    "html": "For a smooth surface $S$ given by $\\mathbf{r}(u, v)$, $(u, v)$ in $D$, and a continuous function $f$:\n  $$\\iint_S f\\,dS = \\iint_D f(\\mathbf{r}(u, v))\\,|\\mathbf{r}_u \\times \\mathbf{r}_v|\\,dA.$$\n  For a graph $z = g(x, y)$ over $D$: $dS = \\sqrt{1 + g_x^2 + g_y^2}\\,dA$. On a sphere of radius $a$: $dS = a^2\\sin\\varphi\\,d\\varphi\\,d\\theta$. On a cylinder of radius $a$: $dS = a\\,d\\theta\\,dz$."
+   },
+   {
+    "t": "why",
+    "html": "A small parameter rectangle of area $\\Delta u\\,\\Delta v$ becomes a patch of area about $|\\mathbf{r}_u \\times \\mathbf{r}_v|\\,\\Delta u\\,\\Delta v$ (see the previous lesson). On that patch $f$ is nearly constant, so the patch contributes about $f \\cdot |\\mathbf{r}_u \\times \\mathbf{r}_v|\\,\\Delta u\\,\\Delta v$. Adding gives a Riemann sum for the double integral over $D$. With $f = 1$ the formula gives the area. Like $\\int_C f\\,ds$, the value does not depend on the parametrization or on which side of the surface is chosen."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "1 - x - y",
+     "xmin": 0,
+     "xmax": 1,
+     "ymin": 0,
+     "ymax": 1,
+     "contours": 6,
+     "slice": "x",
+     "at": 0.4
+    },
+    "cap": "The plane $z = 1 - x - y$ above the unit square. It is tilted, so each piece of it is larger than its shadow on the floor, by the factor $\\sqrt{1 + 1 + 1} = \\sqrt{3}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A tilted triangle",
+    "q": "Evaluate $\\iint_S z\\,dS$, where $S$ is the part of the plane $x + y + z = 1$ in the first octant.",
+    "steps": [
+     "$z = 1 - x - y$ over the triangle $T$: $x, y \\ge 0$, $x + y \\le 1$. $dS = \\sqrt{1 + 1 + 1}\\,dA = \\sqrt{3}\\,dA$.",
+     "$$\\iint_T (1 - x - y)\\,dA = \\int_0^1 \\int_0^{1 - x} (1 - x - y)\\,dy\\,dx = \\int_0^1 \\frac{(1 - x)^2}{2}\\,dx = \\frac{1}{6}.$$",
+     "Answer: $\\frac{\\sqrt{3}}{6}$."
+    ],
+    "a": "$\\frac{\\sqrt{3}}{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "On a sphere",
+    "q": "Evaluate $\\iint_S z^2\\,dS$ over the unit sphere.",
+    "steps": [
+     "$z = \\cos\\varphi$ and $dS = \\sin\\varphi\\,d\\varphi\\,d\\theta$.",
+     "$$\\int_0^{2\\pi} \\int_0^\\pi \\cos^2\\varphi\\sin\\varphi\\,d\\varphi\\,d\\theta = 2\\pi \\cdot \\left[-\\frac{\\cos^3\\varphi}{3}\\right]_0^\\pi = 2\\pi \\cdot \\frac{2}{3} = \\frac{4\\pi}{3}.$$",
+     "Check by symmetry: $x^2$, $y^2$, $z^2$ have equal integrals and add up to $\\iint 1\\,dS = 4\\pi$, so each is $\\frac{4\\pi}{3}$."
+    ],
+    "a": "$\\frac{4\\pi}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "On a cylinder",
+    "q": "Evaluate $\\iint_S (x^2 + z)\\,dS$ over the side of $x^2 + y^2 = 4$, ${}0 \\le z \\le 3$.",
+    "steps": [
+     "$x = 2\\cos\\theta$, $dS = 2\\,d\\theta\\,dz$.",
+     "$$\\int_0^{2\\pi} \\int_0^3 (4\\cos^2\\theta + z) \\cdot 2\\,dz\\,d\\theta = 2\\int_0^{2\\pi} \\left(12\\cos^2\\theta + \\frac{9}{2}\\right) d\\theta = 2(12\\pi + 9\\pi) = 42\\pi.$$"
+    ],
+    "a": "${}42\\pi$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Integrating over the shadow.</b> $\\iint_S f\\,dS$ is not $\\iint_D f\\,dA$: the surface is usually bigger than the region below it. In the first example, leaving out $\\sqrt{3}$ gives $\\frac{1}{6}$, the answer for a flat triangle on the floor. Always find $|\\mathbf{r}_u \\times \\mathbf{r}_v|$ (or $\\sqrt{1 + g_x^2 + g_y^2}$) first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.6 Surface Integrals"
+   }
+  ]
+ },
+ "calc4.oriented-surfaces": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "To measure flow <b>through</b> a surface, we need to know which way counts as \"through\": which side is the front. Choosing a side means choosing a unit normal at every point, in a way that does not flip suddenly. That choice is an <b>orientation</b>. It plays the same role for surfaces that the direction of travel plays for curves. You need <a href=\"/math/calculus-4/parametric-surfaces/\">parametric surfaces</a> and their normal vectors."
+   },
+   {
+    "t": "key",
+    "html": "An <b>orientation</b> of a surface $S$ is a continuous choice of unit normal $\\mathbf{n}$ at each point. (Some books write $\\hat{\\mathbf{n}}$.) A parametrization gives the orientation\n  $$\\mathbf{n} = \\frac{\\mathbf{r}_u \\times \\mathbf{r}_v}{|\\mathbf{r}_u \\times \\mathbf{r}_v|},$$\n  or its opposite, if you swap $u$ and $v$. For a <b>closed</b> surface (one that encloses a solid), the <b>positive orientation</b> is outward. For a graph $z = f(x, y)$, the <b>upward</b> normal is a positive multiple of $\\langle -f_x, -f_y, 1 \\rangle$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Graphs:</b> with $\\mathbf{r} = \\langle x, y, f(x, y) \\rangle$, $\\mathbf{r}_x = \\langle 1, 0, f_x \\rangle$ and $\\mathbf{r}_y = \\langle 0, 1, f_y \\rangle$, so $\\mathbf{r}_x \\times \\mathbf{r}_y = \\langle -f_x, -f_y, 1 \\rangle$, which has positive $z$-component: it points up.<br>\n  <b>Spheres:</b> for $$\\mathbf{r}(\\varphi, \\theta) = a\\langle \\sin\\varphi\\cos\\theta, \\sin\\varphi\\sin\\theta, \\cos\\varphi \\rangle,$$ a computation gives $\\mathbf{r}_\\varphi \\times \\mathbf{r}_\\theta = a\\sin\\varphi\\,\\mathbf{r}$, a positive multiple of the position vector: outward.<br>\n  <b>Not every surface has two sides.</b> Slide a normal vector once around the center line of a Möbius strip and it comes back pointing the other way. No continuous choice exists, so the Möbius strip is not orientable, and flux through it is not defined."
+   },
+   {
+    "t": "viz",
+    "name": "flux",
+    "opts": {
+     "field": "radial",
+     "surface": "hemisphere",
+     "surfaces": [
+      "hemisphere",
+      "sphere",
+      "paraboloid",
+      "disk"
+     ],
+     "normals": true,
+     "R": 1,
+     "H": 1
+    },
+    "cap": "Unit normals on several surfaces, oriented outward (closed surfaces) or upward (open ones). The colors show how much of the field $\\langle x, y, z \\rangle$ passes through each patch in the direction of the normal."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Upward on a graph",
+    "q": "Find the upward unit normal to $z = x^2 + y^2$ at $(1, 1, 2)$.",
+    "steps": [
+     "$f_x = 2x = 2$ and $f_y = 2y = 2$, so $\\langle -f_x, -f_y, 1 \\rangle = \\langle -2, -2, 1 \\rangle$.",
+     "Its length is ${}3$, so $\\mathbf{n} = \\frac{1}{3}\\langle -2, -2, 1 \\rangle$. (Downward would be the negative.)"
+    ],
+    "a": "$\\frac{1}{3}\\langle -2, -2, 1 \\rangle$"
+   },
+   {
+    "t": "ex",
+    "title": "Parameter order matters",
+    "q": "For $\\mathbf{r}(u, v) = \\langle u, v, 3 - u - 2v \\rangle$ and $\\mathbf{s}(u, v) = \\langle v, u, 3 - v - 2u \\rangle$ (the same plane), which cross product $\\mathbf{r}_u \\times \\mathbf{r}_v$, $\\mathbf{s}_u \\times \\mathbf{s}_v$ points up?",
+    "steps": [
+     "$$\\mathbf{r}_u \\times \\mathbf{r}_v = \\langle 1, 0, -1 \\rangle \\times \\langle 0, 1, -2 \\rangle = \\langle 1, 2, 1 \\rangle\\text{:}$$ up.",
+     "$$\\mathbf{s}_u \\times \\mathbf{s}_v = \\langle 0, 1, -2 \\rangle \\times \\langle 1, 0, -1 \\rangle = \\langle -1, -2, -1 \\rangle\\text{:}$$ down.",
+     "Swapping the roles of the parameters flips the normal."
+    ],
+    "a": "$\\mathbf{r}$ points up, $\\mathbf{s}$ points down"
+   },
+   {
+    "t": "ex",
+    "title": "A cylinder",
+    "q": "Does $\\mathbf{r}_\\theta \\times \\mathbf{r}_z$ point outward on $\\mathbf{r}(\\theta, z) = \\langle a\\cos\\theta, a\\sin\\theta, z \\rangle$?",
+    "steps": [
+     "$\\mathbf{r}_\\theta = \\langle -a\\sin\\theta, a\\cos\\theta, 0 \\rangle$, $\\mathbf{r}_z = \\langle 0, 0, 1 \\rangle$.",
+     "$\\mathbf{r}_\\theta \\times \\mathbf{r}_z = \\langle a\\cos\\theta, a\\sin\\theta, 0 \\rangle$, pointing straight away from the axis: outward."
+    ],
+    "a": "yes"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Letting the parametrization choose.</b> The formula $\\mathbf{r}_u \\times \\mathbf{r}_v$ gives a normal, but it may point the wrong way for the problem: inward on a closed surface, or down when the problem says up. Check one convenient point. If the cross product points the wrong way, use $\\mathbf{r}_v \\times \\mathbf{r}_u$, which flips the sign of every flux integral."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.6 Surface Integrals"
+   }
+  ]
+ },
+ "calc4.flux-integrals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How much fluid passes through a net per second? Only the part of the velocity that crosses the net counts. The <b>flux integral</b> adds up the normal component $\\mathbf{F} \\cdot \\mathbf{n}$ over an <a href=\"/math/calculus-4/oriented-surfaces/\">oriented surface</a>. It is the surface version of <a href=\"/math/calculus-4/circulation-flux-curves/\">flux across a curve</a>, and it is the integral that Stokes' theorem and the divergence theorem are about."
+   },
+   {
+    "t": "key",
+    "html": "For a continuous field $\\mathbf{F}$ and an oriented surface $S$ with unit normal $\\mathbf{n}$:\n  $$\\iint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iint_S \\mathbf{F} \\cdot \\mathbf{n}\\,dS = \\iint_D \\mathbf{F}(\\mathbf{r}(u, v)) \\cdot (\\mathbf{r}_u \\times \\mathbf{r}_v)\\,dA,$$\n  where $\\mathbf{r}_u \\times \\mathbf{r}_v$ points along the chosen orientation; $d\\mathbf{S} = \\mathbf{n}\\,dS = (\\mathbf{r}_u \\times \\mathbf{r}_v)\\,dA$. For a graph $z = g(x, y)$ oriented upward:\n  $$\\iint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iint_D \\left(-P g_x - Q g_y + R\\right) dA.$$"
+   },
+   {
+    "t": "why",
+    "html": "In time $\\Delta t$, fluid with velocity $\\mathbf{F}$ crossing a small patch of area $\\Delta S$ fills a slanted box with base $\\Delta S$ and height $(\\mathbf{F} \\cdot \\mathbf{n})\\,\\Delta t$: only the normal component moves fluid across. So the rate is $\\mathbf{F} \\cdot \\mathbf{n}\\,\\Delta S$.<br>\n  Then $$\\mathbf{n}\\,dS = \\frac{\\mathbf{r}_u \\times \\mathbf{r}_v}{|\\mathbf{r}_u \\times \\mathbf{r}_v|} \\cdot |\\mathbf{r}_u \\times \\mathbf{r}_v|\\,dA = (\\mathbf{r}_u \\times \\mathbf{r}_v)\\,dA\\text{:}$$ the lengths cancel. For a graph, $\\mathbf{r}_x \\times \\mathbf{r}_y = \\langle -g_x, -g_y, 1 \\rangle$, which gives the second formula."
+   },
+   {
+    "t": "viz",
+    "name": "flux",
+    "opts": {
+     "field": "up",
+     "surface": "disk",
+     "tilt": 30,
+     "R": 1,
+     "normals": true
+    },
+    "cap": "A constant upward flow through a tilted disk. Tilt it with the slider: the flux is the area $\\pi$ times $\\cos(\\text{tilt})$, because only the normal component of the flow crosses the disk. Edge-on, nothing gets through."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Through a paraboloid",
+    "q": "Find the upward flux of $\\mathbf{F} = \\langle 0, 0, z \\rangle$ through $z = 4 - x^2 - y^2$, $z \\ge 0$.",
+    "steps": [
+     "With $g = 4 - x^2 - y^2$: $-P g_x - Q g_y + R = z = 4 - x^2 - y^2$.",
+     "Over the disk $x^2 + y^2 \\le 4$, in polar coordinates: $$\\int_0^{2\\pi} \\int_0^2 (4 - r^2)\\,r\\,dr\\,d\\theta = 2\\pi(8 - 4) = 8\\pi.$$"
+    ],
+    "a": "${}8\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "Out of a sphere",
+    "q": "Find the outward flux of $\\mathbf{F} = \\langle x, y, z \\rangle$ through the sphere of radius $a$.",
+    "steps": [
+     "Outward unit normal: $\\mathbf{n} = \\frac{1}{a}\\langle x, y, z \\rangle$, so $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{x^2 + y^2 + z^2}{a} = a$.",
+     "$\\iint_S a\\,dS = a \\cdot 4\\pi a^2 = 4\\pi a^3$."
+    ],
+    "a": "${}4\\pi a^3$"
+   },
+   {
+    "t": "ex",
+    "title": "Through a cylinder wall",
+    "q": "Find the outward flux of $\\mathbf{F} = \\langle x, 0, 0 \\rangle$ through the side of $x^2 + y^2 = 1$, ${}0 \\le z \\le 2$.",
+    "steps": [
+     "$\\mathbf{r}_\\theta \\times \\mathbf{r}_z = \\langle \\cos\\theta, \\sin\\theta, 0 \\rangle$ points outward.",
+     "$\\mathbf{F} \\cdot (\\mathbf{r}_\\theta \\times \\mathbf{r}_z) = \\cos\\theta \\cdot \\cos\\theta = \\cos^2\\theta$.",
+     "$\\int_0^2 \\int_0^{2\\pi} \\cos^2\\theta\\,d\\theta\\,dz = 2\\pi$."
+    ],
+    "a": "${}2\\pi$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Two slips with the normal.</b> Flux needs a dot product with the normal: integrating $|\\mathbf{F}|$, or one component of $\\mathbf{F}$ chosen by habit, gives a different number. And the scaling must be counted once: either $\\mathbf{F} \\cdot \\mathbf{n}\\,dS$ (unit normal, with $dS = |\\mathbf{r}_u \\times \\mathbf{r}_v|\\,dA$) or $\\mathbf{F} \\cdot (\\mathbf{r}_u \\times \\mathbf{r}_v)\\,dA$ (no unit normal, no extra factor), never a unit normal and the factor $|\\mathbf{r}_u \\times \\mathbf{r}_v|$ together with the unnormalized cross product."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.6 Surface Integrals"
+   }
+  ]
+ },
+ "calc4.stokes-theorem": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/calculus-4/greens-circulation/\">Green's theorem</a> says the circulation around a flat region equals the total curl inside. Stokes' theorem says the same thing for a curved surface in space: the circulation around its edge equals the <a href=\"/math/calculus-4/flux-integrals/\">flux</a> of the curl through the surface. Cut the surface into tiny patches; each patch's circulation is about its curl times its area, and the shared edges cancel."
+   },
+   {
+    "t": "key",
+    "html": "<b>Stokes' theorem.</b> Let $S$ be an oriented, piecewise smooth surface whose boundary $C$ is a simple closed curve, oriented by the <b>right-hand rule</b> (thumb along $\\mathbf{n}$, fingers curl along $C$; equivalently, walking along $C$ with your head along $\\mathbf{n}$, the surface is on your left). If $\\mathbf{F}$ has continuous partial derivatives on an open region containing $S$, then\n  $$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_S (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}.$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>Green's theorem is the flat case:</b> if $S$ is a region $D$ in the $xy$-plane with $\\mathbf{n} = \\mathbf{k}$, then $(\\nabla \\times \\mathbf{F}) \\cdot \\mathbf{k} = Q_x - P_y$ and $d\\mathbf{S} = \\mathbf{k}\\,dA$, so Stokes reads $\\oint_C P\\,dx + Q\\,dy = \\iint_D (Q_x - P_y)\\,dA$.<br>\n  <b>Why curl appears:</b> a tiny flat patch with unit normal $\\mathbf{n}$ and area $\\Delta S$ is, in its own coordinates, a small region where Green's theorem applies. Its circulation is about (the component of the curl along $\\mathbf{n}$) $\\times\\,\\Delta S = (\\nabla \\times \\mathbf{F}) \\cdot \\mathbf{n}\\,\\Delta S$. Adding over all patches, the inside edges cancel in pairs (each is traced twice in opposite directions), leaving the circulation around $C$."
+   },
+   {
+    "t": "viz",
+    "name": "flux",
+    "opts": {
+     "F": [
+      "0",
+      "0",
+      "2"
+     ],
+     "presets": false,
+     "surface": "hemisphere",
+     "surfaces": [
+      "disk",
+      "hemisphere",
+      "paraboloid"
+     ],
+     "R": 1,
+     "H": 1
+    },
+    "cap": "$\\langle 0, 0, 2 \\rangle$ is the curl of $\\langle -y, x, 0 \\rangle$. Through the disk, the hemisphere and the paraboloid, all with the unit circle as their edge, the flux is the same: ${}2\\pi$, the circulation of $\\langle -y, x, 0 \\rangle$ around the unit circle."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A hemisphere",
+    "q": "Let $S$ be the upper hemisphere $x^2 + y^2 + z^2 = 4$, $z \\ge 0$, oriented upward, and $\\mathbf{F} = \\langle -y, x, z \\rangle$. Find $\\iint_S (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}$.",
+    "steps": [
+     "The boundary is the circle $x^2 + y^2 = 4$, $z = 0$; upward normal means counterclockwise seen from above.",
+     "With $\\mathbf{r}(t) = \\langle 2\\cos t, 2\\sin t, 0 \\rangle$: $\\mathbf{F} \\cdot \\mathbf{r}' = 4\\sin^2 t + 4\\cos^2 t + 0 = 4$.",
+     "$\\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = 8\\pi$. (Check: $\\nabla \\times \\mathbf{F} = \\langle 0, 0, 2 \\rangle$, and through the flat disk of area ${}4\\pi$ its flux is ${}8\\pi$.)"
+    ],
+    "a": "${}8\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "A triangle",
+    "q": "Let $S$ be the triangle with vertices $(1, 0, 0)$, $(0, 1, 0)$, $(0, 0, 1)$, oriented away from the origin, and $\\mathbf{F} = \\langle z, x, y \\rangle$. Find $\\oint_{\\partial S} \\mathbf{F} \\cdot d\\mathbf{r}$.",
+    "steps": [
+     "$$\\nabla \\times \\mathbf{F} = \\langle 1 - 0, 1 - 0, 1 - 0 \\rangle = \\langle 1, 1, 1 \\rangle.$$",
+     "$S$ lies in the plane $x + y + z = 1$ with unit normal $\\frac{1}{\\sqrt{3}}\\langle 1, 1, 1 \\rangle$, so $(\\nabla \\times \\mathbf{F}) \\cdot \\mathbf{n} = \\sqrt{3}$.",
+     "The triangle has area $\\frac{\\sqrt{3}}{2}$ (its sides have length $\\sqrt{2}$). Circulation $= \\sqrt{3} \\cdot \\frac{\\sqrt{3}}{2} = \\frac{3}{2}$."
+    ],
+    "a": "$\\frac{3}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Reading the orientation",
+    "q": "A surface lies above the $xy$-plane with boundary the unit circle in that plane, and is oriented downward. Which way must the circle be traced?",
+    "steps": [
+     "Thumb pointing down: the fingers curl clockwise as seen from above.",
+     "So the circle is traced clockwise (seen from above), and with that direction Stokes' theorem holds."
+    ],
+    "a": "clockwise as seen from above"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Orienting the boundary against the normal.</b> If $\\mathbf{n}$ points up, $C$ must go counterclockwise as seen from above; if $\\mathbf{n}$ points down, clockwise. Pairing an upward normal with a clockwise curve gives the right number with the wrong sign: $-8\\pi$ instead of ${}8\\pi$ in the first example. Use the right-hand rule every time."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.7 Stokes' Theorem"
+   }
+  ]
+ },
+ "calc4.stokes-surfaces": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/calculus-4/stokes-theorem/\">Stokes' theorem</a> has a surprising consequence: the flux of a curl through a surface depends only on the surface's boundary curve. Any two surfaces with the same edge, oriented to match, give the same answer. So a hard surface integral of $\\nabla \\times \\mathbf{F}$ can be replaced by an easy one, usually over a flat disk, or by the line integral around the edge."
+   },
+   {
+    "t": "key",
+    "html": "If $S_1$ and $S_2$ are oriented surfaces with the same boundary curve $C$, and both orientations induce the same direction on $C$, then\n  $$\\iint_{S_1} (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S} = \\oint_C \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_{S_2} (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}.$$\n  For a closed surface (no boundary curve), $\\iint_S (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S} = 0$."
+   },
+   {
+    "t": "why",
+    "html": "Both surface integrals equal the same line integral. For a closed surface, cut it along a curve into two caps. With the outward normal on both, the right-hand rule sends the cutting curve in opposite directions for the two caps, so their circulations cancel and the total is ${}0$. This matches $\\nabla \\cdot (\\nabla \\times \\mathbf{F}) = 0$ and the <a href=\"/math/calculus-4/divergence-theorem/\">divergence theorem</a>.<br>\n  <b>Only for curls.</b> For a general field $\\mathbf{F}$, the flux through two surfaces with the same edge can differ; the difference is the total divergence of $\\mathbf{F}$ in the solid between them."
+   },
+   {
+    "t": "viz",
+    "name": "flux",
+    "opts": {
+     "F": [
+      "y",
+      "-x",
+      "2"
+     ],
+     "presets": false,
+     "surface": "paraboloid",
+     "surfaces": [
+      "disk",
+      "hemisphere",
+      "paraboloid"
+     ],
+     "R": 1,
+     "H": 1
+    },
+    "cap": "The field $\\langle y, -x, 2 \\rangle$ has divergence ${}0$, so it is the curl of another field. Its flux is the same, ${}2\\pi$, through all three surfaces bounded by the unit circle."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Swap a paraboloid for a disk",
+    "q": "Find $\\iint_S (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}$ for $\\mathbf{F} = \\langle -y^3, x^3, e^{z} \\rangle$, where $S$ is $z = 4 - x^2 - y^2$, $z \\ge 0$, oriented upward.",
+    "steps": [
+     "$\\nabla \\times \\mathbf{F} = \\langle 0 - 0, 0 - 0, 3x^2 + 3y^2 \\rangle$.",
+     "The boundary is the circle $x^2 + y^2 = 4$, $z = 0$. Use the flat disk $D$ with upward normal $\\mathbf{k}$ instead.",
+     "$$\\iint_D 3(x^2 + y^2)\\,dA = \\int_0^{2\\pi} \\int_0^2 3r^2 \\cdot r\\,dr\\,d\\theta = 2\\pi \\cdot 12 = 24\\pi.$$"
+    ],
+    "a": "${}24\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "A closed surface",
+    "q": "Find the outward flux of $\\nabla \\times \\mathbf{F}$ through the sphere $x^2 + y^2 + z^2 = 9$, for $\\mathbf{F} = \\langle xy^2, \\sin(xz), e^{xyz} \\rangle$.",
+    "steps": [
+     "The sphere is closed: it has no boundary curve.",
+     "So the flux of any curl through it is ${}0$, no computation needed."
+    ],
+    "a": "${}0$"
+   },
+   {
+    "t": "ex",
+    "title": "An open can",
+    "q": "$S$ is the side and top of the cylinder $x^2 + y^2 = 1$, ${}0 \\le z \\le 2$, with outward normal, and $\\mathbf{F} = \\langle -y, x, z^2 \\rangle$. Find $\\iint_S (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}$.",
+    "steps": [
+     "The boundary of $S$ is the bottom circle. The outward normal on the side, with the right-hand rule, sends it counterclockwise seen from above.",
+     "The bottom disk with <b>upward</b> normal has the same oriented boundary. There $\\nabla \\times \\mathbf{F} = \\langle 0, 0, 2 \\rangle$, so the flux is ${}2 \\cdot \\pi = 2\\pi$."
+    ],
+    "a": "${}2\\pi$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.7 Stokes' Theorem"
+   }
+  ]
+ },
+ "calc4.divergence-theorem": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/calculus-4/greens-flux/\">Green's theorem in flux form</a> says that the flow out of a plane region equals the total divergence inside. The divergence theorem is the same statement in space: the <a href=\"/math/calculus-4/flux-integrals/\">flux</a> out of a closed surface equals the <a href=\"/math/calculus-3/triple-integrals/\">triple integral</a> of the divergence over the solid inside. Sources inside produce the net outflow."
+   },
+   {
+    "t": "key",
+    "html": "<b>Divergence theorem.</b> Let $E$ be a solid region whose boundary $S$ is a closed, piecewise smooth surface with outward orientation. If $\\mathbf{F}$ has continuous partial derivatives on an open region containing $E$, then\n  $$\\iint_S \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\nabla \\cdot \\mathbf{F}\\,dV.$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>A small box</b> $[x, x + \\Delta x] \\times [y, y + \\Delta y] \\times [z, z + \\Delta z]$: the right face (normal $\\mathbf{i}$) and the left face (normal $-\\mathbf{i}$) together give about $$[P(x + \\Delta x, y, z) - P(x, y, z)]\\,\\Delta y\\,\\Delta z \\approx P_x\\,\\Delta V.$$ The other two pairs of faces give $Q_y\\,\\Delta V$ and $R_z\\,\\Delta V$. So the outward flux of a small box is about $(\\nabla \\cdot \\mathbf{F})\\,\\Delta V$.<br>\n  <b>Many boxes:</b> fill $E$ with small boxes and add their fluxes. Each inside face is shared by two boxes with opposite outward normals, so it cancels. What is left is the flux through the outer surface, and the sum of $(\\nabla \\cdot \\mathbf{F})\\,\\Delta V$ is a Riemann sum for the triple integral."
+   },
+   {
+    "t": "viz",
+    "name": "flux",
+    "opts": {
+     "field": "radial",
+     "surface": "sphere",
+     "surfaces": [
+      "sphere",
+      "hemisphere",
+      "cylinder"
+     ],
+     "R": 1,
+     "H": 1
+    },
+    "cap": "The field $\\langle x, y, z \\rangle$ has divergence ${}3$ everywhere. Its outward flux through the unit sphere is ${}3 \\times \\frac{4}{3}\\pi = 4\\pi \\approx 12.57$. The open surfaces in the list do not enclose a solid, so the theorem says nothing about them."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A sphere",
+    "q": "Find the outward flux of $\\mathbf{F} = \\langle x^3, y^3, z^3 \\rangle$ through the sphere of radius $a$.",
+    "steps": [
+     "$\\nabla \\cdot \\mathbf{F} = 3x^2 + 3y^2 + 3z^2 = 3\\rho^2$.",
+     "$$\\iiint_E 3\\rho^2\\,dV = \\int_0^{2\\pi} \\int_0^\\pi \\int_0^a 3\\rho^2 \\cdot \\rho^2\\sin\\varphi\\,d\\rho\\,d\\varphi\\,d\\theta = 2\\pi \\cdot 2 \\cdot \\frac{3a^5}{5} = \\frac{12\\pi a^5}{5}.$$"
+    ],
+    "a": "$\\frac{12\\pi a^5}{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "A box",
+    "q": "Find the outward flux of $\\mathbf{F} = \\langle xy, yz, zx \\rangle$ through the surface of $[0, 1] \\times [0, 2] \\times [0, 3]$.",
+    "steps": [
+     "$\\nabla \\cdot \\mathbf{F} = y + z + x$.",
+     "$\\iiint (x + y + z)\\,dV$ is the volume times the average value of $x + y + z$. Each coordinate averages to the middle of its interval, so this is ${}6\\left(\\frac{1}{2} + 1 + \\frac{3}{2}\\right) = 18$.",
+     "Computing six separate surface integrals would give the same ${}18$, with much more work."
+    ],
+    "a": "${}18$"
+   },
+   {
+    "t": "ex",
+    "title": "A cylinder",
+    "q": "Find the outward flux of $\\mathbf{F} = \\langle x, y, z^2 \\rangle$ through the closed cylinder $x^2 + y^2 \\le 4$, ${}0 \\le z \\le 3$ (side, top and bottom).",
+    "steps": [
+     "$\\nabla \\cdot \\mathbf{F} = 2 + 2z$.",
+     "$$\\iiint (2 + 2z)\\,dV = (\\text{area of the base}) \\int_0^3 (2 + 2z)\\,dz = 4\\pi \\cdot (6 + 9) = 60\\pi.$$"
+    ],
+    "a": "${}60\\pi$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using it on a surface that is not closed.</b> The theorem needs the whole boundary of a solid. The upper hemisphere alone, or a cylinder without its top and bottom, encloses nothing, and $\\iiint \\nabla \\cdot \\mathbf{F}\\,dV$ over \"the inside\" is not its flux. Close the surface first (add the base disk or the lids), apply the theorem, then subtract the flux through the added pieces, as in <a href=\"/math/calculus-4/divergence-applications/\">using the divergence theorem</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.8 The Divergence Theorem"
+   }
+  ]
+ },
+ "calc4.divergence-applications": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/calculus-4/divergence-theorem/\">divergence theorem</a> is more than a way to trade one integral for another. It handles open surfaces (close them up, then subtract), fields with a singular point (cut it out with a small sphere), and it computes volumes from boundaries. Each idea below is a pattern you will use again in physics."
+   },
+   {
+    "t": "key",
+    "html": "Three patterns:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Open surface:</b> add pieces to make a closed surface. Flux through the original surface $=$ $\\iiint \\nabla \\cdot \\mathbf{F}\\,dV$ $-$ flux through the added pieces (with their outward normals).",
+     "<b>Singular point:</b> if $\\nabla \\cdot \\mathbf{F} = 0$ except at a point inside $S$, the flux through $S$ equals the flux through any small sphere around that point.",
+     "<b>Volume:</b> with $\\mathbf{F} = \\frac{1}{3}\\langle x, y, z \\rangle$, $\\nabla \\cdot \\mathbf{F} = 1$, so $\\text{Volume}(E) = \\frac{1}{3}\\iint_S \\langle x, y, z \\rangle \\cdot d\\mathbf{S}$."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "<b>The singular point:</b> let $S_\\varepsilon$ be a tiny sphere around the point, inside $S$. On the solid between $S_\\varepsilon$ and $S$ the field is smooth with zero divergence. That solid's boundary is $S$ (normal outward) together with $S_\\varepsilon$ (normal pointing toward the point, which is outward for the solid between). The theorem gives flux through $S$ minus flux out of $S_\\varepsilon$ $= 0$.<br>\n  For the inverse-square field $\\mathbf{F} = \\frac{\\mathbf{r}}{|\\mathbf{r}|^3}$, on $S_\\varepsilon$ we have $\\mathbf{F} \\cdot \\mathbf{n} = \\frac{1}{\\varepsilon^2}$, so the flux is $\\frac{1}{\\varepsilon^2} \\cdot 4\\pi\\varepsilon^2 = 4\\pi$, whatever the size and shape of $S$, as long as it surrounds the origin."
+   },
+   {
+    "t": "viz",
+    "name": "flux",
+    "opts": {
+     "F": [
+      "0",
+      "0",
+      "z+1"
+     ],
+     "presets": true,
+     "surface": "hemisphere",
+     "surfaces": [
+      "hemisphere",
+      "disk",
+      "sphere"
+     ],
+     "R": 1,
+     "normals": false
+    },
+    "cap": "$\\mathbf{F} = \\langle 0, 0, z + 1 \\rangle$ has divergence ${}1$. Compare the hemisphere with the disk: the half ball has volume $\\frac{2\\pi}{3}$, and the disk's upward flux is $\\pi$, so the hemisphere's flux is $\\frac{2\\pi}{3} + \\pi$ (the second example below)."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A hemisphere without its base",
+    "q": "Find the upward flux of $\\mathbf{F} = \\langle 0, 0, z + 1 \\rangle$ through the upper hemisphere $x^2 + y^2 + z^2 = a^2$, $z \\ge 0$.",
+    "steps": [
+     "Close it with the disk $D$ at $z = 0$, outward normal $-\\mathbf{k}$. On $D$: $\\mathbf{F} \\cdot (-\\mathbf{k}) = -(0 + 1) = -1$, so the disk's flux is $-\\pi a^2$.",
+     "$\\nabla \\cdot \\mathbf{F} = 1$: the half ball gives $\\frac{2}{3}\\pi a^3$.",
+     "Hemisphere $= \\frac{2}{3}\\pi a^3 - (-\\pi a^2) = \\frac{2}{3}\\pi a^3 + \\pi a^2$."
+    ],
+    "a": "$\\frac{2}{3}\\pi a^3 + \\pi a^2$"
+   },
+   {
+    "t": "ex",
+    "title": "Any surface around the origin",
+    "q": "Find the outward flux of $\\mathbf{F} = \\frac{\\langle x, y, z \\rangle}{(x^2 + y^2 + z^2)^{3/2}}$ through the cube $[-1, 1]^3$, and through the sphere of radius ${}1$ centered at $(5, 0, 0)$.",
+    "steps": [
+     "Away from the origin, $\\nabla \\cdot \\mathbf{F} = 0$ (a direct computation).",
+     "The cube surrounds the origin, so its flux equals that of a small sphere: ${}4\\pi$.",
+     "The second sphere does not contain the origin; $\\mathbf{F}$ is smooth inside, so its flux is $\\iiint 0\\,dV = 0$."
+    ],
+    "a": "${}4\\pi$ and ${}0$"
+   },
+   {
+    "t": "ex",
+    "title": "Five faces of a cube",
+    "q": "Find the outward flux of $\\mathbf{F} = \\langle x^2, y, z \\rangle$ through the faces of $[0, 1]^3$ other than the top $z = 1$.",
+    "steps": [
+     "All six faces: $\\nabla \\cdot \\mathbf{F} = 2x + 2$, and $\\iiint (2x + 2)\\,dV = 1 + 2 = 3$.",
+     "Top face, normal $\\mathbf{k}$: $\\mathbf{F} \\cdot \\mathbf{k} = z = 1$, so its flux is ${}1$.",
+     "Five faces: ${}3 - 1 = 2$."
+    ],
+    "a": "${}2$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.8 The Divergence Theorem"
+   }
+  ]
+ },
+ "calc4.big-picture": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Calculus 1 ended with one theorem: integrating a derivative over an interval only needs the values at the two ends. This course has met three more theorems of the same kind, one for each kind of region: curves, surfaces, solids. Put side by side, they are one idea. (This page connects <a href=\"/math/calculus-4/stokes-surfaces/\">Stokes' theorem</a> and <a href=\"/math/calculus-4/divergence-applications/\">the divergence theorem</a> with everything before them.)"
+   },
+   {
+    "t": "key",
+    "html": "<b>A derivative integrated over a region equals the original function \"integrated\" over the boundary of the region.</b>"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Theorem",
+     "Region",
+     "Boundary",
+     "Statement"
+    ],
+    "rows": [
+     [
+      "Fundamental theorem of calculus",
+      "interval $[a, b]$",
+      "two points",
+      "$\\int_a^b F'(x)\\,dx = F(b) - F(a)$"
+     ],
+     [
+      "Fundamental theorem for line integrals",
+      "curve $C$",
+      "two endpoints",
+      "$\\int_C \\nabla f \\cdot d\\mathbf{r} = f(B) - f(A)$"
+     ],
+     [
+      "Green's theorem",
+      "plane region $D$",
+      "closed curve",
+      "$\\oint_C P\\,dx + Q\\,dy = \\iint_D (Q_x - P_y)\\,dA$"
+     ],
+     [
+      "Stokes' theorem",
+      "surface $S$",
+      "closed curve",
+      "$\\oint_{\\partial S} \\mathbf{F} \\cdot d\\mathbf{r} = \\iint_S (\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}$"
+     ],
+     [
+      "Divergence theorem",
+      "solid $E$",
+      "closed surface",
+      "$\\iint_{\\partial E} \\mathbf{F} \\cdot d\\mathbf{S} = \\iiint_E \\nabla \\cdot \\mathbf{F}\\,dV$"
+     ]
+    ],
+    "cap": "Each theorem: derivative inside, function on the boundary, with matching orientations."
+   },
+   {
+    "t": "why",
+    "html": "<b>The boundary of a boundary is empty.</b> A closed curve has no endpoints; a closed surface has no edge. Combining two theorems therefore gives zero, which is why two derivative identities hold:<br>\n  $\\nabla \\times (\\nabla f) = \\mathbf{0}$: by Stokes, the flux of $\\nabla \\times \\nabla f$ through any surface is $\\oint \\nabla f \\cdot d\\mathbf{r}$ around its edge, which is ${}0$ because the edge is a closed curve (fundamental theorem for line integrals).<br>\n  $\\nabla \\cdot (\\nabla \\times \\mathbf{F}) = 0$: by the divergence theorem, its integral over any solid is the flux of $\\nabla \\times \\mathbf{F}$ through the solid's closed surface, which is ${}0$ by Stokes because that surface has no edge. A continuous function whose integral over every small ball is ${}0$ is ${}0$ everywhere."
+   },
+   {
+    "t": "p",
+    "html": "Orientation is part of every statement: the endpoints come with signs ($+F(b)$, $-F(a)$), the boundary curve of a surface follows the right-hand rule, and a closed surface is oriented outward. Each sign convention is chosen so that the inside edges of small pieces cancel."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Choosing the theorem",
+    "q": "You need the outward flux of a field through the surface of a solid cylinder, and the field's divergence is simple. Which theorem should you use?",
+    "steps": [
+     "A flux through a closed surface is the boundary side of the divergence theorem.",
+     "Replace it by the triple integral of $\\nabla \\cdot \\mathbf{F}$ over the solid cylinder."
+    ],
+    "a": "the divergence theorem"
+   },
+   {
+    "t": "ex",
+    "title": "Checking an identity",
+    "q": "Verify $\\nabla \\cdot (\\nabla \\times \\mathbf{F}) = 0$ for $\\mathbf{F} = \\langle xy, yz, zx \\rangle$.",
+    "steps": [
+     "$$\\nabla \\times \\mathbf{F} = \\langle R_y - Q_z, P_z - R_x, Q_x - P_y \\rangle = \\langle 0 - y, 0 - z, 0 - x \\rangle = \\langle -y, -z, -x \\rangle.$$",
+     "Its divergence: $\\frac{\\partial}{\\partial x}(-y) + \\frac{\\partial}{\\partial y}(-z) + \\frac{\\partial}{\\partial z}(-x) = 0$."
+    ],
+    "a": "${}0$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.8 The Divergence Theorem"
+   },
+   {
+    "name": "MIT OpenCourseWare, 18.02SC Multivariable Calculus (Fall 2010), Part C: Triple Integrals and Surface Integrals in 3-Space"
+   }
+  ]
+ },
+ "calc4.fluid-flow": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Vector calculus was built largely to describe fluids. A moving fluid has a velocity field $\\mathbf{v}$, and the ideas of this course become physical laws: <a href=\"/math/calculus-4/flux-integrals/\">flux</a> is the volume of fluid crossing a surface per second, <a href=\"/math/calculus-4/curl-divergence-meaning/\">divergence</a> measures sources, and curl measures spin, which engineers call vorticity."
+   },
+   {
+    "t": "key",
+    "html": "For a fluid with velocity $\\mathbf{v}$ and density $\\rho$:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Volume flow rate</b> through $S$: $\\iint_S \\mathbf{v} \\cdot d\\mathbf{S}$. <b>Mass flow rate</b>: $\\iint_S \\rho\\mathbf{v} \\cdot d\\mathbf{S}$.",
+     "<b>Conservation of mass</b> (continuity equation): $\\dfrac{\\partial \\rho}{\\partial t} + \\nabla \\cdot (\\rho\\mathbf{v}) = 0$.",
+     "<b>Incompressible</b> flow (constant density): $\\nabla \\cdot \\mathbf{v} = 0$. <b>Irrotational</b> flow: $\\nabla \\times \\mathbf{v} = \\mathbf{0}$, so $\\mathbf{v} = \\nabla\\phi$ on a region without holes.",
+     "Both at once: $\\nabla \\cdot \\nabla\\phi = \\phi_{xx} + \\phi_{yy} + \\phi_{zz} = 0$, <b>Laplace's equation</b>."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "<b>Continuity equation:</b> take any fixed region $E$ with surface $S$. The mass inside, $\\iiint_E \\rho\\,dV$, changes only because mass flows across $S$:\n  $$\\frac{d}{dt}\\iiint_E \\rho\\,dV = -\\iint_S \\rho\\mathbf{v} \\cdot d\\mathbf{S} = -\\iiint_E \\nabla \\cdot (\\rho\\mathbf{v})\\,dV$$\n  by the divergence theorem. So $\\iiint_E \\left[\\rho_t + \\nabla \\cdot (\\rho\\mathbf{v})\\right] dV = 0$ for every region $E$, and a continuous function with zero integral over every small region is ${}0$."
+   },
+   {
+    "t": "viz",
+    "name": "vectorfield",
+    "opts": {
+     "P": "x",
+     "Q": "-y",
+     "probe": "both",
+     "at": [
+      1,
+      1
+     ],
+     "particles": true,
+     "presets": true
+    },
+    "cap": "The flow $\\langle x, -y \\rangle$, like water coming down onto a floor and spreading sideways. Divergence ${}1 - 1 = 0$ (no fluid is created) and curl ${}0$ (no spin): it is $\\nabla\\phi$ with $\\phi = \\frac{1}{2}(x^2 - y^2)$, which satisfies Laplace's equation."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Flow through a window",
+    "q": "Water moves with constant velocity $\\mathbf{v} = \\langle 1, 2, 3 \\rangle$ m/s. How much crosses the square $[0, 1] \\times [0, 1]$ in the plane $z = 0$, upward, each second?",
+    "steps": [
+     "Normal $\\mathbf{k}$, area ${}1$: flow rate $= \\mathbf{v} \\cdot \\mathbf{k} \\times 1 = 3$ m$^3$/s.",
+     "The other components run along the square and carry nothing through it."
+    ],
+    "a": "${}3$ m$^3$/s"
+   },
+   {
+    "t": "ex",
+    "title": "An ideal flow",
+    "q": "Is $\\mathbf{v} = \\langle x, -y, 0 \\rangle$ incompressible? Irrotational? Find a velocity potential.",
+    "steps": [
+     "$\\nabla \\cdot \\mathbf{v} = 1 - 1 + 0 = 0$: incompressible.",
+     "$\\nabla \\times \\mathbf{v} = \\langle 0, 0, 0 - 0 \\rangle = \\mathbf{0}$: irrotational.",
+     "$\\phi = \\frac{1}{2}(x^2 - y^2)$ has $\\nabla\\phi = \\mathbf{v}$ and $\\phi_{xx} + \\phi_{yy} = 1 - 1 = 0$."
+    ],
+    "a": "yes, yes, $\\phi = \\frac{1}{2}(x^2 - y^2)$"
+   },
+   {
+    "t": "ex",
+    "title": "Net outflow from a box",
+    "q": "For $\\mathbf{v} = \\langle x^2, y^2, z^2 \\rangle$, find the net rate at which fluid leaves the unit cube $[0, 1]^3$.",
+    "steps": [
+     "Divergence theorem: net outflow $= \\iiint (2x + 2y + 2z)\\,dV$.",
+     "Each of ${}2x$, ${}2y$, ${}2z$ averages to ${}1$ over the cube, so the answer is ${}3$.",
+     "Positive: this flow is not incompressible; fluid must be created inside (or the density must be dropping)."
+    ],
+    "a": "${}3$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.8 The Divergence Theorem"
+   },
+   {
+    "name": "OpenStax Calculus Volume 3, 6.5 Divergence and Curl"
+   }
+  ]
+ },
+ "calc4.gauss-law": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "An electric charge $q$ at the origin produces the field\n  $$\\mathbf{E} = \\frac{q}{4\\pi\\varepsilon_0}\\,\\frac{\\mathbf{r}}{|\\mathbf{r}|^3},$$\n  an inverse-square field like gravity, where $\\varepsilon_0$ is a physical constant. You computed in <a href=\"/math/calculus-4/divergence-applications/\">using the divergence theorem</a> that $\\frac{\\mathbf{r}}{|\\mathbf{r}|^3}$ has flux ${}4\\pi$ through every closed surface around the origin. Multiply by $\\frac{q}{4\\pi\\varepsilon_0}$: the electric flux is $q/\\varepsilon_0$, whatever the surface. That is Gauss's law."
+   },
+   {
+    "t": "key",
+    "html": "<b>Gauss's law.</b> For any closed surface $S$ (outward normal) enclosing total charge $Q_{\\text{enc}}$:\n  $$\\iint_S \\mathbf{E} \\cdot d\\mathbf{S} = \\frac{Q_{\\text{enc}}}{\\varepsilon_0}.$$\n  Charges outside $S$ contribute nothing to the net flux. Differential form, for a charge density $\\rho$: $\\nabla \\cdot \\mathbf{E} = \\dfrac{\\rho}{\\varepsilon_0}$."
+   },
+   {
+    "t": "why",
+    "html": "<b>One charge:</b> on a sphere of radius $r$ around it, $\\mathbf{E} \\cdot \\mathbf{n} = \\frac{q}{4\\pi\\varepsilon_0 r^2}$, and the area is ${}4\\pi r^2$: the flux is $\\frac{q}{\\varepsilon_0}$. The $r^2$ in the area cancels the $r^2$ in the field. Any other closed surface around the charge has the same flux, because $\\nabla \\cdot \\mathbf{E} = 0$ away from the charge (divergence theorem on the region between). A charge outside gives zero net flux: its field is smooth and divergence-free inside $S$.<br>\n  <b>Many charges:</b> fields add, so fluxes add.<br>\n  <b>Differential form:</b> $$\\iiint_E \\nabla \\cdot \\mathbf{E}\\,dV = \\iint_S \\mathbf{E} \\cdot d\\mathbf{S} = \\frac{1}{\\varepsilon_0}\\iiint_E \\rho\\,dV$$ for every region $E$, so the integrands agree."
+   },
+   {
+    "t": "viz",
+    "name": "calc4-loop",
+    "opts": {
+     "sources": [
+      {
+       "x": -1.2,
+       "y": 0.3,
+       "q": 2,
+       "kind": "source"
+      },
+      {
+       "x": 1,
+       "y": 1,
+       "q": 1,
+       "kind": "source"
+      },
+      {
+       "x": 0.6,
+       "y": -1.4,
+       "q": -1,
+       "kind": "source"
+      }
+     ],
+     "center": [
+      -1,
+      0
+     ],
+     "r": 0.8,
+     "shape": "square",
+     "show": "flux",
+     "task": "Move and resize the loop so the outward flux is $3$.",
+     "target": {
+      "flux": 3,
+      "tol": 0.03
+     }
+    },
+    "cap": "A cross-section of three long charged wires (the plane version of Gauss's law: each wire's field falls off like ${}1/r$ in the plane). The flux through the loop counts only the wires inside it, however the loop is shaped or placed."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Counting charges",
+    "q": "Charges ${}3\\,\\mu$C at the origin, $-1\\,\\mu$C at $(0, 0, 1)$ and ${}5\\,\\mu$C at $(4, 0, 0)$. Find the electric flux through the sphere $x^2 + y^2 + z^2 = 4$.",
+    "steps": [
+     "Inside (distance less than ${}2$): the first two. Outside: the third.",
+     "Flux $= \\frac{3 - 1}{\\varepsilon_0} = \\frac{2\\,\\mu\\text{C}}{\\varepsilon_0}$."
+    ],
+    "a": "${}2\\,\\mu\\text{C}/\\varepsilon_0$"
+   },
+   {
+    "t": "ex",
+    "title": "A charged ball",
+    "q": "A ball of radius $R$ carries charge $Q$ spread uniformly through its volume. Find the field strength at distance $r$ from the center.",
+    "steps": [
+     "By symmetry $\\mathbf{E}$ points radially with size $E(r)$, so the flux through the sphere of radius $r$ is $E \\cdot 4\\pi r^2$.",
+     "Outside ($r > R$): all of $Q$ is enclosed, so $E = \\frac{Q}{4\\pi\\varepsilon_0 r^2}$, as if the charge sat at the center.",
+     "Inside ($r < R$): the enclosed charge is $Q\\frac{r^3}{R^3}$, so $E = \\frac{Q r}{4\\pi\\varepsilon_0 R^3}$, growing linearly from ${}0$ at the center."
+    ],
+    "a": "$\\frac{Qr}{4\\pi\\varepsilon_0 R^3}$ inside, $\\frac{Q}{4\\pi\\varepsilon_0 r^2}$ outside"
+   },
+   {
+    "t": "ex",
+    "title": "A charged wire",
+    "q": "A long straight wire carries charge $\\lambda$ per unit length. Find the field at distance $r$.",
+    "steps": [
+     "Use a closed cylinder of radius $r$ and length $\\ell$ around the wire. The field points straight out, so the end caps have zero flux and the side has $E \\cdot 2\\pi r\\ell$.",
+     "Gauss: $E \\cdot 2\\pi r\\ell = \\frac{\\lambda\\ell}{\\varepsilon_0}$, so $E = \\frac{\\lambda}{2\\pi\\varepsilon_0 r}$."
+    ],
+    "a": "$\\frac{\\lambda}{2\\pi\\varepsilon_0 r}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Expecting the shape or size to matter.</b> A bigger sphere around the same charge does not catch more flux: the field weakens like ${}1/r^2$ exactly as the area grows like $r^2$. Any closed surface, of any shape, around the same charges has the same flux. What does change with the surface is which charges are inside."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax University Physics Volume 2, 6.2 Explaining Gauss's Law"
+   },
+   {
+    "name": "OpenStax University Physics Volume 2, 6.3 Applying Gauss's Law"
+   },
+   {
+    "name": "OpenStax Calculus Volume 3, 6.8 The Divergence Theorem"
+   }
+  ]
+ },
+ "calc4.maxwell-equations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "All of classical electricity and magnetism fits in four equations, named for Maxwell, who completed them in the 1860s. Each one can be written two ways: as a statement about fluxes and circulations (the <b>integral form</b>, close to experiments) or about divergence and curl at each point (the <b>differential form</b>). <a href=\"/math/calculus-4/stokes-theorem/\">Stokes' theorem</a> and the <a href=\"/math/calculus-4/divergence-theorem/\">divergence theorem</a> translate between them; <a href=\"/math/calculus-4/gauss-law/\">Gauss's law</a> was the first example."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Law",
+     "Integral form",
+     "Differential form"
+    ],
+    "rows": [
+     [
+      "Gauss's law",
+      "$\\iint_S \\mathbf{E} \\cdot d\\mathbf{S} = Q_{\\text{enc}}/\\varepsilon_0$",
+      "$\\nabla \\cdot \\mathbf{E} = \\rho/\\varepsilon_0$"
+     ],
+     [
+      "No magnetic charges",
+      "$\\iint_S \\mathbf{B} \\cdot d\\mathbf{S} = 0$",
+      "$\\nabla \\cdot \\mathbf{B} = 0$"
+     ],
+     [
+      "Faraday's law",
+      "$\\oint_C \\mathbf{E} \\cdot d\\mathbf{r} = -\\frac{d}{dt}\\iint_S \\mathbf{B} \\cdot d\\mathbf{S}$",
+      "$\\nabla \\times \\mathbf{E} = -\\frac{\\partial \\mathbf{B}}{\\partial t}$"
+     ],
+     [
+      "Ampère–Maxwell law",
+      "$\\oint_C \\mathbf{B} \\cdot d\\mathbf{r} = \\mu_0 I_{\\text{enc}} + \\mu_0\\varepsilon_0\\frac{d}{dt}\\iint_S \\mathbf{E} \\cdot d\\mathbf{S}$",
+      "$\\nabla \\times \\mathbf{B} = \\mu_0\\mathbf{J} + \\mu_0\\varepsilon_0\\frac{\\partial \\mathbf{E}}{\\partial t}$"
+     ]
+    ],
+    "cap": "S is a closed surface in the first two rows; in the last two, S is any surface whose boundary is the loop C, oriented by the right-hand rule."
+   },
+   {
+    "t": "key",
+    "html": "Divergence equations correspond to <b>flux through closed surfaces</b> (divergence theorem). Curl equations correspond to <b>circulation around loops</b> (Stokes' theorem)."
+   },
+   {
+    "t": "why",
+    "html": "<b>Faraday, from integral to differential form:</b> by Stokes, $\\oint_C \\mathbf{E} \\cdot d\\mathbf{r} = \\iint_S (\\nabla \\times \\mathbf{E}) \\cdot d\\mathbf{S}$, so $\\iint_S \\left(\\nabla \\times \\mathbf{E} + \\frac{\\partial \\mathbf{B}}{\\partial t}\\right) \\cdot d\\mathbf{S} = 0$ for every small surface $S$, in every orientation. A continuous field whose flux through every tiny disk is ${}0$ must be $\\mathbf{0}$.<br>\n  <b>Why Maxwell added a term:</b> take the divergence of the Ampère–Maxwell law. The left side is $\\nabla \\cdot (\\nabla \\times \\mathbf{B}) = 0$. The right side becomes $$\\mu_0\\left(\\nabla \\cdot \\mathbf{J} + \\varepsilon_0\\frac{\\partial}{\\partial t}\\nabla \\cdot \\mathbf{E}\\right) = \\mu_0\\left(\\nabla \\cdot \\mathbf{J} + \\frac{\\partial \\rho}{\\partial t}\\right),$$ which is ${}0$ by conservation of charge. Without the $\\frac{\\partial \\mathbf{E}}{\\partial t}$ term, the equation would force $\\nabla \\cdot \\mathbf{J} = 0$, which fails while a capacitor charges."
+   },
+   {
+    "t": "viz",
+    "name": "calc4-loop",
+    "opts": {
+     "sources": [
+      {
+       "x": 0,
+       "y": 0,
+       "q": 2,
+       "kind": "vortex"
+      },
+      {
+       "x": 1.6,
+       "y": 0.8,
+       "q": -1,
+       "kind": "vortex"
+      }
+     ],
+     "center": [
+      0.3,
+      0
+     ],
+     "r": 1,
+     "show": "circ",
+     "task": "Enclose both wires: the circulation drops to $1$.",
+     "target": {
+      "circ": 1,
+      "tol": 0.02
+     }
+    },
+    "cap": "Two long wires seen end-on, with currents ${}2$ and $-1$ (in units where $\\mu_0 = 1$). The magnetic field circles each wire. Ampère's law: $\\oint \\mathbf{B} \\cdot d\\mathbf{r}$ counts the current passing through the loop, whatever its shape."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The field of a wire",
+    "q": "Use Ampère's law to find the magnetic field at distance $r$ from a long straight wire carrying a steady current $I$.",
+    "steps": [
+     "By symmetry $\\mathbf{B}$ circles the wire with constant size $B(r)$ on each circle around it.",
+     "$\\oint \\mathbf{B} \\cdot d\\mathbf{r} = B \\cdot 2\\pi r = \\mu_0 I$, so $B = \\frac{\\mu_0 I}{2\\pi r}$."
+    ],
+    "a": "$\\frac{\\mu_0 I}{2\\pi r}$"
+   },
+   {
+    "t": "ex",
+    "title": "An induced voltage",
+    "q": "A circular loop of radius ${}0.1$ m lies in the $xy$-plane in the field $\\mathbf{B} = \\langle 0, 0, 0.5t \\rangle$ teslas. Find $\\oint_C \\mathbf{E} \\cdot d\\mathbf{r}$, with $C$ counterclockwise seen from above.",
+    "steps": [
+     "Magnetic flux through the disk (upward normal): ${}0.5t \\cdot \\pi(0.1)^2 = 0.005\\pi t$.",
+     "Faraday: $$\\oint_C \\mathbf{E} \\cdot d\\mathbf{r} = -\\frac{d}{dt}(0.005\\pi t) = -0.005\\pi \\approx -0.0157$$ volts."
+    ],
+    "a": "$-0.005\\pi$ V"
+   },
+   {
+    "t": "ex",
+    "title": "Could it be a magnetic field?",
+    "q": "Which of $\\langle x, y, -2z \\rangle$ and $\\langle x, y, z \\rangle$ could be a magnetic field?",
+    "steps": [
+     "$\\nabla \\cdot \\langle x, y, -2z \\rangle = 1 + 1 - 2 = 0$: allowed.",
+     "$\\nabla \\cdot \\langle x, y, z \\rangle = 3 \\ne 0$: it would need magnetic charges, so no."
+    ],
+    "a": "only $\\langle x, y, -2z \\rangle$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax University Physics Volume 2, 16.1 Maxwell's Equations and Electromagnetic Waves"
+   },
+   {
+    "name": "OpenStax University Physics Volume 2, 13.1 Faraday's Law"
+   },
+   {
+    "name": "OpenStax University Physics Volume 2, 12.5 Ampère's Law"
+   }
+  ]
+ },
+ "calc4.shell-mass": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A thin metal dome, a soap film, a satellite dish: these are shells, surfaces with mass but almost no thickness. Their mass, balance point and resistance to spinning are <a href=\"/math/calculus-4/scalar-surface-integrals/\">surface integrals</a>, just as the same quantities for a flat plate were <a href=\"/math/calculus-3/double-integral-applications/\">double integrals</a> and for a solid were <a href=\"/math/calculus-3/triple-applications/\">triple integrals</a>."
+   },
+   {
+    "t": "key",
+    "html": "For a shell $S$ with density $\\delta(x, y, z)$ (mass per unit area):\n  $$M = \\iint_S \\delta\\,dS, \\qquad \\bar{x} = \\frac{1}{M}\\iint_S x\\,\\delta\\,dS, \\quad \\bar{y} = \\frac{1}{M}\\iint_S y\\,\\delta\\,dS, \\quad \\bar{z} = \\frac{1}{M}\\iint_S z\\,\\delta\\,dS,$$\n  and the moment of inertia about the $z$-axis is $I_z = \\iint_S (x^2 + y^2)\\,\\delta\\,dS$."
+   },
+   {
+    "t": "why",
+    "html": "A small patch of area $\\Delta S$ has mass about $\\delta\\,\\Delta S$. The mass is the sum of the patches; the center of mass is the average position, each patch weighted by its mass; and $I_z$ adds mass times squared distance from the axis. Each sum becomes a surface integral as the patches shrink. Symmetry helps: for a shape and density symmetric about the $z$-axis, $\\bar{x} = \\bar{y} = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "param3d",
+    "opts": {
+     "surface": true,
+     "x": "2*sin(u)*cos(v)",
+     "y": "2*sin(u)*sin(v)",
+     "z": "2*cos(u)",
+     "u0": 0,
+     "u1": "pi/2",
+     "v0": 0,
+     "v1": "2pi",
+     "u": 0.7,
+     "v": 1
+    },
+    "cap": "A hemispherical shell of radius ${}2$. Equal steps in $\\varphi$ near the top give smaller bands than near the rim: the area factor $a^2\\sin\\varphi$ puts more of the shell's mass low down, which is why its balance point is at half the radius."
+   },
+   {
+    "t": "p",
+    "html": "Compare shells with solids of the same shape. A uniform hemispherical shell balances at height $\\frac{a}{2}$, while a solid half-ball balances lower, at $\\frac{3a}{8}$, because the solid has more of its mass near the flat base. A thin spherical shell has $I_z = \\frac{2}{3}Ma^2$, while a solid ball of the same mass and radius has $\\frac{2}{5}Ma^2$: the shell's mass is all far from the axis, so it is harder to start spinning. That is why a hollow ball and a solid ball rolled down the same ramp arrive at different times, the solid one first."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A uniform dome",
+    "q": "Find the center of mass of a uniform hemispherical shell $x^2 + y^2 + z^2 = a^2$, $z \\ge 0$.",
+    "steps": [
+     "By symmetry $\\bar{x} = \\bar{y} = 0$. With constant $\\delta$, $M = \\delta \\cdot 2\\pi a^2$.",
+     "$$\\iint_S z\\,\\delta\\,dS = \\delta\\int_0^{2\\pi} \\int_0^{\\pi/2} (a\\cos\\varphi)(a^2\\sin\\varphi)\\,d\\varphi\\,d\\theta = \\delta \\cdot 2\\pi a^3 \\cdot \\frac{1}{2} = \\delta\\pi a^3.$$",
+     "$\\bar{z} = \\frac{\\delta\\pi a^3}{2\\pi a^2\\delta} = \\frac{a}{2}$. (A solid hemisphere balances lower, at $\\frac{3a}{8}$.)"
+    ],
+    "a": "$\\left(0, 0, \\frac{a}{2}\\right)$"
+   },
+   {
+    "t": "ex",
+    "title": "A can with varying density",
+    "q": "The side of the cylinder $x^2 + y^2 = 1$, ${}0 \\le z \\le 2$, has density $\\delta = z$. Find its mass and $\\bar{z}$.",
+    "steps": [
+     "$dS = d\\theta\\,dz$. $M = \\int_0^{2\\pi} \\int_0^2 z\\,dz\\,d\\theta = 2\\pi \\cdot 2 = 4\\pi$.",
+     "$\\iint z \\cdot z\\,dS = 2\\pi \\cdot \\frac{8}{3} = \\frac{16\\pi}{3}$, so $\\bar{z} = \\frac{16\\pi/3}{4\\pi} = \\frac{4}{3}$, above the middle because the top is heavier."
+    ],
+    "a": "$M = 4\\pi$, $\\bar{z} = \\frac{4}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Spinning a spherical shell",
+    "q": "Find $I_z$ for a uniform spherical shell of radius $a$ and mass $M$.",
+    "steps": [
+     "$\\delta = \\frac{M}{4\\pi a^2}$, and on the sphere $x^2 + y^2 = a^2\\sin^2\\varphi$.",
+     "$$I_z = \\delta\\int_0^{2\\pi} \\int_0^\\pi a^2\\sin^2\\varphi \\cdot a^2\\sin\\varphi\\,d\\varphi\\,d\\theta = \\delta \\cdot a^4 \\cdot 2\\pi \\cdot \\frac{4}{3}.$$",
+     "Substituting $\\delta$: $I_z = \\frac{2}{3}Ma^2$."
+    ],
+    "a": "$\\frac{2}{3}Ma^2$"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Calculus Volume 3, 6.6 Surface Integrals"
+   }
+  ]
+ }
+}

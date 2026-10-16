@@ -136,7 +136,7 @@
     { T: 5773, name: 'The Sun’s surface', note: 'About 5,500 °C (10,000 °F).', src: 'NASA', url: 'https://science.nasa.gov/sun/facts/' },
     { T: 2e6, name: 'The Sun’s corona', note: 'The Sun’s outer atmosphere reaches about 2 million °C (3.5 million °F).', src: 'NASA', url: 'https://science.nasa.gov/sun/facts/' },
     { T: 1.5e7, name: 'The Sun’s core', note: 'About 15 million °C (27 million °F), where hydrogen fuses into helium.', src: 'NASA', url: 'https://science.nasa.gov/sun/facts/' },
-    { T: 1.5e8, name: 'Fusion plasma (ITER)', note: 'ITER’s plasma must reach 150 million °C, ten times hotter than the Sun’s core. See Magnetic Bottles for Fusion.', src: 'ITER Organization', url: 'https://www.iter.org/node/2303', link: 'games/magnetic-bottles/' }
+    { T: 1.5e8, name: 'Fusion plasma (ITER)', note: 'ITER’s plasma must reach 150 million °C, ten times hotter than the Sun’s core. See Magnetic Bottles for Fusion.', src: 'ITER Organization', url: 'https://www.iter.org/node/2303', link: 'science-lab/magnetic-bottles/' }
   ];
 
   var API = { kB: kB, muB: muB, hbar: hbar, mRb: mRb, Beff: Beff, entropy: entropy, sOfX: sOfX, polar: polar, heatCap: heatCap, round: round, tempForS: tempForS, Trap: Trap, MARKS: MARKS, rng: rng };

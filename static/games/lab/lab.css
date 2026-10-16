@@ -47,9 +47,11 @@ html[data-theme="dark"] .lab-btn.pri{background:#6cc79a;border-color:#6cc79a;col
 .lab-seg button{flex:1 1 auto;font:600 .8rem system-ui,sans-serif;padding:.35rem .55rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
 .lab-seg button[aria-pressed="true"]{background:#004225;border-color:#004225;color:#fff}
 html[data-theme="dark"] .lab-seg button[aria-pressed="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
-.lab-readout{display:grid;grid-template-columns:1fr auto;gap:.15rem .7rem;margin:0;font-size:.85rem}
-.lab-readout dt{color:var(--muted)}
-.lab-readout dd{margin:0;text-align:right;font:600 .85rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+.lab-readout{display:grid;grid-template-columns:minmax(min(7.5em,45%),1fr) minmax(0,auto);gap:.15rem .7rem;margin:0;font-size:.85rem}
+.lab-readout dt{color:var(--muted);min-width:0;word-break:normal;overflow-wrap:break-word}
+.lab-readout dd{margin:0;min-width:0;text-align:right;font:600 .85rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink);overflow-wrap:break-word}
+/* values wrap at spaces when a panel is narrow, instead of squeezing the labels or widening the page (overrides page-level nowrap) */
+.lab-readout dd{white-space:normal !important}
 .lab-small{font-size:.82rem;color:var(--muted);line-height:1.45}
 /* missions */
 .lab-missions{list-style:none;margin:0;padding:0;display:grid;gap:.4rem}

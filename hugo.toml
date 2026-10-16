@@ -22,9 +22,19 @@ note = "Lessons, planner and practice for every subject"
 icon = "🏫"
 
 [[menu.main]]
+name = "Math Ladder"
+identifier = "math-edu"
+url = "/math/"
+weight = 2
+[menu.main.params]
+group = "Education"
+note = "Math from counting to calculus 4, with practice and review"
+icon = "🪜"
+
+[[menu.main]]
 name = "Languages"
 url = "/languages/"
-weight = 2
+weight = 3
 [menu.main.params]
 group = "Education"
 note = "Koine Greek and Latin: flashcards, drills, readers"
@@ -34,7 +44,7 @@ icon = "🏛"
 name = "Science Lab"
 identifier = "science-lab-edu"
 url = "/science-lab/"
-weight = 3
+weight = 4
 [menu.main.params]
 group = "Education"
 note = "Simulations and deep dives: fusion, Newton’s laws, heat and more"
@@ -43,7 +53,7 @@ icon = "⚛️"
 [[menu.main]]
 name = "Sign Language (ASL)"
 url = "/asl/"
-weight = 4
+weight = 5
 [menu.main.params]
 group = "Education"
 note = "A family path to ASL, fingerspelling practice, free lessons"
@@ -53,7 +63,7 @@ icon = "🤟"
 name = "Econometrics"
 identifier = "econ-edu"
 url = "/business/econometrics/"
-weight = 5
+weight = 6
 [menu.main.params]
 group = "Education"
 note = "A full course, from probability to causal inference"
@@ -63,7 +73,7 @@ icon = "📈"
 name = "Game Theory"
 identifier = "gt-edu"
 url = "/business/game-theory/"
-weight = 6
+weight = 7
 [menu.main.params]
 group = "Education"
 note = "A full course in strategy, from dilemmas to auctions"
@@ -72,7 +82,7 @@ icon = "♟️"
 [[menu.main]]
 name = "Infographics"
 url = "/infographics/"
-weight = 7
+weight = 8
 [menu.main.params]
 group = "Education"
 note = "One-page guides to great books and big ideas"
@@ -81,7 +91,7 @@ icon = "🖼"
 [[menu.main]]
 name = "Videos"
 url = "/videos/"
-weight = 8
+weight = 9
 [menu.main.params]
 group = "Education"
 note = "Walk-throughs and talks, with short trailers"
@@ -90,7 +100,7 @@ icon = "🎬"
 [[menu.main]]
 name = "Library"
 url = "/books/"
-weight = 9
+weight = 10
 [menu.main.params]
 group = "Education"
 note = "Guides to the great books"
@@ -99,7 +109,7 @@ icon = "📚"
 [[menu.main]]
 name = "Free Books"
 url = "/free-books/"
-weight = 10
+weight = 11
 [menu.main.params]
 group = "Education"
 note = "Find free e-books and audiobooks"
@@ -108,7 +118,7 @@ icon = "📖"
 [[menu.main]]
 name = "Reading Paths"
 url = "/books/paths/"
-weight = 11
+weight = 12
 [menu.main.params]
 group = "Education"
 note = "Guided routes through the Library"
@@ -117,7 +127,7 @@ icon = "🧭"
 [[menu.main]]
 name = "Timeline"
 url = "/timeline/"
-weight = 12
+weight = 13
 [menu.main.params]
 group = "Education"
 note = "The ancient world, era by era"
@@ -126,7 +136,7 @@ icon = "⏳"
 [[menu.main]]
 name = "Resources"
 url = "/resources/"
-weight = 13
+weight = 14
 [menu.main.params]
 group = "Education"
 note = "Free resources elsewhere"
@@ -135,7 +145,7 @@ icon = "🔗"
 [[menu.main]]
 name = "My Progress"
 url = "/progress/"
-weight = 14
+weight = 15
 [menu.main.params]
 group = "Education"
 note = "Lessons taught and words met, save or load"
@@ -144,30 +154,11 @@ icon = "✅"
 [[menu.main]]
 name = "What's New"
 url = "/new/"
-weight = 15
+weight = 16
 [menu.main.params]
 group = "Education"
 note = "Latest infographics, games and tools"
 icon = "✨"
-
-[[menu.main]]
-name = "Science Lab"
-identifier = "science-lab-games"
-url = "/science-lab/"
-weight = 30
-[menu.main.params]
-group = "Games"
-note = "Simulations of physics, chemistry, space and life"
-icon = "⚛️"
-
-[[menu.main]]
-name = "Book Cart"
-url = "/games/book-cart/"
-weight = 31
-[menu.main.params]
-group = "Games"
-note = "Swing a chain of books up and balance it"
-icon = "🛒"
 
 [[menu.main]]
 name = "Hero's Road"
@@ -504,3 +495,15 @@ icon = "🧮"
   [[module.mounts]]
     source = "static/img/infographics"
     target = "assets/infographics"
+
+# Build segments: `hugo --renderSegments math` renders only the Math Ladder pages (for fast test builds).
+[segments]
+  [segments.math]
+    [[segments.math.includes]]
+      path = '{/math,/math/**}'
+  [segments.lab]
+    [[segments.lab.includes]]
+      path = '{/science-lab,/science-lab/**}'
+  [segments.garden]
+    [[segments.garden.includes]]
+      path = '{/garden,/garden/**}'

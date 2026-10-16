@@ -1,0 +1,3830 @@
+{
+ "g5.order-of-operations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-4/multistep-word-problems/\">multistep word problems</a> the story told you what to do first. A bare expression like $2 + 3 \\times 4$ has no story, so everyone agrees on one order. That way the same expression always has the same value."
+   },
+   {
+    "t": "key",
+    "html": "Multiply and divide first, working from left to right. Then add and subtract, from left to right. Anything in parentheses comes before all of that."
+   },
+   {
+    "t": "why",
+    "html": "Multiplying is a shortcut for adding equal groups: $3 \\times 4$ means $4 + 4 + 4$. In $2 + 3 \\times 4$, the $3 \\times 4$ is one chunk, three groups of 4. Write the chunk out and you get $2 + 4 + 4 + 4 = 14$. Doing the multiplication first keeps the chunk together."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        2,
+        4,
+        4,
+        4
+       ],
+       "labels": [
+        "2",
+        "4",
+        "4",
+        "4"
+       ],
+       "colors": [
+        "green",
+        "blue",
+        "blue",
+        "blue"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 1,
+       "to": 4,
+       "label": "3 × 4 = 12"
+      },
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 4,
+       "label": "2 + 12 = 14",
+       "up": false
+      }
+     ]
+    },
+    "cap": "$2 + 3 \\times 4$ is one piece of 2 and three pieces of 4. Altogether 14."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Multiply before adding",
+    "q": "Find $2 + 3 \\times 4$.",
+    "steps": [
+     "Look for $\\times$ or $\\div$. There is one: $3 \\times 4 = 12$.",
+     "Now the expression is $2 + 12$.",
+     "Add: $2 + 12 = 14$."
+    ],
+    "a": "$14$"
+   },
+   {
+    "t": "ex",
+    "title": "Three operations",
+    "q": "Find $20 - 12 \\div 4 \\times 2$.",
+    "steps": [
+     "Multiplying and dividing come first. Of those two, the division is further left.",
+     "$12 \\div 4 = 3$, so the expression is $20 - 3 \\times 2$.",
+     "$3 \\times 2 = 6$, so the expression is $20 - 6$.",
+     "Subtract: $20 - 6 = 14$."
+    ],
+    "a": "$14$"
+   },
+   {
+    "t": "ex",
+    "title": "Left to right",
+    "q": "Find $18 \\div 3 \\times 2$.",
+    "steps": [
+     "Multiplying and dividing are partners. Neither one always comes first: go from left to right.",
+     "$18 \\div 3 = 6$.",
+     "$6 \\times 2 = 12$."
+    ],
+    "a": "$12$ (multiplying first would give $3$, which is not right)"
+   },
+   {
+    "t": "mistake",
+    "html": "Working straight from left to right: $2 + 3 = 5$, then $5 \\times 4 = 20$. That adds the 2 into every group of 4, which the expression never asked for. Quick check: before you start, circle each $\\times$ and $\\div$ with the numbers on both sides. The circles are worked first."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Parentheses first.",
+     "Then multiply and divide, from left to right.",
+     "Then add and subtract, from left to right."
+    ]
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 2.1 Use the Language of Algebra (order of operations)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.OA.A.1: evaluate numerical expressions with grouping symbols"
+   }
+  ]
+ },
+ "g5.grouping-symbols": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know the <a href=\"/math/grade-5/order-of-operations/\">order of operations</a>. Parentheses let you change that order: whatever is inside them is worked first. When an expression needs groups inside groups, we use bigger symbols so the eye can match the pairs: parentheses $(\\;)$, brackets $[\\;]$ and braces $\\{\\;\\}$."
+   },
+   {
+    "t": "key",
+    "html": "Start with the innermost grouping symbols and work outward. Inside each pair, use the usual order: multiply and divide, then add and subtract."
+   },
+   {
+    "t": "why",
+    "html": "A grouping symbol says &ldquo;treat this as one number.&rdquo; In $3 \\times (8 + 2)$ you multiply 3 by the amount $8 + 2$, which is 10, so the value is 30. Without the parentheses, $3 \\times 8 + 2$ is 26. Brackets and braces mean exactly the same as parentheses; they only make nested groups easier to read."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Brackets around parentheses",
+    "q": "Find $2 \\times [5 + (6 - 2)]$.",
+    "steps": [
+     "The innermost group is $(6 - 2) = 4$. Now: $2 \\times [5 + 4]$.",
+     "Next, the brackets: $5 + 4 = 9$. Now: $2 \\times 9$.",
+     "Multiply: $2 \\times 9 = 18$."
+    ],
+    "a": "$18$"
+   },
+   {
+    "t": "ex",
+    "title": "Braces too",
+    "q": "Find $\\{20 - [3 \\times (4 + 1)]\\} \\div 5$.",
+    "steps": [
+     "Innermost: $(4 + 1) = 5$. Now: $\\{20 - [3 \\times 5]\\} \\div 5$.",
+     "Brackets: $3 \\times 5 = 15$. Now: $\\{20 - 15\\} \\div 5$.",
+     "Braces: $20 - 15 = 5$. Now: $5 \\div 5$.",
+     "Divide: $5 \\div 5 = 1$."
+    ],
+    "a": "$1$"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Expression",
+     "First step",
+     "Value"
+    ],
+    "rows": [
+     [
+      "$3 \\times (8 + 2)$",
+      "$8 + 2 = 10$",
+      "$30$"
+     ],
+     [
+      "$3 \\times 8 + 2$",
+      "$3 \\times 8 = 24$",
+      "$26$"
+     ],
+     [
+      "$(3 \\times 8) + 2$",
+      "$3 \\times 8 = 24$",
+      "$26$"
+     ]
+    ],
+    "cap": "The same numbers, grouped three ways. Parentheses only change the value when they change what is done first."
+   },
+   {
+    "t": "mistake",
+    "html": "Working the outer symbols first, or dropping the inner ones. In $2 \\times [5 + (6 - 2)]$, doing $2 \\times 5$ first gives the wrong value. Check: find the pair of symbols with nothing grouped inside it. That pair is always first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 2.1 Use the Language of Algebra (grouping symbols)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.OA.A.1: use parentheses, brackets or braces in numerical expressions"
+   }
+  ]
+ },
+ "g5.write-numerical-expressions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now that you can work with <a href=\"/math/grade-5/grouping-symbols/\">parentheses, brackets and braces</a>, you can turn words into expressions. Words like <i>sum</i>, <i>difference</i>, <i>product</i> and <i>quotient</i> each name one result: the answer to an addition, a subtraction, a multiplication or a division."
+   },
+   {
+    "t": "key",
+    "html": "Write the operations in the order the words ask for. If a step the words do first would not come first by the order of operations, put it in parentheses: &ldquo;3 times the sum of 8 and 7&rdquo; is $3 \\times (8 + 7)$."
+   },
+   {
+    "t": "why",
+    "html": "&ldquo;The sum of 8 and 7&rdquo; is one amount, 15. Three times that amount is three groups of 15. Without parentheses, $3 \\times 8 + 7$ would multiply first and add 7 only once, which is a different amount."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        15,
+        15,
+        15
+       ],
+       "labels": [
+        "8 + 7",
+        "8 + 7",
+        "8 + 7"
+       ],
+       "colors": [
+        "blue",
+        "blue",
+        "blue"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 3,
+       "label": "3 × (8 + 7) = 45"
+      }
+     ]
+    },
+    "cap": "Three times the sum of 8 and 7: three equal pieces, each $8 + 7$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Words to an expression",
+    "q": "Write &ldquo;add 6 and 9, then multiply by 4&rdquo; and find its value.",
+    "steps": [
+     "The words add first. Multiplying would normally come first, so the sum needs parentheses: $(6 + 9) \\times 4$.",
+     "Inside the parentheses: $6 + 9 = 15$.",
+     "Multiply: $15 \\times 4 = 60$."
+    ],
+    "a": "$(6 + 9) \\times 4 = 60$"
+   },
+   {
+    "t": "ex",
+    "title": "No parentheses needed",
+    "q": "Write &ldquo;5 less than the product of 7 and 3.&rdquo;",
+    "steps": [
+     "&ldquo;The product of 7 and 3&rdquo; is $7 \\times 3$.",
+     "&ldquo;5 less than&rdquo; it means take 5 away from it: $7 \\times 3 - 5$.",
+     "Multiplying comes first anyway, so no parentheses are needed. The value is $21 - 5 = 16$."
+    ],
+    "a": "$7 \\times 3 - 5$"
+   },
+   {
+    "t": "ex",
+    "title": "Compare without calculating",
+    "q": "How does $4 \\times (2{,}318 + 976)$ compare with $2{,}318 + 976$?",
+    "steps": [
+     "The parentheses make $2{,}318 + 976$ one amount.",
+     "$4 \\times$ that amount is 4 groups of it."
+    ],
+    "a": "It is 4 times as large, and you never had to add."
+   },
+   {
+    "t": "mistake",
+    "html": "Writing $3 \\times 8 + 7$ for &ldquo;3 times the sum of 8 and 7.&rdquo; Check by reading your expression back in words: $3 \\times 8 + 7$ says &ldquo;multiply 3 by 8, then add 7,&rdquo; which is not what you were told."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 2.2 Evaluate, Simplify, and Translate Expressions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.OA.A.2: write simple expressions and interpret them without evaluating"
+   }
+  ]
+ },
+ "g5.prime-factorization": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/grade-4/prime-composite/\">prime number</a> has exactly two factors, 1 and itself. Every other whole number greater than 1 is composite: it splits into smaller factors. Keep splitting, and you reach the primes that build the number."
+   },
+   {
+    "t": "key",
+    "html": "To find the prime factorization, split the number into two factors, then split any factor that is not prime. Stop only when every branch ends in a prime. Then write the number as the product of those primes."
+   },
+   {
+    "t": "why",
+    "html": "Each split makes the factors smaller, so the splitting has to stop, and it can only stop at primes. However you begin, you end with the same primes: $60 = 6 \\times 10$ and $60 = 4 \\times 15$ both lead to $2 \\times 2 \\times 3 \\times 5$."
+   },
+   {
+    "t": "viz",
+    "name": "g5-factortree",
+    "opts": {
+     "n": 60,
+     "first": [
+      6,
+      10
+     ]
+    },
+    "cap": "A factor tree for 60, started as $6 \\times 10$. Split the numbers that are not prime. Then press &ldquo;Start over&rdquo; and try a different first split: the primes at the ends come out the same."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A factor tree for 60",
+    "q": "Write 60 as a product of primes.",
+    "steps": [
+     "$60 = 6 \\times 10$. Neither 6 nor 10 is prime.",
+     "$6 = 2 \\times 3$ and $10 = 2 \\times 5$. All four are prime.",
+     "Put them in order: $2 \\times 2 \\times 3 \\times 5$. Check: $4 \\times 3 \\times 5 = 60$."
+    ],
+    "a": "$60 = 2 \\times 2 \\times 3 \\times 5$"
+   },
+   {
+    "t": "ex",
+    "title": "Peel off small primes",
+    "q": "Write 126 as a product of primes.",
+    "steps": [
+     "126 is even: $126 = 2 \\times 63$.",
+     "63 is not even, but $6 + 3 = 9$, so 3 divides it: $63 = 3 \\times 21$.",
+     "$21 = 3 \\times 7$. Now every factor is prime."
+    ],
+    "a": "$126 = 2 \\times 3 \\times 3 \\times 7$"
+   },
+   {
+    "t": "mistake",
+    "html": "Stopping at a composite factor, like writing $60 = 2 \\times 2 \\times 15$. The number 15 is not prime ($15 = 3 \\times 5$), so the tree is not finished. Check each factor: can it be divided by 2, 3, 5 or 7 without leaving a remainder? If so, split it."
+   },
+   {
+    "t": "note",
+    "html": "You can write repeated primes with an exponent, like $2^{2} \\times 3 \\times 5$. You will meet exponents properly with powers of ten."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 2.5 Prime Factorization and the Least Common Multiple"
+   }
+  ]
+ },
+ "g5.tenths-relationship": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 4 you saw that <a href=\"/math/grade-4/ten-times-place/\">each place is worth ten times the place to its right</a>, and you met <a href=\"/math/grade-4/decimal-notation/\">tenths and hundredths</a>. The same pattern runs both ways and keeps going past the decimal point."
+   },
+   {
+    "t": "key",
+    "html": "Moving one place to the left makes a digit worth 10 times as much. Moving one place to the right makes it worth $\\frac{1}{10}$ as much."
+   },
+   {
+    "t": "why",
+    "html": "Ten ones make a ten, and ten tens make a hundred. Going the other way, cut one whole into 10 equal parts and each part is a tenth; cut a tenth into 10 parts and each is a hundredth. So every place is 10 of the place to its right, and $\\frac{1}{10}$ of the place to its left."
+   },
+   {
+    "t": "viz",
+    "name": "placevalue",
+    "opts": {
+     "n": "555.55",
+     "edit": false,
+     "expanded": "mult"
+    },
+    "cap": "Every digit is a 5, but each 5 is worth 10 times the 5 to its right: $500, 50, 5, 0.5, 0.05$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Ten times as much",
+    "q": "In $4{,}444$, compare the 4 in the hundreds place with the 4 in the tens place.",
+    "steps": [
+     "The hundreds 4 is worth $400$. The tens 4 is worth $40$.",
+     "$40 \\times 10 = 400$."
+    ],
+    "a": "The hundreds 4 is worth 10 times as much."
+   },
+   {
+    "t": "ex",
+    "title": "Across the decimal point",
+    "q": "In $7.77$, compare the 7 in the tenths place with the 7 in the hundredths place.",
+    "steps": [
+     "The tenths 7 is worth $0.7$. The hundredths 7 is worth $0.07$.",
+     "$0.07 \\times 10 = 0.7$, so the tenths 7 is worth 10 times as much.",
+     "Turned around: the hundredths 7 is worth $\\frac{1}{10}$ of the tenths 7."
+    ],
+    "a": "10 times as much (or $\\frac{1}{10}$ as much, the other way)"
+   },
+   {
+    "t": "ex",
+    "title": "Two places apart",
+    "q": "In $3{,}030$, how many times as much is the 3 in the thousands place as the 3 in the tens place?",
+    "steps": [
+     "Thousands are two places left of tens.",
+     "Each place is a factor of 10: $10 \\times 10 = 100$.",
+     "Check: $30 \\times 100 = 3{,}000$."
+    ],
+    "a": "100 times as much"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a digit further right is worth more because it is &ldquo;bigger&rdquo; or comes later. In $0.55$, the first 5 (tenths) is worth 10 times the second 5 (hundredths). Check by writing each value: $0.5$ and $0.05$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.1 Decimals (place value)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.A.1: a digit in one place represents 10 times what it represents in the place to its right"
+   }
+  ]
+ },
+ "g5.powers-of-ten": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know that each place is <a href=\"/math/grade-5/tenths-relationship/\">ten times the place to its right</a>: one, ten, hundred, thousand. Writing $10 \\times 10 \\times 10 \\times 10$ for ten thousand takes a while, so there is a short way: an exponent."
+   },
+   {
+    "t": "key",
+    "html": "$10^{3}$ means $10 \\times 10 \\times 10 = 1{,}000$. The small raised number, the <b>exponent</b>, says how many 10s are multiplied. $10^{n}$ is a 1 followed by $n$ zeros."
+   },
+   {
+    "t": "why",
+    "html": "Each time you multiply by 10, every digit moves one place to the left and a 0 fills the ones place. Start with 1 and multiply by 10 three times: $10$, then $100$, then $1{,}000$. Three factors of 10, three zeros."
+   },
+   {
+    "t": "viz",
+    "name": "placevalue",
+    "opts": {
+     "n": "1",
+     "hi": 6,
+     "lo": 0,
+     "shift": true,
+     "edit": false,
+     "expanded": "mult"
+    },
+    "cap": "Press &ldquo;× 10&rdquo; again and again. Each press is one more factor of 10, and the 1 moves one place left."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Power",
+     "Product",
+     "Value"
+    ],
+    "rows": [
+     [
+      "$10^{1}$",
+      "$10$",
+      "$10$"
+     ],
+     [
+      "$10^{2}$",
+      "$10 \\times 10$",
+      "$100$"
+     ],
+     [
+      "$10^{3}$",
+      "$10 \\times 10 \\times 10$",
+      "$1{,}000$"
+     ],
+     [
+      "$10^{4}$",
+      "$10 \\times 10 \\times 10 \\times 10$",
+      "$10{,}000$"
+     ]
+    ],
+    "cap": "Powers of ten"
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Value of a power",
+    "q": "What is $10^{5}$?",
+    "steps": [
+     "Five 10s multiplied: $10 \\times 10 \\times 10 \\times 10 \\times 10$.",
+     "That is a 1 with five zeros."
+    ],
+    "a": "$100{,}000$"
+   },
+   {
+    "t": "ex",
+    "title": "A number times a power of ten",
+    "q": "What is $6 \\times 10^{3}$?",
+    "steps": [
+     "$10^{3} = 1{,}000$.",
+     "$6 \\times 1{,}000 = 6{,}000$: the 6 moves three places left."
+    ],
+    "a": "$6{,}000$"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading $10^{3}$ as $10 \\times 3 = 30$. The exponent is not a factor; it counts factors. Check: $10^{3}$ must be bigger than $10^{2} = 100$, and 30 is not."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 10.5 Integer Exponents and Scientific Notation (powers of ten)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.A.2: use whole-number exponents to denote powers of 10"
+   }
+  ]
+ },
+ "g5.multiply-divide-powers-of-ten": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have seen that a <a href=\"/math/grade-5/powers-of-ten/\">power of 10</a> like $10^{2}$ is $100$. Multiplying or dividing by 10, 100 or 1,000 is quick, because of how place value works."
+   },
+   {
+    "t": "key",
+    "html": "Multiplying by 10 moves every digit one place to the <b>left</b>; dividing by 10 moves every digit one place to the <b>right</b>. For 100 or $10^{2}$, move two places; for 1,000 or $10^{3}$, three. Fill any empty places between the digits and the point with zeros."
+   },
+   {
+    "t": "why",
+    "html": "Multiplying by 10 makes each digit worth 10 times as much, so each digit moves into the place that is worth 10 times as much: the place to its left. The decimal point stays put; the digits move. It looks as if the point moved the other way, and you can think of it that way too."
+   },
+   {
+    "t": "viz",
+    "name": "placevalue",
+    "opts": {
+     "n": "2.5",
+     "hi": 3,
+     "lo": -3,
+     "shift": true,
+     "edit": false
+    },
+    "cap": "Press &ldquo;× 10&rdquo;: the 2 and the 5 slide one place left, so $2.5$ becomes $25$. Press &ldquo;÷ 10&rdquo; to slide them back."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Multiply a decimal by 100",
+    "q": "Find $3.6 \\times 100$.",
+    "steps": [
+     "100 is $10^{2}$, so each digit moves two places left.",
+     "The 3 (ones) becomes 3 hundreds; the 6 (tenths) becomes 6 tens.",
+     "The ones place is now empty, so write 0."
+    ],
+    "a": "$360$"
+   },
+   {
+    "t": "ex",
+    "title": "Divide by 1,000",
+    "q": "Find $47 \\div 1{,}000$.",
+    "steps": [
+     "Each digit moves three places right.",
+     "The 4 (tens) becomes 4 hundredths; the 7 (ones) becomes 7 thousandths.",
+     "The tenths place is empty: write 0."
+    ],
+    "a": "$0.047$"
+   },
+   {
+    "t": "ex",
+    "title": "Using an exponent",
+    "q": "Find $0.52 \\times 10^{3}$.",
+    "steps": [
+     "$10^{3} = 1{,}000$: move three places left.",
+     "$0.52 \\to 5.2 \\to 52 \\to 520$."
+    ],
+    "a": "$520$"
+   },
+   {
+    "t": "mistake",
+    "html": "&ldquo;Adding a zero&rdquo; to a decimal, like writing $2.5 \\times 10 = 2.50$. A zero at the end of a decimal changes nothing: $2.50$ is still two and a half. Check: multiplying by 10 must give a bigger number. $2.5 \\times 10 = 25$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.2 Decimal Operations (multiplying and dividing by powers of ten)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.A.2: patterns in the number of zeros and in the placement of the decimal point"
+   }
+  ]
+ },
+ "g5.thousandths": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can read <a href=\"/math/grade-5/tenths-relationship/\">tenths and hundredths</a>. Cut a hundredth into 10 equal parts and you get a <b>thousandth</b>, the third place after the decimal point."
+   },
+   {
+    "t": "key",
+    "html": "After the decimal point the places are tenths, hundredths, thousandths. To read a decimal, read the whole number, say &ldquo;and&rdquo; for the point, read the digits after the point as one number, and finish with the name of the last place."
+   },
+   {
+    "t": "why",
+    "html": "$0.347$ is $\\frac{3}{10} + \\frac{4}{100} + \\frac{7}{1000}$. Rename the tenths and hundredths as thousandths: $\\frac{300}{1000} + \\frac{40}{1000} + \\frac{7}{1000} = \\frac{347}{1000}$. That is why the whole decimal part can be read as &ldquo;three hundred forty-seven thousandths.&rdquo;"
+   },
+   {
+    "t": "viz",
+    "name": "placevalue",
+    "opts": {
+     "n": "2.347",
+     "expanded": "frac"
+    },
+    "cap": "$2.347$ in a place-value chart, with its expanded form in fractions. Change the digits with the arrows."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Words to digits",
+    "q": "Write &ldquo;five and twelve thousandths&rdquo; in digits.",
+    "steps": [
+     "Five is the whole number: $5.\\_\\_\\_$",
+     "&ldquo;Thousandths&rdquo; means three places after the point, with the 12 ending in the thousandths place.",
+     "So the places are 0 tenths, 1 hundredth, 2 thousandths."
+    ],
+    "a": "$5.012$"
+   },
+   {
+    "t": "ex",
+    "title": "Expanded form",
+    "q": "Write $4 \\times 1 + 3 \\times \\frac{1}{10} + 8 \\times \\frac{1}{1000}$ as a decimal.",
+    "steps": [
+     "4 ones, 3 tenths and 8 thousandths.",
+     "There are no hundredths, so the hundredths place gets a 0."
+    ],
+    "a": "$4.308$"
+   },
+   {
+    "t": "mistake",
+    "html": "Leaving out a placeholder zero, like writing &ldquo;five and twelve thousandths&rdquo; as $5.12$. That is five and twelve <i>hundredths</i>. Check: the last digit must land in the place the last word names."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.1 Decimals (name and write decimals)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.A.3a: read and write decimals to thousandths"
+   }
+  ]
+ },
+ "g5.compare-decimals-thousandths": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have <a href=\"/math/grade-4/compare-decimals/\">compared tenths and hundredths</a> and you can read <a href=\"/math/grade-5/thousandths/\">thousandths</a>. Comparing works the same way at any size: the biggest places decide first."
+   },
+   {
+    "t": "key",
+    "html": "Line up the decimal points (or write both numbers with the same number of decimal places). Then compare place by place from the left. The first place where the digits differ decides."
+   },
+   {
+    "t": "why",
+    "html": "A tenth is bigger than any number of hundredths or thousandths that fit in the places after it: even $0.099$ is less than $0.1$. So the tenths digit matters more than everything to its right. Writing zeros at the end, like $0.5 = 0.500$, does not change a value, and it lets you compare like whole numbers: 500 thousandths against 125 thousandths."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 0,
+     "max": 1,
+     "step": 0.1,
+     "labels": "dec",
+     "points": [
+      {
+       "v": "0.125",
+       "label": "0.125"
+      },
+      {
+       "v": "0.5",
+       "label": "0.5",
+       "color": "blue"
+      }
+     ]
+    },
+    "cap": "$0.125$ sits near the start of the line; $0.5$ is halfway. More digits did not make $0.125$ bigger."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Different numbers of digits",
+    "q": "Compare $0.125$ and $0.5$.",
+    "steps": [
+     "Write both with three places: $0.125$ and $0.500$.",
+     "Tenths: 1 and 5. They differ, and $1 < 5$."
+    ],
+    "a": "$0.125 < 0.5$"
+   },
+   {
+    "t": "ex",
+    "title": "Same tenths",
+    "q": "Compare $2.09$ and $2.1$.",
+    "steps": [
+     "Ones: both 2.",
+     "Tenths: 0 and 1. $0 < 1$."
+    ],
+    "a": "$2.09 < 2.1$"
+   },
+   {
+    "t": "ex",
+    "title": "Equal values",
+    "q": "Compare $3.40$ and $3.4$.",
+    "steps": [
+     "Write $3.4$ as $3.40$.",
+     "Every place matches."
+    ],
+    "a": "$3.40 = 3.4$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking $0.125 > 0.5$ because 125 is greater than 5. The digits are in different places: the 5 is 5 tenths, but the 1 is only 1 tenth. Check: give both the same number of decimal places, $0.125$ and $0.500$, then compare."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.1 Decimals (order decimals)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.A.3b: compare two decimals to thousandths"
+   }
+  ]
+ },
+ "g5.round-decimals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-4/round-any-place/\">round whole numbers to any place</a>. Rounding decimals works the same way: find the two numbers you are between, and pick the closer one."
+   },
+   {
+    "t": "key",
+    "html": "To round to a place, look at the digit just to its right. If it is 5 or more, round up (add 1 to the place you keep). If it is less than 5, keep the digit. Then drop the digits after the place you kept."
+   },
+   {
+    "t": "why",
+    "html": "$3.46$ is between $3.4$ and $3.5$. Halfway between them is $3.45$. Since $3.46$ is past halfway, it is closer to $3.5$. The digit after the tenths place tells you which side of halfway you are on: 5 or more is the upper half."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 3.4,
+     "max": 3.5,
+     "step": 0.05,
+     "sub": 5,
+     "labels": "dec",
+     "points": [
+      {
+       "v": "3.46",
+       "label": "3.46"
+      }
+     ]
+    },
+    "cap": "$3.46$ is between $3.4$ and $3.5$, just past the halfway mark $3.45$, so it rounds to $3.5$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "To the nearest tenth",
+    "q": "Round $7.382$ to the nearest tenth.",
+    "steps": [
+     "The tenths digit is 3. The digit to its right is 8.",
+     "8 is 5 or more, so round up: 3 tenths become 4 tenths.",
+     "Drop the digits after the tenths place."
+    ],
+    "a": "$7.4$"
+   },
+   {
+    "t": "ex",
+    "title": "To the nearest hundredth",
+    "q": "Round $12.964$ to the nearest hundredth.",
+    "steps": [
+     "The hundredths digit is 6. The digit to its right is 4.",
+     "4 is less than 5, so keep the 6."
+    ],
+    "a": "$12.96$"
+   },
+   {
+    "t": "ex",
+    "title": "A 9 that rolls over",
+    "q": "Round $4.97$ to the nearest tenth.",
+    "steps": [
+     "The tenths digit is 9. The next digit, 7, says round up.",
+     "9 tenths + 1 tenth = 10 tenths = 1 whole. So the ones go from 4 to 5 and the tenths digit is 0."
+    ],
+    "a": "$5.0$ (which equals $5$)"
+   },
+   {
+    "t": "mistake",
+    "html": "Rounding twice: $3.449 \\to 3.45 \\to 3.5$. Round only once, from the original number: $3.449$ to the nearest tenth looks at the hundredths digit, 4, so the answer is $3.4$. Check on a number line: $3.449$ is below the halfway mark $3.45$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.1 Decimals (round decimals)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.A.4: use place value understanding to round decimals to any place"
+   }
+  ]
+ },
+ "g5.multiply-algorithm": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 4 you <a href=\"/math/grade-4/multiply-two-digit/\">multiplied two-digit numbers</a> with partial products in an area model. The standard algorithm is the same idea written in a compact stack: one row for each digit of the bottom number."
+   },
+   {
+    "t": "key",
+    "html": "Multiply the top number by the ones digit of the bottom number. Then multiply by the tens digit, starting that row with a 0 because you are multiplying by tens. Add the rows."
+   },
+   {
+    "t": "why",
+    "html": "In $346 \\times 27$, the 2 in 27 is really 20. So the second row is $346 \\times 20$, which is $346 \\times 2$ tens: $692$ tens, or $6{,}920$. The 0 at the end holds the ones place. The two rows are the two parts of the area model, $346 \\times 7$ and $346 \\times 20$."
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": 346,
+     "b": 27
+    },
+    "cap": "$346 \\times 27$ split by place value. The parts in each column add to the rows of the algorithm: $346 \\times 20$ and $346 \\times 7$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two digits by two digits",
+    "q": "Multiply $54 \\times 36$.",
+    "steps": [
+     "Ones row: $54 \\times 6 = 324$.",
+     "Tens row: $54 \\times 30 = 1{,}620$ (write the 0 first, then $54 \\times 3 = 162$).",
+     "Add: $324 + 1{,}620 = 1{,}944$.",
+     "Estimate: $50 \\times 40 = 2{,}000$. Close."
+    ],
+    "a": "$1{,}944$"
+   },
+   {
+    "t": "ex",
+    "title": "Three digits by two digits",
+    "q": "Multiply $346 \\times 27$.",
+    "steps": [
+     "Ones row: $346 \\times 7 = 2{,}422$.",
+     "Tens row: $346 \\times 20 = 6{,}920$.",
+     "Add: $2{,}422 + 6{,}920 = 9{,}342$.",
+     "Estimate: $350 \\times 30 = 10{,}500$. Close."
+    ],
+    "a": "$9{,}342$"
+   },
+   {
+    "t": "mistake",
+    "html": "Leaving out the placeholder 0, so $346 \\times 27$ becomes $2{,}422 + 692 = 3{,}114$. That treats the 2 in 27 as 2 instead of 20. Check with an estimate: $350 \\times 30$ is about 10,000, so 3,114 is far too small."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 1.4 Multiply Whole Numbers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.5: fluently multiply multi-digit whole numbers using the standard algorithm"
+   }
+  ]
+ },
+ "g5.divide-two-digit-divisors": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know <a href=\"/math/grade-4/long-division-one-digit/\">long division by a one-digit number</a>: divide, multiply, subtract, bring down. With a two-digit divisor the steps are the same. The new part is finding each digit of the quotient, and an estimate does that."
+   },
+   {
+    "t": "key",
+    "html": "Round the divisor to the nearest ten to estimate each quotient digit. Multiply and subtract. If the product is too big, try one less. If what is left is as big as the divisor or bigger, try one more."
+   },
+   {
+    "t": "why",
+    "html": "Division asks for a missing factor: $672 \\div 21$ asks $21 \\times ? = 672$. Each digit you write is a piece of that factor: $21 \\times 30 = 630$, and $21 \\times 2 = 42$, so $21 \\times 32 = 672$. A remainder must be smaller than the divisor; if it is not, another whole group still fits."
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": [
+      "21"
+     ],
+     "b": [
+      "30",
+      "2"
+     ]
+    },
+    "cap": "$672 \\div 21$ as a missing side: a rectangle with area 672 and one side 21. The other side is $30 + 2 = 32$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An estimate that works",
+    "q": "Divide $1{,}976 \\div 38$.",
+    "steps": [
+     "38 is about 40.",
+     "How many 38s in 197? Think $200 \\div 40 = 5$. $5 \\times 38 = 190$, and $197 - 190 = 7$. Write 5.",
+     "Bring down the 6: 76. Think $80 \\div 40 = 2$. $2 \\times 38 = 76$, and $76 - 76 = 0$. Write 2.",
+     "Check: $52 \\times 38 = 1{,}976$."
+    ],
+    "a": "$52$"
+   },
+   {
+    "t": "ex",
+    "title": "An estimate to adjust",
+    "q": "Divide $1{,}640 \\div 24$.",
+    "steps": [
+     "24 is about 20. How many 24s in 164? Think $160 \\div 20 = 8$. But $8 \\times 24 = 192$ is too big. Try 7: $168$, still too big. Try 6: $144$, and $164 - 144 = 20$. Write 6.",
+     "Bring down the 0: 200. Think $200 \\div 20 = 10$, but a digit can be at most 9. Try 8: $8 \\times 24 = 192$, and $200 - 192 = 8$.",
+     "The remainder 8 is less than 24, so it is finished. Check: $68 \\times 24 + 8 = 1{,}640$."
+    ],
+    "a": "$68$ R $8$"
+   },
+   {
+    "t": "mistake",
+    "html": "Keeping a quotient digit that is too small. If you wrote 5 for $164 \\div 24$, you would subtract $120$ and have 44 left, which is more than 24: another 24 still fits. The rule to check: after each subtraction, what is left must be less than the divisor."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 1.5 Divide Whole Numbers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.6: find whole-number quotients with two-digit divisors"
+   }
+  ]
+ },
+ "g5.add-subtract-decimals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You add and subtract whole numbers with the <a href=\"/math/grade-4/add-subtract-algorithm/\">standard algorithm</a>: ones under ones, tens under tens. Decimals work the same way once the places line up, and you can read them to <a href=\"/math/grade-5/thousandths/\">thousandths</a>."
+   },
+   {
+    "t": "key",
+    "html": "Line up the decimal points, so tenths are under tenths and hundredths under hundredths. Fill empty places with zeros. Then add or subtract as with whole numbers, and keep the point in line."
+   },
+   {
+    "t": "why",
+    "html": "You can only add like things: tenths to tenths, hundredths to hundredths, just as you add ones to ones. Lining up the points lines up the places. Writing $3.5$ as $3.50$ changes nothing about its value, but it shows that $3.5$ has 0 hundredths."
+   },
+   {
+    "t": "viz",
+    "name": "decimalgrid",
+    "opts": {
+     "v": "0.5",
+     "compare": "0.25"
+    },
+    "cap": "$0.5$ is 50 hundredths and $0.25$ is 25 hundredths. Together they make 75 hundredths: $0.5 + 0.25 = 0.75$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "ones",
+     "tenths",
+     "hundredths"
+    ],
+    "rows": [
+     [
+      "",
+      "3",
+      "5",
+      "0"
+     ],
+     [
+      "+",
+      "1",
+      "2",
+      "5"
+     ],
+     [
+      "=",
+      "4",
+      "7",
+      "5"
+     ]
+    ],
+    "cap": "$3.5 + 1.25$ with the places lined up."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Different numbers of places",
+    "q": "Find $3.5 + 1.25$.",
+    "steps": [
+     "Write $3.5$ as $3.50$.",
+     "Hundredths: $0 + 5 = 5$. Tenths: $5 + 2 = 7$. Ones: $3 + 1 = 4$.",
+     "Estimate: $3.5 + 1 = 4.5$. Close."
+    ],
+    "a": "$4.75$"
+   },
+   {
+    "t": "ex",
+    "title": "Subtract from a whole number",
+    "q": "Find $6 - 2.37$.",
+    "steps": [
+     "Write $6$ as $6.00$.",
+     "Regroup: $6.00$ is 5 ones, 9 tenths, 10 hundredths.",
+     "$10 - 7 = 3$ hundredths, $9 - 3 = 6$ tenths, $5 - 2 = 3$ ones.",
+     "Check by adding: $3.63 + 2.37 = 6.00$."
+    ],
+    "a": "$3.63$"
+   },
+   {
+    "t": "mistake",
+    "html": "Lining up the last digits, as with whole numbers, so $3.5 + 1.25$ becomes $1.60$. That adds 5 tenths to 5 hundredths. Check with an estimate: $3.5 + 1.25$ is more than $3.5$, so $1.60$ cannot be right."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.2 Decimal Operations (add and subtract decimals)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.7: add and subtract decimals to hundredths"
+   }
+  ]
+ },
+ "g5.multiply-decimal-by-whole": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-5/add-subtract-decimals/\">add decimals</a>, and you know how <a href=\"/math/grade-5/multiply-divide-powers-of-ten/\">multiplying by 10 moves digits</a>. Multiplying a decimal by a whole number is repeated adding of tenths or hundredths."
+   },
+   {
+    "t": "key",
+    "html": "Think of the decimal as a count of tenths or hundredths. Multiply that count by the whole number, then write the result in the same unit: $4 \\times 0.3$ is $4 \\times 3$ tenths $= 12$ tenths $= 1.2$."
+   },
+   {
+    "t": "why",
+    "html": "$4 \\times 0.3$ means four groups of 3 tenths. That is 12 tenths. Ten tenths make one whole, so 12 tenths is 1 whole and 2 tenths: $1.2$. Units stay units: tenths times a whole number are still tenths."
+   },
+   {
+    "t": "viz",
+    "name": "decimalgrid",
+    "opts": {
+     "v": "1.2",
+     "grids": 2,
+     "tenths": true
+    },
+    "cap": "Four groups of 3 tenths fill one whole and 2 more tenths: $4 \\times 0.3 = 1.2$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Tenths",
+    "q": "Find $4 \\times 0.3$.",
+    "steps": [
+     "$0.3$ is 3 tenths.",
+     "$4 \\times 3 = 12$, so the product is 12 tenths.",
+     "12 tenths $= 1.2$."
+    ],
+    "a": "$1.2$"
+   },
+   {
+    "t": "ex",
+    "title": "Hundredths",
+    "q": "Find $6 \\times 2.35$.",
+    "steps": [
+     "$2.35$ is 235 hundredths.",
+     "$6 \\times 235 = 1{,}410$ hundredths.",
+     "1,410 hundredths $= 14.10 = 14.1$.",
+     "Estimate: $6 \\times 2 = 12$, and $6 \\times 2.5 = 15$. The answer is between."
+    ],
+    "a": "$14.1$"
+   },
+   {
+    "t": "mistake",
+    "html": "Losing track of the unit and writing $6 \\times 2.35 = 141$ or $1.41$. Check with an estimate: $2.35$ is a bit more than 2, so six of them are a bit more than 12."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.2 Decimal Operations (multiply decimals)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.7: multiply decimals to hundredths using place value"
+   }
+  ]
+ },
+ "g5.multiply-decimals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-5/multiply-decimal-by-whole/\">multiply a decimal by a whole number</a>. When both factors are decimals, the new question is the size of the unit: what do you get from tenths times tenths?"
+   },
+   {
+    "t": "key",
+    "html": "Multiply as if there were no decimal points. Then count the decimal places in both factors together; the product has that many decimal places. $0.3 \\times 0.2 = 0.06$."
+   },
+   {
+    "t": "why",
+    "html": "$0.3 \\times 0.2$ means 3 tenths of 2 tenths. A tenth of a tenth is a hundredth (cut a square into 10 strips, then each strip into 10 pieces: 100 pieces). So the product is $3 \\times 2 = 6$ hundredths. In fractions: $\\frac{3}{10} \\times \\frac{2}{10} = \\frac{6}{100}$. Tenths times tenths make hundredths, so 1 place and 1 place give 2 places."
+   },
+   {
+    "t": "viz",
+    "name": "g5-fracarea",
+    "opts": {
+     "a": "0.3",
+     "b": "0.2",
+     "dec": true
+    },
+    "cap": "Shade $0.2$ of the square, then $0.3$ of that part. The double-shaded piece is 6 of the 100 small squares: $0.06$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Tenths times tenths",
+    "q": "Find $0.3 \\times 0.2$.",
+    "steps": [
+     "$3 \\times 2 = 6$.",
+     "Each factor has 1 decimal place, so the product has 2.",
+     "6 hundredths: write a 0 in the tenths place."
+    ],
+    "a": "$0.06$"
+   },
+   {
+    "t": "ex",
+    "title": "Bigger factors",
+    "q": "Find $1.4 \\times 2.3$.",
+    "steps": [
+     "$14 \\times 23 = 322$.",
+     "1 decimal place + 1 decimal place = 2.",
+     "$3.22$. Estimate: $1 \\times 2 = 2$ and $1.5 \\times 2.5$ is under 4. It fits."
+    ],
+    "a": "$3.22$"
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": 1.4,
+     "b": 2.3
+    },
+    "cap": "$1.4 \\times 2.3$ as an area: the four parts add to $3.22$."
+   },
+   {
+    "t": "mistake",
+    "html": "Lining up the points as in adding and writing $0.3 \\times 0.2 = 0.6$. Check: when both factors are less than 1, the product is smaller than each of them. $0.6$ is bigger than $0.3$, so it cannot be right."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.2 Decimal Operations (multiply decimals)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.7: multiply decimals to hundredths; relate the strategy to a written method"
+   }
+  ]
+ },
+ "g5.divide-decimal-by-whole": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-5/divide-two-digit-divisors/\">divide whole numbers</a> and you can <a href=\"/math/grade-5/add-subtract-decimals/\">work with tenths and hundredths</a>. Dividing a decimal by a whole number is fair sharing, with tenths and hundredths shared just like ones."
+   },
+   {
+    "t": "key",
+    "html": "Divide as with whole numbers, and put the decimal point in the quotient straight above the point in the dividend. If the division does not come out even, write zeros after the last digit and keep going."
+   },
+   {
+    "t": "why",
+    "html": "Sharing $6.3$ among 3 is sharing 6 ones and 3 tenths: each person gets 2 ones and 1 tenth, $2.1$. Thinking in the smallest unit helps: $9.36$ is 936 hundredths, and $936 \\div 4 = 234$ hundredths, which is $2.34$. A zero at the end, $3.4 = 3.40$, adds no value but gives you hundredths to share."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        2.1,
+        2.1,
+        2.1
+       ],
+       "labels": [
+        "2.1",
+        "2.1",
+        "2.1"
+       ],
+       "colors": [
+        "blue",
+        "blue",
+        "blue"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 3,
+       "label": "6.3"
+      }
+     ]
+    },
+    "cap": "$6.3$ shared equally by 3: each part is $2.1$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Share ones and tenths",
+    "q": "Find $6.3 \\div 3$.",
+    "steps": [
+     "6 ones $\\div 3 = 2$ ones.",
+     "3 tenths $\\div 3 = 1$ tenth."
+    ],
+    "a": "$2.1$"
+   },
+   {
+    "t": "ex",
+    "title": "Long division with a point",
+    "q": "Find $9.36 \\div 4$.",
+    "steps": [
+     "$9 \\div 4 = 2$ with 1 left over. Write 2, then the point above the point.",
+     "Bring down the 3: 13 tenths. $13 \\div 4 = 3$ with 1 left over.",
+     "Bring down the 6: 16 hundredths. $16 \\div 4 = 4$.",
+     "Check: $2.34 \\times 4 = 9.36$."
+    ],
+    "a": "$2.34$"
+   },
+   {
+    "t": "ex",
+    "title": "Write a zero to keep going",
+    "q": "Find $3.4 \\div 4$.",
+    "steps": [
+     "4 does not go into 3 ones, so write 0 ones and the point.",
+     "34 tenths $\\div 4 = 8$ with 2 tenths left.",
+     "Write $3.4$ as $3.40$: the 2 tenths become 20 hundredths. $20 \\div 4 = 5$."
+    ],
+    "a": "$0.85$"
+   },
+   {
+    "t": "mistake",
+    "html": "Losing the decimal point and writing $9.36 \\div 4 = 234$ or $23.4$. Check with an estimate: $9 \\div 4$ is a little more than 2, so the answer is $2.34$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.2 Decimal Operations (divide decimals)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.7: divide decimals to hundredths"
+   }
+  ]
+ },
+ "g5.divide-by-decimal": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-5/divide-decimal-by-whole/\">divide a decimal by a whole number</a>, and you know that <a href=\"/math/grade-5/multiply-divide-powers-of-ten/\">multiplying by 10 shifts every digit</a>. To divide by a decimal, turn the divisor into a whole number first."
+   },
+   {
+    "t": "key",
+    "html": "Multiply the divisor and the dividend by the same power of 10, enough to make the divisor a whole number. The quotient does not change. Then divide: $4.8 \\div 0.6 = 48 \\div 6 = 8$."
+   },
+   {
+    "t": "why",
+    "html": "Division asks how many times one amount fits in another. If both amounts get 10 times bigger, the answer stays the same: $6 \\div 2 = 3$ and $60 \\div 20 = 3$. In tenths: $4.8 \\div 0.6$ asks how many 6 tenths fit in 48 tenths, which is the same as $48 \\div 6$."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 0,
+     "max": 5,
+     "step": 1,
+     "sub": 10,
+     "labels": "dec",
+     "hops": [
+      {
+       "from": 0,
+       "by": 0.6,
+       "n": 8
+      }
+     ],
+     "points": [
+      {
+       "v": "4.8",
+       "label": "4.8"
+      }
+     ]
+    },
+    "cap": "Jumps of $0.6$ from 0 to $4.8$: eight jumps, so $4.8 \\div 0.6 = 8$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A tenths divisor",
+    "q": "Find $4.8 \\div 0.6$.",
+    "steps": [
+     "Multiply both by 10: $48 \\div 6$.",
+     "$48 \\div 6 = 8$.",
+     "Check: $8 \\times 0.6 = 4.8$."
+    ],
+    "a": "$8$"
+   },
+   {
+    "t": "ex",
+    "title": "A decimal answer",
+    "q": "Find $2.56 \\div 0.8$.",
+    "steps": [
+     "Multiply both by 10: $25.6 \\div 8$.",
+     "$25.6 \\div 8 = 3.2$ (256 tenths $\\div 8 = 32$ tenths).",
+     "Check: $3.2 \\times 0.8 = 2.56$."
+    ],
+    "a": "$3.2$"
+   },
+   {
+    "t": "ex",
+    "title": "Write zeros in the dividend",
+    "q": "Find $9 \\div 0.25$.",
+    "steps": [
+     "The divisor has 2 decimal places, so multiply both by 100.",
+     "$9 \\times 100 = 900$ and $0.25 \\times 100 = 25$.",
+     "$900 \\div 25 = 36$."
+    ],
+    "a": "$36$"
+   },
+   {
+    "t": "mistake",
+    "html": "Moving the point in the divisor only: $4.8 \\div 0.6$ becomes $4.8 \\div 6 = 0.8$. Multiplying just one number changes the problem. Check: dividing by a number less than 1 gives an answer bigger than the dividend, and $8 \\times 0.6 = 4.8$ confirms 8."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.2 Decimal Operations (divide by a decimal)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.7: divide decimals to hundredths"
+   }
+  ]
+ },
+ "g5.estimate-decimal-products": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-5/multiply-decimals/\">multiply decimals</a> and <a href=\"/math/grade-5/round-decimals/\">round them</a>. Put the two together and you have a fast check that catches a decimal point in the wrong place."
+   },
+   {
+    "t": "key",
+    "html": "Round each factor to a whole number (or another easy number) and multiply. The exact answer should be close to the estimate. Use the estimate to place the decimal point."
+   },
+   {
+    "t": "why",
+    "html": "The digits of $2.4 \\times 3.1$ are the digits of $24 \\times 31 = 744$. Where does the point go: $0.744$, $7.44$, $74.4$? Since $2.4$ is about 2 and $3.1$ is about 3, the product is about $2 \\times 3 = 6$. Only $7.44$ is close to 6."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 0,
+     "max": 10,
+     "step": 1,
+     "labels": "whole",
+     "points": [
+      {
+       "v": "0.744",
+       "label": "0.744",
+       "color": "red"
+      },
+      {
+       "v": 6,
+       "label": "≈ 6",
+       "color": "gold"
+      },
+      {
+       "v": "7.44",
+       "label": "7.44",
+       "color": "green"
+      }
+     ]
+    },
+    "cap": "The estimate, about 6, sits right next to $7.44$. $0.744$ is far below it, and $74.4$ would be far off the right end of this line."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Place the point",
+    "q": "$3.8 \\times 5.2$ has the digits 1976. Where does the point go?",
+    "steps": [
+     "Estimate: $4 \\times 5 = 20$.",
+     "The choices are $0.1976$, $1.976$, $19.76$, $197.6$. Only $19.76$ is near 20."
+    ],
+    "a": "$19.76$"
+   },
+   {
+    "t": "ex",
+    "title": "Is it reasonable?",
+    "q": "Is $0.48 \\times 9.6 = 46.08$ reasonable?",
+    "steps": [
+     "$0.48$ is about $0.5$, a half, and $9.6$ is about 10.",
+     "Half of 10 is 5. $46.08$ is far from 5."
+    ],
+    "a": "No. The product is $4.608$."
+   },
+   {
+    "t": "mistake",
+    "html": "Accepting an answer like $2.4 \\times 3.1 = 74.4$ without comparing it to $2 \\times 3$. Check every decimal product with a whole-number estimate; a misplaced point is off by 10 times or more, which an estimate shows right away."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.2 Decimal Operations (estimate)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.7: relate decimal strategies to written methods and check them"
+   }
+  ]
+ },
+ "g5.decimal-word-problems": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Money and measurements are full of decimals. You can add, subtract, multiply and divide them, and you can <a href=\"/math/grade-5/estimate-decimal-products/\">check with an estimate</a> and <a href=\"/math/grade-5/divide-by-decimal/\">divide by a decimal</a>. A word problem puts those skills in order."
+   },
+   {
+    "t": "key",
+    "html": "Read the problem and decide what each step finds. Write the operation for each step, estimate, compute carefully with the points lined up or counted, and check that the answer fits the story."
+   },
+   {
+    "t": "why",
+    "html": "Each operation matches an action: putting amounts together is adding, finding what is left or how much more is subtracting, equal groups is multiplying, and sharing or fitting pieces is dividing. Decimals do not change the meaning of the operations, only the arithmetic."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "tapes": [
+      {
+       "parts": [
+        7.35,
+        1.2,
+        1.45
+       ],
+       "labels": [
+        "3 × 2.45",
+        "1.20",
+        "?"
+       ],
+       "colors": [
+        "blue",
+        "green",
+        "gold"
+       ]
+      }
+     ],
+     "braces": [
+      {
+       "tape": 0,
+       "from": 0,
+       "to": 3,
+       "label": "$10"
+      }
+     ]
+    },
+    "cap": "Paying with \\$10: the notebooks, the pen and the change together make \\$10."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two steps with money",
+    "q": "Ana buys 3 notebooks at \\$2.45 each and a pen for \\$1.20. She pays with a \\$10 bill. How much change does she get?",
+    "steps": [
+     "Notebooks: $3 \\times 2.45 = 7.35$.",
+     "Add the pen: $7.35 + 1.20 = 8.55$.",
+     "Change: $10.00 - 8.55 = 1.45$.",
+     "Estimate: $3 \\times 2.5 + 1 = 8.5$, so about \\$1.50 change. It fits."
+    ],
+    "a": "\\$1.45"
+   },
+   {
+    "t": "ex",
+    "title": "How many pieces?",
+    "q": "A ribbon is 4.5 m long. How many 0.75 m pieces can be cut from it?",
+    "steps": [
+     "How many 0.75s fit in 4.5? Divide: $4.5 \\div 0.75$.",
+     "Multiply both by 100: $450 \\div 75 = 6$.",
+     "Check: $6 \\times 0.75 = 4.5$."
+    ],
+    "a": "6 pieces"
+   },
+   {
+    "t": "mistake",
+    "html": "Picking the operation from the numbers instead of the story, such as multiplying $4.5 \\times 0.75$ because the numbers are decimals. Ask what the story does: cutting pieces from a length is dividing. Then check that the answer makes sense: 3.375 pieces would be odd."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.2 Decimal Operations"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NBT.B.7: add, subtract, multiply and divide decimals to hundredths"
+   }
+  ]
+ },
+ "g5.common-denominators": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 4 you made <a href=\"/math/grade-4/equivalent-fractions-multiply/\">equivalent fractions</a> by multiplying the top and bottom by the same number, and you listed <a href=\"/math/grade-4/multiples/\">multiples</a>. Together they let you give two fractions pieces of the same size."
+   },
+   {
+    "t": "key",
+    "html": "A common denominator is a number both denominators divide into: a common multiple. Rename each fraction with it by multiplying the numerator and the denominator by the same number. The least common multiple keeps the numbers small."
+   },
+   {
+    "t": "why",
+    "html": "Thirds and fourths are different sizes, so 2 thirds and 3 fourths are hard to compare or add. Cut every third into 4 pieces and every fourth into 3 pieces, and both are cut into twelfths. Cutting each piece into smaller equal pieces changes how many pieces you have, not how much: $\\frac{2}{3} = \\frac{8}{12}$."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "2/3",
+      "3/4"
+     ],
+     "equiv": true
+    },
+    "cap": "Use &ldquo;Cut each part into&rdquo; to split the parts. Find a cut that gives both bars twelfths."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Halves and thirds",
+    "q": "Rename $\\frac{1}{2}$ and $\\frac{1}{3}$ with a common denominator.",
+    "steps": [
+     "Multiples of 3: 3, 6, … 2 divides 6, so use 6.",
+     "$\\frac{1}{2} = \\frac{1 \\times 3}{2 \\times 3} = \\frac{3}{6}$.",
+     "$\\frac{1}{3} = \\frac{1 \\times 2}{3 \\times 2} = \\frac{2}{6}$."
+    ],
+    "a": "$\\frac{3}{6}$ and $\\frac{2}{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "Use the least common multiple",
+    "q": "Rename $\\frac{5}{6}$ and $\\frac{3}{8}$ with the least common denominator.",
+    "steps": [
+     "Multiples of 8: 8, 16, 24. The first one 6 divides is 24.",
+     "$\\frac{5}{6} = \\frac{5 \\times 4}{6 \\times 4} = \\frac{20}{24}$.",
+     "$\\frac{3}{8} = \\frac{3 \\times 3}{8 \\times 3} = \\frac{9}{24}$."
+    ],
+    "a": "$\\frac{20}{24}$ and $\\frac{9}{24}$"
+   },
+   {
+    "t": "ex",
+    "title": "One denominator already works",
+    "q": "Rename $\\frac{3}{4}$ and $\\frac{7}{12}$.",
+    "steps": [
+     "4 divides 12, so 12 works.",
+     "$\\frac{3}{4} = \\frac{9}{12}$; $\\frac{7}{12}$ stays as it is."
+    ],
+    "a": "$\\frac{9}{12}$ and $\\frac{7}{12}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Changing only the denominator, like writing $\\frac{1}{2} = \\frac{1}{6}$. That makes the pieces smaller without making more of them, so the amount shrinks. Whatever you multiply the bottom by, multiply the top by the same number."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.5 Add and Subtract Fractions with Different Denominators (least common denominator)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.A.1: replace fractions with equivalent fractions with like denominators"
+   }
+  ]
+ },
+ "g5.add-unlike-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-4/add-like-fractions/\">add fractions with like denominators</a>: $\\frac{1}{5} + \\frac{2}{5} = \\frac{3}{5}$, because fifths add like apples. When the pieces are different sizes, first <a href=\"/math/grade-5/common-denominators/\">rename them with a common denominator</a>."
+   },
+   {
+    "t": "key",
+    "html": "To add fractions with unlike denominators, rename them with a common denominator, then add the numerators. The denominator stays the same, because it names the size of the pieces."
+   },
+   {
+    "t": "why",
+    "html": "Adding counts pieces, and you can only count pieces of one size. $\\frac{1}{3}$ is one big piece and $\\frac{1}{4}$ is one smaller piece; together they are not &ldquo;2 sevenths.&rdquo; As twelfths they are 4 pieces and 3 pieces of the same size: 7 twelfths."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "add": [
+      "1/3",
+      "1/4"
+     ]
+    },
+    "cap": "Step through: two pieces of different sizes, put together, the &ldquo;is it $\\frac{2}{7}$?&rdquo; check, and same-size parts."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Unit fractions",
+    "q": "Find $\\frac{1}{2} + \\frac{1}{3}$.",
+    "steps": [
+     "A common denominator of 2 and 3 is 6.",
+     "$\\frac{1}{2} = \\frac{3}{6}$ and $\\frac{1}{3} = \\frac{2}{6}$.",
+     "Add the numerators: $\\frac{3}{6} + \\frac{2}{6} = \\frac{5}{6}$."
+    ],
+    "a": "$\\frac{5}{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "A sum bigger than 1",
+    "q": "Find $\\frac{2}{3} + \\frac{3}{4}$.",
+    "steps": [
+     "Use 12: $\\frac{2}{3} = \\frac{8}{12}$ and $\\frac{3}{4} = \\frac{9}{12}$.",
+     "$\\frac{8}{12} + \\frac{9}{12} = \\frac{17}{12}$.",
+     "$\\frac{17}{12} = 1\\frac{5}{12}$, since 12 twelfths make one whole."
+    ],
+    "a": "$1\\frac{5}{12}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the tops and the bottoms: $\\frac{1}{2} + \\frac{1}{3} = \\frac{2}{5}$. A quick check shows it is wrong: $\\frac{2}{5}$ is less than $\\frac{1}{2}$, but adding $\\frac{1}{3}$ to $\\frac{1}{2}$ must give more than $\\frac{1}{2}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.5 Add and Subtract Fractions with Different Denominators"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.A.1: add fractions with unlike denominators"
+   }
+  ]
+ },
+ "g5.subtract-unlike-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Subtracting works just like <a href=\"/math/grade-5/add-unlike-fractions/\">adding unlike fractions</a>: first make the pieces the same size, then take some away."
+   },
+   {
+    "t": "key",
+    "html": "Rename the fractions with a common denominator, then subtract the numerators. Keep the denominator. Check by adding your answer back."
+   },
+   {
+    "t": "why",
+    "html": "You can take 2 twelfths from 9 twelfths because they are the same kind of piece. You cannot take a third straight out of three fourths, since thirds do not line up with fourths. Renamed as twelfths, $\\frac{3}{4} - \\frac{1}{3}$ is $\\frac{9}{12} - \\frac{4}{12}$, and the answer is the 5 twelfths left over."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "3/4",
+      "1/3"
+     ],
+     "guide": true
+    },
+    "cap": "Drag the guide to the end of the shorter shading. The difference between the bars is the answer to $\\frac{3}{4} - \\frac{1}{3}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Fourths and thirds",
+    "q": "Find $\\frac{3}{4} - \\frac{1}{3}$.",
+    "steps": [
+     "Use 12: $\\frac{3}{4} = \\frac{9}{12}$ and $\\frac{1}{3} = \\frac{4}{12}$.",
+     "$\\frac{9}{12} - \\frac{4}{12} = \\frac{5}{12}$.",
+     "Check: $\\frac{5}{12} + \\frac{4}{12} = \\frac{9}{12} = \\frac{3}{4}$."
+    ],
+    "a": "$\\frac{5}{12}$"
+   },
+   {
+    "t": "ex",
+    "title": "Simplify at the end",
+    "q": "Find $\\frac{5}{6} - \\frac{1}{2}$.",
+    "steps": [
+     "6 already works: $\\frac{1}{2} = \\frac{3}{6}$.",
+     "$\\frac{5}{6} - \\frac{3}{6} = \\frac{2}{6}$.",
+     "Simplify: $\\frac{2}{6} = \\frac{1}{3}$."
+    ],
+    "a": "$\\frac{1}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Subtracting tops and bottoms: $\\frac{3}{4} - \\frac{1}{3} = \\frac{2}{1} = 2$. Taking something away from less than 1 cannot give 2. Always rename first, and check by adding back."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.5 Add and Subtract Fractions with Different Denominators"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.A.1: subtract fractions with unlike denominators"
+   }
+  ]
+ },
+ "g5.unlike-mixed-numbers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-4/add-mixed-numbers/\">add and subtract mixed numbers</a> when the fractions have the same denominator, and you can <a href=\"/math/grade-5/subtract-unlike-fractions/\">rename unlike fractions</a>. Put those together for mixed numbers with unlike denominators."
+   },
+   {
+    "t": "key",
+    "html": "Rename the fraction parts with a common denominator. Add or subtract the whole numbers and the fractions. When adding gives a fraction of 1 or more, carry a whole. When subtracting needs more pieces than you have, regroup one whole into pieces first."
+   },
+   {
+    "t": "why",
+    "html": "A mixed number is wholes plus a fraction, so you can work the wholes and the fractions separately, as long as you keep track of the pieces. One whole is the same as $\\frac{12}{12}$, so $5\\frac{3}{12}$ can be written as $4\\frac{15}{12}$: same amount, more pieces."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      {
+       "n": 15,
+       "d": 12,
+       "len": 2
+      }
+     ]
+    },
+    "cap": "$1\\frac{3}{12}$ is 15 twelfths: one whole broken into 12 twelfths, plus 3 more."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Add and carry",
+    "q": "Find $2\\frac{3}{4} + 1\\frac{1}{2}$.",
+    "steps": [
+     "Rename: $\\frac{1}{2} = \\frac{2}{4}$.",
+     "Wholes: $2 + 1 = 3$. Fractions: $\\frac{3}{4} + \\frac{2}{4} = \\frac{5}{4}$.",
+     "$\\frac{5}{4} = 1\\frac{1}{4}$, so carry 1: $3 + 1\\frac{1}{4} = 4\\frac{1}{4}$."
+    ],
+    "a": "$4\\frac{1}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "Subtract with regrouping",
+    "q": "Find $5\\frac{1}{4} - 2\\frac{2}{3}$.",
+    "steps": [
+     "Rename with 12: $5\\frac{3}{12} - 2\\frac{8}{12}$.",
+     "$\\frac{3}{12}$ is less than $\\frac{8}{12}$, so regroup a whole: $5\\frac{3}{12} = 4\\frac{15}{12}$.",
+     "Wholes: $4 - 2 = 2$. Fractions: $\\frac{15}{12} - \\frac{8}{12} = \\frac{7}{12}$.",
+     "Check: $2\\frac{7}{12} + 2\\frac{8}{12} = 4\\frac{15}{12} = 5\\frac{3}{12}$."
+    ],
+    "a": "$2\\frac{7}{12}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Subtracting the smaller fraction from the larger, whichever number it belongs to: $5\\frac{3}{12} - 2\\frac{8}{12} = 3\\frac{5}{12}$. The $\\frac{8}{12}$ is being taken away, so you need to regroup. Check by adding back: $3\\frac{5}{12} + 2\\frac{8}{12} = 6\\frac{1}{12}$, not $5\\frac{1}{4}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.6 Add and Subtract Mixed Numbers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.A.1: add and subtract mixed numbers with unlike denominators"
+   }
+  ]
+ },
+ "g5.fraction-estimates": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now that you can <a href=\"/math/grade-5/unlike-mixed-numbers/\">add and subtract any fractions and mixed numbers</a>, it helps to know roughly what an answer should be before you work it out. The landmarks 0, $\\frac{1}{2}$ and 1 make that quick."
+   },
+   {
+    "t": "key",
+    "html": "Round each fraction to the nearest benchmark, 0, $\\frac{1}{2}$ or 1, and work with those. An exact answer far from the estimate needs a second look."
+   },
+   {
+    "t": "why",
+    "html": "Compare the numerator with the denominator. If the numerator is close to 0, the fraction is near 0. If it is close to half the denominator, the fraction is near $\\frac{1}{2}$. If it is close to the denominator, the fraction is near 1. So $\\frac{7}{8}$ is near 1 and $\\frac{2}{5}$ is near $\\frac{1}{2}$."
+   },
+   {
+    "t": "viz",
+    "name": "fractionline",
+    "opts": {
+     "d": 8,
+     "point": "5/8",
+     "lines": [
+      2
+     ]
+    },
+    "cap": "Move the point and compare it with $\\frac{1}{2} = \\frac{4}{8}$ on the line below. $\\frac{5}{8}$ is just past one half."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Estimate a sum",
+    "q": "Estimate $\\frac{7}{8} + \\frac{2}{5}$.",
+    "steps": [
+     "$\\frac{7}{8}$ is close to 1.",
+     "$\\frac{2}{5}$ is close to $\\frac{1}{2}$ (half of 5 is 2.5).",
+     "About $1 + \\frac{1}{2} = 1\\frac{1}{2}$. (Exactly: $1\\frac{11}{40}$.)"
+    ],
+    "a": "about $1\\frac{1}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Catch a mistake",
+    "q": "Kai says $\\frac{2}{5} + \\frac{1}{2} = \\frac{3}{7}$. Is that reasonable?",
+    "steps": [
+     "The sum must be more than $\\frac{1}{2}$, since $\\frac{1}{2}$ is one of the parts.",
+     "$\\frac{3}{7}$ is less than $\\frac{1}{2}$, because 3 is less than half of 7."
+    ],
+    "a": "No. The sum is $\\frac{9}{10}$, close to 1."
+   },
+   {
+    "t": "ex",
+    "title": "A story",
+    "q": "Mia walks $\\frac{2}{3}$ mile, then $\\frac{3}{4}$ mile. How far does she walk?",
+    "steps": [
+     "Estimate: about $\\frac{1}{2} + 1 = 1\\frac{1}{2}$ miles.",
+     "Exactly: $\\frac{8}{12} + \\frac{9}{12} = \\frac{17}{12} = 1\\frac{5}{12}$.",
+     "$1\\frac{5}{12}$ is near $1\\frac{1}{2}$, so it is reasonable."
+    ],
+    "a": "$1\\frac{5}{12}$ miles"
+   },
+   {
+    "t": "mistake",
+    "html": "Trusting an answer without checking its size. $\\frac{2}{5} + \\frac{1}{2} = \\frac{3}{7}$ looks tidy, but it is smaller than one of the parts. A one-second benchmark check catches it."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.5 Add and Subtract Fractions with Different Denominators (estimate)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.A.2: use benchmark fractions to estimate and check reasonableness"
+   }
+  ]
+ },
+ "g5.fraction-as-division": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know <a href=\"/math/grade-4/divide-with-remainders/\">division with remainders</a> and <a href=\"/math/grade-4/mixed-numbers/\">mixed numbers</a>. Here is a link between them: the fraction bar is a division sign. $\\frac{3}{4}$ means $3 \\div 4$."
+   },
+   {
+    "t": "key",
+    "html": "$\\frac{a}{b} = a \\div b$. Sharing $a$ wholes equally among $b$ people gives each person $\\frac{a}{b}$ of a whole, even when $a$ is smaller than $b$."
+   },
+   {
+    "t": "why",
+    "html": "Share 3 pizzas among 4 people. Cut each pizza into 4 equal slices. Each person takes one slice from each pizza: 3 slices, each $\\frac{1}{4}$ of a pizza. So each person gets $\\frac{3}{4}$, and $3 \\div 4 = \\frac{3}{4}$."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      {
+       "n": 1,
+       "d": 4,
+       "lock": true
+      },
+      {
+       "n": 1,
+       "d": 4,
+       "lock": true
+      },
+      {
+       "n": 1,
+       "d": 4,
+       "lock": true
+      }
+     ]
+    },
+    "cap": "Three pizzas (one bar each), each cut into fourths. One person's share is one fourth of each pizza: $\\frac{1}{4} + \\frac{1}{4} + \\frac{1}{4} = \\frac{3}{4}$ of a pizza."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A smaller number divided by a larger one",
+    "q": "Write $3 \\div 4$ as a fraction.",
+    "steps": [
+     "The number being divided goes on top: $\\frac{3}{4}$.",
+     "Check: 4 shares of $\\frac{3}{4}$ make $\\frac{12}{4} = 3$."
+    ],
+    "a": "$\\frac{3}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "More than one whole each",
+    "q": "5 people share 7 pounds of clay. How much does each get?",
+    "steps": [
+     "$7 \\div 5 = \\frac{7}{5}$.",
+     "As a mixed number: 5 goes into 7 once with 2 left, and the 2 are shared too: $1\\frac{2}{5}$."
+    ],
+    "a": "$1\\frac{2}{5}$ pounds"
+   },
+   {
+    "t": "ex",
+    "title": "Between which whole numbers?",
+    "q": "Between which two whole numbers is $\\frac{17}{5}$?",
+    "steps": [
+     "$\\frac{17}{5} = 17 \\div 5$.",
+     "$5 \\times 3 = 15$ and $5 \\times 4 = 20$, so the answer is 3 with 2 left over: $3\\frac{2}{5}$."
+    ],
+    "a": "between 3 and 4"
+   },
+   {
+    "t": "mistake",
+    "html": "Believing a smaller number cannot be divided by a larger one, so $3 \\div 4$ &ldquo;can't be done&rdquo; or is 0 R 3. It can: each share is just less than 1. Check by multiplying: $4 \\times \\frac{3}{4} = 3$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.1 Visualize Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.3: interpret a fraction as division of the numerator by the denominator"
+   }
+  ]
+ },
+ "g5.fractions-and-decimals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/grade-5/fraction-as-division/\">fraction is a division</a>, and decimals are <a href=\"/math/grade-5/thousandths/\">tenths, hundredths and thousandths</a>. So a fraction and a decimal can be two names for the same number."
+   },
+   {
+    "t": "key",
+    "html": "To write a fraction as a decimal, rename it with a denominator of 10, 100 or 1,000, or divide the numerator by the denominator. To write a decimal as a fraction, read it: $0.25$ is 25 hundredths, $\\frac{25}{100} = \\frac{1}{4}$."
+   },
+   {
+    "t": "why",
+    "html": "$\\frac{1}{4}$ of a hundred grid is 25 of its 100 squares, so $\\frac{1}{4} = \\frac{25}{100} = 0.25$. Multiplying the top and bottom by 25 does not change the amount; it only cuts the pieces into hundredths. Dividing works too: $1 \\div 4 = 0.25$."
+   },
+   {
+    "t": "viz",
+    "name": "decimalgrid",
+    "opts": {
+     "v": "0.25",
+     "percent": false
+    },
+    "cap": "One fourth of the grid: 25 hundredths, or $0.25$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Fourths",
+    "q": "Write $\\frac{3}{4}$ as a decimal.",
+    "steps": [
+     "$4 \\times 25 = 100$, so multiply the top and bottom by 25.",
+     "$\\frac{3}{4} = \\frac{75}{100}$, which is 75 hundredths."
+    ],
+    "a": "$0.75$"
+   },
+   {
+    "t": "ex",
+    "title": "Eighths",
+    "q": "Write $\\frac{3}{8}$ as a decimal.",
+    "steps": [
+     "$8 \\times 125 = 1{,}000$.",
+     "$\\frac{3}{8} = \\frac{375}{1000}$, which is 375 thousandths."
+    ],
+    "a": "$0.375$"
+   },
+   {
+    "t": "ex",
+    "title": "Decimal to fraction",
+    "q": "Write $0.6$ as a fraction in simplest form.",
+    "steps": [
+     "$0.6$ is 6 tenths: $\\frac{6}{10}$.",
+     "Divide the top and bottom by 2: $\\frac{3}{5}$."
+    ],
+    "a": "$\\frac{3}{5}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading the digits straight across, so $\\frac{1}{4}$ becomes $0.4$ or $0.14$. But $0.4$ is 4 tenths, more than a third. Check by rounding to a benchmark: $\\frac{1}{4}$ is less than $\\frac{1}{2} = 0.5$ and more than 0, and $0.25$ fits."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 5.3 Decimals and Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.3: fractions as division; relate fractions and decimals"
+   }
+  ]
+ },
+ "g5.fraction-of-a-number": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-4/fraction-times-whole/\">multiply a fraction by a whole number</a>, and you know a <a href=\"/math/grade-5/fraction-as-division/\">fraction is a division</a>. Now find a fraction <i>of</i> a number, like $\\frac{2}{3}$ of 12."
+   },
+   {
+    "t": "key",
+    "html": "To find $\\frac{a}{b}$ of a number, divide it into $b$ equal parts and take $a$ of them. $\\frac{2}{3}$ of 12 is 2 groups of $\\frac{1}{3}$ of 12: $2 \\times 4 = 8$. This is the same as $\\frac{2}{3} \\times 12$."
+   },
+   {
+    "t": "why",
+    "html": "$\\frac{1}{3}$ of 12 means 12 split into 3 equal parts: $12 \\div 3 = 4$. Two of those parts are $2 \\times 4 = 8$. Multiplying first works too: $\\frac{2 \\times 12}{3} = \\frac{24}{3} = 8$, because 2 copies of 12 split into 3 parts gives the same amount."
+   },
+   {
+    "t": "viz",
+    "name": "tapediagram",
+    "opts": {
+     "model": "fraction",
+     "of": 12,
+     "n": 2,
+     "d": 3
+    },
+    "cap": "12 split into 3 equal parts. Two of the parts make $\\frac{2}{3}$ of 12."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A whole-number answer",
+    "q": "What is $\\frac{2}{3}$ of 12?",
+    "steps": [
+     "$\\frac{1}{3}$ of 12: $12 \\div 3 = 4$.",
+     "Two of those: $2 \\times 4 = 8$."
+    ],
+    "a": "$8$"
+   },
+   {
+    "t": "ex",
+    "title": "A story",
+    "q": "A class has 30 students. $\\frac{3}{5}$ of them ride the bus. How many ride the bus?",
+    "steps": [
+     "$\\frac{1}{5}$ of 30: $30 \\div 5 = 6$.",
+     "$\\frac{3}{5}$ of 30: $3 \\times 6 = 18$."
+    ],
+    "a": "18 students"
+   },
+   {
+    "t": "ex",
+    "title": "A fraction answer",
+    "q": "What is $\\frac{3}{4}$ of 10?",
+    "steps": [
+     "$\\frac{1}{4}$ of 10: $10 \\div 4 = 2\\frac{1}{2}$.",
+     "Three of those: $3 \\times 2\\frac{1}{2} = 7\\frac{1}{2}$. Or: $\\frac{3 \\times 10}{4} = \\frac{30}{4} = 7\\frac{1}{2}$."
+    ],
+    "a": "$7\\frac{1}{2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing by the numerator instead of the denominator, like finding $\\frac{2}{3}$ of 12 as $12 \\div 2 = 6$. The denominator says how many equal parts to make. Check: $\\frac{2}{3}$ is more than half, so the answer must be more than 6."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.2 Multiply and Divide Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.4a: interpret the product of a fraction and a whole number"
+   }
+  ]
+ },
+ "g5.multiply-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can find a <a href=\"/math/grade-5/fraction-of-a-number/\">fraction of a whole number</a>. A fraction of a fraction works the same way: $\\frac{2}{3} \\times \\frac{3}{4}$ means $\\frac{2}{3}$ of $\\frac{3}{4}$."
+   },
+   {
+    "t": "key",
+    "html": "Multiply the numerators and multiply the denominators: $\\frac{a}{b} \\times \\frac{c}{d} = \\frac{a \\times c}{b \\times d}$. Then simplify. No common denominator is needed."
+   },
+   {
+    "t": "why",
+    "html": "Shade $\\frac{3}{4}$ of a square with 4 columns. Then shade $\\frac{2}{3}$ of that part with 3 rows. The square is now cut into $3 \\times 4 = 12$ equal pieces, which is why the denominators multiply. The double-shaded part is $2 \\times 3 = 6$ of them, which is why the numerators multiply. So $\\frac{2}{3} \\times \\frac{3}{4} = \\frac{6}{12} = \\frac{1}{2}$."
+   },
+   {
+    "t": "viz",
+    "name": "g5-fracarea",
+    "opts": {
+     "a": "2/3",
+     "b": "3/4",
+     "start": "end"
+    },
+    "cap": "$\\frac{2}{3}$ of $\\frac{3}{4}$: the dark green overlap is 6 of 12 equal pieces. Press &ldquo;Back&rdquo; to build it again one step at a time."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Half of a half",
+    "q": "Find $\\frac{1}{2} \\times \\frac{1}{2}$.",
+    "steps": [
+     "Half of one half is a quarter of the whole.",
+     "$\\frac{1 \\times 1}{2 \\times 2} = \\frac{1}{4}$."
+    ],
+    "a": "$\\frac{1}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "Multiply and simplify",
+    "q": "Find $\\frac{2}{3} \\times \\frac{3}{4}$.",
+    "steps": [
+     "Numerators: $2 \\times 3 = 6$. Denominators: $3 \\times 4 = 12$.",
+     "$\\frac{6}{12} = \\frac{1}{2}$."
+    ],
+    "a": "$\\frac{1}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "A story",
+    "q": "There is $\\frac{3}{5}$ of a pan of lasagna left. Leo eats $\\frac{1}{2}$ of what is left. What part of the whole pan does he eat?",
+    "steps": [
+     "$\\frac{1}{2}$ of $\\frac{3}{5}$ is $\\frac{1}{2} \\times \\frac{3}{5}$.",
+     "$\\frac{1 \\times 3}{2 \\times 5} = \\frac{3}{10}$."
+    ],
+    "a": "$\\frac{3}{10}$ of the pan"
+   },
+   {
+    "t": "mistake",
+    "html": "Finding a common denominator first and keeping it: $\\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{2}$. That treats multiplying like adding. Check: half of a half must be smaller than a half."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.2 Multiply and Divide Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.4a: multiply a fraction by a fraction"
+   }
+  ]
+ },
+ "g5.fraction-side-area": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know <a href=\"/math/grade-4/area-perimeter-formulas/\">area = length × width</a> for whole numbers, and you can <a href=\"/math/grade-5/multiply-fractions/\">multiply fractions</a>. The formula still works when the sides are fractions, and tiling shows why."
+   },
+   {
+    "t": "key",
+    "html": "The area of a rectangle with fraction side lengths is still length × width. Tiling it with small rectangles that are $\\frac{1}{b}$ by $\\frac{1}{d}$ gives the same answer: count the tiles and multiply by the area of one tile."
+   },
+   {
+    "t": "why",
+    "html": "Cut a unit square into 4 columns and 3 rows. Each tile is $\\frac{1}{4}$ by $\\frac{1}{3}$, and 12 tiles fill the square, so each tile has area $\\frac{1}{12}$. A rectangle $\\frac{3}{4}$ long and $\\frac{2}{3}$ wide holds 3 tiles across and 2 down: $3 \\times 2 = 6$ tiles, an area of $\\frac{6}{12}$. That is exactly $\\frac{3}{4} \\times \\frac{2}{3}$."
+   },
+   {
+    "t": "viz",
+    "name": "g5-fracarea",
+    "opts": {
+     "a": "2/3",
+     "b": "3/4",
+     "tiles": true,
+     "unit": "ft"
+    },
+    "cap": "A rectangle $\\frac{3}{4}$ ft by $\\frac{2}{3}$ ft, tiled inside a 1-foot square: 6 tiles of $\\frac{1}{12}$ square foot."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Count the tiles",
+    "q": "Find the area of a rectangle $\\frac{3}{4}$ ft long and $\\frac{2}{3}$ ft wide.",
+    "steps": [
+     "Tiles $\\frac{1}{4}$ by $\\frac{1}{3}$ fit: 3 along the length and 2 along the width, so 6 tiles.",
+     "12 tiles make 1 square foot, so each is $\\frac{1}{12}$ square foot.",
+     "Area: $\\frac{6}{12} = \\frac{1}{2}$ square foot. Same as $\\frac{3}{4} \\times \\frac{2}{3}$."
+    ],
+    "a": "$\\frac{1}{2}$ square foot"
+   },
+   {
+    "t": "ex",
+    "title": "Sides longer than 1",
+    "q": "Find the area of a rectangle $\\frac{5}{3}$ m by $\\frac{3}{2}$ m.",
+    "steps": [
+     "Multiply: $\\frac{5}{3} \\times \\frac{3}{2} = \\frac{15}{6}$.",
+     "Simplify: $\\frac{15}{6} = \\frac{5}{2} = 2\\frac{1}{2}$.",
+     "Tiling check: tiles $\\frac{1}{3}$ by $\\frac{1}{2}$ have area $\\frac{1}{6}$, and 5 by 3 of them make 15."
+    ],
+    "a": "$2\\frac{1}{2}$ square meters"
+   },
+   {
+    "t": "viz",
+    "name": "g5-fracarea",
+    "opts": {
+     "a": "3/2",
+     "b": "5/3",
+     "tiles": true,
+     "unit": "m"
+    },
+    "cap": "$\\frac{5}{3}$ by $\\frac{3}{2}$ spreads over more than one unit square: 15 tiles of $\\frac{1}{6}$."
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting that a tile is smaller than a unit square and calling the area &ldquo;6 square feet&rdquo; because there are 6 tiles. Check: the rectangle fits inside one square foot, so its area must be less than 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 9.4 Use Properties of Rectangles, Triangles, and Trapezoids"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.4b: find the area of a rectangle with fractional side lengths by tiling"
+   }
+  ]
+ },
+ "g5.multiplication-as-scaling": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now that you can <a href=\"/math/grade-5/multiply-fractions/\">multiply fractions</a>, here is a way to predict the size of a product before you work it out. Think of multiplying as stretching or shrinking."
+   },
+   {
+    "t": "key",
+    "html": "Multiplying a number by a fraction less than 1 makes it smaller. Multiplying by a number greater than 1 makes it bigger. Multiplying by 1 (like $\\frac{4}{4}$) leaves it the same."
+   },
+   {
+    "t": "why",
+    "html": "$\\frac{3}{4} \\times 8$ means $\\frac{3}{4}$ of 8: only part of the 8, so less than 8. $\\frac{5}{4} \\times 8$ means all of 8 and another $\\frac{1}{4}$ of it, so more than 8. The factor tells you what share of the number you take."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 0,
+     "max": 12,
+     "step": 1,
+     "labels": "whole",
+     "points": [
+      {
+       "v": 6,
+       "label": "3/4 × 8",
+       "color": "blue"
+      },
+      {
+       "v": 8,
+       "label": "8",
+       "color": "gold"
+      },
+      {
+       "v": 10,
+       "label": "5/4 × 8",
+       "color": "green"
+      }
+     ]
+    },
+    "cap": "$\\frac{3}{4} \\times 8 = 6$ lands left of 8; $\\frac{5}{4} \\times 8 = 10$ lands right of it."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Smaller or bigger?",
+    "q": "Without multiplying, is $\\frac{7}{8} \\times 25$ more or less than 25?",
+    "steps": [
+     "$\\frac{7}{8}$ is less than 1.",
+     "So the product is only part of 25."
+    ],
+    "a": "less than 25"
+   },
+   {
+    "t": "ex",
+    "title": "Compare two products",
+    "q": "Which is greater: $\\frac{2}{3} \\times 9$ or $1\\frac{1}{3} \\times 9$?",
+    "steps": [
+     "$\\frac{2}{3}$ is less than 1, so the first product is less than 9.",
+     "$1\\frac{1}{3}$ is more than 1, so the second product is more than 9."
+    ],
+    "a": "$1\\frac{1}{3} \\times 9$"
+   },
+   {
+    "t": "mistake",
+    "html": "Believing that multiplying always makes a number bigger. That is true for whole numbers greater than 1, but not for fractions less than 1: $\\frac{1}{2} \\times 10 = 5$. Check by asking: is the factor more or less than 1?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.2 Multiply and Divide Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.5: interpret multiplication as scaling (resizing)"
+   }
+  ]
+ },
+ "g5.multiply-mixed-numbers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-5/multiply-fractions/\">multiply fractions</a> and rename <a href=\"/math/grade-4/mixed-numbers/\">mixed numbers as fractions</a>. Multiplying mixed numbers uses both skills."
+   },
+   {
+    "t": "key",
+    "html": "Rename each mixed number as a fraction greater than 1, multiply the numerators and the denominators, then simplify and write the answer as a mixed number."
+   },
+   {
+    "t": "why",
+    "html": "$2\\frac{1}{2} \\times 2\\frac{1}{2}$ is the area of a square with sides $2\\frac{1}{2}$. Splitting each side into $2 + \\frac{1}{2}$ gives four parts: $2 \\times 2 = 4$, two strips of $2 \\times \\frac{1}{2} = 1$, and a corner of $\\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}$. Total $6\\frac{1}{4}$. Renaming as $\\frac{5}{2} \\times \\frac{5}{2} = \\frac{25}{4}$ gives the same, with less work."
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": [
+      "2",
+      "1/2"
+     ],
+     "b": [
+      "2",
+      "1/2"
+     ]
+    },
+    "cap": "$2\\frac{1}{2} \\times 2\\frac{1}{2}$ as an area. The two strips in the middle are what the common mistake leaves out."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A whole number times a mixed number",
+    "q": "Find $3 \\times 2\\frac{1}{4}$.",
+    "steps": [
+     "$2\\frac{1}{4} = \\frac{9}{4}$.",
+     "$3 \\times \\frac{9}{4} = \\frac{27}{4}$.",
+     "$\\frac{27}{4} = 6\\frac{3}{4}$."
+    ],
+    "a": "$6\\frac{3}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "Two mixed numbers",
+    "q": "Find $1\\frac{1}{2} \\times 2\\frac{2}{3}$.",
+    "steps": [
+     "$1\\frac{1}{2} = \\frac{3}{2}$ and $2\\frac{2}{3} = \\frac{8}{3}$.",
+     "$\\frac{3}{2} \\times \\frac{8}{3} = \\frac{24}{6}$.",
+     "$\\frac{24}{6} = 4$."
+    ],
+    "a": "$4$"
+   },
+   {
+    "t": "mistake",
+    "html": "Multiplying the whole numbers and the fractions separately: $2\\frac{1}{2} \\times 2\\frac{1}{2} = 4\\frac{1}{4}$. The area model shows the two middle strips worth 1 each are missing. Check with an estimate: $2\\frac{1}{2} \\times 2\\frac{1}{2}$ is more than $2 \\times 3 = 6$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.3 Multiply and Divide Mixed Numbers and Complex Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.6: solve real-world problems involving multiplication of fractions and mixed numbers"
+   }
+  ]
+ },
+ "g5.unit-fraction-divided-by-whole": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can <a href=\"/math/grade-5/multiply-fractions/\">multiply fractions</a>, and division is fair sharing. What happens when the thing being shared is itself a fraction, like $\\frac{1}{3}$ of a pan of cornbread?"
+   },
+   {
+    "t": "key",
+    "html": "$\\frac{1}{a} \\div b = \\frac{1}{a \\times b}$. Sharing $\\frac{1}{3}$ among 4 people gives each $\\frac{1}{12}$. Check with multiplication: $\\frac{1}{12} \\times 4 = \\frac{1}{3}$."
+   },
+   {
+    "t": "why",
+    "html": "Cut the $\\frac{1}{3}$ into 4 equal pieces. If you did that to every third of the pan, the whole pan would be cut into $3 \\times 4 = 12$ pieces of the same size. So each share is $\\frac{1}{12}$ of the pan. Dividing by 4 is the same as taking $\\frac{1}{4}$ of it: $\\frac{1}{4} \\times \\frac{1}{3} = \\frac{1}{12}$."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "1/3",
+      "4/12",
+      "1/12"
+     ]
+    },
+    "cap": "$\\frac{1}{3}$ of the bar is the same as 4 twelfths. One of those 4 equal shares is $\\frac{1}{12}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Share a third",
+    "q": "Find $\\frac{1}{3} \\div 4$.",
+    "steps": [
+     "Cut $\\frac{1}{3}$ into 4 equal parts.",
+     "The whole would have $3 \\times 4 = 12$ such parts, so each is $\\frac{1}{12}$.",
+     "Check: $\\frac{1}{12} \\times 4 = \\frac{4}{12} = \\frac{1}{3}$."
+    ],
+    "a": "$\\frac{1}{12}$"
+   },
+   {
+    "t": "ex",
+    "title": "A story",
+    "q": "Five friends share $\\frac{1}{2}$ pound of trail mix equally. How much does each get?",
+    "steps": [
+     "$\\frac{1}{2} \\div 5$.",
+     "$\\frac{1}{2 \\times 5} = \\frac{1}{10}$.",
+     "Check: $5 \\times \\frac{1}{10} = \\frac{1}{2}$."
+    ],
+    "a": "$\\frac{1}{10}$ pound"
+   },
+   {
+    "t": "mistake",
+    "html": "Answering with a bigger fraction, such as $\\frac{1}{3} \\div 4 = \\frac{4}{3}$. Sharing makes each part smaller than what was shared. Check by multiplying back: $\\frac{4}{3} \\times 4$ is far more than $\\frac{1}{3}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.2 Multiply and Divide Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.7a: divide a unit fraction by a whole number"
+   }
+  ]
+ },
+ "g5.whole-divided-by-unit-fraction": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have <a href=\"/math/grade-5/unit-fraction-divided-by-whole/\">shared a unit fraction among people</a>. Now turn it around: how many pieces of size $\\frac{1}{2}$ fit in 4 wholes? That is $4 \\div \\frac{1}{2}$."
+   },
+   {
+    "t": "key",
+    "html": "$n \\div \\frac{1}{b} = n \\times b$. Each whole holds $b$ pieces of size $\\frac{1}{b}$, so $n$ wholes hold $n \\times b$ of them. $4 \\div \\frac{1}{2} = 8$."
+   },
+   {
+    "t": "why",
+    "html": "Division can ask &ldquo;how many groups of this size fit?&rdquo;: $12 \\div 3$ asks how many 3s fit in 12. In the same way, $4 \\div \\frac{1}{2}$ asks how many halves fit in 4. There are 2 halves in each whole, so there are 8 in 4. Check: $8 \\times \\frac{1}{2} = 4$."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 0,
+     "max": 4,
+     "step": 1,
+     "sub": 2,
+     "labels": "mixed",
+     "hops": [
+      {
+       "from": 0,
+       "by": "1/2",
+       "n": 8
+      }
+     ],
+     "points": [
+      {
+       "v": 4,
+       "label": "4"
+      }
+     ]
+    },
+    "cap": "Jumps of $\\frac{1}{2}$ from 0 to 4: eight jumps, so $4 \\div \\frac{1}{2} = 8$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Halves in 4",
+    "q": "Find $4 \\div \\frac{1}{2}$.",
+    "steps": [
+     "How many halves fit in 4?",
+     "2 halves in each whole: $4 \\times 2 = 8$.",
+     "Check: $8 \\times \\frac{1}{2} = 4$."
+    ],
+    "a": "$8$"
+   },
+   {
+    "t": "ex",
+    "title": "Servings",
+    "q": "How many $\\frac{1}{3}$-cup servings are in 5 cups of rice?",
+    "steps": [
+     "$5 \\div \\frac{1}{3}$: how many thirds in 5?",
+     "3 thirds in each cup: $5 \\times 3 = 15$."
+    ],
+    "a": "15 servings"
+   },
+   {
+    "t": "mistake",
+    "html": "Believing division always makes a number smaller, so $4 \\div \\frac{1}{2} = 2$. That answer is $4 \\div 2$, splitting 4 into 2 groups. Dividing by a number less than 1 asks how many small pieces fit, and the answer is bigger. Check: $2 \\times \\frac{1}{2} = 1$, not 4."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.2 Multiply and Divide Fractions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.7b: divide a whole number by a unit fraction"
+   }
+  ]
+ },
+ "g5.fraction-division-stories": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can divide <a href=\"/math/grade-5/unit-fraction-divided-by-whole/\">a unit fraction by a whole number</a> and <a href=\"/math/grade-5/whole-divided-by-unit-fraction/\">a whole number by a unit fraction</a>. In a story, the hard part is deciding which one it is."
+   },
+   {
+    "t": "key",
+    "html": "Ask what the story does. If a fraction is <b>shared</b> into equal parts, divide the fraction by the number of parts: $\\frac{1}{2} \\div 4$. If you <b>measure</b> how many pieces of a fraction size fit in an amount, divide the amount by the fraction: $4 \\div \\frac{1}{2}$."
+   },
+   {
+    "t": "why",
+    "html": "Both are division, but they answer different questions. Sharing $\\frac{1}{2}$ of a pizza among 4 friends gives each a small piece, $\\frac{1}{8}$. Measuring how many $\\frac{1}{2}$-cup scoops are in 4 cups gives a count, 8. Swapping the numbers swaps the question, so the order matters."
+   },
+   {
+    "t": "viz",
+    "name": "fractionbar",
+    "opts": {
+     "bars": [
+      "1/2",
+      "4/8"
+     ]
+    },
+    "cap": "Sharing: $\\frac{1}{2}$ split into 4 equal parts. Each part is $\\frac{1}{8}$."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 0,
+     "max": 4,
+     "step": 1,
+     "sub": 2,
+     "labels": "mixed",
+     "hops": [
+      {
+       "from": 0,
+       "by": "1/2",
+       "n": 8
+      }
+     ],
+     "points": [
+      {
+       "v": 4,
+       "label": "4"
+      }
+     ]
+    },
+    "cap": "Measuring: how many $\\frac{1}{2}$s fit in 4? Eight."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Sharing",
+    "q": "Ana has $\\frac{1}{3}$ gallon of paint. She pours it equally into 2 cans. How much is in each can?",
+    "steps": [
+     "A fraction is shared into 2 parts: $\\frac{1}{3} \\div 2$.",
+     "$\\frac{1}{3 \\times 2} = \\frac{1}{6}$.",
+     "Check: $2 \\times \\frac{1}{6} = \\frac{1}{3}$."
+    ],
+    "a": "$\\frac{1}{6}$ gallon"
+   },
+   {
+    "t": "ex",
+    "title": "Measuring",
+    "q": "Ben has 3 yards of fabric. Each bandana takes $\\frac{1}{4}$ yard. How many bandanas can he make?",
+    "steps": [
+     "How many $\\frac{1}{4}$s fit in 3? $3 \\div \\frac{1}{4}$.",
+     "4 quarters in each yard: $3 \\times 4 = 12$.",
+     "Check: $12 \\times \\frac{1}{4} = 3$."
+    ],
+    "a": "12 bandanas"
+   },
+   {
+    "t": "mistake",
+    "html": "Writing the division in the wrong order, like $4 \\div \\frac{1}{2}$ for &ldquo;$\\frac{1}{2}$ of a pizza shared by 4.&rdquo; Check with sense: each friend should get less than $\\frac{1}{2}$ of the pizza, not 8 pizzas."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 4.2 Multiply and Divide Fractions (divide fractions)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.NF.B.7c: solve real-world problems involving division of unit fractions and whole numbers"
+   }
+  ]
+ },
+ "g5.convert-units-multistep": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 4 you <a href=\"/math/grade-4/convert-units/\">converted larger units to smaller ones</a>, like feet to inches. Metric units are built on <a href=\"/math/grade-5/multiply-divide-powers-of-ten/\">powers of ten</a>, so converting them is a matter of moving digits."
+   },
+   {
+    "t": "key",
+    "html": "Going from a bigger unit to a smaller one, multiply: there will be more of the small units. Going from a smaller unit to a bigger one, divide. In a problem with two units, change to one unit before you calculate."
+   },
+   {
+    "t": "why",
+    "html": "One meter is 100 centimeters, so 3 meters is 3 groups of 100 centimeters: $3 \\times 100 = 300$. Going back, 300 centimeters holds 100 centimeters 3 times: $300 \\div 100 = 3$. The amount never changes; only the size of the unit you count with changes."
+   },
+   {
+    "t": "viz",
+    "name": "ratiotable",
+    "opts": {
+     "a": 1,
+     "b": 12,
+     "names": [
+      "feet",
+      "inches"
+     ],
+     "max": 6,
+     "task": {
+      "a": 5
+     }
+    },
+    "cap": "Every foot is 12 inches, so feet and inches grow together. Move the marker to 5 feet to see how many inches that is."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Metric",
+     "Customary"
+    ],
+    "rows": [
+     [
+      "1 km = 1,000 m",
+      "1 ft = 12 in"
+     ],
+     [
+      "1 m = 100 cm",
+      "1 yd = 3 ft"
+     ],
+     [
+      "1 cm = 10 mm",
+      "1 lb = 16 oz"
+     ],
+     [
+      "1 kg = 1,000 g",
+      "1 gal = 4 qt; 1 qt = 2 pt; 1 pt = 2 c"
+     ],
+     [
+      "1 L = 1,000 mL",
+      "1 hr = 60 min; 1 min = 60 s"
+     ]
+    ],
+    "cap": "Facts to convert with"
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Metric with a decimal",
+    "q": "How many meters is $2.5$ km?",
+    "steps": [
+     "Kilometers are bigger, so multiply by 1,000.",
+     "$2.5 \\times 1{,}000 = 2{,}500$: each digit moves three places left."
+    ],
+    "a": "$2{,}500$ m"
+   },
+   {
+    "t": "ex",
+    "title": "Two steps",
+    "q": "A 3 m ribbon is cut into pieces 25 cm long. How many pieces?",
+    "steps": [
+     "Use one unit: $3$ m $= 300$ cm.",
+     "Divide: $300 \\div 25 = 12$."
+    ],
+    "a": "12 pieces"
+   },
+   {
+    "t": "ex",
+    "title": "Into a bigger unit",
+    "q": "Six packages each weigh 12 ounces. How many pounds is that?",
+    "steps": [
+     "Total: $6 \\times 12 = 72$ ounces.",
+     "16 ounces make a pound: $72 \\div 16 = 4\\frac{8}{16} = 4\\frac{1}{2}$."
+    ],
+    "a": "$4\\frac{1}{2}$ pounds"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing units, such as dividing 3 (meters) by 25 (centimeters). The numbers must count the same unit first. Check: a 3-meter ribbon is long, so there should be quite a few 25-centimeter pieces, not a fraction of one."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 7.5 Systems of Measurement"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.MD.A.1: convert among different-sized standard measurement units within a given system"
+   }
+  ]
+ },
+ "g5.line-plots-fraction-operations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 4 you made <a href=\"/math/grade-4/line-plots-fraction-data/\">line plots of measurements in eighths</a>. Now that you can <a href=\"/math/grade-5/add-unlike-fractions/\">add fractions with unlike denominators</a>, a line plot can answer questions like &ldquo;how much in all?&rdquo; and &ldquo;how much would each get if it were shared evenly?&rdquo;"
+   },
+   {
+    "t": "key",
+    "html": "Each X is one measurement. To find a total, multiply each value by the number of X marks above it and add. To share the total equally, divide it by the number of measurements."
+   },
+   {
+    "t": "why",
+    "html": "Three X marks above $\\frac{3}{8}$ stand for $\\frac{3}{8} + \\frac{3}{8} + \\frac{3}{8}$, which is $3 \\times \\frac{3}{8} = \\frac{9}{8}$. Adding column by column is just grouping equal values. Sharing equally means pouring everything together and splitting it: total $\\div$ number of beakers."
+   },
+   {
+    "t": "viz",
+    "name": "g5-lineplot",
+    "opts": {
+     "data": [
+      "1/8",
+      "1/4",
+      "1/4",
+      "3/8",
+      "3/8",
+      "3/8",
+      "1/2",
+      "3/4"
+     ],
+     "label": "Water in each beaker (liters)"
+    },
+    "cap": "Eight beakers of water. Tap a column to see its sum, or press &ldquo;Find the total.&rdquo;"
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The total",
+    "q": "Use the line plot above. How much water is there in all?",
+    "steps": [
+     "Column by column: $\\frac{1}{8} + 2 \\times \\frac{1}{4} + 3 \\times \\frac{3}{8} + \\frac{1}{2} + \\frac{3}{4}$.",
+     "In eighths: $\\frac{1}{8} + \\frac{4}{8} + \\frac{9}{8} + \\frac{4}{8} + \\frac{6}{8} = \\frac{24}{8}$.",
+     "$\\frac{24}{8} = 3$."
+    ],
+    "a": "$3$ liters"
+   },
+   {
+    "t": "ex",
+    "title": "Share equally",
+    "q": "If all of that water were poured back into the 8 beakers equally, how much would each hold?",
+    "steps": [
+     "Divide the total by the number of beakers: $3 \\div 8$.",
+     "A fraction is a division: $3 \\div 8 = \\frac{3}{8}$."
+    ],
+    "a": "$\\frac{3}{8}$ liter"
+   },
+   {
+    "t": "ex",
+    "title": "Greatest minus least",
+    "q": "How much more is in the fullest beaker than the emptiest?",
+    "steps": [
+     "Greatest: $\\frac{3}{4}$. Least: $\\frac{1}{8}$.",
+     "$\\frac{3}{4} - \\frac{1}{8} = \\frac{6}{8} - \\frac{1}{8} = \\frac{5}{8}$."
+    ],
+    "a": "$\\frac{5}{8}$ liter"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding only the values on the scale and ignoring how many X marks are stacked above each. Three marks at $\\frac{3}{8}$ count three times. Check: count the X marks first; the total has to use every one."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, 5.MD.B.2: make a line plot of measurements in fractions of a unit and use fraction operations to solve problems"
+   }
+  ]
+ },
+ "g5.volume-unit-cubes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 3 you measured <a href=\"/math/grade-3/area-unit-squares/\">area with unit squares</a>: how many squares cover a flat shape. <b>Volume</b> is the same idea one step up: how many cubes fill a solid."
+   },
+   {
+    "t": "key",
+    "html": "A unit cube is 1 unit long, 1 unit wide and 1 unit high; its volume is 1 cubic unit. The volume of a solid is the number of unit cubes that fill it, with no gaps and no overlaps."
+   },
+   {
+    "t": "why",
+    "html": "Volume measures the space inside. Cubes stack and pack with no gaps, so counting them measures space the way counting squares measures flat area. Packing a box layer by layer is a quick way to count: every layer holds the same number of cubes."
+   },
+   {
+    "t": "viz",
+    "name": "volume",
+    "opts": {
+     "l": 4,
+     "w": 3,
+     "h": 2,
+     "fill": 0
+    },
+    "cap": "An empty box, 4 by 3 by 2. Press &ldquo;Add a layer&rdquo; twice, or &ldquo;Fill it.&rdquo; Drag to turn the box."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Count by layers",
+    "q": "A box is filled with unit cubes: 4 cubes long, 3 cubes wide and 2 cubes high. What is its volume?",
+    "steps": [
+     "One layer: 4 rows of 3, which is $4 \\times 3 = 12$ cubes.",
+     "There are 2 layers: $12 + 12 = 24$ cubes."
+    ],
+    "a": "24 cubic units"
+   },
+   {
+    "t": "ex",
+    "title": "Cubes you cannot see",
+    "q": "A cube-shaped box is 3 cubes on every edge. How many unit cubes fill it?",
+    "steps": [
+     "One layer: $3 \\times 3 = 9$ cubes.",
+     "3 layers: $9 \\times 3 = 27$ cubes. From one corner you can see only 19 of them; the other 8 are hidden behind and inside."
+    ],
+    "a": "27 cubic units"
+   },
+   {
+    "t": "mistake",
+    "html": "Counting only the cubes you can see on the outside of a picture. A $3 \\times 3 \\times 3$ cube shows 19 cubes from one corner, but holds 27. Check: count by layers, cubes in one layer times the number of layers."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 9.6 Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.MD.C.3: recognize volume as an attribute of solid figures; a unit cube has one cubic unit of volume"
+   }
+  ]
+ },
+ "g5.volume-of-prism": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can find <a href=\"/math/grade-5/volume-unit-cubes/\">volume by counting unit cubes in layers</a>. For a rectangular prism (a box shape), the counting turns into a formula."
+   },
+   {
+    "t": "key",
+    "html": "$V = l \\times w \\times h$: length times width gives the cubes in one layer, and times the height counts the layers. Volume is measured in cubic units, such as cubic centimeters ($\\text{cm}^{3}$)."
+   },
+   {
+    "t": "why",
+    "html": "A box 5 cm long and 3 cm wide holds 5 rows of 3 one-centimeter cubes in its bottom layer: $5 \\times 3 = 15$. If it is 4 cm high, there are 4 layers: $15 \\times 4 = 60$ cubes. Each cube is 1 cubic centimeter, so the volume is 60 cubic centimeters."
+   },
+   {
+    "t": "viz",
+    "name": "volume",
+    "opts": {
+     "l": 5,
+     "w": 3,
+     "h": 4
+    },
+    "cap": "Change the length, width and height with the sliders and watch $l \\times w \\times h$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A box",
+    "q": "Find the volume of a box 5 cm long, 3 cm wide and 4 cm high.",
+    "steps": [
+     "$V = 5 \\times 3 \\times 4$.",
+     "$5 \\times 3 = 15$, and $15 \\times 4 = 60$."
+    ],
+    "a": "60 cubic centimeters"
+   },
+   {
+    "t": "ex",
+    "title": "A cube",
+    "q": "A cube has edges 6 inches long. What is its volume?",
+    "steps": [
+     "All three edges are 6.",
+     "$6 \\times 6 \\times 6 = 36 \\times 6 = 216$."
+    ],
+    "a": "216 cubic inches"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the three edges ($5 + 3 + 4 = 12$) or writing square units. Adding edges does not count cubes, and square units measure flat area. Check: picture the cubes in one layer, then count the layers."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 9.6 Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.MD.C.5b: apply V = l × w × h to find volumes of right rectangular prisms"
+   }
+  ]
+ },
+ "g5.volume-base-times-height": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know <a href=\"/math/grade-5/volume-of-prism/\">$V = l \times w \times h$</a>. Grouping the first two factors gives another useful way to see the same formula."
+   },
+   {
+    "t": "key",
+    "html": "$V = B \\times h$, where $B$ is the area of the base and $h$ is the height. The base area is the number of cubes in one layer; the height is the number of layers."
+   },
+   {
+    "t": "why",
+    "html": "$l \\times w$ is the area of the bottom rectangle, and it is also the number of unit cubes that sit on it in one layer. Stacking $h$ such layers gives $B \\times h$ cubes. Multiplying in a different order, $(l \\times w) \\times h = l \\times (w \\times h)$, gives the same volume, so you can stand the box on any face."
+   },
+   {
+    "t": "viz",
+    "name": "volume",
+    "opts": {
+     "l": 5,
+     "w": 3,
+     "h": 4,
+     "layers": true
+    },
+    "cap": "Each colored layer is the base, $5 \\times 3 = 15$ cubes. Four layers: $15 \\times 4 = 60$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Base area given",
+    "q": "A prism has a base area of 24 square cm and a height of 5 cm. Find its volume.",
+    "steps": [
+     "$V = B \\times h = 24 \\times 5$.",
+     "$24 \\times 5 = 120$."
+    ],
+    "a": "120 cubic centimeters"
+   },
+   {
+    "t": "ex",
+    "title": "Find the height",
+    "q": "A box has a volume of 120 cubic inches and a base area of 20 square inches. How tall is it?",
+    "steps": [
+     "$V = B \\times h$, so $120 = 20 \\times h$.",
+     "$120 \\div 20 = 6$: there are 6 layers of 20 cubes."
+    ],
+    "a": "6 inches"
+   },
+   {
+    "t": "mistake",
+    "html": "Multiplying the base area by another side of the base instead of the height. The base area already uses the length and width; the third factor must be the height, the number of layers. Check: name what each number measures before you multiply."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 9.6 Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.MD.C.5a: show that the volume is the same as the area of the base times the height"
+   }
+  ]
+ },
+ "g5.composite-volume": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can find the <a href=\"/math/grade-5/volume-base-times-height/\">volume of a rectangular prism</a>. Many solids, like steps or an L-shaped building, are two or more prisms joined together."
+   },
+   {
+    "t": "key",
+    "html": "Split the solid into rectangular prisms that do not overlap. Find each volume and add. Volume is additive: the whole holds as many cubes as its parts together."
+   },
+   {
+    "t": "why",
+    "html": "Every unit cube in the solid belongs to exactly one of the parts, so adding the parts counts each cube once. If the parts overlapped, the shared cubes would be counted twice, which is why the split must have no overlap. Sometimes you need to find a missing measure by subtracting, such as the height of the bottom part."
+   },
+   {
+    "t": "viz",
+    "name": "g5-prisms",
+    "opts": {
+     "boxes": [
+      {
+       "at": [
+        0,
+        0,
+        0
+       ],
+       "size": [
+        6,
+        3,
+        2
+       ],
+       "show": "lwh"
+      },
+      {
+       "at": [
+        0,
+        0,
+        2
+       ],
+       "size": [
+        3,
+        3,
+        3
+       ],
+       "show": "Lh"
+      }
+     ],
+     "unit": "cm",
+     "sums": true
+    },
+    "cap": "A step shape: a $6 \\times 3 \\times 2$ prism with a $3 \\times 3 \\times 3$ prism on top. Press &ldquo;Pull apart&rdquo; to see the two parts."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two stacked prisms",
+    "q": "Find the volume of the step shape above.",
+    "steps": [
+     "Bottom: $6 \\times 3 \\times 2 = 36$ cubic cm.",
+     "Top: $3 \\times 3 \\times 3 = 27$ cubic cm.",
+     "Total: $36 + 27 = 63$ cubic cm."
+    ],
+    "a": "63 cubic centimeters"
+   },
+   {
+    "t": "ex",
+    "title": "Find a missing height first",
+    "q": "A solid is 5 m tall. Its top part is a $2 \\times 4 \\times 3$ prism (3 m tall), sitting on a bottom part that is 6 m long and 4 m wide. Find the volume.",
+    "steps": [
+     "The bottom part's height is $5 - 3 = 2$ m.",
+     "Bottom: $6 \\times 4 \\times 2 = 48$. Top: $2 \\times 4 \\times 3 = 24$.",
+     "Total: $48 + 24 = 72$."
+    ],
+    "a": "72 cubic meters"
+   },
+   {
+    "t": "mistake",
+    "html": "Counting a shared part twice, such as using the full height of 5 m for the bottom prism in the second example. Then the top part's cubes are counted again. Check: make sure no cube belongs to both parts. The heights of the stacked parts must add to the whole height."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 9.6 Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.MD.C.5c: find volumes of solids made of two non-overlapping right rectangular prisms"
+   }
+  ]
+ },
+ "g5.volume-word-problems": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can find volumes of <a href=\"/math/grade-5/composite-volume/\">single and combined prisms</a>. In word problems you also work backward to a missing edge, compare containers, and decide which unit makes sense."
+   },
+   {
+    "t": "key",
+    "html": "Use $V = l \\times w \\times h$ forward to find a volume, or backward to find a missing edge: divide the volume by the area of the base. Give volumes in cubic units."
+   },
+   {
+    "t": "why",
+    "html": "If a box holds 120 cubes and its base is $6 \\times 4 = 24$ cubes, then the number of layers is $120 \\div 24 = 5$. Dividing undoes multiplying. Units tell you what you measured: square units for a flat surface, cubic units for the space inside."
+   },
+   {
+    "t": "viz",
+    "name": "volume",
+    "opts": {
+     "l": 2,
+     "w": 2,
+     "h": 2,
+     "task": 24
+    },
+    "cap": "Build a box with a volume of 24 cubic units. There is more than one way; try another."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A missing edge",
+    "q": "A box has a volume of 120 cubic inches. It is 6 inches long and 4 inches wide. How tall is it?",
+    "steps": [
+     "Base area: $6 \\times 4 = 24$ square inches.",
+     "Height: $120 \\div 24 = 5$.",
+     "Check: $6 \\times 4 \\times 5 = 120$."
+    ],
+    "a": "5 inches"
+   },
+   {
+    "t": "ex",
+    "title": "Compare two boxes",
+    "q": "Box A is 5 in by 4 in by 3 in. Box B is 6 in by 3 in by 3 in. Which holds more, and by how much?",
+    "steps": [
+     "A: $5 \\times 4 \\times 3 = 60$ cubic inches.",
+     "B: $6 \\times 3 \\times 3 = 54$ cubic inches.",
+     "$60 - 54 = 6$."
+    ],
+    "a": "Box A, by 6 cubic inches"
+   },
+   {
+    "t": "ex",
+    "title": "Bigger cubes",
+    "q": "How many 2-cm cubes fit in a box 6 cm by 4 cm by 4 cm?",
+    "steps": [
+     "Along each edge: $6 \\div 2 = 3$, $4 \\div 2 = 2$, $4 \\div 2 = 2$.",
+     "$3 \\times 2 \\times 2 = 12$ cubes."
+    ],
+    "a": "12 cubes"
+   },
+   {
+    "t": "mistake",
+    "html": "Giving square units for a box's capacity, such as &ldquo;45,000 square centimeters&rdquo; for a fish tank. Capacity is the space inside, so it is counted in cubes. Check the unit: three lengths multiplied give cubic units."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 9.6 Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.MD.C.5b: solve real-world problems involving volume"
+   }
+  ]
+ },
+ "g5.coordinate-plane": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have placed <a href=\"/math/grade-3/fractions-number-line/\">numbers on a number line</a>. Put two number lines together, one across and one up, crossing at 0, and every point on a flat grid gets its own address. That is the <b>coordinate plane</b>."
+   },
+   {
+    "t": "key",
+    "html": "An ordered pair $(x, y)$ tells you how to reach a point from the origin $(0, 0)$: go $x$ units across along the x-axis, then $y$ units up. The order matters: $(2, 5)$ and $(5, 2)$ are different points."
+   },
+   {
+    "t": "why",
+    "html": "One number line can only describe positions along a line. A flat grid needs two directions, so a point needs two numbers. Everyone agrees to give the across number first and the up number second, so an ordered pair means the same point to everyone."
+   },
+   {
+    "t": "viz",
+    "name": "g5-grid",
+    "opts": {
+     "xmax": 8,
+     "ymax": 8,
+     "drag": [
+      0,
+      0
+     ],
+     "task": {
+      "x": 2,
+      "y": 5
+     }
+    },
+    "cap": "Drag the red point (or use the arrow keys) to $(2, 5)$. Press &ldquo;Show the path&rdquo; to see the trip: across first, then up."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Plot a point",
+    "q": "Plot $(4, 3)$.",
+    "steps": [
+     "Start at the origin $(0, 0)$.",
+     "The first number is 4: go 4 units right along the x-axis.",
+     "The second number is 3: go 3 units up. Mark the point."
+    ],
+    "a": "the point 4 across and 3 up"
+   },
+   {
+    "t": "ex",
+    "title": "Read a point",
+    "q": "A point is 6 units right of the origin and 1 unit up. What are its coordinates?",
+    "steps": [
+     "Across comes first: 6.",
+     "Up comes second: 1."
+    ],
+    "a": "$(6, 1)$"
+   },
+   {
+    "t": "viz",
+    "name": "g5-grid",
+    "opts": {
+     "xmax": 8,
+     "ymax": 8,
+     "points": [
+      {
+       "x": 2,
+       "y": 5,
+       "label": "A"
+      },
+      {
+       "x": 5,
+       "y": 2,
+       "label": "B",
+       "color": "orange"
+      }
+     ],
+     "coords": true,
+     "walk": true
+    },
+    "cap": "$A = (2, 5)$ and $B = (5, 2)$ use the same numbers in a different order, so they are different points."
+   },
+   {
+    "t": "mistake",
+    "html": "Swapping the coordinates and plotting $(2, 5)$ at $(5, 2)$. Remember &ldquo;across, then up,&rdquo; like walking along a hallway before taking the stairs. Check: the first number should match the x-axis below the point."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 11.1 Use the Rectangular Coordinate System"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.G.A.1: use a pair of perpendicular number lines to define a coordinate system"
+   }
+  ]
+ },
+ "g5.graph-real-world-points": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can plot and read points on the <a href=\"/math/grade-5/coordinate-plane/\">coordinate plane</a>. When the axes measure real things, like hours and dollars, each point tells a small story."
+   },
+   {
+    "t": "key",
+    "html": "Each axis has a name and a scale. A point $(x, y)$ pairs one value from the across axis with one value from the up axis. To read the story, say both values with their units."
+   },
+   {
+    "t": "why",
+    "html": "If you earn \\$8 an hour, then 1 hour pairs with \\$8, 2 hours with \\$16, and so on. Each pair becomes a point: $(1, 8), (2, 16), (3, 24)$. The graph shows all the pairs at once, so you can read values, spot the pattern and predict the next point."
+   },
+   {
+    "t": "viz",
+    "name": "g5-grid",
+    "opts": {
+     "xmax": 8,
+     "ymax": 64,
+     "ystep": 8,
+     "xlabel": "Hours worked",
+     "ylabel": "Dollars earned",
+     "points": [
+      [
+       1,
+       8
+      ],
+      [
+       2,
+       16
+      ],
+      [
+       3,
+       24
+      ],
+      [
+       4,
+       32
+      ],
+      [
+       5,
+       40
+      ]
+     ],
+     "line": true
+    },
+    "cap": "Earnings at \\$8 an hour. The up axis counts by 8s."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Read a value",
+    "q": "Use the graph. How much is earned in 4 hours?",
+    "steps": [
+     "Find 4 on the across axis (hours).",
+     "Go up to the point and read left: 32."
+    ],
+    "a": "\\$32"
+   },
+   {
+    "t": "ex",
+    "title": "What a point means",
+    "q": "What does the point $(3, 24)$ mean?",
+    "steps": [
+     "The first number is on the hours axis: 3 hours.",
+     "The second number is on the dollars axis: \\$24."
+    ],
+    "a": "Working 3 hours earns \\$24."
+   },
+   {
+    "t": "ex",
+    "title": "Predict",
+    "q": "If the pattern continues, how much is earned in 7 hours?",
+    "steps": [
+     "Each hour adds \\$8.",
+     "From $(5, 40)$: $40 + 8 + 8 = 56$."
+    ],
+    "a": "\\$56"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading the scale as 1, 2, 3 when it counts by 8s, or swapping which number goes with which axis. Check the axis names and the step between grid lines before you read a value."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, 11.1 Use the Rectangular Coordinate System"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, 5.G.A.2: represent real-world problems by graphing points in the first quadrant"
+   }
+  ]
+ },
+ "g5.two-patterns": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 4 you made <a href=\"/math/grade-4/number-patterns/\">patterns from a rule</a>, and you can <a href=\"/math/grade-5/graph-real-world-points/\">graph pairs of numbers</a>. Now make two patterns side by side and compare them."
+   },
+   {
+    "t": "key",
+    "html": "Generate both patterns from their rules. Pair up the terms that are in the same position to make ordered pairs. Then look for a relationship: often each term of one pattern is a fixed number of times the matching term of the other."
+   },
+   {
+    "t": "why",
+    "html": "Pattern A adds 3 each time and pattern B adds 6. After any number of steps, B has added twice as much as A, so each term of B is twice the matching term of A. Graphing the pairs $(3, 6), (6, 12), (9, 18)$ shows the relationship as points on a straight line."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Step",
+     "0",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    "rows": [
+     [
+      "Pattern A (add 3)",
+      "0",
+      "3",
+      "6",
+      "9",
+      "12"
+     ],
+     [
+      "Pattern B (add 6)",
+      "0",
+      "6",
+      "12",
+      "18",
+      "24"
+     ]
+    ],
+    "cap": "Two patterns that start at 0. Each term of B is 2 times the term of A."
+   },
+   {
+    "t": "viz",
+    "name": "g5-grid",
+    "opts": {
+     "xmax": 15,
+     "ymax": 30,
+     "xstep": 3,
+     "ystep": 6,
+     "xlabel": "Pattern A",
+     "ylabel": "Pattern B",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       3,
+       6
+      ],
+      [
+       6,
+       12
+      ],
+      [
+       9,
+       18
+      ],
+      [
+       12,
+       24
+      ]
+     ],
+     "line": true
+    },
+    "cap": "The pairs (term of A, term of B) lie on a straight line through $(0, 0)$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Make the pairs",
+    "q": "Pattern A: start at 0, add 3. Pattern B: start at 0, add 6. Write the first four ordered pairs.",
+    "steps": [
+     "A: 0, 3, 6, 9. B: 0, 6, 12, 18.",
+     "Pair by position: $(0, 0), (3, 6), (6, 12), (9, 18)$."
+    ],
+    "a": "$(0, 0), (3, 6), (6, 12), (9, 18)$"
+   },
+   {
+    "t": "ex",
+    "title": "Use the relationship",
+    "q": "When pattern A reaches 30, what is the matching term of pattern B?",
+    "steps": [
+     "Each term of B is 2 times the term of A.",
+     "$2 \\times 30 = 60$."
+    ],
+    "a": "60"
+   },
+   {
+    "t": "mistake",
+    "html": "Pairing terms from different positions, such as the 3rd term of A with the 4th term of B, or putting B first in the pair. Check: count both patterns from the same start, and keep the order (term of A, term of B)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, 5.OA.B.3: generate two numerical patterns using two given rules and graph the ordered pairs"
+   }
+  ]
+ },
+ "g5.shape-hierarchy": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Grade 4 you <a href=\"/math/grade-4/classify-shapes/\">sorted shapes by their sides and angles</a>. Shapes also belong to families inside families, like a family tree: every square is a rectangle, and every rectangle is a quadrilateral."
+   },
+   {
+    "t": "key",
+    "html": "A shape belongs to every category whose rules it meets. Categories nest: a smaller category (like squares) sits inside a bigger one (like rectangles) when every shape in it meets the bigger category's rules."
+   },
+   {
+    "t": "why",
+    "html": "Each category is defined by its properties. A rectangle is a quadrilateral with 4 right angles. A square has 4 right angles, so it meets that rule: it is a rectangle, a special one that also has 4 equal sides. Being special does not take a shape out of the bigger family."
+   },
+   {
+    "t": "viz",
+    "name": "g5-shapetree",
+    "opts": {
+     "pick": "square"
+    },
+    "cap": "Tap a shape to light up every family it belongs to."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Shape",
+     "Its rule",
+     "Also always a"
+    ],
+    "rows": [
+     [
+      "Parallelogram",
+      "2 pairs of parallel sides",
+      "quadrilateral"
+     ],
+     [
+      "Rectangle",
+      "4 right angles",
+      "parallelogram"
+     ],
+     [
+      "Rhombus",
+      "4 equal sides",
+      "parallelogram"
+     ],
+     [
+      "Square",
+      "4 right angles and 4 equal sides",
+      "rectangle and rhombus"
+     ]
+    ],
+    "cap": "Quadrilaterals from general to special"
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Most specific name",
+    "q": "A quadrilateral has 4 equal sides but no right angles. What is its most specific name?",
+    "steps": [
+     "4 equal sides: it is a rhombus.",
+     "No right angles, so it is not a square."
+    ],
+    "a": "rhombus"
+   },
+   {
+    "t": "ex",
+    "title": "Where two families meet",
+    "q": "Which shapes are both rectangles and rhombuses?",
+    "steps": [
+     "A rectangle has 4 right angles; a rhombus has 4 equal sides.",
+     "A shape with both is a square."
+    ],
+    "a": "squares"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a shape can only have one name. A square is also a rectangle, a rhombus, a parallelogram and a quadrilateral. Check by testing the rules: does it have what that family requires?"
+   },
+   {
+    "t": "note",
+    "html": "Some books define a trapezoid as having <i>exactly</i> one pair of parallel sides, and others as having <i>at least</i> one pair. With the second definition, every parallelogram is also a trapezoid. Either way, the family-tree idea is the same."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, 5.G.B.4: classify two-dimensional figures in a hierarchy based on properties"
+   },
+   {
+    "name": "OpenStax Prealgebra 2e, 9.4 Use Properties of Rectangles, Triangles, and Trapezoids"
+   }
+  ]
+ },
+ "g5.inherited-properties": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have seen the <a href=\"/math/grade-5/shape-hierarchy/\">family tree of shapes</a>. The tree is useful because properties pass down it: whatever is true of every shape in a family is true of every shape in its smaller families too."
+   },
+   {
+    "t": "key",
+    "html": "If every rectangle has a property, then every square has it, because every square is a rectangle. Properties pass <b>down</b> the tree, never up: a square's 4 equal sides do not pass up to all rectangles."
+   },
+   {
+    "t": "why",
+    "html": "&ldquo;Every rectangle has 4 right angles&rdquo; is a statement about all rectangles, and squares are among them. So a square must have 4 right angles. It also inherits from parallelograms: opposite sides parallel and equal, opposite angles equal. A square gets its equal sides from the rhombus family."
+   },
+   {
+    "t": "viz",
+    "name": "g5-shapetree",
+    "opts": {
+     "pick": "rectangle",
+     "kite": false
+    },
+    "cap": "A rectangle inherits from parallelograms, trapezoids and quadrilaterals. Tap the square to see what it inherits from both rectangles and rhombuses."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "What a square inherits",
+    "q": "Squares are rectangles. What must every square have because of that?",
+    "steps": [
+     "Every rectangle has 4 right angles.",
+     "So every square has 4 right angles. (Its 4 equal sides come from being a rhombus.)"
+    ],
+    "a": "4 right angles"
+   },
+   {
+    "t": "ex",
+    "title": "Is a square a rectangle?",
+    "q": "Is every square a rectangle? Is every rectangle a square?",
+    "steps": [
+     "A rectangle only needs 4 right angles. Every square has them, so every square is a rectangle.",
+     "A square also needs 4 equal sides. Many rectangles do not have them."
+    ],
+    "a": "Yes; no"
+   },
+   {
+    "t": "mistake",
+    "html": "Saying a square cannot be a rectangle, or that a rectangle must have two long and two short sides. The rule for a rectangle says nothing about side lengths. Check against the rule itself, not against the picture you usually see."
+   },
+   {
+    "t": "viz",
+    "name": "shapes",
+    "opts": {
+     "shape": "square",
+     "show": [
+      "equal",
+      "right",
+      "parallel"
+     ]
+    },
+    "cap": "Drag a corner of the square. While the angles stay right angles, it is still a rectangle, even with unequal sides."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, 5.G.B.3: attributes of a category of two-dimensional figures belong to all subcategories of that category"
+   },
+   {
+    "name": "OpenStax Prealgebra 2e, 9.4 Use Properties of Rectangles, Triangles, and Trapezoids"
+   }
+  ]
+ }
+}

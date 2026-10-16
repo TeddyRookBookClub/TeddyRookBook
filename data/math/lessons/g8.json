@@ -1,0 +1,5072 @@
+{
+ "g8.exponent-product-rule": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know from <a href=\"/math/grade-6/whole-number-exponents/\">whole-number exponents</a> that an exponent counts factors: $2^{4} = 2 \\cdot 2 \\cdot 2 \\cdot 2$. That one idea is all you need to multiply powers. There is nothing new to memorize, only something to count."
+   },
+   {
+    "t": "why",
+    "html": "$x^{3} \\cdot x^{4}$ means three factors of $x$ followed by four more: $(x \\cdot x \\cdot x) \\cdot (x \\cdot x \\cdot x \\cdot x)$. Multiplication can be regrouped any way you like, so this is just seven factors of $x$ in a row, which is $x^{7}$. The exponents are only counting, so they add."
+   },
+   {
+    "t": "key",
+    "html": "When you multiply powers with the <b>same base</b>, keep the base and add the exponents: $$a^{m} \\cdot a^{n} = a^{m+n}$$"
+   },
+   {
+    "t": "viz",
+    "name": "g8-powers",
+    "opts": {
+     "mode": "product",
+     "base": "x",
+     "m": 3,
+     "n": 4
+    },
+    "cap": "Three factors of $x$ and four more. Press “Put them together,” then change the exponents and count again."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Count the factors",
+    "q": "Write $5^{2} \\cdot 5^{6}$ as one power.",
+    "steps": [
+     "$5^{2}$ is 2 factors of 5, and $5^{6}$ is 6 more.",
+     "Together that is $2 + 6 = 8$ factors of 5.",
+     "The base stays 5: $5^{2} \\cdot 5^{6} = 5^{8}$."
+    ],
+    "a": "$5^{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "A hidden exponent",
+    "q": "Simplify $y^{5} \\cdot y \\cdot y^{3}$.",
+    "steps": [
+     "A plain $y$ is one factor, so $y = y^{1}$.",
+     "Add all the exponents: $5 + 1 + 3 = 9$."
+    ],
+    "a": "$y^{9}$"
+   },
+   {
+    "t": "ex",
+    "title": "Numbers in front",
+    "q": "Simplify $(4a^{3})(-2a^{5})$.",
+    "steps": [
+     "Multiplication can happen in any order, so group the numbers and the powers: $\\big(4 \\cdot (-2)\\big)\\big(a^{3} \\cdot a^{5}\\big)$.",
+     "The numbers multiply: $4 \\cdot (-2) = -8$.",
+     "The powers of $a$ add exponents: $a^{3+5} = a^{8}$."
+    ],
+    "a": "$-8a^{8}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Writing $2^{3} \\cdot 2^{4} = 4^{7}$ (multiplying the bases) or $2^{12}$ (multiplying the exponents). Neither one matches the count of factors. Check with real numbers: $2^{3} \\cdot 2^{4} = 8 \\cdot 16 = 128$, and $2^{7} = 128$. But $4^{7} = 16{,}384$ and $2^{12} = 4{,}096$."
+   },
+   {
+    "t": "note",
+    "html": "The rule needs the same base. $2^{3} \\cdot 3^{4}$ can’t become one power, because the factors are different numbers. In $x^{2}y^{3}$ the letters are different, so nothing combines."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 10.2: Use Multiplication Properties of Exponents"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.1 (properties of integer exponents)"
+   }
+  ]
+ },
+ "g8.exponent-quotient-rule": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Dividing powers uses the same counting as <a href=\"/math/pre-algebra/exponent-product-rule/\">multiplying powers</a>, plus one fact you already know: any number other than 0 divided by itself is 1."
+   },
+   {
+    "t": "why",
+    "html": "Write the factors out: $$\\frac{x^{7}}{x^{3}} = \\frac{x \\cdot x \\cdot x \\cdot x \\cdot x \\cdot x \\cdot x}{x \\cdot x \\cdot x}$$ Each $x$ on the bottom pairs with an $x$ on top, and each pair is $\\frac{x}{x} = 1$. Three pairs cancel, which leaves $7 - 3 = 4$ factors on top: $x^{4}$."
+   },
+   {
+    "t": "key",
+    "html": "To divide powers with the same base, keep the base and <b>subtract</b> the exponents: $$\\frac{a^{m}}{a^{n}} = a^{m-n} \\quad (a \\ne 0)$$"
+   },
+   {
+    "t": "viz",
+    "name": "g8-powers",
+    "opts": {
+     "mode": "quotient",
+     "base": "x",
+     "m": 7,
+     "n": 3
+    },
+    "cap": "Press “Cancel pairs.” Each $x$ on the bottom cancels one on top. What happens when the bottom has more factors? That is the next lesson."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Subtract, don’t divide",
+    "q": "Write $\\dfrac{6^{9}}{6^{4}}$ as one power.",
+    "steps": [
+     "Four 6s on the bottom cancel four of the nine on top.",
+     "That leaves $9 - 4 = 5$ factors of 6."
+    ],
+    "a": "$6^{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "Numbers and letters",
+    "q": "Simplify $\\dfrac{15m^{8}}{3m^{2}}$. (Assume $m \\ne 0$.)",
+    "steps": [
+     "The numbers divide like any fraction: $15 \\div 3 = 5$.",
+     "The powers of $m$ subtract exponents: $m^{8-2} = m^{6}$."
+    ],
+    "a": "$5m^{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "Small numbers first",
+    "q": "Find the value of $\\dfrac{2^{10}}{2^{7}}$.",
+    "steps": [
+     "Subtract the exponents first: $2^{10-7} = 2^{3}$.",
+     "$2^{3} = 8$. Simplifying first keeps the numbers small; you never need to work out $2^{10} = 1{,}024$."
+    ],
+    "a": "$8$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing the exponents, as in $\\dfrac{x^{6}}{x^{2}} = x^{3}$. Cancelling shows what really happens: 2 pairs disappear and 4 factors are left, so the answer is $x^{4}$. Check with $x = 2$: $\\frac{64}{4} = 16 = 2^{4}$, not $2^{3} = 8$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 10.4: Divide Monomials"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.1"
+   }
+  ]
+ },
+ "g8.power-of-power": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "An exponent outside parentheses tells you how many copies of everything inside to multiply. With that, the <a href=\"/math/pre-algebra/exponent-product-rule/\">product rule</a> does the rest."
+   },
+   {
+    "t": "why",
+    "html": "$(x^{2})^{3} = x^{2} \\cdot x^{2} \\cdot x^{2}$: three groups of two factors, or $3 \\cdot 2 = 6$ factors in all. So $(x^{2})^{3} = x^{6}$.<br>$(2x)^{3} = 2x \\cdot 2x \\cdot 2x$. Regroup the factors: $(2 \\cdot 2 \\cdot 2)(x \\cdot x \\cdot x) = 8x^{3}$. Every factor inside the parentheses is used three times, the 2 included."
+   },
+   {
+    "t": "key",
+    "html": "A power of a power multiplies the exponents: $(a^{m})^{n} = a^{mn}$. A power of a product raises every factor: $(ab)^{n} = a^{n}b^{n}$."
+   },
+   {
+    "t": "viz",
+    "name": "g8-powers",
+    "opts": {
+     "mode": "power",
+     "inner": "x^2",
+     "n": 3
+    },
+    "cap": "Three copies of $x^{2}$. Press “Regroup” to count the factors."
+   },
+   {
+    "t": "viz",
+    "name": "g8-powers",
+    "opts": {
+     "mode": "power",
+     "inner": "2x",
+     "n": 3
+    },
+    "cap": "Three copies of $2x$. The 2 is cubed too: $2 \\cdot 2 \\cdot 2 = 8$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Power of a power",
+    "q": "Write $(5^{3})^{4}$ as one power.",
+    "steps": [
+     "Four copies of $5^{3}$, each with 3 factors of 5.",
+     "$4 \\cdot 3 = 12$ factors in all."
+    ],
+    "a": "$5^{12}$"
+   },
+   {
+    "t": "ex",
+    "title": "Power of a product",
+    "q": "Simplify $(3y^{4})^{2}$.",
+    "steps": [
+     "Square every factor inside: $3^{2} \\cdot (y^{4})^{2}$.",
+     "$3^{2} = 9$ and $(y^{4})^{2} = y^{8}$."
+    ],
+    "a": "$9y^{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "A negative inside",
+    "q": "Simplify $(-2a^{2}b)^{3}$.",
+    "steps": [
+     "Cube each factor: $(-2)^{3} \\cdot (a^{2})^{3} \\cdot b^{3}$.",
+     "$(-2)^{3} = -8$, since three negative factors make a negative.",
+     "$(a^{2})^{3} = a^{6}$, and $b$ becomes $b^{3}$."
+    ],
+    "a": "$-8a^{6}b^{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Raising only the letter: $(2x)^{3} = 2x^{3}$. The 2 is inside the parentheses, so it is cubed too. Check with $x = 1$: $(2 \\cdot 1)^{3} = 8$, but $2 \\cdot 1^{3} = 2$. Also, the rule is for products, not sums: $(x + y)^{2}$ is not $x^{2} + y^{2}$. Try $x = y = 1$: $(1 + 1)^{2} = 4$, but $1^{2} + 1^{2} = 2$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 10.2: Use Multiplication Properties of Exponents"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.1"
+   }
+  ]
+ },
+ "g8.zero-negative-exponents": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "So far an exponent has counted factors, so it has been a positive whole number. What could $5^{0}$ or $2^{-3}$ mean? You can’t multiply something “zero times” or “minus three times.” We choose the meaning that keeps the pattern of powers and the <a href=\"/math/pre-algebra/exponent-quotient-rule/\">quotient rule</a> working."
+   },
+   {
+    "t": "viz",
+    "name": "g8-powers",
+    "opts": {
+     "mode": "pattern",
+     "b": 2,
+     "hi": 4,
+     "lo": -3
+    },
+    "cap": "Each row down divides by 2. Keep pressing “Next row down” past $2^{1}$."
+   },
+   {
+    "t": "why",
+    "html": "Going down the powers of 2, each step lowers the exponent by 1 and divides by 2: $2^{3} = 8$, $2^{2} = 4$, $2^{1} = 2$. One more step gives $2^{0} = 2 \\div 2 = 1$. Keep going: $2^{-1} = \\frac{1}{2}$, $2^{-2} = \\frac{1}{4}$, $2^{-3} = \\frac{1}{8}$.<br>The quotient rule agrees. $\\frac{x^{3}}{x^{3}} = x^{3-3} = x^{0}$, and anything (not 0) divided by itself is 1. In $\\frac{x^{2}}{x^{5}}$, three factors are left on the bottom, so $x^{2-5} = x^{-3}$ must equal $\\frac{1}{x^{3}}$."
+   },
+   {
+    "t": "key",
+    "html": "For any $a \\ne 0$: $$a^{0} = 1 \\qquad a^{-n} = \\frac{1}{a^{n}}$$ A negative exponent means “divide by the base that many times.” It gives a small positive number, not a negative one."
+   },
+   {
+    "t": "viz",
+    "name": "g8-powers",
+    "opts": {
+     "mode": "quotient",
+     "base": "x",
+     "m": 2,
+     "n": 5
+    },
+    "cap": "Two factors on top and five on the bottom. After cancelling, three are left on the bottom: $x^{-3} = \\frac{1}{x^{3}}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A negative exponent",
+    "q": "Find the value of $4^{-2}$.",
+    "steps": [
+     "$4^{-2} = \\dfrac{1}{4^{2}}$",
+     "$4^{2} = 16$, so $4^{-2} = \\frac{1}{16}$."
+    ],
+    "a": "$\\frac{1}{16}$"
+   },
+   {
+    "t": "ex",
+    "title": "A fraction to a negative power",
+    "q": "Find the value of $\\left(\\frac{2}{3}\\right)^{-2}$.",
+    "steps": [
+     "$\\left(\\frac{2}{3}\\right)^{-2} = \\dfrac{1}{(2/3)^{2}} = \\dfrac{1}{4/9}$.",
+     "Dividing by a fraction is multiplying by its reciprocal: $1 \\cdot \\frac{9}{4}$.",
+     "Shortcut: a negative exponent flips the fraction, $\\left(\\frac{3}{2}\\right)^{2} = \\frac{9}{4}$."
+    ],
+    "a": "$\\frac{9}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "Watch the parentheses",
+    "q": "Find $(-3)^{0}$ and $-3^{0}$.",
+    "steps": [
+     "In $(-3)^{0}$ the base is $-3$, so the value is 1.",
+     "In $-3^{0}$ the exponent belongs to the 3 only: $-3^{0} = -(3^{0}) = -1$."
+    ],
+    "a": "$1$ and $-1$"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading $2^{-3}$ as $-8$, as if the minus sign made the number negative. Check with the pattern: $2^{0} = 1$, and each step down halves, so $2^{-3}$ must be between 0 and 1. It is $\\frac{1}{8}$."
+   },
+   {
+    "t": "note",
+    "html": "Zero is left out: $0^{0}$ and negative powers of 0 have no value, because they would mean dividing by 0."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 10.5: Integer Exponents and Scientific Notation"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.1"
+   }
+  ]
+ },
+ "g8.exponent-properties": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You now have five exponent rules. Each one comes from counting factors, so you can always check a rule with small numbers when you are unsure. This lesson puts them together."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Rule",
+     "Example",
+     "Why it works"
+    ],
+    "rows": [
+     [
+      "$a^{m} \\cdot a^{n} = a^{m+n}$",
+      "$x^{2} \\cdot x^{5} = x^{7}$",
+      "count all the factors"
+     ],
+     [
+      "$\\dfrac{a^{m}}{a^{n}} = a^{m-n}$",
+      "$\\dfrac{x^{6}}{x^{2}} = x^{4}$",
+      "matching factors cancel"
+     ],
+     [
+      "$(a^{m})^{n} = a^{mn}$",
+      "$(x^{3})^{2} = x^{6}$",
+      "$n$ groups of $m$ factors"
+     ],
+     [
+      "$(ab)^{n} = a^{n}b^{n}$",
+      "$(2x)^{3} = 8x^{3}$",
+      "every factor is repeated"
+     ],
+     [
+      "$a^{0} = 1$, $a^{-n} = \\dfrac{1}{a^{n}}$",
+      "$x^{-2} = \\dfrac{1}{x^{2}}$",
+      "the dividing pattern continues"
+     ]
+    ],
+    "cap": "The rules, for any base $a \\ne 0$."
+   },
+   {
+    "t": "why",
+    "html": "Every rule is about <b>multiplying</b>, because an exponent is shorthand for repeated multiplication. None of them says anything about adding. $x^{2} + x^{3}$ adds two different kinds of things, like 2 apples plus 3 oranges, so it stays as it is."
+   },
+   {
+    "t": "key",
+    "html": "Simplify one step at a time, from the inside out: powers of powers first, then products, then quotients. Give the final answer with positive exponents."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Inside out",
+    "q": "Simplify $\\dfrac{(x^{3})^{2} \\cdot x^{4}}{x^{5}}$. (Assume $x \\ne 0$.)",
+    "steps": [
+     "Power of a power: $(x^{3})^{2} = x^{6}$.",
+     "Multiply on top: $x^{6} \\cdot x^{4} = x^{10}$.",
+     "Divide: $x^{10-5} = x^{5}$."
+    ],
+    "a": "$x^{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "Two letters and a negative exponent",
+    "q": "Simplify $\\dfrac{6a^{-2}b^{5}}{2a^{3}b}$. (Assume no variable is 0.)",
+    "steps": [
+     "Numbers: $6 \\div 2 = 3$.",
+     "$a$: $-2 - 3 = -5$, so $a^{-5} = \\frac{1}{a^{5}}$.",
+     "$b$: $5 - 1 = 4$.",
+     "Put it together with positive exponents: $\\dfrac{3b^{4}}{a^{5}}$."
+    ],
+    "a": "$\\dfrac{3b^{4}}{a^{5}}$"
+   },
+   {
+    "t": "ex",
+    "title": "A value",
+    "q": "Find the value of $\\dfrac{3^{5} \\cdot 3^{-2}}{3^{4}}$.",
+    "steps": [
+     "Top: $5 + (-2) = 3$, so $3^{3}$.",
+     "Divide: $3 - 4 = -1$, so $3^{-1}$.",
+     "$3^{-1} = \\frac{1}{3}$."
+    ],
+    "a": "$\\frac{1}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using a multiplication rule on a sum: $x^{2} + x^{3} = x^{5}$. Check with $x = 2$: $4 + 8 = 12$, but $2^{5} = 32$. Only like terms combine when you add, and then the exponent stays put: $3x^{2} + 4x^{2} = 7x^{2}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 6.2: Use Multiplication Properties of Exponents"
+   },
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 6.7: Integer Exponents and Scientific Notation"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.1"
+   }
+  ]
+ },
+ "g8.scientific-notation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Light travels about 300,000,000 meters each second. A small bacterium can be about 0.000002 meter long. Numbers like these are easy to misread, because you have to count zeros. Scientific notation writes them as a short number times a power of 10: $3 \\times 10^{8}$ and $2 \\times 10^{-6}$."
+   },
+   {
+    "t": "p",
+    "html": "It rests on <a href=\"/math/grade-5/multiply-divide-powers-of-ten/\">multiplying and dividing by powers of 10</a>: each factor of 10 moves every digit one place."
+   },
+   {
+    "t": "key",
+    "html": "A number is in <b>scientific notation</b> when it is written as $a \\times 10^{n}$, where $1 \\le a < 10$ and $n$ is an integer. Big numbers get a positive $n$. Numbers between 0 and 1 get a negative $n$."
+   },
+   {
+    "t": "why",
+    "html": "$3.08 \\times 10^{6}$ multiplies 3.08 by 10 six times, which moves its digits six places to the left: 3,080,000. A <a href=\"/math/pre-algebra/zero-negative-exponents/\">negative exponent</a> divides instead: $10^{-4} = \\frac{1}{10{,}000}$, so $5.06 \\times 10^{-4}$ moves the digits four places to the right: 0.000506."
+   },
+   {
+    "t": "viz",
+    "name": "placevalue",
+    "opts": {
+     "n": "4.5",
+     "hi": 4,
+     "lo": -1,
+     "shift": true,
+     "edit": false,
+     "words": false
+    },
+    "cap": "Press “× 10” four times: 4.5 becomes 45,000. So $45{,}000 = 4.5 \\times 10^{4}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A big number",
+    "q": "Write $3{,}080{,}000$ in scientific notation.",
+    "steps": [
+     "Put the decimal point after the first nonzero digit: $3.08$, which is between 1 and 10.",
+     "From 3.08 to 3,080,000 the point moves 6 places to the right.",
+     "So $3{,}080{,}000 = 3.08 \\times 10^{6}$."
+    ],
+    "a": "$3.08 \\times 10^{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "A small number",
+    "q": "Write $0.000506$ in scientific notation.",
+    "steps": [
+     "The first factor is $5.06$.",
+     "To get from 5.06 back to 0.000506, the point moves 4 places to the <b>left</b>, which is dividing by $10^{4}$.",
+     "Dividing by $10^{4}$ is multiplying by $10^{-4}$."
+    ],
+    "a": "$5.06 \\times 10^{-4}$"
+   },
+   {
+    "t": "ex",
+    "title": "Back to standard form",
+    "q": "Write $6.1 \\times 10^{-3}$ as an ordinary decimal.",
+    "steps": [
+     "A negative exponent: the number is less than 1.",
+     "Move the point 3 places left, filling with zeros."
+    ],
+    "a": "$0.0061$"
+   },
+   {
+    "t": "mistake",
+    "html": "Two common slips. (1) Using a positive exponent for a small number: $0.0045 = 4.5 \\times 10^{3}$ is wrong, because $4.5 \\times 10^{3}$ is 4,500. A number less than 1 needs a negative exponent: $4.5 \\times 10^{-3}$. (2) Stopping at $45 \\times 10^{3}$. It equals 45,000, but 45 is not less than 10. Move one more place: $4.5 \\times 10^{4}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 10.5: Integer Exponents and Scientific Notation"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.3 (numbers as a single digit times a power of 10)"
+   }
+  ]
+ },
+ "g8.compare-scientific": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/pre-algebra/scientific-notation/\">Scientific notation</a> makes it quick to compare very large and very small numbers, because the exponent tells you the size at a glance."
+   },
+   {
+    "t": "why",
+    "html": "Every first factor is at least 1 and less than 10. So any number with $10^{6}$ is between one million and ten million, and any number with $10^{7}$ is at least ten million. No first factor can make up a whole power of 10, so the exponent decides first."
+   },
+   {
+    "t": "key",
+    "html": "To compare two positive numbers in scientific notation, compare the exponents first; the larger exponent wins. Only when the exponents match do you compare the first factors. To find how many times as large one number is, divide."
+   },
+   {
+    "t": "viz",
+    "name": "logscale",
+    "opts": {
+     "mode": "axis",
+     "modes": [
+      "axis"
+     ],
+     "values": [
+      3,
+      30,
+      300,
+      3000
+     ],
+     "x": 300
+    },
+    "cap": "On the lower line, each step to the right multiplies by 10, so every power of 10 gets the same space. Move the point and compare where it sits on the two lines."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Exponents first",
+    "q": "Which is greater: $9.2 \\times 10^{5}$ or $1.4 \\times 10^{6}$?",
+    "steps": [
+     "Compare the exponents: 6 is greater than 5.",
+     "In standard form: 920,000 and 1,400,000."
+    ],
+    "a": "$1.4 \\times 10^{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "Negative exponents",
+    "q": "Which is greater: $3.2 \\times 10^{-4}$ or $8.7 \\times 10^{-5}$?",
+    "steps": [
+     "$-4$ is greater than $-5$ (it is closer to 0).",
+     "In standard form: 0.00032 and 0.000087."
+    ],
+    "a": "$3.2 \\times 10^{-4}$"
+   },
+   {
+    "t": "ex",
+    "title": "How many times as large?",
+    "q": "The United States has about $3 \\times 10^{8}$ people. The whole world has about $8 \\times 10^{9}$. About how many times as many people live in the world?",
+    "steps": [
+     "Divide: $\\dfrac{8 \\times 10^{9}}{3 \\times 10^{8}} = \\dfrac{8}{3} \\times 10^{9-8}$.",
+     "$\\frac{8}{3} \\approx 2.7$, so the quotient is about $2.7 \\times 10 = 27$.",
+     "With these rounded values, about 27 times as many."
+    ],
+    "a": "about 27 times"
+   },
+   {
+    "t": "ex",
+    "title": "Estimate with one digit",
+    "q": "Estimate $4{,}870{,}000$ as a single digit times a power of 10.",
+    "steps": [
+     "In scientific notation it is $4.87 \\times 10^{6}$.",
+     "Round 4.87 to the nearest whole number: 5."
+    ],
+    "a": "about $5 \\times 10^{6}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Comparing the first factors before the exponents, and deciding that $9 \\times 10^{3}$ is greater than $2 \\times 10^{5}$ because 9 is greater than 2. Write them out to check: 9,000 and 200,000."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 10.5: Integer Exponents and Scientific Notation"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.3"
+   }
+  ]
+ },
+ "g8.scientific-operations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "To calculate with numbers in <a href=\"/math/pre-algebra/scientific-notation/\">scientific notation</a>, use the <a href=\"/math/pre-algebra/exponent-properties/\">exponent rules</a> on the powers of 10 and ordinary arithmetic on the first factors."
+   },
+   {
+    "t": "why",
+    "html": "Multiplying: since multiplication can be regrouped, $(3 \\times 10^{4})(2 \\times 10^{5}) = (3 \\cdot 2) \\times (10^{4} \\cdot 10^{5}) = 6 \\times 10^{9}$.<br>Adding is different. $3 \\times 10^{4} + 2 \\times 10^{5}$ is 3 ten-thousands plus 2 hundred-thousands. You can only add amounts of the same unit, just as you line up place values, so first rewrite one of them: $2 \\times 10^{5} = 20 \\times 10^{4}$."
+   },
+   {
+    "t": "key",
+    "html": "<b>Multiply or divide:</b> work on the first factors, and add or subtract the exponents. <b>Add or subtract:</b> first make the powers of 10 match, then add or subtract the first factors and keep the power. Finally, adjust so the first factor is between 1 and 10."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Multiply, then adjust",
+    "q": "Find $(5 \\times 10^{3})(4 \\times 10^{2})$.",
+    "steps": [
+     "First factors: $5 \\cdot 4 = 20$. Powers: $10^{3} \\cdot 10^{2} = 10^{5}$.",
+     "$20 \\times 10^{5}$ is not in scientific notation, since $20 \\ge 10$.",
+     "$20 = 2 \\times 10^{1}$, so the product is $2 \\times 10^{1} \\times 10^{5} = 2 \\times 10^{6}$."
+    ],
+    "a": "$2 \\times 10^{6}$"
+   },
+   {
+    "t": "ex",
+    "title": "Divide",
+    "q": "Find $\\dfrac{8.4 \\times 10^{7}}{2 \\times 10^{3}}$.",
+    "steps": [
+     "First factors: $8.4 \\div 2 = 4.2$.",
+     "Powers: $10^{7-3} = 10^{4}$."
+    ],
+    "a": "$4.2 \\times 10^{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "Add",
+    "q": "Find $3.2 \\times 10^{5} + 4 \\times 10^{4}$.",
+    "steps": [
+     "Make the powers match: $4 \\times 10^{4} = 0.4 \\times 10^{5}$.",
+     "Add the first factors and keep $10^{5}$: $(3.2 + 0.4) \\times 10^{5}$."
+    ],
+    "a": "$3.6 \\times 10^{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "Divide, then adjust",
+    "q": "Find $\\dfrac{1.5 \\times 10^{-2}}{3 \\times 10^{4}}$.",
+    "steps": [
+     "First factors: $1.5 \\div 3 = 0.5$. Powers: $10^{-2-4} = 10^{-6}$.",
+     "$0.5$ is less than 1, so write $0.5 = 5 \\times 10^{-1}$.",
+     "$5 \\times 10^{-1} \\times 10^{-6} = 5 \\times 10^{-7}$."
+    ],
+    "a": "$5 \\times 10^{-7}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the exponents when adding: $(2 \\times 10^{3}) + (3 \\times 10^{3}) = 5 \\times 10^{6}$. Check in standard form: $2{,}000 + 3{,}000 = 5{,}000 = 5 \\times 10^{3}$. Adding exponents is the rule for multiplying."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 10.5: Integer Exponents and Scientific Notation"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.4 (operations with numbers in scientific notation)"
+   }
+  ]
+ },
+ "g8.square-roots": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Squaring multiplies a number by itself: $7^{2} = 7 \\cdot 7 = 49$ (see <a href=\"/math/grade-6/whole-number-exponents/\">whole-number exponents</a>). A square root goes the other way."
+   },
+   {
+    "t": "why",
+    "html": "A square with sides 7 units long has area $7 \\times 7 = 49$ square units. So if a square’s area is 49, its side must be 7. That is what a square root asks: “What number times itself makes 49?”"
+   },
+   {
+    "t": "viz",
+    "name": "areamodel",
+    "opts": {
+     "a": 7,
+     "b": 7,
+     "split": false,
+     "grid": true
+    },
+    "cap": "A 7 by 7 square holds 49 unit squares. The side, 7, is the square root of the area, 49."
+   },
+   {
+    "t": "key",
+    "html": "$\\sqrt{n}$ is the number, not negative, whose square is $n$. The perfect squares $1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, \\ldots$ have whole-number square roots."
+   },
+   {
+    "t": "p",
+    "html": "Negative numbers have squares too: $(-7)^{2} = 49$. The symbol $\\sqrt{\\ }$ always means the positive root, and we write $-\\sqrt{49} = -7$ for the negative one."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A perfect square",
+    "q": "Find $\\sqrt{81}$.",
+    "steps": [
+     "Which number times itself is 81?",
+     "$9 \\times 9 = 81$."
+    ],
+    "a": "$9$"
+   },
+   {
+    "t": "ex",
+    "title": "A fraction",
+    "q": "Find $\\sqrt{\\dfrac{16}{25}}$.",
+    "steps": [
+     "Try the root of the top over the root of the bottom: $\\frac{4}{5}$.",
+     "Check: $\\frac{4}{5} \\cdot \\frac{4}{5} = \\frac{16}{25}$."
+    ],
+    "a": "$\\frac{4}{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "A decimal",
+    "q": "Find $\\sqrt{0.36}$.",
+    "steps": [
+     "$0.36 = \\frac{36}{100}$, and $\\sqrt{36} = 6$, $\\sqrt{100} = 10$.",
+     "So the root is $\\frac{6}{10} = 0.6$. Check: $0.6 \\times 0.6 = 0.36$."
+    ],
+    "a": "$0.6$"
+   },
+   {
+    "t": "mistake",
+    "html": "Halving the number: $\\sqrt{16} = 8$. Check by squaring your answer: $8^{2} = 64$, not 16. The root of 16 is 4, because $4 \\cdot 4 = 16$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 5.7: Simplify and Use Square Roots"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.2 (square and cube roots)"
+   }
+  ]
+ },
+ "g8.cube-roots": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Cubing uses a number as a factor three times: $4^{3} = 4 \\cdot 4 \\cdot 4 = 64$. A cube root undoes cubing, the way a <a href=\"/math/pre-algebra/square-roots/\">square root</a> undoes squaring."
+   },
+   {
+    "t": "why",
+    "html": "A cube with edges 4 units long is built from 4 layers of $4 \\times 4$ unit cubes: $4 \\cdot 4 \\cdot 4 = 64$ cubes. So if a cube holds 64 unit cubes, its edge is 4. We write $\\sqrt[3]{64} = 4$."
+   },
+   {
+    "t": "viz",
+    "name": "volume",
+    "opts": {
+     "l": 4,
+     "w": 4,
+     "h": 4,
+     "max": 6
+    },
+    "cap": "A $4 \\times 4 \\times 4$ cube holds 64 unit cubes. Drag to turn it, and try other sizes."
+   },
+   {
+    "t": "key",
+    "html": "$\\sqrt[3]{n}$ is the number whose cube is $n$. The perfect cubes are $1, 8, 27, 64, 125, 216, 343, 512, 729, 1000, \\ldots$"
+   },
+   {
+    "t": "p",
+    "html": "Unlike square roots, cube roots of negative numbers exist. Three negative factors make a negative, so $(-4)^{3} = -64$ and $\\sqrt[3]{-64} = -4$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A perfect cube",
+    "q": "Find $\\sqrt[3]{125}$.",
+    "steps": [
+     "Which number, used three times as a factor, gives 125?",
+     "$5 \\cdot 5 \\cdot 5 = 125$."
+    ],
+    "a": "$5$"
+   },
+   {
+    "t": "ex",
+    "title": "A negative number",
+    "q": "Find $\\sqrt[3]{-27}$.",
+    "steps": [
+     "$3^{3} = 27$, so try $-3$.",
+     "$(-3)(-3)(-3) = 9 \\cdot (-3) = -27$."
+    ],
+    "a": "$-3$"
+   },
+   {
+    "t": "ex",
+    "title": "A fraction",
+    "q": "Find $\\sqrt[3]{\\dfrac{8}{27}}$.",
+    "steps": [
+     "Take the cube root of the top and of the bottom: $\\sqrt[3]{8} = 2$ and $\\sqrt[3]{27} = 3$.",
+     "Check: $\\frac{2}{3} \\cdot \\frac{2}{3} \\cdot \\frac{2}{3} = \\frac{8}{27}$."
+    ],
+    "a": "$\\frac{2}{3}$"
+   },
+   {
+    "t": "note",
+    "html": "Most numbers are not perfect cubes. Their cube roots still have a place between whole numbers: $3^{3} = 27$ and $4^{3} = 64$, so $\\sqrt[3]{50}$ is between 3 and 4."
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing by 3, as in $\\sqrt[3]{27} = 9$. Check by cubing: $9^{3} = 729$. The cube root of 27 is 3, because $3 \\cdot 3 \\cdot 3 = 27$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Intermediate Algebra 2e, Section 8.1: Simplify Expressions with Roots"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.2"
+   }
+  ]
+ },
+ "g8.solve-squares-cubes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now use <a href=\"/math/pre-algebra/square-roots/\">square roots</a> and <a href=\"/math/pre-algebra/cube-roots/\">cube roots</a> to solve equations. The sign rules from <a href=\"/math/grade-7/multiply-integers/\">multiplying integers</a> decide how many solutions there are."
+   },
+   {
+    "t": "why",
+    "html": "Both $5^{2} = 25$ and $(-5)^{2} = 25$, because a negative times a negative is positive. So $x^{2} = 25$ has two solutions. And no number squared is negative, so $x^{2} = -9$ has none.<br>Cubing keeps the sign: $2^{3} = 8$ but $(-2)^{3} = -8$. Each number has exactly one cube root, so $x^{3} = -8$ has exactly one solution."
+   },
+   {
+    "t": "key",
+    "html": "$x^{2} = p$ has two solutions, $x = \\pm\\sqrt{p}$, when $p > 0$; one solution, $x = 0$, when $p = 0$; and no solution when $p < 0$. $x^{3} = p$ always has exactly one solution, $x = \\sqrt[3]{p}$."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "x^2",
+      {
+       "f": "p",
+       "label": "p",
+       "color": "red"
+      }
+     ],
+     "params": {
+      "p": [
+       -10,
+       40,
+       25,
+       1
+      ]
+     },
+     "intersections": true,
+     "xmin": -8,
+     "xmax": 8,
+     "ymin": -12,
+     "ymax": 45,
+     "zoom": false
+    },
+    "cap": "Each crossing of $y = x^{2}$ and the flat line $y = p$ is a solution of $x^{2} = p$. Slide $p$ below 0, to 0 and above 0."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "x^3",
+      {
+       "f": "p",
+       "label": "p",
+       "color": "red"
+      }
+     ],
+     "params": {
+      "p": [
+       -30,
+       30,
+       -8,
+       1
+      ]
+     },
+     "intersections": true,
+     "xmin": -5,
+     "xmax": 5,
+     "ymin": -35,
+     "ymax": 35,
+     "zoom": false
+    },
+    "cap": "$y = x^{3}$ crosses every flat line exactly once."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two solutions",
+    "q": "Solve $x^{2} = 49$.",
+    "steps": [
+     "$7^{2} = 49$ and $(-7)^{2} = 49$.",
+     "Check both in the equation: each gives 49."
+    ],
+    "a": "$x = 7$ or $x = -7$, written $x = \\pm 7$"
+   },
+   {
+    "t": "ex",
+    "title": "Get the square alone first",
+    "q": "Solve $3x^{2} = 48$.",
+    "steps": [
+     "Divide both sides by 3: $x^{2} = 16$.",
+     "Take square roots: $x = \\pm 4$."
+    ],
+    "a": "$x = \\pm 4$"
+   },
+   {
+    "t": "ex",
+    "title": "A root that isn’t whole",
+    "q": "Solve $x^{2} = 10$.",
+    "steps": [
+     "10 is not a perfect square, so leave the answer as a root.",
+     "$x = \\sqrt{10}$ or $x = -\\sqrt{10}$ (about $\\pm 3.16$)."
+    ],
+    "a": "$x = \\pm\\sqrt{10}$"
+   },
+   {
+    "t": "ex",
+    "title": "A cube",
+    "q": "Solve $x^{3} = -125$.",
+    "steps": [
+     "$(-5)^{3} = -125$.",
+     "$5^{3} = 125$ is positive, so it does not work. There is just one solution."
+    ],
+    "a": "$x = -5$"
+   },
+   {
+    "t": "mistake",
+    "html": "Giving only $x = 5$ for $x^{2} = 25$. Check $-5$ too: $(-5)^{2} = 25$, so it is also a solution. And watch for negatives on the right: $x^{2} = -9$ has no solution (not $\\pm 3$, because $3^{2} = 9$)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 10.1: Solve Quadratic Equations Using the Square Root Property"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.A.2"
+   }
+  ]
+ },
+ "g8.repeating-decimals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-7/fractions-to-decimals/\">terminating and repeating decimals</a> you saw that every fraction becomes a decimal that ends or repeats: $\\frac{1}{4} = 0.25$ and $\\frac{3}{11} = 0.272727\\ldots = 0.\\overline{27}$. Now go the other way, from a repeating decimal back to a fraction."
+   },
+   {
+    "t": "why",
+    "html": "Let $x = 0.\\overline{27}$. Multiplying by 100 moves every digit two places to the left: $100x = 27.\\overline{27}$. Both numbers have exactly the same endless tail, so subtracting makes the tail disappear, and what is left is an ordinary equation."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "value"
+    ],
+    "rows": [
+     [
+      "$100x$",
+      "$27.272727\\ldots$"
+     ],
+     [
+      "$x$",
+      "$0.272727\\ldots$"
+     ],
+     [
+      "$100x - x = 99x$",
+      "$27$"
+     ]
+    ],
+    "cap": "The tails line up, so they cancel."
+   },
+   {
+    "t": "key",
+    "html": "To write a repeating decimal as a fraction, call it $x$. Multiply by 10, 100 or 1000 (one zero for each repeating digit) so the repeating parts line up, subtract, and solve for $x$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "One repeating digit",
+    "q": "Write $0.\\overline{4}$ as a fraction.",
+    "steps": [
+     "Let $x = 0.\\overline{4}$. One digit repeats, so $10x = 4.\\overline{4}$.",
+     "Subtract: $10x - x = 4$, so $9x = 4$."
+    ],
+    "a": "$\\frac{4}{9}$"
+   },
+   {
+    "t": "ex",
+    "title": "Two repeating digits",
+    "q": "Write $0.\\overline{27}$ as a fraction in lowest terms.",
+    "steps": [
+     "$100x = 27.\\overline{27}$ and $x = 0.\\overline{27}$.",
+     "Subtract: $99x = 27$, so $x = \\frac{27}{99}$.",
+     "Divide top and bottom by 9: $\\frac{3}{11}$."
+    ],
+    "a": "$\\frac{3}{11}$"
+   },
+   {
+    "t": "ex",
+    "title": "The repeat starts later",
+    "q": "Write $0.1\\overline{6} = 0.1666\\ldots$ as a fraction.",
+    "steps": [
+     "Only the 6 repeats. $10x = 1.\\overline{6}$ and $100x = 16.\\overline{6}$ have the same tail.",
+     "Subtract: $100x - 10x = 16 - 1$, so $90x = 15$.",
+     "$x = \\frac{15}{90} = \\frac{1}{6}$."
+    ],
+    "a": "$\\frac{1}{6}$"
+   },
+   {
+    "t": "viz",
+    "name": "decimalgrid",
+    "opts": {
+     "v": "0.99"
+    },
+    "cap": "0.99 leaves one hundredth uncovered, 0.999 would leave one thousandth, and so on. With 9s that never stop, no gap is left at all."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking $0.\\overline{9}$ is a little less than 1. Use the method: $x = 0.\\overline{9}$, $10x = 9.\\overline{9}$, so $9x = 9$ and $x = 1$. Another check: $\\frac{1}{3} = 0.\\overline{3}$, and three times each side gives $1 = 0.\\overline{9}$. They are two names for one number; there is no number between them."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 7.1: Rational and Irrational Numbers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.NS.A.1 (rational numbers and repeating decimals)"
+   }
+  ]
+ },
+ "g8.irrational-numbers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know two facts: every fraction’s decimal ends or repeats, and every <a href=\"/math/pre-algebra/repeating-decimals/\">repeating decimal</a> is a fraction. So what about a decimal that never ends and never repeats? Some <a href=\"/math/pre-algebra/square-roots/\">square roots</a> are exactly that."
+   },
+   {
+    "t": "key",
+    "html": "A <b>rational</b> number can be written as a fraction $\\frac{a}{b}$ of integers ($b \\ne 0$); its decimal ends or repeats. An <b>irrational</b> number cannot be written that way; its decimal goes on forever without repeating. Rational and irrational numbers together make up the real numbers."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Rational",
+     "Irrational"
+    ],
+    "rows": [
+     [
+      "$-7$, $\\frac{3}{8}$, $0.25$",
+      "$\\sqrt{2}$, $\\sqrt{5}$, $\\sqrt{10}$"
+     ],
+     [
+      "$0.\\overline{3}$, $\\sqrt{49} = 7$",
+      "$\\pi$, $2\\pi$"
+     ],
+     [
+      "$\\frac{22}{7} = 3.\\overline{142857}$",
+      "$0.1010010001\\ldots$"
+     ]
+    ],
+    "cap": "Some examples of each kind."
+   },
+   {
+    "t": "why",
+    "html": "Why can’t $\\sqrt{2}$ be a fraction? Squares of fractions come close to 2 but never land on it: $\\left(\\frac{7}{5}\\right)^{2} = 1.96$ and $\\left(\\frac{17}{12}\\right)^{2} \\approx 2.007$. Here is the reason. Suppose a fraction $\\frac{a}{b}$ in lowest terms had $\\frac{a^{2}}{b^{2}} = 2$. Then $a^{2} = 2b^{2}$ is even, so $a$ is even (an odd number squared is odd). Write $a = 2c$: then $4c^{2} = 2b^{2}$, so $b^{2} = 2c^{2}$ and $b$ is even too. But in lowest terms $a$ and $b$ can’t both be even. So no such fraction exists."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 0,
+     "max": 4,
+     "step": 1,
+     "sub": 10,
+     "labels": "whole",
+     "zoom": true,
+     "value": false,
+     "points": [
+      {
+       "v": "1.41421356",
+       "label": "√2",
+       "color": "blue",
+       "drag": false
+      },
+      {
+       "v": "3.14159265",
+       "label": "π",
+       "color": "red",
+       "drag": false
+      }
+     ]
+    },
+    "cap": "$\\sqrt{2}$ and $\\pi$ have exact places on the number line, even though their decimals never end."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A root that is rational",
+    "q": "Is $\\sqrt{0.81}$ rational or irrational?",
+    "steps": [
+     "$0.9 \\times 0.9 = 0.81$, so $\\sqrt{0.81} = 0.9$.",
+     "$0.9 = \\frac{9}{10}$, a fraction."
+    ],
+    "a": "rational"
+   },
+   {
+    "t": "ex",
+    "title": "Close is not equal",
+    "q": "Is $\\frac{22}{7}$ equal to $\\pi$?",
+    "steps": [
+     "$\\frac{22}{7} = 3.142857142857\\ldots$, a repeating decimal, so it is rational.",
+     "$\\pi = 3.14159265\\ldots$ is irrational, and the two differ in the third decimal place."
+    ],
+    "a": "No; $\\frac{22}{7}$ is only an approximation of $\\pi$."
+   },
+   {
+    "t": "mistake",
+    "html": "Two opposite slips. Thinking $\\pi$ equals $\\frac{22}{7}$ or $3.14$ exactly: those are handy approximations, and $\\pi$’s digits never end or repeat. And thinking every square root is irrational: perfect squares have whole-number roots, like $\\sqrt{25} = 5$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 7.1: Rational and Irrational Numbers"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.NS.A.1"
+   }
+  ]
+ },
+ "g8.estimate-irrationals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/pre-algebra/irrational-numbers/\">Irrational numbers</a> like $\\sqrt{50}$ have decimals that never end, but you can still find where they sit, closely and without a calculator."
+   },
+   {
+    "t": "why",
+    "html": "For positive numbers, squaring keeps the order: if $a < b$, then $a^{2} < b^{2}$. So to place $\\sqrt{50}$, find the perfect squares on each side of 50: $49 < 50 < 64$. Their roots are 7 and 8, so $7 < \\sqrt{50} < 8$. And because 50 is just above 49, $\\sqrt{50}$ is just above 7."
+   },
+   {
+    "t": "key",
+    "html": "To estimate $\\sqrt{n}$, find the perfect squares just below and just above $n$; the root lies between their roots. To get closer, square some tenths and see which one lands nearest $n$."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": 7,
+     "max": 8,
+     "step": 1,
+     "sub": 10,
+     "labels": "dec",
+     "zoom": true,
+     "value": false,
+     "points": [
+      {
+       "v": "7.0710678",
+       "label": "√50",
+       "color": "blue",
+       "drag": false
+      }
+     ]
+    },
+    "cap": "$\\sqrt{50}$ sits just past 7.0, between 7.0 and 7.1. Zoom in to see the hundredths."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Between two whole numbers",
+    "q": "Estimate $\\sqrt{50}$ to the nearest tenth.",
+    "steps": [
+     "$7^{2} = 49$ and $8^{2} = 64$, so $\\sqrt{50}$ is a bit more than 7.",
+     "Try tenths: $7.0^{2} = 49$ and $7.1^{2} = 50.41$.",
+     "50 is between them and closer to 50.41 (0.41 away, versus 1 away from 49)."
+    ],
+    "a": "$\\sqrt{50} \\approx 7.1$"
+   },
+   {
+    "t": "ex",
+    "title": "Compare with π",
+    "q": "Which is greater, $\\sqrt{10}$ or $\\pi$?",
+    "steps": [
+     "$3.1^{2} = 9.61$ and $3.2^{2} = 10.24$, so $\\sqrt{10}$ is between 3.1 and 3.2.",
+     "$3.15^{2} = 9.9225$ is still less than 10, so $\\sqrt{10} > 3.15$.",
+     "$\\pi \\approx 3.14$, so $\\sqrt{10}$ is a little greater."
+    ],
+    "a": "$\\sqrt{10}$"
+   },
+   {
+    "t": "ex",
+    "title": "Put them in order",
+    "q": "Order from least to greatest: $\\sqrt{30}$, $5.6$, $\\frac{17}{3}$.",
+    "steps": [
+     "$5.4^{2} = 29.16$ and $5.5^{2} = 30.25$, so $\\sqrt{30}$ is between 5.4 and 5.5.",
+     "$\\frac{17}{3} = 5.\\overline{6}$, a little more than 5.6."
+    ],
+    "a": "$\\sqrt{30} < 5.6 < \\frac{17}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Halving: estimating $\\sqrt{50}$ as 25. Check by squaring: $25^{2} = 625$, far more than 50. Look for the number whose square is near 50 instead."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 5.7: Simplify and Use Square Roots"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.NS.A.2 (rational approximations of irrational numbers)"
+   }
+  ]
+ },
+ "g8.multi-step-equations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can already solve <a href=\"/math/grade-7/equations-with-parentheses/\">equations like $p(x + q) = r$</a> and <a href=\"/math/grade-7/add-subtract-expressions/\">simplify expressions</a>. Longer equations need nothing new: tidy each side first, then solve the short equation that is left."
+   },
+   {
+    "t": "why",
+    "html": "An equation is a balance: both sides name the same number. Distributing and combining like terms only rewrite a side, without changing its value, so the balance is untouched. After that, doing the same thing to both sides keeps it balanced while you get the variable alone."
+   },
+   {
+    "t": "key",
+    "html": "A plan that always works: (1) distribute to clear parentheses; (2) combine like terms on each side; (3) undo adding or subtracting; (4) undo multiplying or dividing. Then check by putting your answer back into the original equation."
+   },
+   {
+    "t": "viz",
+    "name": "balance",
+    "opts": {
+     "eq": "3x + 7 = 19",
+     "task": true
+    },
+    "cap": "After tidying, Example 1 becomes $3x + 7 = 19$. Take the same things off both sides until one $x$ is alone."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Distribute first",
+    "q": "Solve $3(x + 4) - 5 = 19$.",
+    "steps": [
+     "Distribute: $3x + 12 - 5 = 19$.",
+     "Combine: $3x + 7 = 19$.",
+     "Subtract 7 from both sides: $3x = 12$.",
+     "Divide both sides by 3: $x = 4$. Check: $3(4 + 4) - 5 = 24 - 5 = 19$."
+    ],
+    "a": "$x = 4$"
+   },
+   {
+    "t": "ex",
+    "title": "Combine like terms",
+    "q": "Solve $2x + 5 + 4x = 35$.",
+    "steps": [
+     "Combine the $x$ terms: $6x + 5 = 35$.",
+     "Subtract 5: $6x = 30$.",
+     "Divide by 6: $x = 5$."
+    ],
+    "a": "$x = 5$"
+   },
+   {
+    "t": "ex",
+    "title": "A negative outside",
+    "q": "Solve $-2(x - 3) + 4x = 20$.",
+    "steps": [
+     "Distribute $-2$ to <b>both</b> terms: $-2 \\cdot x = -2x$ and $-2 \\cdot (-3) = +6$. So $-2x + 6 + 4x = 20$.",
+     "Combine: $2x + 6 = 20$.",
+     "Subtract 6, then divide by 2: $x = 7$. Check: $-2(4) + 28 = 20$."
+    ],
+    "a": "$x = 7$"
+   },
+   {
+    "t": "ex",
+    "title": "Subtracting a whole group",
+    "q": "Solve $10 - (x + 2) = 3$.",
+    "steps": [
+     "Subtracting $(x + 2)$ subtracts both parts: $10 - x - 2 = 3$.",
+     "Combine: $8 - x = 3$.",
+     "Subtract 8: $-x = -5$, so $x = 5$. Check: $10 - 7 = 3$."
+    ],
+    "a": "$x = 5$"
+   },
+   {
+    "t": "mistake",
+    "html": "Distributing a negative to the first term only: $-2(x - 3) = -2x - 6$. The $-2$ multiplies the $-3$ too, and a negative times a negative is positive: $-2(x - 3) = -2x + 6$. Quick check with $x = 0$: $-2(0 - 3) = 6$, but $-2(0) - 6 = -6$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 2.4: Use a General Strategy to Solve Linear Equations"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.C.7b (solve linear equations, including expanding and collecting like terms)"
+   }
+  ]
+ },
+ "g8.variables-both-sides": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sometimes the variable shows up on both sides, as in $5x + 3 = 2x + 18$. You already know how to <a href=\"/math/pre-algebra/multi-step-equations/\">solve multi-step equations</a>; the new move is to gather the variable terms together first."
+   },
+   {
+    "t": "why",
+    "html": "Picture a balance with 5 bags and 3 blocks on the left, 2 bags and 18 blocks on the right. Every bag weighs the same unknown amount. Take 2 bags off <b>each</b> side and the scale stays level: 3 bags and 3 blocks balance 18 blocks. That is $3x + 3 = 18$, a two-step equation."
+   },
+   {
+    "t": "key",
+    "html": "Add or subtract the same variable term on both sides so the variable is on only one side. Moving the smaller variable term usually keeps the numbers positive. Then finish as usual."
+   },
+   {
+    "t": "viz",
+    "name": "balance",
+    "opts": {
+     "eq": "3x + 2 = x + 8",
+     "task": true
+    },
+    "cap": "Take one bag off each side first. What is left tells you the weight of a bag."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Gather the x terms",
+    "q": "Solve $5x + 3 = 2x + 18$.",
+    "steps": [
+     "Subtract $2x$ from both sides: $3x + 3 = 18$.",
+     "Subtract 3: $3x = 15$.",
+     "Divide by 3: $x = 5$. Check: $25 + 3 = 28$ and $10 + 18 = 28$."
+    ],
+    "a": "$x = 5$"
+   },
+   {
+    "t": "ex",
+    "title": "Negative coefficients",
+    "q": "Solve $4 - 3x = 2x - 11$.",
+    "steps": [
+     "Add $3x$ to both sides: $4 = 5x - 11$.",
+     "Add 11: $15 = 5x$.",
+     "Divide by 5: $x = 3$. Check: $4 - 9 = -5$ and $6 - 11 = -5$."
+    ],
+    "a": "$x = 3$"
+   },
+   {
+    "t": "ex",
+    "title": "Parentheses on both sides",
+    "q": "Solve $2(3x - 1) = 4(x + 2)$.",
+    "steps": [
+     "Distribute: $6x - 2 = 4x + 8$.",
+     "Subtract $4x$: $2x - 2 = 8$.",
+     "Add 2, then divide by 2: $x = 5$. Check: $2(14) = 28$ and $4(7) = 28$."
+    ],
+    "a": "$x = 5$"
+   },
+   {
+    "t": "ex",
+    "title": "Clear the fractions",
+    "q": "Solve $\\dfrac{x}{2} + 3 = \\dfrac{x}{3} + 5$.",
+    "steps": [
+     "Multiply every term by 6, a common denominator: $3x + 18 = 2x + 30$.",
+     "Subtract $2x$: $x + 18 = 30$.",
+     "Subtract 18: $x = 12$. Check: $6 + 3 = 9$ and $4 + 5 = 9$."
+    ],
+    "a": "$x = 12$"
+   },
+   {
+    "t": "mistake",
+    "html": "Subtracting a variable term on one side and adding it on the other. From $5x + 3 = 2x + 18$, writing $7x + 3 = 18$ adds $2x$ on the left but takes it away on the right, which tips the balance. Whatever you do, do it to both sides: subtracting $2x$ from both gives $3x + 3 = 18$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 8.3: Solve Equations with Variables and Constants on Both Sides"
+   },
+   {
+    "name": "OpenStax Prealgebra 2e, Section 8.4: Solve Equations with Fraction or Decimal Coefficients"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.C.7b"
+   }
+  ]
+ },
+ "g8.solution-count": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When you <a href=\"/math/pre-algebra/variables-both-sides/\">collect the variable terms</a>, they sometimes cancel completely. Then the equation has no $x$ left, and what remains tells you how many solutions there are."
+   },
+   {
+    "t": "why",
+    "html": "If the $x$ terms cancel, what is left is a statement about numbers only, like $6 = 6$ or $-1 = 6$. Each step kept the two sides balanced, so this statement is true for exactly the values of $x$ that made the original true. A true statement such as $6 = 6$ does not depend on $x$, so <b>every</b> number works. A false one such as $-1 = 6$ can never be made true, so <b>no</b> number works."
+   },
+   {
+    "t": "key",
+    "html": "A linear equation has <b>exactly one solution</b> when you end with $x$ = a number, <b>infinitely many</b> when you end with a true statement like $6 = 6$, and <b>no solution</b> when you end with a false statement like $-1 = 6$."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      {
+       "f": "2x+3",
+       "label": "left"
+      },
+      {
+       "f": "a*x+c",
+       "label": "right",
+       "color": "red"
+      }
+     ],
+     "params": {
+      "a": [
+       -3,
+       3,
+       1,
+       1
+      ],
+      "c": [
+       -6,
+       6,
+       5,
+       1
+      ]
+     },
+     "intersections": true,
+     "xmin": -6,
+     "xmax": 6,
+     "ymin": -10,
+     "ymax": 12,
+     "zoom": false
+    },
+    "cap": "Graph each side of $2x + 3 = ax + c$ as a line. Where they cross, the sides are equal: one solution. Set $a = 2$ and the lines are parallel (no solution), unless $c = 3$ too, which makes them the same line."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Every number works",
+    "q": "Solve $3(x + 2) - x = 2(x + 3)$.",
+    "steps": [
+     "Simplify each side: $2x + 6 = 2x + 6$.",
+     "Subtract $2x$: $6 = 6$. True, whatever $x$ is.",
+     "Check two numbers in the original: $x = 0$ gives $6 = 6$; $x = 5$ gives $16 = 16$."
+    ],
+    "a": "infinitely many solutions (all real numbers)"
+   },
+   {
+    "t": "ex",
+    "title": "No number works",
+    "q": "Solve $4x - 1 = 2(2x + 3)$.",
+    "steps": [
+     "Distribute: $4x - 1 = 4x + 6$.",
+     "Subtract $4x$: $-1 = 6$. False, whatever $x$ is."
+    ],
+    "a": "no solution"
+   },
+   {
+    "t": "ex",
+    "title": "Exactly one",
+    "q": "Solve $5x + 2 = 3x - 4$.",
+    "steps": [
+     "Subtract $3x$: $2x + 2 = -4$.",
+     "Subtract 2, then divide by 2: $x = -3$."
+    ],
+    "a": "one solution, $x = -3$"
+   },
+   {
+    "t": "ex",
+    "title": "Tell without solving",
+    "q": "For which number $c$ does $7x + 4 = 7x + c$ have infinitely many solutions? For which does it have none?",
+    "steps": [
+     "Both sides have $7x$, so the $x$ terms will cancel, leaving $4 = c$.",
+     "If $c = 4$ the sides are identical: infinitely many solutions. Any other $c$ gives a false statement: no solution."
+    ],
+    "a": "$c = 4$ gives infinitely many; any other $c$ gives none."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading $0 = 0$ as “$x = 0$,” or thinking a false statement means you made a mistake. $0 = 0$ says nothing about $x$; it is true for every $x$. A false statement like $4 = 9$ is a real result: no solution. It is still wise to recheck your algebra once, and a quick test with two values of $x$ in the original equation settles it."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 2.4: Use a General Strategy to Solve Linear Equations"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.C.7a (one, infinitely many or no solutions)"
+   }
+  ]
+ },
+ "g8.function-definition": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-6/dependent-independent/\">dependent and independent variables</a> one quantity depended on another. A function makes that idea precise: it is a rule you can count on."
+   },
+   {
+    "t": "why",
+    "html": "A rule is only useful if it is predictable. If you put 3 into a machine and sometimes got 5 and sometimes 7, you could never say what 3 gives. So the one requirement is that each input has a single output. Two different inputs may give the same output, just as two students can share a birthday; that does not make anything unpredictable."
+   },
+   {
+    "t": "key",
+    "html": "A <b>function</b> assigns to each input exactly one output. To test a list, table or diagram, look for an input that appears with two different outputs. If there is none, it is a function."
+   },
+   {
+    "t": "viz",
+    "name": "g8-mapping",
+    "opts": {
+     "pairs": [
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ]
+    },
+    "cap": "A function: two inputs share the output 4, and that is allowed."
+   },
+   {
+    "t": "viz",
+    "name": "g8-mapping",
+    "opts": {
+     "pairs": [
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       7
+      ],
+      [
+       3,
+       6
+      ]
+     ]
+    },
+    "cap": "Not a function: the input 2 has two outputs, 5 and 7."
+   },
+   {
+    "t": "ex",
+    "title": "A list of pairs",
+    "q": "Is $\\{(-2, 3), (0, 1), (4, 3), (5, 0)\\}$ a function?",
+    "steps": [
+     "The inputs are $-2$, 0, 4 and 5: each appears once.",
+     "Two inputs share the output 3, which is fine."
+    ],
+    "a": "Yes, it is a function."
+   },
+   {
+    "t": "ex",
+    "title": "A table",
+    "q": "Is this a function? $$\\begin{array}{c|cccc} x & 1 & 2 & 2 & 3 \\\\ \\hline y & 6 & 8 & 9 & 10 \\end{array}$$",
+    "steps": [
+     "The input 2 appears twice, with outputs 8 and 9.",
+     "One input with two different outputs breaks the rule."
+    ],
+    "a": "No, it is not a function."
+   },
+   {
+    "t": "ex",
+    "title": "Points on a graph",
+    "q": "The points $(1, 2)$, $(1, 5)$ and $(3, 4)$ are plotted. Do they show a function?",
+    "steps": [
+     "$(1, 2)$ and $(1, 5)$ have the same input, 1, but different outputs.",
+     "On a graph, that shows up as two points on the same vertical line."
+    ],
+    "a": "No."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a function can’t have two inputs with the same output. Repeated <b>outputs</b> are fine. Only a repeated <b>input</b> with different outputs breaks the rule."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Intermediate Algebra 2e, Section 3.5: Relations and Functions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.F.A.1 (a function assigns to each input exactly one output)"
+   }
+  ]
+ },
+ "g8.function-representations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/pre-algebra/function-definition/\">function</a> can be shown in four ways: words, a rule (an equation), a table and a graph. They all describe the same input-output pairs, so you can move from any one to the others."
+   },
+   {
+    "t": "why",
+    "html": "A rule like $y = 3x + 2$ is a recipe for making pairs: choose an input, get its output. A table lists some of those pairs. A graph draws every pair as a point $(x, y)$. Words tell the story the pairs come from. Moving between forms is just making pairs or reading them."
+   },
+   {
+    "t": "key",
+    "html": "To go from a rule to a table or graph, choose inputs and compute outputs. To go from a table or graph to a rule, look for how the output changes as the input grows, and what the output is when the input is 0."
+   },
+   {
+    "t": "p",
+    "html": "Example: a bike rental costs \\$2 plus \\$3 per hour. In words: the cost starts at 2 and goes up 3 each hour. As a rule: $y = 3x + 2$, where $x$ is hours and $y$ is dollars."
+   },
+   {
+    "t": "table",
+    "head": [
+     "hours $x$",
+     "0",
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    "rows": [
+     [
+      "cost $y$ (\\$)",
+      "2",
+      "5",
+      "8",
+      "11",
+      "14"
+     ]
+    ],
+    "cap": "The same function as a table."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "3x+2",
+     "table": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "points": [
+      {
+       "x": 2,
+       "y": 8,
+       "label": "2 hours"
+      }
+     ],
+     "xmin": -1,
+     "xmax": 6,
+     "ymin": -2,
+     "ymax": 20,
+     "zoom": false
+    },
+    "cap": "And as a graph. Each row of the table is a point on the line."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Rule to outputs",
+    "q": "For $y = -2x + 7$, find the outputs for $x = 3$ and $x = -1$.",
+    "steps": [
+     "$x = 3$: $y = -2 \\cdot 3 + 7 = -6 + 7 = 1$.",
+     "$x = -1$: $y = -2 \\cdot (-1) + 7 = 2 + 7 = 9$."
+    ],
+    "a": "$1$ and $9$"
+   },
+   {
+    "t": "ex",
+    "title": "Table to rule",
+    "q": "Write a rule for this table. $$\\begin{array}{c|cccc} x & 0 & 1 & 2 & 3 \\\\ \\hline y & 5 & 9 & 13 & 17 \\end{array}$$",
+    "steps": [
+     "Each time $x$ goes up 1, $y$ goes up 4, so the rule has $4x$.",
+     "At $x = 0$, $y = 5$, so 5 is added.",
+     "Check $x = 3$: $4 \\cdot 3 + 5 = 17$."
+    ],
+    "a": "$y = 4x + 5$"
+   },
+   {
+    "t": "ex",
+    "title": "Output to input",
+    "q": "For the bike rental, how many hours cost \\$20?",
+    "steps": [
+     "Set the rule equal to 20: $3x + 2 = 20$.",
+     "Subtract 2: $3x = 18$, so $x = 6$."
+    ],
+    "a": "6 hours"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing up the input and the output, for example reading a table’s bottom row as the inputs. In a table the input row (or column) is usually labeled $x$; on a graph the input is read on the horizontal axis."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Intermediate Algebra 2e, Section 3.6: Graphs of Functions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.F.A.1"
+   }
+  ]
+ },
+ "g8.qualitative-graphs": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Many graphs tell a story without any equation. You can read the story from the <a href=\"/math/pre-algebra/function-representations/\">graph of a function</a>, or sketch a graph from a story, by looking at its shape."
+   },
+   {
+    "t": "why",
+    "html": "A graph pairs each time with an amount. Its height is the amount, not a place on a map. So a rising part means the amount is growing, a flat part means it is not changing, and a falling part means it is shrinking. A steeper part means the change is happening faster."
+   },
+   {
+    "t": "key",
+    "html": "Read left to right, one piece at a time: rising (increasing), flat (constant) or falling (decreasing), and steep (fast) or gentle (slow)."
+   },
+   {
+    "t": "viz",
+    "name": "g8-plot",
+    "opts": {
+     "xmin": 0,
+     "xmax": 12,
+     "ymin": 0,
+     "ymax": 11,
+     "xstep": 1,
+     "ystep": 1,
+     "every": 2,
+     "equal": false,
+     "height": 300,
+     "xlabel": "time (minutes)",
+     "ylabel": "distance from home (blocks)",
+     "paths": [
+      {
+       "pts": [
+        [
+         0,
+         0
+        ],
+        [
+         4,
+         4
+        ],
+        [
+         6,
+         4
+        ],
+        [
+         7,
+         10
+        ],
+        [
+         11,
+         0
+        ]
+       ],
+       "labels": [
+        "A",
+        "B",
+        "C",
+        "D"
+       ],
+       "color": "blue"
+      }
+     ]
+    },
+    "cap": "Ana’s walk: distance from home over 11 minutes."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Tell the story",
+    "q": "Describe Ana’s walk in the graph above.",
+    "steps": [
+     "A: the distance rises gently, so she walks away from home slowly.",
+     "B: flat, so she stops for 2 minutes.",
+     "C: a steep rise, so she moves away fast (maybe she runs).",
+     "D: the graph falls to 0, so she heads back and arrives home."
+    ],
+    "a": "walk away, stop, run farther, return home"
+   },
+   {
+    "t": "ex",
+    "title": "Sketch from a story",
+    "q": "A bathtub fills at a steady rate, stays full while someone bathes, then drains quickly. Describe the graph of water in the tub over time.",
+    "steps": [
+     "Filling steadily: a straight part rising at a constant slant.",
+     "Bathing: a flat part.",
+     "Draining quickly: a steep part falling to 0."
+    ],
+    "a": "rise, flat, steep fall"
+   },
+   {
+    "t": "ex",
+    "title": "Compare speeds",
+    "q": "During which part of Ana’s walk was she moving fastest?",
+    "steps": [
+     "Speed shows as steepness. Part C rises 6 blocks in 1 minute; part A rises 4 blocks in 4 minutes; part D falls 10 blocks in 4 minutes.",
+     "C is the steepest."
+    ],
+    "a": "part C"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading a distance graph like a picture of the path, so that a rising part looks like walking uphill. The graph goes up because the distance from home grows; the ground could be flat. A part that falls to 0 means arriving home, not walking downhill."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.F.B.5 (describe a function by analyzing a graph)"
+   },
+   {
+    "name": "OpenStax Intermediate Algebra 2e, Section 3.6: Graphs of Functions"
+   }
+  ]
+ },
+ "g8.proportional-slope": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-7/proportional-points/\">what a point on the graph means</a> you saw that the graph of $y = kx$ passes through $(0, 0)$ and $(1, k)$, where $k$ is the unit rate. Now look at how steep that line is."
+   },
+   {
+    "t": "why",
+    "html": "In $y = kx$, every step of 1 to the right adds $k$ to $y$. With $k = 2$ the line climbs 2 for each step; with $k = 5$ it climbs 5. So a bigger unit rate makes a steeper line. The steepness of a line is called its <b>slope</b>, and for $y = kx$ the slope is exactly the unit rate $k$."
+   },
+   {
+    "t": "key",
+    "html": "The graph of a proportional relationship $y = kx$ is a line through the origin, and its slope is the unit rate $k = \\frac{y}{x}$. To compare two proportional relationships, compare their unit rates: the steeper line has the greater rate."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "k*x",
+     "params": {
+      "k": [
+       0.5,
+       5,
+       2,
+       0.5
+      ]
+     },
+     "points": [
+      {
+       "x": 1,
+       "on": 0,
+       "label": "at x = 1"
+      }
+     ],
+     "xmin": 0,
+     "xmax": 6,
+     "ymin": 0,
+     "ymax": 15,
+     "zoom": false
+    },
+    "cap": "Slide $k$. The point above $x = 1$ is at height $k$, and the line gets steeper as $k$ grows."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From a table",
+    "q": "3 pounds of apples cost \\$7.50 and 6 pounds cost \\$15. What is the unit rate?",
+    "steps": [
+     "$k = \\frac{y}{x} = \\frac{7.50}{3} = 2.5$.",
+     "Check with the other pair: $\\frac{15}{6} = 2.5$."
+    ],
+    "a": "\\$2.50 per pound; the graph of $y = 2.5x$ has slope 2.5"
+   },
+   {
+    "t": "ex",
+    "title": "Compare two forms",
+    "q": "Pump A follows $y = 4x$ (gallons after $x$ minutes). Pump B’s graph passes through $(5, 18)$. Which pump is faster?",
+    "steps": [
+     "Pump A’s unit rate is 4 gallons per minute.",
+     "Pump B’s is $\\frac{18}{5} = 3.6$ gallons per minute.",
+     "4 is greater, so A’s line is steeper."
+    ],
+    "a": "Pump A"
+   },
+   {
+    "t": "ex",
+    "title": "From a graph",
+    "q": "A proportional graph passes through $(4, 6)$. Write its equation.",
+    "steps": [
+     "$k = \\frac{6}{4} = \\frac{3}{2}$."
+    ],
+    "a": "$y = \\frac{3}{2}x$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing the wrong way, $\\frac{x}{y}$ instead of $\\frac{y}{x}$. The unit rate is the amount of $y$ for each 1 of $x$. Check: at $x = 1$, $y$ should equal $k$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.B.5 (graph proportional relationships, interpreting the unit rate as the slope)"
+   },
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 4.4: Understand Slope of a Line"
+   }
+  ]
+ },
+ "g8.slope-rate-of-change": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Not every line goes through the origin, but every line has a steepness. Building on <a href=\"/math/pre-algebra/proportional-slope/\">unit rate as slope</a>, slope measures how fast one quantity changes compared with another."
+   },
+   {
+    "t": "why",
+    "html": "When something changes at a constant rate, equal steps in $x$ always bring equal changes in $y$. So the ratio $\\dfrac{\\text{change in } y}{\\text{change in } x}$ is the same no matter which two points you pick. That one number describes the whole line, and it is the rate of change."
+   },
+   {
+    "t": "key",
+    "html": "$$\\text{slope} = \\frac{\\text{change in } y}{\\text{change in } x} = \\text{rate of change}$$ It tells how much $y$ changes for each 1 that $x$ increases. Positive: $y$ goes up. Negative: $y$ goes down. Zero: $y$ stays the same."
+   },
+   {
+    "t": "viz",
+    "name": "slope",
+    "opts": {
+     "p1": [
+      0,
+      1
+     ],
+     "p2": [
+      3,
+      7
+     ],
+     "mode": "unit"
+    },
+    "cap": "With a run of 1, the rise is the slope itself: here $y$ goes up 2 for every 1 to the right."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From a table",
+    "q": "A candle burns down: $$\\begin{array}{c|cccc} \\text{hours} & 0 & 1 & 2 & 3 \\\\ \\hline \\text{height (cm)} & 20 & 18 & 16 & 14 \\end{array}$$ What is the rate of change?",
+    "steps": [
+     "Each hour, the height changes by $18 - 20 = -2$ cm.",
+     "It is the same for every pair of neighboring columns."
+    ],
+    "a": "$-2$ cm per hour"
+   },
+   {
+    "t": "ex",
+    "title": "Steps bigger than 1",
+    "q": "$$\\begin{array}{c|cccc} \\text{minutes} & 0 & 5 & 10 & 15 \\\\ \\hline \\text{liters} & 3 & 23 & 43 & 63 \\end{array}$$ What is the rate of change?",
+    "steps": [
+     "Change in $y$: $23 - 3 = 20$. Change in $x$: $5 - 0 = 5$.",
+     "Rate: $\\frac{20}{5} = 4$."
+    ],
+    "a": "4 liters per minute"
+   },
+   {
+    "t": "ex",
+    "title": "Two data points",
+    "q": "A car has gone 150 miles after 2 hours and 330 miles after 5 hours, at a steady speed. What is the rate of change?",
+    "steps": [
+     "Change in distance: $330 - 150 = 180$ miles.",
+     "Change in time: $5 - 2 = 3$ hours.",
+     "$\\frac{180}{3} = 60$."
+    ],
+    "a": "60 miles per hour"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking slope is a height. A slope of 3 does not mean the line is 3 units high; it means the line rises 3 for every 1 to the right. A line can sit high on the graph and still have slope 0, if it is flat."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 4.4: Understand Slope of a Line"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.F.B.4 (rate of change and initial value)"
+   }
+  ]
+ },
+ "g8.slope-from-graph": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "On a graph, the <a href=\"/math/pre-algebra/slope-rate-of-change/\">rate of change</a> can be counted directly from the grid."
+   },
+   {
+    "t": "why",
+    "html": "Between two points on a line, the <b>run</b> is the horizontal change and the <b>rise</b> is the vertical change. They are exactly the change in $x$ and the change in $y$, so $$\\text{slope} = \\frac{\\text{rise}}{\\text{run}}$$"
+   },
+   {
+    "t": "key",
+    "html": "Pick two points where the line crosses grid corners. Going from left to right, count the rise (up is positive, down is negative) and the run, then divide rise by run. Check each axis’s scale before counting squares."
+   },
+   {
+    "t": "viz",
+    "name": "slope",
+    "opts": {
+     "p1": [
+      -2,
+      -1
+     ],
+     "p2": [
+      2,
+      5
+     ],
+     "slide": false
+    },
+    "cap": "Drag either point. The triangle shows the run and the rise, and the slope is rise ÷ run."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Up and to the right",
+    "q": "A line passes through the grid points $(-2, -1)$ and $(2, 5)$. Find its slope.",
+    "steps": [
+     "Run: from $x = -2$ to $x = 2$ is 4 to the right.",
+     "Rise: from $y = -1$ to $y = 5$ is 6 up.",
+     "Slope $= \\frac{6}{4} = \\frac{3}{2}$."
+    ],
+    "a": "$\\frac{3}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "A falling line",
+    "q": "A line goes through $(-3, 4)$ and $(3, 0)$. Find its slope.",
+    "steps": [
+     "Run: 6 to the right.",
+     "Rise: from 4 down to 0, which is $-4$.",
+     "Slope $= \\frac{-4}{6} = -\\frac{2}{3}$. A line that falls from left to right has a negative slope."
+    ],
+    "a": "$-\\frac{2}{3}$"
+   },
+   {
+    "t": "viz",
+    "name": "g8-plot",
+    "opts": {
+     "xmin": 0,
+     "xmax": 12,
+     "ymin": 0,
+     "ymax": 30,
+     "xstep": 2,
+     "ystep": 5,
+     "equal": false,
+     "height": 300,
+     "lines": [
+      {
+       "p": [
+        [
+         2,
+         5
+        ],
+        [
+         8,
+         15
+        ]
+       ],
+       "color": "blue"
+      }
+     ],
+     "points": [
+      {
+       "x": 2,
+       "y": 5,
+       "color": "red",
+       "coords": true
+      },
+      {
+       "x": 8,
+       "y": 15,
+       "color": "red",
+       "coords": true
+      }
+     ],
+     "tri": {
+      "p1": [
+       2,
+       5
+      ],
+      "p2": [
+       8,
+       15
+      ],
+      "run": "6",
+      "rise": "10"
+     }
+    },
+    "cap": "Here each square is 2 across and 5 up."
+   },
+   {
+    "t": "ex",
+    "title": "Mind the scale",
+    "q": "In the graph just above, find the slope.",
+    "steps": [
+     "The line goes 3 squares right and 2 squares up.",
+     "But each square across is 2 units and each square up is 5 units: run $= 3 \\cdot 2 = 6$, rise $= 2 \\cdot 5 = 10$.",
+     "Slope $= \\frac{10}{6} = \\frac{5}{3}$. Counting squares alone would give $\\frac{2}{3}$."
+    ],
+    "a": "$\\frac{5}{3}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Dividing run by rise, or counting grid squares without reading the scale. Slope is rise over run, the change in $y$ over the change in $x$. Read actual coordinates from the axes before you count."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 4.4: Understand Slope of a Line"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.B.6 (similar triangles and slope)"
+   }
+  ]
+ },
+ "g8.slope-similar-triangles": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Does it matter which two points you use to <a href=\"/math/pre-algebra/slope-from-graph/\">find a slope</a>? No, and <a href=\"/math/grade-7/scale-drawings/\">scale drawings</a> explain why."
+   },
+   {
+    "t": "why",
+    "html": "Draw two slope triangles on the same line. Their bottom sides are both horizontal, their upright sides are both vertical, and their long sides lie along the same line. So their angles match, and one triangle is a scaled copy of the other, like a scale drawing. Scaling multiplies every side by the same factor $k$, so $$\\frac{\\text{rise}_2}{\\text{run}_2} = \\frac{k \\cdot \\text{rise}_1}{k \\cdot \\text{run}_1} = \\frac{\\text{rise}_1}{\\text{run}_1}$$"
+   },
+   {
+    "t": "key",
+    "html": "All slope triangles on one line are similar, so they all give the same rise ÷ run. That is why a line has a single slope, and why any two of its points give it."
+   },
+   {
+    "t": "viz",
+    "name": "slope",
+    "opts": {
+     "p1": [
+      -3,
+      -2
+     ],
+     "p2": [
+      0,
+      0
+     ],
+     "slide": true
+    },
+    "cap": "Slide the triangle along the line, or drag the points farther apart. Rise ÷ run stays the same."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Scale a triangle",
+    "q": "On a line, one slope triangle has rise 2 and run 3. A bigger slope triangle on the same line has run 12. What is its rise?",
+    "steps": [
+     "The run grew from 3 to 12, a scale factor of 4.",
+     "The rise grows by the same factor: $2 \\cdot 4 = 8$.",
+     "Check: $\\frac{8}{12} = \\frac{2}{3}$."
+    ],
+    "a": "8"
+   },
+   {
+    "t": "ex",
+    "title": "Same line or not?",
+    "q": "Could a triangle with rise 4 and run 6 and another with rise 6 and run 9 be slope triangles on the same line?",
+    "steps": [
+     "$\\frac{4}{6} = \\frac{2}{3}$ and $\\frac{6}{9} = \\frac{2}{3}$.",
+     "The ratios match, so yes (if the lines also share a point)."
+    ],
+    "a": "yes"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a bigger slope triangle means a steeper line. A bigger triangle on the same line has a bigger rise and a bigger run in the same proportion, so the slope is unchanged."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.B.6 (use similar triangles to explain why the slope is the same between any two points)"
+   },
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 4.4: Understand Slope of a Line"
+   }
+  ]
+ },
+ "g8.slope-formula": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Counting rise and run works on a grid. With coordinates you can compute them instead, using <a href=\"/math/grade-7/integer-operations/\">signed-number arithmetic</a> in place of counting <a href=\"/math/pre-algebra/slope-from-graph/\">from a graph</a>."
+   },
+   {
+    "t": "why",
+    "html": "The rise from point 1 to point 2 is the change in $y$: $y_2 - y_1$. The run is the change in $x$: $x_2 - x_1$. That gives the formula below. Which point you call “point 1” does not matter: swapping them flips the sign of both the top and the bottom, and the two signs cancel."
+   },
+   {
+    "t": "key",
+    "html": "For any two points $(x_1, y_1)$ and $(x_2, y_2)$ with $x_1 \\ne x_2$: $$m = \\frac{y_2 - y_1}{x_2 - x_1}$$ Subtract in the same order on the top and the bottom."
+   },
+   {
+    "t": "viz",
+    "name": "slope",
+    "opts": {
+     "p1": [
+      -3,
+      4
+     ],
+     "p2": [
+      3,
+      -2
+     ]
+    },
+    "cap": "Move the points and compare the formula with the triangle."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Plug in",
+    "q": "Find the slope through $(2, 1)$ and $(6, 9)$.",
+    "steps": [
+     "$m = \\dfrac{9 - 1}{6 - 2} = \\dfrac{8}{4}$."
+    ],
+    "a": "$2$"
+   },
+   {
+    "t": "ex",
+    "title": "With negatives",
+    "q": "Find the slope through $(-3, 4)$ and $(3, -2)$.",
+    "steps": [
+     "$m = \\dfrac{-2 - 4}{3 - (-3)} = \\dfrac{-6}{6}$.",
+     "$m = -1$."
+    ],
+    "a": "$-1$"
+   },
+   {
+    "t": "ex",
+    "title": "Flat and upright lines",
+    "q": "Find the slopes through $(1, 5)$ and $(7, 5)$, and through $(4, -2)$ and $(4, 3)$.",
+    "steps": [
+     "First pair: $m = \\frac{5 - 5}{7 - 1} = \\frac{0}{6} = 0$. A horizontal line has slope 0.",
+     "Second pair: the run is $4 - 4 = 0$, and dividing by 0 is not possible. A vertical line has no slope; we say its slope is undefined."
+    ],
+    "a": "$0$, and undefined"
+   },
+   {
+    "t": "mistake",
+    "html": "Subtracting in different orders on top and bottom, which flips the sign. For $(2, 1)$ and $(6, 9)$: $\\frac{9 - 1}{2 - 6} = -2$ is wrong. Keep the same order: $\\frac{9 - 1}{6 - 2} = 2$. Check: the line rises from left to right, so the slope must be positive."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 4.4: Understand Slope of a Line"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.F.B.4"
+   }
+  ]
+ },
+ "g8.slope-intercept-form": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know a line has <a href=\"/math/pre-algebra/slope-similar-triangles/\">one slope everywhere</a> and how to <a href=\"/math/pre-algebra/slope-formula/\">compute it</a>. That is enough to write an equation that every point on the line satisfies."
+   },
+   {
+    "t": "why",
+    "html": "Take a line with slope $m$ that crosses the $y$-axis at $(0, b)$. Pick any other point $(x, y)$ on it. The slope from $(0, b)$ to $(x, y)$ must be $m$: $$\\frac{y - b}{x - 0} = m$$ Multiply both sides by $x$: $y - b = mx$, so $y = mx + b$."
+   },
+   {
+    "t": "key",
+    "html": "In $y = mx + b$, $m$ is the slope (the rate of change) and $b$ is the $y$-intercept (the starting value, where $x = 0$)."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "m*x+b",
+     "params": {
+      "m": [
+       -4,
+       4,
+       2,
+       0.5
+      ],
+      "b": [
+       -6,
+       6,
+       1,
+       1
+      ]
+     },
+     "points": [
+      {
+       "x": 0,
+       "on": 0,
+       "label": "y-intercept"
+      }
+     ],
+     "xmin": -8,
+     "xmax": 8,
+     "ymin": -10,
+     "ymax": 10
+    },
+    "cap": "Slide $m$ to tilt the line and $b$ to move where it crosses the $y$-axis."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Read m and b",
+    "q": "Find the slope and $y$-intercept of $y = -2x + 5$ and of $y = 4 - \\frac{1}{3}x$.",
+    "steps": [
+     "$y = -2x + 5$: $m = -2$, $b = 5$.",
+     "$y = 4 - \\frac{1}{3}x$ is $y = -\\frac{1}{3}x + 4$ written in a different order: $m = -\\frac{1}{3}$, $b = 4$."
+    ],
+    "a": "$m = -2, b = 5$; and $m = -\\frac{1}{3}, b = 4$"
+   },
+   {
+    "t": "ex",
+    "title": "Graph from the equation",
+    "q": "Graph $y = \\frac{2}{3}x - 1$.",
+    "steps": [
+     "Start at the $y$-intercept, $(0, -1)$.",
+     "The slope $\\frac{2}{3}$ means up 2 for every 3 to the right: the next point is $(3, 1)$.",
+     "Draw the line through them."
+    ],
+    "a": "the line through $(0, -1)$ and $(3, 1)$"
+   },
+   {
+    "t": "ex",
+    "title": "Equation from points",
+    "q": "A line crosses the $y$-axis at $(0, 3)$ and passes through $(2, -1)$. Write its equation.",
+    "steps": [
+     "$b = 3$.",
+     "$m = \\frac{-1 - 3}{2 - 0} = \\frac{-4}{2} = -2$."
+    ],
+    "a": "$y = -2x + 3$"
+   },
+   {
+    "t": "mistake",
+    "html": "Taking the wrong number. In $y = 4 - 2x$ the slope is $-2$ (the number multiplying $x$), not 4, even though 4 is written first. And $b$ is where the line crosses the <b>$y$</b>-axis; the point where it crosses the $x$-axis is a different number."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 4.5: Use the Slope-Intercept Form of an Equation of a Line"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.B.6 (derive y = mx + b)"
+   }
+  ]
+ },
+ "g8.linear-nonlinear": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every equation $y = mx + b$ (see <a href=\"/math/pre-algebra/slope-intercept-form/\">slope-intercept form</a>) graphs as a straight line. Many functions don’t. How can you tell from a table or an equation?"
+   },
+   {
+    "t": "why",
+    "html": "A line has the same slope everywhere, so a linear function changes $y$ by the same amount for each step of 1 in $x$. If the rate of change is different anywhere, the points can’t all lie on one line, and the graph bends."
+   },
+   {
+    "t": "key",
+    "html": "A function is <b>linear</b> when its rate of change is constant: its equation can be written $y = mx + b$, and its graph is a line. Check <b>every</b> pair of neighboring rows; when the $x$-steps are uneven, compare change in $y$ ÷ change in $x$."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "2x+1",
+      "x^2"
+     ],
+     "table": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "xmin": -1,
+     "xmax": 5,
+     "ymin": -1,
+     "ymax": 17,
+     "zoom": false
+    },
+    "cap": "$y = 2x + 1$ rises by 2 every step. $y = x^{2}$ rises by 1, 3, 5, 7: not constant, so it curves."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Constant steps",
+    "q": "Is this linear? $$\\begin{array}{c|ccccc} x & 0 & 1 & 2 & 3 & 4 \\\\ \\hline y & 3 & 7 & 11 & 15 & 19 \\end{array}$$",
+    "steps": [
+     "The changes are $+4, +4, +4, +4$."
+    ],
+    "a": "linear ($y = 4x + 3$)"
+   },
+   {
+    "t": "ex",
+    "title": "Changing steps",
+    "q": "Is this linear? $$\\begin{array}{c|cccc} x & 1 & 2 & 3 & 4 \\\\ \\hline y & 1 & 4 & 9 & 16 \\end{array}$$",
+    "steps": [
+     "The changes are $+3, +5, +7$."
+    ],
+    "a": "nonlinear"
+   },
+   {
+    "t": "ex",
+    "title": "Uneven x-steps",
+    "q": "Is this linear? $$\\begin{array}{c|cccc} x & 0 & 2 & 5 & 6 \\\\ \\hline y & 1 & 7 & 16 & 19 \\end{array}$$",
+    "steps": [
+     "Rates: $\\frac{7 - 1}{2 - 0} = 3$, $\\frac{16 - 7}{5 - 2} = 3$, $\\frac{19 - 16}{6 - 5} = 3$.",
+     "All the same."
+    ],
+    "a": "linear"
+   },
+   {
+    "t": "ex",
+    "title": "From equations",
+    "q": "Which are linear: $y = 3x - 2$, $y = x^{2}$, $y = \\frac{5}{x}$, $2x + y = 7$?",
+    "steps": [
+     "$y = 3x - 2$ is already $y = mx + b$.",
+     "$2x + y = 7$ rearranges to $y = -2x + 7$.",
+     "$x^{2}$ and $\\frac{5}{x}$ can’t be written as $mx + b$."
+    ],
+    "a": "$y = 3x - 2$ and $2x + y = 7$"
+   },
+   {
+    "t": "mistake",
+    "html": "Deciding from the first two rows. A table can start with equal steps and then change. In $y$-values 2, 5, 8, 12, the first steps are $+3$ and $+3$, but the next is $+4$, so it is nonlinear. Check every step."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.F.A.3 (linear functions and functions that are not linear)"
+   },
+   {
+    "name": "OpenStax Intermediate Algebra 2e, Section 3.6: Graphs of Functions"
+   }
+  ]
+ },
+ "g8.compare-functions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two <a href=\"/math/pre-algebra/linear-nonlinear/\">linear functions</a> might be described in different ways: one by an equation, one by a table, one by a graph or in words. You can still compare them."
+   },
+   {
+    "t": "why",
+    "html": "Every linear function has the same two features, however it is shown: a rate of change (the slope) and an initial value (the $y$-intercept). Find those two numbers for each function, and comparing them is just comparing numbers."
+   },
+   {
+    "t": "key",
+    "html": "To compare linear functions in different forms, find each one’s rate of change and initial value: from an equation, read $m$ and $b$; from a table or two points, compute $\\frac{\\text{change in } y}{\\text{change in } x}$ and work back to $x = 0$; from a graph, read the $y$-intercept and count rise over run."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      {
+       "f": "12x+30",
+       "label": "A"
+      },
+      {
+       "f": "15x+10",
+       "label": "B",
+       "color": "red"
+      }
+     ],
+     "intersections": true,
+     "xmin": 0,
+     "xmax": 10,
+     "ymin": 0,
+     "ymax": 180,
+     "zoom": false
+    },
+    "cap": "Plan A starts higher, but Plan B grows faster, so B catches up."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Equation and table",
+    "q": "Plan A costs $y = 12x + 30$ dollars for $x$ months. Plan B is shown in a table: $$\\begin{array}{c|ccc} x & 0 & 2 & 4 \\\\ \\hline y & 10 & 40 & 70 \\end{array}$$ Compare the rates and the starting values.",
+    "steps": [
+     "Plan A: rate 12 dollars per month, starting value 30.",
+     "Plan B: rate $\\frac{40 - 10}{2 - 0} = 15$ dollars per month, starting value 10.",
+     "A starts higher; B’s cost grows faster."
+    ],
+    "a": "A has the greater initial value; B has the greater rate"
+   },
+   {
+    "t": "ex",
+    "title": "Words and a graph",
+    "q": "Tank C starts with 50 liters and loses 4 liters each minute. Tank D’s graph passes through $(0, 60)$ and $(5, 35)$. Which tank drains faster?",
+    "steps": [
+     "C: rate $-4$ liters per minute.",
+     "D: rate $\\frac{35 - 60}{5 - 0} = -5$ liters per minute.",
+     "D loses 5 per minute and C loses 4, so D drains faster."
+    ],
+    "a": "Tank D"
+   },
+   {
+    "t": "mistake",
+    "html": "Comparing one output instead of the rates. Plan A costs more at the start, but that does not make it grow faster. Compare slopes for “faster” and $y$-intercepts for “starts higher.”"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.F.A.2 (compare properties of two functions represented in different ways)"
+   },
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 4.5: Use the Slope-Intercept Form of an Equation of a Line"
+   }
+  ]
+ },
+ "g8.linear-models": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Many real situations change at a constant rate: a bill that adds the same charge each hour, a tank that drains steadily. With <a href=\"/math/pre-algebra/slope-intercept-form/\">slope-intercept form</a> you can turn such a story into an equation, then use it to predict."
+   },
+   {
+    "t": "why",
+    "html": "A constant rate means equal steps in $x$ add equal amounts to $y$, so the data lie on a line. Two points pin down a line: their rise over run is the rate, and walking back along the line to $x = 0$ gives the starting value."
+   },
+   {
+    "t": "key",
+    "html": "Rate: $m = \\dfrac{y_2 - y_1}{x_2 - x_1}$. Starting value: $b = y - mx$, using either point. Model: $y = mx + b$. In context, $m$ is the change per unit of $x$ and $b$ is the value when $x = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "40x+45",
+     "points": [
+      {
+       "x": 3,
+       "y": 165,
+       "label": "3 h"
+      },
+      {
+       "x": 5,
+       "y": 245,
+       "label": "5 h"
+      }
+     ],
+     "xmin": 0,
+     "xmax": 8,
+     "ymin": 0,
+     "ymax": 400,
+     "zoom": false
+    },
+    "cap": "The plumber’s bill from Example 1. The line meets the $y$-axis at the fixed charge, \\$45."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two points in a story",
+    "q": "A plumber’s bill is \\$165 for 3 hours and \\$245 for 5 hours, with a constant charge per hour. Write a model.",
+    "steps": [
+     "Rate: $m = \\frac{245 - 165}{5 - 3} = \\frac{80}{2} = 40$ dollars per hour.",
+     "Start: $b = 165 - 40 \\cdot 3 = 165 - 120 = 45$ dollars.",
+     "Model: $y = 40x + 45$. The 45 is a fixed charge for coming out; the 40 is the charge per hour."
+    ],
+    "a": "$y = 40x + 45$"
+   },
+   {
+    "t": "ex",
+    "title": "A table that starts late",
+    "q": "$$\\begin{array}{c|ccc} x & 2 & 4 & 6 \\\\ \\hline y & 31 & 43 & 55 \\end{array}$$ Find the rate and the starting value.",
+    "steps": [
+     "Rate: $\\frac{43 - 31}{4 - 2} = 6$.",
+     "The table starts at $x = 2$, so 31 is not the start. Go back 2 steps: $b = 31 - 6 \\cdot 2 = 19$."
+    ],
+    "a": "rate 6, starting value 19: $y = 6x + 19$"
+   },
+   {
+    "t": "ex",
+    "title": "Predict",
+    "q": "Using $y = 40x + 45$, what would 7 hours cost?",
+    "steps": [
+     "$y = 40 \\cdot 7 + 45 = 280 + 45 = 325$."
+    ],
+    "a": "\\$325"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the first value in a table as the starting value when the table does not begin at $x = 0$. In Example 2, 31 is the value at $x = 2$. The starting value is $b$, the value at $x = 0$: work backward with the rate."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 4.6: Find the Equation of a Line"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.F.B.4 (construct a function to model a linear relationship)"
+   }
+  ]
+ },
+ "g8.systems-meaning": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "An equation like $y = 2x - 1$ has many solutions: every point on its graph makes it true (see <a href=\"/math/pre-algebra/slope-intercept-form/\">slope-intercept form</a>). A <b>system</b> asks for two equations to be true at the same time."
+   },
+   {
+    "t": "why",
+    "html": "The graph of an equation is exactly the set of points that make it true. A point that makes <b>both</b> equations true must therefore lie on <b>both</b> graphs. Two lines with different slopes share exactly one point, where they cross, so that point is the solution."
+   },
+   {
+    "t": "key",
+    "html": "A solution of a system of two equations is an ordered pair $(x, y)$ that makes both equations true. On a graph, it is the point where the two lines intersect."
+   },
+   {
+    "t": "viz",
+    "name": "linesystem",
+    "opts": {
+     "lines": [
+      "2x - 1",
+      "-x + 5"
+     ],
+     "probe": [
+      0,
+      4
+     ]
+    },
+    "cap": "Drag the probe point. The readout says which equations it satisfies. Only the crossing point, $(2, 3)$, satisfies both."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Check a point",
+    "q": "Is $(2, 3)$ a solution of the system $y = 2x - 1$ and $y = -x + 5$?",
+    "steps": [
+     "First equation: $2 \\cdot 2 - 1 = 3$. True.",
+     "Second equation: $-2 + 5 = 3$. True.",
+     "It makes both true."
+    ],
+    "a": "Yes"
+   },
+   {
+    "t": "ex",
+    "title": "One out of two is not enough",
+    "q": "Is $(1, 1)$ a solution of the system $y = 2x - 1$ and $x + y = 4$?",
+    "steps": [
+     "First: $2 \\cdot 1 - 1 = 1$. True.",
+     "Second: $1 + 1 = 2$, not 4. False.",
+     "The point is on the first line but not the second."
+    ],
+    "a": "No"
+   },
+   {
+    "t": "mistake",
+    "html": "Checking only one equation. A point on one line is a solution of that equation only. Always substitute into both."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 5.1: Solve Systems of Equations by Graphing"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.C.8a (solutions of a system correspond to points of intersection)"
+   }
+  ]
+ },
+ "g8.systems-graphing": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Since the <a href=\"/math/pre-algebra/systems-meaning/\">solution of a system</a> is where the lines cross, one way to find it is to draw both lines carefully, using what you know about <a href=\"/math/pre-algebra/slope-intercept-form/\">slope and intercept</a>."
+   },
+   {
+    "t": "why",
+    "html": "Graphing shows every solution of each equation at once, so the crossing point can be seen. A drawing is only as exact as the grid, though: if the crossing lands between grid lines, you can only estimate it. That is why you always check the point in both equations."
+   },
+   {
+    "t": "key",
+    "html": "To solve by graphing: graph both lines, find where they intersect, write the point as $(x, y)$, and check it in both equations."
+   },
+   {
+    "t": "viz",
+    "name": "linesystem",
+    "opts": {
+     "lines": [
+      "x + 1",
+      "-2x + 7"
+     ],
+     "probe": null
+    },
+    "cap": "$y = x + 1$ and $y = -2x + 7$ cross at $(2, 3)$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Read the crossing",
+    "q": "Solve by graphing: $y = x + 1$ and $y = -2x + 7$.",
+    "steps": [
+     "First line: start at $(0, 1)$, then up 1 and right 1 each step.",
+     "Second line: start at $(0, 7)$, then down 2 and right 1 each step.",
+     "They meet at $(2, 3)$. Check: $2 + 1 = 3$ and $-4 + 7 = 3$."
+    ],
+    "a": "$(2, 3)$"
+   },
+   {
+    "t": "ex",
+    "title": "A fractional slope",
+    "q": "Solve by graphing: $y = \\frac{1}{2}x + 3$ and $y = -x$.",
+    "steps": [
+     "First line: from $(0, 3)$, up 1 for every 2 to the right (or down 1 for every 2 to the left).",
+     "Second line: through the origin, down 1 for every 1 to the right.",
+     "They meet at $(-2, 2)$. Check: $\\frac{1}{2}(-2) + 3 = 2$ and $-(-2) = 2$."
+    ],
+    "a": "$(-2, 2)$"
+   },
+   {
+    "t": "mistake",
+    "html": "Reporting only the $x$-coordinate, as in “the solution is $x = 2$.” A system in $x$ and $y$ needs both values: the solution is the point $(2, 3)$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 5.1: Solve Systems of Equations by Graphing"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.C.8a"
+   }
+  ]
+ },
+ "g8.systems-substitution": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/pre-algebra/systems-graphing/\">Graphing</a> is hard to read exactly when the answer involves fractions. Substitution finds the exact answer with algebra, using what you know about <a href=\"/math/pre-algebra/variables-both-sides/\">equations with variables on both sides</a>."
+   },
+   {
+    "t": "why",
+    "html": "If one equation says $y = 2x - 1$, then at the solution $y$ and $2x - 1$ are the same number. So in the other equation you may replace $y$ with $2x - 1$. That leaves one equation with one unknown, which you already know how to solve."
+   },
+   {
+    "t": "key",
+    "html": "(1) Solve one equation for one variable, if it isn’t already. (2) Substitute that expression into the <b>other</b> equation. (3) Solve. (4) Put the value back to find the other variable. (5) Check the pair in both equations."
+   },
+   {
+    "t": "viz",
+    "name": "linesystem",
+    "opts": {
+     "lines": [
+      "2x - 1",
+      "3x + y = 9"
+     ],
+     "probe": null
+    },
+    "cap": "The system in Example 1. The algebra finds the crossing point $(2, 3)$ exactly."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "One equation is solved for y",
+    "q": "Solve: $y = 2x - 1$ and $3x + y = 9$.",
+    "steps": [
+     "Replace $y$ in the second equation: $3x + (2x - 1) = 9$.",
+     "Combine: $5x - 1 = 9$, so $5x = 10$ and $x = 2$.",
+     "Then $y = 2 \\cdot 2 - 1 = 3$. Check: $3 \\cdot 2 + 3 = 9$."
+    ],
+    "a": "$(2, 3)$"
+   },
+   {
+    "t": "ex",
+    "title": "Both are solved for y",
+    "q": "Solve: $y = 4x - 3$ and $y = x + 6$.",
+    "steps": [
+     "Both expressions equal $y$, so they equal each other: $4x - 3 = x + 6$.",
+     "Subtract $x$ and add 3: $3x = 9$, so $x = 3$.",
+     "$y = 3 + 6 = 9$. Check: $4 \\cdot 3 - 3 = 9$."
+    ],
+    "a": "$(3, 9)$"
+   },
+   {
+    "t": "ex",
+    "title": "Solve for a variable first",
+    "q": "Solve: $x + 2y = 7$ and $3x - y = 7$.",
+    "steps": [
+     "The first equation has $x$ with coefficient 1: $x = 7 - 2y$.",
+     "Substitute: $3(7 - 2y) - y = 7$, so $21 - 7y = 7$.",
+     "$-7y = -14$, so $y = 2$. Then $x = 7 - 4 = 3$.",
+     "Check: $3 + 4 = 7$ and $9 - 2 = 7$."
+    ],
+    "a": "$(3, 2)$"
+   },
+   {
+    "t": "mistake",
+    "html": "Substituting back into the same equation the expression came from. Putting $y = 2x - 1$ into $y = 2x - 1$ gives $2x - 1 = 2x - 1$, which is always true and tells you nothing. Substitute into the <b>other</b> equation."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 5.2: Solving Systems of Equations by Substitution"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.C.8b (solve systems algebraically)"
+   }
+  ]
+ },
+ "g8.systems-special-cases": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two lines don’t always cross. This lesson joins <a href=\"/math/pre-algebra/systems-substitution/\">substitution</a> with what you learned about <a href=\"/math/pre-algebra/solution-count/\">equations with no solution or infinitely many</a>."
+   },
+   {
+    "t": "why",
+    "html": "Two lines in a plane can do only three things: cross once, never meet (parallel: same slope, different $y$-intercepts), or lie on top of each other (the same line). Algebra tells the same story: substitution ends with $x$ = a number, with a false statement, or with a true statement."
+   },
+   {
+    "t": "table",
+    "head": [
+     "The lines",
+     "Slopes and intercepts",
+     "Algebra ends with",
+     "Solutions"
+    ],
+    "rows": [
+     [
+      "cross",
+      "different slopes",
+      "$x$ = a number",
+      "exactly one"
+     ],
+     [
+      "are parallel",
+      "same slope, different $b$",
+      "a false statement, like $-4 = 8$",
+      "none"
+     ],
+     [
+      "are the same line",
+      "same slope, same $b$",
+      "a true statement, like $8 = 8$",
+      "infinitely many"
+     ]
+    ],
+    "cap": "The three possibilities."
+   },
+   {
+    "t": "key",
+    "html": "Write both equations as $y = mx + b$. Different slopes: one solution. Same slope and different intercepts: no solution. Same slope and same intercept: infinitely many solutions (every point on the line)."
+   },
+   {
+    "t": "viz",
+    "name": "linesystem",
+    "opts": {
+     "editable": true,
+     "m": [
+      2,
+      -1
+     ],
+     "b": [
+      -1,
+      3
+     ],
+     "target": "none",
+     "task": "Make this system have <b>no</b> solution."
+    },
+    "cap": "Use the sliders. Then try to make infinitely many solutions."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Parallel lines",
+    "q": "Solve: $y = 3x + 2$ and $6x - 2y = 8$.",
+    "steps": [
+     "Rewrite the second: $-2y = -6x + 8$, so $y = 3x - 4$. Same slope 3, different intercepts: parallel.",
+     "Algebra agrees: $6x - 2(3x + 2) = 8$ gives $-4 = 8$, which is false."
+    ],
+    "a": "no solution"
+   },
+   {
+    "t": "ex",
+    "title": "The same line",
+    "q": "Solve: $y = -x + 4$ and $2x + 2y = 8$.",
+    "steps": [
+     "Rewrite the second: $2y = -2x + 8$, so $y = -x + 4$. It is the same line.",
+     "Every point on it works, such as $(0, 4)$ and $(1, 3)$."
+    ],
+    "a": "infinitely many solutions"
+   },
+   {
+    "t": "ex",
+    "title": "Tell at a glance",
+    "q": "How many solutions do $y = 2x + 1$ and $y = -2x + 1$ have?",
+    "steps": [
+     "The slopes, 2 and $-2$, are different, so the lines cross once (here at $(0, 1)$)."
+    ],
+    "a": "exactly one"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking “infinitely many solutions” means every pair $(x, y)$ works. Only points on the shared line do: $(0, 0)$ is not a solution of $y = -x + 4$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 5.1: Solve Systems of Equations by Graphing"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.C.8b"
+   }
+  ]
+ },
+ "g8.systems-word-problems": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Many stories have two unknown amounts. With <a href=\"/math/pre-algebra/systems-substitution/\">substitution</a> and what you know about <a href=\"/math/pre-algebra/linear-models/\">linear models</a>, you can find both."
+   },
+   {
+    "t": "why",
+    "html": "A story with two unknowns usually gives two facts, such as a total count and a total cost. Each fact becomes an equation. The answer must fit both facts at once, which is exactly what the solution of a system does."
+   },
+   {
+    "t": "key",
+    "html": "(1) Name the two unknowns, with units. (2) Write one equation for each fact. (3) Solve the system. (4) Check the answer in the story. (5) Answer in words."
+   },
+   {
+    "t": "viz",
+    "name": "linesystem",
+    "opts": {
+     "lines": [
+      "15x + 40",
+      "20x + 20"
+     ],
+     "xmin": 0,
+     "xmax": 8,
+     "ymin": 0,
+     "ymax": 200,
+     "equal": false,
+     "probe": null
+    },
+    "cap": "The two gym plans from Example 2 cost the same where the lines cross: after 4 months, at \\$100."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Tickets",
+    "q": "A school play sold 120 tickets for \\$750. Adult tickets cost \\$8 and child tickets cost \\$5. How many of each were sold?",
+    "steps": [
+     "Let $a$ = adult tickets and $c$ = child tickets.",
+     "Count: $a + c = 120$. Money: $8a + 5c = 750$.",
+     "From the first, $c = 120 - a$. Substitute: $8a + 5(120 - a) = 750$, so $3a + 600 = 750$ and $a = 50$.",
+     "Then $c = 70$. Check: $8 \\cdot 50 + 5 \\cdot 70 = 400 + 350 = 750$."
+    ],
+    "a": "50 adult tickets and 70 child tickets"
+   },
+   {
+    "t": "ex",
+    "title": "When do two plans cost the same?",
+    "q": "Gym A charges \\$40 to join plus \\$15 a month. Gym B charges \\$20 to join plus \\$20 a month. When do they cost the same?",
+    "steps": [
+     "Let $x$ = months and $y$ = total cost. A: $y = 15x + 40$. B: $y = 20x + 20$.",
+     "Set them equal: $15x + 40 = 20x + 20$, so $20 = 5x$ and $x = 4$.",
+     "Cost: $15 \\cdot 4 + 40 = 100$. After that, A is cheaper, because it adds less each month."
+    ],
+    "a": "after 4 months, when both cost \\$100"
+   },
+   {
+    "t": "ex",
+    "title": "Sum and difference",
+    "q": "Two numbers add to 31, and one is 7 more than the other. Find them.",
+    "steps": [
+     "Let $x$ be the larger and $y$ the smaller: $x + y = 31$ and $x = y + 7$.",
+     "Substitute: $(y + 7) + y = 31$, so $2y = 24$ and $y = 12$.",
+     "$x = 19$. Check: $19 + 12 = 31$ and $19 - 12 = 7$."
+    ],
+    "a": "19 and 12"
+   },
+   {
+    "t": "mistake",
+    "html": "Stopping after finding one unknown, or skipping the check. The question asks for both amounts. Put them back into the story: do they give the right count <b>and</b> the right total?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Elementary Algebra 2e, Section 5.4: Solve Applications with Systems of Equations"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.EE.C.8c (real-world problems leading to two linear equations)"
+   }
+  ]
+ },
+ "g8.translations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "On the <a href=\"/math/grade-6/four-quadrants/\">four-quadrant coordinate plane</a> you can move whole shapes, not just points. The simplest move is a slide, called a <b>translation</b>."
+   },
+   {
+    "t": "why",
+    "html": "A translation slides every point the same distance in the same direction. Sliding a paper triangle across a desk doesn’t stretch it, turn it or flip it. So side lengths, angle measures and parallel lines all stay the same; only the position changes."
+   },
+   {
+    "t": "key",
+    "html": "Translating $a$ units right (left if $a$ is negative) and $b$ units up (down if $b$ is negative) follows the rule $$(x, y) \\to (x + a, y + b)$$"
+   },
+   {
+    "t": "viz",
+    "name": "transform",
+    "opts": {
+     "t": "translate",
+     "dx": 0,
+     "dy": 0,
+     "shape": [
+      [
+       -5,
+       1
+      ],
+      [
+       -2,
+       1
+      ],
+      [
+       -5,
+       3
+      ]
+     ],
+     "task": {
+      "target": [
+       [
+        -1,
+        -2
+       ],
+       [
+        2,
+        -2
+       ],
+       [
+        -1,
+        0
+       ]
+      ]
+     }
+    },
+    "cap": "Use the sliders to slide the triangle onto the dashed outline. What rule did you use?"
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Move a point",
+    "q": "Translate $A(2, -1)$ 5 units left and 3 units up.",
+    "steps": [
+     "Left 5 changes $x$: $2 - 5 = -3$.",
+     "Up 3 changes $y$: $-1 + 3 = 2$."
+    ],
+    "a": "$A'(-3, 2)$"
+   },
+   {
+    "t": "ex",
+    "title": "Find the rule",
+    "q": "A translation maps $P(1, 4)$ to $P'(6, 2)$. Write its rule.",
+    "steps": [
+     "Change in $x$: $6 - 1 = 5$. Change in $y$: $2 - 4 = -2$."
+    ],
+    "a": "$(x, y) \\to (x + 5, y - 2)$: 5 right and 2 down"
+   },
+   {
+    "t": "ex",
+    "title": "Move a whole figure",
+    "q": "Translate the triangle with vertices $(0, 0)$, $(3, 0)$, $(0, 2)$ by $(x, y) \\to (x - 2, y + 4)$.",
+    "steps": [
+     "Apply the rule to each vertex: $(0, 0) \\to (-2, 4)$, $(3, 0) \\to (1, 4)$, $(0, 2) \\to (-2, 6)$.",
+     "The image has the same side lengths: the bottom side is still 3 long."
+    ],
+    "a": "$(-2, 4)$, $(1, 4)$, $(-2, 6)$"
+   },
+   {
+    "t": "mistake",
+    "html": "Changing the wrong coordinate: moving up or down changes $y$, and moving left or right changes $x$. A quick sketch on a grid catches this."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.1 (properties of rotations, reflections and translations)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.3 (effect of transformations on coordinates)"
+   }
+  ]
+ },
+ "g8.reflections": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A reflection flips a figure across a line, like a mirror image. It is a rigid motion, like a <a href=\"/math/pre-algebra/translations/\">translation</a>: the size and shape don’t change."
+   },
+   {
+    "t": "why",
+    "html": "Think of the mirror line as a fold. Each point goes straight across the line and lands the same distance away on the other side. Across the $x$-axis (a horizontal line), points move straight up or down, so $x$ stays and $y$ changes sign. Across the $y$-axis (a vertical line), points move straight left or right, so $y$ stays and $x$ changes sign."
+   },
+   {
+    "t": "key",
+    "html": "Across the $x$-axis: $(x, y) \\to (x, -y)$. Across the $y$-axis: $(x, y) \\to (-x, y)$. Across the line $y = x$: $(x, y) \\to (y, x)$."
+   },
+   {
+    "t": "viz",
+    "name": "transform",
+    "opts": {
+     "t": "reflect",
+     "line": "y-axis",
+     "shape": [
+      [
+       1,
+       1
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       1,
+       3
+      ]
+     ]
+    },
+    "cap": "A reflection across the $y$-axis. Choose other mirror lines with the buttons."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Across the x-axis",
+    "q": "Reflect $(3, -5)$ across the $x$-axis.",
+    "steps": [
+     "The point is 5 below the axis, so its image is 5 above it.",
+     "$x$ stays 3."
+    ],
+    "a": "$(3, 5)$"
+   },
+   {
+    "t": "ex",
+    "title": "Across the y-axis",
+    "q": "Reflect $(3, -5)$ across the $y$-axis.",
+    "steps": [
+     "The point is 3 to the right of the axis, so its image is 3 to the left.",
+     "$y$ stays $-5$."
+    ],
+    "a": "$(-3, -5)$"
+   },
+   {
+    "t": "ex",
+    "title": "Across another line",
+    "q": "Reflect $(-1, 4)$ across the vertical line $x = 2$.",
+    "steps": [
+     "The point is 3 units left of $x = 2$.",
+     "The image is 3 units right of it: $x = 5$. The height stays 4."
+    ],
+    "a": "$(5, 4)$"
+   },
+   {
+    "t": "mistake",
+    "html": "Reflecting across the $y$-axis by changing the sign of $y$. The $y$-axis is vertical, so the point flips left to right and its $x$ changes sign: $(3, -5) \\to (-3, -5)$. Changing $y$ instead would be a reflection across the $x$-axis. A quick sketch shows which way the point should move."
+   },
+   {
+    "t": "note",
+    "html": "A reflection reverses the order of the corners: if $A$, $B$, $C$ go around clockwise, their images go around counterclockwise. Lengths and angles still stay the same."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.1"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.3"
+   }
+  ]
+ },
+ "g8.rotations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A rotation turns a figure about a point, the center, by an angle. Like <a href=\"/math/pre-algebra/reflections/\">reflections</a>, it keeps size and shape. Here the center is the origin and the turns are quarter and half turns."
+   },
+   {
+    "t": "why",
+    "html": "A point $(x, y)$ is $x$ steps right and $y$ steps up from the origin. Turn the whole picture a quarter turn counterclockwise: “right” becomes “up” and “up” becomes “left.” So the point ends up $x$ steps up and $y$ steps left, which is $(-y, x)$. Check with $(1, 0)$: a quarter turn counterclockwise takes it to $(0, 1)$, and the rule agrees."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Turn about the origin",
+     "Rule"
+    ],
+    "rows": [
+     [
+      "$90^\\circ$ counterclockwise",
+      "$(x, y) \\to (-y, x)$"
+     ],
+     [
+      "$180^\\circ$",
+      "$(x, y) \\to (-x, -y)$"
+     ],
+     [
+      "$90^\\circ$ clockwise",
+      "$(x, y) \\to (y, -x)$"
+     ]
+    ],
+    "cap": "The three rotation rules."
+   },
+   {
+    "t": "key",
+    "html": "To rotate about the origin, use the rule for the angle and direction. A $90^\\circ$ clockwise turn is the same as $270^\\circ$ counterclockwise. When unsure which rule is which, test it on $(1, 0)$: counterclockwise sends it to $(0, 1)$, a half turn to $(-1, 0)$, clockwise to $(0, -1)$."
+   },
+   {
+    "t": "viz",
+    "name": "transform",
+    "opts": {
+     "t": "rotate",
+     "angle": 90,
+     "center": [
+      0,
+      0
+     ],
+     "shape": [
+      [
+       1,
+       1
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       1,
+       3
+      ]
+     ]
+    },
+    "cap": "A $90^\\circ$ counterclockwise turn about the origin. Try the other angles."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A quarter turn counterclockwise",
+    "q": "Rotate $(4, 1)$ by $90^\\circ$ counterclockwise about the origin.",
+    "steps": [
+     "Rule $(x, y) \\to (-y, x)$.",
+     "$(4, 1) \\to (-1, 4)$."
+    ],
+    "a": "$(-1, 4)$"
+   },
+   {
+    "t": "ex",
+    "title": "A quarter turn clockwise",
+    "q": "Rotate $(4, 1)$ by $90^\\circ$ clockwise about the origin.",
+    "steps": [
+     "Rule $(x, y) \\to (y, -x)$.",
+     "$(4, 1) \\to (1, -4)$. The point moved from the first quadrant down into the fourth."
+    ],
+    "a": "$(1, -4)$"
+   },
+   {
+    "t": "ex",
+    "title": "A half turn",
+    "q": "Rotate $(-2, 5)$ by $180^\\circ$ about the origin.",
+    "steps": [
+     "Both coordinates change sign."
+    ],
+    "a": "$(2, -5)$"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing up the clockwise and counterclockwise rules. Test the rule on $(1, 0)$: counterclockwise should send it up to $(0, 1)$; clockwise should send it down to $(0, -1)$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.1"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.3"
+   }
+  ]
+ },
+ "g8.congruence-transformations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/pre-algebra/translations/\">Translations</a>, <a href=\"/math/pre-algebra/reflections/\">reflections</a> and <a href=\"/math/pre-algebra/rotations/\">rotations</a> are called <b>rigid motions</b>. They give a precise meaning to “same size and same shape.”"
+   },
+   {
+    "t": "why",
+    "html": "A rigid motion moves a figure without stretching or bending it, so it never changes a length or an angle. If a sequence of rigid motions carries one figure exactly onto another, then every side and every angle of one matches a side and an angle of the other. That is what we mean by congruent."
+   },
+   {
+    "t": "key",
+    "html": "Two figures are <b>congruent</b> if a sequence of rigid motions maps one onto the other. Corresponding sides and angles are equal. In $\\triangle ABC \\cong \\triangle DEF$, the letters match in order: $A$ with $D$, $B$ with $E$, $C$ with $F$."
+   },
+   {
+    "t": "viz",
+    "name": "transform",
+    "opts": {
+     "pick": true,
+     "shape": [
+      [
+       1,
+       1
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "task": {
+      "target": [
+       [
+        -1,
+        -1
+       ],
+       [
+        -4,
+        -1
+       ],
+       [
+        -1,
+        -3
+       ]
+      ]
+     }
+    },
+    "cap": "Pick a motion that puts the triangle exactly on the dashed outline."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two moves in a row",
+    "q": "Reflect $(2, 3)$ across the $y$-axis, then translate the image 4 units down.",
+    "steps": [
+     "Reflect: $(2, 3) \\to (-2, 3)$.",
+     "Translate: $(-2, 3) \\to (-2, -1)$."
+    ],
+    "a": "$(-2, -1)$"
+   },
+   {
+    "t": "ex",
+    "title": "Show two triangles are congruent",
+    "q": "$\\triangle ABC$ has $A(1, 1)$, $B(4, 1)$, $C(1, 3)$; $\\triangle DEF$ has $D(-1, -1)$, $E(-4, -1)$, $F(-1, -3)$. Are they congruent?",
+    "steps": [
+     "Try a $180^\\circ$ rotation about the origin, $(x, y) \\to (-x, -y)$.",
+     "It sends $A \\to D$, $B \\to E$ and $C \\to F$.",
+     "A rigid motion maps one onto the other."
+    ],
+    "a": "Yes, $\\triangle ABC \\cong \\triangle DEF$"
+   },
+   {
+    "t": "ex",
+    "title": "Use the matching parts",
+    "q": "$\\triangle PQR \\cong \\triangle XYZ$, with $PQ = 7$ and $\\angle R = 40^\\circ$. Find $XY$ and $\\angle Z$.",
+    "steps": [
+     "$PQ$ matches $XY$, so $XY = 7$.",
+     "$\\angle R$ matches $\\angle Z$, so $\\angle Z = 40^\\circ$."
+    ],
+    "a": "$XY = 7$, $\\angle Z = 40^\\circ$"
+   },
+   {
+    "t": "mistake",
+    "html": "Assuming the order of moves doesn’t matter. Reflecting across the $y$-axis and then translating 3 right sends $(1, 0)$ to $(2, 0)$, but translating first and then reflecting sends it to $(-4, 0)$. Do the moves in the order given."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.2 (congruence through rigid motions)"
+   }
+  ]
+ },
+ "g8.dilations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Unlike a <a href=\"/math/pre-algebra/translations/\">translation</a>, a dilation changes size. It is the coordinate version of a <a href=\"/math/grade-7/scale-drawings/\">scale drawing</a>."
+   },
+   {
+    "t": "why",
+    "html": "A dilation with center $O$ and scale factor $k$ moves each point $P$ along the ray from $O$ through $P$, so that its new distance from $O$ is $k$ times the old one. When the center is the origin, the ray from $(0, 0)$ through $(x, y)$ reaches $(kx, ky)$ at $k$ times the distance. When the center is somewhere else, measure from the center instead."
+   },
+   {
+    "t": "key",
+    "html": "Center at the origin: $(x, y) \\to (kx, ky)$. Any center $C$: find how far $P$ is from $C$, multiply that by $k$, and add it back to $C$. If $k > 1$ the figure grows; if $0 < k < 1$ it shrinks. Lengths are multiplied by $k$; angles stay the same."
+   },
+   {
+    "t": "viz",
+    "name": "transform",
+    "opts": {
+     "t": "dilate",
+     "k": 2,
+     "center": [
+      0,
+      0
+     ],
+     "shape": [
+      [
+       1,
+       1
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       1,
+       2
+      ]
+     ]
+    },
+    "cap": "Scale factor 2 with center at the origin: every point moves twice as far from the origin."
+   },
+   {
+    "t": "viz",
+    "name": "transform",
+    "opts": {
+     "t": "dilate",
+     "k": 2,
+     "center": [
+      -2,
+      -1
+     ],
+     "shape": [
+      [
+       0,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       0,
+       1
+      ]
+     ]
+    },
+    "cap": "The same factor with center $(-2, -1)$: the image grows away from that point instead."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Center at the origin",
+    "q": "Dilate $(3, -2)$ by a scale factor of 3, center at the origin.",
+    "steps": [
+     "Multiply both coordinates by 3."
+    ],
+    "a": "$(9, -6)$"
+   },
+   {
+    "t": "ex",
+    "title": "A different center",
+    "q": "Dilate $(5, 4)$ by a scale factor of $\\frac{1}{2}$ with center $(1, 2)$.",
+    "steps": [
+     "From the center to the point: $(5 - 1, 4 - 2) = (4, 2)$.",
+     "Scale it: $\\frac{1}{2} \\cdot (4, 2) = (2, 1)$.",
+     "Add back to the center: $(1 + 2, 2 + 1)$."
+    ],
+    "a": "$(3, 3)$"
+   },
+   {
+    "t": "ex",
+    "title": "Lengths",
+    "q": "A segment 8 cm long is dilated by a scale factor of $\\frac{3}{4}$. How long is the image?",
+    "steps": [
+     "Lengths are multiplied by $k$: $\\frac{3}{4} \\cdot 8 = 6$."
+    ],
+    "a": "6 cm"
+   },
+   {
+    "t": "mistake",
+    "html": "Multiplying the coordinates by $k$ when the center is not the origin. In Example 2 that gives $(2.5, 2)$, which is wrong, because $(kx, ky)$ assumes the center is $(0, 0)$. Always measure from the actual center."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.3"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.4 (similarity through dilations)"
+   }
+  ]
+ },
+ "g8.similar-figures": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/pre-algebra/congruence-transformations/\">Congruent</a> figures match exactly. <b>Similar</b> figures have the same shape but may differ in size. <a href=\"/math/pre-algebra/dilations/\">Dilations</a> make the difference."
+   },
+   {
+    "t": "why",
+    "html": "A dilation multiplies every length by the same factor $k$ and keeps every angle. Rigid motions then move the scaled copy into place without changing anything. So in similar figures, corresponding angles are equal and every pair of corresponding sides has the same ratio, $k$."
+   },
+   {
+    "t": "key",
+    "html": "Two figures are similar if a dilation together with rigid motions maps one onto the other. Then corresponding angles are equal and corresponding sides are proportional: $$\\frac{\\text{side in the image}}{\\text{matching side in the original}} = k$$"
+   },
+   {
+    "t": "viz",
+    "name": "transform",
+    "opts": {
+     "t": "dilate",
+     "k": 1.5,
+     "center": [
+      0,
+      0
+     ],
+     "pick": true,
+     "shape": [
+      [
+       1,
+       1
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       1,
+       3
+      ]
+     ]
+    },
+    "cap": "A dilation by 1.5. Add a slide, flip or turn: the image stays similar."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Missing side",
+    "q": "$\\triangle ABC \\sim \\triangle DEF$, with $AB = 6$, $DE = 9$ and $BC = 8$. Find $EF$.",
+    "steps": [
+     "Scale factor from $ABC$ to $DEF$: $\\frac{9}{6} = 1.5$.",
+     "$EF = 1.5 \\cdot 8 = 12$."
+    ],
+    "a": "$12$"
+   },
+   {
+    "t": "ex",
+    "title": "Are they similar?",
+    "q": "Is a 4 by 6 rectangle similar to a 6 by 9 rectangle? To a 5 by 7 rectangle?",
+    "steps": [
+     "$\\frac{6}{4} = 1.5$ and $\\frac{9}{6} = 1.5$: the same factor, so yes.",
+     "$\\frac{5}{4} = 1.25$ but $\\frac{7}{6} \\approx 1.17$: different, so no."
+    ],
+    "a": "yes; no"
+   },
+   {
+    "t": "ex",
+    "title": "Angles carry over",
+    "q": "$\\triangle ABC \\sim \\triangle DEF$ with $\\angle A = 50^\\circ$ and $\\angle B = 60^\\circ$. Find $\\angle F$.",
+    "steps": [
+     "Corresponding angles are equal: $\\angle D = 50^\\circ$, $\\angle E = 60^\\circ$.",
+     "$\\angle F = 180^\\circ - 50^\\circ - 60^\\circ = 70^\\circ$."
+    ],
+    "a": "$70^\\circ$"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding instead of multiplying. Adding 2 to each side of a 4 by 6 rectangle gives 6 by 8, which is not similar: $\\frac{6}{4} = 1.5$ but $\\frac{8}{6} \\approx 1.33$. Similar figures scale every length by the same factor."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.4"
+   }
+  ]
+ },
+ "g8.parallel-lines-transversal": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know <a href=\"/math/grade-7/angle-relationships/\">vertical and supplementary angles</a>. When a line, called a <b>transversal</b>, crosses two parallel lines, it makes eight angles, and they come in just two sizes."
+   },
+   {
+    "t": "why",
+    "html": "Slide the top crossing down along the transversal (a translation). Because the two lines are parallel, it lands exactly on the bottom crossing, so each angle at the top matches the angle in the same position at the bottom: <b>corresponding angles are equal</b>. Add what you already know (vertical angles are equal, angles on a straight line add to $180^\\circ$), and all the other pairs follow."
+   },
+   {
+    "t": "key",
+    "html": "When two <b>parallel</b> lines are cut by a transversal, corresponding, alternate interior and alternate exterior angles are equal, and same-side interior angles add to $180^\\circ$. Every angle is one of two sizes, and the two sizes add to $180^\\circ$."
+   },
+   {
+    "t": "viz",
+    "name": "angle",
+    "opts": {
+     "mode": "transversal",
+     "deg": 60
+    },
+    "cap": "Turn the transversal and pick a kind of pair. The angles are numbered 1 to 4 counterclockwise at the top crossing (1 is upper right), and 5 to 8 the same way at the bottom."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Find the others",
+    "q": "In the picture, $\\angle 1 = 65^\\circ$. Find $\\angle 5$, $\\angle 3$ and $\\angle 6$.",
+    "steps": [
+     "$\\angle 5$ is in the same position at the other crossing: corresponding, so $65^\\circ$.",
+     "$\\angle 3$ is vertical to $\\angle 1$: $65^\\circ$.",
+     "$\\angle 6$ sits next to $\\angle 5$ on a straight line: $180^\\circ - 65^\\circ = 115^\\circ$."
+    ],
+    "a": "$65^\\circ$, $65^\\circ$, $115^\\circ$"
+   },
+   {
+    "t": "ex",
+    "title": "With algebra",
+    "q": "Two alternate interior angles measure $(3x + 10)^\\circ$ and $(5x - 30)^\\circ$. Find $x$ and the angles.",
+    "steps": [
+     "Alternate interior angles are equal: $3x + 10 = 5x - 30$.",
+     "Subtract $3x$ and add 30: $40 = 2x$, so $x = 20$.",
+     "Each angle is $3 \\cdot 20 + 10 = 70^\\circ$."
+    ],
+    "a": "$x = 20$; both angles are $70^\\circ$"
+   },
+   {
+    "t": "viz",
+    "name": "g8-transversal",
+    "opts": {
+     "deg": 62,
+     "parallel": false,
+     "tilt": 14,
+     "pair": [
+      1,
+      5
+     ]
+    },
+    "cap": "When the lines are not parallel, $\\angle 1$ and $\\angle 5$ differ. Press the button to make them parallel again."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the angle-pair rules when the lines are not parallel. The rules come from sliding one crossing onto the other, which only works for parallel lines. Look for the arrow marks (or the word “parallel”) before you use them."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.5 (angles formed when parallel lines are cut by a transversal)"
+   },
+   {
+    "name": "OpenStax Prealgebra 2e, Section 9.3: Use Properties of Angles, Triangles, and the Pythagorean Theorem"
+   }
+  ]
+ },
+ "g8.triangle-angle-sum": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You may have heard that a triangle’s angles add to $180^\\circ$. <a href=\"/math/pre-algebra/parallel-lines-transversal/\">Parallel lines and a transversal</a> show why it is true for every triangle."
+   },
+   {
+    "t": "why",
+    "html": "Draw a line through the top corner, parallel to the bottom side. Along that line, three angles sit side by side and make a straight angle, $180^\\circ$. The left one equals the triangle’s bottom-left angle, and the right one equals the bottom-right angle (alternate interior angles). The middle one is the triangle’s top angle. So the triangle’s three angles add to $180^\\circ$."
+   },
+   {
+    "t": "key",
+    "html": "The angles of every triangle add to $180^\\circ$. An <b>exterior angle</b> (between one side and the extension of the next) equals the sum of the two interior angles that are not next to it."
+   },
+   {
+    "t": "viz",
+    "name": "angle",
+    "opts": {
+     "mode": "triangle",
+     "pts": [
+      [
+       0,
+       0
+      ],
+      [
+       6,
+       0
+      ],
+      [
+       2,
+       4
+      ]
+     ]
+    },
+    "cap": "Drag the corners: the sum stays $180^\\circ$. Tear off the corners to see them make a straight line."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The third angle",
+    "q": "Two angles of a triangle measure $48^\\circ$ and $77^\\circ$. Find the third.",
+    "steps": [
+     "$180 - 48 - 77 = 55$."
+    ],
+    "a": "$55^\\circ$"
+   },
+   {
+    "t": "ex",
+    "title": "With algebra",
+    "q": "A triangle’s angles are $x^\\circ$, $2x^\\circ$ and $3x^\\circ$. Find them.",
+    "steps": [
+     "$x + 2x + 3x = 180$, so $6x = 180$ and $x = 30$.",
+     "The angles are $30^\\circ$, $60^\\circ$ and $90^\\circ$."
+    ],
+    "a": "$30^\\circ$, $60^\\circ$, $90^\\circ$"
+   },
+   {
+    "t": "ex",
+    "title": "An exterior angle",
+    "q": "A triangle has interior angles of $40^\\circ$ and $65^\\circ$. Find the exterior angle at the third corner.",
+    "steps": [
+     "The third interior angle is $180 - 40 - 65 = 75^\\circ$.",
+     "The exterior angle makes a straight line with it: $180 - 75 = 105^\\circ$.",
+     "Shortcut: $40 + 65 = 105$."
+    ],
+    "a": "$105^\\circ$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking bigger triangles have bigger angle sums. A huge triangle and a tiny one both have angles adding to $180^\\circ$; size changes the sides, not the angle sum."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 9.3: Use Properties of Angles, Triangles, and the Pythagorean Theorem"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.5"
+   }
+  ]
+ },
+ "g8.angle-angle-similarity": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "To show two triangles are <a href=\"/math/pre-algebra/similar-figures/\">similar</a>, do you need to check every angle and side? For triangles, two angles are enough, thanks to the <a href=\"/math/pre-algebra/triangle-angle-sum/\">angle sum</a>."
+   },
+   {
+    "t": "why",
+    "html": "If two angles of one triangle equal two angles of another, the third angles are equal too, since each is $180^\\circ$ minus the other two. Now dilate the first triangle until one side is as long as the matching side of the second. The angles don’t change, and a side with the same two angles at its ends fixes the whole triangle. So a rigid motion can place the scaled copy exactly on the second triangle, and the triangles are similar."
+   },
+   {
+    "t": "key",
+    "html": "<b>Angle-angle (AA) similarity:</b> if two angles of one triangle are equal to two angles of another triangle, the triangles are similar, so their corresponding sides are proportional."
+   },
+   {
+    "t": "viz",
+    "name": "geoboard",
+    "opts": {
+     "points": {
+      "A": [
+       1,
+       1
+      ],
+      "B": [
+       5,
+       1
+      ],
+      "C": [
+       2,
+       4
+      ],
+      "D": [
+       7,
+       1
+      ],
+      "E": [
+       13,
+       1
+      ],
+      "F": [
+       8.5,
+       5.5
+      ]
+     },
+     "objects": [
+      [
+       "poly",
+       "A",
+       "B",
+       "C"
+      ],
+      [
+       "poly",
+       "D",
+       "E",
+       "F"
+      ],
+      [
+       "angle",
+       "B",
+       "A",
+       "C"
+      ],
+      [
+       "angle",
+       "C",
+       "B",
+       "A"
+      ],
+      [
+       "angle",
+       "E",
+       "D",
+       "F"
+      ],
+      [
+       "angle",
+       "F",
+       "E",
+       "D"
+      ]
+     ],
+     "xmin": 0,
+     "xmax": 14,
+     "ymin": 0,
+     "ymax": 7,
+     "snap": 0.5,
+     "show": {
+      "len": true,
+      "ang": true,
+      "area": false
+     }
+    },
+    "cap": "The angles at $A$ and $D$ match, and so do the angles at $B$ and $E$. Every side of $DEF$ is 1.5 times the matching side of $ABC$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Check the angles",
+    "q": "One triangle has angles of $40^\\circ$ and $75^\\circ$. Another has angles of $75^\\circ$ and $65^\\circ$. Are they similar?",
+    "steps": [
+     "Third angles: $180 - 40 - 75 = 65^\\circ$, and $180 - 75 - 65 = 40^\\circ$.",
+     "Both triangles have angles $40^\\circ$, $65^\\circ$, $75^\\circ$."
+    ],
+    "a": "Yes, by AA."
+   },
+   {
+    "t": "ex",
+    "title": "Shadows",
+    "q": "A 6-foot person casts a 4-foot shadow. At the same moment a tree casts a 22-foot shadow. How tall is the tree?",
+    "steps": [
+     "Both stand straight up (a right angle with the ground), and the sun’s rays hit both at the same angle. Two matching angles: the triangles are similar.",
+     "Height over shadow is the same: $\\frac{h}{22} = \\frac{6}{4}$.",
+     "$h = 22 \\cdot 1.5 = 33$."
+    ],
+    "a": "33 feet"
+   },
+   {
+    "t": "ex",
+    "title": "A triangle inside a triangle",
+    "q": "In $\\triangle ABC$, segment $DE$ is parallel to $BC$, with $D$ on $AB$ and $E$ on $AC$. $AD = 3$, $AB = 9$ and $DE = 4$. Find $BC$.",
+    "steps": [
+     "$\\angle A$ is shared, and $\\angle ADE = \\angle ABC$ (corresponding angles, since $DE \\parallel BC$). So $\\triangle ADE \\sim \\triangle ABC$.",
+     "Scale factor: $\\frac{AB}{AD} = \\frac{9}{3} = 3$.",
+     "$BC = 3 \\cdot 4 = 12$."
+    ],
+    "a": "$12$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using only one matching angle. Two triangles can share one angle and still have different shapes. You need two pairs of matching angles (and then the third matches automatically)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.A.5 (the angle-angle criterion for similarity of triangles)"
+   }
+  ]
+ },
+ "g8.pythagorean-theorem": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In a right triangle, the two sides that form the right angle are the <b>legs</b>, and the side across from the right angle is the <b>hypotenuse</b>, always the longest side. Their lengths are tied together by a rule that uses <a href=\"/math/pre-algebra/square-roots/\">squares and square roots</a>."
+   },
+   {
+    "t": "why",
+    "html": "Take four copies of a right triangle with legs $a$ and $b$ and hypotenuse $c$, and place them inside a big square with sides $a + b$. Arranged one way, they leave a tilted square of area $c^{2}$ uncovered in the middle. Slide them into two rectangles instead, and the uncovered part becomes two squares, of areas $a^{2}$ and $b^{2}$. The big square and the four triangles never changed, so the uncovered areas must be equal: $a^{2} + b^{2} = c^{2}$."
+   },
+   {
+    "t": "viz",
+    "name": "pythagoras",
+    "opts": {
+     "a": 3,
+     "b": 4,
+     "view": "proof"
+    },
+    "cap": "Press “Slide the triangles” to watch the $c^{2}$ square become $a^{2}$ plus $b^{2}$."
+   },
+   {
+    "t": "key",
+    "html": "<b>Pythagorean theorem:</b> in a right triangle with legs $a$ and $b$ and hypotenuse $c$, $$a^{2} + b^{2} = c^{2}$$"
+   },
+   {
+    "t": "viz",
+    "name": "pythagoras",
+    "opts": {
+     "a": 3,
+     "b": 4
+    },
+    "cap": "The squares on the legs, $9 + 16$, cover exactly as much as the square on the hypotenuse, $25$. Change the legs and count again."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Find the hypotenuse",
+    "q": "A right triangle has legs 6 and 8. Find the hypotenuse.",
+    "steps": [
+     "$c^{2} = 6^{2} + 8^{2} = 36 + 64 = 100$.",
+     "$c = \\sqrt{100} = 10$."
+    ],
+    "a": "$10$"
+   },
+   {
+    "t": "ex",
+    "title": "Find a leg",
+    "q": "A right triangle has hypotenuse 13 and one leg 5. Find the other leg.",
+    "steps": [
+     "$5^{2} + b^{2} = 13^{2}$, so $25 + b^{2} = 169$.",
+     "$b^{2} = 144$, so $b = 12$."
+    ],
+    "a": "$12$"
+   },
+   {
+    "t": "ex",
+    "title": "An irrational length",
+    "q": "A right triangle has legs 2 and 3. Find the hypotenuse.",
+    "steps": [
+     "$c^{2} = 4 + 9 = 13$.",
+     "13 is not a perfect square, so $c = \\sqrt{13}$, about 3.6."
+    ],
+    "a": "$\\sqrt{13} \\approx 3.6$"
+   },
+   {
+    "t": "mistake",
+    "html": "Two slips. Using a leg as $c$: $c$ is always the side across from the right angle, the longest side, so when you know the hypotenuse, you <b>subtract</b> to find a leg. And adding before squaring: for legs 6 and 8, $(6 + 8)^{2} = 196$ is not $6^{2} + 8^{2} = 100$. Square each leg first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 9.3: Use Properties of Angles, Triangles, and the Pythagorean Theorem"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.B.6 (explain a proof of the Pythagorean theorem and its converse)"
+   }
+  ]
+ },
+ "g8.pythagorean-converse": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/pre-algebra/pythagorean-theorem/\">Pythagorean theorem</a> says right triangles satisfy $a^{2} + b^{2} = c^{2}$. The converse runs the other way: a triangle whose sides satisfy it must have a right angle. Builders use this to check square corners."
+   },
+   {
+    "t": "why",
+    "html": "Suppose a triangle has sides $a$, $b$, $c$ with $a^{2} + b^{2} = c^{2}$. Build a right triangle with legs $a$ and $b$. By the theorem, its hypotenuse is $\\sqrt{a^{2} + b^{2}} = c$. So the two triangles have the same three side lengths. Three sticks can be joined into a triangle in only one shape, so the triangles are congruent, and the first triangle has the same right angle."
+   },
+   {
+    "t": "key",
+    "html": "<b>Converse:</b> if the sides of a triangle satisfy $a^{2} + b^{2} = c^{2}$, where $c$ is the longest side, then the triangle has a right angle, opposite $c$. If they don’t, it has no right angle."
+   },
+   {
+    "t": "viz",
+    "name": "pythagoras",
+    "opts": {
+     "a": 3,
+     "b": 4,
+     "angle": true
+    },
+    "cap": "Change the angle between $a$ and $b$. The squares on the legs match the square on the third side only at exactly $90^\\circ$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A right triangle",
+    "q": "Is a triangle with sides 9, 40 and 41 a right triangle?",
+    "steps": [
+     "The longest side is 41: $41^{2} = 1681$.",
+     "$9^{2} + 40^{2} = 81 + 1600 = 1681$."
+    ],
+    "a": "Yes"
+   },
+   {
+    "t": "ex",
+    "title": "Not a right triangle",
+    "q": "Is a triangle with sides 6, 8 and 11 a right triangle?",
+    "steps": [
+     "$6^{2} + 8^{2} = 100$, but $11^{2} = 121$.",
+     "They are not equal."
+    ],
+    "a": "No"
+   },
+   {
+    "t": "ex",
+    "title": "A square corner",
+    "q": "A builder measures 3 ft along one wall and 4 ft along the other, and the diagonal between those marks is 5 ft. Is the corner square?",
+    "steps": [
+     "$3^{2} + 4^{2} = 25 = 5^{2}$.",
+     "By the converse, the corner is a right angle."
+    ],
+    "a": "Yes"
+   },
+   {
+    "t": "note",
+    "html": "If $c^{2}$ is greater than $a^{2} + b^{2}$, the angle across from $c$ is wider than $90^\\circ$ (as with 6, 8, 11). If it is less, the angle is narrower."
+   },
+   {
+    "t": "mistake",
+    "html": "Testing with a side that isn’t the longest as $c$. For 15, 8, 17, the test is $8^{2} + 15^{2} = 17^{2}$ (true), not $8^{2} + 17^{2} = 15^{2}$. Always put the longest side alone on one side."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.B.6"
+   },
+   {
+    "name": "OpenStax Prealgebra 2e, Section 9.3: Use Properties of Angles, Triangles, and the Pythagorean Theorem"
+   }
+  ]
+ },
+ "g8.pythagorean-applications": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Right angles are everywhere: walls meet floors, streets cross, edges of boxes meet. Wherever two perpendicular lengths are known, the <a href=\"/math/pre-algebra/pythagorean-theorem/\">Pythagorean theorem</a> finds the distance across. When the answer is a square root, <a href=\"/math/pre-algebra/estimate-irrationals/\">estimate it</a>."
+   },
+   {
+    "t": "why",
+    "html": "A ladder against a wall, a diagonal across a screen, a shortcut across a field: each is the hypotenuse of a right triangle whose legs you know (or can measure). In a box, no single triangle reaches from a bottom corner to the opposite top corner, but two do: one across the floor, then one standing up on that floor diagonal."
+   },
+   {
+    "t": "key",
+    "html": "Sketch the right triangle, label the legs and the hypotenuse, then use $a^{2} + b^{2} = c^{2}$. For the space diagonal of a box: first the floor diagonal $d^{2} = l^{2} + w^{2}$, then $D^{2} = d^{2} + h^{2}$."
+   },
+   {
+    "t": "viz",
+    "name": "g8-solid",
+    "opts": {
+     "shape": "box",
+     "l": 4,
+     "w": 3,
+     "h": 12,
+     "diag": true
+    },
+    "cap": "The dashed floor diagonal and the height make a right triangle whose hypotenuse (red) is the space diagonal."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A ladder",
+    "q": "A 10-foot ladder leans against a wall with its foot 6 feet from the wall. How high does it reach?",
+    "steps": [
+     "The ladder is the hypotenuse: $6^{2} + h^{2} = 10^{2}$.",
+     "$h^{2} = 100 - 36 = 64$, so $h = 8$."
+    ],
+    "a": "8 feet"
+   },
+   {
+    "t": "ex",
+    "title": "A screen",
+    "q": "A screen is 16 inches wide and 9 inches tall. How long is its diagonal, to the nearest tenth of an inch?",
+    "steps": [
+     "$d^{2} = 16^{2} + 9^{2} = 256 + 81 = 337$.",
+     "$18^{2} = 324$ and $19^{2} = 361$, so $d$ is between 18 and 19.",
+     "$18.3^{2} = 334.89$ and $18.4^{2} = 338.56$; 337 is closer to 338.56."
+    ],
+    "a": "about 18.4 inches"
+   },
+   {
+    "t": "ex",
+    "title": "A box",
+    "q": "A box is 4 by 3 by 12 inches. How long is the longest rod that fits, from a bottom corner to the opposite top corner?",
+    "steps": [
+     "Floor diagonal: $d^{2} = 4^{2} + 3^{2} = 25$, so $d = 5$.",
+     "Space diagonal: $D^{2} = 5^{2} + 12^{2} = 25 + 144 = 169$.",
+     "$D = 13$."
+    ],
+    "a": "13 inches"
+   },
+   {
+    "t": "mistake",
+    "html": "Using the theorem once in a box, or adding the three lengths. The space diagonal is not $4 + 3 + 12$; it takes two right triangles. (A shortcut: $D^{2} = l^{2} + w^{2} + h^{2}$.)"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.B.7 (apply the Pythagorean theorem in two and three dimensions)"
+   },
+   {
+    "name": "OpenStax Prealgebra 2e, Section 9.3: Use Properties of Angles, Triangles, and the Pythagorean Theorem"
+   }
+  ]
+ },
+ "g8.distance-between-points": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You can find <a href=\"/math/grade-6/grid-distance/\">the distance between points</a> that share a coordinate by subtracting. For any two points, add the <a href=\"/math/pre-algebra/pythagorean-theorem/\">Pythagorean theorem</a>."
+   },
+   {
+    "t": "why",
+    "html": "From $A$, go straight across to the point below or above $B$, then straight up or down to $B$. Those two moves are the legs of a right triangle, and their lengths are the difference in $x$ and the difference in $y$. The straight path from $A$ to $B$ is the hypotenuse."
+   },
+   {
+    "t": "key",
+    "html": "To find the distance between $(x_1, y_1)$ and $(x_2, y_2)$: the legs are $|x_2 - x_1|$ and $|y_2 - y_1|$, so $$d = \\sqrt{(x_2 - x_1)^{2} + (y_2 - y_1)^{2}}$$"
+   },
+   {
+    "t": "viz",
+    "name": "geoboard",
+    "opts": {
+     "axes": true,
+     "coords": true,
+     "xmin": -1,
+     "xmax": 8,
+     "ymin": -1,
+     "ymax": 6,
+     "points": {
+      "A": [
+       1,
+       1
+      ],
+      "B": [
+       5,
+       4
+      ],
+      "C": [
+       5,
+       1
+      ]
+     },
+     "objects": [
+      [
+       "seg",
+       "A",
+       "B"
+      ],
+      [
+       "seg",
+       "A",
+       "C"
+      ],
+      [
+       "seg",
+       "C",
+       "B"
+      ]
+     ],
+     "show": {
+      "len": true,
+      "ang": false,
+      "area": false
+     }
+    },
+    "cap": "Legs of 4 and 3 make the distance from $A$ to $B$ equal to 5. Drag the points and keep $C$ at the corner."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A 3-4-5 triangle",
+    "q": "Find the distance from $A(1, 1)$ to $B(5, 4)$.",
+    "steps": [
+     "Across: $5 - 1 = 4$. Up: $4 - 1 = 3$.",
+     "$d^{2} = 4^{2} + 3^{2} = 25$, so $d = 5$."
+    ],
+    "a": "$5$"
+   },
+   {
+    "t": "ex",
+    "title": "With negatives",
+    "q": "Find the distance from $(-2, 3)$ to $(4, -5)$.",
+    "steps": [
+     "Across: $4 - (-2) = 6$. Down: $-5 - 3 = -8$, a length of 8.",
+     "$d^{2} = 6^{2} + 8^{2} = 100$, so $d = 10$."
+    ],
+    "a": "$10$"
+   },
+   {
+    "t": "ex",
+    "title": "A root",
+    "q": "Find the distance from $(0, 0)$ to $(2, 5)$.",
+    "steps": [
+     "Legs 2 and 5: $d^{2} = 4 + 25 = 29$.",
+     "$d = \\sqrt{29}$, which is between 5 and 6, about 5.4."
+    ],
+    "a": "$\\sqrt{29} \\approx 5.4$"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the legs instead of using the theorem: from $(1, 1)$ to $(5, 4)$ is not $4 + 3 = 7$. Walking along the grid lines is 7; the straight path is shorter, 5. Also, a negative difference is fine: squaring it makes it positive."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.B.8 (distance between two points in a coordinate system)"
+   },
+   {
+    "name": "OpenStax Intermediate Algebra 2e, Section 11.1: Distance and Midpoint Formulas; Circles"
+   }
+  ]
+ },
+ "g8.volume-cylinders": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know the <a href=\"/math/grade-7/circle-area/\">area of a circle</a>, $\\pi r^{2}$, and the <a href=\"/math/grade-7/volume-prisms/\">volume of a prism</a>, base area times height. Put them together for a cylinder."
+   },
+   {
+    "t": "why",
+    "html": "A prism’s volume is a stack of copies of its base, one layer on top of another. A cylinder is a stack of circles, like a roll of coins. Each layer has area $\\pi r^{2}$, and there are $h$ units of layers, so $V = \\pi r^{2} \\cdot h$."
+   },
+   {
+    "t": "key",
+    "html": "$$V = \\pi r^{2} h$$ where $r$ is the radius of the base and $h$ is the height. Leave $\\pi$ in the answer for an exact value, or use $\\pi \\approx 3.14$ to estimate."
+   },
+   {
+    "t": "viz",
+    "name": "g8-solid",
+    "opts": {
+     "shape": "cylinder",
+     "r": 3,
+     "h": 5,
+     "unit": "cm"
+    },
+    "cap": "Change the radius and the height and watch the volume."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Radius and height",
+    "q": "Find the volume of a cylinder with radius 3 cm and height 5 cm.",
+    "steps": [
+     "Base area: $\\pi \\cdot 3^{2} = 9\\pi$.",
+     "Volume: $9\\pi \\cdot 5 = 45\\pi$.",
+     "$45 \\times 3.14 = 141.3$, so about 141 cubic centimeters."
+    ],
+    "a": "$45\\pi \\approx 141$ cm³"
+   },
+   {
+    "t": "ex",
+    "title": "Given the diameter",
+    "q": "A can has diameter 10 cm and height 4 cm. Find its volume.",
+    "steps": [
+     "The radius is half the diameter: $r = 5$.",
+     "$V = \\pi \\cdot 5^{2} \\cdot 4 = 100\\pi \\approx 314$."
+    ],
+    "a": "$100\\pi \\approx 314$ cm³"
+   },
+   {
+    "t": "ex",
+    "title": "Work backward",
+    "q": "A cylinder has volume $72\\pi$ and radius 3. Find its height.",
+    "steps": [
+     "$72\\pi = \\pi \\cdot 9 \\cdot h$.",
+     "Divide by $9\\pi$: $h = 8$."
+    ],
+    "a": "$8$"
+   },
+   {
+    "t": "viz",
+    "name": "g8-solid",
+    "opts": {
+     "shape": "cylinder",
+     "r": 5,
+     "h": 4,
+     "diam": true,
+     "sliders": false
+    },
+    "cap": "The can from Example 2. The label shows the diameter; the formula needs the radius, half of it."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the diameter in place of the radius. With $d = 10$, using 10 gives $\\pi \\cdot 100 \\cdot 4 = 400\\pi$, four times too big, because squaring doubles the error twice. Halve the diameter first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 9.6: Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.C.9 (volumes of cones, cylinders and spheres)"
+   }
+  ]
+ },
+ "g8.volume-cones": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A cone has a circle for a base, like a <a href=\"/math/pre-algebra/volume-cylinders/\">cylinder</a>, but it narrows to a point. How much less does it hold?"
+   },
+   {
+    "t": "why",
+    "html": "Fill a cone with water and pour it into a cylinder with the same base and the same height. It takes exactly three cones to fill the cylinder. So a cone holds one third of its matching cylinder. (The same is true for a pyramid and its prism; a careful proof comes in calculus.)"
+   },
+   {
+    "t": "viz",
+    "name": "g8-solid",
+    "opts": {
+     "mode": "pour",
+     "r": 3,
+     "h": 5
+    },
+    "cap": "Pour cones of water into the cylinder with the same base and height."
+   },
+   {
+    "t": "key",
+    "html": "$$V = \\frac{1}{3}\\pi r^{2} h$$ where $h$ is the height measured straight up from the center of the base, not the slant height along the side."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Radius and height",
+    "q": "A cone has radius 3 and height 4. Find its volume.",
+    "steps": [
+     "Matching cylinder: $\\pi \\cdot 3^{2} \\cdot 4 = 36\\pi$.",
+     "One third of it: $12\\pi$."
+    ],
+    "a": "$12\\pi$"
+   },
+   {
+    "t": "ex",
+    "title": "Given the slant height",
+    "q": "A cone has radius 6 cm and slant height 10 cm. Find its volume.",
+    "steps": [
+     "Height, radius and slant height form a right triangle: $h^{2} + 6^{2} = 10^{2}$, so $h = 8$.",
+     "$V = \\frac{1}{3}\\pi \\cdot 36 \\cdot 8 = 96\\pi \\approx 301$."
+    ],
+    "a": "$96\\pi \\approx 301$ cm³"
+   },
+   {
+    "t": "viz",
+    "name": "g8-solid",
+    "opts": {
+     "shape": "cone",
+     "r": 6,
+     "h": 8,
+     "slant": true,
+     "slantLabel": "10",
+     "sliders": false,
+     "unit": "cm"
+    },
+    "cap": "The slant height (gold) runs along the side. The height (dashed) goes straight up the middle."
+   },
+   {
+    "t": "ex",
+    "title": "Compare with a cylinder",
+    "q": "A cylinder holds $90\\pi$ cubic inches. How much does a cone with the same base and height hold?",
+    "steps": [
+     "A cone is one third of the matching cylinder: $90\\pi \\div 3$."
+    ],
+    "a": "$30\\pi$ cubic inches"
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting the $\\frac{1}{3}$, which gives the volume of the whole cylinder, or using the slant height as $h$. The height must be perpendicular to the base; if you are given the slant height, use the Pythagorean theorem to find $h$ first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 9.6: Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.C.9"
+   }
+  ]
+ },
+ "g8.volume-spheres": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A sphere has no flat base to stack, so the cylinder trick needs a twist. More than 2,000 years ago, Archimedes compared a sphere with a <a href=\"/math/pre-algebra/volume-cylinders/\">cylinder</a> and a <a href=\"/math/pre-algebra/volume-cones/\">cone</a> that just fit around it."
+   },
+   {
+    "t": "why",
+    "html": "A sphere of radius $r$ fits snugly in a cylinder of radius $r$ and height $2r$. That cylinder holds $\\pi r^{2} \\cdot 2r = 2\\pi r^{3}$, and a cone with the same base and height holds one third as much, $\\frac{2}{3}\\pi r^{3}$. Archimedes showed that the cone and the sphere together hold exactly as much as the cylinder. So the sphere holds $2\\pi r^{3} - \\frac{2}{3}\\pi r^{3} = \\frac{4}{3}\\pi r^{3}$: the cone, sphere and cylinder are in the ratio $1 : 2 : 3$."
+   },
+   {
+    "t": "viz",
+    "name": "g8-solid",
+    "opts": {
+     "mode": "archimedes",
+     "r": 3
+    },
+    "cap": "A cone, a sphere and a cylinder with the same radius and height $2r$. Change $r$; the ratio stays $1 : 2 : 3$."
+   },
+   {
+    "t": "key",
+    "html": "$$V = \\frac{4}{3}\\pi r^{3}$$ Cube the radius (not the diameter), then multiply by $\\frac{4}{3}\\pi$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From the radius",
+    "q": "Find the volume of a sphere with radius 3 cm.",
+    "steps": [
+     "$r^{3} = 27$.",
+     "$V = \\frac{4}{3}\\pi \\cdot 27 = 36\\pi \\approx 113$."
+    ],
+    "a": "$36\\pi \\approx 113$ cm³"
+   },
+   {
+    "t": "ex",
+    "title": "From the diameter",
+    "q": "A ball has diameter 12 inches. Find its volume.",
+    "steps": [
+     "$r = 6$, so $r^{3} = 216$.",
+     "$V = \\frac{4}{3}\\pi \\cdot 216 = 288\\pi \\approx 904$."
+    ],
+    "a": "$288\\pi \\approx 904$ cubic inches"
+   },
+   {
+    "t": "ex",
+    "title": "Half a sphere",
+    "q": "A bowl is a hemisphere with radius 6 cm. How much can it hold?",
+    "steps": [
+     "A whole sphere: $\\frac{4}{3}\\pi \\cdot 216 = 288\\pi$.",
+     "Half of it: $144\\pi \\approx 452$."
+    ],
+    "a": "$144\\pi \\approx 452$ cm³"
+   },
+   {
+    "t": "ex",
+    "title": "Work backward",
+    "q": "A sphere has volume $36\\pi$. Find its radius.",
+    "steps": [
+     "$\\frac{4}{3}\\pi r^{3} = 36\\pi$. Divide by $\\pi$ and multiply by $\\frac{3}{4}$: $r^{3} = 27$.",
+     "$r = \\sqrt[3]{27} = 3$."
+    ],
+    "a": "$3$"
+   },
+   {
+    "t": "mistake",
+    "html": "Squaring the radius instead of cubing it, or cubing the diameter. Volume is three-dimensional, so the radius appears three times. With the diameter 12, cubing 12 instead of 6 makes the answer 8 times too big."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Prealgebra 2e, Section 9.6: Solve Geometry Applications: Volume and Surface Area"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.G.C.9"
+   }
+  ]
+ },
+ "g8.scatter-plots": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have <a href=\"/math/grade-6/describe-distributions/\">described distributions</a> of one variable. To see how two variables relate, plot each pair as a <a href=\"/math/grade-5/coordinate-plane/\">point on the coordinate plane</a>: that is a scatter plot."
+   },
+   {
+    "t": "why",
+    "html": "Each point stands for one person or thing, measured two ways: hours studied and test score, say. Putting all the points on one grid turns a long list of pairs into a picture, and patterns that are invisible in the list become shapes in the cloud of points."
+   },
+   {
+    "t": "key",
+    "html": "Describe a scatter plot by its <b>direction</b> (positive: up to the right; negative: down to the right; or no association), its <b>form</b> (linear or curved), its <b>strength</b> (tight or spread out), and any <b>clusters</b> or <b>outliers</b> (points far from the pattern)."
+   },
+   {
+    "t": "viz",
+    "name": "scatter",
+    "opts": {
+     "points": [
+      [
+       1,
+       52
+      ],
+      [
+       2,
+       58
+      ],
+      [
+       2.5,
+       55
+      ],
+      [
+       3,
+       64
+      ],
+      [
+       4,
+       66
+      ],
+      [
+       4.5,
+       70
+      ],
+      [
+       5,
+       71
+      ],
+      [
+       6,
+       79
+      ],
+      [
+       6.5,
+       76
+      ],
+      [
+       7,
+       85
+      ],
+      [
+       8,
+       88
+      ],
+      [
+       3.5,
+       40
+      ]
+     ],
+     "fit": false,
+     "residuals": false,
+     "editable": true,
+     "xlabel": "hours studied",
+     "ylabel": "score"
+    },
+    "cap": "Hours studied and test scores for 12 students. Drag points to see how the pattern changes."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Describe a plot",
+    "q": "Describe the scatter plot above.",
+    "steps": [
+     "As hours increase, scores tend to increase: a positive association.",
+     "The points lie close to a straight line: linear and fairly strong.",
+     "One student studied 3.5 hours and scored 40, far below the pattern: an outlier."
+    ],
+    "a": "positive, linear, fairly strong, with one outlier"
+   },
+   {
+    "t": "ex",
+    "title": "Predict the direction",
+    "q": "What association would you expect between the age of a car and its value? Between a person’s shoe size and their favorite number?",
+    "steps": [
+     "Older cars are usually worth less: a negative association.",
+     "Shoe size has nothing to do with a favorite number: no association."
+    ],
+    "a": "negative; none"
+   },
+   {
+    "t": "note",
+    "html": "An association does not prove that one thing causes the other. Ice cream sales and sunburns rise together, but both are caused by hot, sunny weather."
+   },
+   {
+    "t": "mistake",
+    "html": "Calling a downward pattern “no association.” A cloud that falls from left to right shows a negative association, which is a real relationship. No association means no upward or downward trend at all."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Introductory Statistics 2e, Chapter 12: Linear Regression and Correlation"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.SP.A.1 (construct and interpret scatter plots)"
+   }
+  ]
+ },
+ "g8.line-of-fit": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When the points in a <a href=\"/math/pre-algebra/scatter-plots/\">scatter plot</a> cluster around a line, one line can sum up the trend. You can write its equation in <a href=\"/math/pre-algebra/slope-intercept-form/\">slope-intercept form</a> and use it to predict."
+   },
+   {
+    "t": "why",
+    "html": "A line of fit trades many points for one simple rule. Its slope gives the typical change in $y$ for each 1 more in $x$, and its intercept gives a starting value. Because it is drawn to follow <b>all</b> the points, with some above and some below, it describes the trend better than a line through any two particular points."
+   },
+   {
+    "t": "key",
+    "html": "Draw a line that follows the trend, with about as many points above it as below. Pick two points <b>on the line</b> (they don’t have to be data points), find its equation, and use it to predict. The slope is the average change per unit; the intercept is the predicted value at $x = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "scatter",
+    "opts": {
+     "points": [
+      [
+       1,
+       52
+      ],
+      [
+       2,
+       58
+      ],
+      [
+       2.5,
+       55
+      ],
+      [
+       3,
+       64
+      ],
+      [
+       4,
+       66
+      ],
+      [
+       4.5,
+       70
+      ],
+      [
+       5,
+       71
+      ],
+      [
+       6,
+       79
+      ],
+      [
+       6.5,
+       76
+      ],
+      [
+       7,
+       85
+      ],
+      [
+       8,
+       88
+      ]
+     ],
+     "fit": false,
+     "residuals": false,
+     "userLine": true,
+     "editable": false,
+     "xlabel": "hours studied",
+     "ylabel": "score"
+    },
+    "cap": "Drag the two handles of your line to fit the points. Then turn on the best-fit line to compare."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Write the equation",
+    "q": "A line of fit for the study data passes through $(2, 56)$ and $(7, 81)$. Write its equation.",
+    "steps": [
+     "Slope: $\\frac{81 - 56}{7 - 2} = \\frac{25}{5} = 5$.",
+     "Intercept: $b = 56 - 5 \\cdot 2 = 46$."
+    ],
+    "a": "$y = 5x + 46$"
+   },
+   {
+    "t": "ex",
+    "title": "Predict",
+    "q": "Use $y = 5x + 46$ to predict the score of a student who studies 5 hours.",
+    "steps": [
+     "$y = 5 \\cdot 5 + 46 = 71$.",
+     "It is a prediction from the trend; a real student could score a bit higher or lower."
+    ],
+    "a": "about 71"
+   },
+   {
+    "t": "ex",
+    "title": "Interpret",
+    "q": "What do the 5 and the 46 in $y = 5x + 46$ mean?",
+    "steps": [
+     "Slope 5: each extra hour of study goes with about 5 more points, on average.",
+     "Intercept 46: the predicted score with 0 hours of study."
+    ],
+    "a": "about 5 points per hour; a starting value of 46"
+   },
+   {
+    "t": "mistake",
+    "html": "Drawing the line through the first and last points. Those two points might be unusual, and the line can end up above or below most of the others. Look at the whole cloud, and balance the points above and below the line."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Introductory Statistics 2e, Chapter 12: Linear Regression and Correlation"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.SP.A.2 (informally fit a straight line)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.SP.A.3 (use the equation of a linear model)"
+   }
+  ]
+ },
+ "g8.two-way-tables": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some data are categories, not numbers: yes or no, 7th or 8th grade. A two-way table counts how many fall into each pair of categories. Reading it uses the same thinking as <a href=\"/math/grade-7/compound-probability/\">compound probability</a>."
+   },
+   {
+    "t": "why",
+    "html": "Counts can mislead when the groups have different sizes. If 30 of 50 seventh graders and 30 of 100 eighth graders play a sport, the counts match but the rates are very different: 60% and 30%. Comparing <b>relative frequencies</b>, the share within each group, puts the groups on equal footing."
+   },
+   {
+    "t": "key",
+    "html": "Add row and column totals. To compare groups, divide each count by its <b>row total</b> (or column total) to get relative frequencies. If the groups’ percents differ a lot, there is an association between the two variables."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "Plays a sport",
+     "Does not",
+     "Total"
+    ],
+    "rows": [
+     [
+      "7th grade",
+      "30",
+      "20",
+      "50"
+     ],
+     [
+      "8th grade",
+      "12",
+      "28",
+      "40"
+     ],
+     [
+      "Total",
+      "42",
+      "48",
+      "90"
+     ]
+    ],
+    "cap": "A survey of 90 students."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Use the totals",
+    "q": "In the table, how many students in all play a sport, and how many 8th graders were surveyed?",
+    "steps": [
+     "The column total for “Plays a sport” is $30 + 12 = 42$.",
+     "The row total for 8th grade is $12 + 28 = 40$."
+    ],
+    "a": "42 and 40"
+   },
+   {
+    "t": "ex",
+    "title": "Relative frequencies",
+    "q": "What percent of 7th graders play a sport? Of 8th graders?",
+    "steps": [
+     "7th grade: $\\frac{30}{50} = 60\\%$.",
+     "8th grade: $\\frac{12}{40} = 30\\%$."
+    ],
+    "a": "60% and 30%"
+   },
+   {
+    "t": "ex",
+    "title": "Is there an association?",
+    "q": "Is grade level associated with playing a sport in this survey?",
+    "steps": [
+     "60% of 7th graders play, but only 30% of 8th graders.",
+     "The percents are far apart, so yes: in this group, 7th graders were more likely to play a sport."
+    ],
+    "a": "Yes"
+   },
+   {
+    "t": "mistake",
+    "html": "Comparing counts instead of percents. “30 seventh graders play but only 12 eighth graders” sounds convincing, but the groups have different sizes. Always divide by the group total before comparing."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax Introductory Statistics 2e, Chapter 3: Probability Topics (contingency tables)"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, Grade 8, 8.SP.A.4 (patterns of association in two-way tables)"
+   }
+  ]
+ }
+}

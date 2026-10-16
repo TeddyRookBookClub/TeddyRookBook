@@ -1,0 +1,341 @@
+{
+  "course": "calc4",
+  "units": [
+    {"key":"vector-fields","title":"Vector Fields","blurb":"Picture vector fields, find gradient fields, and measure curl and divergence."},
+    {"key":"line-integrals","title":"Line Integrals","blurb":"Integrate along curves, compute work, and recognize conservative fields."},
+    {"key":"greens","title":"Green's Theorem","blurb":"Turn line integrals around closed curves into double integrals."},
+    {"key":"surface-integrals","title":"Surfaces and Surface Integrals","blurb":"Parametrize surfaces and integrate over them, including flux."},
+    {"key":"theorems","title":"Stokes' and Divergence Theorems","blurb":"Relate integrals over a region to integrals over its boundary."},
+    {"key":"applications","title":"Applications","blurb":"Use the theorems in physics and engineering."}
+  ],
+  "topics": [
+    {
+      "id": "calc4.vector-fields",
+      "slug": "vector-fields",
+      "unit": "vector-fields",
+      "title": "Vector Fields",
+      "short": "A vector field attaches an arrow to every point.",
+      "prereqs": ["calc3.vectors-in-space","calc3.multivariable-functions"],
+      "xp": 1,
+      "trouble": "Students read the arrows as a path to follow instead of a velocity at each point.",
+      "viz": ["vectorfield"]
+    },
+    {
+      "id": "calc4.gradient-fields",
+      "slug": "gradient-fields",
+      "unit": "vector-fields",
+      "title": "Gradient Fields and Potentials",
+      "short": "F = ∇f for a potential function f.",
+      "prereqs": ["calc4.vector-fields","calc3.gradient"],
+      "xp": 2,
+      "viz": ["vectorfield","gradient"]
+    },
+    {
+      "id": "calc4.divergence-curl",
+      "slug": "divergence-curl",
+      "unit": "vector-fields",
+      "title": "Divergence and Curl",
+      "short": "∇ · F measures spreading out; ∇ × F measures rotation.",
+      "prereqs": ["calc4.vector-fields","calc3.higher-partials","calc3.cross-product"],
+      "xp": 2,
+      "trouble": "Students take the divergence of a scalar function, or think divergence is a vector.",
+      "viz": ["vectorfield"]
+    },
+    {
+      "id": "calc4.curl-divergence-meaning",
+      "slug": "curl-divergence-meaning",
+      "unit": "vector-fields",
+      "title": "What Curl and Divergence Measure",
+      "short": "Read sources, sinks and spin from a picture of a field.",
+      "prereqs": ["calc4.divergence-curl"],
+      "xp": 2,
+      "trouble": "Students think any field with curved arrows has nonzero curl.",
+      "viz": ["vectorfield"]
+    },
+    {
+      "id": "calc4.parametrize-curves",
+      "slug": "parametrize-curves",
+      "unit": "line-integrals",
+      "title": "Parametrizing Curves for Integration",
+      "short": "Write segments, circles and graphs as r(t) with an orientation.",
+      "prereqs": ["calc3.vector-functions"],
+      "xp": 1,
+      "trouble": "Students parametrize a segment from B to A when the curve runs from A to B.",
+      "viz": ["lineintegral","param3d"]
+    },
+    {
+      "id": "calc4.scalar-line-integrals",
+      "slug": "scalar-line-integrals",
+      "unit": "line-integrals",
+      "title": "Line Integrals of Functions",
+      "short": "∫_C f ds adds f along a curve, weighted by arc length.",
+      "prereqs": ["calc4.parametrize-curves","calc3.space-arc-length"],
+      "xp": 2,
+      "trouble": "Students forget the factor |r′(t)| in ds.",
+      "viz": ["lineintegral"]
+    },
+    {
+      "id": "calc4.work-line-integrals",
+      "slug": "work-line-integrals",
+      "unit": "line-integrals",
+      "title": "Line Integrals of Vector Fields",
+      "short": "∫_C F · dr measures work along a path.",
+      "prereqs": ["calc4.scalar-line-integrals","calc4.vector-fields"],
+      "xp": 2,
+      "trouble": "Students ignore orientation; reversing the curve changes the sign.",
+      "viz": ["lineintegral","vectorfield"]
+    },
+    {
+      "id": "calc4.differential-form",
+      "slug": "differential-form",
+      "unit": "line-integrals",
+      "title": "Line Integrals in the Form ∫P dx + Q dy",
+      "short": "Write and compute work with differentials.",
+      "prereqs": ["calc4.work-line-integrals"],
+      "xp": 2,
+      "viz": ["lineintegral"]
+    },
+    {
+      "id": "calc4.circulation-flux-curves",
+      "slug": "circulation-flux-curves",
+      "unit": "line-integrals",
+      "title": "Circulation and Flux across Plane Curves",
+      "short": "Flux across a curve uses the outward normal.",
+      "prereqs": ["calc4.work-line-integrals"],
+      "xp": 3,
+      "trouble": "Students use the tangent vector when the flux across a curve needs the normal.",
+      "viz": ["lineintegral","flux"]
+    },
+    {
+      "id": "calc4.ftc-line-integrals",
+      "slug": "ftc-line-integrals",
+      "unit": "line-integrals",
+      "title": "The Fundamental Theorem for Line Integrals",
+      "short": "∫_C ∇f · dr = f(end) − f(start).",
+      "prereqs": ["calc4.work-line-integrals","calc4.gradient-fields"],
+      "xp": 2,
+      "trouble": "Students apply the theorem to a field that is not a gradient.",
+      "viz": ["lineintegral"]
+    },
+    {
+      "id": "calc4.conservative-test",
+      "slug": "conservative-test",
+      "unit": "line-integrals",
+      "title": "Testing for Conservative Fields",
+      "short": "On a simply connected region, curl F = 0 means F is conservative.",
+      "prereqs": ["calc4.ftc-line-integrals","calc4.divergence-curl"],
+      "xp": 3,
+      "trouble": "Students apply the test on a region with a hole, where a curl-free field can still circulate.",
+      "viz": ["vectorfield"]
+    },
+    {
+      "id": "calc4.find-potential",
+      "slug": "find-potential",
+      "unit": "line-integrals",
+      "title": "Finding a Potential Function",
+      "short": "Integrate one component and match the others.",
+      "prereqs": ["calc4.conservative-test"],
+      "xp": 3,
+      "trouble": "Students integrate each component separately and add the results, counting shared terms twice.",
+      "viz": ["gradient"]
+    },
+    {
+      "id": "calc4.path-independence",
+      "slug": "path-independence",
+      "unit": "line-integrals",
+      "title": "Path Independence and Closed Loops",
+      "short": "For conservative fields, work depends only on the endpoints.",
+      "prereqs": ["calc4.find-potential"],
+      "xp": 2,
+      "viz": ["lineintegral"]
+    },
+    {
+      "id": "calc4.greens-circulation",
+      "slug": "greens-circulation",
+      "unit": "greens",
+      "title": "Green's Theorem: Circulation Form",
+      "short": "∮ P dx + Q dy = ∬ (Qx − Py) dA.",
+      "prereqs": ["calc4.path-independence","calc3.general-regions"],
+      "xp": 3,
+      "trouble": "Students go around the boundary clockwise, which flips the sign.",
+      "viz": ["vectorfield","lineintegral"]
+    },
+    {
+      "id": "calc4.greens-flux",
+      "slug": "greens-flux",
+      "unit": "greens",
+      "title": "Green's Theorem: Flux Form",
+      "short": "Outward flux equals the integral of the divergence.",
+      "prereqs": ["calc4.greens-circulation","calc4.circulation-flux-curves"],
+      "xp": 3,
+      "viz": ["flux"]
+    },
+    {
+      "id": "calc4.greens-area",
+      "slug": "greens-area",
+      "unit": "greens",
+      "title": "Area with Green's Theorem",
+      "short": "Find an area with a line integral, such as ½∮(x dy − y dx).",
+      "prereqs": ["calc4.greens-circulation"],
+      "xp": 2,
+      "viz": ["lineintegral"]
+    },
+    {
+      "id": "calc4.greens-holes",
+      "slug": "greens-holes",
+      "unit": "greens",
+      "title": "Green's Theorem for Regions with Holes",
+      "short": "Orient inner boundaries the opposite way.",
+      "prereqs": ["calc4.greens-circulation"],
+      "xp": 3,
+      "trouble": "Students orient the inner boundary the same way as the outer one.",
+      "viz": ["vectorfield"]
+    },
+    {
+      "id": "calc4.parametric-surfaces",
+      "slug": "parametric-surfaces",
+      "unit": "surface-integrals",
+      "title": "Parametric Surfaces",
+      "short": "r(u, v) describes a surface with two parameters.",
+      "prereqs": ["calc3.vector-functions","calc3.quadric-surfaces"],
+      "xp": 2,
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc4.parametric-surface-area",
+      "slug": "parametric-surface-area",
+      "unit": "surface-integrals",
+      "title": "Surface Area of a Parametric Surface",
+      "short": "dS = |r_u × r_v| du dv.",
+      "prereqs": ["calc4.parametric-surfaces","calc3.cross-product","calc3.surface-area-double"],
+      "xp": 3,
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc4.scalar-surface-integrals",
+      "slug": "scalar-surface-integrals",
+      "unit": "surface-integrals",
+      "title": "Surface Integrals of Functions",
+      "short": "∬_S f dS adds f over a surface.",
+      "prereqs": ["calc4.parametric-surface-area"],
+      "xp": 3,
+      "trouble": "Students integrate over the shadow region but forget the dS scaling factor.",
+      "viz": ["surface"]
+    },
+    {
+      "id": "calc4.oriented-surfaces",
+      "slug": "oriented-surfaces",
+      "unit": "surface-integrals",
+      "title": "Oriented Surfaces",
+      "short": "Choose a consistent unit normal, like outward on a closed surface.",
+      "prereqs": ["calc4.parametric-surfaces"],
+      "xp": 2,
+      "trouble": "Students let the cross product r_u × r_v decide the direction even when it points inward.",
+      "viz": ["flux"]
+    },
+    {
+      "id": "calc4.flux-integrals",
+      "slug": "flux-integrals",
+      "unit": "surface-integrals",
+      "title": "Flux Integrals",
+      "short": "∬_S F · dS measures flow through a surface.",
+      "prereqs": ["calc4.oriented-surfaces","calc4.scalar-surface-integrals"],
+      "xp": 3,
+      "trouble": "Students forget to dot with the normal, or use a unit normal and the scaling factor twice.",
+      "viz": ["flux"]
+    },
+    {
+      "id": "calc4.stokes-theorem",
+      "slug": "stokes-theorem",
+      "unit": "theorems",
+      "title": "Stokes' Theorem",
+      "short": "Circulation around a boundary equals the flux of the curl through the surface.",
+      "prereqs": ["calc4.flux-integrals","calc4.greens-circulation"],
+      "xp": 3,
+      "trouble": "Students orient the boundary curve against the surface normal, breaking the right-hand rule.",
+      "viz": ["vectorfield","flux"]
+    },
+    {
+      "id": "calc4.stokes-surfaces",
+      "slug": "stokes-surfaces",
+      "unit": "theorems",
+      "title": "Using Stokes' Theorem to Switch Surfaces",
+      "short": "Any surface with the same boundary gives the same flux of the curl.",
+      "prereqs": ["calc4.stokes-theorem"],
+      "xp": 3,
+      "viz": ["flux"]
+    },
+    {
+      "id": "calc4.divergence-theorem",
+      "slug": "divergence-theorem",
+      "unit": "theorems",
+      "title": "The Divergence Theorem",
+      "short": "Outward flux through a closed surface equals the integral of the divergence inside.",
+      "prereqs": ["calc4.flux-integrals","calc3.triple-integrals","calc4.greens-flux"],
+      "xp": 3,
+      "trouble": "Students apply it to a surface that is not closed, like a hemisphere without its base.",
+      "viz": ["flux"]
+    },
+    {
+      "id": "calc4.divergence-applications",
+      "slug": "divergence-applications",
+      "unit": "theorems",
+      "title": "Using the Divergence Theorem",
+      "short": "Close an open surface or swap a hard flux for an easy volume integral.",
+      "prereqs": ["calc4.divergence-theorem"],
+      "xp": 3,
+      "viz": ["flux"]
+    },
+    {
+      "id": "calc4.big-picture",
+      "slug": "big-picture",
+      "unit": "theorems",
+      "title": "One Idea, Four Theorems",
+      "short": "FTC, Green, Stokes and Gauss all relate a region to its boundary.",
+      "prereqs": ["calc4.stokes-surfaces","calc4.divergence-applications"],
+      "xp": 2,
+      "viz": []
+    },
+    {
+      "id": "calc4.fluid-flow",
+      "slug": "fluid-flow",
+      "unit": "applications",
+      "title": "Fluid Flow, Sources and Circulation",
+      "short": "Interpret flux and curl for moving fluids.",
+      "prereqs": ["calc4.divergence-applications","calc4.curl-divergence-meaning"],
+      "xp": 3,
+      "viz": ["vectorfield","flux"]
+    },
+    {
+      "id": "calc4.gauss-law",
+      "slug": "gauss-law",
+      "unit": "applications",
+      "title": "Gauss's Law and Electric Flux",
+      "short": "Flux through a closed surface counts the charge inside.",
+      "prereqs": ["calc4.divergence-applications"],
+      "xp": 3,
+      "trouble": "Students expect the flux to depend on the surface's shape and size.",
+      "viz": ["flux"]
+    },
+    {
+      "id": "calc4.maxwell-equations",
+      "slug": "maxwell-equations",
+      "unit": "applications",
+      "title": "Maxwell's Equations in Two Forms",
+      "short": "Move between integral and differential forms using the theorems.",
+      "prereqs": ["calc4.gauss-law","calc4.stokes-theorem"],
+      "xp": 3,
+      "viz": ["vectorfield"]
+    },
+    {
+      "id": "calc4.shell-mass",
+      "slug": "shell-mass",
+      "unit": "applications",
+      "title": "Mass and Centers of Mass of Thin Shells",
+      "short": "Integrate density over a surface.",
+      "prereqs": ["calc4.scalar-surface-integrals"],
+      "xp": 3,
+      "viz": ["surface"]
+    }
+  ]
+}

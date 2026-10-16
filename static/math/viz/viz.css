@@ -1,0 +1,23 @@
+/* Math Ladder visuals: shared styles for anything mounted with class ml-viz (see static/math/viz/core.js).
+   The visuals follow the site's light or dark theme. */
+.ml-viz{--mv-ink:#1d2320;--mv-muted:#5d6862;--mv-line:#dde5df;--mv-card:#fff;--mv-paper:#fbf8f0;--mv-acc:#00562f;margin:1rem 0;padding:.7rem;border:1px solid var(--mv-line);border-radius:14px;background:var(--mv-paper);color:var(--mv-ink);position:relative;max-width:100%;box-sizing:border-box}
+html[data-theme="dark"] .ml-viz{--mv-ink:#e6ece8;--mv-muted:#a9b8af;--mv-line:#2f4a3b;--mv-card:#14211a;--mv-paper:#1b2b22;--mv-acc:#6cc79a}
+.ml-viz .ml-cv{display:block;max-width:100%;border-radius:10px;touch-action:none;background:var(--mv-card)}
+.ml-viz .ml-ctl{display:flex;flex-wrap:wrap;gap:.5rem .9rem;align-items:flex-end;margin:.6rem 0 0}
+.ml-viz .ml-sl{display:flex;flex-direction:column;gap:.1rem;min-width:150px;flex:1 1 150px;font-size:.85rem;color:var(--mv-muted)}
+.ml-viz .ml-sl-top{display:flex;justify-content:space-between;gap:.4rem}
+.ml-viz .ml-sl-val{color:var(--mv-ink);font-weight:600;font-variant-numeric:tabular-nums}
+.ml-viz .ml-sl input{width:100%;accent-color:var(--mv-acc);min-height:28px}
+.ml-viz .ml-seg{display:flex;flex-wrap:wrap;gap:.3rem}
+.ml-viz .ml-seg button,.ml-viz .ml-btn{font:600 .85rem system-ui,sans-serif;min-height:36px;padding:.35rem .75rem;border-radius:999px;border:1px solid var(--mv-line);background:var(--mv-card);color:var(--mv-ink);cursor:pointer}
+.ml-viz .ml-seg button[aria-pressed="true"]{background:#004225;border-color:#004225;color:#fff}
+html[data-theme="dark"] .ml-viz .ml-seg button[aria-pressed="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.ml-viz .ml-btn:hover,.ml-viz .ml-seg button:hover{border-color:var(--mv-acc)}
+.ml-viz .ml-btn.pri{background:#004225;border-color:#004225;color:#fff}
+html[data-theme="dark"] .ml-viz .ml-btn.pri{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.ml-viz .ml-readout{margin:.5rem 0 0;font-size:.95rem;line-height:1.5;min-height:1.5em}
+.ml-viz .ml-cap{margin:.45rem 0 0;font-size:.85rem;color:var(--mv-muted);line-height:1.45}
+.ml-viz [hidden]{display:none !important}
+.ml-viz .ml-viz-err{color:var(--mv-muted);font-size:.9rem}
+.ml-viz button:focus-visible,.ml-viz input:focus-visible,.ml-viz .ml-cv:focus-visible{outline:3px solid #b8963e;outline-offset:2px}
+@media print{.ml-viz .ml-ctl{display:none}}

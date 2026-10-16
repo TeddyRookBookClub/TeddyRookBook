@@ -1,0 +1,197 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+<link rel="stylesheet" href="{{ "games/gas/sim.css" | relURL }}?v={{ (os.Stat "static/games/gas/sim.css").ModTime.Unix }}">
+<div class="lab" id="gas-lab">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Gas in a Box</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Chemistry &amp; Physics</p>
+    <h1>Gas in a Box</h1>
+    <p>A box of helium and argon atoms, drawn to scale and slowed down a hundred billion times. Push the piston, heat the walls, pull out the divider, and watch what the atoms do. The gauge and the graphs show why squeezing a gas raises its pressure, why heating it does the same, and why a bike pump gets warm.</p>
+    <span class="lab-mark" aria-hidden="true">🫧</span>
+  </header>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="gas-view">
+      <canvas id="gas-cv" tabindex="0" aria-label="A box of gas atoms bouncing around. Helium atoms are gold, argon atoms are blue. The top wall is a piston you can drag up or down, or move with the up and down arrow keys. The left and right arrow keys change the temperature. Beside the box: a pressure gauge, a thermometer, a histogram of the atoms' speeds and a graph of pressure against volume."></canvas>
+      <div class="lab-hud" id="gas-hud" aria-hidden="true"></div>
+      <div class="lab-tools">
+        <button type="button" id="gas-pause" aria-label="Pause" title="Pause (space)">❚❚</button>
+        <button type="button" id="gas-speed" aria-label="Playback speed: 1 times" title="Playback speed">1×</button>
+        <button type="button" id="gas-reset" aria-label="Start this scene again" title="Start this scene again">↺</button>
+      </div>
+    </div>
+
+    <div class="lab-panel" id="gas-panel">
+      <h3 id="gas-scenes-h">Scenes</h3>
+      <div class="lab-seg" id="gas-scenes" role="group" aria-labelledby="gas-scenes-h">
+        <button type="button" data-scene="ideal" aria-pressed="true">One gas</button>
+        <button type="button" data-scene="spread" aria-pressed="false">Same speed</button>
+        <button type="button" data-scene="two" aria-pressed="false">Two gases</button>
+        <button type="button" data-scene="pump" aria-pressed="false">Bike pump</button>
+        <button type="button" data-scene="crowd" aria-pressed="false">Crowded</button>
+      </div>
+      <p class="lab-small gas-note" id="gas-scene-note"></p>
+
+      <label class="lab-field"><span><span>Helium atoms <small>(light, 4.0 u)</small></span> <output id="gas-nhe-o">100</output></span><input type="range" id="gas-nhe" min="0" max="250" step="5" value="100" aria-label="Number of helium atoms"></label>
+      <label class="lab-field"><span><span>Argon atoms <small>(heavy, 39.9 u)</small></span> <output id="gas-nar-o">0</output></span><input type="range" id="gas-nar" min="0" max="250" step="5" value="0" aria-label="Number of argon atoms"></label>
+      <label class="lab-field"><span><span id="gas-temp-l">Wall temperature</span> <output id="gas-temp-o">300 K</output></span><input type="range" id="gas-temp" min="100" max="1000" step="10" value="300" aria-label="Temperature in kelvins"></label>
+      <label class="lab-chk"><input type="checkbox" id="gas-thermo" checked> Thermostat walls (off: insulated)</label>
+      <p class="lab-small gas-note" id="gas-temp-note"></p>
+      <label class="lab-field"><span>Volume (piston) <output id="gas-vol-o">100%</output></span><input type="range" id="gas-vol" min="20" max="100" step="1" value="100" aria-label="Volume of the box, set by the piston, in percent of the full box"></label>
+      <div class="lab-field"><span id="gas-pspeed-l">Piston speed</span>
+        <div class="lab-seg" id="gas-pspeed" role="group" aria-labelledby="gas-pspeed-l"><button type="button" data-ps="0.1" aria-pressed="false">Slow, 100 m/s</button><button type="button" data-ps="0.8" aria-pressed="true">Fast, 800 m/s</button></div>
+      </div>
+      <div class="lab-row">
+        <button type="button" class="lab-btn" id="gas-div">Put in the divider</button>
+        <button type="button" class="lab-btn" id="gas-color" aria-pressed="false">Color by speed</button>
+      </div>
+
+      <h3>Live numbers</h3>
+      <dl class="lab-readout" id="gas-read">
+        <dt>Temperature</dt><dd id="gas-r-t">—</dd>
+        <dt>Pressure</dt><dd id="gas-r-p">—</dd>
+        <dt>averaged over</dt><dd id="gas-r-avg">—</dd>
+        <dt>Volume (area)</dt><dd id="gas-r-a">—</dd>
+        <dt>P·A</dt><dd id="gas-r-pa">—</dd>
+        <dt>N·k·T</dt><dd id="gas-r-nkt">—</dd>
+        <dt>P·A ÷ N·k·T</dt><dd id="gas-r-ratio">—</dd>
+        <dt>Helium</dt><dd id="gas-r-he">—</dd>
+        <dt>Argon</dt><dd id="gas-r-ar">—</dd>
+        <dt>Work by piston</dt><dd id="gas-r-w">—</dd>
+        <dt>Heat from walls</dt><dd id="gas-r-q">—</dd>
+      </dl>
+      <p class="lab-small">Helium and argon: average speed and average kinetic energy of one atom. A 2-D pressure is a force per length of wall, in millinewtons per meter. 1 zJ (zeptojoule) = 10⁻²¹ J. The pressure is averaged from a moment after your last change, so wait a few seconds after each change.</p>
+
+      <h3>Missions</h3>
+      <p class="lab-progress"></p>
+      <ul class="lab-missions" id="gas-missions"></ul>
+      <p class="lab-small">Keys, with the box selected: ↑ ↓ move the piston, ← → change the temperature, D the divider, space pauses. Tap an atom to follow it.</p>
+    </div>
+  </div>
+
+  <section class="lab-sec">
+    <h2>What you're seeing</h2>
+    <div class="lab-cols">
+      <p>The box is a thin slice of gas, drawn to scale. It is 28 nanometers wide (a nanometer is a billionth of a meter). The gold dots are helium atoms, 0.14 nm in radius, and the blue dots are argon atoms, 0.188 nm. Each atom flies in a straight line until it hits a wall or another atom, then bounces off without losing any energy.</p>
+      <p>Real atoms are far too fast to watch. A helium atom at room temperature would cross this box in roughly 20 trillionths of a second, so the simulation runs about 100 billion times slower than real life: one second on screen shows 10 picoseconds (at 1×).</p>
+      <p>Every flash on a wall is an atom hitting it. The pressure gauge adds up those pushes. The thermometer reads the atoms' average kinetic energy, the histogram sorts the atoms by speed, and the P–V graph traces pressure against volume as you move the piston.</p>
+      <p>The box holds a few hundred atoms. A real one-liter bottle of air holds about 2.5 × 10<sup>22</sup> molecules: 25 thousand billion billion. With that many, the pressure and temperature hold perfectly steady. With a few hundred, you can see them jitter.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>The science</h2>
+    <h3 class="lab-h">Temperature is motion</h3>
+    <p>The temperature of a gas measures how fast its molecules move. More exactly, it measures their average kinetic energy, the energy of motion. In the real, three-dimensional world:</p>
+    <div class="lab-formula">average of ½ <var>m</var> <var>v</var>² = <sup>3</sup>⁄<sub>2</sub> <var>k</var> <var>T</var> &nbsp;&nbsp;&nbsp;(3-D) &nbsp;&nbsp;&nbsp;&nbsp; average of ½ <var>m</var> <var>v</var>² = <var>k</var> <var>T</var> &nbsp;&nbsp;&nbsp;(2-D, this box)</div>
+    <p>Here <var>m</var> is a molecule's mass, <var>v</var> its speed, <var>T</var> the temperature in kelvins, and <var>k</var> = 1.380649 × 10<sup>−23</sup> J/K is Boltzmann's constant. Each direction a molecule can move in carries ½<var>kT</var> of energy on average. Our flat atoms can move in two directions, so they carry <var>kT</var>; real ones carry <sup>3</sup>⁄<sub>2</sub><var>kT</var>.</p>
+    <p>At 20 °C (293 K), nitrogen molecules in the air have a root-mean-square speed of about 511 m/s, faster than sound. For light helium atoms it is about 1,350 m/s, and for heavy argon atoms about 430 m/s. In our flat box the same temperature gives speeds about 18% lower, because two directions share less energy than three.</p>
+
+    <h3 class="lab-h">Pressure is collisions</h3>
+    <p>When an atom bounces off a wall, its speed toward the wall, <var>v</var><sub>⊥</sub>, flips around, so the wall gets a push of 2<var>m</var><var>v</var><sub>⊥</sub>. In air, each square centimeter of wall gets about 3 × 10<sup>23</sup> of these pushes every second, and together they feel like one steady force. Pressure is that force spread over the wall: per square meter in the real world (pascals, N/m²), and per meter of wall in a flat 2-D world (N/m). Adding up the pushes gives the ideal-gas law:</p>
+    <div class="lab-formula"><var>P</var> · <var>V</var> = <var>N</var> · <var>k</var> · <var>T</var> &nbsp;&nbsp;&nbsp;(3-D) &nbsp;&nbsp;&nbsp;&nbsp; <var>P</var> · <var>A</var> = <var>N</var> · <var>k</var> · <var>T</var> &nbsp;&nbsp;&nbsp;(2-D, this box)</div>
+    <p><var>N</var> is the number of molecules and <var>V</var> the volume (in 2-D, the area <var>A</var>). The panel shows both sides of the law live, in zeptojoules. For one liter of air at sea-level pressure (101,325 Pa) and 20 °C, it gives <var>N</var> = <var>PV</var> / <var>kT</var> = 101,325 × 0.001 / (1.380649 × 10<sup>−23</sup> × 293.15) ≈ 2.5 × 10<sup>22</sup> molecules.</p>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Boyle's law: squeeze it</h3>
+        <p>Keep the temperature and the number of molecules fixed and halve the volume. The molecules are packed twice as tightly, so twice as many hit each bit of wall every second, and the pressure doubles. Pressure times volume stays the same.</p>
+        <div class="lab-formula"><var>P</var><sub>1</sub><var>V</var><sub>1</sub> = <var>P</var><sub>2</sub><var>V</var><sub>2</sub></div>
+      </div>
+      <div>
+        <h3 class="lab-h">Gay-Lussac's law: heat it</h3>
+        <p>Keep the volume fixed and heat the gas. The molecules hit the walls harder and more often, and the pressure rises in proportion to the temperature in kelvins. Going from 300 K to 600 K doubles the pressure. Going from 20 °C to 40 °C does not: that is only 293 K to 313 K, a 7% rise.</p>
+        <div class="lab-formula"><var>P</var><sub>1</sub> / <var>T</var><sub>1</sub> = <var>P</var><sub>2</sub> / <var>T</var><sub>2</sub></div>
+      </div>
+    </div>
+
+    <h3 class="lab-h">Fast and slow at the same time: the Maxwell–Boltzmann distribution</h3>
+    <p>In a gas at one temperature, molecules don't all move at the same speed. Collisions keep trading energy between them, so a few crawl, most move at middling speeds, and a few race at several times the average. The shape of that spread was worked out by James Clerk Maxwell and Ludwig Boltzmann. For a flat 2-D gas it is:</p>
+    <div class="lab-formula"><var>f</var>(<var>v</var>) = (<var>m v</var> / <var>kT</var>) · e<sup>−<var>m v</var>² / 2<var>kT</var></sup> &nbsp;&nbsp; most likely speed √(<var>kT</var>/<var>m</var>), &nbsp; root-mean-square speed √(2<var>kT</var>/<var>m</var>)</div>
+    <p>In 3-D, it is <var>f</var>(<var>v</var>) = 4π (<var>m</var>/2π<var>kT</var>)<sup>3/2</sup> <var>v</var>² e<sup>−<var>m v</var>²/2<var>kT</var></sup>, with root-mean-square speed √(3<var>kT</var>/<var>m</var>). The histogram compares the atoms' real speeds with the 2-D curve.</p>
+
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Heavy molecules move slower</h3>
+        <p>At the same temperature, every kind of molecule has the same average kinetic energy. An argon atom is about 10 times heavier than a helium atom, so it moves √10 ≈ 3.16 times slower:</p>
+        <div class="lab-formula"><var>v</var><sub>He</sub> / <var>v</var><sub>Ar</sub> = √(<var>m</var><sub>Ar</sub> / <var>m</var><sub>He</sub>) = √(39.948 / 4.0026) = 3.16</div>
+        <p>This is also why light gases leak out through tiny holes faster than heavy ones (Graham's law).</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Mixing</h3>
+        <p>Take out the divider, and each atom wanders off in a zigzag, knocked this way and that. Before long both gases fill the whole box. Nothing pushes them to mix. There are simply far more mixed arrangements than sorted ones, so random motion almost always ends up mixed. That is also why mixed gases never sort themselves out again.</p>
+      </div>
+    </div>
+
+    <h3 class="lab-h">Why a bike pump gets warm</h3>
+    <p>When an atom bounces off a piston that is moving toward it, it comes back faster, like a tennis ball off a swinging racket. So pushing a piston in speeds up the atoms: the work you do becomes their kinetic energy, and the gas gets hotter. Pulling the piston out does the opposite, and the gas cools. The energy rule (the first law of thermodynamics) is:</p>
+    <div class="lab-formula">change in the gas's energy = work done on it + heat flowing into it</div>
+    <p>If you pump fast, there is no time for the heat to leak out, so all of the work stays in the gas. For our flat gas of single atoms, squeezing it slowly to half its area doubles its temperature (<var>T</var> · <var>A</var> stays the same). Air in 3-D heats less, but still a lot: squeezed to half its volume with no heat lost, air at 20 °C would reach about 114 °C. In a real pump the air keeps leaking heat to the metal, and friction adds some warmth too, which is why the barrel ends up warm rather than hot. Diesel engines squeeze air so hard and so fast that it gets hot enough to light the fuel without a spark.</p>
+    <p>The cooling side matters too. Air that rises in the sky expands as the pressure drops, and it cools by about 9.8 °C for every kilometer it rises (when it is dry). That cooling is how clouds form.</p>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Try this</h2>
+    <div class="lab-try"><b>Boyle's law.</b> Pick <i>One gas</i>. Wait a few seconds for the pressure to settle and note it. Drag the piston down to 50% and wait again: the pressure is about twice as high. Try 25%. On the P–V graph, your points follow the dashed curve, a hyperbola.</div>
+    <div class="lab-try"><b>The Celsius trap.</b> With the volume fixed, raise the temperature from 300 K to 600 K. The pressure doubles. Then work out what 300 K and 600 K are in degrees Celsius (subtract 273.15) and see why doubling a Celsius temperature never doubles the pressure.</div>
+    <div class="lab-try"><b>Order to chaos.</b> Pick <i>Same speed</i>. Every atom starts with the same speed, so the histogram begins as one tall spike. Watch collisions melt it into the Maxwell–Boltzmann curve within a few seconds.</div>
+    <div class="lab-try"><b>Heavy and light.</b> Pick <i>Two gases</i>. Compare the average speeds in the panel: helium is about 3 times faster, yet both have the same average energy. Take out the divider. Which gas spreads faster? Put the divider back once they've mixed: they stay mixed.</div>
+    <div class="lab-try"><b>Bike pump.</b> Pick <i>Bike pump</i> (insulated walls), set the piston speed to <i>Slow</i> and push it to 50%: the temperature roughly doubles (about 2.1 times in our box). Start again with the piston on <i>Fast</i>: the same squeeze heats the gas about 2.6 times. A fast piston plows into atoms piled up in front of it, so it pushes against a higher pressure and does extra work. Pull the piston back out and watch the gas cool.</div>
+    <div class="lab-try"><b>Not so ideal.</b> Pick <i>Crowded</i> and squeeze. Compare P·A with N·k·T: the measured pressure climbs above the ideal-gas law, because the atoms take up room and get in each other's way.</div>
+    <div class="lab-note"><b>At home (safe and easy):</b> screw the cap tightly onto an empty plastic bottle and put it in the freezer for an hour. The air inside cools, its molecules slow down and push less, and the air outside dents the bottle. Or, after pumping up a bike tire or a ball, feel the pump's barrel near the bottom: it's warm.</div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>A common mix-up</h2>
+    <p><b>"When a gas gets hot, its molecules get bigger."</b> They don't. A helium atom is the same size at 100 K and at 1,000 K, and so are the atoms in the box. What changes is their speed. Faster atoms hit the walls harder and more often, so the pressure rises. If the walls can give, as a balloon's can, the gas pushes them out and takes up more room. The gas expands, but each molecule stays the same size.</p>
+    <p>A related mix-up: "slow molecules are colder." In <i>Two gases</i>, the argon atoms are about three times slower than the helium atoms, but they are at exactly the same temperature, because temperature is about energy, not speed.</p>
+  </section>
+
+  <section class="lab-sec">
+    <h2>How the simulation works</h2>
+    <div class="lab-cols">
+      <p><b>The model.</b> Each atom is a hard disk with its real mass (helium 4.0026 u, argon 39.948 u) and its van der Waals radius. Atoms feel no force except when they touch, and every collision is perfectly elastic. Helium and argon are good choices for this: they are single atoms with no parts to spin or wobble.</p>
+      <p><b>The steps.</b> Each frame is cut into sub-steps short enough that no atom moves more than 0.08 nm. A grid of 0.55 nm cells finds the pairs that could touch, and for each one the exact moment of contact is solved for, so atoms bounce at the true distance. The walls are mirrors. The piston bounces atoms in its own moving frame, which is how it does work on the gas. Thermostat walls send each atom that hits them back with a random velocity drawn from the wall's temperature.</p>
+      <p><b>The readings.</b> Pressure is the total momentum the atoms give the four outer walls, divided by the time and the length of wall. Temperature is the total kinetic energy divided by <var>N k</var>. The pressure shown is averaged from a moment after your last change, so it gets steadier the longer you wait.</p>
+      <p><b>What's simplified.</b> The box is flat (2-D), it holds hundreds of atoms instead of 10<sup>22</sup>, and time is slowed 10<sup>11</sup> times. Real atoms also pull on each other slightly when close, which is why real argon turns liquid below 87 K. Ours never attract, so they stay a gas at any temperature.</p>
+    </div>
+    <h3 class="lab-h">How it was checked</h3>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Test</th><th>Result</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>Energy, 240 atoms, insulated walls, 3,000 ps, 95,243 collisions</td><td>drift 3 × 10<sup>−14</sup></td><td>0</td></tr>
+        <tr><td>Ideal-gas law with tiny atoms (P·A ÷ N·k·T)</td><td>1.002</td><td>1</td></tr>
+        <tr><td>Same, real-size helium, 100 atoms</td><td>1.033</td><td>1.034 (hard-disk theory with wall effect)</td></tr>
+        <tr><td>Same, 250 atoms</td><td>1.067</td><td>1.069</td></tr>
+        <tr><td>Speeds vs. 2-D Maxwell–Boltzmann, after starting at one speed</td><td>largest gap 0.7%</td><td>0</td></tr>
+        <tr><td>Equipartition, He started at 600 K, Ar at 100 K: energy ratio</td><td>1.002</td><td>1</td></tr>
+        <tr><td>Same: average speed of He ÷ Ar</td><td>3.159</td><td>√(39.948 / 4.0026) = 3.159</td></tr>
+        <tr><td>Thermostat walls at 600 K: gas temperature</td><td>598.9 K</td><td>600 K</td></tr>
+        <tr><td>Boyle: pressure at half the area ÷ full area (thermostat)</td><td>2.04</td><td>2.07 (hard-disk theory; 2 for an ideal gas)</td></tr>
+        <tr><td>Gay-Lussac: pressure at 600 K ÷ 300 K</td><td>2.001</td><td>2</td></tr>
+        <tr><td>Very slow (5 m/s) insulated squeeze to half the area: temperature ratio</td><td>2.099</td><td>2.093 (2 for an ideal gas)</td></tr>
+        <tr><td>Same squeeze with the piston at 100 m/s (Slow) and 800 m/s (Fast)</td><td>2.111 and 2.570</td><td>more than 2.093, since a moving piston does extra work</td></tr>
+        <tr><td>Same squeeze: work done by piston vs. energy gained</td><td>685.126 zJ vs. 685.126 zJ</td><td>equal</td></tr>
+      </tbody>
+    </table></div>
+    <p class="lab-small">Our atoms take up a little room, and in a box only 28 nm wide that shows: the pressure runs a few percent above the ideal-gas law. The measured values match the equation of state for hard disks (Henderson, 1975), corrected for the space the atoms can't reach next to the walls.</p>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>NIST, CODATA values: <a href="https://physics.nist.gov/cgi-bin/cuu/Value?k">Boltzmann constant</a> (1.380649 × 10<sup>−23</sup> J/K, exact) and <a href="https://physics.nist.gov/cgi-bin/cuu/Value?u">atomic mass constant</a>.</li>
+      <li>NIST, <a href="https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl">Atomic Weights and Isotopic Compositions</a> (helium 4.002602, argon 39.948).</li>
+      <li>OpenStax, <a href="https://openstax.org/books/college-physics-2e/pages/13-4-kinetic-theory-atomic-and-molecular-explanation-of-pressure-and-temperature"><i>College Physics 2e</i>, 13.4 Kinetic Theory</a> (nitrogen's rms speed of 511 m/s at 20 °C; average kinetic energy <sup>3</sup>⁄<sub>2</sub><var>kT</var>).</li>
+      <li>OpenStax, <i>Chemistry 2e</i>: <a href="https://openstax.org/books/chemistry-2e/pages/9-4-effusion-and-diffusion-of-gases">9.4 Effusion and Diffusion of Gases</a> (Graham's law) and <a href="https://openstax.org/books/chemistry-2e/pages/9-5-the-kinetic-molecular-theory">9.5 The Kinetic-Molecular Theory</a>.</li>
+      <li>OpenStax, <a href="https://openstax.org/books/university-physics-volume-2/pages/2-4-distribution-of-molecular-speeds"><i>University Physics Volume 2</i>, 2.4 Distribution of Molecular Speeds</a> and <a href="https://openstax.org/books/university-physics-volume-2/pages/3-6-adiabatic-processes-for-an-ideal-gas">3.6 Adiabatic Processes for an Ideal Gas</a>.</li>
+      <li>A. Bondi, "van der Waals Volumes and Radii," <i>Journal of Physical Chemistry</i> 68, 441 (1964): radii of helium (140 pm) and argon (188 pm).</li>
+      <li>D. Henderson, "A simple equation of state for hard discs," <i>Molecular Physics</i> 30, 971 (1975).</li>
+      <li>Wikipedia, <a href="https://en.wikipedia.org/wiki/Lapse_rate">Lapse rate</a> (dry adiabatic lapse rate, 9.8 °C/km) and <a href="https://en.wikipedia.org/wiki/Boiling_points_of_the_elements_(data_page)">boiling points of the elements</a> (argon, 87.3 K).</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "homeschool/science/" | relURL }}">Homeschool science →</a></nav>
+</div>
+<script src="{{ "games/gas/physics.js" | relURL }}?v={{ (os.Stat "static/games/gas/physics.js").ModTime.Unix }}"></script>
+<script src="{{ "games/gas/sim.js" | relURL }}?v={{ (os.Stat "static/games/gas/sim.js").ModTime.Unix }}"></script>
+{{ end }}

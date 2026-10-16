@@ -1,4 +1,4 @@
-/* Orbit Lab (/games/orbits/): Newton's cannon, Earth orbits, a trip to the Moon and a gravity assist, on one canvas.
+/* Orbit Lab (/science-lab/orbits/): Newton's cannon, Earth orbits, a trip to the Moon and a gravity assist, on one canvas.
    The physics is in physics.js (window.OrbitPhys); this file draws the scenes, handles input and checks the missions. */
 (function () {
   'use strict';

@@ -1,9 +1,10 @@
-/* Magnetic Bottles (/games/magnetic-bottles/): a 3-D explorer of the exact plasma equilibria in arXiv:2610.07304.
+/* Magnetic Bottles (/science-lab/magnetic-bottles/): a 3-D explorer of the exact plasma equilibria in arXiv:2610.07304.
    The formulas live in physics.js (window.MagBottles). This file draws the 3-D view (painter's algorithm on a 2-D canvas),
-   the four slices, the iota chart and the live numbers. */
+   the four slices, the iota chart and the live numbers. guide.js and finder.js talk to it through root.mbApi and the
+   'mb:state' event (sent whenever the family or a setting changes). */
 (function () {
   'use strict';
-  var L = window.TRBLab, MB = window.MagBottles, root = document.getElementById('magnetic-bottles-lab');
+  var L = window.TRBLab, MB = window.MagBottles, MX = window.MBExplore, root = document.getElementById('magnetic-bottles-lab');
   if (!root || !L || !MB) return;
   function $(id) { return document.getElementById(id); }
   var PI = Math.PI, TAU = 2 * PI, reduced = L.reduced, store = L.store('magnetic-bottles');
@@ -192,13 +193,14 @@
     /* color range */
     var lo = 1e9, hi = -1e9; for (i = 0; i < nq; i++) { if (qv[i] < lo) lo = qv[i]; if (qv[i] > hi) hi = qv[i]; }
     geo.vlo = lo; geo.vhi = hi;
-    var eb = [1e9, -1e9]; // |B| on the edge surface
-    for (i = 0; i < 400; i++) { M.surf(1, TAU * ((i * 0.618034) % 1), TAU * i / 400, p); M.B(p[0], p[1], p[2], B); var bmg = Math.hypot(B[0], B[1], B[2]); eb[0] = Math.min(eb[0], bmg); eb[1] = Math.max(eb[1], bmg); }
+    var eb = [1e9, -1e9]; // |B| on the edge surface: 400 spread-out points, the extremes then polished (explore.js)
+    if (MX) eb = MX.edgeB(M, 400);
+    else for (i = 0; i < 400; i++) { M.surf(1, TAU * ((i * 0.618034) % 1), TAU * i / 400, p); M.B(p[0], p[1], p[2], B); var bmg = Math.hypot(B[0], B[1], B[2]); eb[0] = Math.min(eb[0], bmg); eb[1] = Math.max(eb[1], bmg); }
     info.edgeB = eb; info.lineDrift = lineDrift; info.minor = minor;
     setTarget();
     makeParticles();
     fastReadouts();
-    clearTimeout(slowT); slowT = setTimeout(slow, 160);
+    clearTimeout(slowT); slowGen++; slowT = setTimeout(slow, 160);
     dirty = true;
   }
   function setTarget() {
@@ -396,17 +398,25 @@
     readEl.innerHTML = html;
     updateHud();
   }
-  /* the expensive numbers wait until the sliders rest */
+  /* the expensive numbers wait until the sliders rest, and are done one piece at a time (each well under 50 ms), so the
+     page never stalls; a newer build cancels the rest */
+  var slowGen = 0;
   function slow() {
     if (!M) return;
-    var m = M;
-    info.gap = MB.mirrorGap(m, 16, 48, 8, 24);
+    var m = M, gen = slowGen, rs = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1], steps = [], io = [], io0 = [];
+    var m0 = m.fam === 'f2' && Math.abs(m.P.tau) > 1e-9 ? MB.make('f2', Object.assign({}, m.P, { tau: 0 })) : null;
+    steps.push(function () { info.gap = MX ? MX.gap(m, MX.QP.gap) : MB.mirrorGap(m, 16, 48, 8, 24); fastReadouts(); });
     if (m.fam === 'f2') {
-      var rs = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
-      info.iota = rs.map(function (x) { return m.iota(Math.sqrt(x)); });
-      info.iota0 = Math.abs(m.P.tau) > 1e-9 ? rs.map(function (x) { return MB.make('f2', Object.assign({}, m.P, { tau: 0 })).iota(Math.sqrt(x)); }) : null;
-    } else { info.iota = [2, 2]; info.iota0 = null; }
-    fastReadouts(); drawIota(); runCheck(); drawSections();
+      rs.forEach(function (x) { steps.push(function () { io.push(m.iota(Math.sqrt(x))); }); });
+      if (m0) rs.forEach(function (x) { steps.push(function () { io0.push(m0.iota(Math.sqrt(x))); }); });
+      steps.push(function () { info.iota = io; info.iota0 = m0 ? io0 : null; fastReadouts(); drawIota(); });
+    } else steps.push(function () { info.iota = [2, 2]; info.iota0 = null; fastReadouts(); drawIota(); });
+    steps.push(runCheck, drawSections);
+    (function next() {
+      if (gen !== slowGen || m !== M || !steps.length) return;
+      steps.shift()();
+      slowT = setTimeout(next, 0);
+    })();
   }
   function runCheck() {
     var c = MB.check(M, 60, seed), se = MB.surfErr(M, 3, 12, 24), extra, extraName;
@@ -472,6 +482,12 @@
   var XS = { cv: $('mb-xs') }; XS.G = L.canvas(XS.cv);
   var PHIS = [0, PI / 4, PI / 2, 3 * PI / 4], PHIN = ['φ = 0°', 'φ = 45°', 'φ = 90°', 'φ = 135°'];
   var heat = document.createElement('canvas'), hctx = heat.getContext('2d');
+  /* a canvas whose box changes size is cleared, so draw the slices and the iota chart again when the slices' box changes width */
+  if ('ResizeObserver' in window) {
+    var xsW = 0, xsT = 0;
+    try { new ResizeObserver(function () { var w = XS.cv.parentNode.clientWidth; if (Math.abs(w - xsW) < 0.5) return; xsW = w; clearTimeout(xsT); xsT = setTimeout(function () { if (M) { drawSections(); drawIota(); } }, 120); }).observe(XS.cv.parentNode); } catch (er) { }
+    try { var ioW = 0; new ResizeObserver(function () { var w = IO.cv.clientWidth; if (Math.abs(w - ioW) < 0.5) return; ioW = w; setTimeout(function () { if (M) drawIota(); }, 120); }).observe(IO.cv); } catch (er) { }
+  }
   function drawSections() {
     if (!M) return;
     var box = XS.cv.parentNode, W = box.clientWidth - 16; if (W < 100) return;
@@ -591,14 +607,16 @@
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
-  function changed() { syncSliders(); save(); needBuild = true; }
+  function setFam(fam) { st.fam = fam; info = {}; cam.snap = true; buildPanel(); save(); needBuild = true; emit(); }
+  function changed() { syncSliders(); save(); needBuild = true; emit(); }
+  function emit() { try { root.dispatchEvent(new CustomEvent('mb:state', { detail: { fam: st.fam, P: Object.assign({}, st.P[st.fam]) } })); } catch (er) { } }
   root.addEventListener('input', function (e) {
     var k = e.target.dataset && e.target.dataset.k; if (!k) return;
     st.P[st.fam][k] = +e.target.value; changed();
   });
   root.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b || !root.contains(b)) return;
-    if (b.dataset.fam && b.dataset.fam !== st.fam) { st.fam = b.dataset.fam; info = {}; cam.snap = true; buildPanel(); save(); needBuild = true; }
+    if (b.dataset.fam && b.dataset.fam !== st.fam) { setFam(b.dataset.fam); }
     else if (b.dataset.pre !== undefined) {
       var pre = PRE[st.fam], it = pre.items[+b.dataset.pre];
       Object.assign(st.P[st.fam], pre.base, { tau: it.tau }); changed();
@@ -617,6 +635,19 @@
   bindChk('mb-cut', 'cut', true); bindChk('mb-mirror', 'mirror', false); bindChk('mb-lines', 'lines', false); bindChk('mb-flow', 'flow', false);
   colBtns.forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.color === st.color ? 'true' : 'false'); });
   $('mb-recheck').addEventListener('click', function () { seed++; runCheck(); });
+
+  /* what guide.js and finder.js may read and change */
+  root.mbApi = {
+    get: function () { return { fam: st.fam, P: Object.assign({}, st.P[st.fam]) }; },
+    set: function (fam, P, note) {
+      if (fam !== st.fam) setFam(fam);
+      var cur = st.P[st.fam];
+      SL[st.fam].forEach(function (s) { if (P[s.k] !== undefined && isFinite(P[s.k])) cur[s.k] = s.k === 'delta' ? Math.max(s.min, +P[s.k]) : clamp(+P[s.k], s.min, s.max); });
+      changed();
+      if (note) L.toast(view, note);
+    },
+    toast: function (t) { L.toast(view, t); }
+  };
 
   /* ---------- turning, zooming ---------- */
   var spinBtn = $('mb-spin');

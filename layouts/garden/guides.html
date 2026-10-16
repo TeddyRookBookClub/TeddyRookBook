@@ -1,7 +1,7 @@
 {{ define "main" }}
 <link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
 <link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (os.Stat "static/garden/garden.css").ModTime.Unix }}">
-{{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}
+{{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}{{ $v := site.Data.garden.viz }}
 <div class="hs gd" id="gd-gpage" data-units>
   <nav class="hs-crumbs"><a href="{{ "garden/" | relURL }}">Food Garden Planner</a> › Guides</nav>
   <header class="hs-hero">
@@ -14,10 +14,17 @@
     <nav class="gd-toc"><a href="#food">🥕 Growing food</a> <a href="#chickens">🐔 Backyard chickens</a> <a href="#bees">🐝 Honeybees</a> <a href="#pollinators">🌼 Helping pollinators</a></nav>
     <p class="hs-small">{{ $g.meta.disclaimer }} Everything here comes from university extension services, USDA and CDC; each section lists its sources.</p>
   </section>
-  <section class="hs-sec" id="food"><h2>🥕 Growing food</h2>{{ range $g.sections }}{{ partial "garden-sec.html" . }}{{ end }}</section>
-  <section class="hs-sec" id="chickens"><h2>🐔 Backyard chickens</h2>{{ range $a.chickens.sections }}{{ partial "garden-sec.html" . }}{{ end }}</section>
+  <section class="hs-sec" id="food"><h2>🥕 Growing food</h2>
+    <div class="gv" data-gv="sun" data-nounits><p class="hs-small gv-wait">Loading the sun and shade picture…</p></div>
+    {{ range $g.sections }}{{ partial "garden-sec.html" . }}{{ end }}</section>
+  <section class="hs-sec" id="chickens"><h2>🐔 Backyard chickens</h2>
+    <div class="gv" data-gv="hen" data-nounits><p class="hs-small gv-wait">Loading the daylight picture…</p></div>
+    {{ range $a.chickens.sections }}{{ partial "garden-sec.html" . }}{{ end }}</section>
   <section class="hs-sec" id="bees"><h2>🐝 Honeybees</h2>{{ range $a.bees.sections }}{{ partial "garden-sec.html" . }}{{ end }}</section>
   <section class="hs-sec" id="pollinators">{{ with $a.bees.supporting_pollinators }}{{ partial "garden-sec.html" . }}{{ end }}</section>
+  <script type="application/json" id="gd-data">{{ dict "crops" (slice) "an" (dict "ch" $a.chickens.numbers) "viz" (dict "sources" $v.sources "sun" $v.sun "bed" $v.bed) | jsonify | safeJS }}</script>
   <nav class="hs-pn"><a href="{{ "garden/" | relURL }}">← Food Garden Planner</a><a href="{{ "resources/" | relURL }}">More free resources →</a></nav>
 </div>
+<script src="{{ "garden/viz/model.js" | relURL }}?v={{ (os.Stat "static/garden/viz/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "garden/viz/viz.js" | relURL }}?v={{ (os.Stat "static/garden/viz/viz.js").ModTime.Unix }}" defer></script>
 {{ end }}

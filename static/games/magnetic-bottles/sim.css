@@ -72,3 +72,127 @@ html[data-theme="dark"] #magnetic-bottles-lab .mb-check dd .ok{color:#6cc79a}
 #magnetic-bottles-lab .mb-nb{white-space:nowrap}
 #magnetic-bottles-lab .lab-toast{top:3.6rem}
 @media (max-width:600px){#magnetic-bottles-lab .lab-toast{top:6.4rem;font-size:.8rem;max-width:80%}}
+/* ---------- the stage: 3-D view, slices and "What each setting does" on the left, the panel on the right ---------- */
+#magnetic-bottles-lab .lab-stage{grid-template-rows:auto auto 1fr}
+#magnetic-bottles-lab .lab-stage>.lab-panel{grid-row:1 / span 3}
+#magnetic-bottles-lab .lab-stage>.mb-guide{grid-column:1;grid-row:3;align-self:stretch;min-width:0;display:flex;flex-direction:column;margin:.5rem 0 0}
+#magnetic-bottles-lab .mb-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;padding:0}
+#magnetic-bottles-lab .mb-guide-top{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem 1rem;margin:0 0 .5rem}
+#magnetic-bottles-lab .mb-guide h2{margin:0}
+#magnetic-bottles-lab .mb-tabs{display:flex;flex-wrap:wrap;gap:.3rem}
+#magnetic-bottles-lab .mb-tabs button{min-height:36px;font:600 .84rem system-ui,sans-serif;padding:.35rem .75rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+#magnetic-bottles-lab .mb-tabs button:hover{border-color:var(--acc)}
+#magnetic-bottles-lab .mb-tabs button[aria-selected="true"]{background:#004225;border-color:#004225;color:#fff}
+html[data-theme="dark"] #magnetic-bottles-lab .mb-tabs button[aria-selected="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+#magnetic-bottles-lab .mb-tab-sym{font:italic 700 1rem Georgia,serif}
+#magnetic-bottles-lab .mb-card{flex:1 1 auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,300px);grid-template-rows:1fr auto;grid-template-areas:"a b" "c c";gap:.6rem .9rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.75rem .9rem;font-size:.9rem;line-height:1.5}
+#magnetic-bottles-lab .mb-card:focus{outline:none}
+#magnetic-bottles-lab .mb-card:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+#magnetic-bottles-lab .mb-card-a{grid-area:a;display:flex;flex-direction:column;min-width:0}
+#magnetic-bottles-lab .mb-draw{flex:1 1 auto;min-height:170px;max-height:440px;background:#06111a;border-radius:10px;position:relative;overflow:hidden}
+#magnetic-bottles-lab .mb-draw canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#magnetic-bottles-lab .mb-draw-key{margin:.3rem 0 0;font-size:.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:.1rem .8rem}
+#magnetic-bottles-lab .mb-k i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin-right:.3rem}
+#magnetic-bottles-lab .mb-k i.dash{border-top-style:dashed}
+#magnetic-bottles-lab .mb-k i.fdot{width:8px;height:8px;border:0;border-radius:50%}
+#magnetic-bottles-lab .mb-k i.band{width:16px;height:9px;border:0;border-radius:3px}
+#magnetic-bottles-lab .mb-k i.dot{width:7px;height:7px;border:0;border-radius:50%;background:#fff;box-shadow:0 0 0 1px #888}
+#magnetic-bottles-lab .mb-what{margin:.45rem 0 0}
+#magnetic-bottles-lab .mb-card-b{grid-area:b;min-width:0}
+#magnetic-bottles-lab .mb-nudge{width:100%;border-collapse:collapse;font-size:.8rem}
+#magnetic-bottles-lab .mb-nudge caption{text-align:left;font:600 .8rem system-ui,sans-serif;color:var(--ink);padding:0 0 .3rem;line-height:1.35}
+#magnetic-bottles-lab .mb-nudge th,#magnetic-bottles-lab .mb-nudge td{padding:.13rem .3rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:baseline}
+#magnetic-bottles-lab .mb-nudge thead th{font:700 .7rem system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+#magnetic-bottles-lab .mb-nudge tbody th{font-weight:400;color:var(--muted);line-height:1.3}
+#magnetic-bottles-lab .mb-nudge td{font:600 .78rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink);white-space:nowrap;text-align:right}
+#magnetic-bottles-lab .mb-nudge.mb-busy td{opacity:.55}
+#magnetic-bottles-lab .mb-up,#magnetic-bottles-lab .mb-dn{color:var(--ink)}
+#magnetic-bottles-lab .mb-nc{color:var(--muted);font-weight:400}
+#magnetic-bottles-lab .mb-dir{display:flex;gap:.3rem;margin:0 0 .4rem}
+#magnetic-bottles-lab .mb-dir button{flex:1 1 0;min-height:36px;font:600 .8rem system-ui,sans-serif;padding:.3rem .5rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+#magnetic-bottles-lab .mb-dir button:hover{border-color:var(--acc)}
+#magnetic-bottles-lab .mb-dir button[aria-pressed="true"]{background:#004225;border-color:#004225;color:#fff}
+html[data-theme="dark"] #magnetic-bottles-lab .mb-dir button[aria-pressed="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+#magnetic-bottles-lab .mb-nudge-note{margin:.35rem 0 0;font-size:.75rem;color:var(--muted);line-height:1.4}
+#magnetic-bottles-lab .mb-card-c{grid-area:c;display:flex;flex-direction:column;gap:.25rem;border-top:1px solid var(--line);padding-top:.45rem}
+#magnetic-bottles-lab .mb-c-up ul{columns:2 260px;column-gap:1.4rem}
+#magnetic-bottles-lab .mb-c-up li{break-inside:avoid}
+#magnetic-bottles-lab .mb-range{font-weight:400;letter-spacing:0;text-transform:none}
+#magnetic-bottles-lab .mb-card-c h4{margin:0 0 .15rem;font:700 .72rem system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+#magnetic-bottles-lab .mb-card-c p{margin:0 0 .45rem}
+#magnetic-bottles-lab .mb-card-c ul{margin:0 0 .3rem;padding-left:1.1rem}
+#magnetic-bottles-lab .mb-card-c li{margin:.1rem 0;line-height:1.45}
+@media (max-width:1100px) and (min-width:861px){
+  #magnetic-bottles-lab .mb-card{grid-template-columns:minmax(0,1fr) minmax(230px,260px);padding:.65rem .7rem;gap:.5rem .7rem}
+  #magnetic-bottles-lab .mb-nudge tbody th{font-size:.76rem}
+}
+@media (max-width:860px){
+  #magnetic-bottles-lab .lab-stage{grid-template-rows:none}
+  #magnetic-bottles-lab .lab-stage>.lab-panel,#magnetic-bottles-lab .lab-stage>.mb-guide{grid-column:auto;grid-row:auto}
+  #magnetic-bottles-lab .lab-stage>.mb-guide{margin:.6rem 0 0}
+}
+@media (max-width:640px){
+  #magnetic-bottles-lab .mb-card{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"a" "b" "c";padding:.65rem .7rem}
+  #magnetic-bottles-lab .mb-draw{min-height:180px;max-height:220px;height:200px}
+}
+/* ---------- Find a better bottle ---------- */
+#magnetic-bottles-lab .mb-find-intro{max-width:52rem}
+#magnetic-bottles-lab .mb-find-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:.8rem;align-items:start;margin:.6rem 0 0}
+#magnetic-bottles-lab .mb-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.75rem .85rem;min-width:0;display:flex;flex-direction:column;gap:.5rem;font-size:.9rem}
+#magnetic-bottles-lab .mb-box h3{margin:0;font:700 .78rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+#magnetic-bottles-lab .mb-box p{margin:0}
+#magnetic-bottles-lab .mb-ctrls{display:flex;flex-wrap:wrap;gap:.4rem .8rem}
+#magnetic-bottles-lab .mb-ctrls label{display:flex;align-items:center;gap:.35rem;font-size:.82rem;color:var(--muted)}
+#magnetic-bottles-lab .mb-ctrls select,#magnetic-bottles-lab .mb-goal select{font:inherit;font-size:.85rem;min-height:36px;padding:.25rem .45rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+#magnetic-bottles-lab .mb-map-wrap{position:relative;background:#06111a;border-radius:10px;overflow:hidden}
+#magnetic-bottles-lab .mb-map-wrap canvas{display:block;width:100%;height:420px;touch-action:pan-y;cursor:crosshair}
+#magnetic-bottles-lab .mb-par-wrap canvas{height:360px;cursor:pointer}
+#magnetic-bottles-lab .mb-map-wrap canvas:focus{outline:none}
+#magnetic-bottles-lab .mb-map-wrap canvas:focus-visible{outline:2px solid var(--sim-acc);outline-offset:-2px;border-radius:10px}
+#magnetic-bottles-lab .mb-tip{position:absolute;pointer-events:none;background:rgba(11,27,39,.94);color:var(--sim-ink);border:1px solid var(--sim-line);border-radius:8px;padding:.25rem .5rem;font:11px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:nowrap;z-index:2}
+#magnetic-bottles-lab .mb-scale{display:flex;flex-wrap:wrap;align-items:center;gap:.2rem .45rem;font:600 .78rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+#magnetic-bottles-lab .mb-scale-bar{display:inline-block;width:150px;height:10px;border-radius:5px;border:1px solid var(--line)}
+#magnetic-bottles-lab .mb-scale-what{font:400 .8rem system-ui,sans-serif;color:var(--muted)}
+#magnetic-bottles-lab .mb-goal .lab-seg button{min-height:36px;font-size:.8rem}
+#magnetic-bottles-lab .mb-goal .lab-seg button:disabled{opacity:.45;cursor:default}
+#magnetic-bottles-lab .mb-goal .lab-field input[type=range]{min-height:36px;margin:0}
+#magnetic-bottles-lab .mb-goal .lab-field output{font:600 .82rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+#magnetic-bottles-lab .mb-tight{margin-top:-.35rem !important}
+#magnetic-bottles-lab .mb-free-box{border:1px solid var(--line);border-radius:10px;padding:.2rem .6rem .3rem;margin:0}
+#magnetic-bottles-lab .mb-free-box legend{font-size:.8rem;color:var(--muted);padding:0 .3rem}
+#magnetic-bottles-lab .mb-free{display:flex;flex-wrap:wrap;gap:0 1rem}
+#magnetic-bottles-lab .mb-free .lab-chk{min-height:36px;cursor:pointer;font:italic 600 1rem Georgia,serif}
+#magnetic-bottles-lab .mb-free .lab-chk input{width:18px;height:18px;accent-color:var(--acc)}
+#magnetic-bottles-lab .mb-runrow{display:flex;align-items:center;gap:.6rem}
+#magnetic-bottles-lab .mb-runrow .lab-btn{min-height:40px;min-width:6.5rem}
+#magnetic-bottles-lab .mb-progress{flex:1;height:8px;border-radius:4px;background:var(--soft);overflow:hidden}
+#magnetic-bottles-lab .mb-progress div{height:100%;width:0;background:var(--acc);transition:width .2s}
+#magnetic-bottles-lab .mb-result{display:flex;flex-direction:column;gap:.45rem}
+#magnetic-bottles-lab .mb-rtab{width:100%;border-collapse:collapse;font-size:.82rem}
+#magnetic-bottles-lab .mb-rtab caption{text-align:left;font:600 .85rem system-ui,sans-serif;color:var(--ink);padding:0 0 .25rem}
+#magnetic-bottles-lab .mb-rtab th,#magnetic-bottles-lab .mb-rtab td{padding:.18rem .35rem;border-bottom:1px solid var(--line);text-align:left}
+#magnetic-bottles-lab .mb-rtab thead th{font:700 .7rem system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+#magnetic-bottles-lab .mb-rtab tbody th{font-weight:400;color:var(--muted)}
+#magnetic-bottles-lab .mb-rtab td{text-align:right;font:600 .8rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+#magnetic-bottles-lab .mb-rtab tr.mb-ch td:last-child,#magnetic-bottles-lab .mb-rtab tr.mb-goalrow td:last-child{color:var(--acc)}
+#magnetic-bottles-lab .mb-rtab tr.mb-goalrow th{color:var(--ink);font-weight:600}
+#magnetic-bottles-lab .mb-goal-ctrls{display:flex;flex-direction:column;gap:.5rem}
+#magnetic-bottles-lab .mb-resbtns{display:flex;flex-wrap:wrap;gap:.5rem}
+#magnetic-bottles-lab .mb-result .lab-btn{min-height:40px}
+#magnetic-bottles-lab .mb-kk i{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin:0 .25rem 0 0}
+#magnetic-bottles-lab .mb-kk i.ring{border:2px solid var(--ink);background:transparent;width:10px;height:10px}
+#magnetic-bottles-lab .mb-how p{line-height:1.55}
+#magnetic-bottles-lab .mb-honest{margin:.2rem 0 0}
+#magnetic-bottles-lab .mb-honest p{margin:0 0 .45rem}
+#magnetic-bottles-lab .mb-honest p:last-child{margin:0}
+@media (max-width:860px){
+  #magnetic-bottles-lab .mb-find-grid{grid-template-columns:minmax(0,1fr)}
+  #magnetic-bottles-lab .mb-map-wrap canvas{height:340px}
+  #magnetic-bottles-lab .mb-par-wrap canvas{height:320px}
+}
+@media (max-width:600px){
+  #magnetic-bottles-lab .mb-map-wrap canvas{height:300px}
+  #magnetic-bottles-lab .mb-par-wrap canvas{height:290px}
+  #magnetic-bottles-lab .mb-box{padding:.65rem .65rem}
+}
+@media (prefers-reduced-motion:reduce){#magnetic-bottles-lab .mb-progress div{transition:none}}

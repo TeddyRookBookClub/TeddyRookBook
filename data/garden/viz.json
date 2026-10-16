@@ -1,0 +1,468 @@
+{
+ "about": "Data for the Food Garden Planner pictures (static/garden/viz). Weeks are counted from the gardener's own average last spring frost date.",
+ "fields": {
+  "ht": "Height rank used to place crops on the garden map: 4 tree, 3 tall or trellised, 2 medium, 1 low. Texas A&M E-289 names okra, corn and tomatoes as tall crops to group on the north side; VCE 426-312 says to put tall and trellised crops on the north side. Oregon State's raised-bed handout puts pole beans, trellised peas and tomatoes on the north side of an east-west bed and says a north-south bed is best for low crops. The ranks for the other crops follow typical plant size (editorial).",
+  "pw": "Planting window in weeks from the average last spring frost (negative = before), from the CSU planting groups: hardy as early as 2 to 4 weeks before; semi-hardy 0 to 2 weeks before; tender, from seed, around the frost date (drawn as 1 week either side); very tender 2 or more weeks after (drawn as 2 to 4 weeks, fading out). Crops a source says to plant after the frost date (WSU dry beans, WVU sunflowers, USU peanuts) are drawn 0 to 2 weeks after. The planner's crop notes (ps) give the source for each crop.",
+  "si": "Age of transplants when set out, in weeks (CSU Table 1 and 2): tomato 5 to 7, pepper 6 to 8, eggplant 6 to 9, broccoli and cabbage 5 to 7.",
+  "hv": "pick: picked again and again once the first fruit or leaves are ready (Iowa State harvest guide: tomatoes weekly, cucumbers and summer squash every 2 to 3 days), drawn until the average first fall frost, which kills frost-tender crops (UNL G1343, CSU). once: harvested when mature; the window spans the planner's days-to-harvest range, from early to late varieties.",
+  "fall": "A second crop can be sown for fall. Latest sowing = first fall frost minus days to harvest minus the 14-day Fall Factor, minus 14 more days for frost-tender crops (UNL G1343). The window runs from late varieties to early ones. The UNL count also adds the length of the harvest you want, so sow earlier for a longer harvest.",
+  "fd": "Cowpeas: about 65 to 75 days before the average first fall frost (University of Arkansas, in the planner's crop data)."
+ },
+ "sun": {
+  "full": 6,
+  "ideal": 8,
+  "text": "Most vegetables need at least 6 hours of direct sun a day (Texas A&M E-289); 8 to 10 hours is ideal, and fruit and seed crops do best with at least 8 (VCE 426-312). Leafy greens and some herbs get by with less (the planner's crop data, from Iowa State)."
+ },
+ "bed": {
+  "max_ft": 4,
+  "walk_in": [
+   14,
+   16
+  ],
+  "text": "Make beds at most 4 feet wide if you can reach in from both sides, so you never step on the soil; walkways 14 to 16 inches wide work between raised beds (Oregon State). Paths of 3 to 4 feet fit a wheelbarrow or a wheelchair (the planner's Large home gardens guide)."
+ },
+ "sources": {
+  "csu": {
+   "name": "Colorado State University Extension, Vegetable Planting Guide (CMG GardenNotes #720)",
+   "url": "https://extension.colostate.edu/resource/vegetable-planting-guide/"
+  },
+  "unl": {
+   "name": "Nebraska Extension G1343, Fall Vegetable Gardening",
+   "url": "https://extensionpubs.unl.edu/publication/g1343/na/html/view"
+  },
+  "isu": {
+   "name": "Iowa State University Extension, Vegetable Harvest Guide",
+   "url": "https://yardandgarden.extension.iastate.edu/how-to/vegetable-harvest-guide"
+  },
+  "tamu": {
+   "name": "Texas A&M AgriLife Extension E-289, Easy Gardening: Planning a Garden",
+   "url": "https://aggie-horticulture.tamu.edu/vegetable/files/2010/10/E-289_planning.pdf"
+  },
+  "vce": {
+   "name": "Virginia Cooperative Extension 426-312, Planning the Vegetable Garden",
+   "url": "https://aaec.vt.edu/content/dam/pubs_ext_vt_edu/426/426-312/SPES-678.pdf"
+  },
+  "osu": {
+   "name": "Oregon State University Extension (Oregon Master Gardener Association), Raised Bed Gardening",
+   "url": "https://extension.oregonstate.edu/sites/default/files/documents/12281/raisedbed.pdf"
+  },
+  "noaa": {
+   "name": "NOAA Global Monitoring Laboratory, General Solar Position Calculations",
+   "url": "https://gml.noaa.gov/grad/solcalc/solareqns.PDF"
+  },
+  "noaacalc": {
+   "name": "NOAA Global Monitoring Laboratory, Solar Calculator",
+   "url": "https://gml.noaa.gov/grad/solcalc/"
+  },
+  "climate": {
+   "name": "NOAA Climate.gov, Average date of last spring freeze",
+   "url": "https://www.climate.gov/spring-freeze"
+  },
+  "isushade": {
+   "name": "Iowa State University Extension, Which vegetables will grow in partial shade?",
+   "url": "https://yardandgarden.extension.iastate.edu/faq/which-vegetables-will-grow-partial-shade"
+  },
+  "wsu": {
+   "name": "WSU Extension FS135E, Growing Dry Beans in Home Gardens",
+   "url": "https://wpcdn.web.wsu.edu/extension/uploads/sites/25/FS135E-Growing-dry-bean-in-home-garden-publication.pdf"
+  }
+ },
+ "crops": {
+  "potatoes": {
+   "ht": 2,
+   "pw": [
+    -2,
+    0
+   ],
+   "hv": "once"
+  },
+  "sweet_potatoes": {
+   "ht": 1,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "hv": "once"
+  },
+  "carrots": {
+   "ht": 1,
+   "pw": [
+    -2,
+    0
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "beets": {
+   "ht": 1,
+   "pw": [
+    -2,
+    0
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "parsnips": {
+   "ht": 1,
+   "pw": [
+    -2,
+    0
+   ],
+   "hv": "once"
+  },
+  "turnips_rutabaga": {
+   "ht": 1,
+   "pw": [
+    -4,
+    -2
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "onions": {
+   "ht": 1,
+   "pw": [
+    -4,
+    -2
+   ],
+   "hv": "once"
+  },
+  "garlic": {
+   "ht": 1,
+   "note": "Plant cloves in fall; harvest the next summer when the leaves turn brown."
+  },
+  "winter_squash": {
+   "ht": 2,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "hv": "once"
+  },
+  "pumpkins": {
+   "ht": 2,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "hv": "once"
+  },
+  "summer_squash": {
+   "ht": 2,
+   "pw": [
+    -1,
+    1
+   ],
+   "hv": "pick",
+   "fall": 1
+  },
+  "dry_beans": {
+   "ht": 2,
+   "pw": [
+    0,
+    2
+   ],
+   "hv": "once"
+  },
+  "snap_beans": {
+   "ht": 2,
+   "pw": [
+    -1,
+    1
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "peas": {
+   "ht": 3,
+   "pw": [
+    -4,
+    -2
+   ],
+   "hv": "once"
+  },
+  "fava_beans": {
+   "ht": 2,
+   "note": "Sown in fall for a spring crop where winters are mild; timing for cold-winter areas wasn't verified."
+  },
+  "sweet_corn": {
+   "ht": 3,
+   "pw": [
+    -1,
+    1
+   ],
+   "hv": "once"
+  },
+  "flint_dent_corn": {
+   "ht": 3,
+   "pw": [
+    -1,
+    1
+   ],
+   "hv": "once"
+  },
+  "cowpeas": {
+   "ht": 2,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "hv": "once",
+   "fd": [
+    75,
+    65
+   ]
+  },
+  "peanuts": {
+   "ht": 1,
+   "pw": [
+    0,
+    2
+   ],
+   "hv": "once"
+  },
+  "sunflowers": {
+   "ht": 3,
+   "pw": [
+    0,
+    2
+   ],
+   "hv": "once"
+  },
+  "tomatoes": {
+   "ht": 3,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "si": [
+    5,
+    7
+   ],
+   "hv": "pick"
+  },
+  "cherry_tomatoes": {
+   "ht": 3,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "si": [
+    5,
+    7
+   ],
+   "hv": "pick"
+  },
+  "peppers": {
+   "ht": 2,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "si": [
+    6,
+    8
+   ],
+   "hv": "pick"
+  },
+  "eggplant": {
+   "ht": 2,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "si": [
+    6,
+    9
+   ],
+   "hv": "pick"
+  },
+  "cucumbers": {
+   "ht": 2,
+   "pw": [
+    -1,
+    1
+   ],
+   "hv": "pick",
+   "fall": 1
+  },
+  "kale": {
+   "ht": 2,
+   "pw": [
+    -4,
+    -2
+   ],
+   "hv": "pick",
+   "fall": 1
+  },
+  "collards": {
+   "ht": 2,
+   "pw": [
+    -4,
+    -2
+   ],
+   "hv": "pick",
+   "fall": 1
+  },
+  "swiss_chard": {
+   "ht": 2,
+   "pw": [
+    -2,
+    0
+   ],
+   "hv": "pick",
+   "fall": 1
+  },
+  "spinach": {
+   "ht": 1,
+   "pw": [
+    -4,
+    -2
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "lettuce": {
+   "ht": 1,
+   "pw": [
+    -2,
+    0
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "cabbage": {
+   "ht": 2,
+   "pw": [
+    -4,
+    -2
+   ],
+   "si": [
+    5,
+    7
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "broccoli": {
+   "ht": 2,
+   "pw": [
+    -4,
+    -2
+   ],
+   "si": [
+    5,
+    7
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "radishes": {
+   "ht": 1,
+   "pw": [
+    -4,
+    -2
+   ],
+   "hv": "once",
+   "fall": 1
+  },
+  "microgreens": {
+   "ht": 1,
+   "note": "Grown indoors year-round, ready in 1 to 3 weeks."
+  },
+  "culinary_herbs": {
+   "ht": 1,
+   "note": "Timing depends on the herb: basil is frost-tender, parsley and cilantro like cool weather."
+  },
+  "strawberries": {
+   "ht": 1,
+   "note": "Planted once, in early spring; most fruit comes from the second year on."
+  },
+  "blueberries": {
+   "ht": 3,
+   "note": "Planted once, in early spring; full crops from about year 3 or 4."
+  },
+  "raspberries_blackberries": {
+   "ht": 3,
+   "note": "Planted once, in early spring; fruit from about the second year."
+  },
+  "grapes": {
+   "ht": 3,
+   "note": "Planted once, in early spring, on a trellis; fruit from about year 3."
+  },
+  "rhubarb": {
+   "ht": 2,
+   "note": "Planted once as crowns in early spring; light picking from year 2 or 3."
+  },
+  "asparagus": {
+   "ht": 3,
+   "note": "Planted once as crowns in early spring; first spears in year 2 or 3."
+  },
+  "cantaloupe": {
+   "ht": 1,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "hv": "once"
+  },
+  "watermelon": {
+   "ht": 1,
+   "pw": [
+    2,
+    4
+   ],
+   "later": 1,
+   "hv": "once"
+  },
+  "jerusalem_artichokes": {
+   "ht": 3,
+   "note": "Planted once, early in spring; it spreads and comes back every year."
+  },
+  "apple": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  },
+  "pear": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  },
+  "peach": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  },
+  "plum_cherry": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  },
+  "fig": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  },
+  "citrus": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  },
+  "pecan": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  },
+  "hazelnut": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  },
+  "avocado": {
+   "ht": 4,
+   "note": "Planted once, as a young tree; see “Ready in” for the years to first fruit."
+  }
+ }
+}

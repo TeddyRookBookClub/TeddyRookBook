@@ -123,3 +123,16 @@ html[data-theme="dark"] .td-l b{color:#e08a9e}
 .about-list li:hover{border-color:var(--g,#004225);transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.08)}
 .about-list li:has(b a:focus-visible){outline:3px solid #d8b860;outline-offset:2px}
 .about-list li b a:focus-visible{outline:none}
+
+/* Math Ladder tile: course rungs climbing from the lower left */
+.ladder{background:linear-gradient(180deg,#e9f2eb,#f6f2e4)}
+html[data-theme="dark"] .ladder{background:linear-gradient(180deg,#16261d,#1e2521)}
+.ladder span{position:absolute;left:calc(7% + var(--i) * 11%);bottom:calc(12px + var(--i) * 28px);padding:.2rem .65rem;border-radius:999px;background:hsl(calc(45 + var(--i) * 19) 62% 90%);border:1px solid hsl(calc(45 + var(--i) * 19) 35% 72%);color:#163a26;font:700 .78rem/1.2 system-ui,sans-serif;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+html[data-theme="dark"] .ladder span{background:hsl(calc(45 + var(--i) * 19) 32% 24%);border-color:hsl(calc(45 + var(--i) * 19) 30% 38%);color:#e8f3ec}
+.ladder .lad-eq,.ladder .lad-eq2{position:absolute;font:italic 1.05rem Georgia,serif;color:#004225;opacity:.35;white-space:nowrap}
+.ladder .lad-eq{top:14px;left:16px}.ladder .lad-eq2{right:16px;bottom:14px}
+html[data-theme="dark"] .ladder .lad-eq,html[data-theme="dark"] .ladder .lad-eq2{color:#6cc79a}
+/* an odd last tile spans the row */
+@media (min-width:901px){.tiles-4>.tile:last-child:nth-child(odd){grid-column:1/-1;flex-direction:row}
+.tiles-4>.tile:last-child:nth-child(odd) .tile-vis{flex:0 0 46%;height:210px;border-bottom:0;border-right:1px solid var(--line)}
+.tiles-4>.tile:last-child:nth-child(odd) .tile-body{align-self:center}}

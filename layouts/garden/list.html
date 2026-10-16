@@ -1,7 +1,7 @@
 {{ define "main" }}
 <link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
 <link rel="stylesheet" href="{{ "garden/garden.css" | relURL }}?v={{ (os.Stat "static/garden/garden.css").ModTime.Unix }}">
-{{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}{{ $c := site.Data.garden.crops }}
+{{ $g := site.Data.garden.guide }}{{ $a := site.Data.garden.animals }}{{ $c := site.Data.garden.crops }}{{ $v := site.Data.garden.viz }}
 <div class="hs gd" id="gd" data-units>
   <nav class="hs-crumbs"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Food Garden Planner</nav>
   <header class="hs-hero">
@@ -69,6 +69,14 @@
 
   <section class="hs-sec" id="gd-out" aria-live="polite"></section>
 
+  <section class="hs-sec gv" id="gd-viz" aria-labelledby="gv-h" data-nounits data-js="{{ "garden/viz/model.js" | relURL }}?v={{ (os.Stat "static/garden/viz/model.js").ModTime.Unix }} {{ "garden/viz/viz.js" | relURL }}?v={{ (os.Stat "static/garden/viz/viz.js").ModTime.Unix }}">
+    <h2 id="gv-h"><span class="pl-n">6</span> See your garden</h2>
+    <p class="gv-lead">Pictures of the plan above, drawn from the same numbers. Change the plan and they change with it.</p>
+    <div id="gv-root"><p class="hs-small gv-wait">Loading the pictures…</p></div>
+  </section>
+
+  <section class="hs-sec" id="gd-next"></section>
+
   <section class="hs-sec" id="gd-guides">
     <h2>Your guides</h2>
     <p class="hs-small">{{ $g.meta.disclaimer }} Everything here comes from university extension services, USDA and CDC; each section lists its sources.</p>
@@ -89,7 +97,7 @@
     <div class="gd-tablewrap"><table class="hs-table gd-table" id="gd-table"></table></div>
   </section>
   <p class="hs-small">Daily calories: {{ $c.kcal.text }}</p>
-  <script type="application/json" id="gd-data">{{ dict "crops" $c.crops "an" (dict "ch" $a.chickens.numbers "bee" $a.bees.numbers) | jsonify | safeJS }}</script>
+  <script type="application/json" id="gd-data">{{ dict "crops" $c.crops "an" (dict "ch" $a.chickens.numbers "bee" $a.bees.numbers) "viz" (dict "crops" $v.crops "sources" $v.sources "sun" $v.sun "bed" $v.bed) | jsonify | safeJS }}</script>
 </div>
 <script src="{{ "garden/garden.js" | relURL }}?v={{ (os.Stat "static/garden/garden.js").ModTime.Unix }}" defer></script>
 {{ end }}

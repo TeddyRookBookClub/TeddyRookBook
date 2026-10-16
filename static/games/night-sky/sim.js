@@ -1,4 +1,4 @@
-/* Sky and Solar System (/games/night-sky/): the planets around the Sun, the Moon's phases, eclipse geometry and tonight's sky,
+/* Sky and Solar System (/science-lab/night-sky/): the planets around the Sun, the Moon's phases, eclipse geometry and tonight's sky,
    for any moment from 1800 to 2050. The astronomy is in sky.js (window.NightSky); this file draws the views,
    handles input and checks the missions. */
 (function () {

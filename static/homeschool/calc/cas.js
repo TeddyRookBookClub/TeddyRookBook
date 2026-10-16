@@ -20,7 +20,16 @@
   Q.prototype.isOne = function () { return this.n === 1n && this.d === 1n; };
   Q.prototype.sign = function () { return this.n > 0n ? 1 : this.n < 0n ? -1 : 0; };
   Q.prototype.cmp = function (o) { var a = this.n * o.d, b = o.n * this.d; return a < b ? -1 : a > b ? 1 : 0; };
-  Q.prototype.toNum = function () { return Number(this.n) / Number(this.d); };
+  Q.prototype.toNum = function () {
+    var a = Number(this.n), b = Number(this.d);
+    if (isFinite(a) && isFinite(b)) return a / b;
+    // numerator or denominator beyond 1e308 (e.g. an exact (151/150)^144): scale both down by powers of 2 first
+    var n = this.n < 0n ? -this.n : this.n, ln = n.toString(2).length, ld = this.d.toString(2).length;
+    var sn = Math.max(0, ln - 1000), sd = Math.max(0, ld - 1000), r = Number(n >> BigInt(sn)) / Number(this.d >> BigInt(sd)), e = sn - sd;
+    while (e > 0 && isFinite(r)) { var k = Math.min(e, 1000); r *= Math.pow(2, k); e -= k; }
+    while (e < 0 && r !== 0) { var k2 = Math.min(-e, 1000); r /= Math.pow(2, k2); e += k2; }
+    return this.n < 0n ? -r : r;
+  };
   Q.prototype.pow = function (k) { // k: BigInt integer
     if (k === 0n) return q(1);
     var neg = k < 0n; if (neg) k = -k;
@@ -547,14 +556,15 @@
   // Compile to a fast JS function of the given variables (for graphing). Falls back to evalNum.
   function compile(x, vars, env) {
     var js = toJS(x, env);
-    if (js) { try { return new Function(vars.join(','), '"use strict";var M=Math;return ' + js + ';'); } catch (e) { } }
-    return function () { var e2 = Object.create(env || {}); for (var i = 0; i < vars.length; i++) e2[vars[i]] = arguments[i]; return num(evalNum(x, e2)); };
+    // Math lives in the closure as $M, so no variable name (M, Math, …) can shadow it; θ is spelled theta in the code.
+    if (js) { try { return new Function('$M', 'return function(' + vars.map(function (v) { return v === 'θ' ? 'theta' : v; }).join(',') + '){"use strict";return ' + js + ';};')(Math); } catch (e) { } }
+    return function () { var e2 = Object.create(env || {}); for (var i = 0; i < vars.length; i++) { e2[vars[i]] = arguments[i]; if (vars[i] === 'theta') e2['θ'] = arguments[i]; } return num(evalNum(x, e2)); };
   }
   function toJS(x, env) {
     switch (x.k) {
       case 'n': return x.v instanceof C ? null : '(' + num(x.v) + ')';
       case 's':
-        if (x.name === 'π') return 'M.PI'; if (x.name === 'e') return 'M.E'; if (x.name === 'i') return null;
+        if (x.name === 'π') return '$M.PI'; if (x.name === 'e') return '$M.E'; if (x.name === 'i') return null;
         if (env && typeof env[x.name] === 'number') return '(' + env[x.name] + ')';
         if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(x.name) || x.name === 'θ') return x.name === 'θ' ? 'theta' : x.name;
         return null;
@@ -562,19 +572,19 @@
       case '*': { p = x.a.map(function (y) { return toJS(y, env); }); return p.indexOf(null) >= 0 ? null : '(' + p.join('*') + ')'; }
       case '^': {
         var b = toJS(x.a[0], env), e = toJS(x.a[1], env); if (b === null || e === null) return null;
-        if (isQ(x.a[1]) && !x.a[1].v.isInt() && x.a[1].v.d % 2n === 1n) { var ev = x.a[1].v; return '(M.sign(' + b + ')' + (ev.n % 2n === 0n ? '*0+1' : '') + '*M.pow(M.abs(' + b + '),' + ev.toNum() + '))'; }
+        if (isQ(x.a[1]) && !x.a[1].v.isInt() && x.a[1].v.d % 2n === 1n) { var ev = x.a[1].v; return '($M.sign(' + b + ')' + (ev.n % 2n === 0n ? '*0+1' : '') + '*$M.pow($M.abs(' + b + '),' + ev.toNum() + '))'; }
         if (isQ(x.a[1]) && x.a[1].v.isInt() && x.a[1].v.n === 2n) return '((' + b + ')*(' + b + '))';
-        return 'M.pow(' + b + ',' + e + ')';
+        return '$M.pow(' + b + ',' + e + ')';
       }
       case 'f': {
         var a = x.a.map(function (y) { return toJS(y, env); }); if (a.indexOf(null) >= 0) return null;
-        var d = STATE.deg ? '*M.PI/180' : '', o = STATE.deg ? '*180/M.PI' : '';
-        var m = { sin: 'M.sin(' + a[0] + d + ')', cos: 'M.cos(' + a[0] + d + ')', tan: 'M.tan(' + a[0] + d + ')', sec: '(1/M.cos(' + a[0] + d + '))', csc: '(1/M.sin(' + a[0] + d + '))', cot: '(1/M.tan(' + a[0] + d + '))',
-          asin: '(M.asin(' + a[0] + ')' + o + ')', acos: '(M.acos(' + a[0] + ')' + o + ')', atan: '(M.atan(' + a[0] + ')' + o + ')', sinh: 'M.sinh(' + a[0] + ')', cosh: 'M.cosh(' + a[0] + ')', tanh: 'M.tanh(' + a[0] + ')',
-          asinh: 'M.asinh(' + a[0] + ')', acosh: 'M.acosh(' + a[0] + ')', atanh: 'M.atanh(' + a[0] + ')', ln: 'M.log(' + a[0] + ')', exp: 'M.exp(' + a[0] + ')', sqrt: 'M.sqrt(' + a[0] + ')', cbrt: 'M.cbrt(' + a[0] + ')',
-          abs: 'M.abs(' + a[0] + ')', floor: 'M.floor(' + a[0] + ')', ceil: 'M.ceil(' + a[0] + ')', round: 'M.round(' + a[0] + ')', sign: 'M.sign(' + a[0] + ')',
-          log: a.length > 1 ? '(M.log(' + a[0] + ')/M.log(' + a[1] + '))' : 'M.log10(' + a[0] + ')', mod: '(((' + a[0] + ')%(' + a[1] + ')+(' + a[1] + '))%(' + a[1] + '))',
-          max: 'M.max(' + a.join(',') + ')', min: 'M.min(' + a.join(',') + ')' }[x.name];
+        var d = STATE.deg ? '*$M.PI/180' : '', o = STATE.deg ? '*180/$M.PI' : '';
+        var m = { sin: '$M.sin(' + a[0] + d + ')', cos: '$M.cos(' + a[0] + d + ')', tan: '$M.tan(' + a[0] + d + ')', sec: '(1/$M.cos(' + a[0] + d + '))', csc: '(1/$M.sin(' + a[0] + d + '))', cot: '(1/$M.tan(' + a[0] + d + '))',
+          asin: '($M.asin(' + a[0] + ')' + o + ')', acos: '($M.acos(' + a[0] + ')' + o + ')', atan: '($M.atan(' + a[0] + ')' + o + ')', sinh: '$M.sinh(' + a[0] + ')', cosh: '$M.cosh(' + a[0] + ')', tanh: '$M.tanh(' + a[0] + ')',
+          asinh: '$M.asinh(' + a[0] + ')', acosh: '$M.acosh(' + a[0] + ')', atanh: '$M.atanh(' + a[0] + ')', ln: '$M.log(' + a[0] + ')', exp: '$M.exp(' + a[0] + ')', sqrt: '$M.sqrt(' + a[0] + ')', cbrt: '$M.cbrt(' + a[0] + ')',
+          abs: '$M.abs(' + a[0] + ')', floor: '$M.floor(' + a[0] + ')', ceil: '$M.ceil(' + a[0] + ')', round: '$M.round(' + a[0] + ')', sign: '$M.sign(' + a[0] + ')',
+          log: a.length > 1 ? '($M.log(' + a[0] + ')/$M.log(' + a[1] + '))' : '$M.log10(' + a[0] + ')', mod: '(((' + a[0] + ')%(' + a[1] + ')+(' + a[1] + '))%(' + a[1] + '))',
+          max: '$M.max(' + a.join(',') + ')', min: '$M.min(' + a.join(',') + ')' }[x.name];
         return m || null;
       }
       default: return null;

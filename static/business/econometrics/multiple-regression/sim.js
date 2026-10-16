@@ -486,8 +486,8 @@
       label(c, 'experience →', ez[0], ez[1] + 12, C.gold, { size: 11, bold: true, align: 'center' });
       label(c, 'wage ↑', ey[0], ey[1] - 10, C.ink, { size: 11, bold: true, align: 'center' });
       [6, 13, 20].forEach(function (v) { var q = pr(nx(v), -1, -1.08); label(c, v + ' yrs', q[0], q[1] + 2, C.muted, { size: 9.5, align: 'center' }); });
-      [0, 18, 36].forEach(function (v) { var q = pr(-1.08, -1, nz(v)); label(c, v + ' yrs', q[0], q[1] + 2, C.muted, { size: 9.5, align: 'center' }); });
-      [0, 35, 70].forEach(function (v) { var q = pr(-1, ny(v), -1); label(c, '$' + v, q[0] - 6, q[1], C.muted, { size: 9.5, align: 'right' }); });
+      [18, 36].forEach(function (v) { var q = pr(-1.08, -1, nz(v)); label(c, v + ' yrs', q[0], q[1] + 2, C.muted, { size: 9.5, align: 'center' }); });
+      [35, 70].forEach(function (v) { var q = pr(-1, ny(v), -1); label(c, '$' + v, q[0] - 6, q[1], C.muted, { size: 9.5, align: 'right' }); });
       var b = f.full.b; function pl(e, x) { return b[0] + b[1] * e + b[2] * x; }
       // items to depth-sort: points and plane cells
       var items = [];
