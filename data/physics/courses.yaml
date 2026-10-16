@@ -1,0 +1,84 @@
+# Physics Ladder courses, bottom rung to top rung (the order of this list is the ladder).
+# Contract: /tmp/briefs/ladders_spec.md section 2 (keys, slugs, titles) and /tmp/briefs/mathladder_spec.md section 3.
+# Skill maps live in data/physics/topics/<key>.json. Astronomy is a side branch: it needs Physical Science and
+# Algebra 1 (and Earth Science's sky topics), not Physics 2, so a learner can take it any time after Physical Science.
+- key: physsci
+  slug: physical-science
+  title: "Physical Science"
+  short: "Physical Science"
+  band: "High school"
+  grade: "9"
+  icon: "🧲"
+  color: "#2a7f62"
+  blurb: "For grades 8 and 9: motion and forces, energy, heat, waves and light, and electricity and magnetism, with simple numbers and lots of pictures."
+  after: [g8]
+- key: phys1
+  slug: physics-1
+  title: "Physics 1: Motion, Forces and Energy"
+  short: "Physics 1"
+  band: "High school"
+  grade: "11"
+  icon: "🍎"
+  color: "#1f6fb2"
+  blurb: "Algebra-based mechanics, the first half of AP Physics 1: motion in one and two dimensions, Newton's laws, energy, momentum, rotation and oscillations."
+  after: [physsci, alg1, geo]
+- key: phys2
+  slug: physics-2
+  title: "Physics 2: Fluids, Heat, Electricity, Light and Atoms"
+  short: "Physics 2"
+  band: "High school"
+  grade: "12"
+  icon: "💡"
+  color: "#3b5bdb"
+  blurb: "Algebra-based physics after Physics 1, matching AP Physics 2: fluids, thermodynamics, electric fields and circuits, magnetism, waves and optics, and the quantum and the nucleus."
+  after: [phys1, alg2]
+- key: astro
+  slug: astronomy
+  title: "Astronomy"
+  short: "Astronomy"
+  band: "High school"
+  grade: "12"
+  icon: "🔭"
+  color: "#5b3fa8"
+  blurb: "The sky, the Moon and the seasons, orbits, light and telescopes, the Sun, the planets, the lives of stars, galaxies and the expanding universe, with algebra only."
+  after: [earthsci, physsci, alg1]
+- key: mech
+  slug: mechanics
+  title: "Mechanics with Calculus"
+  short: "Mechanics"
+  band: "College"
+  grade: "College"
+  icon: "⚙️"
+  color: "#b5462f"
+  blurb: "Mechanics again, now with derivatives and integrals, as in AP Physics C: Mechanics and university physics I: variable forces, drag, work integrals, potential energy curves, rotation of solid bodies and orbits."
+  after: [phys1, calc1]
+- key: em
+  slug: electricity-and-magnetism
+  title: "Electricity and Magnetism"
+  short: "E and M"
+  band: "College"
+  grade: "College"
+  icon: "⚡"
+  color: "#c08a1e"
+  blurb: "Calculus-based electricity and magnetism, as in AP Physics C: E&M and university physics II: Gauss's law, potential, capacitors, circuits with time, Ampère's and Faraday's laws, AC circuits and Maxwell's equations."
+  after: [mech, phys2, calc2]
+- key: modern
+  slug: waves-optics-modern-physics
+  title: "Waves, Optics and Modern Physics"
+  short: "Modern Physics"
+  band: "College"
+  grade: "College"
+  icon: "⚛️"
+  color: "#8a3fa0"
+  blurb: "University physics III: waves with calculus, wave optics and instruments, special relativity, the quantum world, atoms, nuclei and particles."
+  after: [em, calc2]
+- key: astrophys
+  slug: astrophysics
+  title: "Astrophysics"
+  short: "Astrophysics"
+  band: "College"
+  grade: "College"
+  icon: "🌌"
+  color: "#22306b"
+  blurb: "The physics of the cosmos with calculus: magnitudes and spectra, binary stars and exoplanets, how stars shine and die, compact objects, galaxies, dark matter and cosmology."
+  after: [astro, modern]

@@ -1,8 +1,10 @@
-{{- /* Math Ladder: /math/map/?course=<key> — a course's skill map as a layered graph (pan, zoom, click to open). */ -}}
+{{- /* The Ladders: /<ladder>/map/?course=<key> — a course's skill map as a layered graph (pan, zoom, click to open). */ -}}
 {{ define "main" }}
 {{ partial "inline/ml-head.html" . }}
+{{- $lk := .Params.ladder | default "math" -}}
+{{- $L := partial "inline/ml-ladder.html" $lk -}}
 <div class="mlp mlp-mappage" id="mlp-mappage">
-  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span id="mlp-map-crumb">Skill map</span></nav>
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $L.url }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <span id="mlp-map-crumb">Skill map</span></nav>
   <header class="mlp-maphead">
     <div><h1 id="mlp-map-title">Skill map</h1><p class="mlp-sub">Each topic sits above the skills it builds on. Drag to move, scroll or pinch to zoom, and click a topic to open it.</p></div>
     <label class="mlp-select"><span>Course</span><select id="mlp-map-course" aria-label="Course"></select></label>
@@ -11,10 +13,10 @@
     <div class="mlp-map-tools"><button type="button" class="mlp-iconbtn" data-z="in" aria-label="Zoom in">+</button><button type="button" class="mlp-iconbtn" data-z="out" aria-label="Zoom out">−</button><button type="button" class="mlp-iconbtn" data-z="fit" aria-label="Fit the whole map">⤢</button></div>
     <p class="mlp-loading">Drawing the map…</p>
   </div>
-  <ul class="mlp-legend" aria-label="What the colors mean"><li><i class="st-passed"></i>Passed</li><li><i class="st-due"></i>Review due</li><li><i class="st-learning"></i>Learning</li><li><i class="st-ready"></i>Ready to learn</li><li><i class="st-locked"></i>Needs an earlier topic</li><li><i class="st-ext"></i>From an earlier course</li></ul>
+  <ul class="mlp-legend" aria-label="What the colors mean"><li><i class="st-passed"></i>Passed</li><li><i class="st-due"></i>Review due</li><li><i class="st-learning"></i>Learning</li><li><i class="st-ready"></i>Ready to learn</li><li><i class="st-locked"></i>Needs an earlier topic</li><li><i class="st-ext"></i>From an earlier course{{ if ne $lk "math" }} or another ladder{{ end }}</li><li class="mlp-leg-soon" hidden><i class="st-soon"></i>Being written</li></ul>
   <noscript><p class="mlp-soon">The skill map needs JavaScript turned on.</p></noscript>
 </div>
-{{ partial "inline/ml-cfg.html" "map" }}
+{{ partial "inline/ml-cfg.html" (dict "page" "map" "ladder" $lk) }}
 {{ partial "inline/ml-js.html" "math/core/engine.js" }}
 {{ partial "inline/ml-js.html" "math/app/ui.js" }}
 {{ partial "inline/ml-js.html" "math/app/map.js" }}

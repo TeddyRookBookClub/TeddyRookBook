@@ -1,6 +1,10 @@
-/* Math Ladder pages: shared helpers (window.MathLadder.ui). Loaded after core/engine.js on every Math Ladder page.
-   ML.cfg                       the build-time config from <script id="ml-cfg"> (base, graph url, available gen/viz files, courses)
-   ui.course(key)               a course from the config            ui.courses()  all, in ladder order (bottom first)
+/* The Ladders' pages: shared helpers (window.MathLadder.ui). Loaded after core/engine.js on every ladder page.
+   ML.cfg                       the build-time config from <script id="ml-cfg"> (base, root, ladder, ladders, graph url, available
+                                gen/viz files, courses of every ladder with ladder, dir, n = topics and r = ready topics)
+   ui.course(key)               a course from the config (any ladder)  ui.courses()  this page's ladder's courses, in ladder order
+   ui.allCourses()              every ladder's courses     ui.ladder()  this page's ladder { key, slug, title, short, icon, url }
+   ui.ladders()                 every ladder, in order     ui.ladderOf(courseKey)  the ladder a course belongs to
+   Loading ui.js tells the engine which ladder the page works in (ML.engine.setLadder(ML.cfg.ladder)).
    ui.data(id)                  JSON from <script type="application/json" id=…>
    ui.el(tag, cls, html)  ui.esc(s)  ui.btn(text, cls, fn)
    ui.LABEL[status]             words for each status from ML.engine.status()
@@ -15,6 +19,11 @@
   var ML = W.MathLadder = W.MathLadder || {}, E = ML.engine;
   if (!ML.cfg) { try { ML.cfg = JSON.parse(D.getElementById('ml-cfg').textContent); } catch (e) { ML.cfg = { base: '/math/', courses: [], gen: {}, viz: {}, vb: {} }; } }
   var C = {}; (ML.cfg.courses || []).forEach(function (c) { C[c.key] = c; });
+  var LAD = ML.cfg.ladder || 'math', LADS = {}, LLIST = ML.cfg.ladders || [{ key: 'math', slug: 'math', title: 'Math Ladder', short: 'Math', icon: '🪜', url: ML.cfg.base || '/math/', dir: 'math' }];
+  LLIST.forEach(function (l) { LADS[l.key] = l; });
+  var MINE = (ML.cfg.courses || []).filter(function (c) { return (c.ladder || 'math') === LAD; });
+  if (E && E.setLadder) E.setLadder(LAD);
+  function ladderOf(k) { var c = C[k]; return LADS[(c && c.ladder) || 'math'] || LLIST[0]; }
   function el(tag, cls, html) { var e = D.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function btn(text, cls, fn) { var b = el('button', 'mlp-btn' + (cls ? ' ' + cls : ''), text); b.type = 'button'; if (fn) b.addEventListener('click', fn); return b; }
@@ -40,7 +49,7 @@
     switch (t.type) {
       case 'review': var n = {}; t.items.forEach(function (x) { n[x.id] = 1; }); return 'A quick mixed review: ' + t.items.length + ' problems from ' + Object.keys(n).length + ' topic' + (Object.keys(n).length > 1 ? 's' : '') + '.';
       case 'checkpoint': return 'A checkpoint quiz: ' + t.items.length + ' problems from topics you passed recently.';
-      case 'learn': return (t.reason === 'continue' ? 'Keep going with ' : t.reason === 'retry' ? 'Try again: ' : t.reason === 'prereq' ? 'First, a skill from an earlier course: ' : 'Learn something new: ') + '<b>' + esc(topicTitle(t.id)) + '</b>.';
+      case 'learn': return (t.reason === 'continue' ? 'Keep going with ' : t.reason === 'retry' ? 'Try again: ' : t.reason === 'prereq' ? (t.ladder && LADS[t.ladder] ? 'First, a skill from the ' + esc(LADS[t.ladder].title) + ': ' : 'First, a skill from an earlier course: ') : t.reason === 'focus' ? 'From your test practice: ' : 'Learn something new: ') + '<b>' + esc(topicTitle(t.id)) + '</b>.';
       case 'done': return 'All caught up' + (C[t.course] ? ' in ' + esc(C[t.course].title) : '') + '.';
       default: return 'Find your rung, or pick a course to start.';
     }
@@ -61,13 +70,13 @@
         var ta = el('textarea', 'mlp-code'); ta.readOnly = true; ta.value = code; ta.rows = o.full ? 4 : 3; ta.setAttribute('aria-label', 'Your save code'); ta.spellcheck = false;
         var r2 = el('div', 'mlp-save-row');
         r2.appendChild(btn('Copy', 'pri small', function () {
-          var done = function () { msg.textContent = 'Copied. Paste it somewhere safe, or into Math Ladder on another device.'; };
+          var done = function () { msg.textContent = 'Copied. Paste it somewhere safe, or into ' + (LAD === 'math' ? 'Math Ladder' : 'any ladder') + ' on another device.'; };
           if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, function () { ta.select(); try { D.execCommand('copy'); done(); } catch (e) { msg.textContent = 'Select the code and copy it.'; } });
           else { ta.select(); try { D.execCommand('copy'); done(); } catch (e) { msg.textContent = 'Select the code and copy it.'; } }
         }));
         r2.appendChild(btn('Download as a file', 'small', function () {
-          var d = new Date(), name = 'math-ladder-save-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '.txt';
-          var blob = new Blob(['Math Ladder save code (teddyrookbook.com/math/)\nSaved ' + d.toDateString() + '\n\n' + code + '\n'], { type: 'text/plain' }), a = el('a');
+          var d = new Date(), name = (LAD === 'math' ? 'math-ladder-save-' : 'ladders-save-') + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '.txt';
+          var blob = new Blob([(LAD === 'math' ? 'Math Ladder save code (teddyrookbook.com/math/)' : 'Teddy Rook Book ladders save code (all ladders: ' + LLIST.map(function (l) { return l.short; }).join(', ') + ')') + '\nSaved ' + d.toDateString() + '\n\n' + code + '\n'], { type: 'text/plain' }), a = el('a');
           a.href = URL.createObjectURL(blob); a.download = name; D.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
           msg.textContent = 'Saved as ' + name + '.';
         }));
@@ -100,5 +109,6 @@
     }
   }
 
-  ML.ui = { course: function (k) { return C[k]; }, courses: function () { return ML.cfg.courses || []; }, data: data, el: el, esc: esc, btn: btn, LABEL: LABEL, paintChips: paintChips, ring: ring, dayName: dayName, inDays: inDays, taskLine: taskLine, savePanel: savePanel, graph: graph, topicTitle: topicTitle };
+  ML.ui = { course: function (k) { return C[k]; }, courses: function () { return MINE; }, allCourses: function () { return ML.cfg.courses || []; },
+    ladder: function () { return LADS[LAD] || LLIST[0]; }, ladders: function () { return LLIST; }, ladderOf: ladderOf, data: data, el: el, esc: esc, btn: btn, LABEL: LABEL, paintChips: paintChips, ring: ring, dayName: dayName, inDays: inDays, taskLine: taskLine, savePanel: savePanel, graph: graph, topicTitle: topicTitle };
 })(window, document);

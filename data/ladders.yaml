@@ -1,0 +1,39 @@
+# The Ladders: every subject ladder on the shared Math Ladder engine (contract: /tmp/briefs/ladders_spec.md).
+# Order = the order ladders are listed in (hubs, progress page, the global graph /math/graph.json).
+#   key    data/<key>/ and static/<key>/ (also the ladder field in the engine; topic ids are unique across ladders)
+#   slug   the URL: /<slug>/   title, short (breadcrumbs: "Physics › Course › Unit"), icon, color (accent; light theme),
+#   dark   the accent in the dark theme, blurb (one sentence), lab: Science Lab topics to link (data/science_lab.yaml),
+#   more   extra related links for the hub: [{ url, icon, title, text }]
+#   viz    the ladder's own visuals kit (static/<key>/viz/<key>.js, names prefixed with this) or "" for Math's basic/adv
+#   eyebrow, headline, intro: the hub's hero text
+- key: math
+  slug: math
+  title: "Math Ladder"
+  short: "Math"
+  icon: "🪜"
+  color: "#00562f"
+  dark: "#6cc79a"
+  order: 1
+  viz: ""
+  blurb: "From counting in Kindergarten to calculus, linear algebra and differential equations."
+  eyebrow: "Math Ladder · Free, Kindergarten to college"
+  headline: "Climb from counting to calculus, one rung at a time"
+  intro: "Short lessons that build each idea from the ground up, worked examples, and practice that checks your answers and shows every step. Pass a topic, and it comes back for quick reviews so it stays with you. No sign-up, nothing to pay."
+  lab: []
+  more:
+    - { url: "/homeschool/calculator/", icon: "📈", title: "Graphing calculator", text: "Graph, solve, factor, and take derivatives" }
+- key: physics
+  slug: physics
+  title: "Physics Ladder"
+  short: "Physics"
+  icon: "🪐"
+  color: "#2d5596"
+  dark: "#8fb1ea"
+  order: 2
+  viz: "ph-"
+  blurb: "Motion, forces and energy, then fluids, heat, electricity, light, atoms and the stars, from grade 8 to college."
+  eyebrow: "Physics Ladder · Free, grade 8 to college"
+  headline: "Climb from pushes and pulls to the physics of the stars"
+  intro: "Short lessons that build each idea from the ground up, worked examples with real numbers and units, and practice that checks your answers and shows every step. When a topic needs math you haven’t met, the Math Ladder teaches it first. No sign-up, nothing to pay."
+  lab: [physics, astronomy]
+  more: []

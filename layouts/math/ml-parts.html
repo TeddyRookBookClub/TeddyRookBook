@@ -1,41 +1,81 @@
-{{- /* Math Ladder: shared inline partials (Hugo's inline partials are global). Not a page layout.
-  inline/ml-graph.html   (partialCached) builds /math/graph.json: every course and topic; returns { url, v, courses }
-  inline/ml-index.html   (partialCached) { T: id -> {id, title, url, course, unit, prereqs, xp}, kids: id -> [ids] }
-  inline/ml-head.html    styles for every Math Ladder page
-  inline/ml-cfg.html     <script id="ml-cfg"> with the site config the scripts read (base, graph url, available files, courses)
+{{- /* The Ladders (Math, Physics, Chemistry, Economics, Earth & Space): shared inline partials (Hugo's inline partials are
+  global). Not a page layout. Every ladder's pages use the layouts in layouts/math/; the ladder comes from the page
+  (.Params.ladder, set by content/<ladder>/_index.md's cascade and the content adapters; default "math").
+  inline/ml-ladder.html  a ladder from data/ladders.yaml by key: { key, slug, title, short, icon, color, dark, blurb, lab, more,
+                         url, dir (its data/ and static/ folder) }
+  inline/ml-ladders.html every ladder, in order
+  inline/ml-graph.html   (partialCached) builds /math/graph.json: every course and topic of EVERY ladder; returns
+                         { url, v, courses, n, C: course key -> course (+ ladder, dir, r = ready topics), soon: id -> true }
+  inline/ml-index.html   (partialCached) { T: id -> {id, title, url, course, unit, prereqs, xp, short}, kids: id -> [ids] }, all ladders
+  inline/ml-head.html    styles for every ladder page
+  inline/ml-cfg.html     <script id="ml-cfg"> with the site config the scripts read. Argument: a page name ("hub", "testprep")
+                         for the Math Ladder and pages outside the ladders, or (dict "page" "hub" "ladder" "physics").
   inline/ml-js.html      one deferred script from static/ with a cache-busting version
-  inline/ml-vizbase.html "basic" or "adv": the visuals file a course uses by default
+  inline/ml-vizbase.html "basic" or "adv": the math visuals file a math course uses by default ("" for other ladders)
+  A topic is READY when its lesson exists AND its course's generator file registers its id as a literal string
+  (G('phys1.velocity', …)). Topics that aren't ready show "Being written" and are skipped by practice and placement
+  (graph.json marks them soon: 1).
 */ -}}
 
+{{- define "_partials/inline/ml-ladders.html" -}}
+{{- $out := slice -}}
+{{- range sort (site.Data.ladders | default slice) "order" -}}
+  {{- $out = $out | append (merge . (dict "url" (printf "%s/" .slug | relURL) "dir" .key)) -}}
+{{- end -}}
+{{- if not $out }}{{ $out = slice (dict "key" "math" "slug" "math" "title" "Math Ladder" "short" "Math" "icon" "🪜" "color" "#00562f" "dark" "#6cc79a" "url" ("math/" | relURL) "dir" "math" "lab" slice "more" slice "viz" "") }}{{ end -}}
+{{- return $out -}}
+{{- end -}}
+
+{{- define "_partials/inline/ml-ladder.html" -}}
+{{- $k := . | default "math" -}}
+{{- $all := partial "inline/ml-ladders.html" "x" -}}
+{{- $L := index (where $all "key" $k) 0 -}}
+{{- if not $L }}{{ $L = index (where $all "key" "math") 0 }}{{ end -}}
+{{- return $L -}}
+{{- end -}}
+
 {{- define "_partials/inline/ml-graph.html" -}}
-{{- $courses := slice -}}{{- $topics := slice -}}
-{{- $all := site.Data.math.topics | default dict -}}
-{{- range site.Data.math.courses -}}
-  {{- $c := . -}}{{- $units := slice -}}{{- $n := 0 -}}
-  {{- with index $all .key -}}
-    {{- range .units }}{{ $units = $units | append (dict "key" .key "title" .title) }}{{ end -}}
-    {{- range .topics -}}
-      {{- $topics = $topics | append (dict "id" .id "course" $c.key "unit" .unit "title" .title "short" (.short | default "") "url" (printf "math/%s/%s/" $c.slug .slug | relURL) "prereqs" (.prereqs | default slice) "xp" (.xp | default 2)) -}}
+{{- $courses := slice -}}{{- $topics := slice -}}{{- $C := dict -}}{{- $soon := dict -}}
+{{- range partial "inline/ml-ladders.html" "x" -}}
+  {{- $L := . -}}{{- $LD := index site.Data $L.dir | default dict -}}
+  {{- $all := $LD.topics | default dict -}}{{- $les := $LD.lessons | default dict -}}
+  {{- range $LD.courses | default slice -}}
+    {{- $c := . -}}{{- $units := slice -}}{{- $n := 0 -}}{{- $r := 0 -}}
+    {{- $gf := printf "static/%s/gen/%s.js" $L.dir .key -}}{{- $src := "" -}}{{- if fileExists $gf }}{{ $src = readFile $gf }}{{ end -}}
+    {{- $lc := index $les .key | default dict -}}
+    {{- with index $all .key -}}
+      {{- range .units }}{{ $units = $units | append (dict "key" .key "title" .title) }}{{ end -}}
+      {{- range .topics -}}
+        {{- $t := dict "id" .id "course" $c.key "unit" .unit "title" .title "short" (.short | default "") "url" (printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL) "prereqs" (.prereqs | default slice) "xp" (.xp | default 2) -}}
+        {{- if and (index $lc .id) (or (in $src (printf "'%s'" .id)) (in $src (printf "%q" .id))) }}{{ $r = add $r 1 }}{{ else }}{{ $t = merge $t (dict "soon" 1) }}{{ $soon = merge $soon (dict .id true) }}{{ end -}}
+        {{- $topics = $topics | append $t -}}
+      {{- end -}}
+      {{- $n = len .topics -}}
     {{- end -}}
-    {{- $n = len .topics -}}
+    {{- $co := dict "key" .key "slug" .slug "title" .title "short" .short "band" .band "grade" (string .grade) "icon" .icon "color" .color "blurb" .blurb "after" (.after | default slice) "url" (printf "%s/%s/" $L.slug .slug | relURL) "n" $n "units" $units -}}
+    {{- if ne $L.key "math" }}{{ $co = merge $co (dict "ladder" $L.key "r" $r) }}{{ end -}}
+    {{- $courses = $courses | append $co -}}
+    {{- $C = merge $C (dict .key (merge $co (dict "ladder" $L.key "lshort" $L.short "ltitle" $L.title "dir" $L.dir "r" $r "lurl" $L.url))) -}}
   {{- end -}}
-  {{- $courses = $courses | append (dict "key" .key "slug" .slug "title" .title "short" .short "band" .band "grade" (string .grade) "icon" .icon "color" .color "blurb" .blurb "after" (.after | default slice) "url" (printf "math/%s/" .slug | relURL) "n" $n "units" $units) -}}
 {{- end -}}
 {{- $json := dict "courses" $courses "topics" $topics | jsonify -}}
-{{- $r := resources.FromString "math/graph.json" $json -}}
-{{- return (dict "url" $r.RelPermalink "v" (substr (md5 $json) 0 10) "courses" $courses "n" (len $topics)) -}}
+{{- $res := resources.FromString "math/graph.json" $json -}}
+{{- return (dict "url" $res.RelPermalink "v" (substr (md5 $json) 0 10) "courses" $courses "n" (len $topics) "C" $C "soon" $soon) -}}
 {{- end -}}
 
 {{- define "_partials/inline/ml-index.html" -}}
 {{- $T := newScratch -}}{{- $K := newScratch -}}
-{{- $all := site.Data.math.topics | default dict -}}
-{{- range site.Data.math.courses -}}
-  {{- $c := . -}}
-  {{- with index $all .key -}}
-    {{- range .topics -}}
-      {{- $T.Set .id (dict "id" .id "title" .title "url" (printf "math/%s/%s/" $c.slug .slug | relURL) "course" $c.key "unit" .unit "prereqs" (.prereqs | default slice) "xp" (.xp | default 2) "short" (.short | default "")) -}}
-      {{- $id := .id -}}
-      {{- range .prereqs }}{{ $K.Add . (slice $id) }}{{ end -}}
+{{- range partial "inline/ml-ladders.html" "x" -}}
+  {{- $L := . -}}{{- $LD := index site.Data $L.dir | default dict -}}
+  {{- $all := $LD.topics | default dict -}}
+  {{- range $LD.courses | default slice -}}
+    {{- $c := . -}}
+    {{- with index $all .key -}}
+      {{- range .topics -}}
+        {{- $T.Set .id (dict "id" .id "title" .title "url" (printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL) "course" $c.key "unit" .unit "prereqs" (.prereqs | default slice) "xp" (.xp | default 2) "short" (.short | default "")) -}}
+        {{- $id := .id -}}
+        {{- range .prereqs }}{{ $K.Add . (slice $id) }}{{ end -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -44,7 +84,18 @@
 
 {{- define "_partials/inline/ml-vizbase.html" -}}
 {{- $v := "adv" }}{{ if in (slice "k" "g1" "g2" "g3" "g4" "g5" "g6" "g7" "g8" "geo") . }}{{ $v = "basic" }}{{ end -}}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
+{{- with index $g.C . }}{{ if ne .ladder "math" }}{{ $v = "" }}{{ end }}{{ end -}}
 {{- return $v -}}
+{{- end -}}
+
+{{- define "_partials/inline/ml-xlist.html" -}}
+{{- /* courses from other ladders, grouped by ladder: "Algebra 1 and Geometry from the Math Ladder" or
+   "Physics 1 and Astronomy on the Physics Ladder, and Chemistry on the Chemistry Ladder" (argument: courses from ml-graph's C) */ -}}
+{{- $groups := slice }}{{ range partial "inline/ml-ladders.html" "x" }}{{ $lk := .key }}{{ $in := where $ "ladder" $lk }}{{ if $in }}{{ $groups = $groups | append (dict "l" . "cs" $in) }}{{ end }}{{ end -}}
+{{- range $gi, $gr := $groups }}{{ if $gi }}{{ if eq (add $gi 1) (len $groups) }}, and {{ else }}, {{ end }}{{ end -}}
+{{- range $i, $a := $gr.cs }}{{ if $i }}{{ if eq (add $i 1) (len $gr.cs) }} and {{ else }}, {{ end }}{{ end }}<a href="{{ $a.url }}">{{ if le (len $a.title) 22 }}{{ $a.title }}{{ else }}{{ $a.short | default $a.title }}{{ end }}</a>{{ end }} {{ if eq $gr.l.key "math" }}from{{ else }}on{{ end }} the <a class="mlp-ladlink" href="{{ $gr.l.url }}">{{ $gr.l.title }}</a>
+{{- end -}}
 {{- end -}}
 
 {{- define "_partials/inline/ml-css.html" -}}
@@ -67,18 +118,33 @@
 {{- end -}}
 
 {{- define "_partials/inline/ml-cfg.html" -}}
+{{- $page := . }}{{ $lk := "math" -}}
+{{- if reflect.IsMap . }}{{ $page = .page }}{{ $lk = .ladder | default "math" }}{{ end -}}
+{{- $L := partial "inline/ml-ladder.html" $lk -}}
 {{- $g := partialCached "inline/ml-graph.html" "graph" -}}
 {{- $gen := dict -}}{{- $viz := dict -}}
-{{- range site.Data.math.courses -}}
-  {{- $f := printf "static/math/gen/%s.js" .key -}}{{- if fileExists $f }}{{ $gen = merge $gen (dict .key (os.Stat $f).ModTime.Unix) }}{{ end -}}
-  {{- $v := printf "static/math/viz/%s.js" .key -}}{{- if fileExists $v }}{{ $viz = merge $viz (dict .key (os.Stat $v).ModTime.Unix) }}{{ end -}}
+{{- range $k, $c := $g.C -}}
+  {{- $f := printf "static/%s/gen/%s.js" $c.dir $k -}}{{- if fileExists $f }}{{ $gen = merge $gen (dict $k (os.Stat $f).ModTime.Unix) }}{{ end -}}
+  {{- $v := printf "static/%s/viz/%s.js" $c.dir $k -}}{{- if fileExists $v }}{{ $viz = merge $viz (dict $k (os.Stat $v).ModTime.Unix) }}{{ end -}}
 {{- end -}}
 {{- $vb := dict -}}
 {{- range slice "basic" "adv" -}}
   {{- $f := printf "static/math/viz/%s.js" . -}}{{- if fileExists $f }}{{ $vb = merge $vb (dict . (os.Stat $f).ModTime.Unix) }}{{ end -}}
   {{- $c := printf "static/math/viz/%s.css" . -}}{{- if fileExists $c }}{{ $vb = merge $vb (dict (printf "%s.css" .) (os.Stat $c).ModTime.Unix) }}{{ end -}}
 {{- end -}}
+{{- $lads := slice -}}
+{{- range partial "inline/ml-ladders.html" "x" -}}
+  {{- $lads = $lads | append (dict "key" .key "slug" .slug "title" .title "short" .short "icon" .icon "color" .color "url" .url "dir" .dir) -}}
+  {{- if ne .key "math" -}}
+    {{- $f := printf "static/%s/viz/%s.js" .dir .dir -}}{{- if fileExists $f }}{{ $vb = merge $vb (dict .dir (os.Stat $f).ModTime.Unix) }}{{ end -}}
+    {{- $c := printf "static/%s/viz/%s.css" .dir .dir -}}{{- if fileExists $c }}{{ $vb = merge $vb (dict (printf "%s.css" .dir) (os.Stat $c).ModTime.Unix) }}{{ end -}}
+  {{- end -}}
+{{- end -}}
 {{- $courses := slice -}}
-{{- range $g.courses }}{{ $courses = $courses | append (dict "key" .key "slug" .slug "title" .title "short" .short "band" .band "grade" .grade "icon" .icon "color" .color "after" .after "url" .url "n" .n "viz" (partial "inline/ml-vizbase.html" .key)) }}{{ end -}}
-<script type="application/json" id="ml-cfg">{{ dict "base" ("math/" | relURL) "graph" (printf "%s?v=%s" $g.url $g.v) "gen" $gen "viz" $viz "vb" $vb "courses" $courses "page" . | jsonify | safeJS }}</script>
+{{- range $g.courses -}}
+  {{- $c := index $g.C .key -}}
+  {{- $vk := partial "inline/ml-vizbase.html" .key }}{{ if ne $c.ladder "math" }}{{ $vk = $c.dir }}{{ end -}}
+  {{- $courses = $courses | append (dict "key" .key "slug" .slug "title" .title "short" .short "band" .band "grade" .grade "icon" .icon "color" .color "after" .after "url" .url "n" .n "viz" $vk "ladder" $c.ladder "dir" $c.dir "r" $c.r) -}}
+{{- end -}}
+<script type="application/json" id="ml-cfg">{{ dict "base" $L.url "root" ("/" | relURL) "ladder" $L.key "ladders" $lads "graph" (printf "%s?v=%s" $g.url $g.v) "gen" $gen "viz" $viz "vb" $vb "courses" $courses "page" $page | jsonify | safeJS }}</script>
 {{- end -}}

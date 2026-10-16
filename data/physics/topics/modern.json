@@ -1,0 +1,839 @@
+{
+ "course": "modern",
+ "units": [
+  {
+   "key": "waves",
+   "title": "Waves with Calculus",
+   "blurb": "The wave function, the wave equation, wave energy, phase and interference, and sound."
+  },
+  {
+   "key": "wave-optics",
+   "title": "Wave Optics",
+   "blurb": "Huygens' principle, polarization by reflection, intensity patterns, resolution and interferometers."
+  },
+  {
+   "key": "instruments",
+   "title": "Images and Optical Instruments",
+   "blurb": "Lens design, two-lens systems, the eye, microscopes and telescopes."
+  },
+  {
+   "key": "relativity",
+   "title": "Special Relativity",
+   "blurb": "Light's constant speed, time dilation, length contraction, the Lorentz transformation, and relativistic energy and momentum."
+  },
+  {
+   "key": "quantum",
+   "title": "The Quantum World",
+   "blurb": "Blackbodies, Compton scattering, the hydrogen atom, uncertainty, wave functions and the Schrödinger equation."
+  },
+  {
+   "key": "nuclei-particles",
+   "title": "Nuclei and Particles",
+   "blurb": "Nuclear size and binding, the decay law, reaction energies, dating, and the particles and forces of the Standard Model."
+  }
+ ],
+ "topics": [
+  {
+   "id": "modern.wave-function",
+   "slug": "wave-function",
+   "unit": "waves",
+   "title": "The Wave Function y(x, t)",
+   "short": "A sinusoidal wave is y = A sin(kx − ωt), with k = 2π/λ, ω = 2πf and speed v = ω/k.",
+   "prereqs": [
+    "phys2.wave-graphs",
+    "pre.phase-shift-midline"
+   ],
+   "xp": 2,
+   "trouble": "Students think y = A sin(kx + ωt) travels toward +x.",
+   "viz": [
+    "ph-wave",
+    "graph"
+   ]
+  },
+  {
+   "id": "modern.wave-equation",
+   "slug": "wave-equation",
+   "unit": "waves",
+   "title": "The Wave Equation",
+   "short": "Any shape moving at speed v satisfies ∂²y/∂x² = (1/v²)·∂²y/∂t².",
+   "prereqs": [
+    "modern.wave-function",
+    "calc3.partial-derivatives"
+   ],
+   "xp": 3,
+   "trouble": "Students think only sine waves solve the wave equation.",
+   "viz": [
+    "ph-wave",
+    "graph"
+   ]
+  },
+  {
+   "id": "modern.wave-power",
+   "slug": "wave-power",
+   "unit": "waves",
+   "title": "Energy and Power of a Wave",
+   "short": "A wave on a string carries power P = ½μω²A²v, so doubling the amplitude carries four times the power.",
+   "prereqs": [
+    "modern.wave-function"
+   ],
+   "xp": 2,
+   "trouble": "Students think a wave's power grows in proportion to its amplitude.",
+   "viz": [
+    "ph-wave"
+   ]
+  },
+  {
+   "id": "modern.phase-interference",
+   "slug": "phase-interference",
+   "unit": "waves",
+   "title": "Phase Difference and Interference",
+   "short": "Two equal waves with phase difference φ add to amplitude 2A cos(φ/2), and a path difference Δr gives φ = 2πΔr/λ.",
+   "prereqs": [
+    "modern.wave-function",
+    "phys2.superposition",
+    "pre.sum-difference-formulas"
+   ],
+   "xp": 3,
+   "trouble": "Students treat a half-wavelength path difference as constructive, mixing up path and phase.",
+   "viz": [
+    "ph-interference",
+    "graph"
+   ]
+  },
+  {
+   "id": "modern.standing-wave-math",
+   "slug": "standing-wave-math",
+   "unit": "waves",
+   "title": "Standing Waves as Two Traveling Waves",
+   "short": "Two opposite traveling waves add to y = 2A sin kx cos ωt, with nodes that never move.",
+   "prereqs": [
+    "modern.phase-interference",
+    "phys2.standing-waves-strings"
+   ],
+   "xp": 2,
+   "trouble": "Students think the nodes of a standing wave drift along the string.",
+   "viz": [
+    "ph-wave",
+    "graph"
+   ]
+  },
+  {
+   "id": "modern.sound-waves",
+   "slug": "sound-waves",
+   "unit": "waves",
+   "title": "Sound as a Pressure Wave",
+   "short": "Sound is a pressure wave moving at v = √(B/ρ); pressure nodes sit where the displacement swings most.",
+   "prereqs": [
+    "modern.wave-function",
+    "phys2.standing-waves-pipes"
+   ],
+   "xp": 2,
+   "trouble": "Students think the pressure and the displacement of a sound wave peak at the same places.",
+   "viz": [
+    "ph-wave"
+   ]
+  },
+  {
+   "id": "modern.beats",
+   "slug": "beats",
+   "unit": "waves",
+   "title": "Beats",
+   "short": "Two tones of nearly equal frequency throb at the beat frequency |f₁ − f₂|.",
+   "prereqs": [
+    "modern.phase-interference"
+   ],
+   "xp": 1,
+   "trouble": "Students add or average the two frequencies to find the beat frequency.",
+   "viz": [
+    "ph-wave"
+   ]
+  },
+  {
+   "id": "modern.shock-waves",
+   "slug": "shock-waves",
+   "unit": "waves",
+   "title": "Shock Waves",
+   "short": "A source faster than sound drags a cone of wavefronts with sin θ = v_sound/v_source.",
+   "prereqs": [
+    "phys2.doppler"
+   ],
+   "xp": 2,
+   "trouble": "Students think a sonic boom happens only at the moment a plane passes the speed of sound.",
+   "viz": [
+    "ph-doppler"
+   ]
+  },
+  {
+   "id": "modern.huygens-principle",
+   "slug": "huygens-principle",
+   "unit": "wave-optics",
+   "title": "Huygens' Principle",
+   "short": "Every point on a wavefront acts as a source of wavelets, which explains refraction and diffraction.",
+   "prereqs": [
+    "phys2.snells-law",
+    "phys2.single-slit"
+   ],
+   "xp": 1,
+   "trouble": "Students think diffraction and refraction need two separate explanations.",
+   "viz": [
+    "ph-refraction",
+    "ph-interference"
+   ]
+  },
+  {
+   "id": "modern.brewster-angle",
+   "slug": "brewster-angle",
+   "unit": "wave-optics",
+   "title": "Polarization by Reflection",
+   "short": "Light reflected at Brewster's angle, tan θ_B = n₂/n₁, is completely polarized.",
+   "prereqs": [
+    "phys2.polarization",
+    "phys2.snells-law"
+   ],
+   "xp": 2,
+   "trouble": "Students measure Brewster's angle from the surface instead of the normal.",
+   "viz": [
+    "ph-refraction"
+   ]
+  },
+  {
+   "id": "modern.two-slit-intensity",
+   "slug": "two-slit-intensity",
+   "unit": "wave-optics",
+   "title": "Intensity in Interference Patterns",
+   "short": "Two slits give I = I₀cos²(πd sin θ/λ), and more slits make sharper bright lines.",
+   "prereqs": [
+    "modern.phase-interference",
+    "phys2.diffraction-grating"
+   ],
+   "xp": 3,
+   "trouble": "Students think adding slits makes the bright lines wider, when it makes them narrower and brighter.",
+   "viz": [
+    "ph-interference",
+    "graph"
+   ]
+  },
+  {
+   "id": "modern.diffraction-envelope",
+   "slug": "diffraction-envelope",
+   "unit": "wave-optics",
+   "title": "Single-Slit Envelopes and Missing Orders",
+   "short": "A single slit's pattern sets the envelope of a double-slit pattern, and some bright orders vanish.",
+   "prereqs": [
+    "modern.two-slit-intensity"
+   ],
+   "xp": 3,
+   "trouble": "Students treat a double slit as if each slit were a point, ignoring the width of the slits.",
+   "viz": [
+    "ph-interference"
+   ]
+  },
+  {
+   "id": "modern.resolution",
+   "slug": "resolution",
+   "unit": "wave-optics",
+   "title": "Resolution and the Rayleigh Criterion",
+   "short": "Two points can just be told apart when their angular separation is θ = 1.22λ/D.",
+   "prereqs": [
+    "phys2.single-slit"
+   ],
+   "xp": 2,
+   "trouble": "Students think enough magnification can reveal any detail.",
+   "viz": [
+    "ph-interference"
+   ]
+  },
+  {
+   "id": "modern.michelson-interferometer",
+   "slug": "michelson-interferometer",
+   "unit": "wave-optics",
+   "title": "The Michelson Interferometer",
+   "short": "Moving one mirror a distance λ/2 shifts the pattern by one whole fringe.",
+   "prereqs": [
+    "modern.phase-interference"
+   ],
+   "xp": 2,
+   "trouble": "Students count a mirror shift of λ as one fringe, forgetting the light travels the extra distance twice.",
+   "viz": [
+    "ph-interference"
+   ]
+  },
+  {
+   "id": "modern.thin-film-design",
+   "slug": "thin-film-design",
+   "unit": "wave-optics",
+   "title": "Antireflection Coatings and Air Wedges",
+   "short": "A quarter-wave coating cancels a reflection, and counting fringes in an air wedge measures tiny thicknesses.",
+   "prereqs": [
+    "phys2.thin-films"
+   ],
+   "xp": 3,
+   "trouble": "Students use the wavelength in air instead of in the coating to find its thickness.",
+   "viz": [
+    "ph-interference"
+   ]
+  },
+  {
+   "id": "modern.bragg-diffraction",
+   "slug": "bragg-diffraction",
+   "unit": "wave-optics",
+   "title": "X-Ray Diffraction and Bragg's Law",
+   "short": "Crystal planes a distance d apart reflect X-rays strongly when 2d sin θ = mλ.",
+   "prereqs": [
+    "phys2.diffraction-grating"
+   ],
+   "xp": 2,
+   "trouble": "Students measure θ from the normal, as in Snell's law, instead of from the crystal planes.",
+   "viz": [
+    "ph-interference"
+   ]
+  },
+  {
+   "id": "modern.lensmaker",
+   "slug": "lensmaker",
+   "unit": "instruments",
+   "title": "The Lensmaker's Equation",
+   "short": "A lens's focal length comes from its shape and material: 1/f = (n − 1)(1/R₁ − 1/R₂).",
+   "prereqs": [
+    "phys2.thin-lens-equation"
+   ],
+   "xp": 2,
+   "trouble": "Students give the back surface's radius the wrong sign.",
+   "viz": [
+    "ph-rays"
+   ]
+  },
+  {
+   "id": "modern.two-lens-systems",
+   "slug": "two-lens-systems",
+   "unit": "instruments",
+   "title": "Two-Lens Systems",
+   "short": "The image made by the first lens is the object for the second, and the magnifications multiply.",
+   "prereqs": [
+    "phys2.thin-lens-equation"
+   ],
+   "xp": 3,
+   "trouble": "Students measure the second object distance from the first lens instead of the second.",
+   "viz": [
+    "ph-rays"
+   ],
+   "lab": "/science-lab/optics/"
+  },
+  {
+   "id": "modern.eye-and-glasses",
+   "slug": "eye-and-glasses",
+   "unit": "instruments",
+   "title": "The Eye and Corrective Lenses",
+   "short": "A lens's power is P = 1/f in diopters; nearsighted eyes need diverging lenses and farsighted eyes converging ones.",
+   "prereqs": [
+    "phys2.thin-lens-equation"
+   ],
+   "xp": 2,
+   "trouble": "Students think nearsighted people need converging lenses because they can't see far away.",
+   "viz": [
+    "ph-rays"
+   ]
+  },
+  {
+   "id": "modern.microscopes",
+   "slug": "microscopes",
+   "unit": "instruments",
+   "title": "Magnifiers and Microscopes",
+   "short": "A magnifier gives M = 25 cm/f, and a microscope multiplies the objective's magnification by the eyepiece's.",
+   "prereqs": [
+    "modern.two-lens-systems",
+    "modern.eye-and-glasses"
+   ],
+   "xp": 2,
+   "trouble": "Students add the two magnifications instead of multiplying them.",
+   "viz": [
+    "ph-rays"
+   ]
+  },
+  {
+   "id": "modern.telescope-optics",
+   "slug": "telescope-optics",
+   "unit": "instruments",
+   "title": "Telescope Optics",
+   "short": "A refracting telescope magnifies by M = −f_objective/f_eyepiece, and its aperture sets how faint and how fine it can see.",
+   "prereqs": [
+    "modern.microscopes",
+    "modern.resolution"
+   ],
+   "xp": 2,
+   "trouble": "Students think a telescope's magnification is what lets it see faint objects.",
+   "viz": [
+    "ph-rays"
+   ],
+   "lab": "/science-lab/optics/"
+  },
+  {
+   "id": "modern.relativity-postulates",
+   "slug": "relativity-postulates",
+   "unit": "relativity",
+   "title": "The Postulates of Relativity",
+   "short": "The laws of physics and the speed of light are the same in every inertial frame.",
+   "prereqs": [
+    "mech.galilean-frames",
+    "phys2.em-waves"
+   ],
+   "xp": 1,
+   "trouble": "Students think light from a moving source travels faster than c.",
+   "viz": [
+    "ph-relativity"
+   ]
+  },
+  {
+   "id": "modern.simultaneity",
+   "slug": "simultaneity",
+   "unit": "relativity",
+   "title": "The Relativity of Simultaneity",
+   "short": "Two events at the same time in one frame can happen at different times in another.",
+   "prereqs": [
+    "modern.relativity-postulates"
+   ],
+   "xp": 2,
+   "trouble": "Students think \"at the same time\" means the same thing to every observer.",
+   "viz": [
+    "ph-relativity"
+   ]
+  },
+  {
+   "id": "modern.time-dilation",
+   "slug": "time-dilation",
+   "unit": "relativity",
+   "title": "Time Dilation",
+   "short": "A moving clock runs slow: Δt = γΔτ, with γ = 1/√(1 − v²/c²).",
+   "prereqs": [
+    "modern.relativity-postulates"
+   ],
+   "xp": 2,
+   "trouble": "Students apply γ backward, making the proper time the longer one.",
+   "viz": [
+    "ph-relativity"
+   ]
+  },
+  {
+   "id": "modern.length-contraction",
+   "slug": "length-contraction",
+   "unit": "relativity",
+   "title": "Length Contraction",
+   "short": "A moving object is shorter along its motion: L = L₀/γ.",
+   "prereqs": [
+    "modern.time-dilation"
+   ],
+   "xp": 2,
+   "trouble": "Students shrink lengths at right angles to the motion too.",
+   "viz": [
+    "ph-relativity"
+   ]
+  },
+  {
+   "id": "modern.lorentz-transformation",
+   "slug": "lorentz-transformation",
+   "unit": "relativity",
+   "title": "The Lorentz Transformation",
+   "short": "x′ = γ(x − vt) and t′ = γ(t − vx/c²) convert events between frames.",
+   "prereqs": [
+    "modern.length-contraction",
+    "modern.simultaneity"
+   ],
+   "xp": 3,
+   "trouble": "Students drop the vx/c² term, which carries the relativity of simultaneity.",
+   "viz": [
+    "ph-relativity"
+   ]
+  },
+  {
+   "id": "modern.spacetime-interval",
+   "slug": "spacetime-interval",
+   "unit": "relativity",
+   "title": "Spacetime Diagrams and the Interval",
+   "short": "The interval s² = (cΔt)² − Δx² is the same for every observer.",
+   "prereqs": [
+    "modern.lorentz-transformation"
+   ],
+   "xp": 3,
+   "trouble": "Students think distances and times both change but nothing stays the same between frames.",
+   "viz": [
+    "ph-relativity"
+   ]
+  },
+  {
+   "id": "modern.velocity-addition",
+   "slug": "velocity-addition",
+   "unit": "relativity",
+   "title": "Relativistic Velocity Addition",
+   "short": "Velocities combine as u′ = (u − v)/(1 − uv/c²), so no speed passes c.",
+   "prereqs": [
+    "modern.lorentz-transformation"
+   ],
+   "xp": 2,
+   "trouble": "Students add speeds the everyday way and get more than c.",
+   "viz": [
+    "ph-relativity"
+   ]
+  },
+  {
+   "id": "modern.relativistic-doppler",
+   "slug": "relativistic-doppler",
+   "unit": "relativity",
+   "title": "The Relativistic Doppler Effect",
+   "short": "Light from an approaching source arrives at f = f₀√((1 + β)/(1 − β)), with β = v/c.",
+   "prereqs": [
+    "modern.time-dilation",
+    "phys2.doppler"
+   ],
+   "xp": 3,
+   "trouble": "Students use the sound Doppler formula for light, which treats source and observer differently.",
+   "viz": [
+    "ph-relativity"
+   ]
+  },
+  {
+   "id": "modern.relativistic-energy",
+   "slug": "relativistic-energy",
+   "unit": "relativity",
+   "title": "Relativistic Momentum and Energy",
+   "short": "p = γmu and E = γmc², linked by E² = (pc)² + (mc²)².",
+   "prereqs": [
+    "modern.time-dilation",
+    "phys2.mass-energy"
+   ],
+   "xp": 3,
+   "trouble": "Students write the kinetic energy as ½mv² at speeds near c, or as γmc² without subtracting mc².",
+   "viz": [
+    "graph"
+   ]
+  },
+  {
+   "id": "modern.planck-blackbody",
+   "slug": "planck-blackbody",
+   "unit": "quantum",
+   "title": "Planck and Blackbody Radiation",
+   "short": "Planck's quantized energies explain the blackbody spectrum, and Wien's and Stefan's laws follow from it.",
+   "prereqs": [
+    "phys2.thermal-radiation",
+    "phys2.photons"
+   ],
+   "xp": 2,
+   "trouble": "Students think the ultraviolet catastrophe was something measured, rather than a failed prediction of classical physics.",
+   "viz": [
+    "ph-blackbody",
+    "graph"
+   ]
+  },
+  {
+   "id": "modern.compton-formula",
+   "slug": "compton-formula",
+   "unit": "quantum",
+   "title": "The Compton Formula",
+   "short": "Conserving energy and momentum gives Δλ = (h/mc)(1 − cos θ).",
+   "prereqs": [
+    "phys2.compton-scattering",
+    "modern.relativistic-energy"
+   ],
+   "xp": 3,
+   "trouble": "Students use the photon's wavelength in place of the electron's Compton wavelength h/mc.",
+   "viz": [
+    "ph-photon"
+   ]
+  },
+  {
+   "id": "modern.bohr-hydrogen",
+   "slug": "bohr-hydrogen",
+   "unit": "quantum",
+   "title": "The Bohr Model of Hydrogen",
+   "short": "Quantized angular momentum gives E_n = −13.6 eV/n² and r_n = n²a₀.",
+   "prereqs": [
+    "phys2.bohr-model",
+    "phys1.angular-momentum"
+   ],
+   "xp": 2,
+   "trouble": "Students think the n = 1 level has the highest energy because it comes first.",
+   "viz": [
+    "ph-spectrum"
+   ]
+  },
+  {
+   "id": "modern.hydrogen-series",
+   "slug": "hydrogen-series",
+   "unit": "quantum",
+   "title": "Hydrogen's Spectral Series",
+   "short": "Lyman, Balmer and Paschen lines follow 1/λ = R(1/n_f² − 1/n_i²).",
+   "prereqs": [
+    "modern.bohr-hydrogen",
+    "phys2.spectra"
+   ],
+   "xp": 2,
+   "trouble": "Students swap n_f and n_i, getting a negative wavelength or the wrong series.",
+   "viz": [
+    "ph-spectrum"
+   ]
+  },
+  {
+   "id": "modern.uncertainty-principle",
+   "slug": "uncertainty-principle",
+   "unit": "quantum",
+   "title": "The Uncertainty Principle",
+   "short": "Δx·Δp ≥ ħ/2: the more sharply a position is fixed, the more spread its momentum must have.",
+   "prereqs": [
+    "phys2.matter-waves"
+   ],
+   "xp": 2,
+   "trouble": "Students think the uncertainty comes from clumsy measuring tools that better tools could fix.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.wavefunction-probability",
+   "slug": "wavefunction-probability",
+   "unit": "quantum",
+   "title": "Wave Functions and Probability",
+   "short": "|ψ|² is a probability density, normalized so the total probability is 1.",
+   "prereqs": [
+    "modern.uncertainty-principle",
+    "calc1.definite-integral"
+   ],
+   "xp": 2,
+   "trouble": "Students think ψ itself, rather than |ψ|², is the probability.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.schrodinger-equation",
+   "slug": "schrodinger-equation",
+   "unit": "quantum",
+   "title": "The Schrödinger Equation",
+   "short": "−(ħ²/2m)ψ″ + Uψ = Eψ: check whether a function solves it and read off its energy.",
+   "prereqs": [
+    "modern.wavefunction-probability",
+    "calc1.higher-derivatives"
+   ],
+   "xp": 3,
+   "trouble": "Students think any smooth function is an allowed wave function, forgetting the boundary conditions.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.particle-in-box",
+   "slug": "particle-in-box",
+   "unit": "quantum",
+   "title": "A Particle in a Box",
+   "short": "Confining a particle to a length L allows only E_n = n²h²/(8mL²).",
+   "prereqs": [
+    "modern.schrodinger-equation"
+   ],
+   "xp": 2,
+   "trouble": "Students think the lowest energy of a particle in a box is zero.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.tunneling",
+   "slug": "tunneling",
+   "unit": "quantum",
+   "title": "Finite Wells and Tunneling",
+   "short": "Wave functions leak into barriers, so a particle can tunnel through one with probability about e^(−2κL).",
+   "prereqs": [
+    "modern.particle-in-box"
+   ],
+   "xp": 3,
+   "trouble": "Students think a particle can never be found where its energy is less than the potential energy.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.quantum-oscillator",
+   "slug": "quantum-oscillator",
+   "unit": "quantum",
+   "title": "The Quantum Harmonic Oscillator",
+   "short": "The energies are evenly spaced, E_n = (n + ½)ħω, starting from a nonzero zero-point energy.",
+   "prereqs": [
+    "modern.particle-in-box",
+    "mech.shm-equation"
+   ],
+   "xp": 2,
+   "trouble": "Students think a quantum oscillator can sit perfectly still at its lowest energy.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.quantum-numbers",
+   "slug": "quantum-numbers",
+   "unit": "quantum",
+   "title": "Quantum Numbers in Hydrogen",
+   "short": "The labels n, l, m_l and m_s name each state, and shell n holds 2n² states.",
+   "prereqs": [
+    "modern.bohr-hydrogen",
+    "modern.schrodinger-equation"
+   ],
+   "xp": 2,
+   "trouble": "Students think l can equal n.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.exclusion-principle",
+   "slug": "exclusion-principle",
+   "unit": "quantum",
+   "title": "Electron Spin and the Exclusion Principle",
+   "short": "No two electrons in an atom share all four quantum numbers, which builds the periodic table.",
+   "prereqs": [
+    "modern.quantum-numbers"
+   ],
+   "xp": 2,
+   "trouble": "Students think spin means the electron is a tiny ball literally turning.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.band-theory",
+   "slug": "band-theory",
+   "unit": "quantum",
+   "title": "Conductors, Insulators and Semiconductors",
+   "short": "Energy bands and the gaps between them decide how a solid conducts, and doping and LEDs follow from them.",
+   "prereqs": [
+    "modern.exclusion-principle"
+   ],
+   "xp": 2,
+   "trouble": "Students think semiconductors conduct worse when warmed, as metals do.",
+   "viz": [
+    "ph-quantum"
+   ]
+  },
+  {
+   "id": "modern.nuclear-binding",
+   "slug": "nuclear-binding",
+   "unit": "nuclei-particles",
+   "title": "Nuclear Size and Binding Energy per Nucleon",
+   "short": "Nuclei have radius R = r₀A^(1/3), and the binding energy per nucleon peaks near iron.",
+   "prereqs": [
+    "phys2.mass-energy"
+   ],
+   "xp": 2,
+   "trouble": "Students think bigger nuclei are always more tightly bound.",
+   "viz": [
+    "ph-nucleus"
+   ]
+  },
+  {
+   "id": "modern.decay-law",
+   "slug": "decay-law",
+   "unit": "nuclei-particles",
+   "title": "The Exponential Decay Law",
+   "short": "N = N₀e^(−λt), the activity is A = λN, and the half-life is ln 2/λ.",
+   "prereqs": [
+    "chem.half-life",
+    "calc1.exp-log-derivatives"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up the decay constant with the half-life, or the activity with the number of nuclei.",
+   "viz": [
+    "ph-nucleus"
+   ]
+  },
+  {
+   "id": "modern.q-values",
+   "slug": "q-values",
+   "unit": "nuclei-particles",
+   "title": "Energy in Nuclear Reactions",
+   "short": "Q = (mass before − mass after)c², at 931.5 MeV for each atomic mass unit.",
+   "prereqs": [
+    "modern.nuclear-binding"
+   ],
+   "xp": 3,
+   "trouble": "Students mix nuclear masses with atomic masses and lose track of the electrons.",
+   "viz": [
+    "ph-nucleus"
+   ]
+  },
+  {
+   "id": "modern.radioactive-dating",
+   "slug": "radioactive-dating",
+   "unit": "nuclei-particles",
+   "title": "Radioactive Dating",
+   "short": "The fraction of a parent isotope left gives an age: t = (T½/ln 2)·ln(N₀/N).",
+   "prereqs": [
+    "modern.decay-law",
+    "alg2.solve-exponential-equations"
+   ],
+   "xp": 2,
+   "trouble": "Students try carbon dating on rocks millions of years old, far beyond its range.",
+   "viz": [
+    "ph-nucleus"
+   ],
+   "lab": "/science-lab/atom/"
+  },
+  {
+   "id": "modern.particle-families",
+   "slug": "particle-families",
+   "unit": "nuclei-particles",
+   "title": "Leptons, Hadrons and Quarks",
+   "short": "Leptons are fundamental, baryons hold three quarks and mesons a quark and an antiquark.",
+   "prereqs": [
+    "modern.nuclear-binding",
+    "modern.exclusion-principle"
+   ],
+   "xp": 2,
+   "trouble": "Students think protons and neutrons are fundamental particles.",
+   "viz": [
+    "modern-quarks"
+   ]
+  },
+  {
+   "id": "modern.antimatter",
+   "slug": "antimatter",
+   "unit": "nuclei-particles",
+   "title": "Antiparticles, Pair Production and Annihilation",
+   "short": "Making an electron–positron pair takes at least 2mc², and annihilation turns the pair back into gamma rays.",
+   "prereqs": [
+    "modern.relativistic-energy",
+    "modern.particle-families"
+   ],
+   "xp": 2,
+   "trouble": "Students think a single photon can turn into a pair in empty space, where momentum can't be conserved.",
+   "viz": [
+    "graph"
+   ]
+  },
+  {
+   "id": "modern.conservation-laws-particles",
+   "slug": "conservation-laws-particles",
+   "unit": "nuclei-particles",
+   "title": "Conservation Laws in Particle Reactions",
+   "short": "Charge, baryon number and lepton number decide which reactions can happen.",
+   "prereqs": [
+    "modern.particle-families"
+   ],
+   "xp": 3,
+   "trouble": "Students allow any reaction whose charges balance, forgetting baryon and lepton number.",
+   "viz": [
+    "modern-quarks"
+   ]
+  },
+  {
+   "id": "modern.fundamental-forces",
+   "slug": "fundamental-forces",
+   "unit": "nuclei-particles",
+   "title": "The Four Forces and Their Carriers",
+   "short": "Gravity, electromagnetism and the weak and strong forces; the last three are carried by photons, W and Z bosons and gluons.",
+   "prereqs": [
+    "modern.particle-families"
+   ],
+   "xp": 1,
+   "trouble": "Students think the strong force acts between electrons and nuclei.",
+   "viz": [
+    "graph"
+   ]
+  }
+ ]
+}

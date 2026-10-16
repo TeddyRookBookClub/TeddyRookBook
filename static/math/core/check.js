@@ -47,6 +47,20 @@
    for 3 ("Equal, but give the angle itself …"). An expected "ln(3)" accepts "ln 3" and "log_3(2)" matches ln(2)/ln(3).
    dp: n       requires a decimal rounded to n places (implies 'dec')     tol: t   accepts |answer - v| <= t
    pct: true   v is a percent: "25%" and "25" both match v '25'
+   SCIENCE (the Ladders: physics, chemistry, …)
+   Scientific notation may be typed: 3.0e8, 3.0E8, 3.0×10^8, 3.0*10^8, 3.0 x 10^8, 3.0·10^8, 3 × 10⁸, 1.6×10^-19, 1.6 x 10^(-19).
+   rtol: r     relative tolerance: accepts |answer - v| <= r·|v| (use it for physical quantities: rtol 0.01 is 1%); with tol
+               too, either one is enough. A miss by a power of ten gets "Check the power of ten."
+   form 'sf', sf: n   the value rounded to n significant figures, written with n significant figures (3.00e8 or 3.00×10^8
+               for 3 sf; trailing zeros of a whole number like 300 are ambiguous and count as fine). With rtol, any value
+               within rtol written with n significant figures is accepted (rounding of intermediate steps). Notes: "Round it to
+               3 significant figures.", "Equal, but give it to 3 significant figures, like 3.00 × 10^8.", "Check your rounding".
+   Units of science (SI with prefixes and the common extras): N, J, W, Pa, C, V, Ω, F, T, Hz, mol, K, L, eV, atm, bar, mmHg,
+               cal, AU, ly, pc, u, M (mol/L), min, h, … with products, quotients and powers (kg·m/s², m s^-2, J/(mol·K), cm3)
+               and words (newtons, joules, ohms, kilometers per hour). With p.unit set (shown beside the box), a typed
+               unit that is the same unit (N = kg·m/s²) is accepted; a different one is not: "Check the unit: the answer is in N."
+               (and "that's the right amount in kN, but the answer should be in N" when only the unit is off).
+               multi parts may carry their own unit: parts: [{ label, a, unit }] (shown beside that part's box; strict).
 
    EXPRESSION FORMS  { t: 'expr', v, vars, form }   (always equivalent first: CAS simplification of the difference, then a
    numeric check at random points, skipping points outside the domain, with at least 4 valid points)
@@ -81,6 +95,15 @@
    'x < -1 or x > 2' } (interval notation is accepted too)   MC { t: 'mc', choices, v } answer: an index, an array of
    indices, or the choice text   TF { t: 'tf', v } answer: true/false or "true"/"false"/"t"/"f"/"yes"/"no"
    TEXT { t: 'text', v: ['acute'] } case, spacing, a/an/the and a final period ignored
+   FORMULA { t: 'formula', v: ['H2O'] or 'H2O', states?: true }   a chemical formula (several accepted forms allowed). Case
+            matters (CO is not Co); spaces don't. Subscripts as plain digits or Unicode (H₂O); charges as ^2+, ^2-, ^+, ^-, ^(2-),
+            Unicode (SO₄²⁻), or plain after the formula (Fe3+, SO42-, NH4+: read every way, right if any reading is); groups in
+            ( ) or [ ] (Ca(OH)2, [Cu(NH3)4]^2+); hydrates with ·, •, * or . (CuSO4·5H2O, CuSO4.5H2O). State symbols (s), (l), (g),
+            (aq) are optional and ignored, unless states: true (then required and checked). In the spec write charges with ^
+            (SO4^2-, NH4^+, Fe^3+). Notes: wrong case ("Check capital letters: Co is cobalt, but CO is carbon monoxide."),
+            same atoms in another order or grouping ("… formulas are written in a standard order"), a missing or wrong charge,
+            a subscript of 1, a number in front, wrong subscripts, a symbol that is no element. Not accepted: subscripts of 1
+            (H2O1). Shown with real subscripts and superscripts (answerShow); ML._check.formulaTex(s) gives the TeX.
    MULTI { t: 'multi', parts: [{ label, a }] } answer: an array, one entry per part                                     */
 (function (root) {
   'use strict';
@@ -269,6 +292,139 @@
   }
   function withRad(fn) { var sv = CAS.STATE.deg; CAS.STATE.deg = false; try { return fn(); } finally { CAS.STATE.deg = sv; } }
 
+  // ===================================================================== science: scientific notation, SI units, significant figures
+  function sciNorm(s) { // "3.0 x 10^8", "3.0 X 10^-8", "3.0⋅10^8" -> "3.0*10^8" (only before 10^)
+    return s.replace(/(\d|\))\s*[xX×·⋅*]\s*10\s*\^/g, '$1*10^');
+  }
+  // units -> { d: [length, mass, time, current, temperature, amount, light], f: factor to SI base units }
+  var SI_U = { // symbol: [dims, factor, prefixable]
+    m: [[1, 0, 0, 0, 0, 0, 0], 1, 1], g: [[0, 1, 0, 0, 0, 0, 0], 1e-3, 1], s: [[0, 0, 1, 0, 0, 0, 0], 1, 1], A: [[0, 0, 0, 1, 0, 0, 0], 1, 1],
+    K: [[0, 0, 0, 0, 1, 0, 0], 1, 1], mol: [[0, 0, 0, 0, 0, 1, 0], 1, 1], cd: [[0, 0, 0, 0, 0, 0, 1], 1, 1],
+    N: [[1, 1, -2, 0, 0, 0, 0], 1, 1], J: [[2, 1, -2, 0, 0, 0, 0], 1, 1], W: [[2, 1, -3, 0, 0, 0, 0], 1, 1], Pa: [[-1, 1, -2, 0, 0, 0, 0], 1, 1],
+    C: [[0, 0, 1, 1, 0, 0, 0], 1, 1], V: [[2, 1, -3, -1, 0, 0, 0], 1, 1], 'Ω': [[2, 1, -3, -2, 0, 0, 0], 1, 1], F: [[-2, -1, 4, 2, 0, 0, 0], 1, 1],
+    T: [[0, 1, -2, -1, 0, 0, 0], 1, 1], Wb: [[2, 1, -2, -1, 0, 0, 0], 1, 1], H: [[2, 1, -2, -2, 0, 0, 0], 1, 1], Hz: [[0, 0, -1, 0, 0, 0, 0], 1, 1],
+    S: [[-2, -1, 3, 2, 0, 0, 0], 1, 1], Bq: [[0, 0, -1, 0, 0, 0, 0], 1, 1], Gy: [[2, 0, -2, 0, 0, 0, 0], 1, 1], Sv: [[2, 0, -2, 0, 0, 0, 0], 1, 1],
+    L: [[3, 0, 0, 0, 0, 0, 0], 1e-3, 1], l: [[3, 0, 0, 0, 0, 0, 0], 1e-3, 1], eV: [[2, 1, -2, 0, 0, 0, 0], 1.602176634e-19, 1], Wh: [[2, 1, -2, 0, 0, 0, 0], 3600, 1],
+    bar: [[-1, 1, -2, 0, 0, 0, 0], 1e5, 1], cal: [[2, 1, -2, 0, 0, 0, 0], 4.184, 1], pc: [[1, 0, 0, 0, 0, 0, 0], 3.0856775814913673e16, 1],
+    M: [[-3, 0, 0, 0, 0, 1, 0], 1000, 1], u: [[0, 1, 0, 0, 0, 0, 0], 1.66053906660e-27, 0], Da: [[0, 1, 0, 0, 0, 0, 0], 1.66053906660e-27, 1],
+    min: [[0, 0, 1, 0, 0, 0, 0], 60, 0], h: [[0, 0, 1, 0, 0, 0, 0], 3600, 0], hr: [[0, 0, 1, 0, 0, 0, 0], 3600, 0], d: [[0, 0, 1, 0, 0, 0, 0], 86400, 0],
+    yr: [[0, 0, 1, 0, 0, 0, 0], 31557600, 0], atm: [[-1, 1, -2, 0, 0, 0, 0], 101325, 0], mmHg: [[-1, 1, -2, 0, 0, 0, 0], 133.322387415, 0],
+    torr: [[-1, 1, -2, 0, 0, 0, 0], 101325 / 760, 0], Cal: [[2, 1, -2, 0, 0, 0, 0], 4184, 0], AU: [[1, 0, 0, 0, 0, 0, 0], 1.495978707e11, 0],
+    ly: [[1, 0, 0, 0, 0, 0, 0], 9.4607304725808e15, 0], rad: [[0, 0, 0, 0, 0, 0, 0], 1, 0], sr: [[0, 0, 0, 0, 0, 0, 0], 1, 0]
+  };
+  var SI_PRE = { Y: 1e24, Z: 1e21, E: 1e18, P: 1e15, T: 1e12, G: 1e9, M: 1e6, k: 1e3, h: 1e2, da: 1e1, d: 1e-1, c: 1e-2, m: 1e-3, 'μ': 1e-6, u: 1e-6, n: 1e-9, p: 1e-12, f: 1e-15, a: 1e-18 };
+  var SI_WORD = { newton: 'N', joule: 'J', watt: 'W', pascal: 'Pa', coulomb: 'C', volt: 'V', ohm: 'Ω', farad: 'F', tesla: 'T', weber: 'Wb', henry: 'H', henries: 'H',
+    hertz: 'Hz', siemens: 'S', becquerel: 'Bq', gray: 'Gy', sievert: 'Sv', ampere: 'A', amp: 'A', kelvin: 'K', mole: 'mol', meter: 'm', metre: 'm', second: 's', sec: 's',
+    gram: 'g', liter: 'L', litre: 'L', electronvolt: 'eV', calorie: 'cal', atmosphere: 'atm', minute: 'min', hour: 'h', day: 'd', year: 'yr', molar: 'M',
+    parsec: 'pc', 'light-year': 'ly', lightyear: 'ly' };
+  var SI_WPRE = { yotta: 'Y', zetta: 'Z', exa: 'E', peta: 'P', tera: 'T', giga: 'G', mega: 'M', kilo: 'k', hecto: 'h', deca: 'da', deci: 'd', centi: 'c', milli: 'm', micro: 'μ', nano: 'n', pico: 'p', femto: 'f', atto: 'a' };
+  var SUP = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-' };
+  function siToken(tok) { // "kN", "s^-2", "cm3", "Ω" -> { d, f } or null
+    var m = /^([A-Za-zμΩ]+)(?:\^?\(?(-?\d+)\)?)?$/.exec(tok); if (!m) return null;
+    var sym = m[1], pw = m[2] !== undefined ? +m[2] : 1, base = null, pre = 1;
+    if (SI_U[sym]) base = SI_U[sym];
+    else {
+      var p2 = sym.slice(0, 2) === 'da' ? 'da' : sym.charAt(0), rest = sym.slice(p2.length);
+      if (SI_PRE[p2] && SI_U[rest] && SI_U[rest][2]) { base = SI_U[rest]; pre = SI_PRE[p2]; }
+    }
+    if (!base || !pw) return null;
+    return { d: base[0].map(function (x) { return x * pw; }), f: Math.pow(base[1] * pre, pw) };
+  }
+  function siUnit(u) {
+    var s = unitPlain(u); if (!s || s.length > 60) return null;
+    s = s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+/g, function (x) { return '^' + x.split('').map(function (c) { return SUP[c]; }).join(''); })
+      .replace(/µ/g, 'μ').replace(/Ω/g, 'Ω').replace(/[·⋅*×.]/g, ' ').replace(/[−–]/g, '-').replace(/\s*\^\s*/g, '^');
+    // words: "kilometers per hour", "newton meters", "joules per mole kelvin", "square meters", "meters squared"
+    s = s.replace(/\bper\b/gi, '/').replace(/\b(square|sq)\s+([a-zμΩ]+)/gi, '$2^2').replace(/\b(cubic|cu)\s+([a-zμΩ]+)/gi, '$2^3')
+      .replace(/([a-zμΩ]+)\s+squared\b/gi, '$1^2').replace(/([a-zμΩ]+)\s+cubed\b/gi, '$1^3');
+    s = s.replace(/[A-Za-z][a-z-]+/g, function (w) {
+      var lw = w.toLowerCase(), pre = '';
+      for (var p in SI_WPRE) if (lw.indexOf(p) === 0 && lw.length > p.length + 1) { var r = lw.slice(p.length); if (SI_WORD[r] || SI_WORD[r.replace(/s$/, '')] || SI_WORD[r.replace(/es$/, '')]) { pre = SI_WPRE[p]; lw = r; } break; }
+      var sym = SI_WORD[lw] || SI_WORD[lw.replace(/s$/, '')] || (/ies$/.test(lw) ? SI_WORD[lw] : null) || SI_WORD[lw.replace(/es$/, '')];
+      return sym ? pre + sym : w;
+    });
+    s = s.replace(/[()]/g, ' ').trim(); if (!s) return null;
+    var segs = s.split('/'), out = { d: [0, 0, 0, 0, 0, 0, 0], f: 1 }, any = false;
+    for (var i = 0; i < segs.length; i++) {
+      var toks = segs[i].trim().split(/\s+/).filter(Boolean); if (!toks.length) { if (i === 0 && segs.length > 1 && /^1?$/.test(segs[0].trim())) continue; return null; }
+      for (var j = 0; j < toks.length; j++) {
+        if (i === 0 && toks[j] === '1' && segs.length > 1) continue; // "1/s"
+        var t = siToken(toks[j]); if (!t) return null; any = true;
+        for (var k = 0; k < 7; k++) out.d[k] += i ? -t.d[k] : t.d[k];
+        out.f = i ? out.f / t.f : out.f * t.f;
+      }
+    }
+    return any ? out : null;
+  }
+  function rel(a, b, t) { return Math.abs(a - b) <= t * Math.max(Math.abs(a), Math.abs(b)); } // relative (no floor at 1)
+  function siSame(a, b) { return a.d.join() === b.d.join() && rel(a.f, b.f, 1e-9); }
+  function oldUnitKnown(u) { var c = canonUnit(u); return !!c && c.parts.every(function (p) { return p.dim !== 'count'; }); }
+  // a number followed by a science unit the word list doesn't know ("12 kN", "3.0e8 m/s", "1.6×10^-19 C", "3 ohms")
+  function dropSIUnit(s) {
+    for (var i = 1; i < s.length; i++) {
+      if (!/[A-Za-zμµΩΩ]/.test(s.charAt(i)) || !/[\d.)\s]/.test(s.charAt(i - 1))) continue;
+      var head = s.slice(0, i).trim(), tail = s.slice(i).trim(), si = siUnit(tail);
+      if (!si || !head) continue;
+      var r = parse(commaNum(head), { mixed: true });
+      if (!r.ok || hasVarNode(r.node)) continue;
+      return { s: head, unit: tail, r: r, si: si };
+    }
+    return null;
+  }
+  // the unit check for science units (null: the old word list decides)
+  function siUnitProblem(typed, ctx) {
+    if (!ctx || !ctx.unit || !unitPlain(ctx.unit) || ctx.unitLoose) return null;
+    var X = siUnit(ctx.unit), U = siUnit(typed); if (!X || !U) return null;
+    if (oldUnitKnown(typed) && oldUnitKnown(ctx.unit)) return siSame(U, X) ? { ok: true } : null; // the word list's own note (mL = cm³ too)
+    if (siSame(U, X)) return { ok: true };
+    return { ok: false, msg: 'Check the unit: the answer is in ' + unitName(ctx.unit) + '.', U: U, X: X };
+  }
+  // significant figures of a typed decimal ("3.00e8", "0.00120", "1200", "1.20*10^-3") -> { min, max, n, d (BigInt), neg } or null
+  function sigInfo(text) {
+    var t = str(text).replace(/\s+/g, '').replace(/[×·⋅]/g, '*'), m = /^([-+]?)(\d*\.?\d*)(?:[eE]([-+]?\d+)|\*10\^\(?([-+]?\d+)\)?)?$/.exec(t);
+    if (!m || !/\d/.test(m[2])) return null;
+    var mant = m[2], ex = +(m[3] || m[4] || 0), dot = mant.indexOf('.'), digits = mant.replace('.', ''), lead = digits.replace(/^0+/, '');
+    var frac = dot >= 0 ? mant.length - dot - 1 : 0, min, max;
+    if (!lead) { min = 1; max = Math.max(1, frac); }
+    else if (dot >= 0) { min = max = lead.length; }
+    else { max = lead.length; min = lead.replace(/0+$/, '').length; }
+    var n = BigInt(digits || '0'), d = 1n, e = ex - frac;
+    if (e >= 0) n *= 10n ** BigInt(e); else d = 10n ** BigInt(-e);
+    return { min: min, max: max, n: n, d: d, neg: m[1] === '-' };
+  }
+  function roundSigQ(n0, d0, sf) { // the rational n0/d0 (BigInt, d0 > 0) rounded to sf significant figures -> { n, d, e } (e = power of 10 of the first digit)
+    var neg = n0 < 0n, a = neg ? -n0 : n0; if (a === 0n) return { n: 0n, d: 1n, e: 0 };
+    var e = String(a).length - String(d0).length;
+    while (e > -400 && (e >= 0 ? 10n ** BigInt(e) * d0 > a : d0 > a * 10n ** BigInt(-e))) e--;
+    while (e < 400 && (e + 1 >= 0 ? 10n ** BigInt(e + 1) * d0 <= a : d0 <= a * 10n ** BigInt(-(e + 1)))) e++;
+    var k = sf - 1 - e, num = k >= 0 ? a * 10n ** BigInt(k) : a, den = k >= 0 ? d0 : d0 * 10n ** BigInt(-k);
+    var r = (2n * num + den) / (2n * den); // round half away from zero
+    var on = r, od = 1n; if (k >= 0) od = 10n ** BigInt(k); else on = r * 10n ** BigInt(-k);
+    return { n: neg ? -on : on, d: od, e: e };
+  }
+  function sciText(q, sf) { // a rounded value with sf significant figures: "3.00 × 10^8", "24.5", "0.00120"
+    var neg = q.n < 0n, a = neg ? -q.n : q.n, e = q.e, digits;
+    // the sf digits: a/d * 10^(sf-1-e)
+    var k = sf - 1 - e, v = k >= 0 ? a * 10n ** BigInt(k) / q.d : a / (q.d * 10n ** BigInt(-k)); digits = String(v);
+    if (digits.length > sf) { digits = digits.slice(0, sf); e++; } // 9.99 -> 10.0
+    var out;
+    if (e >= 5 || e <= -4 || sf < e + 1) out = digits.charAt(0) + (sf > 1 ? '.' + digits.slice(1) : '') + ' × 10^' + e;
+    else if (e >= sf - 1) out = digits + '0'.repeat(e - sf + 1);
+    else if (e >= 0) out = digits.slice(0, e + 1) + '.' + digits.slice(e + 1);
+    else out = '0.' + '0'.repeat(-e - 1) + digits;
+    return (neg ? '-' : '') + out;
+  }
+  function canonQ(C) { // exact rational of a canonical number, else one from its float
+    if (C.q) return { n: C.q.n, d: C.q.d };
+    if (typeof C.val !== 'number' || !isFinite(C.val)) return null;
+    var Q0 = ML.Q.from(Number(C.val.toPrecision(15))); return { n: Q0.n, d: Q0.d };
+  }
+  function pow10Off(lv, cv, rt) { // lv = cv × 10^k for a whole k ≠ 0 (within rt)
+    if (!lv || !cv || typeof lv !== 'number' || typeof cv !== 'number' || (lv < 0) !== (cv < 0)) return false;
+    var k = Math.round(Math.log10(lv / cv)); if (!k || Math.abs(k) > 30) return false;
+    return Math.abs(lv - cv * Math.pow(10, k)) <= (rt || 1e-9) * Math.abs(cv * Math.pow(10, k));
+  }
+
   // ===================================================================== reading a single number
   // -> { ok, node, tree, val (float or complex), q (exact Q or null), kind: int|dec|frac|mixed|expr|inf|ninf|dne, info }
   function readNumber(raw, spec, ctx) {
@@ -283,9 +439,10 @@
     if (spec.pct && /%\s*$/.test(s)) { s = s.replace(/\s*%\s*$/, ''); pct = true; }
     s = s.replace(/^\s*(-?)\s*\\?\$\s*/, '$1').replace(/^(-?)\$/, '$1');            // $5.25
     s = commaNum(s);                                                                  // 1,000
-    var r = parse(s, { mixed: true }), unit = '';
+    s = sciNorm(s);                                                                   // 3.0 x 10^8
+    var r = parse(s, { mixed: true }), unit = '', si = null, numText = s;
     if (!r.ok || hasVarNode(r.node) || r.node.t === 'seq' || r.node.t === 'tuple') { // "12 cm", "30°", "3,000 g": drop a unit after the number
-      var du = dropUnit(s) || (ctx && ctx.unit ? dropExpectedUnit(s, ctx.unit) : null); if (du) { r = du.r; unit = du.unit; }
+      var du = dropUnit(s) || (ctx && ctx.unit ? dropExpectedUnit(s, ctx.unit) : null) || dropSIUnit(s); if (du) { r = du.r; unit = du.unit; si = du.si || null; numText = du.s; }
     }
     if (!r.ok) return { ok: false, invalid: true, msg: r.err };
     var node = r.node;
@@ -296,7 +453,7 @@
     if (fv.length) return { ok: false, invalid: false, letters: fv, node: node, msg: 'Type a number (no letters).' };
     var val = withRad(function () { return numVal(tree); });
     var q = exactQ(tree);
-    return { ok: true, node: node, tree: tree, val: val, q: q, kind: kindOf(node), pctTyped: pct, unit: unit, deg: DEG_UNIT.test(unit) };
+    return { ok: true, node: node, tree: tree, val: val, q: q, kind: kindOf(node), pctTyped: pct, unit: unit, deg: DEG_UNIT.test(unit), text: stripLabel(numText), si: si };
   }
   function unNeg(n) { var neg = false; while (n && (n.t === 'neg' || n.t === 'paren')) { if (n.t === 'neg') neg = !neg; n = n.a; } return { n: n, neg: neg }; }
   function kindOf(node) {
@@ -484,7 +641,12 @@
     var C = canonNum(spec), L = readNumber(answer, spec, ctx);
     if (!L.ok) return L.letters ? { ok: false, msg: L.msg } : { ok: false, invalid: !!L.invalid, msg: L.msg };
     // a right number with a unit the problem doesn't use ("24 cm" for square cm, "3 g" for kg) is not right yet
-    var uBad = L.unit ? unitProblem(L.unit, ctx) : null;
+    // science units (N, kPa, J/(mol·K) …): a different unit is never right; say so first, and say when only the unit is off
+    var siP = L.unit ? siUnitProblem(L.unit, ctx) : null, uBad = siP ? null : L.unit ? unitProblem(L.unit, ctx) : null;
+    if (siP && !siP.ok) {
+      var conv = siP.U.d.join() === siP.X.d.join() && typeof L.val === 'number' && typeof C.val === 'number' && C.val !== 0 && rel(L.val * siP.U.f / siP.X.f, C.val, spec.rtol ? Math.max(Math.abs(Number(spec.rtol)), 1e-6) : 0.005);
+      return { ok: false, msg: conv ? 'Check the unit: that’s the right amount in ' + unitName(L.unit) + ', but the answer should be in ' + unitName(ctx.unit) + '.' : siP.msg, form: true, unit: true };
+    }
     function right() { return uBad ? { ok: false, msg: uBad, form: true, unit: true } : { ok: true }; }
     if (C.kind === 'dne' || L.kind === 'dne') return { ok: C.kind === L.kind, msg: C.kind === 'dne' ? undefined : undefined };
     if (C.kind === 'inf' || C.kind === 'ninf' || L.kind === 'inf' || L.kind === 'ninf') {
@@ -507,6 +669,16 @@
       if (Lq && typeof L.val === 'number' && R.q.toNumber() !== 0 && relEq(L.val, -R.q.toNumber())) return { ok: false, msg: 'Right size, wrong sign.' };
       return { ok: false };
     }
+    if (form === 'sf' && spec.sf) return checkSF(spec, L, C, right);
+    if (spec.rtol !== undefined) {
+      var rt = Math.abs(Number(spec.rtol)), lv = L.val, cv = C.val;
+      if (typeof lv === 'number' && typeof cv === 'number') {
+        if (Math.abs(lv - cv) <= rt * Math.abs(cv) + 1e-300 || (spec.tol !== undefined && Math.abs(lv - cv) <= Number(spec.tol) + 1e-12)) return right();
+        if (cv !== 0 && Math.abs(lv + cv) <= rt * Math.abs(cv)) return { ok: false, msg: 'Right size, wrong sign.' };
+        if (pow10Off(lv, cv, rt)) return { ok: false, msg: 'Check the power of ten.' };
+      }
+      return { ok: false };
+    }
     if (spec.tol !== undefined) {
       var tol = Number(spec.tol);
       if (typeof L.val === 'number' && typeof C.val === 'number' && Math.abs(L.val - C.val) <= tol + 1e-12) return right();
@@ -519,6 +691,27 @@
     // equal value: check the form
     var fm = formMsg(form, L, C);
     return fm ? { ok: false, msg: fm, form: true } : right();
+  }
+  function checkSF(spec, L, C, right) { // form 'sf': n significant figures
+    var n = Math.max(1, Math.min(15, Math.floor(Number(spec.sf)) || 1)), cq = canonQ(C), si = sigInfo(L.text);
+    if (!cq || typeof L.val !== 'number') return { ok: false };
+    var R = roundSigQ(cq.n, cq.d, n), want = sciText(R, n), s2 = n === 1 ? '' : 's';
+    var lq = si ? { n: si.neg ? -si.n : si.n, d: si.d } : (L.q ? { n: L.q.n, d: L.q.d } : null);
+    var same = lq && lq.n * R.d === R.n * lq.d, okSF = si && si.min <= n && n <= si.max;
+    if (same) {
+      if (!si) return { ok: false, msg: 'Equal, but write it as a decimal with ' + n + ' significant figure' + s2 + ', like ' + want + '.', form: true };
+      if (okSF) return right();
+      if (si.max < n) return { ok: false, msg: 'Equal, but give it to ' + n + ' significant figure' + s2 + ', like ' + want + '.', form: true };
+      return { ok: false, msg: 'Round it to ' + n + ' significant figure' + s2 + '.', form: true };
+    }
+    var cv = Number(R.n) / Number(R.d), lv = L.val, ulp = Math.pow(10, R.e - n + 1);
+    if (si && si.max < n && lq) { var Rk = roundSigQ(cq.n, cq.d, si.max); if (lq.n * Rk.d === Rk.n * lq.d) return { ok: false, msg: 'Close: give it to ' + n + ' significant figure' + s2 + ', like ' + want + '.', form: true }; }
+    if (spec.rtol !== undefined && okSF && Math.abs(lv - C.val) <= Math.abs(Number(spec.rtol)) * Math.abs(C.val)) return right();
+    if (si && si.min > n && Math.abs(lv - C.val) < ulp / 2 + 1e-12 * Math.abs(cv)) return { ok: false, msg: 'Round it to ' + n + ' significant figure' + s2 + '.', form: true };
+    if (si && Math.abs(lv - cv) <= ulp * 1.01) return { ok: false, msg: 'Check your rounding: we want ' + n + ' significant figure' + s2 + ' (' + want + ').' };
+    if (cv !== 0 && rel(lv, -cv, 1e-9)) return { ok: false, msg: 'Right size, wrong sign.' };
+    if (pow10Off(lv, cv, Math.max(1e-9, spec.rtol ? Number(spec.rtol) : ulp / Math.abs(cv)))) return { ok: false, msg: 'Check the power of ten.' };
+    return { ok: false };
   }
   function hasPi(n) { return !!n && anyNode(n, function (x) { return x.t === 'const' && x.s === 'pi'; }); }
   function angleMsg(L, C) { // the same angle in the other unit
@@ -1087,6 +1280,173 @@
     return { ok: a === spec.v };
   }
   function normWord(s) { return str(s).trim().toLowerCase().replace(/[’']/g, '\'').replace(/[.!]+$/, '').replace(/^(a|an|the)\s+/, '').replace(/\s+/g, ' ').trim(); }
+  // ===================================================================== chemical formulas { t: 'formula', v: ['H2O'], states? }
+  var ELEMENTS = ('H hydrogen,He helium,Li lithium,Be beryllium,B boron,C carbon,N nitrogen,O oxygen,F fluorine,Ne neon,Na sodium,Mg magnesium,' +
+    'Al aluminum,Si silicon,P phosphorus,S sulfur,Cl chlorine,Ar argon,K potassium,Ca calcium,Sc scandium,Ti titanium,V vanadium,Cr chromium,' +
+    'Mn manganese,Fe iron,Co cobalt,Ni nickel,Cu copper,Zn zinc,Ga gallium,Ge germanium,As arsenic,Se selenium,Br bromine,Kr krypton,Rb rubidium,' +
+    'Sr strontium,Y yttrium,Zr zirconium,Nb niobium,Mo molybdenum,Tc technetium,Ru ruthenium,Rh rhodium,Pd palladium,Ag silver,Cd cadmium,In indium,' +
+    'Sn tin,Sb antimony,Te tellurium,I iodine,Xe xenon,Cs cesium,Ba barium,La lanthanum,Ce cerium,Pr praseodymium,Nd neodymium,Pm promethium,' +
+    'Sm samarium,Eu europium,Gd gadolinium,Tb terbium,Dy dysprosium,Ho holmium,Er erbium,Tm thulium,Yb ytterbium,Lu lutetium,Hf hafnium,Ta tantalum,' +
+    'W tungsten,Re rhenium,Os osmium,Ir iridium,Pt platinum,Au gold,Hg mercury,Tl thallium,Pb lead,Bi bismuth,Po polonium,At astatine,Rn radon,' +
+    'Fr francium,Ra radium,Ac actinium,Th thorium,Pa protactinium,U uranium,Np neptunium,Pu plutonium,Am americium,Cm curium,Bk berkelium,' +
+    'Cf californium,Es einsteinium,Fm fermium,Md mendelevium,No nobelium,Lr lawrencium,Rf rutherfordium,Db dubnium,Sg seaborgium,Bh bohrium,' +
+    'Hs hassium,Mt meitnerium,Ds darmstadtium,Rg roentgenium,Cn copernicium,Nh nihonium,Fl flerovium,Mc moscovium,Lv livermorium,Ts tennessine,Og oganesson')
+    .split(',').reduce(function (m, x) { var p = x.split(' '); m[p[0]] = p[1]; return m; }, {});
+  var COMPOUND = { H2O: 'water', CO: 'carbon monoxide', CO2: 'carbon dioxide', NO: 'nitrogen monoxide', NO2: 'nitrogen dioxide', N2O: 'dinitrogen monoxide',
+    SO2: 'sulfur dioxide', SO3: 'sulfur trioxide', NaCl: 'sodium chloride', HCl: 'hydrogen chloride', NH3: 'ammonia', CH4: 'methane', H2O2: 'hydrogen peroxide',
+    O2: 'oxygen gas', N2: 'nitrogen gas', H2: 'hydrogen gas', O3: 'ozone', CaCO3: 'calcium carbonate', NaOH: 'sodium hydroxide', H2SO4: 'sulfuric acid' };
+  var SUBD = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9' };
+  var SUPD = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁺': '+', '⁻': '-' };
+  function fNorm(s) { // spacing, Unicode sub- and superscripts, hydrate dots, TeX-ish _ { } -> one plain string
+    s = str(s).replace(/[ \s]+/g, '').replace(/[−–—]/g, '-');
+    s = s.replace(/[₀-₉]/g, function (c) { return SUBD[c]; }).replace(/[⁰¹²³⁴-⁹⁺⁻]+/g, function (x) { return '^' + x.split('').map(function (c) { return SUPD[c]; }).join(''); });
+    s = s.replace(/\\cdot|[·•∙⋅*]/g, '·').replace(/([A-Za-z0-9)\]])\.(?=[0-9A-Z(])/g, '$1·');
+    return s.replace(/\\mathrm|\\text|[_{}$]/g, '');
+  }
+  // one reading of a normalized formula -> { parts: [{ coef, toks }], charge, hasCharge, state, one (an explicit subscript 1), lead (a
+  // number in front) } or null. toks: ['el', sym, n] | ['grp', open, toks, n, close]. ambig: digits before a final sign with no ^
+  // (Fe3+, SO42-, NH4+): k of them are the charge's size.
+  function fParse(s, k) {
+    var st = null, m = /\((s|l|g|aq)\)$/i.exec(s);
+    if (m) { st = m[1].toLowerCase(); s = s.slice(0, m.index); }
+    var charge = 0, hasCharge = false;
+    if ((m = /\^\(?(\d*)([+-])\)?$/.exec(s)) || (m = /\^\(?([+-])(\d*)\)?$/.exec(s))) {
+      var both = m[1] + m[2], dg = both.replace(/[+-]/g, ''), sg = both.replace(/\d/g, '');
+      charge = (dg ? +dg : 1) * (sg === '-' ? -1 : 1); hasCharge = true; s = s.slice(0, m.index);
+    } else if ((m = /(\d*)([+-]+)$/.exec(s)) && m.index > 0) {
+      var digs = m[1], kk = Math.min(k || 0, digs.length), signs = m[2];
+      if (signs.length > 1 && (digs.length || /[+]/.test(signs) && /-/.test(signs))) return null;
+      charge = (signs.length > 1 ? signs.length : kk ? +digs.slice(digs.length - kk) : 1) * (signs.charAt(0) === '-' ? -1 : 1); hasCharge = true;
+      s = s.slice(0, m.index) + digs.slice(0, digs.length - kk);
+    }
+    if (!s || /[^A-Za-z0-9()[\]·]/.test(s)) return null;
+    var parts = [], one = false, lead = false;
+    var pieces = s.split('·');
+    for (var pi = 0; pi < pieces.length; pi++) {
+      var p = pieces[pi], cm = /^(\d+)/.exec(p), coef = 1;
+      if (cm) { coef = +cm[1]; p = p.slice(cm[1].length); if (pi === 0) lead = true; }
+      if (!p || coef < 1) return null;
+      var pos = 0;
+      var seq = (function group(close) {
+        var out = [];
+        while (pos < p.length) {
+          var c = p.charAt(pos);
+          if (c === ')' || c === ']') { if (c !== close) throw 0; pos++; return out; }
+          var tok;
+          if (c === '(' || c === '[') { pos++; var inner = group(c === '(' ? ')' : ']'); if (!inner.length) throw 0; tok = ['grp', c, inner, 1, c === '(' ? ')' : ']']; }
+          else { var em = /^[A-Za-z][a-z]?/.exec(p.slice(pos)); if (!em) throw 0; tok = ['el', em[0], 1]; pos += em[0].length; }
+          var nm = /^\d+/.exec(p.slice(pos));
+          if (nm) { var n = +nm[0]; if (n === 0) throw 0; if (n === 1) one = true; if (tok[0] === 'el') tok[2] = n; else tok[3] = n; pos += nm[0].length; }
+          out.push(tok);
+        }
+        if (close) throw 0;
+        return out;
+      });
+      try { seq = seq(null); } catch (e) { return null; }
+      parts.push({ coef: coef, toks: seq });
+    }
+    return { parts: parts, charge: charge, hasCharge: hasCharge, state: st, one: one, lead: lead };
+  }
+  function fCanon(F, withState) { // the canonical string: "Ca(OH)2", "CuSO4·5H2O", "SO4^2-", "Fe^3+(aq)"
+    function seq(toks) { return toks.map(function (t) { return t[0] === 'el' ? t[1] + (t[2] > 1 ? t[2] : '') : t[1] + seq(t[2]) + t[4] + (t[3] > 1 ? t[3] : ''); }).join(''); }
+    var s = F.parts.map(function (p, i) { return (p.coef > 1 ? p.coef : '') + seq(p.toks); }).join('·');
+    if (F.charge) s += '^' + (Math.abs(F.charge) > 1 ? Math.abs(F.charge) : '') + (F.charge > 0 ? '+' : '-');
+    return s + (withState && F.state ? '(' + F.state + ')' : '');
+  }
+  function fValid(F) { var ok = true; (function walk(ts) { ts.forEach(function (t) { if (t[0] === 'el') { if (!ELEMENTS[t[1]]) ok = false; } else walk(t[2]); }); })([].concat.apply([], F.parts.map(function (p) { return p.toks; }))); return ok; }
+  function fAtoms(F) { // element -> count (groups and hydrate coefficients multiplied out)
+    var out = {};
+    F.parts.forEach(function (p) { (function walk(ts, k) { ts.forEach(function (t) { if (t[0] === 'el') out[t[1]] = (out[t[1]] || 0) + t[2] * k; else walk(t[2], k * t[3]); }); })(p.toks, p.coef); });
+    return out;
+  }
+  function fShape(F) { return F.parts.length + '|' + F.parts.map(function (p) { return JSON.stringify(p.toks.map(function (t) { return t[0] === 'grp' ? 'g' : 'e'; })); }).join(); }
+  function fReadings(raw) { // every reading of a typed answer (more than one only for "Fe3+", "SO42-", "NH4+")
+    var s = fNorm(raw), out = [], m = /(\d+)[+-]$/.exec(s.replace(/\((s|l|g|aq)\)$/i, '')), max = m && !/\^/.test(s) ? 1 : 0;
+    for (var k = 0; k <= max; k++) { var F = fParse(s, k); if (F) out.push(F); }
+    return out;
+  }
+  function fSpecForms(spec) {
+    return (Array.isArray(spec.v) ? spec.v : [spec.v]).map(function (v) { var F = fParse(fNorm(v), 0); if (!F) throw new Error('Bad formula "' + v + '" in the answer spec'); return F; });
+  }
+  function fDescribe(F) { // "Co is cobalt", "CO is carbon monoxide", "NaCl is sodium and chlorine"
+    var c = fCanon(F, false), els = Object.keys(fAtoms(F));
+    if (COMPOUND[c]) return c + ' is ' + COMPOUND[c];
+    if (!fValid(F)) return null;
+    var names = els.map(function (e) { return ELEMENTS[e]; });
+    return c + ' is ' + (names.length === 1 ? names[0] : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1]);
+  }
+  function checkFormula(spec, answer) {
+    var raw = str(answer).trim();
+    if (!raw) return { ok: false, invalid: true, msg: 'Type an answer first.' };
+    var E = fSpecForms(spec), withSt = !!spec.states, T = fReadings(raw);
+    var want = E.map(function (F) { return fCanon(F, withSt); });
+    if (!T.length) {
+      var low = fNorm(raw).toLowerCase();
+      if (E.some(function (F) { return fCanon(F, false).toLowerCase() === low.replace(/\((s|l|g|aq)\)$/, ''); })) return { ok: false, msg: 'Check capital letters: each element symbol starts with a capital letter, and a second letter is lowercase.' };
+      return { ok: false, invalid: true, msg: 'Type a chemical formula, like H2O, Ca(OH)2 or SO4^2- (a charge goes after the formula: Fe^3+).' };
+    }
+    var hit = null;
+    T.forEach(function (F) { if (!hit && want.indexOf(fCanon(F, withSt)) >= 0) hit = F; });
+    if (!hit && /^[a-z\s]{3,}$/.test(raw) && !E.some(function (X) { return fCanon(X, false).toLowerCase() === raw.replace(/\s+/g, ''); })) return { ok: false, invalid: true, msg: 'Type the chemical formula (like H2O), not its name.' };
+    if (hit) {
+      if (hit.one) return { ok: false, msg: 'Equal, but leave out subscripts of 1: write ' + fCanon(hit, withSt) + '.', form: true };
+      if (!fValid(hit)) return { ok: false };
+      return { ok: true };
+    }
+    // near misses, for the reading that comes closest
+    var notes = [];
+    T.forEach(function (F) {
+      E.forEach(function (X) {
+        var tc = fCanon(F, false), xc = fCanon(X, false), ta = fAtoms(F), xa = fAtoms(X);
+        if (withSt && tc === xc && F.charge === X.charge) notes.push([1, F.state ? 'Check the state symbol.' : 'Include the state symbol: (s), (l), (g) or (aq).']);
+        else if (tc.toLowerCase() === xc.toLowerCase() && tc !== xc) {
+          var dt = fDescribe(F), dx = fDescribe(X);
+          notes.push([2, 'Check capital letters' + (dt && dx ? ': ' + dt + ', but ' + dx + '.' : ': each element symbol starts with a capital letter, and a second letter is lowercase.')]);
+        } else if (JSON.stringify(sortObj(ta)) === JSON.stringify(sortObj(xa)) && F.charge === X.charge) {
+          notes.push([3, fShape(F) !== fShape(X) && (/[([]/.test(xc) || /·/.test(xc)) ? 'Those are the right atoms, but keep each group together the standard way, with parentheses' + (/·/.test(xc) ? ' or a hydrate dot' : '') + ', like ' + xc + '.' : 'Those are the right atoms in the right numbers, but formulas are written in a standard order. Check which element comes first.']);
+        } else if (JSON.stringify(sortObj(ta)) === JSON.stringify(sortObj(xa))) {
+          notes.push([4, !F.hasCharge ? 'Include the charge, written like ^2- or ^+ after the formula.' : !X.charge ? 'This one has no charge.' : 'Check the charge.']);
+        } else if (X.parts.length > 1 && F.parts.length === 1 && JSON.stringify(sortObj(ta)) === JSON.stringify(sortObj(fAtoms({ parts: [X.parts[0]] })))) {
+          notes.push([5, 'This one is a hydrate: include its water after a dot, like ·' + fCanon({ parts: X.parts.slice(1), charge: 0 }, false) + '.']);
+        } else if (F.lead && F.parts.length === X.parts.length && sameMultiple(ta, xa)) {
+          notes.push([5, 'Leave out the number in front: give just the formula.']);
+        } else if (Object.keys(ta).sort().join() === Object.keys(xa).sort().join() && fValid(F)) notes.push([6, 'The right elements, but check the subscripts.']);
+        else if (!fValid(F)) { var bad = []; (function walk(ts) { ts.forEach(function (t) { if (t[0] === 'el') { if (!ELEMENTS[t[1]] && bad.indexOf(t[1]) < 0) bad.push(t[1]); } else walk(t[2]); }); })([].concat.apply([], F.parts.map(function (p) { return p.toks; }))); notes.push([7, bad.join(', ') + (bad.length > 1 ? ' aren’t element symbols.' : ' isn’t an element symbol.')]); }
+      });
+    });
+    notes.sort(function (a, b) { return a[0] - b[0]; });
+    return notes.length ? { ok: false, msg: notes[0][1] } : { ok: false };
+  }
+  function sortObj(o) { var r = {}; Object.keys(o).sort().forEach(function (k) { r[k] = o[k]; }); return r; }
+  function sameMultiple(a, b) { var ks = Object.keys(b); if (Object.keys(a).sort().join() !== ks.sort().join()) return false; var f = a[ks[0]] / b[ks[0]]; return f > 1 && Math.round(f) === f && ks.every(function (k) { return a[k] === f * b[k]; }); }
+  // a formula as TeX ("\mathrm{SO}_{4}^{2-}"); lenient, for the live preview too (letters as typed)
+  function formulaTex(raw) {
+    var s = fNorm(raw), st = '', m = /\((s|l|g|aq)\)$/i.exec(s), ch = '';
+    if (m) { st = '\\,\\mathrm{(' + m[1] + ')}'; s = s.slice(0, m.index); }
+    if ((m = /\^\(?([0-9]*[+-]|[+-][0-9]*)\)?$/.exec(s))) { ch = m[1].replace(/^([+-])(\d+)$/, '$2$1'); s = s.slice(0, m.index); }
+    else if ((m = /^(.*?)(\d*)([+-])$/.exec(s))) { // no ^: Fe3+ and Cu2+ (one element: the digit is the charge), SO42- and
+      var body = m[1], d = m[2], sg = m[3];   // Hg22+ (two digits: the last one is), NH4+ and H3O+ (otherwise a subscript)
+      if (d.length >= 2) { ch = d.slice(-1) + sg; s = body + d.slice(0, -1); }
+      else if (d.length === 1 && /^[A-Z][a-z]?$/.test(body)) { ch = d + sg; s = body; }
+      else { ch = sg; s = body + d; }
+    }
+    if (/[^A-Za-z0-9()[\]·]/.test(s) || !s) throw new Error('not a formula');
+    var out = '', i = 0, start = true;
+    while (i < s.length) {
+      var c = s.charAt(i), rest = s.slice(i), mm;
+      if (c === '·') { out += '\\cdot '; i++; start = true; continue; }
+      if (start && (mm = /^\d+/.exec(rest))) { out += mm[0]; i += mm[0].length; start = false; continue; }
+      start = false;
+      if ((mm = /^[A-Za-z]+/.exec(rest))) { out += '\\mathrm{' + mm[0] + '}'; i += mm[0].length; }
+      else if (c === '(' || c === '[') { out += c; i++; }
+      else if (c === ')' || c === ']') { out += c; i++; }
+      else if ((mm = /^\d+/.exec(rest))) { out += '_{' + mm[0] + '}'; i += mm[0].length; }
+      else throw new Error('not a formula');
+    }
+    if (ch) out += '^{' + ch + '}';
+    return out + st;
+  }
+
   function checkText(spec, answer) {
     var s = normWord(answer); if (!s) return { ok: false, invalid: true, msg: 'Type an answer first.' };
     var want = (Array.isArray(spec.v) ? spec.v : [spec.v]).map(normWord);
@@ -1098,7 +1458,7 @@
     var arr = Array.isArray(answer) ? answer : (answer && typeof answer === 'object' ? spec.parts.map(function (_, i) { return answer[i]; }) : [answer]);
     // each part gets the question; the problem's unit is a hint for the parts (typed with it is fine), not a rule
     var pctx = ctx ? { q: ctx.q, unit: ctx.unit, unitLoose: true } : ctx;
-    var parts = spec.parts.map(function (p, i) { return ML.check(p.a, arr[i], pctx); });
+    var parts = spec.parts.map(function (p, i) { return ML.check(p.a, arr[i], p.unit !== undefined && ctx ? { q: ctx.q, unit: p.unit } : p.unit !== undefined ? { unit: p.unit } : pctx); });
     var ok = parts.every(function (r) { return r.ok; }), inv = parts.filter(function (r) { return r.invalid; });
     var res = { ok: ok, parts: parts };
     if (!ok) {
@@ -1150,6 +1510,7 @@
         case 'mc': return checkMc(spec, answer);
         case 'tf': return checkTf(spec, answer);
         case 'text': return checkText(spec, answer);
+        case 'formula': return checkFormula(spec, answer);
         case 'multi': return checkMulti(spec, answer, ctx);
       }
       return { ok: false, msg: 'Unknown answer type ' + spec.t + '.' };
@@ -1176,6 +1537,7 @@
     if (DNE.test(v) || INF.test(v) || NINF.test(v)) return v;
     var C = canonNum(spec), form = spec.form || (spec.dp !== undefined ? 'dec' : 'any');
     if (spec.dp !== undefined) return roundQ(C, spec.dp).s;
+    if (form === 'sf' && spec.sf) { var cq = canonQ(C); if (cq) { var nsf = Math.max(1, Math.min(15, Math.floor(Number(spec.sf)) || 1)); return sciText(roundSigQ(cq.n, cq.d, nsf), nsf).replace(' × 10^', 'e'); } }
     var q = C.q ? ML.Q(C.q.n, C.q.d) : null;
     if (q) {
       if (form === 'dec') return q.isTerminating() ? q.toDec(20).replace(/\.?0+$/, '') : q.toDec(6);
@@ -1195,6 +1557,7 @@
       case 'mc': return Array.isArray(spec.v) ? spec.v.slice() : spec.v;
       case 'tf': return spec.v;
       case 'text': return Array.isArray(spec.v) ? spec.v[0] : spec.v;
+      case 'formula': return str(Array.isArray(spec.v) ? spec.v[0] : spec.v);
       case 'multi': return spec.parts.map(function (p) { return ML.answerValue(p.a); });
     }
     return '';
@@ -1232,7 +1595,8 @@
     switch (spec.t) {
       case 'num': {
         var t = numText(spec); if (DNE.test(t)) return 'Does not exist'; if (INF.test(t)) return '$\\infty$'; if (NINF.test(t)) return '$-\\infty$';
-        var t0 = t.replace(/%$/, ''), ct = commaTex(t0);
+        var t0 = t.replace(/%$/, ''), ct = commaTex(t0), sm = /^(-?\d+(?:\.\d+)?)(?:[eE]|\*10\^\(?)([-+]?\d+)\)?$/.exec(t0);
+        if (sm && (spec.form === 'sf' || spec.rtol !== undefined || /e|\*10\^/i.test(str(spec.v)))) return '$' + sm[1] + ' \\times 10^{' + (+sm[2]) + '}$';
         return '$' + (ct || tx(t0)) + (spec.pct || t0 !== t ? '\\%' : '') + '$';
       }
       case 'expr': case 'eq': return '$' + tx(spec.v) + '$';
@@ -1247,13 +1611,16 @@
       case 'mc': return (Array.isArray(spec.v) ? spec.v : [spec.v]).map(function (i) { return str(spec.choices[i]); }).join('; ');
       case 'tf': return spec.v ? 'True' : 'False';
       case 'text': return str(Array.isArray(spec.v) ? spec.v[0] : spec.v);
+      case 'formula': { var fv = str(Array.isArray(spec.v) ? spec.v[0] : spec.v); try { var FF = fParse(fNorm(fv), 0); return '$' + formulaTex(FF ? fCanon(FF, !!spec.states) : fv) + '$'; } catch (e) { return fv; } }
       case 'multi': return spec.parts.map(function (p) { return (p.label ? p.label + ' ' : '') + ML.answerShow(p.a); }).join(', ');
     }
     return '';
   };
   ML._check = { readNumber: readNumber, parseIntervals: parseIntervals, parseIneq: parseIneq, violations: violations, compareTrees: compareTrees, kindOf: kindOf,
-    dropUnit: function (s, unit) { var c = cleanInput(s), d = dropUnit(c) || (unit ? dropExpectedUnit(c, unit) : null); return d ? { s: d.s, unit: d.unit } : null; }, splitPM: splitPM,
-    canonUnit: canonUnit, questionUnits: questionUnits, askedUnit: askedUnit, unitProblem: unitProblem };
+    dropUnit: function (s, unit) { var c = cleanInput(s), d = dropUnit(c) || (unit ? dropExpectedUnit(c, unit) : null) || (unit ? dropSIUnit(sciNorm(c)) : null); return d ? { s: d.s, unit: d.unit } : null; }, splitPM: splitPM,
+    canonUnit: canonUnit, questionUnits: questionUnits, askedUnit: askedUnit, unitProblem: unitProblem,
+    formulaTex: formulaTex, formulaReadings: fReadings, formulaCanon: function (s) { var F = fParse(fNorm(s), 0); return F ? fCanon(F, true) : null; },
+    siUnit: siUnit, sigInfo: sigInfo, roundSigQ: roundSigQ, sciText: sciText, sciNorm: sciNorm, dropSIUnit: function (s) { var d = dropSIUnit(sciNorm(cleanInput(s))); return d ? { s: d.s, unit: d.unit } : null; } };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = ML;
 })(typeof window !== 'undefined' ? window : globalThis);

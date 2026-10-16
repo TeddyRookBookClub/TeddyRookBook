@@ -467,7 +467,7 @@
   ML.getGen = function (id) { return GENS[id] || null; };
   ML.byLevel = function (ctx, a, b, c) { var l = ctx && ctx.level || 1; if (b === undefined) b = a; if (c === undefined) c = b; return l >= 3 ? c : l === 2 ? b : a; };
 
-  var TYPES = { num: 1, expr: 1, eq: 1, set: 1, tuple: 1, matrix: 1, interval: 1, ineq: 1, mc: 1, tf: 1, text: 1, multi: 1 };
+  var TYPES = { num: 1, expr: 1, eq: 1, set: 1, tuple: 1, matrix: 1, interval: 1, ineq: 1, mc: 1, tf: 1, text: 1, formula: 1, multi: 1 };
   function validateSpec(a, path, out) {
     if (!a || typeof a !== 'object') { out.push(path + ' is missing'); return; }
     if (!TYPES[a.t]) { out.push(path + '.t is "' + a.t + '" (not an answer type)'); return; }
@@ -489,6 +489,15 @@
         break;
       case 'tf': if (typeof a.v !== 'boolean') out.push(path + '.v must be true or false'); break;
       case 'text': if (!(Array.isArray(a.v) ? a.v.length && a.v.every(str) : str(a.v))) out.push(path + '.v must be a word or an array of words'); break;
+      case 'formula': {
+        var fs = Array.isArray(a.v) ? a.v : [a.v];
+        if (!fs.length || !fs.every(str)) { out.push(path + '.v must be a formula or an array of formulas'); break; }
+        fs.forEach(function (f) {
+          if (/\d[+-]$/.test(f.replace(/\((s|l|g|aq)\)$/i, '')) && f.indexOf('^') < 0) out.push(path + '.v "' + f + '": write the charge with ^ (SO4^2-, NH4^+, Fe^3+)');
+          if (a.states && !/\((s|l|g|aq)\)$/i.test(f)) out.push(path + '.v "' + f + '": states: true needs a state symbol like (aq)');
+        });
+        break;
+      }
       case 'multi':
         if (!Array.isArray(a.parts) || !a.parts.length) { out.push(path + '.parts must be a non-empty array'); break; }
         a.parts.forEach(function (p, i) { if (!p || typeof p !== 'object') { out.push(path + '.parts[' + i + '] is missing'); return; } if (p.label !== undefined && typeof p.label !== 'string') out.push(path + '.parts[' + i + '].label must be a string'); validateSpec(p.a, path + '.parts[' + i + '].a', out); });

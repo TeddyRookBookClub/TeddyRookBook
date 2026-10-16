@@ -1,10 +1,13 @@
-/* Math Ladder course page: topic chips colored by state, progress, Start or Continue, and the next topic up. */
+/* A ladder's course page: topic chips colored by state, progress, Start or Continue, and the next topic up (a topic that
+   is still being written is never offered as the next one). */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder, E = ML.engine, ui = ML.ui, base = ML.cfg.base;
   var d = ui.data('ml-data'); if (!d) return;
   var root = D.getElementById('mlp-course'), key = d.course;
-  E.setGraph({ partial: true, courses: ui.courses(), topics: d.topics });
+  E.setGraph({ partial: true, courses: ui.allCourses(), topics: d.topics });
+  var soon = {}; (d.soon || []).forEach(function (id) { soon[id] = 1; });
+  E.setFilter(function (id) { var T0 = E.graph().T[id]; return !soon[id] && !(T0 && T0.soon); });
   var ids = d.topics.filter(function (t) { return t.course === key; }).map(function (t) { return t.id; });
   var T = {}; d.topics.forEach(function (t) { T[t.id] = t; });
 
@@ -22,7 +25,8 @@
       u.textContent = up ? up + ' of ' + us.length + ' passed' : us.length + ' topics';
     });
     // the next topic: the engine's choice for this course (a started-but-unpassed earlier skill comes first)
-    var nx0 = E.courseNext(key), nextId = nx0 && nx0.id, why = !nx0 ? '' : nx0.reason === 'prereq' ? 'First, from an earlier course:' : nx0.reason === 'continue' || nx0.reason === 'retry' ? 'Keep going with' : 'Next up:';
+    var nx0 = E.courseNext(key), nextId = nx0 && nx0.id, nl = nextId ? ui.ladderOf(String(nextId).split('.')[0]) : null;
+    var why = !nx0 ? '' : nx0.reason === 'prereq' ? (nl && nl.key !== ui.ladder().key ? 'First, from the ' + nl.title + ':' : 'First, from an earlier course:') : nx0.reason === 'continue' || nx0.reason === 'retry' ? 'Keep going with' : 'Next up:';
     var start = D.getElementById('mlp-cstart'), nx = D.getElementById('mlp-cnext');
     if (start) start.textContent = passed || learning ? (E.course() === key ? 'Continue' : 'Continue this course') : 'Start this course';
     if (nx) {

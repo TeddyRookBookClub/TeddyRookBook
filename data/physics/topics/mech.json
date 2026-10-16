@@ -1,0 +1,882 @@
+{
+ "course": "mech",
+ "units": [
+  {
+   "key": "kinematics",
+   "title": "Kinematics with Calculus",
+   "blurb": "Velocity and acceleration as derivatives, motion found by integrating, and motion in two and three dimensions."
+  },
+  {
+   "key": "dynamics",
+   "title": "Forces with Calculus",
+   "blurb": "Time-varying forces, drag, banked curves, pulley constraints and the center of mass by integration."
+  },
+  {
+   "key": "work-energy",
+   "title": "Work and Energy with Calculus",
+   "blurb": "Work as an integral, potential energy from force and force from potential energy, and energy diagrams."
+  },
+  {
+   "key": "momentum",
+   "title": "Momentum and Systems of Particles",
+   "blurb": "Impulse as an integral, collisions in two dimensions, systems of particles and rockets."
+  },
+  {
+   "key": "rotation",
+   "title": "Rotation of Rigid Bodies",
+   "blurb": "Moments of inertia by integration, torque and angular momentum as cross products, rolling, rotational collisions and equilibrium."
+  },
+  {
+   "key": "gravitation",
+   "title": "Gravitation and Orbits",
+   "blurb": "Gravity of spheres, orbital energy, Kepler's laws from Newton's, and elliptical orbits."
+  },
+  {
+   "key": "oscillations",
+   "title": "Oscillations with Calculus",
+   "blurb": "Simple harmonic motion as a differential equation, physical pendulums, damping and resonance."
+  }
+ ],
+ "topics": [
+  {
+   "id": "mech.velocity-derivative",
+   "slug": "velocity-derivative",
+   "unit": "kinematics",
+   "title": "Velocity as a Derivative",
+   "short": "v = dx/dt gives the velocity at any instant from the position function.",
+   "prereqs": [
+    "phys1.instantaneous-velocity",
+    "calc1.motion"
+   ],
+   "xp": 1,
+   "trouble": "Students divide x(t) by t, finding an average velocity from the origin instead of the derivative.",
+   "viz": [
+    "ph-motion",
+    "derivgraph"
+   ]
+  },
+  {
+   "id": "mech.acceleration-derivative",
+   "slug": "acceleration-derivative",
+   "unit": "kinematics",
+   "title": "Acceleration as a Derivative",
+   "short": "a = dv/dt = d²x/dt², and zero velocity at an instant says nothing about the acceleration.",
+   "prereqs": [
+    "mech.velocity-derivative",
+    "phys1.acceleration"
+   ],
+   "xp": 1,
+   "trouble": "Students think an object with zero velocity at an instant must have zero acceleration there.",
+   "viz": [
+    "ph-motion",
+    "derivgraph"
+   ]
+  },
+  {
+   "id": "mech.motion-from-acceleration",
+   "slug": "motion-from-acceleration",
+   "unit": "kinematics",
+   "title": "Velocity and Position from Acceleration",
+   "short": "Integrate a(t) once for v(t) and again for x(t), using the starting values to fix the constants.",
+   "prereqs": [
+    "mech.acceleration-derivative",
+    "calc1.initial-value-antiderivatives"
+   ],
+   "xp": 2,
+   "trouble": "Students forget the constants of integration, losing the starting velocity or position.",
+   "viz": [
+    "ph-graph",
+    "ftc"
+   ]
+  },
+  {
+   "id": "mech.derive-kinematics",
+   "slug": "derive-kinematics",
+   "unit": "kinematics",
+   "title": "Deriving the Constant-Acceleration Equations",
+   "short": "Integrating a constant acceleration twice gives the familiar equations and shows exactly when they apply.",
+   "prereqs": [
+    "mech.motion-from-acceleration",
+    "phys1.kinematic-equations"
+   ],
+   "xp": 2,
+   "trouble": "Students use constant-acceleration equations for an acceleration that changes with time.",
+   "viz": [
+    "ph-graph"
+   ]
+  },
+  {
+   "id": "mech.acceleration-of-position",
+   "slug": "acceleration-of-position",
+   "unit": "kinematics",
+   "title": "Acceleration That Depends on Position",
+   "short": "When a depends on x, write a = v dv/dx and integrate over x.",
+   "prereqs": [
+    "mech.motion-from-acceleration"
+   ],
+   "xp": 3,
+   "trouble": "Students integrate a(x) with respect to t, as if it were a function of time.",
+   "viz": [
+    "ph-graph"
+   ]
+  },
+  {
+   "id": "mech.motion-vectors",
+   "slug": "motion-vectors",
+   "unit": "kinematics",
+   "title": "Position, Velocity and Acceleration Vectors",
+   "short": "r(t), v = dr/dt and a = dv/dt describe motion in two and three dimensions, one component at a time.",
+   "prereqs": [
+    "mech.velocity-derivative",
+    "phys1.vector-addition",
+    "pre.parametric-equations"
+   ],
+   "xp": 2,
+   "trouble": "Students think the acceleration vector always points along the velocity, even on a curved path.",
+   "viz": [
+    "ph-vectors",
+    "vectors3d"
+   ]
+  },
+  {
+   "id": "mech.projectile-optimization",
+   "slug": "projectile-optimization",
+   "unit": "kinematics",
+   "title": "Projectiles with Calculus",
+   "short": "Use derivatives to find the highest point, the range and the launch angle that goes farthest.",
+   "prereqs": [
+    "mech.motion-vectors",
+    "phys1.projectile-angled",
+    "calc1.optimization"
+   ],
+   "xp": 3,
+   "trouble": "Students set the whole velocity, not just its vertical part, to zero at the top of the path.",
+   "viz": [
+    "ph-projectile"
+   ],
+   "lab": "/science-lab/trebuchet/"
+  },
+  {
+   "id": "mech.galilean-frames",
+   "slug": "galilean-frames",
+   "unit": "kinematics",
+   "title": "Relative Motion and Galilean Frames",
+   "short": "Frames moving at constant velocity disagree about velocities but agree about accelerations and forces.",
+   "prereqs": [
+    "mech.motion-vectors",
+    "phys1.relative-velocity"
+   ],
+   "xp": 2,
+   "trouble": "Students think the acceleration also changes between frames that move at constant velocity.",
+   "viz": [
+    "ph-vectors"
+   ]
+  },
+  {
+   "id": "mech.tangential-normal-acceleration",
+   "slug": "tangential-normal-acceleration",
+   "unit": "kinematics",
+   "title": "Tangential and Centripetal Acceleration",
+   "short": "On a curve, acceleration splits into dv/dt along the path and v²/r toward the center.",
+   "prereqs": [
+    "mech.motion-vectors",
+    "phys1.centripetal-acceleration"
+   ],
+   "xp": 3,
+   "trouble": "Students take the whole acceleration to be v²/r even while the speed is changing.",
+   "viz": [
+    "ph-circular"
+   ]
+  },
+  {
+   "id": "mech.time-varying-force",
+   "slug": "time-varying-force",
+   "unit": "dynamics",
+   "title": "Motion Under a Time-Varying Force",
+   "short": "Integrate F(t)/m to find the velocity when the force changes with time.",
+   "prereqs": [
+    "mech.motion-from-acceleration",
+    "phys1.second-law-systems"
+   ],
+   "xp": 2,
+   "trouble": "Students use the final force as if it had acted the whole time.",
+   "viz": [
+    "ph-graph"
+   ]
+  },
+  {
+   "id": "mech.linear-drag",
+   "slug": "linear-drag",
+   "unit": "dynamics",
+   "title": "Linear Drag and Terminal Velocity",
+   "short": "With drag F = −bv, the speed approaches v_T = mg/b as v(t) = v_T(1 − e^(−t/τ)), with τ = m/b.",
+   "prereqs": [
+    "mech.time-varying-force",
+    "calc2.separable-equations"
+   ],
+   "xp": 3,
+   "trouble": "Students think a falling object stops speeding up because gravity weakens, or that it reaches terminal speed after a finite time.",
+   "viz": [
+    "graph",
+    "slopefield"
+   ]
+  },
+  {
+   "id": "mech.quadratic-drag",
+   "slug": "quadratic-drag",
+   "unit": "dynamics",
+   "title": "Quadratic Drag",
+   "short": "Fast objects in air feel drag ½CρAv², which gives a terminal speed √(2mg/(CρA)).",
+   "prereqs": [
+    "mech.linear-drag"
+   ],
+   "xp": 2,
+   "trouble": "Students think heavier objects would fall faster even in a vacuum, because they do in air.",
+   "viz": [
+    "graph"
+   ],
+   "lab": "/science-lab/trebuchet/"
+  },
+  {
+   "id": "mech.banked-curves",
+   "slug": "banked-curves",
+   "unit": "dynamics",
+   "title": "Banked Curves With and Without Friction",
+   "short": "Find the design speed of a banked road and the range of speeds friction allows.",
+   "prereqs": [
+    "phys1.centripetal-force",
+    "phys1.friction-on-inclines"
+   ],
+   "xp": 3,
+   "trouble": "Students split the normal force along the slope as on a ramp, instead of horizontally and vertically.",
+   "viz": [
+    "ph-circular"
+   ],
+   "lab": "/science-lab/newtons-laws/circles-and-gravity/"
+  },
+  {
+   "id": "mech.pulley-constraints",
+   "slug": "pulley-constraints",
+   "unit": "dynamics",
+   "title": "Constraints in Pulley Systems",
+   "short": "The fixed length of a rope links the accelerations, so a movable pulley gives a₁ = 2a₂.",
+   "prereqs": [
+    "phys1.pulley-systems",
+    "calc1.derivative-notation"
+   ],
+   "xp": 3,
+   "trouble": "Students give both masses the same acceleration when a movable pulley halves one of them.",
+   "viz": [
+    "ph-dynamics"
+   ]
+  },
+  {
+   "id": "mech.center-of-mass-integral",
+   "slug": "center-of-mass-integral",
+   "unit": "dynamics",
+   "title": "Center of Mass by Integration",
+   "short": "x_cm = (1/M)∫x dm, with dm = λ dx for a rod whose density varies.",
+   "prereqs": [
+    "phys1.systems-center-of-mass",
+    "calc2.center-of-mass"
+   ],
+   "xp": 3,
+   "trouble": "Students forget to divide by the total mass, or integrate x without the density.",
+   "viz": [
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.work-integral",
+   "slug": "work-integral",
+   "unit": "work-energy",
+   "title": "Work by a Variable Force",
+   "short": "W = ∫F dx, the area under the force–position curve.",
+   "prereqs": [
+    "phys1.work-from-graphs",
+    "calc1.ftc-evaluate"
+   ],
+   "xp": 2,
+   "trouble": "Students multiply the force by the distance when the force changes along the way.",
+   "viz": [
+    "ph-graph",
+    "ftc"
+   ]
+  },
+  {
+   "id": "mech.work-along-path",
+   "slug": "work-along-path",
+   "unit": "work-energy",
+   "title": "Work Along a Path",
+   "short": "W = ∫F · dr adds up only the part of the force along each small step of the path.",
+   "prereqs": [
+    "mech.work-integral",
+    "pre.dot-product"
+   ],
+   "xp": 3,
+   "trouble": "Students multiply the size of the force by the path length, ignoring the angle between them.",
+   "viz": [
+    "lineintegral"
+   ]
+  },
+  {
+   "id": "mech.work-energy-derivation",
+   "slug": "work-energy-derivation",
+   "unit": "work-energy",
+   "title": "The Work-Energy Theorem from Newton's Second Law",
+   "short": "Integrating m dv/dt over x turns F = ma into W_net = ΔK.",
+   "prereqs": [
+    "mech.work-integral",
+    "mech.acceleration-of-position",
+    "phys1.work-energy-theorem"
+   ],
+   "xp": 2,
+   "trouble": "Students use the work of one force, not the net work, to find the change in kinetic energy.",
+   "viz": [
+    "ph-energy"
+   ]
+  },
+  {
+   "id": "mech.conservative-forces",
+   "slug": "conservative-forces",
+   "unit": "work-energy",
+   "title": "Conservative Forces",
+   "short": "A force is conservative when its work doesn't depend on the path, so its work around any closed loop is zero.",
+   "prereqs": [
+    "mech.work-along-path"
+   ],
+   "xp": 2,
+   "trouble": "Students think friction does the same work on any path between two points.",
+   "viz": [
+    "lineintegral"
+   ]
+  },
+  {
+   "id": "mech.potential-from-force",
+   "slug": "potential-from-force",
+   "unit": "work-energy",
+   "title": "Potential Energy from Force",
+   "short": "U(x) = −∫F dx, which gives ½kx² for a spring and mgy for uniform gravity.",
+   "prereqs": [
+    "mech.conservative-forces"
+   ],
+   "xp": 2,
+   "trouble": "Students drop the minus sign, so the potential energy falls where it should rise.",
+   "viz": [
+    "ph-energy"
+   ]
+  },
+  {
+   "id": "mech.force-from-potential",
+   "slug": "force-from-potential",
+   "unit": "work-energy",
+   "title": "Force from Potential Energy",
+   "short": "F = −dU/dx: the force points downhill on the potential energy curve.",
+   "prereqs": [
+    "mech.potential-from-force",
+    "calc1.derivative-notation"
+   ],
+   "xp": 2,
+   "trouble": "Students think the force points toward higher potential energy.",
+   "viz": [
+    "derivgraph",
+    "ph-energy"
+   ]
+  },
+  {
+   "id": "mech.energy-diagrams",
+   "slug": "energy-diagrams",
+   "unit": "work-energy",
+   "title": "Potential Energy Diagrams",
+   "short": "Read turning points, allowed regions and stable or unstable equilibria from a graph of U(x).",
+   "prereqs": [
+    "mech.force-from-potential",
+    "calc1.concavity"
+   ],
+   "xp": 3,
+   "trouble": "Students think an object can pass through a region where its total energy is less than U.",
+   "viz": [
+    "ph-energy",
+    "derivgraph"
+   ]
+  },
+  {
+   "id": "mech.instantaneous-power",
+   "slug": "instantaneous-power",
+   "unit": "work-energy",
+   "title": "Instantaneous Power",
+   "short": "P = dW/dt = F · v gives the power at each instant.",
+   "prereqs": [
+    "mech.work-integral",
+    "phys1.power"
+   ],
+   "xp": 2,
+   "trouble": "Students use the average power when the force or speed is changing.",
+   "viz": [
+    "ph-graph"
+   ]
+  },
+  {
+   "id": "mech.escape-speed",
+   "slug": "escape-speed",
+   "unit": "work-energy",
+   "title": "Gravitational Potential Energy and Escape Speed",
+   "short": "From U = −GMm/r, the escape speed is √(2GM/r), the same for any mass.",
+   "prereqs": [
+    "mech.potential-from-force",
+    "phys1.gravitational-pe-universal"
+   ],
+   "xp": 2,
+   "trouble": "Students think a heavier object needs a higher escape speed.",
+   "viz": [
+    "ph-orbit"
+   ],
+   "lab": "/science-lab/rocket/"
+  },
+  {
+   "id": "mech.impulse-integral",
+   "slug": "impulse-integral",
+   "unit": "momentum",
+   "title": "Impulse as an Integral",
+   "short": "J = ∫F dt for any force that changes in time.",
+   "prereqs": [
+    "phys1.impulse",
+    "calc1.ftc-evaluate"
+   ],
+   "xp": 2,
+   "trouble": "Students multiply the peak force by the collision time.",
+   "viz": [
+    "ph-graph"
+   ]
+  },
+  {
+   "id": "mech.elastic-collisions-1d",
+   "slug": "elastic-collisions-1d",
+   "unit": "momentum",
+   "title": "Solving Elastic Collisions",
+   "short": "Combine conservation of momentum and of kinetic energy: the relative speed reverses in a one-dimensional elastic collision.",
+   "prereqs": [
+    "phys1.elastic-collisions",
+    "alg2.nonlinear-systems"
+   ],
+   "xp": 3,
+   "trouble": "Students write only the momentum equation and are left with one equation for two unknowns.",
+   "viz": [
+    "ph-collision"
+   ]
+  },
+  {
+   "id": "mech.collisions-2d",
+   "slug": "collisions-2d",
+   "unit": "momentum",
+   "title": "Collisions in Two Dimensions",
+   "short": "Conserve the x- and y-components of momentum separately.",
+   "prereqs": [
+    "phys1.momentum-conservation"
+   ],
+   "xp": 3,
+   "trouble": "Students conserve the total speed instead of each component of momentum.",
+   "viz": [
+    "ph-collision",
+    "vectors2d"
+   ]
+  },
+  {
+   "id": "mech.system-of-particles",
+   "slug": "system-of-particles",
+   "unit": "momentum",
+   "title": "Newton's Second Law for a System",
+   "short": "ΣF_external = M·a_cm, because the internal forces cancel in pairs.",
+   "prereqs": [
+    "mech.center-of-mass-integral",
+    "phys1.center-of-mass-motion"
+   ],
+   "xp": 2,
+   "trouble": "Students include forces between parts of the system when finding the acceleration of the center of mass.",
+   "viz": [
+    "ph-collision"
+   ]
+  },
+  {
+   "id": "mech.rocket-equation",
+   "slug": "rocket-equation",
+   "unit": "momentum",
+   "title": "The Rocket Equation",
+   "short": "A rocket gains Δv = v_e ln(m₀/m_f) by throwing mass backward.",
+   "prereqs": [
+    "mech.system-of-particles",
+    "calc1.exp-log-integrals"
+   ],
+   "xp": 3,
+   "trouble": "Students think a rocket moves by pushing against the air or the ground.",
+   "viz": [
+    "ph-collision"
+   ],
+   "lab": "/science-lab/rocket/"
+  },
+  {
+   "id": "mech.angular-calculus",
+   "slug": "angular-calculus",
+   "unit": "rotation",
+   "title": "Angular Velocity and Acceleration with Calculus",
+   "short": "ω = dθ/dt and α = dω/dt; integrate α(t) to find ω and θ.",
+   "prereqs": [
+    "phys1.rotational-kinematics",
+    "mech.motion-from-acceleration"
+   ],
+   "xp": 1,
+   "trouble": "Students differentiate an angle given in degrees and treat the result as radians per second.",
+   "viz": [
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.moment-of-inertia-integral",
+   "slug": "moment-of-inertia-integral",
+   "unit": "rotation",
+   "title": "Moment of Inertia by Integration",
+   "short": "I = ∫r² dm gives the rotational inertia of rods, rings, disks and spheres.",
+   "prereqs": [
+    "phys1.rotational-inertia",
+    "mech.center-of-mass-integral"
+   ],
+   "xp": 3,
+   "trouble": "Students use the distance to the center of mass instead of the distance to the axis.",
+   "viz": [
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.parallel-axis",
+   "slug": "parallel-axis",
+   "unit": "rotation",
+   "title": "The Parallel-Axis Theorem",
+   "short": "I = I_cm + Md² for an axis shifted a distance d from the center of mass.",
+   "prereqs": [
+    "mech.moment-of-inertia-integral"
+   ],
+   "xp": 2,
+   "trouble": "Students apply the theorem starting from an axis that doesn't pass through the center of mass.",
+   "viz": [
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.torque-cross-product",
+   "slug": "torque-cross-product",
+   "unit": "rotation",
+   "title": "Torque as a Cross Product",
+   "short": "τ = r × F, with its direction given by the right-hand rule.",
+   "prereqs": [
+    "phys1.torque",
+    "calc3.cross-product"
+   ],
+   "xp": 2,
+   "trouble": "Students measure r from the wrong point, or reverse the order to F × r.",
+   "viz": [
+    "vectors3d",
+    "ph-torque"
+   ]
+  },
+  {
+   "id": "mech.rolling-dynamics",
+   "slug": "rolling-dynamics",
+   "unit": "rotation",
+   "title": "Rolling Dynamics",
+   "short": "Static friction makes rolling work: on a ramp a = g sin θ/(1 + I/(MR²)).",
+   "prereqs": [
+    "phys1.rolling",
+    "phys1.rotational-second-law"
+   ],
+   "xp": 3,
+   "trouble": "Students think static friction takes energy from an object rolling without slipping.",
+   "viz": [
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.skidding-to-rolling",
+   "slug": "skidding-to-rolling",
+   "unit": "rotation",
+   "title": "From Skidding to Rolling",
+   "short": "A ball that starts out sliding skids until v = Rω, losing energy to kinetic friction on the way.",
+   "prereqs": [
+    "mech.rolling-dynamics"
+   ],
+   "xp": 3,
+   "trouble": "Students assume a thrown bowling ball rolls without slipping from the moment it lands.",
+   "viz": [
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.angular-momentum-particle",
+   "slug": "angular-momentum-particle",
+   "unit": "rotation",
+   "title": "Angular Momentum of a Particle",
+   "short": "L = r × p, so even a particle moving in a straight line has angular momentum about a point.",
+   "prereqs": [
+    "mech.torque-cross-product",
+    "phys1.angular-momentum"
+   ],
+   "xp": 2,
+   "trouble": "Students think a particle needs to move in a circle to have angular momentum.",
+   "viz": [
+    "vectors3d"
+   ]
+  },
+  {
+   "id": "mech.rotational-collisions",
+   "slug": "rotational-collisions",
+   "unit": "rotation",
+   "title": "Collisions with Rotation",
+   "short": "When a ball sticks to a pivoted rod, angular momentum about the pivot is conserved but linear momentum is not.",
+   "prereqs": [
+    "mech.angular-momentum-particle",
+    "mech.parallel-axis",
+    "phys1.angular-momentum-conservation"
+   ],
+   "xp": 3,
+   "trouble": "Students conserve linear momentum even though the pivot pushes on the rod.",
+   "viz": [
+    "mech-pivot-hit",
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.rotational-work-power",
+   "slug": "rotational-work-power",
+   "unit": "rotation",
+   "title": "Work and Power in Rotation",
+   "short": "W = ∫τ dθ and P = τω.",
+   "prereqs": [
+    "mech.angular-calculus",
+    "mech.work-integral",
+    "phys1.rotational-kinetic-energy"
+   ],
+   "xp": 2,
+   "trouble": "Students multiply the torque by an angle in degrees, or by the arc length.",
+   "viz": [
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.precession",
+   "slug": "precession",
+   "unit": "rotation",
+   "title": "Gyroscopes and Precession",
+   "short": "A torque at right angles to the spin turns the direction of L, so a top precesses at Ω = τ/L.",
+   "prereqs": [
+    "mech.angular-momentum-particle"
+   ],
+   "xp": 3,
+   "trouble": "Students expect a spinning top to fall over rather than swing slowly around.",
+   "viz": [
+    "vectors3d",
+    "ph-rotation"
+   ]
+  },
+  {
+   "id": "mech.statics-problems",
+   "slug": "statics-problems",
+   "unit": "rotation",
+   "title": "Static Equilibrium Problems",
+   "short": "For ladders, hinged beams and hanging signs, choose a pivot that removes the unknowns you don't need.",
+   "prereqs": [
+    "phys1.rotational-equilibrium",
+    "phys1.static-friction",
+    "mech.torque-cross-product"
+   ],
+   "xp": 3,
+   "trouble": "Students think a hinge's force on a beam must point along the beam.",
+   "viz": [
+    "ph-torque"
+   ],
+   "lab": "/science-lab/book-cart/"
+  },
+  {
+   "id": "mech.shell-theorem",
+   "slug": "shell-theorem",
+   "unit": "gravitation",
+   "title": "Gravity of a Spherical Body",
+   "short": "Outside a uniform sphere, gravity acts as if all the mass sat at the center; inside, g grows in proportion to r.",
+   "prereqs": [
+    "phys1.gravitational-field",
+    "calc1.substitution-definite"
+   ],
+   "xp": 3,
+   "trouble": "Students think gravity is strongest at the center of the Earth.",
+   "viz": [
+    "ph-orbit"
+   ]
+  },
+  {
+   "id": "mech.orbital-energy",
+   "slug": "orbital-energy",
+   "unit": "gravitation",
+   "title": "Orbital Energy",
+   "short": "A circular orbit has E = −GMm/(2r), so climbing to a higher orbit takes energy yet leaves you moving more slowly.",
+   "prereqs": [
+    "mech.escape-speed",
+    "phys1.orbiting-satellites"
+   ],
+   "xp": 3,
+   "trouble": "Students think a satellite in a higher orbit must move faster.",
+   "viz": [
+    "ph-orbit"
+   ],
+   "lab": "/science-lab/orbits/"
+  },
+  {
+   "id": "mech.kepler-second-from-newton",
+   "slug": "kepler-second-from-newton",
+   "unit": "gravitation",
+   "title": "Kepler's Second Law from Angular Momentum",
+   "short": "Gravity exerts no torque about the Sun, so L is constant and equal areas are swept in equal times.",
+   "prereqs": [
+    "mech.angular-momentum-particle",
+    "phys1.orbiting-satellites"
+   ],
+   "xp": 2,
+   "trouble": "Students think a planet moves at the same speed all around an elliptical orbit.",
+   "viz": [
+    "ph-orbit"
+   ],
+   "lab": "/science-lab/orbits/"
+  },
+  {
+   "id": "mech.kepler-third-from-newton",
+   "slug": "kepler-third-from-newton",
+   "unit": "gravitation",
+   "title": "Kepler's Third Law from Newton",
+   "short": "For a circular orbit T² = 4π²r³/(GM), which weighs a planet or star from its satellites.",
+   "prereqs": [
+    "phys1.orbiting-satellites"
+   ],
+   "xp": 2,
+   "trouble": "Students include the satellite's mass, which cancels, or use the altitude instead of the distance from the center.",
+   "viz": [
+    "ph-orbit"
+   ]
+  },
+  {
+   "id": "mech.vis-viva",
+   "slug": "vis-viva",
+   "unit": "gravitation",
+   "title": "Speed on an Elliptical Orbit",
+   "short": "v² = GM(2/r − 1/a) gives the speed anywhere on an ellipse, which plans transfer orbits.",
+   "prereqs": [
+    "mech.orbital-energy",
+    "mech.kepler-second-from-newton",
+    "pre.ellipses"
+   ],
+   "xp": 3,
+   "trouble": "Students think a rocket burn changes the height of the orbit right where the burn happens, rather than on the far side.",
+   "viz": [
+    "ph-orbit"
+   ],
+   "lab": "/science-lab/orbits/"
+  },
+  {
+   "id": "mech.shm-equation",
+   "slug": "shm-equation",
+   "unit": "oscillations",
+   "title": "The Equation of Simple Harmonic Motion",
+   "short": "x″ = −ω²x is solved by x = A cos(ωt + φ) with ω = √(k/m).",
+   "prereqs": [
+    "phys1.shm-graphs",
+    "calc1.trig-derivatives",
+    "calc1.higher-derivatives"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up the angular frequency ω (rad/s) with the frequency f (Hz).",
+   "viz": [
+    "springmass",
+    "trigwave"
+   ]
+  },
+  {
+   "id": "mech.shm-initial-conditions",
+   "slug": "shm-initial-conditions",
+   "unit": "oscillations",
+   "title": "Amplitude and Phase from Starting Conditions",
+   "short": "Use x(0) and v(0) to find the amplitude A and the phase φ.",
+   "prereqs": [
+    "mech.shm-equation",
+    "pre.inverse-trig"
+   ],
+   "xp": 3,
+   "trouble": "Students pick the phase without checking the sign of the starting velocity.",
+   "viz": [
+    "trigwave"
+   ]
+  },
+  {
+   "id": "mech.vertical-spring",
+   "slug": "vertical-spring",
+   "unit": "oscillations",
+   "title": "Springs Hanging Vertically",
+   "short": "Gravity only moves the equilibrium point; the period stays 2π√(m/k).",
+   "prereqs": [
+    "mech.shm-equation"
+   ],
+   "xp": 2,
+   "trouble": "Students think gravity changes the period of a hanging spring.",
+   "viz": [
+    "ph-oscillator"
+   ]
+  },
+  {
+   "id": "mech.physical-pendulum",
+   "slug": "physical-pendulum",
+   "unit": "oscillations",
+   "title": "Simple and Physical Pendulums",
+   "short": "A swinging rigid body has T = 2π√(I/(mgd)), and small angles make any pendulum simple harmonic.",
+   "prereqs": [
+    "mech.shm-equation",
+    "mech.parallel-axis",
+    "phys1.pendulum-period",
+    "calc1.linear-approximation"
+   ],
+   "xp": 3,
+   "trouble": "Students use the whole length of a swinging rod instead of the distance from the pivot to its center of mass.",
+   "viz": [
+    "ph-oscillator"
+   ],
+   "lab": "/science-lab/pendulums/"
+  },
+  {
+   "id": "mech.damped-oscillations",
+   "slug": "damped-oscillations",
+   "unit": "oscillations",
+   "title": "Damped Oscillations",
+   "short": "Drag makes the amplitude shrink as e^(−bt/2m), and too much damping stops the swinging altogether.",
+   "prereqs": [
+    "mech.shm-equation",
+    "mech.linear-drag",
+    "pre.damped-oscillation"
+   ],
+   "xp": 3,
+   "trouble": "Students think a critically damped system swings once before it stops.",
+   "viz": [
+    "springmass"
+   ]
+  },
+  {
+   "id": "mech.driven-resonance",
+   "slug": "driven-resonance",
+   "unit": "oscillations",
+   "title": "Driven Oscillations and Resonance",
+   "short": "Pushing near the natural frequency builds a large amplitude, limited only by damping.",
+   "prereqs": [
+    "mech.damped-oscillations"
+   ],
+   "xp": 2,
+   "trouble": "Students think any repeated push makes the amplitude grow without limit.",
+   "viz": [
+    "ph-oscillator"
+   ],
+   "lab": "/science-lab/pendulums/"
+  }
+ ]
+}

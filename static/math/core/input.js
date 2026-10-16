@@ -2,7 +2,7 @@
 
    var box = MathLadder.input(container, spec, opts)
      spec   the problem's answer spec ({ t: 'num' | 'expr' | 'eq' | 'set' | 'tuple' | 'matrix' | 'interval' | 'ineq' | 'mc' |
-            'tf' | 'text' | 'multi', … }); only its type and shape are used (sizes, variables, choices), never shown
+            'tf' | 'text' | 'formula' | 'multi', … }); only its type and shape are used (sizes, variables, choices), never shown
      opts   { label: 'Your answer' (accessible name), placeholder, unit: 'cm' (shown after the box; may hold $…$),
               keypad: 'auto' (open on touch screens) | true | false,
               keys: ['pi', 'sqrt', …] (extra keypad keys), autofocus: false, choiceHtml: fn(text) -> html }
@@ -24,7 +24,8 @@
    Text answers get a live MathML preview of what is typed (aria-hidden; a gentle "keep typing" while it can't be read),
    and a keypad (toggle) matched to the answer type: digits and operators, fraction, power, square root, pi, parentheses,
    the answer's variables, ≤ ≥ for inequalities, ∞ and ∪ for intervals, a comma for sets and lists, and
-   "No solution" / "All real numbers" buttons for sets, intervals and inequalities.                                     */
+   "No solution" / "All real numbers" buttons for sets, intervals and inequalities. A chemical formula (t: 'formula') gets a
+   preview with real subscripts and charges (H2O, SO4^2-, CuSO4·5H2O) and keys for ( ) ^ + − · and (aq).                 */
 (function (root) {
   'use strict';
   var ML = root.MathLadder = root.MathLadder || {};
@@ -56,6 +57,7 @@
     eq: ['=', ' = ', 'equals', 'op'], lt: ['<', ' < ', 'less than', 'op'], gt: ['>', ' > ', 'greater than', 'op'], le: ['≤', ' <= ', 'less than or equal to', 'op'], ge: ['≥', ' >= ', 'greater than or equal to', 'op'],
     inf: ['∞', 'inf', 'infinity', 'op'], cup: ['∪', ' U ', 'union', 'op'], or: ['or', ' or ', 'or', 'op'], abs: ['|x|', 'abs(|)', 'absolute value', 'op'], pm: ['±', '±', 'plus or minus', 'op'],
     pct: ['%', '%', 'percent', 'op'], i: ['i', 'i', 'imaginary unit i', 'op'],
+    caret: ['^', '^', 'charge (written after ^)', 'op'], hyd: ['·', '·', 'hydrate dot', 'op'], aq: ['(aq)', '(aq)', 'aqueous', 'op'], fneg: ['−', '-', 'minus sign of a charge', 'op'],
     sin: ['sin', 'sin(|)', 'sine', 'fn'], cos: ['cos', 'cos(|)', 'cosine', 'fn'], tan: ['tan', 'tan(|)', 'tangent', 'fn'], ln: ['ln', 'ln(|)', 'natural log', 'fn'], log: ['log', 'log(|)', 'log', 'fn'],
     left: ['◀', { move: -1 }, 'move left', 'nav'], right: ['▶', { move: 1 }, 'move right', 'nav'], back: ['⌫', { back: 1 }, 'delete', 'nav'], enter: ['↵', { enter: 1 }, 'check answer', 'enter']
   };
@@ -98,6 +100,9 @@
     } else if (t === 'ineq') {
       vars = varsOf(spec);
       ops = ['lt', 'gt', 'le', 'ge', 'neg', 'frac', 'dot', 'or'];
+    } else if (t === 'formula') {
+      ops = ['lp', 'rp', 'caret', 'plus', 'fneg', 'hyd'];
+      if (spec.states) ops.push('aq');
     } else if (t === 'tuple' || t === 'matrix') {
       ops = ['neg', 'frac', 'dot'];
       vars = t === 'tuple' && spec.vars ? [] : varsOf({ v: spec.v });
@@ -111,6 +116,7 @@
   // ---------------------------------------------------------------- preview
   function previewTex(type, s, unit) { // unit: the problem's unit word, so "12 cookies" previews as 12 cookies
     s = str(s).trim(); if (!s) return '';
+    if (type === 'formula') return ML._check && ML._check.formulaTex ? ML._check.formulaTex(s) : '';
     if (/^(no( real)? solutions?|none|∅|empty( set)?|\{\s*\})$/i.test(s)) return '\\text{No solution}';
     if (/^(all real numbers?|all reals?|ℝ|all|infinitely many( solutions)?)$/i.test(s)) return '\\text{All real numbers}';
     if (/^(dne|does not exist)$/i.test(s)) return '\\text{Does not exist}';
@@ -178,7 +184,7 @@
       function upd() {
         var v = inp.value;
         if (ptype === 'text') return;
-        if (!v.trim() || /^\s*-?\s*\d*\.?\d*\s*$/.test(v)) { pv.innerHTML = ''; pv.className = 'ml-in-preview'; return; }
+        if (!v.trim() || (ptype !== 'formula' && /^\s*-?\s*\d*\.?\d*\s*$/.test(v))) { pv.innerHTML = ''; pv.className = 'ml-in-preview'; return; }
         try { var tex = previewTex(ptype, v, opts.unit); pv.innerHTML = tex ? ML.tex(tex, { display: false }) : ''; pv.className = 'ml-in-preview ml-in-ok'; }
         catch (e) { pv.className = 'ml-in-preview ml-in-wait'; if (!pv.querySelector('.ml-in-note')) { var n = h('span', 'ml-in-note', null, 'keep typing…'); pv.appendChild(n); } }
       }
@@ -195,7 +201,7 @@
       kset = keysFor(spec, opts); if (!kset || opts.keypad === false) return;
       var kpId = id + '-kp';
       toggle = h('button', 'ml-kp-toggle', { type: 'button', 'aria-expanded': 'false', 'aria-controls': kpId, title: 'Math keypad' });
-      toggle.innerHTML = '<span aria-hidden="true">±√</span><span class="ml-sr">Math keypad</span>';
+      toggle.innerHTML = spec.t === 'formula' ? '<span aria-hidden="true">^·</span><span class="ml-sr">Formula keypad</span>' : '<span aria-hidden="true">±√</span><span class="ml-sr">Math keypad</span>';
       keypad = h('div', 'ml-kp', { id: kpId, role: 'group', 'aria-label': 'Math keypad' }); keypad.hidden = true;
       var digits = h('div', 'ml-kp-digits'), ops = h('div', 'ml-kp-ops'), nav = h('div', 'ml-kp-nav');
       kset.digits.forEach(function (k) { digits.appendChild(keyBtn(k)); });
@@ -240,7 +246,7 @@
     function setCaret(inp, p) { try { if (D.activeElement !== inp && !preferNoKeyboard) inp.focus({ preventScroll: true }); else if (D.activeElement !== inp) inp.focus({ preventScroll: true }); inp.setSelectionRange(p, p); } catch (e) { } }
 
     var PH = { num: spec.form === 'mixed' ? 'like 2 1/2' : spec.form === 'frac' ? 'like 3/4' : spec.form === 'dec' || spec.dp !== undefined ? 'like 0.75' : spec.form === 'int' ? 'a whole number' : 'Type a number',
-      expr: 'like 2x + 3', eq: 'like y = 2x + 1', set: 'like 3, -2', interval: 'like (-inf, 3]', ineq: 'like x < 3', text: 'Type a word' };
+      expr: 'like 2x + 3', eq: 'like y = 2x + 1', set: 'like 3, -2', interval: 'like (-inf, 3]', ineq: 'like x < 3', text: 'Type a word', formula: 'like H2O or SO4^2-' };
 
     // ---- build by type
     if (t === 'mc' || t === 'tf') {
@@ -330,7 +336,7 @@
       buildKeypad(kpHolder); if (toggle) kpHolder.insertBefore(toggle, kpHolder.firstChild);
       spec = savedSpec;
     } else {
-      // single text box: num expr eq set interval ineq text
+      // single text box: num expr eq set interval ineq text formula
       var box = h('div', 'ml-in-main');
       var f0 = textField(box, t, opts.label || 'Your answer', opts.placeholder || PH[t] || '');
       wrap.appendChild(box);
@@ -350,7 +356,7 @@
       var tools = h('div', 'ml-in-tools');
       wrap.appendChild(tools);
       buildKeypad(tools);
-      if (toggle) { var mainRow = wrap.querySelector('.ml-in-field'); if (t === 'num' || t === 'expr' || t === 'eq' || t === 'set' || t === 'interval' || t === 'ineq') mainRow.insertBefore(toggle, mainRow.querySelector('.ml-in-preview')); else tools.insertBefore(toggle, tools.firstChild); }
+      if (toggle) { var mainRow = wrap.querySelector('.ml-in-field'); if (t === 'num' || t === 'expr' || t === 'eq' || t === 'set' || t === 'interval' || t === 'ineq' || t === 'formula') mainRow.insertBefore(toggle, mainRow.querySelector('.ml-in-preview')); else tools.insertBefore(toggle, tools.firstChild); }
     }
 
     if (!api) {

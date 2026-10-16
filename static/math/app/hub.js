@@ -1,15 +1,17 @@
-/* Math Ladder hub (/math/): progress on every rung, "you are here", the Continue card and the save code. */
+/* A ladder's hub (/math/, /physics/, …): progress on every rung, "you are here", the Continue card and the save code.
+   A ladder with nothing ready to practice yet keeps its static "what's coming" card (data-ready="0" on #mlp-hub). */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder, E = ML.engine, ui = ML.ui, base = ML.cfg.base;
   var cont = D.getElementById('mlp-continue'), go = D.getElementById('mlp-hgo'), find = D.getElementById('mlp-hfind');
-  var graphOK = false;
+  var graphOK = false, hub = D.getElementById('mlp-hub'), ready = !hub || hub.dataset.ready !== '0';
 
   function rungs() {
     var cur = E.course();
     D.querySelectorAll('.mlp-rung[data-course]').forEach(function (a) {
       var k = a.dataset.course, n = +a.dataset.n, here = a.querySelector('.mlp-here');
       a.classList.toggle('soon', !n);
+      if (a.dataset.r === '0' && n) a.classList.add('writing');
       a.classList.toggle('here', k === cur);
       if (k === cur) a.id = 'mlp-here'; else if (a.id === 'mlp-here') a.removeAttribute('id');
       if (here) here.hidden = k !== cur;
@@ -17,11 +19,12 @@
       var p = E.courseProgress(k), bar = a.querySelector('.mlp-rung-bar b'), t = a.querySelector('[data-pct]');
       bar.style.width = p.pct + '%';
       t.textContent = p.passed ? p.passed + ' / ' + p.total : '';
-      a.setAttribute('aria-label', a.querySelector('b').textContent + ', ' + (p.passed ? p.passed + ' of ' + p.total + ' topics passed' : n + ' topics') + (k === cur ? ', you are here' : ''));
+      a.setAttribute('aria-label', a.querySelector('b').textContent + ', ' + (p.passed ? p.passed + ' of ' + p.total + ' topics passed' : n + ' topics' + (a.dataset.r === '0' ? ', being written' : '')) + (k === cur ? ', you are here' : ''));
     });
   }
   function card() {
-    var st = E.state(), cur = E.course(), active = cur || E.totalXP() > 0;
+    if (!cont || !ready) return;
+    var cur = E.course(), active = cur || E.totalXP() > 0;
     cont.hidden = false;
     if (!active) {
       cont.className = 'mlp-continue mlp-welcome';
@@ -30,7 +33,7 @@
       return;
     }
     if (go) { go.textContent = 'Continue practicing'; }
-    if (find && st.pl) find.textContent = 'Redo placement';
+    if (find && E.placed()) find.textContent = 'Redo placement';
     var c = ui.course(cur), xp = E.xpToday(), goal = E.goal(), due = graphOK ? E.dueCount() : 0, t = graphOK ? E.next() : null, streak = E.streak();
     cont.className = 'mlp-continue';
     cont.innerHTML = ui.ring(xp, goal, 70) +

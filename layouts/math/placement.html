@@ -1,13 +1,15 @@
-{{- /* Math Ladder: /math/placement/ — "Find your rung": choose a starting point, the adaptive check, the result. */ -}}
+{{- /* The Ladders: /<ladder>/placement/ — "Find your rung": choose a starting point, the adaptive check, the result. */ -}}
 {{ define "main" }}
 {{ partial "inline/ml-head.html" . }}
+{{- $lk := .Params.ladder | default "math" -}}
+{{- $L := partial "inline/ml-ladder.html" $lk -}}
 {{ partial "inline/ml-css.html" "math/viz/basic.css" }}
 {{ partial "inline/ml-css.html" "math/viz/adv.css" }}
 <div class="mlp mlp-place" id="mlp-place">
-  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>Find your rung</span></nav>
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $L.url }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <span>Find your rung</span></nav>
   <header class="mlp-hero mlp-hero-sm">
     <div class="mlp-hero-text">
-      <p class="mlp-eyebrow">Math Ladder · Placement</p>
+      <p class="mlp-eyebrow">{{ $L.title }} · Placement</p>
       <h1>Find your rung</h1>
       <p>A short check, at most 30 questions, that skips what you already know. Each answer tells us about many topics at once: get one right and the skills under it count as known; say you haven't learned one and the topics built on it wait for later. No hints, no XP, no pressure.</p>
     </div>
@@ -19,9 +21,9 @@
   </section>
   <section id="mlp-pl-run" class="mlp-pl-step" hidden aria-label="Placement check"></section>
   <section id="mlp-pl-res" class="mlp-pl-step" hidden aria-label="Your result"></section>
-  <aside class="mlp-tip"><p><b>Tips.</b> Use scratch paper. If you've never seen a kind of problem, choose "I haven't learned this" instead of guessing: it makes the result better, not worse. You can stop and redo the check any time, or skip it and pick a course from the <a href="{{ "math/" | relURL }}">ladder</a>.</p></aside>
+  <aside class="mlp-tip"><p><b>Tips.</b> Use scratch paper. If you've never seen a kind of problem, choose "I haven't learned this" instead of guessing: it makes the result better, not worse. You can stop and redo the check any time, or skip it and pick a course from the <a href="{{ $L.url }}">ladder</a>.</p></aside>
 </div>
-{{ partial "inline/ml-cfg.html" "placement" }}
+{{ partial "inline/ml-cfg.html" (dict "page" "placement" "ladder" $lk) }}
 {{ partial "inline/ml-js.html" "homeschool/calc/cas.js" }}
 {{ partial "inline/ml-js.html" "math/core/gen.js" }}
 {{ partial "inline/ml-js.html" "math/core/tex.js" }}

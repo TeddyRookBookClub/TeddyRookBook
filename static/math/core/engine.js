@@ -9,8 +9,8 @@
                    n: answers, c: right answers, iv: review step 0…6, due: day, last: day, lap: lapses,
                    pz: day the topic was paused (only while paused; the one field added to the spec's record) }
            A day is a local calendar day counted from 2020-01-01 (day 0).
-   GRAPH   E.setGraph(g)            g = { partial?: true, courses: [{ key, slug, title, short, band, grade, icon, color, after, url }],
-                                          topics: [{ id, course, unit, title, short, url, prereqs, xp }] }   topics in teaching order;
+   GRAPH   E.setGraph(g)            g = { partial?: true, courses: [{ key, slug, title, short, band, grade, icon, color, after, url, ladder? }],
+                                          topics: [{ id, course, unit, title, short, url, prereqs, xp, soon? }] }   topics in teaching order;
                                     a partial graph is fine (a topic page passes only the topics it shows).
            E.loadGraph(url?)        Promise: fetches the site's /math/graph.json once (url: the argument, else "graph" in <script id="ml-cfg">).
            E.graph()                { T: {id: topic}, C: {key: course}, order: [course keys], byCourse: {key: [ids]}, kids: {id: [ids]}, chain }
@@ -52,6 +52,30 @@
            E.exportJSON() → string
    MISC    E.on(fn)  (fn(state) after every change, also from another tab)   E.today()   E.dateOf(day)   E.STEPS   E.KEY
            E.create({ storage, clock }) → a separate engine (tests)   E.setClock(fn)   E.damaged() → true if stored data was unreadable
+   LADDERS (ladders_spec.md: Math, Physics, Chemistry, Economics, Earth & Space on one engine, ONE shared progress)
+           Every course in the graph may carry `ladder` (default 'math'); topic ids are unique across ladders, so one state
+           holds them all. XP, the daily goal and the streak are shared. Each ladder remembers its own current course: math's
+           stays in `cur` (unchanged for existing learners), the others in `cl: { <ladder>: course key }`; placement is per
+           ladder (math's in `pl`, the others in `pls: { <ladder>: { d, c, k } }`). These fields appear only once used, so a
+           Math-only learner's saved state keeps exactly the shape it had.
+           E.setLadder(key)  E.ladder()   the ladder this page works in (default 'math'); ui.js sets it from <script id="ml-cfg">
+           E.ladderOf(courseKey)   E.ladders() → ladder keys in graph order   E.course(ladder?)  E.setCourse(key) (that course's ladder)
+           E.placed(ladder?) → the ladder's last placement { d, c, k } or null
+           Scope: next(), due(), dueCount(), reviewSet() and checkpointSet() work on the active ladder's topics plus topics from
+           other ladders that were learned (or placed) from it (rec.o = that ladder: a math skill a physics topic sent the learner
+           back to comes back for review on the Physics page). E.dueAll() / E.dueCountAll() count every ladder.
+           Cross-ladder MET: a prerequisite from ANOTHER ladder counts as known (until shown otherwise) when its course is
+           reachable through `after` from the course that needs it (phys1 after alg1 → Algebra 1 and everything below it) and
+           the learner isn't currently working at or below it in its own ladder (Math's current course is Algebra 1 → Algebra 1
+           topics aren't assumed). Otherwise next() teaches it first: { type: 'learn', reason: 'prereq', id, for, ladder }.
+   OUTSIDE PRACTICE (stable API for sections such as Test Prep; see also runner.js "API FOR OTHER SECTIONS")
+           E.recordResult(id, ok, { xp }) → { xp, … }   an answer given outside the ladders, counted like a review answer: on a
+                                    passed topic it joins the same 2-answer review tally as reviewAnswer (2 answers move the
+                                    schedule) and a miss brings its review to tomorrow at the latest; on a topic not passed it
+                                    counts toward its totals and XP only. XP = the topic's xp per right answer (xp: false: none).
+           E.addReview(ids) → { review: [ids], learn: [ids] }   passed topics become due today; topics not passed join a short
+                                    "focus" list (state field fq) that next() teaches first, on the topic's own ladder
+                                    ({ type: 'learn', reason: 'focus' }); a topic leaves the list when it is passed.
    READINGS OF THE SPEC (where it left room)
    - A review set is 6 problems at 2 per topic, so it covers up to 3 topics (most overdue first, preferring topics that aren't
      direct prerequisites of each other); never two in a row from the same topic when avoidable.
@@ -79,8 +103,9 @@
   function make(opt) {
     opt = opt || {};
     var store = opt.storage !== undefined ? opt.storage : (function () { try { return W.localStorage; } catch (e) { return null; } })();
-    var clock = opt.clock || realDay, S, broken = false, fns = [], sit = {}, rv = {}, filter = null;
-    var G = { T: {}, C: {}, order: [], byCourse: {}, kids: {}, chain: [], idx: {} };
+    var clock = opt.clock || realDay, S, broken = false, fns = [], sit = {}, rv = {}, filter = null, act = 'math';
+    var G = { T: {}, C: {}, order: [], byCourse: {}, kids: {}, chain: [], idx: {}, chains: {}, anc: {}, ladders: [] };
+    var LK_RE = /^[a-z][a-z0-9-]{0,20}$/;
     function today() { return clock(); }
 
     /* ---------- state: load, clean, save ---------- */
@@ -90,6 +115,7 @@
       var x = { s: int(r.s, 0, 2, 0), p: int(r.p, 0, 9999, 0), st: int(r.st, 0, 9999, 0), n: int(r.n, 0, 1e7, 0), c: int(r.c, 0, 1e7, 0), iv: int(r.iv, 0, 6, 0), due: int(r.due, 0, 1e6, 0), last: int(r.last, 0, 1e6, 0), lap: int(r.lap, 0, 1e5, 0) };
       if (x.c > x.n) x.n = x.c;
       if (r.pz && x.s === 1) x.pz = int(r.pz, 0, 1e6, 0);
+      if (typeof r.o === 'string' && LK_RE.test(r.o)) x.o = r.o; // learned from another ladder's page
       if (x.s === 2 && !x.due) x.due = today() + 1;
       return x;
     }
@@ -105,6 +131,10 @@
       s.lu = typeof o.lu === 'string' && o.lu.length < 120 ? o.lu : null;
       if (o.pl && typeof o.pl === 'object') s.pl = { d: int(o.pl.d, 0, 1e6, 0), c: typeof o.pl.c === 'string' ? o.pl.c.slice(0, 20) : '', k: int(o.pl.k, 0, 1e5, 0) };
       s.d0 = int(o.d0, 0, 1e6, today());
+      // other ladders (only present once used): current course and last placement per ladder; the focus list
+      if (o.cl && typeof o.cl === 'object' && !Array.isArray(o.cl)) for (k in o.cl) if (own(o.cl, k) && LK_RE.test(k) && k !== 'math' && typeof o.cl[k] === 'string' && CK_RE.test(o.cl[k])) (s.cl = s.cl || {})[k] = o.cl[k];
+      if (o.pls && typeof o.pls === 'object' && !Array.isArray(o.pls)) for (k in o.pls) if (own(o.pls, k) && LK_RE.test(k) && o.pls[k] && typeof o.pls[k] === 'object') (s.pls = s.pls || {})[k] = { d: int(o.pls[k].d, 0, 1e6, 0), c: typeof o.pls[k].c === 'string' ? o.pls[k].c.slice(0, 20) : '', k: int(o.pls[k].k, 0, 1e5, 0) };
+      if (Array.isArray(o.fq)) { var fq = o.fq.filter(function (x, i, a) { return typeof x === 'string' && ID_RE.test(x) && a.indexOf(x) === i; }).slice(-40); if (fq.length) s.fq = fq; }
       return s;
     }
     function load() {
@@ -134,12 +164,13 @@
 
     /* ---------- graph ---------- */
     function setGraph(g) {
-      var N = { T: {}, C: {}, order: [], byCourse: {}, kids: {}, chain: [], idx: {} };
-      ((g && g.courses) || []).forEach(function (c) { if (c && c.key) { N.C[c.key] = c; N.order.push(c.key); N.byCourse[c.key] = []; } });
+      var N = { T: {}, C: {}, order: [], byCourse: {}, kids: {}, chain: [], idx: {}, chains: {}, anc: {}, ladders: [] };
+      ((g && g.courses) || []).forEach(function (c) { if (c && c.key && !N.C[c.key]) { N.C[c.key] = c; N.order.push(c.key); N.byCourse[c.key] = []; } });
       ((g && g.topics) || []).forEach(function (t, i) {
         if (!t || !t.id || N.T[t.id]) return;
         var c = t.course || t.id.split('.')[0];
         N.T[t.id] = { id: t.id, course: c, unit: t.unit || '', title: t.title || t.id, short: t.short || '', url: t.url || '', prereqs: (t.prereqs || []).slice(), xp: int(t.xp, 1, 3, 2), i: i };
+        if (t.soon) N.T[t.id].soon = true; // no lesson or generator yet ("Being written"): pages skip it in practice
         (N.byCourse[c] = N.byCourse[c] || []).push(t.id);
         if (!N.C[c]) { N.C[c] = { key: c, after: [] }; N.order.push(c); }
       });
@@ -147,10 +178,23 @@
         var t = N.T[id]; t.prereqs = t.prereqs.filter(function (p) { return p !== id && (N.T[p] || (g && g.partial)); });
         t.prereqs.forEach(function (p) { (N.kids[p] = N.kids[p] || []).push(id); });
       });
-      N.order.forEach(function (k, i) { N.idx[k] = i; });
-      // the main line of the ladder: from the bottom, always the first course (in ladder order) that names the current one in `after`
-      var cur = N.order[0], seen = {};
-      while (cur && !seen[cur]) { seen[cur] = 1; N.chain.push(cur); cur = N.order.filter(function (k) { return (N.C[k].after || []).indexOf(cur) >= 0; })[0]; }
+      N.order.forEach(function (k, i) { N.idx[k] = i; var L = N.C[k].ladder || 'math'; if (N.ladders.indexOf(L) < 0) N.ladders.push(L); });
+      // the main line of each ladder: from its bottom, always the first course (in ladder order) of the same ladder that
+      // names the current one in `after`
+      N.ladders.forEach(function (L) {
+        var mine = N.order.filter(function (k) { return (N.C[k].ladder || 'math') === L; }), cur = mine[0], seen = {}, ch = [];
+        while (cur && !seen[cur]) { seen[cur] = 1; ch.push(cur); cur = mine.filter(function (k) { return (N.C[k].after || []).indexOf(cur) >= 0; })[0]; }
+        N.chains[L] = ch;
+      });
+      N.chain = N.chains[N.ladders[0]] || [];
+      // every course reachable through `after` (across ladders): the courses that count as "earlier" for cross-ladder prerequisites
+      function anc(k, stack) {
+        if (N.anc[k]) return N.anc[k];
+        var out = {}; stack[k] = 1;
+        ((N.C[k] && N.C[k].after) || []).forEach(function (a) { if (stack[a] || !N.C[a]) return; out[a] = 1; var x = anc(a, stack); for (var y in x) out[y] = 1; });
+        delete stack[k]; return (N.anc[k] = out);
+      }
+      N.order.forEach(function (k) { anc(k, {}); });
       G = N; return E;
     }
     var graphP = null;
@@ -162,6 +206,24 @@
       graphP.catch(function () { graphP = null; });
       return graphP;
     }
+    function ladderOf(c) { return (G.C[c] && G.C[c].ladder) || 'math'; }
+    function topicLadder(id) { return ladderOf(courseOf(id)); }
+    function curOf(L) { L = L || act; return L === 'math' ? S.cur : (S.cl && S.cl[L]) || null; }
+    function setCur(L, k) {
+      if (L === 'math') { S.cur = k || null; return; }
+      if (k) { S.cl = S.cl || {}; S.cl[L] = k; } else if (S.cl) { delete S.cl[L]; if (!Object.keys(S.cl).length) delete S.cl; }
+    }
+    function inScope(id) { if (topicLadder(id) === act) return true; var r = own(S.t, id) ? S.t[id] : null; return !!(r && r.o === act); }
+    // is course c "earlier" than course f? Same ladder: lower on the ladder. Another ladder: reachable through f's `after`
+    // and not at or above the learner's current course in c's own ladder.
+    function earlier(c, f) {
+      if (!c || !f || c === f || G.idx[c] === undefined || G.idx[f] === undefined) return false;
+      var Lc = ladderOf(c);
+      if (Lc === ladderOf(f)) return G.idx[c] < G.idx[f];
+      if (!G.anc[f] || !G.anc[f][c]) return false;
+      var cu = curOf(Lc);
+      return !(cu && G.idx[cu] !== undefined && ladderOf(cu) === Lc && G.idx[c] >= G.idx[cu]);
+    }
     function topicXP(id) { return G.T[id] ? G.T[id].xp : 2; }
     function prereqs(id) { return G.T[id] ? G.T[id].prereqs : []; }
     function passed(id) { var r = own(S.t, id) ? S.t[id] : null; return !!r && r.s === 2; }
@@ -171,12 +233,11 @@
     // and the learner hasn't started it without passing it: earlier courses are assumed known until shown otherwise.
     function sat(p, forCourse) {
       if (passed(p)) return true;
-      var c = courseOf(p);
-      if (c === forCourse || G.idx[c] === undefined || G.idx[forCourse] === undefined || G.idx[c] >= G.idx[forCourse]) return false;
+      if (!earlier(courseOf(p), forCourse)) return false;
       var r = own(S.t, p) ? S.t[p] : null; return !r || r.s === 0;
     }
     function ready(id, ctx) { // ctx: a later course the learner is looking from (its earlier courses count as known)
-      var c = courseOf(id); if (ctx && G.idx[ctx] !== undefined && G.idx[c] !== undefined && G.idx[ctx] > G.idx[c]) c = ctx;
+      var c = courseOf(id); if (ctx && earlier(c, ctx)) c = ctx;
       return prereqs(id).every(function (p) { return sat(p, c); });
     }
     function ancestors(id, out) { out = out || {}; prereqs(id).forEach(function (p) { if (!out[p]) { out[p] = 1; ancestors(p, out); } }); return out; }
@@ -190,10 +251,10 @@
       if (!G.T[id]) return 'new';
       return ready(id, ctx) ? 'ready' : 'locked';
     }
-    function dueAll(d) {
+    function dueAll(d, all) { // the active ladder's reviews due (all: every ladder's)
       d = d === undefined ? today() : d;
       var out = [];
-      for (var id in S.t) if (own(S.t, id)) { var r = S.t[id]; if (r.s === 2 && r.due <= d && G.T[id] && ok4(id)) out.push(id); }
+      for (var id in S.t) if (own(S.t, id)) { var r = S.t[id]; if (r.s === 2 && r.due <= d && G.T[id] && ok4(id) && (all || inScope(id))) out.push(id); }
       out.sort(function (a, b) { return S.t[a].due - S.t[b].due || S.t[a].iv - S.t[b].iv || G.T[a].i - G.T[b].i; });
       return out;
     }
@@ -219,7 +280,9 @@
       });
       return best;
     }
-    function nextCourses(key) { return G.order.filter(function (k) { return (G.C[k].after || []).indexOf(key) >= 0; }); }
+    function nextCourses(key, same) { // same: only courses of key's own ladder
+      return G.order.filter(function (k) { return (G.C[k].after || []).indexOf(key) >= 0 && (!same || ladderOf(k) === ladderOf(key)); });
+    }
 
     /* ---------- XP ---------- */
     function addXP(n) { n = int(n, 0, 1000, 0); if (!n) return 0; var d = String(today()); S.xp[d] = (S.xp[d] || 0) + n; return n; }
@@ -246,7 +309,7 @@
       return { p: r.p, st: r.st, need: need, passed: r.s === 2 };
     }
     function pass(id, r, d) {
-      r.s = 2; r.iv = 0; r.due = d + 1; delete r.pz;
+      r.s = 2; r.iv = 0; r.due = d + 1; delete r.pz; unfocus(id);
       S.cp++; S.rp = S.rp.filter(function (x) { return x !== id; }); S.rp.push(id); if (S.rp.length > 24) S.rp = S.rp.slice(-24);
       return echo(id);
     }
@@ -255,7 +318,10 @@
       r.n++; r.last = d; if (ok) r.c++;
       if (r.s === 2) { res.extra = true; if (ok) res.xp = addXP(topicXP(id)); }
       else {
-        if (r.s === 0) { r.s = 1; r.p = 0; r.st = 0; if (G.T[id]) { S.lu = G.T[id].course + '/' + G.T[id].unit; if (!S.cur) S.cur = G.T[id].course; } }
+        if (r.s === 0) {
+          r.s = 1; r.p = 0; r.st = 0;
+          if (G.T[id]) { S.lu = G.T[id].course + '/' + G.T[id].unit; var L = ladderOf(G.T[id].course); if (L === act) { if (!curOf(L)) setCur(L, G.T[id].course); } else r.o = act; }
+        }
         if (ok) { r.p++; r.st = o.hint ? 0 : r.st + 1; res.xp = addXP(topicXP(id)); }
         else { r.st = 0; sit[id] = (sit[id] || 0) + 1; }
         if (r.p >= PASS_RIGHT && r.st >= PASS_STREAK) { res.passed = true; res.echo = pass(id, r, d); res.xp += addXP(PASS_BONUS); sit[id] = 0; }
@@ -314,7 +380,7 @@
 
     /* ---------- checkpoints ---------- */
     function checkpointSet() {
-      var pool = S.rp.filter(function (id) { return G.T[id] && passed(id) && ok4(id); }).slice(-Math.max(CHECK_EVERY, 12)).reverse();
+      var pool = S.rp.filter(function (id) { return G.T[id] && passed(id) && ok4(id) && inScope(id); }).slice(-Math.max(CHECK_EVERY, 12)).reverse();
       if (!pool.length) return [];
       var pick = pool.slice(0, QUIZ_SIZE), items = [], i = 0;
       while (items.length < QUIZ_SIZE) { items.push(pick[i % pick.length]); i++; }
@@ -357,16 +423,33 @@
       });
       return out;
     }
+    function focusCandidates(allowPaused) { // topics added from outside practice (addReview), on their own ladder
+      var d = today(), out = [], have = {};
+      (S.fq || []).forEach(function (id) {
+        if (!G.T[id] || passed(id) || topicLadder(id) !== act) return;
+        var r = own(S.t, id) ? S.t[id] : null, a = id, why = 'focus';
+        if (!ready(id)) { a = frontierAncestor(id, {}); why = 'prereq'; }
+        if (!a || have[a] || !ok4(a)) return;
+        var ra = own(S.t, a) ? S.t[a] : null; if (!allowPaused && ra && ra.pz === d) return;
+        have[a] = 1; out.push(why === 'focus' ? { id: a, reason: 'focus' } : { id: a, reason: 'prereq', 'for': id });
+      });
+      return out;
+    }
     function pickLearn(allowPaused) {
-      if (!S.cur || !G.byCourse[S.cur]) return null;
-      var c = learnCandidates(S.cur, allowPaused); if (!c.length) return null;
+      var f = focusCandidates(allowPaused);
+      if (f.length) { var o0 = { type: 'learn', id: f[0].id, reason: f[0].reason }; if (f[0].for) o0.for = f[0].for; if (topicLadder(o0.id) !== act) o0.ladder = topicLadder(o0.id); return o0; }
+      var cur = curOf(act);
+      if (!cur || !G.byCourse[cur]) return null;
+      var c = learnCandidates(cur, allowPaused); if (!c.length) return null;
       var first = c[0];
       if (first.reason === 'next' && S.lu) { // interleaving: alternate units when another new topic is available
         var u = function (x) { return G.T[x.id].course + '/' + G.T[x.id].unit; };
         if (u(first) === S.lu) for (var i = 1; i < c.length; i++) if (c[i].reason === 'next' && u(c[i]) !== S.lu) { first = c[i]; break; }
       }
       var o = { type: 'learn', id: first.id, reason: allowPaused && first.reason !== 'prereq' ? 'retry' : first.reason };
-      if (first.for) o.for = first.for; return o;
+      if (first.for) o.for = first.for;
+      if (topicLadder(first.id) !== act) o.ladder = topicLadder(first.id); // a skill from another ladder: say which
+      return o;
     }
     function next() {
       var due = dueAll();
@@ -375,9 +458,37 @@
       var L = pickLearn(false); if (L) return L;
       if (due.length) return { type: 'review', items: reviewSet(due) };
       L = pickLearn(true); if (L) return L;
-      if (!S.cur || !G.byCourse[S.cur]) return { type: 'start' };
-      var soon = G.byCourse[S.cur].some(function (id) { return !passed(id) && !ok4(id); });
-      return { type: 'done', course: S.cur, next: nextCourses(S.cur), soon: soon };
+      var cur = curOf(act);
+      if (!cur || !G.byCourse[cur]) return { type: 'start' };
+      var soon = G.byCourse[cur].some(function (id) { return !passed(id) && !ok4(id); });
+      return { type: 'done', course: cur, next: nextCourses(cur, true), soon: soon };
+    }
+
+    /* ---------- outside practice (Test Prep and other sections) ---------- */
+    function unfocus(id) { if (S.fq) { S.fq = S.fq.filter(function (x) { return x !== id; }); if (!S.fq.length) delete S.fq; } }
+    function recordResult(id, ok, o) {
+      o = o || {}; var r = rec(id, true), d = today(), res;
+      if (r.s === 2) {
+        var x0 = S.xp[String(d)] || 0;
+        res = reviewAnswer(id, ok); // counts like a review answer (the same 2-answer tally); saves
+        if (o.xp === false && res.xp) { S.xp[String(d)] = x0; if (!x0) delete S.xp[String(d)]; res.xp = 0; }
+        if (!ok && !res.done && r.due > d + 1) { r.due = d + 1; save(); }
+        return res;
+      }
+      res = { xp: 0, done: false };
+      r.n++; r.last = d; if (ok) { r.c++; if (o.xp !== false) res.xp = addXP(topicXP(id)); }
+      save(); return res;
+    }
+    function addReview(ids) {
+      var d = today(), out = { review: [], learn: [] };
+      (ids || []).forEach(function (id) {
+        if (typeof id !== 'string' || !ID_RE.test(id)) return;
+        var r = own(S.t, id) ? S.t[id] : null;
+        if (r && r.s === 2) { if (r.due > d) r.due = d; out.review.push(id); return; }
+        S.fq = (S.fq || []).filter(function (x) { return x !== id; }); S.fq.push(id); if (S.fq.length > 40) S.fq = S.fq.slice(-40);
+        out.learn.push(id);
+      });
+      save(); return out;
     }
 
     /* ---------- placement ("Find your rung") ---------- */
@@ -385,15 +496,24 @@
       po = po || {};
       var max = po.max || 30, ask0 = po.canAsk || function () { return true; }, noAsk = {};
       function canAsk(id) { return !noAsk[id] && ask0(id) !== false; }
-      var K = {}, U = {}, asked = 0, log = [], stage, win = [], winSet = {}, pending = null, extended = 0;
-      var chain = G.chain.slice(), lo = -1, hi = chain.length - 1;
+      var K = {}, U = {}, asked = 0, log = [], stage, win = [], winSet = {}, xw = {}, pending = null, extended = 0;
+      var PL = po.ladder || (po.start && G.C[po.start] ? ladderOf(po.start) : act); // placement is per ladder
+      var mine = G.order.filter(function (k) { return ladderOf(k) === PL; });
+      var chain = (G.chains[PL] || []).slice(), lo = -1, hi = chain.length - 1;
+      function same(k) { return ladderOf(k) === PL; }
+      // prerequisites from other ladders that block the window's topics (not passed and not assumed known) join the check,
+      // so a right answer can show them known
+      function addBlocking(ids) {
+        ids.forEach(function (id) { prereqs(id).forEach(function (p) { if (G.T[p] && !same(courseOf(p)) && !passed(p) && !sat(p, courseOf(id))) { xw[p] = 1; winSet[p] = 1; } }); });
+      }
       function decided(id) { return K[id] || U[id]; }
       function markK(id) { if (U[id]) return; K[id] = 1; Object.keys(ancestors(id)).forEach(function (a) { if (!U[a]) K[a] = 1; }); }
       function markU(id) { if (K[id]) return; U[id] = 1; Object.keys(descendants(id)).forEach(function (a) { if (!K[a]) U[a] = 1; }); }
       function setWindow(key) {
-        var ks = [key].concat(((G.C[key] && G.C[key].after) || []).filter(function (k) { return G.byCourse[k]; }));
+        var ks = [key].concat(((G.C[key] && G.C[key].after) || []).filter(function (k) { return G.byCourse[k] && same(k); }));
         ks.sort(function (a, b) { return G.idx[a] - G.idx[b]; });
-        win = ks; winSet = {}; ks.forEach(function (k) { (G.byCourse[k] || []).forEach(function (id) { winSet[id] = 1; }); });
+        win = ks; winSet = {}; xw = {}; ks.forEach(function (k) { (G.byCourse[k] || []).forEach(function (id) { winSet[id] = 1; }); });
+        addBlocking(Object.keys(winSet));
       }
       function winIds() { return Object.keys(winSet).sort(function (a, b) { return G.T[a].i - G.T[b].i; }); }
       function probe(key) { // a topic that stands for "knows most of this course": the most in-course ancestors in its first 80%
@@ -406,10 +526,10 @@
         return best;
       }
       if (po.start && po.start !== 'auto' && G.byCourse[po.start]) { stage = 'fine'; setWindow(po.start); }
-      else { stage = 'coarse'; chain = chain.filter(function (k) { return probe(k); }); hi = chain.length - 1; if (hi < 0) { stage = 'fine'; setWindow(G.order[0]); } }
+      else { stage = 'coarse'; chain = chain.filter(function (k) { return probe(k); }); hi = chain.length - 1; if (hi < 0) { stage = 'fine'; setWindow(mine[0] || G.order[0]); } }
       function finishCoarse() {
         stage = 'fine';
-        var k = chain[Math.min(lo + 1, chain.length - 1)] || G.order[0];
+        var k = chain[Math.min(lo + 1, chain.length - 1)] || mine[0] || G.order[0];
         setWindow(k);
       }
       function pickFine() {
@@ -430,9 +550,10 @@
         if (extended >= 3 || asked >= max) return false;
         var low = win[0], ids = G.byCourse[low] || [], roots = ids.filter(function (id) { return !prereqs(id).some(function (p) { return G.T[p] && G.T[p].course === low; }); });
         if (!roots.length || !roots.every(function (id) { return U[id]; })) return false;
-        var below = ((G.C[low] && G.C[low].after) || []).filter(function (k) { return G.byCourse[k] && win.indexOf(k) < 0; });
+        var below = ((G.C[low] && G.C[low].after) || []).filter(function (k) { return G.byCourse[k] && win.indexOf(k) < 0 && same(k); });
         if (!below.length) return false;
         extended++; win = below.concat(win); below.forEach(function (k) { G.byCourse[k].forEach(function (id) { winSet[id] = 1; }); });
+        addBlocking(below.reduce(function (a, k) { return a.concat(G.byCourse[k]); }, []));
         return true;
       }
       var S2 = {
@@ -470,7 +591,7 @@
         result: function () {
           var ids = winIds(), guess = {}, idxs = ids.map(function (id) { return G.T[id].i; });
           // undecided topics: the teaching-order cut that best separates the decided ones
-          var und = ids.filter(function (id) { return !decided(id); });
+          var und = ids.filter(function (id) { return !decided(id) && !xw[id]; }); // other ladders' skills: only what an answer showed
           if (und.length) {
             var bestCut = -Infinity, bestErr = Infinity, cuts = [-Infinity].concat(idxs.map(function (i) { return i + 0.5; }));
             cuts.forEach(function (cut) {
@@ -482,12 +603,12 @@
             und.forEach(function (id) { if (guess[id]) Object.keys(ancestors(id)).forEach(function (a) { if (own(guess, a)) guess[a] = true; }); });
           }
           var known = [], unknown = [];
-          ids.forEach(function (id) { var k = decided(id) ? !!K[id] : guess[id]; (k ? known : unknown).push(id); });
+          ids.forEach(function (id) { var k = decided(id) ? !!K[id] : !!guess[id]; (k ? known : unknown).push(id); });
           // the starting course: the first course in the window (ladder order) with an unknown topic, else the one after
           var course = null;
           win.forEach(function (k) { if (!course && (G.byCourse[k] || []).some(function (id) { return unknown.indexOf(id) >= 0; })) course = k; });
-          if (!course) { var top = win[win.length - 1], nx = nextCourses(top).filter(function (k) { return chain.indexOf(k) >= 0 || G.chain.indexOf(k) >= 0; }); course = nx[0] || nextCourses(top)[0] || top; }
-          return { course: course, window: win.slice(), known: known, unknown: unknown, guessed: und.length, asked: asked, log: log.slice(), K: K };
+          if (!course) { var top = win[win.length - 1], nx = nextCourses(top, true).filter(function (k) { return chain.indexOf(k) >= 0 || (G.chains[PL] || []).indexOf(k) >= 0; }); course = nx[0] || nextCourses(top, true)[0] || top; }
+          return { course: course, window: win.slice(), known: known, unknown: unknown, guessed: und.length, asked: asked, log: log.slice(), K: K, ladder: PL, other: Object.keys(xw) };
         },
         apply: function () {
           var res = S2.result(), d = today(), kn = {}, n = 0;
@@ -496,8 +617,11 @@
           res.known.forEach(function (id) {
             if (passed(id)) return;
             var r = rec(id, true); r.s = 2; r.iv = 1; r.due = d + STEPS[1] + Math.floor(n / 8); r.p = 0; r.st = 0; delete r.pz; n++;
+            if (!same(courseOf(id))) r.o = PL; unfocus(id);
           });
-          S.cur = res.course; S.pl = { d: d, c: po.start || 'auto', k: res.known.length };
+          setCur(PL, res.course);
+          var plr = { d: d, c: po.start || 'auto', k: res.known.length };
+          if (PL === 'math') S.pl = plr; else { S.pls = S.pls || {}; S.pls[PL] = plr; }
           save(); return res;
         }
       };
@@ -546,6 +670,11 @@
       setGraph: setGraph, loadGraph: loadGraph, graph: function () { return G; }, setFilter: function (f) { filter = f || null; return E; },
       rec: function (id) { return copy(rec(id)); }, status: status, isPassed: passed,
       due: function () { return dueAll(); }, dueCount: function () { return dueAll().length; }, dueBy: dueBy,
+      dueAll: function () { return dueAll(undefined, true); }, dueCountAll: function () { return dueAll(undefined, true).length; },
+      setLadder: function (k) { act = typeof k === 'string' && LK_RE.test(k) ? k : 'math'; return E; }, ladder: function () { return act; },
+      ladderOf: ladderOf, ladders: function () { return G.ladders.slice(); }, inScope: inScope,
+      placed: function (L) { L = L || act; return L === 'math' ? S.pl : (S.pls && S.pls[L]) || null; },
+      recordResult: recordResult, addReview: addReview, focusList: function () { return (S.fq || []).slice(); },
       courseProgress: courseProgress, frontier: frontier, ready: ready, met: sat,
       courseNext: function (key) { return learnCandidates(key, true)[0] || null; }, weakestPrereq: weakestPrereq, nextCourses: nextCourses,
       ancestors: function (id) { return Object.keys(ancestors(id)); }, descendants: function (id) { return Object.keys(descendants(id)); },
@@ -555,7 +684,8 @@
       next: next,
       addXP: function (n) { var x = addXP(n); save(); return x; }, xpToday: function () { return xpOn(today()); }, xpOn: xpOn, xpByDay: xpByDay, totalXP: totalXP,
       goal: function () { return S.goal; }, setGoal: function (n) { S.goal = int(n, 5, 500, 40); save(); return S.goal; }, streak: streak,
-      course: function () { return S.cur; }, setCourse: function (k) { S.cur = typeof k === 'string' && CK_RE.test(k) ? k : null; save(); return S.cur; },
+      course: function (L) { return curOf(L); },
+      setCourse: function (k) { k = typeof k === 'string' && CK_RE.test(k) ? k : null; var L = k && G.C[k] ? ladderOf(k) : act; setCur(L, k); save(); return curOf(L); },
       placement: placement,
       exportCode: exportCode, exportJSON: exportJSON, readCode: readCode, replace: replace, reset: reset,
       on: function (f) { fns.push(f); return function () { fns = fns.filter(function (g) { return g !== f; }); }; }

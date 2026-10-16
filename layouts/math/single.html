@@ -1,48 +1,65 @@
-{{- /* Math Ladder: a topic page /math/<course slug>/<topic slug>/ (made by content/math/_content.gotmpl).
-   The lesson comes from data/math/lessons/<course key>.json (spec section 3); practice from static/math/gen/<course key>.js. */ -}}
+{{- /* The Ladders: a topic page /<ladder>/<course slug>/<topic slug>/ (made by content/<ladder>/_content.gotmpl).
+   The lesson comes from data/<ladder>/lessons/<course key>.json (spec section 3); practice from static/<ladder>/gen/<course key>.js.
+   A topic with neither yet shows "Being written": its title, short, the known stumbling block and its prerequisites. */ -}}
 {{ define "main" }}
 {{ partial "inline/ml-head.html" . }}
+{{- $lk := .Params.ladder | default "math" -}}
+{{- $L := partial "inline/ml-ladder.html" $lk -}}
+{{- $LD := index site.Data $L.dir | default dict -}}
+{{- $base := $L.url -}}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
 {{- $key := .Params.course -}}{{- $id := .Params.topic -}}
-{{- $c := index (where site.Data.math.courses "key" $key) 0 -}}
-{{- $d := index (site.Data.math.topics | default dict) $key -}}
+{{- $c := index (where ($LD.courses | default slice) "key" $key) 0 -}}
+{{- $d := index ($LD.topics | default dict) $key -}}
 {{- $t := index (where $d.topics "id" $id) 0 -}}
 {{- $u := index (where $d.units "key" $t.unit) 0 -}}
 {{- $idx := partialCached "inline/ml-index.html" "index" -}}
-{{- $L := false }}{{ with site.Data.math.lessons }}{{ with index . $key }}{{ with index . $id }}{{ $L = . }}{{ end }}{{ end }}{{ end -}}
-{{- $hasGen := fileExists (printf "static/math/gen/%s.js" $key) -}}
+{{- $L0 := false }}{{ with $LD.lessons }}{{ with index . $key }}{{ with index . $id }}{{ $L0 = . }}{{ end }}{{ end }}{{ end -}}
+{{- $gpath := printf "%s/gen/%s.js" $L.dir $key -}}
+{{- $hasGen := false }}{{ if fileExists (printf "static/%s" $gpath) }}{{ $src := readFile (printf "static/%s" $gpath) }}{{ $hasGen = or (in $src (printf "'%s'" $id)) (in $src (printf "%q" $id)) }}{{ end -}}
+{{- $wip := and (not $L0) (not $hasGen) -}}
 {{- /* previous and next topic in the course */ -}}
 {{- $prev := false }}{{ $nextT := false }}{{ $found := false -}}
 {{- range $d.topics }}{{ if $found }}{{ if not $nextT }}{{ $nextT = . }}{{ end }}{{ else if eq .id $id }}{{ $found = true }}{{ else }}{{ $prev = . }}{{ end }}{{ end -}}
-{{- /* the visuals this page needs */ -}}
+{{- /* the visuals this page needs: math's basic and adv files, and a ladder's own kit for names with its prefix */ -}}
 {{- $basic := slice "tenframe" "counters" "numberline" "hundredchart" "base10" "placevalue" "numberbond" "arraygrid" "areamodel" "fractionbar" "fractioncircle" "fractionline" "decimalgrid" "percentbar" "ratiotable" "tapediagram" "clock" "coins" "balance" "integerline" "shapes" "geoboard" "angle" "transform" "pythagoras" "circlepi" "areaformulas" "volume" "nets" "dotplot" "boxplot" -}}
 {{- $adv := slice "graph" "slope" "linesystem" "parabola" "transformfn" "exponential" "logscale" "unitcircle" "trigwave" "polar" "complexplane" "sequence" "limit" "secant" "derivgraph" "riemann" "ftc" "solids" "taylor" "seriespartial" "vectors2d" "vectors3d" "surface" "gradient" "vectorfield" "lineintegral" "flux" "param3d" "matrix2d" "span" "slopefield" "phaseplane" "springmass" "dice" "normal" "sampling" "scatter" "venn" "tree" -}}
+{{- $kits := dict "ph-" "physics" "ch-" "chemistry" "ec-" "economics" "es-" "earth" -}}
 {{- $names := $t.viz | default slice -}}
-{{- if $L }}{{ range $L.blocks }}{{ if eq .t "viz" }}{{ $names = $names | append .name }}{{ end }}{{ end }}{{ end -}}
+{{- if $L0 }}{{ range $L0.blocks }}{{ if eq .t "viz" }}{{ $names = $names | append .name }}{{ end }}{{ end }}{{ end -}}
 {{- $vb := partial "inline/ml-vizbase.html" $key -}}
 {{- $needB := eq $vb "basic" }}{{ $needA := eq $vb "adv" -}}
-{{- range $names }}{{ if in $basic . }}{{ $needB = true }}{{ end }}{{ if in $adv . }}{{ $needA = true }}{{ end }}{{ end -}}
+{{- $needK := slice -}}
+{{- range $names }}{{ if in $basic . }}{{ $needB = true }}{{ end }}{{ if in $adv . }}{{ $needA = true }}{{ end }}{{ with index $kits (substr . 0 3) }}{{ if not (in $needK .) }}{{ $needK = $needK | append . }}{{ end }}{{ end }}{{ end -}}
 {{- if $needB }}{{ partial "inline/ml-css.html" "math/viz/basic.css" }}{{ end -}}
 {{- if $needA }}{{ partial "inline/ml-css.html" "math/viz/adv.css" }}{{ end -}}
-{{- partial "inline/ml-css.html" (printf "math/viz/%s.css" $key) -}}
-{{- /* related topics: prerequisites and what this leads to */ -}}
+{{- range $needK }}{{ partial "inline/ml-css.html" (printf "%s/viz/%s.css" . .) }}{{ end -}}
+{{- partial "inline/ml-css.html" (printf "%s/viz/%s.css" $L.dir $key) -}}
+{{- /* related topics: prerequisites and what this leads to (any ladder) */ -}}
 {{- $pre := slice }}{{ range $t.prereqs }}{{ with index $idx.T . }}{{ $pre = $pre | append . }}{{ end }}{{ end -}}
-{{- $leads := slice }}{{ range (index $idx.kids $id | default slice) }}{{ with index $idx.T . }}{{ $leads = $leads | append . }}{{ end }}{{ end -}}
-{{- $courseOf := dict }}{{ range site.Data.math.courses }}{{ $courseOf = merge $courseOf (dict .key .short) }}{{ end -}}
-<div class="mlp mlp-topic" id="mlp-topic" data-id="{{ $id }}" data-course="{{ $key }}" style="--mc:{{ $c.color }}">
-  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <a href="{{ printf "math/%s/" $c.slug | relURL }}">{{ $c.title }}</a> <span aria-hidden="true">›</span> <a href="{{ printf "math/%s/#unit-%s" $c.slug $t.unit | relURL }}">{{ $u.title }}</a></nav>
+{{- $leads := slice }}{{ $leadsX := slice }}{{ range (index $idx.kids $id | default slice) }}{{ with index $idx.T . }}{{ if eq (index $g.C .course).ladder $lk }}{{ $leads = $leads | append . }}{{ else }}{{ $leadsX = $leadsX | append . }}{{ end }}{{ end }}{{ end -}}
+{{- $isNGSS := and $t.std (findRE `^(K|[1-5]|MS|HS)-[A-Z]` $t.std) -}}
+{{- /* lab: a Science Lab page (or another site page, like /markets/indicators/#…) that fits this topic */ -}}
+{{- $lab := false }}{{ with $t.lab }}{{ $lu := . }}{{ $lp := index (split $lu "#") 0 }}{{ $isLab := hasPrefix $lu "/science-lab/" -}}
+{{- $lab = dict "url" $lu "title" "Teddy Rook Book" "icon" (cond $isLab "🔬" "📊") "kind" (cond $isLab "Try it in the Science Lab" "See it with real data") -}}
+{{- with site.GetPage $lp }}{{ $lab = merge $lab (dict "title" .Title) }}{{ end -}}
+{{- range site.Data.science_lab }}{{ if hasPrefix $lp .url }}{{ $lab = merge $lab (dict "icon" .icon) }}{{ if eq .url $lp }}{{ $lab = merge $lab (dict "title" .title) }}{{ end }}{{ end }}{{ end }}{{ end -}}
+<div class="mlp mlp-topic{{ if $wip }} mlp-topic-wip{{ end }}" id="mlp-topic" data-id="{{ $id }}" data-course="{{ $key }}" data-ladder="{{ $lk }}" style="--mc:{{ $c.color }}">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $base }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <a href="{{ printf "%s/%s/" $L.slug $c.slug | relURL }}">{{ $c.title }}</a> <span aria-hidden="true">›</span> <a href="{{ printf "%s/%s/#unit-%s" $L.slug $c.slug $t.unit | relURL }}">{{ $u.title }}</a></nav>
   <header class="mlp-thead">
-    <p class="mlp-eyebrow"><span>{{ $c.short }}</span><span>{{ $u.title }}</span>{{ with $t.std }}<span title="Common Core State Standard">{{ . }}</span>{{ end }}</p>
+    <p class="mlp-eyebrow"><span>{{ $c.short }}</span><span>{{ $u.title }}</span>{{ with $t.std }}<span title="{{ if $isNGSS }}Next Generation Science Standards{{ else }}Common Core State Standard{{ end }}">{{ . }}</span>{{ end }}</p>
     <h1>{{ $t.title }}</h1>
     {{ with $t.short }}<p class="mlp-short">{{ . }}</p>{{ end }}
     <div class="mlp-thead-row">
-      <span class="mlp-pill" id="mlp-status" data-st="new">Not started</span>
+      {{- if $wip }}<span class="mlp-pill mlp-pill-wip">✎ Being written</span>{{ else }}
+      <span class="mlp-pill" id="mlp-status" data-st="new">Not started</span>{{ end }}
       {{ if $hasGen }}<a class="mlp-btn small" href="#practice">Jump to practice</a>{{ end }}
     </div>
   </header>
 
-  {{- if $L }}
+  {{- if $L0 }}
   <article class="mlp-lesson" id="lesson" aria-label="Lesson">
-    {{- range $i, $b := $L.blocks }}
+    {{- range $i, $b := $L0.blocks }}
     {{- if eq $b.t "p" }}<p>{{ $b.html | safeHTML }}</p>
     {{- else if eq $b.t "h" }}<h2 class="mlp-lh">{{ $b.text }}</h2>
     {{- else if eq $b.t "key" }}<div class="mlp-box mlp-key"><p class="mlp-box-lab"><span aria-hidden="true">🔑</span> Key idea</p><div class="mlp-box-body">{{ $b.html | safeHTML }}</div></div>
@@ -65,6 +82,12 @@
     {{- end }}
     {{- end }}
   </article>
+  {{- else if $wip }}
+  <section class="mlp-soon mlp-wipbox" id="lesson">
+    <h2><span aria-hidden="true">✎</span> Being written</h2>
+    <p>This topic's lesson, worked examples and practice are on the way. Here is what it covers and what it builds on, so you can get ready.</p>
+    {{ with $t.trouble }}<div class="mlp-box mlp-mistake"><p class="mlp-box-lab"><span aria-hidden="true">⚠️</span> Where people get stuck</p><div class="mlp-box-body"><p>{{ . }}</p></div></div>{{ end }}
+  </section>
   {{- else }}
   <section class="mlp-soon" id="lesson">
     <h2>Lesson coming soon</h2>
@@ -73,6 +96,11 @@
   </section>
   {{- end }}
 
+  {{- with $lab }}
+  <a class="mlp-labcard" href="{{ .url | relURL }}"><span class="mlp-labcard-icon" aria-hidden="true">{{ .icon }}</span><span><small>{{ .kind }}</small><b>{{ .title }}</b></span><span aria-hidden="true">→</span></a>
+  {{- end }}
+
+  {{- if not $wip }}
   <section class="mlp-practice" id="practice" aria-labelledby="mlp-prac-h">
     <div class="mlp-practice-head">
       <h2 id="mlp-prac-h">Practice</h2>
@@ -84,28 +112,33 @@
     <div class="mlp-soon mlp-soon-p"><p><b>Practice coming soon.</b> Problems for {{ $c.title }} are being written and checked. Meanwhile, the lesson and its worked examples are here to read.</p></div>
     {{- end }}
   </section>
+  {{- end }}
 
   <section class="mlp-rel" aria-label="Related topics">
     <div>
       <h2>Builds on</h2>
       {{- if $pre }}
-      <ul class="mlp-chips small">{{ range $pre }}<li><a class="mlp-chip" href="{{ .url }}" data-id="{{ .id }}"><i class="mlp-dot" aria-hidden="true"></i><span>{{ .title }}{{ if ne .course $key }} <small>{{ index $courseOf .course }}</small>{{ end }}</span><em class="mlp-sr" data-st></em></a></li>{{ end }}</ul>
+      <ul class="mlp-chips small">{{ range $pre }}{{ $pc := index $g.C .course }}<li><a class="mlp-chip" href="{{ .url }}" data-id="{{ .id }}"><i class="mlp-dot" aria-hidden="true"></i><span>{{ .title }}{{ if ne .course $key }} <small>{{ if ne $pc.ladder $lk }}{{ $pc.lshort }}{{ if ne $pc.short $pc.lshort }} · {{ $pc.short }}{{ end }}{{ else }}{{ $pc.short }}{{ end }}</small>{{ end }}</span><em class="mlp-sr" data-st></em></a></li>{{ end }}</ul>
       {{- else }}<p class="mlp-small">Nothing before it: a good place to start.</p>{{ end }}
     </div>
     <div>
       <h2>Leads to</h2>
       {{- if $leads }}
-      <ul class="mlp-chips small">{{ range $leads }}<li><a class="mlp-chip" href="{{ .url }}" data-id="{{ .id }}"><i class="mlp-dot" aria-hidden="true"></i><span>{{ .title }}{{ if ne .course $key }} <small>{{ index $courseOf .course }}</small>{{ end }}</span><em class="mlp-sr" data-st></em></a></li>{{ end }}</ul>
-      {{- else }}<p class="mlp-small">This is one of the top rungs of {{ $c.title }}.</p>{{ end }}
+      <ul class="mlp-chips small">{{ range $leads }}{{ $pc := index $g.C .course }}<li><a class="mlp-chip" href="{{ .url }}" data-id="{{ .id }}"><i class="mlp-dot" aria-hidden="true"></i><span>{{ .title }}{{ if ne .course $key }} <small>{{ $pc.short }}</small>{{ end }}</span><em class="mlp-sr" data-st></em></a></li>{{ end }}</ul>
+      {{- else if not $leadsX }}<p class="mlp-small">This is one of the top rungs of {{ $c.title }}.</p>{{ end }}
+      {{- with $leadsX }}
+      <p class="mlp-small mlp-also">Also used in other ladders:</p>
+      <ul class="mlp-chips small">{{ range first 8 . }}{{ $pc := index $g.C .course }}<li><a class="mlp-chip" href="{{ .url }}" data-id="{{ .id }}"><i class="mlp-dot" aria-hidden="true"></i><span>{{ .title }} <small>{{ $pc.lshort }}{{ if ne $pc.short $pc.lshort }} · {{ $pc.short }}{{ end }}</small></span><em class="mlp-sr" data-st></em></a></li>{{ end }}{{ if gt (len .) 8 }}<li class="mlp-small mlp-more">and {{ sub (len .) 8 }} more</li>{{ end }}</ul>
+      {{- end }}
     </div>
   </section>
 
   <nav class="mlp-pn" aria-label="Previous and next topic">
-    {{ with $prev }}<a class="mlp-pn-prev" href="{{ printf "math/%s/%s/" $c.slug .slug | relURL }}"><small>Previous topic</small><span>← {{ .title }}</span></a>{{ else }}<span></span>{{ end }}
-    {{ with $nextT }}<a class="mlp-pn-next" href="{{ printf "math/%s/%s/" $c.slug .slug | relURL }}"><small>Next topic</small><span>{{ .title }} →</span></a>{{ end }}
+    {{ with $prev }}<a class="mlp-pn-prev" href="{{ printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL }}"><small>Previous topic</small><span>← {{ .title }}</span></a>{{ else }}<span></span>{{ end }}
+    {{ with $nextT }}<a class="mlp-pn-next" href="{{ printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL }}"><small>Next topic</small><span>{{ .title }} →</span></a>{{ end }}
   </nav>
 
-  {{- with $L }}{{ with .sources }}
+  {{- with $L0 }}{{ with .sources }}
   <section class="mlp-sources" aria-labelledby="mlp-src-h">
     <h2 id="mlp-src-h">Sources and further reading</h2>
     <ul>{{ range . }}<li>{{ if .url }}<a href="{{ .url }}" rel="noopener">{{ .name }}</a>{{ else }}{{ .name }}{{ end }}</li>{{ end }}</ul>
@@ -116,11 +149,12 @@
   {{- $G = $G | append (dict "id" $id "course" $key "unit" $t.unit "title" $t.title "url" .RelPermalink "prereqs" ($t.prereqs | default slice) "xp" ($t.xp | default 2)) }}
   {{- range $pre }}{{ $G = $G | append (dict "id" .id "course" .course "unit" .unit "title" .title "url" .url "prereqs" .prereqs "xp" .xp) }}{{ end }}
   {{- range $leads }}{{ $G = $G | append (dict "id" .id "course" .course "unit" .unit "title" .title "url" .url "prereqs" .prereqs "xp" .xp) }}{{ end }}
-  {{- $allC := slice }}{{ range site.Data.math.courses }}{{ $allC = $allC | append (dict "key" .key "after" (.after | default slice)) }}{{ end }}
-  {{- $nx := dict }}{{ with $nextT }}{{ $nx = dict "id" .id "title" .title "url" (printf "math/%s/%s/" $c.slug .slug | relURL) }}{{ end }}
-  <script type="application/json" id="ml-data">{{ dict "id" $id "course" $key "courseTitle" $c.title "title" $t.title "xp" ($t.xp | default 2) "hasGen" $hasGen "hasLesson" (ne $L false) "next" $nx "courseUrl" (printf "math/%s/" $c.slug | relURL) "graph" (dict "partial" true "courses" $allC "topics" $G) | jsonify | safeJS }}</script>
+  {{- range first 8 $leadsX }}{{ $G = $G | append (dict "id" .id "course" .course "unit" .unit "title" .title "url" .url "prereqs" .prereqs "xp" .xp) }}{{ end }}
+  {{- $allC := slice }}{{ range $g.courses }}{{ $co := dict "key" .key "after" (.after | default slice) }}{{ with .ladder }}{{ $co = merge $co (dict "ladder" .) }}{{ end }}{{ $allC = $allC | append $co }}{{ end }}
+  {{- $nx := dict }}{{ with $nextT }}{{ $nx = dict "id" .id "title" .title "url" (printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL) }}{{ end }}
+  <script type="application/json" id="ml-data">{{ dict "id" $id "course" $key "courseTitle" $c.title "title" $t.title "xp" ($t.xp | default 2) "hasGen" $hasGen "hasLesson" (ne $L0 false) "next" $nx "courseUrl" (printf "%s/%s/" $L.slug $c.slug | relURL) "graph" (dict "partial" true "courses" $allC "topics" $G) | jsonify | safeJS }}</script>
 </div>
-{{ partial "inline/ml-cfg.html" "topic" }}
+{{ partial "inline/ml-cfg.html" (dict "page" "topic" "ladder" $lk) }}
 {{ partial "inline/ml-js.html" "homeschool/calc/cas.js" }}
 {{ partial "inline/ml-js.html" "math/core/gen.js" }}
 {{ partial "inline/ml-js.html" "math/core/tex.js" }}
@@ -131,8 +165,9 @@
 {{ partial "inline/ml-js.html" "math/viz/core.js" }}
 {{ if $needB }}{{ partial "inline/ml-js.html" "math/viz/basic.js" }}{{ end }}
 {{ if $needA }}{{ partial "inline/ml-js.html" "math/viz/adv.js" }}{{ end }}
-{{ if $hasGen }}{{ partial "inline/ml-js.html" (printf "math/gen/%s.js" $key) }}{{ end }}
-{{ if fileExists (printf "static/math/viz/%s.js" $key) }}{{ partial "inline/ml-js.html" (printf "math/viz/%s.js" $key) }}{{ end }}
+{{ range $needK }}{{ if fileExists (printf "static/%s/viz/%s.js" . .) }}{{ partial "inline/ml-js.html" (printf "%s/viz/%s.js" . .) }}{{ end }}{{ end }}
+{{ if fileExists (printf "static/%s" $gpath) }}{{ partial "inline/ml-js.html" $gpath }}{{ end }}
+{{ if fileExists (printf "static/%s/viz/%s.js" $L.dir $key) }}{{ partial "inline/ml-js.html" (printf "%s/viz/%s.js" $L.dir $key) }}{{ end }}
 {{ partial "inline/ml-js.html" "math/app/ui.js" }}
 {{ partial "inline/ml-js.html" "math/app/topic.js" }}
 {{ end }}

@@ -1,10 +1,12 @@
-{{- /* Math Ladder: /math/practice/ — the session: the next task from the engine, one problem card at a time. */ -}}
+{{- /* The Ladders: /<ladder>/practice/ — the session: the next task from the engine, one problem card at a time. */ -}}
 {{ define "main" }}
 {{ partial "inline/ml-head.html" . }}
+{{- $lk := .Params.ladder | default "math" -}}
+{{- $L := partial "inline/ml-ladder.html" $lk -}}
 {{ partial "inline/ml-css.html" "math/viz/basic.css" }}
 {{ partial "inline/ml-css.html" "math/viz/adv.css" }}
 <div class="mlp mlp-session" id="mlp-session">
-  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "math/" | relURL }}">Math</a> <span aria-hidden="true">›</span> <span>Practice</span></nav>
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $L.url }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <span>Practice</span></nav>
   <header class="mlp-shead">
     <div class="mlp-shead-text">
       <h1>Practice</h1>
@@ -13,9 +15,9 @@
     <div class="mlp-shead-stats" id="mlp-sstats" aria-live="polite"></div>
   </header>
   <div id="mlp-task" class="mlp-task" aria-live="polite"><p class="mlp-loading">Finding your next step…</p></div>
-  <noscript><p class="mlp-soon">Math Ladder practice needs JavaScript turned on.</p></noscript>
+  <noscript><p class="mlp-soon">{{ $L.title }} practice needs JavaScript turned on.</p></noscript>
 </div>
-{{ partial "inline/ml-cfg.html" "practice" }}
+{{ partial "inline/ml-cfg.html" (dict "page" "practice" "ladder" $lk) }}
 {{ partial "inline/ml-js.html" "homeschool/calc/cas.js" }}
 {{ partial "inline/ml-js.html" "math/core/gen.js" }}
 {{ partial "inline/ml-js.html" "math/core/tex.js" }}

@@ -1,16 +1,19 @@
-/* Math Ladder progress (/math/progress/): totals and streak, XP by day for the last 30 days (canvas bars with a hover
-   tooltip and a table for screen readers), course progress, reviews coming due this week, the save code, and reset. */
+/* Progress (/<ladder>/progress/): totals and streak, XP by day for the last 30 days (canvas bars with a hover tooltip and a
+   table for screen readers), course progress on EVERY ladder (this page's ladder first), reviews coming due this week on
+   every ladder, the save code, and reset. All ladders share one progress (one localStorage key). */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder, E = ML.engine, ui = ML.ui, base = ML.cfg.base, el = ui.el, esc = ui.esc;
   var statsEl = D.getElementById('mlp-pstats'), chartEl = D.getElementById('mlp-chart'), goalEl = D.getElementById('mlp-goal');
-  var coursesEl = D.getElementById('mlp-pcourses'), revEl = D.getElementById('mlp-previews'), graphOK = false;
+  var coursesEl = D.getElementById('mlp-pcourses'), revEl = D.getElementById('mlp-previews'), graphOK = false, ME = ui.ladder().key;
+  function lOf(id) { return ui.ladderOf(String(id).split('.')[0]); }
+  function otherLadders() { var t = E.state().t, k; for (k in t) if (Object.prototype.hasOwnProperty.call(t, k) && lOf(k).key !== 'math') return true; return false; }
 
   function stats() {
     var t = E.state().t, passed = 0, learning = 0, k;
     for (k in t) if (Object.prototype.hasOwnProperty.call(t, k)) { if (t[k].s === 2) passed++; else if (t[k].s === 1) learning++; }
     var days = Object.keys(E.state().xp).length;
-    statsEl.innerHTML = [[E.xpToday() + ' / ' + E.goal(), 'XP today'], [E.streak(), 'day streak'], [E.totalXP(), 'XP in all'], [passed, 'topics passed'], [graphOK ? E.dueCount() : '…', graphOK && E.dueCount() === 1 ? 'review due today' : 'reviews due today'], [days, 'days practiced']]
+    statsEl.innerHTML = [[E.xpToday() + ' / ' + E.goal(), 'XP today'], [E.streak(), 'day streak'], [E.totalXP(), 'XP in all'], [passed, 'topics passed'], [graphOK ? E.dueCountAll() : '…', graphOK && E.dueCountAll() === 1 ? 'review due today' : 'reviews due today'], [days, 'days practiced']]
       .map(function (s) { return '<div class="mlp-stat"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>'; }).join('');
   }
   function goal() {
@@ -66,11 +69,17 @@
 
   function courses() {
     if (!graphOK) { coursesEl.innerHTML = '<p class="mlp-loading">Loading…</p>'; return; }
-    var rows = ui.courses().filter(function (c) { return c.n; }).map(function (c) { return { c: c, p: E.courseProgress(c.key) }; });
-    var active = rows.filter(function (r) { return r.p.passed || r.p.learning || r.c.key === E.course(); });
-    var list = active.length ? active : rows.slice(0, 0);
-    coursesEl.innerHTML = list.length ? list.map(function (r) {
-      return '<a class="mlp-crow" href="' + r.c.url + '" style="--c:' + r.c.color + '"><span aria-hidden="true">' + r.c.icon + '</span><span>' + esc(r.c.title) + (r.c.key === E.course() ? ' <span class="mlp-tag">Current</span>' : '') + '</span><small>' + r.p.passed + ' / ' + r.p.total + '</small><span class="mlp-rung-bar" role="progressbar" aria-label="' + esc(r.c.title) + ' topics passed" aria-valuemin="0" aria-valuemax="' + r.p.total + '" aria-valuenow="' + r.p.passed + '"><b style="width:' + r.p.pct + '%"></b></span></a>';
+    // every ladder with progress, this page's ladder first
+    var lads = ui.ladders().filter(function (l) { return l.key === ME; }).concat(ui.ladders().filter(function (l) { return l.key !== ME; }));
+    var groups = lads.map(function (l) {
+      var cur = E.course(l.key), rows = ui.allCourses().filter(function (c) { return (c.ladder || 'math') === l.key && c.n; }).map(function (c) { return { c: c, p: E.courseProgress(c.key) }; });
+      return { l: l, cur: cur, list: rows.filter(function (r) { return r.p.passed || r.p.learning || r.c.key === cur; }) };
+    }).filter(function (g) { return g.list.length; });
+    var heads = groups.length > 1 || ME !== 'math';
+    coursesEl.innerHTML = groups.length ? groups.map(function (g) {
+      return (heads ? '<p class="mlp-due-day mlp-lhead"><a href="' + g.l.url + '"><span aria-hidden="true">' + g.l.icon + '</span> ' + esc(g.l.title) + '</a></p>' : '') + g.list.map(function (r) {
+        return '<a class="mlp-crow" href="' + r.c.url + '" style="--c:' + r.c.color + '"><span aria-hidden="true">' + r.c.icon + '</span><span>' + esc(r.c.title) + (r.c.key === g.cur ? ' <span class="mlp-tag">Current</span>' : '') + '</span><small>' + r.p.passed + ' / ' + r.p.total + '</small><span class="mlp-rung-bar" role="progressbar" aria-label="' + esc(r.c.title) + ' topics passed" aria-valuemin="0" aria-valuemax="' + r.p.total + '" aria-valuenow="' + r.p.passed + '"><b style="width:' + r.p.pct + '%"></b></span></a>';
+      }).join('');
     }).join('') : '<p class="mlp-small">No courses started yet. <a href="' + base + 'placement/">Find your rung</a> or pick a course on the <a href="' + base + '">ladder</a>.</p>';
   }
   function reviews() {
@@ -81,8 +90,14 @@
     if (!days.length) { revEl.innerHTML = '<p class="mlp-small">Nothing due in the next 7 days. Reviews appear here after you pass topics.</p>'; return; }
     revEl.innerHTML = days.map(function (d) {
       var ids = by[d], show = ids.slice(0, 4);
-      return '<p class="mlp-due-day">' + (d === today ? 'Today' : d === today + 1 ? 'Tomorrow' : ui.dayName(d)) + ' · ' + ids.length + '</p><ul class="mlp-due-list">' + show.map(function (id) { var t = G.T[id]; return '<li>' + (t ? '<a href="' + t.url + '">' + esc(t.title) + '</a>' : esc(id)) + '</li>'; }).join('') + (ids.length > show.length ? '<li class="mlp-small">and ' + (ids.length - show.length) + ' more</li>' : '') + '</ul>';
-    }).join('') + (by[today] ? '<div class="mlp-acts"><a class="mlp-btn pri small" href="' + base + 'practice/">Do today’s reviews</a></div>' : '');
+      return '<p class="mlp-due-day">' + (d === today ? 'Today' : d === today + 1 ? 'Tomorrow' : ui.dayName(d)) + ' · ' + ids.length + '</p><ul class="mlp-due-list">' + show.map(function (id) { var t = G.T[id], l = lOf(id); return '<li>' + (t ? '<a href="' + t.url + '">' + esc(t.title) + '</a>' : esc(id)) + (l.key !== ME ? ' <small class="mlp-lad">' + esc(l.short) + '</small>' : '') + '</li>'; }).join('') + (ids.length > show.length ? '<li class="mlp-small">and ' + (ids.length - show.length) + ' more</li>' : '') + '</ul>';
+    }).join('') + (by[today] ? '<div class="mlp-acts">' + dueButtons() + '</div>' : '');
+  }
+  function dueButtons() { // one button per ladder with reviews due today, this page's ladder first
+    var seen = {}, out = '';
+    if (E.dueCount()) { seen[ME] = 1; out += '<a class="mlp-btn pri small" href="' + base + 'practice/">Do today’s reviews</a>'; }
+    E.dueAll().forEach(function (id) { var l = lOf(id); if (seen[l.key]) return; seen[l.key] = 1; out += '<a class="mlp-btn small' + (out ? '' : ' pri') + '" href="' + l.url + 'practice/">Reviews on the ' + esc(l.title) + '</a>'; });
+    return out;
   }
   function paint() { stats(); goal(); chart(); courses(); reviews(); }
 
@@ -91,9 +106,9 @@
   reset.addEventListener('click', function () {
     if (reset.dataset.armed) return;
     reset.dataset.armed = '1'; reset.hidden = true;
-    var box = el('div', 'mlp-confirm'); box.innerHTML = '<p><b>Erase all Math Ladder progress in this browser?</b> This can’t be undone unless you have a save code.</p>';
+    var box = el('div', 'mlp-confirm'); box.innerHTML = otherLadders() || ME !== 'math' ? '<p><b>Erase all your progress on every ladder in this browser?</b> That is every topic, review, XP point and placement on ' + ui.ladders().map(function (l) { return esc(l.title); }).join(', ') + '. This can’t be undone unless you have a save code.</p>' : '<p><b>Erase all Math Ladder progress in this browser?</b> This can’t be undone unless you have a save code.</p>';
     var row = el('div', 'mlp-save-row');
-    row.appendChild(ui.btn('Yes, erase it', 'warn small', function () { E.reset(); box.remove(); reset.hidden = false; delete reset.dataset.armed; msg.textContent = 'Erased. Math Ladder starts fresh in this browser.'; }));
+    row.appendChild(ui.btn('Yes, erase it', 'warn small', function () { E.reset(); box.remove(); reset.hidden = false; delete reset.dataset.armed; msg.textContent = ME === 'math' ? 'Erased. Math Ladder starts fresh in this browser.' : 'Erased. Every ladder starts fresh in this browser.'; }));
     row.appendChild(ui.btn('No, keep it', 'ghost small', function () { box.remove(); reset.hidden = false; delete reset.dataset.armed; msg.textContent = 'Nothing changed.'; reset.focus(); }));
     box.appendChild(row); reset.parentNode.insertBefore(box, msg); row.querySelector('button').focus();
   });

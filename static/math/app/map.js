@@ -1,6 +1,7 @@
-/* Math Ladder skill map (/math/map/?course=<key>): a course's topics as a layered graph, prerequisites below and the
+/* A ladder's skill map (/<ladder>/map/?course=<key>): a course's topics as a layered graph, prerequisites below and the
    topics built on them above, colored by state. Drag to pan; wheel, pinch or the buttons to zoom; click or Enter opens a
-   topic; hover or focus highlights what a topic builds on and leads to. Skills from earlier courses sit on the bottom row. */
+   topic; hover or focus highlights what a topic builds on and leads to. Skills from earlier courses (or other ladders) sit
+   on the bottom row; topics still being written are drawn dashed with a pencil. */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder, E = ML.engine, ui = ML.ui, base = ML.cfg.base, esc = ui.esc;
@@ -17,6 +18,10 @@
     return lines;
   }
 
+  function extName(ck) { // "Algebra 1", or "Math · Algebra 1" for a course from another ladder
+    var c = ui.course(ck) || {}, l = ui.ladderOf(ck);
+    return (l && l.key !== ui.ladder().key ? l.short + ' · ' : '') + (c.short || ck);
+  }
   function layout(k) {
     var G = E.graph(), ids = (G.byCourse[k] || []).slice(), inC = {}, ext = [], layer = {}, units = {};
     ids.forEach(function (id) { inC[id] = 1; });
@@ -48,7 +53,7 @@
     var out = {};
     vrows.forEach(function (r, vi) {
       var rw = r.length * (NW + GX) - GX, x0 = (W0 - rw) / 2;
-      r.forEach(function (id, j) { out[id] = { id: id, x: x0 + j * (NW + GX), y: (V - 1 - vi) * (NH + GY), ext: !inC[id], unit: inC[id] ? units[G.T[id].unit] || '' : (ui.course(G.T[id].course) || {}).short || '' }; });
+      r.forEach(function (id, j) { out[id] = { id: id, x: x0 + j * (NW + GX), y: (V - 1 - vi) * (NH + GY), ext: !inC[id], unit: inC[id] ? units[G.T[id].unit] || '' : extName(G.T[id].course) }; });
     });
     return { nodes: out, w: W0, h: V * (NH + GY) - GY, ids: all };
   }
@@ -59,7 +64,7 @@
     D.title = (c ? c.title + ' skill map' : 'Skill map') + ' | Teddy Rook Book';
     box.querySelectorAll('svg,.mlp-loading,.mlp-map-info').forEach(function (e) { e.remove(); });
     if (!G.byCourse[k] || !G.byCourse[k].length) { box.insertAdjacentHTML('beforeend', '<p class="mlp-loading">The skill map for this course is coming soon.</p>'); return; }
-    var lay = layout(k); nodes = lay.nodes; edges = [];
+    var lay = layout(k), nSoon = 0; nodes = lay.nodes; edges = [];
     svg = s('svg', { 'aria-hidden': 'false', role: 'group', 'aria-label': 'Skill map of ' + (c ? c.title : k) });
     gAll = s('g', {}, svg);
     var gE = s('g', {}, gAll), gN = s('g', {}, gAll);
@@ -73,18 +78,21 @@
       });
     });
     lay.ids.forEach(function (id) {
-      var n = nodes[id], t = G.T[id], st = n.ext ? 'ext' : E.status(id, k);
-      var g = s('g', { class: 'mlp-node ' + (n.ext ? 'ext' : 'st-' + st), transform: 'translate(' + n.x + ' ' + n.y + ')', tabindex: '0', role: 'link', 'aria-label': t.title + (n.ext ? ', from ' + n.unit : ', ' + ui.LABEL[st]) }, gN);
+      var n = nodes[id], t = G.T[id], st = n.ext ? 'ext' : E.status(id, k), wip = !!t.soon;
+      if (wip && !n.ext) nSoon++;
+      var g = s('g', { class: 'mlp-node ' + (n.ext ? 'ext' : 'st-' + st) + (wip ? ' soon' : ''), transform: 'translate(' + n.x + ' ' + n.y + ')', tabindex: '0', role: 'link', 'aria-label': t.title + (n.ext ? ', from ' + n.unit : ', ' + ui.LABEL[st]) + (wip ? ', being written' : '') }, gN);
       s('rect', { width: NW, height: NH, rx: 11 }, g);
       var u = s('text', { x: 10, y: 15, class: 'u' }, g); u.textContent = n.unit.length > 23 ? n.unit.slice(0, 22) + '…' : n.unit;
       wrap(t.title, 23).forEach(function (line, i) { var tx = s('text', { x: 10, y: 31 + i * 15 }, g); tx.textContent = line; });
       if (!n.ext && (st === 'passed' || st === 'due')) { var ck = s('text', { x: NW - 18, y: 16, class: 'u' }, g); ck.textContent = st === 'due' ? '↻' : '✓'; }
+      else if (wip) { var pw = s('text', { x: NW - 18, y: 16, class: 'u' }, g); pw.textContent = '✎'; }
       g.addEventListener('mouseenter', function () { hi(id); }); g.addEventListener('focus', function () { hi(id); ensureVisible(n); });
       g.addEventListener('mouseleave', function () { hi(null); }); g.addEventListener('blur', function () { hi(null); });
       g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); W.location.href = t.url; } });
       g._id = id;
     });
     box.appendChild(svg);
+    var leg = D.querySelector('.mlp-leg-soon'); if (leg) leg.hidden = !nSoon;
     info = D.createElement('div'); info.className = 'mlp-map-info'; info.setAttribute('aria-live', 'polite'); box.appendChild(info);
     size = { w: lay.w, h: lay.h }; fit();
   }
@@ -95,7 +103,8 @@
     if (!id) { info.innerHTML = ''; return; }
     var t = G.T[id], n = nodes[id], pre = t.prereqs.length, lead = (G.kids[id] || []).filter(function (c) { return nodes[c]; }).length;
     svg.querySelectorAll('.mlp-node').forEach(function (g) { if (g._id === id) g.classList.add('hi'); });
-    info.innerHTML = '<p><b>' + esc(t.title) + '</b>' + (n.ext ? ' <span class="mlp-small">(' + esc(n.unit) + ')</span>' : '') + '</p><p class="mlp-small">' + (n.ext ? 'From an earlier course' : esc(ui.LABEL[E.status(id, key)])) + ' · builds on ' + pre + ' · leads to ' + lead + (t.short ? '<br>' + esc(t.short) : '') + '</p>';
+    var xl = n.ext && ui.ladderOf(t.course).key !== ui.ladder().key;
+    info.innerHTML = '<p><b>' + esc(t.title) + '</b>' + (n.ext ? ' <span class="mlp-small">(' + esc(n.unit) + ')</span>' : '') + '</p><p class="mlp-small">' + (n.ext ? (xl ? 'From the ' + esc(ui.ladderOf(t.course).title) : 'From an earlier course') : esc(ui.LABEL[E.status(id, key)]) + (t.soon ? ' · being written' : '')) + ' · builds on ' + pre + ' · leads to ' + lead + (t.short ? '<br>' + esc(t.short) : '') + '</p>';
   }
 
   /* ---- pan and zoom ---- */

@@ -1,4 +1,4 @@
-/* Math Ladder practice session (/math/practice/[?course=<key>]): asks the engine for the next task (a new topic with its
+/* A ladder's practice session (/<ladder>/practice/[?course=<key>]): asks the engine for the next task (a new topic with its
    lesson inline, a mixed review, a checkpoint), runs it one problem card at a time, then asks again. Shows XP today against
    the daily goal, the streak and reviews due; "done for today" when the goal is reached (you can keep going). */
 (function (W, D) {
@@ -6,16 +6,20 @@
   var ML = W.MathLadder, E = ML.engine, ui = ML.ui, cfg = ML.cfg, base = cfg.base, el = ui.el, esc = ui.esc;
   var task = D.getElementById('mlp-task'), stats = D.getElementById('mlp-sstats'), courseLine = D.getElementById('mlp-scourse');
   var loaded = {}, keepGoing = false, goalShown = E.xpToday() >= E.goal(), startNote = '';
+  var LAD = ui.ladder(), mine = function (k) { var c = ui.course(k); return !!c && (c.ladder || 'math') === LAD.key; };
+  function readyN(c) { return c.r !== undefined ? c.r : c.n; }
+  var anyReady = ui.courses().some(function (c) { return readyN(c) > 0; });
 
   // ?course=<key>: start or switch to that course
   var q = new URLSearchParams(W.location.search), want = q.get('course');
-  if (want && ui.course(want)) {
+  if (want && ui.course(want) && mine(want)) {
     if (E.course() !== want) { E.setCourse(want); startNote = want; }
     try { W.history.replaceState(null, '', W.location.pathname); } catch (e) { }
   }
 
   E.setFilter(function (id) {
-    var c = String(id).split('.')[0];
+    var c = String(id).split('.')[0], T0 = E.graph().T[id];
+    if (T0 && T0.soon) return false; // being written: no lesson or no generator yet
     if (!cfg.gen || !cfg.gen[c]) return false;
     return loaded[c] ? !!(ML.hasGen && ML.hasGen(id)) : true;
   });
@@ -28,7 +32,8 @@
   function header() {
     var xp = E.xpToday(), goal = E.goal(), due = E.dueCount(), st = E.streak(), c = ui.course(E.course());
     stats.innerHTML = ui.ring(xp, goal, 58) + '<p><b>' + xp + '</b> / ' + goal + ' XP today<br>' + (st ? '<span>' + st + '-day streak</span> · ' : '') + '<span>' + due + ' review' + (due === 1 ? '' : 's') + ' due</span></p>';
-    var opts = ui.courses().filter(function (k) { return k.n; }).map(function (k) { return '<option value="' + k.key + '"' + (c && k.key === c.key ? ' selected' : '') + '>' + esc(k.title) + '</option>'; }).join('');
+    var opts = ui.courses().filter(function (k) { return readyN(k); }).map(function (k) { return '<option value="' + k.key + '"' + (c && k.key === c.key ? ' selected' : '') + '>' + esc(k.title) + '</option>'; }).join('');
+    if (!anyReady) { courseLine.innerHTML = ''; return; }
     courseLine.innerHTML = '<label class="mlp-select"><span>Course</span><select id="mlp-scsel">' + (c ? '' : '<option value="">Choose a course</option>') + opts + '</select></label>' + (c ? '<a href="' + c.url + '">Course page</a> · <a href="' + base + 'map/?course=' + c.key + '">Skill map</a>' : '');
     D.getElementById('mlp-scsel').addEventListener('change', function () { if (this.value) { E.setCourse(this.value); startNote = this.value; run(); } });
   }
@@ -73,8 +78,9 @@
   }
 
   function showLearn(t) {
-    var T = E.graph().T[t.id], c = ui.course(T.course), r = E.rec(t.id), fresh = r.s === 0;
-    var why = t.reason === 'prereq' ? 'A skill from ' + esc(c ? c.title : 'an earlier course') + ' first' + (E.graph().T[t.for] ? ', for <b>' + esc(E.graph().T[t.for].title) + '</b>' : '')
+    var T = E.graph().T[t.id], c = ui.course(T.course), r = E.rec(t.id), fresh = r.s === 0, ol = t.ladder ? ui.ladderOf(T.course) : null;
+    var why = t.reason === 'prereq' ? 'A skill from ' + (ol ? 'the ' + esc(ol.title) + (c && c.title !== ol.short ? ' (' + esc(c.title) + ')' : '') : esc(c ? c.title : 'an earlier course')) + ' first' + (E.graph().T[t.for] ? ', for <b>' + esc(E.graph().T[t.for].title) + '</b>' : '')
+      : t.reason === 'focus' ? 'From your test practice' + (c ? ' · ' + esc(c.title) : '')
       : t.reason === 'continue' ? 'Keep going' : t.reason === 'retry' ? 'Try again' : 'New topic' + (c ? ' · ' + esc(c.title) : '');
     task.innerHTML = '';
     if (startNote && ui.course(startNote)) {
@@ -83,6 +89,7 @@
       startNote = '';
     }
     var hd = el('div'); hd.innerHTML = banner(c ? c.icon : '📘', why, '<a href="' + T.url + '">' + esc(T.title) + '</a>', esc(T.short || ''));
+    if (ol) hd.firstChild.classList.add('mlp-tbanner-x');
     task.appendChild(hd.firstChild);
     lessonInto(task, T, fresh);
     var box = el('div'); task.appendChild(box);
@@ -110,7 +117,18 @@
     var a = el('a', 'mlp-btn', 'Back to the ladder'); a.href = base; row.appendChild(a);
     box.appendChild(row); task.appendChild(box);
   }
+  function showSoon() {
+    task.innerHTML = '';
+    var box = el('section', 'mlp-done-day');
+    box.innerHTML = '<div class="mlp-bigemoji" aria-hidden="true">✎</div><h2>Practice for the ' + esc(LAD.title) + ' is coming soon</h2><p>Its skill maps are ready, and the lessons and practice problems are being written now. Explore the courses to see what you’ll learn; your XP, streak and reviews from other ladders are waiting where you left them.</p>';
+    var row = el('div', 'mlp-acts'), a = el('a', 'mlp-btn pri', 'Explore the skill maps'); a.href = base + 'map/'; row.appendChild(a);
+    var b = el('a', 'mlp-btn', 'See the ladder'); b.href = base; row.appendChild(b);
+    var dl = E.dueAll ? E.dueAll().map(function (id) { return ui.ladderOf(String(id).split('.')[0]); })[0] : null;
+    if (dl && dl.key !== LAD.key) { var m = el('a', 'mlp-btn', 'Your reviews on the ' + esc(dl.title)); m.href = dl.url + 'practice/'; row.appendChild(m); }
+    box.appendChild(row); task.appendChild(box);
+  }
   function showStart() {
+    if (!anyReady) return showSoon();
     task.innerHTML = '';
     var box = el('section', 'mlp-done-day');
     box.innerHTML = '<div class="mlp-bigemoji" aria-hidden="true">🪜</div><h2>Where would you like to start?</h2><p>Take the short placement check to find your rung, or choose a course above. Earlier courses count as known when you pick one; you can always step back.</p>';
@@ -122,6 +140,7 @@
   var guard = 0;
   function run() {
     header();
+    if (!anyReady) return showSoon();
     if (!keepGoing && !goalShown && E.xpToday() >= E.goal()) { goalShown = true; return doneForToday(); }
     var t = E.next();
     var ids = t.type === 'learn' ? [t.id] : t.type === 'review' ? t.items.map(function (x) { return x.id; }) : t.type === 'checkpoint' ? t.items : [];

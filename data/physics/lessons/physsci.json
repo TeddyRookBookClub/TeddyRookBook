@@ -1,0 +1,3538 @@
+{
+ "physsci.speed": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You already know <a href=\"/math/grade-6/unit-rate-problems/\">unit rates and constant speed</a>: 120 miles in 3 hours is 40 miles per hour. Physics uses the same idea, measured in SI units: distance in meters (m), time in seconds (s), so speed comes out in <b>meters per second</b> (m/s)."
+   },
+   {
+    "t": "key",
+    "html": "<b>Average speed</b> is the total distance divided by the total time: $$s = \\dfrac{d}{t}$$ Rearranged, $d = s\\,t$ and $t = \\dfrac{d}{s}$."
+   },
+   {
+    "t": "why",
+    "html": "Speed answers the question \"how many meters each second?\" If you run 100 m in 20 s at a steady pace, every second covers the same share: $100 \\div 20 = 5$ meters each second. When the pace changes, the average speed is the steady speed that would cover the same distance in the same time."
+   },
+   {
+    "t": "viz",
+    "name": "ph-motion",
+    "opts": {
+     "x0": 0,
+     "v0": 2,
+     "a": 0,
+     "tmax": 6,
+     "graphs": [
+      "x"
+     ],
+     "show": [
+      "odometer"
+     ]
+    },
+    "cap": "A cart at a steady 2 m/s. The dots of the motion map are evenly spaced: equal distances in equal times. Press Play and watch the distance grow by 2 m every second."
+   },
+   {
+    "t": "ex",
+    "title": "A sprint",
+    "q": "In 2009 Usain Bolt ran 100 m in 9.58 s. What was his average speed?",
+    "steps": [
+     "Use $s = \\dfrac{d}{t}$ with $d = 100\\,\\mathrm{m}$ and $t = 9.58\\,\\mathrm{s}$.",
+     "$s = \\dfrac{100\\,\\mathrm{m}}{9.58\\,\\mathrm{s}} \\approx 10.4\\,\\mathrm{m/s}$.",
+     "He started from rest, so his top speed was higher than this average."
+    ],
+    "a": "About $10.4\\,\\mathrm{m/s}$"
+   },
+   {
+    "t": "ex",
+    "title": "A trip in two parts",
+    "q": "A bus drives 60 km at 60 km/h, then hits traffic and drives the next 60 km at 30 km/h. What is its average speed for the whole trip?",
+    "steps": [
+     "Time for part 1: $t_1 = \\dfrac{60\\,\\mathrm{km}}{60\\,\\mathrm{km/h}} = 1\\,\\mathrm{h}$.",
+     "Time for part 2: $t_2 = \\dfrac{60\\,\\mathrm{km}}{30\\,\\mathrm{km/h}} = 2\\,\\mathrm{h}$.",
+     "Total distance $120\\,\\mathrm{km}$, total time $3\\,\\mathrm{h}$.",
+     "$s = \\dfrac{120\\,\\mathrm{km}}{3\\,\\mathrm{h}} = 40\\,\\mathrm{km/h}$."
+    ],
+    "a": "$40\\,\\mathrm{km/h}$, not 45 km/h"
+   },
+   {
+    "t": "mistake",
+    "html": "Averaging the two speeds: $(60 + 30) \\div 2 = 45$ km/h. That would only work if the bus spent <b>equal times</b> at each speed. Here it spent twice as long crawling at 30 km/h, so the average leans toward 30. Check: always divide the <b>total distance</b> by the <b>total time</b>."
+   },
+   {
+    "t": "note",
+    "html": "Light is the fastest thing there is: about 300,000 km every second. Even so, sunlight takes about 8 minutes and 20 seconds to cover the 150 million km to Earth, so you see the Sun as it was a few minutes ago."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 2.3 Time, Velocity, and Speed"
+   }
+  ]
+ },
+ "physsci.distance-time-graphs": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A distance-time graph tells the story of a trip. Time runs along the bottom; the distance traveled from the start runs up the side. Its <a href=\"/math/pre-algebra/slope-rate-of-change/\">slope</a>, the rise over the run, is meters per second: the <a href=\"/physics/physical-science/speed/\">speed</a>."
+   },
+   {
+    "t": "key",
+    "html": "On a distance-time graph, <b>slope = speed</b>. A steeper line means faster. A flat line means stopped. A straight line means a steady speed."
+   },
+   {
+    "t": "why",
+    "html": "Over any piece of the graph, the rise is the distance covered and the run is the time it took. Rise ÷ run is distance ÷ time, which is the definition of speed. A flat line has zero rise: time passes but the distance does not change."
+   },
+   {
+    "t": "viz",
+    "name": "ph-graph",
+    "opts": {
+     "pts": [
+      [
+       0,
+       0
+      ],
+      [
+       4,
+       12
+      ],
+      [
+       7,
+       12
+      ],
+      [
+       9,
+       20
+      ]
+     ],
+     "xlab": "t",
+     "xunit": "s",
+     "ylab": "d",
+     "yunit": "m",
+     "tool": "slope",
+     "at": 2,
+     "domain": [
+      0,
+      9
+     ]
+    },
+    "cap": "A walk with a stop. Drag the gold point along the graph: the slope is 3 m/s at first, 0 m/s while stopped, then 4 m/s."
+   },
+   {
+    "t": "ex",
+    "title": "Read the speed from the slope",
+    "q": "A graph goes from (0 s, 0 m) to (4 s, 12 m). What is the speed?",
+    "steps": [
+     "Rise: $12\\,\\mathrm{m} - 0\\,\\mathrm{m} = 12\\,\\mathrm{m}$.",
+     "Run: $4\\,\\mathrm{s} - 0\\,\\mathrm{s} = 4\\,\\mathrm{s}$.",
+     "Slope: $\\dfrac{12\\,\\mathrm{m}}{4\\,\\mathrm{s}} = 3\\,\\mathrm{m/s}$."
+    ],
+    "a": "$3\\,\\mathrm{m/s}$"
+   },
+   {
+    "t": "ex",
+    "title": "Compare the parts",
+    "q": "In the graph above, which part is fastest?",
+    "steps": [
+     "From 0 s to 4 s: $12 \\div 4 = 3$ m/s.",
+     "From 4 s to 7 s the line is flat: 0 m/s, stopped.",
+     "From 7 s to 9 s: $(20 - 12) \\div (9 - 7) = 4$ m/s. This part is the steepest."
+    ],
+    "a": "The last part, at $4\\,\\mathrm{m/s}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading the graph as a picture of the path. A line that slopes up does <b>not</b> mean the walker is going uphill, and a flat line does not mean a flat road. The graph only shows how the distance grows with time. A runner on a flat track makes a steep line; a hiker resting on a mountaintop makes a flat one."
+   },
+   {
+    "t": "note",
+    "html": "Running and cycling apps record your distance every second and draw this graph for you. A curve that gets steeper means speeding up; one that gets flatter means slowing down."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 2.8 Graphical Analysis of One-Dimensional Motion"
+   }
+  ]
+ },
+ "physsci.distance-displacement": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "To find a <a href=\"/physics/physical-science/speed/\">speed</a> you need a distance. But suppose you walk 5 m east, then 2 m back west. How far did you go? That depends on what the question means. Physics keeps two different answers apart, and a <a href=\"/math/grade-6/rational-number-line/\">number line</a> shows both."
+   },
+   {
+    "t": "key",
+    "html": "<b>Distance</b> is the total length of the path you traveled; it is never negative. <b>Displacement</b> is the straight change in position from start to finish, with a direction (or a sign)."
+   },
+   {
+    "t": "why",
+    "html": "Put the start at 0 and call east positive. Walking 5 m east takes you to $+5$; walking 2 m west takes you to $+3$. You covered $5 + 2 = 7$ m of ground, so the distance is 7 m. But you ended only 3 m east of where you began, so the displacement is $+3$ m. Moves in opposite directions add to the distance but cancel in the displacement."
+   },
+   {
+    "t": "viz",
+    "name": "ph-motion",
+    "opts": {
+     "x0": 0,
+     "v0": 3,
+     "a": -1,
+     "tmax": 6,
+     "graphs": [
+      "x"
+     ],
+     "show": [
+      "odometer"
+     ]
+    },
+    "cap": "A cart rolls right, slows, stops and comes back. Watch the readout at the top: the distance keeps growing, but the displacement shrinks back to 0 m when the cart returns to its start."
+   },
+   {
+    "t": "ex",
+    "title": "There and partly back",
+    "q": "A dog runs 12 m east to fetch a stick, then 4 m west. Find the distance and the displacement.",
+    "steps": [
+     "Distance: add the lengths, $12 + 4 = 16$ m.",
+     "Displacement: with east positive, $+12 + (-4) = +8$ m.",
+     "So the dog ended 8 m east of where it started."
+    ],
+    "a": "Distance 16 m; displacement 8 m east"
+   },
+   {
+    "t": "ex",
+    "title": "A round trip",
+    "q": "A swimmer swims one 50 m length of a pool and back. Find the distance and the displacement.",
+    "steps": [
+     "Distance: $50 + 50 = 100$ m.",
+     "Displacement: $+50 + (-50) = 0$ m. She is back where she started."
+    ],
+    "a": "Distance 100 m; displacement 0 m"
+   },
+   {
+    "t": "mistake",
+    "html": "Giving the distance walked when the question asks how far from the start you ended up. \"How far from the start\" means the displacement. Check: picture where you finished on the number line and measure straight back to 0."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 2.1 Displacement"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 2.2 Vectors, Scalars, and Coordinate Systems"
+   }
+  ]
+ },
+ "physsci.velocity": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A weather report might say the wind blows \"at 20 km/h from the northwest.\" That is more than a <a href=\"/physics/physical-science/speed/\">speed</a>; it also says which way. Speed together with direction is called <b>velocity</b>, and it is built from <a href=\"/physics/physical-science/distance-displacement/\">displacement</a> the way speed is built from distance."
+   },
+   {
+    "t": "key",
+    "html": "<b>Velocity</b> is speed with a direction: how fast and which way. Average velocity = displacement ÷ time. On a line we show the direction with a sign: + one way, − the other."
+   },
+   {
+    "t": "why",
+    "html": "Two cars both going 50 km/h, one north and one south, are clearly not doing the same thing: in an hour they end up 100 km apart. Speed can't tell them apart, but velocity can: $+50$ km/h and $-50$ km/h. That is why changing direction changes your velocity even when the speedometer doesn't move."
+   },
+   {
+    "t": "viz",
+    "name": "ph-motion",
+    "opts": {
+     "x0": 10,
+     "v0": -2,
+     "a": 0,
+     "tmax": 5,
+     "graphs": [
+      "x",
+      "v"
+     ]
+    },
+    "cap": "A cart moving left at 2 m/s. With right as positive, its velocity is −2 m/s: the v-graph sits below zero, and the position shrinks as time passes."
+   },
+   {
+    "t": "ex",
+    "title": "Speed and velocity on one trip",
+    "q": "A runner jogs 300 m east, then 100 m west, in a total of 100 s. Find her average speed and her average velocity.",
+    "steps": [
+     "Distance: $300 + 100 = 400$ m. Average speed: $400 \\div 100 = 4$ m/s.",
+     "Displacement (east positive): $300 - 100 = +200$ m.",
+     "Average velocity: $+200\\,\\mathrm{m} \\div 100\\,\\mathrm{s} = +2$ m/s, which means 2 m/s east."
+    ],
+    "a": "Average speed 4 m/s; average velocity 2 m/s east"
+   },
+   {
+    "t": "ex",
+    "title": "Same speed, new velocity",
+    "q": "A cyclist rides at 6 m/s east, turns around and rides at 6 m/s west. Take east as positive. How did her velocity change?",
+    "steps": [
+     "Before: $v = +6$ m/s. After: $v = -6$ m/s.",
+     "Change: $-6 - (+6) = -12$ m/s, even though her speed stayed 6 m/s."
+    ],
+    "a": "From $+6$ m/s to $-6$ m/s"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking two cars going 50 km/h in opposite directions have the same velocity. They have the same <b>speed</b>; their velocities are $+50$ and $-50$ km/h. Check: if two velocities are equal, the objects move together and the gap between them never changes."
+   },
+   {
+    "t": "note",
+    "html": "Earth carries you around the Sun at about 30 km/s. That speed hardly changes during the year, but the direction turns all the way around, so Earth's velocity is always changing."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 2.3 Time, Velocity, and Speed"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 2.2 Vectors, Scalars, and Coordinate Systems"
+   }
+  ]
+ },
+ "physsci.acceleration-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A car pulling away from a stop light, a bike braking, a skateboarder carving a turn: in each, the <a href=\"/physics/physical-science/velocity/\">velocity</a> is changing. How fast it changes is the <b>acceleration</b>. Finding it is a subtraction and a division, and the signs come straight from <a href=\"/math/grade-7/integer-operations/\">signed-number arithmetic</a>."
+   },
+   {
+    "t": "key",
+    "html": "Acceleration is the change in velocity divided by the time it took: $$a = \\dfrac{\\Delta v}{\\Delta t} = \\dfrac{v_f - v_i}{t}$$ Its unit is meters per second per second, written m/s²."
+   },
+   {
+    "t": "why",
+    "html": "If a car's velocity goes from 0 to 12 m/s in 4 s, it gains 3 m/s every second: 3, 6, 9, 12. So its acceleration is 3 (m/s) per second, or 3 m/s². The \"per second\" appears twice because acceleration is a rate of change of a rate of change."
+   },
+   {
+    "t": "viz",
+    "name": "ph-motion",
+    "opts": {
+     "x0": 0,
+     "v0": 0,
+     "segments": [
+      {
+       "dur": 3,
+       "a": 2
+      },
+      {
+       "dur": 2,
+       "a": 0
+      },
+      {
+       "dur": 3,
+       "a": -2
+      }
+     ],
+     "graphs": [
+      "v",
+      "a"
+     ]
+    },
+    "cap": "A cart speeds up, cruises, then brakes. While speeding up, v and a point the same way; while braking, the acceleration arrow points backward. At steady speed, a = 0."
+   },
+   {
+    "t": "ex",
+    "title": "Speeding up",
+    "q": "A car goes from 4 m/s to 22 m/s in 6 s. Find its acceleration.",
+    "steps": [
+     "Change in velocity: $\\Delta v = 22 - 4 = 18$ m/s.",
+     "$a = \\dfrac{18\\,\\mathrm{m/s}}{6\\,\\mathrm{s}} = 3\\,\\mathrm{m/s^2}$."
+    ],
+    "a": "$3\\,\\mathrm{m/s^2}$"
+   },
+   {
+    "t": "ex",
+    "title": "Slowing down",
+    "q": "A bike moving forward at 10 m/s brakes to a stop in 4 s. Take forward as positive. Find the acceleration.",
+    "steps": [
+     "$\\Delta v = 0 - 10 = -10$ m/s.",
+     "$a = \\dfrac{-10\\,\\mathrm{m/s}}{4\\,\\mathrm{s}} = -2.5\\,\\mathrm{m/s^2}$.",
+     "The minus sign says the acceleration points backward, against the motion, so the bike slows down."
+    ],
+    "a": "$-2.5\\,\\mathrm{m/s^2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking acceleration means \"going fast.\" A jet cruising at a steady 250 m/s in a straight line has zero acceleration; a car just starting from rest has a large one. Slowing down is acceleration too, and so is turning at a steady speed, because the direction of the velocity changes."
+   },
+   {
+    "t": "note",
+    "html": "Anything dropped near Earth, with air resistance too small to matter, gains about 9.8 m/s of downward speed every second. That is an acceleration of 9.8 m/s², the same for a pebble and a bowling ball."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 2.4 Acceleration"
+   }
+  ]
+ },
+ "physsci.speed-time-graphs": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A speed-time graph puts time along the bottom and speed up the side. It looks like a <a href=\"/physics/physical-science/distance-time-graphs/\">distance-time graph</a>, but it tells a different story. Here the slope is the change in speed per second: the <a href=\"/physics/physical-science/acceleration-intro/\">acceleration</a>."
+   },
+   {
+    "t": "key",
+    "html": "On a speed-time graph: a rising line means speeding up, a flat line means a <b>steady speed</b>, a falling line means slowing down, and a line along the time axis means stopped. Slope = acceleration."
+   },
+   {
+    "t": "why",
+    "html": "Over any piece of the graph, the rise is a change in speed and the run is a time, so rise ÷ run is $\\dfrac{\\Delta v}{\\Delta t}$, the acceleration. A flat line has zero rise: the speed is not changing, but it is not zero either, so the object keeps moving."
+   },
+   {
+    "t": "viz",
+    "name": "ph-motion",
+    "opts": {
+     "x0": 0,
+     "v0": 0,
+     "segments": [
+      {
+       "dur": 2,
+       "a": 1.5
+      },
+      {
+       "dur": 2,
+       "a": 0
+      },
+      {
+       "dur": 2,
+       "a": -1.5
+      }
+     ],
+     "graphs": [
+      "x",
+      "v"
+     ]
+    },
+    "cap": "The same motion on both graphs. While the speed graph is flat (2 s to 4 s), the distance graph is a straight rising line: steady speed, still moving."
+   },
+   {
+    "t": "ex",
+    "title": "Acceleration from the slope",
+    "q": "A speed-time graph rises in a straight line from 2 m/s at 0 s to 14 m/s at 4 s. Find the acceleration.",
+    "steps": [
+     "Rise: $14 - 2 = 12$ m/s.",
+     "Run: $4 - 0 = 4$ s.",
+     "Slope: $a = \\dfrac{12\\,\\mathrm{m/s}}{4\\,\\mathrm{s}} = 3\\,\\mathrm{m/s^2}$."
+    ],
+    "a": "$3\\,\\mathrm{m/s^2}$"
+   },
+   {
+    "t": "ex",
+    "title": "A flat stretch",
+    "q": "A speed-time graph is flat at 8 m/s from 4 s to 10 s. What is happening, and how far does the object go?",
+    "steps": [
+     "Flat line: the speed stays 8 m/s, so the acceleration is 0.",
+     "The object is still moving: distance $= s\\,t = 8\\,\\mathrm{m/s} \\times 6\\,\\mathrm{s} = 48\\,\\mathrm{m}$.",
+     "That is the area of the rectangle under the line, 8 tall and 6 wide."
+    ],
+    "a": "Steady speed; 48 m"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing up the two graphs. A flat line on a <b>distance</b>-time graph means stopped. A flat line on a <b>speed</b>-time graph means moving at a steady speed. Check the label on the side axis before you read the shape."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Shape of the line",
+     "Distance-time graph",
+     "Speed-time graph"
+    ],
+    "rows": [
+     [
+      "Flat",
+      "Stopped",
+      "Steady speed"
+     ],
+     [
+      "Straight, rising",
+      "Steady speed",
+      "Speeding up steadily"
+     ],
+     [
+      "Falling",
+      "(not possible: distance never shrinks)",
+      "Slowing down"
+     ]
+    ],
+    "cap": "Read the axis label first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 2.8 Graphical Analysis of One-Dimensional Motion"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 2.4 Acceleration"
+   }
+  ]
+ },
+ "physsci.forces-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Push a door, pull a wagon, lift a backpack: each is a <b>force</b>. A force always involves two objects, one that pushes or pulls and one that gets pushed or pulled. Forces are measured in <b>newtons</b> (N), an SI unit; a small apple weighs about 1 N, and 1 kN is 1,000 N."
+   },
+   {
+    "t": "key",
+    "html": "A force is a push or a pull <b>by</b> one object <b>on</b> another. It has a size (in newtons) and a direction, so we draw it as an arrow."
+   },
+   {
+    "t": "why",
+    "html": "Ask \"what is doing the pushing?\" for every force. A book on a table feels two: Earth pulls it down (gravity), and the table pushes it up (the normal force). Some forces need touching, like a push, friction or the pull of a rope. Others act across a gap: gravity, magnetic forces and electric forces."
+   },
+   {
+    "t": "viz",
+    "name": "ph-fbd",
+    "opts": {
+     "scene": "ball-air",
+     "net": true
+    },
+    "cap": "A ball thrown upward, after it has left the hand. The only force drawn is Earth's pull. Nothing keeps pushing it up; it rises because it is already moving."
+   },
+   {
+    "t": "ex",
+    "title": "Name the forces",
+    "q": "A lamp hangs from the ceiling by a cord. What forces act on the lamp, and what exerts each one?",
+    "steps": [
+     "Gravity: Earth pulls the lamp down.",
+     "Tension: the cord pulls the lamp up.",
+     "Nothing else touches the lamp, so those are the only two."
+    ],
+    "a": "Gravity (by Earth) and tension (by the cord)"
+   },
+   {
+    "t": "ex",
+    "title": "After the throw",
+    "q": "A baseball has just left the pitcher's hand. Which forces act on it now?",
+    "steps": [
+     "Earth still pulls it down: gravity.",
+     "The air pushes against its motion: air resistance.",
+     "The hand is no longer touching it, so the hand exerts no force."
+    ],
+    "a": "Gravity and air resistance only"
+   },
+   {
+    "t": "mistake",
+    "html": "Talking about \"the force of the ball,\" as if a moving object carries a force inside it. A force is always a push between two objects, and it lasts only while they interact. Once the ball leaves the hand, the hand's force is gone. Check: for every force you name, say what object exerts it. If you can't, it isn't a force."
+   },
+   {
+    "t": "p",
+    "html": "Try building free-body diagrams in the Science Lab's <a href=\"/science-lab/newtons-laws/\">Newton's Laws</a> course."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 4.1 Development of Force Concept"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-2"
+   }
+  ]
+ },
+ "physsci.net-force": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Most objects feel several <a href=\"/physics/physical-science/forces-intro/\">forces</a> at once. What decides how an object moves is their combined effect, the <b>net force</b>. Along a line, you find it the way you add signed numbers."
+   },
+   {
+    "t": "key",
+    "html": "Pick a positive direction. Forces that way are positive; forces the other way are negative. Add them up: the result is the <b>net force</b>, $\\Sigma F$. If it is zero, the forces are <b>balanced</b>."
+   },
+   {
+    "t": "why",
+    "html": "Two forces in the same direction team up, so their sizes add. Two forces in opposite directions fight, so one cancels part of the other: in a tug of war, 300 N to the right against 250 N to the left leaves $300 - 250 = 50$ N to the right. Only the leftover, unbalanced part can change the motion."
+   },
+   {
+    "t": "viz",
+    "name": "ph-fbd",
+    "opts": {
+     "scene": "block",
+     "forces": [
+      {
+       "type": "gravity",
+       "mag": 50
+      },
+      {
+       "type": "normal",
+       "mag": 50
+      },
+      {
+       "type": "applied",
+       "mag": 30
+      },
+      {
+       "type": "friction",
+       "mag": 10
+      }
+     ],
+     "net": true
+    },
+    "cap": "A box pushed with 30 N against 10 N of friction. Up and down cancel (50 N each), so the net force is 20 N to the right."
+   },
+   {
+    "t": "ex",
+    "title": "Same direction",
+    "q": "Two friends push a stalled car forward, one with 400 N and one with 350 N. Find the net force (ignore friction).",
+    "steps": [
+     "Both forces point forward, so add: $400 + 350 = 750$ N."
+    ],
+    "a": "$750$ N forward"
+   },
+   {
+    "t": "ex",
+    "title": "Opposite directions",
+    "q": "In a tug of war, team A pulls left with 620 N and team B pulls right with 580 N. Taking right as positive, find the net force.",
+    "steps": [
+     "Right is positive: $+580$ N. Left is negative: $-620$ N.",
+     "$\\Sigma F = 580 + (-620) = -40$ N.",
+     "The minus sign means the net force points left. Team A slowly wins."
+    ],
+    "a": "$-40$ N, that is, 40 N to the left"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the sizes of two opposing forces: $620 + 580 = 1{,}200$ N. Opposite forces subtract. Check: the net force can never be bigger than the sum of the sizes, and when forces oppose, it is smaller than the bigger force."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 4.3 Newton's Second Law of Motion: Concept of a System"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-2"
+   }
+  ]
+ },
+ "physsci.first-law-inertia": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "For two thousand years people believed that a moving object needs a push to keep moving. Everyday life seems to agree: stop pedaling and your bike slows down. Galileo and then Newton saw that the bike slows because of friction and air, not because motion runs out. With <a href=\"/physics/physical-science/net-force/\">zero net force</a>, an object keeps the <a href=\"/physics/physical-science/velocity/\">velocity</a> it has."
+   },
+   {
+    "t": "key",
+    "html": "<b>Newton's first law:</b> if the net force on an object is zero, its velocity does not change. At rest, it stays at rest. Moving, it keeps moving at the same speed in the same direction. This resistance to changes in motion is called <b>inertia</b>, and more mass means more inertia."
+   },
+   {
+    "t": "why",
+    "html": "A force is needed to <b>change</b> motion, not to keep it. Slide a puck on rough carpet and it stops almost at once; on smooth ice it glides much farther. Make the surface smoother and smoother, and the puck slows less and less. In the limit of no friction at all, nothing would slow it, so it would glide forever."
+   },
+   {
+    "t": "viz",
+    "name": "ph-dynamics",
+    "opts": {
+     "scene": "cart",
+     "F": 4,
+     "muk": 0,
+     "m1": 2
+    },
+    "cap": "Press Play, then \"Stop pushing.\" With no friction, the cart keeps rolling at the speed it had. Raise the friction slider and try again: now friction is the force that stops it."
+   },
+   {
+    "t": "ex",
+    "title": "A probe in deep space",
+    "q": "A space probe far from any planet coasts at 17 km/s with its engines off. Ignoring the faint pull of the distant Sun, how fast is it going a year later?",
+    "steps": [
+     "Far out in space there is almost no friction, air or nearby gravity, so the net force is about zero.",
+     "Zero net force means the velocity does not change."
+    ],
+    "a": "Still about 17 km/s, in the same direction"
+   },
+   {
+    "t": "ex",
+    "title": "A sudden stop",
+    "q": "A bus brakes hard. Why do the standing passengers lurch forward?",
+    "steps": [
+     "The brakes push the bus backward, but nothing pushes the passengers backward at first.",
+     "By inertia, their bodies keep moving forward at the old speed while the bus slows under them."
+    ],
+    "a": "Their bodies keep moving forward (inertia)"
+   },
+   {
+    "t": "mistake",
+    "html": "Believing a moving object needs a force to keep it moving and stops when that force \"runs out.\" No force runs out. A rolling ball stops because friction and air push against it. Check: name the object that causes the slowing. There always is one."
+   },
+   {
+    "t": "note",
+    "html": "Voyager 1 was launched in 1977. With its engines off, it is still coasting out of the solar system at about 17 km/s."
+   },
+   {
+    "t": "p",
+    "html": "See it for yourself in the Science Lab: <a href=\"/science-lab/newtons-laws/first-law/\">The First Law: Inertia</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 4.2 Newton's First Law of Motion: Inertia"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-2"
+   }
+  ]
+ },
+ "physsci.second-law-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/physics/physical-science/first-law-inertia/\">first law</a> says zero net force means no change in velocity. The second law says what a net force does: it causes <a href=\"/physics/physical-science/acceleration-intro/\">acceleration</a>, and how much depends on the mass. Solving it is a <a href=\"/math/grade-6/one-step-multiply-divide/\">one-step equation</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Newton's second law:</b> $$\\Sigma F = m\\,a$$ The net force (N) equals mass (kg) times acceleration (m/s²). So $a = \\dfrac{\\Sigma F}{m}$: more force, more acceleration; more mass, less."
+   },
+   {
+    "t": "why",
+    "html": "Push an empty shopping cart and a full one with the same force. The empty one speeds up quickly; the full one barely budges. Acceleration grows with the push and shrinks with the mass. Newton's law puts both in one equation, and the newton is defined to make it exact: $1\\,\\mathrm{N}$ gives $1\\,\\mathrm{kg}$ an acceleration of $1\\,\\mathrm{m/s^2}$."
+   },
+   {
+    "t": "viz",
+    "name": "ph-dynamics",
+    "opts": {
+     "scene": "cart",
+     "F": 6,
+     "muk": 0,
+     "m1": 2
+    },
+    "cap": "Change the push and the mass and watch the speed graph. A steady push gives a straight, rising line: steady acceleration, not steady speed."
+   },
+   {
+    "t": "ex",
+    "title": "Find the acceleration",
+    "q": "A 4 kg cart is pushed with a net force of 20 N. Find its acceleration.",
+    "steps": [
+     "$a = \\dfrac{\\Sigma F}{m} = \\dfrac{20\\,\\mathrm{N}}{4\\,\\mathrm{kg}}$.",
+     "$a = 5\\,\\mathrm{m/s^2}$."
+    ],
+    "a": "$5\\,\\mathrm{m/s^2}$"
+   },
+   {
+    "t": "ex",
+    "title": "With friction",
+    "q": "A 50 kg crate is pushed with 180 N while friction pushes back with 80 N. Find its acceleration.",
+    "steps": [
+     "Net force: $180 - 80 = 100$ N forward.",
+     "$a = \\dfrac{100\\,\\mathrm{N}}{50\\,\\mathrm{kg}} = 2\\,\\mathrm{m/s^2}$.",
+     "Use the net force, not the push alone."
+    ],
+    "a": "$2\\,\\mathrm{m/s^2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a steady force gives a steady speed. A steady net force gives a steady <b>acceleration</b>: the speed keeps growing by the same amount each second. You feel a steady speed only when the forces balance, for example when your push just matches friction. Check: if the net force isn't zero, the velocity must be changing."
+   },
+   {
+    "t": "p",
+    "html": "Push a cart with a force probe in the Science Lab: <a href=\"/science-lab/newtons-laws/second-law/\">The Second Law: F = ma</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 4.3 Newton's Second Law of Motion: Concept of a System"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-2"
+   }
+  ]
+ },
+ "physsci.mass-weight": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In everyday talk, \"mass\" and \"weight\" mean the same thing. In physics they don't. Your <b>mass</b> is the amount of matter in you, in kilograms. Your <b>weight</b> is a <a href=\"/physics/physical-science/forces-intro/\">force</a>: the pull of gravity on that mass, in newtons. It follows from the <a href=\"/physics/physical-science/second-law-intro/\">second law</a>."
+   },
+   {
+    "t": "key",
+    "html": "Weight $W = m\\,g$. Near Earth's surface $g = 9.8\\,\\mathrm{N/kg}$, so each kilogram weighs 9.8 N. Mass is the same everywhere; weight depends on where you are."
+   },
+   {
+    "t": "why",
+    "html": "Drop anything and it falls with acceleration $g = 9.8\\,\\mathrm{m/s^2}$. By $F = ma$, the force that causes this is $m \\times 9.8$, and that force is the weight. On the Moon, gravity is weaker ($g \\approx 1.6\\,\\mathrm{N/kg}$), so the same mass weighs about one sixth as much. The astronaut is not smaller; the Moon just pulls less."
+   },
+   {
+    "t": "viz",
+    "name": "ph-fbd",
+    "opts": {
+     "scene": "hanging",
+     "forces": [
+      {
+       "type": "gravity",
+       "mag": 49
+      },
+      {
+       "type": "tension",
+       "mag": 49
+      }
+     ]
+    },
+    "cap": "A 5 kg mass hanging from a spring scale. Its weight is 5 × 9.8 = 49 N, and the scale pulls up with the same 49 N."
+   },
+   {
+    "t": "ex",
+    "title": "Weight on Earth",
+    "q": "Find the weight of a 50 kg student on Earth.",
+    "steps": [
+     "$W = m\\,g = 50\\,\\mathrm{kg} \\times 9.8\\,\\mathrm{N/kg}$.",
+     "$W = 490\\,\\mathrm{N}$."
+    ],
+    "a": "$490\\,\\mathrm{N}$"
+   },
+   {
+    "t": "ex",
+    "title": "The same student on the Moon",
+    "q": "On the Moon, $g = 1.6\\,\\mathrm{N/kg}$. Find the student's mass and weight there.",
+    "steps": [
+     "Mass does not change: still $50\\,\\mathrm{kg}$.",
+     "Weight: $W = 50 \\times 1.6 = 80\\,\\mathrm{N}$."
+    ],
+    "a": "Mass 50 kg; weight 80 N"
+   },
+   {
+    "t": "mistake",
+    "html": "Saying an astronaut's mass changes on the Moon, or giving weight in kilograms. Mass stays the same; only the weight changes. And a weight is a force, so it is in newtons. (A bathroom scale shows kilograms only because it assumes you are on Earth.) Check the unit: kg means mass, N means weight."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Place",
+     "g (N/kg)",
+     "Weight of 10 kg"
+    ],
+    "rows": [
+     [
+      "Earth",
+      "9.8",
+      "98 N"
+     ],
+     [
+      "Moon",
+      "1.6",
+      "16 N"
+     ],
+     [
+      "Mars",
+      "3.7",
+      "37 N"
+     ],
+     [
+      "Jupiter (cloud tops)",
+      "24.8",
+      "248 N"
+     ]
+    ],
+    "cap": "Surface gravity, rounded, from the NASA planetary fact sheets."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 4.3 Newton's Second Law of Motion: Concept of a System"
+   },
+   {
+    "name": "NASA, Planetary Fact Sheet (NSSDCA): surface gravity values"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-4"
+   }
+  ]
+ },
+ "physsci.friction-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Slide a book across a table and it slows down. The force that slows it is <b>friction</b>, which the table exerts where the two surfaces touch. Like any force, it adds into the <a href=\"/physics/physical-science/net-force/\">net force</a>."
+   },
+   {
+    "t": "key",
+    "html": "Friction acts where two surfaces touch and pushes <b>against their sliding</b> (or against the sliding they would do). It is bigger when the surfaces press together harder and when they are rougher."
+   },
+   {
+    "t": "why",
+    "html": "Even smooth-looking surfaces have tiny bumps that catch on each other. Press harder and more bumps lock together, so friction grows. While an object is still, <b>static friction</b> matches your push, up to a limit; push harder than that limit and the object slides, and the smaller <b>kinetic friction</b> takes over."
+   },
+   {
+    "t": "viz",
+    "name": "ph-dynamics",
+    "opts": {
+     "scene": "incline",
+     "angle": 20,
+     "mus": 0.5,
+     "muk": 0.35
+    },
+    "cap": "Tilt the ramp slowly. Static friction holds the block until the slope gets too steep; then the block breaks free and slides."
+   },
+   {
+    "t": "ex",
+    "title": "Not moving yet",
+    "q": "A heavy box needs 60 N to start sliding. You push it with 45 N and it doesn't move. How big is the friction force?",
+    "steps": [
+     "The box stays still, so the net force is zero.",
+     "Friction must cancel your push exactly: 45 N, pointing against your push.",
+     "It is not 60 N: that is only the most static friction can give."
+    ],
+    "a": "45 N"
+   },
+   {
+    "t": "ex",
+    "title": "Sliding",
+    "q": "You push a box with 70 N and it slides; kinetic friction is 50 N. Find the net force.",
+    "steps": [
+     "Friction points against the sliding: $70 - 50 = 20$ N in the direction of the push."
+    ],
+    "a": "20 N forward"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking friction only ever slows things down. When you walk, your shoe pushes backward on the ground, and friction from the ground pushes you <b>forward</b>. That forward friction is what moves you; on smooth ice it is missing, and your feet slip. A car's tires work the same way."
+   },
+   {
+    "t": "p",
+    "html": "Tilt a ramp until a block slips in the Science Lab: <a href=\"/science-lab/newtons-laws/forces/\">Forces at Work</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 5.1 Friction"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-2"
+   }
+  ]
+ },
+ "physsci.third-law-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Push on a wall and you feel it push back on your hands. That is not a coincidence. Every <a href=\"/physics/physical-science/forces-intro/\">force</a> is half of an interaction between two objects, and the other half is always there."
+   },
+   {
+    "t": "key",
+    "html": "<b>Newton's third law:</b> when object A pushes on object B, B pushes on A with a force of the <b>same size</b> in the <b>opposite direction</b>. The two forces act on <b>different</b> objects."
+   },
+   {
+    "t": "why",
+    "html": "A force is an interaction, like a handshake: you can't shake hands without the other hand shaking yours. When a bug hits a car's windshield, the windshield pushes on the bug and the bug pushes on the windshield, with equal force. The results look different only because the same force does much more to a tiny bug than to a heavy car."
+   },
+   {
+    "t": "viz",
+    "name": "ph-fbd",
+    "opts": {
+     "mode": "pairs"
+    },
+    "cap": "Two blocks pushed together. Each third-law pair shares a color: the forces are equal and opposite, and each one acts on a different block."
+   },
+   {
+    "t": "ex",
+    "title": "Pushing off",
+    "q": "A skater pushes a wall with 90 N. What force does the wall exert on the skater?",
+    "steps": [
+     "The pair to \"skater pushes wall\" is \"wall pushes skater.\"",
+     "Same size, opposite direction: 90 N, away from the wall.",
+     "That push is what sends the skater gliding backward."
+    ],
+    "a": "90 N, pushing the skater away from the wall"
+   },
+   {
+    "t": "ex",
+    "title": "A rocket",
+    "q": "What pushes a rocket upward when it takes off?",
+    "steps": [
+     "The rocket pushes hot exhaust gas down out of its nozzle.",
+     "By the third law, the gas pushes the rocket up just as hard.",
+     "No air is needed, which is why rockets work in space."
+    ],
+    "a": "The exhaust gas, pushing back on the rocket"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking the bigger or faster object pushes harder in a collision. In a crash between a truck and a small car, each pushes the other with exactly the same force. The small car is damaged more because the same force gives its smaller mass a bigger acceleration. Check: third-law pairs are always equal, whatever the masses or speeds."
+   },
+   {
+    "t": "p",
+    "html": "Try the skaters in the Science Lab: <a href=\"/science-lab/newtons-laws/third-law/\">The Third Law: Action and Reaction</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 4.4 Newton's Third Law of Motion: Symmetry in Forces"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-1"
+   }
+  ]
+ },
+ "physsci.momentum-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A rolling bowling ball is hard to stop, and so is a fast baseball. <b>Momentum</b> measures this \"hard to stop\": it combines mass with <a href=\"/physics/physical-science/velocity/\">velocity</a>. The <a href=\"/physics/physical-science/third-law-intro/\">third law</a> explains why it is conserved."
+   },
+   {
+    "t": "key",
+    "html": "Momentum $p = m\\,v$, in kg·m/s. In a collision, the <b>total momentum</b> of the objects is the same before and after (as long as outside forces are small)."
+   },
+   {
+    "t": "why",
+    "html": "When two carts collide, each pushes the other with the same force for the same short time. One cart gains exactly the momentum the other loses, so the total cannot change. Momentum has a direction too: on a line, momentum to the left is negative."
+   },
+   {
+    "t": "viz",
+    "name": "ph-collision",
+    "opts": {
+     "mode": "1d",
+     "m1": 2,
+     "m2": 1,
+     "v1": 3,
+     "v2": 0,
+     "e": 0,
+     "show": [
+      "p"
+     ]
+    },
+    "cap": "A 2 kg glider at 3 m/s hits a 1 kg glider at rest, and they stick. The momentum bars: 6 kg·m/s before, 6 kg·m/s after."
+   },
+   {
+    "t": "ex",
+    "title": "Heavy and slow or light and fast?",
+    "q": "Which has more momentum: a 1,500 kg car at 2 m/s or a 0.15 kg baseball at 40 m/s?",
+    "steps": [
+     "Car: $p = 1{,}500 \\times 2 = 3{,}000$ kg·m/s.",
+     "Baseball: $p = 0.15 \\times 40 = 6$ kg·m/s.",
+     "The slow car has 500 times more."
+    ],
+    "a": "The car"
+   },
+   {
+    "t": "ex",
+    "title": "Stick together",
+    "q": "A 2 kg cart moving at 3 m/s hits a 1 kg cart at rest, and they stick. How fast do they move together?",
+    "steps": [
+     "Momentum before: $2 \\times 3 + 1 \\times 0 = 6$ kg·m/s.",
+     "After, the carts move together with mass $2 + 1 = 3$ kg and the same total momentum.",
+     "$v = \\dfrac{6}{3} = 2$ m/s."
+    ],
+    "a": "2 m/s"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a heavy, slow object always has more momentum than a light, fast one. Momentum is mass <b>times</b> velocity, so a big enough speed can win: a 60 kg runner at 8 m/s ($480$) has more momentum than a 200 kg cart at 2 m/s ($400$). Check: multiply both before you compare."
+   },
+   {
+    "t": "p",
+    "html": "Crash gliders on an air track in the Science Lab: <a href=\"/science-lab/newtons-laws/momentum/\">Momentum and Collisions</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 8.1 Linear Momentum and Force"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 8.3 Conservation of Momentum"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS2-2"
+   }
+  ]
+ },
+ "physsci.collision-time": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Drop an egg on a pillow and on a hard floor from the same height. It hits both at the same speed and stops in both cases, so its <a href=\"/physics/physical-science/momentum-intro/\">change in momentum</a> is the same. Why does only one break? The answer combines momentum with the <a href=\"/physics/physical-science/second-law-intro/\">second law</a>."
+   },
+   {
+    "t": "key",
+    "html": "Force × time = change in momentum: $$F\\,t = \\Delta p \\quad\\text{so}\\quad F = \\dfrac{\\Delta p}{t}$$ For the same change in momentum, a longer stopping time means a smaller force."
+   },
+   {
+    "t": "why",
+    "html": "From $F = ma$ and $a = \\dfrac{\\Delta v}{t}$, we get $F = \\dfrac{m\\,\\Delta v}{t} = \\dfrac{\\Delta p}{t}$. The floor stops the egg in a tiny fraction of a second, so the force is huge. The pillow sinks in and takes many times longer, so the force is many times smaller."
+   },
+   {
+    "t": "viz",
+    "name": "ph-collision",
+    "opts": {
+     "mode": "impulse",
+     "m1": 0.5,
+     "v1": 4
+    },
+    "cap": "The same ball stopped by a hard and a soft bumper. The soft bumper's force graph is lower and wider. The area under each graph, the change in momentum, is the same."
+   },
+   {
+    "t": "ex",
+    "title": "A hard stop",
+    "q": "A 0.5 kg ball moving at 10 m/s is stopped by a wall in 0.01 s. Find the average force.",
+    "steps": [
+     "Change in momentum: $\\Delta p = 0.5 \\times 10 = 5$ kg·m/s.",
+     "$F = \\dfrac{5}{0.01} = 500$ N."
+    ],
+    "a": "500 N"
+   },
+   {
+    "t": "ex",
+    "title": "A soft stop",
+    "q": "The same ball is caught by a padded mitt that takes 0.1 s to stop it. Find the force.",
+    "steps": [
+     "Same $\\Delta p = 5$ kg·m/s.",
+     "$F = \\dfrac{5}{0.1} = 50$ N: ten times the time, one tenth the force."
+    ],
+    "a": "50 N"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking padding reduces the change in momentum. The object must go from moving to stopped either way, so $\\Delta p$ is the same. Padding, crumple zones and airbags spread that same change over more time, which lowers the force. Check: the speed before and after didn't change, so neither did $\\Delta p$."
+   },
+   {
+    "t": "note",
+    "html": "This is why a car's front end is built to crumple and why an airbag inflates: both stretch the stop over more time. A gymnast's mat and a catcher who pulls the glove back work the same way."
+   },
+   {
+    "t": "p",
+    "html": "Drop an egg on a pillow and a floor in the Science Lab: <a href=\"/science-lab/newtons-laws/momentum/\">Momentum and Collisions</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 8.2 Impulse"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS2-3"
+   }
+  ]
+ },
+ "physsci.gravity-mass-distance": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Your <a href=\"/physics/physical-science/mass-weight/\">weight</a> is Earth's pull on you. But gravity is not something only planets do. Newton realized that <b>every</b> two masses attract each other: you and your desk, the Moon and the oceans, the Sun and Earth."
+   },
+   {
+    "t": "key",
+    "html": "The gravitational force between two masses grows with each mass and shrinks with the square of the distance between their centers. Double one mass: double the force. Double the distance: one quarter of the force."
+   },
+   {
+    "t": "why",
+    "html": "Think of gravity spreading out from a mass in all directions, like light from a bulb. At twice the distance, the same pull is spread over a sphere with $2^2 = 4$ times the area, so each spot gets $\\tfrac{1}{4}$ as much. At three times the distance, $\\tfrac{1}{3^2} = \\tfrac{1}{9}$. Between everyday objects the force is tiny; it takes a planet-sized mass to make it strong."
+   },
+   {
+    "t": "viz",
+    "name": "ph-orbit",
+    "opts": {
+     "mode": "cannon"
+    },
+    "cap": "Newton's cannon on a mountain. Fire faster and the ball lands farther away, until it falls around the curve of Earth and never lands: an orbit."
+   },
+   {
+    "t": "ex",
+    "title": "Change the distance",
+    "q": "Two asteroids attract each other with 600 N. They drift to three times as far apart. What is the force now?",
+    "steps": [
+     "Distance × 3 means force ÷ $3^2 = 9$.",
+     "$600 \\div 9 \\approx 67$ N."
+    ],
+    "a": "About 67 N"
+   },
+   {
+    "t": "ex",
+    "title": "Change both",
+    "q": "Two balls attract with force $F$. One ball is replaced by one with twice the mass, and the distance is doubled. What is the new force?",
+    "steps": [
+     "Mass × 2: force × 2.",
+     "Distance × 2: force ÷ 4.",
+     "Together: $F \\times \\dfrac{2}{4} = \\dfrac{F}{2}$."
+    ],
+    "a": "Half the old force"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking there is no gravity in space because astronauts float, or that gravity needs air. The space station orbits about 400 km up, where gravity is still about 90% as strong as on the ground. Astronauts float because they and the station fall around Earth together, so nothing presses on them. And gravity crosses empty space: it holds the Moon to Earth and Earth to the Sun."
+   },
+   {
+    "t": "p",
+    "html": "Fire Newton's cannon yourself in the <a href=\"/science-lab/orbits/\">Orbit Lab</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 6.5 Newton's Universal Law of Gravitation"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS2-4"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-4"
+   }
+  ]
+ },
+ "physsci.pressure": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Walk across deep snow in sneakers and you sink. Strap on snowshoes and you stay on top, though your weight is the same. What changed is how the <a href=\"/physics/physical-science/forces-intro/\">force</a> is spread out. <b>Pressure</b> is a <a href=\"/math/grade-6/unit-rate/\">unit rate</a>: force per square meter."
+   },
+   {
+    "t": "key",
+    "html": "Pressure is force divided by the area it pushes on: $$P = \\dfrac{F}{A}$$ in pascals (Pa), where $1\\,\\mathrm{Pa} = 1\\,\\mathrm{N/m^2}$."
+   },
+   {
+    "t": "why",
+    "html": "Each square meter of snow can hold up only so much force before it gives way. Snowshoes spread your weight over several times more area, so each square meter carries only a fraction of it. A knife works the other way: its thin edge puts the force on a tiny area, so the pressure is enormous."
+   },
+   {
+    "t": "viz",
+    "name": "ph-fluids",
+    "opts": {
+     "mode": "pressure-area",
+     "F": 600
+    },
+    "cap": "The same 600 N weight on different contact areas. Slide the area: halve it and the pressure doubles."
+   },
+   {
+    "t": "ex",
+    "title": "Standing in snow",
+    "q": "A hiker weighing 600 N stands on boots with a total area of $0.04\\,\\mathrm{m^2}$. Then she puts on snowshoes with a total area of $0.2\\,\\mathrm{m^2}$. Find the pressure each time.",
+    "steps": [
+     "Boots: $P = \\dfrac{600\\,\\mathrm{N}}{0.04\\,\\mathrm{m^2}} = 15{,}000\\,\\mathrm{Pa}$.",
+     "Snowshoes: $P = \\dfrac{600\\,\\mathrm{N}}{0.2\\,\\mathrm{m^2}} = 3{,}000\\,\\mathrm{Pa}$.",
+     "Five times the area, one fifth the pressure."
+    ],
+    "a": "15,000 Pa in boots; 3,000 Pa on snowshoes"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a bigger force always means more pressure. Pressure depends on the area too: a 600 N hiker on snowshoes presses on the snow less than a 300 N child in small boots. Check: compare force ÷ area, not force alone."
+   },
+   {
+    "t": "note",
+    "html": "The air around you presses on everything with about 101,000 Pa at sea level. You don't feel it because the pressure inside your body matches it, pushing outward just as hard."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 11.3 Pressure"
+   }
+  ]
+ },
+ "physsci.energy-forms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/physics/physical-science/forces-intro/\">force</a> is a push or a pull. <b>Energy</b> is something different: it is what lets things change, by moving, heating up, lighting up or making a sound. Energy comes in many forms and can change from one form to another, and it is measured in <b>joules</b> (J)."
+   },
+   {
+    "t": "key",
+    "html": "Energy shows up as motion (kinetic), height (gravitational potential), stretch or squeeze (elastic), the jiggling of particles (thermal), and stored in fuel and food (chemical), plus electrical, light, sound and nuclear energy. In every change, energy moves from one form or place to another; it is never used up."
+   },
+   {
+    "t": "why",
+    "html": "Follow the energy in a flashlight. The battery stores chemical energy. Switched on, it pushes charge through the wires: electrical energy. The bulb turns that into light, and some into thermal energy, which is why bulbs get warm. Add up all the forms at the end and you get the same amount you started with. \"Using\" energy really means changing it into forms that are less useful to us."
+   },
+   {
+    "t": "viz",
+    "name": "ph-energy",
+    "opts": {
+     "scene": "track"
+    },
+    "cap": "A cart on a hilly track. Watch the bars: as the cart drops, potential energy (blue) turns into kinetic energy (green), and back again as it climbs. The total stays the same."
+   },
+   {
+    "t": "ex",
+    "title": "A bouncing ball",
+    "q": "A ball is dropped, bounces and rises again, but not quite as high. Trace its energy.",
+    "steps": [
+     "Held up high: gravitational potential energy.",
+     "Falling: potential energy turns into kinetic energy.",
+     "Squashed against the floor: elastic energy, which pushes it back up.",
+     "Each bounce turns a little energy into thermal energy and sound, so it rises a bit less each time."
+    ],
+    "a": "Potential → kinetic → elastic → kinetic → potential, with some thermal and sound"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking energy is a substance that gets used up, or mixing up energy with force. A force is a push between two objects at one moment; energy is an amount that can be stored and passed along. When a battery \"runs out,\" its energy has not vanished: it has become light, sound and heat in the room."
+   },
+   {
+    "t": "note",
+    "html": "Food labels count energy in food Calories. One food Calorie is 4,184 J, so a 100-Calorie banana holds about 418,000 J of chemical energy."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 7.6 Conservation of Energy"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS3-2"
+   }
+  ]
+ },
+ "physsci.kinetic-energy": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every moving thing has <b>kinetic energy</b>, the <a href=\"/physics/physical-science/energy-forms/\">form of energy</a> that comes with motion. A faster or heavier object has more. The formula has a square in it, so you will need the <a href=\"/math/grade-6/order-of-operations-exponents/\">order of operations</a>: square the <a href=\"/physics/physical-science/speed/\">speed</a> first, then multiply."
+   },
+   {
+    "t": "key",
+    "html": "$$\\text{KE} = \\tfrac{1}{2}\\,m\\,v^2$$ with mass in kg and speed in m/s, giving joules. Because the speed is squared, doubling the speed makes the kinetic energy <b>four</b> times as big."
+   },
+   {
+    "t": "why",
+    "html": "Why squared? To speed something up, you push it through a distance, and a faster object covers more distance during each push. Getting from 0 to 20 m/s takes four times the energy of getting from 0 to 10 m/s, not twice. That is also why a car at highway speed needs about four times the braking distance it needs at half that speed."
+   },
+   {
+    "t": "viz",
+    "name": "ph-graph",
+    "opts": {
+     "fn": "0.5*2*x^2",
+     "domain": [
+      0,
+      10
+     ],
+     "xlab": "v",
+     "xunit": "m/s",
+     "ylab": "KE",
+     "yunit": "J",
+     "tool": "none"
+    },
+    "cap": "Kinetic energy of a 2 kg ball against its speed. At 5 m/s it has 25 J; at 10 m/s, 100 J. Twice the speed, four times the energy."
+   },
+   {
+    "t": "ex",
+    "title": "A rolling ball",
+    "q": "Find the kinetic energy of a 2 kg ball rolling at 3 m/s.",
+    "steps": [
+     "Square the speed first: $3^2 = 9$.",
+     "$\\text{KE} = \\tfrac{1}{2} \\times 2 \\times 9 = 9$ J."
+    ],
+    "a": "9 J"
+   },
+   {
+    "t": "ex",
+    "title": "Double the speed",
+    "q": "A 1,000 kg car moves at 20 m/s. Find its kinetic energy, then find it again at 40 m/s.",
+    "steps": [
+     "At 20 m/s: $\\tfrac{1}{2} \\times 1{,}000 \\times 20^2 = 500 \\times 400 = 200{,}000$ J.",
+     "At 40 m/s: $\\tfrac{1}{2} \\times 1{,}000 \\times 40^2 = 500 \\times 1{,}600 = 800{,}000$ J.",
+     "Twice the speed gives $2^2 = 4$ times the energy."
+    ],
+    "a": "200,000 J, then 800,000 J"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking that doubling the speed doubles the kinetic energy. The speed is squared, so it multiplies the energy by $2^2 = 4$; tripling the speed multiplies it by 9. Check: in your work, the speed should be squared before anything else is multiplied."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 7.2 Kinetic Energy and the Work-Energy Theorem"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS3-1"
+   }
+  ]
+ },
+ "physsci.potential-energy": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Lift a book onto a shelf and you have stored energy in it: let it fall and that energy turns into motion. Energy stored by height is <b>gravitational potential energy</b>, one of the stored <a href=\"/physics/physical-science/energy-forms/\">forms of energy</a>. It depends on the <a href=\"/physics/physical-science/mass-weight/\">weight</a> $mg$ and on the height."
+   },
+   {
+    "t": "key",
+    "html": "$$\\text{PE} = m\\,g\\,h$$ where $h$ is the height above a level you choose as zero, and $g = 9.8\\,\\mathrm{N/kg}$. Only <b>changes</b> in PE matter, so pick one zero level and keep it for the whole problem."
+   },
+   {
+    "t": "why",
+    "html": "To lift an object at a steady speed, you push up with a force equal to its weight, $mg$, through the height $h$. That takes $mg \\times h$ of energy, and it is stored as PE. Measuring heights from the floor or from a table gives different PE values, but the same <b>difference</b> between two heights, and differences are what turn into motion."
+   },
+   {
+    "t": "viz",
+    "name": "ph-energy",
+    "opts": {
+     "scene": "drop",
+     "h0": 5,
+     "m": 2
+    },
+    "cap": "A 2 kg ball dropped from 5 m. At the top, all its energy is potential: $2 \\times 9.8 \\times 5 = 98$ J. Watch it turn into kinetic energy on the way down."
+   },
+   {
+    "t": "ex",
+    "title": "Lift a box",
+    "q": "A 4 kg box is lifted from the floor onto a shelf 1.5 m high. How much potential energy does it gain?",
+    "steps": [
+     "$\\text{PE} = m\\,g\\,h = 4 \\times 9.8 \\times 1.5$.",
+     "$= 58.8$ J."
+    ],
+    "a": "58.8 J"
+   },
+   {
+    "t": "ex",
+    "title": "Same change, any zero",
+    "q": "A 2 kg book moves from a 0.8 m table to a 2.0 m shelf. Find the change in PE using the floor as zero, then using the table as zero.",
+    "steps": [
+     "Floor as zero: $2 \\times 9.8 \\times 2.0 - 2 \\times 9.8 \\times 0.8 = 39.2 - 15.68 = 23.52$ J.",
+     "Table as zero: the shelf is $1.2$ m up and the table is at 0, so $2 \\times 9.8 \\times 1.2 - 0 = 23.52$ J.",
+     "Same change either way."
+    ],
+    "a": "23.52 J both ways"
+   },
+   {
+    "t": "mistake",
+    "html": "Switching zero levels partway through, for example measuring one height from the floor and another from the table. Mixing them gives a wrong change. Check: write down your zero level first, and measure every height from it."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 7.3 Gravitational Potential Energy"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS3-2"
+   }
+  ]
+ },
+ "physsci.energy-conservation-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A roller coaster climbs slowly to the top of the first hill, then races down. Where does its speed come from? From the height. <a href=\"/physics/physical-science/potential-energy/\">Potential energy</a> turns into <a href=\"/physics/physical-science/kinetic-energy/\">kinetic energy</a> on the way down, and back again on the way up."
+   },
+   {
+    "t": "key",
+    "html": "Energy is never created or destroyed; it only changes form. Without friction, $\\text{KE} + \\text{PE}$ stays the same. With friction, some energy becomes thermal energy (and sound), but the total, including the thermal part, is still the same."
+   },
+   {
+    "t": "why",
+    "html": "Falling, an object loses height and gains speed, and the two changes match joule for joule: every joule of PE that disappears shows up as a joule of KE. A real swing slows down because the air and the chains turn a little energy into heat and sound on every swing. That energy is not lost; it is spread into the air as warmth."
+   },
+   {
+    "t": "viz",
+    "name": "ph-energy",
+    "opts": {
+     "scene": "pendulum",
+     "L": 2,
+     "theta0": 40,
+     "m": 1
+    },
+    "cap": "A swinging pendulum. The bars trade places: all potential at the ends, all kinetic at the bottom. Their total never changes."
+   },
+   {
+    "t": "ex",
+    "title": "Dropped from a height",
+    "q": "A 2 kg ball is dropped from 5 m. Ignoring air resistance, find its kinetic energy just before it lands.",
+    "steps": [
+     "At the top: $\\text{PE} = 2 \\times 9.8 \\times 5 = 98$ J and $\\text{KE} = 0$.",
+     "At the bottom: $\\text{PE} = 0$, so all 98 J is kinetic."
+    ],
+    "a": "98 J"
+   },
+   {
+    "t": "ex",
+    "title": "Partway down",
+    "q": "The same ball is 2 m above the ground. Find its PE and KE there.",
+    "steps": [
+     "PE: $2 \\times 9.8 \\times 2 = 39.2$ J.",
+     "Total is still 98 J, so $\\text{KE} = 98 - 39.2 = 58.8$ J."
+    ],
+    "a": "PE 39.2 J, KE 58.8 J"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking energy is lost when a swing slows down. It is turned into thermal energy and sound by air resistance and rubbing at the pivot. Check: total energy at the start = KE + PE + thermal energy later."
+   },
+   {
+    "t": "p",
+    "html": "Watch fifteen pendulums trade energy in the Science Lab: <a href=\"/science-lab/pendulums/\">Pendulums and Resonance</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 7.6 Conservation of Energy"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 7.5 Nonconservative Forces"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS3-1"
+   }
+  ]
+ },
+ "physsci.work-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In physics, <b>work</b> has a precise meaning: it is energy moved into or out of an object by a <a href=\"/physics/physical-science/net-force/\">force</a> that acts along a distance. Push a cart across a room and you do work on it; the energy you transfer shows up as the cart's <a href=\"/physics/physical-science/energy-forms/\">kinetic energy</a>."
+   },
+   {
+    "t": "key",
+    "html": "Work = force × distance moved in the direction of the force: $$W = F\\,d$$ Force in newtons times distance in meters gives joules: $1\\,\\mathrm{J} = 1\\,\\mathrm{N \\cdot m}$."
+   },
+   {
+    "t": "why",
+    "html": "Work counts only when the object moves along the force. If nothing moves, $d = 0$ and no energy is transferred, however tiring it feels. If the force is sideways to the motion, like the upward force of your arms while you walk with a box, that force is not pushing the box along, so it does no work on it either."
+   },
+   {
+    "t": "viz",
+    "name": "ph-graph",
+    "opts": {
+     "pts": [
+      [
+       0,
+       40
+      ],
+      [
+       5,
+       40
+      ]
+     ],
+     "xlab": "d",
+     "xunit": "m",
+     "ylab": "F",
+     "yunit": "N",
+     "tool": "area",
+     "a": 0,
+     "b": 5,
+     "range": [
+      0,
+      50
+     ]
+    },
+    "cap": "A steady 40 N push over 5 m. The work is the area of the rectangle under the line: 40 N × 5 m = 200 J. Drag the edges of the shaded area."
+   },
+   {
+    "t": "ex",
+    "title": "Pushing a cart",
+    "q": "You push a cart with a steady 40 N for 5 m. How much work do you do?",
+    "steps": [
+     "$W = F\\,d = 40\\,\\mathrm{N} \\times 5\\,\\mathrm{m} = 200\\,\\mathrm{J}$."
+    ],
+    "a": "200 J"
+   },
+   {
+    "t": "ex",
+    "title": "Lifting",
+    "q": "You lift a 10 kg box straight up 1.5 m at a steady speed. How much work do you do?",
+    "steps": [
+     "To lift it steadily, your force equals its weight: $10 \\times 9.8 = 98$ N.",
+     "$W = 98\\,\\mathrm{N} \\times 1.5\\,\\mathrm{m} = 147\\,\\mathrm{J}$."
+    ],
+    "a": "147 J"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking that holding a heavy box still is work in the physics sense. Your muscles tire, but the box doesn't move, so $W = F \\times 0 = 0$ and the box gains no energy. Check: did the object move in the direction of the force?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 7.1 Work: The Scientific Definition"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS3-5"
+   }
+  ]
+ },
+ "physsci.power-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two students carry identical boxes up the same stairs. One jogs, one strolls. They do the same <a href=\"/physics/physical-science/work-intro/\">work</a>, but one does it faster. <b>Power</b> measures how fast energy is transferred."
+   },
+   {
+    "t": "key",
+    "html": "Power = energy transferred ÷ time: $$P = \\dfrac{W}{t}$$ in <b>watts</b> (W), where $1\\,\\mathrm{W} = 1\\,\\mathrm{J/s}$. A 60 W bulb uses 60 joules every second."
+   },
+   {
+    "t": "why",
+    "html": "Joules measure <b>how much</b> energy; watts measure <b>how fast</b>. It is like liters and liters per second for water: a bathtub holds liters, while a faucet delivers liters per second. A more powerful motor does the same job in less time."
+   },
+   {
+    "t": "viz",
+    "name": "ph-graph",
+    "opts": {
+     "pts": [
+      [
+       0,
+       0
+      ],
+      [
+       10,
+       1500
+      ]
+     ],
+     "xlab": "t",
+     "xunit": "s",
+     "ylab": "energy",
+     "yunit": "J",
+     "tool": "slope",
+     "at": 5,
+     "domain": [
+      0,
+      10
+     ]
+    },
+    "cap": "Energy delivered against time by a 150 W motor. The slope of this graph, joules per second, is the power."
+   },
+   {
+    "t": "ex",
+    "title": "Climbing stairs",
+    "q": "A 600 N student climbs stairs 3 m high in 4 s. What is her power?",
+    "steps": [
+     "Work against gravity: $W = F\\,d = 600 \\times 3 = 1{,}800$ J.",
+     "$P = \\dfrac{1{,}800\\,\\mathrm{J}}{4\\,\\mathrm{s}} = 450\\,\\mathrm{W}$."
+    ],
+    "a": "450 W"
+   },
+   {
+    "t": "ex",
+    "title": "Energy from power",
+    "q": "A 1,000 W microwave runs for 90 s. How much energy does it use?",
+    "steps": [
+     "Rearrange: $W = P\\,t = 1{,}000\\,\\mathrm{W} \\times 90\\,\\mathrm{s} = 90{,}000\\,\\mathrm{J}$."
+    ],
+    "a": "90,000 J"
+   },
+   {
+    "t": "mistake",
+    "html": "Using watts and joules as if they meant the same thing. A watt is a joule <b>per second</b>. \"This heater is 1,500 W\" tells you its rate; how much energy it uses depends on how long it runs. Check the units: J ÷ s = W, and W × s = J."
+   },
+   {
+    "t": "note",
+    "html": "Engines are often rated in horsepower: 1 horsepower is about 746 W."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 7.7 Power"
+   }
+  ]
+ },
+ "physsci.efficiency": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "No machine turns all of the energy you put in (by <a href=\"/physics/physical-science/work-intro/\">doing work</a> on it, or by plugging it in) into the form you want. A car engine, a light bulb and your own muscles all let some energy escape, mostly as heat. By <a href=\"/physics/physical-science/energy-conservation-intro/\">conservation of energy</a>, none of it vanishes; it just isn't useful. <b>Efficiency</b> is the useful share, as a <a href=\"/math/grade-6/percent-meaning/\">percent</a>."
+   },
+   {
+    "t": "key",
+    "html": "$$\\text{efficiency} = \\dfrac{\\text{useful energy out}}{\\text{energy in}} \\times 100\\%$$ It is always less than 100%, because some energy always leaves as heat, sound or other forms you didn't want."
+   },
+   {
+    "t": "why",
+    "html": "Energy in = useful energy out + wasted energy. Since the wasted part is never zero in a real machine (there is always some friction, resistance or heat loss), the useful part is always smaller than the input. A machine that put out more energy than it took in would be creating energy, which never happens."
+   },
+   {
+    "t": "viz",
+    "name": "ph-energy",
+    "opts": {
+     "scene": "ramp",
+     "mu": 0.15,
+     "mode": "bars"
+    },
+    "cap": "A block sliding down a ramp with friction. Some of the potential energy becomes kinetic energy and some becomes thermal energy (red-orange). The total stays the same, but only part of it is motion."
+   },
+   {
+    "t": "ex",
+    "title": "A motor",
+    "q": "An electric motor takes in 500 J and lifts a load, giving it 400 J of potential energy. Find its efficiency.",
+    "steps": [
+     "$\\text{efficiency} = \\dfrac{400}{500} \\times 100\\% = 80\\%$.",
+     "The other 100 J became heat and sound."
+    ],
+    "a": "80%"
+   },
+   {
+    "t": "ex",
+    "title": "Useful output",
+    "q": "A lamp is 25% efficient and uses 2,000 J. How much light energy does it give?",
+    "steps": [
+     "25% of 2,000 J: $0.25 \\times 2{,}000 = 500$ J of light.",
+     "The other 1,500 J heats the lamp and the room."
+    ],
+    "a": "500 J"
+   },
+   {
+    "t": "mistake",
+    "html": "Believing a well-built machine can put out more energy than it takes in. Better design can only cut the waste; it can't make energy. Check: if you get an efficiency over 100%, you have swapped \"in\" and \"out.\""
+   },
+   {
+    "t": "note",
+    "html": "Most gasoline car engines turn less than a third of their fuel's energy into motion; the rest leaves as heat through the radiator and the exhaust."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 7.6 Conservation of Energy"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 15.5 Applications of Thermodynamics: Heat Engines"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS3-3"
+   }
+  ]
+ },
+ "physsci.simple-machines": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A ramp, a lever, a pulley: simple machines let you lift heavy things with a smaller force. They seem to give something for nothing. They don't: the <a href=\"/physics/physical-science/work-intro/\">work</a> stays the same, and you pay for the smaller force with a longer distance."
+   },
+   {
+    "t": "key",
+    "html": "An ideal (frictionless) machine puts out the same work it takes in: $$F_{\\text{in}}\\,d_{\\text{in}} = F_{\\text{out}}\\,d_{\\text{out}}$$ So a smaller force must move a longer distance. <b>Mechanical advantage</b> = output force ÷ input force."
+   },
+   {
+    "t": "why",
+    "html": "To raise a 600 N box by 1 m, you must give it $600 \\times 1 = 600$ J, however you do it. Lift it straight up: 600 N for 1 m. Push it up a 3 m ramp: the same 600 J spread over 3 m needs only $600 \\div 3 = 200$ N. The ramp trades force for distance. Real machines have friction, so you need a bit more force than the ideal value."
+   },
+   {
+    "t": "viz",
+    "name": "ph-torque",
+    "opts": {
+     "scene": "ramp",
+     "load": 600,
+     "rampLength": 3,
+     "rampHeight": 1
+    },
+    "cap": "Pushing a 600 N load up a 3 m ramp to a height of 1 m. The push is smaller than the weight, but it acts over a longer distance."
+   },
+   {
+    "t": "ex",
+    "title": "A ramp",
+    "q": "Find the push needed to slide a 600 N box up a frictionless 3 m ramp onto a 1 m platform, and the mechanical advantage.",
+    "steps": [
+     "Work out: $600\\,\\mathrm{N} \\times 1\\,\\mathrm{m} = 600$ J.",
+     "Work in must match: $F \\times 3\\,\\mathrm{m} = 600$ J, so $F = 200$ N.",
+     "Mechanical advantage: $600 \\div 200 = 3$."
+    ],
+    "a": "200 N; mechanical advantage 3"
+   },
+   {
+    "t": "ex",
+    "title": "A pulley block",
+    "q": "A block and tackle with 4 rope strands holding the load lifts a 400 N engine by 0.5 m. Ignoring friction, find the pull and how much rope you pull.",
+    "steps": [
+     "Four strands share the load: $400 \\div 4 = 100$ N.",
+     "Each strand must shorten by 0.5 m, so you pull $4 \\times 0.5 = 2$ m of rope.",
+     "Check the work: $100 \\times 2 = 200$ J in, $400 \\times 0.5 = 200$ J out."
+    ],
+    "a": "100 N, pulling 2 m of rope"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a machine reduces the work needed. It reduces the <b>force</b>; the work is the same (or a bit more, because of friction). Check: input force × input distance should match output force × output distance."
+   },
+   {
+    "t": "viz",
+    "name": "ph-torque",
+    "opts": {
+     "scene": "pulley-block",
+     "load": 400,
+     "strands": 4
+    },
+    "cap": "A block and tackle with four strands: one quarter of the force, four times the rope."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 9.5 Simple Machines"
+   }
+  ]
+ },
+ "physsci.levers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A seesaw is a lever: a stiff bar that turns on a pivot. A light child can balance a heavy adult, if they sit at the right places. The rule is a <a href=\"/math/grade-7/solve-proportions/\">proportion</a>, and it is the same trade of force for distance that every <a href=\"/physics/physical-science/simple-machines/\">simple machine</a> makes."
+   },
+   {
+    "t": "key",
+    "html": "A lever balances when force × distance from the pivot is the same on both sides: $$F_1\\,d_1 = F_2\\,d_2$$ Force times distance is the turning effect (later called torque)."
+   },
+   {
+    "t": "why",
+    "html": "Whether a seesaw tips depends on both the weight and how far out it sits. A weight far from the pivot turns the bar more than the same weight close in, just as a long wrench turns a bolt more easily than a short one. When the turning effects on the two sides match, neither side wins, and the lever balances."
+   },
+   {
+    "t": "viz",
+    "name": "ph-torque",
+    "opts": {
+     "scene": "seesaw",
+     "masses": [
+      {
+       "x": 1,
+       "m": 30
+      },
+      {
+       "x": 3.5,
+       "m": 20
+      }
+     ]
+    },
+    "cap": "A 30 kg child 1.0 m from the pivot balances a 20 kg child 1.5 m from it: $30 \\times 1.0 = 20 \\times 1.5$. Drag either child to see the seesaw tip."
+   },
+   {
+    "t": "ex",
+    "title": "Where to sit",
+    "q": "A 40 kg child sits 1.5 m from a seesaw's pivot. Where must a 30 kg child sit to balance?",
+    "steps": [
+     "Balance: $40 \\times 1.5 = 30 \\times d$. (The weights are both mass × 9.8, so you can use the masses.)",
+     "$60 = 30\\,d$, so $d = 2$ m."
+    ],
+    "a": "2 m from the pivot, on the other side"
+   },
+   {
+    "t": "ex",
+    "title": "A crowbar",
+    "q": "A crowbar's pivot is 0.1 m from a heavy rock and 1.2 m from your hand. The rock pushes back with 600 N. What force must you apply?",
+    "steps": [
+     "Balance: $F \\times 1.2 = 600 \\times 0.1 = 60$.",
+     "$F = 60 \\div 1.2 = 50$ N. The long handle gives a mechanical advantage of 12."
+    ],
+    "a": "50 N"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking the heavier side of a seesaw always goes down. A 60 kg adult 0.5 m from the pivot ($30$) loses to a 20 kg child 2 m out ($40$). Check: compare weight × distance on each side, not weight alone."
+   },
+   {
+    "t": "p",
+    "html": "For balance in motion, try stacking a chain of books on a rolling cart in the Science Lab: <a href=\"/science-lab/book-cart/\">Book Cart</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 9.2 The Second Condition for Equilibrium"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 9.5 Simple Machines"
+   }
+  ]
+ },
+ "physsci.heat-transfer": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "From heat and temperature you know that heat is energy flowing from a hotter object to a colder one. It can travel in three ways, and most real situations use more than one."
+   },
+   {
+    "t": "key",
+    "html": "<b>Conduction:</b> heat passes through touching materials, particle to particle. <b>Convection:</b> a warmed fluid (liquid or gas) moves and carries the heat with it. <b>Radiation:</b> heat travels as light, mostly infrared you can't see, even through empty space."
+   },
+   {
+    "t": "why",
+    "html": "In conduction, fast-jiggling particles bump their neighbors and pass energy along; metals do this especially well. In convection, warm fluid expands, becomes less dense and rises, while cooler fluid sinks to take its place, which sets up a circulating current. Radiation needs no material at all, which is how sunlight warms Earth across 150 million km of space."
+   },
+   {
+    "t": "viz",
+    "name": "ph-thermal",
+    "opts": {
+     "mode": "transfer"
+    },
+    "cap": "The three ways heat moves: through a solid (conduction), with a moving fluid (convection), and as infrared light (radiation)."
+   },
+   {
+    "t": "ex",
+    "title": "A pot of soup",
+    "q": "Name the ways heat moves as soup heats on a stove.",
+    "steps": [
+     "The burner heats the metal pot bottom by contact, and heat passes through it: conduction.",
+     "Warm soup at the bottom rises and cooler soup sinks: convection.",
+     "You can feel the glowing burner's warmth from the side: radiation."
+    ],
+    "a": "All three"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a metal bench feels colder because it <b>is</b> colder than a wooden one in the same park. Both are at the air temperature. Metal conducts heat away from your skin much faster than wood, so your skin cools faster, and that is what you feel. Check: a thermometer would read the same on both."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Way",
+     "Needs",
+     "Example"
+    ],
+    "rows": [
+     [
+      "Conduction",
+      "Touching materials",
+      "A metal spoon warming in hot cocoa"
+     ],
+     [
+      "Convection",
+      "A moving liquid or gas",
+      "Warm air rising from a heater"
+     ],
+     [
+      "Radiation",
+      "Nothing (works in space)",
+      "Sunlight warming your face"
+     ]
+    ],
+    "cap": "The three ways heat moves."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 14.4 Heat Transfer Methods"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 14.5 Conduction"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 14.6 Convection"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 14.7 Radiation"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS3-3"
+   }
+  ]
+ },
+ "physsci.phase-changes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Put a pot of ice on the stove and watch a thermometer in it. The temperature climbs to 0 °C, then <b>stops</b> while the ice melts, even though the burner keeps adding heat. Where does that energy go?"
+   },
+   {
+    "t": "key",
+    "html": "During melting and boiling, added energy breaks particles free from each other instead of making them move faster, so the temperature stays the same until the change is complete. Freezing and condensing give that same energy back. For water at sea level, melting happens at 0 °C and boiling at 100 °C."
+   },
+   {
+    "t": "why",
+    "html": "Temperature measures how fast the particles move on average. In ice, the molecules are held in place by attractions. To melt, they must be pulled partly free, which takes energy but does not speed them up. Once all the ice has melted, added energy goes back to speeding the molecules up, and the temperature rises again. Boiling works the same way, pulling molecules all the way apart into a gas."
+   },
+   {
+    "t": "viz",
+    "name": "ph-thermal",
+    "opts": {
+     "mode": "heating-curve",
+     "m": 1,
+     "T0": -20,
+     "T1": 120,
+     "q": 0.5
+    },
+    "cap": "The heating curve of 1 kg of water. The flat steps are melting (at 0 °C) and boiling (at 100 °C). Slide the heat added and watch the temperature pause at each step."
+   },
+   {
+    "t": "ex",
+    "title": "Reading a heating curve",
+    "q": "Ice at −10 °C is heated steadily until it becomes steam at 110 °C. Describe the temperature.",
+    "steps": [
+     "It rises from −10 °C to 0 °C (ice warming).",
+     "It stays at 0 °C while the ice melts.",
+     "It rises from 0 °C to 100 °C (water warming).",
+     "It stays at 100 °C while the water boils, then rises again (steam warming)."
+    ],
+    "a": "Two flat steps: at 0 °C and at 100 °C"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking the temperature keeps rising while ice melts or water boils. Turning up the stove under boiling water makes it boil faster, not hotter: it stays at 100 °C (at sea level). Check: on a heating curve, a phase change is a flat part."
+   },
+   {
+    "t": "note",
+    "html": "Melting 1 g of ice takes about 334 J; boiling away 1 g of water takes about 2,260 J. That is why steam can scald far worse than hot water at the same temperature: it releases all that extra energy as it condenses on skin."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 14.3 Phase Change and Latent Heat"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS1-4"
+   }
+  ]
+ },
+ "physsci.wave-parts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Drop a pebble in a pond and ripples spread out. Shake one end of a rope and a wiggle runs along it. A <b>wave</b> is a disturbance that travels, carrying energy from place to place. Four numbers describe a repeating wave, measured in SI units: meters, seconds and hertz."
+   },
+   {
+    "t": "key",
+    "html": "<b>Amplitude</b>: how far the medium moves from rest (rest to crest). <b>Wavelength</b> $\\lambda$: the length of one wave, crest to crest. <b>Frequency</b> $f$: how many waves pass each second, in hertz (Hz). <b>Period</b> $T$: the time for one wave, so $$T = \\dfrac{1}{f}$$"
+   },
+   {
+    "t": "why",
+    "html": "If 4 waves pass every second, each one takes a quarter of a second: $T = \\tfrac{1}{4} = 0.25$ s. Frequency counts waves per second; the period is seconds per wave, so each is 1 divided by the other. Bigger amplitude means more energy: a tall ocean swell hits the beach far harder than a ripple."
+   },
+   {
+    "t": "viz",
+    "name": "ph-wave",
+    "opts": {
+     "mode": "travel",
+     "f": 0.5,
+     "v": 1,
+     "A": 0.5,
+     "mark": 4,
+     "graphs": [
+      "snapshot",
+      "history"
+     ]
+    },
+    "cap": "A wave on a row of particles. Watch the marked particle: it only moves up and down, while the wave shape travels along. The history graph below shows that one particle over time."
+   },
+   {
+    "t": "ex",
+    "title": "Period from frequency",
+    "q": "A buoy bobs up and down 5 times every second as waves pass. Find the frequency and the period.",
+    "steps": [
+     "Frequency: 5 waves per second, $f = 5$ Hz.",
+     "Period: $T = \\dfrac{1}{5} = 0.2$ s for each wave."
+    ],
+    "a": "$f = 5$ Hz, $T = 0.2$ s"
+   },
+   {
+    "t": "ex",
+    "title": "Wavelength from crests",
+    "q": "A photo of a rope wave shows crests at 1.5 m, 4.5 m and 7.5 m along the rope. Find the wavelength.",
+    "steps": [
+     "Wavelength is the distance from one crest to the next: $4.5 - 1.5 = 3$ m.",
+     "Check with the next pair: $7.5 - 4.5 = 3$ m."
+    ],
+    "a": "3 m"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a wave carries the water or the rope along with it. A duck on a pond bobs up and down as waves pass, but it doesn't ride away with them. The medium moves back and forth around one spot; only the energy and the wave shape travel."
+   },
+   {
+    "t": "mistake",
+    "html": "Measuring amplitude from crest to trough. That distance is <b>twice</b> the amplitude: the amplitude is measured from the rest position."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 16.9 Waves"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS4-1"
+   }
+  ]
+ },
+ "physsci.wave-speed": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In one period $T$, a wave moves forward exactly one wavelength. Speed is distance over time (<a href=\"/physics/physical-science/speed/\">average speed</a>), so the wave's speed is one wavelength per period. Since $\\frac{1}{T} = f$ (from the <a href=\"/physics/physical-science/wave-parts/\">parts of a wave</a>), that gives the most useful equation for waves."
+   },
+   {
+    "t": "key",
+    "html": "$$v = f\\,\\lambda$$ Wave speed (m/s) = frequency (Hz) × wavelength (m). The <b>medium</b> sets the speed; if you change the frequency, the wavelength changes to match."
+   },
+   {
+    "t": "why",
+    "html": "$v = \\dfrac{\\lambda}{T} = \\lambda \\times \\dfrac{1}{T} = f\\,\\lambda$. Think of a line of waves marching past you: if 4 waves pass each second and each is 2 m long, then 8 m of wave passes each second, so $v = 8$ m/s. Shake a rope faster and the waves bunch up (shorter $\\lambda$), but they still travel at the speed the rope allows."
+   },
+   {
+    "t": "viz",
+    "name": "ph-wave",
+    "opts": {
+     "mode": "travel",
+     "f": 0.5,
+     "v": 1,
+     "A": 0.5,
+     "graphs": [
+      "snapshot"
+     ]
+    },
+    "cap": "Slide the frequency up. The waves get shorter, but each crest still moves along at the same speed: the speed belongs to the medium."
+   },
+   {
+    "t": "ex",
+    "title": "Ocean waves",
+    "q": "Ocean waves 12 m long pass a pier at 0.5 Hz. How fast do they travel?",
+    "steps": [
+     "$v = f\\,\\lambda = 0.5\\,\\mathrm{Hz} \\times 12\\,\\mathrm{m} = 6\\,\\mathrm{m/s}$."
+    ],
+    "a": "6 m/s"
+   },
+   {
+    "t": "ex",
+    "title": "A musical note",
+    "q": "Sound travels at 343 m/s in air. Find the wavelength of a 686 Hz note.",
+    "steps": [
+     "Rearrange: $\\lambda = \\dfrac{v}{f}$.",
+     "$\\lambda = \\dfrac{343}{686} = 0.5$ m."
+    ],
+    "a": "0.5 m"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a higher frequency makes a wave travel faster. In the same medium, every sound travels at about 343 m/s, high notes and low notes alike; otherwise music from far away would arrive scrambled. A higher frequency just means a shorter wavelength. Check: $f \\times \\lambda$ should give the same speed for every wave in that medium."
+   },
+   {
+    "t": "note",
+    "html": "An FM radio station at 100 MHz (100,000,000 Hz) sends radio waves at the speed of light, 300,000,000 m/s, so each wave is $\\dfrac{300{,}000{,}000}{100{,}000{,}000} = 3$ m long."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 16.9 Waves"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 17.2 Speed of Sound, Frequency, and Wavelength"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS4-1"
+   }
+  ]
+ },
+ "physsci.wave-types": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every <a href=\"/physics/physical-science/wave-parts/\">wave</a> makes the medium move, but not always in the same direction. Shake a rope up and down and the wiggle runs along it. Push and pull the end of a long spring and a squeeze runs along it. Those are the two basic kinds of waves."
+   },
+   {
+    "t": "key",
+    "html": "In a <b>transverse</b> wave, the medium moves across (perpendicular to) the direction the wave travels: crests and troughs. In a <b>longitudinal</b> wave, the medium moves back and forth along the direction the wave travels: <b>compressions</b> (squeezed) and <b>rarefactions</b> (spread out). Sound is longitudinal."
+   },
+   {
+    "t": "why",
+    "html": "A loudspeaker cone pushes forward, squeezing the air in front of it, then pulls back, leaving the air spread out. Those squeezes and stretches travel outward, while each bit of air just jiggles back and forth along the wave's path. The distance from one compression to the next is the wavelength, just as crest to crest is for a transverse wave."
+   },
+   {
+    "t": "viz",
+    "name": "ph-wave",
+    "opts": {
+     "mode": "travel",
+     "f": 0.5,
+     "v": 1,
+     "long": true,
+     "graphs": []
+    },
+    "cap": "A longitudinal wave, slowed down: particles crowd together and spread apart. Each one moves only left and right around its own spot."
+   },
+   {
+    "t": "ex",
+    "title": "Classify the wave",
+    "q": "A stadium crowd does \"the wave\": each person stands up and sits down as the wave sweeps around the stadium. Which kind of wave is it?",
+    "steps": [
+     "Each person moves up and down.",
+     "The wave travels sideways around the stadium.",
+     "Motion across the direction of travel: transverse."
+    ],
+    "a": "Transverse"
+   },
+   {
+    "t": "ex",
+    "title": "Wavelength of sound",
+    "q": "In a sound wave, the compressions are 1.2 m apart. What is the wavelength?",
+    "steps": [
+     "One compression to the next is one full wave.",
+     "So $\\lambda = 1.2$ m. (Compression to the next rarefaction would be only half a wave.)"
+    ],
+    "a": "1.2 m"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking every wave is transverse, like the picture of a water wave, and being unable to picture sound. Sound has no crests in the air; it is a train of squeezes and stretches moving outward. (Water waves are actually a mix: the water at the surface moves in small circles.)"
+   },
+   {
+    "t": "note",
+    "html": "Earthquakes send both kinds. Longitudinal P waves travel fastest and arrive first; transverse S waves arrive later and cannot cross Earth's liquid outer core, which is one of the ways scientists learned the outer core is liquid."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 16.9 Waves"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 17.1 Sound"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS4-2"
+   }
+  ]
+ },
+ "physsci.sound": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sound is a <a href=\"/physics/physical-science/wave-types/\">longitudinal wave</a> of squeezes and stretches in the air (or in water, or a solid). Like any wave it has a frequency and an amplitude, and those are exactly what your ears hear as <b>pitch</b> and <b>loudness</b>. It travels at a <a href=\"/physics/physical-science/wave-speed/\">speed</a> set by the material."
+   },
+   {
+    "t": "key",
+    "html": "<b>Pitch</b> comes from frequency: higher frequency, higher note. <b>Loudness</b> comes from amplitude: bigger squeezes, louder sound. Sound needs a <b>medium</b>; it travels at about 343 m/s in air at 20 °C and cannot cross empty space."
+   },
+   {
+    "t": "why",
+    "html": "Your eardrum is pushed in and out by the air's squeezes and stretches. Faster squeezes (more per second) make it vibrate faster, which your brain hears as a higher note. Bigger squeezes push it harder, which you hear as louder. Pitch and loudness are separate dials: a whisper can be high and a drum can be loud and low."
+   },
+   {
+    "t": "viz",
+    "name": "ph-wave",
+    "opts": {
+     "mode": "travel",
+     "f": 0.6,
+     "v": 1.2,
+     "A": 0.4,
+     "long": true,
+     "graphs": [
+      "history"
+     ]
+    },
+    "cap": "A sound wave in the air, slowed way down (real sounds vibrate tens to thousands of times a second). Raise the frequency for a higher pitch (the history graph wiggles faster); raise the amplitude for a louder sound (the wiggles get taller)."
+   },
+   {
+    "t": "ex",
+    "title": "Two notes",
+    "q": "Note A is 440 Hz with a small amplitude. Note B is 220 Hz with a large amplitude. Which is higher, and which is louder?",
+    "steps": [
+     "Pitch follows frequency: A (440 Hz) is higher.",
+     "Loudness follows amplitude: B is louder."
+    ],
+    "a": "A is higher; B is louder"
+   },
+   {
+    "t": "ex",
+    "title": "How far was the lightning?",
+    "q": "You see a lightning flash and hear the thunder 6 s later. About how far away was the strike?",
+    "steps": [
+     "The light arrives almost instantly; the sound takes 6 s.",
+     "$d = v\\,t = 343\\,\\mathrm{m/s} \\times 6\\,\\mathrm{s} \\approx 2{,}060$ m, about 2 km.",
+     "Rule of thumb: about 3 seconds per kilometer."
+    ],
+    "a": "About 2 km"
+   },
+   {
+    "t": "mistake",
+    "html": "Linking pitch to loudness, as if louder sounds were higher. Turning up the volume on a song doesn't change its notes. Check: pitch goes with frequency, loudness with amplitude."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Medium",
+     "Speed of sound (about)"
+    ],
+    "rows": [
+     [
+      "Air at 20 °C",
+      "343 m/s"
+     ],
+     [
+      "Water",
+      "1,500 m/s"
+     ],
+     [
+      "Steel",
+      "more than 5,000 m/s"
+     ],
+     [
+      "Empty space",
+      "none: sound can't travel"
+     ]
+    ],
+    "cap": "Sound travels faster in liquids and solids, where the particles are closer together and more tightly linked."
+   },
+   {
+    "t": "note",
+    "html": "People hear frequencies from about 20 Hz to 20,000 Hz. Dogs hear higher; bats and dolphins use sounds far above our range."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 17.1 Sound"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 17.2 Speed of Sound, Frequency, and Wavelength"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS4-1"
+   }
+  ]
+ },
+ "physsci.echoes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Shout toward a cliff and you hear your voice come back: an <b>echo</b>, <a href=\"/physics/physical-science/sound/\">sound</a> reflected off a surface. If you know the speed of sound and time the echo, you can measure distances you can't reach. Bats, dolphins, ships' sonar and ultrasound scanners all do this."
+   },
+   {
+    "t": "key",
+    "html": "$$d = \\dfrac{v\\,t}{2}$$ where $t$ is the time from sending the sound to hearing the echo. Divide by 2 because the sound travels <b>there and back</b>."
+   },
+   {
+    "t": "why",
+    "html": "In time $t$, the sound covers a total path of $v\\,t$. That path goes out to the reflecting surface and returns, so it is twice the distance to the surface. Half of it, $\\dfrac{v\\,t}{2}$, is the one-way distance."
+   },
+   {
+    "t": "viz",
+    "name": "ph-wave",
+    "opts": {
+     "mode": "pulse",
+     "boundary": "fixed"
+    },
+    "cap": "A pulse travels to the end of a string and reflects back. The round trip covers twice the length of the string."
+   },
+   {
+    "t": "ex",
+    "title": "Sonar",
+    "q": "A ship sends a sound pulse straight down and hears the echo from the seabed 2 s later. Sound travels at 1,500 m/s in seawater. How deep is the sea?",
+    "steps": [
+     "Total path: $1{,}500 \\times 2 = 3{,}000$ m, down and back.",
+     "Depth: $3{,}000 \\div 2 = 1{,}500$ m."
+    ],
+    "a": "1,500 m"
+   },
+   {
+    "t": "ex",
+    "title": "A canyon wall",
+    "q": "You clap and hear the echo from a canyon wall 1.2 s later. Sound travels at 343 m/s. How far away is the wall?",
+    "steps": [
+     "$d = \\dfrac{343 \\times 1.2}{2} = \\dfrac{411.6}{2} = 205.8$ m."
+    ],
+    "a": "About 206 m"
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting that the sound travels there and back, which gives an answer twice the real distance. Check: if your answer is the whole distance the sound traveled in the time, you still need to halve it."
+   },
+   {
+    "t": "note",
+    "html": "Many bats chirp at frequencies too high for us to hear and judge distances to insects from the echoes, within a fraction of a second."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 17.7 Ultrasound"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 17.2 Speed of Sound, Frequency, and Wavelength"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS4-5"
+   }
+  ]
+ },
+ "physsci.wave-behavior": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When a <a href=\"/physics/physical-science/wave-types/\">wave</a> reaches a new material, three things can happen to its energy, and usually all three happen at once in some mix. This is true of light, sound and water waves alike."
+   },
+   {
+    "t": "key",
+    "html": "A wave meeting a new material can be <b>reflected</b> (bounce back), <b>absorbed</b> (its energy taken in, usually as heat) or <b>transmitted</b> (pass through). The three shares always add up to 100% of the energy that arrives."
+   },
+   {
+    "t": "why",
+    "html": "Energy can't vanish, so whatever doesn't bounce back or pass through must be taken in by the material. A black shirt in sunlight absorbs most of the light and warms up. A window transmits most light. A white wall reflects most of it, scattered in every direction, which is why the whole room looks bright."
+   },
+   {
+    "t": "viz",
+    "name": "ph-refraction",
+    "opts": {
+     "mode": "materials"
+    },
+    "cap": "Light hitting different materials. Compare how much is reflected, absorbed and transmitted by each."
+   },
+   {
+    "t": "ex",
+    "title": "Where did the light go?",
+    "q": "A sheet of tinted glass transmits 70% of the light that hits it and reflects 10%. What percent does it absorb?",
+    "steps": [
+     "The three shares add to 100%: $70 + 10 + x = 100$.",
+     "$x = 20\\%$ is absorbed."
+    ],
+    "a": "20%"
+   },
+   {
+    "t": "ex",
+    "title": "Sound in a music studio",
+    "q": "Why are the walls of a recording studio covered with soft foam?",
+    "steps": [
+     "Hard, smooth walls reflect sound, making echoes.",
+     "Soft foam absorbs much of the sound energy instead, so the room stays quiet and clear."
+    ],
+    "a": "The foam absorbs sound instead of reflecting it"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking light only reflects from shiny surfaces like mirrors. Paper, skin and walls reflect light too, scattered in all directions; that is the only reason you can see them. A mirror is special only because it reflects light in one neat direction, so it forms an image."
+   },
+   {
+    "t": "p",
+    "html": "Shine lasers at mirrors, lenses and prisms on the <a href=\"/science-lab/optics/\">Optics Bench</a> in the Science Lab."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 25.2 The Law of Reflection"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 16.11 Energy in Waves: Intensity"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS4-2"
+   }
+  ]
+ },
+ "physsci.em-spectrum": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Visible light is a wave too, but it needs no medium: it is a wave of electric and magnetic fields, and it crosses empty space at $300{,}000$ km/s. Visible light is only a thin slice of a much larger family. Every member obeys the same <a href=\"/physics/physical-science/wave-speed/\">wave equation</a> $v = f\\lambda$, all with the same speed in space."
+   },
+   {
+    "t": "key",
+    "html": "The <b>electromagnetic spectrum</b>, from longest wavelength to shortest: radio waves, microwaves, infrared, visible light (red to violet), ultraviolet, X-rays, gamma rays. All of them are light, and all travel at about $3 \\times 10^8$ m/s in empty space."
+   },
+   {
+    "t": "why",
+    "html": "Since every kind travels at the same speed $c$, the equation $c = f\\lambda$ means a longer wavelength comes with a lower frequency. Radio waves can be longer than a building, with low frequencies; gamma rays are smaller than an atom, with enormous frequencies. Visible light runs from about 700 nm (red) to about 400 nm (violet), where 1 nm is a billionth of a meter."
+   },
+   {
+    "t": "viz",
+    "name": "ph-spectrum",
+    "opts": {
+     "mode": "ruler",
+     "lambda": 550
+    },
+    "cap": "The electromagnetic spectrum on a scale where each step is ten times the last. Drag the marker to see a wavelength's band, frequency and photon energy."
+   },
+   {
+    "t": "ex",
+    "title": "Order the bands",
+    "q": "Put these in order from longest to shortest wavelength: X-rays, radio waves, visible light, microwaves.",
+    "steps": [
+     "Use the spectrum order: radio, microwave, infrared, visible, ultraviolet, X-ray, gamma.",
+     "So: radio waves, microwaves, visible light, X-rays."
+    ],
+    "a": "Radio, microwaves, visible light, X-rays"
+   },
+   {
+    "t": "ex",
+    "title": "Moonlight's trip",
+    "q": "The Moon is about 384,000 km away. Light travels at about 300,000 km/s. How long does moonlight take to reach us?",
+    "steps": [
+     "$t = \\dfrac{d}{v} = \\dfrac{384{,}000}{300{,}000} = 1.28$ s."
+    ],
+    "a": "About 1.3 s"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking radio waves are a kind of sound, or that only visible light is \"light.\" Radio waves are electromagnetic waves, like light, that travel through space at the speed of light; a radio turns them into sound only at the end. Sound itself can't cross empty space at all."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 24.3 The Electromagnetic Spectrum"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS4-2"
+   }
+  ]
+ },
+ "physsci.color": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Isaac Newton passed sunlight through a glass prism and saw it spread into a rainbow of colors, then used a second prism to combine them back into white. White light is a mix of all the colors of the <a href=\"/physics/physical-science/em-spectrum/\">visible spectrum</a>. What color an object looks depends on which of those colors it <a href=\"/physics/physical-science/wave-behavior/\">reflects, absorbs or transmits</a>."
+   },
+   {
+    "t": "key",
+    "html": "An object's color is the color of the light it <b>reflects</b> into your eyes; it absorbs the rest. A colored <b>filter</b> transmits light of its own color and absorbs (blocks) the others. With no light of its color to reflect, an object looks black."
+   },
+   {
+    "t": "why",
+    "html": "A red apple in white light absorbs most of the colors and reflects mostly red, so red light reaches your eye. Put the same apple under pure blue light: there is no red light to reflect, and it absorbs the blue, so it looks black. A white object reflects every color, so it takes on the color of whatever light shines on it."
+   },
+   {
+    "t": "viz",
+    "name": "ph-refraction",
+    "opts": {
+     "mode": "prism"
+    },
+    "cap": "A prism spreads white light into its colors, because each color bends by a slightly different amount."
+   },
+   {
+    "t": "viz",
+    "name": "ph-refraction",
+    "opts": {
+     "mode": "filters"
+    },
+    "cap": "Colored lights, filters and objects. Change the light and the filter and watch which colors get through."
+   },
+   {
+    "t": "ex",
+    "title": "A filter",
+    "q": "White light shines through a green filter onto a white wall. What color is the spot?",
+    "steps": [
+     "The filter transmits green and absorbs the other colors.",
+     "Only green light reaches the white wall, which reflects it."
+    ],
+    "a": "Green"
+   },
+   {
+    "t": "ex",
+    "title": "A shirt under colored light",
+    "q": "A red shirt is lit only by green light. What color does it look?",
+    "steps": [
+     "A red shirt reflects red and absorbs other colors.",
+     "There is no red light to reflect, and it absorbs the green."
+    ],
+    "a": "Black (very dark)"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a red filter adds red to the light, or \"dyes\" it. A filter can only take colors away: white light contains red already, and the filter blocks everything else. Check: a red filter in front of a blue light gives darkness, not purple."
+   },
+   {
+    "t": "p",
+    "html": "Split white light with a prism on the <a href=\"/science-lab/optics/\">Optics Bench</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 25.5 Dispersion: The Rainbow and Prisms"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS4-2"
+   }
+  ]
+ },
+ "physsci.refraction-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A straw in a glass of water looks bent at the surface, and a pool looks shallower than it is. Both happen because light <a href=\"/physics/physical-science/wave-behavior/\">transmitted</a> into a new material changes speed, and that can make it change direction. This bending is called <b>refraction</b>."
+   },
+   {
+    "t": "key",
+    "html": "Light <b>bends</b> when it crosses a boundary at an angle and changes speed. Going into a slower material (air into water or glass), it bends <b>toward</b> the normal (the line perpendicular to the surface). Hitting the boundary straight on, it slows down but does not bend."
+   },
+   {
+    "t": "why",
+    "html": "Picture a marching band crossing from pavement onto mud at an angle. The marchers who reach the mud first slow down first, while the others keep going, so the whole line swings around and heads in a new direction. If the band reaches the mud square on, every marcher slows at the same moment, and the line keeps going straight. Light's wavefronts do the same thing."
+   },
+   {
+    "t": "viz",
+    "name": "ph-refraction",
+    "opts": {
+     "mode": "ray",
+     "n1": 1,
+     "n2": 1.5,
+     "angle": 40
+    },
+    "cap": "Light going from air into glass bends toward the normal. Drag the light source: at 0° (straight on), the ray goes straight through."
+   },
+   {
+    "t": "ex",
+    "title": "Into water",
+    "q": "A ray of light goes from air into water, hitting the surface at 30° from the normal. Does it bend toward or away from the normal?",
+    "steps": [
+     "Light travels slower in water than in air.",
+     "Going into a slower material, it bends toward the normal."
+    ],
+    "a": "Toward the normal"
+   },
+   {
+    "t": "p",
+    "html": "A <b>lens</b> uses refraction on purpose. A converging lens, thicker in the middle, bends parallel rays inward so they meet at a point, the focal point. That is how a magnifying glass, a camera and the lens of your eye form images."
+   },
+   {
+    "t": "viz",
+    "name": "ph-rays",
+    "opts": {
+     "element": "converging",
+     "f": 10,
+     "dObj": 25,
+     "hObj": 5
+    },
+    "cap": "A converging lens bends rays from an object so they meet again and form an image on the other side."
+   },
+   {
+    "t": "mistake",
+    "html": "Expecting light to bend even when it meets a boundary straight on. Along the normal, the light slows down but keeps its direction. Bending needs an angle, so that one side of the beam slows before the other."
+   },
+   {
+    "t": "p",
+    "html": "Bend laser beams through glass and water on the <a href=\"/science-lab/optics/\">Optics Bench</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 25.3 The Law of Refraction"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 25.6 Image Formation by Lenses"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS4-2"
+   }
+  ]
+ },
+ "physsci.radiation-energy": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Light carries energy in tiny packets called <b>photons</b>. Across the <a href=\"/physics/physical-science/em-spectrum/\">electromagnetic spectrum</a>, the energy of a single photon depends on just one thing: its frequency."
+   },
+   {
+    "t": "key",
+    "html": "A photon's energy is proportional to its frequency: double the frequency, double the energy per photon. So one ultraviolet or X-ray photon carries far more energy than one visible or radio photon. A brighter light sends <b>more</b> photons, not stronger ones."
+   },
+   {
+    "t": "why",
+    "html": "To break a molecule in a living cell, a <b>single</b> photon must deliver enough energy at once. An ultraviolet photon has enough to break some of the bonds in skin cells' molecules, which is what causes sunburn. A red or radio photon doesn't, and adding more of them doesn't help, because each one acts alone. It is like trying to knock over a bowling pin with ping-pong balls: throwing more of them won't do it."
+   },
+   {
+    "t": "viz",
+    "name": "ph-spectrum",
+    "opts": {
+     "mode": "ruler",
+     "lambda": 300,
+     "show": [
+      "energy"
+     ]
+    },
+    "cap": "The spectrum with a photon-energy scale in electron volts (eV). Drag the marker from radio to gamma rays and watch the energy per photon climb."
+   },
+   {
+    "t": "ex",
+    "title": "Compare photons",
+    "q": "Which carries more energy per photon: a blue photon or a red photon?",
+    "steps": [
+     "Blue light has a higher frequency (shorter wavelength) than red.",
+     "Higher frequency means more energy per photon."
+    ],
+    "a": "The blue photon"
+   },
+   {
+    "t": "ex",
+    "title": "Scale it",
+    "q": "A photon of frequency $f$ carries 2 units of energy. How much does a photon of frequency $3f$ carry?",
+    "steps": [
+     "Energy is proportional to frequency: three times the frequency, three times the energy.",
+     "$3 \\times 2 = 6$ units."
+    ],
+    "a": "6 units"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking brighter light means more energetic photons, so a bright red lamp should burn skin sooner than dim ultraviolet light. Brightness is the number of photons; each red photon still has too little energy to break those molecules. Check: ask about the frequency of each photon, not how bright the light is."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 29.3 Photon Energies and the Electromagnetic Spectrum"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS4-4"
+   }
+  ]
+ },
+ "physsci.digital-signals": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/physics/physical-science/wave-parts/\">wave</a> can carry information: a radio song, a phone call, a photo. There are two ways to code it. An <b>analog</b> signal copies the original smoothly, with every in-between value. A <b>digital</b> signal sends only a few separate values, usually just two: 0 and 1."
+   },
+   {
+    "t": "key",
+    "html": "A <b>digital</b> signal sends information as distinct values (bits, 0 or 1). Because there are only a few allowed values, the receiver can still read every bit exactly after some noise is added, and copies can be perfect. With $n$ bits you can send $2^n$ different values."
+   },
+   {
+    "t": "why",
+    "html": "Suppose 0 is sent as 0 volts and 1 as 5 volts. Noise on the way might turn 5 V into 4.3 V or 0 V into 0.6 V, but the receiver only asks \"closer to 0 or to 5?\" and recovers the exact bits. An analog signal has no such rule: every bit of noise becomes part of the signal, and copying a copy makes it worse each time."
+   },
+   {
+    "t": "viz",
+    "name": "ph-wave",
+    "opts": {
+     "mode": "digital",
+     "bits": 3,
+     "noise": 0.25
+    },
+    "cap": "An analog signal sampled into 3-bit numbers, sent as 0s and 1s with noise added, and read back exactly."
+   },
+   {
+    "t": "ex",
+    "title": "Count the values",
+    "q": "How many different values can a 4-bit signal send?",
+    "steps": [
+     "Each bit has 2 choices, so $2 \\times 2 \\times 2 \\times 2 = 2^4$.",
+     "$2^4 = 16$ values (0000 up to 1111)."
+    ],
+    "a": "16"
+   },
+   {
+    "t": "ex",
+    "title": "Read a noisy signal",
+    "q": "A receiver uses 0 V for 0 and 5 V for 1. It gets 4.6 V, 0.8 V, 4.1 V, 0.3 V. What bits were sent?",
+    "steps": [
+     "Anything closer to 5 V than to 0 V (above 2.5 V) is a 1; below is a 0.",
+     "4.6 → 1, 0.8 → 0, 4.1 → 1, 0.3 → 0."
+    ],
+    "a": "1010"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking \"digital\" just means electronic. An old analog radio is electronic too. Digital means the information is sent as separate, countable values rather than a smoothly varying wave. Check: can the signal only take a few set values? Then it is digital."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Next Generation Science Standards, MS-PS4-3: digitized signals are a more reliable way to encode and transmit information than analog signals"
+   }
+  ]
+ },
+ "physsci.charges-in-atoms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Rub a balloon on your hair and it sticks to the wall. The <a href=\"/physics/physical-science/forces-intro/\">force</a> at work is electric, and it starts inside atoms. As you know from protons, neutrons and electrons, protons carry positive charge and electrons carry an equal amount of negative charge."
+   },
+   {
+    "t": "key",
+    "html": "An object's net charge is (number of protons) − (number of electrons), counted in units of one electron's charge. Objects become charged by <b>gaining or losing electrons</b>: gain electrons and become negative, lose electrons and become positive. The protons stay put in the nuclei."
+   },
+   {
+    "t": "why",
+    "html": "Protons are locked inside the nucleus at the center of each atom, held by strong nuclear forces. The outer electrons are much easier to move, so when two materials rub, some electrons cross from one to the other. Charge is never made or destroyed: whatever negative charge the balloon gains, your hair loses, so the hair ends up positive by exactly the same amount."
+   },
+   {
+    "t": "viz",
+    "name": "ph-efield",
+    "opts": {
+     "mode": "points",
+     "charges": [
+      {
+       "q": 2,
+       "x": -0.08,
+       "y": 0
+      },
+      {
+       "q": -2,
+       "x": 0.08,
+       "y": 0
+      }
+     ]
+    },
+    "cap": "A positive and a negative charge. The lines show the push a small positive charge would feel: away from + and toward −."
+   },
+   {
+    "t": "ex",
+    "title": "Count the charge",
+    "q": "An oxygen atom has 8 protons. It gains 2 electrons. What is its net charge?",
+    "steps": [
+     "Protons: 8. Electrons: $8 + 2 = 10$.",
+     "Net charge: $8 - 10 = -2$ (in units of the electron's charge)."
+    ],
+    "a": "$-2$"
+   },
+   {
+    "t": "ex",
+    "title": "A balloon and hair",
+    "q": "A balloon rubbed on hair gains 5 million extra electrons. What happens to the hair?",
+    "steps": [
+     "Charge is conserved: the electrons came from the hair.",
+     "The hair loses 5 million electrons, so it has 5 million more protons than electrons: positive."
+    ],
+    "a": "The hair becomes positive by the same amount"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking an object becomes positive by gaining protons. Protons are stuck in nuclei; in everyday charging, only electrons move. A positive object has <b>lost</b> electrons. Check: \"positive\" means fewer electrons than protons."
+   },
+   {
+    "t": "p",
+    "html": "Build atoms and ions particle by particle in the Science Lab: <a href=\"/science-lab/atom/\">Build an Atom</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 18.1 Static Electricity and Charge: Conservation of Charge"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-3"
+   }
+  ]
+ },
+ "physsci.static-forces": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once objects are <a href=\"/physics/physical-science/charges-in-atoms/\">charged</a>, they push and pull on each other without touching. The rules are short, and they explain lightning, clingy socks from the dryer and the way atoms hold together."
+   },
+   {
+    "t": "key",
+    "html": "<b>Like charges repel; unlike charges attract.</b> The force is stronger when the charges are bigger and when they are closer. Like gravity, it weakens with the square of the distance: twice as far, one quarter of the force."
+   },
+   {
+    "t": "why",
+    "html": "A charged object can even attract a <b>neutral</b> one. Bring a negative balloon near a wall: it pushes the wall's electrons slightly away, leaving the near side of the wall a little positive. That near positive side is closer than the farther negative side, so the attraction wins, and the balloon sticks."
+   },
+   {
+    "t": "viz",
+    "name": "ph-efield",
+    "opts": {
+     "mode": "polarize"
+    },
+    "cap": "A charged rod near a neutral object. The object's charges shift a little: the side facing the rod gets the opposite charge, so the rod attracts it."
+   },
+   {
+    "t": "ex",
+    "title": "Attract or repel?",
+    "q": "Two balloons are both rubbed on hair, so both are negative. What happens when you hang them side by side?",
+    "steps": [
+     "Both have the same kind of charge.",
+     "Like charges repel, so the balloons swing apart."
+    ],
+    "a": "They push apart"
+   },
+   {
+    "t": "ex",
+    "title": "Change the distance",
+    "q": "Two charged beads push on each other with 0.8 N. They are moved to half the distance apart. What is the force now?",
+    "steps": [
+     "Distance ÷ 2 means force × $2^2 = 4$.",
+     "$0.8 \\times 4 = 3.2$ N."
+    ],
+    "a": "3.2 N"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a charged balloon can't attract a neutral wall, since only opposite charges attract. The wall's charges shift so that the near side becomes slightly opposite in charge to the balloon, and nearer charges pull harder. Check: a charged comb picks up neutral bits of paper the same way."
+   },
+   {
+    "t": "note",
+    "html": "Lightning is the same kind of attraction on a huge scale: charges separate inside a storm cloud until the pull across the air is strong enough to send a giant spark."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 18.3 Coulomb's Law"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 18.2 Conductors and Insulators"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-3"
+   }
+  ]
+ },
+ "physsci.fields-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Earth pulls the Moon across 384,000 km of empty space. A magnet tugs a paper clip through a tabletop. <a href=\"/physics/physical-science/static-forces/\">Charged balloons</a> push apart without touching. How can a force act across a gap? Physicists describe it with a <b>field</b>: the space around a mass, a charge or a magnet is changed, and any other object placed there feels a force. You met the first one already: <a href=\"/physics/physical-science/gravity-mass-distance/\">gravity</a>."
+   },
+   {
+    "t": "key",
+    "html": "A <b>field</b> is the region around an object where another object feels a force. Gravitational fields act on masses, electric fields on charges, magnetic fields on magnets and moving charges. Field lines show the direction of the force, and they are crowded where the field is strong."
+   },
+   {
+    "t": "why",
+    "html": "The field lets us split one question into two: \"what does this object do to the space around it?\" and \"what force does that space put on whatever is placed there?\" Near Earth's surface the gravitational field is 9.8 N/kg: each kilogram placed there feels 9.8 N. That is the same $g$ as in weight: $W = m\\,g$ is just \"mass times field.\""
+   },
+   {
+    "t": "viz",
+    "name": "ph-efield",
+    "opts": {
+     "mode": "points",
+     "charges": [
+      {
+       "q": 2,
+       "x": -0.08,
+       "y": 0
+      },
+      {
+       "q": 2,
+       "x": 0.08,
+       "y": 0
+      }
+     ]
+    },
+    "cap": "The electric field of two positive charges. The lines spread apart where the field is weaker, and they never cross."
+   },
+   {
+    "t": "viz",
+    "name": "ph-magnetism",
+    "opts": {
+     "mode": "magnets"
+    },
+    "cap": "The magnetic field around a bar magnet. Compass needles line up with the field lines, which run from the north pole to the south pole outside the magnet."
+   },
+   {
+    "t": "ex",
+    "title": "Field strength",
+    "q": "On Mars the gravitational field is about 3.7 N/kg. What force does it put on a 20 kg rover?",
+    "steps": [
+     "Force = mass × field: $20\\,\\mathrm{kg} \\times 3.7\\,\\mathrm{N/kg} = 74\\,\\mathrm{N}$."
+    ],
+    "a": "74 N"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking field lines are real strings, or the paths objects must follow. They are a map: at each point, a line shows which way the force would push, and how close the lines are shows how strong it is. Objects don't slide along them; a ball tossed near Earth curves even though Earth's field lines point straight down."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 18.4 Electric Field: Concept of a Field Revisited"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 22.3 Magnetic Fields and Magnetic Field Lines"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-5"
+   }
+  ]
+ },
+ "physsci.current-voltage": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In a wire, <a href=\"/physics/physical-science/charges-in-atoms/\">electrons</a> can move freely from atom to atom. Connect the wire to a battery and they flow. Two numbers describe this flow: how much charge passes each second, and how much energy each bit of charge carries."
+   },
+   {
+    "t": "key",
+    "html": "<b>Current</b> $I$ is the rate of flow of charge: $I = \\dfrac{Q}{t}$, in amperes (A), where 1 A is 1 coulomb per second. <b>Voltage</b> $V$ is the energy given to each coulomb of charge, in volts (V), where 1 V is 1 joule per coulomb."
+   },
+   {
+    "t": "why",
+    "html": "Think of a loop of water pipe with a pump. The pump (the battery) gives the water energy; the flow rate (the current) is how much water passes a point each second. In a light bulb the charge gives up its energy as light and heat, but the charge itself keeps going around the loop: what goes into the bulb comes out of it. Current is not used up; energy is transferred."
+   },
+   {
+    "t": "viz",
+    "name": "ph-circuit",
+    "opts": {
+     "circuit": "V(6) series(A1, B1:6)",
+     "show": [
+      "meters"
+     ]
+    },
+    "cap": "A 6 V battery, an ammeter and a bulb. The moving dots show the current. It is the same all the way around the loop."
+   },
+   {
+    "t": "ex",
+    "title": "Find the current",
+    "q": "30 coulombs of charge flow through a lamp in 10 s. What is the current?",
+    "steps": [
+     "$I = \\dfrac{Q}{t} = \\dfrac{30\\,\\mathrm{C}}{10\\,\\mathrm{s}} = 3\\,\\mathrm{A}$."
+    ],
+    "a": "3 A"
+   },
+   {
+    "t": "ex",
+    "title": "Energy from voltage",
+    "q": "A 9 V battery pushes 4 C of charge through a circuit. How much energy does it give the charge?",
+    "steps": [
+     "Each coulomb gets 9 J.",
+     "$4 \\times 9 = 36$ J."
+    ],
+    "a": "36 J"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking current gets used up as it passes through a bulb, so less comes out than goes in. An ammeter placed before the bulb and one placed after read the same. What the bulb uses is <b>energy</b>, carried by the charge; the charge itself returns to the battery."
+   },
+   {
+    "t": "note",
+    "html": "The electrons in a wire drift along slowly, often less than a millimeter per second. A lamp still lights almost at once, because the wire is already full of electrons and they all start moving together, like water in a full hose."
+   },
+   {
+    "t": "p",
+    "html": "Wire up batteries, bulbs and meters in the Science Lab: <a href=\"/science-lab/circuits/\">Circuit Builder</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 20.1 Current"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 19.1 Electric Potential Energy: Potential Difference"
+   }
+  ]
+ },
+ "physsci.circuits-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/physics/physical-science/current-voltage/\">current</a> needs a complete path. A battery pushes charge out of one terminal, and that charge must be able to travel all the way around and back into the other terminal. Such a closed path is a <b>circuit</b>."
+   },
+   {
+    "t": "key",
+    "html": "Charge flows only around a <b>closed loop</b> from one terminal of the battery, through the devices, back to the other terminal. A gap anywhere (an <b>open</b> circuit) stops the current everywhere in that loop. A <b>switch</b> is a gap you can open and close."
+   },
+   {
+    "t": "why",
+    "html": "The battery doesn't supply charges; the wires are already full of them. It pushes them around the loop, like a pump pushing water around a closed pipe. Break the pipe anywhere and the whole flow stops, because the water has nowhere to go. That is why one switch by the door can turn off a light across the room."
+   },
+   {
+    "t": "viz",
+    "name": "ph-circuit",
+    "opts": {
+     "circuit": "V(6) series(S1, B1:6, B2:6)",
+     "edit": true
+    },
+    "cap": "Two bulbs and a switch in one loop. Click the switch to open it: both bulbs go out, because the loop is broken."
+   },
+   {
+    "t": "ex",
+    "title": "Does it light?",
+    "q": "A bulb has two connection points. One wire joins it to the + terminal of a battery. Nothing is connected to its other point. Does it light?",
+    "steps": [
+     "For current, charge must go from one terminal, through the bulb, and back to the other terminal.",
+     "Here there is no path back to the battery, so there is no loop."
+    ],
+    "a": "No: the circuit is open"
+   },
+   {
+    "t": "ex",
+    "title": "Where the switch goes",
+    "q": "Two bulbs are wired in one loop with a battery and a switch. The switch is opened. Which bulbs go out?",
+    "steps": [
+     "All the parts share the same single loop.",
+     "Opening the switch breaks that loop, so the current stops everywhere in it."
+    ],
+    "a": "Both bulbs"
+   },
+   {
+    "t": "mistake",
+    "html": "Connecting a bulb to only one end of a battery and expecting it to light. Charge must leave the battery, pass <b>through</b> the bulb and return, so the bulb needs two connections: one to each terminal (directly or through other parts)."
+   },
+   {
+    "t": "p",
+    "html": "Build circuits with switches and bulbs in the Science Lab: <a href=\"/science-lab/circuits/\">Circuit Builder</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 20.2 Ohm's Law: Resistance and Simple Circuits"
+   }
+  ]
+ },
+ "physsci.ohms-law": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Push harder and more <a href=\"/physics/physical-science/current-voltage/\">current</a> flows; put something in the way and less flows. The \"something in the way\" is <b>resistance</b>. A bulb filament or a resistor resists the flow, turning electrical energy into heat and light. Solving the law is a <a href=\"/math/grade-6/one-step-multiply-divide/\">one-step equation</a>, in any <a href=\"/physics/physical-science/circuits-intro/\">complete circuit</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Ohm's law:</b> $$V = I\\,R$$ Voltage (V) = current (A) × resistance in ohms (Ω). So $I = \\dfrac{V}{R}$ and $R = \\dfrac{V}{I}$."
+   },
+   {
+    "t": "why",
+    "html": "For many materials, doubling the voltage doubles the current: current and voltage are proportional. The resistance is the constant ratio $\\dfrac{V}{I}$, a property of the resistor itself, set by its material, length and thickness. A thin, long wire has more resistance than a short, thick one, just as a narrow pipe lets less water through."
+   },
+   {
+    "t": "viz",
+    "name": "ph-circuit",
+    "opts": {
+     "circuit": "V(12) series(A1, R1:4)",
+     "show": [
+      "meters"
+     ],
+     "edit": true
+    },
+    "cap": "A 12 V battery and a 4 Ω resistor: the ammeter reads 3 A. Click the resistor to change its resistance and watch the current change."
+   },
+   {
+    "t": "ex",
+    "title": "Find the current",
+    "q": "A 12 V battery is connected to a 4 Ω resistor. Find the current.",
+    "steps": [
+     "$I = \\dfrac{V}{R} = \\dfrac{12\\,\\mathrm{V}}{4\\,\\Omega} = 3\\,\\mathrm{A}$."
+    ],
+    "a": "3 A"
+   },
+   {
+    "t": "ex",
+    "title": "Find the resistance",
+    "q": "A lamp draws 0.5 A from a 6 V supply. What is its resistance?",
+    "steps": [
+     "$R = \\dfrac{V}{I} = \\dfrac{6\\,\\mathrm{V}}{0.5\\,\\mathrm{A}} = 12\\,\\Omega$."
+    ],
+    "a": "12 Ω"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a resistor's resistance changes when the current through it changes. For an ordinary resistor, if you double the voltage, the current doubles too, and $R = \\dfrac{V}{I}$ stays the same. Resistance depends on the resistor, not on what you connect it to. (A bulb filament is an exception in one way: its resistance rises as it heats up.)"
+   },
+   {
+    "t": "p",
+    "html": "Measure currents and voltages yourself in the <a href=\"/science-lab/circuits/\">Circuit Builder</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 20.2 Ohm's Law: Resistance and Simple Circuits"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 20.3 Resistance and Resistivity"
+   }
+  ]
+ },
+ "physsci.series-parallel-intro": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "With two or more parts in a <a href=\"/physics/physical-science/circuits-intro/\">circuit</a>, you can connect them in a line (series) or side by side on separate branches (parallel). The two ways behave very differently, and <a href=\"/physics/physical-science/ohms-law/\">Ohm's law</a> explains how."
+   },
+   {
+    "t": "key",
+    "html": "<b>Series:</b> one path, so the same current flows through every part; resistances add, $R = R_1 + R_2$, and the battery's voltage is shared among the parts. <b>Parallel:</b> each branch connects straight across the battery, so each gets the <b>full voltage</b>; the branch currents add up to the total."
+   },
+   {
+    "t": "why",
+    "html": "In series, every charge must pass through every part in turn, so the current can't differ from one part to the next, and each added part makes the path harder. In parallel, each branch is its own loop through the battery. Adding a branch adds another path, so the battery delivers more total current, and removing one branch leaves the others working. That is why homes are wired in parallel."
+   },
+   {
+    "t": "viz",
+    "name": "ph-circuit",
+    "opts": {
+     "circuit": "V(9) series(B1:3, par(B2:3, B3:3))",
+     "edit": true,
+     "show": [
+      "voltage"
+     ]
+    },
+    "cap": "One bulb in series with two in parallel. Bulb B1 carries the whole current, so it glows brightest. Click a bulb to remove it and see what happens to the others."
+   },
+   {
+    "t": "ex",
+    "title": "Series",
+    "q": "A 12 V battery is connected to a 2 Ω and a 4 Ω resistor in series. Find the current and the voltage across each resistor.",
+    "steps": [
+     "Total resistance: $2 + 4 = 6\\,\\Omega$.",
+     "Current: $I = \\dfrac{12}{6} = 2$ A, the same through both.",
+     "Voltages: $2 \\times 2 = 4$ V and $2 \\times 4 = 8$ V. They add to 12 V."
+    ],
+    "a": "2 A; 4 V and 8 V"
+   },
+   {
+    "t": "ex",
+    "title": "Parallel",
+    "q": "The same resistors are connected in parallel to the 12 V battery. Find the current in each and the total current.",
+    "steps": [
+     "Each branch gets the full 12 V.",
+     "$I_1 = \\dfrac{12}{2} = 6$ A; $I_2 = \\dfrac{12}{4} = 3$ A.",
+     "Total from the battery: $6 + 3 = 9$ A."
+    ],
+    "a": "6 A, 3 A; 9 A in total"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking the first bulb in a series circuit is brightest because it gets the current first. The current is the same everywhere in a series loop at the same moment, so identical bulbs in series glow equally. Check: there is nowhere for current to \"leak\" out between the bulbs."
+   },
+   {
+    "t": "p",
+    "html": "Try series and parallel bulbs in the <a href=\"/science-lab/circuits/\">Circuit Builder</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 21.1 Resistors in Series and Parallel"
+   }
+  ]
+ },
+ "physsci.electric-power": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A lamp, a toaster and a TV all turn electrical energy into other forms, at different rates. That rate is <a href=\"/physics/physical-science/power-intro/\">power</a>, and for electricity it comes straight from <a href=\"/physics/physical-science/ohms-law/\">current and voltage</a>."
+   },
+   {
+    "t": "key",
+    "html": "Electric power: $$P = V\\,I$$ in watts. Energy used = power × time. Power companies count energy in <b>kilowatt-hours</b> (kWh): 1 kWh is the energy a 1,000 W device uses in 1 hour."
+   },
+   {
+    "t": "why",
+    "html": "Voltage is joules per coulomb, and current is coulombs per second. Multiply them and the coulombs cancel: (J/C) × (C/s) = J/s = watts. A kilowatt-hour is a unit of energy, not power: $1\\,\\mathrm{kW} \\times 1\\,\\mathrm{h} = 1{,}000\\,\\mathrm{J/s} \\times 3{,}600\\,\\mathrm{s} = 3{,}600{,}000\\,\\mathrm{J}$."
+   },
+   {
+    "t": "viz",
+    "name": "ph-circuit",
+    "opts": {
+     "circuit": "V(12) par(B1:6, B2:12)",
+     "show": [
+      "meters"
+     ]
+    },
+    "cap": "Two bulbs in parallel on 12 V. The one with less resistance draws more current, so it uses more power and glows brighter."
+   },
+   {
+    "t": "ex",
+    "title": "Power from current and voltage",
+    "q": "A hair dryer draws 10 A from a 120 V outlet. What is its power?",
+    "steps": [
+     "$P = V\\,I = 120\\,\\mathrm{V} \\times 10\\,\\mathrm{A} = 1{,}200\\,\\mathrm{W} = 1.2\\,\\mathrm{kW}$."
+    ],
+    "a": "1,200 W"
+   },
+   {
+    "t": "ex",
+    "title": "The cost of energy",
+    "q": "A 1.5 kW space heater runs for 4 hours. Electricity costs 15 cents per kWh. How much energy does it use, and what does it cost?",
+    "steps": [
+     "Energy: $1.5\\,\\mathrm{kW} \\times 4\\,\\mathrm{h} = 6\\,\\mathrm{kWh}$.",
+     "Cost: $6 \\times 15 = 90$ cents."
+    ],
+    "a": "6 kWh, 90 cents"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing up kilowatts (a rate) with kilowatt-hours (an amount of energy). A 2 kW kettle uses energy at 2 kW whether it runs for a minute or an hour; the kWh you pay for depend on how long it runs. Check the units: kW × h = kWh."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 20.4 Electric Power and Energy"
+   }
+  ]
+ },
+ "physsci.magnets": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A magnet pulls on iron from a distance through its <a href=\"/physics/physical-science/fields-intro/\">field</a>. Every magnet has two ends where its pull is strongest, called poles, and the rules for poles look a lot like the rules for charges."
+   },
+   {
+    "t": "key",
+    "html": "Every magnet has a <b>north</b> pole and a <b>south</b> pole. Like poles repel; unlike poles attract. Outside the magnet, its field lines run from the north pole to the south pole, and a compass needle lines up along them."
+   },
+   {
+    "t": "why",
+    "html": "A magnet is made of countless tiny magnets: in iron, many of the atoms behave like little magnets, and in a magnet they are lined up. Cut a bar magnet in half and each half still has its tiny magnets lined up, so each half is a whole magnet with its own north and south pole. No one has ever found a north pole by itself."
+   },
+   {
+    "t": "viz",
+    "name": "ph-magnetism",
+    "opts": {
+     "mode": "magnets"
+    },
+    "cap": "A bar magnet's field, shown by lines and compass needles. Break the magnet and each piece has both poles."
+   },
+   {
+    "t": "ex",
+    "title": "Attract or repel?",
+    "q": "The north pole of one magnet is brought near the south pole of another. What happens?",
+    "steps": [
+     "North and south are unlike poles.",
+     "Unlike poles attract."
+    ],
+    "a": "They attract"
+   },
+   {
+    "t": "ex",
+    "title": "Earth as a magnet",
+    "q": "A compass needle's north pole points toward Earth's Arctic. What kind of magnetic pole is near the Arctic?",
+    "steps": [
+     "The needle's north pole is attracted there.",
+     "Unlike poles attract, so the magnetic pole near the Arctic is a <b>south</b> magnetic pole, even though we call that region \"north.\""
+    ],
+    "a": "A magnetic south pole"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking that breaking a magnet in half separates its north pole from its south pole. Each piece becomes a complete magnet with both poles, however small you cut it. Check: test each piece's ends with a compass."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 22.1 Magnets"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 22.3 Magnetic Fields and Magnetic Field Lines"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-5"
+   }
+  ]
+ },
+ "physsci.electromagnets": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In 1820 Hans Christian Ørsted noticed a compass needle twitch when he switched on a <a href=\"/physics/physical-science/current-voltage/\">current</a> nearby. Electricity and <a href=\"/physics/physical-science/magnets/\">magnetism</a> turned out to be linked: every current makes a magnetic field."
+   },
+   {
+    "t": "key",
+    "html": "An electric current makes a magnetic field around it. Wind the wire into a coil and the fields add up, giving a field like a bar magnet's. Put an iron core inside and the field becomes much stronger: an <b>electromagnet</b>, which you can switch on and off."
+   },
+   {
+    "t": "why",
+    "html": "Around a straight wire, the field forms circles. In a coil, the circles from every loop point the same way through the middle, so they add: more turns or more current make a stronger magnet. The iron core's own tiny magnets line up with the coil's field and add their much larger field. Switch off the current and the field disappears, which is why a scrapyard crane can drop what it picked up."
+   },
+   {
+    "t": "viz",
+    "name": "ph-magnetism",
+    "opts": {
+     "mode": "electromagnet"
+    },
+    "cap": "A coil around an iron core. With current flowing, it has a north and a south pole like a bar magnet."
+   },
+   {
+    "t": "ex",
+    "title": "Make it stronger",
+    "q": "Name three ways to make an electromagnet stronger.",
+    "steps": [
+     "Increase the current through the coil.",
+     "Wind more turns of wire.",
+     "Use an iron core."
+    ],
+    "a": "More current, more turns, an iron core"
+   },
+   {
+    "t": "p",
+    "html": "An <b>electric motor</b> puts this to work: a magnetic field pushes on a current-carrying coil, making it spin. That turns electrical energy into motion in fans, drills and electric cars."
+   },
+   {
+    "t": "viz",
+    "name": "ph-magnetism",
+    "opts": {
+     "mode": "motor"
+    },
+    "cap": "A simple motor: the magnetic force on the current in the loop turns it."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking only permanent magnets make magnetic fields. Any electric current does, which is how an electromagnet works with no magnet inside it at all. Check: reverse the current and the electromagnet's poles swap."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 22.2 Ferromagnets and Electromagnets"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 22.8 Torque on a Current Loop: Motors and Meters"
+   },
+   {
+    "name": "Next Generation Science Standards, MS-PS2-3"
+   }
+  ]
+ },
+ "physsci.generators": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "If a current can make a magnetic field (an <a href=\"/physics/physical-science/electromagnets/\">electromagnet</a>), can a magnet make a current? In 1831 Michael Faraday found that it can, but only while something is <b>changing</b>. That discovery runs almost every power plant in the world."
+   },
+   {
+    "t": "key",
+    "html": "Moving a magnet near a coil, or a coil near a magnet, <b>induces</b> a current in the coil. The current flows only while the magnetic field through the coil is changing. Faster motion, a stronger magnet or more turns make a bigger current. A <b>generator</b> uses this to turn motion into electrical energy."
+   },
+   {
+    "t": "why",
+    "html": "Push a magnet into a coil and the field inside the coil grows, so a current flows. Hold it still and nothing changes, so the current stops. Pull it out and the current flows the other way. In a generator, a coil spins between magnets, so the field through it changes all the time, and by <a href=\"/physics/physical-science/energy-conservation-intro/\">conservation of energy</a>, the electrical energy comes from the work done turning the coil."
+   },
+   {
+    "t": "viz",
+    "name": "ph-induction",
+    "opts": {
+     "mode": "magnet-coil"
+    },
+    "cap": "A magnet pushed into a coil, held still, then pulled out. The upper graph shows how much magnetic field passes through the coil; the lower graph shows the induced voltage. The voltage appears only while that field is changing, and it flips sign when the magnet comes back out."
+   },
+   {
+    "t": "viz",
+    "name": "ph-induction",
+    "opts": {
+     "mode": "generator"
+    },
+    "cap": "A generator: a coil turning in a magnetic field produces a current that reverses direction every half turn."
+   },
+   {
+    "t": "ex",
+    "title": "Magnet and coil",
+    "q": "A magnet is pushed into a coil, held still inside it, then pulled out. When does the meter show a current?",
+    "steps": [
+     "Pushing in: the field in the coil grows, so a current flows.",
+     "Held still: no change, no current.",
+     "Pulling out: the field shrinks, so a current flows the other way."
+    ],
+    "a": "Only while the magnet moves; opposite ways in and out"
+   },
+   {
+    "t": "ex",
+    "title": "Where the energy comes from",
+    "q": "A wind turbine's blades turn a generator. What energy change happens?",
+    "steps": [
+     "The wind's kinetic energy turns the blades.",
+     "The generator turns that motion into electrical energy (plus some heat)."
+    ],
+    "a": "Kinetic energy into electrical energy"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a magnet resting inside a coil makes a steady current. A current is induced only while the field through the coil is changing. A still magnet gives a steady field and no current. Check: watch the meter while the magnet is still."
+   },
+   {
+    "t": "note",
+    "html": "In most power plants, steam, falling water or wind spins a turbine connected to a generator. The current in your outlets swings back and forth 60 times each second (60 Hz) in North America."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Physics 2e, 23.1 Induced Emf and Magnetic Flux"
+   },
+   {
+    "name": "OpenStax, College Physics 2e, 23.5 Electric Generators"
+   },
+   {
+    "name": "Next Generation Science Standards, HS-PS2-5"
+   }
+  ]
+ }
+}
