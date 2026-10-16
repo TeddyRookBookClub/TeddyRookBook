@@ -30,7 +30,28 @@
      opts: image: "rook" | "shapes"   the built-in picture
            size: 40                    pixels per side (24 … 64)
            k: 3                        starting rank
-           task, label                                                                                          */
+           task, label
+   ---- neural-network thread (nn) visuals begin
+   la-network  A small neural network, layer by layer: inputs, hidden ReLU units (switches that light up when they are on),
+               one output. Edge thickness shows the size of a weight; blue edges are positive, orange edges negative.
+     opts: W1: [[1, 2], [-1, 1]]   hidden-layer weights, one row per hidden unit (1 to 4), one column per input (1 or 2)
+           b1: [0, 1]               hidden biases          W2: [[2, 5]]  output weights (one row)          b2: [-1]  output bias
+           x: [3, -1]               the input (a slider per input; inputs: [{min, max, step}] sets their ranges, default −4…4)
+           mode: "trace"            run the input forward: each hidden unit shows z = w·x + b and ReLU(z); with one input,
+                                    a graph of y against x marks each unit's bend
+                 "rule"             rule: {t: 5, A: 10, B: 12} builds "if x ≥ t the answer is A, otherwise B" from two ramps
+                                    (exact on whole numbers, a ramp between t − 1 and t); a table compares rule and network;
+                                    edit: true gives number boxes for the output weights and bias, and a check mark (with task)
+                                    once the network is exact on every whole number
+                 "train"            data: [[x, y], …] fits a one-input network with `hidden` units (default 4) by gradient
+                                    descent, using backpropagation for the derivatives; Step, Run, Reset, a step-size slider,
+                                    and a plot of the loss after each step. hidden: 4, lr: 0.05, seed: 3
+           labels: true (false in train)   write the weights on the edges
+           xmin, xmax, ymin, ymax   the window of the y-against-x graph (one input)
+           quiet: true (or readout: false)  show the weights and the input only: no z, h or y (for a picture in a problem)
+           task, label
+   ---- neural-network thread (nn) visuals end
+   */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder = W.MathLadder || {}, V = ML.viz;
@@ -475,3 +496,256 @@
     return { draw: draw };
   });
 })(window, document);
+
+// ==== neural-network thread (nn) begin: la-network (options in the header comment above) ====
+(function (W, D) {
+  'use strict';
+  var ML = W.MathLadder = W.MathLadder || {}, V = ML.viz;
+  if (!V) return;
+  var M = Math, fm = V.fmt, mk = V.el;
+  (function css() {
+    if (D.getElementById('nnv-css-la')) return;
+    var s = D.createElement('style'); s.id = 'nnv-css-la';
+    s.textContent = [
+      '.nnv .nnv-task{display:flex;gap:.55rem;align-items:flex-start;margin:0 0 .6rem;padding:.5rem .7rem;border-radius:10px;background:var(--mv-card);border:1px solid var(--mv-line);border-left:4px solid #b8963e;font-size:.95rem;line-height:1.45}',
+      '.nnv .nnv-tk{flex:0 0 auto;width:1.25rem;height:1.25rem;margin-top:.1rem;border-radius:50%;border:2px solid #b8963e;box-sizing:border-box;position:relative}',
+      '.nnv .nnv-task.ok{border-left-color:#00703c}.nnv .nnv-task.ok .nnv-tk{background:#00703c;border-color:#00703c}',
+      '.nnv .nnv-task.ok .nnv-tk::after{content:"";position:absolute;left:.33rem;top:.12rem;width:.28rem;height:.55rem;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}',
+      'html[data-theme="dark"] .nnv .nnv-task.ok{border-left-color:#6cc79a}html[data-theme="dark"] .nnv .nnv-task.ok .nnv-tk{background:#6cc79a;border-color:#6cc79a}html[data-theme="dark"] .nnv .nnv-task.ok .nnv-tk::after{border-color:#0f1a14}',
+      '.nnv .nnv-btns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 0}',
+      '.nnv .ml-readout{overflow-wrap:anywhere}',
+      '.nnv .nnv-cap{margin:.55rem 0 .2rem;font:600 .82rem system-ui,sans-serif;color:var(--mv-muted);letter-spacing:.02em}',
+      '.nnv .nnv-tbl{max-width:100%;overflow-x:auto;border:1px solid var(--mv-line);border-radius:10px;background:var(--mv-card);margin:.55rem 0 0}',
+      '.nnv .nnv-tbl table{display:table;border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums;margin:0}',
+      '.nnv .nnv-tbl th,.nnv .nnv-tbl td{padding:.3rem .5rem;text-align:center;border-bottom:1px solid var(--mv-line);white-space:nowrap}',
+      '.nnv .nnv-tbl th{color:var(--mv-muted);font-weight:600;background:var(--mv-paper);text-align:left}',
+      '.nnv .nnv-tbl tr:last-child td,.nnv .nnv-tbl tr:last-child th{border-bottom:0}',
+      '.nnv .nnv-tbl .ok{color:#00703c;font-weight:700}.nnv .nnv-tbl .no{color:#d6336c;font-weight:700}',
+      'html[data-theme="dark"] .nnv .nnv-tbl .ok{color:#6cc79a}html[data-theme="dark"] .nnv .nnv-tbl .no{color:#ff8787}',
+      '.nnv .nnv-edit{display:flex;flex-wrap:wrap;gap:.5rem .9rem;align-items:center;margin:.6rem 0 0;font-size:.9rem;color:var(--mv-muted)}',
+      '.nnv .nnv-edit label{display:inline-flex;align-items:center;gap:.35rem}',
+      '.nnv .nnv-edit input{width:4.6rem;min-height:36px;box-sizing:border-box;padding:.25rem .4rem;border:1px solid var(--mv-line);border-radius:8px;background:var(--mv-card);color:var(--mv-ink);font:600 .95rem system-ui,sans-serif;text-align:center;font-variant-numeric:tabular-nums}',
+      '.nnv .nnv-edit input:focus-visible{outline:3px solid #b8963e;outline-offset:1px}',
+      '@media (max-width:480px){.ml-viz.nnv{padding:.55rem}}'
+    ].join('\n');
+    D.head.appendChild(s);
+  })();
+  function nv(v, d) { if (v === null || v === undefined || v === '') return d; v = +v; return isFinite(v) ? v : d; }
+  function relu(v) { return v > 0 ? v : 0; }
+  function sub(n) { return String(n).split('').map(function (ch) { return '₀₁₂₃₄₅₆₇₈₉'[+ch] || ch; }).join(''); }
+  function frame(el, o, label) {
+    el.classList.add('nnv'); el.setAttribute('role', 'group');
+    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', o.label || label);
+    var F = {};
+    if (o.task) { F.task = mk('p', 'nnv-task', '<span class="nnv-tk" aria-hidden="true"></span><span>' + o.task + '</span>'); el.appendChild(F.task); if (ML.typeset) try { ML.typeset(F.task); } catch (e) { } }
+    F.box = mk('div', 'nnv-box'); el.appendChild(F.box);
+    F.ctl = mk('div', 'ml-ctl'); el.appendChild(F.ctl);
+    F.out = V.readout(el);
+    F.done = function (ok) { if (F.task) F.task.classList.toggle('ok', !!ok); };
+    return F;
+  }
+  function rng(seed) { var a = (seed >>> 0) || 1; return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = M.imul(a ^ a >>> 15, 1 | a); t = t + M.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function text(ctx, s, x, y, o) { o = o || {}; var k = V.colors(); ctx.save(); ctx.font = (o.bold ? '700 ' : '600 ') + (o.size || 12) + 'px ' + (o.italic ? 'Georgia,serif' : 'system-ui,sans-serif'); ctx.fillStyle = o.color || k.ink; ctx.textAlign = o.align || 'center'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); ctx.restore(); }
+  function tag(ctx, s, x, y, color) { // a small label with a background, for weights on edges
+    var k = V.colors(); ctx.save(); ctx.font = '700 11.5px system-ui,sans-serif'; var w = ctx.measureText(s).width + 8, h = 17;
+    ctx.fillStyle = k.bg; ctx.globalAlpha = 0.92; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x - w / 2, y - h / 2, w, h, 5); else ctx.rect(x - w / 2, y - h / 2, w, h); ctx.fill();
+    ctx.globalAlpha = 1; ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y + 0.5); ctx.restore();
+  }
+  var DATA = []; (function () { for (var x = -3; x <= 3.001; x += 0.5) DATA.push([x, 0.5 + 1.5 * relu(x + 1) - 3 * relu(x - 1)]); })();
+
+  V.register('la-network', function (el, o) {
+    o = Object.assign({ mode: 'trace', W1: [[1, 2], [-1, 1]], b1: [0, 1], W2: [[2, 5]], b2: [-1], x: null, hidden: 4, lr: 0.05, seed: 3, edit: false }, o || {});
+    var mode = o.mode, quiet = !!(o.quiet || o.readout === false), rule = null, data = null;
+    var net, x;
+    if (mode === 'rule') {
+      rule = { t: nv((o.rule || {}).t, 5), A: nv((o.rule || {}).A, 10), B: nv((o.rule || {}).B, 12) };
+      var d = rule.A - rule.B;
+      net = { W1: [[1], [1]], b1: [-(rule.t - 1), -rule.t], W2: [o.edit ? [0, 0] : [d, -d]], b2: [o.edit ? 0 : rule.B] };
+      x = [o.x ? nv(o.x[0], rule.t - 0.5) : rule.t - 0.5];
+    } else if (mode === 'train') {
+      data = (o.data || DATA).map(function (p) { return [nv(p[0], 0), nv(p[1], 0)]; });
+      net = null; x = [o.x ? nv(o.x[0], 0) : 0];
+    } else {
+      net = { W1: o.W1.map(function (r) { return r.map(function (v) { return nv(v, 0); }); }), b1: o.b1.map(function (v) { return nv(v, 0); }), W2: [o.W2[0].map(function (v) { return nv(v, 0); })], b2: [nv((o.b2 || [0])[0], 0)] };
+      x = (o.x || net.W1[0].map(function () { return 1; })).map(function (v) { return nv(v, 1); });
+    }
+    // ---- training state
+    var steps = 0, losses = [], blew = false, rnd = rng(nv(o.seed, 3)), lr = nv(o.lr, 0.05);
+    function initNet() {
+      var nh = M.max(1, M.min(6, nv(o.hidden, 4))), xs = data.map(function (p) { return p[0]; }), lo = M.min.apply(null, xs), hi = M.max.apply(null, xs), my = data.reduce(function (s, p) { return s + p[1]; }, 0) / data.length;
+      var W1 = [], b1 = [], v = [];
+      for (var j = 0; j < nh; j++) { var w = (rnd() < 0.5 ? -1 : 1) * (0.6 + 0.8 * rnd()), bend = lo + (hi - lo) * (j + 0.5 + 0.6 * (rnd() - 0.5)) / nh; W1.push([w]); b1.push(-w * bend); v.push((rnd() < 0.5 ? -1 : 1) * (0.2 + 0.5 * rnd())); }
+      net = { W1: W1, b1: b1, W2: [v], b2: [my] }; steps = 0; losses = [loss()]; blew = false;
+    }
+    function fwd(xx) { var z = net.W1.map(function (r, j) { return r.reduce(function (s, w, i) { return s + w * xx[i]; }, net.b1[j]); }), h = z.map(relu), y = h.reduce(function (s, hv, j) { return s + net.W2[0][j] * hv; }, net.b2[0]); return { z: z, h: h, y: y }; }
+    function loss() { return data.reduce(function (s, p) { var e = fwd([p[0]]).y - p[1]; return s + e * e; }, 0) / data.length; }
+    function trainStep() { // full-batch gradient descent; the gradient comes from backpropagation
+      var nh = net.W1.length, gW = new Array(nh).fill(0), gb = new Array(nh).fill(0), gv = new Array(nh).fill(0), gc = 0, n = data.length;
+      data.forEach(function (p) {
+        var f = fwd([p[0]]), g = 2 * (f.y - p[1]) / n;           // ∂L/∂ŷ for this point
+        gc += g;
+        for (var j = 0; j < nh; j++) { gv[j] += g * f.h[j]; var gz = f.z[j] > 0 ? g * net.W2[0][j] : 0; gW[j] += gz * p[0]; gb[j] += gz; }
+      });
+      for (var j = 0; j < nh; j++) { net.W1[j][0] -= lr * gW[j]; net.b1[j] -= lr * gb[j]; net.W2[0][j] -= lr * gv[j]; }
+      net.b2[0] -= lr * gc; steps++;
+      var L = loss(); if (!isFinite(L) || L > 1e6) { blew = true; } losses.push(L);
+    }
+    if (mode === 'train') initNet();
+    var nin = net.W1[0].length, nh = net.W1.length;
+    var showLabels = o.labels !== undefined ? !!o.labels : mode !== 'train';
+    var F = frame(el, o, mode === 'rule' ? 'A rule turned into network weights' : mode === 'train' ? 'Training a small network by gradient descent' : 'A small neural network');
+    // ---- the network picture
+    var nMax = M.max(nh, nin), cN = V.canvas(F.box, { height: mode === 'train' ? M.max(260, M.min(380, 70 * nMax + 60)) : M.max(230, M.min(420, 92 * nMax + 60)) });
+    cN.cv.setAttribute('role', 'img');
+    // ---- the graph of y against x (one input)
+    var cG = null, PG = null, gwin = null;
+    if (nin === 1 && o.graph !== false) {
+      F.box.appendChild(mk('p', 'nnv-cap', mode === 'train' ? 'The data and the network’s output' : 'The output y for every input x'));
+      cG = V.canvas(F.box, { aspect: 1.9, min: 190, max: 330 }); cG.cv.setAttribute('role', 'img');
+      if (mode === 'rule') gwin = { xmin: rule.t - 4.5, xmax: rule.t + 3.5, ymin: M.min(rule.A, rule.B) - 3, ymax: M.max(rule.A, rule.B) + 3 };
+      else if (mode === 'train') { var ys = data.map(function (p) { return p[1]; }), xs2 = data.map(function (p) { return p[0]; }), ya = M.min.apply(null, ys), yb = M.max.apply(null, ys), xa = M.min.apply(null, xs2), xb = M.max.apply(null, xs2); gwin = { xmin: xa - 0.6, xmax: xb + 0.6, ymin: ya - (yb - ya) * 0.3 - 0.5, ymax: yb + (yb - ya) * 0.3 + 0.5 }; }
+      else gwin = { xmin: nv(o.xmin, -5), xmax: nv(o.xmax, 5), ymin: nv(o.ymin, -6), ymax: nv(o.ymax, 8) };
+      PG = V.plane(cG, gwin);
+    }
+    var cL = null, PL = null;
+    if (mode === 'train') { F.box.appendChild(mk('p', 'nnv-cap', 'Loss after each step')); cL = V.canvas(F.box, { height: 130 }); cL.cv.setAttribute('role', 'img'); PL = V.plane(cL, { xmin: 0, xmax: 50, ymin: 0, ymax: 1 }); }
+    // ---- controls
+    var sliders = [];
+    var inR = o.inputs || [];
+    if (!quiet || mode !== 'trace') x.forEach(function (xv, i) {
+      var r = inR[i] || {}, lo = nv(r.min, mode === 'rule' ? rule.t - 4 : mode === 'train' ? gwin.xmin : -4), hi = nv(r.max, mode === 'rule' ? rule.t + 3 : mode === 'train' ? gwin.xmax : 4);
+      sliders.push(V.slider(F.ctl, { label: 'input x' + (nin > 1 ? sub(i + 1) : ''), min: lo, max: hi, step: nv(r.step, mode === 'trace' && !cG ? 1 : 0.1), value: xv, input: function (v) { x[i] = v; draw(); } }));
+    });
+    var tblWrap = null, editVals = null;
+    if (mode === 'rule') {
+      tblWrap = mk('div', 'nnv-tbl'); tblWrap.tabIndex = 0; tblWrap.setAttribute('aria-label', 'Rule and network on whole numbers'); el.insertBefore(tblWrap, F.out.el);
+      if (o.edit) {
+        var ed = mk('div', 'nnv-edit'); el.insertBefore(ed, tblWrap);
+        editVals = [['v' + sub(1), 0, function (v) { net.W2[0][0] = v; }], ['v' + sub(2), 0, function (v) { net.W2[0][1] = v; }], ['c', 1, function (v) { net.b2[0] = v; }]].map(function (e) {
+          var lab = mk('label', '', '<span>' + e[0] + ' =</span>'), inp = D.createElement('input'); inp.type = 'text'; inp.inputMode = 'decimal'; inp.value = '0'; inp.setAttribute('aria-label', (e[1] ? 'output bias ' : 'output weight ') + e[0]);
+          inp.addEventListener('input', function () { var v = parseFloat(inp.value.replace('−', '-')); e[2](isFinite(v) ? v : 0); draw(); });
+          lab.appendChild(inp); ed.appendChild(lab); return inp;
+        });
+      }
+    }
+    var runLoop = null, running = false, runBtn = null;
+    if (mode === 'train') {
+      var br = mk('div', 'nnv-btns'); el.insertBefore(br, F.out.el);
+      V.button(br, 'Take one step', function () { stop(); if (!blew) trainStep(); draw(); }, 'pri');
+      runBtn = V.button(br, 'Run', function () { if (running) stop(); else start(); });
+      V.button(br, 'Start over', function () { stop(); rnd = rng(nv(o.seed, 3) + (++reseed)); initNet(); draw(); });
+      var reseed = 0;
+      V.slider(F.ctl, { label: 'step size η', min: 0.005, max: 0.3, step: 0.005, value: lr, fmt: function (v) { return fm(v, 3); }, input: function (v) { lr = v; } });
+      runLoop = V.loop(el, function () { if (!running) return; for (var i = 0; i < (V.reduced ? 20 : 4); i++) { if (blew || steps >= 4000) break; trainStep(); } if (blew || steps >= 4000 || losses[losses.length - 1] < 1e-5) stop(); draw(); });
+      runLoop.stop();
+    }
+    function start() { running = true; if (runBtn) runBtn.textContent = 'Pause'; if (runLoop) runLoop.start(); }
+    function stop() { running = false; if (runBtn) runBtn.textContent = 'Run'; if (runLoop) runLoop.stop(); }
+
+    // ---- drawing
+    function drawNet(f) {
+      var k = V.colors(), ctx = cN.ctx, w = cN.w, h = cN.h; ctx.save(); ctx.fillStyle = k.bg; ctx.fillRect(0, 0, w, h); ctx.restore();
+      var lab = mode !== 'train', r = M.max(13, M.min(24, (h - (lab ? 120 : 80)) / (3.1 * M.max(nh, nin)))), X0 = M.max(r + 10, w * 0.12), X1 = w * 0.5, X2 = M.min(w - r - 10, w * 0.86);
+      function ys(n) { var out = [], top = r + (lab ? 28 : 22), bot = h - r - (lab ? 36 : 24); for (var i = 0; i < n; i++) out.push(n === 1 ? (top + bot) / 2 : top + (bot - top) * i / (n - 1)); return out; }
+      var yi = ys(nin), yh = ys(nh), yo = ys(1)[0], maxW = 0;
+      net.W1.forEach(function (row) { row.forEach(function (v) { maxW = M.max(maxW, M.abs(v)); }); }); net.W2[0].forEach(function (v) { maxW = M.max(maxW, M.abs(v)); });
+      var scale = maxW > 4 ? 4 / maxW : 1;
+      function edge(x1, y1, x2, y2, wv, dim) { ctx.save(); ctx.strokeStyle = wv >= 0 ? k.blue : k.orange; ctx.globalAlpha = dim ? 0.22 : 0.85; ctx.lineWidth = M.max(1, M.min(9, 1 + 1.7 * M.abs(wv) * scale)); ctx.lineCap = 'round'; if (wv === 0) { ctx.setLineDash([3, 5]); ctx.lineWidth = 1; ctx.strokeStyle = k.muted; } ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore(); }
+      var on = f ? f.z.map(function (z) { return z > 0; }) : null;
+      // edges
+      net.W1.forEach(function (row, j) { row.forEach(function (wv, i) { edge(X0 + r, yi[i], X1 - r, yh[j], wv, false); }); });
+      net.W2[0].forEach(function (wv, j) { edge(X1 + r, yh[j], X2 - r, yo, wv, !quiet && on && !on[j]); });
+      if (showLabels) {
+        net.W1.forEach(function (row, j) { row.forEach(function (wv, i) { var t = nin > 1 && nh > 1 ? (i === 0 ? 0.3 : 0.42) : 0.42; tag(ctx, fm(wv), X0 + r + (X1 - r - X0 - r) * t, yi[i] + (yh[j] - yi[i]) * t, wv >= 0 ? k.blue : k.orange); }); });
+        net.W2[0].forEach(function (wv, j) { var t = 0.42; tag(ctx, fm(wv), X1 + r + (X2 - r - X1 - r) * t, yh[j] + (yo - yh[j]) * t, wv >= 0 ? k.blue : k.orange); });
+      }
+      // input nodes
+      yi.forEach(function (y, i) {
+        ctx.save(); ctx.fillStyle = k.panel; ctx.strokeStyle = k.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(X0, y, r, 0, 2 * M.PI); ctx.fill(); ctx.stroke(); ctx.restore();
+        text(ctx, fm(x[i], 2), X0, y, { bold: true, size: r > 19 ? 14 : 12 });
+        text(ctx, 'x' + (nin > 1 ? sub(i + 1) : ''), X0, y - r - 11, { italic: true, size: 14, color: k.muted });
+      });
+      // hidden nodes: the switches
+      yh.forEach(function (y, j) {
+        var isOn = !quiet && on && on[j];
+        ctx.save(); ctx.fillStyle = quiet ? k.panel : isOn ? k.greenSoft : k.grid2; ctx.strokeStyle = quiet ? k.ink : isOn ? k.green : k.muted; ctx.lineWidth = isOn ? 3.5 : 2;
+        if (isOn && !V.reduced) { ctx.shadowColor = k.green; ctx.shadowBlur = 12; }
+        ctx.beginPath(); ctx.arc(X1, y, r, 0, 2 * M.PI); ctx.fill(); ctx.shadowBlur = 0; ctx.stroke();
+        // a little ramp glyph
+        var g = r * 0.5; ctx.strokeStyle = quiet ? k.ink : isOn ? k.green : k.muted; ctx.lineWidth = 2; ctx.beginPath();
+        if (quiet) { ctx.moveTo(X1 - g, y + g * 0.45); ctx.lineTo(X1, y + g * 0.45); ctx.lineTo(X1 + g, y - g * 0.6); }
+        else { ctx.moveTo(X1 - g * 0.9, y + r * 0.62); ctx.lineTo(X1 - g * 0.1, y + r * 0.62); ctx.lineTo(X1 + g * 0.7, y + r * 0.3); }
+        ctx.stroke(); ctx.restore();
+        if (!quiet && f) text(ctx, fm(f.h[j], 2), X1, y - r * 0.12, { bold: true, size: r > 19 ? 14 : 12, color: isOn ? k.ink : k.muted });
+        if (!quiet && f && lab) text(ctx, 'z = ' + fm(f.z[j], 2), X1, y - r - 10, { size: 11.5, color: isOn ? k.green : k.muted });
+        if (showLabels || quiet) text(ctx, 'b = ' + fm(net.b1[j], 2), X1, y + r + 10, { size: 11.5, color: k.muted });
+      });
+      // output node
+      ctx.save(); ctx.fillStyle = k.panel; ctx.strokeStyle = k.blue; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(X2, yo, r, 0, 2 * M.PI); ctx.fill(); ctx.stroke(); ctx.restore();
+      text(ctx, quiet || !f ? 'y' : fm(f.y, 2), X2, yo, { bold: true, size: r > 19 ? 14 : 12, italic: quiet || !f });
+      text(ctx, 'y', X2, yo - r - 11, { italic: true, size: 14, color: k.muted });
+      if (showLabels || quiet) text(ctx, 'c = ' + fm(net.b2[0], 2), X2, yo + r + 10, { size: 11.5, color: k.muted });
+      text(ctx, 'input', X0, h - 9, { size: 10.5, color: k.muted }); text(ctx, 'hidden (ReLU)', X1, h - 9, { size: 10.5, color: k.muted }); text(ctx, 'output', X2, h - 9, { size: 10.5, color: k.muted });
+    }
+    function bendsOf() { return net.W1.map(function (row, j) { return row[0] ? -net.b1[j] / row[0] : null; }); }
+    var UPAL = ['purple', 'orange', 'teal', 'pink', 'gold', 'green'];
+    function drawGraph(f) {
+      if (!cG) return; var k = V.colors(), ctx = cG.ctx;
+      PG.clear(); PG.grid(); PG.axes({ x: 'x', y: 'y' });
+      if (!quiet) bendsOf().forEach(function (bx, j) { if (bx == null || bx < PG.o.xmin || bx > PG.o.xmax) return; PG.seg(bx, PG.o.ymin, bx, PG.o.ymax, { color: UPAL[j % UPAL.length], width: 1.5, dash: [4, 5] }); });
+      if (mode === 'rule') {
+        PG.shade(function () { return PG.o.ymax; }, function () { return PG.o.ymin; }, rule.t - 1, rule.t, { fill: 'goldSoft' });
+        PG.text('ramp', rule.t - 0.5, PG.o.ymax - (PG.o.ymax - PG.o.ymin) * 0.08, { align: 'center', size: 12, color: 'gold', bold: true });
+      }
+      if (data) data.forEach(function (p) { PG.point(p[0], p[1], { color: 'gold', r: 4.5 }); });
+      if (!quiet) PG.plot(function (xx) { return fwd([xx]).y; }, { color: 'blue', width: 3.2 });
+      if (mode === 'rule') for (var n = M.ceil(PG.o.xmin); n <= PG.o.xmax; n++) PG.point(n, n >= rule.t ? rule.A : rule.B, { color: 'red', r: 5, hollow: true });
+      if (!quiet && f) { PG.point(x[0], f.y, { color: 'blue', r: 6 }); PG.seg(x[0], PG.o.ymin, x[0], f.y, { color: k.muted, width: 1, dash: [2, 4] }); }
+      cG.cv.setAttribute('aria-label', 'Graph of the network output y against the input x' + (mode === 'rule' ? ', with the rule’s values on whole numbers as hollow dots' : '') + '.');
+    }
+    function drawLoss() {
+      if (!cL) return; var k = V.colors(), ctx = cL.ctx, n = losses.length, mx = 0;
+      losses.forEach(function (L) { if (isFinite(L)) mx = M.max(mx, L); });
+      PL.set({ xmin: -M.max(50, n) * 0.04, xmax: M.max(50, n) * 1.02, ymin: -mx * 0.08, ymax: mx * 1.12 || 1 });
+      PL.clear(); PL.grid({ minor: false }); PL.axes({ x: 'step', labels: true });
+      ctx.save(); ctx.strokeStyle = k.red; ctx.lineWidth = 2.5; ctx.beginPath();
+      losses.forEach(function (L, i) { if (!isFinite(L)) return; var px = PL.X(i), py = PL.Y(M.min(L, mx * 1.1)); if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); }); ctx.stroke(); ctx.restore();
+      cL.cv.setAttribute('aria-label', 'Loss after each of ' + (n - 1) + ' steps; now ' + fm(losses[n - 1], 4) + '.');
+    }
+    function exactOnWhole() { for (var n = -30; n <= 40; n++) { if (M.abs(fwd([n]).y - (n >= rule.t ? rule.A : rule.B)) > 1e-9) return false; } return true; }
+    function drawTable() {
+      if (!tblWrap) return;
+      var cols = []; for (var n = rule.t - 3; n <= rule.t + 2; n++) cols.push(n);
+      var h = '<table><tbody><tr><th scope="row">x</th>' + cols.map(function (n) { return '<td>' + fm(n) + '</td>'; }).join('') + '</tr>';
+      h += '<tr><th scope="row">rule</th>' + cols.map(function (n) { return '<td>' + fm(n >= rule.t ? rule.A : rule.B) + '</td>'; }).join('') + '</tr>';
+      h += '<tr><th scope="row">network</th>' + cols.map(function (n) { var y = fwd([n]).y, ok = M.abs(y - (n >= rule.t ? rule.A : rule.B)) < 1e-9; return '<td class="' + (ok ? 'ok' : 'no') + '">' + fm(y, 2) + (ok ? ' ✓' : ' ✗') + '</td>'; }).join('') + '</tr></tbody></table>';
+      tblWrap.innerHTML = h;
+    }
+    function draw() {
+      var f = fwd(x);
+      drawNet(f); drawGraph(f); drawLoss(); drawTable();
+      cN.cv.setAttribute('aria-label', 'Network with ' + nin + ' input' + (nin > 1 ? 's' : '') + ', ' + nh + ' hidden ReLU units and one output.' + (quiet ? '' : ' Hidden units on: ' + f.z.map(function (z, j) { return z > 0 ? 'unit ' + (j + 1) : null; }).filter(Boolean).join(', ') + (f.z.some(function (z) { return z > 0; }) ? '' : 'none') + '. Output ' + fm(f.y, 3) + '.'));
+      if (quiet) { F.out.el.hidden = true; return; }
+      var onList = f.z.map(function (z, j) { return z > 0 ? j + 1 : 0; }).filter(Boolean);
+      if (mode === 'trace') {
+        F.out.set('For this input, z = (' + f.z.map(function (z) { return fm(z, 2); }).join(', ') + ') and ReLU gives h = (' + f.h.map(function (v) { return fm(v, 2); }).join(', ') + '). ' +
+          (onList.length === nh ? 'Every unit is on.' : onList.length ? 'Unit' + (onList.length > 1 ? 's ' : ' ') + onList.join(' and ') + (onList.length > 1 ? ' are' : ' is') + ' on; the others are off, so their output weights do nothing right now.' : 'Every unit is off, so the output is just the bias.') +
+          ' Output <b>y = ' + fm(f.y, 3) + '</b>.');
+      } else if (mode === 'rule') {
+        var ok = exactOnWhole(); F.done(ok);
+        var whole = M.abs(x[0] - M.round(x[0])) < 1e-9;
+        F.out.set((whole ? 'At the whole number x = ' + fm(x[0]) + ' the network gives <b>' + fm(f.y, 3) + '</b>' + (M.abs(f.y - (x[0] >= rule.t ? rule.A : rule.B)) < 1e-9 ? ', the same as the rule.' : ', but the rule says ' + fm(x[0] >= rule.t ? rule.A : rule.B) + '.') :
+          'At x = ' + fm(x[0], 2) + ', between whole numbers, the network gives <b>' + fm(f.y, 3) + '</b>' + (x[0] > rule.t - 1 && x[0] < rule.t ? ': this is the ramp from ' + fm(rule.B) + ' to ' + fm(rule.A) + '. A sum of ramps cannot jump, so the rule is only promised on whole numbers.' : '.')) +
+          (o.edit ? (ok ? ' <b>Exact on every whole number.</b>' : ' Set the output weights and bias so every whole number matches.') : ''));
+      } else {
+        var L = losses[losses.length - 1], bs = bendsOf().filter(function (b) { return b != null && b > gwin.xmin && b < gwin.xmax; }).sort(function (a, b) { return a - b; });
+        F.out.set(blew ? '<b>The loss blew up.</b> The step size is too big: each step overshoots. Lower η and start over.' :
+          'Step ' + steps + ': loss <b>' + fm(L, 4) + '</b>' + (steps ? ' (it started at ' + fm(losses[0], 3) + ')' : '') + '. Each hidden unit adds one ramp to the output' + (bs.length ? '; the bends are at x ≈ ' + bs.map(function (b) { return fm(b, 2); }).join(', ') : '') + '.');
+      }
+    }
+    [cN, cG, cL].forEach(function (cc) { if (cc) cc.onResize(draw); });
+    V.onTheme(draw); draw();
+    return { update: draw, destroy: function () { stop(); } };
+  });
+})(window, document);
+// ==== neural-network thread (nn) end ====

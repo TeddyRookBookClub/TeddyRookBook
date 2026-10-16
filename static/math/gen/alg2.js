@@ -2082,5 +2082,166 @@
       steps: ['First term ($k = 1$): $' + a4 + '$. Ratio: $' + qt(r4) + '$, and $|r| < 1$.', '$S = \\frac{' + a4 + '}{1 - ' + T.p(qt(r4)) + '} = ' + qt(S4) + '$.'], hint: 'Read off $a$ and $r$, then use $\\frac{a}{1 - r}$.' };
   });
 
+
+
+
+
+
+  // ==== neural-network thread (nn) begin: alg2.ramp-functions ====
+  // Ramps: ReLU(x) = max(0, x). Every answer is computed with exact rationals from the generated numbers; p.chk holds the
+  // raw data (ramps as {c, a, s}: c·ReLU(s·(x − a)), s = 1 or −1, plus m·x + k) for independent checks.
+  (function () {
+    var Q = ML.Q, T = ML.T;
+    function q(v) { return Q.from(v); }
+    function relu(v) { v = q(v); return v.sign() > 0 ? v : Q(0); }
+    function R_(inner) { return '\\operatorname{ReLU}(' + inner + ')'; }
+    function inner(r) { return r.s === -1 ? T.lin(-1, 'x', r.a) : T.lin(1, 'x', -r.a); }   // "x - a" or "a - x"
+    function rampT(r) { return R_(inner(r)); }
+    function tex(f) { // f = {m, k, ramps}: "mx + k + c₁ReLU(…) + …" (line first, as people write it)
+      var t = []; if (f.m) t.push([f.m, 'x']); if (f.k) t.push([f.k, '']);
+      f.ramps.forEach(function (r) { t.push([r.c, rampT(r)]); });
+      return t.length ? T.terms(t) : '0';
+    }
+    function val(f, x) { var y = q(f.m || 0).mul(x).add(f.k || 0); f.ramps.forEach(function (r) { y = y.add(q(r.c).mul(relu(q(x).sub(r.a).mul(r.s || 1)))); }); return y; }
+    function inVal(r, x) { return q(x).sub(r.a).mul(r.s || 1); }
+    function chk(f) { return { m: f.m || 0, k: f.k || 0, ramps: f.ramps.map(function (r) { return { c: r.c, a: r.a, s: r.s || 1 }; }) }; }
+    // the worked evaluation of f at x, as steps
+    // "c₁·v₁ + c₂·v₂ + k" with every product written out: 2 \cdot 5 - 3 \cdot 0 + 4
+    function prodSum(parts) {
+      return parts.map(function (p, i) {
+        var c = q(p[0]), sgn = c.sign() < 0 ? (i ? ' - ' : '-') : (i ? ' + ' : ''), a = c.abs();
+        if (p[1] === '') return sgn + a.toTex();
+        return sgn + a.toTex() + ' \\cdot ' + p[1];   // always "1 \\cdot 0", never a bare "+ 0"
+      }).join('');
+    }
+    // the worked evaluation of f at x, as steps
+    function evalSteps(f, x, name) {
+      var xs = q(x).toTex(), ins = f.ramps.map(function (r) { return inVal(r, x); });
+      var s1 = 'Work out the inside of each ramp at $x = ' + xs + '$: ' + f.ramps.map(function (r, i) {
+        if (r.s !== -1 && r.a === 0) return '$' + inner(r) + ' = ' + ins[i].toTex() + '$';
+        var e = (r.s === -1 ? T.p(r.a) + ' - ' + T.p(xs) : T.p(xs) + T.signed(-r.a)).replace(/^\(([^()]*)\)/, '$1');
+        return '$' + e + ' = ' + ins[i].toTex() + '$';
+      }).join(', ') + '.';
+      var s2 = f.ramps.map(function (r, i) { return '$' + R_(ins[i].toTex()) + ' = ' + relu(ins[i]).toTex() + '$'; }).join(', ') +
+        (ins.some(function (v) { return v.sign() <= 0; }) ? ' (a ramp gives ${}0$ when its inside is negative).' : ' (each inside is positive, so each ramp passes it through).');
+      var parts = [], tot = val(f, x);
+      if (f.m) parts.push([f.m, T.p(xs)]); if (f.k) parts.push([f.k, '']);
+      f.ramps.forEach(function (r, i) { parts.push([r.c, relu(ins[i]).toTex()]); });
+      return [s1, s2, '$' + (name || 'f') + '(' + xs + ') = ' + prodSum(parts) + ' = ' + tot.toTex() + '$.'];
+    }
+    function sortedKinks(R, n, lo, hi) { var a = R.ints(n, lo, hi, true); a.sort(function (u, v) { return u - v; }); return a; }
+    function slopeAfter(f, i) { var s = q(f.m || 0); for (var j = 0; j <= i; j++) s = s.add(f.ramps[j].c); return s; }
+    function vizOf(f, o) {
+      var kinks = f.ramps.map(function (r) { return r.a; }), lo = Math.min.apply(null, kinks) - 3, hi = Math.max.apply(null, kinks) + 3;
+      var ys = []; for (var x = lo; x <= hi; x++) ys.push(val(f, x).toNumber());
+      var ymin = Math.min(0, Math.min.apply(null, ys)) - 1.5, ymax = Math.max(0, Math.max.apply(null, ys)) + 1.5;
+      return { name: 'alg2-ramps', opts: Object.assign({ line: { m: f.m || 0, b: f.k || 0 }, ramps: chk(f).ramps, edit: false, parts: false, quiet: true, xmin: lo, xmax: hi, ymin: Math.floor(ymin), ymax: Math.ceil(ymax), label: 'A bent-line graph' }, o || {}) };
+    }
+
+    G('alg2.ramp-functions', function (R, ctx) {
+      var kind = R.pick(ML.byLevel(ctx, ['eval', 'eval', 'context', 'basic'], ['slope', 'kink', 'absfill', 'coef', 'eval2', 'context'], ['build', 'build', 'error', 'eval3', 'coef3']));
+      var f, x, a, c, steps;
+      if (kind === 'basic') {
+        var u = R.int(-9, -1), v = R.int(1, 9), cu = R.pick([1, 2, 3]), cv = R.pick([-1, 1, 2, -2]);
+        if (R.coin()) { var sw = u; u = v; v = sw; }
+        var tot = q(cu).mul(relu(u)).add(q(cv).mul(relu(v)));
+        var e = T.terms([[cu, R_(u)], [cv, R_(v)]]);
+        return { q: 'The ramp function is $' + R_('x') + ' = \\max(0, x)$. Find $' + e + '$.', a: { t: 'num', v: tot.toPlain() },
+          steps: ['$' + R_('x') + '$ keeps a positive number and turns a negative number into ${}0$.', '$' + R_(u) + ' = ' + relu(u).toTex() + '$ and $' + R_(v) + ' = ' + relu(v).toTex() + '$.',
+            '$' + prodSum([[cu, relu(u).toTex()], [cv, relu(v).toTex()]]) + ' = ' + tot.toTex() + '$.'],
+          hint: 'ReLU of a negative number is 0; ReLU of a positive number is the number itself.', chk: { k: 'basic', u: u, v: v, cu: cu, cv: cv } };
+      }
+      if (kind === 'context') {
+        if (R.coin()) {
+          var B = R.pick([15, 20, 25, 30]), r = R.pick([5, 8, 10]), L = R.pick([2, 3, 4, 5]), g = R.pick([L - 1, L + 1, L + 2, L + 3, L + 4, L + 5]);
+          if (g < 1) g = L + 2;
+          var cost = B + r * Math.max(0, g - L);
+          return { q: 'A phone plan costs \\$' + B + ' a month plus \\$' + r + ' for each gigabyte of data over ' + L + ' GB. The monthly cost for $g$ gigabytes is $C(g) = ' + B + ' + ' + r + R_('g - ' + L) + '$ dollars. Find $C(' + g + ')$, in dollars.', a: { t: 'num', v: String(cost) }, unit: 'dollars',
+            steps: ['Inside the ramp: $' + g + ' - ' + L + ' = ' + (g - L) + '$.', '$' + R_(g - L) + ' = ' + Math.max(0, g - L) + '$' + (g - L <= 0 ? ': no extra charge, because the data stayed within ' + L + ' GB.' : ': ' + (g - L) + ' GB over the limit.'), '$C(' + g + ') = ' + B + ' + ' + r + ' \\cdot ' + Math.max(0, g - L) + ' = ' + cost + '$, so \\$' + cost + '.'],
+            hint: 'The ramp counts only the gigabytes over the limit.', chk: { k: 'phone', B: B, r: r, L: L, g: g, ans: cost } };
+        }
+        var w = R.pick([12, 14, 16, 18, 20, 22]), h = R.int(36, 48); if (h === 40) h = 44;
+        var pay = w * h + (w / 2) * Math.max(0, h - 40);
+        return { q: 'A worker earns \\$' + w + ' an hour, and time and a half for every hour over 40 in a week. Weekly pay for $h$ hours is $P(h) = ' + w + 'h + ' + (w / 2) + R_('h - 40') + '$ dollars. Find $P(' + h + ')$, in dollars.', a: { t: 'num', v: String(pay) }, unit: 'dollars',
+          steps: ['Regular rate for every hour: $' + w + ' \\cdot ' + h + ' = ' + (w * h) + '$.', 'Overtime hours: $' + R_(h + ' - 40') + ' = ' + Math.max(0, h - 40) + '$. Each one earns an extra half rate, $\\$' + (w / 2) + '$.', '$P(' + h + ') = ' + (w * h) + ' + ' + (w / 2) + ' \\cdot ' + Math.max(0, h - 40) + ' = ' + pay + '$, so \\$' + pay + '.'],
+          hint: 'The ramp is 0 until 40 hours, then counts the overtime hours.', chk: { k: 'overtime', w: w, h: h, ans: pay } };
+      }
+      if (kind === 'eval' || kind === 'eval2' || kind === 'eval3') {
+        var n = kind === 'eval3' ? 3 : 2, ks = sortedKinks(R, n, -4, 4);
+        f = { m: 0, k: kind === 'eval' ? 0 : R.nz(-5, 5), ramps: ks.map(function (k) { return { c: R.pick([-3, -2, -1, 1, 2, 3]), a: k, s: 1 }; }) };
+        if (kind !== 'eval' && R.coin()) f.ramps[0].s = -1;     // a ramp that faces left: ReLU(a − x)
+        // an input that turns at least one ramp on and (usually) one off
+        for (var t = 0; t < 30; t++) {
+          x = kind === 'eval3' && R.chance(0.5) ? q(R.int(-10, 10)).div(2) : q(R.int(-6, 7));
+          var on = f.ramps.filter(function (r) { return inVal(r, x).sign() > 0; }).length;
+          if (on >= 1 && (on < f.ramps.length || R.chance(0.3)) && f.ramps.every(function (r) { return !inVal(r, x).isZero(); })) break;
+        }
+        var y = val(f, x);
+        return { q: 'Let $f(x) = ' + tex(f) + '$. Find $f(' + x.toTex() + ')$.', a: { t: 'num', v: y.toPlain() }, steps: evalSteps(f, x),
+          hint: 'Find the inside of each ramp first. A negative inside gives 0.', chk: { k: 'eval', f: chk(f), x: x.toPlain(), ans: y.toPlain() } };
+      }
+      if (kind === 'kink') {
+        var form = R.pick(['shift', 'scaled', 'flip']), cc = R.pick([-3, -2, 2, 3, 4]), ans, ins, why;
+        if (form === 'shift') { var p0 = R.nz(-8, 8); ins = T.lin(1, 'x', p0); ans = q(-p0); why = '$' + ins + ' = 0$ when $x = ' + ans.toTex() + '$.'; }
+        else if (form === 'scaled') { var kk = R.pick([2, 3, 4]), mm = R.nz(-9, 9); if (mm % kk === 0) mm += (mm > 0 ? 1 : -1); ins = T.lin(kk, 'x', -mm); ans = Q(mm, kk); why = '$' + ins + ' = 0$ gives $' + kk + 'x = ' + mm + '$, so $x = ' + ans.toTex() + '$.'; }
+        else { var p1 = R.nz(-8, 8); ins = T.lin(-1, 'x', p1); ans = q(p1); why = '$' + ins + ' = 0$ when $x = ' + ans.toTex() + '$. This ramp faces left: it rises as $x$ decreases.'; }
+        return { q: 'At what value of $x$ does the graph of $y = ' + T.coef(cc, R_(ins)) + '$ bend?', a: { t: 'num', v: ans.toPlain() },
+          steps: ['A ramp is flat where its inside is negative and straight where its inside is positive, so it bends where the inside is ${}0$.', why, 'The coefficient $' + cc + '$ stretches the ramp' + (cc < 0 ? ' and flips it upside down' : '') + ', but it does not move the bend.'],
+          hint: 'Set the expression inside the ReLU equal to 0.', chk: { k: 'kink', ins: ins, ans: ans.toPlain() } };
+      }
+      if (kind === 'slope') {
+        var ks2 = sortedKinks(R, 2, -4, 4), m0 = R.pick([0, 0, 1, -1, 2, -2]);
+        f = { m: m0, k: R.int(-3, 3), ramps: ks2.map(function (k) { return { c: R.pick([-3, -2, -1, 1, 2, 3]), a: k, s: 1 }; }) };
+        var reg = R.pick(m0 ? ['left', 'mid', 'right', 'right'] : ['mid', 'right', 'right']), sl, where;
+        if (reg === 'left') { sl = q(m0); where = 'x < ' + ks2[0]; }
+        else if (reg === 'mid') { sl = slopeAfter(f, 0); where = ks2[0] + ' < x < ' + ks2[1]; }
+        else { sl = slopeAfter(f, 1); where = 'x > ' + ks2[1]; }
+        var onR = f.ramps.filter(function (r, i) { return reg === 'right' || (reg === 'mid' && i === 0); });
+        return { q: 'Let $f(x) = ' + tex(f) + '$. What is the slope of the graph of $f$ for $' + where + '$?', a: { t: 'num', v: sl.toPlain() },
+          steps: ['A ramp $c\\,' + R_('x - a') + '$ has slope ${}0$ to the left of $x = a$ and slope $c$ to the right of it.',
+            (m0 ? 'The line part $' + T.lin(m0, 'x', f.k) + '$ has slope $' + m0 + '$ everywhere. ' : '') + (onR.length ? 'For $' + where + '$ the ramp' + (onR.length > 1 ? 's' : '') + ' at ' + onR.map(function (r) { return '$x = ' + r.a + '$'; }).join(' and ') + (onR.length > 1 ? ' are' : ' is') + ' on.' : 'For $' + where + '$ no ramp is on yet.'),
+            (function () { var t = []; if (m0) t.push(String(m0)); onR.forEach(function (r) { t.push(T.p(r.c)); }); return t.length > 1 ? 'Add the slopes: $' + t.join(' + ') + ' = ' + sl.toTex() + '$.' : 'So the slope there is $' + sl.toTex() + '$.'; })()],
+          hint: 'Only the ramps whose bend is to the left of the region add slope there.', chk: { k: 'slope', f: chk(f), reg: reg, ans: sl.toPlain() } };
+      }
+      if (kind === 'absfill') {
+        var pa = R.nz(-6, 6), ca = R.pick([1, 1, 2, 3]), insA = T.lin(1, 'x', -pa);
+        var plainU = (pa === 0 ? '-x' : pa + '-x');
+        return { q: 'Find the expression $u$ that makes this true for every $x$: $$' + (ca === 1 ? '' : ca) + '\\left|' + insA + '\\right| = ' + T.coef(ca, R_(insA)) + ' + ' + T.coef(ca, R_('u')) + '.$$', a: { t: 'expr', v: plainU, vars: ['x'] },
+          steps: (ca === 1 ? [] : ['The factor $' + ca + '$ multiplies both sides, so it sits in front of both ramps and does not change $u$.']).concat(['For $x > ' + pa + '$, $' + insA + '$ is positive, so $\\left|' + insA + '\\right| = ' + insA + ' = ' + R_(insA) + '$ and the second ramp must give ${}0$.', 'For $x < ' + pa + '$, $\\left|' + insA + '\\right| = -(' + insA + ') = ' + T.lin(-1, 'x', pa) + '$, which is positive, while $' + R_(insA) + ' = 0$.', 'So the second ramp is $' + R_(T.lin(-1, 'x', pa)) + '$, the first ramp reflected across $x = ' + pa + '$: $u = ' + T.lin(-1, 'x', pa) + '$.']),
+          hint: 'Recall $|x| = \\operatorname{ReLU}(x) + \\operatorname{ReLU}(-x)$.', chk: { k: 'absfill', p: pa, c: ca, ans: plainU } };
+      }
+      if (kind === 'coef' || kind === 'coef3' || kind === 'error') {
+        var nk = kind === 'coef3' ? 3 : 2, ks3 = sortedKinks(R, nk, -4, 4), slopes = [], sv;
+        for (var i = 0; i < nk; i++) { do { sv = R.int(-3, 3); } while (sv === (i ? slopes[i - 1] : 0) || (i === 0 && sv === 0) || (kind === 'error' && sv === 0)); slopes.push(sv); }
+        f = { m: 0, k: 0, ramps: ks3.map(function (k, i) { return { c: slopes[i] - (i ? slopes[i - 1] : 0), a: k, s: 1 }; }) };
+        var desc = 'The graph of $f$ is flat at height ${}0$ for $x \\le ' + ks3[0] + '$. ' + slopes.map(function (s, i) {
+          return i < nk - 1 ? 'Between $x = ' + ks3[i] + '$ and $x = ' + ks3[i + 1] + '$ its slope is $' + s + '$.' : 'For $x \\ge ' + ks3[i] + '$ its slope is $' + s + '$.';
+        }).join(' ');
+        var form2 = 'f(x) = ' + ks3.map(function (k, i) { return 'c_{' + (i + 1) + '}' + R_(T.lin(1, 'x', -k)); }).join(' + ');
+        var stepsC = ['Each ramp $c\\,' + R_('x - a') + '$ leaves the slope alone to the left of $a$ and adds $c$ to it from $a$ on. So each coefficient is the <b>change</b> in slope at its bend.'].concat(
+          ks3.map(function (k, i) { var before = i ? slopes[i - 1] : 0; return 'At $x = ' + k + '$ the slope goes from $' + before + '$ to $' + slopes[i] + '$: $c_{' + (i + 1) + '} = ' + slopes[i] + ' - ' + T.p(before) + ' = ' + f.ramps[i].c + '$.'; }));
+        if (kind === 'error') {
+          var bad = slopes[1];
+          return { q: desc + ' Riley wrote $f(x) = ' + T.terms([[slopes[0], rampT(f.ramps[0])], [bad, rampT(f.ramps[1])]]) + '$, using the new slope as the second coefficient. What should the coefficient of $' + rampT(f.ramps[1]) + '$ be?', a: { t: 'num', v: String(f.ramps[1].c) },
+            steps: stepsC.concat(['Riley\'s version has slope $' + slopes[0] + ' + ' + T.p(bad) + ' = ' + (slopes[0] + bad) + '$ after $x = ' + ks3[1] + '$, not $' + slopes[1] + '$.']),
+            hint: 'The coefficient is how much the slope changes at the bend.', viz: vizOf(f), chk: { k: 'coef', f: chk(f), ks: ks3, slopes: slopes, ans: [f.ramps[1].c] } };
+        }
+        return { q: desc + ' Write it as $' + form2 + '$.', a: { t: 'multi', parts: f.ramps.map(function (r, i) { return { label: '$c_{' + (i + 1) + '} =$', a: { t: 'num', v: String(r.c) } }; }) },
+          steps: stepsC.concat(['$f(x) = ' + tex(f) + '$.']), hint: 'Find how much the slope changes at each bend.', viz: vizOf(f), chk: { k: 'coef', f: chk(f), ks: ks3, slopes: slopes, ans: f.ramps.map(function (r) { return r.c; }) } };
+      }
+      // build: a continuous three-piece graph with a sloped left piece
+      var kb = sortedKinks(R, 2, -3, 4), s0 = R.nz(-2, 2), s1, s2, b0 = R.int(-3, 4);
+      do { s1 = R.int(-3, 3); } while (s1 === s0); do { s2 = R.int(-3, 3); } while (s2 === s1);
+      var b1 = b0 + (s0 - s1) * kb[0], b2 = b1 + (s1 - s2) * kb[1];
+      f = { m: s0, k: b0, ramps: [{ c: s1 - s0, a: kb[0], s: 1 }, { c: s2 - s1, a: kb[1], s: 1 }] };
+      var cases = 'f(x) = \\begin{cases} ' + T.lin(s0, 'x', b0) + ', & x < ' + kb[0] + ' \\\\ ' + T.lin(s1, 'x', b1) + ', & ' + kb[0] + ' \\le x < ' + kb[1] + ' \\\\ ' + T.lin(s2, 'x', b2) + ', & x \\ge ' + kb[1] + ' \\end{cases}';
+      return { q: 'Write $$' + cases + '$$ as $f(x) = ' + T.lin(s0, 'x', b0) + ' + c_{1}' + rampT(f.ramps[0]) + ' + c_{2}' + rampT(f.ramps[1]) + '$.', a: { t: 'multi', parts: [{ label: '$c_{1} =$', a: { t: 'num', v: String(f.ramps[0].c) } }, { label: '$c_{2} =$', a: { t: 'num', v: String(f.ramps[1].c) } }] },
+        steps: ['The left piece $' + T.lin(s0, 'x', b0) + '$ is the starting line, with slope $' + s0 + '$.', 'At $x = ' + kb[0] + '$ the slope changes from $' + s0 + '$ to $' + s1 + '$: $c_{1} = ' + s1 + ' - ' + T.p(s0) + ' = ' + (s1 - s0) + '$.', 'At $x = ' + kb[1] + '$ it changes from $' + s1 + '$ to $' + s2 + '$: $c_{2} = ' + s2 + ' - ' + T.p(s1) + ' = ' + (s2 - s1) + '$.',
+          'Check at $x = ' + (kb[1] + 2) + '$: the last piece gives $' + (prodSum([[s2, T.p(kb[1] + 2)], [b2, '']].filter(function (t) { return t[0] !== 0; })) || '0') + ' = ' + (s2 * (kb[1] + 2) + b2) + '$, and the ramp form gives $' + val(f, kb[1] + 2).toTex() + '$ too. ✓'],
+        hint: 'Each coefficient is the change in slope at its bend, not the new slope.', viz: vizOf(f), chk: { k: 'build', f: chk(f), pieces: [[s0, b0], [s1, b1], [s2, b2]], ks: kb, ans: [s1 - s0, s2 - s1] } };
+    });
+  })();
+  // ==== neural-network thread (nn) end ====
+
 // ---- 99-tail.js
 })(typeof window !== 'undefined' ? window.MathLadder : (typeof global !== 'undefined' ? global.MathLadder : null));

@@ -1956,4 +1956,258 @@
       hint: 'Use the expressions that bound the region as the new variables. Then $dA = \\left|\\frac{\\partial(x, y)}{\\partial(u, v)}\\right| du\\,dv$, the reciprocal of $\\left|\\frac{\\partial(u, v)}{\\partial(x, y)}\\right|$.', chk: { k: 'para', g: g.toPlain(), p: p, q: qq, r: r, s: s, u: [u0, u1], v: [v0, v1] }, nolint: ['+ 0'] };
   });
 
+
+
+
+
+
+  // ==== neural-network thread (nn) begin: calc3.gradient-descent, calc3.minimizing-loss, calc3.backpropagation ====
+  // Exact rationals throughout (ML.Q): step sizes are decimals such as 0.1, so every descent step is exact. p.chk holds the
+  // raw numbers for independent checks (floating-point re-runs and numerical central differences).
+  (function () {
+    var Q = ML.Q, T = ML.T;
+    function q(v) { return Q.from(v); }
+    function dec(v) { v = q(v); if (!v.isTerminating()) return v.toTex(); var s = v.toDec(8); s = s.replace(/0+$/, '').replace(/\.$/, ''); return s === '-0' ? '0' : s; }  // 0.35, -1.2, or \frac{7}{3}
+    function pl(v) { v = q(v); return v.isTerminating() ? dec(v) : v.toPlain(); }
+    function P(v) { var s = dec(v); return q(v).sign() < 0 ? '(' + s + ')' : s; }                // ready to multiply
+    function sum(arr) { return arr.reduce(function (s, v) { return s.add(v); }, Q(0)); }
+    function sgnTerm(v, first) { v = q(v); if (v.isZero()) return first ? '0' : ''; var s = dec(v.abs()); return v.sign() < 0 ? (first ? '-' : ' - ') + s : (first ? '' : ' + ') + s; }
+    var RL = '\\operatorname{ReLU}';
+
+    // ------------------------------------------------------------------ gradient descent
+    G('calc3.gradient-descent', function (R, ctx) {
+      var kind = R.pick(ML.byLevel(ctx, ['step1d', 'step1d', 'step2d', 'sign'], ['step2d', 'two1d', 'behavior', 'after'], ['two2d', 'maxeta', 'oneshot', 'step2dx']));
+      if (kind === 'sign') {
+        var right = '$\\mathbf{x}_{k+1} = \\mathbf{x}_{k} - \\eta\\,\\nabla f(\\mathbf{x}_{k})$';
+        return { q: 'Gradient descent looks for a low point of $f$ using a small step size $\\eta > 0$. Which update is a gradient descent step?', a: { t: 'mc', choices: [right, '$\\mathbf{x}_{k+1} = \\mathbf{x}_{k} + \\eta\\,\\nabla f(\\mathbf{x}_{k})$', '$\\mathbf{x}_{k+1} = \\mathbf{x}_{k} - \\eta\\, f(\\mathbf{x}_{k})$', '$\\mathbf{x}_{k+1} = \\nabla f(\\mathbf{x}_{k}) - \\eta\\,\\mathbf{x}_{k}$'], v: 0 },
+          steps: ['$\\nabla f$ points in the direction in which $f$ increases fastest.', 'To go down, step the opposite way, $-\\nabla f$, scaled by the step size $\\eta$: $\\mathbf{x}_{k+1} = \\mathbf{x}_{k} - \\eta\\,\\nabla f(\\mathbf{x}_{k})$.', 'Adding $\\eta\\,\\nabla f$ would climb (gradient ascent), and $f(\\mathbf{x}_{k})$ is a number, not a direction.'],
+          hint: 'Which way does the gradient point: uphill or downhill?', chk: { k: 'sign' } };
+      }
+      if (kind === 'step1d' || kind === 'two1d') {
+        var a = R.pick([1, 2, 3]), b = R.int(-6, 6), c = R.int(-3, 5), eta = q(R.pick(kind === 'two1d' ? ['0.1', '0.25', '0.2'] : ['0.1', '0.2', '0.25', '0.05'])), x0 = q(R.nz(-4, 4));
+        if (q(2 * a).mul(x0).add(b).isZero()) x0 = x0.add(1);
+        var fp = function (x) { return q(2 * a).mul(x).add(b); }, g0 = fp(x0), x1 = x0.sub(eta.mul(g0)), g1 = fp(x1), x2 = x1.sub(eta.mul(g1));
+        var fT = T.poly([a, b, c], 'x'), fpT = T.lin(2 * a, 'x', b);
+        var st = ['$f\'(x) = ' + fpT + '$.', '$f\'(' + dec(x0) + ') = ' + (2 * a) + ' \\cdot ' + P(x0) + sgnTerm(b) + ' = ' + dec(g0) + '$.', '$x_{1} = x_{0} - \\eta f\'(x_{0}) = ' + dec(x0) + ' - ' + dec(eta) + ' \\cdot ' + P(g0) + ' = ' + dec(x1) + '$.'];
+        if (kind === 'two1d') st.push('$f\'(' + dec(x1) + ') = ' + dec(g1) + '$, so $x_{2} = ' + dec(x1) + ' - ' + dec(eta) + ' \\cdot ' + P(g1) + ' = ' + dec(x2) + '$.');
+        var rr = 1 - 2 * a * eta.toNumber(), pl2 = kind === 'two1d';
+        st.push('The minimum of $f$ is at $x = ' + q(-b).div(2 * a).toTex() + '$, where $f\'(x) = 0$. ' + (rr > 0 ? (pl2 ? 'The steps move' : 'The step moves') + ' toward it without passing it.' : rr === 0 ? 'This step size lands on it at once.' : rr > -1 ? (pl2 ? 'Each step jumps' : 'The step jumps') + ' past it but lands closer.' : 'The step jumps past it and lands farther away: this step size is too big.'));
+        return { q: 'Run gradient descent on $f(x) = ' + fT + '$ with step size $\\eta = ' + dec(eta) + '$, starting at $x_{0} = ' + dec(x0) + '$. Find $x_{' + (kind === 'two1d' ? 2 : 1) + '}$.', a: { t: 'num', v: pl(kind === 'two1d' ? x2 : x1) },
+          steps: st, hint: 'Each step is $x_{k+1} = x_{k} - \\eta f\'(x_{k})$.', chk: { k: '1d', a: a, b: b, c: c, eta: pl(eta), x0: pl(x0), n: kind === 'two1d' ? 2 : 1, ans: pl(kind === 'two1d' ? x2 : x1) } };
+      }
+      if (kind === 'step2d' || kind === 'step2dx' || kind === 'two2d') {
+        var A = R.pick([1, 2, 3]), B = R.pick([1, 2, 3, 4]), Cc = kind === 'step2dx' ? R.nz(-2, 2) : 0, D = kind === 'step2d' ? 0 : R.int(-4, 4), E = kind === 'step2d' ? 0 : R.int(-4, 4);
+        var et = q(R.pick(['0.1', '0.05', '0.2', '0.25'])); if (et.toNumber() * 2 * Math.max(A, B) >= 1.5) et = q('0.1');
+        var p0 = [q(R.nz(-3, 3)), q(R.nz(-3, 3))];
+        var grad = function (p) { return [q(2 * A).mul(p[0]).add(q(Cc).mul(p[1])).add(D), q(2 * B).mul(p[1]).add(q(Cc).mul(p[0])).add(E)]; };
+        var g0v = grad(p0); if (g0v[0].isZero() && g0v[1].isZero()) { p0[0] = p0[0].add(1); g0v = grad(p0); }
+        var p1 = [p0[0].sub(et.mul(g0v[0])), p0[1].sub(et.mul(g0v[1]))], g1v = grad(p1), p2 = [p1[0].sub(et.mul(g1v[0])), p1[1].sub(et.mul(g1v[1]))];
+        var fT2 = T.terms([[A, 'x^{2}'], [Cc, 'xy'], [B, 'y^{2}'], [D, 'x'], [E, 'y']]);
+        var gT = '\\left\\langle ' + T.terms([[2 * A, 'x'], [Cc, 'y'], [D, '']]) + ', ' + T.terms([[2 * B, 'y'], [Cc, 'x'], [E, '']]) + ' \\right\\rangle';
+        var vt = function (p) { return '(' + dec(p[0]) + ', ' + dec(p[1]) + ')'; }, gt = function (g) { return '\\langle ' + dec(g[0]) + ', ' + dec(g[1]) + ' \\rangle'; };
+        var st2 = ['$\\nabla f = ' + gT + '$.', 'At $' + vt(p0) + '$: $\\nabla f = ' + gt(g0v) + '$.', '$' + vt(p0) + ' - ' + dec(et) + gt(g0v) + ' = ' + vt(p1) + '$.'];
+        if (kind === 'two2d') st2.push('At $' + vt(p1) + '$: $\\nabla f = ' + gt(g1v) + '$, so the next point is $' + vt(p1) + ' - ' + dec(et) + gt(g1v) + ' = ' + vt(p2) + '$.');
+        var fv = function (p) { return q(A).mul(p[0].mul(p[0])).add(q(Cc).mul(p[0].mul(p[1]))).add(q(B).mul(p[1].mul(p[1]))).add(q(D).mul(p[0])).add(q(E).mul(p[1])); };
+        st2.push('Check: $f$ went from $' + dec(fv(p0)) + '$ to $' + dec(fv(kind === 'two2d' ? p2 : p1)) + '$' + (fv(kind === 'two2d' ? p2 : p1).lt(fv(p0)) ? ', downhill.' : '. It went up: this step size is too big for this function.'));
+        var fin = kind === 'two2d' ? p2 : p1;
+        return { q: 'Take ' + (kind === 'two2d' ? 'two gradient descent steps' : 'one gradient descent step') + ' on $f(x, y) = ' + fT2 + '$ with step size $\\eta = ' + dec(et) + '$, starting at $' + vt(p0) + '$. Where do you land?', a: { t: 'tuple', v: [pl(fin[0]), pl(fin[1])] },
+          steps: st2, hint: 'New point = old point minus $\\eta$ times the gradient at the old point.', chk: { k: '2d', A: A, B: B, C: Cc, D: D, E: E, eta: pl(et), p0: [pl(p0[0]), pl(p0[1])], n: kind === 'two2d' ? 2 : 1, ans: [pl(fin[0]), pl(fin[1])] } };
+      }
+      if (kind === 'behavior' || kind === 'after') {
+        var a2 = R.pick([1, 2, 4, 5]), etas = { 1: ['0.1', '0.25', '0.5', '0.75', '1.25', '0.4'], 2: ['0.05', '0.1', '0.2', '0.25', '0.3', '0.6'], 4: ['0.05', '0.1', '0.125', '0.15', '0.2', '0.3'], 5: ['0.05', '0.1', '0.15', '0.2', '0.25'] }[a2];
+        var e2 = q(R.pick(etas)), r = Q(1).sub(e2.mul(2 * a2)), x00 = q(R.pick([2, 4, -4, 8, 10, -10]));
+        if (kind === 'after') {
+          if (r.abs().gt(1)) { e2 = q(etas[0]); r = Q(1).sub(e2.mul(2 * a2)); }
+          var x3 = x00.mul(r.pow(3));
+          return { q: 'Gradient descent on $f(x) = ' + T.mono(a2, 'x^{2}') + '$ with step size $\\eta = ' + dec(e2) + '$ starts at $x_{0} = ' + dec(x00) + '$. Find $x_{3}$.', a: { t: 'num', v: pl(x3) },
+            steps: ['$f\'(x) = ' + (2 * a2) + 'x$, so each step is $x_{k+1} = x_{k} - ' + dec(e2) + ' \\cdot ' + (2 * a2) + 'x_{k} = ' + (r.isZero() ? '0' : r.eq(-1) ? '-x_{k}' : r.eq(1) ? 'x_{k}' : dec(r) + 'x_{k}') + '$.', 'Every step multiplies by $r = ' + dec(r) + '$, so $x_{3} = ' + P(r) + '^{3} \\cdot ' + P(x00) + ' = ' + dec(x3) + '$.', Math.abs(r.toNumber()) < 1 ? 'Since $|r| < 1$, the points shrink toward the minimum at ${}0$' + (r.sign() < 0 ? ', jumping from side to side.' : '.') : 'Since $|r| \\ge 1$, the points never settle.'],
+            hint: 'Write one step as a multiple of $x_{k}$.', chk: { k: 'after', a: a2, eta: pl(e2), x0: pl(x00), ans: pl(x3) } };
+        }
+        var choices = ['It slides to the minimum without passing it.', 'It lands on the minimum in one step.', 'It jumps back and forth across the minimum but closes in.', 'It jumps back and forth farther and farther away.'];
+        var rv = r.toNumber(), idx = rv > 0 ? 0 : rv === 0 ? 1 : rv > -1 ? 2 : 3;
+        if (rv === -1) { e2 = q(etas[0]); r = Q(1).sub(e2.mul(2 * a2)); rv = r.toNumber(); idx = rv > 0 ? 0 : rv === 0 ? 1 : 2; }
+        return { q: 'Gradient descent runs on $f(x) = ' + T.mono(a2, 'x^{2}') + '$ with step size $\\eta = ' + dec(e2) + '$, starting at $x_{0} = ' + dec(x00) + '$. What happens?', a: { t: 'mc', choices: choices, v: idx, keep: true },
+          steps: ['$f\'(x) = ' + (2 * a2) + 'x$, so $x_{k+1} = x_{k} - ' + dec(e2) + ' \\cdot ' + (2 * a2) + 'x_{k} = ' + (r.isZero() ? '0' : r.eq(-1) ? '-x_{k}' : r.eq(1) ? 'x_{k}' : dec(r) + 'x_{k}') + '$.', 'Each step multiplies $x$ by $r = ' + dec(r) + '$.', ['$0 < r < 1$: the points shrink toward ${}0$ from one side.', '$r = 0$: the first step lands exactly on the minimum.', '$-1 < r < 0$: the sign flips each step while the size shrinks, a zigzag that converges.', '$r < -1$: the sign flips and the size grows. The step is too big and the run blows up.'][idx]],
+          hint: 'Write one step as $x_{k+1} = r\\,x_{k}$ and look at $r$.', chk: { k: 'behavior', a: a2, eta: pl(e2), x0: pl(x00), ans: idx } };
+      }
+      if (kind === 'maxeta') {
+        var aa = R.int(1, 6), bb = R.intNot(1, 6, aa), mx = Math.max(aa, bb);
+        return { q: 'Gradient descent on $f(x, y) = ' + T.terms([[aa, 'x^{2}'], [bb, 'y^{2}']]) + '$ reaches the minimum from every starting point exactly when $0 < \\eta < \\eta^{*}$. Find $\\eta^{*}$.', a: { t: 'num', v: Q(1, mx).toPlain() },
+          steps: ['$\\nabla f = \\langle ' + (2 * aa) + 'x, ' + (2 * bb) + 'y \\rangle$, so one step gives $x \\to (1 - ' + (2 * aa) + '\\eta)x$ and $y \\to (1 - ' + (2 * bb) + '\\eta)y$.', 'Both factors must have size less than ${}1$: $|1 - ' + (2 * aa) + '\\eta| < 1$ needs $\\eta < ' + Q(1, aa).toTex() + '$, and $|1 - ' + (2 * bb) + '\\eta| < 1$ needs $\\eta < ' + Q(1, bb).toTex() + '$.', 'The steeper direction sets the limit: $\\eta^{*} = ' + Q(1, mx).toTex() + '$.'],
+          hint: 'Treat $x$ and $y$ separately: each step multiplies each one by a fixed factor.', chk: { k: 'maxeta', a: aa, b: bb, ans: Q(1, mx).toPlain() } };
+      }
+      // oneshot: f(x) = a(x − p)² + c
+      var a3 = R.pick([1, 2, 3, 4, 5]), p = R.nz(-5, 5), c3 = R.int(-4, 6);
+      return { q: 'For $f(x) = ' + a3 + '(' + T.lin(1, 'x', -p) + ')^{2}' + T.signed(c3) + '$, what step size $\\eta$ makes gradient descent land on the minimum in one step, from any starting point?', a: { t: 'num', v: Q(1, 2 * a3).toPlain() },
+        steps: ['$f\'(x) = ' + (2 * a3) + '(' + T.lin(1, 'x', -p) + ')$, so $x_{1} = x_{0} - ' + (2 * a3) + '\\eta(x_{0}' + T.signed(-p) + ')$.', 'For $x_{1} = ' + p + '$ we need $x_{0}' + T.signed(-p) + ' - ' + (2 * a3) + '\\eta(x_{0}' + T.signed(-p) + ') = 0$, that is $(1 - ' + (2 * a3) + '\\eta)(x_{0}' + T.signed(-p) + ') = 0$ for every $x_{0}$.', 'So $\\eta = ' + Q(1, 2 * a3).toTex() + '$, which is $\\frac{1}{f\'\'(x)}$. This works because $f$ is a parabola; for other functions no single step size lands on the minimum from everywhere.'],
+        hint: 'Write $' + T.lin(1, 'x_{1}', -p) + '$ as a multiple of $' + T.lin(1, 'x_{0}', -p) + '$.', chk: { k: 'oneshot', a: a3, p: p, ans: Q(1, 2 * a3).toPlain() } };
+    });
+
+    // ------------------------------------------------------------------ fitting a line by minimizing the mean squared error
+    function dataSet(R, n, xhi) {
+      for (var t = 0; t < 60; t++) {
+        var xs = R.ints(n, -2, xhi || 5, true).sort(function (u, v) { return u - v; }), ys = xs.map(function () { return R.int(-2, 8); });
+        if (new Set(ys).size < 2) continue;
+        return xs.map(function (x, i) { return [x, ys[i]]; });
+      }
+      return [[0, 1], [1, 3], [2, 4]].slice(0, n);
+    }
+    function twoN(n) { return n === 2 ? '-' : '-' + Q(2, n).toTex(); }   // -\frac{2}{n}, simplified (n = 2 gives a plain minus sign)
+    function approx(v) { var t = dec(v); return /\.\d{5,}/.test(t) ? '\\approx ' + q(v).toDec(3).replace(/0+$/, '').replace(/\.$/, '') : '= ' + t; }
+    // data whose least-squares line is y = m*x + b* (or y = m*x through the origin) with whole numbers: y = line + e, where
+    // the leftovers e are whole numbers with Σe = 0 and Σx·e = 0 (or only Σx·e = 0), and not all 0
+    function niceData(R, n, origin) {
+      for (var t = 0; t < 100; t++) {
+        var xs = R.ints(n, -2, 5, true).sort(function (u, v) { return u - v; }), ms = R.nz(-2, 3), bs = origin ? 0 : R.int(-2, 4), e = xs.map(function () { return 0; }), k = R.pick([-1, 1]);
+        if (origin) { var nz = xs.map(function (x, i) { return x ? i : -1; }).filter(function (i) { return i >= 0; }); if (nz.length < 2) continue; var pr = R.sample(nz, 2); e[pr[0]] = k * xs[pr[1]]; e[pr[1]] = -k * xs[pr[0]]; }
+        else { var tr = R.sample(xs.map(function (x, i) { return i; }), 3).sort(); var a = tr[0], b = tr[1], c = tr[2]; e[a] = k * (xs[c] - xs[b]); e[b] = k * (xs[a] - xs[c]); e[c] = k * (xs[b] - xs[a]); }
+        var g = 0; e.forEach(function (v) { g = ML.util.gcd(g, Math.abs(v)); }); if (g > 1 && !origin) e = e.map(function (v) { return v / g; });
+        var ys = xs.map(function (x, i) { return ms * x + bs + e[i]; });
+        if (ys.some(function (y) { return Math.abs(y) > 12; }) || e.every(function (v) { return !v; })) continue;
+        return xs.map(function (x, i) { return [x, ys[i]]; });
+      }
+      return [[0, 1], [1, 3], [2, 2]];
+    }
+    function dataTex(d) { return d.map(function (p) { return '$(' + p[0] + ', ' + p[1] + ')$'; }).join(', '); }
+    function resid(d, m, b) { return d.map(function (p) { return q(p[1]).sub(q(m).mul(p[0])).sub(b); }); }
+    function mse(d, m, b) { return sum(resid(d, m, b).map(function (r) { return r.mul(r); })).div(d.length); }
+    function gradL(d, m, b) { var r = resid(d, m, b), n = d.length; return [sum(r.map(function (ri, i) { return ri.mul(d[i][0]); })).mul(-2).div(n), sum(r).mul(-2).div(n)]; }
+    function lineT(m, b) { m = q(m); b = q(b); var t = m.isZero() ? '' : (m.eq(1) ? '' : m.eq(-1) ? '-' : dec(m)) + 'x'; if (b.isZero()) return t || '0'; return t ? t + sgnTerm(b) : dec(b); }
+    // sums of residuals list every term, so a residual or an x of 0 shows as "+ 0": that is meant, not an artifact
+    function zlint(p) { if (p && (p.steps || []).some(function (t) { return /[+-] 0(?![\d.])/.test(t); })) p.nolint = ['+ 0']; return p; }
+    G('calc3.minimizing-loss', function (R, ctx) { return zlint(fitLine(R, ctx)); });
+    function fitLine(R, ctx) {
+      var kind = R.pick(ML.byLevel(ctx, ['mse', 'dLdb', 'ostep'], ['grad', 'step', 'origin', 'mse'], ['exact', 'exact', 'step', 'grad']));
+      var small = kind === 'step' || kind === 'ostep', n = small ? R.pick([2, 3, 4]) : R.pick([3, 3, 4]), d = dataSet(R, n, small ? 3 : 5);
+      var LT = 'L(m, b) = \\frac{1}{' + n + '}\\sum_{i=1}^{' + n + '} \\left(y_{i} - (mx_{i} + b)\\right)^{2}';
+      if (kind === 'origin' || kind === 'ostep') {
+        if (kind === 'origin') d = niceData(R, n, true);
+        for (var tt = 0; tt < 50 && (d.every(function (p) { return p[0] === 0; }) || !d.reduce(function (acc, p) { return acc + p[0] * p[1]; }, 0)); tt++) d = dataSet(R, n);
+        var sxy = sum(d.map(function (p) { return q(p[0] * p[1]); })), sxx = sum(d.map(function (p) { return q(p[0] * p[0]); })), mstar = sxy.div(sxx);
+        var LoT = 'L(m) = \\frac{1}{' + n + '}\\sum \\left(y_{i} - mx_{i}\\right)^{2}';
+        if (kind === 'ostep') {
+          var etaO = q({ 2: '0.05', 3: '0.075', 4: '0.1' }[n]), m0 = q(R.int(-1, 2)), gm = sum(d.map(function (p) { return q(p[0]).mul(q(p[1]).sub(m0.mul(p[0]))); })).mul(-2).div(n), m1 = m0.sub(etaO.mul(gm));
+          return { q: 'Fit $\\hat{y} = mx$ (a line through the origin) to the data ' + dataTex(d) + ' by gradient descent on $$' + LoT + '.$$ Start at $m_{0} = ' + dec(m0) + '$ with step size $\\eta = ' + dec(etaO) + '$. Find $m_{1}$.', a: { t: 'num', v: pl(m1) },
+            steps: ['$L\'(m) = ' + twoN(n) + '\\sum x_{i}\\left(y_{i} - mx_{i}\\right)$ (chain rule: the inside $y_{i} - mx_{i}$ has derivative $-x_{i}$).', 'At $m = ' + dec(m0) + '$ the residuals are ' + d.map(function (p) { return '$' + dec(q(p[1]).sub(m0.mul(p[0]))) + '$'; }).join(', ') + ', so $L\'(' + dec(m0) + ') = -\\frac{2}{' + n + '}(' + d.map(function (p) { return P(p[0]) + ' \\cdot ' + P(q(p[1]).sub(m0.mul(p[0]))); }).join(' + ') + ') = ' + dec(gm) + '$.', '$m_{1} = ' + dec(m0) + ' - ' + dec(etaO) + ' \\cdot ' + P(gm) + ' = ' + dec(m1) + '$. The best slope is $' + mstar.toTex() + '$; the step moved toward it.'],
+            hint: 'Differentiate with respect to $m$, not $x$: the data are fixed numbers.', chk: { k: 'ostep', d: d, m0: pl(m0), eta: pl(etaO), ans: pl(m1) } };
+        }
+        return { q: 'Fit a line through the origin, $\\hat{y} = mx$, to the data ' + dataTex(d) + ' by minimizing $$' + LoT + '.$$ Find the best $m$.', a: { t: 'num', v: mstar.toPlain() },
+          steps: ['$L\'(m) = ' + twoN(n) + '\\sum x_{i}(y_{i} - mx_{i})$. Setting it to ${}0$ gives $\\sum x_{i}y_{i} = m\\sum x_{i}^{2}$.', '$\\sum x_{i}y_{i} = ' + sxy.toTex() + '$ and $\\sum x_{i}^{2} = ' + sxx.toTex() + '$.', '$m = \\frac{' + sxy.toTex() + '}{' + sxx.toTex() + '}' + (mstar.n === sxy.n && mstar.d === sxx.n ? '' : ' = ' + mstar.toTex()) + '$. $L$ is a parabola in $m$ that opens up, so this is its minimum.'],
+          hint: 'Set $L\'(m) = 0$ and solve for $m$.', chk: { k: 'origin', d: d, ans: mstar.toPlain() } };
+      }
+      var m = q(R.pick([0, 1, -1, 2, '0.5'])), b = q(R.int(-2, 3));
+      if (kind === 'mse') {
+        var res = resid(d, m, b), Lv = mse(d, m, b);
+        return { q: 'Data: ' + dataTex(d) + '. Find the mean squared error of the line $\\hat{y} = ' + lineT(m, b) + '$: $$L = \\frac{1}{' + n + '}\\sum_{i=1}^{' + n + '} \\left(y_{i} - \\hat{y}_{i}\\right)^{2}.$$', a: { t: 'num', v: pl(Lv) },
+          steps: ['Predictions: ' + d.map(function (p) { return '$' + dec(q(m).mul(p[0]).add(b)) + '$'; }).join(', ') + '. Residuals $y_{i} - \\hat{y}_{i}$: ' + res.map(function (r) { return '$' + dec(r) + '$'; }).join(', ') + '.', 'Squares: ' + res.map(function (r) { return '$' + dec(r.mul(r)) + '$'; }).join(', ') + ', with sum $' + dec(sum(res.map(function (r) { return r.mul(r); }))) + '$.', '$L = \\frac{' + dec(sum(res.map(function (r) { return r.mul(r); }))) + '}{' + n + '}' + (q(sum(res.map(function (r) { return r.mul(r); }))).div(n).toTex() === '\\frac{' + dec(sum(res.map(function (r) { return r.mul(r); }))) + '}{' + n + '}' ? '' : ' = ' + dec(Lv)) + '$.'],
+          hint: 'Residual = actual minus predicted. Square, add, divide by the number of points.', chk: { k: 'mse', d: d, m: pl(m), b: pl(b), ans: pl(Lv) } };
+      }
+      var g = gradL(d, m, b), r0 = resid(d, m, b), gradSteps = gradStepsOf(d, m, b, g, r0, n);
+      function gradStepsOf(d, m, b, g, r0, n) { return ['By the chain rule, $\\frac{\\partial}{\\partial m}\\left(y_{i} - mx_{i} - b\\right)^{2} = -2x_{i}\\left(y_{i} - mx_{i} - b\\right)$ and $\\frac{\\partial}{\\partial b}\\left(y_{i} - mx_{i} - b\\right)^{2} = -2\\left(y_{i} - mx_{i} - b\\right)$.',
+        'At $(m, b) = (' + dec(m) + ', ' + dec(b) + ')$ the residuals are ' + r0.map(function (r) { return '$' + dec(r) + '$'; }).join(', ') + '.',
+        '$\\frac{\\partial L}{\\partial m} = ' + twoN(n) + '(' + d.map(function (p, i) { return P(p[0]) + ' \\cdot ' + P(r0[i]); }).join(' + ') + ') = ' + dec(g[0]) + '$.',
+        '$\\frac{\\partial L}{\\partial b} = ' + twoN(n) + '(' + r0.map(function (r) { return P(r); }).join(' + ') + ') = ' + dec(g[1]) + '$.']; }
+      if (kind === 'dLdb') return { q: 'Data: ' + dataTex(d) + '. The loss of the line $\\hat{y} = mx + b$ is $$' + LT + '.$$ Find $\\frac{\\partial L}{\\partial b}$ at $(m, b) = (' + dec(m) + ', ' + dec(b) + ')$.', a: { t: 'num', v: pl(g[1]) },
+        steps: ['By the chain rule, $\\frac{\\partial}{\\partial b}\\left(y_{i} - mx_{i} - b\\right)^{2} = -2\\left(y_{i} - mx_{i} - b\\right)$, because the inside has derivative $-1$ with respect to $b$.', gradSteps[1], gradSteps[3], (g[1].sign() < 0 ? 'It is negative: raising $b$ would lower the loss, so the line sits too low on average.' : g[1].sign() > 0 ? 'It is positive: lowering $b$ would lower the loss, so the line sits too high on average.' : 'It is ${}0$: the residuals add to ${}0$.')],
+        hint: 'Differentiate each squared residual with respect to $b$; the inside has derivative $-1$.', chk: { k: 'dLdb', d: d, m: pl(m), b: pl(b), ans: pl(g[1]) } };
+      if (kind === 'grad') return { q: 'Data: ' + dataTex(d) + '. The loss of the line $\\hat{y} = mx + b$ is $$' + LT + '.$$ Find $\\nabla L = \\left\\langle \\frac{\\partial L}{\\partial m}, \\frac{\\partial L}{\\partial b} \\right\\rangle$ at $(m, b) = (' + dec(m) + ', ' + dec(b) + ')$.', a: { t: 'tuple', v: [pl(g[0]), pl(g[1])] },
+        steps: gradSteps, hint: 'The variables are $m$ and $b$. Each $x_{i}$ and $y_{i}$ is a fixed number.', chk: { k: 'grad', d: d, m: pl(m), b: pl(b), ans: [pl(g[0]), pl(g[1])] } };
+      if (kind === 'step') {
+        var et = q({ 2: R.pick(['0.05', '0.1']), 3: '0.075', 4: R.pick(['0.1', '0.05']) }[n]), m1, b1;
+        for (var tr = 0; tr < 40; tr++) { // a step that goes downhill (a smaller step or new data if this one would overshoot)
+          m1 = q(m).sub(et.mul(g[0])); b1 = q(b).sub(et.mul(g[1]));
+          if (mse(d, m1, b1).lt(mse(d, m, b))) break;
+          if (n !== 3 && et.gt('0.05')) et = q('0.05'); else { d = dataSet(R, n, 3); g = gradL(d, m, b); r0 = resid(d, m, b); }
+        }
+        gradSteps = gradStepsOf(d, m, b, g, r0, n);
+        return { q: 'Data: ' + dataTex(d) + '. Fit $\\hat{y} = mx + b$ by gradient descent on $$' + LT + '.$$ Start at $(m, b) = (' + dec(m) + ', ' + dec(b) + ')$ with step size $\\eta = ' + dec(et) + '$. Find $(m_{1}, b_{1})$.', a: { t: 'tuple', v: [pl(m1), pl(b1)] },
+          steps: gradSteps.concat(['$(m_{1}, b_{1}) = (' + dec(m) + ', ' + dec(b) + ') - ' + dec(et) + '\\langle ' + dec(g[0]) + ', ' + dec(g[1]) + ' \\rangle = (' + dec(m1) + ', ' + dec(b1) + ')$.', 'The loss drops from $L ' + approx(mse(d, m, b)) + '$ to $L ' + approx(mse(d, m1, b1)) + '$.']),
+          hint: 'Find both partial derivatives, then subtract $\\eta$ times the gradient.', chk: { k: 'step', d: d, m: pl(m), b: pl(b), eta: pl(et), ans: [pl(m1), pl(b1)] } };
+      }
+      // exact: the normal equations (data built around a line with whole-number slope and intercept, so the answer is tidy)
+      d = niceData(R, n, false);
+      var sx = sum(d.map(function (p) { return q(p[0]); })), sy = sum(d.map(function (p) { return q(p[1]); })), sxx2 = sum(d.map(function (p) { return q(p[0] * p[0]); })), sxy2 = sum(d.map(function (p) { return q(p[0] * p[1]); }));
+      var det = sxx2.mul(n).sub(sx.mul(sx)), ms = sxy2.mul(n).sub(sx.mul(sy)).div(det), bs = sy.sub(ms.mul(sx)).div(n);
+      return { q: 'Data: ' + dataTex(d) + '. Find the slope and intercept $(m, b)$ that minimize $$' + LT + '.$$', a: { t: 'tuple', v: [ms.toPlain(), bs.toPlain()] },
+        steps: ['Set both partial derivatives to ${}0$. $\\frac{\\partial L}{\\partial m} = 0$ gives $m\\sum x_{i}^{2} + b\\sum x_{i} = \\sum x_{i}y_{i}$; $\\frac{\\partial L}{\\partial b} = 0$ gives $m\\sum x_{i} + ' + n + 'b = \\sum y_{i}$.',
+          'Sums: $\\sum x_{i} = ' + sx.toTex() + '$, $\\sum y_{i} = ' + sy.toTex() + '$, $\\sum x_{i}^{2} = ' + sxx2.toTex() + '$, $\\sum x_{i}y_{i} = ' + sxy2.toTex() + '$.',
+          'Solve $' + T.terms([[sxx2, 'm'], [sx, 'b']]) + ' = ' + sxy2.toTex() + '$ and $' + T.terms([[sx, 'm'], [n, 'b']]) + ' = ' + sy.toTex() + '$: $m = ' + ms.toTex() + '$, $b = ' + bs.toTex() + '$.',
+          '$L$ is a bowl in $(m, b)$ (its second-derivative test gives $D > 0$), so this one critical point is the minimum: the least-squares line.'],
+        hint: 'Set $\\frac{\\partial L}{\\partial m} = 0$ and $\\frac{\\partial L}{\\partial b} = 0$ and solve the two equations.', chk: { k: 'exact', d: d, ans: [ms.toPlain(), bs.toPlain()] } };
+    }
+
+    // ------------------------------------------------------------------ backpropagation through z = wx + b, h = ReLU(z), ŷ = vh + c, L = (ŷ − y)²
+    function fwd(o) { var z = q(o.w).mul(o.x).add(o.b), h = z.sign() > 0 ? z : Q(0), yh = q(o.v).mul(h).add(o.c), L = yh.sub(o.y).mul(yh.sub(o.y)); return { z: z, h: h, yh: yh, L: L }; }
+    function pickNet(R, wantOn) {
+      for (var t = 0; t < 200; t++) {
+        var o = { x: R.pick([-2, -1, 1, 2, 3]), w: q(R.pick([-2, -1, 1, 2, '0.5', '-0.5'])), b: q(R.int(-3, 3)), v: q(R.nz(-3, 3)), c: q(R.pick([-2, -1, 0, 1, 2, '0.5'])), y: R.int(-3, 6) };
+        var f = fwd(o);
+        if (f.z.abs().lt('0.5')) continue;
+        if (wantOn === true && f.z.sign() < 0) continue;
+        if (wantOn === false && f.z.sign() > 0) continue;
+        if (f.yh.eq(o.y) || f.yh.sub(o.y).abs().gt(9)) continue;
+        return o;
+      }
+      return { x: 2, w: q(1), b: q(-1), v: q(2), c: q('0.5'), y: 3 };
+    }
+    function netTex(o) { return 'z = ' + dec(o.w) + 'x' + sgnTerm(o.b) + ',\\ h = ' + RL + '(z),\\ \\hat{y} = ' + dec(o.v) + 'h' + (q(o.c).isZero() ? '' : sgnTerm(o.c)); }
+    function setup(o) { return 'A tiny network has one input $x$, one hidden ReLU unit and one output: $$z = wx + b, \\quad h = ' + RL + '(z), \\quad \\hat{y} = vh + c, \\quad L = (\\hat{y} - y)^{2},$$ with $w = ' + dec(o.w) + '$, $b = ' + dec(o.b) + '$, $v = ' + dec(o.v) + '$, $c = ' + dec(o.c) + '$, and the data point $(x, y) = (' + o.x + ', ' + o.y + ')$.'; }
+    function fwdStep(o, f) { return 'Forward: $z = ' + dec(o.w) + ' \\cdot ' + P(o.x) + sgnTerm(o.b) + ' = ' + dec(f.z) + '$, $h = ' + RL + '(' + dec(f.z) + ') = ' + dec(f.h) + '$, $\\hat{y} = ' + dec(o.v) + ' \\cdot ' + P(f.h) + sgnTerm(o.c) + ' = ' + dec(f.yh) + '$, $L = (' + dec(f.yh) + ' - ' + P(o.y) + ')^{2} = ' + dec(f.L) + '$.'; }
+    function nudge(o, name) { // exact central difference with h = 0.001 (L is quadratic in each weight near this point, so it matches exactly)
+      var e = q('0.001'), up = Object.assign({}, o), dn = Object.assign({}, o); up[name] = q(o[name]).add(e); dn[name] = q(o[name]).sub(e);
+      var Lu = fwd(up).L, Ld = fwd(dn).L, qd = Lu.sub(Ld).div(e.mul(2));
+      return 'Check with a nudge: $' + name + ' = ' + dec(up[name]) + '$ gives $L = ' + dec(Lu) + '$ and $' + name + ' = ' + dec(dn[name]) + '$ gives $L = ' + dec(Ld) + '$; $\\frac{' + dec(Lu) + ' - ' + P(Ld) + '}{0.002} = ' + dec(qd) + '$. ✓';
+    }
+    G('calc3.backpropagation', function (R, ctx) {
+      var kind = R.pick(ML.byLevel(ctx, ['forward', 'dc', 'dv'], ['dw', 'dw', 'db', 'dv', 'dead'], ['two', 'two', 'stepw', 'grad2', 'dw']));
+      if (kind === 'two') {
+        for (var t = 0; t < 200; t++) {
+          var x = R.pick([-2, -1, 1, 2]), u = [{ w: R.nz(-2, 2), b: R.int(-3, 3), v: R.nz(-3, 3) }, { w: R.nz(-2, 2), b: R.int(-3, 3), v: R.nz(-3, 3) }], c = R.int(-2, 2), y = R.int(-3, 6);
+          var z = u.map(function (k) { return k.w * x + k.b; }); if (z.some(function (zz) { return zz === 0; })) continue;
+          var h = z.map(function (zz) { return Math.max(0, zz); }), yh = u[0].v * h[0] + u[1].v * h[1] + c; if (yh === y || Math.abs(yh - y) > 9) continue;
+          var k = R.int(0, 1), which = R.pick(['w', 'b', 'v']), dy = 2 * (yh - y), on = z[k] > 0 ? 1 : 0;
+          var ans = which === 'v' ? dy * h[k] : which === 'w' ? dy * u[k].v * on * x : dy * u[k].v * on;
+          if (ans === 0 && R.chance(0.6)) continue;
+          var nm = which + '_{' + (k + 1) + '}';
+          return { q: 'A network has one input $x$ and two hidden units: $$h_{j} = ' + RL + '(w_{j}x + b_{j}), \\quad \\hat{y} = v_{1}h_{1} + v_{2}h_{2} + c, \\quad L = (\\hat{y} - y)^{2},$$ with $w_{1} = ' + u[0].w + '$, $b_{1} = ' + u[0].b + '$, $v_{1} = ' + u[0].v + '$, $w_{2} = ' + u[1].w + '$, $b_{2} = ' + u[1].b + '$, $v_{2} = ' + u[1].v + '$, $c = ' + c + '$. For the data point $(x, y) = (' + x + ', ' + y + ')$, find $\\frac{\\partial L}{\\partial ' + nm + '}$.', a: { t: 'num', v: String(ans) },
+            steps: ['Forward: $z_{1} = ' + u[0].w + ' \\cdot ' + T.p(x) + T.signed(u[0].b) + ' = ' + z[0] + '$, $z_{2} = ' + u[1].w + ' \\cdot ' + T.p(x) + T.signed(u[1].b) + ' = ' + z[1] + '$, so $h_{1} = ' + h[0] + '$, $h_{2} = ' + h[1] + '$, and $\\hat{y} = ' + yh + '$.', 'Backward from the loss: $\\frac{\\partial L}{\\partial \\hat{y}} = 2(\\hat{y} - y) = ' + dy + '$.',
+              which === 'v' ? '$\\frac{\\partial L}{\\partial v_{' + (k + 1) + '}} = \\frac{\\partial L}{\\partial \\hat{y}} \\cdot h_{' + (k + 1) + '} = ' + dy + ' \\cdot ' + T.p(h[k]) + ' = ' + ans + '$.'
+                : 'Into unit ' + (k + 1) + ': $\\frac{\\partial L}{\\partial h_{' + (k + 1) + '}} = ' + dy + ' \\cdot ' + T.p(u[k].v) + ' = ' + (dy * u[k].v) + '$. Its switch is ' + (on ? 'on ($z_{' + (k + 1) + '} > 0$), so $\\frac{\\partial L}{\\partial z_{' + (k + 1) + '}} = ' + (dy * u[k].v) + '$.' : 'off ($z_{' + (k + 1) + '} < 0$), so $\\frac{\\partial L}{\\partial z_{' + (k + 1) + '}} = 0$.'),
+              which === 'v' ? 'Only the path through unit ' + (k + 1) + ' reaches $v_{' + (k + 1) + '}$; the other unit does not affect this derivative.' : '$\\frac{\\partial L}{\\partial ' + nm + '} = \\frac{\\partial L}{\\partial z_{' + (k + 1) + '}} \\cdot ' + (which === 'w' ? 'x = ' + (dy * u[k].v * on) + ' \\cdot ' + T.p(x) : '1') + ' = ' + ans + '$.'],
+            hint: 'Follow the one path from $L$ back to $' + nm + '$ and multiply the local derivatives.', chk: { k: 'two', x: x, y: y, u: u, c: c, which: which, unit: k, ans: ans } };
+        }
+      }
+      var o = pickNet(R, kind === 'dead' ? false : kind === 'grad2' ? true : (kind === 'dw' || kind === 'db' || kind === 'stepw') ? (R.chance(0.85) ? true : null) : null), f = fwd(o);
+      var dy = f.yh.sub(o.y).mul(2), on = f.z.sign() > 0, dh = dy.mul(o.v), dz = on ? dh : Q(0), dw = dz.mul(o.x), db = dz, dv = dy.mul(f.h), dc = dy;
+      var back1 = '$\\frac{\\partial L}{\\partial \\hat{y}} = 2(\\hat{y} - y) = 2(' + dec(f.yh) + ' - ' + P(o.y) + ') = ' + dec(dy) + '$.';
+      var backZ = '$\\frac{\\partial L}{\\partial h} = \\frac{\\partial L}{\\partial \\hat{y}} \\cdot v = ' + dec(dy) + ' \\cdot ' + P(o.v) + ' = ' + dec(dh) + '$. ' + (on ? 'The switch is on ($z > 0$), so ReLU passes the derivative through: $\\frac{\\partial L}{\\partial z} = ' + dec(dz) + '$.' : 'The switch is off ($z < 0$), so ReLU blocks it: $\\frac{\\partial L}{\\partial z} = 0$.');
+      var base = { x: o.x, y: o.y, w: pl(o.w), b: pl(o.b), v: pl(o.v), c: pl(o.c) };
+      if (kind === 'forward') return { q: setup(o) + ' Run the network forward. Find the loss $L$.', a: { t: 'num', v: pl(f.L) }, steps: [fwdStep(o, f), 'The prediction is off by $' + dec(f.yh.sub(o.y)) + '$, and the loss is that error squared.'], hint: 'Compute $z$, then $h$, then $\\hat{y}$, then $L$.', chk: Object.assign({ k: 'forward', ans: pl(f.L) }, base) };
+      if (kind === 'dc' || kind === 'dv') {
+        var isV = kind === 'dv', A = isV ? dv : dc;
+        return { q: setup(o) + ' Find $\\frac{\\partial L}{\\partial ' + (isV ? 'v' : 'c') + '}$.', a: { t: 'num', v: pl(A) },
+          steps: [fwdStep(o, f), back1, isV ? '$\\hat{y} = vh + c$, so $\\frac{\\partial \\hat{y}}{\\partial v} = h$ and $\\frac{\\partial L}{\\partial v} = ' + dec(dy) + ' \\cdot ' + P(f.h) + ' = ' + dec(dv) + '$.' + (f.h.isZero() ? ' The unit is off, so changing $v$ changes nothing.' : '') : '$\\hat{y} = vh + c$, so $\\frac{\\partial \\hat{y}}{\\partial c} = 1$ and $\\frac{\\partial L}{\\partial c} = ' + dec(dc) + '$.'],
+          hint: 'Start with $\\frac{\\partial L}{\\partial \\hat{y}} = 2(\\hat{y} - y)$.', chk: Object.assign({ k: isV ? 'dv' : 'dc', ans: pl(A) }, base) };
+      }
+      if (kind === 'dw' || kind === 'db' || kind === 'dead') {
+        var isW = kind !== 'db', A2 = isW ? dw : db;
+        var st = [fwdStep(o, f), back1, backZ, isW ? '$z = wx + b$, so $\\frac{\\partial z}{\\partial w} = x$: $\\frac{\\partial L}{\\partial w} = ' + dec(dz) + ' \\cdot ' + P(o.x) + ' = ' + dec(dw) + '$.' : '$z = wx + b$, so $\\frac{\\partial z}{\\partial b} = 1$: $\\frac{\\partial L}{\\partial b} = ' + dec(db) + '$.'];
+        st.push(nudge(o, isW ? 'w' : 'b'));
+        return { q: setup(o) + ' Use backpropagation to find $\\frac{\\partial L}{\\partial ' + (isW ? 'w' : 'b') + '}$.', a: { t: 'num', v: pl(A2) }, steps: st,
+          hint: 'Multiply backward: $\\frac{\\partial L}{\\partial \\hat{y}}$, then times $v$, then times the switch (1 or 0), then times ' + (isW ? '$x$' : '1') + '.', chk: Object.assign({ k: isW ? 'dw' : 'db', ans: pl(A2) }, base) };
+      }
+      if (kind === 'stepw') {
+        var eta = q(R.pick(['0.1', '0.05', '0.01'])), w1 = q(o.w).sub(eta.mul(dw));
+        return { q: setup(o) + ' Take one gradient descent step on $w$ alone with step size $\\eta = ' + dec(eta) + '$. Find the new $w$.', a: { t: 'num', v: pl(w1) },
+          steps: [fwdStep(o, f), back1, backZ, '$\\frac{\\partial L}{\\partial w} = \\frac{\\partial L}{\\partial z} \\cdot x = ' + dec(dw) + '$.', '$w_{\\text{new}} = w - \\eta\\frac{\\partial L}{\\partial w} = ' + dec(o.w) + ' - ' + dec(eta) + ' \\cdot ' + P(dw) + ' = ' + dec(w1) + '$.' + (dw.isZero() ? ' The unit is off, so this example cannot change $w$.' : ' The loss becomes $' + dec(fwd(Object.assign({}, o, { w: w1 })).L) + '$.')],
+          hint: 'Find $\\frac{\\partial L}{\\partial w}$ by backpropagation, then step against it.', chk: Object.assign({ k: 'stepw', eta: pl(eta), ans: pl(w1) }, base) };
+      }
+      // grad2: dL/dw and dL/dv together
+      return { q: setup(o) + ' Find $\\frac{\\partial L}{\\partial w}$ and $\\frac{\\partial L}{\\partial v}$.', a: { t: 'multi', parts: [{ label: '$\\frac{\\partial L}{\\partial w} =$', a: { t: 'num', v: pl(dw) } }, { label: '$\\frac{\\partial L}{\\partial v} =$', a: { t: 'num', v: pl(dv) } }] },
+        steps: [fwdStep(o, f), back1, '$\\frac{\\partial L}{\\partial v} = \\frac{\\partial L}{\\partial \\hat{y}} \\cdot h = ' + dec(dy) + ' \\cdot ' + P(f.h) + ' = ' + dec(dv) + '$.', backZ, '$\\frac{\\partial L}{\\partial w} = \\frac{\\partial L}{\\partial z} \\cdot x = ' + dec(dz) + ' \\cdot ' + P(o.x) + ' = ' + dec(dw) + '$. Both reuse $\\frac{\\partial L}{\\partial \\hat{y}}$: that sharing is what makes backpropagation fast.'],
+        hint: 'Compute $\\frac{\\partial L}{\\partial \\hat{y}}$ once, then branch to $v$ and back through the switch to $w$.', chk: Object.assign({ k: 'grad2', ans: [pl(dw), pl(dv)] }, base) };
+    });
+  })();
+  // ==== neural-network thread (nn) end ====
+
 })(window.MathLadder);

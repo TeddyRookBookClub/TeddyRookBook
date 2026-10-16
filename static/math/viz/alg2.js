@@ -20,7 +20,21 @@
    alg2-machines   function machines in a row: an input goes through g, then f; swap the order to compare f(g(x)) with g(f(x))
      fns:     [{"name": "g", "f": "2x - 3", "tex": "2x - 3"}, {"name": "f", "f": "x^2 + 1", "tex": "x^2 + 1"}]  (applied left to right)
      x: 2, min: -5, max: 5, step: 1   the input slider         swap: true   show a "Swap the order" button
-     inverse: true   the second machine undoes the first: the readout says so when the output equals the input           */
+     inverse: true   the second machine undoes the first: the readout says so when the output equals the input
+   ---- neural-network thread (nn) visuals begin
+   alg2-ramps      ramps, ReLU(x) = max(0, x), and the bent-line graphs they add up to: f(x) = mx + b + Σ cᵢ·ReLU(sᵢ(x − aᵢ))
+     ramps:   [{"a": 0, "c": 1, "s": 1}]  each ramp bends at x = a; c is its coefficient (the change in slope at the bend);
+              s: 1 opens to the right, ReLU(x − a); s: −1 opens to the left, ReLU(a − x)
+     line:    {"m": 0, "b": 0}  a straight line added to the ramps          lineEdit: false   sliders for m and b too
+     edit:    true   a row of controls per ramp (bend, coefficient, flip) and Add a ramp / Remove (max: 4 ramps)
+     parts:   true   draw each ramp thin and dashed under the sum           slopes: true   label each straight piece with its slope
+     target:  {"ramps": [...], "line": {...}}  a dashed gold graph to match; with task, a check mark once the sum matches it
+     xmin, xmax, ymin, ymax (-6, 6, -3, 7), snap: 0.5 (bend positions)  task, label
+     quiet:   true (or readout: false) no formula, no slope labels, no readout (for a picture inside a problem)
+     Drag a bend marker sideways to move it (arrow keys: left/right move the picked bend, up/down change its coefficient,
+     Enter picks the next ramp).
+   ---- neural-network thread (nn) visuals end
+   */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder = W.MathLadder || {}, V = ML.viz;
@@ -229,3 +243,160 @@
     return { draw: draw };
   });
 })(window, document);
+
+// ==== neural-network thread (nn) begin: alg2-ramps (options in the header comment above) ====
+(function (W, D) {
+  'use strict';
+  var ML = W.MathLadder = W.MathLadder || {}, V = ML.viz;
+  if (!V) return;
+  var M = Math, fm = V.fmt, mk = V.el;
+  (function css() {
+    if (D.getElementById('nnv-css')) return;
+    var s = D.createElement('style'); s.id = 'nnv-css';
+    s.textContent = [
+      '.nnv .nnv-task{display:flex;gap:.55rem;align-items:flex-start;margin:0 0 .6rem;padding:.5rem .7rem;border-radius:10px;background:var(--mv-card);border:1px solid var(--mv-line);border-left:4px solid #b8963e;font-size:.95rem;line-height:1.45}',
+      '.nnv .nnv-tk{flex:0 0 auto;width:1.25rem;height:1.25rem;margin-top:.1rem;border-radius:50%;border:2px solid #b8963e;box-sizing:border-box;position:relative}',
+      '.nnv .nnv-task.ok{border-left-color:#00703c}.nnv .nnv-task.ok .nnv-tk{background:#00703c;border-color:#00703c}',
+      '.nnv .nnv-task.ok .nnv-tk::after{content:"";position:absolute;left:.33rem;top:.12rem;width:.28rem;height:.55rem;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}',
+      'html[data-theme="dark"] .nnv .nnv-task.ok{border-left-color:#6cc79a}html[data-theme="dark"] .nnv .nnv-task.ok .nnv-tk{background:#6cc79a;border-color:#6cc79a}html[data-theme="dark"] .nnv .nnv-task.ok .nnv-tk::after{border-color:#0f1a14}',
+      '.nnv .nnv-rows{display:grid;gap:.45rem;margin:.6rem 0 0}',
+      '.nnv .nnv-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:.35rem .8rem;padding:.45rem .6rem;border:1px solid var(--mv-line);border-left:5px solid var(--nnc);border-radius:10px;background:var(--mv-card)}',
+      '.nnv .nnv-row .ml-sl{min-width:130px;flex:1 1 130px}',
+      '.nnv .nnv-name{font:600 .9rem system-ui,sans-serif;min-width:5.5rem;align-self:center;color:var(--mv-ink)}',
+      '.nnv .nnv-btns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 0}',
+      '.nnv .ml-btn[aria-pressed="true"]{background:rgba(0,112,60,.16);border-color:#00703c}',
+      '.nnv .ml-readout{overflow-wrap:anywhere}',
+      '.nnv .nnv-say{margin:.45rem 0 0;font-size:.92rem;line-height:1.5;color:var(--mv-muted);min-height:1.4em}',
+      '@media (max-width:480px){.nnv .nnv-row .ml-sl{min-width:120px;flex-basis:120px}.ml-viz.nnv{padding:.55rem}}'
+    ].join('\n');
+    D.head.appendChild(s);
+  })();
+  function nv(v, d) { if (v === null || v === undefined || v === '') return d; v = +v; return isFinite(v) ? v : d; }
+  function relu(v) { return v > 0 ? v : 0; }
+  function frame(el, o, label) {
+    el.classList.add('nnv'); el.setAttribute('role', 'group');
+    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', o.label || label);
+    var F = {};
+    if (o.task) { F.task = mk('p', 'nnv-task', '<span class="nnv-tk" aria-hidden="true"></span><span>' + o.task + '</span>'); el.appendChild(F.task); if (ML.typeset) try { ML.typeset(F.task); } catch (e) { } }
+    F.box = mk('div', 'nnv-box'); el.appendChild(F.box);
+    F.ctl = mk('div', 'ml-ctl'); el.appendChild(F.ctl);
+    F.out = V.readout(el);
+    F.done = function (ok) { if (F.task) F.task.classList.toggle('ok', !!ok); };
+    return F;
+  }
+  function pill(ctx, s, x, y, color, cw, ch) {
+    var k = V.colors(); ctx.save(); ctx.font = '700 12px system-ui,sans-serif'; var w = ctx.measureText(s).width + 10, h = 19;
+    x = M.max(2, M.min(x - w / 2, cw - w - 2)); y = M.max(h / 2 + 2, M.min(y, ch - h / 2 - 2));
+    ctx.fillStyle = k.bg; ctx.globalAlpha = 0.88; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y - h / 2, w, h, 6); else ctx.rect(x, y - h / 2, w, h); ctx.fill();
+    ctx.globalAlpha = 1; ctx.fillStyle = color; ctx.textBaseline = 'middle'; ctx.fillText(s, x + 5, y + 1); ctx.restore();
+  }
+  var PAL = ['purple', 'orange', 'teal', 'pink', 'green', 'gold'];
+
+  V.register('alg2-ramps', function (el, o) {
+    o = Object.assign({ ramps: [{ a: 0, c: 1, s: 1 }], line: { m: 0, b: 0 }, edit: true, lineEdit: false, parts: true, slopes: true, max: 4, xmin: -6, xmax: 6, ymin: -3, ymax: 7, snap: 0.5 }, o || {});
+    var quiet = !!(o.quiet || o.readout === false);
+    function norm(r) { return { a: nv(r.a, 0), c: nv(r.c, 1), s: r.s === -1 ? -1 : 1 }; }
+    var start = (o.ramps || []).map(norm), ramps = start.map(function (r) { return Object.assign({}, r); });
+    var line0 = { m: nv((o.line || {}).m, 0), b: nv((o.line || {}).b, 0) }, line = Object.assign({}, line0);
+    var tgt = o.target ? { ramps: (o.target.ramps || []).map(norm), line: { m: nv((o.target.line || {}).m, 0), b: nv((o.target.line || {}).b, 0) } } : null;
+    var F = frame(el, o, 'Ramps adding up to a bent-line graph');
+    var c = V.canvas(F.box, { aspect: 1.55, min: 240, max: 430 }), P = V.plane(c, { xmin: nv(o.xmin, -6), xmax: nv(o.xmax, 6), ymin: nv(o.ymin, -3), ymax: nv(o.ymax, 7) });
+    c.cv.tabIndex = 0; c.cv.setAttribute('role', 'img');
+    var sel = 0, focus = false, rowsEl = null, btnRow = null;
+    function f(x, rs, ln) { rs = rs || ramps; ln = ln || line; var y = ln.m * x + ln.b; rs.forEach(function (r) { y += r.c * relu(r.s * (x - r.a)); }); return y; }
+    function col(i) { return V.colors()[PAL[i % PAL.length]]; }
+    function snap(v) { var s = nv(o.snap, 0.5) || 0.5; return M.round(v / s) * s; }
+    function termTex(r) { var inner = r.s === 1 ? (r.a === 0 ? 'x' : 'x ' + (r.a > 0 ? '- ' + fm(r.a) : '+ ' + fm(-r.a))) : (r.a === 0 ? '-x' : fm(r.a).replace('−', '-') + ' - x'); return '\\operatorname{ReLU}(' + inner.replace(/−/g, '-') + ')'; }
+    function formula() {
+      var parts = [], first = true;
+      function add(coef, body) { if (!coef) return; var a = M.abs(coef), sg = coef < 0 ? (first ? '-' : ' - ') : (first ? '' : ' + '); parts.push(sg + (body && a === 1 ? '' : fm(a).replace('−', '-')) + body); first = false; }
+      if (line.m) add(line.m, 'x'); if (line.b) add(line.b, ''); ramps.forEach(function (r) { add(r.c, termTex(r)); });
+      return '$f(x) = ' + (parts.join('') || '0') + '$';
+    }
+    function bends(rs) { return rs.map(function (r) { return r.a; }).filter(function (a, i, arr) { return arr.indexOf(a) === i; }).sort(function (u, v) { return u - v; }); }
+    function slopeAt(x, rs, ln) { var h = 1e-4; return (f(x + h, rs, ln) - f(x - h, rs, ln)) / (2 * h); }
+    function matches() {
+      if (!tgt) return false;
+      var xs = bends(ramps).concat(bends(tgt.ramps)); xs.push(P.o.xmin - 5, P.o.xmax + 5, 0);
+      for (var x = P.o.xmin - 6; x <= P.o.xmax + 6; x += 0.25) xs.push(x);
+      return xs.every(function (x) { return M.abs(f(x) - f(x, tgt.ramps, tgt.line)) < 1e-6; });
+    }
+    function draw() {
+      var k = V.colors(), ctx = c.ctx, v = P.view();
+      P.clear(); P.grid(); P.axes();
+      if (tgt) P.plot(function (x) { return f(x, tgt.ramps, tgt.line); }, { color: 'gold', width: 5, dash: [9, 7] });
+      if (o.parts && !quiet) ramps.forEach(function (r, i) { P.plot(function (x) { return r.c * relu(r.s * (x - r.a)); }, { color: col(i), width: 2, dash: [5, 5] }); });
+      if (o.parts && !quiet && (line.m || line.b)) P.plot(function (x) { return line.m * x + line.b; }, { color: k.muted, width: 1.6, dash: [3, 5] });
+      P.plot(function (x) { return f(x); }, { color: 'blue', width: 3.6 });
+      // bend markers (diamonds) on the sum
+      ramps.forEach(function (r, i) {
+        var px = P.X(r.a), py = P.Y(f(r.a)); if (px < -10 || px > c.w + 10) return;
+        ctx.save(); ctx.fillStyle = quiet ? k.blue : col(i); ctx.strokeStyle = k.bg; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(px, py - 8); ctx.lineTo(px + 8, py); ctx.lineTo(px, py + 8); ctx.lineTo(px - 8, py); ctx.closePath(); ctx.fill(); ctx.stroke();
+        if (focus && i === sel && o.edit && !quiet) { ctx.strokeStyle = k.gold; ctx.setLineDash([4, 3]); ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(px, py, 14, 0, 2 * M.PI); ctx.stroke(); }
+        ctx.restore();
+      });
+      // slope labels on each straight piece
+      if (o.slopes && !quiet) {
+        var bs = bends(ramps).filter(function (a) { return a > v.xmin && a < v.xmax; }), cuts = [v.xmin].concat(bs, [v.xmax]);
+        for (var j = 0; j < cuts.length - 1; j++) {
+          var a = cuts[j], b = cuts[j + 1]; if (P.X(b) - P.X(a) < 46) continue;
+          var xm = (a + b) / 2, sl = slopeAt(xm), ym = f(xm), py2 = P.Y(ym);
+          pill(ctx, 'slope ' + fm(M.round(sl * 100) / 100), P.X(xm), py2 + (py2 > c.h * 0.6 ? -20 : 20), k.blue, c.w, c.h);
+        }
+      }
+      var ok = matches(); F.done(ok);
+      if (!quiet) {
+        var sl = bends(ramps).length ? [slopeAt(bends(ramps)[0] - 0.5)].concat(bends(ramps).map(function (a) { return slopeAt(a + 1e-3); })) : [slopeAt(0)];
+        F.out.set(formula() + '<br><span style="color:var(--mv-muted)">Slopes from left to right: ' + sl.map(function (s) { return fm(M.round(s * 100) / 100); }).join(', ') +
+          (ramps.length ? '. Each ramp changes the slope by its coefficient at its bend.' : '.') + (tgt ? (ok ? ' <b>It matches the target.</b>' : '') : '') + '</span>');
+      } else F.out.el.hidden = true;
+      c.cv.setAttribute('aria-label', 'Graph of a bent line made of ' + ramps.length + ' ramp' + (ramps.length === 1 ? '' : 's') + (quiet ? '' : ', bends at x = ' + bends(ramps).map(function (a) { return fm(a); }).join(', ')) + '.' + (o.edit && !quiet ? ' Arrow keys: left and right move the picked bend, up and down change its coefficient, Enter picks the next ramp.' : ''));
+    }
+    // ---- controls
+    function buildRows() {
+      if (!o.edit || quiet) return;
+      if (!rowsEl) { rowsEl = mk('div', 'nnv-rows'); el.insertBefore(rowsEl, F.ctl); }
+      rowsEl.innerHTML = '';
+      ramps.forEach(function (r, i) {
+        var row = mk('div', 'nnv-row'); row.style.setProperty('--nnc', col(i));
+        var name = mk('span', 'nnv-name', 'Ramp ' + (i + 1)); row.appendChild(name);
+        var sa = V.slider(row, { label: 'bend at x =', min: P.o.xmin, max: P.o.xmax, step: nv(o.snap, 0.5), value: r.a, input: function (val) { r.a = val; sel = i; draw(); } });
+        var sc = V.slider(row, { label: 'coefficient', min: -4, max: 4, step: 0.5, value: r.c, input: function (val) { r.c = val; sel = i; draw(); } });
+        var fb = V.button(row, r.s === 1 ? 'Opens right' : 'Opens left', function () { r.s = -r.s; fb.textContent = r.s === 1 ? 'Opens right' : 'Opens left'; fb.setAttribute('aria-pressed', String(r.s === -1)); draw(); });
+        fb.setAttribute('aria-pressed', String(r.s === -1)); fb.title = 'Flip: ReLU(x − a) or ReLU(a − x)';
+        r._sa = sa; r._sc = sc; rowsEl.appendChild(row);
+      });
+      if (addB) addB.disabled = ramps.length >= nv(o.max, 4); if (remB) remB.disabled = !ramps.length;
+    }
+    var addB = null, remB = null;
+    if (o.edit && !quiet) {
+      if (o.lineEdit) {
+        V.slider(F.ctl, { label: 'line slope m', min: -3, max: 3, step: 0.5, value: line.m, input: function (val) { line.m = val; draw(); } });
+        V.slider(F.ctl, { label: 'line intercept b', min: -4, max: 4, step: 0.5, value: line.b, input: function (val) { line.b = val; draw(); } });
+      }
+      btnRow = mk('div', 'nnv-btns'); el.insertBefore(btnRow, F.out.el);
+      addB = V.button(btnRow, 'Add a ramp', function () { if (ramps.length >= nv(o.max, 4)) return; ramps.push({ a: snap((P.o.xmin + P.o.xmax) / 2 + ramps.length), c: 1, s: 1 }); sel = ramps.length - 1; buildRows(); draw(); });
+      remB = V.button(btnRow, 'Remove the last ramp', function () { if (!ramps.length) return; ramps.pop(); sel = M.max(0, M.min(sel, ramps.length - 1)); buildRows(); draw(); });
+      V.button(btnRow, 'Reset', function () { ramps = start.map(function (r) { return Object.assign({}, r); }); line = Object.assign({}, line0); sel = 0; buildRows(); draw(); });
+      buildRows();
+      V.drag(c.cv, {
+        hit: function (px, py) { var best = null, bd = 26; ramps.forEach(function (r, i) { var d = M.hypot(P.X(r.a) - px, P.Y(f(r.a)) - py); if (d < bd) { bd = d; best = i; } }); return best; },
+        start: function (i) { sel = i; },
+        move: function (i, px) { var r = ramps[i]; r.a = M.max(P.o.xmin, M.min(P.o.xmax, snap(P.x(px)))); if (r._sa) r._sa.set(r.a); draw(); }
+      });
+      c.cv.addEventListener('focus', function () { focus = true; draw(); }); c.cv.addEventListener('blur', function () { focus = false; draw(); });
+      c.cv.addEventListener('keydown', function (e) {
+        var r = ramps[sel]; if (!r) return; var st = nv(o.snap, 0.5) || 0.5;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { r.a = M.max(P.o.xmin, M.min(P.o.xmax, snap(r.a + (e.key === 'ArrowRight' ? st : -st)))); if (r._sa) r._sa.set(r.a); }
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { r.c = M.max(-4, M.min(4, r.c + (e.key === 'ArrowUp' ? 0.5 : -0.5))); if (r._sc) r._sc.set(r.c); }
+        else if (e.key === 'Enter' || e.key === 'n' || e.key === 'N') { sel = (sel + 1) % ramps.length; }
+        else return;
+        e.preventDefault(); draw();
+      });
+    }
+    V.onTheme(draw); c.onResize(draw); draw();
+    return { update: draw };
+  });
+})(window, document);
+// ==== neural-network thread (nn) end ====

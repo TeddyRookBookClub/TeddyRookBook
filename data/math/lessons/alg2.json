@@ -856,6 +856,156 @@
    }
   ]
  },
+ "alg2.ramp-functions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You already know two kinds of bent graphs: the V of the <a href=\"/math/algebra-1/absolute-value-functions/\">absolute value function</a> and the pieces of a <a href=\"/math/algebra-1/piecewise-functions/\">piecewise function</a>. Both can be built from one simple shape, the <b>ramp</b>: $$\\operatorname{ReLU}(x) = \\max(0, x) = \\begin{cases} 0, & x < 0 \\\\ x, & x \\ge 0. \\end{cases}$$ It is flat at $0$ for negative inputs, then rises with slope $1$. (ReLU is short for \"rectified linear unit.\")"
+   },
+   {
+    "t": "key",
+    "html": "A shifted, scaled ramp $c\\operatorname{ReLU}(x - a)$ is $0$ to the left of $x = a$ and a line of slope $c$ to the right of it. Add a few ramps (and a line) and you get a bent-line graph. Each ramp makes one bend, at its $a$, and its coefficient $c$ is how much the slope <b>changes</b> there."
+   },
+   {
+    "t": "why",
+    "html": "To the left of $a$, the inside $x - a$ is negative, so the ramp adds $0$ and the graph is unchanged there. To the right of $a$, the ramp adds $c(x - a)$, a line with slope $c$. When you <a href=\"/math/algebra-2/function-operations/\">add functions</a>, heights add, so slopes add too: past the bend, the new slope is the old slope plus $c$. The shift works like any <a href=\"/math/algebra-2/combined-transformations/\">transformation</a>: $\\operatorname{ReLU}(x - 3)$ is the ramp moved $3$ units right, and $\\operatorname{ReLU}(-x)$ is the ramp reflected across the $y$-axis."
+   },
+   {
+    "t": "viz",
+    "name": "alg2-ramps",
+    "opts": {
+     "ramps": [
+      {
+       "a": 0,
+       "c": 1,
+       "s": 1
+      },
+      {
+       "a": 0,
+       "c": 1,
+       "s": -1
+      }
+     ],
+     "xmin": -6,
+     "xmax": 6,
+     "ymin": -3,
+     "ymax": 7
+    },
+    "cap": "Two ramps: $\\operatorname{ReLU}(x)$ opens to the right and $\\operatorname{ReLU}(-x)$ opens to the left. Their sum (blue) is $|x|$. Drag a bend, change a coefficient or add a ramp."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Absolute value from two ramps",
+    "q": "Show that $|x| = \\operatorname{ReLU}(x) + \\operatorname{ReLU}(-x)$ for every $x$.",
+    "steps": [
+     "For $x \\ge 0$: $\\operatorname{ReLU}(x) = x$, and $-x \\le 0$ gives $\\operatorname{ReLU}(-x) = 0$. The sum is $x$, which is $|x|$.",
+     "For $x < 0$: $\\operatorname{ReLU}(x) = 0$, and $-x$ is positive, so $\\operatorname{ReLU}(-x) = -x$. The sum is $-x$, which is $|x|$.",
+     "Check $x = -3$: $\\operatorname{ReLU}(-3) + \\operatorname{ReLU}(3) = 0 + 3 = 3 = |-3|$."
+    ],
+    "a": "$|x| = \\operatorname{ReLU}(x) + \\operatorname{ReLU}(-x)$"
+   },
+   {
+    "t": "ex",
+    "title": "Reading a sum of ramps",
+    "q": "Let $f(x) = 2\\operatorname{ReLU}(x + 1) - 3\\operatorname{ReLU}(x - 2)$. Find $f(4)$ and the slope of each straight piece.",
+    "steps": [
+     "At $x = 4$ the insides are $4 + 1 = 5$ and $4 - 2 = 2$, both positive. So $f(4) = 2 \\cdot 5 - 3 \\cdot 2 = 4$.",
+     "The bends are where the insides are $0$: $x = -1$ and $x = 2$.",
+     "Slopes: $0$ to the left of $-1$; $0 + 2 = 2$ between $-1$ and $2$; $2 + (-3) = -1$ to the right of $2$."
+    ],
+    "a": "$f(4) = 4$; slopes $0$, $2$, $-1$"
+   },
+   {
+    "t": "ex",
+    "title": "Writing a graph as ramps",
+    "q": "A graph comes down with slope $-1$ until the point $(0, 1)$, rises with slope $1$ until $(3, 4)$, and then stays flat. Write it with ramps.",
+    "steps": [
+     "Start with the line of the left piece: slope $-1$ through $(0, 1)$ is $y = -x + 1$.",
+     "At $x = 0$ the slope changes from $-1$ to $1$, a change of $2$. Add $2\\operatorname{ReLU}(x)$.",
+     "At $x = 3$ the slope changes from $1$ to $0$, a change of $-1$. Add $-\\operatorname{ReLU}(x - 3)$.",
+     "Check $x = 5$: $-5 + 1 + 2 \\cdot 5 - 2 = 4$, the height of the flat piece. ✓"
+    ],
+    "a": "$f(x) = -x + 1 + 2\\operatorname{ReLU}(x) - \\operatorname{ReLU}(x - 3)$"
+   },
+   {
+    "t": "viz",
+    "name": "alg2-ramps",
+    "opts": {
+     "line": {
+      "m": -1,
+      "b": 1
+     },
+     "ramps": [
+      {
+       "a": 1,
+       "c": 1,
+       "s": 1
+      },
+      {
+       "a": 4,
+       "c": 1,
+       "s": 1
+      }
+     ],
+     "target": {
+      "line": {
+       "m": -1,
+       "b": 1
+      },
+      "ramps": [
+       {
+        "a": 0,
+        "c": 2,
+        "s": 1
+       },
+       {
+        "a": 3,
+        "c": -1,
+        "s": 1
+       }
+      ]
+     },
+     "max": 3,
+     "xmin": -4,
+     "xmax": 6,
+     "ymin": -2,
+     "ymax": 7,
+     "task": "Make the blue graph land on the gold one from the last example. The line $-x + 1$ is already there; set the two ramps."
+    },
+    "cap": "Drag the bends sideways and set each coefficient to the change in slope at its bend."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Shifting the wrong way.</b> $\\operatorname{ReLU}(x - 3)$ bends at $x = 3$, not at $x = -3$. Find each bend by setting the inside equal to $0$. Check: put your bend into the inside; you should get $0$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using the new slope as the coefficient.</b> In the last example it is tempting to write $1 \\cdot \\operatorname{ReLU}(x)$, because the slope after $0$ is $1$. But a ramp <i>adds</i> its coefficient to the slope already there, so that would give $-1 + 1 = 0$, a flat piece. Check: add up the coefficients from the left to get each piece's slope, and compare with the graph."
+   },
+   {
+    "t": "note",
+    "html": "Ramps are the building blocks of many neural networks, the math inside much of today's speech and image recognition. A network adds up many shifted, scaled ramps, just as you did here. You will meet one in <a href=\"/math/linear-algebra/neural-network-layers/\">Linear Algebra</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, College Algebra 2e, section 3.2 Domain and Range (piecewise-defined functions) and section 3.6 Absolute Value Functions"
+   },
+   {
+    "name": "Common Core State Standards for Mathematics, F-IF.C.7b: graph piecewise-defined functions, including step and absolute value functions"
+   },
+   {
+    "name": "Goodfellow, Bengio and Courville, Deep Learning (MIT Press, 2016), section 6.3.1 Rectified Linear Units and Their Generalizations"
+   }
+  ]
+ },
  "alg2.vertex-formula": {
   "blocks": [
    {

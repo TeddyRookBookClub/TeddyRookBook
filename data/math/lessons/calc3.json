@@ -2752,6 +2752,338 @@
    }
   ]
  },
+ "calc3.gradient-descent": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/calculus-3/gradient/\">gradient</a> points uphill as steeply as possible. To find a low point, you have been setting $\\nabla f = \\mathbf{0}$ and solving, as with <a href=\"/math/calculus-3/critical-points/\">critical points</a>. That works for small textbook functions. For a function of a thousand variables, or a million, nobody can solve that system. There is a humbler plan: stand somewhere, feel which way is down, take a step, and repeat."
+   },
+   {
+    "t": "key",
+    "html": "<b>Gradient descent:</b> choose a starting point $\\mathbf{x}_{0}$ and a step size $\\eta > 0$ (also called the learning rate). Then repeat $$\\mathbf{x}_{k+1} = \\mathbf{x}_{k} - \\eta\\,\\nabla f(\\mathbf{x}_{k}).$$ Each step goes against the gradient, the direction of steepest descent, by an amount proportional to how steep the ground is."
+   },
+   {
+    "t": "why",
+    "html": "By the <a href=\"/math/calculus-3/tangent-planes/\">linear approximation</a>, $$f(\\mathbf{x} - \\eta\\nabla f) \\approx f(\\mathbf{x}) - \\eta\\,\\nabla f \\cdot \\nabla f = f(\\mathbf{x}) - \\eta\\,|\\nabla f|^{2}.$$ When $\\nabla f \\ne \\mathbf{0}$ and $\\eta$ is small, that is less than $f(\\mathbf{x})$: a small enough step always goes down. And the points stop moving only where $\\nabla f = \\mathbf{0}$, at a critical point."
+   },
+   {
+    "t": "h",
+    "text": "One variable first"
+   },
+   {
+    "t": "ex",
+    "title": "The step size decides everything",
+    "q": "Run gradient descent on $f(x) = x^{2}$ from $x_{0} = 2$ with $\\eta = 0.1$, $0.5$, $0.9$ and $1.1$.",
+    "steps": [
+     "$f'(x) = 2x$, so $x_{k+1} = x_{k} - 2\\eta x_{k} = (1 - 2\\eta)x_{k}$. Every step multiplies by $r = 1 - 2\\eta$.",
+     "$\\eta = 0.1$: $r = 0.8$. The points $2, 1.6, 1.28, \\ldots$ slide down toward $0$.",
+     "$\\eta = 0.5$: $r = 0$. One step lands exactly on the minimum.",
+     "$\\eta = 0.9$: $r = -0.8$. The points $2, -1.6, 1.28, \\ldots$ jump across the minimum each time, but still close in.",
+     "$\\eta = 1.1$: $r = -1.2$. The points $2, -2.4, 2.88, \\ldots$ land farther out every time: the run blows up."
+    ],
+    "a": "It converges for $0 < \\eta < 1$, fastest at $\\eta = 0.5$, and blows up for $\\eta > 1$."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-descent",
+    "opts": {
+     "preset": "parabola",
+     "eta": 0.9
+    },
+    "cap": "$f(x) = x^{2}$ with $\\eta = 0.9$: each step jumps across the bottom. Try $\\eta = 0.1$, $0.5$ and $1.1$, then Reset. The red arrow is the next step."
+   },
+   {
+    "t": "h",
+    "text": "Two variables"
+   },
+   {
+    "t": "ex",
+    "title": "Steps on a bowl",
+    "q": "Take two steps on $f(x, y) = x^{2} + 3y^{2}$ from $(2, 1)$ with $\\eta = 0.1$.",
+    "steps": [
+     "$\\nabla f = \\langle 2x, 6y \\rangle$, which is $\\langle 4, 6 \\rangle$ at $(2, 1)$.",
+     "$(2, 1) - 0.1\\langle 4, 6 \\rangle = (1.6, 0.4)$, and $f$ drops from $7$ to $2.56 + 0.48 = 3.04$.",
+     "At $(1.6, 0.4)$: $\\nabla f = \\langle 3.2, 2.4 \\rangle$, so the next point is $(1.28, 0.16)$, where $f = 1.6384 + 0.0768 = 1.7152$.",
+     "Each step multiplies $x$ by $1 - 2\\eta = 0.8$ and $y$ by $1 - 6\\eta = 0.4$: the steep direction shrinks faster."
+    ],
+    "a": "$(1.6, 0.4)$, then $(1.28, 0.16)$"
+   },
+   {
+    "t": "p",
+    "html": "Those factors also set a speed limit. In the $y$-direction the factor $1 - 6\\eta$ has size less than $1$ only when $\\eta < \\frac{1}{3}$; in the $x$-direction the limit is $\\eta < 1$. The steepest direction sets the limit for the whole run. In a long, narrow valley that limit is small, so progress along the gentle floor of the valley is slow, and the path zigzags across it."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-descent",
+    "opts": {
+     "preset": "valley",
+     "presets": true,
+     "etaMax": 0.5
+    },
+    "cap": "Drag the ball (or tap the map) to start somewhere new, then press Run. In the long valley, $f = \\frac{x^{2}}{2} + 5y^{2}$, a step size near $0.2$ zigzags and anything above $0.2$ blows up. Then switch to Two valleys."
+   },
+   {
+    "t": "ex",
+    "title": "Not always the lowest point",
+    "q": "Run gradient descent with a small step size on $f(x) = x^{4} - 4x^{2} + x$, once from $x_{0} = 1$ and once from $x_{0} = -1$.",
+    "steps": [
+     "$f'(x) = 4x^{3} - 8x + 1$, whose zeros are near $x \\approx -1.47$, $0.13$ and $1.35$: two valleys with a hill between them.",
+     "From $x_{0} = 1$: $f'(1) = -3 < 0$, so the steps go right and settle near $x \\approx 1.35$, where $f \\approx -2.62$.",
+     "From $x_{0} = -1$: $f'(-1) = 5 > 0$, so the steps go left and settle near $x \\approx -1.47$, where $f \\approx -5.44$.",
+     "Both are local minima. Gradient descent stops at the bottom of whichever valley it starts in, and only the second one is the lowest point."
+    ],
+    "a": "It finds the valley it starts in, which may not hold the lowest point."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Stepping uphill.</b> $\\mathbf{x}_{k} + \\eta\\nabla f(\\mathbf{x}_{k})$ climbs, because the gradient points uphill. Check: work out $f$ before and after a small step. It should go down."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Thinking a bigger step is always faster.</b> Past the limit set by the steepest direction, each step overshoots by more than it gains and the run blows up. Check: if $f$ goes up after a step, halve $\\eta$."
+   },
+   {
+    "t": "note",
+    "html": "In machine learning, $f$ is a <b>loss</b>: a number that measures how badly a model fits its examples, as a function of the model's weights. Gradient descent, run on millions of weights at once, is how neural networks are trained. Next you will fit a line this way (<a href=\"/math/calculus-3/minimizing-loss/\">minimizing loss</a>) and find a network's gradient (<a href=\"/math/calculus-3/backpropagation/\">backpropagation</a>)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Calculus Volume 3, section 4.6 Directional Derivatives and the Gradient"
+   },
+   {
+    "name": "Boyd and Vandenberghe, Convex Optimization (Cambridge University Press, 2004), section 9.3 Gradient descent method"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.065 Matrix Methods in Data Analysis, Signal Processing, and Machine Learning (Gilbert Strang, Spring 2018), Lecture 22: Gradient Descent: Downhill to a Minimum"
+   }
+  ]
+ },
+ "calc3.minimizing-loss": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In Probability and Statistics you met the <a href=\"/math/probability-and-statistics/least-squares-line/\">least-squares line</a>, the line with the smallest sum of squared residuals, and used formulas for its slope and intercept. Here you will see where those formulas come from, and a second way to find the same line: the way that scales up to models with millions of parameters."
+   },
+   {
+    "t": "key",
+    "html": "A model $\\hat{y} = mx + b$ has two <b>parameters</b>, $m$ and $b$. Its <b>loss</b> on the data $(x_{1}, y_{1}), \\ldots, (x_{n}, y_{n})$ is the mean squared error $$L(m, b) = \\frac{1}{n}\\sum_{i=1}^{n} \\left(y_{i} - (mx_{i} + b)\\right)^{2}.$$ Fitting the model means minimizing $L$: either solve $\\nabla L = \\mathbf{0}$ exactly, or run <a href=\"/math/calculus-3/gradient-descent/\">gradient descent</a> on $L$."
+   },
+   {
+    "t": "why",
+    "html": "The data are fixed numbers; the variables are $m$ and $b$. The inside $y_{i} - mx_{i} - b$ has derivative $-x_{i}$ with respect to $m$ and $-1$ with respect to $b$, so by the <a href=\"/math/calculus-1/chain-rule/\">chain rule</a> $$\\frac{\\partial L}{\\partial m} = -\\frac{2}{n}\\sum x_{i}\\left(y_{i} - mx_{i} - b\\right), \\qquad \\frac{\\partial L}{\\partial b} = -\\frac{2}{n}\\sum \\left(y_{i} - mx_{i} - b\\right).$$ Setting both to $0$ gives the <b>normal equations</b> $$m\\sum x_{i}^{2} + b\\sum x_{i} = \\sum x_{i}y_{i}, \\qquad m\\sum x_{i} + nb = \\sum y_{i}.$$ $L$ is a quadratic bowl: its second-derivative test gives $D = \\frac{4}{n^{2}}\\left(n\\sum x_{i}^{2} - \\left(\\sum x_{i}\\right)^{2}\\right) > 0$ whenever the $x_{i}$ are not all equal. So its one critical point is the minimum, the least-squares line."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-fitline",
+    "opts": {
+     "points": [
+      [
+       0,
+       1
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       4,
+       6
+      ]
+     ],
+     "start": [
+      0,
+      0
+     ],
+     "eta": 0.05
+    },
+    "cap": "Left: the data, the line and its squared residuals. Right: the loss over the $(m, b)$-plane. Each step of gradient descent moves the red dot downhill, and the line on the left follows. Press Show the exact answer to compare."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The exact answer",
+    "q": "Find the line that minimizes $L$ for the data $(0, 1)$, $(1, 3)$, $(2, 4)$, $(3, 4)$, $(4, 6)$.",
+    "steps": [
+     "Sums: $\\sum x_{i} = 10$, $\\sum y_{i} = 18$, $\\sum x_{i}^{2} = 30$, $\\sum x_{i}y_{i} = 47$, and $n = 5$.",
+     "Normal equations: $30m + 10b = 47$ and $10m + 5b = 18$.",
+     "Double the second, $20m + 10b = 36$, and subtract: $10m = 11$, so $m = 1.1$. Then $5b = 18 - 11$, so $b = 1.4$.",
+     "The residuals are $-0.4$, $0.5$, $0.4$, $-0.7$, $0.2$, so $L = \\frac{0.16 + 0.25 + 0.16 + 0.49 + 0.04}{5} = 0.22$."
+    ],
+    "a": "$\\hat{y} = 1.1x + 1.4$, with $L = 0.22$"
+   },
+   {
+    "t": "ex",
+    "title": "One step of gradient descent",
+    "q": "Same data. Start at $(m, b) = (0, 0)$ and take one gradient descent step with $\\eta = 0.05$.",
+    "steps": [
+     "At $(0, 0)$ every prediction is $0$, so the residuals are the $y_{i}$ themselves.",
+     "$\\frac{\\partial L}{\\partial m} = -\\frac{2}{5}\\sum x_{i}y_{i} = -\\frac{2}{5} \\cdot 47 = -18.8$ and $\\frac{\\partial L}{\\partial b} = -\\frac{2}{5}\\sum y_{i} = -\\frac{2}{5} \\cdot 18 = -7.2$.",
+     "$(0, 0) - 0.05\\langle -18.8, -7.2 \\rangle = (0.94, 0.36)$.",
+     "The loss falls from $L(0, 0) = 15.6$ to $L(0.94, 0.36) \\approx 2.12$. More steps creep toward $(1.1, 1.4)$."
+    ],
+    "a": "$(m, b) = (0.94, 0.36)$"
+   },
+   {
+    "t": "ex",
+    "title": "A line through the origin",
+    "q": "Fit $\\hat{y} = mx$ to $(1, 3)$, $(2, 2)$, $(3, 7)$.",
+    "steps": [
+     "With one parameter the loss is a parabola: $$L(m) = \\frac{1}{3}\\left[(3 - m)^{2} + (2 - 2m)^{2} + (7 - 3m)^{2}\\right] = \\frac{1}{3}\\left(14m^{2} - 56m + 62\\right).$$",
+     "$L'(m) = \\frac{1}{3}(28m - 56) = 0$ gives $m = 2$, the vertex of the parabola.",
+     "In general $m = \\frac{\\sum x_{i}y_{i}}{\\sum x_{i}^{2}}$; here $\\frac{28}{14} = 2$."
+    ],
+    "a": "$\\hat{y} = 2x$"
+   },
+   {
+    "t": "p",
+    "html": "In the picture the loss map is a long, tilted valley, because $\\sum x_{i}^{2} = 30$ is much bigger than $n = 5$. As in <a href=\"/math/calculus-3/gradient-descent/\">gradient descent</a> on a long valley, a step size above about $0.15$ makes the path blow up, and a small one crawls along the valley floor. For a straight line the exact answer is easy, so why bother with steps? Because most models have no formula. A neural network's loss is also a mean of squared errors, but of a bent-line function of its weights, and there gradient descent, with derivatives from <a href=\"/math/calculus-3/backpropagation/\">backpropagation</a>, is the tool that works."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Differentiating with respect to $x$.</b> In $L(m, b)$ the $x_{i}$ and $y_{i}$ are numbers you were given; they never change. The variables are the parameters. Check: your $\\frac{\\partial L}{\\partial m}$ should contain data values, $m$ and $b$, and no plain $x$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dropping the minus sign.</b> The inside $y_{i} - mx_{i} - b$ has derivative $-x_{i}$ with respect to $m$, so $\\frac{\\partial L}{\\partial m}$ starts with $-\\frac{2}{n}$. Without that sign a gradient step climbs. Check: with positive data, a step from $(0, 0)$ should raise both $m$ and $b$."
+   },
+   {
+    "t": "note",
+    "html": "This is the same line as ordinary least squares in the <a href=\"/business/econometrics/simple-regression/\">Econometrics course</a>, and the normal equations are the matrix equation of <a href=\"/math/linear-algebra/least-squares/\">least squares</a> in linear algebra."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Introductory Statistics 2e, section 12.3 The Regression Equation"
+   },
+   {
+    "name": "OpenStax, Calculus Volume 3, section 4.7 Maxima/Minima Problems"
+   },
+   {
+    "name": "Andrew Ng, CS229 Lecture Notes (Stanford University), Part I Linear Regression: the LMS algorithm and the normal equations"
+   }
+  ]
+ },
+ "calc3.backpropagation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "To train a network by <a href=\"/math/calculus-3/gradient-descent/\">gradient descent</a>, you need the derivative of its loss with respect to every weight. Here is the smallest network that shows how, with one input $x$, one hidden <a href=\"/math/algebra-2/ramp-functions/\">ramp</a> unit and one output: $$z = wx + b, \\qquad h = \\operatorname{ReLU}(z), \\qquad \\hat{y} = vh + c, \\qquad L = (\\hat{y} - y)^{2},$$ for one data point $(x, y)$. The loss depends on the weights $w$, $b$, $v$ and $c$ through a chain of simple steps, so the tool is the <a href=\"/math/calculus-3/multivariable-chain-rule/\">chain rule</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Backpropagation:</b> run the network forward and keep $z$, $h$, $\\hat{y}$ and $L$. Then go backward, multiplying by one local derivative per step: $$\\frac{\\partial L}{\\partial \\hat{y}} = 2(\\hat{y} - y), \\qquad \\frac{\\partial L}{\\partial h} = \\frac{\\partial L}{\\partial \\hat{y}}\\,v, \\qquad \\frac{\\partial L}{\\partial z} = \\frac{\\partial L}{\\partial h}\\,\\operatorname{ReLU}'(z),$$ where $\\operatorname{ReLU}'(z)$ is $1$ when the switch is on ($z > 0$) and $0$ when it is off. Each weight's derivative is the derivative at its node times what the weight multiplies: $$\\frac{\\partial L}{\\partial v} = \\frac{\\partial L}{\\partial \\hat{y}}\\,h, \\quad \\frac{\\partial L}{\\partial c} = \\frac{\\partial L}{\\partial \\hat{y}}, \\quad \\frac{\\partial L}{\\partial w} = \\frac{\\partial L}{\\partial z}\\,x, \\quad \\frac{\\partial L}{\\partial b} = \\frac{\\partial L}{\\partial z}.$$"
+   },
+   {
+    "t": "why",
+    "html": "Each formula is the chain rule along the one path from $L$ down to that weight, as in a tree diagram: $$\\frac{\\partial L}{\\partial w} = \\frac{\\partial L}{\\partial \\hat{y}} \\cdot \\frac{\\partial \\hat{y}}{\\partial h} \\cdot \\frac{\\partial h}{\\partial z} \\cdot \\frac{\\partial z}{\\partial w}.$$ Working backward, the shared front part of these products, such as $\\frac{\\partial L}{\\partial z}$, is computed once and reused for $w$ and $b$. In a network with millions of weights that reuse is the whole point: one backward pass costs about as much as a couple of forward passes, instead of one forward pass per weight."
+   },
+   {
+    "t": "viz",
+    "name": "calc3-backprop",
+    "opts": {
+     "x": 2,
+     "y": 3,
+     "w": 1,
+     "b": -1,
+     "v": 2,
+     "c": 0.5,
+     "stage": "start"
+    },
+    "cap": "Press Next step to run forward, then backward. Orange numbers are derivatives of the loss. After the last step, the table checks each one with a nudge, and Take a gradient step uses them to lower the loss."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "All four derivatives",
+    "q": "With $w = 1$, $b = -1$, $v = 2$, $c = 0.5$ and the data point $(x, y) = (2, 3)$, find $\\frac{\\partial L}{\\partial w}$, $\\frac{\\partial L}{\\partial b}$, $\\frac{\\partial L}{\\partial v}$ and $\\frac{\\partial L}{\\partial c}$.",
+    "steps": [
+     "Forward: $z = 1 \\cdot 2 - 1 = 1$, $h = \\operatorname{ReLU}(1) = 1$, $\\hat{y} = 2 \\cdot 1 + 0.5 = 2.5$, and $L = (2.5 - 3)^{2} = 0.25$.",
+     "Start at the loss: $\\frac{\\partial L}{\\partial \\hat{y}} = 2(2.5 - 3) = -1$. So $\\frac{\\partial L}{\\partial c} = -1$ and $\\frac{\\partial L}{\\partial v} = -1 \\cdot h = -1$.",
+     "Into the hidden unit: $\\frac{\\partial L}{\\partial h} = -1 \\cdot v = -2$. The switch is on ($z = 1 > 0$), so $\\frac{\\partial L}{\\partial z} = -2$.",
+     "Into the first layer: $\\frac{\\partial L}{\\partial w} = -2 \\cdot x = -4$ and $\\frac{\\partial L}{\\partial b} = -2$.",
+     "All four are negative: the prediction $2.5$ is too low, and raising any weight a little would raise it."
+    ],
+    "a": "$\\frac{\\partial L}{\\partial w} = -4$, $\\frac{\\partial L}{\\partial b} = -2$, $\\frac{\\partial L}{\\partial v} = -1$, $\\frac{\\partial L}{\\partial c} = -1$"
+   },
+   {
+    "t": "ex",
+    "title": "Check with a nudge",
+    "q": "Check $\\frac{\\partial L}{\\partial w} = -4$ numerically.",
+    "steps": [
+     "Nudge $w$ up: $w = 1.001$ gives $z = 1.002$, $\\hat{y} = 2.504$ and $L = (-0.496)^{2} = 0.246016$.",
+     "Nudge it down: $w = 0.999$ gives $\\hat{y} = 2.496$ and $L = 0.254016$.",
+     "$\\frac{0.246016 - 0.254016}{0.002} = -4$. ✓ This check costs two forward passes for each weight; backpropagation found all four derivatives in one backward pass."
+    ],
+    "a": "The nudge agrees: $-4$."
+   },
+   {
+    "t": "ex",
+    "title": "When the switch is off",
+    "q": "Same weights, but the data point is $(x, y) = (-1, 1)$.",
+    "steps": [
+     "Forward: $z = 1 \\cdot (-1) - 1 = -2$, so $h = 0$, $\\hat{y} = 0.5$ and $L = (0.5 - 1)^{2} = 0.25$.",
+     "$\\frac{\\partial L}{\\partial \\hat{y}} = -1$, so $\\frac{\\partial L}{\\partial c} = -1$, but $\\frac{\\partial L}{\\partial v} = -1 \\cdot 0 = 0$.",
+     "The switch is off: $\\operatorname{ReLU}'(-2) = 0$, so $\\frac{\\partial L}{\\partial z} = 0$ and $\\frac{\\partial L}{\\partial w} = \\frac{\\partial L}{\\partial b} = 0$.",
+     "Small changes to $w$ and $b$ leave $z$ negative and the output unchanged, so this example cannot teach them anything. Only $c$ learns from it."
+    ],
+    "a": "Only $\\frac{\\partial L}{\\partial c} = -1$ is not $0$."
+   },
+   {
+    "t": "p",
+    "html": "With more units the same rules run on vectors. For a layer $\\mathbf{h} = \\operatorname{ReLU}(W\\mathbf{x} + \\mathbf{b})$ the backward step is $$\\frac{\\partial L}{\\partial \\mathbf{z}} = \\frac{\\partial L}{\\partial \\mathbf{h}} \\odot \\operatorname{ReLU}'(\\mathbf{z}), \\qquad \\frac{\\partial L}{\\partial W} = \\frac{\\partial L}{\\partial \\mathbf{z}}\\,\\mathbf{x}^{T}, \\qquad \\frac{\\partial L}{\\partial \\mathbf{x}} = W^{T}\\frac{\\partial L}{\\partial \\mathbf{z}},$$ where $\\odot$ multiplies entry by entry. The last formula hands the signal to the layer before, which repeats the same steps. With many data points, average the gradients from each one. The network that trains itself in <a href=\"/math/linear-algebra/neural-network-layers/\">Neural Network Layers</a> works exactly this way."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting the switch.</b> On the way back, ReLU multiplies by $1$ if its unit was on and by $0$ if it was off. Skipping it gives a nonzero $\\frac{\\partial L}{\\partial w}$ for an off unit, as if a weight could change an output it does not reach. Check: if $z < 0$, the derivatives for $w$ and $b$ must be $0$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Multiplying by the wrong thing.</b> $\\frac{\\partial z}{\\partial w} = x$: the derivative with respect to a weight uses the input that the weight multiplies, not the weight itself. Check with a nudge: change the weight by $0.001$ and see how much $L$ changes."
+   },
+   {
+    "t": "note",
+    "html": "At exactly $z = 0$ the ramp has a corner and no derivative. Software simply uses $0$ (or $1$) there, and it rarely matters; the practice problems avoid that point."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "OpenStax, Calculus Volume 3, section 4.5 The Chain Rule"
+   },
+   {
+    "name": "Rumelhart, Hinton and Williams, \"Learning representations by back-propagating errors,\" Nature 323 (1986), 533-536"
+   },
+   {
+    "name": "Goodfellow, Bengio and Courville, Deep Learning (MIT Press, 2016), section 6.5 Back-Propagation and Other Differentiation Algorithms"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.065 Matrix Methods in Data Analysis, Signal Processing, and Machine Learning (Gilbert Strang, Spring 2018), Lecture 27: Backpropagation: Find Partial Derivatives"
+   }
+  ]
+ },
  "calc3.double-integrals": {
   "blocks": [
    {

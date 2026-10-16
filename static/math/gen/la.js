@@ -2361,4 +2361,123 @@
       hint: 'Outer product of the first columns of $U$ and $V$, times $\\sigma_{1}$.' }, { kind: 'rank1', u1: u1, v1: v1, s1: s1 });
   });
 
+
+
+
+
+
+  // ==== neural-network thread (nn) begin: la.neural-network-layers ====
+  // A layer is h = ReLU(Wx + b); a two-layer network is y = v·ReLU(Wx + b) + c. Every answer is computed with exact
+  // integers or rationals from the generated weights; p.chk holds them for an independent re-run of the network.
+  (function () {
+    var Q = ML.Q, T = ML.T;
+    function q(v) { return Q.from(v); }
+    function relu(v) { return Math.max(0, v); }
+    var RL = '\\operatorname{ReLU}';
+    function mv(W, x) { return W.map(function (r) { return r.reduce(function (s, w, j) { return s + w * x[j]; }, 0); }); }
+    function sumTex(r, x, b) { // "2(3) + (-1)(2) + 1" written with dots
+      var t = r.map(function (w, j) { return T.p(w) + ' \\cdot ' + T.p(x[j]); }).join(' + ');
+      return t + (!b ? '' : (b < 0 ? ' - ' + (-b) : ' + ' + b));
+    }
+    function M(rows) { return T.mat(rows); }
+    // a weight of 0 is written out ("0 \\cdot 3") so the learner sees every product; that is meant, not an artifact
+    function zl(p, W) { if (JSON.stringify(W).match(/(^|[\[,])0([,\]])/)) p.nolint = ['+ 0']; return p; }
+    function C(v) { return T.col(v); }
+    function netViz(W, b, v, c, x, extra) { return { name: 'la-network', opts: Object.assign({ W1: W, b1: b, W2: [v], b2: [c], x: x, quiet: true, label: 'A small network with its weights' }, extra || {}) }; }
+    // weights and an input whose pre-activations are never 0 (no unit sits exactly on its switch)
+    function pickLayer(R, nh, nin, wantOff) {
+      for (var t = 0; t < 200; t++) {
+        var W = [], b = [], x = [];
+        for (var i = 0; i < nh; i++) { var r = []; for (var j = 0; j < nin; j++) r.push(R.int(-3, 3)); if (r.every(function (w) { return !w; })) r[0] = R.nz(-3, 3); W.push(r); b.push(R.int(-4, 4)); }
+        for (j = 0; j < nin; j++) x.push(R.nz(-3, 3));
+        var z = mv(W, x).map(function (s, i) { return s + b[i]; });
+        if (z.some(function (v) { return v === 0; })) continue;
+        var off = z.filter(function (v) { return v < 0; }).length;
+        if (wantOff === 'some' && (off === 0 || off === nh)) continue;
+        if (Math.max.apply(null, z.map(Math.abs)) > 14) continue;
+        return { W: W, b: b, x: x, z: z };
+      }
+      return { W: [[1, 2], [-1, 1]], b: [0, 1], x: [3, -1], z: [1, -3] };
+    }
+    function layerSteps(L) {
+      return [
+        'Multiply: $W\\mathbf{x}$ takes each row of $W$ times $\\mathbf{x}$: ' + L.W.map(function (r, i) { return '$' + sumTex(r, L.x) + ' = ' + mv(L.W, L.x)[i] + '$'; }).join(', ') + '.',
+        'Add the bias: $\\mathbf{z} = W\\mathbf{x} + \\mathbf{b} = ' + C(mv(L.W, L.x)) + ' + ' + C(L.b) + ' = ' + C(L.z) + '$.',
+        'Switch: ReLU keeps each positive entry and turns each negative entry into ${}0$, so $\\mathbf{h} = ' + C(L.z.map(relu)) + '$.' + (L.z.some(function (v) { return v < 0; }) ? ' A unit with a negative $z$ is <b>off</b>.' : '')
+      ];
+    }
+
+    G('la.neural-network-layers', function (R, ctx) {
+      var kind = R.pick(ML.byLevel(ctx, ['unit', 'layer', 'layer'], ['net', 'net', 'collapse', 'kinks', 'rulemid'], ['rulebuild', 'gate', 'net3', 'net', 'collapse']));
+      if (kind === 'unit') {
+        var L = pickLayer(R, 1, 2), w = L.W[0], bb = L.b[0], z = L.z[0];
+        return zl({ q: 'A neuron has weights $\\mathbf{w} = ' + T.pt(w) + '$ and bias $b = ' + bb + '$. Its output is $' + RL + '(\\mathbf{w} \\cdot \\mathbf{x} + b)$. Find the output for the input $\\mathbf{x} = ' + T.pt(L.x) + '$.', a: { t: 'num', v: String(relu(z)) },
+          steps: ['$\\mathbf{w} \\cdot \\mathbf{x} + b = ' + sumTex(w, L.x, bb) + ' = ' + z + '$.', z > 0 ? 'The sum is positive, so the switch is on and passes it through: $' + RL + '(' + z + ') = ' + z + '$.' : 'The sum is negative, so the switch is off: $' + RL + '(' + z + ') = 0$.'],
+          hint: 'Add up weight times input, add the bias, then apply ReLU.', chk: { k: 'unit', W: [w], b: [bb], x: L.x, ans: [relu(z)] } }, [w, L.x]);
+      }
+      if (kind === 'layer') {
+        var L2 = pickLayer(R, 2, 2, R.chance(0.7) ? 'some' : null);
+        return zl({ q: 'A layer has $$W = ' + M(L2.W) + ', \\qquad \\mathbf{b} = ' + C(L2.b) + '.$$ Find its output $\\mathbf{h} = ' + RL + '(W\\mathbf{x} + \\mathbf{b})$ for $\\mathbf{x} = ' + C(L2.x) + '$. (ReLU acts on each entry.)', a: { t: 'tuple', v: L2.z.map(function (v) { return String(relu(v)); }) },
+          steps: layerSteps(L2), hint: 'Compute $W\\mathbf{x}$, add $\\mathbf{b}$, then replace each negative entry by 0.', chk: { k: 'layer', W: L2.W, b: L2.b, x: L2.x, ans: L2.z.map(relu) } }, L2.W);
+      }
+      if (kind === 'net' || kind === 'net3') {
+        var nh = kind === 'net3' ? 3 : 2, L3 = pickLayer(R, nh, 2, 'some'), v = [], c = R.int(-3, 3);
+        for (var i = 0; i < nh; i++) v.push(R.nz(-3, 3));
+        var h = L3.z.map(relu), y = h.reduce(function (s, hv, i) { return s + v[i] * hv; }, 0) + c;
+        var offIdx = L3.z.map(function (zz, i) { return zz < 0 ? i : -1; }).filter(function (i) { return i >= 0; });
+        return zl({ q: 'A network computes $y = \\mathbf{v} \\cdot ' + RL + '(W\\mathbf{x} + \\mathbf{b}) + c$ with $$W = ' + M(L3.W) + ', \\quad \\mathbf{b} = ' + C(L3.b) + ', \\quad \\mathbf{v} = ' + T.pt(v) + ', \\quad c = ' + c + '.$$ Find $y$ for $\\mathbf{x} = ' + C(L3.x) + '$.', a: { t: 'num', v: String(y) },
+          steps: layerSteps(L3).concat(['Output layer: $y = \\mathbf{v} \\cdot \\mathbf{h} + c = ' + sumTex(v, h, c) + ' = ' + y + '$.' + (offIdx.length ? ' The weight on the unit that is off never mattered for this input.' : '')]),
+          hint: 'Work left to right: the hidden layer first, then the output.', viz: netViz(L3.W, L3.b, v, c, L3.x), chk: { k: 'net', W: L3.W, b: L3.b, v: v, c: c, x: L3.x, ans: y } }, [L3.W, h]);
+      }
+      if (kind === 'collapse') {
+        var W = [[R.nz(-3, 3), R.int(-3, 3)], [R.int(-3, 3), R.nz(-3, 3)]], b = [R.int(-3, 3), R.int(-3, 3)], v2 = [R.nz(-3, 3), R.nz(-3, 3)], c2 = R.int(-4, 4);
+        var p = v2[0] * W[0][0] + v2[1] * W[1][0], qq = v2[0] * W[0][1] + v2[1] * W[1][1], r = v2[0] * b[0] + v2[1] * b[1] + c2;
+        return zl({ q: 'Someone builds a two-layer network but forgets the ReLU switches: $$y = \\mathbf{v} \\cdot (W\\mathbf{x} + \\mathbf{b}) + c, \\quad W = ' + M(W) + ', \\ \\mathbf{b} = ' + C(b) + ', \\ \\mathbf{v} = ' + T.pt(v2) + ', \\ c = ' + c2 + '.$$ Show that it is one affine map: write $y = px_{1} + qx_{2} + r$.',
+          a: { t: 'multi', parts: [{ label: '$p =$', a: { t: 'num', v: String(p) } }, { label: '$q =$', a: { t: 'num', v: String(qq) } }, { label: '$r =$', a: { t: 'num', v: String(r) } }] },
+          steps: ['Without switches, $y = \\mathbf{v}^{T}W\\mathbf{x} + (\\mathbf{v} \\cdot \\mathbf{b} + c)$: a product of matrices, as in composition.', '$\\mathbf{v}^{T}W = ' + M([v2]) + M(W) + ' = ' + M([[p, qq]]) + '$, so $p = ' + p + '$ and $q = ' + qq + '$.', '$r = \\mathbf{v} \\cdot \\mathbf{b} + c = ' + sumTex(v2, b, c2) + ' = ' + r + '$.', 'So $y = ' + T.terms([[p, 'x_{1}'], [qq, 'x_{2}'], [r, '']]) + '$: stacking layers without switches gives nothing new.'],
+          hint: 'Multiply the row $\\mathbf{v}^{T}$ by $W$ for the coefficients; the constant is $\\mathbf{v} \\cdot \\mathbf{b} + c$.', chk: { k: 'collapse', W: W, b: b, v: v2, c: c2, ans: [p, qq, r] } }, [W, b]);
+      }
+      if (kind === 'kinks') { // one input, two hidden units: where does the graph of y(x) bend?
+        var w1 = R.pick([1, 2, -1, -2]), w2 = R.pick([1, 2, 3, -1]), k1 = R.int(-4, 4), k2 = R.intNot(-4, 4, k1);
+        var b1 = -w1 * k1, b2 = -w2 * k2, u1 = R.nz(-3, 3), u2 = R.nz(-3, 3), c3 = R.int(-3, 3);
+        var yT = T.terms([[u1, RL + '(' + T.lin(w1, 'x', b1) + ')'], [u2, RL + '(' + T.lin(w2, 'x', b2) + ')'], [c3, '']]);
+        return { q: 'A network with one input and two hidden units computes $$y = ' + yT + '.$$ At which values of $x$ does its graph bend? (Enter both.)', a: { t: 'set', v: [String(k1), String(k2)] },
+          steps: ['Each hidden unit is a ramp. It bends where its switch flips, where its input is ${}0$.', '$' + T.lin(w1, 'x', b1) + ' = 0$ gives $x = ' + k1 + '$.', '$' + T.lin(w2, 'x', b2) + ' = 0$ gives $x = ' + k2 + '$.', 'Between and beyond these points the graph is straight: each piece is a line.'],
+          hint: 'Find where the expression inside each ReLU is 0.', chk: { k: 'kinks', u: [u1, u2], w: [w1, w2], b: [b1, b2], c: c3, ans: [k1, k2] } };
+      }
+      if (kind === 'rulemid' || kind === 'rulebuild') {
+        var t = R.int(2, 9), A = R.int(0, 20), B = R.intNot(0, 20, A), d = A - B;
+        var net = 'y = ' + T.terms([[B, ''], [d, RL + '(' + T.lin(1, 'x', -(t - 1)) + ')'], [-d, RL + '(' + T.lin(1, 'x', -t) + ')']]);
+        var rule = '"if $x \\ge ' + t + '$ the answer is ' + A + ', otherwise it is ' + B + '"';
+        if (kind === 'rulemid') {
+          var xm = Q(2 * t - 1, 2), ym = Q(A + B, 2), at = R.pick(['mid', 'mid', 'whole']), xw = R.pick([t - 2, t - 1, t, t + 1, t + 3]), yw = xw >= t ? A : B;
+          if (xw < 0) xw = t + 1, yw = A;
+          if (at === 'whole') return { q: 'The rule ' + rule + ' is built from two ramps: $$' + net + '.$$ Find $y$ for $x = ' + xw + '$.', a: { t: 'num', v: String(yw) },
+            steps: ['Ramps at $x = ' + xw + '$: $' + RL + '(' + (xw - t + 1) + ') = ' + relu(xw - t + 1) + '$ and $' + RL + '(' + (xw - t) + ') = ' + relu(xw - t) + '$.', '$y = ' + B + ' + ' + T.p(d) + ' \\cdot ' + relu(xw - t + 1) + ' - ' + T.p(d) + ' \\cdot ' + relu(xw - t) + ' = ' + yw + '$, which is what the rule says for $x = ' + xw + '$.'],
+            hint: 'Evaluate each ramp, then add.', chk: { k: 'rule', t: t, A: A, B: B, x: xw, ans: yw } };
+          var xd = xm.toDec(1), yd = ym.toDec(1).replace(/\.0$/, '');   // 4.5 and 10.5 read better here than fractions
+          return { q: 'The rule ' + rule + ' is built from two ramps: $$' + net + '.$$ It is exact for every whole number $x$. What does it give for $x = ' + xd + '$, between the whole numbers?', a: { t: 'num', v: yd },
+            steps: ['At $x = ' + xd + '$: $' + RL + '(0.5) = 0.5$ and $' + RL + '(-0.5) = 0$.', '$y = ' + B + ' + ' + T.p(d) + ' \\cdot 0.5 = ' + yd + '$.', 'Between $' + (t - 1) + '$ and $' + t + '$ the output ramps from $' + B + '$ to $' + A + '$ instead of jumping. A sum of ramps is always continuous, so it can never jump; it only has to be right on whole numbers.'],
+            hint: 'Exactly one of the two ramps is on there.', chk: { k: 'rule', t: t, A: A, B: B, x: xm.toPlain(), ans: yd } };
+        }
+        return { q: 'Turn the rule ' + rule + ' into a tiny network that is exact for every whole number $x$: $$y = \\beta + c\\,' + RL + '(' + T.lin(1, 'x', -(t - 1)) + ') + d\\,' + RL + '(' + T.lin(1, 'x', -t) + ').$$ Find $\\beta$, $c$ and $d$.',
+          a: { t: 'multi', parts: [{ label: '$\\beta =$', a: { t: 'num', v: String(B) } }, { label: '$c =$', a: { t: 'num', v: String(d) } }, { label: '$d =$', a: { t: 'num', v: String(-d) } }] },
+          steps: ['For whole $x \\le ' + (t - 1) + '$ both ramps are ${}0$, so $y = \\beta$. The rule says ' + B + ': $\\beta = ' + B + '$.', 'At $x = ' + t + '$ the first ramp is ${}1$ and the second is ${}0$: $' + B + ' + c = ' + A + '$, so $c = ' + d + '$.', 'For $x > ' + t + '$ both ramps grow by ${}1$ per step; the output must stay at ' + A + ', so the slopes cancel: $d = -c = ' + (-d) + '$.', 'Check $x = ' + (t + 2) + '$: $' + B + ' + ' + T.p(d) + ' \\cdot 3 + ' + T.p(-d) + ' \\cdot 2 = ' + A + '$. ✓'],
+          hint: 'Use $x = ' + (t - 1) + '$, $x = ' + t + '$ and $x = ' + (t + 1) + '$.', chk: { k: 'rulebuild', t: t, A: A, B: B, ans: [B, d, -d] } };
+      }
+      // gate: a ReLU network on two bits
+      var gates = [
+        { name: 'AND', f: RL + '(x_{1} + x_{2} - 1)', y: function (a, b) { return relu(a + b - 1); } },
+        { name: 'OR', f: 'x_{1} + x_{2} - ' + RL + '(x_{1} + x_{2} - 1)', y: function (a, b) { return a + b - relu(a + b - 1); } },
+        { name: 'XOR (exactly one)', f: 'x_{1} + x_{2} - 2\\,' + RL + '(x_{1} + x_{2} - 1)', y: function (a, b) { return a + b - 2 * relu(a + b - 1); } },
+        { name: 'NAND (not both)', f: '1 - ' + RL + '(x_{1} + x_{2} - 1)', y: function (a, b) { return 1 - relu(a + b - 1); } }
+      ];
+      var g = R.pick(gates), rows = [[0, 0], [0, 1], [1, 0], [1, 1]].map(function (pr) { return [pr[0], pr[1], g.y(pr[0], pr[1])]; });
+      return { q: 'Inputs $x_{1}$ and $x_{2}$ are bits ($0$ or $1$). Which rule does $y = ' + g.f + '$ compute?', a: { t: 'mc', choices: gates.map(function (h) { return h.name; }), v: gates.indexOf(g) },
+        steps: ['Try all four inputs. The ramp $' + RL + '(x_{1} + x_{2} - 1)$ is ${}1$ only when both bits are ${}1$; otherwise it is ${}0$.', rows.map(function (r) { return '$(' + r[0] + ', ' + r[1] + ') \\to ' + r[2] + '$'; }).join(', ') + '.', 'That table is ' + g.name + '. Logic like this is how a fixed set of weights can carry out an if-else rule.'],
+        hint: 'Make a table of y for (0, 0), (0, 1), (1, 0) and (1, 1).', chk: { k: 'gate', f: g.name, table: rows } };
+    });
+  })();
+  // ==== neural-network thread (nn) end ====
+
 })(window.MathLadder);

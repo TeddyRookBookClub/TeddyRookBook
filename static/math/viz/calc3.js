@@ -30,7 +30,29 @@
      opts: map: "polar" | "linear" | {x: "u^2 - v^2", y: "2u*v"}, m: [[2, 1], [1, 1]] (linear), u: [0, 2], v: [0, "pi/2"],
            cell: [1, 0.5] (lower corner of the highlighted cell), du: 0.25, dv: 0.25
    calc3-boxes      a double integral as a sum of boxes under z = f(x, y) over a rectangle.
-     opts: f: "4 - x^2/2 - y^2/4", a: 0, b: 2, c: 0, d: 2, n: 4, sample: "mid" | "corner", surface: true      */
+     opts: f: "4 - x^2/2 - y^2/4", a: 0, b: 2, c: 0, d: 2, n: 4, sample: "mid" | "corner", surface: true
+   ---- neural-network thread (nn) visuals begin
+   calc3-descent    gradient descent on a loss surface: a contour map (or a curve, in one variable) with a ball that steps
+                    downhill, x ← x − η∇f(x), the path so far, the next step as an arrow, and a step-size slider.
+     opts: f: "x^2 + 3y^2"   the function (CAS string in x and y; in x alone with dim: 1); or preset instead:
+           preset: "bowl" | "valley" | "two" (dim 2), "parabola" | "two1d" (dim 1)    presets: true  buttons to switch
+           start: [2, 1] (a number in 1-D)   drag the ball, or tap the map, to start somewhere else (arrow keys nudge it)
+           eta: 0.1  (slider from 0.01 to etaMax: 1)      steps: 0 (steps already taken when the picture opens)
+           xmin, xmax, ymin, ymax, levels: 12, task, label, quiet
+   calc3-fitline    fit ŷ = mx + b by minimizing the mean squared error L(m, b): the data with the line and its squared
+                    residuals, beside a contour map of L over the (m, b)-plane with the gradient descent path.
+     opts: points: [[0, 1], [1, 3], [2, 4], [3, 4], [4, 6]]   start: [0, 0] (m, b); drag the dot on the loss map to move it
+           eta: 0.05 (slider)   exact: false (show the least-squares answer; a button shows it otherwise)
+           squares: true (draw each squared residual)   origin: false (fit ŷ = mx only: L(m) is a parabola)   task, label, quiet
+   calc3-backprop   backpropagation on z = wx + b, h = ReLU(z), ŷ = vh + c, L = (ŷ − y)²: values flow forward, then the
+                    derivatives of L flow backward, one local rule at a time.
+     opts: x: 2, y: 3, w: 1, b: -1, v: 2, c: 0.5   the data point and the weights (a slider for each)
+           stage: "all" | "start"   "start": nothing computed yet; Next step walks the forward pass, then the backward pass
+           check: true   a table comparing each backprop derivative with a nudge, (L(p + 0.001) − L(p − 0.001)) / 0.002
+           descend: true   "Take a gradient step" with a step-size slider (default 0.02; the loss before and after)
+           task, label, quiet
+   ---- neural-network thread (nn) visuals end
+   */
 (function (W, D) {
   'use strict';
   var ML = W.MathLadder = W.MathLadder || {}, V = ML.viz;
@@ -468,3 +490,389 @@
     return { draw: draw };
   });
 })(window, document);
+
+// ==== neural-network thread (nn) begin: calc3-descent, calc3-fitline, calc3-backprop (options in the header comment above) ====
+(function (W, D) {
+  'use strict';
+  var ML = W.MathLadder = W.MathLadder || {}, V = ML.viz;
+  if (!V) return;
+  var M = Math, fm = V.fmt, mk = V.el;
+  (function css() {
+    if (D.getElementById('nnv-css-c3')) return;
+    var s = D.createElement('style'); s.id = 'nnv-css-c3';
+    s.textContent = [
+      '.nnv .nnv-task{display:flex;gap:.55rem;align-items:flex-start;margin:0 0 .6rem;padding:.5rem .7rem;border-radius:10px;background:var(--mv-card);border:1px solid var(--mv-line);border-left:4px solid #b8963e;font-size:.95rem;line-height:1.45}',
+      '.nnv .nnv-tk{flex:0 0 auto;width:1.25rem;height:1.25rem;margin-top:.1rem;border-radius:50%;border:2px solid #b8963e;box-sizing:border-box;position:relative}',
+      '.nnv .nnv-task.ok{border-left-color:#00703c}.nnv .nnv-task.ok .nnv-tk{background:#00703c;border-color:#00703c}',
+      '.nnv .nnv-task.ok .nnv-tk::after{content:"";position:absolute;left:.33rem;top:.12rem;width:.28rem;height:.55rem;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}',
+      'html[data-theme="dark"] .nnv .nnv-task.ok{border-left-color:#6cc79a}html[data-theme="dark"] .nnv .nnv-task.ok .nnv-tk{background:#6cc79a;border-color:#6cc79a}html[data-theme="dark"] .nnv .nnv-task.ok .nnv-tk::after{border-color:#0f1a14}',
+      '.nnv .nnv-btns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 0}',
+      '.nnv .ml-btn[aria-pressed="true"]{background:rgba(0,112,60,.16);border-color:#00703c}',
+      '.nnv .ml-readout{overflow-wrap:anywhere}',
+      '.nnv .nnv-two{display:flex;flex-wrap:wrap;gap:.6rem}',
+      '.nnv .nnv-two>div{flex:1 1 260px;min-width:0}',
+      '.nnv .nnv-cap{margin:.1rem 0 .3rem;font:600 .82rem system-ui,sans-serif;color:var(--mv-muted);letter-spacing:.02em}',
+      // backprop: a chain of cards
+      '.nnv .bp-chain{display:flex;align-items:stretch;gap:0;margin:.2rem 0 0}',
+      '.nnv .bp-card{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:.2rem;padding:.5rem .55rem;border:1px solid var(--mv-line);border-radius:12px;background:var(--mv-card);transition:box-shadow .25s,border-color .25s}',
+      '.nnv .bp-arrow{flex:0 0 1.1rem;display:flex;align-items:center;justify-content:center;color:var(--mv-muted);font-size:1.1rem}',
+      '.nnv .bp-name{font:italic 600 1rem Georgia,serif;color:var(--mv-ink)}',
+      '.nnv .bp-rule{font-size:.78rem;color:var(--mv-muted);line-height:1.3}',
+      '.nnv .bp-fwd{font:700 1.05rem system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--mv-ink);min-height:1.3em}',
+      '.nnv .bp-bwd{font:700 .9rem system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#b35c00;min-height:1.25em}',
+      'html[data-theme="dark"] .nnv .bp-bwd{color:#ffa94d}',
+      '.nnv .bp-params{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:auto}',
+      '.nnv .bp-par{font:600 .8rem system-ui,sans-serif;padding:.15rem .4rem;border-radius:7px;background:var(--mv-paper);border:1px solid var(--mv-line);font-variant-numeric:tabular-nums}',
+      '.nnv .bp-par b{color:#b35c00;font-weight:700}html[data-theme="dark"] .nnv .bp-par b{color:#ffa94d}',
+      '.nnv .bp-card.hot{border-color:#b8963e;box-shadow:0 0 0 3px rgba(184,150,62,.35)}',
+      '.nnv .bp-card.off .bp-name::after{content:" (off)";font:600 .75rem system-ui,sans-serif;color:var(--mv-muted)}',
+      '.nnv .bp-say{margin:.55rem 0 0;padding:.45rem .65rem;border-radius:10px;background:var(--mv-card);border:1px dashed var(--mv-line);font-size:.92rem;line-height:1.5;min-height:1.5em}',
+      '.ml-viz.nnv .ml-ctl.bp-sls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem .9rem;align-items:end}.ml-viz.nnv .bp-sls .ml-sl{min-width:0}',
+      '@media (max-width:560px){.ml-viz.nnv .ml-ctl.bp-sls{grid-template-columns:repeat(2,minmax(0,1fr))}}',
+      '.nnv .nnv-tbl{max-width:100%;overflow-x:auto;border:1px solid var(--mv-line);border-radius:10px;background:var(--mv-card);margin:.6rem 0 0}',
+      '.nnv .nnv-tbl table{display:table;border-collapse:collapse;width:100%;font-size:.86rem;font-variant-numeric:tabular-nums;margin:0}',
+      '.nnv .nnv-tbl th,.nnv .nnv-tbl td{padding:.3rem .5rem;text-align:right;border-bottom:1px solid var(--mv-line);white-space:nowrap}',
+      '.nnv .nnv-tbl th{color:var(--mv-muted);font-weight:600;background:var(--mv-paper)}',
+      '.nnv .nnv-tbl th:first-child,.nnv .nnv-tbl td:first-child{text-align:left}',
+      '.nnv .nnv-tbl tr:last-child td{border-bottom:0}',
+      '@media (max-width:560px){.nnv .bp-chain{flex-direction:column}.nnv .bp-arrow{flex-basis:1.2rem;transform:rotate(90deg)}.nnv .bp-card{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:.15rem .6rem}.nnv .bp-name{min-width:2.2rem}.nnv .bp-rule{flex:1 1 9rem}.nnv .bp-params{margin-top:0;flex-basis:100%}}',
+      '@media (max-width:480px){.ml-viz.nnv{padding:.55rem}}',
+      '@media (prefers-reduced-motion:reduce){.nnv .bp-card{transition:none}}'
+    ].join('\n');
+    D.head.appendChild(s);
+  })();
+  function nv(v, d) { if (v === null || v === undefined || v === '') return d; v = +v; return isFinite(v) ? v : d; }
+  function relu(v) { return v > 0 ? v : 0; }
+  function frame(el, o, label) {
+    el.classList.add('nnv'); el.setAttribute('role', 'group');
+    if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', o.label || label);
+    var F = {};
+    if (o.task) { F.task = mk('p', 'nnv-task', '<span class="nnv-tk" aria-hidden="true"></span><span>' + o.task + '</span>'); el.appendChild(F.task); if (ML.typeset) try { ML.typeset(F.task); } catch (e) { } }
+    F.box = mk('div', 'nnv-box'); el.appendChild(F.box);
+    F.ctl = mk('div', 'ml-ctl'); el.appendChild(F.ctl);
+    F.out = V.readout(el);
+    F.done = function (ok) { if (F.task) F.task.classList.toggle('ok', !!ok); };
+    return F;
+  }
+  function compile(src, vars) {
+    var C = W.CAS; if (!C) throw new Error('needs the CAS');
+    var g = C.compile(C.parse(String(src)), vars);
+    return function () { try { var v = +g.apply(null, arguments); return isFinite(v) ? v : NaN; } catch (e) { return NaN; } };
+  }
+  function isDark() { return D.documentElement.getAttribute('data-theme') === 'dark'; }
+  // a shaded contour map of f(x, y) over plane P, cached on an offscreen canvas; lines at evenly spaced levels of √(f − min)
+  function contourMap(c, P, f, o) {
+    o = o || {};
+    var key = [c.w, c.h, P.o.xmin, P.o.xmax, P.o.ymin, P.o.ymax, isDark(), o.key].join('|');
+    if (c._cm && c._cm.key === key) { c.ctx.drawImage(c._cm.cv, 0, 0, c.w, c.h); return c._cm; }
+    var nx = M.max(40, M.min(150, M.round(c.w / 4))), ny = M.max(30, M.round(nx * c.h / c.w)), G = [], lo = Infinity, hi = -Infinity, i, j;
+    var v = P.view();
+    for (j = 0; j <= ny; j++) { G.push([]); for (i = 0; i <= nx; i++) { var val = f(v.xmin + (v.xmax - v.xmin) * i / nx, v.ymax - (v.ymax - v.ymin) * j / ny); G[j].push(val); if (isFinite(val)) { lo = M.min(lo, val); hi = M.max(hi, val); } } }
+    var span = hi - lo || 1, T = function (val) { return M.sqrt(M.max(0, (val - lo) / span)); };
+    var off = D.createElement('canvas'); off.width = M.round(c.w * c.dpr); off.height = M.round(c.h * c.dpr);
+    var ox = off.getContext('2d'), sm = D.createElement('canvas'); sm.width = nx + 1; sm.height = ny + 1;
+    var sx = sm.getContext('2d'), img = sx.createImageData(nx + 1, ny + 1), dk = isDark();
+    var A = dk ? [24, 84, 56] : [170, 218, 190], B = dk ? [30, 40, 34] : [252, 247, 232];
+    for (j = 0; j <= ny; j++) for (i = 0; i <= nx; i++) { var t = isFinite(G[j][i]) ? T(G[j][i]) : 1, p = 4 * (j * (nx + 1) + i); for (var ch = 0; ch < 3; ch++) img.data[p + ch] = M.round(A[ch] + (B[ch] - A[ch]) * t); img.data[p + 3] = 255; }
+    sx.putImageData(img, 0, 0); ox.imageSmoothingEnabled = true; ox.drawImage(sm, 0, 0, off.width, off.height);
+    // contour lines (marching squares on the same grid)
+    var L = o.levels || 12, k = V.colors(); ox.save(); ox.scale(c.dpr, c.dpr); ox.strokeStyle = k.muted; ox.globalAlpha = dk ? 0.5 : 0.45; ox.lineWidth = 1;
+    var cw = c.w / nx, chh = c.h / ny;
+    for (var l = 1; l < L; l++) {
+      var lev = lo + span * M.pow(l / L, 2); ox.beginPath();
+      for (j = 0; j < ny; j++) for (i = 0; i < nx; i++) {
+        var a = G[j][i], b = G[j][i + 1], cc = G[j + 1][i + 1], d = G[j + 1][i]; if (!(isFinite(a) && isFinite(b) && isFinite(cc) && isFinite(d))) continue;
+        var pts = [];
+        function ed(v1, v2, x1, y1, x2, y2) { if ((v1 < lev) !== (v2 < lev)) { var tt = (lev - v1) / (v2 - v1); pts.push([x1 + (x2 - x1) * tt, y1 + (y2 - y1) * tt]); } }
+        var X = i * cw, Y = j * chh;
+        ed(a, b, X, Y, X + cw, Y); ed(b, cc, X + cw, Y, X + cw, Y + chh); ed(cc, d, X + cw, Y + chh, X, Y + chh); ed(d, a, X, Y + chh, X, Y);
+        if (pts.length >= 2) { ox.moveTo(pts[0][0], pts[0][1]); ox.lineTo(pts[1][0], pts[1][1]); if (pts.length === 4) { ox.moveTo(pts[2][0], pts[2][1]); ox.lineTo(pts[3][0], pts[3][1]); } }
+      }
+      ox.stroke();
+    }
+    ox.restore();
+    c._cm = { key: key, cv: off, lo: lo, hi: hi };
+    c.ctx.drawImage(off, 0, 0, c.w, c.h); return c._cm;
+  }
+  function arrow(ctx, x1, y1, x2, y2, color, w, dash) {
+    var ang = M.atan2(y2 - y1, x2 - x1), L = M.hypot(x2 - x1, y2 - y1), hs = M.min(10, L * 0.45); if (L < 2) return;
+    ctx.save(); ctx.strokeStyle = ctx.fillStyle = color; ctx.lineWidth = w || 2.5; ctx.lineCap = 'round'; ctx.setLineDash(dash || []);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - hs * 0.6 * M.cos(ang), y2 - hs * 0.6 * M.sin(ang)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - hs * M.cos(ang - 0.42), y2 - hs * M.sin(ang - 0.42)); ctx.lineTo(x2 - hs * M.cos(ang + 0.42), y2 - hs * M.sin(ang + 0.42)); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function ring(ctx, x, y, color) { ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(x, y, 8, 0, 2 * M.PI); ctx.stroke(); ctx.restore(); }
+  function ball(ctx, x, y, color, r) { var k = V.colors(); ctx.save(); ctx.fillStyle = color; ctx.strokeStyle = k.bg; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x, y, r || 8, 0, 2 * M.PI); ctx.fill(); ctx.stroke(); ctx.restore(); }
+  function pathDraw(ctx, pts, color) {
+    if (pts.length < 2) return; var k = V.colors();
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 2.2; ctx.lineJoin = 'round'; ctx.beginPath(); pts.forEach(function (p, i) { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); }); ctx.stroke();
+    ctx.fillStyle = color; pts.forEach(function (p, i) { if (i === pts.length - 1) return; ctx.beginPath(); ctx.arc(p[0], p[1], 3.2, 0, 2 * M.PI); ctx.fill(); }); ctx.restore();
+  }
+  // a short tween for one step (skipped when the visitor prefers less motion)
+  function tween(ms, fn, done) { if (V.reduced) { fn(1); if (done) done(); return; } var t0 = 0; function fr(t) { if (!t0) t0 = t; var u = M.min(1, (t - t0) / ms); fn(1 - M.pow(1 - u, 3)); if (u < 1) W.requestAnimationFrame(fr); else if (done) done(); } W.requestAnimationFrame(fr); }
+
+  // ================================================================== calc3-descent
+  var PRESETS = {
+    bowl: { f: 'x^2 + 3y^2', win: [-3, 3, -2.2, 2.2], start: [2.5, 1.6], eta: 0.1, name: 'Bowl' },
+    valley: { f: 'x^2/2 + 5y^2', win: [-4, 4, -2.2, 2.2], start: [-3.6, 1.4], eta: 0.15, name: 'Long valley' },
+    two: { f: 'x^4/4 - x^2 + 0.3x + 0.8y^2', win: [-2.4, 2.4, -1.8, 1.8], start: [1.9, 1.3], eta: 0.1, name: 'Two valleys' },
+    parabola: { f: 'x^2', win: [-3.2, 3.2, -1, 9], start: 2.6, eta: 0.1, name: 'Parabola', dim: 1 },
+    two1d: { f: 'x^4 - 4x^2 + x', win: [-2.6, 2.6, -7, 8], start: 2, eta: 0.03, name: 'Two valleys', dim: 1 }
+  };
+  V.register('calc3-descent', function (el, o) {
+    o = Object.assign({ steps: 0, levels: 12, presets: false, etaMax: 1 }, o || {});
+    var quiet = !!(o.quiet || o.readout === false);
+    var S = {};
+    function load(name) {
+      var p = PRESETS[name] || null, first = name === (o.preset || null);
+      var dim = p ? (p.dim || 2) : (o.dim === 1 ? 1 : 2), src = p ? p.f : (o.f || (dim === 1 ? 'x^2' : 'x^2 + 3y^2'));
+      var dw = p ? p.win : (dim === 1 ? [-3, 3, -1, 9] : [-3, 3, -2.2, 2.2]);
+      var win = first ? [nv(o.xmin, dw[0]), nv(o.xmax, dw[1]), nv(o.ymin, dw[2]), nv(o.ymax, dw[3])] : dw;
+      var ds = p ? p.start : (dim === 1 ? 2 : [2, 1]), st = first && o.start != null ? o.start : ds;
+      S = { name: name, dim: dim, src: src, f: compile(src, dim === 1 ? ['x'] : ['x', 'y']), win: win,
+        start: dim === 1 ? [nv(Array.isArray(st) ? st[0] : st, 2)] : [nv(st[0], 2), nv(st[1], 1)],
+        eta: first ? nv(o.eta, p ? p.eta : 0.1) : (p ? p.eta : 0.1) };
+      S.path = [S.start.slice()]; S.blown = false;
+    }
+    load(o.preset || null);
+    var F = frame(el, o, 'Gradient descent on a ' + (S.dim === 1 ? 'curve' : 'contour map'));
+    var c = V.canvas(F.box, { aspect: S.dim === 1 ? 1.7 : 1.45, min: 250, max: 460 }), P = V.plane(c, { xmin: S.win[0], xmax: S.win[1], ymin: S.win[2], ymax: S.win[3], equal: S.dim === 2 });
+    c.cv.tabIndex = 0; c.cv.setAttribute('role', 'img');
+    var anim = null; // {from, to, u} while a step is moving
+    function val(p) { return S.dim === 1 ? S.f(p[0]) : S.f(p[0], p[1]); }
+    function grad(p) { var h = 1e-5; if (S.dim === 1) return [(S.f(p[0] + h) - S.f(p[0] - h)) / (2 * h)]; return [(S.f(p[0] + h, p[1]) - S.f(p[0] - h, p[1])) / (2 * h), (S.f(p[0], p[1] + h) - S.f(p[0], p[1] - h)) / (2 * h)]; }
+    function cur() { return S.path[S.path.length - 1]; }
+    function nextPt(p) { var g = grad(p); return p.map(function (v, i) { return v - S.eta * g[i]; }); }
+    function far(p) { var w = S.win, sx = w[1] - w[0], sy = w[3] - w[2]; return !p.every(isFinite) || p[0] < w[0] - 3 * sx || p[0] > w[1] + 3 * sx || (S.dim === 2 && (p[1] < w[2] - 3 * sy || p[1] > w[3] + 3 * sy)); }
+    function step(animate) {
+      if (S.blown || S.path.length > 400) return false;
+      var p = cur(), q = nextPt(p), g = grad(p);
+      if (M.hypot.apply(null, g) < 1e-6) return false;
+      if (far(q)) { S.blown = true; draw(); return false; }
+      if (animate && !V.reduced) { var a = anim = { from: p, to: q, u: 0 }; tween(260, function (u) { if (anim !== a) return; a.u = u; draw(); }, function () { if (anim !== a) return; anim = null; S.path.push(q); draw(); }); }   // a Reset or a new start cancels a step in flight
+      else S.path.push(q);
+      return true;
+    }
+    for (var i0 = 0; i0 < nv(o.steps, 0); i0++) step(false);
+    // ---- controls
+    var bRow = mk('div', 'nnv-btns'); el.insertBefore(bRow, F.out.el);
+    V.button(bRow, 'Take a step', function () { if (!anim) { stopRun(); step(true); draw(); } }, 'pri');
+    var runB = V.button(bRow, 'Run', function () { if (running) stopRun(); else { running = true; runB.textContent = 'Pause'; acc = 0; lp.start(); } });
+    V.button(bRow, 'Reset', function () { stopRun(); anim = null; S.path = [S.start.slice()]; S.blown = false; draw(); });
+    var etaS = V.slider(F.ctl, { label: 'step size η', min: 0.01, max: nv(o.etaMax, 1), step: 0.01, value: S.eta, input: function (v) { S.eta = v; draw(); } });
+    if (o.presets) {
+      var names = S.dim === 1 ? ['parabola', 'two1d'] : ['bowl', 'valley', 'two'];
+      V.seg(F.ctl, { label: 'Function', items: names.map(function (n) { return [n, PRESETS[n].name]; }), value: S.name || names[0], change: function (n) { stopRun(); anim = null; load(n); etaS.set(S.eta); P.set({ xmin: S.win[0], xmax: S.win[1], ymin: S.win[2], ymax: S.win[3] }); c._cm = null; draw(); } });
+    }
+    var running = false, acc = 0, lp = V.loop(el, function (dt) {
+      if (!running) return; acc += dt; if (acc < (V.reduced ? 0.25 : 0.32) || anim) return; acc = 0;
+      if (!step(!V.reduced) || S.path.length > 80) stopRun(); draw();
+    });
+    lp.stop();
+    function stopRun() { running = false; runB.textContent = 'Run'; lp.stop(); }
+    // drag the ball or tap the map to choose the start
+    V.drag(c.cv, {
+      hit: function (px, py) { return 'map'; },
+      start: function (h, px, py) { stopRun(); setStart(px, py); },
+      move: function (h, px, py) { setStart(px, py); }
+    });
+    function setStart(px, py) { var x = M.max(S.win[0], M.min(S.win[1], P.x(px))); S.start = S.dim === 1 ? [x] : [x, M.max(S.win[2], M.min(S.win[3], P.y(py)))]; S.path = [S.start.slice()]; S.blown = false; anim = null; draw(); }
+    c.cv.addEventListener('keydown', function (e) {
+      var d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+      if (d) { anim = null; var s = (S.win[1] - S.win[0]) / 40; S.start = S.dim === 1 ? [S.start[0] + d[0] * s] : [S.start[0] + d[0] * s, S.start[1] + d[1] * s]; S.path = [S.start.slice()]; S.blown = false; e.preventDefault(); draw(); }
+      else if (e.key === ' ' || e.key === 'Enter') { step(true); e.preventDefault(); draw(); }
+    });
+    function draw() {
+      var k = V.colors(), ctx = c.ctx;
+      var pts = S.path.slice(), ballAt = cur();
+      if (anim) { ballAt = anim.from.map(function (v, i) { return v + (anim.to[i] - v) * anim.u; }); }
+      if (S.dim === 2) {
+        contourMap(c, P, S.f, { levels: o.levels, key: S.src });
+        P.axes({ x: 'x', y: 'y' });
+        pathDraw(ctx, pts.concat(anim ? [ballAt] : []).map(function (p) { return [P.X(p[0]), P.Y(p[1])]; }), k.gold);
+        if (!anim && !S.blown) { var q = nextPt(ballAt); arrow(ctx, P.X(ballAt[0]), P.Y(ballAt[1]), P.X(q[0]), P.Y(q[1]), k.red, 2.4, [5, 4]); ring(ctx, P.X(q[0]), P.Y(q[1]), k.red); }
+        ball(ctx, P.X(ballAt[0]), P.Y(ballAt[1]), k.red, 8.5);
+      } else {
+        P.clear(); P.grid(); P.axes({ x: 'x', y: 'f' });
+        P.plot(function (x) { return S.f(x); }, { color: 'blue', width: 3 });
+        var pp = pts.concat(anim ? [ballAt] : []).map(function (p) { return [P.X(p[0]), P.Y(S.f(p[0]))]; });
+        pathDraw(ctx, pp, k.gold);
+        var g1 = grad(ballAt)[0], x0 = ballAt[0], y0 = S.f(x0);
+        P.plot(function (x) { return y0 + g1 * (x - x0); }, { color: 'muted', width: 1.5, dash: [6, 5], from: x0 - 1.2, to: x0 + 1.2 });
+        if (!anim && !S.blown) { var q1 = nextPt(ballAt); var ay = M.min(c.h - 12, M.max(12, P.Y(0))); arrow(ctx, P.X(x0), ay, P.X(q1[0]), ay, k.red, 2.6); ring(ctx, P.X(q1[0]), P.Y(S.f(q1[0])), k.red); }
+        ball(ctx, P.X(x0), P.Y(y0), k.red, 8.5);
+      }
+      var p = cur(), g = grad(p), gn = M.hypot.apply(null, g), n = S.path.length - 1, fv = val(p), f0 = val(S.path[0]);
+      var pt = function (q) { return S.dim === 1 ? fm(q[0], 3) : '(' + fm(q[0], 2) + ', ' + fm(q[1], 2) + ')'; };
+      c.cv.setAttribute('aria-label', (S.dim === 1 ? 'Graph of f with a ball at x = ' : 'Contour map with a ball at ') + pt(p) + ' after ' + n + ' steps. Drag or tap to choose the start; arrow keys nudge it; Enter takes a step.');
+      if (quiet) { F.out.el.hidden = true; return; }
+      var msg;
+      if (S.blown) msg = '<b>It blew up.</b> With η = ' + fm(S.eta) + ' each step overshoots the valley by more than it gains, so the points fly away. Lower the step size and press Reset.';
+      else {
+        msg = 'Step ' + n + ': ' + (S.dim === 1 ? 'x' : '(x, y)') + ' = ' + pt(p) + ', f = <b>' + fm(fv, 4) + '</b>, |∇f| = ' + fm(gn, 3) + '.';
+        if (n > 0 && fv > f0 + 1e-9) msg += ' f went <b>up</b>: the step size is too big here.';
+        else if (gn < 1e-3 && n > 0) msg += ' The gradient is about 0: the ball has settled at a critical point' + (S.name === 'two' || S.name === 'two1d' ? '. Is it the lowest one? Try another start.' : '.');
+        else if (n === 0) msg += ' The dashed red arrow is the first step, −η∇f.';
+      }
+      F.out.set(msg);
+    }
+    c.onResize(function () { c._cm = null; draw(); }); V.onTheme(function () { c._cm = null; draw(); }); draw();
+    return { update: draw, destroy: function () { stopRun(); } };
+  });
+
+  // ================================================================== calc3-fitline
+  V.register('calc3-fitline', function (el, o) {
+    o = Object.assign({ points: [[0, 1], [1, 3], [2, 4], [3, 4], [4, 6]], start: [0, 0], eta: 0.05, exact: false, squares: true, origin: false }, o || {});
+    var quiet = !!(o.quiet || o.readout === false), org = !!o.origin;
+    var d = o.points.map(function (p) { return [nv(p[0], 0), nv(p[1], 0)]; }), n = d.length;
+    var sx = 0, sy = 0, sxx = 0, sxy = 0; d.forEach(function (p) { sx += p[0]; sy += p[1]; sxx += p[0] * p[0]; sxy += p[0] * p[1]; });
+    var EX = org ? [sxy / sxx, 0] : (function () { var m = (n * sxy - sx * sy) / (n * sxx - sx * sx); return [m, (sy - m * sx) / n]; })();
+    function L(m, b) { var s = 0; d.forEach(function (p) { var r = p[1] - (m * p[0] + b); s += r * r; }); return s / n; }
+    function G(m, b) { var gm = 0, gb = 0; d.forEach(function (p) { var r = p[1] - (m * p[0] + b); gm += -2 * p[0] * r / n; gb += -2 * r / n; }); return org ? [gm, 0] : [gm, gb]; }
+    var st0 = [nv(o.start[0], 0), org ? 0 : nv(o.start[1], 0)], path = [st0.slice()], eta = nv(o.eta, 0.05), showEx = !!o.exact, blown = false;
+    var F = frame(el, o, 'Fitting a line by gradient descent on the mean squared error');
+    var two = mk('div', 'nnv-two'); F.box.appendChild(two);
+    var dA = mk('div'), dB = mk('div'); two.appendChild(dA); two.appendChild(dB);
+    dA.appendChild(mk('p', 'nnv-cap', 'The data and the line ŷ = ' + (org ? 'mx' : 'mx + b')));
+    dB.appendChild(mk('p', 'nnv-cap', org ? 'The loss L(m), a parabola' : 'The loss L(m, b) over the (m, b)-plane'));
+    var cA = V.canvas(dA, { aspect: 1.25, min: 220, max: 360 }), cB = V.canvas(dB, { aspect: 1.25, min: 220, max: 360 });
+    cA.cv.setAttribute('role', 'img'); cB.cv.setAttribute('role', 'img'); cB.cv.tabIndex = 0;
+    var xs = d.map(function (p) { return p[0]; }), ys = d.map(function (p) { return p[1]; }), xa = M.min.apply(null, xs), xb = M.max.apply(null, xs), ya = M.min.apply(null, ys), yb = M.max.apply(null, ys);
+    var PA = V.plane(cA, { xmin: M.min(0, xa) - 1, xmax: xb + 1, ymin: M.min(0, ya) - 1.5, ymax: yb + 2 });
+    var dm = M.max(1.5, M.abs(st0[0] - EX[0]) * 1.35), db = M.max(2, M.abs(st0[1] - EX[1]) * 1.35);
+    var PB = org ? V.plane(cB, { xmin: EX[0] - dm, xmax: EX[0] + dm, ymin: -0.1 * L(EX[0] + dm, 0), ymax: 1.08 * M.max(L(EX[0] - dm, 0), L(EX[0] + dm, 0)) }) : V.plane(cB, { xmin: EX[0] - dm, xmax: EX[0] + dm, ymin: EX[1] - db, ymax: EX[1] + db });
+    function cur() { return path[path.length - 1]; }
+    function step() { if (blown) return false; var p = cur(), g = G(p[0], p[1]); if (M.hypot(g[0], g[1]) < 1e-7) return false; var q = [p[0] - eta * g[0], p[1] - eta * g[1]]; if (!isFinite(L(q[0], q[1])) || M.abs(q[0] - EX[0]) > 60 * dm || M.abs(q[1] - EX[1]) > 60 * db) { blown = true; return false; } path.push(q); return true; }
+    var bRow = mk('div', 'nnv-btns'); el.insertBefore(bRow, F.out.el);
+    V.button(bRow, 'Take a step', function () { stopRun(); step(); draw(); }, 'pri');
+    var runB = V.button(bRow, 'Run', function () { if (running) stopRun(); else { running = true; runB.textContent = 'Pause'; lp.start(); } });
+    V.button(bRow, 'Reset', function () { stopRun(); path = [st0.slice()]; blown = false; draw(); });
+    var exB = V.button(bRow, 'Show the exact answer', function () { showEx = !showEx; exB.setAttribute('aria-pressed', String(showEx)); draw(); }); exB.setAttribute('aria-pressed', String(showEx));
+    V.slider(F.ctl, { label: 'step size η', min: 0.005, max: 0.25, step: 0.005, value: eta, fmt: function (v) { return fm(v, 3); }, input: function (v) { eta = v; draw(); } });
+    var running = false, acc = 0, lp = V.loop(el, function (dt) { if (!running) return; acc += dt; if (acc < 0.06) return; acc = 0; for (var i = 0; i < 2; i++) if (!step()) { stopRun(); break; } if (path.length > 600) stopRun(); draw(); });
+    lp.stop();
+    function stopRun() { running = false; runB.textContent = 'Run'; lp.stop(); }
+    V.drag(cB.cv, { hit: function () { return 'p'; }, start: function (h, px, py) { stopRun(); setP(px, py); }, move: function (h, px, py) { setP(px, py); } });
+    function setP(px, py) { var m = PB.x(px), b = org ? 0 : PB.y(py); st0 = [m, b]; path = [st0.slice()]; blown = false; draw(); }
+    cB.cv.addEventListener('keydown', function (e) {
+      var dd = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+      if (dd) { st0 = [cur()[0] + dd[0] * dm / 20, org ? 0 : cur()[1] + dd[1] * db / 20]; path = [st0.slice()]; blown = false; e.preventDefault(); draw(); }
+      else if (e.key === ' ' || e.key === 'Enter') { step(); e.preventDefault(); draw(); }
+    });
+    function draw() {
+      var k = V.colors(), p = cur(), m = p[0], b = p[1], ctx = cA.ctx;
+      // data plot
+      PA.clear(); PA.grid(); PA.axes({ x: 'x', y: 'y' });
+      if (o.squares) d.forEach(function (q) { var yh = m * q[0] + b, r = q[1] - yh, s = M.abs(PA.Y(q[1]) - PA.Y(yh)); var x0 = PA.X(q[0]); if (x0 + s > cA.w - 2 && x0 - s > 2) x0 -= s; ctx.save(); ctx.fillStyle = k.redSoft; ctx.strokeStyle = k.red; ctx.globalAlpha = 0.9; ctx.lineWidth = 1; ctx.beginPath(); ctx.rect(x0, M.min(PA.Y(q[1]), PA.Y(yh)), s, s); ctx.fill(); ctx.stroke(); ctx.restore(); });
+      d.forEach(function (q) { var yh = m * q[0] + b; PA.seg(q[0], q[1], q[0], yh, { color: 'red', width: 1.6 }); });
+      if (showEx) PA.plot(function (x) { return EX[0] * x + EX[1]; }, { color: 'gold', width: 2.5, dash: [8, 6] });
+      PA.plot(function (x) { return m * x + b; }, { color: 'blue', width: 3 });
+      d.forEach(function (q) { PA.point(q[0], q[1], { color: k.ink, r: 4.5 }); });
+      // loss plot
+      var c2 = cB.ctx;
+      if (org) {
+        PB.clear(); PB.grid(); PB.axes({ x: 'm', y: 'L' });
+        PB.plot(function (mm) { return L(mm, 0); }, { color: 'blue', width: 3 });
+        pathDraw(c2, path.map(function (q) { return [PB.X(q[0]), PB.Y(L(q[0], 0))]; }), k.gold);
+        if (showEx) PB.point(EX[0], L(EX[0], 0), { color: 'gold', r: 6, hollow: true });
+        ball(c2, PB.X(m), PB.Y(L(m, 0)), k.red, 7.5);
+      } else {
+        contourMap(cB, PB, function (mm, bb) { return L(mm, bb); }, { levels: 12, key: JSON.stringify(d) });
+        PB.axes({ x: 'm', y: 'b' });
+        pathDraw(c2, path.map(function (q) { return [PB.X(q[0]), PB.Y(q[1])]; }), k.gold);
+        if (showEx) { c2.save(); c2.strokeStyle = k.gold; c2.lineWidth = 3; var ex = PB.X(EX[0]), ey = PB.Y(EX[1]); c2.beginPath(); c2.moveTo(ex - 7, ey - 7); c2.lineTo(ex + 7, ey + 7); c2.moveTo(ex + 7, ey - 7); c2.lineTo(ex - 7, ey + 7); c2.stroke(); c2.restore(); }
+        ball(c2, PB.X(m), PB.Y(b), k.red, 7.5);
+      }
+      var g = G(m, b), Lv = L(m, b), n2 = path.length - 1;
+      cA.cv.setAttribute('aria-label', 'Data points with the line y = ' + fm(m, 2) + 'x + ' + fm(b, 2) + ' and its residuals.');
+      cB.cv.setAttribute('aria-label', 'Loss map with the current parameters marked after ' + n2 + ' steps. Drag or tap to choose a start; arrow keys nudge it; Enter takes a step.');
+      if (quiet) { F.out.el.hidden = true; return; }
+      var line = 'ŷ = ' + fm(m, 3) + 'x' + (org ? '' : (b < 0 ? ' − ' : ' + ') + fm(M.abs(b), 3));
+      F.out.set((blown ? '<b>It blew up:</b> the step size is too big for this loss. Lower η and press Reset. ' : '') + 'Step ' + n2 + ': ' + line + ', loss <b>L = ' + fm(Lv, 4) + '</b>, ∇L = ⟨' + fm(g[0], 3) + (org ? '' : ', ' + fm(g[1], 3)) + '⟩.' +
+        (showEx ? ' Least squares (∇L = 0): m = ' + fm(EX[0], 3) + (org ? '' : ', b = ' + fm(EX[1], 3)) + ', L = ' + fm(L(EX[0], EX[1]), 4) + '.' : ''));
+    }
+    cA.onResize(draw); cB.onResize(function () { cB._cm = null; draw(); }); V.onTheme(function () { cB._cm = null; draw(); }); draw();
+    return { update: draw, destroy: function () { stopRun(); } };
+  });
+
+  // ================================================================== calc3-backprop
+  V.register('calc3-backprop', function (el, o) {
+    o = Object.assign({ x: 2, y: 3, w: 1, b: -1, v: 2, c: 0.5, stage: 'all', check: true, descend: true }, o || {});
+    var quiet = !!(o.quiet || o.readout === false);
+    var P = { x: nv(o.x, 2), y: nv(o.y, 3), w: nv(o.w, 1), b: nv(o.b, -1), v: nv(o.v, 2), c: nv(o.c, 0.5) }, P0 = Object.assign({}, P);
+    var STAGES = ['z', 'h', 'yh', 'L', 'dyh', 'dvc', 'dh', 'dz', 'dwb'], stage = o.stage === 'start' ? 0 : STAGES.length;
+    function run(p) { var z = p.w * p.x + p.b, h = relu(z), yh = p.v * h + p.c, L = (yh - p.y) * (yh - p.y), dyh = 2 * (yh - p.y), dh = dyh * p.v, dz = z > 0 ? dh : 0; return { z: z, h: h, yh: yh, L: L, dyh: dyh, dv: dyh * h, dc: dyh, dh: dh, dz: dz, dw: dz * p.x, db: dz }; }
+    var F = frame(el, o, 'Backpropagation through a tiny network');
+    var chain = mk('div', 'bp-chain'); F.box.appendChild(chain);
+    function card(name, rule) { var cd = mk('div', 'bp-card'); cd.appendChild(mk('div', 'bp-name', name)); cd.appendChild(mk('div', 'bp-rule', rule)); var f = mk('div', 'bp-fwd'), b = mk('div', 'bp-bwd'); cd.appendChild(f); cd.appendChild(b); var ps = mk('div', 'bp-params'); cd.appendChild(ps); chain.appendChild(cd); return { el: cd, f: f, b: b, ps: ps }; }
+    function arr() { chain.appendChild(mk('div', 'bp-arrow', '→')); }
+    var C = {}; C.x = card('x', 'the input'); arr(); C.z = card('z', 'z = wx + b'); arr(); C.h = card('h', 'h = ReLU(z)'); arr(); C.yh = card('ŷ', 'ŷ = vh + c'); arr(); C.L = card('L', 'L = (ŷ − y)²');
+    chain.querySelectorAll('.bp-arrow').forEach(function (a) { a.setAttribute('aria-hidden', 'true'); });
+    function par(card2, name) { var s = mk('span', 'bp-par'); card2.ps.appendChild(s); return s; }
+    var pw = par(C.z, 'w'), pb = par(C.z, 'b'), pv = par(C.yh, 'v'), pc = par(C.yh, 'c'), py = par(C.L, 'y');
+    var say = mk('p', 'bp-say'); say.setAttribute('aria-live', 'polite'); F.box.appendChild(say);
+    var bRow = mk('div', 'nnv-btns'); el.insertBefore(bRow, F.ctl);
+    var nextB = V.button(bRow, 'Next step', function () { if (stage < STAGES.length) stage++; draw(); }, 'pri');
+    V.button(bRow, 'Show all', function () { stage = STAGES.length; draw(); });
+    V.button(bRow, 'Start over', function () { stage = 0; draw(); });
+    var sl = {}; F.ctl.classList.add('bp-sls');
+    [['x', 'input x'], ['y', 'target y'], ['w', 'weight w'], ['b', 'bias b'], ['v', 'weight v'], ['c', 'bias c']].forEach(function (s) {
+      sl[s[0]] = V.slider(F.ctl, { label: s[1], min: -3, max: 3, step: 0.05, value: P[s[0]], fmt: function () { return fm(P[s[0]], 3); }, input: function (v) { P[s[0]] = v; before = null; draw(); } });
+    });
+    var tbl = null; if (o.check) { tbl = mk('div', 'nnv-tbl'); tbl.tabIndex = 0; tbl.setAttribute('aria-label', 'Backpropagation compared with nudging each weight'); el.insertBefore(tbl, F.out.el); }
+    var etaV = 0.02, before = null;
+    if (o.descend) {
+      var dRow = mk('div', 'nnv-btns'); el.insertBefore(dRow, F.out.el);
+      V.button(dRow, 'Take a gradient step', function () { var r = run(P); before = r.L; ['w', 'b', 'v', 'c'].forEach(function (kk) { P[kk] = +(P[kk] - etaV * r['d' + kk]).toFixed(6); sl[kk].set(P[kk]); }); stage = STAGES.length; draw(); });
+      V.button(dRow, 'Reset the weights', function () { Object.keys(P0).forEach(function (kk) { P[kk] = P0[kk]; sl[kk].set(P[kk]); }); before = null; draw(); });
+      V.slider(dRow, { label: 'step size η', min: 0.005, max: 0.2, step: 0.005, value: etaV, fmt: function (v) { return fm(v, 3); }, input: function (v) { etaV = v; } });
+    }
+    function draw() {
+      var r = run(P), s = stage, has = function (k) { return s > STAGES.indexOf(k); };
+      var off = !(r.z > 0);
+      C.x.f.textContent = fm(P.x, 3); C.x.b.textContent = '';
+      C.z.f.textContent = has('z') && !quiet ? '= ' + fm(r.z, 3) : ''; C.z.b.textContent = has('dz') && !quiet ? '∂L/∂z = ' + fm(r.dz, 3) : '';
+      C.h.f.textContent = has('h') && !quiet ? '= ' + fm(r.h, 3) : ''; C.h.b.textContent = has('dh') && !quiet ? '∂L/∂h = ' + fm(r.dh, 3) : '';
+      C.yh.f.textContent = has('yh') && !quiet ? '= ' + fm(r.yh, 3) : ''; C.yh.b.textContent = has('dyh') && !quiet ? '∂L/∂ŷ = ' + fm(r.dyh, 3) : '';
+      C.L.f.textContent = has('L') && !quiet ? '= ' + fm(r.L, 4) : ''; C.L.b.textContent = has('L') && !quiet ? '∂L/∂L = 1' : '';
+      C.h.el.classList.toggle('off', has('h') && off);
+      pw.innerHTML = 'w = ' + fm(P.w, 3) + (has('dwb') && !quiet ? ' · <b>∂L/∂w = ' + fm(r.dw, 3) + '</b>' : '');
+      pb.innerHTML = 'b = ' + fm(P.b, 3) + (has('dwb') && !quiet ? ' · <b>∂L/∂b = ' + fm(r.db, 3) + '</b>' : '');
+      pv.innerHTML = 'v = ' + fm(P.v, 3) + (has('dvc') && !quiet ? ' · <b>∂L/∂v = ' + fm(r.dv, 3) + '</b>' : '');
+      pc.innerHTML = 'c = ' + fm(P.c, 3) + (has('dvc') && !quiet ? ' · <b>∂L/∂c = ' + fm(r.dc, 3) + '</b>' : '');
+      py.innerHTML = 'y = ' + fm(P.y, 3);
+      var hot = { z: 'z', h: 'h', yh: 'yh', L: 'L', dyh: 'yh', dvc: 'yh', dh: 'h', dz: 'z', dwb: 'z' }[STAGES[s - 1]];
+      Object.keys(C).forEach(function (kk) { C[kk].el.classList.toggle('hot', kk === hot && s < STAGES.length); });
+      var t = {
+        0: 'Press <b>Next step</b> to run the network forward, one box at a time.',
+        1: 'Forward: z = wx + b = ' + fm(P.w, 3) + ' · ' + fm(P.x, 3) + ' + ' + fm(P.b, 3) + ' = <b>' + fm(r.z, 3) + '</b>.',
+        2: 'Forward: h = ReLU(z) = <b>' + fm(r.h, 3) + '</b>. ' + (off ? 'z is not positive, so the switch is <b>off</b>.' : 'z is positive, so the switch is on.'),
+        3: 'Forward: ŷ = vh + c = ' + fm(P.v, 3) + ' · ' + fm(r.h, 3) + ' + ' + fm(P.c, 3) + ' = <b>' + fm(r.yh, 3) + '</b>.',
+        4: 'Forward: L = (ŷ − y)² = (' + fm(r.yh, 3) + ' − ' + fm(P.y, 3) + ')² = <b>' + fm(r.L, 4) + '</b>. Now go backward.',
+        5: 'Backward: ∂L/∂ŷ = 2(ŷ − y) = <b>' + fm(r.dyh, 3) + '</b>.',
+        6: 'Backward: ŷ = vh + c, so ∂L/∂v = ∂L/∂ŷ · h = <b>' + fm(r.dv, 3) + '</b> and ∂L/∂c = ∂L/∂ŷ · 1 = <b>' + fm(r.dc, 3) + '</b>.',
+        7: 'Backward: ∂L/∂h = ∂L/∂ŷ · v = ' + fm(r.dyh, 3) + ' · ' + fm(P.v, 3) + ' = <b>' + fm(r.dh, 3) + '</b>.',
+        8: 'Backward through the switch: ReLU′(z) = ' + (off ? '0 (off)' : '1 (on)') + ', so ∂L/∂z = <b>' + fm(r.dz, 3) + '</b>.',
+        9: 'Backward: z = wx + b, so ∂L/∂w = ∂L/∂z · x = <b>' + fm(r.dw, 3) + '</b> and ∂L/∂b = ∂L/∂z · 1 = <b>' + fm(r.db, 3) + '</b>. Every weight now has its derivative.'
+      }[s];
+      if (quiet) t = 'The forward values and derivatives are hidden here.';
+      say.innerHTML = t + (before != null && s === STAGES.length && !quiet ? ' After the gradient step the loss went from ' + fm(before, 4) + ' to <b>' + fm(r.L, 4) + '</b>.' : '');
+      nextB.disabled = s >= STAGES.length;
+      if (tbl) {
+        if (s < STAGES.length || quiet) { tbl.hidden = true; }
+        else {
+          tbl.hidden = false; var rows = '';
+          ['w', 'b', 'v', 'c'].forEach(function (kk) {
+            var up = Object.assign({}, P), dn = Object.assign({}, P); up[kk] += 0.001; dn[kk] -= 0.001;
+            var est = (run(up).L - run(dn).L) / 0.002; rows += '<tr><td>∂L/∂' + kk + '</td><td>' + fm(r['d' + kk], 4) + '</td><td>' + fm(est, 4) + '</td></tr>';
+          });
+          tbl.innerHTML = '<table><thead><tr><th scope="col">derivative</th><th scope="col">backprop</th><th scope="col">nudge ±0.001</th></tr></thead><tbody>' + rows + '</tbody></table>';
+        }
+      }
+      if (quiet) { F.out.el.hidden = true; return; }
+      F.out.set(s < STAGES.length ? 'Step ' + s + ' of ' + STAGES.length + '.' : 'Loss L = <b>' + fm(r.L, 4) + '</b>. Gradient (w, b, v, c) = (' + [r.dw, r.db, r.dv, r.dc].map(function (v) { return fm(v, 3); }).join(', ') + ')' + (off ? '. The switch is off, so w and b get no signal from this example.' : '.'));
+    }
+    V.onTheme(draw); draw();
+    return { update: draw };
+  });
+})(window, document);
+// ==== neural-network thread (nn) end ====

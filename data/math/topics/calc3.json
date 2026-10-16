@@ -326,6 +326,39 @@
       "viz": []
     },
     {
+      "id": "calc3.gradient-descent",
+      "slug": "gradient-descent",
+      "unit": "optimization",
+      "title": "Gradient Descent",
+      "short": "Step against the gradient, x ← x − η∇f, to walk downhill toward a low point.",
+      "prereqs": ["calc3.gradient","calc3.critical-points"],
+      "xp": 2,
+      "trouble": "Students step along +∇f (uphill), or think a bigger step always gets there sooner, when a step that is too big overshoots and can blow up.",
+      "viz": ["calc3-descent"]
+    },
+    {
+      "id": "calc3.minimizing-loss",
+      "slug": "minimizing-loss",
+      "unit": "optimization",
+      "title": "Fitting a Model by Minimizing Loss",
+      "short": "Choose a line's slope and intercept to make the mean squared error as small as possible.",
+      "prereqs": ["calc3.gradient-descent","stat.least-squares-line"],
+      "xp": 3,
+      "trouble": "Students differentiate with respect to x instead of the parameters m and b, or drop the minus sign the chain rule brings out of (y − (mx + b))².",
+      "viz": ["calc3-fitline"]
+    },
+    {
+      "id": "calc3.backpropagation",
+      "slug": "backpropagation",
+      "unit": "optimization",
+      "title": "Backpropagation Is the Chain Rule",
+      "short": "Get every weight's derivative of a network's loss by working backward, one layer at a time.",
+      "prereqs": ["calc3.multivariable-chain-rule","calc3.minimizing-loss","alg2.ramp-functions"],
+      "xp": 3,
+      "trouble": "Students forget the ReLU switch on the way back (its derivative is 1 when the unit is on and 0 when it is off), or multiply by the weight itself instead of the input that the weight multiplies.",
+      "viz": ["calc3-backprop"]
+    },
+    {
       "id": "calc3.double-integrals",
       "slug": "double-integrals",
       "unit": "multiple-integrals",
