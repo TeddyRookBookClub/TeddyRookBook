@@ -1,0 +1,3772 @@
+{
+ "prob.axioms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/probability-and-statistics/addition-rule/\">the addition rule</a> you met rules such as $$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$$ and $P(A^{c}) = 1 - P(A)$. They feel like separate facts, but each one follows from three short statements. Probability as a branch of mathematics starts from these three axioms, set down by Andrey Kolmogorov in 1933, and every rule in this course is built on them."
+   },
+   {
+    "t": "p",
+    "html": "A <b>sample space</b> $S$ is the set of all outcomes of an experiment, and an <b>event</b> is a set of outcomes (a subset of $S$). We write $A^{c}$ for the complement of $A$ (some books write $A'$), and call events <b>disjoint</b> (or mutually exclusive) when they share no outcome."
+   },
+   {
+    "t": "key",
+    "html": "A <b>probability</b> assigns to each event $A$ a number $P(A)$ so that\n  <br>1. $P(A) \\ge 0$ for every event $A$;\n  <br>2. $P(S) = 1$;\n  <br>3. if $A_1, A_2, \\ldots$ are pairwise disjoint, then $P(A_1 \\cup A_2 \\cup \\cdots) = \\sum_{i} P(A_i)$."
+   },
+   {
+    "t": "why",
+    "html": "Every familiar rule is a short consequence.\n  <br><b>Complement:</b> $A$ and $A^{c}$ are disjoint and together make $S$, so axioms 3 and 2 give $P(A) + P(A^{c}) = 1$. With $A = S$ this also shows $P(\\varnothing) = 0$.\n  <br><b>Bigger events are more likely:</b> if $A \\subseteq B$, then $B$ is the disjoint union of $A$ and $B \\cap A^{c}$, so $P(B) = P(A) + P(B \\cap A^{c}) \\ge P(A)$. In particular $P(A) \\le P(S) = 1$.\n  <br><b>Addition rule:</b> $A \\cup B$ is the disjoint union of $A$ and $B \\cap A^{c}$, while $B$ is the disjoint union of $A \\cap B$ and $B \\cap A^{c}$. Subtracting, $$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$$"
+   },
+   {
+    "t": "viz",
+    "name": "prob-square",
+    "opts": {
+     "layout": "free",
+     "pA": "2/5",
+     "pB": "1/2",
+     "pAB": "1/4",
+     "labels": {
+      "A": "A",
+      "B": "B"
+     }
+    },
+    "cap": "The sample space as a unit square: each event is a region and its probability is its area. Drag the edges and watch the readout keep every rule true."
+   },
+   {
+    "t": "p",
+    "html": "The square is a good mental model: area is never negative (axiom 1), the whole square has area 1 (axiom 2), and areas of regions that do not overlap add (axiom 3). It also makes two bounds easy to see. An overlap fits inside each event, so $P(A \\cap B) \\le \\min(P(A), P(B))$. And a union is never bigger than the whole square or than the two areas together, so $P(A \\cup B) \\le \\min(1,\\ P(A) + P(B))$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Finding a missing probability",
+    "q": "A spinner lands on red, blue, green or yellow. $P(\\text{red}) = 0.15$, $P(\\text{blue}) = 0.3$ and $P(\\text{green}) = 0.25$. Find $P(\\text{yellow})$.",
+    "steps": [
+     "The four outcomes are disjoint and together they make up $S$.",
+     "By axioms 3 and 2, their probabilities add to 1.",
+     "$$P(\\text{yellow}) = 1 - (0.15 + 0.3 + 0.25) = 0.3$$"
+    ],
+    "a": "$0.3$"
+   },
+   {
+    "t": "ex",
+    "title": "How much must two events overlap?",
+    "q": "$P(A) = 0.7$ and $P(B) = 0.6$. What is the smallest possible value of $P(A \\cap B)$?",
+    "steps": [
+     "By the addition rule, $$P(A \\cap B) = P(A) + P(B) - P(A \\cup B)$$",
+     "$P(A \\cup B)$ is at most 1, so $P(A \\cap B) \\ge 0.7 + 0.6 - 1 = 0.3$.",
+     "The value $0.3$ is reached when $A \\cup B$ is the whole sample space."
+    ],
+    "a": "$0.3$: the events must overlap at least that much."
+   },
+   {
+    "t": "ex",
+    "title": "Spotting an impossible claim",
+    "q": "Someone reports $P(A) = 0.4$, $P(B) = 0.5$ and $P(A \\cap B) = 0.45$. Is this possible?",
+    "steps": [
+     "$A \\cap B \\subseteq A$, so $P(A \\cap B) \\le P(A) = 0.4$.",
+     "$0.45 > 0.4$ breaks that rule."
+    ],
+    "a": "No: an overlap can never be more likely than either event."
+   },
+   {
+    "t": "mistake",
+    "html": "Two common slips. First, a list of probabilities for outcomes that cannot happen together must add to exactly 1; a list adding to $1.1$ is not a probability model. Second, adding $P(A) + P(B)$ for events that overlap: if each of Saturday and Sunday has a $0.6$ chance of rain, the chance of rain on the weekend is not $1.2$. Check: any answer above 1 is wrong, and the addition rule needs the overlap subtracted."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 1 (Discrete Probability Distributions), section 1.2, the properties of a distribution function"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on probability terminology and the rules of probability"
+   }
+  ]
+ },
+ "prob.inclusion-exclusion-events": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/probability/axioms/\">axioms</a> gave the addition rule for two events: add, then subtract the overlap that was counted twice. With three events the overlaps overlap too, so one more correction is needed. The result, <b>inclusion–exclusion</b>, is the standard way to find the chance that at least one of several events happens."
+   },
+   {
+    "t": "key",
+    "html": "$$P(A \\cup B \\cup C) = P(A) + P(B) + P(C) - P(A \\cap B) - P(A \\cap C) - P(B \\cap C) + P(A \\cap B \\cap C).$$ Add the singles, subtract the pairs, add back the triple."
+   },
+   {
+    "t": "why",
+    "html": "Look at one outcome that lies in exactly $k$ of the three events, and count how many times the right side counts it. The singles count it $k$ times, the pairs $\\binom{k}{2}$ times, the triple $\\binom{k}{3}$ times. For $k = 1$: $1 - 0 + 0 = 1$. For $k = 2$: $2 - 1 + 0 = 1$. For $k = 3$: $3 - 3 + 1 = 1$. Every outcome in the union is counted exactly once, and outcomes outside the union are never counted, so the sum is $P(A \\cup B \\cup C)$. The same count works for $n$ events, because $$\\sum_{j \\ge 1} (-1)^{j+1}\\binom{k}{j} = 1 - (1 - 1)^{k} = 1$$"
+   },
+   {
+    "t": "viz",
+    "name": "venn",
+    "opts": {
+     "sets": 3,
+     "labels": [
+      "A",
+      "B",
+      "C"
+     ],
+     "probs": {
+      "a": 0.19,
+      "b": 0.13,
+      "c": 0.08,
+      "ab": 0.06,
+      "ac": 0.07,
+      "bc": 0.04,
+      "abc": 0.03,
+      "n": 0.4
+     },
+     "shade": "A∪B∪C",
+     "presets": [
+      "A∪B∪C",
+      "A∩B∩C",
+      "A∩B",
+      "A′"
+     ]
+    },
+    "cap": "Three events with the probability of each separate region. Tap regions to build an event; the triple region in the middle sits inside every pairwise overlap."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Three activities",
+    "q": "In a gym, $P(\\text{swim}) = 0.35$, $P(\\text{run}) = 0.26$, $P(\\text{cycle}) = 0.22$, the pairwise overlaps are $P(S \\cap R) = 0.09$, $P(S \\cap C) = 0.10$, $P(R \\cap C) = 0.07$, and $P(S \\cap R \\cap C) = 0.03$. Find the probability that a member does at least one.",
+    "steps": [
+     "Singles: $0.35 + 0.26 + 0.22 = 0.83$.",
+     "Pairs: $0.09 + 0.10 + 0.07 = 0.26$.",
+     "$$P(S \\cup R \\cup C) = 0.83 - 0.26 + 0.03 = 0.60$$"
+    ],
+    "a": "$0.6$"
+   },
+   {
+    "t": "ex",
+    "title": "Divisible by 2, 3 or 5",
+    "q": "A whole number is chosen at random from 1 to 60. Find the probability that it is divisible by 2, 3 or 5.",
+    "steps": [
+     "Let A, B, C be \"divisible by 2\", \"by 3\", \"by 5\". Divisible by both 2 and 3 means divisible by 6, and so on, because 2, 3 and 5 share no factors.",
+     "Counts: $30 + 20 + 12$ singles; $10 + 6 + 4$ pairs (multiples of 6, 10, 15); $2$ multiples of 30.",
+     "$$30 + 20 + 12 - 10 - 6 - 4 + 2 = 44$$ numbers, so the probability is $\\frac{44}{60} = \\frac{11}{15}$."
+    ],
+    "a": "$\\frac{11}{15}$"
+   },
+   {
+    "t": "ex",
+    "title": "Exactly one of the three",
+    "q": "With the gym numbers above, find the probability that a member does exactly one of the three activities.",
+    "steps": [
+     "The sum of the singles counts each \"exactly two\" region twice and the triple region three times; the sum of the pairs counts each \"exactly two\" region once and the triple region three times.",
+     "So $$P(\\text{exactly one}) = \\Sigma\\,\\text{singles} - 2\\,\\Sigma\\,\\text{pairs} + 3P(\\text{triple})$$",
+     "$$= 0.83 - 2(0.26) + 3(0.03) = 0.40$$",
+     "In the same way, $$P(\\text{exactly two}) = \\Sigma\\,\\text{pairs} - 3P(\\text{triple}) = 0.26 - 0.09 = 0.17$$ each pairwise overlap contains the triple region once."
+    ],
+    "a": "$0.4$ (and $0.17$ for exactly two)"
+   },
+   {
+    "t": "p",
+    "html": "The formula can also be run backward. If the union is known and one term is missing, such as $P(A \\cap B \\cap C)$, write out inclusion–exclusion and solve for it. And \"none of the three\" is the complement of the union."
+   },
+   {
+    "t": "mistake",
+    "html": "Stopping after subtracting the pairs. The triple region was added three times (once in each single) and subtracted three times (once in each pair), so without the last term it is not counted at all. Check: your answer must be at least as large as the largest single probability, and at most their sum."
+   },
+   {
+    "t": "note",
+    "html": "For $n$ events, add all singles, subtract all pairs, add all triples, subtract all quadruples, and so on. One famous use: if $n$ people grab coats at random, the chance that nobody gets their own coat is $1 - 1 + \\frac{1}{2!} - \\frac{1}{3!} + \\cdots \\pm \\frac{1}{n!}$, which is close to $\\frac{1}{e} \\approx 0.368$ for any $n$ beyond 5."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 3 (Combinatorics), section 3.2, the inclusion-exclusion principle"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on counting and probability"
+   }
+  ]
+ },
+ "prob.birthday-problem": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How many people must be in a room before two of them probably share a birthday? Most people guess about 180. The answer is 23. The calculation uses the <a href=\"/math/probability/axioms/\">complement rule</a> and the counting from <a href=\"/math/probability-and-statistics/counting-probability/\">probability with counting</a>, and it shows why \"at least one\" questions are usually answered through their complement."
+   },
+   {
+    "t": "key",
+    "html": "If each of $n$ people independently gets one of $d$ equally likely values, then $$P(\\text{all different}) = \\frac{d}{d}\\cdot\\frac{d - 1}{d}\\cdots\\frac{d - n + 1}{d},$$ and $$P(\\text{at least two match}) = 1 - P(\\text{all different})$$"
+   },
+   {
+    "t": "why",
+    "html": "There are $d^{n}$ equally likely lists of values. A list with all values different is built one person at a time: $d$ choices for the first, $d - 1$ for the second, and so on, so there are $d(d - 1)\\cdots(d - n + 1)$ of them. Dividing gives the product above. \"At least two match\" covers many cases (one pair, two pairs, a triple, …), but its complement is a single clean case, so we compute the complement.\n  <br>Why 23 is enough: matches can happen between <i>any</i> two people, and 23 people form $\\binom{23}{2} = 253$ pairs. Each pair matches with chance $\\frac{1}{365}$. Using $1 - \\frac{i}{365} \\approx e^{-i/365}$, the product is about $$e^{-(0 + 1 + \\cdots + 22)/365} = e^{-253/365} \\approx 0.50$$"
+   },
+   {
+    "t": "table",
+    "head": [
+     "People $n$",
+     "5",
+     "10",
+     "20",
+     "23",
+     "30",
+     "40",
+     "50",
+     "57"
+    ],
+    "rows": [
+     [
+      "$P(\\text{a shared birthday})$",
+      "0.027",
+      "0.117",
+      "0.411",
+      "0.507",
+      "0.706",
+      "0.891",
+      "0.970",
+      "0.990"
+     ]
+    ],
+    "cap": "365 equally likely birthdays (leap days ignored). The chance passes one half at 23 people."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Birth months",
+    "q": "Four people each have a birth month, all 12 equally likely and independent. Find the probability that at least two share a month.",
+    "steps": [
+     "All different: $$\\frac{12}{12} \\cdot \\frac{11}{12} \\cdot \\frac{10}{12} \\cdot \\frac{9}{12} = \\frac{11880}{20736} = \\frac{55}{96}$$",
+     "At least two match: $1 - \\frac{55}{96} = \\frac{41}{96} \\approx 0.427$."
+    ],
+    "a": "$\\frac{41}{96}$"
+   },
+   {
+    "t": "ex",
+    "title": "Matching you, or matching anyone",
+    "q": "You are in a room with 22 other people. Compare the chance that someone shares <i>your</i> birthday with the chance that some two people share a birthday.",
+    "steps": [
+     "Someone matches you: each of the 22 misses your birthday with probability $\\frac{364}{365}$, independently, so $1 - \\left(\\frac{364}{365}\\right)^{22} \\approx 0.059$.",
+     "Any match among the 23 people: from the table, about $0.507$.",
+     "The second is much larger because it counts all 253 pairs, not only the 22 pairs that include you."
+    ],
+    "a": "About $0.059$ against about $0.507$."
+   },
+   {
+    "t": "ex",
+    "title": "How many people for a digit match?",
+    "q": "People each pick a random digit from 0 to 9. What is the smallest group in which a repeated digit is more likely than not?",
+    "steps": [
+     "$n = 4$: all different with probability $\\frac{10 \\cdot 9 \\cdot 8 \\cdot 7}{10^{4}} = 0.504$, so a match has chance $0.496$.",
+     "$n = 5$: all different with probability $0.504 \\cdot \\frac{6}{10} = 0.3024$, so a match has chance $0.6976$."
+    ],
+    "a": "5 people."
+   },
+   {
+    "t": "mistake",
+    "html": "Two shortcuts give badly wrong answers. Multiplying $\\frac{1}{365}$ by the number of people ($\\frac{23}{365} \\approx 0.06$) treats the matches as if they could not overlap and grows past 1 for large groups. Comparing everyone with one chosen person misses most of the pairs. Check: a correct method gives a probability that rises toward 1 but never passes it."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 3 (Combinatorics), section 3.1, the birthday problem"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on counting and probability"
+   }
+  ]
+ },
+ "prob.conditional-vs-joint": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two probabilities are easy to mix up: the chance that A and B both happen, and the chance of A among the cases where B happens. You met both in <a href=\"/math/probability-and-statistics/multiplication-rule/\">the general multiplication rule</a>, $P(A \\cap B) = P(B)\\,P(A \\mid B)$. Most wrong answers in conditioning problems are right answers to the other question, so this lesson is about reading the question."
+   },
+   {
+    "t": "key",
+    "html": "$P(A \\cap B)$, the <b>joint</b> probability, is a share of <i>everything</i>. $P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}$, the <b>conditional</b> probability, is a share of <i>B</i>. Words like \"of those who\", \"among\", \"given\" and \"if\" name the group to divide by; \"both\" or \"and\" with no such phrase asks for the joint."
+   },
+   {
+    "t": "why",
+    "html": "Knowing that B happened rules out every outcome outside B, so B becomes the new sample space. To keep the total at 1, every probability inside B is rescaled by $\\frac{1}{P(B)}$. The part of A that survives is $A \\cap B$, so its new probability is $\\frac{P(A \\cap B)}{P(B)}$. The function $A \\mapsto P(A \\mid B)$ satisfies all three <a href=\"/math/probability/axioms/\">axioms</a>, so conditional probabilities obey every rule you know: complements, the addition rule, and so on."
+   },
+   {
+    "t": "viz",
+    "name": "prob-square",
+    "opts": {
+     "layout": "free",
+     "pA": "3/10",
+     "pB": "2/5",
+     "pAB": "1/5",
+     "labels": {
+      "A": "Rain",
+      "B": "Late"
+     },
+     "condition": "B"
+    },
+    "cap": "The joint probability is the overlap as a share of the whole square. Conditioning on Late stretches the Late region to fill the square, and the share that Rain covers there is the conditional probability."
+   },
+   {
+    "t": "p",
+    "html": "In the picture, the overlap has area $\\frac{1}{5}$ of the square: that is $P(\\text{Rain} \\cap \\text{Late})$. Inside the Late region (area $\\frac{2}{5}$) it covers half: that is $P(\\text{Rain} \\mid \\text{Late}) = \\frac{1/5}{2/5} = \\frac{1}{2}$. Same overlap, two different denominators."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "One table, three questions",
+    "q": "Of 200 students, 60 play a sport; 24 of those also have a part-time job; 56 students have a job in all. A student is picked at random. Find (a) the fraction who play a sport and have a job, (b) of the athletes, the fraction with a job, (c) of those with a job, the fraction who play a sport.",
+    "steps": [
+     "(a) No group is named, and \"and\" asks for both: $P(S \\cap J) = \\frac{24}{200} = \\frac{3}{25}$.",
+     "(b) \"Of the athletes\" divides by the 60 athletes: $P(J \\mid S) = \\frac{24}{60} = \\frac{2}{5}$.",
+     "(c) \"Of those with a job\" divides by the 56 workers: $P(S \\mid J) = \\frac{24}{56} = \\frac{3}{7}$."
+    ],
+    "a": "$\\frac{3}{25}$, $\\frac{2}{5}$ and $\\frac{3}{7}$: the same 24 students, three different denominators."
+   },
+   {
+    "t": "ex",
+    "title": "From percents",
+    "q": "Of a café's customers, 40% buy coffee and 15% buy both coffee and a pastry. Of the coffee buyers, what fraction buy a pastry?",
+    "steps": [
+     "The 15% is joint: a share of all customers. The question names the coffee buyers as the group.",
+     "$P(\\text{pastry} \\mid \\text{coffee}) = \\frac{0.15}{0.40} = \\frac{3}{8}$."
+    ],
+    "a": "$\\frac{3}{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "Going the other way",
+    "q": "60% of a library's visitors are adults, and 25% of the adults borrow a DVD. What fraction of all visitors are adults who borrow a DVD?",
+    "steps": [
+     "25% is conditional (a share of the adults); the question asks for a share of everyone, a joint probability.",
+     "$$P(\\text{adult} \\cap \\text{DVD}) = P(\\text{adult})\\,P(\\text{DVD} \\mid \\text{adult}) = 0.6 \\times 0.25 = 0.15$$"
+    ],
+    "a": "$0.15$"
+   },
+   {
+    "t": "mistake",
+    "html": "Answering \"of those with B, what fraction have A?\" with the joint $P(A \\cap B)$, or dividing by the wrong event and giving $P(B \\mid A)$ instead of $P(A \\mid B)$. Check: name the group the question restricts to, and make sure it is your denominator. A conditional probability is never smaller than the joint one, since $P(B) \\le 1$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 4 (Conditional Probability), section 4.1, discrete conditional probability"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on conditional probability, independence and Bayes' theorem"
+   }
+  ]
+ },
+ "prob.total-probability": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sometimes P(B) is hard to see directly but easy once you know which \"case\" you are in: which machine made the part, which bag the marble came from. The law of total probability splits a problem into such cases. It is the <a href=\"/math/probability/conditional-vs-joint/\">joint-from-conditional</a> rule, applied once per case, followed by the addition axiom."
+   },
+   {
+    "t": "key",
+    "html": "If $A_1, \\ldots, A_n$ are disjoint and together cover the sample space (a <b>partition</b>), then $$P(B) = P(B \\mid A_1)P(A_1) + \\cdots + P(B \\mid A_n)P(A_n).$$"
+   },
+   {
+    "t": "why",
+    "html": "$B$ is the disjoint union of the pieces $B \\cap A_1, \\ldots, B \\cap A_n$, because every outcome lies in exactly one $A_i$. By the addition axiom, $P(B) = \\sum P(B \\cap A_i)$, and each piece is $P(B \\cap A_i) = P(B \\mid A_i)P(A_i)$. So $P(B)$ is a <i>weighted average</i> of the conditional probabilities, with the case probabilities as weights."
+   },
+   {
+    "t": "viz",
+    "name": "tree",
+    "opts": {
+     "tree": {
+      "kids": [
+       {
+        "label": "A",
+        "p": "1/2",
+        "kids": [
+         {
+          "label": "Defective",
+          "p": "1/100"
+         },
+         {
+          "label": "Good",
+          "p": "99/100"
+         }
+        ]
+       },
+       {
+        "label": "B",
+        "p": "3/10",
+        "kids": [
+         {
+          "label": "Defective",
+          "p": "1/50"
+         },
+         {
+          "label": "Good",
+          "p": "49/50"
+         }
+        ]
+       },
+       {
+        "label": "C",
+        "p": "1/5",
+        "kids": [
+         {
+          "label": "Defective",
+          "p": "1/25"
+         },
+         {
+          "label": "Good",
+          "p": "24/25"
+         }
+        ]
+       }
+      ]
+     },
+     "select": [
+      "A/Defective",
+      "B/Defective",
+      "C/Defective"
+     ]
+    },
+    "cap": "A probability tree for three machines: multiply along each branch, then add the defective outcomes."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Three machines",
+    "q": "Machines A, B and C make 50%, 30% and 20% of a factory's parts, and 1%, 2% and 4% of their parts are defective. Find the probability that a random part is defective.",
+    "steps": [
+     "The machine is the case: the three cases are disjoint and cover every part.",
+     "$$P(D) = 0.01(0.5) + 0.02(0.3) + 0.04(0.2)$$",
+     "$$= 0.005 + 0.006 + 0.008 = 0.019$$"
+    ],
+    "a": "$0.019$, a weighted average of 1%, 2% and 4%, pulled toward machine A's rate because A makes the most parts."
+   },
+   {
+    "t": "ex",
+    "title": "Two bags",
+    "q": "Flip a fair coin. Heads: draw from bag I with 3 red and 2 blue marbles. Tails: draw from bag II with 1 red and 4 blue. Find P(red).",
+    "steps": [
+     "$$P(\\text{red}) = P(\\text{red} \\mid \\text{I})P(\\text{I}) + P(\\text{red} \\mid \\text{II})P(\\text{II})$$",
+     "$= \\frac{3}{5} \\cdot \\frac{1}{2} + \\frac{1}{5} \\cdot \\frac{1}{2} = \\frac{2}{5}$."
+    ],
+    "a": "$\\frac{2}{5}$"
+   },
+   {
+    "t": "ex",
+    "title": "The second draw",
+    "q": "A box has 5 red and 3 blue marbles. Draw one and set it aside without looking, then draw a second. Find the probability that the second is red.",
+    "steps": [
+     "Condition on the first draw. If it was red (probability $\\frac{5}{8}$), 4 of the remaining 7 are red; if blue (probability $\\frac{3}{8}$), 5 of 7 are red.",
+     "$$P(\\text{2nd red}) = \\frac{4}{7} \\cdot \\frac{5}{8} + \\frac{5}{7} \\cdot \\frac{3}{8} = \\frac{20 + 15}{56} = \\frac{5}{8}$$",
+     "The same as for the first draw. Without seeing the first marble, the second is equally likely to be any of the 8."
+    ],
+    "a": "$\\frac{5}{8}$"
+   },
+   {
+    "t": "note",
+    "html": "The law also runs backward. If the overall defect rate is known and one machine's rate is not, write the weighted sum with that rate as the unknown and solve: with the numbers above, $0.019 = 0.005 + 0.006 + 0.2x$ gives $x = 0.04$."
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the conditional probabilities without the weights: $1\\% + 2\\% + 4\\% = 7\\%$ is not a probability of anything here, and the plain average $2.33\\%$ ignores that machine A makes half the parts. Check: the answer must lie between the smallest and largest conditional probability, nearer the ones with big weights."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 4 (Conditional Probability), section 4.1"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on conditional probability and the law of total probability"
+   }
+  ]
+ },
+ "prob.bayes-several": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/probability-and-statistics/bayes-rule/\">Bayes' rule</a> you reversed a conditional probability with a tree. With several possible causes the idea is the same: the <a href=\"/math/probability/total-probability/\">law of total probability</a> supplies the denominator, and each cause gets its share. Bayes' theorem is how evidence updates a belief."
+   },
+   {
+    "t": "key",
+    "html": "For a partition $A_1, \\ldots, A_n$ and evidence $B$ with $P(B) > 0$: $$P(A_j \\mid B) = \\frac{P(B \\mid A_j)P(A_j)}{\\sum_i P(B \\mid A_i)P(A_i)}.$$ The <b>posterior</b> is proportional to <b>prior × likelihood</b>, rescaled so the posteriors add to 1."
+   },
+   {
+    "t": "why",
+    "html": "By definition, $P(A_j \\mid B) = \\frac{P(A_j \\cap B)}{P(B)}$. The numerator is $P(B \\mid A_j)P(A_j)$ (the multiplication rule) and the denominator is $\\sum_i P(B \\mid A_i)P(A_i)$ (total probability). In tree language: among all the paths that end in B, the posterior of cause $A_j$ is the share of probability flowing through $A_j$."
+   },
+   {
+    "t": "viz",
+    "name": "tree",
+    "opts": {
+     "tree": {
+      "kids": [
+       {
+        "label": "A",
+        "p": "1/2",
+        "kids": [
+         {
+          "label": "Defective",
+          "p": "1/100"
+         },
+         {
+          "label": "Good",
+          "p": "99/100"
+         }
+        ]
+       },
+       {
+        "label": "B",
+        "p": "3/10",
+        "kids": [
+         {
+          "label": "Defective",
+          "p": "1/50"
+         },
+         {
+          "label": "Good",
+          "p": "49/50"
+         }
+        ]
+       },
+       {
+        "label": "C",
+        "p": "1/5",
+        "kids": [
+         {
+          "label": "Defective",
+          "p": "1/25"
+         },
+         {
+          "label": "Good",
+          "p": "24/25"
+         }
+        ]
+       }
+      ]
+     },
+     "select": [
+      "C/Defective"
+     ],
+     "given": [
+      "A/Defective",
+      "B/Defective",
+      "C/Defective"
+     ]
+    },
+    "cap": "Given that the part is defective, only the three defective paths remain. Machine C has the highest defect rate, so its share of them is largest."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Which machine?",
+    "q": "Machines A, B, C make 50%, 30%, 20% of the parts with defect rates 1%, 2%, 4%. A random part is defective. Find the probability that each machine made it.",
+    "steps": [
+     "Joint probabilities: $A$: $0.005$, $B$: $0.006$, $C$: $0.008$; total $P(D) = 0.019$.",
+     "$P(A \\mid D) = \\frac{0.005}{0.019} = \\frac{5}{19}$, $P(B \\mid D) = \\frac{6}{19}$, $P(C \\mid D) = \\frac{8}{19}$.",
+     "They add to 1. C makes the fewest parts but is the most likely source of a defect."
+    ],
+    "a": "$\\frac{5}{19}$, $\\frac{6}{19}$, $\\frac{8}{19}$"
+   },
+   {
+    "t": "ex",
+    "title": "Two positive tests",
+    "q": "A condition affects 1% of people. A test is positive for 95% of people with it and for 5% without it. A person tests positive twice, and the two results are independent given their condition. Find the probability they have the condition.",
+    "steps": [
+     "After one positive: $$\\frac{0.95(0.01)}{0.95(0.01) + 0.05(0.99)} = \\frac{0.0095}{0.059} = \\frac{19}{118} \\approx 0.161$$",
+     "Use $0.161$ as the new prior. Or in one step, multiply the likelihoods: $$\\frac{0.95^{2}(0.01)}{0.95^{2}(0.01) + 0.05^{2}(0.99)} = \\frac{0.009025}{0.0115} = \\frac{361}{460}$$",
+     "$\\approx 0.785$. One positive is weak evidence for a rare condition; two independent positives are much stronger. (A negative second result would instead multiply by $0.05$ on the \"condition\" side and $0.95$ on the other, pushing the probability back down.)"
+    ],
+    "a": "$\\frac{361}{460} \\approx 0.785$"
+   },
+   {
+    "t": "note",
+    "html": "The same update in odds form: posterior odds = prior odds × likelihood ratio. Here the prior odds are $\\frac{1}{99}$, and each positive multiplies them by $\\frac{0.95}{0.05} = 19$: after two positives the odds are $\\frac{361}{99}$, a probability of $\\frac{361}{460}$."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading the test's accuracy as the answer: $P(+ \\mid \\text{condition}) = 0.95$ is not $P(\\text{condition} \\mid +)$, which is only $0.161$ after one test. The other common slip is forgetting to divide by $P(B)$, so the \"posteriors\" do not add to 1. Check: list every cause and make sure your posteriors add to 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 4 (Conditional Probability), section 4.1, Bayes probabilities"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on Bayes' theorem and updating"
+   }
+  ]
+ },
+ "prob.independence-several": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two events are independent when knowing one happened does not change the chance of the other: $P(A \\cap B) = P(A)P(B)$, as in <a href=\"/math/probability-and-statistics/independence/\">independent events</a>. For three or more events, and for events that cannot happen together, the details matter."
+   },
+   {
+    "t": "key",
+    "html": "$A$, $B$, $C$ are (mutually) <b>independent</b> when all four equations hold: $P(A \\cap B) = P(A)P(B)$, $P(A \\cap C) = P(A)P(C)$, $P(B \\cap C) = P(B)P(C)$ and $P(A \\cap B \\cap C) = P(A)P(B)P(C)$. Disjoint events with positive probabilities are never independent."
+   },
+   {
+    "t": "why",
+    "html": "Independence means information about some of the events tells you nothing about the others. If A and B are disjoint and $P(A) > 0$, then learning A happened tells you B did <i>not</i> happen: $P(B \\mid A) = 0 \\ne P(B)$. Using the <a href=\"/math/probability/conditional-vs-joint/\">definition of conditioning</a>, $P(A \\cap B) = 0 < P(A)P(B)$. Pairs are not enough for three events: the triple equation says that knowing <i>both</i> A and B tells you nothing about C, and that is a separate fact."
+   },
+   {
+    "t": "viz",
+    "name": "prob-square",
+    "opts": {
+     "layout": "disjoint",
+     "pA": "3/10",
+     "pB": "2/5",
+     "labels": {
+      "A": "A",
+      "B": "B"
+     }
+    },
+    "cap": "Disjoint events: no overlap, so the joint probability is 0 while the product of the probabilities is not."
+   },
+   {
+    "t": "viz",
+    "name": "prob-square",
+    "opts": {
+     "layout": "coins"
+    },
+    "cap": "Two coin flips: A is first flip heads, B is second flip heads, C is the flips match. Every pair multiplies, but knowing A and B makes C certain."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Disjoint is dependent",
+    "q": "A die is rolled. A = \"roll a 1\", B = \"roll a 6\". Are A and B independent?",
+    "steps": [
+     "$P(A \\cap B) = 0$, since one roll cannot be both.",
+     "$P(A)P(B) = \\frac{1}{6} \\cdot \\frac{1}{6} = \\frac{1}{36} \\ne 0$."
+    ],
+    "a": "No. They are mutually exclusive, which makes them dependent."
+   },
+   {
+    "t": "ex",
+    "title": "At least one of three",
+    "q": "Three independent alarms sound in a fire with probabilities $0.9$, $0.8$ and $0.7$. Find the probability that at least one sounds.",
+    "steps": [
+     "Complement: all three fail. By independence, $$P(\\text{none}) = 0.1 \\times 0.2 \\times 0.3 = 0.006$$",
+     "$$P(\\text{at least one}) = 1 - 0.006 = 0.994$$",
+     "For \"exactly one\", add three disjoint cases: $$0.9(0.2)(0.3) + 0.1(0.8)(0.3) + 0.1(0.2)(0.7) = 0.054 + 0.024 + 0.014 = 0.092$$"
+    ],
+    "a": "$0.994$ (and $0.092$ for exactly one)"
+   },
+   {
+    "t": "ex",
+    "title": "Independent in pairs only",
+    "q": "Flip two fair coins. A = first is heads, B = second is heads, C = the flips match. Check pairwise and mutual independence.",
+    "steps": [
+     "Each event has probability $\\frac{1}{2}$. $A \\cap B = \\{HH\\}$, $A \\cap C = \\{HH\\}$, $B \\cap C = \\{HH\\}$: each has probability $\\frac{1}{4} = \\frac{1}{2} \\cdot \\frac{1}{2}$. So every pair is independent.",
+     "$A \\cap B \\cap C = \\{HH\\}$ has probability $\\frac{1}{4}$, but $P(A)P(B)P(C) = \\frac{1}{8}$."
+    ],
+    "a": "Independent in pairs, but not mutually independent: knowing A and B forces C."
+   },
+   {
+    "t": "mistake",
+    "html": "Treating mutually exclusive events as independent (\"they have nothing to do with each other\"). Exclusive events are strongly linked: one rules out the other. The second slip is checking only pairs of events. Check: for three events write down all four products, including the triple one."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 4 (Conditional Probability), section 4.1, independent events"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on independence"
+   }
+  ]
+ },
+ "prob.pmf-cdf": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/probability-and-statistics/discrete-random-variables/\">discrete random variable</a> takes values you can list, each with a probability. Two descriptions carry the same information: the probability mass function lists $P(X = x)$, and the cumulative distribution function adds them up. Moving between them, with care at the endpoints, is the skill here."
+   },
+   {
+    "t": "key",
+    "html": "The <b>pmf</b> is $p_X(x) = P(X = x)$: never negative, adding to 1 over all values. The <b>CDF</b> is $F_X(x) = P(X \\le x)$: it climbs in steps from 0 to 1, jumping by $P(X = a)$ at each value $a$. For $a < b$: $$P(a < X \\le b) = F(b) - F(a).$$"
+   },
+   {
+    "t": "why",
+    "html": "The events $\\{X \\le a\\}$ and $\\{a < X \\le b\\}$ are disjoint, and together they make $\\{X \\le b\\}$. By the <a href=\"/math/probability/axioms/\">addition axiom</a>, $F(b) = F(a) + P(a < X \\le b)$. The size of a jump is a special case: $P(X = a) = F(a) - P(X < a)$, the CDF at $a$ minus its value just before $a$. Between two values of $X$ nothing happens, so $F$ is flat there: if $X$ is a whole number, $F(2.5) = F(2)$."
+   },
+   {
+    "t": "viz",
+    "name": "prob-density",
+    "opts": {
+     "dist": "pmf",
+     "pmf": {
+      "x": [
+       0,
+       1,
+       2,
+       3
+      ],
+      "p": [
+       "1/8",
+       "3/8",
+       "3/8",
+       "1/8"
+      ]
+     },
+     "a": 1,
+     "b": 3,
+     "closed": "[]"
+    },
+    "cap": "The number of heads in three fair coin flips: bars for the pmf and the step-shaped CDF below. Switch which ends count and watch the bars and the gap change."
+   },
+   {
+    "t": "p",
+    "html": "On the CDF a filled dot sits at the top of each jump and an open dot at the bottom: at $x = a$ the CDF already includes $P(X = a)$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Reading the CDF from the pmf",
+    "q": "$X$ is the number of heads in three fair flips: $p(0) = \\frac{1}{8}$, $p(1) = \\frac{3}{8}$, $p(2) = \\frac{3}{8}$, $p(3) = \\frac{1}{8}$. Find $F(1)$, $F(1.5)$ and $P(1 \\le X \\le 2)$.",
+    "steps": [
+     "$F(1) = p(0) + p(1) = \\frac{1}{2}$, and $F(1.5) = \\frac{1}{2}$ too: no value lies between 1 and 1.5.",
+     "$P(1 \\le X \\le 2) = p(1) + p(2) = \\frac{3}{4}$.",
+     "With the CDF: $F(2) - F(0) = \\frac{7}{8} - \\frac{1}{8} = \\frac{3}{4}$. Subtract $F(0)$, not $F(1)$, so that $X = 1$ stays in."
+    ],
+    "a": "$\\frac{1}{2}$, $\\frac{1}{2}$ and $\\frac{3}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "From a CDF table",
+    "q": "A whole-number $X$ has $F(0) = 0.1$, $F(1) = 0.3$, $F(2) = 0.6$, $F(3) = 0.85$, $F(4) = 1$. Find $P(X = 2)$, $P(1 \\le X \\le 3)$ and $P(X \\ge 2)$.",
+    "steps": [
+     "$P(X = 2)$ is the jump at 2: $0.6 - 0.3 = 0.3$.",
+     "$$P(1 \\le X \\le 3) = F(3) - F(0) = 0.85 - 0.1 = 0.75$$",
+     "$$P(X \\ge 2) = 1 - P(X \\le 1) = 1 - 0.3 = 0.7$$"
+    ],
+    "a": "$0.3$, $0.75$ and $0.7$"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $F(b) - F(a)$ for $P(a \\le X \\le b)$ when $X$ is discrete. That difference is $P(a < X \\le b)$ and leaves out $P(X = a)$, which can be large. Check by listing the values that should count and adding their probabilities directly. (For continuous variables single points have probability 0, so there the endpoints do not matter.)"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 1 (Discrete Probability Distributions), section 1.2"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on discrete random variables, pmfs and CDFs"
+   }
+  ]
+ },
+ "prob.expectation-of-function": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/probability-and-statistics/expected-value/\">expected value</a> $E[X] = \\sum x\\,P(X = x)$ is the long-run average of $X$. Often we need the average of something computed from $X$: a payoff, a square, a cost. There is no need to find the distribution of that new quantity first."
+   },
+   {
+    "t": "key",
+    "html": "For a function $g$, $$E[g(X)] = \\sum_x g(x)\\,P(X = x).$$ Apply $g$ to each value, then weight by the probabilities. In general $E[g(X)] \\ne g(E[X])$; they agree when $g(x) = ax + b$."
+   },
+   {
+    "t": "why",
+    "html": "Let $Y = g(X)$. By definition $E[Y] = \\sum_y y\\,P(Y = y)$, and $P(Y = y)$ adds $P(X = x)$ over all $x$ with $g(x) = y$. So $$E[Y] = \\sum_y \\sum_{x:\\,g(x) = y} g(x)\\,P(X = x) = \\sum_x g(x)\\,P(X = x),$$ since every $x$ appears exactly once in the double sum. For a straight line, $$E[aX + b] = a\\sum x\\,p(x) + b\\sum p(x) = aE[X] + b$$ For a curve there is no such shortcut."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$x$",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6"
+    ],
+    "rows": [
+     [
+      "$P(X = x)$",
+      "$\\frac{1}{6}$",
+      "$\\frac{1}{6}$",
+      "$\\frac{1}{6}$",
+      "$\\frac{1}{6}$",
+      "$\\frac{1}{6}$",
+      "$\\frac{1}{6}$"
+     ],
+     [
+      "$x^{2}$",
+      "1",
+      "4",
+      "9",
+      "16",
+      "25",
+      "36"
+     ],
+     [
+      "$\\max(x - 4, 0)$",
+      "0",
+      "0",
+      "0",
+      "0",
+      "1",
+      "2"
+     ]
+    ],
+    "cap": "One fair die, with two functions of the roll."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The square of a die roll",
+    "q": "Roll a fair die. Find $E[X^{2}]$ and compare it with $(E[X])^{2}$.",
+    "steps": [
+     "$$E[X^{2}] = \\frac{1 + 4 + 9 + 16 + 25 + 36}{6} = \\frac{91}{6} \\approx 15.17$$",
+     "$E[X] = \\frac{7}{2}$, so $(E[X])^{2} = \\frac{49}{4} = 12.25$.",
+     "They differ by $\\frac{91}{6} - \\frac{49}{4} = \\frac{35}{12}$, which will turn out to be the variance."
+    ],
+    "a": "$E[X^{2}] = \\frac{91}{6}$, larger than $(E[X])^{2} = \\frac{49}{4}$."
+   },
+   {
+    "t": "ex",
+    "title": "A payoff",
+    "q": "A game pays $\\max(X - 4, 0)$ dollars on a fair die roll $X$: \\$1 for a 5, \\$2 for a 6, nothing otherwise. Find the expected payoff.",
+    "steps": [
+     "$$E[\\max(X - 4, 0)] = 0 \\cdot \\frac{4}{6} + 1 \\cdot \\frac{1}{6} + 2 \\cdot \\frac{1}{6} = \\frac{1}{2}$$",
+     "Plugging in the mean gives $\\max(3.5 - 4, 0) = 0$, which would call the game worthless."
+    ],
+    "a": "\\$0.50"
+   },
+   {
+    "t": "ex",
+    "title": "A reciprocal",
+    "q": "For the die, find $E\\left[\\frac{1}{X}\\right]$.",
+    "steps": [
+     "$$E\\left[\\frac{1}{X}\\right] = \\frac{1}{6}\\left(1 + \\frac{1}{2} + \\frac{1}{3} + \\frac{1}{4} + \\frac{1}{5} + \\frac{1}{6}\\right) = \\frac{1}{6} \\cdot \\frac{49}{20} = \\frac{49}{120} \\approx 0.41$$",
+     "Compare $\\frac{1}{E[X]} = \\frac{2}{7} \\approx 0.29$."
+    ],
+    "a": "$\\frac{49}{120}$"
+   },
+   {
+    "t": "p",
+    "html": "The same rule handles any function the problems might use: $\\lvert X - c \\rvert$ (an average distance), $X(X - 1)$ (useful for counting pairs), $2^{X}$ (a doubling payoff) or $(X - c)^{2}$. In each case make a row of $g$-values, multiply by the probabilities, and add."
+   },
+   {
+    "t": "mistake",
+    "html": "Finding $E[X^{2}]$ by squaring $E[X]$. Averaging and squaring do not commute: big values get squared into much bigger ones, so the average of the squares is larger. Check with a variable that is $-1$ or $1$ with equal chances: $E[X] = 0$, but $X^{2} = 1$ always, so $E[X^{2}] = 1$."
+   },
+   {
+    "t": "note",
+    "html": "For a curve that bends upward (convex), such as $x^{2}$, $e^{x}$ or $\\frac{1}{x}$ for $x > 0$, the inequality always goes one way: $E[g(X)] \\ge g(E[X])$. This is Jensen's inequality."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 6 (Expected Value and Variance), section 6.1"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on expectation of a function of a random variable"
+   }
+  ]
+ },
+ "prob.variance-rules": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/probability-and-statistics/random-variable-spread/\">standard deviation of a random variable</a> measures how far $X$ typically lands from its mean. Its square, the variance, is easier to work with, because it is an <a href=\"/math/probability/expectation-of-function/\">expected value of a function</a>: $\\operatorname{Var}(X) = E[(X - \\mu)^{2}]$ with $\\mu = E[X]$."
+   },
+   {
+    "t": "key",
+    "html": "$$\\operatorname{Var}(X) = E[X^{2}] - (E[X])^{2}, \\qquad \\operatorname{Var}(aX + b) = a^{2}\\operatorname{Var}(X), \\qquad \\operatorname{SD}(aX + b) = \\lvert a \\rvert\\,\\operatorname{SD}(X).$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>Shortcut:</b> expand $(X - \\mu)^{2} = X^{2} - 2\\mu X + \\mu^{2}$ and use linearity: $E[X^{2}] - 2\\mu \\cdot \\mu + \\mu^{2} = E[X^{2}] - \\mu^{2}$.\n  <br><b>Linear change:</b> $aX + b$ has mean $a\\mu + b$, so its distance from its mean is $(aX + b) - (a\\mu + b) = a(X - \\mu)$. Squaring gives $a^{2}(X - \\mu)^{2}$, and averaging gives $a^{2}\\operatorname{Var}(X)$. The shift $b$ moves every value and the mean together, so it disappears."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A die",
+    "q": "Find the variance and standard deviation of a fair die roll.",
+    "steps": [
+     "$E[X] = \\frac{7}{2}$ and $E[X^{2}] = \\frac{91}{6}$.",
+     "$$\\operatorname{Var}(X) = \\frac{91}{6} - \\frac{49}{4} = \\frac{182 - 147}{12} = \\frac{35}{12} \\approx 2.92$$",
+     "$\\operatorname{SD}(X) = \\sqrt{35/12} \\approx 1.71$."
+    ],
+    "a": "$\\frac{35}{12}$ and about $1.71$"
+   },
+   {
+    "t": "ex",
+    "title": "A linear change",
+    "q": "$X$ is a fair die roll and $Y = 3 - 2X$. Find $E[Y]$, $\\operatorname{Var}(Y)$ and $\\operatorname{SD}(Y)$.",
+    "steps": [
+     "$E[Y] = 3 - 2 \\cdot \\frac{7}{2} = -4$.",
+     "$\\operatorname{Var}(Y) = (-2)^{2} \\cdot \\frac{35}{12} = \\frac{35}{3}$; the $3$ plays no part.",
+     "$\\operatorname{SD}(Y) = 2 \\cdot 1.71 \\approx 3.42$: the factor is $\\lvert -2 \\rvert = 2$."
+    ],
+    "a": "$-4$, $\\frac{35}{3}$ and about $3.42$"
+   },
+   {
+    "t": "why",
+    "html": "Two more facts come straight from the shortcut. Rearranged, it says $E[X^{2}] = \\operatorname{Var}(X) + \\mu^{2}$. More generally, for any number $c$, $$E[(X - c)^{2}] = \\operatorname{Var}(X) + (\\mu - c)^{2},$$ because $X - c = (X - \\mu) + (\\mu - c)$ and the cross term has mean $2(\\mu - c)E[X - \\mu] = 0$. So the average squared distance from $c$ is smallest when $c = \\mu$: the mean is the best single guess when errors are measured by their squares."
+   },
+   {
+    "t": "ex",
+    "title": "Changing units",
+    "q": "Daily highs have mean $20^\\circ\\text{C}$ and standard deviation $5^\\circ\\text{C}$. Find the mean and standard deviation in Fahrenheit, $F = \\frac{9}{5}C + 32$.",
+    "steps": [
+     "Mean: $\\frac{9}{5} \\cdot 20 + 32 = 68^\\circ\\text{F}$.",
+     "Standard deviation: $\\frac{9}{5} \\cdot 5 = 9^\\circ\\text{F}$; adding 32 does not change the spread."
+    ],
+    "a": "$68^\\circ\\text{F}$ and $9^\\circ\\text{F}$ (variance $81$)."
+   },
+   {
+    "t": "ex",
+    "title": "Squared distance from a target",
+    "q": "$X$ has mean 5 and variance 4. Find $E[X^{2}]$ and $E[(X - 2)^{2}]$.",
+    "steps": [
+     "$$E[X^{2}] = \\operatorname{Var}(X) + \\mu^{2} = 4 + 25 = 29$$",
+     "$$E[(X - 2)^{2}] = \\operatorname{Var}(X) + (\\mu - 2)^{2} = 4 + 9 = 13$$"
+    ],
+    "a": "29 and 13"
+   },
+   {
+    "t": "note",
+    "html": "Variance is measured in squared units (square degrees, square dollars), which is hard to picture. The standard deviation, its square root, is back in the original units, so use the SD when describing spread and the variance when calculating."
+   },
+   {
+    "t": "mistake",
+    "html": "Writing $\\operatorname{Var}(aX + b) = a\\operatorname{Var}(X) + b$. With $a = -1$ and $b = 0$ that would make $\\operatorname{Var}(-X)$ negative, which is impossible; and adding a constant cannot change how spread out the values are. Check: a variance is never negative, and $\\operatorname{Var}(-X) = \\operatorname{Var}(X)$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 6 (Expected Value and Variance), section 6.2"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on variance and standard deviation"
+   }
+  ]
+ },
+ "prob.linearity-indicators": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/probability-and-statistics/combining-random-variables/\">sums of random variables</a> you added means. The rule is stronger than it first looks: it needs no independence at all. Together with indicator variables it computes expected counts that would be hard to find any other way, building on <a href=\"/math/probability/expectation-of-function/\">expected values of functions</a>."
+   },
+   {
+    "t": "key",
+    "html": "$E[X + Y] = E[X] + E[Y]$ for <b>any</b> random variables, dependent or not. An <b>indicator</b> $I_A$ is 1 when $A$ happens and 0 otherwise, and $E[I_A] = P(A)$. So if a count is $X = I_{A_1} + \\cdots + I_{A_n}$, then $$E[X] = P(A_1) + \\cdots + P(A_n).$$"
+   },
+   {
+    "t": "why",
+    "html": "For discrete $X$ and $Y$ with joint probabilities $p(x, y)$: $$E[X + Y] = \\sum_{x,y} (x + y)\\,p(x, y) = \\sum_x x \\sum_y p(x, y) + \\sum_y y \\sum_x p(x, y) = E[X] + E[Y],$$ because summing the joint probabilities over one variable gives the other's distribution. Nothing in this used independence. And $$E[I_A] = 1 \\cdot P(A) + 0 \\cdot P(A^{c}) = P(A)$$"
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Cards in their own place",
+    "q": "A deck of 52 cards, numbered by position, is shuffled. Find the expected number of cards that end up in their original position.",
+    "steps": [
+     "Let $I_k = 1$ when card $k$ stays in position $k$. In a random order, card $k$ is equally likely to be in any of the 52 spots, so $P(I_k = 1) = \\frac{1}{52}$.",
+     "The $I_k$ are dependent (if 51 cards stay, so does the last), but linearity does not care.",
+     "$E[X] = 52 \\cdot \\frac{1}{52} = 1$, for a deck of any size."
+    ],
+    "a": "1"
+   },
+   {
+    "t": "ex",
+    "title": "Shared birthdays",
+    "q": "30 people have independent, uniformly random birthdays (365 days). Find the expected number of pairs of people who share a birthday.",
+    "steps": [
+     "One indicator per pair: there are $\\binom{30}{2} = 435$ pairs.",
+     "Each pair matches with probability $\\frac{1}{365}$.",
+     "$E[X] = \\frac{435}{365} = \\frac{87}{73} \\approx 1.19$. Compare the <a href=\"/math/probability/birthday-problem/\">birthday problem</a>: a match is likely, and on average there is more than one."
+    ],
+    "a": "$\\frac{87}{73}$"
+   },
+   {
+    "t": "ex",
+    "title": "Different faces",
+    "q": "Roll a die 6 times. Find the expected number of different faces that appear.",
+    "steps": [
+     "Let $I_f = 1$ if face $f$ appears at least once. Face $f$ is missed by all 6 rolls with probability $\\left(\\frac{5}{6}\\right)^{6}$.",
+     "$E[I_f] = 1 - \\left(\\frac{5}{6}\\right)^{6}$.",
+     "$$E[X] = 6\\left(1 - \\left(\\frac{5}{6}\\right)^{6}\\right) = \\frac{31031}{7776} \\approx 3.99$$ about 4 faces, not 6."
+    ],
+    "a": "$\\frac{31031}{7776} \\approx 3.99$"
+   },
+   {
+    "t": "p",
+    "html": "The same recipe handles many counts. Name the small events, find the chance of one of them, and multiply by how many there are:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Patterns in coin flips.</b> In $n$ flips there are $n - 1$ neighboring pairs, each HH with chance $\\frac{1}{4}$, so the expected number of HH is $\\frac{n - 1}{4}$. A new run starts at each switch, and each neighboring pair is a switch with chance $\\frac{1}{2}$: expected runs $= 1 + \\frac{n - 1}{2}$.",
+     "<b>Empty boxes.</b> Toss $b$ balls into $m$ boxes: box $j$ stays empty with chance $\\left(\\frac{m - 1}{m}\\right)^{b}$, so the expected number of empty boxes is $m\\left(\\frac{m - 1}{m}\\right)^{b}$.",
+     "<b>Mixed neighbors.</b> Line up $b$ boys and $g$ girls at random ($n = b + g$). Each of the $n - 1$ neighboring pairs is mixed with chance $\\frac{2bg}{n(n - 1)}$, so the expected number of mixed pairs is $\\frac{2bg}{n}$."
+    ]
+   },
+   {
+    "t": "mistake",
+    "html": "Believing that $E[X + Y] = E[X] + E[Y]$ needs independence, and so giving up on counts made of dependent pieces. Expected values always add. (Variances are different: there the dependence enters through covariance terms, as in <a href=\"/math/probability/variance-of-sums/\">the variance of a sum</a>.) Check small cases by listing outcomes: for a 2-card deck, both cards stay with probability $\\frac{1}{2}$, so the expected number is $2 \\cdot \\frac{1}{2} = 1$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 6 (Expected Value and Variance), section 6.1, sums of random variables"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on expectation and indicator variables"
+   }
+  ]
+ },
+ "prob.hypergeometric": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Drawing a hand of cards or choosing a committee are draws <i>without replacement</i>: once someone is chosen, they cannot be chosen again, so the draws are not independent and the binomial model does not apply. Counting equally likely subsets, as in <a href=\"/math/probability-and-statistics/counting-probability/\">probability with counting</a>, gives the exact <a href=\"/math/probability/pmf-cdf/\">pmf</a>."
+   },
+   {
+    "t": "key",
+    "html": "Draw $n$ items at random, without replacement, from $N$ items of which $K$ are \"successes\". The number of successes $X$ has the <b>hypergeometric</b> distribution: $$P(X = k) = \\frac{\\binom{K}{k}\\binom{N - K}{n - k}}{\\binom{N}{n}}, \\qquad E[X] = n\\frac{K}{N}.$$"
+   },
+   {
+    "t": "why",
+    "html": "All $\\binom{N}{n}$ sets of $n$ items are equally likely. A set with exactly $k$ successes is made by choosing $k$ of the $K$ successes and $n - k$ of the $N - K$ others: $\\binom{K}{k}\\binom{N - K}{n - k}$ ways. For the mean, use <a href=\"/math/probability/linearity-indicators/\">indicators</a>: by symmetry, draw $j$ is equally likely to be any of the $N$ items, so it is a success with probability $\\frac{K}{N}$, and the $n$ draws add to $n\\frac{K}{N}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A committee",
+    "q": "A committee of 4 is chosen at random from 7 women and 5 men. Find the probability that it has exactly 2 women, and the expected number of women.",
+    "steps": [
+     "$$P(X = 2) = \\dfrac{\\binom{7}{2}\\binom{5}{2}}{\\binom{12}{4}} = \\dfrac{21 \\cdot 10}{495} = \\frac{14}{33} \\approx 0.424$$",
+     "$E[X] = 4 \\cdot \\frac{7}{12} = \\frac{7}{3}$."
+    ],
+    "a": "$\\frac{14}{33}$ and $\\frac{7}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "At least one defective",
+    "q": "A box of 12 bulbs has 3 defective ones. You test 4 at random. Find the probability that at least one is defective.",
+    "steps": [
+     "Complement: none defective, all 4 from the 9 good bulbs: $\\dfrac{\\binom{9}{4}}{\\binom{12}{4}} = \\dfrac{126}{495} = \\frac{14}{55}$.",
+     "$P(X \\ge 1) = 1 - \\frac{14}{55} = \\frac{41}{55} \\approx 0.745$."
+    ],
+    "a": "$\\frac{41}{55}$"
+   },
+   {
+    "t": "ex",
+    "title": "When the binomial is close",
+    "q": "Compare $P(2 \\text{ women})$ in the committee example with the binomial value for 4 independent draws with $p = \\frac{7}{12}$, and with a group of 700 women and 500 men.",
+    "steps": [
+     "Binomial: $\\binom{4}{2}\\left(\\frac{7}{12}\\right)^{2}\\left(\\frac{5}{12}\\right)^{2} \\approx 0.354$, quite different from $0.424$.",
+     "With 700 women and 500 men the hypergeometric value is about $0.355$: removing a few people barely changes the mix, so the draws are nearly independent."
+    ],
+    "a": "The binomial is a good approximation only when $N$ is large compared with $n$."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the binomial for draws without replacement from a small group. After one woman is chosen, the chance that the next is a woman drops from $\\frac{7}{12}$ to $\\frac{6}{11}$, so the trials are neither independent nor identical. Check: if $n$ is more than about a tenth of $N$, use the hypergeometric."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.1, the hypergeometric distribution"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on the hypergeometric and binomial distributions"
+   }
+  ]
+ },
+ "prob.negative-binomial": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/probability-and-statistics/geometric-distribution/\">geometric distribution</a> counts the trials up to the first success. Waiting for the third success, or the fifth, gives the negative binomial distribution. As in that lesson, $X$ counts all the trials, including the last success. (Some books count only the failures, $X - r$; the ideas are the same.)"
+   },
+   {
+    "t": "key",
+    "html": "In independent trials with success probability $p$, the number of trials $X$ needed for the $r$th success has $$P(X = k) = \\binom{k - 1}{r - 1}p^{r}(1 - p)^{k - r}, \\quad k = r, r + 1, \\ldots,$$ with $E[X] = \\frac{r}{p}$ and $\\operatorname{Var}(X) = \\frac{r(1 - p)}{p^{2}}$."
+   },
+   {
+    "t": "why",
+    "html": "$X = k$ means trial $k$ is a success and the first $k - 1$ trials contain exactly $r - 1$ successes, in any of $\\binom{k - 1}{r - 1}$ arrangements. Each arrangement has $r$ successes and $k - r$ failures, probability $p^{r}(1 - p)^{k - r}$. For the mean, split the wait into $r$ stages: trials to the first success, then from there to the second, and so on. Each stage is geometric with mean $\\frac{1}{p}$, so by <a href=\"/math/probability/linearity-indicators/\">linearity</a> $E[X] = \\frac{r}{p}$. The stages are independent, so their variances $\\frac{1 - p}{p^{2}}$ add too."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Coins",
+    "q": "Flip a fair coin until the 3rd head. Find the probability that exactly 5 flips are needed.",
+    "steps": [
+     "The 5th flip is the 3rd head, and the first 4 flips hold exactly 2 heads: $\\binom{4}{2} = 6$ arrangements.",
+     "$P(X = 5) = 6 \\cdot \\left(\\frac{1}{2}\\right)^{5} = \\frac{3}{16}$."
+    ],
+    "a": "$\\frac{3}{16}$"
+   },
+   {
+    "t": "ex",
+    "title": "Sixes",
+    "q": "Roll a die until the 2nd six. Find $P(X = 4)$ and $E[X]$.",
+    "steps": [
+     "$$P(X = 4) = \\binom{3}{1}\\left(\\frac{1}{6}\\right)^{2}\\left(\\frac{5}{6}\\right)^{2} = 3 \\cdot \\frac{25}{1296} = \\frac{25}{432} \\approx 0.058$$",
+     "$E[X] = \\frac{2}{1/6} = 12$ rolls."
+    ],
+    "a": "$\\frac{25}{432}$ and 12"
+   },
+   {
+    "t": "ex",
+    "title": "A best-of-seven series",
+    "q": "Team A wins each game with probability $0.6$, independently. In a best-of-seven series (first to 4 wins), find the probability that A wins in exactly 6 games.",
+    "steps": [
+     "Game 6 must be A's 4th win, and games 1 to 5 hold exactly 3 A-wins: $\\binom{5}{3} = 10$ arrangements.",
+     "$$P = 10(0.6)^{4}(0.4)^{2} = 10(0.1296)(0.16) \\approx 0.207$$"
+    ],
+    "a": "about $0.207$"
+   },
+   {
+    "t": "note",
+    "html": "\"The $r$th success comes on or before trial $m$\" is the same event as \"at least $r$ successes in the first $m$ trials\". So you can add the negative binomial probabilities for $k = r, \\ldots, m$, or add binomial probabilities for $r$ or more successes in $m$ trials. Both give the same number, a useful check."
+   },
+   {
+    "t": "mistake",
+    "html": "Using $\\binom{k}{r}$ instead of $\\binom{k - 1}{r - 1}$. The last trial is not free: it must be the $r$th success, so only the earlier $k - 1$ trials can be arranged. Check with $r = 1$: the formula must give the geometric $p(1 - p)^{k - 1}$, and $\\binom{k - 1}{0} = 1$ does."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.1, the negative binomial distribution"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on the geometric and negative binomial distributions"
+   }
+  ]
+ },
+ "prob.poisson": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some counts have no fixed number of trials: emails in an hour, typos on a page, meteors in a night. When events happen independently and at a steady average rate, the count follows the Poisson distribution. Its formula comes from the series $e^{\\lambda} = \\sum \\frac{\\lambda^{k}}{k!}$ from <a href=\"/math/calculus-2/known-series/\">known series</a>."
+   },
+   {
+    "t": "key",
+    "html": "$X$ is <b>Poisson</b> with mean $\\lambda > 0$ when $$P(X = k) = e^{-\\lambda}\\frac{\\lambda^{k}}{k!}, \\quad k = 0, 1, 2, \\ldots$$ Its mean and its variance are both $\\lambda$. If events occur at rate $r$ per unit of time, the count in a window of length $t$ has $\\lambda = rt$."
+   },
+   {
+    "t": "why",
+    "html": "The probabilities add to 1: $\\sum_k e^{-\\lambda}\\frac{\\lambda^{k}}{k!} = e^{-\\lambda}e^{\\lambda} = 1$. For the mean, the $k = 0$ term vanishes and $\\frac{k}{k!} = \\frac{1}{(k - 1)!}$: $$E[X] = \\sum_{k \\ge 1} e^{-\\lambda}\\frac{\\lambda^{k}}{(k - 1)!} = \\lambda\\sum_{j \\ge 0} e^{-\\lambda}\\frac{\\lambda^{j}}{j!} = \\lambda.$$ The same trick gives $E[X(X - 1)] = \\lambda^{2}$, so $\\operatorname{Var}(X) = \\lambda^{2} + \\lambda - \\lambda^{2} = \\lambda$. (The <a href=\"/math/probability/poisson-approximation/\">next lesson</a> shows where the formula comes from.)"
+   },
+   {
+    "t": "p",
+    "html": "When is a count Poisson? Three conditions are enough in practice: events in separate stretches of time (or space) happen independently, the average rate stays the same, and two events never happen at exactly the same instant. Calls to a large help desk, decays of a radioactive sample and flaws along a cable fit well. Customers who arrive in groups, or a rate that changes through the day, do not, unless you shorten the window until the rate is roughly constant."
+   },
+   {
+    "t": "viz",
+    "name": "prob-poisson",
+    "opts": {
+     "lambda": 3,
+     "t": 1,
+     "T": 10,
+     "mode": "counts",
+     "seed": 4
+    },
+    "cap": "Random arrivals at rate 3 per unit of time. Drag the window of length 1 and count; many windows build a histogram that matches the Poisson pmf with mean 3."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Typos",
+    "q": "A page has on average 2 typos, Poisson. Find the probability of no typos, and of at most one.",
+    "steps": [
+     "$P(X = 0) = e^{-2} \\approx 0.135$.",
+     "$$P(X \\le 1) = e^{-2}(1 + 2) = 3e^{-2} \\approx 0.406$$"
+    ],
+    "a": "about $0.135$ and $0.406$"
+   },
+   {
+    "t": "ex",
+    "title": "Changing the window",
+    "q": "Calls arrive at a rate of 3 per hour. Find the probability of exactly 2 calls in a 30-minute window.",
+    "steps": [
+     "Half an hour: $\\lambda = 3 \\times \\frac{1}{2} = 1.5$.",
+     "$P(X = 2) = e^{-1.5}\\frac{1.5^{2}}{2} \\approx 0.251$."
+    ],
+    "a": "about $0.251$"
+   },
+   {
+    "t": "ex",
+    "title": "From one probability to the mean",
+    "q": "For a Poisson $X$, $P(X = 0) = \\frac{1}{4}$. Find $\\lambda$.",
+    "steps": [
+     "$P(X = 0) = e^{-\\lambda} = \\frac{1}{4}$.",
+     "$\\lambda = \\ln 4 \\approx 1.386$."
+    ],
+    "a": "$\\ln 4$"
+   },
+   {
+    "t": "note",
+    "html": "Neighboring probabilities have a simple ratio: $\\frac{P(X = k + 1)}{P(X = k)} = \\frac{\\lambda}{k + 1}$. So the probabilities rise while $k + 1 < \\lambda$ and fall after, and the most likely count is the whole-number part of $\\lambda$. The ratio also recovers $\\lambda$: if $P(X = 3) = P(X = 2)$, then $\\frac{\\lambda}{3} = 1$ and $\\lambda = 3$."
+   },
+   {
+    "t": "mistake",
+    "html": "Keeping the same $\\lambda$ when the window changes. A rate of 3 per hour means $\\lambda = 6$ for two hours and $\\lambda = 1.5$ for half an hour. Check: $\\lambda$ is the expected count in the window you are asking about, so it scales with the window's length."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.1, the Poisson distribution"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on the Poisson distribution"
+   }
+  ]
+ },
+ "prob.poisson-approximation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/probability-and-statistics/binomial-distribution/\">binomial distribution</a> with many trials and a small chance on each, such as defects in a day's production, is tedious to compute exactly. The <a href=\"/math/probability/poisson/\">Poisson distribution</a> is its limit, and a very good approximation."
+   },
+   {
+    "t": "key",
+    "html": "If $n$ is large, $p$ is small and $\\lambda = np$ is moderate, then $$\\binom{n}{k}p^{k}(1 - p)^{n - k} \\approx e^{-\\lambda}\\frac{\\lambda^{k}}{k!}.$$"
+   },
+   {
+    "t": "why",
+    "html": "Put $p = \\frac{\\lambda}{n}$ and let $n$ grow with $k$ fixed: $$\\binom{n}{k}\\left(\\frac{\\lambda}{n}\\right)^{k}\\left(1 - \\frac{\\lambda}{n}\\right)^{n - k} = \\frac{\\lambda^{k}}{k!} \\cdot \\frac{n(n - 1)\\cdots(n - k + 1)}{n^{k}} \\cdot \\left(1 - \\frac{\\lambda}{n}\\right)^{n}\\left(1 - \\frac{\\lambda}{n}\\right)^{-k}.$$ The second factor tends to 1, the third to $e^{-\\lambda}$ (the limit from calculus), and the last to 1. What is left is the Poisson pmf. This is also why Poisson counts arise: split time into many tiny slots, each with a tiny chance of an event."
+   },
+   {
+    "t": "p",
+    "html": "The slot picture is worth keeping. A window holds a huge number of tiny moments, each with a tiny, independent chance of an event; the binomial count over those moments is essentially Poisson. The same picture, run through time, becomes the Poisson process later in this course."
+   },
+   {
+    "t": "viz",
+    "name": "prob-poisson",
+    "opts": {
+     "lambda": 3,
+     "t": 1,
+     "mode": "slots",
+     "n": 10,
+     "seed": 2
+    },
+    "cap": "One window cut into slots, each with chance 3 divided by the number of slots of holding an arrival. With more slots, the binomial bars match the Poisson bars."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Defective chips",
+    "q": "A factory makes 500 chips a day, each defective with probability $0.004$, independently. Approximate the probability of no defective chips.",
+    "steps": [
+     "$\\lambda = np = 500 \\times 0.004 = 2$.",
+     "$P(X = 0) \\approx e^{-2} \\approx 0.1353$.",
+     "The exact binomial value is $0.996^{500} \\approx 0.1348$."
+    ],
+    "a": "about $0.135$"
+   },
+   {
+    "t": "ex",
+    "title": "At least two",
+    "q": "With the same chips, approximate $P(X \\ge 2)$.",
+    "steps": [
+     "$$P(X \\ge 2) = 1 - P(X = 0) - P(X = 1) \\approx 1 - e^{-2}(1 + 2)$$",
+     "$\\approx 1 - 0.406 = 0.594$ (exact: $0.5945$)."
+    ],
+    "a": "about $0.594$"
+   },
+   {
+    "t": "ex",
+    "title": "When it fails",
+    "q": "Compare binomial $n = 20$, $p = 0.5$ with Poisson $\\lambda = 10$ at $k = 10$.",
+    "steps": [
+     "Binomial: $\\binom{20}{10}(0.5)^{20} \\approx 0.176$.",
+     "Poisson: $e^{-10}\\frac{10^{10}}{10!} \\approx 0.125$.",
+     "The binomial's variance is $np(1 - p) = 5$, while the Poisson's is 10: the shapes differ."
+    ],
+    "a": "Far apart: $p = 0.5$ is not small."
+   },
+   {
+    "t": "note",
+    "html": "A common rule of thumb: the approximation is good when $n \\ge 100$ and $np \\le 10$, or more loosely when $p \\le 0.05$. The error is roughly of size $p$, so the smaller $p$ is, the better. For quick work, $P(\\text{no events}) = (1 - p)^{n} \\approx e^{-np}$ is the most used case."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the approximation when $p$ is not small. The Poisson has variance equal to its mean; a binomial has variance $np(1 - p)$, which is close to $np$ only when $p$ is near 0. Check: is $p$ below about $0.05$ with $n$ in the hundreds? If not, compute the binomial exactly or use a normal approximation."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.1, the Poisson approximation to the binomial"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on the Poisson limit of the binomial distribution"
+   }
+  ]
+ },
+ "prob.choosing-distribution": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Most word problems in this unit are solved the moment the right model is named. This lesson collects the <a href=\"/math/probability/hypergeometric/\">hypergeometric</a>, <a href=\"/math/probability/negative-binomial/\">negative binomial</a> and <a href=\"/math/probability/poisson-approximation/\">Poisson</a> models with the binomial and geometric, and gives a short set of questions for telling them apart."
+   },
+   {
+    "t": "key",
+    "html": "Ask in order: Is there a <b>fixed number of draws without replacement</b> from a finite group? Hypergeometric. A <b>fixed number $n$ of independent trials</b> with the same $p$, counting successes? Binomial. Trials <b>until the first success</b>? Geometric. <b>Until the $r$th</b>? Negative binomial. Events at random at a <b>steady rate</b> in time or space, with no fixed number of trials? Poisson."
+   },
+   {
+    "t": "why",
+    "html": "Each model is the exact answer for its story, and each formula uses the story's features. The binomial's $\\binom{n}{k}p^{k}(1 - p)^{n - k}$ needs independence and a constant $p$; without replacement those fail, and counting subsets replaces them. The waiting-time models fix the number of successes and let the number of trials vary; the binomial does the opposite. The Poisson is the limit of many tiny independent chances. Using a model whose story does not fit gives a precise-looking wrong answer."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Model",
+     "Story",
+     "$P(X = k)$",
+     "Mean",
+     "Variance"
+    ],
+    "rows": [
+     [
+      "Binomial",
+      "$n$ independent trials, count successes",
+      "$\\binom{n}{k}p^{k}(1 - p)^{n - k}$",
+      "$np$",
+      "$np(1 - p)$"
+     ],
+     [
+      "Geometric",
+      "trials until the first success",
+      "$(1 - p)^{k - 1}p$",
+      "$\\frac{1}{p}$",
+      "$\\frac{1 - p}{p^{2}}$"
+     ],
+     [
+      "Negative binomial",
+      "trials until the $r$th success",
+      "$\\binom{k - 1}{r - 1}p^{r}(1 - p)^{k - r}$",
+      "$\\frac{r}{p}$",
+      "$\\frac{r(1 - p)}{p^{2}}$"
+     ],
+     [
+      "Hypergeometric",
+      "$n$ draws without replacement, $K$ of $N$ special",
+      "$\\frac{\\binom{K}{k}\\binom{N - K}{n - k}}{\\binom{N}{n}}$",
+      "$\\frac{nK}{N}$",
+      "$n\\frac{K}{N}\\frac{N - K}{N}\\frac{N - n}{N - 1}$"
+     ],
+     [
+      "Poisson",
+      "random events at a steady rate",
+      "$e^{-\\lambda}\\frac{\\lambda^{k}}{k!}$",
+      "$\\lambda$",
+      "$\\lambda$"
+     ]
+    ],
+    "cap": "The five discrete models of this unit."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A card hand",
+    "q": "Five cards are dealt from a shuffled deck. $X$ is the number of hearts. Which model, and what is $E[X]$?",
+    "steps": [
+     "A fixed number of draws without replacement from 52 cards, 13 of them hearts: hypergeometric.",
+     "$E[X] = 5 \\cdot \\frac{13}{52} = \\frac{5}{4}$."
+    ],
+    "a": "Hypergeometric, mean $\\frac{5}{4}$."
+   },
+   {
+    "t": "ex",
+    "title": "Waiting for sixes",
+    "q": "Roll a die until the third six. $X$ is the number of rolls. Which model, and what is $E[X]$?",
+    "steps": [
+     "Independent trials, same $p = \\frac{1}{6}$, until the 3rd success: negative binomial with $r = 3$.",
+     "$E[X] = \\frac{3}{1/6} = 18$."
+    ],
+    "a": "Negative binomial, mean 18."
+   },
+   {
+    "t": "ex",
+    "title": "Two counts that look alike",
+    "q": "(a) The number of earthquakes above magnitude 5 in a region in a year. (b) The number of defective items in a sample of 10 from a shipment of 100,000. Which models?",
+    "steps": [
+     "(a) Events at random times at a steady average rate, no fixed number of trials: Poisson.",
+     "(b) Strictly hypergeometric, but 10 draws from 100,000 barely change the mix, so binomial with $n = 10$ is an excellent approximation."
+    ],
+    "a": "Poisson; binomial (as an approximation to the hypergeometric)."
+   },
+   {
+    "t": "mistake",
+    "html": "Reaching for the binomial whenever the word \"success\" appears. Before using it, check all four conditions: a fixed number of trials, two outcomes, independence, and the same $p$ every time. A question that says \"until\" has a random number of trials; one that says \"without replacement\" from a small group breaks independence."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.1, important distributions"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on a gallery of discrete distributions"
+   }
+  ]
+ },
+ "prob.densities": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A waiting time or a measured length can take any value in an interval, so listing $P(X = x)$ value by value no longer works. In <a href=\"/math/probability-and-statistics/continuous-distributions/\">continuous random variables</a> probability became area under a curve. With <a href=\"/math/calculus-1/ftc-evaluate/\">the Fundamental Theorem of Calculus</a> we can compute those areas exactly."
+   },
+   {
+    "t": "key",
+    "html": "A <b>probability density function</b> $f$ satisfies $f(x) \\ge 0$ and $\\int_{-\\infty}^{\\infty} f(x)\\,dx = 1$, and $$P(a \\le X \\le b) = \\int_{a}^{b} f(x)\\,dx.$$ A single point has probability $P(X = a) = 0$, so $<$ and $\\le$ give the same answers. The height $f(x)$ is not a probability and may be larger than 1."
+   },
+   {
+    "t": "why",
+    "html": "For a short interval near $x$, $P(x \\le X \\le x + \\Delta x) \\approx f(x)\\,\\Delta x$. So $f(x)$ is probability <i>per unit length</i>, just as a density in physics is mass per unit volume. A probability per unit can be large when the unit is long compared with where the probability sits: if all the probability is packed into $[0, \\frac{1}{4}]$, the density there must be 4 to make the area 1. And a single point is an interval of length 0, so it carries no area: $P(X = a) = \\int_{a}^{a} f = 0$."
+   },
+   {
+    "t": "viz",
+    "name": "prob-density",
+    "opts": {
+     "dist": "uniform",
+     "params": {
+      "a": 0,
+      "b": 0.25
+     },
+     "a": 0.05,
+     "b": 0.15,
+     "xmin": -0.25,
+     "xmax": 1
+    },
+    "cap": "The uniform density on 0 to one quarter has height 4, yet its total area is 1. Drag a and b: probabilities are areas under the curve and gaps on the CDF below. Hover to read a height."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Finding the constant",
+    "q": "$f(x) = cx^{2}$ for $0 \\le x \\le 2$ and 0 otherwise. Find $c$.",
+    "steps": [
+     "The total area must be 1: $\\int_{0}^{2} cx^{2}\\,dx = c \\cdot \\frac{8}{3}$.",
+     "$c \\cdot \\frac{8}{3} = 1$, so $c = \\frac{3}{8}$."
+    ],
+    "a": "$c = \\frac{3}{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "A probability as an area",
+    "q": "With $f(x) = \\frac{3}{8}x^{2}$ on $[0, 2]$, find $P(1 \\le X \\le 2)$ and $P(X > 3)$.",
+    "steps": [
+     "$$P(1 \\le X \\le 2) = \\int_{1}^{2} \\frac{3}{8}x^{2}\\,dx = \\frac{3}{8} \\cdot \\frac{8 - 1}{3} = \\frac{7}{8}$$",
+     "$P(X > 3) = 0$: the density is 0 beyond 2.",
+     "Notice that $f(2) = \\frac{3}{2}$, more than 1, and nothing is wrong."
+    ],
+    "a": "$\\frac{7}{8}$ and 0"
+   },
+   {
+    "t": "ex",
+    "title": "A tall density",
+    "q": "$X$ is uniform on $\\left[0, \\frac{1}{4}\\right]$, so $f(x) = 4$ there. Find $P(X \\le 0.1)$ and $P(X = 0.1)$.",
+    "steps": [
+     "$P(X \\le 0.1) = 4 \\times 0.1 = 0.4$: an area, height times width.",
+     "$P(X = 0.1) = 0$: a single point has no width."
+    ],
+    "a": "$0.4$ and $0$"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading $f(x)$ as the probability that $X = x$. A density can be 4, or 100, at a point, while $P(X = x) = 0$ for every single value. Check: a probability is always an area under $f$ over an interval, and must end up between 0 and 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 2 (Continuous Probability Densities), section 2.2, density functions of continuous random variables"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on continuous random variables and probability density functions"
+   }
+  ]
+ },
+ "prob.continuous-cdf": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The CDF $F(x) = P(X \\le x)$ works for every random variable. For a continuous one it is the area under the <a href=\"/math/probability/densities/\">density</a> to the left of $x$, and <a href=\"/math/calculus-1/ftc-accumulation/\">the first part of the Fundamental Theorem</a> connects the two: the density is the CDF's rate of change."
+   },
+   {
+    "t": "key",
+    "html": "$$F(x) = \\int_{-\\infty}^{x} f(t)\\,dt, \\qquad F'(x) = f(x), \\qquad P(a < X \\le b) = F(b) - F(a).$$ The <b>median</b> $m$ solves $F(m) = \\frac{1}{2}$; the $p$th <b>percentile</b> solves $F(x_p) = p$."
+   },
+   {
+    "t": "why",
+    "html": "$F(x)$ is an accumulation function of the density, so by the Fundamental Theorem it is continuous and $F' = f$ wherever $f$ is continuous. $F$ rises from 0 to 1 and never decreases, because the area keeps adding nonnegative pieces. For a density given in pieces, $F(x)$ must include <i>all</i> the area to the left of $x$, including whole earlier pieces."
+   },
+   {
+    "t": "viz",
+    "name": "prob-density",
+    "opts": {
+     "dist": "piecewise",
+     "pieces": [
+      [
+       "x",
+       0,
+       1
+      ],
+      [
+       "2-x",
+       1,
+       2
+      ]
+     ],
+     "a": 0.5,
+     "b": 1.5,
+     "median": true
+    },
+    "cap": "A triangle-shaped density in two pieces, with its CDF. The CDF at any point includes all the area to its left; the median sits where the CDF reaches one half."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A CDF and its median",
+    "q": "$f(x) = 2x$ on $[0, 1]$. Find $F(x)$ and the median.",
+    "steps": [
+     "For $0 \\le x \\le 1$: $F(x) = \\int_{0}^{x} 2t\\,dt = x^{2}$. Below 0, $F = 0$; above 1, $F = 1$.",
+     "Median: $m^{2} = \\frac{1}{2}$, so $m = \\frac{1}{\\sqrt{2}} \\approx 0.707$.",
+     "The 25th percentile solves $x^{2} = \\frac{1}{4}$: $x = \\frac{1}{2}$."
+    ],
+    "a": "$F(x) = x^{2}$ on $[0, 1]$; median $\\frac{1}{\\sqrt{2}}$."
+   },
+   {
+    "t": "ex",
+    "title": "A density in two pieces",
+    "q": "$f(x) = x$ on $[0, 1]$ and $f(x) = 2 - x$ on $[1, 2]$. Find $F(1.5)$, and a formula for $F$ on $[1, 2]$.",
+    "steps": [
+     "The whole left piece has area $\\int_{0}^{1} x\\,dx = \\frac{1}{2}$.",
+     "For $1 \\le x \\le 2$: $$F(x) = \\frac{1}{2} + \\int_{1}^{x} (2 - t)\\,dt = \\frac{1}{2} + 2x - \\frac{x^{2}}{2} - \\frac{3}{2} = -\\frac{x^{2}}{2} + 2x - 1$$",
+     "$F(1.5) = -\\frac{9}{8} + 3 - 1 = \\frac{7}{8}$. Check: $F(1) = \\frac{1}{2}$ and $F(2) = 1$."
+    ],
+    "a": "$F(1.5) = \\frac{7}{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "From the CDF back to the density",
+    "q": "$F(x) = 1 - e^{-x/2}$ for $x \\ge 0$ (and 0 for $x < 0$). Find the density and the median.",
+    "steps": [
+     "$f(x) = F'(x) = \\frac{1}{2}e^{-x/2}$ for $x > 0$.",
+     "Median: $1 - e^{-m/2} = \\frac{1}{2}$, so $e^{-m/2} = \\frac{1}{2}$ and $m = 2\\ln 2 \\approx 1.386$."
+    ],
+    "a": "$f(x) = \\frac{1}{2}e^{-x/2}$; median $2\\ln 2$."
+   },
+   {
+    "t": "mistake",
+    "html": "Building $F(x)$ on a later piece from that piece alone, for example $\\int_{1}^{x}(2 - t)\\,dt$, and forgetting the $\\frac{1}{2}$ of area already to the left. Check the joins: $F$ must be continuous, so its formula on each piece has to agree with the previous piece at the boundary, and the last piece must end at 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 2 (Continuous Probability Densities), section 2.2, cumulative distribution functions"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on cumulative distribution functions and quantiles"
+   }
+  ]
+ },
+ "prob.continuous-expectation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "For a discrete variable the mean is $\\sum x\\,P(X = x)$. For a <a href=\"/math/probability/densities/\">density</a> the sum becomes an integral, and every rule from <a href=\"/math/probability/variance-rules/\">the variance rules</a> carries over unchanged."
+   },
+   {
+    "t": "key",
+    "html": "$$E[X] = \\int x\\,f(x)\\,dx, \\qquad E[g(X)] = \\int g(x)\\,f(x)\\,dx, \\qquad \\operatorname{Var}(X) = E[X^{2}] - (E[X])^{2}.$$"
+   },
+   {
+    "t": "why",
+    "html": "Cut the line into thin slices of width $\\Delta x$. The slice at $x$ has probability about $f(x)\\,\\Delta x$, so the discrete formula gives $\\sum x\\,f(x)\\,\\Delta x$, a Riemann sum that tends to $\\int x\\,f(x)\\,dx$. Geometrically, $E[X]$ is the balance point of the region under the density, the place where a ruler shaped like the graph would balance on a finger. The same slicing gives $E[g(X)]$, and the algebra behind the variance shortcut only used linearity, which integrals have too."
+   },
+   {
+    "t": "viz",
+    "name": "prob-density",
+    "opts": {
+     "dist": "poly",
+     "f": "2x",
+     "params": {
+      "lo": 0,
+      "hi": 1
+     },
+     "a": 0.5,
+     "b": 1,
+     "mean": true,
+     "median": true
+    },
+    "cap": "The density 2x on 0 to 1, with its balance point at two thirds and its median a little higher."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Mean and variance",
+    "q": "$f(x) = 2x$ on $[0, 1]$. Find $E[X]$ and $\\operatorname{Var}(X)$.",
+    "steps": [
+     "$E[X] = \\int_{0}^{1} x \\cdot 2x\\,dx = \\frac{2}{3}$.",
+     "$E[X^{2}] = \\int_{0}^{1} x^{2} \\cdot 2x\\,dx = \\frac{1}{2}$.",
+     "$\\operatorname{Var}(X) = \\frac{1}{2} - \\frac{4}{9} = \\frac{1}{18}$."
+    ],
+    "a": "$\\frac{2}{3}$ and $\\frac{1}{18}$"
+   },
+   {
+    "t": "ex",
+    "title": "The uniform distribution",
+    "q": "$X$ is uniform on $[a, b]$. Find $E[X]$ and $\\operatorname{Var}(X)$.",
+    "steps": [
+     "$f = \\frac{1}{b - a}$ on $[a, b]$. $$E[X] = \\int_{a}^{b} \\frac{x}{b - a}\\,dx = \\frac{b^{2} - a^{2}}{2(b - a)} = \\frac{a + b}{2}$$ the midpoint.",
+     "$$E[X^{2}] = \\frac{b^{3} - a^{3}}{3(b - a)} = \\frac{a^{2} + ab + b^{2}}{3}$$",
+     "$$\\operatorname{Var}(X) = \\frac{a^{2} + ab + b^{2}}{3} - \\frac{(a + b)^{2}}{4} = \\frac{(b - a)^{2}}{12}$$"
+    ],
+    "a": "$\\frac{a + b}{2}$ and $\\frac{(b - a)^{2}}{12}$"
+   },
+   {
+    "t": "ex",
+    "title": "A function of X",
+    "q": "With $f(x) = 2x$ on $[0, 1]$, find $E\\left[\\frac{1}{X}\\right]$.",
+    "steps": [
+     "$$E\\left[\\frac{1}{X}\\right] = \\int_{0}^{1} \\frac{1}{x} \\cdot 2x\\,dx = \\int_{0}^{1} 2\\,dx = 2$$",
+     "Compare $\\frac{1}{E[X]} = \\frac{3}{2}$: as in the discrete case, $E[g(X)] \\ne g(E[X])$."
+    ],
+    "a": "2"
+   },
+   {
+    "t": "p",
+    "html": "Any function works the same way. Powers give the moments $E[X^{3}] = \\int x^{3}f(x)\\,dx$, and so on. A squared distance from a number $c$ can be expanded first, $$E[(X - c)^{2}] = E[X^{2}] - 2cE[X] + c^{2}$$ so two integrals you may already have do the work. And for a curved function such as $e^{x}$, expect the average of the function to exceed the function of the average: for $X$ uniform on $[0, 1]$, $E[e^{X}] = e - 1 \\approx 1.72$ while $e^{E[X]} = e^{1/2} \\approx 1.65$."
+   },
+   {
+    "t": "mistake",
+    "html": "Integrating the density alone, $\\int f(x)\\,dx$, and reporting the result as the mean. That integral is always 1. Check: the mean must lie inside the range of $X$, and you need the factor $x$ (or $g(x)$) inside the integral."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 6 (Expected Value and Variance), section 6.3, continuous random variables"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on expectation and variance of continuous random variables"
+   }
+  ]
+ },
+ "prob.exponential": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Waiting times for things that happen \"out of the blue\", such as the next call to a help desk or the failure of a part that does not wear out, are modeled by the exponential distribution. Its mean takes an <a href=\"/math/calculus-2/improper-integrals/\">improper integral</a> and <a href=\"/math/calculus-2/integration-by-parts/\">integration by parts</a>, building on <a href=\"/math/probability/continuous-expectation/\">means of densities</a>."
+   },
+   {
+    "t": "key",
+    "html": "$X$ is <b>exponential with rate $\\lambda > 0$</b> when $f(x) = \\lambda e^{-\\lambda x}$ for $x \\ge 0$. Then $$P(X > t) = e^{-\\lambda t}, \\qquad E[X] = \\frac{1}{\\lambda}, \\qquad \\operatorname{Var}(X) = \\frac{1}{\\lambda^{2}},$$ and $X$ is <b>memoryless</b>: $P(X > s + t \\mid X > s) = P(X > t)$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Tail:</b> $P(X > t) = \\int_{t}^{\\infty} \\lambda e^{-\\lambda x}\\,dx = e^{-\\lambda t}$.\n  <br><b>Mean:</b> by parts, $$\\int_{0}^{\\infty} x\\lambda e^{-\\lambda x}\\,dx = \\left[-xe^{-\\lambda x}\\right]_{0}^{\\infty} + \\int_{0}^{\\infty} e^{-\\lambda x}\\,dx = 0 + \\frac{1}{\\lambda}$$ Doing it again gives $E[X^{2}] = \\frac{2}{\\lambda^{2}}$, so the variance is $\\frac{1}{\\lambda^{2}}$.\n  <br><b>No memory:</b> $$\\frac{P(X > s + t)}{P(X > s)} = \\frac{e^{-\\lambda(s + t)}}{e^{-\\lambda s}} = e^{-\\lambda t}$$ Having waited $s$ already changes nothing about the wait ahead. The exponential is the only continuous distribution with this property."
+   },
+   {
+    "t": "viz",
+    "name": "prob-poisson",
+    "opts": {
+     "lambda": 1,
+     "T": 10,
+     "mode": "memory",
+     "s": 1,
+     "seed": 3
+    },
+    "cap": "Fifteen hundred exponential waits with mean 1. Slide the time already waited: the extra waits of those still waiting have the same histogram as fresh waits."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A light bulb",
+    "q": "A bulb's lifetime is exponential with mean 1000 hours. Find the probability that it lasts more than 500 hours.",
+    "steps": [
+     "The rate is $\\lambda = \\frac{1}{1000}$ per hour (the mean is $\\frac{1}{\\lambda}$, not $\\lambda$).",
+     "$$P(X > 500) = e^{-500/1000} = e^{-0.5} \\approx 0.607$$"
+    ],
+    "a": "about $0.607$"
+   },
+   {
+    "t": "ex",
+    "title": "Already lasted",
+    "q": "The same bulb has already lasted 800 hours. Find the probability that it lasts at least 500 more.",
+    "steps": [
+     "By memorylessness, $$P(X > 1300 \\mid X > 800) = P(X > 500)$$",
+     "$= e^{-0.5} \\approx 0.607$, exactly as for a new bulb."
+    ],
+    "a": "about $0.607$"
+   },
+   {
+    "t": "ex",
+    "title": "Median and the mean",
+    "q": "Find the median lifetime of that bulb, and the fraction of bulbs that outlast the mean.",
+    "steps": [
+     "Median: $e^{-m/1000} = \\frac{1}{2}$, so $m = 1000\\ln 2 \\approx 693$ hours, well below the mean of 1000.",
+     "$P(X > 1000) = e^{-1} \\approx 0.368$: a few very long lifetimes pull the mean above the typical value."
+    ],
+    "a": "about 693 hours; about 37% outlast the mean."
+   },
+   {
+    "t": "mistake",
+    "html": "Two slips. Using the rate as the mean: a rate of 2 per hour means a mean wait of $\\frac{1}{2}$ hour. And expecting an old part to be \"due\" to fail: under the exponential model the past does not matter. (Real parts that wear out are not exponential; the model fits failures that come from outside shocks.) Check units: $\\lambda t$ must have no units, so $\\lambda$ is \"per hour\" when $t$ is in hours."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.2, the exponential density"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on the exponential distribution"
+   }
+  ]
+ },
+ "prob.poisson-process": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/probability/poisson/\">Poisson distribution</a> counts random events in a window; the <a href=\"/math/probability/exponential/\">exponential distribution</a> measures the wait between them. They are two views of the same model, the Poisson process: arrivals scattered in time at a steady rate, with no memory."
+   },
+   {
+    "t": "key",
+    "html": "In a <b>Poisson process with rate $\\lambda$</b>: the number of arrivals in any window of length $t$ is Poisson with mean $\\lambda t$; counts in non-overlapping windows are independent; and the gaps between arrivals are independent exponential times with mean $\\frac{1}{\\lambda}$. The $k$th arrival comes after an expected $\\frac{k}{\\lambda}$."
+   },
+   {
+    "t": "why",
+    "html": "Start the clock at any moment. The first arrival comes after time $t$ exactly when the window $[0, t]$ holds no arrivals, so $$P(\\text{first wait} > t) = P(N(t) = 0) = e^{-\\lambda t}:$$ the wait is exponential with rate $\\lambda$. Because separate windows are independent, the same argument restarts after every arrival, so every gap is exponential and the gaps are independent. The time to the $k$th arrival is the sum of $k$ gaps, with mean $\\frac{k}{\\lambda}$ by linearity."
+   },
+   {
+    "t": "viz",
+    "name": "prob-poisson",
+    "opts": {
+     "lambda": 2,
+     "T": 60,
+     "mode": "gaps",
+     "seed": 5
+    },
+    "cap": "Arrivals at rate 2 per unit of time. The gaps between them form a histogram that follows the exponential density with mean one half."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Counts in a window",
+    "q": "Customers arrive as a Poisson process at 6 per hour. Find the probability of exactly 2 arrivals in 20 minutes.",
+    "steps": [
+     "20 minutes is $\\frac{1}{3}$ hour, so the mean count is $\\lambda t = 6 \\cdot \\frac{1}{3} = 2$.",
+     "$$P(N = 2) = e^{-2}\\frac{2^{2}}{2!} = 2e^{-2} \\approx 0.271$$"
+    ],
+    "a": "about $0.271$"
+   },
+   {
+    "t": "ex",
+    "title": "Waiting",
+    "q": "With the same process, find the probability that nobody arrives in the next 15 minutes, and the expected wait for the 3rd customer.",
+    "steps": [
+     "No arrivals in $\\frac{1}{4}$ hour: $e^{-6/4} = e^{-1.5} \\approx 0.223$.",
+     "Each gap has mean $\\frac{1}{6}$ hour = 10 minutes, so the 3rd arrival is expected after 30 minutes."
+    ],
+    "a": "about $0.223$; 30 minutes."
+   },
+   {
+    "t": "ex",
+    "title": "Given the total",
+    "q": "Exactly 4 customers arrived during one hour. Find the probability that exactly 1 of them came in the first 15 minutes.",
+    "steps": [
+     "Given the total, the 4 arrival times behave like 4 independent uniform points in the hour.",
+     "Each lands in the first quarter-hour with probability $\\frac{1}{4}$, so the count there is binomial.",
+     "$\\binom{4}{1}\\left(\\frac{1}{4}\\right)\\left(\\frac{3}{4}\\right)^{3} = \\frac{27}{64} \\approx 0.422$. The rate 6 dropped out."
+    ],
+    "a": "$\\frac{27}{64}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Giving the count in a window of length $t$ the mean $\\lambda$ instead of $\\lambda t$, or giving the gaps the mean $\\lambda$ instead of $\\frac{1}{\\lambda}$. Check: a higher rate means more arrivals and shorter gaps, so the count's mean grows with $\\lambda$ and the gap's mean shrinks."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.2, the exponential density and the Poisson process"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on Poisson processes"
+   }
+  ]
+ },
+ "prob.transform-density": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "If $X$ has a known density, what is the density of $Y = X^{2}$, or $Y = e^{X}$? The reliable route goes through the <a href=\"/math/probability/continuous-cdf/\">CDF</a>: find $F_Y$ by solving an inequality, then differentiate with <a href=\"/math/calculus-1/chain-rule/\">the chain rule</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>The CDF method:</b> write $F_Y(y) = P(g(X) \\le y)$ as a statement about $X$, compute it with $F_X$, then $f_Y = F_Y'$. For increasing (or decreasing) $g$ this gives $$f_Y(y) = f_X\\left(g^{-1}(y)\\right)\\left\\lvert \\frac{d}{dy}g^{-1}(y) \\right\\rvert.$$"
+   },
+   {
+    "t": "why",
+    "html": "For increasing $g$: $g(X) \\le y$ exactly when $X \\le g^{-1}(y)$, so $F_Y(y) = F_X(g^{-1}(y))$, and the chain rule gives $$f_Y(y) = f_X(g^{-1}(y)) \\cdot \\frac{d}{dy}g^{-1}(y)$$ For decreasing $g$ the inequality flips, $F_Y = 1 - F_X(g^{-1}(y))$, and the derivative brings a minus sign that the absolute value absorbs. The derivative factor has a picture: a thin strip of width $dx$ near $x$ carries probability $f_X(x)\\,dx$, and $g$ stretches it to width $\\lvert g'(x) \\rvert\\,dx$. The same probability over a wider strip means a lower density."
+   },
+   {
+    "t": "viz",
+    "name": "prob-density",
+    "opts": {
+     "dist": "uniform",
+     "params": {
+      "a": 0,
+      "b": 1
+     },
+     "transform": "x^2",
+     "x0": 0.5,
+     "xmin": -0.1,
+     "xmax": 1.1
+    },
+    "cap": "Top: X uniform on 0 to 1, with a thin strip. Bottom: the density of Y equal to X squared, with the strip where it lands. Drag the strip: near 0 squaring squeezes the strip, so the density of Y is high there."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Squaring a uniform",
+    "q": "$X$ is uniform on $[0, 1]$ and $Y = X^{2}$. Find $f_Y$.",
+    "steps": [
+     "For $0 < y < 1$: $$F_Y(y) = P(X^{2} \\le y) = P(X \\le \\sqrt{y}) = \\sqrt{y}$$",
+     "$f_Y(y) = \\frac{d}{dy}\\sqrt{y} = \\frac{1}{2\\sqrt{y}}$ on $(0, 1)$.",
+     "Check: $\\int_{0}^{1} \\frac{1}{2\\sqrt{y}}\\,dy = 1$."
+    ],
+    "a": "$f_Y(y) = \\frac{1}{2\\sqrt{y}}$ for $0 < y < 1$."
+   },
+   {
+    "t": "ex",
+    "title": "A logarithm",
+    "q": "$X$ is uniform on $(0, 1)$ and $Y = -\\ln X$. Find $f_Y$.",
+    "steps": [
+     "$-\\ln X \\le y$ means $X \\ge e^{-y}$, so $F_Y(y) = 1 - e^{-y}$ for $y > 0$.",
+     "$f_Y(y) = e^{-y}$: exponential with rate 1. (This is how computers turn uniform random numbers into exponential ones.)"
+    ],
+    "a": "$f_Y(y) = e^{-y}$ for $y > 0$."
+   },
+   {
+    "t": "ex",
+    "title": "A linear change",
+    "q": "$f_X(x) = 2x$ on $[0, 1]$ and $Y = 2X + 3$. Find $f_Y$.",
+    "steps": [
+     "$Y$ runs over $[3, 5]$, and $X = \\frac{Y - 3}{2}$.",
+     "$$f_Y(y) = f_X\\left(\\frac{y - 3}{2}\\right) \\cdot \\frac{1}{2} = 2 \\cdot \\frac{y - 3}{2} \\cdot \\frac{1}{2} = \\frac{y - 3}{2}$$ on $[3, 5]$.",
+     "Check: $\\int_{3}^{5} \\frac{y - 3}{2}\\,dy = 1$."
+    ],
+    "a": "$f_Y(y) = \\frac{y - 3}{2}$ on $[3, 5]$."
+   },
+   {
+    "t": "note",
+    "html": "When $g$ is not one-to-one, add over every $x$ that maps to $y$. If $X$ is uniform on $[-1, 1]$ and $Y = X^{2}$, both $\\sqrt{y}$ and $-\\sqrt{y}$ map to $y$, each contributing $\\frac{1/2}{2\\sqrt{y}}$, so $f_Y(y) = \\frac{1}{2\\sqrt{y}}$ on $(0, 1)$. The CDF method handles this automatically: $F_Y(y) = P(-\\sqrt{y} \\le X \\le \\sqrt{y})$."
+   },
+   {
+    "t": "mistake",
+    "html": "Substituting into the density, $f_Y(y) = f_X(g^{-1}(y))$, and dropping the derivative factor. For $Y = 2X + 3$ above, that would give $y - 3$ on $[3, 5]$, which has area 2. Check: every density you produce must have total area 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.2, functions of a random variable"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on manipulating continuous random variables"
+   }
+  ]
+ },
+ "prob.joint-pmf": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Many questions involve two random variables at once: the number of heads and the number of tails, a customer's age group and spending. A two-way table, like those in <a href=\"/math/probability-and-statistics/two-way-conditional/\">conditional probability from two-way tables</a>, holds their joint distribution, and the <a href=\"/math/probability/pmf-cdf/\">pmf</a> of each variable alone sits in its margins."
+   },
+   {
+    "t": "key",
+    "html": "The <b>joint pmf</b> is $p(x, y) = P(X = x, Y = y)$; its cells are nonnegative and add to 1. The <b>marginal</b> pmfs come from adding across: $$p_X(x) = \\sum_y p(x, y), \\qquad p_Y(y) = \\sum_x p(x, y).$$ Any event about $(X, Y)$ has probability equal to the sum of its cells."
+   },
+   {
+    "t": "why",
+    "html": "The event $\\{X = x\\}$ splits into the disjoint pieces $\\{X = x, Y = y\\}$, one for each value $y$, so by the addition axiom $P(X = x)$ is the sum of that column. That is why these are called marginal: they were written in the margins of the table. The marginals do not determine the table, since many different tables have the same row and column totals; the joint pmf carries more information than the two marginals together."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "$X = 0$",
+     "$X = 1$",
+     "$X = 2$",
+     "$P(Y = y)$"
+    ],
+    "rows": [
+     [
+      "$Y = 0$",
+      "$\\frac{1}{6}$",
+      "$\\frac{1}{6}$",
+      "$0$",
+      "$\\frac{1}{3}$"
+     ],
+     [
+      "$Y = 1$",
+      "$\\frac{1}{12}$",
+      "$\\frac{1}{4}$",
+      "$\\frac{1}{3}$",
+      "$\\frac{2}{3}$"
+     ],
+     [
+      "$P(X = x)$",
+      "$\\frac{1}{4}$",
+      "$\\frac{5}{12}$",
+      "$\\frac{1}{3}$",
+      "$1$"
+     ]
+    ],
+    "cap": "A joint pmf with its marginals in the margins."
+   },
+   {
+    "t": "viz",
+    "name": "prob-table",
+    "opts": {
+     "x": [
+      0,
+      1,
+      2
+     ],
+     "y": [
+      0,
+      1
+     ],
+     "p": [
+      [
+       "1/6",
+       "1/6",
+       "0"
+      ],
+      [
+       "1/12",
+       "1/4",
+       "1/3"
+      ]
+     ],
+     "mode": "marginal"
+    },
+    "cap": "The same joint table as a heat map. Click a cell to compare one joint probability with the row and column totals."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Marginals",
+    "q": "From the table, find $P(X = 1)$ and $P(Y = 1)$.",
+    "steps": [
+     "$P(X = 1)$ adds the column $X = 1$: $\\frac{1}{6} + \\frac{1}{4} = \\frac{5}{12}$.",
+     "$P(Y = 1)$ adds the row $Y = 1$: $\\frac{1}{12} + \\frac{1}{4} + \\frac{1}{3} = \\frac{2}{3}$."
+    ],
+    "a": "$\\frac{5}{12}$ and $\\frac{2}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "An event about both",
+    "q": "From the table, find $P(X + Y \\le 1)$ and $E[X]$.",
+    "steps": [
+     "The cells with $x + y \\le 1$ are $(0, 0)$, $(1, 0)$ and $(0, 1)$: $\\frac{1}{6} + \\frac{1}{6} + \\frac{1}{12} = \\frac{5}{12}$.",
+     "$E[X]$ uses the marginal of $X$: $0 \\cdot \\frac{1}{4} + 1 \\cdot \\frac{5}{12} + 2 \\cdot \\frac{1}{3} = \\frac{13}{12}$."
+    ],
+    "a": "$\\frac{5}{12}$ and $\\frac{13}{12}$"
+   },
+   {
+    "t": "note",
+    "html": "A missing cell can be recovered from a margin: if you know $P(X = 2) = \\frac{1}{3}$ and the cell $(2, 0)$ is 0, then the cell $(2, 1)$ must be $\\frac{1}{3}$. Every row and every column adds to its marginal."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading one cell as a marginal: $P(X = 1, Y = 1) = \\frac{1}{4}$ is not $P(X = 1)$, which also includes the cases with $Y = 0$. Check: a marginal must be at least as large as every cell in its row or column."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on joint distributions"
+   },
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 4 (Conditional Probability), section 4.1"
+   }
+  ]
+ },
+ "prob.conditional-distributions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once a row of a <a href=\"/math/probability/joint-pmf/\">joint table</a> is known to have happened, the other variable has a new distribution: the <a href=\"/math/probability/conditional-vs-joint/\">conditional probability</a> idea, applied to every cell of that row. Comparing those conditional distributions is also how independence of two random variables is tested."
+   },
+   {
+    "t": "key",
+    "html": "$$P(X = x \\mid Y = y) = \\frac{p(x, y)}{p_Y(y)}:$$ divide the row $Y = y$ by its total. $X$ and $Y$ are <b>independent</b> when $p(x, y) = p_X(x)\\,p_Y(y)$ for <b>every</b> cell; equivalently, every row's conditional distribution is the same."
+   },
+   {
+    "t": "why",
+    "html": "Given $Y = y$, the sample space shrinks to that row, and dividing by the row total makes the new probabilities add to 1. If every cell factors as $p_X(x)p_Y(y)$, then dividing row $y$ by $p_Y(y)$ leaves $p_X(x)$: knowing $Y$ changes nothing about $X$. If even one cell fails to factor, the conditional distribution in that row differs from the marginal, so $Y$ carries information about $X$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "$X = 0$",
+     "$X = 1$",
+     "$X = 2$",
+     "$P(Y = y)$"
+    ],
+    "rows": [
+     [
+      "$Y = 0$",
+      "$\\frac{1}{6}$",
+      "$\\frac{1}{6}$",
+      "$0$",
+      "$\\frac{1}{3}$"
+     ],
+     [
+      "$Y = 1$",
+      "$\\frac{1}{12}$",
+      "$\\frac{1}{4}$",
+      "$\\frac{1}{3}$",
+      "$\\frac{2}{3}$"
+     ],
+     [
+      "$P(X = x)$",
+      "$\\frac{1}{4}$",
+      "$\\frac{5}{12}$",
+      "$\\frac{1}{3}$",
+      "$1$"
+     ]
+    ],
+    "cap": "A joint pmf with its marginals in the margins."
+   },
+   {
+    "t": "viz",
+    "name": "prob-table",
+    "opts": {
+     "x": [
+      0,
+      1,
+      2
+     ],
+     "y": [
+      0,
+      1
+     ],
+     "p": [
+      [
+       "1/6",
+       "1/6",
+       "0"
+      ],
+      [
+       "1/12",
+       "1/4",
+       "1/3"
+      ]
+     ],
+     "mode": "conditional",
+     "given": {
+      "y": 1
+     },
+     "modes": [
+      "conditional",
+      "independence"
+     ]
+    },
+    "cap": "Click a row label to condition on it: the row is divided by its total and drawn as bars that add to 1. Switch views to test every cell for independence."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A conditional distribution",
+    "q": "From the table, find the distribution of $X$ given $Y = 1$.",
+    "steps": [
+     "Row $Y = 1$: $\\frac{1}{12}, \\frac{1}{4}, \\frac{1}{3}$, with total $\\frac{2}{3}$.",
+     "Divide: $P(X = 0 \\mid Y = 1) = \\frac{1}{8}$, $P(X = 1 \\mid Y = 1) = \\frac{3}{8}$, $P(X = 2 \\mid Y = 1) = \\frac{1}{2}$.",
+     "They add to 1. Given $Y = 0$ instead, the distribution is $\\frac{1}{2}, \\frac{1}{2}, 0$: very different, so $X$ and $Y$ are dependent."
+    ],
+    "a": "$\\left(\\frac{1}{8}, \\frac{3}{8}, \\frac{1}{2}\\right)$"
+   },
+   {
+    "t": "ex",
+    "title": "One matching cell is not enough",
+    "q": "A joint table has rows $Y = 0$: $\\frac{3}{16}, \\frac{3}{16}, \\frac{1}{8}$ and $Y = 1$: $\\frac{1}{16}, \\frac{5}{16}, \\frac{1}{8}$ (for $X = 0, 1, 2$). Are $X$ and $Y$ independent?",
+    "steps": [
+     "Marginals: $p_X = \\left(\\frac{1}{4}, \\frac{1}{2}, \\frac{1}{4}\\right)$ and $p_Y = \\left(\\frac{1}{2}, \\frac{1}{2}\\right)$.",
+     "Column $X = 2$ factors: $\\frac{1}{8} = \\frac{1}{4} \\cdot \\frac{1}{2}$ in both rows.",
+     "But $p(0, 0) = \\frac{3}{16}$ while $p_X(0)p_Y(0) = \\frac{1}{8}$."
+    ],
+    "a": "No. Two cells factor, but independence needs all six."
+   },
+   {
+    "t": "note",
+    "html": "Conditional distributions can also be the starting data. If $P(Y = 0) = \\frac{1}{4}$ and you know the distribution of $X$ in each row, then each cell is $$p(x, y) = P(X = x \\mid Y = y)\\,P(Y = y)$$ adding a column gives $P(X = x)$, and dividing a cell by its column total reverses the conditioning, as in Bayes' theorem."
+   },
+   {
+    "t": "mistake",
+    "html": "Checking one cell, finding that it factors, and declaring $X$ and $Y$ independent. Independence is a statement about every cell. Check: compare whole conditional distributions, or test each cell against the product of its two marginals."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on joint distributions and independence"
+   },
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 4 (Conditional Probability), section 4.1"
+   }
+  ]
+ },
+ "prob.geometric-probability": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Choose two numbers at random from $[0, 1]$. What is the chance they are within $\\frac{1}{4}$ of each other? Such questions have a beautiful answer: the pair is a random point in a square, and the probability is an area. This lesson extends <a href=\"/math/probability/densities/\">densities</a> to two dimensions in the simplest case, a uniform point."
+   },
+   {
+    "t": "key",
+    "html": "If a point is uniform in a region $R$, then $$P(\\text{point lands in } E) = \\frac{\\text{area}(E \\cap R)}{\\text{area}(R)}.$$ If $X$ and $Y$ are independent and uniform on $[0, 1]$, the pair $(X, Y)$ is a uniform point in the unit square, so the probability of an event is simply its area."
+   },
+   {
+    "t": "why",
+    "html": "For independent uniforms, $$P(a \\le X \\le b,\\ c \\le Y \\le d) = (b - a)(d - c)$$ the probability of every rectangle is its area. Areas of other shapes are built from rectangles (that is what an integral does), so every event's probability is its area. This is also the joint density $f(x, y) = 1$ on the square, a preview of <a href=\"/math/probability/joint-densities/\">joint densities</a>."
+   },
+   {
+    "t": "viz",
+    "name": "prob-region",
+    "opts": {
+     "support": "square",
+     "f": "uniform",
+     "event": "abs(x-y)<1/4",
+     "slices": "x",
+     "at": 0.3,
+     "samples": 200,
+     "seed": 2
+    },
+    "cap": "The unit square of pairs X and Y with the band where they differ by less than one quarter. The band covers 7 sixteenths of the square; random points land in it about that often."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Within a quarter",
+    "q": "$X$ and $Y$ are independent and uniform on $[0, 1]$. Find $P(\\lvert X - Y \\rvert < \\frac{1}{4})$.",
+    "steps": [
+     "The event is the band around the diagonal. Its complement is two corner triangles, each with legs $1 - \\frac{1}{4} = \\frac{3}{4}$.",
+     "Their total area: $2 \\cdot \\frac{1}{2}\\left(\\frac{3}{4}\\right)^{2} = \\frac{9}{16}$.",
+     "$P = 1 - \\frac{9}{16} = \\frac{7}{16}$."
+    ],
+    "a": "$\\frac{7}{16}$"
+   },
+   {
+    "t": "ex",
+    "title": "Meeting for coffee",
+    "q": "Two friends arrive at random, independently, between noon and 1 p.m. Each waits 10 minutes and then leaves. Find the probability that they meet.",
+    "steps": [
+     "In hours, they meet when $\\lvert X - Y \\rvert \\le \\frac{1}{6}$.",
+     "The two missing corners have legs $\\frac{5}{6}$: area $\\left(\\frac{5}{6}\\right)^{2} = \\frac{25}{36}$.",
+     "$P(\\text{meet}) = 1 - \\frac{25}{36} = \\frac{11}{36} \\approx 0.31$."
+    ],
+    "a": "$\\frac{11}{36}$"
+   },
+   {
+    "t": "ex",
+    "title": "Under a curve",
+    "q": "Find $P(X + Y < \\frac{1}{2})$ and $P(XY < \\frac{1}{2})$.",
+    "steps": [
+     "$x + y < \\frac{1}{2}$ is a corner triangle with legs $\\frac{1}{2}$: area $\\frac{1}{8}$.",
+     "$xy < \\frac{1}{2}$: for $x \\le \\frac{1}{2}$ every $y$ works; for $x > \\frac{1}{2}$, $y < \\frac{1}{2x}$. Area $$= \\frac{1}{2} + \\int_{1/2}^{1} \\frac{dx}{2x} = \\frac{1}{2} + \\frac{\\ln 2}{2} \\approx 0.847$$"
+    ],
+    "a": "$\\frac{1}{8}$ and $\\frac{1}{2} + \\frac{\\ln 2}{2}$"
+   },
+   {
+    "t": "mistake",
+    "html": "Working with lengths on one axis, for example saying \"$\\lvert X - Y \\rvert < \\frac{1}{4}$ is like an interval of length $\\frac{1}{2}$, so the chance is $\\frac{1}{2}$\". The event depends on both numbers, so it is a region in the square. Check: draw the square of all pairs, shade the event, and find its area."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 2 (Continuous Probability Densities), section 2.2, examples of geometric probability"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on joint distributions: uniform points in a region"
+   }
+  ]
+ },
+ "prob.joint-densities": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When $(X, Y)$ is not uniform, probability is still found by integrating, now with a density over a region of the plane. The limits come from sketching the region, exactly as in <a href=\"/math/calculus-3/general-regions/\">double integrals over general regions</a>. This generalizes <a href=\"/math/probability/geometric-probability/\">geometric probability</a> and the <a href=\"/math/probability/joint-pmf/\">joint pmf</a>."
+   },
+   {
+    "t": "key",
+    "html": "A <b>joint density</b> satisfies $f(x, y) \\ge 0$ and $\\iint f\\,dA = 1$, and for a region $R$, $$P((X, Y) \\in R) = \\iint_{R} f(x, y)\\,dA.$$ Integrate only where the event holds <i>and</i> $f > 0$."
+   },
+   {
+    "t": "why",
+    "html": "As in one dimension, $f(x, y)$ is probability per unit area: a small rectangle near $(x, y)$ with sides $\\Delta x$ and $\\Delta y$ has probability about $f(x, y)\\,\\Delta x\\,\\Delta y$. Adding over a region gives a double Riemann sum, whose limit is the double integral. Outside the support the density is 0, so those parts of the region add nothing. The work is in the limits: sketch the support and the event, then for each $x$ read off the range of $y$ that lies in both."
+   },
+   {
+    "t": "viz",
+    "name": "prob-region",
+    "opts": {
+     "support": "square",
+     "f": "x+y",
+     "event": "x+y<1",
+     "slices": "x",
+     "at": 0.4
+    },
+    "cap": "The density x plus y on the unit square, darker where it is larger, with the triangle where x plus y is less than 1. The slice shows the inner limits: y runs from 0 to 1 minus x."
+   },
+   {
+    "t": "viz",
+    "name": "surface",
+    "opts": {
+     "f": "x + y",
+     "xmin": 0,
+     "xmax": 1,
+     "ymin": 0,
+     "ymax": 1,
+     "contours": 8,
+     "slice": "none",
+     "n": 20
+    },
+    "cap": "The same joint density drawn as a surface: probability is the volume under it."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The constant",
+    "q": "$f(x, y) = c(x + y)$ on the unit square. Find $c$.",
+    "steps": [
+     "$$\\int_{0}^{1}\\int_{0}^{1} (x + y)\\,dy\\,dx = \\int_{0}^{1} \\left(x + \\frac{1}{2}\\right)dx = 1$$",
+     "So $c = 1$."
+    ],
+    "a": "$c = 1$"
+   },
+   {
+    "t": "ex",
+    "title": "A triangle region",
+    "q": "With $f(x, y) = x + y$ on the unit square, find $P(X + Y < 1)$.",
+    "steps": [
+     "For each $x$ in $[0, 1]$, $y$ runs from 0 to $1 - x$.",
+     "Inner: $$\\int_{0}^{1 - x} (x + y)\\,dy = x(1 - x) + \\frac{(1 - x)^{2}}{2} = \\frac{1 - x^{2}}{2}$$",
+     "Outer: $\\int_{0}^{1} \\frac{1 - x^{2}}{2}\\,dx = \\frac{1}{2} \\cdot \\frac{2}{3} = \\frac{1}{3}$."
+    ],
+    "a": "$\\frac{1}{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "A density on a triangle",
+    "q": "$f(x, y) = 2$ for $0 \\le x \\le y \\le 1$. Find $P(Y > 2X)$.",
+    "steps": [
+     "The event $y > 2x$ inside the triangle: $x$ from 0 to $\\frac{1}{2}$, and $y$ from $2x$ to 1 (then $y > x$ automatically).",
+     "$$\\int_{0}^{1/2}\\int_{2x}^{1} 2\\,dy\\,dx = \\int_{0}^{1/2} 2(1 - 2x)\\,dx = 1 - \\frac{1}{2} = \\frac{1}{2}$$"
+    ],
+    "a": "$\\frac{1}{2}$"
+   },
+   {
+    "t": "note",
+    "html": "Supports can be unbounded. If $f(x, y) = \\lambda\\mu e^{-\\lambda x - \\mu y}$ for $x, y > 0$ (two independent exponential times), then $$P(X < Y) = \\int_{0}^{\\infty}\\int_{x}^{\\infty} \\lambda\\mu e^{-\\lambda x - \\mu y}\\,dy\\,dx = \\int_{0}^{\\infty} \\lambda e^{-(\\lambda + \\mu)x}\\,dx = \\frac{\\lambda}{\\lambda + \\mu}:$$ the clock with the larger rate tends to ring first."
+   },
+   {
+    "t": "mistake",
+    "html": "Integrating over the whole support instead of the part where the event happens, or using limits that run outside the support, where $f = 0$. Check: sketch both regions; the limits must describe their overlap, and the answer must lie between 0 and 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on joint distributions and joint densities"
+   },
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 4 (Conditional Probability), section 4.2, continuous conditional probability"
+   }
+  ]
+ },
+ "prob.marginal-densities": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "From a <a href=\"/math/probability/joint-densities/\">joint density</a> we can recover the density of each variable alone and the density of one given the other, just as rows and columns did for <a href=\"/math/probability/conditional-distributions/\">joint tables</a>. Sums become integrals."
+   },
+   {
+    "t": "key",
+    "html": "$$f_X(x) = \\int f(x, y)\\,dy, \\qquad f_{Y \\mid X}(y \\mid x) = \\frac{f(x, y)}{f_X(x)},$$ integrating over the values of $y$ where $f(x, y) > 0$ for that $x$. $X$ and $Y$ are <b>independent</b> when $f(x, y) = f_X(x)\\,f_Y(y)$ everywhere, which needs a support that is a rectangle."
+   },
+   {
+    "t": "why",
+    "html": "$$P(a \\le X \\le b) = \\int_{a}^{b}\\left(\\int f(x, y)\\,dy\\right)dx$$ so the inner integral is the density of $X$: integrate out $y$. Dividing a slice $f(x, \\cdot)$ by its total $f_X(x)$ makes it a density in $y$, the conditional density. If the support is not a rectangle, some pairs $(x, y)$ are impossible although $x$ and $y$ are each possible alone; there $f(x, y) = 0$ while $f_X(x)f_Y(y) > 0$, so independence fails."
+   },
+   {
+    "t": "viz",
+    "name": "prob-region",
+    "opts": {
+     "support": "triangle",
+     "f": "2",
+     "event": "",
+     "slices": "x",
+     "at": 0.3,
+     "marginal": true
+    },
+    "cap": "The density 2 on the triangle where x is below y. Each vertical slice runs from y equal to x up to 1, so its total, the marginal density of X, shrinks as x grows."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A constant on a triangle",
+    "q": "$f(x, y) = 2$ for $0 \\le x \\le y \\le 1$. Find $f_X$, $f_Y$ and $f_{Y \\mid X}(y \\mid x)$.",
+    "steps": [
+     "For fixed $x$, $y$ runs from $x$ to 1: $f_X(x) = \\int_{x}^{1} 2\\,dy = 2(1 - x)$ on $[0, 1]$.",
+     "For fixed $y$, $x$ runs from 0 to $y$: $f_Y(y) = \\int_{0}^{y} 2\\,dx = 2y$.",
+     "$f_{Y \\mid X}(y \\mid x) = \\frac{2}{2(1 - x)} = \\frac{1}{1 - x}$ for $x \\le y \\le 1$: given $X = x$, $Y$ is uniform on $[x, 1]$."
+    ],
+    "a": "$2(1 - x)$, $2y$, and uniform on $[x, 1]$."
+   },
+   {
+    "t": "ex",
+    "title": "A sum on the square",
+    "q": "$f(x, y) = x + y$ on the unit square. Find $f_X$ and decide whether $X$ and $Y$ are independent.",
+    "steps": [
+     "$f_X(x) = \\int_{0}^{1}(x + y)\\,dy = x + \\frac{1}{2}$; by symmetry $f_Y(y) = y + \\frac{1}{2}$.",
+     "$$f_X(x)f_Y(y) = xy + \\frac{x + y}{2} + \\frac{1}{4} \\ne x + y$$ (try $x = y = 0$: $\\frac{1}{4} \\ne 0$)."
+    ],
+    "a": "$f_X(x) = x + \\frac{1}{2}$; dependent."
+   },
+   {
+    "t": "ex",
+    "title": "A product that is not independent",
+    "q": "$f(x, y) = 8xy$ for $0 \\le x \\le y \\le 1$. Are $X$ and $Y$ independent?",
+    "steps": [
+     "The formula is a product, but the support is a triangle.",
+     "$f_X(x) = \\int_{x}^{1} 8xy\\,dy = 4x(1 - x^{2})$ and $f_Y(y) = \\int_{0}^{y} 8xy\\,dx = 4y^{3}$; their product is not $8xy$.",
+     "Directly: $f(0.9, 0.5) = 0$ although $f_X(0.9) > 0$ and $f_Y(0.5) > 0$."
+    ],
+    "a": "No."
+   },
+   {
+    "t": "mistake",
+    "html": "Calling $f(x, y) = 2$ on the triangle $0 < x < y < 1$ \"a product of separate functions\" because it is constant. The support is not a rectangle, so knowing $X$ limits $Y$ (if $X = 0.9$ then $Y \\ge 0.9$). Check two things: the formula splits as (a function of $x$) × (a function of $y$), and the support is a rectangle."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on marginal and conditional densities, independence"
+   },
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 4 (Conditional Probability), section 4.2"
+   }
+  ]
+ },
+ "prob.covariance-correlation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Do $X$ and $Y$ tend to be large together, or does one tend to be large when the other is small? Covariance measures that tendency, using the <a href=\"/math/probability/variance-rules/\">variance shortcut</a> idea. It is computed from a <a href=\"/math/probability/conditional-distributions/\">joint distribution</a>, and scaled, it becomes the correlation $\\rho$."
+   },
+   {
+    "t": "key",
+    "html": "$$\\operatorname{Cov}(X, Y) = E[(X - \\mu_X)(Y - \\mu_Y)] = E[XY] - E[X]E[Y], \\qquad \\rho = \\frac{\\operatorname{Cov}(X, Y)}{\\sigma_X\\sigma_Y},$$ with $-1 \\le \\rho \\le 1$. Independent variables have covariance 0, but covariance 0 does <b>not</b> imply independence."
+   },
+   {
+    "t": "why",
+    "html": "$(X - \\mu_X)(Y - \\mu_Y)$ is positive when both are above (or both below) their means, and negative when they are on opposite sides; its average measures the trend. Expanding and using linearity gives the shortcut. For $\\lvert \\rho \\rvert \\le 1$: let $U = \\frac{X}{\\sigma_X}$ and $V = \\frac{Y}{\\sigma_Y}$. Then $0 \\le \\operatorname{Var}(U + V) = 1 + 1 + 2\\rho$ and $0 \\le \\operatorname{Var}(U - V) = 2 - 2\\rho$, so $-1 \\le \\rho \\le 1$. If $X$ and $Y$ are independent, $$E[XY] = \\sum xy\\,p_X(x)p_Y(y) = E[X]E[Y]$$ so the covariance is 0. The converse fails because covariance only sees straight-line trends."
+   },
+   {
+    "t": "viz",
+    "name": "prob-table",
+    "opts": {
+     "preset": "x-xsq",
+     "mode": "covariance",
+     "modes": [
+      "covariance",
+      "independence"
+     ]
+    },
+    "cap": "X is minus 1, 0 or 1 with equal chances and Y is X squared. The signed products cancel, so the covariance is 0, yet Y is completely determined by X."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From a table",
+    "q": "$P(X = 0, Y = 0) = 0.4$, $P(X = 0, Y = 1) = 0.1$, $P(X = 1, Y = 0) = 0.2$, $P(X = 1, Y = 1) = 0.3$. Find $\\operatorname{Cov}(X, Y)$ and $\\rho$.",
+    "steps": [
+     "$E[X] = 0.5$, $E[Y] = 0.4$, and $E[XY] = P(X = 1, Y = 1) = 0.3$.",
+     "$\\operatorname{Cov}(X, Y) = 0.3 - 0.5 \\times 0.4 = 0.1$.",
+     "$\\operatorname{Var}(X) = 0.25$, $\\operatorname{Var}(Y) = 0.24$, so $\\rho = \\frac{0.1}{\\sqrt{0.25 \\times 0.24}} \\approx 0.41$."
+    ],
+    "a": "$0.1$ and about $0.41$"
+   },
+   {
+    "t": "ex",
+    "title": "Correlation from the pieces",
+    "q": "$\\operatorname{Var}(X) = 4$, $\\operatorname{Var}(Y) = 9$, $\\operatorname{Cov}(X, Y) = -3$. Find $\\rho$, and $\\operatorname{Cov}(2X + 1, 5 - Y)$.",
+    "steps": [
+     "$\\rho = \\frac{-3}{2 \\cdot 3} = -\\frac{1}{2}$.",
+     "Constants drop out and factors multiply: $$\\operatorname{Cov}(2X + 1, 5 - Y) = 2 \\cdot (-1) \\cdot (-3) = 6$$"
+    ],
+    "a": "$-\\frac{1}{2}$ and 6"
+   },
+   {
+    "t": "ex",
+    "title": "Zero covariance, dependent",
+    "q": "$X$ is $-1$, 0 or 1 with probability $\\frac{1}{3}$ each, and $Y = X^{2}$. Find $\\operatorname{Cov}(X, Y)$.",
+    "steps": [
+     "$E[X] = 0$, and $$E[XY] = E[X^{3}] = \\frac{-1 + 0 + 1}{3} = 0$$",
+     "$\\operatorname{Cov}(X, Y) = 0 - 0 \\cdot E[Y] = 0$.",
+     "Yet $$P(X = 0, Y = 1) = 0 \\ne P(X = 0)P(Y = 1) = \\frac{1}{3} \\cdot \\frac{2}{3}$$"
+    ],
+    "a": "0, although $Y$ depends on $X$ completely."
+   },
+   {
+    "t": "mistake",
+    "html": "Concluding independence from zero covariance. Covariance measures only a linear trend; a perfect curved relationship, as above, can have covariance 0. Check: independence needs every cell (or the density everywhere) to factor; covariance 0 is only a consequence of it."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on covariance and correlation"
+   },
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 6 (Expected Value and Variance), section 6.2"
+   }
+  ]
+ },
+ "prob.variance-of-sums": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Means of sums simply add, by <a href=\"/math/probability/linearity-indicators/\">linearity</a>. Variances add only for uncorrelated variables; in general the <a href=\"/math/probability/covariance-correlation/\">covariance</a> of every pair joins in. This matters most for counts made of dependent indicators."
+   },
+   {
+    "t": "key",
+    "html": "$$\\operatorname{Var}(X + Y) = \\operatorname{Var}(X) + \\operatorname{Var}(Y) + 2\\operatorname{Cov}(X, Y),$$ and in general $$\\operatorname{Var}(aX + bY) = a^{2}\\operatorname{Var}(X) + b^{2}\\operatorname{Var}(Y) + 2ab\\operatorname{Cov}(X, Y)$$ For a longer sum, $$\\operatorname{Var}\\left(\\sum X_i\\right) = \\sum \\operatorname{Var}(X_i) + 2\\sum_{i < j}\\operatorname{Cov}(X_i, X_j).$$"
+   },
+   {
+    "t": "why",
+    "html": "Write $\\tilde X = X - \\mu_X$ and $\\tilde Y = Y - \\mu_Y$. Then $$\\operatorname{Var}(X + Y) = E[(\\tilde X + \\tilde Y)^{2}] = E[\\tilde X^{2}] + E[\\tilde Y^{2}] + 2E[\\tilde X\\tilde Y]$$ which is the formula. For $n$ terms the square of a sum has $n$ squares and $n(n - 1)$ cross terms, which pair up into $2\\sum_{i < j}$. Independent (or merely uncorrelated) variables have all covariances 0, which is the rule from <a href=\"/math/probability-and-statistics/combining-random-variables/\">sums of random variables</a>."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two correlated variables",
+    "q": "$\\operatorname{Var}(X) = 9$, $\\operatorname{Var}(Y) = 4$, $\\operatorname{Cov}(X, Y) = -2$. Find $\\operatorname{Var}(X + Y)$ and $\\operatorname{Var}(X - Y)$.",
+    "steps": [
+     "$\\operatorname{Var}(X + Y) = 9 + 4 + 2(-2) = 9$.",
+     "$$\\operatorname{Var}(X - Y) = 9 + 4 - 2(-2) = 17$$",
+     "Negative covariance: the two partly cancel in the sum and reinforce in the difference."
+    ],
+    "a": "9 and 17"
+   },
+   {
+    "t": "ex",
+    "title": "Hearts in a hand",
+    "q": "Deal 5 cards from a deck. $X$ is the number of hearts. Find $\\operatorname{Var}(X)$ with indicators.",
+    "steps": [
+     "$X = I_1 + \\cdots + I_5$, $I_j = 1$ if card $j$ is a heart. $P(I_j = 1) = \\frac{1}{4}$, so $\\operatorname{Var}(I_j) = \\frac{1}{4} \\cdot \\frac{3}{4} = \\frac{3}{16}$.",
+     "Two cards both hearts: $\\frac{13 \\cdot 12}{52 \\cdot 51} = \\frac{1}{17}$, so $\\operatorname{Cov}(I_j, I_k) = \\frac{1}{17} - \\frac{1}{16} = -\\frac{1}{272}$.",
+     "$$\\operatorname{Var}(X) = 5 \\cdot \\frac{3}{16} + 5 \\cdot 4 \\cdot \\left(-\\frac{1}{272}\\right) = \\frac{235}{272} \\approx 0.86$$ a bit less than the binomial's $\\frac{15}{16}$."
+    ],
+    "a": "$\\frac{235}{272}$"
+   },
+   {
+    "t": "ex",
+    "title": "Cards in their own place",
+    "q": "For a shuffled deck of $n \\ge 2$ cards, the number of cards in their original position has mean 1. Find its variance.",
+    "steps": [
+     "Each indicator has variance $\\frac{1}{n}\\left(1 - \\frac{1}{n}\\right)$.",
+     "Two given cards both stay with probability $\\frac{1}{n(n - 1)}$, so each covariance is $\\frac{1}{n(n - 1)} - \\frac{1}{n^{2}} = \\frac{1}{n^{2}(n - 1)}$.",
+     "$$\\operatorname{Var} = n \\cdot \\frac{n - 1}{n^{2}} + n(n - 1) \\cdot \\frac{1}{n^{2}(n - 1)} = \\frac{n - 1}{n} + \\frac{1}{n} = 1$$"
+    ],
+    "a": "1, for every deck size."
+   },
+   {
+    "t": "note",
+    "html": "With a correlation instead of a covariance, use $\\operatorname{Cov}(X, Y) = \\rho\\,\\sigma_X\\sigma_Y$. This is why diversification works: two investments with standard deviation 10 each and correlation $-\\frac{1}{2}$ have $$\\operatorname{Var}(X + Y) = 100 + 100 - 100 = 100$$ so the total is no more variable than one investment alone."
+   },
+   {
+    "t": "mistake",
+    "html": "Dropping the covariance terms when the pieces are dependent, as with cards dealt without replacement or a shuffled deck. Check: ask whether one piece tells you anything about another. If so, compute the pairwise covariances; there are $\\binom{n}{2}$ pairs, each counted twice."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 6 (Expected Value and Variance), section 6.2"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on variance of sums and covariance"
+   }
+  ]
+ },
+ "prob.convolution": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "If $X$ and $Y$ are independent, what is the distribution of $X + Y$? Not the sum of the two distributions: a total can be made in several ways, and we must add over all of them. This uses the <a href=\"/math/probability/conditional-distributions/\">independence of random variables</a> and, for densities, <a href=\"/math/probability/marginal-densities/\">integrating out</a> a variable."
+   },
+   {
+    "t": "key",
+    "html": "For independent $X$ and $Y$: $$P(X + Y = s) = \\sum_k P(X = k)\\,P(Y = s - k), \\qquad f_{X + Y}(s) = \\int f_X(t)\\,f_Y(s - t)\\,dt.$$ This operation is called <b>convolution</b>."
+   },
+   {
+    "t": "why",
+    "html": "The event $X + Y = s$ splits by the value of $X$: $X = k$ and $Y = s - k$, for each $k$. These pieces are disjoint, so their probabilities add, and independence turns each piece into a product. For densities, the same splitting turns the sum into an integral: slide the flipped density $f_Y(s - t)$ across $f_X(t)$ and measure their overlap."
+   },
+   {
+    "t": "viz",
+    "name": "prob-convolve",
+    "opts": {
+     "X": "die",
+     "s": 7
+    },
+    "cap": "Two dice: the grid holds the products of the two pmfs, and the six highlighted cells add to the probability of a total of 7."
+   },
+   {
+    "t": "viz",
+    "name": "prob-convolve",
+    "opts": {
+     "X": "uniform",
+     "s": 0.7
+    },
+    "cap": "Two uniform densities on 0 to 1: the overlap of one with the other flipped and slid to s gives the density of the sum, a triangle."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two dice",
+    "q": "Find $P(X + Y = 7)$ for two fair dice, and $P(X + Y = 5)$ for a four-sided die plus a six-sided die.",
+    "steps": [
+     "Two dice: the splits $(1, 6), (2, 5), \\ldots, (6, 1)$ each have probability $\\frac{1}{36}$: total $\\frac{6}{36} = \\frac{1}{6}$.",
+     "Four-sided and six-sided: the splits $(1, 4), (2, 3), (3, 2), (4, 1)$ each have probability $\\frac{1}{24}$: total $\\frac{4}{24} = \\frac{1}{6}$."
+    ],
+    "a": "$\\frac{1}{6}$ in both cases."
+   },
+   {
+    "t": "ex",
+    "title": "Two uniforms",
+    "q": "$X$ and $Y$ are independent and uniform on $[0, 1]$. Find the density of $S = X + Y$.",
+    "steps": [
+     "$f_S(s) = \\int_{0}^{1} f_Y(s - t)\\,dt$ is the length of $\\{t \\in [0, 1]: 0 \\le s - t \\le 1\\}$.",
+     "For $0 \\le s \\le 1$ that set is $[0, s]$: $f_S(s) = s$. For $1 \\le s \\le 2$ it is $[s - 1, 1]$: $f_S(s) = 2 - s$.",
+     "A triangle peaking at $s = 1$: middle totals can be made in more ways."
+    ],
+    "a": "$f_S(s) = s$ on $[0, 1]$ and $2 - s$ on $[1, 2]$."
+   },
+   {
+    "t": "ex",
+    "title": "Two Poisson counts",
+    "q": "$X$ and $Y$ are independent Poisson with means $\\lambda$ and $\\mu$. Show that $X + Y$ is Poisson with mean $\\lambda + \\mu$.",
+    "steps": [
+     "$$P(X + Y = n) = \\sum_{k = 0}^{n} e^{-\\lambda}\\frac{\\lambda^{k}}{k!}e^{-\\mu}\\frac{\\mu^{n - k}}{(n - k)!}$$",
+     "$$= \\frac{e^{-(\\lambda + \\mu)}}{n!}\\sum_{k} \\binom{n}{k}\\lambda^{k}\\mu^{n - k} = e^{-(\\lambda + \\mu)}\\frac{(\\lambda + \\mu)^{n}}{n!}$$ by the binomial theorem."
+    ],
+    "a": "Poisson with mean $\\lambda + \\mu$. (Similarly, binomials with the same $p$ add: $n_1 + n_2$ trials.)"
+   },
+   {
+    "t": "mistake",
+    "html": "Adding the pmfs or densities instead of convolving them. The \"sum\" of two uniform densities on $[0, 1]$ would have total area 2, and it would not say anything about totals between 1 and 2. Check: the result must add (or integrate) to 1, and its range must run from the smallest possible total to the largest."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 7 (Sums of Random Variables), sections 7.1 and 7.2"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on sums of independent random variables"
+   }
+  ]
+ },
+ "prob.conditional-expectation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/probability/total-probability/\">law of total probability</a> finds a probability by splitting into cases. The same idea works for averages: find the average within each case, then average those, weighting each case by its probability. Within a case the average comes from the <a href=\"/math/probability/conditional-distributions/\">conditional distribution</a>."
+   },
+   {
+    "t": "key",
+    "html": "$$E[X \\mid Y = y] = \\sum_x x\\,P(X = x \\mid Y = y)$$ is the mean of $X$ within the slice $Y = y$. The <b>tower rule</b>: $$E[X] = \\sum_y E[X \\mid Y = y]\\,P(Y = y),$$ written compactly as $E[X] = E\\left[E[X \\mid Y]\\right]$."
+   },
+   {
+    "t": "why",
+    "html": "Start from $E[X] = \\sum_{x, y} x\\,p(x, y)$ and write each cell as $$p(x, y) = P(X = x \\mid Y = y)P(Y = y)$$ Grouping by $y$: $$E[X] = \\sum_y P(Y = y)\\sum_x x\\,P(X = x \\mid Y = y) = \\sum_y P(Y = y)\\,E[X \\mid Y = y].$$ So $E[X]$ is a weighted average of the slice means, with the slice probabilities as weights."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "$X = 0$",
+     "$X = 1$",
+     "$X = 2$",
+     "$P(Y = y)$"
+    ],
+    "rows": [
+     [
+      "$Y = 0$",
+      "$\\frac{1}{6}$",
+      "$\\frac{1}{6}$",
+      "$0$",
+      "$\\frac{1}{3}$"
+     ],
+     [
+      "$Y = 1$",
+      "$\\frac{1}{12}$",
+      "$\\frac{1}{4}$",
+      "$\\frac{1}{3}$",
+      "$\\frac{2}{3}$"
+     ],
+     [
+      "$P(X = x)$",
+      "$\\frac{1}{4}$",
+      "$\\frac{5}{12}$",
+      "$\\frac{1}{3}$",
+      "$1$"
+     ]
+    ],
+    "cap": "A joint pmf with its marginals in the margins."
+   },
+   {
+    "t": "viz",
+    "name": "prob-table",
+    "opts": {
+     "x": [
+      0,
+      1,
+      2
+     ],
+     "y": [
+      0,
+      1
+     ],
+     "p": [
+      [
+       "1/6",
+       "1/6",
+       "0"
+      ],
+      [
+       "1/12",
+       "1/4",
+       "1/3"
+      ]
+     ],
+     "mode": "cexp"
+    },
+    "cap": "Each row with its own mean of X in the last column. Weighting those row means by the row totals gives the overall mean of X."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Slice means from a table",
+    "q": "From the table, find $E[X \\mid Y = 0]$, $E[X \\mid Y = 1]$ and $E[X]$.",
+    "steps": [
+     "Given $Y = 0$: probabilities $\\frac{1}{2}, \\frac{1}{2}, 0$, so $E[X \\mid Y = 0] = \\frac{1}{2}$.",
+     "Given $Y = 1$: probabilities $\\frac{1}{8}, \\frac{3}{8}, \\frac{1}{2}$, so $E[X \\mid Y = 1] = \\frac{3}{8} + 1 = \\frac{11}{8}$.",
+     "$$E[X] = \\frac{1}{3} \\cdot \\frac{1}{2} + \\frac{2}{3} \\cdot \\frac{11}{8} = \\frac{1}{6} + \\frac{11}{12} = \\frac{13}{12}$$ matching the marginal calculation."
+    ],
+    "a": "$\\frac{1}{2}$, $\\frac{11}{8}$ and $\\frac{13}{12}$"
+   },
+   {
+    "t": "ex",
+    "title": "A two-stage experiment",
+    "q": "Roll a fair die to get $N$, then flip a fair coin $N$ times. Find the expected number of heads.",
+    "steps": [
+     "Given $N = n$, the heads are binomial with mean $\\frac{n}{2}$: $E[X \\mid N] = \\frac{N}{2}$.",
+     "$E[X] = E\\left[\\frac{N}{2}\\right] = \\frac{1}{2} \\cdot \\frac{7}{2} = \\frac{7}{4}$."
+    ],
+    "a": "$\\frac{7}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "Group averages",
+    "q": "A school's students: 50% in group 1 with mean commute 30 minutes, 30% in group 2 with mean 40, 20% in group 3 with mean 60. Find the mean commute overall.",
+    "steps": [
+     "$$E[X] = 0.5(30) + 0.3(40) + 0.2(60) = 15 + 12 + 12 = 39$$ minutes.",
+     "The plain average of the three means, about 43.3, is wrong: group 3 is small."
+    ],
+    "a": "39 minutes"
+   },
+   {
+    "t": "mistake",
+    "html": "Averaging the conditional means without weighting them by the probabilities of their slices. Check: the overall mean must lie between the smallest and largest slice means, closer to the big slices; and it must agree with $E[X]$ computed from the marginal distribution."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on conditional expectation"
+   },
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 6 (Expected Value and Variance), section 6.1, conditional expectation"
+   }
+  ]
+ },
+ "prob.min-max": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A system of parts in series fails when its first part fails; a job finishes when its slowest worker does. These are the minimum and the maximum of several random variables. With independence and <a href=\"/math/probability/continuous-cdf/\">CDFs</a> both have neat formulas, and the minimum of <a href=\"/math/probability/exponential/\">exponential</a> times is exponential again."
+   },
+   {
+    "t": "key",
+    "html": "For independent $X_1, \\ldots, X_n$ with the same CDF $F$: $$P(\\max \\le x) = F(x)^{n}, \\qquad P(\\min > x) = (1 - F(x))^{n}.$$ If the $X_i$ are exponential with rates $\\lambda_1, \\ldots, \\lambda_n$, the minimum is exponential with rate $\\lambda_1 + \\cdots + \\lambda_n$, and $X_i$ is the first with probability $\\frac{\\lambda_i}{\\lambda_1 + \\cdots + \\lambda_n}$."
+   },
+   {
+    "t": "why",
+    "html": "The largest is at most $x$ exactly when <i>every</i> $X_i$ is at most $x$; by independence, <a href=\"/math/probability/conditional-distributions/\">the probabilities multiply</a>. Likewise the smallest exceeds $x$ exactly when every $X_i$ does. For exponentials, $$P(\\min > t) = \\prod e^{-\\lambda_i t} = e^{-(\\lambda_1 + \\cdots + \\lambda_n)t}$$ Working through these \"all of them\" statements avoids the hard \"at least one\" cases."
+   },
+   {
+    "t": "viz",
+    "name": "prob-region",
+    "opts": {
+     "support": "square",
+     "f": "uniform",
+     "event": "x<0.6 and y<0.6",
+     "slices": ""
+    },
+    "cap": "Two independent uniform numbers: the larger is below 0.6 exactly when the point lies in the small square, whose area is 0.6 squared."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Dice",
+    "q": "Roll 3 dice. Find the probability that the largest is at most 4, and that it is exactly 4.",
+    "steps": [
+     "$P(\\max \\le 4) = \\left(\\frac{4}{6}\\right)^{3} = \\frac{8}{27}$.",
+     "$$P(\\max = 4) = P(\\max \\le 4) - P(\\max \\le 3) = \\frac{8}{27} - \\frac{1}{8} = \\frac{37}{216}$$"
+    ],
+    "a": "$\\frac{8}{27}$ and $\\frac{37}{216}$"
+   },
+   {
+    "t": "ex",
+    "title": "The largest of n uniforms",
+    "q": "$n$ numbers are uniform on $[0, 1]$, independent. Find the expected largest.",
+    "steps": [
+     "$F_{\\max}(x) = x^{n}$, so the density is $nx^{n - 1}$ on $[0, 1]$.",
+     "$E[\\max] = \\int_{0}^{1} x \\cdot nx^{n - 1}\\,dx = \\frac{n}{n + 1}$. Similarly $E[\\min] = \\frac{1}{n + 1}$.",
+     "The $n$ points split $[0, 1]$ into $n + 1$ gaps of equal average length."
+    ],
+    "a": "$\\frac{n}{n + 1}$"
+   },
+   {
+    "t": "ex",
+    "title": "Parts in series",
+    "q": "A device has two parts with independent exponential lifetimes, means 4 years and 12 years, and fails when either part fails. Find its mean lifetime and the chance that the first part fails first.",
+    "steps": [
+     "Rates: $\\frac{1}{4}$ and $\\frac{1}{12}$ per year; total $\\frac{1}{3}$.",
+     "The device's lifetime is exponential with rate $\\frac{1}{3}$: mean 3 years.",
+     "The first part fails first with probability $\\frac{1/4}{1/3} = \\frac{3}{4}$."
+    ],
+    "a": "3 years; $\\frac{3}{4}$"
+   },
+   {
+    "t": "p",
+    "html": "The exponential case has a memorable form. Think of independent alarm clocks ringing at exponential times. The first ring comes at rate $\\lambda_1 + \\cdots + \\lambda_n$, so the chance that all of them are still silent at time $t$ is $e^{-(\\lambda_1 + \\cdots + \\lambda_n)t}$, and clock $i$ rings first with probability equal to its share of the total rate. After the first ring the others start fresh, because exponentials have no memory."
+   },
+   {
+    "t": "mistake",
+    "html": "Writing $P(\\max \\le x) = n \\cdot F(x)$ (which can exceed 1), or attacking $P(\\min \\le x)$ directly, which needs inclusion–exclusion. Check: rewrite the event about the max or min as \"all of them\" and multiply; for the min, use the complement: $P(\\min \\le x) = 1 - (1 - F(x))^{n}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on maxima, minima and competing exponential clocks"
+   },
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 5 (Distributions and Densities), section 5.2, the exponential density"
+   }
+  ]
+ },
+ "prob.markov-chebyshev": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Often all we know about a random variable is its mean, or its mean and <a href=\"/math/probability/variance-rules/\">variance</a>. That is still enough to say something definite about how likely large values are. The two inequalities here hold for every distribution, discrete or <a href=\"/math/probability/continuous-expectation/\">continuous</a>, and they are the tools behind the law of large numbers."
+   },
+   {
+    "t": "key",
+    "html": "<b>Markov:</b> if $X \\ge 0$, then for every $a > 0$, $$P(X \\ge a) \\le \\frac{E[X]}{a}.$$ <b>Chebyshev:</b> if $X$ has mean $\\mu$ and standard deviation $\\sigma$, then for every $c > 0$, $$P(\\lvert X - \\mu \\rvert \\ge c) \\le \\frac{\\sigma^{2}}{c^{2}}, \\quad \\text{equivalently} \\quad P(\\lvert X - \\mu \\rvert \\ge k\\sigma) \\le \\frac{1}{k^{2}}.$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>Markov:</b> compare two random variables. Wherever $X \\ge a$, the quantity $a \\cdot 1_{X \\ge a}$ equals $a \\le X$; elsewhere it is $0 \\le X$, because $X \\ge 0$. So $a \\cdot 1_{X \\ge a} \\le X$ always, and taking expected values gives $a\\,P(X \\ge a) \\le E[X]$.\n  <br><b>Chebyshev:</b> apply Markov to the nonnegative variable $(X - \\mu)^{2}$ with $a = c^{2}$: $$P(\\lvert X - \\mu \\rvert \\ge c) = P\\left((X - \\mu)^{2} \\ge c^{2}\\right) \\le \\frac{E[(X - \\mu)^{2}]}{c^{2}} = \\frac{\\sigma^{2}}{c^{2}}.$$"
+   },
+   {
+    "t": "table",
+    "head": [
+     "$k$",
+     "1.5",
+     "2",
+     "3",
+     "4"
+    ],
+    "rows": [
+     [
+      "Chebyshev: at least this much within $k\\sigma$",
+      "$\\frac{5}{9} \\approx 56\\%$",
+      "$\\frac{3}{4} = 75\\%$",
+      "$\\frac{8}{9} \\approx 89\\%$",
+      "$\\frac{15}{16} \\approx 94\\%$"
+     ],
+     [
+      "A normal distribution actually has",
+      "87%",
+      "95%",
+      "99.7%",
+      "99.99%"
+     ]
+    ],
+    "cap": "Chebyshev must hold for every distribution, so it is cautious."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Only the mean",
+    "q": "Waiting times at a clinic average 10 minutes and are never negative. Bound the probability that a wait is at least 40 minutes.",
+    "steps": [
+     "Markov with $a = 40$: $P(X \\ge 40) \\le \\frac{10}{40} = \\frac{1}{4}$.",
+     "So at most a quarter of waits are that long, whatever the distribution."
+    ],
+    "a": "at most $\\frac{1}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "Mean and spread",
+    "q": "Test scores have mean 70 and standard deviation 5. Give a lower bound for the fraction of scores strictly between 60 and 80.",
+    "steps": [
+     "60 and 80 are $c = 10$ from the mean, which is $k = 2$ standard deviations.",
+     "$P(\\lvert X - 70 \\rvert \\ge 10) \\le \\frac{25}{100} = \\frac{1}{4}$, so at least $\\frac{3}{4}$ of scores lie strictly between 60 and 80."
+    ],
+    "a": "at least $\\frac{3}{4}$"
+   },
+   {
+    "t": "ex",
+    "title": "How tight is the bound?",
+    "q": "For one fair die roll ($\\mu = 3.5$, $\\sigma^{2} = \\frac{35}{12}$), compare Chebyshev's bound on $P(\\lvert X - 3.5 \\rvert \\ge 2.5)$ with the true value.",
+    "steps": [
+     "Bound: $\\frac{35/12}{2.5^{2}} = \\frac{35/12}{25/4} = \\frac{7}{15} \\approx 0.47$.",
+     "True value: only 1 and 6 are that far out, so $P = \\frac{2}{6} = \\frac{1}{3}$."
+    ],
+    "a": "Bound $\\frac{7}{15}$, true value $\\frac{1}{3}$: correct, not tight."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading a bound as the exact probability (\"Markov says the chance is $\\frac{1}{4}$\"), or using Markov's inequality for a variable that can be negative. If $X = \\pm 10$ with equal chances, $E[X] = 0$, yet $P(X \\ge 5) = \\frac{1}{2}$, more than $\\frac{0}{5}$. Check: Markov needs $X \\ge 0$, and both inequalities give \"at most\" (or \"at least\") statements."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 8 (Law of Large Numbers), section 8.1, Chebyshev's inequality"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on Chebyshev's inequality and the law of large numbers"
+   }
+  ]
+ },
+ "prob.law-large-numbers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Flip a coin many times and the fraction of heads drifts toward one half. Why must it? The <a href=\"/math/probability/variance-of-sums/\">variance of a sum</a> shows that an average of many independent trials has small spread, and <a href=\"/math/probability/markov-chebyshev/\">Chebyshev's inequality</a> turns small spread into a guarantee."
+   },
+   {
+    "t": "key",
+    "html": "If $X_1, \\ldots, X_n$ are independent with mean $\\mu$ and standard deviation $\\sigma$, their average $\\bar X_n$ has $$E[\\bar X_n] = \\mu, \\qquad \\operatorname{Var}(\\bar X_n) = \\frac{\\sigma^{2}}{n}, \\qquad P(\\lvert \\bar X_n - \\mu \\rvert \\ge \\varepsilon) \\le \\frac{\\sigma^{2}}{n\\varepsilon^{2}} \\to 0.$$ This is the (weak) <b>law of large numbers</b>."
+   },
+   {
+    "t": "why",
+    "html": "By linearity $E[\\bar X_n] = \\frac{1}{n} \\cdot n\\mu = \\mu$. The variances of independent terms add, so $\\operatorname{Var}(X_1 + \\cdots + X_n) = n\\sigma^{2}$; dividing by $n$ divides the variance by $n^{2}$, leaving $\\frac{\\sigma^{2}}{n}$. Chebyshev's inequality with $c = \\varepsilon$ gives the bound, and for any fixed $\\varepsilon$ it shrinks to 0 as $n$ grows. The spread of the average, $\\frac{\\sigma}{\\sqrt{n}}$, falls like one over the square root of $n$: four times as many trials halve it."
+   },
+   {
+    "t": "viz",
+    "name": "dice",
+    "opts": {
+     "kind": "dice",
+     "n": 1,
+     "sides": 6,
+     "event": 6,
+     "theory": true,
+     "seed": 11
+    },
+    "cap": "Rolling one die again and again: the running share of sixes wanders at first, then settles near one sixth."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Averaging measurements",
+    "q": "One measurement has standard deviation 5. Find the standard deviation of the average of 100 independent measurements.",
+    "steps": [
+     "$\\operatorname{Var}(\\bar X) = \\frac{25}{100} = \\frac{1}{4}$.",
+     "$\\operatorname{SD}(\\bar X) = \\frac{5}{\\sqrt{100}} = 0.5$."
+    ],
+    "a": "$0.5$"
+   },
+   {
+    "t": "ex",
+    "title": "How many flips?",
+    "q": "How many flips of a fair coin guarantee, by Chebyshev, that the fraction of heads is within $0.05$ of $\\frac{1}{2}$ with probability at least $0.99$?",
+    "steps": [
+     "Each flip is an indicator with variance $\\frac{1}{4}$, so $\\operatorname{Var}(\\hat p) = \\frac{1}{4n}$.",
+     "We need $\\frac{1/(4n)}{0.05^{2}} \\le 0.01$, that is $\\frac{100}{n} \\le 0.01$.",
+     "$n \\ge 10{,}000$. (Chebyshev is cautious; the normal approximation would need far fewer.)"
+    ],
+    "a": "$n = 10{,}000$"
+   },
+   {
+    "t": "ex",
+    "title": "Swamping, not correcting",
+    "q": "A fair coin shows 10 heads in its first 10 flips. What fraction of heads do you expect after 1000 flips in total?",
+    "steps": [
+     "The next 990 flips are fair and independent of the first 10: expect about 495 heads.",
+     "Expected fraction: $\\frac{10 + 495}{1000} = 0.505$.",
+     "The 10 extra heads are never \"paid back\"; they simply matter less and less as $n$ grows."
+    ],
+    "a": "about $0.505$"
+   },
+   {
+    "t": "p",
+    "html": "Chebyshev's bound is a guarantee for every distribution, so it asks for more trials than are really needed. The <a href=\"/math/probability/clt-sums/\">central limit theorem</a> gives the realistic picture: the fraction of heads in $n$ flips is roughly normal with standard deviation $\\frac{1}{2\\sqrt{n}}$, and in the coin example about 665 flips already give 99% confidence of being within $0.05$, against Chebyshev's 10,000."
+   },
+   {
+    "t": "mistake",
+    "html": "Expecting the next results to \"make up\" for a streak, so that tails are more likely after many heads. The coin has no memory: each flip is still 50–50. The average settles because the early results are swamped by many later ones, not corrected. Check: the law is about averages over many trials, never about the next single trial."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 8 (Law of Large Numbers), section 8.1"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on the law of large numbers"
+   }
+  ]
+ },
+ "prob.mgf": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A moment generating function packs all of a distribution's moments, $E[X], E[X^{2}], \\ldots$, into one function. It turns the hard <a href=\"/math/probability/convolution/\">convolution</a> of independent variables into a simple product, and it is the main tool for proving the central limit theorem. The key fact is the exponential series from <a href=\"/math/calculus-2/known-series/\">known series</a>, and the moments are the <a href=\"/math/probability/continuous-expectation/\">expected values of functions</a> you already compute."
+   },
+   {
+    "t": "key",
+    "html": "The <b>moment generating function</b> of $X$ is $M_X(t) = E\\left[e^{tX}\\right]$. Its derivatives at 0 are the moments: $M'(0) = E[X]$, $M''(0) = E[X^{2}]$, and so on, so $\\operatorname{Var}(X) = M''(0) - (M'(0))^{2}$. For independent $X$ and $Y$, $M_{X + Y}(t) = M_X(t)M_Y(t)$. Two variables with the same MGF (near $t = 0$) have the same distribution."
+   },
+   {
+    "t": "why",
+    "html": "Expand: $e^{tX} = 1 + tX + \\frac{t^{2}X^{2}}{2!} + \\cdots$, so by linearity $$M(t) = 1 + tE[X] + \\frac{t^{2}}{2!}E[X^{2}] + \\frac{t^{3}}{3!}E[X^{3}] + \\cdots,$$ and the $k$th derivative at $t = 0$ picks out $E[X^{k}]$. For independent $X$ and $Y$, $e^{t(X + Y)} = e^{tX}e^{tY}$ is a product of independent factors, whose expected value is the product of the expected values."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Distribution",
+     "$M(t)$",
+     "Mean",
+     "Variance"
+    ],
+    "rows": [
+     [
+      "Bernoulli($p$)",
+      "$1 - p + pe^{t}$",
+      "$p$",
+      "$p(1 - p)$"
+     ],
+     [
+      "Binomial($n, p$)",
+      "$(1 - p + pe^{t})^{n}$",
+      "$np$",
+      "$np(1 - p)$"
+     ],
+     [
+      "Poisson($\\lambda$)",
+      "$e^{\\lambda(e^{t} - 1)}$",
+      "$\\lambda$",
+      "$\\lambda$"
+     ],
+     [
+      "Exponential (rate $\\lambda$)",
+      "$\\frac{\\lambda}{\\lambda - t}$, $t < \\lambda$",
+      "$\\frac{1}{\\lambda}$",
+      "$\\frac{1}{\\lambda^{2}}$"
+     ],
+     [
+      "Normal $N(\\mu, \\sigma^{2})$",
+      "$e^{\\mu t + \\sigma^{2}t^{2}/2}$",
+      "$\\mu$",
+      "$\\sigma^{2}$"
+     ]
+    ],
+    "cap": "Moment generating functions worth recognizing."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A discrete MGF",
+    "q": "$M(t) = \\frac{1}{4}e^{-t} + \\frac{1}{2} + \\frac{1}{4}e^{2t}$. Find $E[X]$ and $\\operatorname{Var}(X)$.",
+    "steps": [
+     "This $X$ is $-1$, 0 or 2 with probabilities $\\frac{1}{4}, \\frac{1}{2}, \\frac{1}{4}$.",
+     "$M'(t) = -\\frac{1}{4}e^{-t} + \\frac{1}{2}e^{2t}$, so $E[X] = -\\frac{1}{4} + \\frac{1}{2} = \\frac{1}{4}$.",
+     "$M''(t) = \\frac{1}{4}e^{-t} + e^{2t}$, so $E[X^{2}] = \\frac{5}{4}$ and $\\operatorname{Var}(X) = \\frac{5}{4} - \\frac{1}{16} = \\frac{19}{16}$."
+    ],
+    "a": "$\\frac{1}{4}$ and $\\frac{19}{16}$"
+   },
+   {
+    "t": "ex",
+    "title": "The Poisson",
+    "q": "Find the mean and variance from $M(t) = e^{\\lambda(e^{t} - 1)}$.",
+    "steps": [
+     "$M'(t) = \\lambda e^{t}M(t)$, so $M'(0) = \\lambda$.",
+     "$M''(t) = \\lambda e^{t}M(t) + \\lambda e^{t}M'(t)$, so $M''(0) = \\lambda + \\lambda^{2}$.",
+     "$\\operatorname{Var}(X) = \\lambda + \\lambda^{2} - \\lambda^{2} = \\lambda$."
+    ],
+    "a": "Both are $\\lambda$."
+   },
+   {
+    "t": "ex",
+    "title": "Recognizing a sum",
+    "q": "$X$ and $Y$ are independent Poisson with means 2 and 3. Identify the distribution of $X + Y$.",
+    "steps": [
+     "$$M_{X + Y}(t) = e^{2(e^{t} - 1)}e^{3(e^{t} - 1)} = e^{5(e^{t} - 1)}$$",
+     "That is the Poisson MGF with $\\lambda = 5$, and an MGF determines the distribution."
+    ],
+    "a": "Poisson with mean 5, matching the convolution lesson with far less work."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading $M''(0)$ as the variance. It is $E[X^{2}]$, the second moment about 0; the variance needs $(M'(0))^{2}$ subtracted. Check with a constant $X = 3$: $M(t) = e^{3t}$, $M''(0) = 9$, but the variance is 0."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 10 (Generating Functions), sections 10.1 and 10.3, moment generating functions"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on moment generating functions"
+   }
+  ]
+ },
+ "prob.clt-sums": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/probability/law-large-numbers/\">law of large numbers</a> says an average settles near its mean. The central limit theorem says more: the <i>shape</i> of a sum of many independent pieces is close to a normal curve, whatever the pieces look like. In <a href=\"/math/probability-and-statistics/sampling-distribution-mean/\">the sampling distribution of a mean</a> you used this for averages; here it is stated for sums."
+   },
+   {
+    "t": "key",
+    "html": "If $X_1, \\ldots, X_n$ are independent with mean $\\mu$ and standard deviation $\\sigma$, then for large $n$ the sum $S_n = X_1 + \\cdots + X_n$ is approximately normal with $$E[S_n] = n\\mu, \\qquad \\operatorname{SD}(S_n) = \\sigma\\sqrt{n}, \\qquad P(S_n \\le s) \\approx \\Phi\\left(\\frac{s - n\\mu}{\\sigma\\sqrt{n}}\\right).$$"
+   },
+   {
+    "t": "why",
+    "html": "The mean and standard deviation of $S_n$ come from linearity and from adding the variances of independent terms ($n\\sigma^{2}$). The normal shape is the deep part. A sketch with <a href=\"/math/probability/mgf/\">moment generating functions</a>: standardize, $Z_n = \\frac{S_n - n\\mu}{\\sigma\\sqrt{n}}$. Its MGF is the product of $n$ identical factors, each about $1 + \\frac{t^{2}}{2n}$ for large $n$, so $M_{Z_n}(t) \\approx \\left(1 + \\frac{t^{2}}{2n}\\right)^{n} \\to e^{t^{2}/2}$, the MGF of the standard normal."
+   },
+   {
+    "t": "viz",
+    "name": "prob-convolve",
+    "opts": {
+     "X": "uniform",
+     "mode": "copies",
+     "n": 3
+    },
+    "cap": "The sum of several independent uniform numbers. Add copies: the shape quickly becomes a bell curve with mean n times one half and standard deviation growing like the square root of n. Switch to the average to see it narrow instead."
+   },
+   {
+    "t": "viz",
+    "name": "sampling",
+    "opts": {
+     "pop": "skewed",
+     "pops": [
+      "skewed",
+      "uniform",
+      "bimodal"
+     ],
+     "n": 10,
+     "seed": 7
+    },
+    "cap": "Even from a skewed population, averages of samples pile up in a nearly normal shape."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Boxes on a pallet",
+    "q": "Boxes weigh 500 g on average with standard deviation 10 g, independently. Find the approximate probability that 36 boxes weigh more than 18.1 kg in total. Use $\\Phi(1.67) = 0.9525$.",
+    "steps": [
+     "$E[S] = 36 \\times 500 = 18{,}000$ g and $\\operatorname{SD}(S) = 10\\sqrt{36} = 60$ g.",
+     "$z = \\frac{18{,}100 - 18{,}000}{60} \\approx 1.67$.",
+     "$$P(S > 18{,}100) \\approx 1 - 0.9525 = 0.0475$$"
+    ],
+    "a": "about $0.048$"
+   },
+   {
+    "t": "ex",
+    "title": "Total call time",
+    "q": "Calls last 5 minutes on average with standard deviation 3 minutes, independently. Find the approximate probability that 49 calls take more than 4 hours in total. Use $\\Phi(0.24) = 0.5948$.",
+    "steps": [
+     "$E[S] = 245$ minutes and $\\operatorname{SD}(S) = 3\\sqrt{49} = 21$ minutes.",
+     "$z = \\frac{240 - 245}{21} \\approx -0.24$.",
+     "$$P(S > 240) \\approx 1 - \\Phi(-0.24) = \\Phi(0.24) = 0.5948$$"
+    ],
+    "a": "about $0.595$"
+   },
+   {
+    "t": "ex",
+    "title": "A total that is rarely exceeded",
+    "q": "With the boxes above, find the weight that 36 boxes stay below about 95% of the time. Use $\\Phi(1.645) \\approx 0.95$.",
+    "steps": [
+     "$$s = n\\mu + 1.645\\,\\sigma\\sqrt{n} = 18{,}000 + 1.645 \\times 60 \\approx 18{,}099$$ g.",
+     "Two sums of the same pieces differ only in $n$: doubling the number of boxes doubles the mean but multiplies the spread by only $\\sqrt{2}$."
+    ],
+    "a": "about 18.1 kg"
+   },
+   {
+    "t": "mistake",
+    "html": "Using $\\sigma n$ or $\\frac{\\sigma}{\\sqrt{n}}$ for the spread of a sum. For a sum it is $\\sigma\\sqrt{n}$; $\\frac{\\sigma}{\\sqrt{n}}$ belongs to the average, $\\frac{S_n}{n}$. Check: a sum of more pieces is more spread out, but not in proportion to $n$, because independent errors partly cancel."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 9 (Central Limit Theorem), sections 9.2 and 9.3"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on the central limit theorem"
+   }
+  ]
+ },
+ "prob.continuity-correction": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/probability-and-statistics/binomial-distribution/\">binomial</a> count is a sum of independent 0–1 trials, so by the <a href=\"/math/probability/clt-sums/\">central limit theorem</a> it is close to normal when $n$ is large. But the binomial lives on whole numbers and the normal curve on all real numbers. The continuity correction bridges the two."
+   },
+   {
+    "t": "key",
+    "html": "For $X$ binomial with $np(1 - p)$ reasonably large (say at least 10), use $Y$ normal with mean $np$ and standard deviation $\\sqrt{np(1 - p)}$, and widen each whole number $k$ to $[k - 0.5,\\ k + 0.5]$: $$P(X \\le k) \\approx P(Y < k + 0.5), \\qquad P(X \\ge k) \\approx P(Y > k - 0.5), \\qquad P(X = k) \\approx P(k - 0.5 < Y < k + 0.5).$$"
+   },
+   {
+    "t": "why",
+    "html": "Draw the binomial pmf as bars of width 1, centered on the whole numbers. The bar for $k$ covers $[k - 0.5, k + 0.5]$ and its area is $P(X = k)$. The normal curve approximates the tops of the bars, so the area under the curve over the same stretch approximates the same probability. For $X \\le k$ the bars run through the one at $k$, which ends at $k + 0.5$. Without the correction, a single value would get probability 0, and each \"$\\le$\" question would lose half a bar."
+   },
+   {
+    "t": "viz",
+    "name": "normal",
+    "opts": {
+     "mu": 50,
+     "sigma": 5,
+     "a": 44.5,
+     "b": 45.5,
+     "shade": "left",
+     "zscale": true,
+     "sliders": false,
+     "xlabel": "heads in 100 flips"
+    },
+    "cap": "The normal curve for 100 fair coin flips: the area to the left of 45.5 approximates the chance of at most 45 heads."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Event",
+     "Corrected normal event"
+    ],
+    "rows": [
+     [
+      "$X \\le 45$",
+      "$Y < 45.5$"
+     ],
+     [
+      "$X < 45$, which is $X \\le 44$",
+      "$Y < 44.5$"
+     ],
+     [
+      "$X \\ge 45$",
+      "$Y > 44.5$"
+     ],
+     [
+      "$X > 45$, which is $X \\ge 46$",
+      "$Y > 45.5$"
+     ],
+     [
+      "$X = 45$",
+      "$44.5 < Y < 45.5$"
+     ]
+    ],
+    "cap": "First decide which whole numbers are in, then go half a unit past the last one."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "At most 45 heads",
+    "q": "Flip a fair coin 100 times. Approximate $P(X \\le 45)$. Use $\\Phi(-0.9) = 0.1841$.",
+    "steps": [
+     "$np = 50$ and $\\sqrt{np(1 - p)} = 5$.",
+     "$P(X \\le 45) \\approx P(Y < 45.5)$; $z = \\frac{45.5 - 50}{5} = -0.9$.",
+     "$\\approx 0.1841$. The exact binomial value is $0.1841$ too."
+    ],
+    "a": "about $0.184$"
+   },
+   {
+    "t": "ex",
+    "title": "Fewer than 45",
+    "q": "Same coin. Approximate $P(X < 45)$. Use $\\Phi(-1.1) = 0.1357$.",
+    "steps": [
+     "$X < 45$ means $X \\le 44$, so use $Y < 44.5$.",
+     "$z = \\frac{44.5 - 50}{5} = -1.1$, and $P \\approx 0.1357$ (exact: $0.1356$)."
+    ],
+    "a": "about $0.136$"
+   },
+   {
+    "t": "ex",
+    "title": "Exactly 50",
+    "q": "Approximate $P(X = 50)$. Use $\\Phi(0.1) = 0.5398$.",
+    "steps": [
+     "$P(X = 50) \\approx P(49.5 < Y < 50.5)$, with $z = \\pm 0.1$.",
+     "$\\approx 0.5398 - 0.4602 = 0.0796$ (exact: $0.0796$)."
+    ],
+    "a": "about $0.080$"
+   },
+   {
+    "t": "mistake",
+    "html": "Skipping the correction, or moving the boundary the wrong way. $P(X < 12)$ is $P(X \\le 11)$, so the boundary is $11.5$, not $12.5$. Check: list which whole numbers the event includes, and make the normal interval run half a unit beyond the extreme ones."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 9 (Central Limit Theorem), section 9.1, Bernoulli trials"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2014), readings on the normal approximation to the binomial"
+   }
+  ]
+ },
+ "prob.markov-chains": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Weather that tends to persist, a customer switching brands, a board-game token: in each, the next state is random, but its chances depend on the current state. A Markov chain models this. Its one-step behavior is a table of <a href=\"/math/probability/total-probability/\">conditional probabilities</a>, and many steps are computed by <a href=\"/math/precalculus/matrix-multiplication/\">matrix multiplication</a>."
+   },
+   {
+    "t": "key",
+    "html": "A <b>Markov chain</b> has the property that, given the present state, the past does not matter: $$P(X_{n + 1} = j \\mid X_n = i, \\text{earlier states}) = P_{ij}$$ The <b>transition matrix</b> $P$ has row $i$ listing the chances of moving from state $i$, so <b>every row adds to 1</b>. A distribution is a row vector $\\pi_n$, and $$\\pi_{n + 1} = \\pi_n P, \\qquad \\pi_n = \\pi_0 P^{n};$$ entry $(i, j)$ of $P^{n}$ is the chance of going from $i$ to $j$ in $n$ steps."
+   },
+   {
+    "t": "why",
+    "html": "Condition on where the chain is now, using the law of total probability: $$P(X_{n + 1} = j) = \\sum_i P(X_n = i)\\,P_{ij}.$$ The right side is the row vector $\\pi_n$ times column $j$ of $P$, so $\\pi_{n + 1} = \\pi_n P$. Repeating, $\\pi_n = \\pi_0 P^{n}$. Starting surely in state $i$ makes $\\pi_0$ a row of zeros with a single 1, and then $\\pi_0 P^{n}$ is row $i$ of $P^{n}$."
+   },
+   {
+    "t": "note",
+    "html": "<b>Mind the convention.</b> Here, as in most probability books, rows of $P$ add to 1 and the distribution is a row vector multiplied on the left. The <a href=\"/math/linear-algebra/matrix-powers-markov/\">Linear Algebra lesson on Markov chains</a> uses the transpose: columns add to 1 and $\\mathbf{x}_{k + 1} = P\\mathbf{x}_k$ with column vectors. The two describe the same chain."
+   },
+   {
+    "t": "viz",
+    "name": "prob-markov",
+    "opts": {
+     "P": [
+      [
+       "1/2",
+       "1/2"
+      ],
+      [
+       "1/4",
+       "3/4"
+      ]
+     ],
+     "names": [
+      "Sunny",
+      "Rainy"
+     ],
+     "mode": "distribution",
+     "pi0": [
+      1,
+      0
+     ],
+     "steps": 1
+    },
+    "cap": "A two-state weather chain. Each step multiplies the row of probabilities by the matrix, and one entry of the product is written out as a row times a column."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two steps ahead",
+    "q": "Weather: from Sunny, tomorrow is Sunny or Rainy with probability $\\frac{1}{2}$ each; from Rainy, Sunny with $\\frac{1}{4}$ and Rainy with $\\frac{3}{4}$. Today is Sunny. Find the chance the day after tomorrow is Rainy.",
+    "steps": [
+     "Write S for Sunny and R for Rainy, and condition on tomorrow: $P(X_2 = R) = P_{SS}P_{SR} + P_{SR}P_{RR}$.",
+     "$= \\frac{1}{2} \\cdot \\frac{1}{2} + \\frac{1}{2} \\cdot \\frac{3}{4} = \\frac{1}{4} + \\frac{3}{8} = \\frac{5}{8}$.",
+     "This is entry (Sunny, Rainy) of $P^{2}$, as the next example confirms."
+    ],
+    "a": "$\\frac{5}{8}$"
+   },
+   {
+    "t": "ex",
+    "title": "The whole matrix",
+    "q": "For the same chain, find $P^{2}$.",
+    "steps": [
+     "Row 1: $\\left(\\frac{1}{2} \\cdot \\frac{1}{2} + \\frac{1}{2} \\cdot \\frac{1}{4},\\ \\frac{5}{8}\\right) = \\left(\\frac{3}{8}, \\frac{5}{8}\\right)$.",
+     "Row 2: $$\\left(\\frac{1}{4} \\cdot \\frac{1}{2} + \\frac{3}{4} \\cdot \\frac{1}{4},\\ \\frac{1}{4} \\cdot \\frac{1}{2} + \\frac{3}{4} \\cdot \\frac{3}{4}\\right) = \\left(\\frac{5}{16}, \\frac{11}{16}\\right)$$",
+     "Each row of $P^{2}$ adds to 1 again."
+    ],
+    "a": "$$P^{2} = \\begin{bmatrix} \\frac{3}{8} & \\frac{5}{8} \\\\ \\frac{5}{16} & \\frac{11}{16} \\end{bmatrix}$$"
+   },
+   {
+    "t": "ex",
+    "title": "A distribution",
+    "q": "If today is Sunny with probability $\\frac{1}{2}$, find tomorrow's distribution.",
+    "steps": [
+     "$\\pi_1 = \\left(\\frac{1}{2}, \\frac{1}{2}\\right)P$.",
+     "First entry: $\\frac{1}{2} \\cdot \\frac{1}{2} + \\frac{1}{2} \\cdot \\frac{1}{4} = \\frac{3}{8}$; second: $\\frac{1}{2} \\cdot \\frac{1}{2} + \\frac{1}{2} \\cdot \\frac{3}{4} = \\frac{5}{8}$."
+    ],
+    "a": "$\\left(\\frac{3}{8}, \\frac{5}{8}\\right)$"
+   },
+   {
+    "t": "mistake",
+    "html": "Multiplying on the wrong side, $P\\pi_0$, with a matrix whose rows add to 1; that mixes the wrong entries and need not even give a distribution. Another slip is writing rows that do not add to 1, for example by listing the chances of arriving <i>in</i> a state along a row. Check: every row of $P$, and every $\\pi_n$, adds to 1."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 11 (Markov Chains), section 11.1"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on Markov chains"
+   }
+  ]
+ },
+ "prob.first-step-analysis": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some states of a <a href=\"/math/probability/markov-chains/\">Markov chain</a> are traps: once entered, the chain stays forever. A gambler who reaches \\$0 or a target stops playing. Two questions follow: where does the chain end up, and how long does it take? Conditioning on the first step turns each question into a small linear system, solved as in <a href=\"/math/algebra-1/systems-elimination/\">elimination</a>."
+   },
+   {
+    "t": "key",
+    "html": "A state $j$ is <b>absorbing</b> if $P_{jj} = 1$. Let $h_i$ be the chance of ending in a chosen absorbing state starting from $i$, and $m_i$ the expected number of steps to absorption. Then $h = 1$ in the chosen state, $h = 0$ in the other absorbing states, $m = 0$ in all absorbing states, and for every other state $$h_i = \\sum_j P_{ij}h_j, \\qquad m_i = 1 + \\sum_j P_{ij}m_j.$$"
+   },
+   {
+    "t": "why",
+    "html": "Condition on the first step. From $i$ the chain moves to $j$ with probability $P_{ij}$, and by the Markov property it then behaves as if it had started at $j$. So the chance of ending in the target is the weighted average $\\sum_j P_{ij}h_j$ (total probability). For the time, the step just taken counts 1, and then the expected remaining time from $j$ is $m_j$: $m_i = 1 + \\sum_j P_{ij}m_j$. Absorbing states supply the boundary values."
+   },
+   {
+    "t": "viz",
+    "name": "prob-markov",
+    "opts": {
+     "P": [
+      [
+       "1",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1/2",
+       "0",
+       "1/2",
+       "0",
+       "0"
+      ],
+      [
+       "0",
+       "1/2",
+       "0",
+       "1/2",
+       "0"
+      ],
+      [
+       "0",
+       "0",
+       "1/2",
+       "0",
+       "1/2"
+      ],
+      [
+       "0",
+       "0",
+       "0",
+       "0",
+       "1"
+      ]
+     ],
+     "names": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+     ],
+     "mode": "absorb",
+     "layout": "line"
+    },
+    "cap": "Gambler's ruin with fair bets between 0 and 4 dollars. The equations from the first step are written out and solved."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Gambler's ruin",
+    "q": "A gambler with \\$$k$ bets \\$1 at a time on fair coin flips until reaching \\$$N$ or \\$0. Find the chance of reaching \\$$N$.",
+    "steps": [
+     "$h_0 = 0$, $h_N = 1$, and for $0 < i < N$: $h_i = \\frac{1}{2}h_{i - 1} + \\frac{1}{2}h_{i + 1}$.",
+     "Rearranged: $h_{i + 1} - h_i = h_i - h_{i - 1}$. The steps are equal, so the $h_i$ rise in a straight line from 0 to 1.",
+     "$h_k = \\frac{k}{N}$; with $k = 1$ and $N = 4$, the chance is $\\frac{1}{4}$."
+    ],
+    "a": "$\\frac{k}{N}$"
+   },
+   {
+    "t": "ex",
+    "title": "How long it lasts",
+    "q": "For the same game, find the expected number of bets.",
+    "steps": [
+     "$m_0 = m_N = 0$ and $m_i = 1 + \\frac{1}{2}m_{i - 1} + \\frac{1}{2}m_{i + 1}$.",
+     "Try $m_i = i(N - i)$: $$1 + \\frac{1}{2}(i - 1)(N - i + 1) + \\frac{1}{2}(i + 1)(N - i - 1) = i(N - i)$$ It fits the equations and the boundary values.",
+     "From \\$1 with $N = 4$: $1 \\cdot 3 = 3$ bets on average. From \\$2: $2 \\cdot 2 = 4$."
+    ],
+    "a": "$k(N - k)$"
+   },
+   {
+    "t": "ex",
+    "title": "Waiting for two heads in a row",
+    "q": "Flip a fair coin until HH appears. Find the expected number of flips.",
+    "steps": [
+     "States: \"start\" and \"just flipped H\". Let $m_0, m_1$ be the expected flips still needed.",
+     "$m_0 = 1 + \\frac{1}{2}m_1 + \\frac{1}{2}m_0$ and $m_1 = 1 + \\frac{1}{2} \\cdot 0 + \\frac{1}{2}m_0$ (a T sends you back to the start).",
+     "The first gives $m_0 = 2 + m_1$; then $m_1 = 1 + \\frac{1}{2}(2 + m_1)$, so $m_1 = 4$ and $m_0 = 6$."
+    ],
+    "a": "6 flips"
+   },
+   {
+    "t": "note",
+    "html": "With an unfair coin, winning with probability $p$, the steps $h_{i + 1} - h_i$ grow by the factor $r = \\frac{1 - p}{p}$ each time, and $h_k = \\frac{1 - r^{k}}{1 - r^{N}}$ (for $p \\ne \\frac{1}{2}$)."
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting to add 1 for the step just taken when writing the equations for expected times. Without it, $m_i = \\sum P_{ij}m_j$ is solved by $m = 0$ everywhere, which is plainly wrong. Check: absorption probabilities have no \"1 +\" and lie between 0 and 1; expected times have \"1 +\" in every equation of a non-absorbing state."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 11 (Markov Chains), section 11.2, absorbing Markov chains; chapter 12 (Random Walks), section 12.2, gambler's ruin"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on Markov chains and first-step analysis"
+   }
+  ]
+ },
+ "prob.stationary-distribution": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Run a <a href=\"/math/probability/markov-chains/\">Markov chain</a> for a long time and, for most chains, the distribution of the state stops changing: the chain forgets where it started. That limiting distribution is the stationary distribution, found by solving a small linear system, as in <a href=\"/math/algebra-1/systems-elimination/\">elimination</a>."
+   },
+   {
+    "t": "key",
+    "html": "A <b>stationary distribution</b> is a row vector $\\pi$ with $$\\pi P = \\pi \\quad \\text{and} \\quad \\pi_1 + \\cdots + \\pi_n = 1.$$ For a chain that can reach every state from every state and does not cycle with a fixed period, $\\pi_n \\to \\pi$ from any start, $\\pi_i$ is the long-run fraction of time spent in state $i$, and the mean time to return to $i$ is $\\frac{1}{\\pi_i}$."
+   },
+   {
+    "t": "why",
+    "html": "If the chain's distribution is ever $\\pi$, the next one is $\\pi P = \\pi$: it stays put, which is why it is called stationary. Entry by entry, $\\pi P = \\pi$ says that the probability flowing into each state equals the probability flowing out: a balance of flows. These equations only fix the ratios of the $\\pi_i$ (any multiple of a solution is a solution, including 0), so the condition that the entries add to 1 is needed to pin down the answer. In the <a href=\"/math/linear-algebra/matrix-powers-markov/\">Linear Algebra lesson</a> the same vector appears as an eigenvector for eigenvalue 1 of the column-stochastic matrix, the transpose of our $P$."
+   },
+   {
+    "t": "viz",
+    "name": "prob-markov",
+    "opts": {
+     "P": [
+      [
+       "0",
+       "1/2",
+       "1/2"
+      ],
+      [
+       "1/4",
+       "1/2",
+       "1/4"
+      ],
+      [
+       "1/3",
+       "1/3",
+       "1/3"
+      ]
+     ],
+     "names": [
+      "A",
+      "B",
+      "C"
+     ],
+     "mode": "stationary",
+     "seed": 3
+    },
+    "cap": "A three-state chain. Run a long walk: the share of time in each state approaches the solution of the balance equations."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two states",
+    "q": "Weather: $$P = \\begin{bmatrix} \\frac{1}{2} & \\frac{1}{2} \\\\ \\frac{1}{4} & \\frac{3}{4} \\end{bmatrix}$$ on (Sunny, Rainy). Find the long-run fraction of rainy days.",
+    "steps": [
+     "$\\pi P = \\pi$, first entry: $\\pi_1 = \\frac{1}{2}\\pi_1 + \\frac{1}{4}\\pi_2$, so $\\frac{1}{2}\\pi_1 = \\frac{1}{4}\\pi_2$: flow out of Sunny equals flow in.",
+     "So $\\pi_2 = 2\\pi_1$. With $\\pi_1 + \\pi_2 = 1$: $\\pi = \\left(\\frac{1}{3}, \\frac{2}{3}\\right)$."
+    ],
+    "a": "$\\frac{2}{3}$ of days are rainy in the long run."
+   },
+   {
+    "t": "ex",
+    "title": "Three states",
+    "q": "For the chain in the picture, find $\\pi$ and the mean return time to A.",
+    "steps": [
+     "Column A: $\\pi_A = \\frac{1}{4}\\pi_B + \\frac{1}{3}\\pi_C$. Column B: $\\pi_B = \\frac{1}{2}\\pi_A + \\frac{1}{2}\\pi_B + \\frac{1}{3}\\pi_C$.",
+     "Drop the third equation (it follows from the others) and add $\\pi_A + \\pi_B + \\pi_C = 1$. Solving: $\\pi = \\left(\\frac{2}{9}, \\frac{4}{9}, \\frac{1}{3}\\right)$.",
+     "Check column C: $$\\frac{1}{2} \\cdot \\frac{2}{9} + \\frac{1}{4} \\cdot \\frac{4}{9} + \\frac{1}{3} \\cdot \\frac{1}{3} = \\frac{1}{9} + \\frac{1}{9} + \\frac{1}{9} = \\frac{1}{3}$$ Mean return time to A: $\\frac{9}{2}$ steps."
+    ],
+    "a": "$\\pi = \\left(\\frac{2}{9}, \\frac{4}{9}, \\frac{1}{3}\\right)$; $\\frac{9}{2}$ steps."
+   },
+   {
+    "t": "ex",
+    "title": "A small queue",
+    "q": "A queue holds 0, 1 or 2 people. Each minute one person arrives with probability $\\frac{1}{3}$ (unless full) or one leaves with probability $\\frac{1}{2}$ (unless empty). Find $\\pi$.",
+    "steps": [
+     "Flow up across each gap equals flow down: $\\frac{1}{3}\\pi_0 = \\frac{1}{2}\\pi_1$ and $\\frac{1}{3}\\pi_1 = \\frac{1}{2}\\pi_2$.",
+     "So $\\pi \\propto \\left(1, \\frac{2}{3}, \\frac{4}{9}\\right)$, with total $\\frac{19}{9}$.",
+     "$\\pi = \\left(\\frac{9}{19}, \\frac{6}{19}, \\frac{4}{19}\\right)$."
+    ],
+    "a": "$\\left(\\frac{9}{19}, \\frac{6}{19}, \\frac{4}{19}\\right)$"
+   },
+   {
+    "t": "mistake",
+    "html": "Solving $\\pi P = \\pi$ but dropping the condition that $\\pi$ adds to 1. The balance equations alone allow every multiple of the answer, including $\\pi = 0$, so you may report a multiple of the right vector or get stuck. Check: your $\\pi$ must have nonnegative entries adding to 1, and $\\pi P$ must give $\\pi$ back."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Grinstead and Snell, Introduction to Probability (2nd revised edition, American Mathematical Society; free from Dartmouth College), chapter 11 (Markov Chains), sections 11.3 and 11.4, ergodic chains and the fundamental limit theorem"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.440, Probability and Random Variables (Spring 2014), lecture notes on stationary distributions of Markov chains"
+   }
+  ]
+ }
+}

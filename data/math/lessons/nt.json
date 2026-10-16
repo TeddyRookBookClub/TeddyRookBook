@@ -1,0 +1,3905 @@
+{
+ "nt.divisibility": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Number theory is the study of the integers $\\dots, -2, -1, 0, 1, 2, \\dots$ and of the patterns hidden in them. Its first and most basic idea is one you met in <a href=\"/math/grade-6/gcf-lcm/\">grade 6</a>, when you listed factors: one whole number dividing another with nothing left over. Here we make that idea exact, so that we can prove things about it."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> For integers $a$ and $b$, we say <b>$a$ divides $b$</b>, and write $a \\mid b$, when there is an integer $k$ with $b = ak$. Then $a$ is a <b>divisor</b> (or factor) of $b$, and $b$ is a <b>multiple</b> of $a$. When no such $k$ exists we write $a \\nmid b$."
+   },
+   {
+    "t": "list",
+    "items": [
+     "$3 \\mid 12$, because $12 = 3 \\cdot 4$.",
+     "$-4 \\mid 20$, because $20 = (-4)(-5)$. Signs never change whether one number divides another.",
+     "$7 \\mid 0$, because $0 = 7 \\cdot 0$. Every integer divides $0$.",
+     "$0 \\nmid 5$: the only multiple of $0$ is $0$ itself.",
+     "$6 \\nmid 45$: $45 = 6 \\cdot 7 + 3$, so there is a remainder."
+    ]
+   },
+   {
+    "t": "p",
+    "html": "Notice that $a \\mid b$ is a <b>statement</b>, true or false. It is not a number, and it is not the fraction $a/b$. The fraction $12/3$ equals $4$; the statement $3 \\mid 12$ is simply true."
+   },
+   {
+    "t": "h",
+    "text": "Rules that follow from the definition"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Transitive:</b> if $a \\mid b$ and $b \\mid c$, then $a \\mid c$.",
+     "<b>Combinations:</b> if $d \\mid a$ and $d \\mid b$, then $d \\mid (ma + nb)$ for all integers $m$ and $n$. In particular $d$ divides $a + b$ and $a - b$.",
+     "<b>Size:</b> if $a \\mid b$ and $b \\neq 0$, then $|a| \\le |b|$, since $|b| = |a|\\,|k|$ with $|k| \\ge 1$."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Each rule has a two-line <a href=\"/math/discrete-math/direct-proof/\">direct proof</a>: rewrite every \"divides\" as an equation, then factor. For combinations, suppose $a = dk$ and $b = dl$. Then $$ma + nb = mdk + ndl = d(mk + nl),$$ and $mk + nl$ is an integer, so $d \\mid (ma + nb)$. Transitivity works the same way: $b = ak$ and $c = bl$ give $c = a(kl)$. This \"write it as an equation\" move is how almost every proof in this course begins."
+   },
+   {
+    "t": "ex",
+    "title": "Reading the bar",
+    "q": "True or false: (a) $6 \\mid 42$, (b) $42 \\mid 6$, (c) $-6 \\mid 42$, (d) $6 \\mid -45$.",
+    "steps": [
+     "(a) $42 = 6 \\cdot 7$: <b>true</b>.",
+     "(b) We would need $6 = 42k$. But $0 < 6 < 42$, so $k$ would be strictly between $0$ and $1$: <b>false</b>. The number on the left is the divisor.",
+     "(c) $42 = (-6)(-7)$: <b>true</b>.",
+     "(d) $-45 = 6 \\cdot (-8) + 3$ leaves remainder $3$: <b>false</b>."
+    ],
+    "a": "True, false, true, false."
+   },
+   {
+    "t": "ex",
+    "title": "Divisors of two numbers at once",
+    "q": "Suppose a positive integer $d$ divides both $n$ and $n + 15$. Which values can $d$ have?",
+    "steps": [
+     "By the combination rule, $d$ divides the difference $(n + 15) - n = 15$.",
+     "So $d$ is a positive divisor of $15$: $d \\in \\{1, 3, 5, 15\\}$.",
+     "Each one really occurs: take $n = 15$, which works for all four."
+    ],
+    "a": "$d = 1, 3, 5$ or $15$."
+   },
+   {
+    "t": "ex",
+    "title": "A short proof",
+    "q": "Show that if $n$ is odd, then $8 \\mid n^{2} - 1$.",
+    "steps": [
+     "Odd means $n = 2k + 1$ for an integer $k$.",
+     "Then $n^{2} - 1 = 4k^{2} + 4k = 4k(k + 1)$.",
+     "One of $k$ and $k + 1$ is even, so $k(k + 1) = 2j$ for an integer $j$.",
+     "So $n^{2} - 1 = 8j$, which says $8 \\mid n^{2} - 1$. Check: $7^{2} - 1 = 48 = 8 \\cdot 6$."
+    ],
+    "a": "$n^{2} - 1 = 8j$ for an integer $j$."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading $a \\mid b$ as the fraction $a/b$, or swapping the roles. $3 \\mid 12$ is true, but $12 \\mid 3$ is false. Say it aloud as \"$a$ divides $b$\", then ask: <i>is $b$ a multiple of $a$?</i> The divisor is on the left, and (unless $b = 0$) it is never larger in size than $b$."
+   },
+   {
+    "t": "key",
+    "html": "$a \\mid b$ means $b = ak$ for some integer $k$. Divisibility survives sums, differences and multiples: if $d \\mid a$ and $d \\mid b$, then $d \\mid ma + nb$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: divisibility"
+   }
+  ]
+ },
+ "nt.division-algorithm": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-4/divide-with-remainders/\">grade 4</a> you wrote $17 \\div 5 = 3$ R $2$. The <b>division algorithm</b> says the same thing as an equation, $17 = 5 \\cdot 3 + 2$, and makes it work for every integer, negative ones included. Almost everything in this course leans on it: remainders, bases, the Euclidean algorithm and congruences."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem (division algorithm).</b> Let $a$ and $b$ be integers with $b > 0$. There are <b>unique</b> integers $q$ (the quotient) and $r$ (the remainder) with $$a = bq + r \\quad\\text{and}\\quad 0 \\le r < b.$$ In fact $q = \\lfloor a/b \\rfloor$, the largest integer that is at most $a/b$, and $r = a - bq$."
+   },
+   {
+    "t": "viz",
+    "name": "numberline",
+    "opts": {
+     "min": -25,
+     "max": 5,
+     "step": 5,
+     "sub": 5,
+     "labels": "whole",
+     "points": [
+      {
+       "v": -17,
+       "label": "a",
+       "color": "red",
+       "drag": false
+      }
+     ],
+     "hops": [
+      {
+       "from": -20,
+       "by": 3,
+       "n": 1
+      }
+     ],
+     "value": false
+    },
+    "cap": "The multiples of 5 cut the line into pieces of length 5. $a = -17$ lies in the piece from $-20$ to $-15$, so $q = -4$, and the hop from $-20$ to $-17$ is the remainder $r = 3$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Existence.</b> The multiples $\\dots, -2b, -b, 0, b, 2b, \\dots$ cut the number line into pieces $[bq, bq + b)$ of length $b$ that do not overlap and cover everything. So $a$ lies in exactly one of them: $bq \\le a < bq + b$. Subtract $bq$: $0 \\le a - bq < b$. Call $a - bq$ the remainder $r$.<br><b>Uniqueness.</b> If also $a = bq' + r'$ with $0 \\le r' < b$, then $b(q - q') = r' - r$. The right side is strictly between $-b$ and $b$, and the left side is a multiple of $b$, so both are $0$: $q = q'$ and $r = r'$."
+   },
+   {
+    "t": "ex",
+    "title": "A positive dividend",
+    "q": "Divide $a = 47$ by $b = 6$.",
+    "steps": [
+     "The largest multiple of $6$ that is at most $47$ is $6 \\cdot 7 = 42$, so $q = 7$.",
+     "$r = 47 - 42 = 5$, and $0 \\le 5 < 6$."
+    ],
+    "a": "$47 = 6 \\cdot 7 + 5$."
+   },
+   {
+    "t": "ex",
+    "title": "A negative dividend",
+    "q": "Divide $a = -17$ by $b = 5$.",
+    "steps": [
+     "The multiples of $5$ near $-17$ are $-20$ and $-15$. We need the one at or below $-17$: $5 \\cdot (-4) = -20$. So $q = -4$.",
+     "$r = -17 - (-20) = 3$, and $0 \\le 3 < 5$.",
+     "Check: $5 \\cdot (-4) + 3 = -20 + 3 = -17$."
+    ],
+    "a": "$-17 = 5 \\cdot (-4) + 3$, so $q = -4$ and $r = 3$."
+   },
+   {
+    "t": "ex",
+    "title": "Counting backward on a calendar",
+    "q": "Today is Wednesday. What day of the week was it 100 days ago?",
+    "steps": [
+     "Going back 100 days is a change of $-100$ days. Divide by $7$: $-100 = 7 \\cdot (-15) + 5$, since $7 \\cdot (-15) = -105 \\le -100$.",
+     "The $15$ whole weeks change nothing, so going back 100 days lands on the same day as going forward $5$ days.",
+     "Wednesday plus 5 days is Monday."
+    ],
+    "a": "Monday."
+   },
+   {
+    "t": "mistake",
+    "html": "Giving a negative remainder: \"$-17 = 5 \\cdot (-3) - 2$, so the remainder is $-2$.\" That equation is true, but $-2$ is not allowed: the remainder must satisfy $0 \\le r < b$. Borrow one more $b$ from the quotient: $-17 = 5 \\cdot (-4) + 3$. Quick check: is $r$ between $0$ and $b - 1$? (A shortcut: when $b \\nmid a$, the remainder of $-a$ is $b$ minus the remainder of $a$. Here $17$ leaves $2$, so $-17$ leaves $5 - 2 = 3$.)"
+   },
+   {
+    "t": "note",
+    "html": "Programming languages disagree here. In JavaScript, C and Java, <code>-17 % 5</code> is <code>-2</code>; in Python it is <code>3</code>. Mathematics always uses the remainder from $0$ to $b - 1$."
+   },
+   {
+    "t": "key",
+    "html": "For $b > 0$, every integer $a$ can be written in exactly one way as $a = bq + r$ with $0 \\le r < b$. For negative $a$ the quotient rounds <i>down</i> (toward $-\\infty$), which keeps the remainder nonnegative."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers (the division algorithm)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: the division theorem"
+   }
+  ]
+ },
+ "nt.number-bases": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "We write numbers in base 10: $2024$ means $2 \\cdot 10^{3} + 0 \\cdot 10^{2} + 2 \\cdot 10 + 4$. Nothing is special about ten except our fingers. Computers use base 2, programmers use base 16, and the <a href=\"/math/number-theory/division-algorithm/\">division algorithm</a> is exactly the tool for moving between bases."
+   },
+   {
+    "t": "p",
+    "html": "<b>Base $b$.</b> Fix an integer $b \\ge 2$. Every positive integer $n$ can be written in exactly one way as $$n = d_k b^{k} + d_{k-1} b^{k-1} + \\cdots + d_1 b + d_0,$$ with digits $0 \\le d_i \\le b - 1$ and $d_k \\neq 0$. We write $n = (d_k d_{k-1} \\dots d_0)_b$, or $d_k \\dots d_0$ with a subscript $b$. Base 16 needs six extra digits: A = 10, B = 11, …, F = 15."
+   },
+   {
+    "t": "why",
+    "html": "Divide $n$ by $b$: every term except $d_0$ is a multiple of $b$, so $$n = b\\,(d_k b^{k-1} + \\cdots + d_1) + d_0, \\qquad 0 \\le d_0 < b.$$ By the uniqueness in the division algorithm, $d_0$ <b>is</b> the remainder of $n$ divided by $b$, and the quotient is the number whose digits are $d_k \\dots d_1$. Repeat on the quotient and the remainders peel off the digits one at a time, <b>last digit first</b>. That same uniqueness is why the digits are unique."
+   },
+   {
+    "t": "ex",
+    "title": "Decimal to binary",
+    "q": "Write $44$ in base 2.",
+    "steps": [
+     "$44 = 2 \\cdot 22 + 0$",
+     "$22 = 2 \\cdot 11 + 0$",
+     "$11 = 2 \\cdot 5 + 1$",
+     "$5 = 2 \\cdot 2 + 1$",
+     "$2 = 2 \\cdot 1 + 0$, and $1 = 2 \\cdot 0 + 1$. Stop when the quotient is $0$.",
+     "The remainders were $0, 0, 1, 1, 0, 1$. Read them from the <b>last</b> to the first: $101100$.",
+     "Check: $1 \\cdot 32 + 0 \\cdot 16 + 1 \\cdot 8 + 1 \\cdot 4 + 0 \\cdot 2 + 0 = 44$."
+    ],
+    "a": "$44 = 101100_2$."
+   },
+   {
+    "t": "ex",
+    "title": "Decimal to base 7",
+    "q": "Write $2024$ in base 7.",
+    "steps": [
+     "$2024 = 7 \\cdot 289 + 1$",
+     "$289 = 7 \\cdot 41 + 2$",
+     "$41 = 7 \\cdot 5 + 6$",
+     "$5 = 7 \\cdot 0 + 5$",
+     "Read the remainders upward: $5621_7$. Check: $5 \\cdot 343 + 6 \\cdot 49 + 2 \\cdot 7 + 1 = 1715 + 294 + 14 + 1 = 2024$."
+    ],
+    "a": "$2024 = 5621_7$."
+   },
+   {
+    "t": "ex",
+    "title": "Hexadecimal to decimal",
+    "q": "Write $\\mathrm{2F3}_{16}$ in base 10.",
+    "steps": [
+     "The digits are $2$, $\\mathrm{F} = 15$ and $3$, standing for $16^{2}$, $16^{1}$ and $16^{0}$.",
+     "$2 \\cdot 256 + 15 \\cdot 16 + 3 = 512 + 240 + 3 = 755$."
+    ],
+    "a": "$755$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Power of 2",
+     "$2^{0}$",
+     "$2^{1}$",
+     "$2^{2}$",
+     "$2^{3}$",
+     "$2^{4}$",
+     "$2^{5}$",
+     "$2^{6}$",
+     "$2^{7}$"
+    ],
+    "rows": [
+     [
+      "Value",
+      "1",
+      "2",
+      "4",
+      "8",
+      "16",
+      "32",
+      "64",
+      "128"
+     ]
+    ],
+    "cap": "Place values in base 2. Each hex digit stands for 4 binary digits, since $16 = 2^{4}$."
+   },
+   {
+    "t": "mistake",
+    "html": "Writing the remainders in the order you found them. For $44$ that gives $001101_2 = 13$, not $44$: the first remainder is the <b>ones</b> digit, which goes on the right. Always check by expanding the answer back into base 10."
+   },
+   {
+    "t": "p",
+    "html": "Base 16 is popular because it is a shorthand for base 2: split the binary digits into groups of four from the right and replace each group by one hex digit. For example $101100_2 = 0010\\ 1100_2 = \\mathrm{2C}_{16}$, since $0010_2 = 2$ and $1100_2 = 12 = \\mathrm{C}$. Check: $2 \\cdot 16 + 12 = 44$."
+   },
+   {
+    "t": "p",
+    "html": "Binary will come back in <a href=\"/math/number-theory/modular-powers/\">fast powers</a>, where the binary digits of an exponent tell you which squares to multiply."
+   },
+   {
+    "t": "key",
+    "html": "To write $n$ in base $b$, divide by $b$ again and again; the remainders are the digits, from the ones digit up. To go back, multiply each digit by its power of $b$ and add."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: the division theorem"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on the integers and the division algorithm"
+   }
+  ]
+ },
+ "nt.euclidean-algorithm": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-6/gcf-lcm/\">grade 6</a> you found the greatest common factor by listing factors. That is fine for $12$ and $18$, hopeless for $2431$ and $1001$, and impossible for numbers with hundreds of digits, which cryptography uses every day. Euclid's algorithm, more than 2,000 years old, finds the gcd with a handful of divisions and no factoring at all."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> For integers $a$ and $b$, not both $0$, the <b>greatest common divisor</b> $\\gcd(a, b)$ is the largest integer that divides both. Two numbers with $\\gcd(a, b) = 1$ are called <b>coprime</b> (or relatively prime)."
+   },
+   {
+    "t": "why",
+    "html": "<b>The key fact:</b> if $a = bq + r$, then $\\gcd(a, b) = \\gcd(b, r)$. Here is why. If $d$ divides $a$ and $b$, it divides $a - bq = r$ (a combination, as in <a href=\"/math/number-theory/divisibility/\">divisibility</a>). If $d$ divides $b$ and $r$, it divides $bq + r = a$. So the pairs $(a, b)$ and $(b, r)$ have exactly the <b>same common divisors</b>, and therefore the same greatest one."
+   },
+   {
+    "t": "p",
+    "html": "<b>The algorithm.</b> Divide $a$ by $b$ with the <a href=\"/math/number-theory/division-algorithm/\">division algorithm</a>, then replace $(a, b)$ by $(b, r)$ and repeat. The remainders get strictly smaller and never go below $0$, so eventually one is $0$. Since $\\gcd(g, 0) = g$, the <b>last nonzero remainder</b> is the gcd."
+   },
+   {
+    "t": "viz",
+    "name": "nt-euclid",
+    "opts": {
+     "a": 252,
+     "b": 198,
+     "mode": "gcd",
+     "task": "Press <b>Next step</b> until no strip is left. Which square fits every time?"
+    },
+    "cap": "Each division cuts the largest possible squares from the rectangle. The last square's side, 18, tiles the whole $252 \\times 198$ rectangle: it divides both sides."
+   },
+   {
+    "t": "ex",
+    "title": "A first run",
+    "q": "Find $\\gcd(252, 198)$.",
+    "steps": [
+     "$252 = 198 \\cdot 1 + 54$",
+     "$198 = 54 \\cdot 3 + 36$",
+     "$54 = 36 \\cdot 1 + 18$",
+     "$36 = 18 \\cdot 2 + 0$. The remainder is $0$, so stop.",
+     "The last nonzero remainder is $18$. Check: $252 = 18 \\cdot 14$ and $198 = 18 \\cdot 11$."
+    ],
+    "a": "$\\gcd(252, 198) = 18$."
+   },
+   {
+    "t": "ex",
+    "title": "Bigger numbers, few steps",
+    "q": "Find $\\gcd(2431, 1001)$.",
+    "steps": [
+     "$2431 = 1001 \\cdot 2 + 429$",
+     "$1001 = 429 \\cdot 2 + 143$",
+     "$429 = 143 \\cdot 3 + 0$",
+     "The gcd is $143$. (Indeed $2431 = 11 \\cdot 13 \\cdot 17$ and $1001 = 7 \\cdot 11 \\cdot 13$, but the algorithm never needed those factorizations.)"
+    ],
+    "a": "$\\gcd(2431, 1001) = 143$."
+   },
+   {
+    "t": "mistake",
+    "html": "Reporting the last quotient, or the final $0$, instead of the last nonzero remainder. In the first example the last line is $36 = 18 \\cdot 2 + 0$: the answer is $18$, not $2$ and not $0$. Check any answer by dividing: the gcd must divide <b>both</b> original numbers."
+   },
+   {
+    "t": "note",
+    "html": "The algorithm is fast. Each remainder is less than half of the number two lines above it, so the number of steps grows only with the number of <b>digits</b>. The slowest inputs are neighboring Fibonacci numbers, where every quotient is $1$."
+   },
+   {
+    "t": "p",
+    "html": "Two small conventions make the algorithm work for every input. Signs do not matter, so $\\gcd(-252, 198) = \\gcd(252, 198)$. And $\\gcd(a, 0) = |a|$ for $a \\neq 0$, since every integer divides $0$. If you start with the smaller number first, the first division simply swaps them: $198 = 252 \\cdot 0 + 198$."
+   },
+   {
+    "t": "key",
+    "html": "$\\gcd(a, b) = \\gcd(b, r)$ when $a = bq + r$. Divide, shift, and repeat; the last nonzero remainder is the gcd."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers (greatest common divisors and the Euclidean algorithm)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: the greatest common divisor"
+   }
+  ]
+ },
+ "nt.bezout": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/number-theory/euclidean-algorithm/\">Euclidean algorithm</a> finds $\\gcd(a, b)$. Kept track of carefully, it gives more: a way to <b>build</b> the gcd out of $a$ and $b$. This is the tool behind modular inverses, linear congruences and RSA, so it is worth getting fluent."
+   },
+   {
+    "t": "p",
+    "html": "<b>Bézout's identity.</b> If $a$ and $b$ are integers, not both $0$, then there are integers $x$ and $y$ with $$ax + by = \\gcd(a, b).$$ Moreover, $\\gcd(a, b)$ is the <b>smallest positive</b> number of the form $ax + by$. Finding $x$ and $y$ is called the <b>extended Euclidean algorithm</b>."
+   },
+   {
+    "t": "why",
+    "html": "Each remainder in the Euclidean algorithm is a combination of $a$ and $b$. The first is $r_1 = a - q_1 b$. The next is $r_2 = b - q_2 r_1$, and since $r_1$ is a combination, so is $r_2$. Every later remainder is \"older remainder minus a multiple of the one after it,\" so by induction every remainder, including the last nonzero one, the gcd, is a combination $ax + by$. And no smaller positive combination exists: the gcd divides $a$ and $b$, so it divides every $ax + by$."
+   },
+   {
+    "t": "ex",
+    "title": "Back-substitution",
+    "q": "Find integers $x$ and $y$ with $252x + 198y = 18$.",
+    "steps": [
+     "Run the algorithm and solve each line for its remainder: $54 = 252 - 1 \\cdot 198$, $\\ 36 = 198 - 3 \\cdot 54$, $\\ 18 = 54 - 1 \\cdot 36$.",
+     "Start from the line with the gcd: $18 = 54 - 36$.",
+     "Replace $36$: $18 = 54 - (198 - 3 \\cdot 54) = 4 \\cdot 54 - 198$.",
+     "Replace $54$: $18 = 4(252 - 198) - 198 = 4 \\cdot 252 - 5 \\cdot 198$.",
+     "Check: $4 \\cdot 252 - 5 \\cdot 198 = 1008 - 990 = 18$."
+    ],
+    "a": "$x = 4$, $y = -5$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-euclid",
+    "opts": {
+     "a": 252,
+     "b": 198,
+     "mode": "bezout",
+     "steps": false
+    },
+    "cap": "The same computation as a table: each remainder is written as $252s + 198t$, using the two rows above it. Every row checks itself, and the row of the gcd gives $x$ and $y$."
+   },
+   {
+    "t": "ex",
+    "title": "Bigger numbers",
+    "q": "Write $\\gcd(2431, 1001)$ as a combination of $2431$ and $1001$.",
+    "steps": [
+     "$2431 = 1001 \\cdot 2 + 429$ and $1001 = 429 \\cdot 2 + 143$, then $429 = 143 \\cdot 3$. So the gcd is $143$.",
+     "$143 = 1001 - 2 \\cdot 429$.",
+     "$429 = 2431 - 2 \\cdot 1001$, so $143 = 1001 - 2(2431 - 2 \\cdot 1001) = 5 \\cdot 1001 - 2 \\cdot 2431$.",
+     "Check: $5 \\cdot 1001 - 2 \\cdot 2431 = 5005 - 4862 = 143$."
+    ],
+    "a": "$143 = 2431 \\cdot (-2) + 1001 \\cdot 5$."
+   },
+   {
+    "t": "ex",
+    "title": "Choosing a solution in a range",
+    "q": "Find $x$ and $y$ with $47x + 15y = 1$ and $0 \\le x < 15$.",
+    "steps": [
+     "$47 = 15 \\cdot 3 + 2$ and $15 = 2 \\cdot 7 + 1$.",
+     "$1 = 15 - 7 \\cdot 2 = 15 - 7(47 - 3 \\cdot 15) = 22 \\cdot 15 - 7 \\cdot 47$. So $x = -7$, $y = 22$ works.",
+     "Adding $15$ to $x$ and subtracting $47$ from $y$ keeps $47x + 15y$ the same (it adds $47 \\cdot 15 - 15 \\cdot 47 = 0$). So $x = 8$, $y = -25$.",
+     "Check: $47 \\cdot 8 - 15 \\cdot 25 = 376 - 375 = 1$."
+    ],
+    "a": "$x = 8$, $y = -25$."
+   },
+   {
+    "t": "mistake",
+    "html": "Losing a sign during substitution. Expanding $4(252 - 198) - 198$ as $4 \\cdot 252 - 4 \\cdot 198 + 198$ gives the wrong $y$. Always finish by multiplying out $ax + by$: if it does not equal the gcd, something slipped. Also remember the answer is not unique: $x = 4 + 11t$, $y = -5 - 14t$ works for every integer $t$ (try $t = 1$: $252 \\cdot 15 - 198 \\cdot 19 = 18$)."
+   },
+   {
+    "t": "key",
+    "html": "Work the Euclidean algorithm backward (or keep a running table) to write $\\gcd(a, b) = ax + by$. Then check by multiplying out."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers, and chapter 2, The Ring of Integers Modulo n (the extended Euclidean algorithm)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: the pulverizer"
+   }
+  ]
+ },
+ "nt.linear-diophantine": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <b>Diophantine equation</b> is an equation where only integer solutions count. The simplest kind is linear: $ax + by = c$. Graphed, it is a straight line; the question is which points on it have whole-number coordinates. <a href=\"/math/number-theory/bezout/\">Bézout's identity</a> answers it completely."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> Let $d = \\gcd(a, b)$, with $a$ and $b$ not both $0$. The equation $ax + by = c$ has an integer solution <b>exactly when $d \\mid c$</b>. If $(x_0, y_0)$ is one solution, then all solutions are $$x = x_0 + \\frac{b}{d}\\,t, \\qquad y = y_0 - \\frac{a}{d}\\,t, \\qquad t \\in \\mathbb{Z}.$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>Only if:</b> $d$ divides $a$ and $b$, so it divides every $ax + by$; if $d \\nmid c$, nothing works. <b>If:</b> Bézout gives $ax' + by' = d$; multiply by $c/d$. <b>All solutions:</b> if $(x, y)$ is another solution, subtract: $a(x - x_0) = -b(y - y_0)$. Divide by $d$ and write $a' = a/d$, $b' = b/d$, which are coprime: $a'(x - x_0) = -b'(y - y_0)$. Bézout gives $a'u + b'v = 1$, so $$x - x_0 = (x - x_0)(a'u + b'v) = -b'(y - y_0)u + b'(x - x_0)v,$$ a multiple of $b'$. Write $x - x_0 = b't$; then $y - y_0 = -a't$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-lattice",
+    "opts": {
+     "mode": "line",
+     "a": 4,
+     "b": 6,
+     "c": 10
+    },
+    "cap": "The line $4x + 6y = 10$ with its lattice points. Neighbors are $b/d = 3$ apart across and $a/d = 2$ apart down. Change $c$ to an odd number and every lattice point disappears."
+   },
+   {
+    "t": "ex",
+    "title": "All solutions",
+    "q": "Find all integer solutions of $12x + 18y = 30$.",
+    "steps": [
+     "$d = \\gcd(12, 18) = 6$, and $6 \\mid 30$, so solutions exist.",
+     "Bézout: $12 \\cdot (-1) + 18 \\cdot 1 = 6$. Multiply by $30/6 = 5$: $x_0 = -5$, $y_0 = 5$.",
+     "Steps: $b/d = 18/6 = 3$ and $a/d = 12/6 = 2$. So $x = -5 + 3t$, $y = 5 - 2t$.",
+     "Check $t = 2$: $(1, 1)$, and $12 + 18 = 30$."
+    ],
+    "a": "$x = -5 + 3t$, $y = 5 - 2t$ for every integer $t$."
+   },
+   {
+    "t": "ex",
+    "title": "No solution",
+    "q": "Does $6x + 9y = 20$ have an integer solution?",
+    "steps": [
+     "$\\gcd(6, 9) = 3$, so $6x + 9y$ is always a multiple of $3$.",
+     "$3 \\nmid 20$, so no integers $x$, $y$ work."
+    ],
+    "a": "No solution."
+   },
+   {
+    "t": "ex",
+    "title": "Stamps",
+    "q": "Stamps come in 5¢ and 8¢. In how many ways can you make exactly \\$1.00 of postage?",
+    "steps": [
+     "Solve $5x + 8y = 100$ with $x, y \\ge 0$. One solution is $(20, 0)$.",
+     "$d = 1$, so all solutions are $x = 20 + 8t$, $y = -5t$.",
+     "$y \\ge 0$ needs $t \\le 0$; $x \\ge 0$ needs $t \\ge -2.5$. So $t = 0, -1, -2$.",
+     "That gives $(20, 0)$, $(12, 5)$ and $(4, 10)$."
+    ],
+    "a": "Three ways."
+   },
+   {
+    "t": "p",
+    "html": "Geometrically, the solutions are the lattice points on the line $ax + by = c$. Since the line has slope $-a/b = -(a/d)/(b/d)$ in lowest terms, moving from one lattice point to the next means going $b/d$ across and $a/d$ down, and no smaller step lands on a lattice point."
+   },
+   {
+    "t": "mistake",
+    "html": "Stepping by $b$ and $a$ instead of $b/d$ and $a/d$. For $12x + 18y = 30$, the steps \"$x = -5 + 18t$, $y = 5 - 12t$\" skip most solutions, such as $(1, 1)$ and $(-2, 3)$. Another slip: forgetting to multiply the Bézout solution by $c/d$, which solves $ax + by = d$ instead of $= c$. Check every answer by substituting it."
+   },
+   {
+    "t": "key",
+    "html": "$ax + by = c$ is solvable in integers exactly when $\\gcd(a, b) \\mid c$. One solution comes from Bézout scaled by $c/d$; the rest step by $b/d$ in $x$ and $-a/d$ in $y$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on linear Diophantine equations"
+   }
+  ]
+ },
+ "nt.primality-sieve": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You met primes in <a href=\"/math/grade-4/prime-composite/\">grade 4</a>. Now we need a precise definition and two dependable tools: a test for one number and a way to list all primes up to a bound."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definitions.</b> An integer $p > 1$ is <b>prime</b> when its only positive divisors are $1$ and $p$. An integer $n > 1$ that is not prime is <b>composite</b>: it can be written $n = ab$ with $1 < a, b < n$. The number $1$ is neither. (Leaving $1$ out is what keeps prime factorizations unique; otherwise $6 = 2 \\cdot 3 = 1 \\cdot 2 \\cdot 3$.)"
+   },
+   {
+    "t": "why",
+    "html": "<b>You only need to test up to $\\sqrt{n}$.</b> Suppose $n = ab$ with $1 < a \\le b$. Then $a \\cdot a \\le a \\cdot b = n$, so $a \\le \\sqrt{n}$. The smallest prime factor of $a$ is at most $a$ and also <a href=\"/math/number-theory/divisibility/\">divides</a> $n$. So a composite $n$ always has a <b>prime factor at most $\\sqrt{n}$</b>. Turn that around: if no prime up to $\\sqrt{n}$ divides $n$, then $n$ is prime."
+   },
+   {
+    "t": "ex",
+    "title": "A composite in disguise",
+    "q": "Is $221$ prime?",
+    "steps": [
+     "$14^{2} = 196$ and $15^{2} = 225$, so $\\sqrt{221} \\approx 14.9$. Test the primes $2, 3, 5, 7, 11, 13$.",
+     "$221$ is odd, its digit sum is $5$ (not a multiple of 3), and it does not end in $0$ or $5$. $221 = 7 \\cdot 31 + 4$ and $221 = 11 \\cdot 20 + 1$.",
+     "$221 = 13 \\cdot 17$. Composite."
+    ],
+    "a": "No: $221 = 13 \\cdot 17$."
+   },
+   {
+    "t": "ex",
+    "title": "A prime",
+    "q": "Is $211$ prime?",
+    "steps": [
+     "$\\sqrt{211} \\approx 14.5$, so test $2, 3, 5, 7, 11, 13$.",
+     "The remainders are $1, 1, 1, 1, 2, 3$. None is $0$.",
+     "No prime up to $\\sqrt{211}$ divides $211$, so it is prime."
+    ],
+    "a": "Yes."
+   },
+   {
+    "t": "h",
+    "text": "The sieve of Eratosthenes"
+   },
+   {
+    "t": "p",
+    "html": "To list <b>every</b> prime up to $N$: write $2, 3, \\dots, N$. Circle the smallest number not yet crossed out; it is prime. Cross out its multiples, starting at its square. Repeat. Once the next circled number $p$ has $p^{2} > N$, everything still standing is prime."
+   },
+   {
+    "t": "viz",
+    "name": "nt-sieve",
+    "opts": {
+     "N": 100,
+     "cols": 10,
+     "task": "Press <b>Next prime</b> until the sieve stops. Why does it stop at 7?"
+    },
+    "cap": "Crossing out starts at $p^{2}$: a smaller multiple $kp$ with $k < p$ has a prime factor smaller than $p$, so it is already crossed out. After 7, the next prime is 11, and $11^{2} = 121 > 100$."
+   },
+   {
+    "t": "ex",
+    "title": "How far does the sieve go?",
+    "q": "To list the primes up to $200$ with the sieve, which primes do you need to sieve with?",
+    "steps": [
+     "You need the primes $p$ with $p^{2} \\le 200$.",
+     "$13^{2} = 169 \\le 200$ but $17^{2} = 289 > 200$.",
+     "So sieve with $2, 3, 5, 7, 11, 13$. Every number left after that is prime."
+    ],
+    "a": "$2, 3, 5, 7, 11$ and $13$."
+   },
+   {
+    "t": "mistake",
+    "html": "Testing every number up to $n$ (slow, though correct), or stopping too early. Stopping at $11$ for $221$ would call it prime, but $13 \\le \\sqrt{221}$ still had to be tried. Find the whole-number part of $\\sqrt{n}$ first and test every prime up to it. And remember: $1$ is not prime."
+   },
+   {
+    "t": "key",
+    "html": "A composite $n$ has a prime factor $p \\le \\sqrt{n}$. So test the primes up to $\\sqrt{n}$; to list all primes up to $N$, sieve with the primes up to $\\sqrt{N}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: prime numbers"
+   }
+  ]
+ },
+ "nt.unique-factorization": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/grade-5/prime-factorization/\">grade 5</a> you factored numbers with factor trees, and different trees for the same number always ended with the same primes. That is not an accident, and it is not obvious either. It is a theorem, and its proof rests on <a href=\"/math/number-theory/bezout/\">Bézout's identity</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>The Fundamental Theorem of Arithmetic.</b> Every integer $n > 1$ can be written as a product of primes, and this factorization is <b>unique</b> apart from the order of the factors. We usually group equal primes: $1260 = 2^{2} \\cdot 3^{2} \\cdot 5 \\cdot 7$."
+   },
+   {
+    "t": "p",
+    "html": "Why uniqueness needs proof: in the even numbers $2, 4, 6, \\dots$, call an even number \"even-prime\" if it is not a product of two even numbers. Then $2$, $6$, $10$ and $30$ are even-prime, and $60 = 2 \\cdot 30 = 6 \\cdot 10$ has two different factorizations. Something special about the integers prevents this."
+   },
+   {
+    "t": "p",
+    "html": "<b>Euclid's lemma.</b> If $p$ is prime and $p \\mid ab$, then $p \\mid a$ or $p \\mid b$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Proof of Euclid's lemma.</b> Suppose $p \\nmid a$. The only positive divisors of $p$ are $1$ and $p$, so $\\gcd(p, a) = 1$, and Bézout gives $px + ay = 1$. Multiply by $b$: $$pbx + (ab)y = b.$$ $p$ divides $pbx$, and $p$ divides $ab$ by assumption, so $p$ divides the sum, $b$.<br><b>Uniqueness.</b> If $p_1 p_2 \\cdots p_k = q_1 q_2 \\cdots q_m$ with all primes, then $p_1$ divides the right side, so (using the lemma again and again) $p_1$ divides some $q_j$, and since $q_j$ is prime, $p_1 = q_j$. Cancel it and repeat. Existence is easier: a number above $1$ is prime or splits into smaller factors, and the splitting must stop."
+   },
+   {
+    "t": "ex",
+    "title": "Factoring by division",
+    "q": "Factor $1260$ into primes.",
+    "steps": [
+     "Divide by $2$ while you can: $1260 \\to 630 \\to 315$. That is $2^{2}$.",
+     "Divide by $3$: $315 \\to 105 \\to 35$. That is $3^{2}$.",
+     "$35 = 5 \\cdot 7$."
+    ],
+    "a": "$1260 = 2^{2} \\cdot 3^{2} \\cdot 5 \\cdot 7$."
+   },
+   {
+    "t": "ex",
+    "title": "Using the exponents",
+    "q": "What is the smallest positive integer $k$ for which $1260k$ is a perfect square?",
+    "steps": [
+     "A number is a perfect square exactly when every exponent in its factorization is even. (This uses uniqueness: there is no other factorization that could have even exponents.)",
+     "In $2^{2} \\cdot 3^{2} \\cdot 5 \\cdot 7$ the odd exponents belong to $5$ and $7$.",
+     "So $k = 5 \\cdot 7 = 35$, and $1260 \\cdot 35 = 2^{2} \\cdot 3^{2} \\cdot 5^{2} \\cdot 7^{2} = 210^{2}$."
+    ],
+    "a": "$k = 35$."
+   },
+   {
+    "t": "ex",
+    "title": "The lemma at work",
+    "q": "Find the smallest positive $x$ with $6 \\mid 4x$.",
+    "steps": [
+     "$6 = 2 \\cdot 3$. The factor $2$ is already supplied by $4$.",
+     "$3$ is prime and $3 \\mid 4x$ but $3 \\nmid 4$, so by Euclid's lemma $3 \\mid x$.",
+     "The smallest choice is $x = 3$: $4 \\cdot 3 = 12 = 6 \\cdot 2$."
+    ],
+    "a": "$x = 3$, not $6$."
+   },
+   {
+    "t": "mistake",
+    "html": "Using Euclid's lemma with a divisor that is not prime. $6 \\mid 4 \\cdot 9 = 36$, but $6$ divides neither $4$ nor $9$: the $2$ came from one factor and the $3$ from the other. For a composite divisor, factor it and apply the lemma one prime at a time."
+   },
+   {
+    "t": "key",
+    "html": "Every integer above $1$ factors into primes in exactly one way. The engine is Euclid's lemma: a <b>prime</b> dividing a product divides one of the factors."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers (the fundamental theorem of arithmetic)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: the fundamental theorem of arithmetic"
+   }
+  ]
+ },
+ "nt.gcd-lcm-factorizations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once numbers are written as products of primes (thanks to <a href=\"/math/number-theory/unique-factorization/\">unique factorization</a>), their gcd and lcm can be read off directly, and a tidy identity connects the two."
+   },
+   {
+    "t": "p",
+    "html": "Write $a$ and $b$ using the same list of primes, allowing exponent $0$: $a = \\prod p^{\\alpha_p}$ and $b = \\prod p^{\\beta_p}$. Then $$\\gcd(a, b) = \\prod p^{\\min(\\alpha_p, \\beta_p)}, \\qquad \\operatorname{lcm}(a, b) = \\prod p^{\\max(\\alpha_p, \\beta_p)}.$$"
+   },
+   {
+    "t": "why",
+    "html": "By unique factorization, $d \\mid a$ exactly when $d$ uses only the primes of $a$, each with an exponent at most $\\alpha_p$. So a <b>common divisor</b> can use each prime at most $\\min(\\alpha_p, \\beta_p)$ times, and the greatest one uses exactly that many. A <b>common multiple</b> must contain each number completely, so it needs at least $\\max(\\alpha_p, \\beta_p)$ copies of each prime, and the least one uses exactly that many. Since $\\min(\\alpha, \\beta) + \\max(\\alpha, \\beta) = \\alpha + \\beta$ for every prime, $$\\gcd(a, b) \\cdot \\operatorname{lcm}(a, b) = ab.$$"
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "$2$",
+     "$3$",
+     "$5$",
+     "$7$"
+    ],
+    "rows": [
+     [
+      "$a = 360$",
+      "3",
+      "2",
+      "1",
+      "0"
+     ],
+     [
+      "$b = 1134$",
+      "1",
+      "4",
+      "0",
+      "1"
+     ],
+     [
+      "gcd: smaller",
+      "1",
+      "2",
+      "0",
+      "0"
+     ],
+     [
+      "lcm: larger",
+      "3",
+      "4",
+      "1",
+      "1"
+     ]
+    ],
+    "cap": "Exponents of each prime in the first example."
+   },
+   {
+    "t": "ex",
+    "title": "Reading off gcd and lcm",
+    "q": "Find $\\gcd(a, b)$ and $\\operatorname{lcm}(a, b)$ for $a = 2^{3} \\cdot 3^{2} \\cdot 5 = 360$ and $b = 2 \\cdot 3^{4} \\cdot 7 = 1134$.",
+    "steps": [
+     "Smaller exponents: $2^{1} \\cdot 3^{2} \\cdot 5^{0} \\cdot 7^{0} = 18$.",
+     "Larger exponents: $2^{3} \\cdot 3^{4} \\cdot 5 \\cdot 7 = 8 \\cdot 81 \\cdot 35 = 22{,}680$.",
+     "Check: $18 \\cdot 22{,}680 = 408{,}240 = 360 \\cdot 1134$."
+    ],
+    "a": "$\\gcd = 18$, $\\operatorname{lcm} = 22{,}680$."
+   },
+   {
+    "t": "ex",
+    "title": "Working backward",
+    "q": "Two positive integers have gcd $12$ and lcm $360$. One of them is $72$. What is the other?",
+    "steps": [
+     "$\\gcd \\cdot \\operatorname{lcm} = ab$, so $b = \\dfrac{12 \\cdot 360}{72} = 60$.",
+     "Check: $72 = 2^{3} \\cdot 3^{2}$ and $60 = 2^{2} \\cdot 3 \\cdot 5$. Smaller exponents: $2^{2} \\cdot 3 = 12$. Larger: $2^{3} \\cdot 3^{2} \\cdot 5 = 360$."
+    ],
+    "a": "$60$."
+   },
+   {
+    "t": "ex",
+    "title": "Three numbers",
+    "q": "Find $\\gcd$ and $\\operatorname{lcm}$ of $12 = 2^{2} \\cdot 3$, $18 = 2 \\cdot 3^{2}$ and $20 = 2^{2} \\cdot 5$.",
+    "steps": [
+     "gcd: smallest exponents, $2^{1} \\cdot 3^{0} \\cdot 5^{0} = 2$.",
+     "lcm: largest exponents, $2^{2} \\cdot 3^{2} \\cdot 5 = 180$.",
+     "Here $2 \\cdot 180 = 360$, but $12 \\cdot 18 \\cdot 20 = 4320$: the product rule is only for <b>two</b> numbers."
+    ],
+    "a": "$\\gcd = 2$, $\\operatorname{lcm} = 180$."
+   },
+   {
+    "t": "mistake",
+    "html": "Taking the larger exponents for the gcd (that gives the lcm), or using $\\gcd \\cdot \\operatorname{lcm} = \\text{product}$ for three numbers. For $2, 2, 2$: the gcd and lcm are both $2$, so their product is $4$, not $2 \\cdot 2 \\cdot 2 = 8$. With three numbers, min plus max misses the middle exponent."
+   },
+   {
+    "t": "p",
+    "html": "Two special cases are worth remembering. Numbers are <a href=\"/math/number-theory/euclidean-algorithm/\">coprime</a> exactly when they share no prime at all; then every minimum is $0$, so $\\gcd(a, b) = 1$ and $\\operatorname{lcm}(a, b) = ab$. And when $a \\mid b$, every exponent of $a$ is at most the matching exponent of $b$, so $\\gcd(a, b) = a$ and $\\operatorname{lcm}(a, b) = b$. The lcm answers \"when do two cycles line up again?\": lights blinking every $12$ and every $18$ seconds blink together every $\\operatorname{lcm}(12, 18) = 36$ seconds."
+   },
+   {
+    "t": "note",
+    "html": "For large numbers, factoring is slow, while the <a href=\"/math/number-theory/euclidean-algorithm/\">Euclidean algorithm</a> is fast. So computers find the gcd by Euclid and then the lcm as $ab / \\gcd(a, b)$."
+   },
+   {
+    "t": "key",
+    "html": "gcd: the smaller exponent of each prime. lcm: the larger. For two numbers, $\\gcd(a, b) \\cdot \\operatorname{lcm}(a, b) = ab$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: the fundamental theorem of arithmetic"
+   }
+  ]
+ },
+ "nt.divisor-functions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "How many divisors does $360$ have, and what do they add up to? Listing them works but is slow and easy to get wrong. With the <a href=\"/math/number-theory/gcd-lcm-factorizations/\">prime factorization</a> in hand, both questions have formulas."
+   },
+   {
+    "t": "p",
+    "html": "<b>Notation.</b> $\\tau(n)$ is the number of positive divisors of $n$ (also written $d(n)$), and $\\sigma(n)$ is their sum. For $n = 12$: the divisors are $1, 2, 3, 4, 6, 12$, so $\\tau(12) = 6$ and $\\sigma(12) = 28$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Formulas.</b> If $n = p_1^{a_1} p_2^{a_2} \\cdots p_k^{a_k}$, then $$\\tau(n) = (a_1 + 1)(a_2 + 1) \\cdots (a_k + 1), \\qquad \\sigma(n) = \\prod_{i=1}^{k} \\left(1 + p_i + p_i^{2} + \\cdots + p_i^{a_i}\\right) = \\prod_{i=1}^{k} \\frac{p_i^{a_i + 1} - 1}{p_i - 1}.$$"
+   },
+   {
+    "t": "why",
+    "html": "By unique factorization, the divisors of $n$ are exactly the numbers $p_1^{e_1} \\cdots p_k^{e_k}$ with $0 \\le e_i \\le a_i$, each exponent chosen independently. Exponent $e_i$ has $a_i + 1$ choices (counting $0$), and choices multiply. For $\\sigma$, expand the product of the brackets: each term of the expansion picks one power of each prime, so each divisor appears exactly once. Each bracket is a finite <a href=\"/math/algebra-2/geometric-series/\">geometric series</a>."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "$3^{0} = 1$",
+     "$3^{1} = 3$",
+     "$3^{2} = 9$"
+    ],
+    "rows": [
+     [
+      "$2^{0} = 1$",
+      "1",
+      "3",
+      "9"
+     ],
+     [
+      "$2^{1} = 2$",
+      "2",
+      "6",
+      "18"
+     ],
+     [
+      "$2^{2} = 4$",
+      "4",
+      "12",
+      "36"
+     ],
+     [
+      "$2^{3} = 8$",
+      "8",
+      "24",
+      "72"
+     ]
+    ],
+    "cap": "The divisors of $72 = 2^{3} \\cdot 3^{2}$: one for each choice of a row and a column, $4 \\cdot 3 = 12$ in all."
+   },
+   {
+    "t": "ex",
+    "title": "Counting divisors",
+    "q": "Find $\\tau(360)$.",
+    "steps": [
+     "$360 = 2^{3} \\cdot 3^{2} \\cdot 5$.",
+     "$\\tau(360) = (3 + 1)(2 + 1)(1 + 1) = 4 \\cdot 3 \\cdot 2 = 24$."
+    ],
+    "a": "$24$."
+   },
+   {
+    "t": "ex",
+    "title": "Adding divisors",
+    "q": "Find $\\sigma(72)$.",
+    "steps": [
+     "$72 = 2^{3} \\cdot 3^{2}$.",
+     "$\\sigma(72) = (1 + 2 + 4 + 8)(1 + 3 + 9) = 15 \\cdot 13 = 195$.",
+     "Check by adding the table's twelve entries: $1 + 2 + 3 + 4 + 6 + 8 + 9 + 12 + 18 + 24 + 36 + 72 = 195$."
+    ],
+    "a": "$195$."
+   },
+   {
+    "t": "ex",
+    "title": "Designing a number",
+    "q": "What is the smallest positive integer with exactly $12$ divisors?",
+    "steps": [
+     "We need $(a_1 + 1)(a_2 + 1) \\cdots = 12$. The ways to write $12$: $12$, $6 \\cdot 2$, $4 \\cdot 3$, $3 \\cdot 2 \\cdot 2$.",
+     "Give the biggest exponent to the smallest prime: $2^{11} = 2048$, $\\ 2^{5} \\cdot 3 = 96$, $\\ 2^{3} \\cdot 3^{2} = 72$, $\\ 2^{2} \\cdot 3 \\cdot 5 = 60$.",
+     "The smallest is $60$."
+    ],
+    "a": "$60$."
+   },
+   {
+    "t": "mistake",
+    "html": "Multiplying the exponents instead of the exponents plus one: \"$\\tau(72) = 3 \\cdot 2 = 6$.\" That forgets that each prime may also appear to the power $0$ (the first row and column of the table). The correct count is $(3 + 1)(2 + 1) = 12$."
+   },
+   {
+    "t": "p",
+    "html": "A pleasant consequence: $\\tau(n)$ is <b>odd exactly when $n$ is a perfect square</b>. Divisors come in pairs $d$ and $n/d$, like $2$ and $36$ for $72$, and a pair collapses to a single divisor only when $d = n/d$, that is, $d^{2} = n$. In the formula, $\\tau(n)$ is odd exactly when every $a_i + 1$ is odd, so every exponent $a_i$ is even."
+   },
+   {
+    "t": "note",
+    "html": "Both functions are <b>multiplicative</b>: if $\\gcd(m, n) = 1$, then $\\tau(mn) = \\tau(m)\\tau(n)$ and $\\sigma(mn) = \\sigma(m)\\sigma(n)$. That is exactly why the formulas are products over the primes."
+   },
+   {
+    "t": "key",
+    "html": "From $n = \\prod p^{a}$: the number of divisors is $\\prod (a + 1)$, and their sum is $\\prod (1 + p + \\cdots + p^{a})$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on arithmetic functions"
+   }
+  ]
+ },
+ "nt.perfect-numbers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The ancient Greeks called $6$ perfect because its smaller divisors add up to it: $1 + 2 + 3 = 6$. So does $28 = 1 + 2 + 4 + 7 + 14$. With <a href=\"/math/number-theory/divisor-functions/\">the divisor sum</a> $\\sigma$, this becomes a clean equation, and Euclid's recipe for perfect numbers becomes a short proof."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definitions.</b> A positive integer $n$ is <b>perfect</b> when $\\sigma(n) = 2n$, that is, when its proper divisors (all but $n$ itself) add up to $n$. It is <b>deficient</b> when $\\sigma(n) < 2n$ and <b>abundant</b> when $\\sigma(n) > 2n$."
+   },
+   {
+    "t": "ex",
+    "title": "Three kinds",
+    "q": "Classify $12$, $14$ and $28$.",
+    "steps": [
+     "$\\sigma(12) = (1 + 2 + 4)(1 + 3) = 28 > 24$: abundant.",
+     "$\\sigma(14) = (1 + 2)(1 + 7) = 24 < 28$: deficient.",
+     "$\\sigma(28) = (1 + 2 + 4)(1 + 7) = 56 = 2 \\cdot 28$: perfect."
+    ],
+    "a": "Abundant, deficient, perfect."
+   },
+   {
+    "t": "p",
+    "html": "<b>Euclid's theorem.</b> If $2^{p} - 1$ is prime, then $N = 2^{p-1}(2^{p} - 1)$ is perfect. Primes of the form $2^{p} - 1$ are called <b>Mersenne primes</b>."
+   },
+   {
+    "t": "why",
+    "html": "Let $q = 2^{p} - 1$, a prime. The factors $2^{p-1}$ and $q$ are coprime, and $\\sigma$ is multiplicative, so $$\\sigma(N) = \\sigma(2^{p-1})\\,\\sigma(q) = (1 + 2 + \\cdots + 2^{p-1})(1 + q) = (2^{p} - 1) \\cdot 2^{p} = 2N.$$ About 2,000 years later Euler proved the converse for even numbers: <b>every even perfect number</b> has this form. Whether an odd perfect number exists is still unknown."
+   },
+   {
+    "t": "ex",
+    "title": "Building a perfect number",
+    "q": "$2^{7} - 1 = 127$ is prime. Which perfect number does it give?",
+    "steps": [
+     "$N = 2^{6} \\cdot 127 = 64 \\cdot 127 = 8128$.",
+     "Check: $\\sigma(8128) = (2^{7} - 1)(127 + 1) = 127 \\cdot 128 = 16{,}256 = 2 \\cdot 8128$."
+    ],
+    "a": "$8128$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Which exponents can work?</b> If the exponent is composite, $n = ab$ with $a, b > 1$, then $2^{a} - 1$ divides $2^{n} - 1$, because $x - 1$ divides $x^{b} - 1$ (take $x = 2^{a}$). For example $2^{6} - 1 = 63 = 7 \\cdot 9$ and $2^{3} - 1 = 7$ divides it. So a Mersenne prime needs a <b>prime</b> exponent. But a prime exponent is not enough:"
+   },
+   {
+    "t": "ex",
+    "title": "A prime exponent that fails",
+    "q": "Is $2^{11} - 1$ prime?",
+    "steps": [
+     "$2^{11} - 1 = 2047$. Test primes up to $\\sqrt{2047} \\approx 45.2$.",
+     "$3, 5, 7, 11, 13, 17, 19$ all leave remainders. Then $2047 = 23 \\cdot 89$."
+    ],
+    "a": "No: $2047 = 23 \\cdot 89$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$p$",
+     "$2^{p} - 1$",
+     "prime?",
+     "perfect number"
+    ],
+    "rows": [
+     [
+      "2",
+      "3",
+      "yes",
+      "6"
+     ],
+     [
+      "3",
+      "7",
+      "yes",
+      "28"
+     ],
+     [
+      "5",
+      "31",
+      "yes",
+      "496"
+     ],
+     [
+      "7",
+      "127",
+      "yes",
+      "8,128"
+     ],
+     [
+      "11",
+      "2,047 = 23 · 89",
+      "no",
+      "—"
+     ],
+     [
+      "13",
+      "8,191",
+      "yes",
+      "33,550,336"
+     ]
+    ],
+    "cap": "The first Mersenne numbers with prime exponent."
+   },
+   {
+    "t": "note",
+    "html": "The largest primes known today are Mersenne primes, with tens of millions of digits, because there is a special fast test for numbers of the form $2^{p} - 1$. Only about fifty Mersenne primes are known. Abundant numbers are far more common: $12$ is the smallest, and the smallest odd one is $945$."
+   },
+   {
+    "t": "mistake",
+    "html": "Believing that $2^{p} - 1$ is prime whenever $p$ is prime. The first counterexample is $p = 11$: $2^{11} - 1 = 2047 = 23 \\cdot 89$. A prime exponent is necessary, not sufficient; each Mersenne number must be tested."
+   },
+   {
+    "t": "key",
+    "html": "$n$ is perfect when $\\sigma(n) = 2n$. Whenever $2^{p} - 1$ is prime, $2^{p-1}(2^{p} - 1)$ is perfect, and every even perfect number arises this way."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on perfect numbers and Mersenne primes"
+   }
+  ]
+ },
+ "nt.factorial-primes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "$100!$ has 158 digits. How many of them are zeros at the end? You do not need to compute it. By <a href=\"/math/number-theory/unique-factorization/\">unique factorization</a>, the question is how many factors of $2$ and $5$ are hiding in $1 \\cdot 2 \\cdot 3 \\cdots 100$, and there is a formula for that."
+   },
+   {
+    "t": "p",
+    "html": "<b>Legendre's formula.</b> For a prime $p$, the exponent of $p$ in $n!$ is $$\\left\\lfloor \\frac{n}{p} \\right\\rfloor + \\left\\lfloor \\frac{n}{p^{2}} \\right\\rfloor + \\left\\lfloor \\frac{n}{p^{3}} \\right\\rfloor + \\cdots,$$ where $\\lfloor x \\rfloor$ is the <a href=\"/math/algebra-1/step-functions/\">floor</a>, the largest integer at most $x$. The sum stops once $p^{k} > n$."
+   },
+   {
+    "t": "why",
+    "html": "Every number $m$ from $1$ to $n$ contributes its own exponent of $p$ to $n!$. Count those contributions by layers. Every multiple of $p$ contributes at least one factor: there are $\\lfloor n/p \\rfloor$ of them. Every multiple of $p^{2}$ contributes a second one: $\\lfloor n/p^{2} \\rfloor$ more. Every multiple of $p^{3}$ a third, and so on. A number like $m = 50 = 2 \\cdot 5^{2}$ is counted once in the first layer and once in the second, exactly its two factors of $5$."
+   },
+   {
+    "t": "ex",
+    "title": "One prime",
+    "q": "Find the exponent of $2$ in $20!$.",
+    "steps": [
+     "$\\lfloor 20/2 \\rfloor = 10$ multiples of $2$.",
+     "$\\lfloor 20/4 \\rfloor = 5$ multiples of $4$, $\\lfloor 20/8 \\rfloor = 2$ of $8$, $\\lfloor 20/16 \\rfloor = 1$ of $16$.",
+     "Total: $10 + 5 + 2 + 1 = 18$. So $2^{18}$ divides $20!$, and $2^{19}$ does not."
+    ],
+    "a": "$18$."
+   },
+   {
+    "t": "ex",
+    "title": "Zeros at the end",
+    "q": "How many zeros does $100!$ end with?",
+    "steps": [
+     "Each final zero is a factor $10 = 2 \\cdot 5$. There are far more $2$s than $5$s, so count the $5$s.",
+     "$\\lfloor 100/5 \\rfloor + \\lfloor 100/25 \\rfloor = 20 + 4 = 24$ (and $125 > 100$)."
+    ],
+    "a": "$24$ zeros."
+   },
+   {
+    "t": "ex",
+    "title": "A composite base",
+    "q": "What is the largest $k$ with $12^{k} \\mid 30!$?",
+    "steps": [
+     "$12 = 2^{2} \\cdot 3$, so each copy of $12$ needs two $2$s and one $3$.",
+     "$2$s in $30!$: $15 + 7 + 3 + 1 = 26$, enough for $13$ copies. $3$s: $10 + 3 + 1 = 14$, enough for $14$ copies.",
+     "The $2$s run out first: $k = 13$."
+    ],
+    "a": "$k = 13$."
+   },
+   {
+    "t": "mistake",
+    "html": "Counting only the multiples of $5$. \"$100/5 = 20$ zeros\" misses that $25$, $50$, $75$ and $100$ each bring a <b>second</b> factor of $5$. Keep adding $\\lfloor n/p^{k} \\rfloor$ until the terms reach $0$. A quick sanity check: $25! = 15{,}511{,}210{,}043{,}330{,}985{,}984{,}000{,}000$ ends in $6$ zeros, and $5 + 1 = 6$."
+   },
+   {
+    "t": "note",
+    "html": "There are more $2$s than $5$s in $n!$ because every second number is even but only every fifth is a multiple of $5$. A neat second form of the formula uses <a href=\"/math/number-theory/number-bases/\">base</a> $p$: the exponent of $p$ in $n!$ is $\\dfrac{n - s}{p - 1}$, where $s$ is the sum of the digits of $n$ in base $p$. For $100 = 400_5$: $(100 - 4)/4 = 24$."
+   },
+   {
+    "t": "key",
+    "html": "The exponent of $p$ in $n!$ is $\\sum_{k \\ge 1} \\lfloor n/p^{k} \\rfloor$. For trailing zeros, count the $5$s."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on the prime factorization of n!"
+   }
+  ]
+ },
+ "nt.infinitely-many-primes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/number-theory/primality-sieve/\">sieve</a> lists the primes up to any bound, and they keep coming: 2, 3, 5, 7, 11, … but they also thin out. Could they stop altogether? Euclid answered this around 300 BC with one of the most famous arguments in mathematics, a <a href=\"/math/discrete-math/contradiction-proof/\">proof by contradiction</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> There are infinitely many primes."
+   },
+   {
+    "t": "why",
+    "html": "Suppose there were only finitely many: $p_1, p_2, \\dots, p_k$. Let $$N = p_1 p_2 \\cdots p_k + 1.$$ Since $N > 1$, it has a prime factor $q$ (its smallest divisor above 1 is prime, or use <a href=\"/math/number-theory/unique-factorization/\">unique factorization</a>). Could $q$ be one of the $p_i$? Then $q$ would divide both $N$ and $p_1 \\cdots p_k$, so it would divide their difference, $1$. That is impossible. So $q$ is a prime that is not on the list, contradicting the assumption that the list had every prime."
+   },
+   {
+    "t": "p",
+    "html": "Read carefully, the proof gives a recipe: <b>any</b> finite list of primes misses one, and the prime factors of $N$ are new. It does not say that $N$ itself is prime."
+   },
+   {
+    "t": "ex",
+    "title": "The new prime may be N itself",
+    "q": "Apply the recipe to the list $2, 3, 5$.",
+    "steps": [
+     "$N = 2 \\cdot 3 \\cdot 5 + 1 = 31$.",
+     "$31$ is prime, and it is not on the list."
+    ],
+    "a": "$31$."
+   },
+   {
+    "t": "ex",
+    "title": "Or a small prime that was left out",
+    "q": "Apply the recipe to the list $3, 5$.",
+    "steps": [
+     "$N = 3 \\cdot 5 + 1 = 16 = 2^{4}$.",
+     "$N$ is not prime, but its prime factor $2$ is missing from the list. The recipe still works."
+    ],
+    "a": "The new prime is $2$."
+   },
+   {
+    "t": "ex",
+    "title": "A famous composite",
+    "q": "Is $2 \\cdot 3 \\cdot 5 \\cdot 7 \\cdot 11 \\cdot 13 + 1$ prime?",
+    "steps": [
+     "$N = 30{,}030 + 1 = 30{,}031$. None of $2, 3, 5, 7, 11, 13$ divides it: each leaves remainder $1$.",
+     "Keep testing primes: $17, 19, \\dots, 53$ all leave remainders, and then $30{,}031 = 59 \\cdot 509$.",
+     "So $N$ is composite, but both of its prime factors are new, exactly as the proof promised."
+    ],
+    "a": "No: $30{,}031 = 59 \\cdot 509$."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking that $p_1 p_2 \\cdots p_k + 1$ must be prime. It need not be: $30{,}031 = 59 \\cdot 509$. The proof never claims it is prime; it only uses that it has <b>some</b> prime factor, and that no listed prime can be that factor."
+   },
+   {
+    "t": "note",
+    "html": "The same idea proves more. Every prime factor of $n! + 1$ is larger than $n$ (each prime up to $n$ leaves remainder 1), so there is always a prime above any $n$. A variation with $N = 4p_1 \\cdots p_k - 1$ shows there are infinitely many primes of the form $4k + 3$."
+   },
+   {
+    "t": "p",
+    "html": "Euclid's theorem was only the start. In 1837 Dirichlet proved that whenever $\\gcd(a, b) = 1$, the progression $a, a + b, a + 2b, \\dots$ contains infinitely many primes, for example infinitely many primes end in the digit 7. His proof needed calculus; Euclid's needs one line of algebra."
+   },
+   {
+    "t": "key",
+    "html": "Multiply any finite list of primes and add 1. The result has a prime factor that is not on the list, so no list can contain them all."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers (there are infinitely many primes)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: prime numbers"
+   }
+  ]
+ },
+ "nt.prime-counting": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "There are <a href=\"/math/number-theory/infinitely-many-primes/\">infinitely many primes</a>, but how many up to a given point? Write $\\pi(x)$ for the number of primes $p \\le x$ (this $\\pi$ has nothing to do with $3.14159\\dots$). So $\\pi(10) = 4$ and $\\pi(100) = 25$."
+   },
+   {
+    "t": "p",
+    "html": "<b>The prime number theorem</b> (proved in 1896 by Hadamard and de la Vallée Poussin): $$\\pi(x) \\sim \\frac{x}{\\ln x}, \\quad\\text{meaning}\\quad \\lim_{x \\to \\infty} \\frac{\\pi(x)}{x / \\ln x} = 1.$$ Here $\\ln$ is the natural <a href=\"/math/algebra-2/logarithms/\">logarithm</a>. An equivalent way to say it: near a large number $x$, roughly <b>one number in $\\ln x$</b> is prime."
+   },
+   {
+    "t": "viz",
+    "name": "nt-sieve",
+    "opts": {
+     "mode": "count",
+     "N": 10000
+    },
+    "cap": "The exact count $\\pi(x)$ (a staircase) and the estimate $x/\\ln x$. The gap between them grows, but the ratio creeps toward 1."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$x$",
+     "$\\pi(x)$",
+     "$x / \\ln x$",
+     "ratio"
+    ],
+    "rows": [
+     [
+      "$10^{3}$",
+      "168",
+      "145",
+      "1.16"
+     ],
+     [
+      "$10^{4}$",
+      "1,229",
+      "1,086",
+      "1.13"
+     ],
+     [
+      "$10^{6}$",
+      "78,498",
+      "72,382",
+      "1.08"
+     ],
+     [
+      "$10^{9}$",
+      "50,847,534",
+      "48,254,942",
+      "1.05"
+     ]
+    ],
+    "cap": "Exact counts against the estimate."
+   },
+   {
+    "t": "why",
+    "html": "Why a logarithm? Each extra digit makes primes a little rarer, by about the same amount. Among the 900 three-digit numbers there are $168 - 25 = 143$ primes, about 1 in 6.3, and $\\ln 500 \\approx 6.2$. Among the 900,000 six-digit numbers there are $78{,}498 - 9{,}592 = 68{,}906$ primes, about 1 in 13, and $\\ln 550{,}000 \\approx 13.2$. The density $1/\\ln x$ captures this slow thinning. (The proof uses complex analysis and is far beyond this course.)"
+   },
+   {
+    "t": "ex",
+    "title": "Using the estimate",
+    "q": "Estimate $\\pi(10^{6})$ with $x/\\ln x$, and compare with the true value $78{,}498$.",
+    "steps": [
+     "$\\ln 10^{6} = 6 \\ln 10 \\approx 6 \\cdot 2.302585 = 13.8155$.",
+     "$10^{6} / 13.8155 \\approx 72{,}382$.",
+     "The estimate is about $6{,}100$ too low, roughly $8\\%$ of the true count. At $10^{9}$ it is $5\\%$ low."
+    ],
+    "a": "About $72{,}382$, an underestimate."
+   },
+   {
+    "t": "ex",
+    "title": "Long gaps between primes",
+    "q": "Find five consecutive composite numbers.",
+    "steps": [
+     "Take $6! = 720$ and look at $722, 723, 724, 725, 726$, that is, $6! + j$ for $j = 2, \\dots, 6$.",
+     "$j$ divides $6!$ and divides $j$, so $j \\mid 6! + j$: $722 = 2 \\cdot 361$, $723 = 3 \\cdot 241$, $724 = 4 \\cdot 181$, $725 = 5 \\cdot 145$, $726 = 6 \\cdot 121$.",
+     "The same trick with $n! + 2, \\dots, n! + n$ gives $n - 1$ composites in a row, so gaps between primes can be as long as you like."
+    ],
+    "a": "$722$ through $726$."
+   },
+   {
+    "t": "ex",
+    "title": "Why cryptographers care",
+    "q": "About what fraction of 100-digit numbers are prime?",
+    "steps": [
+     "Near $x = 10^{100}$, about one number in $\\ln 10^{100} = 100 \\ln 10 \\approx 230$ is prime.",
+     "So a random 100-digit odd number is prime with probability about $2/230 = 1/115$: a computer finds one after about a hundred tries. RSA keys are made this way."
+    ],
+    "a": "About $1$ in $230$."
+   },
+   {
+    "t": "mistake",
+    "html": "Treating $x/\\ln x$ as the exact count. It is an estimate: $\\pi(10^{6}) = 78{,}498$, while $10^{6}/\\ln 10^{6} \\approx 72{,}382$. The theorem promises only that the <b>ratio</b> tends to 1, so the relative error shrinks. The difference itself keeps growing."
+   },
+   {
+    "t": "key",
+    "html": "$\\pi(x) \\sim x/\\ln x$: the ratio tends to 1. Near $x$, about one number in $\\ln x$ is prime; primes thin out, slowly."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 1, Prime Numbers (how many primes are there?)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on the distribution of primes"
+   }
+  ]
+ },
+ "nt.congruence": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Clocks, calendars and odd/even all ignore multiples of some fixed number: 15 hours after 11 o'clock is 2 o'clock, because only the remainder mod 12 matters. Gauss turned this into an algebra with one new symbol, and it is the language of the rest of this course."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> Let $n \\ge 1$. Integers $a$ and $b$ are <b>congruent mod $n$</b>, written $$a \\equiv b \\pmod{n},$$ when $n \\mid (a - b)$. The number $n$ is the <b>modulus</b>. For example $38 \\equiv 3 \\pmod{7}$, because $38 - 3 = 35 = 7 \\cdot 5$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Congruent means \"same remainder\".</b> Use the <a href=\"/math/number-theory/division-algorithm/\">division algorithm</a>: $a = nq + r$ and $b = nq' + r'$ with $0 \\le r, r' < n$. Then $a - b = n(q - q') + (r - r')$, so $n \\mid (a - b)$ exactly when $n \\mid (r - r')$. But $r - r'$ lies strictly between $-n$ and $n$, and the only multiple of $n$ there is $0$. So $a \\equiv b \\pmod{n}$ exactly when $r = r'$."
+   },
+   {
+    "t": "p",
+    "html": "Congruence mod $n$ is an <a href=\"/math/discrete-math/equivalence-relations/\">equivalence relation</a>: $a \\equiv a$; if $a \\equiv b$ then $b \\equiv a$; if $a \\equiv b$ and $b \\equiv c$ then $a \\equiv c$ (add $a - b$ and $b - c$). Its classes, the <b>residue classes</b>, are the $n$ sets of integers with remainder $0, 1, \\dots, n - 1$. The <b>least nonnegative residue</b> of $a$ is its remainder, the one representative from $0$ to $n - 1$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-clock",
+    "opts": {
+     "n": 7,
+     "mode": "add",
+     "x": 0,
+     "a": -3,
+     "task": "Change <b>add</b> to $-10$, then to $11$. Where do you land each time?"
+    },
+    "cap": "Mod 7 the number line wraps around a clock with 7 points. Going back 3 from 0 lands on 4, so $-3 \\equiv 4 \\pmod{7}$; the gray labels outside show the negative names of each point."
+   },
+   {
+    "t": "ex",
+    "title": "Least nonnegative residues",
+    "q": "Find the least nonnegative residues of $38$ and $-3$ mod $7$.",
+    "steps": [
+     "$38 = 7 \\cdot 5 + 3$, so $38 \\equiv 3 \\pmod{7}$.",
+     "$-3 = 7 \\cdot (-1) + 4$, so $-3 \\equiv 4 \\pmod{7}$.",
+     "Many numbers name the same class: $38 \\equiv 3 \\equiv 10 \\equiv -4 \\pmod{7}$."
+    ],
+    "a": "$3$ and $4$."
+   },
+   {
+    "t": "ex",
+    "title": "Which moduli work?",
+    "q": "For which $n > 1$ is $41 \\equiv 17 \\pmod{n}$?",
+    "steps": [
+     "We need $n \\mid 41 - 17 = 24$.",
+     "The divisors of $24$ above $1$: $2, 3, 4, 6, 8, 12, 24$."
+    ],
+    "a": "$n = 2, 3, 4, 6, 8, 12$ or $24$."
+   },
+   {
+    "t": "ex",
+    "title": "Odd squares mod 8",
+    "q": "Show that the square of an odd number is $\\equiv 1 \\pmod{8}$, using classes mod 8.",
+    "steps": [
+     "An odd number is $\\equiv 1, 3, 5$ or $7 \\pmod{8}$.",
+     "$1^{2} = 1$, $3^{2} = 9 \\equiv 1$, $5^{2} = 25 \\equiv 1$, $7^{2} = 49 \\equiv 1 \\pmod{8}$.",
+     "So every odd square is $\\equiv 1 \\pmod{8}$ (squares of congruent numbers are congruent, as the next lesson shows)."
+    ],
+    "a": "Always $1$."
+   },
+   {
+    "t": "mistake",
+    "html": "Dropping the sign: \"$-3 \\equiv 3 \\pmod{7}$.\" Test it with the definition: $-3 - 3 = -6$, and $7 \\nmid -6$. On the clock, $-3$ is three steps <i>back</i> from 0, which is the point $4$: $-3 \\equiv 4 \\pmod{7}$. To reduce a negative number, add multiples of $n$ until you land between $0$ and $n - 1$."
+   },
+   {
+    "t": "key",
+    "html": "$a \\equiv b \\pmod{n}$ means $n \\mid (a - b)$, which is the same as \"$a$ and $b$ leave the same remainder.\" Every integer is congruent to exactly one of $0, 1, \\dots, n - 1$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (congruences modulo n)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: modular arithmetic"
+   }
+  ]
+ },
+ "nt.modular-arithmetic": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The point of <a href=\"/math/number-theory/congruence/\">congruences</a> is that you can calculate with them almost like equations. Adding, subtracting and multiplying all respect congruence, so you may replace any number by anything congruent to it, usually something small, <b>before</b> you compute."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> If $a \\equiv a'$ and $b \\equiv b' \\pmod{n}$, then $$a + b \\equiv a' + b', \\qquad a - b \\equiv a' - b', \\qquad ab \\equiv a'b' \\pmod{n}.$$ Applying the last rule again and again, $a^{k} \\equiv (a')^{k}$ for every $k \\ge 1$."
+   },
+   {
+    "t": "why",
+    "html": "Sums and differences: $(a + b) - (a' + b') = (a - a') + (b - b')$ is a sum of two multiples of $n$. Products take one trick, adding and subtracting $ab'$: $$ab - a'b' = a(b - b') + b'(a - a').$$ Both terms are multiples of $n$, so the difference is too."
+   },
+   {
+    "t": "ex",
+    "title": "Reduce first",
+    "q": "Find $1234 \\cdot 5678 \\bmod 9$.",
+    "steps": [
+     "$1234 = 9 \\cdot 137 + 1$, so $1234 \\equiv 1$. $5678 = 9 \\cdot 630 + 8$, so $5678 \\equiv 8$.",
+     "$1234 \\cdot 5678 \\equiv 1 \\cdot 8 = 8 \\pmod{9}$.",
+     "Check: $1234 \\cdot 5678 = 7{,}006{,}652 = 9 \\cdot 778{,}516 + 8$."
+    ],
+    "a": "$8$."
+   },
+   {
+    "t": "ex",
+    "title": "Negative residues are handy",
+    "q": "Find $2^{10} \\bmod 11$.",
+    "steps": [
+     "$2^{5} = 32 = 33 - 1 \\equiv -1 \\pmod{11}$.",
+     "$2^{10} = (2^{5})^{2} \\equiv (-1)^{2} = 1 \\pmod{11}$."
+    ],
+    "a": "$1$."
+   },
+   {
+    "t": "ex",
+    "title": "Mixed signs",
+    "q": "Find $(-4) \\cdot 17 + 23 \\bmod 9$.",
+    "steps": [
+     "Reduce each number: $-4 \\equiv 5$, $17 \\equiv 8$, $23 \\equiv 5 \\pmod{9}$.",
+     "$5 \\cdot 8 + 5 = 45 \\equiv 0 \\pmod{9}$.",
+     "Check: $-68 + 23 = -45 = 9 \\cdot (-5)$."
+    ],
+    "a": "$0$."
+   },
+   {
+    "t": "h",
+    "text": "What you may not do: cancel freely"
+   },
+   {
+    "t": "p",
+    "html": "Division is different. $2 \\cdot 3 \\equiv 2 \\cdot 1 \\pmod{4}$ (both sides are $\\equiv 2$), yet $3 \\not\\equiv 1 \\pmod{4}$. Cancelling the $2$ fails because $2$ shares a factor with the modulus $4$. The picture shows why: multiplying by $2$ mod $4$ sends both $1$ and $3$ to the same place, so you cannot tell afterward where you started."
+   },
+   {
+    "t": "viz",
+    "name": "nt-clock",
+    "opts": {
+     "n": 4,
+     "mode": "mult",
+     "a": 2
+    },
+    "cap": "Arrows from each $x$ to $2x \\bmod 4$: $1$ and $3$ both land on $2$, and $0$ and $2$ both land on $0$. Multiplying by 2 loses information, so it cannot be undone. Try $a = 3$: then every point is hit exactly once."
+   },
+   {
+    "t": "p",
+    "html": "The rule that does hold: if $ca \\equiv cb \\pmod{n}$ and $\\gcd(c, n) = 1$, then $a \\equiv b \\pmod{n}$. (Here $n \\mid c(a - b)$ with no common factor in $c$, so $n \\mid (a - b)$.) In general you may only conclude $a \\equiv b \\pmod{n/\\gcd(c, n)}$. <a href=\"/math/number-theory/modular-inverses/\">Modular inverses</a> make this precise."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$\\times$",
+     "0",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "rows": [
+     [
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+     ],
+     [
+      "1",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+     ],
+     [
+      "2",
+      "0",
+      "2",
+      "4",
+      "0",
+      "2",
+      "4"
+     ],
+     [
+      "3",
+      "0",
+      "3",
+      "0",
+      "3",
+      "0",
+      "3"
+     ],
+     [
+      "4",
+      "0",
+      "4",
+      "2",
+      "0",
+      "4",
+      "2"
+     ],
+     [
+      "5",
+      "0",
+      "5",
+      "4",
+      "3",
+      "2",
+      "1"
+     ]
+    ],
+    "cap": "Multiplication mod 6. The rows of 2, 3 and 4 repeat values and never reach 1, and $2 \\cdot 3 \\equiv 0$ although neither factor is 0. The rows of 1 and 5 contain every residue once."
+   },
+   {
+    "t": "mistake",
+    "html": "Cancelling a common factor from both sides of a congruence. From $2 \\cdot 3 \\equiv 2 \\cdot 1 \\pmod{4}$ you cannot conclude $3 \\equiv 1 \\pmod{4}$. Check $\\gcd(c, n)$ before cancelling $c$: cancel only when it is $1$, and otherwise divide the modulus by the gcd too."
+   },
+   {
+    "t": "key",
+    "html": "Add, subtract and multiply mod $n$ freely, reducing whenever you like: the answer is the same as reducing at the end. Cancel a factor only when it is coprime to $n$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: arithmetic with a prime modulus and with an arbitrary modulus"
+   }
+  ]
+ },
+ "nt.divisibility-tests": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You may know that a number is divisible by 9 when its digit sum is. With <a href=\"/math/number-theory/modular-arithmetic/\">modular arithmetic</a> this stops being a trick and becomes a two-line proof, and the same idea gives tests for 3, 11, 4, 8 and even 7 and 13."
+   },
+   {
+    "t": "why",
+    "html": "Write $n = d_k 10^{k} + \\cdots + d_1 10 + d_0$ in <a href=\"/math/number-theory/number-bases/\">base 10</a>. Since $10 \\equiv 1 \\pmod{9}$, every power $10^{i} \\equiv 1$, so $$n \\equiv d_k + \\cdots + d_1 + d_0 \\pmod{9}.$$ The same holds mod $3$. Since $10 \\equiv -1 \\pmod{11}$, the powers $10^{0}, 10^{1}, 10^{2}, \\dots$ are $\\equiv 1, -1, 1, \\dots$, so $$n \\equiv d_0 - d_1 + d_2 - d_3 + \\cdots \\pmod{11},$$ with the signs starting at the <b>ones digit</b>."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Modulus",
+     "Because",
+     "Test"
+    ],
+    "rows": [
+     [
+      "3, 9",
+      "$10 \\equiv 1$",
+      "digit sum"
+     ],
+     [
+      "11",
+      "$10 \\equiv -1$",
+      "alternating sum from the right"
+     ],
+     [
+      "2, 5",
+      "$10 \\equiv 0$",
+      "last digit"
+     ],
+     [
+      "4",
+      "$100 \\equiv 0$",
+      "last two digits"
+     ],
+     [
+      "8",
+      "$1000 \\equiv 0$",
+      "last three digits"
+     ],
+     [
+      "7, 11, 13",
+      "$1000 \\equiv -1$ (as $1001 = 7 \\cdot 11 \\cdot 13$)",
+      "alternating sum of 3-digit blocks"
+     ]
+    ],
+    "cap": "Each test is one congruence about a power of 10. They give the remainder, not just a yes or no."
+   },
+   {
+    "t": "ex",
+    "title": "Remainder mod 9",
+    "q": "Find the remainder of $8{,}437{,}265$ divided by $9$.",
+    "steps": [
+     "Digit sum: $8 + 4 + 3 + 7 + 2 + 6 + 5 = 35$.",
+     "$35 \\equiv 3 + 5 = 8 \\pmod{9}$."
+    ],
+    "a": "$8$."
+   },
+   {
+    "t": "ex",
+    "title": "Divisible by 11?",
+    "q": "Is $918{,}082$ divisible by $11$?",
+    "steps": [
+     "From the ones digit: $2 - 8 + 0 - 8 + 1 - 9 = -22$.",
+     "$-22 \\equiv 0 \\pmod{11}$, so yes. Indeed $918{,}082 = 11 \\cdot 83{,}462$."
+    ],
+    "a": "Yes."
+   },
+   {
+    "t": "ex",
+    "title": "A missing digit",
+    "q": "The 6-digit number $7\\square4312$ is divisible by 11. Find the missing digit.",
+    "steps": [
+     "From the right: $2 - 1 + 3 - 4 + \\square - 7 = \\square - 7$.",
+     "We need $\\square - 7 \\equiv 0 \\pmod{11}$, and the only digit that works is $\\square = 7$.",
+     "Check: $774{,}312 = 11 \\cdot 70{,}392$."
+    ],
+    "a": "$7$."
+   },
+   {
+    "t": "ex",
+    "title": "Blocks of three for 7",
+    "q": "Find the remainder of $2{,}456{,}789$ divided by $7$.",
+    "steps": [
+     "Since $1001 = 7 \\cdot 143$, we have $1000 \\equiv -1 \\pmod{7}$. So group the digits in threes from the right and alternate signs: $789 - 456 + 2 = 335$.",
+     "$335 = 7 \\cdot 47 + 6$, so the remainder is $6$. Check: $2{,}456{,}789 = 7 \\cdot 350{,}969 + 6$."
+    ],
+    "a": "$6$."
+   },
+   {
+    "t": "mistake",
+    "html": "Starting the alternating sum from the leftmost digit when you want the remainder mod 11. For $4316$: from the right, $6 - 1 + 3 - 4 = 4$, the true remainder ($4316 = 11 \\cdot 392 + 4$). From the left, $4 - 3 + 1 - 6 = -4 \\equiv 7$, the negative of it. (The two agree when the number has an odd number of digits, or when the answer is 0.) Always give the ones digit the plus sign."
+   },
+   {
+    "t": "note",
+    "html": "Casting out nines is an old way to check arithmetic: since every number is congruent to its digit sum mod 9, the digit sum of a correct product must match the product of the digit sums, mod 9. It catches most slips, though not swapped digits."
+   },
+   {
+    "t": "key",
+    "html": "A divisibility test is a congruence for a power of 10: $10 \\equiv 1 \\pmod{9}$ gives digit sums, and $10 \\equiv -1 \\pmod{11}$ gives alternating sums from the ones digit."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: modular arithmetic"
+   }
+  ]
+ },
+ "nt.modular-powers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Cryptography constantly needs numbers like $a^{e} \\bmod n$ with exponents hundreds of digits long. Multiplying $a$ by itself $e$ times would take longer than the age of the universe. Two ideas make it instant: reduce mod $n$ after every multiplication (allowed by <a href=\"/math/number-theory/modular-arithmetic/\">modular arithmetic</a>), and build the exponent from its <a href=\"/math/number-theory/number-bases/\">binary digits</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>Repeated squaring.</b> To find $a^{e} \\bmod n$:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "Write $e$ in binary, that is, as a sum of powers of 2.",
+     "Square again and again: $a^{1}, a^{2}, a^{4}, a^{8}, \\dots$, each one the square of the one before, reduced mod $n$.",
+     "Multiply together the powers whose binary digit is 1, reducing after each multiplication."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Since $a^{s + t} = a^{s} a^{t}$, a sum of powers of two in the exponent becomes a product of the squares you computed. Each square is the square of the previous one, so reaching $a^{2^{k}}$ takes only $k$ squarings. An exponent with $k + 1$ binary digits needs at most $k$ squarings and $k$ more multiplications: for a 600-digit exponent, about 4,000 steps instead of $10^{600}$. Reducing each time keeps every number below $n^{2}$."
+   },
+   {
+    "t": "ex",
+    "title": "A small case",
+    "q": "Find $5^{13} \\bmod 23$.",
+    "steps": [
+     "$13 = 8 + 4 + 1$ (binary $1101$).",
+     "$5^{1} \\equiv 5$, $\\ 5^{2} = 25 \\equiv 2$, $\\ 5^{4} \\equiv 2^{2} = 4$, $\\ 5^{8} \\equiv 4^{2} = 16$.",
+     "$5^{13} = 5^{8} \\cdot 5^{4} \\cdot 5^{1} \\equiv 16 \\cdot 4 \\cdot 5 = 320$.",
+     "$320 = 23 \\cdot 13 + 21$, so $5^{13} \\equiv 21 \\pmod{23}$."
+    ],
+    "a": "$21$."
+   },
+   {
+    "t": "p",
+    "html": "Count the work: three squarings and two multiplications, five in all, instead of the twelve multiplications of $5 \\cdot 5 \\cdots 5$. And no number above $22^{2} = 484$ ever appeared. (Check by brute force: $5^{13} = 1{,}220{,}703{,}125 = 23 \\cdot 53{,}074{,}048 + 21$.)"
+   },
+   {
+    "t": "viz",
+    "name": "nt-powers",
+    "opts": {
+     "mode": "fast",
+     "n": 100,
+     "a": 3,
+     "e": 45
+    },
+    "cap": "The table for $3^{45} \\bmod 100$, the last two digits of $3^{45}$: one row per binary digit of 45, the repeated squares, and the running product of the rows whose bit is 1. Change the exponent and watch how few rows it needs."
+   },
+   {
+    "t": "ex",
+    "title": "Last two digits",
+    "q": "Find the last two digits of $3^{45}$.",
+    "steps": [
+     "We want $3^{45} \\bmod 100$. $45 = 32 + 8 + 4 + 1$.",
+     "$3^{2} = 9$, $\\ 3^{4} = 81$, $\\ 3^{8} \\equiv 81^{2} = 6561 \\equiv 61$, $\\ 3^{16} \\equiv 61^{2} = 3721 \\equiv 21$, $\\ 3^{32} \\equiv 21^{2} = 441 \\equiv 41$.",
+     "$3^{45} \\equiv 41 \\cdot 61 \\cdot 81 \\cdot 3$. Step by step: $41 \\cdot 61 = 2501 \\equiv 1$, then $1 \\cdot 81 = 81$, then $81 \\cdot 3 = 243 \\equiv 43$."
+    ],
+    "a": "$43$."
+   },
+   {
+    "t": "mistake",
+    "html": "Computing the whole power first. $3^{45} = 2{,}954{,}312{,}706{,}550{,}833{,}698{,}643$ already has 22 digits, and a calculator rounds it, so its last digits come out wrong. Reduce after <b>every</b> multiplication, so no number ever exceeds $(n - 1)^{2}$. And do not reduce the exponent mod $n$: $3^{45} \\not\\equiv 3^{45 \\bmod 100}$ in general. (The right way to shrink exponents comes with <a href=\"/math/number-theory/fermat-little/\">Fermat's theorem</a>.)"
+   },
+   {
+    "t": "key",
+    "html": "Write the exponent in binary, square repeatedly, multiply the squares you need, and reduce mod $n$ after every multiplication. About $2\\log_2 e$ multiplications suffice."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (quickly computing huge powers)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: modular arithmetic and RSA"
+   }
+  ]
+ },
+ "nt.modular-inverses": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In ordinary arithmetic, dividing by $a$ means multiplying by $1/a$. Mod $n$ there are no fractions, but sometimes there is a number that does the same job. Finding it uses <a href=\"/math/number-theory/bezout/\">Bézout's identity</a>, and knowing when it exists fixes the trouble with cancelling we met in <a href=\"/math/number-theory/modular-arithmetic/\">modular arithmetic</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> An <b>inverse of $a$ mod $n$</b> is an integer $x$ with $ax \\equiv 1 \\pmod{n}$. We write $x \\equiv a^{-1} \\pmod{n}$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> $a$ has an inverse mod $n$ exactly when $\\gcd(a, n) = 1$, and then the inverse is unique mod $n$."
+   },
+   {
+    "t": "why",
+    "html": "$ax \\equiv 1 \\pmod{n}$ means $ax - 1 = ny$ for some integer $y$, that is, $ax - ny = 1$. If $\\gcd(a, n) = 1$, Bézout gives such $x$ and $y$, so an inverse exists. If $d = \\gcd(a, n) > 1$, then $d$ divides $ax - ny$, which would mean $d \\mid 1$: impossible. Uniqueness: if $ax \\equiv 1$ and $ax' \\equiv 1$, then $x \\equiv x(ax') = (ax)x' \\equiv x' \\pmod{n}$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-clock",
+    "opts": {
+     "n": 6,
+     "mode": "mult",
+     "a": 2,
+     "task": "Mod 6, nothing lands on 1 when $a = 2$. Change $a$ to $5$. Now which point is sent to 1?"
+    },
+    "cap": "Arrows from $x$ to $2x \\bmod 6$ reach only 0, 2 and 4, so no $x$ has $2x \\equiv 1$: 2 has no inverse mod 6. With $a = 5$ every point is hit once, and $5 \\cdot 5 = 25 \\equiv 1$."
+   },
+   {
+    "t": "ex",
+    "title": "Small modulus: try multiples",
+    "q": "Find $3^{-1} \\bmod 7$.",
+    "steps": [
+     "List $3x \\bmod 7$: $3, 6, 2, 5, 1$ for $x = 1, 2, 3, 4, 5$.",
+     "$3 \\cdot 5 = 15 = 2 \\cdot 7 + 1 \\equiv 1$."
+    ],
+    "a": "$3^{-1} \\equiv 5 \\pmod{7}$."
+   },
+   {
+    "t": "ex",
+    "title": "Larger modulus: extended Euclid",
+    "q": "Find $17^{-1} \\bmod 101$.",
+    "steps": [
+     "$101 = 17 \\cdot 5 + 16$ and $17 = 16 \\cdot 1 + 1$. The gcd is 1, so an inverse exists.",
+     "$1 = 17 - 16 = 17 - (101 - 5 \\cdot 17) = 6 \\cdot 17 - 101$.",
+     "Mod 101 the multiple of 101 vanishes: $6 \\cdot 17 \\equiv 1$. Check: $102 = 101 + 1$."
+    ],
+    "a": "$17^{-1} \\equiv 6 \\pmod{101}$."
+   },
+   {
+    "t": "ex",
+    "title": "Dividing with an inverse",
+    "q": "Solve $17x \\equiv 5 \\pmod{101}$.",
+    "steps": [
+     "Multiply both sides by $17^{-1} \\equiv 6$: $x \\equiv 6 \\cdot 5 = 30 \\pmod{101}$.",
+     "Check: $17 \\cdot 30 = 510 = 5 \\cdot 101 + 5$."
+    ],
+    "a": "$x \\equiv 30 \\pmod{101}$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$a$",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10"
+    ],
+    "rows": [
+     [
+      "$a^{-1} \\bmod 11$",
+      "1",
+      "6",
+      "4",
+      "3",
+      "9",
+      "2",
+      "8",
+      "7",
+      "5",
+      "10"
+     ]
+    ],
+    "cap": "Every nonzero residue mod the prime 11 has an inverse. They come in pairs (2 and 6, 3 and 4, 5 and 9, 7 and 8), and only 1 and 10 are their own inverses, a fact that returns in Wilson's theorem."
+   },
+   {
+    "t": "mistake",
+    "html": "Expecting every nonzero number to have an inverse. Mod 6 the multiples of 2 are only $0, 2, 4$, so $2x \\equiv 1$ has no solution: $\\gcd(2, 6) = 2$. Before hunting for an inverse, check $\\gcd(a, n) = 1$. Mod a <b>prime</b> $p$ the problem disappears: every $a$ with $p \\nmid a$ has an inverse."
+   },
+   {
+    "t": "note",
+    "html": "The numbers from 1 to $n$ that are coprime to $n$, and so have inverses, are called the <b>units</b> mod $n$. Counting them gives <a href=\"/math/number-theory/euler-phi/\">Euler's phi function</a>."
+   },
+   {
+    "t": "key",
+    "html": "$a^{-1} \\bmod n$ exists exactly when $\\gcd(a, n) = 1$. Find it with the extended Euclidean algorithm: from $ax + ny = 1$, the inverse is $x \\bmod n$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (quickly computing inverses)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: multiplicative inverses and cancelling"
+   }
+  ]
+ },
+ "nt.linear-congruences": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A linear congruence $ax \\equiv b \\pmod{n}$ is the mod-$n$ version of $ax = b$. It is really a <a href=\"/math/number-theory/linear-diophantine/\">linear Diophantine equation</a> in disguise, $ax - ny = b$, so we already know when it can be solved. With <a href=\"/math/number-theory/modular-inverses/\">inverses</a> we can solve it quickly and count its solutions."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> Let $d = \\gcd(a, n)$. The congruence $ax \\equiv b \\pmod{n}$ has a solution exactly when $d \\mid b$. In that case it has exactly $d$ solutions mod $n$: if $x_0$ solves $$\\frac{a}{d}\\,x \\equiv \\frac{b}{d} \\pmod{\\frac{n}{d}},$$ then the solutions mod $n$ are $x_0,\\ x_0 + \\frac{n}{d},\\ x_0 + 2\\frac{n}{d},\\ \\dots,\\ x_0 + (d - 1)\\frac{n}{d}$."
+   },
+   {
+    "t": "why",
+    "html": "If $d \\nmid b$: $ax - ny$ is always a multiple of $d$, so it never equals $b$. If $d \\mid b$: $n \\mid (ax - b)$ exactly when $\\frac{n}{d} \\mid \\left(\\frac{a}{d}x - \\frac{b}{d}\\right)$, so the two congruences have the same solutions. Since $\\gcd\\left(\\frac{a}{d}, \\frac{n}{d}\\right) = 1$, the reduced one has an inverse and a single solution $x_0$ mod $\\frac{n}{d}$. That one class mod $\\frac{n}{d}$ splits into $d$ classes mod $n$, the ones listed."
+   },
+   {
+    "t": "p",
+    "html": "The picture behind the count: the map $x \\mapsto ax \\bmod n$ hits only the multiples of $d$, and it hits each of them exactly $d$ times, because $ax \\equiv ax' \\pmod{n}$ exactly when $x \\equiv x' \\pmod{n/d}$. So a right side $b$ is hit $d$ times or not at all."
+   },
+   {
+    "t": "viz",
+    "name": "nt-clock",
+    "opts": {
+     "n": 12,
+     "mode": "solve",
+     "a": 4,
+     "b": 8,
+     "task": "Change $b$ to $6$. How many solutions are left? Then try $a = 5$."
+    },
+    "cap": "Arrows from $x$ to $4x \\bmod 12$. Four arrows land on 8, so $4x \\equiv 8$ has four solutions, spaced $12/4 = 3$ apart. Nothing lands on 6, because $\\gcd(4, 12) = 4$ does not divide 6."
+   },
+   {
+    "t": "ex",
+    "title": "One solution",
+    "q": "Solve $7x \\equiv 3 \\pmod{12}$.",
+    "steps": [
+     "$\\gcd(7, 12) = 1$, so there is exactly one solution mod 12.",
+     "$7^{-1} \\equiv 7 \\pmod{12}$, since $49 = 4 \\cdot 12 + 1$.",
+     "$x \\equiv 7 \\cdot 3 = 21 \\equiv 9$. Check: $7 \\cdot 9 = 63 = 5 \\cdot 12 + 3$."
+    ],
+    "a": "$x \\equiv 9 \\pmod{12}$."
+   },
+   {
+    "t": "ex",
+    "title": "Several solutions",
+    "q": "Solve $10x \\equiv 6 \\pmod{14}$.",
+    "steps": [
+     "$d = \\gcd(10, 14) = 2$ and $2 \\mid 6$, so there are two solutions mod 14.",
+     "Divide $a$, $b$ <b>and</b> $n$ by 2: $5x \\equiv 3 \\pmod{7}$.",
+     "$5^{-1} \\equiv 3 \\pmod{7}$ (since $15 \\equiv 1$), so $x \\equiv 9 \\equiv 2 \\pmod{7}$.",
+     "Mod 14: $x \\equiv 2$ or $2 + 7 = 9$. Check: $10 \\cdot 9 = 90 = 6 \\cdot 14 + 6$."
+    ],
+    "a": "$x \\equiv 2$ or $9 \\pmod{14}$."
+   },
+   {
+    "t": "ex",
+    "title": "No solution",
+    "q": "Solve $6x \\equiv 7 \\pmod{15}$.",
+    "steps": [
+     "$\\gcd(6, 15) = 3$, and $3 \\nmid 7$.",
+     "$6x - 15y$ is always a multiple of 3, so it is never 7."
+    ],
+    "a": "No solution."
+   },
+   {
+    "t": "mistake",
+    "html": "Giving one solution when there are $d$ of them, or dividing $a$ and $b$ by $d$ but not $n$. In $10x \\equiv 6 \\pmod{14}$, the answer \"$x \\equiv 2$\" misses $x \\equiv 9$; and \"$5x \\equiv 3 \\pmod{14}$\" is a different congruence, whose only solution is $x \\equiv 9$, so $x \\equiv 2$ would be lost. Divide all three numbers, then list the $d$ solutions spaced $n/d$ apart, and check one by substitution."
+   },
+   {
+    "t": "key",
+    "html": "$ax \\equiv b \\pmod{n}$ is solvable exactly when $d = \\gcd(a, n)$ divides $b$; then divide $a$, $b$ and $n$ by $d$, solve with an inverse, and you get $d$ solutions mod $n$, spaced $n/d$ apart."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on linear congruences"
+   }
+  ]
+ },
+ "nt.chinese-remainder": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "An old puzzle from the Chinese mathematician Sunzi asks for a number with given remainders on division by 3, by 5 and by 7. Systems like this are everywhere in modern number theory and computing: a number can be stored by its remainders mod a few coprime moduli, and the Chinese Remainder Theorem (CRT) says nothing is lost. It is built from <a href=\"/math/number-theory/modular-inverses/\">modular inverses</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> If $\\gcd(m, n) = 1$, then for any $a$ and $b$ the system $$x \\equiv a \\pmod{m}, \\qquad x \\equiv b \\pmod{n}$$ has a solution, and any two solutions are congruent mod $mn$. So there is <b>exactly one</b> solution mod $mn$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Existence.</b> The first congruence says $x = a + mk$. Put that into the second: $mk \\equiv b - a \\pmod{n}$. Since $\\gcd(m, n) = 1$, $m$ has an inverse mod $n$, so $k \\equiv (b - a)\\,m^{-1} \\pmod{n}$ works. <b>Uniqueness.</b> If $x$ and $x'$ both solve the system, then $m \\mid x - x'$ and $n \\mid x - x'$. Coprime numbers that both divide something divide it together (no prime is shared), so $mn \\mid x - x'$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-crt",
+    "opts": {
+     "m": 4,
+     "n": 5,
+     "target": [
+      1,
+      3
+     ],
+     "fill": "animate"
+    },
+    "cap": "Rows are remainders mod 4, columns remainders mod 5. Each number goes one row down and one column right. Since $\\gcd(4, 5) = 1$, the numbers $0$ to $19$ fill all 20 cells exactly once; the marked cell, $x \\equiv 1 \\pmod{4}$ and $x \\equiv 3 \\pmod{5}$, holds 13."
+   },
+   {
+    "t": "ex",
+    "title": "Two congruences",
+    "q": "Solve $x \\equiv 2 \\pmod{5}$ and $x \\equiv 3 \\pmod{7}$.",
+    "steps": [
+     "$x = 2 + 5k$. Then $2 + 5k \\equiv 3 \\pmod{7}$, so $5k \\equiv 1 \\pmod{7}$.",
+     "$5^{-1} \\equiv 3 \\pmod{7}$ (since $15 \\equiv 1$), so $k \\equiv 3$, and $x = 2 + 15 = 17$.",
+     "Check: $17 = 3 \\cdot 5 + 2$ and $17 = 2 \\cdot 7 + 3$. All solutions: $x \\equiv 17 \\pmod{35}$."
+    ],
+    "a": "$x \\equiv 17 \\pmod{35}$."
+   },
+   {
+    "t": "ex",
+    "title": "Three congruences",
+    "q": "Find the smallest $x \\ge 0$ with $x \\equiv 1 \\pmod{3}$, $x \\equiv 2 \\pmod{4}$, $x \\equiv 3 \\pmod{5}$.",
+    "steps": [
+     "Combine the first two: $x = 1 + 3k$, $3k \\equiv 1 \\pmod{4}$, $k \\equiv 3$, so $x \\equiv 10 \\pmod{12}$.",
+     "Combine with the third: $x = 10 + 12j$, $12j \\equiv -7 \\pmod{5}$, that is $2j \\equiv 3$, so $j \\equiv 4$ and $x = 58$.",
+     "Check: $58 = 3 \\cdot 19 + 1 = 4 \\cdot 14 + 2 = 5 \\cdot 11 + 3$."
+    ],
+    "a": "$x = 58$ (unique mod $60$)."
+   },
+   {
+    "t": "viz",
+    "name": "nt-crt",
+    "opts": {
+     "m": 4,
+     "n": 6,
+     "target": [
+      1,
+      2
+     ],
+     "fill": "all"
+    },
+    "cap": "With $\\gcd(4, 6) = 2$ the path closes after $\\operatorname{lcm}(4, 6) = 12$ steps, so half the cells stay empty. The marked cell asks for $x \\equiv 1 \\pmod{4}$ (odd) and $x \\equiv 2 \\pmod{6}$ (even): impossible."
+   },
+   {
+    "t": "ex",
+    "title": "Moduli with a common factor",
+    "q": "Solve $x \\equiv 1 \\pmod{4}$, $x \\equiv 3 \\pmod{6}$, giving all $x$ with $0 \\le x < 24$.",
+    "steps": [
+     "$\\gcd(4, 6) = 2$, so both congruences say something mod 2: $x$ is odd and $x$ is odd. They agree, so there are solutions.",
+     "Try odd numbers $\\equiv 1 \\pmod{4}$: $1, 5, 9$. $9 \\equiv 3 \\pmod{6}$, so $x \\equiv 9 \\pmod{12}$, the lcm.",
+     "Below 24: $x = 9$ and $x = 21$, two solutions mod 24 rather than one."
+    ],
+    "a": "$x = 9$ or $21$."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the theorem when the moduli share a factor. Then there may be <b>no</b> solution ($x \\equiv 1 \\pmod{4}$ and $x \\equiv 2 \\pmod{6}$ disagree about parity) or <b>several</b> mod $mn$. Check $\\gcd(m, n)$ first; if it is $d > 1$, the system is solvable exactly when $a \\equiv b \\pmod{d}$, and then the solution is unique mod $\\operatorname{lcm}(m, n)$."
+   },
+   {
+    "t": "key",
+    "html": "For coprime moduli, $x \\equiv a \\pmod{m}$ and $x \\equiv b \\pmod{n}$ have exactly one solution mod $mn$: write $x = a + mk$ and solve for $k$ with $m^{-1} \\bmod n$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (the Chinese remainder theorem)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on the Chinese remainder theorem"
+   }
+  ]
+ },
+ "nt.fermat-little": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/number-theory/modular-powers/\">Repeated squaring</a> makes huge powers cheap. For a prime modulus, a theorem from 1640 makes many of them free: the powers of $a$ mod $p$ come back to 1 after at most $p - 1$ steps, so a huge exponent can be shrunk before you start."
+   },
+   {
+    "t": "p",
+    "html": "<b>Fermat's little theorem.</b> If $p$ is prime and $p \\nmid a$, then $$a^{p-1} \\equiv 1 \\pmod{p}.$$ Multiplying by $a$ gives a form that holds for <b>every</b> integer $a$: $a^{p} \\equiv a \\pmod{p}$."
+   },
+   {
+    "t": "why",
+    "html": "Look at the $p - 1$ numbers $a, 2a, 3a, \\dots, (p-1)a$ mod $p$. None is $0$ (Euclid's lemma), and no two are equal: if $ia \\equiv ja$, multiply by <a href=\"/math/number-theory/modular-inverses/\">the inverse</a> of $a$ to get $i \\equiv j$. So they are the numbers $1, 2, \\dots, p - 1$ in some new order. Multiply all of them together both ways: $$a^{p-1} \\cdot (p-1)! \\equiv (p-1)! \\pmod{p}.$$ $(p-1)!$ is coprime to $p$, so it has an inverse and cancels, leaving $a^{p-1} \\equiv 1$."
+   },
+   {
+    "t": "p",
+    "html": "A second proof of the form $a^{p} \\equiv a$ uses the binomial theorem. For $0 < k < p$, the coefficient $\\binom{p}{k} = \\frac{p!}{k!\\,(p-k)!}$ has the prime $p$ upstairs and not downstairs, so $p \\mid \\binom{p}{k}$. Hence $(a + 1)^{p} \\equiv a^{p} + 1 \\pmod{p}$, and starting from $0^{p} = 0$ and adding 1 at a time gives $a^{p} \\equiv a$ for every $a \\ge 0$. Fermat stated the theorem in 1640 without proof; Euler published the first proof in 1736."
+   },
+   {
+    "t": "p",
+    "html": "<b>The payoff: reduce exponents mod $p - 1$.</b> If $e = (p-1)q + r$, then $a^{e} = (a^{p-1})^{q} a^{r} \\equiv a^{r} \\pmod{p}$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-powers",
+    "opts": {
+     "mode": "exponent",
+     "n": 7,
+     "a": 3,
+     "e": 100
+    },
+    "cap": "The powers of 3 mod 7 repeat every 6 steps, and $3^{6} \\equiv 1$. So $3^{100}$ sits at the same place in the cycle as $3^{4}$, because $100 = 6 \\cdot 16 + 4$. Try other bases: every row of 6 ends in 1."
+   },
+   {
+    "t": "ex",
+    "title": "A huge exponent",
+    "q": "Find $3^{100} \\bmod 7$.",
+    "steps": [
+     "$7$ is prime and $7 \\nmid 3$, so $3^{6} \\equiv 1 \\pmod{7}$.",
+     "$100 = 6 \\cdot 16 + 4$, so $3^{100} \\equiv 3^{4} = 81$.",
+     "$81 = 7 \\cdot 11 + 4$."
+    ],
+    "a": "$3^{100} \\equiv 4 \\pmod{7}$."
+   },
+   {
+    "t": "ex",
+    "title": "Another prime",
+    "q": "Find $2^{1000} \\bmod 13$.",
+    "steps": [
+     "$2^{12} \\equiv 1 \\pmod{13}$. $1000 = 12 \\cdot 83 + 4$.",
+     "$2^{1000} \\equiv 2^{4} = 16 \\equiv 3 \\pmod{13}$."
+    ],
+    "a": "$3$."
+   },
+   {
+    "t": "ex",
+    "title": "Inverses for free",
+    "q": "Use Fermat to find $3^{-1} \\bmod 7$.",
+    "steps": [
+     "$3 \\cdot 3^{5} = 3^{6} \\equiv 1$, so $3^{-1} \\equiv 3^{5} \\pmod{7}$. In general $a^{-1} \\equiv a^{p-2} \\pmod{p}$.",
+     "$3^{5} = 243 = 7 \\cdot 34 + 5$, so $3^{-1} \\equiv 5$. Check: $3 \\cdot 5 = 15 \\equiv 1$."
+    ],
+    "a": "$5$."
+   },
+   {
+    "t": "mistake",
+    "html": "Reducing the exponent mod $p$ instead of mod $p - 1$. For $3^{100} \\bmod 7$, \"$100 \\equiv 2 \\pmod{7}$, so the answer is $3^{2} = 9 \\equiv 2$\" is wrong; the cycle has length $p - 1 = 6$, and the answer is $4$. Also check $p \\nmid a$ first: $14^{100} \\equiv 0 \\pmod{7}$, not $1$, because $7 \\mid 14$."
+   },
+   {
+    "t": "note",
+    "html": "Fermat's theorem fails for composite moduli in general: $2^{3} = 8 \\equiv 0 \\pmod{4}$, not $1$. <a href=\"/math/number-theory/euler-theorem/\">Euler's theorem</a> fixes this by replacing $p - 1$ with $\\varphi(n)$. And the theorem's converse is false, which is the subject of <a href=\"/math/number-theory/pseudoprimes/\">pseudoprimes</a>."
+   },
+   {
+    "t": "key",
+    "html": "For a prime $p$ not dividing $a$: $a^{p-1} \\equiv 1 \\pmod{p}$. So exponents may be reduced mod $p - 1$, and $a^{-1} \\equiv a^{p-2}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (Fermat's little theorem)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: Fermat's little theorem"
+   }
+  ]
+ },
+ "nt.wilson": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Multiply all the nonzero residues mod a prime. Mod 5: $1 \\cdot 2 \\cdot 3 \\cdot 4 = 24 \\equiv -1$. Mod 7: $6! = 720 \\equiv -1$. It is always $-1$, and the reason is a pretty pairing argument with <a href=\"/math/number-theory/modular-inverses/\">modular inverses</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>Wilson's theorem.</b> An integer $p > 1$ is prime exactly when $$(p - 1)! \\equiv -1 \\pmod{p}.$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>Primes.</b> Mod a prime $p$, every $x$ from $1$ to $p - 1$ has an inverse. Which are their own inverses? $x^{2} \\equiv 1$ means $p \\mid (x - 1)(x + 1)$, so by Euclid's lemma $x \\equiv 1$ or $x \\equiv -1$. Every other number from $2$ to $p - 2$ pairs off with a <b>different</b> partner, and each pair multiplies to $1$. So $(p - 1)! \\equiv 1 \\cdot (p - 1) \\equiv -1$.<br><b>Composites.</b> If $n = ab$ with $1 < a < b < n$, both $a$ and $b$ appear in $(n - 1)!$, so $n \\mid (n - 1)!$. If $n = a^{2}$ with $a > 2$, then $a$ and $2a$ both appear, so again $n \\mid (n - 1)!$. Either way $(n - 1)! \\equiv 0$, not $-1$. The lone exception $n = 4$ gives $3! = 6 \\equiv 2$, still not $-1$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-clock",
+    "opts": {
+     "n": 13,
+     "mode": "wilson"
+    },
+    "cap": "Mod 13, each chord joins a residue to its inverse: 2 and 7, 3 and 9, 4 and 10, 5 and 8, 6 and 11. Only 1 and 12 are left alone, so $12! \\equiv 1 \\cdot 12 \\equiv -1$. Try $n = 12$: most points have no partner at all."
+   },
+   {
+    "t": "ex",
+    "title": "Checking the theorem",
+    "q": "Find $12! \\bmod 13$ without computing $12!$.",
+    "steps": [
+     "Pair each number with its inverse mod 13: $2 \\cdot 7 = 14$, $3 \\cdot 9 = 27$, $4 \\cdot 10 = 40$, $5 \\cdot 8 = 40$, $6 \\cdot 11 = 66$ are all $\\equiv 1$.",
+     "$12! \\equiv 1 \\cdot 12 \\cdot 1^{5} = 12 \\equiv -1 \\pmod{13}$."
+    ],
+    "a": "$12$, that is, $-1$."
+   },
+   {
+    "t": "ex",
+    "title": "One factor short",
+    "q": "Find $15! \\bmod 17$.",
+    "steps": [
+     "Wilson: $16! \\equiv -1 \\pmod{17}$. And $16! = 15! \\cdot 16$ with $16 \\equiv -1$.",
+     "So $15! \\cdot (-1) \\equiv -1$, which gives $15! \\equiv 1 \\pmod{17}$."
+    ],
+    "a": "$1$."
+   },
+   {
+    "t": "ex",
+    "title": "Two factors short",
+    "q": "Find $20! \\bmod 23$.",
+    "steps": [
+     "$22! = 20! \\cdot 21 \\cdot 22 \\equiv 20! \\cdot (-2)(-1) = 2 \\cdot 20! \\pmod{23}$, and $22! \\equiv -1$.",
+     "So $2 \\cdot 20! \\equiv -1$. The inverse of 2 mod 23 is 12, so $20! \\equiv -12 \\equiv 11 \\pmod{23}$."
+    ],
+    "a": "$11$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$n$",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11"
+    ],
+    "rows": [
+     [
+      "$(n-1)! \\bmod n$",
+      "1",
+      "2",
+      "2",
+      "4",
+      "0",
+      "6",
+      "0",
+      "0",
+      "0",
+      "10"
+     ]
+    ],
+    "cap": "For primes the value is $n - 1 \\equiv -1$; for composites it is $0$, except $2$ at $n = 4$."
+   },
+   {
+    "t": "mistake",
+    "html": "Expecting $(n - 1)! \\equiv -1 \\pmod{n}$ for every $n$. For $n = 6$: $5! = 120 = 6 \\cdot 20 \\equiv 0$. The theorem is about primes, and for composites the value is $0$ (or $2$ when $n = 4$). That difference is exactly why Wilson's theorem characterizes primes."
+   },
+   {
+    "t": "note",
+    "html": "As a primality test Wilson's theorem is perfect and useless: it never errs, but computing $(n - 1)! \\bmod n$ takes about $n$ multiplications, far slower than trial division. Its value is the pairing idea, which comes back in <a href=\"/math/number-theory/quadratic-residues/\">quadratic residues</a>."
+   },
+   {
+    "t": "key",
+    "html": "$p$ is prime exactly when $(p - 1)! \\equiv -1 \\pmod{p}$: the residues $2, \\dots, p - 2$ pair up with their inverses, leaving $1 \\cdot (p - 1)$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (Wilson's theorem)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on Wilson's theorem"
+   }
+  ]
+ },
+ "nt.euler-phi": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Mod a prime $p$, all $p - 1$ nonzero residues have <a href=\"/math/number-theory/modular-inverses/\">inverses</a>. Mod a composite, only some do: the ones coprime to $n$. Counting them is the job of Euler's phi function, and the count is what replaces $p - 1$ when we generalize Fermat's theorem."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> $\\varphi(n)$ is the number of integers $k$ with $1 \\le k \\le n$ and $\\gcd(k, n) = 1$. For example, mod 12 the numbers coprime to 12 are $1, 5, 7, 11$, so $\\varphi(12) = 4$. These are the <b>units</b> mod $n$, the residues with inverses."
+   },
+   {
+    "t": "p",
+    "html": "<b>Formulas.</b> For a prime $p$: $\\varphi(p) = p - 1$ and $\\varphi(p^{k}) = p^{k} - p^{k-1}$. If $\\gcd(m, n) = 1$, then $\\varphi(mn) = \\varphi(m)\\varphi(n)$. Together, with <a href=\"/math/number-theory/unique-factorization/\">the prime factorization</a> of $n$: $$\\varphi(n) = n \\prod_{p \\mid n} \\left(1 - \\frac{1}{p}\\right).$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>Prime powers.</b> Among $1, \\dots, p^{k}$, a number shares a factor with $p^{k}$ exactly when it is a multiple of $p$, and there are $p^{k-1}$ multiples of $p$. Remove them: $p^{k} - p^{k-1}$ remain.<br><b>Coprime products.</b> By the <a href=\"/math/number-theory/chinese-remainder/\">Chinese Remainder Theorem</a>, each $x$ mod $mn$ matches exactly one pair ($x \\bmod m$, $x \\bmod n$), and $x$ is coprime to $mn$ exactly when both parts are coprime to their moduli. So the units mod $mn$ match the pairs of units, and there are $\\varphi(m)\\varphi(n)$ pairs."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$k$ mod 12",
+     "1",
+     "5",
+     "7",
+     "11"
+    ],
+    "rows": [
+     [
+      "mod 4",
+      "1",
+      "1",
+      "3",
+      "3"
+     ],
+     [
+      "mod 3",
+      "1",
+      "2",
+      "1",
+      "2"
+     ]
+    ],
+    "cap": "The units mod 12 match the pairs (unit mod 4, unit mod 3): $2 \\cdot 2 = 4$ of them."
+   },
+   {
+    "t": "ex",
+    "title": "A prime power times another",
+    "q": "Find $\\varphi(36)$.",
+    "steps": [
+     "$36 = 2^{2} \\cdot 3^{2}$, with coprime factors $4$ and $9$.",
+     "$\\varphi(4) = 4 - 2 = 2$ and $\\varphi(9) = 9 - 3 = 6$.",
+     "$\\varphi(36) = 2 \\cdot 6 = 12$. Same by the product formula: $36 \\cdot \\frac{1}{2} \\cdot \\frac{2}{3} = 12$."
+    ],
+    "a": "$12$."
+   },
+   {
+    "t": "ex",
+    "title": "Three primes",
+    "q": "Find $\\varphi(1001)$.",
+    "steps": [
+     "$1001 = 7 \\cdot 11 \\cdot 13$.",
+     "$\\varphi(1001) = 6 \\cdot 10 \\cdot 12 = 720$."
+    ],
+    "a": "$720$."
+   },
+   {
+    "t": "ex",
+    "title": "Fractions in lowest terms",
+    "q": "How many of the fractions $\\frac{1}{12}, \\frac{2}{12}, \\dots, \\frac{12}{12}$ are already in lowest terms?",
+    "steps": [
+     "$\\frac{k}{12}$ is in lowest terms exactly when $\\gcd(k, 12) = 1$.",
+     "So the count is $\\varphi(12) = 4$: $\\frac{1}{12}, \\frac{5}{12}, \\frac{7}{12}, \\frac{11}{12}$."
+    ],
+    "a": "$4$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$n$",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11",
+     "12"
+    ],
+    "rows": [
+     [
+      "$\\varphi(n)$",
+      "1",
+      "1",
+      "2",
+      "2",
+      "4",
+      "2",
+      "6",
+      "4",
+      "6",
+      "4",
+      "10",
+      "4"
+     ]
+    ],
+    "cap": "The first values. $\\varphi(n) = n - 1$ exactly when $n$ is prime, and $\\varphi(n)$ is even for every $n \\ge 3$."
+   },
+   {
+    "t": "mistake",
+    "html": "Multiplying $\\varphi$ values of factors that share a prime. $\\varphi(4) = 2$ (the units are 1 and 3), but $\\varphi(2) \\cdot \\varphi(2) = 1 \\cdot 1 = 1$. The rule $\\varphi(mn) = \\varphi(m)\\varphi(n)$ needs $\\gcd(m, n) = 1$. Split $n$ into <b>prime powers</b> first, and use $p^{k} - p^{k-1}$ on each."
+   },
+   {
+    "t": "note",
+    "html": "A pretty identity: adding $\\varphi(d)$ over all divisors $d$ of $n$ gives $n$. For $n = 12$: $1 + 1 + 2 + 2 + 2 + 4 = 12$ (for $d = 1, 2, 3, 4, 6, 12$). It counts the fractions $\\frac{k}{12}$ by their reduced denominators."
+   },
+   {
+    "t": "key",
+    "html": "$\\varphi(n)$ counts the units mod $n$. Factor $n$ into prime powers; $\\varphi(p^{k}) = p^{k} - p^{k-1}$, and multiply."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (Euler's phi function)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: Euler's theorem"
+   }
+  ]
+ },
+ "nt.euler-theorem": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/number-theory/fermat-little/\">Fermat's theorem</a> shrinks exponents for a prime modulus. Euler found the version for any modulus: replace $p - 1$ by <a href=\"/math/number-theory/euler-phi/\">$\\varphi(n)$</a>, the number of units. It is the theorem that makes RSA work."
+   },
+   {
+    "t": "p",
+    "html": "<b>Euler's theorem.</b> If $\\gcd(a, n) = 1$, then $$a^{\\varphi(n)} \\equiv 1 \\pmod{n}.$$ For a prime, $\\varphi(p) = p - 1$ and this is Fermat's theorem. As before, exponents may be reduced mod $\\varphi(n)$: if $e \\equiv r \\pmod{\\varphi(n)}$, then $a^{e} \\equiv a^{r}$."
+   },
+   {
+    "t": "why",
+    "html": "Copy Fermat's proof, using only the units. Let $u_1, \\dots, u_{\\varphi(n)}$ be the units mod $n$. Multiplying each by $a$ (itself a unit) gives units again, all different (cancel $a$ with its inverse), so $au_1, \\dots, au_{\\varphi(n)}$ are the same units in a new order. Multiply everything: $$a^{\\varphi(n)} \\, u_1 \\cdots u_{\\varphi(n)} \\equiv u_1 \\cdots u_{\\varphi(n)} \\pmod{n}.$$ The product of units is a unit, so it cancels."
+   },
+   {
+    "t": "viz",
+    "name": "nt-powers",
+    "opts": {
+     "mode": "exponent",
+     "n": 10,
+     "a": 7,
+     "e": 222
+    },
+    "cap": "The last digit of a power of 7 cycles through 7, 9, 3, 1, a period of $\\varphi(10) = 4$. So the last digit of $7^{222}$ is the last digit of $7^{2}$, since $222 = 4 \\cdot 55 + 2$."
+   },
+   {
+    "t": "ex",
+    "title": "Last digit",
+    "q": "Find the last digit of $7^{222}$.",
+    "steps": [
+     "We want $7^{222} \\bmod 10$. $\\gcd(7, 10) = 1$ and $\\varphi(10) = 4$.",
+     "$222 = 4 \\cdot 55 + 2$, so $7^{222} \\equiv 7^{2} = 49 \\equiv 9$."
+    ],
+    "a": "$9$."
+   },
+   {
+    "t": "ex",
+    "title": "Last two digits",
+    "q": "Find the last two digits of $3^{1000}$.",
+    "steps": [
+     "Work mod 100. $\\varphi(100) = \\varphi(4)\\varphi(25) = 2 \\cdot 20 = 40$, and $\\gcd(3, 100) = 1$.",
+     "$1000 = 40 \\cdot 25$, so $3^{1000} = (3^{40})^{25} \\equiv 1 \\pmod{100}$."
+    ],
+    "a": "The last two digits are $01$."
+   },
+   {
+    "t": "ex",
+    "title": "An exponent tower",
+    "q": "Find $3^{3^{3}} \\bmod 10$.",
+    "steps": [
+     "The exponent is $3^{3} = 27$. Reduce it mod $\\varphi(10) = 4$: $27 \\equiv 3$.",
+     "$3^{27} \\equiv 3^{3} = 27 \\equiv 7 \\pmod{10}$."
+    ],
+    "a": "$7$."
+   },
+   {
+    "t": "ex",
+    "title": "Inverses from Euler",
+    "q": "Find $5^{-1} \\bmod 12$ using Euler's theorem.",
+    "steps": [
+     "$5 \\cdot 5^{\\varphi(12) - 1} = 5^{\\varphi(12)} \\equiv 1$, so $5^{-1} \\equiv 5^{\\varphi(12) - 1} = 5^{3}$. In general $a^{-1} \\equiv a^{\\varphi(n) - 1}$ for a unit $a$.",
+     "$5^{3} = 125 = 12 \\cdot 10 + 5$, so $5^{-1} \\equiv 5$. Check: $5 \\cdot 5 = 25 \\equiv 1 \\pmod{12}$."
+    ],
+    "a": "$5$."
+   },
+   {
+    "t": "mistake",
+    "html": "Reducing the exponent mod $n$ instead of mod $\\varphi(n)$, or using the theorem when $\\gcd(a, n) > 1$. Mod 10, $2^{\\varphi(10)} = 2^{4} = 16 \\equiv 6$, not 1: the powers of 2 never reach 1 mod 10, because 2 is not a unit. When $\\gcd(a, n) > 1$, factor $n$ and use the <a href=\"/math/number-theory/chinese-remainder/\">CRT</a>, or look for the repeating pattern directly."
+   },
+   {
+    "t": "p",
+    "html": "This theorem is the engine of <a href=\"/math/number-theory/rsa/\">RSA</a>. If $ed \\equiv 1 \\pmod{\\varphi(n)}$, then $ed = 1 + k\\varphi(n)$, and for every unit $m$, $(m^{e})^{d} = m \\cdot (m^{\\varphi(n)})^{k} \\equiv m$. Raising to the power $e$ scrambles $m$; raising to the power $d$ unscrambles it."
+   },
+   {
+    "t": "note",
+    "html": "$\\varphi(n)$ is a period, not always the shortest one. Mod 15, $\\varphi(15) = 8$, yet $2^{4} = 16 \\equiv 1$ already. The shortest period is the <a href=\"/math/number-theory/order-mod-n/\">order</a> of $a$, which always divides $\\varphi(n)$."
+   },
+   {
+    "t": "key",
+    "html": "If $\\gcd(a, n) = 1$, then $a^{\\varphi(n)} \\equiv 1 \\pmod{n}$, so reduce exponents mod $\\varphi(n)$. Check the gcd first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (Euler's theorem)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: Euler's theorem"
+   }
+  ]
+ },
+ "nt.pseudoprimes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/number-theory/fermat-little/\">Fermat's theorem</a> gives a fast way to show a number is composite <b>without finding a factor</b>. That is how computers screen the huge numbers used in cryptography. But the test has a blind spot, and knowing exactly what it proves is the lesson here."
+   },
+   {
+    "t": "p",
+    "html": "<b>The Fermat test.</b> To test $n$, pick a base $a$ with $1 < a < n - 1$ and compute $a^{n-1} \\bmod n$ by <a href=\"/math/number-theory/modular-powers/\">repeated squaring</a>."
+   },
+   {
+    "t": "list",
+    "items": [
+     "If $a^{n-1} \\not\\equiv 1 \\pmod{n}$, then $n$ is <b>certainly composite</b>.",
+     "If $a^{n-1} \\equiv 1 \\pmod{n}$, then $n$ <b>passes</b>: it is probably prime, but not proven prime."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Fermat's theorem says: <i>if $n$ is prime</i> (and $n \\nmid a$), <i>then</i> $a^{n-1} \\equiv 1$. Its contrapositive is just as true: if $a^{n-1} \\not\\equiv 1$, then $n$ is not prime. But the <b>converse</b>, \"if $a^{n-1} \\equiv 1$ then $n$ is prime,\" is a different statement, and it is false. A composite $n$ with $a^{n-1} \\equiv 1 \\pmod{n}$ is called a <b>pseudoprime to base $a$</b>."
+   },
+   {
+    "t": "ex",
+    "title": "Caught by the test",
+    "q": "Run the base-2 test on $n = 91$.",
+    "steps": [
+     "$90 = 64 + 16 + 8 + 2$. Squares mod 91: $2^{2} = 4$, $2^{4} = 16$, $2^{8} = 256 \\equiv 74$, $2^{16} \\equiv 74^{2} = 5476 \\equiv 16$, $2^{32} \\equiv 74$, $2^{64} \\equiv 16$.",
+     "$2^{90} \\equiv 16 \\cdot 16 \\cdot 74 \\cdot 4$: $16 \\cdot 16 = 256 \\equiv 74$, then $74 \\cdot 74 \\equiv 16$, then $16 \\cdot 4 = 64$.",
+     "$2^{90} \\equiv 64 \\not\\equiv 1$, so $91$ is composite. (Indeed $91 = 7 \\cdot 13$, but the test never needed that.)"
+    ],
+    "a": "Composite."
+   },
+   {
+    "t": "ex",
+    "title": "A pseudoprime",
+    "q": "Show that $341 = 11 \\cdot 31$ passes the base-2 test.",
+    "steps": [
+     "$2^{10} = 1024 = 3 \\cdot 341 + 1$, so $2^{10} \\equiv 1 \\pmod{341}$.",
+     "$340 = 10 \\cdot 34$, so $2^{340} = (2^{10})^{34} \\equiv 1 \\pmod{341}$.",
+     "$341$ passes, yet it is composite: it is the smallest pseudoprime to base 2."
+    ],
+    "a": "$2^{340} \\equiv 1 \\pmod{341}$."
+   },
+   {
+    "t": "p",
+    "html": "Changing the base often exposes a pseudoprime: $3^{340} \\bmod 341 = 56$, so base 3 catches 341. But $91$ fools base 3 ($3^{6} = 729 = 8 \\cdot 91 + 1$, so $3^{90} \\equiv 1$), and some composites fool <b>every</b> base coprime to them. These are the <b>Carmichael numbers</b>."
+   },
+   {
+    "t": "ex",
+    "title": "A Carmichael number",
+    "q": "Korselt's criterion: a composite $n$ is a Carmichael number exactly when it is squarefree and $p - 1 \\mid n - 1$ for every prime $p \\mid n$. Check $561 = 3 \\cdot 11 \\cdot 17$.",
+    "steps": [
+     "$561$ is squarefree, and $n - 1 = 560$.",
+     "$2 \\mid 560$, $10 \\mid 560$ and $16 \\mid 560$ (since $560 = 16 \\cdot 35$).",
+     "So $561$ passes the Fermat test for every base coprime to it, though it is composite."
+    ],
+    "a": "Yes, $561$ is a Carmichael number (the smallest)."
+   },
+   {
+    "t": "mistake",
+    "html": "Treating the converse of Fermat's theorem as true: \"$2^{340} \\equiv 1 \\pmod{341}$, so 341 is prime.\" But $341 = 11 \\cdot 31$. A result of 1 only means \"not caught yet.\" A result other than 1 is a proof of compositeness. Real primality tests (like Miller–Rabin, a strengthened Fermat test) use several bases and a sharper condition."
+   },
+   {
+    "t": "key",
+    "html": "If $a^{n-1} \\not\\equiv 1 \\pmod{n}$, then $n$ is composite. If $a^{n-1} \\equiv 1$, $n$ may still be composite: a pseudoprime, or for every base at once, a Carmichael number."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (primality testing)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on primality testing and Carmichael numbers"
+   }
+  ]
+ },
+ "nt.order-mod-n": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/number-theory/euler-theorem/\">Euler's theorem</a> says $a^{\\varphi(n)} \\equiv 1$, so the powers of a unit $a$ eventually come back to 1. But often they come back sooner: mod 7, $2^{3} = 8 \\equiv 1$, long before $2^{6}$. The first return time is the most useful single number about $a$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> If $\\gcd(a, n) = 1$, the <b>order</b> of $a$ mod $n$, written $\\operatorname{ord}_n(a)$, is the smallest $k > 0$ with $a^{k} \\equiv 1 \\pmod{n}$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> Let $k = \\operatorname{ord}_n(a)$. Then $a^{m} \\equiv 1 \\pmod{n}$ exactly when $k \\mid m$. In particular $k \\mid \\varphi(n)$, and the powers of $a$ repeat with period exactly $k$."
+   },
+   {
+    "t": "why",
+    "html": "Divide $m$ by $k$: $m = kq + r$ with $0 \\le r < k$. Then $a^{m} = (a^{k})^{q} a^{r} \\equiv a^{r}$. If $a^{m} \\equiv 1$, then $a^{r} \\equiv 1$ with $r < k$; since $k$ is the <b>smallest</b> positive exponent that gives 1, $r$ must be $0$, so $k \\mid m$. (Conversely $k \\mid m$ clearly gives $a^{m} \\equiv 1$.) Euler's theorem gives $a^{\\varphi(n)} \\equiv 1$, so $k \\mid \\varphi(n)$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-powers",
+    "opts": {
+     "mode": "cycle",
+     "n": 7,
+     "a": 2,
+     "task": "Find a base $a$ whose powers visit all six nonzero points before returning to 1."
+    },
+    "cap": "The powers of 2 mod 7 run $2, 4, 1$ and repeat: order 3, a divisor of $\\varphi(7) = 6$. Bases 3 and 5 go all the way around."
+   },
+   {
+    "t": "ex",
+    "title": "By listing powers",
+    "q": "Find $\\operatorname{ord}_7(2)$.",
+    "steps": [
+     "$2^{1} = 2$, $2^{2} = 4$, $2^{3} = 8 \\equiv 1 \\pmod{7}$.",
+     "The first power that is 1 is the third."
+    ],
+    "a": "$\\operatorname{ord}_7(2) = 3$."
+   },
+   {
+    "t": "ex",
+    "title": "Testing only divisors",
+    "q": "Find $\\operatorname{ord}_{13}(5)$.",
+    "steps": [
+     "The order divides $\\varphi(13) = 12$, so it is one of $1, 2, 3, 4, 6, 12$.",
+     "$5^{1} = 5$. $5^{2} = 25 \\equiv 12 \\equiv -1$. $5^{3} \\equiv 5 \\cdot 12 = 60 \\equiv 8$.",
+     "$5^{4} = (5^{2})^{2} \\equiv (-1)^{2} = 1$. So the order is $4$."
+    ],
+    "a": "$4$."
+   },
+   {
+    "t": "ex",
+    "title": "Order of a power",
+    "q": "$\\operatorname{ord}_{13}(2) = 12$. Find the order of $2^{8}$ mod 13.",
+    "steps": [
+     "$(2^{8})^{m} = 2^{8m} \\equiv 1$ exactly when $12 \\mid 8m$, that is, when $3 \\mid 2m$, that is, when $3 \\mid m$.",
+     "So the order is $3 = \\dfrac{12}{\\gcd(12, 8)}$. Check: $2^{8} = 256 \\equiv 9$, and $9^{3} = 729 = 56 \\cdot 13 + 1$."
+    ],
+    "a": "$3$."
+   },
+   {
+    "t": "p",
+    "html": "The last example is a general rule: if $\\operatorname{ord}_n(a) = k$, then $\\operatorname{ord}_n(a^{j}) = \\dfrac{k}{\\gcd(k, j)}$."
+   },
+   {
+    "t": "p",
+    "html": "Orders explain repeating decimals. The decimal of $\\frac{1}{7} = 0.\\overline{142857}$ repeats every 6 digits because $\\operatorname{ord}_7(10) = 6$: the first $k$ with $7 \\mid 10^{k} - 1$ is $k = 6$, since $999{,}999 = 7 \\cdot 142{,}857$. In general, for $p \\ne 2, 5$, the period of $\\frac{1}{p}$ is $\\operatorname{ord}_p(10)$, so it always divides $p - 1$."
+   },
+   {
+    "t": "mistake",
+    "html": "Taking $\\varphi(n)$ as the order. $\\varphi(7) = 6$, but $\\operatorname{ord}_7(2) = 3$: the order can be any divisor of $\\varphi(n)$. Euler's theorem gives a multiple of the order, not the order itself. To find the order, test the divisors of $\\varphi(n)$ in increasing order and stop at the first one that gives 1."
+   },
+   {
+    "t": "key",
+    "html": "$\\operatorname{ord}_n(a)$ is the first $k > 0$ with $a^{k} \\equiv 1$. It divides $\\varphi(n)$, and $a^{m} \\equiv 1$ exactly when the order divides $m$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (the structure of the units mod p)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on orders and primitive roots"
+   }
+  ]
+ },
+ "nt.primitive-roots": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some numbers have the largest <a href=\"/math/number-theory/order-mod-n/\">order</a> possible. Mod 7, the powers of 3 are $3, 2, 6, 4, 5, 1$: every nonzero residue appears once. Such a number turns multiplication mod $p$ into addition of exponents, and that is the foundation of discrete logarithms and Diffie–Hellman."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> $g$ is a <b>primitive root</b> mod $n$ when $\\operatorname{ord}_n(g) = \\varphi(n)$. Mod a prime $p$ this means order $p - 1$, so $g, g^{2}, \\dots, g^{p-1}$ are all the nonzero residues, each exactly once."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem (Gauss).</b> Every prime $p$ has a primitive root; in fact it has exactly $\\varphi(p - 1)$ of them. (Among other moduli, only $1, 2, 4, p^{k}$ and $2p^{k}$ have primitive roots; mod 8, for instance, every unit has order 1 or 2.)"
+   },
+   {
+    "t": "p",
+    "html": "<b>The test.</b> Let $q_1, \\dots, q_s$ be the primes dividing $p - 1$. Then $g$ is a primitive root mod $p$ exactly when $$g^{(p-1)/q_i} \\not\\equiv 1 \\pmod{p} \\quad\\text{for every } i.$$"
+   },
+   {
+    "t": "why",
+    "html": "The order of $g$ divides $p - 1$. If it is smaller than $p - 1$, it is a proper divisor, so some prime $q_i$ is \"missing\" from it, and the order divides $(p - 1)/q_i$. Then $g^{(p-1)/q_i} \\equiv 1$. So if none of these powers is 1, the order can only be $p - 1$. This needs a few powers instead of $p - 1$ of them."
+   },
+   {
+    "t": "viz",
+    "name": "nt-powers",
+    "opts": {
+     "mode": "table",
+     "n": 13
+    },
+    "cap": "All powers mod 13. Every row reaches 1 at $k = 12$; the first 1 in each row is its order (1, 2, 3, 4, 6 or 12). The starred rows, 2, 6, 7 and 11, contain every unit: $\\varphi(12) = 4$ primitive roots."
+   },
+   {
+    "t": "ex",
+    "title": "A primitive root",
+    "q": "Is $2$ a primitive root mod $11$?",
+    "steps": [
+     "$p - 1 = 10 = 2 \\cdot 5$, so check $2^{10/2} = 2^{5}$ and $2^{10/5} = 2^{2}$.",
+     "$2^{5} = 32 \\equiv 10$ and $2^{2} = 4$. Neither is 1."
+    ],
+    "a": "Yes."
+   },
+   {
+    "t": "ex",
+    "title": "Not a primitive root",
+    "q": "Is $3$ a primitive root mod $13$?",
+    "steps": [
+     "$p - 1 = 12 = 2^{2} \\cdot 3$, so check $3^{6}$ and $3^{4}$.",
+     "$3^{3} = 27 \\equiv 1$, so $3^{6} \\equiv 1$. That settles it: the order of 3 is only 3."
+    ],
+    "a": "No."
+   },
+   {
+    "t": "ex",
+    "title": "The smallest one",
+    "q": "Find the smallest primitive root mod $23$.",
+    "steps": [
+     "$22 = 2 \\cdot 11$, so check $g^{11}$ and $g^{2}$.",
+     "$g = 2$: $2^{11} = 2048 = 89 \\cdot 23 + 1$, so no. $g = 3$: $3^{11} \\equiv 1$ too, so no. $g = 4 = 2^{2}$: $4^{11} = (2^{11})^{2} \\equiv 1$, no.",
+     "$g = 5$: $5^{2} = 25 \\equiv 2$ and $5^{11} \\equiv 22 \\equiv -1$. Neither is 1, so 5 is a primitive root."
+    ],
+    "a": "$5$."
+   },
+   {
+    "t": "mistake",
+    "html": "\"Testing\" with $g^{p-1} \\equiv 1$. By <a href=\"/math/number-theory/fermat-little/\">Fermat's theorem</a> every nonzero $g$ passes that, primitive root or not: $3^{12} \\equiv 1 \\pmod{13}$ even though $3$ has order 3. The test must show that the <b>smaller</b> powers $g^{(p-1)/q}$ are not 1."
+   },
+   {
+    "t": "key",
+    "html": "$g$ is a primitive root mod $p$ when its powers reach every nonzero residue, that is, when $\\operatorname{ord}_p(g) = p - 1$. Test it by checking $g^{(p-1)/q} \\not\\equiv 1$ for each prime $q \\mid p - 1$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n (the structure of (Z/pZ)*)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on primitive roots"
+   }
+  ]
+ },
+ "nt.discrete-logs": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "With a <a href=\"/math/number-theory/primitive-roots/\">primitive root</a> $g$ mod $p$, every nonzero residue is a power of $g$. The exponent that produces it plays the role of a logarithm, and it obeys the familiar logarithm rules, with one twist about where it lives."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> Let $g$ be a primitive root mod a prime $p$, and $p \\nmid h$. The <b>discrete logarithm</b> of $h$ to base $g$, written $\\log_g h$ (also called the index of $h$), is the unique $k$ with $0 \\le k \\le p - 2$ and $$g^{k} \\equiv h \\pmod{p}.$$ Any $k' \\equiv k \\pmod{p - 1}$ also works, since $g^{p-1} \\equiv 1$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Rules.</b> Mod $p - 1$: $\\ \\log_g(ab) \\equiv \\log_g a + \\log_g b$ and $\\log_g(a^{m}) \\equiv m \\log_g a$."
+   },
+   {
+    "t": "why",
+    "html": "If $g^{s} \\equiv a$ and $g^{t} \\equiv b$, then $g^{s + t} = g^{s} g^{t} \\equiv ab$, so $s + t$ is <b>a</b> logarithm of $ab$. Exponents of $g$ only matter mod $p - 1$, the order of $g$ (as in <a href=\"/math/number-theory/order-mod-n/\">orders</a>), so the logarithm is $s + t$ reduced mod $p - 1$. The same argument gives the power rule."
+   },
+   {
+    "t": "viz",
+    "name": "nt-powers",
+    "opts": {
+     "mode": "dlog",
+     "n": 11,
+     "a": 2,
+     "h": 7,
+     "task": "Press <b>Next power</b> until you find $k$ with $2^{k} \\equiv 7 \\pmod{11}$. Then change $h$."
+    },
+    "cap": "Finding a discrete logarithm by brute force: list the powers until $h$ appears. Checking an answer takes one fast power; finding it took a search."
+   },
+   {
+    "t": "ex",
+    "title": "Finding a logarithm",
+    "q": "Mod 11 with $g = 2$, find $\\log_2 7$.",
+    "steps": [
+     "Powers of 2 mod 11: $2^{1} = 2$, $2^{2} = 4$, $2^{3} = 8$, $2^{4} = 16 \\equiv 5$, $2^{5} \\equiv 10$, $2^{6} \\equiv 9$, $2^{7} \\equiv 18 \\equiv 7$.",
+     "So $\\log_2 7 = 7$. Check: $2^{7} = 128 = 11 \\cdot 11 + 7$."
+    ],
+    "a": "$7$."
+   },
+   {
+    "t": "ex",
+    "title": "Logarithms add mod p − 1",
+    "q": "Mod 11 with $g = 2$: $\\log_2 3 = 8$ and $\\log_2 7 = 7$. Find $\\log_2 10$, using $3 \\cdot 7 = 21 \\equiv 10$.",
+    "steps": [
+     "$\\log_2 10 \\equiv 8 + 7 = 15 \\pmod{10}$.",
+     "$15 \\equiv 5 \\pmod{10}$, so $\\log_2 10 = 5$. Check: $2^{5} = 32 \\equiv 10 \\pmod{11}$."
+    ],
+    "a": "$5$."
+   },
+   {
+    "t": "ex",
+    "title": "An exponential congruence",
+    "q": "Solve $2^{x} \\equiv 5 \\pmod{11}$.",
+    "steps": [
+     "From the list, $2^{4} \\equiv 5$, so $\\log_2 5 = 4$.",
+     "All solutions: $x \\equiv 4 \\pmod{10}$, that is $x = 4, 14, 24, \\dots$ (and $-6, -16, \\dots$)."
+    ],
+    "a": "$x \\equiv 4 \\pmod{10}$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$h$",
+     "1",
+     "2",
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10"
+    ],
+    "rows": [
+     [
+      "$\\log_2 h \\bmod 11$",
+      "0",
+      "1",
+      "8",
+      "2",
+      "4",
+      "9",
+      "7",
+      "3",
+      "6",
+      "5"
+     ]
+    ],
+    "cap": "A table of discrete logarithms mod 11, base 2. Like an old table of logarithms, it turns multiplication into addition: $4 \\cdot 6 = 24 \\equiv 2$, and $2 + 9 = 11 \\equiv 1$, the log of 2."
+   },
+   {
+    "t": "mistake",
+    "html": "Reducing a discrete logarithm mod $p$ instead of mod $p - 1$. In the second example, \"$15 \\equiv 4 \\pmod{11}$\" would claim $2^{4} \\equiv 10$, but $2^{4} \\equiv 5$. Logarithms are exponents, and exponents of $g$ cycle with period $p - 1$."
+   },
+   {
+    "t": "note",
+    "html": "Computing $g^{k} \\bmod p$ is fast. Going backward, from $h$ to $k$, has no known fast method on ordinary (non-quantum) computers for a general large prime $p$: the best algorithms still take time that grows faster than any power of the number of digits. This one-way behavior is what <a href=\"/math/number-theory/diffie-hellman/\">Diffie–Hellman</a> relies on."
+   },
+   {
+    "t": "key",
+    "html": "$\\log_g h$ is the exponent $k$ with $g^{k} \\equiv h \\pmod{p}$. It lives mod $p - 1$; logarithms of products add mod $p - 1$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 2, The Ring of Integers Modulo n, and chapter 3, Public-Key Cryptography"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on primitive roots and indices"
+   }
+  ]
+ },
+ "nt.affine-ciphers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Secret codes are the oldest application of modular arithmetic. Number the letters $A = 0, B = 1, \\dots, Z = 25$ and calculate mod 26. Encrypting is multiplying and adding; decrypting is undoing that, which needs a <a href=\"/math/number-theory/modular-inverses/\">modular inverse</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>Shift cipher</b> (Caesar's): $E(x) = x + b \\bmod 26$, undone by $D(y) = y - b$. <b>Affine cipher:</b> $$E(x) = ax + b \\bmod 26, \\qquad D(y) = a^{-1}(y - b) \\bmod 26.$$ The key is the pair $(a, b)$, and $a$ must satisfy $\\gcd(a, 26) = 1$."
+   },
+   {
+    "t": "why",
+    "html": "To undo $y \\equiv ax + b$, subtract $b$ and then \"divide by $a$\", which mod 26 means multiplying by $a^{-1}$: $a^{-1}(y - b) \\equiv a^{-1} a x = x$. The inverse exists exactly when $\\gcd(a, 26) = 1$, that is, $a$ is odd and not 13. Those 12 values of $a$ and 26 values of $b$ give $12 \\cdot 26 = 312$ keys. If $\\gcd(a, 26) > 1$, two letters are sent to the same place, and the message can no longer be read back."
+   },
+   {
+    "t": "viz",
+    "name": "nt-clock",
+    "opts": {
+     "mode": "affine",
+     "a": 5,
+     "b": 8,
+     "x": 7,
+     "task": "Change $a$ to $13$ and look for red chips. Then try $a = 2$."
+    },
+    "cap": "The 26 letters on a clock, with the map $x \\mapsto 5x + 8$. Every letter gets its own cipher letter, listed below. With $a = 13$ or $a = 2$, letters collide."
+   },
+   {
+    "t": "ex",
+    "title": "Encrypting",
+    "q": "Encrypt <b>MATH</b> with $E(x) = 5x + 8 \\bmod 26$.",
+    "steps": [
+     "M, A, T, H are $12, 0, 19, 7$.",
+     "$5 \\cdot 12 + 8 = 68 \\equiv 16$, $\\ 5 \\cdot 0 + 8 = 8$, $\\ 5 \\cdot 19 + 8 = 103 \\equiv 25$, $\\ 5 \\cdot 7 + 8 = 43 \\equiv 17$.",
+     "$16, 8, 25, 17$ are Q, I, Z, R."
+    ],
+    "a": "<b>QIZR</b>."
+   },
+   {
+    "t": "ex",
+    "title": "Decrypting",
+    "q": "Decrypt <b>QIZR</b>, encrypted with $E(x) = 5x + 8$.",
+    "steps": [
+     "$5^{-1} \\equiv 21 \\pmod{26}$, since $5 \\cdot 21 = 105 = 4 \\cdot 26 + 1$. So $D(y) = 21(y - 8)$.",
+     "Q $= 16$: $21 \\cdot 8 = 168 \\equiv 12$ (M). I $= 8$: $21 \\cdot 0 = 0$ (A).",
+     "Z $= 25$: $21 \\cdot 17 = 357 \\equiv 19$ (T). R $= 17$: $21 \\cdot 9 = 189 \\equiv 7$ (H)."
+    ],
+    "a": "<b>MATH</b>."
+   },
+   {
+    "t": "ex",
+    "title": "A bad key",
+    "q": "Why is $a = 13$ not allowed?",
+    "steps": [
+     "$13 \\cdot 0 = 0$ and $13 \\cdot 2 = 26 \\equiv 0$, so A and C get the same cipher letter (for any $b$).",
+     "In fact $13x \\bmod 26$ is only ever $0$ or $13$, so the cipher uses just two letters."
+    ],
+    "a": "$\\gcd(13, 26) = 13 \\ne 1$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$a$",
+     "1",
+     "3",
+     "5",
+     "7",
+     "9",
+     "11",
+     "15",
+     "17",
+     "19",
+     "21",
+     "23",
+     "25"
+    ],
+    "rows": [
+     [
+      "$a^{-1} \\bmod 26$",
+      "1",
+      "9",
+      "21",
+      "15",
+      "3",
+      "19",
+      "7",
+      "23",
+      "11",
+      "5",
+      "17",
+      "25"
+     ]
+    ],
+    "cap": "The allowed multipliers and their inverses mod 26."
+   },
+   {
+    "t": "mistake",
+    "html": "Decrypting by ordinary division: \"$x = (y - 8)/5$.\" For Q $= 16$, that gives $8/5$, not a letter. Mod 26, dividing by 5 means multiplying by $5^{-1} = 21$. Check any decryption by encrypting it again."
+   },
+   {
+    "t": "p",
+    "html": "An affine cipher is also weak against a <b>known-plaintext attack</b>: if Eve learns that two plaintext letters $x_1, x_2$ encrypt to $y_1, y_2$, she solves the two congruences $ax_1 + b \\equiv y_1$ and $ax_2 + b \\equiv y_2$. Subtracting gives $a(x_1 - x_2) \\equiv y_1 - y_2 \\pmod{26}$, a <a href=\"/math/number-theory/linear-congruences/\">linear congruence</a> for $a$, and then $b$ follows."
+   },
+   {
+    "t": "note",
+    "html": "With only 312 keys, an affine cipher falls to a computer instantly, and even by hand to letter-frequency counting (E is the most common letter in English). Modern cryptography keeps the modular arithmetic but uses enormous moduli and keys that never have to be shared, as in <a href=\"/math/number-theory/rsa/\">RSA</a>."
+   },
+   {
+    "t": "key",
+    "html": "Affine cipher: $E(x) = ax + b \\bmod 26$ with $\\gcd(a, 26) = 1$; decrypt with $D(y) = a^{-1}(y - b)$, using the inverse of $a$ mod 26."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 3, Public-Key Cryptography"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: Turing's code and modular arithmetic"
+   }
+  ]
+ },
+ "nt.diffie-hellman": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every cipher so far needs a shared secret key. But how do two people who have never met agree on a key, over a line that anyone can listen to? In 1976 Diffie and Hellman found a way, built on <a href=\"/math/number-theory/discrete-logs/\">discrete logarithms</a>: easy to go forward, hard to go back."
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Public:</b> a large prime $p$ and a primitive root $g$ mod $p$.",
+     "Alice picks a secret $a$ and sends $A = g^{a} \\bmod p$. Bob picks a secret $b$ and sends $B = g^{b} \\bmod p$.",
+     "Alice computes $B^{a}$, Bob computes $A^{b}$. Both get the shared key $K = g^{ab} \\bmod p$."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "$B^{a} = (g^{b})^{a} = g^{ab} = (g^{a})^{b} = A^{b}$, so they agree. An eavesdropper, Eve, sees $p$, $g$, $A$ and $B$. To get $K$ she seems to need $a$ or $b$, that is, a discrete logarithm of $A$ or $B$. For a prime of a few hundred digits, no one knows how to do that in any reasonable time, while Alice and Bob each need only one <a href=\"/math/number-theory/modular-powers/\">fast power</a>."
+   },
+   {
+    "t": "ex",
+    "title": "A small exchange",
+    "q": "Public: $p = 29$, $g = 2$. Alice's secret is $a = 9$ and Bob's is $b = 13$. Find $A$, $B$ and the shared key.",
+    "steps": [
+     "$A = 2^{9} = 512 = 17 \\cdot 29 + 19$, so $A = 19$.",
+     "$B = 2^{13} = 8192 = 282 \\cdot 29 + 14$, so $B = 14$.",
+     "Alice: $K = 14^{9} \\bmod 29 = 3$. Bob: $K = 19^{13} \\bmod 29 = 3$.",
+     "Check: $K = 2^{9 \\cdot 13} = 2^{117}$, and $117 \\equiv 5 \\pmod{28}$, so $K \\equiv 2^{5} = 32 \\equiv 3$."
+    ],
+    "a": "$A = 19$, $B = 14$, $K = 3$."
+   },
+   {
+    "t": "ex",
+    "title": "Eve with a tiny prime",
+    "q": "Why is $p = 29$ unsafe?",
+    "steps": [
+     "Eve lists $2^{1}, 2^{2}, \\dots \\bmod 29$ until she sees $19$: $2^{9} \\equiv 19$, so $a = 9$.",
+     "Then she computes $B^{a} = 14^{9} \\equiv 3$, the key. With $p$ near $10^{600}$ the list would be far too long to search."
+    ],
+    "a": "A small prime makes the discrete logarithm easy."
+   },
+   {
+    "t": "mistake",
+    "html": "Computing the shared key as $A \\cdot B$. That is $g^{a} g^{b} = g^{a + b}$, not $g^{ab}$, and it is no secret at all: Eve sees $A$ and $B$ and can multiply them. Here $A \\cdot B = 19 \\cdot 14 = 266 \\equiv 5$, not the key $3$. The key comes from raising the other person's number to <b>your own</b> secret exponent."
+   },
+   {
+    "t": "p",
+    "html": "Why a primitive root? Then $g^{a}$ runs through <b>every</b> nonzero residue as $a$ varies, so the shared key can be any of $p - 1$ values and Eve gains nothing from guessing. If $g$ had a small order, say 4, there would be only 4 possible keys."
+   },
+   {
+    "t": "note",
+    "html": "Diffie–Hellman protects against listening, not against impersonation: an attacker who can change messages could run one exchange with Alice and another with Bob. Real systems add signatures to prove who is talking."
+   },
+   {
+    "t": "key",
+    "html": "Diffie–Hellman: exchange $A = g^{a}$ and $B = g^{b}$ in public; each side raises the other's number to its own secret, and both get $g^{ab} \\bmod p$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 3, Public-Key Cryptography (the Diffie–Hellman key exchange)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: public-key cryptography"
+   }
+  ]
+ },
+ "nt.rsa": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "RSA (Rivest, Shamir and Adleman, 1977) lets anyone encrypt a message to you with a <b>public</b> key, while only you can decrypt it. It is <a href=\"/math/number-theory/euler-theorem/\">Euler's theorem</a> plus <a href=\"/math/number-theory/modular-inverses/\">modular inverses</a> plus one fact: multiplying primes is easy, but factoring their product is hard."
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Setup.</b> Choose primes $p \\ne q$. Let $n = pq$ and $\\varphi(n) = (p - 1)(q - 1)$.",
+     "Choose $e$ with $\\gcd(e, \\varphi(n)) = 1$, and compute $d \\equiv e^{-1} \\pmod{\\varphi(n)}$.",
+     "<b>Public key:</b> $(n, e)$. <b>Private key:</b> $d$ (and keep $p$, $q$, $\\varphi(n)$ secret).",
+     "<b>Encrypt</b> a message $0 \\le m < n$: $c = m^{e} \\bmod n$. <b>Decrypt:</b> $m = c^{d} \\bmod n$."
+    ]
+   },
+   {
+    "t": "why",
+    "html": "Since $ed \\equiv 1 \\pmod{\\varphi(n)}$, write $ed = 1 + k\\varphi(n)$. If $\\gcd(m, n) = 1$, Euler's theorem gives $$c^{d} = m^{ed} = m \\cdot \\left(m^{\\varphi(n)}\\right)^{k} \\equiv m \\cdot 1 = m \\pmod{n}.$$ (It also works when $\\gcd(m, n) > 1$: check mod $p$ and mod $q$ separately with Fermat, then use the CRT.) Finding $d$ requires $\\varphi(n)$, and knowing $\\varphi(n) = n - p - q + 1$ is as good as knowing $p$ and $q$. So breaking RSA this way means factoring $n$, which for 600-digit numbers is far out of reach."
+   },
+   {
+    "t": "ex",
+    "title": "Making keys",
+    "q": "Make RSA keys from $p = 11$, $q = 17$ and $e = 7$.",
+    "steps": [
+     "$n = 11 \\cdot 17 = 187$ and $\\varphi(n) = 10 \\cdot 16 = 160$.",
+     "$\\gcd(7, 160) = 1$. Extended Euclid: $160 = 7 \\cdot 22 + 6$, $7 = 6 + 1$, so $1 = 7 - 6 = 7 - (160 - 22 \\cdot 7) = 23 \\cdot 7 - 160$.",
+     "So $d = 23$. Check: $7 \\cdot 23 = 161 = 160 + 1$."
+    ],
+    "a": "Public $(187, 7)$, private $d = 23$."
+   },
+   {
+    "t": "ex",
+    "title": "Encrypting and decrypting",
+    "q": "With $(n, e) = (187, 7)$ and $d = 23$, encrypt $m = 42$, then decrypt.",
+    "steps": [
+     "$42^{2} = 1764 \\equiv 1764 - 9 \\cdot 187 = 81$, $\\ 42^{4} \\equiv 81^{2} = 6561 \\equiv 16$.",
+     "$42^{7} = 42^{4} \\cdot 42^{2} \\cdot 42 \\equiv 16 \\cdot 81 \\cdot 42$: $16 \\cdot 81 = 1296 \\equiv 174$, then $174 \\cdot 42 = 7308 \\equiv 15$. So $c = 15$.",
+     "Decrypt: $15^{23} \\bmod 187$ by repeated squaring ($23 = 16 + 4 + 2 + 1$) gives $42$, the original message."
+    ],
+    "a": "$c = 15$, and $15^{23} \\equiv 42$."
+   },
+   {
+    "t": "ex",
+    "title": "Breaking a tiny key",
+    "q": "Eve sees the public key $(n, e) = (187, 7)$. Show how factoring $n$ gives her the private key.",
+    "steps": [
+     "Trial division up to $\\sqrt{187} \\approx 13.7$: $187 = 11 \\cdot 17$.",
+     "Then $\\varphi(187) = 10 \\cdot 16 = 160$, and $d = 7^{-1} \\bmod 160 = 23$, exactly Alice's private key.",
+     "For a 600-digit $n$, the best known factoring methods would run for far longer than the age of the universe on ordinary computers. That gap is the whole security of RSA."
+    ],
+    "a": "$d = 23$, once $n$ is factored."
+   },
+   {
+    "t": "mistake",
+    "html": "Finding $d$ as the inverse of $e$ mod $n$ instead of mod $\\varphi(n)$. Here $7^{-1} \\bmod 187 = 107$, and decrypting with it gives $15^{107} \\equiv 60 \\pmod{187}$, not $42$. The exponent identity comes from Euler's theorem, so exponents work mod $\\varphi(n) = (p - 1)(q - 1)$."
+   },
+   {
+    "t": "note",
+    "html": "Real RSA uses primes with hundreds of digits, $e = 65537$, and a padding scheme that randomizes each message; textbook RSA as above is for understanding, not for protecting secrets."
+   },
+   {
+    "t": "key",
+    "html": "RSA: $n = pq$, $d \\equiv e^{-1} \\pmod{(p - 1)(q - 1)}$. Encrypt $c = m^{e}$, decrypt $m = c^{d}$, both mod $n$. Euler's theorem makes them inverse; the difficulty of factoring $n$ keeps $d$ secret."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 3, Public-Key Cryptography (the RSA cryptosystem)"
+   },
+   {
+    "name": "Lehman, Leighton and Meyer, Mathematics for Computer Science (MIT OpenCourseWare 6.042J), chapter on number theory: RSA public key encryption"
+   }
+  ]
+ },
+ "nt.quadratic-residues": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Which numbers are perfect squares mod $p$? It sounds like a small question, but it leads to one of the deepest results in elementary number theory. We start by counting, using <a href=\"/math/number-theory/modular-arithmetic/\">modular arithmetic</a> and Euclid's lemma from <a href=\"/math/number-theory/unique-factorization/\">unique factorization</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definition.</b> Let $p$ be an odd prime and $p \\nmid a$. Then $a$ is a <b>quadratic residue</b> mod $p$ if $x^{2} \\equiv a \\pmod{p}$ has a solution, and a <b>quadratic nonresidue</b> if it does not."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> Mod an odd prime $p$, exactly $\\frac{p - 1}{2}$ of the numbers $1, \\dots, p - 1$ are quadratic residues, and each one has exactly two square roots, $x$ and $-x$."
+   },
+   {
+    "t": "why",
+    "html": "$x^{2} \\equiv y^{2}$ means $p \\mid (x - y)(x + y)$, so by Euclid's lemma $x \\equiv y$ or $x \\equiv -y$. So squaring sends the $p - 1$ nonzero residues to their squares <b>two at a time</b>: $x$ and $-x$ always land together, and they are different because $p$ is odd ($x \\equiv -x$ would mean $p \\mid 2x$). That leaves exactly $\\frac{p - 1}{2}$ different squares. In practice, square $1, 2, \\dots, \\frac{p - 1}{2}$; the rest repeat these."
+   },
+   {
+    "t": "viz",
+    "name": "nt-clock",
+    "opts": {
+     "n": 11,
+     "mode": "squares"
+    },
+    "cap": "Arrows from $x$ to $x^{2} \\bmod 11$. Pairs $x$ and $11 - x$ meet at the same square, so only 5 of the 10 nonzero points are hit: $1, 3, 4, 5, 9$. The hollow points are the nonresidues."
+   },
+   {
+    "t": "ex",
+    "title": "All the squares",
+    "q": "Find the quadratic residues mod 11.",
+    "steps": [
+     "$1^{2} = 1$, $2^{2} = 4$, $3^{2} = 9$, $4^{2} = 16 \\equiv 5$, $5^{2} = 25 \\equiv 3$.",
+     "The residues are $1, 3, 4, 5, 9$; the nonresidues are $2, 6, 7, 8, 10$. Five of each."
+    ],
+    "a": "$\\{1, 3, 4, 5, 9\\}$."
+   },
+   {
+    "t": "ex",
+    "title": "Square roots mod p",
+    "q": "Solve $x^{2} \\equiv 5 \\pmod{11}$, and then $x^{2} \\equiv 2 \\pmod{11}$.",
+    "steps": [
+     "From the list, $4^{2} \\equiv 5$, so $x \\equiv 4$ or $x \\equiv -4 \\equiv 7$. Check: $7^{2} = 49 = 44 + 5$.",
+     "$2$ is not on the list, so $x^{2} \\equiv 2 \\pmod{11}$ has no solution."
+    ],
+    "a": "$x \\in \\{4, 7\\}$; no solution."
+   },
+   {
+    "t": "ex",
+    "title": "A composite modulus is different",
+    "q": "Solve $x^{2} \\equiv 1 \\pmod{15}$.",
+    "steps": [
+     "Mod 3: $x \\equiv \\pm 1$. Mod 5: $x \\equiv \\pm 1$. Each of the four sign choices gives one solution mod 15 by the <a href=\"/math/number-theory/chinese-remainder/\">Chinese Remainder Theorem</a>.",
+     "They are $1, 4, 11, 14$. Check: $4^{2} = 16$ and $11^{2} = 121 = 120 + 1$."
+    ],
+    "a": "Four solutions: $1, 4, 11, 14$."
+   },
+   {
+    "t": "p",
+    "html": "Squares multiply like signs: residue times residue is a residue (obviously, $x^{2}y^{2} = (xy)^{2}$), and, less obviously, residue times nonresidue is a nonresidue and nonresidue times nonresidue is a <b>residue</b>. Mod 11: $2 \\cdot 6 = 12 \\equiv 1$, a residue. The next lesson explains why."
+   },
+   {
+    "t": "mistake",
+    "html": "Forgetting that $x$ and $-x$ have the same square, and so expecting $p - 1$ different nonzero squares. Mod 11, $5^{2} = 25 \\equiv 3$ and $6^{2} = 36 \\equiv 3$ too. Only $\\frac{p - 1}{2}$ squares appear, each with exactly two roots, and only when $p$ is prime: mod 15 the number 1 has four square roots."
+   },
+   {
+    "t": "key",
+    "html": "Mod an odd prime $p$, squaring is two-to-one on the nonzero residues: exactly half of them, $\\frac{p-1}{2}$, are squares, each with roots $\\pm x$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 4, Quadratic Reciprocity"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on quadratic residues"
+   }
+  ]
+ },
+ "nt.euler-criterion": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Listing squares works mod 11, but not mod a prime with 50 digits. Euler found a test that needs only one <a href=\"/math/number-theory/modular-powers/\">fast power</a>, and it comes straight from <a href=\"/math/number-theory/fermat-little/\">Fermat's theorem</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>The Legendre symbol.</b> For an odd prime $p$ and an integer $a$, $$\\left(\\frac{a}{p}\\right) = \\begin{cases} 1 & \\text{if } p \\nmid a \\text{ and } a \\text{ is a quadratic residue mod } p, \\\\ -1 & \\text{if } a \\text{ is a nonresidue mod } p, \\\\ 0 & \\text{if } p \\mid a. \\end{cases}$$ It looks like a fraction, but it is <b>not</b> division: it is a label, $1$, $-1$ or $0$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Euler's criterion.</b> For an odd prime $p$, $$\\left(\\frac{a}{p}\\right) \\equiv a^{(p-1)/2} \\pmod{p}.$$"
+   },
+   {
+    "t": "why",
+    "html": "Suppose $p \\nmid a$ and let $b = a^{(p-1)/2}$. Then $b^{2} = a^{p-1} \\equiv 1$, so $b \\equiv \\pm 1$ (only $\\pm 1$ square to 1 mod a prime). Which sign? Take a <a href=\"/math/number-theory/primitive-roots/\">primitive root</a> $g$ and write $a \\equiv g^{k}$. The squares are exactly the <b>even</b> powers of $g$. And $b = g^{k(p-1)/2} \\equiv 1$ exactly when $p - 1 \\mid k\\frac{p-1}{2}$, that is, when $k$ is even. So $b \\equiv 1$ exactly for the residues."
+   },
+   {
+    "t": "viz",
+    "name": "nt-powers",
+    "opts": {
+     "mode": "criterion",
+     "n": 11
+    },
+    "cap": "Mod 11, the column $a^{5}$ is always $1$ or $-1$, and it is $1$ in exactly the rows where $a$ has a square root (1, 3, 4, 5, 9)."
+   },
+   {
+    "t": "ex",
+    "title": "A residue",
+    "q": "Find $\\left(\\frac{3}{11}\\right)$.",
+    "steps": [
+     "$\\frac{11 - 1}{2} = 5$, so compute $3^{5} = 243 = 22 \\cdot 11 + 1 \\equiv 1$.",
+     "So $\\left(\\frac{3}{11}\\right) = 1$. Indeed $5^{2} = 25 \\equiv 3 \\pmod{11}$."
+    ],
+    "a": "$1$."
+   },
+   {
+    "t": "ex",
+    "title": "A nonresidue",
+    "q": "Find $\\left(\\frac{2}{13}\\right)$.",
+    "steps": [
+     "$2^{6} = 64 = 4 \\cdot 13 + 12 \\equiv 12 \\equiv -1 \\pmod{13}$.",
+     "So $\\left(\\frac{2}{13}\\right) = -1$: 2 is not a square mod 13. (The squares mod 13 are $1, 4, 9, 3, 12, 10$.)"
+    ],
+    "a": "$-1$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Multiplicativity.</b> Since $(ab)^{(p-1)/2} = a^{(p-1)/2} b^{(p-1)/2}$, Euler's criterion gives $$\\left(\\frac{ab}{p}\\right) = \\left(\\frac{a}{p}\\right)\\left(\\frac{b}{p}\\right).$$ This is the \"signs\" rule from the last lesson: two nonresidues multiply to a residue."
+   },
+   {
+    "t": "ex",
+    "title": "Splitting into factors",
+    "q": "Find $\\left(\\frac{6}{13}\\right)$.",
+    "steps": [
+     "$\\left(\\frac{6}{13}\\right) = \\left(\\frac{2}{13}\\right)\\left(\\frac{3}{13}\\right)$.",
+     "$\\left(\\frac{2}{13}\\right) = -1$ (above). $3^{6} = 729 = 56 \\cdot 13 + 1$, so $\\left(\\frac{3}{13}\\right) = 1$.",
+     "So $\\left(\\frac{6}{13}\\right) = -1$, and 6 is not among the squares mod 13."
+    ],
+    "a": "$-1$."
+   },
+   {
+    "t": "p",
+    "html": "Why this matters: deciding whether $a$ is a square by listing squares takes about $\\frac{p}{2}$ steps, hopeless for a 50-digit prime. Euler's criterion needs one <a href=\"/math/number-theory/modular-powers/\">repeated-squaring</a> computation of $a^{(p-1)/2}$, about 330 multiplications for a 50-digit $p$. It says <i>whether</i> a square root exists, though not what it is. Finding the root takes more work (the Tonelli–Shanks algorithm), and that is left for later."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading $\\left(\\frac{a}{p}\\right)$ as the fraction $a \\div p$. $\\left(\\frac{3}{11}\\right)$ is not $0.27\\ldots$; it is $1$, because 3 is a square mod 11. Every Legendre symbol is $1$, $-1$ or $0$. Euler's power will come out as $1$ or $p - 1$, and $p - 1$ means $-1$."
+   },
+   {
+    "t": "key",
+    "html": "$\\left(\\frac{a}{p}\\right) = \\pm 1$ says whether $a$ is a square mod $p$, and Euler's criterion computes it: $\\left(\\frac{a}{p}\\right) \\equiv a^{(p-1)/2} \\pmod{p}$. The symbol is multiplicative in $a$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 4, Quadratic Reciprocity (Euler's criterion)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on the Legendre symbol"
+   }
+  ]
+ },
+ "nt.supplementary-laws": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/number-theory/euler-criterion/\">Euler's criterion</a> decides any single case. For two special numbers, $-1$ and $2$, it gives a rule that depends only on the remainder of $p$ mod 4 or mod 8. These two rules, the <b>supplementary laws</b>, are the base cases of quadratic reciprocity."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> For an odd prime $p$: $$\\left(\\frac{-1}{p}\\right) = 1 \\iff p \\equiv 1 \\pmod{4}, \\qquad \\left(\\frac{2}{p}\\right) = 1 \\iff p \\equiv \\pm 1 \\pmod{8}.$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>For $-1$:</b> Euler gives $\\left(\\frac{-1}{p}\\right) \\equiv (-1)^{(p-1)/2}$, which is $1$ exactly when $\\frac{p-1}{2}$ is even, that is, $p \\equiv 1 \\pmod{4}$.<br><b>For $2$:</b> multiply the even numbers $2 \\cdot 4 \\cdot 6 \\cdots (p - 1)$. Factoring out a 2 from each gives $2^{(p-1)/2} \\cdot \\left(\\frac{p-1}{2}\\right)!$. Now replace each even number bigger than $\\frac{p}{2}$ by $-(p - \\text{that number})$, a negative odd number below $\\frac{p}{2}$. The list becomes $\\pm 1, \\pm 2, \\dots, \\pm \\frac{p-1}{2}$ with one minus sign for each even number above $\\frac{p}{2}$. So $2^{(p-1)/2} \\equiv (-1)^{m}$, where $m$ counts the even numbers between $\\frac{p}{2}$ and $p$, and checking the four cases of $p \\bmod 8$ shows $m$ is even exactly when $p \\equiv \\pm 1 \\pmod{8}$. For $p = 11$: the evens above 5.5 are 6, 8, 10, so $m = 3$ and $\\left(\\frac{2}{11}\\right) = -1$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$p \\bmod 8$",
+     "1",
+     "3",
+     "5",
+     "7"
+    ],
+    "rows": [
+     [
+      "$\\left(\\frac{-1}{p}\\right)$",
+      "$1$",
+      "$-1$",
+      "$1$",
+      "$-1$"
+     ],
+     [
+      "$\\left(\\frac{2}{p}\\right)$",
+      "$1$",
+      "$-1$",
+      "$-1$",
+      "$1$"
+     ],
+     [
+      "$\\left(\\frac{-2}{p}\\right)$",
+      "$1$",
+      "$1$",
+      "$-1$",
+      "$-1$"
+     ]
+    ],
+    "cap": "The rule for $-1$ depends on $p$ mod 4; the rule for 2 needs $p$ mod 8. The last row is the product of the two above it."
+   },
+   {
+    "t": "ex",
+    "title": "Is −1 a square?",
+    "q": "Find $\\left(\\frac{-1}{13}\\right)$ and a square root of $-1$ mod 13.",
+    "steps": [
+     "$13 \\equiv 1 \\pmod{4}$, so $\\left(\\frac{-1}{13}\\right) = 1$.",
+     "Indeed $5^{2} = 25 = 26 - 1 \\equiv -1 \\pmod{13}$."
+    ],
+    "a": "$1$; for example $x = 5$."
+   },
+   {
+    "t": "ex",
+    "title": "Is 2 a square?",
+    "q": "Find $\\left(\\frac{2}{17}\\right)$ and $\\left(\\frac{2}{11}\\right)$.",
+    "steps": [
+     "$17 \\equiv 1 \\pmod{8}$, so $\\left(\\frac{2}{17}\\right) = 1$. Check: $6^{2} = 36 = 34 + 2$.",
+     "$11 \\equiv 3 \\pmod{8}$, so $\\left(\\frac{2}{11}\\right) = -1$, matching the list of squares mod 11 (2 is not on it)."
+    ],
+    "a": "$1$ and $-1$."
+   },
+   {
+    "t": "ex",
+    "title": "Combining the laws",
+    "q": "Find $\\left(\\frac{-2}{11}\\right)$.",
+    "steps": [
+     "$\\left(\\frac{-2}{11}\\right) = \\left(\\frac{-1}{11}\\right)\\left(\\frac{2}{11}\\right)$.",
+     "$11 \\equiv 3 \\pmod{4}$ gives $-1$; $11 \\equiv 3 \\pmod{8}$ gives $-1$. The product is $1$.",
+     "Check: $3^{2} = 9 \\equiv -2 \\pmod{11}$."
+    ],
+    "a": "$1$."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the rule for $-1$ on $2$, or looking at $p$ mod 4 when the rule for 2 needs $p$ mod 8. For $p = 7$: $7 \\equiv 3 \\pmod{4}$, so $-1$ is not a square, but $7 \\equiv 7 \\equiv -1 \\pmod{8}$, so 2 <b>is</b> a square: $3^{2} = 9 \\equiv 2$. Keep the two rules separate."
+   },
+   {
+    "t": "note",
+    "html": "The first law has a famous consequence. If $p \\equiv 1 \\pmod{4}$, there is an $x$ with $p \\mid x^{2} + 1$, and that is the starting point for writing $p$ as a <a href=\"/math/number-theory/sums-of-two-squares/\">sum of two squares</a>."
+   },
+   {
+    "t": "key",
+    "html": "$-1$ is a square mod $p$ exactly when $p \\equiv 1 \\pmod{4}$; $2$ is a square exactly when $p \\equiv \\pm 1 \\pmod{8}$. Products follow by multiplicativity."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 4, Quadratic Reciprocity"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on the supplementary laws"
+   }
+  ]
+ },
+ "nt.quadratic-reciprocity": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Here are two questions that seem unrelated: is $13$ a square mod $47$? Is $47$ a square mod $13$? Gauss proved, as a teenager, that the answers are linked by a simple sign rule. He called it the <i>golden theorem</i> and gave several different proofs of it. With it and the <a href=\"/math/number-theory/supplementary-laws/\">supplementary laws</a>, any Legendre symbol shrinks quickly, much like the Euclidean algorithm."
+   },
+   {
+    "t": "p",
+    "html": "<b>The law of quadratic reciprocity.</b> For distinct odd primes $p$ and $q$, $$\\left(\\frac{p}{q}\\right)\\left(\\frac{q}{p}\\right) = (-1)^{\\frac{p-1}{2} \\cdot \\frac{q-1}{2}}.$$ In words: $\\left(\\frac{p}{q}\\right) = \\left(\\frac{q}{p}\\right)$, <b>unless</b> $p \\equiv q \\equiv 3 \\pmod{4}$, in which case $\\left(\\frac{p}{q}\\right) = -\\left(\\frac{q}{p}\\right)$."
+   },
+   {
+    "t": "why",
+    "html": "The exponent $\\frac{p-1}{2} \\cdot \\frac{q-1}{2}$ is odd only when both factors are odd, that is, when $p \\equiv q \\equiv 3 \\pmod{4}$; that is where the minus sign comes from. The proof is beyond this lesson (one classical proof counts the lattice points under the diagonal of a $\\frac{p}{2} \\times \\frac{q}{2}$ rectangle in two ways), but its power is easy to see: after flipping, the top number can be reduced mod the new bottom, so the numbers keep getting smaller until the supplementary laws or $\\left(\\frac{1}{q}\\right) = 1$ finish the job."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Reduce the top mod the bottom.",
+     "Factor the top. Drop squared factors; handle $-1$ and $2$ with the supplementary laws.",
+     "For each odd prime on top, flip with reciprocity (minus sign if both are $3 \\bmod 4$), and repeat."
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "One flip",
+    "q": "Find $\\left(\\frac{13}{47}\\right)$.",
+    "steps": [
+     "$13 \\equiv 1 \\pmod{4}$, so no sign: $\\left(\\frac{13}{47}\\right) = \\left(\\frac{47}{13}\\right)$.",
+     "$47 \\equiv 8 \\pmod{13}$: $\\left(\\frac{8}{13}\\right) = \\left(\\frac{2}{13}\\right)^{3} = \\left(\\frac{2}{13}\\right)$.",
+     "$13 \\equiv 5 \\pmod{8}$, so $\\left(\\frac{2}{13}\\right) = -1$."
+    ],
+    "a": "$\\left(\\frac{13}{47}\\right) = -1$: 13 is not a square mod 47."
+   },
+   {
+    "t": "ex",
+    "title": "Watch the sign",
+    "q": "Find $\\left(\\frac{19}{43}\\right)$.",
+    "steps": [
+     "$19 \\equiv 43 \\equiv 3 \\pmod{4}$, so $\\left(\\frac{19}{43}\\right) = -\\left(\\frac{43}{19}\\right) = -\\left(\\frac{5}{19}\\right)$.",
+     "$5 \\equiv 1 \\pmod{4}$: $\\left(\\frac{5}{19}\\right) = \\left(\\frac{19}{5}\\right) = \\left(\\frac{4}{5}\\right) = 1$, since 4 is a square.",
+     "So $\\left(\\frac{19}{43}\\right) = -1$."
+    ],
+    "a": "$-1$."
+   },
+   {
+    "t": "ex",
+    "title": "A composite top",
+    "q": "Find $\\left(\\frac{12}{31}\\right)$.",
+    "steps": [
+     "Factor first: $\\left(\\frac{12}{31}\\right) = \\left(\\frac{2}{31}\\right)^{2}\\left(\\frac{3}{31}\\right) = \\left(\\frac{3}{31}\\right)$.",
+     "$3 \\equiv 31 \\equiv 3 \\pmod{4}$: $\\left(\\frac{3}{31}\\right) = -\\left(\\frac{31}{3}\\right) = -\\left(\\frac{1}{3}\\right) = -1$."
+    ],
+    "a": "$-1$."
+   },
+   {
+    "t": "mistake",
+    "html": "Flipping a symbol whose top is not an odd prime. \"$\\left(\\frac{15}{17}\\right) = \\left(\\frac{17}{15}\\right) = \\left(\\frac{2}{15}\\right)$, and 2 is not a square mod 15, so the answer is $-1$\" is wrong: 15 is not prime, so the law does not apply to it, and the true value is $\\left(\\frac{3}{17}\\right)\\left(\\frac{5}{17}\\right) = (-1)(-1) = 1$. Factor the top into primes first. And when both primes are $3 \\bmod 4$, do not forget the minus sign."
+   },
+   {
+    "t": "note",
+    "html": "Reciprocity also answers \"for which primes $p$ is 3 a square?\" in one stroke: $\\left(\\frac{3}{p}\\right) = 1$ exactly when $p \\equiv \\pm 1 \\pmod{12}$. (Try $p = 11$: $5^{2} = 25 \\equiv 3$.) A version for composite bottoms, the Jacobi symbol, is left for a later course."
+   },
+   {
+    "t": "key",
+    "html": "For distinct odd primes, $\\left(\\frac{p}{q}\\right) = \\left(\\frac{q}{p}\\right)$ unless both are $3 \\bmod 4$, when there is a minus sign. Reduce, factor, flip, repeat."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 4, Quadratic Reciprocity (statement of the quadratic reciprocity law)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on quadratic reciprocity"
+   }
+  ]
+ },
+ "nt.pythagorean-triples": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/pre-algebra/pythagorean-theorem/\">Pythagorean theorem</a> turns right triangles into the equation $a^{2} + b^{2} = c^{2}$. Whole-number solutions like $(3, 4, 5)$ and $(5, 12, 13)$ have fascinated people for nearly 4,000 years; a Babylonian clay tablet, Plimpton 322, lists fifteen of them. Here is the complete list."
+   },
+   {
+    "t": "p",
+    "html": "<b>Definitions.</b> A <b>Pythagorean triple</b> is a triple of positive integers with $a^{2} + b^{2} = c^{2}$. It is <b>primitive</b> when $\\gcd(a, b, c) = 1$. Every triple is a multiple of a primitive one: $(6, 8, 10) = 2 \\cdot (3, 4, 5)$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> The primitive triples, with $b$ the even leg, are exactly $$a = m^{2} - n^{2}, \\qquad b = 2mn, \\qquad c = m^{2} + n^{2},$$ where $m > n > 0$, $\\gcd(m, n) = 1$, and one of $m$, $n$ is even. Each primitive triple comes from exactly one such pair."
+   },
+   {
+    "t": "why",
+    "html": "That these are triples is algebra: $(m^{2} - n^{2})^{2} + (2mn)^{2} = m^{4} + 2m^{2}n^{2} + n^{4} = (m^{2} + n^{2})^{2}$. That there are no others uses <a href=\"/math/number-theory/unique-factorization/\">unique factorization</a>. In a primitive triple exactly one leg is even (squares are $0$ or $1 \\bmod 4$, so two odd legs would make $c^{2} \\equiv 2 \\pmod{4}$, impossible). Write $b^{2} = c^{2} - a^{2} = (c - a)(c + a)$. Both factors are even, and $\\frac{c - a}{2}$ and $\\frac{c + a}{2}$ are coprime; their product is the square $\\left(\\frac{b}{2}\\right)^{2}$, so each is a square, $n^{2}$ and $m^{2}$. Then $c = m^{2} + n^{2}$ and $a = m^{2} - n^{2}$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-lattice",
+    "opts": {
+     "mode": "circle",
+     "m": 2,
+     "n": 1
+    },
+    "cap": "Divide by $c^{2}$: a triple is a point with rational coordinates on the unit circle. The line through $(-1, 0)$ with slope $\\frac{n}{m}$ meets the circle again at $\\left(\\frac{m^{2} - n^{2}}{m^{2} + n^{2}}, \\frac{2mn}{m^{2} + n^{2}}\\right)$. Move the sliders; try $m = 3$, $n = 1$."
+   },
+   {
+    "t": "ex",
+    "title": "From m and n",
+    "q": "Find the triples for $(m, n) = (3, 2)$ and $(4, 1)$.",
+    "steps": [
+     "$(3, 2)$: $9 - 4 = 5$, $2 \\cdot 3 \\cdot 2 = 12$, $9 + 4 = 13$. So $(5, 12, 13)$.",
+     "$(4, 1)$: $16 - 1 = 15$, $8$, $17$. So $(15, 8, 17)$: $225 + 64 = 289 = 17^{2}$."
+    ],
+    "a": "$(5, 12, 13)$ and $(15, 8, 17)$."
+   },
+   {
+    "t": "ex",
+    "title": "Back to m and n",
+    "q": "Which $m$ and $n$ give the primitive triple $(21, 20, 29)$?",
+    "steps": [
+     "The odd leg is $21 = m^{2} - n^{2}$ and $29 = m^{2} + n^{2}$.",
+     "Add: $2m^{2} = 50$, so $m = 5$. Subtract: $2n^{2} = 8$, so $n = 2$.",
+     "Check: $2mn = 20$."
+    ],
+    "a": "$m = 5$, $n = 2$."
+   },
+   {
+    "t": "table",
+    "head": [
+     "$(m, n)$",
+     "(2, 1)",
+     "(3, 2)",
+     "(4, 1)",
+     "(4, 3)",
+     "(5, 2)",
+     "(5, 4)",
+     "(6, 1)"
+    ],
+    "rows": [
+     [
+      "triple",
+      "(3, 4, 5)",
+      "(5, 12, 13)",
+      "(15, 8, 17)",
+      "(7, 24, 25)",
+      "(21, 20, 29)",
+      "(9, 40, 41)",
+      "(35, 12, 37)"
+     ]
+    ],
+    "cap": "The primitive triples with hypotenuse below 42."
+   },
+   {
+    "t": "mistake",
+    "html": "Using $m$ and $n$ that are both odd, or that share a factor, and expecting a primitive triple. $m = 3$, $n = 1$ gives $(8, 6, 10) = 2 \\cdot (4, 3, 5)$, and $m = 4$, $n = 2$ gives $(12, 16, 20) = 4 \\cdot (3, 4, 5)$. Both conditions matter: coprime, and opposite parity. Check the result with $\\gcd$."
+   },
+   {
+    "t": "key",
+    "html": "Every primitive Pythagorean triple is $(m^{2} - n^{2}, 2mn, m^{2} + n^{2})$ for coprime $m > n > 0$ of opposite parity, and every triple is a multiple of a primitive one."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on Pythagorean triples and rational points on the circle"
+   },
+   {
+    "name": "Euclid, Elements, Book X, the lemma before Proposition 29 (the classical construction of Pythagorean triples)"
+   }
+  ]
+ },
+ "nt.sums-of-two-squares": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "$5 = 1^{2} + 2^{2}$ and $13 = 2^{2} + 3^{2}$, but no matter how you try, $7$ and $21$ are not sums of two squares. Fermat found the pattern, and the <a href=\"/math/number-theory/supplementary-laws/\">supplementary law</a> for $-1$ is the key to it."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem (Fermat; proved by Euler).</b> An odd prime $p$ is a sum of two squares exactly when $p \\equiv 1 \\pmod{4}$. More generally, a positive integer $n$ is a sum of two squares of integers exactly when every prime $q \\equiv 3 \\pmod{4}$ appears in the <a href=\"/math/number-theory/unique-factorization/\">prime factorization</a> of $n$ to an <b>even</b> power."
+   },
+   {
+    "t": "why",
+    "html": "<b>Why $3 \\bmod 4$ primes fail.</b> Squares are $0$ or $1 \\bmod 4$, so a sum of two squares is $0$, $1$ or $2 \\bmod 4$, never $3$.<br><b>Products of sums are sums.</b> $(a^{2} + b^{2})(c^{2} + d^{2}) = (ac - bd)^{2} + (ad + bc)^{2}$, an identity you can check by expanding.<br><b>Primes $\\equiv 1 \\bmod 4$ succeed.</b> Here $-1$ is a square mod $p$: some $x$ has $p \\mid x^{2} + 1$, a sum of two squares divisible by $p$. A short argument (Thue's lemma, or Fermat's \"descent\") shrinks this to $p$ itself.<br><b>Why even powers.</b> If $q \\equiv 3 \\pmod{4}$ divides $a^{2} + b^{2}$, then $q$ divides both $a$ and $b$ (otherwise $-1 \\equiv (a b^{-1})^{2}$ would be a square mod $q$). So $q^{2}$ divides the sum, and dividing it out leaves a smaller sum of two squares."
+   },
+   {
+    "t": "ex",
+    "title": "Primes",
+    "q": "Write $13$ and $29$ as sums of two squares, and explain why $23$ cannot be one.",
+    "steps": [
+     "$13 \\equiv 1$ and $29 \\equiv 1 \\pmod{4}$. Search: $13 - 2^{2} = 9 = 3^{2}$, and $29 - 2^{2} = 25 = 5^{2}$.",
+     "$23 \\equiv 3 \\pmod{4}$, and a sum of two squares is never $3 \\bmod 4$."
+    ],
+    "a": "$13 = 3^{2} + 2^{2}$, $29 = 5^{2} + 2^{2}$; $23$ is impossible."
+   },
+   {
+    "t": "ex",
+    "title": "A prime 3 mod 4, squared",
+    "q": "Is $45$ a sum of two squares?",
+    "steps": [
+     "$45 = 3^{2} \\cdot 5$: the prime $3 \\equiv 3 \\pmod{4}$ appears to an even power, so yes.",
+     "Take $5 = 2^{2} + 1^{2}$ and multiply by $9 = 3^{2}$: $45 = 6^{2} + 3^{2}$."
+    ],
+    "a": "Yes: $45 = 36 + 9$."
+   },
+   {
+    "t": "ex",
+    "title": "Multiplying representations",
+    "q": "Write $65 = 5 \\cdot 13$ as a sum of two squares in two ways.",
+    "steps": [
+     "$5 = 2^{2} + 1^{2}$ and $13 = 3^{2} + 2^{2}$.",
+     "$(ac - bd)^{2} + (ad + bc)^{2}$ with $(a, b, c, d) = (2, 1, 3, 2)$: $(6 - 2)^{2} + (4 + 3)^{2} = 16 + 49$.",
+     "Swapping the roles of $c$ and $d$ gives $(4 - 3)^{2} + (6 + 2)^{2} = 1 + 64$."
+    ],
+    "a": "$65 = 4^{2} + 7^{2} = 1^{2} + 8^{2}$."
+   },
+   {
+    "t": "mistake",
+    "html": "Ruling out every number with a prime factor that is $3 \\bmod 4$. $45 = 3^{2} \\cdot 5$ has the factor 3, yet $45 = 6^{2} + 3^{2}$: the 3 appears squared. Only an <b>odd</b> power of such a prime is fatal, as in $21 = 3 \\cdot 7$ or $63 = 3^{2} \\cdot 7$. Also remember that $0$ counts: $49 = 7^{2} + 0^{2}$."
+   },
+   {
+    "t": "key",
+    "html": "$n$ is a sum of two squares exactly when each prime $\\equiv 3 \\pmod{4}$ divides $n$ to an even power. Primes $\\equiv 1 \\pmod{4}$ are sums of two squares, and products of sums are sums."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 5, Continued Fractions (sums of two squares)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on sums of two squares"
+   }
+  ]
+ },
+ "nt.continued-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Run the <a href=\"/math/number-theory/euclidean-algorithm/\">Euclidean algorithm</a> on $67$ and $24$, but keep the quotients instead of throwing them away. They spell out a new way to write $\\frac{67}{24}$, as a tower of fractions, and its truncations are the best possible approximations by small fractions."
+   },
+   {
+    "t": "p",
+    "html": "<b>Notation.</b> $$[q_0; q_1, q_2, \\dots, q_k] = q_0 + \\cfrac{1}{q_1 + \\cfrac{1}{q_2 + \\cfrac{1}{\\ddots + \\cfrac{1}{q_k}}}}$$ The $q_i$ are the <b>partial quotients</b>; $q_0$ is the whole-number part and the rest are positive integers."
+   },
+   {
+    "t": "why",
+    "html": "If $a = bq_0 + r_1$, then $\\frac{a}{b} = q_0 + \\frac{r_1}{b} = q_0 + \\cfrac{1}{b / r_1}$. Now do the same to $\\frac{b}{r_1}$, which is the next line of the Euclidean algorithm, and so on. So the quotients of the algorithm are exactly the partial quotients, and the process stops because the algorithm stops: <b>every rational number has a finite continued fraction</b>."
+   },
+   {
+    "t": "viz",
+    "name": "nt-euclid",
+    "opts": {
+     "a": 67,
+     "b": 24,
+     "mode": "cf",
+     "task": "Step through and count the squares in each row: 2, then 1, 3, 1, 4."
+    },
+    "cap": "Counting squares of each size in the Euclidean rectangle reads off the partial quotients of $\\frac{67}{24}$, and the table lists the convergents."
+   },
+   {
+    "t": "ex",
+    "title": "Rational to continued fraction",
+    "q": "Write $\\frac{67}{24}$ as a continued fraction.",
+    "steps": [
+     "$67 = 24 \\cdot 2 + 19$, $\\ 24 = 19 \\cdot 1 + 5$, $\\ 19 = 5 \\cdot 3 + 4$, $\\ 5 = 4 \\cdot 1 + 1$, $\\ 4 = 1 \\cdot 4 + 0$.",
+     "The quotients, in order: $2, 1, 3, 1, 4$."
+    ],
+    "a": "$\\frac{67}{24} = [2; 1, 3, 1, 4]$."
+   },
+   {
+    "t": "ex",
+    "title": "Continued fraction to rational",
+    "q": "Write $[1; 2, 3, 4]$ as a fraction.",
+    "steps": [
+     "Start at the bottom: $3 + \\frac{1}{4} = \\frac{13}{4}$.",
+     "Next: $2 + \\frac{4}{13} = \\frac{30}{13}$.",
+     "Last: $1 + \\frac{13}{30} = \\frac{43}{30}$."
+    ],
+    "a": "$\\frac{43}{30}$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Convergents.</b> Cutting the continued fraction after $q_k$ gives the $k$-th convergent $\\frac{p_k}{q_k}$. They can be computed from the top down: $$p_k = q_k p_{k-1} + p_{k-2}, \\qquad q_k = q_k q_{k-1} + q_{k-2},$$ starting from $p_{-1} = 1$, $p_{-2} = 0$, $q_{-1} = 0$, $q_{-2} = 1$ (on the right, $q_k$ is the partial quotient). The convergents alternate below and above the true value and close in fast: $\\left|\\frac{a}{b} - \\frac{p_k}{q_k}\\right| < \\frac{1}{q_k q_{k+1}}$."
+   },
+   {
+    "t": "ex",
+    "title": "The convergents of 67/24",
+    "q": "List the convergents of $[2; 1, 3, 1, 4]$.",
+    "steps": [
+     "$\\frac{p_0}{q_0} = \\frac{2}{1}$, $\\ \\frac{p_1}{q_1} = \\frac{1 \\cdot 2 + 1}{1 \\cdot 1 + 0} = \\frac{3}{1}$.",
+     "$\\frac{p_2}{q_2} = \\frac{3 \\cdot 3 + 2}{3 \\cdot 1 + 1} = \\frac{11}{4}$, $\\ \\frac{p_3}{q_3} = \\frac{11 + 3}{4 + 1} = \\frac{14}{5}$, $\\ \\frac{p_4}{q_4} = \\frac{4 \\cdot 14 + 11}{4 \\cdot 5 + 4} = \\frac{67}{24}$.",
+     "They alternate: $2 < 2.75 < 2.791\\overline{6} < 2.8 < 3$."
+    ],
+    "a": "$\\frac{2}{1}, \\frac{3}{1}, \\frac{11}{4}, \\frac{14}{5}, \\frac{67}{24}$."
+   },
+   {
+    "t": "mistake",
+    "html": "Dropping the whole-number part $q_0$, or rebuilding the fraction from the outside in. $[1; 2, 3, 4]$ is not $1 + \\frac{1}{2} + \\frac{1}{3} + \\frac{1}{4}$; each partial quotient sits <b>inside</b> the one before it. Evaluate from the innermost term outward, as in the second example, or use the recurrence."
+   },
+   {
+    "t": "note",
+    "html": "The same algorithm works for irrational numbers, where it never stops: $\\pi = [3; 7, 15, 1, 292, \\dots]$, with convergents $3$, $\\frac{22}{7}$, $\\frac{333}{106}$, $\\frac{355}{113}$. The large 292 explains why $\\frac{355}{113}$ is so astonishingly close to $\\pi$. Square roots come next, in <a href=\"/math/number-theory/irrational-continued-fractions/\">continued fractions of square roots</a>."
+   },
+   {
+    "t": "key",
+    "html": "The quotients of the Euclidean algorithm on $a$ and $b$ are the partial quotients of $\\frac{a}{b} = [q_0; q_1, \\dots, q_k]$. Evaluate from the inside out; the convergents $\\frac{p_k}{q_k}$ are ever better approximations."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 5, Continued Fractions (finite continued fractions)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on continued fractions"
+   }
+  ]
+ },
+ "nt.irrational-continued-fractions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/math/number-theory/continued-fractions/\">rational number</a> has a finite continued fraction. An irrational number does not: the algorithm runs forever. For square roots something remarkable happens: the partial quotients <b>repeat</b>. Finding the pattern needs exact arithmetic with radicals, the kind practiced in <a href=\"/math/algebra-1/radical-operations/\">Algebra 1</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>The algorithm.</b> Start with $x_0 = x$. At each step take the whole part $a_k = \\lfloor x_k \\rfloor$, then flip what is left: $x_{k+1} = \\dfrac{1}{x_k - a_k}$. Then $x = [a_0; a_1, a_2, \\dots]$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem (Lagrange).</b> If $d$ is a positive integer that is not a perfect square, the continued fraction of $\\sqrt{d}$ is periodic: $$\\sqrt{d} = [a_0; \\overline{a_1, a_2, \\dots, a_{r-1}, 2a_0}],$$ where the bar marks the block that repeats forever, and the block always ends with $2a_0$."
+   },
+   {
+    "t": "why",
+    "html": "Each $x_k$ can be written exactly as $\\dfrac{\\sqrt{d} + m}{c}$ with whole numbers $m$ and $c$, by rationalizing the denominator each time. One can show $0 \\le m < \\sqrt{d}$ and $0 < c < 2\\sqrt{d}$, so there are only finitely many possible pairs $(m, c)$. Sooner or later a pair repeats, and from then on every step repeats too. Rounding to decimals destroys exactly this information, which is why the computation must stay exact."
+   },
+   {
+    "t": "ex",
+    "title": "The continued fraction of √7",
+    "q": "Find the continued fraction of $\\sqrt{7}$.",
+    "steps": [
+     "$2 < \\sqrt{7} < 3$, so $a_0 = 2$ and $x_1 = \\dfrac{1}{\\sqrt{7} - 2} = \\dfrac{\\sqrt{7} + 2}{3} \\approx 1.55$. So $a_1 = 1$.",
+     "$x_2 = \\dfrac{1}{x_1 - 1} = \\dfrac{3}{\\sqrt{7} - 1} = \\dfrac{3(\\sqrt{7} + 1)}{6} = \\dfrac{\\sqrt{7} + 1}{2} \\approx 1.82$. So $a_2 = 1$.",
+     "$x_3 = \\dfrac{1}{x_2 - 1} = \\dfrac{2}{\\sqrt{7} - 1} = \\dfrac{\\sqrt{7} + 1}{3} \\approx 1.22$. So $a_3 = 1$.",
+     "$x_4 = \\dfrac{1}{x_3 - 1} = \\dfrac{3}{\\sqrt{7} - 2} = \\sqrt{7} + 2 \\approx 4.65$. So $a_4 = 4 = 2a_0$, and $x_4 - 4 = \\sqrt{7} - 2$, where we started."
+    ],
+    "a": "$\\sqrt{7} = [2; \\overline{1, 1, 1, 4}]$."
+   },
+   {
+    "t": "viz",
+    "name": "nt-euclid",
+    "opts": {
+     "mode": "cf",
+     "x": "sqrt7",
+     "steps": false
+    },
+    "cap": "The $\\sqrt{7} \\times 1$ rectangle cut into squares never comes out even, but the counts settle into the block 1, 1, 1, 4. The last column, $p^{2} - 7q^{2}$, is always small: a hint of Pell's equation."
+   },
+   {
+    "t": "ex",
+    "title": "The simplest case",
+    "q": "Find the continued fraction of $\\sqrt{2}$.",
+    "steps": [
+     "$a_0 = 1$, and $x_1 = \\dfrac{1}{\\sqrt{2} - 1} = \\sqrt{2} + 1 \\approx 2.41$, so $a_1 = 2$.",
+     "$x_1 - 2 = \\sqrt{2} - 1$, the same leftover as before, so every later quotient is 2."
+    ],
+    "a": "$\\sqrt{2} = [1; \\overline{2}]$."
+   },
+   {
+    "t": "ex",
+    "title": "Best approximations",
+    "q": "Find the convergents of $\\sqrt{7} = [2; 1, 1, 1, 4, \\dots]$ up to $\\frac{p_4}{q_4}$.",
+    "steps": [
+     "With the recurrence: $\\frac{2}{1}, \\frac{3}{1}, \\frac{5}{2}, \\frac{8}{3}, \\frac{37}{14}$.",
+     "$\\frac{37}{14} \\approx 2.642857$, while $\\sqrt{7} \\approx 2.645751$. No fraction with denominator at most 14 comes closer.",
+     "Notice $8^{2} - 7 \\cdot 3^{2} = 64 - 63 = 1$, a whole-number solution of $x^{2} - 7y^{2} = 1$."
+    ],
+    "a": "$\\frac{2}{1}, \\frac{3}{1}, \\frac{5}{2}, \\frac{8}{3}, \\frac{37}{14}$."
+   },
+   {
+    "t": "mistake",
+    "html": "Switching to rounded decimals. With $\\sqrt{7} \\approx 2.6458$, a few flips amplify the rounding error until the quotients come out wrong, and the repeating pattern is never seen. Keep exact forms such as $\\dfrac{1}{\\sqrt{7} - 2}$ and rationalize: multiply top and bottom by $\\sqrt{7} + 2$."
+   },
+   {
+    "t": "key",
+    "html": "For $\\sqrt{d}$, flip and take whole parts with exact radicals: $\\sqrt{d} = [a_0; \\overline{a_1, \\dots, 2a_0}]$ is periodic, and its convergents are the best rational approximations to $\\sqrt{d}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 5, Continued Fractions (quadratic irrationals)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on periodic continued fractions"
+   }
+  ]
+ },
+ "nt.pell-equation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In the last lesson, the convergent $\\frac{8}{3}$ of $\\sqrt{7}$ satisfied $8^{2} - 7 \\cdot 3^{2} = 1$. That was no accident. The equation $x^{2} - dy^{2} = 1$, named (by a historical mix-up) after John Pell, is solved completely by the <a href=\"/math/number-theory/irrational-continued-fractions/\">continued fraction of $\\sqrt{d}$</a>."
+   },
+   {
+    "t": "p",
+    "html": "<b>Pell's equation.</b> Let $d > 0$ be an integer that is not a perfect square. We want integers with $x^{2} - dy^{2} = 1$. The <b>trivial solution</b> is $(1, 0)$. The <b>fundamental solution</b> $(x_1, y_1)$ is the solution in positive integers with the smallest $y$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Theorem.</b> The fundamental solution always exists, and $\\frac{x_1}{y_1}$ is a convergent of $\\sqrt{d}$. Every solution in positive integers comes from its powers: $$x_k + y_k\\sqrt{d} = \\left(x_1 + y_1\\sqrt{d}\\right)^{k}, \\qquad k = 1, 2, 3, \\dots$$"
+   },
+   {
+    "t": "why",
+    "html": "<b>Why convergents.</b> Factor: $(x - y\\sqrt{d})(x + y\\sqrt{d}) = 1$, so $\\dfrac{x}{y} - \\sqrt{d} = \\dfrac{1}{y(x + y\\sqrt{d})} < \\dfrac{1}{2y^{2}}$. A fraction that close to $\\sqrt{d}$ must be one of its convergents (a theorem of Legendre). <b>Why powers.</b> The \"norm\" $N(x + y\\sqrt{d}) = x^{2} - dy^{2}$ is multiplicative: $N(\\alpha\\beta) = N(\\alpha)N(\\beta)$, since $(x - y\\sqrt{d})$ behaves like a conjugate. So a power of a number of norm 1 has norm 1 again, and a descent argument shows nothing else occurs."
+   },
+   {
+    "t": "viz",
+    "name": "nt-lattice",
+    "opts": {
+     "mode": "pell",
+     "d": 2,
+     "count": 4
+    },
+    "cap": "The hyperbola $x^{2} - 2y^{2} = 1$ and its whole-number points $(3, 2)$, $(17, 12)$, $(99, 70)$, $(577, 408)$. Press <b>Next point</b>: each is the last one times $3 + 2\\sqrt{2}$, and the view zooms out because they grow so fast."
+   },
+   {
+    "t": "ex",
+    "title": "A small search",
+    "q": "Find the fundamental solution of $x^{2} - 2y^{2} = 1$.",
+    "steps": [
+     "Try $y = 1$: $1 + 2 = 3$, not a square. $y = 2$: $1 + 8 = 9 = 3^{2}$.",
+     "So $(x_1, y_1) = (3, 2)$. It is the convergent $\\frac{3}{2}$ of $\\sqrt{2} = [1; 2, 2, \\dots]$."
+    ],
+    "a": "$(3, 2)$."
+   },
+   {
+    "t": "ex",
+    "title": "The next solution",
+    "q": "Use $(3, 2)$ to find the next solution of $x^{2} - 2y^{2} = 1$.",
+    "steps": [
+     "$(3 + 2\\sqrt{2})^{2} = 9 + 12\\sqrt{2} + 8 = 17 + 12\\sqrt{2}$.",
+     "So $(x_2, y_2) = (17, 12)$. Check: $289 - 2 \\cdot 144 = 1$."
+    ],
+    "a": "$(17, 12)$."
+   },
+   {
+    "t": "ex",
+    "title": "With the continued fraction",
+    "q": "Find the fundamental solution of $x^{2} - 7y^{2} = 1$.",
+    "steps": [
+     "$\\sqrt{7} = [2; \\overline{1, 1, 1, 4}]$ has convergents $\\frac{2}{1}, \\frac{3}{1}, \\frac{5}{2}, \\frac{8}{3}, \\dots$",
+     "$p^{2} - 7q^{2}$ for these: $4 - 7 = -3$, $9 - 7 = 2$, $25 - 28 = -3$, $64 - 63 = 1$.",
+     "The first $+1$ is at $\\frac{8}{3}$."
+    ],
+    "a": "$(8, 3)$."
+   },
+   {
+    "t": "p",
+    "html": "Solutions can be startlingly large. For $d = 13$ the fundamental solution is $(649, 180)$; for $d = 61$ it is $x = 1{,}766{,}319{,}049$, $y = 226{,}153{,}980$, a challenge Fermat set for other mathematicians in 1657. A search over $y$ would take ages; the continued fraction finds it in a few dozen steps."
+   },
+   {
+    "t": "mistake",
+    "html": "Offering $x = 1$, $y = 0$ as the fundamental solution. It solves the equation, but it is the trivial one, and its powers are all $(1, 0)$ again. The fundamental solution is the smallest with $y > 0$; for $d = 2$ that is $(3, 2)$."
+   },
+   {
+    "t": "key",
+    "html": "$x^{2} - dy^{2} = 1$: the fundamental solution is the first convergent $\\frac{p}{q}$ of $\\sqrt{d}$ with $p^{2} - dq^{2} = 1$, and all positive solutions are the powers $(x_1 + y_1\\sqrt{d})^{k}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "William Stein, Elementary Number Theory: Primes, Congruences, and Secrets (Springer, 2009; free online edition), chapter 5, Continued Fractions (Pell's equation)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.781 Theory of Numbers (Spring 2012), lecture notes on Pell's equation"
+   }
+  ]
+ }
+}

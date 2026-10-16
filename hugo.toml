@@ -28,7 +28,7 @@ url = "/math/"
 weight = 2
 [menu.main.params]
 group = "Education"
-note = "Math from counting to calculus 4, with practice and review"
+note = "Math from counting to college, with practice and review"
 icon = "🪜"
 
 [[menu.main]]
@@ -509,7 +509,16 @@ icon = "🧮"
       path = '{/garden,/garden/**}'
   [segments.ladders]
     [[segments.ladders.includes]]
-      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**,/test-prep,/test-prep/**}'
-  [segments.testprep]
-    [[segments.testprep.includes]]
-      path = '{/test-prep,/test-prep/**}'
+      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**}'
+  [segments.physics]
+    [[segments.physics.includes]]
+      path = '{/physics,/physics/**}'
+  [segments.chemistry]
+    [[segments.chemistry.includes]]
+      path = '{/chemistry,/chemistry/**}'
+  [segments.economics]
+    [[segments.economics.includes]]
+      path = '{/economics,/economics/**}'
+  [segments.earth]
+    [[segments.earth.includes]]
+      path = '{/earth-and-space,/earth-and-space/**}'
