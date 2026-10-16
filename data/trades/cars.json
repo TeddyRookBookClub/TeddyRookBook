@@ -29,19 +29,24 @@
 "v": "ev",
 "label": "Electric car",
 "idle": "Electric car: no engine, exhaust or fuel tank. A battery pack under the floor feeds a motor at the drive axle."
+},
+{
+"v": "rd",
+"label": "Roadster (2026)",
+"idle": "Tesla’s 2026 Roadster, as announced: an electric car underneath, plus compressed-air tanks, valves, cold-gas thrusters and underbody suction fans. Tesla hasn’t published a parts layout, so where the new parts sit is our sketch."
 }
 ],
 "finder_lesson": "troubleshooting",
-"finder_p": "Something seems wrong? Pick a symptom, answer a question, and see the likely causes, what you can safely check, and when to stop driving. <a href=\"%BASE%trades/cars/troubleshooting/\">Lesson 12</a> explains how to think it through.",
+"finder_p": "Something seems wrong? Pick a symptom, answer a question, and see the likely causes, what you can safely check, and when to stop driving. <a href=\"%BASE%trades/cars/troubleshooting/\">Lesson 13</a> explains how to think it through.",
 "finder_urg": {
 "stop": "⛔ Stop driving: get it checked first",
 "soon": "⚠ Get it checked soon",
 "ok": "✓ Usually not urgent"
 },
 "finder_foot": "Your owner’s manual explains the warning lights and procedures for your car. When in doubt, have it checked.",
-"ladder_p": "Build skill one rung at a time, with an experienced helper and the service information the first time you do anything new. <a href=\"%BASE%trades/cars/doing-your-own-work/\">Lesson 13</a> covers tools and garage safety.",
+"ladder_p": "Build skill one rung at a time, with an experienced helper and the service information the first time you do anything new. <a href=\"%BASE%trades/cars/doing-your-own-work/\">Lesson 14</a> covers tools and garage safety.",
 "careers_p": "Automotive service technicians and mechanics inspect, maintain and repair cars and light trucks. Here are the U.S. Bureau of Labor Statistics figures from its Occupational Outlook Handbook (page updated August 27, 2026):",
-"careers_more": "Technicians typically complete a program in automotive service technology at a high school, community college or technical institute; others train through manufacturer programs, apprenticeships or on the job, and certification may be required. <a href=\"%BASE%trades/cars/careers/\">Lesson 14</a> has the details, the training paths and how ASE certification works.",
+"careers_more": "Technicians typically complete a program in automotive service technology at a high school, community college or technical institute; others train through manufacturer programs, apprenticeships or on the job, and certification may be required. <a href=\"%BASE%trades/cars/careers/\">Lesson 15</a> has the details, the training paths and how ASE certification works.",
 "stats_note": "U.S. Bureau of Labor Statistics, Occupational Outlook Handbook, page updated August 27, 2026.",
 "foot": "A free course from Teddy Rook Book, with nothing to buy or send in. It explains how cars work in general and follows U.S. sources; your owner’s manual, your vehicle’s service information and state and local rules come first. It isn’t a substitute for hands-on training, and some work needs a trained or certified technician.",
 "lesson_foot": "A free course from Teddy Rook Book. It explains how cars work in general and follows U.S. sources; your owner’s manual and your vehicle’s service information are the final word for your car, along with state and local rules.",
@@ -102,6 +107,51 @@
 "view": "ev",
 "c": "--s-ev",
 "desc": "Traction battery, power electronics, motor, charge port and thermal system."
+},
+{
+"key": "copv",
+"name": "Compressed-air tanks",
+"lesson": "thrusters-and-fans",
+"anchor": "tank",
+"view": "rd",
+"desc": "Carbon-fiber-wrapped tanks (COPVs) tucked into every spare space; about 600 liters of compressed air, says Tesla’s Lars Moravy.",
+"c": "--s-copv"
+},
+{
+"key": "valves",
+"name": "Valves and gas lines",
+"lesson": "thrusters-and-fans",
+"anchor": "parts",
+"view": "rd",
+"desc": "Lines carry the gas to each thruster, and fast valves open and close it.",
+"c": "--s-valves"
+},
+{
+"key": "thrusters",
+"name": "Rear thrusters (Thrust)",
+"lesson": "thrusters-and-fans",
+"anchor": "newton",
+"view": "rd",
+"desc": "Cold-gas nozzles at the back. They throw air backward, so the car is pushed forward.",
+"c": "--s-thrusters"
+},
+{
+"key": "rocket",
+"name": "Thrusters all around (Rocket)",
+"lesson": "thrusters-and-fans",
+"anchor": "newton",
+"view": "rd",
+"desc": "On the Rocket version, nozzles around the body push up and spin the car. Not approved for public roads, per Tesla’s page.",
+"c": "--s-rocket"
+},
+{
+"key": "fans",
+"name": "Suction fans and skirts",
+"lesson": "thrusters-and-fans",
+"anchor": "fans",
+"view": "rd",
+"desc": "Fans pull air from under the car and skirts seal it off, so the air above presses the car down.",
+"c": "--s-fans"
 },
 {
 "key": "electrical",
@@ -248,7 +298,7 @@
 "t": "sec",
 "id": "connect",
 "h": "How the systems depend on each other",
-"html": "<p>No system works alone. The engine needs the electrical system to start it, the fuel system to feed it, the cooling system to keep it from overheating, and oil to keep its parts from grinding together. The engine computer watches all of them through sensors. The brakes, steering, suspension and tires decide what all that power actually does on the road.</p>\n<p>That’s why a problem in one system often shows up in another. A weak battery means the engine won’t crank. A thermostat that’s stuck closed makes the engine overheat. A low tire can make the car pull to one side, which feels like a steering problem. When you troubleshoot (<a href=\"%BASE%trades/cars/troubleshooting/\">Lesson 12</a>), you’ll trace symptoms back across this map.</p>"
+"html": "<p>No system works alone. The engine needs the electrical system to start it, the fuel system to feed it, the cooling system to keep it from overheating, and oil to keep its parts from grinding together. The engine computer watches all of them through sensors. The brakes, steering, suspension and tires decide what all that power actually does on the road.</p>\n<p>That’s why a problem in one system often shows up in another. A weak battery means the engine won’t crank. A thermostat that’s stuck closed makes the engine overheat. A low tire can make the car pull to one side, which feels like a steering problem. When you troubleshoot (<a href=\"%BASE%trades/cars/troubleshooting/\">Lesson 13</a>), you’ll trace symptoms back across this map.</p>"
 },
 {
 "t": "call",
@@ -2952,7 +3002,7 @@
 "t": "sec",
 "id": "maint",
 "h": "Maintenance",
-"html": "<p>All-electric cars need less maintenance: fewer moving parts, and fewer fluids such as engine oil to change. Hybrids and plug-in hybrids still have engines, so their upkeep is much like a regular car’s. Tires, brakes, wipers, cabin filters and the 12-volt battery still need attention on every car (<a href=\"%BASE%trades/cars/doing-your-own-work/\">Lesson 13</a>). One difference: the high-voltage battery can’t be jump-started. Your owner’s manual explains what to do if the car won’t power on.</p>"
+"html": "<p>All-electric cars need less maintenance: fewer moving parts, and fewer fluids such as engine oil to change. Hybrids and plug-in hybrids still have engines, so their upkeep is much like a regular car’s. Tires, brakes, wipers, cabin filters and the 12-volt battery still need attention on every car (<a href=\"%BASE%trades/cars/doing-your-own-work/\">Lesson 14</a>). One difference: the high-voltage battery can’t be jump-started. Your owner’s manual explains what to do if the car won’t power on.</p>"
 },
 {
 "t": "call",
@@ -3046,6 +3096,11 @@
 ],
 "deeper": [
 {
+"name": "Lesson 12: Thrusters and Fans on the 2026 Roadster",
+"url": "%BASE%trades/cars/thrusters-and-fans/",
+"note": "An electric car with cold-gas thrusters and suction fans, and the physics of both."
+},
+{
 "name": "U.S. Department of Energy, Alternative Fuels Data Center: How Do All-Electric Cars Work?",
 "url": "https://afdc.energy.gov/vehicles/how-do-all-electric-cars-work",
 "note": "Key parts of an all-electric car."
@@ -3118,8 +3173,623 @@
 ]
 },
 {
-"key": "troubleshooting",
+"key": "thrusters-and-fans",
 "n": 12,
+"title": "Thrusters and Fans on the 2026 Roadster",
+"short": "Tesla’s 2026 Roadster: cold-gas thrusters and suction fans, from Newton’s third law to choked flow and downforce, with two simulators.",
+"icon": "🚀",
+"level": "Advanced",
+"intro": "Tesla’s new Roadster adds two things no road car has had: thrusters that push it with jets of compressed air, and fans that suck it onto the road. Here’s what was announced, what Tesla’s patent covers, and the physics of how both work, with simulators you can run yourself.",
+"minutes": 15,
+"words": 3079,
+"widgets": [
+"map",
+"thrust",
+"fans"
+],
+"blocks": [
+{
+"t": "sec",
+"id": "announced",
+"h": "What Tesla showed on October 15, 2026",
+"html": "<p>On the evening of October 15, 2026, Tesla showed its new Roadster in a livestream. It’s an electric sports car with two extras no road car has had before: cold-gas thrusters that push the car with jets of compressed air, and fans that suck the car down onto the road. Elon Musk said production should start in 2028. Tesla gave no prices. Reservations were $50,000 for the Performance version and $250,000 for the Thrust version, The Next Web reported.</p><p>Reporters watching the demonstration saw the car drive up a curved ramp and stay on it upside down, held by its fans. Thrusters then launched it off the ramp, flipped it and landed it. In another run it jumped over a row of Tesla vehicles. Tesla also showed a recorded run from 0 to 60 mph in 0.81 seconds. No one outside Tesla has checked that time yet.</p><p>Almost everything we know comes from Tesla or from reporters who watched, a day after the event. The table labels who said what. Treat the numbers as claims until independent testers measure them.</p>"
+},
+{
+"t": "table",
+"cap": "What was announced, and who said it (as of October 16, 2026)",
+"head": [
+"Claim",
+"Who says so",
+"Reported by"
+],
+"rows": [
+[
+"Three versions. Performance: active aero and a “multi-mode suction system.” Thrust: adds rear thrusters. Rocket: adds thrusters around the body for upward and rotational movement; one seat; invite only.",
+"Tesla",
+"Electrek, Teslarati"
+],
+[
+"0–60 mph in under 1.6 s (Performance), under 0.9 s (Thrust) and under 0.59 s (Rocket)",
+"Tesla",
+"Electrek, Teslarati"
+],
+[
+"A recorded 0–60 mph run of 0.81 s",
+"Tesla; not independently verified",
+"The Next Web"
+],
+[
+"10 thrusters fed by about 600 liters of compressed air; the tanks can be refilled",
+"Lars Moravy, Tesla’s vice president of vehicle engineering",
+"TechCrunch, via The Next Web"
+],
+[
+"Carbon-fiber overwrapped pressure vessels (COPVs) fill “every usable void”; more gas means more “flight time”",
+"Tesla",
+"Electrek"
+],
+[
+"The thrusters make four to five times the force the tires can handle",
+"Tesla",
+"Electrek, Teslarati"
+],
+[
+"Running thrusters in air, not the vacuum of space, needed new hardware and controls",
+"Tesla",
+"Electrek"
+],
+[
+"The thrusters were built with SpaceX engineers",
+"Reporters’ account",
+"The Next Web"
+],
+[
+"Fans pull air from under the car and can hold it upside down, even when it’s stopped",
+"Tesla",
+"Electrek, Teslarati"
+],
+[
+"The Rocket version is not approved for public roads",
+"Tesla’s Roadster page",
+"The Next Web, Electrek"
+],
+[
+"Production starts in 2028",
+"Elon Musk",
+"The Next Web, Electrek"
+],
+[
+"Tank pressure, thrust per thruster, how long they fire, the car’s weight",
+"Not published",
+"—"
+]
+]
+},
+{
+"t": "sec",
+"id": "patent",
+"h": "The patent covers the fans, not the thrusters",
+"html": "<p>Many people remember that Tesla filed a patent for this car. It did, but for the fans, not the thrusters. U.S. Patent 12,377,920, “Adaptive vehicle aerodynamics for downforce,” was filed on April 29, 2025, and granted to Tesla on August 5, 2025. It describes fans in air passages that pull air out of a space under the car, with skirts that reach down to the ground to close that space off. Lower pressure underneath means the air above presses the car down harder.</p><p>The patent describes two modes. In one, every skirt is down and the central fans run, for the most downforce on smooth surfaces. In the other, mainly the side skirts are down and all the fans run, for rougher ground. Its example has four fans. It gives no pressures or forces, and it never mentions thrusters, compressed gas or flight; Electrek pointed that out when the patent appeared in August 2025.</p><p>We looked for a Tesla patent on the thrusters and didn’t find one in published patent records as of October 16, 2026.</p>"
+},
+{
+"t": "sec",
+"id": "parts",
+"h": "What’s new in the car",
+"html": "<p>Underneath, the Roadster is an electric car: a battery pack, motors and tires, like the ones in <a href=\"%BASE%trades/cars/hybrids-and-evs/\">Lesson 11</a>. On top of that come the tanks, valves, thrusters, fans and skirts. Switch the map to <b>Roadster (2026)</b> to see them. Tesla hasn’t published a parts layout, so where they sit in our drawing is a sketch.</p>"
+},
+{
+"t": "widget",
+"w": "map",
+"cap": "Pick “Roadster (2026)” above the drawing. Point at a new part to see what it does; click to jump to its section of this lesson."
+},
+{
+"t": "table",
+"cap": "The new parts and what they do",
+"head": [
+"Part",
+"What it does",
+"What Tesla has said"
+],
+"rows": [
+[
+"Compressed-air tanks (COPVs)",
+"Carbon-fiber-wrapped pressure vessels hold the gas.",
+"They fill “every usable void”; about 600 liters in all (Moravy)."
+],
+[
+"Valves and gas lines",
+"Carry gas from the tanks and open and close each thruster quickly.",
+"Running in air needed new hardware and controls."
+],
+[
+"Thrusters",
+"Nozzles turn stored pressure into a fast jet that pushes the car.",
+"10 thrusters (Moravy); rear-facing on Thrust, all around the body on Rocket."
+],
+[
+"Suction fans",
+"Pull air out from under the car to lower the pressure there.",
+"They can hold the car upside down, even when it’s stopped."
+],
+[
+"Skirts",
+"Seal the space under the car so outside air can’t rush back in.",
+"Described in patent US 12,377,920."
+],
+[
+"Battery, motors and tires",
+"Drive the car the rest of the time, like any electric car.",
+"Over 300 miles of range."
+]
+]
+},
+{
+"t": "sec",
+"id": "newton",
+"h": "Push gas back, and the car goes forward",
+"html": "<p>A cold-gas thruster is a bottle of squeezed gas with a valve and a nozzle. Open the valve and gas rushes out of the nozzle. To throw that gas backward, the thruster has to push on it. Newton’s third law says the gas pushes back on the thruster just as hard, the other way. That push on the thruster, and so on the car, is the thrust. The <a href=\"%BASE%science-lab/newtons-laws/third-law/\">Third Law chapter</a> in the Science Lab lets you try the same idea with two skaters.</p><p>Momentum is mass times velocity. Each second the nozzle gives a mass ṁ (“m-dot”) of gas a speed v<sub>e</sub> backward, so the gas gains ṁ·v<sub>e</sub> of backward momentum every second, and the car gains the same amount forward. Force is the rate at which momentum changes, so the thrust is ṁ·v<sub>e</sub>. If the gas still has extra pressure when it leaves, that pressure pushes too and adds a second term. NASA writes the rocket thrust equation like this:</p>"
+},
+{
+"t": "formula",
+"html": "F = ṁ·v<sub>e</sub> + (p<sub>e</sub> − p<sub>a</sub>)·A<sub>e</sub> &nbsp;&nbsp; thrust = mass flow × exit speed + (exit pressure − outside pressure) × exit area"
+},
+{
+"t": "sec",
+"id": "impulse",
+"h": "Impulse: force over time",
+"html": "<p>Push for a while and you give the car an impulse: the force added up over time, J = ∫F dt. Impulse equals the change in momentum, so a thruster that pushes hard for a short time can do the same job as a weaker one that pushes longer. The <a href=\"%BASE%science-lab/newtons-laws/momentum/\">Momentum and Collisions chapter</a> shows impulse with eggs and pillows.</p><p>The jet doesn’t push on the air behind the car or on the road. It pushes only on the gas it throws out. That’s why rockets work in the vacuum of space, and it’s the idea behind the <a href=\"%BASE%science-lab/rocket/\">Rocket Builder</a>. One difference: a rocket carries a huge share of its weight as fuel, while the Roadster’s air is a small share of the car, so the rocket equation’s big mass change matters much less here.</p>"
+},
+{
+"t": "sec",
+"id": "tank",
+"h": "How much air fits in the tanks",
+"html": "<p>Gas pressure is the push of countless molecules hitting a wall. Squeeze more of them into the same space and they hit more often, so the pressure rises. For most gases in ordinary conditions, the ideal gas law ties it together: p·V = m·R·T. Here R is a constant for each gas (about 287 joules per kilogram per kelvin for air) and T is the temperature in kelvins. <a href=\"%BASE%science-lab/gas/\">Gas in a Box</a> lets you watch it happen with bouncing molecules.</p><p>Tesla hasn’t said how hard its tanks are pressurized. The table shows what 600 liters would hold at a few pressures. One bar is about the air pressure at sea level (one atmosphere is 1.013 bar).</p>"
+},
+{
+"t": "table",
+"cap": "Air in 600 liters at 20 °C (ideal-gas estimate; Tesla hasn’t published the pressure)",
+"head": [
+"Tank pressure",
+"Air inside",
+"In the simulator"
+],
+"rows": [
+[
+"100 bar",
+"about 71 kg",
+""
+],
+[
+"200 bar",
+"about 143 kg",
+""
+],
+[
+"300 bar",
+"about 214 kg",
+"the starting guess"
+],
+[
+"700 bar",
+"about 499 kg",
+"the top of the slider"
+]
+]
+},
+{
+"t": "sec",
+"id": "tank-note",
+"h": "Real gas at high pressure",
+"html": "<p>At hundreds of bar, real air is harder to squeeze than the ideal gas law says, so a real tank holds a few to tens of percent less than these estimates. The gap grows with pressure. Even so, that’s a lot of air: at 300 bar, more than 200 kilograms. It gets used up as the thrusters fire, so the car gets a little lighter during a burn. The simulator counts that.</p>"
+},
+{
+"t": "sec",
+"id": "nozzle",
+"h": "The nozzle: a speed limit at the throat",
+"html": "<p>A thruster’s nozzle narrows to a throat, then widens into a bell. Gas speeds up as it squeezes through the narrowing. When the tank pressure is more than about 1.9 times the outside pressure (for air), the gas reaches the speed of sound right at the throat and can’t go any faster there. That’s called choked flow. Raising the tank pressure then doesn’t make the gas at the throat faster; it makes it denser, so more kilograms pass each second. NASA gives the choked mass flow as:</p>"
+},
+{
+"t": "formula",
+"html": "ṁ = A<sub>*</sub>·p<sub>t</sub>·√(γ ⁄ (R·T<sub>t</sub>))·(2 ⁄ (γ+1))<sup>(γ+1)/(2(γ−1))</sup> &nbsp;≈&nbsp; 0.0404·A<sub>*</sub>·p<sub>t</sub> ⁄ √T<sub>t</sub> for air, in SI units"
+},
+{
+"t": "sec",
+"id": "exit",
+"h": "How fast the gas leaves",
+"html": "<p>Here A<sub>*</sub> is the throat area, p<sub>t</sub> and T<sub>t</sub> are the pressure and temperature in the tank, and γ (gamma) is 1.4 for air and nitrogen. Past the throat, the widening bell lets the gas keep expanding and speed up beyond the speed of sound. If the bell is just the right size, the gas leaves at the outside pressure, the pressure term in the thrust equation drops out, and the exit speed is:</p>"
+},
+{
+"t": "formula",
+"html": "v<sub>e</sub> = √( 2γ⁄(γ−1) · R·T<sub>t</sub> · [1 − (p<sub>a</sub> ⁄ p<sub>t</sub>)<sup>(γ−1)/γ</sup>] )"
+},
+{
+"t": "fig",
+"svg": "<svg viewBox=\"0 0 520 236\" role=\"img\" aria-label=\"A cold-gas thruster: a tank of compressed air, a valve, and a nozzle that narrows to a throat and widens into a bell. The gas leaves fast and very cold, and the thrust on the car points the other way.\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"frd-j\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"f-jeth\"/></marker><marker id=\"frd-t\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"16\" markerHeight=\"16\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"f-thrh\"/></marker></defs><rect class=\"f-copv\" x=\"14\" y=\"62\" width=\"150\" height=\"76\" rx=\"38\"/><path class=\"f-weave\" d=\"M52,100 H126 M64,64 v72 M89,62 v76 M114,64 v72\"/><circle class=\"f-mol\" cx=\"40\" cy=\"88\" r=\"3\"/><circle class=\"f-mol\" cx=\"58\" cy=\"112\" r=\"3\"/><circle class=\"f-mol\" cx=\"76\" cy=\"84\" r=\"3\"/><circle class=\"f-mol\" cx=\"100\" cy=\"118\" r=\"3\"/><circle class=\"f-mol\" cx=\"122\" cy=\"90\" r=\"3\"/><circle class=\"f-mol\" cx=\"140\" cy=\"114\" r=\"3\"/><circle class=\"f-mol\" cx=\"48\" cy=\"124\" r=\"3\"/><circle class=\"f-mol\" cx=\"132\" cy=\"76\" r=\"3\"/><text class=\"tx-sm tx-b\" x=\"89\" y=\"50\" text-anchor=\"middle\">tank: 300 bar, 20 °C</text><text class=\"tx-sm\" x=\"89\" y=\"158\" text-anchor=\"middle\">gas packed tight</text><rect class=\"f-pipe\" x=\"164\" y=\"88\" width=\"72\" height=\"24\"/><path class=\"f-valve\" d=\"M188,86 L210,114 L210,86 L188,114 Z\"/><text class=\"tx-sm\" x=\"199\" y=\"78\" text-anchor=\"middle\">valve</text><path class=\"f-gas\" d=\"M236,88 Q290,92 312,95 Q340,92 404,70 L404,130 Q340,108 312,105 Q290,108 236,112 Z\"/><path class=\"f-noz\" d=\"M234,80 Q290,84 312,87 Q340,84 404,62 L404,70 Q340,92 312,95 Q290,92 234,88 Z\"/><path class=\"f-noz\" d=\"M234,120 Q290,116 312,113 Q340,116 404,138 L404,130 Q340,108 312,105 Q290,108 234,112 Z\"/><path class=\"k-lead\" d=\"M312,114 V176\"/><text class=\"tx-sm tx-b\" x=\"312\" y=\"190\" text-anchor=\"middle\">throat</text><text class=\"tx-sm\" x=\"312\" y=\"204\" text-anchor=\"middle\">speed of sound: “choked”</text><text class=\"tx-sm\" x=\"312\" y=\"218\" text-anchor=\"middle\">about 160 bar, −29 °C</text><path class=\"f-jet\" d=\"M410,84 H500\" marker-end=\"url(#frd-j)\"/><path class=\"f-jet\" d=\"M410,100 H508\" marker-end=\"url(#frd-j)\"/><path class=\"f-jet\" d=\"M410,116 H500\" marker-end=\"url(#frd-j)\"/><text class=\"tx-sm tx-b\" x=\"458\" y=\"62\" text-anchor=\"middle\">exit: 1 bar</text><text class=\"tx-sm\" x=\"458\" y=\"140\" text-anchor=\"middle\">about 690 m/s,</text><text class=\"tx-sm\" x=\"458\" y=\"154\" text-anchor=\"middle\">about −215 °C (ideal)</text><path class=\"f-thr\" d=\"M180,196 H40\" marker-end=\"url(#frd-t)\"/><text class=\"tx-sm tx-b tx-em\" x=\"110\" y=\"186\" text-anchor=\"middle\">thrust on the car</text><text class=\"tx-sm\" x=\"110\" y=\"222\" text-anchor=\"middle\">gas goes right, car is pushed left</text></svg>",
+"cap": "A cold-gas thruster, with ideal-gas numbers for air starting at 300 bar (an assumed pressure). The gas is choked at the throat and keeps speeding up in the bell. Sources: NASA Glenn Research Center, “Rocket Thrust Equations” and “Mass Flow Choking.”"
+},
+{
+"t": "sec",
+"id": "exit2",
+"h": "Checking the numbers",
+"html": "<p>For air at 300 bar and 20 °C, that formula gives about 690 meters per second, roughly twice the speed of sound in room air. A plain hole with no bell lets the gas out at the speed of sound (about 310 m/s for the gas, which has cooled to about −29 °C at the throat) with pressure left over. That makes less thrust for the same flow, and you can compare the two in the simulator.</p><p>NASA lists cold-gas thrusters on small spacecraft at a specific impulse of 40 to 110 seconds. Specific impulse is the effective exhaust speed divided by g, so that’s about 400 to 1,100 m/s, and our estimate sits inside that range.</p>"
+},
+{
+"t": "sec",
+"id": "cold",
+"h": "Why cold gas gets cold",
+"html": "<p>“Cold gas” means nothing burns. A rocket engine burns fuel to make hot, fast gas. A cold-gas thruster only lets stored gas out. NASA describes cold-gas systems as simple and mature, with no combustion, and says most use inert, non-toxic gases such as nitrogen. The trade-off is a small total push for their size.</p><p>The gas does get cold, though, and that’s the first law of thermodynamics. The Science Lab’s <a href=\"%BASE%science-lab/thermodynamics/first-law/\">Energy and the First Law</a> chapter writes it as ΔU = Q − W: the change in a gas’s internal energy equals the heat added to it minus the work it does. When gas expands quickly, in the nozzle or in the emptying tank, there’s little time for heat to flow in, so Q is close to zero. The gas does work as it expands, so W is positive and ΔU is negative. For an ideal gas, less internal energy means a lower temperature. OpenStax puts it simply: in an adiabatic expansion, the gas does work and its temperature drops.</p>"
+},
+{
+"t": "formula",
+"html": "T<sub>2</sub> ⁄ T<sub>1</sub> = (p<sub>2</sub> ⁄ p<sub>1</sub>)<sup>(γ−1)/γ</sup> &nbsp;&nbsp; adiabatic expansion of an ideal gas (γ = 1.4 for air)"
+},
+{
+"t": "sec",
+"id": "cold2",
+"h": "How cold?",
+"html": "<p>The numbers get extreme. In the ideal model, air expanding from 300 bar and 20 °C all the way down to 1 bar would cool to about −215 °C. That’s colder than −196 °C, where nitrogen boils, so real air would start to turn liquid before it got there, and any water vapor in it turns to frost long before that. The gas left in the tank cools too as its pressure falls. In the simulator, a one-second burn from 300 bar takes the tank gas from 20 °C to about −9 °C.</p>"
+},
+{
+"t": "call",
+"k": "why",
+"h": "So is it a rocket?",
+"html": "<p>In physics terms, yes: it moves by throwing mass backward, like a rocket. But nothing burns. There are no flames and no hot exhaust, and the “fuel” is air that can be pumped back in; Tesla says the tanks can be refilled. That’s why it’s called a cold-gas thruster.</p>"
+},
+{
+"t": "sec",
+"id": "sim",
+"h": "Try it: the thruster simulator",
+"html": "<p>Choose a mode and press Fire. Boost points the thrusters backward, Brake points them forward, and Hop points them at the ground. Watch the tank pressure and temperature fall as the gas runs out, and compare the thrust with the tires’ grip and with the car’s weight. Tesla hasn’t published the tank pressure, nozzle size or the car’s weight, so those start at our guesses: 300 bar, 16 mm nozzle throats and 1,900 kg.</p>"
+},
+{
+"t": "widget",
+"w": "thrust",
+"cap": "An ideal-gas model of the thrusters, from the NASA and OpenStax equations above. It isn’t Tesla’s design: every number Tesla hasn’t published is a slider, and the notes under the graphs list the assumptions."
+},
+{
+"t": "sec",
+"id": "grip",
+"h": "Beating the grip limit",
+"html": "<p>An ordinary car speeds up, brakes and turns only by pushing on the road through its tires. Friction caps that push. The most a tire can push is about μ times the force pressing it onto the road, where μ (mu) is the coefficient of friction. On flat ground that force is the car’s weight, m·g, so:</p>"
+},
+{
+"t": "formula",
+"html": "F<sub>max</sub> = μ·m·g &nbsp;&nbsp; so the best acceleration on tires alone is a = μ·g"
+},
+{
+"t": "sec",
+"id": "grip2",
+"h": "Why thrust gets around it",
+"html": "<p>OpenStax lists μ = 1.0 for rubber on dry concrete and 0.7 on wet concrete. With μ = 1, no motor can get a car from 0 to 60 mph on flat ground in less than about 2.7 seconds: 60 mph is 26.8 m/s, and 26.8 ÷ 9.8 ≈ 2.7. Grip is the limit, not power. Real tires and roads vary, which is why μ is a slider. <a href=\"%BASE%trades/cars/wheels-and-tires/\">Lesson 10</a> covers what tires do.</p><p>Thrust doesn’t go through the tires, so friction doesn’t cap it. The thrusters push on the car directly, and the tires can still push at their limit on top of that. Tesla says its thrusters make four to five times the force the tires can handle. If Tesla’s recorded 0.81-second run is right, the car averaged 26.8 ÷ 0.81 ≈ 33 m/s² of acceleration. That’s about 3.4 g, far more than the 1 g that a grip of μ = 1 allows.</p>"
+},
+{
+"t": "sec",
+"id": "fans",
+"h": "Fans that pull the car down",
+"html": "<p>Air at sea level presses on everything with about 101,000 pascals, which is 101,000 newtons on every square meter. We don’t notice because it pushes equally from all sides. The fans change that. They pull air out from under the car, and the skirts slow outside air from leaking back in, so the pressure under the floor drops a little. Now the air on top pushes down harder than the air underneath pushes up. The difference is downforce:</p>"
+},
+{
+"t": "formula",
+"html": "downforce = Δp × A &nbsp;&nbsp; pressure difference × sealed floor area"
+},
+{
+"t": "fig",
+"svg": "<svg viewBox=\"0 0 520 250\" role=\"img\" aria-label=\"Looking at the car from the front: skirts reach down to the road on both sides, fans pull air out of the space under the floor, and the full-pressure air above pushes the car down harder than the thinner air below pushes up.\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"frd-a\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"f-airh\"/></marker><marker id=\"frd-f\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"f-fanh\"/></marker><marker id=\"frd-t2\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"16\" markerHeight=\"16\" orient=\"auto\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"f-thrh\"/></marker></defs><rect class=\"f-road\" x=\"10\" y=\"204\" width=\"500\" height=\"18\" rx=\"3\"/><text class=\"tx-sm\" x=\"500\" y=\"240\" text-anchor=\"end\">road</text><path class=\"f-body\" d=\"M110,170 L110,120 Q114,92 150,84 L196,60 Q260,46 324,60 L370,84 Q406,92 410,120 L410,170 Z\"/><rect class=\"f-low\" x=\"128\" y=\"170\" width=\"264\" height=\"34\"/><rect class=\"f-skirt\" x=\"118\" y=\"168\" width=\"10\" height=\"36\" rx=\"2\"/><rect class=\"f-skirt\" x=\"392\" y=\"168\" width=\"10\" height=\"36\" rx=\"2\"/><rect class=\"f-tire\" x=\"80\" y=\"150\" width=\"26\" height=\"54\" rx=\"6\"/><rect class=\"f-tire\" x=\"414\" y=\"150\" width=\"26\" height=\"54\" rx=\"6\"/><circle class=\"f-fan\" cx=\"260\" cy=\"146\" r=\"16\"/><path class=\"f-fanb\" d=\"M260,146 l12,-4 v8 z M260,146 l-12,4 v-8 z\"/><path class=\"f-fanf\" d=\"M220,194 Q236,176 248,162\" marker-end=\"url(#frd-f)\"/><path class=\"f-fanf\" d=\"M300,194 Q284,176 272,162\" marker-end=\"url(#frd-f)\"/><path class=\"f-fanf\" d=\"M260,128 V102\" marker-end=\"url(#frd-f)\"/><text class=\"tx-sm\" x=\"260\" y=\"92\" text-anchor=\"middle\">fan pushes air out</text><path class=\"f-air\" d=\"M160,12 v30\" marker-end=\"url(#frd-a)\"/><path class=\"f-air\" d=\"M220,6 v30\" marker-end=\"url(#frd-a)\"/><path class=\"f-air\" d=\"M300,6 v30\" marker-end=\"url(#frd-a)\"/><path class=\"f-air\" d=\"M360,12 v30\" marker-end=\"url(#frd-a)\"/><text class=\"tx-sm tx-b\" x=\"460\" y=\"20\" text-anchor=\"middle\">outside air:</text><text class=\"tx-sm\" x=\"460\" y=\"34\" text-anchor=\"middle\">full pressure</text><text class=\"tx-sm tx-b\" x=\"260\" y=\"198\" text-anchor=\"middle\">slightly lower pressure</text><text class=\"tx-sm\" x=\"64\" y=\"132\" text-anchor=\"middle\">skirt</text><path class=\"k-lead\" d=\"M76,136 L118,176\"/><path class=\"f-thr\" d=\"M484,70 V150\" marker-end=\"url(#frd-t2)\"/><text class=\"tx-sm tx-b tx-em\" x=\"484\" y=\"172\" text-anchor=\"middle\">downforce</text><text class=\"tx-sm\" x=\"484\" y=\"186\" text-anchor=\"middle\">= Δp × area</text></svg>",
+"cap": "Looking at the car from the front. The fan lowers the pressure under the floor a little; the skirts keep outside air from rushing in; the full-pressure air above presses the car down. Based on the fans and skirts described in Tesla’s patent US 12,377,920."
+},
+{
+"t": "sec",
+"id": "ceiling",
+"h": "How little it takes to hang upside down",
+"html": "<p>Say the sealed area is 4 square meters and the car has a mass of 1,900 kg. Both are our guesses; Tesla hasn’t published either. The car’s weight is 1,900 × 9.8 ≈ 18,600 newtons. To hang from a ceiling, the downforce must beat that, so the pressure drop must be at least 18,600 ÷ 4 ≈ 4,700 pascals. That’s under 5% of the air’s pressure: a small drop over a big area. Driving upside down takes more, because the tires also need something to grip with.</p><p>Downforce also raises the grip limit on an ordinary road. Friction depends on how hard the tires are pressed down, so the most grip becomes μ·(m·g + downforce) while the mass the tires must move stays the same. A wing makes downforce too, but its force grows with the square of the speed and is close to zero when the car is slow. Fans make suction even when the car is parked, which is how Tesla says the Roadster can hold itself upside down while stopped.</p>"
+},
+{
+"t": "widget",
+"w": "fans",
+"cap": "Set the pressure drop, the sealed area and the car’s mass, then flip the car to see when it can hang from a ceiling. Tesla hasn’t published any of these numbers."
+},
+{
+"t": "sec",
+"id": "energy",
+"h": "Air tank or battery?",
+"html": "<p>Compressed air stores energy, but not much for its weight. The most work a tank of gas could ever do, if it expanded slowly enough to stay at room temperature, is p·V·ln(p ⁄ p<sub>a</sub>) − (p − p<sub>a</sub>)·V. For 600 liters at 300 bar that’s about 84 megajoules, or 23 kilowatt-hours, and a fast burst gets less, because the gas cools as it expands. Per kilogram of air, the best case is about 110 watt-hours, before counting the tanks. In 2020 the Department of Energy put electric-car battery cells at about 220 watt-hours per kilogram.</p><p>Most of what the air does deliver goes into the exhaust, not the car. The gas and the car get equal and opposite momentum, but kinetic energy is ½·m·v², and the exhaust moves far faster than the car, so it carries most of the energy away. That’s why the Roadster drives on its battery and motors and saves the thrusters for bursts. Tesla says more gas means more “flight time.” It hasn’t said how long that is.</p>"
+},
+{
+"t": "sec",
+"id": "unknown",
+"h": "What we still don’t know",
+"html": "<ul><li>The tank pressure, the gas, the thrust of each thruster, and how long they can fire. Tesla hasn’t published them.</li><li>The car’s weight, and how much the tanks and the air add to it.</li><li>Whether the 0.81-second run and the other times hold up in independent tests.</li><li>How the thrusters are controlled to flip the car and land it, and how the fan modes are used on the road.</li><li>Whether Tesla has applied for a patent on the thrusters. The patent we found covers the fans.</li><li>Which versions will be sold where. Tesla’s page says the Rocket version isn’t approved for public roads.</li></ul><p>When Tesla or independent testers publish numbers, you can put them into the simulators above. Until then, any figure that isn’t in Tesla’s own statements is an estimate. Check what it assumes.</p>"
+}
+],
+"toc": [
+{
+"id": "announced",
+"h": "What Tesla showed on October 15, 2026"
+},
+{
+"id": "patent",
+"h": "The patent covers the fans, not the thrusters"
+},
+{
+"id": "parts",
+"h": "What’s new in the car"
+},
+{
+"id": "newton",
+"h": "Push gas back, and the car goes forward"
+},
+{
+"id": "tank",
+"h": "How much air fits in the tanks"
+},
+{
+"id": "nozzle",
+"h": "The nozzle: a speed limit at the throat"
+},
+{
+"id": "cold",
+"h": "Why cold gas gets cold"
+},
+{
+"id": "sim",
+"h": "Try it: the thruster simulator"
+},
+{
+"id": "grip",
+"h": "Beating the grip limit"
+},
+{
+"id": "fans",
+"h": "Fans that pull the car down"
+},
+{
+"id": "energy",
+"h": "Air tank or battery?"
+},
+{
+"id": "unknown",
+"h": "What we still don’t know"
+}
+],
+"quiz": [
+{
+"q": "What pushes a cold-gas thruster, and the car, forward?",
+"opts": [
+"Burning fuel inside the nozzle",
+"The gas it throws backward pushes back on it",
+"The jet pushing on the air behind the car",
+"The tanks getting lighter"
+],
+"a": 1,
+"why": "Newton’s third law: the thruster pushes the gas backward, so the gas pushes the thruster forward. Nothing burns, and the jet doesn’t need anything behind it to push on."
+},
+{
+"q": "On flat ground with tire grip μ = 1, what is the best acceleration from the tires alone?",
+"opts": [
+"As much as the motor can give",
+"About 3 g",
+"About 1 g",
+"It depends only on tire width"
+],
+"a": 2,
+"why": "Friction caps the push at μ·m·g, so the acceleration can’t beat μ·g, about 9.8 m/s² when μ = 1, however strong the motor is."
+},
+{
+"q": "Why does air get colder as it rushes out of a nozzle?",
+"opts": [
+"It does work as it expands and has no time to take in heat",
+"The nozzle is refrigerated",
+"Fast things are always cold",
+"The air loses molecules"
+],
+"a": 0,
+"why": "With Q close to zero, ΔU = Q − W is negative when the gas does work. For an ideal gas, less internal energy means a lower temperature."
+},
+{
+"q": "What does Tesla’s published patent US 12,377,920 describe?",
+"opts": [
+"Cold-gas thrusters",
+"A way for the car to fly",
+"A new battery chemistry",
+"Fans and skirts that lower the air pressure under the car"
+],
+"a": 3,
+"why": "The patent, “Adaptive vehicle aerodynamics for downforce,” covers fans and skirts. It never mentions thrusters or flight."
+},
+{
+"q": "A 1,900 kg car has 4 m² of sealed floor. About how big a pressure drop lets it hang from a ceiling?",
+"opts": [
+"About half the air’s pressure",
+"About 5% of the air’s pressure",
+"Twice the air’s pressure",
+"No pressure drop can do it"
+],
+"a": 1,
+"why": "Its weight is about 18,600 N, and 18,600 N ÷ 4 m² ≈ 4,700 Pa, under 5% of the 101,000 Pa the air pushes with."
+}
+],
+"deeper": [
+{
+"name": "Science Lab: Newton’s Laws, Chapter 3: The Third Law",
+"url": "%BASE%science-lab/newtons-laws/third-law/",
+"note": "Action and reaction with skaters, carts and a horse."
+},
+{
+"name": "Science Lab: Newton’s Laws, Chapter 5: Momentum and Collisions",
+"url": "%BASE%science-lab/newtons-laws/momentum/",
+"note": "Impulse and momentum, hands on."
+},
+{
+"name": "Science Lab: Rocket Builder",
+"url": "%BASE%science-lab/rocket/",
+"note": "Thrust and the rocket equation, from the launch pad to orbit."
+},
+{
+"name": "Science Lab: Gas in a Box",
+"url": "%BASE%science-lab/gas/",
+"note": "Pressure, volume and temperature with moving molecules."
+},
+{
+"name": "Science Lab: Thermodynamics, Chapter 2: Energy and the First Law",
+"url": "%BASE%science-lab/thermodynamics/first-law/",
+"note": "Why expanding gas cools. It uses ΔU = Q − W, with W the work done by the gas."
+},
+{
+"name": "Lesson 11: Hybrids and Electric Cars",
+"url": "%BASE%trades/cars/hybrids-and-evs/",
+"note": "The electric car underneath."
+},
+{
+"name": "Lesson 10: Wheels and Tires in Depth",
+"url": "%BASE%trades/cars/wheels-and-tires/",
+"note": "Where grip comes from."
+},
+{
+"name": "NASA Glenn Research Center: Rocket Thrust Equations",
+"url": "https://www.grc.nasa.gov/WWW/K-12/airplane/rktthsum.html",
+"note": "The thrust, mass flow and exit speed equations."
+},
+{
+"name": "NASA Small Spacecraft Technology: In-Space Propulsion (cold gas systems)",
+"url": "https://www.nasa.gov/smallsat-institute/sst-soa/in-space_propulsion/",
+"note": "How cold-gas thrusters are used on spacecraft."
+},
+{
+"name": "U.S. Patent 12,377,920: Adaptive vehicle aerodynamics for downforce",
+"url": "https://patents.google.com/patent/US12377920",
+"note": "Tesla’s fan and skirt patent, full text."
+},
+{
+"name": "Physics Ladder: Newton’s Third Law Pairs",
+"url": "",
+"page": "/physics/physics-1/newtons-third-law",
+"note": "Physics 1"
+},
+{
+"name": "Physics Ladder: Impulse and Change in Momentum",
+"url": "",
+"page": "/physics/physics-1/impulse",
+"note": "Physics 1"
+},
+{
+"name": "Physics Ladder: Conservation of Momentum",
+"url": "",
+"page": "/physics/physics-1/momentum-conservation",
+"note": "Physics 1"
+},
+{
+"name": "Physics Ladder: Static Friction",
+"url": "",
+"page": "/physics/physics-1/static-friction",
+"note": "Physics 1"
+},
+{
+"name": "Physics Ladder: Pressure",
+"url": "",
+"page": "/physics/physical-science/pressure",
+"note": "Physical Science"
+},
+{
+"name": "Physics Ladder: The Ideal Gas Law",
+"url": "",
+"page": "/physics/physics-2/ideal-gas-law",
+"note": "Physics 2"
+},
+{
+"name": "Physics Ladder: The First Law of Thermodynamics",
+"url": "",
+"page": "/physics/physics-2/first-law",
+"note": "Physics 2"
+},
+{
+"name": "Physics Ladder: Isobaric, Isochoric, Isothermal and Adiabatic Processes",
+"url": "",
+"page": "/physics/physics-2/thermo-processes",
+"note": "Physics 2"
+},
+{
+"name": "Physics Ladder: Impulse as an Integral",
+"url": "",
+"page": "/physics/mechanics/impulse-integral",
+"note": "Mechanics"
+},
+{
+"name": "Physics Ladder: The Rocket Equation",
+"url": "",
+"page": "/physics/mechanics/rocket-equation",
+"note": "Mechanics"
+}
+],
+"sources": [
+{
+"name": "Electrek: Tesla unveils “cyberfied” new Roadster (October 15, 2026)",
+"url": "https://electrek.co/2026/10/15/tesla-unveils-cyberfied-new-roadster-kickflip/"
+},
+{
+"name": "The Next Web: Tesla Roadster reveal, thrusters and 2028 production",
+"url": "https://thenextweb.com/news/tesla-roadster-reveal-thrusters-2028"
+},
+{
+"name": "Teslarati: Tesla Roadster downforce fan system (October 15, 2026)",
+"url": "https://www.teslarati.com/tesla-roadster-downforce-fan-system/"
+},
+{
+"name": "Tesla: Roadster",
+"url": "https://www.tesla.com/roadster"
+},
+{
+"name": "Electrek: Tesla’s new Roadster patent doesn’t do what Elon said it would (August 6, 2025)",
+"url": "https://electrek.co/2025/08/06/teslas-new-roadster-patent-doesnt-do-what-elon-said-it-would-and-thats-good/"
+},
+{
+"name": "USPTO Official Gazette: US 12,377,920 B1, Adaptive vehicle aerodynamics for downforce",
+"url": "https://patentsgazette.uspto.gov/week31/OG/html/1537-1/US12377920-20250805.html"
+},
+{
+"name": "Google Patents: US12377920B1, Adaptive vehicle aerodynamics for downforce",
+"url": "https://patents.google.com/patent/US12377920"
+},
+{
+"name": "NASA Glenn Research Center: Rocket Thrust Equations",
+"url": "https://www.grc.nasa.gov/WWW/K-12/airplane/rktthsum.html"
+},
+{
+"name": "NASA Glenn Research Center: Mass Flow Choking",
+"url": "https://www.grc.nasa.gov/www/k-12/airplane/mflchk.html"
+},
+{
+"name": "NASA Glenn Research Center: Specific Impulse",
+"url": "https://www.grc.nasa.gov/www/k-12/airplane/specimp.html"
+},
+{
+"name": "NASA Glenn Research Center: The Lift Equation",
+"url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/lift-equation/"
+},
+{
+"name": "NASA Small Spacecraft Technology State of the Art: In-Space Propulsion",
+"url": "https://www.nasa.gov/smallsat-institute/sst-soa/in-space_propulsion/"
+},
+{
+"name": "OpenStax University Physics Volume 2, 3.6 Adiabatic Processes for an Ideal Gas",
+"url": "https://openstax.org/books/university-physics-volume-2/pages/3-6-adiabatic-processes-for-an-ideal-gas"
+},
+{
+"name": "OpenStax College Physics 2e, 5.1 Friction",
+"url": "https://openstax.org/books/college-physics-2e/pages/5-1-friction"
+},
+{
+"name": "NIST Chemistry WebBook: Nitrogen, phase change data",
+"url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7727379&Units=SI&Mask=4"
+},
+{
+"name": "U.S. Department of Energy: Battery500 Progress Update (2020)",
+"url": "https://www.energy.gov/cmei/articles/battery500-progress-update"
+}
+]
+},
+{
+"key": "troubleshooting",
+"n": 13,
 "title": "Troubleshooting by Symptom",
 "short": "An interactive finder: pick a symptom, answer a question or two, and get likely causes, safe checks and when to stop.",
 "icon": "🔎",
@@ -3377,7 +4047,7 @@
 },
 {
 "key": "doing-your-own-work",
-"n": 13,
+"n": 14,
 "title": "Doing Your Own Work",
 "short": "A basic tool kit, garage safety, and a skill ladder from first jobs to the jobs to leave to professionals.",
 "icon": "🧰",
@@ -3579,7 +4249,7 @@
 },
 {
 "key": "careers",
-"n": 14,
+"n": 15,
 "title": "Careers in Auto Repair",
 "short": "What automotive service technicians do, how they train, what they earn, the job outlook, and ASE certification.",
 "icon": "🧑‍🔧",
@@ -5200,9 +5870,73 @@
 {
 "name": "U.S. Department of Labor, Apprenticeship.gov: Career Seekers",
 "url": "https://www.apprenticeship.gov/career-seekers"
+},
+{
+"name": "Electrek: Tesla unveils “cyberfied” new Roadster (October 15, 2026)",
+"url": "https://electrek.co/2026/10/15/tesla-unveils-cyberfied-new-roadster-kickflip/"
+},
+{
+"name": "The Next Web: Tesla Roadster reveal, thrusters and 2028 production",
+"url": "https://thenextweb.com/news/tesla-roadster-reveal-thrusters-2028"
+},
+{
+"name": "Teslarati: Tesla Roadster downforce fan system (October 15, 2026)",
+"url": "https://www.teslarati.com/tesla-roadster-downforce-fan-system/"
+},
+{
+"name": "Tesla: Roadster",
+"url": "https://www.tesla.com/roadster"
+},
+{
+"name": "Electrek: Tesla’s new Roadster patent doesn’t do what Elon said it would (August 6, 2025)",
+"url": "https://electrek.co/2025/08/06/teslas-new-roadster-patent-doesnt-do-what-elon-said-it-would-and-thats-good/"
+},
+{
+"name": "USPTO Official Gazette: US 12,377,920 B1, Adaptive vehicle aerodynamics for downforce",
+"url": "https://patentsgazette.uspto.gov/week31/OG/html/1537-1/US12377920-20250805.html"
+},
+{
+"name": "Google Patents: US12377920B1, Adaptive vehicle aerodynamics for downforce",
+"url": "https://patents.google.com/patent/US12377920"
+},
+{
+"name": "NASA Glenn Research Center: Rocket Thrust Equations",
+"url": "https://www.grc.nasa.gov/WWW/K-12/airplane/rktthsum.html"
+},
+{
+"name": "NASA Glenn Research Center: Mass Flow Choking",
+"url": "https://www.grc.nasa.gov/www/k-12/airplane/mflchk.html"
+},
+{
+"name": "NASA Glenn Research Center: Specific Impulse",
+"url": "https://www.grc.nasa.gov/www/k-12/airplane/specimp.html"
+},
+{
+"name": "NASA Glenn Research Center: The Lift Equation",
+"url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/lift-equation/"
+},
+{
+"name": "NASA Small Spacecraft Technology State of the Art: In-Space Propulsion",
+"url": "https://www.nasa.gov/smallsat-institute/sst-soa/in-space_propulsion/"
+},
+{
+"name": "OpenStax University Physics Volume 2, 3.6 Adiabatic Processes for an Ideal Gas",
+"url": "https://openstax.org/books/university-physics-volume-2/pages/3-6-adiabatic-processes-for-an-ideal-gas"
+},
+{
+"name": "OpenStax College Physics 2e, 5.1 Friction",
+"url": "https://openstax.org/books/college-physics-2e/pages/5-1-friction"
+},
+{
+"name": "NIST Chemistry WebBook: Nitrogen, phase change data",
+"url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7727379&Units=SI&Mask=4"
+},
+{
+"name": "U.S. Department of Energy: Battery500 Progress Update (2020)",
+"url": "https://www.energy.gov/cmei/articles/battery500-progress-update"
 }
 ],
-"map": "<svg class=\"tr-map-svg\" viewBox=\"0 62 760 252\" role=\"group\" aria-label=\"A car seen from the side with its systems drawn inside. Each system links to its lesson.\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"m-ground\" d=\"M10,306 H750\"/><path class=\"m-body\" d=\"M40,240 L40,205 Q42,180 70,172 L250,150 L330,92 Q345,82 365,80 L520,80 Q545,82 560,96 L620,140 L720,148 Q742,152 744,175 L744,240 Q744,256 728,258 L640,258 A50,50 0 0 0 540,258 L225,258 A50,50 0 0 0 125,258 L56,258 Q40,256 40,240 Z\"/><path class=\"m-glass\" d=\"M300,148 L335,98 L438,96 L438,146 Z M450,96 L516,96 Q540,98 552,108 L590,144 L450,146 Z\"/><path class=\"m-line\" d=\"M444,96 V246 M250,150 V250\"/><path class=\"m-seat\" d=\"M395,200 L405,150 L420,150 L414,200 Z M380,204 H440 V214 H380 Z M520,198 L530,150 L545,150 L540,198 Z M505,202 H568 V212 H505 Z\"/><a class=\"tr-sys\" data-sys=\"exhaust\" data-view=\"gas\" href=\"%BASE%trades/cars/exhaust-and-emissions/\" aria-label=\"Exhaust and emissions: open the lesson\"><title>Exhaust and emissions</title><path class=\"m-pipe\" d=\"M196,232 Q206,262 236,266 L640,266 Q700,266 744,262\"/><rect class=\"m-cat\" x=\"262\" y=\"257\" width=\"54\" height=\"18\" rx=\"9\"/><rect class=\"m-muff\" x=\"644\" y=\"256\" width=\"62\" height=\"21\" rx=\"9\"/><rect class=\"m-hit\" x=\"190\" y=\"250\" width=\"560\" height=\"32\"/></a><a class=\"tr-sys\" data-sys=\"fuel\" data-view=\"gas\" href=\"%BASE%trades/cars/air-fuel-spark/\" aria-label=\"Air, fuel and spark: open the lesson\"><title>Air, fuel and spark</title><rect class=\"m-tank\" x=\"462\" y=\"222\" width=\"76\" height=\"30\" rx=\"6\"/><path class=\"m-fuel\" d=\"M462,246 L230,248 Q200,248 190,234\"/><rect class=\"m-air\" x=\"68\" y=\"150\" width=\"40\" height=\"16\" rx=\"4\"/><path class=\"m-intake\" d=\"M108,158 Q130,150 150,154\"/><path class=\"m-cap\" d=\"M612,150 h10 v8 h-10 z\"/><path class=\"m-fuel\" d=\"M612,158 Q600,200 538,232\"/><rect class=\"m-hit\" x=\"60\" y=\"144\" width=\"100\" height=\"26\"/><rect class=\"m-hit\" x=\"455\" y=\"218\" width=\"90\" height=\"38\"/></a><a class=\"tr-sys\" data-sys=\"cooling\" data-view=\"gas\" href=\"%BASE%trades/cars/cooling-and-oil/\" aria-label=\"Cooling and lubrication: open the lesson\"><title>Cooling and lubrication</title><rect class=\"m-rad\" x=\"50\" y=\"170\" width=\"13\" height=\"66\" rx=\"2\"/><path class=\"m-hose\" d=\"M63,178 Q84,172 108,176 M63,228 Q86,232 108,220\"/><circle class=\"m-fan\" cx=\"76\" cy=\"203\" r=\"10\"/><rect class=\"m-hit\" x=\"44\" y=\"166\" width=\"66\" height=\"74\"/></a><a class=\"tr-sys\" data-sys=\"engine\" data-view=\"gas\" href=\"%BASE%trades/cars/engine/\" aria-label=\"Engine: open the lesson\"><title>Engine</title><rect class=\"m-eng\" x=\"106\" y=\"165\" width=\"108\" height=\"62\" rx=\"8\"/><rect class=\"m-head\" x=\"112\" y=\"152\" width=\"96\" height=\"15\" rx=\"4\"/><rect class=\"m-pan\" x=\"118\" y=\"227\" width=\"84\" height=\"12\" rx=\"4\"/><path class=\"m-cyl\" d=\"M128,172 v40 M152,172 v40 M176,172 v40 M200,172 v40\"/></a><a class=\"tr-sys\" data-sys=\"drivetrain\" data-view=\"gas\" href=\"%BASE%trades/cars/transmission-and-drivetrain/\" aria-label=\"Transmission and drivetrain: open the lesson\"><title>Transmission and drivetrain</title><path class=\"m-trans\" d=\"M214,196 L288,212 L288,234 L214,236 Z\"/><path class=\"m-shaft\" d=\"M288,226 L578,258\"/><rect class=\"m-hit\" x=\"210\" y=\"192\" width=\"82\" height=\"48\"/><path class=\"m-hitl\" d=\"M288,226 L578,258\"/></a><a class=\"tr-sys\" data-sys=\"ev\" data-view=\"ev\" href=\"%BASE%trades/cars/hybrids-and-evs/\" aria-label=\"Hybrid and electric drive: open the lesson\"><title>Hybrid and electric drive</title><rect class=\"m-pack\" x=\"236\" y=\"236\" width=\"290\" height=\"20\" rx=\"5\"/><path class=\"m-pack-l\" d=\"M266,236 v20 M296,236 v20 M326,236 v20 M356,236 v20 M386,236 v20 M416,236 v20 M446,236 v20 M476,236 v20 M506,236 v20\"/><rect class=\"m-inv\" x=\"532\" y=\"214\" width=\"34\" height=\"22\" rx=\"4\"/><circle class=\"m-motor\" cx=\"590\" cy=\"236\" r=\"14\"/><path class=\"m-hv\" d=\"M526,246 Q540,244 548,236 M566,226 Q578,226 582,230\"/><rect class=\"m-port\" x=\"612\" y=\"150\" width=\"12\" height=\"9\" rx=\"2\"/><path class=\"m-hv\" d=\"M612,158 Q590,200 520,236\"/><rect class=\"m-rad\" x=\"50\" y=\"176\" width=\"12\" height=\"56\" rx=\"2\"/><path class=\"m-hose\" d=\"M62,184 Q120,190 236,240\"/><rect class=\"m-hit\" x=\"44\" y=\"172\" width=\"22\" height=\"64\"/><rect class=\"m-hit\" x=\"230\" y=\"210\" width=\"400\" height=\"50\"/></a><a class=\"tr-sys\" data-sys=\"electrical\" href=\"%BASE%trades/cars/electrical/\" aria-label=\"Electrical system: open the lesson\"><title>Electrical system</title><rect class=\"m-batt\" x=\"222\" y=\"160\" width=\"28\" height=\"20\" rx=\"3\"/><path class=\"m-term\" d=\"M228,157 h5 M240,157 h5\"/><circle class=\"m-alt\" cx=\"100\" cy=\"214\" r=\"9\" data-view=\"gas\"/><path class=\"m-wire\" d=\"M236,160 Q260,150 300,156 L420,160 L736,168 M236,180 Q160,194 100,214\"/><rect class=\"m-light\" x=\"40\" y=\"186\" width=\"8\" height=\"12\" rx=\"2\"/><rect class=\"m-light2\" x=\"737\" y=\"160\" width=\"7\" height=\"16\" rx=\"2\"/><rect class=\"m-hit\" x=\"216\" y=\"154\" width=\"40\" height=\"32\"/></a><a class=\"tr-sys\" data-sys=\"brakes\" href=\"%BASE%trades/cars/brakes/\" aria-label=\"Brakes: open the lesson\"><title>Brakes</title><rect class=\"m-mc\" x=\"254\" y=\"154\" width=\"18\" height=\"10\" rx=\"2\"/><path class=\"m-bline\" d=\"M262,164 Q240,220 186,246 M262,164 Q300,252 420,252 L578,256\"/><rect class=\"m-hit\" x=\"250\" y=\"150\" width=\"26\" height=\"18\"/></a><a class=\"tr-sys\" data-sys=\"steering\" href=\"%BASE%trades/cars/steering-and-suspension/\" aria-label=\"Steering, suspension and alignment: open the lesson\"><title>Steering, suspension and alignment</title><path class=\"m-spring\" d=\"M168,182 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 \"/><path class=\"m-spring\" d=\"M583,182 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 \"/><path class=\"m-col\" d=\"M320,128 L226,236\"/><ellipse class=\"m-swheel\" cx=\"322\" cy=\"126\" rx=\"5\" ry=\"16\" transform=\"rotate(-30 322 126)\"/><rect class=\"m-rack\" x=\"188\" y=\"238\" width=\"44\" height=\"7\" rx=\"3\"/><rect class=\"m-hit\" x=\"156\" y=\"178\" width=\"30\" height=\"62\"/><rect class=\"m-hit\" x=\"571\" y=\"178\" width=\"30\" height=\"62\"/><path class=\"m-hitl\" d=\"M320,128 L226,236\"/></a><a class=\"tr-sys\" data-sys=\"tires\" href=\"%BASE%trades/cars/wheels-and-tires/\" aria-label=\"Wheels and tires: open the lesson\"><title>Wheels and tires</title><circle class=\"m-tire\" cx=\"175\" cy=\"262\" r=\"42\"/><circle class=\"m-rim\" cx=\"175\" cy=\"262\" r=\"28\"/><circle class=\"m-tire\" cx=\"590\" cy=\"262\" r=\"42\"/><circle class=\"m-rim\" cx=\"590\" cy=\"262\" r=\"28\"/></a><a class=\"tr-sys\" data-sys=\"brakes\" href=\"%BASE%trades/cars/brakes/\" aria-label=\"Brakes: open the lesson\"><title>Brakes</title><circle class=\"m-rotor\" cx=\"175\" cy=\"262\" r=\"20\"/><path class=\"m-caliper\" d=\"M154,250 a24,24 0 0 1 14,-18\"/><circle class=\"m-rotor\" cx=\"590\" cy=\"262\" r=\"20\"/><path class=\"m-caliper\" d=\"M569,250 a24,24 0 0 1 14,-18\"/></a><a class=\"tr-sys\" data-sys=\"drivetrain\" data-view=\"gas\" href=\"%BASE%trades/cars/transmission-and-drivetrain/\" aria-label=\"Transmission and drivetrain: open the lesson\"><title>Transmission and drivetrain</title><circle class=\"m-diff\" cx=\"590\" cy=\"262\" r=\"10\"/></a><circle class=\"m-hub\" cx=\"175\" cy=\"262\" r=\"5\"/></svg>",
+"map": "<svg class=\"tr-map-svg\" viewBox=\"0 62 760 252\" role=\"group\" aria-label=\"A car seen from the side with its systems drawn inside. Each system links to its lesson.\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"m-ground\" d=\"M10,306 H750\"/><path class=\"m-body\" data-view=\"std\" d=\"M40,240 L40,205 Q42,180 70,172 L250,150 L330,92 Q345,82 365,80 L520,80 Q545,82 560,96 L620,140 L720,148 Q742,152 744,175 L744,240 Q744,256 728,258 L640,258 A50,50 0 0 0 540,258 L225,258 A50,50 0 0 0 125,258 L56,258 Q40,256 40,240 Z\"/><path class=\"m-glass\" data-view=\"std\" d=\"M300,148 L335,98 L438,96 L438,146 Z M450,96 L516,96 Q540,98 552,108 L590,144 L450,146 Z\"/><path class=\"m-line\" data-view=\"std\" d=\"M444,96 V246 M250,150 V250\"/><path class=\"m-seat\" data-view=\"std\" d=\"M395,200 L405,150 L420,150 L414,200 Z M380,204 H440 V214 H380 Z M520,198 L530,150 L545,150 L540,198 Z M505,202 H568 V212 H505 Z\"/><g data-view=\"rd\"><path class=\"m-rbody\" d=\"M40,244 L38,194 Q38,174 62,170 L290,150 Q330,128 380,116 Q400,112 430,112 L480,113 Q520,117 560,128 L652,147 L722,150 Q746,152 746,172 L746,240 Q744,256 728,258 L640,258 A50,50 0 0 0 540,258 L225,258 A50,50 0 0 0 125,258 L56,258 Q40,256 40,244 Z\"/><path class=\"m-rglass\" d=\"M306,148 Q338,131 382,121 Q400,117 428,117 L474,118 Q508,121 540,132 L556,139 Z\"/><path class=\"m-rline\" d=\"M298,152 V250 M490,120 V246\"/><path class=\"m-rseat\" d=\"M420,206 L432,152 L446,152 L440,206 Z M404,208 H468 V218 H404 Z\"/></g><a class=\"tr-sys\" data-sys=\"exhaust\" data-view=\"gas\" href=\"%BASE%trades/cars/exhaust-and-emissions/\" aria-label=\"Exhaust and emissions: open the lesson\"><title>Exhaust and emissions</title><path class=\"m-pipe\" d=\"M196,232 Q206,262 236,266 L640,266 Q700,266 744,262\"/><rect class=\"m-cat\" x=\"262\" y=\"257\" width=\"54\" height=\"18\" rx=\"9\"/><rect class=\"m-muff\" x=\"644\" y=\"256\" width=\"62\" height=\"21\" rx=\"9\"/><rect class=\"m-hit\" x=\"190\" y=\"250\" width=\"560\" height=\"32\"/></a><a class=\"tr-sys\" data-sys=\"fuel\" data-view=\"gas\" href=\"%BASE%trades/cars/air-fuel-spark/\" aria-label=\"Air, fuel and spark: open the lesson\"><title>Air, fuel and spark</title><rect class=\"m-tank\" x=\"462\" y=\"222\" width=\"76\" height=\"30\" rx=\"6\"/><path class=\"m-fuel\" d=\"M462,246 L230,248 Q200,248 190,234\"/><rect class=\"m-air\" x=\"68\" y=\"150\" width=\"40\" height=\"16\" rx=\"4\"/><path class=\"m-intake\" d=\"M108,158 Q130,150 150,154\"/><path class=\"m-cap\" d=\"M612,150 h10 v8 h-10 z\"/><path class=\"m-fuel\" d=\"M612,158 Q600,200 538,232\"/><rect class=\"m-hit\" x=\"60\" y=\"144\" width=\"100\" height=\"26\"/><rect class=\"m-hit\" x=\"455\" y=\"218\" width=\"90\" height=\"38\"/></a><a class=\"tr-sys\" data-sys=\"cooling\" data-view=\"gas\" href=\"%BASE%trades/cars/cooling-and-oil/\" aria-label=\"Cooling and lubrication: open the lesson\"><title>Cooling and lubrication</title><rect class=\"m-rad\" x=\"50\" y=\"170\" width=\"13\" height=\"66\" rx=\"2\"/><path class=\"m-hose\" d=\"M63,178 Q84,172 108,176 M63,228 Q86,232 108,220\"/><circle class=\"m-fan\" cx=\"76\" cy=\"203\" r=\"10\"/><rect class=\"m-hit\" x=\"44\" y=\"166\" width=\"66\" height=\"74\"/></a><a class=\"tr-sys\" data-sys=\"engine\" data-view=\"gas\" href=\"%BASE%trades/cars/engine/\" aria-label=\"Engine: open the lesson\"><title>Engine</title><rect class=\"m-eng\" x=\"106\" y=\"165\" width=\"108\" height=\"62\" rx=\"8\"/><rect class=\"m-head\" x=\"112\" y=\"152\" width=\"96\" height=\"15\" rx=\"4\"/><rect class=\"m-pan\" x=\"118\" y=\"227\" width=\"84\" height=\"12\" rx=\"4\"/><path class=\"m-cyl\" d=\"M128,172 v40 M152,172 v40 M176,172 v40 M200,172 v40\"/></a><a class=\"tr-sys\" data-sys=\"drivetrain\" data-view=\"gas\" href=\"%BASE%trades/cars/transmission-and-drivetrain/\" aria-label=\"Transmission and drivetrain: open the lesson\"><title>Transmission and drivetrain</title><path class=\"m-trans\" d=\"M214,196 L288,212 L288,234 L214,236 Z\"/><path class=\"m-shaft\" d=\"M288,226 L578,258\"/><rect class=\"m-hit\" x=\"210\" y=\"192\" width=\"82\" height=\"48\"/><path class=\"m-hitl\" d=\"M288,226 L578,258\"/></a><a class=\"tr-sys\" data-sys=\"ev\" data-view=\"ev\" href=\"%BASE%trades/cars/hybrids-and-evs/\" aria-label=\"Hybrid and electric drive: open the lesson\"><title>Hybrid and electric drive</title><rect class=\"m-pack\" x=\"236\" y=\"236\" width=\"290\" height=\"20\" rx=\"5\"/><path class=\"m-pack-l\" d=\"M266,236 v20 M296,236 v20 M326,236 v20 M356,236 v20 M386,236 v20 M416,236 v20 M446,236 v20 M476,236 v20 M506,236 v20\"/><rect class=\"m-inv\" x=\"532\" y=\"214\" width=\"34\" height=\"22\" rx=\"4\"/><circle class=\"m-motor\" cx=\"590\" cy=\"236\" r=\"14\"/><path class=\"m-hv\" d=\"M526,246 Q540,244 548,236 M566,226 Q578,226 582,230\"/><rect class=\"m-port\" x=\"612\" y=\"150\" width=\"12\" height=\"9\" rx=\"2\"/><path class=\"m-hv\" d=\"M612,158 Q590,200 520,236\"/><rect class=\"m-rad\" x=\"50\" y=\"176\" width=\"12\" height=\"56\" rx=\"2\"/><path class=\"m-hose\" d=\"M62,184 Q120,190 236,240\"/><rect class=\"m-hit\" x=\"44\" y=\"172\" width=\"22\" height=\"64\"/><rect class=\"m-hit\" x=\"230\" y=\"210\" width=\"400\" height=\"50\"/></a><a class=\"tr-sys\" data-sys=\"fans\" data-view=\"rd\" href=\"%BASE%trades/cars/thrusters-and-fans/#fans\" aria-label=\"Suction fans and skirts: open the lesson section\"><title>Suction fans and skirts</title><rect class=\"m-skirt\" x=\"228\" y=\"258\" width=\"308\" height=\"38\" rx=\"4\"/><path class=\"m-lowp\" d=\"M262,277 h10 M302,277 h10 M342,277 h10 M382,277 h10 M422,277 h10 M462,277 h10 M502,277 h10\"/><path class=\"m-duct\" d=\"M516,264 Q600,286 640,244 M686,240 Q716,248 744,246\"/><circle class=\"m-sfan\" cx=\"650\" cy=\"232\" r=\"11\"/><circle class=\"m-sfan\" cx=\"677\" cy=\"232\" r=\"11\"/><path class=\"m-blade\" d=\"M650,232 l7,-3 v6 z M650,232 l-7,3 v-6 z M677,232 l7,-3 v6 z M677,232 l-7,3 v-6 z\"/><rect class=\"m-hit\" x=\"224\" y=\"256\" width=\"316\" height=\"44\"/><rect class=\"m-hit\" x=\"636\" y=\"218\" width=\"56\" height=\"28\"/></a><a class=\"tr-sys\" data-sys=\"copv\" data-view=\"rd\" href=\"%BASE%trades/cars/thrusters-and-fans/#tank\" aria-label=\"Compressed-air tanks (COPVs): open the lesson section\"><title>Compressed-air tanks (COPVs)</title><rect class=\"m-copv\" x=\"98\" y=\"178\" width=\"100\" height=\"16\" rx=\"8\"/><path class=\"m-weave\" d=\"M106,186 H190 M131.333,180 v12 M164.667,180 v12\"/><rect class=\"m-copv\" x=\"98\" y=\"198\" width=\"100\" height=\"16\" rx=\"8\"/><path class=\"m-weave\" d=\"M106,206 H190 M131.333,200 v12 M164.667,200 v12\"/><rect class=\"m-copv\" x=\"484\" y=\"140\" width=\"20\" height=\"88\" rx=\"10\"/><path class=\"m-weave\" d=\"M494,150 V218 M486,169.333 h16 M486,198.667 h16\"/><rect class=\"m-copv\" x=\"606\" y=\"162\" width=\"96\" height=\"18\" rx=\"9\"/><path class=\"m-weave\" d=\"M615,171 H693 M638,164 v14 M670,164 v14\"/><rect class=\"m-hit\" x=\"94\" y=\"174\" width=\"108\" height=\"44\"/><rect class=\"m-hit\" x=\"480\" y=\"136\" width=\"28\" height=\"96\"/><rect class=\"m-hit\" x=\"602\" y=\"158\" width=\"104\" height=\"26\"/></a><a class=\"tr-sys\" data-sys=\"valves\" data-view=\"rd\" href=\"%BASE%trades/cars/thrusters-and-fans/#parts\" aria-label=\"Valves and gas lines: open the lesson section\"><title>Valves and gas lines</title><path class=\"m-gline\" d=\"M702,171 H716 V222 H738 M716,200 H738 M690,180 Q708,206 700,252 M484,226 H214 Q204,226 200,214 M98,186 Q78,188 74,176 M100,206 Q84,214 86,252 M98,206 Q60,212 42,222\"/><path class=\"m-valve\" d=\"M722,195 L734,205 L734,195 L722,205 Z\"/><path class=\"m-valve\" d=\"M722,217 L734,227 L734,217 L722,227 Z\"/><path class=\"m-valve\" d=\"M696,231 L708,241 L708,231 L696,241 Z\"/><path class=\"m-valve\" d=\"M80,233 L92,243 L92,233 L80,243 Z\"/><path class=\"m-valve\" d=\"M74,179 L86,189 L86,179 L74,189 Z\"/><path class=\"m-valve\" d=\"M50,213 L62,223 L62,213 L50,223 Z\"/><rect class=\"m-hit\" x=\"696\" y=\"166\" width=\"48\" height=\"76\"/><rect class=\"m-hit\" x=\"40\" y=\"176\" width=\"58\" height=\"72\"/></a><a class=\"tr-sys\" data-sys=\"thrusters\" data-view=\"rd\" href=\"%BASE%trades/cars/thrusters-and-fans/#newton\" aria-label=\"Rear thrusters (Thrust version): open the lesson section\"><title>Rear thrusters (Thrust version)</title><path class=\"m-noz\" d=\"M738,195 L744,195 L754,190 L754,210 L744,205 L738,205 Z M738,217 L744,217 L754,212 L754,232 L744,227 L738,227 Z\"/><path class=\"m-plume\" d=\"M757,200 h3 M757,222 h3\"/><rect class=\"m-hit\" x=\"734\" y=\"186\" width=\"26\" height=\"50\"/></a><a class=\"tr-sys\" data-sys=\"rocket\" data-view=\"rd\" href=\"%BASE%trades/cars/thrusters-and-fans/#newton\" aria-label=\"Thrusters around the body (Rocket version): open the lesson section\"><title>Thrusters around the body (Rocket version)</title><path class=\"m-noz2\" d=\"M81,252 L91,252 L96,268 L76,268 Z M695,252 L705,252 L710,268 L690,268 Z M70,170 L78,170 L83,156 L65,156 Z M712,150 L720,150 L725,136 L707,136 Z M40,217 L40,227 L27,232 L27,212 Z\"/><path class=\"m-plume2\" d=\"M86,274 V296 M700,274 V296 M74,150 V128 M716,130 V108 M22,222 H8\"/><rect class=\"m-hit\" x=\"72\" y=\"248\" width=\"28\" height=\"50\"/><rect class=\"m-hit\" x=\"686\" y=\"248\" width=\"28\" height=\"50\"/><rect class=\"m-hit\" x=\"60\" y=\"104\" width=\"28\" height=\"68\"/><rect class=\"m-hit\" x=\"702\" y=\"104\" width=\"28\" height=\"48\"/><rect class=\"m-hit\" x=\"4\" y=\"208\" width=\"38\" height=\"28\"/></a><a class=\"tr-sys\" data-sys=\"electrical\" href=\"%BASE%trades/cars/electrical/\" aria-label=\"Electrical system: open the lesson\"><title>Electrical system</title><rect class=\"m-batt\" x=\"222\" y=\"160\" width=\"28\" height=\"20\" rx=\"3\"/><path class=\"m-term\" d=\"M228,157 h5 M240,157 h5\"/><circle class=\"m-alt\" cx=\"100\" cy=\"214\" r=\"9\" data-view=\"gas\"/><path class=\"m-wire\" d=\"M236,160 Q260,150 300,156 L420,160 L736,168 M236,180 Q160,194 100,214\"/><rect class=\"m-light\" x=\"40\" y=\"186\" width=\"8\" height=\"12\" rx=\"2\"/><rect class=\"m-light2\" x=\"737\" y=\"160\" width=\"7\" height=\"16\" rx=\"2\"/><rect class=\"m-hit\" x=\"216\" y=\"154\" width=\"40\" height=\"32\"/></a><a class=\"tr-sys\" data-sys=\"brakes\" href=\"%BASE%trades/cars/brakes/\" aria-label=\"Brakes: open the lesson\"><title>Brakes</title><rect class=\"m-mc\" x=\"254\" y=\"154\" width=\"18\" height=\"10\" rx=\"2\"/><path class=\"m-bline\" d=\"M262,164 Q240,220 186,246 M262,164 Q300,252 420,252 L578,256\"/><rect class=\"m-hit\" x=\"250\" y=\"150\" width=\"26\" height=\"18\"/></a><a class=\"tr-sys\" data-sys=\"steering\" href=\"%BASE%trades/cars/steering-and-suspension/\" aria-label=\"Steering, suspension and alignment: open the lesson\"><title>Steering, suspension and alignment</title><path class=\"m-spring\" d=\"M168,182 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 \"/><path class=\"m-spring\" d=\"M583,182 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 \"/><path class=\"m-col\" data-view=\"std\" d=\"M320,128 L226,236\"/><ellipse class=\"m-swheel\" data-view=\"std\" cx=\"322\" cy=\"126\" rx=\"5\" ry=\"16\" transform=\"rotate(-30 322 126)\"/><rect class=\"m-rack\" x=\"188\" y=\"238\" width=\"44\" height=\"7\" rx=\"3\"/><path class=\"m-yoke\" data-view=\"rd\" d=\"M372,136 Q364,150 372,166 M368,151 h10\"/><path class=\"m-sbw\" data-view=\"rd\" d=\"M370,158 Q300,200 232,240\"/><path class=\"m-hitl\" data-view=\"rd\" d=\"M374,150 Q300,200 232,240\"/><rect class=\"m-hit\" x=\"156\" y=\"178\" width=\"30\" height=\"62\"/><rect class=\"m-hit\" x=\"571\" y=\"178\" width=\"30\" height=\"62\"/><path class=\"m-hitl\" data-view=\"std\" d=\"M320,128 L226,236\"/></a><a class=\"tr-sys\" data-sys=\"tires\" href=\"%BASE%trades/cars/wheels-and-tires/\" aria-label=\"Wheels and tires: open the lesson\"><title>Wheels and tires</title><circle class=\"m-tire\" cx=\"175\" cy=\"262\" r=\"42\"/><circle class=\"m-rim\" cx=\"175\" cy=\"262\" r=\"28\"/><circle class=\"m-tire\" cx=\"590\" cy=\"262\" r=\"42\"/><circle class=\"m-rim\" cx=\"590\" cy=\"262\" r=\"28\"/></a><a class=\"tr-sys\" data-sys=\"brakes\" href=\"%BASE%trades/cars/brakes/\" aria-label=\"Brakes: open the lesson\"><title>Brakes</title><circle class=\"m-rotor\" cx=\"175\" cy=\"262\" r=\"20\"/><path class=\"m-caliper\" d=\"M154,250 a24,24 0 0 1 14,-18\"/><circle class=\"m-rotor\" cx=\"590\" cy=\"262\" r=\"20\"/><path class=\"m-caliper\" d=\"M569,250 a24,24 0 0 1 14,-18\"/></a><a class=\"tr-sys\" data-sys=\"drivetrain\" data-view=\"gas\" href=\"%BASE%trades/cars/transmission-and-drivetrain/\" aria-label=\"Transmission and drivetrain: open the lesson\"><title>Transmission and drivetrain</title><circle class=\"m-diff\" cx=\"590\" cy=\"262\" r=\"10\"/></a><circle class=\"m-hub\" cx=\"175\" cy=\"262\" r=\"5\"/></svg>",
 "mapstatic": "<svg class=\"tr-map-svg\" aria-hidden=\"true\" focusable=\"false\" viewBox=\"0 62 760 252\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"m-ground\" d=\"M10,306 H750\"/><path class=\"m-body\" d=\"M40,240 L40,205 Q42,180 70,172 L250,150 L330,92 Q345,82 365,80 L520,80 Q545,82 560,96 L620,140 L720,148 Q742,152 744,175 L744,240 Q744,256 728,258 L640,258 A50,50 0 0 0 540,258 L225,258 A50,50 0 0 0 125,258 L56,258 Q40,256 40,240 Z\"/><path class=\"m-glass\" d=\"M300,148 L335,98 L438,96 L438,146 Z M450,96 L516,96 Q540,98 552,108 L590,144 L450,146 Z\"/><path class=\"m-line\" d=\"M444,96 V246 M250,150 V250\"/><path class=\"m-seat\" d=\"M395,200 L405,150 L420,150 L414,200 Z M380,204 H440 V214 H380 Z M520,198 L530,150 L545,150 L540,198 Z M505,202 H568 V212 H505 Z\"/><g><desc>Exhaust and emissions</desc><path class=\"m-pipe\" d=\"M196,232 Q206,262 236,266 L640,266 Q700,266 744,262\"/><rect class=\"m-cat\" x=\"262\" y=\"257\" width=\"54\" height=\"18\" rx=\"9\"/><rect class=\"m-muff\" x=\"644\" y=\"256\" width=\"62\" height=\"21\" rx=\"9\"/><rect class=\"m-hit\" x=\"190\" y=\"250\" width=\"560\" height=\"32\"/></g><g><desc>Air, fuel and spark</desc><rect class=\"m-tank\" x=\"462\" y=\"222\" width=\"76\" height=\"30\" rx=\"6\"/><path class=\"m-fuel\" d=\"M462,246 L230,248 Q200,248 190,234\"/><rect class=\"m-air\" x=\"68\" y=\"150\" width=\"40\" height=\"16\" rx=\"4\"/><path class=\"m-intake\" d=\"M108,158 Q130,150 150,154\"/><path class=\"m-cap\" d=\"M612,150 h10 v8 h-10 z\"/><path class=\"m-fuel\" d=\"M612,158 Q600,200 538,232\"/><rect class=\"m-hit\" x=\"60\" y=\"144\" width=\"100\" height=\"26\"/><rect class=\"m-hit\" x=\"455\" y=\"218\" width=\"90\" height=\"38\"/></g><g><desc>Cooling and lubrication</desc><rect class=\"m-rad\" x=\"50\" y=\"170\" width=\"13\" height=\"66\" rx=\"2\"/><path class=\"m-hose\" d=\"M63,178 Q84,172 108,176 M63,228 Q86,232 108,220\"/><circle class=\"m-fan\" cx=\"76\" cy=\"203\" r=\"10\"/><rect class=\"m-hit\" x=\"44\" y=\"166\" width=\"66\" height=\"74\"/></g><g><desc>Engine</desc><rect class=\"m-eng\" x=\"106\" y=\"165\" width=\"108\" height=\"62\" rx=\"8\"/><rect class=\"m-head\" x=\"112\" y=\"152\" width=\"96\" height=\"15\" rx=\"4\"/><rect class=\"m-pan\" x=\"118\" y=\"227\" width=\"84\" height=\"12\" rx=\"4\"/><path class=\"m-cyl\" d=\"M128,172 v40 M152,172 v40 M176,172 v40 M200,172 v40\"/></g><g><desc>Transmission and drivetrain</desc><path class=\"m-trans\" d=\"M214,196 L288,212 L288,234 L214,236 Z\"/><path class=\"m-shaft\" d=\"M288,226 L578,258\"/><rect class=\"m-hit\" x=\"210\" y=\"192\" width=\"82\" height=\"48\"/><path class=\"m-hitl\" d=\"M288,226 L578,258\"/></g><g><desc>Hybrid and electric drive</desc><rect class=\"m-pack\" x=\"236\" y=\"236\" width=\"290\" height=\"20\" rx=\"5\"/><path class=\"m-pack-l\" d=\"M266,236 v20 M296,236 v20 M326,236 v20 M356,236 v20 M386,236 v20 M416,236 v20 M446,236 v20 M476,236 v20 M506,236 v20\"/><rect class=\"m-inv\" x=\"532\" y=\"214\" width=\"34\" height=\"22\" rx=\"4\"/><circle class=\"m-motor\" cx=\"590\" cy=\"236\" r=\"14\"/><path class=\"m-hv\" d=\"M526,246 Q540,244 548,236 M566,226 Q578,226 582,230\"/><rect class=\"m-port\" x=\"612\" y=\"150\" width=\"12\" height=\"9\" rx=\"2\"/><path class=\"m-hv\" d=\"M612,158 Q590,200 520,236\"/><rect class=\"m-rad\" x=\"50\" y=\"176\" width=\"12\" height=\"56\" rx=\"2\"/><path class=\"m-hose\" d=\"M62,184 Q120,190 236,240\"/><rect class=\"m-hit\" x=\"44\" y=\"172\" width=\"22\" height=\"64\"/><rect class=\"m-hit\" x=\"230\" y=\"210\" width=\"400\" height=\"50\"/></g><g><desc>Electrical system</desc><rect class=\"m-batt\" x=\"222\" y=\"160\" width=\"28\" height=\"20\" rx=\"3\"/><path class=\"m-term\" d=\"M228,157 h5 M240,157 h5\"/><circle class=\"m-alt\" cx=\"100\" cy=\"214\" r=\"9\" data-view=\"gas\"/><path class=\"m-wire\" d=\"M236,160 Q260,150 300,156 L420,160 L736,168 M236,180 Q160,194 100,214\"/><rect class=\"m-light\" x=\"40\" y=\"186\" width=\"8\" height=\"12\" rx=\"2\"/><rect class=\"m-light2\" x=\"737\" y=\"160\" width=\"7\" height=\"16\" rx=\"2\"/><rect class=\"m-hit\" x=\"216\" y=\"154\" width=\"40\" height=\"32\"/></g><g><desc>Brakes</desc><rect class=\"m-mc\" x=\"254\" y=\"154\" width=\"18\" height=\"10\" rx=\"2\"/><path class=\"m-bline\" d=\"M262,164 Q240,220 186,246 M262,164 Q300,252 420,252 L578,256\"/><rect class=\"m-hit\" x=\"250\" y=\"150\" width=\"26\" height=\"18\"/></g><g><desc>Steering, suspension and alignment</desc><path class=\"m-spring\" d=\"M168,182 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 \"/><path class=\"m-spring\" d=\"M583,182 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 l9,4.0 l-9,4.0 \"/><path class=\"m-col\" d=\"M320,128 L226,236\"/><ellipse class=\"m-swheel\" cx=\"322\" cy=\"126\" rx=\"5\" ry=\"16\" transform=\"rotate(-30 322 126)\"/><rect class=\"m-rack\" x=\"188\" y=\"238\" width=\"44\" height=\"7\" rx=\"3\"/><rect class=\"m-hit\" x=\"156\" y=\"178\" width=\"30\" height=\"62\"/><rect class=\"m-hit\" x=\"571\" y=\"178\" width=\"30\" height=\"62\"/><path class=\"m-hitl\" d=\"M320,128 L226,236\"/></g><g><desc>Wheels and tires</desc><circle class=\"m-tire\" cx=\"175\" cy=\"262\" r=\"42\"/><circle class=\"m-rim\" cx=\"175\" cy=\"262\" r=\"28\"/><circle class=\"m-tire\" cx=\"590\" cy=\"262\" r=\"42\"/><circle class=\"m-rim\" cx=\"590\" cy=\"262\" r=\"28\"/></g><g><desc>Brakes</desc><circle class=\"m-rotor\" cx=\"175\" cy=\"262\" r=\"20\"/><path class=\"m-caliper\" d=\"M154,250 a24,24 0 0 1 14,-18\"/><circle class=\"m-rotor\" cx=\"590\" cy=\"262\" r=\"20\"/><path class=\"m-caliper\" d=\"M569,250 a24,24 0 0 1 14,-18\"/></g><g><desc>Transmission and drivetrain</desc><circle class=\"m-diff\" cx=\"590\" cy=\"262\" r=\"10\"/></g><circle class=\"m-hub\" cx=\"175\" cy=\"262\" r=\"5\"/></svg>",
 "figs": {
 "stands": "<svg viewBox=\"0 0 440 258\" role=\"img\" aria-label=\"A car with its front raised and resting on a jack stand at a lift point; the jack is set aside, and the rear wheels are chocked\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"fjs-a\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"k-arrow\"/></marker><marker id=\"fjs-h\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"k-hotf\"/></marker><marker id=\"fjs-c\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"k-coolf\"/></marker><marker id=\"fjs-o\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerUnits=\"userSpaceOnUse\" markerWidth=\"10\" markerHeight=\"10\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" class=\"k-oilf\"/></marker></defs><path class=\"k-ground\" d=\"M0,226 H440\"/><path class=\"k-body\" d=\"M60,150 L60,118 Q62,100 90,96 L190,84 L236,52 L330,50 L372,84 L400,90 Q414,94 414,114 L414,150 Z\"/><circle class=\"k-tirec\" cx=\"130\" cy=\"166\" r=\"34\"/><circle class=\"k-pale\" cx=\"130\" cy=\"166\" r=\"15\"/><circle class=\"k-tirec\" cx=\"350\" cy=\"192\" r=\"34\"/><circle class=\"k-pale\" cx=\"350\" cy=\"192\" r=\"15\"/><path class=\"k-stand\" d=\"M190,150 V176 M178,226 L190,176 L202,226 M172,226 H208\"/><rect class=\"k-acc\" x=\"182\" y=\"146\" width=\"16\" height=\"6\" rx=\"2\"/><path class=\"k-jack\" d=\"M246,226 H306 M262,226 L276,196 L290,226\"/><path class=\"k-chock\" d=\"M378,226 L392,206 L404,226 Z\"/><text class=\"tx-ink tx-b\" x=\"190\" y=\"248\" text-anchor=\"middle\">jack stand at a lift point</text><text class=\"tx-sm\" x=\"276\" y=\"190\" text-anchor=\"middle\">jack: lift only</text><text class=\"tx-sm\" x=\"410\" y=\"246\" text-anchor=\"end\">wheel chocks</text><text class=\"tx-sm\" x=\"20\" y=\"24\">The car rests on stands before anyone reaches under it.</text><text class=\"tx-sm\" x=\"20\" y=\"40\">Firm, level ground; lift points from the owner’s manual.</text></svg>"

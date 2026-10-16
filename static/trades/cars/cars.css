@@ -1,0 +1,131 @@
+/* The Trades, Cars course: what the shared trades.css doesn't already cover. Every rule is scoped under .c-cars.
+   1) the third map view, "Roadster (2026)" (data-view="rd"): its systems, colors and view switching;
+   2) the Lesson 12 widgets (thrust.js, fans.js), rd- and rf- classes, with dark plot panels in both themes. */
+.c-cars{--s-copv:#4f6b7d;--s-valve:#9a7410;--s-thrust:#0277bd;--s-rocket:#4a4fc4;--s-fans:#2e8540}
+html[data-theme="dark"] .c-cars{--s-copv:#a9c1d0;--s-valve:#e6c35c;--s-thrust:#5cc2ff;--s-rocket:#a9acff;--s-fans:#79d38a}
+
+/* ---------- map: third view ---------- */
+.c-cars .tr-map[data-view="rd"] .tr-map-svg [data-view="gas"],.c-cars .tr-map[data-view="rd"] .tr-legend [data-view="gas"],
+.c-cars .tr-map[data-view="rd"] [data-view="std"]{display:none}
+.c-cars .tr-map:not([data-view="rd"]) [data-view="rd"]{display:none}
+.c-cars .tr-map-svg .m-rbody{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2;fill-opacity:.85}
+.c-cars .tr-map-svg .m-rglass{fill:var(--tr-glass);opacity:.7}
+.c-cars .tr-map-svg .m-rline{stroke:var(--tr-edge);stroke-width:1;stroke-dasharray:4 4;fill:none}
+.c-cars .tr-map-svg .m-rseat{fill:var(--tr-edge);opacity:.25}
+.c-cars .tr-map-svg .m-yoke{fill:none;stroke:var(--s-steering);stroke-width:4;stroke-linecap:round}
+.c-cars .tr-map-svg .m-sbw{fill:none;stroke:var(--s-steering);stroke-width:2;stroke-dasharray:3 4}
+.c-cars .tr-map-svg .m-copv{fill:var(--s-copv)}
+.c-cars .tr-map-svg .m-weave{stroke:var(--tr-pale);stroke-width:1.2;opacity:.45;fill:none}
+.c-cars .tr-map-svg .m-gline{stroke:var(--s-valve);stroke-width:2.5;fill:none;stroke-linejoin:round}
+.c-cars .tr-map-svg .m-valve{fill:var(--s-valve);stroke:var(--tr-pale);stroke-width:1}
+.c-cars .tr-map-svg .m-noz{fill:var(--s-thrust);stroke:var(--tr-pale);stroke-width:1}
+.c-cars .tr-map-svg .m-plume{stroke:var(--s-thrust);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:2 6;opacity:.75}
+.c-cars .tr-map-svg .m-noz2{fill:var(--tr-pale);stroke:var(--s-rocket);stroke-width:2.5}
+.c-cars .tr-map-svg .m-plume2{stroke:var(--s-rocket);stroke-width:3;fill:none;stroke-linecap:round;stroke-dasharray:2 6;opacity:.75}
+.c-cars .tr-map-svg .m-skirt{fill:var(--s-fans);fill-opacity:.28;stroke:var(--s-fans);stroke-width:2}
+.c-cars .tr-map-svg .m-lowp{fill:var(--s-fans);opacity:.6}
+.c-cars .tr-map-svg .m-sfan{fill:var(--tr-pale);stroke:var(--s-fans);stroke-width:3}
+.c-cars .tr-map-svg .m-blade{fill:var(--s-fans)}
+.c-cars .tr-map-svg .m-duct{stroke:var(--s-fans);stroke-width:3;fill:none;stroke-dasharray:6 4}
+.c-cars .tr-legend [data-sys="copv"] i{background:var(--s-copv)}.c-cars .tr-legend [data-sys="valves"] i{background:var(--s-valve)}
+.c-cars .tr-legend [data-sys="thrusters"] i{background:var(--s-thrust)}.c-cars .tr-legend [data-sys="rocket"] i{background:var(--tr-pale);box-shadow:inset 0 0 0 3px var(--s-rocket)}
+.c-cars .tr-legend [data-sys="fans"] i{background:var(--s-fans)}
+
+/* ---------- Lesson 12 widgets ---------- */
+.c-cars .rd-top{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;margin-bottom:.6rem}
+.c-cars .rd-modenote{margin:0;flex:1 1 260px;font-size:.92rem;color:var(--muted);line-height:1.45}
+.c-cars .rd-stage{background:#0f1a14;border:1px solid #26392e;border-radius:12px;overflow:hidden}
+.c-cars .rd-stage svg{display:block;width:100%;height:auto}
+.c-cars .rd-road{fill:#1b2821}.c-cars .rd-roadedge{stroke:#3c5546;stroke-width:2}
+.c-cars .rd-dash{fill:#4d6657}.c-cars .rd-post{fill:#5f7a6a}.c-cars .rd-postr{fill:#b8963e}
+.c-cars .rd-ruler line{stroke:#6cc79a;stroke-width:1.5}.c-cars .rd-ruler text{fill:#9fb5a8;font:600 11px system-ui,sans-serif}
+.c-cars .rd-car{fill:#e7ece8;stroke:#9fb5a8;stroke-width:1.2}
+.c-cars .rd-glass{fill:#22323c}.c-cars .rd-trim{stroke:#b8963e;stroke-width:1.6;fill:none}
+.c-cars .rd-tire{fill:#2a302d;stroke:#0b0f0d;stroke-width:1.5}.c-cars .rd-rim{fill:#8c9a92}
+.c-cars .rd-shadow{fill:#000}
+.c-cars .rd-noz{fill:#9aa7a0;stroke:#dfe7e2;stroke-width:.8;transition:fill .3s}
+.c-cars .icy .rd-noz{fill:#bfe6ff;stroke:#fff}
+.c-cars .rd-puff{fill:#e3f4ff}
+.c-cars .rd-arT,.c-cars .rd-arG,.c-cars .rd-arW,.c-cars .rd-arB{stroke-width:4;fill:none;stroke-linecap:round}
+.c-cars .rd-arT{stroke:#f2c14e}.c-cars .rd-aht{fill:#f2c14e}.c-cars .rd-arTt{fill:#f2c14e}
+.c-cars .rd-arG{stroke:#6cc79a}.c-cars .rd-ahg{fill:#6cc79a}.c-cars .rd-arGt{fill:#6cc79a}
+.c-cars .rd-arW{stroke:#ff9f7a}.c-cars .rd-ahw{fill:#ff9f7a}.c-cars .rd-arWt{fill:#ff9f7a}
+.c-cars .rd-arB{stroke:#74c0fc}.c-cars .rd-ahb{fill:#74c0fc}.c-cars .rd-arBt{fill:#74c0fc}
+.c-cars .rd-art{font:700 13px system-ui,sans-serif}
+.c-cars .rd-hud text{fill:#e6ece8;font:600 14px system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.c-cars .rd-gbox{fill:#0b1510;stroke:#3c5546;stroke-width:1.5}.c-cars .rd-gfill{fill:#74c0fc}
+.c-cars .rd-gl{fill:#9fb5a8;font:600 11px system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.c-cars .rd-ctl .tr-field{margin:.3rem 0 .45rem}
+.c-cars .rd-fl{display:flex;justify-content:space-between;gap:.2rem .6rem;flex-wrap:wrap}
+.c-cars .rd-w input[type=range]{min-height:36px;margin:0}
+.c-cars .rd-segf .tr-seg button{padding:.35rem .75rem}
+.c-cars .rd-fire{background:var(--g);border-color:var(--g);color:#fff;min-width:7.5rem;justify-content:center}
+html[data-theme="dark"] .c-cars .rd-fire{color:#0f1a14}
+.c-cars .rd-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.4rem;margin:.8rem 0 .2rem}
+.c-cars .rd-side .rd-tiles{grid-template-columns:1fr 1fr}
+.c-cars .rd-tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.45rem .6rem;display:flex;flex-direction:column;gap:.1rem;min-width:0}
+.c-cars .rd-tile b{font:700 1.12rem Georgia,serif;color:var(--g);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.c-cars .rd-tile span{font-size:.8rem;color:var(--muted);line-height:1.3}
+.c-cars .rd-tile.hi{border-color:var(--gold)}.c-cars .rd-tile.hi b{color:#8a6a1c}
+html[data-theme="dark"] .c-cars .rd-tile.hi b{color:#e6c35c}
+.c-cars .rd-tile.bad b{color:var(--tr-red)}
+.c-cars .rd-sum{font-size:.95rem;margin:.6rem 0;line-height:1.5}
+.c-cars .rd-plots{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.c-cars .rd-plots1{grid-template-columns:1fr;max-width:620px}
+@media (max-width:640px){.c-cars .rd-plots{grid-template-columns:1fr}.c-cars .rd-side .rd-tiles{grid-template-columns:1fr 1fr}}
+.c-cars .rd-plot{margin:0;background:#0f1a14;border:1px solid #26392e;border-radius:12px;padding:.45rem .5rem .25rem}
+.c-cars .rd-plot figcaption{color:#d3e2d9;font:600 .85rem system-ui,sans-serif;margin:0 0 .15rem .2rem}
+.c-cars .rd-plot svg{display:block;width:100%;height:auto}
+.c-cars .rd-ax{fill:#8fa79a;font:500 10px system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.c-cars .rd-yl{font-weight:700;fill:#b9cbbf}
+.c-cars .rd-grid{stroke:#22362b;stroke-width:1}
+.c-cars .rd-line{fill:none;stroke-width:2.3;stroke-linejoin:round}
+.c-cars .rd-line.c1{stroke:#74c0fc}.c-cars .rd-dot.c1{fill:#74c0fc}
+.c-cars .rd-line.c2{stroke:#ffa94d}.c-cars .rd-dot.c2{fill:#ffa94d}
+.c-cars .rd-line.c3{stroke:#f2c14e}.c-cars .rd-dot.c3{fill:#f2c14e}
+.c-cars .rd-line.c4{stroke:#6cc79a}.c-cars .rd-dot.c4{fill:#6cc79a}
+.c-cars .rd-ref{stroke-width:1.4;stroke-dasharray:5 4}
+.c-cars .rd-ref.g{stroke:#6cc79a}.c-cars .rd-ref.w{stroke:#ff9f7a}
+.c-cars .rd-reft{font:600 10px system-ui,sans-serif}.c-cars .rd-reft.g{fill:#6cc79a}.c-cars .rd-reft.w{fill:#ff9f7a}
+.c-cars .rd-cur{stroke:#e6ece8;stroke-width:1;opacity:.5}
+.c-cars .rd-assume{margin-top:.7rem}
+/* fans */
+.c-cars .rf-low{fill:#74c0fc}
+.c-cars .rf-skirt{stroke:#79d38a;stroke-width:1.6;fill:none}
+.c-cars .rf-duct{stroke:#79d38a;stroke-width:1.4;fill:none;stroke-dasharray:3 2}
+.c-cars .rf-fanring{fill:#0f1a14;stroke:#79d38a;stroke-width:1.2}
+.c-cars .rf-blade{fill:#79d38a}
+.c-cars .rf-air{stroke:#9fb5a8;stroke-width:2.5;fill:none}.c-cars .rd-aha{fill:#9fb5a8}
+.c-cars .rf-badge text{fill:#fff;font:700 13px system-ui,sans-serif}
+.c-cars .rf-badge.ok rect{fill:#1f6a40}.c-cars .rf-badge.bad rect{fill:#8a2b22}
+/* Lesson 12 figures */
+.c-cars svg .f-copv{fill:var(--s-copv)}.c-cars svg .f-weave{stroke:var(--tr-pale);stroke-width:1.5;opacity:.45;fill:none}
+.c-cars svg .f-mol{fill:var(--tr-pale)}
+.c-cars svg .f-pipe{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.2}
+.c-cars svg .f-valve{fill:var(--s-valve);stroke:var(--tr-pale);stroke-width:1}
+.c-cars svg .f-gas{fill:var(--s-thrust);opacity:.18}
+.c-cars svg .f-noz{fill:var(--tr-metal);stroke:var(--tr-edge);stroke-width:1.4}
+.c-cars svg .f-jet{stroke:var(--s-thrust);stroke-width:3;fill:none;stroke-linecap:round}.c-cars svg .f-jeth{fill:var(--s-thrust)}
+.c-cars svg .f-thr{stroke:var(--gold);stroke-width:6;fill:none}.c-cars svg .f-thrh{fill:var(--gold)}
+.c-cars svg .f-road{fill:var(--tr-metal);stroke:var(--tr-edge)}
+.c-cars svg .f-body{fill:var(--tr-pale);stroke:var(--tr-edge);stroke-width:2}
+.c-cars svg .f-low{fill:var(--s-fans);opacity:.22}
+.c-cars svg .f-skirt{fill:var(--s-fans)}
+.c-cars svg .f-tire{fill:var(--s-tires)}
+.c-cars svg .f-fan{fill:var(--tr-pale);stroke:var(--s-fans);stroke-width:3}.c-cars svg .f-fanb{fill:var(--s-fans)}
+.c-cars svg .f-fanf{stroke:var(--s-fans);stroke-width:2.5;fill:none;stroke-dasharray:5 3}.c-cars svg .f-fanh{fill:var(--s-fans)}
+.c-cars svg .f-air{stroke:var(--tr-edge);stroke-width:2.5;fill:none}.c-cars svg .f-airh{fill:var(--tr-edge)}
+.c-cars .rd-unit{font-weight:500;color:#8fa79a}
+.c-cars .rd-left{min-width:0}
+.c-cars .rd-left .tr-w-ctrl{margin:.6rem 0 0}
+.c-cars .rd-left .rd-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:520px){.c-cars .rd-left .rd-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){
+.c-cars .rd-hud text{font-size:22px}
+.c-cars .rd-gl{font-size:17px}
+.c-cars .rd-art{font-size:21px}
+.c-cars .rd-ruler text{font-size:17px}
+.c-cars .rf-badge text{font-size:16px}
+}
+.c-cars .rd-left .rf-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:560px){.c-cars .rd-ax{font-size:11.5px}.c-cars .rd-reft{font-size:11.5px}}

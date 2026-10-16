@@ -160,7 +160,7 @@
   {{- end }}
   <p class="tr-map-info" aria-live="polite">{{ $c.map_idle }}</p>
   {{ replace $d.map "%BASE%" $B | safeHTML }}
-  <ul class="tr-legend">{{ range $d.systems }}{{ $les := index (where $d.lessons "key" .lesson) 0 }}<li{{ if and .view (ne .view "both") }} data-view="{{ .view }}"{{ end }}><a href="{{ printf "trades/%s/%s/" $course .lesson | relURL }}" data-sys="{{ .key }}" data-desc="{{ .desc }}"><i aria-hidden="true"></i><span>{{ .name }}<small>Lesson {{ $les.n }}</small></span></a></li>{{ end }}</ul>
+  <ul class="tr-legend">{{ range $d.systems }}{{ $les := index (where $d.lessons "key" .lesson) 0 }}<li{{ if and .view (ne .view "both") }} data-view="{{ .view }}"{{ end }}><a href="{{ printf "trades/%s/%s/" $course .lesson | relURL }}{{ with .anchor }}#{{ . }}{{ end }}" data-sys="{{ .key }}" data-desc="{{ .desc }}"><i aria-hidden="true"></i><span>{{ .name }}<small>Lesson {{ $les.n }}</small></span></a></li>{{ end }}</ul>
 </div>
 {{- end }}
 

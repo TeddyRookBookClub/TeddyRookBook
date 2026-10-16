@@ -72,7 +72,7 @@
 
     <section class="hs-sec" id="deeper">
       <h2>Go deeper</h2>
-      <ul class="tr-deeper">{{ range $L.deeper }}<li><a href="{{ replace .url "%BASE%" $B }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>{{ with .note }} <small>{{ . }}</small>{{ end }}</li>{{ end }}</ul>
+      <ul class="tr-deeper">{{ range $L.deeper }}{{ $it := . }}{{- if $it.page }}{{/* a link to a page that may not be published yet: shown only once it exists */}}{{ with site.GetPage $it.page }}<li><a href="{{ .RelPermalink }}">{{ $it.name }}</a>{{ with $it.note }} <small>{{ . }}</small>{{ end }}</li>{{ end }}{{- else }}<li><a href="{{ replace .url "%BASE%" $B }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener"{{ end }}>{{ .name }}</a>{{ with .note }} <small>{{ . }}</small>{{ end }}</li>{{ end }}{{ end }}</ul>
     </section>
 
     <section class="hs-sec" id="sources">
