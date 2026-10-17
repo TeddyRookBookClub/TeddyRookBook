@@ -1,0 +1,71 @@
+---
+title: "Scales and the Circle of Fifths"
+pill: "Scales"
+description: "The major scale’s pattern of whole and half steps, why each key needs its sharps or flats, the natural minor scale, and the circle of fifths that ties every key together."
+lead: "A scale is a key’s notes in order. Learn the pattern of the major scale and every key signature starts to make sense."
+weight: 9
+icon: "🪜"
+songs:
+  - { slug: minuet-in-g, why: "runs up and down the G major scale" }
+  - { slug: clementi-sonatina-op36-no1, why: "C major scales and broken chords" }
+  - { slug: canon-in-d, why: "D major" }
+  - { slug: invention-no-1, why: "scale fragments passed between the hands" }
+---
+<p class="ml-lead">A <b>scale</b> is the set of notes a piece of music is built from, played in order from one note up to the same note an octave higher. The first note is the <b>tonic</b>, the home note that gives the key its name.</p>
+
+<h2>The major scale</h2>
+<p>The C major scale uses only white keys: <b>C D E F G A B C</b>. Look at the steps between them. Most are whole steps, but E to F and B to C are half steps. That gives the pattern of every major scale:</p>
+<p class="ml-big" style="text-align:center">whole · whole · half · whole · whole · whole · half</p>
+<figure data-ml="staff" data-src="C4/4 D4/4 E4/4 F4/4 | G4/4 A4/4 B4/4 C5/4" data-time="4/4" data-letters="1" data-tempo="100" data-max="640" data-under="_ W W H W W W H" data-label="The C major scale, with the step into each note marked W for whole step or H for half step">
+  <figcaption>C major. W = whole step, H = half step (the step <i>into</i> each note). The half steps fall between notes 3 and 4 and between 7 and 8.</figcaption>
+</figure>
+<div data-ml="keys" data-range="C4-C5" data-labels="on" data-tasks='[
+  {"say": "Play the C major scale with your right hand. After E, tuck your thumb under your hand to play F, then keep going.", "keys": ["C4","D4","E4","F4","G4","A4","B4","C5"], "order": true, "fingers": [1,2,3,1,2,3,4,5], "hand": "rh", "done": "That thumb tuck lets you play eight notes with five fingers."}
+]'></div>
+
+<h2>Why keys need sharps and flats</h2>
+<p>Start a scale on G and play only white keys, and the pattern breaks near the top: E to F is a half step where the pattern wants a whole step. Raise F to <b>F♯</b> and the pattern is right again. That’s why G major has one sharp, F♯, in its key signature.</p>
+<figure data-ml="staff" data-src="G4/4 A4/4 B4/4 C5/4 | D5/4 E5/4 F#5/4 G5/4" data-time="4/4" data-letters="1" data-tempo="100" data-max="640" data-under="_ W W H W W W H" data-label="The G major scale: G A B C D E F sharp G">
+  <figcaption>G major: G A B C D E F♯ G. Same pattern, one sharp.</figcaption>
+</figure>
+<p>Start on F and the fourth note needs to come down: <b>B♭</b>. So F major has one flat.</p>
+<div data-ml="keys" data-range="C4-C6" data-range-sm="F4-G5" data-labels="on" data-black-names="1" data-tasks='[
+  {"say": "Play the G major scale: G A B C D E <b>F♯</b> G.", "keys": ["G4","A4","B4","C5","D5","E5","F#5","G5"], "order": true, "fingers": [1,2,3,1,2,3,4,5], "hand": "rh", "done": "G major."},
+  {"say": "Play the F major scale: F G A <b>B♭</b> C D E F.", "keys": ["F4","G4","A4","A#4","C5","D5","E5","F5"], "order": true, "fingers": [1,2,3,4,1,2,3,4], "hand": "rh", "done": "F major. In this scale the thumb tucks under after B♭."}
+]'></div>
+
+<h2>The natural minor scale</h2>
+<p>Play the white keys from A to A: <b>A B C D E F G A</b>. This is the <b>A minor</b> scale. It uses the same notes as C major, starting from a different home note, so the half steps fall in different places (between notes 2 and 3, and 5 and 6). That gives minor keys their darker sound. A minor is the relative minor of C major, which is why they share a key signature. (Minor keys have two other common forms of the scale as well, which raise some of the upper notes.)</p>
+<figure data-ml="staff" data-src="A4/4 B4/4 C5/4 D5/4 | E5/4 F5/4 G5/4 A5/4" data-time="4/4" data-letters="1" data-tempo="100" data-max="640" data-under="_ W H W W H W W" data-label="The A natural minor scale: A B C D E F G A">
+  <figcaption>A natural minor. Compare its sound with C major above.</figcaption>
+</figure>
+
+<h2>The circle of fifths</h2>
+<p>Count five notes up from C (C D E F G) and you reach G, the key with one sharp. Five up from G is D, with two sharps. Keep going and each new key adds one sharp. Going the other way, five notes <i>down</i> from C is F, with one flat, then B♭ with two, and so on. Arranged in a circle, all twelve keys fit around it like the hours of a clock: the <b>circle of fifths</b>.</p>
+<div data-ml="circle"></div>
+<p>At the bottom of the circle the sharp keys and flat keys meet. F♯ major (six sharps) and G♭ major (six flats) use exactly the same keys on the piano, written two ways. So do B and C♭, and D♭ and C♯. The minor keys inside the circle are the relative minors of the major keys beside them.</p>
+
+<div data-ml="drill" data-type="quiz" data-id="rm-scales-quiz" data-title="Scales and keys quiz">
+<script type="application/json">[
+  {"q": "What is the pattern of steps in a major scale?", "choices": ["W W H W W W H", "W H W W H W W", "W W W H W W H", "H W W W H W W"], "a": 0, "fixed": true, "why": "Whole, whole, half, whole, whole, whole, half."},
+  {"q": "Which note gets a sharp in the G major scale?", "choices": ["F", "C", "G", "B"], "a": 0, "why": "G A B C D E F♯ G: F must be raised to make the last step a half step."},
+  {"q": "Which note gets a flat in the F major scale?", "choices": ["B", "E", "A", "F"], "a": 0, "why": "F G A B♭ C D E F: B must come down so A to B♭ is a half step."},
+  {"q": "Going clockwise around the circle of fifths from C, which key comes next?", "choices": ["G major", "F major", "D major", "A minor"], "a": 0, "why": "C, G, D, A, E, B… each a fifth higher, each with one more sharp."},
+  {"q": "How many sharps does A major have?", "choices": ["1", "2", "3", "4"], "a": 2, "fixed": true, "why": "C 0, G 1, D 2, A 3: F♯, C♯ and G♯."},
+  {"q": "How many flats does E♭ major have?", "choices": ["1", "2", "3", "4"], "a": 2, "fixed": true, "why": "F 1, B♭ 2, E♭ 3: B♭, E♭ and A♭."},
+  {"q": "What is the relative minor of C major?", "choices": ["A minor", "C minor", "E minor", "D minor"], "a": 0, "why": "Three half steps below C is A. A minor uses the same white keys."},
+  {"q": "What is the relative minor of G major?", "choices": ["E minor", "G minor", "B minor", "D minor"], "a": 0, "why": "Three half steps below G is E. Both have one sharp, F♯."},
+  {"q": "Which major key has the same piano keys as G♭ major?", "choices": ["F♯ major", "G major", "F major", "D♭ major"], "a": 0, "why": "Six flats or six sharps: two ways to write the same keys."},
+  {"q": "In the A natural minor scale, between which notes are the half steps?", "choices": ["B–C and E–F", "E–F and B–C, plus G–A", "C–D and F–G", "There are none"], "a": 0, "why": "A minor uses the white keys from A to A; the half steps are always B–C and E–F."}
+]</script>
+</div>
+
+<div class="ml-sum">
+  <h2>Remember</h2>
+  <ul>
+    <li>Major scale: whole, whole, half, whole, whole, whole, half.</li>
+    <li>A key’s sharps or flats are the ones its scale needs to keep that pattern.</li>
+    <li>Natural minor: the major scale’s notes starting on the 6th note (A minor = C major’s notes).</li>
+    <li>Circle of fifths: clockwise adds a sharp; counterclockwise adds a flat.</li>
+  </ul>
+</div>

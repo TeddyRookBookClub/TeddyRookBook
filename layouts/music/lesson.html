@@ -1,0 +1,64 @@
+{{- /* Music lessons: one chapter of a course (/music/piano-basics/…, /music/reading-music/…). Lessons builder.
+   The course's _index.md cascades `layout: lesson` and the lesson scripts and styles to its chapters. Front matter:
+     title, description, weight (chapter order), pill (short name in the chapter strip), lead (hero text)
+     songs: [ { slug: hot-cross-buns, why: "three notes: C, D and E" } ]   songs that use what the chapter teaches
+                                         (data/music/songs/<slug>.yaml; a plain slug works too)
+     songs_title: "…", songs_intro: "…"  heading of that list (default "Songs that use this") and a line under it
+     embed_songs: [hot-cross-buns]       hands the song's YAML to a data-ml="player" box in the content
+   The chapter text is HTML (content/music/<course>/<chapter>.html) with data-ml widgets, mounted by
+   static/music/lessons/widgets.js. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+{{- $course := .Parent -}}
+{{- $sib := $course.Pages.ByWeight -}}
+{{- $num := 0 }}{{ range $i, $p := $sib }}{{ if eq $p.RelPermalink $.RelPermalink }}{{ $num = add $i 1 }}{{ end }}{{ end -}}
+{{- $key := path.Join .File.Dir .File.ContentBaseName -}}
+{{- $songs := site.Data.music.songs | default dict -}}
+<div class="mus ml-page" id="ml-page" data-chapter="{{ $key }}">
+  {{ partial "inline/mus-crumbs.html" . }}
+  <nav class="ml-strip" aria-label="Chapters of {{ $course.Title }}">
+    <a class="ml-strip-home" href="{{ $course.RelPermalink }}"><span aria-hidden="true">{{ $course.Params.icon | default "🎹" }}</span>{{ $course.LinkTitle }}</a>
+    <ol>{{ range $i, $p := $sib }}<li><a href="{{ $p.RelPermalink }}" data-done-key="{{ path.Join $p.File.Dir $p.File.ContentBaseName }}" title="{{ $p.Title }}"{{ if eq $p.RelPermalink $.RelPermalink }} aria-current="page"{{ end }}><b>{{ add $i 1 }}</b><span>{{ $p.Params.pill | default $p.LinkTitle }}</span></a></li>{{ end }}</ol>
+  </nav>
+  <header class="mus-hero">
+    <p class="mus-eyebrow">{{ $course.LinkTitle }} · Chapter {{ $num }} of {{ len $sib }}</p>
+    <h1>{{ .Title }}</h1>
+    {{- with (.Params.lead | default .Description) }}
+    <p>{{ . | markdownify }}</p>{{ end }}
+    <span class="mus-mark" aria-hidden="true">{{ .Params.icon | default ($course.Params.icon | default "🎹") }}</span>
+  </header>
+  <div class="mus-body">
+    {{ .Content }}
+  </div>
+  {{- with .Params.songs }}
+  <section class="ml-songs" aria-labelledby="ml-songs-h">
+    <h2 id="ml-songs-h">{{ $.Params.songs_title | default "Songs that use this" }}</h2>
+    {{- with $.Params.songs_intro }}
+    <p>{{ . | markdownify }}</p>{{ end }}
+    <ul class="ml-songlist">
+    {{- range . }}
+      {{- $slug := . }}{{ $why := "" }}
+      {{- if reflect.IsMap . }}{{ $slug = .slug }}{{ $why = .why | default "" }}{{ end }}
+      {{- $s := index $songs $slug }}
+      {{- if $s }}
+      {{- $k := string $s.key }}{{ $minor := hasSuffix $k "m" }}{{ $t := cond $minor (strings.TrimSuffix "m" $k) $k -}}
+      {{- $t = replace (replace $t "#" "♯") "b" "♭" -}}{{- $t = printf "%s%s" (upper (substr $t 0 1)) (substr $t 1) }}
+      <li><a href="{{ printf "music/songs/%s/" $slug | relURL }}"><b>{{ $s.title }}</b><span>{{ title $s.level }} · {{ $t }} {{ cond $minor "minor" "major" }} · {{ $s.time }}</span>{{ with $why }}<span>{{ . }}</span>{{ end }}</a></li>
+      {{- else }}{{ warnf "music lessons: song %q not found (page %s)" $slug $.RelPermalink }}{{ end }}
+    {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+  {{- range .Params.embed_songs }}
+  {{- $file := printf "data/music/songs/%s.yaml" . }}
+  {{- if fileExists $file }}
+  <div class="ml-songsrc" hidden data-slug="{{ . }}" data-yaml="{{ readFile $file }}"></div>
+  {{- else }}{{ warnf "music lessons: song file %q not found (page %s)" $file $.RelPermalink }}{{ end }}
+  {{- end }}
+  {{- $next := false }}{{ $found := false }}{{ range $sib }}{{ if $found }}{{ if not $next }}{{ $next = . }}{{ end }}{{ else if eq .RelPermalink $.RelPermalink }}{{ $found = true }}{{ end }}{{ end }}
+  {{ partial "inline/mus-pn.html" . }}
+  {{- if and (not $next) $course.Params.after }}
+  <div class="mus-note ml-after"><b>You finished {{ $course.LinkTitle }}.</b> {{ $course.Params.after.text }} <a href="{{ $course.Params.after.url | relURL }}">{{ $course.Params.after.title }} →</a></div>
+  {{- end }}
+</div>
+{{ end }}

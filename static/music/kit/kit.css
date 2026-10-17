@@ -1,0 +1,203 @@
+/* Music kit: shared look for every /music/ page, and the styles of the kit components
+   (keyboard.js .mk-*, staff.js .ms-*, player.js .mp-*). Everything is scoped to .mus (the page wrapper) or to the
+   component's own root class, so it never leaks into the rest of the site.
+   Colors: racing green #004225 / #00562f, dark accent #6cc79a, gold #b8963e. Dark theme: html[data-theme="dark"].
+   Hand colors (keys and notes lit while playing): --rh (right hand, blue-green) and --lh (left hand, warm orange);
+   both are used by the keyboard and the score, and by any lesson widget that wants to match them. */
+
+main.main:has(.mus){max-width:1040px}
+main.main:has(.mus-wide){max-width:1200px}
+.mus{--g:#004225;--g2:#00562f;--acc:#004225;--gold:#b8963e;--gt:#8a6a1f;--ink:#1d2320;--muted:#5d6862;--line:#dde5df;
+  --card:#fff;--paper:#fbf8f0;--soft:#e7f0ea;--focus:#b8963e;
+  --rh:#1f7fbf;--rh-soft:#d6ebf8;--lh:#d9691f;--lh-soft:#fbe3cf;--hl:#2f9e6f;
+  --score-bg:#fffdf7;--score-ink:#1a1a1a;--score-line:#3a3a3a;--score-muted:#77807a;
+  color:var(--ink)}
+html[data-theme="dark"] .mus{--acc:#6cc79a;--gt:#e0c070;--ink:#e6ece8;--muted:#a9b8af;--line:#2f4a3b;--card:#1b2b22;
+  --paper:#16241c;--soft:#1f3328;--focus:#e0c070;
+  --rh:#5cb8f0;--rh-soft:#17384d;--lh:#f39a55;--lh-soft:#4a2e18;--hl:#6cc79a;
+  --score-bg:#14211a;--score-ink:#e8ede9;--score-line:#c9d3cd;--score-muted:#8fa298}
+.mus [hidden]{display:none !important}
+.mus a{color:var(--acc)}
+.mus :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* page chrome */
+.mus-crumbs{font-size:.85rem;color:var(--muted);margin:0 0 .6rem}
+.mus-crumbs a{color:inherit;text-decoration:none;box-shadow:none}.mus-crumbs a:hover{color:var(--acc)}
+.mus-hero{background:linear-gradient(135deg,#004225 0%,#00562f 100%);color:#fff;border-radius:14px;padding:1.3rem 1.6rem;margin-bottom:1.1rem;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,76,42,.18)}
+.mus-hero .mus-eyebrow{margin:0;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;color:#e6cf8f}
+.mus-hero h1{margin:.1rem 0 .3rem;font:700 2.1rem/1.15 Georgia,"Times New Roman",serif;color:#fff}
+.mus-hero p{margin:0;color:#d3e6da;max-width:46rem;line-height:1.5}
+.mus-hero p+p{margin-top:.4rem}
+.mus-hero a{color:#f3dfa3}
+.mus-hero .mus-mark{position:absolute;right:1.2rem;top:.2rem;font-size:4.2rem;opacity:.16;pointer-events:none}
+.mus-body{line-height:1.6}
+.mus-body>p,.mus-body>ul,.mus-body>ol{max-width:46rem}
+.mus h2{font:700 1.35rem Georgia,serif;color:var(--acc);margin:1.4rem 0 .5rem}
+.mus h3{font:700 1.08rem Georgia,serif;color:var(--ink);margin:1.1rem 0 .35rem}
+.mus-small{font-size:.84rem;color:var(--muted);line-height:1.45}
+.mus-note{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:.6rem .9rem;margin:.8rem 0;font-size:.93rem}
+.mus-try{background:var(--soft);border-left:4px solid var(--acc);border-radius:0 10px 10px 0;padding:.6rem .9rem;margin:.8rem 0}
+.mus-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:.9rem 1rem;margin:.9rem 0;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.mus-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:.8rem;margin:1rem 0}
+.mus-card{display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:.15rem .7rem;align-items:start;padding:.9rem 1rem;border:1px solid var(--line);border-radius:14px;background:var(--card);text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.05);color:var(--ink) !important;transition:transform .15s,border-color .15s}
+.mus-card:hover{transform:translateY(-2px);border-color:var(--acc)}
+.mus-card .mus-ic{grid-row:span 2;font-size:2rem;line-height:1}
+.mus-card b{font:700 1.08rem Georgia,serif;color:var(--acc)}
+.mus-card>span:last-child{color:var(--muted);font-size:.9rem;line-height:1.45}
+.mus-pn{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin:1.8rem 0 .6rem}
+.mus-pn a{display:inline-flex;align-items:center;min-height:36px;padding:.5rem .9rem;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;box-shadow:none;color:var(--ink)}
+.mus-pn a:hover{border-color:var(--acc)}
+
+/* buttons and small controls (shared by every music page) */
+.mus-btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;font:600 .9rem system-ui,sans-serif;min-height:36px;padding:.4rem .85rem;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;line-height:1.2;text-decoration:none;box-shadow:none;box-sizing:border-box}
+.mus-btn:hover{border-color:var(--acc)}
+.mus-btn.pri{background:#004225;border-color:#004225;color:#fff}
+.mus-btn.pri:hover{background:#00562f}
+html[data-theme="dark"] .mus-btn.pri{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.mus-btn[aria-pressed="true"]{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc);background:var(--soft)}
+.mus-btn:disabled{opacity:.45;cursor:default}
+.mus-seg{display:inline-flex;flex-wrap:wrap;gap:.25rem}
+.mus-seg button{font:600 .82rem system-ui,sans-serif;min-height:36px;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.mus-seg button[aria-pressed="true"]{background:#004225;border-color:#004225;color:#fff}
+html[data-theme="dark"] .mus-seg button[aria-pressed="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+.mus-table{border-collapse:collapse;width:100%;font-size:.92rem;margin:.5rem 0}
+.mus-table th,.mus-table td{border-bottom:1px solid var(--line);padding:.4rem .5rem;text-align:left;vertical-align:top}
+.mus-table th{background:var(--paper);font:700 .78rem system-ui,sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.mus-tw{overflow-x:auto}
+
+@media (max-width:640px){
+  .mus-hero{padding:1.1rem 1.1rem}
+  .mus-hero h1{font-size:1.7rem}
+  .mus-hero .mus-mark{font-size:3.2rem}
+}
+@media (prefers-reduced-motion:reduce){.mus-card{transition:none}.mus-card:hover{transform:none}}
+@media print{.mus-hero{background:none;color:#000;box-shadow:none;padding:0}.mus-hero h1,.mus-hero p{color:#000}.mus-hero .mus-mark,.mus-crumbs,.mus-pn{display:none}}
+
+/* ---------- the score (staff.js) ---------- */
+.ms-score{background:var(--score-bg,#fffdf7);color:var(--score-ink,#1a1a1a);overflow:auto;-webkit-overflow-scrolling:touch;border-radius:12px;position:relative}
+.ms-svg{display:block;color:var(--score-ink,#1a1a1a);margin:0 auto;overflow:visible}
+.ms-svg .ms-ink,.ms-svg .ms-hd{fill:currentColor}
+.ms-svg .ms-ln{stroke:var(--score-line,#3a3a3a);stroke-width:.11;fill:none}
+.ms-svg .ms-led{stroke:currentColor;stroke-width:.17;fill:none}
+.ms-svg .ms-stem{stroke:currentColor;stroke-width:.12;fill:none}
+.ms-svg .ms-bl{stroke:currentColor}
+.ms-svg text{fill:currentColor}
+.ms-svg .ms-ts{font-family:"Times New Roman","Liberation Serif","Nimbus Roman","FreeSerif","Tinos",serif;font-weight:700}
+.ms-svg .ms-bn{font-family:"Times New Roman","Liberation Serif","FreeSerif",serif;font-style:italic;fill:var(--score-muted,#77807a)}
+.ms-svg .ms-fg{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-weight:600}
+.ms-svg .ms-dyn{font-family:"Times New Roman","Liberation Serif","FreeSerif",serif;font-weight:700;font-style:italic}
+.ms-svg .ms-tempo{font-family:"Times New Roman","Liberation Serif","FreeSerif",serif;font-weight:700}
+.ms-svg .ms-word,.ms-svg .ms-vt{font-family:"Times New Roman","Liberation Serif","FreeSerif",serif;font-style:italic}
+.ms-svg .ms-tup{font-family:"Times New Roman","Liberation Serif","FreeSerif",serif;font-style:italic;font-weight:700}
+.ms-svg .ms-lt{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-weight:700;fill:currentColor;pointer-events:none}
+.ms-svg .ms-lt.on-black{fill:var(--score-bg,#fffdf7)}
+.ms-svg .ms-hit{fill:transparent}
+.ms-score.ms-clickable .ms-hit{cursor:pointer}
+.ms-svg .ms-cursor{fill:var(--hl,#2f9e6f);opacity:.16;pointer-events:none}
+.ms-svg .ms-n.hl-rh{color:var(--rh)}
+.ms-svg .ms-n.hl-lh{color:var(--lh)}
+.ms-svg .ms-n.hl-ok{color:var(--hl)}
+.ms-svg .ms-n.hl-bad{color:#d64545}
+.ms-svg .ms-n.hl-hint{color:var(--gold)}
+.ms-svg .ms-n.hl .ms-hd{filter:drop-shadow(0 0 .25px currentColor)}
+.ms-svg .ms-n.hl .ms-lt.on-black{fill:#fff}
+@media print{.ms-score{background:#fff;color:#000;overflow:visible}.ms-svg{color:#000}.ms-svg .ms-cursor{display:none}}
+
+/* ---------- the piano keyboard (keyboard.js) ---------- */
+.mk{--mk-h:150px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.mk-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;margin:0 0 .4rem;font:600 .8rem system-ui,sans-serif;color:var(--muted)}
+.mk-bar button{min-height:36px;padding:.25rem .7rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 .8rem system-ui,sans-serif;cursor:pointer}
+.mk-bar button:hover{border-color:var(--acc)}
+.mk-bar button:disabled{opacity:.4;cursor:default}
+.mk-bar button[aria-pressed="true"]{border-color:var(--acc);background:var(--soft);box-shadow:inset 0 0 0 1px var(--acc)}
+.mk-range{font-variant-numeric:tabular-nums;min-width:5.5em;text-align:center}
+.mk-sp{flex:1 1 auto}
+.mk-midi{color:var(--acc);font-weight:600}
+.mk-midi::before{content:"● ";color:var(--hl)}
+.mk-keys{position:relative;height:var(--mk-h);touch-action:none;background:#0f1d16;border-top:6px solid #004225;border-radius:4px 4px 10px 10px;box-shadow:0 3px 10px rgba(0,0,0,.18);overflow:hidden;cursor:pointer;outline-offset:3px}
+.mk-w,.mk-b{position:absolute;top:0;box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;transition:background-color .06s}
+.mk-w{bottom:0;background:linear-gradient(#f4f1e8,#fffefa 22%,#fffdf6);border:1px solid #b9b4a6;border-top:0;border-radius:0 0 6px 6px;z-index:1;padding-bottom:6px}
+.mk-b{height:62%;background:linear-gradient(#2a2a2a,#111 70%,#333);border:1px solid #000;border-top:0;border-radius:0 0 4px 4px;z-index:2;box-shadow:inset -2px -3px 2px rgba(255,255,255,.08),0 2px 3px rgba(0,0,0,.4);padding-bottom:5px}
+.mk-w.down{background:linear-gradient(#ddd8cb,#ece8dc)}
+.mk-b.down{background:linear-gradient(#444,#2a2a2a)}
+.mk-w.hl-rh{background:linear-gradient(#bfe0f5,var(--rh) 92%)}
+.mk-b.hl-rh{background:linear-gradient(#5ab0e8,var(--rh))}
+.mk-w.hl-lh{background:linear-gradient(#fbd3b0,var(--lh) 92%)}
+.mk-b.hl-lh{background:linear-gradient(#f0a060,var(--lh))}
+.mk-w.hl-rh.hl-lh{background:linear-gradient(90deg,var(--lh) 50%,var(--rh) 50%)}
+.mk-w.hl-ok,.mk-b.hl-ok{background:#2f9e6f}
+.mk-w.hl-bad,.mk-b.hl-bad{background:#d64545}
+.mk-w.hl-hint{box-shadow:inset 0 0 0 3px var(--gold)}
+.mk-b.hl-hint{box-shadow:inset 0 0 0 3px var(--gold)}
+.mk-lab{font:700 .72rem system-ui,sans-serif;color:#5b5f5a;pointer-events:none;line-height:1}
+.mk-mid{font:600 .6rem system-ui,sans-serif;color:#004225;margin-bottom:.2rem;text-align:center;line-height:1.05;pointer-events:none}
+.mk-c4::after{content:"";position:absolute;left:50%;top:calc(62% + 7px);width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:var(--gold)}
+.mk-ck{font:700 .7rem ui-monospace,Menlo,Consolas,monospace;line-height:1;pointer-events:none;color:#004225}
+.mk-ck:empty{display:none}
+.mk-b .mk-ck{color:#fff}
+.mk-w.hl-rh .mk-lab,.mk-w.hl-lh .mk-lab,.mk-w.hl-rh .mk-mid,.mk-w.hl-lh .mk-mid{color:#fff}
+.mk-help{font-size:.84rem;color:var(--muted);margin:.45rem 0 0}
+.mk-help kbd{font:600 .78rem ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 .3rem;background:var(--card);color:var(--ink)}
+@media (max-width:520px){.mk-mid{font-size:.5rem}.mk-bar .mk-oct span,.mk-ckb span,.mk-midibtn span{display:none}}
+@media (prefers-reduced-motion:reduce){.mk-w,.mk-b{transition:none}}
+
+/* ---------- the song player (player.js) ---------- */
+.mp{display:flex;flex-direction:column;gap:.55rem}
+.mp-bar{display:flex;flex-direction:column;gap:.45rem}
+.mp-row{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .45rem}
+.mp-play{min-width:6.6rem}
+.mp-tempo{display:inline-flex;align-items:center;gap:.3rem}
+.mp-tempo .mus-btn{min-width:36px;padding:.3rem .5rem;font-size:1.05rem}
+.mp-tl{display:inline-flex;flex-direction:column;align-items:center;font:600 .74rem system-ui,sans-serif;color:var(--muted);gap:0}
+.mp-tv{font-variant-numeric:tabular-nums;white-space:nowrap}
+.mp-tl input{width:clamp(80px,14vw,150px);accent-color:var(--acc);margin:0;height:26px}
+.mp-vol{display:inline-flex;align-items:center;gap:.25rem;font-size:.95rem;color:var(--muted)}
+.mp-vol input{width:clamp(60px,9vw,100px);accent-color:var(--acc);height:36px}
+.mp-loop{display:inline-flex;flex-wrap:wrap;align-items:center;gap:.3rem;font:600 .8rem system-ui,sans-serif;color:var(--muted)}
+.mp-loop select{font:600 .82rem system-ui,sans-serif;min-height:36px;padding:.2rem .3rem;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.mp-dot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.3rem;vertical-align:-.02rem}
+.mp-dot.rh{background:var(--rh)}.mp-dot.lh{background:var(--lh)}
+.mus-seg button[aria-pressed="true"] .mp-dot{box-shadow:0 0 0 2px #fff}
+.mp-scorewrap{position:relative}
+.mp-score{max-height:min(62vh,640px);min-height:120px;border:1px solid var(--line);padding:.3rem .2rem}
+.mp-count{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:700 4.5rem/1 Georgia,serif;color:var(--acc);opacity:0;pointer-events:none;text-shadow:0 2px 12px var(--score-bg)}
+.mp-count.on{opacity:.85}
+.mp-status{margin:0;font:600 .88rem system-ui,sans-serif;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
+.mp-waiting .mp-status{color:var(--acc);font-size:.98rem}
+.mp-live{margin:0;font-size:.9rem;color:var(--ink);min-height:0}
+.mp-live:empty{display:none}
+.mp-err{background:#fdecec;border:1px solid #e3a3a3;color:#7a1f1f;border-radius:10px;padding:.5rem .8rem;font-size:.86rem}
+html[data-theme="dark"] .mp-err{background:#3a1d1d;border-color:#7a3a3a;color:#f3caca}
+.mp-err ul{margin:.3rem 0 0;padding-left:1.2rem}
+.mp-kb{margin-top:.2rem}
+@media (max-width:640px){
+  .mp-score{max-height:46vh}
+  .mp-play{min-width:5.6rem}
+  .mp-vol{display:none}
+}
+@media print{.mp-bar,.mp-kb,.mp-status,.mp-live,.mp-count{display:none !important}.mp-score{max-height:none;border:0}}
+
+/* ---------- song pages ---------- */
+.sg-hero .sg-by{color:#e6dcc0;font-style:italic}
+.sg-hero .sg-facts{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem}
+.sg-hero .sg-facts span{font:600 .76rem system-ui,sans-serif;padding:.15rem .6rem;border-radius:999px;background:rgba(255,255,255,.13);color:#f1ead6}
+.sg-player{padding:.8rem}
+.sg-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:0 2rem;margin-top:.4rem}
+.sg-cols p,.sg-cols li{line-height:1.6}
+.sg-how{padding-left:1.2rem}.sg-how li{margin:.3rem 0}
+.sg-rh{color:var(--rh);font-weight:700}.sg-lh{color:var(--lh);font-weight:700}
+.sg-src{font-size:.92rem;color:var(--muted)}
+.sg-back{margin:1.4rem 0 .4rem}
+.mus kbd{font:600 .8rem ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 .3rem;background:var(--card);color:var(--ink)}
+.mp-more{display:none}
+@media (max-width:640px){
+  .mp-bar{gap:.35rem}
+  .mp-row{gap:.3rem}
+  .mp .mus-btn{padding:.3rem .6rem;font-size:.84rem}
+  .mp .mus-seg button{padding:.25rem .55rem}
+  .mp-wide{display:none}
+  .mp-more{display:inline-flex}
+  .mp-row3{display:none}
+  .mp-bar.mp-open .mp-row3{display:flex}
+  .mp-tl input{width:96px}
+}

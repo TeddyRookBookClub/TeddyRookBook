@@ -1,0 +1,74 @@
+{{- /* Music section: shared inline partials (Hugo's inline partials are global). Not a page layout.
+  Every music page (base layouts list.html and single.html, the song pages, and any builder's own layout) can use:
+
+  inline/mus-head.html   (argument: the page) kit.css, plus the scripts and styles the page asks for in front matter:
+                           scripts: [audio, keyboard, staff, song, player]   kit names (static/music/kit/<name>.js);
+                                    their dependencies are added and everything loads in dependency order:
+                                    audio, song, staff, keyboard, player (player needs all four; keyboard uses audio)
+                           scripts: ["music/lessons/intervals.js"]          any other path under static/ (loaded after the kit)
+                           styles:  ["music/lessons/lessons.css"]           extra stylesheets under static/
+                         All scripts load with `defer`, so page code should run on DOMContentLoaded (or be deferred too).
+  inline/mus-crumbs.html (argument: the page) Education › Music › parent section › this page
+  inline/mus-hero.html   (argument: the page) the green hero: eyebrow (params.eyebrow), title, description
+                         (params.lead or .Description), icon (params.icon, an emoji shown faintly at the right)
+  inline/mus-pn.html     (argument: the page) previous / next links among the page's siblings (by weight), for chapters
+
+  Page wrapper: put everything inside <div class="mus" id="…">; kit.css scopes the colors and look to .mus.
+*/ -}}
+
+{{- define "_partials/inline/mus-asset.html" -}}
+{{- /* a static file's URL with a cache-busting version; argument: path under static/ */ -}}
+{{- $p := strings.TrimPrefix "/" . -}}
+{{- if fileExists (printf "static/%s" $p) -}}{{ printf "%s?v=%d" ($p | relURL) (os.Stat (printf "static/%s" $p)).ModTime.Unix }}{{- end -}}
+{{- end -}}
+
+{{- define "_partials/inline/mus-head.html" -}}
+{{- $p := . -}}
+<link rel="stylesheet" href="{{ partial "inline/mus-asset.html" "music/kit/kit.css" }}">
+{{- range $p.Params.styles }}{{ $u := partial "inline/mus-asset.html" . }}{{ if $u }}
+<link rel="stylesheet" href="{{ $u }}">{{ else }}{{ warnf "music: style %q not found (page %s)" . $p.RelPermalink }}{{ end }}{{ end }}
+{{- $order := slice "audio" "song" "staff" "keyboard" "player" -}}
+{{- $deps := dict "player" (slice "audio" "song" "staff" "keyboard") "keyboard" (slice "audio") -}}
+{{- $want := dict -}}{{- $other := slice -}}
+{{- range $p.Params.scripts -}}
+  {{- $s := . -}}
+  {{- if in $order $s -}}
+    {{- $want = merge $want (dict $s true) -}}
+    {{- range (index $deps $s | default slice) }}{{ $want = merge $want (dict . true) }}{{ end -}}
+  {{- else -}}{{- $other = $other | append $s -}}{{- end -}}
+{{- end -}}
+{{- range $order }}{{ if index $want . }}
+<script src="{{ partial "inline/mus-asset.html" (printf "music/kit/%s.js" .) }}" defer></script>{{ end }}{{ end }}
+{{- range $other }}{{ $u := partial "inline/mus-asset.html" . }}{{ if $u }}
+<script src="{{ $u }}" defer></script>{{ else }}{{ warnf "music: script %q not found (page %s)" . $p.RelPermalink }}{{ end }}{{ end }}
+{{- end -}}
+
+{{- define "_partials/inline/mus-crumbs.html" -}}
+{{- $p := . -}}
+<nav class="mus-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a>
+{{- if ne $p.RelPermalink ("music/" | relURL) }} › <a href="{{ "music/" | relURL }}">Music</a>
+  {{- with $p.Parent }}{{ if and (ne .RelPermalink ("music/" | relURL)) (ne .RelPermalink $p.RelPermalink) (hasPrefix .RelPermalink ("music/" | relURL)) }} › <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}{{ end }}
+{{- end }} › <span aria-current="page">{{ $p.LinkTitle }}</span></nav>
+{{- end -}}
+
+{{- define "_partials/inline/mus-hero.html" -}}
+{{- $p := . -}}
+<header class="mus-hero">
+  <p class="mus-eyebrow">{{ $p.Params.eyebrow | default "Music" }}</p>
+  <h1>{{ $p.Title }}</h1>
+  {{- with ($p.Params.lead | default $p.Description) }}
+  <p>{{ . | markdownify }}</p>{{ end }}
+  <span class="mus-mark" aria-hidden="true">{{ $p.Params.icon | default "🎹" }}</span>
+</header>
+{{- end -}}
+
+{{- define "_partials/inline/mus-pn.html" -}}
+{{- $p := . -}}
+{{- with $p.Parent }}{{ $sib := .Pages.ByWeight }}{{ $prev := false }}{{ $next := false }}{{ $found := false -}}
+{{- range $sib }}{{ if $found }}{{ if not $next }}{{ $next = . }}{{ end }}{{ else if eq .RelPermalink $p.RelPermalink }}{{ $found = true }}{{ else }}{{ $prev = . }}{{ end }}{{ end -}}
+{{- if or $prev $next }}
+<nav class="mus-pn" aria-label="Chapters">
+  {{- with $prev }}<a href="{{ .RelPermalink }}" rel="prev">← {{ .LinkTitle }}</a>{{ else }}<span></span>{{ end }}
+  {{- with $next }}<a href="{{ .RelPermalink }}" rel="next">{{ .LinkTitle }} →</a>{{ end }}
+</nav>{{ end }}{{ end -}}
+{{- end -}}

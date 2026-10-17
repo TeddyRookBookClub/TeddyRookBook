@@ -1,0 +1,68 @@
+{{- /* /music/songs/<slug>/: one song with the player (static/music/kit/player.js). The page is made by
+   content/music/songs/_content.gotmpl from data/music/songs/<slug>.yaml; params.song is the file's name.
+   The YAML text itself is handed to the player (data-yaml) and parsed in the browser by song.js, the same parser
+   scripts/music/check-songs.js uses, so what is checked is exactly what plays. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+{{- $key := .Params.song -}}
+{{- $s := index (site.Data.music.songs | default dict) $key -}}
+{{- $file := printf "data/music/songs/%s.yaml" $key -}}
+{{- $raw := cond (fileExists $file) (readFile $file) "" -}}
+{{- $k := string $s.key }}{{ $minor := hasSuffix $k "m" }}{{ $t := cond $minor (strings.TrimSuffix "m" $k) $k -}}
+{{- $keyName := printf "%s %s" (replace (replace $t "#" "♯") "b" "♭") (cond $minor "minor" "major") -}}
+{{- $rh := $s.staves.rh | default "" }}{{ $lh := $s.staves.lh | default "" -}}
+{{- $bars := 0 }}{{ range split (cond (ne $rh "") $rh $lh) "|" }}{{ if strings.TrimSpace . }}{{ $bars = add $bars 1 }}{{ end }}{{ end -}}
+{{- if gt (float ($s.pickup | default 0)) 0 }}{{ $bars = sub $bars 1 }}{{ end -}}
+<div class="mus mus-wide" id="mus-song">
+  {{ partial "inline/mus-crumbs.html" . }}
+  <header class="mus-hero sg-hero">
+    <p class="mus-eyebrow">Songs · {{ title ($s.level | default "") }}</p>
+    <h1>{{ $s.title }}</h1>
+    <p class="sg-by">{{ $s.composer }}{{ with $s.work }} · {{ . }}{{ end }}</p>
+    <p class="sg-facts"><span>{{ $keyName }}</span><span>{{ $s.time }} time{{ if $s.common }} (common time){{ end }}{{ if $s.cut }} (cut time){{ end }}</span><span>{{ $bars }} bars</span><span>{{ cond (and (ne $rh "") (ne $lh "")) "both hands" (cond (ne $rh "") "right hand only" "left hand only") }}</span>{{ if gt (float ($s.pickup | default 0)) 0 }}<span>starts with a pickup</span>{{ end }}</p>
+    <span class="mus-mark" aria-hidden="true">🎼</span>
+  </header>
+  {{- with $s.arranged }}
+  <p class="mus-note sg-arr"><b>Arranged:</b> {{ strings.TrimSuffix "." . }}. The notes here are not exactly the ones the composer wrote.</p>
+  {{- end }}
+  <div class="mus-box sg-player" id="mus-player" {{ if $raw }}data-yaml="{{ $raw }}"{{ else }}data-json="{{ jsonify $s }}"{{ end }} data-level="{{ $s.level }}">
+    <noscript><p>The player needs JavaScript. The music itself is described below.</p></noscript>
+    <p class="mus-small sg-loading">Loading the music…</p>
+  </div>
+  <div class="sg-cols">
+    <section>
+      <h2>About this piece</h2>
+      <p>{{ $s.about | markdownify }}</p>
+      {{- with $s.skills }}
+      <h3>What it practices</h3>
+      <ul class="sg-skills">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
+      {{- end }}
+      <h3>Where the notes come from</h3>
+      <p class="sg-src">{{ $s.source | markdownify }}</p>
+    </section>
+    <section>
+      <h2>How to practice with it</h2>
+      <ol class="sg-how">
+        <li><b>Listen first.</b> Press Play and follow the moving line with your eyes. The lit notes and keys show what sounds right now: <span class="sg-rh">blue</span> is the right hand, <span class="sg-lh">orange</span> the left.</li>
+        <li><b>Slow it down.</b> Use − and + to set the tempo. 60% is a good place to start.</li>
+        <li><b>One hand at a time.</b> Choose Right or Left, learn that hand, then put them together.</li>
+        <li><b>Wait for me.</b> Turn it on and press Start. The lit keys show what to play, and the music waits until you play them, on the screen, on your computer keyboard or on a MIDI keyboard.</li>
+        <li><b>Loop the hard part.</b> Turn on Loop, pick the bars, and play them a few times in a row.</li>
+      </ol>
+      <p class="mus-small">Click a bar in the music to start from there. Space plays and pauses. The computer keys <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>F</kbd> <kbd>G</kbd> <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> play C D E F G A B C (press ⌨ Computer keys under the music to see them on the piano).</p>
+    </section>
+  </div>
+  <p class="sg-back"><a href="{{ "music/songs/" | relURL }}">← All songs</a></p>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var box = document.getElementById('mus-player');
+  if (!box || !window.TRBMusic || !TRBMusic.player) return;
+  var src = box.getAttribute('data-yaml');
+  if (src == null) { try { src = JSON.parse(box.getAttribute('data-json')); } catch (e) { src = ''; } }
+  box.removeAttribute('data-yaml'); box.removeAttribute('data-json');
+  box.innerHTML = '';
+  window.trbPlayer = TRBMusic.player.mount(box, src, {});
+});
+</script>
+{{ end }}

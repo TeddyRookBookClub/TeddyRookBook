@@ -1,0 +1,15 @@
+{{/* One page per song, from data/music/songs/<slug>.yaml (the format: layouts/music/song.html and static/music/kit/song.js). */}}
+{{ $rank := dict "beginner" 1 "intermediate" 2 "advanced" 3 }}
+{{ range $key, $s := site.Data.music.songs }}
+  {{ $slug := $s.slug | default $key }}
+  {{ $desc := printf "Play %s%s on the piano: the sheet music with every note lit up as it sounds, the keys on a piano keyboard, letter names, tempo control and a wait-for-me practice mode." $s.title (cond (ne ($s.composer | default "") "") (printf " by %s" $s.composer) "") }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" $slug
+    "title" $s.title
+    "layout" "song"
+    "description" $desc
+    "params" (dict "song" $key "scripts" (slice "player") "level" $s.level "eyebrow" (printf "Songs · %s" (title ($s.level | default "song"))) "icon" "🎼")
+    "weight" (add (mul (index $rank ($s.level | default "beginner") | default 4) 100) (int ($s.order | default 50)))
+  ) }}
+{{ end }}

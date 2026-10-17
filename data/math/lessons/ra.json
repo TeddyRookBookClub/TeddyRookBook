@@ -1,0 +1,3792 @@
+{
+ "ra.absolute-value": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Real analysis is the part of mathematics that proves why calculus works. Almost every proof in it measures how close two numbers are, and the tool for that is the absolute value. You solved inequalities like $|x - 3| < 2$ in <a href=\"/math/algebra-1/absolute-value-inequalities/\">Algebra 1</a>, and in <a href=\"/math/discrete-math/direct-proof/\">Discrete Math</a> you learned to write a direct proof. This course puts the two together."
+   },
+   {
+    "t": "key",
+    "html": "$|x - a|$ is the <b>distance</b> from $x$ to $a$, so $|x - a| < \\varepsilon$ means $a - \\varepsilon < x < a + \\varepsilon$. Two inequalities turn distances into bounds: the <b>triangle inequality</b> $|a + b| \\le |a| + |b|$, and the <b>reverse triangle inequality</b> $|a| - |b| \\le |a - b|$."
+   },
+   {
+    "t": "why",
+    "html": "Since $-|a| \\le a \\le |a|$ and $-|b| \\le b \\le |b|$, adding gives $-(|a| + |b|) \\le a + b \\le |a| + |b|$, which says exactly $|a + b| \\le |a| + |b|$. For the reverse version, write $a = (a - b) + b$ and apply the triangle inequality: $|a| \\le |a - b| + |b|$, so $|a| - |b| \\le |a - b|$. Swapping $a$ and $b$ gives $|b| - |a| \\le |a - b|$ too, so in fact $\\big||a| - |b|\\big| \\le |a - b|$."
+   },
+   {
+    "t": "p",
+    "html": "Analysts use these two facts in two directions. The triangle inequality gives an <b>upper bound</b> for a sum: if two quantities are each small, so is their sum. The reverse inequality gives a <b>lower bound</b>: a number close to $a$ cannot be much smaller in size than $|a|$. We will use the second one to keep denominators away from $0$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Unwrapping an absolute value",
+    "q": "Write the set of $x$ with $|x + 2| < 0.1$ as an interval.",
+    "steps": [
+     "$|x + 2| = |x - (-2)|$ is the distance from $x$ to $-2$.",
+     "So $-0.1 < x + 2 < 0.1$, that is, $-2.1 < x < -1.9$."
+    ],
+    "a": "$(-2.1, -1.9)$, an open interval because the inequality is strict."
+   },
+   {
+    "t": "ex",
+    "title": "Bounding a factor",
+    "q": "If $|x - 3| < 1$, how big can $|x + 3|$ be?",
+    "steps": [
+     "From $|x - 3| < 1$: $2 < x < 4$.",
+     "Then $5 < x + 3 < 7$, so $|x + 3| < 7$.",
+     "This is the step that makes $x^{2}$ continuous at $3$: $|x^{2} - 9| = |x - 3|\\,|x + 3| < 7|x - 3|$, which is small when $|x - 3|$ is."
+    ],
+    "a": "$|x + 3| < 7$, and no smaller bound works for every such $x$."
+   },
+   {
+    "t": "ex",
+    "title": "Keeping away from zero",
+    "q": "If $|x - 5| < 2$, show that $|x| > 3$.",
+    "steps": [
+     "Reverse triangle inequality: $|x| \\ge |5| - |x - 5|$.",
+     "Since $|x - 5| < 2$, we get $|x| > 5 - 2 = 3$."
+    ],
+    "a": "$|x| > 3$. (So $\\frac{1}{|x|} < \\frac{1}{3}$: a bound on a reciprocal, the kind the quotient law needs.)"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Running the inequality backward.</b> The tempting \"$|a - b| \\le |a| - |b|$\" is false: with $a = 1$ and $b = 2$, the left side is $1$ and the right side is $-1$. The difference of sizes is a <b>lower</b> bound for the size of the difference. And $|a + b| = |a| + |b|$ holds only when $a$ and $b$ have the same sign (or one is $0$). Check any inequality like these with $a = 1$, $b = -1$ and with $a = 1$, $b = 2$ before you use it."
+   },
+   {
+    "t": "note",
+    "html": "In a proof you will often see a chain like $|x^{2} - 9| = |x - 3||x + 3| \\le |x - 3|(|x - 3| + 6)$. The last step is the triangle inequality: $|x + 3| = |(x - 3) + 6| \\le |x - 3| + 6$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 1.3 (absolute value)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the real numbers and absolute value"
+   }
+  ]
+ },
+ "ra.sup-inf": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A bounded set of numbers may have no largest element. The set $(0, 1)$ has numbers as close to $1$ as you like, but $1$ itself is not in it. Analysis needs a name for the number such a set crowds up against, and in <a href=\"/math/discrete-math/set-operations/\">Discrete Math</a> you met the set language we use to say it precisely. We also lean on <a href=\"/math/real-analysis/absolute-value/\">distances</a> throughout."
+   },
+   {
+    "t": "key",
+    "html": "An <b>upper bound</b> of $A$ is a number $u$ with $a \\le u$ for every $a \\in A$. The <b>supremum</b> $\\sup A$ is the least upper bound: it is an upper bound, and no smaller number is one. The <b>infimum</b> $\\inf A$ is the greatest lower bound. When $\\sup A$ belongs to $A$, it is the <b>maximum</b>; otherwise $A$ has no maximum."
+   },
+   {
+    "t": "why",
+    "html": "Think of the upper bounds of $A$ as a ray on the number line, $[s, \\infty)$. Its left end $s$ is the supremum. Every element of $A$ sits at or to the left of $s$ (so $s$ is an upper bound), and every number to the left of $s$ is beaten by some element (so nothing smaller is an upper bound). Whether $s$ itself is an element is a separate question, which is why \"sup\" and \"max\" are different words."
+   },
+   {
+    "t": "viz",
+    "name": "ra-supinf",
+    "opts": {
+     "seq": "1-1/n",
+     "nmax": 40,
+     "sup": "1",
+     "inf": "0",
+     "bound": 1.15,
+     "xmin": -0.1,
+     "xmax": 1.3
+    },
+    "cap": "The set $\\left\\{1 - \\frac{1}{n}\\right\\}$: the gold region holds the upper bounds; their left end is the supremum. Drag the red marker $b$ to test candidates."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A sequence that climbs",
+    "q": "Find $\\sup A$ and $\\inf A$ for $A = \\left\\{1 - \\frac{1}{n} : n \\ge 1\\right\\}$.",
+    "steps": [
+     "The elements are $0, \\frac{1}{2}, \\frac{2}{3}, \\frac{3}{4}, \\ldots$: increasing, and always less than $1$.",
+     "$\\inf A = 0$, and it is an element (at $n = 1$), so it is the minimum.",
+     "Every element is below $1$, so $1$ is an upper bound. A smaller number $1 - \\varepsilon$ is beaten as soon as $\\frac{1}{n} < \\varepsilon$. So $\\sup A = 1$, and $A$ has no maximum."
+    ],
+    "a": "$\\sup A = 1$ (not attained), $\\inf A = 0$ (attained)."
+   },
+   {
+    "t": "ex",
+    "title": "An interval with an extra point",
+    "q": "Find $\\sup A$ and $\\inf A$ for $A = (-2, 1] \\cup \\{3\\}$.",
+    "steps": [
+     "The largest element is the isolated point $3$, so $\\sup A = 3 = \\max A$.",
+     "The elements come as close to $-2$ as you like, but $-2 \\notin A$. So $\\inf A = -2$, and there is no minimum."
+    ],
+    "a": "$\\sup A = 3$, $\\inf A = -2$."
+   },
+   {
+    "t": "ex",
+    "title": "Signs that alternate",
+    "q": "Find $\\sup A$ and $\\inf A$ for $A = \\left\\{\\frac{(-1)^{n}}{n} : n \\ge 1\\right\\}$.",
+    "steps": [
+     "The elements are $-1, \\frac{1}{2}, -\\frac{1}{3}, \\frac{1}{4}, \\ldots$",
+     "The positive ones are largest at $n = 2$, and the negative ones are smallest at $n = 1$."
+    ],
+    "a": "$\\sup A = \\frac{1}{2}$ and $\\inf A = -1$, both attained."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Sup is not max.</b> Students often write \"$\\sup (0, 1)$ does not exist\" or \"$\\sup A$ must be in $A$.\" The supremum exists for every nonempty set that is bounded above (that is the next topic), but it need not be an element. The opposite slip is giving an upper bound that is too big, like \"$\\sup (0, 1) = 2$.\" Check both conditions: is it an upper bound, and is every smaller number beaten by some element?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 1.1 (upper and lower bounds, supremum and infimum)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the least upper bound"
+   }
+  ]
+ },
+ "ra.approximation-property": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The definition of <a href=\"/math/real-analysis/sup-inf/\">supremum</a> has two halves, and proofs have to check both. The first half, \"$s$ is an upper bound,\" is usually easy. The second half, \"nothing smaller is an upper bound,\" has a convenient form called the ε-test, and it is the first place in this course where the letter $\\varepsilon$ does real work."
+   },
+   {
+    "t": "key",
+    "html": "Let $s$ be an upper bound of $A$. Then $s = \\sup A$ exactly when <b>for every $\\varepsilon > 0$ there is an $a \\in A$ with $a > s - \\varepsilon$</b>. In words: every number below $s$, however slightly below, is beaten by an element of $A$."
+   },
+   {
+    "t": "why",
+    "html": "A number smaller than $s$ can always be written as $s - \\varepsilon$ with $\\varepsilon > 0$. \"No number smaller than $s$ is an upper bound\" says each $s - \\varepsilon$ fails to be an upper bound, that is, some element exceeds it. That is word for word the ε-test. Conversely, if the test holds, every $s - \\varepsilon$ is beaten, so no smaller upper bound exists."
+   },
+   {
+    "t": "p",
+    "html": "Here is a full proof in this style. <b>Claim:</b> $\\sup\\left\\{1 - \\frac{1}{n} : n \\ge 1\\right\\} = 1$. <b>Proof.</b> Every element is $1 - \\frac{1}{n} < 1$, so $1$ is an upper bound. Let $\\varepsilon > 0$. By the <a href=\"/math/real-analysis/completeness/\">Archimedean property</a> choose a positive integer $n$ with $\\frac{1}{n} < \\varepsilon$. Then $1 - \\frac{1}{n} > 1 - \\varepsilon$, so $1 - \\varepsilon$ is not an upper bound. Since $\\varepsilon$ was arbitrary, $1$ is the least upper bound. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "ra-supinf",
+    "opts": {
+     "seq": "1-1/n",
+     "nmax": 60,
+     "sup": "1",
+     "eps": 0.15,
+     "xmin": -0.1,
+     "xmax": 1.25
+    },
+    "cap": "The ε-test: the blue strip is $(\\sup - \\varepsilon, \\sup]$. However thin you make it with the slider, some term of the sequence (green) lands inside."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Which element passes the test?",
+    "q": "For $A = \\left\\{1 - \\frac{2}{n} : n \\ge 1\\right\\}$ and $\\varepsilon = 0.01$, find the smallest $n$ whose element is greater than $1 - \\varepsilon$.",
+    "steps": [
+     "We need $1 - \\frac{2}{n} > 0.99$, that is, $\\frac{2}{n} < 0.01$, or $n > 200$.",
+     "The smallest whole number with $n > 200$ is $201$."
+    ],
+    "a": "$n = 201$."
+   },
+   {
+    "t": "ex",
+    "title": "An element of an interval",
+    "q": "For $A = [2, 5)$ and $\\varepsilon = \\frac{1}{4}$, give an element greater than $5 - \\varepsilon$.",
+    "steps": [
+     "We need $x \\in A$ with $4.75 < x < 5$.",
+     "Any such $x$ works, for example $4.9$."
+    ],
+    "a": "$4.9$ (any number in $(4.75, 5)$ is right)."
+   },
+   {
+    "t": "ex",
+    "title": "The same test for an infimum",
+    "q": "Show that $\\inf A = 2$ for $A = \\left\\{2 + \\frac{3}{n} : n \\ge 1\\right\\}$, and find the first element below $2 + 0.01$.",
+    "steps": [
+     "Every element is $2 + \\frac{3}{n} > 2$, so $2$ is a lower bound.",
+     "For the ε-test turned around, we need an element below $2 + \\varepsilon$: $\\frac{3}{n} < \\varepsilon$ holds once $n > \\frac{3}{\\varepsilon}$, which the Archimedean property supplies. So $2$ is the greatest lower bound.",
+     "With $\\varepsilon = 0.01$: $n > 300$, so the first such element is at $n = 301$."
+    ],
+    "a": "$\\inf A = 2$; the first element below $2.01$ is $2 + \\frac{3}{301}$, at $n = 301$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Proving only half.</b> \"Every $x$ in $(0, 2)$ has $x < 2$, so $\\sup (0, 2) = 2$\" proves only that $2$ is an upper bound, which gives $\\sup (0, 2) \\le 2$. The number $3$ is an upper bound too. To pin down the supremum you must also show every smaller number fails. A second slip is checking the test for one $\\varepsilon$, like $0.01$: the test must hold for <b>every</b> $\\varepsilon > 0$, so the proof starts \"Let $\\varepsilon > 0$\" and then works for that arbitrary $\\varepsilon$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 1.2 (the set of real numbers)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the least upper bound property"
+   }
+  ]
+ },
+ "ra.completeness": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The rational numbers have every algebraic property the reals have, so what makes $\\mathbb{R}$ special? In <a href=\"/math/algebra-1/real-number-system/\">Algebra 1</a> the answer was \"the reals fill in the gaps, like $\\sqrt{2}$.\" Analysis makes that precise with one axiom about <a href=\"/math/real-analysis/approximation-property/\">suprema</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Completeness axiom.</b> Every nonempty set of real numbers that is bounded above has a supremum in $\\mathbb{R}$. <b>Archimedean property</b> (a consequence): for every real $x$ there is a positive integer $n > x$; equivalently, for every $\\varepsilon > 0$ there is a positive integer $n$ with $\\frac{1}{n} < \\varepsilon$."
+   },
+   {
+    "t": "why",
+    "html": "Suppose the positive integers were bounded above. By completeness they would have a supremum $s$. Then $s - 1$ is not an upper bound, so some integer $n$ has $n > s - 1$. But then $n + 1 > s$, and $n + 1$ is a positive integer, contradicting that $s$ is an upper bound. So for every $x$ some integer exceeds it. Taking $x = \\frac{1}{\\varepsilon}$ gives $n > \\frac{1}{\\varepsilon}$, that is, $\\frac{1}{n} < \\varepsilon$."
+   },
+   {
+    "t": "p",
+    "html": "Completeness is exactly what fails in $\\mathbb{Q}$. The set $S = \\{x \\in \\mathbb{Q} : x > 0,\\ x^{2} < 2\\}$ is bounded above (by $2$, say), and in $\\mathbb{R}$ its supremum is $\\sqrt{2}$. But $\\sqrt{2}$ is not rational, and no rational number can serve as the least upper bound: any rational upper bound $r$ has $r^{2} > 2$, and a slightly smaller rational is still an upper bound. Every limit theorem in this course (monotone sequences converge, the intermediate value theorem, the extreme value theorem) uses completeness somewhere, and each one is false in $\\mathbb{Q}$."
+   },
+   {
+    "t": "viz",
+    "name": "ra-supinf",
+    "opts": {
+     "intervals": [
+      [
+       0,
+       1.41421356,
+       false,
+       false
+      ]
+     ],
+     "sup": "sqrt(2)",
+     "bound": 1.6,
+     "xmin": -0.2,
+     "xmax": 2
+    },
+    "cap": "Rationals with $x^{2} < 2$ crowd up against $\\sqrt{2} \\approx 1.414$. The supremum exists in $\\mathbb{R}$, not in $\\mathbb{Q}$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The Archimedean property with numbers",
+    "q": "Find the smallest positive integer $n$ with $\\frac{1}{n} < 0.003$.",
+    "steps": [
+     "$\\frac{1}{n} < 0.003$ means $n > \\frac{1}{0.003} = 333.\\overline{3}$.",
+     "The smallest whole number above $333.\\overline{3}$ is $334$."
+    ],
+    "a": "$n = 334$."
+   },
+   {
+    "t": "ex",
+    "title": "When equality is close",
+    "q": "Find the smallest positive integer $n$ with $\\frac{1}{n} < \\frac{1}{30}$.",
+    "steps": [
+     "The condition is $n > 30$.",
+     "$n = 30$ gives equality, which is not \"less than.\""
+    ],
+    "a": "$n = 31$."
+   },
+   {
+    "t": "ex",
+    "title": "A supremum outside the set's number system",
+    "q": "Let $S = \\{x \\in \\mathbb{Q} : x > 0,\\ x^{2} < 5\\}$. What is $\\sup S$, and is it rational?",
+    "steps": [
+     "Every element is less than $\\sqrt{5}$, and rationals come arbitrarily close to $\\sqrt{5}$ (density, next topic).",
+     "So $\\sup S = \\sqrt{5}$, which is irrational because $5$ is not a perfect square."
+    ],
+    "a": "$\\sup S = \\sqrt{5}$, not rational."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Assuming suprema stay in the same number system.</b> A bounded set of rationals need not have a rational supremum, as $S$ above shows. In a proof, \"let $s = \\sup A$\" is allowed only when $A$ is a nonempty set of reals bounded above, and then $s$ is a real number. Check both hypotheses (nonempty, bounded above) every time you invoke completeness."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 1.2 (the least upper bound property and the Archimedean property)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 1.1"
+   }
+  ]
+ },
+ "ra.density": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Between any two different real numbers there are infinitely many rationals, even though the rationals have \"gaps.\" The proof is a short, concrete recipe built on the <a href=\"/math/real-analysis/completeness/\">Archimedean property</a>, and it is a model for many analysis proofs: choose a scale, then count steps."
+   },
+   {
+    "t": "key",
+    "html": "<b>Density of $\\mathbb{Q}$.</b> If $a < b$, there is a rational $\\frac{m}{n}$ with $a < \\frac{m}{n} < b$. Recipe: choose a positive integer $n$ with $\\frac{1}{n} < b - a$; then let $m$ be the smallest integer greater than $na$."
+   },
+   {
+    "t": "why",
+    "html": "Steps of size $\\frac{1}{n}$ are shorter than the gap $b - a$, so they cannot jump over the whole interval $(a, b)$. Precisely: $m$ is the smallest integer with $m > na$, so $m - 1 \\le na$. Dividing by $n$: $a < \\frac{m}{n}$ and $\\frac{m}{n} \\le a + \\frac{1}{n} < a + (b - a) = b$. So $\\frac{m}{n}$ is strictly between $a$ and $b$. The integer $m$ exists because the integers have no gaps: $m = \\lfloor na \\rfloor + 1$."
+   },
+   {
+    "t": "p",
+    "html": "Applying the result again to $\\left(a, \\frac{m}{n}\\right)$ gives another rational, and so on: there are infinitely many. The same idea shows the irrationals are dense too: find a rational $q$ between $\\frac{a}{\\sqrt{2}}$ and $\\frac{b}{\\sqrt{2}}$ with $q \\ne 0$; then $q\\sqrt{2}$ is irrational and lies between $a$ and $b$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Following the recipe",
+    "q": "Find a fraction between $a = 0.31$ and $b = 0.34$ using the recipe.",
+    "steps": [
+     "$b - a = 0.03$, and $\\frac{1}{n} < 0.03$ means $n > 33.\\overline{3}$, so $n = 34$.",
+     "$na = 34 \\cdot 0.31 = 10.54$, so the smallest integer above it is $m = 11$.",
+     "Check: $\\frac{11}{34} \\approx 0.3235$, which is between $0.31$ and $0.34$."
+    ],
+    "a": "$\\frac{11}{34}$"
+   },
+   {
+    "t": "ex",
+    "title": "Next to an irrational",
+    "q": "Use the recipe for $a = \\sqrt{2}$ and $b = 1.42$.",
+    "steps": [
+     "$b - a \\approx 0.00579$, and $\\frac{1}{0.00579} \\approx 172.8$, so $n = 173$.",
+     "$na = 173\\sqrt{2} = \\sqrt{59858}$. Since $244^{2} = 59536$ and $245^{2} = 60025$, $\\lfloor 173\\sqrt{2} \\rfloor = 244$, so $m = 245$.",
+     "$\\frac{245}{173} \\approx 1.41618$, which is indeed between $\\sqrt{2} \\approx 1.41421$ and $1.42$."
+    ],
+    "a": "$\\frac{245}{173}$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Choosing $n$ with $\\frac{1}{n} \\le b - a$, or $m$ with $m \\ge na$.</b> With equality allowed, the fraction can land exactly on $b$ (or on $a$). For $a = 0$ and $b = \\frac{1}{2}$, the choice $n = 2$ gives $\\frac{1}{n} = b - a$ and $m = 1$, so $\\frac{m}{n} = \\frac{1}{2} = b$, not strictly inside. The strict inequalities in the recipe are what make the final check $a < \\frac{m}{n} < b$ work."
+   },
+   {
+    "t": "note",
+    "html": "The recipe is not the only route. The fraction with the smallest denominator between $0.31$ and $0.34$ is $\\frac{1}{3}$; the proof only needs some fraction, and it chooses one that is easy to justify."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 1.2 (density of the rationals)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the Archimedean property"
+   }
+  ]
+ },
+ "ra.countable-sets": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some infinite sets are bigger than others. In <a href=\"/math/discrete-math/bijections-inverses/\">Discrete Math</a> you saw that a bijection matches two sets element for element; here we compare infinite sets the same way. The surprise, due to Georg Cantor, is that the real numbers cannot be listed at all, even though the rationals can. The proof uses decimal expansions of numbers in $(0, 1)$, which exist thanks to <a href=\"/math/real-analysis/completeness/\">completeness</a>."
+   },
+   {
+    "t": "key",
+    "html": "A set is <b>countable</b> when it is finite or there is a bijection between it and the positive integers, that is, its elements can be listed $a_1, a_2, a_3, \\ldots$ with every element appearing. $\\mathbb{Z}$, $\\mathbb{Q}$ and $\\mathbb{Z} \\times \\mathbb{Z}$ are countable. The interval $(0, 1)$, and so $\\mathbb{R}$, is <b>uncountable</b>."
+   },
+   {
+    "t": "why",
+    "html": "<b>Pairs are countable.</b> List the pairs $(m, n)$ of positive integers by diagonals $m + n = 2, 3, 4, \\ldots$: $(1, 1), (1, 2), (2, 1), (1, 3), (2, 2), (3, 1), \\ldots$ Each diagonal is finite, so every pair gets a position, and $\\frac{m}{n}$ then lists every positive rational (with repeats, which we skip). <b>$(0, 1)$ is not.</b> Suppose $x_1, x_2, x_3, \\ldots$ were a list of all of $(0, 1)$. Build $x = 0.d_1 d_2 d_3 \\ldots$ where $d_k = 4$ if the $k$th digit of $x_k$ is $5$, and $d_k = 5$ otherwise. Then $x \\in (0, 1)$, and $x$ differs from $x_k$ in the $k$th digit, so $x \\ne x_k$ for every $k$. Using only the digits $4$ and $5$ means $x$ has a unique decimal expansion (no $\\ldots 999$ tail), so \"differs in a digit\" really means \"is a different number.\" So the list missed $x$: no list can contain all of $(0, 1)$. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "ra-diagonal",
+    "opts": {
+     "mode": "diagonal",
+     "rows": [
+      "31415",
+      "27182",
+      "14142",
+      "16180",
+      "57751"
+     ]
+    },
+    "cap": "Build the diagonal number one digit at a time. Each new digit is chosen to disagree with the digit on the diagonal."
+   },
+   {
+    "t": "viz",
+    "name": "ra-diagonal",
+    "opts": {
+     "mode": "pairing",
+     "size": 6
+    },
+    "cap": "The diagonal listing of pairs: step through it and watch every pair receive a position."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A position in the pair listing",
+    "q": "In the diagonal listing, what is the position of $(3, 2)$?",
+    "steps": [
+     "It lies on the diagonal $m + n = 5$.",
+     "The earlier diagonals $m + n = 2, 3, 4$ hold $1 + 2 + 3 = 6$ pairs.",
+     "Within its diagonal it is number $m = 3$, so its position is $6 + 3 = 9$."
+    ],
+    "a": "Position $9$."
+   },
+   {
+    "t": "ex",
+    "title": "Building the diagonal number",
+    "q": "A list begins $x_1 = 0.5172\\ldots$, $x_2 = 0.3909\\ldots$, $x_3 = 0.4455\\ldots$, $x_4 = 0.8125\\ldots$. Give the first four digits of Cantor's $x$.",
+    "steps": [
+     "The diagonal digits are $5, 9, 5, 5$.",
+     "Change each: $5 \\to 4$, anything else $\\to 5$. So $x = 0.4544\\ldots$"
+    ],
+    "a": "$0.4544$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>\"The diagonal number is just further down the list.\"</b> It cannot be: if it were $x_{1000}$, then its $1000$th digit would have to equal the $1000$th digit of $x_{1000}$, but it was built to differ there. The argument does not search the list; it shows every single line fails. Another slip is thinking a list that \"goes on forever\" must eventually include everything. The integers $2, 4, 6, \\ldots$ go on forever and still miss every odd number."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, sections 0.3 (cardinality) and 1.4 (the size of $\\mathbb{R}$)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on countable and uncountable sets"
+   }
+  ]
+ },
+ "ra.sequence-limit": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/calculus-2/sequences/\">Calculus 2</a> you said $a_n \\to L$ when the terms \"get closer and closer\" to $L$. That phrase is not precise enough to prove anything: $1 + \\frac{1}{n}$ gets closer and closer to $0$ as well, without ever getting close. The fix is a definition with two quantifiers, the kind you read in <a href=\"/math/discrete-math/nested-quantifiers/\">Discrete Math</a>, and it rests on the <a href=\"/math/real-analysis/completeness/\">Archimedean property</a>."
+   },
+   {
+    "t": "key",
+    "html": "$a_n \\to L$ means: <b>for every $\\varepsilon > 0$ there is an $N$ such that $|a_n - L| < \\varepsilon$ for every $n \\ge N$.</b> The $\\varepsilon$ is a challenge (how close?), and $N$ is the answer (from where on?). If one $N$ works, every larger $N$ works too."
+   },
+   {
+    "t": "why",
+    "html": "Read the definition as a game. A skeptic names a tolerance $\\varepsilon$, as tiny as they like. You must answer with a point $N$ in the sequence beyond which <b>every</b> term stays within $\\varepsilon$ of $L$, not just one term, and not just most of them. A sequence converges to $L$ when you can always win, whatever $\\varepsilon$ the skeptic picks. For $1 + \\frac{1}{n}$ and $L = 0$ the skeptic wins with $\\varepsilon = \\frac{1}{2}$: every term is more than $1$ away from $0$."
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsband",
+    "opts": {
+     "f": "(2n+1)/(n+3)",
+     "L": "2",
+     "eps": 0.2,
+     "N": 10,
+     "nmax": 50
+    },
+    "cap": "Terms of $a_n = \\frac{2n + 1}{n + 3}$ with the band $L \\pm \\varepsilon$ around $L = 2$. Drag $N$ (or use the arrow keys): terms from $N$ on turn green inside the band and red outside. Shrink $\\varepsilon$ and watch the smallest working $N$ grow."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Finding $N$ for one $\\varepsilon$",
+    "q": "Let $a_n = \\frac{2n + 1}{n + 3}$, so $L = 2$. Find an $N$ that works for $\\varepsilon = 0.01$.",
+    "steps": [
+     "$a_n - 2 = \\frac{2n + 1 - 2(n + 3)}{n + 3} = \\frac{-5}{n + 3}$, so $|a_n - 2| = \\frac{5}{n + 3}$.",
+     "$\\frac{5}{n + 3} < 0.01$ means $n + 3 > 500$, that is, $n > 497$.",
+     "Since $\\frac{5}{n + 3}$ decreases, every $n \\ge 498$ works, and $n = 497$ gives exactly $0.01$, which is not less than $0.01$."
+    ],
+    "a": "$N = 498$ (or any larger $N$)."
+   },
+   {
+    "t": "ex",
+    "title": "Checking a proposed $N$",
+    "q": "For $a_n = \\frac{1}{n^{2}}$ ($L = 0$) and $\\varepsilon = 0.001$, does $N = 30$ work?",
+    "steps": [
+     "$|a_n - 0| = \\frac{1}{n^{2}} < 0.001$ means $n^{2} > 1000$, that is, $n \\ge 32$.",
+     "At $n = 30$ the distance is $\\frac{1}{900} \\approx 0.0011$, which is not below $0.001$."
+    ],
+    "a": "No. The smallest $N$ that works is $32$."
+   },
+   {
+    "t": "ex",
+    "title": "A sequence that zigzags",
+    "q": "Let $a_n = \\frac{3 + 2(-1)^{n}}{n}$, with limit $0$. Find the smallest $N$ that works for $\\varepsilon = 0.1$.",
+    "steps": [
+     "For even $n$, $|a_n| = \\frac{5}{n}$; for odd $n$, $|a_n| = \\frac{1}{n}$. The distances are not monotone.",
+     "Even $n$: need $\\frac{5}{n} < 0.1$, so $n > 50$; the last even failure is $n = 50$. Odd $n$: $\\frac{1}{n} < 0.1$ once $n > 10$; the last odd failure is $n = 9$.",
+     "The last failing index is $50$, so every $n \\ge 51$ works."
+    ],
+    "a": "$N = 51$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Checking one term instead of all the later ones.</b> In the zigzag example, $|a_{11}| = \\frac{1}{11} < 0.1$, but $N = 11$ fails because $a_{12}, a_{14}, \\ldots$ are still too far. Always ask: does the inequality hold for <b>every</b> $n \\ge N$? The opposite slip is thinking there is one correct $N$. If $N = 498$ works, so do $499$ and $10^{6}$; a definition that says \"there is an $N$\" never needs the smallest one."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.1 (sequences and limits)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on convergent sequences"
+   }
+  ]
+ },
+ "ra.epsilon-n-proofs": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Finding an $N$ for one $\\varepsilon$, as in <a href=\"/math/real-analysis/sequence-limit/\">the definition</a>, is a computation. A proof must handle every $\\varepsilon > 0$ at once, so $N$ becomes a formula in $\\varepsilon$. Every ε–N proof is written in two passes: scratch work backward, then a clean argument forward."
+   },
+   {
+    "t": "key",
+    "html": "<b>Scratch work</b> (not part of the proof): simplify $|a_n - L|$, bound it by something simple like $\\frac{C}{n}$, and solve $\\frac{C}{n} < \\varepsilon$ to see that $N > \\frac{C}{\\varepsilon}$ will do. <b>The proof</b>: \"Let $\\varepsilon > 0$. Choose an integer $N > \\frac{C}{\\varepsilon}$. Let $n \\ge N$. Then $|a_n - L| \\le \\frac{C}{n} \\le \\frac{C}{N} < \\varepsilon$.\""
+   },
+   {
+    "t": "why",
+    "html": "The order of the sentences follows the order of the quantifiers in the definition: for every $\\varepsilon$ (let $\\varepsilon > 0$), there is an $N$ (choose it, using only $\\varepsilon$), such that for all $n \\ge N$ (let $n \\ge N$), the inequality holds (the estimate). The scratch work runs the other way, starting from the inequality we want, which is why it cannot be handed in as a proof: it assumes what it is trying to show. Replacing $|a_n - L|$ by a simpler upper bound is allowed and makes the algebra easy; the bound only has to be true and to go to $0$."
+   },
+   {
+    "t": "p",
+    "html": "<b>Model proof.</b> Claim: $\\frac{3n + 1}{n + 2} \\to 3$. Scratch: $\\left|\\frac{3n + 1}{n + 2} - 3\\right| = \\frac{5}{n + 2} < \\frac{5}{n}$, and $\\frac{5}{n} < \\varepsilon$ when $n > \\frac{5}{\\varepsilon}$. <b>Proof.</b> Let $\\varepsilon > 0$. By the Archimedean property choose an integer $N > \\frac{5}{\\varepsilon}$. For every $n \\ge N$, $\\left|\\frac{3n + 1}{n + 2} - 3\\right| = \\frac{5}{n + 2} < \\frac{5}{n} \\le \\frac{5}{N} < \\varepsilon$. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsband",
+    "opts": {
+     "f": "(3n+1)/(n+2)",
+     "L": "3",
+     "eps": 0.25,
+     "N": 21,
+     "nmax": 60
+    },
+    "cap": "The proof's choice $N > \\frac{5}{\\varepsilon}$ for $\\frac{3n + 1}{n + 2} \\to 3$: try several $\\varepsilon$ and check that $N = \\frac{5}{\\varepsilon}$ (rounded up) always lands in the green."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Simplify, then bound",
+    "q": "For $a_n = \\frac{2n - 7}{n + 4}$ and $L = 2$, find a constant $C$ with $|a_n - L| < \\frac{C}{n}$, and write the choice of $N$.",
+    "steps": [
+     "$a_n - 2 = \\frac{2n - 7 - 2n - 8}{n + 4} = \\frac{-15}{n + 4}$, so $|a_n - 2| = \\frac{15}{n + 4}$.",
+     "Dropping the $4$ makes the denominator smaller and the fraction bigger: $\\frac{15}{n + 4} < \\frac{15}{n}$. So $C = 15$.",
+     "Choose an integer $N > \\frac{15}{\\varepsilon}$."
+    ],
+    "a": "$C = 15$, $N > \\frac{15}{\\varepsilon}$."
+   },
+   {
+    "t": "ex",
+    "title": "A bound that needs care",
+    "q": "For $a_n = \\frac{n}{n^{2} + 1}$ and $L = 0$, find a simple bound and the choice of $N$.",
+    "steps": [
+     "$\\left|\\frac{n}{n^{2} + 1}\\right| = \\frac{n}{n^{2} + 1} < \\frac{n}{n^{2}} = \\frac{1}{n}$.",
+     "So $N > \\frac{1}{\\varepsilon}$ works: for $n \\ge N$, $|a_n| < \\frac{1}{n} \\le \\frac{1}{N} < \\varepsilon$."
+    ],
+    "a": "$|a_n| < \\frac{1}{n}$; choose $N > \\frac{1}{\\varepsilon}$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Handing in the scratch work.</b> \"Suppose $\\frac{5}{n + 2} < \\varepsilon$; then $n > \\frac{5}{\\varepsilon} - 2$, so the limit is $3$\" starts from the conclusion. Another common slip is an $N$ that depends on $n$ (like \"choose $N = n + 1$\"): $N$ must be fixed before $n$ is chosen, from $\\varepsilon$ alone. And a proof that picks $\\varepsilon = 0.01$ proves the inequality for that one $\\varepsilon$, not convergence."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.1 (examples of limits)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on convergent sequences (proof examples)"
+   }
+  ]
+ },
+ "ra.divergence": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Two facts about convergence come straight from <a href=\"/math/real-analysis/epsilon-n-proofs/\">the definition</a>: a convergent sequence cannot wander off to infinity, and a sequence can fail to converge in a precise way that you can exhibit with a single $\\varepsilon$."
+   },
+   {
+    "t": "key",
+    "html": "<b>Convergent sequences are bounded:</b> if $a_n \\to L$, some $M$ has $|a_n| \\le M$ for every $n$. <b>Not converging to $L$</b> means: there is an $\\varepsilon > 0$ such that for every $N$ some $n \\ge N$ has $|a_n - L| \\ge \\varepsilon$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Bounded.</b> Use the definition with $\\varepsilon = 1$: there is an $N$ with $|a_n - L| < 1$ for $n \\ge N$, so those terms have $|a_n| < |L| + 1$ (triangle inequality). Only finitely many terms come before $N$. So $M = \\max\\{|a_1|, \\ldots, |a_{N-1}|, |L| + 1\\}$ bounds every term. $\\blacksquare$ <b>Negation.</b> \"For every $\\varepsilon$ there is an $N$ such that for all $n \\ge N$, $|a_n - L| < \\varepsilon$\" becomes, one quantifier at a time: there is an $\\varepsilon$ such that for every $N$ there is an $n \\ge N$ with $|a_n - L| \\ge \\varepsilon$."
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsband",
+    "opts": {
+     "f": "(-1)^n",
+     "L": "0.5",
+     "eps": 1,
+     "N": 8,
+     "nmax": 30,
+     "ymin": -1.6,
+     "ymax": 1.6
+    },
+    "cap": "$a_n = (-1)^{n}$ with a band around $L = 0.5$: whatever $N$ you choose, some later term is outside the band when $\\varepsilon \\le 1.5$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The bound from the proof",
+    "q": "For $a_n = \\frac{5n + 9}{n + 1}$, which tends to $5$, carry out the proof's recipe: find $N$ for $\\varepsilon = 1$ and then $M$.",
+    "steps": [
+     "$|a_n - 5| = \\frac{4}{n + 1} < 1$ once $n + 1 > 4$, so the smallest $N$ is $4$ ($|a_3 - 5| = 1$ exactly, which is not less than $1$).",
+     "Earlier terms: $a_1 = 7$, $a_2 = \\frac{19}{3}$, $a_3 = 6$. And $|L| + 1 = 6$.",
+     "$M = \\max\\{7, \\frac{19}{3}, 6, 6\\} = 7$."
+    ],
+    "a": "$N = 4$, $M = 7$."
+   },
+   {
+    "t": "ex",
+    "title": "Proving divergence with one $\\varepsilon$",
+    "q": "Show that $a_n = (-1)^{n}$ does not converge to $L = \\frac{1}{2}$, and give the largest $\\varepsilon$ that witnesses it.",
+    "steps": [
+     "The terms are $-1$ and $1$, each infinitely often. Their distances from $\\frac{1}{2}$ are $\\frac{3}{2}$ and $\\frac{1}{2}$.",
+     "Beyond any $N$ there is an odd $n$, where $|a_n - \\frac{1}{2}| = \\frac{3}{2}$.",
+     "So every $\\varepsilon$ with $0 < \\varepsilon \\le \\frac{3}{2}$ witnesses the failure; $\\frac{3}{2}$ is the largest."
+    ],
+    "a": "$\\varepsilon = \\frac{3}{2}$ (or anything smaller and positive). Since $L$ was arbitrary in this style of argument, $(-1)^{n}$ diverges."
+   },
+   {
+    "t": "note",
+    "html": "The contrapositive of \"convergent implies bounded\" is a quick test for divergence: an <b>unbounded</b> sequence diverges. So $\\sqrt{n}$, $\\ln n$ and $(-2)^{n}$ all diverge, with no $\\varepsilon$ needed. A bounded sequence needs a closer look."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Two traps.</b> First, \"bounded implies convergent\" is false: $(-1)^{n}$ is bounded and diverges. Only the converse is true. Second, negating the definition as \"for every $\\varepsilon$, no $N$ works\" says far too much: it would mean the sequence is never within any distance of $L$. The negation needs just one bad $\\varepsilon$, and then for that $\\varepsilon$ every $N$ fails somewhere later."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.1 (convergent sequences are bounded)"
+   },
+   {
+    "name": "Oscar Levin, Discrete Mathematics: An Open Introduction, section 0.2 (negating quantified statements)"
+   }
+  ]
+ },
+ "ra.limit-laws": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/calculus-1/limit-laws/\">Calculus 1</a> you used the limit laws freely. Now we prove them from the definition, which shows how ε-proofs combine. You will need <a href=\"/math/real-analysis/divergence/\">boundedness</a> for the product."
+   },
+   {
+    "t": "key",
+    "html": "If $a_n \\to a$ and $b_n \\to b$, then $a_n + b_n \\to a + b$, $c\\,a_n \\to ca$, $a_n b_n \\to ab$, and $\\frac{a_n}{b_n} \\to \\frac{a}{b}$ when $b \\ne 0$. The proofs split $\\varepsilon$ between the pieces (\"$\\frac{\\varepsilon}{2}$ each\") and use $N = \\max(N_1, N_2)$ so that both estimates hold at once."
+   },
+   {
+    "t": "why",
+    "html": "<b>Sum.</b> Let $\\varepsilon > 0$. Choose $N_1$ with $|a_n - a| < \\frac{\\varepsilon}{2}$ for $n \\ge N_1$, and $N_2$ with $|b_n - b| < \\frac{\\varepsilon}{2}$ for $n \\ge N_2$. For $n \\ge N = \\max(N_1, N_2)$, the triangle inequality gives $|(a_n + b_n) - (a + b)| \\le |a_n - a| + |b_n - b| < \\varepsilon$. $\\blacksquare$ <b>Product.</b> Add and subtract $a_n b$: $$a_n b_n - ab = a_n(b_n - b) + b(a_n - a).$$ Since $(a_n)$ converges it is bounded, say $|a_n| \\le M$ with $M > 0$. Choose $N$ so that $|b_n - b| < \\frac{\\varepsilon}{2M}$ and $|a_n - a| < \\frac{\\varepsilon}{2|b| + 1}$ for $n \\ge N$. Then $|a_n b_n - ab| < M\\frac{\\varepsilon}{2M} + |b|\\frac{\\varepsilon}{2|b| + 1} < \\varepsilon$. $\\blacksquare$ (The $+1$ avoids dividing by $0$ when $b = 0$.)"
+   },
+   {
+    "t": "p",
+    "html": "<b>Quotient.</b> It is enough to show $\\frac{1}{b_n} \\to \\frac{1}{b}$, then use the product law. Since $b_n \\to b \\ne 0$, eventually $|b_n - b| < \\frac{|b|}{2}$, and then $|b_n| > \\frac{|b|}{2}$ by the reverse triangle inequality. So $\\left|\\frac{1}{b_n} - \\frac{1}{b}\\right| = \\frac{|b - b_n|}{|b_n||b|} < \\frac{2}{b^{2}}|b_n - b|$, which can be made smaller than any $\\varepsilon$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Splitting $\\varepsilon$ with numbers",
+    "q": "Suppose $|a_n - a| \\le \\frac{3}{n}$ and $|b_n - b| \\le \\frac{5}{n}$. For $\\varepsilon = 0.1$, find $N_1$, $N_2$ and $N$ as in the sum proof.",
+    "steps": [
+     "Each piece must be less than $\\frac{\\varepsilon}{2} = 0.05$.",
+     "$\\frac{3}{n} < 0.05$ means $n > 60$, so $N_1 = 61$; $\\frac{5}{n} < 0.05$ means $n > 100$, so $N_2 = 101$."
+    ],
+    "a": "$N_1 = 61$, $N_2 = 101$, $N = 101$."
+   },
+   {
+    "t": "ex",
+    "title": "Using the laws",
+    "q": "If $a_n \\to 3$ and $b_n \\to -2$, find $\\lim \\frac{a_n b_n - a_n^{2}}{b_n + 4}$.",
+    "steps": [
+     "The denominator tends to $2 \\ne 0$, so the quotient law applies.",
+     "The numerator tends to $3(-2) - 9 = -15$."
+    ],
+    "a": "$-\\frac{15}{2}$"
+   },
+   {
+    "t": "ex",
+    "title": "The step that protects a denominator",
+    "q": "Suppose $b_n \\to -4$. Explain why eventually $|b_n| > 2$, and bound $\\left|\\frac{1}{b_n} - \\left(-\\frac{1}{4}\\right)\\right|$ in terms of $|b_n + 4|$.",
+    "steps": [
+     "With $\\varepsilon = 2 = \\frac{|b|}{2}$ there is an $N$ with $|b_n + 4| < 2$ for $n \\ge N$. By the reverse triangle inequality, $|b_n| \\ge 4 - |b_n + 4| > 2$.",
+     "Then $\\left|\\frac{1}{b_n} + \\frac{1}{4}\\right| = \\frac{|b_n + 4|}{4|b_n|} < \\frac{|b_n + 4|}{8}$."
+    ],
+    "a": "For $n \\ge N$: $\\left|\\frac{1}{b_n} + \\frac{1}{4}\\right| < \\frac{1}{8}|b_n + 4|$, which goes to $0$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using one $N$ for two sequences.</b> \"Choose $N$ so that $|a_n - a| < \\frac{\\varepsilon}{2}$ and $|b_n - b| < \\frac{\\varepsilon}{2}$\" is fine only after saying why one $N$ serves both: take the larger of the two. In the product proof, the slip is forgetting to bound $|a_n|$: the factor $a_n$ changes with $n$, so \"$|a_n||b_n - b|$ is small\" needs $|a_n| \\le M$ first."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.2 (facts about limits of sequences)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the algebra of limits"
+   }
+  ]
+ },
+ "ra.squeeze-order": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Limits respect order, with one subtle exception. These facts, together with the <a href=\"/math/real-analysis/limit-laws/\">limit laws</a>, compute most limits without returning to $\\varepsilon$ every time."
+   },
+   {
+    "t": "key",
+    "html": "<b>Order:</b> if $a_n \\le b_n$ for all $n$ (or all large $n$), $a_n \\to a$ and $b_n \\to b$, then $a \\le b$. <b>Squeeze:</b> if $a_n \\le c_n \\le b_n$ for all large $n$ and $a_n \\to L$ and $b_n \\to L$, then $c_n \\to L$. Strict inequalities can become equalities in the limit."
+   },
+   {
+    "t": "why",
+    "html": "<b>Order.</b> Suppose instead $a > b$, and let $\\varepsilon = \\frac{a - b}{2}$. Eventually $a_n > a - \\varepsilon$ and $b_n < b + \\varepsilon$, and $a - \\varepsilon = b + \\varepsilon$, so $a_n > b_n$, a contradiction. <b>Squeeze.</b> Let $\\varepsilon > 0$. Eventually both $L - \\varepsilon < a_n$ and $b_n < L + \\varepsilon$, and then $L - \\varepsilon < a_n \\le c_n \\le b_n < L + \\varepsilon$, so $|c_n - L| < \\varepsilon$. $\\blacksquare$"
+   },
+   {
+    "t": "p",
+    "html": "The squeeze theorem is how analysts handle anything bounded times something that goes to $0$: since $-1 \\le \\sin n \\le 1$, $\\left|\\frac{\\sin n}{n}\\right| \\le \\frac{1}{n} \\to 0$. It also handles sums of many small terms, by bounding every term by the smallest and the largest."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A bounded wiggle",
+    "q": "Find $\\lim \\frac{3n + 2\\sin n}{4n + 1}$.",
+    "steps": [
+     "Divide top and bottom by $n$: $\\frac{3 + 2\\frac{\\sin n}{n}}{4 + \\frac{1}{n}}$.",
+     "$-\\frac{1}{n} \\le \\frac{\\sin n}{n} \\le \\frac{1}{n}$, so by the squeeze theorem $\\frac{\\sin n}{n} \\to 0$."
+    ],
+    "a": "$\\frac{3}{4}$ by the limit laws."
+   },
+   {
+    "t": "ex",
+    "title": "A sum with $n$ terms",
+    "q": "Find $\\lim \\sum_{k=1}^{n} \\frac{n}{n^{2} + k}$.",
+    "steps": [
+     "Each of the $n$ terms is between $\\frac{n}{n^{2} + n}$ (the smallest, at $k = n$) and $\\frac{n}{n^{2} + 1}$ (the largest, at $k = 1$).",
+     "So $\\frac{n^{2}}{n^{2} + n} \\le \\sum_{k=1}^{n} \\frac{n}{n^{2} + k} \\le \\frac{n^{2}}{n^{2} + 1}$, and both bounds tend to $1$."
+    ],
+    "a": "$1$"
+   },
+   {
+    "t": "ex",
+    "title": "A root of a sum",
+    "q": "Find $\\lim \\left(2^{n} + 5^{n}\\right)^{1/n}$.",
+    "steps": [
+     "$5^{n} \\le 2^{n} + 5^{n} \\le 2 \\cdot 5^{n}$, so $5 \\le (2^{n} + 5^{n})^{1/n} \\le 2^{1/n} \\cdot 5$.",
+     "$2^{1/n} \\to 1$, so both bounds tend to $5$."
+    ],
+    "a": "$5$: the larger base wins."
+   },
+   {
+    "t": "ex",
+    "title": "Where a limit can land",
+    "q": "Suppose $a_n \\to L$ and $2 \\le a_n \\le 5$ for every $n \\ge 10$. What can you say about $L$?",
+    "steps": [
+     "Apply the order theorem to $2 \\le a_n$ and to $a_n \\le 5$ (the first nine terms do not matter).",
+     "So $2 \\le L \\le 5$. The ends are possible: $5 - \\frac{1}{n} \\to 5$ stays in $[2, 5]$."
+    ],
+    "a": "$L \\in [2, 5]$, a closed interval."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Keeping a strict inequality in the limit.</b> From $a_n < b_n$ you may conclude only $\\lim a_n \\le \\lim b_n$. Example: $0 < \\frac{1}{n}$ for every $n$, but both sides tend to $0$. In particular, a sequence of positive numbers can have limit $0$. Check any \"$<$\" in a limit argument against the example $\\frac{1}{n}$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.2 (squeeze lemma and order)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 4.1"
+   }
+  ]
+ },
+ "ra.monotone-convergence": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sometimes you cannot compute a sequence's terms in closed form, as with $a_{n+1} = \\sqrt{2 + a_n}$. The monotone convergence theorem proves such a sequence converges without knowing the limit in advance, using <a href=\"/math/real-analysis/completeness/\">completeness</a>; after that, the <a href=\"/math/real-analysis/squeeze-order/\">limit laws</a> find the limit. You met bounded monotone sequences in <a href=\"/math/calculus-2/monotone-bounded/\">Calculus 2</a> as a fact; here is the proof."
+   },
+   {
+    "t": "key",
+    "html": "<b>Monotone convergence theorem.</b> A bounded increasing sequence converges to $\\sup\\{a_n\\}$; a bounded decreasing sequence converges to $\\inf\\{a_n\\}$. For a recursion $a_{n+1} = g(a_n)$ with $g$ continuous: prove the sequence is monotone and bounded (usually by induction), and only then solve $L = g(L)$."
+   },
+   {
+    "t": "why",
+    "html": "Let $(a_n)$ be increasing and bounded above, and let $s = \\sup\\{a_n\\}$, which exists by completeness. Given $\\varepsilon > 0$, the number $s - \\varepsilon$ is not an upper bound, so some $a_N > s - \\varepsilon$. Because the sequence increases, every $n \\ge N$ has $s - \\varepsilon < a_N \\le a_n \\le s$, so $|a_n - s| < \\varepsilon$. $\\blacksquare$ The theorem says nothing about the value of $s$; the recursion supplies it, because $a_{n+1} \\to s$ as well, so $s = g(s)$."
+   },
+   {
+    "t": "viz",
+    "name": "ra-cobweb",
+    "opts": {
+     "g": "sqrt(2+x)",
+     "x0": 0,
+     "steps": 3,
+     "xmin": -0.2,
+     "xmax": 3,
+     "ymin": -0.2,
+     "ymax": 3
+    },
+    "cap": "Iterating $g(x) = \\sqrt{2 + x}$ from $a_1 = 0$: up to the curve, across to the line $y = x$. The path climbs a staircase toward the crossing at $2$. Drag the start or press Step."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A nested square root",
+    "q": "Let $a_1 = 0$ and $a_{n+1} = \\sqrt{2 + a_n}$. Show that $(a_n)$ converges and find its limit.",
+    "steps": [
+     "<b>Bounded:</b> $a_1 < 2$, and if $a_n < 2$, then $a_{n+1} = \\sqrt{2 + a_n} < \\sqrt{4} = 2$. By induction, $a_n < 2$ for all $n$.",
+     "<b>Increasing:</b> for $0 \\le x < 2$, $x^{2} < x + 2$ (since $x^{2} - x - 2 = (x - 2)(x + 1) < 0$), so $x < \\sqrt{2 + x}$. Hence $a_n < a_{n+1}$.",
+     "So the sequence converges, to some $L$ with $0 \\le L \\le 2$. Then $L = \\sqrt{2 + L}$, so $L^{2} - L - 2 = 0$ and $L = 2$ or $L = -1$. Since $L \\ge 0$, $L = 2$."
+    ],
+    "a": "$a_n \\to 2$."
+   },
+   {
+    "t": "ex",
+    "title": "A linear recursion",
+    "q": "Let $a_1 = 0$ and $a_{n+1} = \\frac{1}{2}a_n + 3$. Find $a_2$, $a_3$ and the limit.",
+    "steps": [
+     "$a_2 = 3$, $a_3 = \\frac{9}{2}$. The terms increase and stay below $6$ (if $a_n < 6$ then $a_{n+1} < 3 + 3 = 6$).",
+     "The limit satisfies $L = \\frac{1}{2}L + 3$, so $L = 6$."
+    ],
+    "a": "$a_2 = 3$, $a_3 = \\frac{9}{2}$, limit $6$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Solving $L = g(L)$ first.</b> For $a_1 = 1$ and $a_{n+1} = 2a_n + 1$, the equation $L = 2L + 1$ gives $L = -1$, but the terms are $1, 3, 7, 15, \\ldots$: there is no limit. The equation only says what a limit would have to be. Also, when the equation has two roots, use what you proved about the terms (all $\\ge 0$, all below the smaller root, and so on) to choose the right one."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.1 (monotone sequences)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the monotone convergence theorem"
+   }
+  ]
+ },
+ "ra.subsequences": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A subsequence keeps some of the terms of a sequence, in their original order. Subsequences are the main tool for showing that a sequence does <b>not</b> converge, and they lead to the most important existence theorem about sequences in the next topic. They build on <a href=\"/math/real-analysis/squeeze-order/\">limits of sequences</a>."
+   },
+   {
+    "t": "key",
+    "html": "A <b>subsequence</b> of $(a_n)$ is $(a_{n_k})$ where $n_1 < n_2 < n_3 < \\cdots$ are positive integers. If $a_n \\to L$, every subsequence tends to $L$. So if two subsequences have different limits, $(a_n)$ diverges. A <b>subsequential limit</b> is a number some subsequence converges to."
+   },
+   {
+    "t": "why",
+    "html": "Strictly increasing indices satisfy $n_k \\ge k$ (induction: $n_1 \\ge 1$, and $n_{k+1} > n_k \\ge k$). If $a_n \\to L$ and $\\varepsilon > 0$, take $N$ with $|a_n - L| < \\varepsilon$ for $n \\ge N$. For $k \\ge N$ we have $n_k \\ge k \\ge N$, so $|a_{n_k} - L| < \\varepsilon$. $\\blacksquare$ The proof uses the increasing indices in an essential way: they guarantee that the subsequence moves out along the sequence."
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsband",
+    "opts": {
+     "f": "(-1)^n*2n/(n+1)",
+     "nmax": 40,
+     "mode": "plain",
+     "sub": [
+      2,
+      0
+     ],
+     "ymin": -2.5,
+     "ymax": 2.5
+    },
+    "cap": "$a_n = (-1)^{n}\\frac{2n}{n + 1}$, with the even terms highlighted in purple: they approach $2$, while the odd terms approach $-2$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two subsequences",
+    "q": "Show that $a_n = (-1)^{n}\\frac{2n}{n + 1}$ diverges.",
+    "steps": [
+     "Along even $n$: $a_{2k} = \\frac{4k}{2k + 1} \\to 2$.",
+     "Along odd $n$: $a_{2k+1} = -\\frac{2(2k + 1)}{2k + 2} \\to -2$."
+    ],
+    "a": "Two subsequences with different limits, so $(a_n)$ diverges."
+   },
+   {
+    "t": "ex",
+    "title": "All subsequential limits",
+    "q": "Find the set of subsequential limits of $a_n = \\cos\\left(\\frac{n\\pi}{3}\\right)$.",
+    "steps": [
+     "The values repeat with period $6$: $\\frac{1}{2}, -\\frac{1}{2}, -1, -\\frac{1}{2}, \\frac{1}{2}, 1$.",
+     "Each value occurs infinitely often, so each is the limit of a constant subsequence.",
+     "Any subsequence must eventually stay near one value (they are a fixed distance apart), so there are no others."
+    ],
+    "a": "$\\left\\{-1, -\\frac{1}{2}, \\frac{1}{2}, 1\\right\\}$"
+   },
+   {
+    "t": "ex",
+    "title": "A subsequence along a pattern",
+    "q": "Let $a_n = (-1)^{n}\\frac{3n + 1}{n + 2}$. Find the limit of $a_{4k+3}$ as $k \\to \\infty$, and decide whether $a_{3k}$ converges.",
+    "steps": [
+     "The index $4k + 3$ is always odd, so $a_{4k+3} = -\\frac{3(4k + 3) + 1}{(4k + 3) + 2} \\to -3$.",
+     "The index $3k$ is even for even $k$ and odd for odd $k$, so $a_{3k}$ itself has subsequences tending to $3$ and to $-3$: it diverges."
+    ],
+    "a": "$a_{4k+3} \\to -3$; $(a_{3k})$ diverges."
+   },
+   {
+    "t": "note",
+    "html": "The set of subsequential limits tells a lot. A bounded sequence converges exactly when this set has one element. In the next topic you will see that it is never empty for a bounded sequence, and two topics later its largest and smallest elements get names: lim sup and lim inf."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Reordering is not a subsequence.</b> $a_2, a_1, a_4, a_3, \\ldots$ uses every term but in a different order, so it is not a subsequence, and the theorem says nothing about it. The indices must strictly increase: $n_k = k^{2}$ and $n_k = 2k + 1$ are fine; $n_k = \\lceil \\frac{k}{2} \\rceil$ (which repeats indices) is not. A second slip: one subsequence converging does not make the whole sequence converge."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.1 (subsequences)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on subsequences"
+   }
+  ]
+ },
+ "ra.bolzano-weierstrass": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A bounded sequence need not converge, but it cannot avoid having some convergent piece. This theorem is the engine behind the <a href=\"/math/real-analysis/evt/\">extreme value theorem</a>, the convergence of <a href=\"/math/real-analysis/cauchy-sequences/\">Cauchy sequences</a>, and compactness. Its proof combines <a href=\"/math/real-analysis/subsequences/\">subsequences</a> with the <a href=\"/math/real-analysis/monotone-convergence/\">monotone convergence theorem</a> (through nested intervals)."
+   },
+   {
+    "t": "key",
+    "html": "<b>Bolzano–Weierstrass theorem.</b> Every bounded sequence of real numbers has a convergent subsequence."
+   },
+   {
+    "t": "why",
+    "html": "Say every term lies in $I_0 = [a, b]$. Cut $I_0$ in half. At least one half contains $a_n$ for infinitely many $n$; call it $I_1$ (if both do, take the left one). Repeat: $I_2 \\subseteq I_1$ is a half of $I_1$ holding infinitely many terms, and so on. The interval $I_k$ has length $\\frac{b - a}{2^{k}}$. Now choose indices: $n_1$ with $a_{n_1} \\in I_1$, then $n_2 > n_1$ with $a_{n_2} \\in I_2$ (possible, since $I_2$ holds infinitely many terms), and so on. The left ends of the $I_k$ increase and are bounded, so they converge to some $c$ (monotone convergence), and the right ends converge to $c$ too, since the lengths go to $0$. Both $a_{n_k}$ and $c$ lie in $I_k$, so $|a_{n_k} - c| \\le \\frac{b - a}{2^{k}} \\to 0$. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsband",
+    "opts": {
+     "f": "(17/30)+(7/30)*(-1)^n+1/(10n)",
+     "nmax": 40,
+     "mode": "plain",
+     "sub": [
+      2,
+      1
+     ],
+     "ymin": 0,
+     "ymax": 1
+    },
+    "cap": "A bounded sequence with two piles: odd terms just above $\\frac{1}{3}$, even terms just above $\\frac{4}{5}$. The bisection keeps a half that holds infinitely many terms."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Running the bisection",
+    "q": "Let $a_n = \\frac{1}{3} + \\frac{1}{10n}$ for odd $n$ and $a_n = \\frac{4}{5} + \\frac{1}{10n}$ for even $n$, all in $[0, 1]$. Keeping the left half whenever it holds infinitely many terms, find $I_3$.",
+    "steps": [
+     "The terms pile up at $\\frac{1}{3}$ and $\\frac{4}{5}$ (from above). A closed half holds infinitely many terms exactly when one of these values lies in it.",
+     "$[0, \\frac{1}{2}]$ contains $\\frac{1}{3}$: keep it. Then $[0, \\frac{1}{4}]$ does not contain $\\frac{1}{3}$ or $\\frac{4}{5}$, so keep $[\\frac{1}{4}, \\frac{1}{2}]$.",
+     "Then $[\\frac{1}{4}, \\frac{3}{8}]$ contains $\\frac{1}{3}$: keep it."
+    ],
+    "a": "$I_3 = \\left[\\frac{1}{4}, \\frac{3}{8}\\right]$, closing in on $\\frac{1}{3}$."
+   },
+   {
+    "t": "ex",
+    "title": "What the theorem promises",
+    "q": "Does $(-1)^{n}$ converge? Does it have a convergent subsequence?",
+    "steps": [
+     "It is bounded and diverges.",
+     "The constant subsequence $a_{2k} = 1$ converges."
+    ],
+    "a": "No; yes. The theorem promises a convergent subsequence, never convergence of the whole sequence."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Keeping the half with more of the early terms.</b> What matters is a half with <b>infinitely many</b> terms; any finite number of terms can be ignored. In the example, the first terms of the sequence sit near $0.43$ and $0.85$, but where they are does not decide anything. Also, the theorem needs boundedness: $a_n = n$ has no convergent subsequence."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.3 (Bolzano–Weierstrass theorem)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the Bolzano–Weierstrass theorem"
+   }
+  ]
+ },
+ "ra.limsup-liminf": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A divergent bounded sequence still has a largest and a smallest place where its terms pile up. These two numbers, the limit superior and limit inferior, always exist for bounded sequences (by <a href=\"/math/real-analysis/bolzano-weierstrass/\">Bolzano–Weierstrass</a> and completeness), and they will power the root test and the radius of convergence later."
+   },
+   {
+    "t": "key",
+    "html": "For bounded $(a_n)$, let $s_n = \\sup\\{a_k : k \\ge n\\}$ (the tail supremum) and $i_n = \\inf\\{a_k : k \\ge n\\}$. Then $\\limsup a_n = \\lim s_n$ and $\\liminf a_n = \\lim i_n$. They are the largest and the smallest subsequential limits, and $a_n$ converges exactly when $\\limsup a_n = \\liminf a_n$ (then both equal the limit)."
+   },
+   {
+    "t": "why",
+    "html": "As $n$ grows the tail $\\{a_k : k \\ge n\\}$ loses elements, so its supremum can only go down: $(s_n)$ is decreasing, and it is bounded below. By monotone convergence it has a limit. The same works for $(i_n)$, which increases. Dropping finitely many terms never changes these limits, which is why they describe the long-run behavior and ignore early outliers. If $\\limsup = \\liminf = L$, then $i_n \\le a_n \\le s_n$ and both bounds tend to $L$, so $a_n \\to L$ by the squeeze theorem."
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsband",
+    "opts": {
+     "f": "(-1)^n*(1+2/n)",
+     "nmax": 40,
+     "mode": "tails",
+     "ymin": -3.2,
+     "ymax": 2.4
+    },
+    "cap": "$a_n = (-1)^{n}\\left(1 + \\frac{2}{n}\\right)$: the red staircase is the tail suprema, falling to $\\limsup a_n = 1$; the blue one is the tail infima, rising to $\\liminf a_n = -1$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Tails of an alternating sequence",
+    "q": "For $a_n = (-1)^{n}\\left(1 + \\frac{2}{n}\\right)$, find $\\limsup a_n$, $\\liminf a_n$, $\\sup a_n$ and $s_5$.",
+    "steps": [
+     "Even $n$: $1 + \\frac{2}{n} \\to 1$ from above. Odd $n$: $-1 - \\frac{2}{n} \\to -1$ from below.",
+     "So $\\limsup a_n = 1$ and $\\liminf a_n = -1$.",
+     "The largest term overall is $a_2 = 2$, so $\\sup a_n = 2$. From $k = 5$ on, the largest term is at the first even index, $k = 6$: $s_5 = 1 + \\frac{2}{6} = \\frac{4}{3}$."
+    ],
+    "a": "$\\limsup = 1$, $\\liminf = -1$, $\\sup = 2$, $s_5 = \\frac{4}{3}$."
+   },
+   {
+    "t": "ex",
+    "title": "A sequence that cycles",
+    "q": "Find $\\limsup$ and $\\liminf$ of $a_n = (n \\bmod 3) + \\frac{1}{n}$.",
+    "steps": [
+     "The remainders cycle $1, 2, 0, 1, 2, 0, \\ldots$, and $\\frac{1}{n} \\to 0$.",
+     "The subsequential limits are $0$, $1$ and $2$."
+    ],
+    "a": "$\\limsup = 2$, $\\liminf = 0$."
+   },
+   {
+    "t": "note",
+    "html": "For an unbounded sequence one writes $\\limsup a_n = \\infty$ when the terms are not bounded above. The examples in this course are bounded, so both numbers are finite."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Confusing $\\sup$ with $\\limsup$.</b> The supremum of all the terms can be an early term that is never approached again, like $a_2 = 2$ above. The lim sup forgets any finite number of terms: it is where the tail suprema end up. Check by asking: do infinitely many terms come close to this value?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.3 (limit superior and limit inferior)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 4.1 (limits superior and inferior)"
+   }
+  ]
+ },
+ "ra.cauchy-sequences": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "To use the definition of a limit you must already know the limit $L$. Cauchy's idea removes $L$: a sequence should converge when its terms get close <b>to each other</b>. In $\\mathbb{R}$ that idea is exactly right, thanks to <a href=\"/math/real-analysis/bolzano-weierstrass/\">Bolzano–Weierstrass</a>, and it is how we will handle series, whose sums are usually unknown."
+   },
+   {
+    "t": "key",
+    "html": "$(a_n)$ is <b>Cauchy</b> when for every $\\varepsilon > 0$ there is an $N$ with $|a_m - a_n| < \\varepsilon$ for <b>all</b> $m, n \\ge N$. <b>Theorem.</b> A sequence of real numbers converges if and only if it is Cauchy."
+   },
+   {
+    "t": "why",
+    "html": "<b>Convergent implies Cauchy:</b> if $a_n \\to L$, choose $N$ with $|a_n - L| < \\frac{\\varepsilon}{2}$ for $n \\ge N$; then $|a_m - a_n| \\le |a_m - L| + |L - a_n| < \\varepsilon$. <b>Cauchy implies convergent:</b> a Cauchy sequence is bounded (use $\\varepsilon = 1$ as for convergent sequences). By Bolzano–Weierstrass some subsequence $a_{n_k} \\to L$. Given $\\varepsilon > 0$, take $N$ from the Cauchy condition with $\\frac{\\varepsilon}{2}$, and some $n_k \\ge N$ with $|a_{n_k} - L| < \\frac{\\varepsilon}{2}$. For $n \\ge N$: $|a_n - L| \\le |a_n - a_{n_k}| + |a_{n_k} - L| < \\varepsilon$. $\\blacksquare$ In $\\mathbb{Q}$ the second half fails: the decimal truncations $1, 1.4, 1.41, 1.414, \\ldots$ of $\\sqrt{2}$ are Cauchy, with no rational limit."
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsband",
+    "opts": {
+     "f": "3/n",
+     "mode": "cauchy",
+     "eps": 0.1,
+     "N": 20,
+     "nmax": 60
+    },
+    "cap": "Cauchy mode for $a_n = \\frac{3}{n}$: the shaded strip shows how far apart the terms from $N$ on can be. It must be narrower than $\\varepsilon$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Finding $N$ for a Cauchy sequence",
+    "q": "For $a_n = \\frac{3}{n}$ and $\\varepsilon = 0.1$, find the smallest $N$ with $|a_m - a_n| < \\varepsilon$ for all $m, n \\ge N$.",
+    "steps": [
+     "For $m, n \\ge N$: $|a_m - a_n| = 3\\left|\\frac{1}{m} - \\frac{1}{n}\\right| < \\frac{3}{N}$, and taking $m = N$ and $n$ huge comes as close to $\\frac{3}{N}$ as you like.",
+     "So every pair is within $0.1$ exactly when $\\frac{3}{N} \\le 0.1$, that is, $N \\ge 30$."
+    ],
+    "a": "$N = 30$ (or any larger $N$)."
+   },
+   {
+    "t": "ex",
+    "title": "Neighbors close, but not Cauchy",
+    "q": "Is $H_n = 1 + \\frac{1}{2} + \\cdots + \\frac{1}{n}$ Cauchy?",
+    "steps": [
+     "$H_{2n} - H_n = \\frac{1}{n + 1} + \\cdots + \\frac{1}{2n}$ has $n$ terms, each at least $\\frac{1}{2n}$, so it is at least $\\frac{1}{2}$.",
+     "For $\\varepsilon = \\frac{1}{2}$, no $N$ works (take $m = 2n$ with $n \\ge N$)."
+    ],
+    "a": "No, so $H_n$ diverges, even though $H_{n+1} - H_n = \\frac{1}{n + 1} \\to 0$."
+   },
+   {
+    "t": "note",
+    "html": "For a series $\\sum a_k$, the difference of two partial sums is a block $a_{m+1} + \\cdots + a_n$. So \"the partial sums are Cauchy\" says \"far-out blocks are small,\" with no need to know the sum. That is the Cauchy criterion of the next unit."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Checking only consecutive terms.</b> \"$|a_{n+1} - a_n| \\to 0$, so the sequence is Cauchy\" is false: the harmonic sums above and $\\sqrt{n}$ are counterexamples. The Cauchy condition is about every pair $m, n \\ge N$, however far apart. Check with pairs like $(n, 2n)$ or $(n, 4n)$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.4 (Cauchy sequences)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on Cauchy sequences and completeness"
+   }
+  ]
+ },
+ "ra.series-cauchy": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A series $\\sum a_k$ is a sequence in disguise: its partial sums $s_n = a_1 + \\cdots + a_n$. You met partial sums in <a href=\"/math/calculus-2/series-partial-sums/\">Calculus 2</a>. Since we rarely know the sum of a series in advance, the right tool is the <a href=\"/math/real-analysis/cauchy-sequences/\">Cauchy condition</a>, which talks only about the terms."
+   },
+   {
+    "t": "key",
+    "html": "$\\sum a_k$ <b>converges</b> to $S$ when $s_n \\to S$. <b>Cauchy criterion:</b> $\\sum a_k$ converges if and only if for every $\\varepsilon > 0$ there is an $N$ with $|a_{m+1} + a_{m+2} + \\cdots + a_n| < \\varepsilon$ whenever $n > m \\ge N$. Taking $n = m + 1$ shows that a convergent series has $a_k \\to 0$."
+   },
+   {
+    "t": "why",
+    "html": "The block $a_{m+1} + \\cdots + a_n$ is exactly $s_n - s_m$. So \"far-out blocks are small\" is the statement \"the partial sums form a Cauchy sequence,\" which in $\\mathbb{R}$ is the same as \"the partial sums converge.\" The criterion is useful because blocks can often be estimated even when the sum is unknown, as in $\\sum \\frac{1}{k^{2}}$: comparing with the telescoping $\\frac{1}{k - 1} - \\frac{1}{k}$ gives $s_n - s_m < \\frac{1}{m}$, which is small for large $m$. So $\\sum \\frac{1}{k^{2}}$ converges, and we never needed its sum ($\\frac{\\pi^{2}}{6}$)."
+   },
+   {
+    "t": "p",
+    "html": "The same criterion explains the classic divergence. For the harmonic series, the block $\\frac{1}{n + 1} + \\cdots + \\frac{1}{2n}$ has $n$ terms, each at least $\\frac{1}{2n}$, so it is at least $\\frac{1}{2}$ no matter how far out it starts. The criterion fails for $\\varepsilon = \\frac{1}{2}$, so the series diverges even though its terms go to $0$."
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "1/n^2",
+     "N": 12,
+     "limit": "pi^2/6",
+     "presets": true
+    },
+    "cap": "Partial sums of $\\sum \\frac{1}{k^{2}}$ settle down; switch to the harmonic series to see sums that keep creeping up."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A telescoping series",
+    "q": "Find $s_n$ and the sum for $\\sum_{k=1}^{\\infty} \\frac{1}{k(k + 1)}$, and the smallest $n$ with $S - s_n < 0.01$.",
+    "steps": [
+     "$\\frac{1}{k(k + 1)} = \\frac{1}{k} - \\frac{1}{k + 1}$, so the sum telescopes: $s_n = 1 - \\frac{1}{n + 1}$.",
+     "$s_n \\to 1$, so $S = 1$ and $S - s_n = \\frac{1}{n + 1}$.",
+     "$\\frac{1}{n + 1} < 0.01$ means $n + 1 > 100$, so $n \\ge 100$."
+    ],
+    "a": "$s_n = 1 - \\frac{1}{n + 1}$, $S = 1$, and $n = 100$ (or more)."
+   },
+   {
+    "t": "ex",
+    "title": "A geometric tail",
+    "q": "For $\\sum_{k=1}^{\\infty} \\left(\\frac{1}{2}\\right)^{k} = 1$, how many terms make the error less than $0.001$?",
+    "steps": [
+     "The tail after $n$ terms is $\\sum_{k > n} \\left(\\frac{1}{2}\\right)^{k} = \\left(\\frac{1}{2}\\right)^{n}$.",
+     "$\\frac{1}{2^{n}} < 0.001$ means $2^{n} > 1000$, so $n \\ge 10$ ($2^{10} = 1024$)."
+    ],
+    "a": "$10$ terms."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>\"The terms go to $0$, so the series converges.\"</b> That is the most common series error. $a_k \\to 0$ is necessary (it is the Cauchy criterion with blocks of one term), but not sufficient: $\\sum \\frac{1}{k}$ has terms going to $0$ and diverges, because long blocks do not get small. Use $a_k \\to 0$ only to prove <b>divergence</b>: if the terms do not go to $0$, the series diverges."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.5 (series; Cauchy series)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on series"
+   }
+  ]
+ },
+ "ra.absolute-convergence": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Series with terms of both signs are harder: cancellation can help or hide what is going on. The <a href=\"/math/real-analysis/series-cauchy/\">Cauchy criterion</a> gives a clean way to compare a series with a simpler one, and it proves the fact you used in <a href=\"/math/calculus-2/absolute-conditional/\">Calculus 2</a> that absolutely convergent series converge."
+   },
+   {
+    "t": "key",
+    "html": "<b>Comparison test.</b> If $|a_k| \\le b_k$ for all $k$ and $\\sum b_k$ converges, then $\\sum a_k$ converges (absolutely). If $0 \\le b_k \\le a_k$ and $\\sum b_k$ diverges, then $\\sum a_k$ diverges. <b>Absolute convergence:</b> if $\\sum |a_k|$ converges, then $\\sum a_k$ converges. A series that converges but not absolutely converges <b>conditionally</b>."
+   },
+   {
+    "t": "why",
+    "html": "Let $\\varepsilon > 0$. Since $\\sum b_k$ converges, by the Cauchy criterion there is an $N$ with $b_{m+1} + \\cdots + b_n < \\varepsilon$ for $n > m \\ge N$. By the triangle inequality, $$|a_{m+1} + \\cdots + a_n| \\le |a_{m+1}| + \\cdots + |a_n| \\le b_{m+1} + \\cdots + b_n < \\varepsilon.$$ So $\\sum a_k$ satisfies the Cauchy criterion and converges. $\\blacksquare$ Absolute convergence is the special case $b_k = |a_k|$. Notice what the proof needs: a convergent series <b>above</b> the absolute values. Being below a divergent series, or above a convergent one, gives nothing to work with."
+   },
+   {
+    "t": "p",
+    "html": "In practice, finding the comparison series is the whole skill. Look at the terms for large $k$ and keep only the dominant parts: $\\frac{k + 2}{k^{3} + 4}$ behaves like $\\frac{k}{k^{3}} = \\frac{1}{k^{2}}$, so compare with $\\frac{C}{k^{2}}$. You do not need the best constant $C$, only one that works for all $k$ (or for all $k$ past some point, since finitely many terms never affect convergence). Bounded factors such as $\\sin k$, $\\cos k$ or $(-1)^{k}$ can be replaced by $1$ inside absolute values, which is why $\\sum \\frac{\\sin k}{k^{2}}$ converges absolutely with no further work."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Comparing with a $p$-series",
+    "q": "Show that $\\sum \\frac{k + 2}{k^{3} + 4}$ converges by finding the smallest $C$ with $\\frac{k + 2}{k^{3} + 4} \\le \\frac{C}{k^{2}}$ for all $k \\ge 1$.",
+    "steps": [
+     "We need $C \\ge \\frac{k^{2}(k + 2)}{k^{3} + 4} = 1 + \\frac{2k^{2} - 4}{k^{3} + 4}$ for every $k$.",
+     "The values for $k = 1, 2, 3, 4$ are $\\frac{3}{5}$, $\\frac{4}{3}$, $\\frac{45}{31}$, $\\frac{96}{68} = \\frac{24}{17}$; after $k = 3$ the fraction $\\frac{2k^{2} - 4}{k^{3} + 4}$ keeps shrinking.",
+     "So $C = \\frac{45}{31}$, and $\\sum \\frac{C}{k^{2}}$ converges."
+    ],
+    "a": "$C = \\frac{45}{31}$; the series converges (absolutely)."
+   },
+   {
+    "t": "ex",
+    "title": "Absolutely, conditionally, or not at all",
+    "q": "Classify $\\sum \\frac{(-1)^{k}}{\\sqrt{k}}$, $\\sum \\frac{\\sin k}{k^{2}}$ and $\\sum (-1)^{k}\\frac{k}{k + 1}$.",
+    "steps": [
+     "$\\sum \\frac{1}{\\sqrt{k}}$ diverges ($p = \\frac{1}{2}$), but the alternating series test gives convergence: conditional.",
+     "$\\left|\\frac{\\sin k}{k^{2}}\\right| \\le \\frac{1}{k^{2}}$: absolute.",
+     "The terms do not go to $0$: divergent."
+    ],
+    "a": "Conditional; absolute; divergent."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Comparing in the wrong direction.</b> \"$0 \\le a_k \\le \\frac{1}{k}$ and $\\sum \\frac{1}{k}$ diverges, so $\\sum a_k$ diverges\" is invalid: $a_k = \\frac{1}{k^{2}}$ satisfies the hypothesis and converges. Before using a comparison, say which way it points: smaller than convergent, or bigger than divergent (with nonnegative terms). Also, the comparison must use absolute values when $a_k$ can be negative."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.5 (absolute convergence, comparison test)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on absolute convergence"
+   }
+  ]
+ },
+ "ra.condensation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "For a decreasing sequence of positive terms, you can learn whether $\\sum a_n$ converges by sampling it only at powers of $2$. This test is a neat application of <a href=\"/math/real-analysis/absolute-convergence/\">comparison</a> and settles the $p$-series without integrals."
+   },
+   {
+    "t": "key",
+    "html": "<b>Cauchy condensation test.</b> If $a_n \\ge 0$ and $(a_n)$ is decreasing, then $\\sum_{n=1}^{\\infty} a_n$ converges if and only if $\\sum_{k=0}^{\\infty} 2^{k} a_{2^{k}}$ converges. Moreover $\\sum a_n \\le \\sum 2^{k} a_{2^{k}}$."
+   },
+   {
+    "t": "why",
+    "html": "Group the terms in blocks of doubling length: $a_1$, then $a_2 + a_3$, then $a_4 + \\cdots + a_7$, and so on; block $k$ is $a_{2^{k}} + \\cdots + a_{2^{k+1} - 1}$, with $2^{k}$ terms. Because the terms decrease, each term of block $k$ is at most $a_{2^{k}}$ and at least $a_{2^{k+1}}$. So $$2^{k} a_{2^{k+1}} \\le \\text{block}_k \\le 2^{k} a_{2^{k}}.$$ Summing the right inequality gives $\\sum a_n \\le \\sum 2^{k} a_{2^{k}}$; summing the left one gives $\\frac{1}{2}\\sum_{k \\ge 1} 2^{k} a_{2^{k}} \\le \\sum a_n$. So the two series converge or diverge together. $\\blacksquare$"
+   },
+   {
+    "t": "p",
+    "html": "For the $p$-series, $2^{k} a_{2^{k}} = 2^{k}(2^{k})^{-p} = (2^{1 - p})^{k}$, a geometric series with ratio $2^{1 - p}$. It converges exactly when $2^{1 - p} < 1$, that is, $p > 1$. For $a_n = \\frac{1}{n(\\ln n)^{p}}$, $2^{k} a_{2^{k}} = \\frac{1}{(k \\ln 2)^{p}}$, a constant times a $p$-series in $k$: it converges exactly when $p > 1$. So $\\sum \\frac{1}{n \\ln n}$ diverges, extremely slowly."
+   },
+   {
+    "t": "p",
+    "html": "Why does sampling at powers of $2$ help? A decreasing sequence changes slowly, so all the terms between $2^{k}$ and $2^{k+1}$ are about the same size as $a_{2^{k}}$; there are $2^{k}$ of them, so the block is about $2^{k}a_{2^{k}}$. Condensing turns a series whose terms shrink like a power of $n$ into one whose terms shrink geometrically, or not at all, and geometric behavior is easy to judge. It also explains logarithms: substituting $n = 2^{k}$ turns $\\ln n$ into $k \\ln 2$, so one layer of logarithm becomes a power of $k$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The ratio of the condensed series",
+    "q": "Apply condensation to $\\sum \\frac{1}{n^{3/2}}$.",
+    "steps": [
+     "$2^{k} a_{2^{k}} = \\frac{2^{k}}{2^{3k/2}} = \\left(2^{-1/2}\\right)^{k}$.",
+     "The ratio is $2^{-1/2} = \\frac{\\sqrt{2}}{2} \\approx 0.707 < 1$."
+    ],
+    "a": "Geometric with ratio $\\frac{\\sqrt{2}}{2}$, so the series converges."
+   },
+   {
+    "t": "ex",
+    "title": "A bound for a sum",
+    "q": "Use $\\sum a_n \\le \\sum_{k \\ge 0} 2^{k} a_{2^{k}}$ to bound $\\sum \\frac{1}{n^{2}}$.",
+    "steps": [
+     "$2^{k} a_{2^{k}} = 2^{k} \\cdot 2^{-2k} = \\left(\\frac{1}{2}\\right)^{k}$.",
+     "$\\sum_{k \\ge 0} \\left(\\frac{1}{2}\\right)^{k} = 2$."
+    ],
+    "a": "$\\sum \\frac{1}{n^{2}} \\le 2$ (the true value is $\\frac{\\pi^{2}}{6} \\approx 1.645$)."
+   },
+   {
+    "t": "ex",
+    "title": "Logarithms in the denominator",
+    "q": "Write the condensed term of $\\sum_{n \\ge 2} \\frac{1}{n (\\ln n)^{2}}$.",
+    "steps": [
+     "$a_{2^{k}} = \\frac{1}{2^{k}(\\ln 2^{k})^{2}} = \\frac{1}{2^{k} k^{2} (\\ln 2)^{2}}$.",
+     "Multiply by $2^{k}$: $\\frac{1}{(\\ln 2)^{2} k^{2}}$."
+    ],
+    "a": "$\\frac{1}{(\\ln 2)^{2} k^{2}}$: a convergent $p$-series, so the original series converges."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Dropping the factor $2^{k}$, or ignoring \"decreasing.\"</b> The condensed series is $\\sum 2^{k} a_{2^{k}}$, not $\\sum a_{2^{k}}$; without the factor, $\\sum \\frac{1}{n}$ would seem to condense to the convergent $\\sum \\frac{1}{2^{k}}$. And the test needs decreasing terms: a sequence that is $0$ at the powers of $2$ and $\\frac{1}{n}$ elsewhere has condensed series $0$ but diverges."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.5 (Cauchy condensation, in the exercises)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100B Analysis I, problem sets on series tests"
+   }
+  ]
+ },
+ "ra.root-ratio-limsup": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The ratio and root tests from <a href=\"/math/calculus-2/ratio-root-tests/\">Calculus 2</a> used ordinary limits. Many series have ratios or roots that jump around and have no limit. Replacing \"lim\" by <a href=\"/math/real-analysis/limsup-liminf/\">lim sup</a> fixes the root test completely, and the proof is a comparison with a geometric series, using <a href=\"/math/real-analysis/absolute-convergence/\">absolute convergence</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Root test.</b> Let $\\rho = \\limsup |a_k|^{1/k}$. If $\\rho < 1$, $\\sum a_k$ converges absolutely; if $\\rho > 1$, it diverges. <b>Ratio test.</b> If $\\limsup \\left|\\frac{a_{k+1}}{a_k}\\right| < 1$, the series converges absolutely; if $\\liminf \\left|\\frac{a_{k+1}}{a_k}\\right| > 1$, it diverges. A value of exactly $1$ decides nothing."
+   },
+   {
+    "t": "why",
+    "html": "Suppose $\\rho < 1$ and pick $r$ with $\\rho < r < 1$. Because the tail suprema of $|a_k|^{1/k}$ decrease to $\\rho$, eventually $|a_k|^{1/k} < r$, that is, $|a_k| < r^{k}$ for all $k \\ge K$. Comparing with the convergent geometric series $\\sum r^{k}$ gives absolute convergence. If $\\rho > 1$, then $|a_k|^{1/k} > 1$ for infinitely many $k$, so $|a_k| > 1$ infinitely often and $a_k \\not\\to 0$: divergence. $\\blacksquare$ The root test is stronger than the ratio test: whenever the ratio test decides, the root test agrees, but not conversely."
+   },
+   {
+    "t": "p",
+    "html": "Computing $\\limsup |a_k|^{1/k}$ usually comes down to three facts: $k^{1/k} \\to 1$ (so polynomial factors disappear), $c^{1/k} \\to 1$ for any constant $c > 0$, and $(r^{k})^{1/k} = r$. For instance $\\left(k^{5}\\left(\\frac{1}{3}\\right)^{k}\\right)^{1/k} = \\left(k^{1/k}\\right)^{5}\\cdot\\frac{1}{3} \\to \\frac{1}{3}$, so $\\sum k^{5}3^{-k}$ converges. When the terms follow different rules on different kinds of $k$, take the root of each kind; the lim sup is the largest of the limits you get."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Ratios that jump",
+    "q": "Let $a_k = 2^{-k + (-1)^{k}}$. Compute the lim sup and lim inf of the ratios, and $\\lim |a_k|^{1/k}$.",
+    "steps": [
+     "Even $k$: $a_k = 2^{-k+1}$, $a_{k+1} = 2^{-k-2}$, ratio $2^{-3} = \\frac{1}{8}$. Odd $k$: $a_k = 2^{-k-1}$, $a_{k+1} = 2^{-k}$, ratio $2$.",
+     "So $\\limsup$ of the ratios is $2$ and $\\liminf$ is $\\frac{1}{8}$: the ratio test cannot decide.",
+     "$|a_k|^{1/k} = 2^{-1 + (-1)^{k}/k} \\to \\frac{1}{2}$."
+    ],
+    "a": "Ratios: $2$ and $\\frac{1}{8}$; roots tend to $\\frac{1}{2} < 1$, so the series converges."
+   },
+   {
+    "t": "ex",
+    "title": "Two geometric series interleaved",
+    "q": "Let $a_k = \\left(\\frac{1}{2}\\right)^{k}$ for even $k$ and $a_k = \\left(\\frac{2}{3}\\right)^{k}$ for odd $k$. Find $\\limsup |a_k|^{1/k}$.",
+    "steps": [
+     "The $k$th roots are $\\frac{1}{2}$ (even $k$) and $\\frac{2}{3}$ (odd $k$)."
+    ],
+    "a": "$\\frac{2}{3} < 1$: the series converges absolutely."
+   },
+   {
+    "t": "ex",
+    "title": "A limit that involves $e$",
+    "q": "Find $\\lim |a_k|^{1/k}$ for $a_k = \\left(\\frac{k}{k + 1}\\right)^{k^{2}}$.",
+    "steps": [
+     "$|a_k|^{1/k} = \\left(\\frac{k}{k + 1}\\right)^{k} = \\left(1 + \\frac{1}{k}\\right)^{-k}$."
+    ],
+    "a": "$\\frac{1}{e} < 1$, so the series converges."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using \"lim\" when it does not exist, or reading $1$ as divergence.</b> In the first example the ratios have no limit, and a student who insists on $\\lim \\frac{a_{k+1}}{a_k}$ gets stuck. Use lim sup. And when $\\limsup |a_k|^{1/k} = 1$, both $\\sum \\frac{1}{k}$ (divergent) and $\\sum \\frac{1}{k^{2}}$ (convergent) are possible: switch tests."
+   },
+   {
+    "t": "note",
+    "html": "The ratio test is easier to compute when the terms contain factorials, since $\\frac{(k + 1)!}{k!} = k + 1$ cancels so neatly. The price is that it needs the ratios to behave; the root test needs nothing but the size of the terms. When the ratios do have a limit, the roots have the same limit, so the two tests then agree."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.6 (root test and ratio test)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 4.3"
+   }
+  ]
+ },
+ "ra.alternating-series": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Alternating series converge for a very visual reason: the partial sums zigzag, and the zigzags shrink. You used the test in <a href=\"/math/calculus-2/alternating-series/\">Calculus 2</a>; here we prove it with nested intervals and the <a href=\"/math/real-analysis/series-cauchy/\">Cauchy criterion</a>, and get a sharp error bound for free."
+   },
+   {
+    "t": "key",
+    "html": "<b>Alternating series test.</b> If $b_k$ decreases and $b_k \\to 0$, then $S = \\sum_{k=1}^{\\infty} (-1)^{k+1} b_k$ converges, $S$ lies between any two consecutive partial sums, and $|S - s_n| < b_{n+1}$ (when $b_k$ strictly decreases)."
+   },
+   {
+    "t": "why",
+    "html": "The even partial sums increase: $s_{2m+2} = s_{2m} + (b_{2m+1} - b_{2m+2}) \\ge s_{2m}$. The odd partial sums decrease: $s_{2m+1} = s_{2m-1} - (b_{2m} - b_{2m+1}) \\le s_{2m-1}$. And every even sum is below every odd sum. So the even sums increase and are bounded above, hence converge, and the odd sums decrease to a limit too; their difference $s_{2m+1} - s_{2m} = b_{2m+1} \\to 0$, so the limits agree. Call it $S$. Since $S$ sits between $s_n$ and $s_{n+1}$, its distance from $s_n$ is less than $|s_{n+1} - s_n| = b_{n+1}$. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "(-1)^(n+1)/n",
+     "N": 8,
+     "limit": "ln(2)",
+     "view": "walk"
+    },
+    "cap": "The alternating harmonic series on a number line: each step goes the other way and is shorter, so the sum is trapped between consecutive partial sums."
+   },
+   {
+    "t": "p",
+    "html": "The error bound is one of the few in analysis that you get completely free: no derivatives to estimate, just the next term. It also tells you the sign of the error. If the last term you added was positive, you have overshot, and $s_n > S$; if it was negative, $s_n < S$. Averaging two consecutive partial sums is often much closer to $S$ than either one, because the true sum sits between them."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "How many terms are enough?",
+    "q": "How many terms of $\\sum (-1)^{k+1}\\frac{1}{k^{2}}$ guarantee an error below $0.001$?",
+    "steps": [
+     "The error after $n$ terms is less than $b_{n+1} = \\frac{1}{(n + 1)^{2}}$.",
+     "$\\frac{1}{(n + 1)^{2}} < 0.001$ means $(n + 1)^{2} > 1000$, so $n + 1 \\ge 32$."
+    ],
+    "a": "$n = 31$ terms (or more)."
+   },
+   {
+    "t": "ex",
+    "title": "Above or below?",
+    "q": "For $\\sum (-1)^{k+1}\\frac{1}{k}$, is $s_5$ above or below the sum?",
+    "steps": [
+     "The fifth term is $+\\frac{1}{5}$: adding it overshoots."
+    ],
+    "a": "Above. Odd partial sums lie above $S$, even ones below."
+   },
+   {
+    "t": "ex",
+    "title": "Trapping the sum",
+    "q": "Compute $s_3$ and $s_4$ for $\\sum (-1)^{k+1}\\frac{1}{k^{2}}$ and give the interval that must contain $S$.",
+    "steps": [
+     "$s_3 = 1 - \\frac{1}{4} + \\frac{1}{9} = \\frac{31}{36}$ and $s_4 = \\frac{31}{36} - \\frac{1}{16} = \\frac{115}{144}$."
+    ],
+    "a": "$S \\in \\left(\\frac{115}{144}, \\frac{31}{36}\\right) \\approx (0.799, 0.861)$. (In fact $S = \\frac{\\pi^{2}}{12} \\approx 0.822$.)"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>The error bound uses the next term.</b> After $n$ terms, the bound is $b_{n+1}$, the first term left out, not $b_n$. Also check the hypotheses: if $b_k$ is not decreasing (say $\\frac{1}{k}$ for odd $k$ and $\\frac{1}{k^{2}}$ for even $k$), the series can diverge even though $b_k \\to 0$ and the signs alternate."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.6 (alternating series)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on alternating series"
+   }
+  ]
+ },
+ "ra.rearrangements": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "For finite sums, the order of the terms never matters. For series it can. Whether it does depends on the difference between <a href=\"/math/real-analysis/absolute-convergence/\">absolute</a> and conditional convergence, and the <a href=\"/math/real-analysis/alternating-series/\">alternating harmonic series</a> is the standard example."
+   },
+   {
+    "t": "key",
+    "html": "If $\\sum a_k$ converges <b>absolutely</b>, every rearrangement converges to the same sum. If $\\sum a_k$ converges <b>conditionally</b>, then for every real number $T$ some rearrangement converges to $T$ (Riemann's rearrangement theorem), and others diverge."
+   },
+   {
+    "t": "why",
+    "html": "<b>Conditional case.</b> Split the terms into positives and negatives. Both parts must diverge: if one converged, the other would equal the original series minus it and converge too, making the series absolutely convergent. So we have an unlimited supply of positive terms and of negative terms, each going to $0$. To reach $T$: add positive terms until the sum first exceeds $T$, then negative terms until it first drops below $T$, and repeat. Each overshoot is at most the last term used, and those terms go to $0$, so the partial sums converge to $T$. <b>Absolute case.</b> Given $\\varepsilon > 0$, choose $N$ with $\\sum_{k > N} |a_k| < \\varepsilon$. Far enough out, a rearrangement has used all of $a_1, \\ldots, a_N$, and what remains is made of terms beyond $N$, whose total size is less than $\\varepsilon$. So the rearranged sums end up within $\\varepsilon$ of the original sum."
+   },
+   {
+    "t": "p",
+    "html": "A famous case: taking two positive terms, then one negative, $1 + \\frac{1}{3} - \\frac{1}{2} + \\frac{1}{5} + \\frac{1}{7} - \\frac{1}{4} + \\cdots$, gives $\\frac{3}{2}\\ln 2$ instead of $\\ln 2$. In general, $p$ positive terms then $q$ negative terms give $\\ln 2 + \\frac{1}{2}\\ln\\frac{p}{q}$."
+   },
+   {
+    "t": "viz",
+    "name": "seriespartial",
+    "opts": {
+     "a": "(-1)^(n+1)/n",
+     "N": 20,
+     "limit": "ln(2)",
+     "view": "plot"
+    },
+    "cap": "The alternating harmonic series in its original order settles at $\\ln 2 \\approx 0.693$. A different order of the same terms settles somewhere else."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A rearranged partial sum",
+    "q": "Find the sum of the first $6$ terms of $1 + \\frac{1}{3} - \\frac{1}{2} + \\frac{1}{5} + \\frac{1}{7} - \\frac{1}{4} + \\cdots$.",
+    "steps": [
+     "$1 + \\frac{1}{3} - \\frac{1}{2} = \\frac{5}{6}$, and $\\frac{1}{5} + \\frac{1}{7} - \\frac{1}{4} = \\frac{13}{140}$.",
+     "Total: $\\frac{5}{6} + \\frac{13}{140} = \\frac{389}{420} \\approx 0.926$, already well above $\\ln 2 \\approx 0.693$."
+    ],
+    "a": "$\\frac{389}{420}$"
+   },
+   {
+    "t": "ex",
+    "title": "Riemann's method for a target",
+    "q": "To rearrange $1 - \\frac{1}{2} + \\frac{1}{3} - \\cdots$ toward $T = \\frac{3}{2}$, how many positive terms come first?",
+    "steps": [
+     "Running sums: $1$, then $1.333$, then $1.533$.",
+     "The sum first exceeds $1.5$ after three positive terms."
+    ],
+    "a": "$3$; then negative terms are added until the sum drops below $1.5$ again."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Assuming addition is always commutative.</b> Rearranging the terms of a conditionally convergent series can change its sum, or make it diverge. Before reordering or regrouping an infinite sum in a proof, check absolute convergence: for $\\sum \\frac{(-1)^{k+1}}{k^{2}}$ any order gives $\\frac{\\pi^{2}}{12}$, for $\\sum \\frac{(-1)^{k+1}}{k}$ it does not."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.6 (rearrangements)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100B Analysis I, lecture notes on rearrangements of series"
+   }
+  ]
+ },
+ "ra.function-limits": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You met the ε–δ definition of a limit in <a href=\"/math/calculus-1/epsilon-delta/\">Calculus 1</a>. It is the same idea as the <a href=\"/math/real-analysis/sequence-limit/\">ε–N definition</a>, with \"far enough out in the sequence\" replaced by \"close enough to $a$.\" This time we treat it as a working tool: given $\\varepsilon$, find a $\\delta$ and check it."
+   },
+   {
+    "t": "key",
+    "html": "$\\lim_{x \\to a} f(x) = L$ means: <b>for every $\\varepsilon > 0$ there is a $\\delta > 0$ such that $|f(x) - L| < \\varepsilon$ whenever $0 < |x - a| < \\delta$</b> (and $x$ is in the domain). If a $\\delta$ works, so does every smaller positive $\\delta$. The condition $0 < |x - a|$ means the value $f(a)$, if any, plays no role."
+   },
+   {
+    "t": "why",
+    "html": "The $\\varepsilon$ is a horizontal band around $L$; $\\delta$ is a vertical window around $a$. The definition asks that the graph over the window (with the point $x = a$ removed) stays inside the band. Narrowing the window can only remove points, so it never breaks the condition, which is why any smaller $\\delta$ works. The largest $\\delta$ that works is set by the nearest place where the graph leaves the band."
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsdelta",
+    "opts": {
+     "f": "x^2",
+     "a": 2,
+     "eps": 0.5,
+     "delta": 0.3
+    },
+    "cap": "The ε–δ box for $f(x) = x^{2}$ at $a = 2$. The part of the graph over the δ-window is green inside the ε-band and red where it escapes. Press \"Largest δ,\" then shrink ε and watch δ shrink too."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A line",
+    "q": "For $f(x) = 3x - 1$, $\\lim_{x \\to 2} f(x) = 5$. Find the largest $\\delta$ for $\\varepsilon = 0.06$.",
+    "steps": [
+     "$|f(x) - 5| = |3x - 6| = 3|x - 2|$.",
+     "$3|x - 2| < 0.06$ exactly when $|x - 2| < 0.02$."
+    ],
+    "a": "$\\delta = 0.02$; any $\\delta$ with $0 < \\delta \\le 0.02$ works."
+   },
+   {
+    "t": "ex",
+    "title": "A removable hole",
+    "q": "$f(x) = \\frac{x^{2} - 9}{x - 3}$ for $x \\ne 3$. Find a $\\delta$ for $\\varepsilon = 0.01$ at $a = 3$, where the limit is $6$.",
+    "steps": [
+     "For $x \\ne 3$, $f(x) = x + 3$, so $|f(x) - 6| = |x - 3|$.",
+     "This is less than $0.01$ exactly when $|x - 3| < 0.01$."
+    ],
+    "a": "$\\delta = 0.01$. The point $x = 3$ itself is excluded by $0 < |x - 3|$, which is lucky: $f(3)$ is undefined."
+   },
+   {
+    "t": "ex",
+    "title": "The square root, where the sides differ",
+    "q": "For $f(x) = \\sqrt{x}$ at $a = 9$ (limit $3$) and $\\varepsilon = 0.1$, find the largest $\\delta$.",
+    "steps": [
+     "$|\\sqrt{x} - 3| < 0.1$ means $2.9 < \\sqrt{x} < 3.1$, that is, $8.41 < x < 9.61$.",
+     "The distances from $9$ to the ends are $0.59$ (left) and $0.61$ (right).",
+     "A symmetric window must fit inside $(8.41, 9.61)$, so it can reach only $0.59$."
+    ],
+    "a": "$\\delta = 0.59$, set by the steeper side."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>\"The δ.\"</b> There is no single correct $\\delta$: the definition asks for some $\\delta$, and if one works, all smaller positive ones do too. A second slip is a $\\delta$ that depends on $x$, like \"$\\delta = \\frac{\\varepsilon}{|x + 2|}$\": the window must be chosen before you look at individual points. Check a proposed $\\delta$ by testing points near both ends of the window, on both sides of $a$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 3.1 (limits of functions)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on limits of functions"
+   }
+  ]
+ },
+ "ra.continuity": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Continuity at a point is the <a href=\"/math/real-analysis/function-limits/\">ε–δ limit</a> with the hole filled in: the limit exists and equals the value. Writing the proofs teaches one trick you will use constantly, the \"min with $1$,\" which restricts $x$ before bounding the rest of the expression."
+   },
+   {
+    "t": "key",
+    "html": "$f$ is <b>continuous at $a$</b> when for every $\\varepsilon > 0$ there is a $\\delta > 0$ with $|f(x) - f(a)| < \\varepsilon$ whenever $|x - a| < \\delta$. For $f(x) = x^{2}$: $|x^{2} - a^{2}| = |x - a|\\,|x + a|$; if $|x - a| < 1$ then $|x + a| < 2|a| + 1$, so $\\delta = \\min\\left(1, \\frac{\\varepsilon}{2|a| + 1}\\right)$ works."
+   },
+   {
+    "t": "why",
+    "html": "The factor $|x - a|$ will be small; the trouble is the other factor $|x + a|$, which depends on $x$. Restricting $x$ to within $1$ of $a$ caps it: $$|x + a| = |(x - a) + 2a| \\le |x - a| + 2|a| < 1 + 2|a|.$$ Now both conditions together, $|x - a| < 1$ and $|x - a| < \\frac{\\varepsilon}{2|a| + 1}$, give $$|x^{2} - a^{2}| < (2|a| + 1)\\cdot\\frac{\\varepsilon}{2|a| + 1} = \\varepsilon.$$ Taking $\\delta$ to be the smaller of the two numbers guarantees both. The $1$ is arbitrary; any fixed positive number would do, with a different bound."
+   },
+   {
+    "t": "p",
+    "html": "<b>Proof, written out.</b> Let $\\varepsilon > 0$ and $\\delta = \\min\\left(1, \\frac{\\varepsilon}{2|a| + 1}\\right)$. Suppose $|x - a| < \\delta$. Then $|x - a| < 1$, so $|x + a| < 2|a| + 1$, and $|x^{2} - a^{2}| = |x - a||x + a| < \\delta(2|a| + 1) \\le \\varepsilon$. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsdelta",
+    "opts": {
+     "f": "x^2",
+     "a": 3,
+     "eps": 0.7,
+     "delta": 0.1
+    },
+    "cap": "Continuity of $x^{2}$ at $a = 3$: set ε, then compare the recipe $\\delta = \\min\\left(1, \\frac{\\varepsilon}{7}\\right)$ with the largest δ the picture finds."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Running the recipe",
+    "q": "Use $\\delta = \\min\\left(1, \\frac{\\varepsilon}{2|a| + 1}\\right)$ for $x^{2}$ at $a = 3$ with $\\varepsilon = 0.7$.",
+    "steps": [
+     "$2|a| + 1 = 7$ and $\\frac{0.7}{7} = 0.1$.",
+     "$\\delta = \\min(1, 0.1) = 0.1$."
+    ],
+    "a": "$\\delta = 0.1$. (The largest δ is $\\sqrt{9.7} - 3 \\approx 0.1145$; the recipe is safe, not sharp.)"
+   },
+   {
+    "t": "ex",
+    "title": "A different quadratic",
+    "q": "For $f(x) = x^{2} - 4x$ at $a = 3$, write $|f(x) - f(3)|$ as a product and bound the second factor when $|x - 3| < 1$.",
+    "steps": [
+     "$f(x) - f(3) = x^{2} - 4x + 3 = (x - 3)(x - 1)$.",
+     "If $2 < x < 4$, then $1 < x - 1 < 3$, so $|x - 1| < 3$."
+    ],
+    "a": "$|f(x) - f(3)| < 3|x - 3|$, so $\\delta = \\min\\left(1, \\frac{\\varepsilon}{3}\\right)$ works."
+   },
+   {
+    "t": "ex",
+    "title": "A cube",
+    "q": "For $x^{3}$ at $a = 2$, bound $|x^{2} + 2x + 4|$ when $|x - 2| < 1$.",
+    "steps": [
+     "$x^{3} - 8 = (x - 2)(x^{2} + 2x + 4)$.",
+     "On $(1, 3)$ the quadratic increases, so it stays below its value at $3$: $9 + 6 + 4 = 19$."
+    ],
+    "a": "$|x^{3} - 8| < 19|x - 2|$, so $\\delta = \\min\\left(1, \\frac{\\varepsilon}{19}\\right)$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forgetting the restriction.</b> \"$\\delta = \\frac{\\varepsilon}{5}$ works for $x^{2}$ at $2$\" fails for large $\\varepsilon$: with $\\varepsilon = 100$ it allows $x = 21$, where $|x^{2} - 4| = 437$. The bound $|x + 2| < 5$ was only true for $|x - 2| < 1$, so $\\delta$ must also be at most $1$. And never let δ depend on $x$; it is chosen once, from $\\varepsilon$ and $a$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 3.2 (continuous functions)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on continuity"
+   }
+  ]
+ },
+ "ra.sequential-criterion": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Continuity can be tested with sequences instead of ε and δ, which turns everything you know about <a href=\"/math/real-analysis/subsequences/\">limits of sequences</a> into facts about functions. The criterion is especially good at proving that a function is <b>not</b> continuous, where an ε–δ argument would be clumsy. It builds on <a href=\"/math/real-analysis/continuity/\">ε–δ continuity</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Sequential criterion.</b> $f$ is continuous at $a$ if and only if $f(x_n) \\to f(a)$ for <b>every</b> sequence $x_n \\to a$ (in the domain). So to prove a discontinuity, find one sequence $x_n \\to a$ with $f(x_n) \\not\\to f(a)$, or two sequences giving different limits."
+   },
+   {
+    "t": "why",
+    "html": "<b>(Continuous implies the sequence condition.)</b> Let $x_n \\to a$ and $\\varepsilon > 0$. Take $\\delta$ from continuity, then $N$ with $|x_n - a| < \\delta$ for $n \\ge N$; then $|f(x_n) - f(a)| < \\varepsilon$. <b>(Converse, by contrapositive.)</b> If $f$ is not continuous at $a$, some $\\varepsilon > 0$ has no working $\\delta$. Try $\\delta = \\frac{1}{n}$: each fails, so there is an $x_n$ with $|x_n - a| < \\frac{1}{n}$ but $|f(x_n) - f(a)| \\ge \\varepsilon$. Then $x_n \\to a$ while $f(x_n) \\not\\to f(a)$. $\\blacksquare$"
+   },
+   {
+    "t": "p",
+    "html": "The classic example is $f(x) = \\sin\\frac{1}{x}$ near $0$. Along $x_n = \\frac{1}{2\\pi n + \\pi/2}$, $f(x_n) = 1$ for every $n$; along $x_n = \\frac{1}{2\\pi n}$, $f(x_n) = 0$. Both sequences tend to $0$, so no choice of $f(0)$ makes $f$ continuous there. Functions defined differently on rationals and irrationals work the same way, because every interval contains both kinds of numbers."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Choosing the sequence",
+    "q": "For $f(x) = \\cos\\frac{1}{x}$ and $x_n = \\frac{1}{2\\pi n + \\pi/3}$, find $\\lim f(x_n)$.",
+    "steps": [
+     "$\\frac{1}{x_n} = 2\\pi n + \\frac{\\pi}{3}$, so $f(x_n) = \\cos\\left(\\frac{\\pi}{3}\\right) = \\frac{1}{2}$ for every $n$."
+    ],
+    "a": "$\\frac{1}{2}$. Another sequence gives $1$, so $\\cos\\frac{1}{x}$ has no limit at $0$."
+   },
+   {
+    "t": "ex",
+    "title": "Rational and irrational pieces",
+    "q": "Let $f(x) = x^{2}$ for rational $x$ and $f(x) = x + 2$ for irrational $x$. Where is $f$ continuous?",
+    "steps": [
+     "Near any $a$ there are rationals $r_n \\to a$ and irrationals $t_n \\to a$, giving $f(r_n) \\to a^{2}$ and $f(t_n) \\to a + 2$.",
+     "Continuity at $a$ needs $a^{2} = a + 2$, so $a = 2$ or $a = -1$. At those points every sequence gives the same limit, and $f$ is continuous; everywhere else it is not."
+    ],
+    "a": "$\\{-1, 2\\}$"
+   },
+   {
+    "t": "ex",
+    "title": "Thomae's function",
+    "q": "Let $f\\left(\\frac{p}{q}\\right) = \\frac{1}{q}$ for a fraction in lowest terms and $f(x) = 0$ for irrational $x$. Is $f$ continuous at $\\frac{2}{3}$?",
+    "steps": [
+     "$f\\left(\\frac{2}{3}\\right) = \\frac{1}{3}$.",
+     "Irrationals $t_n \\to \\frac{2}{3}$ have $f(t_n) = 0 \\not\\to \\frac{1}{3}$."
+    ],
+    "a": "No. (At irrational points it is continuous: nearby rationals have large denominators.)"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>One good sequence proves nothing.</b> \"$f\\left(\\frac{1}{n}\\right) \\to f(0)$, so $f$ is continuous at $0$\" is invalid: the criterion requires every sequence. One sequence can only prove a discontinuity. If you want to prove continuity, either handle an arbitrary sequence $x_n \\to a$ or go back to ε and δ."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, sections 3.1 and 3.2 (sequential limits and continuity)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 2.2"
+   }
+  ]
+ },
+ "ra.ivt": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The intermediate value theorem from <a href=\"/math/calculus-1/intermediate-value-theorem/\">Calculus 1</a> looks obvious in a picture, but it is false over the rationals: $x^{2} - 2$ goes from negative to positive on $[1, 2]$ and is never $0$ at a rational point. Its proof needs completeness and <a href=\"/math/real-analysis/continuity/\">continuity</a> together."
+   },
+   {
+    "t": "key",
+    "html": "<b>Intermediate value theorem.</b> If $f$ is continuous on $[a, b]$ and $f(a) < y < f(b)$ (or $f(a) > y > f(b)$), then $f(c) = y$ for some $c \\in (a, b)$. In particular a continuous function that changes sign on $[a, b]$ has a root there."
+   },
+   {
+    "t": "why",
+    "html": "It is enough to handle $f(a) < 0 < f(b)$ (subtract $y$ otherwise). Let $c = \\sup\\{x \\in [a, b] : f(x) < 0\\}$, which exists by completeness. <b>$f(c) < 0$ is impossible:</b> by continuity $f$ would stay negative a little to the right of $c$, so $c$ would not be an upper bound (and $c \\ne b$ since $f(b) > 0$). <b>$f(c) > 0$ is impossible:</b> $f$ would stay positive on an interval $(c - \\delta, c]$, so $c - \\delta$ would already be an upper bound, smaller than $c$ (and $c \\ne a$ since $f(a) < 0$). So $f(c) = 0$. $\\blacksquare$ A second proof halves the interval again and again, keeping the half where the sign changes; the nested intervals close in on a root. That proof is also an algorithm: bisection."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "x^3+2x-5",
+     "xmin": -1,
+     "xmax": 3,
+     "ymin": -8,
+     "ymax": 10,
+     "trace": true
+    },
+    "cap": "$f(x) = x^{3} + 2x - 5$ changes sign on $[1, 2]$: trace the curve and see where it crosses."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Bisection by hand",
+    "q": "For $f(x) = x^{3} + 2x - 5$ on $[1, 2]$ ($f(1) = -2 < 0 < 7 = f(2)$), run three bisection steps.",
+    "steps": [
+     "$m = \\frac{3}{2}$: $f = \\frac{27}{8} + 3 - 5 > 0$, keep $[1, \\frac{3}{2}]$.",
+     "$m = \\frac{5}{4}$: $f = \\frac{125}{64} + \\frac{5}{2} - 5 = -\\frac{35}{64} < 0$, keep $[\\frac{5}{4}, \\frac{3}{2}]$.",
+     "$m = \\frac{11}{8}$: $f = \\frac{1331}{512} + \\frac{11}{4} - 5 > 0$, keep $[\\frac{5}{4}, \\frac{11}{8}]$."
+    ],
+    "a": "The root lies in $\\left[\\frac{5}{4}, \\frac{11}{8}\\right]$, an interval of length $\\frac{1}{8}$."
+   },
+   {
+    "t": "ex",
+    "title": "Counting forced roots",
+    "q": "A continuous $f$ has $f(-2) = 3$, $f(-1) = -1$, $f(0) = -4$, $f(1) = 2$, $f(2) = 5$. How many roots must it have in $[-2, 2]$?",
+    "steps": [
+     "Sign changes: between $-2$ and $-1$, and between $0$ and $1$."
+    ],
+    "a": "At least $2$ (there could be more)."
+   },
+   {
+    "t": "ex",
+    "title": "When the theorem does not apply",
+    "q": "$f(x) = \\frac{1}{x}$ has $f(-1) = -1 < 0 < 1 = f(1)$. Does the IVT give a root in $[-1, 1]$?",
+    "steps": [
+     "$f$ is not continuous on $[-1, 1]$: it is not even defined at $0$."
+    ],
+    "a": "No, and indeed $\\frac{1}{x}$ is never $0$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Skipping the hypothesis, or reading too much into the conclusion.</b> The function must be continuous on the whole closed interval; one bad point can let it jump over $0$. And the theorem only says a root exists, somewhere in $(a, b)$: it does not say there is only one, or where it is. For uniqueness you need more (for example, a strictly increasing function)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 3.3 (Bolzano's intermediate value theorem)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the intermediate value theorem"
+   }
+  ]
+ },
+ "ra.evt": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The extreme value theorem is the reason optimization problems on closed intervals always have answers. Its proof uses <a href=\"/math/real-analysis/bolzano-weierstrass/\">Bolzano–Weierstrass</a> to catch a maximizing point, and every one of its hypotheses matters. It pairs with the <a href=\"/math/real-analysis/ivt/\">intermediate value theorem</a>: together they say a continuous function maps $[a, b]$ onto a closed interval $[m, M]$."
+   },
+   {
+    "t": "key",
+    "html": "<b>Extreme value theorem.</b> A continuous function on a closed, bounded interval $[a, b]$ is bounded and attains a maximum and a minimum: there are $c, d \\in [a, b]$ with $f(d) \\le f(x) \\le f(c)$ for all $x \\in [a, b]$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Bounded.</b> If not, choose $x_n$ with $|f(x_n)| > n$. By Bolzano–Weierstrass some subsequence $x_{n_k} \\to c$, and $c \\in [a, b]$ because the interval is closed. By continuity $f(x_{n_k}) \\to f(c)$, a finite number, contradicting $|f(x_{n_k})| > n_k$. <b>Attained.</b> Let $s = \\sup f([a, b])$, finite now. Choose $x_n$ with $f(x_n) > s - \\frac{1}{n}$. A subsequence converges to some $c \\in [a, b]$, and $f(c) = \\lim f(x_{n_k}) = s$. $\\blacksquare$ Closed is used to keep $c$ in the interval, bounded to apply Bolzano–Weierstrass, and continuity to pass to the limit."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "f": "5-(x-1)^2",
+     "xmin": -2,
+     "xmax": 4,
+     "ymin": -6,
+     "ymax": 7,
+     "shade": {
+      "fn": 0,
+      "a": -1,
+      "b": 3
+     }
+    },
+    "cap": "$f(x) = 5 - (x - 1)^{2}$ on an interval: on a closed interval the top of the parabola is attained; remove an end and the supremum may be missed."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A closed interval",
+    "q": "Find the maximum of $f(x) = x^{3} - 12x$ on $[-1, 4]$.",
+    "steps": [
+     "$f'(x) = 3x^{2} - 12 = 0$ at $x = \\pm 2$; only $x = 2$ is in the interval.",
+     "Values: $f(-1) = 11$, $f(2) = -16$, $f(4) = 16$."
+    ],
+    "a": "The maximum is $16$, at $x = 4$."
+   },
+   {
+    "t": "ex",
+    "title": "An open end",
+    "q": "Find $\\sup f$ on $(1, 3)$ for $f(x) = (x - 1)^{2}$, and decide whether it is attained.",
+    "steps": [
+     "$f$ increases on $(1, 3)$ toward $f(3) = 4$.",
+     "Every value is less than $4$, but values come as close to $4$ as you like."
+    ],
+    "a": "$\\sup f = 4$, not attained: no maximum. The interval is not closed."
+   },
+   {
+    "t": "ex",
+    "title": "Which hypothesis fails?",
+    "q": "$f(x) = x - \\lfloor x \\rfloor$ on $[0, 2]$ takes values in $[0, 1)$ and has no maximum. Why does the EVT not apply?",
+    "steps": [
+     "The interval is closed and bounded.",
+     "But $f$ jumps at $x = 1$ and $x = 2$: it is not continuous."
+    ],
+    "a": "Continuity fails."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using the theorem on the wrong set.</b> On $(0, 1)$, $f(x) = x$ has supremum $1$ and no maximum; on $[0, \\infty)$, it has no maximum at all; and $\\frac{1}{x}$ (with $f(0) = 0$) on $[-1, 1]$ is not even bounded. When a problem asks whether a maximum exists, check all three: continuous, closed, bounded. When it does exist, find it among the critical points inside and the two ends."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 3.3 (min-max theorem)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the extreme value theorem"
+   }
+  ]
+ },
+ "ra.uniform-continuity": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In the proof that $x^{2}$ is <a href=\"/math/real-analysis/continuity/\">continuous</a>, the $\\delta$ depended on the point $a$: the steeper the graph, the smaller $\\delta$ had to be. Uniform continuity asks for one $\\delta$ that works everywhere at once. On a closed, bounded interval it comes for free, by the same Bolzano–Weierstrass argument that proves the <a href=\"/math/real-analysis/evt/\">extreme value theorem</a>, and it is the key to proving that continuous functions can be integrated."
+   },
+   {
+    "t": "key",
+    "html": "$f$ is <b>uniformly continuous</b> on $S$ when for every $\\varepsilon > 0$ there is a $\\delta > 0$ such that $|f(x) - f(y)| < \\varepsilon$ for <b>all</b> $x, y \\in S$ with $|x - y| < \\delta$. <b>Theorem:</b> a continuous function on a closed, bounded interval is uniformly continuous. $\\frac{1}{x}$ on $(0, 1)$ and $x^{2}$ on $\\mathbb{R}$ are continuous but not uniformly continuous."
+   },
+   {
+    "t": "why",
+    "html": "Compare the quantifiers. Continuity: for every $a$ and every $\\varepsilon$ there is a $\\delta$ (which may depend on $a$). Uniform: for every $\\varepsilon$ there is a $\\delta$ that works for every $a$. For $\\frac{1}{x}$ near $0$, the points $x = \\delta$ and $y = \\frac{\\delta}{2}$ are within $\\delta$, yet $\\left|\\frac{1}{x} - \\frac{1}{y}\\right| = \\frac{1}{\\delta}$, which is large: no single $\\delta$ handles $\\varepsilon = 1$. On $[a, b]$, a failure would produce pairs $x_n, y_n$ with $|x_n - y_n| \\to 0$ but $|f(x_n) - f(y_n)| \\ge \\varepsilon$; Bolzano–Weierstrass gives subsequences converging to a common point $c$, and continuity at $c$ then forces $f(x_{n_k}) - f(y_{n_k}) \\to 0$, a contradiction."
+   },
+   {
+    "t": "viz",
+    "name": "ra-epsdelta",
+    "opts": {
+     "f": "x^2",
+     "a": 1,
+     "eps": 0.6,
+     "mode": "uniform",
+     "interval": [
+      0,
+      3
+     ]
+    },
+    "cap": "Uniform mode for $x^{2}$ on $[0, 3]$: drag the point along the interval. The purple strip shows the best δ at each point; the smallest of them is the one δ that works everywhere."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A line is the easy case",
+    "q": "For $f(x) = \\frac{3}{2}x + 7$ on $\\mathbb{R}$ and $\\varepsilon = 0.1$, find the largest uniform $\\delta$.",
+    "steps": [
+     "$|f(x) - f(y)| = \\frac{3}{2}|x - y|$, the same at every point."
+    ],
+    "a": "$\\delta = \\frac{0.1}{3/2} = \\frac{1}{15}$."
+   },
+   {
+    "t": "ex",
+    "title": "The square on a closed interval",
+    "q": "For $f(x) = x^{2}$ on $[0, 2]$ and $\\varepsilon = 0.1$, find the largest uniform $\\delta$.",
+    "steps": [
+     "For $y = x + t$ with $0 < t < \\delta$: $y^{2} - x^{2} = t(2x + t)$, largest when $y = 2$: $t(4 - t)$.",
+     "As $t \\to \\delta$ this approaches $\\delta(4 - \\delta)$, so we need $\\delta(4 - \\delta) \\le 0.1$, that is, $(2 - \\delta)^{2} \\ge 3.9$."
+    ],
+    "a": "$\\delta = 2 - \\sqrt{3.9} \\approx 0.0252$, set by the steep end of the interval."
+   },
+   {
+    "t": "ex",
+    "title": "Steep but still uniform",
+    "q": "For $\\sqrt{x}$ on $[0, \\infty)$ and $\\varepsilon = 0.1$, find the largest uniform $\\delta$.",
+    "steps": [
+     "$|\\sqrt{x} - \\sqrt{y}| \\le \\sqrt{|x - y|}$, with equality when one point is $0$."
+    ],
+    "a": "$\\delta = 0.01$: we need $\\sqrt{\\delta} \\le 0.1$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Calling a point-dependent δ uniform.</b> \"$\\delta = \\frac{\\varepsilon}{2|a| + 1}$ works for $x^{2}$\" is a perfectly good continuity proof at each $a$, but on $\\mathbb{R}$ these $\\delta$'s shrink to $0$ as $|a|$ grows, so no single one works. Ask: does my δ mention the point? If its smallest value over the set is $0$, the function is not uniformly continuous there."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 3.4 (uniform continuity)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on uniform continuity"
+   }
+  ]
+ },
+ "ra.derivative-definition": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/calculus-1/derivative-at-a-point/\">Calculus 1</a> the derivative was the limit of difference quotients, and the rules took over quickly. In analysis we go back to the definition, now with <a href=\"/math/real-analysis/function-limits/\">ε–δ limits</a> behind it, because the interesting functions are exactly the ones the rules cannot handle: pieces glued together, or functions that oscillate near a point."
+   },
+   {
+    "t": "key",
+    "html": "$f'(a) = \\lim_{h \\to 0} \\frac{f(a + h) - f(a)}{h}$ when this limit exists (equivalently $\\lim_{x \\to a} \\frac{f(x) - f(a)}{x - a}$). To use it: write the difference quotient, simplify it algebraically for $h \\ne 0$, then take the limit, often with the squeeze theorem."
+   },
+   {
+    "t": "why",
+    "html": "The difference quotient is the slope of the secant line through $(a, f(a))$ and $(a + h, f(a + h))$. As $h \\to 0$ the secant turns into the tangent, and the derivative is its slope. Because the definition is a limit, every tool for limits applies: algebra to cancel the $h$, the squeeze theorem for oscillating factors, and one-sided limits at a corner."
+   },
+   {
+    "t": "viz",
+    "name": "secant",
+    "opts": {
+     "f": "x^2",
+     "a": 1,
+     "h": 1
+    },
+    "cap": "The secant through $a$ and $a + h$ turns into the tangent as $h \\to 0$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A polynomial from scratch",
+    "q": "For $f(x) = 2x^{2} + 3x$, simplify $\\frac{f(1 + h) - f(1)}{h}$ and find $f'(1)$.",
+    "steps": [
+     "$f(1 + h) = 2(1 + 2h + h^{2}) + 3 + 3h = 5 + 7h + 2h^{2}$, and $f(1) = 5$.",
+     "So the quotient is $\\frac{7h + 2h^{2}}{h} = 7 + 2h$ for $h \\ne 0$."
+    ],
+    "a": "$7 + 2h \\to 7$, so $f'(1) = 7$."
+   },
+   {
+    "t": "ex",
+    "title": "An oscillating function that is differentiable",
+    "q": "Let $f(x) = x^{2}\\sin\\frac{1}{x}$ for $x \\ne 0$ and $f(0) = 0$. Find $f'(0)$.",
+    "steps": [
+     "$\\frac{f(h) - f(0)}{h} = h\\sin\\frac{1}{h}$.",
+     "$\\left|h\\sin\\frac{1}{h}\\right| \\le |h| \\to 0$, so by the squeeze theorem the limit is $0$."
+    ],
+    "a": "$f'(0) = 0$, even though $f'(x) = 2x\\sin\\frac{1}{x} - \\cos\\frac{1}{x}$ has no limit as $x \\to 0$."
+   },
+   {
+    "t": "ex",
+    "title": "One power less, and it fails",
+    "q": "Let $g(x) = x\\sin\\frac{1}{x}$ for $x \\ne 0$ and $g(0) = 0$. Does $g'(0)$ exist?",
+    "steps": [
+     "$\\frac{g(h) - g(0)}{h} = \\sin\\frac{1}{h}$.",
+     "Along $h = \\frac{1}{2\\pi n}$ it is $0$; along $h = \\frac{1}{2\\pi n + \\pi/2}$ it is $1$."
+    ],
+    "a": "No limit, so $g'(0)$ does not exist (although $g$ is continuous at $0$)."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using the rules at a break point.</b> For $f(x) = x^{2}$ ($x \\le 1$) and $f(x) = 3x - 2$ ($x > 1$), \"the derivative is $2x$ on the left and $3$ on the right\" describes $f'$ away from $1$, but at $x = 1$ only the definition decides: the left quotient tends to $2$ and the right one to $3$, so $f'(1)$ does not exist. Likewise for $x^{2}\\sin\\frac{1}{x}$: the formula for $f'(x)$ at $x \\ne 0$ says nothing about $f'(0)$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 4.1 (the derivative)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the derivative"
+   }
+  ]
+ },
+ "ra.differentiability": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Differentiability is a stronger condition than <a href=\"/math/real-analysis/continuity/\">continuity</a>: a differentiable function is continuous, but a continuous function can have corners, as in <a href=\"/math/calculus-1/differentiability/\">Calculus 1</a>. At a point where two formulas meet, the <a href=\"/math/real-analysis/derivative-definition/\">definition</a> splits into one-sided limits."
+   },
+   {
+    "t": "key",
+    "html": "<b>Differentiable at $a$ implies continuous at $a$.</b> At a break point, $f'(a)$ exists exactly when both one-sided limits of the difference quotient exist and agree. For pieces that meet at $c$, that means: the pieces agree at $c$ (continuity) <b>and</b> their slopes agree at $c$."
+   },
+   {
+    "t": "why",
+    "html": "For $x \\ne a$, $$f(x) - f(a) = \\frac{f(x) - f(a)}{x - a}\\cdot(x - a).$$ As $x \\to a$ the first factor tends to $f'(a)$ and the second to $0$, so by the product law $f(x) - f(a) \\to f'(a) \\cdot 0 = 0$: $f$ is continuous at $a$. $\\blacksquare$ The converse fails: $|x|$ is continuous at $0$, but its quotient $\\frac{|h|}{h}$ is $1$ for $h > 0$ and $-1$ for $h < 0$, so the one-sided limits disagree."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      {
+       "f": "x^2",
+       "to": 1
+      },
+      {
+       "f": "a*x+b",
+       "from": 1,
+       "color": "red"
+      }
+     ],
+     "params": {
+      "a": [
+       -4,
+       4,
+       1,
+       0.5
+      ],
+      "b": [
+       -4,
+       4,
+       0,
+       0.5
+      ]
+     },
+     "xmin": -2,
+     "xmax": 3,
+     "ymin": -2,
+     "ymax": 6
+    },
+    "cap": "Gluing $x^{2}$ (for $x \\le 1$) to a line: adjust $a$ and $b$ until the pieces meet and have the same slope. The answer is the tangent line $y = 2x - 1$."
+   },
+   {
+    "t": "p",
+    "html": "A useful way to read differentiability: near $a$, the function is a line plus something much smaller than the distance to $a$. Precisely, $f(a + h) = f(a) + f'(a)h + r(h)$ with $\\frac{r(h)}{h} \\to 0$. A corner breaks this, because no single line fits the graph from both sides; a jump breaks it more badly, because no line through $(a, f(a))$ even comes close on one side. That is why every differentiable function is continuous, and why the converse must fail."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Making a function differentiable",
+    "q": "Find $a$ and $b$ so that $f(x) = x^{2}$ for $x \\le 2$ and $f(x) = ax + b$ for $x > 2$ is differentiable at $2$.",
+    "steps": [
+     "The pieces must meet: $4 = 2a + b$.",
+     "The slopes must agree: the left derivative is $2x = 4$ at $x = 2$, the right one is $a$. So $a = 4$.",
+     "Then $b = 4 - 8 = -4$."
+    ],
+    "a": "$a = 4$, $b = -4$: the line is the tangent line $y = 4x - 4$."
+   },
+   {
+    "t": "ex",
+    "title": "A corner, computed",
+    "q": "For $f(x) = |x - 1|(x + 2)$, find the one-sided derivatives at $x = 1$.",
+    "steps": [
+     "$f(1) = 0$, so $\\frac{f(1 + h) - f(1)}{h} = \\frac{|h|}{h}(3 + h)$.",
+     "For $h > 0$ this tends to $3$; for $h < 0$ to $-3$."
+    ],
+    "a": "Right: $3$; left: $-3$. Continuous, not differentiable."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Matching only one condition.</b> For glued pieces, students often match the slopes and forget that the pieces must meet (then $f$ is not even continuous, so not differentiable), or check that the pieces meet and stop (then there may be a corner). Both equations are needed. And remember the logic: differentiable implies continuous; continuous does not imply differentiable."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 4.1 (differentiable functions are continuous)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on differentiability"
+   }
+  ]
+ },
+ "ra.mean-value-theorem": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The mean value theorem connects the derivative at one point to the behavior of a function across an interval. It is the reason a positive derivative means increasing, and it is behind every error estimate in calculus. You met it in <a href=\"/math/calculus-1/mean-value-theorem/\">Calculus 1</a>; here is the proof, which rests on the <a href=\"/math/real-analysis/evt/\">extreme value theorem</a> and <a href=\"/math/real-analysis/differentiability/\">differentiability</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Rolle's theorem.</b> If $f$ is continuous on $[a, b]$, differentiable on $(a, b)$, and $f(a) = f(b)$, then $f'(c) = 0$ for some $c \\in (a, b)$. <b>Mean value theorem.</b> If $f$ is continuous on $[a, b]$ and differentiable on $(a, b)$, then $f'(c) = \\frac{f(b) - f(a)}{b - a}$ for some $c \\in (a, b)$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Rolle.</b> By the EVT, $f$ has a maximum and a minimum on $[a, b]$. If both occur at the ends, $f$ is constant (since $f(a) = f(b)$) and any $c$ works. Otherwise one of them is at an interior point $c$. At an interior maximum, the difference quotient is $\\le 0$ for $h > 0$ and $\\ge 0$ for $h < 0$, so the derivative, the common limit, is $0$. <b>MVT.</b> Subtract the secant line: $g(x) = f(x) - \\frac{f(b) - f(a)}{b - a}(x - a)$ has $g(a) = g(b) = f(a)$. Rolle gives $g'(c) = 0$, which is $f'(c) = \\frac{f(b) - f(a)}{b - a}$. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "x^3-3x",
+      {
+       "f": "2",
+       "color": "red",
+       "dash": true,
+       "label": "secant",
+       "from": -1,
+       "to": 2
+      },
+      {
+       "f": "-2",
+       "color": "green",
+       "label": "tangent at c"
+      }
+     ],
+     "xmin": -2,
+     "xmax": 3,
+     "ymin": -4,
+     "ymax": 4
+    },
+    "cap": "$f(x) = x^{3} - 3x$ on $[-1, 2]$ with its secant line: the tangent at $c = 1$ is parallel to it."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A quadratic always gives the midpoint",
+    "q": "Find $c$ for $f(x) = 3x^{2} - 2x$ on $[0, 4]$.",
+    "steps": [
+     "Secant slope: $\\frac{f(4) - f(0)}{4} = \\frac{40}{4} = 10$.",
+     "$f'(c) = 6c - 2 = 10$ gives $c = 2$."
+    ],
+    "a": "$c = 2$, the midpoint. (For any quadratic, $f'$ is linear and the MVT point is the midpoint.)"
+   },
+   {
+    "t": "ex",
+    "title": "A cubic with one admissible $c$",
+    "q": "Find all $c$ for $f(x) = x^{3} - 3x$ on $[-1, 2]$.",
+    "steps": [
+     "Secant slope: $\\frac{f(2) - f(-1)}{3} = \\frac{2 - 2}{3} = 0$.",
+     "$f'(c) = 3c^{2} - 3 = 0$ gives $c = \\pm 1$."
+    ],
+    "a": "Only $c = 1$ is in the open interval $(-1, 2)$."
+   },
+   {
+    "t": "ex",
+    "title": "Counting roots with Rolle",
+    "q": "Show that $x^{5} + x - 3 = 0$ has exactly one real root.",
+    "steps": [
+     "It has at least one: the polynomial is negative at $0$ and positive at $2$ (IVT).",
+     "If it had two, Rolle would give a zero of the derivative $5x^{4} + 1$ between them, but $5x^{4} + 1 > 0$."
+    ],
+    "a": "Exactly one."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Skipping the hypotheses, or the open interval.</b> $|x|$ on $[-1, 1]$ has secant slope $0$ but no point with derivative $0$: it is not differentiable at $0$. Likewise $x^{2/3}$ on $[-1, 1]$. And the theorem's $c$ lies strictly inside $(a, b)$: in the cubic example, $c = -1$ solves the equation but is an endpoint, so it is not the theorem's point."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 4.2 (Rolle's theorem and the mean value theorem)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the mean value theorem"
+   }
+  ]
+ },
+ "ra.mvt-inequalities": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/real-analysis/mean-value-theorem/\">mean value theorem</a> is rarely used to find $c$. Its power is in inequalities: since we do not know where $c$ is, we bound $f'(c)$ over the whole interval, and that bound controls how far $f$ can move. This is the cleanest route to <a href=\"/math/real-analysis/uniform-continuity/\">uniform continuity</a>."
+   },
+   {
+    "t": "key",
+    "html": "If $|f'(x)| \\le K$ for all $x$ in an interval $I$, then $|f(x) - f(y)| \\le K|x - y|$ for all $x, y \\in I$ ($f$ is <b>Lipschitz</b> with constant $K$). Then $\\delta = \\frac{\\varepsilon}{K}$ works for every point at once, so $f$ is uniformly continuous on $I$. The best constant is $K = \\sup_I |f'|$."
+   },
+   {
+    "t": "why",
+    "html": "For $x \\ne y$ in $I$, the MVT gives $f(x) - f(y) = f'(c)(x - y)$ for some $c$ between them, and $c \\in I$. So $|f(x) - f(y)| = |f'(c)||x - y| \\le K|x - y|$. Then $|x - y| < \\frac{\\varepsilon}{K}$ gives $|f(x) - f(y)| < \\varepsilon$, and $\\delta = \\frac{\\varepsilon}{K}$ does not depend on the points. $\\blacksquare$ Taking $f = \\sin$ and $K = 1$ gives the useful $|\\sin x - \\sin y| \\le |x - y|$ for all real $x, y$."
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "sqrt(x)",
+      {
+       "f": "2+(x-4)/4",
+       "color": "red",
+       "dash": true,
+       "label": "slope 1/4"
+      }
+     ],
+     "xmin": 0,
+     "xmax": 10,
+     "ymin": 0,
+     "ymax": 4
+    },
+    "cap": "$f(x) = \\sqrt{x}$ on $[4, 9]$: the slope is largest at the left end, $\\frac{1}{4}$, so the graph never rises faster than a line of slope $\\frac{1}{4}$."
+   },
+   {
+    "t": "p",
+    "html": "The same argument proves the facts about monotonicity that calculus takes for granted. If $f' > 0$ on an interval, then for $x < y$ the MVT gives $f(y) - f(x) = f'(c)(y - x) > 0$: the function increases. If $f' = 0$ everywhere on an interval, then $f(y) - f(x) = 0$ for all $x, y$: the function is constant. Notice that each conclusion needs information about $f'$ at every point between $x$ and $y$, not at one point."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The best Lipschitz constant",
+    "q": "Find the smallest $K$ with $|x^{2} - y^{2}| \\le K|x - y|$ for all $x, y \\in [-3, 2]$.",
+    "steps": [
+     "$|f'(x)| = 2|x|$, largest at the end farther from $0$, $x = -3$."
+    ],
+    "a": "$K = 6$."
+   },
+   {
+    "t": "ex",
+    "title": "A δ that works everywhere",
+    "q": "On $[1, 4]$, $\\frac{1}{x}$ has $|f'(x)| = \\frac{1}{x^{2}} \\le 1$. What δ does the bound give for $\\varepsilon = 0.05$?",
+    "steps": [
+     "$|f(x) - f(y)| \\le 1 \\cdot |x - y| < \\delta$."
+    ],
+    "a": "$\\delta = 0.05$, for every pair of points in $[1, 4]$."
+   },
+   {
+    "t": "ex",
+    "title": "Estimating a square root",
+    "q": "Use the MVT to bound $\\sqrt{102} - 10$ from above.",
+    "steps": [
+     "$\\sqrt{102} - \\sqrt{100} = \\frac{1}{2\\sqrt{c}} \\cdot 2$ for some $c \\in (100, 102)$.",
+     "Since $\\sqrt{c} > 10$, this is less than $\\frac{2}{20} = \\frac{1}{10}$."
+    ],
+    "a": "$\\sqrt{102} < 10.1$ (in fact $\\sqrt{102} \\approx 10.0995$)."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using $f'$ at one point instead of a bound over the interval.</b> \"$f'(4) = \\frac{1}{4}$, so $|\\sqrt{x} - \\sqrt{y}| \\le \\frac{1}{4}|x - y|$\" is right on $[4, 9]$ only because $\\frac{1}{4}$ happens to be the largest value of $f'$ there; on $[1, 9]$ it is false (the slope reaches $\\frac{1}{2}$ at $x = 1$). The MVT's $c$ could be anywhere between the points, so you must bound $|f'|$ everywhere on the interval."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 4.2 (applications of the mean value theorem)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 2.3"
+   }
+  ]
+ },
+ "ra.taylor-remainder": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/calculus-2/taylor-error/\">Calculus 2</a> you used Taylor's inequality to bound errors. Taylor's theorem says exactly what the error is, up to one unknown point, and it is the <a href=\"/math/real-analysis/mean-value-theorem/\">mean value theorem</a> taken to higher order. (The case $n = 0$ is the MVT itself: $f(x) = f(a) + f'(c)(x - a)$.)"
+   },
+   {
+    "t": "key",
+    "html": "<b>Taylor's theorem.</b> If $f$ has $n + 1$ derivatives on an interval containing $a$ and $x$, then $$f(x) = P_n(x) + \\frac{f^{(n+1)}(c)}{(n + 1)!}(x - a)^{n+1}$$ for some $c$ between $a$ and $x$, where $P_n(x) = \\sum_{k=0}^{n} \\frac{f^{(k)}(a)}{k!}(x - a)^{k}$. If $|f^{(n+1)}| \\le M$ between $a$ and $x$, then $|f(x) - P_n(x)| \\le \\frac{M|x - a|^{n+1}}{(n + 1)!}$."
+   },
+   {
+    "t": "why",
+    "html": "Fix $x \\ne a$ and choose the number $K$ so that $g(t) = f(t) - P_n(t) - K(t - a)^{n+1}$ has $g(x) = 0$. By construction $g(a) = g'(a) = \\cdots = g^{(n)}(a) = 0$. Rolle's theorem on $[a, x]$ gives $c_1$ with $g'(c_1) = 0$; Rolle again on $[a, c_1]$ (since $g'(a) = 0$) gives $c_2$ with $g''(c_2) = 0$; after $n + 1$ steps, $g^{(n+1)}(c) = 0$ for some $c$ between $a$ and $x$. But $g^{(n+1)}(t) = f^{(n+1)}(t) - (n + 1)!\\,K$, because $P_n$ has degree $n$. So $K = \\frac{f^{(n+1)}(c)}{(n + 1)!}$, which is the formula. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "taylor",
+    "opts": {
+     "f": "e^x",
+     "a": 0,
+     "n": 2,
+     "x": 1,
+     "xmin": -3,
+     "xmax": 3,
+     "ymin": -1,
+     "ymax": 8
+    },
+    "cap": "Taylor polynomials of $e^{x}$ at $0$: add terms and watch the error at the probe point shrink like $\\frac{3x^{n+1}}{(n + 1)!}$ predicts."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "How many terms for $e$?",
+    "q": "Approximating $e = e^{1}$ by $P_n(1) = \\sum_{k=0}^{n} \\frac{1}{k!}$, using $e^{c} < 3$ for $0 \\le c \\le 1$, find the smallest $n$ with error bound below $0.001$.",
+    "steps": [
+     "The bound is $\\frac{3}{(n + 1)!}$.",
+     "$n = 5$: $\\frac{3}{720} \\approx 0.0042$, too big. $n = 6$: $\\frac{3}{5040} \\approx 0.0006$."
+    ],
+    "a": "$n = 6$ (or more)."
+   },
+   {
+    "t": "ex",
+    "title": "A sine error",
+    "q": "Bound the error of $\\sin x \\approx x - \\frac{x^{3}}{6}$ at $x = \\frac{1}{2}$.",
+    "steps": [
+     "This is $P_3$ (the $x^{2}$ and $x^{4}$ terms are $0$, so it is also $P_4$). Using $P_4$: $|R_4| \\le \\frac{|x|^{5}}{5!}$ since every derivative of $\\sin$ is at most $1$ in size.",
+     "$\\frac{(1/2)^{5}}{120} = \\frac{1}{3840}$."
+    ],
+    "a": "Error at most $\\frac{1}{3840} \\approx 0.00026$."
+   },
+   {
+    "t": "ex",
+    "title": "Finding the point $c$",
+    "q": "For $f(x) = x^{4}$, $a = 0$ and $n = 2$, find $c$ with $f(x) = P_2(x) + \\frac{f'''(c)}{3!}x^{3}$ at $x = 6$.",
+    "steps": [
+     "$P_2 = 0$ (all derivatives up to order $2$ vanish at $0$), and $f'''(t) = 24t$.",
+     "So $6^{4} = \\frac{24c}{6}\\cdot 6^{3}$, that is, $1296 = 864c$."
+    ],
+    "a": "$c = \\frac{3}{2} = \\frac{6}{4}$, which is between $0$ and $6$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>The wrong derivative, or a guessed $c$.</b> The remainder after $P_n$ uses the $(n + 1)$st derivative. And since $c$ is unknown, you cannot plug in $c = a$ or $c = x$; bound $|f^{(n+1)}|$ over the whole interval between $a$ and $x$ instead. For $e^{x}$ on $[0, 1]$ that bound is $e < 3$, not $e^{0} = 1$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 4.3 (Taylor's theorem)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on Taylor's theorem"
+   }
+  ]
+ },
+ "ra.upper-lower-sums": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/math/calculus-1/riemann-sums/\">Calculus 1</a> you approximated areas with rectangles whose heights came from left ends, right ends or midpoints. To prove anything, we want rectangles that are guaranteed to be too big and too small. Their heights come from the <a href=\"/math/real-analysis/sup-inf/\">supremum and infimum</a> of $f$ on each piece. This approach is due to Darboux, and it is how Lebl's book defines the integral."
+   },
+   {
+    "t": "key",
+    "html": "A <b>partition</b> of $[a, b]$ is $P = \\{x_0 < x_1 < \\cdots < x_n\\}$ with $x_0 = a$, $x_n = b$. On each piece let $M_i = \\sup\\{f(x) : x \\in [x_{i-1}, x_i]\\}$ and $m_i = \\inf\\{f(x) : x \\in [x_{i-1}, x_i]\\}$. The <b>upper sum</b> is $U(f, P) = \\sum M_i \\Delta x_i$ and the <b>lower sum</b> is $L(f, P) = \\sum m_i \\Delta x_i$. Always $L(f, P) \\le U(f, P)$; adding points to $P$ can only lower $U$ and raise $L$."
+   },
+   {
+    "t": "why",
+    "html": "On each piece $m_i \\le M_i$, so $L \\le U$ for the same partition. If you add one point inside a piece, that piece splits into two; the supremum on each half is at most the supremum on the whole piece, so the new upper contribution is at most the old one, and similarly the lower contribution can only grow. So for any two partitions $P$ and $Q$, comparing both with their common refinement $P \\cup Q$ gives $$L(f, P) \\le L(f, P \\cup Q) \\le U(f, P \\cup Q) \\le U(f, Q).$$ Every lower sum is at most every upper sum, which lets us define the lower integral (the sup of all lower sums) and the upper integral (the inf of all upper sums)."
+   },
+   {
+    "t": "viz",
+    "name": "ra-sums",
+    "opts": {
+     "f": "x^2",
+     "a": 0,
+     "b": 2,
+     "n": 4,
+     "show": "both"
+    },
+    "cap": "Upper (blue) and lower (green) rectangles for $x^{2}$ on $[0, 2]$; the gold strips are the gap $U - L$. Refine the partition and watch the gap shrink."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An increasing function",
+    "q": "For $f(x) = x^{2}$ on $[0, 2]$ with $P = \\{0, \\frac{1}{2}, 1, 2\\}$, find $U(f, P)$ and $L(f, P)$.",
+    "steps": [
+     "$f$ increases on $[0, 2]$, so on each piece the sup is at the right end and the inf at the left end.",
+     "$U = \\frac{1}{4}\\cdot\\frac{1}{2} + 1\\cdot\\frac{1}{2} + 4\\cdot 1 = \\frac{37}{8}$.",
+     "$L = 0\\cdot\\frac{1}{2} + \\frac{1}{4}\\cdot\\frac{1}{2} + 1\\cdot 1 = \\frac{9}{8}$."
+    ],
+    "a": "$U = \\frac{37}{8}$, $L = \\frac{9}{8}$ (and $\\int_0^2 x^{2}\\,dx = \\frac{8}{3}$ lies between)."
+   },
+   {
+    "t": "ex",
+    "title": "A turning point inside a piece",
+    "q": "For $f(x) = x^{2} - 3x + 2$ on $[0, 2]$ with $P = \\{0, 1, 2\\}$, find $U$ and $L$.",
+    "steps": [
+     "On $[0, 1]$, $f$ decreases from $2$ to $0$: $M_1 = 2$, $m_1 = 0$.",
+     "On $[1, 2]$ the vertex is at $x = \\frac{3}{2}$: $f(1) = f(2) = 0$ and $f\\left(\\frac{3}{2}\\right) = -\\frac{1}{4}$, so $M_2 = 0$, $m_2 = -\\frac{1}{4}$."
+    ],
+    "a": "$U = 2 + 0 = 2$, $L = 0 - \\frac{1}{4} = -\\frac{1}{4}$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using the ends when $f$ is not monotone.</b> On a piece that contains a turning point, the supremum or infimum is at the turning point, not at an end. In the second example, using the ends of $[1, 2]$ would give $m_2 = 0$ and miss the dip to $-\\frac{1}{4}$. Check each piece: is $f$ monotone there? If not, compare the ends with the critical points inside."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 5.1 (partitions and lower and upper integrals)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the Riemann integral"
+   }
+  ]
+ },
+ "ra.integrability-criterion": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A bounded function is <b>integrable</b> when its lower integral equals its upper integral; the common value is $\\int_a^b f$. Checking that directly means handling every partition at once. The criterion below reduces it to finding, for each $\\varepsilon$, one good partition, exactly in the spirit of <a href=\"/math/real-analysis/sequence-limit/\">ε–N proofs</a> and built on <a href=\"/math/real-analysis/upper-lower-sums/\">upper and lower sums</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Integrability criterion.</b> A bounded $f$ on $[a, b]$ is integrable if and only if for every $\\varepsilon > 0$ there is a partition $P$ with $U(f, P) - L(f, P) < \\varepsilon$. For a monotone $f$ and $n$ equal pieces, $U - L = |f(b) - f(a)|\\frac{b - a}{n}$."
+   },
+   {
+    "t": "why",
+    "html": "For every partition, $L(f, P) \\le \\underline{\\int} f \\le \\overline{\\int} f \\le U(f, P)$. If the gap $U - L$ can be made less than every $\\varepsilon$, the upper and lower integrals differ by less than every $\\varepsilon$, so they are equal. Conversely, if they are equal to $I$, choose $P_1$ with $L(f, P_1) > I - \\frac{\\varepsilon}{2}$ and $P_2$ with $U(f, P_2) < I + \\frac{\\varepsilon}{2}$; their common refinement does both, so its gap is less than $\\varepsilon$. <b>Monotone functions:</b> for increasing $f$ and equal pieces of width $\\Delta x$, $M_i - m_i = f(x_i) - f(x_{i-1})$, and the sum telescopes: $$U - L = \\sum (f(x_i) - f(x_{i-1}))\\Delta x = (f(b) - f(a))\\Delta x.$$ This goes to $0$ as $n$ grows, so every monotone function is integrable. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "ra-sums",
+    "opts": {
+     "f": "sqrt(x)",
+     "a": 0,
+     "b": 4,
+     "n": 6,
+     "show": "gap"
+    },
+    "cap": "The gap for $\\sqrt{x}$ on $[0, 4]$: slide the gold strips together into one column and its height is $f(4) - f(0) = 2$, with width $\\frac{4}{n}$."
+   },
+   {
+    "t": "p",
+    "html": "The criterion is the integral's version of the Cauchy idea: instead of knowing the value of the integral in advance, you show that the over-estimate and the under-estimate can be squeezed together. Once a function passes, any sums with shrinking pieces (left, right, midpoint, or any sample points at all) converge to the same number, because all of them lie between the lower and upper sums of their partition."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The gap for a monotone function",
+    "q": "For $f(x) = \\frac{1}{x}$ on $[1, 3]$ with $5$ equal pieces, find $U - L$.",
+    "steps": [
+     "$f$ decreases, so $U - L = |f(3) - f(1)|\\cdot\\frac{3 - 1}{5}$.",
+     "$= \\frac{2}{3}\\cdot\\frac{2}{5}$."
+    ],
+    "a": "$\\frac{4}{15}$"
+   },
+   {
+    "t": "ex",
+    "title": "How fine a partition?",
+    "q": "For $f(x) = x^{3}$ on $[0, 2]$, find the smallest $n$ such that $n$ equal pieces give $U - L < 0.1$.",
+    "steps": [
+     "$U - L = (8 - 0)\\cdot\\frac{2}{n} = \\frac{16}{n}$.",
+     "$\\frac{16}{n} < 0.1$ means $n > 160$."
+    ],
+    "a": "$n = 161$ (or more)."
+   },
+   {
+    "t": "ex",
+    "title": "A function that turns",
+    "q": "For $x^{2}$ on $[-1, 1]$ with $n = 3$ equal pieces, find $U - L$.",
+    "steps": [
+     "Points: $-1, -\\frac{1}{3}, \\frac{1}{3}, 1$. On $[-1, -\\frac{1}{3}]$: $M - m = 1 - \\frac{1}{9} = \\frac{8}{9}$. The same on $[\\frac{1}{3}, 1]$.",
+     "The middle piece contains $0$: $M - m = \\frac{1}{9} - 0 = \\frac{1}{9}$."
+    ],
+    "a": "$U - L = \\left(\\frac{8}{9} + \\frac{1}{9} + \\frac{8}{9}\\right)\\cdot\\frac{2}{3} = \\frac{34}{27}$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>One partition is not a proof.</b> Showing $U - L < 0.1$ for $n = 161$ proves nothing about integrability by itself. The criterion needs a partition for <b>every</b> $\\varepsilon > 0$, so a proof sounds like: \"Let $\\varepsilon > 0$. Choose $n > \\frac{16}{\\varepsilon}$. Then $U - L = \\frac{16}{n} < \\varepsilon$.\""
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, sections 5.1 and 5.2 (Riemann integrability)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 3.2"
+   }
+  ]
+ },
+ "ra.integrable-functions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "With the <a href=\"/math/real-analysis/integrability-criterion/\">criterion</a> we can sort functions into integrable and not. The big theorem uses <a href=\"/math/real-analysis/uniform-continuity/\">uniform continuity</a>: every continuous function on $[a, b]$ is integrable. Jumps are fine in moderation. A function that jumps everywhere is not."
+   },
+   {
+    "t": "key",
+    "html": "Integrable on $[a, b]$: every continuous function, every monotone function, and every bounded function with finitely many discontinuities. Changing a function at finitely many points does not change its integral. <b>Not integrable:</b> Dirichlet's function ($1$ on rationals, $0$ on irrationals), since every $U = b - a$ and every $L = 0$; and unbounded functions."
+   },
+   {
+    "t": "why",
+    "html": "<b>Continuous functions.</b> Let $\\varepsilon > 0$. By uniform continuity there is a $\\delta$ with $|f(x) - f(y)| < \\frac{\\varepsilon}{b - a}$ when $|x - y| < \\delta$. Take a partition with all pieces shorter than $\\delta$. On each piece the sup and inf are values of $f$ (EVT) at points less than $\\delta$ apart, so $M_i - m_i < \\frac{\\varepsilon}{b - a}$, and $U - L < \\frac{\\varepsilon}{b - a}\\sum \\Delta x_i = \\varepsilon$. $\\blacksquare$ <b>A jump.</b> Put the jump inside one piece of width $w$; every other piece sees a continuous (or constant) function. That one piece contributes at most (size of the jump) $\\times\\, w$ to $U - L$, which you can make small by shrinking $w$. <b>Dirichlet.</b> Every piece of every partition contains rationals and irrationals (density), so $M_i = 1$ and $m_i = 0$ always: the gap is always $b - a$."
+   },
+   {
+    "t": "viz",
+    "name": "ra-sums",
+    "opts": {
+     "jump": {
+      "at": 2,
+      "left": 1,
+      "right": 3
+     },
+     "a": 0,
+     "b": 4,
+     "P": [
+      0,
+      1,
+      1.5,
+      2.5,
+      3,
+      4
+     ],
+     "show": "gap"
+    },
+    "cap": "A step function with a jump at $x = 2$: only the piece containing the jump has a gap. Make that piece thinner and the gap disappears."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The gap at a jump",
+    "q": "Let $f = 3$ on $[0, 2)$ and $f = 5$ on $[2, 4]$. For $P = \\{0, 1.9, 2.1, 4\\}$, find $U - L$.",
+    "steps": [
+     "The pieces $[0, 1.9]$ and $[2.1, 4]$ have $M_i = m_i$.",
+     "The middle piece $[1.9, 2.1]$ has $M - m = 5 - 3 = 2$ and width $0.2$."
+    ],
+    "a": "$U - L = 0.4$. A middle piece of width $w$ gives $2w$, as small as you like."
+   },
+   {
+    "t": "ex",
+    "title": "Dirichlet's function",
+    "q": "Let $f = 2$ on the rationals and $f = -1$ on the irrationals in $[0, 3]$. Find $U(f, P)$ and $L(f, P)$ for any partition.",
+    "steps": [
+     "Every piece contains both kinds of numbers: $M_i = 2$ and $m_i = -1$."
+    ],
+    "a": "$U = 2 \\cdot 3 = 6$ and $L = -3$ for every $P$: not integrable."
+   },
+   {
+    "t": "ex",
+    "title": "Changing finitely many values",
+    "q": "$g(x) = x^{2}$ on $[0, 3]$ except $g(1) = 100$. Find $\\int_0^3 g$.",
+    "steps": [
+     "Put $x = 1$ inside a tiny piece; it changes $U - L$ by at most about $100 \\times$ (its width)."
+    ],
+    "a": "$\\int_0^3 g = \\int_0^3 x^{2}\\,dx = 9$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Two opposite errors.</b> \"Bounded implies integrable\" is false (Dirichlet's function). \"A function with a jump cannot be integrated\" is false too: finitely many jumps cost nothing. The real question is how big the set of discontinuities is. (Lebesgue's criterion: a bounded function is Riemann integrable exactly when its discontinuities form a set of measure zero. Thomae's function, discontinuous at every rational, is integrable with integral $0$.)"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 5.2 (continuous functions are integrable)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on integrable functions"
+   }
+  ]
+ },
+ "ra.integral-properties": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once a function is <a href=\"/math/real-analysis/integrable-functions/\">integrable</a>, simple inequalities about $f$ become inequalities about $\\int f$. Combined with the <a href=\"/math/real-analysis/evt/\">extreme value theorem</a>, they give the mean value theorem for integrals, a key step in the proof of the fundamental theorem."
+   },
+   {
+    "t": "key",
+    "html": "If $m \\le f(x) \\le M$ on $[a, b]$, then $m(b - a) \\le \\int_a^b f \\le M(b - a)$. Also $\\left|\\int_a^b f\\right| \\le \\int_a^b |f|$. <b>Mean value theorem for integrals:</b> if $f$ is continuous on $[a, b]$, then $f(c) = \\frac{1}{b - a}\\int_a^b f$ for some $c \\in [a, b]$."
+   },
+   {
+    "t": "why",
+    "html": "For the one-piece partition $\\{a, b\\}$, the lower sum is at least $m(b - a)$ and the upper sum at most $M(b - a)$, and the integral sits between all lower and upper sums. For the absolute value, $-|f| \\le f \\le |f|$ integrates to $-\\int |f| \\le \\int f \\le \\int |f|$. For the mean value theorem, let $m$ and $M$ be the minimum and maximum of $f$ (they exist by the EVT). The average $\\frac{1}{b - a}\\int_a^b f$ lies between $m$ and $M$, so by the intermediate value theorem $f$ takes that value at some $c$. $\\blacksquare$"
+   },
+   {
+    "t": "viz",
+    "name": "graph",
+    "opts": {
+     "fns": [
+      "-x^2+6x-2",
+      {
+       "f": "7",
+       "color": "green",
+       "dash": true,
+       "label": "max"
+      },
+      {
+       "f": "-2",
+       "color": "red",
+       "dash": true,
+       "label": "min"
+      }
+     ],
+     "shade": {
+      "fn": 0,
+      "a": 2,
+      "b": 6
+     },
+     "xmin": 0,
+     "xmax": 7,
+     "ymin": -4,
+     "ymax": 9
+    },
+    "cap": "$f(x) = -x^{2} + 6x - 2$ on $[2, 6]$: the integral is trapped between the rectangles of height $\\min f = -2$ and $\\max f = 7$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Bounds without integrating",
+    "q": "Bound $\\int_2^6 \\left(-x^{2} + 6x - 2\\right) dx$ using the minimum and maximum of the integrand.",
+    "steps": [
+     "The vertex is at $x = 3$, inside $[2, 6]$, with value $7$: the maximum.",
+     "At the ends: $f(2) = 6$ and $f(6) = -2$; the minimum is $-2$."
+    ],
+    "a": "$-8 \\le \\int_2^6 f \\le 28$. (The true value is $\\frac{56}{3}$.)"
+   },
+   {
+    "t": "ex",
+    "title": "The point of the mean value theorem",
+    "q": "Find $c$ in $[0, 3]$ with $f(c)$ equal to the average of $f(x) = x^{2}$ on $[0, 3]$.",
+    "steps": [
+     "The average is $\\frac{1}{3}\\int_0^3 x^{2}\\,dx = \\frac{1}{3} \\cdot 9 = 3$.",
+     "$c^{2} = 3$ with $c \\ge 0$."
+    ],
+    "a": "$c = \\sqrt{3}$"
+   },
+   {
+    "t": "ex",
+    "title": "Cancellation",
+    "q": "For $f(x) = x - 1$ on $[-2, 3]$, compute $\\left|\\int f\\right|$ and $\\int |f|$.",
+    "steps": [
+     "$\\int_{-2}^{3} (x - 1)\\,dx = \\left[\\frac{x^{2}}{2} - x\\right]_{-2}^{3} = \\frac{3}{2} - 4 = -\\frac{5}{2}$.",
+     "For $\\int |f|$, split at $x = 1$: $\\int_{-2}^{1} (1 - x)\\,dx = \\frac{9}{2}$ and $\\int_1^3 (x - 1)\\,dx = 2$."
+    ],
+    "a": "$\\left|\\int f\\right| = \\frac{5}{2}$, $\\int |f| = \\frac{13}{2}$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Using the values at the ends as the bounds.</b> The bounds need the true minimum and maximum of $f$ on the interval; for a function that turns, those are often inside. In the first example, the ends give $6$ and $-2$, but the maximum is $7$. Also keep $\\left|\\int f\\right| \\le \\int |f|$ pointing the right way: positive and negative parts cancel inside $\\int f$, never inside $\\int |f|$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 5.2 (properties of the integral)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 3.3"
+   }
+  ]
+ },
+ "ra.ftc": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The fundamental theorem of calculus links the two halves of calculus. In <a href=\"/math/calculus-1/ftc-accumulation/\">Calculus 1</a> you used it; now we can prove it, using <a href=\"/math/real-analysis/integral-properties/\">bounds for integrals</a> and the definition of <a href=\"/math/real-analysis/differentiability/\">the derivative</a>. The proof also shows exactly what can go wrong at a jump."
+   },
+   {
+    "t": "key",
+    "html": "Let $f$ be integrable on $[a, b]$ and $F(x) = \\int_a^x f(t)\\,dt$. Then $F$ is continuous, indeed $|F(x) - F(y)| \\le M|x - y|$ when $|f| \\le M$. If $f$ is continuous at $c$, then $F'(c) = f(c)$. At a jump of $f$, $F$ has a corner: its one-sided derivatives are the one-sided values of $f$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Continuity.</b> $|F(x) - F(y)| = \\left|\\int_y^x f\\right| \\le M|x - y|$. <b>Derivative.</b> For $h \\ne 0$, $$\\frac{F(c + h) - F(c)}{h} - f(c) = \\frac{1}{h}\\int_c^{c+h} \\big(f(t) - f(c)\\big)\\,dt.$$ Let $\\varepsilon > 0$. Continuity at $c$ gives $\\delta$ with $|f(t) - f(c)| < \\varepsilon$ for $|t - c| < \\delta$. For $0 < |h| < \\delta$, the integrand is less than $\\varepsilon$ in size over an interval of length $|h|$, so the right side is at most $\\frac{1}{|h|}\\cdot\\varepsilon|h| = \\varepsilon$. So the difference quotient tends to $f(c)$. $\\blacksquare$ The other half, $\\int_a^b g' = g(b) - g(a)$, follows from the mean value theorem applied on each piece of a partition."
+   },
+   {
+    "t": "viz",
+    "name": "ftc",
+    "opts": {
+     "f": "1+(2)*(sign(x-2)+1)/2",
+     "a": 0,
+     "x": 3,
+     "xmin": -0.5,
+     "xmax": 4.5
+    },
+    "cap": "The area function of a step function: $F$ is made of straight pieces, with a corner where $f$ jumps."
+   },
+   {
+    "t": "p",
+    "html": "The two halves of the theorem fit together like this. Part 1 (above) says that integrating and then differentiating gets you back where you started, at points of continuity. Part 2 says that differentiating and then integrating also gets you back: if $g$ is differentiable and $g'$ is integrable, then for any partition the mean value theorem gives $g(x_i) - g(x_{i-1}) = g'(c_i)\\Delta x_i$, so $g(b) - g(a) = \\sum g'(c_i)\\Delta x_i$, a Riemann sum for $\\int_a^b g'$. It lies between the lower and upper sums for every partition, so it equals the integral."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The area function of a step function",
+    "q": "Let $f(t) = 1$ for $t < 2$ and $f(t) = 3$ for $t \\ge 2$, and $F(x) = \\int_0^x f$. Find $F(3)$ and the one-sided derivatives of $F$ at $2$.",
+    "steps": [
+     "For $x > 2$: $F(x) = 1 \\cdot 2 + 3(x - 2)$, so $F(3) = 5$.",
+     "Just left of $2$, $F$ has slope $1$; just right, slope $3$."
+    ],
+    "a": "$F(3) = 5$; left derivative $1$, right derivative $3$, so $F'(2)$ does not exist."
+   },
+   {
+    "t": "ex",
+    "title": "The chain rule with the FTC",
+    "q": "Let $G(x) = \\int_1^{x^{2}} (t^{2} + 3)\\,dt$. Find $G'(2)$.",
+    "steps": [
+     "$G(x) = F(x^{2})$ with $F' = t^{2} + 3$, so $G'(x) = \\left((x^{2})^{2} + 3\\right)\\cdot 2x$."
+    ],
+    "a": "$G'(2) = (16 + 3) \\cdot 4 = 76$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>\"$F' = f$ everywhere.\"</b> The FTC gives $F'(c) = f(c)$ at points where $f$ is continuous. At a jump of $f$, the difference quotients of $F$ from the two sides tend to the two different one-sided values, so $F$ is not differentiable there. The graph of $F$ is still continuous: integration smooths jumps into corners."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 5.3 (fundamental theorem of calculus)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on the fundamental theorem of calculus"
+   }
+  ]
+ },
+ "ra.riemann-sum-limits": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The integral of a continuous function is the limit of <b>any</b> Riemann sums whose pieces shrink, because the sums are squeezed between lower and upper sums whose gap goes to $0$ (<a href=\"/math/real-analysis/ftc/\">the integral is well defined</a>). Read backward, this turns certain limits of sums into integrals you can evaluate with the <a href=\"/math/calculus-1/ftc-evaluate/\">fundamental theorem</a>."
+   },
+   {
+    "t": "key",
+    "html": "If $f$ is continuous on $[0, 1]$, then $$\\lim_{n \\to \\infty} \\frac{1}{n}\\sum_{k=1}^{n} f\\left(\\frac{k}{n}\\right) = \\int_0^1 f(x)\\,dx.$$ To use it, rewrite each term as $f\\left(\\frac{k}{n}\\right)\\cdot\\frac{1}{n}$: the sample point is $\\frac{k}{n}$ and the width is $\\frac{1}{n}$."
+   },
+   {
+    "t": "why",
+    "html": "The points $\\frac{k}{n}$ cut $[0, 1]$ into $n$ pieces of width $\\frac{1}{n}$, and $f\\left(\\frac{k}{n}\\right)$ is the value at the right end of the $k$th piece. So the sum is a Riemann sum, and it lies between $L(f, P_n)$ and $U(f, P_n)$. Since $f$ is continuous, it is integrable, so $U - L \\to 0$ and both tend to $\\int_0^1 f$. The sum is squeezed to the same value. The same idea works on other intervals: $\\sum_{k=1}^{2n} \\frac{1}{n} f\\left(\\frac{k}{n}\\right) \\to \\int_0^2 f$."
+   },
+   {
+    "t": "viz",
+    "name": "riemann",
+    "opts": {
+     "f": "1/(1+x^2)",
+     "a": 0,
+     "b": 1,
+     "n": 6,
+     "method": "right",
+     "exact": true
+    },
+    "cap": "Right-endpoint sums for $\\frac{1}{1 + x^{2}}$ on $[0, 1]$ approach $\\frac{\\pi}{4}$: they are exactly the sums $\\sum \\frac{n}{n^{2} + k^{2}}$."
+   },
+   {
+    "t": "p",
+    "html": "The recognition step is the whole skill. Look for a factor $\\frac{1}{n}$ (or something that becomes one after dividing top and bottom by a power of $n$), and for $k$ appearing only through $\\frac{k}{n}$. Then the function is whatever is applied to $\\frac{k}{n}$, and the interval runs from where $\\frac{k}{n}$ starts to where it ends. A constant factor in front of the sum just multiplies the integral."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A sum that becomes $\\frac{\\pi}{4}$",
+    "q": "Find $\\lim \\sum_{k=1}^{n} \\frac{n}{n^{2} + k^{2}}$.",
+    "steps": [
+     "Divide top and bottom by $n^{2}$: $\\frac{n}{n^{2} + k^{2}} = \\frac{1}{1 + (k/n)^{2}}\\cdot\\frac{1}{n}$.",
+     "So the sum is a Riemann sum for $f(x) = \\frac{1}{1 + x^{2}}$ on $[0, 1]$."
+    ],
+    "a": "$\\int_0^1 \\frac{dx}{1 + x^{2}} = \\arctan 1 = \\frac{\\pi}{4}$."
+   },
+   {
+    "t": "ex",
+    "title": "A logarithm from a sum",
+    "q": "Find $\\lim \\sum_{k=1}^{n} \\frac{1}{n + k}$.",
+    "steps": [
+     "$\\frac{1}{n + k} = \\frac{1}{1 + k/n}\\cdot\\frac{1}{n}$."
+    ],
+    "a": "$\\int_0^1 \\frac{dx}{1 + x} = \\ln 2$."
+   },
+   {
+    "t": "ex",
+    "title": "Powers",
+    "q": "Find $\\lim \\frac{1}{n}\\sum_{k=1}^{n} \\left(\\frac{k}{n}\\right)^{3}$.",
+    "steps": [
+     "This is a Riemann sum for $x^{3}$ on $[0, 1]$."
+    ],
+    "a": "$\\int_0^1 x^{3}\\,dx = \\frac{1}{4}$ (compare $\\sum_{k=1}^{n} k^{3} = \\frac{n^{2}(n + 1)^{2}}{4}$, which gives the same limit)."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Losing the width or the interval.</b> Every term must be written as $f(\\text{point})\\cdot\\frac{1}{n}$; a sum like $\\sum \\frac{k}{n^{2}}$ hides the $\\frac{1}{n}$ inside $\\frac{k}{n}\\cdot\\frac{1}{n}$. And count the terms: $k$ from $1$ to $2n$ with width $\\frac{1}{n}$ covers $[0, 2]$, not $[0, 1]$, so $\\sum_{k=1}^{2n} \\frac{1}{n + k} \\to \\ln 3$."
+   },
+   {
+    "t": "note",
+    "html": "These limits are a two-way street. Numerical methods use them forward: a Riemann sum with large $n$ approximates an integral. Analysis uses them backward: a limit of sums that looks hopeless by algebra is recognized as an integral and evaluated exactly."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 5.1 (Riemann sums and the integral)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on Riemann sums"
+   }
+  ]
+ },
+ "ra.pointwise-convergence": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Power series, Fourier series and solutions of differential equations are all limits of sequences of functions. The simplest way to take such a limit is one point at a time, using what you know about <a href=\"/math/real-analysis/limit-laws/\">limits of sequences</a>. It is simple, and it is too weak to keep <a href=\"/math/real-analysis/continuity/\">continuity</a>."
+   },
+   {
+    "t": "key",
+    "html": "$f_n \\to f$ <b>pointwise</b> on $S$ when $f_n(x) \\to f(x)$ for each $x \\in S$ separately: for every $x$ and every $\\varepsilon > 0$ there is an $N$ (which may depend on $x$) with $|f_n(x) - f(x)| < \\varepsilon$ for $n \\ge N$. A pointwise limit of continuous functions can be discontinuous."
+   },
+   {
+    "t": "why",
+    "html": "Fix $x$, and $(f_n(x))$ is an ordinary sequence of numbers. For $f_n(x) = x^{n}$ on $[0, 1]$: if $0 \\le x < 1$ then $x^{n} \\to 0$, and at $x = 1$ every term is $1$. So the limit is $0$ on $[0, 1)$ and $1$ at $1$: it jumps, although every $x^{n}$ is continuous. The reason is visible in the $N$: to get $x^{n} < \\frac{1}{2}$ you need $n > \\frac{\\ln 2}{-\\ln x}$, which grows without bound as $x \\to 1$. Points near $1$ converge more and more slowly, and no single $N$ serves them all."
+   },
+   {
+    "t": "p",
+    "html": "In symbols, continuity of the limit would mean swapping two limits: $\\lim_{x \\to 1}\\lim_{n \\to \\infty} x^{n} = 0$, while $\\lim_{n \\to \\infty}\\lim_{x \\to 1} x^{n} = 1$. Limits cannot always be swapped, and the rest of this unit is about when they can."
+   },
+   {
+    "t": "viz",
+    "name": "ra-unifband",
+    "opts": {
+     "fn": "x^n",
+     "f": null,
+     "n": 4,
+     "nmax": 40,
+     "xmin": 0,
+     "xmax": 1
+    },
+    "cap": "$f_n(x) = x^{n}$ on $[0, 1]$ for growing $n$ (earlier ones faint): each graph is continuous, but near $x = 1$ they bend up later and later, and the limit jumps at $1$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A limit with three cases",
+    "q": "Find the pointwise limit of $f_n(x) = \\frac{x^{n}}{1 + x^{n}}$ on $[0, \\infty)$.",
+    "steps": [
+     "$0 \\le x < 1$: $x^{n} \\to 0$, so $f_n(x) \\to 0$.",
+     "$x = 1$: every term is $\\frac{1}{2}$.",
+     "$x > 1$: divide by $x^{n}$: $\\frac{1}{x^{-n} + 1} \\to 1$."
+    ],
+    "a": "$f = 0$ on $[0, 1)$, $f(1) = \\frac{1}{2}$, $f = 1$ on $(1, \\infty)$: discontinuous at $1$."
+   },
+   {
+    "t": "ex",
+    "title": "The exponential as a limit",
+    "q": "Find $\\lim_{n \\to \\infty} \\left(1 + \\frac{x}{n}\\right)^{n}$ at $x = 2$.",
+    "steps": [
+     "This is the classic limit $\\left(1 + \\frac{x}{n}\\right)^{n} \\to e^{x}$."
+    ],
+    "a": "$e^{2}$. Here the limit function $e^{x}$ is continuous."
+   },
+   {
+    "t": "ex",
+    "title": "A special point",
+    "q": "Find the pointwise limit of $f_n(x) = \\arctan(nx)$ at $x = 0$ and at $x = \\frac{1}{100}$.",
+    "steps": [
+     "At $0$ every term is $0$.",
+     "At $\\frac{1}{100}$, $nx \\to \\infty$, so $\\arctan(nx) \\to \\frac{\\pi}{2}$."
+    ],
+    "a": "$0$ and $\\frac{\\pi}{2}$: the limit jumps at $0$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Missing the special points.</b> Students compute the limit for a \"typical\" $x$ and forget the boundary cases: $x = 1$ for $x^{n}$, $x = 0$ for $\\arctan(nx)$ or $\\frac{nx}{1 + nx}$. Before writing down $f$, list the values of $x$ where the behavior of $f_n(x)$ changes (where a base equals $1$, or a product $nx$ stays $0$), and treat each separately."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 6.1 (pointwise convergence)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on sequences of functions"
+   }
+  ]
+ },
+ "ra.uniform-convergence": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<a href=\"/math/real-analysis/pointwise-convergence/\">Pointwise convergence</a> lets each $x$ converge at its own speed. Uniform convergence demands one speed for all of them, and the cleanest way to measure it is a single number, the sup norm. Computing it is a maximum problem, so the <a href=\"/math/real-analysis/evt/\">extreme value theorem</a> and calculus do the work."
+   },
+   {
+    "t": "key",
+    "html": "The <b>sup norm</b> is $\\|g\\| = \\sup_{x \\in S} |g(x)|$. $f_n \\to f$ <b>uniformly</b> on $S$ when $\\|f_n - f\\| \\to 0$; equivalently, for every $\\varepsilon > 0$ there is an $N$ with $|f_n(x) - f(x)| < \\varepsilon$ for <b>every</b> $x \\in S$ and every $n \\ge N$. Uniform implies pointwise; not conversely."
+   },
+   {
+    "t": "why",
+    "html": "$\\|f_n - f\\| < \\varepsilon$ says the whole graph of $f_n$ lies inside the band between $f - \\varepsilon$ and $f + \\varepsilon$. So uniform convergence means: for every band width, from some $N$ on, every $f_n$ fits entirely inside the band. To decide it, compute $\\|f_n - f\\|$ (find the largest gap, often by setting a derivative to $0$) and see whether it goes to $0$. For $x^{n}$ on $[0, 1)$ the sup is $1$ for every $n$: never inside a band of width $\\frac{1}{2}$, so the convergence is not uniform. On $[0, \\frac{1}{2}]$ the sup is $\\left(\\frac{1}{2}\\right)^{n} \\to 0$: uniform."
+   },
+   {
+    "t": "viz",
+    "name": "ra-unifband",
+    "opts": {
+     "fn": "x/(1+n*x^2)",
+     "f": "0",
+     "n": 2,
+     "nmax": 60,
+     "eps": 0.1,
+     "xmin": -3,
+     "xmax": 3,
+     "ymin": -0.6,
+     "ymax": 0.6
+    },
+    "cap": "$f_n(x) = \\frac{x}{1 + nx^{2}}$ with the band $0 \\pm \\varepsilon$: the red segment marks the largest gap, $\\frac{1}{2\\sqrt{n}}$ at $x = \\frac{1}{\\sqrt{n}}$. Increase $n$ until the whole graph fits in the band."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Calculus finds the sup",
+    "q": "Find $\\|f_n - 0\\|$ on $\\mathbb{R}$ for $f_n(x) = \\frac{x}{1 + nx^{2}}$.",
+    "steps": [
+     "The derivative $\\frac{1 - nx^{2}}{(1 + nx^{2})^{2}}$ is $0$ at $x = \\pm\\frac{1}{\\sqrt{n}}$.",
+     "The value there is $\\frac{1/\\sqrt{n}}{2} = \\frac{1}{2\\sqrt{n}}$, and $f_n \\to 0$ at $\\pm\\infty$."
+    ],
+    "a": "$\\|f_n\\| = \\frac{1}{2\\sqrt{n}} \\to 0$: uniform convergence to $0$."
+   },
+   {
+    "t": "ex",
+    "title": "A bump that does not shrink",
+    "q": "Is $f_n(x) = \\frac{nx}{1 + n^{2}x^{2}} \\to 0$ uniform on $[0, 1]$?",
+    "steps": [
+     "At $x = \\frac{1}{n}$ the value is $\\frac{1}{2}$, the maximum, for every $n$.",
+     "So $\\|f_n\\| = \\frac{1}{2}$, which does not go to $0$, although $f_n(x) \\to 0$ at each $x$."
+    ],
+    "a": "No: pointwise but not uniform."
+   },
+   {
+    "t": "ex",
+    "title": "Finding $N$ for every $x$ at once",
+    "q": "For $f_n(x) = x^{n}$ on $\\left[0, \\frac{1}{2}\\right]$ and $\\varepsilon = 0.01$, find the smallest $N$ that works for all $x$.",
+    "steps": [
+     "$\\|f_n\\| = \\left(\\frac{1}{2}\\right)^{n}$, the value at the right end.",
+     "$\\frac{1}{2^{n}} < 0.01$ means $2^{n} > 100$, so $n \\ge 7$."
+    ],
+    "a": "$N = 7$, one $N$ for every $x$ in the interval."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Fixing $x$ first.</b> \"For each $x$, $|f_n(x) - f(x)| \\to 0$, so the convergence is uniform\" is the definition of pointwise convergence, not uniform. The test for uniform is the supremum over all $x$: it must go to $0$. A moving bump like $\\frac{nx}{1 + n^{2}x^{2}}$ passes the pointwise test at every $x$ and fails the uniform one."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 6.1 (uniform convergence and the uniform norm)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 4.4"
+   }
+  ]
+ },
+ "ra.uniform-limits": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Why prefer <a href=\"/math/real-analysis/uniform-convergence/\">uniform convergence</a>? Because it lets you swap limits with the operations of calculus. The proofs are short, and the counterexamples, where the convergence is only pointwise, show that each hypothesis is needed. Integrals bring in the <a href=\"/math/real-analysis/ftc/\">fundamental theorem</a>."
+   },
+   {
+    "t": "key",
+    "html": "If $f_n \\to f$ uniformly on $[a, b]$ and each $f_n$ is continuous, then $f$ is continuous, and $\\int_a^b f_n \\to \\int_a^b f$. For derivatives the hypothesis must be on the derivatives: if $f_n' \\to g$ uniformly (and $f_n(x_0)$ converges at one point), then $f_n \\to f$ with $f' = g$."
+   },
+   {
+    "t": "why",
+    "html": "<b>Continuity</b> (the \"$\\frac{\\varepsilon}{3}$ argument\"). Given $\\varepsilon > 0$, choose $n$ with $\\|f_n - f\\| < \\frac{\\varepsilon}{3}$, then $\\delta$ from the continuity of $f_n$ at $c$. For $|x - c| < \\delta$: $$|f(x) - f(c)| \\le |f(x) - f_n(x)| + |f_n(x) - f_n(c)| + |f_n(c) - f(c)| < \\varepsilon.$$ <b>Integrals.</b> $$\\left|\\int_a^b f_n - \\int_a^b f\\right| \\le \\int_a^b |f_n - f| \\le (b - a)\\|f_n - f\\| \\to 0. \\quad \\blacksquare$$ Both proofs use that one $n$ controls every $x$ at once, which is exactly what pointwise convergence cannot provide."
+   },
+   {
+    "t": "p",
+    "html": "<b>Derivatives</b> follow from integrals when the $f_n'$ are continuous: write $f_n(x) = f_n(x_0) + \\int_{x_0}^{x} f_n'$. As $n \\to \\infty$, the right side tends to $f(x_0) + \\int_{x_0}^{x} g$, by the integral result applied to $f_n' \\to g$. So $f(x) = f(x_0) + \\int_{x_0}^{x} g$, and the fundamental theorem gives $f' = g$."
+   },
+   {
+    "t": "viz",
+    "name": "ra-unifband",
+    "opts": {
+     "fn": "n*x*(1-x^2)^n",
+     "f": "0",
+     "n": 4,
+     "nmax": 40,
+     "eps": null,
+     "xmin": 0,
+     "xmax": 1,
+     "ymin": -0.2,
+     "ymax": 3
+    },
+    "cap": "$f_n(x) = nx(1 - x^{2})^{n}$: every $f_n$ has area close to $\\frac{1}{2}$, but the bump slides toward $0$ and gets taller, and the pointwise limit is $0$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "The limit of the integrals is not the integral of the limit",
+    "q": "For $f_n(x) = nx(1 - x^{2})^{n}$ on $[0, 1]$, find $\\lim \\int_0^1 f_n$ and $\\int_0^1 \\lim f_n$.",
+    "steps": [
+     "Substitute $u = 1 - x^{2}$: $\\int_0^1 nx(1 - x^{2})^{n}\\,dx = \\frac{n}{2}\\int_0^1 u^{n}\\,du = \\frac{n}{2(n + 1)} \\to \\frac{1}{2}$.",
+     "For each $x \\in (0, 1]$, $(1 - x^{2})^{n} \\to 0$ much faster than $n$ grows, and $f_n(0) = 0$; the pointwise limit is $0$."
+    ],
+    "a": "$\\frac{1}{2}$ versus $0$: the convergence cannot be uniform (indeed $\\|f_n\\| \\to \\infty$)."
+   },
+   {
+    "t": "ex",
+    "title": "When uniform convergence holds",
+    "q": "For $f_n(x) = x + \\frac{x^{2}}{n}$ on $[0, 1]$, compare $\\lim \\int f_n$ and $\\int \\lim f_n$.",
+    "steps": [
+     "$\\|f_n - x\\| = \\frac{1}{n} \\to 0$: uniform.",
+     "$\\int_0^1 f_n = \\frac{1}{2} + \\frac{1}{3n} \\to \\frac{1}{2}$, and $\\int_0^1 x\\,dx = \\frac{1}{2}$."
+    ],
+    "a": "Both are $\\frac{1}{2}$, as the theorem guarantees."
+   },
+   {
+    "t": "ex",
+    "title": "Derivatives need more",
+    "q": "$f_n(x) = \\frac{\\sin(nx)}{n} \\to 0$ uniformly on $\\mathbb{R}$. Do the derivatives converge to $0$?",
+    "steps": [
+     "$f_n'(x) = \\cos(nx)$, and $f_n'(0) = 1$ for every $n$."
+    ],
+    "a": "No. Uniform convergence of $f_n$ does not control $f_n'$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Swapping without checking.</b> Moving a limit inside an integral, or differentiating a series term by term, is a swap of two limits, and it can fail. Before writing $\\lim \\int f_n = \\int \\lim f_n$, check uniform convergence (or another theorem's hypotheses). A quick warning sign is a bump that gets taller and thinner: the sup norm does not go to $0$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 6.2 (interchange of limits)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100A Real Analysis, lecture notes on uniform convergence and integration"
+   }
+  ]
+ },
+ "ra.weierstrass-m-test": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "For a series of functions $\\sum f_k$, uniform convergence of the partial sums is hard to check from the definition. The M-test reduces it to a single series of numbers, using <a href=\"/math/real-analysis/absolute-convergence/\">comparison</a> and the <a href=\"/math/real-analysis/uniform-convergence/\">sup norm</a>."
+   },
+   {
+    "t": "key",
+    "html": "<b>Weierstrass M-test.</b> If there are numbers $M_k$ with $|f_k(x)| \\le M_k$ for every $x \\in S$ and $\\sum M_k$ converges, then $\\sum f_k$ converges uniformly (and absolutely) on $S$. The natural choice is $M_k = \\|f_k\\| = \\sup_S |f_k|$."
+   },
+   {
+    "t": "why",
+    "html": "For each $x$, comparison with $\\sum M_k$ shows that $\\sum f_k(x)$ converges absolutely; call the sum $f(x)$. The tail is bounded the same way for every $x$: $$\\left|f(x) - \\sum_{k=1}^{n} f_k(x)\\right| = \\left|\\sum_{k > n} f_k(x)\\right| \\le \\sum_{k > n} M_k.$$ The right side does not depend on $x$ and goes to $0$ (it is the tail of a convergent series). So the partial sums converge uniformly. $\\blacksquare$ Combined with the previous topic, a series of continuous functions that passes the M-test has a continuous sum, and can be integrated term by term."
+   },
+   {
+    "t": "p",
+    "html": "The test is strong enough for a famous example. Weierstrass showed that $\\sum_{k=0}^{\\infty} \\frac{1}{2^{k}}\\cos(b^{k}\\pi x)$, for a large odd integer $b$, is differentiable at no point at all. Yet the M-test with $M_k = \\frac{1}{2^{k}}$ shows at once that the sum is continuous everywhere. Continuity survives uniform limits; differentiability does not."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A trigonometric series",
+    "q": "For $\\sum_{k=1}^{\\infty} \\frac{\\sin(kx)}{k^{2}}$ on $\\mathbb{R}$, find $M_k$ and conclude.",
+    "steps": [
+     "$\\left|\\frac{\\sin(kx)}{k^{2}}\\right| \\le \\frac{1}{k^{2}}$, with equality for some $x$.",
+     "$\\sum \\frac{1}{k^{2}}$ converges."
+    ],
+    "a": "$M_k = \\frac{1}{k^{2}}$; the series converges uniformly on $\\mathbb{R}$, so its sum is continuous."
+   },
+   {
+    "t": "ex",
+    "title": "A power series on a smaller interval",
+    "q": "For $\\sum_{k=1}^{\\infty} x^{k}$ on $\\left[-\\frac{2}{3}, \\frac{2}{3}\\right]$, find $\\sum M_k$ and the smallest $N$ with tail bound $\\sum_{k > N} M_k < 0.01$.",
+    "steps": [
+     "$M_k = \\left(\\frac{2}{3}\\right)^{k}$, so $\\sum_{k \\ge 1} M_k = \\frac{2/3}{1/3} = 2$.",
+     "The tail after $N$ terms is $\\frac{(2/3)^{N+1}}{1/3} = 3\\left(\\frac{2}{3}\\right)^{N+1}$, which first drops below $0.01$ at $N = 14$."
+    ],
+    "a": "$\\sum M_k = 2$; $N = 14$ works for every $x$ in the interval."
+   },
+   {
+    "t": "ex",
+    "title": "Where the test fails",
+    "q": "Can the M-test show that $\\sum x^{k}$ converges uniformly on $(-1, 1)$?",
+    "steps": [
+     "The best constant is $\\sup_{(-1, 1)} |x^{k}| = 1$, and $\\sum 1$ diverges."
+    ],
+    "a": "No. (In fact the convergence is not uniform there: the partial sums blow up near $x = 1$.)"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>An $M_k$ that depends on $x$, or one whose series diverges.</b> \"$|x^{k}| \\le |x|^{k}$ and $\\sum |x|^{k}$ converges\" proves pointwise convergence only; the M-test needs numbers that work for all $x$ at once. And a bound whose series diverges proves nothing: the test simply does not apply, which is not the same as the series failing to converge."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 6.1 (series of functions and the M-test)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 4.4 (Weierstrass's test)"
+   }
+  ]
+ },
+ "ra.power-series-radius": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A power series $\\sum c_n x^{n}$ converges on an interval centered at $0$, as you saw in <a href=\"/math/calculus-2/power-series/\">Calculus 2</a>. The <a href=\"/math/real-analysis/root-ratio-limsup/\">root test with lim sup</a> gives the radius in every case, and the <a href=\"/math/real-analysis/weierstrass-m-test/\">M-test</a> shows that the sum is continuous inside."
+   },
+   {
+    "t": "key",
+    "html": "<b>Cauchy–Hadamard.</b> $\\sum c_n x^{n}$ has radius of convergence $R = \\frac{1}{\\limsup |c_n|^{1/n}}$ (with $\\frac{1}{0} = \\infty$ and $\\frac{1}{\\infty} = 0$): it converges absolutely for $|x| < R$ and diverges for $|x| > R$. For every $r < R$ it converges uniformly on $[-r, r]$, so its sum is continuous on $(-R, R)$. The endpoints must be checked separately."
+   },
+   {
+    "t": "why",
+    "html": "Apply the root test to the terms $c_n x^{n}$: $\\limsup |c_n x^{n}|^{1/n} = |x|\\limsup |c_n|^{1/n} = \\frac{|x|}{R}$. This is less than $1$ when $|x| < R$ (convergence) and more than $1$ when $|x| > R$ (divergence). For uniform convergence on $[-r, r]$ with $r < R$: the number $r$ itself is inside the radius, so $\\sum |c_n| r^{n}$ converges, and $M_n = |c_n| r^{n}$ bounds $|c_n x^{n}|$ for every $|x| \\le r$. The M-test finishes the proof. $\\blacksquare$"
+   },
+   {
+    "t": "p",
+    "html": "The lim sup matters for series with gaps or irregular coefficients. In $\\sum 4^{n} x^{2n}$ the odd coefficients are $0$, so the ratios $\\frac{c_{n+1}}{c_n}$ are undefined half the time; but as a series in $x$, $|c_{2m}|^{1/(2m)} = 4^{1/2} = 2$ and the odd ones are $0$, so $\\limsup = 2$ and $R = \\frac{1}{2}$."
+   },
+   {
+    "t": "p",
+    "html": "The differentiated series $\\sum n c_n x^{n-1}$ has the same radius, because $n^{1/n} \\to 1$ does not change the lim sup. On each $[-r, r]$ with $r < R$ it converges uniformly, so by the derivative theorem of the previous topic, a power series can be differentiated term by term inside its interval, as many times as you like."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A series with gaps",
+    "q": "Find the radius of convergence of $\\sum_{n=0}^{\\infty} 9^{n} x^{2n}$.",
+    "steps": [
+     "As a series in $x$: $c_{2n} = 9^{n}$ and the odd coefficients are $0$. So $|c_{2n}|^{1/(2n)} = 3$.",
+     "$\\limsup |c_k|^{1/k} = 3$, so $R = \\frac{1}{3}$."
+    ],
+    "a": "$\\frac{1}{3}$ (check: it is geometric in $9x^{2}$, which needs $9x^{2} < 1$)."
+   },
+   {
+    "t": "ex",
+    "title": "Coefficients that alternate rules",
+    "q": "Find the radius for $c_n = 2^{n}$ (even $n$), $c_n = 5^{n}$ (odd $n$).",
+    "steps": [
+     "$|c_n|^{1/n}$ is $2$ or $5$; the lim sup is $5$."
+    ],
+    "a": "$R = \\frac{1}{5}$."
+   },
+   {
+    "t": "ex",
+    "title": "The endpoints",
+    "q": "Find the interval of convergence of $\\sum_{n=1}^{\\infty} \\frac{(x - 1)^{n}}{n\\,3^{n}}$.",
+    "steps": [
+     "$|c_n|^{1/n} = \\frac{1}{n^{1/n}\\,3} \\to \\frac{1}{3}$, so $R = 3$ around the center $1$: $(-2, 4)$.",
+     "At $x = 4$: $\\sum \\frac{1}{n}$ diverges. At $x = -2$: $\\sum \\frac{(-1)^{n}}{n}$ converges."
+    ],
+    "a": "$[-2, 4)$"
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Forcing the ratio test.</b> For series with missing powers or two interleaved patterns, $\\frac{c_{n+1}}{c_n}$ has no limit (or is undefined), and \"the ratio test fails\" is sometimes misread as \"the radius does not exist.\" The root test with lim sup always gives $R$. And the theorem says nothing at $|x| = R$: test the endpoints with other tools."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 2.6 (power series)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 4.5"
+   }
+  ]
+ },
+ "ra.metric-spaces": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every definition in this course so far used one thing about the real line: the distance $|x - y|$. Limits, <a href=\"/math/real-analysis/cauchy-sequences/\">Cauchy sequences</a> and continuity all make sense wherever you can measure distance, whether between points of the plane (as in <a href=\"/math/pre-algebra/distance-between-points/\">the distance formula</a>), between functions, or between strings. A metric space is the setting that keeps exactly what those proofs need."
+   },
+   {
+    "t": "key",
+    "html": "A <b>metric</b> on a set $X$ is a function $d : X \\times X \\to [0, \\infty)$ with, for all $x, y, z \\in X$: (1) $d(x, y) = 0$ exactly when $x = y$; (2) $d(x, y) = d(y, x)$; (3) the <b>triangle inequality</b> $d(x, z) \\le d(x, y) + d(y, z)$. On $\\mathbb{R}^{2}$ the taxicab metric $d_1 = |\\Delta x| + |\\Delta y|$, the Euclidean metric $d_2 = \\sqrt{\\Delta x^{2} + \\Delta y^{2}}$ and the max metric $d_\\infty = \\max(|\\Delta x|, |\\Delta y|)$ are three examples."
+   },
+   {
+    "t": "why",
+    "html": "Checking that a formula is a metric means checking all three properties, and (3) is the one with content. For $d_\\infty$, use the triangle inequality on $\\mathbb{R}$ in each coordinate: $$|x_i - z_i| \\le |x_i - y_i| + |y_i - z_i| \\le d_\\infty(x, y) + d_\\infty(y, z).$$ The max over $i$ of the left side is $d_\\infty(x, z)$. $\\blacksquare$ For $d_1$, add the coordinate inequalities instead. For $d_2$ the proof needs the Cauchy–Schwarz inequality."
+   },
+   {
+    "t": "p",
+    "html": "Now the old definitions transfer word for word. $x_n \\to x$ means $d(x_n, x) \\to 0$; a sequence is Cauchy when $d(x_m, x_n) < \\varepsilon$ for $m, n \\ge N$; and $X$ is <b>complete</b> when every Cauchy sequence converges to a point of $X$. $\\mathbb{R}$ and $\\mathbb{R}^{n}$ are complete; $\\mathbb{Q}$ is not, since rational approximations of $\\sqrt{2}$ form a Cauchy sequence with no rational limit. The space of continuous functions on $[a, b]$ with the <a href=\"/math/real-analysis/uniform-convergence/\">sup norm</a> distance $d(f, g) = \\|f - g\\|$ is complete too; the proof combines completeness of $\\mathbb{R}$ with the fact that <a href=\"/math/real-analysis/uniform-limits/\">uniform limits</a> of continuous functions are continuous."
+   },
+   {
+    "t": "viz",
+    "name": "ra-balls",
+    "opts": {
+     "p": [
+      0,
+      0
+     ],
+     "q": [
+      2,
+      1
+     ],
+     "r": 3,
+     "metric": "all"
+    },
+    "cap": "The open ball of radius $r$ around $p$ is a diamond for $d_1$, a disk for $d_2$ and a square for $d_\\infty$. Drag $q$ to see its three distances and which balls contain it."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Three distances",
+    "q": "Find $d_1$, $d_2$ and $d_\\infty$ between $P = (1, 0)$ and $Q = (-4, 1)$.",
+    "steps": [
+     "The coordinate differences are $5$ and $1$.",
+     "$d_1 = 6$, $d_2 = \\sqrt{26}$, $d_\\infty = 5$."
+    ],
+    "a": "$6$, $\\sqrt{26} \\approx 5.10$, $5$. In general $d_\\infty \\le d_2 \\le d_1$."
+   },
+   {
+    "t": "ex",
+    "title": "Not a metric",
+    "q": "Is $d(x, y) = (x - y)^{2}$ a metric on $\\mathbb{R}$?",
+    "steps": [
+     "Properties (1) and (2) hold.",
+     "Try $x = 0$, $y = 3$, $z = 6$: $d(0, 6) = 36$, but $d(0, 3) + d(3, 6) = 9 + 9 = 18$."
+    ],
+    "a": "No: the triangle inequality fails."
+   },
+   {
+    "t": "ex",
+    "title": "The discrete metric",
+    "q": "On any set, let $d(x, y) = 1$ if $x \\ne y$ and $d(x, x) = 0$. Is it a metric, and which sequences converge?",
+    "steps": [
+     "For the triangle inequality: if $x \\ne z$, then $y$ differs from at least one of them, so the right side is at least $1$.",
+     "$d(x_n, x) < \\frac{1}{2}$ forces $x_n = x$."
+    ],
+    "a": "Yes. A sequence converges exactly when it is eventually constant."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Skipping the triangle inequality.</b> Positivity and symmetry are easy to see, and many students stop there. A squared distance, or $|x^{2} - y^{2}|$ (which is $0$ for $x = 1$, $y = -1$), shows that each property must be checked. To refute a property, a single specific triple of points is enough; to prove one, you need an argument for all points."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 7.1 (metric spaces)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100B Real Analysis, lecture notes on metric spaces"
+   }
+  ]
+ },
+ "ra.open-closed-sets": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In a <a href=\"/math/real-analysis/metric-spaces/\">metric space</a> the open ball $B(p, r) = \\{x : d(x, p) < r\\}$ plays the role of an open interval. Open and closed sets describe, without any numbers, where limits can go."
+   },
+   {
+    "t": "key",
+    "html": "$U$ is <b>open</b> when every $p \\in U$ has some $r > 0$ with $B(p, r) \\subseteq U$. $E$ is <b>closed</b> when its complement is open; equivalently, whenever $x_n \\in E$ and $x_n \\to x$, the limit $x$ is in $E$. The <b>closure</b> $\\overline{E}$ is $E$ together with all limits of sequences from $E$: the smallest closed set containing $E$."
+   },
+   {
+    "t": "why",
+    "html": "<b>An open ball is open.</b> Let $q \\in B(p, r)$ and set $s = r - d(p, q) > 0$. If $d(x, q) < s$, then $d(x, p) \\le d(x, q) + d(q, p) < s + d(p, q) = r$, so $B(q, s) \\subseteq B(p, r)$. $\\blacksquare$"
+   },
+   {
+    "t": "p",
+    "html": "<b>Closed sets keep their limits.</b> Suppose the complement of $E$ is open, $x_n \\in E$ and $x_n \\to x$. If $x \\notin E$, some ball $B(x, r)$ misses $E$; but $x_n \\in B(x, r)$ for large $n$, and $x_n \\in E$. Contradiction, so $x \\in E$. $\\blacksquare$ In $\\mathbb{R}$: $(0, 1)$ is open, $[0, 1]$ closed, $[0, 1)$ neither, and $\\mathbb{R}$ and $\\varnothing$ are both. Any union of open sets is open, but only finite intersections need be: $\\bigcap_{n} \\left(-\\frac{1}{n}, \\frac{1}{n}\\right) = \\{0\\}$ is not open."
+   },
+   {
+    "t": "viz",
+    "name": "ra-balls",
+    "opts": {
+     "p": [
+      2,
+      4
+     ],
+     "q": null,
+     "r": 1,
+     "metric": "all",
+     "square": 6
+    },
+    "cap": "The open square $(0, 6)^{2}$ is open: from any point $p$ inside it, a ball fits. The largest radius is the distance from $p$ to the nearest side. Drag $p$ toward an edge and watch the room shrink to $0$, but never reach it."
+   },
+   {
+    "t": "viz",
+    "name": "ra-supinf",
+    "opts": {
+     "seq": "1/n",
+     "nmax": 40,
+     "sup": null,
+     "inf": null,
+     "eps": null,
+     "closure": true,
+     "limits": [
+      0
+     ],
+     "xmin": -0.1,
+     "xmax": 1.1
+    },
+    "cap": "The set $\\left\\{\\frac{1}{n}\\right\\}$ is not closed: its terms pile up at $0$, which is not in the set (gold ring). Adding $0$ gives the closure."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "How much room",
+    "q": "Find the largest $r$ such that $B\\left(\\frac{3}{2}, r\\right) \\subseteq (0, 2) \\cup (3, 7)$ in $\\mathbb{R}$.",
+    "steps": [
+     "The point $\\frac{3}{2}$ is in $(0, 2)$; its distances to the ends are $\\frac{3}{2}$ and $\\frac{1}{2}$."
+    ],
+    "a": "$r = \\frac{1}{2}$ (any larger ball sticks out past $2$)."
+   },
+   {
+    "t": "ex",
+    "title": "Closure and interior",
+    "q": "For $E = [0, 2) \\cup \\{5\\}$ in $\\mathbb{R}$, find the closure and the interior (the largest open set inside $E$).",
+    "steps": [
+     "Limits of sequences in $E$ fill in $2$; the isolated point $5$ stays.",
+     "Interior points need a whole interval around them: $0$ and $5$ fail."
+    ],
+    "a": "$\\overline{E} = [0, 2] \\cup \\{5\\}$; interior $= (0, 2)$."
+   },
+   {
+    "t": "ex",
+    "title": "Neither",
+    "q": "Is $\\mathbb{Q}$ open or closed in $\\mathbb{R}$?",
+    "steps": [
+     "Every interval around a rational contains irrationals, so no ball fits: not open.",
+     "Rationals converge to $\\sqrt{2}$, which is not rational: not closed."
+    ],
+    "a": "Neither. Its closure is $\\mathbb{R}$, and its interior is empty."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>\"Not open\" does not mean closed.</b> Sets are not doors. $[0, 1)$ fails both tests: no ball around $0$ fits inside, and the sequence $1 - \\frac{1}{n}$ in the set converges to $1$, outside it. Check each property on its own. Also, openness depends on the space: $[0, 1)$ is open as a subset of the metric space $[0, 1]$, since the ball of radius $\\frac{1}{2}$ around $0$ there is $[0, \\frac{1}{2})$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 7.2 (open and closed sets)"
+   },
+   {
+    "name": "William F. Trench, Introduction to Real Analysis (Trinity University), section 1.3 (the real line: open and closed sets)"
+   }
+  ]
+ },
+ "ra.compactness": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/math/real-analysis/evt/\">extreme value theorem</a> and uniform continuity both used something special about $[a, b]$: every sequence in it has a subsequence converging in it. Compactness is the name for this property, stated in a form that works in every metric space. It builds on <a href=\"/math/real-analysis/open-closed-sets/\">open sets</a>."
+   },
+   {
+    "t": "key",
+    "html": "An <b>open cover</b> of $K$ is a collection of open sets whose union contains $K$. $K$ is <b>compact</b> when <b>every</b> open cover of $K$ has a finite subcover. In a metric space this is equivalent to: every sequence in $K$ has a subsequence converging to a point of $K$. <b>Heine–Borel:</b> in $\\mathbb{R}^{n}$, $K$ is compact exactly when it is closed and bounded."
+   },
+   {
+    "t": "why",
+    "html": "<b>$[a, b]$ is compact.</b> Take an open cover, and let $c$ be the supremum of the $x \\in [a, b]$ for which $[a, x]$ is covered by finitely many sets of the cover ($x = a$ qualifies, so $c$ exists). Some set $U_0$ of the cover contains $c$, and with it an interval $(c - r, c + r)$. Pick a qualifying $x > c - r$: finitely many sets cover $[a, x]$, and adding $U_0$ covers $[a, t]$ for every $t < c + r$. If $c < b$, then $t = \\min\\left(c + \\frac{r}{2}, b\\right)$ qualifies and is larger than $c$, which is impossible. So $c = b$, and the same finite family covers $[a, b]$. $\\blacksquare$"
+   },
+   {
+    "t": "p",
+    "html": "<b>Bounded is not enough.</b> The sets $\\left(\\frac{1}{n}, 2\\right)$ cover $(0, 1]$, since every $x > 0$ has $\\frac{1}{n} < x$ for large $n$. But finitely many of them have a largest $N$, and their union $\\left(\\frac{1}{N}, 2\\right)$ misses $\\frac{1}{2N}$. So $(0, 1]$ is not compact: it is not closed. Compact sets give back the theorems of unit 4 in full generality: a continuous function maps compact sets to compact sets, so a continuous real function on a compact set attains a maximum and a minimum."
+   },
+   {
+    "t": "viz",
+    "name": "ra-cover",
+    "opts": {
+     "a": 0,
+     "b": 4,
+     "intervals": [
+      [
+       -0.3,
+       1.2
+      ],
+      [
+       0.9,
+       2.1
+      ],
+      [
+       1.8,
+       3.3
+      ],
+      [
+       3,
+       4.5
+      ],
+      [
+       0.5,
+       1.5
+      ],
+      [
+       2.5,
+       3.6
+      ],
+      [
+       0.2,
+       0.8
+      ]
+     ],
+     "mode": "cover"
+    },
+    "cap": "An open cover of $[0, 4]$. \"Find a finite subcover\" chooses, from the left, the interval that reaches farthest at each step, the same idea as in the proof."
+   },
+   {
+    "t": "viz",
+    "name": "ra-cover",
+    "opts": {
+     "mode": "inv",
+     "nmax": 12
+    },
+    "cap": "The cover $\\left(\\frac{1}{n}, 2\\right)$ of $(0, 1]$: with the slider, use more and more of the intervals. Each finite batch leaves a gap next to $0$."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Choosing a finite subcover",
+    "q": "The open intervals $(-1, 2)$, $(1, 3)$, $(0, 1.5)$, $(2.5, 5)$ cover $[0, 4]$. What is the smallest number of them that still covers?",
+    "steps": [
+     "Start at $0$: $(-1, 2)$ reaches farthest, to $2$.",
+     "The point $2$ is not in $(-1, 2)$; of the intervals containing $2$, $(1, 3)$ reaches farthest. Then $(2.5, 5)$ covers past $4$."
+    ],
+    "a": "$3$; the interval $(0, 1.5)$ is not needed."
+   },
+   {
+    "t": "ex",
+    "title": "How many intervals of the bad cover",
+    "q": "How many of the sets $\\left(\\frac{1}{n}, 2\\right)$ are needed to cover $\\left[\\frac{1}{10}, 1\\right]$?",
+    "steps": [
+     "The union of the first $N$ is $\\left(\\frac{1}{N}, 2\\right)$; it contains $\\frac{1}{10}$ when $\\frac{1}{N} < \\frac{1}{10}$, that is $N \\ge 11$."
+    ],
+    "a": "$11$. The closed interval $\\left[\\frac{1}{10}, 1\\right]$ is compact, so a finite number suffices; for $(0, 1]$ no number does."
+   },
+   {
+    "t": "ex",
+    "title": "Which are compact?",
+    "q": "Which of $[0, 1]$, $[0, \\infty)$, $\\{0\\} \\cup \\left\\{\\frac{1}{n}\\right\\}$, $\\mathbb{Q} \\cap [0, 1]$ are compact?",
+    "steps": [
+     "Apply Heine–Borel: $[0, \\infty)$ is unbounded; $\\mathbb{Q} \\cap [0, 1]$ is not closed."
+    ],
+    "a": "$[0, 1]$ and $\\{0\\} \\cup \\left\\{\\frac{1}{n}\\right\\}$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Showing it for one cover.</b> Finding a finite subcover of one particular open cover proves nothing about compactness; the definition is about every open cover. To show a set is not compact, you need one cover with no finite subcover. To show it is compact, use a theorem (Heine–Borel in $\\mathbb{R}^{n}$, or the sequence criterion) or an argument that handles an arbitrary cover, like the supremum proof above."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 7.4 (completeness and compactness)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100B Real Analysis, lecture notes on compact sets and Heine–Borel"
+   }
+  ]
+ },
+ "ra.contraction-mapping": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Many equations can be written as $x = g(x)$, and the simplest way to try to solve one is to iterate: $x_{n+1} = g(x_n)$. The <a href=\"/math/real-analysis/mvt-inequalities/\">mean value inequality</a> tells you when the iterates shrink their gaps, and completeness of the <a href=\"/math/real-analysis/metric-spaces/\">metric space</a> supplies the limit."
+   },
+   {
+    "t": "key",
+    "html": "<b>Contraction mapping theorem.</b> Let $(X, d)$ be a complete metric space and $g : X \\to X$ a <b>contraction</b>: $d(g(x), g(y)) \\le k\\,d(x, y)$ for all $x, y$, with one constant $k < 1$. Then $g$ has exactly one fixed point $x^{*}$, and for any $x_0$ the iterates converge to it with $d(x_n, x^{*}) \\le \\frac{k^{n}}{1 - k}\\,d(x_1, x_0)$."
+   },
+   {
+    "t": "why",
+    "html": "Each step shrinks the gap: $d(x_{j+1}, x_j) \\le k^{j} d(x_1, x_0)$. For $m > n$, by the triangle inequality and the geometric series, $$d(x_m, x_n) \\le \\sum_{j=n}^{m-1} k^{j} d(x_1, x_0) \\le \\frac{k^{n}}{1 - k}\\,d(x_1, x_0).$$ This goes to $0$, so $(x_n)$ is <a href=\"/math/real-analysis/cauchy-sequences/\">Cauchy</a> and converges to some $x^{*} \\in X$ (completeness). A contraction is continuous, so $x^{*} = \\lim x_{n+1} = \\lim g(x_n) = g(x^{*})$. Letting $m \\to \\infty$ in the display gives the error bound. If $y^{*}$ is another fixed point, $d(x^{*}, y^{*}) = d(g(x^{*}), g(y^{*})) \\le k\\,d(x^{*}, y^{*})$, which forces $d(x^{*}, y^{*}) = 0$. $\\blacksquare$"
+   },
+   {
+    "t": "p",
+    "html": "On a closed interval $I$ of $\\mathbb{R}$ (which is complete), the mean value theorem gives a practical test: if $g$ maps $I$ into $I$ and $|g'(x)| \\le k < 1$ on all of $I$, then $|g(x) - g(y)| = |g'(c)||x - y| \\le k|x - y|$."
+   },
+   {
+    "t": "viz",
+    "name": "ra-cobweb",
+    "opts": {
+     "g": "sqrt(2+x)",
+     "x0": 0,
+     "steps": 3,
+     "xmin": -0.2,
+     "xmax": 2.6,
+     "ymin": -0.2,
+     "ymax": 2.6
+    },
+    "cap": "Iterating $g(x) = \\sqrt{2 + x}$: from $x_0$, go up to the graph, across to the line $y = x$, and repeat. On $[0, 2]$, $|g'| \\le \\frac{1}{2\\sqrt{2}}$, and the path climbs in steps to the fixed point $2$. Drag $x_0$ or press Step."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Checking the hypotheses",
+    "q": "Show that $g(x) = \\cos x$ is a contraction on $[0, 1]$.",
+    "steps": [
+     "$g$ is decreasing there, so $g([0, 1]) = [\\cos 1, 1] \\approx [0.54, 1] \\subseteq [0, 1]$.",
+     "$|g'(x)| = \\sin x \\le \\sin 1 \\approx 0.84$ on $[0, 1]$."
+    ],
+    "a": "It is a contraction with $k = \\sin 1 < 1$. So $\\cos x = x$ has exactly one solution there, about $0.739$."
+   },
+   {
+    "t": "ex",
+    "title": "The a priori bound",
+    "q": "For $g(x) = \\frac{1}{3}x + 5$ and $x_0 = 1$, how many iterations does the bound guarantee for an error below $0.001$?",
+    "steps": [
+     "$x_1 = \\frac{16}{3}$, so $d(x_1, x_0) = \\frac{13}{3}$, and $k = \\frac{1}{3}$.",
+     "The bound is $\\frac{(1/3)^{n}}{2/3}\\cdot\\frac{13}{3} = \\frac{13}{2}\\cdot\\frac{1}{3^{n}} < 0.001$ when $3^{n} > 6500$."
+    ],
+    "a": "$n = 8$ (since $3^{8} = 6561$). The fixed point is $\\frac{15}{2}$."
+   },
+   {
+    "t": "ex",
+    "title": "Close to $1$ is not enough",
+    "q": "$g(x) = x + \\frac{1}{x}$ on $[1, \\infty)$ satisfies $|g(x) - g(y)| < |x - y|$ for $x \\ne y$. Does it have a fixed point?",
+    "steps": [
+     "$x + \\frac{1}{x} = x$ has no solution.",
+     "The ratio $|g'(x)| = 1 - \\frac{1}{x^{2}}$ approaches $1$, so no single $k < 1$ works."
+    ],
+    "a": "No: the theorem needs one constant $k < 1$."
+   },
+   {
+    "t": "mistake",
+    "html": "<b>Checking at one point, or forgetting \"into itself.\"</b> $|g'(x_0)| < 1$ at the fixed point gives convergence only for starting points close enough; the theorem needs $|g'| \\le k$ on the whole set. And $g$ must map the set into itself: $g(x) = \\frac{x}{2} + 3$ shrinks distances on $[0, 1]$, but sends $0$ to $3$, outside, and its fixed point $6$ is not in $[0, 1]$."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Jiří Lebl, Basic Analysis I: Introduction to Real Analysis, section 7.6 (fixed point theorem)"
+   },
+   {
+    "name": "MIT OpenCourseWare 18.100B Real Analysis, lecture notes on the contraction mapping principle"
+   }
+  ]
+ }
+}

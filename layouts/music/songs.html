@@ -1,0 +1,67 @@
+{{- /* /music/songs/: every song in data/music/songs/*.yaml, by level (beginner, intermediate, advanced), easiest first
+   (each file's `order`). The song pages themselves come from content/music/songs/_content.gotmpl + song.html. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+{{- $songs := site.Data.music.songs | default dict -}}
+<div class="mus mus-wide" id="mus-songs">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{ partial "inline/mus-hero.html" . }}
+  {{- with .Content }}<div class="mus-body">{{ . }}</div>{{ end }}
+  <p class="sg-lead">Pick a piece, press Play, and watch. A line moves through the music, each note lights up as it sounds, and the same key lights up on the piano below: <span class="sg-rh">blue</span> for the right hand, <span class="sg-lh">orange</span> for the left. Turn on <b>Letter names</b> to see C, D, E… inside every note, slow it down, play one hand at a time, or turn on <b>Wait for me</b> and play along at your own speed.</p>
+  {{- $levels := slice
+    (dict "k" "beginner" "t" "Beginner" "d" "One hand at a time, then both hands. Quarter and half notes, then eighths. Start here if you've just learned where the notes are.")
+    (dict "k" "intermediate" "t" "Intermediate" "d" "Both hands all the way through, more keys, dotted rhythms and real pieces by Bach, Beethoven, Clementi and Schumann.")
+    (dict "k" "advanced" "t" "Advanced" "d" "Longer pieces with independent hands, wide stretches and expressive playing.") }}
+  {{- $any := false }}
+  {{- range $levels }}{{ $lv := .k }}
+  {{- $list := slice }}
+  {{- range $k, $s := $songs }}{{ if eq $s.level $lv }}{{ $list = $list | append (merge $s (dict "_key" $k)) }}{{ end }}{{ end }}
+  {{- if $list }}{{ $any = true }}
+  <section class="sg-level" id="{{ $lv }}" aria-labelledby="h-{{ $lv }}">
+    <h2 id="h-{{ $lv }}">{{ .t }} <small>{{ len $list }} {{ cond (eq (len $list) 1) "piece" "pieces" }}</small></h2>
+    <p class="mus-small">{{ .d }}</p>
+    <div class="sg-grid">
+    {{- range sort $list "order" }}
+      {{- $slug := .slug | default ._key -}}
+      {{- $rh := .staves.rh | default "" }}{{ $lh := .staves.lh | default "" -}}
+      {{- $bars := 0 }}{{ range split (cond (ne $rh "") $rh $lh) "|" }}{{ if strings.TrimSpace . }}{{ $bars = add $bars 1 }}{{ end }}{{ end -}}
+      {{- if gt (float (.pickup | default 0)) 0 }}{{ $bars = sub $bars 1 }}{{ end -}}
+      {{- $k := string .key -}}
+      {{- $minor := hasSuffix $k "m" }}{{ $t := cond $minor (strings.TrimSuffix "m" $k) $k -}}
+      {{- $t = replace (replace $t "#" "♯") "b" "♭" -}}{{- $t = printf "%s%s" (upper (substr $t 0 1)) (substr $t 1) -}}
+      {{- $hands := cond (and (ne $rh "") (ne $lh "")) "both hands" (cond (ne $rh "") "right hand" "left hand") }}
+      <a class="sg-card" href="{{ printf "music/songs/%s/" $slug | relURL }}">
+        <span class="sg-t">{{ .title }}</span>
+        <span class="sg-c">{{ .composer }}</span>
+        <span class="sg-chips"><i>{{ $t }} {{ cond $minor "minor" "major" }}</i><i>{{ .time }}{{ if .common }} (C){{ end }}{{ if .cut }} (cut){{ end }}</i><i>{{ $bars }} bars</i><i>{{ $hands }}</i>{{ with .arranged }}<i class="sg-arr" title="{{ . }}">arranged</i>{{ end }}</span>
+        {{- with .skills }}<span class="sg-sk">{{ delimit . " · " }}</span>{{ end }}
+      </a>
+    {{- end }}
+    </div>
+  </section>
+  {{- end }}{{ end }}
+  {{- if not $any }}
+  <p class="mus-note">The songs are being engraved and checked note by note. They will appear here soon.</p>
+  {{- end }}
+  <section class="sg-about">
+    <h2>About these editions</h2>
+    <p>Every piece here is either a traditional tune or the work of a composer who died long ago, published before 1930, so it belongs to everyone. The music is our own engraving. When we simplified a piece or wrote our own accompaniment, the song page says so. Each page lists the edition the notes were checked against.</p>
+  </section>
+</div>
+<style>
+#mus-songs .sg-lead,#mus-songs .sg-about p{max-width:48rem;line-height:1.6}
+#mus-songs .sg-rh{color:var(--rh);font-weight:700}
+#mus-songs .sg-lh{color:var(--lh);font-weight:700}
+#mus-songs .sg-level h2 small{font:600 .8rem system-ui,sans-serif;color:var(--muted);margin-left:.4rem}
+#mus-songs .sg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:.75rem;margin:.6rem 0 1.4rem}
+#mus-songs .sg-card{display:flex;flex-direction:column;gap:.3rem;padding:.85rem 1rem;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:14px;background:var(--card);text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.05);color:var(--ink);transition:transform .15s,border-color .15s}
+#mus-songs .sg-card:hover{transform:translateY(-2px);border-color:var(--acc)}
+#mus-songs .sg-t{font:700 1.12rem Georgia,serif;color:var(--acc)}
+#mus-songs .sg-c{font-size:.9rem;color:var(--muted)}
+#mus-songs .sg-chips{display:flex;flex-wrap:wrap;gap:.3rem}
+#mus-songs .sg-chips i{font:600 .74rem system-ui,sans-serif;font-style:normal;padding:.12rem .5rem;border-radius:999px;background:var(--soft);color:var(--ink)}
+#mus-songs .sg-chips i.sg-arr{background:var(--paper);border:1px solid var(--line);color:var(--gt)}
+#mus-songs .sg-sk{font-size:.84rem;color:var(--muted);line-height:1.4}
+@media (prefers-reduced-motion:reduce){#mus-songs .sg-card{transition:none}#mus-songs .sg-card:hover{transform:none}}
+</style>
+{{ end }}

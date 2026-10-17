@@ -1,0 +1,22 @@
+{{- /* Music: base layout for a section page (/music/ and its sub-sections). Front matter as single.html, plus
+     cards: false   no cards for the child pages and sections under the content (shown by default, sorted by weight;
+                    each card: params.icon, title, description)
+   A section that needs its own page (e.g. /music/songs/) sets `layout: <name>` and gets layouts/music/<name>.html. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+<div class="mus{{ if .Params.wide }} mus-wide{{ end }}" id="mus-page">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{- if ne .Params.hero false }}
+  {{ partial "inline/mus-hero.html" . }}{{ end }}
+  {{- with .Content }}
+  <div class="mus-body">
+    {{ . }}
+  </div>{{ end }}
+  {{- if ne .Params.cards false }}{{ with .Pages.ByWeight }}
+  <div class="mus-cards">
+    {{- range . }}
+    <a class="mus-card" href="{{ .RelPermalink }}"><span class="mus-ic" aria-hidden="true">{{ .Params.icon | default "🎵" }}</span><b>{{ .LinkTitle }}</b><span>{{ .Description }}</span></a>
+    {{- end }}
+  </div>{{ end }}{{ end }}
+</div>
+{{ end }}

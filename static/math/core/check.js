@@ -47,6 +47,16 @@
    for 3 ("Equal, but give the angle itself …"). An expected "ln(3)" accepts "ln 3" and "log_3(2)" matches ln(2)/ln(3).
    dp: n       requires a decimal rounded to n places (implies 'dec')     tol: t   accepts |answer - v| <= t
    pct: true   v is a percent: "25%" and "25" both match v '25'
+   ANY VALUE THAT WORKS (Real Analysis: "find an N that works for this ε", "find a δ that works")
+   { t: 'num', v, satisfies: { min, max, minOpen, maxOpen, int, msgLow, msgHigh } }   v is one value that works (it is
+               the answer shown); every real number in the range the data describes is right, whatever its form.
+               min, max: plain-math strings or numbers ('1/100', 'sqrt(91/10)-3'), either may be left out; the ends are
+               included unless minOpen / maxOpen is true; int: true asks for a whole number. Compared exactly when both
+               values are rational, otherwise numerically (equal within 1e-12, relative). Outside the range: msgLow /
+               msgHigh if given, else "It has to be positive." (min 0, open) or "That one doesn't work: it is too
+               small." / "… too large."; not whole: "Give a whole number." answerShow adds the range ("$101$, or any
+               whole number $\ge 101$"). A range with no upper end accepts v + 1, so put it in a multi part (check-gen
+               probes a lone num with v + 1). Tests: /tmp/work_ra/test/check_satisfies.js
    SCIENCE (the Ladders: physics, chemistry, …)
    Scientific notation may be typed: 3.0e8, 3.0E8, 3.0×10^8, 3.0*10^8, 3.0 x 10^8, 3.0·10^8, 3 × 10⁸, 1.6×10^-19, 1.6 x 10^(-19).
    rtol: r     relative tolerance: accepts |answer - v| <= r·|v| (use it for physical quantities: rtol 0.01 is 1%); with tol
@@ -655,6 +665,7 @@
       return { ok: false };
     }
     if (typeof L.val === 'number' && !isFinite(L.val)) return { ok: false, invalid: true, msg: 'That isn\'t a number we can use (check for dividing by 0).' };
+    if (spec.satisfies) return checkSatisfies(spec.satisfies, L, right);
     var dp = spec.dp, form = spec.form || (dp !== undefined ? 'dec' : 'any');
     // percent typed where a plain number is expected: "25%" -> 0.25 already handled by the parser
     if (dp !== undefined) {
@@ -691,6 +702,41 @@
     // equal value: check the form
     var fm = formMsg(form, L, C);
     return fm ? { ok: false, msg: fm, form: true } : right();
+  }
+  // ---- satisfies: any number in a range described by data (see the header: ANY VALUE THAT WORKS)
+  function satBound(x) { // a bound -> { val, q } (q exact when rational), or null when absent
+    if (x === undefined || x === null || str(x).trim() === '') return null;
+    var r = parse(str(x).trim(), { mixed: true }); if (!r.ok) throw new Error('Bad satisfies bound "' + x + '": ' + r.err);
+    var t = casTree(r.node); return { val: withRad(function () { return numVal(t); }), q: exactQ(t) };
+  }
+  function satCmp(L, B) { // the sign of (learner's value − bound)
+    if (L.q && B.q) { var d = L.q.n * B.q.d - B.q.n * L.q.d; return d > 0n ? 1 : d < 0n ? -1 : 0; }
+    if (typeof B.val !== 'number' || !isFinite(B.val)) throw new Error('satisfies: a bound is not a real number');
+    return relEq(L.val, B.val, 1e-12) ? 0 : L.val > B.val ? 1 : -1;
+  }
+  function satisfiesWhy(S, L) { // null when L is in the range; else 'nan', 'int', 'low' or 'high'
+    if (typeof L.val !== 'number' || !isFinite(L.val)) return 'nan';
+    if (S.int && !(L.q ? L.q.d === 1n : Number.isInteger(L.val))) return 'int';
+    var lo = satBound(S.min), hi = satBound(S.max), c;
+    if (lo) { c = satCmp(L, lo); if (c < 0 || (c === 0 && S.minOpen)) return 'low'; }
+    if (hi) { c = satCmp(L, hi); if (c > 0 || (c === 0 && S.maxOpen)) return 'high'; }
+    return null;
+  }
+  function checkSatisfies(S, L, right) {
+    var why = satisfiesWhy(S, L);
+    if (!why) return right();
+    if (why === 'int') return { ok: false, msg: 'Give a whole number.' };
+    if (why === 'low') return { ok: false, msg: S.msgLow || (S.minOpen && /^\s*0\s*$/.test(str(S.min)) && !(L.val > 0) ? 'It has to be positive.' : 'That one doesn’t work: it is too small.') };
+    if (why === 'high') return { ok: false, msg: S.msgHigh || 'That one doesn’t work: it is too large.' };
+    return { ok: false };
+  }
+  function satisfiesNote(S) { // ", or any whole number $\ge 101$" for answerShow
+    var lo = S.min !== undefined && S.min !== null && str(S.min).trim() !== '', hi = S.max !== undefined && S.max !== null && str(S.max).trim() !== '';
+    var what = S.int ? 'whole number' : 'number';
+    if (lo && hi) return ', or any ' + what + ' in $' + (S.minOpen ? '(' : '[') + tx(str(S.min)) + ', ' + tx(str(S.max)) + (S.maxOpen ? ')' : ']') + '$';
+    if (lo) return ', or any ' + what + ' $' + (S.minOpen ? '>' : '\\ge') + ' ' + tx(str(S.min)) + '$';
+    if (hi) return ', or any ' + what + ' $' + (S.maxOpen ? '<' : '\\le') + ' ' + tx(str(S.max)) + '$';
+    return '';
   }
   function checkSF(spec, L, C, right) { // form 'sf': n significant figures
     var n = Math.max(1, Math.min(15, Math.floor(Number(spec.sf)) || 1)), cq = canonQ(C), si = sigInfo(L.text);
@@ -1597,7 +1643,7 @@
         var t = numText(spec); if (DNE.test(t)) return 'Does not exist'; if (INF.test(t)) return '$\\infty$'; if (NINF.test(t)) return '$-\\infty$';
         var t0 = t.replace(/%$/, ''), ct = commaTex(t0), sm = /^(-?\d+(?:\.\d+)?)(?:[eE]|\*10\^\(?)([-+]?\d+)\)?$/.exec(t0);
         if (sm && (spec.form === 'sf' || spec.rtol !== undefined || /e|\*10\^/i.test(str(spec.v)))) return '$' + sm[1] + ' \\times 10^{' + (+sm[2]) + '}$';
-        return '$' + (ct || tx(t0)) + (spec.pct || t0 !== t ? '\\%' : '') + '$';
+        return '$' + (ct || tx(t0)) + (spec.pct || t0 !== t ? '\\%' : '') + '$' + (spec.satisfies ? satisfiesNote(spec.satisfies) : '');
       }
       case 'expr': case 'eq': return '$' + tx(spec.v) + '$';
       case 'set': return spec.v === 'all' ? 'All real numbers' : !spec.v.length ? 'No solution' : '$' + spec.v.map(function (x) { return commaTex(str(x).trim()) || tx(x); }).join(',\\ ') + '$';

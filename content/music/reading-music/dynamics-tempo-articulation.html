@@ -1,0 +1,114 @@
+---
+title: "Dynamics, Tempo and Articulation"
+pill: "Expression"
+description: "How loud (p, mf, f, crescendo), how fast (Andante, Allegro, rit.), and how each note is played (legato, staccato, accents, fermatas)."
+lead: "The notes say what to play. These marks say how: loud or soft, fast or slow, smooth or crisp."
+weight: 11
+icon: "🎻"
+songs:
+  - { slug: melody-schumann, why: "piano (soft), with diminuendos" }
+  - { slug: moonlight-sonata-first-movement, why: "Adagio sostenuto and pianissimo" }
+  - { slug: fur-elise, why: "Poco moto and pianissimo" }
+  - { slug: canon-in-d, why: "growing from p to mf" }
+  - { slug: invention-no-1, why: "a fermata near the end" }
+---
+<p class="ml-lead">Most of these marks are Italian words or short forms of them; Italian has been the usual language for musical directions for centuries. You only need a handful to read most music.</p>
+
+<h2>Dynamics: loud and soft</h2>
+<p>Dynamics are written below the staff (between the staves in piano music), in bold italic letters:</p>
+<div class="ml-tw"><table class="ml-table">
+  <thead><tr><th>Sign</th><th>Italian</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td class="ml-sym">pp</td><td>pianissimo</td><td>very soft</td></tr>
+    <tr><td class="ml-sym">p</td><td>piano</td><td>soft</td></tr>
+    <tr><td class="ml-sym">mp</td><td>mezzo piano</td><td>medium soft</td></tr>
+    <tr><td class="ml-sym">mf</td><td>mezzo forte</td><td>medium loud</td></tr>
+    <tr><td class="ml-sym">f</td><td>forte</td><td>loud</td></tr>
+    <tr><td class="ml-sym">ff</td><td>fortissimo</td><td>very loud</td></tr>
+  </tbody>
+</table></div>
+<p>The piano’s full name, <i>pianoforte</i>, means “soft-loud,” because it could play both, depending on how you press the keys.</p>
+<figure data-ml="staff" data-src='{"rh": "C5/4 D5/4 E5/4 C5/4 | C5/4 D5/4 E5/4 C5/4", "marks": {"1": {"dyn": "p"}, "2": {"dyn": "f"}}}' data-tempo="100" data-max="560" data-label="The same four notes twice: first marked p, soft; then f, loud">
+  <figcaption>The same notes, first <i>p</i>, then <i>f</i>. Press <i>Hear it</i>.</figcaption>
+</figure>
+<p>Gradual changes are written as words or as long, thin wedges called hairpins. <b>Crescendo</b> (<i>cresc.</i>, or a wedge opening to the right) means get louder little by little. <b>Diminuendo</b> or <b>decrescendo</b> (<i>dim.</i>, <i>decresc.</i>, or a wedge closing to the right) means get softer.</p>
+<figure data-ml="staff" data-src='{"rh": "C5/4 D5/4 E5/4 F5/4 | G5/4 A5/4 B5/4 C6/4 | C6/1", "marks": {"1": {"dyn": ["p", "cresc.@2"]}, "3": {"dyn": "f"}}}' data-vels="0.3 0.36 0.42 0.48 0.55 0.62 0.69 0.76 0.82" data-tempo="100" data-max="640" data-label="A rising line marked p, then cresc., arriving at f">
+  <figcaption>Starting soft, a crescendo grows until it reaches <i>f</i>.</figcaption>
+</figure>
+
+<h2>Tempo: fast and slow</h2>
+<p>A word above the first bar sets the speed. These are the most common, from slow to fast. The beats per minute are only rough guides; musicians and editions differ.</p>
+<div class="ml-tw"><table class="ml-table">
+  <thead><tr><th>Word</th><th>Meaning</th><th>Roughly (beats per minute)</th></tr></thead>
+  <tbody>
+    <tr><td><b>Largo</b></td><td>broad, very slow</td><td>40–60</td></tr>
+    <tr><td><b>Adagio</b></td><td>slow, at ease</td><td>66–76</td></tr>
+    <tr><td><b>Andante</b></td><td>at a walking pace</td><td>76–108</td></tr>
+    <tr><td><b>Moderato</b></td><td>moderate</td><td>108–120</td></tr>
+    <tr><td><b>Allegro</b></td><td>quick and bright</td><td>120–156</td></tr>
+    <tr><td><b>Presto</b></td><td>very fast</td><td>168–200</td></tr>
+  </tbody>
+</table></div>
+<p>Many pieces also print a metronome mark such as ♩ = 100: one hundred quarter-note beats per minute. The <a href="../../metronome/">metronome</a> shows the tempo word for any speed you choose.</p>
+<div class="ml-cols">
+  <figure data-ml="staff" data-src='{"rh": "E4/4 E4/4 F4/4 G4/4 | G4/4 F4/4 E4/4 D4/4", "marks": {"1": {"tempo": "Adagio"}}}' data-tempo="66" data-label="The start of Ode to Joy marked Adagio">
+    <figcaption><i>Adagio</i>: slow.</figcaption>
+  </figure>
+  <figure data-ml="staff" data-src='{"rh": "E4/4 E4/4 F4/4 G4/4 | G4/4 F4/4 E4/4 D4/4", "marks": {"1": {"tempo": "Allegro"}}}' data-tempo="138" data-label="The start of Ode to Joy marked Allegro">
+    <figcaption><i>Allegro</i>: quick and bright.</figcaption>
+  </figure>
+</div>
+<p>Changes of speed: <b>ritardando</b> (<i>rit.</i>) or <b>rallentando</b> (<i>rall.</i>) means gradually slower; <b>accelerando</b> (<i>accel.</i>) gradually faster; <b>a tempo</b> means go back to the speed you had before. A <b>fermata</b> (a curve with a dot under it) over a note means hold it longer than its written value, for as long as feels right.</p>
+<figure data-ml="staff" data-src='{"rh": "G4/4 E4/4 F4/4 D4/4 | C4/1", "marks": {"1": {"above": "rit."}, "2": {"fermata": true}}}' data-hear="0" data-max="440" data-label="Two bars: rit. above the first bar, and a fermata over the final whole note">
+  <figcaption>Slow down through the first bar (<i>rit.</i>), then hold the last note (the fermata).</figcaption>
+</figure>
+
+<h2>Articulation: how each note is played</h2>
+<div class="ml-cols ml-two">
+  <div class="ml-card"><h3>Legato</h3><p>Smooth and connected, each note flowing into the next. A curved line over or under different notes, a <b>slur</b>, asks for legato.</p></div>
+  <div class="ml-card"><h3>Staccato</h3><p>A dot above or below the note: make it short and detached, with a little silence after it.</p></div>
+  <div class="ml-card"><h3>Accent</h3><p>A sideways wedge &gt;: play that note with more weight, louder than the notes around it.</p></div>
+  <div class="ml-card"><h3>Tenuto</h3><p>A short line: hold the note for its full value, often leaning on it slightly.</p></div>
+</div>
+<div class="ml-cols ml-two">
+  <figure data-ml="staff" data-src="(C5/4 D5/4 E5/4 F5/4) | G5/1" data-time="4/4" data-tempo="96" data-label="Four notes under a slur, played legato">
+    <figcaption>Legato, under a slur.</figcaption>
+  </figure>
+  <figure data-ml="staff" data-src="C5/4 D5/4 E5/4 F5/4 | G5/1" data-artic=". . . . _" data-time="4/4" data-tempo="96" data-label="The same notes with staccato dots, played short">
+    <figcaption>Staccato: the same notes, short and crisp.</figcaption>
+  </figure>
+  <figure data-ml="staff" data-src="C5/4 C5/4 C5/4 C5/4 | C5/4 C5/4 C5/4 C5/4" data-artic="> _ _ _ > _ _ _" data-vels="0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5" data-time="4/4" data-tempo="96" data-label="Repeated notes with an accent on every first beat">
+    <figcaption>Accents on beat 1 of each bar.</figcaption>
+  </figure>
+  <figure data-ml="staff" data-src="E5/4 E5/4 E5/4 E5/4 | D5/1" data-artic="- - - - _" data-time="4/4" data-tempo="96" data-label="Notes with tenuto lines, each held its full length">
+    <figcaption>Tenuto: full length, slightly leaned on.</figcaption>
+  </figure>
+</div>
+
+<div data-ml="drill" data-type="quiz" data-id="rm-expression-quiz" data-title="What does it mean?">
+<script type="application/json">[
+  {"q": "What does this mark mean?", "big": "pp", "choices": ["very soft", "very loud", "medium soft", "gradually louder"], "a": 0, "why": "pp is pianissimo, very soft."},
+  {"q": "What does this mark mean?", "big": "mf", "choices": ["medium loud", "medium soft", "very loud", "gradually softer"], "a": 0, "why": "mf is mezzo forte, medium loud."},
+  {"q": "What does this mark mean?", "big": "f", "choices": ["loud", "soft", "fast", "hold the note"], "a": 0, "why": "f is forte, loud."},
+  {"q": "What does this mark mean?", "big": "cresc.", "choices": ["gradually louder", "gradually softer", "gradually slower", "very loud"], "a": 0, "why": "Crescendo: grow louder little by little."},
+  {"q": "What does this mark mean?", "big": "dim.", "choices": ["gradually softer", "gradually louder", "gradually faster", "short and detached"], "a": 0, "why": "Diminuendo: get softer little by little."},
+  {"q": "How do you play these notes?", "staff": "C5/4 D5/4 E5/4 F5/4", "o": {"artic": ". . . ."}, "choices": ["short and detached", "smooth and connected", "loud", "held extra long"], "a": 0, "why": "Dots above or below the notes mean staccato."},
+  {"q": "How do you play the first note?", "staff": "G4/4 G4/4 G4/4 G4/4", "o": {"artic": "> _ _ _"}, "choices": ["with extra weight, louder", "very short", "softer than the others", "twice as long"], "a": 0, "why": "The wedge is an accent."},
+  {"q": "How do you play these notes?", "staff": "(C5/4 D5/4 E5/4 F5/4)", "choices": ["smooth and connected", "short and detached", "all at once", "gradually faster"], "a": 0, "why": "A slur over different notes means legato: smooth and connected."},
+  {"q": "What does the sign over the last note mean?", "staff": {"rh": "E4/2 D4/2 | C4/1", "marks": {"2": {"fermata": true}}}, "o": {"timeSig": true}, "hear": false, "choices": ["hold it longer than written", "play it very short", "repeat it", "play it louder"], "a": 0, "why": "That’s a fermata: hold the note as long as feels right."},
+  {"q": "What does this tempo word mean?", "big": "Allegro", "choices": ["quick and bright", "slow", "at a walking pace", "very soft"], "a": 0, "why": "Allegro is quick and bright."},
+  {"q": "What does this tempo word mean?", "big": "Andante", "choices": ["at a walking pace", "very fast", "very slow", "loud"], "a": 0, "why": "Andante means at a walking pace."},
+  {"q": "What does this tempo word mean?", "big": "Adagio", "choices": ["slow", "fast", "moderate", "gradually faster"], "a": 0, "why": "Adagio is slow, at ease."},
+  {"q": "What does this mark mean?", "big": "rit.", "choices": ["gradually slower", "gradually softer", "return to the beginning", "gradually faster"], "a": 0, "why": "Ritardando: slow down little by little."},
+  {"q": "After a rit., what does a tempo tell you?", "big": "a tempo", "choices": ["go back to the earlier speed", "play twice as fast", "stop", "play softly"], "a": 0, "why": "A tempo means return to the tempo you had before the change."}
+]</script>
+</div>
+
+<div class="ml-sum">
+  <h2>Remember</h2>
+  <ul>
+    <li>Dynamics: pp, p, mp, mf, f, ff; cresc. louder, dim. softer.</li>
+    <li>Tempo words set the speed: Largo, Adagio, Andante, Moderato, Allegro, Presto. rit. slows, a tempo returns.</li>
+    <li>Legato (slur) smooth; staccato (dot) short; accent (&gt;) stronger; tenuto (line) full length; fermata: hold.</li>
+  </ul>
+</div>

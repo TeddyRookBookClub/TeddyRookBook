@@ -1,0 +1,125 @@
+{{- /* The metronome (/music/metronome/). Scripts and styles come from front matter (scripts:, styles:) through the
+     section's shared inline/mus-head.html; the behavior is in static/music/rhythm/metronome.js. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+<div class="mus" id="mr-met">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{ partial "inline/mus-hero.html" . }}
+
+  <section class="mr-stage" id="met-stage" aria-label="Metronome">
+    <div class="mr-met-top">
+      <div class="mr-lamp" id="met-lamp" aria-hidden="true"><span class="mr-lamp-glow"></span></div>
+      <div class="mr-bpm-wrap">
+        <p class="mr-bpm"><span id="met-bpm">100</span><small>BPM</small></p>
+        <p class="mr-word"><span id="met-word">Andante</span> <span class="mr-word-m" id="met-word-m">at a walking pace</span></p>
+        <p class="mr-unit" id="met-unit"></p>
+      </div>
+    </div>
+    <div class="mr-dots" id="met-dots" role="group" aria-label="The beats of one bar. Press a beat to change its accent."></div>
+    <p class="mr-count" id="met-count" aria-hidden="true"></p>
+    <div class="mr-go-row">
+      <button type="button" class="mr-go" id="met-go" aria-pressed="false" aria-label="Start the metronome (space bar)"><span class="mr-go-ic" aria-hidden="true"></span><span class="mr-go-t">Start</span></button>
+    </div>
+    <div class="mr-tempo-row">
+      <button type="button" class="mr-round" id="met-minus" aria-label="One beat per minute slower (down arrow)">−</button>
+      <input type="range" class="mr-range" id="met-range" min="20" max="300" step="1" value="100" aria-label="Tempo in beats per minute">
+      <button type="button" class="mr-round" id="met-plus" aria-label="One beat per minute faster (up arrow)">+</button>
+    </div>
+    <div class="mr-tempo-row2">
+      <label class="mr-numfield"><input type="number" id="met-num" min="20" max="300" step="1" value="100" inputmode="numeric" aria-label="Type a tempo, 20 to 300 beats per minute"><span>BPM</span></label>
+      <button type="button" class="mr-tap" id="met-tap" aria-label="Tap tempo: tap a few times at the speed you want (key T)">Tap tempo <kbd>T</kbd></button>
+    </div>
+    <p class="mr-status" id="met-status" aria-live="polite"></p>
+  </section>
+
+  <div class="mr-grid">
+    <section class="mus-box mr-card" aria-labelledby="met-h-beat">
+      <h2 id="met-h-beat">Beat</h2>
+      <div class="mr-field"><span class="mr-lab" id="met-ts-l">Time signature</span>
+        <div class="mus-seg" id="met-ts" role="group" aria-labelledby="met-ts-l"></div></div>
+      <div class="mr-field mr-inline" id="met-custom" hidden>
+        <label>Beats in a bar <input type="number" id="met-cnum" min="1" max="16" step="1" value="5" class="mr-smallnum"></label>
+        <label>Note value <select id="met-cden"><option value="2">2 (half)</option><option value="4">4 (quarter)</option><option value="8">8 (eighth)</option><option value="16">16 (sixteenth)</option></select></label>
+      </div>
+      <div class="mr-field" id="met-group-row" hidden><span class="mr-lab" id="met-group-l">Group the eighths</span>
+        <div class="mus-seg" id="met-group" role="group" aria-labelledby="met-group-l"></div></div>
+      <div class="mr-field" id="met-pulse-row" hidden><span class="mr-lab" id="met-pulse-l">Count</span>
+        <div class="mus-seg mr-noteseg" id="met-pulse" role="group" aria-labelledby="met-pulse-l"></div></div>
+      <div class="mr-field"><span class="mr-lab" id="met-sub-l">Subdivision</span>
+        <div class="mus-seg" id="met-sub" role="group" aria-labelledby="met-sub-l"></div></div>
+      <div class="mr-field"><span class="mr-lab">Accents</span>
+        <p class="mus-small">Press a beat dot to change it: <b>accent</b> (gold), <b>normal</b>, <b>soft</b> (small) or <b>silent</b> (dashed).</p>
+        <button type="button" class="mus-btn" id="met-acc-reset">Usual accents</button></div>
+    </section>
+
+    <section class="mus-box mr-card" aria-labelledby="met-h-sound">
+      <h2 id="met-h-sound">Sound</h2>
+      <div class="mr-field"><span class="mr-lab" id="met-sound-l">Click</span>
+        <div class="mus-seg" id="met-sound" role="group" aria-labelledby="met-sound-l"></div></div>
+      <label class="mr-field"><span class="mr-lab">Volume <output id="met-vol-o">80%</output></span>
+        <input type="range" class="mr-range mr-range-light" id="met-vol" min="0" max="100" step="1" value="80" aria-label="Volume"></label>
+      <p class="mus-small">Every sound here is made by your browser on the spot. Nothing is downloaded.</p>
+    </section>
+
+    <section class="mus-box mr-card" aria-labelledby="met-h-tr">
+      <h2 id="met-h-tr">Speed trainer</h2>
+      <label class="mr-chk"><input type="checkbox" id="met-tr-on"> Raise the tempo as I play</label>
+      <p class="mr-sentence">Add <input type="number" id="met-tr-step" min="1" max="20" value="5" class="mr-smallnum" aria-label="Beats per minute to add each step"> BPM every
+        <input type="number" id="met-tr-every" min="1" max="16" value="4" class="mr-smallnum" aria-label="Bars between steps"> bars, up to
+        <input type="number" id="met-tr-target" min="20" max="300" value="140" class="mr-smallnum" aria-label="Target tempo"> BPM.</p>
+      <p class="mus-small" id="met-tr-info" aria-live="polite"></p>
+      <p class="mus-small">It starts from the tempo above when you press Start. A target below the tempo makes it slow down instead.</p>
+    </section>
+
+    <section class="mus-box mr-card" aria-labelledby="met-h-si">
+      <h2 id="met-h-si">Silent bars</h2>
+      <label class="mr-chk"><input type="checkbox" id="met-si-on"> Drop out for some bars</label>
+      <p class="mr-sentence">Play <input type="number" id="met-si-play" min="1" max="8" value="2" class="mr-smallnum" aria-label="Bars with the click"> bars, then stay silent for
+        <input type="number" id="met-si-mute" min="1" max="8" value="2" class="mr-smallnum" aria-label="Silent bars"> bars.</p>
+      <label class="mr-chk"><input type="checkbox" id="met-si-show"> Keep showing the beat while it is silent</label>
+      <p class="mus-small" id="met-si-info"></p>
+      <p class="mus-small">When the click comes back, you hear at once whether you stayed with it. Turn on <b>Check my timing</b> to see it in numbers.</p>
+    </section>
+
+    <section class="mus-box mr-card" aria-labelledby="met-h-chk">
+      <h2 id="met-h-chk">Check my timing</h2>
+      <label class="mr-chk"><input type="checkbox" id="met-chk-on"> Show a tap pad</label>
+      <div id="met-chk" hidden>
+        <button type="button" class="mr-chk-pad" id="met-chk-pad" aria-label="Tap on every beat (or press J)">Tap on the beat <kbd>J</kbd></button>
+        <p class="mr-chk-last" id="met-chk-last" aria-live="polite"></p>
+        <div class="mr-strip" id="met-chk-strip" aria-hidden="true"><span class="mr-strip-l">early</span><span class="mr-strip-c"></span><span class="mr-strip-r">late</span><div class="mr-strip-marks"></div></div>
+        <p class="mus-small" id="met-chk-stats"></p>
+      </div>
+      <p class="mus-small">Each tap is compared with the nearest beat, after the delay correction below. Gold marks are taps made in silent bars.</p>
+    </section>
+
+    <section class="mus-box mr-card" aria-labelledby="met-h-cal">
+      <h2 id="met-h-cal">Delay and headphones</h2>
+      <p class="mus-small">Sound takes a moment to reach you. Wired headphones and the device's own speaker add very little. <b>Bluetooth headphones and speakers often add a tenth of a second or more</b>, so your taps seem late even when they are right. Measure your delay once with the headphones you use; the metronome and the rhythm trainer both subtract it.</p>
+      <div id="met-cal"></div>
+    </section>
+  </div>
+
+  <section class="mus-box mr-words-box" aria-labelledby="met-h-words">
+    <h2 id="met-h-words">Tempo words</h2>
+    <p class="mus-small">Composers write the speed in Italian words. They describe a mood as much as a speed, so the numbers are <b>approximate</b>: sources differ by a few beats either way. The row for the tempo you have set is highlighted.</p>
+    <div class="mus-tw"><table class="mus-table" id="met-words"><thead><tr><th scope="col">Word</th><th scope="col">Meaning</th><th scope="col">About (BPM)</th><th scope="col"><span class="mr-sr">Set tempo</span></th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="mus-box mr-keys" aria-labelledby="met-h-keys">
+    <h2 id="met-h-keys">Keys</h2>
+    <ul class="mr-keylist">
+      <li><kbd>Space</kbd> start or stop (<kbd>Enter</kbd> presses the button you are on)</li>
+      <li><kbd>↑</kbd> <kbd>↓</kbd> one beat per minute faster or slower (<kbd>Shift</kbd> for ten)</li>
+      <li><kbd>T</kbd> tap tempo</li>
+      <li><kbd>J</kbd> tap the timing pad</li>
+      <li><kbd>Esc</kbd> stop</li>
+    </ul>
+  </section>
+
+  <div class="mus-body mr-prose">
+    {{ .Content }}
+  </div>
+  {{ partial "inline/mus-pn.html" . }}
+</div>
+{{ end }}

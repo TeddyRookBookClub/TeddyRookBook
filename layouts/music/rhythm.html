@@ -1,0 +1,97 @@
+{{- /* The two-hand rhythm trainer (/music/rhythm/). Scripts and styles come from front matter through the section's
+     shared inline/mus-head.html; the behavior is in static/music/rhythm/trainer.js. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+<div class="mus" id="mr-tr">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{ partial "inline/mus-hero.html" . }}
+
+  <section class="mr-stage" id="tr-stage" aria-label="Rhythm trainer">
+    <div class="mr-tr-head">
+      <button type="button" class="mr-round" id="tr-prev" aria-label="Previous exercise">‹</button>
+      <select id="tr-ex" aria-label="Choose an exercise"></select>
+      <button type="button" class="mr-round" id="tr-next" aria-label="Next exercise">›</button>
+    </div>
+    <div class="mr-tr-title"><h2 id="tr-title">Both hands together</h2><span class="mr-tr-best" id="tr-best"></span></div>
+    <p class="mr-tr-how" id="tr-how"></p>
+    <div class="mr-free" id="tr-free" hidden>
+      <span class="mr-step rh">Right hand <button type="button" class="mr-round" data-f="R" data-d="-1" aria-label="Right hand: one tap fewer per cycle">−</button><b id="tr-f-R">3</b><button type="button" class="mr-round" data-f="R" data-d="1" aria-label="Right hand: one more tap per cycle">+</button></span>
+      <span class="mr-step lh">Left hand <button type="button" class="mr-round" data-f="L" data-d="-1" aria-label="Left hand: one tap fewer per cycle">−</button><b id="tr-f-L">2</b><button type="button" class="mr-round" data-f="L" data-d="1" aria-label="Left hand: one more tap per cycle">+</button></span>
+      <span class="mr-step">Cycle <button type="button" class="mr-round" data-f="cycleBeats" data-d="-1" aria-label="Shorter cycle">−</button><b id="tr-f-cycleBeats">2</b><button type="button" class="mr-round" data-f="cycleBeats" data-d="1" aria-label="Longer cycle">+</button> beats</span>
+    </div>
+    <div class="mr-tl"><canvas id="tr-cv" role="img" aria-label="Timeline: the right hand's taps on the top lane, the left hand's on the bottom lane, and a playhead moving across."></canvas></div>
+    <p class="mr-status" id="tr-status" aria-live="polite"></p>
+    <div class="mr-pads">
+      <button type="button" class="mr-pad mr-pad-l" id="tr-pad-L" aria-label="Left hand pad (keys F or D)" aria-keyshortcuts="F D"><b>Left hand</b><span><kbd>F</kbd> or <kbd>D</kbd></span><i class="mr-pad-fb" id="tr-fb-L"></i></button>
+      <button type="button" class="mr-pad mr-pad-r" id="tr-pad-R" aria-label="Right hand pad (keys J or K)" aria-keyshortcuts="J K"><b>Right hand</b><span><kbd>J</kbd> or <kbd>K</kbd></span><i class="mr-pad-fb" id="tr-fb-R"></i></button>
+    </div>
+    <div class="mr-tr-ctl">
+      <button type="button" class="mr-go" id="tr-go" aria-pressed="false" aria-label="Start the exercise (space bar)"><span class="mr-go-ic" aria-hidden="true"></span><span class="mr-go-t">Start</span></button>
+      <div class="mr-tr-tempo">
+        <button type="button" class="mr-round" id="tr-minus" aria-label="Slower (down arrow)">−</button>
+        <input type="range" class="mr-range" id="tr-range" min="20" max="200" step="1" value="70" aria-label="Tempo in beats per minute">
+        <button type="button" class="mr-round" id="tr-plus" aria-label="Faster (up arrow)">+</button>
+        <output id="tr-bpm" aria-live="off">70 BPM</output>
+      </div>
+    </div>
+  </section>
+
+  <div class="mr-grid">
+    <section class="mus-box mr-card" aria-labelledby="tr-h-score">
+      <h2 id="tr-h-score">Your score</h2>
+      <div id="tr-score" aria-live="polite"><p class="mus-small">Press Start, wait for the count-in, then tap both pads with the sounds. Your timing shows here as you play.</p></div>
+    </section>
+
+    <section class="mus-box mr-card" aria-labelledby="tr-h-set">
+      <h2 id="tr-h-set">Practice settings</h2>
+      <label class="mr-chk"><input type="checkbox" id="tr-countin" checked> Count-in before it starts</label>
+      <div class="mr-field"><span class="mr-lab" id="tr-len-l">Length</span>
+        <div class="mus-seg" id="tr-len" role="group" aria-labelledby="tr-len-l"></div></div>
+      <label class="mr-field"><span class="mr-lab">Guide sounds for the hands <output id="tr-guide-o">80%</output></span>
+        <input type="range" class="mr-range mr-range-light" id="tr-guide" min="0" max="100" step="5" value="80" aria-label="Volume of the guide sounds for both hands"></label>
+      <label class="mr-chk"><input type="checkbox" id="tr-fade"> Fade the guide as I get it right</label>
+      <label class="mr-chk"><input type="checkbox" id="tr-beat" checked> Soft click on every beat</label>
+      <label class="mr-chk"><input type="checkbox" id="tr-tapsnd" checked> A sound when I tap</label>
+      <label class="mr-chk"><input type="checkbox" id="tr-swap"> Swap hands</label>
+      <label class="mr-field"><span class="mr-lab">Volume <output id="tr-vol-o">80%</output></span>
+        <input type="range" class="mr-range mr-range-light" id="tr-vol" min="0" max="100" step="1" value="80" aria-label="Volume"></label>
+      <div class="mr-row" id="tr-midi-row" hidden><button type="button" class="mus-btn" id="tr-midi">Use a MIDI keyboard</button></div>
+      <p class="mus-small" id="tr-midi-msg" aria-live="polite"></p>
+    </section>
+
+    <section class="mus-box mr-card mr-math" aria-labelledby="tr-h-math">
+      <h2 id="tr-h-math">The math</h2>
+      <div id="tr-math"></div>
+    </section>
+
+    <section class="mus-box mr-card mr-prog" aria-labelledby="tr-h-prog">
+      <h2 id="tr-h-prog">Exercises and your best scores</h2>
+      <p class="mus-small">From easy to hard. Best scores stay in this browser only.</p>
+      <div id="tr-prog"></div>
+    </section>
+
+    <section class="mus-box mr-card" aria-labelledby="tr-h-cal">
+      <h2 id="tr-h-cal">Delay and headphones</h2>
+      <p class="mus-small">Sound takes a moment to reach you, and a touch screen takes a moment to notice a tap. Wired headphones and the device's own speaker add very little. <b>Bluetooth headphones and speakers often add a tenth of a second or more</b>, which makes every tap look late. Measure your delay once with the headphones you use; scores here and on the metronome subtract it.</p>
+      <div id="tr-cal"></div>
+    </section>
+
+    <section class="mus-box mr-card" aria-labelledby="tr-h-keys">
+      <h2 id="tr-h-keys">Keys and touch</h2>
+      <ul class="mr-keylist">
+        <li><kbd>F</kbd> or <kbd>D</kbd> left hand</li>
+        <li><kbd>J</kbd> or <kbd>K</kbd> right hand</li>
+        <li><kbd>Space</kbd> start or stop (<kbd>Enter</kbd> presses the button you are on)</li>
+        <li><kbd>↑</kbd> <kbd>↓</kbd> tempo (<kbd>Shift</kbd> for five)</li>
+        <li><kbd>Esc</kbd> stop</li>
+      </ul>
+      <p class="mus-small">On a phone or tablet, tap both pads with two fingers or two thumbs; both can be pressed at once. With a MIDI keyboard, keys below middle C are the left hand and middle C and above are the right hand.</p>
+    </section>
+  </div>
+
+  <div class="mus-body mr-prose">
+    {{ .Content }}
+  </div>
+  {{ partial "inline/mus-pn.html" . }}
+</div>
+{{ end }}

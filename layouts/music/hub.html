@@ -1,0 +1,86 @@
+{{- /* /music/: the music hub (Lessons builder). A start-here path, a keyboard to try, cards for every part of the
+   section (counts come from the content and from data/music/songs/*.yaml), and what you need.
+   content/music/_index.md sets `layout: hub`; its `need:` list ({ title, text }) and Markdown text fill "What you need". */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+{{- $songs := site.Data.music.songs | default dict -}}
+{{- $lv := dict "beginner" 0 "intermediate" 0 "advanced" 0 -}}
+{{- range $songs }}{{ with .level }}{{ $lv = merge $lv (dict . (add (index $lv .) 1)) }}{{ end }}{{ end -}}
+{{- $pb := site.GetPage "/music/piano-basics" -}}
+{{- $rm := site.GetPage "/music/reading-music" -}}
+{{- $sg := site.GetPage "/music/songs" -}}
+{{- $mt := site.GetPage "/music/metronome" -}}
+{{- $rt := site.GetPage "/music/rhythm" -}}
+<div class="mus mus-wide ml-hub" id="ml-hub">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{ partial "inline/mus-hero.html" . }}
+
+  <section aria-labelledby="ml-start-h">
+    <h2 id="ml-start-h">Start here</h2>
+    <p class="ml-lead">Never sat at a piano? You’re in the right place. Take these four steps in order, a little each day, or jump to whatever you need.</p>
+    <ol class="ml-path">
+      <li><a href="{{ with $pb }}{{ .RelPermalink }}{{ end }}"><span class="ml-pn" aria-hidden="true">1</span><b>Meet the piano</b><span class="ml-pd">The black and white keys, finding C, your hands and fingers, and your first notes. No reading yet.</span></a></li>
+      <li><a href="{{ with $rm }}{{ .RelPermalink }}{{ end }}"><span class="ml-pn" aria-hidden="true">2</span><b>Read music</b><span class="ml-pd">The staff, the notes, rhythm and key signatures, with short drills to make them stick.</span></a></li>
+      <li><a href="{{ with $sg }}{{ .RelPermalink }}{{ end }}"><span class="ml-pn" aria-hidden="true">3</span><b>Play songs</b><span class="ml-pd">Start with Hot Cross Buns. Every note lights up on the music and on the keys as it sounds.</span></a></li>
+      <li><a href="{{ with $mt }}{{ .RelPermalink }}{{ end }}"><span class="ml-pn" aria-hidden="true">4</span><b>Keep time</b><span class="ml-pd">A metronome to practice with, and a rhythm trainer for both hands.</span></a></li>
+    </ol>
+  </section>
+
+  <section class="mus-box ml-try" aria-labelledby="ml-try-h">
+    <div>
+      <h2 id="ml-try-h">Try a key</h2>
+      <p>Press any key. The gold dot marks <b>middle C</b>, the C in the middle of a piano. The <i>Letter names</i> button shows or hides the names of the keys.</p>
+      <p class="mus-small">On a computer you can also play with the letter keys: <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>F</kbd> <kbd>G</kbd> <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> play C D E F G A B C.</p>
+    </div>
+    <div data-ml="kb" data-bare="1" data-range="C3-C6" data-range-sm="C4-C5"></div>
+  </section>
+
+  <h2 id="ml-all-h">Everything in Music</h2>
+  <div class="ml-big-cards" aria-labelledby="ml-all-h">
+    {{- with $pb }}
+    <div class="ml-bc">
+      <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🎹" }}</span><b>{{ .LinkTitle }}</b></a>
+      <p>{{ .Description }}</p>
+      <span class="ml-meta">{{ len .Pages }} short chapters, something to play in each</span>
+      <span class="ml-progress" data-done-count="music/piano-basics/" data-done-total="{{ len .Pages }}" hidden></span>
+    </div>{{ end }}
+    {{- with $rm }}
+    <div class="ml-bc">
+      <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🎼" }}</span><b>{{ .LinkTitle }}</b></a>
+      <p>{{ .Description }}</p>
+      <span class="ml-meta">{{ len .Pages }} chapters with drills</span>
+      <span class="ml-progress" data-done-count="music/reading-music/" data-done-total="{{ len .Pages }}" hidden></span>
+    </div>{{ end }}
+    {{- with $sg }}
+    <div class="ml-bc">
+      <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🎵" }}</span><b>{{ .LinkTitle }}</b></a>
+      <p>{{ .Description }}</p>
+      <span class="ml-meta">{{ len $songs }} pieces</span>
+      <span class="ml-levels-list">
+        {{- range slice "beginner" "intermediate" "advanced" }}{{ $n := index $lv . }}{{ if $n }}
+        <a href="{{ $sg.RelPermalink }}#{{ . }}">{{ title . }}: {{ $n }}</a>{{ end }}{{ end }}
+      </span>
+    </div>{{ end }}
+    {{- with $mt }}
+    <div class="ml-bc">
+      <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "⏱️" }}</span><b>{{ .LinkTitle }}</b></a>
+      <p>{{ .Description }}</p>
+    </div>{{ end }}
+    {{- with $rt }}
+    <div class="ml-bc">
+      <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🥁" }}</span><b>{{ .LinkTitle }}</b></a>
+      <p>{{ .Description }}</p>
+    </div>{{ end }}
+  </div>
+
+  <section aria-labelledby="ml-need-h">
+    <h2 id="ml-need-h">What you need</h2>
+    <div class="ml-need">
+      {{- range .Params.need }}
+      <div><b>{{ .title }}</b><p>{{ .text | markdownify }}</p></div>
+      {{- end }}
+    </div>
+    {{- with .Content }}<div class="mus-body">{{ . }}</div>{{ end }}
+  </section>
+</div>
+{{ end }}

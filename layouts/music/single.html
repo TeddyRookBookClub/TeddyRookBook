@@ -1,0 +1,19 @@
+{{- /* Music: base layout for a single page (a chapter, a tool page). Front matter:
+     title, description; eyebrow ("Music · Reading music"), icon (emoji), lead (hero text, default: description)
+     scripts: [...], styles: [...]   see layouts/music/mus-parts.html (kit names get their dependencies)
+     hero: false                     no green hero (the page's content starts with its own heading)
+     pager: false                    no previous / next links among the sibling pages (shown by default)
+     wide: true                      the full 1200px width (default 1000px, comfortable for reading)
+   The page's Markdown/HTML content goes in <div class="mus-body">. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+<div class="mus{{ if .Params.wide }} mus-wide{{ end }}" id="mus-page">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{- if ne .Params.hero false }}
+  {{ partial "inline/mus-hero.html" . }}{{ end }}
+  <div class="mus-body">
+    {{ .Content }}
+  </div>
+  {{- if ne .Params.pager false }}{{ partial "inline/mus-pn.html" . }}{{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,25 @@
+{{- /* Music lessons: a course's front page (/music/piano-basics/, /music/reading-music/). Lessons builder.
+   Lists the chapters in order (weight) with their descriptions; chapters finished in this browser get a check mark
+   (static/music/lessons/widgets.js reads localStorage 'trb-music-read-v1'). Front matter: title, description, lead,
+   eyebrow, icon, after: { url, title, text } (shown at the end of the last chapter). */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+{{- $pre := printf "%s" .File.Dir -}}
+<div class="mus ml-page ml-course" id="ml-course">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{ partial "inline/mus-hero.html" . }}
+  <div class="mus-body">
+    {{ .Content }}
+  </div>
+  <h2 id="ml-chaps-h">The chapters</h2>
+  <p class="ml-progress" data-done-count="{{ $pre }}" data-done-total="{{ len .Pages }}" hidden></p>
+  <ol class="ml-chaps" aria-labelledby="ml-chaps-h">
+    {{- range $i, $p := .Pages.ByWeight }}
+    <li><a href="{{ $p.RelPermalink }}" data-done-key="{{ path.Join $p.File.Dir $p.File.ContentBaseName }}"><span class="ml-n" aria-hidden="true">{{ add $i 1 }}</span><b><span class="ml-sr">Chapter {{ add $i 1 }}: </span>{{ $p.Title }}</b><span class="ml-cd">{{ $p.Description }}</span></a></li>
+    {{- end }}
+  </ol>
+  {{- with .Params.after }}
+  <p class="mus-note">{{ .text }} <a href="{{ .url | relURL }}">{{ .title }} →</a></p>
+  {{- end }}
+</div>
+{{ end }}
