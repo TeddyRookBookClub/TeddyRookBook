@@ -1,0 +1,90 @@
+/* Chemistry Ladder visuals (static/chemistry/viz/chemistry.js, names ch-…): styles on top of math/viz/viz.css.
+   Follows the site's light or dark theme. Accent: the Chemistry Ladder's plum (#7d3c78; dark #d39ad0). */
+.ml-viz.chv{--chv-acc:#7d3c78;--chv-ok:#00703c;--chv-red:#d6336c;--chv-blue:#1c6fd6;--chv-gold:#b8963e;--chv-soft:rgba(125,60,120,.10);overflow:hidden}
+html[data-theme="dark"] .ml-viz.chv{--chv-acc:#d39ad0;--chv-ok:#6cc79a;--chv-red:#ff8787;--chv-blue:#74c0fc;--chv-gold:#ffd479;--chv-soft:rgba(211,154,208,.14)}
+.chv .chv-box{position:relative}
+.chv .chv-box canvas+canvas{margin-top:.5rem}
+.chv .chv-task{display:flex;gap:.55rem;align-items:flex-start;margin:0 0 .6rem;padding:.5rem .7rem;border-radius:10px;background:var(--mv-card);border:1px solid var(--mv-line);border-left:4px solid var(--chv-gold);font-size:.95rem;line-height:1.45}
+.chv .chv-tk{flex:0 0 auto;width:1.25rem;height:1.25rem;margin-top:.1rem;border-radius:50%;border:2px solid var(--chv-gold);box-sizing:border-box;position:relative}
+.chv .chv-task.ok{border-left-color:var(--chv-ok)}
+.chv .chv-task.ok .chv-tk{background:var(--chv-ok);border-color:var(--chv-ok)}
+.chv .chv-task.ok .chv-tk::after{content:"";position:absolute;left:.33rem;top:.12rem;width:.28rem;height:.55rem;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+html[data-theme="dark"] .chv .chv-task.ok .chv-tk::after{border-color:#0f1a14}
+.chv .chv-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.chv .ml-readout{overflow-wrap:anywhere}
+.chv .ml-readout b{font-variant-numeric:tabular-nums}
+.chv .ml-ctl:empty{display:none}
+.chv [hidden]{display:none!important}
+.chv .ml-seg button[aria-pressed="true"]{background:var(--chv-acc);border-color:var(--chv-acc);color:#fff}
+html[data-theme="dark"] .chv .ml-seg button[aria-pressed="true"]{color:#1b1220}
+.chv .ml-btn[aria-pressed="true"]{background:var(--chv-soft);border-color:var(--chv-acc)}
+.chv .ml-sl input{accent-color:var(--chv-acc)}
+.chv .chv-chk{display:inline-flex;align-items:center;gap:.35rem;min-height:36px;font-size:.88rem;color:var(--mv-ink);cursor:pointer}
+.chv .chv-chk input{width:1.1rem;height:1.1rem;accent-color:var(--chv-acc);margin:0}
+.chv .chv-key{display:inline-block;width:.85em;height:.85em;border-radius:3px;background:var(--c);margin-right:.35em;vertical-align:-.05em}
+.chv .chv-dot{display:inline-block;width:.8em;height:.8em;border-radius:50%;background:var(--c);margin-right:.3em;vertical-align:-.05em;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.chv .chv-ok{color:var(--chv-ok);font-weight:700}.chv .chv-no{color:var(--chv-red);font-weight:700}.chv .chv-acc{color:var(--chv-acc);font-weight:700}
+.chv .chv-note{margin:.5rem 0 0;font-size:.85rem;color:var(--mv-muted);line-height:1.45}
+.chv .chv-tbl{max-width:100%;overflow-x:auto;margin:.55rem 0 0;border:1px solid var(--mv-line);border-radius:10px;background:var(--mv-card)}
+.chv .chv-tbl table{border-collapse:collapse;width:100%;font-size:.85rem;font-variant-numeric:tabular-nums;margin:0}
+.chv .chv-tbl th,.chv .chv-tbl td{padding:.3rem .5rem;text-align:center;border-bottom:1px solid var(--mv-line);white-space:nowrap}
+.chv .chv-tbl th{color:var(--mv-muted);font-weight:600;background:var(--mv-paper)}
+.chv .chv-tbl th:first-child,.chv .chv-tbl td:first-child{text-align:left;white-space:normal;min-width:4.5em}
+.chv .chv-tbl tr:last-child td{border-bottom:0}
+.chv .chv-tbl tr.hi td{background:rgba(184,150,62,.16);font-weight:700}
+.chv .chv-tbl td.ok{color:var(--chv-ok);font-weight:700}.chv .chv-tbl td.no{color:var(--chv-red);font-weight:700}
+.chv .chv-stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:.4rem;margin:.55rem 0 0}
+.chv .chv-stat div{background:var(--mv-card);border:1px solid var(--mv-line);border-radius:10px;padding:.35rem .55rem;font-size:.8rem;color:var(--mv-muted);line-height:1.3}
+.chv .chv-stat b{display:block;color:var(--mv-ink);font-size:1.02rem;font-variant-numeric:tabular-nums}
+/* legends, plus/minus counters, lists */
+.chv .chv-legend{display:flex;flex-wrap:wrap;gap:.25rem .9rem;margin:.5rem 0 0;font-size:.82rem;color:var(--mv-muted);line-height:1.4}
+.chv .chv-legend>span{display:inline-flex;align-items:center}
+.chv .chv-pm{display:inline-flex;align-items:center;gap:.3rem;padding:.15rem .3rem .15rem .6rem;border:1px solid var(--mv-line);border-radius:999px;background:var(--mv-card);font-size:.85rem;color:var(--mv-muted)}
+.chv .chv-pm .ml-btn{width:36px;height:36px;min-height:36px;padding:0;font-size:1.1rem;line-height:1}
+.chv .chv-pm output{min-width:1.8rem;text-align:center;font-weight:700;color:var(--mv-ink);font-variant-numeric:tabular-nums}
+.chv .chv-models{margin:.6rem 0 0;padding-left:1.3rem;font-size:.9rem;line-height:1.45}
+.chv .chv-models li{margin:.25rem 0}
+.chv .chv-then{color:var(--mv-muted)}
+/* nuclide symbols, half-reactions, significant digits */
+.chv .chv-nuc{display:inline-flex;align-items:center;gap:.05rem}
+.chv .chv-nuc>span{display:inline-flex;flex-direction:column;align-items:flex-end;line-height:1;font-size:.62em;margin-right:.08em}
+.chv .chv-nuc sup,.chv .chv-nuc sub{position:static;font-size:1em;line-height:1.05}
+.chv .chv-helper{opacity:.85;border-style:dashed}
+.chv .chv-halves .chv-eq{justify-content:flex-start;font-size:1rem}
+.chv .chv-dg{font:600 2.4rem ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em;text-align:center;margin:.4rem 0;overflow-wrap:anywhere}
+.chv .chv-dg .sig{color:var(--chv-acc);border-bottom:3px solid var(--chv-acc)}
+.chv .chv-dg .no{color:#adb5bd}
+.chv .chv-dg .amb{color:var(--chv-gold);border-bottom:3px dashed var(--chv-gold)}
+.chv .chv-dg .pt{color:var(--mv-ink)}
+/* equation balancer */
+.chv .chv-eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.35rem .4rem;margin:.2rem 0 .55rem;font:600 1.1rem system-ui,sans-serif}
+.chv .chv-term{display:inline-flex;align-items:center;gap:.15rem;padding:.15rem .3rem;border-radius:10px;background:var(--mv-card);border:1px solid var(--mv-line)}
+.chv .chv-spin{display:inline-flex;flex-direction:column;align-items:center}
+.chv .chv-spin button{width:36px;height:24px;padding:0;border:1px solid var(--mv-line);background:var(--mv-paper);color:var(--mv-ink);font:700 .8rem system-ui,sans-serif;cursor:pointer;line-height:1}
+.chv .chv-spin button:first-child{border-radius:8px 8px 0 0}.chv .chv-spin button:last-child{border-radius:0 0 8px 8px}
+.chv .chv-spin output{display:block;min-width:36px;text-align:center;font:700 1.15rem system-ui,sans-serif;color:var(--chv-acc);font-variant-numeric:tabular-nums;border-left:1px solid var(--mv-line);border-right:1px solid var(--mv-line);background:var(--mv-card)}
+.chv .chv-f{cursor:help;padding:0 .1rem;border-radius:6px}
+.chv .chv-f:focus-visible{outline:3px solid #b8963e}
+.chv .chv-op{color:var(--mv-muted);font-weight:600}
+/* conversion chain */
+.chv .chv-chain{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .5rem;margin:.2rem 0 .3rem;font:600 1rem system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.chv .chv-frac{display:inline-flex;flex-direction:column;align-items:center;padding:.15rem .45rem;border-radius:10px;background:var(--mv-card);border:1px solid var(--mv-line);min-width:3.6rem}
+.chv .chv-frac span{padding:.12rem .2rem;white-space:nowrap}
+.chv .chv-frac span:first-child{border-bottom:2px solid var(--mv-ink)}
+.chv .chv-frac .ml-btn{min-height:30px;padding:.1rem .5rem;font-size:.75rem;margin-top:.2rem}
+.chv .chv-u{color:var(--chv-blue)}
+.chv .chv-x{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--chv-red);color:var(--mv-muted)}
+.chv .chv-res{padding:.25rem .55rem;border-radius:10px;background:var(--chv-soft);border:1px solid var(--chv-acc)}
+.chv .chv-times{color:var(--mv-muted)}
+.chv .chv-paren{font-size:2.2rem;font-weight:300;color:var(--mv-muted);line-height:1}
+.chv .chv-paren sup{font-size:1rem;font-weight:700;color:var(--mv-ink)}
+/* small chips (choose a species, an acid, a nuclide…) */
+.chv .chv-chips{display:flex;flex-wrap:wrap;gap:.3rem}
+.chv .chv-chips button{font:600 .85rem system-ui,sans-serif;min-height:36px;min-width:40px;padding:.3rem .6rem;border-radius:10px;border:1px solid var(--mv-line);background:var(--mv-card);color:var(--mv-ink);cursor:pointer}
+.chv .chv-chips button[aria-pressed="true"]{border-color:var(--chv-acc);box-shadow:inset 0 -3px 0 var(--chv-acc)}
+.chv select{font:600 .9rem system-ui,sans-serif;min-height:36px;padding:.2rem .5rem;border-radius:10px;border:1px solid var(--mv-line);background:var(--mv-card);color:var(--mv-ink);max-width:100%}
+.chv .chv-lab{display:inline-flex;flex-direction:column;gap:.15rem;font-size:.85rem;color:var(--mv-muted)}
+.chv button:focus-visible,.chv input:focus-visible,.chv select:focus-visible,.chv .ml-cv:focus-visible{outline:3px solid #b8963e;outline-offset:2px}
+@media (max-width:480px){.chv .ml-sl{min-width:0;flex:1 1 100%}.chv .chv-tbl th,.chv .chv-tbl td{padding:.28rem .38rem}.ml-viz.chv{padding:.55rem}.chv .chv-task{font-size:.9rem}.chv .chv-eq{font-size:1rem}}
+@media (prefers-reduced-motion:reduce){.chv *{transition:none!important}}
+@media print{.chv .ml-ctl{display:none}}

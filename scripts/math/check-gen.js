@@ -213,7 +213,7 @@ topics.forEach(function (topic) {
       if (p.viz && !knownViz(p.viz.name)) { if (notBuiltViz(p.viz.name)) vizLater[p.viz.name] = 1; else vizWarn[p.viz.name] = 1; }
       var aj = JSON.stringify(p.a);
       if (/\d\.\d*?(\d)\1{6,}\d*|\d\.\d{12,}/.test(aj + ' ' + texts(p).map(function (x) { return x[1]; }).join(' '))) issue('float noise', 'a long decimal like 0.30000000000000004 (use ML.util.fix, T.num or ML.Q): ' + clip(aj + ' ' + p.q, /\d\.\d{9,}/), where);
-      if (/NaN|Infinity|undefined|null|\[object/.test(aj)) issue('bad value', 'answer spec: ' + clip(aj, /NaN|Infinity|undefined|null|\[object/), where);
+      if (/\bNaN\b|\bInfinity\b|\bundefined\b|\bnull\b|\[object/.test(aj)) issue('bad value', 'answer spec: ' + clip(aj, /\bNaN\b|\bInfinity\b|\bundefined\b|\bnull\b|\[object/), where);
       try {
         var r = ML.check(p.a, ML.answerValue(p.a));
         if (!r.ok) issue('answer fails', 'its own answer ' + JSON.stringify(ML.answerValue(p.a)) + ' is marked wrong' + (r.msg ? ' ("' + r.msg + '")' : '') + ' for ' + JSON.stringify(p.a) + (r.error ? ' — ' + r.error : ''), where);

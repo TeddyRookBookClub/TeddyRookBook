@@ -41,7 +41,8 @@
 {{- $isNGSS := and $t.std (findRE `^(K|[1-5]|MS|HS)-[A-Z]` $t.std) -}}
 {{- /* lab: a Science Lab page (or another site page, like /markets/indicators/#…) that fits this topic */ -}}
 {{- $lab := false }}{{ with $t.lab }}{{ $lu := . }}{{ $lp := index (split $lu "#") 0 }}{{ $isLab := hasPrefix $lu "/science-lab/" -}}
-{{- $lab = dict "url" $lu "title" "Teddy Rook Book" "icon" (cond $isLab "🔬" "📊") "kind" (cond $isLab "Try it in the Science Lab" "See it with real data") -}}
+{{- $isMk := hasPrefix $lu "/markets/" }}{{ $isBiz := hasPrefix $lu "/business/" -}}
+{{- $lab = dict "url" $lu "title" "Teddy Rook Book" "icon" (cond $isLab "🔬" (cond $isMk "📊" (cond $isBiz "💼" "🔗"))) "kind" (cond $isLab "Try it in the Science Lab" (cond $isMk "See it with real data" (cond $isBiz "Go deeper in the Business courses" "More on Teddy Rook Book"))) -}}
 {{- with site.GetPage $lp }}{{ $lab = merge $lab (dict "title" .Title) }}{{ end -}}
 {{- range site.Data.science_lab }}{{ if hasPrefix $lp .url }}{{ $lab = merge $lab (dict "icon" .icon) }}{{ if eq .url $lp }}{{ $lab = merge $lab (dict "title" .title) }}{{ end }}{{ end }}{{ end }}{{ end -}}
 <div class="mlp mlp-topic{{ if $wip }} mlp-topic-wip{{ end }}" id="mlp-topic" data-id="{{ $id }}" data-course="{{ $key }}" data-ladder="{{ $lk }}" style="--mc:{{ $c.color }}">

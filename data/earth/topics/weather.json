@@ -1,0 +1,1003 @@
+{
+ "course": "weather",
+ "units": [
+  {
+   "key": "air-basics",
+   "title": "The Air Around Us",
+   "blurb": "Air pressure and how it falls with height, and the gas law that ties pressure, temperature and density together."
+  },
+  {
+   "key": "energy",
+   "title": "Sunlight and Earth's Energy",
+   "blurb": "How sunlight arrives and how much is reflected, why warm things glow, Earth's energy balance, and how water stores energy."
+  },
+  {
+   "key": "water-vapor",
+   "title": "Water Vapor",
+   "blurb": "When air is saturated, how relative humidity and dew point measure water vapor, and which one tells you how much is there."
+  },
+  {
+   "key": "rising-air",
+   "title": "Rising Air and Stability",
+   "blurb": "Why rising air cools, where clouds form, how condensation changes the cooling rate, and when air keeps rising on its own."
+  },
+  {
+   "key": "clouds-precipitation",
+   "title": "Clouds and Precipitation",
+   "blurb": "Naming clouds, how tiny droplets grow into raindrops and snowflakes, and what decides rain, snow, sleet or freezing rain."
+  },
+  {
+   "key": "pressure-wind",
+   "title": "Pressure and Wind",
+   "blurb": "The forces that push and turn the wind, and why winds spiral around highs and lows."
+  },
+  {
+   "key": "global-circulation",
+   "title": "The Global Circulation",
+   "blurb": "Belts of rising and sinking air, the jet stream, and how the Pacific Ocean and the air together make El Niño and La Niña."
+  },
+  {
+   "key": "fronts",
+   "title": "Air Masses, Fronts and Weather Maps",
+   "blurb": "How fronts change the weather as they pass, how storms of the middle latitudes grow, and how to read a weather map."
+  },
+  {
+   "key": "storms",
+   "title": "Storms",
+   "blurb": "Thunderstorms, lightning, tornadoes and hurricanes: what powers them and how they are rated."
+  },
+  {
+   "key": "forecasting",
+   "title": "Observing and Forecasting",
+   "blurb": "How weather is measured, what radar and satellites show, and how computer forecasts and forecast probabilities work."
+  },
+  {
+   "key": "climate-zones",
+   "title": "Climate and Climate Zones",
+   "blurb": "Thirty-year averages and anomalies, reading climographs, and sorting the world's climates into zones."
+  },
+  {
+   "key": "climate-change",
+   "title": "The Carbon Cycle and Climate Change",
+   "blurb": "How carbon moves, what pushes climate warmer or cooler, feedbacks, past climates, and the evidence and projections for today's warming."
+  }
+ ],
+ "topics": [
+  {
+   "id": "weather.pressure-units",
+   "slug": "pressure-units",
+   "unit": "air-basics",
+   "title": "Measuring Air Pressure",
+   "short": "Pressure is force per area; read it in hectopascals, millibars and inches of mercury.",
+   "prereqs": [
+    "earthsci.air-pressure",
+    "physsci.pressure",
+    "alg1.units-quantities"
+   ],
+   "xp": 1,
+   "trouble": "Students think a barometer weighs the air in the room; it measures the weight of the whole column of air above it, about 1013 hPa at sea level on average.",
+   "viz": [
+    "es-atmosphere"
+   ]
+  },
+  {
+   "id": "weather.pressure-height",
+   "slug": "pressure-height",
+   "unit": "air-basics",
+   "title": "How Pressure Falls with Height",
+   "short": "Pressure drops by about half for every 5.5 km you climb, because less air is left above you.",
+   "prereqs": [
+    "weather.pressure-units",
+    "alg1.exponential-growth-decay"
+   ],
+   "xp": 2,
+   "trouble": "Students expect pressure to fall by the same amount for each kilometer, like a straight line; it falls by the same fraction, so each kilometer's drop is smaller than the one below.",
+   "viz": [
+    "es-atmosphere"
+   ]
+  },
+  {
+   "id": "weather.gas-law-air",
+   "slug": "gas-law-air",
+   "unit": "air-basics",
+   "title": "The Gas Law for Air",
+   "short": "Pressure, density and temperature are tied together by P = ρRT, so at the same pressure warm air is less dense than cold air.",
+   "prereqs": [
+    "weather.pressure-units",
+    "chem.combined-gas-law"
+   ],
+   "xp": 3,
+   "trouble": "Students put Celsius into the gas law; it needs kelvins, or a cold day would give air a negative density.",
+   "viz": [
+    "es-atmosphere"
+   ],
+   "lab": "/science-lab/gas/"
+  },
+  {
+   "id": "weather.radiation-wavelength",
+   "slug": "radiation-wavelength",
+   "unit": "energy",
+   "title": "Sunlight In, Infrared Out",
+   "short": "The Sun's light peaks in the visible and Earth's glow peaks near 10 μm in the infrared, so air can let sunlight through yet absorb Earth's heat.",
+   "prereqs": [
+    "earthsci.greenhouse-effect",
+    "astro.color-temperature"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-4",
+   "trouble": "Students think only hot, glowing things give off light; everything gives off radiation, and the ground, the air and your body glow in infrared we can't see.",
+   "viz": [
+    "es-energy"
+   ]
+  },
+  {
+   "id": "weather.stefan-boltzmann",
+   "slug": "stefan-boltzmann",
+   "unit": "energy",
+   "title": "Hotter Things Glow Much More",
+   "short": "The energy a surface gives off grows with the fourth power of its temperature in kelvins: E = σT⁴.",
+   "prereqs": [
+    "weather.radiation-wavelength"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-4",
+   "trouble": "Students expect doubling the temperature to double the glow; doubling the temperature in kelvins multiplies it by 16.",
+   "viz": [
+    "es-energy"
+   ]
+  },
+  {
+   "id": "weather.insolation",
+   "slug": "insolation",
+   "unit": "energy",
+   "title": "Sun Angle and Sunlight on the Ground",
+   "short": "A low sun spreads the same beam over more ground, so each square meter gets less energy.",
+   "prereqs": [
+    "earthsci.seasons",
+    "geo.trig-ratios"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-4",
+   "trouble": "Students think low sunlight is weak mainly because it crosses more air; that adds a little, but the main reason is the beam spreading over more ground.",
+   "viz": [
+    "es-earth-sun"
+   ]
+  },
+  {
+   "id": "weather.albedo",
+   "slug": "albedo",
+   "unit": "energy",
+   "title": "Albedo: How Much Sunlight Bounces Off",
+   "short": "Albedo is the fraction of sunlight a surface reflects: fresh snow reflects most of it and open ocean very little.",
+   "prereqs": [
+    "weather.insolation",
+    "g6.percent-of-a-number"
+   ],
+   "xp": 1,
+   "std": "HS-ESS2-4",
+   "trouble": "Students think a high albedo means a surface soaks up a lot of sunlight; it means the surface reflects a lot, so it absorbs less.",
+   "viz": [
+    "es-energy"
+   ]
+  },
+  {
+   "id": "weather.energy-balance",
+   "slug": "energy-balance",
+   "unit": "energy",
+   "title": "Earth's Energy Balance",
+   "short": "Earth warms until the infrared it sends to space equals the sunlight it absorbs, which predicts about −18 °C with no greenhouse gases.",
+   "prereqs": [
+    "weather.stefan-boltzmann",
+    "weather.albedo",
+    "alg1.rational-exponents"
+   ],
+   "xp": 3,
+   "std": "HS-ESS2-4",
+   "trouble": "Students forget to divide the sunlight by 4; Earth catches sunlight on a disk but gives off heat from its whole sphere, which has four times the disk's area.",
+   "viz": [
+    "es-energy"
+   ]
+  },
+  {
+   "id": "weather.greenhouse-layer",
+   "slug": "greenhouse-layer",
+   "unit": "energy",
+   "title": "How Greenhouse Gases Warm the Surface",
+   "short": "Air that absorbs infrared sends part of it back down, so the surface must warm until it gives off more.",
+   "prereqs": [
+    "weather.energy-balance"
+   ],
+   "xp": 3,
+   "std": "HS-ESS2-4",
+   "trouble": "Students think greenhouse gases stop heat from leaving at all; Earth still sends out as much energy as it absorbs, but from higher, colder air, so the surface below must be warmer.",
+   "viz": [
+    "es-energy"
+   ]
+  },
+  {
+   "id": "weather.specific-heat",
+   "slug": "specific-heat",
+   "unit": "energy",
+   "title": "Why Coasts Stay Mild",
+   "short": "Water takes about five times more energy than dry sand to warm by one degree, so oceans warm and cool slowly and coastal places swing less in temperature than inland ones.",
+   "prereqs": [
+    "chem.specific-heat"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-5",
+   "trouble": "Students think water warms slowly because it is wet or reflects the light; each kilogram of water simply needs far more energy per degree (Q = mcΔT).",
+   "viz": [
+    "es-density"
+   ],
+   "lab": "/science-lab/thermodynamics/zeroth-law/"
+  },
+  {
+   "id": "weather.latent-heat",
+   "slug": "latent-heat",
+   "unit": "energy",
+   "title": "Latent Heat: Energy Hidden in Water Vapor",
+   "short": "Evaporating water takes in a lot of energy and condensing vapor gives it back, warming the air inside clouds and powering storms.",
+   "prereqs": [
+    "weather.specific-heat",
+    "physsci.phase-changes"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-5",
+   "trouble": "Students think condensation cools the air because it happens in cooling air; condensing vapor releases heat into the air around it.",
+   "viz": [
+    "es-parcel"
+   ]
+  },
+  {
+   "id": "weather.saturation",
+   "slug": "saturation",
+   "unit": "water-vapor",
+   "title": "Water Vapor and Saturation",
+   "short": "Air is saturated when vapor condenses as fast as water evaporates; the saturation amount climbs steeply with temperature.",
+   "prereqs": [
+    "earthsci.water-cycle",
+    "chem.temperature-scales"
+   ],
+   "xp": 2,
+   "trouble": "Students picture air as a sponge that \"holds\" water; saturation depends on temperature, not on the air, and would happen even with no air at all.",
+   "viz": [
+    "es-humidity"
+   ]
+  },
+  {
+   "id": "weather.relative-humidity",
+   "slug": "relative-humidity",
+   "unit": "water-vapor",
+   "title": "Relative Humidity",
+   "short": "Relative humidity compares the vapor in the air with the saturation amount at the air's temperature.",
+   "prereqs": [
+    "weather.saturation"
+   ],
+   "xp": 2,
+   "trouble": "Students read high relative humidity as lots of water vapor; a cold morning at 100% can have less vapor than a hot desert afternoon at 20%.",
+   "viz": [
+    "es-humidity"
+   ]
+  },
+  {
+   "id": "weather.dew-point",
+   "slug": "dew-point",
+   "unit": "water-vapor",
+   "title": "Dew Point",
+   "short": "The dew point is the temperature air must cool to for saturation; a higher dew point means more water vapor.",
+   "prereqs": [
+    "weather.relative-humidity"
+   ],
+   "xp": 2,
+   "trouble": "Students use relative humidity to judge how muggy it feels; the dew point does that better, because it measures the actual amount of vapor.",
+   "viz": [
+    "es-humidity"
+   ]
+  },
+  {
+   "id": "weather.adiabatic-cooling",
+   "slug": "adiabatic-cooling",
+   "unit": "rising-air",
+   "title": "Rising Air Cools",
+   "short": "A rising parcel expands as the pressure drops and cools about 10 °C per kilometer while it stays unsaturated.",
+   "prereqs": [
+    "weather.pressure-height"
+   ],
+   "xp": 2,
+   "trouble": "Students think rising air cools because it gets closer to cold space or farther from the warm ground; it cools because it expands, pushing back the air around it.",
+   "viz": [
+    "es-parcel"
+   ],
+   "lab": "/science-lab/thermodynamics/first-law/"
+  },
+  {
+   "id": "weather.lifting",
+   "slug": "lifting",
+   "unit": "rising-air",
+   "title": "What Lifts the Air",
+   "short": "Air rises when the ground heats it, when it is forced over mountains, when it is pushed up at fronts and when winds crowd together.",
+   "prereqs": [
+    "weather.adiabatic-cooling"
+   ],
+   "xp": 1,
+   "trouble": "Students think clouds are fed by water evaporating straight up into them; nearly every cloud forms where air is lifted and cools to its dew point.",
+   "viz": [
+    "es-parcel"
+   ]
+  },
+  {
+   "id": "weather.cloud-base",
+   "slug": "cloud-base",
+   "unit": "rising-air",
+   "title": "Finding the Cloud Base",
+   "short": "A rising parcel's temperature closes in on its dew point by about 8 °C per kilometer, so the cloud base is about 125 m up for each degree of difference.",
+   "prereqs": [
+    "weather.adiabatic-cooling",
+    "weather.dew-point"
+   ],
+   "xp": 2,
+   "trouble": "Students keep a rising parcel's dew point fixed; it also drops, about 2 °C per kilometer, so the gap closes at about 8 °C per kilometer, not 10.",
+   "viz": [
+    "es-parcel"
+   ]
+  },
+  {
+   "id": "weather.moist-adiabatic",
+   "slug": "moist-adiabatic",
+   "unit": "rising-air",
+   "title": "Saturated Air Cools More Slowly",
+   "short": "Once a parcel is saturated, condensation releases latent heat, so it cools more slowly, about 6 °C per kilometer on average.",
+   "prereqs": [
+    "weather.cloud-base",
+    "weather.latent-heat"
+   ],
+   "xp": 2,
+   "trouble": "Students think the released latent heat warms a rising cloud parcel; it still cools as it rises, only more slowly than dry air.",
+   "viz": [
+    "es-parcel"
+   ]
+  },
+  {
+   "id": "weather.rain-shadow",
+   "slug": "rain-shadow",
+   "unit": "rising-air",
+   "title": "Rain Shadows and Warm Downslope Winds",
+   "short": "Air that drops its rain on the way up a mountain warms faster on the way down, so the far side is warmer and drier.",
+   "prereqs": [
+    "weather.moist-adiabatic",
+    "weather.lifting"
+   ],
+   "xp": 3,
+   "trouble": "Students think a warm downslope wind comes from somewhere warm; it warms by being squeezed as it sinks, and ends warmer than it started because it kept the heat released when its vapor rained out.",
+   "viz": [
+    "es-parcel"
+   ]
+  },
+  {
+   "id": "weather.stability",
+   "slug": "stability",
+   "unit": "rising-air",
+   "title": "Stable and Unstable Air",
+   "short": "Lift a parcel and compare it with the air around it: if it ends up warmer it keeps rising, and if colder it sinks back.",
+   "prereqs": [
+    "weather.moist-adiabatic"
+   ],
+   "xp": 3,
+   "trouble": "Students judge stability by the temperature at the ground; what matters is how fast the surrounding air cools with height compared with the parcel.",
+   "viz": [
+    "es-parcel"
+   ]
+  },
+  {
+   "id": "weather.cloud-types",
+   "slug": "cloud-types",
+   "unit": "clouds-precipitation",
+   "title": "Cloud Types",
+   "short": "Name clouds by height and shape: cirrus are high and wispy, stratus lie in flat layers, cumulus pile up in heaps, and nimbus means rain.",
+   "prereqs": [
+    "weather.lifting",
+    "weather.stability"
+   ],
+   "xp": 1,
+   "trouble": "Students think dark clouds are made of something different from white ones; they are thicker or denser clouds that let less sunlight through.",
+   "viz": [
+    "es-clouds"
+   ]
+  },
+  {
+   "id": "weather.raindrop-growth",
+   "slug": "raindrop-growth",
+   "unit": "clouds-precipitation",
+   "title": "How Raindrops Grow",
+   "short": "A raindrop holds about a million cloud droplets; drops grow by bumping and joining, or from ice crystals that grow at the droplets' expense.",
+   "prereqs": [
+    "weather.cloud-types",
+    "g8.volume-spheres"
+   ],
+   "xp": 3,
+   "trouble": "Students think cloud droplets simply get heavy and fall; a droplet is so small that rising air holds it up, so it must grow about 100 times wider first.",
+   "viz": [
+    "es-clouds"
+   ]
+  },
+  {
+   "id": "weather.precipitation-types",
+   "slug": "precipitation-types",
+   "unit": "clouds-precipitation",
+   "title": "Rain, Snow, Sleet and Freezing Rain",
+   "short": "The temperatures a falling snowflake meets on the way down decide whether it lands as snow, rain, sleet or freezing rain.",
+   "prereqs": [
+    "weather.raindrop-growth"
+   ],
+   "xp": 2,
+   "trouble": "Students think sleet and freezing rain are the same; sleet freezes into ice pellets before it lands, while freezing rain lands as liquid and freezes on contact.",
+   "viz": [
+    "es-clouds"
+   ]
+  },
+  {
+   "id": "weather.pressure-gradient",
+   "slug": "pressure-gradient",
+   "unit": "pressure-wind",
+   "title": "The Pressure Gradient Force",
+   "short": "Air is pushed from high toward low pressure, harder where the isobars are close together.",
+   "prereqs": [
+    "earthsci.wind",
+    "weather.pressure-units",
+    "g8.slope-rate-of-change"
+   ],
+   "xp": 2,
+   "trouble": "Students think wind blows straight from high to low pressure; that is only how it starts, before Earth's spin turns it.",
+   "viz": [
+    "es-wind"
+   ]
+  },
+  {
+   "id": "weather.coriolis",
+   "slug": "coriolis",
+   "unit": "pressure-wind",
+   "title": "The Coriolis Effect",
+   "short": "On a spinning Earth, moving air turns to the right in the Northern Hemisphere and to the left in the Southern, more strongly toward the poles.",
+   "prereqs": [
+    "weather.pressure-gradient",
+    "earthsci.global-winds",
+    "geo.trig-ratios"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Coriolis effect speeds the wind up or is strongest at the equator; it only changes the wind's direction, and it is zero at the equator.",
+   "viz": [
+    "es-wind"
+   ]
+  },
+  {
+   "id": "weather.geostrophic-wind",
+   "slug": "geostrophic-wind",
+   "unit": "pressure-wind",
+   "title": "Winds Aloft Follow the Isobars",
+   "short": "High above the ground, the pressure push and the Coriolis turn balance, so the wind blows along the isobars.",
+   "prereqs": [
+    "weather.coriolis",
+    "weather.gas-law-air"
+   ],
+   "xp": 3,
+   "trouble": "Students expect upper winds to cross the isobars toward low pressure; aloft they run along them, with low pressure on the left of the wind in the Northern Hemisphere.",
+   "viz": [
+    "es-wind"
+   ]
+  },
+  {
+   "id": "weather.highs-and-lows",
+   "slug": "highs-and-lows",
+   "unit": "pressure-wind",
+   "title": "Winds around Highs and Lows",
+   "short": "Near the ground, friction lets air spiral into lows, where it rises and builds clouds, and out of highs, where it sinks and clears the sky.",
+   "prereqs": [
+    "weather.geostrophic-wind",
+    "weather.lifting"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up the turning directions; in the Northern Hemisphere air spirals counterclockwise into a low and clockwise out of a high, and the reverse south of the equator.",
+   "viz": [
+    "es-wind",
+    "es-weather-map"
+   ]
+  },
+  {
+   "id": "weather.three-cells",
+   "slug": "three-cells",
+   "unit": "global-circulation",
+   "title": "Hadley, Ferrel and Polar Cells",
+   "short": "Air rises near the equator and sinks near 30° latitude, which explains rainy tropics, desert belts and the trade winds.",
+   "prereqs": [
+    "weather.highs-and-lows"
+   ],
+   "xp": 2,
+   "trouble": "Students think deserts are hot because they are close to the Sun; the great deserts near 30° are dry because air sinks there and warms, which keeps clouds from forming.",
+   "viz": [
+    "es-wind"
+   ]
+  },
+  {
+   "id": "weather.jet-stream",
+   "slug": "jet-stream",
+   "unit": "global-circulation",
+   "title": "The Jet Stream",
+   "short": "A fast river of wind about 10 km up forms where warm and cold air meet, and its dips and bulges steer storms.",
+   "prereqs": [
+    "weather.three-cells"
+   ],
+   "xp": 2,
+   "trouble": "Students think the jet stream is a steady straight band; it meanders in great waves, with cold, stormy weather under its dips (troughs) and warm, settled weather under its bulges (ridges).",
+   "viz": [
+    "es-wind"
+   ]
+  },
+  {
+   "id": "weather.enso",
+   "slug": "enso",
+   "unit": "global-circulation",
+   "title": "El Niño and La Niña",
+   "short": "When the Pacific trade winds weaken, warm water spreads east (El Niño); when they strengthen, cool water wells up in the east (La Niña), and weather shifts around the world.",
+   "prereqs": [
+    "weather.three-cells",
+    "earthsci.surface-currents"
+   ],
+   "xp": 2,
+   "trouble": "Students blame El Niño for every odd season; it tilts the odds toward certain patterns in certain regions but does not cause any single storm.",
+   "viz": [
+    "es-ocean"
+   ]
+  },
+  {
+   "id": "weather.station-model",
+   "slug": "station-model",
+   "unit": "fronts",
+   "title": "Reading a Station Model",
+   "short": "Decode a weather station's plot: temperature, dew point, pressure, wind barbs and cloud cover.",
+   "prereqs": [
+    "weather.dew-point",
+    "weather.pressure-units"
+   ],
+   "xp": 2,
+   "trouble": "Students read the wind barb as pointing where the wind goes; the barb's staff points toward the direction the wind comes from.",
+   "viz": [
+    "es-weather-map"
+   ]
+  },
+  {
+   "id": "weather.air-mass-modification",
+   "slug": "air-mass-modification",
+   "unit": "fronts",
+   "title": "Air Masses and How They Change",
+   "short": "Name air masses by their source (cP, mT and others) and see how they change over new ground, as in lake-effect snow.",
+   "prereqs": [
+    "earthsci.air-masses-fronts",
+    "weather.stability"
+   ],
+   "xp": 2,
+   "trouble": "Students think an air mass keeps its properties forever; crossing warm water or cold land changes its temperature and moisture from below.",
+   "viz": [
+    "es-weather-map"
+   ]
+  },
+  {
+   "id": "weather.cold-fronts",
+   "slug": "cold-fronts",
+   "unit": "fronts",
+   "title": "Cold Fronts",
+   "short": "A cold front lifts warm air sharply, bringing a narrow band of showers and storms, then cooler, drier air and a shift in the wind.",
+   "prereqs": [
+    "weather.air-mass-modification",
+    "weather.station-model",
+    "weather.lifting"
+   ],
+   "xp": 2,
+   "trouble": "Students expect it to warm up after the storms pass; behind a cold front the temperature and dew point fall and the pressure rises.",
+   "viz": [
+    "es-weather-map"
+   ]
+  },
+  {
+   "id": "weather.warm-fronts",
+   "slug": "warm-fronts",
+   "unit": "fronts",
+   "title": "Warm Fronts",
+   "short": "Warm air glides up a gentle slope over cold air, so high clouds come first and steady rain spreads over a wide area.",
+   "prereqs": [
+    "weather.cold-fronts",
+    "weather.cloud-types"
+   ],
+   "xp": 2,
+   "trouble": "Students think warm air shoves the cold air away along the ground; it rides up over the cold air, which slowly retreats.",
+   "viz": [
+    "es-weather-map",
+    "es-clouds"
+   ]
+  },
+  {
+   "id": "weather.midlatitude-cyclones",
+   "slug": "midlatitude-cyclones",
+   "unit": "fronts",
+   "title": "Life of a Mid-Latitude Storm",
+   "short": "A low forms on a front, winds up into a comma of cold and warm fronts, occludes and fades over a few days.",
+   "prereqs": [
+    "weather.warm-fronts",
+    "weather.jet-stream"
+   ],
+   "xp": 2,
+   "trouble": "Students think an occluded front means the storm is just forming; occlusion comes late, when the cold front catches the warm front and the low begins to weaken.",
+   "viz": [
+    "es-weather-map"
+   ]
+  },
+  {
+   "id": "weather.surface-maps",
+   "slug": "surface-maps",
+   "unit": "fronts",
+   "title": "Reading a Surface Weather Map",
+   "short": "Use isobars, fronts, highs and lows to say where the wind blows, where it is raining and what is coming next.",
+   "prereqs": [
+    "weather.midlatitude-cyclones"
+   ],
+   "xp": 3,
+   "trouble": "Students think weather moves at random; in the middle latitudes most systems travel from west to east, steered by the winds aloft.",
+   "viz": [
+    "es-weather-map"
+   ]
+  },
+  {
+   "id": "weather.thunderstorms",
+   "slug": "thunderstorms",
+   "unit": "storms",
+   "title": "Thunderstorms",
+   "short": "Moisture, unstable air and a lift build a thunderstorm through its cumulus, mature and dissipating stages.",
+   "prereqs": [
+    "weather.stability",
+    "weather.lifting"
+   ],
+   "xp": 2,
+   "trouble": "Students think a storm's cold downdraft is wind blowing down from high above; it starts when falling rain drags air down and evaporation chills it.",
+   "viz": [
+    "es-storms"
+   ]
+  },
+  {
+   "id": "weather.lightning-thunder",
+   "slug": "lightning-thunder",
+   "unit": "storms",
+   "title": "Lightning and Thunder",
+   "short": "Lightning heats the air so fast that it expands with the boom we call thunder; sound takes about 3 seconds to travel a kilometer.",
+   "prereqs": [
+    "weather.thunderstorms",
+    "g7.unit-rates-fractions"
+   ],
+   "xp": 1,
+   "trouble": "Students believe lightning never strikes the same place twice; tall buildings and towers are struck many times a year.",
+   "viz": [
+    "es-storms"
+   ]
+  },
+  {
+   "id": "weather.tornadoes",
+   "slug": "tornadoes",
+   "unit": "storms",
+   "title": "Supercells and Tornadoes",
+   "short": "Winds that change with height can set a storm's updraft spinning; tornadoes are rated by their damage on the Enhanced Fujita scale.",
+   "prereqs": [
+    "weather.thunderstorms"
+   ],
+   "xp": 2,
+   "trouble": "Students think tornadoes avoid cities, rivers or valleys; they can cross any of them.",
+   "viz": [
+    "es-storms"
+   ]
+  },
+  {
+   "id": "weather.hurricanes",
+   "slug": "hurricanes",
+   "unit": "storms",
+   "title": "Hurricanes",
+   "short": "Warm ocean water feeds a hurricane through latent heat; its Saffir–Simpson category rates only its wind.",
+   "prereqs": [
+    "weather.thunderstorms",
+    "weather.coriolis"
+   ],
+   "xp": 2,
+   "trouble": "Students judge a hurricane's danger by its category alone; the category measures only wind, while storm surge and flooding rain cause most hurricane deaths.",
+   "viz": [
+    "es-storms"
+   ]
+  },
+  {
+   "id": "weather.wind-chill-heat-index",
+   "slug": "wind-chill-heat-index",
+   "unit": "storms",
+   "title": "Wind Chill and Heat Index",
+   "short": "Wind makes cold air feel colder and humid air makes heat feel hotter, by changing how fast your body loses heat.",
+   "prereqs": [
+    "weather.relative-humidity"
+   ],
+   "xp": 1,
+   "trouble": "Students think wind chill lowers the temperature of things; wind only speeds cooling, so a car or a water pipe never gets colder than the air itself.",
+   "viz": [
+    "graph"
+   ]
+  },
+  {
+   "id": "weather.instruments",
+   "slug": "instruments",
+   "unit": "forecasting",
+   "title": "Weather Instruments",
+   "short": "Match each instrument to what it measures: thermometer, barometer, hygrometer, anemometer, wind vane, rain gauge and weather balloon.",
+   "prereqs": [
+    "weather.station-model"
+   ],
+   "xp": 1,
+   "trouble": "Students think a wind vane points where the wind is going; it turns to point into the wind, toward where the wind comes from.",
+   "viz": [
+    "es-weather-map"
+   ]
+  },
+  {
+   "id": "weather.radar-satellite",
+   "slug": "radar-satellite",
+   "unit": "forecasting",
+   "title": "Radar and Satellite Images",
+   "short": "Visible images show sunlit clouds, infrared images show how cold cloud tops are, and radar shows where rain and snow are falling.",
+   "prereqs": [
+    "weather.instruments",
+    "weather.radiation-wavelength"
+   ],
+   "xp": 2,
+   "trouble": "Students think satellite pictures show rain; they show clouds, radar shows precipitation, and on infrared images the brightest clouds are the coldest, highest tops.",
+   "viz": [
+    "es-energy"
+   ]
+  },
+  {
+   "id": "weather.forecast-models",
+   "slug": "forecast-models",
+   "unit": "forecasting",
+   "title": "Computer Forecasts and Chaos",
+   "short": "Models step the laws of physics forward on a grid; small errors grow, so forecasters run many versions and look at how far they spread.",
+   "prereqs": [
+    "weather.surface-maps"
+   ],
+   "xp": 2,
+   "trouble": "Students think a missed forecast means forecasting doesn't work; small errors grow with time, so forecasts are good for a few days and lose skill beyond about a week to ten days.",
+   "viz": [
+    "es-chance"
+   ]
+  },
+  {
+   "id": "weather.probability-of-precipitation",
+   "slug": "probability-of-precipitation",
+   "unit": "forecasting",
+   "title": "What a 40% Chance of Rain Means",
+   "short": "The chance of rain is the probability that measurable rain falls at any given spot in the forecast area during the forecast period.",
+   "prereqs": [
+    "weather.forecast-models",
+    "g7.probability-scale"
+   ],
+   "xp": 2,
+   "trouble": "Students think 40% means rain 40% of the time or over 40% of the area; it means a 4 in 10 chance at any given spot.",
+   "viz": [
+    "es-chance"
+   ]
+  },
+  {
+   "id": "weather.climate-normals",
+   "slug": "climate-normals",
+   "unit": "climate-zones",
+   "title": "Climate Normals and Anomalies",
+   "short": "A climate normal is a 30-year average, and an anomaly is how far a value is from its normal.",
+   "prereqs": [
+    "earthsci.weather-vs-climate",
+    "g7.add-subtract-rationals"
+   ],
+   "xp": 1,
+   "trouble": "Students read an anomaly map as actual temperatures; a blue area can still be hot, just cooler than its own normal.",
+   "viz": [
+    "es-climate-data"
+   ]
+  },
+  {
+   "id": "weather.climographs",
+   "slug": "climographs",
+   "unit": "climate-zones",
+   "title": "Reading Climographs",
+   "short": "A climograph shows a place's average monthly temperature and precipitation, enough to tell its hemisphere and climate type.",
+   "prereqs": [
+    "weather.climate-normals"
+   ],
+   "xp": 1,
+   "trouble": "Students assume the warmest months are always June to August; in the Southern Hemisphere they are December to February.",
+   "viz": [
+    "es-climate-data"
+   ]
+  },
+  {
+   "id": "weather.climate-zones",
+   "slug": "climate-zones",
+   "unit": "climate-zones",
+   "title": "Climate Zones",
+   "short": "Classify a climate from its monthly numbers with the Köppen groups: tropical, dry, temperate, continental and polar.",
+   "prereqs": [
+    "weather.climographs",
+    "earthsci.climate-factors"
+   ],
+   "xp": 3,
+   "trouble": "Students call any hot place a desert; a desert is defined by too little precipitation, and Antarctica is the largest desert on Earth.",
+   "viz": [
+    "es-climate-data"
+   ]
+  },
+  {
+   "id": "weather.carbon-cycle",
+   "slug": "carbon-cycle",
+   "unit": "climate-change",
+   "title": "The Carbon Cycle",
+   "short": "Carbon moves among air, ocean, living things and rock, quickly through photosynthesis and decay and slowly through rocks and fossil fuels.",
+   "prereqs": [
+    "earthsci.natural-resources",
+    "earthsci.greenhouse-effect"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-6",
+   "trouble": "Students think plants get their mass from the soil; nearly all of a plant's dry mass is built from carbon dioxide taken from the air.",
+   "viz": [
+    "es-carbon"
+   ]
+  },
+  {
+   "id": "weather.carbon-budget",
+   "slug": "carbon-budget",
+   "unit": "climate-change",
+   "title": "Tracking Carbon from Emissions to the Air",
+   "short": "About 2.1 billion tonnes of carbon raise the air's carbon dioxide by 1 ppm, and a little under half of what we emit stays in the air.",
+   "prereqs": [
+    "weather.carbon-cycle",
+    "g8.scientific-operations"
+   ],
+   "xp": 3,
+   "std": "HS-ESS3-6",
+   "trouble": "Students assume all emitted carbon dioxide stays in the air; the ocean and land take up a little over half, so the yearly rise is less than half what emissions alone would give.",
+   "viz": [
+    "es-carbon"
+   ]
+  },
+  {
+   "id": "weather.co2-record",
+   "slug": "co2-record",
+   "unit": "climate-change",
+   "title": "The Rising Carbon Dioxide Record",
+   "short": "Measurements at Mauna Loa since 1958 show a yearly wiggle from plant growth on top of a rise that has reached 2 to 3 ppm a year.",
+   "prereqs": [
+    "weather.carbon-budget",
+    "alg1.average-rate-of-change"
+   ],
+   "xp": 2,
+   "std": "HS-ESS3-5",
+   "trouble": "Students think the dip each spring and summer means the rise is reversing; it comes every year as northern plants grow, and the long-term rise goes on.",
+   "viz": [
+    "es-climate-data"
+   ]
+  },
+  {
+   "id": "weather.climate-forcings",
+   "slug": "climate-forcings",
+   "unit": "climate-change",
+   "title": "What Changes Climate: Forcings",
+   "short": "Changes in sunlight, volcanic haze, greenhouse gases, pollution particles and land cover push climate warmer or cooler.",
+   "prereqs": [
+    "weather.greenhouse-layer",
+    "weather.co2-record"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-4",
+   "trouble": "Students think a big volcanic eruption warms the climate; its sulfur haze reflects sunlight and cools Earth for a year or two, as Pinatubo did in 1992.",
+   "viz": [
+    "es-energy"
+   ]
+  },
+  {
+   "id": "weather.feedbacks",
+   "slug": "feedbacks",
+   "unit": "climate-change",
+   "title": "Climate Feedbacks",
+   "short": "A change can strengthen itself, as when melting ice uncovers darker water, or weaken itself, as when a warmer Earth gives off more heat.",
+   "prereqs": [
+    "weather.climate-forcings"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-2",
+   "trouble": "Students think a positive feedback is a good thing; in science \"positive\" means the change strengthens itself, whatever its effects.",
+   "viz": [
+    "es-energy"
+   ]
+  },
+  {
+   "id": "weather.orbital-cycles",
+   "slug": "orbital-cycles",
+   "unit": "climate-change",
+   "title": "Orbital Cycles and Ice Ages",
+   "short": "Slow changes in the shape of Earth's orbit, its tilt and the direction of its axis, over tens of thousands of years, pace the ice ages.",
+   "prereqs": [
+    "weather.feedbacks"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-4",
+   "trouble": "Students think orbital cycles explain today's warming; they act over tens of thousands of years and have been nudging Earth very slowly toward cooling.",
+   "viz": [
+    "es-earth-sun"
+   ]
+  },
+  {
+   "id": "weather.paleoclimate",
+   "slug": "paleoclimate",
+   "unit": "climate-change",
+   "title": "Reading Past Climates",
+   "short": "Ice cores, tree rings, ocean mud and corals record temperatures and gases from long before thermometers.",
+   "prereqs": [
+    "weather.orbital-cycles"
+   ],
+   "xp": 2,
+   "std": "HS-ESS2-4",
+   "trouble": "Students think we know past climates only from written records; bubbles in Antarctic ice hold samples of air from about 800,000 years ago.",
+   "viz": [
+    "es-climate-data"
+   ]
+  },
+  {
+   "id": "weather.climate-sensitivity",
+   "slug": "climate-sensitivity",
+   "unit": "climate-change",
+   "title": "How Much Warming per Doubling",
+   "short": "Each doubling of carbon dioxide adds about 3.7 W/m² of push, and the long-run warming is likely 2.5 to 4 °C per doubling.",
+   "prereqs": [
+    "weather.feedbacks",
+    "alg2.logarithms"
+   ],
+   "xp": 3,
+   "std": "HS-ESS3-5",
+   "trouble": "Students expect each added ppm to warm by the same amount; the push grows with the logarithm, so going from 280 to 560 ppm warms about as much as going from 560 to 1,120.",
+   "viz": [
+    "es-energy",
+    "graph"
+   ]
+  },
+  {
+   "id": "weather.sea-level-rise",
+   "slug": "sea-level-rise",
+   "unit": "climate-change",
+   "title": "Why Sea Level Rises",
+   "short": "Seas rise as warming water expands and as ice on land melts or slides into the ocean.",
+   "prereqs": [
+    "weather.climate-forcings"
+   ],
+   "xp": 2,
+   "std": "HS-ESS3-5",
+   "trouble": "Students think melting sea ice raises sea level; floating ice already pushes aside its own weight of water, so only ice from land adds to the sea.",
+   "viz": [
+    "es-climate-data"
+   ]
+  },
+  {
+   "id": "weather.climate-projections",
+   "slug": "climate-projections",
+   "unit": "climate-change",
+   "title": "Climate Models and Projections",
+   "short": "Climate models project long-term averages, not the weather on a date, for different paths of future emissions.",
+   "prereqs": [
+    "weather.forecast-models",
+    "weather.climate-sensitivity"
+   ],
+   "xp": 2,
+   "std": "HS-ESS3-5",
+   "trouble": "Students reason that if weather can't be forecast two weeks ahead, climate can't be projected decades ahead; climate is the average of weather, set by the energy balance, much as one coin toss is unpredictable but the share of heads in thousands is not.",
+   "viz": [
+    "es-climate-data"
+   ]
+  }
+ ]
+}
