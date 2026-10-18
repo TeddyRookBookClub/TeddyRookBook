@@ -1,0 +1,8 @@
+{{- /* the hieroglyph tools' tab bar; the page's front matter `hnav` marks the current tab */ -}}
+{{- $cur := .Params.hnav -}}
+<nav class="hg-nav" aria-label="Hieroglyph tools">
+{{- range slice (slice "home" "" "Start") (slice "intro" "how-they-work/" "How they work") (slice "signs" "signs/" "Sign list") (slice "flash" "flashcards/" "Flashcards") (slice "cart" "cartouche/" "Cartouche maker") (slice "type" "typing/" "Typing helper") }}
+  <a href="{{ printf "languages/hieroglyphs/%s" (index . 1) | relURL }}"{{ if eq $cur (index . 0) }} aria-current="page"{{ end }}>{{ index . 2 }}</a>
+{{- end }}
+  <a class="hg-nav-out" href="{{ "egyptology/middle-egyptian-1/" | relURL }}">Middle Egyptian I →</a>
+</nav>

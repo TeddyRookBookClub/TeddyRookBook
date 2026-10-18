@@ -1,0 +1,86 @@
+{{- /* /egypt/sites/<key>/: one site of the atlas. Data: data/egypt/sites/<key>.yaml (made by /tmp/work_egypt/atlas/sites_src.py),
+   front matter `site: <key>`. Hieroglyph strips and the sign-by-sign tables are drawn by static/egypt/sites.js from the kit's model. */ -}}
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ partial "egypt-kit.html" . }}
+<link rel="stylesheet" href="{{ "egypt/sites.css" | relURL }}?v={{ (os.Stat "static/egypt/sites.css").ModTime.Unix }}">
+{{- $D := site.Data.egypt -}}
+{{- $S := index $D.sites .Params.site -}}
+{{- $groups := index $D.sites "_groups" -}}
+{{- $g := index (where $groups "key" $S.group) 0 -}}
+{{- $all := slice }}{{ range $k, $v := $D.sites }}{{ if ne $k "_groups" }}{{ $all = $all | append $v }}{{ end }}{{ end }}{{ $all = sort $all "order" -}}
+{{- $PN := dict "pre" "Predynastic" "ed" "Early Dynastic" "ok" "Old Kingdom" "fip" "First Intermediate" "mk" "Middle Kingdom" "sip" "Second Intermediate" "nk" "New Kingdom" "tip" "Third Intermediate" "late" "Late Period" "ptol" "Ptolemaic" "rom" "Roman" -}}
+<div class="hs eg-page egat">
+  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › <a href="{{ "egypt/sites/" | relURL }}">Sites</a> › {{ $S.name }}</nav>
+  <div class="egat-head">
+    <p class="egat-eyebrow">{{ $g.name }} · {{ range $i, $p := $S.periods }}{{ if $i }}, {{ end }}{{ index $PN $p }}{{ end }}</p>
+    <h1>{{ $S.name }}</h1>
+    {{ with $S.anc }}<p class="egat-anc">Ancient name: {{ . }}</p>{{ end }}
+    <p class="egat-lead">{{ $S.summary }}</p>
+    <dl class="egat-facts">{{ range $S.facts }}<div><dt>{{ index . 0 }}</dt><dd>{{ index . 1 }}</dd></div>{{ end }}</dl>
+    <nav class="egat-jump" aria-label="On this page"><a href="#about">What was built</a><a href="#inscriptions">Inscriptions ({{ len $S.inscriptions }})</a><a href="#map">Map</a>{{ with $S.models3d }}<a href="#about-3d">3-D</a>{{ end }}<a href="#learn">Learn more</a><a href="#sources">Sources</a></nav>
+  </div>
+
+  <section class="hs-sec" id="about">
+    <div class="egat-cols">
+      <div class="egat-prose"><h2>Who built what</h2>{{ range $S.built }}<p>{{ . | safeHTML }}</p>{{ end }}</div>
+      <div class="egat-prose"><h2>What survives</h2>{{ range $S.survives }}<p>{{ . | safeHTML }}</p>{{ end }}</div>
+    </div>
+    {{ with $S.visual }}<figure class="egat-vis"><div class="ml-viz" data-viz="{{ .viz }}" data-opts="{{ .opts | jsonify }}" aria-label="{{ .caption }}"></div><figcaption>{{ .caption }}</figcaption></figure>{{ end }}
+    {{ with $S.models3d }}<div class="egat-3d" id="about-3d">{{ range . }}<a href="{{ printf "egypt/3d/#%s" (index . 0) | relURL }}"><span aria-hidden="true">🧊</span> {{ index . 1 }} →</a>{{ end }}</div>{{ end }}
+  </section>
+
+  <section class="hs-sec" id="inscriptions">
+    <h2>Inscriptions</h2>
+    <p class="egat-intro">{{ len $S.inscriptions }} short, well-known texts from {{ $S.name }}, each with its transliteration (the Egyptian sounds in Latin letters) and a translation. Tap <b>Sign by sign</b> to see what each sign is and how it is read. Royal names are drawn in their cartouches.</p>
+    <div class="egat-inslist">
+    {{ range $S.inscriptions }}
+      <article class="egat-ins" id="ins-{{ .id }}">
+        <h3>{{ .title }}</h3>
+        {{ if .segs }}<div class="egat-strip" data-segs="{{ .segs | jsonify }}" data-label="Hieroglyphs{{ with .tl }}: {{ . }}{{ end }}"><noscript>The hieroglyphs need JavaScript turned on.</noscript></div>
+        {{ else }}<p class="egat-nosigns">{{ .nosigns }}</p>{{ end }}
+        <dl class="egat-read">
+          {{ with .tl }}<dt>Transliteration</dt><dd><span class="eg-tl">{{ . }}</span></dd>{{ end }}
+          <dt>Translation</dt><dd class="egat-en">“{{ .en }}”</dd>
+        </dl>
+        <p><b>Where:</b> {{ .where }}</p>
+        <p>{{ .about }}</p>
+        {{ with .simplified }}<p class="egat-simp"><b>Simplified:</b> {{ . }}</p>{{ end }}
+        {{ if .segs }}<details class="egat-signs"><summary>Sign by sign</summary><div class="egat-gl" data-segs="{{ .segs | jsonify }}" data-tl="{{ .tl }}" data-en="{{ .en }}"></div></details>{{ end }}
+        <p class="egat-src"><b>Reading:</b> {{ .reading }}</p>
+      </article>
+    {{ end }}
+    </div>
+  </section>
+
+  <section class="hs-sec" id="map">
+    <h2>On the map</h2>
+    <div class="ml-viz" data-viz="eg-map" data-opts="{{ dict "view" $S.map.view "select" $S.key "layerChips" false "height" 460 | jsonify }}" aria-label="Map around {{ $S.name }}"></div>
+    <p class="eg-more"><a class="hs-btn" href="{{ "egypt/map/" | relURL }}">The full map of Egypt and Nubia →</a></p>
+  </section>
+
+  <section class="hs-sec" id="learn">
+    <h2>Learn more on the Egyptology Ladder</h2>
+    <ul class="egat-links">
+    {{ range $S.topics }}{{ $ck := index (split . ".") 0 }}{{ $c := index (where $D.courses "key" $ck) 0 }}{{ $t := index (where (index $D.topics $ck).topics "id" .) 0 }}
+      <li><a href="{{ printf "egyptology/%s/%s/" $c.slug (index (split . ".") 1) | relURL }}"><small>{{ $c.title }}</small>{{ $t.title }}</a></li>
+    {{ end }}
+    </ul>
+    {{ with $S.events }}<h3>On the timeline</h3>
+    <ul class="egat-links">{{ range . }}{{ $e := index (where site.Data.timeline.events "id" .) 0 }}<li><a href="{{ "timeline/" | relURL }}?show=egypt#{{ $e.id }}"><small>{{ $e.when }}</small>{{ $e.title }}</a></li>{{ end }}</ul>{{ end }}
+  </section>
+
+  <section class="hs-sec" id="sources">
+    <h2>Sources</h2>
+    <ul class="egat-sources">{{ range $S.sources }}<li>{{ if index . 1 }}<a href="{{ index . 1 }}" rel="noopener">{{ index . 0 }}</a>{{ else }}{{ index . 0 }}{{ end }}</li>{{ end }}</ul>
+    <p class="hs-small eg-fine">Dates follow Shaw, ed., <i>The Oxford History of Ancient Egypt</i> (2000); before 664 BC they are approximate. Readings are the standard ones in the sources named under each inscription; translations are Teddy Rook Book's own. The hieroglyphs are drawn in the site's font, TRB Hieroglyphs, so their shapes are simplified; where an inscription's arrangement or signs can't be shown faithfully, the card says so.</p>
+  </section>
+
+  {{- $i := 0 }}{{ range $n, $v := $all }}{{ if eq $v.key $S.key }}{{ $i = $n }}{{ end }}{{ end -}}
+  <nav class="egat-pn" aria-label="Other sites">
+    {{ if gt $i 0 }}{{ $p := index $all (sub $i 1) }}<a class="prev" href="{{ printf "egypt/sites/%s/" $p.key | relURL }}"><small>← North</small>{{ $p.name }}</a>{{ end }}
+    {{ if lt $i (sub (len $all) 1) }}{{ $q := index $all (add $i 1) }}<a class="next" href="{{ printf "egypt/sites/%s/" $q.key | relURL }}"><small>South →</small>{{ $q.name }}</a>{{ end }}
+  </nav>
+</div>
+<script src="{{ "egypt/sites.js" | relURL }}?v={{ (os.Stat "static/egypt/sites.js").ModTime.Unix }}" defer></script>
+{{ end }}

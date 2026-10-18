@@ -1,0 +1,58 @@
+{{ define "main" }}
+{{ partial "hiero-head.html" . }}
+<div class="lang hg hc" data-hg-root>
+  <header class="lang-hero hg-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/hieroglyphs/" | relURL }}" style="color:inherit">Hieroglyphs</a> · Cartouche maker</p>
+    <h1>Your name in a cartouche</h1>
+    <p>Type a name and it is spelled with Egyptian sound signs, letter by letter. Choose a different sign for any sound, set the name across or down, add a royal title, then print it or save it as a picture.</p>
+  </header>
+  {{ partial "hiero-nav.html" . }}
+
+  <div class="hc-game" role="note"><b>A modern game, played with real signs.</b> Egyptians wrote only royal names in cartouches, and they spelled sounds differently from English: they wrote consonants and few vowels, had no letters for <i>l</i> or <i>v</i>, and had several sounds English lacks. When scribes of the Ptolemaic and Roman periods had to write Greek and Latin names (Ptolemy, Cleopatra, Caesar), they spelled them out with sound signs, as this tool does. So there is no single right way to write your name: below, each letter shows the choice made and the other signs you could use.</div>
+
+  <section class="hc-make">
+    <div class="box hc-ctl">
+      <label class="hc-namelab" for="hc-name">Name</label>
+      <input id="hc-name" class="hc-name" type="text" maxlength="20" autocomplete="off" spellcheck="false" value="Teddy" aria-describedby="hc-name-help">
+      <p class="hc-help" id="hc-name-help">Letters A to Z; up to 16 letters. Accents are dropped.</p>
+      <div class="hc-opts">
+        <div class="hc-opt"><span class="fc-lab">Layout</span><div class="hg-seg" id="hc-lay"><button type="button" data-v="h">Across</button><button type="button" data-v="v">Down</button></div></div>
+        <div class="hc-opt"><span class="fc-lab">Signs face</span><div class="hg-seg" id="hc-dir"><button type="button" data-v="l">Left (read →)</button><button type="button" data-v="r">Right (read ←)</button></div></div>
+        <div class="hc-opt"><span class="fc-lab">Signs</span><div class="hg-seg" id="hc-grp"><button type="button" data-v="1">In blocks</button><button type="button" data-v="0">In a row</button></div></div>
+        <label class="hc-opt"><span class="fc-lab">Title before it</span><select id="hc-title"><option value="">None</option><option value="zara">Son of Ra (before a king’s birth name)</option><option value="nesubit">King of Upper and Lower Egypt (before a throne name)</option></select></label>
+        <label class="hc-opt"><span class="fc-lab">Last sign</span><select id="hc-det"><option value="">None (as in most kings’ cartouches)</option><option value="A1">Seated man (ends men’s names)</option><option value="B1">Seated woman (ends women’s names)</option><option value="X1:H8">t and egg (as in Cleopatra’s cartouche)</option></select></label>
+      </div>
+      <div class="hc-vowels"><span class="fc-lab">Vowels</span> <button type="button" class="chip" id="hc-allv">Write every vowel</button> <button type="button" class="chip" id="hc-nov">Drop the vowels inside the name, Egyptian style</button></div>
+    </div>
+
+    <div class="hc-out">
+      <div class="hc-stage" id="hc-stage" aria-live="polite"></div>
+      <p class="hc-cap" id="hc-cap"></p>
+      <div class="hc-acts">
+        <button type="button" class="cbtn play" id="hc-png">⬇ Save as picture (PNG)</button>
+        <button type="button" class="cbtn" id="hc-svg">⬇ SVG</button>
+        <button type="button" class="cbtn" id="hc-print">🖨 Print</button>
+        <button type="button" class="cbtn" id="hc-copy">Copy as text</button>
+      </div>
+      <p class="hc-help">“Copy as text” copies the signs as Unicode hieroglyphs, in reading order; they show as hieroglyphs only where a hieroglyph font is installed.</p>
+    </div>
+  </section>
+
+  <section class="hc-sec">
+    <h2>Letter by letter</h2>
+    <p class="hg-lead">Tap a sign to use it for that letter. The first choice is the one Ptolemaic scribes would most likely have used; the others are other ways to hear the sound.</p>
+    <div class="hc-segs" id="hc-segs"></div>
+  </section>
+
+  <section class="hc-sec" id="rulers">
+    <h2>Read a real cartouche</h2>
+    <p class="hg-lead">These are the names of real rulers as they appear in their cartouches. Try to read each one with the <a href="{{ "languages/hieroglyphs/signs/" | relURL }}">sign list</a>, then tap “Show the reading”. Watch for the sun disk <span class="eg-h">𓇳</span> of the god Ra: it is written first out of respect but often read last.</p>
+    <div class="hc-quiz box" id="hc-quiz"></div>
+    <div class="hc-rulers" id="hc-rulers"></div>
+    <p class="hi-note">Royal names and readings follow Gardiner, <i>Egyptian Grammar</i>, the Excursus on the royal titulary, and Wikipedia’s articles on each ruler. Learn the five royal names in <a href="{{ "egyptology/middle-egyptian-1/titulary/" | relURL }}">The Five Royal Names</a> and <a href="{{ "egyptology/middle-egyptian-1/royal-names/" | relURL }}">Reading Royal Names</a> (Middle Egyptian I), or <a href="{{ "egyptology/young-explorers/cartouche/" | relURL }}">Cartouches</a> for young explorers.</p>
+  </section>
+  <div id="hc-printarea" class="hc-printarea" aria-hidden="true"></div>
+  {{ partial "hiero-credits.html" . }}
+</div>
+<script src="{{ "languages/hieroglyphs/cartouche.js" | relURL }}?v={{ (os.Stat "static/languages/hieroglyphs/cartouche.js").ModTime.Unix }}" defer></script>
+{{ end }}

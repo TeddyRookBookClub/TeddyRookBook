@@ -1,0 +1,101 @@
+{{ define "main" }}
+{{ partial "hiero-head.html" . }}
+{{- $me1 := "egyptology/middle-egyptian-1/" -}}
+<div class="lang hg hi" data-hg-root>
+  <header class="lang-hero hg-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/hieroglyphs/" | relURL }}" style="color:inherit">Hieroglyphs</a> · How they work</p>
+    <h1>How hieroglyphs work</h1>
+    <p>Hieroglyphs look like pictures, and some of them are, but most of the time they spell out sounds. Here is the whole system in nine short steps, with real words to try. Tap any sign in the examples to see what it is.</p>
+  </header>
+  {{ partial "hiero-nav.html" . }}
+
+  <ol class="hi-toc">
+    <li><a href="#script">A script for 3,500 years</a></li><li><a href="#sounds">Signs for sounds</a></li><li><a href="#alphabet">The “alphabet”</a></li>
+    <li><a href="#multi">Two and three sounds</a></li><li><a href="#complements">Helper signs</a></li><li><a href="#words">Word signs</a></li>
+    <li><a href="#dets">Determinatives</a></li><li><a href="#direction">Which way to read</a></li><li><a href="#names">Cartouches and royal names</a></li>
+  </ol>
+
+  <section class="hi-sec" id="script">
+    <h2><span class="hi-n">1</span> A script for 3,500 years</h2>
+    <p>Egyptians were writing with hieroglyphs by about 3000 BC, when the first kings ruled the whole country, and the last hieroglyphic inscription we know of was carved at the temple of Philae in AD 394. They called their writing <span class="eg-tl">mdw nṯr</span>, “the god’s words”; our word comes from the Greek <i>hieroglyphika</i>, “sacred carvings”.</p>
+    <p>Hieroglyphs were for monuments: temple walls, tombs, statues and stelae. For letters, accounts and stories, scribes wrote with a reed brush in <b>hieratic</b>, a quick, joined-up form of the same signs, and from about 650 BC in the even quicker <b>Demotic</b>. This page is about the hieroglyphs of <b>Middle Egyptian</b>, the classical language of about 2000 BC that scribes kept copying and imitating for two thousand years.</p>
+  </section>
+
+  <section class="hi-sec" id="sounds">
+    <h2><span class="hi-n">2</span> Most signs stand for sounds</h2>
+    <p>A sign can show a thing and still be used only for its sound, the way a picture of an eye and a saw could write “I saw” in a rebus. The mouth <span class="eg-h">𓂋</span> is read <span class="eg-tl">r</span>, and the ripple of water <span class="eg-h">𓈖</span> is read <span class="eg-tl">n</span>; together they spell <span class="eg-tl">rn</span>, “name”, which has nothing to do with mouths or water.</p>
+    <div class="ml-viz" data-viz="eg-glyphs" data-opts='{"word":"ren","breakdown":true,"lines":["tl","say","en"],"size":90}' aria-label="The word rn, name, in hieroglyphs"></div>
+    <p><b>Only consonants are written.</b> Egyptian had vowels, but the script left them out, as written Arabic and Hebrew usually do. We know the consonants of most words for certain, but how the vowels sounded is known only for some words, mostly from Coptic, the last stage of the language, which was written in Greek letters plus a few signs taken from Demotic. So Egyptologists use a convention to say words aloud: put an <i>e</i> between consonants, and say <span class="eg-tl">ꜣ</span> and <span class="eg-tl">ꜥ</span> as <i>a</i>, <span class="eg-tl">j</span> as <i>i</i> and <span class="eg-tl">w</span> as <i>u</i>. <span class="eg-tl">rn</span> is said “ren”, <span class="eg-tl">nfr</span> “nefer”. That is a modern habit, not how Egyptians spoke.</p>
+  </section>
+
+  <section class="hi-sec" id="alphabet">
+    <h2><span class="hi-n">3</span> The “alphabet”: signs for one sound</h2>
+    <p>About two dozen signs write a single consonant. Egyptologists list them in a fixed order, like an alphabet, and write each sound with a letter of their own: the <b>transliteration</b>. Several of these letters have dots or hooks, because Egyptian had sounds English doesn’t: <span class="eg-tl">ḥ</span> is a breathy h made in the throat, <span class="eg-tl">ḫ</span> is the ch of Scottish “loch”, and <span class="eg-tl">ꜥ</span> is a sound made deep in the throat, like Arabic ʿayn. Egyptian never used these signs on their own as an alphabet, though; they mixed them with all the other kinds of signs below.</p>
+    <div class="hi-alpha" id="hi-alpha" aria-label="The one-sound signs in dictionary order"></div>
+    <p class="hi-note">Drill them on the <a href="{{ "languages/hieroglyphs/flashcards/" | relURL }}?deck=alpha">alphabet flashcards</a>, and type them with the <a href="{{ "languages/hieroglyphs/typing/" | relURL }}">typing helper</a> (the second column is what you type). Some old books write yod <span class="eg-tl">ꞽ</span> or <span class="eg-tl">i</span> instead of <span class="eg-tl">j</span>, and <span class="eg-tl">ś</span> or <span class="eg-tl">s</span> for the door bolt <span class="eg-tl">z</span>; the sounds are the same.</p>
+  </section>
+
+  <section class="hi-sec" id="multi">
+    <h2><span class="hi-n">4</span> Signs for two and three sounds</h2>
+    <p>Many more signs write two consonants (<b>biliterals</b>) or three (<b>triliterals</b>). The house plan <span class="eg-h">𓉐</span> writes <span class="eg-tl">pr</span>, the basket <span class="eg-h">𓎟</span> <span class="eg-tl">nb</span>, the heart and windpipe <span class="eg-h">𓄤</span> <span class="eg-tl">nfr</span> and the ankh <span class="eg-h">𓋹</span> <span class="eg-tl">ꜥnḫ</span>. Again only the consonants count: the basket writes <span class="eg-tl">nb</span> “lord” and also starts <span class="eg-tl">nbt</span> “lady”, a different word with the same two consonants plus the ending <span class="eg-tl">t</span>.</p>
+  </section>
+
+  <section class="hi-sec" id="complements">
+    <h2><span class="hi-n">5</span> Helper signs: phonetic complements</h2>
+    <p>Scribes often added one-sound signs that repeat part of what a bigger sign already says, to make the reading certain. In <span class="eg-tl">nfr</span> “good, beautiful” the viper (<span class="eg-tl">f</span>) and the mouth (<span class="eg-tl">r</span>) repeat the last two sounds of <span class="eg-h">𓄤</span>. You read the word once, <span class="eg-tl">nfr</span>, not <i>nfr-f-r</i>.</p>
+    <div class="ml-viz" data-viz="eg-glyphs" data-opts='{"word":"nfr","breakdown":true,"size":90}' aria-label="The word nfr in hieroglyphs with its complements"></div>
+    <p>Notice how the viper and the mouth sit one above the other. Signs are packed into neat blocks (Egyptologists call them <b>quadrats</b>), and you read a block top to bottom before moving on.</p>
+  </section>
+
+  <section class="hi-sec" id="words">
+    <h2><span class="hi-n">6</span> Word signs and the stroke</h2>
+    <p>Some signs do mean what they show. These are <b>word signs</b> (ideograms or logograms), and a short stroke <span class="eg-h">𓏤</span> under one says “this sign means the thing itself”. The house plan with a stroke is the word <span class="eg-tl">pr</span>, “house”.</p>
+    <div class="ml-viz" data-viz="eg-glyphs" data-opts='{"word":"per","breakdown":true,"size":90}' aria-label="The word pr, house"></div>
+  </section>
+
+  <section class="hi-sec" id="dets">
+    <h2><span class="hi-n">7</span> Determinatives: silent signs for meaning</h2>
+    <p>Because vowels were not written, many words looked alike. So scribes ended most words with a <b>determinative</b>, a sign that is not read aloud but tells you what kind of thing the word is about: a seated man for men and their jobs, a seated woman for women, walking legs for motion, a papyrus roll for writing and ideas, three hills for foreign lands. Here the duck <span class="eg-tl">zꜣ</span> and the loaf <span class="eg-tl">t</span> (the feminine ending) spell <span class="eg-tl">zꜣt</span>, and the seated woman shows the word means a woman: “daughter”.</p>
+    <div class="ml-viz" data-viz="eg-glyphs" data-opts='{"word":"zat","breakdown":true,"size":90}' aria-label="The word zꜣt, daughter"></div>
+    <p>Determinatives also mark where a word ends, which helps, since Egyptian left no spaces between words. Three strokes <span class="eg-h">𓏥</span> after a word mark the plural.</p>
+  </section>
+
+  <section class="hi-sec" id="direction">
+    <h2><span class="hi-n">8</span> Which way to read</h2>
+    <p>Hieroglyphs can run right to left (the most common way), left to right, or down in columns. The rule for finding the start: <b>people, animals and birds face the beginning of the line</b>. If the owl’s face looks right, start reading at the right. Here is the same phrase, <span class="eg-tl">ḥtp-dj-nsw</span>, “an offering that the king gives”, the first words of thousands of tomb inscriptions, written both ways.</p>
+    <div class="hi-two">
+      <div class="ml-viz" data-viz="eg-glyphs" data-opts='{"word":"htpdinsw","dir":"rtl","arrow":true,"tl":false,"en":false,"note":false,"size":80,"caption":"Right to left: the signs face right."}' aria-label="ḥtp-dj-nsw written right to left"></div>
+      <div class="ml-viz" data-viz="eg-glyphs" data-opts='{"word":"htpdinsw","arrow":true,"note":false,"size":80,"caption":"Left to right: the signs face left."}' aria-label="ḥtp-dj-nsw written left to right"></div>
+    </div>
+    <p>The sedge plant for “king” (<span class="eg-tl">nsw</span>) is written first even though it is read last. Scribes put the king or a god in front out of respect; this is called <b>honorific transposition</b>. Books like this one usually print hieroglyphs left to right, to run with the English.</p>
+  </section>
+
+  <section class="hi-sec" id="names">
+    <h2><span class="hi-n">9</span> Cartouches and royal names</h2>
+    <p>A king had five names. The two most important, his throne name and his birth name, were written inside an oval loop of rope with a bar at one end: the <b>cartouche</b> (French for “cartridge”, the name Napoleon’s soldiers gave it). The loop is usually explained as a stretched <i>shen</i> ring, a sign of encircling and protection. Cartouches were the key to decipherment: in 1822 Jean-François Champollion showed that the signs in the cartouches of Ptolemy and Cleopatra spelled their Greek names, and then read the old Egyptian names Ramesses and Thutmose the same way.</p>
+    <div class="hi-two">
+      <div class="ml-viz" data-viz="eg-cartouche" data-opts='{"name":"ramesses","breakdown":true}' aria-label="The cartouche of Ramesses"></div>
+      <div class="ml-viz" data-viz="eg-cartouche" data-opts='{"name":"ptolemy","breakdown":true}' aria-label="The cartouche of Ptolemy"></div>
+    </div>
+    <p>Read more royal names in the <a href="{{ "languages/hieroglyphs/cartouche/" | relURL }}#rulers">cartouche maker</a>, and write your own there (a modern game, since Egyptians wrote only royal names in cartouches).</p>
+  </section>
+
+  <section class="hi-sec hi-next">
+    <h2>Keep going</h2>
+    <ul>
+      <li><b>The course:</b> <a href="{{ $me1 | relURL }}">Middle Egyptian I</a> teaches all of this step by step with practice: <a href="{{ printf "%ssign-kinds/" $me1 | relURL }}">three kinds of signs</a>, <a href="{{ printf "%salpha-1/" $me1 | relURL }}">the alphabet</a>, <a href="{{ printf "%smdc/" $me1 | relURL }}">typing transliteration</a>, <a href="{{ printf "%sdeterminatives/" $me1 | relURL }}">determinatives</a>, <a href="{{ printf "%sdirection/" $me1 | relURL }}">reading direction</a> and <a href="{{ printf "%sroyal-names/" $me1 | relURL }}">royal names</a>. <a href="{{ "egyptology/middle-egyptian-2/" | relURL }}">Middle Egyptian II</a> goes on to verbs and real texts.</li>
+      <li><b>For younger readers:</b> <a href="{{ "egyptology/young-explorers/sound-signs/" | relURL }}">sound signs</a>, <a href="{{ "egyptology/young-explorers/your-name/" | relURL }}">writing your name</a> and <a href="{{ "egyptology/young-explorers/cartouche/" | relURL }}">cartouches</a> in Ancient Egypt for Young Explorers.</li>
+      <li><b>The tools:</b> the <a href="{{ "languages/hieroglyphs/signs/" | relURL }}">sign list</a>, the <a href="{{ "languages/hieroglyphs/flashcards/" | relURL }}">flashcards</a> and the <a href="{{ "languages/hieroglyphs/typing/" | relURL }}">typing helper</a>.</li>
+    </ul>
+  </section>
+  <p class="hi-src"><b>Sources:</b> A. H. Gardiner, <i>Egyptian Grammar</i> (1927; 3rd ed. 1957), Introduction; J. P. Allen, <i>Middle Egyptian</i> (3rd ed. 2014), the opening lessons on the writing; Wikipedia, <a href="https://en.wikipedia.org/wiki/Egyptian_hieroglyphs" target="_blank" rel="noopener">Egyptian hieroglyphs</a>, <a href="https://en.wikipedia.org/wiki/Cartouche" target="_blank" rel="noopener">Cartouche</a> and <a href="https://en.wikipedia.org/wiki/Decipherment_of_ancient_Egyptian_scripts" target="_blank" rel="noopener">Decipherment of ancient Egyptian scripts</a>.</p>
+  {{ partial "hiero-credits.html" . }}
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var E = window.MathLadder && MathLadder.egypt, box = document.getElementById('hi-alpha'); if (!E || !box) return;
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  box.innerHTML = E.ALPHA.map(function (a) { var S = E.SIGNS[a[2]]; return '<div class="hi-a"><span class="eg-h" aria-hidden="true">' + S.u + '</span><b class="eg-tl">' + esc(a[0]) + '</b><kbd>' + esc(a[1]) + '</kbd><small>' + esc(S.n) + '<br>said “' + esc(a[3]) + '”</small></div>'; }).join('');
+});
+</script>
+{{ end }}

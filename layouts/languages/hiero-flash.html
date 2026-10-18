@@ -1,0 +1,63 @@
+{{ define "main" }}
+{{ partial "hiero-head.html" . }}
+<link rel="stylesheet" href="{{ "lang/flash.css" | relURL }}?v={{ (os.Stat "static/lang/flash.css").ModTime.Unix }}">
+<div class="lang fc hg hf" id="fc" data-hg-root>
+  <header class="lang-hero hg-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/hieroglyphs/" | relURL }}" style="color:inherit">Hieroglyphs</a> · Flashcards</p>
+    <h1>Hieroglyph flashcards</h1>
+    <p>Start with the alphabet of one-sound signs, then add the two- and three-sound signs, the determinatives and real words. Say the answer to yourself, flip the card and rate how well you knew it; each card comes back just before you would forget it.</p>
+  </header>
+  {{ partial "hiero-nav.html" . }}
+  {{ partial "lang-notice.html" . }}
+  <details class="lang-help">
+    <summary>❓ How the flashcards work</summary>
+    <ol>
+      <li><b>Pick a deck</b> below. <i>The alphabet</i> is the place to start: the 25 one-sound signs in the order Egyptologists list them.</li>
+      <li><b>Say the answer before you flip.</b> Trying to remember, even when you can’t, is what makes a sign stick.</li>
+      <li><b>Grade each card.</b> <i>Again</i> brings it back in a minute; <i>Hard</i>, <i>Good</i> and <i>Easy</i> send it further out (each button shows when you’ll see it next). This is spaced repetition: cards you know come back after days, then weeks.</li>
+      <li><b>Which side first:</b> <i>Hieroglyph first</i> shows the sign or word and asks for its sound or meaning; <i>Sound or meaning first</i> asks you to recall the sign; <i>Both</i> makes two cards of each.</li>
+      <li><b>Sounds</b> are shown in transliteration with the way Egyptologists say them (“nefer” for <span class="eg-tl">nfr</span>) and the Manuel de Codage typing form. Nobody knows exactly how the vowels sounded.</li>
+      <li><b>Keys:</b> Space or Enter flips; 1–4 grade (Again, Hard, Good, Easy); S skips.</li>
+    </ol>
+  </details>
+
+  <section class="fc-setup box" id="fc-setup">
+    <h3>Deck</h3>
+    <div class="hf-decks" id="hf-decks" role="radiogroup" aria-label="Choose a deck"></div>
+    <div class="fc-row">
+      <div class="fc-field"><span class="fc-lab">Show first</span>
+        <div class="seg hg-seg" id="hf-dir"><button type="button" data-v="f">Hieroglyph first</button><button type="button" data-v="r">Sound or meaning first</button><button type="button" data-v="x">Both</button></div></div>
+      <label class="fc-field"><span class="fc-lab">Order</span>
+        <select id="hf-order"><option value="srs">Smart review (due cards first)</option><option value="shuffle">Shuffle</option><option value="list">In list order</option></select></label>
+      <label class="fc-field"><span class="fc-lab">New cards per day</span>
+        <select id="hf-new"><option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="9999">No limit</option></select></label>
+    </div>
+  </section>
+
+  <div class="fc-focus">
+    <div class="fc-bar"><span id="fc-pos-lbl"></span><span class="fc-prog"><i id="fc-prog"></i></span><span id="fc-due"></span></div>
+    <div class="fc-stage" id="fc-stage" tabindex="0" aria-live="polite" aria-label="Flashcard: press Space to flip">
+      <p class="fc-msg" id="fc-msg">Loading the cards…</p>
+    </div>
+    <div class="fc-actions" id="fc-actions">
+      <button type="button" class="cbtn play" id="fc-flip">Show answer</button>
+      <div class="fc-grade" id="fc-grade" hidden>
+        <button type="button" class="g g1" data-q="1"><b>Again</b><small></small></button>
+        <button type="button" class="g g2" data-q="2"><b>Hard</b><small></small></button>
+        <button type="button" class="g g3" data-q="3"><b>Good</b><small></small></button>
+        <button type="button" class="g g4" data-q="4"><b>Easy</b><small></small></button>
+      </div>
+    </div>
+    <div class="fc-tools"><button type="button" class="linkbtn" id="fc-skip">Skip</button> · <a class="linkbtn" id="hf-look" href="{{ "languages/hieroglyphs/signs/" | relURL }}">Look it up in the sign list</a> · <span id="fc-today"></span></div>
+  </div>
+
+  <section class="box fc-stats">
+    <h3>Your progress <small style="text-transform:none;letter-spacing:0">(this device)</small></h3>
+    <div class="fc-nums" id="fc-nums"></div>
+    <p style="margin:.6rem 0 0"><button class="linkbtn" id="fc-reset" type="button">Reset progress for this deck</button></p>
+  </section>
+  <p class="hi-note">Want the grammar too? These signs and words come from <a class="hg-in" href="{{ "egyptology/middle-egyptian-1/" | relURL }}">Middle Egyptian I</a> on the Egyptology Ladder, where each one is taught with practice.</p>
+  {{ partial "hiero-credits.html" . }}
+</div>
+<script src="{{ "languages/hieroglyphs/flash.js" | relURL }}?v={{ (os.Stat "static/languages/hieroglyphs/flash.js").ModTime.Unix }}" defer></script>
+{{ end }}

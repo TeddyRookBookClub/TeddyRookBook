@@ -1,0 +1,47 @@
+{{ define "main" }}
+{{ partial "hiero-head.html" . }}
+<div class="lang hg ht" data-hg-root>
+  <header class="lang-hero hg-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/hieroglyphs/" | relURL }}" style="color:inherit">Hieroglyphs</a> · Typing helper</p>
+    <h1>Type transliteration</h1>
+    <p>Egyptologists type with an ordinary keyboard using the <i>Manuel de Codage</i> (MdC), a standard worked out in the 1980s: <b>A</b> for <span class="eg-tl">ꜣ</span>, <b>H</b> for <span class="eg-tl">ḥ</span>, <b>x</b> for <span class="eg-tl">ḫ</span> and so on. Type in either box; the other one follows. Then copy.</p>
+  </header>
+  {{ partial "hiero-nav.html" . }}
+
+  <section class="ht-pair">
+    <div class="box ht-box">
+      <label class="ht-lab" for="ht-mdc">Manuel de Codage <small>(what you type)</small></label>
+      <textarea id="ht-mdc" class="ht-in ht-mdc" rows="4" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">Htp-di-nsw wsir nb AbDw</textarea>
+      <div class="ht-acts"><button type="button" class="cbtn" id="ht-copy-mdc">Copy</button><button type="button" class="cbtn" id="ht-clear">Clear</button></div>
+    </div>
+    <div class="box ht-box">
+      <label class="ht-lab" for="ht-uni">Transliteration <small>(Unicode)</small></label>
+      <textarea id="ht-uni" class="ht-in ht-uni eg-tl" rows="4" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea>
+      <div class="ht-keys" id="ht-keys" role="group" aria-label="Insert a special letter"></div>
+      <div class="ht-acts"><button type="button" class="cbtn play" id="ht-copy-uni">Copy transliteration</button></div>
+    </div>
+  </section>
+
+  <section class="box ht-opts" aria-label="Options">
+    <div class="ht-opt"><span class="fc-lab">Write yod as</span>
+      <div class="seg hg-seg" id="ht-yod"><button type="button" data-v="j" class="on" aria-pressed="true">j <small>(this site, Allen)</small></button><button type="button" data-v="ꞽ" aria-pressed="false">ꞽ</button><button type="button" data-v="ỉ" aria-pressed="false">ỉ <small>(older books)</small></button><button type="button" data-v="i" aria-pressed="false">i</button></div></div>
+    <div class="ht-opt"><span class="fc-lab">Write q as</span>
+      <div class="seg hg-seg" id="ht-q"><button type="button" data-v="q" class="on" aria-pressed="true">q</button><button type="button" data-v="ḳ" aria-pressed="false">ḳ <small>(older books)</small></button></div></div>
+  </section>
+
+  <section class="box ht-read" aria-live="polite">
+    <h3>Reading it</h3>
+    <div id="ht-say"></div>
+  </section>
+
+  <section class="ht-sec">
+    <h2>The typing table</h2>
+    <p>Capital letters matter only for <b>A H x X S T D</b> (and <b>a</b> versus <b>A</b>): <b>h</b> is plain <span class="eg-tl">h</span> and <b>H</b> is <span class="eg-tl">ḥ</span>. Everything else passes through as typed, including the separators Egyptologists use: <b>.</b> before an ending (<span class="eg-tl">sḏm.n</span>), <b>=</b> before a suffix pronoun (<span class="eg-tl">pr=f</span>) and <b>-</b> inside compounds.</p>
+    <div class="ht-table" id="ht-table"></div>
+    <p class="hi-note">Some typists write <b>3</b> for <span class="eg-tl">ꜣ</span> and <b>`</b> for <span class="eg-tl">ꜥ</span>; switch that on here: <label class="ht-chk"><input type="checkbox" id="ht-digits"> read 3 as ꜣ and ` as ꜥ</label></p>
+    <p class="hi-note">The answer boxes in the <a href="{{ "egyptology/middle-egyptian-1/" | relURL }}">Middle Egyptian courses</a> accept MdC typing directly. Learn it in the lesson <a href="{{ "egyptology/middle-egyptian-1/mdc/" | relURL }}">Typing Transliteration</a>. Source: Wikipedia, <a href="https://en.wikipedia.org/wiki/Manuel_de_Codage" target="_blank" rel="noopener">Manuel de Codage</a> and <a href="https://en.wikipedia.org/wiki/Transliteration_of_Ancient_Egyptian" target="_blank" rel="noopener">Transliteration of Ancient Egyptian</a>.</p>
+  </section>
+  {{ partial "hiero-credits.html" . }}
+</div>
+<script src="{{ "languages/hieroglyphs/typing.js" | relURL }}?v={{ (os.Stat "static/languages/hieroglyphs/typing.js").ModTime.Unix }}" defer></script>
+{{ end }}

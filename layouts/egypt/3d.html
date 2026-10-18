@@ -1,0 +1,275 @@
+{{- /* /egypt/3d/: six 3-D models of Egyptian sites (static/egypt/3d/: viewer.js renderer and controls, models.js geometry,
+   3d.css). Deep links /egypt/3d/#giza, #great-pyramid, #edfu, #abu-simbel, #kv62, #mastaba. The info panels below are plain
+   HTML (readable without JavaScript); the viewer shows the one for the open model. The kit (egypt-kit) draws the matching
+   eg-pyramid and eg-temple plans in the panels. */ -}}
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ partial "egypt-kit.html" . }}
+<link rel="stylesheet" href="{{ "egypt/3d/3d.css" | relURL }}?v={{ (os.Stat "static/egypt/3d/3d.css").ModTime.Unix }}">
+{{- range slice "egypt/3d/viewer.js" "egypt/3d/models.js" }}
+<script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+{{- end }}
+<div class="hs eg-page td-page">
+  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › 3-D models</nav>
+  <header>
+    <h1>{{ .Title }}</h1>
+    <p class="td-lead">Six places from ancient Egypt, built at their real sizes from published measurements: the Giza plateau, the inside of the Great Pyramid, a temple, Abu Simbel and its rescue, Tutankhamun’s tomb and a mastaba. The forms are simple on purpose, so the sizes and the layout stand out. Drag to turn a model, take the guided tour, and switch on <b>See through</b> to look inside.</p>
+  </header>
+
+  <div class="td-app" id="td-app" aria-label="3-D viewer">
+    <div class="td-wait"><noscript>The 3-D viewer needs JavaScript. The descriptions and measurements of each model are below.</noscript><span class="td-js">Loading the 3-D viewer…</span></div>
+  </div>
+
+  <div class="td-infos">
+  {{/* ------------------------------------------------------------ Giza */}}
+  <section class="td-info hs-sec" data-model="giza" id="about-giza">
+    <h2>About the Giza plateau model</h2>
+    <div class="td-cols">
+      <div>
+        <p>Three kings of the Fourth Dynasty, Khufu, his son Khafre and Menkaure, built their pyramids on the desert edge west of Memphis between about 2589 and 2503 BC. Each pyramid was the center of a complex: a temple on its east side, a causeway down to a valley temple at the edge of the flood plain, smaller pyramids for queens, and boat pits. Officials and members of the royal family were buried in mastaba tombs laid out in streets around them.</p>
+        <p>The model places the three pyramids from Flinders Petrie’s survey of 1880–82: Khafre’s center lies 353.9 m south and 334.4 m west of Khufu’s, and Menkaure’s 739.2 m south and 574.4 m west. The Sphinx, the queens’ pyramids, temples, causeways and cemeteries are drawn in simple form.</p>
+        <div class="td-unc">
+          <b>Simplified or uncertain</b>
+          <ul>
+            <li>The ground is smoothed. It is right that Khafre’s pyramid stands about 10 m higher and that the plateau falls toward the valley in the east; the exact levels are not modeled.</li>
+            <li>Temples, causeways, the queens’ pyramids and the mastaba fields are placed from plans, good to a few meters for the main buildings but only roughly for the cemeteries, which are drawn as tidy rows.</li>
+            <li>Khufu’s causeway and valley temple lie mostly under the modern town; only its direction is shown.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Measurements used</h3>
+        <table class="td-dims">
+          <tr><th>Great Pyramid (Khufu)</th><td>base 230.3 m, height 146.6 m as built (138.5 m today), slope 51°50′</td></tr>
+          <tr><th>Pyramid of Khafre</th><td>base 215.3 m, height 143.5 m (136.4 m today), slope about 53°</td></tr>
+          <tr><th>Pyramid of Menkaure</th><td>base about 102–105 m, height 65.5 m (about 61 m today), slope 51°20′</td></tr>
+          <tr><th>Queens’ pyramid G1-a</th><td>base 49.5 m, height 30.25 m as built</td></tr>
+          <tr><th>Great Sphinx</th><td>about 73 m long, 20 m high, 19 m wide</td></tr>
+          <tr><th>Khafre’s causeway</th><td>494.6 m, about 14° south of east; Khufu’s about 14° north of east</td></tr>
+          <tr><th>Positions</th><td>Petrie’s survey as tabulated by Legon (1988)</td></tr>
+        </table>
+      </div>
+    </div>
+    <h3>The three pyramids to scale</h3>
+    <div class="ml-viz" data-viz="eg-pyramid" data-opts='{"view":"compare","compare":["great","khafre","menkaure"]}' aria-label="The three Giza pyramids side by side, to scale"></div>
+    <h3>Learn more</h3>
+    <ul class="td-links">
+      <li><a href="{{ "egypt/sites/giza/" | relURL }}">Giza in the site atlas</a></li>
+      <li><a href="{{ "egyptology/history/pyramid-age/" | relURL }}">Sneferu, Khufu and the True Pyramid</a></li>
+      <li><a href="{{ "egyptology/history/pyramid-state/" | relURL }}">The State That Built the Pyramids</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/pyramid-complex/" | relURL }}">The Pyramid Complex</a></li>
+      <li><a href="{{ "egyptology/young-explorers/giza/" | relURL }}">For young explorers: Giza and the Sphinx</a></li>
+      <li><a href="{{ "egypt/map/" | relURL }}">The map</a></li>
+      <li><a href="{{ "timeline/" | relURL }}?show=egypt">The timeline</a></li>
+    </ul>
+  </section>
+
+  {{/* ------------------------------------------------------------ Great Pyramid */}}
+  <section class="td-info hs-sec" data-model="great-pyramid" id="about-great-pyramid">
+    <h2>About the Great Pyramid cutaway</h2>
+    <div class="td-cols">
+      <div>
+        <p>Khufu’s pyramid holds three main chambers. The oldest plan seems to have been a room deep in the bedrock, reached by the descending passage. Higher up, the ascending passage and the Grand Gallery lead to the King’s Chamber, lined with granite, where the sarcophagus still stands. The Queen’s Chamber, on the level passage, had some other purpose that is not known. Above the King’s Chamber, five relieving chambers carry the weight of the masonry.</p>
+        <p>Switch <b>Outside</b> between the original casing, a smooth skin of white limestone from Tura with a point 146.6 m high, and the pyramid today, where the stepped core shows and the top is missing. Most of the casing was taken for building in Cairo in the Middle Ages; a few casing stones remain at the foot of each side.</p>
+        <div class="td-unc">
+          <b>Simplified or uncertain</b>
+          <ul>
+            <li>The passages and chambers are drawn at their published sizes and slopes; where sources give no exact position, they are placed from the published sections, to about a meter or two. The well shaft’s winding course and the air shafts’ bends are simplified.</li>
+            <li>How the blocks were raised is debated: straight, zigzag or wrapping ramps outside, or an internal ramp, which is one architect’s theory. None is drawn.</li>
+            <li>In 2017 the ScanPyramids team reported, from muon measurements, a large empty space above the Grand Gallery, at least 30 m long. Its shape and purpose are unknown, so it is not drawn. In 2023 a camera confirmed a short corridor, about 9 m long, behind the stones above the original entrance.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Measurements used</h3>
+        <table class="td-dims">
+          <tr><th>Base, height, slope</th><td>230.3 m; 146.6 m as built, 138.5 m today; 51°50′40″</td></tr>
+          <tr><th>Original entrance</th><td>north face, about 17 m up, 7–8 m east of the center line</td></tr>
+          <tr><th>Descending passage</th><td>about 1.0 × 1.2 m, about 26.5°; meets the ascending passage after 28 m</td></tr>
+          <tr><th>Subterranean chamber</th><td>8.4 × 14.1 m, about 4 m high, about 27 m below the base</td></tr>
+          <tr><th>Ascending passage</th><td>39.3 m long, about 26°</td></tr>
+          <tr><th>Queen’s Chamber</th><td>5.2 × 5.8 m, pointed roof 6.3 m high, halfway between the north and south faces</td></tr>
+          <tr><th>Grand Gallery</th><td>46.68 m long, 8.6 m high, 2.1 m wide at the floor narrowing to 1 m</td></tr>
+          <tr><th>King’s Chamber</th><td>10.5 × 5.2 m (20 × 10 cubits), 5.8 m high, floor about 43 m above the base</td></tr>
+          <tr><th>Relieving chambers</th><td>five, the top one with a pointed roof</td></tr>
+        </table>
+      </div>
+    </div>
+    <h3>The same section, flat</h3>
+    <div class="ml-viz" data-viz="eg-pyramid" data-opts='{"which":"great","view":"section"}' aria-label="A north–south section of the Great Pyramid"></div>
+    <h3>Learn more</h3>
+    <ul class="td-links">
+      <li><a href="{{ "egypt/sites/giza/" | relURL }}">Giza in the site atlas</a></li>
+      <li><a href="{{ "egyptology/history/pyramid-age/" | relURL }}">Sneferu, Khufu and the True Pyramid</a></li>
+      <li><a href="{{ "egyptology/young-explorers/building/" | relURL }}">How They Were Built</a></li>
+      <li><a href="{{ "egyptology/young-explorers/why-pyramids/" | relURL }}">Why Pyramids?</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/pyramid-complex/" | relURL }}">The Pyramid Complex</a></li>
+    </ul>
+  </section>
+
+  {{/* ------------------------------------------------------------ Edfu */}}
+  <section class="td-info hs-sec" data-model="edfu" id="about-edfu">
+    <h2>About the temple model: Horus at Edfu</h2>
+    <div class="td-cols">
+      <div>
+        <p>The Temple of Horus at Edfu was begun under Ptolemy III on 23 August 237 BC and finished under Ptolemy XII in 57 BC, when its great doors were hung. Sand and silt later buried it as deep as 12 m, which protected it; Auguste Mariette began clearing it in 1860. It is the best preserved temple in Egypt, roof and all.</p>
+        <p>Its plan is the classic one, followed from the New Kingdom on: a pylon, an open court with columns, a roofed hypostyle hall, a second, smaller hall, an offering hall and vestibule, and the sanctuary, with chapels around it and an enclosure wall around everything. Walking in, the floor rises, the ceilings come down and the light fades, from the open world to the god’s dark room. The temple faces south.</p>
+        <div class="td-unc">
+          <b>Simplified</b>
+          <ul>
+            <li>The overall length (a little over 140 m), the pylon’s height and the column counts follow the sources; the inner rooms are placed from the published plan, and their sizes are approximate.</li>
+            <li>Side rooms, stairs, the roof chapels, the birth house (mammisi) and the reliefs are left out. The flagpoles, now gone, are drawn faintly.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Measurements used</h3>
+        <table class="td-dims">
+          <tr><th>Length</th><td>a little over 140 m, about 7,000 m²</td></tr>
+          <tr><th>Pylon</th><td>towers about 36 m high; four grooves for flagpoles about 40 m tall</td></tr>
+          <tr><th>Court</th><td>32 columns on three sides</td></tr>
+          <tr><th>Hypostyle hall (pronaos)</th><td>18 columns in three rows</td></tr>
+          <tr><th>Second hypostyle hall</th><td>12 columns</td></tr>
+          <tr><th>Sanctuary</th><td>naos of Nectanebo II (black granite), with chapels around</td></tr>
+        </table>
+      </div>
+    </div>
+    <h3>The standard plan</h3>
+    <p class="hs-small">The same parts in a New Kingdom temple, from the river to the sanctuary. Some temples, like Karnak and Luxor, also had a quay and an avenue of sphinxes in front.</p>
+    <div class="ml-viz" data-viz="eg-temple" data-opts='{"section":true}' aria-label="Plan of an Egyptian temple"></div>
+    <h3>Learn more</h3>
+    <ul class="td-links">
+      <li><a href="{{ "egypt/sites/edfu/" | relURL }}">Edfu in the site atlas</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/temple-plan/" | relURL }}">The Plan of a Temple</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/temple-meaning/" | relURL }}">The Temple as the World</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/daily-ritual/" | relURL }}">The Daily Ritual</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/karnak/" | relURL }}">Karnak and Luxor</a></li>
+      <li><a href="{{ "egyptology/history/ptolemies/" | relURL }}">The Ptolemies and Alexandria</a></li>
+    </ul>
+  </section>
+
+  {{/* ------------------------------------------------------------ Abu Simbel */}}
+  <section class="td-info hs-sec" data-model="abu-simbel" id="about-abu-simbel">
+    <h2>About the Abu Simbel model</h2>
+    <div class="td-cols">
+      <div>
+        <p>Ramesses II (reigned c. 1279–1213 BC) had two temples cut into the sandstone cliffs at Abu Simbel in Nubia, beginning around 1264 BC: the Great Temple, for Amun-Ra, Ra-Horakhty, Ptah and the king himself, and a smaller one for his queen Nefertari and the goddess Hathor. Sand later covered most of the Great Temple. Johann Ludwig Burckhardt saw its top in 1813, and Giovanni Belzoni dug his way in in 1817.</p>
+        <p><b>The move.</b> The Aswan High Dam’s reservoir, Lake Nasser, would have drowned both temples. With UNESCO leading an international appeal, a team of engineers cut them into 1,036 blocks (807 for the Great Temple) from 1964 to 1968 and rebuilt them 65 m higher and 208 m back from the river, against an artificial hill over a concrete dome. The project cost about $41.7 million, half paid by Egypt and half by gifts from 48 countries. Use the slider or <b>Play the move</b> to see it.</p>
+        <div class="td-unc">
+          <b>Simplified</b>
+          <ul>
+            <li>The colossi are simple blocks at the right size and place; the cliff, the ground and the water levels are schematic.</li>
+            <li>The rooms inside follow the published plan, with the hypostyle hall at its published size; the other rooms’ sizes are approximate, and the side storerooms are left out.</li>
+            <li>The move is shown as one lift and slide; in fact the temple was sawn into blocks and rebuilt piece by piece.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Measurements used</h3>
+        <table class="td-dims">
+          <tr><th>Facade</th><td>about 33 m high, 38 m wide</td></tr>
+          <tr><th>Colossi</th><td>four seated statues of Ramesses II, each about 20 m high</td></tr>
+          <tr><th>Baboon frieze</th><td>22 baboons along the top</td></tr>
+          <tr><th>Hypostyle hall</th><td>18 × 16.7 m, eight Osiris pillars</td></tr>
+          <tr><th>The move</th><td>1964–68; 65 m higher, 208 m back; 807 blocks for the Great Temple</td></tr>
+          <tr><th>Sun in the sanctuary</th><td>about 22 February and 22 October (before the move)</td></tr>
+        </table>
+      </div>
+    </div>
+    <h3>Learn more</h3>
+    <ul class="td-links">
+      <li><a href="{{ "egypt/sites/abu-simbel/" | relURL }}">Abu Simbel in the site atlas</a></li>
+      <li><a href="{{ "egyptology/history/ramesses2/" | relURL }}">Ramesses II</a></li>
+      <li><a href="{{ "egyptology/history/kadesh/" | relURL }}">Kadesh and the Peace Treaty</a></li>
+      <li><a href="{{ "egyptology/archaeology-scripts/nubia-rescue/" | relURL }}">The Nubian Rescue</a></li>
+    </ul>
+  </section>
+
+  {{/* ------------------------------------------------------------ KV62 */}}
+  <section class="td-info hs-sec" data-model="kv62" id="about-kv62">
+    <h2>About the KV62 model</h2>
+    <div class="td-cols">
+      <div>
+        <p>Tutankhamun (reigned c. 1336–1327 BC) was buried in a small tomb in the Valley of the Kings, at Thebes. Robbers broke in twice soon after the burial, but the tomb was resealed, and later building above hid its entrance. Howard Carter’s team found the first step on 4 November 1922, reached the antechamber on 26 November, and opened the burial chamber in February 1923. Clearing and recording took about ten years.</p>
+        <p>Switch <b>Show</b> between the rooms as found, with the main pieces where they stood, and today, when the quartzite sarcophagus and the king’s mummy are still in the tomb while the treasures are in Cairo.</p>
+        <div class="td-unc">
+          <b>Simplified</b>
+          <ul>
+            <li>Room sizes follow the published plan. Room heights are within the published range (2.3 to 3.6 m), and the depth below the valley floor is approximate.</li>
+            <li>Only the largest finds are drawn, as plain boxes; the rooms held more than 5,000 objects.</li>
+            <li>In 2015 one scholar suggested hidden rooms behind the painted walls; radar surveys in 2016 and 2018 found none, so none are drawn.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Measurements used</h3>
+        <table class="td-dims">
+          <tr><th>Stairway</th><td>16 steps, down toward the west</td></tr>
+          <tr><th>Corridor</th><td>8 m long, 1.7 m wide, sloping down</td></tr>
+          <tr><th>Antechamber</th><td>7.9 m north–south × 3.6 m</td></tr>
+          <tr><th>Annexe</th><td>4.4 × 2.6 m, off its southwest corner</td></tr>
+          <tr><th>Burial chamber</th><td>4 m north–south × 6.4 m, north of the antechamber</td></tr>
+          <tr><th>Treasury</th><td>4.8 × 3.8 m, east of the burial chamber</td></tr>
+          <tr><th>Floors</th><td>annexe, burial chamber and treasury about 0.9 m lower than the antechamber</td></tr>
+        </table>
+      </div>
+    </div>
+    <h3>Learn more</h3>
+    <ul class="td-links">
+      <li><a href="{{ "egypt/sites/kings/" | relURL }}">The Valley of the Kings in the site atlas</a></li>
+      <li><a href="{{ "egyptology/archaeology-scripts/kv62/" | relURL }}">Carter and KV62</a></li>
+      <li><a href="{{ "egyptology/history/restoration/" | relURL }}">Tutankhamun and the Restoration</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/rock-cut/" | relURL }}">Rock-Cut Tombs</a></li>
+      <li><a href="{{ "egyptology/young-explorers/carter/" | relURL }}">For young explorers: Finding Tutankhamun’s Tomb</a></li>
+    </ul>
+  </section>
+
+  {{/* ------------------------------------------------------------ Mastaba */}}
+  <section class="td-info hs-sec" data-model="mastaba" id="about-mastaba">
+    <h2>About the mastaba model</h2>
+    <div class="td-cols">
+      <div>
+        <p>A mastaba (Arabic for “bench”) is a flat-topped tomb with sloping walls, of mud brick or stone. The first kings and their officials were buried in them, and officials kept using them all through the Old Kingdom, in rows around the royal pyramids at Saqqara and Giza; they had a revival in the Middle Kingdom and became rare by the New Kingdom. Above ground was the part for the living: a chapel with a false door, where the family brought offerings. Below, a shaft led down to the burial chamber.</p>
+        <p>This is a typical stone mastaba of an Old Kingdom official, not one particular tomb. Djoser’s Step Pyramid, the first pyramid, began as a mastaba and grew in steps.</p>
+        <div class="td-unc">
+          <b>A typical example</b>
+          <ul>
+            <li>Sizes are chosen within the usual range: many mastabas were 10 m high or more, and many were long and narrow. Real tombs vary widely, with several shafts for family members, larger chapels and many rooms in the later ones.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3>Measurements used</h3>
+        <table class="td-dims">
+          <tr><th>Footprint</th><td>32 × 12 m, long axis north–south <small>(typical)</small></td></tr>
+          <tr><th>Height</th><td>8 m, with sloping walls <small>(typical)</small></td></tr>
+          <tr><th>Shaft</th><td>2 × 2 m, about 15 m into the bedrock <small>(typical)</small></td></tr>
+        </table>
+      </div>
+    </div>
+    <h3>Learn more</h3>
+    <ul class="td-links">
+      <li><a href="{{ "egypt/sites/saqqara/" | relURL }}">Saqqara in the site atlas</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/mastaba/" | relURL }}">Mastaba Tombs</a></li>
+      <li><a href="{{ "egyptology/religion-art-architecture/offering-cult/" | relURL }}">Offerings for the Dead</a></li>
+      <li><a href="{{ "egyptology/history/djoser/" | relURL }}">Djoser and the Step Pyramid</a></li>
+    </ul>
+  </section>
+  </div>
+
+  <section class="hs-sec td-sources" id="sources">
+    <h2>Sources</h2>
+    <ul class="td-src">
+      <li>Pyramid positions: W. M. F. Petrie, <i>The Pyramids and Temples of Gizeh</i> (1883), as tabulated in J. A. R. Legon, “The Giza Ground Plan,” <i>Discussions in Egyptology</i> 10 (1988), via the Giza Project at Harvard.</li>
+      <li>Pyramid sizes, slopes, the Great Pyramid’s passages and chambers, casing: Wikipedia, “Great Pyramid of Giza,” “Pyramid of Khafre,” “Pyramid of Menkaure,” “Pyramid G1-a,” “Giza pyramid complex”; ScanPyramids results: Wikipedia, “ScanPyramids.”</li>
+      <li>Causeway directions: G. Magli, “Akhet Khufu: archaeo-astronomical hints at a common project of the two main pyramids of Giza” (arXiv:0708.3632), and the Giza Project at Harvard, “Khufu Causeway.”</li>
+      <li>Edfu: Yale Egyptology, Tell Edfu Project, “Overview of other Edfu monuments”; Wikipedia, “Temple of Edfu.”</li>
+      <li>Abu Simbel and the move: Wikipedia, “Abu Simbel.”</li>
+      <li>KV62: Wikipedia, “KV62.”</li>
+      <li>Mastabas: Wikipedia, “Mastaba.”</li>
+      <li>Dates: Shaw, ed., <i>The Oxford History of Ancient Egypt</i> (2000); before 664 BC they are approximate.</li>
+    </ul>
+    <p class="hs-small">The 3-D viewer and the models were made for Teddy Rook Book. It draws with WebGL when your browser has it, and with a plain 2-D canvas when it doesn’t.</p>
+  </section>
+</div>
+{{ end }}

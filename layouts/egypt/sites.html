@@ -1,0 +1,60 @@
+{{- /* /egypt/sites/: the site atlas index, grouped from north to south, filterable by period, with the map.
+   Data: data/egypt/sites/*.yaml and _groups.yaml (made by /tmp/work_egypt/atlas/sites_src.py). */ -}}
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ partial "egypt-kit.html" . }}
+<link rel="stylesheet" href="{{ "egypt/sites.css" | relURL }}?v={{ (os.Stat "static/egypt/sites.css").ModTime.Unix }}">
+{{- $D := site.Data.egypt -}}
+{{- $all := slice }}{{ range $k, $v := $D.sites }}{{ if ne $k "_groups" }}{{ $all = $all | append $v }}{{ end }}{{ end }}{{ $all = sort $all "order" -}}
+{{- $nIns := 0 }}{{ range $all }}{{ $nIns = add $nIns (len .inscriptions) }}{{ end -}}
+{{- $keys := slice }}{{ range $all }}{{ $keys = $keys | append .key }}{{ end -}}
+{{- $PN := dict "pre" "Predynastic" "ed" "Early Dynastic" "ok" "Old Kingdom" "fip" "First Intermediate" "mk" "Middle Kingdom" "sip" "Second Intermediate" "nk" "New Kingdom" "tip" "Third Intermediate" "late" "Late Period" "ptol" "Ptolemaic" "rom" "Roman" -}}
+{{- $used := slice }}{{ range $all }}{{ $used = $used | append .periods }}{{ end }}{{ $used = $used | uniq -}}
+<div class="hs eg-page egat">
+  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › Sites</nav>
+  <header class="hs-hero egat-hero">
+    <p class="hs-eyebrow">Ancient Egypt · The site atlas</p>
+    <h1>{{ .Title }}</h1>
+    <p>{{ len $all }} of the great places of ancient Egypt, from the Delta to Nubia: where each one is, who built what, what is left, and {{ $nIns }} of the inscriptions you can see there, in hieroglyphs with their readings and translations. They run from north to south, from the Mediterranean upstream to Nubia.</p>
+    <div class="hs-actions"><a class="hs-btn big" href="#atlas">🏛️ The sites</a><a class="hs-btn big ghost" href="{{ "egypt/map/" | relURL }}">🗺️ The full map</a><a class="hs-btn big ghost" href="{{ "egyptology/" | relURL }}">🏺 The Egyptology Ladder</a></div>
+  </header>
+
+  <section class="hs-sec" id="map">
+    <h2>Where they are</h2>
+    <p class="egat-intro">Tap a dot for a short note. Most of the sites cluster in two places: around Memphis, the old capital near modern Cairo, and around Thebes (Luxor) in the south.</p>
+    <div class="ml-viz" data-viz="eg-map" data-opts="{{ dict "view" "egypt" "sites" $keys "layerChips" false | jsonify }}" aria-label="Map of the sites in the atlas"></div>
+  </section>
+
+  <section class="hs-sec" id="atlas">
+    <h2>The sites, north to south</h2>
+    <div class="egat-filter" id="egat-filter" role="group" aria-label="Show sites from a period">
+      <button type="button" data-p="all" aria-pressed="true">All periods</button>
+      {{ range slice "pre" "ed" "ok" "mk" "nk" "tip" "late" "ptol" "rom" }}{{ if in $used . }}<button type="button" data-p="{{ . }}" aria-pressed="false">{{ index $PN . }}</button>{{ end }}{{ end }}
+    </div>
+    <p class="egat-count" id="egat-count" aria-live="polite">All {{ len $all }} sites</p>
+    {{ range (index $D.sites "_groups") }}{{ $gk := .key }}{{ $in := where $all "group" $gk }}{{ if $in }}
+    <div class="egat-group" id="g-{{ $gk }}">
+      <h2>{{ .name }}</h2>
+      <p>{{ .blurb }}</p>
+      <div class="egat-grid">
+      {{ range $in }}{{ $first := index .inscriptions 0 }}
+        <a class="egat-card" href="{{ printf "egypt/sites/%s/" .key | relURL }}" data-periods="{{ delimit .periods " " }}">
+          <span class="egat-cardtop"><span><b>{{ .name }}</b>{{ with .anc }}<br><span class="egat-cardanc">{{ . }}</span>{{ end }}</span>{{ range first 1 (where .inscriptions "segs" "!=" nil) }}<span class="egat-cardgl" aria-hidden="true" data-segs="{{ first 1 .segs | jsonify }}"></span>{{ end }}</span>
+          <span class="egat-cardsum">{{ .summary }}</span>
+          <span class="egat-chips">{{ range .periods }}<span class="egat-chip">{{ index $PN . }}</span>{{ end }}</span>
+          <span class="egat-cardn">{{ len .inscriptions }} inscriptions{{ with .models3d }} · 3-D model{{ end }}</span>
+        </a>
+      {{ end }}
+      </div>
+    </div>
+    {{ end }}{{ end }}
+  </section>
+
+  <section class="hs-sec" id="how">
+    <h2>How the inscriptions are shown</h2>
+    <p class="egat-intro">Each inscription is drawn in TRB Hieroglyphs, the site's own hieroglyph font, with royal names in their cartouches. Under it are the transliteration, the Egyptian sounds in the Egyptologists' alphabet, and a translation, and you can open a sign-by-sign table. The texts are short and their readings standard; each card names its source. Where a text's signs or layout can't be shown faithfully yet, the card gives the reading only and says why. To learn to read them yourself, start with <a href="{{ "egyptology/middle-egyptian-1/" | relURL }}">Middle Egyptian I</a>, or try <a href="{{ "egyptology/young-explorers/cartouche/" | relURL }}">reading a cartouche</a> in the Young Explorers course.</p>
+    <p class="hs-small eg-fine">Dates follow Shaw, ed., <i>The Oxford History of Ancient Egypt</i> (2000); before 664 BC they are approximate. Site coordinates were checked against Wikipedia.</p>
+  </section>
+</div>
+<script src="{{ "egypt/sites.js" | relURL }}?v={{ (os.Stat "static/egypt/sites.js").ModTime.Unix }}" defer></script>
+{{ end }}

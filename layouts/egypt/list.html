@@ -1,4 +1,4 @@
-{{- /* /egypt/: the Ancient Egypt hub. Phase 1: the Egyptology Ladder's courses, the map and the timeline's Egypt track.
+{{- /* /egypt/: the Ancient Egypt hub (phase 2 added the sites, 3-D models and hieroglyph tools). Phase 1: the Egyptology Ladder's courses, the map and the timeline's Egypt track.
    Courses come from data/egypt/courses.yaml and data/egypt/topics/<key>.json; the ladder's entry in data/ladders.yaml. */ -}}
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
@@ -13,7 +13,7 @@
       <p class="hs-eyebrow">Ancient Egypt · Free, age 8 to college</p>
       <h1>Ancient Egypt</h1>
       <p>Three thousand years of kings, temples and tombs along one river, and a script no one could read for fourteen centuries until it was cracked in 1822. Here you can learn it the way a good college program teaches it: the history and how its dates are known, the gods, temples and art, the archaeology, and Middle Egyptian, the language of the hieroglyphs. There's a first course for young explorers, too.</p>
-      <div class="hs-actions"><a class="hs-btn big" href="{{ "egyptology/" | relURL }}">🏺 The Egyptology Ladder</a><a class="hs-btn big ghost" href="{{ "egypt/map/" | relURL }}">🗺️ The map</a><a class="hs-btn big ghost" href="{{ "timeline/" | relURL }}?show=egypt">⏳ The timeline</a></div>
+      <div class="hs-actions"><a class="hs-btn big" href="{{ "egyptology/" | relURL }}">🏺 The Egyptology Ladder</a><a class="hs-btn big ghost" href="{{ "egypt/sites/" | relURL }}">🏛️ The sites</a><a class="hs-btn big ghost" href="{{ "egypt/3d/" | relURL }}">🧊 3-D models</a><a class="hs-btn big ghost" href="{{ "egypt/map/" | relURL }}">🗺️ The map</a><a class="hs-btn big ghost" href="{{ "timeline/" | relURL }}?show=egypt">⏳ The timeline</a></div>
     </div>
     <div class="eg-hero-art" aria-hidden="true"><div class="ml-viz" data-viz="eg-cartouche" data-opts='{"name":"ramesses","interactive":false,"tl":false,"en":false,"note":false,"size":64}'></div></div>
   </header>
@@ -40,6 +40,25 @@
     </div>
   </section>
 
+  <section class="hs-sec" id="sites">
+    <h2>The sites and their inscriptions</h2>
+    <p class="eg-intro">Nineteen great sites from Rosetta in the Delta to Abu Simbel in Nubia: who built what, what survives, and the inscriptions you can still read there, each in hieroglyphs with a sign-by-sign reading and a translation.</p>
+    <p class="eg-more"><a class="hs-btn" href="{{ "egypt/sites/" | relURL }}">Explore the sites →</a></p>
+  </section>
+
+  <section class="hs-sec" id="models">
+    <h2>3-D models</h2>
+    <p class="eg-intro">Walk around the Giza plateau, cut open the Great Pyramid, step through a temple from pylon to sanctuary, watch Abu Simbel move to higher ground, and go down into Tutankhamun's tomb, all built to published measurements.</p>
+    <ul class="eg-links">
+      <li><a href="{{ "egypt/3d/" | relURL }}#giza"><span aria-hidden="true">🔺</span> <b>The Giza plateau</b> <small>The three pyramids, the Sphinx and the causeways</small></a></li>
+      <li><a href="{{ "egypt/3d/" | relURL }}#great-pyramid"><span aria-hidden="true">🔍</span> <b>Inside the Great Pyramid</b> <small>Passages, the Grand Gallery and the King's Chamber</small></a></li>
+      <li><a href="{{ "egypt/3d/" | relURL }}#edfu"><span aria-hidden="true">🛕</span> <b>The Temple of Edfu</b> <small>The standard temple plan, best preserved</small></a></li>
+      <li><a href="{{ "egypt/3d/" | relURL }}#abu-simbel"><span aria-hidden="true">🗿</span> <b>Abu Simbel</b> <small>The four colossi and the 1960s rescue</small></a></li>
+      <li><a href="{{ "egypt/3d/" | relURL }}#kv62"><span aria-hidden="true">⚱️</span> <b>Tutankhamun's tomb</b> <small>KV62, room by room</small></a></li>
+      <li><a href="{{ "egypt/3d/" | relURL }}#mastaba"><span aria-hidden="true">🧱</span> <b>A mastaba</b> <small>The tomb before the pyramids</small></a></li>
+    </ul>
+  </section>
+
   <section class="hs-sec" id="map">
     <h2>Map of Egypt and Nubia</h2>
     <p class="eg-intro">The Nile from the Mediterranean to Khartoum, the Delta and the cataracts, with more than fifty ancient sites by period. Tap a site for a short note.</p>
@@ -58,13 +77,24 @@
     <h2>Your name in a cartouche</h2>
     <p class="eg-intro">Type a name to write it with Egyptian sound signs, the way scribes spelled Greek names like Ptolemy and Cleopatra.</p>
     <div class="ml-viz" data-viz="eg-cartouche" data-opts='{"mode":"name","text":"Teddy"}' aria-label="Write a name in a cartouche"></div>
+    <p class="eg-more"><a class="hs-btn" href="{{ "languages/hieroglyphs/cartouche/" | relURL }}">The full cartouche maker: choose signs, print or save →</a></p>
+  </section>
+
+  <section class="hs-sec" id="tools">
+    <h2>Hieroglyph tools</h2>
+    <ul class="eg-links">
+      <li><a href="{{ "languages/hieroglyphs/how-they-work/" | relURL }}"><span aria-hidden="true">📜</span> <b>How hieroglyphs work</b> <small>Sound signs, word signs and determinatives in nine short sections</small></a></li>
+      <li><a href="{{ "languages/hieroglyphs/signs/" | relURL }}"><span aria-hidden="true">🔎</span> <b>Sign list</b> <small>Every sign by Gardiner category, searchable by code, sound or meaning</small></a></li>
+      <li><a href="{{ "languages/hieroglyphs/flashcards/" | relURL }}"><span aria-hidden="true">🃏</span> <b>Flashcards</b> <small>The alphabet, two- and three-sound signs, determinatives and words, with spaced review</small></a></li>
+      <li><a href="{{ "languages/hieroglyphs/typing/" | relURL }}"><span aria-hidden="true">⌨️</span> <b>Typing helper</b> <small>Manuel de Codage to transliteration and back</small></a></li>
+    </ul>
   </section>
 
   <section class="hs-sec" id="more">
     <h2>More on Teddy Rook Book</h2>
     <ul class="eg-links">
       <li><a href="{{ "timeline/" | relURL }}?show=egypt"><span aria-hidden="true">⏳</span> <b>Timeline: Egypt</b> <small>From the first kings to the Arab conquest, and the decipherment in 1822</small></a></li>
-      <li><a href="{{ "languages/" | relURL }}"><span aria-hidden="true">🏛</span> <b>Languages</b> <small>Koine Greek and Latin, the other languages of the Rosetta Stone's world</small></a></li>
+      <li><a href="{{ "languages/" | relURL }}"><span aria-hidden="true">🏛</span> <b>Languages</b> <small>Egyptian hieroglyphs, Koine Greek and Latin: the Rosetta Stone's Greek and its neighbors</small></a></li>
       <li><a href="{{ "infographics/gods-of-egypt/" | relURL }}"><span aria-hidden="true">🖼️</span> <b>Gods of Egypt</b> <small>An infographic pairing the plagues of Exodus with the gods of Egypt</small></a></li>
       <li><a href="{{ "books/plutarchs-lives/" | relURL }}"><span aria-hidden="true">📖</span> <b>Plutarch's Lives</b> <small>In the Library; his Life of Antony tells the story of Cleopatra</small></a></li>
     </ul>

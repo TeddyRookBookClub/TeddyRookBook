@@ -1,0 +1,34 @@
+{{ define "main" }}
+{{ partial "hiero-head.html" . }}
+<div class="lang hg" data-hg-root>
+  <header class="lang-hero hg-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/hieroglyphs/" | relURL }}" style="color:inherit">Hieroglyphs</a> · Sign list</p>
+    <h1>The sign list</h1>
+    <p>Every hieroglyph on Teddy Rook Book, in the order of Sir Alan Gardiner’s sign list: men (A), women (B), gods (C), parts of the body (D), and on to Aa, the signs no one could classify. Each sign has its code, what it pictures, what kind of sign it is, its sound, what it means and a word that uses it.</p>
+  </header>
+  {{ partial "hiero-nav.html" . }}
+
+  <section class="box hs-tools" aria-label="Search the signs">
+    <div class="hs-searchrow">
+      <label class="hs-field"><span class="fc-lab">Search</span>
+        <input type="search" id="hs-q" autocomplete="off" spellcheck="false" placeholder="A code (G17), a sound (nfr or Htp) or a meaning (water)"></label>
+      <p class="hs-count" id="hs-count" aria-live="polite"></p>
+    </div>
+    <div class="hs-kinds" id="hs-kinds" role="group" aria-label="Show only one kind of sign"></div>
+    <nav class="hs-cats" id="hs-cats" aria-label="Jump to a category"></nav>
+    <p class="hs-tip">Sounds can be typed the Egyptologists’ way: <b>A</b> for <span class="eg-tl">ꜣ</span>, <b>a</b> for <span class="eg-tl">ꜥ</span>, <b>i</b> for <span class="eg-tl">j</span>, <b>H</b> for <span class="eg-tl">ḥ</span>, <b>x</b> for <span class="eg-tl">ḫ</span>, <b>X</b> for <span class="eg-tl">ẖ</span>, <b>S</b> for <span class="eg-tl">š</span>, <b>T</b> for <span class="eg-tl">ṯ</span>, <b>D</b> for <span class="eg-tl">ḏ</span>. Capitals matter only in these.</p>
+  </section>
+
+  <div id="hs-list" class="hs-list"><p class="hg-loading">Loading the signs…</p></div>
+
+  <details class="lang-help hs-about">
+    <summary>About this list</summary>
+    <p><b>Codes.</b> Gardiner sorted the signs by what they picture into 26 groups, lettered A to Z (he skipped J) plus Aa for the leftovers, and numbered them within each group: G17 is the 17th bird, the owl. A letter after the number marks a variant (N35A, three ripples of water instead of one). Unicode uses the same codes in its names (G17 is EGYPTIAN HIEROGLYPH G017).</p>
+    <p><b>Kinds.</b> Most signs can be used in more than one way. Each card gives the sign’s usual job: a <i>one-sound sign</i> (uniliteral) writes one consonant, a <i>two-sound</i> or <i>three-sound sign</i> (biliteral, triliteral) writes two or three, a <i>word sign</i> (ideogram) stands for the thing it pictures, and a <i>determinative</i> is not read aloud but shows what kind of word it ends. The other uses are under “Meaning”.</p>
+    <p><b>How many signs?</b> Gardiner’s list has more than 700 signs, and texts of the Ptolemaic period use thousands. This list has the signs the site’s lessons and tools use, {{/* count filled by script */}}<span id="hs-total">…</span> so far; more are added as the lessons need them. Signs are drawn in the site’s own font, so they look the same on every device.</p>
+    <p><b>Sounds.</b> Egyptian writing shows consonants only; Egyptologists add an <i>e</i> to say words aloud (nfr is said “nefer”). The “say” forms on the cards follow that convention; nobody knows exactly how the words sounded.</p>
+  </details>
+  {{ partial "hiero-credits.html" . }}
+</div>
+<script src="{{ "languages/hieroglyphs/signs.js" | relURL }}?v={{ (os.Stat "static/languages/hieroglyphs/signs.js").ModTime.Unix }}" defer></script>
+{{ end }}

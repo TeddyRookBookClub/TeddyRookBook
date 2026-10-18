@@ -206,13 +206,18 @@
     "W22":{"u":"𓏊","k":"det","v":[],"n":"beer jug","use":"determinative of beer and of jars","m":[0.222,0.548,0.052]},
     "N33":{"u":"𓈒","k":"det","v":[],"n":"grain of sand","use":"determinative of sand, minerals and grains","m":[0.112,0.356,0.244]},
     "G37":{"u":"𓅪","k":"det","v":[],"n":"sparrow","use":"determinative of small, bad, weak or wrong things","m":[0.704,0.528,0.072]},
+    "U21":{"u":"𓍉","k":"tri","v":["stp"],"n":"adze working a block of wood","use":"stp \"choose\"; in stp-n-rꜥ \"chosen of Ra\" in royal names","m":[0.534,0.644,-0.044]},
+    "N36":{"u":"𓈘","k":"bi","v":["mr"],"n":"channel filled with water","use":"mr \"canal\"; writes mr, as in mrj \"beloved\" (mrj-jmn \"beloved of Amun\")","m":[0.768,0.356,0.244]},
+    "H6":{"u":"𓆄","k":"logo","v":["mꜣꜥt","šw"],"n":"ostrich feather","use":"mꜣꜥt \"truth, Maat\" (the feather of Maat); šw \"Shu\", the god of air","m":[0.156,0.684,-0.084]},
+    "C10":{"u":"𓁦","k":"logo","v":["mꜣꜥt"],"n":"seated goddess with a feather on her head (Maat)","use":"the goddess Maat; mꜣꜥt \"truth, order\", as in the royal names Nebmaatre and Usermaatre","m":[0.352,0.692,-0.092]},
+    "I3":{"u":"𓆊","k":"det","v":[],"n":"crocodile","use":"determinative of crocodiles and of the crocodile god Sobek (sbk)","m":[0.776,0.459,0.141]},
     "Z1":{"u":"𓏤","k":"logo","v":[],"n":"single stroke","use":"marks a logogram (a sign that means what it shows); the numeral 1","m":[0.056,0.54,0.06]},
     "Z2":{"u":"𓏥","k":"det","v":[],"n":"three strokes","use":"the plural","m":[0.24,0.436,0.164]},
     "V10":{"u":"𓍷","k":"det","v":[],"n":"cartouche (shen ring stretched long)","use":"encloses a royal name; determinative of names","m":[0.256,0.676,-0.076]},
     "V20":{"u":"𓎆","k":"num","v":[],"n":"hobble for cattle","use":"the numeral 10","m":[0.256,0.452,0.148]},
     "V1":{"u":"𓍢","k":"num","v":[],"n":"coil of rope","use":"the numeral 100","m":[0.245,0.542,0.058]},
     "I8":{"u":"𓆐","k":"num","v":[],"n":"tadpole","use":"the numeral 100,000","m":[0.481,0.396,0.204]}};
-  var SIGN_ORDER = ["G1", "M17", "M17A", "Z4", "D36", "G43", "Z7", "D58", "Q3", "I9", "G17", "N35", "D21", "O4", "V28", "Aa1", "F32", "O34", "S29", "N37", "N29", "V31", "W11", "X1", "V13", "D46", "I10", "D28", "G39", "G40", "G36", "G25", "G29", "G38", "E34", "E23", "U1", "O1", "D4", "F34", "V30", "Y5", "F31", "U36", "N14", "N16", "N26", "Q1", "M23", "L2", "D2", "W24", "O28", "O29", "M12", "Aa11", "X8", "V4", "F21", "N28", "Aa15", "S34", "F35", "R4", "R8", "L1", "P8", "S38", "F12", "R11", "S12", "E9", "W19", "O50", "M18", "U7", "D37", "U15", "W25", "D35", "N11", "M4", "N5", "N35A", "G5", "G26", "E15", "H8", "A1", "B1", "A2", "A40", "A24", "A53", "A55", "C11", "D54", "D50", "Y1", "N1", "N25", "O49", "G7", "I12", "E1", "K1", "M2", "T14", "F27", "W22", "N33", "G37", "Z1", "Z2", "V10", "V20", "V1", "I8"];
+  var SIGN_ORDER = ["G1", "M17", "M17A", "Z4", "D36", "G43", "Z7", "D58", "Q3", "I9", "G17", "N35", "D21", "O4", "V28", "Aa1", "F32", "O34", "S29", "N37", "N29", "V31", "W11", "X1", "V13", "D46", "I10", "D28", "G39", "G40", "G36", "G25", "G29", "G38", "E34", "E23", "U1", "O1", "D4", "F34", "V30", "Y5", "F31", "U36", "N14", "N16", "N26", "Q1", "M23", "L2", "D2", "W24", "O28", "O29", "M12", "Aa11", "X8", "V4", "F21", "N28", "Aa15", "S34", "F35", "R4", "R8", "L1", "P8", "S38", "F12", "R11", "S12", "E9", "W19", "O50", "M18", "U7", "D37", "U15", "W25", "D35", "N11", "M4", "N5", "N35A", "G5", "G26", "E15", "H8", "A1", "B1", "A2", "A40", "A24", "A53", "A55", "C11", "D54", "D50", "Y1", "N1", "N25", "O49", "G7", "I12", "E1", "K1", "M2", "T14", "F27", "W22", "N33", "G37", "U21", "N36", "H6", "C10", "I3", "Z1", "Z2", "V10", "V20", "V1", "I8"];
   /* ---------------------------------------------------------------- the alphabet and transliteration */
   // [letter, MdC, Gardiner sign, how Egyptologists say it, a note]
   var ALPHA = [
@@ -347,7 +352,44 @@
     jnk: { tl: 'jnk', en: 'I (independent pronoun)', sp: 'M17-N35:V31', parts: [['M17', 'phon', 'j'], ['N35', 'phon', 'n'], ['V31', 'phon', 'k']] },
     sw: { tl: 'sw', en: 'he, him, it (dependent pronoun)', sp: 'M23-G43', parts: [['M23', 'phon', 'sw'], ['G43', 'comp', 'w']] },
     pw: { tl: 'pw', en: 'this; it is', sp: 'Q3-G43', parts: [['Q3', 'phon', 'p'], ['G43', 'phon', 'w']] },
-    weser: { tl: 'wsr', en: 'powerful', sp: 'F12-S29:D21', parts: [['F12', 'phon', 'wsr'], ['S29', 'comp', 's'], ['D21', 'comp', 'r']] }
+    weser: { tl: 'wsr', en: 'powerful', sp: 'F12-S29:D21', parts: [['F12', 'phon', 'wsr'], ['S29', 'comp', 's'], ['D21', 'comp', 'r']] },
+    // added for the site atlas (/egypt/sites/)
+    aten: { tl: 'jtn', en: 'the Aten, the disk of the sun', sp: 'M17-X1:N35-N5', parts: [['M17', 'phon', 'j'], ['X1', 'phon', 't'], ['N35', 'phon', 'n'], ['N5', 'det', '']] },
+    amunra: { tl: 'jmn-rꜥ', en: 'Amun-Ra', sp: 'M17-Y5:N35-N5:Z1-A40', parts: [['M17', 'phon', 'j'], ['Y5', 'phon', 'mn'], ['N35', 'comp', 'n'], ['N5', 'logo', 'rꜥ'], ['Z1', 'stroke', ''], ['A40', 'det', '']] },
+    sobek: { tl: 'sbk', en: 'Sobek, the crocodile god', sp: 'S29-D58-V31-I3', parts: [['S29', 'phon', 's'], ['D58', 'phon', 'b'], ['V31', 'phon', 'k'], ['I3', 'det', '']] },
+    horwer: { tl: 'ḥr-wr', en: 'Horus the Elder (Haroeris)', sp: 'G5-G36:D21', parts: [['G5', 'logo', 'ḥr'], ['G36', 'phon', 'wr'], ['D21', 'comp', 'r']] },
+    punt: { tl: 'pwnt', en: 'Punt, a land reached by the Red Sea', sp: 'Q3-G43-N35:X1-N25', parts: [['Q3', 'phon', 'p'], ['G43', 'phon', 'w'], ['N35', 'phon', 'n'], ['X1', 'phon', 't'], ['N25', 'det', '']] },
+    netjeraa: { tl: 'nṯr ꜥꜣ', en: 'the great god', sp: 'R8 O29-D36:G1', parts: [['R8', 'logo', 'nṯr'], ['O29', 'phon', 'ꜥꜣ'], ['D36', 'comp', 'ꜥ'], ['G1', 'comp', 'ꜣ']] },
+    nebpet: { tl: 'nb pt', en: 'lord of the sky', sp: 'V30 Q3:X1-N1', parts: [['V30', 'phon', 'nb'], ['Q3', 'phon', 'p'], ['X1', 'phon', 't'], ['N1', 'det', '']] },
+    djet: { tl: 'ḏt', en: 'forever, eternity', sp: 'I10:X1-N16', parts: [['I10', 'phon', 'ḏ'], ['X1', 'phon', 't'], ['N16', 'det', '']], note: 'The land sign is a determinative here; many texts use a flatter form of it.' },
+    netjerikhet: { tl: 'nṯrj-ẖt', en: 'Netjerikhet, "divine of body", the Horus name of Djoser', sp: 'R8-F32:X1', parts: [['R8', 'logo', 'nṯrj'], ['F32', 'phon', 'ẖ'], ['X1', 'phon', 't']], note: 'In his day the king was called by this Horus name, written in a serekh (a palace facade); the name Djoser appears only in later texts.' },
+    // more vocabulary, so that more signs have an example word (for the sign list in /languages/hieroglyphs/)
+    hrface: { tl: 'ḥr', en: 'face', sp: 'D2:Z1', parts: [['D2', 'logo', 'ḥr'], ['Z1', 'stroke', '']] },
+    seba: { tl: 'sbꜣ', en: 'star', sp: 'S29-D58-N14', parts: [['S29', 'comp', 's'], ['D58', 'comp', 'b'], ['N14', 'logo', 'sbꜣ']] },
+    pa: { tl: 'pꜣ', en: 'this (masculine)', sp: 'G40-G1', parts: [['G40', 'phon', 'pꜣ'], ['G1', 'comp', 'ꜣ']] },
+    wenem: { tl: 'wnm', en: 'eat', sp: 'E34:N35-G17-A2', parts: [['E34', 'phon', 'wn'], ['N35', 'comp', 'n'], ['G17', 'phon', 'm'], ['A2', 'det', '']] },
+    maakheru: { tl: 'mꜣꜥ-ḫrw', en: 'true of voice (said of the blessed dead)', sp: 'Aa11:D36-P8', parts: [['Aa11', 'phon', 'mꜣꜥ'], ['D36', 'comp', 'ꜥ'], ['P8', 'logo', 'ḫrw']] },
+    djedpillar: { tl: 'ḏd', en: 'stable, enduring; the djed pillar', sp: 'R11', parts: [['R11', 'logo', 'ḏd']] },
+    iah: { tl: 'jꜥḥ', en: 'moon', sp: 'M17-D36:V28-N11', parts: [['M17', 'phon', 'j'], ['D36', 'phon', 'ꜥ'], ['V28', 'phon', 'ḥ'], ['N11', 'det', '']] },
+    renpet: { tl: 'rnpt', en: 'year', sp: 'M4-X1:Z1', parts: [['M4', 'logo', 'rnp'], ['X1', 'end', 't'], ['Z1', 'stroke', '']] },
+    zep: { tl: 'zp', en: 'time, occasion', sp: 'O50-Q3', parts: [['O50', 'phon', 'zp'], ['Q3', 'comp', 'p']] },
+    negn: { tl: 'n', en: 'not (the negative)', sp: 'D35', parts: [['D35', 'phon', 'n']] },
+    ini: { tl: 'jnj', en: 'bring', sp: 'W25-N35', parts: [['W25', 'phon', 'jnj'], ['N35', 'comp', 'n']] },
+    di: { tl: 'dj', en: 'give', sp: 'D37', parts: [['D37', 'phon', 'dj']] },
+    tem: { tl: 'tm', en: 'not to do (the negative verb)', sp: 'U15-G17', parts: [['U15', 'phon', 'tm'], ['G17', 'comp', 'm']] },
+    ii: { tl: 'jj', en: 'come', sp: 'M18-D54', parts: [['M18', 'phon', 'jj'], ['D54', 'det', '']] },
+    iw: { tl: 'jw', en: 'the particle jw (introduces a statement)', sp: 'E9-G43', parts: [['E9', 'phon', 'jw'], ['G43', 'comp', 'w']] },
+    mi: { tl: 'mj', en: 'like, as', sp: 'W19', parts: [['W19', 'phon', 'mj']] },
+    sedjer: { tl: 'sḏr', en: 'lie down; spend the night', sp: 'S29-I10:D21-A55', parts: [['S29', 'phon', 's'], ['I10', 'phon', 'ḏ'], ['D21', 'phon', 'r'], ['A55', 'det', '']] },
+    tut: { tl: 'twt', en: 'statue, image', sp: 'X1:G43-X1-A53', parts: [['X1', 'phon', 't'], ['G43', 'phon', 'w'], ['X1', 'phon', 't'], ['A53', 'det', '']] },
+    kabull: { tl: 'kꜣ', en: 'bull', sp: 'D28-E1', parts: [['D28', 'phon', 'kꜣ'], ['E1', 'det', '']] },
+    inet: { tl: 'jnt', en: 'tilapia (a Nile fish)', sp: 'M17-N35:X1-K1', parts: [['M17', 'phon', 'j'], ['N35', 'phon', 'n'], ['X1', 'phon', 't'], ['K1', 'det', '']] },
+    aam: { tl: 'ꜥꜣm', en: 'Asiatic (a person from the Near East)', sp: 'D36:G1-G17-T14-A1', parts: [['D36', 'phon', 'ꜥ'], ['G1', 'phon', 'ꜣ'], ['G17', 'phon', 'm'], ['T14', 'det', ''], ['A1', 'det', '']] },
+    henqet: { tl: 'ḥnqt', en: 'beer', sp: 'V28-N35:N29-X1:W22', parts: [['V28', 'phon', 'ḥ'], ['N35', 'phon', 'n'], ['N29', 'phon', 'q'], ['X1', 'phon', 't'], ['W22', 'det', '']] },
+    nedjes: { tl: 'nḏs', en: 'commoner; small', sp: 'N35-I10-S29-G37', parts: [['N35', 'phon', 'n'], ['I10', 'phon', 'ḏ'], ['S29', 'phon', 's'], ['G37', 'det', '']] },
+    khet: { tl: 'ẖt', en: 'body, belly', sp: 'F32:X1-Z1', parts: [['F32', 'phon', 'ẖ'], ['X1', 'phon', 't'], ['Z1', 'stroke', '']] },
+    she: { tl: 'š', en: 'lake, pool', sp: 'N37:Z1', parts: [['N37', 'logo', 'š'], ['Z1', 'stroke', '']] },
+    maatgoddess: { tl: 'mꜣꜥt', en: 'Maat, the goddess of truth and order', sp: 'C10', parts: [['C10', 'logo', 'mꜣꜥt']], note: 'The goddess Maat with her feather, as in royal names.' }
   };
   // royal names in cartouches (read: the order of reading; honorific transposition puts a god's name first in the writing)
   var NAMES = {
@@ -362,7 +404,17 @@
     menkheperre: { tl: 'mn-ḫpr-rꜥ', en: 'Menkheperre', king: 'thutmose3', sp: 'N5-Y5-L1', signs: ['N5', 'Y5', 'L1'], note: 'The throne name of Thutmose III, "Enduring is the form of Ra"; Ra is written first out of honor but read last.' },
     nebkheperure: { tl: 'nb-ḫprw-rꜥ', en: 'Nebkheperure', king: 'tutankhamun', sp: 'N5-L1-Z2-V30', signs: ['N5', 'L1', 'Z2', 'V30'], note: 'The throne name of Tutankhamun, "Lord of the forms of Ra"; the three strokes make ḫprw plural, and Ra is read last.' },
     ptolemy: { tl: 'ptwlmys', en: 'Ptolemy', king: 'ptolemy5', sp: 'Q3-X1-V4-E23-Aa15-M17A-S29', signs: ['Q3', 'X1', 'V4', 'E23', 'Aa15', 'M17A', 'S29'], note: 'A Greek name spelled out with sound signs: p, t, o (the lasso), l (the lion), m, y and s.' },
-    cleopatra: { tl: 'qljwpꜣdrꜣt', en: 'Cleopatra', king: 'cleopatra7', sp: 'N29-E23-M17-V4-Q3-G1-D46-D21-G1-X1:H8', signs: ['N29', 'E23', 'M17', 'V4', 'Q3', 'G1', 'D46', 'D21', 'G1', 'X1', 'H8'], note: 'k, l, e, o, p, a, t (the hand), r, a, then the feminine t and the egg for a woman\'s name. The Cleopatra on the Philae obelisk is not the famous Cleopatra VII.' }
+    cleopatra: { tl: 'qljwpꜣdrꜣt', en: 'Cleopatra', king: 'cleopatra7', sp: 'N29-E23-M17-V4-Q3-G1-D46-D21-G1-X1:H8', signs: ['N29', 'E23', 'M17', 'V4', 'Q3', 'G1', 'D46', 'D21', 'G1', 'X1', 'H8'], note: 'k, l, e, o, p, a, t (the hand), r, a, then the feminine t and the egg for a woman\'s name. The Cleopatra on the Philae obelisk is not the famous Cleopatra VII.' },
+    // added for the site atlas (/egypt/sites/)
+    unas: { tl: 'wnjs', en: 'Unas', king: 'unas', sp: 'E34:N35-M17-S29', signs: ['E34', 'N35', 'M17', 'S29'], note: 'The hare (wn) with the water ripple as its complement, then j and s. The last king of the 5th Dynasty.' },
+    meni: { tl: 'mnj', en: 'Meni (Menes)', king: 'narmer', sp: 'Y5:N35-M17', signs: ['Y5', 'N35', 'M17'], note: 'The first name in the Abydos King List: Menes, whom later tradition made the first king of all Egypt. Most scholars identify him with Narmer; some with his successor Aha.' },
+    kheperkare: { tl: 'ḫpr-kꜣ-rꜥ', en: 'Kheperkare', king: 'senusret1', sp: 'N5-L1-D28', signs: ['N5', 'L1', 'D28'], note: 'The throne name of Senusret I, "The ka of Ra comes into being"; Ra is written first out of honor but read last.' },
+    maatkare: { tl: 'mꜣꜥt-kꜣ-rꜥ', en: 'Maatkare', king: 'hatshepsut', sp: 'N5-C10-D28', signs: ['N5', 'C10', 'D28'], note: 'The throne name of Hatshepsut, "Maat is the ka of Ra"; Ra is written first out of honor but read last.' },
+    nebmaatre: { tl: 'nb-mꜣꜥt-rꜥ', en: 'Nebmaatre', king: 'amenhotep3', sp: 'N5-C10-V30', signs: ['N5', 'C10', 'V30'], note: 'The throne name of Amenhotep III, "Lord of the Maat of Ra"; Ra is written first out of honor but read last.' },
+    menmaatre: { tl: 'mn-mꜣꜥt-rꜥ', en: 'Menmaatre', king: 'seti1', sp: 'N5-C10-Y5:N35', signs: ['N5', 'C10', 'Y5', 'N35'], note: 'The throne name of Seti I, "Enduring is the Maat of Ra"; Ra is written first out of honor but read last.' },
+    usermaatre: { tl: 'wsr-mꜣꜥt-rꜥ stp-n-rꜥ', en: 'Usermaatre Setepenre', king: 'ramesses2', sp: 'N5-F12-C10-U21:N35:N5', signs: ['N5', 'F12', 'C10', 'U21', 'N35', 'N5'], note: 'The throne name of Ramesses II, "Strong is the Maat of Ra, chosen of Ra"; Ra is written first out of honor but read last. Greek writers turned wsr-mꜣꜥt-rꜥ into Ozymandias.' },
+    usermaatremeryamun: { tl: 'wsr-mꜣꜥt-rꜥ mrj-jmn', en: 'Usermaatre Meryamun', king: 'ramesses3', sp: 'N5-F12-C10-N36-M17-Y5:N35', signs: ['N5', 'F12', 'C10', 'N36', 'M17', 'Y5', 'N35'], note: 'The throne name of Ramesses III, "Strong is the Maat of Ra, beloved of Amun"; Ra is written first out of honor but read last. The canal sign writes mr.' },
+    akhenaten: { tl: 'ꜣḫ-n-jtn', en: 'Akhenaten', king: 'akhenaten', sp: 'M17-X1:N35:N5-G25-Aa1:N35', signs: ['M17', 'X1', 'N35', 'N5', 'G25', 'Aa1', 'N35'], note: 'The name the king took in his fifth year, "Effective for the Aten"; the Aten (jtn, with the sun disk) is written first out of honor but read last.' }
   };
   // the numerals
   var NUMERALS = [[1000000, 'C11'], [100000, 'I8'], [10000, 'D50'], [1000, 'M12'], [100, 'V1'], [10, 'V20'], [1, 'Z1']];
