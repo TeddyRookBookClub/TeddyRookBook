@@ -25,7 +25,10 @@
    and a keypad (toggle) matched to the answer type: digits and operators, fraction, power, square root, pi, parentheses,
    the answer's variables, ≤ ≥ for inequalities, ∞ and ∪ for intervals, a comma for sets and lists, and
    "No solution" / "All real numbers" buttons for sets, intervals and inequalities. A chemical formula (t: 'formula') gets a
-   preview with real subscripts and charges (H2O, SO4^2-, CuSO4·5H2O) and keys for ( ) ^ + − · and (aq).                 */
+   preview with real subscripts and charges (H2O, SO4^2-, CuSO4·5H2O) and keys for ( ) ^ + − · and (aq).
+   A logic formula (t: 'prop', the Logic Ladder) gets a preview in symbols, ASCII turned into symbols as it is typed
+   (-> →, <-> ↔, ~ ¬, & ∧), and a keypad row of the logic symbols ¬ ∧ ∨ → ↔ ( ), with ∀ ∃ for predicate logic and = ≠
+   when the answer uses identity, plus the answer's letters (no digits).                                                 */
 (function (root) {
   'use strict';
   var ML = root.MathLadder = root.MathLadder || {};
@@ -57,6 +60,8 @@
     eq: ['=', ' = ', 'equals', 'op'], lt: ['<', ' < ', 'less than', 'op'], gt: ['>', ' > ', 'greater than', 'op'], le: ['≤', ' <= ', 'less than or equal to', 'op'], ge: ['≥', ' >= ', 'greater than or equal to', 'op'],
     inf: ['∞', 'inf', 'infinity', 'op'], cup: ['∪', ' U ', 'union', 'op'], or: ['or', ' or ', 'or', 'op'], abs: ['|x|', 'abs(|)', 'absolute value', 'op'], pm: ['±', '±', 'plus or minus', 'op'],
     pct: ['%', '%', 'percent', 'op'], i: ['i', 'i', 'imaginary unit i', 'op'],
+    lnot: ['¬', '¬', 'not', 'op'], land: ['∧', ' ∧ ', 'and', 'op'], lor: ['∨', ' ∨ ', 'or', 'op'], limp: ['→', ' → ', 'if then', 'op'], liff: ['↔', ' ↔ ', 'if and only if', 'op'],
+    lall: ['∀', '∀', 'for all', 'op'], lsome: ['∃', '∃', 'there is', 'op'], leq: ['=', ' = ', 'is identical to', 'op'], lneq: ['≠', ' ≠ ', 'is not identical to', 'op'],
     caret: ['^', '^', 'charge (written after ^)', 'op'], hyd: ['·', '·', 'hydrate dot', 'op'], aq: ['(aq)', '(aq)', 'aqueous', 'op'], fneg: ['−', '-', 'minus sign of a charge', 'op'],
     sin: ['sin', 'sin(|)', 'sine', 'fn'], cos: ['cos', 'cos(|)', 'cosine', 'fn'], tan: ['tan', 'tan(|)', 'tangent', 'fn'], ln: ['ln', 'ln(|)', 'natural log', 'fn'], log: ['log', 'log(|)', 'log', 'fn'],
     left: ['◀', { move: -1 }, 'move left', 'nav'], right: ['▶', { move: 1 }, 'move right', 'nav'], back: ['⌫', { back: 1 }, 'delete', 'nav'], enter: ['↵', { enter: 1 }, 'check answer', 'enter']
@@ -69,8 +74,23 @@
     return seen.sort().slice(0, 4);
   }
   function uses(spec, re) { var v = spec.v; if (spec.t === 'multi') return false; return re.test(str(Array.isArray(v) ? JSON.stringify(v) : v)); }
+  function propLetters(spec) { // the letters of a logic answer: statement letters, predicates, names, variables
+    var vs = Array.isArray(spec.v) ? spec.v : [spec.v], out = [];
+    vs.forEach(function (v) { var s = str(v); try { if (ML._check && ML._check.propShow) s = ML._check.propShow(s); } catch (e) { } s.replace(/[A-Za-z]′*/g, function (c) { if (out.indexOf(c) < 0) out.push(c); return c; }); });
+    var rank = function (c) { return /^[A-Z]/.test(c) ? 0 : /^[xyzwuv]/.test(c) ? 2 : 1; };
+    out.sort(function (a, b) { return rank(a) - rank(b); });
+    return out.slice(0, 8);
+  }
   function keysFor(spec, opts) {
     var t = spec.t, ks = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0'], ops = [], vars = [];
+    if (t === 'prop') {
+      var pv = str(Array.isArray(spec.v) ? spec.v.join(' ') : spec.v);
+      ops = ['lnot', 'land', 'lor', 'limp', 'liff', 'lp', 'rp'];
+      if (/[∀∃]|\(\s*[xyzwuv]\s*\)|[A-Z][a-z]|[=≠]/.test(pv)) ops.push('lall', 'lsome');
+      if (/[=≠]/.test(pv)) ops.push('leq', 'lneq');
+      (opts.keys || []).forEach(function (k) { if (K[k] && ops.indexOf(k) < 0) ops.push(k); });
+      return { digits: [], ops: ops, vars: propLetters(spec), nav: ['left', 'right', 'back', 'enter'], logic: true };
+    }
     var form = spec.form || '';
     if (t === 'num') {
       if (form !== 'int') ops.push(form === 'frac' || form === 'mixed' ? 'frac' : 'dot');
@@ -117,6 +137,7 @@
   function previewTex(type, s, unit) { // unit: the problem's unit word, so "12 cookies" previews as 12 cookies
     s = str(s).trim(); if (!s) return '';
     if (type === 'formula') return ML._check && ML._check.formulaTex ? ML._check.formulaTex(s) : '';
+    if (type === 'prop') return propTex(s);
     if (/^(no( real)? solutions?|none|∅|empty( set)?|\{\s*\})$/i.test(s)) return '\\text{No solution}';
     if (/^(all real numbers?|all reals?|ℝ|all|infinitely many( solutions)?)$/i.test(s)) return '\\text{All real numbers}';
     if (/^(dne|does not exist)$/i.test(s)) return '\\text{Does not exist}';
@@ -131,6 +152,10 @@
       if (type !== 'num') { var parts = splitTopCommas(s); if (parts.length > 1 && parts.some(function (p) { return unitTex(p, unit); })) return parts.map(function (p) { return unitTex(p, unit) || pmTex(p); }).join(',\\ '); }
     }
     return pmTex(s);
+  }
+  function propTex(s) { // a logic formula as TeX, through MathLadder.logic's parser (throws while it can't be read yet)
+    if (!ML._check || !ML._check.propTex || !ML.logic) throw new Error('keep typing');
+    return ML._check.propTex(s);
   }
   function pmTex(s) { // ± anywhere, even inside brackets: (-1 ± sqrt(13))/2 -> \frac{-1 \pm \sqrt{13}}{2}
     if (s.indexOf('±') < 0) return ML.plainToTex(s);
@@ -179,6 +204,10 @@
       row.appendChild(inp);
       if (opts.unit && !small && typeof opts.unit === 'string') { var un = h('span', 'ml-in-unit'); un.innerHTML = htmlOf(opts.unit, opts); row.appendChild(un); inp.setAttribute('aria-label', label + ' (in ' + opts.unit.replace(/\$|\\text\{|\}/g, '') + ')'); }
       if (ptype !== 'text') row.appendChild(pv);
+      if (ptype === 'prop') inp.addEventListener('input', function () { // ASCII to symbols as you type
+        var v = inp.value, n = v.replace(/<->/g, '↔').replace(/->/g, '→').replace(/~/g, '¬').replace(/&/g, '∧');
+        if (n !== v) { var c = Math.max(0, (inp.selectionStart == null ? v.length : inp.selectionStart) - (v.length - n.length)); inp.value = n; try { inp.setSelectionRange(c, c); } catch (e) { } }
+      });
       parent.appendChild(row);
       var f = { input: inp, preview: pv, type: ptype, row: row };
       function upd() {
@@ -201,14 +230,16 @@
       kset = keysFor(spec, opts); if (!kset || opts.keypad === false) return;
       var kpId = id + '-kp';
       toggle = h('button', 'ml-kp-toggle', { type: 'button', 'aria-expanded': 'false', 'aria-controls': kpId, title: 'Math keypad' });
-      toggle.innerHTML = spec.t === 'formula' ? '<span aria-hidden="true">^·</span><span class="ml-sr">Formula keypad</span>' : '<span aria-hidden="true">±√</span><span class="ml-sr">Math keypad</span>';
-      keypad = h('div', 'ml-kp', { id: kpId, role: 'group', 'aria-label': 'Math keypad' }); keypad.hidden = true;
+      toggle.innerHTML = spec.t === 'formula' ? '<span aria-hidden="true">^·</span><span class="ml-sr">Formula keypad</span>' : kset.logic ? '<span aria-hidden="true">¬∧</span><span class="ml-sr">Logic symbols keypad</span>' : '<span aria-hidden="true">±√</span><span class="ml-sr">Math keypad</span>';
+      if (kset.logic) toggle.title = 'Logic symbols';
+      keypad = h('div', 'ml-kp' + (kset.logic ? ' ml-kp-logic' : ''), { id: kpId, role: 'group', 'aria-label': kset.logic ? 'Logic symbols' : 'Math keypad' }); keypad.hidden = true;
+      if (!kset.digits.length) { keypad.style.gridTemplateColumns = 'minmax(0,1fr)'; keypad.style.gridTemplateAreas = '"o" "n"'; }
       var digits = h('div', 'ml-kp-digits'), ops = h('div', 'ml-kp-ops'), nav = h('div', 'ml-kp-nav');
       kset.digits.forEach(function (k) { digits.appendChild(keyBtn(k)); });
       kset.vars.forEach(function (v) { ops.appendChild(keyBtn(null, [v, v, 'variable ' + v, 'var'])); });
       kset.ops.forEach(function (k) { ops.appendChild(keyBtn(k)); });
       kset.nav.forEach(function (k) { nav.appendChild(keyBtn(k)); });
-      keypad.appendChild(digits); keypad.appendChild(ops); keypad.appendChild(nav);
+      if (kset.digits.length) keypad.appendChild(digits); keypad.appendChild(ops); keypad.appendChild(nav);
       where.appendChild(keypad);
       toggle.addEventListener('click', function () { setKeypad(keypad.hidden); });
       var open = opts.keypad === true || (opts.keypad !== false && coarse());
@@ -246,7 +277,8 @@
     function setCaret(inp, p) { try { if (D.activeElement !== inp && !preferNoKeyboard) inp.focus({ preventScroll: true }); else if (D.activeElement !== inp) inp.focus({ preventScroll: true }); inp.setSelectionRange(p, p); } catch (e) { } }
 
     var PH = { num: spec.form === 'mixed' ? 'like 2 1/2' : spec.form === 'frac' ? 'like 3/4' : spec.form === 'dec' || spec.dp !== undefined ? 'like 0.75' : spec.form === 'int' ? 'a whole number' : 'Type a number',
-      expr: 'like 2x + 3', eq: 'like y = 2x + 1', set: 'like 3, -2', interval: 'like (-inf, 3]', ineq: 'like x < 3', text: 'Type a word', formula: 'like H2O or SO4^2-' };
+      expr: 'like 2x + 3', eq: 'like y = 2x + 1', set: 'like 3, -2', interval: 'like (-inf, 3]', ineq: 'like x < 3', text: 'Type a word', formula: 'like H2O or SO4^2-',
+      prop: /[∀∃]|[A-Z][a-z]/.test(str(Array.isArray(spec.v) ? spec.v[0] : spec.v)) ? 'like ∀x(Fx → Gx)' : 'like p → (q ∧ r)' };
 
     // ---- build by type
     if (t === 'mc' || t === 'tf') {
@@ -331,12 +363,14 @@
       var pseudo = { t: 'expr', v: parts.map(function (p) { return p.a && p.a.v !== undefined ? (Array.isArray(p.a.v) ? p.a.v.join(' ') : str(p.a.v)) : ''; }).join(' '), vars: [] };
       if (parts.every(function (p) { return p.a && (p.a.t === 'num' || p.a.t === 'set' || p.a.t === 'tuple'); })) pseudo.t = 'num';
       if (parts.some(function (p) { return p.a && (p.a.t === 'ineq'); })) pseudo.t = 'ineq';
+      var propParts = parts.filter(function (p) { return p.a && p.a.t === 'prop'; });
+      if (propParts.length) pseudo = { t: 'prop', v: [].concat.apply([], propParts.map(function (p) { return Array.isArray(p.a.v) ? p.a.v : [p.a.v]; })) };
       var savedSpec = spec; spec = pseudo;
       var kpHolder = h('div', 'ml-in-tools'); wrap.appendChild(kpHolder);
       buildKeypad(kpHolder); if (toggle) kpHolder.insertBefore(toggle, kpHolder.firstChild);
       spec = savedSpec;
     } else {
-      // single text box: num expr eq set interval ineq text formula
+      // single text box: num expr eq set interval ineq text formula prop
       var box = h('div', 'ml-in-main');
       var f0 = textField(box, t, opts.label || 'Your answer', opts.placeholder || PH[t] || '');
       wrap.appendChild(box);
@@ -356,7 +390,7 @@
       var tools = h('div', 'ml-in-tools');
       wrap.appendChild(tools);
       buildKeypad(tools);
-      if (toggle) { var mainRow = wrap.querySelector('.ml-in-field'); if (t === 'num' || t === 'expr' || t === 'eq' || t === 'set' || t === 'interval' || t === 'ineq' || t === 'formula') mainRow.insertBefore(toggle, mainRow.querySelector('.ml-in-preview')); else tools.insertBefore(toggle, tools.firstChild); }
+      if (toggle) { var mainRow = wrap.querySelector('.ml-in-field'); if (t === 'num' || t === 'expr' || t === 'eq' || t === 'set' || t === 'interval' || t === 'ineq' || t === 'formula' || t === 'prop') mainRow.insertBefore(toggle, mainRow.querySelector('.ml-in-preview')); else tools.insertBefore(toggle, tools.firstChild); }
     }
 
     if (!api) {

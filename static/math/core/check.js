@@ -114,6 +114,18 @@
             same atoms in another order or grouping ("… formulas are written in a standard order"), a missing or wrong charge,
             a subscript of 1, a number in front, wrong subscripts, a symbol that is no element. Not accepted: subscripts of 1
             (H2O1). Shown with real subscripts and superscripts (answerShow); ML._check.formulaTex(s) gives the TeX.
+   PROP { t: 'prop', v: 'p → (q ∧ r)' (or a list of accepted formulas), match?: 'equivalent' (default) | 'exact' }
+            a formula of statement or predicate logic (the Logic Ladder), read by MathLadder.logic's parser
+            (static/logic/viz/logic.js, which Logic pages load; required here in node). Learners may type ¬ ~ ! - not,
+            ∧ & ^ · * and, ∨ | \/ or and a lone v, → -> > ⊃ => then implies, ↔ <-> <> ≡ iff, ∀x (x) Ax (Ax) (∀x), ∃x Ex (Ex)
+            (∃x), = ≠ !=, brackets [ ] for parentheses. 'equivalent': right when it has the same truth value as an accepted
+            formula in every row (statement logic) or in every small world (predicate logic: all worlds of 1 to 3 objects
+            when there are few, else a fixed sample, plus a sample of 4-object worlds); 'exact': the same formula up to
+            parentheses that change nothing and the names of bound variables (∀y Fy = ∀x Fx); an equivalent one gets "That
+            says the same thing, but …". Notes: the converse, ∀ with ∧ / ∃ with →, De Morgan slips, a ¬ with the wrong scope,
+            a free variable, a letter that isn't part of the answer. answerValue / answerText / answerShow: the formula in the
+            Logic Ladder's style (show(): ¬(p ∧ q) → r, ∀x(Fx → Gx)); answerShow as TeX ($\neg(p \land q) \to r$).
+            ML._check.propNorm / propParse / propEquiv / propShow / propTex.
    MULTI { t: 'multi', parts: [{ label, a }] } answer: an array, one entry per part                                     */
 (function (root) {
   'use strict';
@@ -1493,6 +1505,137 @@
     return out + st;
   }
 
+  // ===================================================================== logic formulas { t: 'prop', v, match }
+  // Parsed and compared with MathLadder.logic (static/logic/viz/logic.js; loaded on Logic pages, required here in node).
+  function LGM() { if (!ML.logic) need('../../logic/viz/logic.js'); return ML.logic || null; }
+  var PVARS = 'xyzwuv';
+  // typed forms -> what the logic parser reads: Ax / Ex / (Ax) / (∀x) quantifiers, a lone v for "or", iff, implies
+  function propNorm(raw) {
+    var s = str(raw).replace(/[​ ]/g, ' ').replace(/−|–|—/g, '-').replace(/⋀/g, '∧').replace(/⋁/g, '∨').replace(/⇔|⟺/g, '↔').replace(/⇒|⟹/g, '→').replace(/∼/g, '~').trim();
+    s = s.replace(/\biff\b/gi, ' ↔ ').replace(/\bimplies\b/gi, ' → ').replace(/\bthen\b/gi, ' → ');
+    var Q = '(?=\\s*(?:[(\\[A-Z¬~!∀∃]|-(?!>)))';
+    s = s.replace(/\(\s*([∀∃])\s*([xyzwuv])\s*\)/g, '$1$2');
+    s = s.replace(new RegExp('\\(\\s*([AE])\\s*([xyzwuv])\\s*\\)' + Q, 'g'), function (m, q, v) { return (q === 'A' ? '∀' : '∃') + v; });
+    var prev;
+    do { prev = s; s = s.replace(new RegExp('(^|[^A-Za-z′\']|[∀∃][xyzwuv])([AE])([xyzwuv])' + Q, 'g'), function (m, pre, q, v) { return pre + (q === 'A' ? '∀' : '∃') + v; }); } while (s !== prev);
+    // a lone v is "or", unless v is used as a variable (∀v, Fv, (v))
+    if (!/[∀∃]\s*v|[A-Z][a-z]*v|\(\s*v\s*\)/.test(s)) s = s.replace(/(^|[^A-Za-z∀∃])v(?=[^A-Za-z′']|$)/g, '$1∨');
+    return s;
+  }
+  function propParse(raw) { var L = LGM(); return L.parse(propNorm(raw)); }
+  function propQuant(f) { var q = false; (function go(g) { if (g.t === 'all' || g.t === 'some' || g.t === 'pred' || g.t === 'eq') q = true; else if (g.a && typeof g.a === 'object') { go(g.a); if (g.b && typeof g.b === 'object') go(g.b); } })(f); return q; }
+  function propKids(g) { return g.t === 'not' || g.t === 'all' || g.t === 'some' ? [g.a] : (g.t === 'and' || g.t === 'or' || g.t === 'imp' || g.t === 'iff') ? [g.a, g.b] : []; }
+  // the formula with bound variables renamed in order (so ∀y Fy and ∀x Fx have one key)
+  function propAlpha(f) {
+    var n = 0;
+    function go(g, env) {
+      function r(a) { return env[a] || a; }
+      switch (g.t) {
+        case 'pred': return { t: 'pred', p: g.p, args: g.args.map(r) };
+        case 'eq': return { t: 'eq', a: r(g.a), b: r(g.b) };
+        case 'all': case 'some': { var nv = '_' + (n++), e = Object.assign({}, env); e[g.v] = nv; return { t: g.t, v: nv, a: go(g.a, e) }; }
+        case 'not': return { t: 'not', a: go(g.a, env) };
+        case 'atom': case 'bot': return g;
+        default: return { t: g.t, a: go(g.a, env), b: go(g.b, env) };
+      }
+    }
+    return JSON.stringify(go(f, {}));
+  }
+  // what a formula uses: statement letters, predicates with their number of places, names, free variables
+  function propSig(f, sig) {
+    sig = sig || { atoms: {}, preds: {}, names: {}, free: {} };
+    (function go(g, bound) {
+      if (g.t === 'atom') sig.atoms[g.p] = 1;
+      else if (g.t === 'pred') { sig.preds[g.p] = Math.max(sig.preds[g.p] || 0, g.args.length); g.args.forEach(term); }
+      else if (g.t === 'eq') { term(g.a); term(g.b); }
+      else if (g.t === 'all' || g.t === 'some') { var b = Object.assign({}, bound); b[g.v] = 1; go(g.a, b); }
+      else propKids(g).forEach(function (k) { go(k, bound); });
+      function term(a) { if (PVARS.indexOf(a.charAt(0)) >= 0) { if (!bound[a]) sig.free[a] = 1; } else sig.names[a] = 1; }
+    })(f, {});
+    return sig;
+  }
+  // equivalence: truth tables for statement logic; for predicate logic, every small world (domains of 1 to 3 objects,
+  // all of them when there are few, else a fixed sample of 4000, plus a sample of 4-object worlds)
+  function propEquiv(A, B) {
+    var L = LGM();
+    if (!propQuant(A) && !propQuant(B)) return L.equivalent(A, B);
+    var sig = propSig(B, propSig(A));
+    var atoms = Object.keys(sig.atoms), preds = Object.keys(sig.preds), names = Object.keys(sig.names).concat(Object.keys(sig.free));
+    var seed = 12345; function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+    for (var n = 1; n <= 4; n++) {
+      var ids = []; for (var i = 0; i < n; i++) ids.push('o' + i);
+      var slots = []; // [kind, pred, tuple] one bit each
+      atoms.forEach(function (a) { slots.push(['atom', a]); });
+      preds.forEach(function (P) {
+        var k = sig.preds[P];
+        (function tup(pre) { if (pre.length === k) { slots.push(['pred', P, pre]); return; } ids.forEach(function (o) { tup(pre.concat([o])); }); })([]);
+      });
+      var nBits = slots.length, nNames = Math.pow(n, names.length), total = Math.pow(2, nBits) * nNames;
+      var exhaustive = total <= 4096 && n <= 3, count = exhaustive ? total : (n <= 3 ? 4000 : 1500);
+      for (var w = 0; w < count; w++) {
+        var bits, nameIx;
+        if (exhaustive) { bits = Math.floor(w / nNames); nameIx = w % nNames; }
+        else { bits = null; nameIx = Math.floor(rnd() * nNames); }
+        var world = { objects: ids.map(function (o) { return { n: o, has: [] }; }), rels: {}, props: {}, names: {} };
+        slots.forEach(function (sl, bi) {
+          var on = bits === null ? rnd() < 0.5 : !!(Math.floor(bits / Math.pow(2, bi)) % 2);
+          if (!on) return;
+          if (sl[0] === 'atom') world.props[sl[1]] = true;
+          else if (sl[2].length === 1) world.objects[ids.indexOf(sl[2][0])].has.push(sl[1]);
+          else (world.rels[sl[1]] = world.rels[sl[1]] || []).push(sl[2]);
+        });
+        names.forEach(function (nm) { world.names[nm] = ids[nameIx % n]; nameIx = Math.floor(nameIx / n); });
+        if (L.evalWorld(A, world) !== L.evalWorld(B, world)) return false;
+      }
+    }
+    return true;
+  }
+  function propSpecForms(spec) {
+    return (Array.isArray(spec.v) ? spec.v : [spec.v]).map(function (v) { try { return propParse(v); } catch (e) { throw new Error('Bad formula "' + v + '" in the answer spec'); } });
+  }
+  // strip the quantifiers the two formulas share at the front
+  function propCore(A, B) { while ((A.t === 'all' || A.t === 'some') && A.t === B.t) { A = A.a; B = B.a; } return [A, B]; }
+  function checkProp(spec, answer) {
+    var L = LGM();
+    if (!L) return { ok: false, invalid: true, msg: 'The logic checker hasn\'t loaded yet. Try again in a moment.' };
+    var raw = str(answer).trim();
+    if (!raw) return { ok: false, invalid: true, msg: 'Type an answer first.' };
+    var E = propSpecForms(spec), F;
+    try { F = propParse(raw); }
+    catch (e) {
+      if (/(^|[^A-Za-z])[a-w][A-Z]/.test(raw) && E.some(function (X) { return Object.keys(propSig(X).preds).length; })) return { ok: false, msg: 'Write the predicate letter first, then the name: Fa says that a is F.' };
+      return { ok: false, invalid: true, msg: 'I can\'t read that formula' + (e && e.logic ? ': ' + e.message : '.') + ' Use ¬ ∧ ∨ → ↔ (or ~ & v -> <->) and parentheses.' };
+    }
+    var exact = spec.match === 'exact', fk = propAlpha(F);
+    if (E.some(function (X) { return propAlpha(X) === fk; })) return { ok: true };
+    var eq = E.some(function (X) { return propEquiv(X, F); });
+    if (eq && !exact) return { ok: true };
+    if (eq) return { ok: false, form: true, msg: 'That says the same thing, but this asks for one exact formula. Check the grouping and the order of the parts.' };
+    // notes, only when we are sure what happened
+    var X = E[0], fs = propSig(F), xs = propSig(X);
+    var fFree = Object.keys(fs.free).filter(function (v) { return !xs.free[v]; });
+    if (fFree.length) return { ok: false, msg: 'The variable ' + fFree[0] + ' is free here: every variable needs a quantifier that covers it.' };
+    var cr = propCore(X, F), x = cr[0], f = cr[1];
+    if (x.t === 'imp' && f.t === 'imp' && L.same(x.a, f.b) && L.same(x.b, f.a)) return { ok: false, msg: 'That\'s the converse: the arrow points the wrong way. Which part is the condition?' };
+    if ((X.t === 'all' && F.t === 'all' && X.a.t === 'imp' && F.a.t === 'and' && L.same(X.a.a, F.a.a)) ) return { ok: false, msg: 'With ∀, the connective is usually →. ∀x(Sx ∧ Px) says everything is both S and P.' };
+    if ((X.t === 'some' && F.t === 'some' && X.a.t === 'and' && F.a.t === 'imp' && L.same(X.a.a, F.a.a))) return { ok: false, msg: 'With ∃, the connective is usually ∧. ∃x(Sx → Px) is true as soon as anything is not S.' };
+    if (x.t === 'not' && (x.a.t === 'and' || x.a.t === 'or') && (f.t === 'and' || f.t === 'or') && f.a.t === 'not' && L.same(f.a.a, x.a.a)) {
+      if (f.t === x.a.t && f.b.t === 'not' && L.same(f.b.a, x.a.b)) return { ok: false, msg: 'Check the ¬: moving it inside the parentheses changes ' + (x.a.t === 'and' ? '∧ to ∨' : '∨ to ∧') + ' (De Morgan).' };
+    }
+    if (x.t === 'not' && f.t !== 'not') {
+      var fa = f; if ((fa.t === 'and' || fa.t === 'or' || fa.t === 'imp' || fa.t === 'iff') && fa.a.t === 'not' && fa.t === x.a.t && L.same(fa.a.a, x.a.a) && L.same(fa.b, x.a.b)) return { ok: false, msg: 'Check what the ¬ covers: here it should apply to the whole ' + (x.a.t === 'and' ? 'conjunction' : x.a.t === 'or' ? 'disjunction' : x.a.t === 'imp' ? 'conditional' : 'biconditional') + '.' };
+    }
+    var bare = Object.keys(fs.atoms).filter(function (a) { return /[A-Z]/.test(a) && xs.preds[a]; });
+    if (bare.length) return { ok: false, msg: 'The predicate ' + bare[0] + ' needs a name or variable after it, like ' + bare[0] + 'a or ' + bare[0] + 'x.' };
+    var extra = Object.keys(fs.atoms).filter(function (a) { return !xs.atoms[a]; }).concat(Object.keys(fs.preds).filter(function (a) { return !xs.preds[a]; }));
+    if (extra.length && !E.some(function (Y) { var ys = propSig(Y); return Object.keys(fs.atoms).every(function (a) { return ys.atoms[a]; }) && Object.keys(fs.preds).every(function (a) { return ys.preds[a]; }); })) return { ok: false, msg: 'Check your letters: ' + extra.join(', ') + (extra.length > 1 ? ' are' : ' is') + ' not part of this one.' };
+    return { ok: false };
+  }
+  function propShow(v) { try { return LGM().show(propParse(v)); } catch (e) { return str(v); } }
+  var PROP_TEX = { '¬': '\\neg ', '∧': '\\land ', '∨': '\\lor ', '→': '\\to ', '↔': '\\leftrightarrow ', '∀': '\\forall ', '∃': '\\exists ', '≠': '\\ne ', '⊥': '\\bot ', '′': "'" };
+  // a formula as TeX in the Logic Ladder's style (\neg (p \land q) \to r, \forall x(Fx \to Gx)); throws if it can't be read
+  function propTex(v) { return LGM().show(propParse(v)).replace(/[¬∧∨→↔∀∃≠⊥′]/g, function (c) { return PROP_TEX[c]; }).replace(/ +/g, ' ').trim(); }
+
   function checkText(spec, answer) {
     var s = normWord(answer); if (!s) return { ok: false, invalid: true, msg: 'Type an answer first.' };
     var want = (Array.isArray(spec.v) ? spec.v : [spec.v]).map(normWord);
@@ -1557,6 +1700,7 @@
         case 'tf': return checkTf(spec, answer);
         case 'text': return checkText(spec, answer);
         case 'formula': return checkFormula(spec, answer);
+        case 'prop': return checkProp(spec, answer);
         case 'multi': return checkMulti(spec, answer, ctx);
       }
       return { ok: false, msg: 'Unknown answer type ' + spec.t + '.' };
@@ -1604,6 +1748,7 @@
       case 'tf': return spec.v;
       case 'text': return Array.isArray(spec.v) ? spec.v[0] : spec.v;
       case 'formula': return str(Array.isArray(spec.v) ? spec.v[0] : spec.v);
+      case 'prop': return propShow(Array.isArray(spec.v) ? spec.v[0] : spec.v);
       case 'multi': return spec.parts.map(function (p) { return ML.answerValue(p.a); });
     }
     return '';
@@ -1657,6 +1802,7 @@
       case 'mc': return (Array.isArray(spec.v) ? spec.v : [spec.v]).map(function (i) { return str(spec.choices[i]); }).join('; ');
       case 'tf': return spec.v ? 'True' : 'False';
       case 'text': return str(Array.isArray(spec.v) ? spec.v[0] : spec.v);
+      case 'prop': { var pv0 = Array.isArray(spec.v) ? spec.v[0] : spec.v; try { return '$' + propTex(pv0) + '$'; } catch (e) { return propShow(pv0); } }
       case 'formula': { var fv = str(Array.isArray(spec.v) ? spec.v[0] : spec.v); try { var FF = fParse(fNorm(fv), 0); return '$' + formulaTex(FF ? fCanon(FF, !!spec.states) : fv) + '$'; } catch (e) { return fv; } }
       case 'multi': return spec.parts.map(function (p) { return (p.label ? p.label + ' ' : '') + ML.answerShow(p.a); }).join(', ');
     }
@@ -1665,6 +1811,7 @@
   ML._check = { readNumber: readNumber, parseIntervals: parseIntervals, parseIneq: parseIneq, violations: violations, compareTrees: compareTrees, kindOf: kindOf,
     dropUnit: function (s, unit) { var c = cleanInput(s), d = dropUnit(c) || (unit ? dropExpectedUnit(c, unit) : null) || (unit ? dropSIUnit(sciNorm(c)) : null); return d ? { s: d.s, unit: d.unit } : null; }, splitPM: splitPM,
     canonUnit: canonUnit, questionUnits: questionUnits, askedUnit: askedUnit, unitProblem: unitProblem,
+    propNorm: propNorm, propParse: propParse, propEquiv: propEquiv, propShow: propShow, propTex: propTex,
     formulaTex: formulaTex, formulaReadings: fReadings, formulaCanon: function (s) { var F = fParse(fNorm(s), 0); return F ? fCanon(F, true) : null; },
     siUnit: siUnit, sigInfo: sigInfo, roundSigQ: roundSigQ, sciText: sciText, sciNorm: sciNorm, dropSIUnit: function (s) { var d = dropSIUnit(sciNorm(cleanInput(s))); return d ? { s: d.s, unit: d.unit } : null; } };
 

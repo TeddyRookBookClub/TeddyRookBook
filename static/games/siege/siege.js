@@ -129,7 +129,8 @@
   // a heavy blow on a beam lying on a defender knocks him out too, so fallen planks can't make a shield
   function crush(b, proj, v) {
     var w = G.world; if (v < 4) return;
-    for (var k in w.arb) { var A = w.arb[k], o = A.a === b ? A.b : A.b === b ? A.a : null; if (o && o.data.mat === 'target') damage(o, proj, v * 0.7); }
+    if (!b.im || b.data.mat === 'ground') return; // the ground and fixed walls pass nothing on: a shot into the dirt doesn't knock out defenders it never touched
+    for (var k in w.arb) { var A = w.arb[k], o = A.a === b ? A.b : A.b === b ? A.a : null; if (o && o.data.mat === 'target' && o.p.y < b.p.y) damage(o, proj, v * 0.7); } // only defenders under the struck beam
   }
   // fire: wood burns and falls apart after a while, and sets the wood touching it alight; defenders caught by it run
   function ignite(b) {

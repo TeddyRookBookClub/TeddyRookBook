@@ -24,12 +24,13 @@
 {{- /* the visuals this page needs: math's basic and adv files, and a ladder's own kit for names with its prefix */ -}}
 {{- $basic := slice "tenframe" "counters" "numberline" "hundredchart" "base10" "placevalue" "numberbond" "arraygrid" "areamodel" "fractionbar" "fractioncircle" "fractionline" "decimalgrid" "percentbar" "ratiotable" "tapediagram" "clock" "coins" "balance" "integerline" "shapes" "geoboard" "angle" "transform" "pythagoras" "circlepi" "areaformulas" "volume" "nets" "dotplot" "boxplot" -}}
 {{- $adv := slice "graph" "slope" "linesystem" "parabola" "transformfn" "exponential" "logscale" "unitcircle" "trigwave" "polar" "complexplane" "sequence" "limit" "secant" "derivgraph" "riemann" "ftc" "solids" "taylor" "seriespartial" "vectors2d" "vectors3d" "surface" "gradient" "vectorfield" "lineintegral" "flux" "param3d" "matrix2d" "span" "slopefield" "phaseplane" "springmass" "dice" "normal" "sampling" "scatter" "venn" "tree" -}}
-{{- $kits := dict "ph-" "physics" "ch-" "chemistry" "ec-" "economics" "es-" "earth" -}}
+{{- $kits := dict "ph-" "physics" "ch-" "chemistry" "ec-" "economics" "es-" "earth" "lg-" "logic" -}}
 {{- $names := $t.viz | default slice -}}
 {{- if $L0 }}{{ range $L0.blocks }}{{ if eq .t "viz" }}{{ $names = $names | append .name }}{{ end }}{{ end }}{{ end -}}
 {{- $vb := partial "inline/ml-vizbase.html" $key -}}
 {{- $needB := eq $vb "basic" }}{{ $needA := eq $vb "adv" -}}
-{{- $needK := slice -}}
+{{- /* a ladder's own kit always loads on its topic pages, since its generators may call the kit's models (e.g. MathLadder.logic) */ -}}
+{{- $needK := cond (ne $lk "math") (slice $L.dir) slice -}}
 {{- range $names }}{{ if in $basic . }}{{ $needB = true }}{{ end }}{{ if in $adv . }}{{ $needA = true }}{{ end }}{{ with index $kits (substr . 0 3) }}{{ if not (in $needK .) }}{{ $needK = $needK | append . }}{{ end }}{{ end }}{{ end -}}
 {{- if $needB }}{{ partial "inline/ml-css.html" "math/viz/basic.css" }}{{ end -}}
 {{- if $needA }}{{ partial "inline/ml-css.html" "math/viz/adv.css" }}{{ end -}}

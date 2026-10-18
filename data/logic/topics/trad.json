@@ -1,0 +1,786 @@
+{
+ "course": "trad",
+ "units": [
+  {
+   "key": "terms",
+   "title": "Terms and Simple Apprehension",
+   "blurb": "The first act of the mind: grasping what a thing is. Terms, extension and comprehension, genus and species, the predicables, and logical division."
+  },
+  {
+   "key": "propositions",
+   "title": "Categorical Propositions",
+   "blurb": "The second act of the mind: judgment. The four standard forms A, E, I and O, translation into standard form, distribution, Venn diagrams and existential import."
+  },
+  {
+   "key": "opposition",
+   "title": "The Square of Opposition",
+   "blurb": "How the four forms about the same subject and predicate constrain one another: contradictories, contraries, subcontraries and subalterns."
+  },
+  {
+   "key": "immediate",
+   "title": "Immediate Inference",
+   "blurb": "New propositions from a single one: complements, conversion, obversion and contraposition, and chains of them."
+  },
+  {
+   "key": "syllogisms",
+   "title": "Categorical Syllogisms",
+   "blurb": "The third act of the mind: reasoning. Terms, mood and figure, testing by Venn diagrams and by the rules, and the valid forms."
+  },
+  {
+   "key": "everyday",
+   "title": "Syllogisms in Everyday Form",
+   "blurb": "Real arguments rarely arrive in standard form: reducing the number of terms, translating, filling in enthymemes, and chains called sorites."
+  },
+  {
+   "key": "hypothetical",
+   "title": "Hypothetical and Disjunctive Syllogisms",
+   "blurb": "Reasoning with if, or and not both: modus ponens and tollens, their fallacies, pure hypothetical, disjunctive and conjunctive syllogisms, and dilemmas."
+  }
+ ],
+ "topics": [
+  {
+   "id": "trad.three-acts",
+   "slug": "three-acts",
+   "unit": "terms",
+   "title": "The Three Acts of the Mind",
+   "short": "Simple apprehension grasps a term, judgment joins terms into a proposition, and reasoning moves from propositions to a conclusion.",
+   "prereqs": [
+    "informal.arguments"
+   ],
+   "xp": 1,
+   "trouble": "Learners treat a long phrase as a proposition. \"The tall oak beside the river\" is still one term; nothing is affirmed or denied until a verb joins it to a predicate.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.terms",
+   "slug": "terms",
+   "unit": "terms",
+   "title": "Terms",
+   "short": "A term is a word or phrase that names a class or an individual; singular terms name one thing, general terms name a class.",
+   "prereqs": [
+    "trad.three-acts"
+   ],
+   "xp": 1,
+   "trouble": "Learners count words instead of ideas. \"Large brown dogs\" is one general term, and \"the first president of the United States\" is one singular term.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.extension-intension",
+   "slug": "extension-intension",
+   "unit": "terms",
+   "title": "Extension and Comprehension",
+   "short": "A term's extension is the set of things it applies to; its comprehension (intension) is the set of features it implies.",
+   "prereqs": [
+    "trad.terms"
+   ],
+   "xp": 2,
+   "trouble": "Learners expect both to grow together. As comprehension grows (dog, then black dog, then small black dog), extension shrinks or stays the same.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.genus-species",
+   "slug": "genus-species",
+   "unit": "terms",
+   "title": "Genus and Species",
+   "short": "A genus is a wider class divided into species; the same class can be a species of one genus and a genus of narrower species.",
+   "prereqs": [
+    "trad.extension-intension",
+    "informal.genus-difference"
+   ],
+   "xp": 1,
+   "trouble": "Learners use the biology ranks. In logic, genus and species are relative: \"polygon\" is a species of \"shape\" and a genus of \"triangle\".",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.predicables",
+   "slug": "predicables",
+   "unit": "terms",
+   "title": "The Predicables",
+   "short": "A predicate can relate to its subject as genus, species, difference, property (always goes with it) or accident (may or may not).",
+   "prereqs": [
+    "trad.genus-species"
+   ],
+   "xp": 3,
+   "trouble": "Property and accident are easy to confuse. A property follows from what the thing is (every triangle has angles summing to 180°); an accident does not (this triangle is red).",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.division",
+   "slug": "division",
+   "unit": "terms",
+   "title": "Logical Division",
+   "short": "A good division splits a genus into species by one principle, so that the parts are exclusive and together exhaustive.",
+   "prereqs": [
+    "trad.genus-species"
+   ],
+   "xp": 2,
+   "trouble": "Learners mix principles (\"books: novels, hardcovers, library books\"), so the parts overlap and some books fit nowhere or in two places.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.categorical-propositions",
+   "slug": "categorical-propositions",
+   "unit": "propositions",
+   "title": "Categorical Propositions",
+   "short": "A categorical proposition relates two classes: quantifier, subject term, copula (are or are not) and predicate term.",
+   "prereqs": [
+    "trad.terms",
+    "informal.statements"
+   ],
+   "xp": 1,
+   "trouble": "Learners take the grammatical subject or verb for the logical terms. In \"All whales are mammals that breathe air\", the predicate term is \"mammals that breathe air\".",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.aeio",
+   "slug": "aeio",
+   "unit": "propositions",
+   "title": "The Four Forms: A, E, I, O",
+   "short": "A: All S are P. E: No S are P. I: Some S are P. O: Some S are not P. Quantity is universal or particular; quality is affirmative or negative.",
+   "prereqs": [
+    "trad.categorical-propositions"
+   ],
+   "xp": 1,
+   "trouble": "Reading \"some\" as \"some but not all\": in logic, \"Some S are P\" means at least one, and it stays true even if all S are P.",
+   "viz": [
+    "lg-venn3",
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.translating-nonstandard",
+   "slug": "translating-nonstandard",
+   "unit": "propositions",
+   "title": "Putting Statements in Standard Form",
+   "short": "Turn verbs into \"are\" plus a class, singular statements into \"All S are P\", and words like \"every\", \"none\" and \"a few\" into the four quantifiers.",
+   "prereqs": [
+    "trad.aeio"
+   ],
+   "xp": 2,
+   "trouble": "Learners write \"All S are not P\" for \"No S are P\". \"All that glitters is not gold\" means \"Some things that glitter are not gold\", an O proposition.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.only-exceptives",
+   "slug": "only-exceptives",
+   "unit": "propositions",
+   "title": "Only, None But and All Except",
+   "short": "\"Only S are P\" and \"None but S are P\" become \"All P are S\"; \"All except S are P\" makes two claims.",
+   "prereqs": [
+    "trad.translating-nonstandard"
+   ],
+   "xp": 3,
+   "trouble": "Learners keep the order: \"Only members may vote\" does not say all members vote; it says all voters are members.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.distribution",
+   "slug": "distribution",
+   "unit": "propositions",
+   "title": "Distribution of Terms",
+   "short": "A term is distributed when the proposition says something about every member of its class: A distributes S, E both, I neither, O the predicate.",
+   "prereqs": [
+    "trad.aeio"
+   ],
+   "xp": 2,
+   "trouble": "Learners memorize the chart without the reason. \"Some S are not P\" excludes the S from all of P, so it speaks about every P.",
+   "viz": [
+    "lg-syllogism",
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.venn-propositions",
+   "slug": "venn-propositions",
+   "unit": "propositions",
+   "title": "Venn Diagrams for Propositions",
+   "short": "Shade a region to show it is empty; put an X in a region to show something is there. A and E shade; I and O place an X.",
+   "prereqs": [
+    "trad.aeio"
+   ],
+   "xp": 1,
+   "trouble": "Learners shade the region a statement talks about instead of the region it says is empty. For \"All S are P\", shade the part of S outside P.",
+   "viz": [
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.existential-import",
+   "slug": "existential-import",
+   "unit": "propositions",
+   "title": "Existential Import",
+   "short": "In the modern (Boolean) reading, A and E say nothing about whether S exists; I and O do. The traditional reading assumes the subject class is not empty.",
+   "prereqs": [
+    "trad.venn-propositions"
+   ],
+   "xp": 3,
+   "trouble": "Learners assume \"All unicorns are white\" claims there are unicorns. On the Boolean reading it only says there are no non-white unicorns.",
+   "viz": [
+    "lg-venn3",
+    "lg-square"
+   ]
+  },
+  {
+   "id": "trad.square",
+   "slug": "square",
+   "unit": "opposition",
+   "title": "The Square of Opposition",
+   "short": "A, E, I and O with the same terms sit at the corners of a square; its sides and diagonals name how their truth values are tied.",
+   "prereqs": [
+    "trad.aeio"
+   ],
+   "xp": 1,
+   "trouble": "Learners place the corners in the wrong spots. Universals on top (A left, E right), particulars below (I under A, O under E).",
+   "viz": [
+    "lg-square"
+   ]
+  },
+  {
+   "id": "trad.contradictories",
+   "slug": "contradictories",
+   "unit": "opposition",
+   "title": "Contradictories",
+   "short": "A and O, and E and I, are contradictories: exactly one of each pair is true.",
+   "prereqs": [
+    "trad.square"
+   ],
+   "xp": 1,
+   "trouble": "Learners give \"No S are P\" as the contradictory of \"All S are P\". It is the contrary; to deny \"all\" you need only \"some are not\".",
+   "viz": [
+    "lg-square"
+   ]
+  },
+  {
+   "id": "trad.contraries-subcontraries",
+   "slug": "contraries-subcontraries",
+   "unit": "opposition",
+   "title": "Contraries and Subcontraries",
+   "short": "A and E cannot both be true but can both be false; I and O cannot both be false but can both be true.",
+   "prereqs": [
+    "trad.contradictories"
+   ],
+   "xp": 2,
+   "trouble": "Learners treat contraries as contradictories and conclude from \"A is false\" that E is true. Both can be false when some S are P and some are not.",
+   "viz": [
+    "lg-square"
+   ]
+  },
+  {
+   "id": "trad.subalternation",
+   "slug": "subalternation",
+   "unit": "opposition",
+   "title": "Subalternation",
+   "short": "On the traditional square, truth flows down from A to I and from E to O, and falsity flows up from I to A and from O to E.",
+   "prereqs": [
+    "trad.contraries-subcontraries"
+   ],
+   "xp": 2,
+   "trouble": "Learners send truth up the square: \"Some S are P\" being true does not make \"All S are P\" true.",
+   "viz": [
+    "lg-square"
+   ]
+  },
+  {
+   "id": "trad.square-inferences",
+   "slug": "square-inferences",
+   "unit": "opposition",
+   "title": "Inferences on the Square",
+   "short": "Given the truth value of one corner, work out each other corner as true, false or undetermined.",
+   "prereqs": [
+    "trad.subalternation"
+   ],
+   "xp": 3,
+   "trouble": "Learners force a value when the right answer is \"undetermined\", especially for the corners linked only by subalternation or subcontrariety.",
+   "viz": [
+    "lg-square"
+   ]
+  },
+  {
+   "id": "trad.modern-square",
+   "slug": "modern-square",
+   "unit": "opposition",
+   "title": "The Modern Square",
+   "short": "Without existential import only the contradictory diagonals survive; contrariety, subcontrariety and subalternation can fail when a class is empty.",
+   "prereqs": [
+    "trad.square-inferences",
+    "trad.existential-import"
+   ],
+   "xp": 3,
+   "trouble": "Learners keep using subalternation in the Boolean reading: from \"All dragons breathe fire\" it does not follow that some dragon breathes fire.",
+   "viz": [
+    "lg-square",
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.complements",
+   "slug": "complements",
+   "unit": "immediate",
+   "title": "Term Complements",
+   "short": "The complement of a class is everything outside it: non-P. The complement of non-P is P.",
+   "prereqs": [
+    "trad.venn-propositions"
+   ],
+   "xp": 1,
+   "trouble": "Learners use the opposite word instead of the complement: the complement of \"winners\" is \"non-winners\", not \"losers\", since some may not have played.",
+   "viz": [
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.conversion",
+   "slug": "conversion",
+   "unit": "immediate",
+   "title": "Conversion",
+   "short": "Conversion swaps subject and predicate. It is valid for E and I, not for A or O (A converts only by limitation, on the traditional reading).",
+   "prereqs": [
+    "trad.complements",
+    "trad.distribution"
+   ],
+   "xp": 2,
+   "trouble": "Converting an A proposition: \"All cats are animals\" does not give \"All animals are cats\". This illicit conversion is one of the most common mistakes in reasoning.",
+   "viz": [
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.obversion",
+   "slug": "obversion",
+   "unit": "immediate",
+   "title": "Obversion",
+   "short": "Obversion changes the quality (affirmative to negative or back) and replaces the predicate with its complement; it is valid for all four forms.",
+   "prereqs": [
+    "trad.conversion"
+   ],
+   "xp": 2,
+   "trouble": "Learners change the quality but forget to complement the predicate, or complement the subject instead.",
+   "viz": [
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.contraposition",
+   "slug": "contraposition",
+   "unit": "immediate",
+   "title": "Contraposition",
+   "short": "Contraposition swaps subject and predicate and replaces both with their complements. It is valid for A and O, not for E or I.",
+   "prereqs": [
+    "trad.obversion"
+   ],
+   "xp": 3,
+   "trouble": "Learners use contraposition on E or I, or swap the terms without complementing them, which is just conversion.",
+   "viz": [
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.immediate-chains",
+   "slug": "immediate-chains",
+   "unit": "immediate",
+   "title": "Chains of Immediate Inference",
+   "short": "Combine conversion, obversion, contraposition and the square to decide whether one proposition follows from another.",
+   "prereqs": [
+    "trad.contraposition",
+    "trad.square-inferences"
+   ],
+   "xp": 3,
+   "trouble": "Learners lose track of which steps are valid for which form, or slip in an invalid conversion partway through the chain.",
+   "viz": [
+    "lg-venn3",
+    "lg-square"
+   ]
+  },
+  {
+   "id": "trad.syllogism-parts",
+   "slug": "syllogism-parts",
+   "unit": "syllogisms",
+   "title": "The Parts of a Syllogism",
+   "short": "A categorical syllogism has three propositions and three terms: the major term (predicate of the conclusion), minor term (subject of the conclusion) and middle term.",
+   "prereqs": [
+    "trad.categorical-propositions",
+    "informal.premise-conclusion"
+   ],
+   "xp": 1,
+   "trouble": "Learners name the major term by size or by which premise comes first. The conclusion decides: its predicate is the major term, its subject the minor term.",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.syllogism-standard-form",
+   "slug": "syllogism-standard-form",
+   "unit": "syllogisms",
+   "title": "Standard-Form Syllogisms",
+   "short": "In standard form the major premise (with the major term) comes first, then the minor premise, then the conclusion.",
+   "prereqs": [
+    "trad.syllogism-parts"
+   ],
+   "xp": 2,
+   "trouble": "Learners keep the order in which the premises were spoken. Find the conclusion first, then put the premise with its predicate on top.",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.mood",
+   "slug": "mood",
+   "unit": "syllogisms",
+   "title": "Mood",
+   "short": "The mood is the three letters of the major premise, minor premise and conclusion, in that order, such as AII or EAE.",
+   "prereqs": [
+    "trad.syllogism-standard-form"
+   ],
+   "xp": 1,
+   "trouble": "Learners read the letters in the order the sentences appear rather than in standard-form order.",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.figure",
+   "slug": "figure",
+   "unit": "syllogisms",
+   "title": "Figure",
+   "short": "The figure (1 to 4) records where the middle term sits: subject then predicate, predicate twice, subject twice, or predicate then subject.",
+   "prereqs": [
+    "trad.mood"
+   ],
+   "xp": 2,
+   "trouble": "Learners mix up figures 1 and 4. In figure 1 the middle term is the subject of the major premise and the predicate of the minor.",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.venn-syllogism",
+   "slug": "venn-syllogism",
+   "unit": "syllogisms",
+   "title": "Testing Syllogisms with Venn Diagrams",
+   "short": "Draw three circles, diagram both premises, and the syllogism is valid when the conclusion is already shown without drawing anything more.",
+   "prereqs": [
+    "trad.figure",
+    "trad.venn-propositions"
+   ],
+   "xp": 2,
+   "trouble": "Learners diagram the conclusion too, then say the picture \"matches\". Only the premises are drawn; then you read the conclusion off the picture.",
+   "viz": [
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.venn-particular",
+   "slug": "venn-particular",
+   "unit": "syllogisms",
+   "title": "Venn Tests with Particular Premises",
+   "short": "Diagram universal premises first; place an X in a region only if the other region it could go in is shaded, otherwise put it on the line.",
+   "prereqs": [
+    "trad.venn-syllogism"
+   ],
+   "xp": 3,
+   "trouble": "Learners drop the X into one region when the premise allows two, which can make an invalid syllogism look valid.",
+   "viz": [
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.rules-terms",
+   "slug": "rules-terms",
+   "unit": "syllogisms",
+   "title": "Rules of the Syllogism: Distribution",
+   "short": "The middle term must be distributed at least once, and a term distributed in the conclusion must be distributed in its premise.",
+   "prereqs": [
+    "trad.figure",
+    "trad.distribution"
+   ],
+   "xp": 2,
+   "trouble": "Undistributed middle: \"All dogs are animals; all cats are animals; so all cats are dogs.\" Both premises talk about only part of the animals.",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.rules-quality",
+   "slug": "rules-quality",
+   "unit": "syllogisms",
+   "title": "Rules of the Syllogism: Quality",
+   "short": "Two negative premises prove nothing; a negative premise requires a negative conclusion, and a negative conclusion requires a negative premise.",
+   "prereqs": [
+    "trad.rules-terms"
+   ],
+   "xp": 2,
+   "trouble": "Learners think two negative premises can still link the terms. If neither premise says what the middle term includes, the terms never meet.",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.syllogism-fallacies",
+   "slug": "syllogism-fallacies",
+   "unit": "syllogisms",
+   "title": "Naming a Syllogism's Fallacy",
+   "short": "Each broken rule has a name: undistributed middle, illicit major, illicit minor, exclusive premises, affirmative from a negative, the existential fallacy, four terms.",
+   "prereqs": [
+    "trad.rules-quality"
+   ],
+   "xp": 3,
+   "trouble": "Learners stop at the first broken rule they see. Check every rule; one syllogism can break several, and the names point to the exact flaw.",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.valid-forms",
+   "slug": "valid-forms",
+   "unit": "syllogisms",
+   "title": "The Valid Forms and Their Names",
+   "short": "Fifteen mood-and-figure combinations are valid on the modern reading, such as AAA-1 (Barbara), EAE-1 (Celarent) and AII-3 (Datisi).",
+   "prereqs": [
+    "trad.syllogism-fallacies",
+    "trad.venn-particular"
+   ],
+   "xp": 2,
+   "trouble": "Learners learn the names without the forms. The vowels of each name give its mood: Barbara is AAA, Celarent is EAE, Ferio is EIO.",
+   "viz": [
+    "lg-syllogism",
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.conditional-validity",
+   "slug": "conditional-validity",
+   "unit": "syllogisms",
+   "title": "Conditionally Valid Forms",
+   "short": "Nine more forms, such as AAI-1 and EAO-2, are valid only if a class is assumed to have members; the Venn test shows which class.",
+   "prereqs": [
+    "trad.valid-forms",
+    "trad.existential-import"
+   ],
+   "xp": 3,
+   "trouble": "Learners count AAI-1 as valid on the modern reading. It needs the assumption that the minor term's class is not empty, or it commits the existential fallacy.",
+   "viz": [
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.reducing-terms",
+   "slug": "reducing-terms",
+   "unit": "everyday",
+   "title": "Reducing the Number of Terms",
+   "short": "When an argument seems to have four or more terms, use synonyms, complements and obversion to bring it down to three.",
+   "prereqs": [
+    "trad.syllogism-standard-form",
+    "trad.obversion"
+   ],
+   "xp": 3,
+   "trouble": "Learners call the argument invalid for four terms when two of them are synonyms or complements, or treat terms as the same when the meaning has shifted.",
+   "viz": [
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.everyday-syllogisms",
+   "slug": "everyday-syllogisms",
+   "unit": "everyday",
+   "title": "Syllogisms in Everyday Language",
+   "short": "Put each statement in standard form, find the three terms, arrange the syllogism, then test it by the rules or a Venn diagram.",
+   "prereqs": [
+    "trad.reducing-terms",
+    "trad.only-exceptives"
+   ],
+   "xp": 3,
+   "trouble": "Learners test the argument before translating, or translate \"only\" the wrong way, which flips a valid argument into an invalid one.",
+   "viz": [
+    "lg-syllogism",
+    "lg-venn3"
+   ]
+  },
+  {
+   "id": "trad.enthymemes",
+   "slug": "enthymemes",
+   "unit": "everyday",
+   "title": "Enthymemes",
+   "short": "An enthymeme is a syllogism with a premise or the conclusion left unstated; supply the missing part so the syllogism is valid, then judge whether it is true.",
+   "prereqs": [
+    "trad.everyday-syllogisms",
+    "informal.unstated-premises"
+   ],
+   "xp": 3,
+   "trouble": "Learners supply a premise that makes the syllogism invalid, or one so strong that it is plainly false when a weaker true one would work.",
+   "viz": [
+    "lg-argmap",
+    "lg-syllogism"
+   ]
+  },
+  {
+   "id": "trad.sorites",
+   "slug": "sorites",
+   "unit": "everyday",
+   "title": "Sorites",
+   "short": "A sorites is a chain of premises that leads to one conclusion through several hidden intermediate conclusions; it is valid when every link is a valid syllogism.",
+   "prereqs": [
+    "trad.enthymemes"
+   ],
+   "xp": 3,
+   "trouble": "Learners check only the first and last premises. Each step in the chain must be a valid syllogism on its own.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "trad.hypothetical-propositions",
+   "slug": "hypothetical-propositions",
+   "unit": "hypothetical",
+   "title": "Hypothetical Propositions",
+   "short": "A hypothetical proposition joins an antecedent and a consequent: \"If P, then Q\". \"Q if P\", \"P only if Q\" and \"Q provided that P\" say the same.",
+   "prereqs": [
+    "informal.conditional-fallacies",
+    "trad.categorical-propositions"
+   ],
+   "xp": 2,
+   "trouble": "\"Only if\" reversed: \"P only if Q\" means \"if P then Q\", not \"if Q then P\". \"You may drive only if you have a license\" does not promise that a license lets you drive.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "trad.modus-ponens",
+   "slug": "modus-ponens",
+   "unit": "hypothetical",
+   "title": "Affirming the Antecedent (Modus Ponens)",
+   "short": "From \"If P, then Q\" and \"P\", conclude \"Q\".",
+   "prereqs": [
+    "trad.hypothetical-propositions"
+   ],
+   "xp": 1,
+   "trouble": "Learners reject a modus ponens because they doubt the first premise. Doubting a premise is a question about soundness; the form itself is valid.",
+   "viz": [
+    "lg-truthtable"
+   ]
+  },
+  {
+   "id": "trad.modus-tollens",
+   "slug": "modus-tollens",
+   "unit": "hypothetical",
+   "title": "Denying the Consequent (Modus Tollens)",
+   "short": "From \"If P, then Q\" and \"not Q\", conclude \"not P\".",
+   "prereqs": [
+    "trad.modus-ponens"
+   ],
+   "xp": 2,
+   "trouble": "Learners find modus tollens harder than modus ponens and wrongly reject it. If P would bring Q, and there is no Q, there was no P.",
+   "viz": [
+    "lg-truthtable"
+   ]
+  },
+  {
+   "id": "trad.hypothetical-fallacies",
+   "slug": "hypothetical-fallacies",
+   "unit": "hypothetical",
+   "title": "The Two Conditional Fallacies",
+   "short": "Affirming the consequent (Q, so P) and denying the antecedent (not P, so not Q) are invalid; the consequent can come about some other way.",
+   "prereqs": [
+    "trad.modus-tollens"
+   ],
+   "xp": 2,
+   "trouble": "Affirming the consequent is the most common formal fallacy. Show it with a counterexample where Q is true for a different reason.",
+   "viz": [
+    "lg-truthtable"
+   ]
+  },
+  {
+   "id": "trad.pure-hypothetical",
+   "slug": "pure-hypothetical",
+   "unit": "hypothetical",
+   "title": "Pure Hypothetical Syllogism",
+   "short": "From \"If P, then Q\" and \"If Q, then R\", conclude \"If P, then R\"; the links must run in the same direction.",
+   "prereqs": [
+    "trad.hypothetical-fallacies"
+   ],
+   "xp": 2,
+   "trouble": "Learners chain conditionals that do not share a middle in the right place, such as \"If P then Q\" and \"If R then Q\".",
+   "viz": [
+    "lg-truthtable"
+   ]
+  },
+  {
+   "id": "trad.disjunctive-syllogism",
+   "slug": "disjunctive-syllogism",
+   "unit": "hypothetical",
+   "title": "Disjunctive Syllogism",
+   "short": "From \"P or Q\" and \"not P\", conclude \"Q\". From \"P or Q\" and \"P\", nothing follows about Q unless the \"or\" is exclusive.",
+   "prereqs": [
+    "trad.hypothetical-propositions"
+   ],
+   "xp": 2,
+   "trouble": "Affirming a disjunct: learners read every \"or\" as \"one or the other but not both\". Logic's \"or\" is inclusive unless the speaker rules out both.",
+   "viz": [
+    "lg-truthtable"
+   ]
+  },
+  {
+   "id": "trad.conjunctive-syllogism",
+   "slug": "conjunctive-syllogism",
+   "unit": "hypothetical",
+   "title": "Conjunctive Syllogism",
+   "short": "From \"Not both P and Q\" and \"P\", conclude \"not Q\". From \"not P\", nothing follows.",
+   "prereqs": [
+    "trad.disjunctive-syllogism"
+   ],
+   "xp": 2,
+   "trouble": "Learners deny one conjunct and conclude the other is true. \"Not both\" allows neither to be true.",
+   "viz": [
+    "lg-truthtable"
+   ]
+  },
+  {
+   "id": "trad.dilemmas",
+   "slug": "dilemmas",
+   "unit": "hypothetical",
+   "title": "Dilemmas",
+   "short": "A constructive dilemma reasons from \"If P then Q, and if R then S\" and \"P or R\" to \"Q or S\"; a destructive dilemma from \"not Q or not S\" to \"not P or not R\".",
+   "prereqs": [
+    "trad.pure-hypothetical",
+    "trad.disjunctive-syllogism"
+   ],
+   "xp": 3,
+   "trouble": "Learners mix the two patterns, affirming consequents in a destructive dilemma or denying antecedents in a constructive one, which makes it invalid.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "trad.answering-dilemmas",
+   "slug": "answering-dilemmas",
+   "unit": "hypothetical",
+   "title": "Answering a Dilemma",
+   "short": "Escape between the horns (show a third option), grasp a horn (deny a conditional premise), or offer a counterdilemma.",
+   "prereqs": [
+    "trad.dilemmas",
+    "informal.false-dilemma"
+   ],
+   "xp": 3,
+   "trouble": "Learners answer a valid dilemma by calling it invalid. A valid dilemma can only be answered by showing one of its premises is false.",
+   "viz": [
+    "lg-argmap"
+   ]
+  }
+ ]
+}

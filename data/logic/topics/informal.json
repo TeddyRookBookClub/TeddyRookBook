@@ -1,0 +1,851 @@
+{
+ "course": "informal",
+ "units": [
+  {
+   "key": "arguments",
+   "title": "Arguments",
+   "blurb": "What an argument is, how to find its conclusion and premises, and how to lay it out in standard form or as a map."
+  },
+  {
+   "key": "deduction-induction",
+   "title": "Deductive and Inductive Reasoning",
+   "blurb": "Two ways reasons can support a claim: validity and soundness for deduction, strength for induction, and how samples, analogies and causes can mislead."
+  },
+  {
+   "key": "language",
+   "title": "Language and Definitions",
+   "blurb": "Clear words make clear arguments: ambiguity and vagueness, kinds of definitions, and how to write and judge a good one."
+  },
+  {
+   "key": "relevance",
+   "title": "Fallacies of Relevance",
+   "blurb": "Arguments whose premises have nothing to do with the conclusion, though they may stir feelings that make them seem to."
+  },
+  {
+   "key": "presumption",
+   "title": "Fallacies of Presumption and Weak Induction",
+   "blurb": "Arguments that sneak in an unearned assumption or leap from too little evidence."
+  },
+  {
+   "key": "ambiguity",
+   "title": "Fallacies of Ambiguity",
+   "blurb": "Arguments that slide between two meanings of a word, a sentence, or a whole and its parts."
+  },
+  {
+   "key": "evaluating",
+   "title": "Evaluating Real Arguments",
+   "blurb": "Putting it all together: conditional fallacies, telling look-alike fallacies apart, reading charitably, and judging an argument step by step."
+  }
+ ],
+ "topics": [
+  {
+   "id": "informal.statements",
+   "slug": "statements",
+   "unit": "arguments",
+   "title": "Statements",
+   "short": "A statement is a sentence that is either true or false; questions, commands and exclamations are not statements.",
+   "prereqs": [],
+   "xp": 1,
+   "trouble": "Learners think a statement must be true, or that an opinion cannot be a statement. \"Pizza is the best food\" is a statement; it is just one people disagree about.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.arguments",
+   "slug": "arguments",
+   "unit": "arguments",
+   "title": "Arguments and Non-Arguments",
+   "short": "An argument offers reasons (premises) meant to support a claim (the conclusion); a report, description, warning or bare opinion does not.",
+   "prereqs": [
+    "informal.statements"
+   ],
+   "xp": 1,
+   "trouble": "Learners call any passage that states a strong opinion an argument. Without at least one reason offered in support, it is only an assertion.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.explanations",
+   "slug": "explanations",
+   "unit": "arguments",
+   "title": "Arguments and Explanations",
+   "short": "An argument tries to show that something is true; an explanation tells why something we already accept is true.",
+   "prereqs": [
+    "informal.arguments"
+   ],
+   "xp": 2,
+   "trouble": "The word \"because\" appears in both. Learners must ask whether the claim is in doubt (argument) or taken as known (explanation).",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.premise-conclusion",
+   "slug": "premise-conclusion",
+   "unit": "arguments",
+   "title": "Premises and Conclusions",
+   "short": "Find the conclusion first by asking what the speaker wants you to believe; the premises are the reasons given for it.",
+   "prereqs": [
+    "informal.arguments"
+   ],
+   "xp": 1,
+   "trouble": "Learners take the first sentence to be a premise and the last to be the conclusion. The conclusion can come first, last or in the middle.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.indicator-words",
+   "slug": "indicator-words",
+   "unit": "arguments",
+   "title": "Indicator Words",
+   "short": "Words like \"therefore\" and \"so\" usually mark a conclusion; \"because\", \"since\" and \"for\" usually mark a premise.",
+   "prereqs": [
+    "informal.premise-conclusion"
+   ],
+   "xp": 1,
+   "trouble": "Indicator words have other uses: \"since Tuesday\" is about time, and \"so tired\" means very. And many arguments have no indicator words at all.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.standard-form",
+   "slug": "standard-form",
+   "unit": "arguments",
+   "title": "Standard Form",
+   "short": "Rewrite an argument as numbered premises followed by its conclusion, leaving out filler, repeats and side remarks.",
+   "prereqs": [
+    "informal.indicator-words"
+   ],
+   "xp": 2,
+   "trouble": "Learners copy every sentence, including background and asides, or change the meaning of a premise while rewording it.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.argument-maps",
+   "slug": "argument-maps",
+   "unit": "arguments",
+   "title": "Linked and Convergent Premises",
+   "short": "Linked premises support the conclusion only together; convergent premises each give a separate reason on their own.",
+   "prereqs": [
+    "informal.standard-form"
+   ],
+   "xp": 2,
+   "trouble": "Learners treat every pair of premises as linked. Test it: if you remove one premise, does the other still give some support by itself?",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.subarguments",
+   "slug": "subarguments",
+   "unit": "arguments",
+   "title": "Chains of Reasoning",
+   "short": "A claim can be the conclusion of one step and a premise of the next; the last claim supported is the main conclusion.",
+   "prereqs": [
+    "informal.argument-maps"
+   ],
+   "xp": 2,
+   "trouble": "Learners pick the intermediate conclusion as the main one because it has an indicator word. The main conclusion is the claim everything else finally supports.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.unstated-premises",
+   "slug": "unstated-premises",
+   "unit": "arguments",
+   "title": "Unstated Premises",
+   "short": "Many arguments leave a premise unsaid; supply the most reasonable one that connects the stated premises to the conclusion.",
+   "prereqs": [
+    "informal.subarguments"
+   ],
+   "xp": 2,
+   "trouble": "Learners supply a premise that just repeats the conclusion, or one much stronger than the speaker needs and would accept.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.deductive-inductive",
+   "slug": "deductive-inductive",
+   "unit": "deduction-induction",
+   "title": "Deductive and Inductive Arguments",
+   "short": "A deductive argument claims its conclusion must be true if the premises are; an inductive argument claims only that it is probably true.",
+   "prereqs": [
+    "informal.premise-conclusion"
+   ],
+   "xp": 1,
+   "trouble": "The old rule \"deduction goes from general to specific, induction from specific to general\" is not reliable. Ask how strongly the argument claims to support its conclusion.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.validity",
+   "slug": "validity",
+   "unit": "deduction-induction",
+   "title": "Validity",
+   "short": "An argument is valid when it is impossible for all its premises to be true and its conclusion false.",
+   "prereqs": [
+    "informal.deductive-inductive"
+   ],
+   "xp": 2,
+   "trouble": "Confusing validity with truth: learners call an argument invalid because a premise is false, or valid because they agree with the conclusion. Validity is about the link, not the facts.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.counterexample-method",
+   "slug": "counterexample-method",
+   "unit": "deduction-induction",
+   "title": "Testing Validity with a Counterexample",
+   "short": "To show a form is invalid, give an argument with the same form whose premises are plainly true and whose conclusion is plainly false.",
+   "prereqs": [
+    "informal.validity"
+   ],
+   "xp": 3,
+   "trouble": "Learners change the form while building the counterexample, or pick premises that are not clearly true, so the counterexample proves nothing.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.soundness",
+   "slug": "soundness",
+   "unit": "deduction-induction",
+   "title": "Soundness",
+   "short": "A sound argument is valid and has all true premises, so its conclusion must be true.",
+   "prereqs": [
+    "informal.validity"
+   ],
+   "xp": 2,
+   "trouble": "Learners think a true conclusion makes an argument sound. An argument with a true conclusion can still be invalid or have a false premise.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.validity-truth-combos",
+   "slug": "validity-truth-combos",
+   "unit": "deduction-induction",
+   "title": "Validity and Truth Together",
+   "short": "Every mix of true and false premises and conclusions is possible for a valid argument except one: true premises with a false conclusion.",
+   "prereqs": [
+    "informal.soundness"
+   ],
+   "xp": 2,
+   "trouble": "Learners believe a valid argument cannot have false premises or a false conclusion. It can have both; what it cannot have is all true premises and a false conclusion.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.inductive-strength",
+   "slug": "inductive-strength",
+   "unit": "deduction-induction",
+   "title": "Strong and Weak Inductive Arguments",
+   "short": "An inductive argument is strong when its premises, if true, make the conclusion likely; a strong argument with true premises is cogent.",
+   "prereqs": [
+    "informal.deductive-inductive"
+   ],
+   "xp": 2,
+   "trouble": "Learners call strong inductive arguments \"valid\", or think new evidence cannot change a strong argument. Induction can always be weakened or strengthened by more facts.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.generalizations",
+   "slug": "generalizations",
+   "unit": "deduction-induction",
+   "title": "Generalizing from a Sample",
+   "short": "A generalization is only as good as its sample: large enough, chosen fairly, and like the whole group in the ways that matter.",
+   "prereqs": [
+    "informal.inductive-strength"
+   ],
+   "xp": 2,
+   "trouble": "Learners trust a huge sample even when it was chosen in a biased way, such as asking only the people who came to a chess club about favorite games.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.analogies",
+   "slug": "analogies",
+   "unit": "deduction-induction",
+   "title": "Arguments from Analogy",
+   "short": "An analogy argues that two things alike in some ways are alike in another; it is strong when the likenesses are relevant and the differences are not.",
+   "prereqs": [
+    "informal.inductive-strength"
+   ],
+   "xp": 2,
+   "trouble": "Learners count the number of similarities instead of asking whether they are relevant to the conclusion.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.causal-reasoning",
+   "slug": "causal-reasoning",
+   "unit": "deduction-induction",
+   "title": "Reasoning about Causes",
+   "short": "Two things happening together does not show that one causes the other; look for a common cause, reverse direction, or coincidence.",
+   "prereqs": [
+    "informal.inductive-strength"
+   ],
+   "xp": 2,
+   "trouble": "Correlation read as causation: ice cream sales and sunburns rise together because of summer sun, not because one causes the other.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.ambiguity-vagueness",
+   "slug": "ambiguity-vagueness",
+   "unit": "language",
+   "title": "Ambiguity and Vagueness",
+   "short": "A word is ambiguous when it has two distinct meanings in context, and vague when its boundary is fuzzy.",
+   "prereqs": [
+    "informal.statements"
+   ],
+   "xp": 1,
+   "trouble": "Learners use the two words as synonyms. \"Bat\" in \"I found a bat\" is ambiguous; \"tall\" is vague, since no exact height separates tall from not tall.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.kinds-of-definitions",
+   "slug": "kinds-of-definitions",
+   "unit": "language",
+   "title": "Kinds of Definitions",
+   "short": "Lexical definitions report how a word is used, stipulative ones assign a new meaning, precising ones sharpen a vague word, and persuasive ones slant it.",
+   "prereqs": [
+    "informal.ambiguity-vagueness"
+   ],
+   "xp": 2,
+   "trouble": "Learners judge a stipulative definition as true or false. A new name for a new thing can be clear or unclear, but it cannot be false.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.genus-difference",
+   "slug": "genus-difference",
+   "unit": "language",
+   "title": "Definition by Genus and Difference",
+   "short": "A classical definition names the larger kind (genus) and the feature that sets this thing apart within it (difference).",
+   "prereqs": [
+    "informal.kinds-of-definitions"
+   ],
+   "xp": 2,
+   "trouble": "Learners give an example or a synonym instead of a definition, or name a difference that other members of the genus also have.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.definition-rules",
+   "slug": "definition-rules",
+   "unit": "language",
+   "title": "Rules for Good Definitions",
+   "short": "A good definition is neither too broad nor too narrow, not circular, not negative when it can be positive, and not figurative or obscure.",
+   "prereqs": [
+    "informal.genus-difference"
+   ],
+   "xp": 2,
+   "trouble": "Learners mix up too broad and too narrow. Too broad lets in things that do not belong; too narrow shuts out things that do.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.loaded-language",
+   "slug": "loaded-language",
+   "unit": "language",
+   "title": "Emotive and Loaded Language",
+   "short": "Words can carry feelings as well as facts; loaded words try to win agreement by attitude instead of by reasons.",
+   "prereqs": [
+    "informal.kinds-of-definitions"
+   ],
+   "xp": 1,
+   "trouble": "Learners think neutral words are always better. Feelings are fine in a speech; the trouble comes when slanted words stand in for evidence.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.verbal-disputes",
+   "slug": "verbal-disputes",
+   "unit": "language",
+   "title": "Verbal and Factual Disagreements",
+   "short": "Some disagreements are about the facts; others vanish once people notice they are using a word in different senses.",
+   "prereqs": [
+    "informal.ambiguity-vagueness"
+   ],
+   "xp": 2,
+   "trouble": "Learners keep arguing about facts when the real disagreement is over what a word means, such as whether a hot dog \"counts\" as a sandwich.",
+   "viz": [
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.fallacy-intro",
+   "slug": "fallacy-intro",
+   "unit": "relevance",
+   "title": "What a Fallacy Is",
+   "short": "A fallacy is a common pattern of bad reasoning that can look persuasive; formal fallacies are flaws in form, informal ones in content.",
+   "prereqs": [
+    "informal.validity",
+    "informal.inductive-strength"
+   ],
+   "xp": 1,
+   "trouble": "Learners call any false claim a fallacy, or conclude that a fallacious argument has a false conclusion. A bad argument can reach a true conclusion; it just does not show it.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.ad-hominem",
+   "slug": "ad-hominem",
+   "unit": "relevance",
+   "title": "Attacking the Person",
+   "short": "Ad hominem rejects a claim by attacking the person who made it (insults or their circumstances) instead of the reasons given.",
+   "prereqs": [
+    "informal.fallacy-intro"
+   ],
+   "xp": 1,
+   "trouble": "Learners call every criticism of a person ad hominem. Questioning a witness's honesty is fair when the question is whether to trust their report.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.tu-quoque",
+   "slug": "tu-quoque",
+   "unit": "relevance",
+   "title": "You Too (Tu Quoque)",
+   "short": "Tu quoque dismisses an argument because the arguer does not follow their own advice.",
+   "prereqs": [
+    "informal.ad-hominem"
+   ],
+   "xp": 1,
+   "trouble": "Learners treat hypocrisy as a refutation. A smoker who says smoking harms health may be inconsistent, but the reasons still stand.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.straw-man",
+   "slug": "straw-man",
+   "unit": "relevance",
+   "title": "Straw Man",
+   "short": "A straw man swaps the opponent's real position for a weaker or exaggerated version, then knocks that down.",
+   "prereqs": [
+    "informal.fallacy-intro"
+   ],
+   "xp": 1,
+   "trouble": "Learners confuse straw man with red herring. A straw man still talks about the opponent's view, only a distorted copy of it.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.red-herring",
+   "slug": "red-herring",
+   "unit": "relevance",
+   "title": "Red Herring",
+   "short": "A red herring changes the subject to a different issue, then treats the original question as settled.",
+   "prereqs": [
+    "informal.straw-man"
+   ],
+   "xp": 1,
+   "trouble": "Learners call any change of topic a red herring. It is a fallacy when the new topic is used as though it answered the first.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.appeal-to-force",
+   "slug": "appeal-to-force",
+   "unit": "relevance",
+   "title": "Appeal to Force",
+   "short": "An appeal to force tries to win agreement by a threat of harm instead of by reasons.",
+   "prereqs": [
+    "informal.fallacy-intro"
+   ],
+   "xp": 1,
+   "trouble": "Learners call any warning of a consequence an appeal to force. \"If you skip practice, you'll play worse\" gives a reason; \"agree or you're off the team\" gives a threat.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.appeal-to-pity",
+   "slug": "appeal-to-pity",
+   "unit": "relevance",
+   "title": "Appeal to Pity",
+   "short": "An appeal to pity asks us to accept a claim because of sympathy, when the sympathy has no bearing on whether the claim is true.",
+   "prereqs": [
+    "informal.fallacy-intro"
+   ],
+   "xp": 1,
+   "trouble": "Feelings are not always irrelevant: hardship can be a good reason for mercy. The fallacy is using pity to show something is true, like that a grade was earned.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.appeal-to-popularity",
+   "slug": "appeal-to-popularity",
+   "unit": "relevance",
+   "title": "Appeal to the People",
+   "short": "The bandwagon fallacy argues that a claim is true, or a choice good, because many people believe it or do it.",
+   "prereqs": [
+    "informal.fallacy-intro"
+   ],
+   "xp": 1,
+   "trouble": "Learners call any mention of popularity a fallacy. Popularity is relevant to claims about popularity itself (\"this is the best-selling book\").",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.appeal-to-authority",
+   "slug": "appeal-to-authority",
+   "unit": "relevance",
+   "title": "Appeals to Authority: Fair and Unfair",
+   "short": "Citing an expert in their own field, where experts agree, is reasonable; citing someone outside their expertise, or one voice against a consensus, is not.",
+   "prereqs": [
+    "informal.appeal-to-popularity"
+   ],
+   "xp": 2,
+   "trouble": "Learners think every appeal to authority is a fallacy. We rely on experts all the time; the questions are whether this is their field and whether they are trustworthy here.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.appeal-to-ignorance",
+   "slug": "appeal-to-ignorance",
+   "unit": "relevance",
+   "title": "Appeal to Ignorance",
+   "short": "An appeal to ignorance argues that a claim is true because it has not been shown false, or false because it has not been shown true.",
+   "prereqs": [
+    "informal.fallacy-intro"
+   ],
+   "xp": 2,
+   "trouble": "A careful search that finds nothing can be evidence (\"we checked every room; the cat is not inside\"). The fallacy treats a mere lack of proof as proof.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.begging-question",
+   "slug": "begging-question",
+   "unit": "presumption",
+   "title": "Begging the Question",
+   "short": "An argument begs the question when a premise assumes the very conclusion it is supposed to prove, often in other words.",
+   "prereqs": [
+    "informal.fallacy-intro",
+    "informal.standard-form"
+   ],
+   "xp": 2,
+   "trouble": "In everyday speech \"begs the question\" means \"raises the question\". In logic it means circular reasoning: the conclusion hides in a premise.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.complex-question",
+   "slug": "complex-question",
+   "unit": "presumption",
+   "title": "Complex Question",
+   "short": "A complex question has a hidden assumption built in, so that any direct answer grants it.",
+   "prereqs": [
+    "informal.begging-question"
+   ],
+   "xp": 1,
+   "trouble": "Learners answer the question instead of spotting the assumption. \"Have you stopped forgetting your homework?\" assumes you used to forget it.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.false-dilemma",
+   "slug": "false-dilemma",
+   "unit": "presumption",
+   "title": "False Dilemma",
+   "short": "A false dilemma presents two options as the only ones when others exist.",
+   "prereqs": [
+    "informal.fallacy-intro"
+   ],
+   "xp": 1,
+   "trouble": "Learners treat every either-or as a false dilemma. \"The light is on or it is off\" really does cover the cases; the fallacy needs a missing option.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.hasty-generalization",
+   "slug": "hasty-generalization",
+   "unit": "presumption",
+   "title": "Hasty Generalization",
+   "short": "A hasty generalization draws a conclusion about a whole group from a sample that is too small or not typical.",
+   "prereqs": [
+    "informal.generalizations",
+    "informal.fallacy-intro"
+   ],
+   "xp": 1,
+   "trouble": "Learners confuse it with accident. Hasty generalization goes from a few cases up to a rule; accident applies a good rule down to a case it does not fit.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.false-cause",
+   "slug": "false-cause",
+   "unit": "presumption",
+   "title": "False Cause",
+   "short": "False cause claims one thing caused another only because it came first (post hoc) or because the two occur together.",
+   "prereqs": [
+    "informal.causal-reasoning",
+    "informal.fallacy-intro"
+   ],
+   "xp": 2,
+   "trouble": "Learners accept \"it happened right after, so it caused it\". Timing is a clue, not a proof; look for other causes and for chance.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.slippery-slope",
+   "slug": "slippery-slope",
+   "unit": "presumption",
+   "title": "Slippery Slope",
+   "short": "A slippery slope claims one step will set off a chain of bad results, without good reason to think each link will happen.",
+   "prereqs": [
+    "informal.false-cause"
+   ],
+   "xp": 2,
+   "trouble": "Some chains are well supported. The fallacy is a chain of weak or unsupported links presented as though the end were certain.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.weak-analogy",
+   "slug": "weak-analogy",
+   "unit": "presumption",
+   "title": "Weak Analogy",
+   "short": "A weak analogy rests on likenesses that do not matter for the conclusion, or ignores differences that do.",
+   "prereqs": [
+    "informal.analogies",
+    "informal.fallacy-intro"
+   ],
+   "xp": 2,
+   "trouble": "Learners call every comparison weak. Ask what the conclusion needs, then check whether the two cases share that feature.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.suppressed-evidence",
+   "slug": "suppressed-evidence",
+   "unit": "presumption",
+   "title": "Suppressed Evidence",
+   "short": "Suppressed evidence leaves out an important fact that would change the conclusion.",
+   "prereqs": [
+    "informal.inductive-strength",
+    "informal.fallacy-intro"
+   ],
+   "xp": 2,
+   "trouble": "Learners check only whether the stated premises are true. A set of true premises can still mislead when a key fact is left out.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.accident",
+   "slug": "accident",
+   "unit": "presumption",
+   "title": "Accident",
+   "short": "Accident applies a general rule to a special case that the rule was never meant to cover.",
+   "prereqs": [
+    "informal.hasty-generalization"
+   ],
+   "xp": 2,
+   "trouble": "Learners call this hasty generalization. Here the rule is fine in general; the mistake is forcing it onto an exception, like ticketing an ambulance for speeding.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.equivocation",
+   "slug": "equivocation",
+   "unit": "ambiguity",
+   "title": "Equivocation",
+   "short": "Equivocation uses a word in one sense in one premise and in another sense elsewhere, so the argument only seems to connect.",
+   "prereqs": [
+    "informal.ambiguity-vagueness",
+    "informal.fallacy-intro"
+   ],
+   "xp": 2,
+   "trouble": "The shift in meaning is easy to miss because the spelling stays the same. Replace the word with its meaning in each line and the gap shows.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.amphiboly",
+   "slug": "amphiboly",
+   "unit": "ambiguity",
+   "title": "Amphiboly",
+   "short": "Amphiboly draws a conclusion from a sentence whose grammar allows two readings.",
+   "prereqs": [
+    "informal.equivocation"
+   ],
+   "xp": 2,
+   "trouble": "Learners confuse amphiboly with equivocation. In equivocation one word has two meanings; in amphiboly the sentence structure does.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.composition",
+   "slug": "composition",
+   "unit": "ambiguity",
+   "title": "Composition",
+   "short": "Composition reasons that because every part has a property, the whole must have it too.",
+   "prereqs": [
+    "informal.fallacy-intro"
+   ],
+   "xp": 2,
+   "trouble": "Some properties do carry over (if every brick is red, the wall is red). Learners must ask whether this property is one that adds up.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.division",
+   "slug": "division",
+   "unit": "ambiguity",
+   "title": "Division",
+   "short": "Division reasons that because the whole has a property, each part must have it too.",
+   "prereqs": [
+    "informal.composition"
+   ],
+   "xp": 2,
+   "trouble": "Learners mix up composition and division. Composition goes from parts to the whole; division goes from the whole to the parts.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.conditional-fallacies",
+   "slug": "conditional-fallacies",
+   "unit": "evaluating",
+   "title": "Affirming the Consequent and Denying the Antecedent",
+   "short": "From \"if P then Q\", you may infer Q from P, and not-P from not-Q; inferring P from Q, or not-Q from not-P, is a fallacy.",
+   "prereqs": [
+    "informal.counterexample-method"
+   ],
+   "xp": 2,
+   "trouble": "Affirming the consequent feels natural: \"If it rained, the street is wet. The street is wet, so it rained.\" A sprinkler could have wet the street.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.telling-apart",
+   "slug": "telling-apart",
+   "unit": "evaluating",
+   "title": "Telling Look-Alike Fallacies Apart",
+   "short": "Name the fallacy by the job the faulty step does: distorting a view, changing the subject, leaping from a sample, or assuming the conclusion.",
+   "prereqs": [
+    "informal.red-herring",
+    "informal.accident",
+    "informal.division",
+    "informal.slippery-slope",
+    "informal.appeal-to-ignorance"
+   ],
+   "xp": 3,
+   "trouble": "Learners match on surface words (\"everyone\", \"expert\") rather than on what the reasoning does. Find the faulty step first, then name it.",
+   "viz": [
+    "lg-fallacy",
+    "lg-sort"
+   ]
+  },
+  {
+   "id": "informal.fallacy-or-not",
+   "slug": "fallacy-or-not",
+   "unit": "evaluating",
+   "title": "Good Reasoning That Looks Like a Fallacy",
+   "short": "Many fallacy names have fair cousins: trusted experts, well-supported chains of causes, and real either-or choices are good reasoning.",
+   "prereqs": [
+    "informal.telling-apart",
+    "informal.appeal-to-authority"
+   ],
+   "xp": 3,
+   "trouble": "Fallacy hunting: learners shout a fallacy name at every argument they dislike. Each name fits only when its faulty step is really there.",
+   "viz": [
+    "lg-fallacy"
+   ]
+  },
+  {
+   "id": "informal.charity",
+   "slug": "charity",
+   "unit": "evaluating",
+   "title": "The Principle of Charity",
+   "short": "Before judging an argument, state it in its strongest reasonable form, the way its author would accept.",
+   "prereqs": [
+    "informal.unstated-premises",
+    "informal.straw-man"
+   ],
+   "xp": 2,
+   "trouble": "Learners read charity as agreeing. Charity is about understanding the argument fairly; you may still find it weak after that.",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.evaluate-argument",
+   "slug": "evaluate-argument",
+   "unit": "evaluating",
+   "title": "Evaluating an Argument Step by Step",
+   "short": "Find the conclusion and premises, check whether the reasoning is valid or strong, then check whether the premises are true.",
+   "prereqs": [
+    "informal.charity",
+    "informal.conditional-fallacies",
+    "informal.validity-truth-combos"
+   ],
+   "xp": 3,
+   "trouble": "Learners jump to \"I disagree with the conclusion\" without asking the two separate questions: does it follow, and are the premises true?",
+   "viz": [
+    "lg-argmap"
+   ]
+  },
+  {
+   "id": "informal.objections",
+   "slug": "objections",
+   "unit": "evaluating",
+   "title": "Objections and Replies",
+   "short": "A strong case answers the best objection to it; an objection attacks a premise or the link from premises to conclusion.",
+   "prereqs": [
+    "informal.evaluate-argument"
+   ],
+   "xp": 2,
+   "trouble": "Learners answer a weak objection, or think an objection to one premise defeats a conclusion that has other, independent support.",
+   "viz": [
+    "lg-argmap"
+   ]
+  }
+ ]
+}

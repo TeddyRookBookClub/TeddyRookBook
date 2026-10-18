@@ -1,0 +1,4883 @@
+{
+ "trad.three-acts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/logic/informal-logic/arguments/\">Arguments and Non-Arguments</a> you learned to tell an argument from a plain claim. Traditional logic starts one step further back. It asks what the mind is doing when it thinks at all, and it finds three different acts, each building on the one before."
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Simple apprehension</b>: grasping what something is, such as \"triangle\" or \"the oak by the river\". Its product is a <b>term</b>.",
+     "<b>Judgment</b>: joining two terms and affirming or denying one of the other, such as \"The oak is tall.\" Its product is a <b>proposition</b>.",
+     "<b>Reasoning</b>: moving from propositions we hold to a new one, such as \"All oaks are trees, and this is an oak, so this is a tree.\" Its product is an <b>argument</b>."
+    ]
+   },
+   {
+    "t": "key",
+    "html": "A term only names. A proposition affirms or denies, so it can be true or false. An argument draws a conclusion from premises, so it can be valid or invalid."
+   },
+   {
+    "t": "why",
+    "html": "Each act needs the one before it. You cannot judge that the oak is tall until you have grasped \"oak\" and \"tall\". You cannot reason to a conclusion until you have judgments to reason from. That is why this course follows the same order: terms first (this unit), then propositions (units 2 to 4), then reasoning (units 5 to 7)."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "Term",
+      "Proposition",
+      "Argument"
+     ],
+     "cards": [
+      {
+       "text": "the tall oak beside the river",
+       "bin": 0,
+       "why": "It names something but says nothing about it."
+      },
+      {
+       "text": "The oak beside the river is tall.",
+       "bin": 1,
+       "why": "The verb \"is\" joins two terms and affirms something."
+      },
+      {
+       "text": "Every oak is a tree, and this is an oak, so this is a tree.",
+       "bin": 2,
+       "why": "\"So\" marks a conclusion drawn from two premises."
+      },
+      {
+       "text": "a red bicycle with a flat tire",
+       "bin": 0,
+       "why": "A long phrase, but still only a name."
+      },
+      {
+       "text": "No triangle has four sides.",
+       "bin": 1,
+       "why": "It denies something of every triangle."
+      },
+      {
+       "text": "The library is closed on Sundays, and today is Sunday; therefore it is closed.",
+       "bin": 2,
+       "why": "\"Therefore\" marks a conclusion."
+      }
+     ]
+    },
+    "cap": "Sort each card by the act of the mind it expresses. Tap a card, then a group."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Which act is it?",
+    "q": "What does each one express? (a) \"the girl who won the spelling bee\" (b) \"Mia won the spelling bee.\" (c) \"Mia won the spelling bee, so she will go to the state contest.\"",
+    "steps": [
+     "(a) has no main verb that affirms anything; it picks out a person. It is a term.",
+     "(b) joins a subject (Mia) to a predicate (winning the spelling bee) and affirms it. It can be true or false: a proposition.",
+     "(c) adds \"so\" and a second proposition that is claimed to follow from the first: an argument."
+    ],
+    "a": "term, proposition, argument"
+   },
+   {
+    "t": "mistake",
+    "html": "Treating a long phrase as a proposition. \"The tall oak beside the river\" has many words, but nothing is affirmed or denied until a verb joins it to a predicate: it is still one term. Quick check: ask \"Is that true?\" If the question makes no sense, you have a term."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Peter Kreeft, Socratic Logic, on the three acts of the mind"
+   },
+   {
+    "name": "Aristotle, On Interpretation 1 (names alone are neither true nor false)"
+   },
+   {
+    "name": "Jacques Maritain, An Introduction to Logic (the three operations of the mind)"
+   }
+  ]
+ },
+ "trad.terms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/logic/traditional-logic/three-acts/\">The Three Acts of the Mind</a> you met the term as the product of simple apprehension. A <b>term</b> is a word or phrase that names a class of things or one individual thing. In a proposition, terms are the building blocks that the verb joins."
+   },
+   {
+    "t": "key",
+    "html": "A <b>singular term</b> names exactly one thing (\"Mount Everest\", \"the tallest student in our class\"). A <b>general term</b> names a class, so it applies to each of its members (\"mountains\", \"students who play the violin\"). Count ideas, not words."
+   },
+   {
+    "t": "why",
+    "html": "Logic cares about what a phrase picks out, not how long it is. \"The first president of the United States\" uses seven words, but it names one person, so it works exactly like a name. \"Dogs\" is one word, but it applies to millions of animals. When we later ask whether a statement is about <i>all</i> of a class or only <i>some</i> of it, we need to know which phrases name classes."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Phrase",
+     "Words",
+     "Kind of term"
+    ],
+    "rows": [
+     [
+      "Jupiter",
+      "1",
+      "singular"
+     ],
+     [
+      "the oldest tree in the park",
+      "6",
+      "singular"
+     ],
+     [
+      "planets",
+      "1",
+      "general"
+     ],
+     [
+      "large brown dogs that herd sheep",
+      "6",
+      "general"
+     ]
+    ],
+    "cap": "Length does not decide the kind of term."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "Singular term",
+      "General term"
+     ],
+     "cards": [
+      {
+       "text": "the Eiffel Tower",
+       "bin": 0,
+       "why": "There is only one."
+      },
+      {
+       "text": "rivers in Europe",
+       "bin": 1,
+       "why": "Many rivers fit."
+      },
+      {
+       "text": "the author of our class reader",
+       "bin": 0,
+       "why": "It picks out one person."
+      },
+      {
+       "text": "prime numbers",
+       "bin": 1,
+       "why": "A whole class of numbers."
+      },
+      {
+       "text": "this pencil",
+       "bin": 0,
+       "why": "\"This\" points to one thing."
+      },
+      {
+       "text": "people who ride the bus",
+       "bin": 1,
+       "why": "Many people fit."
+      }
+     ]
+    },
+    "cap": "Sort each phrase: does it name one thing or a class?"
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Counting the terms in a proposition",
+    "q": "How many terms does \"The first president of the United States was a skilled surveyor\" join, and what are they?",
+    "steps": [
+     "Find what the sentence is about: \"the first president of the United States\". That whole phrase is one idea, a singular term.",
+     "Find what is said about it: \"a skilled surveyor\". That is a second term (a general term: there were many skilled surveyors).",
+     "The verb \"was\" joins the two."
+    ],
+    "a": "2 terms: \"the first president of the United States\" and \"a skilled surveyor\""
+   },
+   {
+    "t": "mistake",
+    "html": "Counting words instead of ideas. \"Large brown dogs\" is one general term, not three, and \"the first president of the United States\" is one singular term. Check: could you replace the whole phrase with a single name or a single plural noun without changing what it picks out? Then it is one term."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Peter Kreeft, Socratic Logic, on the three acts of the mind"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 2.2 The Intension and Extension of Terms (terms and what they name)"
+   }
+  ]
+ },
+ "trad.extension-intension": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/logic/traditional-logic/terms/\">term</a> does two jobs at once. It points to things, and it carries an idea of what those things are like. Traditional logic gives each job a name."
+   },
+   {
+    "t": "key",
+    "html": "The <b>extension</b> of a term is the set of things it applies to. Its <b>comprehension</b> (also called intension) is the set of features it implies. Add a feature, and the comprehension grows while the extension shrinks or stays the same."
+   },
+   {
+    "t": "why",
+    "html": "Every feature you add is one more test a thing must pass. \"Dog\" applies to every dog. \"Black dog\" applies only to the dogs that also pass the \"black\" test, so fewer things fit. \"Small black dog\" adds a third test, and fewer still pass. The tests pile up (comprehension grows) as the crowd that passes them thins out (extension shrinks). If every member already had the feature, the crowd stays the same size, which is why we say \"shrinks or stays the same\"."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Term",
+     "Comprehension (features)",
+     "Extension (things)"
+    ],
+    "rows": [
+     [
+      "animals",
+      "living, able to move and sense",
+      "every animal"
+     ],
+     [
+      "mammals",
+      "+ hair, nurses its young",
+      "every mammal"
+     ],
+     [
+      "dogs",
+      "+ the features of a dog",
+      "every dog"
+     ],
+     [
+      "sheepdogs",
+      "+ bred to herd sheep",
+      "only the sheepdogs"
+     ]
+    ],
+    "cap": "Down the table, comprehension grows and extension shrinks."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "Extension of \"rectangle\"",
+      "Comprehension of \"rectangle\""
+     ],
+     "cards": [
+      {
+       "text": "the door of your classroom (as a shape)",
+       "bin": 0,
+       "why": "A thing the term applies to."
+      },
+      {
+       "text": "has four right angles",
+       "bin": 1,
+       "why": "A feature every rectangle has."
+      },
+      {
+       "text": "a sheet of printer paper",
+       "bin": 0,
+       "why": "One of the things that is a rectangle."
+      },
+      {
+       "text": "has four sides",
+       "bin": 1,
+       "why": "Part of what \"rectangle\" means."
+      },
+      {
+       "text": "the flag of Canada (its outline)",
+       "bin": 0,
+       "why": "A thing the term applies to."
+      },
+      {
+       "text": "is a closed plane figure",
+       "bin": 1,
+       "why": "A feature implied by the term."
+      }
+     ]
+    },
+    "cap": "Things go in the extension; features go in the comprehension."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Ordering terms",
+    "q": "Which has the greatest extension, and which the greatest comprehension: \"lemons\", \"fruits\", \"citrus fruits\"?",
+    "steps": [
+     "Line them up from wide to narrow: fruits → citrus fruits → lemons. Every lemon is a citrus fruit, and every citrus fruit is a fruit.",
+     "The widest term applies to the most things: \"fruits\" has the greatest extension.",
+     "The narrowest term carries the most features (fruit, citrus, and lemon): \"lemons\" has the greatest comprehension."
+    ],
+    "a": "extension: fruits; comprehension: lemons"
+   },
+   {
+    "t": "ex",
+    "title": "Thing or feature?",
+    "q": "For the term \"planet\", is \"Mars\" part of the extension or the comprehension? What about \"orbits a star\"?",
+    "steps": [
+     "Mars is one of the things the word \"planet\" applies to: extension.",
+     "\"Orbits a star\" is a feature every planet has: comprehension."
+    ],
+    "a": "Mars: extension; orbits a star: comprehension"
+   },
+   {
+    "t": "mistake",
+    "html": "Expecting both to grow together. A richer idea is a narrower idea: as comprehension grows (dog, black dog, small black dog), extension shrinks or stays the same. Check with a picture: each new feature is a smaller circle drawn inside the last one."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 2.2 The Intension and Extension of Terms"
+   },
+   {
+    "name": "Antoine Arnauld and Pierre Nicole, Logic or the Art of Thinking (the Port-Royal Logic), on comprehension and extension"
+   }
+  ]
+ },
+ "trad.genus-species": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You saw in <a href=\"/logic/traditional-logic/extension-intension/\">Extension and Comprehension</a> that terms nest inside one another, and in <a href=\"/logic/informal-logic/genus-difference/\">Definition by Genus and Difference</a> that a definition names a wider class and then narrows it. Logic names the two ends of that relation."
+   },
+   {
+    "t": "key",
+    "html": "A <b>genus</b> is a wider class that is divided into narrower classes; each narrower class is a <b>species</b> of that genus. The same class can be a species of one genus and a genus of other species."
+   },
+   {
+    "t": "why",
+    "html": "Genus and species name a relation between two classes, like \"parent\" and \"child\". Nobody is a parent all by themselves; you are a parent of someone. In the same way, \"polygon\" is a species when we compare it with \"shape\" (every polygon is a shape, not every shape is a polygon), and a genus when we compare it with \"triangle\". Only the comparison decides."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "Genus of \"rectangles\"",
+      "Species of \"rectangles\""
+     ],
+     "cards": [
+      {
+       "text": "quadrilaterals",
+       "bin": 0,
+       "why": "Every rectangle is a quadrilateral, but not the other way around."
+      },
+      {
+       "text": "squares",
+       "bin": 1,
+       "why": "Every square is a rectangle, but not every rectangle is a square."
+      },
+      {
+       "text": "polygons",
+       "bin": 0,
+       "why": "A wider class that contains the rectangles."
+      },
+      {
+       "text": "golden rectangles",
+       "bin": 1,
+       "why": "A narrower class inside the rectangles."
+      },
+      {
+       "text": "shapes",
+       "bin": 0,
+       "why": "Wider still, but still a genus of rectangles."
+      }
+     ]
+    },
+    "cap": "Sort each class by how it relates to the rectangles."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "One class, two roles",
+    "q": "How is \"mammals\" related to \"animals\" and to \"dogs\"?",
+    "steps": [
+     "Compare mammals with animals: every mammal is an animal, but some animals (birds, fish) are not mammals. So mammals is the narrower class: a species of animals.",
+     "Compare mammals with dogs: every dog is a mammal, but not every mammal is a dog. So mammals is the wider class: a genus of dogs."
+    ],
+    "a": "a species of animals and a genus of dogs"
+   },
+   {
+    "t": "note",
+    "html": "Porphyry drew these nested classes as a tree, now called the Tree of Porphyry: substance at the top, then body, living body, animal, and rational animal (human being) near the bottom. A class with no wider class above it is a <b>highest genus</b>; a class that is not divided any further is a <b>lowest species</b>. Everything between is both a genus and a species."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the biology ranks. In biology, \"genus\" and \"species\" are fixed levels (Canis is a genus, Canis familiaris a species). In logic they are relative: any wider class is a genus of any narrower class inside it, at any level. Check by asking \"wider or narrower than <i>what</i>?\""
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Porphyry, Isagoge (the five predicables)"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 2.4 Definitional Techniques (definition by genus and difference)"
+   }
+  ]
+ },
+ "trad.predicables": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once you know <a href=\"/logic/traditional-logic/genus-species/\">genus and species</a>, you can sort every true statement \"Every S is P\" by <i>how</i> the predicate belongs to the subject. Since Porphyry wrote about them in the third century, logicians have counted five ways, called the <b>predicables</b>."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Predicable",
+     "How it belongs",
+     "Example for \"triangle\""
+    ],
+    "rows": [
+     [
+      "Genus",
+      "the wider class it belongs to",
+      "is a polygon"
+     ],
+     [
+      "Specific difference",
+      "what sets it apart within the genus",
+      "is three-sided"
+     ],
+     [
+      "Species (definition)",
+      "genus + difference: the whole essence",
+      "is a three-sided polygon"
+     ],
+     [
+      "Property",
+      "not in the definition, but follows from it, so every member has it",
+      "has angles that add up to 180°"
+     ],
+     [
+      "Accident",
+      "may or may not belong; the thing would be the same kind without it",
+      "is drawn in red ink"
+     ]
+    ],
+    "cap": "The five predicables, with one subject."
+   },
+   {
+    "t": "key",
+    "html": "Genus, difference and species belong to what a thing <i>is</i>. A property is not part of the definition but always comes with it. An accident could be missing without the thing changing its kind."
+   },
+   {
+    "t": "why",
+    "html": "The test for each is a question. Is it the wider class? (genus) Is it what marks this kind off from others in that class? (difference) Is it both together? (species) If it is none of those, could a member of the kind lack it? If no member could lack it, because it follows from what the thing is, it is a property. If a member could lack it and still be the same kind of thing, it is an accident."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "Genus",
+      "Difference",
+      "Property",
+      "Accident"
+     ],
+     "cards": [
+      {
+       "text": "A human being is an animal.",
+       "bin": 0,
+       "why": "Animal is the wider class."
+      },
+      {
+       "text": "A human being is rational.",
+       "bin": 1,
+       "why": "The classic difference that sets humans apart among animals."
+      },
+      {
+       "text": "A human being is able to learn a language.",
+       "bin": 2,
+       "why": "Not in the definition, but it follows from being rational."
+      },
+      {
+       "text": "A human being is wearing a blue coat.",
+       "bin": 3,
+       "why": "Take the coat off and you are still human."
+      },
+      {
+       "text": "An even number is divisible by 2.",
+       "bin": 1,
+       "why": "That is what sets even numbers apart among integers."
+      },
+      {
+       "text": "An even number has a square that is even.",
+       "bin": 2,
+       "why": "It follows from being divisible by 2."
+      }
+     ]
+    },
+    "cap": "Sort each predicate by how it belongs to its subject."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A property",
+    "q": "Subject: square. Predicate: \"has diagonals that cross at right angles\". Which predicable?",
+    "steps": [
+     "It is not the genus (rectangle), not the difference (four equal sides), and not the full definition.",
+     "Could a square lack it? No: every square has such diagonals, because of what a square is.",
+     "So it is a property."
+    ],
+    "a": "property"
+   },
+   {
+    "t": "ex",
+    "title": "An accident",
+    "q": "Subject: rectangle. Predicate: \"is 4 cm long\". Which predicable?",
+    "steps": [
+     "It is not part of the definition, and it does not follow from it.",
+     "A rectangle 5 cm long is just as much a rectangle. So it can be missing: an accident."
+    ],
+    "a": "accident"
+   },
+   {
+    "t": "mistake",
+    "html": "Confusing property and accident. Both lie outside the definition, so they look alike. The test: a property belongs to <i>every</i> member because of what the thing is (every triangle's angles add up to 180°); an accident does not (this triangle happens to be red). Ask \"could one of them lack it?\""
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Porphyry, Isagoge (the five predicables)"
+   },
+   {
+    "name": "Aristotle, Topics I.4–8 (the predicables)"
+   }
+  ]
+ },
+ "trad.division": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Definition moves up from a species to its genus. <b>Logical division</b> moves down: it splits a <a href=\"/logic/traditional-logic/genus-species/\">genus</a> into its species. Done well, it gives a clean map of a subject; done badly, it causes the confusion you see in messy categories."
+   },
+   {
+    "t": "key",
+    "html": "A good division uses <b>one principle</b>, so its parts are <b>exclusive</b> (nothing falls in two parts) and together <b>exhaustive</b> (everything falls in some part)."
+   },
+   {
+    "t": "why",
+    "html": "A principle is one question that sorts every member: \"What is the largest angle of this triangle?\" Because each triangle has exactly one answer, it lands in exactly one part, so no overlaps; and because every triangle has some answer, none are left out. Mixing two questions, such as kind of writing and type of binding for books, breaks both: a hardcover novel lands in two parts, and some books may land in none."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Division",
+     "Principle",
+     "Verdict"
+    ],
+    "rows": [
+     [
+      "triangles: acute, right, obtuse",
+      "largest angle",
+      "good"
+     ],
+     [
+      "books: novels, hardcovers, library books",
+      "three at once",
+      "overlaps"
+     ],
+     [
+      "vehicles: cars, trucks",
+      "kind of vehicle",
+      "leaves out bicycles and buses"
+     ]
+    ],
+    "cap": "Check one principle, no overlap, nothing left out."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "Good division",
+      "Mixes principles",
+      "Leaves members out"
+     ],
+     "cards": [
+      {
+       "text": "Whole numbers: even and odd",
+       "bin": 0,
+       "why": "One principle: the remainder when divided by 2."
+      },
+      {
+       "text": "Shoes: sneakers, red shoes, boots",
+       "bin": 1,
+       "why": "Style and color at once: red sneakers fit twice."
+      },
+      {
+       "text": "Pets: dogs and cats",
+       "bin": 2,
+       "why": "Goldfish and parakeets fit nowhere."
+      },
+      {
+       "text": "High school students: freshmen, sophomores, juniors, seniors",
+       "bin": 0,
+       "why": "One principle: year in school."
+      },
+      {
+       "text": "Students: athletes, seniors, musicians",
+       "bin": 1,
+       "why": "A senior athlete fits twice."
+      },
+      {
+       "text": "Triangles: right and obtuse",
+       "bin": 2,
+       "why": "Acute triangles are left out."
+      }
+     ]
+    },
+    "cap": "Sort each division by its verdict."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Finding the fault",
+    "q": "Is \"dogs: puppies, beagles and pets\" a good division?",
+    "steps": [
+     "Look for the principle. \"Puppies\" sorts by age, \"beagles\" by breed, \"pets\" by whether someone owns the dog.",
+     "Three principles at once means overlap: a pet beagle puppy fits all three parts.",
+     "And a stray adult collie fits none."
+    ],
+    "a": "not good: it mixes principles"
+   },
+   {
+    "t": "ex",
+    "title": "Parts, not kinds",
+    "q": "Is \"a bicycle: frame, wheels, chain and handlebars\" a logical division?",
+    "steps": [
+     "In a logical division each part is itself a kind of the whole: every acute triangle is a triangle.",
+     "A wheel is not a kind of bicycle. These are the physical pieces of one thing."
+    ],
+    "a": "no: it is a partition into parts, not a division into kinds"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing principles (\"books: novels, hardcovers, library books\"). The parts overlap, and some books fit nowhere or in two places. Check: name the single question that sorts every member. If you need two questions, the division is mixed."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "George Hayward Joyce, Principles of Logic (1908), on logical division"
+   },
+   {
+    "name": "Porphyry, Isagoge (the five predicables)"
+   }
+  ]
+ },
+ "trad.categorical-propositions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/logic/informal-logic/statements/\">statement</a> is true or false. A <b>categorical proposition</b> is a statement of one special shape: it relates two classes, named by <a href=\"/logic/traditional-logic/terms/\">terms</a>, by saying that one is included in the other or shut out of it, in whole or in part."
+   },
+   {
+    "t": "p",
+    "html": "Every categorical proposition in standard form has four parts, in this order:"
+   },
+   {
+    "t": "list",
+    "items": [
+     "the <b>quantifier</b>: <i>All</i>, <i>No</i> or <i>Some</i>;",
+     "the <b>subject term</b>: the class the statement is about;",
+     "the <b>copula</b>: <i>are</i> or <i>are not</i>;",
+     "the <b>predicate term</b>: the class the subject is related to."
+    ]
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "All whales are mammals that breathe air"
+     ],
+     "show": [
+      "parts"
+     ]
+    },
+    "cap": "The four parts of a standard-form categorical proposition."
+   },
+   {
+    "t": "key",
+    "html": "Standard form is <i>Quantifier – subject term – copula – predicate term</i>, with both terms naming classes: \"All whales are mammals that breathe air.\""
+   },
+   {
+    "t": "why",
+    "html": "Fixing one shape lets us compare statements part by part. Once every claim reads \"All/No/Some ___ are (not) ___\", we can see at a glance which two classes it relates and how, and the rest of this course (the square, conversion, syllogisms) works on those parts. The terms must name classes (\"mammals that breathe air\", not \"breathe air\") so that both sides of the copula are the same kind of thing."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Finding the terms",
+    "q": "Name the four parts of \"Some books on the top shelf are not novels by Jane Austen.\"",
+    "steps": [
+     "Quantifier: the first word, <i>Some</i>.",
+     "Subject term: everything between the quantifier and the copula: <i>books on the top shelf</i>.",
+     "Copula: <i>are not</i>.",
+     "Predicate term: everything after the copula: <i>novels by Jane Austen</i>."
+    ],
+    "a": "Some / books on the top shelf / are not / novels by Jane Austen"
+   },
+   {
+    "t": "mistake",
+    "html": "Taking the grammatical subject or the verb for the logical terms. In \"All whales are mammals that breathe air\", the predicate term is the whole phrase <i>mammals that breathe air</i>, not \"mammals\" and not \"breathe\". Check: the predicate term is everything after \"are\" or \"are not\"."
+   },
+   {
+    "t": "note",
+    "html": "In an E proposition (\"No dogs are cats\") the word \"no\" belongs to the quantifier, so the copula is plain <i>are</i>. Only the O form (\"Some dogs are not puppies\") has <i>are not</i>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.1 The Components of Categorical Propositions"
+   },
+   {
+    "name": "Aristotle, On Interpretation 7"
+   }
+  ]
+ },
+ "trad.aeio": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "There are exactly four ways to relate two classes in a <a href=\"/logic/traditional-logic/categorical-propositions/\">categorical proposition</a>. Medieval logicians named them with the vowels of <i>AffIrmo</i> (\"I affirm\") and <i>nEgO</i> (\"I deny\")."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Form",
+     "Standard form",
+     "Quantity",
+     "Quality"
+    ],
+    "rows": [
+     [
+      "A",
+      "All S are P",
+      "universal",
+      "affirmative"
+     ],
+     [
+      "E",
+      "No S are P",
+      "universal",
+      "negative"
+     ],
+     [
+      "I",
+      "Some S are P",
+      "particular",
+      "affirmative"
+     ],
+     [
+      "O",
+      "Some S are not P",
+      "particular",
+      "negative"
+     ]
+    ],
+    "cap": "S is the subject term, P the predicate term."
+   },
+   {
+    "t": "key",
+    "html": "<b>Quantity</b> asks \"all or some?\": A and E are universal, I and O particular. <b>Quality</b> asks \"including or excluding?\": A and I are affirmative, E and O negative. In logic, <b>some</b> means \"at least one\"."
+   },
+   {
+    "t": "why",
+    "html": "\"Some\" means at least one because logic only keeps what a statement guarantees. \"Some students passed\" guarantees that at least one did. It does not guarantee that some failed; the speaker may simply not know. If all of them passed, \"Some students passed\" is still true, just not the whole story."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "A",
+      "E",
+      "I",
+      "O"
+     ],
+     "cards": [
+      {
+       "text": "All hikers are early risers",
+       "bin": 0,
+       "why": "All … are: universal affirmative."
+      },
+      {
+       "text": "No hikers are early risers",
+       "bin": 1,
+       "why": "No … are: universal negative."
+      },
+      {
+       "text": "Some hikers are early risers",
+       "bin": 2,
+       "why": "Some … are: particular affirmative."
+      },
+      {
+       "text": "Some hikers are not early risers",
+       "bin": 3,
+       "why": "Some … are not: particular negative."
+      },
+      {
+       "text": "No planets are stars",
+       "bin": 1,
+       "why": "Universal negative."
+      },
+      {
+       "text": "Some books are not novels",
+       "bin": 3,
+       "why": "Particular negative."
+      }
+     ]
+    },
+    "cap": "Sort each proposition by its form."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Letter, quantity and quality",
+    "q": "Give the form, quantity and quality of \"Some campers are not singers.\"",
+    "steps": [
+     "Quantifier \"some\": particular.",
+     "Copula \"are not\": negative.",
+     "Particular negative is the O form."
+    ],
+    "a": "O: particular negative"
+   },
+   {
+    "t": "ex",
+    "title": "When all of them are",
+    "q": "Every student in the class passed the quiz. Is \"Some students in the class are students who passed\" true?",
+    "steps": [
+     "In logic, \"some\" asks only for at least one.",
+     "There is at least one student in the class, and that student passed.",
+     "So the I statement is true, even though the A statement is true as well."
+    ],
+    "a": "true"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading \"some\" as \"some but not all\". If every S is P (and there are S), then \"Some S are P\" is true. Check: ask whether the statement would become false if it turned out that <i>all</i> of them are. For \"some\", it would not."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "S",
+      "P"
+     ],
+     "circles": 2,
+     "props": [
+      "All S are P",
+      "Some S are P"
+     ]
+    },
+    "cap": "Two different diagrams: A shades the part of S outside P; I puts an X in the overlap. The I diagram allows that all S are P."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.2 Quality, Quantity, and Distribution"
+   },
+   {
+    "name": "Aristotle, On Interpretation 7"
+   }
+  ]
+ },
+ "trad.translating-nonstandard": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Everyday speech rarely uses the exact words of the <a href=\"/logic/traditional-logic/aeio/\">four forms</a>. Before you can test reasoning, you rewrite each statement in standard form. The meaning must stay the same; only the wording changes."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Everyday wording",
+     "Standard form"
+    ],
+    "rows": [
+     [
+      "Every dog barks. / Dogs bark.",
+      "All dogs are barkers (animals that bark)."
+     ],
+     [
+      "None of the guests left early.",
+      "No guests are people who left early."
+     ],
+     [
+      "A few campers sing.",
+      "Some campers are singers."
+     ],
+     [
+      "Not every runner is a swimmer.",
+      "Some runners are not swimmers."
+     ],
+     [
+      "Maya is a hiker.",
+      "All people identical to Maya are hikers."
+     ],
+     [
+      "All that glitters is not gold.",
+      "Some things that glitter are not gold things."
+     ]
+    ],
+    "cap": "Common rewrites."
+   },
+   {
+    "t": "key",
+    "html": "Three steps: (1) make the verb \"are\" plus a class (\"bark\" → \"are barkers\"); (2) choose the quantifier from the meaning: all, none, at least one, or at least one not; (3) write it as All/No/Some S are (not) P. \"Many\" and \"most\" become \"some\". A statement about one named thing becomes a universal about a one-member class."
+   },
+   {
+    "t": "why",
+    "html": "Standard form has only four quantifiers, so every everyday quantifier must map to the one that keeps what it guarantees. \"Most\" guarantees at least one, so it becomes \"some\" (we lose information, but we never add any). A singular statement such as \"Maya is a hiker\" says something about every member of a class with exactly one member, so it acts as a universal: \"All people identical to Maya are hikers.\""
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "A",
+      "E",
+      "I",
+      "O"
+     ],
+     "cards": [
+      {
+       "text": "Every golfer is an early riser.",
+       "bin": 0,
+       "why": "All golfers are early risers."
+      },
+      {
+       "text": "Golfers are never chess players.",
+       "bin": 1,
+       "why": "No golfers are chess players."
+      },
+      {
+       "text": "There are golfers who paint.",
+       "bin": 2,
+       "why": "Some golfers are painters."
+      },
+      {
+       "text": "Not all golfers are drummers.",
+       "bin": 3,
+       "why": "Some golfers are not drummers."
+      },
+      {
+       "text": "Most golfers are walkers.",
+       "bin": 2,
+       "why": "\"Most\" keeps only \"at least one\": Some golfers are walkers."
+      },
+      {
+       "text": "Leo is not a golfer.",
+       "bin": 1,
+       "why": "No people identical to Leo are golfers."
+      }
+     ]
+    },
+    "cap": "Sort each everyday statement by the form it becomes."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A verb and a hidden quantifier",
+    "q": "Put \"Some skaters dance\" in standard form.",
+    "steps": [
+     "Turn the verb into \"are\" plus a class: those who dance are dancers.",
+     "\"Some\" already means at least one."
+    ],
+    "a": "Some skaters are dancers."
+   },
+   {
+    "t": "ex",
+    "title": "Not every",
+    "q": "Put \"Not every hiker is a poet\" in standard form.",
+    "steps": [
+     "\"Not every hiker is a poet\" says that at least one hiker is not a poet.",
+     "That is the particular negative form, O."
+    ],
+    "a": "Some hikers are not poets."
+   },
+   {
+    "t": "mistake",
+    "html": "Writing \"All S are not P\" for \"No S are P\". \"All S are not P\" is ambiguous: \"All that glitters is not gold\" means that <i>not all</i> that glitters is gold, an O statement. Never use \"All … are not\" in standard form: write \"No S are P\" for E and \"Some S are not P\" for O."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.7 Translating Ordinary Language Statements into Categorical Form"
+   }
+  ]
+ },
+ "trad.only-exceptives": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Some words in <a href=\"/logic/traditional-logic/translating-nonstandard/\">everyday statements</a> change the order of the terms. The most important is <b>only</b>."
+   },
+   {
+    "t": "key",
+    "html": "\"Only S are P\" and \"None but S are P\" become <b>All P are S</b> (swap the terms). \"The only S are P\" becomes <b>All S are P</b> (keep the order). \"All except S are P\" makes two claims: <b>All non-S are P</b>, and <b>No S are P</b>."
+   },
+   {
+    "t": "why",
+    "html": "\"Only members may vote\" sets a requirement on voters: to vote, you must be a member. That is a claim about every voter: all voters are members. It says nothing about every member; some members may stay home. So the class after \"only\" is the one the <i>other</i> class must fit inside, and it becomes the predicate. \"The only\" works the other way: \"The only animals in the canyon are skunks\" says every animal in the canyon is a skunk."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "voters",
+      "members"
+     ],
+     "circles": 2,
+     "props": [
+      "All voters are members"
+     ]
+    },
+    "cap": "Only members may vote: the part of the voters circle outside the members is empty. Members outside the voters circle are allowed."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Everyday wording",
+     "Standard form"
+    ],
+    "rows": [
+     [
+      "Only ticket holders are allowed backstage.",
+      "All people allowed backstage are ticket holders."
+     ],
+     [
+      "None but seniors may park on campus.",
+      "All students who may park on campus are seniors."
+     ],
+     [
+      "The only dogs here are puppies.",
+      "All dogs here are puppies."
+     ],
+     [
+      "All except seniors are campers.",
+      "All non-seniors are campers, and no seniors are campers."
+     ]
+    ],
+    "cap": "Watch the order of the terms."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Only",
+    "q": "Put \"Only adults may use the hot tub\" in standard form.",
+    "steps": [
+     "The class after \"only\" is the requirement: adults.",
+     "Every person who may use the hot tub must be an adult."
+    ],
+    "a": "All people who may use the hot tub are adults."
+   },
+   {
+    "t": "ex",
+    "title": "All except",
+    "q": "Put \"All except the drummers are singers\" in standard form.",
+    "steps": [
+     "An exceptive makes two claims: one about everyone else, one about the exceptions.",
+     "Everyone who is not a drummer is a singer: All non-drummers are singers.",
+     "The drummers are the exception: No drummers are singers."
+    ],
+    "a": "All non-drummers are singers, and no drummers are singers."
+   },
+   {
+    "t": "mistake",
+    "html": "Keeping the order of the words. \"Only members may vote\" does not say that all members vote; it says that all voters are members. Check with a case: picture a member who stays home. Is the rule broken? No, so the rule is not about every member."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.7 Translating Ordinary Language Statements into Categorical Form (exclusive and exceptive propositions)"
+   }
+  ]
+ },
+ "trad.distribution": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Look again at the <a href=\"/logic/traditional-logic/aeio/\">four forms</a>. Some of them say something about every member of a class; others speak about only part of it. A term is <b>distributed</b> in a proposition when the proposition says something about every member of the class it names."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Form",
+     "Subject",
+     "Predicate"
+    ],
+    "rows": [
+     [
+      "A: All S are P",
+      "distributed",
+      "not"
+     ],
+     [
+      "E: No S are P",
+      "distributed",
+      "distributed"
+     ],
+     [
+      "I: Some S are P",
+      "not",
+      "not"
+     ],
+     [
+      "O: Some S are not P",
+      "not",
+      "distributed"
+     ]
+    ],
+    "cap": "Universals distribute the subject; negatives distribute the predicate."
+   },
+   {
+    "t": "key",
+    "html": "Universal statements (A, E) distribute their subject. Negative statements (E, O) distribute their predicate. So A distributes S, E both, I neither, O only P."
+   },
+   {
+    "t": "why",
+    "html": "Take each form in turn. \"All S are P\" speaks of every S, but only of the P that happen to be S. \"No S are P\" shuts every S out of the whole of P, which says of every P that it is not an S: both terms. \"Some S are P\" speaks of at least one S and at least one P: neither class as a whole. \"Some S are not P\" speaks of only some S, but says that whole class P leaves those S out, so it tells us something about every P: the predicate."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "Some reptiles are not lizards"
+     ],
+     "show": [
+      "parts",
+      "dist"
+     ]
+    },
+    "cap": "In an O proposition only the predicate term is distributed (underlined)."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An A proposition",
+    "q": "Which terms are distributed in \"All dancers are musicians\"?",
+    "steps": [
+     "It is universal, so the subject <i>dancers</i> is distributed: it speaks of every dancer.",
+     "It is affirmative, so the predicate <i>musicians</i> is not: it does not speak of every musician."
+    ],
+    "a": "dancers only"
+   },
+   {
+    "t": "ex",
+    "title": "An O proposition",
+    "q": "Which terms are distributed in \"Some readers are not bakers\"?",
+    "steps": [
+     "It is particular, so <i>readers</i> is not distributed.",
+     "It is negative, so <i>bakers</i> is distributed: every baker is outside the group of readers it mentions."
+    ],
+    "a": "bakers only"
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "Some reptiles are not lizards",
+      "All snakes are reptiles"
+     ],
+     "conclusion": "Some snakes are not lizards",
+     "mode": "dist"
+    },
+    "cap": "Your turn: tap every distributed term, then Check."
+   },
+   {
+    "t": "mistake",
+    "html": "Memorizing the chart without the reason, then forgetting the O form. \"Some S are not P\" excludes some S from <i>all</i> of P, so it speaks about every P. Check by asking, for each term, \"Does this statement say something about every one of these?\""
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.2 Quality, Quantity, and Distribution"
+   }
+  ]
+ },
+ "trad.venn-propositions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "John Venn gave the <a href=\"/logic/traditional-logic/aeio/\">four forms</a> a picture. Draw two overlapping circles, the subject class S on the left and the predicate class P on the right. They make four regions: 1 (S only), 2 (both), 3 (P only) and 4 (outside both)."
+   },
+   {
+    "t": "key",
+    "html": "<b>Shading</b> a region means it is empty. An <b>X</b> in a region means at least one thing is there. A and E shade; I and O put an X."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Form",
+     "What it says",
+     "Diagram"
+    ],
+    "rows": [
+     [
+      "All S are P",
+      "no S outside P",
+      "shade region 1"
+     ],
+     [
+      "No S are P",
+      "no S inside P",
+      "shade region 2"
+     ],
+     [
+      "Some S are P",
+      "something is in S and P",
+      "X in region 2"
+     ],
+     [
+      "Some S are not P",
+      "something is in S but not P",
+      "X in region 1"
+     ]
+    ],
+    "cap": "Each form becomes one mark."
+   },
+   {
+    "t": "why",
+    "html": "Each form talks about exactly one region. \"All S are P\" is the same claim as \"there is nothing that is S but not P\", so its region, 1, is empty. \"Some S are P\" is the claim \"there is something that is both\", so region 2 gets an X. Turning every statement into a claim about which regions are empty or occupied is what makes pictures able to test reasoning later."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "S",
+      "P"
+     ],
+     "circles": 2,
+     "props": [
+      "All S are P",
+      "No S are P"
+     ]
+    },
+    "cap": "A shades region 1; E shades region 2."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "S",
+      "P"
+     ],
+     "circles": 2,
+     "props": [
+      "Some S are P",
+      "Some S are not P"
+     ]
+    },
+    "cap": "I puts an X in region 2; O puts an X in region 1."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Reading a diagram",
+    "q": "With S = runners and P = poets, region 1 is shaded and nothing else is marked. Which statement is that?",
+    "steps": [
+     "Region 1 is runners who are not poets. Shading says there are none.",
+     "\"No runners are outside the poets\" is the same as \"All runners are poets\"."
+    ],
+    "a": "All runners are poets"
+   },
+   {
+    "t": "mistake",
+    "html": "Shading the region the statement talks about instead of the region it says is empty. For \"All S are P\", people often shade the overlap because \"S are P\" sounds like the overlap. But A says the part of S <i>outside</i> P is empty, so shade region 1. Check: after shading, every S left in the picture should be inside P."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "dogs",
+      "pets"
+     ],
+     "circles": 2,
+     "mode": "draw",
+     "props": [
+      "Some dogs are not pets"
+     ],
+     "numbers": true
+    },
+    "cap": "Your turn: diagram \"Some dogs are not pets\", then Check."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.3 Venn Diagrams and the Modern Square of Opposition"
+   }
+  ]
+ },
+ "trad.existential-import": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/logic/traditional-logic/venn-propositions/\">Venn diagram</a> for \"All S are P\" shades region 1 and puts no X anywhere. So the picture does not say that any S exist. That raises a real question: does \"All S are P\" claim that there are S?"
+   },
+   {
+    "t": "key",
+    "html": "On the <b>modern (Boolean) reading</b>, A and E say nothing about whether the subject class has members; only I and O assert that something exists. On the <b>traditional (Aristotelian) reading</b>, every statement assumes its subject class is not empty."
+   },
+   {
+    "t": "why",
+    "html": "Consider \"All trespassers will be prosecuted.\" The sign is true even if no one ever trespasses: it says there are no unprosecuted trespassers, not that trespassers exist. That is the Boolean reading of A: an empty region, nothing more. \"Some trespassers were prosecuted\", by contrast, says at least one exists. The traditional reading instead adds an assumption to every statement, which suits talk about familiar classes (birds, books) and fails for empty ones (unicorns)."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "unicorns",
+      "white creatures"
+     ],
+     "circles": 2,
+     "props": [
+      "All unicorns are white creatures"
+     ]
+    },
+    "cap": "Boolean reading: only region 1 is shaded. No X, so no claim that unicorns exist."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "Boolean (modern)",
+     "Traditional"
+    ],
+    "rows": [
+     [
+      "A, E assert S exists?",
+      "no",
+      "yes (assumed)"
+     ],
+     [
+      "I, O assert S exists?",
+      "yes",
+      "yes"
+     ],
+     [
+      "If S is empty",
+      "A and E true, I and O false",
+      "the reading does not apply"
+     ]
+    ],
+    "cap": "Existential import on the two readings."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "An empty subject class",
+    "q": "There are no dragons. On the Boolean reading, is \"All dragons are creatures that breathe fire\" true?",
+    "steps": [
+     "A says that region 1 (dragons that do not breathe fire) is empty.",
+     "With no dragons at all, that region is certainly empty."
+    ],
+    "a": "true"
+   },
+   {
+    "t": "ex",
+    "title": "A particular statement",
+    "q": "There are no dragons. Is \"Some dragons are friendly creatures\" true on the Boolean reading?",
+    "steps": [
+     "I says there is at least one thing in region 2 (dragons that are friendly creatures).",
+     "There are no dragons, so nothing is there."
+    ],
+    "a": "false"
+   },
+   {
+    "t": "mistake",
+    "html": "Assuming \"All unicorns are white\" claims there are unicorns. On the Boolean reading it only says there are no non-white unicorns, which is true because there are no unicorns at all. Check: is there an X in the diagram? Only an X asserts existence."
+   },
+   {
+    "t": "note",
+    "html": "This course uses the Boolean reading by default and says so whenever the traditional reading is used, as in the square of opposition and conditionally valid syllogisms."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.3 Venn Diagrams and the Modern Square of Opposition"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.6 Venn Diagrams and the Traditional Standpoint"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"The Traditional Square of Opposition\""
+   }
+  ]
+ },
+ "trad.square": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Take one pair of terms, say <i>birds</i> and <i>swimmers</i>, and write all <a href=\"/logic/traditional-logic/aeio/\">four forms</a> with them. Those four statements are not independent: the truth of one limits the truth of the others. Since late antiquity, logicians have drawn those limits as a square."
+   },
+   {
+    "t": "viz",
+    "name": "lg-square",
+    "opts": {
+     "s": "birds",
+     "p": "swimmers"
+    },
+    "cap": "The square of opposition for birds and swimmers."
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Corners</b>: universals on top (A left, E right), particulars below (I under A, O under E). Affirmatives on the left, negatives on the right.",
+     "<b>Contradictories</b> (the diagonals, A–O and E–I): exactly one is true.",
+     "<b>Contraries</b> (the top, A–E): not both true.",
+     "<b>Subcontraries</b> (the bottom, I–O): not both false.",
+     "<b>Subalterns</b> (the sides, A–I and E–O): truth flows down, falsity flows up."
+    ]
+   },
+   {
+    "t": "key",
+    "html": "The square names four relations among A, E, I and O with the same terms: contradictories, contraries, subcontraries and subalterns. This traditional square assumes the subject class has members."
+   },
+   {
+    "t": "why",
+    "html": "The layout follows quantity and quality. Moving across a side changes quality (affirmative to negative); moving up or down changes quantity (universal to particular); a diagonal changes both. A statement and its full opposite, different in both ways, can never agree, which is why the diagonals are the strongest relation. Later lessons show why each side behaves as it does."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Naming a relation",
+    "q": "How are \"No birds are swimmers\" and \"Some birds are swimmers\" related?",
+    "steps": [
+     "The first is E (top right). The second is I (bottom left).",
+     "Top right to bottom left is a diagonal."
+    ],
+    "a": "contradictories"
+   },
+   {
+    "t": "note",
+    "html": "The names come from the old Latin textbooks: contraries are opposed at the top, subcontraries sit \"under\" them at the bottom, and a subaltern is the statement \"below another\" on the same side."
+   },
+   {
+    "t": "mistake",
+    "html": "Placing the corners in the wrong spots, so every relation comes out wrong. Remember: universals on top, A left and E right; I sits under A and O under E (each particular under the universal with the same quality). Check: the two left corners both affirm; the two right corners both deny."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.5 The Traditional Square of Opposition"
+   },
+   {
+    "name": "Aristotle, On Interpretation 7"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"The Traditional Square of Opposition\""
+   }
+  ]
+ },
+ "trad.contradictories": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "On the <a href=\"/logic/traditional-logic/square/\">square of opposition</a>, the diagonals join A with O and E with I. These pairs are <b>contradictories</b>."
+   },
+   {
+    "t": "key",
+    "html": "Contradictories cannot both be true and cannot both be false: exactly one of them is true. The contradictory of \"All S are P\" is \"Some S are not P\"; the contradictory of \"No S are P\" is \"Some S are P\"."
+   },
+   {
+    "t": "why",
+    "html": "Each pair talks about the same region of a Venn diagram and says opposite things about it. \"All S are P\" says region 1 (S outside P) is empty; \"Some S are not P\" says region 1 has something in it. A region is either empty or not, so exactly one of the two is right. The same goes for E and I with region 2. Because this reason uses no assumption about existence, the contradictories hold on every reading."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "students",
+      "swimmers"
+     ],
+     "circles": 2,
+     "props": [
+      "All students are swimmers",
+      "Some students are not swimmers"
+     ]
+    },
+    "cap": "A shades region 1; O puts an X in region 1. Exactly one can be right."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Denying a universal",
+    "q": "What is the contradictory of \"All the cookies are burned\"? (Standard form: All cookies on the tray are burned cookies.)",
+    "steps": [
+     "It is an A statement, so its contradictory is the O with the same terms.",
+     "To show that not all the cookies are burned, you only need one cookie that is not."
+    ],
+    "a": "Some cookies on the tray are not burned cookies."
+   },
+   {
+    "t": "ex",
+    "title": "Denying a negative",
+    "q": "What is the contradictory of \"No hikers are poets\"?",
+    "steps": [
+     "It is an E statement, so its contradictory is the I with the same terms.",
+     "To show that \"none\" is wrong, one hiker who is a poet is enough."
+    ],
+    "a": "Some hikers are poets."
+   },
+   {
+    "t": "mistake",
+    "html": "Giving \"No S are P\" as the contradictory of \"All S are P\". That is the contrary, and both can be false at once (some cookies burned, some not). To deny \"all\", you need only \"some are not\". Check: could your two statements both be false? If yes, they are not contradictories."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.5 The Traditional Square of Opposition"
+   },
+   {
+    "name": "Aristotle, On Interpretation 7"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"The Traditional Square of Opposition\""
+   }
+  ]
+ },
+ "trad.contraries-subcontraries": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/logic/traditional-logic/contradictories/\">diagonals</a> are the strongest link on the square. The top and bottom sides are weaker, and each is weak in its own way."
+   },
+   {
+    "t": "key",
+    "html": "<b>Contraries</b> (A and E) cannot both be true, but can both be false. <b>Subcontraries</b> (I and O) cannot both be false, but can both be true. (Traditional reading: the subject class has members.)"
+   },
+   {
+    "t": "why",
+    "html": "Picture a class where some members are P and some are not: some students swim and some do not. Then \"All students are swimmers\" and \"No students are swimmers\" are both false, and \"Some are\" and \"Some are not\" are both true. That mixed case is why contraries can both be false and subcontraries both true. But if there is at least one student, the A and the E cannot both be true (that student cannot be both a swimmer and not one), and the I and the O cannot both be false (that student is one or the other)."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Pair",
+     "Both true?",
+     "Both false?"
+    ],
+    "rows": [
+     [
+      "A and O (contradictories)",
+      "no",
+      "no"
+     ],
+     [
+      "A and E (contraries)",
+      "no",
+      "yes"
+     ],
+     [
+      "I and O (subcontraries)",
+      "yes",
+      "no"
+     ]
+    ],
+    "cap": "What each pair allows."
+   },
+   {
+    "t": "viz",
+    "name": "lg-square",
+    "opts": {
+     "s": "students",
+     "p": "swimmers",
+     "given": {
+      "A": false
+     },
+     "highlight": "contraries"
+    },
+    "cap": "If A is false, E is undetermined: contraries can both be false."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "From a true contrary",
+    "q": "\"All the students are swimmers\" is true. What about \"No students are swimmers\"?",
+    "steps": [
+     "A and E are contraries: they cannot both be true.",
+     "A is true, so E must be false."
+    ],
+    "a": "false"
+   },
+   {
+    "t": "ex",
+    "title": "From a false subcontrary",
+    "q": "\"Some students are swimmers\" is false. What about \"Some students are not swimmers\"?",
+    "steps": [
+     "I and O are subcontraries: they cannot both be false.",
+     "I is false, so O must be true."
+    ],
+    "a": "true"
+   },
+   {
+    "t": "mistake",
+    "html": "Treating contraries as contradictories and concluding from \"A is false\" that E is true. Both can be false when some S are P and some are not. Check by building the mixed case: if it makes both statements false, you cannot conclude anything from one being false."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.5 The Traditional Square of Opposition"
+   },
+   {
+    "name": "Aristotle, On Interpretation 7"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"The Traditional Square of Opposition\""
+   }
+  ]
+ },
+ "trad.subalternation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The last relation on the <a href=\"/logic/traditional-logic/contraries-subcontraries/\">square</a> runs down the sides: from A to I and from E to O. Each universal is the <b>superaltern</b>, and the particular below it with the same quality is its <b>subaltern</b>."
+   },
+   {
+    "t": "key",
+    "html": "On the traditional square, <b>truth flows down</b> (if A is true, I is true; if E is true, O is true) and <b>falsity flows up</b> (if I is false, A is false; if O is false, E is false). Everything else is undetermined."
+   },
+   {
+    "t": "why",
+    "html": "If every one of the students is a swimmer, and there is at least one student (the traditional assumption), then at least one student is a swimmer: truth flows down. If not even one student is a swimmer, then certainly not all of them are: falsity flows up. But \"some are\" does not make \"all are\" true, and \"not all are\" does not make \"some are\" false, so truth does not flow up and falsity does not flow down."
+   },
+   {
+    "t": "viz",
+    "name": "lg-square",
+    "opts": {
+     "s": "students",
+     "p": "swimmers",
+     "given": {
+      "E": true
+     },
+     "highlight": "subalterns"
+    },
+    "cap": "E true sends truth down to O, and makes A false (contraries) and I false (contradictories)."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Truth down",
+    "q": "\"No birdwatchers are early risers\" is true. What follows about \"Some birdwatchers are not early risers\"?",
+    "steps": [
+     "E and O are subalterns, with E on top.",
+     "Truth flows down: if none are, then (assuming there are birdwatchers) some are not."
+    ],
+    "a": "true"
+   },
+   {
+    "t": "ex",
+    "title": "Truth does not flow up",
+    "q": "\"Some musicians are painters\" is true. What follows about \"All musicians are painters\"?",
+    "steps": [
+     "I is the subaltern of A.",
+     "Truth flows down, not up. Some being painters fits both \"all are\" and \"only some are\"."
+    ],
+    "a": "undetermined"
+   },
+   {
+    "t": "mistake",
+    "html": "Sending truth up the square: \"Some S are P\" being true does not make \"All S are P\" true. Check with a case where only some S are P: the I is true and the A false, so the I alone could not decide the A."
+   },
+   {
+    "t": "note",
+    "html": "Subalternation depends on the subject class having members. On the modern reading it fails, as a later lesson shows."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.5 The Traditional Square of Opposition"
+   },
+   {
+    "name": "Aristotle, On Interpretation 7"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"The Traditional Square of Opposition\""
+   }
+  ]
+ },
+ "trad.square-inferences": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now put the four relations of the <a href=\"/logic/traditional-logic/subalternation/\">square</a> to work. Given that one corner is true or false, you can work out each of the other three as true, false or <b>undetermined</b>."
+   },
+   {
+    "t": "key",
+    "html": "Start with the contradictory: it always gets the opposite value. Then use the contraries (not both true), subcontraries (not both false) and subalterns (truth down, falsity up) from both the given corner and its contradictory. Whatever is still unsettled is undetermined."
+   },
+   {
+    "t": "why",
+    "html": "Four of the eight starting cases settle every corner: A true, E true, I false and O false. Each is a strong claim (all, none, not even one, not even one is not), and it pins down the whole square. The other four, A false, E false, I true and O true, are weak claims: they fit the mixed case where some S are P and some are not, and also one extreme case, so two corners stay undetermined."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Given",
+     "A",
+     "E",
+     "I",
+     "O"
+    ],
+    "rows": [
+     [
+      "A true",
+      "T",
+      "F",
+      "T",
+      "F"
+     ],
+     [
+      "E true",
+      "F",
+      "T",
+      "F",
+      "T"
+     ],
+     [
+      "I true",
+      "?",
+      "F",
+      "T",
+      "?"
+     ],
+     [
+      "O true",
+      "F",
+      "?",
+      "?",
+      "T"
+     ],
+     [
+      "A false",
+      "F",
+      "?",
+      "?",
+      "T"
+     ],
+     [
+      "E false",
+      "?",
+      "F",
+      "T",
+      "?"
+     ],
+     [
+      "I false",
+      "F",
+      "T",
+      "F",
+      "T"
+     ],
+     [
+      "O false",
+      "T",
+      "F",
+      "T",
+      "F"
+     ]
+    ],
+    "cap": "The traditional square: T true, F false, ? undetermined."
+   },
+   {
+    "t": "viz",
+    "name": "lg-square",
+    "opts": {
+     "s": "climbers",
+     "p": "hikers",
+     "given": {
+      "O": false
+     },
+     "mode": "fill"
+    },
+    "cap": "O is false. Tap each empty pill to set T, F or ?, then Check."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A weak starting point",
+    "q": "\"All climbers are hikers\" is false. Find E, I and O.",
+    "steps": [
+     "O is the contradictory of A, so O is true.",
+     "E: A is false, and contraries can both be false, so A says nothing about E; O (true) is the subaltern of E, and truth does not flow up. E is undetermined.",
+     "I: falsity does not flow down from A; O is true, and subcontraries can both be true. I is undetermined."
+    ],
+    "a": "E ?, I ?, O true"
+   },
+   {
+    "t": "ex",
+    "title": "A strong starting point",
+    "q": "\"Some dancers are golfers\" is false. Find A, E and O.",
+    "steps": [
+     "E is the contradictory of I: true.",
+     "Falsity flows up from I to A: A is false.",
+     "I and O cannot both be false, so O is true (also, truth flows down from E)."
+    ],
+    "a": "A false, E true, O true"
+   },
+   {
+    "t": "mistake",
+    "html": "Forcing a value when the honest answer is \"undetermined\", especially for corners linked only by subalternation or subcontrariety. Check by building a world: if one situation makes the corner true and another makes it false, while the given value holds in both, it is undetermined."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.5 The Traditional Square of Opposition"
+   },
+   {
+    "name": "Aristotle, On Interpretation 7"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"The Traditional Square of Opposition\""
+   }
+  ]
+ },
+ "trad.modern-square": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Everything on the square so far used the traditional assumption that the subject class has members. On the modern reading, <a href=\"/logic/traditional-logic/existential-import/\">universal statements have no existential import</a>, and most of the square comes apart."
+   },
+   {
+    "t": "key",
+    "html": "On the <b>modern (Boolean) square</b>, only the contradictories hold: A–O and E–I still have opposite values. Contrariety, subcontrariety and subalternation can all fail when the subject class is empty."
+   },
+   {
+    "t": "why",
+    "html": "Suppose there are no dragons. \"All dragons breathe fire\" and \"No dragons breathe fire\" say only that two regions are empty, and with no dragons both are true: contrariety fails. \"Some dragons breathe fire\" and \"Some dragons do not\" both say a dragon exists, so both are false: subcontrariety fails. And the true A does not send truth down to the false I: subalternation fails. The diagonals survive because each pair still talks about the same region, empty or not."
+   },
+   {
+    "t": "viz",
+    "name": "lg-square",
+    "opts": {
+     "s": "dragons",
+     "p": "creatures that breathe fire",
+     "boolean": true,
+     "given": {
+      "A": true
+     }
+    },
+    "cap": "The modern square: from A true only O (false) follows."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "dragons",
+      "fire breathers"
+     ],
+     "circles": 2,
+     "props": [
+      "All dragons are fire breathers",
+      "No dragons are fire breathers"
+     ]
+    },
+    "cap": "If the dragons circle is empty, both diagrams are correct at once."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Subalternation on the modern square",
+    "q": "On the Boolean reading, \"All campers are dancers\" is true. What is \"Some campers are dancers\"?",
+    "steps": [
+     "A and I are not contradictories, so the modern square links them by nothing.",
+     "If there are no campers, I is false; if there are, I is true."
+    ],
+    "a": "undetermined"
+   },
+   {
+    "t": "ex",
+    "title": "A contradictory still works",
+    "q": "On the Boolean reading, \"Some actors are poets\" is false. What is \"No actors are poets\"?",
+    "steps": [
+     "E and I are contradictories, which hold on every reading.",
+     "I is false, so E is true."
+    ],
+    "a": "true"
+   },
+   {
+    "t": "note",
+    "html": "Why keep both squares? The traditional square is right whenever we already know the subject class has members, which is true of most everyday talk. The modern square is safer in general, because it makes no assumption, and it is the one built into modern symbolic logic."
+   },
+   {
+    "t": "mistake",
+    "html": "Keeping subalternation on the Boolean reading: from \"All dragons breathe fire\" it does not follow that some dragon breathes fire. Check: could the subject class be empty? If so, the universal is true and the particular false."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.3 Venn Diagrams and the Modern Square of Opposition"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.6 Venn Diagrams and the Traditional Standpoint"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"The Traditional Square of Opposition\""
+   }
+  ]
+ },
+ "trad.complements": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "An <b>immediate inference</b> draws a conclusion from a single proposition, with no second premise. Before we can make the three classic ones, we need one more idea about classes. In a <a href=\"/logic/traditional-logic/venn-propositions/\">Venn diagram</a>, everything outside a circle forms a class too."
+   },
+   {
+    "t": "key",
+    "html": "The <b>complement</b> of a class is everything that is not in it, written with \"non-\": the complement of <i>winners</i> is <i>non-winners</i>. The complement of <i>non-winners</i> is <i>winners</i> again."
+   },
+   {
+    "t": "why",
+    "html": "A class and its complement split the whole world in two with nothing left over and nothing counted twice: each thing is either a winner or not. Opposite words do not do that. \"Losers\" leaves out everyone who never played, and some people are neither. Because a complement leaves no gap, swapping a statement about P for one about non-P can keep the meaning exactly, which is what obversion and contraposition will do."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "Winners",
+      "Non-winners"
+     ],
+     "cards": [
+      {
+       "text": "the first-place runner",
+       "bin": 0,
+       "why": "She won."
+      },
+      {
+       "text": "the runner who finished fifth",
+       "bin": 1,
+       "why": "She ran but did not win."
+      },
+      {
+       "text": "a fan in the stands",
+       "bin": 1,
+       "why": "Not a winner, and not a loser either: he never ran."
+      },
+      {
+       "text": "the referee",
+       "bin": 1,
+       "why": "Outside the class of winners."
+      },
+      {
+       "text": "the relay team that won the final",
+       "bin": 0,
+       "why": "They won."
+      },
+      {
+       "text": "a tree beside the track",
+       "bin": 1,
+       "why": "Everything that is not a winner is a non-winner."
+      }
+     ]
+    },
+    "cap": "Every single thing lands in exactly one of the two groups."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Complement or opposite?",
+    "q": "Is \"children\" the complement of \"adults\"?",
+    "steps": [
+     "The complement of adults is everything that is not an adult: non-adults.",
+     "Teenagers are neither adults nor (in everyday speech) children, and a table is neither. So \"children\" leaves things out."
+    ],
+    "a": "no: the complement is non-adults"
+   },
+   {
+    "t": "ex",
+    "title": "Two complements",
+    "q": "What is the complement of \"non-members\"?",
+    "steps": [
+     "The complement is everything outside the class of non-members.",
+     "Everything that is not a non-member is a member."
+    ],
+    "a": "members"
+   },
+   {
+    "t": "note",
+    "html": "In a two-circle Venn diagram, the class non-P is everything outside the P circle: region 1 (S only) and region 4 (outside both). That is why statements about non-P can be drawn on the same picture as statements about P."
+   },
+   {
+    "t": "mistake",
+    "html": "Using the opposite word instead of the complement: the complement of \"winners\" is \"non-winners\", not \"losers\", since some may not have played. Check: is there anything that is neither? If so, the opposite word is not the complement."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.4 Conversion, Obversion, and Contraposition"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.6 Venn Diagrams and the Traditional Standpoint (conversion by limitation)"
+   }
+  ]
+ },
+ "trad.conversion": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<b>Conversion</b> is the simplest immediate inference: swap the subject and predicate terms. Whether it is valid depends on the form, and <a href=\"/logic/traditional-logic/distribution/\">distribution</a> explains which."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Original",
+     "Converse",
+     "Valid?"
+    ],
+    "rows": [
+     [
+      "No S are P",
+      "No P are S",
+      "yes"
+     ],
+     [
+      "Some S are P",
+      "Some P are S",
+      "yes"
+     ],
+     [
+      "All S are P",
+      "All P are S",
+      "no"
+     ],
+     [
+      "Some S are not P",
+      "Some P are not S",
+      "no"
+     ]
+    ],
+    "cap": "Conversion is valid for E and I only."
+   },
+   {
+    "t": "key",
+    "html": "Conversion is valid for E and I, which treat both terms alike. It is not valid for A or O. On the traditional reading, A converts <b>by limitation</b>: from \"All S are P\" to \"Some P are S\"."
+   },
+   {
+    "t": "why",
+    "html": "In a Venn diagram, E shades the overlap and I puts an X in the overlap. The overlap belongs to both circles equally, so swapping the circles leaves the same picture: same picture, same meaning. A shades the part of S outside P, but its converse shades the part of P outside S, a different region. Distribution says the same: A distributes S but not P, so after the swap P would be distributed without the original statement giving us anything about all P."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "S",
+      "P"
+     ],
+     "circles": 2,
+     "props": [
+      "No S are P",
+      "No P are S"
+     ]
+    },
+    "cap": "E converts: the two diagrams match."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "S",
+      "P"
+     ],
+     "circles": 2,
+     "props": [
+      "All S are P",
+      "All P are S"
+     ]
+    },
+    "cap": "A does not: different regions are shaded."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A valid conversion",
+    "q": "Convert \"Some bakers are anglers\". Is the converse equivalent?",
+    "steps": [
+     "Swap the terms: \"Some anglers are bakers\".",
+     "It is an I statement, and I converts validly: both say something is both a baker and an angler."
+    ],
+    "a": "Some anglers are bakers: equivalent"
+   },
+   {
+    "t": "ex",
+    "title": "Conversion by limitation",
+    "q": "On the traditional reading, what follows from \"All early risers are drummers\" by conversion by limitation?",
+    "steps": [
+     "Plain conversion (\"All drummers are early risers\") does not follow.",
+     "Swap the terms and weaken \"all\" to \"some\": I.",
+     "It needs the traditional assumption that there are early risers."
+    ],
+    "a": "Some drummers are early risers"
+   },
+   {
+    "t": "mistake",
+    "html": "Converting an A proposition: \"All cats are animals\" does not give \"All animals are cats\". This illicit conversion is one of the most common mistakes in reasoning. Check: does the converse claim something about every member of a class the original only partly covered? Then it says more than the original."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.4 Conversion, Obversion, and Contraposition"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.6 Venn Diagrams and the Traditional Standpoint (conversion by limitation)"
+   }
+  ]
+ },
+ "trad.obversion": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<b>Obversion</b> uses <a href=\"/logic/traditional-logic/complements/\">complements</a> to say the same thing in the opposite quality. It works for every form."
+   },
+   {
+    "t": "key",
+    "html": "To obvert: (1) change the quality (affirmative ↔ negative: A ↔ E, I ↔ O) and (2) replace the predicate with its complement. The obverse always means the same as the original."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Original",
+     "Obverse"
+    ],
+    "rows": [
+     [
+      "All S are P",
+      "No S are non-P"
+     ],
+     [
+      "No S are P",
+      "All S are non-P"
+     ],
+     [
+      "Some S are P",
+      "Some S are not non-P"
+     ],
+     [
+      "Some S are not P",
+      "Some S are non-P"
+     ]
+    ],
+    "cap": "Change the quality, complement the predicate."
+   },
+   {
+    "t": "why",
+    "html": "The two changes cancel each other, like two negations. \"All S are P\" says no S lies outside P. \"Outside P\" is exactly \"in non-P\", so it says no S are non-P. Saying an S <i>is not</i> in non-P is the same as saying it <i>is</i> in P, because P and non-P split everything with no gap and no overlap."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "S",
+      "P"
+     ],
+     "circles": 2,
+     "props": [
+      "All S are P",
+      "No S are non-P"
+     ]
+    },
+    "cap": "A statement and its obverse have the same diagram."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Obverting an E",
+    "q": "Obvert \"No coders are musicians\".",
+    "steps": [
+     "Change the quality: E becomes A (\"All … are\").",
+     "Complement the predicate: musicians → non-musicians."
+    ],
+    "a": "All coders are non-musicians"
+   },
+   {
+    "t": "ex",
+    "title": "Removing a \"non-\"",
+    "q": "Obvert \"No cyclists are non-debaters\".",
+    "steps": [
+     "Change the quality: E becomes A.",
+     "Complement the predicate: the complement of non-debaters is debaters."
+    ],
+    "a": "All cyclists are debaters"
+   },
+   {
+    "t": "note",
+    "html": "Obversion is the main tool for removing a \"non-\" from an argument. When a syllogism seems to have four terms because one of them is a complement, obverting a premise often brings it back to three (you will use this in Unit 6)."
+   },
+   {
+    "t": "mistake",
+    "html": "Doing only half the job: changing the quality but forgetting to complement the predicate (\"No S are P\" from \"All S are P\" means something very different), or complementing the subject instead of the predicate. Check: the subject term must come through untouched, and exactly one \"not\" or \"no\" is added or removed."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.4 Conversion, Obversion, and Contraposition"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.6 Venn Diagrams and the Traditional Standpoint (conversion by limitation)"
+   }
+  ]
+ },
+ "trad.contraposition": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "<b>Contraposition</b> combines the swap of <a href=\"/logic/traditional-logic/conversion/\">conversion</a> with the complements of <a href=\"/logic/traditional-logic/obversion/\">obversion</a>."
+   },
+   {
+    "t": "key",
+    "html": "To contrapose: swap the subject and predicate and replace <b>both</b> with their complements. \"All S are P\" becomes \"All non-P are non-S\". Contraposition is valid for A and O, not for E or I."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Original",
+     "Contrapositive",
+     "Valid?"
+    ],
+    "rows": [
+     [
+      "All S are P",
+      "All non-P are non-S",
+      "yes"
+     ],
+     [
+      "Some S are not P",
+      "Some non-P are not non-S",
+      "yes"
+     ],
+     [
+      "No S are P",
+      "No non-P are non-S",
+      "no"
+     ],
+     [
+      "Some S are P",
+      "Some non-P are non-S",
+      "no"
+     ]
+    ],
+    "cap": "Contraposition works exactly where conversion fails."
+   },
+   {
+    "t": "why",
+    "html": "Contraposition is three steps in one: obvert, convert, obvert. Start with \"All S are P\". Obvert: \"No S are non-P\". Convert (E converts validly): \"No non-P are S\". Obvert again: \"All non-P are non-S\". Every step kept the meaning. Try the same with \"No S are P\": obverting gives an A, and A does not convert, so the chain breaks. That is why A and O contrapose, and E and I do not."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "S",
+      "P"
+     ],
+     "circles": 2,
+     "props": [
+      "All S are P",
+      "All non-P are non-S"
+     ]
+    },
+    "cap": "A and its contrapositive: the same diagram."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Contraposing an A",
+    "q": "Contrapose \"All coders are skaters\".",
+    "steps": [
+     "Swap: skaters, coders.",
+     "Complement both: non-skaters, non-coders.",
+     "A contraposes validly."
+    ],
+    "a": "All non-skaters are non-coders (equivalent)"
+   },
+   {
+    "t": "ex",
+    "title": "An invalid contraposition",
+    "q": "Does \"No non-jugglers are non-knitters\" follow from \"No knitters are jugglers\"?",
+    "steps": [
+     "It is the contrapositive of an E statement.",
+     "E does not contrapose: the original shades the knitter–juggler overlap, while the contrapositive shades the region outside both circles."
+    ],
+    "a": "no"
+   },
+   {
+    "t": "note",
+    "html": "On the traditional reading, an E statement can be contraposed <b>by limitation</b>: from \"No S are P\" to \"Some non-P are not non-S\", just as an A statement converts by limitation. Like every limitation, it needs the assumption that the classes involved have members."
+   },
+   {
+    "t": "mistake",
+    "html": "Using contraposition on E or I, or swapping the terms without complementing them (which is only conversion). Check: both terms changed places, both gained or lost \"non-\", and the form is A or O."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.4 Conversion, Obversion, and Contraposition"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.6 Venn Diagrams and the Traditional Standpoint (conversion by limitation)"
+   }
+  ]
+ },
+ "trad.immediate-chains": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The steps of <a href=\"/logic/traditional-logic/contraposition/\">contraposition</a>, obversion and conversion can be chained, and combined with the <a href=\"/logic/traditional-logic/square-inferences/\">square of opposition</a>. A chain lets you decide whether one statement follows from another even when the two look nothing alike."
+   },
+   {
+    "t": "key",
+    "html": "A chain is valid only if every step is valid for the form it is applied to: obversion for any form, conversion for E and I, contraposition for A and O (and, on the traditional reading only, subalternation and conversion by limitation)."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Step",
+     "Works on"
+    ],
+    "rows": [
+     [
+      "Obversion",
+      "A, E, I, O"
+     ],
+     [
+      "Conversion",
+      "E, I"
+     ],
+     [
+      "Contraposition",
+      "A, O"
+     ],
+     [
+      "Contradictory (square)",
+      "any form, any reading: it gives the opposite truth value"
+     ],
+     [
+      "Subalternation, limitation",
+      "traditional reading only"
+     ]
+    ],
+    "cap": "Check the form before every step."
+   },
+   {
+    "t": "why",
+    "html": "Each valid step produces a statement with the same meaning (or, for the traditional steps, one that is guaranteed true when the original is). Linking statements that each mean the same as the one before gives a last statement that means the same as the first. One invalid step anywhere breaks the guarantee, even if the remaining steps are fine."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "poets",
+      "campers"
+     ],
+     "circles": 2,
+     "props": [
+      "No poets are campers",
+      "All campers are non-poets"
+     ]
+    },
+    "cap": "The start and the end of a chain: same diagram, same meaning."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A two-step chain",
+    "q": "If \"No poets are campers\" is true, must \"All campers are non-poets\" be true?",
+    "steps": [
+     "Obvert the original (any form): \"All poets are non-campers\".",
+     "That is an A, so contraposition is allowed: \"All non-non-campers are non-poets\", that is, \"All campers are non-poets\"."
+    ],
+    "a": "yes, by obversion then contraposition"
+   },
+   {
+    "t": "ex",
+    "title": "A broken chain",
+    "q": "Does \"Some non-P are S\" follow from \"All S are P\"?",
+    "steps": [
+     "Obvert: \"No S are non-P\". Convert (E is fine): \"No non-P are S\".",
+     "That says no non-P are S, the opposite of what was asked.",
+     "No valid chain reaches \"Some non-P are S\"; in fact it is the contradictory of a statement that does follow."
+    ],
+    "a": "no"
+   },
+   {
+    "t": "mistake",
+    "html": "Losing track of the form and slipping in an invalid step, such as converting an A halfway through a chain. Check: write the letter of each line before choosing the next step."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.4 Conversion, Obversion, and Contraposition"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.6 Venn Diagrams and the Traditional Standpoint (conversion by limitation)"
+   }
+  ]
+ },
+ "trad.syllogism-parts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "We now reach the third act of the mind, reasoning. In <a href=\"/logic/informal-logic/premise-conclusion/\">Premises and Conclusions</a> you found premises and conclusions. A <b>categorical syllogism</b> is an argument with exactly two premises and a conclusion, all three of them <a href=\"/logic/traditional-logic/categorical-propositions/\">categorical propositions</a>, using exactly three terms, each used twice."
+   },
+   {
+    "t": "key",
+    "html": "The conclusion decides the names. Its predicate is the <b>major term</b> (P); its subject is the <b>minor term</b> (S). The term in both premises but not in the conclusion is the <b>middle term</b> (M)."
+   },
+   {
+    "t": "why",
+    "html": "The middle term is the go-between. The conclusion claims some relation between S and P, and the premises can only support it by relating each of them to a third class. If S is tied to M and M is tied to P in the right way, the tie carries over to S and P, and then M disappears from the conclusion. That is why each term appears exactly twice: S and P once in a premise and once in the conclusion, M once in each premise."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "All birds are animals",
+      "All robins are birds"
+     ],
+     "conclusion": "All robins are animals",
+     "show": [
+      "terms"
+     ]
+    },
+    "cap": "S (minor term) in orange, P (major term) in blue, M (middle term) in green."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Naming the terms",
+    "q": "Name the major, minor and middle terms: \"Some readers are runners. All runners are early risers. So some readers are early risers.\"",
+    "steps": [
+     "Start with the conclusion: \"Some readers are early risers\".",
+     "Its predicate, <i>early risers</i>, is the major term (P). Its subject, <i>readers</i>, is the minor term (S).",
+     "<i>Runners</i> appears in both premises and not in the conclusion: the middle term (M)."
+    ],
+    "a": "major: early risers; minor: readers; middle: runners"
+   },
+   {
+    "t": "mistake",
+    "html": "Naming the major term by size (\"animals\" sounds bigger) or by which premise comes first. Only the conclusion decides: its predicate is the major term, its subject the minor term, whatever order the premises were spoken in."
+   },
+   {
+    "t": "note",
+    "html": "The names come from Aristotle: in his first figure the major term is usually the widest class and the minor term the narrowest. The rule we use (look at the conclusion) works for every syllogism."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.1 Standard Form, Mood, and Figure"
+   },
+   {
+    "name": "Aristotle, Prior Analytics I.4–7 (the three figures)"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"Aristotle's Logic\""
+   }
+  ]
+ },
+ "trad.syllogism-standard-form": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once you can name the <a href=\"/logic/traditional-logic/syllogism-parts/\">three terms</a>, you can put any syllogism in a fixed order. That order is what the names mood and figure describe, so it comes first."
+   },
+   {
+    "t": "key",
+    "html": "<b>Standard form</b>: the <b>major premise</b> (the premise with the major term) first, then the <b>minor premise</b> (the premise with the minor term), then the conclusion."
+   },
+   {
+    "t": "why",
+    "html": "A fixed order turns every syllogism into the same pattern, so two arguments with the same pattern can be recognized at once, even when their words differ. People speak arguments in any order (\"We will be late, since the bus is slow and…\"). Putting the conclusion last and the major premise first is like writing a fraction in lowest terms: a standard way to write the same thing, so that comparing is easy."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Find the conclusion (look for so, therefore, since, because).",
+     "Its predicate is the major term: the premise containing it is the major premise.",
+     "The other premise, which contains the minor term, is the minor premise.",
+     "Write: major premise, minor premise, conclusion."
+    ]
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "Some coders are volunteers",
+      "No cyclists are coders"
+     ],
+     "conclusion": "Some volunteers are not cyclists",
+     "show": [
+      "terms"
+     ]
+    },
+    "cap": "Given in either order, the premises are shown in standard form: the major premise (with \"cyclists\") on top."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Conclusion first",
+    "q": "Put in standard form: \"Some volunteers are not cyclists, because no cyclists are coders and some coders are volunteers.\"",
+    "steps": [
+     "\"Because\" marks the premises, so the conclusion is \"Some volunteers are not cyclists\".",
+     "Major term: cyclists. The major premise is \"No cyclists are coders\".",
+     "Minor premise: \"Some coders are volunteers\"."
+    ],
+    "a": "No cyclists are coders / Some coders are volunteers / ∴ Some volunteers are not cyclists"
+   },
+   {
+    "t": "ex",
+    "title": "Premises in the wrong order",
+    "q": "Which is the major premise? \"All squares are rectangles. All rectangles are polygons. Therefore all squares are polygons.\"",
+    "steps": [
+     "Conclusion: \"All squares are polygons\". Its predicate, <i>polygons</i>, is the major term.",
+     "The premise containing \"polygons\" is \"All rectangles are polygons\", although it was spoken second."
+    ],
+    "a": "All rectangles are polygons"
+   },
+   {
+    "t": "mistake",
+    "html": "Keeping the order in which the premises were spoken. Find the conclusion first, then put the premise with its predicate on top. Check: the first line of your standard form must contain the last word-group of the conclusion."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.1 Standard Form, Mood, and Figure"
+   }
+  ]
+ },
+ "trad.mood": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every proposition in a <a href=\"/logic/traditional-logic/syllogism-standard-form/\">standard-form syllogism</a> is an A, E, I or O. Reading the three letters gives a short name for the argument's shape."
+   },
+   {
+    "t": "key",
+    "html": "The <b>mood</b> of a syllogism is the letters of its major premise, minor premise and conclusion, in that order: for example AAA, EIO or OAO."
+   },
+   {
+    "t": "why",
+    "html": "Validity depends only on the pattern, never on what the terms are about. Two syllogisms with the same letters in the same positions have the same pattern of all/some and is/is not, so the mood (together with the figure, next lesson) is enough to decide whether an argument is valid. With 4 choices for each of 3 lines there are 4 × 4 × 4 = 64 moods."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "No artists are early risers",
+      "Some runners are early risers"
+     ],
+     "conclusion": "Some runners are not artists",
+     "show": [
+      "terms",
+      "mood"
+     ]
+    },
+    "cap": "E, I, O: the mood is EIO."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "Reorder, then read",
+    "q": "Find the mood: \"Some potters are knitters. All knitters are gardeners. So some potters are gardeners.\"",
+    "steps": [
+     "The conclusion's predicate is <i>gardeners</i>, so the major premise is \"All knitters are gardeners\": A.",
+     "The minor premise is \"Some potters are knitters\": I.",
+     "The conclusion \"Some potters are gardeners\" is I."
+    ],
+    "a": "AII"
+   },
+   {
+    "t": "ex",
+    "title": "Conclusion first",
+    "q": "Find the mood: \"Some swimmers are not drummers, since no drummers are artists and some swimmers are artists.\"",
+    "steps": [
+     "The conclusion comes first here: \"Some swimmers are not drummers\" (O). Its predicate, <i>drummers</i>, is the major term.",
+     "Major premise: \"No drummers are artists\" (E). Minor premise: \"Some swimmers are artists\" (I).",
+     "Standard order: E, I, O."
+    ],
+    "a": "EIO"
+   },
+   {
+    "t": "note",
+    "html": "A mood alone does not settle validity. EIO happens to be valid in every figure, but AAA is valid only in figure 1: \"All P are M, all S are M, so all S are P\" is not. The next lesson adds the figure."
+   },
+   {
+    "t": "mistake",
+    "html": "Reading the letters in the order the sentences appear rather than in standard-form order. In the example above, the spoken order gives IAI, a different mood. Check: the first letter must belong to the premise with the major term."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.1 Standard Form, Mood, and Figure"
+   }
+  ]
+ },
+ "trad.figure": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/logic/traditional-logic/mood/\">mood</a> does not tell the whole shape of a syllogism. \"All M are P\" and \"All P are M\" are both A, but they place the middle term differently. The <b>figure</b> records where the middle term sits."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Figure",
+     "Major premise",
+     "Minor premise",
+     "Middle term is…"
+    ],
+    "rows": [
+     [
+      "1",
+      "M – P",
+      "S – M",
+      "subject, then predicate"
+     ],
+     [
+      "2",
+      "P – M",
+      "S – M",
+      "predicate twice"
+     ],
+     [
+      "3",
+      "M – P",
+      "M – S",
+      "subject twice"
+     ],
+     [
+      "4",
+      "P – M",
+      "M – S",
+      "predicate, then subject"
+     ]
+    ],
+    "cap": "The four figures (premises in standard order)."
+   },
+   {
+    "t": "key",
+    "html": "Figure 1: the middle term is the subject of the major premise and the predicate of the minor. Figure 2: predicate of both. Figure 3: subject of both. Figure 4: predicate of the major, subject of the minor. The <b>form</b> of a syllogism is its mood and figure, such as AII-3."
+   },
+   {
+    "t": "why",
+    "html": "The figure matters because it changes which terms are distributed where. \"All M are P\" distributes M, but \"All P are M\" does not. With 64 moods and 4 figures there are 256 forms, and each one is either always valid or never valid, whatever its terms."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "All birds are animals",
+      "All robins are birds"
+     ],
+     "conclusion": "All robins are animals",
+     "show": [
+      "terms",
+      "mood",
+      "figure"
+     ]
+    },
+    "cap": "Middle term \"birds\": subject of the major premise, predicate of the minor: figure 1. Form AAA-1."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Figure 2",
+    "q": "Find the figure: \"No mammals are reptiles. All snakes are reptiles. So no snakes are mammals.\"",
+    "steps": [
+     "The conclusion's predicate is <i>mammals</i>, so \"No mammals are reptiles\" is the major premise. The middle term is <i>reptiles</i>.",
+     "In the major premise, M is the predicate.",
+     "In the minor premise \"All snakes are reptiles\", M is the predicate again.",
+     "Predicate twice is figure 2."
+    ],
+    "a": "figure 2 (form EAE-2, Cesare)"
+   },
+   {
+    "t": "ex",
+    "title": "Figure 3",
+    "q": "Find the figure: \"All knitters are climbers. All knitters are runners. So some runners are climbers.\"",
+    "steps": [
+     "Middle term: <i>knitters</i>.",
+     "It is the subject of both premises."
+    ],
+    "a": "figure 3 (form AAI-3)"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing up figures 1 and 4. In figure 1 the middle term is the subject of the major premise and the predicate of the minor (M–P, S–M); figure 4 is the reverse (P–M, M–S). Check: put the premises in standard order first, then trace where M sits in each line."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.1 Standard Form, Mood, and Figure"
+   },
+   {
+    "name": "Aristotle, Prior Analytics I.4–7 (the three figures)"
+   }
+  ]
+ },
+ "trad.venn-syllogism": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A syllogism is about three classes, so its picture needs three circles: S on the left, P on the right, M below. They make eight regions. You already know how to <a href=\"/logic/traditional-logic/venn-propositions/\">diagram one proposition</a>; now you diagram two."
+   },
+   {
+    "t": "key",
+    "html": "Diagram <b>only the premises</b>. The syllogism is <b>valid</b> if the picture then already shows the conclusion, with nothing more drawn. If you would have to add something, it is invalid."
+   },
+   {
+    "t": "why",
+    "html": "A valid argument is one where the premises cannot be true while the conclusion is false. The diagram of the premises shows everything the premises say, and nothing more. If the conclusion is already in that picture, every situation that fits the premises fits the conclusion too, which is exactly validity. If the conclusion needs one more mark, then a situation fitting the premises but not the conclusion is possible."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "golfers",
+      "campers",
+      "bakers"
+     ],
+     "premises": [
+      "No bakers are campers",
+      "All golfers are bakers"
+     ],
+     "conclusion": "No golfers are campers",
+     "steps": true,
+     "numbers": true
+    },
+    "cap": "Celarent, EAE-1: step through the premises. The golfer–camper overlap ends up fully shaded, so the conclusion is shown."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A valid syllogism",
+    "q": "Test: \"No bakers are campers. All golfers are bakers. So no golfers are campers.\" (S = golfers, P = campers, M = bakers)",
+    "steps": [
+     "Premise 1: no bakers are campers. Shade the overlap of M and P (regions 5 and 6).",
+     "Premise 2: all golfers are bakers. Shade the part of S outside M (regions 1 and 2).",
+     "The conclusion says the overlap of S and P (regions 2 and 5) is empty. Both are already shaded."
+    ],
+    "a": "valid"
+   },
+   {
+    "t": "ex",
+    "title": "An invalid one with true statements",
+    "q": "Test: \"All squares are polygons. All squares are rectangles. So all rectangles are polygons.\" (S = rectangles, P = polygons, M = squares)",
+    "steps": [
+     "Premise 1 shades the part of M outside P (regions 4 and 7). Premise 2 shades the part of M outside S (regions 6 and 7).",
+     "The conclusion needs the part of S outside P (regions 1 and 4) empty. Region 4 is shaded, but region 1 is not.",
+     "Every statement is true, yet the picture does not show the conclusion."
+    ],
+    "a": "invalid"
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "rectangles",
+      "polygons",
+      "squares"
+     ],
+     "premises": [
+      "All squares are polygons",
+      "All squares are rectangles"
+     ],
+     "conclusion": "All rectangles are polygons",
+     "numbers": true
+    },
+    "cap": "Region 1 stays open: the conclusion is not shown, so the form is invalid even though every statement is true."
+   },
+   {
+    "t": "mistake",
+    "html": "Diagramming the conclusion too, then saying the picture \"matches\". Only the premises are drawn; then you read the conclusion off the picture. Check: before reading, count your marks. There should be exactly one mark (or one pair of shaded regions) per premise."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.2 Venn Diagrams"
+   }
+  ]
+ },
+ "trad.venn-particular": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "With an I or O premise, the <a href=\"/logic/traditional-logic/venn-syllogism/\">Venn test</a> needs an X, and the X needs care: a premise like \"Some S are M\" says something is in the S–M overlap, but that overlap is cut in two by the P circle."
+   },
+   {
+    "t": "key",
+    "html": "Diagram universal premises first. Then place the X for a particular premise: in a region if only one of its two regions is still open, or <b>on the line</b> between them if both are open. An X on a line does not show that something is on either side."
+   },
+   {
+    "t": "why",
+    "html": "Shading first can settle where the X must go: if one half of the overlap is already empty, the something must be in the other half. Doing the X first would force a guess. And when both halves are open, the premise leaves it unknown which half holds the thing, so the X sits on the line. Putting it on one side would add information the premises never gave."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "students",
+      "readers",
+      "athletes"
+     ],
+     "premises": [
+      "All athletes are readers",
+      "Some students are athletes"
+     ],
+     "conclusion": "Some students are readers",
+     "steps": true,
+     "numbers": true
+    },
+    "cap": "Darii, AII-1: shade first, and the X has only one place to go (region 5)."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Shade first",
+    "q": "Test: \"All athletes are readers. Some students are athletes. So some students are readers.\" (S = students, P = readers, M = athletes)",
+    "steps": [
+     "Universal premise first: no athletes outside the readers. Shade regions 4 and 7.",
+     "Particular premise: something is a student and an athlete, regions 4 or 5. Region 4 is shaded, so the X goes in region 5.",
+     "The conclusion needs an X in the student–reader overlap (regions 2 or 5). There is one in region 5."
+    ],
+    "a": "valid"
+   },
+   {
+    "t": "ex",
+    "title": "An X on the line",
+    "q": "Test: \"All painters are bakers. Some golfers are bakers. So some golfers are painters.\" (S = golfers, P = painters, M = bakers)",
+    "steps": [
+     "Shade the part of the painters circle outside the bakers: regions 2 and 3.",
+     "Some golfers are bakers: regions 4 or 5, both open, so the X goes on the line between them.",
+     "The conclusion needs an X in region 2 or 5. The X might be in region 4 instead."
+    ],
+    "a": "invalid"
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "golfers",
+      "painters",
+      "bakers"
+     ],
+     "premises": [
+      "All painters are bakers",
+      "Some golfers are bakers"
+     ],
+     "conclusion": "Some golfers are painters",
+     "numbers": true
+    },
+    "cap": "The X sits on the line between regions 4 and 5, so the conclusion is not shown."
+   },
+   {
+    "t": "mistake",
+    "html": "Dropping the X into one region when the premise allows two. That adds information and can make an invalid syllogism look valid. Check: for each X, ask \"Did a premise force this side?\" If not, it belongs on the line."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.2 Venn Diagrams"
+   }
+  ]
+ },
+ "trad.rules-terms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Venn diagrams test one syllogism at a time. Rules test by looking at <a href=\"/logic/traditional-logic/distribution/\">distribution</a> and quality, and they also name what went wrong. The first two rules are about distribution."
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Rule 1</b>: the middle term must be distributed at least once. Breaking it: <b>undistributed middle</b>.",
+     "<b>Rule 2</b>: a term distributed in the conclusion must be distributed in its premise. Breaking it: <b>illicit major</b> (for P) or <b>illicit minor</b> (for S)."
+    ]
+   },
+   {
+    "t": "key",
+    "html": "Mark the distributed terms (A: subject; E: both; I: neither; O: predicate). The middle term needs a mark in at least one premise, and every term marked in the conclusion needs a mark in its premise."
+   },
+   {
+    "t": "why",
+    "html": "Rule 1: if neither premise speaks of all of M, the premises may be about different parts of M, and then nothing links S to P. Rule 2: a conclusion that speaks of every P (or every S) claims more than a premise that spoke only of some of them. A conclusion can never say more about a class than the premises said."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "All dogs are mammals",
+      "All cats are mammals"
+     ],
+     "conclusion": "All cats are dogs",
+     "show": [
+      "terms",
+      "dist",
+      "rules",
+      "verdict"
+     ]
+    },
+    "cap": "\"Mammals\" is the predicate of two A statements, so it is never distributed: undistributed middle."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Undistributed middle",
+    "q": "Which rule does this break? \"All dogs are mammals. All cats are mammals. So all cats are dogs.\"",
+    "steps": [
+     "Distributed terms: premise 1, dogs; premise 2, cats; conclusion, cats.",
+     "The middle term <i>mammals</i> is distributed in neither premise.",
+     "The dogs and the cats may be different parts of the mammals."
+    ],
+    "a": "undistributed middle"
+   },
+   {
+    "t": "ex",
+    "title": "Illicit major",
+    "q": "Which rule does this break? \"All early risers are climbers. No singers are early risers. So no singers are climbers.\"",
+    "steps": [
+     "The conclusion is E, so both <i>singers</i> and <i>climbers</i> are distributed in it.",
+     "The major term <i>climbers</i> appears in the major premise as the predicate of an A statement: not distributed."
+    ],
+    "a": "illicit major"
+   },
+   {
+    "t": "mistake",
+    "html": "Undistributed middle: \"All dogs are animals; all cats are animals; so all cats are dogs.\" Both premises talk about only part of the animals. Check: underline the middle term each time it is distributed. If it has no underline, stop: the syllogism is invalid."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.3 Rules and Fallacies"
+   }
+  ]
+ },
+ "trad.rules-quality": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/logic/traditional-logic/rules-terms/\">distribution rules</a> are two of six. The next three are about quality, that is, about the negative statements (E and O)."
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Rule 3</b>: two negative premises are not allowed. Breaking it: <b>exclusive premises</b>.",
+     "<b>Rule 4</b>: a negative premise requires a negative conclusion, and a negative conclusion requires a negative premise. Breaking it: <b>affirmative conclusion from a negative premise</b>, or <b>negative conclusion from affirmative premises</b>."
+    ]
+   },
+   {
+    "t": "key",
+    "html": "Count the negatives. Zero negative premises: the conclusion must be affirmative. Exactly one: the conclusion must be negative. Two: the syllogism is invalid."
+   },
+   {
+    "t": "why",
+    "html": "A negative premise says that M excludes something. If both premises only say what M excludes, they never say what M includes, so S and P are never brought together and nothing follows about them. With one negative premise, one of S or P is linked to M and the other is shut out of M, so the only link that can follow is an exclusion: a negative conclusion. And affirmative premises only include classes in one another; they cannot produce an exclusion."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "No fish are mammals",
+      "No whales are fish"
+     ],
+     "conclusion": "No whales are mammals",
+     "show": [
+      "terms",
+      "rules",
+      "verdict"
+     ]
+    },
+    "cap": "Two negative premises: exclusive premises. (The premises are true and the conclusion false.)"
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Exclusive premises",
+    "q": "Is this valid? \"No fish are mammals. No whales are fish. So no whales are mammals.\"",
+    "steps": [
+     "Both premises are negative (E, E).",
+     "They say only what the fish exclude, so they never connect whales and mammals.",
+     "Here the premises are true and the conclusion false, which no valid form allows."
+    ],
+    "a": "invalid: exclusive premises"
+   },
+   {
+    "t": "ex",
+    "title": "Affirmative from a negative",
+    "q": "Which quality rule does this break? \"No poets are hikers. All hikers are skaters. So some skaters are poets.\"",
+    "steps": [
+     "One negative premise (E).",
+     "The conclusion (I) is affirmative."
+    ],
+    "a": "affirmative conclusion from a negative premise"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking two negative premises can still link the terms (\"No cats are dogs; no dogs are birds; so no cats are birds\" sounds right). If neither premise says what the middle term includes, the terms never meet. Check: count the E and O premises first; two means stop."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.3 Rules and Fallacies"
+   }
+  ]
+ },
+ "trad.syllogism-fallacies": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Put the <a href=\"/logic/traditional-logic/rules-terms/\">distribution rules</a> and the <a href=\"/logic/traditional-logic/rules-quality/\">quality rules</a> together with one more, and you have the six rules for a standard-form syllogism (on the modern reading). Each broken rule has a name."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Rule",
+     "Fallacy when broken"
+    ],
+    "rows": [
+     [
+      "1. The middle term is distributed at least once.",
+      "Undistributed middle"
+     ],
+     [
+      "2. A term distributed in the conclusion is distributed in its premise.",
+      "Illicit major / illicit minor"
+     ],
+     [
+      "3. Not both premises negative.",
+      "Exclusive premises"
+     ],
+     [
+      "4. A negative premise needs a negative conclusion, and the reverse.",
+      "Affirmative conclusion from a negative premise / negative conclusion from affirmative premises"
+     ],
+     [
+      "5. (Modern reading) Two universal premises cannot give a particular conclusion.",
+      "Existential fallacy"
+     ],
+     [
+      "A syllogism must have exactly three terms.",
+      "Four terms"
+     ]
+    ],
+    "cap": "The rules and their fallacies."
+   },
+   {
+    "t": "key",
+    "html": "A syllogism is valid (modern reading) exactly when it breaks none of the rules. Check every rule: one syllogism can break several, and each name points to a different flaw."
+   },
+   {
+    "t": "why",
+    "html": "The existential fallacy is the rule we have not met yet. On the modern reading, universal premises say only that regions are empty, so they put no X in the diagram. A particular conclusion needs an X. So two universal premises can never prove a particular conclusion, unless we add the traditional assumption that some class has members (the last lesson of this unit)."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "All bakers are skaters",
+      "All early risers are bakers"
+     ],
+     "conclusion": "No early risers are skaters",
+     "show": [
+      "terms",
+      "dist",
+      "rules",
+      "verdict"
+     ]
+    },
+    "cap": "Two rules broken at once: illicit major and negative conclusion from affirmative premises."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Two fallacies",
+    "q": "Name every fallacy: \"All bakers are skaters. All early risers are bakers. So no early risers are skaters.\"",
+    "steps": [
+     "Distribution: the conclusion (E) distributes <i>skaters</i>, but the major premise (A) does not: illicit major.",
+     "Quality: both premises affirmative, conclusion negative: negative conclusion from affirmative premises.",
+     "The middle term is distributed (premise 1) and the minor term is fine."
+    ],
+    "a": "illicit major; negative conclusion from affirmative premises"
+   },
+   {
+    "t": "ex",
+    "title": "Four terms",
+    "q": "What is wrong with: \"All chess players are thinkers. All chess fans are viewers. So all chess players are viewers\"?",
+    "steps": [
+     "Count the terms: chess players, thinkers, chess fans, viewers. That is four.",
+     "With no shared middle term, the premises cannot connect anything."
+    ],
+    "a": "four terms"
+   },
+   {
+    "t": "mistake",
+    "html": "Stopping at the first broken rule. The question \"which fallacies?\" wants all of them. Check all five rules in order (middle, major, minor, the negatives, universals to a particular) every time."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.3 Rules and Fallacies"
+   }
+  ]
+ },
+ "trad.valid-forms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Of the 256 forms you met in <a href=\"/logic/traditional-logic/figure/\">Figure</a>, only fifteen pass every rule and the <a href=\"/logic/traditional-logic/venn-particular/\">Venn test</a> on the modern reading. Medieval students memorized them with names whose vowels spell the mood."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Figure 1",
+     "Figure 2",
+     "Figure 3",
+     "Figure 4"
+    ],
+    "rows": [
+     [
+      "Barbara (AAA)",
+      "Cesare (EAE)",
+      "Disamis (IAI)",
+      "Camenes (AEE)"
+     ],
+     [
+      "Celarent (EAE)",
+      "Camestres (AEE)",
+      "Datisi (AII)",
+      "Dimaris (IAI)"
+     ],
+     [
+      "Darii (AII)",
+      "Festino (EIO)",
+      "Bokardo (OAO)",
+      "Fresison (EIO)"
+     ],
+     [
+      "Ferio (EIO)",
+      "Baroko (AOO)",
+      "Ferison (EIO)",
+      ""
+     ]
+    ],
+    "cap": "The fifteen forms valid on the modern reading."
+   },
+   {
+    "t": "key",
+    "html": "A form is valid on the modern reading exactly when it is one of these fifteen. The first three vowels of each name give the mood: <b>B<u>a</u>rb<u>a</u>r<u>a</u></b> is AAA, <b>C<u>e</u>l<u>a</u>r<u>e</u>nt</b> is EAE, <b>F<u>e</u>r<u>i</u><u>o</u></b> is EIO."
+   },
+   {
+    "t": "why",
+    "html": "Validity belongs to the form, so a short list of forms covers every valid syllogism ever written. Each name was checked once, and every argument with the same mood and figure inherits the result. You can confirm any entry with a Venn diagram or the rules; the names only save you the work."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "No reptiles are mammals",
+      "Some pets are reptiles"
+     ],
+     "conclusion": "Some pets are not mammals",
+     "show": [
+      "terms",
+      "mood",
+      "figure",
+      "name",
+      "verdict"
+     ]
+    },
+    "cap": "EIO-1: Ferio."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Name the form",
+    "q": "What is the name of: \"All runners are early risers. Some runners are readers. So some readers are early risers.\"?",
+    "steps": [
+     "Major premise \"All runners are early risers\": A. Minor \"Some runners are readers\": I. Conclusion: I. Mood AII.",
+     "The middle term <i>runners</i> is the subject of both premises: figure 3.",
+     "AII-3 is Datisi."
+    ],
+    "a": "Datisi"
+   },
+   {
+    "t": "ex",
+    "title": "From the name",
+    "q": "Write Camestres with S, P and M.",
+    "steps": [
+     "The vowels a, e, e give AEE. Camestres is in figure 2 (P–M, S–M).",
+     "Major: All P are M. Minor: No S are M. Conclusion: No S are P."
+    ],
+    "a": "All P are M / No S are M / ∴ No S are P"
+   },
+   {
+    "t": "mistake",
+    "html": "Learning the names without the forms. A name is useful only if you can read its mood from the vowels and know its figure. Check: from \"Ferio\", can you write the three lines with S, P and M? (No M are P / Some S are M / ∴ Some S are not P.)"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.3 Rules and Fallacies"
+   },
+   {
+    "name": "William of Sherwood, Introduction to Logic (the mnemonic names, 13th century)"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"Aristotle's Logic\""
+   }
+  ]
+ },
+ "trad.conditional-validity": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The <a href=\"/logic/traditional-logic/valid-forms/\">fifteen valid forms</a> assume nothing about existence. On the <a href=\"/logic/traditional-logic/existential-import/\">traditional reading</a>, where classes are assumed to have members, nine more forms become valid. They are called <b>conditionally valid</b>."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Form",
+     "Name",
+     "Class that must have members"
+    ],
+    "rows": [
+     [
+      "AAI-1",
+      "Barbari",
+      "S"
+     ],
+     [
+      "EAO-1",
+      "Celaront",
+      "S"
+     ],
+     [
+      "AEO-2",
+      "Camestros",
+      "S"
+     ],
+     [
+      "EAO-2",
+      "Cesaro",
+      "S"
+     ],
+     [
+      "AAI-3",
+      "Darapti",
+      "M"
+     ],
+     [
+      "EAO-3",
+      "Felapton",
+      "M"
+     ],
+     [
+      "AEO-4",
+      "Camenos",
+      "S"
+     ],
+     [
+      "EAO-4",
+      "Fesapo",
+      "M"
+     ],
+     [
+      "AAI-4",
+      "Bramantip",
+      "P"
+     ]
+    ],
+    "cap": "The nine conditionally valid forms."
+   },
+   {
+    "t": "key",
+    "html": "A conditionally valid form commits the existential fallacy on the modern reading, but it is valid if one particular class has at least one member. The Venn test shows which class: the one whose circle has its only open part inside the region the conclusion needs."
+   },
+   {
+    "t": "why",
+    "html": "Each of these forms has two universal premises and a particular conclusion. The premises shade regions but draw no X, and the conclusion needs an X. Now assume a class has members. If the shading leaves that circle open only inside the conclusion's region, the member must be there, which puts the X right where the conclusion needs it. Assuming a different class may not help, so the choice of class matters."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "S",
+      "P",
+      "M"
+     ],
+     "premises": [
+      "All M are P",
+      "All S are M"
+     ],
+     "conclusion": "Some S are P",
+     "assume": "S",
+     "numbers": true
+    },
+    "cap": "AAI-1 (Barbari): with the assumption that there are S, the only open part of S is region 5, inside the conclusion's region."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Barbari",
+    "q": "\"All mammals are animals. All whales are mammals. So some whales are animals.\" Valid on which reading?",
+    "steps": [
+     "AAI-1: two universals, a particular conclusion. On the modern reading: existential fallacy.",
+     "Assume there are whales (S). The shading leaves only the whale–mammal–animal region open in the whale circle, so a whale must be there.",
+     "So it is valid on the traditional reading, if there are whales."
+    ],
+    "a": "conditionally valid: S must have members"
+   },
+   {
+    "t": "ex",
+    "title": "Darapti",
+    "q": "For AAI-3, \"All M are P. All M are S. So some S are P\", which class must have members?",
+    "steps": [
+     "Assuming S helps? The S circle still has open parts outside P (region 1), so no.",
+     "Assume M has members: both premises shade every part of M except the region inside S and P (region 5). The X goes there."
+    ],
+    "a": "M"
+   },
+   {
+    "t": "mistake",
+    "html": "Counting AAI-1 as valid on the modern reading. It needs the assumption that the minor term's class is not empty, or it commits the existential fallacy. Check: two universal premises with a particular conclusion always need an existence assumption."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.2 Venn Diagrams"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.2 Venn Diagrams (the traditional standpoint)"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.3 Rules and Fallacies"
+   }
+  ]
+ },
+ "trad.reducing-terms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A syllogism must have exactly three terms. Real arguments often seem to have more: one premise says \"students\" and another \"pupils\", or one says \"players\" and another \"non-players\". Before calling it the fallacy of four terms, try to reduce the number of terms with tools you already have: synonyms, <a href=\"/logic/traditional-logic/complements/\">complements</a> and <a href=\"/logic/traditional-logic/obversion/\">obversion</a>, and then put it in <a href=\"/logic/traditional-logic/syllogism-standard-form/\">standard form</a>."
+   },
+   {
+    "t": "key",
+    "html": "Replace synonyms with one word. When a term appears with and without \"non-\", rewrite a premise (by obversion, or by contraposition for A and O) so the \"non-\" disappears. If three terms remain, test the syllogism as usual."
+   },
+   {
+    "t": "why",
+    "html": "Rewriting is allowed because the new statement means exactly the same as the old one. Synonyms name the same class; obversion and valid contraposition give equivalent statements. Changing the words without changing the claims cannot change whether the argument is valid, so the reduced syllogism stands or falls with the original."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Seems like",
+     "Rewrite",
+     "Why it is allowed"
+    ],
+    "rows": [
+     [
+      "students / pupils",
+      "use \"students\" both times",
+      "synonyms name one class"
+     ],
+     [
+      "No S are non-P",
+      "All S are P",
+      "obversion"
+     ],
+     [
+      "All non-P are non-S",
+      "All S are P",
+      "contraposition (A)"
+     ]
+    ],
+    "cap": "Three ways to reduce terms."
+   },
+   {
+    "t": "viz",
+    "name": "lg-syllogism",
+    "opts": {
+     "premises": [
+      "All bakers are anglers",
+      "Some sailors are not anglers"
+     ],
+     "conclusion": "Some sailors are not bakers",
+     "show": [
+      "terms",
+      "mood",
+      "figure",
+      "name",
+      "verdict"
+     ]
+    },
+    "cap": "After reducing the first example below: AOO-2, Baroko, valid."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Removing a complement",
+    "q": "Reduce to three terms and test: \"No bakers are non-anglers. Some sailors are not anglers. So some sailors are not bakers.\"",
+    "steps": [
+     "Four apparent terms: bakers, non-anglers, sailors, anglers. But non-anglers is the complement of anglers.",
+     "Obvert premise 1: change the quality and complement the predicate. \"No bakers are non-anglers\" becomes \"All bakers are anglers\".",
+     "Now: All bakers are anglers / Some sailors are not anglers / ∴ Some sailors are not bakers. That is AOO-2 (Baroko)."
+    ],
+    "a": "three terms; valid"
+   },
+   {
+    "t": "ex",
+    "title": "Synonyms and contraposition",
+    "q": "Reduce and test: \"All non-runners are non-athletes. All pupils on the team are athletes. So all students on the team are runners.\"",
+    "steps": [
+     "\"Pupils on the team\" and \"students on the team\" are synonyms: use one phrase.",
+     "Contrapose premise 1 (an A statement): \"All athletes are runners\".",
+     "Now: All athletes are runners / All students on the team are athletes / ∴ All students on the team are runners. That is AAA-1 (Barbara)."
+    ],
+    "a": "three terms; valid"
+   },
+   {
+    "t": "mistake",
+    "html": "Calling an argument invalid for four terms when two of its terms are synonyms or complements, or the reverse: treating two terms as the same when the meaning has shifted (\"light\" as in weight and \"light\" as in color). Check: do the two words name exactly the same class, or exact complements? Only then may you merge them."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.4 Reducing the Number of Terms"
+   }
+  ]
+ },
+ "trad.everyday-syllogisms": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Arguments in conversation, ads and articles use everyday words. Testing them takes everything from this course so far: <a href=\"/logic/traditional-logic/translating-nonstandard/\">standard form</a>, <a href=\"/logic/traditional-logic/only-exceptives/\">\"only\"</a>, <a href=\"/logic/traditional-logic/reducing-terms/\">reducing terms</a>, and then a Venn diagram or the rules."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Find the conclusion (indicator words help).",
+     "Translate each statement into standard form; watch \"only\", \"not every\" and verbs.",
+     "Reduce to three terms if needed.",
+     "Arrange in standard form and find the mood and figure.",
+     "Test with the rules or a Venn diagram."
+    ]
+   },
+   {
+    "t": "key",
+    "html": "Translate first, then test. Every judgment about validity is made on the standard-form version."
+   },
+   {
+    "t": "why",
+    "html": "Everyday wording hides the form. \"Only members may vote\" looks like it starts with the subject \"members\", but its standard form puts members in the predicate. If you test the wording instead of the meaning, you test the wrong argument. Translation is where most mistakes happen, so it gets its own step before any testing."
+   },
+   {
+    "t": "viz",
+    "name": "lg-venn3",
+    "opts": {
+     "terms": [
+      "volunteers",
+      "potters",
+      "knitters"
+     ],
+     "premises": [
+      "All knitters are volunteers",
+      "Some potters are knitters"
+     ],
+     "conclusion": "Some potters are volunteers",
+     "numbers": true
+    },
+    "cap": "Darii after translation: the X lands in region 5, inside the potter–volunteer overlap."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A hidden \"only\"",
+    "q": "Is this valid? \"Only people with a ticket can enter the gym. Some parents can enter the gym. So some parents are people with a ticket.\"",
+    "steps": [
+     "\"Only people with a ticket can enter\" → All people who can enter the gym are people with a ticket.",
+     "\"Some parents can enter\" → Some parents are people who can enter the gym.",
+     "Conclusion: Some parents are people with a ticket. Middle term: people who can enter the gym.",
+     "Standard form: All M are P / Some S are M / ∴ Some S are P. That is AII-1, Darii."
+    ],
+    "a": "valid"
+   },
+   {
+    "t": "ex",
+    "title": "Not every",
+    "q": "Is this valid? \"Not every birdwatcher is a skater. None of the skaters are drummers. Hence there are birdwatchers who are not drummers.\"",
+    "steps": [
+     "Translate: Some birdwatchers are not skaters (O). No skaters are drummers (E). Some birdwatchers are not drummers (O).",
+     "Two negative premises."
+    ],
+    "a": "invalid: exclusive premises"
+   },
+   {
+    "t": "mistake",
+    "html": "Testing before translating, or translating \"only\" the wrong way round. Reversing \"only\" turns \"All people who enter are ticket holders\" into \"All ticket holders enter\", and that flips a valid argument into an invalid one (or the reverse). Check: write the standard form of every line before you look for the middle term."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.5 Ordinary Language Arguments"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 4.7 Translating Ordinary Language Statements into Categorical Form"
+   }
+  ]
+ },
+ "trad.enthymemes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/logic/informal-logic/unstated-premises/\">Unstated Premises</a> you saw that people leave obvious premises unsaid. A syllogism with a premise or the conclusion left out is called an <b>enthymeme</b>. To evaluate it, you first supply the missing part, and <a href=\"/logic/traditional-logic/everyday-syllogisms/\">test it</a> like any syllogism."
+   },
+   {
+    "t": "key",
+    "html": "Supply the missing statement that makes the syllogism <b>valid</b> and is as plausible as possible. Then judge the whole argument: valid, and are the premises (including the one you supplied) true?"
+   },
+   {
+    "t": "why",
+    "html": "A fair reader fills the gap the way the speaker most likely meant it: with a premise that makes the reasoning work. Supplying a premise that makes the argument invalid would attack a position nobody held. But the supplied premise must also be believable; choosing a claim that is stronger than needed and plainly false would be unfair in the other direction."
+   },
+   {
+    "t": "viz",
+    "name": "lg-argmap",
+    "opts": {
+     "nodes": [
+      {
+       "id": 1,
+       "text": "Some swimmers are cyclists."
+      },
+      {
+       "id": 2,
+       "text": "No knitters are cyclists.",
+       "kind": "unstated"
+      },
+      {
+       "id": 3,
+       "text": "Some swimmers are not knitters.",
+       "kind": "conclusion"
+      }
+     ],
+     "links": [
+      {
+       "from": [
+        1,
+        2
+       ],
+       "to": 3
+      }
+     ]
+    },
+    "cap": "The unstated premise joins the stated one to make a valid syllogism (EIO-2, Festino)."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A missing premise",
+    "q": "Supply the missing premise: \"Some swimmers are cyclists, so some swimmers are not knitters.\"",
+    "steps": [
+     "The conclusion's terms are swimmers (S) and knitters (P). The stated premise uses swimmers and cyclists, so cyclists is the middle term.",
+     "The missing premise must link cyclists and knitters, and since the conclusion is negative, it must be negative.",
+     "\"No knitters are cyclists\" gives EIO-2 (Festino), which is valid. (\"No cyclists are knitters\" says the same.)"
+    ],
+    "a": "No knitters are cyclists"
+   },
+   {
+    "t": "ex",
+    "title": "Weak or strong?",
+    "q": "Supply a premise: \"Leo is invited on the hike, because all the campers are invited.\"",
+    "steps": [
+     "In standard form: All campers are invited people / ∴ All people identical to Leo are invited people. The missing premise links Leo and campers.",
+     "\"All people identical to Leo are campers\" (Leo is a camper) makes it Barbara, valid.",
+     "A stronger premise such as \"Everyone in town is a camper\" would also work, but it is plainly false. The fair choice is the weaker, plausible one."
+    ],
+    "a": "Leo is a camper."
+   },
+   {
+    "t": "mistake",
+    "html": "Supplying a premise that makes the syllogism invalid (such as \"All cyclists are knitters\" in the first example, which leaves two affirmative premises with a negative conclusion), or one so strong that it is plainly false when a weaker true one would work. Check: test the completed syllogism, then ask if the premise you added is believable."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.6 Enthymemes"
+   },
+   {
+    "name": "Aristotle, Rhetoric I.2 (the enthymeme)"
+   }
+  ]
+ },
+ "trad.sorites": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <b>sorites</b> is a chain of three or more premises leading to one conclusion. It packs several <a href=\"/logic/traditional-logic/enthymemes/\">enthymemes</a> together: each step produces an unstated intermediate conclusion that becomes a premise of the next step."
+   },
+   {
+    "t": "key",
+    "html": "A sorites is valid when every link in the chain is a valid syllogism. To test it, put the premises in chain order, draw each intermediate conclusion, and test each link."
+   },
+   {
+    "t": "why",
+    "html": "Each link takes the conclusion so far and one new premise, and produces a new conclusion. If every link is valid, the truth of the premises passes along the chain like a relay, all the way to the end. One bad link breaks the relay: what comes after it is no longer guaranteed, even if every later link is fine."
+   },
+   {
+    "t": "viz",
+    "name": "lg-argmap",
+    "opts": {
+     "nodes": [
+      {
+       "id": 1,
+       "text": "All actors are climbers."
+      },
+      {
+       "id": 2,
+       "text": "All climbers are anglers."
+      },
+      {
+       "id": 3,
+       "text": "All actors are anglers.",
+       "kind": "sub"
+      },
+      {
+       "id": 4,
+       "text": "All anglers are bakers."
+      },
+      {
+       "id": 5,
+       "text": "All actors are bakers.",
+       "kind": "conclusion"
+      }
+     ],
+     "links": [
+      {
+       "from": [
+        1,
+        2
+       ],
+       "to": 3
+      },
+      {
+       "from": [
+        3,
+        4
+       ],
+       "to": 5
+      }
+     ]
+    },
+    "cap": "Two links, each Barbara. The middle box is the hidden intermediate conclusion."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Ordering the chain",
+    "q": "What follows? \"All anglers are bakers. All actors are climbers. All climbers are anglers.\"",
+    "steps": [
+     "Find the term that is never a predicate: <i>actors</i>. Start there: All actors are climbers.",
+     "Next, the premise about climbers: All climbers are anglers. Link 1 (Barbara): All actors are anglers.",
+     "Then the premise about anglers: All anglers are bakers. Link 2 (Barbara): All actors are bakers."
+    ],
+    "a": "All actors are bakers."
+   },
+   {
+    "t": "ex",
+    "title": "A negative last link",
+    "q": "What follows? \"All poets are hikers. No singers are runners. All hikers are singers.\"",
+    "steps": [
+     "Chain: poets → hikers → singers, then \"no singers are runners\".",
+     "Link 1: All poets are hikers, all hikers are singers, so all poets are singers (Barbara).",
+     "Link 2: No singers are runners, all poets are singers, so no poets are runners (Celarent)."
+    ],
+    "a": "No poets are runners."
+   },
+   {
+    "t": "note",
+    "html": "Lewis Carroll, the author of <i>Alice in Wonderland</i>, wrote famous sorites puzzles with silly premises, such as chains about babies, crocodiles and logic. Silly premises are a good reminder that validity is about form, not about whether the premises are true."
+   },
+   {
+    "t": "mistake",
+    "html": "Checking only the first and last premises. Each step in the chain must be a valid syllogism on its own; one undistributed middle in the middle of the chain breaks the whole sorites. Check: write out every intermediate conclusion and test each link."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 5.7 Sorites"
+   },
+   {
+    "name": "Lewis Carroll, Symbolic Logic (1896), sorites problems"
+   }
+  ]
+ },
+ "trad.hypothetical-propositions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Not every proposition is <a href=\"/logic/traditional-logic/categorical-propositions/\">categorical</a>. A <b>hypothetical proposition</b> joins two whole statements with \"if\": \"If it rains, then the game is canceled.\" The part after \"if\" is the <b>antecedent</b>; the part after \"then\" is the <b>consequent</b>. You met these in <a href=\"/logic/informal-logic/conditional-fallacies/\">Affirming the Consequent and Denying the Antecedent</a>."
+   },
+   {
+    "t": "key",
+    "html": "\"If P, then Q\" says that P is enough for Q. \"Q if P\", \"Q provided that P\", \"Whenever P, Q\" and \"<b>P only if Q</b>\" all say the same thing: P is the antecedent and Q the consequent."
+   },
+   {
+    "t": "why",
+    "html": "\"P only if Q\" says that P cannot happen without Q: Q is required. So whenever P happens, Q must have happened too, and that is exactly \"If P, then Q\". \"You may drive only if you have a license\" means: if you may drive, you have a license. It does not promise that having a license lets you drive (you might also need insurance). The word \"only\" points to the requirement, which becomes the consequent."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Wording",
+     "If …, then …"
+    ],
+    "rows": [
+     [
+      "The game is canceled if it rains.",
+      "If it rains, then the game is canceled."
+     ],
+     [
+      "You may drive only if you have a license.",
+      "If you may drive, then you have a license."
+     ],
+     [
+      "The cake burns whenever it bakes too long.",
+      "If the cake bakes too long, then it burns."
+     ],
+     [
+      "A license is necessary for driving.",
+      "If you drive, then you have a license."
+     ],
+     [
+      "Rain is sufficient for canceling the game.",
+      "If it rains, then the game is canceled."
+     ]
+    ],
+    "cap": "One meaning, many wordings."
+   },
+   {
+    "t": "viz",
+    "name": "lg-sort",
+    "opts": {
+     "bins": [
+      "Means \"If it rains, the field floods\"",
+      "Means \"If the field floods, it rained\""
+     ],
+     "cards": [
+      {
+       "text": "The field floods if it rains.",
+       "bin": 0,
+       "why": "The \"if\" clause is the antecedent."
+      },
+      {
+       "text": "It rains only if the field floods.",
+       "bin": 0,
+       "why": "\"Only if\" introduces the consequent."
+      },
+      {
+       "text": "The field floods only if it rains.",
+       "bin": 1,
+       "why": "Here rain is the requirement, so it is the consequent."
+      },
+      {
+       "text": "Rain is sufficient for the field to flood.",
+       "bin": 0,
+       "why": "A sufficient condition is the antecedent."
+      },
+      {
+       "text": "Rain is necessary for the field to flood.",
+       "bin": 1,
+       "why": "A necessary condition is the consequent."
+      },
+      {
+       "text": "The field floods whenever it rains.",
+       "bin": 0,
+       "why": "\"Whenever\" works like \"if\"."
+      }
+     ]
+    },
+    "cap": "Sort each sentence by what it means."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Only if",
+    "q": "Rewrite with \"If …, then …\": \"Sam goes to the movies only if Sam finishes his chores.\"",
+    "steps": [
+     "\"Only if\" introduces the consequent: Sam finishes his chores.",
+     "So the antecedent is \"Sam goes to the movies\"."
+    ],
+    "a": "If Sam goes to the movies, then Sam finished his chores."
+   },
+   {
+    "t": "ex",
+    "title": "Necessary condition",
+    "q": "Rewrite: \"Practice is necessary for making the team.\"",
+    "steps": [
+     "A necessary condition is a requirement, so it is the consequent.",
+     "Antecedent: you make the team."
+    ],
+    "a": "If you make the team, then you practiced."
+   },
+   {
+    "t": "mistake",
+    "html": "Reversing \"only if\". \"P only if Q\" means \"If P then Q\", not \"If Q then P\". Check with the license example: having a license does not by itself let you drive, so \"only if\" cannot mean \"if you have a license, you may drive\"."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.1 Symbols and Translation (if, only if, necessary and sufficient conditions)"
+   }
+  ]
+ },
+ "trad.modus-ponens": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <b>hypothetical syllogism</b> has a <a href=\"/logic/traditional-logic/hypothetical-propositions/\">hypothetical proposition</a> as a premise. The simplest is called <b>modus ponens</b> (Latin: \"the way that affirms\"), or affirming the antecedent."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "Form",
+     "Example"
+    ],
+    "rows": [
+     [
+      "Premise",
+      "If P, then Q.",
+      "If the dog hears the doorbell, the dog barks."
+     ],
+     [
+      "Premise",
+      "P.",
+      "The dog hears the doorbell."
+     ],
+     [
+      "Conclusion",
+      "So Q.",
+      "So the dog barks."
+     ]
+    ],
+    "cap": "Modus ponens."
+   },
+   {
+    "t": "key",
+    "html": "From \"If P, then Q\" and \"P\", conclude \"Q\". Modus ponens is valid: whenever both premises are true, the conclusion is true."
+   },
+   {
+    "t": "why",
+    "html": "\"If P, then Q\" rules out exactly one situation: P true and Q false. The second premise says P is true. The only situation left is the one where Q is true too. A truth table lists every case at once. Write p for \"the dog hears the doorbell\" and q for \"the dog barks\"; the arrow → means \"if … then\". The only row where both premises are true has q true."
+   },
+   {
+    "t": "viz",
+    "name": "lg-truthtable",
+    "opts": {
+     "premises": [
+      "p → q",
+      "p"
+     ],
+     "conclusion": "q"
+    },
+    "cap": "Every row where both premises are true (only the first) has the conclusion true: valid."
+   },
+   {
+    "t": "h",
+    "text": "Worked example"
+   },
+   {
+    "t": "ex",
+    "title": "What follows?",
+    "q": "\"If Maya finishes her chores, then Maya goes to the movies. Maya finishes her chores.\" What follows?",
+    "steps": [
+     "The second premise affirms the antecedent.",
+     "By modus ponens, the consequent follows."
+    ],
+    "a": "Maya goes to the movies."
+   },
+   {
+    "t": "ex",
+    "title": "Order does not matter",
+    "q": "Is this modus ponens? \"The puddles freeze, since the temperature dropped below freezing, and if the temperature drops below freezing, the puddles freeze.\"",
+    "steps": [
+     "The conclusion comes first (\"since\" marks the premises), but the form is the same.",
+     "Premises: If P then Q; P. Conclusion: Q."
+    ],
+    "a": "yes: valid modus ponens"
+   },
+   {
+    "t": "mistake",
+    "html": "Rejecting a modus ponens because you doubt the first premise. \"If the moon is made of cheese, then mice can live on the moon; the moon is made of cheese; so mice can live on the moon\" is valid. Its premises are false, so it is unsound, but the form is fine. Doubting a premise is a question about soundness, not validity."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"Ancient Logic\" (the Stoic indemonstrables)"
+   }
+  ]
+ },
+ "trad.modus-tollens": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "The second valid hypothetical form runs <a href=\"/logic/traditional-logic/modus-ponens/\">modus ponens</a> in reverse. <b>Modus tollens</b> (\"the way that denies\") is also called denying the consequent."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "Form",
+     "Example"
+    ],
+    "rows": [
+     [
+      "Premise",
+      "If P, then Q.",
+      "If the field is flooded, the game is postponed."
+     ],
+     [
+      "Premise",
+      "Not Q.",
+      "The game is not postponed."
+     ],
+     [
+      "Conclusion",
+      "So not P.",
+      "So the field is not flooded."
+     ]
+    ],
+    "cap": "Modus tollens."
+   },
+   {
+    "t": "key",
+    "html": "From \"If P, then Q\" and \"not Q\", conclude \"not P\". Modus tollens is valid."
+   },
+   {
+    "t": "why",
+    "html": "If P had been true, Q would have been true too; that is what the first premise says. But Q is false. So P cannot have been true. On the truth table (¬ means \"not\"), the only row where both \"p → q\" and \"¬q\" are true is the row with p false. Detectives and scientists use this form all the time: \"If the suspect were in the room, there would be footprints. There are none. So the suspect was not in the room.\""
+   },
+   {
+    "t": "viz",
+    "name": "lg-truthtable",
+    "opts": {
+     "premises": [
+      "p → q",
+      "¬q"
+     ],
+     "conclusion": "¬p"
+    },
+    "cap": "Only the last row makes both premises true, and there ¬p is true: valid."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Denying the consequent",
+    "q": "\"If the store is open, then the lights are on. The lights are not on.\" What follows?",
+    "steps": [
+     "The second premise denies the consequent.",
+     "By modus tollens, deny the antecedent."
+    ],
+    "a": "The store is not open."
+   },
+   {
+    "t": "ex",
+    "title": "Spotting the form",
+    "q": "Is this valid? \"If Priya wins the spelling bee, she goes to the state final. She does not go to the state final. So she did not win.\"",
+    "steps": [
+     "Form: If P then Q; not Q; so not P.",
+     "That is modus tollens."
+    ],
+    "a": "valid"
+   },
+   {
+    "t": "mistake",
+    "html": "Finding modus tollens harder than modus ponens and wrongly rejecting it. If P would bring Q, and there is no Q, there was no P. Check with a truth table or a plain case: \"If it is a square, it has four sides. It does not have four sides. So it is not a square.\" Clearly right."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"Ancient Logic\" (the Stoic indemonstrables)"
+   }
+  ]
+ },
+ "trad.hypothetical-fallacies": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Each valid form from <a href=\"/logic/traditional-logic/modus-tollens/\">the last two lessons</a> has an invalid twin that looks almost the same."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Form",
+     "Pattern",
+     "Valid?"
+    ],
+    "rows": [
+     [
+      "Modus ponens",
+      "If P then Q; P; so Q",
+      "valid"
+     ],
+     [
+      "Modus tollens",
+      "If P then Q; not Q; so not P",
+      "valid"
+     ],
+     [
+      "Affirming the consequent",
+      "If P then Q; Q; so P",
+      "invalid"
+     ],
+     [
+      "Denying the antecedent",
+      "If P then Q; not P; so not Q",
+      "invalid"
+     ]
+    ],
+    "cap": "Two valid forms and their invalid twins."
+   },
+   {
+    "t": "key",
+    "html": "<b>Affirming the consequent</b> (Q, so P) and <b>denying the antecedent</b> (not P, so not Q) are invalid: the consequent can come about some other way."
+   },
+   {
+    "t": "why",
+    "html": "\"If P, then Q\" says P is one way to get Q. It does not say it is the only way. So learning that Q happened does not tell you P happened (affirming the consequent), and learning that P did not happen does not tell you Q failed (denying the antecedent). The truth table shows a counterexample row for each: P false and Q true makes both premises true and the conclusion false."
+   },
+   {
+    "t": "viz",
+    "name": "lg-truthtable",
+    "opts": {
+     "premises": [
+      "p → q",
+      "q"
+     ],
+     "conclusion": "p"
+    },
+    "cap": "Affirming the consequent: the third row (p false, q true) has true premises and a false conclusion."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Affirming the consequent",
+    "q": "\"If the dog hears the doorbell, it barks. The dog is barking. So it heard the doorbell.\" Valid?",
+    "steps": [
+     "The second premise affirms the consequent; the conclusion affirms the antecedent.",
+     "Counterexample: a squirrel ran past the window. The dog barks, though no doorbell rang."
+    ],
+    "a": "invalid: affirming the consequent"
+   },
+   {
+    "t": "ex",
+    "title": "Denying the antecedent",
+    "q": "\"If the number is divisible by 4, it is even. This number is not divisible by 4. So it is not even.\" Valid?",
+    "steps": [
+     "The second premise denies the antecedent.",
+     "Counterexample: 6 is not divisible by 4, but it is even."
+    ],
+    "a": "invalid: denying the antecedent"
+   },
+   {
+    "t": "mistake",
+    "html": "Affirming the consequent is the most common formal fallacy (\"If it rained, the street is wet; the street is wet; so it rained\"). Show it with a counterexample where Q is true for a different reason: a street cleaner went by."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   },
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies (affirming the consequent, denying the antecedent)"
+   }
+  ]
+ },
+ "trad.pure-hypothetical": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "In <a href=\"/logic/traditional-logic/modus-ponens/\">modus ponens</a> only one premise is hypothetical. In a <b>pure hypothetical syllogism</b>, every statement is: the premises link conditionals into a chain."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "Form",
+     "Example"
+    ],
+    "rows": [
+     [
+      "Premise",
+      "If P, then Q.",
+      "If the alarm rings, Sam wakes up."
+     ],
+     [
+      "Premise",
+      "If Q, then R.",
+      "If Sam wakes up, Sam catches the bus."
+     ],
+     [
+      "Conclusion",
+      "So if P, then R.",
+      "So if the alarm rings, Sam catches the bus."
+     ]
+    ],
+    "cap": "Pure hypothetical syllogism (also called hypothetical syllogism, HS)."
+   },
+   {
+    "t": "key",
+    "html": "From \"If P, then Q\" and \"If Q, then R\", conclude \"If P, then R\". The consequent of the first must be the antecedent of the second; the links must run in the same direction."
+   },
+   {
+    "t": "why",
+    "html": "Imagine P happens. By the first premise, Q happens. By the second, R happens. So whenever P happens, R does: that is \"If P, then R\". The chain works like the categorical chain in a sorites: Q is the middle term, and it must sit at the end of one link and the start of the next."
+   },
+   {
+    "t": "viz",
+    "name": "lg-truthtable",
+    "opts": {
+     "premises": [
+      "p → q",
+      "q → r"
+     ],
+     "conclusion": "p → r"
+    },
+    "cap": "Three letters, eight rows: no row makes both premises true and the conclusion false."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "A longer chain",
+    "q": "What follows? \"If it snows tonight, school opens late. If the math quiz moves to Friday, Kim has an extra day to study. If school opens late, the math quiz moves to Friday.\"",
+    "steps": [
+     "Order the links: snow → school opens late → quiz moves to Friday → extra day.",
+     "Each consequent is the next antecedent."
+    ],
+    "a": "If it snows tonight, Kim has an extra day to study."
+   },
+   {
+    "t": "ex",
+    "title": "Links that do not chain",
+    "q": "What follows? \"If the power goes out, the freezer stops. If the door is left open, the freezer stops.\"",
+    "steps": [
+     "Both conditionals end at the same consequent.",
+     "Nothing runs from \"power out\" to \"door open\" or back."
+    ],
+    "a": "nothing follows about how the two antecedents are related"
+   },
+   {
+    "t": "mistake",
+    "html": "Chaining conditionals that do not share a middle in the right place, such as \"If P then Q\" and \"If R then Q\". Both arrows point into Q, so nothing connects P and R. Check: draw the arrows; you must be able to follow them from start to end without going backward."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   }
+  ]
+ },
+ "trad.disjunctive-syllogism": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Another kind of compound statement uses \"or\": \"Either the keys are in the car or they are on the hook.\" Each part is a <b>disjunct</b>. Like <a href=\"/logic/traditional-logic/hypothetical-propositions/\">hypothetical propositions</a>, disjunctions support their own syllogism."
+   },
+   {
+    "t": "key",
+    "html": "<b>Disjunctive syllogism</b>: from \"P or Q\" and \"not P\", conclude \"Q\" (or from \"not Q\", conclude \"P\"). But from \"P or Q\" and \"P\", nothing follows about Q, because logic's \"or\" is <b>inclusive</b>: it allows both."
+   },
+   {
+    "t": "why",
+    "html": "\"P or Q\" says at least one is true. Rule one out, and the other must be the true one. But learning that one is true does not rule the other out, since both may be true. \"Either Ana is at practice or she is at the library\" is not proven false if she went to both. Concluding \"not Q\" from \"P\" is the fallacy of <b>affirming a disjunct</b>. It is only safe when the speaker has made clear that the options exclude each other (\"either … or …, but not both\")."
+   },
+   {
+    "t": "viz",
+    "name": "lg-truthtable",
+    "opts": {
+     "premises": [
+      "p ∨ q",
+      "¬p"
+     ],
+     "conclusion": "q"
+    },
+    "cap": "Disjunctive syllogism: the only row with both premises true has q true. (∨ means \"or\".)"
+   },
+   {
+    "t": "viz",
+    "name": "lg-truthtable",
+    "opts": {
+     "premises": [
+      "p ∨ q",
+      "p"
+     ],
+     "conclusion": "¬q"
+    },
+    "cap": "Affirming a disjunct: the first row (both true) is a counterexample."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Ruling one out",
+    "q": "\"Either the noise came from the attic or it came from the garage. It did not come from the attic.\" What follows?",
+    "steps": [
+     "One disjunct is denied.",
+     "The other must be true."
+    ],
+    "a": "The noise came from the garage."
+   },
+   {
+    "t": "ex",
+    "title": "Affirming a disjunct",
+    "q": "\"Either we take the train or we take the bus. We take the train. So we do not take the bus.\" Valid?",
+    "steps": [
+     "The second premise affirms one disjunct.",
+     "With inclusive \"or\", we could take both (the train, then a bus)."
+    ],
+    "a": "invalid: affirming a disjunct"
+   },
+   {
+    "t": "mistake",
+    "html": "Reading every \"or\" as \"one or the other but not both\". Logic's \"or\" is inclusive unless the speaker rules out both. Check: could both disjuncts be true at once? If yes, affirming one tells you nothing about the other."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"Ancient Logic\" (the Stoic indemonstrables)"
+   }
+  ]
+ },
+ "trad.conjunctive-syllogism": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <b>conjunction</b> joins statements with \"and\". Its denial, \"not both P and Q\", says the two cannot be true together. It powers a syllogism much like the <a href=\"/logic/traditional-logic/disjunctive-syllogism/\">disjunctive syllogism</a>, but in the opposite direction."
+   },
+   {
+    "t": "key",
+    "html": "<b>Conjunctive syllogism</b>: from \"Not both P and Q\" and \"P\", conclude \"not Q\". But from \"Not both P and Q\" and \"not P\", nothing follows: \"not both\" allows neither."
+   },
+   {
+    "t": "why",
+    "html": "\"Not both\" rules out exactly one case: both true. If P is true, Q would make that case happen, so Q must be false. But if P is false, the forbidden case is already avoided, and Q is free to be true or false. \"Ben is not both at the game and at home\" fits Ben being at the library, where he is at neither."
+   },
+   {
+    "t": "viz",
+    "name": "lg-truthtable",
+    "opts": {
+     "premises": [
+      "¬(p ∧ q)",
+      "p"
+     ],
+     "conclusion": "¬q"
+    },
+    "cap": "Valid: the only row with both premises true has q false. (∧ means \"and\".)"
+   },
+   {
+    "t": "table",
+    "head": [
+     "Premises",
+     "Conclusion",
+     "Verdict"
+    ],
+    "rows": [
+     [
+      "Not both P and Q; P",
+      "not Q",
+      "valid"
+     ],
+     [
+      "Not both P and Q; Q",
+      "not P",
+      "valid"
+     ],
+     [
+      "Not both P and Q; not P",
+      "Q",
+      "invalid"
+     ],
+     [
+      "Not both P and Q; not Q",
+      "P",
+      "invalid"
+     ]
+    ],
+    "cap": "Affirm one to deny the other; denying one proves nothing."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Affirming one part",
+    "q": "\"It is not the case that both the traffic light is red and the traffic light is green. The light is red.\" What follows?",
+    "steps": [
+     "\"Not both\" plus one part true.",
+     "The other part must be false."
+    ],
+    "a": "The light is not green."
+   },
+   {
+    "t": "ex",
+    "title": "Denying one part",
+    "q": "\"Kim is not both the team captain and the team treasurer. Kim is not the captain.\" What follows about the treasurer?",
+    "steps": [
+     "Denying one part avoids the forbidden case already.",
+     "Kim might be the treasurer, or might hold neither job."
+    ],
+    "a": "nothing follows"
+   },
+   {
+    "t": "mistake",
+    "html": "Denying one conjunct and concluding the other is true. \"Not both\" allows neither to be true. Check: is there a situation where both parts are false? If so, the conclusion can fail."
+   },
+   {
+    "t": "note",
+    "html": "The Stoic logicians of ancient Greece listed this form, together with modus ponens, modus tollens and two disjunctive forms, among their five basic arguments."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   },
+   {
+    "name": "Stanford Encyclopedia of Philosophy, \"Ancient Logic\" (the Stoic indemonstrables)"
+   }
+  ]
+ },
+ "trad.dilemmas": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <b>dilemma</b> combines two <a href=\"/logic/traditional-logic/pure-hypothetical/\">conditionals</a> with a <a href=\"/logic/traditional-logic/disjunctive-syllogism/\">disjunction</a>. It is the argument of \"either way, you lose\" (or \"either way, you win\")."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Constructive dilemma",
+     "Destructive dilemma"
+    ],
+    "rows": [
+     [
+      "If P then Q, and if R then S.",
+      "If P then Q, and if R then S."
+     ],
+     [
+      "P or R.",
+      "Not Q or not S."
+     ],
+     [
+      "So Q or S.",
+      "So not P or not R."
+     ]
+    ],
+    "cap": "The two valid dilemmas."
+   },
+   {
+    "t": "key",
+    "html": "A <b>constructive dilemma</b> affirms the antecedents (P or R) and concludes the consequents (Q or S): modus ponens on each horn. A <b>destructive dilemma</b> denies the consequents and concludes the denial of the antecedents: modus tollens on each horn. Both are valid."
+   },
+   {
+    "t": "why",
+    "html": "Take the constructive dilemma. At least one of P and R is true. If it is P, the first conditional gives Q; if it is R, the second gives S. Either way, Q or S. The destructive dilemma is the same reasoning with modus tollens. The two options in the \"or\" premise are called the <b>horns</b> of the dilemma."
+   },
+   {
+    "t": "viz",
+    "name": "lg-argmap",
+    "opts": {
+     "nodes": [
+      {
+       "id": 1,
+       "text": "If we leave early, we wait at the gate for an hour."
+      },
+      {
+       "id": 2,
+       "text": "If we leave late, we miss the opening song."
+      },
+      {
+       "id": 3,
+       "text": "We leave early or we leave late."
+      },
+      {
+       "id": 4,
+       "text": "We wait an hour, or we miss the opening song.",
+       "kind": "conclusion"
+      }
+     ],
+     "links": [
+      {
+       "from": [
+        1,
+        2,
+        3
+       ],
+       "to": 4
+      }
+     ]
+    },
+    "cap": "A constructive dilemma: three linked premises."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Constructive",
+    "q": "\"If Jo studies tonight, Jo misses the concert; if Jo goes to the concert, Jo does poorly on the quiz. Jo studies tonight or goes to the concert.\" What follows?",
+    "steps": [
+     "The \"or\" premise affirms the two antecedents.",
+     "Constructive dilemma: one consequent or the other."
+    ],
+    "a": "Jo misses the concert or does poorly on the quiz."
+   },
+   {
+    "t": "ex",
+    "title": "A broken dilemma",
+    "q": "\"If the family drives, the trip takes two days; if they fly, the trip costs more. The trip takes two days or costs more. So the family drives or flies.\" Valid?",
+    "steps": [
+     "The \"or\" premise affirms the consequents, and the conclusion affirms the antecedents.",
+     "That is affirming the consequent on each horn: the trip could take two days because of a storm while they take the train."
+    ],
+    "a": "invalid"
+   },
+   {
+    "t": "mistake",
+    "html": "Mixing the two patterns: affirming consequents in a destructive dilemma or denying antecedents in a constructive one, which makes it invalid. Check: a constructive dilemma moves forward along the arrows (antecedents to consequents); a destructive one moves backward with \"not\" (denied consequents to denied antecedents)."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   }
+  ]
+ },
+ "trad.answering-dilemmas": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A <a href=\"/logic/traditional-logic/dilemmas/\">dilemma</a> can feel like a trap, but a valid argument is only as good as its premises. Since the classic dilemmas are valid, answering one means challenging a premise. Rhetoric teachers named three ways to do it. (Calling the choice too narrow is the same move you studied in <a href=\"/logic/informal-logic/false-dilemma/\">False Dilemma</a>.)"
+   },
+   {
+    "t": "list",
+    "items": [
+     "<b>Escaping between the horns</b>: show a third option the \"or\" premise left out, so the disjunction is false.",
+     "<b>Grasping a horn</b>: deny one of the conditionals; show that one option does not lead where the arguer claims.",
+     "<b>Offering a counterdilemma</b>: build a new dilemma from the same options with a different (often cheerful) conclusion."
+    ]
+   },
+   {
+    "t": "key",
+    "html": "A valid dilemma can only be answered by showing that a premise is false or doubtful: the disjunction (between the horns) or a conditional (grasping a horn). A counterdilemma does not refute; it shows another way to look at the same choice."
+   },
+   {
+    "t": "why",
+    "html": "Validity guarantees that true premises give a true conclusion. So if you want to reject the conclusion, you must find a premise to reject; complaining about the form gets nowhere. Escaping between the horns attacks the \"or\"; grasping a horn attacks an \"if\". A counterdilemma leaves both standing and changes the emphasis, which is why it persuades but does not prove the original wrong."
+   },
+   {
+    "t": "viz",
+    "name": "lg-argmap",
+    "opts": {
+     "nodes": [
+      {
+       "id": 1,
+       "text": "If the club raises its dues, some members quit."
+      },
+      {
+       "id": 2,
+       "text": "If the club keeps its dues the same, it cannot buy new equipment."
+      },
+      {
+       "id": 3,
+       "text": "The club raises its dues or keeps them the same."
+      },
+      {
+       "id": 4,
+       "text": "Some members quit, or the club cannot buy new equipment.",
+       "kind": "conclusion"
+      },
+      {
+       "id": 5,
+       "text": "The club could keep its dues the same and hold a bake sale for the equipment.",
+       "kind": "objection"
+      }
+     ],
+     "links": [
+      {
+       "from": [
+        1,
+        2,
+        3
+       ],
+       "to": 4
+      },
+      {
+       "from": [
+        5
+       ],
+       "to": 2,
+       "kind": "against"
+      }
+     ]
+    },
+    "cap": "The objection attacks the second conditional: grasping a horn."
+   },
+   {
+    "t": "h",
+    "text": "Worked examples"
+   },
+   {
+    "t": "ex",
+    "title": "Between the horns",
+    "q": "Dilemma: \"If we leave early, we wait an hour; if we leave late, we miss the song; we leave early or late.\" Reply: \"We could leave at a middle time.\" Which way of answering is it?",
+    "steps": [
+     "The reply offers a third option the \"or\" premise ignored.",
+     "It denies the disjunction."
+    ],
+    "a": "escaping between the horns"
+   },
+   {
+    "t": "ex",
+    "title": "A counterdilemma",
+    "q": "Reply to the same dilemma: \"If we leave early, we get the best seats; if we leave late, we skip the long line. Either way, we gain something.\"",
+    "steps": [
+     "The reply keeps the same two options.",
+     "It draws a new, cheerful conclusion from new conditionals."
+    ],
+    "a": "a counterdilemma"
+   },
+   {
+    "t": "mistake",
+    "html": "Answering a valid dilemma by calling it invalid. A valid dilemma can only be answered by showing one of its premises is false. Check: first ask whether the form is a correct constructive or destructive dilemma; if it is, look for a third option or a weak \"if … then\"."
+   },
+   {
+    "t": "note",
+    "html": "Some dilemmas cannot be escaped between the horns because the options are a statement and its denial (\"Either Sam admits it or he keeps quiet\"). Then only grasping a horn or a counterdilemma remains."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Patrick J. Hurley, A Concise Introduction to Logic, 6.6 Argument Forms and Fallacies"
+   },
+   {
+    "name": "Irving Copi and Carl Cohen, Introduction to Logic, on refuting dilemmas"
+   }
+  ]
+ }
+}

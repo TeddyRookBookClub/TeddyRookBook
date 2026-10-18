@@ -18,7 +18,7 @@
                          visuals kit once, for a course of ANY ladder, using the list of files that exist (embedded at build
                          time in <script id="ml-cfg">: each course has `dir`, the static folder of its ladder).
    ML.needViz(name)    → Promise: makes sure the visual `name` is registered (loads math's viz/basic.js or viz/adv.js, or a
-                         ladder's kit for names prefixed ph-, ch-, ec-, es-: static/<ladder>/viz/<ladder>.js and .css).
+                         ladder's kit for names prefixed ph-, ch-, ec-, es-, lg-: static/<ladder>/viz/<ladder>.js and .css).
    ML.lessonUI(root)   worked examples revealed one step at a time, inline "try" problems, math and visuals in a lesson.
    ML.fmtAnswer(spec)  the correct answer of an answer spec as HTML (math typeset after insertion).
 
@@ -90,7 +90,7 @@
   var BASIC = 'tenframe counters numberline hundredchart base10 placevalue numberbond arraygrid areamodel fractionbar fractioncircle fractionline decimalgrid percentbar ratiotable tapediagram clock coins balance integerline shapes geoboard angle transform pythagoras circlepi areaformulas volume nets dotplot boxplot'.split(' ');
   var ADV = 'graph slope linesystem parabola transformfn exponential logscale unitcircle trigwave polar complexplane sequence limit secant derivgraph riemann ftc solids taylor seriespartial vectors2d vectors3d surface gradient vectorfield lineintegral flux param3d matrix2d span slopefield phaseplane springmass dice normal sampling scatter venn tree'.split(' ');
   // visuals kits: math's basic and adv (static/math/viz/), and one per ladder (static/<dir>/viz/<dir>.js, names prefixed)
-  var KIT_PREFIX = { 'ph-': 'physics', 'ch-': 'chemistry', 'ec-': 'economics', 'es-': 'earth' };
+  var KIT_PREFIX = { 'ph-': 'physics', 'ch-': 'chemistry', 'ec-': 'economics', 'es-': 'earth', 'lg-': 'logic' };
   function vizFile(which) {
     var vb = cfg().vb || {}, dir = which === 'basic' || which === 'adv' ? 'math' : which;
     if (!vb[which] && !D.querySelector('script[src*="' + dir + '/viz/' + which + '.js"]')) return Promise.resolve(false);
@@ -368,6 +368,7 @@
         if (sp.t === 'mc') return (Array.isArray(a) ? a : [a]).map(function (i) { return '<span class="mlp-ans-choice">' + (sp.choices || [])[i] + '</span>'; }).join(', ');
         if (sp.t === 'tf') return a ? 'True' : 'False';
         if (sp.t === 'formula') { try { return esc('$' + ML._check.formulaTex(String(a)) + '$'); } catch (e2) { return esc(String(a)); } }
+        if (sp.t === 'prop') { try { return esc(ML._check.propShow(String(a))); } catch (e3) { return esc(String(a)); } }
         if (Array.isArray(a)) return esc(a.map(function (x) { return Array.isArray(x) ? '[' + x.join(', ') + ']' : x; }).join('; '));
         return plain(a);
       } catch (e) { return esc(String(a)); }

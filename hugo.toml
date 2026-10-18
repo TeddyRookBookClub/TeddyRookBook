@@ -72,6 +72,16 @@ note = "Micro, macro and intermediate microeconomics"
 icon = "⚖️"
 
 [[menu.main]]
+name = "Logic Ladder"
+identifier = "logic-edu"
+url = "/logic/"
+weight = 6
+[menu.main.params]
+group = "Education"
+note = "Informal, traditional and symbolic logic, with practice"
+icon = "🦉"
+
+[[menu.main]]
 name = "Languages"
 url = "/languages/"
 weight = 7
@@ -589,7 +599,7 @@ icon = "🧮"
       path = '{/garden,/garden/**}'
   [segments.ladders]
     [[segments.ladders.includes]]
-      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**,/test-prep,/test-prep/**}'
+      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**,/logic,/logic/**,/test-prep,/test-prep/**}'
   [segments.physics]
     [[segments.physics.includes]]
       path = '{/physics,/physics/**}'
@@ -611,3 +621,6 @@ icon = "🧮"
   [segments.puzzles]
     [[segments.puzzles.includes]]
       path = '{/puzzles,/puzzles/**}'
+  [segments.logic]
+    [[segments.logic.includes]]
+      path = '{/logic,/logic/**}'

@@ -22,6 +22,10 @@
      - the canonical answer passes its own check, and an obviously wrong answer fails (num, expr and set)
      - at least 30% of the problems are distinct (the question, the answer and the picture together), and making one
        takes under 5 ms on average
+   The ladder's visual kit (static/<ladder>/viz/<ladder>.js) is loaded too when it runs without a DOM (it is tried in a
+   separate node sandbox first): the Logic kit's MathLadder.logic is then available to generators and to the 'prop'
+   answer type, as on the ladder's pages. Kits that need a document are skipped; generators must not need them at load.
+   A 'prop' answer is also checked with a clearly wrong answer (its negation).
    Prints one line per topic and exits with status 1 if anything fails or a generator is missing. A course with a skill
    map but no generator file yet is reported as "not yet written" (exit status 0).
    -v shows every failing example (default: up to 2 per kind of problem per topic).                                   */
@@ -67,6 +71,16 @@ var LADDER = (function () {
     if (fs.existsSync(path.join(ROOT, 'data', LADDERS[i].key, 'topics', course + '.json'))) return LADDERS[i].key;
   }
   return 'math';
+})();
+// the ladder's visual kit, when it runs without a DOM (its models, e.g. MathLadder.logic, are then there for the generators
+// and for check.js, as on the ladder's pages). A kit that needs a document is tried in a separate sandbox first and skipped.
+var KIT_LOADED = (function () {
+  if (LADDER === 'math') return null;
+  var f = path.join(ROOT, 'static', LADDER, 'viz', LADDER + '.js');
+  if (!fs.existsSync(f)) return null;
+  try { var sb = { console: console }; sb.window = sb; sb.globalThis = sb; require('vm').runInNewContext(fs.readFileSync(f, 'utf8'), sb, { filename: f, timeout: 5000 }); }
+  catch (e) { return null; }
+  try { require(f); return path.relative(ROOT, f); } catch (e) { return null; }
 })();
 var topicsFile = opt.topics || path.join(ROOT, 'data', LADDER, 'topics', course + '.json');
 var genFile = opt.gen || path.join(ROOT, 'static', LADDER, 'gen', course + '.js');
@@ -178,6 +192,7 @@ function wrongAnswer(a) {
     var vars = a.vars && a.vars.length ? a.vars : ['x'];
     return /\bC\b/.test(a.v) ? '(' + a.v + ')+' + vars[0] : '(' + a.v + ')+1';
   }
+  if (a.t === 'prop') return '¬(' + ML.answerValue(a) + ')';
   if (a.t === 'formula') { var f0 = String(Array.isArray(a.v) ? a.v[0] : a.v); return f0.toLowerCase() !== f0 ? f0.toLowerCase() : f0 + '2'; }
   if (a.t === 'set') {
     if (a.v === 'all' || !a.v.length) return '0';
