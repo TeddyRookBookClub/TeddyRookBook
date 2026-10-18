@@ -1,0 +1,64 @@
+# Egyptology Ladder courses, bottom rung to top rung (the order of this list is the ladder).
+# Contract: /tmp/briefs/ladders_spec.md and /tmp/briefs/mathladder_spec.md section 3; brief /tmp/briefs/egypt_design.md.
+# Skill maps live in data/egypt/topics/<key>.json. Design notes and conventions: /tmp/work_egypt/overview.md.
+# kids stands alone; hist follows it; Middle Egyptian I and II need no history; relart and arch build on hist.
+- key: kids
+  slug: young-explorers
+  title: "Ancient Egypt for Young Explorers"
+  short: "Young Explorers"
+  band: "Elementary"
+  grade: "3–7"
+  icon: "🐪"
+  color: "#b5651d"
+  blurb: "For ages 8 to 12: the Nile and its flood, pharaohs and pyramids, gods and mummies, daily life, hieroglyphs and your name in a cartouche, and how Egypt was rediscovered."
+  after: []
+- key: hist
+  slug: history
+  title: "History of Ancient Egypt"
+  short: "History"
+  band: "High school"
+  grade: "9–12"
+  icon: "📜"
+  color: "#6e5200"
+  blurb: "A survey from the first farmers to the Arab conquest of AD 641: how the dates are built, the kingdoms and intermediate periods, the great rulers, and how Egyptians lived and governed."
+  after: [kids]
+- key: me1
+  slug: middle-egyptian-1
+  title: "Middle Egyptian I"
+  short: "Middle Egyptian I"
+  band: "College"
+  grade: "College"
+  icon: "🪶"
+  color: "#1f5f8b"
+  blurb: "A first semester of the classical language: the signs, transliteration, nouns, adjectives, pronouns, prepositions, sentences without verbs, numbers, royal names and the offering formula."
+  after: [kids]
+- key: me2
+  slug: middle-egyptian-2
+  title: "Middle Egyptian II"
+  short: "Middle Egyptian II"
+  band: "College"
+  grade: "College"
+  icon: "📖"
+  color: "#2e6e5e"
+  blurb: "The verb system, from the infinitive and the sḏm=f to participles, the passive and negation, then real texts in short passages: stelae, Sinuhe, the Eloquent Peasant and the Rosetta Stone."
+  after: [me1]
+- key: relart
+  slug: religion-art-architecture
+  title: "Religion, Art and Architecture"
+  short: "Religion, Art and Architecture"
+  band: "High school"
+  grade: "9–12"
+  icon: "🏛️"
+  color: "#8a3b2e"
+  blurb: "The gods and their cults, creation accounts, kingship and maat, temples and festivals, the afterlife and mummification, tombs and pyramids, and the rules of Egyptian art."
+  after: [hist]
+- key: arch
+  slug: archaeology-scripts
+  title: "Archaeology and Later Scripts"
+  short: "Archaeology and Scripts"
+  band: "College"
+  grade: "College"
+  icon: "⛏️"
+  color: "#4f5d73"
+  blurb: "How Egypt was rediscovered: the Rosetta Stone and decipherment, excavation and dating methods, epigraphy, museums and the return debate, and the later scripts: hieratic, Demotic and Coptic."
+  after: [hist, relart]

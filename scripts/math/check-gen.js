@@ -193,6 +193,7 @@ function wrongAnswer(a) {
     return /\bC\b/.test(a.v) ? '(' + a.v + ')+' + vars[0] : '(' + a.v + ')+1';
   }
   if (a.t === 'prop') return '¬(' + ML.answerValue(a) + ')';
+  if (a.t === 'translit') return String(ML.answerValue(a)) + (/p$/.test(String(ML.answerValue(a))) ? 'm' : 'p');
   if (a.t === 'formula') { var f0 = String(Array.isArray(a.v) ? a.v[0] : a.v); return f0.toLowerCase() !== f0 ? f0.toLowerCase() : f0 + '2'; }
   if (a.t === 'set') {
     if (a.v === 'all' || !a.v.length) return '0';

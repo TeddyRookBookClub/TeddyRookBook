@@ -1,0 +1,5 @@
+{{- /* the Egyptology kit for the /egypt/ pages: the viz toolkit, the kit and its fonts (static/egypt/viz/) */ -}}
+{{- range slice "math/viz/viz.css" "egypt/viz/egypt.css" "egypt/hub.css" }}<link rel="stylesheet" href="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}">
+{{ end -}}
+{{- range slice "math/viz/core.js" "egypt/viz/egypt.js" }}<script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+{{ end -}}

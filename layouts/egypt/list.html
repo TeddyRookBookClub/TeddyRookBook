@@ -1,0 +1,74 @@
+{{- /* /egypt/: the Ancient Egypt hub. Phase 1: the Egyptology Ladder's courses, the map and the timeline's Egypt track.
+   Courses come from data/egypt/courses.yaml and data/egypt/topics/<key>.json; the ladder's entry in data/ladders.yaml. */ -}}
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ partial "egypt-kit.html" . }}
+{{- $L := index (where site.Data.ladders "key" "egypt") 0 -}}
+{{- $D := site.Data.egypt -}}
+{{- $n := 0 }}{{ range $D.courses }}{{ with index $D.topics .key }}{{ $n = add $n (len .topics) }}{{ end }}{{ end -}}
+<div class="hs eg-page eg-hub">
+  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › Ancient Egypt</nav>
+  <header class="hs-hero eg-hero">
+    <div class="eg-hero-text">
+      <p class="hs-eyebrow">Ancient Egypt · Free, age 8 to college</p>
+      <h1>Ancient Egypt</h1>
+      <p>Three thousand years of kings, temples and tombs along one river, and a script no one could read for fourteen centuries until it was cracked in 1822. Here you can learn it the way a good college program teaches it: the history and how its dates are known, the gods, temples and art, the archaeology, and Middle Egyptian, the language of the hieroglyphs. There's a first course for young explorers, too.</p>
+      <div class="hs-actions"><a class="hs-btn big" href="{{ "egyptology/" | relURL }}">🏺 The Egyptology Ladder</a><a class="hs-btn big ghost" href="{{ "egypt/map/" | relURL }}">🗺️ The map</a><a class="hs-btn big ghost" href="{{ "timeline/" | relURL }}?show=egypt">⏳ The timeline</a></div>
+    </div>
+    <div class="eg-hero-art" aria-hidden="true"><div class="ml-viz" data-viz="eg-cartouche" data-opts='{"name":"ramesses","interactive":false,"tl":false,"en":false,"note":false,"size":64}'></div></div>
+  </header>
+
+  <section class="hs-sec" id="ladder">
+    <h2>The Egyptology Ladder</h2>
+    <p class="eg-intro">Six courses, {{ $n }} short topics, each with a lesson and practice that checks your answers and brings topics back for review. Middle Egyptian I and II stand on their own; Religion, Art and Architecture and Archaeology and Later Scripts build on the history course.</p>
+    <div class="eg-courses">
+      {{ range $i, $c := $D.courses }}{{ $t := index $D.topics $c.key }}
+      <a class="eg-course" href="{{ printf "egyptology/%s/" $c.slug | relURL }}" style="--cc:{{ $c.color }}">
+        <span class="eg-ci" aria-hidden="true">{{ $c.icon }}</span>
+        <span class="eg-cbody"><b>{{ $c.title }}</b><small class="eg-clevel">{{ $c.band }}{{ if ne (string $c.grade) "College" }} · grades {{ $c.grade }}{{ end }}{{ with $t }} · {{ len .topics }} topics{{ end }}</small><span class="eg-cblurb">{{ $c.blurb }}</span></span>
+      </a>
+      {{ end }}
+    </div>
+    <div class="eg-start">
+      <h3>Where to start</h3>
+      <ul>
+        <li><b>Ages 8 to 12:</b> <a href="{{ "egyptology/young-explorers/" | relURL }}">Ancient Egypt for Young Explorers</a>, read together with a grown-up or on your own.</li>
+        <li><b>High school:</b> <a href="{{ "egyptology/history/" | relURL }}">History of Ancient Egypt</a>, then <a href="{{ "egyptology/religion-art-architecture/" | relURL }}">Religion, Art and Architecture</a>.</li>
+        <li><b>To read hieroglyphs:</b> <a href="{{ "egyptology/middle-egyptian-1/" | relURL }}">Middle Egyptian I</a> starts from the first sign; no history needed.</li>
+        <li><b>Not sure?</b> <a href="{{ "egyptology/placement/" | relURL }}">Find your rung</a> with a short placement check.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="hs-sec" id="map">
+    <h2>Map of Egypt and Nubia</h2>
+    <p class="eg-intro">The Nile from the Mediterranean to Khartoum, the Delta and the cataracts, with more than fifty ancient sites by period. Tap a site for a short note.</p>
+    <div class="ml-viz" data-viz="eg-map" data-opts='{"view":"egypt","layerChips":false}' aria-label="Map of Egypt with ancient sites"></div>
+    <p class="eg-more"><a class="hs-btn" href="{{ "egypt/map/" | relURL }}">Open the full map: zoom, pan and layers by period →</a></p>
+  </section>
+
+  <section class="hs-sec" id="timeline">
+    <h2>Three thousand years at a glance</h2>
+    <p class="eg-intro">The periods of Egyptian history with their dynasties. Tap a period for its dates. The whiskers show how uncertain the early dates are.</p>
+    <div class="ml-viz" data-viz="eg-timeline" data-opts='{"from":-3300,"to":700}' aria-label="Timeline of ancient Egyptian history"></div>
+    <p class="eg-more"><a class="hs-btn" href="{{ "timeline/" | relURL }}?show=egypt">Egypt on the Timeline of the Ancient World →</a></p>
+  </section>
+
+  <section class="hs-sec" id="name">
+    <h2>Your name in a cartouche</h2>
+    <p class="eg-intro">Type a name to write it with Egyptian sound signs, the way scribes spelled Greek names like Ptolemy and Cleopatra.</p>
+    <div class="ml-viz" data-viz="eg-cartouche" data-opts='{"mode":"name","text":"Teddy"}' aria-label="Write a name in a cartouche"></div>
+  </section>
+
+  <section class="hs-sec" id="more">
+    <h2>More on Teddy Rook Book</h2>
+    <ul class="eg-links">
+      <li><a href="{{ "timeline/" | relURL }}?show=egypt"><span aria-hidden="true">⏳</span> <b>Timeline: Egypt</b> <small>From the first kings to the Arab conquest, and the decipherment in 1822</small></a></li>
+      <li><a href="{{ "languages/" | relURL }}"><span aria-hidden="true">🏛</span> <b>Languages</b> <small>Koine Greek and Latin, the other languages of the Rosetta Stone's world</small></a></li>
+      <li><a href="{{ "infographics/gods-of-egypt/" | relURL }}"><span aria-hidden="true">🖼️</span> <b>Gods of Egypt</b> <small>An infographic pairing the plagues of Exodus with the gods of Egypt</small></a></li>
+      <li><a href="{{ "books/plutarchs-lives/" | relURL }}"><span aria-hidden="true">📖</span> <b>Plutarch's Lives</b> <small>In the Library; his Life of Antony tells the story of Cleopatra</small></a></li>
+    </ul>
+    <p class="hs-small eg-fine">Dates follow Shaw, ed., <i>The Oxford History of Ancient Egypt</i> (2000); before 664 BC they are approximate. Hieroglyphs on this site are drawn for Teddy Rook Book in the font TRB Hieroglyphs (SIL Open Font License), and Coptic letters come from GNU FreeFont.</p>
+  </section>
+</div>
+{{ end }}

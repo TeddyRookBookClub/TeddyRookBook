@@ -2,7 +2,7 @@
 
    var box = MathLadder.input(container, spec, opts)
      spec   the problem's answer spec ({ t: 'num' | 'expr' | 'eq' | 'set' | 'tuple' | 'matrix' | 'interval' | 'ineq' | 'mc' |
-            'tf' | 'text' | 'formula' | 'multi', … }); only its type and shape are used (sizes, variables, choices), never shown
+            'tf' | 'text' | 'formula' | 'prop' | 'translit' | 'multi', … }); only its type and shape are used (sizes, variables, choices), never shown
      opts   { label: 'Your answer' (accessible name), placeholder, unit: 'cm' (shown after the box; may hold $…$),
               keypad: 'auto' (open on touch screens) | true | false,
               keys: ['pi', 'sqrt', …] (extra keypad keys), autofocus: false, choiceHtml: fn(text) -> html }
@@ -28,7 +28,9 @@
    preview with real subscripts and charges (H2O, SO4^2-, CuSO4·5H2O) and keys for ( ) ^ + − · and (aq).
    A logic formula (t: 'prop', the Logic Ladder) gets a preview in symbols, ASCII turned into symbols as it is typed
    (-> →, <-> ↔, ~ ¬, & ∧), and a keypad row of the logic symbols ¬ ∧ ∨ → ↔ ( ), with ∀ ∃ for predicate logic and = ≠
-   when the answer uses identity, plus the answer's letters (no digits).                                                 */
+   when the answer uses identity, plus the answer's letters (no digits).
+   An Egyptian transliteration (t: 'translit', the Egyptology Ladder) previews in the Egyptological alphabet as it is typed
+   (MdC Htp shows as ḥtp) and gets a keypad row of the special letters ꜣ j ꜥ ḥ ḫ ẖ z š q ṯ ḏ with . and - between morphemes.                                                 */
 (function (root) {
   'use strict';
   var ML = root.MathLadder = root.MathLadder || {};
@@ -62,6 +64,10 @@
     pct: ['%', '%', 'percent', 'op'], i: ['i', 'i', 'imaginary unit i', 'op'],
     lnot: ['¬', '¬', 'not', 'op'], land: ['∧', ' ∧ ', 'and', 'op'], lor: ['∨', ' ∨ ', 'or', 'op'], limp: ['→', ' → ', 'if then', 'op'], liff: ['↔', ' ↔ ', 'if and only if', 'op'],
     lall: ['∀', '∀', 'for all', 'op'], lsome: ['∃', '∃', 'there is', 'op'], leq: ['=', ' = ', 'is identical to', 'op'], lneq: ['≠', ' ≠ ', 'is not identical to', 'op'],
+    tA: ['ꜣ', 'ꜣ', 'alef (vulture), MdC A', 'tl'], tj: ['j', 'j', 'yod (reed), MdC i', 'tl'], ta: ['ꜥ', 'ꜥ', 'ayin (forearm), MdC a', 'tl'], tH: ['ḥ', 'ḥ', 'h with dot below (wick), MdC H', 'tl'],
+    tx: ['ḫ', 'ḫ', 'h with breve below (placenta), MdC x', 'tl'], tX: ['ẖ', 'ẖ', 'h with line below (belly), MdC X', 'tl'], tz: ['z', 'z', 'z (door bolt)', 'tl'], tS: ['š', 'š', 's with caron (pool), MdC S', 'tl'],
+    tq: ['q', 'q', 'q (hill slope)', 'tl'], tT: ['ṯ', 'ṯ', 't with line below (tethering rope), MdC T', 'tl'], tD: ['ḏ', 'ḏ', 'd with line below (cobra), MdC D', 'tl'],
+    tdot: ['.', '.', 'dot between morphemes', 'op'], thy: ['-', '-', 'hyphen between words', 'op'],
     caret: ['^', '^', 'charge (written after ^)', 'op'], hyd: ['·', '·', 'hydrate dot', 'op'], aq: ['(aq)', '(aq)', 'aqueous', 'op'], fneg: ['−', '-', 'minus sign of a charge', 'op'],
     sin: ['sin', 'sin(|)', 'sine', 'fn'], cos: ['cos', 'cos(|)', 'cosine', 'fn'], tan: ['tan', 'tan(|)', 'tangent', 'fn'], ln: ['ln', 'ln(|)', 'natural log', 'fn'], log: ['log', 'log(|)', 'log', 'fn'],
     left: ['◀', { move: -1 }, 'move left', 'nav'], right: ['▶', { move: 1 }, 'move right', 'nav'], back: ['⌫', { back: 1 }, 'delete', 'nav'], enter: ['↵', { enter: 1 }, 'check answer', 'enter']
@@ -90,6 +96,11 @@
       if (/[=≠]/.test(pv)) ops.push('leq', 'lneq');
       (opts.keys || []).forEach(function (k) { if (K[k] && ops.indexOf(k) < 0) ops.push(k); });
       return { digits: [], ops: ops, vars: propLetters(spec), nav: ['left', 'right', 'back', 'enter'], logic: true };
+    }
+    if (t === 'translit') {
+      ops = ['tA', 'tj', 'ta', 'tH', 'tx', 'tX', 'tz', 'tS', 'tq', 'tT', 'tD', 'tdot', 'thy'];
+      (opts.keys || []).forEach(function (k) { if (K[k] && ops.indexOf(k) < 0) ops.push(k); });
+      return { digits: [], ops: ops, vars: [], nav: ['left', 'right', 'back', 'enter'], translit: true };
     }
     var form = spec.form || '';
     if (t === 'num') {
@@ -213,6 +224,7 @@
       function upd() {
         var v = inp.value;
         if (ptype === 'text') return;
+        if (ptype === 'translit') { var tv = v.trim() && ML._check && ML._check.translitShow ? ML._check.translitShow(v) : ''; pv.textContent = tv; pv.className = 'ml-in-preview' + (tv ? (tv.indexOf('?') >= 0 ? ' ml-in-wait' : ' ml-in-ok ml-in-tl') : ''); return; }
         if (!v.trim() || (ptype !== 'formula' && /^\s*-?\s*\d*\.?\d*\s*$/.test(v))) { pv.innerHTML = ''; pv.className = 'ml-in-preview'; return; }
         try { var tex = previewTex(ptype, v, opts.unit); pv.innerHTML = tex ? ML.tex(tex, { display: false }) : ''; pv.className = 'ml-in-preview ml-in-ok'; }
         catch (e) { pv.className = 'ml-in-preview ml-in-wait'; if (!pv.querySelector('.ml-in-note')) { var n = h('span', 'ml-in-note', null, 'keep typing…'); pv.appendChild(n); } }
@@ -230,9 +242,10 @@
       kset = keysFor(spec, opts); if (!kset || opts.keypad === false) return;
       var kpId = id + '-kp';
       toggle = h('button', 'ml-kp-toggle', { type: 'button', 'aria-expanded': 'false', 'aria-controls': kpId, title: 'Math keypad' });
-      toggle.innerHTML = spec.t === 'formula' ? '<span aria-hidden="true">^·</span><span class="ml-sr">Formula keypad</span>' : kset.logic ? '<span aria-hidden="true">¬∧</span><span class="ml-sr">Logic symbols keypad</span>' : '<span aria-hidden="true">±√</span><span class="ml-sr">Math keypad</span>';
+      toggle.innerHTML = kset.translit ? '<span aria-hidden="true">ꜣḥ</span><span class="ml-sr">Transliteration letters</span>' : spec.t === 'formula' ? '<span aria-hidden="true">^·</span><span class="ml-sr">Formula keypad</span>' : kset.logic ? '<span aria-hidden="true">¬∧</span><span class="ml-sr">Logic symbols keypad</span>' : '<span aria-hidden="true">±√</span><span class="ml-sr">Math keypad</span>';
       if (kset.logic) toggle.title = 'Logic symbols';
-      keypad = h('div', 'ml-kp' + (kset.logic ? ' ml-kp-logic' : ''), { id: kpId, role: 'group', 'aria-label': kset.logic ? 'Logic symbols' : 'Math keypad' }); keypad.hidden = true;
+      if (kset.translit) toggle.title = 'Transliteration letters';
+      keypad = h('div', 'ml-kp' + (kset.logic ? ' ml-kp-logic' : '') + (kset.translit ? ' ml-kp-logic ml-kp-translit' : ''), { id: kpId, role: 'group', 'aria-label': kset.logic ? 'Logic symbols' : kset.translit ? 'Transliteration letters' : 'Math keypad' }); keypad.hidden = true;
       if (!kset.digits.length) { keypad.style.gridTemplateColumns = 'minmax(0,1fr)'; keypad.style.gridTemplateAreas = '"o" "n"'; }
       var digits = h('div', 'ml-kp-digits'), ops = h('div', 'ml-kp-ops'), nav = h('div', 'ml-kp-nav');
       kset.digits.forEach(function (k) { digits.appendChild(keyBtn(k)); });
@@ -277,6 +290,7 @@
     function setCaret(inp, p) { try { if (D.activeElement !== inp && !preferNoKeyboard) inp.focus({ preventScroll: true }); else if (D.activeElement !== inp) inp.focus({ preventScroll: true }); inp.setSelectionRange(p, p); } catch (e) { } }
 
     var PH = { num: spec.form === 'mixed' ? 'like 2 1/2' : spec.form === 'frac' ? 'like 3/4' : spec.form === 'dec' || spec.dp !== undefined ? 'like 0.75' : spec.form === 'int' ? 'a whole number' : 'Type a number',
+      translit: 'like ḥtp or Htp',
       expr: 'like 2x + 3', eq: 'like y = 2x + 1', set: 'like 3, -2', interval: 'like (-inf, 3]', ineq: 'like x < 3', text: 'Type a word', formula: 'like H2O or SO4^2-',
       prop: /[∀∃]|[A-Z][a-z]/.test(str(Array.isArray(spec.v) ? spec.v[0] : spec.v)) ? 'like ∀x(Fx → Gx)' : 'like p → (q ∧ r)' };
 
@@ -365,6 +379,7 @@
       if (parts.some(function (p) { return p.a && (p.a.t === 'ineq'); })) pseudo.t = 'ineq';
       var propParts = parts.filter(function (p) { return p.a && p.a.t === 'prop'; });
       if (propParts.length) pseudo = { t: 'prop', v: [].concat.apply([], propParts.map(function (p) { return Array.isArray(p.a.v) ? p.a.v : [p.a.v]; })) };
+      if (parts.some(function (p) { return p.a && p.a.t === 'translit'; })) pseudo = { t: 'translit', v: '' };
       var savedSpec = spec; spec = pseudo;
       var kpHolder = h('div', 'ml-in-tools'); wrap.appendChild(kpHolder);
       buildKeypad(kpHolder); if (toggle) kpHolder.insertBefore(toggle, kpHolder.firstChild);
@@ -390,7 +405,7 @@
       var tools = h('div', 'ml-in-tools');
       wrap.appendChild(tools);
       buildKeypad(tools);
-      if (toggle) { var mainRow = wrap.querySelector('.ml-in-field'); if (t === 'num' || t === 'expr' || t === 'eq' || t === 'set' || t === 'interval' || t === 'ineq' || t === 'formula' || t === 'prop') mainRow.insertBefore(toggle, mainRow.querySelector('.ml-in-preview')); else tools.insertBefore(toggle, tools.firstChild); }
+      if (toggle) { var mainRow = wrap.querySelector('.ml-in-field'); if (t === 'num' || t === 'expr' || t === 'eq' || t === 'set' || t === 'interval' || t === 'ineq' || t === 'formula' || t === 'prop' || t === 'translit') mainRow.insertBefore(toggle, mainRow.querySelector('.ml-in-preview')); else tools.insertBefore(toggle, tools.firstChild); }
     }
 
     if (!api) {

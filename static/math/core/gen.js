@@ -467,7 +467,7 @@
   ML.getGen = function (id) { return GENS[id] || null; };
   ML.byLevel = function (ctx, a, b, c) { var l = ctx && ctx.level || 1; if (b === undefined) b = a; if (c === undefined) c = b; return l >= 3 ? c : l === 2 ? b : a; };
 
-  var TYPES = { num: 1, expr: 1, eq: 1, set: 1, tuple: 1, matrix: 1, interval: 1, ineq: 1, mc: 1, tf: 1, text: 1, formula: 1, prop: 1, multi: 1 };
+  var TYPES = { num: 1, expr: 1, eq: 1, set: 1, tuple: 1, matrix: 1, interval: 1, ineq: 1, mc: 1, tf: 1, text: 1, formula: 1, prop: 1, multi: 1, translit: 1 };
   function validateSpec(a, path, out) {
     if (!a || typeof a !== 'object') { out.push(path + ' is missing'); return; }
     if (!TYPES[a.t]) { out.push(path + '.t is "' + a.t + '" (not an answer type)'); return; }
@@ -496,6 +496,11 @@
           if (/\d[+-]$/.test(f.replace(/\((s|l|g|aq)\)$/i, '')) && f.indexOf('^') < 0) out.push(path + '.v "' + f + '": write the charge with ^ (SO4^2-, NH4^+, Fe^3+)');
           if (a.states && !/\((s|l|g|aq)\)$/i.test(f)) out.push(path + '.v "' + f + '": states: true needs a state symbol like (aq)');
         });
+        break;
+      }
+      case 'translit': { // an Egyptian transliteration (check.js), one reading or a list of accepted readings
+        var tv = Array.isArray(a.v) ? a.v : [a.v];
+        if (!tv.length || !tv.every(str)) out.push(path + '.v must be a transliteration or an array of them');
         break;
       }
       case 'prop': { // a logic formula (check.js; parsed by MathLadder.logic when it is loaded)

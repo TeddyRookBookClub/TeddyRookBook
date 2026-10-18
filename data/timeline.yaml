@@ -1,10 +1,15 @@
 # The Timeline page (/timeline/) and the site search read this file.
 # Each event: id (anchor), year (negative = BC, for sorting), when (as shown), era, place (filter), title, text,
-# and links: [kind, label, url] where kind is game, book, infographic, language or page.
+# and links: [kind, label, url] where kind is game, book, infographic, language or page (page: a Teddy Rook Book page, such as a
+# ladder topic or the /egypt/ hub). The Egypt track (place: egypt) follows Shaw, The Oxford History of Ancient Egypt (2000):
+# dates before 664 BC are approximate ("c.").
 eras:
+  - id: first
+    name: "The First Kings and the Pyramids"
+    span: "to c. 2000 BC"
   - id: bronze
-    name: "The Bronze Age"
-    span: "to c. 1100 BC"
+    name: "The Later Bronze Age"
+    span: "c. 2000 to 1100 BC"
   - id: archaic
     name: "Early Greece and the Founding of Rome"
     span: "c. 1100 to 500 BC"
@@ -20,25 +25,31 @@ eras:
   - id: late
     name: "Late Antiquity"
     span: "AD 180 to 530"
+  - id: after
+    name: "After the Ancient World"
+    span: "AD 530 onward"
 places:
   - [greece, "Greece"]
   - [rome, "Rome"]
   - [bible, "Bible and Church"]
-  - [east, "Egypt and the Near East"]
+  - [egypt, "Egypt"]
+  - [east, "The Near East"]
 events:
   - id: giza
     year: -2560
-    when: "c. 2560 BC"
-    era: bronze
-    place: east
+    when: "c. 2589–2566 BC"
+    era: first
+    place: egypt
     title: "The Great Pyramid of Giza"
     text: "Built for the pharaoh Khufu, it stayed the tallest building in the world for almost four thousand years."
     links:
-      - [infographic, "Gods of Egypt", "/infographics/gods-of-egypt/"]
+      - [page, "Sneferu, Khufu and the True Pyramid", "/egyptology/history/pyramid-age/"]
+      - [page, "The Pyramids of Giza (Young Explorers)", "/egyptology/young-explorers/giza/"]
+      - [page, "Map: Giza", "/egypt/map/"]
   - id: ur
     year: -2500
     when: "c. 2600–2400 BC"
-    era: bronze
+    era: first
     place: east
     title: "The Royal Game of Ur"
     text: "Game boards are buried with the dead in the Royal Cemetery at Ur, in what is now southern Iraq. More than two thousand years later a Babylonian tablet still records how the game was played."
@@ -419,3 +430,362 @@ events:
     text: "Accused of treason by the Gothic king Theodoric, the Roman senator Boethius writes The Consolation of Philosophy while awaiting execution. It was one of the most-read books of the Middle Ages."
     links:
       - [book, "The Consolation of Philosophy", "/books/the-consolation-of-philosophy/"]
+  - id: naqada
+    year: -3600
+    when: "c. 4000–3100 BC"
+    era: first
+    place: egypt
+    title: "The Naqada culture"
+    text: "Farming villages along the Nile grow into chiefdoms whose pottery, trade and rich graves spread from the south across all of Egypt."
+    links:
+      - [page, "Before the Kings", "/egyptology/history/naqada/"]
+  - id: first-writing
+    year: -3200
+    when: "c. 3200 BC"
+    era: first
+    place: egypt
+    title: "The first Egyptian writing"
+    text: "Small bone and ivory labels in a tomb at Abydos (tomb U-j) carry some of the earliest writing known anywhere."
+    links:
+      - [page, "The First Writing", "/egyptology/history/first-writing/"]
+      - [page, "Kinds of signs (Middle Egyptian I)", "/egyptology/middle-egyptian-1/sign-kinds/"]
+  - id: narmer
+    year: -3000
+    when: "c. 3000 BC"
+    era: first
+    place: egypt
+    title: "The Two Lands become one"
+    text: "Upper and Lower Egypt come under one king. The Narmer Palette, found at Hierakonpolis, shows King Narmer in the white crown of the south on one side and the red crown of the north on the other."
+    links:
+      - [page, "The Joining of the Two Lands", "/egyptology/history/unification/"]
+      - [page, "One Kingdom (Young Explorers)", "/egyptology/young-explorers/one-kingdom/"]
+  - id: step-pyramid
+    year: -2667
+    when: "c. 2667–2648 BC"
+    era: first
+    place: egypt
+    title: "The Step Pyramid of Djoser"
+    text: "At Saqqara, King Djoser and his official Imhotep raise the first large building of cut stone: six steps, about 62 meters high."
+    links:
+      - [page, "Djoser and the Step Pyramid", "/egyptology/history/djoser/"]
+  - id: sneferu
+    year: -2613
+    when: "c. 2613–2589 BC"
+    era: first
+    place: egypt
+    title: "Sneferu builds the first true pyramids"
+    text: "Sneferu tries three times, at Meidum and Dahshur. The Bent Pyramid changes its angle partway up; the Red Pyramid gets it right."
+    links:
+      - [page, "Sneferu, Khufu and the True Pyramid", "/egyptology/history/pyramid-age/"]
+  - id: pyramid-texts
+    year: -2350
+    when: "c. 2350 BC"
+    era: first
+    place: egypt
+    title: "The Pyramid Texts"
+    text: "King Unas has spells carved on the walls inside his pyramid at Saqqara, the oldest large body of religious writing in the world."
+    links:
+      - [page, "The Pyramid Texts", "/egyptology/religion-art-architecture/pyramid-texts/"]
+  - id: ok-end
+    year: -2160
+    when: "c. 2160 BC"
+    era: first
+    place: egypt
+    title: "The Old Kingdom ends"
+    text: "Royal power fades and rival kings rule from Herakleopolis and Thebes. Historians still debate why."
+    links:
+      - [page, "Why Did the Old Kingdom End?", "/egyptology/history/ok-end/"]
+  - id: mentuhotep
+    year: -2055
+    when: "c. 2055 BC"
+    era: first
+    place: egypt
+    title: "Mentuhotep II reunites Egypt"
+    text: "A Theban king defeats his northern rivals, and the Middle Kingdom begins."
+    links:
+      - [page, "Mentuhotep II Reunites Egypt", "/egyptology/history/mentuhotep/"]
+  - id: sinuhe
+    year: -1900
+    when: "c. 1900 BC"
+    era: bronze
+    place: egypt
+    title: "The Tale of Sinuhe"
+    text: "A courtier flees Egypt when the king dies and lives among the people of Canaan; the story becomes a classic, copied by schoolboys for centuries."
+    links:
+      - [page, "The Classic Age", "/egyptology/history/mk-culture/"]
+      - [page, "Sinuhe: The Opening (Middle Egyptian II)", "/egyptology/middle-egyptian-2/sinuhe-opening/"]
+  - id: nubian-forts
+    year: -1860
+    when: "c. 1860 BC"
+    era: bronze
+    place: egypt
+    title: "Forts at the Second Cataract"
+    text: "Senusret III fixes Egypt's southern border in Nubia with a chain of great mud-brick forts."
+    links:
+      - [page, "Senusret III and Nubia", "/egyptology/history/senusret3/"]
+      - [page, "Map: Buhen and Semna", "/egypt/map/"]
+  - id: hyksos
+    year: -1650
+    when: "c. 1650 BC"
+    era: bronze
+    place: egypt
+    title: "The Hyksos rule from Avaris"
+    text: "Rulers of western Asian origin govern northern Egypt as the 15th Dynasty, while Theban kings hold the south."
+    links:
+      - [page, "The Hyksos", "/egyptology/history/hyksos/"]
+  - id: ahmose
+    year: -1550
+    when: "c. 1550 BC"
+    era: bronze
+    place: egypt
+    title: "Ahmose drives out the Hyksos"
+    text: "The Theban king takes Avaris and founds the 18th Dynasty: the New Kingdom begins."
+    links:
+      - [page, "The Theban War", "/egyptology/history/liberation/"]
+  - id: hatshepsut
+    year: -1473
+    when: "c. 1473–1458 BC"
+    era: bronze
+    place: egypt
+    title: "Hatshepsut rules as king"
+    text: "She builds her terraced temple at Deir el-Bahari and sends ships to the land of Punt."
+    links:
+      - [page, "Hatshepsut", "/egyptology/history/hatshepsut/"]
+      - [page, "Hatshepsut (Young Explorers)", "/egyptology/young-explorers/hatshepsut/"]
+  - id: megiddo
+    year: -1457
+    when: "c. 1457 BC"
+    era: bronze
+    place: egypt
+    title: "The battle of Megiddo"
+    text: "Thutmose III defeats a coalition of Canaanite rulers and begins twenty years of campaigns in the Levant."
+    links:
+      - [page, "Thutmose III and Megiddo", "/egyptology/history/thutmose3/"]
+  - id: amarna
+    year: -1352
+    when: "c. 1352–1336 BC"
+    era: bronze
+    place: egypt
+    title: "Akhenaten and the Aten"
+    text: "The king puts the sun disk, the Aten, above all gods and builds a new capital at Amarna; after him the old gods return."
+    links:
+      - [page, "Akhenaten and Amarna", "/egyptology/history/akhenaten/"]
+      - [page, "The Art of the Amarna Age", "/egyptology/religion-art-architecture/amarna-art/"]
+  - id: tutankhamun
+    year: -1336
+    when: "c. 1336–1327 BC"
+    era: bronze
+    place: egypt
+    title: "Tutankhamun"
+    text: "A boy king brings back the old gods and dies young. His small tomb will wait more than three thousand years to be found."
+    links:
+      - [page, "Tutankhamun and the Restoration", "/egyptology/history/restoration/"]
+      - [page, "Tutankhamun (Young Explorers)", "/egyptology/young-explorers/tutankhamun/"]
+  - id: ramesses
+    year: -1279
+    when: "c. 1279–1213 BC"
+    era: bronze
+    place: egypt
+    title: "Ramesses II"
+    text: "The great builder reigns 66 years: Abu Simbel, the Ramesseum, and a new Delta capital, Pi-Ramesses."
+    links:
+      - [page, "Ramesses II", "/egyptology/history/ramesses2/"]
+      - [page, "Ramesses the Great (Young Explorers)", "/egyptology/young-explorers/ramesses/"]
+  - id: kadesh
+    year: -1274
+    when: "c. 1274 BC"
+    era: bronze
+    place: egypt
+    title: "The battle of Kadesh"
+    text: "Ramesses II fights the Hittites in Syria. Both sides claim victory; most historians call it a draw."
+    links:
+      - [page, "Kadesh and the Peace Treaty", "/egyptology/history/kadesh/"]
+  - id: hittite-treaty
+    year: -1259
+    when: "c. 1259 BC"
+    era: bronze
+    place: egypt
+    title: "A peace treaty with the Hittites"
+    text: "Egypt and the Hittites make one of the earliest surviving peace treaties; copies survive in both Egyptian and Akkadian."
+    links:
+      - [page, "Kadesh and the Peace Treaty", "/egyptology/history/kadesh/"]
+  - id: sea-peoples
+    year: -1177
+    when: "c. 1177 BC"
+    era: bronze
+    place: egypt
+    title: "Ramesses III and the Sea Peoples"
+    text: "Egypt fights off groups on the move from the north, recorded on the walls of Medinet Habu."
+    links:
+      - [page, "Ramesses III and the Sea Peoples", "/egyptology/history/ramesses3/"]
+  - id: first-strike
+    year: -1157
+    when: "c. 1157 BC"
+    era: bronze
+    place: egypt
+    title: "The first recorded strike"
+    text: "The tomb-builders of Deir el-Medina stop work because their grain rations are late."
+    links:
+      - [page, "Deir el-Medina", "/egyptology/history/deir-el-medina/"]
+  - id: nk-end
+    year: -1069
+    when: "c. 1069 BC"
+    era: archaic
+    place: egypt
+    title: "The New Kingdom ends"
+    text: "Egypt divides: kings rule the north from Tanis while the high priests of Amun hold Thebes."
+    links:
+      - [page, "A Divided Egypt", "/egyptology/history/tip/"]
+  - id: shoshenq
+    year: -925
+    when: "c. 925 BC"
+    era: archaic
+    place: egypt
+    title: "Shoshenq I campaigns in Canaan"
+    text: "A Libyan king of Egypt leads an army north. Many scholars identify him with Shishak in the Bible; others doubt it."
+    links:
+      - [page, "Egypt and the Bible: What Scholars Debate", "/egyptology/history/bible/"]
+  - id: piye
+    year: -728
+    when: "c. 728 BC"
+    era: archaic
+    place: egypt
+    title: "Piye of Kush conquers Egypt"
+    text: "A king from Napata in Nubia sails north and takes Egypt; his family rules it as the 25th Dynasty."
+    links:
+      - [page, "The Kushite Kings", "/egyptology/history/kushite/"]
+      - [page, "Map: Napata", "/egypt/map/"]
+  - id: psamtek
+    year: -664
+    when: "664 BC"
+    era: archaic
+    place: egypt
+    title: "The Saite revival"
+    text: "Psamtek I reunites Egypt from Sais. From this year on, Egyptian dates are exact."
+    links:
+      - [page, "The Saite Revival", "/egyptology/history/saite/"]
+      - [page, "How Sure Are the Dates?", "/egyptology/history/how-sure/"]
+  - id: cambyses
+    year: -525
+    when: "525 BC"
+    era: archaic
+    place: egypt
+    title: "Persia conquers Egypt"
+    text: "Cambyses II of Persia defeats the last Saite king; Egypt becomes a Persian province."
+    links:
+      - [page, "Persian Rule", "/egyptology/history/persians/"]
+  - id: nectanebo
+    year: -343
+    when: "343 BC"
+    era: classical
+    place: egypt
+    title: "The last native pharaoh"
+    text: "The Persians return and Nectanebo II flees south. No Egyptian-born king will rule Egypt again for more than two thousand years."
+    links:
+      - [page, "The Last Native Kings", "/egyptology/history/last-natives/"]
+  - id: alexandria
+    year: -331
+    when: "332–331 BC"
+    era: classical
+    place: egypt
+    title: "Alexander takes Egypt and founds Alexandria"
+    text: "The Persian governor gives Egypt up without a fight. Alexander visits the oracle of Amun at Siwa and founds a new city on the coast."
+    links:
+      - [page, "Alexander in Egypt", "/egyptology/history/alexander/"]
+  - id: library
+    year: -285
+    when: "c. 285 BC"
+    era: hellenistic
+    place: egypt
+    title: "The Library of Alexandria"
+    text: "Under the first Ptolemies, Alexandria gathers scholars and books; the priest Manetho writes his history of Egypt in Greek, with the 30 dynasties we still use."
+    links:
+      - [page, "The Ptolemies and Alexandria", "/egyptology/history/ptolemies/"]
+      - [page, "Manetho's Dynasties", "/egyptology/history/manetho/"]
+  - id: rosetta-stone
+    year: -196
+    when: "196 BC"
+    era: hellenistic
+    place: egypt
+    title: "The Rosetta Stone"
+    text: "Priests issue a decree in honor of Ptolemy V, carved in hieroglyphs, Demotic and Greek. Two thousand years later it will help unlock the hieroglyphs."
+    links:
+      - [page, "The Rosetta Stone", "/egyptology/archaeology-scripts/rosetta/"]
+      - [page, "The Rosetta Stone (Young Explorers)", "/egyptology/young-explorers/rosetta-stone/"]
+  - id: cleopatra
+    year: -30
+    when: "51–30 BC"
+    era: hellenistic
+    place: egypt
+    title: "Cleopatra VII, the last Ptolemy"
+    text: "Allied with Caesar and then Antony, she loses to Octavian at Actium (31 BC). After her death in 30 BC, Egypt becomes a Roman province."
+    links:
+      - [page, "Cleopatra VII", "/egyptology/history/cleopatra/"]
+      - [book, "Plutarch's Lives", "/books/plutarchs-lives/"]
+  - id: pachomius
+    year: 320
+    when: "c. AD 320"
+    era: late
+    place: egypt
+    title: "The first monasteries"
+    text: "In Upper Egypt, Pachomius gathers monks into the first communal monasteries; Christian Egyptians write their language in Coptic letters."
+    links:
+      - [page, "Christian and Byzantine Egypt", "/egyptology/history/christian-egypt/"]
+      - [page, "Where Coptic Comes From", "/egyptology/archaeology-scripts/coptic-origins/"]
+  - id: last-hieroglyphs
+    year: 394
+    when: "AD 394"
+    era: late
+    place: egypt
+    title: "The last hieroglyphs"
+    text: "At the temple of Isis at Philae, a priest carves the last known hieroglyphic inscription, dated 24 August 394."
+    links:
+      - [page, "The Last Hieroglyphic Inscription", "/egyptology/archaeology-scripts/last-hieroglyphs/"]
+      - [page, "Map: Philae", "/egypt/map/"]
+  - id: last-demotic
+    year: 452
+    when: "AD 452"
+    era: late
+    place: egypt
+    title: "The last Demotic"
+    text: "The last dated inscription in Demotic, also at Philae. After it, Egyptian is written only in Coptic."
+    links:
+      - [page, "The Last Demotic", "/egyptology/archaeology-scripts/last-demotic/"]
+  - id: arab-conquest
+    year: 641
+    when: "AD 641"
+    era: after
+    place: egypt
+    title: "The Arab conquest of Egypt"
+    text: "Arab armies under Amr ibn al-As take the fortress of Babylon and then Alexandria, ending Byzantine rule."
+    links:
+      - [page, "The Arab Conquest", "/egyptology/history/arab-conquest/"]
+  - id: rosetta-found
+    year: 1799
+    when: "AD 1799"
+    era: after
+    place: egypt
+    title: "The Rosetta Stone is found"
+    text: "French soldiers of Napoleon's expedition dig it up at Rosetta, in the Delta; it goes to the British Museum in 1802."
+    links:
+      - [page, "Napoleon's Expedition", "/egyptology/archaeology-scripts/napoleon/"]
+  - id: decipherment
+    year: 1822
+    when: "AD 1822"
+    era: after
+    place: egypt
+    title: "Champollion reads the hieroglyphs"
+    text: "Jean-François Champollion reads the names of Ptolemy, Cleopatra, Ramesses and Thutmose and shows how the script works, building on Thomas Young's work."
+    links:
+      - [page, "Champollion's Breakthrough", "/egyptology/archaeology-scripts/champollion/"]
+      - [page, "Champollion Cracks the Code (Young Explorers)", "/egyptology/young-explorers/champollion/"]
+  - id: kv62
+    year: 1922
+    when: "AD 1922"
+    era: after
+    place: egypt
+    title: "Tutankhamun's tomb is found"
+    text: "Howard Carter finds the steps to tomb KV62 in the Valley of the Kings, nearly untouched since antiquity."
+    links:
+      - [page, "Carter and KV62", "/egyptology/archaeology-scripts/kv62/"]
+      - [page, "Finding Tutankhamun's Tomb (Young Explorers)", "/egyptology/young-explorers/carter/"]

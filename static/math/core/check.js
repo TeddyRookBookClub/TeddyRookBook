@@ -126,6 +126,16 @@
             a free variable, a letter that isn't part of the answer. answerValue / answerText / answerShow: the formula in the
             Logic Ladder's style (show(): ¬(p ∧ q) → r, ∀x(Fx → Gx)); answerShow as TeX ($\neg(p \land q) \to r$).
             ML._check.propNorm / propParse / propEquiv / propShow / propTex.
+   TRANSLIT { t: 'translit', v: 'ḥtp-dj-nsw' (or a list of accepted readings), strict?: true }   an Egyptian transliteration
+            (the Egyptology Ladder). Typed in the Egyptological alphabet in Unicode (ꜣ j y ꜥ w b p f m n r h ḥ ḫ ẖ z s š q k g t ṯ d ḏ)
+            or in Manuel de Codage (A i y a w b p f m n r h H x X z s S q k g t T d D), or a mix: capitals matter only where
+            MdC gives them a meaning (H X S T D, A for ꜣ and a for ꜥ), so h and H are different letters; other letters ignore
+            case (Jmn = jmn). Also read: 3 and ȝ for ꜣ; ʿ ‘ ` for ꜥ; i, ꞽ, ỉ, ı͗, i̯ for yod (the site writes j); ś and Z for z;
+            ḳ for q; letters built with combining marks (h + ̣ = ḥ). Dots, hyphens, = signs, spaces and brackets between
+            morphemes are optional (sḏm.n.f = sḏmnf = sḏm.n=f). z and s are the same letter unless strict: true (the older
+            books write s for both). Notes: a plain h, t, d, s or k where a dotted or underlined letter belongs ("Check the
+            marks: ḥ (MdC H) is not h."), ꜣ and ꜥ swapped. answerShow: the first accepted reading as written.
+            ML._check.translitNorm(s, strict) (the comparison key) and translitShow(s) (Unicode, separators kept).
    MULTI { t: 'multi', parts: [{ label, a }] } answer: an array, one entry per part                                     */
 (function (root) {
   'use strict';
@@ -1636,6 +1646,63 @@
   // a formula as TeX in the Logic Ladder's style (\neg (p \land q) \to r, \forall x(Fx \to Gx)); throws if it can't be read
   function propTex(v) { return LGM().show(propParse(v)).replace(/[¬∧∨→↔∀∃≠⊥′]/g, function (c) { return PROP_TEX[c]; }).replace(/ +/g, ' ').trim(); }
 
+
+  // ===================================================================== Egyptian transliteration { t: 'translit', v, strict }
+  // one letter at a time (after NFD, so a base letter and its combining marks stay together), Unicode and MdC alike
+  var TL_PLAIN = { A: 'ꜣ', '3': 'ꜣ', 'ȝ': 'ꜣ', 'Ȝ': 'ꜣ', 'Ꜣ': 'ꜣ', 'ꜣ': 'ꜣ', a: 'ꜥ', 'ʿ': 'ꜥ', 'ʽ': 'ꜥ', '‘': 'ꜥ', '`': 'ꜥ', 'Ꜥ': 'ꜥ', 'ꜥ': 'ꜥ',
+    i: 'j', I: 'j', j: 'j', J: 'j', 'ꞽ': 'j', 'Ꞽ': 'j', 'ı': 'j', y: 'y', Y: 'y', H: 'ḥ', x: 'ḫ', X: 'ẖ', S: 'š', T: 'ṯ', D: 'ḏ', Z: 'z', z: 'z',
+    Q: 'q', q: 'q', w: 'w', W: 'w', b: 'b', B: 'b', p: 'p', P: 'p', f: 'f', F: 'f', m: 'm', M: 'm', n: 'n', N: 'n', r: 'r', R: 'r',
+    h: 'h', s: 's', k: 'k', K: 'k', g: 'g', G: 'g', t: 't', d: 'd', l: 'l', L: 'l', 'ꜧ': 'ḥ' };
+  // base (lowercase) + combining mark -> letter
+  var TL_MARK = { 'ḥ': 'ḥ', 'ḫ': 'ḫ', 'ẖ': 'ẖ', 'h̲': 'ẖ', 'š': 'š', 'ś': 'z', 'ṯ': 'ṯ', 't̲': 'ṯ',
+    'ḏ': 'ḏ', 'd̲': 'ḏ', 'ḳ': 'q', 'i͗': 'j', 'i̯': 'j', 'ỉ': 'j', 'ı͗': 'j', 'j͗': 'j', 'ẓ': 'z' };
+  var TL_SEP = /[\s.\-=‧·‐‑–—()[\]{}⸢⸣⟨⟩<>\/:,;'’"?!]/;
+  // letters in order, null for a character that is no transliteration letter; seps: keep the separators (for display)
+  function tlLetters(raw, seps) {
+    var s = str(raw).normalize ? str(raw).normalize('NFD') : str(raw), out = [], bad = false;
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i];
+      if (/[̀-ͯ]/.test(c)) continue; // a stray mark
+      var marks = ''; while (i + 1 < s.length && /[̀-ͯ]/.test(s[i + 1])) marks += s[++i];
+      if (TL_SEP.test(c)) { if (c === '’' && !seps) { out.push('ꜥ'); continue; } if (seps) out.push(c === '‐' || c === '‑' ? '-' : c); continue; }
+      var hit = null;
+      if (marks) { var lc = c.toLowerCase(); for (var k = 0; k < marks.length && !hit; k++) hit = TL_MARK[lc + marks[k]] || null; if (!hit && TL_PLAIN[lc] && /^[a-z]$/.test(lc) && !/[HXSTDA]/.test(c)) hit = TL_PLAIN[lc]; if (!hit) hit = TL_PLAIN[c] || null; }
+      else hit = TL_PLAIN[c] || null;
+      if (!hit) { var pre = c.normalize ? c.normalize('NFC') : c, lo = pre.toLowerCase(); if ('ḥḫẖšṯḏqꜣꜥ'.indexOf(lo) >= 0) hit = lo; else if (lo === 'ḳ') hit = 'q'; else if (lo === 'ś') hit = 'z'; else if (lo === 'ỉ' || lo === 'i̯') hit = 'j'; }
+      if (!hit) { bad = true; out.push(null); } else out.push(hit);
+    }
+    return { letters: out, bad: bad };
+  }
+  function translitNorm(raw, strict) {
+    var L = tlLetters(raw, false); if (L.bad) return null;
+    var k = L.letters.join('');
+    return strict ? k : k.replace(/z/g, 's');
+  }
+  function translitShow(raw) { var L = tlLetters(raw, true); return L.letters.map(function (c) { return c === null ? '?' : c; }).join('').replace(/\s+/g, ' ').trim(); }
+  function checkTranslit(spec, answer) {
+    var raw = str(answer).trim();
+    if (!raw) return { ok: false, invalid: true, msg: 'Type an answer first.' };
+    var strict = !!spec.strict, k = translitNorm(raw, strict);
+    if (k === null) return { ok: false, invalid: true, msg: 'Use the transliteration letters: ꜣ j y ꜥ w b p f m n r h ḥ ḫ ẖ z s š q k g t ṯ d ḏ (or type A i y a … H x X … S … T D).' };
+    if (!k) return { ok: false, invalid: true, msg: 'Type an answer first.' };
+    var E = (Array.isArray(spec.v) ? spec.v : [spec.v]).map(function (v) { var e = translitNorm(v, strict); if (e === null) throw new Error('Bad transliteration "' + v + '" in the answer spec'); return e; });
+    if (E.indexOf(k) >= 0) return { ok: true };
+    if (strict && E.indexOf(k.replace(/z/g, 's')) >= 0 || strict && E.some(function (e) { return e.replace(/z/g, 's') === k.replace(/z/g, 's'); })) return { ok: false, msg: 'Close: z (the door bolt, MdC z) and s (the folded cloth) are kept apart here.' };
+    var bare = function (x) { return x.replace(/[ḥḫẖ]/g, 'h').replace(/ṯ/g, 't').replace(/ḏ/g, 'd').replace(/š/g, 's').replace(/q/g, 'k'); };
+    var bk = bare(k);
+    for (var i = 0; i < E.length; i++) if (bare(E[i]) === bk) {
+      var e = E[i], miss = '';
+      for (var j = 0; j < e.length; j++) if (e[j] !== k[j]) { miss = e[j]; break; }
+      var MDC = { 'ḥ': 'H', 'ḫ': 'x', 'ẖ': 'X', 'ṯ': 'T', 'ḏ': 'D', 'š': 'S', 'q': 'q', 'h': 'h', 't': 't', 'd': 'd', 's': 's', 'k': 'k' };
+      return { ok: false, msg: 'Check the marks under and over the letters' + (miss ? ': this one has ' + miss + ' (MdC ' + MDC[miss] + ')' : '') + '. Plain h, t, d, s and k are different letters from ḥ ḫ ẖ, ṯ, ḏ, š and q.' };
+    }
+    var swap = function (x) { return x.replace(/[ꜣꜥ]/g, '\u0001'); };
+    if (E.some(function (e) { return swap(e) === swap(k); })) return { ok: false, msg: 'Check ꜣ and ꜥ: ꜣ (the vulture, MdC A) and ꜥ (the forearm, MdC a) are different sounds.' };
+    var yod = function (x) { return x.replace(/y/g, 'jj'); };
+    if (E.some(function (e) { return yod(e) === yod(k); })) return { ok: true };
+    return { ok: false };
+  }
+
   function checkText(spec, answer) {
     var s = normWord(answer); if (!s) return { ok: false, invalid: true, msg: 'Type an answer first.' };
     var want = (Array.isArray(spec.v) ? spec.v : [spec.v]).map(normWord);
@@ -1701,6 +1768,7 @@
         case 'text': return checkText(spec, answer);
         case 'formula': return checkFormula(spec, answer);
         case 'prop': return checkProp(spec, answer);
+        case 'translit': return checkTranslit(spec, answer);
         case 'multi': return checkMulti(spec, answer, ctx);
       }
       return { ok: false, msg: 'Unknown answer type ' + spec.t + '.' };
@@ -1749,6 +1817,7 @@
       case 'text': return Array.isArray(spec.v) ? spec.v[0] : spec.v;
       case 'formula': return str(Array.isArray(spec.v) ? spec.v[0] : spec.v);
       case 'prop': return propShow(Array.isArray(spec.v) ? spec.v[0] : spec.v);
+      case 'translit': return str(Array.isArray(spec.v) ? spec.v[0] : spec.v);
       case 'multi': return spec.parts.map(function (p) { return ML.answerValue(p.a); });
     }
     return '';
@@ -1802,6 +1871,7 @@
       case 'mc': return (Array.isArray(spec.v) ? spec.v : [spec.v]).map(function (i) { return str(spec.choices[i]); }).join('; ');
       case 'tf': return spec.v ? 'True' : 'False';
       case 'text': return str(Array.isArray(spec.v) ? spec.v[0] : spec.v);
+      case 'translit': return translitShow(Array.isArray(spec.v) ? spec.v[0] : spec.v);
       case 'prop': { var pv0 = Array.isArray(spec.v) ? spec.v[0] : spec.v; try { return '$' + propTex(pv0) + '$'; } catch (e) { return propShow(pv0); } }
       case 'formula': { var fv = str(Array.isArray(spec.v) ? spec.v[0] : spec.v); try { var FF = fParse(fNorm(fv), 0); return '$' + formulaTex(FF ? fCanon(FF, !!spec.states) : fv) + '$'; } catch (e) { return fv; } }
       case 'multi': return spec.parts.map(function (p) { return (p.label ? p.label + ' ' : '') + ML.answerShow(p.a); }).join(', ');
@@ -1811,7 +1881,7 @@
   ML._check = { readNumber: readNumber, parseIntervals: parseIntervals, parseIneq: parseIneq, violations: violations, compareTrees: compareTrees, kindOf: kindOf,
     dropUnit: function (s, unit) { var c = cleanInput(s), d = dropUnit(c) || (unit ? dropExpectedUnit(c, unit) : null) || (unit ? dropSIUnit(sciNorm(c)) : null); return d ? { s: d.s, unit: d.unit } : null; }, splitPM: splitPM,
     canonUnit: canonUnit, questionUnits: questionUnits, askedUnit: askedUnit, unitProblem: unitProblem,
-    propNorm: propNorm, propParse: propParse, propEquiv: propEquiv, propShow: propShow, propTex: propTex,
+    translitNorm: translitNorm, translitShow: translitShow, propNorm: propNorm, propParse: propParse, propEquiv: propEquiv, propShow: propShow, propTex: propTex,
     formulaTex: formulaTex, formulaReadings: fReadings, formulaCanon: function (s) { var F = fParse(fNorm(s), 0); return F ? fCanon(F, true) : null; },
     siUnit: siUnit, sigInfo: sigInfo, roundSigQ: roundSigQ, sciText: sciText, sciNorm: sciNorm, dropSIUnit: function (s) { var d = dropSIUnit(sciNorm(cleanInput(s))); return d ? { s: d.s, unit: d.unit } : null; } };
 

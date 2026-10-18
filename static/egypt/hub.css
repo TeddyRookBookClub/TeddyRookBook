@@ -1,0 +1,38 @@
+/* The Ancient Egypt hub (/egypt/) and its full-page map (/egypt/map/), on top of homeschool/hs.css. Accent: deep ochre. */
+.eg-page{--eg-acc:#6e5200;--eg-accs:rgba(110,82,0,.09)}
+html[data-theme="dark"] .eg-page{--eg-acc:#d6b04a;--eg-accs:rgba(214,176,74,.12)}
+.eg-hub .eg-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1.2rem;align-items:center}
+.eg-hero-art{min-width:0;max-width:280px}
+.eg-hero-art .ml-viz{margin:0;padding:0;border:0;background:none}
+@media (max-width:720px){.eg-hub .eg-hero{grid-template-columns:minmax(0,1fr)}.eg-hero-art{max-width:100%;justify-self:center}}
+.eg-intro{margin:.2rem 0 .8rem;line-height:1.55;color:var(--secondary)}
+.eg-courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr));gap:.7rem}
+.eg-course{display:flex;gap:.7rem;align-items:flex-start;padding:.85rem .95rem;border:1px solid var(--border);border-left:5px solid var(--cc,var(--eg-acc));border-radius:12px;background:var(--entry);color:var(--primary);text-decoration:none;box-shadow:none;transition:border-color .15s,transform .15s}
+.eg-course:hover{border-color:var(--cc,var(--eg-acc));transform:translateY(-1px)}
+.eg-ci{font-size:1.7rem;line-height:1}
+.eg-cbody{display:flex;flex-direction:column;gap:.15rem;min-width:0}
+.eg-cbody b{font:700 1.05rem Georgia,serif}
+.eg-clevel{font-size:.78rem;color:var(--secondary);text-transform:uppercase;letter-spacing:.04em}
+.eg-cblurb{font-size:.9rem;line-height:1.45;color:var(--secondary)}
+.eg-start{margin-top:1rem;padding:.7rem 1rem;border-radius:12px;background:var(--eg-accs);border:1px solid var(--border)}
+.eg-start h3{margin:.1rem 0 .3rem;font:700 1.05rem Georgia,serif}
+.eg-start ul{margin:0;padding-left:1.1rem;line-height:1.6}
+.eg-more{margin:.6rem 0 0}
+.eg-links{list-style:none;margin:0;padding:0;display:grid;gap:.45rem}
+.eg-links a{display:block;padding:.55rem .75rem;border:1px solid var(--border);border-radius:10px;background:var(--entry);text-decoration:none;box-shadow:none;color:var(--primary)}
+.eg-links a:hover{border-color:var(--eg-acc)}
+.eg-links small{display:block;color:var(--secondary);margin-left:1.6rem}
+.eg-fine{margin-top:1rem;color:var(--secondary)}
+.eg-maphead h1{font:700 2rem Georgia,serif;margin:.3rem 0}
+.eg-maphead p{color:var(--secondary);line-height:1.55;margin:0 0 .8rem}
+html:not([data-theme="dark"]) .eg-maphead h1{color:#004225}
+html[data-theme="dark"] .eg-maphead h1{color:#6cc79a}
+.eg-sitelist .eg-reg{margin:.8rem 0 .3rem;font:700 1rem Georgia,serif}
+.eg-sitebtns{display:flex;flex-wrap:wrap;gap:.35rem}
+.eg-sitebtn{font:inherit;font-size:.86rem;padding:.3rem .65rem;border:1px solid var(--border);border-radius:999px;background:var(--entry);color:var(--primary);cursor:pointer;min-height:36px}
+.eg-sitebtn:hover,.eg-sitebtn:focus-visible{border-color:var(--eg-acc)}
+.eg-sitebtn small{color:var(--secondary);margin-left:.25rem}
+.eg-hub .eg-hero::after{content:"𓂀";font-family:"TRB Hieroglyphs",serif;display:none}
+.eg-hub .eg-hero .hs-btn.ghost{color:#fff;border-color:rgba(255,255,255,.55)}
+.eg-hub .eg-hero .hs-btn.ghost:hover{background:rgba(255,255,255,.1)}
+.eg-hub .eg-hero .ml-viz.egv{--eg-paper:#fbf5e6;--eg-ink:#2a2116;background:none}

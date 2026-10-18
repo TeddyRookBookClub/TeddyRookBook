@@ -1,0 +1,20 @@
+{{- /* /egypt/map/: the full-page interactive map (eg-map with full: true) and a list of the sites by region. */ -}}
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+{{ partial "egypt-kit.html" . }}
+<div class="hs eg-page eg-mappage">
+  <nav class="hs-crumbs"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "egypt/" | relURL }}">Ancient Egypt</a> › Map</nav>
+  <header class="eg-maphead">
+    <h1>{{ .Title }}</h1>
+    <p>The Nile, the Delta and the six cataracts, Upper and Lower Egypt, and ancient sites from the first farmers to Roman Egypt. Choose periods to show their sites, tap a site for a short note, and zoom in on the Delta, Memphis or Thebes. Modern cities are shown with small squares.</p>
+  </header>
+  <div class="ml-viz" id="eg-bigmap" data-viz="eg-map" data-opts='{"full":true,"view":"nile"}' aria-label="Interactive map of Egypt and Nubia"></div>
+  <section class="hs-sec eg-sitelist" id="sites">
+    <h2>The sites</h2>
+    <p class="eg-intro">Every site on the map, by region. Choose one to find it on the map.</p>
+    <div id="eg-sites"><noscript><p>The map and this list need JavaScript turned on.</p></noscript></div>
+  </section>
+  <p class="hs-small eg-fine">The coastlines, the river and the lakes were drawn for this site through the coordinates of known places; they are simplified, good to a few kilometers. Site coordinates were checked against Wikipedia. The Suez Canal and modern cities are shown for orientation only.</p>
+</div>
+<script src="{{ "egypt/hub.js" | relURL }}?v={{ (os.Stat "static/egypt/hub.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -92,6 +92,26 @@ note = "Manners from please and thank you to formal dinners, age 4 to adult"
 icon = "🤝"
 
 [[menu.main]]
+name = "Egyptology Ladder"
+identifier = "egypt-edu"
+url = "/egyptology/"
+weight = 6
+[menu.main.params]
+group = "Education"
+note = "Ancient Egypt's history, hieroglyphs, religion and art, and archaeology"
+icon = "🏺"
+
+[[menu.main]]
+name = "Ancient Egypt"
+identifier = "egypt-hub"
+url = "/egypt/"
+weight = 6
+[menu.main.params]
+group = "Education"
+note = "The Nile map, the Egypt timeline and the Egyptology courses"
+icon = "🏜️"
+
+[[menu.main]]
 name = "Languages"
 url = "/languages/"
 weight = 7
@@ -609,7 +629,7 @@ icon = "🧮"
       path = '{/garden,/garden/**}'
   [segments.ladders]
     [[segments.ladders.includes]]
-      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**,/logic,/logic/**,/etiquette,/etiquette/**,/test-prep,/test-prep/**}'
+      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**,/logic,/logic/**,/etiquette,/etiquette/**,/egyptology,/egyptology/**,/egypt,/egypt/**,/test-prep,/test-prep/**}'
   [segments.physics]
     [[segments.physics.includes]]
       path = '{/physics,/physics/**}'
@@ -637,3 +657,6 @@ icon = "🧮"
   [segments.etiquette]
     [[segments.etiquette.includes]]
       path = '{/etiquette,/etiquette/**}'
+  [segments.egypt]
+    [[segments.egypt.includes]]
+      path = '{/egyptology,/egyptology/**,/egypt,/egypt/**}'

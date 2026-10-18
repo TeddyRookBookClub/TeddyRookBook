@@ -24,7 +24,7 @@
 {{- /* the visuals this page needs: math's basic and adv files, and a ladder's own kit for names with its prefix */ -}}
 {{- $basic := slice "tenframe" "counters" "numberline" "hundredchart" "base10" "placevalue" "numberbond" "arraygrid" "areamodel" "fractionbar" "fractioncircle" "fractionline" "decimalgrid" "percentbar" "ratiotable" "tapediagram" "clock" "coins" "balance" "integerline" "shapes" "geoboard" "angle" "transform" "pythagoras" "circlepi" "areaformulas" "volume" "nets" "dotplot" "boxplot" -}}
 {{- $adv := slice "graph" "slope" "linesystem" "parabola" "transformfn" "exponential" "logscale" "unitcircle" "trigwave" "polar" "complexplane" "sequence" "limit" "secant" "derivgraph" "riemann" "ftc" "solids" "taylor" "seriespartial" "vectors2d" "vectors3d" "surface" "gradient" "vectorfield" "lineintegral" "flux" "param3d" "matrix2d" "span" "slopefield" "phaseplane" "springmass" "dice" "normal" "sampling" "scatter" "venn" "tree" -}}
-{{- $kits := dict "ph-" "physics" "ch-" "chemistry" "ec-" "economics" "es-" "earth" "lg-" "logic" -}}
+{{- $kits := dict "ph-" "physics" "ch-" "chemistry" "ec-" "economics" "es-" "earth" "lg-" "logic" "eg-" "egypt" -}}
 {{- $names := $t.viz | default slice -}}
 {{- if $L0 }}{{ range $L0.blocks }}{{ if eq .t "viz" }}{{ $names = $names | append .name }}{{ end }}{{ end }}{{ end -}}
 {{- $vb := partial "inline/ml-vizbase.html" $key -}}
