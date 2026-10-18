@@ -1,0 +1,226 @@
+# SAT Math: the test's format and content areas (from the College Board's public pages; see data/testprep/sources.yaml),
+# each area mapped to Math Ladder topic ids that cover it at the test's level. Read by layouts/test-prep/single.html and
+# static/test-prep/tp-app.js.
+# The top level is the CURRENT test (the digital SAT). `versions` lists every version offered for practice: the first
+# entry is the current one (it takes format, parts, sets, areas and facts from the top level); older versions carry
+# their own. `parts`: the timed parts of the section (name, questions, minutes, calculator, typed = share of typed
+# answers, grid = the paper grid's rules for typed answers). `sets`: each set's questions per part, in part order.
+# `changes`: the comparison page /test-prep/sat-changes/.
+key: sat-math
+slug: sat-math
+title: "SAT Math"
+test: "SAT"
+section: "Math section"
+maker: "College Board"
+icon: "📐"
+color: "#2f6fc4"
+asof: "2026-10-17"
+blurb: "The math half of the SAT: algebra, advanced math, data and geometry, in two adaptive modules taken on a computer."
+format:
+  questions: 44
+  minutes: 70
+  parts: 2              # two modules of 22 questions and 35 minutes
+  part_name: "Module"
+  choices: 4
+  typed: 0.25           # about a quarter of the questions are student-produced responses (typed answers)
+  calculator: true
+  hand: false
+  easy_first: true      # within a module, questions run from easiest to hardest
+  adaptive: true        # the second module depends on the first
+facts:
+  - { text: "44 questions in 70 minutes, split into two modules of 22 questions and 35 minutes each.", src: [sat-structure, sat-math-skills] }
+  - { text: "Each module has 20 questions that count and 2 unscored pretest questions.", src: [sat-math-skills] }
+  - { text: "Adaptive: the first module has easy, medium and hard questions; how you do on it decides whether the second module is harder or easier.", src: [sat-structure] }
+  - { text: "Within each module the questions go from easiest to hardest, and all four content areas show up in each module.", src: [sat-math-overview] }
+  - { text: "About 75% of questions are multiple choice with 4 options. The rest ask you to type your own answer (a “student-produced response”).", src: [sat-spr] }
+  - { text: "A calculator is allowed on the whole Math section. The testing app, Bluebook, has a built-in Desmos graphing calculator, and you may bring an approved one.", src: [sat-calculator] }
+  - { text: "About 30% of the questions are set in a real-world or science context.", src: [sat-math-overview] }
+parts:
+  - { name: "Module 1", questions: 22, minutes: 35, calculator: true, typed: 0.25 }
+  - { name: "Module 2", questions: 22, minutes: 35, calculator: true, typed: 0.25 }
+sets:
+  - { label: "Short set", parts: [11] }
+  - { label: "One module", parts: [22] }
+  - { label: "Full section", parts: [22, 22] }
+levels: [1, 2, 3]
+areas:
+  - key: algebra
+    title: "Algebra"
+    share: 35
+    count: "13–15 questions"
+    about: "Lines in every form: solving linear equations and inequalities, building them from words, reading slope and intercepts, and solving systems of two linear equations."
+    skills:
+      - "Linear equations in one variable, including how many solutions an equation has"
+      - "Linear equations and functions in two variables: slope, intercepts, and what they mean in context"
+      - "Systems of two linear equations"
+      - "Linear inequalities in one or two variables"
+    levels: [2, 3]
+    topics: [g8.variables-both-sides, g8.solution-count, alg1.equations-fractions-decimals, alg1.write-equations-words, alg1.literal-equations,
+             alg1.point-slope-form, alg1.line-through-two-points, alg1.parallel-perpendicular-lines, alg1.horizontal-vertical-lines,
+             alg1.function-notation, alg1.linear-models-context, g8.linear-models, alg1.systems-elimination, alg1.systems-elimination-multiply,
+             g8.systems-substitution, g8.systems-special-cases, alg1.multi-step-inequalities, alg1.inequality-word-problems,
+             alg1.linear-inequalities-2var, alg1.systems-inequalities]
+  - key: advanced
+    title: "Advanced Math"
+    share: 35
+    count: "13–15 questions"
+    about: "Everything past lines: rewriting expressions, solving quadratic, radical, rational and exponential equations, and reading nonlinear functions and their graphs."
+    skills:
+      - "Equivalent expressions: expanding, factoring, exponents and rational expressions"
+      - "Nonlinear equations in one variable, and systems with a line and a curve"
+      - "Nonlinear functions: quadratics, exponentials, polynomials and their graphs, composition and transformations"
+    levels: [2, 3]
+    topics: [alg1.multiply-binomials, alg1.special-products, alg1.factor-x2-bx-c, alg1.factor-ax2-bx-c, alg2.seeing-structure,
+             alg2.add-subtract-rational, alg2.simplify-rational, alg1.rational-exponents,
+             alg1.zero-product-property, alg1.quadratic-formula, alg1.solve-square-roots, alg1.completing-the-square, alg1.discriminant,
+             alg1.absolute-value-equations, alg2.radical-equations, alg2.rational-equations, alg2.common-base-equations,
+             alg1.vertex-form, alg1.quadratic-graphs, alg1.factored-form-zeros, alg2.vertex-formula, alg1.quadratic-models,
+             alg1.exponential-functions, alg1.exponential-growth-decay, alg1.exponential-models,
+             alg2.function-composition, alg1.function-transformations, alg2.zeros-multiplicity, alg2.remainder-factor-theorems]
+  - key: data
+    title: "Problem-Solving and Data Analysis"
+    share: 15
+    count: "5–7 questions"
+    about: "Numbers in context: ratios, rates, percents and units, then reading data, from averages and spread to scatterplots, probability, samples and study design."
+    skills:
+      - "Ratios, rates, proportions and units"
+      - "Percents"
+      - "One-variable data: center and spread"
+      - "Two-variable data: scatterplots and lines of fit"
+      - "Probability and conditional probability"
+      - "Samples, margin of error, and what a study can and can't show"
+    levels: [2, 3]
+    topics: [g7.solve-proportions, g6.unit-rate-problems, alg1.units-quantities, g7.percent-change, g7.markup-discount-tax, g6.find-the-whole,
+             g6.mean, g6.median-mode, g6.range-iqr, stat.standard-deviation, stat.compare-distributions,
+             g8.scatter-plots, alg1.lines-of-fit-residuals, stat.interpret-regression,
+             g7.theoretical-probability, g7.compound-probability, alg1.two-way-relative-frequency, stat.two-way-conditional,
+             g7.sample-predictions, stat.margin-of-error, stat.observational-experimental, stat.evaluate-reports, stat.sampling-bias]
+  - key: geometry
+    title: "Geometry and Trigonometry"
+    share: 15
+    count: "5–7 questions"
+    about: "Area and volume, angles and triangles, right-triangle trigonometry and circles, including radians and the equation of a circle."
+    skills:
+      - "Area and volume"
+      - "Lines, angles and triangles, including similar triangles"
+      - "Right triangles and trigonometry"
+      - "Circles: arcs, sectors, angles and equations"
+    levels: [2, 3]
+    topics: [geo.pyramids-cones-spheres, g8.volume-cylinders, geo.surface-area-solids, geo.scaling-solids,
+             g8.parallel-lines-transversal, g8.triangle-angle-sum, geo.isosceles-triangles, geo.aa-similarity, geo.side-splitter,
+             g8.pythagorean-theorem, geo.special-right-triangles, geo.trig-ratios, geo.complementary-sine-cosine,
+             geo.arc-length, geo.sector-area, geo.circle-equation, geo.inscribed-angles, pre.degrees-radians]
+
+versions:
+  - key: digital
+    name: "Digital SAT"
+    years: "U.S. since March 2024"
+    current: true
+    note: "This is the SAT given now, on a computer or tablet in the Bluebook app. Practice this one first."
+  - key: paper
+    name: "Paper SAT"
+    years: "March 2016 to 2023"
+    current: false
+    note: "The paper SAT is no longer given; the digital SAT replaced it in the U.S. in March 2024. Practice it if you're working from an older prep book, or for extra hand work: its first part allows no calculator."
+    format:
+      questions: 58
+      minutes: 80
+      parts: 2
+      part_name: "Portion"
+      choices: 4
+      typed: 0.22          # 13 of 58
+      calculator: part     # no calculator on the first portion
+      hand: false
+      easy_first: false
+      grid: true
+    facts:
+      - { text: "58 questions in 80 minutes, in two portions: 20 questions in 25 minutes with no calculator, then 38 questions in 55 minutes with a calculator.", src: [sat-student-guide-2018, sat-math-2019] }
+      - { text: "45 questions were multiple choice with four options, and 13 were grid-ins: you wrote your answer and bubbled it in.", src: [sat-student-guide-2018] }
+      - { text: "The grid held only four characters and only zero or positive numbers, written as a fraction or a decimal.", src: [sat-student-guide-2018] }
+      - { text: "Content: Heart of Algebra 19 questions, Problem Solving and Data Analysis 17, Passport to Advanced Math 16, Additional Topics in Math (geometry and trigonometry) 6.", src: [sat-math-2019] }
+    parts:
+      - { name: "No-calculator portion", short: "by hand", questions: 20, minutes: 25, calculator: false, typed: 0.25, grid: true }
+      - { name: "Calculator portion", short: "with a calculator", questions: 38, minutes: 55, calculator: true, typed: 0.21, grid: true }
+    sets:
+      - { label: "Short set", parts: [5, 9] }
+      - { label: "No-calculator portion", parts: [20, 0] }
+      - { label: "Calculator portion", parts: [0, 38] }
+      - { label: "Full test", parts: [20, 38] }
+    areas:
+      - key: hoa
+        title: "Heart of Algebra"
+        share: 19
+        count: "19 questions"
+        about: "Linear equations, inequalities and systems, built from real situations, solved and interpreted."
+        levels: [2, 3]
+        topics: [g8.variables-both-sides, g8.solution-count, alg1.equations-fractions-decimals, alg1.write-equations-words, alg1.literal-equations,
+                 alg1.point-slope-form, alg1.line-through-two-points, alg1.parallel-perpendicular-lines, alg1.function-notation,
+                 alg1.linear-models-context, g8.linear-models, alg1.systems-elimination, alg1.systems-elimination-multiply,
+                 g8.systems-substitution, g8.systems-special-cases, alg1.multi-step-inequalities, alg1.inequality-word-problems,
+                 alg1.linear-inequalities-2var, alg1.systems-inequalities]
+      - key: psda
+        title: "Problem Solving and Data Analysis"
+        share: 17
+        count: "17 questions"
+        about: "Ratios, rates, percents and units, then reading tables, graphs and data, often several questions about one situation."
+        levels: [2, 3]
+        topics: [g7.solve-proportions, g6.unit-rate-problems, alg1.units-quantities, g7.percent-change, g7.markup-discount-tax, g6.find-the-whole,
+                 g7.simple-interest, g6.mean, g6.median-mode, g6.range-iqr, stat.standard-deviation, stat.compare-distributions,
+                 g8.scatter-plots, alg1.lines-of-fit-residuals, stat.interpret-regression, alg1.exponential-growth-decay,
+                 g7.theoretical-probability, g7.compound-probability, alg1.two-way-relative-frequency, stat.two-way-conditional,
+                 g7.sample-predictions, stat.margin-of-error, stat.observational-experimental, stat.sampling-bias]
+      - key: pam
+        title: "Passport to Advanced Math"
+        share: 16
+        count: "16 questions"
+        about: "Quadratic and exponential problems, radical and rational equations, rewriting expressions, and how a polynomial's zeros match its factors."
+        levels: [2, 3]
+        topics: [alg1.multiply-binomials, alg1.special-products, alg1.factor-x2-bx-c, alg1.factor-ax2-bx-c, alg2.seeing-structure,
+                 alg2.add-subtract-rational, alg2.simplify-rational, alg1.rational-exponents, alg1.zero-product-property,
+                 alg1.quadratic-formula, alg1.solve-square-roots, alg1.completing-the-square, alg2.radical-equations, alg2.rational-equations,
+                 alg1.vertex-form, alg1.quadratic-graphs, alg1.factored-form-zeros, alg1.exponential-functions, alg2.function-composition,
+                 alg1.function-transformations, alg2.zeros-multiplicity, alg2.remainder-factor-theorems]
+      - key: atm
+        title: "Additional Topics in Math"
+        share: 6
+        count: "6 questions"
+        about: "Geometry and trigonometry: volume, right triangles, sine, cosine and tangent, circle theorems, and lines, angles and triangles."
+        levels: [2, 3]
+        topics: [geo.pyramids-cones-spheres, g8.volume-cylinders, g8.parallel-lines-transversal, g8.triangle-angle-sum, geo.aa-similarity,
+                 g8.pythagorean-theorem, geo.special-right-triangles, geo.trig-ratios, geo.complementary-sine-cosine, geo.arc-length,
+                 geo.sector-area, geo.inscribed-angles, geo.circle-equation]
+
+changes:
+  slug: sat-changes
+  title: "How the SAT changed in 2024"
+  lead: "In March 2024 the SAT in the U.S. moved from paper to a shorter, adaptive test taken on a computer. Here is what changed, side by side, and what the evidence says about whether it got easier."
+  take: "If you take the SAT now, you take the digital SAT. The paper SAT isn't given anymore. (Students who test on paper as an accommodation get a paper form of the digital test, not the old one.)"
+  take_src: [sat-launch-2024, sat-paper-practice]
+  old: "Paper SAT, 2016–2023"
+  new: "Digital SAT, 2024 on"
+  groups:
+    - title: "The whole test"
+      rows:
+        - { label: "Length", old: "3 hours (plus an optional 50-minute essay)", new: "2 hours 14 minutes, with a 10-minute break; no essay", src: [sat-student-guide-2018, sat-spec-overview] }
+        - { label: "How you take it", old: "Paper and pencil; not adaptive", new: "On a computer or tablet in the Bluebook app; adaptive: your second module depends on your first", src: [sat-structure, sat-digital-news] }
+        - { label: "Scores", old: "400–1600", new: "400–1600, on the same scale", src: [sat-spec-overview] }
+    - title: "Math"
+      rows:
+        - { label: "Questions and time", old: "58 questions in 80 minutes", new: "44 questions in 70 minutes", src: [sat-student-guide-2018, sat-structure] }
+        - { label: "Pace", old: "about 83 seconds a question", new: "about 95 seconds a question", src: [sat-student-guide-2018, sat-structure] }
+        - { label: "Parts", old: "No-calculator portion (20 questions, 25 minutes), then calculator portion (38 questions, 55 minutes)", new: "Two modules of 22 questions and 35 minutes; within each, easiest to hardest", src: [sat-student-guide-2018, sat-structure, sat-math-overview] }
+        - { label: "Calculator", old: "Not allowed on the first portion", new: "Allowed on every question, with a Desmos graphing calculator built in", src: [sat-student-guide-2018, sat-calculator] }
+        - { label: "Answer choices", old: "Four", new: "Four", src: [sat-student-guide-2018, sat-spr] }
+        - { label: "Typed answers", old: "13 grid-ins; four characters, zero or positive only", new: "About 25% of questions; up to 5 characters, and negative answers allowed", src: [sat-student-guide-2018, sat-spr, sat-bluebook-directions] }
+        - { label: "Content", old: "Heart of Algebra 19, Problem Solving and Data Analysis 17, Passport to Advanced Math 16, Additional Topics 6", new: "Algebra 13–15, Advanced Math 13–15, Problem-Solving and Data Analysis 5–7, Geometry and Trigonometry 5–7", src: [sat-math-2019, sat-math-overview] }
+    - title: "Reading and writing"
+      rows:
+        - { label: "Sections", old: "Reading (52 questions, 65 minutes) and Writing and Language (44 questions, 35 minutes)", new: "One Reading and Writing section: 54 questions in 64 minutes, in two modules", src: [sat-student-guide-2018, sat-structure] }
+        - { label: "Passages", old: "Nine passages of 400 to 750 words, with several questions each", new: "54 passages of 25 to 150 words, with one question each", src: [sat-passage-brief, sat-rw-page] }
+  easier:
+    intro: "Some people say yes. Here is who says what."
+    claims:
+      - { who: "What changed for sure", text: "The digital SAT is shorter, gives more time per math question (about 95 seconds instead of 83), allows a calculator on every math question, and swaps long reading passages for short ones. That changes how it feels: in the College Board's 2021 pilot, 80% of students found it less stressful.", src: [sat-spec-overview, sat-digital-news] }
+      - { who: "Critics", text: "A writer who works for the Classic Learning Test, a competing test, argues that the shorter passages, the calculator and the extra time make the SAT less demanding. A 2024 working paper by two University of Cincinnati economists argued that SAT math questions grew easier from 2008 to 2023, before the digital test; its authors say their new method can't yet prove cause, and it hasn't been peer reviewed.", src: [sat-torres-2025, sat-cincinnati-2024] }
+      - { who: "The College Board", text: "The test maker says the rigor is the same. It reports that 7% of students scored 1400 or higher both on the paper test in 2019 and on the digital test recently, and that digital scores still line up with grades and AP scores. Its July 2026 study found that passage length doesn't meaningfully change how students do; in its experiment, students did slightly better on the longer versions of the same passages.", src: [sat-rodriguez-2025, sat-passage-brief] }
+    verdict: "What we can say: the digital SAT is shorter and less rushed, and the calculator is allowed throughout. Scores are reported on the same 400–1600 scale, and the College Board says they are comparable with paper scores, though the two tests measure similar but not identical things. The claims that it is easier come mostly from critics, and no independent study we found settles the question."

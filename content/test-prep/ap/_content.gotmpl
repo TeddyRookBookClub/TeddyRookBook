@@ -1,0 +1,5 @@
+{{- /* Test Prep: one page per AP course, /test-prep/ap/<key>/, from data/testprep/ap/<file>.yaml (layouts/test-prep/single.html). */ -}}
+{{- range $f, $c := $.Site.Data.testprep.ap -}}
+  {{- $key := $c.key | default $f -}}
+  {{- $.AddPage (dict "path" $key "kind" "page" "title" $c.title "description" (printf "How the official units of %s line up with Teddy Rook Book's ladders, with a practice set for each unit." $c.title) "params" (dict "tp" "apcourse" "ap" $f)) -}}
+{{- end -}}

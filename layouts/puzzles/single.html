@@ -1,0 +1,65 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "puzzles/puzzles.css" | relURL }}?v={{ (os.Stat "static/puzzles/puzzles.css").ModTime.Unix }}">
+{{ $d := site.Data.puzzles.families }}{{ $f := index (where $d.families "key" .Params.fam) 0 }}
+{{ $g := index (where $d.groups "key" $f.group) 0 }}
+{{ $sib := where $d.families "group" $f.group }}
+<div class="hs pz" id="pz-fam" data-fam="{{ $f.key }}">
+  <nav class="hs-crumbs pz-noprint"><a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a> › <a href="{{ printf "puzzles/#%s" $g.key | relURL }}">{{ $g.name }}</a> › {{ $f.name }}</nav>
+  <header class="hs-hero pz-hero pz-noprint">
+    <div class="pz-fhead">
+      <span class="pz-big-ic" aria-hidden="true">{{ $f.icon }}</span>
+      <div>
+        <p class="hs-eyebrow">Brain Puzzles · {{ $g.name }}</p>
+        <h1>{{ $f.name }}</h1>
+        <p>{{ $f.card }} Print a fresh sheet with its answer key, or try one on screen.</p>
+      </div>
+    </div>
+    <div class="hs-actions"><a class="hs-btn big" href="#print">🖨 Print a sheet</a><a class="hs-btn big ghost" href="#play">▶ Try one on screen</a></div>
+  </header>
+
+  <section class="hs-sec pz-noprint">
+    <div class="pz-two">
+      <div class="pz-box">
+        <h2>How to play</h2>
+        <ol>{{ range $f.how }}<li>{{ . }}</li>{{ end }}</ol>
+      </div>
+      <div class="pz-box">
+        <h2>What it exercises</h2>
+        <p>{{ $f.exercises }}</p>
+        <h3>Levels</h3>
+        <ul class="pz-lvls">
+          <li><b>Easy</b> {{ $f.levels.easy }}</li>
+          <li><b>Medium</b> {{ $f.levels.medium }}</li>
+          <li><b>Hard</b> {{ $f.levels.hard }}</li>
+        </ul>
+        {{ if or $f.lesson $f.lesson2 }}<div class="pz-links">{{ with $f.lesson }}<a class="hs-btn" href="{{ .url | relURL }}">📘 {{ .name }}</a>{{ end }}{{ with $f.lesson2 }}<a class="hs-btn" href="{{ .url | relURL }}">📘 {{ .name }}</a>{{ end }}</div>{{ end }}
+      </div>
+    </div>
+  </section>
+
+  <section class="hs-sec" id="print">
+    <h2 class="pz-noprint">🖨 Print a sheet</h2>
+    <div id="pz-builder" data-fam="{{ $f.key }}"><noscript><p>The puzzle maker needs JavaScript turned on.</p></noscript></div>
+  </section>
+
+  <section class="hs-sec pz-noprint" id="play">
+    <h2>▶ Try one on screen</h2>
+    <div id="pz-play" class="pz-play" data-fam="{{ $f.key }}"></div>
+  </section>
+
+  <section class="hs-sec pz-noprint">
+    <h2>More {{ lower $g.name }} puzzles</h2>
+    <div class="pz-cards">
+      {{ range $sib }}{{ if ne .key $f.key }}
+      <a class="pz-card" href="{{ printf "puzzles/%s/" .key | relURL }}"><span class="pz-ic" aria-hidden="true">{{ .icon }}</span><b>{{ .name }}</b><small>{{ .card }}</small></a>
+      {{ end }}{{ end }}
+      <a class="pz-card" href="{{ "puzzles/" | relURL }}"><span class="pz-ic" aria-hidden="true">🧠</span><b>All Brain Puzzles</b><small>Every kind, and the mixed sampler.</small></a>
+    </div>
+  </section>
+</div>
+<script type="application/json" id="pz-data">{{ dict "groups" $d.groups "families" $d.families | jsonify | safeJS }}</script>
+{{ range slice "core.js" "words.js" "gen-numbers.js" "gen-logic.js" "gen-words.js" "gen-codes.js" "gen-shapes.js" "ui.js" }}
+<script src="{{ printf "puzzles/%s" . | relURL }}?v={{ (os.Stat (printf "static/puzzles/%s" .)).ModTime.Unix }}" defer></script>
+{{ end }}
+{{ end }}

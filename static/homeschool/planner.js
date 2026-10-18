@@ -10,7 +10,17 @@
   var $ = function (s, el) { return (el || root).querySelector(s); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   var SUB = {}, COURSE = {};
-  DATA.subjects.forEach(function (s) { SUB[s.key] = s; s.courses.forEach(function (c, i) { c.sub = s.key; c.i = i; COURSE[c.key] = c; c.lessons = c.lessons.map(function (l) { return l.u ? [l.n, l.t, l.m, l.u] : [l.n, l.t, l.m]; }); }); });
+  // lessons become [number, title, minutes, url?, progress id?]. Ladder topics: url = course base + slug, progress = the
+  // ladder's topic id (trb-math-v1). Practice courses (sessions): one session per school day, all on the same page.
+  DATA.subjects.forEach(function (s) {
+    SUB[s.key] = s;
+    s.courses.forEach(function (c, i) {
+      c.sub = s.key; c.i = i; COURSE[c.key] = c;
+      if (c.sessions) { c.lessons = []; for (var j = 1; j <= c.sessions; j++) c.lessons.push([j, '', c.sm || 20, c.url]); return; }
+      c.lessons = c.lessons.map(function (l) { return l.s ? [l.n, l.t, l.m, c.base + l.s + '/', 'm:' + c.pp + l.s] : l.u ? (l.p ? [l.n, l.t, l.m, l.u, l.p] : [l.n, l.t, l.m, l.u]) : [l.n, l.t, l.m]; });
+    });
+  });
+  function isExt(l) { return !!l[3] && /^https?:/.test(l[3]); } // Hannah Ward's PDFs and Lifeprint open on another site
 
   // ---------- state ----------
   function iso(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
@@ -45,23 +55,42 @@
   if (!st) st = fresh();
   var saveT = 0;
   function save() { clearTimeout(saveT); saveT = setTimeout(function () { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }, 250); }
-  function done() { try { var h = JSON.parse(W.localStorage.getItem(HS) || 'null'); return (h && h.done) || {}; } catch (e) { return {}; } }
+  function done() {
+    var d = {}; try { var h = JSON.parse(W.localStorage.getItem(HS) || 'null'); d = (h && h.done) || {}; } catch (e) { }
+    // lessons finished elsewhere on the site count too: ladder topics passed (trb-math-v1) and music chapters read (trb-music-read-v1)
+    var ml = null, mu = null;
+    try { ml = (JSON.parse(W.localStorage.getItem('trb-math-v1') || 'null') || {}).t || null; } catch (e) { }
+    try { mu = (JSON.parse(W.localStorage.getItem('trb-music-read-v1') || 'null') || {}).done || null; } catch (e) { }
+    if (ml || mu) DATA.subjects.forEach(function (s) {
+      s.courses.forEach(function (c) {
+        c.lessons.forEach(function (l) {
+          var p = l[4]; if (!p) return;
+          var on = p.charAt(0) === 'm' ? ml && ml[p.slice(2)] && ml[p.slice(2)].s === 2 : mu && mu[p.slice(2)];
+          if (on) { if (!d[c.key]) d[c.key] = {}; d[c.key][l[0]] = 1; }
+        });
+      });
+    });
+    return d;
+  }
   function setDone(course, num, on) {
     var h; try { h = JSON.parse(W.localStorage.getItem(HS) || 'null'); } catch (e) { } if (!h || !h.done) h = { done: {} };
     var c = h.done[course] || (h.done[course] = {}); if (on) c[num] = 1; else delete c[num];
     try { W.localStorage.setItem(HS, JSON.stringify(h)); } catch (e) { }
   }
+  // "Arithmetic: Ray's Practical Arithmetic, lesson 12", or just "Math Ladder: Grade 3, lesson 2" when the course already names its subject
+  function courseAt(c, n, bare) { var sn = SUB[c.sub].name; return (bare || c.name.indexOf(sn) === 0 ? '' : sn + ': ') + c.name + ', ' + (c.w || 'Lesson').toLowerCase() + ' ' + n; }
   function msg(t) { var m = $('#pl-msg'); m.textContent = t; clearTimeout(msg.t); msg.t = setTimeout(function () { m.textContent = ''; }, 4000); }
 
   // ---------- step 1: children ----------
   function kidHTML(k, i) {
     var ages = ''; for (var a = 3; a <= 18; a++) ages += '<option value="' + a + '"' + (a === k.age ? ' selected' : '') + '>' + a + '</option>';
-    var rows = DATA.subjects.map(function (s) {
+    function row(s) {
       var x = k.subs[s.key], c = COURSE[x.course];
       var opts = s.courses.map(function (cc) { return '<option value="' + cc.key + '"' + (cc.key === x.course ? ' selected' : '') + '>' + esc(cc.name) + '</option>'; }).join('');
       var paces = PACES.map(function (p) { return '<option value="' + p[0] + '"' + (p[0] === +x.pace ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('');
-      return '<div class="pl-sub' + (x.on ? '' : ' off') + '" data-s="' + s.key + '">' +
+      return '<div class="pl-sub' + (x.on ? '' : ' off') + (s.more ? ' more' : '') + '" data-s="' + s.key + '">' +
         '<label class="pl-on"><input type="checkbox" data-f="on"' + (x.on ? ' checked' : '') + '> <span>' + s.icon + ' ' + esc(s.name) + '</span></label>' +
+        (s.note ? '<p class="pl-sn">' + esc(s.note) + '</p>' : '') +
         '<label class="pl-f"><span>Book</span><select data-f="course">' + opts + '</select></label>' +
         '<label class="pl-f pl-sm"><span>From lesson</span><input type="number" min="1" max="' + c.lessons[c.lessons.length - 1][0] + '" value="' + x.lesson + '" data-f="lesson"></label>' +
         '<label class="pl-f pl-sm"><span>Minutes a week</span><input type="number" min="0" max="1200" step="5" value="' + x.mins + '" data-f="mins"></label>' +
@@ -69,16 +98,25 @@
         '<label class="pl-f pl-sm"><span>Pace</span><select data-f="pace">' + paces + '</select></label>' +
         '<button type="button" class="pl-resume" data-f="resume" title="Start after the last lesson marked done on this site">↻ Pick up where we left off</button>' +
         '</div>';
-    }).join('');
+    }
+    var main = DATA.subjects.filter(function (s) { return !s.more; }), more = DATA.subjects.filter(function (s) { return s.more; });
+    var rows = main.map(row).join('');
+    if (more.length) {
+      var nOn = more.filter(function (s) { return k.subs[s.key].on; }).length, open = moreOpen[i] != null ? moreOpen[i] : nOn > 0;
+      rows += '<details class="pl-moresubs" data-k="' + i + '"' + (open ? ' open' : '') + '><summary><span class="pl-ms-t">More subjects</span> <span class="pl-ms-l">' + more.map(function (s) { return s.icon + ' ' + esc(s.name.replace(/:.*$/, '').replace(/ \(.*\)$/, '')); }).join(' · ') + '</span>' + (nOn ? ' <span class="pl-ms-n">' + nOn + ' on</span>' : '') + '</summary>' +
+        '<div class="pl-subs">' + more.map(row).join('') + '</div></details>';
+    }
     return '<div class="pl-kid" data-k="' + i + '" style="--kc:' + COLORS[i % COLORS.length] + '">' +
       '<div class="pl-kidtop"><span class="pl-dot"></span><input class="pl-name" type="text" value="' + esc(k.name) + '" aria-label="Name" maxlength="30">' +
       '<label class="pl-age">Age <select data-f="age">' + ages + '</select></label>' +
       (st.kids.length > 1 ? '<button type="button" class="pl-x" data-f="del" aria-label="Remove ' + esc(k.name) + '">✕</button>' : '') + '</div>' +
       '<div class="pl-subs">' + rows + '</div></div>';
   }
+  var moreOpen = {}; // which children's "More subjects" lists are open (just for this visit)
   function renderKids() {
     $('#pl-kids').innerHTML = st.kids.map(kidHTML).join('');
   }
+  $('#pl-kids').addEventListener('toggle', function (e) { if (e.target.classList && e.target.classList.contains('pl-moresubs')) moreOpen[+e.target.dataset.k] = e.target.open; }, true);
   $('#pl-kids').addEventListener('change', onKid);
   $('#pl-kids').addEventListener('input', function (e) { if (e.target.classList.contains('pl-name')) { var k = st.kids[+e.target.closest('.pl-kid').dataset.k]; k.name = e.target.value || 'Child'; update(); } });
   $('#pl-kids').addEventListener('click', function (e) {
@@ -91,7 +129,7 @@
       if (!best) { msg('Nothing in ' + s.name + ' is marked done yet in this browser.'); return; }
       var c = best.c, j = best.j + 1; if (j >= c.lessons.length) { var nc = c.alt ? null : s.courses.filter(function (q) { return q.i > c.i && !q.alt; })[0]; if (nc) { c = nc; j = 0; } else { msg('That subject is all done!'); return; } }
       var x = k.subs[s.key]; x.course = c.key; x.lesson = c.lessons[j][0]; x.on = true; renderKids(); update();
-      msg(k.name + ': ' + s.name + ' now starts at ' + c.name + ', lesson ' + x.lesson + '.');
+      msg(k.name + ': ' + s.name + ' now starts at ' + courseAt(c, x.lesson, true) + '.');
     }
   });
   function onKid(e) {
@@ -99,7 +137,13 @@
     var ki = +t.closest('.pl-kid').dataset.k, k = st.kids[ki];
     if (f === 'age') { k.age = +t.value; k.subs = defSubs(k.age); renderKids(); update(); msg('Books and times reset to suggestions for age ' + k.age + '. Change any of them.'); return; }
     var x = k.subs[t.closest('.pl-sub').dataset.s];
-    if (f === 'on') { x.on = t.checked; t.closest('.pl-sub').classList.toggle('off', !t.checked); }
+    if (f === 'on') {
+      x.on = t.checked; t.closest('.pl-sub').classList.toggle('off', !t.checked);
+      var sb = SUB[t.closest('.pl-sub').dataset.s], offd = [];
+      if (t.checked) (sb.replaces || []).forEach(function (r) { if (k.subs[r] && k.subs[r].on) { k.subs[r].on = false; offd.push(SUB[r].name); } });
+      if (offd.length) { renderKids(); update(); msg(k.name + ': ' + offd.join(' and ') + (offd.length > 1 ? ' are' : ' is') + ' switched off, since ' + sb.name + ' covers ' + (offd.length > 1 ? 'them' : 'it') + '. Switch ' + (offd.length > 1 ? 'them' : 'it') + ' back on to do both.'); return; }
+      if (sb.more) { var det = t.closest('.pl-moresubs'), cnt = det && det.querySelector('.pl-ms-n'), nOn = det ? det.querySelectorAll('.pl-sub.more:not(.off)').length : 0; if (det) { if (!cnt && nOn) { cnt = D.createElement('span'); cnt.className = 'pl-ms-n'; det.querySelector('summary').appendChild(cnt); } if (cnt) { cnt.textContent = nOn + ' on'; cnt.hidden = !nOn; } } }
+    }
     if (f === 'course') { x.course = t.value; x.lesson = 1; renderKids(); }
     if (f === 'lesson') { var cl = COURSE[x.course].lessons, n = cl[cl.length - 1][0]; x.lesson = Math.max(1, Math.min(n, Math.round(+t.value) || 1)); t.value = x.lesson; }
     if (f === 'mins') x.mins = Math.max(0, +t.value || 0);
@@ -133,13 +177,13 @@
     st.kids.forEach(function (k, ki) {
       DATA.subjects.forEach(function (s) {
         var x = k.subs[s.key]; if (!x || !x.on || !(x.mins > 0)) return;
-        var c0 = COURSE[x.course], items = [], t = 0;
+        var c0 = COURSE[x.course], items = [], t = 0, perDay = x.mins / nd;
         for (var ci = c0.i; ci < s.courses.length; ci++) {
           var c = s.courses[ci];
           if (ci > c0.i && (c.alt || c0.alt)) continue; // an "also try" course is never moved into, and doesn't lead on
           c.lessons.forEach(function (l) {
             if (ci === c0.i && l[0] < x.lesson) return;
-            var e = (l[2] || 20) * (c.rep || 1) * (x.pace || 1); items.push({ c: c, l: l, s: t, e: t + e }); t += e;
+            var e = c.daily ? perDay : (l[2] || 20) * (c.rep || 1) * (x.pace || 1); items.push({ c: c, l: l, s: t, e: t + e }); t += e;
           });
         }
         if (!items.length) return;
@@ -201,7 +245,8 @@
   }
   function fm(m) { m = Math.round(m / 5) * 5 || (m > 0 ? 5 : 0); return m >= 60 ? Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + m % 60 + ' min' : '') : m + ' min'; }
   function dayTotals(groups) { var l = 0, h = 0; groups.forEach(function (g) { l += g.m; h += g.hw; }); return { l: l, h: h }; }
-  function lessonText(e) { return 'Lesson ' + e.it.l[0] + (e.it.l[1] ? ': ' + e.it.l[1] : ''); }
+  function units(c) { return (c.w || 'Lesson').toLowerCase() + 's'; } // "lessons", "chapters", "sessions"
+  function lessonText(e) { return (e.it.c.w || 'Lesson') + ' ' + e.it.l[0] + (e.it.l[1] ? ': ' + e.it.l[1] : ''); }
   function lessonURL(e) { return e.it.l[3] || e.it.c.url + 'lesson-' + e.it.l[0] + '/'; } // Hannah Ward's lessons are PDFs on her site
   function absURL(e) { var u = lessonURL(e); return /^https?:/.test(u) ? u : location.origin + u; }
 
@@ -226,14 +271,14 @@
         t.books.forEach(function (b, bi) {
           if (b.d0 >= total) return;
           var l = 100 * b.d0 / total, w = Math.max(1.5, 100 * (Math.min(b.d1 + 1, total) - b.d0) / total);
-          h += '<a class="pl-bar b' + (bi % 3) + '" href="' + esc(b.c.url) + '" style="left:' + l + '%;width:' + w + '%" title="' + esc(b.c.name + ': ' + whenDay(b.d0) + ' to ' + whenDay(b.d1)) + '"><span>' + esc(b.c.name.replace(/^(McGuffey's|Ray's|Webster's|Harvey's|D'Ooge's) /, '').replace(/ \((Hannah Ward|Dr\. Bill Vicars)\).*$/, '')) + '</span></a>';
+          h += '<a class="pl-bar b' + (bi % 3) + '" href="' + esc(b.c.url) + '" style="left:' + l + '%;width:' + w + '%" title="' + esc(b.c.name + ': ' + whenDay(b.d0) + ' to ' + whenDay(b.d1)) + '"><span>' + esc(b.c.bar || b.c.name.replace(/^(McGuffey's|Ray's|Webster's|Harvey's|D'Ooge's) /, '').replace(/ \((Hannah Ward|Dr\. Bill Vicars)\).*$/, '')) + '</span></a>';
         });
         h += '</div></div><ul class="pl-ovlist">';
         var later = [];
         t.books.forEach(function (b) {
           if (b.d0 >= total) { later.push(b.c.name); return; }
           var endL = b.d1 >= total ? (P.cal[total - 1] && t.plan[total - 1] && t.plan[total - 1].length ? t.plan[total - 1][t.plan[total - 1].length - 1].it.l[0] : b.lastL) : b.lastL;
-          h += '<li><a href="' + esc(b.c.url) + '">' + esc(b.c.name) + '</a>: ' + (b.d1 >= total ? 'lessons ' + b.first + '–' + endL + ' in this plan, from ' + whenDay(b.d0) + '; it finishes later' : 'lessons ' + b.first + '–' + b.lastL + ', ' + whenDay(b.d0) + ' to ' + whenDay(b.d1)) + '</li>';
+          h += '<li><a href="' + esc(b.c.url) + '">' + esc(b.c.name) + '</a>: ' + (b.d1 >= total ? units(b.c) + ' ' + b.first + '–' + endL + ' in this plan, from ' + whenDay(b.d0) + '; it finishes later' : units(b.c) + ' ' + b.first + '–' + b.lastL + ', ' + whenDay(b.d0) + ' to ' + whenDay(b.d1)) + '</li>';
         });
         if (later.length) h += '<li class="pl-later">Then: ' + later.map(esc).join(', ') + '</li>';
         h += '</ul>';
@@ -251,7 +296,7 @@
       return '<div class="pl-g"><span class="pl-gi" title="' + esc(g.s.name) + '">' + g.s.icon + '</span><div><div class="pl-gt">' + esc(g.s.name) + ' · ≈ ' + fm(g.m) + ' lesson' + (g.hw ? ' + ' + fm(g.hw) + ' study' : '') + '</div>' + g.list.map(function (e) {
         var isD = dn[e.it.c.key] && dn[e.it.c.key][e.it.l[0]];
         return '<div class="pl-l' + (isD ? ' done' : '') + '">' + (e.fin ? '<input type="checkbox" class="pl-ck" data-c="' + e.it.c.key + '" data-n="' + e.it.l[0] + '"' + (isD ? ' checked' : '') + ' aria-label="Done">' : '<span class="pl-ckph"></span>') +
-          '<a href="' + esc(lessonURL(e)) + '"' + (e.it.l[3] ? ' target="_blank" rel="noopener" title="Opens the lesson on another site"' : '') + '>' + esc(lessonText(e)) + (e.it.l[3] ? ' ↗' : '') + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small></div>';
+          '<a href="' + esc(lessonURL(e)) + '"' + (isExt(e.it.l) ? ' target="_blank" rel="noopener" title="Opens the lesson on another site"' : '') + '>' + esc(lessonText(e)) + (isExt(e.it.l) ? ' ↗' : '') + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small></div>';
       }).join('') + '</div></div>';
     }).join('') + '<div class="pl-tot">Total ≈ ' + fm(tt.l + tt.h) + ' <span>(' + fm(tt.l) + ' lessons' + (tt.h ? ' + ' + fm(tt.h) + ' study' : '') + ')</span></div>';
   }
@@ -352,7 +397,7 @@
         add(k.name + ', age ' + k.age, { size: 24, bold: true, color: COLORS[ki % COLORS.length], gap: 8, serif: true });
         trs.forEach(function (t) {
           add(t.s.icon + ' ' + t.s.name + ' · ' + st.kids[ki].subs[t.s.key].mins + ' min a week' + (t.hw ? ' + ' + t.hw + ' min study a day' : ''), { bold: true, indent: 12, gap: 4 });
-          var lat = []; t.books.forEach(function (b) { if (b.d0 >= P.cal.length) lat.push(b.c.name); else add(b.c.name + ': lessons ' + b.first + '–' + b.lastL + ', ' + whenDay(b.d0) + ' to ' + (b.d1 >= P.cal.length ? 'beyond this plan' : whenDay(b.d1)), { indent: 36, size: 16 }); });
+          var lat = []; t.books.forEach(function (b) { if (b.d0 >= P.cal.length) lat.push(b.c.name); else add(b.c.name + ': ' + units(b.c) + ' ' + b.first + '–' + b.lastL + ', ' + whenDay(b.d0) + ' to ' + (b.d1 >= P.cal.length ? 'beyond this plan' : whenDay(b.d1)), { indent: 36, size: 16 }); });
           if (lat.length) add('Then: ' + lat.join(', '), { indent: 36, size: 16, color: '#5d6862' });
           lines[lines.length - 1].gap = 12;
         });
@@ -434,12 +479,14 @@
       kid = newKid(st.kids.length + 1, age); if (nm) kid.name = nm;
       if (blank) st.kids = [kid]; else st.kids.push(kid);
     } else if (kid.age !== age) { kid.age = age; }
-    var said = [];
+    var said = [], offd = [];
     Object.keys(placed.picks).forEach(function (sk) {
-      var pk = placed.picks[sk], x = kid.subs[sk], c = COURSE[pk.course]; if (!x || !c) return;
-      x.course = c.key; x.lesson = Math.max(1, +pk.lesson || 1); x.on = true; said.push(SUB[sk].name + ': ' + c.name + ', lesson ' + x.lesson);
+      var pk = placed.picks[sk], x = kid.subs[sk], c = COURSE[pk.course];
+      if (x && pk.off) { if (x.on) offd.push(SUB[sk].name); x.on = false; return; }
+      if (!x || !c) return;
+      x.course = c.key; x.lesson = Math.max(1, +pk.lesson || 1); x.on = true; said.push(courseAt(c, x.lesson));
     });
-    setTimeout(function () { msg(kid.name + ' is set to start at ' + said.join('; ') + '.'); }, 50);
+    setTimeout(function () { msg(kid.name + (said.length ? ' is set to start at ' + said.join('; ') + '.' : ' is added.') + (offd.length ? ' ' + offd.join(' and ') + ' switched off.' : '')); }, 50);
   }
 
   // ---------- start ----------

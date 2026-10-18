@@ -1,0 +1,185 @@
+{{- /* Test Prep: the hub (/test-prep/, params.tp = "hub") and the AP map (/test-prep/ap/, params.tp = "ap").
+   Data: data/testprep/{sat-math,act-math,clt-quantitative}.yaml, data/testprep/ap/*.yaml, data/testprep/sources.yaml. */ -}}
+{{ define "main" }}
+{{ partial "inline/tp-head.html" . }}
+{{- $tp := site.Data.testprep -}}
+{{- $src := $tp.sources -}}
+{{- $tests := slice (index $tp "sat-math") (index $tp "act-math") (index $tp "clt-quantitative") -}}
+{{- $aps := slice -}}{{- range $f, $c := ($tp.ap | default dict) }}{{ $aps = $aps | append (merge $c (dict "file" $f "key" ($c.key | default $f))) }}{{ end -}}
+{{- $ladders := site.Data.ladders | default (slice (dict "key" "math" "title" "Math Ladder" "short" "Math" "icon" "🪜" "order" 1)) -}}
+{{- $asof := time.AsTime $src.asof -}}
+
+{{- if eq .Params.tp "ap" }}
+{{- /* ======================= the AP map ======================= */ -}}
+{{- $T := partialCached "inline/tp-topics.html" "tp-topics" -}}
+<div class="mlp tp tp-aplist" id="tp-root">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "test-prep/" | relURL }}">Test Prep</a> <span aria-hidden="true">›</span> <span>AP courses</span></nav>
+  <header class="tp-hero tp-hero-sm">
+    <div class="tp-hero-text">
+      <p class="tp-eyebrow">Test Prep · Advanced Placement</p>
+      <h1>AP courses on the ladders</h1>
+      <p>Each AP course is a list of official units. Here is every unit next to the ladder topics that teach it, with honest notes where we don't cover something yet. Open a course to practice a unit with a mixed set.</p>
+    </div>
+    <svg class="tp-hero-art" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 30h84M18 60h84M18 90h84"/><path d="M38 18v84M82 18v84"/></g></svg>
+  </header>
+
+  {{- range $L := sort $ladders "order" }}
+    {{- $mine := where $aps "ladder" $L.key }}
+    {{- if $mine }}
+  <section class="tp-apgroup" aria-labelledby="ap-{{ $L.key }}">
+    <h2 id="ap-{{ $L.key }}"><span aria-hidden="true">{{ $L.icon }}</span> {{ $L.title }}</h2>
+    <ul class="tp-apgrid">
+      {{- range sort $mine "title" }}
+        {{- $n := 0 }}{{ $w := 0 }}{{ $ids := slice }}
+        {{- range .units }}{{ range .topics }}{{ if not (in $ids .) }}{{ $ids = $ids | append . }}{{ $t := index $T . }}{{ if and $t $t.w }}{{ $w = add $w 1 }}{{ end }}{{ end }}{{ end }}{{ end }}
+        {{- $n = len $ids }}
+      <li><a class="tp-apcard" href="{{ printf "test-prep/ap/%s/" .key | relURL }}">
+        <b>{{ .title }}</b>
+        <span class="tp-apcard-meta">{{ len .units }} units · {{ $n }} ladder topics</span>
+        {{ with .blurb }}<span class="tp-apcard-blurb">{{ . }}</span>{{ end }}
+        <span class="tp-cover" role="img" aria-label="{{ $w }} of {{ $n }} topics ready to practice"><span class="tp-cover-bar"><b style="width:{{ if $n }}{{ div (mul $w 100) $n }}{{ else }}0{{ end }}%"></b></span><small>{{ if eq $w $n }}All topics ready{{ else if eq $w 0 }}Being written{{ else }}{{ $w }} of {{ $n }} topics ready{{ end }}</small></span>
+      </a></li>
+      {{- end }}
+    </ul>
+  </section>
+    {{- end }}
+  {{- end }}
+  {{- if not $aps }}<p class="tp-empty">The AP maps are being written.</p>{{ end }}
+
+  <section class="tp-card tp-how-ap" aria-labelledby="tp-apnote-h">
+    <h2 id="tp-apnote-h">How to read the maps</h2>
+    <ul class="tp-list">
+      <li>Unit names are the College Board's own, from each course's public page on AP Central. Everything else is ours.</li>
+      <li>A topic marked <em class="tp-soon-tag">Being written</em> is planned on its ladder, but its lesson or practice isn't ready yet. Practice sets skip it.</li>
+      <li>Some units list topics from a college course, like Calculus 3. Those topics go further than AP needs; the notes say so.</li>
+      <li>We don't predict AP scores. The maps show where to learn and practice each unit.</li>
+    </ul>
+  </section>
+  {{ partial "inline/tp-legal.html" . }}
+</div>
+
+{{- else }}
+{{- /* ======================= the hub ======================= */ -}}
+<div class="mlp tp tp-hub" id="tp-root">
+  <header class="tp-hero">
+    <div class="tp-hero-text">
+      <p class="tp-eyebrow">Teddy Rook Book · Test Prep</p>
+      <h1>Calm practice for the math on the big tests</h1>
+      <p>Get ready for the math on the SAT, the ACT and the Classic Learning Test with problems from Math Ladder, in each test's own format and pace. Every miss comes with its steps and a link to the lesson behind it. Free, with no sign-up.</p>
+      <div class="tp-hero-btns">
+        {{- range $tests }}<a class="mlp-btn light" href="{{ printf "test-prep/%s/" .slug | relURL }}"><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</a>{{ end }}
+      </div>
+    </div>
+    <svg class="tp-hero-art" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><rect x="22" y="14" width="76" height="94" rx="8"/><path d="M40 40l7 7 13-14M40 66l7 7 13-14"/><path d="M70 44h12M70 70h12M40 92h42"/></g></svg>
+  </header>
+
+  <section aria-labelledby="tp-tests-h">
+    <h2 id="tp-tests-h" class="tp-h2">Choose a test</h2>
+    <ul class="tp-tests">
+      {{- range $tests }}
+      {{- $f := .format }}
+      <li class="tp-test" style="--tc:{{ .color }}">
+        <a class="tp-test-link" href="{{ printf "test-prep/%s/" .slug | relURL }}">
+          <span class="tp-test-icon" aria-hidden="true">{{ .icon }}</span>
+          <span class="tp-test-name"><b>{{ .title }}</b><small>{{ .maker }}</small></span>
+        </a>
+        <p class="tp-test-blurb">{{ .blurb }}</p>
+        <ul class="tp-facts-mini" aria-label="{{ .title }} at a glance">
+          <li><b>{{ $f.questions }}</b> questions</li>
+          <li><b>{{ $f.minutes }}</b> minutes</li>
+          <li>{{ if $f.calculator }}Calculator allowed{{ else }}<b>No</b> calculator{{ end }}</li>
+          <li>{{ if $f.typed }}Multiple choice and typed answers{{ else }}{{ $f.choices }}-choice questions{{ end }}</li>
+        </ul>
+        {{- $old := where (.versions | default slice) "current" false }}
+        {{- with .changes }}<p class="tp-test-change"><span class="tp-newtag">Changed</span> <a href="{{ printf "test-prep/%s/" .slug | relURL }}">{{ .title }}</a>{{ with index $old 0 }}. The {{ lower (substr .name 0 1) }}{{ substr .name 1 }} is here to practice too.{{ end }}</p>{{ end }}
+        <a class="mlp-btn pri" href="{{ printf "test-prep/%s/" .slug | relURL }}">Practice {{ .test }} math</a>
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+
+  <div class="tp-hub-grid">
+    <section class="tp-card" aria-labelledby="tp-how-h">
+      <h2 id="tp-how-h">How practice works here</h2>
+      <ol class="tp-steps">
+        <li><b>Practice one area at a time.</b> Pick an area of a test, like Advanced Math on the SAT. You see the steps after each question, so you learn as you go.</li>
+        <li><b>Then try a timed mixed set.</b> Questions from every area, at the real section's pace. Take the full length or a shorter set. The timer hides with one tap.</li>
+        <li><b>Answer the way the test asks.</b> Four choices on all three tests today, plus typed answers on the SAT. On the CLT, every problem is meant to be done by hand. The older paper SAT and legacy ACT have their own sets, with their own timing and rules.</li>
+        <li><b>Read your results.</b> Right and wrong by area, your time on each question, the steps for every miss, and the Math Ladder topics to work on, which you can add to your reviews.</li>
+      </ol>
+      <p class="tp-small">The problems come from Math Ladder's own generators, so every set is new. A set shows which topics to work on. It doesn't predict a score, and nothing here does.</p>
+    </section>
+
+    <section class="tp-card tp-apcta" aria-labelledby="tp-ap-h">
+      <h2 id="tp-ap-h">AP courses</h2>
+      <p>See how the official units of AP courses line up with our ladders, and practice any unit with a mixed set.</p>
+      <ul class="tp-aplinks">
+        {{- range $L := sort $ladders "order" }}{{ range sort (where $aps "ladder" $L.key) "title" }}
+        <li><a href="{{ printf "test-prep/ap/%s/" .key | relURL }}"><span aria-hidden="true">{{ $L.icon }}</span> {{ .title }}</a></li>
+        {{- end }}{{ end }}
+      </ul>
+      <a class="mlp-btn" href="{{ "test-prep/ap/" | relURL }}">All AP courses</a>
+    </section>
+  </div>
+
+  <section class="tp-changed" aria-labelledby="tp-chg-h">
+    <h2 id="tp-chg-h" class="tp-h2">Have the tests changed, and did they get easier?</h2>
+    <p class="tp-sub">Two of the three changed in the last few years. Each is shorter now, with more time for each question. Whether that makes them easier is argued: the makers say scores are comparable, and some critics disagree. Each page shows the evidence, who says what, and lets you practice both versions.</p>
+    <ul class="tp-chg">
+      {{- range $tests }}
+      <li class="tp-chg-item" style="--tc:{{ .color }}">
+        <span class="tp-chg-icon" aria-hidden="true">{{ .icon }}</span>
+        <div>
+        {{- with .changes }}
+          <b>{{ .title }}</b>
+          <p>{{ .old }} → {{ .new }}</p>
+          <a href="{{ printf "test-prep/%s/" .slug | relURL }}">What changed, side by side</a>
+        {{- else }}
+          <b>{{ with .unchanged }}{{ .title }}{{ end }}</b>
+          <p>Not its math: still 40 questions in 45 minutes, no calculator.</p>
+          <a href="{{ printf "test-prep/%s/#tp-unch-h" .slug | relURL }}">More about the CLT</a>
+        {{- end }}
+        </div>
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+
+  <section class="tp-card tp-verbalcta" aria-labelledby="tp-verbal-h">
+    <h2 id="tp-verbal-h">Reading, writing and grammar</h2>
+    <p>What the reading, writing and English sections ask, on each test and each version, with links to the test makers' own free practice. Plus grammar and punctuation practice in each test's style: the part of those sections that follows clear rules.</p>
+    <a class="mlp-btn" href="{{ "test-prep/grammar/" | relURL }}">Reading, writing and grammar</a>
+  </section>
+
+  <section class="tp-card tp-compare" aria-labelledby="tp-cmp-h">
+    <h2 id="tp-cmp-h">The three math sections today, side by side</h2>
+    <p class="tp-small">As of {{ $asof.Format "January 2, 2006" }}, from each test maker's public pages (linked below). Tests change; check the official page before test day.</p>
+    <p class="tp-small tp-swipe" aria-hidden="true">Swipe the table sideways to see all three tests.</p>
+    <div class="tp-table-wrap" tabindex="0" role="region" aria-label="Comparison table">
+    <table class="tp-table">
+      <thead><tr><th scope="col"></th>{{ range $tests }}<th scope="col">{{ .title }}</th>{{ end }}</tr></thead>
+      <tbody>
+        <tr><th scope="row">Questions</th>{{ range $tests }}<td>{{ .format.questions }}{{ if gt (int .format.parts) 1 }} in {{ .format.parts }} modules{{ end }}</td>{{ end }}</tr>
+        <tr><th scope="row">Time</th>{{ range $tests }}<td>{{ .format.minutes }} minutes</td>{{ end }}</tr>
+        <tr><th scope="row">Pace</th>{{ range $tests }}<td>about {{ math.Round (div (mul (float .format.minutes) 60) .format.questions) }} seconds a question</td>{{ end }}</tr>
+        <tr><th scope="row">Answers</th>{{ range $tests }}<td>{{ if .format.typed }}About 75% four-choice, the rest typed{{ else }}All four-choice{{ end }}</td>{{ end }}</tr>
+        <tr><th scope="row">Calculator</th>{{ range $tests }}<td>{{ if .format.calculator }}Allowed{{ else }}Not allowed{{ end }}</td>{{ end }}</tr>
+        <tr><th scope="row">Content</th>{{ range $tests }}<td>{{ range $i, $a := .areas }}{{ if $i }}, {{ end }}{{ $a.title }}{{ end }}</td>{{ end }}</tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="tp-card tp-sources" aria-labelledby="tp-src-h">
+    <h2 id="tp-src-h">Where these facts come from</h2>
+    <p class="tp-small">Read on {{ $asof.Format "January 2, 2006" }}. Descriptions on this site are in our own words. The pages on how the SAT and ACT changed list more sources, including news reports and opinion.</p>
+    <ul class="tp-srclist">
+      {{- range $k := slice "sat-structure" "sat-math-overview" "sat-math-skills" "sat-spr" "sat-calculator" "sat-spec-overview" "sat-student-guide-2018" "act-enhancements" "act-preparing" "act-framework-2026" "act-linking-2025" "clt-admins" "clt-faq-time" "clt-content" "clt-sample" }}
+      {{- with index $src.sources $k }}<li><a href="{{ .url }}" rel="noopener">{{ .name }}</a></li>{{ end }}
+      {{- end }}
+    </ul>
+  </section>
+  {{ partial "inline/tp-legal.html" . }}
+</div>
+{{- end }}
+{{ end }}

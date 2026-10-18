@@ -36,25 +36,15 @@
             {{- if $lsenabled }}
             <div class="logo-switches">
                 {{- if (not site.Params.disableThemeToggle) }}
-                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
-                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
+                {{- /* Light/dark switch: a sun-and-moon slider. The theme's own code (footer.html) still does the switching on
+                   click and saves 'pref-theme'; the knob follows html[data-theme] in CSS (assets/css/extended/theme-switch.css),
+                   so it is right from the first paint. aria-checked follows the theme through the small script at the end of this file. */}}
+                <button type="button" id="theme-toggle" class="theme-toggle trb-switch" role="switch" aria-checked="false" aria-label="Dark mode" accesskey="t" title="Dark mode (Alt + T)">
+                    <span class="trb-sw-track" aria-hidden="true">
+                        <span class="trb-sw-knob"></span>
+                        <svg class="trb-sw-sun" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="currentColor"></circle><path d="M12 1.8v2.6M12 19.6v2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M1.8 12h2.6M19.6 12h2.6M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"></path></svg>
+                        <svg class="trb-sw-moon" viewBox="0 0 24 24" width="14" height="14"><path d="M20.6 14.4A8.6 8.6 0 0 1 9.6 3.4a8.6 8.6 0 1 0 11 11z" fill="currentColor"></path></svg>
+                    </span>
                 </button>
                 {{- end }}
                 
@@ -114,3 +104,6 @@
         </ul>
     </nav>
 </header>
+{{- if (not site.Params.disableThemeToggle) }}
+<script>(function () { 'use strict'; var b = document.getElementById('theme-toggle'), h = document.documentElement; if (!b) return; function sync() { b.setAttribute('aria-checked', h.getAttribute('data-theme') === 'dark' ? 'true' : 'false'); } sync(); try { new MutationObserver(sync).observe(h, { attributes: true, attributeFilter: ['data-theme'] }); } catch (e) { } })();</script>
+{{- end }}

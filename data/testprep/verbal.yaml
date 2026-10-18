@@ -1,0 +1,45 @@
+# Test Prep: the reading, writing and English sections of the SAT, ACT and CLT, today and before the changes, for the page
+# /test-prep/grammar/ (layouts/test-prep/single.html, params.tp = "verbal"). Facts name sources in sources.yaml.
+# The grammar practice itself is static/test-prep/tp-grammar.js; `styles` are the timed sets it offers.
+asof: "2026-10-17"
+tests:
+  - key: sat
+    name: "SAT"
+    icon: "📐"
+    color: "#2f6fc4"
+    title: "SAT Reading and Writing"
+    now:
+      - { text: "One section: 54 questions in 64 minutes, in two adaptive modules of 32 minutes.", src: [sat-structure, sat-spec-overview] }
+      - { text: "Each question has its own short passage of 25 to 150 words, and four choices.", src: [sat-rw-page, sat-passage-brief] }
+      - { text: "Four kinds of questions: Craft and Structure (about 28%: words in context, how a text is built), Information and Ideas (about 26%: reading closely, using evidence and data), Standard English Conventions (about 26%: grammar, usage and punctuation) and Expression of Ideas (about 20%: revising for a goal, transitions).", src: [sat-spec-overview, sat-rw-page] }
+    before: { label: "Paper SAT, 2016–2023", text: "Two tests: Reading (52 questions in 65 minutes) and Writing and Language (44 questions in 35 minutes), built on nine long passages of 400 to 750 words with several questions each.", src: [sat-student-guide-2018, sat-passage-brief] }
+    here: "Standard English Conventions is the part that follows clear rules, so our grammar practice covers it, in the SAT's fill-the-blank style. The rest asks for close reading of real passages; for that, the College Board's own free practice is the best place."
+    links: [sat-practice, sat-khan]
+  - key: act
+    name: "ACT"
+    icon: "📏"
+    color: "#a8521f"
+    title: "ACT English and Reading"
+    now:
+      - { text: "English: 50 questions in 35 minutes (40 scored). You edit passages: many questions point to an underlined part and offer NO CHANGE as a choice.", src: [act-preparing, act-framework-2026] }
+      - { text: "About 38–43% of English questions are Conventions of Standard English: sentence structure, punctuation and usage. The rest are about organizing and improving the writing.", src: [act-preparing] }
+      - { text: "Reading: 36 questions in 40 minutes (27 scored), on long and short passages, some with a graph or table. Science is optional: 40 questions in 40 minutes.", src: [act-preparing, act-framework-2026] }
+    before: { label: "Legacy ACT, before 2025", text: "English had 75 questions in 45 minutes, Reading 40 in 35, and Science (required) 40 in 35.", src: [act-framework-2026, act-legacy-content] }
+    here: "The conventions questions follow clear rules, so our grammar practice covers them, in the ACT's underlined, NO CHANGE style. For the rest of English, and for Reading and Science, use ACT's own free practice tests."
+    links: [act-free-prep]
+  - key: clt
+    name: "CLT"
+    icon: "🏛"
+    color: "#b8963e"
+    title: "CLT Verbal Reasoning and Grammar/Writing"
+    now:
+      - { text: "Verbal Reasoning: 40 questions in 40 minutes on passages; every answer comes from the passage, and the last two questions on each passage are analogies.", src: [clt-sample, clt-admins] }
+      - { text: "Grammar/Writing: 40 questions in 35 minutes. Most questions point to a numbered part of a passage and ask you to fix an error or improve it, with NO CHANGE when it's already right. Style and tone count as well as grammar and punctuation.", src: [clt-sample, clt-blog-2025] }
+    before: { label: "Has it changed?", text: "We found no recent change to either section.", src: [clt-test-page, ednext-clt-2026] }
+    here: "Grammar/Writing follows the same rules as the other tests' conventions questions, in a NO CHANGE style, so our grammar practice covers that part. For Verbal Reasoning, use the CLT's own free practice test."
+    links: [clt-practice]
+styles:
+  - { key: sat, fmt: sat, label: "SAT style", desc: "A blank in the sentence and four choices", pace: 71, pace_note: "the Reading and Writing section's pace: 64 minutes for 54 questions" }
+  - { key: act, fmt: act, label: "ACT style", desc: "An underlined part; choice A is NO CHANGE", pace: 42, pace_note: "the English test's pace: 35 minutes for 50 questions" }
+  - { key: clt, fmt: act, label: "CLT style", desc: "A marked part; choice A is NO CHANGE", pace: 52.5, pace_note: "the Grammar/Writing section's pace: 35 minutes for 40 questions" }
+sets: [10, 20]

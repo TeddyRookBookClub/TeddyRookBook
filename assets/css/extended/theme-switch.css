@@ -1,0 +1,72 @@
+/* The light/dark switch in the header (layouts/_partials/header.html): a pill with a sun on the left and a moon on the
+   right; the knob sits under the sun in light mode and slides under the moon in dark mode. The knob's place comes from
+   html[data-theme], which the theme sets in <head>, so it is right before the first paint. */
+header.header #theme-toggle.trb-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 58px;
+    min-height: 40px;
+    padding: 6px 2px;
+    margin: 0 .05rem;
+    border: 0;
+    background: none;
+    color: #f3ead2;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 999px;
+    -webkit-tap-highlight-color: transparent;
+}
+.trb-switch .trb-sw-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 54px;
+    height: 28px;
+    padding: 0 5px 0 6px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .28);
+    border: 1.5px solid rgba(243, 234, 210, .9);
+    transition: background-color .2s, border-color .2s;
+}
+.trb-switch .trb-sw-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    background: #f3ead2;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+    transition: transform .22s cubic-bezier(.3, .7, .4, 1), background-color .2s;
+}
+.trb-switch .trb-sw-sun,
+.trb-switch .trb-sw-moon {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    display: block;
+    pointer-events: none;
+    transition: color .2s, opacity .2s;
+}
+/* light: the sun is on (dark gold on the cream knob), the moon waits on the right */
+.trb-switch .trb-sw-sun { color: #8a5d00; }
+.trb-switch .trb-sw-moon { color: #f3ead2; opacity: .8; }
+header.header #theme-toggle.trb-switch:hover .trb-sw-track { background: rgba(255, 255, 255, .14); }
+/* dark: the knob slides under the moon */
+[data-theme="dark"] .trb-switch .trb-sw-knob { transform: translateX(26px); background: #cdeedc; }
+[data-theme="dark"] .trb-switch .trb-sw-track { border-color: #6cc79a; background: rgba(0, 0, 0, .35); }
+[data-theme="dark"] .trb-switch .trb-sw-moon { color: #00331c; opacity: 1; }
+[data-theme="dark"] .trb-switch .trb-sw-sun { color: #f3ead2; opacity: .75; }
+header.header #theme-toggle.trb-switch:focus { outline: none; }
+header.header #theme-toggle.trb-switch:focus-visible .trb-sw-track { outline: 2px solid #d8b860; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+    .trb-switch .trb-sw-knob,
+    .trb-switch .trb-sw-track,
+    .trb-switch .trb-sw-sun,
+    .trb-switch .trb-sw-moon { transition: none; }
+}
+@media print { .trb-switch { display: none !important; } }

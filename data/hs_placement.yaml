@@ -1,5 +1,6 @@
 # "Where should we start?" placement check. Each subject is a ladder of checkpoints from easiest to hardest.
 # course = the lesson planner's course key; lesson = where to start if this checkpoint is the right level.
+# ml (arithmetic) = the matching Math Ladder course in the planner: the results suggest it too, with Find your rung.
 # Reading and spelling lines are the books' own words (from the guides' quotations). Arithmetic problems are written
 # for this page in the style of Ray's, at the level of the lesson named.
 subjects:
@@ -47,16 +48,33 @@ subjects:
   judge: [All right, quickly, Some right, or slowly, Mostly wrong or stuck]
   start: [[5, 0], [6, 1], [7, 3], [8, 5], [9, 6], [10, 7], [11, 9], [12, 10], [99, 11]]
   points:
-  - {course: primary, lesson: 1, book: "Ray's Primary Arithmetic, Lesson 1", ask: "Put out 7 buttons or beans. Ask your child to count them, touching each one, then write the numbers 1 to 10.", lines: ["Count 7 things, one at a time.", "Write 1 2 3 4 5 6 7 8 9 10."], answers: ["7", "1 2 3 4 5 6 7 8 9 10"]}
-  - {course: primary, lesson: 10, book: "Ray's Primary Arithmetic, Lesson 10 (adding)", lines: ["4 + 3 =", "6 + 2 =", "5 + 5 =", "9 + 3 =", "3 boys and 4 girls: how many children?"], answers: ["7", "8", "10", "12", "7 children"]}
-  - {course: primary, lesson: 25, book: "Ray's Primary Arithmetic, Lesson 25 (subtracting)", lines: ["9 − 4 =", "12 − 5 =", "15 − 7 =", "Sam had 11 marbles and lost 3: how many are left?"], answers: ["5", "7", "8", "8 marbles"]}
-  - {course: primary, lesson: 40, book: "Ray's Primary Arithmetic, Lesson 40 (multiplying)", lines: ["3 × 4 =", "5 × 6 =", "8 × 3 =", "One apple costs 6 cents: what do 4 apples cost?"], answers: ["12", "30", "24", "24 cents"]}
-  - {course: primary, lesson: 52, book: "Ray's Primary Arithmetic, Lesson 52 (dividing)", lines: ["20 ÷ 4 =", "35 ÷ 7 =", "48 ÷ 6 =", "18 pears shared equally by 3 children: how many each?"], answers: ["5", "5", "8", "6 pears"]}
-  - {course: intellectual, lesson: 13, book: "Ray's Intellectual Arithmetic, Lesson 13 (tables to 12)", lines: ["7 × 8 =", "9 × 12 =", "11 × 6 =", "84 ÷ 7 =", "A pencil costs 6 cents: how much do 9 pencils cost?"], answers: ["56", "108", "66", "12", "54 cents"]}
-  - {course: intellectual, lesson: 22, book: "Ray's Intellectual Arithmetic, Lesson 22 (a fraction of a number)", lines: ["½ of 18 =", "⅓ of 21 =", "¾ of 12 =", "If 4 yards of cloth cost 20 cents, what do 7 yards cost?"], answers: ["9", "7", "9", "35 cents"]}
-  - {course: practical, lesson: 16, book: "Ray's Practical Arithmetic, Lesson 16 (long multiplication)", lines: ["4,056 + 987 + 1,325 =", "6,004 − 2,867 =", "327 × 23 =", "608 × 45 ="], answers: ["6,368", "3,137", "7,521", "27,360"]}
-  - {course: practical, lesson: 22, book: "Ray's Practical Arithmetic, Lesson 22 (long division)", lines: ["7,488 ÷ 24 =", "9,135 ÷ 35 =", "A farm of 6,048 acres is divided into 112 equal fields: how many acres in each?"], answers: ["312", "261", "54 acres"]}
-  - {course: practical, lesson: 58, book: "Ray's Practical Arithmetic, Lesson 58 (fractions)", lines: ["⅔ × ¾ =", "1½ + 2¼ =", "⅚ − ¼ =", "Reduce 18/24 to lowest terms."], answers: ["½ (6/12)", "3¾", "7/12", "¾"]}
-  - {course: practical, lesson: 67, book: "Ray's Practical Arithmetic, Lesson 67 (decimals)", lines: ["3.25 + 0.8 =", "6 − 2.75 =", "4.5 × 1.2 =", "7.2 ÷ 0.9 ="], answers: ["4.05", "3.25", "5.4", "8"]}
-  - {course: practical, lesson: 79, book: "Ray's Practical Arithmetic, Lesson 79 (per cent)", lines: ["15% of 80 =", "12 is what per cent of 48?", "A coat bought for $40 is sold for $50: what per cent is the gain?"], answers: ["12", "25%", "25%"]}
-  - {course: higher, lesson: 61, book: "Ray's Higher Arithmetic, Lesson 61 (proportion and roots)", lines: ["3 : 5 = 12 : ?", "If 8 men build a wall in 15 days, how long would 12 men take?", "Square root of 144 =", "Interest on $200 at 6% for 1½ years ="], answers: ["20", "10 days", "12", "$18"]}
+  - {course: primary, lesson: 1, ml: ml-k, book: "Ray's Primary Arithmetic, Lesson 1", ask: "Put out 7 buttons or beans. Ask your child to count them, touching each one, then write the numbers 1 to 10.", lines: ["Count 7 things, one at a time.", "Write 1 2 3 4 5 6 7 8 9 10."], answers: ["7", "1 2 3 4 5 6 7 8 9 10"]}
+  - {course: primary, lesson: 10, ml: ml-g1, book: "Ray's Primary Arithmetic, Lesson 10 (adding)", lines: ["4 + 3 =", "6 + 2 =", "5 + 5 =", "9 + 3 =", "3 boys and 4 girls: how many children?"], answers: ["7", "8", "10", "12", "7 children"]}
+  - {course: primary, lesson: 25, ml: ml-g1, book: "Ray's Primary Arithmetic, Lesson 25 (subtracting)", lines: ["9 − 4 =", "12 − 5 =", "15 − 7 =", "Sam had 11 marbles and lost 3: how many are left?"], answers: ["5", "7", "8", "8 marbles"]}
+  - {course: primary, lesson: 40, ml: ml-g3, book: "Ray's Primary Arithmetic, Lesson 40 (multiplying)", lines: ["3 × 4 =", "5 × 6 =", "8 × 3 =", "One apple costs 6 cents: what do 4 apples cost?"], answers: ["12", "30", "24", "24 cents"]}
+  - {course: primary, lesson: 52, ml: ml-g3, book: "Ray's Primary Arithmetic, Lesson 52 (dividing)", lines: ["20 ÷ 4 =", "35 ÷ 7 =", "48 ÷ 6 =", "18 pears shared equally by 3 children: how many each?"], answers: ["5", "5", "8", "6 pears"]}
+  - {course: intellectual, lesson: 13, ml: ml-g4, book: "Ray's Intellectual Arithmetic, Lesson 13 (tables to 12)", lines: ["7 × 8 =", "9 × 12 =", "11 × 6 =", "84 ÷ 7 =", "A pencil costs 6 cents: how much do 9 pencils cost?"], answers: ["56", "108", "66", "12", "54 cents"]}
+  - {course: intellectual, lesson: 22, ml: ml-g4, book: "Ray's Intellectual Arithmetic, Lesson 22 (a fraction of a number)", lines: ["½ of 18 =", "⅓ of 21 =", "¾ of 12 =", "If 4 yards of cloth cost 20 cents, what do 7 yards cost?"], answers: ["9", "7", "9", "35 cents"]}
+  - {course: practical, lesson: 16, ml: ml-g5, book: "Ray's Practical Arithmetic, Lesson 16 (long multiplication)", lines: ["4,056 + 987 + 1,325 =", "6,004 − 2,867 =", "327 × 23 =", "608 × 45 ="], answers: ["6,368", "3,137", "7,521", "27,360"]}
+  - {course: practical, lesson: 22, ml: ml-g5, book: "Ray's Practical Arithmetic, Lesson 22 (long division)", lines: ["7,488 ÷ 24 =", "9,135 ÷ 35 =", "A farm of 6,048 acres is divided into 112 equal fields: how many acres in each?"], answers: ["312", "261", "54 acres"]}
+  - {course: practical, lesson: 58, ml: ml-g5, book: "Ray's Practical Arithmetic, Lesson 58 (fractions)", lines: ["⅔ × ¾ =", "1½ + 2¼ =", "⅚ − ¼ =", "Reduce 18/24 to lowest terms."], answers: ["½ (6/12)", "3¾", "7/12", "¾"]}
+  - {course: practical, lesson: 67, ml: ml-g6, book: "Ray's Practical Arithmetic, Lesson 67 (decimals)", lines: ["3.25 + 0.8 =", "6 − 2.75 =", "4.5 × 1.2 =", "7.2 ÷ 0.9 ="], answers: ["4.05", "3.25", "5.4", "8"]}
+  - {course: practical, lesson: 79, ml: ml-g7, book: "Ray's Practical Arithmetic, Lesson 79 (per cent)", lines: ["15% of 80 =", "12 is what per cent of 48?", "A coat bought for $40 is sold for $50: what per cent is the gain?"], answers: ["12", "25%", "25%"]}
+  - {course: higher, lesson: 61, ml: ml-g8, book: "Ray's Higher Arithmetic, Lesson 61 (proportion and roots)", lines: ["3 : 5 = 12 : ?", "If 8 men build a wall in 15 days, how long would 12 men take?", "Square root of 144 =", "Interest on $200 at 6% for 1½ years ="], answers: ["20", "10 days", "12", "$18"]}
+# Not checked, suggested by age on the results (course = a lesson planner course key; also = more to mention).
+# A ladder course also links that ladder's "Find your rung" check, and can be put in the planner.
+science:
+- {to: 5, course: comstock, plan: false, text: "Science at this age is looking closely and asking questions. Watch birds, bugs and plants together, and try a Science Lab simulation side by side."}
+- {to: 6, course: comstock, plan: false, text: "Science at this age is looking closely and asking questions. The Handbook of Nature-Study shows you what to look for, one plant or animal at a time."}
+- {to: 8, course: fairy-land, plan: false, text: "Start at Lesson 1 of the science book the planner suggests. The Science Lab's simulations make good extras."}
+- {to: 10, course: sun-moon-stars, plan: false, text: "Start at Lesson 1 of the science book the planner suggests. The Science Lab's simulations make good extras."}
+- {to: 11, course: worlds-foundations, plan: false, also: [lab-newton], text: "Start at Lesson 1 of the science book the planner suggests, or try the Science Lab's Newton's Laws unit."}
+- {to: 13, course: es-earthsci, also: [lab-newton], text: "Earth Science on the Earth & Space Ladder is the middle-school course: rocks, water, weather and space."}
+- {to: 14, course: ph-physsci, also: [es-earthsci], text: "Physical Science on the Physics Ladder is the usual first high-school science: motion, energy, matter and waves."}
+- {to: 15, course: ch-chem, also: [ph-physsci], text: "High-school Chemistry on the Chemistry Ladder: atoms, bonds, moles and reactions, with algebra."}
+- {to: 16, course: ph-phys1, also: [ch-chem, es-weather], text: "Physics 1 on the Physics Ladder: motion, forces and energy, with algebra and a little trigonometry."}
+- {to: 99, course: ph-phys2, also: [ph-astro, ec-micro], text: "Physics 2 on the Physics Ladder, or Astronomy, or Microeconomics on the Economics Ladder."}
+music:
+- {to: 5, text: "Sit at the keys together. Piano Basics starts with the black-key groups and finding C, a few minutes at a time. Clapping along with the metronome is music too."}
+- {to: 8, text: "Start Piano Basics, a chapter or two a week, with ten minutes at the keys most days. Reading Music comes next."}
+- {to: 99, text: "Start Piano Basics (it goes fast if the keys are familiar), then Reading Music and the songs. Ten or fifteen minutes most days does more than one long session a week."}

@@ -1,0 +1,88 @@
+{{- /* Test Prep: shared inline partials (Hugo's inline partials are global, so every name starts with tp-). Not a page layout.
+  inline/tp-topics.html  (partialCached) every ladder topic: id -> { t: title, u: url, l: ladder key, ls: ladder short name,
+                         c: course key, ct: course title, g: the course has a generator file, w: written (lesson + generator) }
+                         Ladders come from data/ladders.yaml (falls back to Math alone); topics from data/<ladder>/topics/*.json,
+                         lessons from data/<ladder>/lessons/<course>.json, generators from static/<ladder>/gen/<course>.js.
+  inline/tp-chip.html    one topic chip: dict "id" … "T" (tp-topics) ["mini" true]
+  inline/tp-legal.html   the trademark and "our own problems" note
+  inline/tp-head.html    styles: Math Ladder's (hs-head, core.css, viz.css, math.css) plus static/test-prep/tp.css
+  inline/tp-scripts.html the engine scripts every Test Prep page with practice loads, then the given page script
+  inline/tp-cite.html    source links for a fact: dict "src" [keys in data/testprep/sources.yaml] "S" (the sources data)
+  inline/tp-lc.html      a name inside a sentence, first letter lowercased ("Paper SAT" -> "paper SAT")
+  inline/tp-mins.html    seconds as "25 minutes" or "6 min 15 s"
+*/ -}}
+
+{{- define "_partials/inline/tp-topics.html" -}}
+{{- $T := newScratch -}}
+{{- $ladders := site.Data.ladders | default (slice (dict "key" "math" "slug" "math" "short" "Math")) -}}
+{{- range $L := $ladders -}}
+  {{- $d := index site.Data $L.key -}}
+  {{- with $d -}}
+    {{- $tops := .topics | default dict -}}{{- $less := .lessons | default dict -}}
+    {{- range $c := (.courses | default slice) -}}
+      {{- $gen := fileExists (printf "static/%s/gen/%s.js" $L.key $c.key) -}}
+      {{- $les := index $less $c.key | default dict -}}
+      {{- with index $tops $c.key -}}
+        {{- range .topics -}}
+          {{- $w := and $gen (isset $les .id) -}}
+          {{- $T.Set .id (dict "t" .title "u" (printf "%s/%s/%s/" $L.slug $c.slug .slug | relURL) "l" $L.key "ls" ($L.short | default $L.title) "c" $c.key "ct" ($c.short | default $c.title) "g" $gen "w" $w) -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $T.Values -}}
+{{- end -}}
+
+{{- define "_partials/inline/tp-chip.html" -}}
+{{- /* dict "id" … "T" (tp-topics) ["ladder" the page's ladder: other ladders get a label] ["quiet" true: no "Being written" tag] */ -}}
+{{- $t := index .T .id -}}{{- $lad := .ladder | default "math" -}}
+{{- if $t -}}
+<li><a class="tp-chip{{ if not $t.w }} is-soon{{ end }}" href="{{ $t.u }}" data-id="{{ .id }}"{{ if not $t.w }} title="Being written: the lesson or its practice isn't ready yet"{{ end }}><i class="tp-dot" aria-hidden="true"></i><span>{{ $t.t }}</span>{{ if ne $t.l $lad }}<small class="tp-chip-l">{{ $t.ls }}</small>{{ end }}{{ if not $t.w }}{{ if .quiet }}<em class="tp-sr">, being written</em>{{ else }}<em class="tp-soon-tag">Being written</em>{{ end }}{{ end }}<em class="tp-sr" data-st></em></a></li>
+{{- else -}}
+<li><span class="tp-chip is-missing" data-id="{{ .id }}"><i class="tp-dot" aria-hidden="true"></i><span>{{ .id }}</span><em class="tp-soon-tag">Planned</em></span></li>
+{{- end -}}
+{{- end -}}
+
+{{- define "_partials/inline/tp-legal.html" -}}
+<aside class="tp-legal" aria-label="Trademarks">
+  <p>SAT and AP are trademarks of the College Board; ACT is a trademark of ACT, Inc.; the Classic Learning Test is a trademark of Classic Learning Initiatives. Teddy Rook Book is not affiliated with or endorsed by them. All practice problems here are our own.</p>
+</aside>
+{{- end -}}
+
+{{- define "_partials/inline/tp-head.html" -}}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "math/viz/basic.css" }}
+{{ partial "inline/ml-css.html" "math/viz/adv.css" }}
+{{ partial "inline/ml-css.html" "test-prep/tp.css" }}
+{{- end -}}
+
+{{- define "_partials/inline/tp-scripts.html" -}}
+{{ partial "inline/ml-cfg.html" "testprep" }}
+{{ partial "inline/ml-js.html" "homeschool/calc/cas.js" }}
+{{ partial "inline/ml-js.html" "math/core/gen.js" }}
+{{ partial "inline/ml-js.html" "math/core/tex.js" }}
+{{ partial "inline/ml-js.html" "math/core/check.js" }}
+{{ partial "inline/ml-js.html" "math/core/input.js" }}
+{{ partial "inline/ml-js.html" "math/core/engine.js" }}
+{{ partial "inline/ml-js.html" "math/core/runner.js" }}
+{{ partial "inline/ml-js.html" "math/viz/core.js" }}
+{{ partial "inline/ml-js.html" "test-prep/tp-core.js" }}
+{{ if eq .Params.tp "verbal" }}{{ partial "inline/ml-js.html" "test-prep/tp-grammar.js" }}{{ end }}
+{{ partial "inline/ml-js.html" "test-prep/tp-app.js" }}
+{{- end -}}
+
+{{- define "_partials/inline/tp-mins.html" -}}
+{{- $s := int . -}}{{- $m := div $s 60 -}}{{- $r := mod $s 60 -}}
+{{- if eq $r 0 }}{{ $m }} minutes{{ else }}{{ $m }} min {{ $r }} s{{ end -}}
+{{- end -}}
+
+{{- define "_partials/inline/tp-cite.html" -}}
+{{- $S := .S -}}{{- $n := 0 -}}
+<span class="tp-cite">{{ range $k := .src }}{{ with index $S.sources $k }}{{ if $n }} · {{ end }}{{ $n = add $n 1 }}<a href="{{ .url }}" rel="noopener">{{ index (split .name " (") 0 }}</a>{{ end }}{{ end }}</span>
+{{- end -}}
+
+{{- define "_partials/inline/tp-lc.html" -}}
+{{- /* a version name inside a sentence: "Paper SAT" -> "paper SAT" */ -}}
+{{- lower (substr . 0 1) }}{{ substr . 1 -}}
+{{- end -}}

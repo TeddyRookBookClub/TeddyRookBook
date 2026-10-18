@@ -1,12 +1,50 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
 <link rel="stylesheet" href="{{ "homeschool/planner.css" | relURL }}?v={{ (os.Stat "static/homeschool/planner.css").ModTime.Unix }}">
+{{- /* Course kinds (data/hs_planner.yaml): data (a book on this site), ar (Hannah Ward's PDFs), ext (a course elsewhere),
+   ladder + lc (a Math Ladder or other ladder course: one lesson per topic, URLs built in planner.js from base + slug),
+   practice + sessions (a practice page: one session per school day), section (a section's chapters, by weight),
+   unit (a Science Lab or Business unit, data/science_units), trade (data/trades/<key>.json), adult (Being an Adult 101).
+   A course whose pages aren't in this build is left out. "p" = where its progress lives (u: music chapters). */ -}}
 {{- $subs := slice -}}
 {{- range site.Data.hs_planner.subjects -}}
   {{- $cs := slice -}}
   {{- range .courses -}}
-    {{- $ls := slice -}}{{ $word := "Lesson" }}
-    {{- if .ar -}}
+    {{- $ls := slice -}}{{ $word := "Lesson" }}{{ $ok := true }}{{ $url := .url }}{{ $name := .name }}{{ $bar := .bar | default "" }}{{ $base := "" }}{{ $pp := "" }}{{ $n := 0 }}
+    {{- if .ladder -}}
+      {{- $m := .mins -}}{{- $lad := index site.Data .ladder -}}
+      {{- $L := index (where site.Data.ladders "key" .ladder) 0 -}}{{- $C := index (where $lad.courses "key" .lc) 0 -}}{{- $T := index $lad.topics .lc -}}
+      {{- if and $L $C $T (site.GetPage (printf "/%s/%s" $L.slug $C.slug)) -}}
+        {{- $base = printf "/%s/%s/" $L.slug $C.slug | relURL -}}{{- $url = printf "/%s/%s/" $L.slug $C.slug -}}{{- $pp = printf "%s." .lc -}}
+        {{- $name = $name | default (printf "%s: %s" $L.title $C.title) -}}{{- $bar = $bar | default $C.short -}}
+        {{- range $j, $t := $T.topics -}}{{- $ls = $ls | append (dict "n" (add $j 1) "t" $t.title "m" $m "s" $t.slug) -}}{{- end -}}
+      {{- else -}}{{- $ok = false -}}{{- end -}}
+    {{- else if .practice -}}
+      {{- if not (site.GetPage .practice) -}}{{- $ok = false -}}{{- end -}}{{- $n = .sessions | default 180 -}}
+    {{- else if .section -}}
+      {{- $m := .mins -}}
+      {{- with site.GetPage .section -}}
+        {{- $url = .RelPermalink -}}{{- $name = $name | default .Title -}}
+        {{- range $j, $p := .Pages.ByWeight -}}{{- $ls = $ls | append (dict "n" (add $j 1) "t" $p.Title "m" $m "u" $p.RelPermalink "p" (printf "u:%s" (path.Join $p.File.Dir $p.File.ContentBaseName))) -}}{{- end -}}
+      {{- else -}}{{- $ok = false -}}{{- end -}}
+    {{- else if .unit -}}
+      {{- $m := .mins -}}{{- $u := index site.Data.science_units .unit -}}{{- $sec := $u.section | default "science-lab" -}}
+      {{- with site.GetPage (printf "/%s/%s" $sec $u.slug) -}}
+        {{- $url = .RelPermalink -}}{{- $name = $name | default (cond (eq $sec "science-lab") (printf "%s (Science Lab)" $u.title) $u.title) -}}{{- $bar = $bar | default $u.short -}}
+        {{- range $u.chapters -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" $m "u" (printf "/%s/%s/%s/" $sec $u.slug .key | relURL)) -}}{{- end -}}
+      {{- else -}}{{- $ok = false -}}{{- end -}}
+    {{- else if .trade -}}
+      {{- $m := .mins -}}{{- $tk := .trade -}}
+      {{- with site.GetPage (printf "/trades/%s" $tk) -}}
+        {{- $url = .RelPermalink -}}{{- $bar = $bar | default (strings.TrimPrefix "The Trades: " $name) -}}
+        {{- range (index site.Data.trades $tk).lessons -}}{{- $ls = $ls | append (dict "n" .n "t" .title "m" $m "u" (printf "/trades/%s/%s/" $tk .key | relURL)) -}}{{- end -}}
+      {{- else -}}{{- $ok = false -}}{{- end -}}
+    {{- else if .adult -}}
+      {{- $m := .mins -}}{{- $i := 0 -}}
+      {{- if site.GetPage "/being-an-adult" -}}
+        {{- range .adult -}}{{- range (index site.Data.adult .).guides -}}{{- $i = add $i 1 -}}{{- $ls = $ls | append (dict "n" $i "t" .name "m" $m "u" (printf "/being-an-adult/%s/" .key | relURL)) -}}{{- end -}}{{- end -}}
+      {{- else -}}{{- $ok = false -}}{{- end -}}
+    {{- else if .ar -}}
       {{- /* Hannah Ward's Actual Reading: each lesson is a PDF on her site (data/hs_hannah.yaml) */ -}}
       {{- $m := .mins -}}
       {{- range where site.Data.hs_hannah.curricula "key" .ar -}}{{- range .groups -}}{{- range .lessons -}}{{- $l := . -}}{{- with index $l 1 -}}
@@ -21,9 +59,20 @@
       {{- range $d.lessons -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" .mins) -}}{{- end -}}
       {{- $word = cond (isset $d.book "lessonword") ($d.book.lessonword | default "") "Lesson" -}}
     {{- end -}}
-    {{- $cs = $cs | append (dict "key" .key "name" .name "url" (.url | relURL) "from" .from "to" .to "rep" .rep "alt" (.alt | default false) "word" $word "lessons" $ls) -}}
+    {{- if and $ok (or $n (gt (len $ls) 0)) -}}
+      {{- $c := dict "key" .key "name" $name "url" ($url | relURL) "from" .from "to" .to "rep" .rep "alt" (.alt | default false) "word" $word "lessons" $ls -}}
+      {{- with .w }}{{ $c = merge $c (dict "w" .) }}{{ end -}}
+      {{- with $bar }}{{ $c = merge $c (dict "bar" .) }}{{ end -}}
+      {{- with $base }}{{ $c = merge $c (dict "base" . "pp" $pp) }}{{ end -}}
+      {{- if $n }}{{ $c = merge $c (dict "sessions" $n "daily" true "sm" .mins) }}{{ end -}}
+      {{- $cs = $cs | append $c -}}
+    {{- end -}}
   {{- end -}}
-  {{- $subs = $subs | append (dict "key" .key "name" .name "icon" .icon "start" (.start | default 0) "until" (.until | default 99) "replaces" (.replaces | default slice) "mins" .mins "hw" (.hw | default (slice (slice 99 10))) "courses" $cs) -}}
+  {{- if $cs -}}
+  {{- $s := dict "key" .key "name" .name "icon" .icon "start" (.start | default 0) "until" (.until | default 99) "replaces" (.replaces | default slice) "mins" .mins "hw" (.hw | default (slice (slice 99 10))) "courses" $cs -}}
+  {{- if .more }}{{ $s = merge $s (dict "more" true "note" (.note | default "")) }}{{ end -}}
+  {{- $subs = $subs | append $s -}}
+  {{- end -}}
 {{- end -}}
 <div class="hs pl" id="pl">
   <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Lesson planner</nav>
@@ -36,6 +85,7 @@
   <section class="hs-sec pl-step hs-noprint">
     <h2><span class="pl-n">1</span> Your children</h2>
     <p class="hs-small">For ages 3 to 5 the planner suggests <a href="{{ "homeschool/actual-reading/" | relURL }}">Hannah Ward's Actual Reading</a> curricula (Little House Pre-K and Kindergarten cover math and English together, so Arithmetic and Phonics start switched off), then the classic schoolbooks. Every subject's Book menu lists all the choices.</p>
+    <p class="hs-small">Under <b>More subjects</b> are the <a href="{{ "math/" | relURL }}">Math Ladder</a> (Kindergarten to college), the <a href="{{ "physics/" | relURL }}">Physics</a>, <a href="{{ "chemistry/" | relURL }}">Chemistry</a>, <a href="{{ "earth-and-space/" | relURL }}">Earth &amp; Space</a> and <a href="{{ "economics/" | relURL }}">Economics</a> Ladders, <a href="{{ "music/" | relURL }}">Music</a>, and life skills from <a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> and <a href="{{ "trades/" | relURL }}">The Trades</a>. Switch one on and pick a course, or pick “Today's practice” and the ladder chooses each day's lesson or review.</p>
     <div id="pl-kids"></div>
     <button type="button" class="hs-btn" id="pl-addkid">＋ Add a child</button>
   </section>

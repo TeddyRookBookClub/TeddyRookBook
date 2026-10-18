@@ -1,0 +1,219 @@
+# ACT Math: the test's format and reporting categories (from ACT's public pages; see data/testprep/sources.yaml),
+# each mapped to Math Ladder topic ids. Read by layouts/test-prep/single.html and static/test-prep/tp-app.js.
+# Same layout as sat-math.yaml: the top level is the current (enhanced) test; `versions` adds the legacy test; `changes` is
+# the comparison page /test-prep/act-changes/.
+key: act-math
+slug: act-math
+title: "ACT Math"
+test: "ACT"
+section: "Mathematics test"
+maker: "ACT, Inc."
+icon: "📏"
+color: "#a8521f"
+asof: "2026-10-17"
+blurb: "The ACT's math test: a brisk set of multiple-choice questions on the math of high school, from percents to logarithms and trigonometry."
+format:
+  questions: 45
+  minutes: 50
+  parts: 1
+  choices: 4
+  typed: 0
+  calculator: true
+  hand: false
+  easy_first: false
+facts:
+  - { text: "45 questions in 50 minutes, about 67 seconds a question. 41 of the 45 count toward your score.", src: [act-enhancements, act-preparing] }
+  - { text: "Every question is multiple choice with 4 answer choices (the enhanced ACT dropped the fifth choice).", src: [act-enhancements, act-preparing] }
+  - { text: "A permitted calculator may be used, and every problem can be solved without one.", src: [act-preparing] }
+  - { text: "Basic formulas are assumed known; you aren't asked to recall complex ones.", src: [act-preparing] }
+  - { text: "Compared with the legacy ACT, fewer questions are set in a long real-world story, and a smaller share are “Integrating Essential Skills.”", src: [act-framework-2026] }
+  - { text: "The enhanced ACT began with online national testing in April 2025, then paper and international testing in September 2025 and school-day testing in spring 2026. Science is now optional; math is part of the core test.", src: [act-enhancements] }
+  - { text: "About 80% of the questions are “Preparing for Higher Math” (five subject areas) and about 20% are “Integrating Essential Skills.” Modeling questions are counted inside the others.", src: [act-preparing] }
+parts:
+  - { name: "Mathematics test", questions: 45, minutes: 50, calculator: true, typed: 0 }
+sets:
+  - { label: "Short set", parts: [15] }
+  - { label: "Two-thirds", parts: [30] }
+  - { label: "Full test", parts: [45] }
+levels: [1, 2, 3]
+areas:
+  - key: number
+    title: "Number and Quantity"
+    share: 11
+    count: "10–12%"
+    about: "How numbers work: real and complex numbers, integer and fractional exponents, radicals, and simple vectors and matrices."
+    skills:
+      - "Real and complex numbers"
+      - "Integer and rational exponents, radicals"
+      - "Vectors and matrices"
+    levels: [2, 3]
+    topics: [alg1.rational-exponents, g8.zero-negative-exponents, alg1.simplify-square-roots, alg1.radical-operations, alg2.nth-roots,
+             alg2.imaginary-unit, alg2.complex-arithmetic, alg2.complex-division, alg1.real-number-system,
+             pre.vector-components, pre.vector-operations, pre.matrix-multiplication, pre.determinants]
+  - key: algebra
+    title: "Algebra"
+    share: 18
+    count: "17–20%"
+    about: "Solving and modeling: linear, polynomial, radical and exponential equations, inequalities and systems, often from a word problem."
+    skills:
+      - "Linear equations and inequalities"
+      - "Polynomial, radical and exponential equations"
+      - "Systems of equations"
+      - "Rewriting expressions; equations from words"
+    levels: [2, 3]
+    topics: [g8.variables-both-sides, alg1.equations-fractions-decimals, alg1.literal-equations, alg1.write-equations-words,
+             alg1.multi-step-inequalities, alg1.absolute-value-equations, alg1.systems-elimination, alg1.systems-elimination-multiply,
+             alg1.multiply-binomials, alg1.factor-x2-bx-c, alg1.factor-ax2-bx-c, alg1.zero-product-property, alg1.quadratic-formula,
+             alg2.radical-equations, alg2.common-base-equations, alg2.rational-equations, alg2.add-subtract-rational]
+  - key: functions
+    title: "Functions"
+    share: 18
+    count: "17–20%"
+    about: "What functions are and how they behave: notation, domain and range, piecewise, polynomial, exponential and logarithmic functions, and how graphs shift and stretch."
+    skills:
+      - "Function notation, composition and inverses"
+      - "Linear, piecewise, polynomial, exponential and logarithmic functions"
+      - "Transformations and features of graphs"
+      - "Sequences"
+    levels: [2, 3]
+    topics: [alg1.function-notation, alg2.function-composition, alg2.inverse-functions, alg1.piecewise-functions, alg1.domain-range,
+             alg1.average-rate-of-change, alg1.function-transformations, alg2.zeros-multiplicity, alg2.end-behavior,
+             alg1.exponential-functions, alg2.logarithms, alg2.log-exp-forms, alg2.log-properties,
+             alg1.arithmetic-sequences, alg1.geometric-sequences, alg2.asymptotes-holes]
+  - key: geometry
+    title: "Geometry"
+    share: 18
+    count: "17–20%"
+    about: "Shapes and solids: congruence and similarity, triangles and circles, surface area and volume, trig ratios, and the equations of circles and other conics."
+    skills:
+      - "Congruence and similarity"
+      - "Triangles, circles and polygons"
+      - "Surface area and volume of solids"
+      - "Right-triangle trigonometry and the unit circle"
+      - "Coordinate geometry and conic sections"
+    levels: [2, 3]
+    topics: [geo.aa-similarity, geo.side-splitter, geo.polygon-angle-sums, geo.inscribed-angles, geo.arc-length, geo.sector-area,
+             geo.special-right-triangles, geo.trig-ratios, pre.special-angles, pre.unit-circle-sine-cosine,
+             geo.surface-area-solids, geo.pyramids-cones-spheres, geo.distance-midpoint, geo.circle-equation, pre.ellipses]
+  - key: stats
+    title: "Statistics and Probability"
+    share: 13
+    count: "12–15%"
+    about: "Center and spread of data, how data are collected, relationships in two-variable data, and probabilities from counting outcomes."
+    skills:
+      - "Center and spread"
+      - "Data collection and sampling"
+      - "Scatterplots and lines of fit"
+      - "Probability, counting and expected value"
+    levels: [2, 3]
+    topics: [g6.median-mode, stat.standard-deviation, stat.sampling-methods, g8.scatter-plots, alg1.lines-of-fit-residuals,
+             g7.compound-probability, g7.sample-spaces, stat.addition-rule, stat.permutations, stat.combinations, stat.expected-value,
+             alg1.two-way-relative-frequency]
+  - key: essential
+    title: "Integrating Essential Skills"
+    share: 20
+    count: "about 20%"
+    about: "Earlier math put to work in longer problems: rates and percents, proportions, area and volume, averages, and writing numbers in different forms."
+    skills:
+      - "Rates and percents"
+      - "Proportional relationships and scale"
+      - "Area, surface area and volume"
+      - "Average and median"
+      - "Numbers in different forms (fractions, decimals, scientific notation)"
+    levels: [2, 3]
+    topics: [g7.percent-change, g7.markup-discount-tax, g7.simple-interest, g6.unit-rate-problems, alg1.distance-rate-time,
+             g7.solve-proportions, g7.scale-drawings, g6.area-polygons, g7.circle-area, g7.volume-prisms, g8.volume-cylinders,
+             g6.mean, g7.fractions-to-decimals, g8.compare-scientific]
+
+versions:
+  - key: enhanced
+    name: "Enhanced ACT"
+    years: "since April 2025"
+    current: true
+    note: "This is the ACT given now, online or on paper, nationally and on school days. Practice this one first."
+  - key: legacy
+    name: "Legacy ACT"
+    years: "before 2025"
+    current: false
+    note: "The legacy ACT is no longer given: national testing switched in 2025 and school-day testing in spring 2026. Practice it if you're working from an older prep book. It's faster and has five answer choices."
+    format:
+      questions: 60
+      minutes: 60
+      parts: 1
+      choices: 5
+      typed: 0
+      calculator: true
+      hand: false
+      easy_first: false
+    facts:
+      - { text: "60 questions in 60 minutes: one minute a question, all of them scored.", src: [act-framework-2026, act-legacy-content] }
+      - { text: "Five answer choices on every question.", src: [act-framework-2026, act-studentblog-2025] }
+      - { text: "About 40–43% of questions were “Integrating Essential Skills,” often longer problems set in real situations; the rest were “Preparing for Higher Math.”", src: [act-framework-2026] }
+      - { text: "A permitted calculator was allowed, as now.", src: [act-preparing] }
+    parts:
+      - { name: "Mathematics test", questions: 60, minutes: 60, calculator: true, typed: 0 }
+    sets:
+      - { label: "Short set", parts: [20] }
+      - { label: "Half test", parts: [30] }
+      - { label: "Full test", parts: [60] }
+    areas:
+      - { key: number, title: "Number and Quantity", share: 6, count: "8–12%", levels: [2, 3], about: "Real and complex numbers, exponents and radicals, vectors and matrices.",
+          topics: [alg1.rational-exponents, g8.zero-negative-exponents, alg1.simplify-square-roots, alg1.radical-operations, alg2.nth-roots,
+                   alg2.imaginary-unit, alg2.complex-arithmetic, alg2.complex-division, alg1.real-number-system,
+                   pre.vector-components, pre.vector-operations, pre.matrix-multiplication, pre.determinants] }
+      - { key: algebra, title: "Algebra", share: 8, count: "12–15%", levels: [2, 3], about: "Linear, polynomial, radical and exponential equations, inequalities and systems.",
+          topics: [g8.variables-both-sides, alg1.equations-fractions-decimals, alg1.literal-equations, alg1.write-equations-words,
+                   alg1.multi-step-inequalities, alg1.absolute-value-equations, alg1.systems-elimination, alg1.systems-elimination-multiply,
+                   alg1.multiply-binomials, alg1.factor-x2-bx-c, alg1.factor-ax2-bx-c, alg1.zero-product-property, alg1.quadratic-formula,
+                   alg2.radical-equations, alg2.common-base-equations, alg2.rational-equations, alg2.add-subtract-rational] }
+      - { key: functions, title: "Functions", share: 8, count: "12–15%", levels: [2, 3], about: "Notation, domain and range, the families of functions, and how graphs move.",
+          topics: [alg1.function-notation, alg2.function-composition, alg2.inverse-functions, alg1.piecewise-functions, alg1.domain-range,
+                   alg1.average-rate-of-change, alg1.function-transformations, alg2.zeros-multiplicity, alg2.end-behavior,
+                   alg1.exponential-functions, alg2.logarithms, alg2.log-exp-forms, alg2.log-properties,
+                   alg1.arithmetic-sequences, alg1.geometric-sequences, alg2.asymptotes-holes] }
+      - { key: geometry, title: "Geometry", share: 8, count: "12–15%", levels: [2, 3], about: "Triangles, circles and solids, trig ratios, and coordinate geometry.",
+          topics: [geo.aa-similarity, geo.side-splitter, geo.polygon-angle-sums, geo.inscribed-angles, geo.arc-length, geo.sector-area,
+                   geo.special-right-triangles, geo.trig-ratios, pre.special-angles, pre.unit-circle-sine-cosine,
+                   geo.surface-area-solids, geo.pyramids-cones-spheres, geo.distance-midpoint, geo.circle-equation, pre.ellipses] }
+      - { key: stats, title: "Statistics and Probability", share: 6, count: "8–12%", levels: [2, 3], about: "Center and spread, data collection, two-variable data, and probability.",
+          topics: [g6.median-mode, stat.standard-deviation, stat.sampling-methods, g8.scatter-plots, alg1.lines-of-fit-residuals,
+                   g7.compound-probability, g7.sample-spaces, stat.addition-rule, stat.permutations, stat.combinations, stat.expected-value,
+                   alg1.two-way-relative-frequency] }
+      - { key: essential, title: "Integrating Essential Skills", share: 24, count: "40–43%", levels: [2, 3], about: "Earlier math in longer problems: rates, percents, proportions, area and volume, averages.",
+          topics: [g7.percent-change, g7.markup-discount-tax, g7.simple-interest, g6.unit-rate-problems, alg1.distance-rate-time,
+                   g7.solve-proportions, g7.scale-drawings, g6.area-polygons, g7.circle-area, g7.volume-prisms, g8.volume-cylinders,
+                   g6.mean, g7.fractions-to-decimals, g8.compare-scientific] }
+
+changes:
+  slug: act-changes
+  title: "How the ACT changed in 2025"
+  lead: "In April 2025 ACT began giving a shorter “enhanced” ACT, with fewer questions, more time for each, and science made optional. Here is what changed, side by side, and what the evidence says about whether it got easier."
+  take: "If you take the ACT now, you take the enhanced ACT. National tests switched in 2025 and school-day tests in spring 2026, so the legacy ACT isn't given anymore."
+  take_src: [act-enhancements, act-studentblog-2025]
+  old: "Legacy ACT, before 2025"
+  new: "Enhanced ACT, 2025 on"
+  groups:
+    - title: "The whole test"
+      rows:
+        - { label: "Length", old: "215 questions in 175 minutes (English, math, reading and science)", new: "131 questions in 125 minutes (English, math and reading); science adds 40 questions in 40 minutes if you choose it", src: [act-framework-2026] }
+        - { label: "Science", old: "Required, and part of the Composite", new: "Optional; not part of the Composite", src: [act-studentblog-2025, act-enhancements] }
+        - { label: "Composite score", old: "Average of English, math, reading and science", new: "Average of English, math and reading", src: [act-studentblog-2025] }
+        - { label: "Scores", old: "1–36", new: "1–36, on the same scale", src: [act-studentblog-2025, act-linking-2025] }
+    - title: "Math"
+      rows:
+        - { label: "Questions and time", old: "60 questions in 60 minutes", new: "45 questions in 50 minutes (41 scored, 4 tryout questions)", src: [act-framework-2026] }
+        - { label: "Pace", old: "60 seconds a question", new: "about 67 seconds a question", src: [act-framework-2026] }
+        - { label: "Answer choices", old: "Five", new: "Four", src: [act-framework-2026, act-studentblog-2025] }
+        - { label: "Calculator", old: "Permitted calculator allowed", new: "Permitted calculator allowed", src: [act-preparing] }
+        - { label: "Content", old: "Preparing for Higher Math 57–60%, Integrating Essential Skills 40–43%", new: "Preparing for Higher Math about 80%, Integrating Essential Skills about 20%; fewer questions set in long real-world stories", src: [act-framework-2026] }
+    - title: "English and reading"
+      rows:
+        - { label: "English", old: "75 questions in 45 minutes", new: "50 questions in 35 minutes (40 scored)", src: [act-framework-2026] }
+        - { label: "Reading", old: "40 questions in 35 minutes", new: "36 questions in 40 minutes (27 scored)", src: [act-framework-2026] }
+  easier:
+    intro: "Some people say yes. Here is who says what."
+    claims:
+      - { who: "What changed for sure", text: "The enhanced ACT is shorter, gives more time per question (about nine seconds more on average; 67 instead of 60 in math), drops a fifth answer choice in math, and makes science optional. Counselors quoted in news reports expect less fatigue and stress.", src: [act-framework-2026, act-mfp-2024] }
+      - { who: "Critics", text: "A longtime test-prep tutor, writing in Inside Higher Ed, predicted the ACT would become “substantially easier,” mostly because it eases the time pressure that used to separate fast and slow test takers. He also expected the effect to be minor.", src: [act-paris-2024] }
+      - { who: "ACT", text: "The test maker's linking study found the difficulty of the enhanced questions similar to the legacy test in all four sections, with a slight tendency to be harder, and found that scores on the two can be used interchangeably. Its design report says fewer answer choices cut the time spent reading choices.", src: [act-linking-2025, act-framework-2026] }
+    verdict: "What we can say: the enhanced ACT is shorter and less rushed, and its math has four choices instead of five. ACT's own studies say the questions are about as hard as before and that scores mean the same thing. Less time pressure may help students who used to run out of time; whether that makes a given score easier to reach is still argued, and we found no independent study that settles it."

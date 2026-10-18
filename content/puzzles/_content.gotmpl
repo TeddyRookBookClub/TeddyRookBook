@@ -1,0 +1,10 @@
+{{/* One page per puzzle family, from data/puzzles/families.yaml */}}
+{{ range site.Data.puzzles.families.families }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" .key
+    "title" .name
+    "params" (dict "fam" .key "description" (printf "Free printable %s puzzles with answer keys, made fresh every time in easy, medium and hard. %s" (lower .name) .card))
+    "dates" (dict "date" (time.AsTime "2026-10-17"))
+  ) }}
+{{ end }}

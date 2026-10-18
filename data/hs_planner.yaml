@@ -1,3 +1,16 @@
+# The lesson planner's subjects and courses (layouts/homeschool/planner.html, static/homeschool/planner.js).
+# Subject: key, name, icon, start/until (ages switched on by default; 99 = off), replaces (subjects switched off when
+#   this one is switched on), mins and hw ([age up to, minutes] rows: lesson minutes a week, study minutes a day),
+#   more: true (listed under "More subjects", with its note).
+# Course: key, name, url, from/to (ages; the first course whose "to" fits a child's age is suggested), rep, alt (an
+#   "also try" course the plan never moves into), w (the word before the number: Lesson, Chapter, Session...), and one of
+#   data: <book data>   ar: <Hannah Ward curriculum>   ext: <data with lesson urls>
+#   ladder: <ladder key> + lc: <course key>   one lesson per topic (mins each, about a school year at the subject's time)
+#   practice: <page path> + sessions: N      a practice page, one session a school day (Today's practice, songs, Test Prep)
+#   section: <page path>                      the section's pages by weight (Music chapters)
+#   unit: <data/science_units key>            Science Lab and Business units, chapter by chapter
+#   trade: <data/trades key>   adult: [<data/adult keys>]
+# A course whose pages are missing from the build is left out of the planner.
 subjects:
 - key: early
   name: 'Early years: math and English'
@@ -301,6 +314,270 @@ subjects:
   hw:
   - - 99
     - 20
+- key: mathladder
+  name: Math Ladder
+  icon: 🪜
+  more: true
+  start: 99
+  replaces:
+  - arithmetic
+  - higher-math
+  mins:
+  - - 6
+    - 75
+  - - 8
+    - 100
+  - - 11
+    - 150
+  - - 99
+    - 180
+  hw:
+  - - 8
+    - 5
+  - - 99
+    - 10
+  note: "Kindergarten to college. Each lesson is a Math Ladder topic: read it, then practice until it passes. Study time is for its quick reviews."
+  courses:
+  - key: ml-practice
+    name: "Today's Math Ladder practice (it picks the next lesson or review)"
+    practice: /math/practice
+    url: /math/practice/
+    sessions: 180
+    w: Session
+    from: 5
+    to: 99
+    rep: 1
+    mins: 20
+    alt: true
+  - key: ml-k
+    ladder: math
+    lc: k
+    from: 5
+    to: 5
+    rep: 1
+    mins: 90
+  - key: ml-g1
+    ladder: math
+    lc: g1
+    from: 6
+    to: 6
+    rep: 1
+    mins: 80
+  - key: ml-g2
+    ladder: math
+    lc: g2
+    from: 7
+    to: 7
+    rep: 1
+    mins: 95
+  - key: ml-g3
+    ladder: math
+    lc: g3
+    from: 8
+    to: 8
+    rep: 1
+    mins: 70
+  - key: ml-g4
+    ladder: math
+    lc: g4
+    from: 9
+    to: 9
+    rep: 1
+    mins: 110
+  - key: ml-g5
+    ladder: math
+    lc: g5
+    from: 10
+    to: 10
+    rep: 1
+    mins: 110
+  - key: ml-g6
+    ladder: math
+    lc: g6
+    from: 11
+    to: 11
+    rep: 1
+    mins: 100
+  - key: ml-g7
+    ladder: math
+    lc: g7
+    from: 12
+    to: 12
+    rep: 1
+    mins: 120
+  - key: ml-g8
+    ladder: math
+    lc: g8
+    from: 13
+    to: 13
+    rep: 1
+    mins: 115
+  - key: ml-alg1
+    ladder: math
+    lc: alg1
+    from: 14
+    to: 14
+    rep: 1
+    mins: 80
+  - key: ml-geo
+    ladder: math
+    lc: geo
+    from: 15
+    to: 15
+    rep: 1
+    mins: 95
+  - key: ml-alg2
+    ladder: math
+    lc: alg2
+    from: 16
+    to: 16
+    rep: 1
+    mins: 90
+  - key: ml-pre
+    ladder: math
+    lc: pre
+    from: 17
+    to: 17
+    rep: 1
+    mins: 100
+  - key: ml-stat
+    ladder: math
+    lc: stat
+    from: 17
+    to: 17
+    rep: 1
+    mins: 105
+  - key: ml-calc1
+    ladder: math
+    lc: calc1
+    from: 18
+    to: 99
+    rep: 1
+    mins: 115
+  - key: ml-calc2
+    ladder: math
+    lc: calc2
+    from: 18
+    to: 99
+    rep: 1
+    mins: 135
+  - key: ml-calc3
+    ladder: math
+    lc: calc3
+    from: 18
+    to: 99
+    rep: 1
+    mins: 135
+  - key: ml-calc4
+    ladder: math
+    lc: calc4
+    from: 18
+    to: 99
+    rep: 1
+    mins: 195
+  - key: ml-la
+    ladder: math
+    lc: la
+    from: 18
+    to: 99
+    rep: 1
+    mins: 125
+  - key: ml-de
+    ladder: math
+    lc: de
+    from: 18
+    to: 99
+    rep: 1
+    mins: 125
+  - key: ml-disc
+    ladder: math
+    lc: disc
+    from: 18
+    to: 99
+    rep: 1
+    mins: 120
+    alt: true
+  - key: ml-nt
+    ladder: math
+    lc: nt
+    from: 18
+    to: 99
+    rep: 1
+    mins: 150
+    alt: true
+  - key: ml-prob
+    ladder: math
+    lc: prob
+    from: 18
+    to: 99
+    rep: 1
+    mins: 155
+    alt: true
+  - key: ml-cplx
+    ladder: math
+    lc: cplx
+    from: 18
+    to: 99
+    rep: 1
+    mins: 145
+    alt: true
+  - key: ml-num
+    ladder: math
+    lc: num
+    from: 18
+    to: 99
+    rep: 1
+    mins: 135
+    alt: true
+  - key: ml-ra
+    ladder: math
+    lc: ra
+    from: 18
+    to: 99
+    rep: 1
+    mins: 130
+    alt: true
+  - key: ml-aa
+    ladder: math
+    lc: aa
+    from: 18
+    to: 99
+    rep: 1
+    mins: 125
+    alt: true
+  - key: tp-sat
+    name: "SAT Math practice (Test Prep)"
+    practice: /test-prep/sat-math
+    url: /test-prep/sat-math/
+    sessions: 60
+    w: Session
+    from: 15
+    to: 99
+    rep: 1
+    mins: 30
+    alt: true
+  - key: tp-act
+    name: "ACT Math practice (Test Prep)"
+    practice: /test-prep/act-math
+    url: /test-prep/act-math/
+    sessions: 60
+    w: Session
+    from: 15
+    to: 99
+    rep: 1
+    mins: 30
+    alt: true
+  - key: tp-clt
+    name: "CLT Quantitative practice (Test Prep)"
+    practice: /test-prep/clt-quantitative
+    url: /test-prep/clt-quantitative/
+    sessions: 60
+    w: Session
+    from: 14
+    to: 99
+    rep: 1
+    mins: 30
+    alt: true
 - key: science
   name: Science
   icon: 🔭
@@ -355,6 +632,264 @@ subjects:
     from: 14
     to: 99
     rep: 1
+- key: physics
+  name: Physics Ladder
+  icon: 🪐
+  more: true
+  start: 99
+  replaces:
+  - science
+  mins:
+  - - 13
+    - 105
+  - - 99
+    - 150
+  hw:
+  - - 99
+    - 10
+  note: "Grade 8 to college. Each lesson is a ladder topic with practice. The Science Lab units are hands-on simulations to add or use on their own."
+  courses:
+  - key: ph-practice
+    name: "Today's Physics Ladder practice"
+    practice: /physics/practice
+    url: /physics/practice/
+    sessions: 180
+    w: Session
+    from: 13
+    to: 99
+    rep: 1
+    mins: 20
+    alt: true
+  - key: ph-physsci
+    ladder: physics
+    lc: physsci
+    from: 13
+    to: 14
+    rep: 1
+    mins: 100
+  - key: ph-phys1
+    ladder: physics
+    lc: phys1
+    from: 15
+    to: 16
+    rep: 1
+    mins: 70
+  - key: ph-phys2
+    ladder: physics
+    lc: phys2
+    from: 17
+    to: 17
+    rep: 1
+    mins: 65
+  - key: ph-astro
+    ladder: physics
+    lc: astro
+    from: 14
+    to: 99
+    rep: 1
+    mins: 100
+    alt: true
+  - key: ph-mech
+    ladder: physics
+    lc: mech
+    from: 18
+    to: 99
+    rep: 1
+    mins: 100
+  - key: ph-em
+    ladder: physics
+    lc: em
+    from: 18
+    to: 99
+    rep: 1
+    mins: 100
+  - key: ph-modern
+    ladder: physics
+    lc: modern
+    from: 18
+    to: 99
+    rep: 1
+    mins: 100
+  - key: ph-astrophys
+    ladder: physics
+    lc: astrophys
+    from: 18
+    to: 99
+    rep: 1
+    mins: 115
+  - key: lab-newton
+    unit: newton
+    w: Chapter
+    from: 11
+    to: 99
+    rep: 1
+    mins: 90
+    alt: true
+  - key: lab-thermo
+    unit: thermo
+    w: Chapter
+    from: 12
+    to: 99
+    rep: 1
+    mins: 90
+    alt: true
+- key: chemistry
+  name: Chemistry Ladder
+  icon: ⚗️
+  more: true
+  start: 99
+  replaces:
+  - science
+  mins:
+  - - 13
+    - 105
+  - - 99
+    - 150
+  hw:
+  - - 99
+    - 10
+  note: "High school to college: atoms, bonds, moles and reactions, with practice that checks every step."
+  courses:
+  - key: ch-practice
+    name: "Today's Chemistry Ladder practice"
+    practice: /chemistry/practice
+    url: /chemistry/practice/
+    sessions: 180
+    w: Session
+    from: 14
+    to: 99
+    rep: 1
+    mins: 20
+    alt: true
+  - key: ch-chem
+    ladder: chemistry
+    lc: chem
+    from: 14
+    to: 16
+    rep: 1
+    mins: 60
+  - key: ch-gchem1
+    ladder: chemistry
+    lc: gchem1
+    from: 17
+    to: 99
+    rep: 1
+    mins: 75
+  - key: ch-gchem2
+    ladder: chemistry
+    lc: gchem2
+    from: 17
+    to: 99
+    rep: 1
+    mins: 75
+- key: earthspace
+  name: Earth & Space Ladder
+  icon: 🌋
+  more: true
+  start: 99
+  replaces:
+  - science
+  mins:
+  - - 13
+    - 105
+  - - 99
+    - 150
+  hw:
+  - - 99
+    - 10
+  note: "Middle school to college: rocks, plates and volcanoes, oceans, weather and climate, and the planets."
+  courses:
+  - key: es-practice
+    name: "Today's Earth & Space Ladder practice"
+    practice: /earth-and-space/practice
+    url: /earth-and-space/practice/
+    sessions: 180
+    w: Session
+    from: 11
+    to: 99
+    rep: 1
+    mins: 20
+    alt: true
+  - key: es-earthsci
+    ladder: earth
+    lc: earthsci
+    from: 11
+    to: 13
+    rep: 1
+    mins: 60
+  - key: es-weather
+    ladder: earth
+    lc: weather
+    from: 14
+    to: 15
+    rep: 1
+    mins: 90
+  - key: es-geology
+    ladder: earth
+    lc: geology
+    from: 16
+    to: 99
+    rep: 1
+    mins: 80
+- key: economics
+  name: Economics Ladder
+  icon: ⚖️
+  more: true
+  start: 99
+  mins:
+  - - 99
+    - 150
+  hw:
+  - - 99
+    - 10
+  note: "High school to college: microeconomics, macroeconomics and calculus-based micro, then Game Theory and Econometrics."
+  courses:
+  - key: ec-practice
+    name: "Today's Economics Ladder practice"
+    practice: /economics/practice
+    url: /economics/practice/
+    sessions: 180
+    w: Session
+    from: 15
+    to: 99
+    rep: 1
+    mins: 20
+    alt: true
+  - key: ec-micro
+    ladder: economics
+    lc: micro
+    from: 15
+    to: 17
+    rep: 1
+    mins: 75
+  - key: ec-macro
+    ladder: economics
+    lc: macro
+    from: 17
+    to: 17
+    rep: 1
+    mins: 90
+  - key: ec-imicro
+    ladder: economics
+    lc: imicro
+    from: 18
+    to: 99
+    rep: 1
+    mins: 85
+  - key: biz-gt
+    unit: gt
+    w: Chapter
+    from: 18
+    to: 99
+    rep: 1
+    mins: 180
+  - key: biz-econ
+    unit: econ
+    w: Chapter
+    from: 18
+    to: 99
+    rep: 1
+    mins: 150
 - key: nature
   name: Nature study
   icon: 🌿
@@ -464,3 +999,122 @@ subjects:
     to: 99
     rep: 1
     mins: 30
+  - key: asl-fingerspelling
+    name: Fingerspelling practice (on this site)
+    practice: /asl/fingerspelling
+    url: /asl/fingerspelling/
+    sessions: 120
+    w: Session
+    from: 6
+    to: 99
+    rep: 1
+    mins: 10
+    alt: true
+- key: music
+  name: Music (piano)
+  icon: 🎹
+  more: true
+  start: 99
+  mins:
+  - - 5
+    - 30
+  - - 8
+    - 45
+  - - 99
+    - 60
+  hw:
+  - - 5
+    - 5
+  - - 8
+    - 10
+  - - 99
+    - 15
+  note: "For every age: Piano Basics, then Reading Music, then songs. Study time is practice at the keys, ten or fifteen minutes most days. The keys on the screen work if you have no piano yet."
+  courses:
+  - key: mus-piano-basics
+    section: /music/piano-basics
+    name: Piano Basics
+    w: Chapter
+    from: 3
+    to: 99
+    rep: 1
+    mins: 30
+  - key: mus-reading-music
+    section: /music/reading-music
+    name: Reading Music
+    w: Chapter
+    from: 6
+    to: 99
+    rep: 1
+    mins: 40
+  - key: mus-songs
+    name: Play songs (with the rhythm trainer and metronome)
+    practice: /music/songs
+    url: /music/songs/
+    sessions: 180
+    w: Session
+    from: 4
+    to: 99
+    rep: 1
+    mins: 15
+- key: lifeskills
+  name: 'Life skills: Being an Adult 101 and the Trades'
+  icon: 🧰
+  more: true
+  start: 99
+  mins:
+  - - 99
+    - 60
+  hw:
+  - - 99
+    - 0
+  note: "Real-world jobs done together: fix a running toilet, check the oil, make a budget. Then how houses and cars work, trade by trade."
+  courses:
+  - key: adult-101
+    adult:
+    - house
+    - car
+    - money
+    - everyday
+    url: /being-an-adult/
+    name: Being an Adult 101
+    w: Guide
+    from: 8
+    to: 99
+    rep: 1
+    mins: 30
+  - key: trade-cars
+    trade: cars
+    name: 'The Trades: Cars'
+    from: 12
+    to: 99
+    rep: 1
+    mins: 60
+  - key: trade-electrical
+    trade: electrical
+    name: 'The Trades: Electrical'
+    from: 12
+    to: 99
+    rep: 1
+    mins: 60
+  - key: trade-plumbing
+    trade: plumbing
+    name: 'The Trades: Plumbing'
+    from: 12
+    to: 99
+    rep: 1
+    mins: 60
+  - key: trade-hvac
+    trade: hvac
+    name: 'The Trades: Heating and Cooling (HVAC)'
+    from: 12
+    to: 99
+    rep: 1
+    mins: 60
+  - key: trade-construction
+    trade: construction
+    name: 'The Trades: Construction'
+    from: 12
+    to: 99
+    rep: 1
+    mins: 60

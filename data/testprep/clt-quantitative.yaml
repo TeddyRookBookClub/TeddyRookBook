@@ -1,0 +1,148 @@
+# CLT Quantitative Reasoning: the section's format and content categories (from Classic Learning Initiatives' public
+# pages; see data/testprep/sources.yaml), each mapped to Math Ladder topic ids. No calculator: sets use only problems
+# meant to be done by hand (hand: true). Read by layouts/test-prep/single.html and static/test-prep/tp-app.js.
+key: clt-quantitative
+slug: clt-quantitative
+title: "CLT Quantitative Reasoning"
+test: "CLT"
+section: "Quantitative Reasoning section"
+maker: "Classic Learning Initiatives"
+icon: "🏛"
+color: "#b8963e"
+asof: "2026-10-17"
+blurb: "The math section of the Classic Learning Test: algebra, geometry with trigonometry, and mathematical reasoning, all without a calculator."
+format:
+  questions: 40
+  minutes: 45
+  parts: 1
+  choices: 4
+  typed: 0
+  calculator: false
+  hand: true
+  easy_first: false
+facts:
+  - { text: "40 questions in 45 minutes, about 68 seconds a question.", src: [clt-admins, clt-faq-time, clt-sample] }
+  - { text: "No calculator is allowed.", src: [clt-admins, clt-sample] }
+  - { text: "Every question is multiple choice with four choices, A through D.", src: [clt-sample] }
+  - { text: "Basic formulas are given, including basic trigonometric functions and identities. Figures are not necessarily drawn to scale.", src: [clt-content, clt-sample] }
+  - { text: "Three domains: Algebra, Geometry (with trigonometry) and Mathematical Reasoning (logic and word problems).", src: [clt-content] }
+  - { text: "The whole CLT has three sections of 40 questions (Verbal Reasoning, Grammar and Writing, Quantitative Reasoning) and takes 2 hours. Wrong answers are not penalized.", src: [clt-admins, clt-test-page] }
+  - { text: "You can take it at a school or at home with remote proctoring.", src: [clt-test-page] }
+parts:
+  - { name: "Quantitative Reasoning", questions: 40, minutes: 45, calculator: false, typed: 0 }
+sets:
+  - { label: "Short set", parts: [10] }
+  - { label: "Half section", parts: [20] }
+  - { label: "Full section", parts: [40] }
+levels: [1, 2, 3]
+note: "The CLT doesn't publish how many questions come from each category, so our mixed sets spread questions evenly across the seven."
+areas:
+  - key: arithmetic
+    domain: "Algebra"
+    title: "Arithmetic and Operations"
+    share: 14
+    about: "Rules of numbers: absolute value, exponents, primes and factors, patterns in sequences, and simple probability."
+    skills:
+      - "Absolute value expressions, equations and inequalities"
+      - "Properties of exponents"
+      - "Patterns and terms of sequences"
+      - "Probability of an event"
+      - "Primes, factors, even and odd, positive and negative integers"
+    levels: [2, 3]
+    topics: [g6.absolute-value, alg1.absolute-value-equations, alg1.absolute-value-inequalities, g8.exponent-properties,
+             g8.zero-negative-exponents, alg1.rational-exponent-rules, alg1.arithmetic-sequences, alg1.geometric-sequences,
+             g7.theoretical-probability, g7.compound-probability, g5.prime-factorization, g6.gcf-lcm, g7.integer-operations]
+  - key: equations
+    domain: "Algebra"
+    title: "Algebraic Expressions and Equations"
+    share: 14
+    about: "Simplifying, substituting and solving: linear and compound inequalities, quadratics with real or complex roots, and systems in two or three variables."
+    skills:
+      - "Substituting values into expressions and simplifying"
+      - "Solving equations and inequalities, including compound inequalities"
+      - "Factoring and solving quadratics, with real or complex roots"
+      - "Systems of equations and inequalities in two or three variables"
+    levels: [2, 3]
+    topics: [alg1.evaluate-expressions, g8.variables-both-sides, alg1.equations-fractions-decimals, alg1.multi-step-inequalities,
+             alg1.compound-inequalities, alg1.factor-x2-bx-c, alg1.factor-ax2-bx-c, alg1.zero-product-property, alg1.quadratic-formula,
+             alg2.complex-solutions, alg1.systems-elimination, alg1.systems-elimination-multiply, alg2.three-variable-systems,
+             alg1.systems-inequalities]
+  - key: plane
+    domain: "Geometry"
+    title: "Plane Geometry"
+    share: 14
+    about: "Figures and lines in the plane: missing angles and lengths, transformations (including reflection over y = x), slopes, intercepts, and parallel and perpendicular lines."
+    skills:
+      - "Missing angles and segment lengths in figures"
+      - "Transformations in the coordinate plane"
+      - "Slope from two points or an equation; intercepts"
+      - "Slopes of parallel, perpendicular, vertical and horizontal lines"
+    levels: [2, 3]
+    topics: [g8.parallel-lines-transversal, g8.triangle-angle-sum, geo.polygon-angle-sums, geo.midsegments, geo.angles-bisectors,
+             g8.reflections, g8.rotations, geo.define-rigid-motions, g8.slope-formula, alg1.parallel-perpendicular-lines,
+             alg1.horizontal-vertical-lines, geo.distance-midpoint]
+  - key: shapes
+    domain: "Geometry"
+    title: "Properties of Shapes"
+    share: 14
+    about: "Triangles, polygons, circles and solids: congruence, similarity, area and circumference, and what a figure's measures force to be true."
+    skills:
+      - "Triangle congruence"
+      - "Similar figures: sides, perimeters and areas"
+      - "Area and circumference of circles"
+      - "Prisms, cylinders, spheres and other solids"
+    levels: [2, 3]
+    topics: [geo.congruence-criteria, geo.corresponding-parts, geo.isosceles-triangles, geo.aa-similarity, g8.similar-figures,
+             geo.scaling-solids, geo.special-right-triangles, g8.pythagorean-theorem, geo.arc-length, geo.sector-area,
+             geo.pyramids-cones-spheres, geo.surface-area-solids]
+  - key: trig
+    domain: "Geometry"
+    title: "Trigonometry"
+    share: 14
+    about: "Trig ratios in right triangles, then the unit circle, radians, identities and the graphs of trig functions."
+    skills:
+      - "Trig ratios in a right triangle"
+      - "Degrees and radians; angles on the unit circle"
+      - "Simplifying with trig identities"
+      - "Graphs of trig functions"
+    levels: [2, 3]
+    topics: [geo.trig-ratios, geo.complementary-sine-cosine, pre.degrees-radians, pre.special-angles, pre.unit-circle-sine-cosine,
+             pre.reference-angles, pre.pythagorean-identity, pre.fundamental-identities, pre.double-angle, pre.sine-cosine-graphs]
+  - key: logic
+    domain: "Mathematical Reasoning"
+    title: "Logic"
+    share: 15
+    about: "Reasoning from given facts to a new conclusion: if-then statements and their relatives, counterexamples, and what must be true of a number."
+    skills:
+      - "True and false statements from given information"
+      - "Counterexamples"
+      - "Conclusions about an unknown number from clues"
+    levels: [2, 3]
+    topics: [geo.conditional-statements, alg1.real-number-system, alg1.rational-irrational-operations, g8.irrational-numbers,
+             g8.solution-count, g8.systems-special-cases]
+    note: "Math Ladder has fewer pure logic puzzles than the CLT uses. This area draws on if-then reasoning and number-system reasoning for now."
+  - key: words
+    domain: "Mathematical Reasoning"
+    title: "Word Problems"
+    share: 15
+    about: "Real situations turned into math: percent change, ratios and rates, work together, distance and time, and a quadratic that models a launch."
+    skills:
+      - "Percent increase and decrease"
+      - "Proportion, ratio and rate"
+      - "Work-rate problems"
+      - "A quadratic model of a real situation"
+      - "Spatial reasoning about real objects"
+    levels: [2, 3]
+    topics: [g7.percent-change, g7.markup-discount-tax, g7.solve-proportions, g6.unit-rate-problems, alg1.distance-rate-time,
+             alg2.rational-models, alg1.quadratic-models, alg1.write-equations-words, g7.surface-area-problems, g7.scale-drawings]
+
+versions:
+  - key: current
+    name: "CLT"
+    years: "now"
+    current: true
+# No newer or older version to offer: we found no change to the CLT's Quantitative Reasoning section in recent years.
+unchanged:
+  title: "Has the CLT changed?"
+  text: "Not its math. We found no recent change to the Quantitative Reasoning section on its maker's pages or in recent reporting: it is still 40 four-choice questions in 45 minutes, with no calculator. What has grown is where and how you can take it: at a school or at home with remote proctoring, many times a year. The optional essay isn't offered on the remotely proctored test."
+  src: [clt-test-page, clt-admins, clt-vs-sat, ednext-clt-2026]

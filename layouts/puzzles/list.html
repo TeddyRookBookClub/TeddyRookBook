@@ -1,0 +1,63 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "puzzles/puzzles.css" | relURL }}?v={{ (os.Stat "static/puzzles/puzzles.css").ModTime.Unix }}">
+{{ $d := site.Data.puzzles.families }}
+<div class="hs pz" id="pz-hub">
+  <nav class="hs-crumbs pz-noprint"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › Brain Puzzles</nav>
+  <header class="hs-hero pz-hero pz-noprint">
+    <p class="hs-eyebrow">Print, solve, print again</p>
+    <h1>Brain Puzzles</h1>
+    <p>Sheets of number, logic, word, shape and code puzzles to print for the kitchen table. Every sheet is made fresh, in easy, medium or hard, with the answer key on its own page. Many you can also play right here on screen.</p>
+    <div class="hs-actions"><a class="hs-btn big" href="#print">🖨 Print a sheet</a><a class="hs-btn big ghost" href="#print" data-pz-pick="sampler">🎲 Mixed sampler</a></div>
+  </header>
+
+  <section class="hs-sec pz-noprint" id="kinds">
+    <h2>Pick a kind of puzzle</h2>
+    <p class="pz-intro">There are {{ len $d.families }} kinds, grouped by the skill they use most. Open one to read how it works, try one on screen, and print a sheet of them.</p>
+    {{ range $d.groups }}{{ $g := .key }}
+    <div class="pz-group" id="{{ $g }}">
+      <h3><span aria-hidden="true">{{ .icon }}</span> {{ .name }} <small>{{ .blurb }}</small></h3>
+      <div class="pz-cards">
+        {{ range where $d.families "group" $g }}
+        <a class="pz-card" href="{{ printf "puzzles/%s/" .key | relURL }}">
+          <span class="pz-ic" aria-hidden="true">{{ .icon }}</span>
+          <b>{{ .name }}</b>
+          <small>{{ .card }}</small>
+        </a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+  </section>
+
+  <section class="hs-sec" id="print">
+    <h2 class="pz-noprint">🖨 Print a sheet</h2>
+    <p class="pz-noprint pz-intro">Choose a kind of puzzle (or the mixed sampler), a level and how many. The preview below is exactly what prints. Use <b>New sheet</b> for different puzzles.</p>
+    <div id="pz-builder" data-fam="sampler"><noscript><p>The puzzle maker needs JavaScript turned on.</p></noscript></div>
+  </section>
+
+  <section class="hs-sec pz-noprint">
+    <h2>How the sheets work</h2>
+    <div class="pz-two">
+      <div class="pz-box">
+        <ul>
+          <li><b>Made fresh.</b> The page builds every puzzle when you ask for it, so there's no end to them. The ones that need a single answer (sudoku, cage squares, logic grids, picture logic, letter arithmetic, piece fitting, matchsticks) are checked to have exactly one.</li>
+          <li><b>Print it again.</b> Each sheet has a code in the corner. Type that code into <b>Sheet code</b> and you get the very same puzzles, so a sibling can have a clean copy, or you can share the link.</li>
+          <li><b>Answers on their own page.</b> Print the key with the sheet, or turn it off and print it later from the same code.</li>
+        </ul>
+      </div>
+      <div class="pz-box">
+        <ul>
+          <li><b>Paper.</b> Choose US Letter or A4. If your printer adds its own margins, pick “actual size” or “100%” in the print box.</li>
+          <li><b>Levels.</b> Easy is a good start for most children around 7 to 9 and for anyone new to a puzzle. Medium and hard take longer and need more steps of reasoning. Mix them freely.</li>
+          <li><b>Nothing to sign up for.</b> Your choices stay in this browser only.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<script type="application/json" id="pz-data">{{ dict "groups" $d.groups "families" $d.families | jsonify | safeJS }}</script>
+{{ range slice "core.js" "words.js" "gen-numbers.js" "gen-logic.js" "gen-words.js" "gen-codes.js" "gen-shapes.js" "ui.js" }}
+<script src="{{ printf "puzzles/%s" . | relURL }}?v={{ (os.Stat (printf "static/puzzles/%s" .)).ModTime.Unix }}" defer></script>
+{{ end }}
+{{ end }}

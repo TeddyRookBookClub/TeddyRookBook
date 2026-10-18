@@ -101,9 +101,19 @@ note = "Piano from the very first key, reading music, songs and a metronome"
 icon = "🎹"
 
 [[menu.main]]
+name = "Test Prep"
+identifier = "testprep-edu"
+url = "/test-prep/"
+weight = 10
+[menu.main.params]
+group = "Education"
+note = "SAT, ACT and CLT practice, old and new versions, and the AP map"
+icon = "📝"
+
+[[menu.main]]
 name = "Sign Language (ASL)"
 url = "/asl/"
-weight = 10
+weight = 11
 [menu.main.params]
 group = "Education"
 note = "A family path to ASL, fingerspelling practice, free lessons"
@@ -113,7 +123,7 @@ icon = "🤟"
 name = "Econometrics"
 identifier = "econ-edu"
 url = "/business/econometrics/"
-weight = 11
+weight = 12
 [menu.main.params]
 group = "Education"
 note = "A full course, from probability to causal inference"
@@ -123,7 +133,7 @@ icon = "📈"
 name = "Game Theory"
 identifier = "gt-edu"
 url = "/business/game-theory/"
-weight = 12
+weight = 13
 [menu.main.params]
 group = "Education"
 note = "A full course in strategy, from dilemmas to auctions"
@@ -132,7 +142,7 @@ icon = "♟️"
 [[menu.main]]
 name = "Infographics"
 url = "/infographics/"
-weight = 13
+weight = 14
 [menu.main.params]
 group = "Education"
 note = "One-page guides to great books and big ideas"
@@ -141,7 +151,7 @@ icon = "🖼"
 [[menu.main]]
 name = "Videos"
 url = "/videos/"
-weight = 14
+weight = 15
 [menu.main.params]
 group = "Education"
 note = "Walk-throughs and talks, with short trailers"
@@ -150,7 +160,7 @@ icon = "🎬"
 [[menu.main]]
 name = "Library"
 url = "/books/"
-weight = 15
+weight = 16
 [menu.main.params]
 group = "Education"
 note = "Guides to the great books"
@@ -159,7 +169,7 @@ icon = "📚"
 [[menu.main]]
 name = "Free Books"
 url = "/free-books/"
-weight = 16
+weight = 17
 [menu.main.params]
 group = "Education"
 note = "Find free e-books and audiobooks"
@@ -168,7 +178,7 @@ icon = "📖"
 [[menu.main]]
 name = "Reading Paths"
 url = "/books/paths/"
-weight = 17
+weight = 18
 [menu.main.params]
 group = "Education"
 note = "Guided routes through the Library"
@@ -177,7 +187,7 @@ icon = "🧭"
 [[menu.main]]
 name = "Timeline"
 url = "/timeline/"
-weight = 18
+weight = 19
 [menu.main.params]
 group = "Education"
 note = "The ancient world, era by era"
@@ -186,7 +196,7 @@ icon = "⏳"
 [[menu.main]]
 name = "Resources"
 url = "/resources/"
-weight = 19
+weight = 20
 [menu.main.params]
 group = "Education"
 note = "Free resources elsewhere"
@@ -195,7 +205,7 @@ icon = "🔗"
 [[menu.main]]
 name = "My Progress"
 url = "/progress/"
-weight = 20
+weight = 21
 [menu.main.params]
 group = "Education"
 note = "Lessons taught and words met, save or load"
@@ -204,7 +214,7 @@ icon = "✅"
 [[menu.main]]
 name = "What's New"
 url = "/new/"
-weight = 21
+weight = 22
 [menu.main.params]
 group = "Education"
 note = "Latest infographics, games and tools"
@@ -402,6 +412,16 @@ note = "Free image editor in your browser"
 icon = "🎨"
 
 [[menu.main]]
+name = "Brain Puzzles"
+identifier = "puzzles-misc"
+url = "/puzzles/"
+weight = 65
+[menu.main.params]
+group = "Miscellaneous"
+note = "Printable logic, number and word puzzles with answer keys"
+icon = "🧠"
+
+[[menu.main]]
 name = "Business Cases"
 url = "/business/cases/"
 weight = 80
@@ -569,7 +589,7 @@ icon = "🧮"
       path = '{/garden,/garden/**}'
   [segments.ladders]
     [[segments.ladders.includes]]
-      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**}'
+      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**,/test-prep,/test-prep/**}'
   [segments.physics]
     [[segments.physics.includes]]
       path = '{/physics,/physics/**}'
@@ -585,3 +605,9 @@ icon = "🧮"
   [segments.music]
     [[segments.music.includes]]
       path = '{/music,/music/**}'
+  [segments.testprep]
+    [[segments.testprep.includes]]
+      path = '{/test-prep,/test-prep/**}'
+  [segments.puzzles]
+    [[segments.puzzles.includes]]
+      path = '{/puzzles,/puzzles/**}'

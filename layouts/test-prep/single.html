@@ -1,0 +1,386 @@
+{{- /* Test Prep: a test page (/test-prep/<test>/, params.tp = "test", params.test = the data file) and an AP course page
+   (/test-prep/ap/<key>/, params.tp = "apcourse", params.ap = the file in data/testprep/ap/, made by content/test-prep/ap/_content.gotmpl).
+   The practice app is static/test-prep/tp-app.js; it reads <script id="tp-data">. */ -}}
+{{ define "main" }}
+{{ partial "inline/tp-head.html" . }}
+{{- $tp := site.Data.testprep -}}
+{{- $src := $tp.sources -}}
+{{- $T := partialCached "inline/tp-topics.html" "tp-topics" -}}
+
+{{- if eq .Params.tp "test" }}
+{{- /* ======================= a test page ======================= */ -}}
+{{- $t := index $tp .Params.test -}}
+{{- $f := $t.format -}}
+{{- $asof := time.AsTime $t.asof -}}
+{{- $pace := div (mul (float $f.minutes) 60) $f.questions -}}
+{{- /* every version, the current one filled in from the top level */ -}}
+{{- $vers := slice -}}
+{{- range ($t.versions | default (slice (dict "key" "current" "current" true))) -}}
+  {{- $v := . -}}
+  {{- if .current }}{{ $v = merge (dict "format" $t.format "parts" $t.parts "sets" $t.sets "areas" $t.areas "facts" $t.facts) . }}{{ end -}}
+  {{- $vers = $vers | append $v -}}
+{{- end -}}
+{{- $topics := dict -}}
+{{- range $vers }}{{ range .areas }}{{ range $id := .topics }}{{ with index $T $id }}{{ $topics = merge $topics (dict $id (dict "t" .t "u" .u "w" .w "g" .g "c" .c "ct" .ct "l" .l)) }}{{ end }}{{ end }}{{ end }}{{ end -}}
+{{- $multi := gt (len $vers) 1 -}}
+<div class="mlp tp tp-testpage" id="tp-root" data-kind="test" style="--tc:{{ $t.color }}">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "test-prep/" | relURL }}">Test Prep</a> <span aria-hidden="true">›</span> <span>{{ $t.title }}</span></nav>
+  <header class="tp-hero tp-hero-sm">
+    <div class="tp-hero-text">
+      <p class="tp-eyebrow">Test Prep · {{ $t.test }} · {{ $t.section }}</p>
+      <h1>{{ $t.title }}</h1>
+      <p>{{ $t.blurb }}</p>
+      <ul class="tp-hero-facts" aria-label="At a glance">
+        <li><b>{{ $f.questions }}</b> questions</li>
+        <li><b>{{ $f.minutes }}</b> minutes{{ if gt (int $f.parts) 1 }} in {{ $f.parts }} {{ lower $f.part_name }}s{{ end }}</li>
+        <li>about <b>{{ math.Round $pace }}</b> s a question</li>
+        <li>{{ if $f.calculator }}Calculator allowed{{ else }}<b>No calculator</b>{{ end }}</li>
+        <li>{{ if $f.typed }}4 choices and typed answers{{ else }}{{ $f.choices }} choices{{ end }}</li>
+      </ul>
+      {{- with $t.changes }}
+      <p class="tp-hero-change"><span class="tp-newtag">Changed in {{ if eq $t.key "sat-math" }}2024{{ else }}2025{{ end }}</span> <a href="{{ printf "test-prep/%s/" .slug | relURL }}">{{ .title }}</a>: what's different, and whether it got easier.</p>
+      {{- end }}
+    </div>
+    <span class="tp-hero-icon" aria-hidden="true">{{ $t.icon }}</span>
+  </header>
+
+  <section class="tp-app" id="tp-app" aria-label="Practice">
+    <div class="tp-setup" id="tp-setup">
+    {{- if $multi }}
+      <div class="tp-vpick">
+        <h2 class="tp-h2" id="tp-ver-h">Which version?</h2>
+        <div class="tp-vtabs" role="tablist" aria-labelledby="tp-ver-h">
+          {{- range $vers }}
+          <button type="button" class="tp-vtab{{ if .current }} on{{ end }}" role="tab" id="tab-{{ .key }}" data-ver="{{ .key }}" aria-controls="ver-{{ .key }}" aria-selected="{{ if .current }}true{{ else }}false{{ end }}" tabindex="{{ if .current }}0{{ else }}-1{{ end }}">
+            <b>{{ .name }}</b><small>{{ .years }}{{ if .current }} · the one you'll take{{ else }} · retired{{ end }}</small>
+          </button>
+          {{- end }}
+        </div>
+      </div>
+    {{- end }}
+    {{- range $vers }}
+      {{- $v := . }}{{ $vf := .format }}
+      {{- $vpace := div (mul (float $vf.minutes) 60) $vf.questions }}
+      <div class="tp-ver{{ if not .current }} is-old{{ end }}" data-ver="{{ .key }}" id="ver-{{ .key }}"{{ if $multi }} role="tabpanel" aria-labelledby="tab-{{ .key }}"{{ end }}{{ if not .current }} hidden{{ end }}>
+        {{- if $multi }}
+        <div class="tp-vernote{{ if .current }} is-now{{ end }}">
+          <p>{{ .note }}{{ if not .current }}{{ with $t.changes }} <a href="{{ printf "test-prep/%s/" .slug | relURL }}">What changed</a>.{{ end }}{{ end }}</p>
+          {{- if not .current }}
+          <ul class="tp-facts-mini" aria-label="{{ .name }} at a glance">
+            <li><b>{{ $vf.questions }}</b> questions</li>
+            <li><b>{{ $vf.minutes }}</b> minutes</li>
+            <li>about <b>{{ math.Round $vpace }}</b> s a question</li>
+            <li>{{ if eq $vf.calculator "part" }}No calculator on part 1{{ else if $vf.calculator }}Calculator allowed{{ else }}No calculator{{ end }}</li>
+            <li>{{ if $vf.typed }}{{ $vf.choices }} choices and {{ if $vf.grid }}grid-in{{ else }}typed{{ end }} answers{{ else }}{{ $vf.choices }} choices{{ end }}</li>
+          </ul>
+          {{- end }}
+        </div>
+        {{- end }}
+        <div class="tp-setgrid">
+        <section class="tp-card tp-setcard" aria-labelledby="tp-timed-h-{{ .key }}">
+          <h2 id="tp-timed-h-{{ .key }}">Timed mixed set{{ if $multi }} <small>{{ .name }}</small>{{ end }}</h2>
+          <p class="tp-small">{{ if gt (len .parts) 1 }}{{ if eq $vf.calculator "part" }}As on the {{ partial "inline/tp-lc.html" .name }}: the {{ lower (index .parts 0).name }} first, then the {{ lower (index .parts 1).name }}, each at its own pace.{{ else }}Questions from every area, in {{ lower $vf.part_name }}s at the real pace of about {{ math.Round $vpace }} seconds a question.{{ end }}{{ else }}Questions from every area, at the real pace of about {{ math.Round $vpace }} seconds a question.{{ end }} Answer in any order, flag questions to come back to, and see everything at the end.</p>
+          <fieldset class="tp-sizes">
+            <legend>How many questions?</legend>
+            {{- range $i, $s := .sets }}
+            {{- $n := 0 }}{{ $sec := 0.0 }}{{ $pn := slice }}
+            {{- range $k, $c := $s.parts }}{{ if $c }}{{ $P := index $v.parts $k }}{{ $n = add $n $c }}{{ $sec = add $sec (div (mul (float $P.minutes) 60 $c) $P.questions) }}{{ $pn = $pn | append (printf "%d %s" $c ($P.short | default (lower $P.name))) }}{{ end }}{{ end }}
+            <label class="tp-size"><input type="radio" class="tp-size-in" name="tp-size-{{ $v.key }}" value="{{ $i }}"{{ if eq $i 0 }} checked{{ end }}><span><b>{{ $n }} questions</b><small>{{ $s.label }} · {{ partial "inline/tp-mins.html" (math.Round $sec) }}{{ if and (gt (len $pn) 1) (eq $vf.calculator "part") }} · {{ delimit $pn ", then " }}{{ end }}</small></span></label>
+            {{- end }}
+          </fieldset>
+          <div class="tp-opts">
+            <label class="tp-switch"><input type="checkbox" class="tp-limit" checked><span>Use the real time limit</span></label>
+            <label class="tp-switch"><input type="checkbox" class="tp-timer-on" checked><span>Show the timer</span></label>
+          </div>
+          <p class="tp-small tp-timer-note">You can hide the timer at any time during the set. Your time on each question is kept for your results either way. {{ if eq $vf.calculator "part" }}No calculator in the first part, as on the real test: those problems are meant to be done by hand. Keep one nearby for the second part.{{ else if $vf.calculator }}A calculator is allowed on the real {{ $t.test }}, so keep one nearby for the few questions that ask you to round.{{ else }}No calculator, as on the real {{ $t.test }}: every problem in these sets is meant to be done by hand.{{ end }}</p>
+          <button type="button" class="mlp-btn pri big tp-start" disabled>Start the set</button>
+        </section>
+        <section class="tp-card tp-areacard" aria-labelledby="tp-area-h-{{ .key }}">
+          <h2 id="tp-area-h-{{ .key }}">Practice by area{{ if $multi }} <small>{{ .name }}</small>{{ end }}</h2>
+          <p class="tp-small">Ten questions from one area, untimed, with the steps after each answer{{ if ne $vf.choices 4 }}, with {{ $vf.choices }} choices each{{ end }}.</p>
+          <ul class="tp-areas">
+            {{- range .areas }}
+            {{- $n := 0 }}{{ range .topics }}{{ with index $T . }}{{ if .g }}{{ $n = add $n 1 }}{{ end }}{{ end }}{{ end }}
+            <li><button type="button" class="tp-area-btn" data-area="{{ .key }}" disabled{{ if not $n }} aria-disabled="true"{{ end }}>
+              <span class="tp-area-name">{{ with .domain }}<small>{{ . }}</small>{{ end }}<b>{{ .title }}</b></span>
+              {{ with .count }}<span class="tp-area-share">{{ . }}</span>{{ end }}
+              <span class="tp-area-go" aria-hidden="true">→</span>
+            </button></li>
+            {{- end }}
+          </ul>
+        </section>
+        </div>
+      </div>
+    {{- end }}
+    </div>
+    <label class="tp-switch tp-recsw"><input type="checkbox" id="tp-record" checked><span>Count my answers toward my Math Ladder reviews and XP</span></label>
+    <div class="tp-run" id="tp-run" hidden></div>
+    <noscript><p class="tp-card">Practice needs JavaScript turned on. The test facts and topic lists below work without it.</p></noscript>
+  </section>
+
+  <div class="tp-info" id="tp-info">
+    <section class="tp-card tp-about" aria-labelledby="tp-about-h">
+      <h2 id="tp-about-h">About the {{ $t.test }} {{ if eq $t.test "CLT" }}Quantitative Reasoning section{{ else }}math{{ end }}{{ if $multi }} today{{ end }}</h2>
+      <ul class="tp-factlist">
+        {{- range $t.facts }}
+        <li>{{ .text }} {{ partial "inline/tp-cite.html" (dict "src" .src "S" $src) }}</li>
+        {{- end }}
+      </ul>
+      <p class="tp-small">As of {{ $asof.Format "January 2, 2006" }}, from {{ $t.maker }}'s public pages. Tests change, so check the official page before test day.</p>
+      {{- range $vers }}{{ if and (not .current) .facts }}
+      <details class="tp-oldfacts">
+        <summary>The {{ .name }} ({{ .years }})</summary>
+        <ul class="tp-factlist">{{ range .facts }}<li>{{ .text }} {{ partial "inline/tp-cite.html" (dict "src" .src "S" $src) }}</li>{{ end }}</ul>
+      </details>
+      {{- end }}{{ end }}
+    </section>
+    {{- with $t.unchanged }}
+    <section class="tp-card tp-unchanged" aria-labelledby="tp-unch-h">
+      <h2 id="tp-unch-h">{{ .title }}</h2>
+      <p>{{ .text }} {{ partial "inline/tp-cite.html" (dict "src" .src "S" $src) }}</p>
+      <p class="tp-small">The SAT and the ACT did change: see <a href="{{ "test-prep/sat-changes/" | relURL }}">how the SAT changed</a> and <a href="{{ "test-prep/act-changes/" | relURL }}">how the ACT changed</a>.</p>
+    </section>
+    {{- end }}
+
+    <section class="tp-content" aria-labelledby="tp-content-h">
+      <h2 id="tp-content-h" class="tp-h2">What's on it, and where to learn it</h2>
+      <p class="tp-sub">The content areas{{ if $multi }} of today's test{{ end }} in our own words, from the official descriptions, with the Math Ladder topics that teach each one.{{ with $t.note }} {{ . }}{{ end }}</p>
+      {{- range $t.areas }}
+      <section class="tp-area" id="area-{{ .key }}" aria-labelledby="h-{{ .key }}">
+        <div class="tp-area-head">
+          <h3 id="h-{{ .key }}">{{ with .domain }}<small>{{ . }}</small>{{ end }}{{ .title }}</h3>
+          {{ with .count }}<span class="tp-pill">{{ . }}</span>{{ end }}
+        </div>
+        <p>{{ .about }}</p>
+        {{ with .skills }}<ul class="tp-skills">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
+        {{ with .note }}<p class="tp-note">{{ . }}</p>{{ end }}
+        <details class="tp-topics">
+          <summary>{{ len .topics }} Math Ladder topics</summary>
+          <ul class="tp-chips">{{ range .topics }}{{ partial "inline/tp-chip.html" (dict "id" . "T" $T "ladder" "math") }}{{ end }}</ul>
+        </details>
+      </section>
+      {{- end }}
+    </section>
+    <p class="tp-small tp-more">Also on Test Prep: {{ range $i, $k := slice "sat-math" "act-math" "clt-quantitative" }}{{ if ne $k $t.key }}{{ $o := index $tp $k }}<a href="{{ printf "test-prep/%s/" $o.slug | relURL }}">{{ $o.title }}</a> · {{ end }}{{ end }}<a href="{{ "test-prep/grammar/" | relURL }}">Reading, writing and grammar</a> · <a href="{{ "test-prep/ap/" | relURL }}">AP courses</a></p>
+    {{ partial "inline/tp-legal.html" . }}
+  </div>
+</div>
+<script type="application/json" id="tp-data">{{ dict "kind" "test" "key" $t.key "title" $t.title "test" $t.test "format" $f "parts" $t.parts "sets" $t.sets "levels" $t.levels "areas" $t.areas "versions" $vers "topics" $topics "base" ("test-prep/" | relURL) | jsonify | safeJS }}</script>
+{{ partial "inline/tp-scripts.html" . }}
+
+{{- else if eq .Params.tp "changes" }}
+{{- /* ======================= how a test changed (/test-prep/<sat|act>-changes/, params.test = the data file) ======================= */ -}}
+{{- $t := index $tp .Params.test -}}
+{{- $c := $t.changes -}}
+{{- $old := index (where $t.versions "current" false) 0 -}}
+{{- $new := index (where $t.versions "current" true) 0 -}}
+<div class="mlp tp tp-changes" id="tp-root" data-kind="changes" style="--tc:{{ $t.color }}">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "test-prep/" | relURL }}">Test Prep</a> <span aria-hidden="true">›</span> <a href="{{ printf "test-prep/%s/" $t.slug | relURL }}">{{ $t.title }}</a> <span aria-hidden="true">›</span> <span>What changed</span></nav>
+  <header class="tp-hero tp-hero-sm">
+    <div class="tp-hero-text">
+      <p class="tp-eyebrow">Test Prep · {{ $t.test }} · what changed</p>
+      <h1>{{ $c.title }}</h1>
+      <p>{{ $c.lead }}</p>
+    </div>
+    <span class="tp-hero-icon" aria-hidden="true">{{ $t.icon }}</span>
+  </header>
+
+  <section class="tp-card tp-take" aria-labelledby="tp-take-h">
+    <h2 id="tp-take-h"><span aria-hidden="true">📌</span> Which one will you take?</h2>
+    <p>{{ $c.take }} {{ partial "inline/tp-cite.html" (dict "src" $c.take_src "S" $src) }}</p>
+    <div class="mlp-acts">
+      <a class="mlp-btn pri" href="{{ printf "test-prep/%s/" $t.slug | relURL }}">Practice the {{ partial "inline/tp-lc.html" $new.name }}</a>
+      <a class="mlp-btn" href="{{ printf "test-prep/%s/#%s" $t.slug $old.key | relURL }}">Practice the {{ partial "inline/tp-lc.html" $old.name }}</a>
+    </div>
+  </section>
+
+  <section class="tp-card tp-cmp" aria-labelledby="tp-cmp-h">
+    <h2 id="tp-cmp-h">Side by side</h2>
+    <p class="tp-small tp-swipe" aria-hidden="true">On a phone, each row shows the old test above the new one.</p>
+    <table class="tp-ctable">
+      <caption class="tp-sr">{{ $c.old }} compared with {{ $c.new }}</caption>
+      <thead><tr><th scope="col"><span class="tp-sr">What</span></th><th scope="col" class="tp-col-old">{{ $c.old }}</th><th scope="col" class="tp-col-new">{{ $c.new }}</th></tr></thead>
+      {{- range $c.groups }}
+      <tbody>
+        <tr class="tp-cgroup"><th scope="colgroup" colspan="3">{{ .title }}</th></tr>
+        {{- range .rows }}
+        <tr>
+          <th scope="row">{{ .label }}</th>
+          <td class="tp-col-old" data-label="{{ $c.old }}">{{ .old }}</td>
+          <td class="tp-col-new" data-label="{{ $c.new }}">{{ .new }} {{ partial "inline/tp-cite.html" (dict "src" .src "S" $src) }}</td>
+        </tr>
+        {{- end }}
+      </tbody>
+      {{- end }}
+    </table>
+  </section>
+
+  <section class="tp-card tp-easier" aria-labelledby="tp-easier-h">
+    <h2 id="tp-easier-h">Did it get easier?</h2>
+    <p>{{ $c.easier.intro }}</p>
+    <dl class="tp-claims">
+      {{- range $c.easier.claims }}
+      <div class="tp-claim"><dt>{{ .who }}</dt><dd>{{ .text }} {{ partial "inline/tp-cite.html" (dict "src" .src "S" $src) }}</dd></div>
+      {{- end }}
+    </dl>
+    <p class="tp-verdict">{{ $c.easier.verdict }}</p>
+  </section>
+
+  <section class="tp-card tp-whatmeans" aria-labelledby="tp-means-h">
+    <h2 id="tp-means-h">What it means for practice here</h2>
+    <ul class="tp-list">
+      {{- if eq $t.key "sat-math" }}
+      <li><b>Digital SAT sets</b> come in two modules of 22 questions and 35 minutes, easiest to hardest within each, with a calculator allowed throughout and about a quarter typed answers (negative answers allowed).</li>
+      <li><b>Paper SAT sets</b> start with the no-calculator portion (problems meant to be done by hand) and then the calculator portion, each at its own pace; typed answers fit the old four-character grid and are never negative.</li>
+      {{- else }}
+      <li><b>Enhanced ACT sets</b> are 45 questions in 50 minutes, with four choices each.</li>
+      <li><b>Legacy ACT sets</b> are 60 questions in 60 minutes, with five choices each, and lean more on longer problems from earlier math (“Integrating Essential Skills”).</li>
+      {{- end }}
+      <li>Every problem is our own, from Math Ladder's generators. Results show the topics to work on; nothing here predicts a score.</li>
+    </ul>
+  </section>
+  <p class="tp-small tp-more">Read on {{ (time.AsTime $src.asof).Format "January 2, 2006" }}. Also on Test Prep: {{ if eq $t.key "sat-math" }}<a href="{{ "test-prep/act-changes/" | relURL }}">How the ACT changed</a>{{ else }}<a href="{{ "test-prep/sat-changes/" | relURL }}">How the SAT changed</a>{{ end }} · <a href="{{ "test-prep/clt-quantitative/#tp-unch-h" | relURL }}">Has the CLT changed?</a> · <a href="{{ "test-prep/grammar/" | relURL }}">Reading, writing and grammar</a></p>
+  {{ partial "inline/tp-legal.html" . }}
+</div>
+
+{{- else if eq .Params.tp "verbal" }}
+{{- /* ======================= reading, writing and grammar (/test-prep/grammar/) ======================= */ -}}
+{{- $vb := $tp.verbal -}}
+{{- $rules := slice -}}
+{{- /* rule list mirrors TestPrep.grammar.RULES (static/test-prep/tp-grammar.js); the page fills in each rule's text from it */ -}}
+<div class="mlp tp tp-verbal" id="tp-root" data-kind="verbal">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "test-prep/" | relURL }}">Test Prep</a> <span aria-hidden="true">›</span> <span>Reading, writing and grammar</span></nav>
+  <header class="tp-hero tp-hero-sm">
+    <div class="tp-hero-text">
+      <p class="tp-eyebrow">Test Prep · reading, writing and English</p>
+      <h1>Reading, writing and grammar</h1>
+      <p>Every test here has a reading section and a writing or English section. Below is what each one asks, today and before the recent changes, with links to the test makers' own free practice. Then practice the part that follows clear rules: grammar and punctuation, in each test's style.</p>
+      <div class="tp-hero-btns"><a class="mlp-btn light" href="#tp-gpractice">Grammar practice</a></div>
+    </div>
+    <svg class="tp-hero-art" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 26c14-6 28-6 40 4v70c-12-10-26-10-40-4z"/><path d="M100 26c-14-6-28-6-40 4v70c12-10 26-10 40-4z"/></g></svg>
+  </header>
+
+  <section aria-labelledby="tp-vsec-h">
+    <h2 id="tp-vsec-h" class="tp-h2">The sections, test by test</h2>
+    <div class="tp-vtests">
+      {{- range $vb.tests }}
+      <section class="tp-card tp-vtest" style="--tc:{{ .color }}" aria-labelledby="vt-{{ .key }}">
+        <h3 id="vt-{{ .key }}"><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</h3>
+        <ul class="tp-factlist">
+          {{- range .now }}<li>{{ .text }} {{ partial "inline/tp-cite.html" (dict "src" .src "S" $src) }}</li>{{ end }}
+        </ul>
+        {{- with .before }}
+        <p class="tp-vbefore"><b>{{ .label }}{{ if not (strings.HasSuffix .label "?") }}:{{ end }}</b> {{ .text }} {{ partial "inline/tp-cite.html" (dict "src" .src "S" $src) }}</p>
+        {{- end }}
+        <p class="tp-vhere">{{ .here }}</p>
+        <p class="tp-vlinks"><b>Free official practice:</b> {{ range $i, $k := .links }}{{ with index $src.sources $k }}{{ if $i }} · {{ end }}<a href="{{ .url }}" rel="noopener">{{ index (split .name " (") 0 }}</a>{{ end }}{{ end }}</p>
+      </section>
+      {{- end }}
+    </div>
+    <p class="tp-small">As of {{ (time.AsTime $vb.asof).Format "January 2, 2006" }}, from the test makers' public pages. Tests change, so check the official page before test day.</p>
+  </section>
+
+  <section class="tp-app tp-gpractice" id="tp-gpractice" aria-labelledby="tp-gp-h">
+    <h2 id="tp-gp-h" class="tp-h2">Grammar and punctuation practice</h2>
+    <p class="tp-sub">Eleven rules of the kind all three tests ask about, in sentences of our own. Every question has exactly one right choice, and every answer comes with the rule and why the other choices don't work. Nothing you answer here is stored.</p>
+    <div class="tp-setup" id="tp-setup">
+      <fieldset class="tp-gstyles">
+        <legend>Which test's style?</legend>
+        {{- range $i, $st := $vb.styles }}
+        <label class="tp-size"><input type="radio" class="tp-style-in" name="tp-style" value="{{ .key }}"{{ if eq $i 0 }} checked{{ end }}><span><b>{{ .label }}</b><small>{{ .desc }}</small></span></label>
+        {{- end }}
+      </fieldset>
+      <div class="tp-setgrid">
+        <section class="tp-card tp-setcard" aria-labelledby="tp-gtimed-h">
+          <h2 id="tp-gtimed-h">Timed mixed set</h2>
+          <p class="tp-small">Questions on every rule, at the pace of the style you picked: <span class="tp-gpace" data-pace>{{ (index $vb.styles 0).pace_note }}</span>. On the real test, these questions are mixed with others.</p>
+          <fieldset class="tp-sizes">
+            <legend>How many questions?</legend>
+            {{- range $i, $n := $vb.sets }}
+            <label class="tp-size"><input type="radio" class="tp-size-in" name="tp-gsize" value="{{ $n }}"{{ if eq $i 0 }} checked{{ end }}><span><b>{{ $n }} questions</b><small class="tp-gmins" data-n="{{ $n }}">{{ partial "inline/tp-mins.html" (math.Round (mul (float $n) (index $vb.styles 0).pace)) }}</small></span></label>
+            {{- end }}
+          </fieldset>
+          <div class="tp-opts">
+            <label class="tp-switch"><input type="checkbox" class="tp-limit" checked><span>Use the time limit</span></label>
+            <label class="tp-switch"><input type="checkbox" class="tp-timer-on" checked><span>Show the timer</span></label>
+          </div>
+          <button type="button" class="mlp-btn pri big tp-start" disabled>Start the set</button>
+        </section>
+        <section class="tp-card tp-areacard" aria-labelledby="tp-grule-h">
+          <h2 id="tp-grule-h">Practice one rule</h2>
+          <p class="tp-small">Eight questions on one rule, untimed, with the explanation after each answer.</p>
+          <div class="tp-grules" id="tp-grules"></div>
+        </section>
+      </div>
+    </div>
+    <div class="tp-run" id="tp-run" hidden></div>
+    <noscript><p class="tp-card">Practice needs JavaScript turned on. The rules below work without it.</p></noscript>
+  </section>
+
+  <section class="tp-rules" aria-labelledby="tp-rules-h">
+    <h2 id="tp-rules-h" class="tp-h2">The rules</h2>
+    <p class="tp-sub">Short and plain, with an example of each. Your results link back here.</p>
+    <div class="tp-rulelist" id="tp-rulelist"><noscript><p class="tp-small">Turn on JavaScript to see the rules and practice them.</p></noscript></div>
+  </section>
+  <p class="tp-small tp-more">Also on Test Prep: <a href="{{ "test-prep/sat-math/" | relURL }}">SAT Math</a> · <a href="{{ "test-prep/act-math/" | relURL }}">ACT Math</a> · <a href="{{ "test-prep/clt-quantitative/" | relURL }}">CLT Quantitative Reasoning</a> · <a href="{{ "test-prep/sat-changes/" | relURL }}">How the SAT changed</a> · <a href="{{ "test-prep/act-changes/" | relURL }}">How the ACT changed</a></p>
+  {{ partial "inline/tp-legal.html" . }}
+</div>
+<script type="application/json" id="tp-data">{{ dict "kind" "verbal" "key" "grammar" "title" "Grammar and punctuation" "styles" $vb.styles "sets" $vb.sets "topics" dict "base" ("test-prep/" | relURL) | jsonify | safeJS }}</script>
+{{ partial "inline/tp-scripts.html" . }}
+
+{{- else }}
+{{- /* ======================= an AP course page ======================= */ -}}
+{{- $c := index $tp.ap .Params.ap -}}
+{{- $key := $c.key | default .Params.ap -}}
+{{- $L := index (where (site.Data.ladders | default slice) "key" $c.ladder) 0 -}}
+{{- $topics := dict -}}
+{{- range $c.units }}{{ range $id := .topics }}{{ with index $T $id }}{{ $topics = merge $topics (dict $id (dict "t" .t "u" .u "w" .w "g" .g "c" .c "l" .l)) }}{{ end }}{{ end }}{{ end -}}
+<div class="mlp tp tp-apcourse" id="tp-root" data-kind="ap">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "test-prep/" | relURL }}">Test Prep</a> <span aria-hidden="true">›</span> <a href="{{ "test-prep/ap/" | relURL }}">AP courses</a> <span aria-hidden="true">›</span> <span>{{ $c.title }}</span></nav>
+  <header class="tp-hero tp-hero-sm">
+    <div class="tp-hero-text">
+      <p class="tp-eyebrow">AP map · {{ with $L }}{{ .title }}{{ else }}{{ $c.ladder }}{{ end }}</p>
+      <h1>{{ $c.title }}</h1>
+      {{ with $c.blurb }}<p>{{ . }}</p>{{ end }}
+      <p class="tp-hero-src">Unit names: {{ with $c.source_url }}<a href="{{ . }}" rel="noopener">{{ $c.source }}</a>{{ else }}{{ $c.source }}{{ end }}{{ with $c.asof }}, read {{ (time.AsTime .).Format "January 2, 2006" }}{{ end }}.</p>
+    </div>
+    <span class="tp-hero-icon" aria-hidden="true">{{ with $L }}{{ .icon }}{{ else }}📚{{ end }}</span>
+  </header>
+  {{ with $c.note }}<p class="tp-coursenote">{{ . }}</p>{{ end }}
+  {{- $any := 0 }}{{ range $c.units }}{{ range .topics }}{{ with index $T . }}{{ if .g }}{{ $any = add $any 1 }}{{ end }}{{ end }}{{ end }}{{ end }}
+  {{- if $any }}
+  <label class="tp-switch tp-recsw"><input type="checkbox" id="tp-record" checked><span>Count my unit practice toward my reviews and XP on the ladders</span></label>
+  {{- else }}
+  <p class="tp-coursenote">The {{ with $L }}{{ .title }}{{ else }}ladder{{ end }} has its skill map, and its lessons are being written. Each unit below lists the topics that will cover it; practice opens as they're finished.</p>
+  {{- end }}
+
+  <ol class="tp-units">
+    {{- range $c.units }}
+    {{- $n := 0 }}{{ $nw := 0 }}{{ range .topics }}{{ with index $T . }}{{ if .g }}{{ $n = add $n 1 }}{{ end }}{{ if .w }}{{ $nw = add $nw 1 }}{{ end }}{{ end }}{{ end }}
+    {{- $quiet := and .topics (eq $nw 0) }}
+    <li class="tp-unit" id="unit-{{ .num }}">
+      <div class="tp-unit-head">
+        <h2><span class="tp-unit-n">Unit {{ .num }}</span> {{ .title }}</h2>
+        {{ with .weight }}<span class="tp-pill" title="Share of the multiple-choice section">{{ . }} of multiple choice</span>{{ end }}
+      </div>
+      {{- if .topics }}
+      {{- if $quiet }}<p class="tp-soonnote"><em class="tp-soon-tag">Being written</em> These topics are planned on the {{ with $L }}{{ .title }}{{ else }}ladder{{ end }}; their lessons and practice are on the way.</p>{{ end }}
+      <ul class="tp-chips">{{ range .topics }}{{ partial "inline/tp-chip.html" (dict "id" . "T" $T "ladder" $c.ladder "quiet" $quiet) }}{{ end }}</ul>
+      {{- else }}
+      <p class="tp-note">No ladder topics cover this unit yet.</p>
+      {{- end }}
+      {{ with .note }}<p class="tp-note">{{ . }}</p>{{ end }}
+      <div class="tp-unit-acts">
+        {{- if $n }}<button type="button" class="mlp-btn pri" data-unit="{{ .num }}" disabled>Practice this unit</button><span class="tp-small">8 mixed questions, with the steps after each</span>
+        {{- else }}<span class="tp-small">Practice for this unit opens when its topics are written.</span>{{ end }}
+      </div>
+      <div class="tp-unit-run" data-run="{{ .num }}" hidden></div>
+    </li>
+    {{- end }}
+  </ol>
+  {{ partial "inline/tp-legal.html" . }}
+</div>
+<script type="application/json" id="tp-data">{{ dict "kind" "ap" "key" $key "title" $c.title "units" $c.units "topics" $topics "format" (dict "choices" 4) "base" ("test-prep/" | relURL) | jsonify | safeJS }}</script>
+{{ partial "inline/tp-scripts.html" . }}
+{{- end }}
+{{ end }}

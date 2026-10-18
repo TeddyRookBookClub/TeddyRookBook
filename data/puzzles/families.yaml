@@ -1,0 +1,327 @@
+# Brain Puzzles: one entry per puzzle family. The generators live in static/puzzles/*.js under the same key.
+# ins: one line printed at the top of a sheet. counts: choices for "how many". bundle: small problems grouped together in the mixed sampler.
+groups:
+  - key: numbers
+    name: Numbers
+    icon: "🔢"
+    blurb: Patterns, sums and old ways of writing numbers.
+  - key: logic
+    name: Logic
+    icon: "🧩"
+    blurb: Grids and riddles with exactly one answer you can reason your way to.
+  - key: words
+    name: Words
+    icon: "🔤"
+    blurb: Spelling, meaning and how words connect.
+  - key: shapes
+    name: Space and shape
+    icon: "📐"
+    blurb: Paths, pieces and shapes you turn in your head.
+  - key: codes
+    name: Codes
+    icon: "🔐"
+    blurb: Binary, hex, ciphers and Morse code.
+
+families:
+  - key: sequences
+    name: Number Sequences
+    icon: "🔢"
+    group: numbers
+    card: Find the next number in the pattern.
+    ins: Find the rule, then write the next number in the empty box.
+    how:
+      - Look at how each number changes to become the next one. Is something added, taken away, or multiplied?
+      - Check your rule on every number in the row, not just the first two.
+      - Write the next number in the empty box.
+    exercises: Spotting a pattern, putting it into words, and testing a guess against every piece of evidence before trusting it. The harder rows mix two steps or two patterns at once.
+    levels: { easy: "Adding or taking away the same amount, or doubling.", medium: "Multiplying, square numbers, gaps that grow, two patterns taking turns.", hard: "Two steps in a row, primes, cubes, and gaps that double." }
+    counts: [5, 10, 15, 20]
+    def: 10
+    bundle: 2
+  - key: crosssum
+    name: Cross-Sum Grids
+    icon: "➕"
+    group: numbers
+    card: Place 1 to 9 so every row and column works out.
+    ins: Put the numbers 1 to 9 in the boxes, once each, so every row and column gives its answer. Work left to right and top to bottom.
+    how:
+      - Use each number from 1 to 9 exactly once.
+      - Each row reads like a sum from left to right, and each column from top to bottom. Do the steps in order, not by the usual order of operations.
+      - Start with the row or column that has the fewest choices, like a small total or a ×.
+    exercises: Mental arithmetic with a purpose. You try a number, follow what it forces, and back up when it breaks a sum.
+    levels: { easy: "Adding and subtracting, with some numbers filled in.", medium: "Adding, subtracting and multiplying.", hard: "All four operations and few or no numbers given." }
+    counts: [2, 4, 6, 8]
+    def: 4
+  - key: magic
+    name: Magic Squares
+    icon: "✨"
+    group: numbers
+    card: Every row, column and diagonal adds to the same number.
+    ins: Fill the empty squares so every row, every column and both diagonals add up to the magic sum.
+    how:
+      - Each number in the list is used exactly once.
+      - Find a row, column or diagonal with only one empty square. Its missing number is the magic sum minus the others.
+      - Keep going. Each number you place opens up another line.
+    exercises: Adding and subtracting quickly, and seeing how one choice ripples through rows, columns and diagonals.
+    levels: { easy: "3 × 3 squares with the numbers 1 to 9.", medium: "3 × 3 squares with other sets of numbers.", hard: "4 × 4 squares with the numbers 1 to 16." }
+    counts: [3, 6, 9, 12]
+    def: 6
+  - key: balance
+    name: Balance Scales
+    icon: "⚖️"
+    group: numbers
+    card: Every scale balances. What does each shape weigh?
+    ins: Every scale is balanced. Work out what each shape weighs. Each shape has a different whole-number weight.
+    how:
+      - Both sides of a balanced scale weigh the same.
+      - Start with a scale where you can swap something you know for something you don't.
+      - When you have an answer, check it on every scale.
+    exercises: The same thinking as solving equations in algebra, done with pictures. You swap equal things for each other until only one unknown is left.
+    levels: { easy: "Two shapes and two scales.", medium: "Three shapes.", hard: "Four shapes, with no shape weighed on its own." }
+    counts: [2, 4, 6]
+    def: 4
+  - key: roman
+    name: Roman Numerals
+    icon: "🏛️"
+    group: numbers
+    card: Write numbers the Roman way, and read them back.
+    ins: Change each number to Roman numerals, or each Roman numeral to a number.
+    how:
+      - "I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000."
+      - Add the values from left to right, biggest first.
+      - "When a smaller numeral comes just before a bigger one, take it away: IV = 4, IX = 9, XL = 40."
+    exercises: Place value from a different angle. Roman numerals have no zero and no columns, so you see why our way of writing numbers is so handy.
+    levels: { easy: "Up to 50.", medium: "Up to 500.", hard: "Up to 3999, plus adding two Roman numerals." }
+    counts: [10, 20, 30, 40]
+    def: 20
+    bundle: 4
+  - key: sudoku
+    name: Sudoku
+    icon: "🔲"
+    group: logic
+    card: Each row, column and box holds every number once.
+    ins: Fill the grid so every row, every column and every outlined box holds each number exactly once.
+    how:
+      - "A 4 × 4 grid uses 1 to 4, a 6 × 6 grid uses 1 to 6, and a 9 × 9 grid uses 1 to 9."
+      - Look for a square where only one number can go, or a number that has only one place left in a row, column or box.
+      - Never guess. Every puzzle here has exactly one answer, so there is always a next step you can be sure of.
+    exercises: Careful, step-by-step reasoning. You keep several rules in mind at once and only write what you can prove.
+    levels: { easy: "Many clues, solvable by spotting singles.", medium: "Fewer clues, still no guessing needed.", hard: "Only the clues needed for one answer." }
+    counts: [1, 2, 4, 6, 9, 12]
+    def: 6
+  - key: cages
+    name: Cage Squares
+    icon: "🧮"
+    group: logic
+    card: A number grid with sums and products in outlined cages.
+    ins: Fill the grid so each row and column holds each number once. The numbers in each outlined cage must make its target with the sign shown.
+    how:
+      - "In a 4 × 4 grid use 1 to 4, in a 5 × 5 grid use 1 to 5, and so on. No repeats in any row or column."
+      - "A cage marked 7+ adds up to 7. A cage marked 2− has two numbers that differ by 2. 12× multiplies to 12. 3÷ means one number is 3 times the other."
+      - A cage with just one square tells you its number.
+    exercises: Arithmetic facts and logic at the same time. You list the ways a cage can work, then cross them off using the rows and columns.
+    levels: { easy: "4 × 4, adding and subtracting.", medium: "5 × 5, adding, subtracting and multiplying.", hard: "6 × 6, all four operations." }
+    counts: [2, 4, 6, 8]
+    def: 4
+  - key: logicgrid
+    name: Logic Grids
+    icon: "🧩"
+    group: logic
+    card: Use the clues to match each child to their things.
+    ins: Use the clues to work out who goes with what. Mark ✗ in the grid for "no" and ● for "yes".
+    how:
+      - Read every clue. Put an ✗ where a clue says something is not true, and a ● where it must be true.
+      - Each row and each column in a block has exactly one ●. When you place a ●, cross out the rest of that row and column.
+      - Clues can link two things that aren't names, like "the child with the cat likes red." Carry that across the blocks.
+    exercises: Reading carefully and keeping track of what you know. It's the same skill as reasoning through a mystery story, one fact at a time.
+    levels: { easy: "Three children and two things to match.", medium: "Four children.", hard: "Four children, three things to match, and clues about ages." }
+    counts: [1, 2, 3, 4]
+    def: 2
+  - key: nonogram
+    name: Picture Logic
+    icon: "🖼️"
+    group: logic
+    card: Number clues tell you which squares to fill. A picture or a pattern appears.
+    ins: Shade squares to match the numbers. Each number is a run of shaded squares in that row or column, in order, with at least one gap between runs.
+    how:
+      - "A clue of 3 1 means a run of 3 shaded squares, then a gap, then 1 shaded square."
+      - Start with big numbers. In a row of 8, a run of 6 must cover the middle 4 squares, wherever it sits.
+      - Mark squares you know are empty with a small dot so you don't shade them by mistake.
+    exercises: Counting and logical overlap, and the patience to work across and down in turns. You can also try these on screen and tap squares to shade them.
+    levels: { easy: "8 × 8. Many are small pictures; some are patterns.", medium: "10 × 10.", hard: "15 × 15, with longer clues to juggle." }
+    counts: [1, 2, 4, 6]
+    def: 2
+  - key: crypto
+    name: Letter Arithmetic
+    icon: "🔤"
+    group: logic
+    card: An addition sum in letters. Which digit is each letter?
+    ins: Each letter stands for a digit. Different letters stand for different digits, and no number starts with 0. Find the digits that make the sum true.
+    how:
+      - Start in the left column. If the answer is longer than the numbers you add, its first letter must be 1.
+      - Work in from the right, keeping track of carries.
+      - Use the hints, and when you think you've got it, check the whole sum.
+    exercises: Column addition and carrying, run backwards. You reason about what each column allows instead of just adding.
+    levels: { easy: "Two-digit numbers, with hints.", medium: "Three-digit numbers.", hard: "Four digits, or three numbers to add, with at most one hint." }
+    counts: [2, 4, 6, 8]
+    def: 4
+  - key: classics
+    name: Classic Brainteasers
+    icon: "🌉"
+    group: logic
+    card: Bridges at night, water jugs, river crossings and fake coins.
+    ins: Read each story carefully and find the best plan. Write your steps in the space below each one.
+    how:
+      - Read the rules twice. The puzzle is in the rules.
+      - Draw a picture or make a small table to keep track of who or what is where.
+      - When you find a plan that works, ask whether a shorter one exists.
+    exercises: Planning ahead and testing a plan step by step. These old puzzles reward trying a few ideas on paper before settling on one.
+    levels: { easy: "Three people on the bridge, small jugs, fewer coins.", medium: "Four people on the bridge, longer jug puzzles.", hard: "Five people, the longest jug puzzles, up to 81 coins." }
+    counts: [2, 4, 6, 8]
+    def: 4
+  - key: ladders
+    name: Word Ladders
+    icon: "🪜"
+    group: words
+    card: Change one letter at a time to climb from one word to another.
+    ins: Change one letter at a time to get from the top word to the bottom word. Every step must be a real word.
+    how:
+      - Change just one letter on each step, and keep the letters in the same order.
+      - Every word on the ladder has to be a real, everyday word.
+      - Work from both ends if you get stuck.
+    exercises: Spelling and vocabulary. You look at words letter by letter and search your memory for words that fit.
+    levels: { easy: "Three-letter words, three steps.", medium: "Four-letter words, four steps.", hard: "Four-letter words, five or six steps." }
+    counts: [3, 6, 9, 12]
+    def: 6
+  - key: anagrams
+    name: Anagrams
+    icon: "🔀"
+    group: words
+    card: Unscramble the letters. A hint tells you the topic.
+    ins: Unscramble the letters to make a word. The tag tells you what kind of word it is.
+    how:
+      - Use the tag. If it says Animals, think of animals with that many letters.
+      - Look for common letter pairs like TH, CH, ER and ING.
+      - Write the letters in a circle on scrap paper. A new layout helps you see words.
+    exercises: Spelling and word knowledge. You hold several letters in mind and try them in different orders.
+    levels: { easy: "Four and five letters.", medium: "Six letters.", hard: "Seven letters or more." }
+    counts: [10, 20, 30]
+    def: 20
+    bundle: 4
+  - key: wordsense
+    name: Analogies & Odd One Out
+    icon: "🤔"
+    group: words
+    card: Find how words are linked, and which one doesn't belong.
+    ins: For each analogy, choose the word that finishes the pair. For each odd one out, circle the word that does not belong.
+    how:
+      - "For an analogy, say how the first two words are linked in a sentence: a young cow is a calf. Then use the same sentence for the second pair."
+      - For odd one out, find what four of the words have in common.
+      - Each question has one best answer, and the answer key explains it.
+    exercises: Vocabulary and sorting things into groups. Saying the link out loud is a good habit for reading and writing too.
+    levels: { easy: "Baby animals, animal sounds, opposites, very different groups.", medium: "Homes, groups, tools, parts, closer groups.", hard: "Measuring tools, workplaces, what things are made from, close science groups." }
+    counts: [6, 10, 16, 20]
+    def: 10
+    bundle: 2
+  - key: mazes
+    name: Mazes
+    icon: "🌀"
+    group: shapes
+    card: Find the one path through.
+    ins: Start at the arrow and find your way out. There is exactly one path.
+    how:
+      - Start at the arrow at the top left. The way out is on the right side, at the bottom.
+      - Trace with a finger or a pencil. If you hit a dead end, back up to the last place you had a choice.
+      - Working backward from the exit helps in big mazes.
+    exercises: Planning a route and keeping your place. You can also play these on screen with the arrow keys or by tapping.
+    levels: { easy: "8 by 10.", medium: "16 by 20.", hard: "24 by 30." }
+    counts: [1, 2, 4]
+    def: 2
+  - key: matchsticks
+    name: Matchstick Equations
+    icon: "🪵"
+    group: shapes
+    card: Move one stick to make the sum true.
+    ins: Each sum is wrong. Move exactly one stick to a new spot to make it right. You can't take a stick away or add one.
+    how:
+      - Count the sticks in each digit. Moving one stick can turn a 6 into a 0 or a 9, or a + into a −.
+      - The equals sign stays as it is.
+      - Each puzzle has exactly one correct fix.
+    exercises: Seeing numbers as shapes, and thinking about what a small change can do.
+    levels: { easy: "Single digits.", medium: "Answers up to 18.", hard: "Two-digit numbers." }
+    counts: [4, 6, 8, 12]
+    def: 8
+  - key: pieces
+    name: Piece Fitting
+    icon: "🟩"
+    group: shapes
+    card: Fit the pieces into the outline. Cut them out to try.
+    ins: Fit all the pieces into the outlined shape with no gaps or overlaps. You may turn and flip them.
+    how:
+      - Cut out the pieces, or copy them onto grid paper.
+      - Fill the tricky corners and narrow spots first. Only a few pieces fit there.
+      - Each puzzle has exactly one way to fit the pieces.
+    exercises: Seeing how shapes fit together, turning them in your head, and trying a different piece when one won't go.
+    levels: { easy: "Four pieces of four squares.", medium: "Five pieces of five squares.", hard: "Seven pieces of five squares." }
+    counts: [1, 2, 3, 4]
+    def: 2
+  - key: cubes
+    name: Cube Nets & Turned Shapes
+    icon: "🎲"
+    group: shapes
+    card: Which net folds into this cube? Which shape is just turned?
+    ins: Choose the answer for each one. For cube nets, pick the flat pattern that folds into the cube shown. For turned shapes, pick the shape that is the first one turned, not flipped.
+    how:
+      - "A net is a flat pattern that folds into a cube. Faces next to each other on the net may end up opposite each other on the cube."
+      - On a cube, three faces meet at each corner. Faces that are opposite can never be seen together.
+      - For turned shapes, a flipped shape is a mirror image. Turning it on the table can never make it match.
+    exercises: Picturing shapes in your head and turning them around. You can check yourself by cutting out a net and folding it.
+    levels: { easy: "The wrong nets put two of the faces you can see on opposite sides.", medium: "A mix.", hard: "The wrong nets are mirror images, so the order of the faces around the corner matters." }
+    counts: [2, 4, 6, 8]
+    def: 4
+  - key: bases
+    name: Number Bases
+    icon: "💻"
+    group: codes
+    card: Binary, octal and hex conversion sheets, and binary adding.
+    ins: Change each number into the base shown by the small number. Show your work in the space.
+    how:
+      - "Each place is worth the base times the place to its right. In binary the places are 1, 2, 4, 8, 16 and so on. In hex they are 1, 16, 256."
+      - "To change to decimal, multiply each digit by its place value and add."
+      - "To change from decimal, take out the biggest place value that fits, and repeat. Or divide by the base and keep the remainders."
+    exercises: Place value, the idea behind how we write every number, and how computers store everything as 0s and 1s.
+    levels: { easy: "Up to 15, and four-place tables.", medium: "Up to 255 (one byte), hex and octal, adding small binary numbers.", hard: "Up to 65,535, octal and binary, adding eight-bit numbers." }
+    counts: [10, 20, 30, 40]
+    def: 20
+    bundle: 4
+    lesson: { url: "homeschool/number-bases/", name: "Number bases, step by step" }
+    lesson2: { url: "homeschool/hexadecimal/", name: "Hexadecimal and binary" }
+  - key: ciphers
+    name: Secret Ciphers
+    icon: "🔐"
+    group: codes
+    card: Crack number codes, shift ciphers and substitution ciphers.
+    ins: Decode each message. Write the real letter in the space under each code letter or number.
+    how:
+      - "Number code: A = 1, B = 2 and so on, unless the puzzle says it starts somewhere else."
+      - "Shift cipher: every letter slid the same number of places along the alphabet. The alphabet strip helps you count."
+      - "Substitution cipher: each letter swapped for another. Use the hints, then look for short words like A, THE and IS."
+    exercises: Letter patterns and careful counting. Ciphers are a gentle way into how codes work and why some are easier to crack than others.
+    levels: { easy: "Number codes and small shifts, with the shift given.", medium: "Bigger shifts and number codes with a twist.", hard: "Substitution ciphers with a few hints, and shifts you have to find." }
+    counts: [1, 2, 3, 4, 6]
+    def: 3
+  - key: morse
+    name: Morse Code
+    icon: "📡"
+    group: codes
+    card: Dots and dashes to letters, and back.
+    ins: Decode the dots and dashes, or write the message in Morse code.
+    how:
+      - A dot is a short beep and a dash is a long one. Each letter has its own pattern.
+      - A space comes between letters and a slash between words.
+      - Use the chart on the sheet. On the hard sheets, try it from memory first.
+    exercises: Matching patterns and holding a short code in mind. Tapping the patterns out loud helps them stick.
+    levels: { easy: "Short words, with a chart.", medium: "Short messages, with a chart.", hard: "Longer messages, chart on the answer page only." }
+    counts: [4, 6, 8, 10]
+    def: 6
+    lesson: { url: "homeschool/outdoor-skills/morse-code/", name: "Morse code in Outdoor Skills" }

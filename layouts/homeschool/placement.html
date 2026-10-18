@@ -1,13 +1,37 @@
 {{ define "main" }}
 {{ partial "hs-head.html" . }}
-{{- $urls := dict -}}{{- $names := dict -}}
-{{- range site.Data.hs_planner.subjects -}}{{- range .courses -}}{{- $urls = merge $urls (dict .key (.url | relURL)) -}}{{- $names = merge $names (dict .key .name) -}}{{- end -}}{{- end -}}
+<link rel="stylesheet" href="{{ "homeschool/placement.css" | relURL }}?v={{ (os.Stat "static/homeschool/placement.css").ModTime.Unix }}">
+{{- /* Planner courses: name and page (ladder and unit courses take theirs from the ladder or unit data, as in the planner),
+   the planner subject each belongs to, and for ladder courses that ladder's "Find your rung" page. Only pages in this build. */ -}}
+{{- $urls := dict -}}{{- $names := dict -}}{{- $subj := dict -}}{{- $rung := dict -}}
+{{- range $s := site.Data.hs_planner.subjects -}}{{- range .courses -}}
+  {{- $u := .url -}}{{- $n := .name -}}{{- $ok := true -}}{{- $ck := .key -}}
+  {{- if .ladder -}}
+    {{- $L := index (where site.Data.ladders "key" .ladder) 0 -}}{{- $C := index (where (index site.Data .ladder).courses "key" .lc) 0 -}}
+    {{- if and $L $C (site.GetPage (printf "/%s/%s" $L.slug $C.slug)) -}}
+      {{- $u = printf "/%s/%s/" $L.slug $C.slug -}}{{- $n = $n | default (printf "%s: %s" $L.title $C.title) -}}
+      {{- with site.GetPage (printf "/%s/placement" $L.slug) -}}{{- $rung = merge $rung (dict $ck (dict "url" .RelPermalink "ladder" $L.title)) -}}{{- end -}}
+    {{- else -}}{{- $ok = false -}}{{- end -}}
+  {{- else if .unit -}}
+    {{- $un := index site.Data.science_units .unit -}}{{- $sec := $un.section | default "science-lab" -}}
+    {{- with site.GetPage (printf "/%s/%s" $sec $un.slug) -}}{{- $u = .RelPermalink -}}{{- $n = $n | default (cond (eq $sec "science-lab") (printf "%s (Science Lab)" $un.title) $un.title) -}}{{- else -}}{{- $ok = false -}}{{- end -}}
+  {{- else if .section -}}
+    {{- with site.GetPage .section -}}{{- $u = .RelPermalink -}}{{- $n = $n | default .Title -}}{{- else -}}{{- $ok = false -}}{{- end -}}
+  {{- else if .practice -}}
+    {{- if not (site.GetPage .practice) -}}{{- $ok = false -}}{{- end -}}
+  {{- end -}}
+  {{- if $ok -}}{{- $urls = merge $urls (dict .key ($u | relURL)) -}}{{- $names = merge $names (dict .key $n) -}}{{- $subj = merge $subj (dict .key $s.key) -}}{{- end -}}
+{{- end -}}{{- end -}}
+{{- $links := dict -}}
+{{- range slice "/math/placement" "/science-lab" "/music" "/music/piano-basics" "/music/reading-music" "/music/songs" "/music/metronome" "/music/rhythm" -}}
+  {{- $lp := . -}}{{- with site.GetPage $lp -}}{{- $links = merge $links (dict (strings.TrimPrefix "/" $lp) .RelPermalink) -}}{{- end -}}
+{{- end -}}
 <div class="hs pc" id="pc">
   <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Where should we start?</nav>
   <header class="hs-hero">
     <p class="hs-eyebrow">Homeschool · Placement</p>
     <h1>Where should we start?</h1>
-    <p>A short, relaxed check, about 10 minutes, that finds the right starting point in reading, spelling and arithmetic. Your child reads a few lines, spells a few words or works a few sums; you say how it went; the page moves up or down until it finds the level that is just right. Then it can set everything up in the lesson planner.</p>
+    <p>A short, relaxed check, about 10 minutes, that finds the right starting point in reading, spelling and arithmetic. Your child reads a few lines, spells a few words or works a few sums; you say how it went; the page moves up or down until it finds the level that is just right. Then it can set everything up in the lesson planner. The results also say where to start on the Math Ladder, in science and in Music.</p>
   </header>
 
   <section class="hs-sec pc-step" id="pc-who">
@@ -30,8 +54,9 @@
     <h2>How it works</h2>
     <p>Each subject is a ladder of short checks taken from the books themselves: lines from McGuffey's Readers, words from Webster's and McGuffey's spellers, and sums at the level of each part of Ray's Arithmetic. It starts near your child's age. If a check is easy it moves up; if it's too hard it moves down; it stops at the level where your child needs a little help, or at the last one that felt comfortable, so the first few lessons build confidence. You are the judge: you know when your child is guessing or struggling.</p>
     <p>For history, science, nature study, geography, writing and Latin, there's no need to check: start at Lesson 1 of the book the planner suggests for your child's age.</p>
+    <p>Each arithmetic result also names the matching course on the <a href="{{ "math/" | relURL }}">Math Ladder</a>, which runs from Kindergarten to college. To place exactly on the ladder's own topics, use its <a href="{{ "math/placement/" | relURL }}">Find your rung</a> check; the Physics, Chemistry, Earth &amp; Space and Economics Ladders each have one too. Science and Music aren't checked here: the results suggest a starting point for your child's age.</p>
   </section>
-  <script type="application/json" id="pc-data">{{ dict "subjects" site.Data.hs_placement.subjects "urls" $urls "names" $names | jsonify | safeJS }}</script>
+  <script type="application/json" id="pc-data">{{ dict "subjects" site.Data.hs_placement.subjects "urls" $urls "names" $names "subj" $subj "rung" $rung "links" $links "science" site.Data.hs_placement.science "music" site.Data.hs_placement.music | jsonify | safeJS }}</script>
 </div>
 <script src="{{ "homeschool/placement.js" | relURL }}?v={{ (os.Stat "static/homeschool/placement.js").ModTime.Unix }}" defer></script>
 {{ end }}

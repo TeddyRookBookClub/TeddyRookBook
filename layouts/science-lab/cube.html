@@ -1,0 +1,312 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+{{- $v := dict -}}
+{{- range slice "model" "solve3" "solve2" "beginner" "solve4" "validate" "core" "view3d" "app" "guide" "worker" -}}
+{{- $v = merge $v (dict . (printf "games/cube/%s.js?v=%d" . (os.Stat (printf "static/games/cube/%s.js" .)).ModTime.Unix | relURL)) -}}
+{{- end -}}
+<link rel="stylesheet" href="{{ "games/cube/cube.css" | relURL }}?v={{ (os.Stat "static/games/cube/cube.css").ModTime.Unix }}">
+<div class="lab" id="cube-lab" data-n="3" data-mode="enter" data-worker="{{ index $v "worker" }}" data-scripts="{{ index $v "model" }} {{ index $v "solve3" }} {{ index $v "solve2" }} {{ index $v "beginner" }} {{ index $v "solve4" }} {{ index $v "core" }}">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › Cube Solver</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Math and puzzles</p>
+    <h1>Cube Solver</h1>
+    <p>Paint in the colors of your own 2×2, 3×3 or 4×4 twisty puzzle cube, and the solver works out the moves and plays them on a 3-D cube, one turn at a time. It checks your colors first and explains anything that can't be right. Below it: how to read the moves, the beginner method step by step with practice cases, the common algorithms, why some cubes can't be solved, how many positions there are, and a timer.</p>
+    <span class="lab-mark" aria-hidden="true">🧩</span>
+  </header>
+
+  <div class="cube-bar">
+    <div class="lab-seg" id="cube-size" role="group" aria-label="Cube size">
+      <button type="button" data-n="2" aria-pressed="false">2×2</button><button type="button" data-n="3" aria-pressed="true">3×3</button><button type="button" data-n="4" aria-pressed="false">4×4</button>
+    </div>
+    <div class="cube-tabs" id="cube-tabs" role="tablist" aria-label="Steps">
+      <button type="button" role="tab" data-mode="enter" aria-selected="true" aria-controls="cube-p-enter"><span aria-hidden="true">1</span> Your colors</button>
+      <button type="button" role="tab" data-mode="solve" aria-selected="false" aria-controls="cube-p-solve" id="cube-tab-solve" disabled><span aria-hidden="true">2</span> The solution</button>
+    </div>
+  </div>
+  <div class="cube-note" id="cube-note" role="status" hidden></div>
+
+  <div class="lab-stage">
+    <div class="lab-view" id="cube-view">
+      <div class="cube-cvwrap">
+        <canvas id="cube-cv" tabindex="0" aria-label="3-D cube. Drag to look around. Tap a sticker to paint it with the chosen color. Keys: arrow keys turn the view; 1 to 6 pick a color, 0 the eraser; U R F D L B turn a face (Shift for counterclockwise). While a solution plays: Space plays or pauses, left and right arrows step back and forward, Home and End jump to the start and the end."></canvas>
+        <div class="lab-hud" id="cube-hud" aria-hidden="true"></div>
+        <div class="lab-tools">
+          <button type="button" id="cube-flip" aria-label="Look at the other side of the cube" title="Look at the other side">⇆</button>
+          <button type="button" id="cube-home" aria-label="Reset the view" title="Reset the view">↺</button>
+        </div>
+      </div>
+      <div class="cube-move" id="cube-move" aria-live="polite" hidden></div>
+      <div class="cube-player" id="cube-player" role="group" aria-label="Play the solution" hidden>
+        <button type="button" id="cube-p-start" aria-label="Back to the start" title="Start (Home)">⏮</button>
+        <button type="button" id="cube-p-back" aria-label="One move back" title="Back (←)">◀</button>
+        <button type="button" id="cube-p-play" class="pri" aria-label="Play" title="Play or pause (Space)">▶</button>
+        <button type="button" id="cube-p-fwd" aria-label="One move forward" title="Forward (→)">▶▏</button>
+        <button type="button" id="cube-p-end" aria-label="Jump to the end" title="End (End)">⏭</button>
+        <span class="cube-count" id="cube-count" aria-live="off"></span>
+      </div>
+    </div>
+
+    <div class="lab-panel" id="cube-panel">
+      <div id="cube-p-enter" role="tabpanel" aria-label="Your colors">
+        <h3 id="cube-pal-h">Paint with</h3>
+        <div class="cube-palette" id="cube-palette" role="radiogroup" aria-labelledby="cube-pal-h"></div>
+        <p class="lab-small">Painting with <b class="cube-paintwith">white</b>. Tap a sticker on the 3-D cube or on the map below. Keys 1 to 6 pick a color, 0 the eraser, Z undoes.</p>
+        <h3>Start from</h3>
+        <div class="lab-row cube-presets">
+          <button type="button" class="lab-btn" id="cube-solved">Solved</button>
+          <button type="button" class="lab-btn" id="cube-centers">Centers only</button>
+          <button type="button" class="lab-btn" id="cube-blank">Blank</button>
+          <button type="button" class="lab-btn" id="cube-scramble">Scramble</button>
+          <button type="button" class="lab-btn" id="cube-undo" disabled>Undo</button>
+        </div>
+        <label class="lab-field"><span>Color scheme</span>
+          <select id="cube-scheme"><option value="standard">Standard: white opposite yellow, green opposite blue, red opposite orange</option><option value="auto">Work it out from my cube</option></select></label>
+        <details class="cube-type">
+          <summary>Set it up from a list of moves</summary>
+          <label class="lab-field"><span>Moves, like R U R′ U′</span><input type="text" id="cube-moves-in" autocomplete="off" spellcheck="false" inputmode="text"></label>
+          <div class="lab-row"><button type="button" class="lab-btn" id="cube-apply-solved">Do them on a solved cube</button><button type="button" class="lab-btn" id="cube-apply-here">Do them on this cube</button></div>
+          <p class="lab-small" id="cube-moves-msg" aria-live="polite"></p>
+        </details>
+        <h3>Check</h3>
+        <div id="cube-check" class="cube-check" role="status" aria-live="polite"></div>
+        <div class="cube-solve-btns" id="cube-solve-btns"></div>
+        <p class="lab-small" id="cube-solve-why" hidden>The solve buttons wake up when every check passes.</p>
+        <p class="cube-busy" id="cube-busy" role="status" hidden></p>
+        <button type="button" class="lab-btn cube-padbtn" id="cube-pad-toggle" aria-expanded="false" aria-controls="cube-pad">Turn the cube</button>
+        <div class="cube-pad" id="cube-pad" hidden></div>
+      </div>
+
+      <div id="cube-p-solve" role="tabpanel" aria-label="The solution" hidden>
+        <h3>The solution</h3>
+        <p class="cube-sum" id="cube-sum"></p>
+        <p class="lab-small cube-hold" id="cube-hold"></p>
+        <div class="cube-stepbox">
+          <span class="cube-step-n" id="cube-step-n"></span>
+          <b id="cube-step-title"></b>
+          <p id="cube-step-text"></p>
+        </div>
+        <label class="lab-field"><span>Speed <output id="cube-speed-o">1 moves/s</output></span><input type="range" id="cube-speed" min="0" max="9" step="1" value="3" aria-label="Playback speed"></label>
+        <label class="lab-chk"><input type="checkbox" id="cube-pause" checked> Pause at the end of each step</label>
+        <div class="lab-row">
+          <button type="button" class="lab-btn" id="cube-print-btn">Print the moves</button>
+          <button type="button" class="lab-btn" id="cube-edit">Change the colors</button>
+        </div>
+        <p class="lab-small">Keys, with the 3-D cube selected: Space plays or pauses, ← → step, Home and End jump. Tap any move in the list below to jump to it.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="cube-entry" id="cube-entry" aria-labelledby="cube-entry-h">
+    <div class="cube-entry-head">
+      <h2 id="cube-entry-h">Your cube's colors</h2>
+      <div class="lab-seg" id="cube-entry-mode" role="group" aria-label="How to enter colors">
+        <button type="button" data-v="net" aria-pressed="true">Whole map</button><button type="button" data-v="scan" aria-pressed="false">One face at a time</button>
+      </div>
+    </div>
+    <div class="cube-entry-body">
+      <div class="cube-net-wrap only-map" id="cube-net-wrap">
+        <div class="cube-net" id="cube-net" aria-label="Map of the cube, unfolded: top above, then left, front, right and back in a row, bottom below. Arrow keys move between stickers; Enter or Space paints."></div>
+        <p class="lab-small cube-net-key">The map is the cube unfolded: <b>U</b> top, <b>L</b> left, <b>F</b> front, <b>R</b> right, <b>B</b> back, <b>D</b> bottom. Each side is drawn as you'd see it looking straight at it, with the top side up (the top is drawn with the back edge up, the bottom with the front edge up).</p>
+      </div>
+      <div class="cube-scan" id="cube-scan" hidden>
+        <p class="cube-scan-step" id="cube-scan-step"></p>
+        <p class="cube-scan-tip" id="cube-scan-tip"></p>
+        <div class="cube-scan-grid" id="cube-scan-grid" role="group" aria-label="The face you're entering, as you see it"></div>
+        <div class="lab-row">
+          <button type="button" class="lab-btn" id="cube-scan-prev">← Back</button>
+          <button type="button" class="lab-btn" id="cube-scan-fill" aria-label="Fill this whole face with the chosen color">Fill this face</button>
+          <button type="button" class="lab-btn pri" id="cube-scan-next">Next face →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cube-steps" id="cube-steps" aria-label="All the moves" hidden>
+    <h2>All the moves</h2>
+    <div id="cube-list"></div>
+  </section>
+  <div class="cube-print" id="cube-print" aria-hidden="true"></div>
+
+  <section class="lab-sec" id="cube-howto">
+    <h2>How to use the solver</h2>
+    <div class="lab-cols">
+      <p><b>1. Pick the size.</b> 2×2, 3×3 or 4×4. The 3×3 is the cube often sold as the Rubik's Cube. Each size remembers its own colors in this browser.</p>
+      <p><b>2. Paint the colors.</b> Choose a color, then tap stickers on the map or on the 3-D cube. <i>One face at a time</i> walks you around your cube and tells you how to hold it for each side, so the map matches the real thing. On a 3×3, start from <i>Centers only</i> if your centers are white on top and green in front.</p>
+      <p><b>3. Read the check.</b> It runs as you paint. A cube with a wrong sticker can't be solved, so the check looks for every kind of mistake: the wrong number of a color, two colors that can't share a piece, a piece that appears twice, a twisted corner, a flipped edge, and two pieces swapped. <i>Show</i> outlines the stickers involved.</p>
+      <p><b>4. Solve and follow along.</b> On the 3×3, choose the fewest moves (about 20) or the beginner method (about 160, in steps you can learn). Play the moves, step through them, slow them down, and print the list to keep next to you.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="cube-notation">
+    <h2>Reading the moves</h2>
+    <p>Every move is a letter for one side of the cube, seen with the cube held still in front of you:</p>
+    <div class="lab-tw"><table class="lab-table cube-ntable">
+      <thead><tr><th>Letter</th><th>Side</th><th>Letter</th><th>Side</th></tr></thead>
+      <tbody>
+        <tr><td><b>U</b></td><td>Up: the top</td><td><b>D</b></td><td>Down: the bottom</td></tr>
+        <tr><td><b>R</b></td><td>Right</td><td><b>L</b></td><td>Left</td></tr>
+        <tr><td><b>F</b></td><td>Front: facing you</td><td><b>B</b></td><td>Back</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>A letter alone, like <b>R</b>, is a quarter turn <b>clockwise</b>, as you would see it if you looked straight at that side. So <b>R</b> lifts the front of the right side up, and <b>L</b> pushes the front of the left side down.</li>
+      <li>A mark after the letter, <b>R′</b> (said "R prime"), is a quarter turn <b>counterclockwise</b>: the same turn undone.</li>
+      <li>A <b>2</b>, as in <b>R2</b>, is a half turn. Either direction gives the same result.</li>
+      <li>On big cubes, a <b>w</b> means wide: <b>Rw</b> turns the right face together with the layer next to it.</li>
+      <li><b>x</b>, <b>y</b> and <b>z</b> turn the whole cube in your hands, the same way as R, U and F. The beginner solution uses <b>y</b> to bring the part you're working on to the front.</li>
+      <li>On a 3×3, <b>M</b>, <b>E</b> and <b>S</b> turn a middle layer. The solver doesn't use them, but you'll see them in other guides.</li>
+    </ul>
+    <h3 class="lab-h">How to hold the cube</h3>
+    <p>Hold it in both hands, thumbs in front, fingers behind. Keep the same side toward you and the same side on top for a whole list of moves: if the cube turns in your hands, every letter after that points at a different side. Turn the right side with your right hand and the left side with your left. For <b>U</b>, push the top front edge to the left with your right index finger; for <b>U′</b>, the other way. When you scramble a 3×3 the usual way to hold it is white on top and green in front.</p>
+    <div class="cube-demo" id="cube-demo">
+      <div class="cube-demo-view lab-view"><canvas id="cube-demo-cv" tabindex="0" aria-label="Demo cube. Use the buttons to see each move. Drag to look around; arrow keys turn the view; letters U R F D L B make a move, Shift for counterclockwise."></canvas>
+        <div class="lab-hud" aria-hidden="true"><span id="cube-demo-step"></span></div>
+      </div>
+      <div class="cube-demo-side">
+        <div class="lab-seg" id="cube-demo-size" role="group" aria-label="Demo cube size"><button type="button" data-n="3" aria-pressed="true">3×3</button><button type="button" data-n="4" aria-pressed="false">4×4</button></div>
+        <div class="cube-demo-moves" id="cube-demo-moves" role="group" aria-label="Try a move"></div>
+        <p class="cube-demo-desc" id="cube-demo-desc" aria-live="polite">Press a move to see it. The yellow arrow shows which way the layer turns.</p>
+        <p class="lab-small cube-demo-now" id="cube-demo-now"></p>
+        <button type="button" class="lab-btn" id="cube-demo-reset">Reset the demo cube</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec" id="cube-beginner">
+    <h2>The beginner method, step by step</h2>
+    <p>This is the way most people first learn to solve a 3×3, and it is what <i>Solve: beginner method</i> uses. You solve the cube in layers: the bottom layer, then the middle, then the top. It takes about 160 turns, and you only need to remember a handful of short algorithms. Hold the cube with white on the bottom for every step. Each <i>Practice</i> button sets up a cube with the earlier steps done, so you can work on just that step, on the screen or on your own cube.</p>
+    <ol class="cube-learn">
+      <li><h3>The white cross</h3><p>Put the four white edges around the white center, so each one's other color matches the center on its side. There's no algorithm to memorize: bring an edge to the bottom next to its center, white side down, and try not to undo the ones already there. Tip: look for an edge in the top layer, turn the top until its side color matches the center under it, then turn that side twice.</p><button type="button" class="lab-btn cube-practice" data-stage="1">Practice the cross</button></li>
+      <li><h3>The white corners</h3><p>Find a white corner in the top layer. Turn the whole cube so the corner's spot is at the bottom front right, and turn the top until the corner sits right above it. Then repeat <span class="cube-code">R U R′ U′</span> until the corner drops in with white on the bottom. It takes 1, 3 or 5 times, and the cross stays put. If a white corner is stuck in the bottom in the wrong place, do <span class="cube-code">R U R′ U′</span> once with it at the front right to lift it out.</p><button type="button" class="lab-btn cube-practice" data-stage="2">Practice the corners</button></li>
+      <li><h3>The middle layer</h3><p>Find a top edge with no yellow. Turn the top until its front color matches the center below it, so it makes an upside-down T. If its top color matches the right center, it goes right: <span class="cube-code">U R U′ R′ U′ F′ U F</span>. If it matches the left center, it goes left: <span class="cube-code">U′ L′ U L U F U′ F′</span>. If a middle edge is in the wrong place or flipped, put any yellow edge into its spot with the same algorithm, and it pops out.</p><button type="button" class="lab-btn cube-practice" data-stage="3">Practice the middle layer</button></li>
+      <li><h3>The yellow cross</h3><p>Look at the top. You'll see a dot, an L, a line or a cross of yellow edges. Hold an L pointing to the back and the left, or a line running left to right, and do <span class="cube-code">F R U R′ U′ F′</span>. From a dot, just do it: you'll get an L or a line, and then do it again. Don't worry about the corners yet.</p><button type="button" class="lab-btn cube-practice" data-stage="4">Practice the yellow cross</button></li>
+      <li><h3>The yellow edges</h3><p>Turn the top until at least two yellow edges match the centers on their sides. If two side-by-side edges match, hold them at the back and the right, then do <span class="cube-code">R U R′ U R U2 R′ U</span>: it swaps the front and left edges. If the two matching edges are across from each other, do the algorithm once from anywhere and look again.</p><button type="button" class="lab-btn cube-practice" data-stage="5">Practice the yellow edges</button></li>
+      <li><h3>Yellow corners into place</h3><p>A corner is "in place" when it sits between the three centers of its colors, even if it is turned the wrong way. Find one in place, hold it at the front right, top, and do <span class="cube-code">U R U′ L′ U R′ U′ L</span>. That moves the other three corners around; do it again if they still aren't in place. If none is in place, do it once from anywhere first.</p><button type="button" class="lab-btn cube-practice" data-stage="6">Practice placing corners</button></li>
+      <li><h3>Turn the yellow corners</h3><p>Hold a corner that isn't yellow-up at the front right, top. Repeat <span class="cube-code">R′ D′ R D</span> until yellow faces up: 2 or 4 times. The bottom will look scrambled. That's normal. Now turn only the top (U) to bring the next wrong corner to the front right, and repeat. Don't turn the whole cube during this step. When all four are yellow-up, turn the top to finish. The bottom comes back on its own.</p><button type="button" class="lab-btn cube-practice" data-stage="7">Practice the last step</button></li>
+    </ol>
+  </section>
+
+  <section class="lab-sec" id="cube-algs">
+    <h2>Common algorithms</h2>
+    <p>An algorithm is a short list of moves with a known effect. <i>Show</i> plays it on the demo cube, starting from the case it fixes.</p>
+    <div class="lab-tw"><table class="lab-table cube-atable">
+      <thead><tr><th>Name</th><th>Moves</th><th>What it does</th><th><span class="cube-sr">Play</span></th></tr></thead>
+      <tbody>
+        <tr><th>Right-hand trigger</th><td class="cube-code">R U R′ U′</td><td>The building block of many algorithms. Six in a row bring the cube back to the start. The beginner method uses it to drop in the white corners.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="R U R' U'" data-from="solved">Show</button></td></tr>
+        <tr><th>Middle edge, right</th><td class="cube-code">U R U′ R′ U′ F′ U F</td><td>Moves the front-top edge down into the front-right slot without disturbing the bottom layer.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="U R U' R' U' F' U F">Show</button></td></tr>
+        <tr><th>Middle edge, left</th><td class="cube-code">U′ L′ U L U F U′ F′</td><td>The mirror image: front-top edge into the front-left slot.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="U' L' U L U F U' F'">Show</button></td></tr>
+        <tr><th>Yellow cross</th><td class="cube-code">F R U R′ U′ F′</td><td>Flips top edges: dot to L, L to line, line to cross.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="F R U R' U' F'">Show</button></td></tr>
+        <tr><th>Sune</th><td class="cube-code">R U R′ U R U2 R′</td><td>Turns three top corners, and moves the top pieces around. With a U after it, it swaps the front and left top edges, which is how the beginner method uses it.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="R U R' U R U2 R'">Show</button></td></tr>
+        <tr><th>Corner cycle</th><td class="cube-code">U R U′ L′ U R′ U′ L</td><td>Moves three top corners around in a cycle and leaves the front-right corner where it is.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="U R U' L' U R' U' L">Show</button></td></tr>
+        <tr><th>Corner twister</th><td class="cube-code">R′ D′ R D</td><td>Done twice, it twists the front-right top corner in place and scrambles the bottom a little. Done 6 times, it puts everything back.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="R' D' R D R' D' R D" data-from="solved">Show</button></td></tr>
+        <tr><th>Edge cycle (U perm)</th><td class="cube-code">R U′ R U R U R U′ R′ U′ R2</td><td>Moves three top edges around and nothing else. Speedcubers use it at the very end.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="R U' R U R U R U' R' U' R2">Show</button></td></tr>
+        <tr><th>T perm</th><td class="cube-code">R U R′ U′ R′ F R2 U′ R′ U′ R U R′ F′</td><td>Swaps two top corners and two top edges. It is one of the 21 "PLL" algorithms that finish the cube in faster methods.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="R U R' U' R' F R2 U' R' U' R U R' F'">Show</button></td></tr>
+        <tr><th>Checkerboard</th><td class="cube-code">R2 L2 U2 D2 F2 B2</td><td>A pattern: every face becomes a checkerboard. Do it again to undo it.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="R2 L2 U2 D2 F2 B2" data-from="solved">Show</button></td></tr>
+        <tr><th>Superflip</th><td class="cube-code">U R2 F B R B2 R U2 L B2 R U′ D′ R2 F R′ L B2 U2 F2</td><td>Flips all 12 edges in place. It was the first position proved to need 20 moves.</td><td><button type="button" class="lab-btn cube-alg-show" data-alg="U R2 F B R B2 R U2 L B2 R U' D' R2 F R' L B2 U2 F2" data-from="solved">Show</button></td></tr>
+        <tr><th>4×4 OLL parity</th><td class="cube-code">Rw U2 x Rw U2 Rw U2 Rw′ U2 Lw U2 Rw′ U2 Rw U2 Rw′ U2 Rw′</td><td>Flips one paired edge of a 4×4 (the front-top one), which a 3×3 can't do. It also swaps the top-left and top-right edges and the two front corners on top; the rest of the solve fixes those like any 3×3.</td><td><button type="button" class="lab-btn cube-alg-show" data-n="4" data-alg="Rw U2 x Rw U2 Rw U2 Rw' U2 Lw U2 Rw' U2 Rw U2 Rw' U2 Rw'">Show</button></td></tr>
+        <tr><th>4×4 PLL parity</th><td class="cube-code">Rw2 F2 U2 Rw2 R2 U2 F2 Rw2</td><td>Swaps the front-top and back-top edges of a 4×4 and nothing else a 3×3 would notice.</td><td><button type="button" class="lab-btn cube-alg-show" data-n="4" data-alg="Rw2 F2 U2 Rw2 R2 U2 F2 Rw2">Show</button></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="lab-sec" id="cube-why">
+    <h2>Why some cubes can't be solved</h2>
+    <p>Take a 3×3 apart and put the pieces back at random, and only 1 time in 12 can it be solved by turning. Turning the faces can rearrange the pieces in many ways, but not in every way. Three rules always hold:</p>
+    <div class="lab-cols">
+      <p><b>Corner twist.</b> Give each corner a number for how it's turned: 0 if its white or yellow sticker faces up or down, 1 if it's turned one step clockwise from that, 2 for two steps. Every face turn keeps the total a multiple of 3. A cube with one corner twisted in place breaks that rule, so it can't be solved. Twisting that corner back by hand fixes it. In a random reassembly, this rule fails 2 times in 3.</p>
+      <p><b>Edge flip.</b> In the same way, every turn flips edges in pairs, so the number of flipped edges is always even. One flipped edge can't be fixed by turning. In a random reassembly, this rule fails 1 time in 2.</p>
+      <p><b>Swap parity.</b> Any rearrangement can be built from swaps of two pieces. A quarter turn moves 4 corners in a cycle (3 swaps) and 4 edges in a cycle (3 swaps), 6 swaps in all, an even number. So the total number of swaps is always even, and a cube with just two pieces swapped can't be solved. This rule also fails 1 time in 2.</p>
+      <p>3 × 2 × 2 = 12, so 11 of every 12 random reassemblies are stuck. When the check finds one of these, it usually means a sticker was entered wrong. If every sticker is right, someone took the cube apart, twisted a corner or peeled a sticker. Taking out pieces and putting them back the right way fixes it.</p>
+    </div>
+    <p>Try it: each button loads a scrambled 3×3 with one thing broken, and the check explains it.</p>
+    <div class="lab-row"><button type="button" class="lab-btn cube-broken" data-kind="twist">A twisted corner</button><button type="button" class="lab-btn cube-broken" data-kind="flip">A flipped edge</button><button type="button" class="lab-btn cube-broken" data-kind="swap">Two edges swapped</button></div>
+    <h3 class="lab-h">Parity on the 4×4</h3>
+    <p>A 4×4 has no fixed centers, and each edge is really two pieces. Its inner layers can make an odd number of swaps of edge pieces, which a 3×3 never can. So after pairing the edges, the cube sometimes looks like a 3×3 with one flipped edge (called OLL parity) or two swapped edges (PLL parity). Neither is a mistake. Each has its own algorithm, shown above, and the solver adds them when needed. The 2×2 has no such problems: any turn of its corners is possible except a single twisted corner.</p>
+  </section>
+
+  <section class="lab-sec" id="cube-count">
+    <h2>How many positions?</h2>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Cube</th><th>Positions you can reach by turning</th><th>Where the number comes from</th></tr></thead>
+      <tbody>
+        <tr><td>2×2</td><td><b>3,674,160</b></td><td>Hold one corner still: 7! ways to arrange the other corners × 3<sup>6</sup> ways to twist them (the last twist is forced).</td></tr>
+        <tr><td>3×3</td><td><b>43,252,003,274,489,856,000</b><br>(about 43 quintillion)</td><td>8! × 3<sup>7</sup> for the corners, × 12! × 2<sup>11</sup> for the edges, ÷ 2 because the swaps must be even.</td></tr>
+        <tr><td>4×4</td><td><b>7,401,196,841,564,901,869,874,093,974,498,574,336,000,000,000</b><br>(about 7.4 × 10<sup>45</sup>)</td><td>7! × 3<sup>6</sup> for the corners, × 24! for the edge pieces, × 24! ÷ (4!)<sup>6</sup> for the centers, since the 4 centers of a color look alike.</td></tr>
+      </tbody>
+    </table></div>
+    <p>If you could look at a billion 3×3 positions every second, seeing them all would take over 1,300 years. Taking a 3×3 apart and reassembling it gives 12 times as many arrangements, 519,024,039,293,878,272,000, but only one in 12 is in the list above.</p>
+    <h3 class="lab-h">God's number</h3>
+    <p>What is the fewest moves that always works, from the very worst position? In 2010, Tomas Rokicki, Herbert Kociemba, Morley Davidson and John Dethridge proved that every 3×3 position can be solved in <b>20 moves or fewer</b>, counting a half turn as one move, and that some positions need all 20. The superflip above is one of them. They split the positions into about 2.2 billion groups, used the cube's symmetry to cut that to about 56 million, and solved each one with a fast program, using about 35 years of computer time. Counting only quarter turns, the answer is 26, proved in 2014. For the 2×2 it is 11, and this page's solver checks that number itself: the table below is the count it makes of every 2×2 position by distance.</p>
+    <div class="lab-tw"><table class="lab-table cube-dist">
+      <thead><tr><th>Moves</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th></tr></thead>
+      <tbody><tr><th>2×2 positions</th><td>1</td><td>9</td><td>54</td><td>321</td><td>1,847</td><td>9,992</td><td>50,136</td><td>227,536</td><td>870,072</td><td>1,887,748</td><td>623,800</td><td>2,644</td></tr></tbody>
+    </table></div>
+    <p class="lab-small">Half-turn metric, with one corner held still. The numbers add up to 3,674,160.</p>
+  </section>
+
+  <section class="lab-sec cube-timer" id="cube-timer">
+    <h2>Scramble and time yourself</h2>
+    <div class="cube-t-wrap">
+      <div class="cube-t-main">
+        <div class="lab-seg" id="cube-t-size" role="group" aria-label="Timer cube size"><button type="button" data-n="2" aria-pressed="false">2×2</button><button type="button" data-n="3" aria-pressed="true">3×3</button><button type="button" data-n="4" aria-pressed="false">4×4</button></div>
+        <p class="cube-t-scr cube-code" id="cube-t-scr" aria-live="polite">…</p>
+        <div class="lab-row"><button type="button" class="lab-btn" id="cube-t-new">New scramble</button><button type="button" class="lab-btn" id="cube-t-load">Show it in the solver</button></div>
+        <div class="cube-t-disp" id="cube-t-disp" tabindex="0" role="timer" aria-label="Timer. Press and hold Space, or press and hold here, until it turns green, then let go to start. Press any key or tap to stop.">0.00</div>
+        <p class="lab-small" id="cube-t-help" aria-live="polite">Scramble your cube with the moves above (white on top, green in front). Then press and hold Space (or hold the timer) until it turns green, and let go to start. Any key or a tap stops it.</p>
+        <label class="lab-chk"><input type="checkbox" id="cube-t-inspect"> 15-second inspection first, as in competitions</label>
+      </div>
+      <div class="cube-t-side">
+        <dl class="cube-t-stats" id="cube-t-stats"></dl>
+        <ol class="cube-t-list" id="cube-t-list" reversed aria-label="Your times, newest first"></ol>
+        <button type="button" class="lab-btn" id="cube-t-clear">Delete all these times</button>
+        <p class="lab-small">The averages work like competitions: of your last 5 (or 12) solves, the best and worst are dropped and the rest averaged. A DNF counts as the worst. The 2×2 and 3×3 scrambles are random positions, every one equally likely; the 4×4 uses 40 random turns. Times are saved in this browser only.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>How the solver works</h2>
+    <div class="lab-cols">
+      <p><b>2×2: the shortest answer.</b> Holding one corner still leaves 3,674,160 positions, few enough to list them all. When the page first solves a 2×2, it works out the exact distance of every position from solved (a breadth-first search, under a second). From your position it then always takes a turn that brings it one step closer, so the answer is as short as possible.</p>
+      <p><b>3×3: the two-phase method.</b> Herbert Kociemba's 1992 idea. Phase 1 turns the cube until no corner is twisted, no edge is flipped and the four middle edges are in the middle layer. From there, only U, D and half turns of the sides are needed, and phase 2 finishes with just those. Both phases search with tables that give a lower bound on how many moves are left, so hopeless paths are dropped early. It keeps looking for shorter solutions for up to 1.5 seconds and stops at 20 moves.</p>
+      <p><b>3×3: the beginner method.</b> The same steps a person learns, done by the computer: a small search places each cross edge, then the standard algorithms from the guide above do the rest, with whole-cube turns so every algorithm is done from the same hold.</p>
+      <p><b>4×4: reduction.</b> First the centers, in three searches over where the center colors sit, each with an exact distance table. Then the edges: a wide turn brings two matching pieces together, three outer turns swap the new pair out of the way, and the wide turn is undone; a search picks the best of these each time. Then any parity fix, and a two-phase 3×3 solve that turns only the outer layers.</p>
+      <p>The searches run in a background worker, so the page doesn't freeze. The first solve of each size builds its tables, which takes a moment.</p>
+    </div>
+    <h3 class="lab-h">How it was checked</h3>
+    <div class="lab-tw"><table class="lab-table" id="cube-checks">
+      <thead><tr><th>Test</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>2×2: 3,000 random positions, every solution applied to the cube</td><td>all solved; length matches the distance table (at most 11)</td></tr>
+        <tr><td>2×2: count of positions by distance</td><td>1, 9, 54, … 2,644 (table above), total 3,674,160</td></tr>
+        <tr><td>3×3 fewest moves: 2,000 random positions</td><td>all solved; median 20 moves, longest 22 (85% in 20 or fewer); median 0.08 s, slowest 1.5 s</td></tr>
+        <tr><td>3×3 beginner method: 2,000 random positions, in random orientations</td><td>all solved; median 160 turns, longest 223</td></tr>
+        <tr><td>4×4 reduction: 1,000 random scrambles (100 random turns each)</td><td>all solved; median 84 turns, longest 110; median 0.2 s, slowest 1.1 s</td></tr>
+        <tr><td>Broken cubes: a twisted corner, a mirror-image corner and one wrong sticker (1,200 of each across the three sizes); a flipped edge and two swapped edges (400 of each on the 3×3); a 4×4 edge piece with its stickers swapped (400)</td><td>every one caught, with the right reason</td></tr>
+        <tr><td>Position counts above</td><td>worked out exactly with whole-number arithmetic</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      <li>T. Rokicki, H. Kociemba, M. Davidson and J. Dethridge, <a href="https://www.cube20.org/">"God's Number is 20"</a> (2010), and their paper in <i>SIAM Journal on Discrete Mathematics</i> 27 (2013).</li>
+      <li>T. Rokicki and M. Davidson, <a href="https://www.cube20.org/qtm/">"God's Number is 26 in the Quarter-Turn Metric"</a> (2014).</li>
+      <li>H. Kociemba, <a href="https://kociemba.org/cube.htm">"Cube Explorer" and the two-phase algorithm</a>, with notes on the coordinates and pruning tables.</li>
+      <li>World Cube Association, <a href="https://www.worldcubeassociation.org/regulations/">Regulations</a>: notation (article 12), inspection (A3) and averages (9f).</li>
+      <li>Jaap Scherphuis, <a href="https://www.jaapsch.net/puzzles/cube2.htm">Pocket Cube</a> and <a href="https://www.jaapsch.net/puzzles/cube4.htm">Revenge</a> pages: position counts and parity on the 2×2 and 4×4.</li>
+      <li>D. Joyner, <i>Adventures in Group Theory</i> (2nd ed., Johns Hopkins, 2008): why twist, flip and swap parity are kept by every turn.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "homeschool/" | relURL }}">Homeschool →</a></nav>
+</div>
+<script src="{{ index $v "model" }}"></script>
+<script src="{{ index $v "solve3" }}"></script>
+<script src="{{ index $v "validate" }}"></script>
+<script src="{{ index $v "beginner" }}"></script>
+<script src="{{ index $v "view3d" }}"></script>
+<script src="{{ index $v "app" }}"></script>
+<script src="{{ index $v "guide" }}"></script>
+{{ end }}
