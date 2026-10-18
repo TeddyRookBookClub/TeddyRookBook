@@ -11,6 +11,7 @@
         <b id="bc-title">2 books</b>
         <span class="bc-time" id="bc-time">0.0 s</span>
         <span class="bc-slow" id="bc-slow" hidden></span>
+        <span class="bc-slow bc-assist" id="bc-assist" hidden title="A helping hand trims extra swing near the top and steers the cart under the books. Turn it off in the menu.">🤝 helping hand</span>
       </div>
       <div class="bc-bars">
         <span class="bc-bl">Swing</span><span class="bc-bar"><i id="bc-swing"></i><em></em></span>
@@ -31,12 +32,14 @@
     <h3>Live physics <small>SI units</small></h3>
     <dl class="bc-vals" id="bc-vals"></dl>
     <canvas class="bc-chart" id="bc-chart" width="240" height="70" aria-label="Angle of the stack over the last 10 seconds"></canvas>
-    <p class="bc-cap">Angle of the books from straight up, last 10 s. Green band: balanced (within 15°).</p>
+    <p class="bc-cap">Angle of the books from straight up, last 10 s. Green band: balanced.</p>
     <div class="bc-energy" id="bc-energy"></div>
   </aside>
 
   <aside class="bc-lab" id="bc-lab" hidden aria-label="Lab settings">
     <h3>Lab <small>change anything</small><button type="button" class="bc-fold" id="bl-fold" aria-expanded="true" aria-label="Hide the Lab settings">▾</button></h3>
+    <p class="bc-hint">Slide on the scene to swing the books up. Then try 🤖, set Gravity to the Moon, or tap a preset at the bottom.</p>
+    <button type="button" class="bc-play" id="bl-play">🎮 Play the game: 24 levels →</button>
     <label>Books <output id="bl-n-o">5</output><input type="range" id="bl-n" min="1" max="25" value="5"></label>
     <label>Bindings between books <output id="bl-bind-o"></output><input type="range" id="bl-bind" min="0" max="3000" value="320"></label>
     <label>Counterweight <output id="bl-cw-o"></output><input type="range" id="bl-cw" min="0" max="400" value="0"></label>
@@ -55,7 +58,7 @@
   <div class="bc-ov" id="bc-ov" role="dialog" aria-modal="false" aria-labelledby="bc-ov-h"></div>
   <noscript>This lab needs JavaScript.</noscript>
 </div></div>
-<p class="bc-help">The books start hanging from the cart. Swing them up and keep them balanced above the cart, or, for a harder goal, stand every book straight. Pick any level, and slow motion or real time, in the menu. Phone or mouse: press on the cart scene and slide left or right; the cart moves with your finger. Keyboard: hold ← → (or A, D) to slide the cart, P pauses, R starts again, O turns the autopilot on or off, I shows the physics. <a href="{{ "homeschool/science/balancing-physics/" | relURL }}">The physics behind it →</a></p>
+<p class="bc-help">Book Cart opens in the Lab: change the number of books, the bindings, gravity, wind and more, and watch the live physics. When you want a challenge, press 🎮 Play the game. The books start hanging from the cart; swing them up and keep them balanced above the cart, or, for a harder goal, stand every book straight. The first levels are gentle, with a wider balance band, a shorter hold and a helping hand you can turn off. Pick any level, and slow motion or real time, in the menu (☰). Phone or mouse: press on the scene and slide left or right; the cart follows your finger. Keyboard: hold ← → (or A, D) to slide the cart, P pauses, R starts again, O turns the autopilot on or off, I shows the physics. <a href="{{ "homeschool/science/balancing-physics/" | relURL }}">The physics behind it →</a></p>
 <script type="application/json" id="bc-lessons">{{ "homeschool/science/balancing-physics/" | relURL | jsonify | safeJS }}</script>
 <script src="{{ "games/bookcart/physics.js" | relURL }}?v={{ (os.Stat "static/games/bookcart/physics.js").ModTime.Unix }}"></script>
 <script src="{{ "games/bookcart/game.js" | relURL }}?v={{ (os.Stat "static/games/bookcart/game.js").ModTime.Unix }}"></script>

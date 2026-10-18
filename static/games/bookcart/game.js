@@ -11,7 +11,7 @@
   // playing with a human-like 0.15 s reaction time.
   var LEVELS = [{"n":2,"seed":1002,"sBind":1.64,"speed":0.139,"xEnd":2.4,"par":33},{"n":3,"seed":1003,"sBind":2.245,"speed":0.171,"xEnd":2.4,"par":32},{"n":4,"seed":1004,"sBind":2.725,"speed":0.197,"xEnd":2.4,"par":32},{"n":5,"seed":1005,"sBind":3.22,"speed":0.239,"xEnd":2.4,"par":32},{"n":6,"seed":1006,"sBind":4.091,"speed":0.257,"xEnd":2.44,"par":32},{"n":7,"seed":1007,"sBind":4.336,"speed":0.286,"xEnd":2.63,"par":32},{"n":8,"seed":1008,"sBind":4.957,"speed":0.314,"xEnd":2.75,"par":32},{"n":9,"seed":1009,"sBind":5.327,"speed":0.345,"xEnd":2.9,"par":31},{"n":10,"seed":1010,"sBind":5.876,"speed":0.363,"xEnd":2.98,"par":26},{"n":11,"seed":1011,"sBind":6.436,"speed":0.391,"xEnd":3.19,"par":25},{"n":12,"seed":1012,"sBind":6.807,"speed":0.426,"xEnd":3.34,"par":26},{"n":13,"seed":1013,"sBind":6.977,"speed":0.429,"xEnd":3.39,"par":26},{"n":14,"seed":1014,"sBind":7.588,"speed":0.483,"xEnd":3.65,"par":27},{"n":15,"seed":1015,"sBind":7.908,"speed":0.491,"xEnd":3.71,"par":27},{"n":16,"seed":1016,"sBind":8.695,"speed":0.526,"xEnd":3.91,"par":32},{"n":17,"seed":1017,"sBind":8.749,"speed":0.551,"xEnd":3.95,"par":34},{"n":18,"seed":1018,"sBind":9.068,"speed":0.587,"xEnd":4.18,"par":27},{"n":19,"seed":1019,"sBind":8.841,"speed":0.635,"xEnd":4.35,"par":28},{"n":20,"seed":1020,"sBind":9.219,"speed":0.675,"xEnd":4.58,"par":34},{"n":21,"seed":1021,"sBind":9.972,"speed":0.727,"xEnd":4.81,"par":34},{"n":22,"seed":1022,"sBind":10.426,"speed":0.74,"xEnd":4.84,"par":33},{"n":23,"seed":1023,"sBind":10.13,"speed":0.786,"xEnd":5.01,"par":34},{"n":24,"seed":1024,"sBind":10.65,"speed":0.816,"xEnd":5.02,"par":34},{"n":25,"seed":1025,"sBind":10.732,"speed":0.872,"xEnd":5.23,"par":34}];
   function lv(n) { return LEVELS[Math.max(0, Math.min(23, n - 2))]; }
-  // Goals for the levels: keep the books' centre of gravity within 15° for 8 s, or stand every book straight up (within 5° or 2°)
+  // Goals for the levels: keep the books' center of gravity within 15° for 8 s (wider and shorter on the early levels, see EASE), or stand every book straight up (within 5° or 2°)
   // and hold it there for 3 s.
   var GOALS = {
     bal: { deg: 15, hold: 8, name: 'Balance', short: '⚖️ Balance it', par: 1 },
@@ -20,10 +20,23 @@
   };
   var HOLD = 8, H = 1 / 360, ITERS = 2, ZETA = 0.08, CART = 15, PIV = 0.9, ZONE = 15 * Math.PI / 180, ZBEND = 20 * Math.PI / 180, ZTIP = 25 * Math.PI / 180;
   var SERVO = 12; // how briskly the cart follows your finger, per second of screen time
+  var SMOOTH = 0.06; // the cart's target eases toward your finger over about this long (screen seconds), so a shaky slide stays smooth
+  // The early levels are gentler. e = 1 on level 1 (2 books) and fades smoothly to 0 at EASE.fade books: stiffer bindings (so the
+  // stack swings more like one piece), a wider balance band and looser bend limits, a shorter hold, a longer slow-motion "doubling
+  // time" near the top, and a helping hand near the top that trims extra swing and steers the cart under the books. Every setting is
+  // still real physics; only the books and the rules change. Tuned with a simulated player who reacts in about 0.2 s, with imperfect
+  // aim and a shaky hand, given a minute a try: it wins levels 1 to 3 every time, about half of level 7, and almost never past level 10.
+  var EASE = { fade: 22, bind: 0.6, zone: 15, bend: 15, tip: 15, hold: 5, look: 1.2, assist: 0.7, reach: 1.6 };
+  function easeOf(n) { var u = Math.max(0, Math.min(1, 1 - (n - 2) / (EASE.fade - 2))); return u * u * (3 - 2 * u); }
+  // the rules for the level being played (or the Lab): balance band, bend and top-book limits, hold time, and how much help
+  function rules() {
+    var e = G.mode === 'levels' ? easeOf(G.n) : 0;
+    var d = Math.PI / 180; return { e: e, zone: ZONE + EASE.zone * e * d, bend: ZBEND + EASE.bend * e * d, tip: ZTIP + EASE.tip * e * d, hold: Math.round((HOLD - EASE.hold * e) * 2) / 2, assist: SV.help ? EASE.assist * e : 0 };
+  }
   var COLORS = ['#63e6be', '#ffa94d', '#f783ac', '#74c0fc', '#b197fc', '#c0eb75', '#ffe8cc', '#ffc078', '#66d9e8', '#faa2c1', '#ffd43b', '#ff8787', '#a9e34b', '#91a7ff', '#e599f7', '#8ce99a'];
   var FACTS = [
     'Pumping a swing works best in rhythm. Push the cart the same way each time the books pass the bottom, and each swing climbs a little higher. That’s resonance.',
-    'To stand straight up and stop there, the books need exactly enough swing energy to lift their centre of gravity from below the pivot to above it: E = 2 m g h. The Swing bar fills up as you get there.',
+    'To stand straight up and stop there, the books need exactly enough swing energy to lift their center of gravity from below the pivot to above it: E = 2 m g h. The Swing bar fills up as you get there.',
     'A tall stack tips more slowly than a short one: the time it takes to fall grows with the square root of its height. That’s why a broom is easier to balance on your hand than a pencil.',
     'Real books on a free pivot fall very fast: a lean of two books doubles about every 0.13 s, quicker than anyone can react. So the lab slows time down near the top. The physics is exactly the same, just shown in slow motion.',
     'An unbalanced lean doesn’t grow at a steady speed; it doubles again and again. Small, early corrections beat big, late ones.',
@@ -36,11 +49,14 @@
 
   // ---------- saved progress ----------
   // unlocked is the next level to play (every level can be picked); rt: play the levels in real time, without slow motion
-  var KEY = 'trb-bookcart-v2', SV = { unlocked: 2, best: {}, best5: {}, best2: {}, rt: false, goal: 'bal' };
-  try { var raw = JSON.parse(W.localStorage.getItem(KEY) || 'null'); if (raw) { SV.unlocked = raw.unlocked || 2; SV.best = raw.best || {}; SV.best5 = raw.best5 || {}; SV.best2 = raw.best2 || {}; SV.rt = !!raw.rt; SV.goal = GOALS[raw.goal] ? raw.goal : 'bal'; } } catch (e) { }
+  var KEY = 'trb-bookcart-v2', SV = { unlocked: 2, best: {}, best5: {}, best2: {}, rt: false, goal: 'bal', mode: '', help: true };
+  try { var raw = JSON.parse(W.localStorage.getItem(KEY) || 'null'); if (raw) { SV.unlocked = raw.unlocked || 2; SV.best = raw.best || {}; SV.best5 = raw.best5 || {}; SV.best2 = raw.best2 || {}; SV.rt = !!raw.rt; SV.goal = GOALS[raw.goal] ? raw.goal : 'bal'; SV.mode = raw.mode === 'levels' || raw.mode === 'lab' ? raw.mode : raw.best && Object.keys(raw.best).length ? 'levels' : ''; SV.help = raw.help !== false; } } catch (e) { }
   function goal() { return GOALS[SV.goal] || GOALS.bal; }
   function bests() { return SV.goal === 's5' ? SV.best5 : SV.goal === 's2' ? SV.best2 : SV.best; }
-  function holdFor() { return G.mode === 'levels' ? goal().hold : HOLD; }
+  function holdFor() { return G.mode === 'levels' ? (SV.goal === 'bal' ? G.rule.hold : goal().hold) : HOLD; }
+  function zoneRad() { return G.mode === 'levels' && SV.goal !== 'bal' ? goal().deg * Math.PI / 180 : G.rule.zone; }
+  function zoneDeg() { return Math.round(zoneRad() * 180 / Math.PI); }
+  function remember(m) { if (SV.mode !== m) { SV.mode = m; persist(); } }
   function persist() { try { W.localStorage.setItem(KEY, JSON.stringify(SV)); } catch (e) { } }
 
   // ---------- canvas ----------
@@ -80,7 +96,7 @@
   function begin(st) {
     G.st = st; G.sys.initAcc(G.st); G.t = 0; G.tsim = 0; G.hist = []; G.trail = []; G.peakF = 0; G.sample = 0; G.hold = 0; G.bestHold = 0; G.topE = 0; G.reached = false;
     G.E0 = G.sys.energy(G.st).total; G.wind.v = G.wind.steady; G.wind.target = G.wind.steady; G.wind.next = 2 + Math.random() * 3;
-    G.input.tx = st[0]; G.keyHold = 0; G.apMode = 'pump'; G.autoUsed = G.auto; G.speed = 1; G.blewUp = false; acc = 0; setPaused(false);
+    G.input.tx = G.input.sx = st[0]; G.keyHold = 0; G.keyV = 0; G.rule = rules(); G.apMode = 'pump'; G.autoUsed = G.auto; G.speed = 1; G.blewUp = false; acc = 0; setPaused(false);
     if (!isFinite(G.cam.cx)) G.cam.cx = 0;
     if (G.twin) { var t2 = Float64Array.from(st); t2[1] += 1e-3 * Math.PI / 180; var tw = build(G.sys.books, { sBind: G.sys.sBind, zeta: G.sys.zeta, g: G.sys.g, mc: G.sys.mc, rc: G.sys.rc, xEnd: G.sys.xEnd }); G.twin = { sys: tw, st: t2 }; tw.initAcc(t2); }
   }
@@ -89,17 +105,19 @@
   function startLevel(n, quiet) {
     var L = lv(n); G.mode = 'levels'; G.n = n; G.twin = null; $('bc-lab').hidden = true;
     G.books = P.makeBooks(n, L.seed); G.colors = colorsFor(n, n);
-    G.sys = build(G.books, { sBind: L.sBind, xEnd: L.xEnd }); analyse();
+    var e = easeOf(n); G.sys = build(G.books, { sBind: L.sBind * (1 + EASE.bind * e), xEnd: L.xEnd }); analyse();
     levelSpeed(); G.wind.max = 0; G.wind.gusty = false; G.wind.steady = 0;
     begin(newState('down')); G.phase = 'ready'; G.cam.S = 0;
     if (!quiet) showIntro(); else hideOv();
   }
 
-  // Levels run in slow motion near the top, or in real time if the player chose it.
-  function levelSpeed() { if (SV.rt) { G.autoSlow = false; G.fixedSpeed = 1; } else { G.autoSlow = true; G.lvSpeed = lv(G.n).speed; } }
+  // Levels run in slow motion near the top, or in real time if the player chose it. Near the top a lean looks as if it doubles every
+  // 0.9 s on 2 books down to 0.5 s on 25 (the table's speeds), plus up to EASE.look seconds more on the early levels.
+  function lookFor(n) { return 0.9 - 0.4 * (n - 2) / 23 + EASE.look * easeOf(n); }
+  function levelSpeed() { if (SV.rt) { G.autoSlow = false; G.fixedSpeed = 1; } else { G.autoSlow = true; G.lvSpeed = G.rate > 0.01 ? Math.max(0.04, Math.min(1, Math.LN2 / G.rate / lookFor(G.n))) : lv(G.n).speed; } }
 
   // ---------- Lab ----------
-  var LAB = { n: 5, bind: 3.22, cw: 0, z: 0.08, g: P.G, w: 0, gust: false, start: 'down', speed: 'auto', twin: false, auto: false };
+  var LAB = { n: 4, bind: 4, cw: 0, z: 0.08, g: P.G, w: 0, gust: false, start: 'down', speed: 'auto', twin: false, auto: false };
   var lab = { n: $('bl-n'), bind: $('bl-bind'), cw: $('bl-cw'), z: $('bl-z'), g: $('bl-g'), w: $('bl-w'), gust: $('bl-gust'), start: $('bl-start'), speed: $('bl-speed'), twin: $('bl-twin'), auto: $('bl-auto') };
   function labToForm() {
     lab.n.value = LAB.n; lab.bind.value = Math.round(LAB.bind * 100); lab.cw.value = Math.round(LAB.cw * 10); lab.z.value = Math.round(LAB.z * 100);
@@ -150,7 +168,8 @@
   };
   PRESETS.hang = PRESETS.swing;
   function preset(k) { var p = PRESETS[k]; if (!p) return; for (var key in p) LAB[key] = p[key]; labToForm(); startLab(true); }
-  D.querySelectorAll('[data-preset]').forEach(function (b) { b.addEventListener('click', function () { preset(b.dataset.preset); }); });
+  D.querySelectorAll('[data-preset]').forEach(function (b) { b.addEventListener('click', function () { remember('lab'); preset(b.dataset.preset); }); });
+  $('bl-play').addEventListener('click', function () { remember('levels'); startLevel(Math.min(SV.unlocked, 25)); });
   $('bl-fold').addEventListener('click', function () { var l = $('bc-lab'), f = l.classList.toggle('fold'); this.setAttribute('aria-expanded', f ? 'false' : 'true'); this.setAttribute('aria-label', f ? 'Show the Lab settings' : 'Hide the Lab settings'); });
 
   // ---------- control ----------
@@ -160,10 +179,26 @@
     if (G.auto) return { a: autopilot(q) };
     // the motor drives the cart toward the target you set, like a stiff spring with a shock absorber; it's tuned in screen time,
     // so in slow motion the cart still keeps up with your finger
-    var wc = SERVO / G.speed; return { a: wc * wc * (G.input.tx - q[0]) - 2 * 0.9 * wc * q[N] };
+    var wc = SERVO / G.speed, a = wc * wc * (G.input.sx - q[0]) - 2 * 0.9 * wc * q[N], hp = G.rule.assist;
+    // the helping hand on the early levels: once the books swing above the pivot's level, a share of the push (70% on level 1, less
+    // after) comes from the autopilot, which trims off extra swing and steers the cart under them. You still do the swinging from
+    // below, and it lets go when they fall away.
+    if (hp > 0) {
+      var o = s.swing(q), al = Math.abs(o.psi);
+      if (al < EASE.reach) {
+        var am = s.aMax, ex = o.Etop > 0 ? o.E / o.Etop - 1 : 0, h = hp * Math.min(1, (EASE.reach - al) / 0.25), ah;
+        a = Math.max(-am, Math.min(am, a));
+        // still rising with too much swing: brake it, pushing the cart with the swing, so the books arrive at the top gently
+        if (ex > 0.02 && o.psi * o.rate < 0 && al > 0.2) { ah = am * Math.min(1, 6 * ex) * (o.rate * Math.cos(o.psi) >= 0 ? 1 : -1); G.apMode = 'pump'; }
+        else ah = autopilot(q);
+        a = (1 - h) * a + h * ah;
+      }
+      else G.apMode = 'pump';
+    }
+    return { a: a };
   }
   // The autopilot: away from the top it pumps energy into the swing, pushing the cart against the swing at the right moments until the
-  // stack has just enough energy to reach the top; near the top it catches the books, steering the cart under their centre of gravity;
+  // stack has just enough energy to reach the top; near the top it catches the books, steering the cart under their center of gravity;
   // once they are nearly up, a regulator that watches every book (LQR, in physics.js) stands the whole stack straight and keeps it there.
   function wrapA(a) { return Math.atan2(Math.sin(a), Math.cos(a)); }
   function autopilot(q) {
@@ -194,13 +229,13 @@
   function setAuto(v) {
     G.auto = v; if (v) { G.autoUsed = true; G.apMode = 'pump'; if (G.phase === 'ready') { hideOv(); G.phase = 'play'; } }
     $('bc-auto').setAttribute('aria-pressed', v ? 'true' : 'false'); if (G.mode === 'lab') { LAB.auto = v; lab.auto.checked = v; }
-    if (!v) G.input.tx = G.st[0];
+    if (!v) G.input.tx = G.input.sx = G.st[0];
   }
 
   // ---------- simulation ----------
   // Slow motion: the game slows time near the top, where a human needs it, and runs nearly at real speed for the swing.
   function slowFor(psi) {
-    var lo = G.lvSpeed, hi = Math.min(1, 2.5 * lo), a = Math.abs(psi) * 180 / Math.PI;
+    var lo = G.lvSpeed, hi = Math.min(1, Math.max(0.4, 2.5 * lo)), a = Math.abs(psi) * 180 / Math.PI;
     if (!isFinite(a)) return 1;
     if (a > 70) return hi; if (a < 25) return lo;
     var u = (70 - a) / 45, sm = u * u * (3 - 2 * u); return hi + (lo - hi) * sm;
@@ -220,7 +255,13 @@
   }
   function tick(h) {
     var s = G.sys, N = s.N, hs = h / G.speed, u = (G.input.right ? 1 : 0) - (G.input.left ? 1 : 0);
-    if (u && G.phase === 'play' && !G.auto) { G.keyHold += hs; var lim = s.xEnd - 0.05, vk = (0.25 + 0.35 * s.height) * (0.6 + 1.4 * Math.min(1, G.keyHold)); G.input.tx = Math.max(-lim, Math.min(lim, G.input.tx + u * vk * hs)); } else G.keyHold = 0;
+    // keys: the target speeds up the longer you hold, and eases in and out instead of starting and stopping with a jerk
+    var lim = s.xEnd - 0.05;
+    if (u && G.phase === 'play' && !G.auto) G.keyHold += hs; else G.keyHold = 0;
+    var vt = u && G.phase === 'play' && !G.auto ? u * (0.25 + 0.35 * s.height) * (0.6 + 1.4 * Math.min(1, G.keyHold)) : 0;
+    G.keyV += (vt - G.keyV) * Math.min(1, hs / 0.12); if (Math.abs(G.keyV) < 1e-4 && !vt) G.keyV = 0;
+    if (G.keyV) G.input.tx = Math.max(-lim, Math.min(lim, G.input.tx + G.keyV * hs));
+    G.input.sx += (G.input.tx - G.input.sx) * Math.min(1, hs / SMOOTH);
     updateWind(h);
     // When the books whirl fast, split the step so no book turns more than about 0.08 rad (5°) per step. Without this, a very
     // fast spin feeds numerical energy into the swing and it runs away; real books don't do that.
@@ -234,10 +275,11 @@
     var tp = s.points(G.st, PIV).pts[s.n], tipA = Math.abs(Math.atan2(tp[0] - G.st[0], tp[1] - PIV));
     // the worst-leaning book, in radians from straight up
     var worst = 0; for (j = 1; j <= s.n; j++) { var aj = Math.abs(wrapA(G.st[j])); if (aj > worst) worst = aj; } G.worst = worst;
-    // Balance: the books' centre of gravity within 15° of straight up, no binding bent more than 20°, and the top book within 25°.
+    // Balance: the books' center of gravity within 15° of straight up, no binding bent more than 20°, and the top book within 25°
+    // (each a little looser on the early levels).
     // Straight: every single book within 5° (or 2°) of straight up.
     if (G.mode === 'levels' && SV.goal !== 'bal') G.inZone = worst < goal().deg * Math.PI / 180;
-    else G.inZone = Math.abs(cm.lean) < ZONE && mb < ZBEND && tipA < ZTIP;
+    else G.inZone = Math.abs(cm.lean) < G.rule.zone && mb < G.rule.bend && tipA < G.rule.tip;
     if (G.phase === 'play') {
       G.t += hs; G.peakF = Math.max(G.peakF, Math.abs(s.lastF));
       if (G.inZone) { G.hold += hs; G.reached = true; } else G.hold = 0;
@@ -249,7 +291,7 @@
   }
   // the numbers ran away: stop the simulation (in every mode) and offer a fresh start
   function blowUp() { if (G.blewUp) return; G.blewUp = true; G.phase = 'done'; G.input.touch = G.input.left = G.input.right = false; showBlown(); }
-  function parFor(n) { return Math.round(lv(n).par * goal().par); }
+  function parFor(n) { var p = lv(n).par * goal().par; if (SV.goal === 'bal') p -= HOLD - G.rule.hold; return Math.round(p); }
   function stars() { var par = parFor(G.n); return G.t <= par ? 3 : G.t <= 2 * par ? 2 : 1; }
   function clear() {
     G.phase = 'done'; var n = G.n, st = stars();
@@ -399,9 +441,9 @@
     drawHub(pp);
     return pp;
   }
-  // the balance zone: a wedge 15° either side of straight up, with the hold time filling it
+  // the balance zone: a wedge either side of straight up (15°, wider on the early levels), with the hold time filling it
   function drawZone() {
-    var zr = G.mode === 'levels' ? goal().deg * Math.PI / 180 : ZONE, s = G.sys, p = [X(G.st[0]), Y(PIV)], R = (s.height + 0.12) * G.cam.S, a0 = -Math.PI / 2 - zr, a1 = -Math.PI / 2 + zr, on = G.inZone && G.phase !== 'ready';
+    var zr = zoneRad(), s = G.sys, p = [X(G.st[0]), Y(PIV)], R = (s.height + 0.12) * G.cam.S, a0 = -Math.PI / 2 - zr, a1 = -Math.PI / 2 + zr, on = G.inZone && G.phase !== 'ready';
     g.beginPath(); g.moveTo(p[0], p[1]); g.arc(p[0], p[1], R, a0, a1); g.closePath();
     g.fillStyle = on ? 'rgba(99,230,190,0.13)' : 'rgba(99,230,190,0.05)'; g.fill();
     g.setLineDash([5, 6]); g.strokeStyle = on ? 'rgba(99,230,190,0.75)' : 'rgba(99,230,190,0.3)'; g.lineWidth = 1.2; g.stroke(); g.setLineDash([]);
@@ -485,7 +527,8 @@
       else if (ef < 0.85) msg = 'Swing them higher: push in time with the swing.';
       else if (ef > 1.25 && Math.abs(sw.psi) > 0.6) msg = 'Too much swing: they’ll go over the top. Slow them down.';
       else msg = 'Nearly there: catch them at the top.';
-    } else msg = G.auto ? 'Autopilot: ' + (G.apMode === 'lqr' ? 'standing every book straight' : G.apMode === 'bal' ? 'catching the books' : 'pumping the swing') : '';
+    } else msg = G.auto ? 'Autopilot: ' + (G.apMode === 'lqr' ? 'standing every book straight' : G.apMode === 'bal' ? 'catching the books' : 'pumping the swing') : strip.classList.contains('used') ? '' : 'Slide on the scene to swing the books, or press 🤖.';
+    $('bc-assist').hidden = !(G.mode === 'levels' && G.rule.assist > 0);
     $('bc-msg').textContent = msg;
     if ($('bc-panel').hidden) return;
     var cm = s.comState(st), F = s.lastF || 0, a = s.lastAcc || 0, E = s.energy(st), Wk = st[2 * N], Ls = st[2 * N + 1];
@@ -494,7 +537,7 @@
       row('Motor force F', fmt(F, 0) + ' N') + row('F = (M+m)a would be', fmt(s.mTot * a, 0) + ' N', 'the gap is the books pulling on the cart') +
       '<dt class="sec">Books</dt>' + row('Mass m', s.mBooks.toFixed(1) + ' kg') + row('Height', s.height.toFixed(2) + ' m') + row('Angle from straight up', fmt(cm.lean * 180 / Math.PI, 0) + '°') +
       row('Turning rate', fmt(cm.leanRate * 180 / Math.PI, 0) + '°/s') + row('Gravity torque', fmt(s.mBooks * s.g * cm.x, 1) + ' N·m', 'τ = m g × sideways offset') + row('Sharpest bend', (maxBend * 180 / Math.PI).toFixed(0) + '°') +
-      '<dt class="sec">Swing</dt>' + row('Swing energy', sw.E.toFixed(2) + ' J', 'E = ½ J ω² + g P (cos φ + 1)') + row('Needed to reach the top', sw.Etop.toFixed(2) + ' J', '2 g P: lifts the centre of gravity over the pivot') +
+      '<dt class="sec">Swing</dt>' + row('Swing energy', sw.E.toFixed(2) + ' J', 'E = ½ J ω² + g P (cos φ + 1)') + row('Needed to reach the top', sw.Etop.toFixed(2) + ' J', '2 g P: lifts the center of gravity over the pivot') +
       row('Swing period hanging', G.period ? G.period.toFixed(2) + ' s' : '—', 'T = 2π √(J ÷ g P), small swings') +
       (s.mc > 0 ? row('Counterweight', s.mc.toFixed(1) + ' kg at ' + s.rc.toFixed(2) + ' m') : '') +
       '<dt class="sec">At the top</dt>' + row('Doubling time', G.rate > 0.01 ? (Math.LN2 / G.rate).toFixed(3) + ' s' : 'stable', 't₂ = ln 2 / λ, standing straight up with the cart held still') + row('Slowest wobble', G.f1 ? G.f1.toFixed(2) + ' Hz' : '—') +
@@ -513,7 +556,7 @@
     var w = chart.clientWidth || 240, h = chart.clientHeight || 70; if (chart.width !== Math.round(w * DPR)) { chart.width = Math.round(w * DPR); chart.height = Math.round(h * DPR); }
     cg.setTransform(DPR, 0, 0, DPR, 0, 0); cg.clearRect(0, 0, w, h);
     var Yc = function (v) { return h / 2 - v / Math.PI * (h / 2 - 3); };
-    var zb = straightGoal() ? goal().deg * Math.PI / 180 : ZONE; cg.fillStyle = 'rgba(99,230,190,0.18)'; cg.fillRect(0, Yc(zb), w, Yc(-zb) - Yc(zb));
+    var zb = zoneRad(); cg.fillStyle = 'rgba(99,230,190,0.18)'; cg.fillRect(0, Yc(zb), w, Yc(-zb) - Yc(zb));
     cg.strokeStyle = 'rgba(255,255,255,0.12)'; cg.beginPath(); cg.moveTo(0, Yc(Math.PI / 2)); cg.lineTo(w, Yc(Math.PI / 2)); cg.moveTo(0, Yc(-Math.PI / 2)); cg.lineTo(w, Yc(-Math.PI / 2)); cg.stroke();
     cg.fillStyle = 'rgba(200,220,230,0.5)'; cg.font = '9px system-ui,sans-serif'; cg.fillText('up', 2, Yc(0) - 2); cg.fillText('down', 2, h - 2);
     if (G.hist.length < 2) return; var t1 = G.hist[G.hist.length - 1][0], t0 = t1 - 10;
@@ -538,28 +581,29 @@
   function timePick() {
     var h = '<div class="bc-timepick" role="group" aria-label="Goal"><span>Goal:</span>';
     for (var k in GOALS) h += '<button type="button" data-goal="' + k + '" aria-pressed="' + (SV.goal === k) + '">' + GOALS[k].short + '</button>';
-    return h + '</div><div class="bc-timepick" role="group" aria-label="Time"><span>Time:</span><button type="button" data-rt="0" aria-pressed="' + !SV.rt + '">🐢 Slow motion near the top</button><button type="button" data-rt="1" aria-pressed="' + SV.rt + '">⚡ Real time</button></div>';
+    return h + '</div><div class="bc-timepick" role="group" aria-label="Time"><span>Time:</span><button type="button" data-rt="0" aria-pressed="' + !SV.rt + '">🐢 Slow motion near the top</button><button type="button" data-rt="1" aria-pressed="' + SV.rt + '">⚡ Real time</button></div>' +
+      '<div class="bc-timepick" role="group" aria-label="Help"><span>Help:</span><button type="button" data-help="1" aria-pressed="' + SV.help + '">🤝 Helping hand on the early levels</button><button type="button" data-help="0" aria-pressed="' + !SV.help + '">No help</button></div>';
   }
   function goalText() {
     var gl = goal();
-    return SV.goal === 'bal' ? 'catch them at the top and keep their centre of gravity within 15° of straight up for ' + gl.hold + ' seconds'
+    return SV.goal === 'bal' ? 'catch them at the top and keep their center of gravity within ' + zoneDeg() + '° of straight up for ' + holdFor() + ' seconds'
       : 'stand them up straight: every single book within ' + gl.deg + '° of vertical, held for ' + gl.hold + ' seconds';
   }
   function showMenu() {
     if (G.phase === 'play') setPaused(true);
     showOv('<h2 id="bc-ov-h">🛒 Book Cart</h2><p>A chain of books hangs from a shopping cart. Roll the cart to swing the books up, then keep them balanced above the cart. Every book obeys real physics: gravity, inertia, springy bindings and friction.</p>' +
-      '<div class="bc-modes"><button type="button" data-mode="levels" class="on"><b>Levels</b><small>2 to 25 books, in any order. Swing them up, then balance them above the cart or stand every book straight.</small></button>' +
-      '<button type="button" data-mode="lab"><b>Lab</b><small>Change gravity, stiffness, counterweight and wind. Stand the books up, watch chaos, or let the autopilot try.</small></button></div>' +
-      '<h3>Pick a level <span class="small">(number of books)</span></h3>' + levelGrid() + timePick() +
+      '<div class="bc-modes"><button type="button" data-mode="lab"' + (G.mode === 'lab' ? ' class="on"' : '') + '><b>🔬 Lab</b><small>Change gravity, stiffness, counterweight and wind. Stand the books up, watch chaos, or let the autopilot try.</small></button>' +
+      '<button type="button" data-mode="levels"' + (G.mode === 'levels' ? ' class="on"' : '') + '><b>🎮 Game</b><small>24 levels, 2 to 25 books. Swing them up, then balance them above the cart. The first levels are gentle.</small></button></div>' +
+      '<h3>Or pick a level <span class="small">(number of books)</span></h3>' + levelGrid() + timePick() +
       '<p class="small">Phone or mouse: press anywhere on the scene and slide left or right; the cart moves with you. Keyboard: hold ← →. 🔬 shows the live physics, 🤖 the autopilot. Stars are kept for each goal; ⚡ marks a level done in real time. <a href="' + LESSON + '">Learn the physics →</a></p>', 'menu');
   }
   function showIntro() {
-    var s = G.sys, L = lv(G.n);
+    var s = G.sys;
     showOv('<h2 id="bc-ov-h">Level ' + (G.n - 1) + ': ' + G.n + ' books</h2>' +
       '<div class="bc-stats"><div><b>' + s.height.toFixed(2) + ' m</b><span>long</span></div><div><b>' + s.mBooks.toFixed(1) + ' kg</b><span>of books</span></div><div><b>' + (Math.LN2 / G.rate).toFixed(2) + ' s</b><span>for a lean to double at the top, in real time</span></div>' +
-      (SV.rt ? '<div><b>⚡ Real time</b><span>no slow motion: you have ' + (Math.LN2 / G.rate).toFixed(2) + ' s to catch a lean before it doubles</span></div>' : '<div><b>×' + L.speed.toFixed(2) + '</b><span>slow motion near the top, so it looks like ' + (Math.LN2 / G.rate / L.speed).toFixed(1) + ' s</span></div>') + '</div>' +
+      (SV.rt ? '<div><b>⚡ Real time</b><span>no slow motion: you have ' + (Math.LN2 / G.rate).toFixed(2) + ' s to catch a lean before it doubles</span></div>' : '<div><b>×' + G.lvSpeed.toFixed(2) + '</b><span>slow motion near the top, so it looks like ' + (Math.LN2 / G.rate / G.lvSpeed).toFixed(1) + ' s</span></div>') + '</div>' +
       '<p>The books hang from the cart. Swing them up by rolling the cart in time with the swing, then ' + goalText() + '.</p>' +
-      '<p class="small">Watch the Swing bar: when it reaches the line, the books have just enough energy to stand up. ' + (SV.rt ? 'Real time is much harder: the books fall at their true speed.' : 'Near the top, time slows down so you can react.') + ' ★★★ under ' + parFor(G.n) + ' s.</p>' + timePick() +
+      '<p class="small">Watch the Swing bar: when it reaches the line, the books have just enough energy to stand up. ' + (SV.rt ? 'Real time is much harder: the books fall at their true speed.' : 'Near the top, time slows down so you can react.') + (G.rule.assist > 0 ? ' 🤝 On this level a helping hand trims extra swing near the top and steers the cart under the books; you do the swinging.' : '') + ' ★★★ under ' + parFor(G.n) + ' s.</p>' + timePick() +
       '<div class="bc-actions"><button type="button" class="go" data-act="go">▶ Start</button><button type="button" data-act="auto">🤖 Watch the autopilot</button><button type="button" data-act="menu">Menu</button></div>', 'intro');
   }
   function fact() { return FACTS[Math.floor(Math.random() * FACTS.length)]; }
@@ -585,21 +629,27 @@
       var nb = ov.querySelector('[data-rt="' + b.dataset.rt + '"]'); if (nb) nb.focus({ preventScroll: true });
       return;
     }
+    if (b.dataset.help !== undefined) {
+      SV.help = b.dataset.help === '1'; persist(); G.rule = rules();
+      if (ov.dataset.kind === 'intro') showIntro(); else if (ov.dataset.kind === 'menu') showMenu();
+      var hb = ov.querySelector('[data-help="' + b.dataset.help + '"]'); if (hb) hb.focus({ preventScroll: true });
+      return;
+    }
     if (b.dataset.goal) {
-      SV.goal = GOALS[b.dataset.goal] ? b.dataset.goal : 'bal'; persist(); G.hold = 0;
+      SV.goal = GOALS[b.dataset.goal] ? b.dataset.goal : 'bal'; persist(); G.hold = 0; G.rule = rules();
       if (ov.dataset.kind === 'intro') showIntro(); else if (ov.dataset.kind === 'menu') showMenu();
       var gb = ov.querySelector('[data-goal="' + SV.goal + '"]'); if (gb) gb.focus({ preventScroll: true });
       return;
     }
-    if (b.dataset.lv) { startLevel(+b.dataset.lv); return; }
-    if (b.dataset.mode) { if (b.dataset.mode === 'levels') startLevel(Math.min(SV.unlocked, 25)); else { labToForm(); startLab(); } return; }
+    if (b.dataset.lv) { remember('levels'); startLevel(+b.dataset.lv); return; }
+    if (b.dataset.mode) { remember(b.dataset.mode); if (b.dataset.mode === 'levels') startLevel(Math.min(SV.unlocked, 25)); else { labToForm(); startLab(); } return; }
     var a = b.dataset.act;
     if (a === 'go') go();
     else if (a === 'menu') showMenu();
     else if (a === 'retry') restart();
     else if (a === 'auto') { go(); setAuto(true); }
-    else if (a === 'next') startLevel(G.n + 1);
-    else if (a === 'lab') { labToForm(); startLab(); }
+    else if (a === 'next') { remember('levels'); startLevel(G.n + 1); }
+    else if (a === 'lab') { remember('lab'); labToForm(); startLab(); }
   });
   function restart() {
     var a = G.auto;
@@ -654,20 +704,23 @@
 
   // ---------- main loop ----------
   var acc = 0, last = performance.now();
+  // move the simulation on by dt seconds of screen time
+  function advance(dt) {
+    if (G.paused || G.phase === 'menu' || (G.phase === 'done' && (G.mode === 'levels' || G.blewUp))) return;
+    var target = G.autoSlow ? slowFor(G.sys.comState(G.st).lean) : G.fixedSpeed;
+    if (!isFinite(target)) target = 1; if (!isFinite(G.speed)) G.speed = target;
+    G.speed += (target - G.speed) * Math.min(1, dt / 0.3);
+    if (!isFinite(acc)) acc = 0;
+    acc += dt * G.speed; var n = 0;
+    while (acc >= H && n < 90) { tick(H); acc -= H; n++; if (G.phase === 'done' && (G.mode === 'levels' || G.blewUp)) { acc = 0; break; } }
+    if (n >= 90) acc = 0;
+  }
   function frame(now) {
     // ask for the next frame first, so nothing that goes wrong below can stop the game (and its buttons) for good
     W.requestAnimationFrame(frame);
     var dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now;
     try {
-      if (!G.paused && G.phase !== 'menu' && !(G.phase === 'done' && (G.mode === 'levels' || G.blewUp))) {
-        var target = G.autoSlow ? slowFor(G.sys.comState(G.st).lean) : G.fixedSpeed;
-        if (!isFinite(target)) target = 1; if (!isFinite(G.speed)) G.speed = target;
-        G.speed += (target - G.speed) * Math.min(1, dt / 0.3);
-        if (!isFinite(acc)) acc = 0;
-        acc += dt * G.speed; var n = 0;
-        while (acc >= H && n < 90) { tick(H); acc -= H; n++; if (G.phase === 'done' && (G.mode === 'levels' || G.blewUp)) { acc = 0; break; } }
-        if (n >= 90) acc = 0;
-      }
+      advance(dt);
       render(G.paused ? 0 : dt);
       hudT += dt; if (hudT > 0.1) { hudT = 0; hud(); }
     } catch (err) {
@@ -676,11 +729,13 @@
     }
   }
 
-  // first screen: a lab preset from the address (?lab=swing), or the menu
+  // first screen: a lab preset from the address (?lab=swing), the levels menu for a returning player who last chose the game
+  // (or ?play), and otherwise the Lab
   var q = /[?&]lab=([a-z]+)/.exec(W.location.search);
   if (q && PRESETS[q[1]]) { for (var k in PRESETS[q[1]]) LAB[k] = PRESETS[q[1]][k]; labToForm(); startLab(); }
-  else { startLevel(Math.min(SV.unlocked, 25), true); showMenu(); }
+  else if (SV.mode === 'levels' || /[?&]play\b/.test(W.location.search)) { startLevel(Math.min(SV.unlocked, 25), true); showMenu(); }
+  else { labToForm(); startLab(); }
   if (W.innerWidth > 900 && G.mode !== 'lab') setPanel(true);
-  if (/[?&]bcdebug\b/.test(W.location.search)) W.__bc = { G: G, startLevel: startLevel, preset: preset, LEVELS: LEVELS, setAuto: setAuto, SV: SV };
+  if (/[?&]bcdebug\b/.test(W.location.search)) W.__bc = { G: G, advance: advance, go: go, EASE: EASE, startLevel: startLevel, startLab: startLab, preset: preset, LEVELS: LEVELS, setAuto: setAuto, SV: SV };
   W.requestAnimationFrame(frame);
 })(window, document);

@@ -1,7 +1,7 @@
 ---
 aliases: ["/games/book-cart/"]
 title: "Book Cart"
-description: "Swing a chain of 2 to 25 linked books up from a rolling shopping cart and balance it on top. Real physics, live numbers, a Lab to change gravity, wind, stiffness and weight, and a lesson on why things fall over."
+description: "A physics lab with a chain of linked books on a rolling shopping cart: change gravity, wind, stiffness and weight, watch the live numbers, and stand the books up. Then play the game: 24 levels, gentle at first, to swing 2 to 25 books up and balance them on top."
 layout: bookcart
 images: ["img/share/games/bookcart.jpg"]
 ---

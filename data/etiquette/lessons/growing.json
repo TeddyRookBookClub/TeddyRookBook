@@ -1,0 +1,4324 @@
+{
+ "growing.starting-conversation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Most people feel a little shy before they talk to someone new: at a party, on the first day of a club, or while waiting for practice to start. Here is a secret: the other person is often just as nervous, and they will be glad you went first. Starting a conversation is a small kindness you can learn."
+   },
+   {
+    "t": "key",
+    "html": "Open with a <b>greeting</b> and a <b>simple question or comment about something you share right now</b>: the class, the game, the food, the place. “Hi, I’m Ruby. Have you been to this pool before?”"
+   },
+   {
+    "t": "why",
+    "html": "Manners are kindness made into habits. A friendly opener puts the other person at ease: it shows you are interested in them, and a question about the moment you share is easy for anyone to answer. Nobody has to think hard about “What did you think of the movie?” right after the movie."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "party",
+     "people": [
+      {
+       "who": "sam",
+       "age": "teen"
+      },
+      {
+       "who": "hana",
+       "age": "teen",
+       "mood": "shy"
+      }
+     ],
+     "prompt": "Sam doesn’t know anyone at his cousin’s party except his cousin. Hana is standing by the snack table. What could Sam say?",
+     "choices": [
+      {
+       "text": "“Hi, I’m Sam. These pretzels are great. How do you know Ruby?”",
+       "ok": true,
+       "mood": {
+        "0": "happy",
+        "1": "happy"
+       },
+       "say": [
+        [
+         1,
+         "I’m Hana! We’re on the swim team together."
+        ]
+       ],
+       "outcome": "A greeting, a comment about the snacks they are both eating, and an easy question. Hana has something to answer."
+      },
+      {
+       "text": "Nothing. He waits for Hana to talk first.",
+       "ok": false,
+       "mood": {
+        "0": "shy",
+        "1": "shy"
+       },
+       "outcome": "They both wait, and nobody talks. Someone has to go first; it may as well be Sam."
+      },
+      {
+       "text": "“I got a new bike and it has twenty-one gears.”",
+       "ok": false,
+       "mood": {
+        "1": "surprised"
+       },
+       "outcome": "A fact about yourself is hard to answer. Hana can only say “Oh.” A question about something you share works better."
+      }
+     ]
+    },
+    "cap": "Try each choice to see how Hana reacts."
+   },
+   {
+    "t": "ex",
+    "title": "At a new club",
+    "q": "Leo arrives at the first meeting of the chess club. A girl is setting up a board by herself. What can Leo say?",
+    "steps": [
+     "Start with a greeting and your name: “Hi, I’m Leo.”",
+     "Add a question about the thing you share, the club: “Is this your first meeting too?”",
+     "If she answers, you have a conversation. If she is quiet, ask one more easy question: “Do you want to play a game?”"
+    ],
+    "a": "“Hi, I’m Leo. Is this your first meeting too?”"
+   },
+   {
+    "t": "ex",
+    "title": "A grown-up at a family party",
+    "q": "Omar is next to his aunt’s neighbor, Mr. Diaz, at a cookout. What is a good opener?",
+    "steps": [
+     "Greet him with his title: “Hi, Mr. Diaz.”",
+     "Comment on or ask about the cookout you are both at: “Did you try the corn? It’s really good.”",
+     "Grown-ups enjoy being asked about things, too: “How do you know my aunt?”"
+    ],
+    "a": "“Hi, Mr. Diaz. Did you try the corn?”"
+   },
+   {
+    "t": "mistake",
+    "html": "Waiting for the other person to start, or opening with a fact about yourself (“I have a new phone”). Waiting leaves you both stuck, and a fact gives them nothing to answer. Check your opener: does it end with a question they can answer easily?"
+   },
+   {
+    "t": "note",
+    "html": "Good openers to keep ready: “How do you know (the host)?” “Have you been here before?” “What did you think of the game?” “Is this seat taken?”"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on conversation (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.good-questions": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once you have <a href=\"/etiquette/growing-up/starting-conversation/\">started a conversation</a>, the next question decides whether it keeps going. Some questions open a door. Others close it."
+   },
+   {
+    "t": "key",
+    "html": "<b>Open questions</b> begin with words like <i>what</i>, <i>how</i>, <i>why</i> and <i>tell me about</i>, and they invite a real answer: “What was the best part of your trip?” <b>Yes-or-no questions</b> (“Was your trip fun?”) often get one word and a silence."
+   },
+   {
+    "t": "why",
+    "html": "A good question tells the other person, “I’m interested in you.” An open question gives them room to share a story, and their story gives you the next question. A string of yes-or-no questions starts to feel like a quiz."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Opens the door",
+      "Closes the door"
+     ],
+     "cards": [
+      {
+       "text": "What do you like to do after school?",
+       "bin": 0
+      },
+      {
+       "text": "Do you like school?",
+       "bin": 1,
+       "why": "It can be answered with “Yes” or “No.”"
+      },
+      {
+       "text": "How did you get into skateboarding?",
+       "bin": 0
+      },
+      {
+       "text": "Was the movie good?",
+       "bin": 1,
+       "why": "Try “What was your favorite part of the movie?”"
+      },
+      {
+       "text": "Tell me about your new puppy!",
+       "bin": 0
+      },
+      {
+       "text": "Is that your dog?",
+       "bin": 1,
+       "why": "A fine start, but follow it with an open question."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort the questions, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Turning a closed question into an open one",
+    "q": "Mia wants to ask Grandpa Walt about his old job. She was going to ask, “Did you like being a mail carrier?” How could she ask it so he has more to say?",
+    "steps": [
+     "“Did you like…” can be answered with one word.",
+     "Start with “what” or “tell me” instead.",
+     "“What was the funniest thing that happened on your route?” invites a story."
+    ],
+    "a": "“What was the funniest thing that happened on your mail route?”"
+   },
+   {
+    "t": "ex",
+    "title": "Follow the answer",
+    "q": "Sam asks Hana, “What did you do this weekend?” Hana says, “We went to the lake.” What is a good next question?",
+    "steps": [
+     "Use what she just said. The lake is the new topic.",
+     "Ask an open question about it: “What did you do at the lake?”",
+     "Avoid jumping to a new topic of your own; that tells her you were not listening."
+    ],
+    "a": "“What did you do at the lake?”"
+   },
+   {
+    "t": "mistake",
+    "html": "Asking a string of yes-or-no questions (“Do you have a dog? Do you like soccer? Is your teacher nice?”) and then running out of things to say. Check: could the answer be one word? Then turn it into a what, how or why question."
+   },
+   {
+    "t": "mistake",
+    "html": "Asking questions that pry. Good questions are about interests, plans and opinions, not about money, weight or private family matters. More on that in <a href=\"/etiquette/growing-up/topics-to-skip/\">Topics to Skip</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on conversation (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.listening-well": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "After you ask <a href=\"/etiquette/growing-up/good-questions/\">a good question</a>, the most important part comes next: listening to the answer. Listening well is a skill, and people can tell right away whether you have it."
+   },
+   {
+    "t": "key",
+    "html": "Good listeners <b>look at the speaker</b>, <b>let them finish</b>, and <b>ask a follow-up question</b> about what they just said. “You went camping? What did you cook over the fire?”"
+   },
+   {
+    "t": "why",
+    "html": "When someone feels heard, they feel respected. A follow-up question is proof that you listened, because you can only ask it if you were paying attention. It also keeps the conversation going without you having to think up a new topic."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "classroom",
+     "people": [
+      {
+       "who": "ruby",
+       "age": "teen"
+      },
+      {
+       "who": "omar",
+       "age": "teen"
+      }
+     ],
+     "say": [
+      [
+       0,
+       "My grandma taught me to make dumplings this weekend!"
+      ]
+     ],
+     "prompt": "What should Omar say next?",
+     "choices": [
+      {
+       "text": "“That sounds fun! Were they hard to fold?”",
+       "ok": true,
+       "mood": {
+        "0": "happy",
+        "1": "happy"
+       },
+       "say": [
+        [
+         0,
+         "So hard! Mine looked like little rocks."
+        ]
+       ],
+       "outcome": "Omar asked about what Ruby just said. Now she has a story to tell."
+      },
+      {
+       "text": "“I went to a basketball game this weekend.”",
+       "ok": false,
+       "mood": {
+        "0": "sad"
+       },
+       "outcome": "Omar jumped to his own story. Ruby can tell he was waiting for his turn, not listening."
+      },
+      {
+       "text": "He nods and looks at his phone.",
+       "ok": false,
+       "mood": {
+        "0": "sad"
+       },
+       "outcome": "Looking away tells Ruby that the phone matters more than she does."
+      }
+     ]
+    },
+    "cap": "Choose what Omar says, and watch Ruby’s face."
+   },
+   {
+    "t": "ex",
+    "title": "A follow-up question",
+    "q": "Leo tells Sam, “I’m learning to play the drums.” Write a follow-up question for Sam.",
+    "steps": [
+     "Find the new information: Leo is learning the drums.",
+     "Ask about it with an open question.",
+     "“How long have you been playing?” or “What song are you learning?”"
+    ],
+    "a": "“What song are you learning first?”"
+   },
+   {
+    "t": "ex",
+    "title": "When someone is sad",
+    "q": "Hana says, “My cat is sick, and we have to take her to the vet.” What does a good listener do?",
+    "steps": [
+     "Look at Hana and let her finish.",
+     "Show you heard the feeling: “Oh no, I’m sorry.”",
+     "Ask gently, if she seems to want to talk: “What’s her name?” Don’t change the subject to your own pet story."
+    ],
+    "a": "“Oh no, I’m sorry. What’s her name?”"
+   },
+   {
+    "t": "mistake",
+    "html": "Spending the other person’s turn planning your own story, then saying “That reminds me…” and talking about yourself. A quick check: before you share your story, have you asked at least one question about theirs?"
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> In the U.S., looking at the speaker’s face shows you are listening. In some families and cultures, looking down a little is the respectful way to listen to an older person. Both are ways of showing respect; more in <a href=\"/etiquette/growing-up/eye-contact/\">Eye Contact</a>."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.sharing-the-talk": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know how to <a href=\"/etiquette/growing-up/listening-well/\">listen well</a>. Now put talking and listening together. A good conversation is a game of catch: you catch the ball, hold it for a moment, and toss it back."
+   },
+   {
+    "t": "key",
+    "html": "<b>Say a little, then toss it back</b> with a question. Keep your turns about as long as the other person’s, and <b>bring quiet people in</b>: “Omar, you play the trumpet, right?”"
+   },
+   {
+    "t": "why",
+    "html": "A conversation belongs to everyone in it. When one person does all the talking, the others feel like an audience instead of friends. Sharing the talk makes each person feel that their ideas matter too."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Shares the talk",
+      "Hogs the talk"
+     ],
+     "cards": [
+      {
+       "text": "Answering a question, then asking “What about you?”",
+       "bin": 0
+      },
+      {
+       "text": "Telling a ten-minute story while friends wait to talk.",
+       "bin": 1,
+       "why": "Tell the short version and let others ask for more."
+      },
+      {
+       "text": "Asking the quiet new kid what they think.",
+       "bin": 0
+      },
+      {
+       "text": "Turning every topic back to your own team.",
+       "bin": 1,
+       "why": "Let the topic stay on your friend for a while."
+      },
+      {
+       "text": "Saying “Sorry, go ahead” when you both start at once.",
+       "bin": 0
+      },
+      {
+       "text": "Talking over someone to finish your point.",
+       "bin": 1,
+       "why": "Wait for a pause. Your point will keep."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each habit, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Toss it back",
+    "q": "Ms. Park asks Ruby, “How was your summer?” Ruby went to camp. How can she answer and share the talk?",
+    "steps": [
+     "Answer with a short version and a detail: “Great! I went to a camp by a lake and learned to canoe.”",
+     "Toss it back: “How was yours?”",
+     "If Ms. Park wants to hear more, she will ask."
+    ],
+    "a": "“Great! I learned to canoe at camp. How was your summer?”"
+   },
+   {
+    "t": "ex",
+    "title": "Bringing someone in",
+    "q": "Leo, Mia and Sam are talking about a video game. Sam has not said anything. What can Mia do?",
+    "steps": [
+     "Notice who has been quiet.",
+     "Ask a question that is easy for Sam to answer, about something he knows: “Sam, you like building games, right? What are you playing now?”",
+     "Then listen to his answer, just as you would anyone else’s."
+    ],
+    "a": "“Sam, what are you playing these days?”"
+   },
+   {
+    "t": "mistake",
+    "html": "Answering one question with a long story and never asking one back, or steering every topic to yourself. A quick check: count your questions. If you have asked none in a few minutes, toss the ball back."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on conversation (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.topics-to-skip": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When you <a href=\"/etiquette/growing-up/sharing-the-talk/\">share a conversation</a>, some topics bring people together and some make them want to leave. A remark can be true, and even meant kindly, and still make someone uncomfortable."
+   },
+   {
+    "t": "key",
+    "html": "Leave out remarks about <b>someone’s body or weight</b>, <b>money</b> (how much things cost, how much people earn, how big their house is) and <b>private family matters</b>. Talk about interests, plans, books, games, animals, food and what you are doing together."
+   },
+   {
+    "t": "why",
+    "html": "People can’t easily change their body, their money or their family’s troubles, and a remark about them puts the person on the spot in front of others. Good manners mean thinking about how a remark will feel to the person who hears it, not only whether it is true."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Fine to talk about",
+      "Better to skip"
+     ],
+     "cards": [
+      {
+       "text": "What book are you reading?",
+       "bin": 0
+      },
+      {
+       "text": "“You got so tall! You’re huge now.”",
+       "bin": 1,
+       "why": "Even meant kindly, it makes someone think about their body."
+      },
+      {
+       "text": "How much did your sneakers cost?",
+       "bin": 1,
+       "why": "Money questions put people on the spot."
+      },
+      {
+       "text": "What are you doing this summer?",
+       "bin": 0
+      },
+      {
+       "text": "“Why are your parents getting divorced?”",
+       "bin": 1,
+       "why": "A private family matter. Let your friend bring it up if they want to."
+      },
+      {
+       "text": "Which team do you think will win?",
+       "bin": 0
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort the topics, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A remark that is true",
+    "q": "At a family dinner, Leo notices his cousin has a cast on her arm. Is it fine to ask about it?",
+    "steps": [
+     "A cast is something she will expect questions about, and a kind question shows care.",
+     "Keep it gentle and let her decide how much to say: “Oh no, what happened? Does it hurt?”",
+     "Skip jokes about it, and don’t ask more if she changes the subject."
+    ],
+    "a": "Yes, gently: “Oh no, what happened?” Then let her lead."
+   },
+   {
+    "t": "ex",
+    "title": "Steering away",
+    "q": "Ruby’s friend says, “Your house is so small!” What could Ruby say, and what is the lesson for the friend?",
+    "steps": [
+     "Ruby can answer calmly and change the topic: “It’s cozy. Want to see my room?”",
+     "The friend’s remark was about money and size: it can make a family feel judged.",
+     "Better: say something kind and true, like “I love your room!”"
+    ],
+    "a": "Ruby: “It’s cozy. Want to see my room?” The friend: skip remarks about the size of someone’s home."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a remark is fine because it is true or meant kindly, like “You got so tall!” or “You’ve gained weight.” If it is about someone’s body or money, skip it. A good test: would you want this said about you in front of everyone?"
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Families differ about what is private. Some talk openly about money at home, and that is their choice. With friends, neighbors and guests, the polite custom in the U.S. is to leave those topics out unless the other person brings them up."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on conversation and subjects to avoid (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.ending-conversation": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Every conversation ends. When you have <a href=\"/etiquette/growing-up/sharing-the-talk/\">shared the talk</a> for a while and need to go, ending well is part of being polite. Many people stay stuck because leaving feels rude. It isn’t, if you do it kindly."
+   },
+   {
+    "t": "key",
+    "html": "Wait for a pause, then give a <b>kind closing line</b> with a reason if you have one, and say <b>goodbye</b>: “It was good to talk with you. I need to find my mom. See you Monday!”"
+   },
+   {
+    "t": "why",
+    "html": "A friendly closing line tells the other person you enjoyed talking and that you are leaving because you have to, not because of them. It lets you both move on without hurt feelings, and it makes the next conversation easier to start."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "Ending a conversation",
+     "items": [
+      "Wait for a pause in the talk.",
+      "Say something kind about the conversation: “It was fun to hear about your trip.”",
+      "Give a reason if you have one: “I need to help set up.”",
+      "Say goodbye with their name: “See you later, Sam!”",
+      "Smile or wave as you go."
+     ]
+    },
+    "cap": "Put the steps in order, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Leaving a group",
+    "q": "Omar is talking with friends after a game and sees his dad waving from the car. What can he say?",
+    "steps": [
+     "He doesn’t need to wait long; a parent waiting is a good reason.",
+     "Closing line with the reason: “My dad’s here. Great game, everybody!”",
+     "Goodbye: “See you at practice!”"
+    ],
+    "a": "“My dad’s here. Great game, everybody! See you at practice!”"
+   },
+   {
+    "t": "ex",
+    "title": "A grown-up who keeps talking",
+    "q": "Mr. Diaz, a neighbor, has been telling Hana about his garden for a long time, and Hana promised to help Grandma June in the kitchen. What can Hana do?",
+    "steps": [
+     "Wait for a pause instead of breaking in mid-sentence.",
+     "Say something kind: “Your tomatoes sound amazing, Mr. Diaz.”",
+     "Give the reason and leave warmly: “I promised to help Grandma in the kitchen. It was nice talking with you!”"
+    ],
+    "a": "“Your tomatoes sound amazing. I promised to help Grandma, so I’d better go. It was nice talking with you!”"
+   },
+   {
+    "t": "mistake",
+    "html": "Walking away in the middle of someone’s sentence, or staying stuck because leaving feels rude. Wait for a pause, then use a closing line. Check: did you say something kind and say goodbye?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.introducing-yourself": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sooner or later you will meet someone and nobody will be there to introduce you: a new neighbor, a teammate’s parent, a substitute teacher. That is your chance to introduce yourself, and it takes about five seconds."
+   },
+   {
+    "t": "key",
+    "html": "<b>Stand</b>, <b>smile</b>, <b>look at the person</b>, say your name clearly (“Hi, I’m Leo”), and <b>add one detail</b> that gives them something to talk about: “I’m Sam’s cousin” or “I just joined the team.”"
+   },
+   {
+    "t": "why",
+    "html": "A clear name is a gift: the other person doesn’t have to guess or ask again. The detail tells them how you fit in, and it hands them an easy way to keep talking. Standing and looking at them shows that you think meeting them matters."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "Introducing yourself",
+     "items": [
+      "Stand up if you are sitting.",
+      "Smile and look at the person.",
+      "Say hello and your name clearly: “Hi, I’m Ruby.”",
+      "Add a detail: “I live next door.”",
+      "Listen for their name and say, “Nice to meet you.”"
+     ]
+    },
+    "cap": "Put the steps in order, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Meeting a new coach",
+    "q": "Hana arrives at her first swim practice. The coach, Mr. Diaz, doesn’t know her yet. What can she say?",
+    "steps": [
+     "Walk up, smile and look at him.",
+     "Say her full name, because a coach needs it for the team list: “Hi, Mr. Diaz. I’m Hana Kim.”",
+     "Add a detail: “I’m new this season.”"
+    ],
+    "a": "“Hi, Mr. Diaz. I’m Hana Kim. I’m new this season.”"
+   },
+   {
+    "t": "ex",
+    "title": "At a friend’s house",
+    "q": "Omar goes to Leo’s house for the first time, and Leo’s grandmother opens the door. Leo is upstairs. What should Omar say?",
+    "steps": [
+     "Greet her and say who he is: “Hello, I’m Omar.”",
+     "Add the detail that explains why he is there: “I’m Leo’s friend from school.”",
+     "If she says her name, use it: “Nice to meet you, Mrs. Hale.”"
+    ],
+    "a": "“Hello, I’m Omar, Leo’s friend from school.”"
+   },
+   {
+    "t": "mistake",
+    "html": "Mumbling your name while looking down, so it has to be asked again. Say it clearly, at a normal pace, while you look at the person. A quick check: could someone across a table hear and spell your name?"
+   },
+   {
+    "t": "note",
+    "html": "With grown-ups, giving your full name (“I’m Sam Rivera”) is helpful. With kids your age, a first name is fine."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on introductions (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.eye-contact": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When you <a href=\"/etiquette/growing-up/introducing-yourself/\">introduce yourself</a> or listen to someone, your eyes say a lot. In the U.S., looking at a person’s face tells them, “I’m interested, and I’m paying attention.”"
+   },
+   {
+    "t": "key",
+    "html": "Look at the person’s <b>face</b> while you greet them and while you listen. <b>Glance away now and then</b>, the way people naturally do. Don’t stare without blinking, and don’t keep your eyes on the floor the whole time."
+   },
+   {
+    "t": "why",
+    "html": "People feel respected when they can see that your attention is on them. Eye contact is one of the clearest signals of attention, so in American custom it goes with greeting, thanking and listening. A soft, friendly look puts people at ease; a hard stare does the opposite."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Good eye contact",
+      "Not quite"
+     ],
+     "cards": [
+      {
+       "text": "Looking at Grandma’s face while she tells a story.",
+       "bin": 0
+      },
+      {
+       "text": "Staring without blinking for the whole conversation.",
+       "bin": 1,
+       "why": "A stare feels like a contest. Glance away now and then."
+      },
+      {
+       "text": "Looking up and smiling when you say thank you.",
+       "bin": 0
+      },
+      {
+       "text": "Watching your phone while the coach talks to you.",
+       "bin": 1,
+       "why": "Your eyes show where your attention is."
+      },
+      {
+       "text": "Glancing away for a moment while you think.",
+       "bin": 0
+      },
+      {
+       "text": "Looking at the floor during the whole introduction.",
+       "bin": 1,
+       "why": "Try looking up for your name and the person’s."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each habit, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Saying thank you",
+    "q": "Mr. Diaz hands Sam a trophy at the team party. How can Sam use eye contact?",
+    "steps": [
+     "Look up at Mr. Diaz’s face as he takes the trophy.",
+     "Smile and say, “Thank you, Coach.”",
+     "Then he can look at the trophy; nobody expects a long stare."
+    ],
+    "a": "Look at Mr. Diaz, smile and say thank you."
+   },
+   {
+    "t": "ex",
+    "title": "When it feels hard",
+    "q": "Ruby feels nervous looking right into people’s eyes. What can she do?",
+    "steps": [
+     "She can look at the person’s face, near the eyes or at the nose; it looks the same from the other side.",
+     "Looking up for the greeting and the goodbye covers the most important moments.",
+     "Practice with family first, where it feels easy."
+    ],
+    "a": "Look at the face, near the eyes, especially for hello, thank you and goodbye."
+   },
+   {
+    "t": "mistake",
+    "html": "Staring without blinking, or never looking up at all. Both make the other person uncomfortable. Aim for a friendly look at the face, with natural glances away."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> In some cultures and families, looking an older person straight in the eye can seem bold, and looking down a little is the respectful way. If a friend or a grown-up looks away while you talk, they may be showing respect in their own way. Neither way is wrong; each is a way to honor the other person."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.handshake": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A handshake often goes with <a href=\"/etiquette/growing-up/introducing-yourself/\">introducing yourself</a>. Grown-ups may offer you a hand when you meet them, at a game, a job fair, a ceremony, or when your parent introduces you. A good handshake takes a little practice and lasts about two seconds."
+   },
+   {
+    "t": "key",
+    "html": "<b>Stand</b>, reach out your <b>right hand</b>, meet the other hand <b>palm to palm</b>, grip <b>firmly but not hard</b>, shake <b>two or three times</b>, and let go. Look at the person and smile while you do it."
+   },
+   {
+    "t": "why",
+    "html": "A handshake is a small, friendly promise: “I’m glad to meet you, and I mean it.” A firm grip shows you are paying attention; a crushing one feels like a contest and a limp one feels like you would rather not. Standing shows the moment matters."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "A good handshake",
+     "items": [
+      "Stand up and face the person.",
+      "Smile and look at them.",
+      "Reach out your right hand, thumb up.",
+      "Meet palm to palm, so the skin between your thumb and finger touches theirs.",
+      "Grip firmly and shake two or three times.",
+      "Let go and say, “Nice to meet you.”"
+     ]
+    },
+    "cap": "Put the steps in order, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Meeting a friend’s dad",
+    "q": "Leo’s friend Omar says, “Dad, this is Leo.” Omar’s dad reaches out his hand. What should Leo do?",
+    "steps": [
+     "Stand if he is sitting.",
+     "Take the hand palm to palm with a firm grip and shake two or three times.",
+     "Look at him, smile and say, “Nice to meet you, Mr. Haddad.”"
+    ],
+    "a": "Stand, shake firmly two or three times, and say, “Nice to meet you, Mr. Haddad.”"
+   },
+   {
+    "t": "ex",
+    "title": "After a game",
+    "q": "Mia’s team lost. The teams line up to shake hands. What does a good handshake look like here?",
+    "steps": [
+     "Walk the line and offer each player a quick handshake, or the low five the league uses.",
+     "Say “Good game” to each person.",
+     "Keep it friendly and short, win or lose. More in <a href=\"/etiquette/growing-up/sportsmanship/\">Sportsmanship</a>."
+    ],
+    "a": "A quick shake or low five and “Good game,” to every player."
+   },
+   {
+    "t": "mistake",
+    "html": "A limp “fingertip” shake, a bone-crushing squeeze, or staying seated. Check: did your palms meet? Was it firm, like holding a full glass, and not tight like squeezing a lemon?"
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Not everyone shakes hands. Some people prefer not to for reasons of culture, religion or health, and many cultures greet with a bow, a nod, a hand on the heart or a kiss on the cheek. If someone does not offer a hand, smile and say hello instead. Nobody has to touch anyone to be polite."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on greetings and shaking hands (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.remembering-names": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When you <a href=\"/etiquette/growing-up/introducing-yourself/\">introduce yourself</a>, the other person tells you their name. A few seconds later, many people have already forgotten it. Here is how to keep it."
+   },
+   {
+    "t": "key",
+    "html": "<b>Repeat the name right away</b> (“Nice to meet you, Grace”), <b>use it once more</b> before you say goodbye, and if you missed it, <b>ask again soon</b>: “I’m sorry, could you tell me your name again?”"
+   },
+   {
+    "t": "why",
+    "html": "A person’s name matters to them. Using it tells them you cared enough to remember. Saying it out loud also helps your memory hold on to it. And asking again right away is easy and polite; waiting weeks makes it much more awkward."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "classroom",
+     "frames": [
+      {
+       "people": [
+        {
+         "who": "ruby",
+         "age": "teen"
+        },
+        {
+         "who": "park"
+        }
+       ],
+       "say": [
+        [
+         0,
+         "Hi, I’m Ruby Walsh. I’m in your third-period art class."
+        ]
+       ]
+      },
+      {
+       "say": [
+        [
+         1,
+         "Nice to meet you, Ruby. I’m Ms. Park."
+        ]
+       ]
+      },
+      {
+       "say": [
+        [
+         0,
+         "Nice to meet you, Ms. Park."
+        ]
+       ],
+       "narr": "Ruby repeats the name right away. Saying it out loud helps her remember it."
+      },
+      {
+       "say": [
+        [
+         0,
+         "Thanks for showing me the room, Ms. Park. See you Monday!"
+        ]
+       ],
+       "narr": "She uses the name once more as she leaves."
+      }
+     ]
+    },
+    "cap": "Use Next to watch Ruby learn and use her new teacher’s name."
+   },
+   {
+    "t": "ex",
+    "title": "Repeat it right away",
+    "q": "At a family picnic, Sam meets his uncle’s friend. She says, “Hi, I’m Priya.” What should Sam say?",
+    "steps": [
+     "Use the name in your answer: “Nice to meet you, Priya.”",
+     "If grown-ups usually go by a title in your family, ask: “Should I call you Ms. Shah?”",
+     "Use it once more when you leave: “Bye, Ms. Shah!”"
+    ],
+    "a": "“Nice to meet you, Priya.” (or “Ms. Shah,” if that is what she prefers)"
+   },
+   {
+    "t": "ex",
+    "title": "When you forgot",
+    "q": "Ten minutes after meeting a new teammate, Hana realizes she has forgotten his name. What should she do?",
+    "steps": [
+     "Ask now; it only gets harder later.",
+     "Say it kindly and take the blame: “I’m sorry, I missed your name. Can you tell me again?”",
+     "Repeat it right away when he answers: “Omar. Got it. Thanks, Omar.”"
+    ],
+    "a": "“I’m sorry, I missed your name. Can you tell me again?”"
+   },
+   {
+    "t": "mistake",
+    "html": "Being too embarrassed to ask for a name again, so you avoid using it for weeks. Everyone forgets names. Asking right away is easy and polite; the awkward part is waiting."
+   },
+   {
+    "t": "note",
+    "html": "Memory tricks: link the name to a picture (“Grace with the green scarf”), or to someone you know with the same name. And if someone seems to have forgotten yours, help them out: “Hi, I’m Leo. We met at the game.”"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on introductions and remembering names (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.introducing-others": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Once you know <a href=\"/etiquette/growing-up/remembering-names/\">how to remember and use names</a>, you can do something kind for two people who haven’t met: introduce them. There is a simple order that etiquette writers have used for more than a century."
+   },
+   {
+    "t": "key",
+    "html": "<b>Say the name of the older or honored person first</b>, then present the other person to them. Then introduce the honored person back, and <b>give each one a detail</b> to talk about: “Grandma, this is my friend Omar. Omar, this is my grandmother, Mrs. Hale. Omar plays chess too.”"
+   },
+   {
+    "t": "why",
+    "html": "Saying someone’s name first is a small way to honor them: it shows respect to an older person, a guest or a teacher. The detail does the hardest part of starting a conversation for them, so neither person is left standing in silence."
+   },
+   {
+    "t": "viz",
+    "name": "et-intro",
+    "opts": {
+     "people": [
+      {
+       "who": "june",
+       "role": "my grandmother",
+       "call": "Grandma",
+       "title": "Mrs. Hale"
+      },
+      {
+       "who": "omar",
+       "age": "teen",
+       "role": "my friend"
+      }
+     ],
+     "you": {
+      "who": "mia",
+      "age": "teen",
+      "name": "Mia"
+     },
+     "details": [
+      "He just joined our chess club.",
+      "She taught me to play chess."
+     ]
+    },
+    "cap": "The honored person’s name is said first."
+   },
+   {
+    "t": "ex",
+    "title": "Teacher and parent",
+    "q": "At the school fair, Leo wants to introduce his mom to his teacher, Ms. Park. Whose name comes first?",
+    "steps": [
+     "Both are adults. At school the teacher is something like the host, so many people say her name first; saying Mom’s name first is fine too.",
+     "Say one name first and present the other: “Ms. Park, this is my mom, Rosa Novak. Mom, this is Ms. Park, my science teacher.”",
+     "Add a detail: “She’s the one who helped with my volcano project.”"
+    ],
+    "a": "One good way: “Ms. Park, this is my mom, Rosa Novak. Mom, this is Ms. Park, my science teacher.”"
+   },
+   {
+    "t": "ex",
+    "title": "Two friends",
+    "q": "Ruby’s friend Sam and her cousin Hana are the same age. How does Ruby introduce them?",
+    "steps": [
+     "With people your own age, either name can go first.",
+     "Say who each person is to you: “Sam, this is my cousin Hana. Hana, this is Sam from my class.”",
+     "Add a detail they share: “You both love drawing.”"
+    ],
+    "a": "“Sam, this is my cousin Hana. Hana, this is Sam from my class. You both love drawing.”"
+   },
+   {
+    "t": "mistake",
+    "html": "Saying the names in any order, or saying only the names and walking off. Check: did the older or honored person hear their name first, and did each person get a detail to start talking about?"
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> The “older or honored person first” rule is the long-standing American and British custom. Families have their own ways, too. Whatever order you use, saying both names clearly and adding a detail is what makes an introduction kind."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on introductions (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.addressing-adults": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When you <a href=\"/etiquette/growing-up/introducing-yourself/\">introduce yourself</a> to a grown-up, you also need to know what to call them. The custom in most of the U.S. is simple, and there is a polite way to handle the times you aren’t sure."
+   },
+   {
+    "t": "key",
+    "html": "Use a <b>title with the last name</b>: Mr. Diaz, Ms. Park, Mrs. Hale, Dr. Bell. Use a first name <b>only if the adult invites you to</b>. When you aren’t sure whether a woman uses Mrs. or Ms., <b>“Ms.” works for any woman</b>."
+   },
+   {
+    "t": "why",
+    "html": "A title shows respect for an adult’s age and role. Letting the adult decide whether to use first names puts the choice with them, so nobody is made uncomfortable. And when you follow what a person asks to be called, you show that you listened."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Respectful",
+      "Better to avoid"
+     ],
+     "cards": [
+      {
+       "text": "“Good morning, Ms. Park.”",
+       "bin": 0
+      },
+      {
+       "text": "“Hey, Grace!” to your teacher.",
+       "bin": 1,
+       "why": "Use her title unless she asks you to use her first name."
+      },
+      {
+       "text": "“Thank you, Dr. Bell.”",
+       "bin": 0
+      },
+      {
+       "text": "“Hey, you!” to a friend’s dad.",
+       "bin": 1,
+       "why": "Use his name with a title, or ask what to call him."
+      },
+      {
+       "text": "“What should I call you?”",
+       "bin": 0
+      },
+      {
+       "text": "“Thanks, Priya,” after she asked you to call her Priya.",
+       "bin": 0
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each greeting, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A friend’s parent",
+    "q": "Sam meets his friend Omar’s mother for the first time. Omar’s last name is Haddad. What should Sam call her?",
+    "steps": [
+     "Start with a title and the family’s last name: “Hello, Mrs. Haddad” or “Ms. Haddad.”",
+     "If she says, “Oh, please call me Layla,” then use Layla. If not, keep the title.",
+     "If Sam isn’t sure of her last name, he can ask Omar first."
+    ],
+    "a": "“Hello, Ms. Haddad,” unless she invites him to use her first name."
+   },
+   {
+    "t": "ex",
+    "title": "Not sure",
+    "q": "Mia’s new neighbor waves at her. Mia knows her name is Nora Grant but not whether she is married. What should Mia say?",
+    "steps": [
+     "“Ms.” works for any woman, married or not.",
+     "“Hi, Ms. Grant!”",
+     "If Nora asks to be called something else, Mia can switch."
+    ],
+    "a": "“Hi, Ms. Grant!”"
+   },
+   {
+    "t": "mistake",
+    "html": "Guessing wrong between Mrs. and Ms. and then avoiding the person’s name. “Ms.” works for any woman when you are not sure. And always follow what an adult asks to be called."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Customs differ by region and family. In parts of the South, children may say “Miss Ana” or “Mr. James” with a first name, and “sir” and “ma’am” are a common, respectful habit in many regions. Some families and schools use first names for adults. When in doubt, use the title and last name, and follow what the adult prefers."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on forms of address (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.standing-poise": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Before you say a word, the way you stand already says something. <b>Poise</b> means looking calm, easy and ready to pay attention. It is not about looking stiff or perfect; it is about showing the people around you that you are present."
+   },
+   {
+    "t": "key",
+    "html": "Stand <b>tall and easy</b>: weight on both feet, <b>shoulders relaxed and back</b>, <b>head up</b>, eyes forward, and <b>hands still</b> at your sides or lightly together in front."
+   },
+   {
+    "t": "why",
+    "html": "People read your posture as a message. Slumping with your hands in your pockets can look as if you would rather be somewhere else, even when you don’t mean that. Standing easy and tall says, “I’m glad to be here, and I’m listening.” That is why poise is a courtesy: it is about how you make others feel."
+   },
+   {
+    "t": "viz",
+    "name": "et-posture",
+    "opts": {
+     "pose": "stand",
+     "mode": "slider",
+     "who": "leo"
+    },
+    "cap": "Drag the slider from slumped to poised and watch the cues appear."
+   },
+   {
+    "t": "ex",
+    "title": "Waiting to be called up",
+    "q": "Mia is waiting on stage to receive a certificate. What does poise look like?",
+    "steps": [
+     "Stand with weight on both feet, not leaning on one hip.",
+     "Head up, shoulders relaxed, hands still at her sides or lightly together.",
+     "Look toward the speaker; when her name is called, walk up at an easy pace."
+    ],
+    "a": "Tall and easy, hands still, eyes on the speaker."
+   },
+   {
+    "t": "mistake",
+    "html": "Standing stiff like a soldier, or slumping with your hands in your pockets. Poise looks relaxed, not rigid. Check yourself: can you breathe and smile easily? If you feel frozen, let your shoulders drop a little."
+   },
+   {
+    "t": "note",
+    "html": "Poise is for everyone. People stand in many ways because bodies differ; some people use a wheelchair, a cane or crutches. Poise is the same idea for all of us: head up, attention on the people with you."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> What looks respectful varies a little. In some cultures, standing with hands clasped in front or bowing the head slightly shows respect to elders. The idea underneath is the same everywhere: show people your attention."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.sitting-well": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sitting well uses the same ideas as <a href=\"/etiquette/growing-up/standing-poise/\">standing with poise</a>: easy, upright and paying attention. You sit in class, at meals, in waiting rooms and at other people’s homes, so it is one of the habits people notice most."
+   },
+   {
+    "t": "key",
+    "html": "<b>Sit back in the chair</b>, upright and relaxed, with your <b>feet on the floor</b> and your <b>hands in your lap</b> or resting on the table edge. Keep all four chair legs on the floor."
+   },
+   {
+    "t": "why",
+    "html": "How you sit shows whether you are paying attention to the people with you. Sprawling across a couch or hanging over the back of a chair takes up space others might need and can look as if you are bored. Sitting well is a quiet way to say, “I’m with you.” Tipping a chair back is also hard on the chair and can startle people nearby."
+   },
+   {
+    "t": "viz",
+    "name": "et-posture",
+    "opts": {
+     "pose": "sit",
+     "mode": "compare",
+     "good": "B",
+     "who": "hana"
+    },
+    "cap": "Tap the figure that shows poise, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "At a friend’s house",
+    "q": "Sam is visiting Omar’s family and sits on their couch while Omar’s grandmother talks to him. What does sitting well look like?",
+    "steps": [
+     "Sit back on the couch, not sprawled across it.",
+     "Feet on the floor; shoes off the cushions.",
+     "Hands in his lap, and face her while she talks."
+    ],
+    "a": "Sit back and upright, feet on the floor, hands still, facing her."
+   },
+   {
+    "t": "ex",
+    "title": "In class",
+    "q": "Ruby is tired during the last class of the day. What can she do so she still looks attentive?",
+    "steps": [
+     "Sit back in the chair with feet on the floor; avoid putting her head down on the desk.",
+     "Turn toward whoever is speaking.",
+     "Keep her hands still, not drumming or clicking a pen."
+    ],
+    "a": "Sit back and upright, turned toward the speaker, hands still."
+   },
+   {
+    "t": "mistake",
+    "html": "Sprawling, hanging an arm over the chair back, or tipping the chair onto two legs. A quick check: are all four chair legs and both your feet on the floor?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.entering-room": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "First impressions start at the door. Walking into a room uses <a href=\"/etiquette/growing-up/standing-poise/\">standing with poise</a>, plus one more thing: a greeting."
+   },
+   {
+    "t": "key",
+    "html": "Walk in at an <b>easy pace</b>, <b>look up</b>, <b>smile</b>, and <b>greet the people there</b>, starting with the host or the adult in charge. If you are a guest, <b>wait to be shown where to sit</b>, or ask."
+   },
+   {
+    "t": "why",
+    "html": "A greeting at the door lets people know you are glad to be there and that you see them. Sliding in with your eyes on your phone can look as if the room doesn’t matter to you. Waiting to be shown a seat respects the host, who may have a plan, like saving a chair for someone."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "Walking into a friend’s birthday party",
+     "items": [
+      "Put your phone away before you go in.",
+      "Walk in at an easy pace and look up.",
+      "Smile and greet the host’s parent: “Hi, Ms. Lopez!”",
+      "Find your friend and say, “Happy birthday!”",
+      "Ask where to put the gift, or wait to be shown."
+     ]
+    },
+    "cap": "Put the steps in order, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Arriving at a family dinner",
+    "q": "Leo arrives at his aunt’s house for dinner. Several relatives are already in the living room. What should he do?",
+    "steps": [
+     "Put his phone away and walk in looking up.",
+     "Greet his aunt, the host, first: “Hi, Aunt Rosa, thanks for having us.”",
+     "Then say hello to the others, especially grandparents, and wait to be told where to sit at the table."
+    ],
+    "a": "Greet the host first, then the others, and wait to be shown a seat."
+   },
+   {
+    "t": "ex",
+    "title": "Arriving late",
+    "q": "Hana’s club meeting has already started when she arrives. How can she enter politely?",
+    "steps": [
+     "Come in quietly, without letting the door bang.",
+     "Give a small smile or wave to the leader instead of talking over the meeting.",
+     "Take the nearest open seat, and apologize briefly afterward: “Sorry I was late.”"
+    ],
+    "a": "Come in quietly, a small wave to the leader, nearest seat, a short apology afterward."
+   },
+   {
+    "t": "mistake",
+    "html": "Slipping in while looking at your phone, or heading straight for a seat without a word. Check: did you look up and greet someone at the door?"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.standing-to-greet": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know how to <a href=\"/etiquette/growing-up/sitting-well/\">sit well</a>. Here is when to stand up instead. Standing to greet is one of the oldest and simplest signs of respect, and it still makes a strong impression."
+   },
+   {
+    "t": "key",
+    "html": "<b>Stand up</b> when an adult or a guest <b>enters the room</b> or <b>comes over to meet you</b>, and whenever you are <b>introduced</b>. Then greet them, and sit again once they have settled or invite you to."
+   },
+   {
+    "t": "why",
+    "html": "Getting up takes a little effort, and that is the point: standing says, “You matter enough for me to get up.” It also puts you face to face, which makes a greeting or a handshake easier. Staying on the couch and waving can look as if the screen or the game matters more."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "home",
+     "people": [
+      {
+       "who": "omar",
+       "age": "teen",
+       "pose": "sit",
+       "holds": "phone"
+      },
+      {
+       "who": "walt",
+       "pose": "wave"
+      }
+     ],
+     "say": [
+      [
+       1,
+       "Hello, Omar!"
+      ]
+     ],
+     "prompt": "Grandpa Walt has just arrived for a visit. What should Omar do?",
+     "choices": [
+      {
+       "text": "Put the phone down, stand up, and say, “Hi, Grandpa! It’s great to see you.”",
+       "ok": true,
+       "mood": {
+        "0": "happy",
+        "1": "happy"
+       },
+       "say": [
+        [
+         1,
+         "Look at you! You’ve grown!"
+        ]
+       ],
+       "outcome": "Grandpa feels welcomed. Standing up says he matters."
+      },
+      {
+       "text": "Wave from the couch and keep scrolling.",
+       "ok": false,
+       "mood": {
+        "1": "sad"
+       },
+       "outcome": "Grandpa feels less important than the phone."
+      },
+      {
+       "text": "Say “Hi” without looking up.",
+       "ok": false,
+       "mood": {
+        "1": "neutral"
+       },
+       "outcome": "A greeting is good, but Grandpa can’t see Omar’s face. Stand and look up."
+      }
+     ]
+    },
+    "cap": "Choose what Omar does."
+   },
+   {
+    "t": "ex",
+    "title": "A teacher stops by",
+    "q": "Ms. Park comes over to the lunch table to talk to Ruby’s mom at the school picnic. Ruby is sitting. What should she do?",
+    "steps": [
+     "Stand up as Ms. Park arrives.",
+     "Greet her: “Hi, Ms. Park.”",
+     "Sit down again once the grown-ups are talking or Ms. Park says, “Please, sit.”"
+    ],
+    "a": "Stand, greet her, and sit again when it is natural."
+   },
+   {
+    "t": "ex",
+    "title": "Being introduced",
+    "q": "At a family party, Sam’s dad brings a friend over: “Sam, this is Mr. Reed.” Sam is sitting on the steps. What should he do?",
+    "steps": [
+     "Stand up for the introduction.",
+     "Shake hands if Mr. Reed offers his hand, and say, “Nice to meet you, Mr. Reed.”",
+     "Sit back down when they move on."
+    ],
+    "a": "Stand up, shake hands, and say, “Nice to meet you, Mr. Reed.”"
+   },
+   {
+    "t": "mistake",
+    "html": "Staying seated and waving from the couch. Check: when someone new walks over, are you on your feet for the greeting?"
+   },
+   {
+    "t": "note",
+    "html": "If standing is hard for you, because of an injury or a disability, a warm greeting, a smile and looking up are the same courtesy. Etiquette asks for respect, not for everyone to do it the same way."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on standing to greet guests (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.setting-table": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Setting the table is one of the most useful jobs you can do at home, and the pattern is the same in nearly every American home and restaurant. Once you learn it, you will never have to wonder where the fork goes."
+   },
+   {
+    "t": "key",
+    "html": "<b>Fork on the left.</b> <b>Knife on the right</b>, with the <b>blade facing the plate</b>. <b>Spoon to the right of the knife.</b> <b>Glass above the knife.</b> <b>Napkin on the left</b>, beside the fork (or under it)."
+   },
+   {
+    "t": "why",
+    "html": "The pattern follows the hands. Most people cut with the right hand, so the knife sits on the right; the fork is picked up with the left. The blade faces the plate so nobody reaches past a sharp edge. And because everyone sets the table the same way, guests always know which glass is theirs: the one on their right."
+   },
+   {
+    "t": "viz",
+    "name": "et-setting",
+    "opts": {
+     "level": "basic",
+     "mode": "build"
+    },
+    "cap": "Drag or tap each piece to its spot, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Setting one place",
+    "q": "Ruby is setting the table for spaghetti. Each person gets a plate, a fork, a knife, a spoon, a glass and a napkin. Where does each go?",
+    "steps": [
+     "Plate in the middle, in front of the chair.",
+     "Fork on the left; the folded napkin to the left of the fork.",
+     "Knife on the right, blade toward the plate; spoon to the right of the knife.",
+     "Glass above the tip of the knife."
+    ],
+    "a": "Napkin, fork, plate, knife (blade in), spoon, with the glass above the knife."
+   },
+   {
+    "t": "ex",
+    "title": "A memory trick",
+    "q": "Leo can never remember which side the fork goes on. What trick can help?",
+    "steps": [
+     "Count the letters: “fork” and “left” both have four.",
+     "“Knife,” “spoon” and “right” all have five.",
+     "So the fork goes left; the knife and spoon go right."
+    ],
+    "a": "Fork and left have four letters; knife, spoon and right have five."
+   },
+   {
+    "t": "mistake",
+    "html": "Putting the fork and knife on the same side, or turning the knife blade outward. Check with the letter trick, and look at the knife: the sharp edge should point at the plate."
+   },
+   {
+    "t": "note",
+    "html": "Setting for more courses? Utensils go in the order you will use them, from the outside in, and a bread plate goes at the upper left. That is the next step, in the Teens and Adults course."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on setting the table (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.using-utensils": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now that you can <a href=\"/etiquette/growing-up/setting-table/\">set the table</a>, here is how to use what is on it. Americans hold the fork and knife in two ways, and both are correct."
+   },
+   {
+    "t": "key",
+    "html": "To cut, hold the <b>fork in your left hand</b>, tines down, and the <b>knife in your right</b>, with your index finger along the back of the blade. Cut <b>one or two bites at a time</b>. In the <b>American style</b>, you then set the knife on the edge of the plate and switch the fork to your right hand to eat. In the <b>Continental style</b>, the fork stays in your left hand and the knife stays in your right."
+   },
+   {
+    "t": "why",
+    "html": "Cutting a bite or two at a time keeps your food warm and the meal calm. A finger along the back of the knife gives you control, so you cut gently instead of sawing. Both styles are tidy and quiet, which is what matters."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "Cutting and eating in the American style",
+     "items": [
+      "Hold the fork in your left hand, tines down, to keep the food still.",
+      "Hold the knife in your right hand, index finger along the back.",
+      "Cut one bite with a few gentle strokes.",
+      "Set the knife across the top edge of your plate.",
+      "Move the fork to your right hand and eat the bite."
+     ]
+    },
+    "cap": "Put the steps in order, then Check."
+   },
+   {
+    "t": "table",
+    "head": [
+     "",
+     "American style",
+     "Continental style"
+    ],
+    "rows": [
+     [
+      "Cutting",
+      "Fork left, knife right",
+      "Fork left, knife right"
+     ],
+     [
+      "Eating",
+      "Knife down; fork moves to the right hand, tines up",
+      "Fork stays in the left hand, tines down"
+     ],
+     [
+      "Correct in the U.S.?",
+      "Yes",
+      "Yes"
+     ]
+    ],
+    "cap": "Both styles are polite."
+   },
+   {
+    "t": "ex",
+    "title": "Cutting chicken",
+    "q": "Omar has a piece of chicken. How should he cut it?",
+    "steps": [
+     "Fork in his left hand, tines down, holding the chicken still; knife in his right, finger along the back.",
+     "Cut one bite, eat it, then cut the next."
+    ],
+    "a": "One bite at a time, fork left and knife right while cutting."
+   },
+   {
+    "t": "ex",
+    "title": "A guest who eats differently",
+    "q": "At dinner, Hana notices her cousin’s friend keeps the fork in her left hand the whole meal. Is that a mistake?",
+    "steps": [
+     "No. That is the Continental style, used across Europe and by many Americans.",
+     "Both styles are correct in the U.S.",
+     "There is nothing to correct or comment on."
+    ],
+    "a": "No. It is the Continental style, and it is correct."
+   },
+   {
+    "t": "mistake",
+    "html": "Holding the knife like a dagger in a fist, or cutting the whole plate of food at once. Hold it with your finger along the back and cut one or two bites at a time."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Some families eat certain dishes with chopsticks, bread or their hands. Each way is correct in its place."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on table manners and using the fork and knife (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.passing-food": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "At a family-style meal, dishes go around the table instead of being served from the kitchen. Once you know <a href=\"/etiquette/growing-up/setting-table/\">where everything sits</a>, passing is the next skill, and a few simple customs keep it from turning into a scramble."
+   },
+   {
+    "t": "key",
+    "html": "Pass dishes <b>to the right</b> (counterclockwise). If you start a dish, <b>offer it to your neighbor</b> or hold it while they serve themselves. <b>Pass the salt and pepper together</b>, even if someone asks for only one. When someone asks for a dish, pass it to them without helping yourself on the way."
+   },
+   {
+    "t": "why",
+    "html": "When every dish travels the same direction, no two bowls collide and nobody gets skipped. The salt and pepper travel as a pair so nobody has to hunt for the other one. And handing a dish straight to the person who asked respects their turn."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "table",
+     "people": [
+      {
+       "who": "leo",
+       "age": "teen"
+      },
+      {
+       "who": "june"
+      },
+      {
+       "who": "sam",
+       "age": "teen"
+      }
+     ],
+     "say": [
+      [
+       2,
+       "Could you please pass the salt?"
+      ]
+     ],
+     "prompt": "Leo has the salt and the pepper. What should he do?",
+     "choices": [
+      {
+       "text": "Pass the salt and the pepper together.",
+       "ok": true,
+       "mood": {
+        "2": "happy"
+       },
+       "say": [
+        [
+         2,
+         "Thanks, Leo."
+        ]
+       ],
+       "outcome": "The pair stays together, so the next person doesn’t have to hunt for the pepper."
+      },
+      {
+       "text": "Shake some salt on his own food first, then pass it.",
+       "ok": false,
+       "mood": {
+        "2": "neutral"
+       },
+       "outcome": "Sam asked first. Pass it straight to him, and ask for it back later."
+      },
+      {
+       "text": "Slide the salt across the table to Sam.",
+       "ok": false,
+       "mood": {
+        "1": "worried"
+       },
+       "outcome": "Sliding can tip things over. Hand it along, and send the pepper too."
+      }
+     ]
+    },
+    "cap": "Choose what Leo does."
+   },
+   {
+    "t": "ex",
+    "title": "Starting the potatoes",
+    "q": "The mashed potatoes are in front of Mia. Everyone is ready to start. What should she do?",
+    "steps": [
+     "Offer them first: hold the bowl for the person on her left, or ask, “Would you like some?”",
+     "Serve herself a fair share.",
+     "Pass the bowl to the right."
+    ],
+    "a": "Offer, serve herself, then pass to the right."
+   },
+   {
+    "t": "ex",
+    "title": "Passing to someone far away",
+    "q": "At the other end of the table, Grandpa Walt asks for the rolls. Ruby is holding the basket. What should she do?",
+    "steps": [
+     "Pass the basket toward Grandpa through the people in between, the shortest way.",
+     "Don’t take a roll on the way; he asked first.",
+     "If she wants one, she can ask for the basket back afterward."
+    ],
+    "a": "Pass it along to Grandpa without taking one, and ask for it later."
+   },
+   {
+    "t": "mistake",
+    "html": "Taking a dish that was passed to someone else, or sending the salt without the pepper. Check: is the dish going to the person who asked? Are the salt and pepper traveling as a pair?"
+   },
+   {
+    "t": "note",
+    "html": "Pass bowls with the handle or the serving spoon turned toward the person taking it, and hold a hot dish with a napkin or pot holder."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on passing dishes at the table (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.serving-yourself": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When a dish <a href=\"/etiquette/growing-up/passing-food/\">is passed to you</a>, you serve yourself. A few habits make sure there is enough for everyone and that the food stays clean for the next person."
+   },
+   {
+    "t": "key",
+    "html": "Use the <b>serving spoon</b>, not your own fork. Take a <b>fair share</b>, so everyone gets some; seconds can come later. Put the serving spoon <b>back in the dish</b>. Then <b>wait to eat</b> until everyone has been served and the host or cook begins."
+   },
+   {
+    "t": "why",
+    "html": "The serving spoon keeps the shared food clean: your own fork has been in your mouth. A fair share is kindness to the people after you; the last person to get the dish should still have some. Waiting until everyone is served means nobody eats alone while others are still filling their plates."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "cards": [
+      {
+       "text": "Using the serving spoon for the beans.",
+       "bin": 0
+      },
+      {
+       "text": "Spearing a meatball with your own fork from the bowl.",
+       "bin": 1,
+       "why": "Use the serving spoon so the shared food stays clean."
+      },
+      {
+       "text": "Taking a fair share so the dish goes all the way around.",
+       "bin": 0
+      },
+      {
+       "text": "Taking half the lasagna because it is your favorite.",
+       "bin": 1,
+       "why": "Take a fair share first; ask for seconds later."
+      },
+      {
+       "text": "Putting the serving spoon back in the dish.",
+       "bin": 0
+      },
+      {
+       "text": "Starting to eat while Grandma is still serving herself.",
+       "bin": 1,
+       "why": "Wait until everyone is served and the host begins."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each habit as polite or rude, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A favorite dish",
+    "q": "Sam loves enchiladas. There are eight enchiladas and six people. How many should Sam take on the first pass?",
+    "steps": [
+     "Count: eight enchiladas, six people.",
+     "A fair share is one each, which leaves two extra.",
+     "Take one, and ask later, “May I have another, if there are extras?”"
+    ],
+    "a": "One, and ask for a second one after everyone has been served."
+   },
+   {
+    "t": "ex",
+    "title": "A food you don’t like",
+    "q": "The green beans come to Hana, and she doesn’t like them. What can she do?",
+    "steps": [
+     "She can say, “No, thank you,” and pass the dish on.",
+     "Many families ask children to take a small taste; follow your family’s custom.",
+     "She should not say “Yuck” or make a face; someone worked to make it."
+    ],
+    "a": "“No, thank you,” pass it along, or take a small taste if that is the family custom."
+   },
+   {
+    "t": "mistake",
+    "html": "Taking a huge first helping of a favorite dish before everyone has some. Count the people and take a fair share; seconds come later."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Families start meals in different ways. Some wait for the cook to sit down, some for the host to pick up a fork, and some say a blessing or a few words first. Follow the family you are with. If you are a guest, watch the host."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on table manners (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.reaching-elbows": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You already know how to <a href=\"/etiquette/growing-up/sitting-well/\">sit well</a> and how to <a href=\"/etiquette/growing-up/passing-food/\">pass dishes</a>. Two more habits keep a meal pleasant for the people beside you: asking instead of reaching, and keeping your space tidy."
+   },
+   {
+    "t": "key",
+    "html": "If something is <b>out of easy reach</b>, ask: “Could you please pass the butter?” Keep your <b>elbows off the table while you are eating</b>. Keep <b>phones, toys and hats</b> away from the table."
+   },
+   {
+    "t": "why",
+    "html": "Reaching across someone puts your arm in front of their face and over their plate, and it can knock over a glass. Asking takes two seconds and gives the other person a chance to help. Elbows on the table while eating crowd your neighbors and lean you over your plate. And a phone or a toy at the table tells the people there that something else matters more."
+   },
+   {
+    "t": "viz",
+    "name": "et-posture",
+    "opts": {
+     "pose": "table",
+     "mode": "compare",
+     "good": "A",
+     "who": "sam"
+    },
+    "cap": "Tap the figure who is sitting well at the table, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "The butter is far away",
+    "q": "The butter is in front of Grandpa Walt, two seats from Omar. What should Omar do?",
+    "steps": [
+     "Ask the person closest to it: “Grandpa, could you please pass the butter?”",
+     "Wait for it to come to him.",
+     "Say thank you when it arrives."
+    ],
+    "a": "“Grandpa, could you please pass the butter?” and “Thank you.”"
+   },
+   {
+    "t": "ex",
+    "title": "Between courses",
+    "q": "Dinner is over and everyone is talking, waiting for dessert. Ruby rests her forearms on the table. Is that rude?",
+    "steps": [
+     "Most etiquette writers say elbows are fine between courses or after the meal, while people are talking and not eating.",
+     "The custom is about not leaning over your food while eating.",
+     "Some families prefer elbows off at all times, so follow your family’s rule."
+    ],
+    "a": "Usually not. Elbows are generally fine between courses; follow the family’s custom."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking elbows are never allowed. Most etiquette writers say elbows on the table are fine between courses or after the meal, just not while you are eating. The bigger rule is about not crowding or reaching over your neighbors."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Hats and caps come off at the table in most American homes; religious head coverings stay on. In some families phones are fine at a casual meal, and in others they are never allowed. When you are a guest, follow the house custom, and when in doubt, put the phone away."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on elbows and reaching at the table (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.table-mishaps": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Everyone drops a fork sooner or later, even grown-ups at fancy dinners. Knowing <a href=\"/etiquette/growing-up/serving-yourself/\">how a meal works</a> helps, but the real skill is staying calm when something goes a little wrong."
+   },
+   {
+    "t": "key",
+    "html": "<b>Quiet and quick</b> is the rule. At home, <b>pick up a dropped fork</b> and get a clean one. At a restaurant, <b>leave it</b> and quietly ask the server for another. For a small spill, <b>say “Excuse me,”</b> wipe it with your napkin, and help clean up."
+   },
+   {
+    "t": "why",
+    "html": "A mishap is only a big deal if someone makes it one. Handling it quietly keeps the meal pleasant for everyone and saves you from embarrassment. A fork that has been on the floor is dirty, so you get a clean one rather than wiping it and using it again."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Good way to handle it",
+      "Makes it worse"
+     ],
+     "cards": [
+      {
+       "text": "Saying “Excuse me” and wiping up a small spill with your napkin.",
+       "bin": 0
+      },
+      {
+       "text": "Shouting “Oops!” and laughing loudly.",
+       "bin": 1,
+       "why": "A quiet “Excuse me” keeps the meal calm."
+      },
+      {
+       "text": "At a restaurant, leaving a dropped fork and asking the server for another.",
+       "bin": 0
+      },
+      {
+       "text": "Wiping a dropped fork on your napkin and using it.",
+       "bin": 1,
+       "why": "It is still dirty. Get a clean one."
+      },
+      {
+       "text": "At home, picking up the fork and getting a clean one from the drawer.",
+       "bin": 0
+      },
+      {
+       "text": "Pointing out a spill someone else made.",
+       "bin": 1,
+       "why": "Help them quietly instead."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each choice, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Spilled milk",
+    "q": "Leo bumps his glass and a little milk spills on the tablecloth. What should he do?",
+    "steps": [
+     "Say “Excuse me” or “Sorry about that.”",
+     "Set the glass upright and blot the spill with his napkin.",
+     "If it is a big spill, tell the host and offer to help clean it, then carry on with the meal."
+    ],
+    "a": "“Excuse me,” blot it, offer to help, and carry on."
+   },
+   {
+    "t": "ex",
+    "title": "Someone else’s mishap",
+    "q": "Grandma June drops her spoon on the floor. What can Mia do?",
+    "steps": [
+     "Don’t make a fuss or point it out.",
+     "Offer quietly: “I’ll get you a clean one, Grandma.”",
+     "Bring a clean spoon and sit back down."
+    ],
+    "a": "Quietly get her a clean spoon."
+   },
+   {
+    "t": "mistake",
+    "html": "Making a big fuss, or wiping a dropped fork on a napkin and using it again. Quiet and quick is the rule, and a fork that touched the floor needs to be replaced."
+   },
+   {
+    "t": "note",
+    "html": "Other small mishaps: if you burp, say “Excuse me” quietly. If you need to cough or sneeze, turn away from the table and use your elbow or a tissue. If a bite has a pit or a bit of bone, take it out the way it went in, with your fork or fingers, and set it on the edge of your plate."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on accidents at the table (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.thanking-cook": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "After you <a href=\"/etiquette/growing-up/serving-yourself/\">serve yourself</a> and enjoy the meal, one more habit finishes it well. Someone planned, shopped and cooked so you could eat. A thank-you tells them their work was noticed."
+   },
+   {
+    "t": "key",
+    "html": "<b>Thank whoever cooked</b> and say <b>something kind and specific</b> about the meal: “Thank you for dinner. The bread was great.” Then <b>offer to help clear the table</b>, and ask to be excused if you need to leave before others."
+   },
+   {
+    "t": "why",
+    "html": "Thanks are for the work, not just for food you loved. Even on a night when you didn’t like a dish, the cook spent time and care on everyone. A specific detail shows you noticed, and offering to help turns thanks into action."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "table",
+     "people": [
+      {
+       "who": "hana",
+       "age": "teen"
+      },
+      {
+       "who": "kofi",
+       "name": "Dad"
+      }
+     ],
+     "prompt": "Dad made a new soup recipe. Hana didn’t love it, but the bread was great. What should she say?",
+     "choices": [
+      {
+       "text": "“Thanks for dinner, Dad. The bread was so good. Can I help clear?”",
+       "ok": true,
+       "mood": {
+        "0": "happy",
+        "1": "happy"
+       },
+       "say": [
+        [
+         1,
+         "Thanks, Hana! Sure, grab the bowls."
+        ]
+       ],
+       "outcome": "Hana thanked Dad for his work, praised something she liked, and offered to help."
+      },
+      {
+       "text": "“The soup was weird. Can I go?”",
+       "ok": false,
+       "mood": {
+        "1": "sad"
+       },
+       "outcome": "Dad worked on that soup. Thank him first, and say something kind and true."
+      },
+      {
+       "text": "Nothing. She leaves the table.",
+       "ok": false,
+       "mood": {
+        "1": "neutral"
+       },
+       "outcome": "Leaving without a word skips the thank-you and asking to be excused."
+      }
+     ]
+    },
+    "cap": "Choose what Hana says."
+   },
+   {
+    "t": "ex",
+    "title": "Dinner at a friend’s house",
+    "q": "Sam eats dinner at Ruby’s house. Ruby’s mom made tacos. What should he say at the end?",
+    "steps": [
+     "Thank the cook by name: “Thank you for dinner, Ms. Walsh.”",
+     "Add something specific: “The tacos were delicious.”",
+     "Offer to help: “Can I help clear the plates?”"
+    ],
+    "a": "“Thank you for dinner, Ms. Walsh. The tacos were delicious. Can I help clear?”"
+   },
+   {
+    "t": "ex",
+    "title": "Leaving the table early",
+    "q": "Omar has to get ready for practice before the others finish. What should he do?",
+    "steps": [
+     "Thank the cook first.",
+     "Ask to be excused: “May I please be excused? I need to get ready for practice.”",
+     "Take his plate to the kitchen if that is the family custom."
+    ],
+    "a": "“Thanks for dinner, Mom. May I please be excused?”"
+   },
+   {
+    "t": "mistake",
+    "html": "Thanking the cook only when you liked the food. Thank them for the work, and find something true and kind to say: the bread, the table, the effort, or simply “Thank you for making dinner.”"
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.phone-calls": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Texting is quick, but some things go better with a call: talking to a grandparent, asking a coach a question, or calling a friend’s house when a parent may answer. A good phone call has a simple shape, and the other person can’t see you, so your words do all the work."
+   },
+   {
+    "t": "key",
+    "html": "<b>Greet</b> the person, <b>say who you are</b>, <b>ask if it is a good time</b>, <b>say why you are calling</b>, and <b>say goodbye</b> before you hang up. “Hi, this is Ruby, Hana’s friend. Is Hana there, please?”"
+   },
+   {
+    "t": "why",
+    "html": "On the phone, the other person can’t see who is talking, so saying your name right away saves them from guessing. Asking whether it is a good time respects their day: they may be cooking, driving or about to leave. A clear reason and a goodbye make the call easy to follow and easy to end."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "Calling a friend’s house",
+     "items": [
+      "Say hello when someone answers.",
+      "Say who you are: “This is Ruby, Hana’s friend.”",
+      "Ask for your friend: “Is Hana there, please?”",
+      "When Hana comes on, ask, “Is this a good time?”",
+      "Say why you called.",
+      "Say goodbye before you hang up."
+     ]
+    },
+    "cap": "Put the steps in order, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Calling Grandma",
+    "q": "Leo wants to call Grandma June to thank her for a birthday card. How might the call go?",
+    "steps": [
+     "Greet and say who it is, even with family; her phone may not show the name: “Hi, Grandma, it’s Leo.”",
+     "Ask if it’s a good time: “Is this a good time to talk?”",
+     "Say why he called: “I wanted to thank you for the card.” Then chat, and say goodbye: “Love you, bye!”"
+    ],
+    "a": "“Hi, Grandma, it’s Leo. Is this a good time? I wanted to thank you for the card.”"
+   },
+   {
+    "t": "ex",
+    "title": "Calling the coach",
+    "q": "Omar needs to tell Coach Diaz he will miss practice. What should he say?",
+    "steps": [
+     "Greet and give his full name: “Hi, Coach Diaz, this is Omar Haddad from the team.”",
+     "Ask if it is a good time.",
+     "Give the reason clearly and briefly: “I have a dentist appointment Thursday, so I’ll miss practice.” Then thank him and say goodbye."
+    ],
+    "a": "“Hi, Coach Diaz, this is Omar Haddad. Is this a good time? I’ll miss Thursday’s practice because of a dentist appointment. Thanks, bye.”"
+   },
+   {
+    "t": "mistake",
+    "html": "Starting to talk without saying your name, or calling during dinner or late at night. Check: did you say who you are in your first sentence? Is it a reasonable hour for the family you are calling?"
+   },
+   {
+    "t": "note",
+    "html": "If you reach voicemail, leave a short message: your name, why you called, your number and a goodbye. Speak slowly when you say the number."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on the telephone (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.answering-messages": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know how to <a href=\"/etiquette/growing-up/phone-calls/\">make a call</a>. Answering the family phone, or a parent’s phone when they ask you to, is the other half. It is a real job: a message is only helpful if it reaches the person it is for."
+   },
+   {
+    "t": "key",
+    "html": "Answer with a <b>greeting</b>. If the call is for someone else, ask, <b>“May I tell them who’s calling?”</b> If they can’t come to the phone, <b>write down</b> the caller’s <b>name</b>, <b>number</b> and <b>message</b>, and the time, and give it to the person."
+   },
+   {
+    "t": "why",
+    "html": "A calm greeting makes the caller feel welcome. Asking who is calling, instead of shouting “WHO IS THIS?”, is polite and lets the person decide whether to come to the phone. Writing the message down matters because memories slip, and a lost message can mean a missed appointment or a friend left waiting."
+   },
+   {
+    "t": "viz",
+    "name": "et-note",
+    "opts": {
+     "kind": "message",
+     "parts": {
+      "to": "Mom",
+      "from": "Dr. Bell’s office",
+      "number": "555-0142",
+      "message": "Your appointment moved to Friday at 3:00. Please call back to confirm.",
+      "time": "Tuesday, 4:15 p.m.",
+      "taker": "Sam"
+     }
+    },
+    "cap": "A complete phone message: who it is for, who called, the number, the message, the time and who took it."
+   },
+   {
+    "t": "ex",
+    "title": "A call for Dad",
+    "q": "The family phone rings, and Mia answers. The caller asks for her dad, who is in the yard. What should she say?",
+    "steps": [
+     "Greet: “Hello, this is the Brooks house, Mia speaking.” Or simply “Hello?”, as her family prefers.",
+     "Ask: “May I tell him who’s calling?”",
+     "Say, “Please hold on, I’ll get him,” set the phone down gently, and go get him instead of shouting across the house."
+    ],
+    "a": "“May I tell him who’s calling? Please hold on, I’ll get him.”"
+   },
+   {
+    "t": "ex",
+    "title": "Taking a message",
+    "q": "Ms. Park calls for Sam’s mom, who is out. What should Sam write down?",
+    "steps": [
+     "Who the message is for: Mom.",
+     "Who called and her number: Ms. Park, and the number she gives, read back to check it.",
+     "The message, the time, and his own name, then put it where Mom will see it."
+    ],
+    "a": "For Mom; from Ms. Park; her number; the message; the time; taken by Sam."
+   },
+   {
+    "t": "mistake",
+    "html": "Shouting across the house for the person, or forgetting to write the message down. Go get them, and if they can’t come, write it down right away and read the number back to the caller."
+   },
+   {
+    "t": "note",
+    "html": "If a caller you don’t know asks questions you aren’t sure about, it is fine to say, “Please hold on,” and get a grown-up. You never have to answer questions that make you uncomfortable."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on the telephone (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.video-calls": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Video calls are <a href=\"/etiquette/growing-up/phone-calls/\">phone calls</a> with a picture, for a class, a club, or a chat with family far away. Because people can see you, a few more courtesies come in."
+   },
+   {
+    "t": "key",
+    "html": "Find a <b>quiet spot</b> with <b>light on your face</b> (a window or lamp in front of you, not behind). <b>Look at the camera</b> when you talk, <b>mute</b> when you aren’t talking, and give the call your <b>attention</b>."
+   },
+   {
+    "t": "why",
+    "html": "Treat a video call like sitting across a table from someone. Noise, a dark screen or a bouncing camera make it hard for others to follow, and an open microphone sends every crunch and barking dog to everyone. Looking at the camera is how you “look at” people on a screen, and paying attention shows them their time matters."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Good video-call manners",
+      "Not so good"
+     ],
+     "cards": [
+      {
+       "text": "Muting your microphone while others talk.",
+       "bin": 0
+      },
+      {
+       "text": "Eating chips with the microphone on.",
+       "bin": 1,
+       "why": "Every crunch goes to everyone. Mute, or eat later."
+      },
+      {
+       "text": "Sitting with a window in front of you.",
+       "bin": 0
+      },
+      {
+       "text": "Walking around the house with the camera bouncing.",
+       "bin": 1,
+       "why": "Sit still somewhere, the way you would at a table."
+      },
+      {
+       "text": "Looking at the camera when you talk.",
+       "bin": 0
+      },
+      {
+       "text": "Playing a game in another window during class.",
+       "bin": 1,
+       "why": "Give the call your attention."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each habit, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A class on video",
+    "q": "Hana has a class on video. Her little brother is playing loudly nearby. What can she do?",
+    "steps": [
+     "Move to a quieter room if she can, or close the door.",
+     "Mute her microphone until she needs to talk.",
+     "When the teacher calls on her, unmute, look at the camera and speak clearly."
+    ],
+    "a": "Quiet spot, mute until she speaks, then unmute and look at the camera."
+   },
+   {
+    "t": "ex",
+    "title": "A call with Grandpa",
+    "q": "Sam is video-chatting with Grandpa Walt, but Sam’s screen shows only a dark shape. Why, and how can he fix it?",
+    "steps": [
+     "The window is behind him, so the camera sees bright light and his face looks dark.",
+     "Turn around so the window or a lamp lights his face.",
+     "Hold the device steady or set it on a table at eye level."
+    ],
+    "a": "The light is behind him; face the window or lamp and keep the camera steady."
+   },
+   {
+    "t": "mistake",
+    "html": "Leaving the microphone on while you eat, or walking around with the camera bouncing. Before you join: quiet spot, light in front, device steady, microphone ready to mute."
+   },
+   {
+    "t": "note",
+    "html": "Join a scheduled call on time, dressed as you would be for that class or meeting, and say hello and goodbye, just as you would in person."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.texting": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A text is like a <a href=\"/etiquette/growing-up/phone-calls/\">phone call</a> with no voice. That makes it fast, but it also takes away the smile and the tone that tell people what you mean."
+   },
+   {
+    "t": "key",
+    "html": "Text at <b>reasonable hours</b>, <b>write clearly</b>, and <b>read your message before you send it</b>. Remember that <b>tone is hard to hear in text</b>, so add a friendly word or two."
+   },
+   {
+    "t": "why",
+    "html": "In person, a smile shows when you are joking. In a text, the same words can sound cold or angry. A one-letter “k” can read as “I’m annoyed,” even if you were only busy. Reading before you send catches words that might hurt, and texting at reasonable hours respects the fact that the buzz can wake someone up."
+   },
+   {
+    "t": "viz",
+    "name": "et-text",
+    "opts": {
+     "title": "Aunt Rosa",
+     "messages": [
+      {
+       "from": "Rosa",
+       "text": "Did the package arrive? 📦",
+       "time": "6:02 PM"
+      }
+     ],
+     "choices": [
+      {
+       "text": "k",
+       "ok": false,
+       "why": "A one-letter answer can read as cold. Aunt Rosa wants to know you liked it."
+      },
+      {
+       "text": "Yes! Thank you so much for the art kit. I already painted a bird!",
+       "ok": true,
+       "why": "Warm, specific and quick. That is a great reply."
+      },
+      {
+       "text": "YES IT CAME",
+       "ok": false,
+       "why": "All capital letters read like shouting, and there is no thank-you."
+      }
+     ]
+    },
+    "cap": "Choose a reply and read the note."
+   },
+   {
+    "t": "ex",
+    "title": "A late-night idea",
+    "q": "At 10:45 p.m., Leo remembers something funny he wants to tell Omar. What should he do?",
+    "steps": [
+     "It is late; the buzz could wake Omar or his family.",
+     "Save it as a draft or write it down.",
+     "Send it in the morning."
+    ],
+    "a": "Wait until morning to send it."
+   },
+   {
+    "t": "ex",
+    "title": "Fixing a curt text",
+    "q": "Mia’s friend asks, “Want to come over Saturday?” Mia can’t. Her first draft says, “No.” How can she make it kinder?",
+    "steps": [
+     "“No.” alone can sound like she doesn’t want to see her friend.",
+     "Add a thank-you and a reason or a wish: “Thanks for asking! I have a game Saturday.”",
+     "Offer another time if she can: “Could we do Sunday?”"
+    ],
+    "a": "“Thanks for asking! I have a game Saturday. Could we do Sunday?”"
+   },
+   {
+    "t": "mistake",
+    "html": "Sending a curt “k” or “fine” that reads as annoyed, or texting late at night. A short friendly word or two prevents a lot of hurt feelings. Check before sending: would this sound kind if someone read it in a grumpy voice?"
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Families set different rules about phones and texting hours. Follow yours, and for other families, assume early evening is fine and late at night is not."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.group-chats": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A group chat is <a href=\"/etiquette/growing-up/texting/\">texting</a> with an audience. Everything you send is seen by everyone in it, and it can be copied, saved and shared, so group chats need a little extra care."
+   },
+   {
+    "t": "key",
+    "html": "<b>Stay on topic</b>, don’t share <b>screenshots or private messages</b> without asking, and <b>never use a chat to leave someone out or gang up</b> on anyone. If a chat turns mean, <b>don’t join in</b>, and tell a trusted grown-up if it keeps going."
+   },
+   {
+    "t": "why",
+    "html": "A message sent to one friend was meant for that friend. Sharing it with a group breaks their trust, even if the words were already “sent.” Teasing in a group stings more, because everyone sees it. And making a new chat to talk about someone who was left out of it is a modern way of whispering behind their back."
+   },
+   {
+    "t": "viz",
+    "name": "et-text",
+    "opts": {
+     "kind": "group",
+     "title": "Soccer team",
+     "messages": [
+      {
+       "from": "Ruby",
+       "text": "Practice moved to 5 tomorrow!"
+      },
+      {
+       "from": "Omar",
+       "text": "Thanks for the heads-up 👍"
+      },
+      {
+       "from": "Leo",
+       "text": "Hana kicks like a baby lol"
+      },
+      {
+       "from": "Hana",
+       "text": "Can someone give me a ride?"
+      }
+     ],
+     "mode": "spot",
+     "fault": 2,
+     "why": "Teasing someone in front of the whole group hurts more, and the message can be copied and shared."
+    },
+    "cap": "Tap the message that is unkind, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A screenshot",
+    "q": "Sam’s friend sent him a private message about being nervous for the tryouts. Another friend says, “Screenshot it to the group, it’s funny.” What should Sam do?",
+    "steps": [
+     "The message was meant only for Sam.",
+     "Sharing it would embarrass his friend and break his trust.",
+     "Say no: “Nah, that was just to me.”"
+    ],
+    "a": "Don’t share it. Private messages stay private unless the sender says it’s okay."
+   },
+   {
+    "t": "ex",
+    "title": "A side chat",
+    "q": "Mia sees that some classmates made a new chat called “Everyone but Ruby.” What can she do?",
+    "steps": [
+     "Don’t join in or add anything unkind.",
+     "She can leave the chat or say, “This isn’t cool.”",
+     "If it keeps going or gets mean, tell a trusted grown-up. Being kind to Ruby in person helps too."
+    ],
+    "a": "Don’t join in, speak up or leave, and tell a trusted grown-up if it continues."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a screenshot is harmless because the words were already sent. Sharing someone’s message with others breaks their trust. Ask first, every time."
+   },
+   {
+    "t": "note",
+    "html": "Other group-chat courtesies: keep late-night messages to a minimum, don’t flood the chat with dozens of stickers, and if a chat is for one purpose, like a team schedule, keep it to that."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.phones-around-people": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You know about <a href=\"/etiquette/growing-up/texting/\">texting</a> and <a href=\"/etiquette/growing-up/group-chats/\">group chats</a>. The last phone habit may be the most important one: knowing when to put it down."
+   },
+   {
+    "t": "key",
+    "html": "When someone is talking with you, <b>put the phone down</b>. At <b>meals, visits and conversations</b>, the people in front of you come first. If you must check something, say so: “Sorry, my mom’s texting about pickup. One second.”"
+   },
+   {
+    "t": "why",
+    "html": "Looking at a phone while someone talks tells them, without a word, that the screen is more interesting than they are. People notice, even when you think you are being sneaky. Putting the phone away is one of the simplest ways to show someone they matter."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "table",
+     "people": [
+      {
+       "who": "ruby",
+       "age": "teen",
+       "holds": "phone"
+      },
+      {
+       "who": "june"
+      },
+      {
+       "who": "leo",
+       "age": "teen"
+      }
+     ],
+     "say": [
+      [
+       1,
+       "Ruby, tell me about your science fair project!"
+      ]
+     ],
+     "prompt": "Grandma June asks Ruby a question while Ruby is looking at her phone. What should Ruby do?",
+     "choices": [
+      {
+       "text": "Put the phone face down and answer: “It’s about bees! Want to hear?”",
+       "ok": true,
+       "mood": {
+        "0": "happy",
+        "1": "happy"
+       },
+       "outcome": "Grandma feels that Ruby wants to talk with her."
+      },
+      {
+       "text": "Keep scrolling and say, “Uh-huh, it’s good.”",
+       "ok": false,
+       "mood": {
+        "1": "sad"
+       },
+       "outcome": "Grandma can tell the phone has Ruby’s attention, not her."
+      },
+      {
+       "text": "Text under the table while answering.",
+       "ok": false,
+       "mood": {
+        "1": "neutral"
+       },
+       "outcome": "Everyone notices texting under the table. Put it away."
+      }
+     ]
+    },
+    "cap": "Choose what Ruby does."
+   },
+   {
+    "t": "ex",
+    "title": "Waiting for an important message",
+    "q": "Omar is at dinner with his friend’s family, but his mom said she would text about pickup time. What should he do?",
+    "steps": [
+     "Keep the phone in his pocket, on silent or vibrate.",
+     "If it buzzes, say, “Excuse me, that’s probably my mom about pickup,” and check it quickly.",
+     "Reply briefly, put it away, and rejoin the conversation."
+    ],
+    "a": "Mention it, check quickly when it buzzes, then put it away."
+   },
+   {
+    "t": "ex",
+    "title": "With friends",
+    "q": "Sam and Leo are hanging out, and Leo keeps scrolling while Sam talks. What could Sam say, kindly?",
+    "steps": [
+     "Assume the best; Leo may not realize it.",
+     "Say it lightly: “Hey, want to put the phones away and play a game?”",
+     "And Leo can do the polite thing: put it away and say sorry."
+    ],
+    "a": "“Hey, want to put the phones away and play a game?”"
+   },
+   {
+    "t": "mistake",
+    "html": "Texting “under the table” and thinking no one notices. Everyone notices, and it tells them they are less interesting than the screen. Put the phone away, or say why you need to look."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Families have different rules about phones at casual meals. Some are fine with a quick check; many say none at the table at all. At someone else’s home, follow their rule, and when in doubt, keep it in your pocket."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.friends-over": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "When a friend comes to your house, you become the <b>host</b>. That is a real job, and a fun one. A good host makes a guest feel welcome from the moment they arrive."
+   },
+   {
+    "t": "key",
+    "html": "<b>Greet</b> your friend and the parent who drops them off, <b>offer a snack</b> or a drink, give a <b>choice of what to do</b>, and <b>include everyone</b> who is there, including brothers, sisters and other friends."
+   },
+   {
+    "t": "why",
+    "html": "Being a guest in someone else’s home can feel a little strange: different rules, different rooms, people you don’t know. A good host takes that feeling away. Offering choices puts your friend’s fun first, and including everyone means nobody spends the afternoon feeling left out."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "door",
+     "people": [
+      {
+       "who": "leo",
+       "age": "teen",
+       "pose": "wave"
+      },
+      {
+       "who": "sam",
+       "age": "teen"
+      },
+      {
+       "who": "kofi",
+       "name": "Mr. Rivera"
+      }
+     ],
+     "prompt": "Sam and his dad arrive at Leo’s door. What should Leo do first?",
+     "choices": [
+      {
+       "text": "“Hi, Sam! Hi, Mr. Rivera! Come on in. Want a snack before we play?”",
+       "ok": true,
+       "mood": {
+        "1": "happy",
+        "2": "happy"
+       },
+       "outcome": "Leo greeted both of them and offered a snack. Sam feels welcome."
+      },
+      {
+       "text": "“Come see my new game!” and runs off without a word to Sam’s dad.",
+       "ok": false,
+       "mood": {
+        "2": "neutral"
+       },
+       "outcome": "Sam’s dad was left at the door. Greet the parent too."
+      },
+      {
+       "text": "Lets them in and goes back to his video.",
+       "ok": false,
+       "mood": {
+        "1": "sad"
+       },
+       "outcome": "Sam came to play with Leo. The guest’s good time is the host’s job."
+      }
+     ]
+    },
+    "cap": "Choose what Leo does."
+   },
+   {
+    "t": "ex",
+    "title": "Choosing what to do",
+    "q": "Ruby has her friend Mia over. Ruby wants to play her favorite video game, but Mia isn’t into games. What should Ruby do?",
+    "steps": [
+     "A host puts the guest’s fun first.",
+     "Offer two or three choices: “Do you want to bake cookies, play outside or do a puzzle?”",
+     "Go with what Mia picks; Ruby can play her game another time."
+    ],
+    "a": "“Do you want to bake, play outside or do a puzzle?” and go with Mia’s pick."
+   },
+   {
+    "t": "ex",
+    "title": "A little sister",
+    "q": "Omar’s friend is over, and his little sister keeps asking to join. What can Omar do?",
+    "steps": [
+     "Find something everyone can do together for part of the time, like a card game.",
+     "If the friends want time alone later, say it kindly: “We’ll play with you after our game.”",
+     "Ask a parent for help if needed, instead of shooing her away rudely."
+    ],
+    "a": "Include her in a game for a while, and be kind when they want time alone."
+   },
+   {
+    "t": "mistake",
+    "html": "Playing a game only you enjoy, or leaving a sibling or a second friend out. Check: has your guest had a say in what you do? Is anyone sitting alone?"
+   },
+   {
+    "t": "note",
+    "html": "When your friend leaves, walk them to the door, say “Thanks for coming,” and say goodbye to their parent too."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on hospitality and guests (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.sleepovers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A sleepover is a longer visit, so the <a href=\"/etiquette/growing-up/friends-over/\">guest manners</a> you already know matter even more. This time you are the guest, in another family’s home overnight."
+   },
+   {
+    "t": "key",
+    "html": "At a sleepover, <b>follow the family’s rules and bedtime</b>, <b>offer to help</b>, keep your things <b>tidy</b>, and <b>thank the parents</b> in the morning. And remember: it is always fine to <b>call home</b> if you feel uncomfortable or want to leave."
+   },
+   {
+    "t": "why",
+    "html": "Each home has its own rules, and as a guest you live by theirs for the night. Following them shows respect for the family who invited you. Offering to help and keeping your things tidy say thank you before you even say it. And knowing you can call home lets you relax and enjoy the night."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "cards": [
+      {
+       "text": "Going to sleep when the parents ask for lights out.",
+       "bin": 0
+      },
+      {
+       "text": "Staying up loudly after the parents asked for quiet.",
+       "bin": 1,
+       "why": "Their house, their bedtime."
+      },
+      {
+       "text": "Asking before taking a snack from the kitchen.",
+       "bin": 0
+      },
+      {
+       "text": "Leaving your sleeping bag and clothes all over the floor.",
+       "bin": 1,
+       "why": "Keep your things together and roll up your bag in the morning."
+      },
+      {
+       "text": "Saying, “Thank you for having me,” in the morning.",
+       "bin": 0
+      },
+      {
+       "text": "Complaining that breakfast isn’t what you eat at home.",
+       "bin": 1,
+       "why": "Try what is offered, or say “No, thank you.”"
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each habit as polite or rude, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A different rule",
+    "q": "At Hana’s house, everyone takes their shoes off at the door, and there are no phones after nine o’clock. Ruby’s family doesn’t do either. What should Ruby do?",
+    "steps": [
+     "Follow Hana’s family’s rules while she is their guest.",
+     "Take her shoes off at the door and put her phone away at nine.",
+     "There is no need to say how her family does it differently."
+    ],
+    "a": "Shoes off and phone away at nine, just as Hana’s family does."
+   },
+   {
+    "t": "ex",
+    "title": "Wanting to go home",
+    "q": "At a sleepover, Sam starts to feel homesick and uneasy. What can he do?",
+    "steps": [
+     "It is fine to call home. He can tell his friend’s parent, “I’d like to call my mom.”",
+     "He does not need to explain more than he wants to.",
+     "In the morning, or when he leaves, he can still thank the family: “Thank you for having me.”"
+    ],
+    "a": "Ask the friend’s parent to help him call home. That is always okay."
+   },
+   {
+    "t": "mistake",
+    "html": "Staying up after the parents asked for quiet, or helping yourself to snacks without asking. As a guest, follow their rules and ask first. And if anything feels wrong, it is fine to say no and call home."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Families differ: some take shoes off at the door, some say a few words before meals, some have early bedtimes. Respect every way, follow the house you are in, and never make fun of how another family does things."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.birthday-invitations": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Birthday parties start with invitations, and invitations come with jobs for both the host and the guests. Like <a href=\"/etiquette/growing-up/friends-over/\">having a friend over</a>, the goal is that everyone feels welcome, including people who aren’t coming."
+   },
+   {
+    "t": "key",
+    "html": "When you get an invitation, <b>reply by the date it asks</b>: “RSVP” means <b>please reply</b>. When you are the host, <b>don’t hand out invitations or talk about the party in front of people who were not invited</b>."
+   },
+   {
+    "t": "why",
+    "html": "A host needs to know how many people are coming to plan food, seats and games. Replying, yes or no, is a kindness to them. “RSVP” comes from the French <i>répondez s’il vous plaît</i>, “please reply.” And because not everyone can be invited to every party, keeping invitations private spares feelings."
+   },
+   {
+    "t": "viz",
+    "name": "et-note",
+    "opts": {
+     "kind": "invitation",
+     "parts": {
+      "host": "Omar Haddad",
+      "occasion": "is turning 12! Come celebrate.",
+      "when": "Saturday, May 9, 2:00 to 4:00 p.m.",
+      "where": "14 Elm Street (the backyard)",
+      "attire": "Play clothes; we’ll have a water-balloon toss!",
+      "rsvp": "RSVP to Omar’s mom by May 2: 555-0186"
+     }
+    },
+    "cap": "An invitation names the host, the occasion, the time and place, what to wear and how to reply."
+   },
+   {
+    "t": "ex",
+    "title": "Replying",
+    "q": "Leo gets the invitation above. He can come. What should he do, and by when?",
+    "steps": [
+     "Find the reply line: RSVP to Omar’s mom by May 2.",
+     "Have a parent help him call or text her before May 2.",
+     "Say yes clearly and thank her: “Leo would love to come. Thank you for inviting him!”"
+    ],
+    "a": "Reply to Omar’s mom by May 2: “Leo would love to come. Thank you!”"
+   },
+   {
+    "t": "ex",
+    "title": "Can’t come",
+    "q": "Mia is invited to Hana’s party but has a family trip that day. Does she need to reply?",
+    "steps": [
+     "Yes. “RSVP” asks for a reply either way.",
+     "Reply by the date: “Thank you so much for inviting me. I’m sorry I can’t come; we’ll be away. I hope it’s a great party!”",
+     "She can wish Hana a happy birthday at school."
+    ],
+    "a": "Yes. Reply by the date with thanks and regrets."
+   },
+   {
+    "t": "mistake",
+    "html": "Never replying, or saying yes and then not showing up. The host is counting on your answer. If your plans change after you reply, tell the host as soon as you can."
+   },
+   {
+    "t": "note",
+    "html": "Hosting? Invite either the whole class or a small group quietly, by mail, by a parent’s text, or in person away from the others. At the party, talk about it only with the guests."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on invitations and replies (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.giving-gifts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Many <a href=\"/etiquette/growing-up/birthday-invitations/\">parties</a> and holidays come with gifts. A gift doesn’t have to be expensive to be a good one. The best gifts show you thought about the other person."
+   },
+   {
+    "t": "key",
+    "html": "Choose a gift <b>with the person in mind</b>, <b>take the price tag off</b>, add a <b>card with your name</b>, and <b>let them open it when they like</b>. Never say how much it cost."
+   },
+   {
+    "t": "why",
+    "html": "A gift is a way of saying, “I know you, and I thought about you.” That is why the thought matters more than the price. Removing the price tag keeps the focus on the gift and away from money, and a card makes sure the person knows whom to thank."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Thoughtful",
+      "Not so thoughtful"
+     ],
+     "cards": [
+      {
+       "text": "A sketchbook for a friend who loves drawing.",
+       "bin": 0
+      },
+      {
+       "text": "The game you want, so you can play it at their house.",
+       "bin": 1,
+       "why": "Choose for them, not for you."
+      },
+      {
+       "text": "Taking the price sticker off before wrapping.",
+       "bin": 0
+      },
+      {
+       "text": "“This cost forty dollars, so you’d better like it.”",
+       "bin": 1,
+       "why": "Price talk makes a gift about money."
+      },
+      {
+       "text": "A card that says who it’s from.",
+       "bin": 0
+      },
+      {
+       "text": "A homemade card and cookies for Grandma.",
+       "bin": 0
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each gift idea, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Choosing a gift",
+    "q": "Sam needs a birthday gift for Ruby. He knows she loves birds, and he has a small budget. What could he choose?",
+    "steps": [
+     "Think about Ruby: what does she enjoy?",
+     "Find something that fits her interest and his budget: a small book about birds, a bird-shaped bookmark, or seeds for a feeder.",
+     "Take off the price tag and add a card: “Happy birthday, Ruby! From Sam.”"
+    ],
+    "a": "A small bird-themed gift, price tag off, with a card from Sam."
+   },
+   {
+    "t": "ex",
+    "title": "A homemade gift",
+    "q": "Hana wants to give her grandfather something, but she has no money. Is a homemade gift okay?",
+    "steps": [
+     "Yes. A gift is about the thought.",
+     "A drawing, a letter, a batch of cookies or a promise to help in his garden all show care.",
+     "Wrap it or put it in an envelope, with a note saying it is from her."
+    ],
+    "a": "Yes. A homemade gift shows real thought."
+   },
+   {
+    "t": "mistake",
+    "html": "Choosing the gift you would want, or saying how much it cost. Check: does this gift fit what the other person likes? Is the price tag off?"
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Customs differ about when gifts are opened. In many American families, gifts are opened at the party; in some families and cultures, gifts are opened later, privately. Both are polite, so let the person decide."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on gifts (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.receiving-gifts": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Now turn it around. When someone <a href=\"/etiquette/growing-up/giving-gifts/\">gives you a gift</a>, how you receive it matters just as much. The giver is watching your face, hoping you’ll be pleased."
+   },
+   {
+    "t": "key",
+    "html": "<b>Read the card first</b>, <b>look at the giver</b>, <b>thank them warmly</b>, and <b>say something kind</b>, even if you already have one or it isn’t your style."
+   },
+   {
+    "t": "why",
+    "html": "A gift is a thought from another person, so you thank them for thinking of you, whatever is in the box. Reading the card first tells you whom to thank. A warm, kind response makes the giver glad they chose it; a disappointed face or “I already have this” can hurt for a long time."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "party",
+     "people": [
+      {
+       "who": "mia",
+       "age": "teen",
+       "holds": "gift"
+      },
+      {
+       "who": "walt"
+      }
+     ],
+     "prompt": "Grandpa Walt gives Mia a sweater. She already has one just like it. What should she say?",
+     "choices": [
+      {
+       "text": "“Thank you, Grandpa! It’s so soft. I love this color.”",
+       "ok": true,
+       "mood": {
+        "0": "happy",
+        "1": "happy"
+       },
+       "outcome": "Mia thanked him for the thought and said something kind and true."
+      },
+      {
+       "text": "“I already have this one.”",
+       "ok": false,
+       "mood": {
+        "1": "sad"
+       },
+       "outcome": "True, but it hurts. Thank him for thinking of her; questions about exchanging can come later, privately."
+      },
+      {
+       "text": "“Do you have the receipt?”",
+       "ok": false,
+       "mood": {
+        "1": "sad"
+       },
+       "outcome": "Asking about returns in front of the giver makes the gift about the store, not the thought."
+      }
+     ]
+    },
+    "cap": "Choose what Mia says."
+   },
+   {
+    "t": "ex",
+    "title": "A gift you don’t love",
+    "q": "Leo’s aunt gives him a puzzle with a thousand pieces. Leo doesn’t like puzzles. What should he say?",
+    "steps": [
+     "Thank her for the thought: “Thank you, Aunt Rosa!”",
+     "Find something kind and true: “This picture is really cool,” or “Maybe we can do it together at the holidays.”",
+     "Don’t say he doesn’t like puzzles."
+    ],
+    "a": "“Thank you, Aunt Rosa! The picture is really cool.”"
+   },
+   {
+    "t": "ex",
+    "title": "Opening several gifts",
+    "q": "At her party, Ruby opens gifts from six friends. How can she make each giver feel thanked?",
+    "steps": [
+     "Read each card first, so she knows who gave which gift.",
+     "Look at that friend and thank them by name: “Thanks, Omar! I love it.”",
+     "Don’t compare gifts or rush past one to get to the next."
+    ],
+    "a": "Card first, then a warm thank-you by name for each gift."
+   },
+   {
+    "t": "mistake",
+    "html": "Saying “I already have this” or “Do you have the receipt?” in front of the giver. Thank them for thinking of you; any question about exchanging comes later, privately, if at all."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> In some families and cultures, gifts are set aside and opened later, not in front of the giver. In others, gifts are opened right away. Follow the custom of the people you are with."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on receiving gifts (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.thank-you-notes": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "After you <a href=\"/etiquette/growing-up/receiving-gifts/\">receive a gift</a>, a thank-you note finishes the job. It takes about five minutes, and it may be kept for years."
+   },
+   {
+    "t": "key",
+    "html": "A thank-you note has a <b>greeting</b>, a <b>thank-you for the specific gift or kindness</b>, a <b>line about how you will use or enjoy it</b>, a <b>warm closing</b> and your <b>signature</b>. Send it within a week or two."
+   },
+   {
+    "t": "why",
+    "html": "A note shows that you took time to thank someone, just as they took time to choose a gift for you. Naming the gift proves you noticed what they chose, and a detail about using it lets them picture you enjoying it. That is what makes a giver feel thanked."
+   },
+   {
+    "t": "viz",
+    "name": "et-note",
+    "opts": {
+     "kind": "thanks",
+     "mode": "build",
+     "parts": {
+      "date": "June 3",
+      "greeting": "Dear Grandpa Walt,",
+      "personal": "I hope your garden is growing well.",
+      "closing": "Love,",
+      "signature": "Ruby"
+     },
+     "pick": {
+      "thanks": {
+       "options": [
+        "Thanks for the stuff.",
+        "Thank you so much for the book about birds."
+       ],
+       "ok": 1,
+       "why": "Name the gift, so the giver knows you noticed it."
+      },
+      "detail": {
+       "options": [
+        "I read the part about owls twice, and now I want to see one!",
+        "I already had one, but that is okay."
+       ],
+       "ok": 0,
+       "why": "Say how you will use or enjoy it."
+      }
+     }
+    },
+    "cap": "Choose the best sentence for each part, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Writing the note",
+    "q": "Omar got a soccer ball from his Aunt Rosa. Write a short thank-you note.",
+    "steps": [
+     "Greeting: “Dear Aunt Rosa,”",
+     "Thanks for the specific gift: “Thank you for the soccer ball.”",
+     "How he will use it: “I already took it to practice, and Coach liked it too.” A personal line: “I hope I see you at my next game.”",
+     "Closing and signature: “Love, Omar”"
+    ],
+    "a": "“Dear Aunt Rosa, Thank you for the soccer ball. I already took it to practice. I hope I see you at my next game. Love, Omar”"
+   },
+   {
+    "t": "ex",
+    "title": "Addressing the envelope",
+    "q": "Hana mails her note to Dr. Bell. Where does each part go on the envelope?",
+    "steps": [
+     "Dr. Bell’s name and address go in the center.",
+     "Hana’s own address, the return address, goes in the upper left corner.",
+     "The stamp goes in the upper right corner."
+    ],
+    "a": "Delivery address in the center, return address upper left, stamp upper right."
+   },
+   {
+    "t": "viz",
+    "name": "et-envelope",
+    "opts": {
+     "to": [
+      "Dr. Ada Bell",
+      "400 Oak Avenue",
+      "Rivertown, TX 75001"
+     ],
+     "from": [
+      "Hana Kim",
+      "9 Birch Road",
+      "Rivertown, TX 75002"
+     ]
+    },
+    "cap": "Where everything goes on an envelope."
+   },
+   {
+    "t": "mistake",
+    "html": "Writing “Thanks for the gift” without naming it, or waiting months. Name the gift, add one real detail, and send it within a week or two."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on letters of thanks (for history; many details have changed)"
+   },
+   {
+    "name": "United States Postal Service, guidance on addressing mail (return address upper left, delivery address in the center, stamp upper right)"
+   }
+  ]
+ },
+ "growing.apologizing": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Everyone makes mistakes: a sharp word, a broken promise, a borrowed book returned with a torn cover. What matters is what you do next. A good apology can repair a friendship faster than almost anything else."
+   },
+   {
+    "t": "key",
+    "html": "A good apology <b>says what you did</b>, <b>says you are sorry without a “but,”</b> <b>offers to make it right</b>, and is followed by <b>doing better next time</b>. “I’m sorry I yelled at you during the game. That wasn’t fair. I’ll keep my cool next time.”"
+   },
+   {
+    "t": "why",
+    "html": "An apology is for the person who was hurt. Naming what you did shows you understand it. A “but” (“Sorry, but you started it”) turns the apology into a defense and puts the blame back on them. Offering to fix things, and then changing, shows that the words were meant."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "The parts of a good apology",
+     "items": [
+      "Say what you did: “I borrowed your book and the cover tore.”",
+      "Say you’re sorry, with no “but”: “I’m really sorry.”",
+      "Offer to make it right: “Can I buy you a new one, or tape it?”",
+      "Say what you’ll do next time: “I’ll be more careful with things I borrow.”"
+     ]
+    },
+    "cap": "Put the parts in order, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A sharp word",
+    "q": "At lunch, Leo made fun of Sam’s drawing, and Sam looked hurt. What could Leo say?",
+    "steps": [
+     "Name it: “I made fun of your drawing.”",
+     "Say sorry with no excuse: “I’m sorry. That was mean.”",
+     "Make it right and do better: “It’s actually really good. I won’t do that again.”"
+    ],
+    "a": "“I’m sorry I made fun of your drawing. That was mean, and I won’t do it again.”"
+   },
+   {
+    "t": "ex",
+    "title": "Fixing an apology",
+    "q": "Ruby forgot to save Mia a seat as she promised and said, “Sorry you feel that way.” How could she apologize better?",
+    "steps": [
+     "“Sorry you feel that way” blames Mia’s feelings instead of owning the broken promise.",
+     "Name what she did: “I forgot to save you a seat after I promised.”",
+     "Say sorry and offer a fix: “I’m sorry. I’ll save you one tomorrow.”"
+    ],
+    "a": "“I’m sorry I forgot to save you a seat after I promised. I’ll save you one tomorrow.”"
+   },
+   {
+    "t": "mistake",
+    "html": "Saying “I’m sorry you feel that way” or “Sorry, but you started it.” Those blame the other person. Own your part. A quick check: does your apology have the word “I” and no “but”?"
+   },
+   {
+    "t": "note",
+    "html": "Accepting an apology is a courtesy too. “Thanks for saying that” or “It’s okay, I forgive you” lets you both move on. If you aren’t ready yet, “Thank you. I need a little time” is honest and kind."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.disagreeing": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Friends won’t always agree, about a movie, a rule, a game plan or a bigger idea. Disagreeing is not rude. Like <a href=\"/etiquette/growing-up/apologizing/\">apologizing well</a>, doing it kindly is a skill."
+   },
+   {
+    "t": "key",
+    "html": "Disagree with the <b>idea, not the person</b>. <b>Listen first</b>, say what you <b>agree with</b>, then give your view with <b>“I think”</b> instead of “You’re wrong.” “I see why you like that plan. I think we’d have more time if we left earlier.”"
+   },
+   {
+    "t": "why",
+    "html": "People defend themselves when they feel attacked, and then nobody listens. Talking about the idea keeps the other person’s dignity safe. Starting with what you agree with shows you heard them, and “I think” makes it clear you are sharing a view, not handing down a ruling. You can disagree and still be friends."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Kind disagreement",
+      "Unkind"
+     ],
+     "cards": [
+      {
+       "text": "“I see your point. I think the blue poster is easier to read.”",
+       "bin": 0
+      },
+      {
+       "text": "“That’s a dumb idea.”",
+       "bin": 1,
+       "why": "It attacks the person, not the idea."
+      },
+      {
+       "text": "“What makes you think that? I see it differently.”",
+       "bin": 0
+      },
+      {
+       "text": "“You’re wrong, as usual.”",
+       "bin": 1,
+       "why": "“As usual” turns a disagreement into a put-down."
+      },
+      {
+       "text": "“We can agree to disagree.”",
+       "bin": 0
+      },
+      {
+       "text": "Rolling your eyes while a friend explains.",
+       "bin": 1,
+       "why": "Listen first, even when you disagree."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each response, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A group project",
+    "q": "Omar wants their project poster to be about volcanoes. Hana thinks earthquakes would be better. What could Hana say?",
+    "steps": [
+     "Listen and find something to agree with: “Volcanoes would look great.”",
+     "Give her view with “I think”: “I think earthquakes might be easier, because we already have the library book.”",
+     "Invite a solution: “Could we do both, or flip a coin?”"
+    ],
+    "a": "“Volcanoes would look great. I think earthquakes might be easier, since we have the book. Want to do both?”"
+   },
+   {
+    "t": "ex",
+    "title": "Disagreeing with a grown-up",
+    "q": "Grandpa Walt says the old movie is better than the new one. Sam disagrees. How can he say so respectfully?",
+    "steps": [
+     "Ask about Grandpa’s view first: “What did you like about the old one?”",
+     "Share his own: “I think the new one’s effects are amazing.”",
+     "Keep it friendly; it is a conversation, not a contest."
+    ],
+    "a": "“What did you like about the old one? I think the new one’s effects are amazing.”"
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking disagreeing is rude, or that winning the argument is the goal. You can disagree and still be friends. The goal is understanding each other, and sometimes agreeing to disagree."
+   },
+   {
+    "t": "note",
+    "html": "Some topics, like politics and religion, can stir strong feelings. With friends and family, it is fine to say, “Let’s talk about something else,” and that is often the kindest choice at a party or a meal."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.sportsmanship": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Games are more fun when everyone plays well together, whether it is a league game, a pickup game at recess or a board game at home. Sportsmanship is the set of manners that makes that happen."
+   },
+   {
+    "t": "key",
+    "html": "<b>Play fair</b>, <b>accept the referee’s calls</b>, <b>cheer for your team</b> without jeering the other one, and <b>shake hands after the game</b>, win or lose: “Good game.”"
+   },
+   {
+    "t": "why",
+    "html": "A game only works if both sides agree to the rules and to the people who enforce them. Arguing every call or mocking the other team turns a game into a fight. A good sport is gracious in winning, because the other team worked hard too, and gracious in losing, because the winners earned it."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Good sport",
+      "Poor sport"
+     ],
+     "cards": [
+      {
+       "text": "Saying “Good game” to every player in the handshake line.",
+       "bin": 0
+      },
+      {
+       "text": "Yelling at the referee after a call.",
+       "bin": 1,
+       "why": "Accept the call; your coach can ask about it."
+      },
+      {
+       "text": "Helping up a player from the other team who fell.",
+       "bin": 0
+      },
+      {
+       "text": "Doing a dance in the other team’s faces after a goal.",
+       "bin": 1,
+       "why": "Celebrate with your team, not at the other one."
+      },
+      {
+       "text": "Cheering for your team.",
+       "bin": 0
+      },
+      {
+       "text": "Quitting the board game when you start losing.",
+       "bin": 1,
+       "why": "Finish the game; the others are counting on you."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each action, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A bad call",
+    "q": "In Mia’s softball game, the umpire calls her out at first base. She is sure she was safe. What should she do?",
+    "steps": [
+     "Accept the call and jog back to the dugout.",
+     "Don’t argue or throw her helmet.",
+     "If it matters, her coach can ask the umpire calmly; that is the coach’s job."
+    ],
+    "a": "Accept the call and let the coach handle any question."
+   },
+   {
+    "t": "ex",
+    "title": "Winning big",
+    "q": "Leo’s team wins 8 to 1. What does gracious winning look like?",
+    "steps": [
+     "Celebrate with his own team, not at the other team.",
+     "Shake hands and say “Good game” to every player.",
+     "Say something kind if he can: “You guys played hard.”"
+    ],
+    "a": "Celebrate with his team, then shake hands and say “Good game.”"
+   },
+   {
+    "t": "mistake",
+    "html": "Arguing every call, or celebrating by mocking the other team. A good sport is gracious in both winning and losing. Check: would you be glad to play against yourself?"
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Leagues use different end-of-game customs: a handshake line, high fives, a fist bump or a cheer for the other team. Follow your team’s custom; the idea is the same."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.school-teachers": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "School is a place where many people share a room for many hours. The skills from <a href=\"/etiquette/growing-up/disagreeing/\">disagreeing kindly</a> help a lot, and so do a few classroom habits that teachers notice every day."
+   },
+   {
+    "t": "key",
+    "html": "<b>Greet your teacher</b>, <b>raise your hand and wait</b> to be called on, <b>listen when others speak</b>, and <b>ask for help respectfully</b>. If you disagree with a grade or a rule, <b>ask to talk after class</b>."
+   },
+   {
+    "t": "why",
+    "html": "A teacher is trying to help twenty or thirty people learn at once. Raising your hand gives everyone a fair turn, and listening to classmates gives their ideas the same respect you want for yours. Talking about a grade in private keeps it calm and lets the teacher listen, without an audience."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "classroom",
+     "people": [
+      {
+       "who": "park"
+      },
+      {
+       "who": "omar",
+       "age": "teen"
+      },
+      {
+       "who": "hana",
+       "age": "teen"
+      }
+     ],
+     "prompt": "Ms. Park asks a question. Omar knows the answer right away. What should he do?",
+     "choices": [
+      {
+       "text": "Raise his hand and wait to be called on.",
+       "ok": true,
+       "mood": {
+        "0": "happy",
+        "1": "happy"
+       },
+       "outcome": "Everyone gets a chance to think, and Omar gets his turn."
+      },
+      {
+       "text": "Shout out the answer.",
+       "ok": false,
+       "mood": {
+        "2": "cross"
+       },
+       "outcome": "Hana was still thinking. Calling out takes away everyone else’s turn."
+      },
+      {
+       "text": "Whisper the answer to Hana.",
+       "ok": false,
+       "mood": {
+        "0": "neutral"
+       },
+       "outcome": "Whispering distracts both of them. Raise your hand instead."
+      }
+     ]
+    },
+    "cap": "Choose what Omar does."
+   },
+   {
+    "t": "ex",
+    "title": "A grade that seems wrong",
+    "q": "Sam thinks a test question was marked wrong by mistake. What is the respectful way to handle it?",
+    "steps": [
+     "Wait until after class, or ask, “Could I talk with you about my test sometime?”",
+     "Bring the test and explain calmly: “I think this answer might be right. Could you look again?”",
+     "Accept the teacher’s answer politely, even if it is not the one he hoped for."
+    ],
+    "a": "Ask to talk privately after class, and explain calmly."
+   },
+   {
+    "t": "ex",
+    "title": "Asking for help",
+    "q": "Ruby doesn’t understand the homework. What can she say?",
+    "steps": [
+     "Ask at a good moment, such as after class or during work time.",
+     "Be specific: “Ms. Park, I’m stuck on number 4. Could you explain the first step?”",
+     "Thank her for the help."
+    ],
+    "a": "“Ms. Park, I’m stuck on number 4. Could you explain the first step? Thank you!”"
+   },
+   {
+    "t": "mistake",
+    "html": "Calling out answers, or arguing about a grade in front of the class. Raise your hand and wait; for grades, ask to talk after class."
+   },
+   {
+    "t": "note",
+    "html": "Small courtesies count: say good morning and goodbye, hold the door, help a substitute learn names, and return borrowed supplies."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.respect-elders": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "You have learned to <a href=\"/etiquette/growing-up/school-teachers/\">show respect at school</a>. Older people, like grandparents, neighbors and family friends, deserve that respect too, and showing it is one of the warmest things you can do."
+   },
+   {
+    "t": "key",
+    "html": "Offer older people <b>your seat</b>, <b>your help</b> with doors and bags, and <b>your attention</b>. <b>Listen to their stories</b>, ask them questions, and <b>stand when they enter</b>."
+   },
+   {
+    "t": "why",
+    "html": "Older people have spent a lifetime working, raising families and learning things you haven’t yet. Small courtesies like a seat or a held door make their day easier. And your attention is a gift: many older people love to share their stories, and they don’t always find someone who wants to hear them."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "bins": [
+      "Respectful",
+      "Not respectful"
+     ],
+     "cards": [
+      {
+       "text": "Offering your seat on a crowded bus to an older man.",
+       "bin": 0
+      },
+      {
+       "text": "Rolling your eyes at Grandpa’s old stories.",
+       "bin": 1,
+       "why": "Ask a question instead. His stories are part of your family’s history."
+      },
+      {
+       "text": "Asking Grandma what school was like when she was young.",
+       "bin": 0
+      },
+      {
+       "text": "Carrying a neighbor’s grocery bag to her door.",
+       "bin": 0
+      },
+      {
+       "text": "Calling an older neighbor by a nickname without asking.",
+       "bin": 1,
+       "why": "Use the name and title they prefer."
+      },
+      {
+       "text": "Looking at your phone while Grandpa talks.",
+       "bin": 1,
+       "why": "Put it down and give him your attention."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each action, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Asking about a life",
+    "q": "Hana is visiting her great-aunt, who doesn’t say much. What could Hana ask?",
+    "steps": [
+     "Open questions about her life work best: “What was your first job?”",
+     "Or about the past: “What did you do for fun when you were my age?”",
+     "Then listen, and ask a follow-up about what she says."
+    ],
+    "a": "“What did you do for fun when you were my age?” Then listen and ask more."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking respect means staying silent around older people. Asking an older relative about their life is one of the kindest things you can do. Respect is attention, help and interest, not silence."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Families and cultures show respect to elders in many ways: special titles, bowing, serving elders first at meals, kissing a hand, or using formal words. Learn your family’s ways, and when you visit others, follow theirs."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   },
+   {
+    "name": "Emily Post, Etiquette (1922, public domain), on courtesy to older people (for history; many details have changed)"
+   }
+  ]
+ },
+ "growing.helping-home": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Family manners are the ones we practice most, with the people we see every day. It is easy to be polite to guests and forget the people at home, but home is where manners matter most."
+   },
+   {
+    "t": "key",
+    "html": "Do your <b>share of the chores</b> without being asked twice, <b>notice what needs doing</b> and do it, and <b>thank family members</b> for what they do for you."
+   },
+   {
+    "t": "why",
+    "html": "A home runs on many small jobs: dishes, laundry, trash, feeding the dog. When everyone helps, nobody carries all of it. Noticing a job and doing it without being asked is a way of saying, “I’m part of this family too.” And thanks at home matter just as much as thanks anywhere else."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "Clearing the table after dinner",
+     "items": [
+      "Ask to be excused, or wait until everyone has finished.",
+      "Carry your own plate and silverware to the kitchen.",
+      "Scrape leftovers into the trash or compost.",
+      "Bring in the serving dishes and wipe the table.",
+      "Thank the cook again on your way out."
+     ]
+    },
+    "cap": "Put the steps in order, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Noticing a job",
+    "q": "Leo walks past the full trash can on his way to his room. Taking out the trash is his sister’s chore this week. What could he do?",
+    "steps": [
+     "Notice it: the bag is full and she is at practice.",
+     "Take it out, or at least tell someone it’s full.",
+     "No need to make a big deal; small help is the point."
+    ],
+    "a": "Take it out anyway, or let someone know."
+   },
+   {
+    "t": "mistake",
+    "html": "Helping only when it is “your” chore. Family manners are the ones we practice most. Check: when you see something that needs doing, do you do it?"
+   },
+   {
+    "t": "note",
+    "html": "Thank-yous at home: “Thanks for driving me, Mom.” “Thanks for helping me with my homework, Grandpa.” They are short, and they make a home feel kinder."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.lines-crowds": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Lines are everywhere: at the cafeteria, the ticket booth, the bus stop, the bathroom at halftime. A line is a simple, fair system, and it only works when everyone in it plays fair."
+   },
+   {
+    "t": "key",
+    "html": "<b>Join a line at the end</b>, leave a <b>little space</b> in front of you, keep your <b>bag close</b>, and <b>don’t save places</b> for friends who arrive later."
+   },
+   {
+    "t": "why",
+    "html": "A line is first come, first served, which is fair to everyone. Each person who joins in front of you makes everyone behind you wait longer, even if it is “just one friend.” A little space and a bag held close keep you from bumping people in a crowd, where everyone is already short on room."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "cards": [
+      {
+       "text": "Walking to the end of the line.",
+       "bin": 0
+      },
+      {
+       "text": "Waving three friends into your spot near the front.",
+       "bin": 1,
+       "why": "Everyone behind you now waits longer."
+      },
+      {
+       "text": "Holding your backpack in front of you in a crowd.",
+       "bin": 0
+      },
+      {
+       "text": "Standing so close you bump the person ahead.",
+       "bin": 1,
+       "why": "Leave a little space."
+      },
+      {
+       "text": "Moving up when the line moves.",
+       "bin": 0
+      },
+      {
+       "text": "Pretending not to see the line and walking to the front.",
+       "bin": 1,
+       "why": "Cutting is unfair to everyone who waited."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each action as polite or rude, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Friends arrive late",
+    "q": "Sam is near the front of the line for the school play tickets. His friends Leo and Omar arrive and want to join him. What should Sam do?",
+    "steps": [
+     "Saving places for friends who just arrived isn’t fair to the people behind him.",
+     "Kindly say, “The line starts back there. I’ll wait for you inside.”",
+     "Or Sam can go to the back with them, if he wants to stay together."
+    ],
+    "a": "“The line starts back there. I’ll wait for you inside.”"
+   },
+   {
+    "t": "ex",
+    "title": "A crowded hallway",
+    "q": "After an assembly, the hallway is packed. How can Ruby move through it politely?",
+    "steps": [
+     "Keep to the right and move with the crowd.",
+     "Hold her bag in front of her.",
+     "If she bumps someone, say “Excuse me” or “Sorry.”"
+    ],
+    "a": "Keep right, bag close, and “excuse me” if she bumps someone."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking saving spots for friends is fine. Each person who joins in front of you makes everyone behind you wait longer. If you want to be with your friends, join them at the back."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> Holding one place for someone who steps away for a moment (to grab a napkin or use the restroom) and asks you to is widely accepted. Letting a group of late friends in is not. In some countries, lines work a little differently; follow what people around you do."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.doors-elevators": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Doors and elevators are where people meet in small spaces. Like <a href=\"/etiquette/growing-up/lines-crowds/\">lines</a>, they work best with a few simple customs that keep people from bumping into one another."
+   },
+   {
+    "t": "key",
+    "html": "<b>Hold a door</b> for the person right behind you. <b>Let people off</b> an elevator before you get on. Offer to <b>press the button</b> for others, and stand aside to make room."
+   },
+   {
+    "t": "why",
+    "html": "Holding a door takes two seconds and saves the next person from a door swinging into them, especially if their hands are full. People inside an elevator need to get out before there is room for anyone to get in, so waiting to the side actually makes things faster for everyone."
+   },
+   {
+    "t": "viz",
+    "name": "et-order",
+    "opts": {
+     "title": "Taking the elevator",
+     "items": [
+      "Stand to the side of the doors while you wait.",
+      "Let everyone get off first.",
+      "Step in and move toward the back.",
+      "Ask, “Which floor?” and press the button for others.",
+      "Step aside at each stop so people can get out."
+     ]
+    },
+    "cap": "Put the steps in order, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "Hands full",
+    "q": "Hana sees Mr. Diaz coming toward the library door with a big box. What should she do?",
+    "steps": [
+     "Hold the door open for him and stand to the side.",
+     "Wait until he is through.",
+     "He will likely say “Thank you”; she can answer, “You’re welcome.”"
+    ],
+    "a": "Hold the door open and stand aside until he’s through."
+   },
+   {
+    "t": "ex",
+    "title": "The elevator opens",
+    "q": "At the doctor’s office, the elevator doors open and three people are inside, about to get off. Leo is in a hurry. What should he do?",
+    "steps": [
+     "Step to the side of the doors.",
+     "Let all three people get off.",
+     "Then step in, move to the back, and press his floor."
+    ],
+    "a": "Step aside, let them off, then get on."
+   },
+   {
+    "t": "mistake",
+    "html": "Rushing into an elevator as soon as the doors open. The people inside can’t get out, and everyone is slowed down. Step aside and let people out first."
+   },
+   {
+    "t": "note",
+    "html": "If someone holds a door for you, say thank you. If the person behind you is far away, you don’t need to wait; a door held too long can make them rush."
+   },
+   {
+    "t": "note",
+    "html": "<b>Customs differ.</b> On escalators in many American cities, people stand on the right and walk on the left. Not every place does this, so watch what people around you do."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.sidewalks": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Sidewalks, hallways, trails and park paths are shared by everyone: walkers, strollers, people in wheelchairs, dog walkers, runners. The same fairness as <a href=\"/etiquette/growing-up/lines-crowds/\">lines and crowds</a> keeps everyone moving."
+   },
+   {
+    "t": "key",
+    "html": "<b>Walk on the right</b>. In a group, <b>don’t spread out across the whole path</b>. If you need to stop or check your phone, <b>step to the side</b>. And <b>clean up after yourself</b>."
+   },
+   {
+    "t": "why",
+    "html": "When everyone keeps right, people going opposite ways pass easily. A group walking four across forces others into the street or the grass. Stopping in the middle of a busy path is like stopping in a doorway: everyone behind you has to swerve. Litter left behind becomes someone else’s job."
+   },
+   {
+    "t": "viz",
+    "name": "et-sort",
+    "opts": {
+     "cards": [
+      {
+       "text": "Walking on the right side of the path.",
+       "bin": 0
+      },
+      {
+       "text": "Walking four across so no one can pass.",
+       "bin": 1,
+       "why": "Pair up or go single file when others need to pass."
+      },
+      {
+       "text": "Stepping to the side to text.",
+       "bin": 0
+      },
+      {
+       "text": "Stopping in a doorway to chat.",
+       "bin": 1,
+       "why": "Step out of the way first."
+      },
+      {
+       "text": "Throwing your wrapper in a trash can.",
+       "bin": 0
+      },
+      {
+       "text": "Leaving your scooter in the middle of the sidewalk.",
+       "bin": 1,
+       "why": "Someone could trip over it."
+      }
+     ],
+     "shuffle": true,
+     "reveal": true
+    },
+    "cap": "Sort each habit, then Check."
+   },
+   {
+    "t": "ex",
+    "title": "A group walk",
+    "q": "Mia, Sam and Ruby are walking side by side on a sidewalk when a woman with a stroller comes toward them. What should they do?",
+    "steps": [
+     "Move into single file or two by two on the right.",
+     "Leave room for the stroller to pass.",
+     "Then spread back out once she has passed, if there is room."
+    ],
+    "a": "Single file on the right until the stroller passes."
+   },
+   {
+    "t": "ex",
+    "title": "Checking directions",
+    "q": "Omar needs to look at a map on his phone while walking in a busy downtown area. What should he do?",
+    "steps": [
+     "Step to the side, out of the flow of people, next to a wall or a bench.",
+     "Check the map.",
+     "Then step back into the flow and keep right."
+    ],
+    "a": "Step to the side to check, then rejoin the flow."
+   },
+   {
+    "t": "mistake",
+    "html": "Stopping in the middle of a busy walkway or doorway. If you need to stop, step to the side, so the people behind you can keep going."
+   },
+   {
+    "t": "note",
+    "html": "On a shared path, people on bikes often say “On your left” before they pass. If you hear it, keep to the right. Pick up after a dog you are walking, too."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.movies-shows": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "A movie, a play, a concert or a recital is something many people share at once in the dark. It is a <a href=\"/etiquette/growing-up/sidewalks/\">shared space</a> too, and the people around you paid for the same experience you did."
+   },
+   {
+    "t": "key",
+    "html": "<b>Arrive on time</b>, <b>silence your phone</b> and <b>keep the screen dark</b>, <b>save talking for afterward</b>, and <b>clap at the right moments</b>."
+   },
+   {
+    "t": "why",
+    "html": "In a dark theater, even a small light or a whisper pulls people’s attention away from the show. A phone screen shines right into the eyes of the people behind you. Arriving on time means you don’t climb past people after the show starts. And applause is how an audience thanks the performers."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "theater",
+     "people": [
+      {
+       "who": "leo",
+       "age": "teen",
+       "holds": "phone"
+      },
+      {
+       "who": "ruby",
+       "age": "teen"
+      }
+     ],
+     "prompt": "The movie has started, and Leo’s phone buzzes. What should he do?",
+     "choices": [
+      {
+       "text": "Leave it in his pocket and check it after the movie.",
+       "ok": true,
+       "mood": {
+        "0": "happy",
+        "1": "happy"
+       },
+       "outcome": "The theater stays dark, and nobody misses a moment."
+      },
+      {
+       "text": "Check it quickly with the screen turned down low.",
+       "ok": false,
+       "mood": {
+        "1": "cross"
+       },
+       "outcome": "Even a dim screen is bright in a dark theater, and the people behind see it."
+      },
+      {
+       "text": "Whisper to Ruby about the message.",
+       "ok": false,
+       "mood": {
+        "1": "cross"
+       },
+       "outcome": "Whispers carry. Save it for after the show."
+      }
+     ]
+    },
+    "cap": "Choose what Leo does."
+   },
+   {
+    "t": "ex",
+    "title": "Arriving late to a play",
+    "q": "Hana arrives at the school play just after it has started. What should she do?",
+    "steps": [
+     "Wait at the back or the door until there is a break, or until an usher shows her to a seat.",
+     "Move quietly along the row and say “Excuse me” softly to the people she passes.",
+     "Sit quickly and keep her phone off."
+    ],
+    "a": "Wait for a break or an usher, then slip quietly to a seat."
+   },
+   {
+    "t": "ex",
+    "title": "When to clap",
+    "q": "At a band concert, Omar isn’t sure when to clap. What can he do?",
+    "steps": [
+     "At a concert, people usually clap when a whole piece is finished.",
+     "At a play, people clap at the end of a scene, a song or the show.",
+     "When in doubt, wait and clap when others do."
+    ],
+    "a": "Clap when the piece or scene ends, and follow the audience when unsure."
+   },
+   {
+    "t": "mistake",
+    "html": "Whispering through a movie or checking your phone, whose light bothers the people behind you. Phone off and away, talking afterward."
+   },
+   {
+    "t": "note",
+    "html": "A few more theater courtesies: unwrap snacks before the show starts, keep your feet off the seat in front, and if you must leave in the middle, go quietly at a pause."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Present-day American etiquette as commonly taught to children and families (summarized in our own words)"
+   }
+  ]
+ },
+ "growing.pledge-anthem": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "At assemblies, ball games and ceremonies, you will often hear the Pledge of Allegiance or “The Star-Spangled Banner,” the national anthem. The United States Code, the collection of federal laws, describes the customs for both."
+   },
+   {
+    "t": "key",
+    "html": "During the Pledge and the anthem, people <b>stand</b>, <b>face the flag</b> and place the <b>right hand over the heart</b>. The Code asks men not in uniform to <b>remove hats</b> other than religious head coverings, and today most people remove hats. <b>People in uniform salute.</b> If no flag is displayed during the anthem, <b>face the music</b>."
+   },
+   {
+    "t": "why",
+    "html": "Standing still and quiet together is a shared sign of respect for the country and the people who serve it. It is also a courtesy to everyone around you: during those moments, talking or wandering distracts the people who are taking part."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Moment",
+     "What the U.S. Code describes"
+    ],
+    "rows": [
+     [
+      "The Pledge of Allegiance (4 U.S.C. § 4)",
+      "Stand facing the flag, right hand over the heart; men not in uniform remove headdress other than religious head coverings; people in uniform face the flag and salute."
+     ],
+     [
+      "The national anthem (36 U.S.C. § 301)",
+      "With the flag displayed: face the flag, stand at attention, right hand over the heart. With no flag: face toward the music."
+     ],
+     [
+      "The flag passing in a parade, or being raised or lowered (4 U.S.C. § 9)",
+      "Face the flag, stand at attention, right hand over the heart."
+     ]
+    ],
+    "cap": "What the Code describes for civilians."
+   },
+   {
+    "t": "viz",
+    "name": "et-scene",
+    "opts": {
+     "place": "park",
+     "people": [
+      {
+       "who": "leo",
+       "age": "teen",
+       "pose": "heart"
+      },
+      {
+       "who": "diaz",
+       "pose": "heart"
+      },
+      {
+       "who": "hana",
+       "age": "teen",
+       "pose": "heart"
+      }
+     ],
+     "props": [
+      {
+       "kind": "flag",
+       "x": 520,
+       "y": 120,
+       "s": 2.5
+      }
+     ],
+     "narr": "Before the game, everyone stands for the anthem."
+    },
+    "cap": "Right hand over the heart, facing the flag."
+   },
+   {
+    "t": "ex",
+    "title": "At a ball game",
+    "q": "Sam is wearing a baseball cap at a game when the anthem begins. What does the custom ask?",
+    "steps": [
+     "Stand and face the flag.",
+     "Take off the cap; today most people do, and the Code asks it of men not in uniform.",
+     "Hold the cap with the right hand over the heart, or put the hand over the heart, and stay quiet until the song ends."
+    ],
+    "a": "Stand, face the flag, cap off, right hand over the heart."
+   },
+   {
+    "t": "ex",
+    "title": "No flag in sight",
+    "q": "At an indoor event, the anthem plays but there is no flag in the room. What should Mia do?",
+    "steps": [
+     "Stand.",
+     "Face toward the music, as 36 U.S.C. § 301 describes.",
+     "Right hand over the heart until the song ends."
+    ],
+    "a": "Stand, face the music, right hand over the heart."
+   },
+   {
+    "t": "mistake",
+    "html": "Keeping a hat on or talking during the anthem. When no flag is displayed, people face the music. The Code describes customs; it does not punish anyone for not following them."
+   },
+   {
+    "t": "note",
+    "html": "Some people choose not to say the Pledge, for reasons of belief. In 1943 the Supreme Court decided that public schools cannot require students to say it. Respecting other people’s choices quietly is part of good manners too."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "Pledge of Allegiance conduct, 4 U.S.C. § 4"
+   },
+   {
+    "name": "National anthem conduct, 36 U.S.C. § 301"
+   },
+   {
+    "name": "U.S. Flag Code, 4 U.S.C. § 9 (conduct during hoisting, lowering or passing of the flag)"
+   }
+  ]
+ },
+ "growing.flag-display": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "After the <a href=\"/etiquette/growing-up/pledge-anthem/\">Pledge and the anthem</a>, the Flag Code’s best-known rules are about how the flag is displayed. One idea explains most of them: the flag’s place of honor is at the top and to the flag’s own right."
+   },
+   {
+    "t": "key",
+    "html": "On a wall, <b>horizontal or vertical</b>, the flag’s blue <b>union</b> (the field of stars) goes <b>at the top</b> and <b>to the flag’s own right</b>, which is the <b>viewer’s left</b>. On a staff, the union is at the <b>peak</b>."
+   },
+   {
+    "t": "why",
+    "html": "In many traditions, the right side is the place of honor, as when a guest of honor sits at the host’s right. The union is the flag’s honored part, so it goes uppermost and at the flag’s own right. Imagine the flag as a person facing you: its right hand is on your left."
+   },
+   {
+    "t": "viz",
+    "name": "et-flag",
+    "opts": {
+     "show": "vertical",
+     "compare": true,
+     "right": "B"
+    },
+    "cap": "Tap the picture that follows the Flag Code, then Check."
+   },
+   {
+    "t": "table",
+    "head": [
+     "Where the flag is",
+     "The rule (4 U.S.C. § 7)"
+    ],
+    "rows": [
+     [
+      "On a wall, horizontal or vertical",
+      "Union at the top, at the flag’s own right: the viewer’s left (§ 7(i))."
+     ],
+     [
+      "In a window",
+      "The same way, union to the left of a person looking from the street (§ 7(i))."
+     ],
+     [
+      "On a speaker’s platform, on a staff",
+      "At the speaker’s right as they face the audience (§ 7(k))."
+     ],
+     [
+      "Crossed staffs with another flag",
+      "The U.S. flag on its own right, its staff in front (§ 7(d))."
+     ]
+    ],
+    "cap": "A few display rules."
+   },
+   {
+    "t": "ex",
+    "title": "Hanging it vertically",
+    "q": "Ruby’s class wants to hang the flag vertically on the wall behind the teacher’s desk. Where does the union go?",
+    "steps": [
+     "Vertical or horizontal, the rule is the same: the union is at the top.",
+     "It is at the flag’s own right, which is the viewer’s left.",
+     "So as the class looks at it, the stars are at the top left."
+    ],
+    "a": "At the top, on the left as the class looks at it."
+   },
+   {
+    "t": "ex",
+    "title": "A flag on a pole",
+    "q": "At a scout meeting, Omar raises the flag on a pole. Where does the union go?",
+    "steps": [
+     "On a staff, the union goes at the peak, the top, next to the pole.",
+     "The Code adds that the flag is raised briskly and lowered slowly and ceremoniously (§ 6(b)).",
+     "The flag is never flown upside down except as a signal of dire distress (§ 8(a))."
+    ],
+    "a": "At the top of the pole, next to the staff."
+   },
+   {
+    "t": "viz",
+    "name": "et-flag",
+    "opts": {
+     "show": "platform"
+    },
+    "cap": "On a platform, the flag stands at the speaker’s right."
+   },
+   {
+    "t": "mistake",
+    "html": "Hanging a vertical flag with the union at the top right, as seen from the front. Whichever way it hangs on a wall, the union is at the top left as you look at it."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "U.S. Flag Code, 4 U.S.C. § 7 (position and manner of display)"
+   },
+   {
+    "name": "U.S. Flag Code, 4 U.S.C. § 6 (time and occasions for display)"
+   },
+   {
+    "name": "U.S. Flag Code, 4 U.S.C. § 8 (respect for the flag)"
+   }
+  ]
+ },
+ "growing.flag-care": {
+  "blocks": [
+   {
+    "t": "p",
+    "html": "Besides <a href=\"/etiquette/growing-up/flag-display/\">how to display the flag</a>, the Flag Code describes how to care for it. These customs treat the flag the way you would treat something that matters to many people."
+   },
+   {
+    "t": "key",
+    "html": "The Flag Code asks that the flag <b>not touch anything beneath it</b>, such as the ground or the floor; that it <b>fly from sunrise to sunset</b> unless it is <b>lit at night</b>; and that a flag <b>too worn to fly</b> be <b>retired in a dignified way</b>, preferably by burning."
+   },
+   {
+    "t": "why",
+    "html": "Each custom is a sign of care: keeping the flag off the ground keeps it clean and shows respect; lighting it at night keeps it visible when it flies; and retiring a worn flag with dignity, instead of throwing it in the trash, honors what it stands for. Many groups, such as veterans’ organizations and scout troops, hold flag retirement ceremonies."
+   },
+   {
+    "t": "viz",
+    "name": "et-flag",
+    "opts": {
+     "show": "half",
+     "steps": true
+    },
+    "cap": "Use Next to see how a flag is put at half-staff."
+   },
+   {
+    "t": "list",
+    "items": [
+     "Keep it from touching the ground or floor (4 U.S.C. § 8(b)).",
+     "Fly it from sunrise to sunset, or day and night if it is lit after dark (§ 6(a)).",
+     "Don’t fly it in bad weather unless it is an all-weather flag (§ 6(c)).",
+     "For half-staff, raise it to the peak for an instant, then lower it to half-staff; raise it to the peak again before lowering it for the day (§ 7(m)).",
+     "Retire a worn flag in a dignified way, preferably by burning (§ 8(k))."
+    ]
+   },
+   {
+    "t": "ex",
+    "title": "A flag touches the ground",
+    "q": "While folding the class flag, Leo and Hana let a corner touch the floor. Does the flag have to be destroyed?",
+    "steps": [
+     "No. The Code asks that the flag be kept from touching the ground; it does not say a flag that touches it must be destroyed.",
+     "Pick it up, check that it is clean and undamaged.",
+     "A clean, undamaged flag can still be flown."
+    ],
+    "a": "No. Pick it up; if it is clean and undamaged, it can still be flown."
+   },
+   {
+    "t": "ex",
+    "title": "Night-time",
+    "q": "Sam’s family wants to leave their flag up overnight. What does the Code say?",
+    "steps": [
+     "The custom is to fly the flag from sunrise to sunset.",
+     "It may fly day and night if it is properly lit after dark.",
+     "So they can leave it up if a light shines on it."
+    ],
+    "a": "Leave it up only if it is lit at night."
+   },
+   {
+    "t": "mistake",
+    "html": "Thinking a flag that touches the ground must be destroyed. The Code asks only that it be kept from touching the ground; a clean, undamaged flag can still be flown. The Code is guidance for civilians and has no penalties."
+   },
+   {
+    "t": "try"
+   }
+  ],
+  "sources": [
+   {
+    "name": "U.S. Flag Code, 4 U.S.C. § 8 (respect for the flag)"
+   },
+   {
+    "name": "U.S. Flag Code, 4 U.S.C. § 6 (time and occasions for display)"
+   },
+   {
+    "name": "U.S. Flag Code, 4 U.S.C. § 7(m) (half-staff)"
+   }
+  ]
+ }
+}
