@@ -1,0 +1,81 @@
+{{ define "main" }}
+{{ partial "languages/linear-b/head.html" . }}
+<div class="lang lb lb-page">
+  <header class="lang-hero lb-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/linear-b/" | relURL }}" style="color:inherit">Linear B</a> · Tablets</p>
+    <h1>Famous tablets</h1>
+    <p>Read real Linear B tablets the way scholars do: find the word dividers, the logograms and the numbers first, then sound out the words sign by sign. Then look at Linear A and see how much, and how little, can be said.</p>
+  </header>
+  {{ partial "languages/linear-b/nav.html" . }}
+
+  <section class="lb-sec">
+    <h2>How to read a line</h2>
+    <ol class="lb-start">
+      <li><b>Find the pieces.</b> Short upright strokes between signs are word dividers. A logogram, a picture-like sign for a thing, comes right before a number.</li>
+      <li><b>Sound out the words.</b> Look each syllable up in the <a href="{{ "languages/linear-b/signs/" | relURL }}">sign grid</a> and join them with hyphens: <span class="sc-tl">ti-ri-po</span>.</li>
+      <li><b>Undo the spelling.</b> Supply the missing consonants and drop the empty vowels: <span class="sc-tl">ti-ri-po</span> is <i>tripos</i> (later τρίπους), not “tiripo.” Remember that r is also l, and p is also b and ph.</li>
+      <li><b>Put it together.</b> Most lines say “this many of this thing,” often with a name or a place.</li>
+    </ol>
+    <p class="lb-note">On each tablet below, tap a word, logogram or number to see what it is, and use the button to reveal the reading one layer at a time. Tablets marked “pattern” show how a kind of record is laid out; they are not one particular tablet.</p>
+  </section>
+
+  <section class="lb-tab" id="ta641">
+    <h2>The tripod tablet <span class="lb-tag b">Linear B · Pylos</span></h2>
+    <p>Found at Pylos in June 1952 and read in 1953, this palm-leaf tablet confirmed the decipherment: the words beside each pictured vessel describe it. Look for <span class="sc-tl">ti-ri-po-de</span> beside the tripod and the cups with four, three and no handles.</p>
+    <div class="ml-viz" data-viz="sc-tablet" data-opts='{"tablet":"ta641","steps":true,"reading":["tl","gr","en"]}' aria-label="PY Ta 641, the tripod tablet"></div>
+    <details><summary>Sign by sign: the first entry</summary>
+      <div class="ml-viz" data-viz="sc-signs" data-opts='{"text":"ti-ri-po-de a3-ke-u ke-re-si-jo we-ke *201VAS 2","breakdown":true,"size":48}' aria-label="The first entry, sign by sign"></div>
+      <p class="lb-note"><span class="sc-tl">ti-ri-po-de</span> is a dual, “two tripods”: Greek still had a form for exactly two. <span class="sc-tl">ke-re-si-jo we-ke</span> means “of Cretan make.” The meaning of <span class="sc-tl">a3-ke-u</span> is unclear; it may be a name.</p>
+    </details>
+  </section>
+
+  <section class="lb-tab" id="tn316">
+    <h2>Gold vessels for the gods <span class="lb-tag b">Linear B · Pylos</span></h2>
+    <p>Three entries from a longer Pylos tablet (Tn 316) that sends gold vessels, and people, to the gods at their shrines. Zeus, Hera and Drimios, a son of Zeus who is otherwise almost unknown, are named.</p>
+    <div class="ml-viz" data-viz="sc-tablet" data-opts='{"tablet":"tn316","steps":true,"reading":["tl","gr","en"]}' aria-label="PY Tn 316, extract"></div>
+    <details><summary>Sign by sign: the first entry</summary>
+      <div class="ml-viz" data-viz="sc-signs" data-opts='{"text":"di-we AUR *213VAS 1 VIR 1","breakdown":true,"size":48}' aria-label="To Zeus, sign by sign"></div>
+      <p class="lb-note"><span class="sc-tl">di-we</span> is the dative of Zeus’s name, “to Zeus.” AUR (gold) is written as a small logogram next to the vessel sign. Whether the man was a sacrifice or a servant given to the god is debated.</p>
+    </details>
+  </section>
+
+  <section class="lb-tab" id="horses">
+    <h2>Horses and foals <span class="lb-tag b">Linear B · Knossos · pattern</span></h2>
+    <p>Knossos tablets count horses with the horse logogram, and the words beside it read as Greek: <span class="sc-tl">i-qo</span> is <i>hikkʷos</i>, horse (later ἵππος), and <span class="sc-tl">po-ro</span> is <i>pōlos</i>, foal.</p>
+    <div class="ml-viz" data-viz="sc-tablet" data-opts='{"tablet":"horses","steps":true,"reading":["tl","gr","en"]}' aria-label="Horses and foals at Knossos (pattern)"></div>
+  </section>
+
+  <section class="lb-tab" id="sheep">
+    <h2>A flock at Phaistos <span class="lb-tag b">Linear B · Knossos · pattern</span></h2>
+    <p>Hundreds of Knossos tablets keep track of sheep: a shepherd’s name, a place, the sheep logogram marked male or female, and a number. Here the place is <span class="sc-tl">pa-i-to</span>, Phaistos, and the sign has the two short bars of a ram.</p>
+    <div class="ml-viz" data-viz="sc-tablet" data-opts='{"tablet":"sheep","steps":true,"reading":["tl","gr","en"]}' aria-label="Sheep at Phaistos (pattern)"></div>
+    <details><summary>Sign by sign</summary>
+      <div class="ml-viz" data-viz="sc-signs" data-opts='{"text":"pa-i-to OVISm 100","breakdown":true,"size":48}' aria-label="Phaistos, rams, 100"></div>
+    </details>
+  </section>
+
+  <section class="lb-tab" id="kuro">
+    <h2>A list and its total <span class="lb-tag a">Linear A · Hagia Triada · pattern</span></h2>
+    <p>Many Linear A tablets from Hagia Triada are lists of words and numbers that end with the word read <span class="sc-tl">ku-ro</span> and the sum of the lines above it. Fractions appear too; <i>J</i> is one half.</p>
+    <div class="ml-viz" data-viz="sc-tablet" data-opts='{"tablet":"kuro","steps":true,"reading":["tl","en"]}' aria-label="A Linear A list with ku-ro"></div>
+    <div class="lb-can">
+      <div><h3>What we can say</h3><ul><li>The numbers add up, so <span class="sc-tl">ku-ro</span> introduces the total; this meaning is widely accepted.</li><li>The numerals and the half sign work like Linear B’s.</li><li>The signs can be sounded out with the borrowed Linear B values.</li></ul></div>
+      <div><h3>What we cannot say</h3><ul><li>What the listed words mean (names? goods? places?).</li><li>What language <span class="sc-tl">ku-ro</span> belongs to, or how it was really pronounced.</li><li>The values of most fraction signs, beyond proposals.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="lb-tab" id="libation">
+    <h2>The libation formula <span class="lb-tag a">Linear A · sanctuaries · pattern</span></h2>
+    <p>Stone offering tables from peak sanctuaries, like Mount Iouktas near Knossos, carry versions of one formula. Its words recur from site to site, in much the same order.</p>
+    <div class="ml-viz" data-viz="sc-tablet" data-opts='{"tablet":"libation","steps":true,"reading":["tl","en"]}' aria-label="Words of the libation formula"></div>
+    <details><summary>Sign by sign</summary>
+      <div class="ml-viz" data-viz="sc-signs" data-opts='{"la":"a-sa-sa-ra-me","breakdown":true,"size":48}' aria-label="a-sa-sa-ra-me, sign by sign"></div>
+    </details>
+    <div class="lb-can">
+      <div><h3>What we can say</h3><ul><li>The same words recur on many objects, such as <span class="sc-tl">a-sa-sa-ra-me</span> (also <span class="sc-tl">ja-sa-sa-ra-me</span>), <span class="sc-tl">i-pi-na-ma</span> and <span class="sc-tl">si-ru-te</span>.</li><li>They appear on objects used in religious offerings.</li></ul></div>
+      <div><h3>What we cannot say</h3><ul><li>What any of the words mean. Guesses that <span class="sc-tl">a-sa-sa-ra-me</span> names a goddess are only guesses.</li><li>Whether the borrowed sound values are right for these signs.</li></ul></div>
+    </div>
+  </section>
+  {{ partial "languages/linear-b/credits.html" . }}
+</div>
+{{ end }}

@@ -1,0 +1,27 @@
+{{ define "main" }}
+{{ partial "languages/linear-b/head.html" . }}
+<div class="lang lb lb-page">
+  <header class="lang-hero lb-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/linear-b/" | relURL }}" style="color:inherit">Linear B</a> · Your name</p>
+    <h1>Your name in Linear B</h1>
+    <p>Type a name and see how a Mycenaean scribe might have written it. The scribes never wrote our names, of course; this is a modern game. But the rules it uses are the real spelling rules of Linear B, and each step is shown.</p>
+  </header>
+  {{ partial "languages/linear-b/nav.html" . }}
+  <div class="ml-viz" data-viz="sc-signs" data-opts='{"mode":"name","text":"Teddy"}' aria-label="Write a name in Linear B"></div>
+  <section class="lb-sec">
+    <h2>The rules it uses</h2>
+    <ul class="lb-start">
+      <li><b>Every sign ends in a vowel.</b> Linear B has signs for a vowel alone (<span class="sc-tl">a</span>) or a consonant plus a vowel (<span class="sc-tl">ka</span>), and nothing for a consonant by itself.</li>
+      <li><b>Consonants at the end of a word are dropped:</b> <i>pater</i> is written <span class="sc-tl">pa-te</span>. A final stop is kept with the vowel before it, the way <i>wanaks</i> is written <span class="sc-tl">wa-na-ka</span>.</li>
+      <li><b>Some consonants before another consonant are dropped:</b> s (<i>sperma</i>, <span class="sc-tl">pe-mo</span>), l and r (<i>khalkos</i>, <span class="sc-tl">ka-ko</span>), and m or n before a stop (<i>panta</i>, <span class="sc-tl">pa-ta</span>).</li>
+      <li><b>Other clusters get an empty vowel</b>, borrowed from the next syllable: <i>tripos</i>, <span class="sc-tl">ti-ri-po</span>; <i>Alexandra</i>, <span class="sc-tl">a-re-ka-sa-da-ra</span>.</li>
+      <li><b>One sign, several sounds.</b> The r signs write r and l; the p signs write p, b and ph; the k signs write k, g and kh; the t signs write t and th. Only d is kept apart from t.</li>
+      <li><b>No h.</b> The h sound is not written (<i>hippos</i>, <span class="sc-tl">i-qo</span>).</li>
+      <li><b>Sounds Greek didn’t have</b> are matched to the nearest one: f becomes p, v becomes w, j and a soft g become z. A double letter is written once.</li>
+      <li><b>No sign for that syllable?</b> The grid has gaps (there is no <span class="sc-tl">wu</span> or <span class="sc-tl">zu</span>), so the nearest sign is used.</li>
+    </ul>
+    <p class="lb-note">Names that are already Greek come out best: try Alexandra, which appears on a real tablet from Mycenae as <span class="sc-tl">a-re-ka-sa-da-ra</span>, or Andreas, Theodora, Philip, Penelope. Different scholars might spell a modern name slightly differently; the rules leave some choices open.</p>
+  </section>
+  {{ partial "languages/linear-b/credits.html" . }}
+</div>
+{{ end }}

@@ -112,12 +112,22 @@ note = "Sites and inscriptions, 3-D models, the Nile map and the timeline"
 icon = "🏜️"
 
 [[menu.main]]
+name = "Ancient Scripts Ladder"
+identifier = "scripts-edu"
+url = "/ancient-scripts/"
+weight = 6
+[menu.main.params]
+group = "Education"
+note = "Linear A and Linear B: the Bronze Age Aegean and the oldest Greek"
+icon = "📜"
+
+[[menu.main]]
 name = "Languages"
 url = "/languages/"
 weight = 7
 [menu.main.params]
 group = "Education"
-note = "Koine Greek, Latin and Egyptian hieroglyphs: flashcards, drills, readers"
+note = "Koine Greek, Latin, Egyptian hieroglyphs and Linear B: flashcards, drills, readers"
 icon = "🏛"
 
 [[menu.main]]
@@ -629,7 +639,7 @@ icon = "🧮"
       path = '{/garden,/garden/**}'
   [segments.ladders]
     [[segments.ladders.includes]]
-      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**,/logic,/logic/**,/etiquette,/etiquette/**,/egyptology,/egyptology/**,/egypt,/egypt/**,/test-prep,/test-prep/**}'
+      path = '{/math,/math/**,/physics,/physics/**,/chemistry,/chemistry/**,/economics,/economics/**,/earth-and-space,/earth-and-space/**,/logic,/logic/**,/etiquette,/etiquette/**,/egyptology,/egyptology/**,/egypt,/egypt/**,/ancient-scripts,/ancient-scripts/**,/test-prep,/test-prep/**}'
   [segments.physics]
     [[segments.physics.includes]]
       path = '{/physics,/physics/**}'
@@ -660,3 +670,6 @@ icon = "🧮"
   [segments.egypt]
     [[segments.egypt.includes]]
       path = '{/egyptology,/egyptology/**,/egypt,/egypt/**,/languages/hieroglyphs,/languages/hieroglyphs/**}'
+  [segments.scripts]
+    [[segments.scripts.includes]]
+      path = '{/ancient-scripts,/ancient-scripts/**,/languages/linear-b,/languages/linear-b/**}'

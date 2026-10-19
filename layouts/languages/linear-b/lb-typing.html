@@ -1,0 +1,24 @@
+{{ define "main" }}
+{{ partial "languages/linear-b/head.html" . }}
+<div class="lang lb lb-page">
+  <header class="lang-hero lb-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/linear-b/" | relURL }}" style="color:inherit">Linear B</a> · Typing helper</p>
+    <h1>Linear B typing helper</h1>
+    <p>Type in transliteration and copy real Unicode signs into your notes, or paste signs to read them back. It works for Linear A too, with the conventional values.</p>
+  </header>
+  {{ partial "languages/linear-b/nav.html" . }}
+  <div class="ml-viz" data-viz="sc-signs" data-opts='{"mode":"type"}' aria-label="Linear B typing helper"></div>
+  <section class="lb-sec">
+    <h2>How to type</h2>
+    <ul class="lb-start">
+      <li><b>Syllables</b> joined by hyphens, words by spaces: <span class="sc-tl">a-ta-na-po-ti-ni-ja</span>.</li>
+      <li><b>Special signs</b> by their values with a number: <span class="sc-tl">a2</span> (ha), <span class="sc-tl">a3</span> (ai), <span class="sc-tl">pu2</span> (phu), <span class="sc-tl">ra2</span>, <span class="sc-tl">ra3</span>, <span class="sc-tl">ro2</span>, <span class="sc-tl">ta2</span>, and <span class="sc-tl">au</span>, <span class="sc-tl">dwe</span>, <span class="sc-tl">dwo</span>, <span class="sc-tl">nwa</span>, <span class="sc-tl">pte</span>, <span class="sc-tl">twe</span>, <span class="sc-tl">two</span>.</li>
+      <li><b>Unread signs</b> by their numbers: <span class="sc-tl">*18</span>, <span class="sc-tl">*47</span>.</li>
+      <li><b>Logograms</b> by their scholarly names: VIR, MUL, EQU, OVISm, OVISf, GRA, OLE, VIN, AUR, AES, and vessels like *201VAS. <b>Numbers</b> as digits: 120. A <b>|</b> makes a word divider.</li>
+      <li><b>Linear A:</b> switch the script; fractions are capital letters (J for one half) and the sign without a Linear B match is *301.</li>
+    </ul>
+    <p class="lb-note">The signs are real Unicode characters, so they paste into any document. To see them, the reader needs a font with Linear B; this site uses its own, TRB Linear B, and others may see Noto Sans Linear B or Segoe UI Historic.</p>
+  </section>
+  {{ partial "languages/linear-b/credits.html" . }}
+</div>
+{{ end }}

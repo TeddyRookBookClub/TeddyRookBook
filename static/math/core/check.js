@@ -104,7 +104,7 @@
    INTERVAL { t: 'interval', v: '(-inf, 3] U (5, inf)' }   INEQUALITY { t: 'ineq', v: 'x < 3' | '-2 <= x < 5' |
    'x < -1 or x > 2' } (interval notation is accepted too)   MC { t: 'mc', choices, v } answer: an index, an array of
    indices, or the choice text   TF { t: 'tf', v } answer: true/false or "true"/"false"/"t"/"f"/"yes"/"no"
-   TEXT { t: 'text', v: ['acute'] } case, spacing, a/an/the and a final period ignored
+   TEXT { t: 'text', v: ['acute'], strict?: true } case, spacing, a/an/the and a final period ignored; a plural s too unless strict
    FORMULA { t: 'formula', v: ['H2O'] or 'H2O', states?: true }   a chemical formula (several accepted forms allowed). Case
             matters (CO is not Co); spaces don't. Subscripts as plain digits or Unicode (H₂O); charges as ^2+, ^2-, ^+, ^-, ^(2-),
             Unicode (SO₄²⁻), or plain after the formula (Fe3+, SO42-, NH4+: read every way, right if any reading is); groups in
@@ -1707,7 +1707,7 @@
     var s = normWord(answer); if (!s) return { ok: false, invalid: true, msg: 'Type an answer first.' };
     var want = (Array.isArray(spec.v) ? spec.v : [spec.v]).map(normWord);
     if (want.indexOf(s) >= 0) return { ok: true };
-    if (want.indexOf(s.replace(/s$/, '')) >= 0 || want.indexOf(s + 's') >= 0) return { ok: true };
+    if (!spec.strict && (want.indexOf(s.replace(/s$/, '')) >= 0 || want.indexOf(s + 's') >= 0)) return { ok: true }; // strict: no plural leeway (transliterations)
     return { ok: false };
   }
   function checkMulti(spec, answer, ctx) {

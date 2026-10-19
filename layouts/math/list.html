@@ -126,7 +126,7 @@
   <section class="mlp-continue mlp-welcome mlp-coming" id="mlp-coming" aria-labelledby="mlp-coming-h">
     <div class="mlp-tbanner-icon" aria-hidden="true">✎</div>
     <div><h2 id="mlp-coming-h">{{ if $Ln }}The skill maps are ready; lessons are being written{{ else }}This ladder is being built{{ end }}</h2>
-    <p>{{ if $Ln }}The {{ $L.title }} has <b>{{ len $LC }}</b> courses and <b>{{ $Ln }}</b> topics, each one small idea in a careful order. Lessons with worked examples, and practice that checks your answers, are being written now. Until then, explore each course's skill map to see what you'll learn and what it builds on{{ if $L.lab }}, and try the Science Lab simulations below{{ end }}.{{ else }}Its courses and skill maps are on the way. Meanwhile, the other ladders below are ready to climb.{{ end }}</p>
+    <p>{{ if $Ln }}The {{ $L.title }} has <b>{{ len $LC }}</b> {{ cond (eq (len $LC) 1) "course" "courses" }} and <b>{{ $Ln }}</b> topics, each one small idea in a careful order. Lessons with worked examples, and practice that checks your answers, are being written now. Until then, explore {{ cond (eq (len $LC) 1) "the course's" "each course's" }} skill map to see what you'll learn and what it builds on{{ if $L.lab }}, and try the Science Lab simulations below{{ end }}.{{ else }}Its courses and skill maps are on the way. Meanwhile, the other ladders below are ready to climb.{{ end }}</p>
     <p class="mlp-small">Everything you do on any ladder is saved together in this browser: XP, your streak and your reviews carry over.</p></div>
     {{ if $Ln }}<div class="mlp-acts"><a class="mlp-btn pri" href="{{ $base }}map/">Explore the skill maps</a></div>{{ end }}
   </section>

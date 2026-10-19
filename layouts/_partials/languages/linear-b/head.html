@@ -1,0 +1,9 @@
+{{- /* Linear B and Linear A tools (/languages/linear-b/): the Languages styles, the Ancient Scripts kit (model, visuals, fonts)
+   and the area's own files (static/languages/linear-b/). The kit: static/scripts/viz/scripts.js and .css. */ -}}
+{{ partial "lang-head.html" . }}
+{{- range slice "math/viz/viz.css" "scripts/viz/scripts.css" "languages/linear-b/lb.css" }}
+<link rel="stylesheet" href="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}">
+{{- end }}
+{{- range slice "math/viz/core.js" "scripts/viz/scripts.js" }}
+<script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+{{- end }}

@@ -1,0 +1,45 @@
+{{ define "main" }}
+{{ partial "languages/linear-b/head.html" . }}
+<div class="lang lb lb-page">
+  <header class="lang-hero lb-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · <a href="{{ "languages/linear-b/" | relURL }}" style="color:inherit">Linear B</a> · Signs</p>
+    <h1>The signs of Linear B and Linear A</h1>
+    <p>Linear B’s syllable signs fill a grid: one row for each consonant, one column for each vowel. Tap any sign for its number, its value and words that use it. Below are the special signs, the signs no one has read, the logograms and the numbers, and the Linear A signs that match.</p>
+  </header>
+  {{ partial "languages/linear-b/nav.html" . }}
+
+  <section class="lb-sec">
+    <h2>Look up a sign</h2>
+    <div class="lb-search"><input id="lb-q" type="search" placeholder="A value (ka, pu2), a number (*08) or a pasted sign" aria-label="Look up a sign by value, number or the sign itself" autocomplete="off" spellcheck="false"><span class="lb-found" id="lb-found" aria-live="polite"></span></div>
+    <div id="lb-hit"></div>
+  </section>
+
+  <section class="lb-sec" id="grid">
+    <h2>The syllabic grid</h2>
+    <p class="lb-lead">The first row holds the five vowels alone. In the other rows, each sign is a consonant plus a vowel. A dot marks a place with no sign; <span class="sc-tl">ju?</span> is a sign whose value is not certain. Read <span class="sc-tl">r</span> as r or l, <span class="sc-tl">p</span> as p, b or ph, <span class="sc-tl">k</span> as k, g or kh, and <span class="sc-tl">q</span> as the old Greek kʷ sounds.</p>
+    <div class="ml-viz" data-viz="sc-grid" data-opts='{"specials":true,"unread":true}' aria-label="The Linear B syllabic grid"></div>
+  </section>
+
+  <section class="lb-sec" id="logograms">
+    <h2>Logograms</h2>
+    <p class="lb-lead">Word signs stand before a number and say what is counted. Scholars write them with Latin abbreviations: VIR for man, OVIS for sheep. Small marks show male (m) and female (f) animals.</p>
+    <div class="lb-logos" id="lb-logos"></div>
+  </section>
+
+  <section class="lb-sec" id="numbers">
+    <h2>Numbers and measures</h2>
+    <p class="lb-lead">Both scripts count with the same marks: upright strokes for ones, level strokes for tens, circles for hundreds, circles with rays for thousands. You add the marks up.</p>
+    <div class="ml-viz" data-viz="sc-numbers" data-opts='{"mode":"build","target":1952}' aria-label="Build an Aegean number"></div>
+    <div class="ml-viz" data-viz="sc-numbers" data-opts='{"mode":"measures","system":"dry"}' aria-label="Mycenaean measures"></div>
+  </section>
+
+  <section class="lb-sec" id="linear-a">
+    <h2>Linear A signs</h2>
+    <p class="lb-warn"><b>Conventional values.</b> These are the Linear A signs that look like Linear B signs, shown with the Linear B values. Reading them this way is a convention, a likely guess about sounds; it is not proof that Minoan used the same sounds.</p>
+    <div class="ml-viz" data-viz="sc-grid" data-opts='{"script":"A","specials":true}' aria-label="Linear A signs shared with Linear B"></div>
+    <div class="ml-viz" data-viz="sc-numbers" data-opts='{"mode":"fractions"}' aria-label="Linear A fraction signs"></div>
+  </section>
+  {{ partial "languages/linear-b/credits.html" . }}
+</div>
+<script src="{{ "languages/linear-b/signs.js" | relURL }}?v={{ (os.Stat "static/languages/linear-b/signs.js").ModTime.Unix }}" defer></script>
+{{ end }}

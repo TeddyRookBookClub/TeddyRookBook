@@ -1,11 +1,13 @@
 {{ define "main" }}
 {{ partial "lang-head.html" . }}
 <link rel="stylesheet" href="{{ "languages/hieroglyphs/hiero.css" | relURL }}?v={{ (os.Stat "static/languages/hieroglyphs/hiero.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "languages/linear-b/lb.css" | relURL }}?v={{ (os.Stat "static/languages/linear-b/lb.css").ModTime.Unix }}">
+<style>@font-face{font-family:"TRB Linear B";src:url("{{ "scripts/fonts/trb-linear-b.woff" | relURL }}") format("woff");font-display:swap;unicode-range:U+10000-1013F}.lang .sc-b{font-family:"TRB Linear B","Noto Sans Linear B","Segoe UI Historic",sans-serif;font-style:normal}.lang-linb .lang-card .big.sc-b{font-size:2.1rem;color:#0074a5;display:inline-block;min-height:2.3rem}html[data-theme="dark"] .lang-linb .lang-card .big.sc-b{color:#5ec2f2}</style>
 <div class="lang">
   <header class="lang-hero">
     <p class="lang-eyebrow">Languages</p>
     <h1><span class="grc">Κοινή</span> &amp; <span class="lat">Latina</span></h1>
-    <p>Learn Latin and Greek from the Gospels and the classics. Hear each sentence in English, Greek and Latin, then tap any word to see what it means and why it has that form. And now the oldest of them all: <a href="{{ "languages/hieroglyphs/" | relURL }}" style="color:#f3dfa3">Egyptian hieroglyphs</a>.</p>
+    <p>Learn Latin and Greek from the Gospels and the classics. Hear each sentence in English, Greek and Latin, then tap any word to see what it means and why it has that form. And now the oldest of them all: <a href="{{ "languages/hieroglyphs/" | relURL }}" style="color:#f3dfa3">Egyptian hieroglyphs</a>, and the oldest Greek, <a href="{{ "languages/linear-b/" | relURL }}" style="color:#f3dfa3">Linear B</a>.</p>
   </header>
   {{ partial "lang-notice.html" . }}
   <section class="lang-cards">
@@ -74,6 +76,18 @@
       <a class="lang-card" href="{{ "languages/hieroglyphs/flashcards/" | relURL }}"><span class="big eg-h" aria-hidden="true">𓄿𓇋</span><h2>Hieroglyph Flashcards</h2><p>The alphabet, two- and three-sound signs, determinatives, numbers and words, with spaced review.</p><span class="go">Start studying →</span></a>
       <a class="lang-card" href="{{ "languages/hieroglyphs/cartouche/" | relURL }}"><span class="big eg-h" aria-hidden="true">𓍷</span><h2>Cartouche Maker</h2><p>Your name in sound signs, letter by letter, in a cartouche to print or save; then read the names of real pharaohs.</p><span class="go">Make a cartouche →</span></a>
       <a class="lang-card" href="{{ "languages/hieroglyphs/typing/" | relURL }}"><span class="big hg-tlbig" aria-hidden="true">ḥ ḫ ꜣ</span><h2>Typing Helper</h2><p>Type Egyptian transliteration with an ordinary keyboard (Manuel de Codage) and copy it.</p><span class="go">Start typing →</span></a>
+    </div>
+  </section>
+  <section class="lang-egypt lang-linb" id="linear-b">
+    <h2 class="lang-egypt-h"><span class="sc-b" aria-hidden="true">𐀷𐀙𐀏</span> Linear B and Linear A</h2>
+    <p class="lang-egypt-p">The scripts of Bronze Age Crete and Greece. Linear B writes the oldest Greek and was read again in 1952; Linear A, which shares many of its signs, is still undeciphered. For the full course, see <a href="{{ "ancient-scripts/linear-a-and-b/" | relURL }}">Linear A and Linear B</a> on the Ancient Scripts Ladder.</p>
+    <div class="lang-cards lb-cards">
+      <a class="lang-card" href="{{ "languages/linear-b/" | relURL }}"><span class="big sc-b" aria-hidden="true">𐀷𐀙𐀏</span><h2>Start Here</h2><p>The Linear B tools in one place, with where to begin.</p><span class="go">Open Linear B →</span></a>
+      <a class="lang-card" href="{{ "languages/linear-b/story/" | relURL }}"><span class="big sc-b" aria-hidden="true">𐀒𐀜𐀰</span><h2>How It Was Deciphered</h2><p>Evans, Blegen, Kober and Ventris, the grid, the tripod tablet, and the mystery of Linear A.</p><span class="go">Read the story →</span></a>
+      <a class="lang-card" href="{{ "languages/linear-b/signs/" | relURL }}"><span class="big sc-b" aria-hidden="true">𐀀𐀁𐀂𐀃𐀄</span><h2>Sign Grid</h2><p>Every sign with its value and example words, plus the logograms, numbers and Linear A signs.</p><span class="go">See the signs →</span></a>
+      <a class="lang-card" href="{{ "languages/linear-b/flashcards/" | relURL }}"><span class="big sc-b" aria-hidden="true">𐀏𐀐𐀑𐀒𐀓</span><h2>Linear B Flashcards</h2><p>The vowels, each row of the grid, special signs, logograms and numbers, with spaced review.</p><span class="go">Start studying →</span></a>
+      <a class="lang-card" href="{{ "languages/linear-b/tablets/" | relURL }}"><span class="big sc-b" aria-hidden="true">𐀴𐀪𐀡 𐃠</span><h2>Famous Tablets</h2><p>The tripod tablet and others, sign by sign, with Greek and a translation, and what Linear A’s lists can tell.</p><span class="go">Read a tablet →</span></a>
+      <a class="lang-card" href="{{ "languages/linear-b/name/" | relURL }}"><span class="big sc-b" aria-hidden="true">𐀀𐀩𐀏𐀭𐀅𐀨</span><h2>Your Name in Linear B</h2><p>A modern game with the real spelling rules, step by step. A typing helper is in the tools too.</p><span class="go">Write your name →</span></a>
     </div>
   </section>
   <section class="lang-video">

@@ -1,0 +1,75 @@
+{{ define "main" }}
+{{ partial "languages/linear-b/head.html" . }}
+<div class="lang lb lb-page">
+  <header class="lang-hero lb-hero">
+    <p class="lang-eyebrow"><a href="{{ "languages/" | relURL }}" style="color:inherit">Languages</a> · Linear B and Linear A</p>
+    <h1><span class="sc-b lb-h1g" aria-hidden="true">𐀷𐀙𐀏</span> Linear B and Linear A</h1>
+    <p>Linear B is the oldest written Greek, pressed into clay in the palaces of Crete and the Greek mainland more than three thousand years ago and read again in 1952. Linear A, the script it came from, uses many of the same signs, yet no one can read it. Learn the story, the signs and the tablets of both.</p>
+  </header>
+  {{ partial "languages/linear-b/nav.html" . }}
+  {{ partial "lang-notice.html" . }}
+
+  <section class="lang-cards lb-cards">
+    <a class="lang-card" href="{{ "languages/linear-b/story/" | relURL }}">
+      <span class="big sc-b" aria-hidden="true">𐀒𐀜𐀰</span>
+      <h2>The Story</h2>
+      <p>How a forgotten script was found on Crete in 1900, how Alice Kober and Michael Ventris worked out its grid without knowing a single sound, how the 1952 breakthrough came, and why Linear A is still a mystery.</p>
+      <span class="go">Read the story →</span>
+    </a>
+    <a class="lang-card" href="{{ "languages/linear-b/signs/" | relURL }}">
+      <span class="big sc-b" aria-hidden="true">𐀀𐀁𐀂𐀃𐀄</span>
+      <h2>Sign Grid</h2>
+      <p>Every Linear B sign in its row and column, with its number, value and words that use it; the special signs, the unread ones, the logograms and numbers, and the Linear A signs that match.</p>
+      <span class="go">See the signs →</span>
+    </a>
+    <a class="lang-card" href="{{ "languages/linear-b/flashcards/" | relURL }}">
+      <span class="big sc-b" aria-hidden="true">𐀏𐀐𐀑𐀒𐀓</span>
+      <h2>Flashcards</h2>
+      <p>Learn the vowels first, then one row of the grid at a time, then the special signs, the logograms and the numbers. Spaced review brings each card back just before you’d forget it.</p>
+      <span class="go">Start studying →</span>
+    </a>
+    <a class="lang-card" href="{{ "languages/linear-b/tablets/" | relURL }}">
+      <span class="big sc-b" aria-hidden="true">𐀴𐀪𐀡 𐃠</span>
+      <h2>Famous Tablets</h2>
+      <p>Read the Pylos tripod tablet, gold vessels for the gods and the flocks and horses of Knossos sign by sign, with the later Greek words and a translation. Then see what a Linear A list does and does not tell us.</p>
+      <span class="go">Read a tablet →</span>
+    </a>
+    <a class="lang-card" href="{{ "languages/linear-b/name/" | relURL }}">
+      <span class="big sc-b" aria-hidden="true">𐀀𐀩𐀏𐀭𐀅𐀨</span>
+      <h2>Your Name in Linear B</h2>
+      <p>Type a name and see it spelled the way a Mycenaean scribe would have bent it to fit the signs, with every rule explained. Alexandra comes out exactly as it does on a real tablet.</p>
+      <span class="go">Write your name →</span>
+    </a>
+    <a class="lang-card" href="{{ "languages/linear-b/typing/" | relURL }}">
+      <span class="big lb-tlbig" aria-hidden="true">ti-ri-po</span>
+      <h2>Typing Helper</h2>
+      <p>Type transliteration with hyphens (ti-ri-po) and copy real Linear B or Linear A signs, or paste signs to read them back. Logograms and numbers work too.</p>
+      <span class="go">Start typing →</span>
+    </a>
+    <a class="lang-card" href="{{ "ancient-scripts/linear-a-and-b/" | relURL }}">
+      <span class="big" aria-hidden="true">🏺</span>
+      <h2>The Course: Linear A and Linear B</h2>
+      <p>On the Ancient Scripts Ladder, a full course for high school and college: the Bronze Age Aegean, the decipherment step by step, the spelling rules, reading tablets, Mycenaean Greek and Linear A, with practice that checks your answers.</p>
+      <span class="go">Open the course →</span>
+    </a>
+  </section>
+
+  <section class="lb-sec">
+    <h2>Where to start</h2>
+    <ul class="lb-start">
+      <li><b>New to all of this?</b> Read <a href="{{ "languages/linear-b/story/" | relURL }}">the story</a> first (about twenty minutes, with things to try along the way).</li>
+      <li><b>Want to read a tablet?</b> Learn <a href="{{ "languages/linear-b/flashcards/" | relURL }}?deck=v">the five vowels</a> and a few rows of the grid on flashcards, then try <a href="{{ "languages/linear-b/tablets/" | relURL }}#ta641">the tripod tablet</a> with the <a href="{{ "languages/linear-b/signs/" | relURL }}">sign grid</a> open beside it.</li>
+      <li><b>Studying it properly:</b> the course <a href="{{ "ancient-scripts/linear-a-and-b/" | relURL }}">Linear A and Linear B</a> teaches it all in order, from the palaces of Crete to judging a decipherment claim.</li>
+      <li><b>Know Greek already?</b> You’ll recognize many words once you learn the spelling rules: <span class="sc-tl">ti-ri-po</span> is τρίπους, <span class="sc-tl">di-pa</span> is δέπας, <span class="sc-tl">ku-ru-so</span> is χρυσός.</li>
+      <li><b>Curious about other scripts?</b> <a href="{{ "languages/hieroglyphs/" | relURL }}">Egyptian hieroglyphs</a> were deciphered about a hundred and thirty years earlier, with the help of the Rosetta Stone. Linear B had no Rosetta Stone.</li>
+    </ul>
+  </section>
+
+  <section class="lb-sec">
+    <h2>Two scripts, one family</h2>
+    <p class="lb-lead">Linear B was adapted from Linear A, so many signs look alike. The difference is that we know Linear B’s language.</p>
+    <div class="ml-viz" data-viz="sc-compare" data-opts='{"mode":"facts"}' aria-label="Linear A and Linear B compared"></div>
+  </section>
+  {{ partial "languages/linear-b/credits.html" . }}
+</div>
+{{ end }}

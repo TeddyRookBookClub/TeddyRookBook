@@ -18,7 +18,7 @@
                          visuals kit once, for a course of ANY ladder, using the list of files that exist (embedded at build
                          time in <script id="ml-cfg">: each course has `dir`, the static folder of its ladder).
    ML.needViz(name)    → Promise: makes sure the visual `name` is registered (loads math's viz/basic.js or viz/adv.js, or a
-                         ladder's kit for names prefixed ph-, ch-, ec-, es-, lg-, eg-: static/<ladder>/viz/<ladder>.js and .css).
+                         ladder's kit for names prefixed ph-, ch-, ec-, es-, lg-, eg-, sc-: static/<ladder>/viz/<ladder>.js and .css).
    ML.lessonUI(root)   worked examples revealed one step at a time, inline "try" problems, math and visuals in a lesson.
    ML.fmtAnswer(spec)  the correct answer of an answer spec as HTML (math typeset after insertion).
 
@@ -90,7 +90,7 @@
   var BASIC = 'tenframe counters numberline hundredchart base10 placevalue numberbond arraygrid areamodel fractionbar fractioncircle fractionline decimalgrid percentbar ratiotable tapediagram clock coins balance integerline shapes geoboard angle transform pythagoras circlepi areaformulas volume nets dotplot boxplot'.split(' ');
   var ADV = 'graph slope linesystem parabola transformfn exponential logscale unitcircle trigwave polar complexplane sequence limit secant derivgraph riemann ftc solids taylor seriespartial vectors2d vectors3d surface gradient vectorfield lineintegral flux param3d matrix2d span slopefield phaseplane springmass dice normal sampling scatter venn tree'.split(' ');
   // visuals kits: math's basic and adv (static/math/viz/), and one per ladder (static/<dir>/viz/<dir>.js, names prefixed)
-  var KIT_PREFIX = { 'ph-': 'physics', 'ch-': 'chemistry', 'ec-': 'economics', 'es-': 'earth', 'lg-': 'logic', 'eg-': 'egypt' };
+  var KIT_PREFIX = { 'ph-': 'physics', 'ch-': 'chemistry', 'ec-': 'economics', 'es-': 'earth', 'lg-': 'logic', 'eg-': 'egypt', 'sc-': 'scripts' };
   function vizFile(which) {
     var vb = cfg().vb || {}, dir = which === 'basic' || which === 'adv' ? 'math' : which;
     if (!vb[which] && !D.querySelector('script[src*="' + dir + '/viz/' + which + '.js"]')) return Promise.resolve(false);

@@ -1,0 +1,15 @@
+{{- /* Ancient Scripts Ladder: one page per course (a section) and one per topic, from data/scripts/courses.yaml and data/scripts/topics/<key>.json.
+   The same pages as the Math Ladder's (content/math/_content.gotmpl), rendered by layouts/math/ (type math, from _index.md's cascade).
+   Course pages: /ancient-scripts/<course slug>/ (layouts/math/list.html). Topic pages: /ancient-scripts/<course slug>/<topic slug>/ (layouts/math/single.html). */ -}}
+{{- $lk := "scripts" -}}{{- $ln := "Ancient Scripts Ladder" -}}
+{{- $D := index $.Site.Data $lk | default dict -}}
+{{- $all := $D.topics | default dict -}}
+{{- range $i, $c := $D.courses | default slice -}}
+  {{- $d := index $all $c.key -}}
+  {{- $.AddPage (dict "path" $c.slug "kind" "section" "type" "math" "title" $c.title "description" (printf "%s Free %s lessons and practice on the %s at Teddy Rook Book." ($c.blurb | default "") $c.title $ln) "params" (dict "course" $c.key "ladder" $lk) "weight" (add $i 1)) -}}
+  {{- with $d -}}
+    {{- range $j, $t := .topics -}}
+      {{- $.AddPage (dict "path" (printf "%s/%s" $c.slug $t.slug) "kind" "page" "type" "math" "title" $t.title "description" (printf "%s %s · %s" ($t.short | default "") $c.title $ln) "weight" (add $j 1) "params" (dict "course" $c.key "topic" $t.id "unit" $t.unit "ladder" $lk)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

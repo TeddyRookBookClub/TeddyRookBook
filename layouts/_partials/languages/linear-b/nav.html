@@ -1,0 +1,8 @@
+{{- /* the Linear B tools' tab bar; the page's front matter `lnav` marks the current tab */ -}}
+{{- $cur := .Params.lnav -}}
+<nav class="lb-nav" aria-label="Linear B tools">
+{{- range slice (slice "home" "" "Start") (slice "story" "story/" "The story") (slice "signs" "signs/" "Signs") (slice "flash" "flashcards/" "Flashcards") (slice "tablets" "tablets/" "Tablets") (slice "name" "name/" "Your name") (slice "type" "typing/" "Typing helper") }}
+  <a href="{{ printf "languages/linear-b/%s" (index . 1) | relURL }}"{{ if eq $cur (index . 0) }} aria-current="page"{{ end }}>{{ index . 2 }}</a>
+{{- end }}
+  <a class="lb-nav-out" href="{{ "ancient-scripts/linear-a-and-b/" | relURL }}">The course →</a>
+</nav>
