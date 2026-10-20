@@ -1,17 +1,30 @@
 {{- /* /music/songs/: every song in data/music/songs/*.yaml, by level (beginner, intermediate, advanced), easiest first
-   (each file's `order`). The song pages themselves come from content/music/songs/_content.gotmpl + song.html. */ -}}
+   (each file's `order`), with an instrument filter (All, Piano, Guitar, Ukulele, Banjo; the address keeps it as
+   #guitar etc.). The song pages come from content/music/songs/_content.gotmpl + song.html (piano) or fsong.html
+   (guitar, ukulele, banjo: files with `instrument:`). Songs with `draft: true` are left out unless the build sets
+   musicDrafts. */ -}}
 {{ define "main" }}
 {{ partial "inline/mus-head.html" . }}
-{{- $songs := site.Data.music.songs | default dict -}}
+{{- $all := site.Data.music.songs | default dict -}}
+{{- $drafts := site.Params.musicDrafts | default false -}}
+{{- $songs := dict -}}{{- range $k, $v := $all }}{{ if or (not $v.draft) $drafts }}{{ $songs = merge $songs (dict $k $v) }}{{ end }}{{ end -}}
+{{- $insts := slice (dict "k" "piano" "t" "Piano" "i" "🎹") (dict "k" "guitar" "t" "Guitar" "i" "🎸") (dict "k" "ukulele" "t" "Ukulele" "i" "🌺") (dict "k" "banjo" "t" "Banjo" "i" "🪕") -}}
+{{- $count := dict -}}{{- range $songs }}{{ $i := .instrument | default "piano" }}{{ $count = merge $count (dict $i (add (index $count $i | default 0) 1)) }}{{ end -}}
 <div class="mus mus-wide" id="mus-songs">
   {{ partial "inline/mus-crumbs.html" . }}
   {{ partial "inline/mus-hero.html" . }}
   {{- with .Content }}<div class="mus-body">{{ . }}</div>{{ end }}
-  <p class="sg-lead">Pick a piece, press Play, and watch. A line moves through the music, each note lights up as it sounds, and the same key lights up on the piano below: <span class="sg-rh">blue</span> for the right hand, <span class="sg-lh">orange</span> for the left. Turn on <b>Letter names</b> to see C, D, E… inside every note, slow it down, play one hand at a time, or turn on <b>Wait for me</b> and play along at your own speed.</p>
+  <div class="sg-filter" role="group" aria-label="Show songs for" id="sg-filter">
+    <button type="button" class="mus-btn" data-f="all" aria-pressed="true">All <small>{{ len $songs }}</small></button>
+    {{- range $insts }}{{ $n := index $count .k | default 0 }}{{ if $n }}
+    <button type="button" class="mus-btn" data-f="{{ .k }}" aria-pressed="false"><span aria-hidden="true">{{ .i }}</span> {{ .t }} <small>{{ $n }}</small></button>{{ end }}{{ end }}
+  </div>
+  <p class="sg-lead" data-for="all piano">Pick a piece, press Play, and watch. A line moves through the music, each note lights up as it sounds, and the same key lights up on the piano below: <span class="sg-rh">blue</span> for the right hand, <span class="sg-lh">orange</span> for the left. Turn on <b>Letter names</b> to see C, D, E… inside every note, slow it down, play one hand at a time, or turn on <b>Wait for me</b> and play along at your own speed.</p>
+  <p class="sg-lead" data-for="guitar ukulele banjo" hidden>Guitar, ukulele and banjo songs come in tab, with the notation above it and the chords named over the music. Press Play: each note lights up in the tab and on the fretboard, the chord diagrams show what to finger, and the strum or picking pattern is drawn under the tab. Slow it down, loop a few bars, or play just the tune or just the chords. Left-handed players can mirror the diagrams.</p>
   {{- $levels := slice
-    (dict "k" "beginner" "t" "Beginner" "d" "One hand at a time, then both hands. Quarter and half notes, then eighths. Start here if you've just learned where the notes are.")
-    (dict "k" "intermediate" "t" "Intermediate" "d" "Both hands all the way through, more keys, dotted rhythms and real pieces by Bach, Beethoven, Clementi and Schumann.")
-    (dict "k" "advanced" "t" "Advanced" "d" "Longer pieces with independent hands, wide stretches and expressive playing.") }}
+    (dict "k" "beginner" "t" "Beginner" "d" "One hand at a time, then both hands. Quarter and half notes, then eighths. Start here if you've just learned where the notes are." "df" "Open strings and first-position notes, two or three easy chords, steady strums and simple rolls. Start here after the first chapters of your instrument's course.")
+    (dict "k" "intermediate" "t" "Intermediate" "d" "Both hands all the way through, more keys, dotted rhythms and real pieces by Bach, Beethoven, Clementi and Schumann." "df" "More chords and quicker changes, barre chords, fingerpicking and Travis patterns, bluegrass rolls and clawhammer, and classical studies.")
+    (dict "k" "advanced" "t" "Advanced" "d" "Longer pieces with independent hands, wide stretches and expressive playing." "df" "Longer pieces that need every technique together.") }}
   {{- $any := false }}
   {{- range $levels }}{{ $lv := .k }}
   {{- $list := slice }}
@@ -19,10 +32,25 @@
   {{- if $list }}{{ $any = true }}
   <section class="sg-level" id="{{ $lv }}" aria-labelledby="h-{{ $lv }}">
     <h2 id="h-{{ $lv }}">{{ .t }} <small>{{ len $list }} {{ cond (eq (len $list) 1) "piece" "pieces" }}</small></h2>
-    <p class="mus-small">{{ .d }}</p>
+    <p class="mus-small" data-for="all piano">{{ .d }}</p>
+    <p class="mus-small" data-for="guitar ukulele banjo" hidden>{{ .df }}</p>
     <div class="sg-grid">
     {{- range sort $list "order" }}
       {{- $slug := .slug | default ._key -}}
+      {{- if .instrument }}
+      {{- $bars := 0 }}{{ range split (.tab | default "") "|" }}{{ if strings.TrimSpace . }}{{ $bars = add $bars 1 }}{{ end }}{{ end -}}
+      {{- if gt (float (.pickup | default 0)) 0 }}{{ $bars = sub $bars 1 }}{{ end -}}
+      {{- $k := string .key -}}
+      {{- $minor := hasSuffix $k "m" }}{{ $t := cond $minor (strings.TrimSuffix "m" $k) $k -}}
+      {{- $t = replace (replace $t "#" "♯") "b" "♭" -}}
+      {{- $ii := index (dict "guitar" "🎸 Guitar" "ukulele" "🌺 Ukulele" "banjo" "🪕 Banjo") .instrument }}
+      <a class="sg-card sg-fret" data-inst="{{ .instrument }}" href="{{ printf "music/songs/%s/" $slug | relURL }}">
+        <span class="sg-t">{{ .title }}</span>
+        <span class="sg-c">{{ .composer }}{{ with .style }} · {{ . }}{{ end }}</span>
+        <span class="sg-chips"><i class="sg-ins">{{ $ii }}</i>{{ with .technique }}{{ range (slice | append .) }}<i>{{ . }}</i>{{ end }}{{ end }}<i>{{ $t }} {{ cond $minor "minor" "major" }}</i><i>{{ .time }}</i><i>{{ $bars }} bars</i>{{ with .capo }}<i>capo {{ . }}</i>{{ end }}{{ with .arranged }}<i class="sg-arr" title="{{ . }}">arranged</i>{{ end }}</span>
+        {{- with .skills }}<span class="sg-sk">{{ delimit . " · " }}</span>{{ end }}
+      </a>
+      {{- else }}
       {{- $rh := .staves.rh | default "" }}{{ $lh := .staves.lh | default "" -}}
       {{- $bars := 0 }}{{ range split (cond (ne $rh "") $rh $lh) "|" }}{{ if strings.TrimSpace . }}{{ $bars = add $bars 1 }}{{ end }}{{ end -}}
       {{- if gt (float (.pickup | default 0)) 0 }}{{ $bars = sub $bars 1 }}{{ end -}}
@@ -30,12 +58,13 @@
       {{- $minor := hasSuffix $k "m" }}{{ $t := cond $minor (strings.TrimSuffix "m" $k) $k -}}
       {{- $t = replace (replace $t "#" "♯") "b" "♭" -}}{{- $t = printf "%s%s" (upper (substr $t 0 1)) (substr $t 1) -}}
       {{- $hands := cond (and (ne $rh "") (ne $lh "")) "both hands" (cond (ne $rh "") "right hand" "left hand") }}
-      <a class="sg-card" href="{{ printf "music/songs/%s/" $slug | relURL }}">
+      <a class="sg-card" data-inst="piano" href="{{ printf "music/songs/%s/" $slug | relURL }}">
         <span class="sg-t">{{ .title }}</span>
         <span class="sg-c">{{ .composer }}</span>
         <span class="sg-chips"><i>{{ $t }} {{ cond $minor "minor" "major" }}</i><i>{{ .time }}{{ if .common }} (C){{ end }}{{ if .cut }} (cut){{ end }}</i><i>{{ $bars }} bars</i><i>{{ $hands }}</i>{{ with .arranged }}<i class="sg-arr" title="{{ . }}">arranged</i>{{ end }}</span>
         {{- with .skills }}<span class="sg-sk">{{ delimit . " · " }}</span>{{ end }}
       </a>
+      {{- end }}
     {{- end }}
     </div>
   </section>
@@ -43,11 +72,37 @@
   {{- if not $any }}
   <p class="mus-note">The songs are being engraved and checked note by note. They will appear here soon.</p>
   {{- end }}
+  <p class="mus-note sg-none" id="sg-none" hidden>No songs for this instrument yet. They are being arranged and checked note by note.</p>
   <section class="sg-about">
     <h2>About these editions</h2>
-    <p>Every piece here is either a traditional tune or the work of a composer who died long ago, published before 1930, so it belongs to everyone. The music is our own engraving. When we simplified a piece or wrote our own accompaniment, the song page says so. Each page lists the edition the notes were checked against.</p>
+    <p>Every piece here is either a traditional tune or the work of a composer who died long ago, published before 1930, so it belongs to everyone. The music is our own engraving, and the guitar, ukulele and banjo arrangements are our own. When we simplified a piece or wrote our own accompaniment, the song page says so. Each page lists the edition the notes were checked against.</p>
   </section>
 </div>
+<script>
+(function () {
+  var box = document.getElementById('sg-filter'); if (!box) return;
+  var page = document.getElementById('mus-songs');
+  function apply(f) {
+    Array.prototype.forEach.call(box.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-f') === f)); });
+    Array.prototype.forEach.call(page.querySelectorAll('.sg-card'), function (c) { c.hidden = f !== 'all' && c.getAttribute('data-inst') !== f; });
+    var any = false;
+    Array.prototype.forEach.call(page.querySelectorAll('.sg-level'), function (sec) {
+      var vis = Array.prototype.filter.call(sec.querySelectorAll('.sg-card'), function (c) { return !c.hidden; }).length;
+      sec.hidden = !vis; if (vis) any = true;
+      var sm = sec.querySelector('h2 small'); if (sm) sm.textContent = vis + (vis === 1 ? ' piece' : ' pieces');
+    });
+    Array.prototype.forEach.call(page.querySelectorAll('[data-for]'), function (p) { p.hidden = p.getAttribute('data-for').split(' ').indexOf(f) < 0; });
+    var none = document.getElementById('sg-none'); if (none) none.hidden = any;
+  }
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var f = b.getAttribute('data-f'); apply(f);
+    try { history.replaceState(null, '', f === 'all' ? location.pathname : '#' + f); } catch (er) {}
+  });
+  var h = location.hash.replace('#', '');
+  if (box.querySelector('[data-f="' + h + '"]')) apply(h);
+})();
+</script>
 <style>
 #mus-songs .sg-lead,#mus-songs .sg-about p{max-width:48rem;line-height:1.6}
 #mus-songs .sg-rh{color:var(--rh);font-weight:700}
@@ -62,6 +117,13 @@
 #mus-songs .sg-chips i{font:600 .74rem system-ui,sans-serif;font-style:normal;padding:.12rem .5rem;border-radius:999px;background:var(--soft);color:var(--ink)}
 #mus-songs .sg-chips i.sg-arr{background:var(--paper);border:1px solid var(--line);color:var(--gt)}
 #mus-songs .sg-sk{font-size:.84rem;color:var(--muted);line-height:1.4}
+#mus-songs .sg-filter{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 .8rem}
+#mus-songs .sg-filter small{font-weight:600;color:var(--muted)}
+#mus-songs .sg-filter [aria-pressed="true"] small{color:inherit}
+#mus-songs .sg-card.sg-fret{border-left-color:var(--acc)}
+#mus-songs .sg-chips i.sg-ins{background:var(--g);color:#fff}
+html[data-theme="dark"] #mus-songs .sg-chips i.sg-ins{background:#6cc79a;color:#0f1a14}
+#mus-songs [hidden]{display:none !important}
 @media (prefers-reduced-motion:reduce){#mus-songs .sg-card{transition:none}#mus-songs .sg-card:hover{transform:none}}
 </style>
 {{ end }}

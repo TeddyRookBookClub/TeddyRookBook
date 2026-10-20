@@ -19,6 +19,9 @@
      voices()                              how many voices are sounding
      debug(true)                           record every scheduled note in TRBMusic.audio.log: { midi, when, dur, vel }
                                            (for tests; headless browsers can't listen)
+     output()                              the node other voices connect to (the same room, volume and compressor
+                                           as the piano), e.g. the fretted-instrument synth in static/music/fret/
+     onStopAll(fn)                         run fn whenever stopAll() is called (other synths stop their voices too)
    The voice: 6 sine partials with slight inharmonicity (stretched like piano strings), a detuned second "string",
    a soft hammer knock, a two-stage decay that is longer for low notes, brightness that follows velocity and fades
    as the note rings, a damper release when the key lifts, a small generated room reverb, a gentle compressor.
@@ -28,7 +31,7 @@
   'use strict';
   var TRB = window.TRBMusic = window.TRBMusic || {};
   var ctx = null, master = null, bus = null, noiseBuf = null, vol = 0.8, unlocked = false;
-  var voices = [], held = {}, sustain = false, waiting = [], logOn = false, clicks = [];
+  var voices = [], held = {}, sustain = false, waiting = [], logOn = false, clicks = [], stopHooks = [];
   var MAXV = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || /Mobi|Android/i.test(navigator.userAgent) ? 16 : 24;
 
   function freq(m) { return 440 * Math.pow(2, (m - 69) / 12); }
@@ -202,7 +205,10 @@
       voices = []; held = {};
       clicks.slice().forEach(function (o) { try { o.stop(ctx.currentTime); } catch (e) {} }); // count-in clicks not yet heard
       clicks = [];
+      stopHooks.forEach(function (fn) { try { fn(); } catch (e) {} });
     },
+    output: function () { make(); return bus; },
+    onStopAll: function (fn) { stopHooks.push(fn); },
     setVolume: function (x) { vol = Math.max(0, Math.min(1, +x)); if (master) master.gain.setTargetAtTime(vol, ctx.currentTime, 0.02); },
     volume: function () { return vol; },
     now: function () { return ctx ? ctx.currentTime : 0; },

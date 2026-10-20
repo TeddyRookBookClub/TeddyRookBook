@@ -1,0 +1,86 @@
+{{- /* /music/songs/<slug>/ for a guitar, ukulele or banjo song (the YAML has `instrument:`). Made by
+   content/music/songs/_content.gotmpl; params.song is the file's name. The YAML text goes to the fretted player
+   (static/music/fret/player.js) as data-yaml and is parsed in the browser by fret/core.js + kit/song.js, the same
+   code scripts/music/check-songs.js runs, so what is checked is what plays. The format: /tmp/work_fret/overview.md
+   and the top of static/music/fret/core.js. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+{{- $key := .Params.song -}}
+{{- $s := index (site.Data.music.songs | default dict) $key -}}
+{{- $file := printf "data/music/songs/%s.yaml" $key -}}
+{{- $raw := cond (fileExists $file) (readFile $file) "" -}}
+{{- $inst := $s.instrument -}}
+{{- $iname := index (dict "guitar" "Guitar" "ukulele" "Ukulele" "banjo" "Banjo") $inst | default (title $inst) -}}
+{{- $k := string $s.key }}{{ $minor := hasSuffix $k "m" }}{{ $t := cond $minor (strings.TrimSuffix "m" $k) $k -}}
+{{- $keyName := printf "%s %s" (replace (replace $t "#" "♯") "b" "♭") (cond $minor "minor" "major") -}}
+{{- $bars := 0 }}{{ range split ($s.tab | default "") "|" }}{{ if strings.TrimSpace . }}{{ $bars = add $bars 1 }}{{ end }}{{ end -}}
+{{- if gt (float ($s.pickup | default 0)) 0 }}{{ $bars = sub $bars 1 }}{{ end -}}
+{{- $tunings := dict "guitar" (dict "standard" "standard tuning" "dropd" "drop D tuning" "openg" "open G tuning" "opend" "open D tuning") "ukulele" (dict "standard" "standard tuning (high G)" "lowg" "low-G tuning" "baritone" "baritone tuning (D G B E)") "banjo" (dict "openg" "open G tuning" "doublec" "double C tuning" "opend" "open D tuning") -}}
+{{- $tun := index (index $tunings $inst | default dict) ($s.tuning | default (cond (eq $inst "banjo") "openg" "standard")) | default $s.tuning -}}
+{{- /* the chord names in the song, in order, once each */ -}}
+{{- $chords := slice -}}
+{{- with $s.chords }}{{ range split (replace . "|" " ") " " }}{{ $c := index (split (strings.TrimSpace .) ":") 0 }}{{ if and $c (not (in (slice "/" "%" "NC" "N.C.") $c)) (not (in $chords $c)) }}{{ $chords = $chords | append $c }}{{ end }}{{ end }}{{ end -}}
+<div class="mus mus-wide" id="mus-song" data-instrument="{{ $inst }}">
+  {{ partial "inline/mus-crumbs.html" . }}
+  <header class="mus-hero sg-hero">
+    <p class="mus-eyebrow">Songs · {{ $iname }} · {{ title ($s.level | default "") }}</p>
+    <h1>{{ $s.title }}</h1>
+    <p class="sg-by">{{ $s.composer }}{{ with $s.work }} · {{ . }}{{ end }}</p>
+    <p class="sg-facts"><span>{{ $iname }}{{ with $s.style }} · {{ . }}{{ end }}</span>{{ with $s.technique }}<span>{{ delimit (slice | append .) ", " }}</span>{{ end }}<span>{{ $keyName }}</span><span>{{ $s.time }} time</span><span>{{ $bars }} bars</span><span>{{ $tun }}</span>{{ with $s.capo }}<span>capo at fret {{ . }}</span>{{ end }}{{ if gt (float ($s.pickup | default 0)) 0 }}<span>starts with a pickup</span>{{ end }}</p>
+    <span class="mus-mark" aria-hidden="true">{{ .Params.icon | default "🎸" }}</span>
+  </header>
+  {{- with $s.arranged }}
+  <p class="mus-note sg-arr"><b>Arranged:</b> {{ strings.TrimSuffix "." . }}.</p>
+  {{- end }}
+  {{- with $s.capo }}
+  <p class="mus-note"><b>Capo at fret {{ . }}.</b> Clamp the capo just behind fret {{ . }}. The tab and the chord names count from the capo, as if it were the nut: play the shapes as written and everything sounds {{ . }} half step{{ if ne . 1 }}s{{ end }} higher.{{ if eq $inst "banjo" }} Raise the short 5th string by the same amount (most players use a little spike or a 5th-string capo).{{ end }}</p>
+  {{- end }}
+  <div class="mus-box sg-player" id="mus-player" data-yaml="{{ $raw }}" data-level="{{ $s.level }}">
+    <noscript><p>The player needs JavaScript. The music itself is described below.</p></noscript>
+    <p class="mus-small sg-loading">Loading the music…</p>
+  </div>
+  <div class="sg-cols">
+    <section>
+      <h2>About this piece</h2>
+      <p>{{ $s.about | markdownify }}</p>
+      {{- with $s.skills }}
+      <h3>What it practices</h3>
+      <ul class="sg-skills">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
+      {{- end }}
+      {{- with $chords }}
+      <h3>Chords in this song</h3>
+      <p class="sg-chordlinks">{{ range $i, $c := . }}{{ if $i }} · {{ end }}<a href="{{ "music/chords/" | relURL }}?i={{ $inst }}&amp;t={{ $s.tuning | default (cond (eq $inst "banjo") "openg" "standard") }}&amp;c={{ $c | urlquery }}">{{ replace (replace $c "#" "♯") "b" "♭" }}</a>{{ end }}</p>
+      <p class="mus-small">Each link opens the chord finder with more ways to play that chord.</p>
+      {{- end }}
+      <h3>Where the notes come from</h3>
+      <p class="sg-src">{{ $s.source | markdownify }}</p>
+    </section>
+    <section>
+      <h2>How to practice with it</h2>
+      <ol class="sg-how">
+        <li><b>Listen first.</b> Press Play and follow along. The note being played lights up in the tab, in the notation and on the fretboard{{ if $s.chords }}, and the chord being played lights up in the row of chord diagrams{{ end }}.</li>
+        {{- if $s.chords }}
+        <li><b>Learn the chords.</b> Press each diagram to hear it, then practice changing between them slowly{{ if $s.pattern }}, before you add the {{ if or (eq $inst "banjo") (in (slice "travis" "pima" "pima34" "forward" "backward" "alternating" "forwardreverse" "pinch") ($s.pattern | default "")) }}picking{{ else }}strum{{ end }} pattern under the tab{{ end }}.</li>
+        {{- end }}
+        <li><b>Slow it down.</b> Use − and + to set the tempo. 60% is a good place to start; the notes keep their pitch.</li>
+        {{- if $s.pattern }}
+        <li><b>One part at a time.</b> Choose <i>Tab only</i> to hear the tune alone, or the other part alone, then put them together.</li>
+        {{- end }}
+        <li><b>Loop the hard part.</b> Under <i>More…</i>, turn on Loop, pick the bars, and play them a few times in a row. Count-in gives you a bar of clicks before it starts.</li>
+      </ol>
+      <p class="mus-small">Click a bar in the music to start from there. Space plays and pauses. Left-handed? Turn on the left-handed view: the chord diagrams and the fretboard are mirrored to match your instrument. Tab reads the same either way: the top line is always the first (highest) string.</p>
+    </section>
+  </div>
+  <p class="sg-back"><a href="{{ "music/songs/" | relURL }}#{{ $inst }}">← All {{ lower $iname }} songs</a></p>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var box = document.getElementById('mus-player');
+  if (!box || !window.TRBMusic || !TRBMusic.fret || !TRBMusic.fret.player) return;
+  var src = box.getAttribute('data-yaml') || '';
+  box.removeAttribute('data-yaml');
+  box.innerHTML = '';
+  window.trbPlayer = TRBMusic.fret.player.mount(box, src, { chordLinks: '{{ "music/chords/" | relURL }}' });
+});
+</script>
+{{ end }}

@@ -1,7 +1,7 @@
 ---
 title: "Music"
-description: "Learn the piano from the very first key, read music one step at a time, play songs with every note lit up as it sounds, and keep time with a metronome and a two-hand rhythm trainer."
-lead: "Learn the piano from the very first key. Read music one small step at a time, play songs with every note lit up as it sounds, and keep steady time. Free, at your own pace, with nothing to sign up for."
+description: "Learn the piano, guitar, ukulele or banjo from the very first note, read music and tab one step at a time, play songs with every note lit up as it sounds, tune up, find any chord, and keep time with a metronome and a two-hand rhythm trainer."
+lead: "Learn the piano from the very first key, or the guitar, ukulele or banjo from the first chord. Read music one small step at a time, play songs with every note lit up as it sounds, and keep steady time. Free, at your own pace, with nothing to sign up for."
 eyebrow: "Music"
 icon: "🎹"
 layout: hub

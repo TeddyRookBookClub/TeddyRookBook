@@ -14,7 +14,14 @@
              scale: 1 (multiplies sp), staves: ['rh','lh'] (which to show), timeSig: true, keySig: true,
              finalBar: true, maxBars: bars per line cap, label: aria-label for the score,
              onClick: function (measureIndex, tickInMeasure) {} (clicks on the score),
-             key / time / clef: for a string snippet }
+             key / time / clef: for a string snippet,
+             clef8: true      a small 8 under the treble clef (guitar and banjo music sounds an octave lower),
+             above / below: function (info) -> { h, svg, cursor: [y0, y1] }   extra drawing above / below each line
+                              of music, in staff spaces (y = 0 at the top of that strip); info = { li, x0, x1, first,
+                              bars: [{ mi, x0, x1, len, cols: [{ off, x }] }] }. Elements with class "ms-n" and
+                              data-id="<note id>" are lit by highlight() like noteheads (the tab numbers use this).
+                              cursor (optional) also stretches the play cursor over that strip.
+             staffless: true  draw no staves, only the above / below strips (the tab-only view) }
    Note ids are the song model's: "<staff>-<bar>-<voice>-<item>-<note>", e.g. "rh-3-1-0-0" (bar numbers as printed;
    chord notes numbered low to high). model.events[i].ids lists the ids a sounding note covers (ties).
    Score methods
@@ -489,6 +496,7 @@
         B.s.push(glyph(clef === 'treble' ? G.treble : G.bass, left0 + 0.7, clef === 'treble' ? 3 : 1));
         ext(si, clef === 'treble' ? -1.5 : 0);
         ext(si, clef === 'treble' ? 5.8 : 4);
+        if (opts.clef8 && clef === 'treble') { B.s.push('<text class="ms-ts ms-c8" x="' + n3(left0 + 0.7 + 1.05) + '" y="7.15" font-size="1.25" text-anchor="middle">8</text>'); ext(si, 7.3); }
         var kx = left0 + 0.7 + 3.0 + 0.6;
         if (ksN) {
           var pos = KEYPOS[clef][key.fifths > 0 ? 1 : -1];
@@ -564,7 +572,25 @@
     drawTies(this, tieQ, slurQ);
     // assemble: vertical placement
     var y = 0.6, svgParts = [];
+    function stripInfo(sys, li) {
+      return { li: li, x0: sys.x0, x1: sys.x1, first: li === 0, bars: sys.bars.map(function (b) { var mp = self.measPos[b.mi]; return { mi: b.mi, x0: mp.x0, x1: mp.x1, len: mp.len, cols: mp.cols }; }) };
+    }
     this.sysInfo.forEach(function (sys, li) {
+      var aboveR = opts.above ? opts.above(stripInfo(sys, li)) : null, belowR = opts.below ? opts.below(stripInfo(sys, li)) : null;
+      var aH = aboveR ? aboveR.h || 0 : 0, bH = belowR ? belowR.h || 0 : 0;
+      if (opts.staffless) {
+        sys.y = [y + aH]; sys.top = y; sys.h = aH + bH;
+        sys.cy0 = y + aH + (belowR && belowR.cursor ? belowR.cursor[0] : 0); sys.cy1 = y + aH + (belowR && belowR.cursor ? belowR.cursor[1] : bH);
+        var gs = ['<g class="ms-sys" data-sys="' + li + '">'];
+        if (aboveR) gs.push('<g class="ms-above" transform="translate(0 ' + n3(y) + ')">' + aboveR.svg + '</g>');
+        if (belowR) gs.push('<g class="ms-below" transform="translate(0 ' + n3(y + aH) + ')">' + belowR.svg + '</g>');
+        sys.barXs.forEach(function (b) { gs.push('<rect class="ms-hit" data-m="' + b[2].mi + '" x="' + n3(b[0]) + '" y="' + n3(sys.top) + '" width="' + n3(b[1] - b[0]) + '" height="' + n3(sys.h) + '"/>'); });
+        gs.push('</g>');
+        svgParts.push(gs.join(''));
+        y += sys.h + 1.6;
+        return;
+      }
+      y += aH;
       var buf = sys.buf, offs = [];
       var topRoom = -buf[0].top;
       if (sys.words.length) topRoom = Math.max(topRoom + 2.2, 4.2);
@@ -581,9 +607,14 @@
       }
       var last = buf[buf.length - 1];
       var bottomRoom = Math.max(last.bot - 4, 0) + (last.under.length ? 2.6 : 0) + (!grand && hasDyn ? 3.0 : 0);
-      sys.y = offs; sys.top = y; sys.h = sy + 4 + bottomRoom - y;
+      sys.y = offs; sys.top = y - aH; sys.h = sy + 4 + bottomRoom - y + aH;
+      var yBelow = sy + 4 + bottomRoom;
+      sys.cy0 = null; sys.cy1 = belowR ? yBelow + (belowR.cursor ? belowR.cursor[1] : bH) : null;
+      sys.h += bH;
       // staff lines
       var g = ['<g class="ms-sys" data-sys="' + li + '">'];
+      if (aboveR) g.push('<g class="ms-above" transform="translate(0 ' + n3(y - aH) + ')">' + aboveR.svg + '</g>');
+      if (belowR) g.push('<g class="ms-below" transform="translate(0 ' + n3(yBelow) + ')">' + belowR.svg + '</g>');
       sys.buf.forEach(function (B, si) {
         var oy = offs[si], d = '';
         for (var k = 0; k < 5; k++) d += 'M' + n3(sys.x0) + ' ' + n3(oy + k) + 'H' + n3(sys.x1);
@@ -654,7 +685,7 @@
       last.under.forEach(function (P) { g.push('<text class="ms-word" x="' + n3(P.x) + '" y="' + n3(py) + '" font-size="1.45">' + esc(P.t) + '</text>'); });
       g.push('</g>');
       svgParts.push(g.join(''));
-      y += sys.h + (grand ? 3.2 : 2.6);
+      y = sys.top + sys.h + (grand ? 3.2 : 2.6);
     });
     var H = y;
     this.Wsp = Wsp; this.Hsp = H;
@@ -1082,7 +1113,7 @@
     var mp = this.measPos[mi];
     if (!mp || !this.cursorEl) return;
     var sys = this.sysInfo[mp.sys], x = xAt(mp, tick || 0);
-    var y0 = sys.y[0] - 1.6, y1 = sys.y[sys.y.length - 1] + 5.6;
+    var y0 = sys.cy0 != null ? sys.cy0 : sys.y[0] - 1.6, y1 = sys.cy1 != null ? sys.cy1 : sys.y[sys.y.length - 1] + 5.6;
     var w = HW * this.hs + 0.7;
     this.cursorEl.setAttribute('x', n3(x + HW * this.hs / 2 - w / 2));
     this.cursorEl.setAttribute('y', n3(y0));
@@ -1119,6 +1150,7 @@
     Score: Score,
     glyphs: G,
     brace: brace,
-    stepY: stepY
+    stepY: stepY,
+    xAt: xAt
   };
 })();

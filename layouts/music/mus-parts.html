@@ -5,6 +5,9 @@
                            scripts: [audio, keyboard, staff, song, player]   kit names (static/music/kit/<name>.js);
                                     their dependencies are added and everything loads in dependency order:
                                     audio, song, staff, keyboard, player (player needs all four; keyboard uses audio)
+                           scripts: [fret]          guitar, ukulele, banjo pictures and sound (static/music/fret/: core, sound,
+                                                    draw + fret.css); [fret-player] adds the fretted song player;
+                                                    [fret-widgets] the lesson widgets (data-fret=…); [tuner]; [chord-finder]
                            scripts: ["music/lessons/intervals.js"]          any other path under static/ (loaded after the kit)
                            styles:  ["music/lessons/lessons.css"]           extra stylesheets under static/
                          All scripts load with `defer`, so page code should run on DOMContentLoaded (or be deferred too).
@@ -27,18 +30,27 @@
 <link rel="stylesheet" href="{{ partial "inline/mus-asset.html" "music/kit/kit.css" }}">
 {{- range $p.Params.styles }}{{ $u := partial "inline/mus-asset.html" . }}{{ if $u }}
 <link rel="stylesheet" href="{{ $u }}">{{ else }}{{ warnf "music: style %q not found (page %s)" . $p.RelPermalink }}{{ end }}{{ end }}
-{{- $order := slice "audio" "song" "staff" "keyboard" "player" -}}
-{{- $deps := dict "player" (slice "audio" "song" "staff" "keyboard") "keyboard" (slice "audio") -}}
+{{- $order := slice "audio" "song" "staff" "keyboard" "player" "fret-core" "fret-pitch" "fret-sound" "fret-draw" "fret-player" "fret-widgets" "fret-tuner" "fret-chords" -}}
+{{- $fp := slice "audio" "song" "staff" "keyboard" "player" "fret-core" "fret-sound" "fret-draw" "fret-player" -}}
+{{- $deps := dict "player" (slice "audio" "song" "staff" "keyboard") "keyboard" (slice "audio")
+    "fret" (slice "audio" "song" "staff" "fret-core" "fret-sound" "fret-draw")
+    "fret-player" $fp "fret-widgets" ($fp | append "fret-widgets")
+    "tuner" (slice "audio" "song" "fret-core" "fret-pitch" "fret-sound" "fret-draw" "fret-tuner")
+    "chord-finder" (slice "audio" "song" "staff" "fret-core" "fret-sound" "fret-draw" "fret-chords") -}}
+{{- $files := dict "fret-core" "music/fret/core.js" "fret-pitch" "music/fret/pitch.js" "fret-sound" "music/fret/sound.js" "fret-draw" "music/fret/draw.js"
+    "fret-player" "music/fret/player.js" "fret-widgets" "music/fret/widgets.js" "fret-tuner" "music/fret/tuner.js" "fret-chords" "music/fret/chords.js" -}}
 {{- $want := dict -}}{{- $other := slice -}}
 {{- range $p.Params.scripts -}}
   {{- $s := . -}}
-  {{- if in $order $s -}}
-    {{- $want = merge $want (dict $s true) -}}
+  {{- if or (in $order $s) (index $deps $s) -}}
+    {{- if in $order $s }}{{ $want = merge $want (dict $s true) }}{{ end -}}
     {{- range (index $deps $s | default slice) }}{{ $want = merge $want (dict . true) }}{{ end -}}
   {{- else -}}{{- $other = $other | append $s -}}{{- end -}}
 {{- end -}}
+{{- if index $want "fret-core" }}
+<link rel="stylesheet" href="{{ partial "inline/mus-asset.html" "music/fret/fret.css" }}">{{ end }}
 {{- range $order }}{{ if index $want . }}
-<script src="{{ partial "inline/mus-asset.html" (printf "music/kit/%s.js" .) }}" defer></script>{{ end }}{{ end }}
+<script src="{{ partial "inline/mus-asset.html" (index $files . | default (printf "music/kit/%s.js" .)) }}" defer></script>{{ end }}{{ end }}
 {{- range $other }}{{ $u := partial "inline/mus-asset.html" . }}{{ if $u }}
 <script src="{{ $u }}" defer></script>{{ else }}{{ warnf "music: script %q not found (page %s)" . $p.RelPermalink }}{{ end }}{{ end }}
 {{- end -}}

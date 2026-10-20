@@ -1,0 +1,16 @@
+{{- /* /music/chords/: the chord finder for guitar, ukulele and banjo. The behavior is static/music/fret/chords.js
+   (scripts: [chord-finder] in front matter). Song pages link here as ?i=<instrument>&t=<tuning>&c=<chord>. */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+<div class="mus mus-wide" id="mus-chords">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{ partial "inline/mus-hero.html" . }}
+  <div class="fl-bar" id="fl-bar"></div>
+  <div id="cf-app"><noscript><p class="mus-note">The chord finder needs JavaScript.</p></noscript></div>
+  <div class="mus-body">
+    {{ .Content }}
+  </div>
+  <p class="mus-small">Also here: the <a href="{{ "music/tuner/" | relURL }}">tuner</a>{{ with site.GetPage "/music/guitar" }}, <a href="{{ .RelPermalink }}">guitar</a>{{ end }}{{ with site.GetPage "/music/ukulele" }}, <a href="{{ .RelPermalink }}">ukulele</a>{{ end }}{{ with site.GetPage "/music/banjo" }} and <a href="{{ .RelPermalink }}">banjo</a> lessons{{ end }}, and <a href="{{ "music/songs/" | relURL }}">songs</a>.</p>
+</div>
+<script>document.addEventListener('DOMContentLoaded', function () { var b = document.getElementById('fl-bar'); if (b && window.TRBMusic && TRBMusic.fret && TRBMusic.fret.prefs) TRBMusic.fret.prefs.toggle(b); });</script>
+{{ end }}

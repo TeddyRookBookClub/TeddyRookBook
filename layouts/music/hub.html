@@ -5,12 +5,17 @@
 {{ partial "inline/mus-head.html" . }}
 {{- $songs := site.Data.music.songs | default dict -}}
 {{- $lv := dict "beginner" 0 "intermediate" 0 "advanced" 0 -}}
-{{- range $songs }}{{ with .level }}{{ $lv = merge $lv (dict . (add (index $lv .) 1)) }}{{ end }}{{ end -}}
+{{- range $songs }}{{ if or (not .draft) (site.Params.musicDrafts | default false) }}{{ with .level }}{{ $lv = merge $lv (dict . (add (index $lv .) 1)) }}{{ end }}{{ end }}{{ end -}}
 {{- $pb := site.GetPage "/music/piano-basics" -}}
 {{- $rm := site.GetPage "/music/reading-music" -}}
 {{- $sg := site.GetPage "/music/songs" -}}
 {{- $mt := site.GetPage "/music/metronome" -}}
 {{- $rt := site.GetPage "/music/rhythm" -}}
+{{- $fret := slice (site.GetPage "/music/guitar") (site.GetPage "/music/ukulele") (site.GetPage "/music/banjo") -}}
+{{- $tu := site.GetPage "/music/tuner" -}}
+{{- $cf := site.GetPage "/music/chords" -}}
+{{- $drafts := site.Params.musicDrafts | default false -}}
+{{- $icount := dict -}}{{- range $songs }}{{ if or (not .draft) $drafts }}{{ $i := .instrument | default "piano" }}{{ $icount = merge $icount (dict $i (add (index $icount $i | default 0) 1)) }}{{ end }}{{ end -}}
 <div class="mus mus-wide ml-hub" id="ml-hub">
   {{ partial "inline/mus-crumbs.html" . }}
   {{ partial "inline/mus-hero.html" . }}
@@ -35,6 +40,31 @@
     <div data-ml="kb" data-bare="1" data-range="C3-C6" data-range-sm="C4-C5"></div>
   </section>
 
+  <section aria-labelledby="ml-fret-h">
+    <h2 id="ml-fret-h">Guitar, ukulele and banjo</h2>
+    <p class="ml-lead">Each has its own course, from holding it and tuning it to fingerpicking, with tab that plays and songs that belong to the instrument: folk, blues, cowboy and classical guitar; Hawaiian ukulele; Southern old-time and bluegrass banjo.</p>
+    <div class="ml-big-cards">
+      {{- range $fret }}{{ with . }}
+      {{- $ik := .Params.instrument | default (lower .Title) }}
+      <div class="ml-bc">
+        <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🎸" }}</span><b>{{ .LinkTitle }}</b></a>
+        <p>{{ .Description }}</p>
+        <span class="ml-meta">{{ with len .Pages }}{{ . }} short chapters{{ else }}Chapters coming soon{{ end }}{{ with index $icount $ik }} · <a href="{{ with $sg }}{{ .RelPermalink }}{{ end }}#{{ $ik }}">{{ . }} song{{ if ne . 1 }}s{{ end }}</a>{{ end }}</span>
+        <span class="ml-progress" data-done-count="{{ printf "%s" .File.Dir }}" data-done-total="{{ len .Pages }}" hidden></span>
+      </div>{{ end }}{{ end }}
+      {{- with $tu }}
+      <div class="ml-bc">
+        <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🎚️" }}</span><b>{{ .LinkTitle }}</b></a>
+        <p>{{ .Description }}</p>
+      </div>{{ end }}
+      {{- with $cf }}
+      <div class="ml-bc">
+        <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🎼" }}</span><b>{{ .LinkTitle }}</b></a>
+        <p>{{ .Description }}</p>
+      </div>{{ end }}
+    </div>
+  </section>
+
   <h2 id="ml-all-h">Everything in Music</h2>
   <div class="ml-big-cards" aria-labelledby="ml-all-h">
     {{- with $pb }}
@@ -55,7 +85,7 @@
     <div class="ml-bc">
       <a class="ml-bct" href="{{ .RelPermalink }}"><span class="ml-ic" aria-hidden="true">{{ .Params.icon | default "🎵" }}</span><b>{{ .LinkTitle }}</b></a>
       <p>{{ .Description }}</p>
-      <span class="ml-meta">{{ len $songs }} pieces</span>
+      <span class="ml-meta">{{ $n := 0 }}{{ range $songs }}{{ if or (not .draft) $drafts }}{{ $n = add $n 1 }}{{ end }}{{ end }}{{ $n }} pieces{{ with index $icount "piano" }} · piano {{ . }}{{ end }}{{ with index $icount "guitar" }} · guitar {{ . }}{{ end }}{{ with index $icount "ukulele" }} · ukulele {{ . }}{{ end }}{{ with index $icount "banjo" }} · banjo {{ . }}{{ end }}</span>
       <span class="ml-levels-list">
         {{- range slice "beginner" "intermediate" "advanced" }}{{ $n := index $lv . }}{{ if $n }}
         <a href="{{ $sg.RelPermalink }}#{{ . }}">{{ title . }}: {{ $n }}</a>{{ end }}{{ end }}

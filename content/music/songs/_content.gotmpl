@@ -1,15 +1,29 @@
-{{/* One page per song, from data/music/songs/<slug>.yaml (the format: layouts/music/song.html and static/music/kit/song.js). */}}
+{{/* One page per song, from data/music/songs/<slug>.yaml. Piano songs use layouts/music/song.html (kit/player.js);
+     guitar, ukulele and banjo songs (the file has `instrument:`) use layouts/music/fsong.html (fret/player.js).
+     A song with `draft: true` is checked by scripts/music/check-songs.js but gets no page and no card, unless the
+     build sets the site parameter musicDrafts (HUGO_PARAMS_MUSICDRAFTS=true) to preview it. */}}
 {{ $rank := dict "beginner" 1 "intermediate" 2 "advanced" 3 }}
+{{ $drafts := site.Params.musicDrafts | default false }}
 {{ range $key, $s := site.Data.music.songs }}
+  {{ if or (not $s.draft) $drafts }}
   {{ $slug := $s.slug | default $key }}
-  {{ $desc := printf "Play %s%s on the piano: the sheet music with every note lit up as it sounds, the keys on a piano keyboard, letter names, tempo control and a wait-for-me practice mode." $s.title (cond (ne ($s.composer | default "") "") (printf " by %s" $s.composer) "") }}
+  {{ $inst := $s.instrument | default "" }}
+  {{ $by := cond (ne ($s.composer | default "") "") (printf " by %s" $s.composer) "" }}
+  {{ $desc := printf "Play %s%s on the piano: the sheet music with every note lit up as it sounds, the keys on a piano keyboard, letter names, tempo control and a wait-for-me practice mode." $s.title $by }}
+  {{ $layout := "song" }}{{ $scripts := slice "player" }}{{ $icon := "🎼" }}
+  {{ if $inst }}
+    {{ $layout = "fsong" }}{{ $scripts = slice "fret-player" }}
+    {{ $icon = index (dict "guitar" "🎸" "ukulele" "🌺" "banjo" "🪕") $inst | default "🎸" }}
+    {{ $desc = printf "Play %s%s on the %s: tab and notation with every note lit up as it sounds, chord diagrams, %s, a fretboard, tempo control, loop and a left-handed view." $s.title $by $inst (cond (ne ($s.pattern | default "") "") "the strum or picking pattern" "the picking hand's fingers") }}
+  {{ end }}
   {{ $.AddPage (dict
     "kind" "page"
     "path" $slug
     "title" $s.title
-    "layout" "song"
+    "layout" $layout
     "description" $desc
-    "params" (dict "song" $key "scripts" (slice "player") "level" $s.level "eyebrow" (printf "Songs · %s" (title ($s.level | default "song"))) "icon" "🎼")
+    "params" (dict "song" $key "scripts" $scripts "level" $s.level "instrument" (cond (ne $inst "") $inst "piano") "eyebrow" (printf "Songs · %s" (title ($s.level | default "song"))) "icon" $icon)
     "weight" (add (mul (index $rank ($s.level | default "beginner") | default 4) 100) (int ($s.order | default 50)))
   ) }}
+  {{ end }}
 {{ end }}

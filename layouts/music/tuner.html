@@ -1,0 +1,16 @@
+{{- /* /music/tuner/: the tuner for guitar, ukulele and banjo. The behavior is static/music/fret/tuner.js (scripts:
+   [tuner] in front matter brings pitch.js, sound.js and the rest through inline/mus-head.html). */ -}}
+{{ define "main" }}
+{{ partial "inline/mus-head.html" . }}
+<div class="mus" id="mus-tuner">
+  {{ partial "inline/mus-crumbs.html" . }}
+  {{ partial "inline/mus-hero.html" . }}
+  <div class="fl-bar" id="fl-bar"></div>
+  <div id="tu-app"><noscript><p class="mus-note">The tuner needs JavaScript.</p></noscript></div>
+  <div class="mus-body">
+    {{ .Content }}
+  </div>
+  <p class="mus-small">Also here: the <a href="{{ "music/chords/" | relURL }}">chord finder</a>{{ with site.GetPage "/music/guitar" }}, <a href="{{ .RelPermalink }}">guitar</a>{{ end }}{{ with site.GetPage "/music/ukulele" }}, <a href="{{ .RelPermalink }}">ukulele</a>{{ end }}{{ with site.GetPage "/music/banjo" }} and <a href="{{ .RelPermalink }}">banjo</a> lessons{{ end }}.</p>
+</div>
+<script>document.addEventListener('DOMContentLoaded', function () { var b = document.getElementById('fl-bar'); if (b && window.TRBMusic && TRBMusic.fret && TRBMusic.fret.prefs) TRBMusic.fret.prefs.toggle(b); });</script>
+{{ end }}

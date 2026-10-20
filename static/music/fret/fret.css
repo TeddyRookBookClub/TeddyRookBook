@@ -1,0 +1,185 @@
+/* Music kit, fretted instruments (static/music/fret/*): chord diagrams .fd, fretboards .fb, tab strips .ft-*, right-hand
+   patterns .fp, the fretted player .fp-player, the tuner .tu-*, the chord finder .cf-*, lesson widgets .fw-*.
+   Scoped to .mus (the music page wrapper) and the components' own classes; colors from kit.css's variables, so light
+   and dark themes both work (html[data-theme="dark"]). */
+
+.mus{--fret-wood:#efe3cc;--fret-wood2:#e6d5b6;--fret-wire:#a79a83;--fret-nut:#f6f1e4;--fret-str:#6d6150;--fret-dot:var(--g2);--fret-dot-ink:#fff;--fret-root:#b8963e;--fret-scale:#2f6f8f;--fret-chord:#9fb9a9}
+html[data-theme="dark"] .mus{--fret-wood:#2a2219;--fret-wood2:#34291c;--fret-wire:#8d826f;--fret-nut:#d9cfbd;--fret-str:#c8bba3;--fret-dot:#6cc79a;--fret-dot-ink:#0f1a14;--fret-root:#e0c070;--fret-scale:#5cb8f0;--fret-chord:#46624f}
+.fl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* left-handed switch */
+.mus .fl-toggle{font-size:.84rem}
+.mus .fl-toggle b{font-weight:700}
+.fl-bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:flex-end;margin:-.4rem 0 .8rem}
+
+/* chord diagram */
+.fd{display:block;width:100%;height:auto;color:var(--ink);overflow:visible;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.fd .fd-name{font:700 2.1px Georgia,serif;fill:currentColor}
+.fd .fd-fret{stroke:var(--muted);stroke-width:.1}
+.fd .fd-nut{stroke:currentColor;stroke-width:.5}
+.fd .fd-str{stroke:currentColor;stroke-width:.12}
+.fd .fd-base{font-size:1.05px;fill:var(--muted);font-weight:600}
+.fd .fd-x{stroke:currentColor;stroke-width:.16;fill:none}
+.fd .fd-o{fill:none;stroke:currentColor;stroke-width:.14}
+.fd .fd-dot circle{fill:var(--fret-dot)}
+.fd .fd-dot.fd-root circle{fill:var(--fret-root)}
+.fd .fd-dot text{fill:var(--fret-dot-ink);font-size:1.05px;font-weight:700}
+.fd .fd-barre{fill:var(--fret-dot)}
+.fd .fd-nn{font-size:.95px;fill:var(--muted);font-weight:600}
+.fd .fd-cell{fill:transparent;cursor:pointer}
+.fd .fd-cell:hover{fill:var(--soft)}
+.fd .fd-focus{fill:none;stroke:var(--focus);stroke-width:.2}
+.mus .fd-box{display:inline-flex;flex-direction:column;align-items:center;gap:.1rem;padding:.35rem .4rem .25rem;border:1px solid var(--line);border-radius:12px;background:var(--card);cursor:pointer;color:var(--ink);min-width:72px;width:96px;transition:border-color .15s,background-color .15s}
+.mus .fd-box:hover{border-color:var(--acc)}
+.mus .fd-box.fd-now{border-color:var(--rh);box-shadow:0 0 0 2px var(--rh) inset;background:var(--rh-soft)}
+.mus .fd-box.fd-playing{background:var(--soft)}
+.mus .fd-box .fd-cap{font-size:.74rem;color:var(--muted);line-height:1.2}
+
+/* fretboard */
+.fb-wrap{position:relative;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;border-radius:10px;outline-offset:3px;padding:.2rem 0}
+.fb{display:block;width:100%;min-width:var(--fb-minw,420px);max-width:var(--fb-maxw,100%);height:auto;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.fb .fb-wood{fill:var(--fret-wood);stroke:var(--fret-wood2);stroke-width:.1}
+.fb .fb-nut{stroke:var(--fret-nut);stroke-width:.7}
+html:not([data-theme="dark"]) .fb .fb-nut{stroke:#d9d2c0}
+.fb .fb-wire{stroke:var(--fret-wire);stroke-width:.2}
+.fb .fb-str{stroke:var(--fret-str)}
+.fb .fb-peg{fill:var(--fret-str)}
+.fb .fb-inlay{fill:var(--fret-wood2);stroke:var(--fret-wire);stroke-width:.05}
+.fb .fb-fn{font-size:.95px;fill:var(--muted)}
+.fb .fb-sn{font-size:1.0px;font-weight:700;fill:var(--muted)}
+.fb .fb-cell{fill:transparent;cursor:pointer}
+.fb .fb-cell:hover{fill:rgba(47,158,111,.14)}
+.fb .fb-ghost{font-size:.75px;fill:var(--muted);opacity:.75;pointer-events:none}
+.fb .fb-mark{pointer-events:none}
+.fb .fb-mark circle{fill:var(--fret-dot)}
+.fb .fb-mark text{fill:var(--fret-dot-ink);font-size:.85px;font-weight:700}
+.fb .fb-mark.root circle{fill:var(--fret-root)}
+.fb .fb-mark.root text{fill:#1d1606}
+.fb .fb-mark.scale circle{fill:var(--fret-scale)}
+.fb .fb-mark.chord circle{fill:var(--fret-chord)}
+.fb .fb-mark.chord text{fill:var(--ink)}
+.fb .fb-mark.hint circle{fill:none;stroke:var(--gold);stroke-width:.18}
+.fb .fb-mark.hint text{fill:var(--ink)}
+.fb .fb-mark.lit circle{fill:var(--rh)}
+.fb .fb-mark.lit text{fill:#fff}
+.fb .fb-mark.muted circle{fill:var(--muted)}
+.fb .fb-flash{fill:none;stroke:var(--hl);stroke-width:.25}
+.fb .fb-focus{fill:none;stroke:var(--focus);stroke-width:.18}
+
+/* tab strips inside a staff.js score */
+.ms-svg .ft-line{stroke:var(--score-line,#3a3a3a);stroke-width:.09;fill:none;opacity:.8}
+.ms-svg .ft-bar{stroke:currentColor;stroke-width:.13}
+.ms-svg .ft-thick{stroke:currentColor;stroke-width:.45}
+.ms-svg .ft-rep{fill:currentColor}
+.ms-svg .ft-tab{font:700 1.45px Georgia,"Times New Roman",serif;fill:currentColor}
+.ms-svg .ft-tun{font:600 .95px system-ui,sans-serif;fill:var(--score-muted,#77807a)}
+.ms-svg .ft-num{font:700 1.18px system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;fill:currentColor;stroke:var(--score-bg,#fffdf7);stroke-width:.55;paint-order:stroke;stroke-linejoin:round}
+.ms-svg .ft-n.hl .ft-num{fill:var(--rh);font-size:1.4px}
+.ms-svg .ft-tech{stroke:currentColor;stroke-width:.1;fill:none}
+.ms-svg .ft-arrow{fill:currentColor}
+.ms-svg .ft-tl{font:italic 600 .8px system-ui,sans-serif;fill:currentColor}
+.ms-svg .ft-pick{font:700 .95px system-ui,sans-serif;fill:var(--score-muted,#77807a)}
+.ms-svg .ft-stem{stroke:currentColor;stroke-width:.12;fill:none}
+.ms-svg .ft-beam{fill:currentColor}
+.ms-svg .ft-dot{fill:currentColor}
+.ms-svg .ft-rest{fill:currentColor}
+.ms-svg .ft-end{font:italic 700 1.1px "Times New Roman",serif;fill:currentColor}
+.ms-svg .ft-chord,.fp .ft-chord{font:700 1.5px Georgia,serif;fill:currentColor}
+.ms-svg .ft-arw,.fp .ft-arw{stroke:currentColor;stroke-width:.18;fill:none}
+.ms-svg .ft-head,.fp .ft-head{fill:currentColor;stroke:none}
+.ms-svg .ft-miss,.fp .ft-miss{opacity:.32}
+.ms-svg .ft-acc,.fp .ft-acc{font:700 1.1px system-ui,sans-serif;fill:currentColor}
+.ms-svg .ft-letter,.fp .ft-letter{font:700 1.15px system-ui,sans-serif;fill:currentColor}
+.ms-svg .ft-sub,.fp .ft-sub{font:600 .7px system-ui,sans-serif;fill:var(--score-muted,#77807a)}
+.ms-svg .ft-dim{opacity:.5}
+.ms-svg .ft-count,.fp .ft-count{font:600 .9px system-ui,sans-serif;fill:var(--score-muted,#77807a)}
+.ms-svg .ft-st.on,.fp .fp-st.on{color:var(--rh)}
+.ms-svg .ft-st.on .ft-count,.fp .fp-st.on .ft-count{fill:var(--rh)}
+.ms-svg .ms-c8{font-weight:700}
+
+/* a right-hand pattern */
+.fp{display:block;width:100%;max-width:min(100%,var(--fp-maxw,460px));height:auto;color:var(--ink)}
+.fp .fp-beat{fill:var(--paper)}
+.fp .fp-beat.odd{fill:var(--soft)}
+.fp .ft-line{stroke:var(--muted);stroke-width:.09}
+.fp .ft-num{font:700 1.15px system-ui,sans-serif;fill:currentColor;stroke:var(--card);stroke-width:.5;paint-order:stroke}
+.fp .ft-syl{font:italic .9px Georgia,serif;fill:var(--muted)}
+.fp .fp-st.on .ft-num{fill:var(--rh)}
+
+/* the fretted player */
+.fp-player .fp-chords{display:flex;flex-wrap:wrap;gap:.45rem;margin:.6rem 0}
+.fp-player .fp-chord{display:flex;flex-direction:column;align-items:center;gap:.15rem}
+.fp-player .fp-clink{font-size:.74rem}
+.fp-player .fp-boardrow{display:flex;gap:.8rem;align-items:flex-start;margin-top:.6rem}
+.fp-player .fp-board{flex:1 1 auto;min-width:0}
+.fp-player .fp-now{flex:0 0 auto;display:flex;gap:.4rem;align-items:flex-start}
+.fp-player .fp-nowc{width:84px;text-align:center}
+.fp-player .fp-nowc.fp-next{width:64px;opacity:.75}
+.fp-player .fp-nowl{display:block;font:600 .72rem system-ui,sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.fp-player .fp-lefty{display:inline-flex}
+@media (max-width:640px){
+  .fp-player .fp-boardrow{flex-direction:column;align-items:stretch}
+  .fp-player .fp-board{align-self:stretch;width:100%;max-width:100%}
+  .fp-player .fp-now{align-self:center}
+  .mus .fd-box{width:80px}
+}
+
+/* lesson widgets */
+.fw{margin:1rem 0}
+.fw-row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.4rem 0}
+.fw-chords{display:flex;flex-wrap:wrap;gap:.5rem}
+.fw-cap{font-size:.86rem;color:var(--muted);margin:.3rem 0 0}
+.fw-tab .ms-score{max-height:none}
+.fw-pat{display:flex;flex-direction:column;gap:.4rem}
+
+
+/* the tuner */
+.tu{display:grid;gap:1rem}
+.tu-stage{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.tu-note{font:700 3.4rem/1 Georgia,serif;color:var(--ink);margin:.2rem 0 0;min-height:3.4rem}
+.tu-note small{font-size:1.4rem;color:var(--muted);margin-left:.1rem}
+.tu-freq{font:600 .92rem system-ui,sans-serif;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
+.tu-meter{display:block;width:100%;max-width:520px;height:auto;margin:.4rem auto 0}
+.tu-meter .tu-scale{stroke:var(--muted);stroke-width:.25}
+.tu-meter .tu-zone{fill:rgba(47,158,111,.18)}
+.tu-meter .tu-lab{font:600 2.6px system-ui,sans-serif;fill:var(--muted)}
+.tu-meter .tu-needle{stroke:var(--gt);stroke-width:.8;stroke-linecap:round;transition:transform .12s ease-out;transform-origin:50px 48px}
+.tu-meter .tu-hub{fill:var(--gt)}
+.tu.tu-in .tu-meter .tu-needle{stroke:var(--hl)}
+.tu.tu-in .tu-meter .tu-hub{fill:var(--hl)}
+.tu-say{font:700 1.15rem system-ui,sans-serif;min-height:1.6em;margin:.3rem 0 0;color:var(--ink)}
+.tu.tu-in .tu-say{color:var(--hl)}
+.tu-strings{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;margin:.6rem 0}
+.tu-str{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:64px;min-height:56px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:700 1.1rem Georgia,serif;cursor:pointer;padding:.3rem .5rem}
+.tu-str small{font:600 .7rem system-ui,sans-serif;color:var(--muted)}
+.tu-str.on{border-color:var(--hl);box-shadow:0 0 0 2px var(--hl) inset}
+.tu-str.ok{background:var(--soft)}
+.tu-str[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold) inset}
+.tu-ctl{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;align-items:center}
+.tu-ctl label{font-size:.88rem;color:var(--muted);display:inline-flex;gap:.35rem;align-items:center}
+.tu-ctl select{min-height:36px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:.2rem .5rem;font:inherit}
+.tu-msg{font-size:.92rem;margin:.6rem auto 0;max-width:36rem}
+.tu-msg.tu-bad{color:#b23b3b}
+html[data-theme="dark"] .tu-msg.tu-bad{color:#f08a8a}
+.tu-level{height:6px;border-radius:3px;background:var(--soft);overflow:hidden;max-width:220px;margin:.5rem auto 0}
+.tu-level i{display:block;height:100%;width:0;background:var(--hl);transition:width .1s}
+@media (prefers-reduced-motion:reduce){.tu-meter .tu-needle{transition:none}}
+
+/* the chord finder */
+.cf-ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:.6rem 1rem;align-items:start}
+.cf-ctl .mr-lab,.cf-lab{display:block;font:600 .78rem system-ui,sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 .25rem}
+.cf-ctl select{min-height:36px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:.2rem .5rem;font:inherit;width:100%}
+.cf-roots button,.cf-quals button{min-width:2.6rem}
+.cf-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem;margin:1rem 0 .3rem}
+.cf-head h2{margin:0}
+.cf-notes{font-size:.95rem;color:var(--muted)}
+.cf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.6rem;margin:.5rem 0 1rem}
+.cf-grid .fd-box{width:100%}
+.cf-sub{font:700 1rem Georgia,serif;color:var(--ink);margin:.8rem 0 .2rem}
+.cf-rev{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:1rem;align-items:start}
+.cf-rev .cf-pad{max-width:220px}
+.cf-rev .cf-pad svg{touch-action:manipulation}
+.cf-names{list-style:none;padding:0;margin:.3rem 0}
+.cf-names li{margin:.2rem 0}
+.cf-names b{font:700 1.2rem Georgia,serif}
+@media (max-width:560px){.cf-rev{grid-template-columns:1fr}.cf-rev .cf-pad{margin:0 auto}}
