@@ -1,0 +1,264 @@
+{{ define "main" }}
+{{ partial "lab-head.html" . }}
+{{- $d := site.Data.elements.elements -}}
+{{- $data := resources.FromString "games/elements/data.js" (printf "window.TRBElementsData=%s;" ($d | jsonify)) | fingerprint -}}
+<link rel="stylesheet" href="{{ "games/elements/elements.css" | relURL }}?v={{ (os.Stat "static/games/elements/elements.css").ModTime.Unix }}">
+<div class="lab el" id="el-app">
+  <nav class="lab-crumbs" aria-label="Breadcrumb"><a href="{{ "education/" | relURL }}">Education</a> › <a href="{{ "science-lab/" | relURL }}">Science Lab</a> › The Elements</nav>
+  <header class="lab-hero">
+    <p class="lab-eyebrow">Science Lab · Chemistry</p>
+    <h1>The Elements</h1>
+    <p>All 118 elements, and the atom inside each one. Pick any element to spin its atom in 3-D, first as a simple shell model and then as the real orbital clouds of quantum mechanics. Read its numbers, see its spectral fingerprint, compare two elements, take the quiz, print a card for the wall, and listen to the elements turned into sound.</p>
+    <span class="lab-mark" aria-hidden="true">🧪</span>
+  </header>
+
+  <section class="el-top" id="el-top" aria-label="The atom">
+    <div class="lab-stage">
+      <div class="lab-view el-view" id="el-view">
+        <canvas id="el-gl"></canvas>
+        <canvas id="el-ov" tabindex="0" role="img" aria-label="The 3-D atom."></canvas>
+        <div class="lab-hud" id="el-hud"></div>
+        <div class="lab-tools">
+          <button type="button" id="el-zout" aria-label="Zoom out" title="Zoom out">−</button>
+          <button type="button" id="el-zin" aria-label="Zoom in" title="Zoom in">+</button>
+          <button type="button" id="el-reset" aria-label="Reset the view" title="Reset the view">↺</button>
+        </div>
+        <p class="el-hint" aria-hidden="true">Drag to turn · scroll or pinch to zoom</p>
+      </div>
+
+      <div class="lab-panel el-side" id="el-side">
+        <div class="el-head" id="el-head"></div>
+        <div class="lab-row el-nav">
+          <button type="button" class="lab-btn" id="el-prev" aria-label="Previous element">◀ Previous</button>
+          <button type="button" class="lab-btn" id="el-next" aria-label="Next element">Next ▶</button>
+          <button type="button" class="lab-btn" id="el-play-side" title="Play this element in the sound mode chosen below">♪ Listen</button>
+        </div>
+        <p class="el-config" id="el-config"></p>
+        <h3 id="el-mode-l">Picture</h3>
+        <div class="lab-seg" id="el-mode" role="group" aria-labelledby="el-mode-l">
+          <button type="button" data-v="shell" aria-pressed="true">Shell model</button>
+          <button type="button" data-v="orbital" aria-pressed="false">Orbitals</button>
+        </div>
+        <div id="el-shellbox"><div id="el-shellinfo"></div></div>
+        <div id="el-orbbox" hidden>
+          <div class="lab-seg" id="el-layout" role="group" aria-label="How to lay out the orbitals">
+            <button type="button" data-v="apart" aria-pressed="true">Side by side</button>
+            <button type="button" data-v="together" aria-pressed="false">All together</button>
+          </div>
+          <p class="el-subl" id="el-subs-l">Subshells</p>
+          <div class="el-subs" id="el-subs" role="group" aria-labelledby="el-subs-l"></div>
+          <label class="lab-field" id="el-zoomto"><span>Zoom to</span><select id="el-zoomsel"></select></label>
+          <p class="el-pick" id="el-pick" aria-live="polite"></p>
+          <p class="lab-small" id="el-orbnote"></p>
+        </div>
+        <p class="el-sr" id="el-live" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="el-sec" aria-labelledby="el-table-h">
+    <h2 id="el-table-h">The periodic table</h2>
+    <div class="el-tools">
+      <label class="el-search"><span>Find</span><input type="search" id="el-search" placeholder="Name, symbol or number" autocomplete="off" aria-describedby="el-search-o"></label>
+      <label class="el-colorby"><span>Color by</span>
+        <select id="el-color">
+          <option value="category">Family</option>
+          <option value="radius">Atomic radius</option>
+          <option value="en">Electronegativity</option>
+          <option value="ie1">Ionization energy</option>
+          <option value="melt">Melting point</option>
+          <option value="density">Density</option>
+          <option value="year">Year of discovery</option>
+          <option value="state">State at a temperature</option>
+        </select>
+      </label>
+      <label class="el-temp" id="el-temp-row" hidden><span>Temperature <output id="el-temp-o"></output></span><input type="range" id="el-temp" min="0" max="6000" step="1" value="298" aria-label="Temperature in kelvin"></label>
+    </div>
+    <p class="el-search-o" id="el-search-o" aria-live="polite"></p>
+    <div class="el-tablew"><div class="el-table" id="el-table" aria-label="Periodic table. Arrow keys move between elements; each one you land on is shown above."></div></div>
+    <div class="el-legend" id="el-legend"></div>
+    <p class="lab-small">Click or tap an element to see its atom. With an element selected, the arrow keys move across the table. La and Ac sit in group 3 here, as on the Chemistry Ladder; some tables put Lu and Lr there instead.</p>
+  </section>
+
+  <section class="el-sec" aria-labelledby="el-info-h">
+    <h2 id="el-info-h">All about it</h2>
+    <div class="el-info" id="el-info"></div>
+  </section>
+
+  <section class="el-sec el-tabs" aria-label="Compare, quiz, sounds and print">
+    <div class="el-panel" id="el-compare">
+      <h2>Compare two elements</h2>
+      <div class="el-cmp-ctl">
+        <label><span>First</span><select id="el-cmp-a"></select></label>
+        <button type="button" class="lab-btn" id="el-cmp-swap" aria-label="Swap the two elements">⇄</button>
+        <label><span>Second</span><select id="el-cmp-b"></select></label>
+        <button type="button" class="lab-btn" id="el-cmp-use">Use the element above</button>
+      </div>
+      <div id="el-cmp"></div>
+    </div>
+
+    <div class="el-panel" id="el-quiz">
+      <h2>Element quiz</h2>
+      <div class="el-qtop">
+        <div class="lab-seg" id="el-qlevel" role="group" aria-label="Quiz level">
+          <button type="button" data-v="starter" aria-pressed="true">Starter · 1–20</button>
+          <button type="button" data-v="explorer" aria-pressed="false">Explorer · 1–56, 72–86</button>
+          <button type="button" data-v="expert" aria-pressed="false">Expert · all, no symbols</button>
+        </div>
+        <button type="button" class="lab-btn pri" id="el-qstart">Start a round</button>
+      </div>
+      <p class="el-qq" id="el-qq" aria-live="polite">Ten questions: find elements on the table from their names or from clues, and name their group, block and family. Pick a level and press <b>Start a round</b>.</p>
+      <div class="lab-row el-qa" id="el-qa" hidden></div>
+      <div class="el-tablew"><div class="el-table el-qtable" id="el-qtable" aria-label="Quiz table: pick the element"></div></div>
+      <p class="el-qfb" id="el-qfb" aria-live="polite"></p>
+      <div class="lab-row"><button type="button" class="lab-btn pri" id="el-qnext" hidden>Next question</button><span class="el-qscore" id="el-qscore"></span></div>
+      <p class="lab-small" id="el-qbest"></p>
+    </div>
+
+    <div class="el-panel" id="el-sounds">
+      <h2>Element sounds</h2>
+      <p>These are <b>artistic mappings</b>: atoms don’t make sounds. Each mode turns real numbers about <b id="el-snd-el">the element</b> into tones you can hear.</p>
+      <div class="lab-seg" id="el-smode" role="group" aria-label="Sound mode">
+        <button type="button" data-v="chord" aria-pressed="true">Spectrum chord</button>
+        <button type="button" data-v="arp" aria-pressed="false">Spectrum arpeggio</button>
+        <button type="button" data-v="config" aria-pressed="false">Electron melody</button>
+      </div>
+      <div class="lab-row el-srow">
+        <button type="button" class="lab-btn pri" id="el-splay">♪ Play</button>
+        <button type="button" class="lab-btn" id="el-srow">Sweep its row</button>
+        <button type="button" class="lab-btn" id="el-sgroup">Sweep its group</button>
+        <button type="button" class="lab-btn" id="el-sstop">■ Stop</button>
+        <span class="el-snow" id="el-snow" aria-live="polite"></span>
+      </div>
+      <div id="el-sinfo"></div>
+      <div class="lab-cols el-smodes">
+        <p><b>Spectrum chord.</b> Every visible line sounds at once. A line’s light wave vibrates hundreds of trillions of times a second; dividing by 2<sup>40</sup> moves it exactly 40 octaves down, into the range of a voice, and keeps the musical spacing between the lines. Brighter lines are louder. This is the idea W. Walker Smith presented to the American Chemical Society in 2023, and Jill Linz’s Atom Music at Skidmore College works the same way.</p>
+        <p><b>Spectrum arpeggio.</b> The same tones one at a time, from red (lowest) to violet (highest), each plucked and dying away like a string, as in Linz’s atom tones and the melodies Smith drew from the lines.</p>
+        <p><b>Electron melody.</b> One piano note for each subshell, in the order electrons fill them. The shell number picks the note of the scale: shell 1 is <i>do</i>, shell 2 is <i>re</i>, up to shell 7, <i>ti</i>. A subshell with more electrons is a longer note. The idea comes from Sam Zhang’s 2006 article “Teaching Electron Configuration the Musical Way.”</p>
+        <p><b>The first musical table.</b> In 1865 John Newlands noticed that, listed by weight, every eighth element seemed to repeat the first, like the eighth note of a musical octave. His “law of octaves” was laughed at, but it was an early glimpse of the periodic law. Sweep a group to hear elements of one family one after another.</p>
+      </div>
+    </div>
+
+    <div class="el-panel" id="el-printing">
+      <h2>Printable cards</h2>
+      <p>A one-page card for the element you’ve picked, or a full color periodic table for the wall. Both print sharp at any size.</p>
+      <div class="el-pctl">
+        <div class="lab-seg" id="el-paper" role="group" aria-label="Paper size">
+          <button type="button" data-v="letter" aria-pressed="true">US Letter</button>
+          <button type="button" data-v="a4" aria-pressed="false">A4</button>
+        </div>
+        <button type="button" class="lab-btn pri" id="el-card-btn">Print the card</button>
+        <button type="button" class="lab-btn pri" id="el-wall-btn">Print the wall table</button>
+      </div>
+      <p class="lab-small">The wall table prints sideways (landscape). For a bigger poster, print it at “fit to page” on larger paper.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>What you’re seeing</h2>
+    <div class="lab-cols">
+      <p><b>The shell model</b> is the picture most of us first learn: a nucleus of protons (red) and neutrons (gray) in the middle, and electrons (blue) on rings around it. The number on each ring is how many electrons that shell holds. It is good for counting, and it shows why the table has rows: a new row starts each time a new shell starts to fill. But it is not to scale. If the atom were as wide as a football stadium, the nucleus would be a pea in the middle.</p>
+      <p><b>Electrons don’t orbit like planets.</b> An electron has no path at all. Quantum mechanics only tells us how likely we are to find it in each spot, and that gives a fuzzy cloud called an <b>orbital</b>. In the <i>Orbitals</i> picture, each dot is a place the electron could be found: where the dots are thick, it is often there. Two colors mark the two signs of the electron’s wave, which matter when atoms bond.</p>
+      <p><b>The shapes have names.</b> An s orbital is a ball. Each p orbital is a pair of lobes along one axis (p<sub>x</sub>, p<sub>y</sub>, p<sub>z</sub>). The five d orbitals are mostly four-leaf clovers, and the seven f orbitals are more lobed still. Choose <i>Side by side</i> to see one subshell’s orbitals spread out, and tap any cloud to read its name and how many electrons it holds.</p>
+      <p><b>A full subshell is round.</b> Put all three p orbitals together, or all five d orbitals, and the lobes fill each other in to make a sphere. That is why <i>All together</i> looks like nested fuzzy balls for most atoms: atoms really are close to round.</p>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>The science</h2>
+    <div class="lab-cols">
+      <div>
+        <h3 class="lab-h">Filling order</h3>
+        <p>Electrons fill subshells from the lowest energy up. A handy rule, the <b>Madelung rule</b> (or Aufbau order), sorts the subshells by <var>n</var> + <var>l</var>, and by <var>n</var> when there’s a tie:</p>
+        <div class="lab-formula">1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s, 4d, 5p, 6s, 4f, 5d, 6p, 7s, 5f, 6d, 7p</div>
+        <p>Here <var>n</var> is the shell number and <var>l</var> is 0, 1, 2, 3 for s, p, d, f. About twenty elements break the rule a little. Chromium is [Ar] 3d<sup>5</sup> 4s<sup>1</sup>, not 3d<sup>4</sup> 4s<sup>2</sup>, and copper is [Ar] 3d<sup>10</sup> 4s<sup>1</sup>. The page uses each element’s measured configuration and marks the exceptions.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Where the shapes come from</h3>
+        <p>For hydrogen, the Schrödinger equation can be solved exactly. Each orbital is a radial part times an angular part:</p>
+        <div class="lab-formula">ψ<sub><var>nlm</var></sub>(<var>r</var>, θ, φ) = <var>R</var><sub><var>nl</var></sub>(<var>r</var>) · <var>Y</var><sub><var>lm</var></sub>(θ, φ)</div>
+        <p>The angular part, a <b>real spherical harmonic</b>, gives the shape: the s, p, d and f lobes. The radial part sets the size and adds <var>n</var> − <var>l</var> − 1 round nodes, shells where the electron is never found. The chance of finding the electron near a point is |ψ|², and the dots are drawn at random with exactly that chance.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Sizes, roughly</h3>
+        <p>In a bigger atom each electron is pulled by the nucleus but pushed by the other electrons, so it feels a smaller <b>effective nuclear charge</b>. In 1930 John Slater gave simple rules to estimate it. For iron’s 4s electrons:</p>
+        <div class="lab-formula"><var>Z</var><sub>eff</sub> = 26 − (1 × 0.35 + 14 × 0.85 + 10 × 1.00) = 3.75</div>
+        <p>Each orbital here uses a hydrogen-like shape, sized so its average radius matches Slater’s estimate. That is an approximation: real many-electron orbitals are close to these shapes, but their sizes differ somewhat, and heavy atoms also feel effects from relativity.</p>
+      </div>
+      <div>
+        <h3 class="lab-h">Spectral fingerprints</h3>
+        <p>When an atom’s electron drops from a higher energy level to a lower one, the atom gives off light of one exact color. Each element has its own set of levels, so each has its own pattern of bright lines, as personal as a fingerprint. Astronomers read these lines in starlight to learn what stars are made of; helium was found in the Sun’s spectrum in 1868, before anyone found it on Earth.</p>
+        <div class="lab-formula"><var>E</var><sub>photon</sub> = <var>E</var><sub>upper</sub> − <var>E</var><sub>lower</sub> = <var>h</var><var>c</var> / λ</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Try this</h2>
+    <div class="lab-try"><b>Watch a row grow.</b> Pick sodium and press <i>Next</i> until argon. Each step adds a proton and an electron, and the third shell fills from 1 to 8. Then go on to potassium, where a fourth ring appears.</div>
+    <div class="lab-try"><b>Find the hidden shapes.</b> Pick carbon, choose <i>Orbitals</i> and <i>Side by side</i>, and look at the 2p subshell: two dumbbells at right angles. Now try neon, where all three are there, and then <i>All together</i>: they make a ball.</div>
+    <div class="lab-try"><b>Fingerprints side by side.</b> Compare sodium with neon, or iron with copper. Sodium’s brightest lines by far are a close yellow-orange pair near 589 nm, the color of old streetlights. Neon’s many red and orange lines are the glow of a neon sign.</div>
+    <div class="lab-try"><b>Melt the table.</b> Color by <i>State at a temperature</i> and slide from 0 K up. Mercury and bromine are the liquids at room temperature; near 30 °C cesium and gallium join them (gallium melts in your hand); tungsten, the metal with the highest melting point, stays solid until 3,695 K.</div>
+    <div class="lab-try"><b>Hear a family.</b> In <i>Element sounds</i>, choose <i>Electron melody</i> and sweep a group: each element’s last notes climb one step as you go down, because each row adds a shell.</div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Learn more</h2>
+    <ul class="el-links">
+      <li><a href="{{ "chemistry/chemistry/periodic-table-organization/" | relURL }}">Groups, Periods and Families</a> · <a href="{{ "chemistry/chemistry/electron-configuration/" | relURL }}">Electron Configurations</a> · <a href="{{ "chemistry/chemistry/orbitals-sublevels/" | relURL }}">Sublevels and Orbitals</a> · <a href="{{ "chemistry/chemistry/emission-spectra/" | relURL }}">Bright-Line Spectra</a> on the Chemistry Ladder</li>
+      <li><a href="{{ "chemistry/general-chemistry-1/quantum-numbers/" | relURL }}">Quantum Numbers</a> · <a href="{{ "chemistry/general-chemistry-1/hydrogen-spectrum/" | relURL }}">Hydrogen’s Energy Levels</a> · <a href="{{ "chemistry/general-chemistry-1/ion-configurations/" | relURL }}">Configurations of Ions and Exceptions</a> in General Chemistry 1</li>
+      <li><a href="{{ "science-lab/atom/" | relURL }}">Build an Atom</a>: put protons, neutrons and electrons together yourself, and watch nuclei decay.</li>
+    </ul>
+  </section>
+
+  <section class="lab-sec">
+    <h2>How it works</h2>
+    <div class="lab-cols">
+      <p><b>The orbitals.</b> For each occupied subshell the page computes Slater’s effective charge, then draws points from the hydrogen-like |ψ|² for every occupied orbital: the distance from the radial probability <var>r</var>²<var>R</var>², the direction from |<var>Y</var><sub><var>lm</var></sub>|² by accepting or rejecting random directions. Each electron gets the same number of points, so a pair of electrons makes a denser cloud. The dots are drawn with the browser’s WebGL, or on a plain canvas if WebGL isn’t available.</p>
+      <p><b>The nucleus</b> uses the most common isotope in nature, or the longest-lived one for elements with none. Its protons and neutrons are packed as balls in a sphere whose volume grows with the number of particles, as a real nucleus does.</p>
+      <p><b>Colors of light.</b> Each spectral line is colored from the CIE 1931 color-matching functions (in the fit by Wyman, Sloan and Shirley) converted to screen colors. Pure spectral colors are more vivid than any screen can show, so these are the nearest a screen can do, dimmed toward the ends of the visible range where the eye is less sensitive.</p>
+      <p><b>The sounds</b> use the site’s own small synthesizer, with nothing recorded. A line at 656.3 nm (hydrogen’s red line) has a frequency of 456.7 trillion hertz; divided by 2<sup>40</sup> that is 415.3 Hz, close to the G♯ above middle C.</p>
+    </div>
+    <h3 class="lab-h">How it was checked</h3>
+    <div class="lab-tw"><table class="lab-table">
+      <thead><tr><th>Test</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>All 22 radial functions up to <var>n</var> = 7, <var>l</var> = 3, integrated (∫<var>R</var>²<var>r</var>² d<var>r</var>), and their average radius</td><td>1 within 10<sup>−12</sup>; ⟨<var>r</var>⟩ as the formula says</td></tr>
+        <tr><td>All 16 real spherical harmonics, s to f, integrated over the sphere against each other</td><td>1 for the same one, 0 for two different ones, within 10<sup>−5</sup></td></tr>
+        <tr><td>Nodes: sign changes along <var>r</var>, from pole to pole, and around the sphere</td><td><var>n</var> − <var>l</var> − 1, <var>l</var> − |<var>m</var>| and 2|<var>m</var>|, every time</td></tr>
+        <tr><td>40,000 random points for a 2p<sub>z</sub> electron: average distance, and the share of ⟨<var>z</var>²⟩ in ⟨<var>r</var>²⟩</td><td>within 2% of ⟨<var>r</var>⟩; 0.60 (exactly 3/5 expected)</td></tr>
+        <tr><td>Electrons in each element’s configuration and shells, all 118</td><td>add up to <var>Z</var> every time</td></tr>
+        <tr><td>Configurations the Madelung order gets wrong</td><td>exactly the 20 marked exceptions: Cr, Cu, Nb, Mo, Ru, Rh, Pd, Ag, La, Ce, Gd, Pt, Au, Ac, Th, Pa, U, Np, Cm, Lr</td></tr>
+        <tr><td>Slater’s rules, textbook examples (N 2p, Zn 3d and 4s)</td><td>3.90, 8.85, 4.35</td></tr>
+        <tr><td>Wavelength colors: 405, 450, 530, 580 and 650 nm</td><td>violet, blue, green, yellow-orange, red</td></tr>
+        <tr><td>Sounds: hydrogen’s red line; every chord, arpeggio and melody for all 118 elements</td><td>415.3 Hz (G♯4); chords never too loud, arpeggios climb from red to violet, one note per subshell</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="lab-sec">
+    <h2>Sources</h2>
+    <ul class="lab-src">
+      {{- with $d.meta.sources }}{{ range $k, $v := . }}
+      <li><b>{{ $k | humanize }}.</b> {{ $v }}</li>
+      {{- end }}{{ end }}
+      <li>J. C. Slater, “Atomic Shielding Constants,” <i>Physical Review</i> 36, 57 (1930): effective nuclear charges.</li>
+      <li>OpenStax, <i>Chemistry 2e</i>: <a href="https://openstax.org/books/chemistry-2e/pages/6-3-development-of-quantum-theory">6.3 Development of Quantum Theory</a> and <a href="https://openstax.org/books/chemistry-2e/pages/6-4-electronic-structure-of-atoms-electron-configurations">6.4 Electron Configurations</a>.</li>
+      <li>C. Wyman, P.-P. Sloan and P. Shirley, “Simple Analytic Approximations to the CIE XYZ Color Matching Functions,” <i>Journal of Computer Graphics Techniques</i> 2, 1 (2013).</li>
+      <li>W. Walker Smith, sonified periodic table presented at ACS Spring 2023: <a href="https://phys.org/news/2023-03-elements.html">“Elemental music”</a> (phys.org, March 2023).</li>
+      <li>Jill Linz and Christian Howat, Skidmore College, Atom Music and Atom Tones: <a href="https://physics.aps.org/articles/v16/6">“Making Music from Atoms”</a> (<i>Physics</i>, 2023) and <a href="https://physicstoday.aip.org/news/composing-atom-music">“Composing atom music”</a> (<i>Physics Today</i>, 2019).</li>
+      <li>Sam Zhang, “Teaching Electron Configuration the Musical Way,” <a href="https://www.ijee.ie/articles/Vol22-5/05_ijee1837.pdf"><i>International Journal of Engineering Education</i> 22, 951 (2006)</a>.</li>
+      <li>John Newlands’ law of octaves (1865): <a href="https://en.wikipedia.org/wiki/John_Newlands_(chemist)">John Newlands</a> on Wikipedia.</li>
+    </ul>
+  </section>
+
+  <nav class="lab-pn" aria-label="More"><a href="{{ "science-lab/" | relURL }}">← Science Lab</a><a href="{{ "science-lab/atom/" | relURL }}">Build an Atom →</a></nav>
+  <div id="el-print" class="el-print" aria-hidden="true"></div>
+</div>
+<script src="{{ $data.RelPermalink }}"></script>
+<script src="{{ "music/kit/audio.js" | relURL }}?v={{ (os.Stat "static/music/kit/audio.js").ModTime.Unix }}"></script>
+<script src="{{ "games/elements/core.js" | relURL }}?v={{ (os.Stat "static/games/elements/core.js").ModTime.Unix }}"></script>
+<script src="{{ "games/elements/view3d.js" | relURL }}?v={{ (os.Stat "static/games/elements/view3d.js").ModTime.Unix }}"></script>
+<script src="{{ "games/elements/sound.js" | relURL }}?v={{ (os.Stat "static/games/elements/sound.js").ModTime.Unix }}"></script>
+<script src="{{ "games/elements/app.js" | relURL }}?v={{ (os.Stat "static/games/elements/app.js").ModTime.Unix }}"></script>
+{{ end }}

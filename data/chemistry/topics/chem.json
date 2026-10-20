@@ -1,21 +1,81 @@
 {
   "course": "chem",
   "units": [
-    {"key":"matter","title":"Matter and Measurement","blurb":"Sort matter, tell physical changes from chemical ones, and measure with the right units and digits."},
-    {"key":"atoms","title":"Atoms and Isotopes","blurb":"What atoms are made of, how we found out, and how atoms of one element can differ."},
-    {"key":"electrons","title":"Electrons in Atoms","blurb":"Energy levels, light from atoms, orbitals and electron configurations."},
-    {"key":"periodic","title":"The Periodic Table","blurb":"Read the table's layout and explain its trends from charge and distance."},
-    {"key":"bonding","title":"Bonds, Formulas and Names","blurb":"How atoms bond, how to write and name compounds, and what shapes molecules take."},
-    {"key":"particle-forces","title":"Forces Between Particles","blurb":"Explain melting points, boiling points and other bulk properties from the forces between particles."},
-    {"key":"mole","title":"The Mole","blurb":"Count particles by weighing them, and find formulas from masses."},
-    {"key":"reactions","title":"Chemical Reactions","blurb":"Write, balance and classify reactions, and predict their products."},
-    {"key":"stoichiometry","title":"Stoichiometry","blurb":"Use balanced equations to predict how much reacts and how much forms."},
-    {"key":"gases","title":"Gases","blurb":"Explain gas behavior with moving particles, and predict it with the gas laws."},
-    {"key":"solutions","title":"Solutions","blurb":"How things dissolve, how much can dissolve, how to state concentration, and what happens when solutions mix."},
-    {"key":"acids-bases","title":"Acids and Bases","blurb":"Define acids and bases, measure them with pH, and neutralize them."},
-    {"key":"energy","title":"Energy and Change","blurb":"Heat and temperature, specific heat, phase changes, and the energy of reactions."},
-    {"key":"rates-equilibrium","title":"Reaction Rates and Equilibrium","blurb":"Why reactions speed up or slow down, and why some stop changing without stopping."},
-    {"key":"nuclear","title":"Nuclear Chemistry","blurb":"Changes in the nucleus: radioactive decay, half-life, fission and fusion."}
+    {
+      "key": "matter",
+      "title": "Matter and Measurement",
+      "blurb": "Sort matter, tell physical changes from chemical ones, and measure with the right units and digits."
+    },
+    {
+      "key": "atoms",
+      "title": "Atoms and Isotopes",
+      "blurb": "What atoms are made of, how we found out, and how atoms of one element can differ."
+    },
+    {
+      "key": "electrons",
+      "title": "Electrons in Atoms",
+      "blurb": "Energy levels, light from atoms, orbitals and electron configurations."
+    },
+    {
+      "key": "periodic",
+      "title": "The Periodic Table",
+      "blurb": "Read the table's layout and explain its trends from charge and distance."
+    },
+    {
+      "key": "bonding",
+      "title": "Bonds, Formulas and Names",
+      "blurb": "How atoms bond, how to write and name compounds, and what shapes molecules take."
+    },
+    {
+      "key": "particle-forces",
+      "title": "Forces Between Particles",
+      "blurb": "Explain melting points, boiling points and other bulk properties from the forces between particles."
+    },
+    {
+      "key": "mole",
+      "title": "The Mole",
+      "blurb": "Count particles by weighing them, and find formulas from masses."
+    },
+    {
+      "key": "reactions",
+      "title": "Chemical Reactions",
+      "blurb": "Write, balance and classify reactions, and predict their products."
+    },
+    {
+      "key": "stoichiometry",
+      "title": "Stoichiometry",
+      "blurb": "Use balanced equations to predict how much reacts and how much forms."
+    },
+    {
+      "key": "gases",
+      "title": "Gases",
+      "blurb": "Explain gas behavior with moving particles, and predict it with the gas laws."
+    },
+    {
+      "key": "solutions",
+      "title": "Solutions",
+      "blurb": "How things dissolve, how much can dissolve, how to state concentration, and what happens when solutions mix."
+    },
+    {
+      "key": "acids-bases",
+      "title": "Acids and Bases",
+      "blurb": "Define acids and bases, measure them with pH, and neutralize them."
+    },
+    {
+      "key": "energy",
+      "title": "Energy and Change",
+      "blurb": "Heat and temperature, specific heat, phase changes, and the energy of reactions."
+    },
+    {
+      "key": "rates-equilibrium",
+      "title": "Reaction Rates and Equilibrium",
+      "blurb": "Why reactions speed up or slow down, and why some stop changing without stopping."
+    },
+    {
+      "key": "nuclear",
+      "title": "Nuclear Chemistry",
+      "blurb": "Changes in the nucleus: radioactive decay, half-life, fission and fusion."
+    }
   ],
   "topics": [
     {
@@ -28,7 +88,9 @@
       "xp": 1,
       "std": "MS-PS1-1",
       "trouble": "Students call a compound a mixture of its elements, or call salt water a pure substance because it looks the same all the way through.",
-      "viz": ["ch-particles"]
+      "viz": [
+        "ch-particles"
+      ]
     },
     {
       "id": "chem.states-of-matter",
@@ -36,11 +98,15 @@
       "unit": "matter",
       "title": "Solids, Liquids and Gases",
       "short": "Particles move in every state; the states differ in how close the particles are and how freely they move.",
-      "prereqs": ["chem.matter-classification"],
+      "prereqs": [
+        "chem.matter-classification"
+      ],
       "xp": 1,
       "std": "MS-PS1-4",
       "trouble": "Students think the particles in a solid do not move at all, or that the particles themselves swell, melt or boil when heated.",
-      "viz": ["ch-particles"],
+      "viz": [
+        "ch-particles"
+      ],
       "lab": "/science-lab/gas/"
     },
     {
@@ -49,11 +115,15 @@
       "unit": "matter",
       "title": "Physical and Chemical Changes",
       "short": "A chemical change makes new substances; a physical change only changes form or state.",
-      "prereqs": ["chem.states-of-matter"],
+      "prereqs": [
+        "chem.states-of-matter"
+      ],
       "xp": 1,
       "std": "MS-PS1-2",
       "trouble": "Students call boiling or dissolving a chemical change because bubbles appear, or think every color change means a reaction.",
-      "viz": ["ch-particles"]
+      "viz": [
+        "ch-particles"
+      ]
     },
     {
       "id": "chem.si-prefixes",
@@ -61,10 +131,15 @@
       "unit": "matter",
       "title": "SI Units and Metric Prefixes",
       "short": "Each prefix is a power of ten: 1 km = 10³ m and 1 mg = 10⁻³ g.",
-      "prereqs": ["g5.multiply-divide-powers-of-ten","g8.scientific-notation"],
+      "prereqs": [
+        "g5.multiply-divide-powers-of-ten",
+        "g8.scientific-notation"
+      ],
       "xp": 1,
       "trouble": "Students move the decimal point the wrong way, writing 2.5 km = 0.0025 m, or mix up milli- (10⁻³) and micro- (10⁻⁶).",
-      "viz": ["ch-convert"]
+      "viz": [
+        "ch-convert"
+      ]
     },
     {
       "id": "chem.significant-figures",
@@ -72,11 +147,15 @@
       "unit": "matter",
       "title": "Measurements and Significant Figures",
       "short": "Read an instrument to one estimated digit, then count the digits that carry meaning.",
-      "prereqs": ["g5.round-decimals"],
+      "prereqs": [
+        "g5.round-decimals"
+      ],
       "xp": 1,
       "std": "N-Q.A.3",
       "trouble": "Students count leading zeros as significant, drop a meaningful trailing zero such as the one in 2.50 g, or report only the digits that have tick marks.",
-      "viz": ["ch-measure"]
+      "viz": [
+        "ch-measure"
+      ]
     },
     {
       "id": "chem.accuracy-precision",
@@ -84,10 +163,15 @@
       "unit": "matter",
       "title": "Accuracy, Precision and Percent Error",
       "short": "Accurate means close to the true value; precise means close to each other.",
-      "prereqs": ["chem.significant-figures","g7.percent-error"],
+      "prereqs": [
+        "chem.significant-figures",
+        "g7.percent-error"
+      ],
       "xp": 1,
       "trouble": "Students think precise results must also be accurate, or divide by their own measured value instead of the accepted value when finding percent error.",
-      "viz": ["ch-measure"]
+      "viz": [
+        "ch-measure"
+      ]
     },
     {
       "id": "chem.sig-fig-calculations",
@@ -95,7 +179,10 @@
       "unit": "matter",
       "title": "Significant Figures in Calculations",
       "short": "Products and quotients keep the fewest significant figures; sums and differences keep the fewest decimal places.",
-      "prereqs": ["chem.significant-figures","g8.scientific-operations"],
+      "prereqs": [
+        "chem.significant-figures",
+        "g8.scientific-operations"
+      ],
       "xp": 2,
       "std": "N-Q.A.3",
       "trouble": "Students use the multiplication rule for sums, or round after every step instead of once at the end.",
@@ -107,11 +194,16 @@
       "unit": "matter",
       "title": "Dimensional Analysis",
       "short": "Multiply by conversion factors equal to 1, arranged so the units you do not want cancel.",
-      "prereqs": ["chem.si-prefixes","alg1.units-quantities"],
+      "prereqs": [
+        "chem.si-prefixes",
+        "alg1.units-quantities"
+      ],
       "xp": 2,
       "std": "N-Q.A.1",
       "trouble": "Students set a conversion factor upside down so nothing cancels, or convert cm³ to m³ by dividing by 100 instead of by 100³.",
-      "viz": ["ch-convert"]
+      "viz": [
+        "ch-convert"
+      ]
     },
     {
       "id": "chem.density",
@@ -119,11 +211,17 @@
       "unit": "matter",
       "title": "Density",
       "short": "Density is mass per unit volume; use it to find a mass, a volume or the identity of a substance.",
-      "prereqs": ["chem.si-prefixes","g6.unit-rate","g6.one-step-multiply-divide"],
+      "prereqs": [
+        "chem.si-prefixes",
+        "g6.unit-rate",
+        "g6.one-step-multiply-divide"
+      ],
       "xp": 2,
       "std": "MS-PS1-2",
       "trouble": "Students think a bigger or heavier object must be denser, or that cutting a block in half halves its density.",
-      "viz": ["ratiotable"]
+      "viz": [
+        "ratiotable"
+      ]
     },
     {
       "id": "chem.temperature-scales",
@@ -131,10 +229,14 @@
       "unit": "matter",
       "title": "Temperature Scales and Absolute Zero",
       "short": "The kelvin scale starts at absolute zero: K = °C + 273.15.",
-      "prereqs": ["g7.add-subtract-rationals"],
+      "prereqs": [
+        "g7.add-subtract-rationals"
+      ],
       "xp": 1,
       "trouble": "Students think 0 °C means no thermal energy at all, or that going from 10 °C to 20 °C doubles how hot something is.",
-      "viz": ["numberline"],
+      "viz": [
+        "numberline"
+      ],
       "lab": "/science-lab/thermodynamics/third-law/"
     },
     {
@@ -143,10 +245,14 @@
       "unit": "atoms",
       "title": "How We Learned What Atoms Are",
       "short": "Dalton's atoms, Thomson's electrons and Rutherford's nucleus, each from an experiment.",
-      "prereqs": ["chem.matter-classification"],
+      "prereqs": [
+        "chem.matter-classification"
+      ],
       "xp": 1,
       "trouble": "Students picture an atom as a solid ball, missing Rutherford's evidence that it is mostly empty space around a tiny, dense nucleus.",
-      "viz": ["ch-atom"]
+      "viz": [
+        "ch-atom"
+      ]
     },
     {
       "id": "chem.subatomic-particles",
@@ -154,10 +260,14 @@
       "unit": "atoms",
       "title": "Protons, Neutrons and Electrons",
       "short": "The number of protons, the atomic number, decides which element an atom is.",
-      "prereqs": ["chem.atomic-models"],
+      "prereqs": [
+        "chem.atomic-models"
+      ],
       "xp": 1,
       "trouble": "Students think the number of neutrons or electrons decides the element.",
-      "viz": ["ch-atom"],
+      "viz": [
+        "ch-atom"
+      ],
       "lab": "/science-lab/atom/"
     },
     {
@@ -166,10 +276,14 @@
       "unit": "atoms",
       "title": "Isotopes and Mass Number",
       "short": "Isotopes have the same number of protons but different numbers of neutrons; mass number = protons + neutrons.",
-      "prereqs": ["chem.subatomic-particles"],
+      "prereqs": [
+        "chem.subatomic-particles"
+      ],
       "xp": 1,
       "trouble": "Students find the neutrons by adding the atomic number to the mass number, or think isotopes of one element have different numbers of protons.",
-      "viz": ["ch-atom"],
+      "viz": [
+        "ch-atom"
+      ],
       "lab": "/science-lab/atom/"
     },
     {
@@ -178,10 +292,14 @@
       "unit": "atoms",
       "title": "Ions and Charge",
       "short": "An atom that gains electrons becomes a negative ion; one that loses electrons becomes a positive ion.",
-      "prereqs": ["chem.subatomic-particles"],
+      "prereqs": [
+        "chem.subatomic-particles"
+      ],
       "xp": 1,
       "trouble": "Students think a positive ion gained protons, or that losing electrons makes an atom negative.",
-      "viz": ["ch-atom"],
+      "viz": [
+        "ch-atom"
+      ],
       "lab": "/science-lab/atom/"
     },
     {
@@ -190,10 +308,15 @@
       "unit": "atoms",
       "title": "Average Atomic Mass",
       "short": "The mass on the periodic table is the average of the isotopes' masses, weighted by how common each one is.",
-      "prereqs": ["chem.isotopes","g6.percent-of-a-number"],
+      "prereqs": [
+        "chem.isotopes",
+        "g6.percent-of-a-number"
+      ],
       "xp": 2,
       "trouble": "Students average the isotope masses without weighting by abundance, or think some atoms have exactly the average mass.",
-      "viz": ["ch-massspec"]
+      "viz": [
+        "ch-massspec"
+      ]
     },
     {
       "id": "chem.electron-shells",
@@ -201,11 +324,15 @@
       "unit": "electrons",
       "title": "Energy Levels and Shells",
       "short": "Electrons fill levels of rising energy: 2, then 8, then 8 for the first 20 elements.",
-      "prereqs": ["chem.subatomic-particles"],
+      "prereqs": [
+        "chem.subatomic-particles"
+      ],
       "xp": 1,
       "std": "HS-PS1-1",
       "trouble": "Students give potassium the shells 2, 8, 9 instead of 2, 8, 8, 1, or picture electrons circling the nucleus on fixed tracks like planets.",
-      "viz": ["ch-atom"],
+      "viz": [
+        "ch-atom"
+      ],
       "lab": "/science-lab/atom/"
     },
     {
@@ -214,10 +341,16 @@
       "unit": "electrons",
       "title": "Bright-Line Spectra",
       "short": "An electron that drops to a lower level gives off light of one exact energy, so each element shows its own set of colors.",
-      "prereqs": ["chem.electron-shells","physsci.radiation-energy"],
+      "prereqs": [
+        "chem.electron-shells",
+        "physsci.radiation-energy"
+      ],
       "xp": 2,
       "trouble": "Students think an atom can give off light of any energy, or that a bigger drop gives a longer wavelength when it gives a shorter one.",
-      "viz": ["ch-spectrum"]
+      "viz": [
+        "ch-spectrum"
+      ],
+      "lab": "/science-lab/elements/"
     },
     {
       "id": "chem.orbitals-sublevels",
@@ -225,10 +358,15 @@
       "unit": "electrons",
       "title": "Sublevels and Orbitals",
       "short": "Level n has n sublevels (s, p, d, f), and each orbital in a sublevel holds at most two electrons.",
-      "prereqs": ["chem.electron-shells"],
+      "prereqs": [
+        "chem.electron-shells"
+      ],
       "xp": 2,
       "trouble": "Students picture an orbital as a path the electron travels, or think every level holds exactly 8 electrons.",
-      "viz": ["ch-orbitalbox"]
+      "viz": [
+        "ch-orbitalbox"
+      ],
+      "lab": "/science-lab/elements/"
     },
     {
       "id": "chem.electron-configuration",
@@ -236,11 +374,17 @@
       "unit": "electrons",
       "title": "Electron Configurations",
       "short": "Fill sublevels in order of energy, read straight off the blocks of the periodic table.",
-      "prereqs": ["chem.orbitals-sublevels"],
+      "prereqs": [
+        "chem.orbitals-sublevels"
+      ],
       "xp": 2,
       "std": "HS-PS1-1",
       "trouble": "Students fill 3d before 4s by following the level numbers instead of the table's blocks, or write superscripts that do not add up to the number of electrons.",
-      "viz": ["ch-orbitalbox","ch-periodic"]
+      "viz": [
+        "ch-orbitalbox",
+        "ch-periodic"
+      ],
+      "lab": "/science-lab/elements/"
     },
     {
       "id": "chem.periodic-table-organization",
@@ -248,11 +392,16 @@
       "unit": "periodic",
       "title": "Groups, Periods and Families",
       "short": "Elements in a column have the same number of outer electrons and behave alike; each row starts a new shell.",
-      "prereqs": ["chem.electron-configuration"],
+      "prereqs": [
+        "chem.electron-configuration"
+      ],
       "xp": 1,
       "std": "HS-PS1-1",
       "trouble": "Students think the table is ordered by atomic mass, or mix up groups (columns) with periods (rows).",
-      "viz": ["ch-periodic"]
+      "viz": [
+        "ch-periodic"
+      ],
+      "lab": "/science-lab/elements/"
     },
     {
       "id": "chem.valence-electrons",
@@ -260,11 +409,17 @@
       "unit": "periodic",
       "title": "Valence Electrons and Dot Symbols",
       "short": "Count the outer-shell electrons of a main-group atom from its group and draw them as dots.",
-      "prereqs": ["chem.periodic-table-organization"],
+      "prereqs": [
+        "chem.periodic-table-organization"
+      ],
       "xp": 1,
       "std": "HS-PS1-1",
       "trouble": "Students count all of an atom's electrons instead of the outer ones, or give sulfur in group 16 sixteen valence electrons.",
-      "viz": ["ch-lewis","ch-periodic"]
+      "viz": [
+        "ch-lewis",
+        "ch-periodic"
+      ],
+      "lab": "/science-lab/elements/"
     },
     {
       "id": "chem.atomic-radius",
@@ -272,11 +427,16 @@
       "unit": "periodic",
       "title": "Atomic Radius",
       "short": "Atoms get bigger down a group as shells are added, and smaller across a period as more protons pull on the same shell.",
-      "prereqs": ["chem.periodic-table-organization"],
+      "prereqs": [
+        "chem.periodic-table-organization"
+      ],
       "xp": 2,
       "std": "HS-PS1-1",
       "trouble": "Students expect atoms to grow across a period because they have more electrons, missing the stronger pull of more protons on the same shell.",
-      "viz": ["ch-periodic","ch-coulomb"]
+      "viz": [
+        "ch-periodic",
+        "ch-coulomb"
+      ]
     },
     {
       "id": "chem.ionization-energy",
@@ -284,11 +444,16 @@
       "unit": "periodic",
       "title": "Ionization Energy",
       "short": "It takes more energy to remove an electron that is closer to more protons.",
-      "prereqs": ["chem.atomic-radius"],
+      "prereqs": [
+        "chem.atomic-radius"
+      ],
       "xp": 2,
       "std": "HS-PS1-1",
       "trouble": "Students explain the trend by saying atoms \"want\" a full shell, instead of reasoning from the nuclear charge and the distance.",
-      "viz": ["ch-periodic","ch-coulomb"]
+      "viz": [
+        "ch-periodic",
+        "ch-coulomb"
+      ]
     },
     {
       "id": "chem.electronegativity",
@@ -296,11 +461,15 @@
       "unit": "periodic",
       "title": "Electronegativity",
       "short": "Electronegativity measures how hard an atom pulls on shared electrons; it rises up and to the right.",
-      "prereqs": ["chem.ionization-energy"],
+      "prereqs": [
+        "chem.ionization-energy"
+      ],
       "xp": 1,
       "std": "HS-PS1-1",
       "trouble": "Students give the noble gases the highest electronegativity, or confuse electronegativity with the number of valence electrons.",
-      "viz": ["ch-periodic"]
+      "viz": [
+        "ch-periodic"
+      ]
     },
     {
       "id": "chem.ion-charges",
@@ -308,11 +477,17 @@
       "unit": "periodic",
       "title": "Predicting Ion Charges",
       "short": "Main-group atoms gain or lose electrons to match the nearest noble gas.",
-      "prereqs": ["chem.valence-electrons","chem.ions"],
+      "prereqs": [
+        "chem.valence-electrons",
+        "chem.ions"
+      ],
       "xp": 1,
       "std": "HS-PS1-2",
       "trouble": "Students predict that sodium gains seven electrons instead of losing one, or write the sulfide ion as S²⁺.",
-      "viz": ["ch-periodic","ch-atom"]
+      "viz": [
+        "ch-periodic",
+        "ch-atom"
+      ]
     },
     {
       "id": "chem.ionic-bonding",
@@ -320,11 +495,16 @@
       "unit": "bonding",
       "title": "Ionic Bonds",
       "short": "Metals give electrons to nonmetals, and the oppositely charged ions hold each other in a lattice.",
-      "prereqs": ["chem.ion-charges"],
+      "prereqs": [
+        "chem.ion-charges"
+      ],
       "xp": 1,
       "std": "HS-PS1-2",
       "trouble": "Students picture table salt as separate NaCl molecules instead of a lattice in which every ion is surrounded by ions of the opposite charge.",
-      "viz": ["ch-crystal","ch-lewis"]
+      "viz": [
+        "ch-crystal",
+        "ch-lewis"
+      ]
     },
     {
       "id": "chem.ionic-formulas",
@@ -332,10 +512,15 @@
       "unit": "bonding",
       "title": "Formulas of Ionic Compounds",
       "short": "Choose the ratio of ions that makes the total charge zero.",
-      "prereqs": ["chem.ionic-bonding","g6.gcf-lcm"],
+      "prereqs": [
+        "chem.ionic-bonding",
+        "g6.gcf-lcm"
+      ],
       "xp": 2,
       "trouble": "Students cross the charges the wrong way and write Mg₂Cl for magnesium chloride, or leave Ca₂O₂ unreduced instead of writing CaO.",
-      "viz": ["ch-crystal"]
+      "viz": [
+        "ch-crystal"
+      ]
     },
     {
       "id": "chem.naming-ionic",
@@ -343,7 +528,9 @@
       "unit": "bonding",
       "title": "Naming Ionic Compounds",
       "short": "Name the metal, then the nonmetal ending in -ide; add a Roman numeral for metals with more than one charge.",
-      "prereqs": ["chem.ionic-formulas"],
+      "prereqs": [
+        "chem.ionic-formulas"
+      ],
       "xp": 1,
       "trouble": "Students use prefixes such as di- for ionic compounds, or leave out the Roman numeral for iron and copper.",
       "viz": []
@@ -354,7 +541,9 @@
       "unit": "bonding",
       "title": "Polyatomic Ions",
       "short": "Groups such as NO₃⁻ and SO₄²⁻ act as single ions; use parentheses when you need more than one.",
-      "prereqs": ["chem.naming-ionic"],
+      "prereqs": [
+        "chem.naming-ionic"
+      ],
       "xp": 2,
       "trouble": "Students drop the parentheses and write CaNO₃₂, or change a subscript inside the polyatomic ion to balance the charge.",
       "viz": []
@@ -365,11 +554,16 @@
       "unit": "bonding",
       "title": "Covalent Bonds",
       "short": "Nonmetal atoms share pairs of electrons in single, double or triple bonds.",
-      "prereqs": ["chem.valence-electrons"],
+      "prereqs": [
+        "chem.valence-electrons"
+      ],
       "xp": 1,
       "std": "HS-PS1-2",
       "trouble": "Students say atoms bond because they \"want\" eight electrons, instead of because the shared electrons are attracted to both nuclei.",
-      "viz": ["ch-lewis","ch-bondcurve"]
+      "viz": [
+        "ch-lewis",
+        "ch-bondcurve"
+      ]
     },
     {
       "id": "chem.naming-covalent",
@@ -377,7 +571,10 @@
       "unit": "bonding",
       "title": "Naming Molecular Compounds",
       "short": "Use prefixes to count atoms: N₂O₄ is dinitrogen tetroxide.",
-      "prereqs": ["chem.covalent-bonding","chem.naming-ionic"],
+      "prereqs": [
+        "chem.covalent-bonding",
+        "chem.naming-ionic"
+      ],
       "xp": 1,
       "trouble": "Students use prefixes for ionic compounds, or add mono- to the first element, as in monocarbon dioxide.",
       "viz": []
@@ -388,10 +585,14 @@
       "unit": "bonding",
       "title": "Lewis Structures",
       "short": "Count all the valence electrons, connect the atoms, then complete octets with lone pairs and multiple bonds.",
-      "prereqs": ["chem.covalent-bonding"],
+      "prereqs": [
+        "chem.covalent-bonding"
+      ],
       "xp": 2,
       "trouble": "Students count the wrong total of valence electrons, especially for ions, or give carbon five bonds.",
-      "viz": ["ch-lewis"]
+      "viz": [
+        "ch-lewis"
+      ]
     },
     {
       "id": "chem.vsepr-shapes",
@@ -399,10 +600,14 @@
       "unit": "bonding",
       "title": "Molecular Shapes (VSEPR)",
       "short": "Electron groups around an atom spread as far apart as they can, and lone pairs help set the shape.",
-      "prereqs": ["chem.lewis-structures"],
+      "prereqs": [
+        "chem.lewis-structures"
+      ],
       "xp": 2,
       "trouble": "Students ignore lone pairs and call water linear, or count a double bond as two electron groups.",
-      "viz": ["ch-vsepr"]
+      "viz": [
+        "ch-vsepr"
+      ]
     },
     {
       "id": "chem.bond-polarity",
@@ -410,10 +615,15 @@
       "unit": "bonding",
       "title": "Polar and Nonpolar Bonds",
       "short": "The bigger the electronegativity difference, the more unevenly the bonding electrons are shared.",
-      "prereqs": ["chem.electronegativity","chem.covalent-bonding"],
+      "prereqs": [
+        "chem.electronegativity",
+        "chem.covalent-bonding"
+      ],
       "xp": 1,
       "trouble": "Students treat ionic and covalent bonds as two separate boxes with a sharp cutoff, instead of the ends of a range of uneven sharing.",
-      "viz": ["ch-vsepr"]
+      "viz": [
+        "ch-vsepr"
+      ]
     },
     {
       "id": "chem.molecular-polarity",
@@ -421,11 +631,16 @@
       "unit": "bonding",
       "title": "Polar and Nonpolar Molecules",
       "short": "A molecule is polar when its bond dipoles do not cancel out.",
-      "prereqs": ["chem.bond-polarity","chem.vsepr-shapes"],
+      "prereqs": [
+        "chem.bond-polarity",
+        "chem.vsepr-shapes"
+      ],
       "xp": 2,
       "std": "HS-PS1-3",
       "trouble": "Students call CO₂ polar because its bonds are polar, missing that its two dipoles point in opposite directions and cancel.",
-      "viz": ["ch-vsepr"]
+      "viz": [
+        "ch-vsepr"
+      ]
     },
     {
       "id": "chem.bond-types-properties",
@@ -433,11 +648,17 @@
       "unit": "particle-forces",
       "title": "Ionic, Molecular, Network and Metallic Solids",
       "short": "The kind of particles and the forces between them explain melting point, hardness and conductivity.",
-      "prereqs": ["chem.ionic-bonding","chem.covalent-bonding","chem.states-of-matter"],
+      "prereqs": [
+        "chem.ionic-bonding",
+        "chem.covalent-bonding",
+        "chem.states-of-matter"
+      ],
       "xp": 2,
       "std": "HS-PS1-3",
       "trouble": "Students think a high melting point always means an ionic compound, missing network solids such as diamond, or that solid salt conducts electricity.",
-      "viz": ["ch-crystal"]
+      "viz": [
+        "ch-crystal"
+      ]
     },
     {
       "id": "chem.intermolecular-forces",
@@ -445,11 +666,15 @@
       "unit": "particle-forces",
       "title": "Intermolecular Forces",
       "short": "Dispersion forces, dipole–dipole forces and hydrogen bonds pull whole molecules toward each other.",
-      "prereqs": ["chem.molecular-polarity"],
+      "prereqs": [
+        "chem.molecular-polarity"
+      ],
       "xp": 2,
       "std": "HS-PS1-3",
       "trouble": "Students think boiling water breaks the O–H bonds inside each molecule, instead of pulling whole molecules apart.",
-      "viz": ["ch-imf"]
+      "viz": [
+        "ch-imf"
+      ]
     },
     {
       "id": "chem.imf-properties",
@@ -457,11 +682,15 @@
       "unit": "particle-forces",
       "title": "Predicting Boiling Points",
       "short": "Stronger forces between molecules mean a higher boiling point and a lower vapor pressure.",
-      "prereqs": ["chem.intermolecular-forces"],
+      "prereqs": [
+        "chem.intermolecular-forces"
+      ],
       "xp": 2,
       "std": "HS-PS1-3",
       "trouble": "Students rank boiling points by polarity alone, missing that large molecules have strong dispersion forces.",
-      "viz": ["ch-imf"]
+      "viz": [
+        "ch-imf"
+      ]
     },
     {
       "id": "chem.mole-concept",
@@ -469,11 +698,16 @@
       "unit": "mole",
       "title": "The Mole",
       "short": "A mole is 6.022 × 10²³ particles, a count chosen so that a mole of atoms has a mass in grams equal to its atomic mass.",
-      "prereqs": ["chem.average-atomic-mass","g8.scientific-operations"],
+      "prereqs": [
+        "chem.average-atomic-mass",
+        "g8.scientific-operations"
+      ],
       "xp": 1,
       "std": "HS-PS1-7",
       "trouble": "Students think a mole of any substance has the same mass, or confuse a mole with a molecule.",
-      "viz": ["ch-convert"]
+      "viz": [
+        "ch-convert"
+      ]
     },
     {
       "id": "chem.molar-mass",
@@ -481,7 +715,10 @@
       "unit": "mole",
       "title": "Molar Mass",
       "short": "Add up the atomic masses in a formula to get the mass of one mole in grams.",
-      "prereqs": ["chem.mole-concept","chem.polyatomic-ions"],
+      "prereqs": [
+        "chem.mole-concept",
+        "chem.polyatomic-ions"
+      ],
       "xp": 1,
       "std": "HS-PS1-7",
       "trouble": "Students forget to multiply by a subscript, or by the 2 outside the parentheses in Ca(NO₃)₂.",
@@ -493,11 +730,16 @@
       "unit": "mole",
       "title": "Grams, Moles and Particles",
       "short": "Divide a mass by the molar mass to get moles; multiply moles by Avogadro's number to count particles.",
-      "prereqs": ["chem.molar-mass","chem.dimensional-analysis"],
+      "prereqs": [
+        "chem.molar-mass",
+        "chem.dimensional-analysis"
+      ],
       "xp": 2,
       "std": "HS-PS1-7",
       "trouble": "Students multiply by the molar mass when going from grams to moles, or mix up moles of molecules with moles of atoms.",
-      "viz": ["ch-convert"]
+      "viz": [
+        "ch-convert"
+      ]
     },
     {
       "id": "chem.percent-composition",
@@ -505,7 +747,10 @@
       "unit": "mole",
       "title": "Percent Composition",
       "short": "Each element's share of a compound's molar mass, as a percent.",
-      "prereqs": ["chem.molar-mass","g6.percent-meaning"],
+      "prereqs": [
+        "chem.molar-mass",
+        "g6.percent-meaning"
+      ],
       "xp": 2,
       "trouble": "Students use the number of atoms instead of their masses, so they give water as 67% hydrogen.",
       "viz": []
@@ -516,10 +761,16 @@
       "unit": "mole",
       "title": "Empirical Formulas",
       "short": "Turn masses into moles, then into the simplest whole-number ratio.",
-      "prereqs": ["chem.percent-composition","chem.mass-mole-conversions","g6.equivalent-ratios"],
+      "prereqs": [
+        "chem.percent-composition",
+        "chem.mass-mole-conversions",
+        "g6.equivalent-ratios"
+      ],
       "xp": 3,
       "trouble": "Students round a ratio such as 1 : 1.5 to 1 : 2 instead of doubling it to 2 : 3, or use the mass ratio as if it were the mole ratio.",
-      "viz": ["ratiotable"]
+      "viz": [
+        "ratiotable"
+      ]
     },
     {
       "id": "chem.molecular-formula",
@@ -527,7 +778,9 @@
       "unit": "mole",
       "title": "Molecular Formulas",
       "short": "A molecular formula is a whole-number multiple of the empirical formula, found from the molar mass.",
-      "prereqs": ["chem.empirical-formula"],
+      "prereqs": [
+        "chem.empirical-formula"
+      ],
       "xp": 2,
       "trouble": "Students think the empirical formula is always the real formula, so they give glucose as CH₂O.",
       "viz": []
@@ -538,11 +791,15 @@
       "unit": "reactions",
       "title": "Atoms Are Conserved",
       "short": "In a reaction atoms are rearranged, never created or destroyed, so the total mass stays the same.",
-      "prereqs": ["chem.physical-chemical-changes"],
+      "prereqs": [
+        "chem.physical-chemical-changes"
+      ],
       "xp": 1,
       "std": "HS-PS1-7",
       "trouble": "Students think mass is lost when wood burns or a gas escapes, because they do not count the gases that leave.",
-      "viz": ["ch-particles"]
+      "viz": [
+        "ch-particles"
+      ]
     },
     {
       "id": "chem.coefficients-subscripts",
@@ -550,10 +807,16 @@
       "unit": "reactions",
       "title": "Coefficients and Subscripts",
       "short": "Subscripts say what one molecule is made of; coefficients say how many molecules there are.",
-      "prereqs": ["chem.conservation-of-mass","chem.polyatomic-ions"],
+      "prereqs": [
+        "chem.conservation-of-mass",
+        "chem.polyatomic-ions"
+      ],
       "xp": 1,
       "trouble": "Students read 2H₂O as one molecule with four hydrogen atoms, or count the atoms in 3Ca(OH)₂ without multiplying through.",
-      "viz": ["ch-particles","ch-eqbalance"]
+      "viz": [
+        "ch-particles",
+        "ch-eqbalance"
+      ]
     },
     {
       "id": "chem.balancing-equations",
@@ -561,11 +824,15 @@
       "unit": "reactions",
       "title": "Balancing Equations",
       "short": "Change coefficients, never subscripts, until every element has the same count on both sides.",
-      "prereqs": ["chem.coefficients-subscripts"],
+      "prereqs": [
+        "chem.coefficients-subscripts"
+      ],
       "xp": 2,
       "std": "HS-PS1-7",
       "trouble": "Students change subscripts to balance an equation, which turns the substances into different ones.",
-      "viz": ["ch-eqbalance"]
+      "viz": [
+        "ch-eqbalance"
+      ]
     },
     {
       "id": "chem.reaction-types",
@@ -573,11 +840,15 @@
       "unit": "reactions",
       "title": "Types of Reactions",
       "short": "Synthesis, decomposition, single replacement, double replacement and combustion.",
-      "prereqs": ["chem.balancing-equations"],
+      "prereqs": [
+        "chem.balancing-equations"
+      ],
       "xp": 1,
       "std": "HS-PS1-2",
       "trouble": "Students sort by surface pattern alone, missing combustion when the fuel contains oxygen, or calling every reaction of two compounds a double replacement.",
-      "viz": ["ch-particles"]
+      "viz": [
+        "ch-particles"
+      ]
     },
     {
       "id": "chem.activity-series",
@@ -585,11 +856,15 @@
       "unit": "reactions",
       "title": "Predicting Single Replacements",
       "short": "A more active metal replaces a less active one in a compound; the activity series tells which is which.",
-      "prereqs": ["chem.reaction-types"],
+      "prereqs": [
+        "chem.reaction-types"
+      ],
       "xp": 2,
       "std": "HS-PS1-2",
       "trouble": "Students think any metal can replace any other metal in a compound.",
-      "viz": ["chem-activity"]
+      "viz": [
+        "chem-activity"
+      ]
     },
     {
       "id": "chem.mole-ratios",
@@ -597,11 +872,18 @@
       "unit": "stoichiometry",
       "title": "Mole Ratios",
       "short": "The coefficients of a balanced equation give the ratio of moles that react and form.",
-      "prereqs": ["chem.balancing-equations","chem.mass-mole-conversions","g7.solve-proportions"],
+      "prereqs": [
+        "chem.balancing-equations",
+        "chem.mass-mole-conversions",
+        "g7.solve-proportions"
+      ],
       "xp": 1,
       "std": "HS-PS1-7",
       "trouble": "Students use the subscripts or the masses as the ratio instead of the coefficients.",
-      "viz": ["ch-convert","ratiotable"]
+      "viz": [
+        "ch-convert",
+        "ratiotable"
+      ]
     },
     {
       "id": "chem.mass-stoichiometry",
@@ -609,11 +891,15 @@
       "unit": "stoichiometry",
       "title": "Mass-to-Mass Stoichiometry",
       "short": "Go from grams of one substance to moles, across the mole ratio, then back to grams of another.",
-      "prereqs": ["chem.mole-ratios"],
+      "prereqs": [
+        "chem.mole-ratios"
+      ],
       "xp": 2,
       "std": "HS-PS1-7",
       "trouble": "Students apply the coefficient ratio straight to grams, skipping the trip through moles.",
-      "viz": ["ch-convert"]
+      "viz": [
+        "ch-convert"
+      ]
     },
     {
       "id": "chem.limiting-reactant",
@@ -621,11 +907,15 @@
       "unit": "stoichiometry",
       "title": "Limiting Reactant",
       "short": "The reactant that runs out first decides how much product can form.",
-      "prereqs": ["chem.mass-stoichiometry"],
+      "prereqs": [
+        "chem.mass-stoichiometry"
+      ],
       "xp": 3,
       "std": "HS-PS1-7",
       "trouble": "Students pick the reactant with the smaller mass, or the smaller number of moles, without comparing to the coefficient ratio.",
-      "viz": ["ch-limiting"]
+      "viz": [
+        "ch-limiting"
+      ]
     },
     {
       "id": "chem.percent-yield",
@@ -633,10 +923,15 @@
       "unit": "stoichiometry",
       "title": "Theoretical and Percent Yield",
       "short": "Compare the product you actually got with the most the limiting reactant allows.",
-      "prereqs": ["chem.limiting-reactant","g6.percent-meaning"],
+      "prereqs": [
+        "chem.limiting-reactant",
+        "g6.percent-meaning"
+      ],
       "xp": 2,
       "trouble": "Students divide the theoretical yield by the actual yield, or find the theoretical yield from the reactant in excess.",
-      "viz": ["ch-limiting"]
+      "viz": [
+        "ch-limiting"
+      ]
     },
     {
       "id": "chem.gas-pressure",
@@ -644,10 +939,16 @@
       "unit": "gases",
       "title": "Gas Pressure",
       "short": "Pressure is the push of particle collisions on each square meter of wall, measured in atm, kPa or mmHg.",
-      "prereqs": ["chem.states-of-matter","chem.dimensional-analysis","physsci.pressure"],
+      "prereqs": [
+        "chem.states-of-matter",
+        "chem.dimensional-analysis",
+        "physsci.pressure"
+      ],
       "xp": 1,
       "trouble": "Students think gas pressure pushes only downward, or that gas particles settle at the bottom of their container.",
-      "viz": ["ch-gasbox"],
+      "viz": [
+        "ch-gasbox"
+      ],
       "lab": "/science-lab/gas/"
     },
     {
@@ -656,11 +957,16 @@
       "unit": "gases",
       "title": "Kinetic Molecular Theory",
       "short": "The particles of a gas move fast and randomly, and the kelvin temperature measures their average kinetic energy.",
-      "prereqs": ["chem.gas-pressure","chem.temperature-scales"],
+      "prereqs": [
+        "chem.gas-pressure",
+        "chem.temperature-scales"
+      ],
       "xp": 2,
       "std": "HS-PS3-2",
       "trouble": "Students think every particle in a gas moves at the same speed, or that the particles stop moving at 0 °C.",
-      "viz": ["ch-gasbox"],
+      "viz": [
+        "ch-gasbox"
+      ],
       "lab": "/science-lab/gas/"
     },
     {
@@ -669,10 +975,15 @@
       "unit": "gases",
       "title": "Boyle's Law",
       "short": "At constant temperature, squeezing a gas into half the volume doubles its pressure: P₁V₁ = P₂V₂.",
-      "prereqs": ["chem.kinetic-molecular-theory","alg1.literal-equations"],
+      "prereqs": [
+        "chem.kinetic-molecular-theory",
+        "alg1.literal-equations"
+      ],
       "xp": 2,
       "trouble": "Students expect every gas relation to be direct, so they predict that more pressure means more volume.",
-      "viz": ["ch-gasbox"],
+      "viz": [
+        "ch-gasbox"
+      ],
       "lab": "/science-lab/gas/"
     },
     {
@@ -681,10 +992,16 @@
       "unit": "gases",
       "title": "Charles's Law",
       "short": "At constant pressure, a gas's volume is proportional to its kelvin temperature.",
-      "prereqs": ["chem.kinetic-molecular-theory","g7.proportional-equations"],
+      "prereqs": [
+        "chem.kinetic-molecular-theory",
+        "g7.proportional-equations"
+      ],
       "xp": 2,
       "trouble": "Students use Celsius temperatures, so warming from 10 °C to 20 °C seems to double the volume.",
-      "viz": ["ch-gasbox","graph"],
+      "viz": [
+        "ch-gasbox",
+        "graph"
+      ],
       "lab": "/science-lab/gas/"
     },
     {
@@ -693,10 +1010,15 @@
       "unit": "gases",
       "title": "Gay-Lussac's Law and the Combined Gas Law",
       "short": "At constant volume, pressure is proportional to kelvin temperature, and P₁V₁/T₁ = P₂V₂/T₂ joins all three laws.",
-      "prereqs": ["chem.boyles-law","chem.charles-law"],
+      "prereqs": [
+        "chem.boyles-law",
+        "chem.charles-law"
+      ],
       "xp": 2,
       "trouble": "Students forget to convert to kelvins, or put the starting and final values on the wrong sides of the equation.",
-      "viz": ["ch-gasbox"],
+      "viz": [
+        "ch-gasbox"
+      ],
       "lab": "/science-lab/gas/"
     },
     {
@@ -705,10 +1027,15 @@
       "unit": "gases",
       "title": "Avogadro's Law and Molar Volume",
       "short": "Equal volumes of gases at the same temperature and pressure hold equal numbers of particles: 22.4 L per mole at 0 °C and 1 atm.",
-      "prereqs": ["chem.combined-gas-law","chem.mass-mole-conversions"],
+      "prereqs": [
+        "chem.combined-gas-law",
+        "chem.mass-mole-conversions"
+      ],
       "xp": 2,
       "trouble": "Students think a mole of a heavy gas takes up more room than a mole of a light gas at the same temperature and pressure.",
-      "viz": ["ch-gasbox"],
+      "viz": [
+        "ch-gasbox"
+      ],
       "lab": "/science-lab/gas/"
     },
     {
@@ -717,10 +1044,14 @@
       "unit": "gases",
       "title": "The Ideal Gas Law",
       "short": "PV = nRT connects the pressure, volume, moles and temperature of a gas.",
-      "prereqs": ["chem.avogadros-law"],
+      "prereqs": [
+        "chem.avogadros-law"
+      ],
       "xp": 2,
       "trouble": "Students use a value of R that does not match their units, or forget to change °C to K and mL to L.",
-      "viz": ["ch-gasbox"],
+      "viz": [
+        "ch-gasbox"
+      ],
       "lab": "/science-lab/gas/"
     },
     {
@@ -729,11 +1060,17 @@
       "unit": "solutions",
       "title": "Why Things Dissolve",
       "short": "Water's polar molecules pull ions and polar molecules apart and surround them: like dissolves like.",
-      "prereqs": ["chem.intermolecular-forces","chem.ionic-bonding"],
+      "prereqs": [
+        "chem.intermolecular-forces",
+        "chem.ionic-bonding"
+      ],
       "xp": 2,
       "std": "HS-PS1-3",
       "trouble": "Students think dissolved sugar has disappeared or turned into water, or that dissolving is the same thing as melting.",
-      "viz": ["ch-particles","ch-imf"]
+      "viz": [
+        "ch-particles",
+        "ch-imf"
+      ]
     },
     {
       "id": "chem.solubility-curves",
@@ -741,10 +1078,14 @@
       "unit": "solutions",
       "title": "Solubility and Solubility Curves",
       "short": "A solubility curve shows the most solute that dissolves at each temperature.",
-      "prereqs": ["chem.dissolving"],
+      "prereqs": [
+        "chem.dissolving"
+      ],
       "xp": 2,
       "trouble": "Students think every solute, gases included, dissolves better in hotter water, or call any solution with a lot of solute saturated.",
-      "viz": ["ch-solubilitycurve"]
+      "viz": [
+        "ch-solubilitycurve"
+      ]
     },
     {
       "id": "chem.molarity",
@@ -752,10 +1093,16 @@
       "unit": "solutions",
       "title": "Molarity",
       "short": "Molarity is moles of solute per liter of solution.",
-      "prereqs": ["chem.mass-mole-conversions","chem.dissolving","g6.unit-rate"],
+      "prereqs": [
+        "chem.mass-mole-conversions",
+        "chem.dissolving",
+        "g6.unit-rate"
+      ],
       "xp": 2,
       "trouble": "Students divide by the volume of water added instead of the final volume of solution, or use milliliters as if they were liters.",
-      "viz": ["ch-beaker"]
+      "viz": [
+        "ch-beaker"
+      ]
     },
     {
       "id": "chem.dilution",
@@ -763,10 +1110,14 @@
       "unit": "solutions",
       "title": "Dilution",
       "short": "Adding water spreads the same moles of solute through more volume: M₁V₁ = M₂V₂.",
-      "prereqs": ["chem.molarity"],
+      "prereqs": [
+        "chem.molarity"
+      ],
       "xp": 2,
       "trouble": "Students think adding water changes the number of moles of solute.",
-      "viz": ["ch-beaker"]
+      "viz": [
+        "ch-beaker"
+      ]
     },
     {
       "id": "chem.precipitation-reactions",
@@ -774,11 +1125,17 @@
       "unit": "solutions",
       "title": "Precipitation and Solubility Rules",
       "short": "Mixing two solutions can make an insoluble solid fall out, and solubility rules predict when.",
-      "prereqs": ["chem.dissolving","chem.reaction-types","chem.polyatomic-ions"],
+      "prereqs": [
+        "chem.dissolving",
+        "chem.reaction-types",
+        "chem.polyatomic-ions"
+      ],
       "xp": 2,
       "std": "HS-PS1-2",
       "trouble": "Students think every ionic compound dissolves in water, or give the precipitate a formula whose charges do not balance.",
-      "viz": ["ch-particles"]
+      "viz": [
+        "ch-particles"
+      ]
     },
     {
       "id": "chem.acid-base-definitions",
@@ -786,10 +1143,16 @@
       "unit": "acids-bases",
       "title": "Acids and Bases",
       "short": "In water, acids make hydronium ions (H₃O⁺) and bases make hydroxide ions (OH⁻).",
-      "prereqs": ["chem.dissolving","chem.polyatomic-ions"],
+      "prereqs": [
+        "chem.dissolving",
+        "chem.polyatomic-ions"
+      ],
       "xp": 1,
       "trouble": "Students think any compound with H in its formula is an acid, such as CH₄, or that any compound with OH is a base, such as the alcohol CH₃OH.",
-      "viz": ["ch-phscale","ch-particles"],
+      "viz": [
+        "ch-phscale",
+        "ch-particles"
+      ],
       "lab": "/science-lab/chem-lab/"
     },
     {
@@ -798,10 +1161,14 @@
       "unit": "acids-bases",
       "title": "Proton Donors and Acceptors",
       "short": "An acid gives an H⁺ to a base, leaving a conjugate pair on each side of the equation.",
-      "prereqs": ["chem.acid-base-definitions"],
+      "prereqs": [
+        "chem.acid-base-definitions"
+      ],
       "xp": 2,
       "trouble": "Students build a conjugate base by removing OH instead of H⁺, or think water can never act as an acid or a base.",
-      "viz": ["ch-lewis"]
+      "viz": [
+        "ch-lewis"
+      ]
     },
     {
       "id": "chem.ph-scale",
@@ -809,10 +1176,15 @@
       "unit": "acids-bases",
       "title": "The pH Scale",
       "short": "pH counts powers of ten: each step down the scale means ten times more H₃O⁺.",
-      "prereqs": ["chem.acid-base-definitions","g8.zero-negative-exponents"],
+      "prereqs": [
+        "chem.acid-base-definitions",
+        "g8.zero-negative-exponents"
+      ],
       "xp": 2,
       "trouble": "Students think pH 3 is only a little more acidic than pH 4, missing the factor of 10.",
-      "viz": ["ch-phscale"],
+      "viz": [
+        "ch-phscale"
+      ],
       "lab": "/science-lab/chem-lab/"
     },
     {
@@ -821,10 +1193,15 @@
       "unit": "acids-bases",
       "title": "pH, pOH and the Ions in Water",
       "short": "In water [H₃O⁺] × [OH⁻] = 1.0 × 10⁻¹⁴ at 25 °C, so pH + pOH = 14.",
-      "prereqs": ["chem.ph-scale","g8.exponent-product-rule"],
+      "prereqs": [
+        "chem.ph-scale",
+        "g8.exponent-product-rule"
+      ],
       "xp": 2,
       "trouble": "Students think a basic solution has no H₃O⁺ at all, or that pure water contains no ions.",
-      "viz": ["ch-phscale"]
+      "viz": [
+        "ch-phscale"
+      ]
     },
     {
       "id": "chem.strong-weak-acids",
@@ -832,10 +1209,15 @@
       "unit": "acids-bases",
       "title": "Strong and Weak Acids",
       "short": "A strong acid ionizes completely and a weak acid only partly; strength is not the same as concentration.",
-      "prereqs": ["chem.ph-scale","chem.bronsted-lowry"],
+      "prereqs": [
+        "chem.ph-scale",
+        "chem.bronsted-lowry"
+      ],
       "xp": 2,
       "trouble": "Students confuse a strong acid with a concentrated one, and a weak acid with a dilute one.",
-      "viz": ["ch-particles"]
+      "viz": [
+        "ch-particles"
+      ]
     },
     {
       "id": "chem.neutralization",
@@ -843,10 +1225,15 @@
       "unit": "acids-bases",
       "title": "Neutralization",
       "short": "An acid and a hydroxide base react to make water and a salt.",
-      "prereqs": ["chem.strong-weak-acids","chem.balancing-equations"],
+      "prereqs": [
+        "chem.strong-weak-acids",
+        "chem.balancing-equations"
+      ],
       "xp": 1,
       "trouble": "Students think mixing any acid with any base gives pH 7, even when the moles of acid and base are not equal.",
-      "viz": ["ch-titration"],
+      "viz": [
+        "ch-titration"
+      ],
       "lab": "/science-lab/chem-lab/"
     },
     {
@@ -855,10 +1242,16 @@
       "unit": "acids-bases",
       "title": "Titration",
       "short": "Add base drop by drop until it exactly uses up the acid, then work out the acid's concentration.",
-      "prereqs": ["chem.neutralization","chem.molarity","chem.mole-ratios"],
+      "prereqs": [
+        "chem.neutralization",
+        "chem.molarity",
+        "chem.mole-ratios"
+      ],
       "xp": 3,
       "trouble": "Students use M₁V₁ = M₂V₂ for an acid such as H₂SO₄ that gives two H⁺, ignoring the 1 : 2 mole ratio.",
-      "viz": ["ch-titration"],
+      "viz": [
+        "ch-titration"
+      ],
       "lab": "/science-lab/chem-lab/"
     },
     {
@@ -867,11 +1260,16 @@
       "unit": "energy",
       "title": "Heat and Temperature",
       "short": "Temperature measures the particles' average kinetic energy; heat is energy that flows from hotter to colder.",
-      "prereqs": ["chem.states-of-matter","chem.temperature-scales"],
+      "prereqs": [
+        "chem.states-of-matter",
+        "chem.temperature-scales"
+      ],
       "xp": 1,
       "std": "HS-PS3-4",
       "trouble": "Students treat heat and temperature as the same thing, or think cold flows from a cold object into a warm one.",
-      "viz": ["ch-calorimeter"],
+      "viz": [
+        "ch-calorimeter"
+      ],
       "lab": "/science-lab/thermodynamics/zeroth-law/"
     },
     {
@@ -880,11 +1278,16 @@
       "unit": "energy",
       "title": "Specific Heat",
       "short": "q = mcΔT: some substances need more energy per gram to warm by one degree.",
-      "prereqs": ["chem.heat-temperature","alg1.literal-equations"],
+      "prereqs": [
+        "chem.heat-temperature",
+        "alg1.literal-equations"
+      ],
       "xp": 2,
       "std": "HS-PS3-1",
       "trouble": "Students think a substance with a high specific heat warms up faster, when it warms up more slowly.",
-      "viz": ["ch-calorimeter"],
+      "viz": [
+        "ch-calorimeter"
+      ],
       "lab": "/science-lab/thermodynamics/zeroth-law/"
     },
     {
@@ -893,11 +1296,16 @@
       "unit": "energy",
       "title": "Calorimetry",
       "short": "In an insulated cup, the heat lost by the hot object equals the heat gained by the cold one.",
-      "prereqs": ["chem.specific-heat","g8.variables-both-sides"],
+      "prereqs": [
+        "chem.specific-heat",
+        "g8.variables-both-sides"
+      ],
       "xp": 3,
       "std": "HS-PS3-4",
       "trouble": "Students drop the minus sign in q lost = −q gained, or pair the metal's mass with water's specific heat.",
-      "viz": ["ch-calorimeter"],
+      "viz": [
+        "ch-calorimeter"
+      ],
       "lab": "/science-lab/thermodynamics/zeroth-law/"
     },
     {
@@ -906,11 +1314,16 @@
       "unit": "energy",
       "title": "Heating Curves and Phase Changes",
       "short": "While a substance melts or boils, the added heat pulls particles apart and the temperature stays flat.",
-      "prereqs": ["chem.heat-temperature","chem.imf-properties"],
+      "prereqs": [
+        "chem.heat-temperature",
+        "chem.imf-properties"
+      ],
       "xp": 2,
       "std": "MS-PS1-4",
       "trouble": "Students think the temperature keeps rising while ice melts, or that boiling water gets hotter the longer it boils.",
-      "viz": ["ch-heatingcurve"]
+      "viz": [
+        "ch-heatingcurve"
+      ]
     },
     {
       "id": "chem.exo-endo",
@@ -918,11 +1331,17 @@
       "unit": "energy",
       "title": "Exothermic and Endothermic Reactions",
       "short": "Exothermic reactions release energy to the surroundings; endothermic reactions take it in.",
-      "prereqs": ["chem.heat-temperature","chem.physical-chemical-changes","physsci.energy-forms"],
+      "prereqs": [
+        "chem.heat-temperature",
+        "chem.physical-chemical-changes",
+        "physsci.energy-forms"
+      ],
       "xp": 1,
       "std": "HS-PS1-4",
       "trouble": "Students mix up the system and the surroundings: a cold pack feels cold because the reaction takes heat from your hand, not because it gives off cold.",
-      "viz": ["ch-energydiagram"]
+      "viz": [
+        "ch-energydiagram"
+      ]
     },
     {
       "id": "chem.bond-energy",
@@ -930,11 +1349,17 @@
       "unit": "energy",
       "title": "Bond Energy and Reaction Energy",
       "short": "Breaking bonds takes energy and forming bonds releases it; the difference is the energy change of the reaction.",
-      "prereqs": ["chem.exo-endo","chem.lewis-structures"],
+      "prereqs": [
+        "chem.exo-endo",
+        "chem.lewis-structures"
+      ],
       "xp": 3,
       "std": "HS-PS1-4",
       "trouble": "Students think breaking a bond releases energy, a widespread idea that has the energy flowing the wrong way.",
-      "viz": ["ch-energydiagram","ch-bondcurve"]
+      "viz": [
+        "ch-energydiagram",
+        "ch-bondcurve"
+      ]
     },
     {
       "id": "chem.collision-theory",
@@ -942,11 +1367,17 @@
       "unit": "rates-equilibrium",
       "title": "Collision Theory and Reaction Rate",
       "short": "Particles must collide hard enough and lined up the right way, so temperature, concentration and surface area change the rate.",
-      "prereqs": ["chem.kinetic-molecular-theory","chem.exo-endo"],
+      "prereqs": [
+        "chem.kinetic-molecular-theory",
+        "chem.exo-endo"
+      ],
       "xp": 2,
       "std": "HS-PS1-5",
       "trouble": "Students think every collision makes a reaction, or that heating speeds a reaction only by causing more collisions, missing the larger share of collisions that are hard enough.",
-      "viz": ["ch-collisions","ch-maxwell"],
+      "viz": [
+        "ch-collisions",
+        "ch-maxwell"
+      ],
       "lab": "/science-lab/chem-lab/"
     },
     {
@@ -955,11 +1386,16 @@
       "unit": "rates-equilibrium",
       "title": "Activation Energy and Catalysts",
       "short": "A catalyst opens a path with a lower energy barrier and is not used up.",
-      "prereqs": ["chem.collision-theory"],
+      "prereqs": [
+        "chem.collision-theory"
+      ],
       "xp": 2,
       "std": "HS-PS1-5",
       "trouble": "Students think a catalyst gets used up, or that it changes how much energy the reaction releases.",
-      "viz": ["ch-energydiagram","ch-collisions"],
+      "viz": [
+        "ch-energydiagram",
+        "ch-collisions"
+      ],
       "lab": "/science-lab/chem-lab/"
     },
     {
@@ -968,11 +1404,15 @@
       "unit": "rates-equilibrium",
       "title": "Dynamic Equilibrium",
       "short": "At equilibrium the forward and reverse reactions run at equal rates, so the amounts stop changing.",
-      "prereqs": ["chem.collision-theory"],
+      "prereqs": [
+        "chem.collision-theory"
+      ],
       "xp": 2,
       "std": "HS-PS1-6",
       "trouble": "Students think the reactions stop at equilibrium, or that the reactants and products must be present in equal amounts.",
-      "viz": ["ch-equilibrium"]
+      "viz": [
+        "ch-equilibrium"
+      ]
     },
     {
       "id": "chem.le-chatelier",
@@ -980,11 +1420,16 @@
       "unit": "rates-equilibrium",
       "title": "Le Chatelier's Principle",
       "short": "A system at equilibrium shifts to partly undo a change in concentration, pressure or temperature.",
-      "prereqs": ["chem.dynamic-equilibrium","chem.boyles-law"],
+      "prereqs": [
+        "chem.dynamic-equilibrium",
+        "chem.boyles-law"
+      ],
       "xp": 2,
       "std": "HS-PS1-6",
       "trouble": "Students think adding a catalyst shifts an equilibrium, or that the shift undoes the change completely.",
-      "viz": ["ch-equilibrium"]
+      "viz": [
+        "ch-equilibrium"
+      ]
     },
     {
       "id": "chem.radioactive-decay",
@@ -992,11 +1437,15 @@
       "unit": "nuclear",
       "title": "Radioactive Decay and Nuclear Equations",
       "short": "Alpha, beta and gamma decay change the nucleus, and both the mass numbers and the charges balance.",
-      "prereqs": ["chem.isotopes"],
+      "prereqs": [
+        "chem.isotopes"
+      ],
       "xp": 2,
       "std": "HS-PS1-8",
       "trouble": "Students think gamma decay changes the element, or balance the mass numbers and forget the atomic numbers.",
-      "viz": ["ch-nuclide"],
+      "viz": [
+        "ch-nuclide"
+      ],
       "lab": "/science-lab/atom/"
     },
     {
@@ -1005,11 +1454,17 @@
       "unit": "nuclear",
       "title": "Half-Life",
       "short": "In each half-life, half of the remaining nuclei decay; use it to find amounts left and ages.",
-      "prereqs": ["chem.radioactive-decay","alg1.exponential-functions"],
+      "prereqs": [
+        "chem.radioactive-decay",
+        "alg1.exponential-functions"
+      ],
       "xp": 2,
       "std": "HS-PS1-8",
       "trouble": "Students think a sample is all gone after two half-lives, taking away the same amount each time instead of halving what is left.",
-      "viz": ["ch-kineticsplot","exponential"],
+      "viz": [
+        "ch-kineticsplot",
+        "exponential"
+      ],
       "lab": "/science-lab/atom/"
     },
     {
@@ -1018,11 +1473,15 @@
       "unit": "nuclear",
       "title": "Fission and Fusion",
       "short": "Splitting heavy nuclei and joining light ones both release energy as a little mass disappears.",
-      "prereqs": ["chem.radioactive-decay"],
+      "prereqs": [
+        "chem.radioactive-decay"
+      ],
       "xp": 1,
       "std": "HS-PS1-8",
       "trouble": "Students mix up fission and fusion, or think the Sun runs on fission.",
-      "viz": ["ch-nuclide"]
+      "viz": [
+        "ch-nuclide"
+      ]
     }
   ]
 }
