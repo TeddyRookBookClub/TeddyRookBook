@@ -105,3 +105,45 @@ table.gl td.la{color:var(--wine);font-size:1.05rem}
   .tb-main{grid-column:1;grid-row:2;grid-template-columns:1fr}.tb-side{display:none}
   .tb-pad{grid-column:2;grid-row:2;align-content:center;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px)}
 }
+/* Mode menu, Eagle Hunt and Campaign */
+.tb-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin:.8rem 0}
+.tb-mode{display:flex;flex-direction:column;align-items:flex-start;gap:.25rem;text-align:left;border:1px solid var(--line);border-top:4px solid var(--wine);background:var(--card);color:var(--ink);border-radius:12px;padding:.7rem .8rem;cursor:pointer;font:inherit;line-height:1.3;transition:transform .15s,box-shadow .15s}
+.tb-mode:hover,.tb-mode:focus-visible{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.tb-mode:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.tb-mode i{font-style:normal;font-size:1.5rem;line-height:1}
+.tb-mname{display:flex;flex-direction:column}
+.tb-mname .la{font-size:1.2rem;color:var(--wine)}
+html[data-theme="dark"] .tb-mname .la{color:#e59aa9}
+.tb-mname .en{font-size:.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.tb-mode small{font-size:.82rem;color:var(--muted)}
+.tb-mrec{font-size:.75rem;color:var(--muted);margin-top:auto;padding-top:.2rem}
+.tb-mrec .la,.tb-mrec .en{font-size:inherit}
+.tb-rec{font-size:.88rem;color:var(--muted);margin:.4rem 0}
+.tb-rec .en{font-size:.75rem}
+.tb-rec b{color:var(--ink);font-variant-numeric:tabular-nums}
+.tb-new{display:inline-block;background:var(--gold);color:#1d2320;border-radius:999px;padding:0 .45rem;font-size:.7rem;font-weight:700;margin-left:.15rem}
+.tb-hr{border:0;border-top:1px solid var(--line);margin:.8rem 0}
+.tb-hrules{list-style:none;padding:0;margin:.6rem 0;display:flex;flex-direction:column;gap:.45rem}
+.tb-hrules li{display:grid;grid-template-columns:1.6rem 1fr;gap:.4rem;align-items:start}
+.tb-hrules i{font-style:normal;font-size:1.15rem;line-height:1.5}
+.tb-hrules .la{font-size:1.15rem;color:var(--wine);margin-right:.4rem}
+html[data-theme="dark"] .tb-hrules .la{color:#e59aa9}
+.tb-hrules .en{font-size:.8rem;color:var(--muted)}
+.tb-hrules p{margin:.1rem 0 0;font-size:.92rem;line-height:1.45}
+.tb-stage canvas.hunt{box-shadow:none;border-radius:0}
+.tb-flash.turn .la{color:#ffe9a8}
+.tb-stage.tflash::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 6px #f3dfa3;background:rgba(255,240,200,.18);animation:tbflash .45s linear forwards}
+@keyframes tbflash{from{opacity:1}to{opacity:0}}
+.tb-hside h3{margin-top:.2rem}
+.tb-compass{list-style:none;margin:0 0 .5rem;padding:0;display:flex;flex-direction:column;gap:.3rem}
+.tb-compass li{display:grid;grid-template-columns:3.3rem 1.2rem 1fr;align-items:baseline;gap:.35rem;padding:.25rem .45rem;background:var(--paper);border-radius:6px}
+.tb-compass li:first-child{border-left:3px solid var(--wine)}
+.tb-compass kbd{font:600 .78rem system-ui,sans-serif;color:var(--muted)}
+.tb-compass b{font-family:Georgia,serif;color:var(--wine)}
+html[data-theme="dark"] .tb-compass b{color:#e59aa9}
+.tb-compass .en{grid-column:3;font-size:.75rem;color:var(--muted)}
+.tb-hside .small{font-size:.8rem;color:var(--muted);line-height:1.4}
+.tb-pad.compass button span{font:700 1.15rem Georgia,serif;color:#ffe9a8}
+.tb-pad.compass .pad-up{border-color:rgba(243,223,163,.6);background:rgba(140,29,44,.55)}
+@media (max-width:700px){.tb-modes{grid-template-columns:1fr}.tb-mode{display:grid;grid-template-columns:2rem 1fr;column-gap:.6rem;align-items:center}.tb-mode i{grid-row:span 3}.tb-mode small,.tb-mrec{grid-column:2}}
+@media (prefers-reduced-motion:reduce){.tb-mode{transition:none}.tb-mode:hover,.tb-mode:focus-visible{transform:none}}

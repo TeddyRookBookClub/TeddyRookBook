@@ -1,0 +1,7 @@
+{{- /* the Vocabulary Ladder's own pages; argument: the current page key (ladder, flash, quiz, words, print) */ -}}
+{{- $cur := . -}}
+<nav class="vop-nav" aria-label="Vocabulary pages">
+  {{- range slice (slice "ladder" "vocabulary/" "🪜" "The ladder") (slice "flash" "vocabulary/flashcards/" "🗂️" "Flashcards") (slice "quiz" "vocabulary/quiz/" "⏱️" "Quizzes") (slice "words" "vocabulary/words/" "🔎" "All 1,000 words") (slice "print" "vocabulary/print/" "🖨️" "Printable book") }}
+  <a href="{{ index . 1 | relURL }}"{{ if eq (index . 0) $cur }} aria-current="page" class="on"{{ end }}><span aria-hidden="true">{{ index . 2 }}</span> {{ index . 3 }}</a>
+  {{- end }}
+</nav>

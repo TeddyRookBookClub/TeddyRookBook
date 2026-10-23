@@ -1,0 +1,11 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="{{ "games/brain-kit.css" | relURL }}?v={{ (os.Stat "static/games/brain-kit.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "games/coin-match.css" | relURL }}?v={{ (os.Stat "static/games/coin-match.css").ModTime.Unix }}">
+{{ partial "game-shell.html" . }}
+<div class="gwrap"><div class="gbar"><a href="{{ "games/brain-games/" | relURL }}">‹ Brain games</a><span>{{ .Title }}</span></div><div class="bk coinm gbox" id="coinm" data-hub="{{ "games/brain-games/" | relURL }}"><noscript>This game needs JavaScript.</noscript></div></div>
+<p style="font-size:.8rem;color:#777;margin-top:.5rem">Same or different? Right arrow for Same, left arrow for Different; P pauses. Part of the <a href="{{ "games/brain-games/" | relURL }}">brain games</a>; for paper puzzles, see <a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a>.</p>
+<script src="{{ "games/brain-kit.js" | relURL }}?v={{ (os.Stat "static/games/brain-kit.js").ModTime.Unix }}"></script>
+<script src="{{ "games/coin-match.js" | relURL }}?v={{ (os.Stat "static/games/coin-match.js").ModTime.Unix }}"></script>
+{{ end }}

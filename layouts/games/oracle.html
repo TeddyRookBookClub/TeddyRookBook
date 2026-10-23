@@ -1,0 +1,9 @@
+{{ define "main" }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="{{ "games/oracle.css" | relURL }}?v={{ (os.Stat "static/games/oracle.css").ModTime.Unix }}">
+{{ partial "game-shell.html" . }}
+<div class="gwrap"><div class="gbar"><a href="{{ "games/brain-games/" | relURL }}">‹ Brain games</a><span>{{ .Title }}</span></div><div class="or gbox" id="or"><noscript>This game needs JavaScript.</noscript></div></div>
+<p style="font-size:.8rem;color:#777;margin-top:.5rem">Tap a plinth, or press 1 to 4; P pauses. One of the <a href="{{ "games/brain-games/" | relURL }}">brain games</a>; for printable puzzles, see <a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a>.</p>
+<script src="{{ "games/oracle.js" | relURL }}?v={{ (os.Stat "static/games/oracle.js").ModTime.Unix }}"></script>
+{{ end }}

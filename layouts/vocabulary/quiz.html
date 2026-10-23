@@ -1,0 +1,40 @@
+{{- /* /vocabulary/quiz/: quick vocabulary rounds, timed or untimed (static/vocab/app/quiz.js; storage trb-vocab-v1) */ -}}
+{{ define "main" }}
+{{ partial "vocab/head.html" . }}
+{{- $D := partialCached "vocab/data.html" "x" -}}
+<div class="mlp vop vop-quiz" id="vop" data-src="{{ $D.url }}?v={{ $D.v }}" data-base="{{ "vocabulary/" | relURL }}">
+  <header class="vop-head">
+    <p class="mlp-eyebrow"><a href="{{ "vocabulary/" | relURL }}">Vocabulary Ladder</a> · Quizzes</p>
+    <h1>Vocabulary quizzes</h1>
+    <p>A quick round of ten, twenty or thirty questions. Choose the words, the kinds of questions and a timer if you like a challenge. Words you miss go to your hard words for the flashcards.</p>
+  </header>
+  {{ partial "vocab/nav.html" "quiz" }}
+  <section class="vop-box vop-setup" id="vq-setup" aria-label="Set up a quiz">
+    <div class="vop-row">
+      <div class="vop-field"><span class="vop-lab">Words from</span>
+        <div class="vop-seg" id="vq-kind" role="group" aria-label="Which words"><button type="button" data-v="topic">A topic</button><button type="button" data-v="level">A level</button><button type="button" data-v="root">A root</button><button type="button" data-v="hard">My hard words</button><button type="button" data-v="all">All</button></div></div>
+      <label class="vop-field vop-grow" id="vq-which-l"><span class="vop-lab">Which</span><select id="vq-which"></select></label>
+    </div>
+    <div class="vop-row">
+      <div class="vop-field"><span class="vop-lab">Questions</span>
+        <div class="vop-chips" id="vq-types" role="group" aria-label="Kinds of questions">
+          <button type="button" data-v="meaning" aria-pressed="true">Word → meaning</button>
+          <button type="button" data-v="word" aria-pressed="true">Meaning → word</button>
+          <button type="button" data-v="context" aria-pressed="true">Word in context</button>
+          <button type="button" data-v="syn" aria-pressed="true">Synonyms and opposites</button>
+          <button type="button" data-v="roots" aria-pressed="false">Roots</button>
+        </div></div>
+    </div>
+    <div class="vop-row">
+      <label class="vop-field"><span class="vop-lab">How many</span><select id="vq-n"><option value="10">10</option><option value="20">20</option><option value="30">30</option></select></label>
+      <label class="vop-field"><span class="vop-lab">Timer</span><select id="vq-t"><option value="0">Untimed</option><option value="30">30 seconds a question</option><option value="15">15 seconds a question</option></select></label>
+      <div class="vop-field"><button type="button" class="mlp-btn pri big" id="vq-go">Start the quiz</button></div>
+    </div>
+    <p class="vop-msg2" id="vq-note" hidden></p>
+  </section>
+  <section class="vop-quizbox" id="vq-run" hidden aria-live="polite"></section>
+</div>
+{{ partial "inline/ml-js.html" "vocab/viz/vocab.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/common.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/quiz.js" }}
+{{ end }}

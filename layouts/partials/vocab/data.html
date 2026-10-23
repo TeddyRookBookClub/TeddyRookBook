@@ -1,0 +1,9 @@
+{{- /* Vocabulary Ladder: every word entry (data/vocab/words/<topic>.json) as one JSON file for the flashcard, quiz, word-list
+   and print pages: /vocabulary/data/words.json = { "<topic key>": [entries] }. Call with partialCached "vocab/data.html" "x";
+   returns { url, v (a content hash for cache busting), n (topics with entries), words (entries) }. */ -}}
+{{- $W := site.Data.vocab.words | default dict -}}
+{{- $out := dict -}}{{- $n := 0 -}}
+{{- range $k, $v := $W }}{{ with $v.words }}{{ $out = merge $out (dict $k .) }}{{ $n = add $n (len .) }}{{ end }}{{ end -}}
+{{- $json := $out | jsonify -}}
+{{- $res := resources.FromString "vocabulary/data/words.json" $json -}}
+{{- return (dict "url" $res.RelPermalink "v" (substr (md5 $json) 0 10) "n" (len $out) "words" $n) -}}

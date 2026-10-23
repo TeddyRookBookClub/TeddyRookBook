@@ -1,0 +1,41 @@
+{{- /* /vocabulary/words/<word>/: one word's page (made by content/vocabulary/words/_content.gotmpl). The text is in the HTML;
+   static/vocab/app/word.js draws the full card with its picture from the entry embedded below. */ -}}
+{{ define "main" }}
+{{ partial "vocab/head.html" . }}
+{{- $w := .Params.word -}}{{- $tk := .Params.topic -}}
+{{- $L := site.Data.vocab.list -}}
+{{- $T := index (where $L.topics "key" $tk) 0 -}}
+{{- $e := dict }}{{ with index site.Data.vocab.words $tk }}{{ range .words }}{{ if eq .word $w }}{{ $e = . }}{{ end }}{{ end }}{{ end -}}
+{{- $mark := `\{([^}]+)\}` -}}
+{{- $O := partialCached "vocab/order.html" "x" -}}
+{{- $nb := index $O.nav $w | default dict -}}{{- $prev := $nb.prev -}}{{- $next := $nb.next -}}
+<div class="mlp vop vop-word" id="vop" data-base="{{ "vocabulary/" | relURL }}">
+  <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ "vocabulary/" | relURL }}">Vocabulary</a> <span aria-hidden="true">›</span> <a href="{{ "vocabulary/words/" | relURL }}">All 1,000 words</a> <span aria-hidden="true">›</span> <a href="{{ printf "vocabulary/advanced-vocabulary/%s/" $tk | relURL }}">{{ $T.title }}</a></nav>
+  {{ partial "vocab/nav.html" "words" }}
+  <div id="vw-card" class="vop-wordcard">
+    <article class="vo-card vo-card-card vop-static">
+      <header class="vo-head"><h1 class="vo-w">{{ $w }}</h1><span class="vo-say">{{ $e.say }}</span><span class="vo-pos">{{ $e.pos }}</span></header>
+      <p class="vo-def"><span class="vo-k">Meaning</span> {{ $e.def }}</p>
+      {{ with $e.mn }}<div class="vo-mn"><span class="vo-k">Memory hook</span> <b>{{ .cue }}.</b> {{ replaceRE $mark "$1" .text }}</div>{{ end }}
+      {{ with $e.ex }}<p class="vo-ex">{{ replaceRE $mark "$1" . }}</p>{{ end }}
+      {{ with $e.ctx }}<p class="vo-ex vo-ctx"><span class="vo-k">In context</span> {{ replaceRE $mark "$1" . }}</p>{{ end }}
+      {{ with $e.syn }}<p><span class="vo-k">Similar</span> {{ delimit . ", " }}</p>{{ end }}
+      {{ with $e.ant }}<p><span class="vo-k">Opposite</span> {{ delimit . ", " }}</p>{{ end }}
+      {{ with $e.etym }}<p class="vo-etym">{{ . }}</p>{{ end }}
+    </article>
+  </div>
+  <p class="vop-wordnav">{{ with $prev }}<a href="{{ printf "vocabulary/words/%s/" (. | urlize) | relURL }}">← {{ . }}</a>{{ end }}<span><a href="{{ printf "vocabulary/advanced-vocabulary/%s/" $tk | relURL }}">Learn and practice the topic: {{ $T.title }}</a> · <a href="{{ printf "vocabulary/flashcards/?deck=topic:%s" $tk | relURL }}">Flashcards for this topic</a></span>{{ with $next }}<a href="{{ printf "vocabulary/words/%s/" (. | urlize) | relURL }}">{{ . }} →</a>{{ end }}</p>
+  <script type="application/json" id="vw-entry">{{ $e | jsonify | safeJS }}</script>
+</div>
+{{ partial "inline/ml-js.html" "vocab/viz/vocab.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/common.js" }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var VO = window.MathLadder && window.MathLadder.vocab, box = document.getElementById('vw-card'), e;
+  try { e = JSON.parse(document.getElementById('vw-entry').textContent); } catch (er) { return; }
+  if (!VO || !e || !e.word) return;
+  e.topic = {{ $tk }};
+  box.innerHTML = VO.cardHTML(e, { mode: 'card', speak: !!window.speechSynthesis }).replace('<h3 class="vo-w"', '<h1 class="vo-w"').replace('</h3>', '</h1>');
+});
+</script>
+{{ end }}

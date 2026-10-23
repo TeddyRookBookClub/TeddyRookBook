@@ -1,0 +1,107 @@
+/* Vocabulary Ladder visuals (static/vocab/viz/vocab.js): the word card, scenes, root trees and cloze sentences.
+   On top of math/viz/viz.css; follows the site's light or dark theme (html[data-theme="dark"]). Accent #476600 (dark #b6d36b).
+   The pictures keep their own paper colors in both themes (like an illustration on a page); in the dark theme they are
+   framed and dimmed a little. Print styles keep colors and avoid breaking a card across pages. */
+.vo-v,.vo-card,.vo-tree,.vo-cardwrap{--vo-acc:#476600;--vo-accs:rgba(71,102,0,.10);--vo-hl:#2f5200;--vo-hlbg:#eef5d8;--vo-paper:#fffdf7;--vo-line:#e2dccb;--vo-ink:#1f2420;--vo-muted:#5f665e;--vo-ok:#00703c;--vo-bad:#c92a2a;--vo-tag:#7a5a00;--vo-part:#fff3c4;--vo-partb:#e3c766}
+html[data-theme="dark"] .vo-v,html[data-theme="dark"] .vo-card,html[data-theme="dark"] .vo-tree,html[data-theme="dark"] .vo-cardwrap{--vo-acc:#b6d36b;--vo-accs:rgba(182,211,107,.14);--vo-hl:#d6ec9e;--vo-hlbg:rgba(182,211,107,.16);--vo-paper:#1d2a21;--vo-line:#36493b;--vo-ink:#e6ece8;--vo-muted:#a9b8af;--vo-ok:#6cc79a;--vo-bad:#ff8787;--vo-tag:#ffd479;--vo-part:rgba(255,212,121,.16);--vo-partb:#8a7a3e}
+.vo-v .vo-task{margin:0 0 .6rem;padding:.5rem .7rem;border-radius:10px;background:var(--mv-card,#fff);border:1px solid var(--mv-line,#ddd);border-left:4px solid var(--vo-acc);font-size:.95rem;line-height:1.45}
+.vo-fig{margin:0}
+.vo-scene-svg{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--vo-line,#e2dccb);background:#fbf7ee}
+html[data-theme="dark"] .vo-scene-svg{filter:brightness(.9) saturate(.95);border-color:#3e5544}
+.vo-v-scene{max-width:560px;margin-inline:auto}
+.vo-fig figcaption{margin-top:.35rem}
+
+/* the word card */
+.vo-card{background:var(--vo-paper);color:var(--vo-ink);border:1px solid var(--vo-line);border-radius:14px;padding:.9rem 1rem 1rem;box-shadow:0 1px 2px rgba(0,0,0,.05);text-align:left}
+.vo-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem .7rem;margin:0 0 .6rem;padding-bottom:.45rem;border-bottom:2px solid var(--vo-acc)}
+.vo-w{margin:0;font:700 1.55rem/1.15 Georgia,"Times New Roman",serif;color:var(--vo-ink);letter-spacing:.01em}
+.vo-say{font:500 1rem/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--vo-muted)}
+.vo-say b{color:var(--vo-ink);font-weight:800}
+.vo-pos{font:italic 600 .9rem/1.3 Georgia,serif;color:var(--vo-acc)}
+.vo-speak{margin-left:auto;border:1px solid var(--vo-line);background:transparent;border-radius:999px;padding:.1rem .5rem;cursor:pointer;font-size:.95rem;line-height:1.4;color:inherit}
+.vo-speak:hover{background:var(--vo-accs)}
+.vo-cols{display:grid;grid-template-columns:minmax(0,1fr);gap:.8rem}
+@media (min-width:760px){.vo-card-card .vo-cols{grid-template-columns:minmax(0,46%) minmax(0,1fr);align-items:start}}
+.vo-pic{min-width:0}
+.vo-txt{min-width:0}
+.vo-txt p,.vo-txt .vo-mn{margin:0 0 .55rem;line-height:1.5;font-size:.98rem}
+.vo-k{display:inline-block;font:700 .68rem/1.2 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--vo-tag);margin-right:.35rem;vertical-align:.08em}
+.vo-def{font-size:1.06rem!important}
+.vo-mn{background:var(--vo-accs);border-left:4px solid var(--vo-acc);border-radius:0 10px 10px 0;padding:.45rem .65rem}
+.vo-ex{font-style:italic;font-family:Georgia,"Times New Roman",serif}
+.vo-ex .vo-k{font-style:normal}
+.vo-hl{color:var(--vo-hl);background:var(--vo-hlbg);border-radius:4px;padding:0 .08em;font-style:normal;font-weight:700}
+.vo-hl.vo-bad{color:var(--vo-bad);background:rgba(201,42,42,.08)}
+.vo-blank{display:inline-block;min-width:4.5em;border-bottom:2px solid currentColor;line-height:1;color:transparent;font-style:normal}
+.vo-rts{font-size:.93rem!important}
+.vo-part{display:inline-block;font:700 .88rem/1.3 system-ui,sans-serif;background:var(--vo-part);border:1px solid var(--vo-partb);border-radius:6px;padding:0 .35em}
+.vo-plus{color:var(--vo-muted)}
+.vo-etym{font-size:.86rem!important;color:var(--vo-muted)}
+.vo-more{margin:.2rem 0 0;display:grid;gap:.15rem;font-size:.92rem}
+.vo-more>div{display:flex;gap:.5rem;flex-wrap:wrap}
+.vo-more dt{font:700 .68rem/1.9 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--vo-tag);min-width:5.2em}
+.vo-more dd{margin:0;flex:1;min-width:0}
+.vo-note{font-size:.9rem!important;border-top:1px dashed var(--vo-line);padding-top:.45rem;color:var(--vo-muted)}
+.vo-miss{color:var(--mv-muted,#666);font-style:italic}
+.vo-card-front .vo-txt,.vo-card-word .vo-txt{margin-top:.6rem}
+.vo-wordside .vo-head{border:0;justify-content:center;flex-direction:column;align-items:center;margin:0;padding:1.4rem 0}
+.vo-wordside .vo-w{font-size:2.1rem}
+.vo-card-mini{padding:.6rem .75rem}
+.vo-card-mini .vo-w{font-size:1.25rem}
+.vo-quiet .vo-w{letter-spacing:.2em}
+/* print layout: four cards to a US Letter or A4 page (see /vocabulary/print/). All sizes are in points times --fs, so the
+   page's print.js can step a crowded card's type down (--fs), tighten its lines (--lh) and narrow its picture (--pw on the
+   cell) until it fits; .vo-fit-noex drops the example sentence as a last resort. */
+.vo-card-print{--fs:1;padding:calc(5pt*var(--fs)) calc(6pt*var(--fs)) calc(5pt*var(--fs));border-radius:8pt;box-shadow:none;font-size:calc(9.5pt*var(--fs));line-height:1.3;break-inside:avoid;page-break-inside:avoid}
+.vo-card-print .vo-head{margin:0 0 calc(3pt*var(--fs));padding-bottom:calc(2.5pt*var(--fs));gap:calc(2pt*var(--fs)) calc(6pt*var(--fs))}
+.vo-card-print .vo-w{font-size:calc(15pt*var(--fs))}
+.vo-card-print .vo-say,.vo-card-print .vo-pos{font-size:calc(9pt*var(--fs))}
+.vo-card-print .vo-pic{margin:0 auto calc(3pt*var(--fs))}
+.vo-card-print .vo-scene-svg{border-radius:5pt}
+.vo-card-print .vo-txt p,.vo-card-print .vo-txt .vo-mn{font-size:calc(8.6pt*var(--fs));margin:0 0 calc(2.5pt*var(--fs));line-height:var(--lh,1.32)}
+.vo-card-print .vo-mn{padding:calc(3pt*var(--fs)) calc(5pt*var(--fs))}
+.vo-card-print .vo-def{font-size:calc(9.2pt*var(--fs))!important}
+.vo-card-print .vo-k{font-size:calc(6.2pt*var(--fs));margin-right:calc(3pt*var(--fs))}
+.vo-card-print .vo-more{font-size:calc(8pt*var(--fs));gap:0;margin:0;line-height:var(--lh,1.32)}
+.vo-card-print .vo-more>div{gap:0 calc(4pt*var(--fs))}
+.vo-card-print .vo-more dt{font-size:calc(6.2pt*var(--fs));line-height:calc(8pt*var(--fs)*var(--lh,1.32))}
+.vo-card-print .vo-part{font-size:calc(7.6pt*var(--fs))}
+.vo-card-print .vo-rts{font-size:calc(8.4pt*var(--fs))!important}
+.vo-card-print.vo-fit-noex .vo-ex{display:none}
+
+/* root trees: the root as a trunk, its words as branches */
+.vo-trees{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.vo-tree{position:relative;background:var(--vo-paper);color:var(--vo-ink);border:1px solid var(--vo-line);border-radius:14px;padding:.75rem .8rem .7rem}
+.vo-trunk{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem .55rem;padding:.45rem .7rem;border-radius:10px;background:#7a4f1d;color:#fff8e6;margin-bottom:.55rem}
+html[data-theme="dark"] .vo-trunk{background:#8a6a3a;color:#fffbe8}
+.vo-tform{font:700 1.25rem/1.2 Georgia,serif}
+.vo-tmean{font:600 1rem/1.3 system-ui,sans-serif}
+.vo-tlang{font:600 .7rem/1.3 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;opacity:.85;margin-left:auto}
+.vo-branches{list-style:none;margin:0;padding:0 0 0 .9rem;border-left:3px solid #7a4f1d;display:grid;gap:.3rem}
+html[data-theme="dark"] .vo-branches{border-color:#a07c45}
+.vo-leaf{position:relative;display:flex;flex-wrap:wrap;gap:.1rem .55rem;align-items:baseline;padding:.25rem .5rem;border-radius:8px;background:var(--vo-accs)}
+.vo-leaf::before{content:"";position:absolute;left:-.9rem;top:50%;width:.8rem;border-top:3px solid #7a4f1d}
+html[data-theme="dark"] .vo-leaf::before{border-color:#a07c45}
+.vo-lw{font:600 1.02rem/1.3 Georgia,serif}
+.vo-rt{color:#9a3d00;background:#fff0c2;border-radius:3px;padding:0 .05em}
+html[data-theme="dark"] .vo-rt{color:#ffd479;background:rgba(255,212,121,.15)}
+.vo-lg{font-size:.88rem;color:var(--vo-muted);line-height:1.35}
+.vo-tree-ex{margin:.5rem 0 0;font-size:.86rem;color:var(--vo-muted)}
+
+/* cloze sentences */
+.vo-clz{background:var(--vo-paper);color:var(--vo-ink);border:1px solid var(--vo-line);border-radius:12px;padding:.7rem .85rem}
+.vo-cl{margin:0 0 .5rem;font:1.05rem/1.55 Georgia,"Times New Roman",serif}
+.vo-bank{display:flex;flex-wrap:wrap;gap:.4rem}
+.vo-chip{border:1px solid var(--vo-line);background:var(--mv-card,#fff);color:inherit;border-radius:999px;padding:.25rem .7rem;font:600 .95rem/1.3 system-ui,sans-serif}
+button.vo-chip{cursor:pointer}button.vo-chip:hover{border-color:var(--vo-acc)}
+.vo-chip.ok{border-color:var(--vo-ok);background:rgba(0,112,60,.1)}.vo-chip.no{border-color:var(--vo-bad);background:rgba(201,42,42,.08)}
+.vo-chl{display:inline-block;font-weight:800;margin-right:.15rem;color:var(--vo-acc)}
+.vo-out{margin:.5rem 0 0}
+.vo-okm{color:var(--vo-ok);font-weight:800}.vo-nom{color:var(--vo-bad);font-weight:800}
+/* problem text made by the generators */
+span.vo-cl{display:block;margin-top:.45rem;font:1.04rem/1.55 Georgia,"Times New Roman",serif}
+.vo-v button:focus-visible,.vo-speak:focus-visible{outline:3px solid #b8963e;outline-offset:2px}
+@media print{.vo-scene-svg{filter:none!important;border-color:#bbb}.vo-speak{display:none}.vo-card,.vo-tree,.vo-clz{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+/* inside a lesson figure the figure is the frame */
+.mlp-fig .vo-v-word .vo-card{border:0;box-shadow:none;background:transparent;padding:.15rem .1rem .2rem}
+.mlp-fig .vo-v-roots .vo-tree{border:0;background:transparent;padding:.1rem}

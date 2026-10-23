@@ -1,0 +1,12 @@
+{{- /* (partialCached "vocab/order.html" "x") the words that have full entries, in list order, and each one's neighbors:
+   { words: [word…], nav: { word: { prev, next } } } */ -}}
+{{- $W := site.Data.vocab.words | default dict -}}
+{{- $has := dict }}{{ range $k, $v := $W }}{{ range $v.words }}{{ $has = merge $has (dict .word true) }}{{ end }}{{ end -}}
+{{- $list := slice }}{{ range (site.Data.vocab.list | default dict).words }}{{ if index $has .word }}{{ $list = $list | append .word }}{{ end }}{{ end -}}
+{{- $nav := dict -}}
+{{- range $i, $w := $list -}}
+  {{- $p := "" }}{{ if gt $i 0 }}{{ $p = index $list (sub $i 1) }}{{ end -}}
+  {{- $n := "" }}{{ if lt (add $i 1) (len $list) }}{{ $n = index $list (add $i 1) }}{{ end -}}
+  {{- $nav = merge $nav (dict $w (dict "prev" $p "next" $n)) -}}
+{{- end -}}
+{{- return (dict "words" $list "nav" $nav "has" $has) -}}

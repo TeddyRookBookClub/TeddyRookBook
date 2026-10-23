@@ -1,0 +1,15 @@
+{{- /* Vocabulary Ladder: a page for each word that has its full entry (data/vocab/words/<topic>.json): /vocabulary/words/<word>/.
+   Rendered by layouts/vocabulary/word.html. Words still being written appear only in the list. */ -}}
+{{- $L := site.Data.vocab.list | default dict -}}
+{{- $W := site.Data.vocab.words | default dict -}}
+{{- range $L.words -}}
+  {{- $row := . -}}
+  {{- with index $W .topic -}}
+    {{- range .words -}}
+      {{- if eq .word $row.word -}}
+        {{- $slug := $row.word | urlize -}}
+        {{- $.AddPage (dict "path" $slug "kind" "page" "type" "vocabulary" "layout" "word" "title" $row.word "description" (printf "%s (%s): %s. Meaning, pronunciation, a picture and memory hook, examples in context, synonyms, opposites and roots, from the Vocabulary Ladder." $row.word $row.pos .def) "params" (dict "word" $row.word "topic" $row.topic "n" $row.n) "weight" $row.n) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

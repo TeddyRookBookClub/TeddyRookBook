@@ -1,0 +1,47 @@
+{{- /* /vocabulary/words/: all 1,000 words, searchable and filterable (static/vocab/app/words.js). The table is in the HTML, so
+   the list works without JavaScript; the script filters it and opens each word's card. */ -}}
+{{ define "main" }}
+{{ partial "vocab/head.html" . }}
+{{- $D := partialCached "vocab/data.html" "x" -}}
+{{- $L := site.Data.vocab.list -}}{{- $W := site.Data.vocab.words | default dict -}}{{- $Rt := site.Data.vocab.roots.roots -}}
+{{- $has := (partialCached "vocab/order.html" "x").has -}}
+<div class="mlp vop vop-words" id="vop" data-src="{{ $D.url }}?v={{ $D.v }}" data-base="{{ "vocabulary/" | relURL }}">
+  <header class="vop-head">
+    <p class="mlp-eyebrow"><a href="{{ "vocabulary/" | relURL }}">Vocabulary Ladder</a> · Word list</p>
+    <h1>All 1,000 words</h1>
+    <p>Every word on the Vocabulary Ladder, from the most familiar to the rarest, in 100 topics of ten. Search, filter by level, strand, part of speech or root, and open any word to see its picture, memory hook and examples. {{ len $has }} of the 1,000 cards are ready; the rest are being written.</p>
+  </header>
+  {{ partial "vocab/nav.html" "words" }}
+  <section class="vop-box vop-filters" aria-label="Search and filter">
+    <div class="vop-row">
+      <label class="vop-field vop-grow"><span class="vop-lab">Search</span><input type="search" id="vw-q" placeholder="A word or part of a meaning" autocomplete="off"></label>
+      <label class="vop-field"><span class="vop-lab">Level</span><select id="vw-level"><option value="">All levels</option>{{ range seq 10 }}<option value="{{ . }}">Level {{ . }}</option>{{ end }}</select></label>
+      <label class="vop-field"><span class="vop-lab">Strand</span><select id="vw-strand"><option value="">All strands</option>{{ range $L.strands }}<option value="{{ .n }}">{{ .title }}</option>{{ end }}</select></label>
+      <label class="vop-field"><span class="vop-lab">Part of speech</span><select id="vw-pos"><option value="">Any</option><option value="adj">Adjectives</option><option value="noun">Nouns</option><option value="verb">Verbs</option></select></label>
+      <label class="vop-field"><span class="vop-lab">Root</span><select id="vw-root"><option value="">Any root</option>{{ range $k, $r := $Rt }}{{ if $r.words }}<option value="{{ $k }}">{{ $r.form }} ({{ $r.means }})</option>{{ end }}{{ end }}</select></label>
+    </div>
+    <div class="vop-row"><label class="vop-check"><input type="checkbox" id="vw-ready"> Only words with finished cards</label><span class="vop-count" id="vw-count" aria-live="polite"></span></div>
+  </section>
+  <div class="vop-tablewrap">
+  <table class="vop-table" id="vw-table">
+    <thead><tr><th scope="col">#</th><th scope="col">Word</th><th scope="col">Meaning</th><th scope="col" class="vop-col-t">Topic</th></tr></thead>
+    <tbody>
+    {{- range $L.words }}
+      {{- $t := index $L.topics (int (sub .t 1)) -}}
+      {{- $ready := index $has .word -}}
+      <tr data-w="{{ .word }}" data-l="{{ .level }}" data-s="{{ $t.strand }}" data-p="{{ .pos }}" data-r=" {{ delimit .roots " " }} " data-t="{{ .topic }}"{{ if $ready }} data-ready="1"{{ end }}>
+        <td class="vop-n">{{ .n }}</td>
+        <td class="vop-wd">{{ if $ready }}<a href="{{ printf "vocabulary/words/%s/" (.word | urlize) | relURL }}" class="vop-wl" data-w="{{ .word }}">{{ .word }}</a>{{ else }}<span class="vop-wl0">{{ .word }}</span>{{ end }} <small class="vop-pos">{{ .pos }}</small></td>
+        <td class="vop-g">{{ .gloss }}</td>
+        <td class="vop-col-t"><a href="{{ printf "vocabulary/advanced-vocabulary/%s/" .topic | relURL }}">{{ $t.n }}. {{ $t.title }}</a></td>
+      </tr>
+    {{- end }}
+    </tbody>
+  </table>
+  </div>
+  <dialog class="vop-dialog" id="vw-dlg" aria-label="Word card"><div class="vop-dlg-in" id="vw-dlg-in"></div><form method="dialog"><button class="mlp-btn" value="close">Close</button></form></dialog>
+</div>
+{{ partial "inline/ml-js.html" "vocab/viz/vocab.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/common.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/words.js" }}
+{{ end }}

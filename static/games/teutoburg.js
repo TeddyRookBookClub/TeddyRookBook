@@ -1,4 +1,264 @@
-/* Saltus Teutoburgiensis: a maze chase set in the Teutoburg Forest, AD 9. Latin with optional English help. */
+/* Venatio aquilae (Eagle Hunt): maze, fair start positions, the chase, board rotation and scoring.
+   Pure logic with no DOM, so the Node tests can load this file directly. */
+(function (G) {
+  'use strict';
+  var DIRS = { up: [0, -1], right: [1, 0], down: [0, 1], left: [-1, 0] };
+  var CLOCK = ['up', 'right', 'down', 'left']; // board north, east, south, west, in clockwise order
+  var OPP = { up: 'down', down: 'up', left: 'right', right: 'left' };
+  var SPIN = 0.38, WARN = 0.75, CATCH = 0.72;
+
+  function rng(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0; var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+  // Difficulty for round r (1, 2, 3 ...). Speeds are in tiles per second.
+  function params(round) {
+    var k = Math.max(0, round - 1), vP = 5;
+    return {
+      round: round,
+      n: Math.min(10, 5 + Math.ceil(round / 2)),          // maze cells per side: 6 6 7 7 8 8 9 9 10 ...
+      braid: Math.max(0.3, 0.7 - 0.05 * k),               // share of dead ends opened into loops
+      vP: vP,
+      v0: vP * Math.min(0.88, 0.6 + 0.035 * k),           // the warrior's speed when the round starts
+      a: vP * Math.min(0.11, 0.035 + 0.008 * k),          // ... and how fast it grows each second
+      vMax: vP * Math.min(1.3, 1.02 + 0.035 * k),         // ... up to this
+      delay: Math.max(0.35, 1.1 - 0.1 * k),               // he waits this long before moving
+      margin: Math.max(1.5, 3.8 - 0.26 * k),              // seconds to spare on the best route
+      window: 1.6,
+      rotEvery: Math.max(2.9, 7.5 - 0.6 * k),             // seconds between turns of the board
+      allow180: round >= 3,
+      startTurned: round >= 3,
+      minGap: 8
+    };
+  }
+
+  // A perfect maze (depth-first) on n x n cells, drawn as a (2n+1) x (2n+1) grid of tiles (1 = forest, 0 = path),
+  // then "braided": some dead ends are opened so there are loops to run around.
+  function genMaze(n, r, braid) {
+    var S = 2 * n + 1, t = [], i;
+    for (i = 0; i < S * S; i++) t.push(1);
+    var seen = [], sx = Math.floor(r() * n), sy = Math.floor(r() * n), stack = [[sx, sy]];
+    seen[sy * n + sx] = 1; t[(2 * sy + 1) * S + 2 * sx + 1] = 0;
+    while (stack.length) {
+      var c = stack[stack.length - 1], nb = [];
+      for (i = 0; i < 4; i++) {
+        var v = DIRS[CLOCK[i]], nx = c[0] + v[0], ny = c[1] + v[1];
+        if (nx >= 0 && ny >= 0 && nx < n && ny < n && !seen[ny * n + nx]) nb.push([nx, ny, v]);
+      }
+      if (!nb.length) { stack.pop(); continue; }
+      var k = nb[Math.floor(r() * nb.length)];
+      t[(2 * c[1] + 1 + k[2][1]) * S + 2 * c[0] + 1 + k[2][0]] = 0;
+      t[(2 * k[1] + 1) * S + 2 * k[0] + 1] = 0; seen[k[1] * n + k[0]] = 1; stack.push([k[0], k[1]]);
+    }
+    var cells = []; for (var cy = 0; cy < n; cy++) for (var cx = 0; cx < n; cx++) cells.push([cx, cy]);
+    shuffle(cells, r).forEach(function (c) {
+      var walls = [], open = 0;
+      CLOCK.forEach(function (d) {
+        var v = DIRS[d], wx = 2 * c[0] + 1 + v[0], wy = 2 * c[1] + 1 + v[1];
+        if (t[wy * S + wx] === 0) open++;
+        else if (c[0] + v[0] >= 0 && c[1] + v[1] >= 0 && c[0] + v[0] < n && c[1] + v[1] < n) walls.push([wx, wy]);
+      });
+      if (open === 1 && walls.length && r() < braid) { var w = walls[Math.floor(r() * walls.length)]; t[w[1] * S + w[0]] = 0; }
+    });
+    return { n: n, S: S, t: t };
+  }
+  function isOpen(m, x, y) { return x >= 0 && y >= 0 && x < m.S && y < m.S && m.t[y * m.S + x] === 0; }
+  function bfs(m, x, y) {
+    var S = m.S, d = [], q = [y * S + x], i;
+    for (i = 0; i < S * S; i++) d.push(-1);
+    d[y * S + x] = 0;
+    for (var h = 0; h < q.length; h++) {
+      var k = q[h], kx = k % S, ky = (k / S) | 0;
+      for (i = 0; i < 4; i++) {
+        var v = DIRS[CLOCK[i]], nx = kx + v[0], ny = ky + v[1];
+        if (isOpen(m, nx, ny) && d[ny * S + nx] < 0) { d[ny * S + nx] = d[k] + 1; q.push(ny * S + nx); }
+      }
+    }
+    return d;
+  }
+  // shortest route from a to b as a list of tiles (a first)
+  function path(m, a, b) {
+    var d = bfs(m, b.x, b.y), out = [{ x: a.x, y: a.y }], x = a.x, y = a.y;
+    if (d[y * m.S + x] < 0) return null;
+    while (x !== b.x || y !== b.y) {
+      for (var i = 0; i < 4; i++) {
+        var v = DIRS[CLOCK[i]], nx = x + v[0], ny = y + v[1];
+        if (isOpen(m, nx, ny) && d[ny * m.S + nx] === d[y * m.S + x] - 1) { x = nx; y = ny; break; }
+      }
+      out.push({ x: x, y: y });
+    }
+    return out;
+  }
+  // how far the warrior has run t seconds after the round starts, and the inverse
+  function foeSpeed(t, P) { t = Math.max(0, t - P.delay); return t <= 0 ? 0 : Math.min(P.vMax, P.v0 + P.a * t); }
+  function foeDist(t, P) {
+    t = Math.max(0, t - P.delay); var tc = (P.vMax - P.v0) / P.a;
+    if (t <= tc) return P.v0 * t + 0.5 * P.a * t * t;
+    return P.v0 * tc + 0.5 * P.a * tc * tc + P.vMax * (t - tc);
+  }
+  function foeTime(d, P) {
+    if (d <= 0) return P.delay;
+    var tc = (P.vMax - P.v0) / P.a, dc = P.v0 * tc + 0.5 * P.a * tc * tc;
+    if (d <= dc) return P.delay + (-P.v0 + Math.sqrt(P.v0 * P.v0 + 2 * P.a * d)) / P.a;
+    return P.delay + tc + (d - dc) / P.vMax;
+  }
+  // Seconds to spare: over every tile of the hero's best route, how much later the warrior could first get there
+  // (within catching distance) than the hero does. Positive everywhere means a hero who runs the best route always wins.
+  function slack(m, route, foe, P) {
+    var d = bfs(m, foe.x, foe.y), s = 1e9;
+    for (var i = 0; i < route.length; i++) {
+      var dw = d[route[i].y * m.S + route[i].x];
+      var gap = foeTime(Math.max(0, dw - CATCH), P) - i / P.vP;
+      if (gap < s) s = gap;
+    }
+    return s;
+  }
+  function cellsOf(m) { var out = []; for (var y = 1; y < m.S; y += 2) for (var x = 1; x < m.S; x += 2) out.push({ x: x, y: y }); return out; }
+  // Hero in a corner region, eagle far away, warrior placed so the best route has between margin and margin+window seconds to spare.
+  function layout(m, P, r, relax) {
+    var n = m.n, third = Math.max(2, Math.ceil(n / 3)), corner = Math.floor(r() * 4);
+    var cx = Math.floor(r() * third), cy = Math.floor(r() * third);
+    if (corner & 1) cx = n - 1 - cx; if (corner & 2) cy = n - 1 - cy;
+    var hero = { x: 2 * cx + 1, y: 2 * cy + 1 }, dh = bfs(m, hero.x, hero.y), cells = cellsOf(m), max = 0;
+    cells.forEach(function (c) { max = Math.max(max, dh[c.y * m.S + c.x]); });
+    var far = cells.filter(function (c) { return dh[c.y * m.S + c.x] >= 0.78 * max; });
+    var eagle = far[Math.floor(r() * far.length)], route = path(m, hero, eagle);
+    var best = null, inWin = [], most = null;
+    cells.forEach(function (c) {
+      if (dh[c.y * m.S + c.x] < P.minGap) return;
+      var s = slack(m, route, c, P);
+      if (!most || s > most.s) most = { c: c, s: s };
+      if (s < P.margin) return;
+      if (s <= P.margin + P.window) inWin.push({ c: c, s: s });
+      if (!best || s < best.s) best = { c: c, s: s };
+    });
+    var pick = inWin.length ? inWin[Math.floor(r() * inWin.length)] : best;
+    if (!pick && relax) pick = most; // never reached in practice: the safest spot this forest has
+    if (!pick) return null;
+    return { hero: hero, eagle: eagle, foe: pick.c, route: route, slack: pick.s };
+  }
+
+  function newRound(round, seed, opt) {
+    opt = opt || {};
+    var P = params(round), r = rng(seed), m, L, tries = 0;
+    do { m = genMaze(P.n, r, P.braid); L = layout(m, P, r, tries >= 40); tries++; } while (!L);
+    var q = 0;
+    if (P.startTurned) q = 1 + Math.floor(r() * 3);
+    if (opt.q != null) q = opt.q;
+    return {
+      round: round, P: P, m: m, r: r, seed: seed,
+      hero: { x: L.hero.x, y: L.hero.y, dir: null, face: 'up', next: null, p: 0, mouth: 0, moved: false },
+      foe: { x: L.foe.x, y: L.foe.y, dir: 'up', p: 0, moving: false },
+      eagle: L.eagle, route: L.route, slack: L.slack, par: (L.route.length - 1) / P.vP,
+      q: q, ang: q * Math.PI / 2, spinFrom: 0, spinTo: 0, spinT: 0, freeze: 0,
+      rotT: P.rotEvery * (0.45 + 0.2 * r()), warned: false, nextDq: 0, turns: 0,
+      t: 0, elapsed: 0, anim: 0, glow: 0, over: null
+    };
+  }
+
+  function can(m, e, d) { if (!d) return false; var v = DIRS[d]; return isOpen(m, e.x + v[0], e.y + v[1]); }
+  function moveHero(H, dt) {
+    var h = H.hero, m = H.m;
+    if (h.p === 0) {
+      if (can(m, h, h.next)) h.dir = h.next;
+      if (!can(m, h, h.dir)) return false;
+    } else if (h.next === OPP[h.dir]) {
+      var b = DIRS[h.dir]; h.x += b[0]; h.y += b[1]; h.p = 1 - h.p; h.dir = h.next;
+    }
+    h.moved = true; h.face = h.dir; h.p += H.P.vP * dt; h.mouth += dt * 12;
+    while (h.p >= 1) {
+      var v = DIRS[h.dir]; h.x += v[0]; h.y += v[1]; h.p -= 1;
+      if (h.x === H.eagle.x && h.y === H.eagle.y) { h.p = 0; return true; }
+      if (can(m, h, h.next)) h.dir = h.next;
+      if (!can(m, h, h.dir)) { h.p = 0; break; }
+    }
+    h.face = h.dir;
+    return false;
+  }
+  function chase(H) { // the warrior's next step on a shortest route to the hero
+    var f = H.foe, m = H.m, d = bfs(m, H.hero.x, H.hero.y), best = null, bd = 1e9;
+    for (var i = 0; i < 4; i++) {
+      var dir = CLOCK[i], v = DIRS[dir], nx = f.x + v[0], ny = f.y + v[1];
+      if (!isOpen(m, nx, ny)) continue;
+      var dd = d[ny * m.S + nx]; if (dd >= 0 && dd < bd) { bd = dd; best = dir; }
+    }
+    return best;
+  }
+  function moveFoe(H, dt) {
+    var f = H.foe, sp = foeSpeed(H.t, H.P);
+    if (sp <= 0) return;
+    if (f.p === 0) { var d = chase(H); if (!d) return; f.dir = d; }
+    f.moving = true; f.p += sp * dt;
+    while (f.p >= 1) {
+      var v = DIRS[f.dir]; f.x += v[0]; f.y += v[1]; f.p -= 1;
+      var nd = chase(H); if (!nd) { f.p = 0; break; } f.dir = nd;
+    }
+  }
+  function pos(e) { var v = DIRS[e.dir] || [0, 0]; return { x: e.x + v[0] * e.p, y: e.y + v[1] * e.p }; }
+  function caught(H) { var a = pos(H.hero), b = pos(H.foe); return Math.abs(a.x - b.x) + Math.abs(a.y - b.y) < CATCH; }
+  function ease(k) { return k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; }
+  function pickTurn(H) { var opts = H.P.allow180 ? [1, -1, 1, -1, 2] : [1, -1]; return opts[Math.floor(H.r() * opts.length)]; }
+  function turn(H, instant) {
+    var dq = H.nextDq || pickTurn(H); H.nextDq = 0;
+    H.q = (H.q + dq + 4) % 4; H.turns++;
+    H.spinFrom = H.ang; H.spinTo = H.ang + dq * Math.PI / 2;
+    if (instant) { H.ang = H.spinTo; H.spinT = 0; } else H.spinT = SPIN;
+    H.freeze = SPIN + 0.08; H.glow = 1;
+    H.rotT = H.P.rotEvery * (0.8 + 0.4 * H.r()); H.warned = false;
+    return dq;
+  }
+  // Advance the round by dt seconds. Returns a list of events: 'warn', 'turn', 'win', 'caught'.
+  function step(H, dt, opt) {
+    var ev = [];
+    if (H.over) return ev;
+    H.anim += dt; H.glow = Math.max(0, H.glow - dt * 0.8);
+    if (H.spinT > 0) { H.spinT = Math.max(0, H.spinT - dt); H.ang = H.spinFrom + (H.spinTo - H.spinFrom) * ease(1 - H.spinT / SPIN); }
+    if (H.freeze > 0) { H.freeze = Math.max(0, H.freeze - dt); return ev; }
+    H.t += dt; H.elapsed += dt; H.rotT -= dt;
+    if (!H.warned && H.rotT <= WARN) { H.warned = true; H.nextDq = pickTurn(H); ev.push('warn'); }
+    if (H.rotT <= 0) { turn(H, opt && opt.instant); ev.push('turn'); return ev; }
+    if (moveHero(H, dt)) { H.over = 'win'; ev.push('win'); return ev; }
+    moveFoe(H, dt);
+    if (caught(H)) { H.over = 'caught'; ev.push('caught'); }
+    return ev;
+  }
+
+  // Controls are tied to the board: Up (W, the N button, a swipe up) always means board north, whatever the turn.
+  function inputToBoard(key, q) { return key; }
+  // where a board direction points on the screen after q clockwise quarter turns
+  function boardToScreen(d, q) { return CLOCK[(CLOCK.indexOf(d) + ((q % 4) + 4)) % 4]; }
+  function screenToBoard(d, q) { return CLOCK[(CLOCK.indexOf(d) - (q % 4) + 8) % 4]; }
+  // the same turn as a canvas rotation (y points down, so a positive angle turns clockwise)
+  function rotVec(x, y, ang) { var c = Math.cos(ang), s = Math.sin(ang); return [x * c - y * s, x * s + y * c]; }
+  function quarter(ang) { return ((Math.round(ang / (Math.PI / 2)) % 4) + 4) % 4; }
+
+  // points for a recovered eagle: a base that grows each round plus a bonus for a quick run
+  function points(round, elapsed, par) {
+    var bonus = Math.max(0, Math.round(par * 2 + 4 - elapsed)) * 10;
+    return 100 + 50 * (round - 1) + Math.min(bonus, 300);
+  }
+  // a win moves you on; a catch costs a helmet and you replay the same round in a fresh forest
+  function nextRound(round, won) { return won ? round + 1 : round; }
+
+  var API = {
+    DIRS: DIRS, CLOCK: CLOCK, OPP: OPP, SPIN: SPIN, WARN: WARN, CATCH: CATCH,
+    rng: rng, params: params, genMaze: genMaze, isOpen: isOpen, bfs: bfs, path: path,
+    foeSpeed: foeSpeed, foeDist: foeDist, foeTime: foeTime, slack: slack, layout: layout,
+    newRound: newRound, step: step, turn: turn, pos: pos, caught: caught, chase: chase,
+    inputToBoard: inputToBoard, boardToScreen: boardToScreen, screenToBoard: screenToBoard, rotVec: rotVec, quarter: quarter,
+    points: points, nextRound: nextRound
+  };
+  if (typeof module === 'object' && module.exports) module.exports = API;
+  if (G) G.TeutHunt = API;
+})(typeof window !== 'undefined' ? window : null);
+/* Saltus Teutoburgiensis: a maze chase set in the Teutoburg Forest, AD 9. Latin with optional English help.
+   Three modes: Tres dies (Classic, the original game), Venatio aquilae (Eagle Hunt, on a turning board) and Expeditio (Campaign). */
 (function (W, D) {
   'use strict';
   var root = D.getElementById('teut'); if (!root) return;
@@ -231,6 +491,7 @@
   }
   function dayWon() {
     state = 'card';
+    if (gameMode === 'camp') { campaignAfterDay(); return; }
     if (S.day < 3) { S.day++; S.eaten = 0; bonus = null; loadMaze(); resetActors(); var dc = dayCard(); card(function () { return winCard(false) + dc(); }); }
     else { card(winCard(true)); }
   }
@@ -262,6 +523,7 @@
   // ---------- drawing ----------
   var cv, ctx, TS = 24, dpr = 1;
   function resize() {
+    if (H) { huntResize(); return; }
     var wrapEl = root.querySelector('.tb-stage'), w = wrapEl.clientWidth, h = wrapEl.clientHeight;
     TS = Math.floor(Math.min(w / CW, h / CH)); TS = Math.max(12, TS);
     dpr = Math.min(2, W.devicePixelRatio || 1);
@@ -365,7 +627,7 @@
     ctx.beginPath(); rainDrops.forEach(function (d) { ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 3, d.y + 10); d.y += d.v / 60; d.x -= 1; if (d.y > CH * TS) { d.y = -10; d.x = Math.random() * CW * TS; } }); ctx.stroke();
     if (state === 'ready') { ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(0, 8.6 * TS, CW * TS, 1.8 * TS); ctx.fillStyle = '#f3dfa3'; ctx.font = 'bold ' + Math.round(TS * 0.9) + 'px Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(X.day[0] + ' ' + roman(S.day) + ' · ' + X.goal1[0], CW * TS / 2, 9.5 * TS); }
   }
-  function roman(n) { return ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][n] || String(n); }
+  function roman(n) { if (!(n > 0 && n < 4000)) return String(n); var v = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1], l = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'], o = ''; for (var i = 0; i < v.length; i++) while (n >= v[i]) { o += l[i]; n -= v[i]; } return o; }
 
   // ---------- UI ----------
   function shell() {
@@ -374,16 +636,16 @@
       '<div class="tb-hud"><span class="hs" id="h-score"></span><span class="hs" id="h-lives"></span><span class="hs" id="h-day"></span><span class="hs" id="h-words"></span></div>' +
       '<div class="tb-btns"><label class="tb-en"><input type="checkbox" id="tb-en"' + (showEn ? ' checked' : '') + '> English</label>' +
       '<button type="button" class="tb-btn" id="tb-pause" title="Pause (P)">❚❚</button><button type="button" class="tb-btn" id="tb-help" title="How to play and history">?</button></div></div>' +
-      '<div class="tb-main"><div class="tb-stage"><canvas id="tb-cv"></canvas><div class="tb-flash" id="tb-flash"></div><div class="tb-card" id="tb-card" hidden></div></div>' +
-      '<aside class="tb-side"><div id="tb-side-speed">' + speedHTML() + '</div><h3>' + T(X.words) + '</h3><ul id="tb-learned" class="tb-learned"></ul><h3>Germani</h3><ul class="tb-tribes">' +
-      TRIBES.map(function (t) { return '<li><i style="background:' + t.color + '"></i><b>' + t.name + '</b><small>' + t.note + '</small></li>'; }).join('') + '</ul></aside></div>' +
+      '<div class="tb-main"><div class="tb-stage"><canvas id="tb-cv"></canvas><div class="tb-flash" id="tb-flash" role="status" aria-live="polite"></div><div class="tb-card" id="tb-card" hidden></div></div>' +
+      '<aside class="tb-side"><div id="tb-side-speed">' + speedHTML() + '</div><div id="tb-side-c"><h3>' + T(X.words) + '</h3><ul id="tb-learned" class="tb-learned"></ul><h3>Germani</h3><ul class="tb-tribes">' +
+      TRIBES.map(function (t) { return '<li><i style="background:' + t.color + '"></i><b>' + t.name + '</b><small>' + t.note + '</small></li>'; }).join('') + '</ul></div><div id="tb-side-h" class="tb-hside" hidden></div></aside></div>' +
       '<div class="tb-pad" aria-label="Direction buttons">' + ['up', 'left', 'right', 'down'].map(function (d) { return '<button type="button" data-d="' + d + '" class="pad-' + d + '"><span>' + { up: '▲', down: '▼', left: '◀', right: '▶' }[d] + '</span><small>' + X[d][0] + '</small></button>'; }).join('') + '</div>';
     cv = root.querySelector('#tb-cv'); ctx = cv.getContext('2d');
     W.addEventListener('resize', function () { resize(); });
-    root.querySelector('#tb-en').onchange = function (e) { showEn = e.target.checked; try { W.localStorage.setItem('teut-en', showEn ? '1' : '0'); } catch (x) { } renderHud(); root.querySelector('#tb-side-speed').innerHTML = speedHTML(); if (state === 'card' || state === 'menu' || cardHTML) refreshCard(); };
+    root.querySelector('#tb-en').onchange = function (e) { showEn = e.target.checked; try { W.localStorage.setItem('teut-en', showEn ? '1' : '0'); } catch (x) { } renderHud(); root.querySelector('#tb-side-speed').innerHTML = speedHTML(); if (H) side('hunt'); if (state === 'card' || state === 'menu' || cardHTML) refreshCard(); };
     root.querySelector('#tb-pause').onclick = togglePause;
     root.addEventListener('input', function (e) { if (e.target.classList && e.target.classList.contains('tb-spd')) setSpeed(+e.target.value); });
-    root.querySelector('#tb-help').onclick = function () { if (state === 'play') togglePause(); card(helpCard, true); };
+    root.querySelector('#tb-help').onclick = function () { if (state === 'play') togglePause(); if (cardHTML && !cardIsHelp) prevCard = cardHTML; card(helpCard, true); };
     Array.prototype.forEach.call(root.querySelectorAll('[data-d]'), function (b) {
       b.addEventListener('pointerdown', function (e) { e.preventDefault(); steer(b.dataset.d); });
     });
@@ -392,7 +654,7 @@
       var k = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right' }[e.key];
       if (k && (state === 'play' || state === 'ready')) { e.preventDefault(); steer(k); }
       if ((e.key === 'p' || e.key === 'P' || e.key === 'Escape') && S) togglePause();
-      if ((e.key === 'Enter' || e.key === ' ') && state === 'card') { e.preventDefault(); var b = root.querySelector('#tb-card .go'); if (b) b.click(); }
+      if ((e.key === 'Enter' || e.key === ' ') && state === 'card') { var fa = D.activeElement; if (fa && fa.tagName === 'BUTTON' && root.contains(fa)) return; e.preventDefault(); var b = root.querySelector('#tb-card .go'); if (b) b.click(); }
     });
     // swipe
     var sx = 0, sy = 0;
@@ -402,6 +664,15 @@
       if (Math.abs(dx) + Math.abs(dy) > 24) { steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up')); sx = e.touches[0].clientX; sy = e.touches[0].clientY; }
       e.preventDefault();
     }, { passive: false });
+    var st = root.querySelector('.tb-stage'), tx0 = 0, ty0 = 0;
+    st.addEventListener('touchstart', function (e) { tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; }, { passive: true });
+    st.addEventListener('touchmove', function (e) {
+      if (!H || e.target === cv || (state !== 'play' && state !== 'ready')) return;
+      var dx = e.touches[0].clientX - tx0, dy = e.touches[0].clientY - ty0;
+      if (Math.abs(dx) + Math.abs(dy) > 24) { steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up')); tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; }
+      e.preventDefault();
+    }, { passive: false });
+    D.addEventListener('visibilitychange', function () { if (D.hidden && H && (state === 'play' || state === 'ready')) togglePause(); });
     resize();
   }
   function steer(d) { if (player) player.next = d; }
@@ -413,6 +684,7 @@
   var hudCache = '';
   function renderHud() {
     if (!S) return;
+    if (H) { renderHuntHud(); return; }
     root.querySelector('#h-score').innerHTML = '<span class="la">' + X.score[0] + '</span> <b>' + S.score + '</b>';
     root.querySelector('#h-lives').innerHTML = '<span class="la">' + X.lives[0] + '</span> ' + Array(Math.max(0, S.lives) + 1).join('🪖');
     root.querySelector('#h-day').innerHTML = '<span class="la">' + X.day[0] + '</span> <b>' + roman(S.day) + '</b>';
@@ -435,20 +707,29 @@
     var el = root.querySelector('#tb-card'); if (!cardHTML) { el.hidden = true; return; }
     var html = typeof cardHTML === 'function' ? cardHTML() : cardHTML;
     el.innerHTML = '<div class="tb-cardin">' + html + '</div>'; el.hidden = false; el.scrollTop = 0;
-    var go = el.querySelector('.go');
-    if (go) go.onclick = function () {
-      var act = go.dataset.act; cardHTML = ''; el.hidden = true;
-      if (act === 'new') newGame();
-      if (act === 'play') { state = 'ready'; readyT = 1.4; renderHud(); }
-      if (act === 'close') { if (!S) { card(menuCard); } else if (state === 'paused') { state = prevState || 'play'; } }
-    };
-    var h = el.querySelector('.helpbtn'); if (h) h.onclick = function () { card(helpCard, true); };
+    Array.prototype.forEach.call(el.querySelectorAll('.go'), function (go) {
+      go.onclick = function () {
+        var act = go.dataset.act; cardHTML = ''; el.hidden = true;
+        if (act === 'new') startClassic();
+        if (act === 'play') { state = 'ready'; readyT = 1.4; renderHud(); }
+        if (act === 'close') { var pc = prevCard; prevCard = null; if (!S) { card(menuCard); } else if (state === 'paused') { state = prevState || 'play'; } else if (pc) { card(pc); } }
+        if (act === 'hunt') startHunt();
+        if (act === 'camp') startCampaign();
+        if (act === 'hplay') { state = 'ready'; hReadyT = 2.2; renderHud(); }
+        if (act === 'menu') { prevCard = null; toMenu(); }
+      };
+    });
+    var h = el.querySelector('.helpbtn'); if (h) h.onclick = function () { if (cardHTML && !cardIsHelp) prevCard = cardHTML; card(helpCard, true); };
   }
   function goals() { return '<ul class="tb-goals"><li>🪙 ' + T(X.goal1) + '</li><li>🦅 ' + T(X.goal3) + '</li><li>⚠️ ' + T(X.goal2) + '</li></ul>'; }
   function menuCard() {
-    return '<h2>' + T(X.title) + '</h2><p class="lead">' + (showEn ? 'September, AD 9. You are a legionary in Varus’ army, marching through the rain-soaked forest of Germania. Collect coins, grab the eagle standards, and escape the Germanic tribes.' : '') + '</p>' +
-      goals() + speedHTML() + '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="new">' + T(X.start) + '</button><button type="button" class="tb-btn helpbtn">' + T(X.help) + '</button></div>' +
-      '<p class="small">Arrow keys or WASD · swipe or use the buttons on a phone · P pauses. Nothing is saved: each game starts fresh.</p>';
+    return '<h2>' + T(X.title) + '</h2><p class="lead">' + (showEn ? 'You are a Roman legionary in the forests of Germania. Choose how to play:' : '') + '</p>' +
+      '<div class="tb-modes">' +
+      modeBtn('new', '🪙', XH.mClassic, 'September, AD 9. Collect coins over three days, grab the eagle standards and escape four Germanic tribes.') +
+      modeBtn('hunt', '🦅', XH.mHunt, 'AD 15–16. Race one warrior to a lost eagle while the forest board turns. Up always runs north.', '<span class="tb-mrec">' + recLine('hunt').replace(/<\/?p[^>]*>/g, '') + '</span>') +
+      modeBtn('camp', '⚔️', XH.mCamp, 'Classic days and eagle hunts in turn, a little harder each time, for one score.', '<span class="tb-mrec">' + recLine('camp').replace(/<\/?p[^>]*>/g, '') + '</span>') +
+      '</div>' + speedHTML() + '<div class="tb-row"><button type="button" class="tb-btn helpbtn">' + T(X.help) + '</button></div>' +
+      '<p class="small">Arrow keys or WASD · swipe or use the buttons on a phone · P pauses. Classic saves nothing; Eagle Hunt and Campaign keep your best scores on this device.</p>';
   }
   function dayCard() {
     return function () {
@@ -466,6 +747,7 @@
       wordList() + '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="new">' + T(X.again) + '</button></div>';
   }
   function lossCard() {
+    if (gameMode === 'camp') return campOverCard(noteRecords());
     return '<h2>' + T(X.lost) + '</h2><p class="la big">Quintili Vare, legiones redde!</p>' + (showEn ? '<p class="gloss">“Quinctilius Varus, give me back my legions!”, which Augustus is said to have cried out for months afterward (Suetonius, <i>Augustus</i> 23).</p>' +
       '<p>Varus and several senior officers took their own lives (Velleius Paterculus 2.119). The three legions and their eagles were lost. Rome recovered two eagles under Germanicus in AD 15 and 16 (Tacitus, <i>Annals</i> 1.60, 2.25) and the third in AD 41 (Cassius Dio 60.8). The 17th, 18th and 19th legions were never raised again.</p>' : '') +
       '<p class="score">' + X.score[0] + ': <b>' + S.score + '</b> · ' + X.day[0] + ' ' + roman(S.day) + ' · ' + X.words[0] + ': <b>' + learned.length + '</b></p>' + wordList() +
@@ -485,24 +767,365 @@
       '<li>🍞 Bonus supplies appear below the rampart twice per day: <i>panis</i> (bread), <i>posca</i> (the sour-wine drink of Roman soldiers), <i>galea</i> (helmet), <i>pilum</i> (javelin).</li>' +
       '<li>📜 Every 30 coins you pick up a new Latin word about the battle. Your words are listed beside the map and at the end.</li>' +
       '<li>🪖 You have three lives (<i>vitae</i>). The tribes hunt differently: the Cherusci chase you directly, the Bructeri cut ahead of you, the Marsi work with the Cherusci, and the Chatti close in and then fall back.</li></ul>' +
+      '<h3>' + T(XH.mHunt) + '</h3>' + huntRules() +
+      '<ul><li>Each round is a new forest with a fair route: if you run the best way, you reach the eagle first. Rounds bring a bigger forest, a faster warrior and more frequent turns; from round III the board can also turn halfway around (180°).</li>' +
+      '<li>Just before a turn, the board’s edge glows and an arrow shows which way it will turn. The red <b>N</b> plaque and the compass rose turn with the board.</li>' +
+      '<li>An eagle scores 100, plus 50 for each round after the first, plus a bonus for a quick run. If you are caught you lose a helmet and replay the round in a new forest. Your best score, round and streak (<i>victoriae</i>, eagles in a row without being caught) are kept on this device.</li></ul>' +
+      '<h3>' + T(XH.mCamp) + '</h3><p>Classic days and eagle hunts take turns, each faster than the one before, for one score. Three helmets last the whole campaign, and every eagle you recover wins back one you lost.</p>' +
       '<h3>' + T(X.history) + '</h3>' +
       '<p>In September AD 9, Publius Quinctilius Varus, governor of Germania, led the 17th, 18th and 19th legions with auxiliary troops and a long baggage train through wooded, hilly country. Arminius, a prince of the Cherusci who had served as a commander of Roman auxiliaries and held Roman citizenship, had secretly united several tribes. Over three or four days of rain and ambushes the army was destroyed. Estimates of the dead run from about 15,000 to 20,000.</p>' +
       '<p>The site is widely identified with Kalkriese, near Osnabrück in Germany, where a narrow passage runs between the Kalkriese hill and a large bog. Excavations there since 1987 have found a Germanic turf wall, Roman weapons and armor, a famous iron face mask, and many coins, including copper coins countermarked VAR. Some scholars still debate whether Kalkriese was the main battlefield.</p>' +
       '<p><b>The four tribes in the game</b> are ones ancient writers link to the battle or its aftermath:</p><ul>' + TRIBES.map(function (t) { return '<li><b>' + t.name + '</b>: ' + t.note + '</li>'; }).join('') + '</ul>' +
       '<p class="small">Their colors are for play only. Ancient sources: Velleius Paterculus 2.117–120; Cassius Dio 56.18–24; Tacitus, <i>Annals</i> 1.55–71; Suetonius, <i>Augustus</i> 23. The name <i>saltus Teutoburgiensis</i> comes from Tacitus, <i>Annals</i> 1.60.</p>' +
-      '<h3>Latin in this game</h3><table class="gl">' + Object.keys(X).map(function (k) { return '<tr><td class="la">' + X[k][0] + '</td><td>' + X[k][1] + '</td></tr>'; }).join('') + '</table>' +
-      '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="close">' + T(['Redi', 'Back']) + '</button></div>';
+      '<h3>Latin in this game</h3><table class="gl">' + Object.keys(X).concat(Object.keys(XH).map(function (k) { return 'h:' + k; })).map(function (k) { var w = k.indexOf('h:') === 0 ? XH[k.slice(2)] : X[k]; return '<tr><td class="la">' + w[0] + '</td><td>' + w[1] + '</td></tr>'; }).join('') + '</table>' +
+      '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="close">' + T(['Redi', 'Back']) + '</button>' + (S ? '<button type="button" class="tb-btn go" data-act="menu">' + T(XH.modes) + '</button>' : '') + '</div>';
+  }
+
+  // ======================================================================
+  // Venatio aquilae (Eagle Hunt) and Expeditio (Campaign). The rules live in TeutHunt above;
+  // this part draws the turning board and runs the rounds. Classic play above is unchanged.
+  // ======================================================================
+  var HUNT = W.TeutHunt, H = null, gameMode = null, HT = 20, hbg = null, hReadyT = 0, hEndT = 0, hrain = [], prevCard = null;
+  var RM = false; try { RM = W.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
+  var XH = {
+    mClassic: ['Tres dies', 'Classic'], mHunt: ['Venatio aquilae', 'Eagle Hunt'], mCamp: ['Expeditio', 'Campaign'],
+    round: ['Certamen', 'Round'], streak: ['Victoriae', 'Win streak'], stage: ['Gradus', 'Stage'], eagles: ['Aquilae', 'Eagles'],
+    won: ['Aquilam recepisti!', 'You recovered the eagle!'], foe: ['Cave Germanum!', 'Beware the German!'],
+    turns: ['Silva vertitur!', 'The forest turns!'], seek: ['Germanicus aquilas quaerit.', 'Germanicus is looking for the eagles.'],
+    north: ['Septentrio', 'North'], east: ['Oriens', 'East'], south: ['Meridies', 'South'], west: ['Occidens', 'West'],
+    over: ['Finis', 'The end'], modes: ['Modi', 'Modes'], run: ['Curre!', 'Run!']
+  };
+  var WHERE = ['at the top', 'on the right', 'at the bottom', 'on the left'];
+  var PADC = { up: ['N', XH.north], right: ['E', XH.east], down: ['S', XH.south], left: ['W', XH.west] };
+  var ARROW = { up: '▲', down: '▼', left: '◀', right: '▶' };
+
+  // ---------- records (this device only) ----------
+  var REC_KEY = 'trb-teutoburg-v1';
+  function loadRec() { try { var o = JSON.parse(W.localStorage.getItem(REC_KEY) || '{}'); if (o && typeof o === 'object') { o.hunt = o.hunt || {}; o.camp = o.camp || {}; return o; } } catch (e) { } return { hunt: {}, camp: {} }; }
+  function saveRec(o) { try { W.localStorage.setItem(REC_KEY, JSON.stringify(o)); } catch (e) { } }
+  function noteRecords() { // returns which records this run just beat
+    var R = loadRec(), news = {};
+    if (gameMode === 'hunt') {
+      var h = R.hunt;
+      if (S.score > (h.score || 0)) { h.score = S.score; news.score = 1; }
+      if (S.cleared > (h.round || 0)) { h.round = S.cleared; news.round = 1; }
+      if (S.bestStreak > (h.streak || 0)) { h.streak = S.bestStreak; news.streak = 1; }
+    } else if (gameMode === 'camp') {
+      var c = R.camp;
+      if (S.score > (c.score || 0)) { c.score = S.score; news.score = 1; }
+      if (S.stage > (c.stage || 0)) { c.stage = S.stage; news.stage = 1; }
+    }
+    saveRec(R); return news;
+  }
+  function recLine(which, news) {
+    var R = loadRec(), r = R[which], nb = function (k) { return news && news[k] ? ' <span class="tb-new">' + (showEn ? 'new best' : '★') + '</span>' : ''; };
+    var lab = function (w) { return '<span class="la">' + w[0] + '</span>' + (showEn ? ' <span class="en">(' + w[1].toLowerCase() + ')</span>' : ''); };
+    if (which === 'hunt') {
+      if (!r.score && !r.round) return '<p class="tb-rec">' + (showEn ? 'No records yet on this device.' : '—') + '</p>';
+      return '<p class="tb-rec">🏆 ' + lab(X.score) + ' <b>' + (r.score || 0) + '</b>' + nb('score') + ' · ' + lab(XH.round) + ' <b>' + (r.round ? roman(r.round) : '—') + '</b>' + nb('round') + ' · ' + lab(XH.streak) + ' <b>' + (r.streak || 0) + '</b>' + nb('streak') + '</p>';
+    }
+    if (!r.score) return '<p class="tb-rec">' + (showEn ? 'No records yet on this device.' : '—') + '</p>';
+    return '<p class="tb-rec">🏆 ' + lab(X.score) + ' <b>' + r.score + '</b>' + nb('score') + ' · ' + lab(XH.stage) + ' <b>' + roman(r.stage || 1) + '</b>' + nb('stage') + '</p>';
+  }
+
+  // ---------- modes ----------
+  function setPad(compass) {
+    var pad = root.querySelector('.tb-pad'); pad.classList.toggle('compass', !!compass);
+    Array.prototype.forEach.call(pad.querySelectorAll('[data-d]'), function (b) {
+      var d = b.dataset.d;
+      b.innerHTML = compass ? '<span>' + PADC[d][0] + '</span><small>' + PADC[d][1][0] + '</small>' : '<span>' + ARROW[d] + '</span><small>' + X[d][0] + '</small>';
+      b.setAttribute('aria-label', compass ? PADC[d][1][1] : X[d][1]);
+    });
+  }
+  function side(which) {
+    root.querySelector('#tb-side-c').hidden = which !== 'classic';
+    var h = root.querySelector('#tb-side-h'); h.hidden = which !== 'hunt'; if (which === 'hunt') h.innerHTML = huntSide();
+  }
+  function useClassicBoard() { H = null; cv.classList.remove('hunt'); setPad(false); side('classic'); resize(); placeFlash(); }
+  function startClassic() { gameMode = 'classic'; useClassicBoard(); newGame(); }
+  function toMenu() { S = null; H = null; gameMode = null; state = 'menu'; useClassicBoard(); hudClear(); card(menuCard); }
+  function hudClear() { ['#h-score', '#h-lives', '#h-day', '#h-words'].forEach(function (s) { root.querySelector(s).innerHTML = ''; }); }
+  function startHunt() {
+    gameMode = 'hunt'; learned = [];
+    S = { score: 0, lives: 3, day: 1, loops: 0, round: 1, streak: 0, bestStreak: 0, cleared: 0, eagles: 0 };
+    beginHuntRound(); state = 'card'; card(huntIntro);
+  }
+  function startCampaign() {
+    gameMode = 'camp'; useClassicBoard();
+    S = { score: 0, lives: 3, day: 1, loops: 0, round: 1, streak: 0, bestStreak: 0, cleared: 0, eagles: 0, stage: 1 }; learned = [];
+    loadMaze(); resetActors(); bonus = null; S.eaten = 0; state = 'card';
+    var dc = dayCard(); card(function () { return campIntro() + dc(); });
+  }
+  function beginHuntRound() {
+    H = HUNT.newRound(S.round, (Math.random() * 2147483646 | 0) + 1);
+    player = H.hero; hbg = null; cv.classList.add('hunt'); setPad(true); side('hunt'); huntResize(); renderHud();
+    state = 'ready'; hReadyT = 2.2;
+  }
+  // Campaign: a Classic day is done, so an eagle hunt comes next
+  function campaignAfterDay() {
+    S.stage++; noteRecords(); beginHuntRound(); state = 'card';
+    card(function () { return winCard(false) + huntNextHTML(); });
+  }
+  function campaignAfterHunt(pts, helm) {
+    S.stage++; S.day++; noteRecords(); useClassicBoard(); loadMaze(); resetActors(); bonus = null; S.eaten = 0; state = 'card';
+    var dc = dayCard();
+    card(function () { return '<p class="win">' + T(XH.won) + ' <b>+' + pts + '</b>' + (helm ? ' · +1 🪖' : '') + '</p>' + dc(); });
+  }
+
+  // ---------- one round ----------
+  function huntUpdate(dt) {
+    anim += dt;
+    if (state === 'ready') { hReadyT -= dt; H.anim += dt; if (hReadyT <= 0) { state = 'play'; flash(XH.run[0], XH.run[1], 'gold'); } return; }
+    if (state === 'dying' || state === 'hwon') {
+      hEndT -= dt; H.anim += dt; H.glow = Math.max(0, H.glow - dt);
+      if (hEndT <= 0) { if (state === 'dying') afterCaught(); else afterWin(); }
+      return;
+    }
+    if (state !== 'play') return;
+    var ev = HUNT.step(H, dt, { instant: RM });
+    ev.forEach(function (e) {
+      if (e === 'turn') {
+        placeFlash(); flash(XH.turns[0], 'North is now ' + WHERE[H.q] + '.', 'turn');
+        if (RM) { var st = root.querySelector('.tb-stage'); st.classList.remove('tflash'); void st.offsetWidth; st.classList.add('tflash'); }
+      } else if (e === 'win') {
+        var pts = HUNT.points(S.round, H.elapsed, H.par); S.score += pts; S.streak++; S.eagles++; S.cleared = Math.max(S.cleared, S.round);
+        S.bestStreak = Math.max(S.bestStreak, S.streak); S.lastPts = pts;
+        state = 'hwon'; hEndT = 1.3; H.glow = 1;
+        flash(XH.won[0] + ' +' + pts, XH.won[1], 'gold');
+        if (gameMode === 'hunt') noteRecords();
+      } else if (e === 'caught') {
+        S.lives--; S.streak = 0; state = 'dying'; hEndT = 1.5;
+        flash(X.caught[0], X.caught[1], 'red');
+      }
+    });
+    var hk = S.score + '|' + S.lives + '|' + S.round + '|' + S.streak;
+    if (hk !== hudCache) { renderHud(); hudCache = hk; }
+  }
+  function afterWin() {
+    if (gameMode === 'camp') {
+      var helm = S.lives < 3; if (helm) S.lives++;
+      S.round = HUNT.nextRound(S.round, true); campaignAfterHunt(S.lastPts, helm); return;
+    }
+    S.round = HUNT.nextRound(S.round, true); beginHuntRound();
+  }
+  function afterCaught() {
+    if (S.lives <= 0) { var news = noteRecords(); state = 'card'; card(gameMode === 'camp' ? campOverCard(news) : huntOverCard(news)); renderHud(); return; }
+    S.round = HUNT.nextRound(S.round, false); beginHuntRound();
+  }
+
+  // ---------- drawing the turning board ----------
+  function huntResize() {
+    if (!H) return;
+    var st = root.querySelector('.tb-stage'), w = st.clientWidth, h = st.clientHeight, U = H.m.S + 2;
+    HT = Math.max(9, Math.floor((Math.min(w, h) - 8) / U));
+    dpr = Math.min(2, W.devicePixelRatio || 1);
+    var px = HT * U; cv.style.width = px + 'px'; cv.style.height = px + 'px';
+    cv.width = Math.round(px * dpr); cv.height = Math.round(px * dpr); hbg = null; placeFlash();
+  }
+  // during the hunt, messages go beside or above the board so they never hide the N
+  function placeFlash() {
+    var f = root.querySelector('#tb-flash'), s = f.style; s.top = s.left = s.bottom = s.maxWidth = '';
+    if (!H) return;
+    var st = root.querySelector('.tb-stage'), side = cv.offsetWidth, gv = (st.clientHeight - side) / 2, gh = (st.clientWidth - side) / 2;
+    if (gv >= 70) s.top = Math.max(4, gv / 2 - 32) + 'px';
+    else if (gh >= 150) { s.top = '42%'; s.left = (gh / 2) + 'px'; s.maxWidth = (gh - 16) + 'px'; }
+    else if (H.q === 0) { s.top = 'auto'; s.bottom = '1rem'; }
+  }
+  function huntBackground() {
+    var m = H.m, U = m.S + 2, px = HT * U, B = m.S * HT;
+    hbg = D.createElement('canvas'); hbg.width = Math.round(px * dpr); hbg.height = hbg.width;
+    var c = hbg.getContext('2d'); c.scale(dpr, dpr);
+    var r = rnd(H.seed % 2147483646 + 1), i, x, y;
+    // oak frame
+    var fg = c.createLinearGradient(0, 0, px, px); fg.addColorStop(0, '#5a3f24'); fg.addColorStop(1, '#2e2012');
+    c.fillStyle = fg; c.fillRect(0, 0, px, px);
+    c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 1;
+    for (i = 0; i < 26; i++) { var o = r() * px; c.beginPath(); c.moveTo(o, 0); c.lineTo(o + (r() - 0.5) * 30, HT); c.moveTo(o, px); c.lineTo(o + (r() - 0.5) * 30, px - HT); c.moveTo(0, o); c.lineTo(HT, o + (r() - 0.5) * 30); c.moveTo(px, o); c.lineTo(px - HT, o + (r() - 0.5) * 30); c.stroke(); }
+    c.save(); c.translate(HT, HT); c.beginPath(); c.rect(0, 0, B, B); c.clip();
+    c.fillStyle = '#5b4a33'; c.fillRect(0, 0, B, B);
+    for (i = 0; i < B * B / 260; i++) { c.fillStyle = r() < 0.5 ? 'rgba(40,30,18,.25)' : 'rgba(120,100,70,.18)'; c.beginPath(); c.ellipse(r() * B, r() * B, 2 + r() * 5, 1 + r() * 2.5, r() * 3, 0, Math.PI * 2); c.fill(); }
+    for (i = 0; i < m.S; i++) { c.fillStyle = 'rgba(70,90,95,.35)'; c.beginPath(); c.ellipse(r() * B, r() * B, 5 + r() * 9, 3 + r() * 4, 0, 0, Math.PI * 2); c.fill(); }
+    for (y = 0; y < m.S; y++) for (x = 0; x < m.S; x++) {
+      if (m.t[y * m.S + x] !== 1) continue;
+      var cx = x * HT + HT / 2, cy = y * HT + HT / 2;
+      c.fillStyle = '#1f3a22'; c.fillRect(x * HT - 1, y * HT - 1, HT + 2, HT + 2);
+      for (var k = 0; k < 3; k++) {
+        var rr = HT * (0.32 + r() * 0.22), ox = (r() - 0.5) * HT * 0.6, oy = (r() - 0.5) * HT * 0.6;
+        var g = c.createRadialGradient(cx + ox - rr * 0.3, cy + oy - rr * 0.3, rr * 0.1, cx + ox, cy + oy, rr);
+        var dark = r() < 0.5; g.addColorStop(0, dark ? '#3f6b3a' : '#4d7a3f'); g.addColorStop(1, dark ? '#1c3620' : '#244426');
+        c.fillStyle = g; c.beginPath(); c.arc(cx + ox, cy + oy, rr, 0, Math.PI * 2); c.fill();
+      }
+    }
+    c.restore();
+    c.strokeStyle = 'rgba(243,223,163,.6)'; c.lineWidth = Math.max(1.5, HT * 0.09); c.strokeRect(HT - 1, HT - 1, B + 2, B + 2);
+  }
+  function hx(v) { return (v + 1.5) * HT; }
+  function upright(x, y, a, fn) { ctx.save(); ctx.translate(x, y); ctx.rotate(-a); fn(); ctx.restore(); }
+  function drawRose(x, y, R, alpha) {
+    ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y);
+    ctx.strokeStyle = '#f3dfa3'; ctx.lineWidth = Math.max(1, R * 0.04);
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.62, 0, Math.PI * 2); ctx.stroke();
+    for (var i = 7; i >= 0; i--) {
+      var long = i % 2 === 0, len = long ? R : R * 0.5, w = R * (long ? 0.16 : 0.11);
+      ctx.save(); ctx.rotate(i * Math.PI / 4);
+      ctx.fillStyle = i === 0 ? '#c0392b' : '#f3dfa3'; ctx.beginPath(); ctx.moveTo(0, -len); ctx.lineTo(w, 0); ctx.lineTo(0, 0); ctx.fill();
+      ctx.fillStyle = i === 0 ? '#7d1d14' : '#a8874a'; ctx.beginPath(); ctx.moveTo(0, -len); ctx.lineTo(-w, 0); ctx.lineTo(0, 0); ctx.fill();
+      ctx.restore();
+    }
+    ctx.fillStyle = '#2e2012'; ctx.beginPath(); ctx.arc(0, 0, R * 0.07, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  function drawHero(cx, cy, r, dir, mouth, k) { // the legionary, seen from above, facing where he runs on the board
+    var ang = { right: 0, down: Math.PI / 2, left: Math.PI, up: -Math.PI / 2 }[dir || 'up'];
+    ctx.save(); ctx.translate(cx, cy);
+    if (k != null) { ctx.rotate(anim * 12); ctx.globalAlpha = Math.max(0, k); }
+    ctx.rotate(ang);
+    var chomp = (Math.sin(mouth) + 1) / 2 * 0.55 + 0.08;
+    ctx.fillStyle = '#a3222a'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, r, chomp, Math.PI * 2 - chomp); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#f3dfa3'; ctx.lineWidth = Math.max(1, r * 0.1); ctx.stroke();
+    ctx.strokeStyle = 'rgba(200,200,200,.55)'; ctx.lineWidth = Math.max(1, r * 0.12); ctx.beginPath(); ctx.arc(0, 0, r * 0.7, chomp + 0.2, Math.PI * 2 - chomp - 0.2); ctx.stroke();
+    ctx.fillStyle = '#9aa3a8'; ctx.beginPath(); ctx.arc(-r * 0.08, 0, r * 0.42, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#6c7479'; ctx.fillRect(-r * 0.62, -r * 0.3, r * 0.22, r * 0.6);
+    ctx.fillStyle = '#c9a24a'; ctx.fillRect(-r * 0.13, -r * 0.4, r * 0.1, r * 0.8);
+    ctx.restore();
+  }
+  function drawWarrior(r, col, look, run) { // drawn upright on screen at the origin
+    var wv = Math.sin(run * 10) * r * 0.12;
+    ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(0, r * 0.9, r * 0.9, r * 0.25, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(0, -r * 0.1, r, Math.PI, 0);
+    ctx.lineTo(r, r * 0.85); ctx.lineTo(r * 0.5, r * 0.65 + wv); ctx.lineTo(0, r * 0.85); ctx.lineTo(-r * 0.5, r * 0.65 - wv); ctx.lineTo(-r, r * 0.85); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = 'rgba(20,10,5,.7)'; ctx.lineWidth = Math.max(1, r * 0.08); ctx.stroke();
+    ctx.fillStyle = '#7a5230'; ctx.beginPath(); ctx.arc(-r * 0.45, r * 0.25, r * 0.42, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#b8bfc4'; ctx.beginPath(); ctx.arc(-r * 0.45, r * 0.25, r * 0.13, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#4a3420'; ctx.lineWidth = Math.max(1, r * 0.1); ctx.beginPath(); ctx.moveTo(r * 0.6, r * 0.8); ctx.lineTo(r * 0.8, -r * 1.05); ctx.stroke();
+    ctx.fillStyle = '#c9ced2'; ctx.beginPath(); ctx.moveTo(r * 0.8, -r * 1.35); ctx.lineTo(r * 0.7, -r * 1.02); ctx.lineTo(r * 0.9, -r * 1.02); ctx.fill();
+    var ex = look[0] * r * 0.15, ey = look[1] * r * 0.15;
+    [-0.3, 0.2].forEach(function (o) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(o * r, -r * 0.2, r * 0.2, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#1d2320'; ctx.beginPath(); ctx.arc(o * r + ex, -r * 0.2 + ey, r * 0.1, 0, Math.PI * 2); ctx.fill(); });
+  }
+  function drawTurnArrow(x, y, R, dq, k) { // warns which way the board is about to turn
+    ctx.save(); ctx.translate(x, y); ctx.globalAlpha = k;
+    ctx.fillStyle = 'rgba(20,15,10,.55)'; ctx.beginPath(); ctx.arc(0, 0, R * 1.25, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#f3dfa3'; ctx.fillStyle = '#f3dfa3'; ctx.lineWidth = Math.max(2, R * 0.16); ctx.lineCap = 'round';
+    var span = dq === 2 ? Math.PI * 1.5 : Math.PI * 1.1, s = -Math.PI / 2 - span / 2, e = s + span, cw = dq !== -1;
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.8, s, e); ctx.stroke();
+    var tip = cw ? e : s, tx = Math.cos(tip) * R * 0.8, ty = Math.sin(tip) * R * 0.8, dirA = tip + (cw ? Math.PI / 2 : -Math.PI / 2), hs = R * 0.42;
+    ctx.beginPath(); ctx.moveTo(tx + Math.cos(dirA) * hs, ty + Math.sin(dirA) * hs);
+    ctx.lineTo(tx + Math.cos(dirA + 2.3) * hs, ty + Math.sin(dirA + 2.3) * hs); ctx.lineTo(tx + Math.cos(dirA - 2.3) * hs, ty + Math.sin(dirA - 2.3) * hs); ctx.closePath(); ctx.fill();
+    if (dq === 2) { ctx.font = 'bold ' + Math.round(R * 0.55) + 'px Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('180°', 0, R * 0.05); }
+    ctx.restore();
+  }
+  function drawHunt() {
+    if (!H) return;
+    if (!hbg) huntBackground();
+    var U = H.m.S + 2, px = HT * U, c0 = px / 2, a = H.ang, sc = 1 / (Math.abs(Math.cos(a)) + Math.abs(Math.sin(a)));
+    var warnK = H.warned && state === 'play' ? Math.min(1, (HUNT.WARN - H.rotT) / 0.25) : 0;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, px, px);
+    ctx.save(); ctx.translate(c0, c0); ctx.rotate(a); ctx.scale(sc, sc); ctx.translate(-c0, -c0);
+    ctx.drawImage(hbg, 0, 0, px, px);
+    if (warnK) { ctx.strokeStyle = 'rgba(243,223,163,' + (0.5 + 0.5 * Math.sin(H.anim * 18)) * warnK + ')'; ctx.lineWidth = HT * 0.35; ctx.strokeRect(HT * 0.2, HT * 0.2, px - HT * 0.4, px - HT * 0.4); }
+    drawRose(c0, c0, px * 0.17, Math.min(0.85, 0.2 + 0.6 * H.glow + (state === 'ready' ? 0.3 : 0)));
+    // N plaque on the north edge of the board
+    var pw = HT * 1.9, ph = HT * 0.86, pulse = state === 'ready' ? 0.5 + 0.5 * Math.sin(H.anim * 6) : 0;
+    ctx.fillStyle = '#8c1d2c'; ctx.strokeStyle = pulse ? 'rgba(255,240,190,' + (0.6 + 0.4 * pulse) + ')' : '#f3dfa3'; ctx.lineWidth = Math.max(1.5, HT * 0.1);
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(c0 - pw / 2, HT * 0.07, pw, ph, HT * 0.2); else ctx.rect(c0 - pw / 2, HT * 0.07, pw, ph); ctx.fill(); ctx.stroke();
+    // eagle standard, with a soft glow so it is easy to find
+    var ex = hx(H.eagle.x), ey = hx(H.eagle.y), gl = 1 + Math.sin(H.anim * 4) * 0.12;
+    var gg = ctx.createRadialGradient(ex, ey, 1, ex, ey, HT * 1.3 * gl); gg.addColorStop(0, 'rgba(255,225,130,.75)'); gg.addColorStop(1, 'rgba(255,225,130,0)');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(ex, ey, HT * 1.3 * gl, 0, Math.PI * 2); ctx.fill();
+    upright(ex, ey, a, function () { var lift = state === 'hwon' ? -HT * 0.6 * (1 - hEndT / 1.3) : 0; drawEagle(0, lift, HT * 0.52 * (state === 'hwon' ? 1.3 : 1)); });
+    // the warrior stays upright on screen; his eyes look where he runs on screen
+    var fp = HUNT.pos(H.foe), fv = HUNT.DIRS[H.foe.dir] || [0, 0], sv = HUNT.rotVec(fv[0], fv[1], a), tribe = TRIBES[S.round % TRIBES.length];
+    upright(hx(fp.x), hx(fp.y), a, function () { drawWarrior(HT * 0.46, tribe.color, sv, H.foe.moving ? H.anim : 0); });
+    var hp = HUNT.pos(H.hero);
+    drawHero(hx(hp.x), hx(hp.y), HT * 0.45, H.hero.face, H.hero.mouth, state === 'dying' ? hEndT / 1.5 : null);
+    ctx.restore();
+    // compass letters, always upright: a big N on its plaque, small E S W
+    function at(bx, by) { var v = HUNT.rotVec(bx - c0, by - c0, a); return [c0 + v[0] * sc, c0 + v[1] * sc]; }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    var n = at(c0, HT * 0.5); ctx.font = 'bold ' + Math.round(HT * 0.78) + 'px Georgia, serif'; ctx.fillStyle = '#ffe9a8'; ctx.fillText('N', n[0], n[1] + HT * 0.04);
+    ctx.font = 'bold ' + Math.round(HT * 0.55) + 'px Georgia, serif'; ctx.fillStyle = 'rgba(243,223,163,.75)';
+    [['E', px - HT * 0.5, c0], ['S', c0, px - HT * 0.5], ['W', HT * 0.5, c0]].forEach(function (l) { var p = at(l[1], l[2]); ctx.fillText(l[0], p[0], p[1]); });
+    // rain, in screen space
+    if (!RM) {
+      ctx.strokeStyle = 'rgba(190,210,225,.3)'; ctx.lineWidth = 1;
+      while (hrain.length < 50) hrain.push({ x: Math.random() * px, y: Math.random() * px, v: 300 + Math.random() * 200 });
+      ctx.beginPath(); hrain.forEach(function (d) { ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 3, d.y + 10); if (state !== 'paused') { d.y += d.v / 60; d.x -= 1; } if (d.y > px) { d.y = -10; d.x = Math.random() * px; } }); ctx.stroke();
+    }
+    if (warnK && H.nextDq) drawTurnArrow(c0, c0, HT * 1.5, H.nextDq, warnK);
+    var bannerK = state === 'ready' ? Math.max(0, Math.min(1, (hReadyT - 0.9) / 0.4)) : 0; // fades out so the forest is clear before you run
+    if (bannerK > 0) {
+      ctx.save(); ctx.globalAlpha = bannerK;
+      ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(0, c0 - HT * 1.6, px, HT * 3.2);
+      ctx.fillStyle = '#f3dfa3'; ctx.font = 'bold ' + Math.round(HT * 1.05) + 'px Georgia, serif';
+      ctx.fillText(XH.round[0] + ' ' + roman(S.round) + (showEn ? '  ·  Round ' + S.round : ''), c0, c0 - HT * 0.6);
+      ctx.font = Math.round(HT * 0.62) + 'px Georgia, serif'; ctx.fillStyle = '#fff';
+      ctx.fillText(X.goal3[0] + '  ·  ▲ = N' + (showEn ? ' (north is ' + WHERE[H.q] + ')' : ''), c0, c0 + HT * 0.7);
+      ctx.restore();
+    }
+  }
+
+  // ---------- cards and panels ----------
+  function modeBtn(act, icon, name, en, extra) {
+    return '<button type="button" class="tb-mode go" data-act="' + act + '"><i aria-hidden="true">' + icon + '</i><span class="tb-mname"><b class="la">' + name[0] + '</b>' + (showEn ? '<span class="en">' + name[1] + '</span>' : '') + '</span>' + (showEn ? '<small>' + en + '</small>' : '') + (extra || '') + '</button>';
+  }
+  function huntRules() {
+    function li(icon, la, more) { return '<li><i aria-hidden="true">' + icon + '</i><div>' + T(la) + (showEn ? '<p>' + more + '</p>' : '') + '</div></li>'; }
+    return '<ul class="tb-hrules">' + li('🦅', X.goal3, 'Reach the eagle standard before he reaches you.') +
+      li('⚠️', XH.foe, 'One warrior chases you, a little faster every second.') +
+      li('🧭', XH.turns, 'The board turns now and then. <b>Up always runs north</b>, toward the red N on the board’s edge, wherever it is on screen. Right runs east, down south, left west.') + '</ul>';
+  }
+  function huntIntro() {
+    return '<h2>' + T(XH.mHunt) + '</h2><p class="la big">' + XH.seek[0] + '</p>' +
+      (showEn ? '<p class="gloss">' + XH.seek[1] + '</p><p>AD 15 and 16. Germanicus led Roman armies back into Germania and recovered two of the eagles lost with Varus: one found among the Bructeri (Tacitus, <i>Annals</i> 1.60), one dug up from a grove after a leader of the Marsi told where it lay (<i>Annals</i> 2.25). Race through the forest to the eagle before a Germanic warrior catches you.</p>' : '') +
+      huntRules() + (showEn ? '<p class="small">Arrow keys or W A S D; on a phone, the N E S W buttons (N always on top) or a swipe (up = north). Each round brings a bigger forest, a faster warrior and more turns. If he catches you, you lose a helmet and try a new forest.</p>' : '') +
+      recLine('hunt') + '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="hplay">' + T(X.start) + '</button><button type="button" class="tb-btn helpbtn">' + T(X.help) + '</button></div>';
+  }
+  function huntNextHTML() {
+    return '<h2>' + T([XH.round[0] + ' ' + roman(S.round) + ' · ' + XH.mHunt[0], 'Round ' + S.round + ' · Eagle Hunt']) + '</h2>' + huntRules() +
+      '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="hplay">' + T(X.start) + '</button></div>';
+  }
+  function campIntro() {
+    return '<h2>' + T(XH.mCamp) + '</h2>' + (showEn ? '<p>Classic days and eagle hunts take turns, each a little harder than the last, for one score. You have three helmets for the whole campaign; each eagle you recover wins back a lost one.</p>' : '') + recLine('camp') + '<hr class="tb-hr">';
+  }
+  function huntOverCard(news) {
+    return '<h2>' + T(XH.over) + '</h2><p class="score">' + X.score[0] + ': <b>' + S.score + '</b> · ' + XH.eagles[0] + ': <b>' + S.eagles + '</b></p>' +
+      recLine('hunt', news) +
+      (showEn ? '<p>Germanicus recovered two of the three lost eagles in AD 15 and 16. The last came back in AD 41, when Publius Gabinius won it from the Chauci (Cassius Dio 60.8).</p>' : '') +
+      '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="hunt">' + T(X.again) + '</button><button type="button" class="tb-btn go" data-act="menu">' + T(XH.modes) + '</button></div>';
+  }
+  function campOverCard(news) {
+    return '<h2>' + T(XH.over) + '</h2><p class="score">' + X.score[0] + ': <b>' + S.score + '</b> · ' + XH.stage[0] + ' <b>' + roman(S.stage) + '</b> · ' + XH.eagles[0] + ': <b>' + S.eagles + '</b></p>' +
+      recLine('camp', news) + '<p class="la big">Quintili Vare, legiones redde!</p>' +
+      (showEn ? '<p class="gloss">“Quinctilius Varus, give me back my legions!” (Suetonius, <i>Augustus</i> 23).</p>' : '') + wordList() +
+      '<div class="tb-row"><button type="button" class="tb-btn big go" data-act="camp">' + T(X.again) + '</button><button type="button" class="tb-btn go" data-act="menu">' + T(XH.modes) + '</button></div>';
+  }
+  function huntSide() {
+    var keys = [['up', '▲ W'], ['right', '▶ D'], ['down', '▼ S'], ['left', '◀ A']];
+    return '<h3>' + T(XH.mHunt) + '</h3><ul class="tb-compass">' + keys.map(function (k) {
+      return '<li><kbd>' + k[1] + '</kbd><b>' + PADC[k[0]][0] + '</b><span class="la">' + PADC[k[0]][1][0] + '</span>' + (showEn ? ' <span class="en">' + PADC[k[0]][1][1] + '</span>' : '') + '</li>';
+    }).join('') + '</ul>' + (showEn ? '<p class="small">The keys follow the board, not the screen: ▲ always runs toward the red N.</p>' : '') +
+      '<h3>' + T(['Gloria summa', 'Your best']) + '</h3>' + recLine(gameMode === 'camp' ? 'camp' : 'hunt') +
+      (showEn ? '<p class="small">AD 15–16: Germanicus’ armies recovered two lost eagles (Tacitus, <i>Annals</i> 1.60, 2.25).</p>' : '');
+  }
+  function renderHuntHud() {
+    root.querySelector('#h-score').innerHTML = '<span class="la">' + X.score[0] + '</span> <b>' + S.score + '</b>';
+    root.querySelector('#h-lives').innerHTML = '<span class="la">' + X.lives[0] + '</span> ' + Array(Math.max(0, S.lives) + 1).join('🪖');
+    root.querySelector('#h-day').innerHTML = '<span class="la">' + XH.round[0] + '</span> <b>' + roman(S.round) + '</b>';
+    root.querySelector('#h-words').innerHTML = gameMode === 'camp' ? '<span class="la">' + XH.stage[0] + '</span> <b>' + roman(S.stage) + '</b>' : '<span class="la">' + XH.streak[0] + '</span> <b>' + S.streak + '</b>';
   }
 
   // ---------- loop ----------
   function frame(ts) {
     var t = ts / 1000, dt = Math.min(0.05, t - (last || t)); last = t;
-    if (S && state !== 'paused' && state !== 'card') update(dt * GS);
-    if (S) draw(); else drawIdle(t);
+    if (S && state !== 'paused' && state !== 'card') { if (H) huntUpdate(dt * GS); else if (gameMode !== 'hunt') update(dt * GS); }
+    if (H) drawHunt(); else if (S && gameMode !== 'hunt') draw(); else drawIdle(t);
     W.requestAnimationFrame(frame);
   }
   function drawIdle(t) { anim = t; if (!bg) drawBackground(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(bg, 0, 0); }
 
   loadMaze(); shell(); card(menuCard); W.requestAnimationFrame(frame);
-  W.__teut = { get S() { return S; }, get state() { return state; }, get coins() { return coins; }, get player() { return player; }, get ghosts() { return ghosts; }, update: update, newGame: newGame, steer: steer, setState: function (s) { state = s; } };
-})(window, document);
+  // links such as /games/teutoburg/#eagle-hunt open that mode's start card
+  try { var hsh = (W.location.hash || '').toLowerCase(); if (hsh === '#eagle-hunt') startHunt(); else if (hsh === '#campaign') startCampaign(); } catch (e) { }
+  W.__teut = { get S() { return S; }, get state() { return state; }, get coins() { return coins; }, get player() { return player; }, get ghosts() { return ghosts; }, update: update, newGame: newGame, steer: steer, setState: function (s) { state = s; },
+    get H() { return H; }, get mode() { return gameMode; }, huntUpdate: function (dt) { huntUpdate(dt); }, startHunt: startHunt, startCampaign: startCampaign, startClassic: startClassic, toMenu: toMenu, dayWon: function () { dayWon(); } };
+})(typeof window !== 'undefined' ? window : {}, typeof document !== 'undefined' ? document : { getElementById: function () { return null; } });

@@ -1,0 +1,96 @@
+{{ define "main" }}
+{{ partial "lang-head.html" . }}
+<link rel="stylesheet" href="{{ "games/brain-games.css" | relURL }}?v={{ (os.Stat "static/games/brain-games.css").ModTime.Unix }}">
+<div class="lang bg-hub" id="bg-hub">
+  <nav class="bg-crumbs" aria-label="Breadcrumb"><a href="{{ "games/" | relURL }}">Games</a> › Brain games</nav>
+  <header class="lang-hero">
+    <p class="lang-eyebrow">Games · Brain games</p>
+    <h1>Brain games, <span class="lat">Greek &amp; Roman</span></h1>
+    <p>Short challenges for memory, attention, speed and spatial thinking, set among mosaics, coins, aqueducts and oracles. Each game watches how you are doing: it gets harder after a success and eases off after a miss. A session takes one to three minutes.</p>
+  </header>
+  <section class="lang-cards bg-cards">
+    <a class="lang-card" href="{{ "games/mosaic-memory/" | relURL }}" data-slug="mosaic-memory">
+      <svg class="bg-ico" viewBox="0 0 48 48" aria-hidden="true"><rect x="2" y="2" width="44" height="44" rx="5" fill="#2d2a26"/><g fill="#efe6d0"><rect x="7" y="7" width="10" height="10" rx="1.5"/><rect x="19" y="7" width="10" height="10" rx="1.5"/><rect x="7" y="19" width="10" height="10" rx="1.5"/><rect x="31" y="19" width="10" height="10" rx="1.5"/><rect x="19" y="31" width="10" height="10" rx="1.5"/><rect x="31" y="31" width="10" height="10" rx="1.5"/></g><g fill="#e9b949"><rect x="31" y="7" width="10" height="10" rx="1.5"/><rect x="19" y="19" width="10" height="10" rx="1.5"/><rect x="7" y="31" width="10" height="10" rx="1.5"/></g></svg>
+      <h2>Mosaic Memory</h2>
+      <p>Visual memory: remember which tiles of a Roman mosaic shone, on a grid that grows as you improve.</p>
+      <p class="bg-best" hidden></p>
+      <span class="go">Play →</span>
+    </a>
+    <a class="lang-card" href="{{ "games/coin-match/" | relURL }}" data-slug="coin-match">
+      <svg class="bg-ico" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#6c737c"/><circle cx="24" cy="24" r="19" fill="#d3d7dc"/><circle cx="24" cy="24" r="17.5" fill="none" stroke="#6c737c" stroke-width="1.6" stroke-dasharray=".1 2.6" stroke-linecap="round"/><path d="M24 13c-4.5 0-7.5 3-7.5 7 0 2 .5 3 1 4-1 2.5-1.5 4.5-1 6.5.5 4 3.5 6.5 7.5 6.5s7-2.5 7.5-6.5c.5-2 0-4-1-6.5.5-1 1-2 1-4 0-4-3-7-7.5-7z" fill="#6c737c"/><circle cx="21.2" cy="19.5" r="2.4" fill="#d3d7dc"/><circle cx="26.8" cy="19.5" r="2.4" fill="#d3d7dc"/></svg>
+      <h2>Coin Match</h2>
+      <p>Attention and speed: say as fast as you can whether each coin matches the one before, and later the one two back.</p>
+      <p class="bg-best" hidden></p>
+      <span class="go">Play →</span>
+    </a>
+    <a class="lang-card" href="{{ "games/numbers-in-order/" | relURL }}" data-slug="numbers-in-order">
+      <svg class="bg-ico" viewBox="0 0 48 48" aria-hidden="true"><rect x="2" y="7" width="44" height="34" rx="3" fill="#7b4f2b"/><rect x="6" y="11" width="36" height="26" rx="1.5" fill="#35251a"/><g font-family="Georgia,serif" font-weight="700" font-size="9" fill="#f3e3bf"><text x="10" y="21">1</text><text x="30" y="19">2</text><text x="19" y="33">3</text></g><rect x="31" y="25" width="7" height="8" rx="1" fill="#f4f1ea"/></svg>
+      <h2>Numbers in Order</h2>
+      <p>Memory for places and order: the chimpanzee Ayumu’s famous number task, with a training ladder down to a fifth of a second.</p>
+      <p class="bg-best" hidden></p>
+      <span class="go">Play →</span>
+    </a>
+    <a class="lang-card" href="{{ "games/aqueduct/" | relURL }}" data-slug="aqueduct">
+      <svg class="bg-ico" viewBox="0 0 48 48" aria-hidden="true"><path d="M2 12h44v6H2z" fill="#b9a27a"/><path d="M2 18h44v24h-6V30a6 6 0 0 0-12 0v12h-8V30a6 6 0 0 0-12 0v12H2z" fill="#cdb68c"/><path d="M4 9h40" stroke="#4f8fc0" stroke-width="3" stroke-linecap="round"/><path d="M34 42c0-4 3-6 3-9" stroke="#4f8fc0" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="2 2"/></svg>
+      <h2>Aqueduct Switches</h2>
+      <p>Plan ahead and think in space: flip the gates so every stream of water runs to its own fountain.</p>
+      <p class="bg-best" hidden></p>
+      <span class="go">Play →</span>
+    </a>
+    <a class="lang-card" href="{{ "games/oracle/" | relURL }}" data-slug="oracle">
+      <svg class="bg-ico" viewBox="0 0 48 48" aria-hidden="true"><path d="M20 6h8v4c7 4 9 13 4 21l-4 7-1 4h-6l-1-4-4-7c-5-8-3-17 4-21z" fill="#c26a3d"/><path d="M20 10c-6-1-7 6-3 9M28 10c6-1 7 6 3 9" stroke="#8a4524" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M15 24h18" stroke="#2d2a26" stroke-width="2.2"/><path d="M17 28l3 3 3-3 3 3 3-3 3 3" stroke="#2d2a26" stroke-width="1.6" fill="none"/></svg>
+      <h2>Oracle’s Rule</h2>
+      <p>Stay flexible: sort amphorae by the oracle’s secret rule, and notice fast when the rule quietly changes.</p>
+      <p class="bg-best" hidden></p>
+      <span class="go">Play →</span>
+    </a>
+    <a class="lang-card" href="{{ "games/teutoburg/" | relURL }}">
+      <svg class="bg-ico" viewBox="0 0 48 48" aria-hidden="true"><rect x="2" y="2" width="44" height="44" rx="6" fill="#1f3a24"/><path d="M24 7l3 7h-6z" fill="#f3dfa3"/><text x="24" y="20" text-anchor="middle" font-size="6" font-weight="700" fill="#f3dfa3" font-family="system-ui,sans-serif">N</text><path d="M24 22c-3 4-9 5-14 3 3 3 7 6 11 6l-1 6h8l-1-6c4 0 8-3 11-6-5 2-11 1-14-3z" fill="#e3b84e"/><circle cx="24" cy="23.5" r="2.2" fill="#e3b84e"/></svg>
+      <h2>Teutoburg: Eagle Hunt</h2>
+      <p>Spatial thinking under pressure: race a warrior to a lost legion eagle while the forest board turns, with Up always pointing north. Choose Eagle Hunt on Teutoburg’s start screen.</p>
+      <span class="go">Play →</span>
+    </a>
+  </section>
+
+  <section class="bg-note">
+    <h2>What these games can and can’t do</h2>
+    <p>They are fun challenges for memory, attention, speed and spatial thinking, and you will see your scores climb as you practice. That is real progress, but mostly at the game itself: getting better at Coin Match makes you better at Coin Match. We don’t claim that any game here raises intelligence, protects against memory loss, or carries over to school, work or sport. In 2016 a large brain-training company agreed to pay $2 million to settle U.S. Federal Trade Commission charges that its ads made claims like those (<a href="https://www.ftc.gov/news-events/news/press-releases/2016/01/lumosity-pay-2-million-settle-ftc-deceptive-advertising-charges-its-brain-training-program" rel="noopener">FTC press release</a>).</p>
+    <p>For the full story of how practice changes performance, read about Ayumu the chimpanzee on the <a href="{{ "games/numbers-in-order/" | relURL }}">Numbers in Order</a> page.</p>
+  </section>
+
+  <section class="bg-note">
+    <h2>On paper</h2>
+    <p>For puzzles you can print, solve with a pencil and check against an answer key, try <a href="{{ "puzzles/" | relURL }}">Brain Puzzles</a>: sudoku, logic grids, mazes, ciphers and more, made fresh every time.</p>
+  </section>
+
+  <section class="bg-note bg-mine" id="bg-mine" hidden>
+    <h2>Your progress</h2>
+    <p class="bg-small">Saved only in this browser.</p>
+    <div id="bg-mine-list"></div>
+  </section>
+
+  <nav class="bg-pn"><a href="{{ "games/" | relURL }}">← All games</a><a href="{{ "puzzles/" | relURL }}">Brain Puzzles →</a></nav>
+</div>
+<script>
+(function () {
+  'use strict';
+  var data = {};
+  try { data = JSON.parse(localStorage.getItem('trb-brain-v1')) || {}; } catch (e) { data = {}; }
+  var NAMES = { 'mosaic-memory': 'Mosaic Memory', 'coin-match': 'Coin Match', 'numbers-in-order': 'Numbers in Order', aqueduct: 'Aqueduct Switches', oracle: 'Oracle’s Rule' };
+  var rows = [];
+  document.querySelectorAll('#bg-hub [data-slug]').forEach(function (a) {
+    var e = data[a.dataset.slug], s = e && Array.isArray(e.sessions) ? e.sessions : [];
+    if (!e || typeof e.best !== 'number') return;
+    var p = a.querySelector('.bg-best');
+    p.textContent = 'Your best: ' + e.best + ' · ' + (e.plays || s.length) + ' session' + ((e.plays || s.length) === 1 ? '' : 's');
+    p.hidden = false;
+    if (s.length) {
+      var last = s.slice(-12), max = Math.max.apply(null, last.map(function (x) { return +x.score || 0; }).concat([1]));
+      var bars = last.map(function (x, i) { var h = Math.max(1.5, 22 * (+x.score || 0) / max); return '<rect x="' + (i * 9) + '" y="' + (24 - h).toFixed(1) + '" width="7" height="' + h.toFixed(1) + '" rx="1"/>'; }).join('');
+      rows.push('<div class="bg-row"><span>' + NAMES[a.dataset.slug] + '</span><svg viewBox="0 0 108 24" role="img" aria-label="' + NAMES[a.dataset.slug] + ': your last ' + last.length + ' scores, latest ' + last[last.length - 1].score + ', best ' + e.best + '">' + bars + '</svg><b>' + last[last.length - 1].score + '</b></div>');
+    }
+  });
+  if (rows.length) { document.getElementById('bg-mine-list').innerHTML = rows.join(''); document.getElementById('bg-mine').hidden = false; }
+})();
+</script>
+{{ end }}

@@ -1,0 +1,58 @@
+{{- /* /vocabulary/flashcards/: spaced-review flashcards for the word cards (static/vocab/app/flash.js; storage trb-vocab-v1) */ -}}
+{{ define "main" }}
+{{ partial "vocab/head.html" . }}
+{{- $D := partialCached "vocab/data.html" "x" -}}
+<div class="mlp vop vop-flash" id="vop" data-src="{{ $D.url }}?v={{ $D.v }}" data-base="{{ "vocabulary/" | relURL }}">
+  <header class="vop-head">
+    <p class="mlp-eyebrow"><a href="{{ "vocabulary/" | relURL }}">Vocabulary Ladder</a> · Flashcards</p>
+    <h1>Vocabulary flashcards</h1>
+    <p>Look at the picture and the meaning, say the word to yourself, then flip the card and rate how well you knew it. Each card comes back just before you would forget it.</p>
+  </header>
+  {{ partial "vocab/nav.html" "flash" }}
+  <details class="vop-help">
+    <summary>How the flashcards work</summary>
+    <ol>
+      <li><b>Pick a deck:</b> a topic of ten words, every word built on one Greek or Latin root, a whole level, your hard words, or all of them.</li>
+      <li><b>Picture side or word side.</b> <i>Picture first</i> shows the picture and the meaning and asks for the word. <i>Word first</i> shows the word and asks what it means. <i>Both</i> makes two cards of each word.</li>
+      <li><b>Say the answer before you flip.</b> Trying to remember, even when you can’t, is what makes a word stick.</li>
+      <li><b>Grade each card.</b> <i>Again</i> brings it back in a minute; <i>Hard</i>, <i>Good</i> and <i>Easy</i> send it further out (each button shows when you’ll see it next). Words you mark <i>Again</i> or <i>Hard</i>, and words you miss in a quiz, go to <i>My hard words</i>.</li>
+      <li><b>Keys:</b> Space or Enter flips; 1–4 grade (Again, Hard, Good, Easy); S skips.</li>
+    </ol>
+  </details>
+  <section class="vop-box vop-setup" aria-label="Choose cards">
+    <div class="vop-row">
+      <div class="vop-field"><span class="vop-lab">Deck</span>
+        <div class="vop-seg" id="vf-kind" role="group" aria-label="Kind of deck"><button type="button" data-v="topic">Topic</button><button type="button" data-v="root">Root</button><button type="button" data-v="level">Level</button><button type="button" data-v="hard">My hard words</button><button type="button" data-v="all">All</button></div></div>
+      <label class="vop-field vop-grow" id="vf-which-l"><span class="vop-lab">Which</span><select id="vf-which"></select></label>
+    </div>
+    <div class="vop-row">
+      <div class="vop-field"><span class="vop-lab">Show first</span>
+        <div class="vop-seg" id="vf-dir" role="group" aria-label="Which side first"><button type="button" data-v="p">Picture first</button><button type="button" data-v="w">Word first</button><button type="button" data-v="x">Both</button></div></div>
+      <label class="vop-field"><span class="vop-lab">Order</span><select id="vf-order"><option value="srs">Smart review (due cards first)</option><option value="shuffle">Shuffle</option><option value="list">In list order</option></select></label>
+      <label class="vop-field"><span class="vop-lab">New cards per day</span><select id="vf-new"><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="9999">No limit</option></select></label>
+    </div>
+  </section>
+  <div class="vop-focus">
+    <div class="vop-bar"><span id="vf-pos"></span><span class="vop-prog"><i id="vf-prog"></i></span><span id="vf-due"></span></div>
+    <div class="vop-stage" id="vf-stage" tabindex="0" aria-live="polite" aria-label="Flashcard: press Space to flip"><p class="vop-msg">Loading the cards…</p></div>
+    <div class="vop-actions">
+      <button type="button" class="mlp-btn pri big" id="vf-flip">Show the answer</button>
+      <div class="vop-grade" id="vf-grade" hidden>
+        <button type="button" class="vg vg1" data-q="1"><b>Again</b><small></small></button>
+        <button type="button" class="vg vg2" data-q="2"><b>Hard</b><small></small></button>
+        <button type="button" class="vg vg3" data-q="3"><b>Good</b><small></small></button>
+        <button type="button" class="vg vg4" data-q="4"><b>Easy</b><small></small></button>
+      </div>
+    </div>
+    <p class="vop-tools"><button type="button" class="vop-link" id="vf-skip">Skip</button> · <a class="vop-link" id="vf-open" href="{{ "vocabulary/words/" | relURL }}">Open in the word list</a> · <span id="vf-today"></span></p>
+  </div>
+  <section class="vop-box vop-stats" aria-labelledby="vf-stats-h">
+    <h2 id="vf-stats-h">Your progress <small>(saved in this browser)</small></h2>
+    <div class="vop-nums" id="vf-nums"></div>
+    <p class="mlp-small"><button class="vop-link" id="vf-reset" type="button">Reset progress for this deck</button> · The site’s <a href="{{ "progress/" | relURL }}">My Progress</a> page backs up everything at once.</p>
+  </section>
+</div>
+{{ partial "inline/ml-js.html" "vocab/viz/vocab.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/common.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/flash.js" }}
+{{ end }}

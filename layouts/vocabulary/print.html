@@ -1,0 +1,34 @@
+{{- /* /vocabulary/print/: the printable word book, four cards to a page (static/vocab/app/print.js). ?vol=1…4 or all, ?size=letter or a4.
+   scripts/vocab/make-pdf.js prints it with Playwright to static/vocabulary/vocabulary-1000.pdf (and A4, and volumes if large). */ -}}
+{{ define "main" }}
+{{ partial "vocab/head.html" . }}
+{{- $D := partialCached "vocab/data.html" "x" -}}
+{{- $pdfs := slice -}}
+{{- range slice (slice "vocabulary-1000.pdf" "The whole book, US Letter") (slice "vocabulary-1000-a4.pdf" "The whole book, A4") (slice "vocabulary-1000-vol1.pdf" "Volume 1 (topics 1–25), US Letter") (slice "vocabulary-1000-vol2.pdf" "Volume 2 (topics 26–50), US Letter") (slice "vocabulary-1000-vol3.pdf" "Volume 3 (topics 51–75), US Letter") (slice "vocabulary-1000-vol4.pdf" "Volume 4 (topics 76–100), US Letter") (slice "vocabulary-1000-a4-vol1.pdf" "Volume 1, A4") (slice "vocabulary-1000-a4-vol2.pdf" "Volume 2, A4") (slice "vocabulary-1000-a4-vol3.pdf" "Volume 3, A4") (slice "vocabulary-1000-a4-vol4.pdf" "Volume 4, A4") -}}
+  {{- $f := printf "static/vocabulary/%s" (index . 0) -}}
+  {{- if fileExists $f }}{{ $pdfs = $pdfs | append (dict "url" (printf "vocabulary/%s" (index . 0) | relURL) "label" (index . 1) "mb" (div (float (os.Stat $f).Size) 1048576)) }}{{ end -}}
+{{- end -}}
+<div class="mlp vop vop-print" id="vop" data-src="{{ $D.url }}?v={{ $D.v }}" data-base="{{ "vocabulary/" | relURL }}">
+  <div class="vop-noprint">
+    <header class="vop-head">
+      <p class="mlp-eyebrow"><a href="{{ "vocabulary/" | relURL }}">Vocabulary Ladder</a> · Printable book</p>
+      <h1>The printable word book</h1>
+      <p>Every word card with its picture, memory hook, meaning, example and roots, four cards to a page. Print a volume at home, or save it as a PDF. Black-and-white printing works too: every picture has clear outlines.</p>
+    </header>
+    {{ partial "vocab/nav.html" "print" }}
+    {{ with $pdfs }}<section class="vop-box"><h2>Download the PDF</h2><ul class="vop-pdfs">{{ range . }}<li><a href="{{ .url }}" download>{{ .label }}</a> <small>({{ printf "%.1f" .mb }} MB)</small></li>{{ end }}</ul></section>{{ end }}
+    <section class="vop-box vop-setup" aria-label="Print settings">
+      <div class="vop-row">
+        <label class="vop-field"><span class="vop-lab">Volume</span><select id="vp-vol"><option value="1">Volume 1: topics 1–25</option><option value="2">Volume 2: topics 26–50</option><option value="3">Volume 3: topics 51–75</option><option value="4">Volume 4: topics 76–100</option><option value="all">All four volumes</option></select></label>
+        <label class="vop-field"><span class="vop-lab">Paper</span><select id="vp-size"><option value="letter">US Letter</option><option value="a4">A4</option></select></label>
+        <div class="vop-field"><button type="button" class="mlp-btn pri big" id="vp-print">Print</button></div>
+      </div>
+      <p class="mlp-small" id="vp-note">In the print window, choose “Background graphics” (or “Print backgrounds”) so the pictures print in color, and set the margins to the default.</p>
+    </section>
+  </div>
+  <div class="vop-book" id="vp-book" aria-live="polite"><p class="vop-msg">Laying out the cards…</p></div>
+</div>
+{{ partial "inline/ml-js.html" "vocab/viz/vocab.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/common.js" }}
+{{ partial "inline/ml-js.html" "vocab/app/print.js" }}
+{{ end }}
