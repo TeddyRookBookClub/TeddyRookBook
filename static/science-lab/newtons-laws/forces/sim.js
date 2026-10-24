@@ -409,7 +409,7 @@
       c.moveTo(x, y - 0.75 * s); c.lineTo(x, y - hgt + 2 * head);                                         // body
       var sh = y - hgt + 2.3 * head, arm = float ? -0.5 : 0.45;
       c.moveTo(x - 0.3 * s, sh + arm * s); c.lineTo(x, sh); c.lineTo(x + 0.3 * s, sh + arm * s); c.stroke();
-      c.beginPath(); c.arc(x, y - hgt + head, head, 0, 7); c.fill();
+      c.beginPath(); c.arc(x, y - hgt + head, head, 0, 7); c.fillStyle = '#ffcc4d'; c.fill(); c.lineWidth = Math.max(1.5, s * 0.03); c.stroke(); c.fillStyle = col; // head in the one skin color
       if (float) { c.lineWidth = 1.5; c.beginPath(); for (var i = -2; i <= 2; i++) { c.moveTo(x + i * head * 0.35, y - hgt); c.lineTo(x + i * head * 0.5, y - hgt - head * 0.9); } c.stroke(); }
       c.restore();
     }

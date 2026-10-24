@@ -279,6 +279,7 @@
     k.efield = k.red; k.bfield = d ? '#91a7ff' : '#3b4fc4'; k.cur = k.gold;
     k.eK = k.green; k.eUg = k.blue; k.eUs = k.purple; k.eTh = d ? '#ff922b' : '#d9480f'; k.eW = d ? '#adb5bd' : '#6c757d';
     k.obj = d ? '#2a3d57' : '#e3eaf5'; k.objLine = d ? '#8fb1ea' : '#2d5596'; k.obj2 = d ? '#4a3b22' : '#f6ecd6'; k.obj2Line = d ? '#ffd479' : '#8a6a1f';
+    k.skin = '#ffcc4d'; k.skinLine = '#e8a93a'; // every drawn person: one cartoon skin color, the same in both themes
     k.ground = d ? '#5b6b62' : '#9aa5a0'; k.metal = d ? '#8b9bab' : '#7b8794';
     k.water = d ? 'rgba(77,171,247,0.30)' : 'rgba(28,111,214,0.17)'; k.waterLine = d ? '#74c0fc' : '#1c6fd6';
     k.panelBg = d ? '#17281f' : '#f5f8fb'; k.halo = d ? 'rgba(20,33,26,0.85)' : 'rgba(255,255,255,0.88)';
@@ -1090,7 +1091,7 @@
       var x = C0[0], y = C0[1];
       if (scene === 'block' || scene === 'two-blocks' || scene === 'person') ground(ctx, 10, y + h / 2, c.w - 20, k);
       if (scene === 'block' || scene === 'two-blocks') block(ctx, x - w / 2, y - h / 2, w, h, { label: two ? (C0 === centers[0] ? 'A' : 'B') : '' });
-      else if (scene === 'person') { ctx.save(); ctx.strokeStyle = k.objLine; ctx.lineWidth = 3; ctx.lineCap = 'round'; circ(ctx, x, y - h * 0.38, h * 0.12, { fill: k.obj, color: k.objLine, w: 2.5 }); ctx.beginPath(); ctx.moveTo(x, y - h * 0.26); ctx.lineTo(x, y + h * 0.12); ctx.moveTo(x - h * 0.2, y - h * 0.12); ctx.lineTo(x, y - h * 0.2); ctx.lineTo(x + h * 0.2, y - h * 0.12); ctx.moveTo(x - h * 0.13, y + h * 0.5); ctx.lineTo(x, y + h * 0.12); ctx.lineTo(x + h * 0.13, y + h * 0.5); ctx.stroke(); ctx.restore(); }
+      else if (scene === 'person') { ctx.save(); ctx.strokeStyle = k.objLine; ctx.lineWidth = 3; ctx.lineCap = 'round'; circ(ctx, x, y - h * 0.38, h * 0.12, { fill: k.skin, color: k.objLine, w: 2.5 }); ctx.beginPath(); ctx.moveTo(x, y - h * 0.26); ctx.lineTo(x, y + h * 0.12); ctx.moveTo(x - h * 0.2, y - h * 0.12); ctx.lineTo(x, y - h * 0.2); ctx.lineTo(x + h * 0.2, y - h * 0.12); ctx.moveTo(x - h * 0.13, y + h * 0.5); ctx.lineTo(x, y + h * 0.12); ctx.lineTo(x + h * 0.13, y + h * 0.5); ctx.stroke(); ctx.restore(); }
       else if (scene === 'hanging') { hatch(ctx, x - 60, 4, 120, 10, k.ground); line(ctx, x - 60, 14, x + 60, 14, k.ground, 2); line(ctx, x, 14, x, y - h / 2, k.metal, 2.5); block(ctx, x - w / 2, y - h / 2, w, h); }
       else if (scene === 'incline') { var a = th * DEG, L = c.w * 0.9, bx = x + (h / 2) * M.sin(a), by = y + (h / 2) * M.cos(a); var p0 = [bx - L / 2 * M.cos(a), by + L / 2 * M.sin(a)], p1 = [bx + L / 2 * M.cos(a), by - L / 2 * M.sin(a)]; poly(ctx, [p0, p1, [p1[0], p0[1]]], { fill: k.obj2, color: k.obj2Line, w: 2, close: true }); arc(ctx, p0[0], p0[1], 34, -a, 0, k.obj2Line, 1.5); txt(ctx, fm(th, 0) + '°', p0[0] + 40, p0[1] - 9, { size: 11.5, color: k.obj2Line }); ctx.save(); ctx.translate(x, y); ctx.rotate(-a); block(ctx, -w / 2, -h / 2, w, h); ctx.restore(); }
       else if (scene === 'elevator') { ctx.save(); ctx.strokeStyle = k.metal; ctx.lineWidth = 2.5; rrect(ctx, x - w * 1.4, y - h * 1.5, w * 2.8, h * 2, 6); ctx.stroke(); ctx.restore(); line(ctx, x, y - h * 1.5, x, 0, k.metal, 2); hatch(ctx, x - w * 1.4, y + h / 2, w * 2.8, 8, k.ground); block(ctx, x - w / 2, y - h / 2, w, h); }
@@ -1151,7 +1152,7 @@
     return r;
   };
   function hand(ctx, x, y, k) { // a pusher's hand and arm touching (x, y) from the left
-    ctx.save(); ctx.strokeStyle = k.obj2Line; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - 46, y + 6); ctx.lineTo(x - 14, y); ctx.stroke(); rrect(ctx, x - 16, y - 9, 15, 18, 6); ctx.fillStyle = k.obj2; ctx.fill(); ctx.lineWidth = 2; ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - 46, y + 6); ctx.lineTo(x - 14, y); ctx.strokeStyle = k.skinLine; ctx.lineWidth = 9; ctx.stroke(); ctx.strokeStyle = k.skin; ctx.lineWidth = 5.5; ctx.stroke(); rrect(ctx, x - 16, y - 9, 15, 18, 6); ctx.fillStyle = k.skin; ctx.fill(); ctx.strokeStyle = k.skinLine; ctx.lineWidth = 2; ctx.stroke(); ctx.restore();
   }
   R('ph-dynamics', function (el, o) {
     var sc = pick(o.scene, ['cart', 'incline', 'atwood', 'table', 'push-two', 'train', 'elevator', 'heavy-pulley', 'movable-pulley'], 'cart');
@@ -1240,7 +1241,7 @@
         line(ctx, shaftX - 70, 0, shaftX - 70, H0, k.grid, 2); line(ctx, shaftX + 70, 0, shaftX + 70, H0, k.grid, 2); line(ctx, shaftX, 0, shaftX, cy1 - carH / 2, k.metal, 2);
         ctx.save(); rrect(ctx, shaftX - 60, cy1 - carH / 2, 120, carH, 6); ctx.fillStyle = k.obj; ctx.fill(); ctx.strokeStyle = k.objLine; ctx.lineWidth = 2; ctx.stroke(); ctx.restore();
         var fy = cy1 + carH / 2 - 8; block(ctx, shaftX - 26, fy - 8, 52, 8, { fill: k.obj2, color: k.obj2Line, r: 2 }); txt(ctx, vals ? un(N / g, 'kg', 3) : '?', shaftX, fy - 4, { align: 'center', size: 9.5, weight: 700, color: k.obj2Line });
-        var ph = carH * 0.62; ctx.save(); ctx.strokeStyle = k.ink; ctx.lineWidth = 3; ctx.lineCap = 'round'; circ(ctx, shaftX, fy - 8 - ph + 9, 8, { fill: k.bg, color: k.ink, w: 2.5 }); ctx.beginPath(); ctx.moveTo(shaftX, fy - 8 - ph + 17); ctx.lineTo(shaftX, fy - 8 - ph * 0.4); ctx.moveTo(shaftX - 12, fy - 8); ctx.lineTo(shaftX, fy - 8 - ph * 0.4); ctx.lineTo(shaftX + 12, fy - 8); ctx.moveTo(shaftX - 14, fy - 8 - ph * 0.62); ctx.lineTo(shaftX + 14, fy - 8 - ph * 0.62); ctx.stroke(); ctx.restore();
+        var ph = carH * 0.62; ctx.save(); ctx.strokeStyle = k.ink; ctx.lineWidth = 3; ctx.lineCap = 'round'; circ(ctx, shaftX, fy - 8 - ph + 9, 8, { fill: k.skin, color: k.ink, w: 2.5 }); ctx.beginPath(); ctx.moveTo(shaftX, fy - 8 - ph + 17); ctx.lineTo(shaftX, fy - 8 - ph * 0.4); ctx.moveTo(shaftX - 12, fy - 8); ctx.lineTo(shaftX, fy - 8 - ph * 0.4); ctx.lineTo(shaftX + 12, fy - 8); ctx.moveTo(shaftX - 14, fy - 8 - ph * 0.62); ctx.lineTo(shaftX + 14, fy - 8 - ph * 0.62); ctx.stroke(); ctx.restore();
         if (showFbd) fbdArrows(ctx, k, shaftX + 40, cy1, [[P.m1 * g, -90, ['F', 'g'], P.m1 * g], [N, 90, ['F', 'N'], N]], 50 / (P.m1 * g));
         if (M.abs(a) > 1e-9) arrow(ctx, shaftX - 86, cy1, shaftX - 86, cy1 - M.sign(a) * 34, { color: k.accel, w: 3, label: 'a' }); else txt(ctx, 'a = 0', shaftX - 84, cy1, { color: k.accel, size: 12, align: 'right', weight: 700 });
         desc = 'A ' + fm(P.m1, 0) + ' kg person on a scale in an elevator accelerating at ' + un(a, 'm/s²', 2) + (vals ? '; the scale reads ' + un(N, 'N', 3) : '') + '.';
@@ -3324,7 +3325,7 @@
       mp = fitMap({ x: 10, y: 10, w: W0 - 20, h: H0 - 20 }, -4.3, 4.3, -0.15, 2.2, true); var X = mp.X, Y = mp.Y;
       ground(ctx, X(-4.3), Y(0), X(4.3) - X(-4.3), k); line(ctx, X(0), Y(0), X(0), Y(2.1), k.waterLine, 2, [4, 4]);
       var eye = P.H * 0.94, mTop = (P.H + eye) / 2, mBot = eye / 2; line(ctx, X(0), Y(mBot), X(0), Y(mTop), k.waterLine, 6); txt(ctx, 'mirror you need: ' + (F.vals ? un(mTop - mBot, 'm', 3) : '?') + ' (half your height)', X(0) + 8, Y(mTop) - 10, { size: 11, weight: 700, color: k.waterLine, halo: true });
-      function person(x, alpha) { ctx.save(); ctx.globalAlpha = alpha; var hx = X(x), s = mp.sy; circ(ctx, hx, Y(P.H - 0.12), 0.11 * s, { fill: k.obj, color: k.objLine, w: 2 }); line(ctx, hx, Y(P.H - 0.24), hx, Y(0.85), k.objLine, 4); line(ctx, hx, Y(0.85), hx - 0.12 * s, Y(0), k.objLine, 4); line(ctx, hx, Y(0.85), hx + 0.12 * s, Y(0), k.objLine, 4); line(ctx, hx - 0.2 * s, Y(1.25), hx + 0.2 * s, Y(1.25), k.objLine, 4); ctx.restore(); }
+      function person(x, alpha) { ctx.save(); ctx.globalAlpha = alpha; var hx = X(x), s = mp.sy; circ(ctx, hx, Y(P.H - 0.12), 0.11 * s, { fill: k.skin, color: k.objLine, w: 2 }); line(ctx, hx, Y(P.H - 0.24), hx, Y(0.85), k.objLine, 4); line(ctx, hx, Y(0.85), hx - 0.12 * s, Y(0), k.objLine, 4); line(ctx, hx, Y(0.85), hx + 0.12 * s, Y(0), k.objLine, 4); line(ctx, hx - 0.2 * s, Y(1.25), hx + 0.2 * s, Y(1.25), k.objLine, 4); ctx.restore(); }
       person(-P.d, 1); person(P.d, 0.4); txt(ctx, 'image (virtual)', X(P.d), Y(0) + 14, { align: 'center', size: 11, color: k.muted });
       [[P.H, k.green], [0, k.purple]].forEach(function (q) { var hy = (q[0] + eye) / 2; line(ctx, X(-P.d), Y(q[0]), X(0), Y(hy), q[1], 1.8); line(ctx, X(0), Y(hy), X(-P.d), Y(eye), q[1], 1.8); line(ctx, X(0), Y(hy), X(P.d), Y(q[0]), rgba(q[1], 0.5), 1.4, [5, 4]); });
       hd.draw(ctx);

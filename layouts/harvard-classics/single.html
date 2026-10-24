@@ -1,0 +1,78 @@
+{{ define "main" }}
+{{- /* One day of the Harvard Classics reading guide: content/harvard-classics/days/MM-DD.md (front matter hcid),
+   data/harvard/guide.json (title, introduction, assignment) and data/harvard/days/MM-DD.json (the text). */ -}}
+{{- $h := partial "harvard-classics/data.html" . -}}
+{{- $id := .Params.hcid -}}
+{{- $days := $h.guide.days -}}
+{{- $g := index (where $days "id" $id) 0 -}}
+{{- $t := index ($h.days | default dict) $id -}}
+{{- $months := slice "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December" -}}
+{{- $pos := 0 -}}{{- range $i, $d := $days -}}{{- if eq $d.id $id -}}{{- $pos = $i -}}{{- end -}}{{- end -}}
+{{- $n := len $days -}}
+{{- $prev := index $days (mod (add $pos (sub $n 1)) $n) -}}
+{{- $next := index $days (mod (add $pos 1) $n) -}}
+{{- $date := printf "%s %d" (index $months (sub (int $g.month) 1)) (int $g.day) -}}
+{{- $vols := dict -}}{{- range $h.guide.volumes -}}{{- $vols = merge $vols (dict (string .n) .) -}}{{- end -}}
+{{- $reads := $g.readings -}}{{- with $t -}}{{- $reads = .readings -}}{{- end -}}
+{{ partial "harvard-classics/head.html" . }}
+<article class="hc hc-day" id="hc-day" data-id="{{ $id }}" data-slug="{{ $g.slug }}" data-title="{{ $g.title }}">
+  <nav class="hc-crumbs" aria-label="Breadcrumb"><a href="{{ "books/" | relURL }}">Library</a> › <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics</a> › <a href="{{ "harvard-classics/calendar/" | relURL }}#m{{ $g.month }}">Calendar</a> › {{ $date }}</nav>
+
+  <header class="hc-dhead">
+    <p class="hc-eye"><span class="hc-date">{{ $date }}</span> <span aria-hidden="true">·</span> The Harvard Classics, fifteen minutes a day</p>
+    <h1>{{ $g.title }}</h1>
+    <p class="hc-meta">
+      {{- range $i, $r := $reads -}}
+        {{- if $i }}<span class="hc-and"> and </span>{{ end -}}
+        <span class="hc-mr">{{ with $r.author }}{{ . }}, {{ end }}<i>{{ $r.title | default $r.work }}</i></span>
+      {{- end -}}
+      {{- with $t -}}<span class="hc-mins"> · about {{ .minutes }} {{ cond (eq (int .minutes) 1) "minute" "minutes" }}</span>{{- end -}}
+    </p>
+  </header>
+
+  <section class="hc-intro" aria-label="Introduction from the {{ $h.guide.edition.guide_year | default 1930 }} Reading Guide">
+    {{- range $g.intro }}<p>{{ . }}</p>{{ end }}
+    {{- with $g.notes }}<ul class="hc-notes">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
+    <p class="hc-intro-src">From the {{ $h.guide.edition.guide_year | default 1930 }} Reading Guide</p>
+  </section>
+
+  {{- with $t }}{{ if ne .status "proofread" }}
+  <p class="hc-raw">This text was read by machine from the 1909–10 scans and hasn’t been proofread against the page images yet, so a word here and there may be wrong. The scanned page is linked below each reading.</p>
+  {{- end }}{{ end }}
+
+  {{- if $t }}
+  {{- range $ri, $r := $t.readings }}
+  {{- $v := index $vols (string $r.volume) }}
+  <section class="hc-reading" aria-labelledby="hc-r{{ add $ri 1 }}">
+    <header class="hc-rhead">
+      <h2 id="hc-r{{ add $ri 1 }}">{{ $r.title | default $r.work }}</h2>
+      {{ with $r.author }}<p class="hc-by">{{ . }}</p>{{ end }}
+    </header>
+    {{- with $r.boundary }}{{ with .start }}<p class="hc-bound">{{ . }}</p>{{ end }}{{ end }}
+    <div class="hc-text">{{ partial "harvard-classics/text.html" (dict "blocks" $r.text "pre" (printf "%s-%d" $id (add $ri 1)) "endnote" (($r.boundary | default dict).end | default "")) | safeHTML }}</div>
+    <p class="hc-src">Volume {{ $r.volume }}, {{ if eq (string $r.start) (string $r.end) }}page {{ $r.start }}{{ else }}pages {{ $r.start }}–{{ $r.end }}{{ end }}{{ with $v }}{{ with .year }} ({{ . }}){{ end }}{{ end }}{{ with $r.scan }}{{ with .url }} · <a href="{{ . }}" rel="noopener">See the scanned page on archive.org</a>{{ end }}{{ end }}</p>
+  </section>
+  {{- end }}
+  <p class="hc-end" id="hc-end" aria-hidden="true">❧</p>
+  {{- else }}
+  <section class="hc-reading hc-pending">
+    <p>The text for {{ $date }} is still being prepared. Until it’s here, you can read it in the scanned volume:</p>
+    <ul>
+      {{- range $g.readings }}{{ $v := index $vols (string .volume) }}
+      <li>{{ with .author }}{{ . }}, {{ end }}<i>{{ .title | default .work }}</i>, Volume {{ .volume }}, pages {{ .start }}–{{ .end }}{{ with $v }}{{ with .scan_url }} · <a href="{{ . }}" rel="noopener">the volume on archive.org</a>{{ end }}{{ end }}</li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+
+  {{- $as := slice -}}{{- range $g.readings -}}{{- $as = $as | append (.printed | default (printf "Vol. %v, pp. %v–%v" .volume .start .end)) -}}{{- end }}
+  <p class="hc-guide">This is the reading for {{ $date }} in <i>Fifteen Minutes a Day: The Reading Guide</i> ({{ $h.guide.edition.guide_year | default 1930 }} edition){{ with $g.guide_page }}, page {{ . }}{{ end }}.{{ with $as }} There the assignment reads {{ range $i, $a := . }}{{ if $i }} and {{ end }}“{{ $a }}{{ if and (eq (add $i 1) (len $as)) (not (strings.HasSuffix $a ".")) }}.{{ end }}”{{ end }}{{ end }}{{ with $g.guide_url }} <a href="{{ . }}" rel="noopener">Read it in the guide</a>.{{ end }}</p>
+
+  <nav class="hc-pn" aria-label="Other days">
+    <a class="hc-pn-prev" href="{{ printf "harvard-classics/%s/" $prev.slug | relURL }}" rel="prev"><small>← {{ index $months (sub (int $prev.month) 1) }} {{ $prev.day }}</small><span>{{ $prev.title }}</span></a>
+    <a class="hc-pn-cal" href="{{ "harvard-classics/calendar/" | relURL }}#m{{ $g.month }}">Calendar</a>
+    <a class="hc-pn-next" href="{{ printf "harvard-classics/%s/" $next.slug | relURL }}" rel="next"><small>{{ index $months (sub (int $next.month) 1) }} {{ $next.day }} →</small><span>{{ $next.title }}</span></a>
+  </nav>
+</article>
+<script src="{{ "harvard-classics/hc.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/hc.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -1,0 +1,58 @@
+{{ define "main" }}
+{{- /* /harvard-classics/calendar/ (content/harvard-classics/days/_index.md): twelve month grids, each day linking to its
+   reading. The weekdays are laid out for the build year; hc.js moves them to the visitor's year, shows one month at a
+   time with previous/next (or the whole year), and marks today and the last reading finished. */ -}}
+{{- $h := partial "harvard-classics/data.html" . -}}
+{{- $days := $h.guide.days -}}
+{{- $months := slice "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December" -}}
+{{- $len := slice 31 29 31 30 31 30 31 31 30 31 30 31 -}}
+{{- $wdi := dict "Sun" 1 "Mon" 2 "Tue" 3 "Wed" 4 "Thu" 5 "Fri" 6 "Sat" 7 -}}
+{{- $y := now.Year -}}
+{{- $byid := dict -}}{{- range $days -}}{{- $byid = merge $byid (dict .id .) -}}{{- end -}}
+{{ partial "harvard-classics/head.html" . }}
+<div class="hc hc-wide hc-cal" id="hc-cal" data-year="{{ $y }}">
+  <nav class="hc-crumbs" aria-label="Breadcrumb"><a href="{{ "books/" | relURL }}">Library</a> › <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics</a> › Calendar</nav>
+  <h1>The reading calendar</h1>
+  <p class="hc-cal-lead">One reading for each day of the year, from the 1930 edition of the Reading Guide to the Harvard Classics. Pick a day to read it. The weekdays are shown for <span id="hc-year">{{ $y }}</span>; the readings belong to the date, so they are the same every year.{{ if not $days }} The readings themselves are being prepared and will appear here soon.{{ end }}</p>
+  <div class="hc-ctools" id="hc-ctools" hidden>
+    <button type="button" class="hc-btn hc-arrow" id="hc-prev" aria-label="Previous month">‹</button>
+    <span class="hc-mlab" id="hc-mlab" aria-live="polite"></span>
+    <button type="button" class="hc-btn hc-arrow" id="hc-next" aria-label="Next month">›</button>
+    <button type="button" class="hc-btn" id="hc-gotoday">Today</button>
+    <span class="hc-sp1"></span>
+    <span class="hc-seg" role="group" aria-label="View"><button type="button" data-v="month" aria-pressed="true">Month</button><button type="button" data-v="year" aria-pressed="false">Year</button></span>
+  </div>
+  <p class="hc-cont" id="hc-cont" hidden></p>
+  <div class="hc-months">
+    {{- range $mi, $mn := $months }}
+    {{- $m := add $mi 1 }}
+    {{- $nd := index $len $mi }}
+    {{- $mdays := where $days "month" $m }}
+    <section class="hc-month" id="m{{ $m }}" data-m="{{ $m }}" aria-labelledby="mh{{ $m }}">
+      <h2 id="mh{{ $m }}">{{ $mn }} <small>{{ len $mdays }} {{ cond (eq (len $mdays) 1) "reading" "readings" }}</small></h2>
+      <div class="hc-wk" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+      <ol class="hc-grid">
+        {{- range $d := seq $nd }}
+        {{- $id := printf "%02d-%02d" $m $d }}
+        {{- $g := index $byid $id }}
+        {{- if or $g (lt $d 29) (ne $m 2) }}
+        {{- $st := "" }}{{ if eq $d 1 }}{{ $st = printf ` style="grid-column-start:%d"` (index $wdi ((time.AsTime (printf "%d-%02d-01" $y $m)).Format "Mon")) }}{{ end }}
+        <li{{ $st | safeHTMLAttr }}{{ if eq $id "02-29" }} class="hc-leap"{{ end }}>
+          {{- with $g }}<a href="{{ printf "harvard-classics/%s/" .slug | relURL }}" data-id="{{ $id }}" aria-label="{{ $mn }} {{ $d }}: {{ .title }}"><b>{{ $d }}</b><span>{{ .title }}</span>{{ if eq $id "02-29" }}<i>leap day</i>{{ end }}</a>
+          {{- else }}<span class="hc-nod" title="Not in the guide yet"><b>{{ $d }}</b></span>{{ end -}}
+        </li>
+        {{- end }}
+        {{- end }}
+      </ol>
+      <ol class="hc-mlist">
+        {{- range $mdays }}
+        <li data-id="{{ .id }}"><a href="{{ printf "harvard-classics/%s/" .slug | relURL }}"><b>{{ .day }}</b><span>{{ .title }}</span></a></li>
+        {{- end }}
+      </ol>
+    </section>
+    {{- end }}
+  </div>
+</div>
+<script type="application/json" id="hc-days">{{ partial "harvard-classics/days-json.html" . | safeJS }}</script>
+<script src="{{ "harvard-classics/hc.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/hc.js").ModTime.Unix }}" defer></script>
+{{ end }}

@@ -39,7 +39,7 @@
     c.beginPath(); c.moveTo(lx * 0.3, hip); c.lineTo(lx, sh); c.stroke();                                                 // body
     var ax = lx + (0.2 + 0.32 * reach) * s, ay = sh + (0.12 - 0.06 * reach) * s;
     c.beginPath(); c.moveTo(lx, sh + 0.04 * s); c.lineTo(ax, ay); c.moveTo(lx, sh + 0.04 * s); c.lineTo(ax - 0.02 * s, ay + 0.08 * s); c.stroke();  // arms
-    c.beginPath(); c.arc(lx + 0.02 * s, sh - 0.17 * s, 0.13 * s, 0, 7); c.fill();                                        // head
+    c.beginPath(); c.arc(lx + 0.02 * s, sh - 0.17 * s, 0.13 * s, 0, 7); c.fillStyle = '#ffcc4d'; c.fill(); c.lineWidth = Math.max(1.5, 0.035 * s); c.stroke(); // head: the one skin color, ringed in the figure's color
     if (skate) { c.strokeStyle = '#dbe7ef'; c.lineWidth = 2; c.beginPath(); c.moveTo(-0.3 * s, 0.03 * s); c.lineTo(0.05 * s, 0.03 * s); c.moveTo(-0.02 * s, 0.03 * s); c.lineTo(0.33 * s, 0.03 * s); c.stroke(); }
     c.restore();
   }

@@ -98,24 +98,26 @@
      THE MODEL: MathLadder.etiquette
      ===================================================================================================================== */
   var CAST = {
-    mia:   { name: 'Mia', full: 'Mia Brooks', pronoun: 'she', kid: true, skin: 4, hair: 'puffs', hc: '#1f1612', shirt: '#f2b33d', pants: '#3f5d9e' },
-    leo:   { name: 'Leo', full: 'Leo Novak', pronoun: 'he', kid: true, skin: 1, hair: 'short', hc: '#8a4b22', shirt: '#3f9a5c', pants: '#4d5566' },
-    sam:   { name: 'Sam', full: 'Sam Rivera', pronoun: 'he', kid: true, skin: 3, hair: 'curly', hc: '#2a1d15', shirt: '#2f7fd0', pants: '#5a4636', glasses: true },
-    ruby:  { name: 'Ruby', full: 'Ruby Walsh', pronoun: 'she', kid: true, skin: 1, hair: 'ponytail', hc: '#c4542b', shirt: '#8a5cc7', pants: '#33445e' },
-    omar:  { name: 'Omar', full: 'Omar Haddad', pronoun: 'he', kid: true, skin: 3, hair: 'short', hc: '#1d1714', shirt: '#e8742e', pants: '#3c4a3e' },
-    hana:  { name: 'Hana', full: 'Hana Kim', pronoun: 'she', kid: true, skin: 2, hair: 'bob', hc: '#141214', shirt: '#e0628a', pants: '#2f4a6b' },
-    june:  { name: 'Grandma June', short: 'Grandma', full: 'June Hale', title: 'Mrs. Hale', pronoun: 'she', skin: 2, hair: 'bun', hc: '#cfcfd4', shirt: '#7a9fb8', pants: '#59607a', glasses: true, cardigan: '#b5677a' },
-    walt:  { name: 'Grandpa Walt', short: 'Grandpa', full: 'Walt Hale', title: 'Mr. Hale', pronoun: 'he', skin: 2, hair: 'bald', hc: '#d8d8dc', shirt: '#c7b07a', pants: '#5b5048', mustache: true },
-    park:  { name: 'Ms. Park', full: 'Grace Park', title: 'Ms. Park', pronoun: 'she', skin: 2, hair: 'bun', hc: '#17141a', shirt: '#2f8f86', pants: '#3b3f52', cardigan: '#d9a441' },
-    diaz:  { name: 'Mr. Diaz', full: 'Luis Diaz', title: 'Mr. Diaz', pronoun: 'he', skin: 3, hair: 'short', hc: '#231a15', shirt: '#c43c3c', pants: '#3a3a44', mustache: true },
-    bell:  { name: 'Dr. Bell', full: 'Ada Bell', title: 'Dr. Bell', pronoun: 'she', skin: 5, hair: 'short-curly', hc: '#1a1210', shirt: '#7fb0d6', pants: '#3e4a5c', coat: true, glasses: true },
-    rosa:  { name: 'Rosa', full: 'Rosa Lopez', title: 'Ms. Lopez', pronoun: 'she', skin: 3, hair: 'long', hc: '#2b1b14', shirt: '#d9704a', pants: '#3d4d6b' },
-    kofi:  { name: 'Kofi', full: 'Kofi Mensah', title: 'Mr. Mensah', pronoun: 'he', skin: 5, hair: 'buzz', hc: '#141010', shirt: '#4a6fb5', pants: '#2f3440', beard: true },
-    nora:  { name: 'Nora', full: 'Nora Grant', title: 'Ms. Grant', pronoun: 'she', skin: 1, hair: 'long', hc: '#d9b25c', shirt: '#2f6f73', pants: '#2c3546', blazer: true },
-    james: { name: 'James', full: 'James Reed', title: 'Mr. Reed', pronoun: 'he', skin: 1, hair: 'short', hc: '#5b3b22', shirt: '#e9edf2', pants: '#2b3242', tie: '#9b2335', blazer: '#3a4660' },
-    priya: { name: 'Priya', full: 'Priya Shah', title: 'Ms. Shah', pronoun: 'she', skin: 3, hair: 'braid', hc: '#16100e', shirt: '#b8478f', pants: '#34405a' }
+    mia:   { name: 'Mia', full: 'Mia Brooks', pronoun: 'she', kid: true, hair: 'puffs', hc: '#1f1612', shirt: '#d6453d', pants: '#3f5d9e' },
+    leo:   { name: 'Leo', full: 'Leo Novak', pronoun: 'he', kid: true, hair: 'short', hc: '#8a4b22', shirt: '#3f9a5c', pants: '#4d5566' },
+    sam:   { name: 'Sam', full: 'Sam Rivera', pronoun: 'he', kid: true, hair: 'curly', hc: '#2a1d15', shirt: '#2f7fd0', pants: '#5a4636', glasses: true },
+    ruby:  { name: 'Ruby', full: 'Ruby Walsh', pronoun: 'she', kid: true, hair: 'ponytail', hc: '#c4542b', shirt: '#8a5cc7', pants: '#33445e' },
+    omar:  { name: 'Omar', full: 'Omar Haddad', pronoun: 'he', kid: true, hair: 'short', hc: '#1d1714', shirt: '#e8742e', pants: '#3c4a3e' },
+    hana:  { name: 'Hana', full: 'Hana Kim', pronoun: 'she', kid: true, hair: 'bob', hc: '#141214', shirt: '#e0628a', pants: '#2f4a6b' },
+    june:  { name: 'Grandma June', short: 'Grandma', full: 'June Hale', title: 'Mrs. Hale', pronoun: 'she', hair: 'bun', hc: '#cfcfd4', shirt: '#7a9fb8', pants: '#59607a', glasses: true, cardigan: '#b5677a' },
+    walt:  { name: 'Grandpa Walt', short: 'Grandpa', full: 'Walt Hale', title: 'Mr. Hale', pronoun: 'he', hair: 'bald', hc: '#d8d8dc', shirt: '#c7b07a', pants: '#5b5048', mustache: true },
+    park:  { name: 'Ms. Park', full: 'Grace Park', title: 'Ms. Park', pronoun: 'she', hair: 'bun', hc: '#17141a', shirt: '#2f8f86', pants: '#3b3f52', cardigan: '#d9a441' },
+    diaz:  { name: 'Mr. Diaz', full: 'Luis Diaz', title: 'Mr. Diaz', pronoun: 'he', hair: 'short', hc: '#231a15', shirt: '#c43c3c', pants: '#3a3a44', mustache: true },
+    bell:  { name: 'Dr. Bell', full: 'Ada Bell', title: 'Dr. Bell', pronoun: 'she', hair: 'short-curly', hc: '#1a1210', shirt: '#7fb0d6', pants: '#3e4a5c', coat: true, glasses: true },
+    rosa:  { name: 'Rosa', full: 'Rosa Lopez', title: 'Ms. Lopez', pronoun: 'she', hair: 'long', hc: '#2b1b14', shirt: '#d9704a', pants: '#3d4d6b' },
+    kofi:  { name: 'Kofi', full: 'Kofi Mensah', title: 'Mr. Mensah', pronoun: 'he', hair: 'buzz', hc: '#141010', shirt: '#4a6fb5', pants: '#2f3440', beard: true },
+    nora:  { name: 'Nora', full: 'Nora Grant', title: 'Ms. Grant', pronoun: 'she', hair: 'long', hc: '#d9b25c', shirt: '#2f6f73', pants: '#2c3546', blazer: true },
+    james: { name: 'James', full: 'James Reed', title: 'Mr. Reed', pronoun: 'he', hair: 'short', hc: '#5b3b22', shirt: '#e9edf2', pants: '#2b3242', tie: '#9b2335', blazer: '#3a4660' },
+    priya: { name: 'Priya', full: 'Priya Shah', title: 'Ms. Shah', pronoun: 'she', hair: 'braid', hc: '#16100e', shirt: '#b8478f', pants: '#34405a' }
   };
-  var SKIN = ['#f9e1cf', '#f3d1b5', '#e2b088', '#c48a5c', '#9a6440', '#6b4129'];
+  // one cartoon skin color for everyone (the warm yellow of the standard emoji) and a slightly darker outline for it;
+  // an old skin value in a cast entry or a scene is ignored
+  var SKIN = '#ffcc4d', SKIN_LINE = '#e8a93a';
   var PLACES = ['home', 'table', 'kitchen', 'classroom', 'store', 'library', 'park', 'doctor', 'party', 'restaurant', 'office', 'street', 'door', 'hall', 'theater', 'plane', 'plain'];
   var PIECES = {
     'dinner-plate': { name: 'dinner plate', side: 'center' },
@@ -210,7 +212,7 @@
     worn: 'A flag too worn to fly should be destroyed in a dignified way, preferably by burning. (4 U.S.C. § 8(k))'
   };
   ML.etiquette = {
-    CAST: CAST, SKIN: SKIN, PLACES: PLACES, PIECES: PIECES, setting: setting, NOTES: NOTES, PART_NAMES: PART_NAMES, CHART: CHART,
+    CAST: CAST, SKIN: SKIN, SKIN_LINE: SKIN_LINE, PLACES: PLACES, PIECES: PIECES, setting: setting, NOTES: NOTES, PART_NAMES: PART_NAMES, CHART: CHART,
     DRESS: DRESS, REST: REST, FLAG: FLAG,
     cast: function (k) { return CAST[k] || null; },
     names: function (kids) { return Object.keys(CAST).filter(function (k) { return kids === undefined || !!CAST[k].kid === !!kids; }).map(function (k) { return CAST[k].name; }); }
@@ -274,7 +276,7 @@
   function shade(hex, f) { var v = parseInt(hex.slice(1), 16), r = v >> 16 & 255, g = v >> 8 & 255, b = v & 255; function m(x) { return M.max(0, M.min(255, M.round(f < 0 ? x * (1 + f) : x + (255 - x) * f))); } return '#' + ((1 << 24) + (m(r) << 16) + (m(g) << 8) + m(b)).toString(16).slice(1); }
   // draws a person into g; returns geometry { top, headY, handR: [x, y], handL: [x, y], width }
   function drawPerson(g, p) {
-    var I = personInfo(p), c = I.c, d = I.d, skin = ET.SKIN[c.skin] || ET.SKIN[1], sit = p.pose === 'sit';
+    var I = personInfo(p), c = I.c, d = I.d, skin = ET.SKIN, sl = { stroke: ET.SKIN_LINE, 'stroke-width': 1.3 }, sit = p.pose === 'sit';
     var leg = sit ? d.leg * 0.5 : d.leg, hipY = -leg, shY = hipY - d.torso, r = d.head, hy = shY - d.neck - r, dir = p.flip ? -1 : 1;
     var ink = '#2b2420', shirt = c.shirt, pants = c.pants;
     g.setAttribute('class', 'etv-person');
@@ -293,7 +295,7 @@
     // long coat (doctor) behind the arms
     var body = 'M' + (-d.sh) + ',' + (shY + 8) + ' Q' + (-d.sh) + ',' + shY + ' ' + (-d.sh + 9) + ',' + shY + ' L' + (d.sh - 9) + ',' + shY + ' Q' + d.sh + ',' + shY + ' ' + d.sh + ',' + (shY + 8) + ' L' + (d.hip + 1) + ',' + (hipY + 2) + ' L' + (-d.hip - 1) + ',' + (hipY + 2) + ' Z';
     if (c.coat) sv('path', { d: 'M' + (-d.sh - 1) + ',' + (shY + 8) + ' L' + (-d.hip - 6) + ',' + (hipY + leg * 0.5) + ' L' + (d.hip + 6) + ',' + (hipY + leg * 0.5) + ' L' + (d.sh + 1) + ',' + (shY + 8) + ' Z', fill: '#f4f6f8', stroke: '#c9d2da', 'stroke-width': 1 }, g);
-    sv('rect', { x: -d.sh * 0.22, y: shY - d.neck - 2, width: d.sh * 0.44, height: d.neck + 6, fill: skin }, g);
+    sv('rect', Object.assign({ x: -d.sh * 0.22, y: shY - d.neck - 2, width: d.sh * 0.44, height: d.neck + 6, fill: skin }, sl), g);
     sv('path', { d: body, fill: shirt }, g);
     var jacket = c.blazer ? (typeof c.blazer === 'string' ? c.blazer : shade(shirt, -0.35)) : c.cardigan || (c.coat ? '#f4f6f8' : null);
     if (jacket) {
@@ -320,13 +322,13 @@
       if (pose === 'cover' && side === 'R') { mx = -d.sh - T * 0.1; my = shY + T * 0.1; }
       if (pose === 'hips') { mx = s * (d.sh + T * 0.35); my = shY + T * 0.45; }
       sv('path', { d: 'M' + x0 + ',' + y0 + ' Q' + mx + ',' + my + ' ' + x1 + ',' + y1, fill: 'none', stroke: sleeve, 'stroke-width': aw, 'stroke-linecap': 'round' }, g);
-      sv('circle', { cx: x1, cy: y1, r: hr, fill: skin }, g);
+      sv('circle', Object.assign({ cx: x1, cy: y1, r: hr, fill: skin }, sl), g);
     }
     arm('R', tgt.R); arm('L', tgt.L);
     // head
-    sv('circle', { cx: 0, cy: hy, r: r, fill: skin }, g);
-    sv('ellipse', { cx: -r * 0.98, cy: hy + 1, rx: r * 0.16, ry: r * 0.24, fill: skin }, g);
-    sv('ellipse', { cx: r * 0.98, cy: hy + 1, rx: r * 0.16, ry: r * 0.24, fill: skin }, g);
+    sv('ellipse', Object.assign({ cx: -r * 0.98, cy: hy + 1, rx: r * 0.16, ry: r * 0.24, fill: skin }, sl), g);
+    sv('ellipse', Object.assign({ cx: r * 0.98, cy: hy + 1, rx: r * 0.16, ry: r * 0.24, fill: skin }, sl), g);
+    sv('circle', Object.assign({ cx: 0, cy: hy, r: r, fill: skin }, sl), g);
     // hair in front
     function cap(top, fr) { sv('path', { d: 'M' + (-r * 1.03) + ',' + (hy + r * 0.05) + ' C' + (-r * 1.08) + ',' + (hy - r * top) + ' ' + (r * 1.08) + ',' + (hy - r * top) + ' ' + (r * 1.03) + ',' + (hy + r * 0.05) + ' C' + (r * 0.75) + ',' + (hy - r * fr) + ' ' + (-r * 0.35) + ',' + (hy - r * (fr + 0.15)) + ' ' + (-r * 1.03) + ',' + (hy + r * 0.05) + ' Z', fill: c.hc }, g); }
     if (hc === 'short' || hc === 'long' || hc === 'ponytail' || hc === 'puffs' || hc === 'braid' || hc === 'bun') cap(1.35, 0.42);
@@ -1136,7 +1138,7 @@
     table: [['head', 'Sit up, head up'], ['back', 'Back against the chair'], ['hand', 'Wrists at the table edge, elbows off while eating'], ['ankle', 'Feet on the floor']]
   };
   function drawPosture(svg, pose, t, o) {
-    var P = POSE[pose] || POSE.stand, c = ET.CAST[o.who || 'leo'] || ET.CAST.leo, skin = ET.SKIN[c.skin];
+    var P = POSE[pose] || POSE.stand, c = ET.CAST[o.who || 'leo'] || ET.CAST.leo, skin = ET.SKIN, sl = { stroke: ET.SKIN_LINE, 'stroke-width': 1.3 };
     function J(k) { var a = P[k][0], b = P[k][1]; return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; }
     var g = sv('g', { transform: 'translate(' + (o.x || 0) + ',0)' }, svg);
     if (pose !== 'stand') { // chair, and the table
@@ -1150,13 +1152,13 @@
     sv('path', { d: 'M' + hip[0] + ',' + hip[1] + ' Q' + bk[0] + ',' + bk[1] + ' ' + sh[0] + ',' + sh[1], fill: 'none', stroke: c.shirt, 'stroke-width': 26, 'stroke-linecap': 'round' }, g);
     var nk = [(sh[0] * 0.4 + hd[0] * 0.6), (sh[1] * 0.4 + hd[1] * 0.6)];
     line([sh, nk], '', 9, skin);
-    sv('circle', { cx: hd[0], cy: hd[1], r: 17, fill: skin }, g);
+    sv('circle', Object.assign({ cx: hd[0], cy: hd[1], r: 17, fill: skin }, sl), g);
     sv('path', { d: 'M' + (hd[0] - 18) + ',' + (hd[1] + 2) + ' A18 18 0 0 1 ' + (hd[0] + 10) + ',' + (hd[1] - 15) + ' Q' + (hd[0] - 4) + ',' + (hd[1] - 8) + ' ' + (hd[0] - 8) + ',' + (hd[1] + 6) + ' Z', fill: c.hc }, g);
     sv('circle', { cx: hd[0] + 8, cy: hd[1] - 3, r: 2.2, fill: '#2b2420' }, g);
     sv('path', { d: 'M' + (hd[0] + 16) + ',' + (hd[1] - 2) + ' l4,6 l-4,1 z', fill: skin }, g);
     sv('path', { d: 'M' + (hd[0] + 7) + ',' + (hd[1] + 9) + ' q4,2 7,-1', fill: 'none', stroke: '#2b2420', 'stroke-width': 1.5, 'stroke-linecap': 'round' }, g);
     line([sh, el, hn], 'etpo-arm', 10, c.blazer && typeof c.blazer === 'string' ? c.blazer : c.shirt);
-    sv('circle', { cx: hn[0], cy: hn[1], r: 5.5, fill: skin }, g);
+    sv('circle', Object.assign({ cx: hn[0], cy: hn[1], r: 5.5, fill: skin }, sl), g);
     return { J: J };
   }
   V.register('et-posture', function (el, o) {

@@ -20,7 +20,7 @@
     col = col || C.wine;
     m.box(x - 0.17, y, z - 0.1, x + 0.17, y + 0.84, z + 0.1, col);
     m.box(x - 0.22, y + 0.84, z - 0.12, x + 0.22, y + 1.44, z + 0.12, col);
-    m.box(x - 0.11, y + 1.47, z - 0.11, x + 0.11, y + 1.7, z + 0.11, '#d9b38c');
+    m.box(x - 0.11, y + 1.47, z - 0.11, x + 0.11, y + 1.7, z + 0.11, '#ffcc4d'); // the head, in the site's one cartoon skin color
     return m;
   }
   // a true pyramid on the ground at (cx, cz), base b, height h; sideCols shade the four faces a little apart

@@ -170,8 +170,8 @@
       var Fv = F(), ratio = S.unb ? Math.min(1, Fv / 100) : Math.min(1, Fv / S.str);
       c.strokeStyle = 'rgba(255,255,255,.1)'; c.lineWidth = 6; c.beginPath(); c.arc(o.x, o.y, 26, -Math.PI / 2, 1.5 * Math.PI); c.stroke();
       c.strokeStyle = ratio > 0.85 && !S.unb ? C.red : C.pink; c.beginPath(); c.arc(o.x, o.y, 26, -Math.PI / 2, -Math.PI / 2 + TAU * ratio); c.stroke();
-      // the hand
-      c.fillStyle = '#e9c39b'; c.beginPath(); c.arc(o.x, o.y, 13, 0, TAU); c.fill(); c.fillStyle = '#c99a6b'; c.beginPath(); c.arc(o.x, o.y, 5, 0, TAU); c.fill();
+      // the hand (seen from above), in the site's one cartoon skin color
+      c.fillStyle = '#ffcc4d'; c.beginPath(); c.arc(o.x, o.y, 13, 0, TAU); c.fill(); c.strokeStyle = '#e8a93a'; c.lineWidth = 1.5; c.stroke(); c.fillStyle = '#e8a93a'; c.beginPath(); c.arc(o.x, o.y, 5, 0, TAU); c.fill();
       // after a cut: what would "straight outward" look like, and the real path
       if (S.rel && S.ghost > 0) {
         var r0 = S.rel, ux = Math.cos(r0.phi), uy = Math.sin(r0.phi), Lg = 3.5;

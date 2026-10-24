@@ -1,0 +1,38 @@
+{{ define "main" }}
+{{- /* /harvard-classics/today/: hc.js finds the reading for the visitor's local date and shows that day's page here.
+   Without JavaScript: every reading, month by month (the build month open). */ -}}
+{{- $h := partial "harvard-classics/data.html" . -}}
+{{- $days := $h.guide.days -}}
+{{- $months := slice "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December" -}}
+{{- $has29 := gt (len (where $days "id" "02-29")) 0 -}}
+{{- $nowm := int (now.Format "1") -}}
+{{ partial "harvard-classics/head.html" . }}
+<div class="hc hc-todaypg" id="hc-todaypg" data-base="{{ "harvard-classics/" | relURL }}" data-leap="{{ cond $has29 "02-29" "02-28" }}">
+  <nav class="hc-crumbs" aria-label="Breadcrumb"><a href="{{ "books/" | relURL }}">Library</a> › <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics</a> › Today’s reading</nav>
+  <div class="hc-tbar">
+    <h1 class="hc-eye">Today’s reading</h1>
+    <span class="hc-tdate" id="hc-tdate"></span>
+  </div>
+  <p class="hc-cont" id="hc-cont" hidden></p>
+  <div class="hc-slot" id="hc-slot">
+    <p class="hc-nojs" id="hc-nojs">This page finds the reading for your own date with JavaScript, which seems to be off. Pick the day from the list below or from the <a href="{{ "harvard-classics/calendar/" | relURL }}">calendar</a>.</p>
+  </div>
+  <section class="hc-all" aria-labelledby="hc-all-h">
+    <h2 id="hc-all-h">Every reading, month by month</h2>
+    {{- if not $days }}<p class="hc-nojs">The readings are being prepared from scans of the 1909–10 volumes and will appear here soon.</p>{{ end }}
+    {{- range $mi, $mn := cond (gt (len $days) 0) $months slice }}
+    {{- $m := add $mi 1 }}
+    <details{{ if eq $m $nowm }} open{{ end }} data-m="{{ $m }}">
+      <summary>{{ $mn }}</summary>
+      <ol>
+        {{- range where $days "month" $m }}
+        <li><a href="{{ printf "harvard-classics/%s/" .slug | relURL }}">{{ $mn }} {{ .day }}</a>{{ .title }}</li>
+        {{- end }}
+      </ol>
+    </details>
+    {{- end }}
+  </section>
+</div>
+<script type="application/json" id="hc-days">{{ partial "harvard-classics/days-json.html" . | safeJS }}</script>
+<script src="{{ "harvard-classics/hc.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/hc.js").ModTime.Unix }}" defer></script>
+{{ end }}

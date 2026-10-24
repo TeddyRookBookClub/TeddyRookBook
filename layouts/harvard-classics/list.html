@@ -1,0 +1,101 @@
+{{ define "main" }}
+{{- /* /harvard-classics/: the front page of the daily readings. */ -}}
+{{- $h := partial "harvard-classics/data.html" . -}}
+{{- $days := $h.guide.days -}}
+{{- $ed := $h.guide.edition -}}
+{{- $months := slice "Jan." "Feb." "Mar." "Apr." "May" "June" "July" "Aug." "Sept." "Oct." "Nov." "Dec." -}}
+{{- $nproof := 0 -}}{{- $ntext := 0 -}}
+{{- range $k, $t := $h.days -}}{{- $ntext = add $ntext 1 -}}{{- if eq $t.status "proofread" -}}{{- $nproof = add $nproof 1 -}}{{- end -}}{{- end -}}
+{{- $set := index (where site.Data.sets "key" "harvard-classics") 0 -}}
+{{ partial "harvard-classics/head.html" . }}
+<div class="hc hc-wide hc-front">
+  <nav class="hc-crumbs" aria-label="Breadcrumb"><a href="{{ "books/" | relURL }}">Library</a> › Harvard Classics</nav>
+
+  <header class="hc-hero">
+    <div>
+      <p class="hc-eye">Dr. Eliot’s Five Foot Shelf of Books</p>
+      <h1>The Harvard Classics, fifteen minutes a day</h1>
+      <p class="hc-lead">In 1916 the publisher of the Harvard Classics first printed a little guide with a reading for every day of the year, each a few pages from one of the fifty volumes, with a short introduction to draw you in. {{ if $days }}Here {{ if eq (len $days) 1 }}is the reading{{ else }}are all {{ len $days }} readings{{ end }}, the full text of each day’s pages from the volumes, so you can read along whether or not you own the set.{{ else }}The readings are on their way: each day’s pages are being prepared from scans of the volumes, and they will appear here, one for every day of the year.{{ end }}</p>
+      <div class="hc-btns">
+        <a class="hc-btn pri" href="{{ "harvard-classics/today/" | relURL }}">Today’s reading</a>
+        <a class="hc-btn" href="{{ "harvard-classics/calendar/" | relURL }}">The calendar</a>
+        {{ with $days }}{{ with index . 0 }}<a class="hc-btn" href="{{ printf "harvard-classics/%s/" .slug | relURL }}">Start on {{ .slug | humanize }}</a>{{ end }}{{ end }}
+      </div>
+    </div>
+    <div aria-hidden="true">
+      <div class="hc-shelf">{{ range seq 25 }}<i><b>{{ . }}</b></i>{{ end }}</div>
+      <div class="hc-shelf">{{ range seq 26 50 }}<i><b>{{ . }}</b></i>{{ end }}</div>
+      <p class="hc-shelf-cap">Fifty volumes, about five feet of shelf</p>
+    </div>
+  </header>
+
+  <p class="hc-cont" id="hc-cont" hidden></p>
+
+  {{- if $days }}
+  <section class="hc-sec" aria-labelledby="hc-today-h">
+    <h2 id="hc-today-h">Today’s reading</h2>
+    {{ partial "hc-today.html" . }}
+  </section>
+  {{- end }}
+
+  <div class="hc-cols">
+    <section class="hc-sec" aria-labelledby="hc-what-h">
+      <h2 id="hc-what-h">What the Five Foot Shelf is</h2>
+      <p>Charles W. Eliot was president of Harvard for forty years, from 1869 to 1909. He liked to say that a shelf of books about five feet long could hold a liberal education. When he retired, the publisher P. F. Collier &amp; Son took him at his word. With William Allan Neilson, a Harvard professor of English, Eliot chose the works, and Collier printed them in 1909 and 1910 as <i>The Harvard Classics</i>: fifty volumes, from Plato, the Bible and the Greek plays to Shakespeare, Franklin, Darwin and the founding documents of the United States. A volume of lectures on the set followed in 1914.</p>
+      <h2 id="hc-plan-h">Eliot’s plan</h2>
+      <p>Eliot believed that anyone who read these books with care, even for only fifteen minutes a day, could gain the essentials of a liberal education. The guide, <i>Fifteen Minutes a Day: The Reading Guide</i>, turns that promise into a calendar. Each day has a few pages, often tied to the date by a birthday or an anniversary, and a short introduction meant to make you want to read on. In a year you sample nearly the whole shelf: history, poetry, philosophy, science, travel, scripture and drama, a little at a time.</p>
+    </section>
+    <section class="hc-sec" aria-labelledby="hc-how-h">
+      <h2 id="hc-how-h">How to use the daily readings</h2>
+      <ul class="hc-how">
+        <li><a href="{{ "harvard-classics/today/" | relURL }}">Today’s reading</a> follows the date on your own phone or computer, wherever you are.</li>
+        <li>The <a href="{{ "harvard-classics/calendar/" | relURL }}">calendar</a> has every day of the year, so you can catch up, read ahead or start on any day you like.</li>
+        <li>Each day opens with the guide’s introduction, then the reading itself, set like a book page: verse stays verse, and the footnotes come at the end.</li>
+        <li>When the guide’s pages begin or end in the middle of a paragraph, the reading runs on to the end of it, and a small note says so.</li>
+        <li>Each day names its volume and pages and links to the scanned page, so you can follow along in your own set or check a word.</li>
+        <li>The day pages print cleanly, one reading to a few sheets of paper.</li>
+        <li>Your browser remembers the last reading you finished (on this device only), so this page can show you where to pick up.</li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="hc-sec hc-edition" aria-labelledby="hc-ed-h">
+    <h2 id="hc-ed-h">The edition used</h2>
+    <p>The daily plan is from <i>{{ $ed.guide | default "Fifteen Minutes a Day: The Reading Guide" }}</i> ({{ $ed.guide_publisher | default "P. F. Collier & Son" }}, {{ $ed.guide_year | default 1916 }}){{ with $ed.guide_scan }}, <a href="{{ . }}" rel="noopener">scanned at the Internet Archive</a>{{ end }}. The texts are from <i>The Harvard Classics</i>, edited by Charles W. Eliot (P. F. Collier &amp; Son, copyright 1909–1910), in a later printing from the original plates scanned at the Internet Archive; the guide’s page numbers match it. Some printings reset a few volumes, so in another set the page numbers may differ. Both the guide and the volumes are in the public domain in the United States.{{ with $ed.note }} {{ . }}{{ end }}</p>
+    <p class="hc-stat">{{ if not $ntext }}The texts are being prepared.{{ else if eq $nproof $ntext }}Every day’s text has been proofread line by line against the page images.{{ else }}Proofreading: {{ $nproof }} of {{ len $days }} days have been checked line by line against the page images so far. The rest were read by machine from the scans and may have a wrong word here and there.{{ end }}</p>
+  </section>
+
+  <section class="hc-sec" aria-labelledby="hc-vols-h">
+    <h2 id="hc-vols-h">The fifty volumes</h2>
+    <p>What’s in each volume, how many of the daily readings come from it, and which days they are.</p>
+    {{- $vols := $h.guide.volumes -}}
+    {{- if not $vols -}}{{- $vols = slice -}}{{- range $i, $s := first 50 ($set.volumes | default slice) -}}{{- $vols = $vols | append (dict "n" (add $i 1) "title" (index (split $s " · ") 1)) -}}{{- end -}}{{- end }}
+    <ol class="hc-vols">
+      {{- range $vols }}
+      {{- $vn := int .n -}}
+      {{- $vd := slice -}}
+      {{- range $days -}}{{- $d := . -}}{{- $hit := false -}}{{- range .readings -}}{{- if eq (int .volume) $vn -}}{{- $hit = true -}}{{- end -}}{{- end -}}{{- if $hit -}}{{- $vd = $vd | append $d -}}{{- end -}}{{- end }}
+      <li class="hc-vol" id="vol-{{ $vn }}">
+        <span class="hc-vn" aria-hidden="true"><small>VOL.</small>{{ $vn }}</span>
+        <p class="hc-vt"><span class="hc-sr">Volume {{ $vn }}: </span>{{ .title }}</p>
+        <p class="hc-vm">{{ with .year }}{{ . }} · {{ end }}{{ len $vd }} {{ cond (eq (len $vd) 1) "reading" "readings" }}{{ with .scan_url }} · <a href="{{ . }}" rel="noopener">the scan</a>{{ end }}</p>
+        {{- with $vd }}
+        <details><summary>The days</summary>
+          <ul class="hc-vdays">{{ range . }}<li><a href="{{ printf "harvard-classics/%s/" .slug | relURL }}" title="{{ .title }}">{{ index $months (sub (int .month) 1) }} {{ .day }}</a></li>{{ end }}</ul>
+        </details>
+        {{- end }}
+      </li>
+      {{- end }}
+    </ol>
+  </section>
+
+  <section class="hc-sec" aria-labelledby="hc-lib-h">
+    <h2 id="hc-lib-h">On my shelf</h2>
+    <div class="hc-lib">
+      <p>I have the whole set at home, all fifty volumes plus the Lectures, and it’s listed with the other sets in the <a href="{{ "books/" | relURL }}#set-harvard-classics">Library</a>. For more great books in order, try the <a href="{{ "books/paths/" | relURL }}">reading paths</a>, or find free copies of other classics on <a href="{{ "free-books/" | relURL }}">Free Books</a>.</p>
+    </div>
+  </section>
+</div>
+<script type="application/json" id="hc-days">{{ partial "harvard-classics/days-json.html" . | safeJS }}</script>
+<script src="{{ "harvard-classics/hc.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/hc.js").ModTime.Unix }}" defer></script>
+{{ end }}

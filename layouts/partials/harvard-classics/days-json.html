@@ -1,0 +1,5 @@
+{{- /* The guide's days as a compact JSON list for the page scripts: [[id, slug, title], …] in calendar order. */ -}}
+{{- $h := partial "harvard-classics/data.html" . -}}
+{{- $l := slice -}}
+{{- range $h.guide.days -}}{{- $l = $l | append (jsonify (slice .id .slug .title)) -}}{{- end -}}
+{{- return (printf "[%s]" (delimit $l ",")) -}}

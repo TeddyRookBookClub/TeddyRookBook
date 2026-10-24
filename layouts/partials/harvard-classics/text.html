@@ -1,0 +1,58 @@
+{{- /* A reading's text as HTML (data/harvard/days/MM-DD.json, schema v1 block types: p, heading, quote, verse, speaker,
+   stage, break, footnotes; anything else is a plain paragraph). In: dict "blocks", "pre" (e.g. "01-01-1"), and
+   "endnote" (the reading's boundary.end sentence, set after the text and before its footnotes).
+   Schema v1.1: footnote items are {n, s, mark, page} with n a running number (shown); [^n] links to item n.
+   A block's "pg" (the printed page it begins on) becomes a quiet page number in the margin when the page changes.
+   Headings inside the reading are h3–h5 (the page has h1 for the day and h2 for each reading). */ -}}
+{{- $pre := .pre -}}
+{{- $sc := newScratch -}}
+{{- $endnote := "" -}}{{- with .endnote -}}{{- $endnote = printf "<p class=\"hc-bound\">%s</p>\n" (htmlEscape .) -}}{{- end -}}
+{{- $k := 0 -}}
+{{- range .blocks -}}{{- if eq .t "footnotes" -}}{{- range .items -}}
+  {{- $k = add $k 1 -}}{{- $m := string .n -}}
+  {{- $sc.Set (printf "q:%s" $m) (($sc.Get (printf "q:%s" $m) | default slice) | append $k) -}}
+{{- end -}}{{- end -}}{{- end -}}
+{{- $out := "" -}}
+{{- $fk := 0 -}}
+{{- $lastpg := "" -}}
+{{- range .blocks -}}
+  {{- $t := .t -}}
+  {{- $pm := "" -}}
+  {{- with .pg -}}{{- if ne (string .) $lastpg -}}{{- $lastpg = string . -}}{{- $pm = printf `<span class="hc-pg" aria-hidden="true" title="Page %s of the volume">%s</span>` (htmlEscape $lastpg) (htmlEscape $lastpg) -}}{{- end -}}{{- end -}}
+  {{- if eq $t "p" -}}
+    {{- $out = printf "%s<p>%s%s</p>\n" $out $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) -}}
+  {{- else if eq $t "heading" -}}
+    {{- $lv := add (int (.level | default 2)) 1 -}}{{- if lt $lv 3 }}{{ $lv = 3 }}{{ end -}}{{- if gt $lv 5 }}{{ $lv = 5 }}{{ end -}}
+    {{- $out = printf "%s<h%d class=\"hc-h\">%s%s</h%d>\n" $out $lv $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) $lv -}}
+  {{- else if eq $t "quote" -}}
+    {{- $out = printf "%s<blockquote class=\"hc-q\"><p>%s%s</p></blockquote>\n" $out $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) -}}
+  {{- else if eq $t "verse" -}}
+    {{- $ls := "" -}}
+    {{- range .lines -}}
+      {{- $i := float (.i | default 0) -}}
+      {{- $st := "" -}}{{- if gt $i 0.0 }}{{ $st = printf ` style="--i:%g"` $i }}{{ end -}}
+      {{- $ls = printf "%s<span class=\"hc-vl\"%s>%s</span>" $ls $st (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) -}}
+    {{- end -}}
+    {{- $out = printf "%s<div class=\"hc-verse\">%s%s</div>\n" $out $pm $ls -}}
+  {{- else if eq $t "speaker" -}}
+    {{- $out = printf "%s<p class=\"hc-sp\">%s%s</p>\n" $out $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) -}}
+  {{- else if eq $t "stage" -}}
+    {{- $out = printf "%s<p class=\"hc-st\">%s%s</p>\n" $out $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) -}}
+  {{- else if eq $t "break" -}}
+    {{- $out = printf "%s<hr class=\"hc-br\">\n" $out -}}
+  {{- else if eq $t "footnotes" -}}
+    {{- $out = printf "%s%s" $out $endnote -}}{{- $endnote = "" -}}
+    {{- $li := "" -}}
+    {{- range .items -}}
+      {{- $fk = add $fk 1 -}}
+      {{- $back := "" -}}
+      {{- if $sc.Get (printf "r:%d" $fk) -}}{{- $back = printf ` <a class="hc-fb" href="#fnr-%s-%d" aria-label="Back to the text">↩</a>` $pre $fk -}}{{- end -}}
+      {{- $fp := "" -}}{{- with .page -}}{{- $fp = printf ` <span class="hc-fpg">(page %s)</span>` (htmlEscape (string .)) -}}{{- end -}}
+      {{- $li = printf "%s<li id=\"fn-%s-%d\"><span class=\"hc-fm\">%s</span> %s%s%s</li>" $li $pre $fk (htmlEscape (string .n)) (partial "harvard-classics/inline.html" (dict "s" .s "nofn" true)) $fp $back -}}
+    {{- end -}}
+    {{- $out = printf "%s<aside class=\"hc-fns\" aria-label=\"Notes\"><p class=\"hc-fnh\">Notes</p><ol>%s</ol></aside>\n" $out $li -}}
+  {{- else if .s -}}
+    {{- $out = printf "%s<p>%s%s</p>\n" $out $pm (partial "harvard-classics/inline.html" (dict "s" .s "pre" $pre "sc" $sc)) -}}
+  {{- end -}}
+{{- end -}}
+{{- return (printf "%s%s" $out $endnote) -}}

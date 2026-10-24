@@ -1,0 +1,10 @@
+{{- /* /harvard-classics/<day>/index.json: the small record the home-page card (partials/hc-today.html) loads for the visitor's date. */ -}}
+{{- $h := partial "harvard-classics/data.html" . -}}
+{{- $id := .Params.hcid -}}
+{{- $g := index (where $h.guide.days "id" $id) 0 -}}
+{{- $t := index ($h.days | default dict) $id -}}
+{{- $rs := slice -}}
+{{- range $g.readings -}}{{- $rs = $rs | append (dict "author" .author "work" (.title | default .work) "volume" .volume "start" .start "end" .end) -}}{{- end -}}
+{{- $o := dict "id" $id "slug" $g.slug "url" (printf "harvard-classics/%s/" $g.slug | relURL) "date" .LinkTitle "title" $g.title "intro" $g.intro "readings" $rs -}}
+{{- with $t -}}{{- $o = merge $o (dict "minutes" .minutes "words" .words "status" .status) -}}{{- end -}}
+{{- $o | jsonify -}}

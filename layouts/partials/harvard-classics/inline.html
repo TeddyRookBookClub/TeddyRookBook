@@ -1,0 +1,27 @@
+{{- /* One string of reading text (schema v1 inline markup): escape it, keep <i>…</i>, and turn [^N] into a link to
+   footnote N of this reading. In: dict "s" (string), "pre" (id prefix, e.g. "01-01-1"), "sc" (the reading's scratch,
+   which holds the footnote queue: q:<mark> = item numbers with that mark, c:<mark> = marks used so far), "nofn" (true
+   inside the footnotes). Marks like "*" start over on each printed page, so the k-th [^*] goes to the k-th "*" note. */ -}}
+{{- $s := htmlEscape (.s | default "") -}}
+{{- $s = replace $s "&lt;i&gt;" "<i>" -}}
+{{- $s = replace $s "&lt;/i&gt;" "</i>" -}}
+{{- if not .nofn -}}
+  {{- $pre := .pre -}}{{- $sc := .sc -}}
+  {{- range findRE `\[\^[^\]\s]{1,6}\]` $s -}}
+    {{- $mk := . -}}
+    {{- $m := strings.TrimSuffix "]" (strings.TrimPrefix "[^" $mk) -}}
+    {{- $list := $sc.Get (printf "q:%s" $m) | default slice -}}
+    {{- $c := $sc.Get (printf "c:%s" $m) | default 0 -}}
+    {{- $k := 0 -}}
+    {{- if lt $c (len $list) -}}{{- $k = index $list $c -}}{{- else if $list -}}{{- $k = index $list (sub (len $list) 1) -}}{{- end -}}
+    {{- $sc.Set (printf "c:%s" $m) (add $c 1) -}}
+    {{- if $k -}}
+      {{- $ref := "" -}}
+      {{- if not ($sc.Get (printf "r:%d" $k)) -}}{{- $ref = printf ` id="fnr-%s-%d"` $pre $k -}}{{- $sc.Set (printf "r:%d" $k) true -}}{{- end -}}
+      {{- $s = replace $s $mk (printf `<sup class="hc-fr"><a href="#fn-%s-%d"%s aria-label="Note %s">%s</a></sup>` $pre $k $ref $m $m) 1 -}}
+    {{- else -}}
+      {{- $s = replace $s $mk (printf `<sup class="hc-fr">%s</sup>` $m) 1 -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $s -}}

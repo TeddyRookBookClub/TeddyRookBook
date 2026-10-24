@@ -176,46 +176,48 @@
   function seeded(str) { var x = 2166136261; str = String(str); for (var i = 0; i < str.length; i++) { x ^= str.charCodeAt(i); x = M.imul(x, 16777619) >>> 0; } return function () { x = (M.imul(x, 1664525) + 1013904223) >>> 0; return x / 4294967296; }; }
 
   /* ---------------- palette ---------------- */
-  var SKIN = ['#fde3cf', '#f3cdaa', '#e3ae83', '#c88c5f', '#9c6541', '#6f442b'];
-  var HAIR = { black: '#1f1814', dark: '#3d2617', brown: '#7a4a26', auburn: '#a2481f', red: '#c9552a', blond: '#e3b65a', gray: '#a8a39d', white: '#ece8e0', blue: '#3c6fd1', pink: '#e27aa3' };
+  // one cartoon skin color for everyone (the warm yellow of the standard emoji), with a darker shade for freckles and shine
+  var SKIN = '#ffcc4d', SKIN_SHADE = '#e8a93a';
+  var HAIR = { black: '#1f1814', dark: '#3d2617', brown: '#7a4a26', auburn: '#a2481f', red: '#c9552a', blond: '#f5d985', gray: '#a8a39d', white: '#ece8e0', blue: '#3c6fd1', pink: '#e27aa3' };
   var COL = { red: '#d9534a', orange: '#ef8a3c', yellow: '#f2c14e', green: '#5aa469', teal: '#3a9ea5', blue: '#4a7fd0', navy: '#2f4673', purple: '#8a62c4',
     pink: '#e27aa3', brown: '#8a5a3a', tan: '#c9a26b', gray: '#8a949c', white: '#f6f2ea', black: '#36322f', cream: '#efe2c4', gold: '#f0b429', silver: '#c5ccd3', olive: '#7d8a3a', maroon: '#8e2f3c', sky: '#8cc3ea' };
   function cc(c, dflt) { return !c ? dflt : COL[c] || HAIR[c] || c; }
   /* ---------------- the cast: original characters of all ages (front view, big heads so faces read at card size) ---------------- */
-  // age: baby | kid | teen | adult | elder;  skin 0-5;  hair: style;  hc: hair color;  top, bottom, dress, shoes: colors
+  // age: baby | kid | teen | adult | elder;  hair: style;  hc: hair color;  top, bottom, dress, shoes: colors
+  // (everyone has the same skin color, SKIN; an old skin value in a cast entry or a scene's color is ignored)
   var CAST = {
     // children
-    pip:    { name: 'Pip', age: 'kid', skin: 0, hair: 'spiky', hc: 'red', top: 'blue', bottom: 'navy', freckles: true, desc: 'boy, red spiky hair, freckles, blue shirt' },
-    zoe:    { name: 'Zoe', age: 'kid', skin: 4, hair: 'puffs', hc: 'black', dress: 'yellow', shoes: 'red', desc: 'girl, two hair puffs, yellow dress' },
-    kai:    { name: 'Kai', age: 'kid', skin: 1, hair: 'bowl', hc: 'black', top: 'orange', bottom: 'gray', desc: 'boy, black bowl cut, orange shirt' },
-    lila:   { name: 'Lila', age: 'kid', skin: 2, hair: 'braids', hc: 'dark', top: 'purple', bottom: 'blue', desc: 'girl, two long braids, purple shirt' },
-    sami:   { name: 'Sami', age: 'kid', skin: 3, hair: 'curly', hc: 'dark', top: 'green', bottom: 'brown', glasses: true, desc: 'boy, curly hair, glasses, green shirt' },
-    ivy:    { name: 'Ivy', age: 'kid', skin: 0, hair: 'pigtails', hc: 'blond', dress: 'pink', shoes: 'purple', desc: 'girl, blond pigtails, pink dress' },
-    theo:   { name: 'Theo', age: 'baby', skin: 1, hair: 'tuft', hc: 'blond', top: 'sky', bottom: 'sky', desc: 'toddler, blond tuft, blue romper' },
+    pip:    { name: 'Pip', age: 'kid', hair: 'spiky', hc: 'red', top: 'blue', bottom: 'navy', freckles: true, desc: 'boy, red spiky hair, freckles, blue shirt' },
+    zoe:    { name: 'Zoe', age: 'kid', hair: 'puffs', hc: 'black', dress: 'red', shoes: 'navy', desc: 'girl, two hair puffs, red dress' },
+    kai:    { name: 'Kai', age: 'kid', hair: 'bowl', hc: 'black', top: 'orange', bottom: 'gray', desc: 'boy, black bowl cut, orange shirt' },
+    lila:   { name: 'Lila', age: 'kid', hair: 'braids', hc: 'dark', top: 'purple', bottom: 'blue', desc: 'girl, two long braids, purple shirt' },
+    sami:   { name: 'Sami', age: 'kid', hair: 'curly', hc: 'dark', top: 'green', bottom: 'brown', glasses: true, desc: 'boy, curly hair, glasses, green shirt' },
+    ivy:    { name: 'Ivy', age: 'kid', hair: 'pigtails', hc: 'blond', dress: 'pink', shoes: 'purple', desc: 'girl, blond pigtails, pink dress' },
+    theo:   { name: 'Theo', age: 'baby', hair: 'tuft', hc: 'blond', top: 'sky', bottom: 'sky', desc: 'toddler, blond tuft, blue romper' },
     // teens
-    maya:   { name: 'Maya', age: 'teen', skin: 3, hair: 'ponytail', hc: 'dark', top: 'teal', bottom: 'navy', desc: 'teen girl, ponytail, teal top' },
-    jonah:  { name: 'Jonah', age: 'teen', skin: 1, hair: 'sidepart', hc: 'brown', top: 'red', bottom: 'gray', desc: 'teen boy, side-parted brown hair, red shirt' },
-    rosa:   { name: 'Rosa', age: 'teen', skin: 2, hair: 'wavy', hc: 'brown', top: 'green', bottom: 'black', desc: 'teen girl, long wavy hair, green top' },
-    dev:    { name: 'Dev', age: 'teen', skin: 4, hair: 'short', hc: 'black', top: 'yellow', bottom: 'navy', desc: 'teen boy, short black hair, yellow shirt' },
+    maya:   { name: 'Maya', age: 'teen', hair: 'ponytail', hc: 'dark', top: 'teal', bottom: 'navy', desc: 'teen girl, ponytail, teal top' },
+    jonah:  { name: 'Jonah', age: 'teen', hair: 'sidepart', hc: 'brown', top: 'red', bottom: 'gray', desc: 'teen boy, side-parted brown hair, red shirt' },
+    rosa:   { name: 'Rosa', age: 'teen', hair: 'wavy', hc: 'brown', top: 'green', bottom: 'black', desc: 'teen girl, long wavy hair, green top' },
+    dev:    { name: 'Dev', age: 'teen', hair: 'short', hc: 'black', top: 'orange', bottom: 'navy', desc: 'teen boy, short black hair, orange shirt' },
     // grown-ups
-    ada:    { name: 'Ada', age: 'adult', skin: 1, hair: 'bob', hc: 'black', top: 'navy', bottom: 'gray', glasses: true, desc: 'woman, black bob, glasses, navy jacket' },
-    omar:   { name: 'Omar', age: 'adult', skin: 3, hair: 'short', hc: 'black', top: 'green', bottom: 'brown', beard: true, desc: 'man, short black hair, beard, green shirt' },
-    greta:  { name: 'Greta', age: 'adult', skin: 0, hair: 'bun', hc: 'blond', dress: 'red', shoes: 'maroon', desc: 'woman, blond bun, red dress' },
-    marcus: { name: 'Marcus', age: 'adult', skin: 5, hair: 'buzz', hc: 'black', top: 'purple', bottom: 'navy', mustache: true, desc: 'man, buzz cut, mustache, purple sweater' },
-    nell:   { name: 'Nell', age: 'adult', skin: 0, hair: 'curly-long', hc: 'auburn', top: 'cream', bottom: 'brown', freckles: true, desc: 'woman, curly auburn hair, freckles, cream top' },
-    victor: { name: 'Victor', age: 'adult', skin: 2, hair: 'sidepart', hc: 'dark', top: 'white', bottom: 'black', mustache: true, vest: 'maroon', desc: 'man, slick hair, mustache, maroon vest' },
-    felix:  { name: 'Felix', age: 'adult', skin: 1, hair: 'wavy-short', hc: 'brown', top: 'tan', bottom: 'olive', glasses: true, desc: 'man, wavy brown hair, glasses, tan sweater' },
-    tia:    { name: 'Tia', age: 'adult', skin: 4, hair: 'braids', hc: 'black', top: 'orange', bottom: 'teal', desc: 'woman, long braids, orange top' },
-    sven:   { name: 'Sven', age: 'adult', skin: 0, hair: 'short', hc: 'blond', top: 'red', bottom: 'navy', beard: true, build: 'big', pattern: 'plaid', desc: 'big man, blond beard, red plaid shirt' },
-    lin:    { name: 'Lin', age: 'adult', skin: 1, hair: 'long', hc: 'black', dress: 'teal', shoes: 'navy', desc: 'woman, long black hair, teal dress' },
-    jamal:  { name: 'Jamal', age: 'adult', skin: 4, hair: 'curly', hc: 'black', top: 'sky', bottom: 'gray', desc: 'man, short curly hair, light blue shirt' },
-    priya:  { name: 'Priya', age: 'adult', skin: 3, hair: 'long', hc: 'dark', top: 'pink', bottom: 'navy', earrings: true, desc: 'woman, long dark hair, pink top' },
+    ada:    { name: 'Ada', age: 'adult', hair: 'bob', hc: 'black', top: 'navy', bottom: 'gray', glasses: true, desc: 'woman, black bob, glasses, navy jacket' },
+    omar:   { name: 'Omar', age: 'adult', hair: 'short', hc: 'black', top: 'green', bottom: 'brown', beard: true, desc: 'man, short black hair, beard, green shirt' },
+    greta:  { name: 'Greta', age: 'adult', hair: 'bun', hc: 'blond', dress: 'red', shoes: 'maroon', desc: 'woman, blond bun, red dress' },
+    marcus: { name: 'Marcus', age: 'adult', hair: 'buzz', hc: 'black', top: 'purple', bottom: 'navy', mustache: true, desc: 'man, buzz cut, mustache, purple sweater' },
+    nell:   { name: 'Nell', age: 'adult', hair: 'curly-long', hc: 'auburn', top: 'cream', bottom: 'brown', freckles: true, desc: 'woman, curly auburn hair, freckles, cream top' },
+    victor: { name: 'Victor', age: 'adult', hair: 'sidepart', hc: 'dark', top: 'white', bottom: 'black', mustache: true, vest: 'maroon', desc: 'man, slick hair, mustache, maroon vest' },
+    felix:  { name: 'Felix', age: 'adult', hair: 'wavy-short', hc: 'brown', top: 'tan', bottom: 'olive', glasses: true, desc: 'man, wavy brown hair, glasses, tan sweater' },
+    tia:    { name: 'Tia', age: 'adult', hair: 'braids', hc: 'black', top: 'orange', bottom: 'teal', desc: 'woman, long braids, orange top' },
+    sven:   { name: 'Sven', age: 'adult', hair: 'short', hc: 'blond', top: 'red', bottom: 'navy', beard: true, build: 'big', pattern: 'plaid', desc: 'big man, blond beard, red plaid shirt' },
+    lin:    { name: 'Lin', age: 'adult', hair: 'long', hc: 'black', dress: 'teal', shoes: 'navy', desc: 'woman, long black hair, teal dress' },
+    jamal:  { name: 'Jamal', age: 'adult', hair: 'curly', hc: 'black', top: 'sky', bottom: 'gray', desc: 'man, short curly hair, light blue shirt' },
+    priya:  { name: 'Priya', age: 'adult', hair: 'long', hc: 'dark', top: 'pink', bottom: 'navy', earrings: true, desc: 'woman, long dark hair, pink top' },
     // elders
-    gus:    { name: 'Grandpa Gus', age: 'elder', skin: 1, hair: 'bald', hc: 'white', top: 'olive', bottom: 'brown', mustache: true, desc: 'grandfather, bald with white tufts, mustache, olive cardigan' },
-    mae:    { name: 'Granny Mae', age: 'elder', skin: 0, hair: 'bun', hc: 'white', dress: 'purple', shoes: 'brown', glasses: true, desc: 'grandmother, white bun, glasses, purple dress' },
-    lou:    { name: 'Nana Lou', age: 'elder', skin: 5, hair: 'curly', hc: 'white', top: 'teal', bottom: 'gray', earrings: true, desc: 'grandmother, short white curls, teal top' },
-    edwin:  { name: 'Professor Edwin', age: 'elder', skin: 2, hair: 'balding', hc: 'gray', top: 'brown', bottom: 'gray', beard: 'long', glasses: true, desc: 'old professor, long gray beard, glasses, brown jacket' },
-    rex:    { name: 'Rex', age: 'adult', skin: 2, hair: 'spiky', hc: 'black', top: 'black', bottom: 'gray', build: 'slim', desc: 'man, spiky black hair, black shirt (a handy villain or trickster)' }
+    gus:    { name: 'Grandpa Gus', age: 'elder', hair: 'bald', hc: 'white', top: 'olive', bottom: 'brown', mustache: true, desc: 'grandfather, bald with white tufts, mustache, olive cardigan' },
+    mae:    { name: 'Granny Mae', age: 'elder', hair: 'bun', hc: 'white', dress: 'purple', shoes: 'brown', glasses: true, desc: 'grandmother, white bun, glasses, purple dress' },
+    lou:    { name: 'Nana Lou', age: 'elder', hair: 'curly', hc: 'white', top: 'teal', bottom: 'gray', earrings: true, desc: 'grandmother, short white curls, teal top' },
+    edwin:  { name: 'Professor Edwin', age: 'elder', hair: 'balding', hc: 'gray', top: 'brown', bottom: 'gray', beard: 'long', glasses: true, desc: 'old professor, long gray beard, glasses, brown jacket' },
+    rex:    { name: 'Rex', age: 'adult', hair: 'spiky', hc: 'black', top: 'black', bottom: 'gray', build: 'slim', desc: 'man, spiky black hair, black shirt (a handy villain or trickster)' }
   };
   var DIMS = {
     baby:  { R: 20, torso: 19, legs: 15, sh: 12, hip: 11, ua: 11, la: 10, aw: 7.5, lw: 8.5, fx: 6 },
@@ -334,7 +336,7 @@
       case 'bald':
         o += path('M' + pt(-R * 1.0, hy + R * 0.25) + 'Q' + pt(-R * 1.12, hy - R * 0.25) + ' ' + pt(-R * 0.82, hy - R * 0.48) + 'Q' + pt(-R * 0.86, hy - R * 0.05) + ' ' + pt(-R * 0.72, hy + R * 0.2) + 'Z', hc) +
              path('M' + pt(R * 1.0, hy + R * 0.25) + 'Q' + pt(R * 1.12, hy - R * 0.25) + ' ' + pt(R * 0.82, hy - R * 0.48) + 'Q' + pt(R * 0.86, hy - R * 0.05) + ' ' + pt(R * 0.72, hy + R * 0.2) + 'Z', hc);
-        o += stroke('M' + pt(-R * 0.45, hy - R * 0.62) + 'Q' + pt(-R * 0.25, hy - R * 0.7) + ' ' + pt(-R * 0.1, hy - R * 0.6), shade(SKIN[c.skin || 0], -0.18), 1.4); break;
+        o += stroke('M' + pt(-R * 0.45, hy - R * 0.62) + 'Q' + pt(-R * 0.25, hy - R * 0.7) + ' ' + pt(-R * 0.1, hy - R * 0.6), SKIN_SHADE, 1.4); break;
       case 'balding':
         o += path('M' + pt(-R * 1.02, hy + R * 0.3) + 'Q' + pt(-R * 1.15, hy - R * 0.5) + ' ' + pt(-R * 0.62, hy - R * 0.78) + 'Q' + pt(-R * 0.82, hy - R * 0.2) + ' ' + pt(-R * 0.74, hy + R * 0.25) + 'Z', hc) +
              path('M' + pt(R * 1.02, hy + R * 0.3) + 'Q' + pt(R * 1.15, hy - R * 0.5) + ' ' + pt(R * 0.62, hy - R * 0.78) + 'Q' + pt(R * 0.82, hy - R * 0.2) + ' ' + pt(R * 0.74, hy + R * 0.25) + 'Z', hc) +
@@ -372,7 +374,7 @@
   function face(c, R, hy, mood, look, fdir, isKid) {
     var m = MOODS[mood] || MOODS.happy, o = '', fx = fdir * R * 0.2, ex = R * 0.36, ey = hy + R * 0.1, er = R * 0.105;
     var lx = (look === 'left' ? -1 : look === 'right' ? 1 : 0) * R * 0.05 + fdir * R * 0.03, ly = look === 'up' ? -R * 0.05 : look === 'down' ? R * 0.05 : 0;
-    var skin = SKIN[c.skin || 0];
+    var skin = SKIN;
     if (m.flush) o += ell(fx, hy + R * 0.15, R * 0.75, R * 0.45, '#e85c4a', 0, { opacity: m.flush > 1 ? 0.38 : 0.22 });
     if (m.green) o += ell(fx, hy + R * 0.1, R * 0.8, R * 0.6, '#6fbf5a', 0, { opacity: m.green > 1 ? 0.35 : 0.22 });
     if (m.blush || isKid) o += ell(fx - R * 0.6, hy + R * 0.42, R * 0.17, R * 0.11, '#ef7d7d', 0, { opacity: m.blush > 1 ? 0.7 : 0.4 }) + ell(fx + R * 0.6, hy + R * 0.42, R * 0.17, R * 0.11, '#ef7d7d', 0, { opacity: m.blush > 1 ? 0.7 : 0.4 });
@@ -450,7 +452,7 @@
     if (p.color) Object.keys(p.color).forEach(function (k) { c[k] = p.color[k]; });
     if (c.build === 'big') d = Object.assign({}, d, { sh: d.sh + 5, hip: d.hip + 4, aw: d.aw + 2, lw: d.lw + 2 });
     if (c.build === 'slim') d = Object.assign({}, d, { sh: d.sh - 2, hip: d.hip - 2 });
-    var pose = POSES[p.pose] || POSES.stand, R = d.R, skin = SKIN[c.skin == null ? 1 : c.skin], hc = cc(c.hc, HAIR.brown);
+    var pose = POSES[p.pose] || POSES.stand, R = d.R, skin = SKIN, hc = cc(c.hc, HAIR.brown);
     var wear = [].concat(p.wear || []), has = function (w) { return wear.indexOf(w) >= 0; };
     var dress = c.dress ? cc(c.dress) : null, top = cc(c.top, dress || COL.blue), bottom = cc(c.bottom, COL.navy), shoes = cc(c.shoes, '#4a3b33');
     if (has('robe') || has('judge')) { top = has('judge') ? '#2b2b33' : cc(p.robe, COL.purple); }
@@ -1623,6 +1625,7 @@
     props: Object.keys(PROPS), fx: Object.keys(FX), wear: WEAR.slice(), hair: HAIRS.slice(), colors: Object.keys(COL), bubbles: BUBBLES.slice() };
   if (ML.vocabItems) VO.setItems(ML.vocabItems);
   VO.CAST = CAST;
+  VO.SKIN = SKIN;
   VO.PROP_H = {}; Object.keys(PROPS).forEach(function (k) { VO.PROP_H[k] = PROPS[k].h; });
   VO.SIZE = { w: SW, h: SH, ground: GY };
   // checks a scene spec against the kit's names; returns a list of problems (used by scripts/vocab/check-words.js)

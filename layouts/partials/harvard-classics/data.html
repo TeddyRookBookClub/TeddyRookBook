@@ -1,0 +1,6 @@
+{{- /* The Harvard Classics data: data/harvard/ (guide.json and days/MM-DD.json, written by the source pipeline).
+   Always returns {guide: {edition, volumes, days}, days: {MM-DD: …}}, empty when the data isn't there yet. */ -}}
+{{- $h := site.Data.harvard -}}
+{{- $h = $h | default dict -}}
+{{- $g := merge (dict "days" slice "volumes" slice "edition" dict) ((index $h "guide") | default dict) -}}
+{{- return dict "guide" $g "days" ((index $h "days") | default dict) -}}
