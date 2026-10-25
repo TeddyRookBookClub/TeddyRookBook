@@ -1249,7 +1249,7 @@
     var alt = spec.alt || '';
     return '<svg class="vo-scene-svg" viewBox="0 0 ' + SW + ' ' + SH + '" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg"' + (alt ? ' aria-label="' + esc(alt) + '"' : ' aria-hidden="true"') + '>' + out + '</svg>';
   }
-  /* ---------------- the word card as HTML (used by vo-word, the flashcards, the word pages and the printable book) ---------------- */
+  /* ---------------- the word card as HTML (used by vo-word, the flashcards, the word pages and the print page) ---------------- */
   // entry: a full entry; o.mode: 'card' (default) | 'print' | 'front' (picture side) | 'back' | 'word' (word side) | 'mini'
   // o.quiet: hide the word (and its forms) so the card can be part of a problem; o.speak: a "Say it" button
   function cardHTML(e, o) {

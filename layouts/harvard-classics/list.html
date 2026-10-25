@@ -20,6 +20,7 @@
         <a class="hc-btn pri" href="{{ "harvard-classics/today/" | relURL }}">Today’s reading</a>
         <a class="hc-btn" href="{{ "harvard-classics/calendar/" | relURL }}">The calendar</a>
         {{ with $days }}{{ with index . 0 }}<a class="hc-btn" href="{{ printf "harvard-classics/%s/" .slug | relURL }}">Start on {{ .slug | humanize }}</a>{{ end }}{{ end }}
+        {{ with $days }}<a class="hc-btn" href="{{ "harvard-classics/export/" | relURL }}?all=1">Export: EPUB, PDF, text</a>{{ end }}
       </div>
     </div>
     <div aria-hidden="true">

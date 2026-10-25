@@ -1,24 +1,18 @@
 #!/usr/bin/env node
-/* Makes the printable Vocabulary Ladder book as PDF files, from the /vocabulary/print/ page of a running build.
+/* Vocabulary Ladder: a local check tool for the print page (/vocabulary/print/), which lays out word cards on the fly in
+   the browser and fits every card to its space. The site stores no PDF files: readers print, or save a PDF, from their
+   own browser. This script drives the same page in Playwright (Chromium).
 
-   Usage:  node scripts/vocab/make-pdf.js [base URL] [--check] [--estimate] [--letter-only]
-     base URL     where the built site is served (default http://localhost:1313/)
-     --check      lay out the whole book at Letter and A4 and check that every card fits (nothing written)
-     --estimate   fills every topic with copies of the finished cards and reports how big a full 1,000-card book would be;
-                  writes nothing
-     --letter-only  skip the A4 files
-
-   Writes to static/vocabulary/:
-     vocabulary-1000.pdf      the whole book, US Letter    vocabulary-1000-a4.pdf   the whole book, A4
-   When a whole book is over 25 MB, it writes four volumes instead (topics 1–25, 26–50, 51–75, 76–100):
-     vocabulary-1000-vol1.pdf … vol4.pdf                    vocabulary-1000-a4-vol1.pdf … a4-vol4.pdf
-   and removes the whole-book file of that paper size (and the other way round), so the print page never lists stale files.
-   Rebuild the site afterwards: /vocabulary/print/ lists whichever of these files exist, with their sizes.
-
-   Every card must fit its quarter page: the print page steps a crowded card's type and picture down until it does, and this
-   script re-fits under print media and stops with exit status 1, naming the cards, if any card still overflows.
-
-   Needs Playwright with Chromium (npm i -g playwright, then run with NODE_PATH="$(npm root -g)"). */
+   node scripts/vocab/make-pdf.js [base URL] --check [--size letter|a4|both] [--per 2,4,6] [--sel SEL]
+       lays out the selection (default: everything, in its four parts of 25 topics) at each paper size and number of cards
+       per page (default: both sizes, 2, 4 and 6), and exits 1, naming the cards, if any card still overflows. Writes nothing.
+   node scripts/vocab/make-pdf.js [base URL] [--out DIR] [--size …] [--per …] [--sel SEL] [--bw]
+       the same (4 cards a page unless --per is given), and also saves each part as a PDF in DIR (default /tmp/vocab-pdf/),
+       e.g. cards-all-part1-letter-4.pdf, to look at the pages (pdftoppm -r 60 -f 3 -l 3 -png file.pdf page).
+       It refuses to write into static/: the site keeps no PDF files.
+   base URL: where a build of the site is served (default http://localhost:1313/).
+   SEL: the print page's selection, as in its URL: topics:1,5,9 | range:1-25 | level:3 | strand:2 | roots:all |
+   roots:<slug> | all.  Needs Playwright with Chromium (NODE_PATH="$(npm root -g)"). */
 'use strict';
 const fs = require('fs'), path = require('path');
 let chromium;
@@ -26,69 +20,58 @@ try { ({ chromium } = require('playwright')); } catch (e) {
   console.error('Playwright is not installed. Run: npm i -g playwright && npx playwright install chromium, then NODE_PATH="$(npm root -g)" node scripts/vocab/make-pdf.js');
   process.exit(2);
 }
-const ROOT = path.resolve(__dirname, '..', '..'), OUT = path.join(ROOT, 'static', 'vocabulary');
-const LIMIT = 25 * 1024 * 1024, MB = n => (n / 1048576).toFixed(1) + ' MB';
-const args = process.argv.slice(2), flags = args.filter(a => a.startsWith('--')), base = (args.find(a => !a.startsWith('--')) || 'http://localhost:1313/').replace(/\/?$/, '/');
-const estimate = flags.includes('--estimate'), checkOnly = flags.includes('--check'), sizes = flags.includes('--letter-only') ? ['letter'] : ['letter', 'a4'];
-const NAME = (size, vol) => 'vocabulary-1000' + (size === 'a4' ? '-a4' : '') + (vol ? '-vol' + vol : '') + '.pdf';
-
-// --estimate: answer the words data request with every topic filled by copies of the finished entries
-function fakeData(real) {
-  const list = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'vocab', 'list.json'), 'utf8'));
-  const pool = [].concat(...Object.values(real)); if (!pool.length) throw new Error('no finished entries to copy');
-  const out = {}; let k = 0;
-  list.topics.forEach(t => { out[t.key] = t.words.map(w => { const e = JSON.parse(JSON.stringify(pool[k++ % pool.length])); e.word = w; return e; }); });
-  return out;
+const args = process.argv.slice(2), opt = { check: false, out: '/tmp/vocab-pdf', size: 'both', per: '2,4,6', sel: 'all', bw: false }, pos = [];
+for (let i = 0; i < args.length; i++) {
+  const a = args[i];
+  if (a === '--check') opt.check = true; else if (a === '--bw') opt.bw = true;
+  else if (a === '--out' || a === '--size' || a === '--per' || a === '--sel') opt[a.slice(2)] = args[++i];
+  else if (a === '-h' || a === '--help') { console.log(fs.readFileSync(__filename, 'utf8').split('*/')[0].replace(/^[^]*?\/\*/, '')); process.exit(0); }
+  else pos.push(a);
 }
+if (!opt.check && !args.includes('--per')) opt.per = '4';
+const base = (pos[0] || 'http://localhost:1313/').replace(/\/?$/, '/');
+const sizes = opt.size === 'both' ? ['letter', 'a4'] : [opt.size === 'a4' ? 'a4' : 'letter'], pers = String(opt.per).split(',').map(Number).filter(n => [2, 4, 6].includes(n));
+const out = path.resolve(opt.out);
+if (!opt.check && out.split(path.sep).includes('static')) { console.error('Refusing to write PDFs into ' + out + ': the site keeps no PDF files.'); process.exit(2); }
 
-async function pdf(browser, vol, size) {
+async function open(browser, q) {
   const page = await browser.newPage({ viewport: { width: 1100, height: 1400 } });
   page.setDefaultTimeout(0);
-  page.on('pageerror', e => console.error('  page error:', e.message));
-  if (estimate) await page.route('**/vocabulary/data/words.json*', async route => {
-    const res = await route.fetch(); route.fulfill({ response: res, contentType: 'application/json', body: JSON.stringify(fakeData(await res.json())) });
-  });
+  const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(() => { try { localStorage.setItem('pref-theme', 'light'); } catch (e) { } });
-  const url = base + 'vocabulary/print/?vol=' + vol + '&size=' + size;
-  const res = await page.goto(url, { waitUntil: 'load' });
+  const url = base + 'vocabulary/print/' + q, res = await page.goto(url, { waitUntil: 'load' });
   if (!res || !res.ok()) throw new Error('could not open ' + url + ' (' + (res && res.status()) + ')');
   await page.waitForFunction(() => window.__voPrintReady === true);
-  await page.evaluate(() => document.fonts && document.fonts.ready);
-  await page.emulateMedia({ media: 'print' });
-  const fitR = await page.evaluate(() => window.__voFit()); // re-fit under print media, then check
-  const n = await page.$$eval('.vo-card-print', x => x.length);
-  if (fitR.cards !== n) throw new Error('fit report covers ' + fitR.cards + ' of ' + n + ' cards');
-  const lv = Object.keys(fitR.levels).sort((a, b) => a - b).map(k => 'level ' + k + ': ' + fitR.levels[k]).join(', ');
-  console.log('  ' + size + ' vol ' + vol + ': ' + n + ' cards fit check: ' + (fitR.overflow.length ? fitR.overflow.length + ' OVERFLOW (' + fitR.overflow.join(', ') + ')' : 'all fit') + '; ' + lv);
-  if (fitR.overflow.length) { await page.close(); throw new Error(fitR.overflow.length + ' card(s) do not fit at ' + size + ': ' + fitR.overflow.join(', ')); }
-  const buf = checkOnly ? Buffer.alloc(0) : await page.pdf({ preferCSSPageSize: true, printBackground: true, format: size === 'a4' ? 'A4' : 'Letter' });
-  await page.close();
-  return { buf, cards: n };
+  if (errors.length) throw new Error('page errors on ' + url + ': ' + errors.join(' | '));
+  return page;
 }
-
-function write(name, buf) { fs.writeFileSync(path.join(OUT, name), buf); console.log('  wrote static/vocabulary/' + name + ' (' + MB(buf.length) + ')'); }
-function remove(name) { const f = path.join(OUT, name); if (fs.existsSync(f)) { fs.unlinkSync(f); console.log('  removed static/vocabulary/' + name); } }
-
 (async () => {
-  if (!estimate && !checkOnly) fs.mkdirSync(OUT, { recursive: true });
   const browser = await chromium.launch();
+  let bad = 0, cards = 0, files = 0;
   try {
-    for (const size of sizes) {
-      const t0 = Date.now(), whole = await pdf(browser, 'all', size);
-      if (checkOnly) continue;
-      console.log(size + ': ' + whole.cards + ' cards, whole book ' + MB(whole.buf.length) + ' (' + Math.round((Date.now() - t0) / 1000) + ' s)');
-      if (estimate) { console.log('  ' + (whole.buf.length > LIMIT ? 'over 25 MB: the real run would split it into four volumes' : 'under 25 MB: the real run would keep one file')); continue; }
-      if (whole.buf.length <= LIMIT) {
-        write(NAME(size), whole.buf); [1, 2, 3, 4].forEach(v => remove(NAME(size, v)));
-      } else {
-        for (const v of [1, 2, 3, 4]) {
-          const part = await pdf(browser, String(v), size);
-          if (part.buf.length > LIMIT) console.warn('  note: volume ' + v + ' is ' + MB(part.buf.length) + ', over 25 MB');
-          write(NAME(size, v), part.buf);
-        }
-        remove(NAME(size));
+    // how many parts the selection has (the print page shows a button for each)
+    const p0 = await open(browser, '?sel=' + encodeURIComponent(opt.sel)), nParts = await p0.$$eval('#vp-partbtns button', b => b.length);
+    await p0.close();
+    const parts = nParts ? Array.from({ length: nParts }, (x, i) => i + 1) : [0];
+    if (!opt.check) fs.mkdirSync(out, { recursive: true });
+    for (const size of sizes) for (const per of pers) for (const part of parts) {
+      const q = '?sel=' + encodeURIComponent(opt.sel) + (part ? '&part=' + part : '') + '&size=' + size + '&per=' + per + (opt.bw ? '&bw=1' : '');
+      const page = await open(browser, q);
+      await page.emulateMedia({ media: 'print' });
+      const r = await page.evaluate(() => window.__voFit()); // fit again under print media, then check
+      const n = await page.$$eval('.vo-card-print', x => x.length);
+      if (r.cards !== n) throw new Error('fit report covers ' + r.cards + ' of ' + n + ' cards');
+      const lv = Object.keys(r.levels).sort((a, b) => a - b).map(k => 'L' + k + ' ' + r.levels[k]).join(', ');
+      console.log(size.padEnd(6) + ' ' + per + '/page  ' + (part ? 'part ' + part : 'all   ') + '  ' + String(n).padStart(4) + ' cards: ' + (r.overflow.length ? r.overflow.length + ' OVERFLOW (' + r.overflow.join(', ') + ')' : 'all fit') + '  [' + lv + ']');
+      bad += r.overflow.length; cards += n;
+      if (!opt.check) {
+        const f = path.join(out, 'cards-' + opt.sel.replace(/[^\w-]+/g, '_') + (part ? '-part' + part : '') + '-' + size + '-' + per + (opt.bw ? '-bw' : '') + '.pdf');
+        const buf = await page.pdf({ preferCSSPageSize: true, printBackground: true, format: size === 'a4' ? 'A4' : 'Letter' });
+        fs.writeFileSync(f, buf); files++; console.log('        wrote ' + f + ' (' + (buf.length / 1048576).toFixed(1) + ' MB)');
       }
+      await page.close();
     }
   } finally { await browser.close(); }
-  if (checkOnly) console.log('Every card fits.'); else if (!estimate) console.log('Done. Rebuild the site so /vocabulary/print/ lists the files.');
+  console.log(cards + ' cards laid out; ' + (bad ? bad + ' do not fit.' : 'every card fits.') + (files ? ' ' + files + ' PDF(s) in ' + out + '.' : ''));
+  process.exit(bad ? 1 : 0);
 })().catch(e => { console.error(e.message || e); process.exit(1); });

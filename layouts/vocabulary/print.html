@@ -1,33 +1,56 @@
-{{- /* /vocabulary/print/: the printable word book, four cards to a page (static/vocab/app/print.js). ?vol=1…4 or all, ?size=letter or a4.
-   scripts/vocab/make-pdf.js prints it with Playwright to static/vocabulary/vocabulary-1000.pdf (and A4, and volumes if large). */ -}}
+{{- /* /vocabulary/print/: print any set of word cards, or save them as a PDF from the browser's print window
+   (static/vocab/app/print.js lays them out on the fly and fits every card to its space). Nothing is stored on the site.
+   URL: ?sel=topics:1,5,9 | range:1-25 | level:3 | strand:2 | roots:all | roots:<slug> | hard | all, &part=N (selections
+   over 25 topics or 250 cards print in parts), &size=letter|a4, &per=2|4|6, &bw=1. scripts/vocab/make-pdf.js --check
+   drives it to check that every card fits. */ -}}
 {{ define "main" }}
 {{ partial "vocab/head.html" . }}
 {{- $D := partialCached "vocab/data.html" "x" -}}
-{{- $pdfs := slice -}}
-{{- range slice (slice "vocabulary-1000.pdf" "The whole book, US Letter") (slice "vocabulary-1000-a4.pdf" "The whole book, A4") (slice "vocabulary-1000-vol1.pdf" "Volume 1 (topics 1–25), US Letter") (slice "vocabulary-1000-vol2.pdf" "Volume 2 (topics 26–50), US Letter") (slice "vocabulary-1000-vol3.pdf" "Volume 3 (topics 51–75), US Letter") (slice "vocabulary-1000-vol4.pdf" "Volume 4 (topics 76–100), US Letter") (slice "vocabulary-1000-a4-vol1.pdf" "Volume 1, A4") (slice "vocabulary-1000-a4-vol2.pdf" "Volume 2, A4") (slice "vocabulary-1000-a4-vol3.pdf" "Volume 3, A4") (slice "vocabulary-1000-a4-vol4.pdf" "Volume 4, A4") -}}
-  {{- $f := printf "static/vocabulary/%s" (index . 0) -}}
-  {{- if fileExists $f }}{{ $pdfs = $pdfs | append (dict "url" (printf "vocabulary/%s" (index . 0) | relURL) "label" (index . 1) "mb" (div (float (os.Stat $f).Size) 1048576)) }}{{ end -}}
-{{- end -}}
+{{- $RT := site.Data.vocab.topics.roots -}}
+{{- $RL := site.Data.vocab.lessons.roots | default dict -}}
+{{- $roots := slice -}}
+{{- range $RT.topics }}{{ $l := index $RL .id }}{{ $cards := slice }}{{ with $l }}{{ with index . "cards" }}{{ $cards = . }}{{ end }}{{ end }}{{ $roots = $roots | append (dict "id" .id "slug" .slug "title" .title "unit" .unit "cards" $cards) }}{{ end -}}
 <div class="mlp vop vop-print" id="vop" data-src="{{ $D.url }}?v={{ $D.v }}" data-base="{{ "vocabulary/" | relURL }}">
   <div class="vop-noprint">
     <header class="vop-head">
-      <p class="mlp-eyebrow"><a href="{{ "vocabulary/" | relURL }}">Vocabulary Ladder</a> · Printable book</p>
-      <h1>The printable word book</h1>
-      <p>Every word card with its picture, memory hook, meaning, example and roots, four cards to a page. Print a volume at home, or save it as a PDF. Black-and-white printing works too: every picture has clear outlines.</p>
+      <p class="mlp-eyebrow"><a href="{{ "vocabulary/" | relURL }}">Vocabulary Ladder</a> · Print cards</p>
+      <h1>Print word cards</h1>
+      <p>Choose any set of word cards, lay them out, then print them or save them as a PDF. Each card has its picture, memory hook, meaning, example and roots, and every card is fitted to its space before you print. Black-and-white printing works too: every picture has clear outlines.</p>
     </header>
     {{ partial "vocab/nav.html" "print" }}
-    {{ with $pdfs }}<section class="vop-box"><h2>Download the PDF</h2><ul class="vop-pdfs">{{ range . }}<li><a href="{{ .url }}" download>{{ .label }}</a> <small>({{ printf "%.1f" .mb }} MB)</small></li>{{ end }}</ul></section>{{ end }}
-    <section class="vop-box vop-setup" aria-label="Print settings">
-      <div class="vop-row">
-        <label class="vop-field"><span class="vop-lab">Volume</span><select id="vp-vol"><option value="1">Volume 1: topics 1–25</option><option value="2">Volume 2: topics 26–50</option><option value="3">Volume 3: topics 51–75</option><option value="4">Volume 4: topics 76–100</option><option value="all">All four volumes</option></select></label>
-        <label class="vop-field"><span class="vop-lab">Paper</span><select id="vp-size"><option value="letter">US Letter</option><option value="a4">A4</option></select></label>
-        <div class="vop-field"><button type="button" class="mlp-btn pri big" id="vp-print">Print</button></div>
+    <section class="vop-box vop-setup" aria-labelledby="vp-h1">
+      <h2 id="vp-h1">1. What to print</h2>
+      <div class="vop-seg vp-kind" id="vp-kind" role="group" aria-label="What to print">
+        <button type="button" data-v="topics">Topics</button><button type="button" data-v="range">A range</button><button type="button" data-v="level">A level</button><button type="button" data-v="strand">A strand</button><button type="button" data-v="roots">Roots course</button><button type="button" data-v="hard">My hard words</button><button type="button" data-v="all">Everything</button>
       </div>
-      <p class="mlp-small" id="vp-note">In the print window, choose “Background graphics” (or “Print backgrounds”) so the pictures print in color, and set the margins to the default.</p>
+      <div class="vp-panel" data-p="topics" hidden><p class="mlp-small">Tick one or more topics. <button type="button" class="vop-link" id="vp-none">Clear all</button></p><div class="vp-tlist" id="vp-topics"></div></div>
+      <div class="vp-panel" data-p="range" hidden><div class="vop-row"><label class="vop-field"><span class="vop-lab">From topic</span><select id="vp-from"></select></label><label class="vop-field"><span class="vop-lab">To topic</span><select id="vp-to"></select></label></div></div>
+      <div class="vp-panel" data-p="level" hidden><label class="vop-field"><span class="vop-lab">Level</span><select id="vp-level"></select></label></div>
+      <div class="vp-panel" data-p="strand" hidden><label class="vop-field"><span class="vop-lab">Strand (its topic at every level)</span><select id="vp-strand"></select></label></div>
+      <div class="vp-panel" data-p="roots" hidden><label class="vop-field"><span class="vop-lab">Greek and Latin Roots</span><select id="vp-roots"></select></label><p class="mlp-small">The list words that a roots topic teaches, as cards.</p></div>
+      <div class="vp-panel" data-p="hard" hidden><p class="mlp-small" id="vp-hardnote"></p></div>
+      <div class="vp-panel" data-p="all" hidden><p class="mlp-small">All 100 topics (1,000 cards), printed in four parts of 25 topics.</p></div>
+      <h2>2. How to print</h2>
+      <div class="vop-row">
+        <label class="vop-field"><span class="vop-lab">Paper</span><select id="vp-size"><option value="letter">US Letter</option><option value="a4">A4</option></select></label>
+        <div class="vop-field"><span class="vop-lab">Cards per page</span><div class="vop-seg" id="vp-per" role="group" aria-label="Cards per page"><button type="button" data-v="2">2</button><button type="button" data-v="4">4</button><button type="button" data-v="6">6</button></div></div>
+        <div class="vop-field"><span class="vop-lab">Ink</span><div class="vop-seg" id="vp-ink" role="group" aria-label="Color or black and white"><button type="button" data-v="color">Color</button><button type="button" data-v="bw">Black and white</button></div></div>
+      </div>
+      <p class="vp-sum" id="vp-sum" aria-live="polite"></p>
+      <div class="vp-go" id="vp-go"><button type="button" class="mlp-btn pri big" id="vp-lay">Lay out the cards</button></div>
+      <div class="vp-parts" id="vp-parts" hidden><p id="vp-parts-msg"></p><div class="vp-partbtns" id="vp-partbtns"></div></div>
+    </section>
+    <section class="vop-box vp-ready" id="vp-ready" aria-labelledby="vp-h3" hidden>
+      <h2 id="vp-h3">3. Print or save as PDF</h2>
+      <p id="vp-status" aria-live="polite"></p>
+      <p><button type="button" class="mlp-btn pri big" id="vp-print">Print or save as PDF</button></p>
+      <p class="vp-hint"><b>To save a PDF:</b> in the print window, choose <b>Save as PDF</b> (or <b>Microsoft Print to PDF</b>) as the printer or destination. Keep the margins at <b>Default</b> and the scale at <b>100%</b>, and turn on <b>Background graphics</b> so the pictures and highlights print. On a phone, use Share, then Print; the preview there can be saved as a PDF too.</p>
     </section>
   </div>
-  <div class="vop-book" id="vp-book" aria-live="polite"><p class="vop-msg">Laying out the cards…</p></div>
+  <div class="vop-book" id="vp-book"><p class="vop-msg">Loading the cards…</p></div>
+  <p class="vp-empty">Choose what to print on the page first, then lay out the cards.</p>
 </div>
+<script type="application/json" id="vp-roots-data">{{ $roots | jsonify | safeJS }}</script>
 {{ partial "inline/ml-js.html" "vocab/viz/vocab.js" }}
 {{ partial "inline/ml-js.html" "vocab/app/common.js" }}
 {{ partial "inline/ml-js.html" "vocab/app/print.js" }}

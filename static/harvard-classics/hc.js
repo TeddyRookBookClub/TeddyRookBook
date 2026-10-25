@@ -98,6 +98,8 @@
       prev.hidden = next.hidden = view !== 'month';
       tools.querySelectorAll('.hc-seg button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-v') === view)); });
       try { history.replaceState(null, '', view === 'month' ? '#m' + cur : location.pathname); } catch (e) { }
+      var xp = D.getElementById('hc-xport');
+      if (xp) { xp.href = xp.href.replace(/\?.*$/, '') + (view === 'month' ? '?m=' + cur : '?all=1'); xp.textContent = view === 'month' ? 'Export ' + M[cur - 1] : 'Export the year'; }
     }
     function go(dm) { cur = (cur + dm + 11) % 12 + 1; show(); }
     prev.addEventListener('click', function () { go(-1); });

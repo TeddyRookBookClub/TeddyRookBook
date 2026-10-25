@@ -1,0 +1,168 @@
+/* The Harvard Classics, fifteen minutes a day: the print layout (/harvard-classics/export/print/), for custom PDFs saved
+   from the browser. print.js sets the
+   page size, margins and running heads (@page rules in #hcp-pages) and the variables --fs, --lh, --ch (the height of
+   the text area), --sink and --gut.
+   Fonts (../fonts/, licenses in ../fonts/LICENSES.txt): "HC Book Serif" is TeX Gyre Pagella (GUST Font License) and
+   "HC Book Greek" is GFS Porson (SIL Open Font License), both with their outlines converted to TrueType by
+   scripts/harvard_export_fonts.py, so Chromium embeds them in PDFs as TrueType rather than Type 3 fonts. */
+@font-face{font-family:"HC Book";src:url(../fonts/hcbook-regular.woff) format("woff");font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:"HC Book";src:url(../fonts/hcbook-italic.woff) format("woff");font-weight:400;font-style:italic;font-display:block}
+@font-face{font-family:"HC Book";src:url(../fonts/hcgreek-regular.woff) format("woff");font-weight:400;font-style:normal;unicode-range:U+0370-03FF,U+1F00-1FFF;font-display:block;size-adjust:103%}
+@font-face{font-family:"HC Book";src:url(../fonts/hcgreek-regular.woff) format("woff");font-weight:400;font-style:italic;unicode-range:U+0370-03FF,U+1F00-1FFF;font-display:block;size-adjust:103%}
+
+:root{--ink:#1c1c1a;--muted:#5a5a55;--accent:#0b4d2c;--gold:#9a7a2c;--rule:#c8bd9a;--fs:11.5pt;--lh:1.42;--ch:9in;--sink:.85in;--gut:0in;--pw:5.6in}
+html{background:#e7e2d4}
+body.hcp{margin:0;color:var(--ink);font-family:"HC Book","TeX Gyre Pagella","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif}
+
+/* ── the screen bar ── */
+.hcp-bar{font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#004225;color:#e8efe9;padding:14px 18px;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center}
+.hcp-bar p{margin:0}
+.hcp-bar a{color:#f3dfa3}
+.hcp-status{flex:1 1 16rem;font-weight:600}
+.hcp-hint{flex:1 1 100%;font-size:13.5px;color:#cfe0d5;max-width:62rem}
+.hcp-hint b{color:#fff}
+.hcp-btn{font:600 15px/1.2 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f3dfa3;color:#1d2320;border:0;border-radius:999px;padding:11px 20px;min-height:44px;cursor:pointer}
+.hcp-btn:disabled{opacity:.55;cursor:default}
+.hcp-btn:focus-visible,.hcp-bar a:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.hcp-msg{font:16px system-ui,sans-serif;text-align:center;padding:2rem}
+
+/* ── the book ── */
+.hcp-book{font-size:var(--fs);line-height:var(--lh);font-kerning:normal;font-variant-ligatures:common-ligatures;font-variant-numeric:oldstyle-nums proportional-nums;hyphens:auto;-webkit-hyphens:auto;text-rendering:optimizeLegibility;padding:0 var(--gut)}
+@media screen{
+  .hcp-book{box-sizing:content-box;width:var(--pw);max-width:calc(100% - 2.4rem - 2 * var(--gut));margin:1.6rem auto 4rem;background:#fffefa;padding:.9in calc(.7in + var(--gut));box-shadow:0 1px 3px rgba(0,0,0,.12),0 10px 40px rgba(60,45,10,.12)}
+  .hcp-book>*+*{margin-top:0}
+  .hcp-book>section,.hcp-book>article,.hcp-book>nav{border-top:1px dashed #d9d0b8;padding-top:1.2rem;margin-top:1.6rem}
+  .hcp-book>:first-child{border-top:0;margin-top:0;padding-top:0}
+  .tp,.colo{min-height:0 !important;height:auto !important}
+}
+@media screen and (max-width:640px){.hcp-book{padding:.5in 18px;max-width:none;width:auto;margin:0}}
+@media print{
+  html,body.hcp{background:#fff}
+  .hcp-bar,noscript{display:none !important}
+  a{color:inherit;text-decoration:none}
+}
+.sr,.sep{position:absolute !important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;margin:0;padding:0}
+
+/* title page and its back */
+.tp{height:var(--ch);display:flex;flex-direction:column;justify-content:space-between;text-align:center;break-after:page;hyphens:manual}
+.tp p{margin:0}
+.tp-top{padding-top:8%}
+.tp-eye{font-variant-caps:all-small-caps;letter-spacing:.24em;font-size:1.05em;color:var(--accent)}
+.tp-t{font-weight:400;font-size:2.9em;line-height:1.08;margin:.45em 0 0;letter-spacing:.01em;text-wrap:balance}
+.tp-orn{margin:.9em auto .8em !important;width:9em;border-top:.6pt solid var(--gold);position:relative;height:0}
+.tp-orn span{position:absolute;left:50%;top:-3.2pt;width:0;height:0;border:2.6pt solid var(--gold);transform:translateX(-50%) rotate(45deg);background:#fff}
+.tp-sub{font-style:italic;font-size:1.55em;line-height:1.25;text-wrap:balance}
+.tp-mid{font-size:1em;color:var(--muted)}
+.tp-mid p+p{margin-top:.2em}
+.tp-bot{padding-bottom:4%}
+.tp-by{font-size:1.15em}
+.tp-from{font-style:italic;margin-top:.2em !important}
+.tp-from i{font-style:normal}
+.tp-pub{margin-top:1.6em !important;font-variant-caps:all-small-caps;letter-spacing:.22em;color:var(--accent)}
+.colo{height:var(--ch);display:flex;flex-direction:column;justify-content:flex-end;font-size:.84em;line-height:1.45;break-after:page;color:var(--muted)}
+.colo p{margin:0 0 .7em;text-align:left;hyphens:manual}
+
+/* contents */
+.toc{break-before:page}
+.toc h1{font-weight:400;font-size:1.5em;letter-spacing:.08em;text-align:center;margin:var(--sink) 0 1.1em;font-variant-caps:all-small-caps}
+.toc-m{font-variant-caps:all-small-caps;letter-spacing:.14em;color:var(--accent);margin:1em 0 .25em;break-after:avoid;text-align:center}
+.toc ol{list-style:none;margin:0;padding:0}
+.toc li{margin:0 0 .14em;break-inside:avoid}
+.toc a{display:flex;align-items:baseline;gap:.5em}
+.toc .tn{flex:none;width:1.6em;text-align:right;color:var(--muted)}
+.toc .tt{flex:1 1 auto;min-width:0;hyphens:manual}
+.toc .tpn{flex:none}
+.tocnums .toc .tt{position:relative;overflow:hidden}
+.tocnums .toc .tt::after{content:". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .";position:absolute;white-space:nowrap;padding-left:.5em;color:#9b9686;letter-spacing:.1em}
+.tocnums .toc .tpn{min-width:2.2em;text-align:right;font-variant-numeric:oldstyle-nums tabular-nums}
+
+/* a month */
+.mo{break-before:page;text-align:center;padding-top:calc(var(--sink) * 2.2)}
+.mo h1{font-weight:400;font-size:2.4em;letter-spacing:.1em;font-variant-caps:all-small-caps;margin:0}
+.mo h1::after{content:"";display:block;width:3.2em;border-top:.6pt solid var(--gold);margin:.5em auto 0}
+.mo .ep{display:inline-block;text-align:left;margin:2.4em auto 0;font-style:italic;font-size:1.04em;hyphens:manual}
+.mo .ep p{margin:0}
+.mo .ep-by{text-align:right;font-style:normal;font-size:.86em;color:var(--muted);margin-top:.7em !important}
+
+/* a day */
+.paged .day{break-before:page}
+.dh{text-align:center;margin:0 0 1.25em;padding-top:var(--sink);break-after:avoid;break-inside:avoid;hyphens:manual}
+.run .dh{padding-top:0}
+.dt{font-weight:400;margin:0;line-height:1.18}
+.dd{display:block;font-size:.8em;font-variant-caps:all-small-caps;letter-spacing:.2em;color:var(--accent);margin:0 0 .6em}
+.dn{display:block;font-size:1.72em;text-wrap:balance}
+.intro{font-style:italic;margin:0 1.4em 1.3em;text-align:justify;break-inside:avoid;break-after:avoid}
+.intro p{margin:0 0 .45em;text-indent:0}
+.intro i{font-style:normal}
+.intro p.gn{text-align:center;font-size:.93em}
+.intro::after{content:"";display:block;width:2.8em;border-top:.6pt solid var(--gold);margin:1.05em auto 0}
+.raw{font-size:.82em;font-style:italic;text-align:center;color:var(--muted);margin:0 2em 1em}
+.reading+.reading{margin-top:2.2em}
+.rh{text-align:center;margin:0 0 1em;break-after:avoid;break-inside:avoid;hyphens:manual}
+.text>:first-child{break-before:avoid}
+.rt{margin:0;font-size:1.08em;font-variant-caps:all-small-caps;letter-spacing:.12em}
+.by{margin:.1em 0 0;font-style:italic}
+.src{margin:.9em 0 0;text-align:right;font-style:italic;font-size:.84em;color:var(--muted);hyphens:manual}
+.orn{height:0;width:5.5em;border-top:.6pt solid var(--gold);margin:2.3em auto 2.6em;position:relative;break-before:avoid}
+.orn::after{content:"";position:absolute;left:50%;top:-3pt;width:0;height:0;border:2.4pt solid var(--gold);transform:translateX(-50%) rotate(45deg)}
+.run .day:last-child .orn{display:none}
+
+/* the text */
+.text p{margin:0;text-indent:1.25em;text-align:justify;orphans:2;widows:2}
+.text>p:first-child,.text>.h+p,.text>.h+.h+p,.text>hr+p,.text>blockquote+p,.text>p.verse+p,.text>p.sp+p,.text>p.st+p,.text>p.bound+p{text-indent:0}
+.text .h{text-indent:0;text-align:center;margin:1.45em 0 .7em;line-height:1.3;break-after:avoid;hyphens:manual;text-wrap:balance}
+.text>.h:first-child{margin-top:0}
+.text .h+.h{margin-top:-.2em}
+.text .h3{font-size:1.02em;letter-spacing:.07em}
+.text .h4{font-size:.98em;letter-spacing:.05em}
+.text .h5{font-size:.95em;font-style:italic}
+.text .h.caps{font-variant-caps:all-small-caps;letter-spacing:.11em;font-size:1.08em}
+.text .h5.caps{font-style:normal;font-size:1em}
+.text p.dc::first-letter{initial-letter:2;color:var(--accent);margin-right:.08em}
+.text p.dc::first-line{font-variant-caps:small-caps;letter-spacing:.03em}
+blockquote.q{margin:.6em 1.4em;font-size:.93em}
+blockquote.q p{text-indent:0}
+.text p.verse{text-indent:0;text-align:left;margin:.6em 0 .6em 1.5em;hyphens:manual}
+.text p.verse.short{break-inside:avoid}
+p.verse br{display:none}
+span.l{display:block;padding-left:1.6em;text-indent:-1.6em}
+span.l:first-child{break-after:avoid}
+span.l:last-child{break-before:avoid}
+span.i1{padding-left:calc(1.6em + 1em)}span.i2{padding-left:calc(1.6em + 2em)}span.i3{padding-left:calc(1.6em + 3em)}span.i4{padding-left:calc(1.6em + 4em)}span.i5{padding-left:calc(1.6em + 5em)}span.i6{padding-left:calc(1.6em + 6em)}span.i7{padding-left:calc(1.6em + 7em)}span.i8{padding-left:calc(1.6em + 8em)}span.i9{padding-left:calc(1.6em + 9em)}span.i10{padding-left:calc(1.6em + min(10em, 45%))}span.i11{padding-left:calc(1.6em + min(11em, 45%))}span.i12{padding-left:calc(1.6em + min(12em, 45%))}span.i13{padding-left:calc(1.6em + min(13em, 45%))}span.i14{padding-left:calc(1.6em + min(14em, 45%))}span.i15{padding-left:calc(1.6em + min(15em, 45%))}span.i16{padding-left:calc(1.6em + min(16em, 45%))}span.i17{padding-left:calc(1.6em + min(17em, 45%))}span.i18{padding-left:calc(1.6em + min(18em, 45%))}span.i19{padding-left:calc(1.6em + min(19em, 45%))}span.i20{padding-left:calc(1.6em + min(20em, 45%))}span.i21{padding-left:calc(1.6em + min(21em, 45%))}span.i22{padding-left:calc(1.6em + min(22em, 45%))}span.i23{padding-left:calc(1.6em + min(23em, 45%))}span.i24{padding-left:calc(1.6em + min(24em, 45%))}span.i25{padding-left:calc(1.6em + min(25em, 45%))}span.i26{padding-left:calc(1.6em + min(26em, 45%))}
+.text p.sp{text-indent:0;text-align:left;margin:.75em 0 .08em;font-variant-caps:all-small-caps;letter-spacing:.09em;break-after:avoid;hyphens:manual}
+.text p.sp+p.verse{margin-top:.08em}
+.text p.st{text-indent:0;text-align:left;margin:.4em 0 .4em 2em;font-style:italic;font-size:.96em;break-after:avoid;hyphens:manual}
+.text hr.br{border:0;height:auto;margin:.9em 0;text-align:center;overflow:visible;break-after:avoid}
+.text hr.br::after{content:"*\2003*\2003*";color:var(--muted)}
+.text p.bound,p.bound{text-indent:0;text-align:center;font-style:italic;font-size:.86em;color:var(--muted);margin:.7em 1.5em;hyphens:manual}
+sup.fr{font-size:.64em;line-height:0;vertical-align:super;font-variant-numeric:lining-nums;padding:0 .05em}
+sup.fr a{color:var(--accent)}
+.notes{margin:1.3em 0 0;padding-top:.45em;border-top:.5pt solid var(--rule);font-size:.86em;line-height:1.36}
+.notes-h{margin:0 0 .3em;text-indent:0 !important;font-variant-caps:all-small-caps;letter-spacing:.12em;color:var(--accent);break-after:avoid}
+.notes ol{list-style:none;margin:0;padding:0}
+.notes li{margin:0 0 .22em}
+.notes li p{text-indent:0;padding-left:1.7em;text-indent:-1.7em;text-align:left;orphans:2;widows:2}
+.fm{display:inline-block;min-width:1.4em;margin-right:.3em;text-indent:0;font-variant-numeric:lining-nums}
+.fm a{color:var(--accent)}
+.fpg{color:var(--muted);font-size:.92em;white-space:nowrap}
+/* page numbers of the volume, in the outer margin (with "page references") */
+.pgrefs .text>*{position:relative}
+.pg{display:none}
+.pgrefs .pg{display:block;position:absolute;right:calc(-1 * var(--gut));top:.28em;width:calc(var(--gut) - .06in);text-align:right;font-size:6.8pt;line-height:1;font-style:normal;font-variant:normal;font-variant-numeric:lining-nums;letter-spacing:0;text-indent:0;color:#8a8577}
+.pgrefs blockquote .pg{right:calc(-1 * var(--gut) - 1.4em)}
+
+/* the reading plan */
+.plan{font-size:.95em}
+.plan h1{font-weight:400;font-size:1.6em;letter-spacing:.08em;text-align:center;font-variant-caps:all-small-caps;margin:0}
+.plan-t{text-align:center;font-style:italic;font-size:1.1em;margin:.3em 0 0}
+.plan-s{text-align:center;color:var(--muted);margin:.2em 0 1em}
+.plan h2{font-weight:400;font-variant-caps:all-small-caps;letter-spacing:.14em;color:var(--accent);font-size:1.1em;margin:1.1em 0 .3em;break-after:avoid;border-bottom:.5pt solid var(--rule);padding-bottom:.2em}
+.plan table{width:100%;border-collapse:collapse}
+.plan tr{break-inside:avoid}
+.plan td{vertical-align:top;padding:.3em .3em .3em 0;border-bottom:.4pt solid #e2dccb;line-height:1.3}
+.plan .ck{width:1.4em}
+.plan .ck span{display:inline-block;width:.8em;height:.8em;border:.7pt solid #444;margin-top:.18em}
+.plan .pd{width:1.6em;text-align:right;padding-right:.7em;color:var(--muted)}
+.plan .pt b{font-weight:400;font-size:1.04em}
+.plan .pt span{font-size:.92em}
+.plan .pt small{font-size:.8em;color:var(--muted)}

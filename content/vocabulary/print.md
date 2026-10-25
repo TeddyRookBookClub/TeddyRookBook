@@ -1,6 +1,6 @@
 ---
-title: "The Printable Word Book"
-description: "Every Vocabulary Ladder word card, with its picture, memory hook, meaning, example and roots, four cards to a page, ready to print or save as a PDF."
+title: "Print Word Cards"
+description: "Print any set of Vocabulary Ladder word cards, or save them as a PDF: a topic, a level, a roots topic, your hard words or everything, two, four or six cards to a page, in color or black and white."
 type: vocabulary
 layout: print
 ---

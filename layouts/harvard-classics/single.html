@@ -31,7 +31,7 @@
   </header>
 
   <section class="hc-intro" aria-label="Introduction from the {{ $h.guide.edition.guide_year | default 1930 }} Reading Guide">
-    {{- range $g.intro }}<p>{{ . }}</p>{{ end }}
+    {{- range $g.intro }}<p>{{ partial "harvard-classics/inline.html" (dict "s" . "nofn" true) | safeHTML }}</p>{{ end }}
     {{- with $g.notes }}<ul class="hc-notes">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}
     <p class="hc-intro-src">From the {{ $h.guide.edition.guide_year | default 1930 }} Reading Guide</p>
   </section>
@@ -67,6 +67,8 @@
 
   {{- $as := slice -}}{{- range $g.readings -}}{{- $as = $as | append (.printed | default (printf "Vol. %v, pp. %v–%v" .volume .start .end)) -}}{{- end }}
   <p class="hc-guide">This is the reading for {{ $date }} in <i>Fifteen Minutes a Day: The Reading Guide</i> ({{ $h.guide.edition.guide_year | default 1930 }} edition){{ with $g.guide_page }}, page {{ . }}{{ end }}.{{ with $as }} There the assignment reads {{ range $i, $a := . }}{{ if $i }} and {{ end }}“{{ $a }}{{ if and (eq (add $i 1) (len $as)) (not (strings.HasSuffix $a ".")) }}.{{ end }}”{{ end }}{{ end }}{{ with $g.guide_url }} <a href="{{ . }}" rel="noopener">Read it in the guide</a>.{{ end }}</p>
+
+  <p class="hc-xpbtn"><a class="hc-btn" href="{{ "harvard-classics/export/" | relURL }}?day={{ $id }}">Export this reading <small>EPUB, PDF or text</small></a></p>
 
   <nav class="hc-pn" aria-label="Other days">
     <a class="hc-pn-prev" href="{{ printf "harvard-classics/%s/" $prev.slug | relURL }}" rel="prev"><small>← {{ index $months (sub (int $prev.month) 1) }} {{ $prev.day }}</small><span>{{ $prev.title }}</span></a>

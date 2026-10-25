@@ -19,7 +19,7 @@
     r.forEach(function (x, i) { if (i) by.appendChild(document.createTextNode(' and ')); if (x.author) by.appendChild(document.createTextNode(x.author + ', ')); by.appendChild(el('i', x.work || '')); });
     var sp = box.querySelector('.hc-card-spine b'); if (sp && r[0]) sp.textContent = r[0].volume;
     var intro = box.querySelector('.hc-card-intro'); intro.textContent = '';
-    (o.intro || []).forEach(function (p) { intro.appendChild(el('p', p)); });
+    (o.intro || []).forEach(function (p) { var q = document.createElement('p'); var parts = String(p).split(/(<\/?i>)/); var cur = q; parts.forEach(function (s) { if (s === '<i>') { var it = document.createElement('i'); q.appendChild(it); cur = it; } else if (s === '</i>') { cur = q; } else if (s) { cur.appendChild(document.createTextNode(s)); } }); intro.appendChild(q); }); // the guide's italics only; everything else stays text
     today();
   }).catch(function () { /* keep the build date's reading; its own date is shown on the card */ });
 })();

@@ -1,0 +1,36 @@
+{{- /* Data for the export page and its print layout (call with partialCached, once per build):
+   text    the full texts as one JSON file per month, harvard-classics/text/MM.<md5>.json, written at build time from
+           data/harvard (guide.json + days/MM-DD.json), so they always match the day pages: {month, days: [day record]},
+           the same records as HCBook.record() in static/harvard-classics/export/hc-book.js. Returned as dict "01" → URL.
+   index   one short entry a day for choosing readings: [id, title, words, minutes, [{v: volume, a: author, w: work}, …]].
+   months  the guide's months (name, epigraph, by); vols: [[n, short title, title], …]; year: the guide's edition year.
+   Returns dict "json" (all of it as one JSON string, for a <script type="application/json">). */ -}}
+{{- $h := partial "harvard-classics/data.html" . -}}
+{{- $text := dict -}}
+{{- $idx := slice -}}
+{{- range $m := seq 12 -}}
+  {{- $recs := slice -}}
+  {{- range where $h.guide.days "month" $m -}}
+    {{- $g := . -}}
+    {{- $t := (index $h.days $g.id) | default dict -}}
+    {{- $rs := slice -}}{{- $ix := slice -}}
+    {{- range $t.readings -}}
+      {{- $b := .boundary | default dict -}}
+      {{- $rs = $rs | append (dict "volume" .volume "start" .start "end" .end "author" (.author | default "") "work" (.work | default "") "title" (.title | default "") "boundary" (dict "start" ($b.start | default "") "end" ($b.end | default "")) "words" (.words | default 0) "scan" ((.scan | default dict).url | default "") "text" (.text | default slice)) -}}
+      {{- $ix = $ix | append (dict "v" .volume "a" (.author | default "") "w" (.title | default .work)) -}}
+    {{- end -}}
+    {{- $recs = $recs | append (dict "id" $g.id "month" $g.month "day" $g.day "slug" $g.slug "title" $g.title "intro" ($g.intro | default slice) "notes" ($g.notes | default slice) "status" ($t.status | default "") "words" ($t.words | default 0) "minutes" ($t.minutes | default 0) "readings" $rs) -}}
+    {{- $idx = $idx | append (jsonify (slice $g.id $g.title ($t.words | default 0) ($t.minutes | default 0) $ix)) -}}
+  {{- end -}}
+  {{- if $recs -}}
+    {{- $r := resources.FromString (printf "harvard-classics/text/%02d.json" $m) (jsonify (dict "month" $m "days" $recs)) | fingerprint "md5" -}}
+    {{- $text = merge $text (dict (printf "%02d" $m) $r.RelPermalink) -}}
+  {{- end -}}
+{{- end -}}
+{{- $vols := slice -}}
+{{- range $h.guide.volumes -}}{{- $vols = $vols | append (jsonify (slice .n (.short | default "") (.title | default ""))) -}}{{- end -}}
+{{- $months := slice -}}
+{{- range $h.guide.months -}}{{- $months = $months | append (dict "name" .name "epigraph" (.epigraph | default slice) "by" (.by | default "")) -}}{{- end -}}
+{{- $o := dict "text" $text "months" $months "year" ($h.guide.edition.guide_year | default 1930) "site" (site.BaseURL | absURL) "dayurl" ("harvard-classics/" | absURL) -}}
+{{- $json := printf `{"index":[%s],"vols":[%s],%s` (delimit $idx ",") (delimit $vols ",") (strings.TrimPrefix "{" (jsonify $o)) -}}
+{{- return dict "json" $json "count" (len $idx) -}}

@@ -1,0 +1,192 @@
+{{ define "main" }}
+{{- /* /harvard-classics/export/ (content/harvard-classics/export.md): the daily readings as EPUB, PDF and plain text.
+   Everything is made in the browser (no stored files): selections are made by static/harvard-classics/export/export.js (with hc-book.js): the EPUB and the text files
+   directly, the PDF through the print layout /harvard-classics/export/print/. The full texts come from the per-month
+   JSON files that partials/harvard-classics/export-data.html writes at build time.
+   Links in: ?day=MM-DD (one day), ?m=3 (a month), ?all=1, or ?d=<selection> (HCBook.encodeSel). */ -}}
+{{- $h := partial "harvard-classics/data.html" . -}}
+{{- $days := $h.guide.days -}}
+{{- $X := partialCached "harvard-classics/export-data.html" . "x" -}}
+{{- $months := slice "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December" -}}
+{{- $v := (os.Stat "static/harvard-classics/export/export.js").ModTime.Unix -}}
+{{- $vb := (os.Stat "static/harvard-classics/export/hc-book.js").ModTime.Unix -}}
+{{ partial "harvard-classics/head.html" . }}
+<link rel="stylesheet" href="{{ "harvard-classics/export/export.css" | relURL }}?v={{ (os.Stat "static/harvard-classics/export/export.css").ModTime.Unix }}">
+<div class="hc hc-wide hc-xp" id="hc-xp" data-print="{{ "harvard-classics/export/print/" | relURL }}" data-fonts="{{ "harvard-classics/fonts/" | relURL }}">
+  <nav class="hc-crumbs" aria-label="Breadcrumb"><a href="{{ "books/" | relURL }}">Library</a> › <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics</a> › Download</nav>
+
+  <header class="hc-xhead">
+    <p class="hc-eye">Fifteen minutes a day, wherever you read</p>
+    <h1>Take the readings with you</h1>
+    <p class="hc-xlead">Every one of the {{ len $days }} daily readings can go to your e-reader as an EPUB (Kindle, Kobo, Nook, Apple Books, Google Play Books), or be saved as a PDF to read on a tablet or print. Make your own book below in a few seconds: one day, a week, a stretch of dates, a month or the whole year, or every reading by one author or from one book.</p>
+    <p class="hc-xjump"><a href="#hc-make">Make your own</a> · <a href="#hc-devices">Getting it onto your reader</a></p>
+  </header>
+
+  {{- /* ── make your own ── */}}
+  <section class="hc-sec hc-xmake" id="hc-make" aria-labelledby="hc-make-h">
+    <h2 id="hc-make-h">Make your own</h2>
+    <noscript><p class="hc-xnote">Making your own book happens in your browser and needs JavaScript, which seems to be off. Each day’s page can still be printed from the browser.</p></noscript>
+    <div class="hc-xapp" id="hc-xapp" hidden>
+      <div class="hc-xstep">
+        <h3><span class="hc-xn" aria-hidden="true">1</span> Choose the readings</h3>
+        <div class="hc-xpick">
+          <div class="hc-xtabs" role="tablist" aria-label="Ways to choose">
+            <button type="button" role="tab" id="hc-t-days" aria-controls="hc-p-days" aria-selected="true">Days</button>
+            <button type="button" role="tab" id="hc-t-range" aria-controls="hc-p-range" aria-selected="false" tabindex="-1">Dates</button>
+            <button type="button" role="tab" id="hc-t-months" aria-controls="hc-p-months" aria-selected="false" tabindex="-1">Months</button>
+            <button type="button" role="tab" id="hc-t-soon" aria-controls="hc-p-soon" aria-selected="false" tabindex="-1">Coming up</button>
+            <button type="button" role="tab" id="hc-t-who" aria-controls="hc-p-who" aria-selected="false" tabindex="-1">Author or book</button>
+            <button type="button" role="tab" id="hc-t-vol" aria-controls="hc-p-vol" aria-selected="false" tabindex="-1">Volume</button>
+          </div>
+          <div class="hc-xpanel" role="tabpanel" id="hc-p-days" aria-labelledby="hc-t-days">
+            <p>Tick the days on the calendar: one, or as many as you like. Shift-click ticks every day between two.</p>
+            <div class="hc-xrow"><label class="hc-xf2"><span>Jump to a day</span><input type="date" id="hc-jump"></label><button type="button" class="hc-btn" id="hc-only">Just this day</button></div>
+          </div>
+          <div class="hc-xpanel" role="tabpanel" id="hc-p-range" aria-labelledby="hc-t-range" hidden>
+            <p>Every reading from one date to another. A range can run past December 31 into January.</p>
+            <div class="hc-xrow">
+              <fieldset class="hc-xmd"><legend>From</legend><select id="hc-fm" aria-label="From month"></select><select id="hc-fd" aria-label="From day"></select></fieldset>
+              <fieldset class="hc-xmd"><legend>To</legend><select id="hc-tm" aria-label="To month"></select><select id="hc-td" aria-label="To day"></select></fieldset>
+              <button type="button" class="hc-btn pri" id="hc-range-go">Choose these dates</button>
+            </div>
+          </div>
+          <div class="hc-xpanel" role="tabpanel" id="hc-p-months" aria-labelledby="hc-t-months" hidden>
+            <p>Pick one month or several.</p>
+            <div class="hc-xmonths" id="hc-xmonths" role="group" aria-label="Months"></div>
+            <div class="hc-xrow"><button type="button" class="hc-btn" id="hc-all">The whole year ({{ len $days }} readings)</button></div>
+          </div>
+          <div class="hc-xpanel" role="tabpanel" id="hc-p-soon" aria-labelledby="hc-t-soon" hidden>
+            <p>Readings from today’s date on, by your own calendar.</p>
+            <div class="hc-xrow hc-xsoon">
+              <button type="button" class="hc-btn" data-soon="today">Today</button>
+              <button type="button" class="hc-btn" data-soon="week">This week</button>
+              <button type="button" class="hc-btn" data-soon="7">The next 7 days</button>
+              <button type="button" class="hc-btn" data-soon="30">The next 30 days</button>
+              <button type="button" class="hc-btn" data-soon="month">The rest of this month</button>
+            </div>
+          </div>
+          <div class="hc-xpanel" role="tabpanel" id="hc-p-who" aria-labelledby="hc-t-who" hidden>
+            <p>Every day that reads from one author, or from one book.</p>
+            <div class="hc-xrow"><label class="hc-xf2 hc-xgrow"><span>Author</span><select id="hc-author"></select></label><button type="button" class="hc-btn pri" id="hc-author-go">Choose</button></div>
+            <div class="hc-xrow"><label class="hc-xf2 hc-xgrow"><span>Book or work</span><select id="hc-work"></select></label><button type="button" class="hc-btn pri" id="hc-work-go">Choose</button></div>
+          </div>
+          <div class="hc-xpanel" role="tabpanel" id="hc-p-vol" aria-labelledby="hc-t-vol" hidden>
+            <p>Every day that reads from one of the fifty volumes.</p>
+            <div class="hc-xrow"><label class="hc-xf2 hc-xgrow"><span>Volume</span><select id="hc-vol"></select></label><button type="button" class="hc-btn pri" id="hc-vol-go">Choose</button></div>
+          </div>
+          <label class="hc-xchk hc-xadd"><input type="checkbox" id="hc-add"> Add to the days already chosen instead of starting over</label>
+        </div>
+
+        <div class="hc-xcal" id="hc-xcal">
+          <div class="hc-xcbar">
+            <button type="button" class="hc-btn hc-arrow" id="hc-cprev" aria-label="Previous month">‹</button>
+            <h4 class="hc-xclab" id="hc-xclab" aria-live="polite"></h4>
+            <button type="button" class="hc-btn hc-arrow" id="hc-cnext" aria-label="Next month">›</button>
+          </div>
+          <div class="hc-xmchips" id="hc-xmchips" aria-label="Months, with the number of days chosen in each"></div>
+          <div class="hc-wk" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+          <div class="hc-xgrid" id="hc-xgrid" role="group" aria-labelledby="hc-xclab"></div>
+          <div class="hc-xcact">
+            <button type="button" class="hc-btn" id="hc-cmall">All of <span id="hc-cmn1"></span></button>
+            <button type="button" class="hc-btn" id="hc-cmnone">None of <span id="hc-cmn2"></span></button>
+            <button type="button" class="hc-btn" id="hc-clear">Clear all</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hc-xsum" id="hc-xsum" aria-live="polite"><p class="hc-xsum-n" id="hc-xsum-n">No readings chosen yet.</p><p class="hc-xsum-d" id="hc-xsum-d"></p></div>
+
+      <div class="hc-xstep">
+        <h3><span class="hc-xn" aria-hidden="true">2</span> What goes in</h3>
+        <div class="hc-xopts">
+          <fieldset class="hc-xfs">
+            <legend>Include</legend>
+            <label class="hc-xchk"><input type="checkbox" id="o-intro" checked> Dr. Eliot’s introductions, from the {{ $h.guide.edition.guide_year | default 1930 }} guide</label>
+            <label class="hc-xchk"><input type="checkbox" id="o-gnotes" checked> The guide’s notes (birthdays and anniversaries)</label>
+            <label class="hc-xchk"><input type="checkbox" id="o-notes" checked> Footnotes, at the end of each reading</label>
+            <label class="hc-xchk"><input type="checkbox" id="o-pages"> Page references: the volume’s page numbers and where each reading begins and ends</label>
+            <label class="hc-xchk"><input type="checkbox" id="o-front" checked> A title page and a table of contents</label>
+            <label class="hc-xchk"><input type="checkbox" id="o-openers" checked> A page for each month, with the guide’s verses</label>
+          </fieldset>
+          <fieldset class="hc-xfs">
+            <legend>For the PDF</legend>
+            <div class="hc-xf2"><span id="o-size-l">Paper</span><div class="hc-seg" role="radiogroup" aria-labelledby="o-size-l" id="o-size"><button type="button" role="radio" data-v="letter" aria-checked="true">US Letter</button><button type="button" role="radio" data-v="a4" aria-checked="false">A4</button><button type="button" role="radio" data-v="6x9" aria-checked="false">6 × 9 in</button></div></div>
+            <p class="hc-xsmall">6 × 9 inches is a book page; it reads well on a tablet.</p>
+            <div class="hc-xf2"><span id="o-type-l">Type</span><div class="hc-seg" role="radiogroup" aria-labelledby="o-type-l" id="o-type"><button type="button" role="radio" data-v="normal" aria-checked="true">Normal</button><button type="button" role="radio" data-v="large" aria-checked="false">Large</button></div></div>
+            <div class="hc-xf2"><span id="o-lay-l">Layout</span><div class="hc-seg" role="radiogroup" aria-labelledby="o-lay-l" id="o-lay"><button type="button" role="radio" data-v="page" aria-checked="true">New page each day</button><button type="button" role="radio" data-v="run" aria-checked="false">Continuous</button></div></div>
+          </fieldset>
+          <fieldset class="hc-xfs hc-xfs-ep">
+            <legend>For the EPUB</legend>
+            <label class="hc-xf2"><span>Title in your library</span><input type="text" id="o-title" maxlength="120" autocomplete="off" spellcheck="false"></label>
+            <div class="hc-xcover"><canvas id="hc-cover" width="400" height="640" role="img" aria-label="The cover"></canvas><p class="hc-xsmall">The cover is drawn from the title and the dates. The volumes your readings come from are the bright ones on the shelves.</p></div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="hc-xstep">
+        <h3><span class="hc-xn" aria-hidden="true">3</span> Make the file</h3>
+        <p class="hc-xready-hint" id="hc-xmatch" hidden></p>
+        <div class="hc-xgo">
+          <button type="button" class="hc-btn pri hc-xbig" id="go-epub">Download the EPUB</button>
+          <button type="button" class="hc-btn pri hc-xbig" id="go-pdf">Make a PDF</button>
+          <button type="button" class="hc-btn" id="go-txt">Plain text (.txt)</button>
+          <button type="button" class="hc-btn" id="go-plan">Print a reading plan</button>
+          <button type="button" class="hc-btn" id="go-plantxt">Reading plan as text</button>
+        </div>
+        <p class="hc-xstatus" id="hc-xstatus" role="status" aria-live="polite"></p>
+        <div class="hc-xhow">
+          <p><b>The PDF</b> opens as a print layout in a new tab. In the print window, choose <b>Save as PDF</b> (or <b>Microsoft Print to PDF</b>) as the printer, and under More settings turn off <b>Headers and footers</b>; the page size and margins come from the layout. Chrome and Edge print the running heads and page numbers; other browsers leave them out. One PDF holds up to 92 days, about a quarter of the year; for more, the page offers the parts, and the EPUB takes any number of days in one file.</p>
+          <p><b>The EPUB</b> is made right here in your browser and saved to your Downloads folder. <b>Plain text</b> opens on anything; the <b>reading plan</b> is a checklist of the days with their titles.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{- /* ── devices ── */}}
+  <section class="hc-sec hc-xdev" id="hc-devices" aria-labelledby="hc-dev-h">
+    <h2 id="hc-dev-h">Getting a book onto your reader</h2>
+    <div class="hc-xdevs">
+      <div class="hc-xdevc">
+        <h3>Kindle</h3>
+        <p>Amazon’s Send to Kindle takes EPUB files and turns them into Kindle books, cover and contents included. They arrive on every Kindle and Kindle app on your account, and your place is kept across them.</p>
+        <ul>
+          <li><b>On a computer:</b> install the free Send to Kindle app for Windows or Mac, then drag the EPUB onto it (or right-click the file and choose Send to Kindle) and press Send.</li>
+          <li><b>In a web browser:</b> go to <span class="hc-xurl">amazon.com/sendtokindle</span>, sign in, drop the file on the page and press Send.</li>
+          <li><b>By email:</b> attach the EPUB to an email to your Kindle’s Send to Kindle address. You’ll find the address in the Kindle’s settings or the Kindle app, and on Amazon’s website under Preferences, Personal Document Settings, where you also approve the address you send from.</li>
+          <li><b>On a phone:</b> open the downloaded file, tap Share, and choose Kindle.</li>
+        </ul>
+        <p class="hc-xsmall">Send the EPUB rather than the PDF: a PDF keeps its fixed pages, which are small on a Kindle screen.</p>
+      </div>
+      <div class="hc-xdevc">
+        <h3>Kobo</h3>
+        <ul>
+          <li>Plug the Kobo into your computer with its USB cable, tap Connect on the Kobo, and copy the EPUB onto it like any file. Eject it, and the book shows up in My Books.</li>
+          <li>Newer Kobos can also pick up books from Dropbox or Google Drive: put the EPUB in the folder Kobo made there, then open Dropbox or Google Drive from the Kobo’s More menu.</li>
+        </ul>
+        <h3>Nook and others</h3>
+        <p>Most other e-readers (Nook, PocketBook, Boox, Tolino) take EPUB files the same way: connect by USB and copy the file to the reader’s main folder or its Books folder.</p>
+      </div>
+      <div class="hc-xdevc">
+        <h3>Apple Books</h3>
+        <ul>
+          <li><b>iPhone and iPad:</b> open the downloaded EPUB (in Safari’s downloads or the Files app), tap Share, and choose Books.</li>
+          <li><b>Mac:</b> double-click the EPUB, or drag it into the Books app. It syncs to your iPhone and iPad when iCloud is on for Books.</li>
+        </ul>
+        <h3>Google Play Books</h3>
+        <p>On a computer, open <span class="hc-xurl">play.google.com/books</span>, choose Upload files, and pick the EPUB or PDF. In the Play Books app on Android, choose Upload PDF or EPUB from the menu in your library. The book is then on all your devices.</p>
+      </div>
+      <div class="hc-xdevc">
+        <h3>Calibre</h3>
+        <p>If you keep your books in Calibre, add the EPUB with Add books. Calibre can send it to almost any e-reader over USB, and convert it if your reader wants another format.</p>
+        <h3>A PDF on a tablet</h3>
+        <p>The 6 × 9 inch PDF is the one to read on a tablet: the type is a comfortable size without zooming. Open it in Books, Files or any PDF app; the table of contents and the bookmarks jump to each day.</p>
+        <h3>Plain text</h3>
+        <p>The .txt file opens on any phone, computer or reader, with no formatting at all.</p>
+      </div>
+    </div>
+  </section>
+</div>
+<script type="application/json" id="hc-xp-data">{{ $X.json | safeJS }}</script>
+<script src="{{ "harvard-classics/export/hc-book.js" | relURL }}?v={{ $vb }}" defer></script>
+<script src="{{ "harvard-classics/export/export.js" | relURL }}?v={{ $v }}" defer></script>
+{{ end }}

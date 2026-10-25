@@ -1,0 +1,30 @@
+{{- /* /harvard-classics/export/print/ (content/harvard-classics/export-print.md): the print layout of the export page, a
+   page of its own with no site header or footer. static/harvard-classics/export/print.js reads the selection and the
+   options from the address, lays out the readings with print.css (the book's typography, running heads, page numbers)
+   and opens the print window. Address: ?d=<selection>|m=3|all=1 &size=letter|a4|6x9 &type=normal|large &lay=page|run
+   &intro=1&gnotes=1&notes=1&pages=0&front=1&openers=1 &title=… &plan=1 (the reading plan) &go=1 (print at once). */ -}}
+{{- $X := partialCached "harvard-classics/export-data.html" . "x" -}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Fifteen Minutes a Day</title>
+<link rel="stylesheet" href="{{ "harvard-classics/export/print.css" | relURL }}?v={{ (os.Stat "static/harvard-classics/export/print.css").ModTime.Unix }}">
+<style id="hcp-pages"></style>
+</head>
+<body class="hcp">
+<div class="hcp-bar" id="hcp-bar">
+  <p class="hcp-back"><a href="{{ "harvard-classics/export/" | relURL }}">← Back to the export page</a></p>
+  <p class="hcp-status" id="hcp-status" role="status">Laying out the readings…</p>
+  <p><button type="button" class="hcp-btn" id="hcp-print" disabled>Print or save as PDF</button></p>
+  <p class="hcp-hint">In the print window, choose <b>Save as PDF</b> (or <b>Microsoft Print to PDF</b>) as the printer. Under More settings, turn off <b>Headers and footers</b> and leave the margins at Default; the page size comes from this layout. Chrome and Edge print the running heads and page numbers. A long selection takes a little while to appear in the print window.</p>
+</div>
+<main class="hcp-book" id="hcp-book" aria-live="polite"></main>
+<noscript><p class="hcp-msg">This layout is made with JavaScript, which seems to be off.</p></noscript>
+<script type="application/json" id="hc-xp-data">{{ $X.json | safeJS }}</script>
+<script src="{{ "harvard-classics/export/hc-book.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/export/hc-book.js").ModTime.Unix }}"></script>
+<script src="{{ "harvard-classics/export/print.js" | relURL }}?v={{ (os.Stat "static/harvard-classics/export/print.js").ModTime.Unix }}"></script>
+</body>
+</html>

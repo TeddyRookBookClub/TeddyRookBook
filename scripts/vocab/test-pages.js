@@ -5,13 +5,13 @@
 
    1. Every Vocabulary page loads at 1280 and 390 px wide, in the light and dark themes, with no console errors and no
       sideways scrolling: the hub, both course pages, a topic, practice, placement, map, progress, flashcards, quizzes,
-      the word list, a word page and the printable book.
+      the word list, a word page and the print page.
    2. In the browser, words fit their boxes: in a sweep of scenes (every cast member speaking, thinking, shouting and
       whispering, labels of many lengths, every prop with words), each line of text lies inside its bubble, tag or sign.
    3. The pages work: flashcards (picture side hides the word, flip, grades saved in localStorage 'trb-vocab-v1', the
       hard-words, root and word-side decks, ?deck= links), quizzes (a round, feedback, score, the timer, misses saved),
       the word list (1,000 rows, search and filters, the card dialog), a word page, the topic lesson and its practice,
-      and the print layout (four cards to a sheet).                                                                   */
+      and the print page (selections laid out on the fly, parts over 25 topics, every card fitting).                                                                   */
 'use strict';
 const { chromium } = require('playwright');
 const base = (process.argv[2] || 'http://localhost:1313/').replace(/\/$/, '');
@@ -154,12 +154,35 @@ const PATHS = ['/vocabulary/', '/vocabulary/advanced-vocabulary/', '/vocabulary/
   await p.waitForSelector('.mlp-practice .mlp-q', { timeout: 10000 }).catch(() => null);
   ok(await p.$('.mlp-practice .mlp-q'), 'lesson: practice shows a problem');
 
-  // print
-  for (const q of ['?vol=1', '?vol=all&size=a4']) {
-    await p.goto(base + '/vocabulary/print/' + q); await p.waitForFunction(() => window.__voPrintReady, null, { timeout: 30000 });
-    const nc = await p.$$eval('.vo-card-print', x => x.length), ns = await p.$$eval('.vop-sheet', x => x.length);
-    ok(nc >= 10 && ns >= Math.ceil(nc / 4), 'print ' + q + ': ' + nc + ' cards on ' + ns + ' sheets');
+  // print: on-the-fly layouts, selections, parts, fitting
+  const printed = async (q) => { await p.goto(base + '/vocabulary/print/' + q); await p.waitForFunction(() => window.__voPrintReady === true, null, { timeout: 60000 }); return p.evaluate(() => ({ cards: document.querySelectorAll('.vo-card-print').length, sheets: document.querySelectorAll('.vop-sheet').length, fit: window.__voFitReport, title: (document.querySelector('.vop-tv') || {}).textContent || '', status: (document.getElementById('vp-status') || {}).textContent || '', parts: [...document.querySelectorAll('#vp-partbtns button')].map(b => b.textContent) })); };
+  for (const [q, n, per] of [['?sel=topics:7', 10, 4], ['?sel=level:3&per=6', 100, 6], ['?sel=range:26-50&size=a4&per=2&bw=1', 250, 2]]) {
+    const r = await printed(q);
+    ok(r.cards === n && r.sheets === Math.ceil(n / per) + 1, 'print ' + q + ': ' + r.cards + ' cards on ' + r.sheets + ' sheets');
+    ok(r.fit && r.fit.cards === n && !r.fit.overflow.length, 'print ' + q + ': every card fits (' + (r.fit ? r.fit.overflow.join(', ') : 'no report') + ')');
+    ok(/Every card fits/.test(r.status), 'print ' + q + ': the status says every card fits');
   }
+  ok(await p.$('#vp-ready:not([hidden]) #vp-print'), 'print: the print button shows after laying out');
+  ok(/Save as PDF/.test(await p.textContent('.vp-hint')), 'print: the Save as PDF hint');
+  let r0 = await printed('?sel=all');
+  ok(r0.cards === 0 && r0.parts.length === 4 && /Topics 1–25/.test(r0.parts[0]) && /Topics 76–100/.test(r0.parts[3]), 'print everything: four part buttons (' + r0.parts.join(' | ') + ')');
+  ok(!(await p.isVisible('#vp-lay')), 'print everything: no single print over the cap');
+  await p.click('#vp-partbtns button[data-part="2"]'); await p.waitForFunction(() => window.__voPrintReady === true && document.querySelectorAll('.vo-card-print').length > 0, null, { timeout: 60000 });
+  const rp2 = await p.evaluate(() => ({ cards: document.querySelectorAll('.vo-card-print').length, title: document.querySelector('.vop-tv').textContent, url: location.search, over: window.__voFitReport.overflow.length }));
+  ok(rp2.cards === 250 && /part 2 of 4/.test(rp2.title) && /part=2/.test(rp2.url) && !rp2.over, 'print everything, part 2: ' + rp2.cards + ' cards, "' + rp2.title + '"');
+  // the checklist: 30 topics split into parts of 25 and 5
+  await p.goto(base + '/vocabulary/print/?sel=topics:1'); await p.waitForFunction(() => window.__voPrintReady === true);
+  for (let n = 2; n <= 30; n++) await p.check('#vp-topics input[value="' + n + '"]');
+  const parts = await p.$$eval('#vp-partbtns button', b => b.map(x => x.textContent));
+  ok(parts.length === 2 && /Part 1: Topics 1–25/.test(parts[0]) && /Part 2: Topics 26–30/.test(parts[1]), 'print 30 ticked topics: two parts (' + parts.join(' | ') + ')');
+  // the roots course, a strand and hard words
+  const rr = await printed('?sel=roots:bene-mal');
+  ok(rr.cards >= 5 && !rr.fit.overflow.length, 'print a roots topic: ' + rr.cards + ' cards');
+  const rs = await printed('?sel=strand:5&per=2');
+  ok(rs.cards === 100 && !rs.fit.overflow.length, 'print a strand: ' + rs.cards + ' cards');
+  await p.goto(base + '/vocabulary/print/'); await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('trb-vocab-v1') || '{}'); s.qmiss = { candid: Date.now(), laconic: Date.now() }; localStorage.setItem('trb-vocab-v1', JSON.stringify(s)); });
+  const rh = await printed('?sel=hard');
+  ok(rh.cards >= 2, 'print my hard words: ' + rh.cards + ' cards');
   ok(!errs.length, 'no console errors' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await b.close(); console.log((fails ? 'FAILED ' + fails + ', ' : '') + 'passed ' + passes + ' checks'); process.exit(fails ? 1 : 0);
 })();

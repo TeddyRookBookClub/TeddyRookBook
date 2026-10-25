@@ -21,7 +21,7 @@
     <p class="hc-card-eye"><a href="{{ "harvard-classics/" | relURL }}">Harvard Classics<span class="hc-card-x"> · fifteen minutes a day</span></a> <span class="hc-card-date">{{ index $months (sub (int $g.month) 1) }} {{ $g.day }}</span></p>
     <h3 class="hc-card-title"><a href="{{ printf "harvard-classics/%s/" $g.slug | relURL }}">{{ $g.title }}</a></h3>
     <p class="hc-card-by">{{ range $i, $r := $g.readings }}{{ if $i }} and {{ end }}{{ with $r.author }}{{ . }}, {{ end }}<i>{{ $r.title | default $r.work }}</i>{{ end }}</p>
-    <div class="hc-card-intro">{{ range $g.intro }}<p>{{ . }}</p>{{ end }}</div>
+    <div class="hc-card-intro">{{ range $g.intro }}<p>{{ partial "harvard-classics/inline.html" (dict "s" . "nofn" true) | safeHTML }}</p>{{ end }}</div>
     <p class="hc-card-links"><a class="hc-card-go" href="{{ printf "harvard-classics/%s/" $g.slug | relURL }}">Read today’s reading →</a> <a href="{{ "harvard-classics/calendar/" | relURL }}">The calendar</a></p>
   </div>
 </div></div>

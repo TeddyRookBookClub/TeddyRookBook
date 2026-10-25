@@ -1,5 +1,6 @@
-/* Vocabulary Ladder pages beyond the ladder: flashcards, quizzes, the word list, word pages and the printable book.
-   Uses the ladders' .mlp theme (math.css) and vocab.css; classes start with vop-. Light and dark; prints the book. */
+/* Vocabulary Ladder pages beyond the ladder: flashcards, quizzes, the word list, word pages and the print page.
+   Uses the ladders' .mlp theme (math.css) and vocab.css; classes start with vop- (vp- on the print page). Light and dark;
+   the print page prints its laid-out cards. */
 .vop{--vacc:#476600;--vaccs:rgba(71,102,0,.10);--vgold:#b8963e}
 html[data-theme="dark"] .vop{--vacc:#b6d36b;--vaccs:rgba(182,211,107,.14)}
 .vop a{color:var(--vacc)}
@@ -115,8 +116,20 @@ html[data-theme="dark"] .vop-seg button.on{color:#14200f}
 .vop-word .vo-card{margin:0 0 1rem}
 .vop-word h1.vo-w{font-size:2rem}
 .vop-wordnav{display:flex;flex-wrap:wrap;gap:.6rem 1rem;justify-content:space-between;align-items:center;font-size:.95rem}
-/* the printable book */
-.vop-pdfs{margin:0;padding-left:1.2rem;line-height:1.7}
+/* the print page: choosing what to print */
+.vp-kind{align-self:flex-start}
+.vp-panel[hidden]{display:none}
+.vp-tlist{max-height:22rem;overflow:auto;border:1px solid var(--line2);border-radius:10px;padding:.3rem .6rem;background:var(--paper)}
+.vp-lv{border:0;margin:0 0 .3rem;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:0 .8rem}
+.vp-lv legend{font:700 .72rem system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:.4rem 0 .15rem}
+.vp-t{display:flex;gap:.45rem;align-items:flex-start;padding:.2rem 0;font-size:.93rem;line-height:1.35;cursor:pointer;min-width:0}
+.vp-t input{margin-top:.18rem;flex:none;accent-color:var(--vacc)}
+.vp-sum{margin:0;font-weight:600;color:var(--ink)}
+.vp-parts p{margin:0 0 .5rem;color:var(--muted)}
+.vp-partbtns{display:flex;flex-wrap:wrap;gap:.5rem}
+.vp-partbtns .mlp-btn small{font-weight:400;opacity:.8;margin-left:.3rem}
+.vp-hint{margin:.4rem 0 0;font-size:.92rem;line-height:1.55;color:var(--muted);max-width:52rem}
+.vp-empty{display:none}
 /* the sheets have the printed page's exact size (US Letter or A4 inside the margins) on screen too, so print.js can fit each
    card before printing; on screen a wrapper shows them scaled to the window (--k) */
 .vop-book{--k:1;display:flex;flex-direction:column;gap:1.2rem;align-items:center}
@@ -138,6 +151,19 @@ html[data-theme="dark"] .vop-seg button.on{color:#14200f}
 .vop-toc{columns:2;column-gap:.35in;width:6.4in;max-width:100%;box-sizing:border-box;text-align:left;font:9pt/1.45 system-ui,sans-serif;margin:4pt 0;padding:0}
 .vop-toc li{margin-left:2.2em;break-inside:avoid}
 .vop-tf{font:9pt system-ui,sans-serif;color:#666;margin:6pt 0 0}
+.vop-tc{font:600 10pt system-ui,sans-serif;color:#666;margin:0}
+/* cards per page: 2 (one above the other, the picture beside the words), 4 (2 x 2) or 6 (2 x 3) */
+.vop-per-2 .vop-sheet{grid-template-columns:minmax(0,1fr)}
+.vop-per-6 .vop-sheet{grid-template-rows:repeat(3,minmax(0,1fr))}
+.vop-per-2 .vo-card-print{display:grid;grid-template-columns:var(--pw,3.6in) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);column-gap:10pt;align-content:start}
+.vop-per-2 .vo-card-print .vo-head{grid-column:1/-1}
+.vop-per-2 .vop-cell .vo-pic{max-width:none;width:var(--pw,3.6in);margin:0}
+.vop-per-2 .vop-title-in,.vop-per-6 .vop-title-in{grid-row:1/-1}
+/* black and white: the pictures are turned gray by print.js; the card's colors become grays here */
+.vop-bw .vop-cell .vo-card{--vo-acc:#333;--vo-accs:#eeeeee;--vo-hl:#111;--vo-hlbg:#e2e2e2;--vo-tag:#444;--vo-part:#efefef;--vo-partb:#9a9a9a;--vo-paper:#fff;--vo-line:#bbb;background:#fff}
+.vop-bw .vo-mn{border-left-color:#555}
+.vop-bw .vop-title h2{color:#111}
+.vop-bw .vop-tb{color:#444}
 @media print{
   header.header,footer.footer,.trb-social,.vop-noprint,.top-link,nav#menu,.breadcrumbs{display:none!important}
   main.main{max-width:none!important;padding:0!important;margin:0!important}
@@ -147,5 +173,6 @@ html[data-theme="dark"] .vop-seg button.on{color:#14200f}
   .vop-sheetw>.vop-sheet{transform:none}
   .vop-print,.vop-book{margin:0!important;padding:0!important}
   .vop-sheetw:last-child{break-after:auto;page-break-after:auto}
+  .vop-book:empty+.vp-empty{display:block;font:14pt Georgia,serif;text-align:center;margin:2in 0}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
