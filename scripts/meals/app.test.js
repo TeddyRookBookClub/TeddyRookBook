@@ -202,6 +202,131 @@ eq(M.purchase(M.normItem({ id: 'x', name: 'X', section: 'p', counts: { each: 26 
 eq(M.purchase(M.normItem({ id: 'x', name: 'Whole chicken', section: 'meat', counts: { each: 1800 }, count_label: '4-lb chicken', buy: { packs: [], loose: { unit: 'each', step: 1 } } }), 1800).text, '1 chicken (4 lb)', 'count label with a size');
 eq(M.purchase(M.normItem({ id: 'x', name: 'Butter', section: 'dairy', counts: { stick: 113 }, buy: { packs: [{ label: '1-lb box (4 sticks)', amount: 1, unit: 'lb' }] } }), 900).text, '2 boxes (1 lb, 4 sticks)', 'label with a note');
 
+// ---------- from scratch: substitution, scaling, merging, nutrition ----------
+var cat2 = JSON.parse(JSON.stringify(catalog));
+cat2.items.push(
+  item('flour', 'All-purpose flour', 'baking', { keep: 'pantry', g_per_cup: 125, buy: { packs: [{ label: '5-lb bag', amount: 5, unit: 'lb' }] }, allergens: ['wheat'], diet: ['vegan', 'vegetarian'], nutrition: N100(364, 10.3, 1, 0.2, 76.3, 2.7, 0.3, 2) }),
+  item('yeast', 'Active dry yeast', 'baking', { keep: 'pantry', g_per_cup: 149, counts: { package: 7 }, buy: { packs: [{ label: '3-packet strip', amount: 3, unit: 'package' }] }, diet: ['vegan', 'vegetarian', 'gluten-free'], nutrition: N100(325, 40.4, 7.6, 1, 41.2, 26.9, 0, 51) }),
+  item('bread', 'Sandwich bread, white', 'bakery', { counts: { slice: 28 }, buy: { packs: [{ label: '20-oz loaf', amount: 20, unit: 'oz' }] }, allergens: ['wheat'], diet: ['vegan', 'vegetarian'], nutrition: N100(266, 7.6, 3.3, 0.7, 49.4, 2.4, 5.7, 490) }),
+  item('crumbs', 'Dry breadcrumbs', 'baking', { keep: 'pantry', g_per_cup: 108, buy: { packs: [{ label: '15-oz canister', amount: 15, unit: 'oz' }] }, allergens: ['wheat'], nutrition: N100(395, 13.4, 5.3, 1.2, 71.9, 4.5, 6.2, 732) }),
+  item('broth', 'Chicken broth', 'canned', { keep: 'pantry', g_per_cup: 240, buy: { packs: [{ label: '32-oz carton', amount: 1, unit: 'quart' }] }, nutrition: N100(6, 0.6, 0.2, 0.1, 0.4, 0, 0.2, 371) }),
+  item('wings', 'Chicken wings', 'meat', { buy: { packs: [], loose: { unit: 'lb', step: 0.25 } }, nutrition: N100(191, 17.5, 12.9, 3.7, 0, 0, 0, 73) }),
+  item('tomato', 'Tomatoes', 'produce', { keep: 'counter', g_per_cup: 180, counts: { each: 123 }, count_label: 'medium tomato', buy: { packs: [], loose: { unit: 'each', step: 1 } }, diet: ['vegan', 'vegetarian', 'gluten-free'], nutrition: N100(18, 0.9, 0.2, 0, 3.9, 1.2, 2.6, 5) })
+);
+var pans = [{ id: '9x5', label: '9 × 5-inch loaf pan', f: 1 }, { id: '8x4', label: '8½ × 4½-inch loaf pan', f: 0.75 }];
+var scratchRaw = { recipes: [
+  { id: 'crumbs-s', name: 'Dry breadcrumbs', kind: 'scratch', makes: [{ item: 'crumbs', by: 'g', n: 150 }], batch: { step: 0.25, min: 0.25 }, ingredients: [ing('bread', 8, 'slice')],
+    stages: [{ do: 'Dry at 300°F', station: 'oven', temp: 300, cook: 20 }], plan: { keep_days: 90, freeze: true }, nutrition: { from: 'ingredients' } },
+  { id: 'bread-s', name: 'Sandwich bread', kind: 'scratch', makes: [{ item: 'bread', by: 'slice', n: 16 }], batch: { step: 0.25, min: 0.75, pans: pans },
+    ingredients: [ing('flour', 480, 'g'), ing('yeast', 7, 'g'), ing('salt', 9, 'g'), ing('milk', 1, 'cup'), ing('water', 0.3333, 'cup')],
+    stages: [{ do: 'Mix and knead', active: 25, wait: 90 }, { do: 'Shape', active: 10, wait: 50 }, { do: 'Bake at 350°F', station: 'oven', temp: 350, cook: 38 }, { do: 'Cool', wait: 60, bg: true }],
+    plan: { keep_days: 3, freeze: true, lead_days: 0 }, nutrition: { from: 'ingredients' } },
+  { id: 'stock-s', name: 'Chicken stock', kind: 'scratch', makes: [{ item: 'broth', by: 'cup', n: 12 }], batch: { step: 0.25, min: 0.25 }, ingredients: [ing('wings', 3, 'lb'), ing('water', 16, 'cup')],
+    stages: [{ do: 'Simmer', station: 'simmer', cook: 210, bg: true }], plan: { keep_days: 2, freeze: true }, nutrition: { from: 'usda', fdc: 172884, per100: { kcal: 36, protein: 2.52, fat: 1.2, satfat: 0.32, carb: 3.53, fiber: 0, sugars: 1.58, sodium: 143 } } },
+  { id: 'sub-s', name: 'Crumb stand-in', kind: 'stand-in', makes: [{ item: 'milk', by: 'cup', n: 1 }], batch: { step: 0.25 }, ingredients: [ing('water', 1, 'cup')], stages: [], plan: {}, nutrition: { from: 'item' } }
+] };
+var D2 = M.norm({ catalog: cat2, recipes: recipes }), CAT2 = D2.cat, SS = M.normScratch(scratchRaw, CAT2);
+eq(SS.byItem.bread, 'bread-s', 'scratch recipe found by the item it makes');
+ok(SS.order.indexOf('crumbs-s') < SS.order.indexOf('bread-s'), 'a recipe comes before the scratch recipes it uses (crumbs before bread)');
+eq(SS.byId['crumbs-s'].needs.join(), 'bread-s', 'crumbs need homemade bread');
+near(SS.byId['bread-s'].makes[0].g, 16 * 28, 1e-9, 'one loaf stands in for 16 store slices');
+var b1 = M.scratchBatches(SS.byId['bread-s'], 1.5);
+eq(b1.n, 1.5, '1.5 loaves needed → 1.5'); eq(b1.pans.map(function (p) { return p.count + 'x' + p.id; }).join(), '2x8x4', '1.5 loaves → two 8½ × 4½ pans');
+var b2 = M.scratchBatches(SS.byId['bread-s'], 1.6);
+eq(b2.n, 1.75, '1.6 loaves → 1.75'); eq(b2.pans.map(function (p) { return p.count + 'x' + p.id; }).join(), '1x9x5,1x8x4', '1.6 loaves → a 9 × 5 and an 8½ × 4½');
+eq(M.scratchBatches(SS.byId['bread-s'], 1.03).n, 1, 'within 6% of a loaf → one loaf');
+eq(M.scratchBatches(SS.byId['bread-s'], 0.3).n, 0.75, 'small need → the smallest pan');
+eq(M.scratchBatches(SS.byId['stock-s'], 0.3).n, 0.5, 'rounds up to the step (¼ batch)');
+near(M.scratchFor(SS.byId['bread-s'], { bread: 24 * 28 }).raw, 1.5, 1e-9, '24 slices = 1.5 loaves');
+var scS = M.scaleScratch(SS.byId['bread-s'], 1.5, CAT2);
+near(scS[0].g, 720, 1e-9, 'flour scales by weight: 1.5 × 480 g'); near(scS[1].g, 10.5, 1e-9, 'yeast scales by weight: 1.5 × 7 g'); near(scS[2].g, 13.5, 1e-9, 'salt scales by weight');
+// the shopping list: "toast" uses 8 slices for 4 servings; making the bread swaps it for flour, yeast, salt, milk
+recipes.recipes.push({ id: 'toast', name: 'Toast', servings: 4, meal: ['breakfast'], protein: 'vegetarian', method: [], tags: [], times: { total: 5 }, ingredients: [ing('bread', 8, 'slice'), ing('milk', 1, 'cup')], steps: [], allergens: ['wheat', 'milk'], diet: ['vegetarian'] });
+recipes.recipes.push({ id: 'pancake', name: 'Pancakes', servings: 4, meal: ['breakfast'], protein: 'vegetarian', method: [], tags: [], times: { total: 20 }, ingredients: [ing('flour', 1, 'cup'), ing('tomato', 2, 'each')], steps: [], allergens: ['wheat'], diet: ['vegetarian'] });
+recipes.recipes.push({ id: 'meatballs', name: 'Meatballs', servings: 4, meal: ['dinner'], protein: 'beef', method: [], tags: [], times: { total: 40 }, ingredients: [ing('beef', 1, 'lb'), ing('crumbs', 0.5, 'cup'), ing('broth', 2, 'cup')], steps: [], allergens: ['wheat'], diet: [] });
+D2 = M.norm({ catalog: cat2, recipes: recipes }); CAT2 = D2.cat; SS = M.normScratch(scratchRaw, CAT2);
+var G4 = [{ k: 'adult', n: 4, f: 1 }];
+var sp = { start: '2026-07-06', days: 7, slots: { breakfast: true, lunch: true, dinner: true, snack: false }, cells: { '0|breakfast': [{ r: 'toast' }], '1|breakfast': [{ r: 'toast' }], '2|breakfast': [{ r: 'toast' }], '1|lunch': [{ r: 'pancake' }] }, guests: {} };
+function mk(ids) { return { S: SS, make: function (id) { return ids.indexOf(id) >= 0; } }; }
+var rep = {}, plainL = M.shoppingList(sp, G4, D2.recipes, CAT2, {}), madeL = M.shoppingList(sp, G4, D2.recipes, CAT2, { scratch: mk(['bread']), report: rep });
+function rowOf(l, id) { return l.filter(function (r) { return r.id === id; })[0]; }
+ok(rowOf(plainL, 'bread') && !rowOf(madeL, 'bread'), 'making the bread takes it off the list');
+eq(rep.made.length, 1, 'the report lists one thing made from scratch');
+near(rep.made[0].items.bread, 24 * 28, 1e-6, '3 breakfasts × 8 slices = 24 slices needed');
+eq(rep.made[0].b.n, 1.5, 'so 1½ loaves are made');
+near(rowOf(madeL, 'flour').g, 720 + 125, 0.01, 'the bread’s flour merges with the pancakes’ flour');
+ok(rowOf(madeL, 'flour').uses.indexOf('Sandwich bread (homemade)') >= 0 && rowOf(madeL, 'flour').uses.indexOf('Pancakes') >= 0, 'the merged flour row lists both uses');
+near(rowOf(madeL, 'milk').g, 244 * 3 + 244 * 1.5, 0.01, 'the bread’s milk merges with the toast’s milk');
+ok(!rowOf(madeL, 'water'), 'water from a scratch recipe is never on the list');
+ok(rowOf(madeL, 'yeast') && /packet|strip|pantry/.test(rowOf(madeL, 'yeast').buy), 'yeast is bought in packets (' + (rowOf(madeL, 'yeast') || {}).buy + ')');
+eq(Object.keys(rep.made[0].byDay).sort().join(), '0,1,2', 'needs are recorded by the day they’re eaten');
+// nested: meatballs need crumbs; making crumbs and bread makes the bread for the crumbs too
+var rep2 = {}, nest = M.shoppingList({ start: '2026-07-06', days: 7, slots: sp.slots, cells: { '3|dinner': [{ r: 'meatballs' }] }, guests: {} }, G4, D2.recipes, CAT2, { scratch: mk(['crumbs', 'bread']), report: rep2 });
+eq(rep2.made.map(function (j) { return j.s.id; }).join(), 'crumbs-s,bread-s', 'homemade crumbs call for homemade bread');
+near(rep2.made[1].items.bread, M.scaleScratch(SS.byId['crumbs-s'], rep2.made[0].b.n, CAT2)[0].g, 1e-6, 'the bread needed is what the crumbs use');
+ok(!rowOf(nest, 'crumbs') && !rowOf(nest, 'bread') && rowOf(nest, 'flour'), 'neither crumbs nor bread is bought; flour is');
+eq(rowOf(nest, 'flour').uses.join(), 'Sandwich bread (homemade)', 'the flour is for the homemade bread');
+var nest2 = M.shoppingList({ start: '2026-07-06', days: 7, slots: sp.slots, cells: { '3|dinner': [{ r: 'meatballs' }] }, guests: {} }, G4, D2.recipes, CAT2, { scratch: mk(['crumbs']) });
+ok(rowOf(nest2, 'bread') && rowOf(nest2, 'bread').uses[0] === 'Dry breadcrumbs (homemade)', 'homemade crumbs from store bread put the bread on the list');
+// nutrition of the homemade version, computed from its ingredients
+var bn = M.scratchNutr(SS.byId['bread-s'], CAT2, 'bread'), batchK = (480 * 364 + 7 * 325 + 9 * 0 + 244 * 61 + 0.3333 * 237 * 0) / 100;
+near(bn.n.kcal, batchK / (16 * 28) * 100, 0.01, 'homemade bread: a batch’s calories over the 16 slices it replaces');
+var CW = M.catalogWith(CAT2, SS, { bread: true });
+near(M.recipeNutrition(D2.recipes.toast, CW).n.kcal, (2 * batchK / 16 + 244 * 61 / 100 / 4 * 4 / 4 * 1) , 0.5, 'toast with homemade bread: 2 homemade slices a serving (plus its milk)');
+ok(M.recipeNutrition(D2.recipes.toast, CW).n.kcal > M.recipeNutrition(D2.recipes.toast, CAT2).n.kcal, 'homemade slices are bigger than store slices, so the toast has more calories');
+eq(CW.bread.scratch, 'bread-s', 'the swapped item says where its numbers come from');
+eq(M.catalogWith(CAT2, SS, {}), CAT2, 'nothing made → the same catalog');
+near(M.scratchNutr(SS.byId['stock-s'], CAT2, 'broth').n.sodium, 143, 1e-9, 'strained stock uses its USDA home-made numbers');
+eq(M.scratchNutr(SS.byId['sub-s'], CAT2, 'milk').n, CAT2.milk.n, '"from: item" uses the store item’s numbers');
+
+// ---------- the garden: what's covered, when ----------
+var GM = M.normGardenMap({ crops: { tomatoes: { months: [7, 8, 9], store_months: 0 }, potatoes: { months: [8], store_months: 6 } }, animals: { hens: { months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], store_months: 1 } },
+  items: [{ item: 'tomato', crop: 'tomatoes', f: 1 }, { item: 'eggs', animal: 'hens', f: 1 }, { item: 'potato', crop: 'potatoes', f: 1 }] });
+var grow = { crops: { tomatoes: { on: true, m: [7, 8, 9] }, potatoes: { on: true, m: [8], store: true } }, animals: { hens: { on: false, m: [] } } };
+eq(M.growCovers(grow, GM, 'tomato', 8).how, 'harvest', 'tomatoes in August: from the garden');
+eq(M.growCovers(grow, GM, 'tomato', 11), null, 'tomatoes in November: bought (they don’t store)');
+eq(M.growCovers(grow, GM, 'potato', 12).how, 'stored', 'potatoes in December: from storage (6 months after August)');
+eq(M.growCovers(grow, GM, 'potato', 3), null, 'potatoes in March: past their storage months');
+eq(M.growCovers({ crops: { potatoes: { on: true, m: [8], store: false } } }, GM, 'potato', 12), null, 'not stored → bought outside the harvest');
+eq(M.growCovers(grow, GM, 'eggs', 5), null, 'hens turned off → eggs bought');
+eq(M.growCovers({ crops: { tomatoes: { on: true, m: [11, 12, 1] } } }, GM, 'tomato', 1).how, 'harvest', 'harvest months can run past December');
+eq(M.monthOf({ start: '2026-07-30' }, 3), 8, 'plan day 3 from July 30 is in August');
+var gl = M.shoppingList(sp, G4, D2.recipes, CAT2, { garden: { covers: function (id, d) { return M.growCovers(grow, GM, id, M.monthOf(sp, d)); } } });
+ok(rowOf(gl, 'g:tomato') && rowOf(gl, 'g:tomato').garden && !rowOf(gl, 'tomato'), 'July tomatoes move to “From your garden”');
+eq(rowOf(gl, 'g:tomato').section, 'garden', 'garden rows have their own section');
+ok(/tomato/.test(rowOf(gl, 'g:tomato').need), 'garden rows say how much to pick (' + rowOf(gl, 'g:tomato').need + ')');
+var spN = JSON.parse(JSON.stringify(sp)); spN.start = '2026-11-02';
+var glN = M.shoppingList(spN, G4, D2.recipes, CAT2, { garden: { covers: function (id, d) { return M.growCovers(grow, GM, id, M.monthOf(spN, d)); } } });
+ok(rowOf(glN, 'tomato') && !rowOf(glN, 'g:tomato'), 'November tomatoes are bought');
+var gp = M.growPlan(gl, GM, { tomatoes: { n: 'Tomatoes', y: 71, sq: 7, dh: [52, 120], se: 'warm' } }, 52, {});
+near(gp[0].lb, rowOf(gl, 'g:tomato').g * 52 / 453.59237, 1e-6, 'grow view: a year of the plan’s tomatoes in pounds');
+near(gp[0].sqft, gp[0].lb / 0.71, 1e-6, 'space = pounds ÷ yield per square foot (71 lb per 100 sq ft)');
+eq(gp[0].plants, Math.ceil(gp[0].sqft / 7), 'plants = space ÷ space per plant');
+
+// ---------- prep day with from-scratch jobs ----------
+var sch = M.scratchSchedule([{ s: SS.byId['bread-s'], n: 1.5, byDay: { 0: 0.5, 1: 0.5, 2: 0.5 } }], -1)[0];
+eq(sch.parts.length, 1, 'bread for days 0–2 keeps from prep day'); eq(sch.parts[0].day, -1, 'made on prep day'); eq(sch.parts[0].freeze, null, 'nothing to freeze');
+var sch2 = M.scratchSchedule([{ s: SS.byId['bread-s'], n: 1.5, byDay: { 0: 0.5, 5: 1 } }], -1)[0];
+ok(sch2.parts[0].day === -1 && sch2.parts[0].freeze && sch2.parts[0].freeze.from === 5, 'bread for Saturday is baked on prep day and frozen');
+near(sch2.parts[0].freeze.share, 2 / 3, 1e-9, 'the frozen share is Saturday’s part');
+var mayo = { id: 'm', name: 'Mayo', plan: { keep_days: 2, freeze: false } };
+var sch3 = M.scratchSchedule([{ s: mayo, n: 2, byDay: { 1: 1, 5: 1 } }], -1)[0];
+eq(sch3.parts.map(function (p) { return p.day; }).join(), '-1,5', 'a short-keeping, unfreezable item is made again for later in the week');
+var pick = M.scratchSchedule([{ s: { plan: { keep_days: 30, lead_days: 1 } }, n: 1, byDay: { 0: 1 } }], -1)[0];
+eq(pick.parts[0].day, -1, 'pickles needed day 0 with a day’s lead: prep day');
+var pick2 = M.scratchSchedule([{ s: { plan: { keep_days: 30, lead_days: 1 } }, n: 1, byDay: { 0: 1 } }], 0)[0];
+eq(pick2.parts[0].day, -1, 'too late for a prep day on day 0: made the day before');
+var pdS = M.prepDay([{ r: R.chick, servings: 4 }, { s: SS.byId['bread-s'], n: 1.5 }, { s: SS.byId['crumbs-s'], n: 0.5, after: ['bread-s'] }]);
+var breadBake = pdS.steps.filter(function (s) { return s.j.s && s.j.s.id === 'bread-s' && s.inOven != null; })[0], chickBake = pdS.steps.filter(function (s) { return s.j.r && s.inOven != null; })[0], crumbBake = pdS.steps.filter(function (s) { return s.j.s && s.j.s.id === 'crumbs-s'; })[0];
+eq(pdS.steps[0].j.s && pdS.steps[0].j.s.id, 'bread-s', 'the dough is mixed first, so it can rise');
+eq(breadBake.inOven, 25 + 90 + 10 + 50, 'the bread goes in when it has risen twice');
+ok(chickBake.inOven + 35 <= breadBake.inOven || chickBake.inOven >= breadBake.inOven + 38, 'the chicken bakes around the bread, not at the same time');
+ok(crumbBake.at >= breadBake.ready + 60, 'crumbs from homemade bread wait until it has baked and cooled');
+eq(breadBake.heat, 350, 'heat the oven for the bread');
+ok(pdS.steps.every(function (s) { return s.at >= 0 && s.ready >= s.at; }), 'scratch steps have sane times');
+eq(pdS.scratch, 2, 'two from-scratch jobs scheduled');
+eq(pdS.steps.filter(function (s) { return s.sg && s.sg.bg; }).length, 1, 'cooling is background time');
+
 // ---------- the real data, if it is there ----------
 var dir = path.join(ROOT, 'data', 'meals');
 if (fs.existsSync(path.join(dir, 'recipes.json')) && fs.existsSync(path.join(dir, 'catalog.json'))) {
@@ -219,7 +344,28 @@ if (fs.existsSync(path.join(dir, 'recipes.json')) && fs.existsSync(path.join(dir
   var bl = M.shoppingList(big, M.DEFAULT_GROUPS, real.recipes, real.cat, {});
   var badRows = bl.filter(function (r) { return !r.buy || /NaN|undefined|null/.test(r.buy + r.need); });
   eq(badRows.length, 0, 'every row of a month-long list has something to buy' + (badRows.length ? ': ' + badRows.slice(0, 5).map(function (r) { return r.name + '=' + r.buy; }).join('; ') : ''));
-  console.log('real data: ' + ids.length + ' recipes, ' + Object.keys(real.cat).length + ' items, month list ' + bl.length + ' rows');
+  // from scratch on the real data: every recipe scales, has nutrition for what it makes, and a month of meals with
+  // everything made at home still gives a clean list
+  var rs = JSON.parse(fs.readFileSync(path.join(dir, 'scratch.json'), 'utf8')), RS = M.normScratch(rs, real.cat), badS = [];
+  Object.keys(RS.byId).forEach(function (id) {
+    var s = RS.byId[id];
+    if (rs.recipes.filter(function (x) { return x.id === id; })[0].makes.length !== s.makes.length) badS.push(id + ': a "makes" item didn’t convert');
+    [0.25, 1, 2.3].forEach(function (n) { M.scaleScratch(s, n, real.cat).forEach(function (x) { if (!x.item) badS.push(id + ': unknown item'); else if (x.g == null || !(x.g > 0) || /NaN|undefined/.test(x.nice.text)) badS.push(id + ': ' + x.ing.item + ' at ×' + n); }); });
+    s.makes.forEach(function (m) { var sn = M.scratchNutr(s, real.cat, m.item); if (!sn || !(sn.n.kcal >= 0) || isNaN(sn.n.sodium)) badS.push(id + ': no nutrition for ' + m.item); });
+  });
+  eq(badS.length, 0, 'real scratch recipes scale and have nutrition' + (badS.length ? ': ' + badS.slice(0, 5).join('; ') : ''));
+  var repR = {}, all = M.shoppingList(big, M.DEFAULT_GROUPS, real.recipes, real.cat, { scratch: { S: RS, make: function () { return true; } }, report: repR });
+  var badR = all.filter(function (r) { return !r.buy || /NaN|undefined|null/.test(r.buy + r.need); });
+  eq(badR.length, 0, 'a month with everything made at home has a clean list' + (badR.length ? ': ' + badR.slice(0, 5).map(function (r) { return r.name + '=' + r.buy; }).join('; ') : ''));
+  ok(repR.made.length >= 15 && all.every(function (r) { return !r.item || !RS.byItem[r.item.id] || r.uses.every(function (u) { return / \(homemade\)$/.test(u); }); }), 'every item with a scratch recipe is swapped out; only starters for homemade batches (yogurt) are bought (' + repR.made.length + ' made)');
+  var CWR = M.catalogWith(real.cat, RS, (function () { var o = {}; Object.keys(RS.byItem).forEach(function (k) { o[k] = true; }); return o; })()), badN = [];
+  ids.forEach(function (id) { var n = M.recipeNutrition(real.recipes[id], CWR); if (n.status !== 'none' && !(n.n.kcal > 0 && n.n.kcal < 3000)) badN.push(id + ' ' + n.n.kcal); });
+  eq(badN.length, 0, 'real recipes with homemade ingredients have sane nutrition' + (badN.length ? ': ' + badN.join('; ') : ''));
+  var gmR = M.normGardenMap(JSON.parse(fs.readFileSync(path.join(dir, 'garden-map.json'), 'utf8')));
+  var everything = { crops: {}, animals: { hens: { on: true, m: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] } } }; Object.keys(gmR.crops).forEach(function (k) { everything.crops[k] = { on: true, m: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }; });
+  var allG = M.shoppingList(big, M.DEFAULT_GROUPS, real.recipes, real.cat, { garden: { covers: function (id, d) { return M.growCovers(everything, gmR, id, M.monthOf(big, d)); } } });
+  ok(allG.filter(function (r) { return r.garden; }).length > 20 && allG.every(function (r) { return !r.garden || (r.need && !/NaN/.test(r.need)); }), 'growing everything moves the produce and eggs to the garden section');
+  console.log('real data: ' + ids.length + ' recipes, ' + Object.keys(real.cat).length + ' items, month list ' + bl.length + ' rows, ' + Object.keys(RS.byId).length + ' scratch recipes');
 }
 
 console.log(pass + ' passed, ' + fail + ' failed');

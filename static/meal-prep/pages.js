@@ -68,7 +68,8 @@
       var sc = M.scaleRecipe(r, n, data.cat), grp = '', h = '';
       sc.forEach(function (s) {
         if (s.ing.group && s.ing.group !== grp) { grp = s.ing.group; h += '<li class="mp-ingg"><h4>' + C.esc(grp) + '</h4></li>'; }
-        h += '<li>' + C.ingLine(s) + '</li>';
+        var ge = s.item && data.G.byItem[s.item.id], gk = ge ? ge.key : null;
+        h += '<li>' + C.ingLine(s) + (gk ? ' <a class="mp-tag mp-grow" href="' + C.esc(data.gardenURL + (ge.animal ? '?' + gk + '=on' : '?crops=' + gk + '&mode=only') + '&from=meals') + '" aria-label="Grow it: ' + C.esc(C.growName(data, gk)) + ', in the Food Garden Planner">🌱 Grow it</a>' : '') + '</li>';
       });
       $('#rp-ings').innerHTML = h;
       var note = $('#rp-scalenote');
@@ -91,5 +92,54 @@
       if (srcs.length) h += '<details class="mp-mini"><summary>Where the numbers come from</summary><ul class="hs-small">' + srcs.join('') + '</ul></details>';
       box.innerHTML = h;
     }
+  }
+
+  // ---------- one from-scratch recipe: "how much do you need?" ----------
+  var sx = D.getElementById('mp-scratch');
+  if (sx && W.MealModel && W.MealCommon) {
+    var SM = W.MealModel, SC = W.MealCommon;
+    SC.load(sx.dataset.src, function (err, d) {
+      if (err) return;
+      var s = d.S.byId[sx.dataset.id]; if (!s) return;
+      var pans = s.batch && s.batch.pans, opts = [], seen = {}, first = s.makes[0];
+      opts.push({ v: 'batch', t: pans ? 'loaves (9 × 5-inch size)' : 'batches of the recipe' });
+      s.makes.forEach(function (m) {
+        var it = d.cat[m.item], k = SM.kind(m.by), o;
+        if (k === 'count') o = { v: m.item + '|' + m.by, t: m.label, item: m.item, n: m.n, toG: function (n) { return n * it.units[m.by]; } };
+        else if (k === 'vol') o = { v: m.item + '|' + m.by, t: SM.unitName(m.by, 2) + ' of ' + SC.lcName(it), item: m.item, n: m.n, toG: function (n) { return SM.toGrams(it, n, m.by); } };
+        else o = { v: m.item + '|lb', t: 'lb of ' + SC.lcName(it) + ' (dried) to replace', item: m.item, n: Math.round(m.g / SM.MASS.lb * 100) / 100, toG: function (n) { return n * SM.MASS.lb; } };
+        if (!seen[o.t]) { seen[o.t] = 1; opts.push(o); }
+      });
+      var nIn = $('#sx-n'), uIn = $('#sx-u');
+      uIn.innerHTML = opts.map(function (o, i) { return '<option value="' + i + '">' + SC.esc(o.t) + '</option>'; }).join('');
+      var start = opts.length > 1 ? 1 : 0;
+      uIn.value = String(start); nIn.value = start ? String(opts[start].n) : '1';
+      $('#sx-scale').hidden = false;
+      function draw() {
+        var o = opts[+uIn.value] || opts[0], n = +nIn.value, b, items = {};
+        if (!(n > 0)) { $('#sx-what').textContent = 'Enter how much you need.'; return; }
+        if (o.v === 'batch') { b = SM.scratchBatches(s, n); if (first) items[first.item] = b.n * first.g; }
+        else { items[o.item] = o.toG(n); b = SM.scratchFor(s, items); }
+        var t = SC.madeText(d, { s: s, b: b, items: items });
+        $('#sx-what').textContent = 'Make ' + SC.timesText(b.n) + ' of the recipe' + (Math.abs(b.n - b.raw) > 0.01 ? ' (rounded up from ×' + SM.fmtNum(Math.round(b.raw * 100) / 100) + ' to whole steps)' : '') + (o.v === 'batch' ? '' : t.makes ? ': ' + t.makes : '') + '.';
+        $('#sx-ings').innerHTML = SM.scaleScratch(s, b.n, d.cat).map(function (x) { return '<li>' + SC.scratchLine(x) + '</li>'; }).join('');
+        var pp = $('#sx-pans');
+        if (b.pans && b.pans.length) { pp.hidden = false; pp.textContent = 'Pans: ' + b.pans.map(function (p) { return p.count + ' × ' + p.label; }).join(' and ') + '. Divide the dough by weight: a 9 × 5 pan takes a full batch, an 8½ × 4½ pan three-quarters of one.'; }
+        else pp.hidden = true;
+      }
+      nIn.addEventListener('input', draw);
+      uIn.addEventListener('change', function () { var o = opts[+uIn.value]; nIn.value = o.v === 'batch' ? '1' : String(o.n); draw(); });
+      draw();
+      // nutrition for one of what it makes
+      var box = $('#sx-nutr'), rows = [];
+      s.makes.forEach(function (m) {
+        var sn = SM.scratchNutr(s, d.cat, m.item); if (!sn) return;
+        var it = d.cat[m.item], k = SM.kind(m.by), per = k === 'count' ? it.units[m.by] : k === 'vol' ? SM.toGrams(it, 1, m.by) : 100;
+        var lab = k === 'count' ? 'per ' + SC.sing(m.label) : k === 'vol' ? 'per ' + SM.unitName(m.by, 1) : 'per 100 g of dried ' + SC.lcName(it) + ' replaced';
+        function v(key) { return sn.n[key] * per / 100; }
+        rows.push('<tr><th scope="row">' + SC.esc(lab) + '</th><td>' + Math.round(v('kcal')) + '</td><td>' + Math.round(v('protein') * 10) / 10 + ' g</td><td>' + Math.round(v('fat') * 10) / 10 + ' g</td><td>' + Math.round(v('carb') * 10) / 10 + ' g</td><td>' + Math.round(v('sodium')) + ' mg</td></tr>');
+      });
+      if (rows.length) box.innerHTML = '<div class="mp-tablewrap"><table class="mp-ntab"><thead><tr><th scope="col">Estimate</th><th scope="col">Calories</th><th scope="col">Protein</th><th scope="col">Fat</th><th scope="col">Carbs</th><th scope="col">Sodium</th></tr></thead><tbody>' + rows.join('') + '</tbody></table></div>' + box.innerHTML;
+    });
   }
 })(window, document);

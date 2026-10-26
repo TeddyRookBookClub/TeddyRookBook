@@ -1,0 +1,42 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{ $sc := site.Data.meals.scratch }}{{ $cat := partialCached "meal-prep/catdict.html" "c" }}
+<div class="hs mp" id="mp-scratchlist">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "From scratch")) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep · The old way</p>
+    <h1>From scratch</h1>
+    <p>How to make the things most families buy: bread sized for the loaf pan you have, buns, tortillas, pizza dough, fresh pasta, butter, yogurt, stock, sauces, pickles and pantry mixes. Each page scales the recipe to the amount you need, and the meal planner can put the ingredients on your shopping list and the baking on your prep day.</p>
+  </header>
+
+  <section class="hs-sec">
+    <h2>Is it worth the time?</h2>
+    <p>Sometimes. Most of these take little of your own time and a lot of waiting: a loaf of bread is about 35 minutes of work spread over 4½ hours, while yogurt is 15 minutes of work and a night on its own. Each recipe lists both, so you can see what fits your week. Homemade versions often cost less and let you choose the salt, sugar and fat; store versions keep longer. Do what works for your family.</p>
+    <p class="mp-glinks"><a class="mp-glink" href="{{ "meal-prep/plan/" | relURL }}">📅 Plan meals and make things from scratch</a><a class="mp-glink" href="{{ "garden/" | relURL }}">🌱 Grow the ingredients</a></p>
+  </section>
+
+  {{ $groups := slice }}{{ range $sc.recipes }}{{ if not (in $groups .group) }}{{ $groups = $groups | append .group }}{{ end }}{{ end }}
+  {{ range $groups }}{{ $g := . }}
+  <section class="hs-sec" id="{{ $g | urlize }}">
+    <h2>{{ $g }}</h2>
+    <div class="mp-rgrid">
+      {{ range where $sc.recipes "group" $g }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>⏱ {{ partial "meal-prep/mins.html" .times.active }} hands-on · {{ partial "meal-prep/mins.html" .times.total }} in all{{ if eq .kind "stand-in" }} · a stand-in{{ end }}</small>{{ with .makes }}<small>Instead of: {{ range $i, $m := . }}{{ if $i }}, {{ end }}{{ with index $cat $m.item }}{{ lower .name }}{{ end }}{{ end }}</small>{{ end }}</span></a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{ with $sc.omitted }}
+  <section class="hs-sec hs-note">
+    <h2>What we left out, and why</h2>
+    <ul>{{ range . }}<li><b>{{ .name }}.</b> {{ .why }}</li>{{ end }}</ul>
+  </section>
+  {{ end }}
+  <section class="hs-sec hs-note">
+    <h2>Where the facts come from</h2>
+    <p class="hs-small">Storage times and food-safety steps come from USDA, FDA, the National Center for Home Food Preservation and university extension services, named on each recipe. Where no agency publishes a time, the recipe says so. There are no canning recipes here: for those, use the <a href="https://nchfp.uga.edu/" rel="noopener">National Center for Home Food Preservation</a>’s tested ones. Nutrition is estimated from USDA FoodData Central.</p>
+  </section>
+</div>
+{{ end }}

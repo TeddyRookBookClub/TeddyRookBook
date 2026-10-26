@@ -21,7 +21,22 @@
     {{- $secs := slice -}}{{- range $g.sections -}}{{- $secs = $secs | append (dict "id" .id "h" .h) -}}{{- end -}}
     {{- $guides = $guides | append (dict "key" $g.key "title" $g.title "icon" ($g.icon | default "") "summary" ($g.summary | default "") "sections" $secs "url" (printf "meal-prep/guides/%s/" $g.key | relURL)) -}}
   {{- end -}}
-  {{- $d := dict "meta" $m.meta "catalog" (dict "items" $items) "recipes" $m.recipes "guides" $guides "recipeBase" ("meal-prep/recipes/" | relURL) -}}
+  {{- /* from scratch and the garden: data/meals/scratch.json, data/meals/garden-map.json, and the few crop facts the
+     "Grow" view needs from data/garden/crops.json (yield per 100 sq ft, space per plant, days to harvest, season) */ -}}
+  {{- $gm := index $m "garden-map" | default dict -}}
+  {{- $crops := dict -}}
+  {{- range site.Data.garden.crops.crops -}}{{- if index ($gm.crops | default dict) .k -}}
+    {{- $crops = merge $crops (dict .k (dict "n" .n "y" .y "sq" .sq "dh" .dh "se" .se "t" .t "yrs" .yrs "sto" .sto)) -}}
+  {{- end -}}{{- end -}}
+  {{- $an := dict -}}
+  {{- with site.Data.garden.animals -}}
+    {{- range .chickens.numbers }}{{ if eq .id "eggs_per_hen_year" }}{{ $an = merge $an (dict "eggsPerHen" .value.typical_low) }}{{ end }}{{ end -}}
+    {{- range .bees.numbers }}{{ if eq .id "honey_per_colony" }}{{ $an = merge $an (dict "honeyPerHive" .value.surplus_lb_low) }}{{ end }}{{ end -}}
+  {{- end -}}
+  {{- $sc := slice -}}{{- with $m.scratch }}{{ range .recipes -}}
+    {{- $sc = $sc | append (dict "id" .id "name" .name "emoji" .emoji "kind" .kind "group" .group "summary" .summary "yield" .yield "makes" .makes "batch" .batch "ingredients" .ingredients "stages" .stages "plan" .plan "times" .times "keeps" .keeps "nutrition" .nutrition) -}}
+  {{- end }}{{ end -}}
+  {{- $d := dict "meta" $m.meta "catalog" (dict "items" $items) "recipes" $m.recipes "guides" $guides "recipeBase" ("meal-prep/recipes/" | relURL) "scratchBase" ("meal-prep/scratch/" | relURL) "gardenURL" ("garden/" | relURL) "scratch" (dict "recipes" $sc) "gardenMap" $gm "gardenCrops" $crops "gardenAnimals" $an -}}
   {{- $r := resources.FromString "meal-prep/meals-data.json" ($d | jsonify) | fingerprint "md5" -}}
   {{- $url = $r.RelPermalink -}}
 {{- end -}}

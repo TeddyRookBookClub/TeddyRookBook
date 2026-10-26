@@ -3,7 +3,9 @@
    Checks at 1280 and 390 px, light and dark: no console errors, no sideways scrolling; placing meals with a
    mouse drag, a touch long-press drag, tap-to-place and the keyboard; leftovers, shuffle, tabs, the recipe
    editor (catalog item + write-in), backup export/import, recipe-page scaling, storage blocked, the print
-   page (saved as a PDF) and the PNG pictures (saved for looking at). */
+   page (saved as a PDF) and the PNG pictures (saved for looking at). From scratch: the library, the "how much do
+   you need?" scaler, Make it / Buy instead and "make when I can" on the shopping list, prep-day timing for bread,
+   the Grow view, "What I grow" and the garden section of the list, and the Garden Planner hand-off both ways. */
 'use strict';
 var pw = require('playwright'), fs = require('fs'), path = require('path');
 var BASE = process.argv[2] || 'http://localhost:9102', OUT = process.argv[3] || '/tmp/meal-shots';
@@ -164,6 +166,128 @@ async function shot(pg, name, full) { await pg.screenshot({ path: path.join(OUT,
       await pg.ctx.close();
     }
   }
+  // ---------- from scratch and the garden ----------
+  // a July week: burgers Mon, tacos Tue, French toast Wed (sandwich bread), spaghetti Thu, sandwiches Fri lunch, French toast again Sun
+  function seedPlan(extra) {
+    var s = { v: 1, cur: 'p1', plans: [{ id: 'p1', name: 'Week A', start: '2026-07-06', len: 7, slots: { breakfast: true, lunch: true, dinner: true, snack: false },
+      cells: { '0|dinner': [{ r: 'classic-burgers' }], '1|dinner': [{ r: 'beef-tacos' }], '2|breakfast': [{ r: 'french-toast' }], '3|dinner': [{ r: 'spaghetti-meat-sauce' }], '4|lunch': [{ r: 'lunchbox-sandwiches' }], '6|breakfast': [{ r: 'french-toast' }] }, guests: {}, pantry: {}, extras: [] }],
+      people: [{ k: 'adult', label: 'Adults', n: 2, f: 1 }, { k: 'child', label: 'Children (4–12)', n: 2, f: 0.6 }], avoid: [], diet: {}, rules: { noRepeat: 6, busy: [] }, mine: {}, view: 'shop', shopRange: 'all' };
+    return JSON.stringify(Object.assign(s, extra || {}));
+  }
+  async function seeded(o, extra) {
+    var pg = await page(b, o);
+    await pg.addInitScript(function (s) { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('trb-meals-v1', s); } }, seedPlan(extra));
+    return pg;
+  }
+  function stOf(pg) { return pg.evaluate(function () { return JSON.parse(localStorage.getItem('trb-meals-v1')); }); }
+  for (var dark2 of [false, true]) for (var w2 of [1280, 390]) {
+    var tg = (dark2 ? 'dark' : 'light') + ' ' + w2, tap = function (pg, sel) { return w2 < 500 ? pg.tap(sel) : pg.click(sel); };
+    // the library and one recipe's "how much do you need?"
+    pg = await page(b, { w: w2, dark: dark2 });
+    await pg.goto(BASE + '/meal-prep/scratch/', { waitUntil: 'networkidle' });
+    ok(await pg.locator('.mp-rcard').count() >= 40, tg + ': the from-scratch library lists the recipes');
+    await check(pg, tg + ' scratch library'); await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-scratch-library');
+    await pg.goto(BASE + '/meal-prep/scratch/sandwich-bread/', { waitUntil: 'networkidle' });
+    await pg.selectOption('#sx-u', '0'); await pg.fill('#sx-n', '1.5'); await pg.waitForTimeout(100);
+    var ingT = await pg.textContent('#sx-ings'), panT = await pg.textContent('#sx-pans');
+    ok(/720 g/.test(ingT) && /10\.5 g/.test(ingT) && /13\.5 g/.test(ingT), tg + ': 1½ loaves → 720 g flour, 10.5 g yeast, 13.5 g salt by weight (' + ingT.slice(0, 120) + ')');
+    ok(/2 × 8½ × 4½-inch loaf pan/.test(panT), tg + ': 1½ loaves → two 8½ × 4½ pans (' + panT + ')');
+    await pg.fill('#sx-n', '24'); await pg.selectOption('#sx-u', '1'); await pg.fill('#sx-n', '24'); await pg.waitForTimeout(100);
+    ok(/×1½/.test(await pg.textContent('#sx-what')), tg + ': 24 slices → ×1½ of the recipe');
+    ok(/per slice/.test(await pg.textContent('#sx-nutr')), tg + ': nutrition per homemade slice');
+    await check(pg, tg + ' scratch page'); await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-scratch-bread');
+    await pg.goto(BASE + '/meal-prep/scratch/egg-pasta/', { waitUntil: 'networkidle' });
+    await pg.selectOption('#sx-u', '1'); await pg.fill('#sx-n', '1'); await pg.waitForTimeout(100);
+    ok(/4 large eggs/.test(await pg.textContent('#sx-ings')) && /400 g/.test(await pg.textContent('#sx-ings')), tg + ': 1 lb of dried spaghetti’s worth → 4 eggs and 400 g flour');
+    await pg.goto(BASE + '/meal-prep/recipes/beef-tacos/', { waitUntil: 'networkidle' });
+    ok(await pg.locator('a.mp-glink[href*="/meal-prep/scratch/corn-tortillas/"]').count() === 1, tg + ': the tacos page links “Make the corn tortillas yourself”');
+    ok(await pg.locator('#rp-ings .mp-grow').count() >= 3, tg + ': recipe ingredients the garden can grow have a Grow it badge');
+    await check(pg, tg + ' recipe with scratch links');
+    await pg.ctx.close();
+
+    // the planner: Make it swaps the item for its ingredients; Buy instead puts it back
+    pg = await seeded({ w: w2, dark: dark2 });
+    await pg.goto(BASE + '/meal-prep/plan/', { waitUntil: 'networkidle' });
+    ok(await pg.locator('#mp-shop .mp-sn', { hasText: 'Corn tortillas' }).count() === 1, tg + ': corn tortillas are on the list');
+    await tap(pg, '#mp-shop [data-make="corn-tortillas"]'); await pg.waitForTimeout(200);
+    ok(await pg.locator('#mp-shop .mp-shopsec .mp-sn', { hasText: 'Corn tortillas' }).count() === 0 && await pg.locator('#mp-shop .mp-sn', { hasText: 'Masa harina' }).count() === 1, tg + ': Make it swaps the tortillas for masa harina');
+    ok(/Corn tortillas/.test(await pg.textContent('#sl-made')), tg + ': the From scratch panel lists the tortillas');
+    ok((await stOf(pg)).make['corn-tortillas'] === true, tg + ': the choice is saved');
+    await tap(pg, '#sl-made [data-make="corn-tortillas"]'); await pg.waitForTimeout(200);
+    ok(await pg.locator('#mp-shop .mp-shopsec .mp-sn', { hasText: 'Corn tortillas' }).count() === 1 && await pg.locator('#mp-shop .mp-sn', { hasText: 'Masa harina' }).count() === 0, tg + ': Buy instead puts them back');
+    // household default: make from scratch when I can
+    await tap(pg, '#mp-setup > summary'); await pg.check('#mp-makeall'); await pg.waitForTimeout(200);
+    var made = await pg.textContent('#mp-make-sum');
+    ok(/sandwich bread/i.test(made) && /hamburger buns/.test(made) && !/brown sugar/.test(made), tg + ': “make when I can” covers scratch recipes, not stand-ins (' + made + ')');
+    await tap(pg, '#mp-setup > summary');
+    await tap(pg, '#tab-shop'); await pg.waitForTimeout(200);
+    ok(await pg.locator('#mp-shop .mp-shopsec .mp-sn', { hasText: /^Hamburger buns$/ }).count() === 0 && await pg.locator('#mp-shop .mp-sn', { hasText: 'All-purpose flour' }).count() === 1, tg + ': buns and bread become flour and yeast');
+    var flourRow = await pg.locator('#mp-shop li', { has: pg.locator('.mp-sn', { hasText: 'All-purpose flour' }) }).textContent();
+    ok(/Sandwich bread \(homemade\)/.test(flourRow) && /Soft buns/.test(flourRow), tg + ': one flour row for both homemade breads');
+    await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-shop-scratch');
+    // prep day: the dough is mixed first and baked after rising; Sunday's bread is frozen
+    await tap(pg, '#tab-prep'); await pg.waitForTimeout(200);
+    var tl = await pg.$$eval('.mp-timeline li', function (a) { return a.map(function (x) { return x.textContent; }); });
+    var iMix = tl.findIndex(function (t) { return /Sandwich bread/.test(t) && /Mix and knead/.test(t); }), iBake = tl.findIndex(function (t) { return /Sandwich bread/.test(t) && /Bake at 350/.test(t); });
+    function tmin(t) { var m = /(\d+):(\d\d) (AM|PM)/.exec(t); return m ? (+m[1] % 12 + (m[3] === 'PM' ? 12 : 0)) * 60 + +m[2] : -1; }
+    var tMix = iMix >= 0 ? tmin(tl[iMix]) : -1, tBake = iBake >= 0 ? tmin(tl[iBake]) : -1;
+    ok(iMix >= 0 && iBake > iMix, tg + ': prep day mixes the bread dough early and bakes it later (' + iMix + ', ' + iBake + ')');
+    ok(tBake - tMix >= 25 + 90 + 10 + 50, tg + ': the bread goes in only after kneading and two rises (' + (tBake - tMix) + ' min)');
+    var ovens = await pg.$$eval('.mp-timeline li', function (a) { return a.filter(function (x) { return /Heat the oven/.test(x.textContent); }).length; });
+    ok(ovens >= 1, tg + ': the oven heating is called out');
+    ok(/Freeze the part for Sat Jul 11|Freeze the part for Sun Jul 12/.test(await pg.textContent('#mp-prep .mp-scratchsel')), tg + ': bread for the end of the week is frozen on prep day');
+    await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-prep-scratch');
+    await check(pg, tg + ' planner prep with scratch');
+    // nutrition counts the homemade versions
+    await tap(pg, '#tab-nutr'); await pg.waitForTimeout(200);
+    ok(/Counted as homemade/.test(await pg.textContent('#mp-nutr')), tg + ': nutrition says it counts homemade versions');
+    // the grow view and "What I grow"
+    await tap(pg, '#tab-grow'); await pg.waitForTimeout(200);
+    ok(await pg.locator('.mp-growtab tbody tr').count() >= 4, tg + ': the grow view lists the plan’s crops');
+    var gh = await pg.getAttribute('#gr-open', 'href');
+    ok(/crops=[^&]*tomatoes/.test(decodeURIComponent(gh)) && /mode=only/.test(gh), tg + ': the Garden Planner link carries the crops (' + gh + ')');
+    await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-grow');
+    await check(pg, tg + ' grow view');
+    await tap(pg, '#mp-grow [data-growdlg]'); await pg.waitForTimeout(200);
+    await tap(pg, '[data-gon="tomatoes"]'); await pg.waitForTimeout(150);
+    ok(await pg.locator('[data-gk="tomatoes"] .mp-mon[aria-pressed="true"]').count() >= 3, tg + ': tomatoes start with the garden calendar’s example months');
+    await tap(pg, '[data-gk="tomatoes"] .mp-mon[data-gm="12"]'); await pg.waitForTimeout(100);
+    ok((await stOf(pg)).grow.crops.tomatoes.m.indexOf(12) >= 0, tg + ': a month toggle is saved');
+    await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-growdlg', false);
+    await tap(pg, '#gw-done'); await pg.waitForTimeout(200);
+    await tap(pg, '#tab-shop'); await pg.waitForTimeout(200);
+    var gsec = await pg.textContent('#sl-garden').catch(function () { return ''; });
+    ok(/Tomatoes/.test(gsec) && /Crushed tomatoes/.test(gsec), tg + ': July tomatoes move to “From your garden”');
+    ok(await pg.locator('#mp-shop .mp-shopsec:not(#sl-garden) .mp-sn', { hasText: /^Tomatoes$/ }).count() === 0, tg + ': and off the buying list');
+    await check(pg, tg + ' shop with garden');
+    await tap(pg, '#tab-cal');
+    if (w2 < 500) { await tap(pg, '#mp-open-lib'); await pg.waitForTimeout(200); }
+    ok(await pg.locator('[data-f="garden"]').count() === 1, tg + ': the library has a “From my garden” filter');
+    await tap(pg, '[data-f="garden"]'); await pg.waitForTimeout(150);
+    var nrec = await pg.locator('#mp-lib-list .mp-rec').count();
+    ok(nrec > 0 && nrec < 40, tg + ': it shows recipes using what you grow (' + nrec + ')');
+    await pg.ctx.close();
+
+    // garden hand-off both ways
+    pg = await page(b, { w: w2, dark: dark2 });
+    await pg.goto(BASE + '/garden/?crops=tomatoes,cucumbers&mode=only&people=4&hens=3&from=meals', { waitUntil: 'networkidle' });
+    var gst = await pg.evaluate(function () { return JSON.parse(localStorage.getItem('trb-garden-v1')); });
+    ok(gst.must.join() === 'tomatoes,cucumbers' && gst.mode === 'only' && gst.people === 4 && gst.hens && gst.nhens === 3, tg + ': the Garden Planner opens with the meal plan’s crops');
+    ok(!/crops=/.test(pg.url()), tg + ': and tidies the address');
+    ok(await pg.locator('#gd-frommeals').count() === 1 && await pg.locator('#gd-out .gd-cook').count() >= 2, tg + ': it says where they came from and links Cook it recipes');
+    ok(await pg.locator('#gd-table tr', { hasText: /^Cucumbers/ }).locator('.gd-cook a[href*="/meal-prep/scratch/refrigerator-pickles/"]').count() === 1, tg + ': cucumbers → refrigerator pickles in the crop reference');
+    await check(pg, tg + ' garden from meals'); await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-garden-handoff');
+    var hh = await pg.getAttribute('#gd-harvest', 'href');
+    ok(/harvest=tomatoes%3A6-10%2Ccucumbers%3A5-10%2Chens%3A1-12/.test(hh), tg + ': “Plan meals around my harvest” carries the months (' + hh + ')');
+    await Promise.all([pg.waitForNavigation(), tap(pg, '#gd-harvest')]); await pg.waitForLoadState('networkidle'); await pg.waitForTimeout(200);
+    var mst = await stOf(pg);
+    ok(mst.grow.crops.tomatoes.on && mst.grow.crops.tomatoes.m.join() === '6,7,8,9,10' && mst.grow.animals.hens.on, tg + ': Meal Prep takes the harvest months');
+    ok(/From your Garden Planner/.test(await pg.textContent('#mp-msg')), tg + ': and says so');
+    ok(!/harvest=/.test(pg.url()), tg + ': and tidies the address');
+    await check(pg, tg + ' planner from garden');
+    await pg.ctx.close();
+  }
+
   // ---------- storage blocked ----------
   pg = await page(b, { w: 1280, block: true });
   await pg.goto(BASE + '/meal-prep/plan/', { waitUntil: 'networkidle' });
@@ -175,6 +299,10 @@ async function shot(pg, name, full) { await pg.screenshot({ path: path.join(OUT,
   // the site's theme script reads localStorage without a guard; only errors from the meal-prep scripts count here
   var mine = (pg.stacks || []).filter(function (x) { return /meal-prep\/[a-z-]+\.js/.test(x); });
   ok(!mine.length, 'storage blocked: no errors from the meal-prep scripts ' + mine.join(' || '));
+  await pg.goto(BASE + '/meal-prep/scratch/corn-tortillas/', { waitUntil: 'networkidle' });
+  ok(/16/.test(await pg.inputValue('#sx-n')) && await pg.locator('#sx-ings li').count() === 3, 'storage blocked: the from-scratch scaler still works');
+  mine = (pg.stacks || []).filter(function (x) { return /meal-prep\/[a-z-]+\.js/.test(x); });
+  ok(!mine.length, 'storage blocked: no errors from the scratch page ' + mine.join(' || '));
   await b.close();
   console.log(pass + ' passed, ' + fail + ' failed; screenshots, pictures and plan.pdf in ' + OUT);
   process.exit(fail ? 1 : 0);

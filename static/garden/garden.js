@@ -1,6 +1,12 @@
 /* Food Garden Planner: suggests crops for a space and climate (or plans just the crops you pick), estimates harvest and
    calories, lays out a rotation, sizes a flock or apiary, and shows how they fit together. Figures come from data/garden/
-   (extension yield tables, USDA FoodData Central); the garden-and-animals notes cite their sources inline. */
+   (extension yield tables, USDA FoodData Central); the garden-and-animals notes cite their sources inline.
+   Hand-offs with Meal Prep (each app keeps its own storage: this one "trb-garden-v1", Meal Prep "trb-meals-v1"):
+     in:  /garden/?crops=tomatoes,cucumbers&mode=only&people=4&hens=3&bees=on&from=meals  (Meal Prep's "What could you
+          grow for this plan?" and the recipes' "Grow it" badges) picks those crops; the URL is cleaned up after it is read.
+     out: "Cook it" links per crop (DATA.cook, built in layouts/garden/list.html from data/meals/garden-map.json), and
+          "Plan meals around my harvest": /meal-prep/plan/?harvest=tomatoes:6-10,hens:1-12&from=garden, with the
+          harvest months worked out from the planting calendar (the frost dates set below the plan, or its examples). */
 (function (W, D) {
   'use strict';
   var DATA = JSON.parse(D.getElementById('gd-data').textContent), C = DATA.crops, BY = {};
@@ -16,6 +22,22 @@
     must: ['potatoes', 'sweet_potatoes', 'carrots', 'strawberries'], hens: false, epw: 12, nhens: '', broil: false, nbroil: 25, bees: false, nhives: 2, allg: false, planby: 'area', conts: [{ p: 'bucket5', q: 2 }, { p: 'box24', q: 2 }, { p: 'pot2', q: 2 }] };
   try { var sv = JSON.parse(W.localStorage.getItem(KEY) || 'null'); if (sv) for (var k in sv) st[k] = sv[k]; } catch (e) { }
   function save() { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }
+  // ---------- arriving from Meal Prep (see the note at the top) ----------
+  var fromMeals = null;
+  (function () {
+    var q = {}; String(W.location.search || '').replace(/[?&]([^=&]+)=([^&]*)/g, function (_, k, v) { try { q[k] = decodeURIComponent(v.replace(/\+/g, ' ')); } catch (e) { } });
+    if (!q.crops && !q.hens && !q.bees) return;
+    var got = String(q.crops || '').split(',').filter(function (k) { return BY[k]; });
+    if (got.length) { if (q.mode === 'only') { st.must = got.slice(); st.mode = 'only'; } else got.forEach(function (k) { if (st.must.indexOf(k) < 0) st.must.push(k); }); }
+    if (+q.people >= 1 && +q.people <= 12) st.people = Math.round(+q.people);
+    var an = [];
+    if (q.hens) { st.hens = true; if (+q.hens > 0) { st.nhens = Math.min(200, Math.round(+q.hens)); st.epw = ''; } an.push('laying hens'); }
+    if (q.bees) { st.bees = true; if (+q.bees > 0) st.nhives = Math.min(50, Math.round(+q.bees)); an.push('honeybees'); }
+    if (an.length && st.where !== 'garden' && st.where !== 'farm') st.where = 'garden';
+    fromMeals = { crops: got, an: an };
+    save();
+    try { W.history.replaceState(null, '', W.location.pathname + W.location.hash); } catch (e) { }
+  })();
   var yard = function () { return st.where === 'garden' || st.where === 'farm'; };
 
   // ---------- form ----------
@@ -447,6 +469,7 @@
     var picks = P.picks.sort(function (a, b) { return b.a - a.a; });
     var mustOut = st.must.map(function (k) { return BY[k]; }).filter(function (c) { return c && status(c).s === 'no'; });
     var o = animalPlan(), h = '<h2><span class="pl-n">5</span> Your plan</h2>';
+    if (fromMeals) h += '<p class="gd-note gd-ok" id="gd-frommeals">🍳 <b>From your meal plan:</b> ' + esc(list(fromMeals.crops.map(function (k) { return lc(BY[k].n); }).concat(fromMeals.an))) + (st.mode === 'only' ? '. The plan below uses just these; switch to “Suggest a plan” in step 3 to add more.' : '.') + '</p>';
     if (st.mode === 'only' && !P.cand.length) h += '<p class="gd-note">Tap the crops you want to grow in step 3' + (mustOut.length ? ' (the ones you picked don’t suit this space)' : '') + ', or switch to “Suggest a plan”.</p>';
     var kcal = 0, lb = 0, anyK = false; picks.forEach(function (p) { if (p.kcal) { kcal += p.kcal; anyK = true; } if (p.lb) lb += p.lb; });
     var days = kcal / (people * 2000);
@@ -482,7 +505,7 @@
       h += '<div class="gd-tablewrap"><table class="hs-table gd-plan"><thead><tr><th>Crop</th><th>Space</th><th>Plants</th><th>Rough harvest</th><th>Calories</th><th>Rich in</th><th>Plant</th><th>Ready in</th></tr></thead><tbody>';
       picks.forEach(function (p) {
         var c = p.c, nt = p.notes.slice(); if (p.st.why) nt.unshift(p.st.why);
-        h += '<tr><td><b>' + esc(c.n) + '</b>' + (st.mode !== 'only' && st.must.indexOf(c.k) >= 0 ? ' <span class="gd-tag">your pick</span>' : '') + (nt.length ? '<small class="gd-warn">' + esc(nt.join('; ')) + '</small>' : '') + ((w === 'balcony' || w === 'indoor') && c.cg ? '<small>Container: at least ' + c.cg + ' gallons' + (c.cdep ? ', ' + c.cdep + ' inches deep' : '') + (c.cper ? ', ' + c.cper + ' plant each' : '') + '</small>' : '') + '</td>' +
+        h += '<tr><td><b>' + esc(c.n) + '</b>' + (st.mode !== 'only' && st.must.indexOf(c.k) >= 0 ? ' <span class="gd-tag">your pick</span>' : '') + (nt.length ? '<small class="gd-warn">' + esc(nt.join('; ')) + '</small>' : '') + ((w === 'balcony' || w === 'indoor') && c.cg ? '<small>Container: at least ' + c.cg + ' gallons' + (c.cdep ? ', ' + c.cdep + ' inches deep' : '') + (c.cper ? ', ' + c.cper + ' plant each' : '') + '</small>' : '') + cookHTML(c.k) + '</td>' +
           '<td data-l="Space">' + (p.cont && p.cont.length ? esc(tally(p.cont).join(', ')) + '<small>' + space(p.a) + ' of soil</small>' : space(p.a)) + '</td>' +
           '<td data-l="Plants">' + (p.trees ? p.trees + ' tree' + (p.trees > 1 ? 's' : '') : p.plants ? '≈ ' + n0(p.plants) : '—') + '</td>' +
           '<td data-l="Rough harvest">' + (p.lb != null ? (p.lbr && lbs(p.lbr[0]) !== lbs(p.lbr[1]) ? lbs(p.lbr[0]) + '–' + lbs(p.lbr[1]) : lbs(p.lb)) + ' lb' + (p.trees ? ' a year once mature' : '') : '—') + '</td>' +
@@ -493,6 +516,7 @@
       });
       h += '</tbody></table></div><p class="hs-small">Harvest ranges come from university extension yield tables for ordinary garden rows; well-tended intensive beds can do better, and a bad year worse. Calories are for the raw edible part (rinds, peels and pits not subtracted). See each crop in the reference table below for spacing, storage and sources.</p>';
       h += rotation(picks);
+      h += harvestHTML(picks, o);
     }
     if (o.cards.length) h += '<h3>Your animals</h3><div class="gd-acards">' + o.cards.join('') + '</div>';
     h += together(picks, o);
@@ -505,6 +529,55 @@
     guides(picks, o);
     G.plan = { where: w, area: A, planted: planted, byCont: !!CA, picks: picks, spare: P.spare || 0, pots: CA ? CA.spare : null, hens: o.hens || 0, people: people, mode: st.mode };
     D.dispatchEvent(new CustomEvent('trb-garden-plan'));
+  }
+
+  // ---------- Meal Prep: "Cook it" and "Plan meals around my harvest" ----------
+  var MEALS = (D.getElementById('gd') || {}).dataset ? $('gd').dataset.meals || '' : '', COOK = DATA.cook || {}, MEALCROPS = DATA.mealCrops || [];
+  function cookHTML(k) {
+    var a = COOK[k]; if (!a || !a.length) return '';
+    var sc = a.filter(function (x) { return x.s; }), rc = a.filter(function (x) { return !x.s; }), show = sc.concat(rc).slice(0, 4), more = a.length - show.length;
+    return '<small class="gd-cook">🍳 Cook it: ' + show.map(function (x) { return '<a href="' + esc(x.u) + '">' + esc(x.n) + '</a>'; }).join(', ') + (more > 0 ? ' and ' + more + ' more' : '') + '</small>';
+  }
+  // harvest months from the planting calendar's math (static/garden/viz/model.js cropCal), with the frost dates set in
+  // the calendar or its examples (April 15 and October 15 north of the equator)
+  function frostLF() {
+    var lat = parseFloat(st.lat), so = isFinite(lat) && lat < 0, L = mdDay(st.lsf), F = mdDay(st.fff);
+    if (!L) L = so ? 288 : 105; if (!F) F = so ? 105 : 288; if (F <= L) F += 365;
+    return { L: L, F: F };
+  }
+  function harvestMonths(c) {
+    var v = ((DATA.viz || {}).crops || {})[c.k]; if (!v || !v.pw || !c.dh || c.dh[0] == null) return [];
+    var fr = frostLF(), L = fr.L, F = fr.F, tender = c.fr === 'tender', d1 = c.dh[1] == null ? c.dh[0] : c.dh[1];
+    var p0 = L + 7 * v.pw[0], p1 = L + 7 * v.pw[1], pm = (p0 + p1) / 2, h0 = pm + c.dh[0], h1 = pm + d1, wins = [];
+    if (v.hv === 'pick') h1 = Math.max(h1, F);
+    if (tender) h1 = Math.min(h1, F);
+    if (h1 > h0) wins.push([h0, h1]);
+    if (v.fall || v.fd) {
+      var tf = tender ? 14 : 0, f0, f1, fall = null;
+      if (v.fd) { f0 = F - v.fd[0]; f1 = F - v.fd[1]; if (f1 > p0) fall = [Math.max(f0, p0), f1]; }
+      else { f0 = F - 14 - tf - d1; f1 = F - 14 - tf - c.dh[0]; if (f1 > p1 + 14) fall = [Math.max(f0, p1 + 14), f1]; }
+      if (fall) wins.push([fall[0] + c.dh[0], F]);
+    }
+    var ms = {};
+    wins.forEach(function (w) { for (var d = w[0]; d <= w[1]; d += 7) ms[monthOf(d)] = 1; ms[monthOf(w[1])] = 1; });
+    return Object.keys(ms).map(Number).sort(function (a, b) { return a - b; });
+  }
+  function monthOf(d) { d = Math.round(d); while (d > 365) d -= 365; while (d < 1) d += 365; var dm = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], m = 0; while (d > dm[m]) { d -= dm[m]; m++; } return m + 1; }
+  function monthRuns(ms) {
+    if (!ms.length) return '';
+    var runs = [], cur = null; ms.forEach(function (m) { if (cur && m === cur[1] + 1) cur[1] = m; else { cur = [m, m]; runs.push(cur); } });
+    return runs.map(function (r) { return r[0] === r[1] ? String(r[0]) : r[0] + '-' + r[1]; }).join('.');
+  }
+  function harvestHTML(picks, o) {
+    if (!MEALS) return '';
+    var parts = [], names = [];
+    picks.forEach(function (p) { if (MEALCROPS.indexOf(p.c.k) < 0) return; parts.push(p.c.k + ':' + monthRuns(harvestMonths(p.c))); names.push(lc(p.c.n)); });
+    if (o.hens) { parts.push('hens:1-12'); names.push('eggs'); }
+    if (o.bees) { parts.push('bees'); names.push('honey'); }
+    if (!parts.length) return '';
+    var href = MEALS + '?harvest=' + encodeURIComponent(parts.join(',')) + '&from=garden';
+    return '<div class="gd-tomeals"><h3>Cook what you grow</h3><p>Send this plan’s harvest to the Meal Prep planner: it marks recipes that use ' + esc(list(names.slice(0, 6))) + (names.length > 6 ? ' and more' : '') + ', and takes them off the shopping list in the months they come in' + (st.lsf && st.fff ? ', worked out from your frost dates' : ', worked out from the example frost dates (set yours in the calendar below for a closer fit)') + '.</p>' +
+      '<p><a class="hs-btn" id="gd-harvest" href="' + esc(href) + '">🍳 Plan meals around my harvest</a></p></div>';
   }
 
   // ---------- guides: show the ones that match the plan ----------
@@ -534,7 +607,7 @@
     var rows = C.filter(function (c) { return !q || (c.n + ' ' + c.fam + ' ' + c.g).toLowerCase().indexOf(q) >= 0; });
     $('gd-table').innerHTML = '<thead><tr><th>Crop</th><th>Family</th><th>Calories / 100 g</th><th>Protein / fiber (g)</th><th>Rich in</th><th>Yield per 100 sq ft</th><th>Space per plant</th><th>Season</th><th>Keeps</th><th>Sources</th></tr></thead><tbody>' +
       rows.map(function (c) {
-        return '<tr><td><b>' + esc(c.n) + '</b><small>' + esc(c.part || '') + '</small></td><td>' + esc(c.fam) + '<small>' + esc(c.g) + '</small></td>' +
+        return '<tr><td><b>' + esc(c.n) + '</b><small>' + esc(c.part || '') + '</small>' + cookHTML(c.k) + '</td><td>' + esc(c.fam) + '<small>' + esc(c.g) + '</small></td>' +
           '<td>' + (c.cal != null ? Math.round(c.cal) : '—') + (c.fdc ? ' <a href="' + esc(c.fdc) + '" target="_blank" rel="noopener" title="USDA FoodData Central">↗</a>' : '') + '</td>' +
           '<td>' + (c.pro != null ? c.pro : '—') + ' / ' + (c.fib != null ? c.fib : '—') + '</td><td>' + esc(c.nut.join(', ') || '—') + '</td>' +
           '<td>' + (c.y != null ? c.y + ' lb' + (c.yr ? '<small>range ' + Math.round(c.yr[0]) + '–' + Math.round(c.yr[1]) + '</small>' : '') : '—') + '</td>' +

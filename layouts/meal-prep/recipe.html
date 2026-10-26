@@ -42,6 +42,16 @@
         </ul>
         <p class="hs-small" id="rp-scalenote" hidden></p>
       </section>
+      {{- /* "Make the tortillas yourself": items in this recipe with a from-scratch recipe (data/meals/scratch.json) */ -}}
+      {{ $mk := slice }}{{ $seen := slice }}
+      {{ range $r.ingredients }}{{ $iid := .item }}{{ $opt := .optional }}{{ range $m.scratch.recipes }}{{ $sr := . }}{{ range .makes }}{{ if and (eq .item $iid) (not (in $seen $sr.id)) (not $opt) }}{{ $seen = $seen | append $sr.id }}{{ $mk = $mk | append (dict "s" $sr "item" $iid) }}{{ end }}{{ end }}{{ end }}{{ end }}
+      {{ with $mk }}
+      <section class="mp-box hs-noprint" aria-labelledby="rp-mkh">
+        <h2 id="rp-mkh">Make it yourself</h2>
+        <p class="mp-glinks">{{ range . }}{{ $n0 := replaceRE ` \(.*\)$` "" .s.name }}{{ $nm := printf "%s%s" (lower (substr $n0 0 1)) (substr $n0 1) }}<a class="mp-glink" href="{{ printf "meal-prep/scratch/%s/" .s.id | relURL }}"><span aria-hidden="true">{{ .s.emoji }}</span> {{ if eq .s.kind "stand-in" }}Out of {{ with index $cat .item }}{{ lower .name }}{{ end }}? Make it →{{ else if hasSuffix .s.id "-from-dry" }}Cook the {{ replaceRE ` from dry$` "" $nm }} from dry →{{ else }}Make the {{ $nm }} yourself →{{ end }}</a>{{ end }}</p>
+        <p class="hs-small">In the planner, <b>Make it</b> on the shopping list swaps the store item for these ingredients and puts the work on your prep day.</p>
+      </section>
+      {{ end }}
       <section class="mp-box" aria-labelledby="rp-nh">
         <h2 id="rp-nh">Nutrition</h2>
         <div id="rp-nutr"><p class="mp-pending">Nutrition coming: the USDA numbers for these ingredients are being added.</p></div>

@@ -132,6 +132,7 @@ ground-beef-90 | Ground beef, 90% lean | meat | fridge | 225 | | 1-lb package=1 
 ground-beef-93 | Ground beef, 93% lean | meat | fridge | 225 | | 1-lb package=1 lb | | gf | | Beef, ground, 93% lean meat / 7% fat, raw | differences#ground-beef | extra-lean ground beef |
 chuck-roast | Beef chuck roast | meat | fridge | | | ~lb 0.5 | | gf | | Beef, chuck, arm pot roast, separable lean and fat, trimmed to 1/8" fat, all grades, raw | | pot roast, shoulder roast |
 stew-beef | Beef stew meat | meat | fridge | 150 | | 1-lb package=1 lb; 2-lb package=2 lb | | gf | | Beef, chuck for stew, separable lean and fat, all grades, raw | | beef for stew |
+beef-soup-bones | Beef soup bones (shank, neck or knuckle) | meat | fridge | | | ~lb 0.5 | | gf | proxy:stew-beef | Beef, chuck for stew, separable lean and fat, all grades, raw | | beef shanks, marrow bones | For stock. Nutrition is estimated from stew beef; the stock recipe uses USDA's figures for home-made stock.
 sirloin-steak | Top sirloin steak | meat | fridge | | each=280#8-oz steak | ~lb 0.25 | | gf | | Beef, top sirloin, steak, separable lean and fat, trimmed to 1/8" fat, all grades, raw | | sirloin |
 flank-steak | Flank steak | meat | fridge | | | ~lb 0.25 | | gf | | Beef, flank, steak, separable lean and fat, trimmed to 0" fat, choice, raw | | |
 ribeye-steak | Ribeye steak | meat | fridge |  | each=340#12-oz steak | ~lb 0.25 |  | gf |  | Beef, rib, eye, small end (ribs 10-12), separable lean and fat, trimmed to 0" fat, choice, raw |  | rib eye | 
@@ -185,6 +186,7 @@ hummus | Hummus* | deli | fridge | 246 | | 10-oz container=10 oz | sesame | vg g
 fresh-salsa | Fresh salsa (refrigerated)* | deli | fridge | 260 | | 16-oz container=16 oz | | vg gf | proxy:salsa | Sauce, salsa, ready-to-serve | | pico de gallo |
 # ---------- DAIRY AND EGGS ----------
 eggs | Eggs, large | dairy | fridge | 243 | each=50#large egg | dozen=12 each; 18-count=18 each | eggs | v gf | | Egg, whole, raw, fresh | | |
+pasteurized-eggs | Pasteurized eggs (in shell), large | dairy | fridge | 243 | each=50#large pasteurized egg | dozen=12 each | eggs | v gf | proxy:eggs | Egg, whole, raw, fresh | | pasteurized shell eggs | Heated in the shell to kill Salmonella; FDA advises them for anything served with raw egg, like homemade mayonnaise. Nutrition as for fresh eggs.
 egg-whites | Liquid egg whites | dairy | fridge | 243 | | 16-oz carton=16 oz | eggs | v gf | | Egg, white, raw, fresh | | |
 whole-milk | Whole milk | dairy | fridge | 244 | | half gallon=0.5 gallon; gallon=1 gallon | milk | v gf | | Milk, whole, 3.25% milkfat, with added vitamin D | | milk |
 milk-2 | 2% milk | dairy | fridge | 244 | | half gallon=0.5 gallon; gallon=1 gallon | milk | v gf | | Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D | | reduced-fat milk |
@@ -273,7 +275,9 @@ lentils | Dried lentils | grains | pantry | 192 | | 1-lb bag=1 lb | | vg gf | | 
 split-peas | Dried split peas | grains | pantry | 196 |  | 1-lb bag=1 lb |  | vg gf |  | Peas, green, split, mature seeds, raw | differences#beans |  | 
 dried-black-beans | Dried black beans | grains | pantry | 194 | | 1-lb bag=1 lb | | vg gf | | Beans, black, mature seeds, raw | differences#beans | |
 dried-pinto-beans | Dried pinto beans | grains | pantry | 193 |  | 1-lb bag=1 lb; 2-lb bag=2 lb |  | vg gf | 175199 | Beans, pinto, mature seeds, raw | differences#beans |  | 
+dried-kidney-beans | Dried red kidney beans | grains | pantry | 184 | | 1-lb bag=1 lb | | vg gf | 175193 | Beans, kidney, all types, mature seeds, raw | differences#beans | |
 cornmeal | Yellow cornmeal | baking | pantry | 122 | | 2-lb bag=2 lb | | vg gf | | Cornmeal, whole-grain, yellow | | |
+masa-harina | Masa harina (corn flour for tortillas)* | baking | pantry | 114 | | 4.4-lb bag=4.4 lb | | vg gf | 169694 | Corn flour, masa, enriched, white | | instant corn masa flour, masa flour | Corn cooked with lime, dried and ground; plain cornmeal won't make tortillas.
 grits | Quick grits | breakfast | pantry | 156 | | 24-oz canister=24 oz | | vg gf | | Cereals, corn grits, white, regular and quick, enriched, dry | | |
 orzo | Orzo | grains | pantry | 170 | | 16-oz box=16 oz | wheat | vg | proxy:spaghetti | Pasta, dry, enriched | | |
 arborio-rice | Arborio rice | grains | pantry | 200 | | 2-lb bag=2 lb | | vg gf | | Rice, white, medium-grain, raw, enriched | differences#rice | risotto rice |
@@ -347,7 +351,7 @@ brown-sugar | Brown sugar | baking | pantry | 220 | | 2-lb bag=2 lb | | vg gf | 
 powdered-sugar | Powdered sugar | baking | pantry | 120 | | 2-lb bag=2 lb | | vg gf | | Sugars, powdered | | confectioners' sugar |
 baking-soda | Baking soda | baking | pantry | 220 | | 1-lb box=1 lb | | vg gf | | Leavening agents, baking soda | differences#leaveners | bicarbonate of soda |
 baking-powder | Baking powder | baking | pantry | 192 | | 8.1-oz can=8.1 oz | | vg gf | | Leavening agents, baking powder, double-acting, sodium aluminum sulfate | differences#leaveners | |
-yeast | Active dry yeast | baking | pantry | 192 | package=7#1/4-oz packet | 3-packet strip=3 package | | vg gf | | Leavening agents, yeast, baker's, active dry | | |
+yeast | Active dry yeast | baking | pantry | 149 | package=7#1/4-oz packet | 3-packet strip=3 package | | vg gf | | Leavening agents, yeast, baker's, active dry | | | A 7-g (1/4-oz) packet holds 2 1/4 teaspoons, as packets are labeled.
 cream-of-tartar | Cream of tartar | baking | pantry | 192 | | 1.5-oz jar=1.5 oz | | vg gf | | Leavening agents, cream of tartar | differences#leaveners | |
 vanilla | Vanilla extract | baking | pantry | 208 | | 2-oz bottle=2 fl-oz | | vg gf | | Vanilla extract | | |
 chocolate-chips | Semisweet chocolate chips* | baking | pantry | 168 | | 12-oz bag=12 oz | milk soybeans | v gf | | Candies, semisweet chocolate | | | Many brands contain milk and soy; dairy-free chips are labeled.

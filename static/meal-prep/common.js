@@ -43,12 +43,15 @@
   };
   C.fresh = function () {
     var p = C.newPlan('Week A');
-    return { v: 1, cur: p.id, plans: [p], people: JSON.parse(JSON.stringify(M.DEFAULT_GROUPS)), avoid: [], diet: {}, rules: { noRepeat: 6, busy: [1, 3] }, mine: {}, view: 'cal', shopRange: 'all' };
+    // make: {catalog id: true (make it) | false (buy it)}; makeAll: "make from scratch when I can" (scratch recipes, not stand-ins)
+    // grow: {crops: {crop key: {on, m: [months 1-12], store}}, animals: {hens: {...}, bees: {...}}} (keys from data/garden)
+    return { v: 1, cur: p.id, plans: [p], people: JSON.parse(JSON.stringify(M.DEFAULT_GROUPS)), avoid: [], diet: {}, rules: { noRepeat: 6, busy: [1, 3] }, mine: {}, view: 'cal', shopRange: 'all', make: {}, makeAll: false, grow: { crops: {}, animals: {} } };
   };
   C.fix = function (st) {
     var f = C.fresh();
     if (!st || typeof st !== 'object' || !Array.isArray(st.plans) || !st.plans.length) return f;
-    ['people', 'avoid', 'diet', 'rules', 'mine'].forEach(function (k) { if (st[k] == null) st[k] = f[k]; });
+    ['people', 'avoid', 'diet', 'rules', 'mine', 'make', 'grow'].forEach(function (k) { if (st[k] == null || typeof st[k] !== 'object') st[k] = f[k]; });
+    st.makeAll = !!st.makeAll; st.grow.crops = st.grow.crops || {}; st.grow.animals = st.grow.animals || {};
     st.plans.forEach(function (p) { p.cells = p.cells || {}; p.guests = p.guests || {}; p.pantry = p.pantry || {}; p.extras = p.extras || []; p.slots = p.slots || { breakfast: true, lunch: true, dinner: true, snack: false }; p.days = C.planDays(p); if (!p.id) p.id = C.uid('p'); });
     if (!st.plans.some(function (p) { return p.id === st.cur; })) st.cur = st.plans[0].id;
     st.v = 1;
@@ -82,10 +85,14 @@
       M.ALLERGENS.forEach(function (a) { if (!data.allergenName[a]) data.allergenName[a] = a.replace('-', ' ').replace(/^./, function (c) { return c.toUpperCase(); }); });
       Object.keys(n.cat).forEach(function (k) { if (n.cat[k].n) data.nutrHas = true; });
       data.items = Object.keys(n.cat).map(function (k) { return n.cat[k]; }).sort(function (a, b) { return a.name.localeCompare(b.name); });
+      data.S = M.normScratch(raw.scratch || [], n.cat);
+      data.G = M.normGardenMap(raw.gardenMap || {});
+      data.crops = raw.gardenCrops || {}; data.animals = raw.gardenAnimals || {};
+      data.scratchBase = raw.scratchBase || '/meal-prep/scratch/'; data.gardenURL = raw.gardenURL || '/garden/';
       cb(null, data);
     }).catch(function (e) { cb(e); });
   };
-  C.sectionName = function (data, id) { return data.sectionName[id] || (id ? String(id).replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); }) : 'Other'); };
+  C.sectionName = function (data, id) { return id === 'garden' ? 'From your garden' : data.sectionName[id] || (id ? String(id).replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); }) : 'Other'); };
   // built-in recipes plus the user's own (own ids start with "my-")
   C.recipes = function (data, st) {
     var all = {};
@@ -116,11 +123,83 @@
     return s;
   };
 
+  // ---------- from scratch and from the garden ----------
+  // is this item made at home? its own choice wins; otherwise "make from scratch when I can" (not stand-ins)
+  C.makes = function (data, st, id) {
+    var sid = data.S && data.S.byItem[id]; if (!sid) return false;
+    var c = (st.make || {})[id]; if (c === true || c === false) return c;
+    return !!st.makeAll && data.S.byId[sid].kind === 'scratch';
+  };
+  C.made = function (data, st) { var out = {}; Object.keys((data.S && data.S.byItem) || {}).forEach(function (id) { if (C.makes(data, st, id)) out[id] = true; }); return out; };
+  // the catalog with homemade nutrition for what's made from scratch (cached per choice)
+  var catCache = { k: null, v: null };
+  C.cat = function (data, st) { var made = C.made(data, st), k = Object.keys(made).sort().join(','); if (catCache.k !== k || catCache.d !== data) catCache = { k: k, d: data, v: M.catalogWith(data.cat, data.S, made) }; return catCache.v; };
+  C.covers = function (data, st, plan) { return function (id, d) { return M.growCovers(st.grow, data.G, id, M.monthOf(plan, d)); }; };
+  C.scratchURL = function (data, s) { return data.scratchBase + s.id + '/'; };
+  C.MON = MON; C.MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  C.monthsText = function (ms) {
+    ms = (ms || []).slice().sort(function (a, b) { return a - b; }); if (!ms.length) return 'no months set'; if (ms.length === 12) return 'all year';
+    var runs = [], cur = null; ms.forEach(function (m) { if (cur && m === cur[1] + 1) cur[1] = m; else { cur = [m, m]; runs.push(cur); } });
+    if (runs.length > 1 && runs[0][0] === 1 && runs[runs.length - 1][1] === 12) { var last = runs.pop(); runs[0] = [last[0], runs[0][1]]; }
+    return runs.map(function (r) { return r[0] === r[1] ? MON[r[0] - 1] : MON[r[0] - 1] + '–' + MON[r[1] - 1]; }).join(', ');
+  };
+  // "1 batch", "1½ batches", "about ⅓ batch" (0.3125)
+  C.batchText = function (n) {
+    var r = M.roundFrac(n, [1 / 8, 1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4]); if (!(r > 0)) r = n;
+    return (Math.abs(r - n) > 0.01 ? 'about ' : '') + M.fmtFrac(r) + (r > 1 + 1e-9 ? ' batches' : ' batch');
+  };
+  C.timesText = function (n) { var r = M.roundFrac(n, [1 / 8, 1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4]); if (!(r > 0)) r = n; return (Math.abs(r - n) > 0.01 ? '≈' : '') + '×' + M.fmtFrac(r); };
+  C.lcName = function (it) { var n = String(it.name).replace(/ \((?!.*\d).*\)$/, ''); return /^(Italian|Dijon|Greek|Mexican|American|French|Roma|Swiss|Parmesan|Monterey|Colby|Yukon)\b/.test(n) ? n : n.replace(/^(\w)/, function (c) { return c.toLowerCase(); }); };
+  // "hamburger buns" -> "hamburger bun", "loaves (about 1 lb each)" -> "loaf (about 1 lb each)", "cans’ worth" -> "can’s worth"
+  C.sing = function (lab) {
+    lab = String(lab); if (/s’ worth/.test(lab)) return lab.replace(/s’ worth/, '’s worth');
+    var p = lab.indexOf(' ('), head = p < 0 ? lab : lab.slice(0, p), tail = p < 0 ? '' : lab.slice(p), of = head.indexOf(' of ');
+    var front = of < 0 ? head : head.slice(0, of), back = of < 0 ? '' : head.slice(of);
+    front = front.replace(/(\S+)$/, function (w) { return w === 'loaves' ? 'loaf' : /(ches|shes|xes)$/.test(w) ? w.slice(0, -2) : /[^s]s$/.test(w) ? w.slice(0, -1) : w; });
+    return front + back + tail;
+  };
+  C.growName = function (data, key) { return key === 'hens' ? 'Laying hens (eggs)' : key === 'bees' ? 'Honeybees (honey)' : String((data.crops[key] || {}).n || key).replace(/ \(.*\)$/, ''); };
+  // "1½ batches (two 8½ × 4½-inch pans)", "8 hamburger buns and 6 dinner rolls", "about 1⅓ lb of fresh pasta"
+  C.madeText = function (data, job) {
+    var s = job.s, b = job.b || { n: job.n }, parts = [];
+    s.makes.forEach(function (m) {
+      var g = (job.items || {})[m.item]; if (!(g > 0)) return;
+      var it = data.cat[m.item], k = M.kind(m.by), amt = M.convert(it, g, 'g', m.by);
+      if (k === 'count' && amt != null) { var c = Math.max(1, Math.ceil(amt - 0.05)); parts.push(c + ' ' + (c === 1 ? C.sing(m.label) : m.label)); }
+      else if (k === 'vol' && amt != null) parts.push(M.nice(amt, m.by, it).text + ' of ' + C.lcName(it));
+      else parts.push('in place of ' + M.needText(it, g) + ' of ' + C.lcName(it));
+    });
+    var t = C.batchText(b.n);
+    if (b.pans && b.pans.length) t += ' (' + b.pans.map(function (p) { return p.count + ' × ' + p.label; }).join(' + ') + ')';
+    return { batches: t, makes: parts.join(', ') };
+  };
+  // one line of a from-scratch recipe: weight and volume for what bakers weigh ("3¾ cups (480 g)"), counts as words
+  C.scratchLine = function (x) {
+    var it = x.item, i = x.ing, u = x.unit, amt = x.amt, txt = '';
+    if (it && u === 'g' && it.gml) {
+      // bakers' measures: quarter cups and spoons (finer than the planner's everyday rounding), grams to 0.1 under 20 g
+      var tsp = amt / it.gml / M.VOL.tsp, cups = tsp / 48, g = amt < 20 ? Math.round(amt * 10) / 10 : Math.round(amt);
+      var v = cups >= 0.25 ? M.fmtFrac(M.roundFrac(cups, [1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4])) + ' ' + M.unitName('cup', M.roundFrac(cups, [1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4])) : M.nice(tsp, 'tsp', it).text;
+      if (it.id === 'yeast' && Math.abs(amt / 7 - Math.round(amt / 7)) < 0.04 && amt >= 6.5) txt = (Math.round(amt / 7) === 1 ? '1 packet' : Math.round(amt / 7) + ' packets') + ' (' + v + ', ' + g + ' g)';
+      else txt = v + ' (' + g + ' g)';
+    } else if (it && u === 'g') txt = M.nice(amt, 'g', it).text;
+    else if (it && M.kind(u) === 'vol' && it.gml && /baking|spices/.test(it.section) && amt) { var gg = M.toGrams(it, amt, u); txt = x.nice.text + (gg >= 1 ? ' (' + (gg < 10 ? Math.round(gg * 10) / 10 : Math.round(gg)) + ' g)' : ''); }
+    else if (it && it.countLabel && u === 'each' && x.nice.n) return '<b>' + C.esc(C.countWords(x.nice.n, it)) + '</b>' + (i.note ? ', ' + C.esc(i.note) : '') + (i.opt ? ' <i>(optional)</i>' : '');
+    else txt = x.nice.text;
+    return '<b>' + C.esc(txt) + '</b> ' + C.esc(it ? it.name.toLowerCase().replace(/^water$/, 'water') : (i.w && i.w.name) || '') + (i.note ? ', ' + C.esc(i.note) : '') + (i.opt ? ' <i>(optional)</i>' : '');
+  };
+
   // ---------- shared HTML (print page and planner) ----------
-  C.listRows = function (data, st, plan, range) {
-    var all = C.recipes(data, st), from = 0, to = plan.days - 1;
+  C.rangeDays = function (plan, range) {
+    var from = 0, to = plan.days - 1;
     if (range && range !== 'all') { var m = /^(w|d)(\d+)$/.exec(range); if (m) { if (m[1] === 'w') { from = +m[2] * 7; to = Math.min(plan.days - 1, from + 6); } else { from = to = +m[2]; } } }
-    return M.shoppingList(plan, st.people, all, data.cat, { from: from, to: to, pantry: plan.pantry, extras: range === 'all' || !range ? plan.extras : [], sectionOrder: data.sectionOrder });
+    return { from: from, to: to };
+  };
+  // the shopping list with homemade items swapped for their ingredients and garden items set aside; rep gets {made}
+  C.listRows = function (data, st, plan, range, rep) {
+    var all = C.recipes(data, st), r = C.rangeDays(plan, range);
+    return M.shoppingList(plan, st.people, all, data.cat, { from: r.from, to: r.to, pantry: plan.pantry, extras: range === 'all' || !range ? plan.extras : [], sectionOrder: data.sectionOrder,
+      scratch: data.S ? { S: data.S, make: function (id) { return C.makes(data, st, id); } } : null, garden: data.G ? { covers: C.covers(data, st, plan) } : null, report: rep || null });
   };
   C.rangeLabel = function (plan, range) {
     if (!range || range === 'all') return C.shortDate(C.dateOf(plan, 0)) + ' – ' + C.shortDate(C.dateOf(plan, plan.days - 1));
@@ -144,9 +223,11 @@
   };
   C.shopHTML = function (data, st, plan, range, opts) {
     opts = opts || {};
-    var rows = C.listRows(data, st, plan, range), sec = null, h = '';
-    var buy = rows.filter(function (r) { return !r.have; }), have = rows.filter(function (r) { return r.have; });
+    var rep = {}, rows = C.listRows(data, st, plan, range, rep), sec = null, h = '';
+    var buy = rows.filter(function (r) { return !r.have && !r.garden; }), have = rows.filter(function (r) { return r.have; }), grown = rows.filter(function (r) { return r.garden && !r.have; });
     if (!rows.length) return '<p class="mpp-empty">Nothing to buy yet: add some meals to the plan.</p>';
+    if (rep.made && rep.made.length) h += '<p class="mpp-made"><b>Making from scratch:</b> ' + rep.made.map(function (j) { var t = C.madeText(data, j); return C.esc(j.s.name.replace(/ \(.*\)$/, '')) + ': ' + C.esc((t.makes || t.batches).replace(/ \([^()]*\)/g, '')); }).join('; ') + '. Their ingredients are on the list.</p>';
+    if (grown.length) buy = buy.concat(grown.map(function (r) { return Object.assign({}, r, { section: 'garden', buy: r.need + ' from your garden' }); }));
     h += '<div class="mpp-shop">';
     buy.forEach(function (r) {
       if (r.section !== sec) { if (sec !== null) h += '</ul></div>'; sec = r.section; h += '<div class="mpp-sec"><h3>' + C.esc(C.sectionName(data, sec)) + '</h3><ul>'; }
@@ -200,6 +281,40 @@
       h += '</div>';
     }
     return h + '</div>';
+  };
+  // a week's prep day (the day before the week starts): the recipes to cook ahead, and the from-scratch jobs with the
+  // day each is made (prep day when it keeps that long; otherwise made fresh or frozen) -> {p, cooked, scratch:[...], jobs}
+  C.prepPlan = function (data, st, plan, w) {
+    var p = w.from - 1, rep = {}, sel = st.prepSel || {};
+    C.listRows(data, st, plan, 'w' + w.w, rep);
+    var sched = M.scratchSchedule(rep.made || [], p), cooked = C.cooked(data, st, plan, w.from, w.to), onPrep = {};
+    var scratch = sched.map(function (x) {
+      var made = (rep.made || []).filter(function (m) { return m.s.id === x.s.id; })[0];
+      x.made = made; x.key = 's:' + x.s.id; x.on = sel[x.key] != null ? !!sel[x.key] : true;
+      x.parts.forEach(function (pt) {
+        var step = +(x.s.batch && x.s.batch.step) || 0.25;
+        pt.n = x.parts.length === 1 ? x.n : Math.max(step, Math.ceil(x.n * pt.share / step - 1e-6) * step);
+        if (pt.day === p && x.on) onPrep[x.s.id] = pt;
+      });
+      return x;
+    });
+    var jobs = cooked.filter(function (c) { return sel[c.r.id] != null ? sel[c.r.id] : !!(c.r.prepDay && c.r.prepDay.ahead); }).map(function (c) { return { r: c.r, servings: c.servings }; });
+    Object.keys(onPrep).forEach(function (id) { var s = data.S.byId[id]; jobs.push({ s: s, n: onPrep[id].n, after: s.needs.filter(function (c) { return onPrep[c]; }) }); });
+    return { p: p, cooked: cooked, scratch: scratch, jobs: jobs, sel: sel };
+  };
+  C.stageWhere = { oven: 'Oven', stove: 'Stovetop', simmer: 'Back burner', counter: 'Counter', fridge: 'Fridge', slow: 'Slow cooker' };
+  // a prep-day step in words (recipes and from-scratch stages), shared by the planner and the print page
+  C.stepText = function (s, clock) {
+    var j = s.j;
+    if (j.s) {
+      var g = s.sg, bits = [];
+      if (g.active) bits.push(C.mins(g.active) + ' hands-on');
+      if (g.cook) bits.push(C.mins(g.cook) + (g.station === 'oven' ? ' in the oven' : g.station === 'simmer' ? ' simmering' : ' cooking'));
+      if (g.wait) bits.push('then ' + C.mins(g.wait) + (g.station === 'fridge' ? ' in the fridge' : /rest/i.test(g.do) ? ' to rest' : /rise|knead|shape|dough/i.test(g.do) ? ' to rise' : /set/i.test(g.do) ? ' to set' : /soak/i.test(g.do) ? ' soaking' : ' waiting'));
+      if (s.waited) bits.push('the oven is busy ' + C.mins(s.waited) + ' longer, so chill the shaped dough for that time to keep it from over-rising');
+      return { title: (j.s.emoji || '🥣') + ' ' + j.s.name + ' (from scratch, ' + C.timesText(j.n) + ')', where: g.station === 'oven' ? 'oven' : g.station === 'stove' || g.station === 'simmer' ? 'stove' : g.station === 'slow' ? 'slow' : 'counter', label: C.stageWhere[g.station] || 'Counter', what: g.do + '.', small: bits.join(', ') + (s.until > s.ready && clock ? '; done about ' + clock(s.until) : s.ready > s.at && clock ? '; ready about ' + clock(s.ready) : '') };
+    }
+    return { title: C.emoji(j.r) + ' ' + j.r.name, where: j.where, label: { slow: 'Slow cooker', oven: 'Oven', stove: 'Stovetop', counter: 'Counter' }[j.where], what: j.what || (j.where === 'counter' ? 'Mix, portion and pack.' : 'Cook as the recipe says.'), small: C.mins(j.active) + ' hands-on' + (j.cook && clock ? ', ready about ' + clock(s.ready) : '') };
   };
   // recipes cooked in a range, with the portions they're cooked for
   C.cooked = function (data, st, plan, from, to) {

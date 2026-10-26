@@ -226,8 +226,8 @@
       var u0 = item && item.buy && item.buy[0] ? item.buy[0].unit : 'lb';
       var byCount = item && item.units && item.units.each && !MASS[u0] && !VOL[u0] && (u0 === 'each' || u0 === 'dozen' || item.countLabel || !item.gml);
       if (byCount && !(item.keep === 'pantry' && item.gml)) { var n = grams / item.units.each, r = item.whole ? Math.ceil(n - 0.05) : n < 3 ? Math.round(n * 4) / 4 : Math.round(n * 2) / 2; r = Math.max(0.25, r); return 'about ' + (item.countLabel ? labelText(r, item.countLabel, fmtFrac(r)) : fmtFrac(r)); }
-      if (item && item.gml && VOL[u0]) { var ml = grams / item.gml; if (ml >= VOL.quart * 1.5) return 'about ' + fmtFrac(roundFrac(ml / VOL.quart, [1 / 2])) + ' quarts'; return ml >= VOL.cup / 4 ? fmtFrac(roundFrac(ml / VOL.cup, [1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4])) + ' ' + unitName('cup', ml / VOL.cup) : nice(ml / VOL.tbsp, 'tbsp').text; }
-      if (item && item.gml && item.keep === 'pantry' && grams < 120) { var ml2 = grams / item.gml; return ml2 >= VOL.cup / 4 ? fmtFrac(roundFrac(ml2 / VOL.cup, [1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4])) + ' ' + unitName('cup', ml2 / VOL.cup) : nice(ml2 / VOL.tbsp, 'tbsp').text; }
+      if (item && item.gml && VOL[u0]) { var ml = grams / item.gml; if (ml >= VOL.quart * 1.5) return 'about ' + fmtFrac(roundFrac(ml / VOL.quart, [1 / 2])) + ' quarts'; var rc = roundFrac(ml / VOL.cup, [1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4]); return ml >= VOL.cup / 4 ? fmtFrac(rc) + ' ' + unitName('cup', rc) : nice(ml / VOL.tbsp, 'tbsp').text; }
+      if (item && item.gml && item.keep === 'pantry' && grams < 120) { var ml2 = grams / item.gml; var rc2 = roundFrac(ml2 / VOL.cup, [1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4]); return ml2 >= VOL.cup / 4 ? fmtFrac(rc2) + ' ' + unitName('cup', rc2) : nice(ml2 / VOL.tbsp, 'tbsp').text; }
       var oz = grams / MASS.oz; if (grams < 3) return 'a little'; return oz >= 16 ? fmtNum(Math.round(oz / 16 * 100) / 100) + ' lb' : fmtNum(oz) + ' oz';
     }
     return Object.keys(byUnit || {}).map(function (u) { return nice(byUnit[u], u).text; }).join(' + ');
@@ -272,11 +272,190 @@
     return out.filter(function (c) { return c.d >= from && c.d <= to; });
   }
 
+  // ---------- from scratch (data/meals/scratch.json) ----------
+  // S = {byId:{id: s}, byItem:{catalog id: scratch id}, order:[ids, each before the scratch recipes it uses]}
+  // s = {id, name, kind, makes:[{item, by, n, g: item grams one batch stands in for}], ing, batch:{step, min, pans}, stages, plan, nutrition, needs:[scratch ids]}
+  function normScratch(raw, cat) {
+    var list = raw && raw.recipes ? raw.recipes : raw || [], S = { byId: {}, byItem: {}, order: [] };
+    arr(list).forEach(function (x) {
+      var s = { id: x.id, name: x.name, emoji: x.emoji || '', kind: x.kind || 'scratch', group: x.group || '', yieldText: x.yield || '', summary: x.summary || '', makes: [], ing: arr(x.ingredients).map(normIng),
+        batch: x.batch || {}, stages: arr(x.stages), plan: x.plan || {}, nutrition: x.nutrition || { from: 'ingredients' }, times: x.times || {}, needs: [] };
+      arr(x.makes).forEach(function (m) { var it = cat[m.item]; if (!it) return; var g = toGrams(it, +m.n, m.by); if (g > 0) s.makes.push({ item: m.item, by: unitKey(m.by), n: +m.n, g: g, label: m.label || '' }); });
+      S.byId[s.id] = s;
+      s.makes.forEach(function (m) { if (!S.byItem[m.item]) S.byItem[m.item] = s.id; });
+    });
+    Object.keys(S.byId).forEach(function (id) { var s = S.byId[id]; s.ing.forEach(function (i) { var c = i.item && S.byItem[i.item]; if (c && c !== id && s.needs.indexOf(c) < 0) s.needs.push(c); }); });
+    var done = {}, post = [];
+    function visit(id, depth) { if (done[id] || depth > 8) return; done[id] = 1; S.byId[id].needs.forEach(function (c) { visit(c, depth + 1); }); post.push(id); }
+    Object.keys(S.byId).forEach(function (id) { visit(id, 0); });
+    S.order = post.reverse(); // parents (breadcrumbs) before the recipes they use (bread)
+    return S;
+  }
+  function makesFor(s, itemId) { for (var i = 0; i < s.makes.length; i++) if (s.makes[i].item === itemId) return s.makes[i]; return null; }
+  // how many batches to make for `raw` batches' worth of need: whole steps (a tortilla, an egg's worth of pasta), at least
+  // the minimum, within the same 6% tolerance as buying; recipes with pans choose the mix of pans that wastes least
+  function scratchBatches(s, raw) {
+    if (!(raw > 0)) return { raw: 0, n: 0 };
+    var b = s.batch || {}, step = +b.step || 0.25, min = +b.min || step, need = raw * (1 - TOL);
+    if (b.pans && b.pans.length) {
+      var P = b.pans, best = null;
+      (function rec(i, cnt, tot, nP) {
+        if (i === P.length) { if (tot >= Math.max(need, min) - 1e-9 && nP) { var sc = (tot - raw) + nP * 0.01; if (!best || sc < best.sc - 1e-9) best = { sc: sc, cnt: cnt.slice(), tot: tot }; } return; }
+        for (var k = 0; k <= 12; k++) { cnt.push(k); rec(i + 1, cnt, tot + k * P[i].f, nP + k); cnt.pop(); if (tot + k * P[i].f >= Math.max(need, min)) break; }
+      })(0, [], 0, 0);
+      if (best) return { raw: raw, n: Math.round(best.tot * 1e4) / 1e4, pans: P.map(function (p, i) { return { id: p.id, label: p.label, f: p.f, count: best.cnt[i] }; }).filter(function (p) { return p.count; }) };
+    }
+    var n = Math.max(min, Math.ceil(need / step - 1e-9) * step);
+    return { raw: raw, n: Math.round(n * 1e4) / 1e4 };
+  }
+  // the batches needed for given amounts of the items a recipe makes: needs {itemId: grams}
+  function scratchFor(s, needs) {
+    var raw = 0; Object.keys(needs || {}).forEach(function (id) { var m = makesFor(s, id); if (m && needs[id] > 0) raw += needs[id] / m.g; });
+    return scratchBatches(s, raw);
+  }
+  function scaleScratch(s, n, cat) {
+    return s.ing.map(function (i) {
+      var item = i.item ? cat[i.item] : null, a = (+i.amt || 0) * (i.fixed ? 1 : n), g = item ? toGrams(item, a, i.unit) : null;
+      return { ing: i, item: item, amt: a, unit: unitKey(i.unit), g: g, nice: nice(a, i.unit, item) };
+    });
+  }
+  // nutrition per 100 g of the catalog item a batch stands in for (so "8 slices" of homemade bread counts 8 homemade slices)
+  function scratchNutr(s, cat, itemId) {
+    var m = makesFor(s, itemId); if (!m) return null;
+    var nu = s.nutrition || {};
+    if (nu.from === 'item') { var it = cat[itemId]; return it && it.n ? { n: it.n, how: 'item', why: nu.why || '' } : null; }
+    if (nu.from === 'usda') { var u = normNutr(nu.per100); return u ? { n: u, how: 'usda', why: nu.why || '', fdc: nu.fdc } : null; }
+    var tot = {}, missing = [];
+    NUTR.forEach(function (k) { tot[k] = 0; });
+    s.ing.forEach(function (i) {
+      if (i.opt || i.noNutr) return;
+      var item = i.item ? cat[i.item] : null; if (!item) return;
+      var g = toGrams(item, i.amt, i.unit); if (g == null) return;
+      if (!item.n) { missing.push(item.name); return; }
+      NUTR.forEach(function (k) { if (item.n[k] != null) tot[k] += item.n[k] * g * (item.edible || 1) / 100; });
+    });
+    if (missing.length) return null;
+    var n = {}; NUTR.forEach(function (k) { n[k] = tot[k] / m.g * 100; });
+    return { n: n, how: 'ingredients' };
+  }
+  // the catalog with homemade versions swapped in for the items being made (made: {itemId: true})
+  function catalogWith(cat, S, made) {
+    if (!S || !made || !Object.keys(made).some(function (k) { return made[k]; })) return cat;
+    var out = {};
+    Object.keys(cat).forEach(function (k) { out[k] = cat[k]; });
+    Object.keys(made).forEach(function (id) {
+      var sid = made[id] && S.byItem[id], it = cat[id]; if (!sid || !it) return;
+      var sn = scratchNutr(S.byId[sid], cat, id); if (!sn) return;
+      out[id] = Object.assign({}, it, { n: sn.n, scratch: sid, nsrc: 'Homemade (' + S.byId[sid].name + ')' + (sn.how === 'ingredients' ? ', from its ingredients' : sn.how === 'usda' ? ': USDA FoodData Central ' + sn.fdc : ': USDA numbers for the store item'), proxy: false });
+    });
+    return out;
+  }
+
+  // ---------- garden (data/meals/garden-map.json) ----------
+  function normGardenMap(raw) {
+    var G = { byItem: {}, crops: (raw && raw.crops) || {}, animals: (raw && raw.animals) || {} };
+    arr(raw && raw.items).forEach(function (e) { if (e.item && (e.crop || e.animal)) G.byItem[e.item] = { key: e.crop || e.animal, animal: !!e.animal, part: e.part || '', f: +e.f || 1, note: e.note || '' }; });
+    return G;
+  }
+  function monthOf(plan, d) { var p = String(plan.start || '').split('-'), dt = new Date(+p[0], +p[1] - 1, +p[2] + d); return isNaN(dt) ? 1 : dt.getMonth() + 1; }
+  // does the household's garden cover this item in this month? grow: {crops:{key:{on, m:[months], store}}, animals:{hens:{on, m}, bees:{on, m, store}}}
+  // returns null, or {key, how: 'harvest' | 'stored'}; stored = within the crop's storage months after a harvest month
+  function growCovers(grow, G, itemId, month) {
+    if (!grow || !G) return null;
+    var e = G.byItem[itemId]; if (!e) return null;
+    var g = ((e.animal ? grow.animals : grow.crops) || {})[e.key];
+    if (!g || !g.on) return null;
+    var ms = g.m || [];
+    if (ms.indexOf(month) >= 0) return { key: e.key, how: 'harvest' };
+    var def = (e.animal ? G.animals : G.crops)[e.key] || {}, sm = g.store ? +def.store_months || 0 : 0;
+    for (var k = 1; k <= sm; k++) if (ms.indexOf(((month - k - 1 + 120) % 12) + 1) >= 0) return { key: e.key, how: 'stored' };
+    return null;
+  }
+  // "what could you grow for this plan?": harvest needed per crop from shopping rows, times `mult` (365 / plan days
+  // for a year), with the space and plants from the garden data's yields (lb per 100 sq ft, sq ft per plant)
+  // crops: {key: {n, y, sq, dh, se, t, yrs}}; animals: {eggsPerHen, honeyPerHive}
+  function growPlan(rows, G, crops, mult, animals) {
+    var by = {}, out = [];
+    (rows || []).forEach(function (r) {
+      var it = r.item, e = it && G.byItem[it.id]; if (!e || !(r.g > 0)) return;
+      var x = by[e.key] || (by[e.key] = { key: e.key, animal: e.animal, g: 0, items: [] });
+      x.g += r.g * e.f * (mult || 1);
+      if (x.items.indexOf(it.name) < 0) x.items.push(it.name);
+    });
+    Object.keys(by).forEach(function (k) {
+      var x = by[k], lb = x.g / MASS.lb, o = { key: k, animal: x.animal, lb: lb, items: x.items };
+      if (x.animal) {
+        // a large egg is about 50 g; hens and hives are counted for a year's worth at the same rate (yearFactor = 365 / days covered)
+        var yf = animals && animals.yearFactor || 1;
+        if (k === 'hens') { o.eggs = x.g / 50; if (animals && animals.eggsPerHen) o.hens = Math.max(1, Math.ceil(o.eggs * yf / animals.eggsPerHen)); }
+        if (k === 'bees' && animals && animals.honeyPerHive) o.hives = Math.max(1, Math.ceil(lb * yf / animals.honeyPerHive));
+      } else {
+        var c = crops[k] || {}; o.name = c.n || k; o.dh = c.dh || null; o.se = c.se || ''; o.t = c.t || ''; o.yrs = c.yrs || null;
+        if (c.y) { o.sqft = lb / (c.y / 100); if (c.sq) { o.plants = Math.max(1, Math.ceil(o.sqft / c.sq)); if (c.t === 'perennial' && c.sq >= 100) o.trees = o.plants; } }
+      }
+      out.push(o);
+    });
+    return out.sort(function (a, b) { return (b.sqft || 0) - (a.sqft || 0) || b.lb - a.lb; });
+  }
+
+  // when to make each from-scratch job: on prep day (day p) if it keeps until its last use; else freeze the later
+  // part (if it freezes), or make it again closer to the day. jobs: [{s, n, byDay:{d: raw batches}}]
+  // returns [{s, n, parts:[{day, share, freeze: day or null}]}]
+  function scratchSchedule(jobs, p) {
+    return (jobs || []).map(function (j) {
+      var pl = j.s.plan || {}, keep = pl.keep_days != null ? +pl.keep_days : 2, lead = +pl.lead_days || 0;
+      var days = Object.keys(j.byDay || {}).map(Number).sort(function (a, b) { return a - b; }), tot = 0;
+      days.forEach(function (d) { tot += j.byDay[d]; }); if (!tot) tot = 1;
+      if (!days.length) return { s: j.s, n: j.n, parts: [{ day: p, share: 1, freeze: null }] };
+      var first = days[0], last = days[days.length - 1], parts = [];
+      if (first - lead < p) { // too late for prep day: make it before the first use
+        var d0 = first - lead, upto = d0 + Math.max(keep, 0);
+        parts.push({ day: d0, share: sum(days.filter(function (d) { return d <= upto; })) / tot, freeze: null });
+        days = days.filter(function (d) { return d > upto; });
+        if (!days.length) return { s: j.s, n: j.n, parts: parts };
+        first = days[0];
+      }
+      if (last - p <= keep) { parts.push({ day: p, share: sum(days) / tot, freeze: null }); return { s: j.s, n: j.n, parts: parts }; }
+      if (pl.freeze) {
+        var soon = days.filter(function (d) { return d - p <= keep; }), later = days.filter(function (d) { return d - p > keep; });
+        parts.push({ day: p, share: sum(days) / tot, freeze: later.length ? { from: later[0], share: sum(later) / tot } : null, fresh: sum(soon) / tot });
+        return { s: j.s, n: j.n, parts: parts };
+      }
+      // doesn't freeze: make it in rounds, each lasting until its uses run past the keeping time
+      var firstRound = true;
+      while (days.length) {
+        var mk = firstRound && days[0] - lead >= p && days[0] - p <= keep ? p : Math.max(p, days[0] - lead), grp = days.filter(function (d) { return d - mk <= keep; });
+        if (!grp.length) grp = [days[0]];
+        parts.push({ day: mk, share: sum(grp) / tot, freeze: null }); firstRound = false;
+        days = days.filter(function (d) { return grp.indexOf(d) < 0; });
+      }
+      return { s: j.s, n: j.n, parts: parts };
+      function sum(ds) { var t = 0; ds.forEach(function (d) { t += j.byDay[d]; }); return t; }
+    });
+  }
+
   // ---------- shopping list ----------
   // returns {rows:[{id, name, section, g, byUnit, need, buy, uses:[recipe names], writein, have}], unknown:[...]}
+  // opt.scratch = {S, make: fn(itemId) -> true to make it}: made items become their recipe's raw ingredients (nested
+  //   recipes too: breadcrumbs from homemade bread), merged with the rest of the list; opt.garden = {covers: fn(itemId, d)}:
+  //   covered items become "From your garden" rows (garden: true). opt.report, if given, gets {made: [...]}.
   function shoppingList(plan, groups, recipes, cat, opt) {
     opt = opt || {};
-    var rows = {}, cooks = cookings(plan, groups, opt.from, opt.to, recipes);
+    var rows = {}, cooks = cookings(plan, groups, opt.from, opt.to, recipes), SC = opt.scratch && opt.scratch.S ? opt.scratch : null, GD = opt.garden && opt.garden.covers ? opt.garden : null, needs = {};
+    function wantMake(id) { return SC && SC.S.byItem[id] && SC.make(id) ? SC.S.byItem[id] : null; }
+    function need(sid, item, g, d, use) {
+      var n = needs[sid] || (needs[sid] = { items: {}, byDay: {}, day: d, uses: [] }), m = makesFor(SC.S.byId[sid], item.id);
+      n.items[item.id] = (n.items[item.id] || 0) + g; n.day = Math.min(n.day, d);
+      n.byDay[d] = (n.byDay[d] || 0) + (m ? g / m.g : 0);
+      if (use && n.uses.indexOf(use) < 0) n.uses.push(use);
+    }
+    function place(ing, item, amt, unit, g, d, use) {
+      if (item && g != null && g > 0) {
+        var sid = wantMake(item.id); if (sid) { need(sid, item, g, d, use); return; }
+        var cov = GD && GD.covers(item.id, d); if (cov) { addRow(rows, ing, item, amt, unit, g, use, false, 'g:' + item.id, cov); return; }
+      }
+      addRow(rows, ing, item, amt, unit, g, use);
+    }
     cooks.forEach(function (c) {
       var r = recipes[c.r]; if (!r || !(c.servings > 0)) return;
       scaleRecipe(r, c.servings, cat).forEach(function (s) {
@@ -284,12 +463,29 @@
         if (s.item && s.item.noBuy) return;
         // whole things (eggs, cans, buns) are bought as the rounded amount the cook will use
         var g = s.g; if (s.item && kind(s.unit) === 'count' && s.nice.n > 0) { var g2 = toGrams(s.item, s.nice.n, s.nice.unit); if (g2 != null) g = g2; }
-        addRow(rows, s.ing, s.item, s.amt, s.ing.unit, g, r.name);
+        place(s.ing, s.item, s.amt, s.ing.unit, g, c.d, r.name);
       });
     });
+    var made = [];
+    if (SC) SC.S.order.forEach(function (sid) {
+      var nd = needs[sid]; if (!nd) return;
+      var s = SC.S.byId[sid], b = scratchFor(s, nd.items), lead = +(s.plan && s.plan.lead_days) || 0, label = s.name + ' (homemade)';
+      made.push({ s: s, b: b, n: b.n, items: nd.items, byDay: nd.byDay, day: nd.day, uses: nd.uses });
+      scaleScratch(s, b.n, cat).forEach(function (x) {
+        if (x.ing.opt && !opt.optional) return;
+        if (x.item && x.item.noBuy) return;
+        var g = x.g; if (x.item && kind(x.unit) === 'count' && x.nice.n > 0) { var g2 = toGrams(x.item, x.nice.n, x.nice.unit); if (g2 != null) g = g2; }
+        if (x.item && wantMake(x.item.id) === sid) { addRow(rows, x.ing, x.item, x.amt, x.ing.unit, g, label); return; }
+        place(x.ing, x.item, x.amt, x.ing.unit, g, nd.day - lead, label);
+      });
+    });
+    if (opt.report) opt.report.made = made;
     var list = Object.keys(rows).map(function (k) {
       var row = rows[k], item = row.item;
-      if (item && row.g > 0 && !Object.keys(row.byUnit).length) {
+      if (row.garden) {
+        row.need = item && row.g > 0 ? needText(item, row.g) : nice(0, 'each').text;
+        row.buy = 'from your garden';
+      } else if (item && row.g > 0 && !Object.keys(row.byUnit).length) {
         var p = purchase(item, row.g), small = Math.min.apply(null, item.buy.filter(function (o) { return !o.loose; }).map(function (o) { return o.g; }).concat([Infinity]));
         row.buy = p ? p.text : needText(item, row.g);
         if ((item.keep === 'pantry' || /condiment|spice|baking/.test(item.section)) && small < Infinity && row.g < small * 0.25) { row.check = item.keep === 'fridge' ? 'check fridge' : 'check pantry'; row.ifOut = row.buy; row.buy = row.check; }
@@ -319,10 +515,11 @@
     });
     return list;
   }
-  function addRow(rows, ing, item, amt, unit, g, rname, extra) {
-    var w = ing.w, key = item ? item.id : 'w:' + String((w && w.name) || '').trim().toLowerCase();
+  function addRow(rows, ing, item, amt, unit, g, rname, extra, gkey, cov) {
+    var w = ing.w, key = gkey || (item ? item.id : 'w:' + String((w && w.name) || '').trim().toLowerCase());
     if (key === 'w:') return;
-    var row = rows[key] || (rows[key] = { id: key, item: item, name: item ? item.name : String(w.name).trim(), section: item ? item.section : (w.section || 'Other'), g: 0, byUnit: {}, uses: [], writein: !item, extra: false });
+    var row = rows[key] || (rows[key] = { id: key, item: item, name: item ? item.name : String(w.name).trim(), section: gkey ? 'garden' : item ? item.section : (w.section || 'Other'), g: 0, byUnit: {}, uses: [], writein: !item, extra: false });
+    if (cov) { row.garden = true; row.crop = cov.key; row.how = row.how === 'harvest' ? 'harvest' : cov.how; }
     if (g != null) row.g += g;
     else { var u = unitKey(unit); row.byUnit[u] = (row.byUnit[u] || 0) + (+amt || 0); }
     if (rname && row.uses.indexOf(rname) < 0) row.uses.push(rname);
@@ -508,9 +705,13 @@
     if (/stove|pot|skillet|grill/.test(s) || (!s && (r.cook > 0))) return 'stove';
     return 'counter';
   }
+  // From-scratch jobs ({s, n, after: [scratch ids]}) run in stages (mix, rise, shape, bake, cool): they start right after
+  // the slow cooker, since rising and soaking take longest; their later stages happen when the waiting is over, and
+  // their oven time is held so the dishes below bake around it. A job that uses another homemade item starts after it.
   function prepDay(list) {
-    var by = { slow: [], oven: [], stove: [], counter: [] };
+    var by = { slow: [], oven: [], stove: [], counter: [] }, sj = [];
     list.forEach(function (x) {
+      if (x.s) { sj.push({ s: x.s, n: x.n, where: 'scratch', stages: x.s.stages || [], after: x.after || [], what: x.what || '', id: x.s.id }); return; }
       var r = x.r, pd = r.prepDay || {}, where = station(r);
       var active = +pd.active || +r.prep || 10, cook = where === 'counter' ? 0 : (+r.cook || 0);
       by[where].push({ r: r, servings: x.servings, where: where, active: active, cook: cook, temp: pd.oven_f || r.ovenF || null, what: pd.ahead || '', keeps: pd.keeps_days || null });
@@ -518,20 +719,53 @@
     by.slow.sort(function (a, b) { return b.cook - a.cook; });
     by.oven.sort(function (a, b) { return (b.temp || 0) - (a.temp || 0) || b.cook - a.cook; });
     by.stove.sort(function (a, b) { return b.cook - a.cook; });
-    var steps = [], hands = 0, ovenFree = 0, ovenTemp = null, stoveFree = 0;
+    var steps = [], hands = 0, ovenFree = 0, stoveFree = 0, held = [];
+    // the oven is held for the bread; anything else baking slides to the next free stretch
+    function freeOven(t, len) { var moved = true; while (moved) { moved = false; held.forEach(function (h) { if (t < h[1] && t + len > h[0]) { t = h[1]; moved = true; } }); } return t; }
     // hands: when the cook is next free; each job takes its active minutes of the cook's time
     by.slow.forEach(function (j) { steps.push({ at: hands, j: j, ready: hands + j.active + j.cook }); hands += j.active; });
+    // from-scratch jobs: the ones other jobs use first, then the longest
+    var tot = function (j) { return j.stages.reduce(function (s, g) { return s + (+g.active || 0) + (+g.cook || 0) + (+g.wait || 0); }, 0); };
+    // longest first, and whatever a long job needs (butter for the bread) goes ahead of it
+    var prio = {}; sj.forEach(function (j) { prio[j.id] = tot(j); });
+    for (var pass = 0; pass < 4; pass++) sj.forEach(function (j) { j.after.forEach(function (d) { if (prio[d] != null) prio[d] = Math.max(prio[d], prio[j.id] + 1); }); });
+    sj.sort(function (a, b) { return prio[b.id] - prio[a.id]; });
+    var ids = sj.map(function (j) { return j.id; }), placed = [], ordered = [];
+    while (sj.length) {
+      var i = 0; for (; i < sj.length; i++) if (sj[i].after.every(function (id) { return ids.indexOf(id) < 0 || placed.indexOf(id) >= 0; })) break;
+      if (i === sj.length) i = 0;
+      placed.push(sj[i].id); ordered.push(sj.splice(i, 1)[0]);
+    }
+    sj = ordered;
+    var readyAt = {}, bgEnd = 0;
+    sj.forEach(function (j) {
+      var t = hands, first = true;
+      j.after.forEach(function (id) { if (readyAt[id] != null) t = Math.max(t, readyAt[id]); });
+      j.stages.forEach(function (sg, k) {
+        var a = +sg.active || 0, ck = +sg.cook || 0, w = +sg.wait || 0, at = t, stp = { at: at, j: j, sg: sg, k: k };
+        if (first && a) { hands = Math.max(hands, at + a); first = false; } // later hands-on moments (shaping) are short interruptions
+        if (sg.station === 'oven' && ck) { var into = freeOven(Math.max(at + a, ovenFree), ck); held.push([into, into + ck]); stp.inOven = into; stp.temp = +sg.temp || null; if (into - (at + a) > 10) stp.waited = into - (at + a); stp.at = into - a; t = into + ck; }
+        else t = at + a + ck;
+        stp.ready = t; t += w; stp.until = t;
+        if (sg.bg) { stp.bg = true; bgEnd = Math.max(bgEnd, t); }
+        if (a || ck || w) steps.push(stp);
+      });
+      j.ready = readyAt[j.id] = t;
+    });
     by.oven.forEach(function (j) {
-      var at = Math.max(hands, ovenFree - j.active), into = Math.max(at + j.active, ovenFree);
-      steps.push({ at: at, j: j, heat: ovenTemp !== j.temp ? j.temp : null, inOven: into, ready: into + j.cook });
-      ovenTemp = j.temp; hands = at + j.active; ovenFree = into + j.cook;
+      var at = Math.max(hands, ovenFree - j.active), into = freeOven(Math.max(at + j.active, ovenFree), j.cook);
+      steps.push({ at: at, j: j, inOven: into, temp: j.temp, ready: into + j.cook });
+      hands = at + j.active; ovenFree = into + j.cook; held.push([into, into + j.cook]);
     });
     by.stove.forEach(function (j) { var at = Math.max(hands, stoveFree); steps.push({ at: at, j: j, ready: at + j.active + j.cook }); hands = at + Math.max(j.active, Math.min(j.cook, 10)); stoveFree = at + j.active + j.cook; });
     by.counter.forEach(function (j) { steps.push({ at: hands, j: j, ready: hands + j.active }); hands += j.active; });
-    steps.sort(function (a, b) { return a.at - b.at; });
-    var end = 0, slowEnd = 0; steps.forEach(function (s) { if (s.j.where === 'slow') slowEnd = Math.max(slowEnd, s.ready); else end = Math.max(end, s.ready); });
+    // say when to heat (or reset) the oven, in the order things go in
+    var prevT = null;
+    steps.filter(function (s) { return s.inOven != null; }).sort(function (a, b) { return a.inOven - b.inOven; }).forEach(function (s) { s.heat = s.temp !== prevT ? s.temp : null; prevT = s.temp; });
+    steps.sort(function (a, b) { return a.at - b.at || (a.k || 0) - (b.k || 0); });
+    var end = 0, slowEnd = 0; steps.forEach(function (s) { if (s.j.where === 'slow') slowEnd = Math.max(slowEnd, s.ready); else if (!s.bg) end = Math.max(end, s.ready); });
     if (!end) end = hands;
-    return { steps: steps, end: end, slowEnd: slowEnd, oven: by.oven.length, slow: by.slow.length };
+    return { steps: steps, end: end, slowEnd: slowEnd, bgEnd: bgEnd, oven: by.oven.length + sj.filter(function (j) { return j.stages.some(function (g) { return g.station === 'oven'; }); }).length, slow: by.slow.length, scratch: sj.length };
   }
 
   // ---------- the adapter: data/meals (whatever its exact shape) -> what the app uses ----------
@@ -643,6 +877,8 @@
     shoppingList: shoppingList, listText: listText, NUTR: NUTR, DV: DV, NLAB: NLAB, recipeNutrition: recipeNutrition, pctDV: pctDV, dayNutrition: dayNutrition,
     rng: rng, isQuick: isQuick, totalMinutes: totalMinutes, weekday: weekday, shuffle: shuffle, checkRules: checkRules,
     copyDay: copyDay, swapDays: swapDays, copyWeek: copyWeek, addLeftovers: addLeftovers, moveEntry: moveEntry, prepDay: prepDay, station: station,
+    normScratch: normScratch, makesFor: makesFor, scratchBatches: scratchBatches, scratchFor: scratchFor, scaleScratch: scaleScratch, scratchNutr: scratchNutr, catalogWith: catalogWith, scratchSchedule: scratchSchedule,
+    normGardenMap: normGardenMap, monthOf: monthOf, growCovers: growCovers, growPlan: growPlan, TOL: TOL,
     norm: norm, normItem: normItem, normRecipe: normRecipe, normNutr: normNutr, ALLERGENS: ALLERGENS, allergenKey: allergenKey, recipeFlags: recipeFlags
   };
 });

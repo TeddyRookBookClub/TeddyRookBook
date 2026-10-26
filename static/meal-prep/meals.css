@@ -349,7 +349,7 @@ html[data-theme="dark"] .mp-temp{background:#4a2414;color:#ffc4a8}
 .mp-bar span{display:block;height:100%}
 .mp-legend{display:flex;flex-wrap:wrap;gap:.3rem .9rem;font-size:.8rem;color:var(--muted);margin:.3rem 0}
 .mp-legend i{display:inline-block;width:.8rem;height:.8rem;border-radius:3px;margin-right:.25rem;vertical-align:-1px}
-@media (max-width:760px){.mp-r{grid-template-columns:1fr}}
+@media (max-width:760px){.mp-r{grid-template-columns:minmax(0,1fr)}}
 
 /* ---------- print page ---------- */
 .mpp-opts{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.6rem .9rem;margin:0 0 1rem}
@@ -390,6 +390,56 @@ html[data-theme="dark"] .mpp{box-shadow:0 0 0 1px #2f4a3b}
 .mpp-prep ol{padding-left:1.2rem;font-size:.88rem;line-height:1.5}
 .mpp-empty{color:#5d6862}
 .mpp-foot{font-size:.75rem;color:#8a948e;margin-top:1rem}
+/* ---------- from scratch and from the garden ---------- */
+.mp-shopsec li{flex-wrap:wrap}
+.mp-rowtools{display:flex;flex-wrap:wrap;gap:.3rem;width:100%;padding-left:1.55rem}
+.mp-tag{display:inline-flex;align-items:center;gap:.2rem;border:1px solid var(--chipb);background:var(--chip);color:var(--g);border-radius:999px;padding:.12rem .55rem;font:600 .76rem system-ui,sans-serif;cursor:pointer;text-decoration:none;box-shadow:none;line-height:1.5;white-space:nowrap}
+.mp-tag:hover{background:var(--chip2)}
+.mp-tag.on{cursor:default}
+html[data-theme="dark"] .mp-tag{color:#9fe0bd}
+.mp-ings .mp-tag{margin-left:.2rem;vertical-align:1px}
+.mp-made{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:.5rem .8rem;margin:.8rem 0}
+.mp-made h3{margin:.1rem 0 .3rem;font-size:1rem;color:var(--g)}
+.mp-made ul{list-style:none;margin:0;padding:0}
+.mp-made li{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:flex-start;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--line)}
+.mp-made li:last-child{border-bottom:0}
+.mp-made li>div{flex:1 1 16rem;min-width:0}
+.mp-made small{display:block;color:var(--muted);font-size:.8rem}
+.mp-made .mp-warnline,.mp-warnline{color:var(--warn);font-weight:600}
+.mp-scratchhint{margin:.6rem 0}
+.mp-grown{border-color:var(--chipb)}
+.mp-grown h3{border-bottom-color:#6cc79a}
+.mp-grown .mp-sb{color:#2f7a4f}
+html[data-theme="dark"] .mp-grown .mp-sb{color:#9fe0bd}
+.mp-growlist{list-style:none;margin:.4rem 0;padding:0;display:grid;gap:.5rem}
+.mp-growlist li{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.45rem .6rem}
+.mp-growlist small{display:block;color:var(--muted);font-size:.78rem;margin-top:.2rem}
+.mp-growhead{display:flex;align-items:baseline;gap:.5rem}
+.mp-growhead b{color:var(--g)}
+.mp-growhead small{flex:1;margin:0}
+.mp-growhead .mp-x{margin-left:auto}
+.mp-months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:.15rem;margin:.35rem 0}
+.mp-mon{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:.3rem 0;font:600 .72rem system-ui,sans-serif;cursor:pointer;min-width:0}
+.mp-mon[aria-pressed="true"]{background:#2f7a4f;border-color:#2f7a4f;color:#fff}
+html[data-theme="dark"] .mp-mon[aria-pressed="true"]{background:#6cc79a;border-color:#6cc79a;color:#0f1a14}
+@media (max-width:520px){.mp-months{grid-template-columns:repeat(6,minmax(0,1fr))}.mp-mon{padding:.45rem 0}}
+.mp-growtab th[scope=row] .mp-tag{font-size:.68rem}
+.mp-growan{margin:.6rem 0;padding-left:1.2rem}
+.mp-otherdays{margin:.4rem 0;padding-left:1.2rem}
+.mp-otherdays li{margin:.2rem 0}
+.mp-tl-scratch::before{background:var(--gold)!important}
+.mp-keeps{margin:0;padding-left:1.2rem}
+.mp-keeps li{margin:.25rem 0;line-height:1.45}
+.mp-stagetab{min-width:0!important}
+.mp-stagetab td{white-space:nowrap}
+.mp-need{flex-direction:column;align-items:stretch}
+.mp-need>label{font-weight:700}
+.mp-needrow{display:flex;gap:.4rem;flex-wrap:wrap}
+.mp-needrow input{width:6rem}
+.mp-needrow select{flex:1 1 12rem;min-width:0}
+.mp-need p{margin:0}
+.mpp-made{font-size:.9rem;margin:.2rem 0 .6rem}
+
 @media print{
   @page{size:letter;margin:12mm}
   body:has(.mpp) .header,body:has(.mpp) .footer,body:has(.mpp) .top-link,body:has(.mpp) .hs-crumbs,.mpp-opts,.hs-noprint{display:none!important}

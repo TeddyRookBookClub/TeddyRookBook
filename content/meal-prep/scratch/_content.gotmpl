@@ -1,0 +1,13 @@
+{{/* One page per from-scratch recipe, from data/meals/scratch.json */}}
+{{ with site.Data.meals }}{{ with .scratch }}
+  {{ range .recipes }}
+    {{ $.AddPage (dict
+      "kind" "page"
+      "path" .id
+      "title" .name
+      "layout" "scratch"
+      "params" (dict "scratch" .id "description" (printf "How to make %s at home: %s Scales to the amount you need, with hands-on and waiting times and how long it keeps." (lower .name) .summary))
+      "dates" (dict "date" (time.AsTime "2026-10-25"))
+    ) }}
+  {{ end }}
+{{ end }}{{ end }}

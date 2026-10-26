@@ -222,6 +222,104 @@ if (guides.fats) for (const id of guides.fats.sections.flatMap(s => s.fat_table 
   if (n && !['mufa', 'pufa'].every(k => isNum(n[k]))) warn(`fats guide: ${id} lacks mufa/pufa`);
 }
 
+// ---------- from scratch (scratch.json) ----------
+const scratchPath = D('scratch.json');
+if (fs.existsSync(scratchPath)) {
+  const sc = load('scratch.json'), sIds = new Set(), srcIds = new Set((sc.sources || []).map(s => s.id));
+  for (const s of sc.sources || []) if (!/^https:\/\//.test(s.url) || !s.title || !s.publisher) err(`scratch source ${s.id}: needs https url, title, publisher`);
+  const STATIONS = new Set(['counter', 'oven', 'stove', 'simmer', 'fridge', 'slow']);
+  const conv = (it, u) => u in MASS || (u in VOL && it.g_per_cup) || (it.counts && u in it.counts);
+  for (const r of sc.recipes) {
+    const w = `scratch ${r.id}`;
+    if (!ID_RE.test(r.id || '') || sIds.has(r.id)) err(`${w}: bad or duplicate id`);
+    sIds.add(r.id);
+    for (const k of ['name', 'emoji', 'summary', 'yield', 'group']) if (!r[k]) err(`${w}: missing ${k}`);
+    if (!['scratch', 'stand-in'].includes(r.kind)) err(`${w}: kind must be scratch or stand-in`);
+    for (const i of r.ingredients) {
+      const it = byId.get(i.item);
+      if (!it) { err(`${w}: ingredient ${i.item} not in catalog`); continue; }
+      if (!(isNum(i.amount) && i.amount > 0)) err(`${w}: ${i.item} bad amount`);
+      if (!conv(it, i.unit)) err(`${w}: ${i.amount} ${i.unit} of ${i.item} not convertible`);
+    }
+    for (const m of r.makes) {
+      const it = byId.get(m.item);
+      if (!it) { err(`${w}: makes ${m.item}, not in catalog`); continue; }
+      if (!conv(it, m.by) || !(m.n > 0) || !m.label) err(`${w}: makes ${m.item} by ${m.by} (n ${m.n}) not usable`);
+    }
+    const b = r.batch || {};
+    if (!(b.step > 0 && b.step <= 1) || (b.min != null && !(b.min > 0))) err(`${w}: batch step/min`);
+    for (const p of b.pans || []) if (!p.id || !p.label || !(p.f > 0)) err(`${w}: bad pan`);
+    let act = 0, tot = 0;
+    for (const g of r.stages) {
+      if (!g.do || !STATIONS.has(g.station)) err(`${w}: stage ${g.do} station ${g.station}`);
+      for (const k of ['active', 'cook', 'wait']) if (g[k] != null && !(isNum(g[k]) && g[k] >= 0)) err(`${w}: stage ${g.do} ${k}`);
+      if (g.station === 'oven' && !(g.temp >= 200 && g.temp <= 500)) err(`${w}: oven stage without a temperature`);
+      act += g.active || 0; tot += (g.active || 0) + (g.cook || 0) + (g.wait || 0);
+    }
+    if (!r.stages.length || r.times.active !== act || r.times.total !== tot) err(`${w}: times must match the stages`);
+    const pl = r.plan || {};
+    if (!(isNum(pl.keep_days) && pl.keep_days >= 0) || typeof pl.freeze !== 'boolean' || !(isNum(pl.lead_days) && pl.lead_days >= 0)) err(`${w}: plan keep_days/freeze/lead_days`);
+    if (!r.keeps || !r.keeps.length) err(`${w}: say how long it keeps`);
+    if (!r.steps.length || !r.equipment.length) err(`${w}: empty steps or equipment`);
+    for (const id of r.src) if (!srcIds.has(id)) err(`${w}: source ${id} not listed`);
+    const n = r.nutrition || {};
+    if (!['ingredients', 'item', 'usda'].includes(n.from)) err(`${w}: nutrition.from`);
+    if (n.from !== 'ingredients' && !n.why) err(`${w}: say why the nutrition isn't from the ingredients`);
+    if (n.from === 'usda' && !(n.per100 && ['kcal', 'protein', 'fat', 'carb', 'sodium'].every(k => isNum(n.per100[k])) && n.fdc)) err(`${w}: usda nutrition needs fdc and per100`);
+    if (n.from === 'item' && r.makes.some(m => !(byId.get(m.item) || {}).nutrition)) err(`${w}: item nutrition missing`);
+    const text = JSON.stringify([r.name, r.summary, r.yield, r.steps, r.keeps, r.scaling, r.old_way, r.safety, r.notes, r.ingredients.map(i => i.prep || ''), n.why || '']);
+    if (BANNED.test(text)) err(`${w}: banned word: ${text.match(BANNED)[0]}`);
+    if (BRANDS.test(text)) err(`${w}: brand name: ${text.match(BRANDS)[0]}`);
+    // the owner's food-safety rules: no home-canning instructions; raw egg only as pasteurized eggs; dried beans boiled 30 minutes
+    if (/(water[- ]bath|pressure)[- ]can|process(ing)? (time|the jars)|canner/i.test(JSON.stringify(r.steps))) err(`${w}: canning instructions are not allowed (link NCHFP instead)`);
+    const cooked = r.stages.some(g => ['oven', 'stove', 'simmer'].includes(g.station));
+    if (r.ingredients.some(i => i.item === 'eggs') && !cooked && !r.cooked_later) err(`${w}: raw eggs must be pasteurized-eggs`);
+    if (r.ingredients.some(i => i.item === 'pasteurized-eggs') && !/pasteurized/i.test(JSON.stringify(r.safety))) err(`${w}: pasteurized-egg recipes need the FDA/USDA note`);
+    if (r.ingredients.some(i => /^dried-.*beans$/.test(i.item)) && !/30 minutes/.test(JSON.stringify(r.steps))) err(`${w}: dried beans must boil at least 30 minutes (FDA)`);
+  }
+  for (const o of sc.omitted || []) for (const id of o.src || []) if (!srcIds.has(id)) err(`scratch omitted ${o.name}: source ${id}`);
+  console.log(`scratch: ${sc.recipes.length} recipes, ${sc.sources.length} sources`);
+}
+
+// ---------- garden map (garden-map.json) ----------
+const gmPath = D('garden-map.json');
+if (fs.existsSync(gmPath)) {
+  const gm = load('garden-map.json');
+  const crops = JSON.parse(fs.readFileSync(path.join(SITE, 'data', 'garden', 'crops.json'), 'utf8')).crops;
+  const viz = JSON.parse(fs.readFileSync(path.join(SITE, 'data', 'garden', 'viz.json'), 'utf8')).crops;
+  const cropBy = new Map(crops.map(c => [c.k, c]));
+  let GM = null; try { GM = require(path.join(SITE, 'static', 'garden', 'viz', 'model.js')); } catch (e) { warn('garden viz model.js not loadable; months not checked'); }
+  const seenItems = new Set();
+  for (const e of gm.items) {
+    const w = `garden-map ${e.item}`;
+    if (!byId.has(e.item)) err(`${w}: not in catalog`);
+    if (seenItems.has(e.item)) err(`${w}: listed twice`);
+    seenItems.add(e.item);
+    if (e.crop && !cropBy.has(e.crop)) err(`${w}: crop ${e.crop} not in data/garden/crops.json`);
+    if (e.crop && !gm.crops[e.crop]) err(`${w}: crop ${e.crop} has no entry in garden-map crops`);
+    if (e.animal && !['hens', 'bees'].includes(e.animal)) err(`${w}: animal ${e.animal}`);
+    if (!e.crop === !e.animal) err(`${w}: needs exactly one of crop or animal`);
+    if (!(e.f > 0 && e.f < 10)) err(`${w}: conversion f`);
+  }
+  const L = 105, F = 288; // the garden planner's example frost dates, April 15 and October 15
+  for (const [k, c] of Object.entries(gm.crops)) {
+    const w = `garden-map crop ${k}`;
+    if (!cropBy.has(k)) { err(`${w}: not in data/garden/crops.json`); continue; }
+    if (!c.months.every(m => Number.isInteger(m) && m >= 1 && m <= 12)) err(`${w}: months must be 1-12`);
+    if (!(isNum(c.store_months) && c.store_months >= 0 && c.store_months <= 24)) err(`${w}: store_months`);
+    if (c.store_months && !/month|year/i.test(cropBy.get(k).sto || '') && !c.store_note) err(`${w}: store_months without a storage note to back it`);
+    if (GM) { // months must match the garden planner's own calendar math with its example frost dates
+      const cr = cropBy.get(k), cal = GM.cropCal(viz[k], cr.dh, cr.fr === 'tender', L, F), want = new Set(), mo = d => GM.mdOf(d).m;
+      if (cal && cal.h) { for (let d = cal.h[0]; d <= cal.h[1]; d += 7) want.add(mo(d)); want.add(mo(cal.h[1])); }
+      if (cal && cal.fall) { for (let d = cal.fall[0] + cr.dh[0]; d <= F; d += 7) want.add(mo(d)); want.add(mo(F)); }
+      const got = [...c.months].sort((a, b) => a - b).join(), exp = [...want].sort((a, b) => a - b).join();
+      if (got !== exp) err(`${w}: months ${got} but the garden calendar gives ${exp}`);
+    }
+  }
+  for (const a of ['hens', 'bees']) if (!gm.animals || !gm.animals[a]) err(`garden-map: animals.${a} missing`);
+  console.log(`garden-map: ${gm.items.length} items, ${Object.keys(gm.crops).length} crops`);
+}
+
 // ---------- report ----------
 const pending = catalog.filter(i => !i.nutrition).length;
 console.log(`catalog: ${catalog.length} items (${pending} without nutrition), recipes: ${recipes.length}, guides: ${Object.keys(guides).length}`);

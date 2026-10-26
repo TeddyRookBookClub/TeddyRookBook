@@ -38,13 +38,19 @@
     $('#mpp').innerHTML = h || '<p class="mpp-empty">Pick at least one thing to print.</p>';
   }
   function prepHTML(p, w) {
-    var cooked = C.cooked(data, st, p, w.from, w.to), sel = st.prepSel || {};
-    var jobs = cooked.filter(function (c) { return sel[c.r.id] != null ? sel[c.r.id] : !!(c.r.prepDay && c.r.prepDay.ahead); }).map(function (c) { return { r: c.r, servings: c.servings }; });
-    if (!jobs.length) return '<p class="mpp-empty">No make-ahead dishes picked for this week.</p>';
-    var pd = M.prepDay(jobs), start = (st.prepStart || '13:00').split(':'), sm = +start[0] * 60 + (+start[1] || 0);
+    var PP = C.prepPlan(data, st, p, w), jobs = PP.jobs, other = [];
+    PP.scratch.forEach(function (x) { x.parts.forEach(function (pt) { if (pt.day !== PP.p) other.push({ s: x.s, pt: pt }); }); });
+    var start = (st.prepStart || '13:00').split(':'), sm = +start[0] * 60 + (+start[1] || 0);
     function clock(m) { var t = (sm + m) % 1440, hh = Math.floor(t / 60), mm = Math.round(t % 60); return (hh % 12 || 12) + ':' + (mm < 10 ? '0' : '') + mm + (hh >= 12 ? ' PM' : ' AM'); }
-    return '<div class="mpp-prep"><ol>' + pd.steps.map(function (s) { var j = s.j; return '<li><b>' + clock(s.at) + '</b> ' + esc(C.emoji(j.r) + ' ' + j.r.name) + ' (' + { slow: 'slow cooker', oven: 'oven', stove: 'stovetop', counter: 'counter' }[j.where] + ')' + (s.heat ? ': heat the oven to ' + s.heat + '°F' : '') + '. ' + esc(j.what || 'Cook as the recipe says.') + (j.cook ? ' Ready about ' + clock(s.ready) + '.' : '') + (j.keeps ? ' Keeps about ' + j.keeps + ' days in the fridge.' : '') + '</li>'; }).join('') +
-      '<li><b>' + clock(pd.end) + '</b> Cool, label and pack. Refrigerate within 2 hours (1 hour above 90°F); reheat leftovers to 165°F.</li></ol></div>';
+    var h = '';
+    if (!jobs.length) h += '<p class="mpp-empty">No make-ahead dishes picked for this week.</p>';
+    else {
+      var pd = M.prepDay(jobs);
+      h += '<p class="mpp-sub">' + esc(C.dayLabel(p, PP.p, true)) + '</p><div class="mpp-prep"><ol>' + pd.steps.map(function (s) { var T = C.stepText(s, clock), j = s.j; return '<li><b>' + clock(s.at) + '</b> ' + esc(T.title) + ' (' + esc(T.label.toLowerCase()) + ')' + (s.heat ? ': heat the oven to ' + s.heat + '°F' : '') + '. ' + esc(T.what) + ' ' + esc(T.small) + '.' + (j.r && j.keeps ? ' Keeps about ' + j.keeps + (j.keeps === 1 ? ' day' : ' days') + ' in the fridge.' : '') + '</li>'; }).join('') +
+        '<li><b>' + clock(pd.end) + '</b> Cool, label and pack. Refrigerate within 2 hours (1 hour above 90°F); reheat leftovers to 165°F.</li></ol></div>';
+    }
+    if (other.length) h += '<h3>From scratch on other days</h3><ul>' + other.sort(function (a, b) { return a.pt.day - b.pt.day; }).map(function (o) { return '<li><b>' + esc(C.dayLabel(p, o.pt.day, true)) + '</b>: ' + esc(o.s.name) + ' ' + C.timesText(o.pt.n) + '</li>'; }).join('') + '</ul>';
+    return h;
   }
   $('#mpp-plan').addEventListener('change', function () { st.cur = this.value; range = 'all'; opts(); render(); });
   $('#mpp-range').addEventListener('change', function () { range = this.value; render(); });

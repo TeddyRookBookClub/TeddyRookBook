@@ -1,0 +1,97 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{ $m := site.Data.meals }}{{ $id := .Params.scratch }}
+{{ $s := index (where $m.scratch.recipes "id" $id) 0 }}
+{{ $cat := partialCached "meal-prep/catdict.html" "c" }}
+{{ $src := partial "meal-prep/data.html" . }}
+{{ $srcs := dict }}{{ range $i, $x := $m.scratch.sources }}{{ $srcs = merge $srcs (dict $x.id $x) }}{{ end }}
+{{ $gm := index $m "garden-map" }}{{ $gitems := dict }}{{ range $gm.items }}{{ $gitems = merge $gitems (dict .item .) }}{{ end }}
+{{ $alname := dict }}{{ range $m.meta.allergens }}{{ $alname = merge $alname (dict .id (.name | default .id)) }}{{ end }}
+{{ $al := slice }}{{ range $s.ingredients }}{{ if not .optional }}{{ with index $cat .item }}{{ range .allergens }}{{ if not (in $al .) }}{{ $al = $al | append . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ end }}
+<div class="hs mp" id="mp-scratch" data-src="{{ $src }}" data-id="{{ $id }}">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "From scratch" "u" "meal-prep/scratch/") (dict "t" $s.name)) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">From scratch · {{ $s.group }}{{ if eq $s.kind "stand-in" }} · A stand-in{{ end }}</p>
+    <h1><span aria-hidden="true">{{ $s.emoji }}</span> {{ $s.name }}</h1>
+    <p>{{ $s.summary }}</p>
+    <div class="mp-badges">
+      <span class="mp-badge">✋ {{ partial "meal-prep/mins.html" $s.times.active }} hands-on</span>
+      <span class="mp-badge">⏱ {{ partial "meal-prep/mins.html" $s.times.total }} start to finish</span>
+      <span class="mp-badge">🍽 {{ $s.yield }}</span>
+    </div>
+  </header>
+  {{ with $al }}<p class="mp-tip"><b>Contains</b>{{ range $i, $a := . }}{{ if $i }}, {{ end }}{{ index $alname $a | default $a }}{{ end }}.</p>{{ end }}
+
+  <div class="mp-r">
+    <div>
+      <section class="mp-box" aria-labelledby="sx-ingh">
+        <h2 id="sx-ingh">Ingredients</h2>
+        <div class="mp-scale mp-need hs-noprint" id="sx-scale" hidden>
+          <label class="mp-f mp-inline" for="sx-n">How much do you need?</label>
+          <span class="mp-needrow"><input type="number" id="sx-n" min="0" step="any" inputmode="decimal" aria-describedby="sx-what"><select id="sx-u" aria-label="Of what"></select></span>
+          <p class="hs-small" id="sx-what" aria-live="polite"></p>
+        </div>
+        <ul class="mp-ings" id="sx-ings">
+          {{ range $s.ingredients }}{{ $it := index $cat .item }}
+          <li><b>{{ partial "meal-prep/amt.html" .amount }} {{ if ne .unit "each" }}{{ replace .unit "-" " " }}{{ end }}</b> {{ with $it }}{{ lower .name }}{{ end }}{{ with .prep }}, {{ . }}{{ end }}{{ if .optional }} <i>(optional)</i>{{ end }}</li>
+          {{ end }}
+        </ul>
+        <p class="hs-small" id="sx-pans" hidden></p>
+      </section>
+      <section class="mp-box" aria-labelledby="sx-th">
+        <h2 id="sx-th">Time</h2>
+        <p class="hs-small">Hands-on time is when you’re busy; the rest is rising, simmering, chilling or cooling, when you can do something else.</p>
+        <table class="mp-ntab mp-stagetab"><thead><tr><th scope="col">Step</th><th scope="col">Hands-on</th><th scope="col">Waiting</th></tr></thead><tbody>
+          {{ range $s.stages }}<tr><th scope="row">{{ .do }}</th><td>{{ with .active }}{{ partial "meal-prep/mins.html" . }}{{ else }}–{{ end }}</td><td>{{ $w := add (.cook | default 0) (.wait | default 0) }}{{ if $w }}{{ partial "meal-prep/mins.html" $w }}{{ else }}–{{ end }}</td></tr>{{ end }}
+        </tbody><tfoot><tr><th scope="row">In all</th><td>{{ partial "meal-prep/mins.html" $s.times.active }}</td><td>{{ partial "meal-prep/mins.html" (sub $s.times.total $s.times.active) }}</td></tr></tfoot></table>
+      </section>
+      <section class="mp-box" aria-labelledby="sx-kh">
+        <h2 id="sx-kh">How long it keeps</h2>
+        <ul class="mp-keeps">{{ range $s.keeps }}<li>{{ . }}</li>{{ end }}</ul>
+      </section>
+      <section class="mp-box" aria-labelledby="sx-nh">
+        <h2 id="sx-nh">Nutrition</h2>
+        <div id="sx-nutr"><p class="hs-small">{{ if eq $s.nutrition.from "ingredients" }}Estimated from the ingredients’ USDA FoodData Central numbers.{{ else }}{{ $s.nutrition.why }}{{ end }}</p></div>
+      </section>
+    </div>
+    <div>
+      <section class="mp-box" aria-labelledby="sx-sh">
+        <h2 id="sx-sh">Steps</h2>
+        {{ with $s.equipment }}<p class="hs-small"><b>You’ll need:</b> {{ delimit . ", " }}.</p>{{ end }}
+        <ol class="mp-stepsol">{{ range $s.steps }}<li>{{ . | replaceRE `(\d{3}) ?°F` `<span class="mp-temp">$1°F</span>` | safeHTML }}</li>{{ end }}</ol>
+      </section>
+      <section class="mp-tips" aria-label="Tips">
+        {{ with $s.scaling }}<div class="mp-tip"><b>⚖️ Scaling</b>{{ . }}</div>{{ end }}
+        {{ range $s.safety }}<div class="mp-tip"><b>🛡 Safety</b>{{ . }}</div>{{ end }}
+        {{ range $s.notes }}<div class="mp-tip"><b>Good to know</b>{{ . }}</div>{{ end }}
+        {{ with $s.old_way }}<div class="mp-tip"><b>📜 The old way</b>{{ . }}</div>{{ end }}
+      </section>
+      {{ $mk := slice }}{{ range $s.makes }}{{ $mk = $mk | append .item }}{{ end }}
+      {{ $used := slice }}{{ range $m.recipes.recipes }}{{ $r := . }}{{ $hit := false }}{{ range .ingredients }}{{ if in $mk .item }}{{ $hit = true }}{{ end }}{{ end }}{{ if $hit }}{{ $used = $used | append $r }}{{ end }}{{ end }}
+      {{ with $used }}
+      <section class="mp-box hs-noprint" style="margin-top:1rem"><h2>Use it in</h2><p class="mp-glinks">{{ range . }}<a class="mp-glink" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .emoji }} {{ .name }}</a>{{ end }}</p></section>
+      {{ end }}
+      {{ $grow := slice }}{{ range $s.ingredients }}{{ with index $gitems .item }}{{ $k := .crop | default .animal }}{{ if and $k (not (in $grow $k)) }}{{ $grow = $grow | append $k }}{{ end }}{{ end }}{{ end }}
+      {{ with $grow }}{{ $crops := slice }}{{ range . }}{{ if and (ne . "hens") (ne . "bees") }}{{ $crops = $crops | append . }}{{ end }}{{ end }}
+      <section class="mp-box hs-noprint" style="margin-top:1rem"><h2>🌱 Grow it</h2>
+        <p>{{ $names := slice }}{{ range . }}{{ $k := . }}{{ if eq $k "hens" }}{{ $names = $names | append "eggs (backyard hens)" }}{{ else if eq $k "bees" }}{{ $names = $names | append "honey (honeybees)" }}{{ else }}{{ range site.Data.garden.crops.crops }}{{ if eq .k $k }}{{ $names = $names | append (lower (replaceRE ` \(.*\)$` "" .n)) }}{{ end }}{{ end }}{{ end }}{{ end }}You can grow some of what goes into this: {{ delimit $names ", " " and " }}.</p>
+        {{ with $crops }}<p class="mp-glinks"><a class="mp-glink" href="{{ "garden/" | relURL }}?crops={{ delimit . "," }}&amp;mode=only&amp;from=meals">🌱 Plan a garden with {{ if eq (len .) 1 }}it{{ else }}them{{ end }} →</a></p>{{ end }}
+      </section>
+      {{ end }}
+    </div>
+  </div>
+  {{ with $s.src }}
+  <section class="hs-sec" id="sources">
+    <h2>Sources</h2>
+    <ol class="mp-src">{{ range . }}{{ with index $srcs . }}<li><a href="{{ .url }}" rel="noopener">{{ .title }}</a>, {{ .publisher }}. Accessed {{ .accessed }}.</li>{{ end }}{{ end }}</ol>
+  </section>
+  {{ end }}
+  <section class="hs-sec hs-note hs-noprint">
+    <p>In the <a href="{{ "meal-prep/plan/" | relURL }}">meal planner</a>, tap <b>Make it</b> next to {{ with $s.makes }}{{ with index $cat (index . 0).item }}{{ lower .name }}{{ end }}{{ else }}an item{{ end }} on the shopping list: the list swaps it for these ingredients, scaled to your meals, and the Prep day tab fits the {{ if gt $s.times.total 120 }}waiting{{ else }}work{{ end }} into your week. <a href="{{ "meal-prep/scratch/" | relURL }}">More from-scratch recipes</a>.</p>
+  </section>
+</div>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pages.js").ModTime.Unix }}" defer></script>
+{{ end }}

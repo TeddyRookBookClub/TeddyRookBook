@@ -83,6 +83,7 @@
     $('#mp-diet').innerHTML = '<span class="mp-cbh">Only:</span>' + [['vegetarian', 'Vegetarian'], ['vegan', 'Vegan'], ['glutenFree', 'Gluten-free'], ['dairyFree', 'Dairy-free']].map(function (d) { return '<label class="mp-cb"><input type="checkbox" data-diet="' + d[0] + '"' + (st.diet[d[0]] ? ' checked' : '') + '> ' + d[1] + '</label>'; }).join('');
     $('#mp-norepeat').value = String(st.rules.noRepeat);
     if (!$('#mp-norepeat').value) $('#mp-norepeat').value = '6';
+    $('#mp-makeall').checked = !!st.makeAll;
     $('#mp-busy').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(function (d) { return '<label class="mp-cb"><input type="checkbox" data-busy="' + d + '"' + (st.rules.busy.indexOf(d) >= 0 ? ' checked' : '') + '> ' + C.DOW[d] + '</label>'; }).join('');
     renderSetupSum();
   }
@@ -91,6 +92,14 @@
     $('#mp-people-sum').textContent = n + (n === 1 ? ' person' : ' people') + ' · about ' + M.fmtNum(sv) + ' adult-sized portions a meal';
     var av = st.avoid.length ? ' · avoiding ' + st.avoid.length + (st.avoid.length === 1 ? ' allergen' : ' allergens') : '';
     $('#mp-setup-sum').textContent = C.shortDate(C.dateOf(p, 0)) + ' – ' + C.shortDate(C.dateOf(p, p.days - 1)) + ' · ' + n + (n === 1 ? ' person' : ' people') + av;
+    if (data) {
+      var made = Object.keys(C.made(data, st)).map(function (id) { return data.cat[id].name.replace(/ \(.*\)$/, '').toLowerCase(); });
+      $('#mp-make-sum').textContent = made.length ? 'Making at home: ' + made.join(', ') + '.' : 'Buying everything ready-made.';
+      var gr = [];
+      Object.keys(st.grow.crops).forEach(function (k) { if (st.grow.crops[k].on && data.G.crops[k]) gr.push(C.growName(data, k) + ' (' + C.monthsText(st.grow.crops[k].m) + ')'); });
+      ['hens', 'bees'].forEach(function (k) { var a = st.grow.animals[k]; if (a && a.on) gr.push(k === 'hens' ? 'eggs' : 'honey'); });
+      $('#mp-grow-sum').textContent = gr.length ? 'You grow: ' + gr.join(', ') + '.' : 'Nothing yet. Tell the planner what you grow and it takes those off the shopping list while they’re in season.';
+    }
   }
   var setup = $('#mp-setup');
   setup.addEventListener('change', function (e) {
@@ -101,12 +110,14 @@
     else if (t.dataset.fac != null) { var v = +t.value; if (v > 0 && v <= 3) { st.people[+t.dataset.fac].f = v; change('cal'); } }
     else if (t.dataset.avoid) { var a = t.dataset.avoid; st.avoid = st.avoid.filter(function (x) { return x !== a; }); if (t.checked) st.avoid.push(a); save(); renderLib(); renderSetupSum(); warnAvoid(); }
     else if (t.dataset.diet) { st.diet[t.dataset.diet] = t.checked; save(); renderLib(); warnAvoid(); }
+    else if (t.id === 'mp-makeall') { st.makeAll = t.checked; save(); renderSetupSum(); if (st.view !== 'cal') renderView(); msg(t.checked ? 'The shopping list now lists ingredients for what you can make at home (bread, tortillas, stock and more). Use “Buy instead” on any of them.' : 'Buying ready-made again, except items you chose to make one by one.'); }
     else if (t.id === 'mp-norepeat') { st.rules.noRepeat = +t.value; save(); renderCal(); }
     else if (t.dataset.busy) { var d = +t.dataset.busy; st.rules.busy = st.rules.busy.filter(function (x) { return x !== d; }); if (t.checked) st.rules.busy.push(d); save(); renderCal(); }
   });
   setup.addEventListener('click', function (e) {
     var b = e.target.closest('[data-pp]');
     if (b) { var g = st.people[+b.dataset.pp]; g.n = Math.max(0, Math.min(20, g.n + +b.dataset.d)); b.parentNode.querySelector('output').textContent = g.n; change('cal'); return; }
+    if (e.target.closest('#mp-grow-open')) { if (W.MealViews) W.MealViews.growDialog(api, null); return; }
     if (e.target.id === 'mp-facreset') { st.people.forEach(function (g) { var d = M.DEFAULT_GROUPS.filter(function (x) { return x.k === g.k; })[0]; if (d) g.f = d.f; }); renderSetup(); change('cal'); }
   });
   setup.addEventListener('toggle', function () { try { W.localStorage.setItem('trb-meals-setup', setup.open ? '1' : '0'); } catch (e) { } });
@@ -123,8 +134,14 @@
   var FILTERS = [
     ['m:breakfast', 'Breakfast'], ['m:lunch', 'Lunch'], ['m:dinner', 'Dinner'], ['m:side', 'Sides'], ['m:snack', 'Snacks'],
     ['quick', '⚡ Quick'], ['budget', '💲 Budget'], ['kid-friendly', '🧒 Kid-friendly'], ['freezer-friendly', '❄️ Freezer'], ['lunchbox', '🎒 Lunchbox'],
-    ['slow-cooker', 'Slow cooker'], ['sheet-pan', 'Sheet pan'], ['one-pot', 'One pot'], ['grill', 'Grill'], ['mine', '⭐ My recipes']
+    ['slow-cooker', 'Slow cooker'], ['sheet-pan', 'Sheet pan'], ['one-pot', 'One pot'], ['grill', 'Grill'], ['mine', '⭐ My recipes'], ['garden', '🌱 From my garden']
   ];
+  // recipes that use something the household grows, in season (or stored) during this plan
+  function fromGarden(r) {
+    var p = plan(), cov = C.covers(data, st, p);
+    return r.ing.some(function (i) { if (!i.item || i.opt) return false; for (var d = 0; d < p.days; d += 7) if (cov(i.item, d) || cov(i.item, Math.min(p.days - 1, d + 6))) return true; return false; });
+  }
+  function growsAny() { return Object.keys(st.grow.crops).some(function (k) { return st.grow.crops[k].on; }) || ['hens', 'bees'].some(function (k) { return st.grow.animals[k] && st.grow.animals[k].on; }); }
   function libMatches(r) {
     if (!C.allowed(data, st, r)) return false;
     var f = lib.f, meals = Object.keys(f).filter(function (k) { return f[k] && k.indexOf('m:') === 0; });
@@ -132,6 +149,7 @@
     for (var k in f) {
       if (!f[k] || k.indexOf('m:') === 0) continue;
       if (k === 'mine') { if (!r.own) return false; }
+      else if (k === 'garden') { if (!fromGarden(r)) return false; }
       else if (k === 'quick') { if (!M.isQuick(r, 30) && !C.has(r, 'quick')) return false; }
       else if (!C.has(r, k)) return false;
     }
@@ -145,12 +163,13 @@
     var bits = [], t = M.totalMinutes(r);
     if (t) bits.push(C.mins(t));
     if (r.own) bits.push('mine');
+    if (growsAny() && fromGarden(r)) bits.push('🌱 from your garden');
     return '<li><button type="button" class="mp-rec" data-drag="r" data-r="' + esc(r.id) + '" aria-label="' + esc(r.name) + ': place on the calendar"><span class="mp-emo" aria-hidden="true">' + esc(C.emoji(r)) + '</span><span class="mp-rn">' + esc(r.name) + '<small>' + esc(bits.join(' · ')) + '</small></span></button>' +
       '<button type="button" class="mp-recinfo" data-info="' + esc(r.id) + '" aria-label="About ' + esc(r.name) + '">ⓘ</button></li>';
   }
   function renderLib() {
     if (!data) return;
-    $('#mp-fchips').innerHTML = FILTERS.map(function (f) { return '<button type="button" class="mp-chipf" data-f="' + f[0] + '" aria-pressed="' + !!lib.f[f[0]] + '">' + f[1] + '</button>'; }).join('');
+    $('#mp-fchips').innerHTML = FILTERS.filter(function (f) { return f[0] !== 'garden' || growsAny() || lib.f.garden; }).map(function (f) { return '<button type="button" class="mp-chipf" data-f="' + f[0] + '" aria-pressed="' + !!lib.f[f[0]] + '">' + f[1] + '</button>'; }).join('');
     var list = Object.keys(ALL).map(function (k) { return ALL[k]; }).filter(libMatches);
     var groups = [['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner'], ['side', 'Sides'], ['snack', 'Snacks']], used = {}, h = '';
     if (lib.target) h += '<p class="mp-libtarget">Adding to <b>' + esc(cellName(lib.target)) + '</b> <button type="button" class="mp-linkbtn" id="mp-libtarget-x">cancel</button></p>';
@@ -475,7 +494,7 @@
 
   function recipeInfo(id) {
     var r = ALL[id]; if (!r) return;
-    var f = C.flags(data, r), rn = M.recipeNutrition(r, data.cat), url = C.recipeURL(data, r);
+    var f = C.flags(data, r), rn = M.recipeNutrition(r, C.cat(data, st)), url = C.recipeURL(data, r);
     var h = '<p class="mp-dlgsub">' + esc(r.intro || '') + '</p><p class="hs-small">Makes ' + r.servings + (r.size ? ' (' + esc(r.size) + ' each)' : '') + (M.totalMinutes(r) ? ' · ' + C.mins(M.totalMinutes(r)) : '') + (f.allergens.length ? ' · Contains: ' + f.allergens.map(function (a) { return data.allergenName[a] || a; }).join(', ') : '') + '</p>';
     if (rn.status === 'none') h += '<p class="mp-pending">Nutrition coming: the USDA numbers for these ingredients haven’t been added yet.</p>';
     else h += '<p class="hs-small">About <b>' + Math.round(rn.n.kcal) + ' calories</b> a serving' + (rn.status === 'partial' ? ' (not counting ' + esc(rn.missing.join(', ')) + ')' : '') + '. An estimate from USDA data.</p>';
@@ -517,7 +536,7 @@
   function setView(v) {
     st.view = v; save(); $('#mp-msg').classList.remove('on');
     $$('#mp-tabs [role=tab]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.v === v); b.tabIndex = b.dataset.v === v ? 0 : -1; });
-    ['cal', 'shop', 'nutr', 'prep', 'kids'].forEach(function (x) { $('#mp-' + x).hidden = x !== v; });
+    ['cal', 'shop', 'nutr', 'prep', 'kids', 'grow'].forEach(function (x) { $('#mp-' + x).hidden = x !== v; });
     if (v !== 'cal') { stopPlacing(); closeLib(); }
     renderView();
   }
@@ -548,6 +567,28 @@
   };
   W.MealPlanner = api;
 
+  // ?harvest= hand-off from the Food Garden Planner (static/garden/garden.js builds the link): "key:6-10" or "key:11-2.5"
+  function applyHarvest(q) {
+    var out = [];
+    String(q || '').split(',').forEach(function (tok) {
+      var p = tok.split(':'), key = p[0], an = key === 'hens' || key === 'bees';
+      if (!key || !(an ? data.G.animals[key] : data.G.crops[key])) return;
+      var ms = [];
+      String(p[1] || '').split('.').forEach(function (seg) {
+        var r = /^(\d{1,2})(?:-(\d{1,2}))?$/.exec(seg); if (!r) return;
+        var a = +r[1], b = r[2] ? +r[2] : a; if (a < 1 || a > 12 || b < 1 || b > 12) return;
+        for (var m = a, n = 0; n < 12; n++) { if (ms.indexOf(m) < 0) ms.push(m); if (m === b) break; m = m % 12 + 1; }
+      });
+      var def = (an ? data.G.animals : data.G.crops)[key] || {};
+      if (!ms.length) ms = key === 'bees' ? [8, 9] : (def.months || []).slice();
+      ms.sort(function (a, b) { return a - b; });
+      (an ? st.grow.animals : st.grow.crops)[key] = { on: true, m: ms, store: !!def.store_months };
+      out.push(C.growName(data, key).replace(/ \(.*\)$/, '').toLowerCase() + ' (' + C.monthsText(ms) + ')');
+    });
+    return out;
+  }
+  W.MealPlannerHarvest = applyHarvest;
+
   // ---------- start ----------
   var openSetup = null; try { openSetup = W.localStorage.getItem('trb-meals-setup'); } catch (e) { }
   setup.open = openSetup == null ? !C.storageOK || !st.plans.some(function (p) { return Object.keys(p.cells).length; }) : openSetup === '1';
@@ -559,6 +600,13 @@
     var m = /[?&]add=([a-z0-9-]+)/.exec(location.search);
     renderAll();
     if (m && ALL[m[1]]) { setView('cal'); startPlacing({ kind: 'add', r: m[1], label: C.emoji(ALL[m[1]]) + ' ' + ALL[m[1]].name }); try { history.replaceState(null, '', location.pathname); } catch (e) { } }
+    // arriving from the Food Garden Planner with ?harvest=tomatoes:6-10,cucumbers:5-9,hens:1-12 (crop keys from data/garden, months 1-12)
+    var hv = /[?&]harvest=([^&#]*)/.exec(location.search);
+    if (hv) {
+      var got = applyHarvest(decodeURIComponent(hv[1]));
+      try { history.replaceState(null, '', location.pathname); } catch (e) { }
+      if (got.length) { save(); lib.f.garden = true; renderAll(); setView('cal'); msg('From your Garden Planner: ' + got.join(', ') + '. Recipes that use them are marked 🌱, and the shopping list takes them off while they’re in season.'); }
+    }
     root.classList.add('ready');
   });
 })(window, document);

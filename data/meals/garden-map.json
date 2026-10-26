@@ -1,0 +1,984 @@
+{
+ "version": 1,
+ "updated": "2026-10-25",
+ "note": "Which catalog items the Food Garden Planner (data/garden) can supply. f = grams of harvest per gram of the item. months = example harvest months from the garden planner's own calendar math and its example frost dates (April 15 and October 15); store_months = months it keeps after harvest, from the storage notes in data/garden/crops.json. Edit scripts/meals/src/build_scratch.py, not this file.",
+ "example_frost": [
+  "04-15",
+  "10-15"
+ ],
+ "crops": {
+  "tomatoes": {
+   "months": [
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "About 5 days at ~55°F; do not refrigerate (UMN)."
+  },
+  "cherry_tomatoes": {
+   "months": [
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "About 5 days at ~55°F; do not refrigerate (UMN, tomatoes)."
+  },
+  "potatoes": {
+   "months": [
+    6,
+    7,
+    8
+   ],
+   "store_months": 6,
+   "store_note": "",
+   "sto": "Cure 14 days at 50-60°F, then store dark at 32-40°F and ~95% RH: about 6 months (UMN). Potatoes for frying: 40-50°F to avoid cold sweetening."
+  },
+  "sweet_potatoes": {
+   "months": [
+    7,
+    8,
+    9
+   ],
+   "store_months": 4,
+   "store_note": "The storage note doesn’t give months; we count 4, the low end for cured sweet potatoes kept at 55 to 60°F.",
+   "sto": "Cure ~85°F, 80-90% RH, 5-10 days (home: ~1 week in a warm covered spot); store at 55-60°F, 85-90% RH through winter (UMD). Do not refrigerate."
+  },
+  "carrots": {
+   "months": [
+    6,
+    9,
+    10
+   ],
+   "store_months": 8,
+   "store_note": "",
+   "sto": "Remove tops; cold and moist (32-40°F, ~95% RH): about 8 months (UMN)."
+  },
+  "beets": {
+   "months": [
+    5,
+    6,
+    9,
+    10
+   ],
+   "store_months": 5,
+   "store_note": "",
+   "sto": "Remove tops; cold and moist: about 5 months (UMN)."
+  },
+  "parsnips": {
+   "months": [
+    7,
+    8
+   ],
+   "store_months": 4,
+   "store_note": "",
+   "sto": "Cold and moist: about 4 months; sweetens after 2 weeks at 32°F (UMN)."
+  },
+  "turnips_rutabaga": {
+   "months": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 4,
+   "store_note": "",
+   "sto": "Cold and moist: about 4 months (UMN, turnips and rutabagas)."
+  },
+  "onions": {
+   "months": [
+    6,
+    7
+   ],
+   "store_months": 4,
+   "store_note": "",
+   "sto": "Cure at room temperature 2-4 weeks, then cold and dry (32-40°F, ~65% RH): about 4 months (UMN). Do not freeze."
+  },
+  "garlic": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "Cured garlic keeps for months; the storage note doesn’t give a number, so we don’t count stored garlic.",
+   "sto": "Ohio State: cure 2-3 weeks (above freezing to 40°F, RH ≤75%); WSU: store cold and dry, 32-50°F, 60-70% RH. Use net bags, not plastic."
+  },
+  "winter_squash": {
+   "months": [
+    7,
+    8
+   ],
+   "store_months": 2,
+   "store_note": "",
+   "sto": "Cool and dry (50-60°F, ~60% RH): 2-6 months depending on type (UMN). Do not cure Table Queen/acorn types."
+  },
+  "pumpkins": {
+   "months": [
+    7,
+    8,
+    9
+   ],
+   "store_months": 2,
+   "store_note": "",
+   "sto": "Cool and dry: about 2 months; sensitive below 45°F (UMN)."
+  },
+  "summer_squash": {
+   "months": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "About 1 week at ~55°F in perforated bags; no more than 4 days in refrigerator (UMN)."
+  },
+  "dry_beans": {
+   "months": [
+    7,
+    8
+   ],
+   "store_months": 12,
+   "store_note": "The storage note says dry beans keep several years; we count 12 months.",
+   "sto": "Thresh and store in a tightly closed container in a dark, dry place; keeps several years, but after 3+ years may develop \"hard seed\" (WSU)."
+  },
+  "snap_beans": {
+   "months": [
+    6,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist about 1 week; pitting below 40°F (UMN)."
+  },
+  "peas": {
+   "months": [
+    5,
+    6
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist about 1 week (UMN)."
+  },
+  "sweet_corn": {
+   "months": [
+    6,
+    7
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist about 5 days (UMN); best eaten soon after picking."
+  },
+  "flint_dent_corn": {
+   "months": [
+    8,
+    9
+   ],
+   "store_months": 0,
+   "store_note": "The storage note gives no time for dried corn, so stored corn isn’t counted.",
+   "sto": "Dry ears, shell, then treat for insects (hold at 120°F core for 30 min, or freeze 4 days at 0°F) and store airtight (UACES). 1 lb shelled corn yields about 1 lb meal."
+  },
+  "peppers": {
+   "months": [
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "About 2 weeks at ~55°F; pitting below 45°F (UMN)."
+  },
+  "eggplant": {
+   "months": [
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "About 1 week at ~55°F; chilling injury below 50°F (UMN)."
+  },
+  "cucumbers": {
+   "months": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "About 1 week at ~55°F in perforated bags; chilling injury below 40°F; keep away from apples and tomatoes (UMN)."
+  },
+  "kale": {
+   "months": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "collards": {
+   "months": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "swiss_chard": {
+   "months": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "spinach": {
+   "months": [
+    4,
+    5,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist about 10 days (UMN)."
+  },
+  "lettuce": {
+   "months": [
+    5,
+    6,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist about 1 week (UMN)."
+  },
+  "cabbage": {
+   "months": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "store_months": 5,
+   "store_note": "",
+   "sto": "Cold and moist: about 5 months (UMN)."
+  },
+  "broccoli": {
+   "months": [
+    5,
+    6,
+    9,
+    10
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist about 2 weeks (UMN)."
+  },
+  "radishes": {
+   "months": [
+    4,
+    5,
+    9,
+    10
+   ],
+   "store_months": 1,
+   "store_note": "",
+   "sto": "Remove tops; cold and moist about 1 month (UMN)."
+  },
+  "culinary_herbs": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Basil: room temperature with stems in water, about 5 days; discolors in the refrigerator (UMN)."
+  },
+  "strawberries": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "blueberries": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "raspberries_blackberries": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "grapes": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "asparagus": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist, upright, about 2 weeks (UMN)."
+  },
+  "cantaloupe": {
+   "months": [
+    7,
+    8
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist about 1 week (UMN)."
+  },
+  "watermelon": {
+   "months": [
+    7,
+    8
+   ],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "About 2 weeks at ~55°F; decays below 50°F after a few days (UMN)."
+  },
+  "apple": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Cold and moist (32-40°F, 80-90% RH) per WSU; months vary by variety."
+  },
+  "pear": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "peach": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "plum_cherry": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "citrus": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Fruit holds on the tree: satsuma 4-6 weeks; grapefruit over an extended period (UF/IFAS)."
+  },
+  "avocado": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": "Fruit ripens off the tree in 3-8 days at 60-75°F; ripe fruit can be refrigerated (UF/IFAS)."
+  },
+  "pecan": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  },
+  "hazelnut": {
+   "months": [],
+   "store_months": 0,
+   "store_note": "",
+   "sto": ""
+  }
+ },
+ "animals": {
+  "hens": {
+   "months": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "store_months": 1,
+   "note": "Hens lay all year, fewer in winter. Fresh eggs keep 3 to 5 weeks in the refrigerator (USDA)."
+  },
+  "bees": {
+   "months": [],
+   "store_months": 24,
+   "note": "Honey keeps about 2 years (NDSU), so once you harvest, it can cover the whole year. Little or no honey the first year."
+  }
+ },
+ "items": [
+  {
+   "item": "tomato",
+   "part": "ripe fruit",
+   "f": 1,
+   "crop": "tomatoes"
+  },
+  {
+   "item": "roma-tomato",
+   "part": "ripe fruit (paste types)",
+   "f": 1,
+   "crop": "tomatoes"
+  },
+  {
+   "item": "cherry-tomatoes",
+   "part": "ripe fruit",
+   "f": 1,
+   "crop": "cherry_tomatoes"
+  },
+  {
+   "item": "crushed-tomatoes",
+   "part": "ripe fruit, cooked down and canned",
+   "f": 1.289,
+   "crop": "tomatoes",
+   "note": "NCHFP: about 2¾ lb of fresh tomatoes per quart of crushed tomatoes."
+  },
+  {
+   "item": "diced-tomatoes",
+   "part": "ripe fruit, canned",
+   "f": 1.299,
+   "crop": "tomatoes",
+   "note": "Counted like crushed tomatoes (NCHFP: about 2¾ lb per quart)."
+  },
+  {
+   "item": "russet-potato",
+   "part": "tubers",
+   "f": 1,
+   "crop": "potatoes"
+  },
+  {
+   "item": "yukon-potato",
+   "part": "tubers",
+   "f": 1,
+   "crop": "potatoes"
+  },
+  {
+   "item": "red-potato",
+   "part": "tubers",
+   "f": 1,
+   "crop": "potatoes"
+  },
+  {
+   "item": "baby-potatoes",
+   "part": "young tubers",
+   "f": 1,
+   "crop": "potatoes"
+  },
+  {
+   "item": "sweet-potato",
+   "part": "storage roots",
+   "f": 1,
+   "crop": "sweet_potatoes"
+  },
+  {
+   "item": "carrot",
+   "part": "roots",
+   "f": 1,
+   "crop": "carrots"
+  },
+  {
+   "item": "baby-carrots",
+   "part": "roots",
+   "f": 1,
+   "crop": "carrots"
+  },
+  {
+   "item": "beets",
+   "part": "roots",
+   "f": 1,
+   "crop": "beets"
+  },
+  {
+   "item": "parsnips",
+   "part": "roots",
+   "f": 1,
+   "crop": "parsnips"
+  },
+  {
+   "item": "turnips",
+   "part": "roots",
+   "f": 1,
+   "crop": "turnips_rutabaga"
+  },
+  {
+   "item": "onion",
+   "part": "cured bulbs",
+   "f": 1,
+   "crop": "onions"
+  },
+  {
+   "item": "red-onion",
+   "part": "cured bulbs",
+   "f": 1,
+   "crop": "onions"
+  },
+  {
+   "item": "sweet-onion",
+   "part": "cured bulbs",
+   "f": 1,
+   "crop": "onions"
+  },
+  {
+   "item": "shallot",
+   "part": "bulbs",
+   "f": 1,
+   "crop": "onions"
+  },
+  {
+   "item": "garlic",
+   "part": "cured bulbs",
+   "f": 1,
+   "crop": "garlic"
+  },
+  {
+   "item": "butternut-squash",
+   "part": "mature fruit",
+   "f": 1,
+   "crop": "winter_squash"
+  },
+  {
+   "item": "acorn-squash",
+   "part": "mature fruit",
+   "f": 1,
+   "crop": "winter_squash"
+  },
+  {
+   "item": "spaghetti-squash",
+   "part": "mature fruit",
+   "f": 1,
+   "crop": "winter_squash"
+  },
+  {
+   "item": "pumpkin",
+   "part": "mature fruit",
+   "f": 1,
+   "crop": "pumpkins"
+  },
+  {
+   "item": "zucchini",
+   "part": "young fruit",
+   "f": 1,
+   "crop": "summer_squash"
+  },
+  {
+   "item": "yellow-squash",
+   "part": "young fruit",
+   "f": 1,
+   "crop": "summer_squash"
+  },
+  {
+   "item": "dried-black-beans",
+   "part": "dry seeds",
+   "f": 1,
+   "crop": "dry_beans"
+  },
+  {
+   "item": "dried-pinto-beans",
+   "part": "dry seeds",
+   "f": 1,
+   "crop": "dry_beans"
+  },
+  {
+   "item": "dried-kidney-beans",
+   "part": "dry seeds",
+   "f": 1,
+   "crop": "dry_beans"
+  },
+  {
+   "item": "black-beans",
+   "part": "dry seeds, cooked",
+   "f": 0.267,
+   "crop": "dry_beans",
+   "note": "1 lb of dry beans makes about four 15-oz cans."
+  },
+  {
+   "item": "pinto-beans",
+   "part": "dry seeds, cooked",
+   "f": 0.267,
+   "crop": "dry_beans",
+   "note": "1 lb of dry beans makes about four 15-oz cans."
+  },
+  {
+   "item": "kidney-beans",
+   "part": "dry seeds, cooked",
+   "f": 0.267,
+   "crop": "dry_beans",
+   "note": "1 lb of dry beans makes about four 15-oz cans."
+  },
+  {
+   "item": "green-beans",
+   "part": "young pods",
+   "f": 1,
+   "crop": "snap_beans"
+  },
+  {
+   "item": "snap-peas",
+   "part": "pods",
+   "f": 1,
+   "crop": "peas"
+  },
+  {
+   "item": "frozen-peas",
+   "part": "shelled peas",
+   "f": 1,
+   "crop": "peas",
+   "note": "Frozen peas are shelled garden peas."
+  },
+  {
+   "item": "corn-on-cob",
+   "part": "ears",
+   "f": 1,
+   "crop": "sweet_corn"
+  },
+  {
+   "item": "frozen-corn",
+   "part": "kernels",
+   "f": 2.778,
+   "crop": "sweet_corn",
+   "note": "Kernels are roughly a third of an ear’s weight."
+  },
+  {
+   "item": "cornmeal",
+   "part": "dry kernels, ground",
+   "f": 1,
+   "crop": "flint_dent_corn"
+  },
+  {
+   "item": "green-bell-pepper",
+   "part": "fruit",
+   "f": 1,
+   "crop": "peppers"
+  },
+  {
+   "item": "red-bell-pepper",
+   "part": "fruit",
+   "f": 1,
+   "crop": "peppers"
+  },
+  {
+   "item": "yellow-bell-pepper",
+   "part": "fruit",
+   "f": 1,
+   "crop": "peppers"
+  },
+  {
+   "item": "jalapeno",
+   "part": "fruit",
+   "f": 1,
+   "crop": "peppers"
+  },
+  {
+   "item": "poblano",
+   "part": "fruit",
+   "f": 1,
+   "crop": "peppers"
+  },
+  {
+   "item": "eggplant",
+   "part": "fruit",
+   "f": 1,
+   "crop": "eggplant"
+  },
+  {
+   "item": "cucumber",
+   "part": "young fruit",
+   "f": 1,
+   "crop": "cucumbers"
+  },
+  {
+   "item": "kale",
+   "part": "leaves",
+   "f": 1,
+   "crop": "kale"
+  },
+  {
+   "item": "collards",
+   "part": "leaves",
+   "f": 1,
+   "crop": "collards"
+  },
+  {
+   "item": "swiss-chard",
+   "part": "leaves and stems",
+   "f": 1,
+   "crop": "swiss_chard"
+  },
+  {
+   "item": "spinach",
+   "part": "leaves",
+   "f": 1,
+   "crop": "spinach"
+  },
+  {
+   "item": "romaine",
+   "part": "leaves",
+   "f": 1,
+   "crop": "lettuce"
+  },
+  {
+   "item": "iceberg",
+   "part": "heads",
+   "f": 1,
+   "crop": "lettuce"
+  },
+  {
+   "item": "green-leaf-lettuce",
+   "part": "leaves",
+   "f": 1,
+   "crop": "lettuce"
+  },
+  {
+   "item": "salad-mix",
+   "part": "young leaves",
+   "f": 1,
+   "crop": "lettuce"
+  },
+  {
+   "item": "cabbage",
+   "part": "heads",
+   "f": 1,
+   "crop": "cabbage"
+  },
+  {
+   "item": "red-cabbage",
+   "part": "heads",
+   "f": 1,
+   "crop": "cabbage"
+  },
+  {
+   "item": "coleslaw-mix",
+   "part": "shredded heads",
+   "f": 1,
+   "crop": "cabbage"
+  },
+  {
+   "item": "broccoli",
+   "part": "heads and side shoots",
+   "f": 1,
+   "crop": "broccoli"
+  },
+  {
+   "item": "radishes",
+   "part": "roots",
+   "f": 1,
+   "crop": "radishes"
+  },
+  {
+   "item": "basil",
+   "part": "leaves",
+   "f": 1,
+   "crop": "culinary_herbs"
+  },
+  {
+   "item": "parsley",
+   "part": "leaves",
+   "f": 1,
+   "crop": "culinary_herbs"
+  },
+  {
+   "item": "cilantro",
+   "part": "leaves",
+   "f": 1,
+   "crop": "culinary_herbs"
+  },
+  {
+   "item": "thyme",
+   "part": "sprigs",
+   "f": 1,
+   "crop": "culinary_herbs"
+  },
+  {
+   "item": "chives",
+   "part": "leaves",
+   "f": 1,
+   "crop": "culinary_herbs"
+  },
+  {
+   "item": "dill",
+   "part": "fronds",
+   "f": 1,
+   "crop": "culinary_herbs"
+  },
+  {
+   "item": "mint",
+   "part": "leaves",
+   "f": 1,
+   "crop": "culinary_herbs"
+  },
+  {
+   "item": "strawberries",
+   "part": "fruit",
+   "f": 1,
+   "crop": "strawberries"
+  },
+  {
+   "item": "blueberries",
+   "part": "fruit",
+   "f": 1,
+   "crop": "blueberries"
+  },
+  {
+   "item": "raspberries",
+   "part": "fruit",
+   "f": 1,
+   "crop": "raspberries_blackberries"
+  },
+  {
+   "item": "grapes",
+   "part": "fruit",
+   "f": 1,
+   "crop": "grapes"
+  },
+  {
+   "item": "asparagus",
+   "part": "spears",
+   "f": 1,
+   "crop": "asparagus"
+  },
+  {
+   "item": "cantaloupe",
+   "part": "fruit",
+   "f": 1,
+   "crop": "cantaloupe"
+  },
+  {
+   "item": "watermelon",
+   "part": "fruit",
+   "f": 1,
+   "crop": "watermelon"
+  },
+  {
+   "item": "apple",
+   "part": "fruit",
+   "f": 1,
+   "crop": "apple"
+  },
+  {
+   "item": "applesauce",
+   "part": "fruit, cooked down",
+   "f": 1.394,
+   "crop": "apple",
+   "note": "NCHFP: about 3 lb of apples per quart of applesauce."
+  },
+  {
+   "item": "pear",
+   "part": "fruit",
+   "f": 1,
+   "crop": "pear"
+  },
+  {
+   "item": "peach",
+   "part": "fruit",
+   "f": 1,
+   "crop": "peach"
+  },
+  {
+   "item": "plum",
+   "part": "fruit",
+   "f": 1,
+   "crop": "plum_cherry"
+  },
+  {
+   "item": "cherries",
+   "part": "fruit",
+   "f": 1,
+   "crop": "plum_cherry"
+  },
+  {
+   "item": "lemon",
+   "part": "fruit",
+   "f": 1,
+   "crop": "citrus"
+  },
+  {
+   "item": "lime",
+   "part": "fruit",
+   "f": 1,
+   "crop": "citrus"
+  },
+  {
+   "item": "orange",
+   "part": "fruit",
+   "f": 1,
+   "crop": "citrus"
+  },
+  {
+   "item": "clementine",
+   "part": "fruit",
+   "f": 1,
+   "crop": "citrus"
+  },
+  {
+   "item": "avocado",
+   "part": "fruit",
+   "f": 1,
+   "crop": "avocado"
+  },
+  {
+   "item": "pecans",
+   "part": "nut kernels",
+   "f": 1,
+   "crop": "pecan"
+  },
+  {
+   "item": "hazelnuts",
+   "part": "nut kernels",
+   "f": 1,
+   "crop": "hazelnut"
+  },
+  {
+   "item": "eggs",
+   "part": "eggs",
+   "f": 1,
+   "animal": "hens"
+  },
+  {
+   "item": "honey",
+   "part": "honey",
+   "f": 1,
+   "animal": "bees"
+  }
+ ]
+}

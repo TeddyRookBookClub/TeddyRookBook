@@ -38,6 +38,14 @@
         <p class="hs-small">These hide recipes in the library and in Shuffle. Always read labels yourself: products and recipes change.</p>
       </fieldset>
       <fieldset class="mp-fs">
+        <legend>Homemade and homegrown</legend>
+        <label class="mp-cb"><input type="checkbox" id="mp-makeall"> Make from scratch when I can</label>
+        <p class="hs-small" id="mp-make-sum"></p>
+        <p class="hs-small">Bread, tortillas, pasta, butter, stock and more: see the <a href="{{ "meal-prep/scratch/" | relURL }}">from-scratch recipes</a>. Each item on the shopping list also has its own <b>Make it</b> button.</p>
+        <div class="mp-f"><span>From your garden</span><button type="button" class="hs-btn" id="mp-grow-open">🌱 What I grow…</button></div>
+        <p class="hs-small" id="mp-grow-sum"></p>
+      </fieldset>
+      <fieldset class="mp-fs">
         <legend>Shuffle rules</legend>
         <label class="mp-f">Don't repeat a meal within <select id="mp-norepeat"><option value="0">no limit</option><option value="2">2 days</option><option value="3">3 days</option><option value="5">5 days</option><option value="6">6 days</option><option value="10">10 days</option><option value="13">2 weeks</option></select></label>
         <p class="hs-small">For lunches and dinners. Breakfasts and snacks only avoid repeating two days in a row.</p>
@@ -52,6 +60,7 @@
     <button type="button" role="tab" data-v="nutr" id="tab-nutr">📊 Nutrition</button>
     <button type="button" role="tab" data-v="prep" id="tab-prep">🔪 Prep day</button>
     <button type="button" role="tab" data-v="kids" id="tab-kids">🧒 Kids' chart</button>
+    <button type="button" role="tab" data-v="grow" id="tab-grow">🌱 Grow</button>
     <button type="button" class="mp-export-btn" id="mp-export">⬇ Export</button>
   </div>
   <p class="mp-msg" id="mp-msg" aria-live="polite"></p>
@@ -85,12 +94,13 @@
   <section class="mp-view" id="mp-nutr" role="tabpanel" aria-labelledby="tab-nutr" hidden></section>
   <section class="mp-view" id="mp-prep" role="tabpanel" aria-labelledby="tab-prep" hidden></section>
   <section class="mp-view" id="mp-kids" role="tabpanel" aria-labelledby="tab-kids" hidden></section>
+  <section class="mp-view" id="mp-grow" role="tabpanel" aria-labelledby="tab-grow" hidden></section>
 
   <div class="mp-placebar" id="mp-placebar" hidden role="status"><span id="mp-placetxt"></span> <button type="button" class="hs-btn" id="mp-placedone">Done</button></div>
   <div class="mp-trash" id="mp-trash" hidden>🗑 Drop here to remove</div>
 
   <section class="hs-sec hs-note hs-noprint mp-about">
-    <p class="hs-small">Everything here stays in this browser (nothing is sent anywhere). Nutrition numbers are estimates from USDA FoodData Central and change with brands and portions. Cook meats to the USDA safe minimum internal temperatures given in each recipe. See the <a href="{{ "meal-prep/guides/" | relURL }}">kitchen guides</a> for cooking fats, cinnamon and more.</p>
+    <p class="hs-small">Everything here stays in this browser (nothing is sent anywhere). Nutrition numbers are estimates from USDA FoodData Central and change with brands and portions. Cook meats to the USDA safe minimum internal temperatures given in each recipe. See the <a href="{{ "meal-prep/guides/" | relURL }}">kitchen guides</a> for cooking fats, cinnamon and more, the <a href="{{ "meal-prep/scratch/" | relURL }}">from-scratch recipes</a>, and the <a href="{{ "garden/" | relURL }}">Food Garden Planner</a> for growing your own.</p>
   </section>
 </div>
 <script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
