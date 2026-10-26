@@ -107,7 +107,11 @@
         var it = d.cat[m.item], k = SM.kind(m.by), o;
         if (k === 'count') o = { v: m.item + '|' + m.by, t: m.label, item: m.item, n: m.n, toG: function (n) { return n * it.units[m.by]; } };
         else if (k === 'vol') o = { v: m.item + '|' + m.by, t: SM.unitName(m.by, 2) + ' of ' + SC.lcName(it), item: m.item, n: m.n, toG: function (n) { return SM.toGrams(it, n, m.by); } };
-        else o = { v: m.item + '|lb', t: 'lb of ' + SC.lcName(it) + ' (dried) to replace', item: m.item, n: Math.round(m.g / SM.MASS.lb * 100) / 100, toG: function (n) { return n * SM.MASS.lb; } };
+        else {
+          var dried = /dried/.test(m.label), sl = !dried && (it.units.slice ? 'slice' : it.units.each ? 'each' : null);
+          if (sl) { var sw = it.units[sl], so = { v: m.item + '|' + sl, t: (sl === 'slice' ? 'slices of ' : '') + SC.lcName(it) + (sl === 'each' ? ' (counted as ' + sw + ' g each)' : ' (about ' + sw + ' g each)'), item: m.item, n: Math.round(m.g / sw), toG: function (n) { return n * sw; } }; if (!seen[so.t]) { seen[so.t] = 1; opts.push(so); } }
+          o = { v: m.item + '|lb', t: 'lb of ' + SC.lcName(it) + (dried ? ' (dried) to replace' : ''), item: m.item, n: Math.round(m.g / SM.MASS.lb * 100) / 100, toG: function (n) { return n * SM.MASS.lb; } };
+        }
         if (!seen[o.t]) { seen[o.t] = 1; opts.push(o); }
       });
       var nIn = $('#sx-n'), uIn = $('#sx-u');
@@ -134,8 +138,9 @@
       var box = $('#sx-nutr'), rows = [];
       s.makes.forEach(function (m) {
         var sn = SM.scratchNutr(s, d.cat, m.item); if (!sn) return;
-        var it = d.cat[m.item], k = SM.kind(m.by), per = k === 'count' ? it.units[m.by] : k === 'vol' ? SM.toGrams(it, 1, m.by) : 100;
-        var lab = k === 'count' ? 'per ' + SC.sing(m.label) : k === 'vol' ? 'per ' + SM.unitName(m.by, 1) : 'per 100 g of dried ' + SC.lcName(it) + ' replaced';
+        var it = d.cat[m.item], k = SM.kind(m.by), dried = /dried/.test(m.label), sl = k === 'mass' && !dried && it.units.slice ? 'slice' : null;
+        var per = k === 'count' ? it.units[m.by] : k === 'vol' ? SM.toGrams(it, 1, m.by) : sl ? it.units.slice : 100;
+        var lab = k === 'count' ? 'per ' + SC.sing(m.label) : k === 'vol' ? 'per ' + SM.unitName(m.by, 1) : sl ? 'per ' + it.units.slice + '-g slice' : dried ? 'per 100 g of dried ' + SC.lcName(it) + ' replaced' : 'per 100 g';
         function v(key) { return sn.n[key] * per / 100; }
         rows.push('<tr><th scope="row">' + SC.esc(lab) + '</th><td>' + Math.round(v('kcal')) + '</td><td>' + Math.round(v('protein') * 10) / 10 + ' g</td><td>' + Math.round(v('fat') * 10) / 10 + ' g</td><td>' + Math.round(v('carb') * 10) / 10 + ' g</td><td>' + Math.round(v('sodium')) + ' mg</td></tr>');
       });

@@ -365,6 +365,39 @@ if (fs.existsSync(path.join(dir, 'recipes.json')) && fs.existsSync(path.join(dir
   var everything = { crops: {}, animals: { hens: { on: true, m: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] } } }; Object.keys(gmR.crops).forEach(function (k) { everything.crops[k] = { on: true, m: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }; });
   var allG = M.shoppingList(big, M.DEFAULT_GROUPS, real.recipes, real.cat, { garden: { covers: function (id, d) { return M.growCovers(everything, gmR, id, M.monthOf(big, d)); } } });
   ok(allG.filter(function (r) { return r.garden; }).length > 20 && allG.every(function (r) { return !r.garden || (r.need && !/NaN/.test(r.need)); }), 'growing everything moves the produce and eggs to the garden section');
+  // ---------- breads ----------
+  var groups = []; rs.recipes.forEach(function (r) { if (groups.indexOf(r.group) < 0) groups.push(r.group); });
+  eq(groups.slice(0, 7).join(' / '), 'Yeast breads / Enriched breads / Sourdough / Flatbreads and tortillas / Quick breads / Boiled breads: pretzels and bagels / Pastry and crackers', 'the library groups the breads, in order');
+  ['soft-pretzels', 'bagels', 'sourdough-bread', 'sourdough-starter', 'croissants', 'english-muffins', 'pita', 'naan', 'challah', 'brioche', 'milk-bread', 'rye-bread', 'focaccia', 'ciabatta', 'cinnamon-rolls', 'sweet-rolls', 'cornbread', 'irish-soda-bread', 'banana-bread', 'zucchini-bread', 'crackers', 'lavash', 'hoagie-rolls', 'breadsticks', 'italian-bread', 'oatmeal-bread', 'potato-bread', 'whole-wheat-sandwich-bread']
+    .forEach(function (id) { ok(!!RS.byId[id], 'bread recipe ' + id + ' is in the library'); });
+  eq(RS.byItem['wheat-bread'], 'whole-wheat-sandwich-bread', 'store whole-wheat bread is made as the all whole-wheat loaf');
+  eq(RS.byItem['pretzel-rolls'] + ',' + RS.byItem['soft-pretzels'] + ',' + RS.byItem.bagels + ',' + RS.byItem.croissants + ',' + RS.byItem.sourdough, 'soft-pretzels,soft-pretzels,bagels,croissants,sourdough-bread', 'pretzels, pretzel buns, bagels, croissants and sourdough each have a Make it recipe');
+  ['english-muffins', 'pita', 'naan', 'hoagie-rolls', 'rye-bread', 'challah', 'hawaiian-rolls', 'cinnamon-rolls', 'italian-bread', 'potato-bread', 'whole-grain-crackers'].forEach(function (id) { ok(!!RS.byItem[id], id + ' has a Make it recipe'); });
+  var pz = RS.byId['soft-pretzels'];
+  eq(M.scratchFor(pz, { 'soft-pretzels': 16 * real.cat['soft-pretzels'].units.each }).n, 2, '16 pretzels is two batches');
+  eq(M.scratchFor(pz, { 'pretzel-rolls': 12 * real.cat['pretzel-rolls'].units.each }).n, 1.5, '12 pretzel buns is 1½ batches');
+  eq(M.scratchFor(pz, { 'soft-pretzels': 4 * real.cat['soft-pretzels'].units.each, 'pretzel-rolls': 4 * real.cat['pretzel-rolls'].units.each }).n, 1, '4 pretzels and 4 buns share one batch');
+  var pz2 = M.scaleScratch(pz, 2, real.cat), soda2 = pz2.filter(function (x) { return x.ing.item === 'baking-soda'; })[0], flour2 = pz2.filter(function (x) { return x.ing.item === 'flour'; })[0];
+  eq(Math.round(flour2.g), 1000, 'a double batch of pretzels takes 1000 g flour');
+  eq(Math.round(soda2.g), 110, 'but the soda bath stays ½ cup (110 g)');
+  var pzN = M.scratchNutr(pz, real.cat, 'soft-pretzels'), perPz = pzN.n.sodium * real.cat['soft-pretzels'].units.each / 100;
+  ok(perPz > 300 && perPz < 1200, 'a homemade pretzel’s sodium leaves out the soda bath (' + Math.round(perPz) + ' mg)');
+  ok(/history only/.test(rs.recipes.filter(function (r) { return r.id === 'soft-pretzels'; })[0].old_way), 'lye appears as history only');
+  var sd = RS.byId['sourdough-bread'], pdSD = M.prepDay([{ s: sd, n: 1 }, { s: RS.byId.brioche, n: 1 }]);
+  ok(pdSD.steps.every(function (s) { return !s.sg || !s.sg.before; }), 'day-before stages (starter, overnight chills) stay off the prep-day timeline');
+  var sdBake = pdSD.steps.filter(function (s) { return s.j.s === sd && s.inOven != null; })[0], brBake = pdSD.steps.filter(function (s) { return s.j.s === RS.byId.brioche && s.inOven != null; })[0];
+  ok(sdBake && brBake && (sdBake.inOven + 45 <= brBake.inOven || brBake.inOven + 17 <= sdBake.inOven), 'the sourdough (475°F) and brioche (375°F) take turns in the oven');
+  ok(pdSD.end < 6 * 60, 'with the overnight work done, prep day for both is under 6 hours (' + pdSD.end + ' min)');
+  var badK = rs.recipes.filter(function (r) { return groups.indexOf(r.group) < 7 && !r.keeps.some(function (k) { return /NDSU|Missouri|Clemson|Alaska|Cornell/.test(k); }); }).map(function (r) { return r.id; });
+  eq(badK.join(), '', 'every bread’s storage time names its source');
+  var fake = M.norm({ catalog: JSON.parse(fs.readFileSync(path.join(dir, 'catalog.json'), 'utf8')), recipes: [{ id: 'deli-brunch', name: 'Deli brunch', servings: 4, meal: ['lunch'], ingredients: [{ item: 'bagels', amount: 4, unit: 'each' }, { item: 'soft-pretzels', amount: 4, unit: 'each' }, { item: 'rye-bread', amount: 8, unit: 'slice' }], steps: ['Serve.'] }] });
+  var bp = { start: '2026-10-26', days: 7, slots: { lunch: true }, cells: { '0|lunch': [{ r: 'deli-brunch' }] }, guests: {} }, repB = {};
+  var bList = M.shoppingList(bp, M.DEFAULT_GROUPS, fake.recipes, real.cat, { scratch: { S: RS, make: function (id) { return id !== 'rye-bread'; } }, report: repB });
+  var bNames = bList.map(function (r) { return r.name; });
+  ok(bNames.indexOf(real.cat.bagels.name) < 0 && bNames.indexOf(real.cat['soft-pretzels'].name) < 0 && bNames.indexOf(real.cat['bread-flour'].name) >= 0, 'Make it swaps bagels and pretzels for flour (' + bNames.join(', ') + ')');
+  ok(bNames.indexOf(real.cat['rye-bread'].name) >= 0, 'rye bread left as Buy stays on the list');
+  var soda = bList.filter(function (r) { return r.item && r.item.id === 'baking-soda'; })[0];
+  ok(soda && /Soft pretzels/.test(soda.uses.join()), 'the pretzel bath’s baking soda is on the list for the homemade pretzels');
   console.log('real data: ' + ids.length + ' recipes, ' + Object.keys(real.cat).length + ' items, month list ' + bl.length + ' rows, ' + Object.keys(RS.byId).length + ' scratch recipes');
 }
 

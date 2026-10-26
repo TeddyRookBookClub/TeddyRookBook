@@ -34,7 +34,7 @@
         </div>
         <ul class="mp-ings" id="sx-ings">
           {{ range $s.ingredients }}{{ $it := index $cat .item }}
-          <li><b>{{ partial "meal-prep/amt.html" .amount }} {{ if ne .unit "each" }}{{ replace .unit "-" " " }}{{ end }}</b> {{ with $it }}{{ lower .name }}{{ end }}{{ with .prep }}, {{ . }}{{ end }}{{ if .optional }} <i>(optional)</i>{{ end }}</li>
+          <li><b>{{ partial "meal-prep/amt.html" .amount }} {{ if ne .unit "each" }}{{ replace .unit "-" " " }}{{ end }}</b> {{ with $it }}{{ partial "meal-prep/lcname.html" .name }}{{ end }}{{ with .prep }}, {{ . }}{{ end }}{{ if .optional }} <i>(optional)</i>{{ end }}</li>
           {{ end }}
         </ul>
         <p class="hs-small" id="sx-pans" hidden></p>
@@ -43,7 +43,7 @@
         <h2 id="sx-th">Time</h2>
         <p class="hs-small">Hands-on time is when you’re busy; the rest is rising, simmering, chilling or cooling, when you can do something else.</p>
         <table class="mp-ntab mp-stagetab"><thead><tr><th scope="col">Step</th><th scope="col">Hands-on</th><th scope="col">Waiting</th></tr></thead><tbody>
-          {{ range $s.stages }}<tr><th scope="row">{{ .do }}</th><td>{{ with .active }}{{ partial "meal-prep/mins.html" . }}{{ else }}–{{ end }}</td><td>{{ $w := add (.cook | default 0) (.wait | default 0) }}{{ if $w }}{{ partial "meal-prep/mins.html" $w }}{{ else }}–{{ end }}</td></tr>{{ end }}
+          {{ range $s.stages }}<tr><th scope="row">{{ .do }}{{ if .before }} <small>(the day before)</small>{{ end }}</th><td>{{ with .active }}{{ partial "meal-prep/mins.html" . }}{{ else }}–{{ end }}</td><td>{{ $w := add (.cook | default 0) (.wait | default 0) }}{{ if $w }}{{ partial "meal-prep/mins.html" $w }}{{ else }}–{{ end }}</td></tr>{{ end }}
         </tbody><tfoot><tr><th scope="row">In all</th><td>{{ partial "meal-prep/mins.html" $s.times.active }}</td><td>{{ partial "meal-prep/mins.html" (sub $s.times.total $s.times.active) }}</td></tr></tfoot></table>
       </section>
       <section class="mp-box" aria-labelledby="sx-kh">
@@ -88,7 +88,7 @@
   </section>
   {{ end }}
   <section class="hs-sec hs-note hs-noprint">
-    <p>In the <a href="{{ "meal-prep/plan/" | relURL }}">meal planner</a>, tap <b>Make it</b> next to {{ with $s.makes }}{{ with index $cat (index . 0).item }}{{ lower .name }}{{ end }}{{ else }}an item{{ end }} on the shopping list: the list swaps it for these ingredients, scaled to your meals, and the Prep day tab fits the {{ if gt $s.times.total 120 }}waiting{{ else }}work{{ end }} into your week. <a href="{{ "meal-prep/scratch/" | relURL }}">More from-scratch recipes</a>.</p>
+    <p>In the <a href="{{ "meal-prep/plan/" | relURL }}">meal planner</a>, tap <b>Make it</b> next to {{ with $s.makes }}{{ with index $cat (index . 0).item }}{{ partial "meal-prep/lcname.html" .name }}{{ end }}{{ else }}an item{{ end }} on the shopping list: the list swaps it for these ingredients, scaled to your meals, and the Prep day tab fits the {{ if gt $s.times.total 120 }}waiting{{ else }}work{{ end }} into your week. <a href="{{ "meal-prep/scratch/" | relURL }}">More from-scratch recipes</a>.</p>
   </section>
 </div>
 <script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>

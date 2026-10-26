@@ -17,12 +17,13 @@
   </section>
 
   {{ $groups := slice }}{{ range $sc.recipes }}{{ if not (in $groups .group) }}{{ $groups = $groups | append .group }}{{ end }}{{ end }}
+  <p class="mp-glinks mp-jump" role="navigation" aria-label="Recipe groups">{{ range $groups }}<a class="mp-glink" href="#{{ . | urlize }}">{{ . }}</a>{{ end }}</p>
   {{ range $groups }}{{ $g := . }}
   <section class="hs-sec" id="{{ $g | urlize }}">
     <h2>{{ $g }}</h2>
     <div class="mp-rgrid">
       {{ range where $sc.recipes "group" $g }}
-      <a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>⏱ {{ partial "meal-prep/mins.html" .times.active }} hands-on · {{ partial "meal-prep/mins.html" .times.total }} in all{{ if eq .kind "stand-in" }} · a stand-in{{ end }}</small>{{ with .makes }}<small>Instead of: {{ range $i, $m := . }}{{ if $i }}, {{ end }}{{ with index $cat $m.item }}{{ lower .name }}{{ end }}{{ end }}</small>{{ end }}</span></a>
+      <a class="mp-rcard" href="{{ printf "meal-prep/scratch/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ .summary }}</small><small>⏱ {{ partial "meal-prep/mins.html" .times.active }} hands-on · {{ partial "meal-prep/mins.html" .times.total }} in all{{ if eq .kind "stand-in" }} · a stand-in{{ end }}</small>{{ with .makes }}<small>Instead of: {{ range $i, $m := . }}{{ if $i }}, {{ end }}{{ with index $cat $m.item }}{{ partial "meal-prep/lcname.html" .name }}{{ end }}{{ end }}</small>{{ end }}</span></a>
       {{ end }}
     </div>
   </section>

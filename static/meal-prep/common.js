@@ -28,7 +28,11 @@
   };
   C.weeks = function (plan) { var n = plan.days, out = []; for (var i = 0; i < n; i += 7) out.push({ w: out.length, from: i, to: Math.min(n, i + 7) - 1 }); return out; };
   C.weekLabel = function (plan, w) { return 'Week ' + (w.w + 1) + ' · ' + C.shortDate(C.dateOf(plan, w.from)) + ' – ' + C.shortDate(C.dateOf(plan, w.to)); };
-  C.mins = function (m) { if (m == null) return ''; m = Math.round(m); return m < 60 ? m + ' min' : Math.floor(m / 60) + ' hr' + (m % 60 ? ' ' + (m % 60) + ' min' : ''); };
+  C.mins = function (m) {
+    if (m == null) return ''; m = Math.round(m);
+    if (m >= 1440) { var d = Math.floor(m / 1440), h = Math.round((m - d * 1440) / 60); if (h === 24) { d++; h = 0; } return d + (d === 1 ? ' day' : ' days') + (h ? ' ' + h + ' hr' : ''); }
+    return m < 60 ? m + ' min' : Math.floor(m / 60) + ' hr' + (m % 60 ? ' ' + (m % 60) + ' min' : '');
+  };
   // inline Markdown used in guide text: **bold**, *italic*, [text](url)
   C.md = function (s) { return C.esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\*(.+?)\*/g, '<i>$1</i>').replace(/\[([^\]]+)\]\((https?:[^)\s]+|\/[^)\s]*)\)/g, '<a href="$2">$1</a>'); };
 
@@ -149,7 +153,7 @@
     return (Math.abs(r - n) > 0.01 ? 'about ' : '') + M.fmtFrac(r) + (r > 1 + 1e-9 ? ' batches' : ' batch');
   };
   C.timesText = function (n) { var r = M.roundFrac(n, [1 / 8, 1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4]); if (!(r > 0)) r = n; return (Math.abs(r - n) > 0.01 ? '≈' : '') + '×' + M.fmtFrac(r); };
-  C.lcName = function (it) { var n = String(it.name).replace(/ \((?!.*\d).*\)$/, ''); return /^(Italian|Dijon|Greek|Mexican|American|French|Roma|Swiss|Parmesan|Monterey|Colby|Yukon)\b/.test(n) ? n : n.replace(/^(\w)/, function (c) { return c.toLowerCase(); }); };
+  C.lcName = function (it) { var n = String(it.name).replace(/ \((?!.*\d).*\)$/, ''); return /^(Italian|Dijon|Greek|Mexican|American|French|Roma|Swiss|Parmesan|Monterey|Colby|Yukon|English|Hawaiian|Japanese|Irish)\b/.test(n) ? n : n.replace(/^(\w)/, function (c) { return c.toLowerCase(); }); };
   // "hamburger buns" -> "hamburger bun", "loaves (about 1 lb each)" -> "loaf (about 1 lb each)", "cans’ worth" -> "can’s worth"
   C.sing = function (lab) {
     lab = String(lab); if (/s’ worth/.test(lab)) return lab.replace(/s’ worth/, '’s worth');
@@ -302,6 +306,16 @@
     Object.keys(onPrep).forEach(function (id) { var s = data.S.byId[id]; jobs.push({ s: s, n: onPrep[id].n, after: s.needs.filter(function (c) { return onPrep[c]; }) }); });
     return { p: p, cooked: cooked, scratch: scratch, jobs: jobs, sel: sel };
   };
+  // from-scratch stages done the day before prep day (an overnight chill or a starter to feed): [{s, n, stages}]
+  C.beforeJobs = function (jobs) {
+    return (jobs || []).filter(function (j) { return j.s && j.s.stages.some(function (g) { return g.before; }); })
+      .map(function (j) { return { s: j.s, n: j.n, stages: j.s.stages.filter(function (g) { return g.before; }) }; });
+  };
+  C.beforeText = function (b) {
+    var act = b.stages.reduce(function (t, g) { return t + (+g.active || 0); }, 0);
+    return b.stages.map(function (g) { return g.do; }).join('. ') + '. ' + C.mins(act) + ' hands-on in all';
+  };
+  C.hasBefore = function (s) { return s.stages.some(function (g) { return g.before; }); };
   C.stageWhere = { oven: 'Oven', stove: 'Stovetop', simmer: 'Back burner', counter: 'Counter', fridge: 'Fridge', slow: 'Slow cooker' };
   // a prep-day step in words (recipes and from-scratch stages), shared by the planner and the print page
   C.stepText = function (s, clock) {

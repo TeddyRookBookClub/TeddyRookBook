@@ -1,1 +1,1 @@
-{{- $m := int . -}}{{- if lt $m 60 -}}{{ $m }} min{{- else -}}{{ div $m 60 }} hr{{ with mod $m 60 }} {{ . }} min{{ end }}{{- end -}}
+{{- $m := int . -}}{{- if ge $m 1440 -}}{{ $d := div $m 1440 }}{{ $h := math.Round (div (float (sub $m (mul $d 1440))) 60) }}{{ if eq $h 24.0 }}{{ $d = add $d 1 }}{{ $h = 0 }}{{ end }}{{ $d }} {{ if eq $d 1 }}day{{ else }}days{{ end }}{{ with $h }} {{ int . }} hr{{ end }}{{- else if lt $m 60 -}}{{ $m }} min{{- else -}}{{ div $m 60 }} hr{{ with mod $m 60 }} {{ . }} min{{ end }}{{- end -}}

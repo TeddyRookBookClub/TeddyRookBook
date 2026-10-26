@@ -276,7 +276,18 @@ if (fs.existsSync(scratchPath)) {
     if (r.ingredients.some(i => i.item === 'eggs') && !cooked && !r.cooked_later) err(`${w}: raw eggs must be pasteurized-eggs`);
     if (r.ingredients.some(i => i.item === 'pasteurized-eggs') && !/pasteurized/i.test(JSON.stringify(r.safety))) err(`${w}: pasteurized-egg recipes need the FDA/USDA note`);
     if (r.ingredients.some(i => /^dried-.*beans$/.test(i.item)) && !/30 minutes/.test(JSON.stringify(r.steps))) err(`${w}: dried beans must boil at least 30 minutes (FDA)`);
+    // lye (sodium hydroxide) is history only: never in the method, ingredients, equipment or tips
+    if (/\blye\b|sodium hydroxide/i.test(JSON.stringify([r.steps, r.ingredients, r.equipment, r.scaling, r.notes, r.safety]))) err(`${w}: lye may appear only in old_way, as history`);
+    // an alkaline bath goes in a stainless or enameled pot, not aluminum
+    if (/baking soda/i.test(JSON.stringify(r.steps)) && /\bbath\b/i.test(JSON.stringify(r.steps)) && !/not aluminum/i.test(JSON.stringify(r.equipment))) err(`${w}: a soda bath needs a non-aluminum pot in the equipment`);
+    // stages done the day before come first, and something is left for the day itself
+    const bi = r.stages.map(g => !!g.before);
+    if (bi.indexOf(false) >= 0 && bi.lastIndexOf(true) > bi.indexOf(false)) err(`${w}: day-before stages must come first`);
+    if (bi.length && bi.every(Boolean)) err(`${w}: every stage is marked for the day before`);
   }
+  // the library groups by first appearance, so each group's recipes must sit together
+  { const seenG = []; let prevG = null;
+    for (const r of sc.recipes) { if (r.group !== prevG) { if (seenG.includes(r.group)) err(`scratch ${r.id}: group "${r.group}" is split up`); seenG.push(r.group); prevG = r.group; } } }
   for (const o of sc.omitted || []) for (const id of o.src || []) if (!srcIds.has(id)) err(`scratch omitted ${o.name}: source ${id}`);
   console.log(`scratch: ${sc.recipes.length} recipes, ${sc.sources.length} sources`);
 }

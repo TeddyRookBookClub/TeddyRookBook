@@ -725,7 +725,7 @@
     // hands: when the cook is next free; each job takes its active minutes of the cook's time
     by.slow.forEach(function (j) { steps.push({ at: hands, j: j, ready: hands + j.active + j.cook }); hands += j.active; });
     // from-scratch jobs: the ones other jobs use first, then the longest
-    var tot = function (j) { return j.stages.reduce(function (s, g) { return s + (+g.active || 0) + (+g.cook || 0) + (+g.wait || 0); }, 0); };
+    var tot = function (j) { return j.stages.reduce(function (s, g) { return g.before ? s : s + (+g.active || 0) + (+g.cook || 0) + (+g.wait || 0); }, 0); };
     // longest first, and whatever a long job needs (butter for the bread) goes ahead of it
     var prio = {}; sj.forEach(function (j) { prio[j.id] = tot(j); });
     for (var pass = 0; pass < 4; pass++) sj.forEach(function (j) { j.after.forEach(function (d) { if (prio[d] != null) prio[d] = Math.max(prio[d], prio[j.id] + 1); }); });
@@ -742,6 +742,7 @@
       var t = hands, first = true;
       j.after.forEach(function (id) { if (readyAt[id] != null) t = Math.max(t, readyAt[id]); });
       j.stages.forEach(function (sg, k) {
+        if (sg.before) return; // done the day before (an overnight chill); see beforeSteps
         var a = +sg.active || 0, ck = +sg.cook || 0, w = +sg.wait || 0, at = t, stp = { at: at, j: j, sg: sg, k: k };
         if (first && a) { hands = Math.max(hands, at + a); first = false; } // later hands-on moments (shaping) are short interruptions
         if (sg.station === 'oven' && ck) { var into = freeOven(Math.max(at + a, ovenFree), ck); held.push([into, into + ck]); stp.inOven = into; stp.temp = +sg.temp || null; if (into - (at + a) > 10) stp.waited = into - (at + a); stp.at = into - a; t = into + ck; }

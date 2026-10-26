@@ -222,6 +222,7 @@ soy-milk | Soy milk | dairy | fridge | 243 | | half gallon=0.5 gallon | soybeans
 orange-juice | Orange juice | dairy | fridge | 248 | | 52-oz carton=52 fl-oz | | vg gf | | Orange juice, chilled, includes from concentrate | | OJ |
 biscuit-dough | Refrigerated biscuit dough* | dairy | fridge |  | each=57#biscuit | 8-count can=8 each | wheat | v | 172668 | Biscuits, plain or buttermilk, refrigerated dough, higher fat |  |  | 
 pie-crust | Refrigerated pie crust* | dairy | fridge | | sheet=220#9-inch crust | 2-crust box=2 sheet | wheat | v | | Pie crust, refrigerated, regular, unbaked | | |
+cinnamon-rolls | Cinnamon rolls, refrigerated dough* | dairy | fridge | | each=44#roll | 8-count can=8 each | wheat milk | v | 172798 | Sweet rolls, cinnamon, refrigerated dough with frosting | | |
 tofu | Firm tofu | dairy | fridge | 252 | | 14-oz block=14 oz | soybeans | vg gf | | Tofu, raw, firm, prepared with calcium sulfate | | bean curd |
 italian-cheese | Italian-style shredded cheese blend | dairy | fridge | 113 | | 8-oz bag=8 oz | milk | v gf | proxy:mozzarella | Cheese, mozzarella, low moisture, part-skim | | |
 colby-jack | Colby Jack cheese | dairy | fridge | 113 | slice=21#slice | 8-oz bag=8 oz | milk | v gf | | Cheese, colby | | |
@@ -236,7 +237,7 @@ white-bread | Sandwich bread, white* | bakery | counter | | slice=28#slice | 20-
 wheat-bread | Sandwich bread, whole wheat* | bakery | counter | | slice=32#slice | 20-oz loaf=20 oz | wheat | v | | Bread, whole-wheat, commercially prepared | | whole-grain bread |
 hamburger-buns | Hamburger buns* | bakery | counter | | each=44#bun | 8-count bag=8 each | wheat | v | | Rolls, hamburger or hotdog, plain | | |
 hot-dog-buns | Hot dog buns* | bakery | counter | | each=44#bun | 8-count bag=8 each | wheat | v | proxy:hamburger-buns | Rolls, hamburger or hotdog, plain | | |
-french-bread | French bread* | bakery | counter | | loaf=450#loaf; slice=25#slice | loaf=1 loaf | wheat | vg | | Bread, french or vienna (includes sourdough) | | baguette, Italian bread |
+french-bread | French bread* | bakery | counter | | loaf=450#loaf; slice=25#slice | loaf=1 loaf | wheat | vg | | Bread, french or vienna (includes sourdough) | | baguette |
 dinner-rolls | Dinner rolls* | bakery | counter | | each=28#roll | 12-count bag=12 each | wheat | v | | Rolls, dinner, plain, commercially prepared (includes brown-and-serve) | | |
 hoagie-rolls | Sub rolls* | bakery | counter | | each=85#roll | 6-count bag=6 each | wheat | v | | Rolls, hard (includes kaiser) | | hoagie rolls |
 english-muffins | English muffins* | bakery | counter |  | each=57#English muffin | 6-count=6 each | wheat | v |  | Muffins, English, plain, enriched, with ca prop (includes sourdough) |  |  | 
@@ -254,6 +255,12 @@ croissants | Croissants* | bakery | counter | | each=57#croissant | 6-count=6 ea
 whole-wheat-tortillas | Whole wheat tortillas* | bakery | counter | | each=49#8-inch tortilla | 8-count=8 each | wheat | v | | Tortillas, ready-to-bake or -fry, whole wheat | | |
 naan | Naan* | bakery | counter | | each=90#naan | 2-count=2 each | wheat milk | v | | Bread, naan, plain, commercially prepared, refrigerated | | |
 sourdough | Sourdough bread* | bakery | counter | | slice=50#slice; loaf=680#loaf | loaf=1 loaf | wheat | vg | proxy:french-bread | Bread, french or vienna (includes sourdough) | | |
+rye-bread | Rye bread* | bakery | counter | | slice=32#slice | 16-oz loaf=16 oz | wheat | v | 172684 | Bread, rye | | deli rye, seeded rye |
+italian-bread | Italian bread* | bakery | counter | | loaf=450#loaf; slice=25#slice | loaf=1 loaf | wheat | vg | proxy:french-bread | Bread, french or vienna (includes sourdough) | | | Nutrition from French bread, the closest USDA match.
+challah | Challah* | bakery | counter | | loaf=454#loaf; slice=40#slice | loaf=1 loaf | wheat eggs | v | 172673 | Bread, egg | | egg bread |
+potato-bread | Potato bread* | bakery | counter | | slice=32#slice | 20-oz loaf=20 oz | wheat milk | v | 167943 | Bread, potato | | |
+hawaiian-rolls | Sweet rolls (Hawaiian-style)* | bakery | counter | | each=28#roll | 12-count=12 each | wheat milk eggs | v | 174107 | Rolls, dinner, sweet | | Hawaiian rolls, sweet dinner rolls |
+pretzel-rolls | Pretzel rolls* | bakery | counter | | each=85#roll | 4-count=4 each | wheat | vg | proxy:soft-pretzels | Pretzels, soft | | pretzel buns | Nutrition from soft pretzels, the closest USDA match.
 # ---------- PASTA, RICE AND GRAINS ----------
 spaghetti | Spaghetti | grains | pantry | | | 1-lb box=1 lb | wheat | vg | | Pasta, dry, enriched | | |
 penne | Penne | grains | pantry | 100 | | 1-lb box=1 lb | wheat | vg | proxy:spaghetti | Pasta, dry, enriched | | ziti, rigatoni |
@@ -342,6 +349,7 @@ cranberry-sauce | Cranberry sauce (canned) | canned | pantry | 277 | can=397#14-
 flour | All-purpose flour | baking | pantry | 125 | | 5-lb bag=5 lb; 2-lb bag=2 lb | wheat | vg | | Wheat flour, white, all-purpose, enriched, bleached | differences#flour | plain flour |
 bread-flour | Bread flour | baking | pantry | 127 | | 5-lb bag=5 lb | wheat | vg | | Wheat flour, white, bread, enriched | differences#flour | |
 whole-wheat-flour | Whole wheat flour | baking | pantry | 120 | | 5-lb bag=5 lb | wheat | vg | | Wheat flour, whole-grain (Includes foods for USDA's Food Distribution Program) | differences#flour | |
+rye-flour | Rye flour* | baking | pantry | 102 | | 2-lb bag=2 lb | | vg | 168886 | Rye flour, medium | | | Rye has gluten even though it isn’t wheat: not for gluten-free diets. Check the label; much rye flour is milled alongside wheat.
 self-rising-flour | Self-rising flour | baking | pantry | 125 | | 5-lb bag=5 lb | wheat | vg | | Wheat flour, white, all-purpose, self-rising, enriched | differences#flour | |
 gf-flour | Gluten-free all-purpose flour blend* | baking | pantry | 140 | | 22-oz bag=22 oz | | vg gf | proxy:rice-flour | Rice flour, white, unenriched | | | Blends vary; a blend with xanthan gum works best in these recipes.
 rice-flour | White rice flour | baking | pantry | 158 | | 24-oz bag=24 oz | | vg gf | | Rice flour, white, unenriched | | |
@@ -417,6 +425,7 @@ chicken-bouillon | Chicken bouillon cubes* | spices | pantry |  | each=4#cube | 
 coriander | Ground coriander | spices | pantry | 86 | | 1.25-oz jar=1.25 oz | | vg gf | | Spices, coriander seed | | |
 celery-seed | Celery seed | spices | pantry | 120 | | 1.5-oz jar=1.5 oz | | vg gf | | Spices, celery seed | | |
 fennel-seed | Fennel seed | spices | pantry | 96 | | 1.5-oz jar=1.5 oz | | vg gf | | Spices, fennel seed | | |
+caraway-seeds | Caraway seeds | spices | pantry | 107 | | 1-oz jar=1 oz | | vg gf | 170918 | Spices, caraway seed | | caraway |
 cardamom | Ground cardamom | spices | pantry | 96 | | 1.5-oz jar=1.5 oz | | vg gf | | Spices, cardamom | | |
 garlic-salt | Garlic salt | spices | pantry | 250 | | 5-oz jar=5 oz | | vg gf | proxy:salt | Salt, table | differences#salt | | Mostly salt; nutrition estimated as table salt.
 # ---------- OILS, SAUCES AND CONDIMENTS ----------
@@ -478,6 +487,7 @@ miso | Miso | international | fridge | 275 | | 14-oz tub=14 oz | soybeans | vg |
 kimchi | Kimchi* | international | fridge | 150 | | 16-oz jar=16 oz | | | | Cabbage, kimchi | | | Traditional kimchi often contains fish sauce or shrimp; check the label.
 ramen-noodles | Ramen noodles (instant)* | international | pantry | | package=85#3-oz block | 6-pack=6 package | wheat soybeans | v | | Soup, ramen noodle, any flavor, dry | | |
 # ---------- FROZEN ----------
+soft-pretzels | Soft pretzels, frozen* | frozen | freezer | | each=115#large soft pretzel | 6-count box=6 each | wheat | vg | 169064 | Pretzels, soft | | |
 frozen-peas | Frozen peas | frozen | freezer | 134 | | 12-oz bag=12 oz; 16-oz bag=16 oz | | vg gf | | Peas, green, frozen, unprepared (Includes foods for USDA's Food Distribution Program) | | green peas |
 frozen-corn | Frozen corn | frozen | freezer | 136 |  | 12-oz bag=12 oz; 16-oz bag=16 oz |  | vg gf | 168398 | Corn, sweet, yellow, frozen, kernels cut off cob, unprepared |  |  | 
 frozen-mixed-veg | Frozen mixed vegetables | frozen | freezer | 135 | | 12-oz bag=12 oz; 16-oz bag=16 oz | | vg gf | | Vegetables, mixed, frozen, unprepared | | |

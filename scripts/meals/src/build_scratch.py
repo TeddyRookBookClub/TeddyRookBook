@@ -73,19 +73,30 @@ SOURCES = [
     ('wiki-masa', 'Masa', 'Wikipedia', 'https://en.wikipedia.org/wiki/Masa'),
     ('wiki-buttermilk', 'Buttermilk', 'Wikipedia', 'https://en.wikipedia.org/wiki/Buttermilk'),
     ('wiki-fleischmann', 'Charles Louis Fleischmann', 'Wikipedia', 'https://en.wikipedia.org/wiki/Charles_Louis_Fleischmann'),
+    ('wiki-lyeroll', 'Lye roll', 'Wikipedia', 'https://en.wikipedia.org/wiki/Lye_roll'),
+    ('wiki-bicarbonate', 'Sodium bicarbonate', 'Wikipedia', 'https://en.wikipedia.org/wiki/Sodium_bicarbonate'),
+    ('wiki-carbonate', 'Sodium carbonate', 'Wikipedia', 'https://en.wikipedia.org/wiki/Sodium_carbonate'),
+    ('niosh-naoh', 'NIOSH Pocket Guide to Chemical Hazards: Sodium hydroxide', 'Centers for Disease Control and Prevention (NIOSH)', 'https://www.cdc.gov/niosh/npg/npgd0565.html'),
+    ('clemson-sourdough', 'How to Make, Feed, and Bake With a Sourdough Starter: Sourdough 101 Guide', 'Clemson Cooperative Extension, Home & Garden Information Center, 2025', 'https://hgic.clemson.edu/how-to-make-feed-and-bake-with-a-sourdough-starter-sourdough-101-guide/'),
+    ('uaf-sourdough', 'Sourdough (FNH-00061)', 'University of Alaska Fairbanks Cooperative Extension Service, 2024', 'https://www.uaf.edu/ces/publications/database/food/sourdough.php'),
+    ('ucanr-starter', 'Can This Sourdough Starter Be Saved? Or Is This Starter a Goner?', 'UC Agriculture and Natural Resources, Master Food Preservers of San Luis Obispo and Santa Barbara Counties, 2020', 'https://ucanr.edu/blog/master-food-preserver-slo-sb-counties/article/can-sourdough-starter-be-saved-or-starter-goner'),
+    ('isu-tangzhong', 'Tangzhong', 'Iowa State University Extension and Outreach, AnswerLine, 2018', 'https://blogs.extension.iastate.edu/answerline/2018/07/30/tangzhong/'),
     ('fdc', 'FoodData Central (SR Legacy)', 'USDA Agricultural Research Service', 'https://fdc.nal.usda.gov/'),
 ]
 
 
-def I(item, amount, unit, prep='', optional=False):
+def I(item, amount, unit, prep='', optional=False, eaten=True, fixed=False):
     d = {'item': item, 'amount': amount, 'unit': unit}
+    if fixed: d['fixed'] = True  # the same amount for any batch size
     if prep: d['prep'] = prep
     if optional: d['optional'] = True
+    if not eaten: d['in_nutrition'] = False  # e.g. a pretzel bath: bought and used, but poured away
     return d
 
 
-def st(do, active=0, cook=0, wait=0, station='counter', temp=None, bg=False):
+def st(do, active=0, cook=0, wait=0, station='counter', temp=None, bg=False, before=False):
     d = {'do': do, 'station': station}
+    if before: d['before'] = True  # done the day before (an overnight chill); the prep-day timeline starts after it
     if active: d['active'] = active
     if cook: d['cook'] = cook
     if wait: d['wait'] = wait
@@ -106,7 +117,7 @@ R = []
 # ------------------------------------------------------------------ breads
 loaf_pans = [{'id': '9x5', 'label': '9 × 5-inch loaf pan', 'f': 1}, {'id': '8x4', 'label': '8½ × 4½-inch loaf pan', 'f': 0.75}]
 R.append(dict(
-    id='sandwich-bread', name='Sandwich bread', emoji='🍞', kind='scratch', group='Breads and doughs',
+    id='sandwich-bread', name='Sandwich bread', emoji='🍞', kind='scratch', group='Yeast breads',
     summary='A soft white loaf for toast and sandwiches, sized for the loaf pan you have.',
     makes=[{'item': 'white-bread', 'by': 'slice', 'n': 16, 'label': 'slices (about ½ inch thick)'}],
     yield_='One 9 × 5-inch loaf (about 1¾ lb), 16 slices about ½ inch thick. The same dough at ¾ size fills an 8½ × 4½-inch pan (12 slices).',
@@ -134,7 +145,7 @@ R.append(dict(
     nutrition={'from': 'ingredients'}, src=BREAD_SRC + ['wiki-fleischmann']))
 
 R.append(dict(
-    id='whole-wheat-bread', name='Half whole-wheat sandwich bread', emoji='🍞', kind='scratch', group='Breads and doughs',
+    id='whole-wheat-bread', name='Half whole-wheat sandwich bread', emoji='🍞', kind='scratch', group='Yeast breads',
     summary='Half whole-wheat, half white flour, sweetened with a little honey: a soft loaf for sandwiches.',
     makes=[{'item': 'wheat-bread', 'by': 'slice', 'n': 16, 'label': 'slices (about ½ inch thick)'}],
     yield_='One 9 × 5-inch loaf, 16 slices about ½ inch thick (¾ of the dough fills an 8½ × 4½-inch pan).',
@@ -155,14 +166,14 @@ R.append(dict(
     plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in its wrapping on the counter, about 3 hours.'},
     keeps=BREAD_KEEPS,
     scaling='Same rules as sandwich bread: 7 g yeast and 9 g salt for every 480 g of flour in all. Double for two loaves; the times stay the same.',
-    old_way=None, safety=[FLOUR_SAFETY], notes=['All whole-wheat flour works too, with 2 more tablespoons of water; the loaf will be denser.'],
+    old_way=None, safety=[FLOUR_SAFETY], notes=['For an all whole-wheat loaf, see whole-wheat sandwich bread.'],
     nutrition={'from': 'ingredients'}, src=BREAD_SRC))
 
 R.append(dict(
-    id='crusty-loaf', name='Crusty white loaves', emoji='🥖', kind='scratch', group='Breads and doughs',
-    summary='Flour, water, yeast and salt, baked hot for a crackly crust: two loaves the size of a store French loaf.',
+    id='crusty-loaf', name='French bread and baguettes', emoji='🥖', kind='scratch', group='Yeast breads',
+    summary='Flour, water, yeast and salt, baked hot for a crackly crust: two French loaves or three thin baguettes.',
     makes=[{'item': 'french-bread', 'by': 'loaf', 'n': 2, 'label': 'loaves (about 1 lb each)'}],
-    yield_='Two loaves, about 1 lb each.',
+    yield_='Two loaves, about 1 lb each, or three 15-inch baguettes.',
     batch={'step': 0.5, 'min': 0.5},
     ingredients=[I('flour', 600, 'g', 'or bread flour'), I('yeast', 7, 'g'), I('salt', 12, 'g'), I('water', 1.6667, 'cup', 'about 110°F')],
     equipment=['large bowl', 'baking sheet', 'metal pan for hot water', 'cooling rack'],
@@ -171,6 +182,7 @@ R.append(dict(
         'Knead about 10 minutes, until smooth and stretchy. The dough should be soft and a little sticky.',
         'Cover and let it rise until doubled, 1½ to 2 hours.',
         'Divide in two. Pat each piece into a rectangle and roll it up tightly into a 12- to 14-inch log, pinching the seam. Set them seam down on a floured or parchment-lined baking sheet, well apart.',
+        'Baguettes instead: divide into 3, roll each up into a log, rest 10 minutes, then roll it under your palms from the middle out to a thin 15-inch rope. Bake them 20 to 25 minutes in the next steps.',
         'Cover loosely and let them rise until puffy, 45 to 60 minutes. Put an empty metal pan on the lowest rack and heat the oven to 450°F.',
         'Slash the tops 3 or 4 times with a sharp knife. Slide the loaves in and pour 1 cup of hot water into the metal pan for steam (stand back).',
         'Bake 25 to 30 minutes, until deep brown and hollow-sounding when tapped underneath (about 200°F inside). Cool on a rack at least 30 minutes.'],
@@ -183,7 +195,7 @@ R.append(dict(
     nutrition={'from': 'ingredients'}, src=BREAD_SRC))
 
 R.append(dict(
-    id='soft-buns-rolls', name='Soft buns and dinner rolls', emoji='🍔', kind='scratch', group='Breads and doughs',
+    id='soft-buns-rolls', name='Soft buns and dinner rolls', emoji='🍔', kind='scratch', group='Enriched breads',
     summary='One soft dough for hamburger buns, hot dog buns or a pan of dinner rolls.',
     makes=[{'item': 'hamburger-buns', 'by': 'each', 'n': 10, 'label': 'hamburger buns'},
            {'item': 'hot-dog-buns', 'by': 'each', 'n': 10, 'label': 'hot dog buns'},
@@ -210,7 +222,7 @@ R.append(dict(
     nutrition={'from': 'ingredients'}, src=BREAD_SRC))
 
 R.append(dict(
-    id='pizza-dough', name='Pizza dough', emoji='🍕', kind='scratch', group='Breads and doughs',
+    id='pizza-dough', name='Pizza dough', emoji='🍕', kind='scratch', group='Yeast breads',
     summary='A one-pound ball of dough, the size sold at the store, ready in about 1½ hours.',
     makes=[{'item': 'frozen-pizza-dough', 'by': 'each', 'n': 1, 'label': 'balls of dough (1 lb each)'}],
     yield_='One 1-lb ball of dough: one 14-inch round pizza or one 10 × 15-inch sheet pan.',
@@ -230,7 +242,7 @@ R.append(dict(
     nutrition={'from': 'ingredients'}, src=['ndsu-fn579', 'mu-gh1505', 'fda-flour']))
 
 R.append(dict(
-    id='flour-tortillas', name='Flour tortillas', emoji='🫓', kind='scratch', group='Breads and doughs',
+    id='flour-tortillas', name='Flour tortillas', emoji='🫓', kind='scratch', group='Flatbreads and tortillas',
     summary='Soft flour tortillas from five pantry staples, cooked in a dry skillet.',
     makes=[{'item': 'flour-tortillas', 'by': 'each', 'n': 10, 'label': '8-inch tortillas'},
            {'item': 'large-flour-tortillas', 'by': 'each', 'n': 7, 'label': '10-inch tortillas'}],
@@ -252,7 +264,7 @@ R.append(dict(
     nutrition={'from': 'ingredients'}, src=['ndsu-fn579', 'mu-gh1505', 'fda-flour']))
 
 R.append(dict(
-    id='corn-tortillas', name='Corn tortillas', emoji='🌮', kind='scratch', group='Breads and doughs',
+    id='corn-tortillas', name='Corn tortillas', emoji='🌮', kind='scratch', group='Flatbreads and tortillas',
     summary='Masa harina, water and salt, pressed thin and cooked on a hot griddle.',
     makes=[{'item': 'corn-tortillas', 'by': 'each', 'n': 16, 'label': '6-inch tortillas'}],
     yield_='About sixteen 6-inch tortillas.',
@@ -273,7 +285,7 @@ R.append(dict(
     nutrition={'from': 'ingredients'}, src=['ndsu-fn579', 'mu-gh1505', 'wiki-masa']))
 
 R.append(dict(
-    id='biscuits', name='Biscuits', emoji='🥯', kind='scratch', group='Breads and doughs',
+    id='biscuits', name='Biscuits', emoji='🥯', kind='scratch', group='Quick breads',
     summary='Tall, flaky butter biscuits in about 30 minutes, in place of the refrigerated can.',
     makes=[{'item': 'biscuit-dough', 'by': 'each', 'n': 8, 'label': 'biscuits (2½ inch)'}],
     yield_='Eight 2½-inch biscuits.',
@@ -295,7 +307,7 @@ R.append(dict(
     nutrition={'from': 'ingredients'}, src=['mu-gh1505', 'fda-flour']))
 
 R.append(dict(
-    id='pie-crust', name='Butter pie crust', emoji='🥧', kind='scratch', group='Breads and doughs',
+    id='pie-crust', name='Butter pie crust', emoji='🥧', kind='scratch', group='Pastry and crackers',
     summary='Enough flaky all-butter pastry for one double-crust pie or two single crusts.',
     makes=[{'item': 'pie-crust', 'by': 'sheet', 'n': 2, 'label': 'crusts (9-inch)'},
            {'item': 'frozen-pie-crust', 'by': 'each', 'n': 2, 'label': 'crusts (9-inch)'}],
@@ -958,6 +970,592 @@ for bid, dry, name, cook_t in (('black', 'dried-black-beans', 'Black beans', '1 
         scaling='1 lb of dried beans makes about 6 cups cooked, about four 15-oz cans. Use a pot big enough that the beans stay covered by 2 inches of water.',
         old_way=None, safety=['Never eat raw or undercooked dried beans. Soak at least 5 hours and boil in fresh water at least 30 minutes (FDA).', 'Cool in shallow containers and refrigerate within 2 hours (USDA).'], notes=[],
         nutrition={'from': 'ingredients'}, src=['fda-toxins', 'fsis-leftovers']))
+
+
+# ------------------------------------------------------------------ more breads (added with soft pretzels)
+QUICK_KEEPS = ['Counter: wrapped, about 3 days (NDSU’s figure for bread).', 'Freezer: wrapped once cool, 2 to 4 months (University of Missouri’s time for quick breads); thaw in the wrapping, 1 to 2 hours.']
+QUICK_SRC = ['ndsu-fn579', 'mu-gh1505', 'fda-flour']
+ROLL_KEEPS = ['Counter: in a bag, about 3 days (NDSU’s figure for bread and rolls).', 'Freezer: bag them once cool, up to 3 months (University of Missouri).']
+LOAF_PLAN = {'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in its wrapping on the counter, about 3 hours.'}
+ROLL_PLAN = {'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in the bag on the counter, about 1 hour.'}
+
+R.append(dict(
+    id='whole-wheat-sandwich-bread', name='Whole-wheat sandwich bread', emoji='🍞', kind='scratch', group='Yeast breads',
+    summary='All whole-wheat flour, a little honey, and a rest before kneading so the bran softens.',
+    makes=[{'item': 'wheat-bread', 'by': 'slice', 'n': 16, 'label': 'slices (about ½ inch thick)'}],
+    yield_='One 9 × 5-inch loaf, 16 slices about ½ inch thick (¾ of the dough fills an 8½ × 4½-inch pan).',
+    batch={'step': 0.25, 'min': 0.75, 'pans': loaf_pans},
+    ingredients=[I('whole-wheat-flour', 480, 'g'), I('yeast', 7, 'g'), I('salt', 9, 'g'), I('honey', 3, 'tbsp'), I('butter', 42, 'g', 'softened, or 3 tablespoons vegetable oil'),
+                 I('whole-milk', 1, 'cup'), I('water', 0.6667, 'cup')],
+    equipment=['large bowl', 'loaf pan (9 × 5 or 8½ × 4½ inch)', 'instant-read thermometer (helpful)', 'cooling rack'],
+    steps=['Warm the milk and water to about 110°F. Stir in the honey and yeast and let it stand 5 to 10 minutes, until foamy.',
+           'Stir in the flour, butter and salt to make a sticky, shaggy dough. Cover and let it rest 20 minutes: whole-wheat flour soaks up water slowly, and the dough gets easier to knead.',
+           'Knead 8 to 10 minutes until smooth and stretchy but still a little tacky. Add flour only a spoonful at a time; too much makes a dry, heavy loaf.',
+           'Cover and let it rise until doubled, 1 to 1½ hours.',
+           'Shape it like sandwich bread (press into a rectangle, roll up tightly, pinch the seam) and set it in a greased pan.',
+           'Let it rise until it crowns about 1 inch over the rim, 45 to 60 minutes, while the oven heats to 350°F.',
+           'Bake 35 to 40 minutes (8½ × 4½: 30 to 35), until the center reads about 190°F. Cool on a rack at least 1 hour before slicing.'],
+    stages=[st('Mix, rest and knead the dough', active=25, wait=110), st('Shape the loaves and set them in the pans', active=10, wait=55),
+            st('Bake at 350°F', cook=38, station='oven', temp=350), st('Cool on a rack before slicing', wait=60, bg=True)],
+    plan=LOAF_PLAN, keeps=BREAD_KEEPS,
+    scaling='7 g yeast and 9 g salt for every 480 g of flour. Whole wheat rises a little slower in a cool kitchen; go by the size of the dough, not the clock.',
+    old_way=None, safety=[FLOUR_SAFETY], notes=['Half whole-wheat and half white flour gives a lighter loaf: see the half whole-wheat recipe.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='oatmeal-bread', name='Oatmeal bread', emoji='🍞', kind='scratch', group='Yeast breads',
+    summary='Rolled oats soaked in hot water with honey and butter make a soft, faintly sweet, moist loaf.',
+    makes=[], yield_='One 9 × 5-inch loaf, about 16 slices.',
+    batch={'step': 0.25, 'min': 0.75, 'pans': loaf_pans},
+    ingredients=[I('rolled-oats', 1, 'cup'), I('water', 1, 'cup', 'boiling'), I('honey', 0.25, 'cup'), I('butter', 28, 'g'), I('whole-milk', 0.5, 'cup'),
+                 I('salt', 9, 'g'), I('yeast', 7, 'g'), I('flour', 420, 'g', 'or bread flour')],
+    equipment=['large bowl', 'loaf pan (9 × 5 or 8½ × 4½ inch)', 'cooling rack'],
+    steps=['Pour the boiling water over the oats, honey, butter and salt in a large bowl. Let it stand until just warm, about 110°F, 20 to 30 minutes.',
+           'Warm the milk to about 110°F, stir in the yeast, and let it stand 5 minutes. Add it to the oats.',
+           'Stir in the flour a cup at a time. Knead 8 minutes until smooth; the oats keep it a little sticky.',
+           'Cover and let it rise until doubled, about 1 to 1½ hours.',
+           'Shape into a loaf, set it in a greased pan, and let it rise until it crowns 1 inch over the rim, 45 to 60 minutes. Heat the oven to 350°F.',
+           'Sprinkle a few oats on top if you like. Bake 35 to 40 minutes, until the center reads about 190°F. Cool at least 1 hour.'],
+    stages=[st('Soak the oats and cool', active=5, wait=25), st('Mix and knead the dough', active=20, wait=80), st('Shape and set in the pan', active=10, wait=50),
+            st('Bake at 350°F', cook=38, station='oven', temp=350), st('Cool on a rack', wait=60, bg=True)],
+    plan=LOAF_PLAN, keeps=BREAD_KEEPS,
+    scaling='Scales by the loaf; keep 7 g yeast and 9 g salt per batch.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='potato-bread', name='Potato bread', emoji='🥔', kind='scratch', group='Yeast breads',
+    summary='Mashed potato and its cooking water make a tender, moist loaf that stays soft for days.',
+    makes=[{'item': 'potato-bread', 'by': 'slice', 'n': 16, 'label': 'slices (about ½ inch thick)'}],
+    yield_='One 9 × 5-inch loaf, 16 slices.',
+    batch={'step': 0.25, 'min': 0.75, 'pans': loaf_pans},
+    ingredients=[I('russet-potato', 1, 'each', 'peeled and cut in chunks'), I('whole-milk', 0.5, 'cup'), I('butter', 42, 'g'), I('sugar', 25, 'g'), I('eggs', 1, 'each'),
+                 I('salt', 9, 'g'), I('yeast', 7, 'g'), I('flour', 450, 'g', 'or bread flour')],
+    equipment=['small saucepan', 'masher or fork', 'large bowl', 'loaf pan (9 × 5 or 8½ × 4½ inch)'],
+    steps=['Boil the potato in water until very tender, about 15 minutes. Save ½ cup of the cooking water, drain, and mash the potato smooth (about ¾ cup).',
+           'Stir the butter and sugar into the warm potato, then the milk and saved potato water. Let it cool to about 110°F and stir in the yeast.',
+           'Beat in the egg and salt, then the flour a little at a time. Knead 8 minutes; the dough is soft and slightly sticky.',
+           'Cover and let it rise until doubled, about 1 hour (potato dough is quick).',
+           'Shape into a loaf, set it in a greased pan, and let it rise until it crowns about 1 inch over the rim, 40 to 50 minutes. Heat the oven to 375°F.',
+           'Bake 30 to 35 minutes, until golden and about 190°F in the center. Cool at least 1 hour.'],
+    stages=[st('Boil and mash the potato', active=10, cook=15, station='stove'), st('Cool, mix and knead the dough', active=20, wait=60),
+            st('Shape and set in the pan', active=10, wait=45), st('Bake at 375°F', cook=33, station='oven', temp=375), st('Cool on a rack', wait=60, bg=True)],
+    plan=LOAF_PLAN, keeps=BREAD_KEEPS,
+    scaling='One medium russet (about ¾ cup mashed) per loaf. Leftover plain mashed potato works; skip the boiling.', old_way=None, safety=[FLOUR_SAFETY], notes=['A good use for garden potatoes.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='rye-bread', name='Deli-style rye bread', emoji='🥪', kind='scratch', group='Yeast breads',
+    summary='A light rye with caraway seeds, the kind for corned beef or turkey sandwiches.',
+    makes=[{'item': 'rye-bread', 'by': 'slice', 'n': 16, 'label': 'slices'}],
+    yield_='One oval loaf (or a 9 × 5-inch pan loaf), about 16 slices.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('bread-flour', 300, 'g'), I('rye-flour', 150, 'g'), I('caraway-seeds', 1, 'tbsp'), I('yeast', 7, 'g'), I('salt', 9, 'g'),
+                 I('molasses', 2, 'tbsp', 'or honey'), I('vegetable-oil', 2, 'tbsp'), I('water', 1.3333, 'cup', 'about 110°F')],
+    equipment=['large bowl', 'baking sheet or 9 × 5-inch loaf pan', 'cooling rack'],
+    steps=['Stir the yeast and molasses into the warm water and let it stand 5 minutes.',
+           'Add the oil, salt, caraway, rye flour and bread flour and mix to a soft dough. Rye dough is stickier than wheat dough; wet your hands instead of adding much flour.',
+           'Knead about 6 minutes until fairly smooth. Cover and let it rise until about doubled, 1 to 1½ hours.',
+           'Shape into an oval loaf on a baking sheet dusted with cornmeal or flour (or into a greased loaf pan). Cover and let it rise until puffy, 45 to 60 minutes. Heat the oven to 375°F.',
+           'Brush the top with water and slash it 3 times. Bake 35 to 40 minutes, until it sounds hollow underneath and reads about 190°F.',
+           'Cool completely, 2 hours, before slicing; rye stays gummy while warm.'],
+    stages=[st('Mix and knead the dough', active=20, wait=80), st('Shape the loaf', active=10, wait=50), st('Bake at 375°F', cook=38, station='oven', temp=375), st('Cool completely', wait=120, bg=True)],
+    plan=LOAF_PLAN, keeps=BREAD_KEEPS,
+    scaling='Keep rye at about a third of the flour; more rye makes a denser loaf that needs a different method.', old_way=None,
+    safety=[FLOUR_SAFETY, 'Rye has gluten, and this bread is mostly wheat flour: it isn’t gluten-free.'], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='italian-bread', name='Italian bread', emoji='🥖', kind='scratch', group='Yeast breads',
+    summary='A soft-crusted, golden loaf with a little olive oil and sugar, often topped with sesame seeds.',
+    makes=[{'item': 'italian-bread', 'by': 'g', 'n': 780, 'label': 'g of bread'}],
+    yield_='One large loaf, about 1¾ lb (or two smaller ones).',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('bread-flour', 500, 'g'), I('yeast', 7, 'g'), I('salt', 10, 'g'), I('sugar', 12.5, 'g'), I('olive-oil', 2, 'tbsp'), I('water', 1.3333, 'cup', 'about 110°F'),
+                 I('sesame-seeds', 1, 'tbsp', '', True)],
+    equipment=['large bowl', 'baking sheet', 'cooling rack'],
+    steps=['Stir the yeast and sugar into the warm water and let it stand 5 minutes. Add the oil, salt and flour and mix.',
+           'Knead 8 to 10 minutes until smooth and elastic. Cover and let it rise until doubled, about 1 to 1½ hours.',
+           'Shape into a 14-inch log (or two 10-inch logs), set on a baking sheet dusted with cornmeal, and let it rise until puffy, 45 to 60 minutes. Heat the oven to 425°F.',
+           'Brush with water, sprinkle with sesame seeds if you like, and slash one long cut down the top.',
+           'Bake 25 to 30 minutes, until golden and hollow-sounding (about 200°F). Cool 30 minutes.'],
+    stages=[st('Mix and knead the dough', active=20, wait=80), st('Shape the loaf', active=10, wait=50), st('Bake at 425°F', cook=28, station='oven', temp=425), st('Cool', wait=30, bg=True)],
+    plan={'keep_days': 2, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in its wrapping, then warm in a 350°F oven for 5 to 10 minutes.'}, keeps=BREAD_KEEPS,
+    scaling='10 g salt and 7 g yeast per 500 g flour.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='focaccia', name='Focaccia', emoji='🫒', kind='scratch', group='Yeast breads',
+    summary='A wet, olive-oil dough baked in a sheet pan: crisp underneath, airy inside, dimpled on top.',
+    makes=[], yield_='One 9 × 13-inch pan, 12 to 15 pieces.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('bread-flour', 500, 'g', 'or all-purpose'), I('yeast', 7, 'g'), I('salt', 12, 'g'), I('water', 1.6667, 'cup', 'about 100°F'), I('olive-oil', 0.375, 'cup', 'divided'),
+                 I('rosemary-dried', 1, 'tsp'), I('kosher-salt', 0.5, 'tsp', 'for the top')],
+    equipment=['large bowl', '9 × 13-inch metal pan'],
+    steps=['Stir the flour, yeast and salt in a bowl, add the water, and mix until no dry flour is left. The dough will be very wet; that’s right.',
+           'Cover and rest 30 minutes. With a wet hand, lift one side of the dough and fold it over the middle; turn the bowl and repeat 4 times. Do this 3 times, 30 minutes apart.',
+           'Pour ¼ cup of the oil into the pan, tip the dough in, and turn it once to coat. Let it rest 20 minutes, then gently stretch it toward the corners.',
+           'Cover and let it rise until puffy and bubbly, 45 to 60 minutes. Heat the oven to 450°F.',
+           'Drizzle with the rest of the oil, press deep dimples all over with oiled fingers, and sprinkle with rosemary and coarse salt.',
+           'Bake 20 to 25 minutes, until deep golden on top and underneath. Cool 10 minutes in the pan, then move it to a rack.'],
+    stages=[st('Mix the dough', active=10, wait=30), st('Stretch and fold 3 times', active=6, wait=90), st('Pan it and let it rise', active=5, wait=65),
+            st('Dimple and top', active=5), st('Bake at 450°F', cook=23, station='oven', temp=450), st('Cool', wait=15)],
+    plan={'keep_days': 2, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw, then warm in a 375°F oven 5 to 8 minutes.'},
+    keeps=['Counter: best the day it’s baked; wrapped, about 2 days, recrisped in the oven.', BREAD_KEEPS[1]],
+    scaling='Double it in a half-sheet pan (13 × 18 inch); the baking time stays about the same.', old_way=None, safety=[FLOUR_SAFETY], notes=['The wet dough is what makes the big holes; resist adding flour.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='ciabatta', name='Ciabatta', emoji='🥖', kind='scratch', group='Yeast breads',
+    summary='Very wet dough, folded instead of kneaded, baked into two flat, open-holed loaves.',
+    makes=[], yield_='Two loaves, about 14 oz each, or 8 sandwich rolls.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('bread-flour', 500, 'g'), I('yeast', 4, 'g'), I('salt', 10, 'g'), I('water', 1.75, 'cup', 'about 90°F'), I('olive-oil', 1, 'tbsp')],
+    equipment=['large bowl or square container', 'baking sheet', 'parchment paper', 'bench scraper (helpful)'],
+    steps=['Mix the flour, yeast, salt, water and oil until no dry flour remains. Cover and rest 30 minutes.',
+           'With a wet hand, stretch and fold the dough over itself 4 times, turning the bowl. Repeat 3 more times, every 30 minutes. Then let it rise undisturbed until doubled and bubbly, about 1 more hour.',
+           'Tip it onto a well-floured counter. With floured hands, gently pat it into a rectangle and cut it in two. Fold each piece in thirds like a letter and set them seam side down on floured parchment.',
+           'Cover and let them rise 45 minutes while the oven heats to 450°F with a baking sheet inside.',
+           'Flip each loaf over onto the hot sheet (parchment and all) so the floured side is up. Bake 22 to 25 minutes, until deep golden. Cool at least 30 minutes.'],
+    stages=[st('Mix and rest', active=10, wait=30), st('Stretch and fold 4 times, then rise', active=8, wait=150), st('Shape the loaves', active=10, wait=45),
+            st('Bake at 450°F', cook=24, station='oven', temp=450), st('Cool', wait=30, bg=True)],
+    plan={'keep_days': 2, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw, then crisp in a 350°F oven 5 to 10 minutes.'},
+    keeps=['Counter: best the day it’s baked; in a paper bag, about 2 days.', BREAD_KEEPS[1]],
+    scaling='Don’t add flour to make it easier to handle; flour your hands and the counter instead.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='hoagie-rolls', name='Sub rolls', emoji='🥖', kind='scratch', group='Yeast breads',
+    summary='Long, soft-crusted rolls for subs, hoagies and meatball sandwiches.',
+    makes=[{'item': 'hoagie-rolls', 'by': 'each', 'n': 8, 'label': 'sub rolls (about 8 inches)'}],
+    yield_='Eight 8-inch rolls.',
+    batch={'step': 0.125, 'min': 0.25},
+    ingredients=[I('bread-flour', 500, 'g'), I('yeast', 7, 'g'), I('salt', 9, 'g'), I('sugar', 12.5, 'g'), I('vegetable-oil', 2, 'tbsp'), I('water', 1.25, 'cup', 'about 110°F')],
+    equipment=['large bowl', '2 baking sheets', 'cooling rack'],
+    steps=['Stir the yeast and sugar into the warm water and let it stand 5 minutes. Add the oil, salt and flour and mix.',
+           'Knead 8 to 10 minutes until smooth. Cover and let it rise until doubled, about 1 hour.',
+           'Divide into 8 pieces (about 100 g each). Pat each into a rectangle, roll it up tightly into an 8-inch log, and set them 2 inches apart on the sheets.',
+           'Cover and let rise until puffy, 40 to 50 minutes. Heat the oven to 400°F.',
+           'Brush with water and slash each down the middle if you like. Bake 18 to 20 minutes, until golden. Cool on a rack.'],
+    stages=[st('Mix and knead the dough', active=20, wait=60), st('Shape the rolls', active=15, wait=45), st('Bake at 400°F', cook=19, station='oven', temp=400), st('Cool', wait=30, bg=True)],
+    plan=ROLL_PLAN, keeps=ROLL_KEEPS,
+    scaling='Each roll is an eighth of the dough; the planner counts rolls.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='breadsticks', name='Soft breadsticks', emoji='🥖', kind='scratch', group='Yeast breads',
+    summary='Pizza-style dough cut into sticks and brushed with garlic butter and Parmesan.',
+    makes=[], yield_='12 breadsticks.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('flour', 280, 'g'), I('yeast', 4, 'g'), I('salt', 6, 'g'), I('olive-oil', 1, 'tbsp'), I('water', 0.75, 'cup', 'about 110°F'),
+                 I('butter', 42, 'g', 'melted'), I('garlic-powder', 0.5, 'tsp'), I('parmesan', 2, 'tbsp', '', True)],
+    equipment=['bowl', 'baking sheet', 'pastry brush'],
+    steps=['Make the dough: stir the yeast into the warm water, add the flour, salt and oil, and knead 6 to 8 minutes. Cover and let it rise until doubled, about 1 hour.',
+           'Pat it into a 12 × 8-inch rectangle on a greased baking sheet and cut it into 12 strips with a pizza cutter (leave them side by side). Let rise 20 minutes. Heat the oven to 400°F.',
+           'Brush with half the garlic butter and sprinkle with Parmesan. Bake 15 to 18 minutes, until golden. Brush with the rest of the butter and pull apart.'],
+    stages=[st('Mix and knead the dough', active=15, wait=60), st('Shape and cut', active=10, wait=20), st('Bake at 400°F', active=3, cook=16, station='oven', temp=400)],
+    plan={'keep_days': 2, 'freeze': True, 'lead_days': 0, 'thaw': 'Warm frozen breadsticks in a 350°F oven about 10 minutes.'}, keeps=ROLL_KEEPS,
+    scaling='Same dough as one 1-lb ball of pizza dough.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='english-muffins', name='English muffins', emoji='🧇', kind='scratch', group='Yeast breads',
+    summary='A soft, wet dough cut into rounds, rolled in cornmeal and cooked slowly on a griddle.',
+    makes=[{'item': 'english-muffins', 'by': 'each', 'n': 10, 'label': 'English muffins'}],
+    yield_='About ten 3-inch muffins.',
+    batch={'step': 0.1, 'min': 0.5},
+    ingredients=[I('flour', 450, 'g', 'or bread flour'), I('yeast', 7, 'g'), I('salt', 7, 'g'), I('sugar', 12.5, 'g'), I('butter', 28, 'g', 'melted'),
+                 I('whole-milk', 1.25, 'cup', 'warm'), I('water', 0.25, 'cup', 'warm'), I('cornmeal', 3, 'tbsp', 'for dusting')],
+    equipment=['bowl', '3-inch round cutter or a glass', 'griddle or large heavy skillet', 'baking sheet'],
+    steps=['Stir the yeast and sugar into the warm milk and water and let it stand 5 minutes. Add the butter, salt and flour and beat to a soft, sticky dough.',
+           'Knead about 5 minutes (in a mixer is easiest). Cover and let it rise until doubled, about 1 hour.',
+           'Pat it ¾ inch thick on a floured counter and cut 3-inch rounds. Press the scraps together once for the last few.',
+           'Set the rounds on a sheet dusted with cornmeal, dust the tops, cover, and let them rise 30 to 45 minutes.',
+           'Heat a dry griddle over medium-low. Cook the muffins a few at a time, 7 to 8 minutes per side, until browned and the sides spring back (about 200°F in the middle). Keep the heat low so the inside cooks before the outside burns.',
+           'Cool on a rack. Split them with a fork for the craggy, crisp-toasting inside.'],
+    stages=[st('Mix and knead the dough', active=15, wait=60), st('Cut and rest in cornmeal', active=15, wait=40), st('Cook on the griddle', active=35, station='stove'), st('Cool', wait=20, bg=True)],
+    plan=ROLL_PLAN, keeps=ROLL_KEEPS,
+    scaling='Each muffin is a tenth of the dough. Cook in batches; a griddle holds 4 to 6.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+# ------------------------------------------------------------------ enriched breads
+R.append(dict(
+    id='milk-bread', name='Japanese-style milk bread', emoji='🍞', kind='scratch', group='Enriched breads',
+    summary='A cooked flour-and-milk paste (tangzhong) makes an extra-soft, fluffy loaf that stays fresh longer.',
+    makes=[], yield_='One 8½ × 4½-inch loaf, about 12 thick slices.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('bread-flour', 350, 'g', '20 g of it for the paste'), I('whole-milk', 0.9, 'cup', '100 g of it for the paste'), I('eggs', 1, 'each'), I('sugar', 40, 'g'), I('salt', 6, 'g'),
+                 I('yeast', 7, 'g'), I('butter', 40, 'g', 'softened')],
+    equipment=['small saucepan and whisk', 'bowl or stand mixer', '8½ × 4½-inch loaf pan'],
+    steps=['Paste: whisk 20 g (2 tablespoons plus 1 teaspoon) of the flour into 100 g (scant ½ cup) of the milk in a small pan. Cook over medium-low, whisking, until it thickens like pudding and the whisk leaves lines, 2 to 3 minutes. Cool to lukewarm.',
+           'Warm the rest of the milk to about 110°F and stir in the yeast. Add the paste, egg, sugar, salt and the rest of the flour and mix.',
+           'Knead 10 minutes (it starts sticky), then knead in the butter a little at a time and knead 5 to 10 minutes more, until very smooth and stretchy.',
+           'Cover and let it rise until doubled, about 1 hour.',
+           'Divide into 3 pieces. Roll each into an oval, fold in the long sides, and roll it up from the short end. Set the 3 rolls side by side in the greased pan.',
+           'Let rise until the top is about ½ inch over the rim, 45 to 60 minutes. Heat the oven to 350°F. Brush with milk.',
+           'Bake 30 to 35 minutes, until deep golden and about 190°F in the middle. Cool in the pan 10 minutes, then on a rack.'],
+    stages=[st('Cook the paste and cool it', active=5, cook=3, station='stove', wait=15), st('Mix and knead in the butter', active=25, wait=60),
+            st('Shape the three rolls', active=10, wait=50), st('Bake at 350°F', cook=33, station='oven', temp=350), st('Cool', wait=60, bg=True)],
+    plan=LOAF_PLAN, keeps=BREAD_KEEPS,
+    scaling='The paste is about 6% of the flour cooked with five times its weight in milk; scale both with the loaf.', old_way=None,
+    safety=[FLOUR_SAFETY], notes=['Iowa State Extension notes the cooked-paste method makes bread softer and helps it keep longer.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC + ['isu-tangzhong']))
+
+R.append(dict(
+    id='challah', name='Challah', emoji='🥨', kind='scratch', group='Enriched breads',
+    summary='A braided egg bread sweetened with honey, shiny with egg wash.',
+    makes=[{'item': 'challah', 'by': 'g', 'n': 850, 'label': 'g of bread'}],
+    yield_='One large braided loaf, about 1¾ lb.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('bread-flour', 500, 'g'), I('yeast', 7, 'g'), I('salt', 9, 'g'), I('honey', 0.25, 'cup'), I('vegetable-oil', 0.25, 'cup'),
+                 I('eggs', 3, 'each', '2 for the dough, 1 for brushing'), I('water', 0.75, 'cup', 'about 110°F')],
+    equipment=['large bowl', 'baking sheet lined with parchment', 'pastry brush'],
+    steps=['Stir the yeast and a spoonful of the honey into the warm water and let it stand 5 minutes.',
+           'Beat in the rest of the honey, the oil, 2 eggs and the salt, then the flour. Knead 8 to 10 minutes until smooth and elastic.',
+           'Cover and let it rise until doubled, 1½ to 2 hours.',
+           'Divide into 3 (or 6) equal pieces and roll each into a 16-inch rope. Pinch the ends together and braid loosely, then pinch and tuck the other end under.',
+           'Set on the sheet, brush with beaten egg, and let rise until puffy, about 1 hour. Heat the oven to 350°F. Brush again.',
+           'Bake 30 to 35 minutes, until deep brown and about 190°F in the thickest part. Cool on a rack.'],
+    stages=[st('Mix and knead the dough', active=20, wait=100), st('Braid the loaf', active=15, wait=60), st('Bake at 350°F', active=2, cook=33, station='oven', temp=350), st('Cool', wait=45, bg=True)],
+    plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in its wrapping on the counter, about 3 hours.'}, keeps=BREAD_KEEPS,
+    scaling='Two loaves: double it and braid two. A day-old loaf makes excellent French toast.', old_way=None, safety=[FLOUR_SAFETY], notes=['Made with oil, so it has no dairy.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='brioche', name='Brioche (loaf or buns)', emoji='🍞', kind='scratch', group='Enriched breads',
+    summary='Eggs and lots of butter make a rich, tender bread; the dough rests overnight in the refrigerator.',
+    makes=[], yield_='One 9 × 5-inch loaf or 8 burger buns.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('flour', 375, 'g', 'or bread flour'), I('yeast', 7, 'g'), I('salt', 7, 'g'), I('sugar', 50, 'g'), I('whole-milk', 0.25, 'cup', 'warm'),
+                 I('eggs', 5, 'each', '4 for the dough, 1 for brushing'), I('butter', 170, 'g', 'soft, in pieces')],
+    equipment=['stand mixer with dough hook (strongly recommended)', 'loaf pan or baking sheet', 'plastic wrap'],
+    steps=['Mix the flour, yeast, salt and sugar in the mixer bowl. Add the milk and 4 eggs and knead on medium-low about 5 minutes, until smooth.',
+           'With the mixer running, add the butter a piece at a time, waiting until each disappears. Knead 8 to 10 minutes more, until the dough is glossy and pulls from the sides.',
+           'Cover and let it rise 1 hour at room temperature, then press it down, cover tightly, and refrigerate overnight (8 to 16 hours). Cold dough is much easier to shape.',
+           'Shape while cold: a loaf (8 small balls in two rows in a greased 9 × 5 pan) or 8 buns flattened to 3½ inches on a lined sheet.',
+           'Let rise in a warm spot until puffy, 1½ to 2 hours. Heat the oven to 375°F for buns or 350°F for a loaf. Brush with beaten egg.',
+           'Bake buns 15 to 18 minutes; a loaf 35 to 40 minutes (cover with foil if it browns too fast). It’s done at about 190°F. Cool on a rack.'],
+    stages=[st('Mix and knead in the butter', active=25, wait=60, before=True), st('Chill overnight', active=2, wait=720, station='fridge', before=True), st('Shape while cold', active=15, wait=100),
+            st('Bake at 375°F (buns)', active=2, cook=17, station='oven', temp=375), st('Cool', wait=30, bg=True)],
+    plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in the bag on the counter.'}, keeps=ROLL_KEEPS,
+    scaling='Keep the butter about 45% of the flour’s weight. A stand mixer handles up to a double batch.', old_way=None, safety=[FLOUR_SAFETY], notes=['Brioche buns are a favorite for burgers.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='cinnamon-rolls', name='Cinnamon rolls', emoji='🌀', kind='scratch', group='Enriched breads',
+    summary='A soft milk dough rolled around butter, brown sugar and cinnamon, finished with a simple glaze.',
+    makes=[{'item': 'cinnamon-rolls', 'by': 'each', 'n': 12, 'label': 'cinnamon rolls'}],
+    yield_='12 large rolls in a 9 × 13-inch pan.',
+    batch={'step': 0.25, 'min': 0.5},
+    ingredients=[I('flour', 500, 'g', 'or bread flour'), I('yeast', 7, 'g'), I('salt', 6, 'g'), I('sugar', 50, 'g'), I('whole-milk', 1, 'cup', 'warm'), I('eggs', 1, 'each'),
+                 I('butter', 113, 'g', 'softened: half for the dough, half for the filling'), I('brown-sugar', 0.75, 'cup', 'packed'), I('cinnamon', 1, 'tbsp'),
+                 I('powdered-sugar', 120, 'g', 'for the glaze'), I('whole-milk', 2, 'tbsp', 'for the glaze'), I('vanilla', 0.5, 'tsp')],
+    equipment=['large bowl', 'rolling pin', '9 × 13-inch pan', 'unflavored dental floss or a sharp knife'],
+    steps=['Stir the yeast into the warm milk. Add the sugar, egg, half the butter (4 tablespoons), salt and flour and knead 8 minutes until soft and smooth.',
+           'Cover and let it rise until doubled, about 1 hour.',
+           'Roll it into an 18 × 12-inch rectangle. Spread with the rest of the soft butter and sprinkle evenly with the brown sugar and cinnamon.',
+           'Roll it up tightly from the long side and pinch the seam. Cut into 12 slices (dental floss cuts cleanly) and set them in a greased 9 × 13 pan.',
+           'Cover and let rise until puffy and touching, 45 to 60 minutes. (Or refrigerate overnight and let them rise 1 to 1½ hours in the morning.) Heat the oven to 375°F.',
+           'Bake 22 to 25 minutes, until golden and the middle roll reads about 190°F.',
+           'Stir the powdered sugar, milk and vanilla into a thick glaze and spread it over the warm rolls.'],
+    stages=[st('Mix and knead the dough', active=15, wait=60), st('Fill, roll and cut', active=20, wait=50), st('Bake at 375°F', cook=23, station='oven', temp=375), st('Glaze', active=5, wait=10)],
+    plan={'keep_days': 2, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw, then warm 10 minutes at 300°F.'},
+    keeps=['Counter: covered, about 2 days; best warm the first day.', 'Freezer: bake them, cool, and freeze unglazed up to 3 months (University of Missouri’s time for baked yeast rolls); glaze after warming.'],
+    scaling='Each roll is a twelfth of the recipe.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='sweet-rolls', name='Sweet rolls (Hawaiian-style)', emoji='🍞', kind='scratch', group='Enriched breads',
+    summary='Soft, slightly sweet pull-apart rolls made with honey, butter and eggs.',
+    makes=[{'item': 'hawaiian-rolls', 'by': 'each', 'n': 16, 'label': 'rolls'}],
+    yield_='16 pull-apart rolls in a 9 × 13-inch pan.',
+    batch={'step': 0.25, 'min': 0.5},
+    ingredients=[I('flour', 500, 'g'), I('yeast', 7, 'g'), I('salt', 7, 'g'), I('honey', 0.25, 'cup'), I('sugar', 25, 'g'), I('whole-milk', 0.75, 'cup', 'warm'),
+                 I('eggs', 2, 'each'), I('butter', 57, 'g', 'softened, plus more for brushing')],
+    equipment=['large bowl', '9 × 13-inch pan'],
+    steps=['Stir the yeast into the warm milk with the honey and sugar and let it stand 5 minutes.',
+           'Beat in the eggs, butter and salt, then the flour. Knead 8 to 10 minutes; the dough stays soft.',
+           'Cover and let it rise until doubled, about 1 to 1½ hours.',
+           'Divide into 16 pieces (about 55 g each), round them into tight balls, and set them in rows in a greased 9 × 13 pan.',
+           'Let rise until puffy and touching, 45 to 60 minutes. Heat the oven to 350°F.',
+           'Bake 20 to 25 minutes, until golden (about 190°F). Brush with melted butter.'],
+    stages=[st('Mix and knead the dough', active=20, wait=75), st('Shape the rolls', active=15, wait=50), st('Bake at 350°F', cook=23, station='oven', temp=350), st('Cool', wait=20, bg=True)],
+    plan=ROLL_PLAN, keeps=ROLL_KEEPS,
+    scaling='Each roll is a sixteenth of the dough. Many recipes use pineapple juice for part of the milk; this one keeps to pantry staples.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+# ------------------------------------------------------------------ sourdough
+R.append(dict(
+    id='sourdough-starter', name='Sourdough starter', emoji='🫙', kind='scratch', group='Sourdough',
+    summary='Flour and water, fed daily until wild yeast and bacteria make it bubble and rise: then keep it in the refrigerator for years.',
+    makes=[], yield_='A jar of active starter; you keep about 50 to 100 g and feed it.',
+    batch={'step': 1, 'min': 1},
+    ingredients=[I('flour', 1300, 'g', 'about 100 g a day for 2 weeks'), I('water', 5.5, 'cup', 'about 100 g a day')],
+    equipment=['clean glass jar (1 quart) with a loose lid', 'kitchen scale', 'spoon (not metal is best)', 'rubber band to mark the level'],
+    steps=['Day 1: stir 100 g flour and 100 g lukewarm water in the jar into a thick batter. Cover loosely and leave it in a warm spot for 24 hours.',
+           'Day 2: stir it, then keep only 50 g and throw out the rest. Feed it 50 g flour and 50 g water, stir, and mark the level with a rubber band.',
+           'Keep feeding once a day the same way (equal weights of starter, flour and water: 1:1:1). When it starts bubbling and smelling yeasty, after about 3 days, feed it twice a day, about every 12 hours.',
+           'It’s ready to bake with when it doubles within 4 to 6 hours after a feeding, is bubbly all through, and smells pleasantly sour. That usually takes about 2 weeks (Clemson Extension).',
+           'Keeping it: store it in the refrigerator in a clean glass jar with a loose lid, and feed it once a week (Clemson, University of Alaska). Before baking, take it out, feed it, and let it double.',
+           'Gray liquid on top is normal (it’s called hooch): stir it back in for a more sour starter, or pour it off.',
+           'Throw it out and start over if it turns green (University of Alaska), grows fuzzy mold, or smells rotten rather than sour. When in doubt, throw it out.',
+           'Use the starter you remove at each feeding (the discard) in pancakes, waffles or crackers, or throw it away.'],
+    stages=[st('Mix the first batch', active=5, wait=1440, bg=True), st('Feed daily, then twice a day, until it doubles in 4 to 6 hours', active=75, wait=18720, bg=True)],
+    plan={'keep_days': 365, 'freeze': False, 'lead_days': 0, 'thaw': ''},
+    keeps=['Refrigerator: keep it in a covered glass jar and feed it once a week (Clemson Extension; University of Alaska Extension). Metal containers and spoons aren’t recommended, since the acid can react with the metal (University of Alaska).'],
+    scaling='Keep a small amount (50 to 100 g) and feed it 1:1:1 by weight. To build up starter for baking, feed it 6 to 12 hours before you mix the dough: for example 20 g starter, 50 g flour, 50 g water.',
+    old_way='In Alaska, “sourdough” also means an old-timer: miners, trappers and homesteaders kept starters going because bread couldn’t be made without them, and supplies came by ship only once or twice a year (University of Alaska Extension).',
+    safety=['Use a clean jar, and don’t add baking soda to the starter itself (University of Alaska).'], notes=[],
+    nutrition={'from': 'ingredients'}, src=['clemson-sourdough', 'uaf-sourdough', 'ucanr-starter']))
+
+R.append(dict(
+    id='sourdough-bread', name='Sourdough bread', emoji='🥖', kind='scratch', group='Sourdough',
+    summary='A crusty round loaf raised only with sourdough starter, shaped one day and baked the next.',
+    makes=[{'item': 'sourdough', 'by': 'g', 'n': 800, 'label': 'g of bread'}],
+    yield_='One round loaf, about 1¾ lb.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('bread-flour', 500, 'g', '50 g of it to feed the starter'), I('water', 1.5833, 'cup', '50 g of it to feed the starter'), I('salt', 10, 'g')],
+    equipment=['kitchen scale', 'large bowl', 'bowl or basket lined with a well-floured towel', 'Dutch oven (5 to 6 quart) with lid', 'parchment paper', 'razor blade or sharp knife'],
+    steps=['The day before baking, in the morning (6 to 12 hours ahead), feed your starter: 20 g of starter from the jar, 50 g of the flour and 50 g of the water. It’s ready when it has doubled and is bubbly.',
+           'Mix all of the risen starter (about 120 g) with the remaining water (about 325 g) and flour (450 g) until no dry flour is left. Cover and rest 1 hour.',
+           'Add the salt with a splash of water and squeeze it in. Over the next 2 hours, every 30 minutes, stretch one side of the dough up and fold it over; turn the bowl and repeat 4 times.',
+           'Let it rise, covered, until it has grown by about half and has bubbles on the sides, 2 to 4 more hours (longer in a cool kitchen).',
+           'In the evening, turn it out, shape it into a tight ball, and set it seam side up in the floured, towel-lined bowl. Cover and refrigerate overnight, 8 to 16 hours.',
+           'Next morning, heat the oven to 475°F with the Dutch oven inside for 45 minutes. Turn the cold dough onto parchment, slash the top, and lower it into the pot.',
+           'Bake covered 20 minutes, then uncovered 20 to 25 minutes, until very dark brown and about 205°F inside. Cool at least 2 hours before cutting.'],
+    stages=[st('Feed the starter in the morning', active=5, wait=480, before=True), st('Mix the dough and rest', active=10, wait=60, before=True), st('Add the salt, then stretch and fold 4 times', active=10, wait=120, before=True),
+            st('Let it rise until it grows by half', wait=180, before=True), st('Shape it and chill it overnight', active=10, wait=600, station='fridge', before=True), st('Heat the oven with the pot inside', wait=45), st('Bake at 475°F', cook=45, station='oven', temp=475), st('Cool', wait=120, bg=True)],
+    plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in its wrapping on the counter, then crisp in a 375°F oven 10 minutes.'},
+    keeps=['Counter: cut side down on a board or in a paper bag, about 3 days (NDSU’s figure for bread).', BREAD_KEEPS[1]],
+    scaling='75% water, 2% salt and about 20% starter by the flour’s weight. Times depend on your starter and your kitchen: go by how the dough looks.',
+    old_way='Before factory-made yeast went on sale in the United States in the late 1860s, home bakers raised their bread with starters like this one or with yeast from brewing.',
+    safety=[FLOUR_SAFETY, 'Use oven mitts that cover your wrists for the 475°F pot.'], notes=['You need an active starter first: see the sourdough starter recipe.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC + ['wiki-fleischmann', 'clemson-sourdough']))
+
+# ------------------------------------------------------------------ flatbreads
+R.append(dict(
+    id='pita', name='Pita bread', emoji='🫓', kind='scratch', group='Flatbreads and tortillas',
+    summary='Rounds of simple dough baked on a hot sheet until they puff into pockets.',
+    makes=[{'item': 'pita', 'by': 'each', 'n': 8, 'label': 'pitas (6½ inch)'}],
+    yield_='Eight 6½-inch pitas.',
+    batch={'step': 0.125, 'min': 0.25},
+    ingredients=[I('flour', 360, 'g'), I('yeast', 4, 'g'), I('salt', 6, 'g'), I('sugar', 1, 'tsp'), I('olive-oil', 1, 'tbsp'), I('water', 1, 'cup', 'about 110°F')],
+    equipment=['bowl', 'rolling pin', 'heavy baking sheet or baking stone (or a cast-iron skillet)'],
+    steps=['Stir the yeast and sugar into the warm water. Add the oil, salt and flour and knead 8 minutes until smooth.',
+           'Cover and let it rise until doubled, about 1 to 1½ hours.',
+           'Heat the oven to 475°F with the baking sheet on the lowest rack for at least 30 minutes.',
+           'Divide into 8 balls and rest them 10 minutes, covered. Roll each to a 6-inch round about ¼ inch thick, without creasing.',
+           'Bake 2 or 3 at a time on the hot sheet, 3 to 5 minutes, until puffed and just starting to color. (On the stove: cook in a hot dry skillet 1 to 2 minutes per side.)',
+           'Stack them in a towel so they stay soft as they cool.'],
+    stages=[st('Mix and knead the dough', active=15, wait=75), st('Shape the rounds', active=15, wait=10), st('Bake at 475°F in batches', active=15, cook=15, station='oven', temp=475)],
+    plan=ROLL_PLAN, keeps=['Counter: in a bag once cool, about 3 days (NDSU’s figure for bread).', 'Freezer: bag them, up to 3 months; warm in a skillet or toaster.'],
+    scaling='Each pita is an eighth of the dough (about 75 g).', old_way=None, safety=[FLOUR_SAFETY], notes=['Uneven thickness or creases keep them from puffing; they still taste fine as flatbread.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='naan', name='Naan', emoji='🫓', kind='scratch', group='Flatbreads and tortillas',
+    summary='A soft yogurt dough cooked in a very hot skillet and brushed with butter.',
+    makes=[{'item': 'naan', 'by': 'each', 'n': 8, 'label': 'naan'}],
+    yield_='8 naan, about 8 inches long.',
+    batch={'step': 0.125, 'min': 0.25},
+    ingredients=[I('flour', 375, 'g'), I('yeast', 4, 'g'), I('salt', 6, 'g'), I('sugar', 1, 'tsp'), I('plain-yogurt', 0.5, 'cup'), I('water', 0.5, 'cup', 'warm'),
+                 I('vegetable-oil', 2, 'tbsp'), I('butter', 28, 'g', 'melted, for brushing'), I('garlic', 2, 'clove', 'minced, for garlic naan', True)],
+    equipment=['bowl', 'rolling pin', 'cast-iron skillet with a lid'],
+    steps=['Stir the yeast and sugar into the warm water and let it stand 5 minutes. Add the yogurt, oil, salt and flour and knead 5 minutes into a soft dough.',
+           'Cover and let it rise until doubled, about 1½ hours.',
+           'Divide into 8 balls. Roll each into an oval about ¼ inch thick.',
+           'Heat the skillet over medium-high until very hot. Cook one naan at a time: when big bubbles form, about 1 minute, flip it, cover the pan, and cook 1 minute more, until charred in spots.',
+           'Brush with butter (stir the garlic into the butter for garlic naan) and keep them wrapped in a towel.'],
+    stages=[st('Mix and knead the dough', active=10, wait=90), st('Roll and cook', active=25, station='stove')],
+    plan=ROLL_PLAN, keeps=['Counter: wrapped, about 3 days (NDSU’s figure for bread).', 'Freezer: with parchment between them, up to 3 months; warm in a skillet.'],
+    scaling='Each naan is an eighth of the dough.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='lavash', name='Flatbread (lavash)', emoji='🫓', kind='scratch', group='Flatbreads and tortillas',
+    summary='An unleavened dough rolled paper-thin: soft from a skillet for wraps, crisp from the oven for crackers.',
+    makes=[], yield_='8 large thin flatbreads.',
+    batch={'step': 0.25, 'min': 0.5},
+    ingredients=[I('flour', 250, 'g'), I('salt', 4, 'g'), I('olive-oil', 2, 'tbsp'), I('water', 0.6667, 'cup', 'warm')],
+    equipment=['bowl', 'rolling pin', 'large skillet or baking sheets'],
+    steps=['Mix the flour and salt, add the oil and water, and knead 5 minutes until smooth. Cover and rest 30 minutes.',
+           'Divide into 8 pieces and roll each as thin as you can, about 10 inches across.',
+           'Soft: cook in a hot dry skillet about 1 minute per side, until bubbled with a few brown spots; stack in a towel.',
+           'Crisp: bake on a sheet at 400°F 5 to 8 minutes, sprinkled with sesame seeds or salt, until browned; break into crackers.'],
+    stages=[st('Mix and rest', active=10, wait=30), st('Roll and cook', active=25, station='stove')],
+    plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in the bag.'},
+    keeps=['Soft: in a bag, about 3 days (NDSU’s figure for bread); freeze for longer.', 'Crisp: airtight; crispest within a week or two.'],
+    scaling='Each flatbread is an eighth of the dough.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+# ------------------------------------------------------------------ quick breads
+R.append(dict(
+    id='cornbread', name='Cornbread', emoji='🌽', kind='scratch', group='Quick breads',
+    summary='Cornmeal and flour, lightly sweet, baked in a hot pan in about half an hour.',
+    makes=[], yield_='One 8-inch square pan (or 9-inch skillet), 9 pieces.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('cornmeal', 1, 'cup'), I('flour', 125, 'g'), I('sugar', 25, 'g', 'up to 50 g for sweeter'), I('baking-powder', 12, 'g'), I('salt', 3, 'g'),
+                 I('whole-milk', 1, 'cup'), I('eggs', 1, 'each'), I('butter', 57, 'g', 'melted, or vegetable oil')],
+    equipment=['bowl', '8-inch square pan or 9-inch cast-iron skillet'],
+    steps=['Heat the oven to 400°F. Grease the pan (for a crisp crust, heat a greased skillet in the oven).',
+           'Whisk the cornmeal, flour, sugar, baking powder and salt. Whisk the milk, egg and melted butter separately, then stir them into the dry mix just until combined.',
+           'Pour into the pan and bake 20 to 25 minutes, until golden and a toothpick in the middle comes out clean. Cool 10 minutes.'],
+    stages=[st('Mix', active=10), st('Bake at 400°F', cook=22, station='oven', temp=400), st('Cool', wait=10)],
+    plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw wrapped, then warm in a 350°F oven.'}, keeps=QUICK_KEEPS,
+    scaling='Double it in a 9 × 13 pan; bake 25 to 30 minutes.', old_way=None, safety=[FLOUR_SAFETY], notes=['Garden flint or dent corn ground to meal works here.'],
+    nutrition={'from': 'ingredients'}, src=QUICK_SRC))
+
+R.append(dict(
+    id='irish-soda-bread', name='Irish soda bread', emoji='🍞', kind='scratch', group='Quick breads',
+    summary='Four ingredients, no yeast: baking soda and buttermilk raise a round loaf in under an hour.',
+    makes=[], yield_='One round loaf, about 1½ lb.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('flour', 500, 'g'), I('baking-soda', 1, 'tsp'), I('salt', 6, 'g'), I('buttermilk', 1.75, 'cup', 'plus a little more if dry')],
+    equipment=['bowl', 'baking sheet or cast-iron skillet'],
+    steps=['Heat the oven to 425°F and flour a baking sheet.',
+           'Whisk the flour, baking soda and salt. Pour in the buttermilk and stir with your hand or a spoon just until a soft, shaggy dough forms; don’t knead it.',
+           'Turn it out, shape it gently into a round about 2 inches high, and cut a deep cross in the top.',
+           'Bake 35 to 40 minutes, until browned and hollow-sounding underneath. Wrap in a towel for a soft crust, or cool on a rack for a crisp one.'],
+    stages=[st('Mix and shape', active=10), st('Bake at 425°F', cook=38, station='oven', temp=425), st('Cool', wait=30, bg=True)],
+    plan={'keep_days': 2, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw wrapped; toast slices.'},
+    keeps=['Counter: wrapped, best within 2 days; it stales faster than yeast bread.', QUICK_KEEPS[1]],
+    scaling='The buttermilk’s acid is what makes the baking soda work: use real buttermilk or the buttermilk stand-in, not plain milk.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=QUICK_SRC))
+
+R.append(dict(
+    id='banana-bread', name='Banana bread', emoji='🍌', kind='scratch', group='Quick breads',
+    summary='Very ripe bananas, butter and a little brown sugar in a moist loaf.',
+    makes=[], yield_='One 9 × 5-inch loaf, about 10 slices.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('banana', 3, 'each', 'very ripe, mashed (about 1⅓ cups)'), I('butter', 76, 'g', 'melted'), I('brown-sugar', 0.6667, 'cup', 'packed'), I('eggs', 2, 'each'), I('vanilla', 1, 'tsp'),
+                 I('flour', 190, 'g'), I('baking-soda', 1, 'tsp'), I('salt', 3, 'g'), I('cinnamon', 0.5, 'tsp', '', True), I('walnuts', 0.5, 'cup', 'chopped', True)],
+    equipment=['bowl', '9 × 5-inch loaf pan'],
+    steps=['Heat the oven to 350°F and grease the pan.',
+           'Mash the bananas in a bowl, then stir in the melted butter, brown sugar, eggs and vanilla.',
+           'Sprinkle the baking soda, salt and cinnamon over the top and stir, then stir in the flour (and nuts) just until no dry flour shows.',
+           'Bake 55 to 65 minutes, until a toothpick in the middle comes out clean. Cool 15 minutes in the pan, then on a rack.'],
+    stages=[st('Mix', active=15), st('Bake at 350°F', cook=60, station='oven', temp=350), st('Cool', wait=30, bg=True)],
+    plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in the wrapping, 1 to 2 hours.'}, keeps=QUICK_KEEPS,
+    scaling='Double it for two pans. The darker the bananas, the sweeter the bread.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=QUICK_SRC))
+
+R.append(dict(
+    id='zucchini-bread', name='Zucchini bread', emoji='🥒', kind='scratch', group='Quick breads',
+    summary='A spiced quick bread that uses up a big garden zucchini.',
+    makes=[], yield_='One 9 × 5-inch loaf, about 10 slices.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('zucchini', 1, 'each', 'medium, grated (about 1½ cups), not peeled'), I('vegetable-oil', 0.5, 'cup'), I('sugar', 150, 'g'), I('eggs', 2, 'each'), I('vanilla', 1, 'tsp'),
+                 I('flour', 190, 'g'), I('baking-soda', 1, 'tsp'), I('baking-powder', 0.5, 'tsp'), I('salt', 3, 'g'), I('cinnamon', 1, 'tsp'), I('walnuts', 0.5, 'cup', 'chopped', True)],
+    equipment=['box grater', 'bowl', '9 × 5-inch loaf pan'],
+    steps=['Heat the oven to 350°F and grease the pan. Grate the zucchini; there’s no need to squeeze it.',
+           'Whisk the oil, sugar, eggs and vanilla. Stir in the zucchini.',
+           'Sprinkle the baking soda, baking powder, salt and cinnamon over the top and stir, then stir in the flour (and nuts) just until combined.',
+           'Bake 50 to 60 minutes, until a toothpick in the middle comes out clean. Cool 15 minutes in the pan, then on a rack.'],
+    stages=[st('Grate and mix', active=15), st('Bake at 350°F', cook=55, station='oven', temp=350), st('Cool', wait=30, bg=True)],
+    plan={'keep_days': 3, 'freeze': True, 'lead_days': 0, 'thaw': 'Thaw in the wrapping, 1 to 2 hours.'}, keeps=QUICK_KEEPS,
+    scaling='A big garden zucchini makes several loaves: about 1½ cups grated per loaf.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=QUICK_SRC))
+
+# ------------------------------------------------------------------ boiled breads
+R.append(dict(
+    id='soft-pretzels', name='Soft pretzels (twists, bites and buns)', emoji='🥨', kind='scratch', group='Boiled breads: pretzels and bagels',
+    summary='A firm dough shaped into twists, bites or buns, dipped in a hot baking-soda bath and baked deep brown.',
+    makes=[{'item': 'soft-pretzels', 'by': 'each', 'n': 8, 'label': 'large pretzels'},
+           {'item': 'pretzel-rolls', 'by': 'each', 'n': 8, 'label': 'pretzel buns'}],
+    yield_='8 large twisted pretzels, 8 pretzel buns, or about 64 bites.',
+    batch={'step': 0.125, 'min': 0.25},
+    ingredients=[I('flour', 500, 'g', 'or bread flour'), I('yeast', 7, 'g'), I('salt', 7, 'g'), I('brown-sugar', 1, 'tbsp'), I('butter', 28, 'g', 'melted'), I('water', 1.25, 'cup', 'about 110°F'),
+                 I('baking-soda', 0.5, 'cup', 'for the bath: bake it first for a darker crust (see the steps)', eaten=False, fixed=True), I('water', 8, 'cup', 'for the bath', eaten=False, fixed=True), I('kosher-salt', 1, 'tbsp', 'coarse, for topping')],
+    equipment=['large bowl', 'baking sheet (for baking the soda)', 'wide stainless-steel or enameled pot (not aluminum)', 'slotted spoon or spider', '2 baking sheets lined with parchment', 'kitchen gloves (for handling baked baking soda)'],
+    steps=['For a darker, more traditional crust, bake the baking soda first (you can do this days ahead): spread the ½ cup on a parchment-lined baking sheet and bake at 250°F for 1 hour. Heat turns baking soda into washing soda (sodium carbonate), which is more alkaline; fully changed, it weighs about a third less. Let it cool, then store it in a closed jar labeled “baked baking soda: not for eating”, out of children’s reach. Plain baking soda works too, with a lighter crust.',
+           'Dough: stir the yeast and brown sugar into the warm water and let it stand 5 minutes. Add the butter, salt and flour and knead 8 minutes into a smooth, firm dough.',
+           'Cover and let it rise until doubled, about 1 hour.',
+           'Shape. Twists: divide into 8, roll each into a 24-inch rope, make a U, cross the ends twice, and press them onto the bottom of the U. Buns: 8 tight balls. Bites: roll ropes and cut into 1-inch pieces.',
+           'Set them on the parchment-lined sheets and refrigerate, uncovered, 15 to 20 minutes; firm dough holds its shape in the bath. Heat the oven to 425°F.',
+           'Bath: in the stainless pot, bring the 8 cups of water to a simmer and stir in ¼ cup of baked baking soda (or ½ cup plain baking soda) a little at a time; it foams. Keep it at a gentle simmer.',
+           'Dip 2 or 3 at a time for 20 to 30 seconds (buns 30 seconds a side), lift out with the slotted spoon, drain, and set back on the parchment. Keep children away from the hot pot.',
+           'Sprinkle with coarse salt. Slash the buns across the top. Bake twists 12 to 15 minutes, bites 10 to 12, buns 18 to 20, until deep brown.',
+           'Let the bath cool, then pour it down the drain with running water.'],
+    stages=[st('Mix and knead the dough', active=15, wait=60), st('Shape and chill', active=20, wait=20, station='fridge'), st('Dip in the soda bath', active=15, station='stove'),
+            st('Bake at 425°F', cook=14, station='oven', temp=425), st('Cool', wait=10)],
+    plan={'keep_days': 1, 'freeze': True, 'lead_days': 0, 'thaw': 'Warm frozen pretzels in a 350°F oven 5 to 10 minutes.'},
+    keeps=['Counter: best the day they’re baked; uncovered or in a paper bag for a day (salt draws moisture in a closed bag).', 'Freezer: freeze them baked and unsalted, up to 3 months (University of Missouri’s time for baked yeast bread); add salt after warming.'],
+    scaling='Each pretzel or bun is an eighth of the dough (about 105 g). The bath doesn’t scale with the dough: 8 cups of water does a full batch or a half.',
+    old_way='Southern German bakers dip pretzels and rolls in a weak solution of food-grade lye (sodium hydroxide), which makes the glossy, mahogany crust. Lye is caustic: it burns skin and eyes and attacks aluminum (CDC/NIOSH). Because it needs gloves, eye protection and careful measuring of a hazardous chemical, we describe it here as history only and use baked baking soda at home, which bakers also use in place of lye (Wikipedia).',
+    safety=['Don’t taste baked baking soda or the bath, and keep both away from children; store the baked soda in a labeled jar.', FLOUR_SAFETY],
+    notes=['The alkaline bath is what browns the crust and gives the pretzel flavor; without it you get a breadstick.', 'The nutrition numbers leave out the bath, which is poured away.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC + ['wiki-bicarbonate', 'wiki-carbonate', 'wiki-lyeroll', 'niosh-naoh']))
+
+R.append(dict(
+    id='bagels', name='Bagels', emoji='🥯', kind='scratch', group='Boiled breads: pretzels and bagels',
+    summary='A stiff dough shaped into rings, boiled a minute a side, then baked for a chewy crust.',
+    makes=[{'item': 'bagels', 'by': 'each', 'n': 8, 'label': 'bagels'}],
+    yield_='8 bagels.',
+    batch={'step': 0.125, 'min': 0.25},
+    ingredients=[I('bread-flour', 500, 'g'), I('yeast', 7, 'g'), I('salt', 10, 'g'), I('honey', 1, 'tbsp', 'plus 1 tablespoon for the water'), I('water', 1.25, 'cup', 'about 100°F'),
+                 I('sesame-seeds', 2, 'tbsp', 'or other toppings', True)],
+    equipment=['bowl or stand mixer', 'large wide pot', 'slotted spoon', 'baking sheet with parchment'],
+    steps=['Stir the yeast and honey into the warm water. Add the flour and salt and knead 10 minutes; the dough is stiff and smooth.',
+           'Cover and let it rise until about 1½ times bigger, about 1 hour.',
+           'Divide into 8 pieces (about 100 g). Roll each into a 9-inch rope, wrap it around your hand so the ends overlap under your palm, and roll the overlap on the counter to seal. Set them on parchment.',
+           'Cover and rest 20 to 30 minutes, until they float when dropped in a bowl of water. (Or refrigerate overnight for more flavor; boil them straight from the fridge.) Heat the oven to 425°F.',
+           'Bring a large pot of water to a boil with 1 tablespoon honey. Boil 2 or 3 bagels at a time, 1 minute per side (2 minutes for chewier bagels). Lift out, drain, and add toppings while wet.',
+           'Bake 18 to 22 minutes, until deep golden. Cool on a rack at least 20 minutes.'],
+    stages=[st('Mix and knead the dough', active=15, wait=60), st('Shape the bagels', active=20, wait=25), st('Boil', active=15, station='stove'),
+            st('Bake at 425°F', cook=20, station='oven', temp=425), st('Cool', wait=20, bg=True)],
+    plan=ROLL_PLAN, keeps=['Counter: in a paper or plastic bag, about 3 days (NDSU’s figure for bread).', 'Freezer: slice them first, bag them, up to 3 months (University of Missouri); toast from frozen.'],
+    scaling='Each bagel is an eighth of the dough. Bakeries use barley malt syrup in the water and dough; honey or brown sugar is the home stand-in.', old_way=None, safety=[FLOUR_SAFETY], notes=[],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+# ------------------------------------------------------------------ pastry and crackers
+R.append(dict(
+    id='croissants', name='Croissants', emoji='🥐', kind='scratch', group='Pastry and crackers',
+    summary='A yeast dough folded around a slab of butter three times for flaky layers. A weekend project.',
+    makes=[{'item': 'croissants', 'by': 'each', 'n': 12, 'label': 'croissants'}],
+    yield_='12 croissants.',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('flour', 500, 'g', 'or bread flour'), I('yeast', 10, 'g'), I('salt', 10, 'g'), I('sugar', 50, 'g'), I('whole-milk', 275, 'g', 'cold (about 1⅛ cups)'),
+                 I('butter', 310, 'g', '30 g softened for the dough, 280 g cold for the butter block (use unsalted if you have it)'), I('eggs', 1, 'each', 'for brushing')],
+    equipment=['stand mixer or bowl', 'rolling pin', 'ruler', 'parchment', '2 baking sheets', 'pastry brush'],
+    steps=['Day 1, evening: mix the flour, yeast, salt, sugar, milk and 30 g soft butter into a smooth dough, about 5 minutes. Pat it into a rectangle, wrap it, and refrigerate overnight.',
+           'Day 2: pound and roll the 280 g of cold butter between parchment into a 7-inch square; refrigerate until firm but bendable.',
+           'Roll the dough to a 10-inch square, set the butter on it like a diamond, fold the corners over it, and pinch the seams to seal.',
+           'Roll it into an 8 × 24-inch strip, fold it in thirds like a letter, wrap, and chill 30 minutes. Do this twice more (three folds in all), chilling 30 minutes after each. If butter breaks through or gets soft, chill longer.',
+           'Chill 1 hour, then roll to a 10 × 24-inch rectangle about ¼ inch thick. Cut 12 long triangles (about 4 inches at the base).',
+           'Cut a ½-inch notch in the middle of each base, roll each up from the base to the tip, and set them tip-down on the sheets, curved if you like.',
+           'Cover loosely and let them rise at cool room temperature (below about 78°F, so the butter stays solid) until puffy and wobbly, 1½ to 2½ hours.',
+           'Heat the oven to 400°F. Brush with beaten egg and bake 18 to 22 minutes, until deep golden brown. Cool 20 minutes.'],
+    stages=[st('Mix the dough; chill overnight', active=15, wait=600, station='fridge', before=True), st('Make the butter block and lock it in', active=20, wait=20, station='fridge'),
+            st('Three folds, chilling 30 minutes after each', active=30, wait=150, station='fridge'), st('Roll, cut and shape', active=30, wait=120),
+            st('Bake at 400°F', active=3, cook=20, station='oven', temp=400), st('Cool', wait=20)],
+    plan={'keep_days': 1, 'freeze': True, 'lead_days': 0, 'thaw': 'Warm frozen baked croissants in a 350°F oven 8 to 10 minutes.'},
+    keeps=['Counter: best the day they’re baked; in a paper bag up to 2 days, recrisped in the oven.', 'Freezer: baked, up to 3 months (University of Missouri’s time for baked yeast bread). Shaped, unbaked croissants can be frozen up to about 1 month (NDSU’s time for unbaked rolls); thaw and rise them overnight in the refrigerator, then let them finish rising before baking.'],
+    scaling='About 2 hours of work over 2 days. Keep the butter block 56% of the flour’s weight. A cool kitchen is the main trick: stop and chill whenever the butter softens.',
+    old_way=None, safety=[FLOUR_SAFETY], notes=['Roll in one direction and keep the edges square; the layers come from the folds, so neat folds bake into neat layers.'],
+    nutrition={'from': 'ingredients'}, src=BREAD_SRC))
+
+R.append(dict(
+    id='crackers', name='Crisp crackers', emoji='🍘', kind='scratch', group='Pastry and crackers',
+    summary='Half whole-wheat flour, olive oil and salt, rolled thin and baked crisp.',
+    makes=[{'item': 'whole-grain-crackers', 'by': 'g', 'n': 300, 'label': 'g of crackers'}],
+    yield_='About 10 oz of crackers (about 60 two-inch squares).',
+    batch={'step': 0.5, 'min': 0.5},
+    ingredients=[I('flour', 125, 'g'), I('whole-wheat-flour', 125, 'g'), I('salt', 3, 'g'), I('olive-oil', 3, 'tbsp'), I('water', 0.625, 'cup'), I('kosher-salt', 0.5, 'tsp', 'for sprinkling', True),
+                 I('sesame-seeds', 1, 'tbsp', '', True)],
+    equipment=['bowl', 'rolling pin', 'pizza cutter', '2 baking sheets', 'fork'],
+    steps=['Heat the oven to 400°F. Mix the flours and salt, add the oil and water, and knead briefly into a smooth, firm dough. Rest 10 minutes.',
+           'Divide in half. Roll each half on parchment as thin as you can, about 1/16 inch. Slide the parchment onto a baking sheet.',
+           'Prick all over with a fork, cut into 2-inch squares with the pizza cutter (no need to separate them), and sprinkle with coarse salt and seeds.',
+           'Bake 12 to 16 minutes, until browned and crisp; edges brown first, so take those off early if needed. Cool on the pan, then break apart.'],
+    stages=[st('Mix and rest', active=10, wait=10), st('Roll and cut', active=15), st('Bake at 400°F', cook=14, station='oven', temp=400), st('Cool', wait=15)],
+    plan={'keep_days': 14, 'freeze': False, 'lead_days': 0, 'thaw': ''},
+    keeps=['Pantry: airtight once completely cool. NDSU gives opened crackers about 1 month; homemade ones are crispest within the first week or two.'],
+    scaling='Thinner dough makes crisper crackers; thick spots stay soft, so roll evenly.', old_way=None, safety=[FLOUR_SAFETY], notes=['Discard from a sourdough starter can replace up to half the water and some flour.'],
+    nutrition={'from': 'ingredients'}, src=['ndsu-fn579', 'fda-flour']))
+
+GROUPS = ['Yeast breads', 'Enriched breads', 'Sourdough', 'Flatbreads and tortillas', 'Quick breads', 'Boiled breads: pretzels and bagels', 'Pastry and crackers',
+          'Pasta and noodles', 'Dairy', 'Stocks and sauces', 'Dressings and spreads', 'Pantry mixes', 'Seasonings and stand-ins', 'Beans']
+FIRST = ['sandwich-bread', 'whole-wheat-sandwich-bread', 'whole-wheat-bread']  # the all whole-wheat loaf is the one the planner makes for whole-wheat bread
+R.sort(key=lambda r: (GROUPS.index(r['group']), FIRST.index(r['id']) if r['id'] in FIRST else len(FIRST)))
 
 OMITTED = [
     {'name': 'Sour cream and crème fraîche', 'why': 'The home methods we found culture cream at room temperature for many hours. The one extension method (University of Kentucky) gives no storage time, and the popular “cream plus buttermilk on the counter” method has no tested food-safety guidance behind it, so we left both out.', 'src': ['uky-cultured']},

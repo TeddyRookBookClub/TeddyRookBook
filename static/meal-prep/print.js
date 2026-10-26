@@ -42,14 +42,15 @@
     PP.scratch.forEach(function (x) { x.parts.forEach(function (pt) { if (pt.day !== PP.p) other.push({ s: x.s, pt: pt }); }); });
     var start = (st.prepStart || '13:00').split(':'), sm = +start[0] * 60 + (+start[1] || 0);
     function clock(m) { var t = (sm + m) % 1440, hh = Math.floor(t / 60), mm = Math.round(t % 60); return (hh % 12 || 12) + ':' + (mm < 10 ? '0' : '') + mm + (hh >= 12 ? ' PM' : ' AM'); }
-    var h = '';
+    var h = '', before = C.beforeJobs(jobs);
+    if (before.length) h += '<h3>The day before</h3><ul>' + before.map(function (b) { return '<li><b>' + esc(C.dayLabel(p, PP.p - 1, true)) + '</b>: ' + esc(b.s.name) + ' ' + C.timesText(b.n) + ': ' + esc(C.beforeText(b)) + '.</li>'; }).join('') + '</ul>';
     if (!jobs.length) h += '<p class="mpp-empty">No make-ahead dishes picked for this week.</p>';
     else {
       var pd = M.prepDay(jobs);
       h += '<p class="mpp-sub">' + esc(C.dayLabel(p, PP.p, true)) + '</p><div class="mpp-prep"><ol>' + pd.steps.map(function (s) { var T = C.stepText(s, clock), j = s.j; return '<li><b>' + clock(s.at) + '</b> ' + esc(T.title) + ' (' + esc(T.label.toLowerCase()) + ')' + (s.heat ? ': heat the oven to ' + s.heat + '°F' : '') + '. ' + esc(T.what) + ' ' + esc(T.small) + '.' + (j.r && j.keeps ? ' Keeps about ' + j.keeps + (j.keeps === 1 ? ' day' : ' days') + ' in the fridge.' : '') + '</li>'; }).join('') +
         '<li><b>' + clock(pd.end) + '</b> Cool, label and pack. Refrigerate within 2 hours (1 hour above 90°F); reheat leftovers to 165°F.</li></ol></div>';
     }
-    if (other.length) h += '<h3>From scratch on other days</h3><ul>' + other.sort(function (a, b) { return a.pt.day - b.pt.day; }).map(function (o) { return '<li><b>' + esc(C.dayLabel(p, o.pt.day, true)) + '</b>: ' + esc(o.s.name) + ' ' + C.timesText(o.pt.n) + '</li>'; }).join('') + '</ul>';
+    if (other.length) h += '<h3>From scratch on other days</h3><ul>' + other.sort(function (a, b) { return a.pt.day - b.pt.day; }).map(function (o) { return '<li><b>' + esc(C.dayLabel(p, o.pt.day, true)) + '</b>: ' + esc(o.s.name) + ' ' + C.timesText(o.pt.n) + (C.hasBefore(o.s) ? ' (start it the day before)' : '') + '</li>'; }).join('') + '</ul>';
     return h;
   }
   $('#mpp-plan').addEventListener('change', function () { st.cur = this.value; range = 'all'; opts(); render(); });

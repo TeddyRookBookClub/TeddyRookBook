@@ -189,7 +189,8 @@
       });
       h += '</ul>';
     }
-    var jobs = PP.jobs;
+    var jobs = PP.jobs, before = C.beforeJobs(jobs);
+    if (before.length) h += '<h3>The day before</h3><ul class="mp-otherdays mp-before">' + before.map(function (b) { return '<li><b>' + esc(C.dayLabel(p, PP.p - 1, true)) + '</b>: ' + esc((b.s.emoji || '') + ' ' + b.s.name) + ' ' + C.timesText(b.n) + ': ' + esc(C.beforeText(b)) + '. <a href="' + esc(C.scratchURL(data, b.s)) + '">Recipe</a></li>'; }).join('') + '</ul>';
     if (jobs.length) {
       var plan2 = M.prepDay(jobs);
       function clk(m) { return clock(sm, m); }
@@ -208,7 +209,7 @@
     } else h += '<p class="mp-empty">Tick at least one dish to get a schedule.</p>';
     if (other.length) {
       other.sort(function (a, b) { return a.pt.day - b.pt.day; });
-      h += '<h3>From scratch on other days</h3><ul class="mp-otherdays">' + other.map(function (o) { var s = o.x.s; return '<li><b>' + esc(C.dayLabel(p, o.pt.day, true)) + '</b>: ' + esc((s.emoji || '') + ' ' + s.name) + ' ' + C.timesText(o.pt.n) + ' <small>(' + esc(C.mins(s.times.active)) + ' hands-on, ' + esc(C.mins(s.times.total)) + ' in all)</small> <a href="' + esc(C.scratchURL(data, s)) + '">Recipe</a></li>'; }).join('') + '</ul>';
+      h += '<h3>From scratch on other days</h3><ul class="mp-otherdays">' + other.map(function (o) { var s = o.x.s; return '<li><b>' + esc(C.dayLabel(p, o.pt.day, true)) + '</b>: ' + esc((s.emoji || '') + ' ' + s.name) + ' ' + C.timesText(o.pt.n) + ' <small>(' + esc(C.mins(s.times.active)) + ' hands-on, ' + esc(C.mins(s.times.total)) + ' in all' + (C.hasBefore(s) ? '; start it the day before' : '') + ')</small> <a href="' + esc(C.scratchURL(data, s)) + '">Recipe</a></li>'; }).join('') + '</ul>';
     }
     el.innerHTML = h; bind();
     function bind() {

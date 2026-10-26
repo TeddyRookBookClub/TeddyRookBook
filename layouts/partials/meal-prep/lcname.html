@@ -1,0 +1,2 @@
+{{- /* a catalog name in lower case for the middle of a sentence, keeping proper nouns (like C.lcName) */ -}}
+{{- lower . | replaceRE `\benglish\b` "English" | replaceRE `\bitalian\b` "Italian" | replaceRE `\bhawaiian\b` "Hawaiian" | replaceRE `\bfrench\b` "French" | replaceRE `\bgreek\b` "Greek" | replaceRE `\bjapanese\b` "Japanese" | replaceRE `\birish\b` "Irish" | replaceRE `\bdijon\b` "Dijon" | replaceRE `\bparmesan\b` "Parmesan" -}}

@@ -203,6 +203,47 @@ async function shot(pg, name, full) { await pg.screenshot({ path: path.join(OUT,
     ok(await pg.locator('a.mp-glink[href*="/meal-prep/scratch/corn-tortillas/"]').count() === 1, tg + ': the tacos page links “Make the corn tortillas yourself”');
     ok(await pg.locator('#rp-ings .mp-grow').count() >= 3, tg + ': recipe ingredients the garden can grow have a Grow it badge');
     await check(pg, tg + ' recipe with scratch links');
+    // breads: the library's groups, the pretzel scaler (the soda bath doesn't scale), and the sourdough's day-before steps
+    await pg.goto(BASE + '/meal-prep/scratch/', { waitUntil: 'networkidle' });
+    var hs = await pg.$$eval('main h2', function (a) { return a.map(function (x) { return x.textContent.trim(); }); });
+    var want = ['Yeast breads', 'Enriched breads', 'Sourdough', 'Flatbreads and tortillas', 'Quick breads', 'Boiled breads: pretzels and bagels', 'Pastry and crackers'];
+    ok(want.every(function (g, i) { return hs.indexOf(g) >= 0 && (i === 0 || hs.indexOf(g) > hs.indexOf(want[i - 1])); }), tg + ': the library groups the breads in order (' + hs.join(' / ') + ')');
+    ok(await pg.locator('.mp-jump a[href="#boiled-breads-pretzels-and-bagels"]').count() === 1, tg + ': the library has jump links to the groups');
+    ok(/English muffins/.test(await pg.textContent('#yeast-breads')), tg + ': “English” keeps its capital in the library');
+    await pg.goto(BASE + '/meal-prep/scratch/soft-pretzels/', { waitUntil: 'networkidle' });
+    ok(/large pretzels/.test(await pg.textContent('#sx-u option[value="1"]')) && /pretzel buns/.test(await pg.textContent('#sx-u')), tg + ': the pretzel scaler counts pretzels or buns');
+    await pg.selectOption('#sx-u', '1'); await pg.fill('#sx-n', '16'); await pg.waitForTimeout(100);
+    var pzT = await pg.textContent('#sx-ings');
+    ok(/1000 g|1,000 g|2 lb/.test(pzT) && /½ cup \(110 g\) baking soda/.test(pzT) && /8 cups water, for the bath/.test(pzT), tg + ': 16 pretzels → twice the flour, the same soda bath (' + pzT.replace(/\s+/g, ' ').slice(0, 220) + ')');
+    ok(/×2/.test(await pg.textContent('#sx-what')), tg + ': 16 pretzels is ×2');
+    var pzPage = await pg.textContent('main');
+    ok(/250°F for 1 hour/.test(pzPage) && /not aluminum/.test(pzPage) && /history only/.test(pzPage), tg + ': the pretzel page has baked baking soda, a non-aluminum pot, and lye as history only');
+    ok(/per large pretzel|per pretzel/.test(await pg.textContent('#sx-nutr')), tg + ': nutrition per homemade pretzel');
+    await check(pg, tg + ' pretzel page'); await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-scratch-pretzels');
+    await pg.goto(BASE + '/meal-prep/scratch/sourdough-bread/', { waitUntil: 'networkidle' });
+    var sdT = await pg.textContent('#sx-th + p + table');
+    ok((sdT.match(/the day before/g) || []).length === 5 && /1 day/.test(sdT), tg + ': sourdough marks its day-before steps and totals in days (' + sdT.replace(/\s+/g, ' ').slice(-80) + ')');
+    await check(pg, tg + ' sourdough page');
+    await pg.goto(BASE + '/meal-prep/scratch/challah/', { waitUntil: 'networkidle' });
+    var chU = await pg.textContent('#sx-u');
+    ok(/slices of challah/.test(chU) && !/dried/.test(chU) && /per 40-g slice/.test(await pg.textContent('#sx-nutr')), tg + ': a bread made by weight scales by slices, not “dried” (' + chU + ')');
+    await pg.goto(BASE + '/meal-prep/scratch/sourdough-starter/', { waitUntil: 'networkidle' });
+    ok(/1:1:1/.test(await pg.textContent('main')) && /green/.test(await pg.textContent('main')), tg + ': the starter guide gives the feeding ratio and when to throw it out');
+    await pg.ctx.close();
+    // a recipe of my own with bagels and sourdough: Make it, and the prep day starts the day before
+    pg = await seeded({ w: w2, dark: dark2 }, { mine: { 'my-brunch': { name: 'Bagel brunch', servings: 4, meal: ['breakfast'], ingredients: [{ item: 'bagels', amount: 4, unit: 'each' }, { item: 'sourdough', amount: 4, unit: 'slice' }], steps: ['Toast and serve.'] } },
+      plans: [{ id: 'p1', name: 'Week A', start: '2026-07-06', len: 7, slots: { breakfast: true, lunch: true, dinner: true, snack: false }, cells: { '1|breakfast': [{ r: 'my-brunch' }] }, guests: {}, pantry: {}, extras: [] }] });
+    await pg.goto(BASE + '/meal-prep/plan/', { waitUntil: 'networkidle' });
+    ok(await pg.locator('#mp-shop [data-make="bagels"]').count() === 1 && await pg.locator('#mp-shop [data-make="sourdough"]').count() === 1, tg + ': bagels and sourdough on the list have Make it');
+    await tap(pg, '#mp-shop [data-make="bagels"]'); await pg.waitForTimeout(150); await tap(pg, '#mp-shop [data-make="sourdough"]'); await pg.waitForTimeout(200);
+    ok(await pg.locator('#mp-shop .mp-shopsec .mp-sn', { hasText: /^Bagels$/ }).count() === 0 && await pg.locator('#mp-shop .mp-sn', { hasText: 'Bread flour' }).count() === 1, tg + ': Make it swaps bagels and sourdough for bread flour');
+    await tap(pg, '#tab-prep'); await pg.waitForTimeout(200);
+    var prepT = await pg.textContent('#mp-prep');
+    ok(/The day before/.test(prepT) && /Feed the starter/.test(await pg.textContent('#mp-prep .mp-before').catch(function () { return ''; })), tg + ': prep day lists the sourdough’s day-before steps');
+    var tl2 = await pg.$$eval('.mp-timeline li', function (a) { return a.map(function (x) { return x.textContent; }); });
+    ok(tl2.some(function (t) { return /Sourdough bread/.test(t) && /Bake at 475/.test(t); }) && !tl2.some(function (t) { return /Feed the starter/.test(t); }), tg + ': the timeline bakes the sourdough and leaves the starter to the day before');
+    ok(tl2.some(function (t) { return /Bagels/.test(t) && /Boil/.test(t); }), tg + ': the bagels are boiled on prep day');
+    await check(pg, tg + ' prep with sourdough'); await shot(pg, (dark2 ? 'dark' : 'light') + '-' + w2 + '-prep-sourdough');
     await pg.ctx.close();
 
     // the planner: Make it swaps the item for its ingredients; Buy instead puts it back
