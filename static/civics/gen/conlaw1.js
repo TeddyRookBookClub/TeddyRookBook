@@ -56,7 +56,6 @@
     prize: { name: 'The Prize Cases', year: 1863 },
     exmilligan: { name: 'Ex parte Milligan', year: 1866 },
     fitzgerald: { name: 'Nixon v. Fitzgerald', year: 1982 },
-    vance: { name: 'Trump v. Vance', year: 2020 },
     beach: { name: 'FCC v. Beach Communications', year: 1993 },
     clarkjeter: { name: 'Clark v. Jeter', year: 1988 },
     cohens: { name: 'Cohens v. Virginia', year: 1821 },
@@ -710,17 +709,18 @@
     ['A civil suit for damages over a President\'s official act while in office', 'Absolute immunity (Nixon v. Fitzgerald)'],
     ['A civil suit over a President\'s unofficial conduct before taking office', 'No immunity; the suit may proceed (Clinton v. Jones)'],
     ['A criminal trial subpoena for a President\'s official recordings', 'Qualified privilege that yields to a specific need (United States v. Nixon)'],
-    ['A state grand jury subpoena to a third party for a sitting President\'s personal financial records', 'No absolute immunity from the subpoena (Trump v. Vance)']];
+    ['A President removed by impeachment and conviction is later indicted in court for the same conduct', 'Allowed; the Constitution says the convicted party remains liable to indictment and trial (Article I, Section 3)']];
   var IMMK = IMM.map(function (x) { return x[1]; });
   G('conlaw1.privilege-immunity', fromBank(function () { return [
     { L: [2, 3], gen: function (R) { var x = R.pick(IMM); return { q: 'What rule applies? ' + x[0] + '.', a: x[1], w: IMMK.filter(function (k) { return k !== x[1]; }), why: 'Sort by the kind of proceeding (civil or criminal) and the kind of act (official or unofficial). ' + x[1] + '.' }; } },
     { L: [1, 2, 3], q: 'What did <i>United States v. Nixon</i> (1974) hold about executive privilege?', a: 'It is real but qualified, and yields to a criminal trial\'s specific need for evidence', w: ['It is absolute', 'It does not exist', 'Only Congress may decide it'], why: 'The unanimous Court (8 to 0) ordered the tapes produced.' },
-    { L: [1, 2], q: 'Which case allowed a civil suit against a sitting President over unofficial acts before taking office?', a: ny('clintonjones'), w: [ny('fitzgerald'), ny('nixon'), ny('vance')], why: '<i>Clinton v. Jones</i> (1997), 9 to 0.' },
-    { L: [1, 2], q: 'Which case gave Presidents absolute immunity from civil damages for official acts?', a: ny('fitzgerald'), w: [ny('clintonjones'), ny('vance'), ny('nixon')], why: '<i>Nixon v. Fitzgerald</i> (1982), 5 to 4.' },
+    { L: [1, 2], q: 'Which case allowed a civil suit against a sitting President over unofficial acts before taking office?', a: ny('clintonjones'), w: [ny('fitzgerald'), ny('nixon'), ny('clintonny')], why: '<i>Clinton v. Jones</i> (1997), 9 to 0.' },
+    { L: [1, 2], q: 'Which case gave Presidents absolute immunity from civil damages for official acts?', a: ny('fitzgerald'), w: [ny('clintonjones'), ny('clintonny'), ny('nixon')], why: '<i>Nixon v. Fitzgerald</i> (1982), 5 to 4.' },
     { L: [2, 3], q: 'In <i>Nixon v. Fitzgerald</i> (1982), how far did the President\'s civil immunity reach?', a: 'To acts within the "outer perimeter" of official duties', w: ['Only to acts the President personally signed', 'To all acts, official or not', 'Only to acts approved by Congress'], why: 'The Court gave absolute immunity from civil damages for official acts, including those at the outer perimeter of the office.' },
-    { L: [2, 3], q: 'What did <i>Trump v. Vance</i> (2020) hold?', a: 'A sitting President has no absolute immunity from a state grand jury subpoena for personal records', w: ['States may never subpoena a President\'s records', 'Presidents may be arrested by states', 'Congress must approve state subpoenas'], why: 'Decided 7 to 2.' },
+    { L: [2, 3], q: 'What did <i>Clinton v. Jones</i> (1997) hold?', a: 'A sitting President has no immunity, even temporary, from a civil suit over unofficial acts before taking office', w: ['A sitting President may not be sued until he leaves office', 'Presidents have absolute immunity from all civil suits', 'Only Congress may decide whether such a suit goes forward'], why: 'Decided 9 to 0. Fitzgerald\'s immunity covers official acts only.' },
+    { L: [2, 3], q: 'In <i>United States v. Nixon</i> (1974), who decided whether the privilege had to yield?', a: 'The courts', w: ['The President alone', 'Congress', 'The special prosecutor'], why: 'The Court said it is the province of the judiciary to say what the law is, including the scope of executive privilege.' },
     { L: [1, 2, 3], q: 'Nixon v. Fitzgerald gave Presidents absolute immunity from criminal prosecution for all acts.', tf: false, why: 'Fitzgerald concerned civil damages for official acts.' },
-    { L: [3], gen: function () { return chrono([3], ['nixon', 'fitzgerald', 'clintonjones', 'vance']); } },
+    { L: [3], gen: function () { return chrono([3], ['nixon', 'fitzgerald', 'clintonjones']); } },
     { L: [2, 3], q: 'In <i>Federalist</i> No. 69, Hamilton said that a President removed by impeachment would afterwards be…', a: '"liable to prosecution and punishment in the ordinary course of law"', w: ['immune from any later trial', 'exiled from the country', 'barred only from voting'], why: 'Hamilton contrasted the President with the "sacred and inviolable" British king.' }
   ]; }, 'Civil or criminal? Official or unofficial?'));
 
