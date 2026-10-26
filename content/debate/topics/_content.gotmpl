@@ -1,0 +1,8 @@
+{{/* One page per topic, from data/debate/topics/<key>.json → /debate/topics/<slug>/ (layouts/debate/topic.html) */}}
+{{ with site.Data.debate }}{{ with .topics }}
+  {{ range $k, $t := . }}
+    {{ $.AddPage (dict "kind" "page" "path" $t.slug "title" (printf "%s: Both Sides" $t.title) "layout" "topic"
+      "params" (dict "topic" $k "description" (printf "%s Both sides at their strongest, with background, key terms, cross-examination questions and sources." $t.resolution))
+      "dates" (dict "date" (time.AsTime ($t.updated | default "2026-10-25")))) }}
+  {{ end }}
+{{ end }}{{ end }}

@@ -1,0 +1,72 @@
+{{ define "main" }}
+{{ partial "debate-tools/head.html" . }}
+{{ $formats := partial "debate-tools/formats.html" . }}
+<div class="hs db dbx dbf" id="dbf">
+  {{ partial "debate-tools/crumbs.html" (slice (dict "t" "Tools" "u" "debate/tools/") (dict "t" "Flow sheet")) }}
+  <header class="dbx-top dbf-noprint">
+    <p class="hs-eyebrow">Debate · Tools</p>
+    <h1>Flow sheet</h1>
+    <p class="dbx-lede">Flowing is how debaters take notes: one column for each speech, each argument on its own row, and each answer next to the thing it answers. Write what you hear, then use → to answer it in the next speech's column.</p>
+  </header>
+  <noscript><p class="dbx-warn">The on-screen flow needs JavaScript. You can still print this page and flow by hand.</p></noscript>
+  <p class="dbx-warn" id="dbf-nostore" hidden>This browser isn't letting the page save, so your flow will be lost when you close it. Use <b>Save as a file</b> to keep it.</p>
+
+  <div class="dbf-bar dbf-noprint">
+    <label class="dbx-f">Flow
+      <select id="dbf-pick" aria-label="Choose a saved flow"></select>
+    </label>
+    <div class="dbx-row">
+      <button type="button" class="hs-btn pri" id="dbf-new">＋ New flow</button>
+      <button type="button" class="hs-btn" id="dbf-rename">✎ Rename</button>
+      <button type="button" class="hs-btn" id="dbf-del">🗑 Delete</button>
+    </div>
+  </div>
+  <div class="dbf-newbox dbx-panel dbf-noprint" id="dbf-newbox" hidden>
+    <h2 class="dbf-h">Start a new flow</h2>
+    <div class="dbx-row">
+      <label class="dbx-f">Format <select id="dbf-fmt">{{ range $formats }}<option value="{{ .key }}">{{ .name }}</option>{{ end }}</select></label>
+      <label class="dbx-f">Name <input type="text" id="dbf-name" placeholder="Round 1, Smith v. Lee"></label>
+      <label class="dbx-cb"><input type="checkbox" id="dbf-cx"> Columns for cross-examination too</label>
+    </div>
+    <div class="hs-actions"><button type="button" class="hs-btn pri" id="dbf-make">Make the flow</button> <button type="button" class="hs-btn" id="dbf-cancel">Cancel</button></div>
+  </div>
+
+  <p class="dbf-title" id="dbf-title"></p>
+  <div class="dbf-scroll" id="dbf-scroll" tabindex="-1">
+    <div class="dbf-grid" id="dbf-grid" aria-label="Flow"></div>
+    <svg class="dbf-arrows" id="dbf-arrows" aria-hidden="true"></svg>
+  </div>
+  <p class="hs-small dbf-noprint" id="dbf-help">Each column's <b>＋</b> starts a new argument there. On a card, <b>→</b> answers it in the next column, <b>⊕</b> adds another point under it, <b>⚑</b> marks it dropped (not answered), and <b>✕</b> deletes it. Keys inside a card: <kbd>Ctrl</kbd>+<kbd>Enter</kbd> answers it, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd> adds a point below.</p>
+  <p class="dbx-msg dbf-noprint" id="dbf-msg" aria-live="polite"></p>
+
+  <div class="hs-actions dbf-noprint">
+    <button type="button" class="hs-btn" id="dbf-print">🖨 Print this flow</button>
+    <button type="button" class="hs-btn" id="dbf-text">⬇ Save as text</button>
+    <button type="button" class="hs-btn" id="dbf-json">⬇ Save as a file</button>
+    <button type="button" class="hs-btn" id="dbf-load">⬆ Open a saved file</button>
+  </div>
+
+  <section class="hs-sec dbf-noprint">
+    <h2>Printable blank flows</h2>
+    <p>Paper flows are still what most debaters use at tournaments. Each prints in landscape with a column for each speech. Formats with two sides print two sheets: one for the affirmative's case and one that starts with the negative's first speech, for the negative's own arguments.</p>
+    <div class="dbf-blanks" id="dbf-blanks"></div>
+  </section>
+
+  <section class="hs-sec hs-note dbf-noprint dbx-about">
+    <h2>Flowing tips</h2>
+    <ul>
+      <li><b>Write less than you think.</b> Short tags ("C1: uniforms cut cost") beat full sentences. Make up abbreviations and use them every time.</li>
+      <li><b>Keep answers on the same row</b> as what they answer, so a judge (or you) can read across a row and see the whole fight over one argument.</li>
+      <li><b>Mark what's dropped.</b> An argument nobody answered usually counts as true in the round, so point it out in your next speech.</li>
+      <li><b>Use two colors</b> on paper, one for each side, the way this sheet colors its columns.</li>
+    </ul>
+    <p class="hs-small">Learn more in <a href="{{ "debate/learn/" | relURL }}">Learn to Debate</a>. Your flows stay in this browser; nothing is sent anywhere.</p>
+  </section>
+  <div class="dbf-printarea" id="dbf-printarea" aria-hidden="true"></div>
+</div>
+<script id="db-formats" type="application/json">{{ $formats | jsonify | safeJS }}</script>
+{{ partial "debate-tools/script.html" "common.js" }}
+{{ partial "debate-tools/script.html" "timer-core.js" }}
+{{ partial "debate-tools/script.html" "flow-core.js" }}
+{{ partial "debate-tools/script.html" "flow.js" }}
+{{ end }}

@@ -1,0 +1,21 @@
+{{- /* Debate data for the tools: dict {formats, topics, meta, fallacies} from data/debate/ (Content builder).
+   Call with "lite" for the picker fields only, or "full" for what the drills use. */ -}}
+{{- $D := index site.Data "debate" | default dict -}}
+{{- $full := eq . "full" -}}
+{{- $topics := slice -}}
+{{- range $k, $t := $D.topics | default dict -}}
+  {{- $slug := $t.slug | default $t.key | default $k -}}
+  {{- $o := dict "key" ($t.key | default $k) "slug" $slug "title" $t.title "resolution" $t.resolution "level" $t.level "category" $t.category "kind" ($t.kind | default "") "formats" ($t.formats | default slice) "url" (printf "debate/topics/%s/" $slug | relURL) -}}
+  {{- if $full -}}
+    {{- $sides := dict -}}
+    {{- range $sk, $sv := $t.sides | default dict -}}
+      {{- $args := slice -}}
+      {{- range $sv.args }}{{ $args = $args | append (dict "claim" .claim "warrant" .warrant "evidence" .evidence "response" .response) }}{{ end -}}
+      {{- $sides = merge $sides (dict $sk (dict "label" $sv.label "stance" $sv.stance "args" $args)) -}}
+    {{- end -}}
+    {{- $o = merge $o (dict "sides" $sides "strawmen" ($t.strawmen | default slice) "cx" ($t.cx | default dict)) -}}
+  {{- end -}}
+  {{- $topics = $topics | append $o -}}
+{{- end -}}
+{{- $topics = sort $topics "title" -}}
+{{- return dict "topics" $topics "meta" ($D.meta | default dict) "fallacies" ($D.fallacies | default slice) -}}

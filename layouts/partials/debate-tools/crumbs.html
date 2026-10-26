@@ -1,0 +1,4 @@
+{{- /* Debate › Tools › <page>; uses the Content builder's crumbs when present */ -}}
+{{- if templates.Exists "partials/debate/crumbs.html" }}{{ partial "debate/crumbs.html" . }}{{ else -}}
+<nav class="hs-crumbs hs-noprint"><a href="{{ "debate/" | relURL }}">Debate</a> › {{ range . }}{{ if .u }}<a href="{{ .u | relURL }}">{{ .t }}</a> › {{ else }}{{ .t }}{{ end }}{{ end }}</nav>
+{{- end -}}

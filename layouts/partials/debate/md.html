@@ -1,0 +1,1 @@
+{{- $s := . | markdownify -}}{{- $s = replaceRE `href="/([^"]*)"` (printf `href="%s$1"` ("/" | relURL)) $s -}}{{- $s | safeHTML -}}

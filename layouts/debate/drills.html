@@ -1,0 +1,115 @@
+{{ define "main" }}
+{{ partial "debate-tools/head.html" . }}
+{{ $data := partial "debate-tools/data.html" "full" }}
+{{ $formats := partial "debate-tools/formats.html" . }}
+<div class="hs db dbx dbd" id="dbd">
+  {{ partial "debate-tools/crumbs.html" (slice (dict "t" "Tools" "u" "debate/tools/") (dict "t" "Practice drills")) }}
+  <header class="dbx-top">
+    <p class="hs-eyebrow">Debate · Tools</p>
+    <h1>Practice drills</h1>
+    <p class="dbx-lede">Short workouts for the skills that win rounds. Most take five minutes and work alone; a few are better with a partner or a coach listening.</p>
+  </header>
+  <noscript><p class="dbx-warn">The drills need JavaScript. The topics and their arguments are on <a href="{{ "debate/topics/" | relURL }}">Debates with Both Sides</a>.</p></noscript>
+
+  <div class="dbd-tabs" role="tablist" aria-label="Drills" id="dbd-tabs">
+    <button type="button" role="tab" data-v="pick" id="tab-pick" aria-controls="dbd-pick">🎲 Random resolution</button>
+    <button type="button" role="tab" data-v="impromptu" id="tab-impromptu" aria-controls="dbd-impromptu">⏱️ Impromptu</button>
+    <button type="button" role="tab" data-v="steelman" id="tab-steelman" aria-controls="dbd-steelman">🛡️ Steelman it</button>
+    <button type="button" role="tab" data-v="rebuttal" id="tab-rebuttal" aria-controls="dbd-rebuttal">↩️ Rebuttal</button>
+    <button type="button" role="tab" data-v="cx" id="tab-cx" aria-controls="dbd-cx">❓ Cross-ex</button>
+    <button type="button" role="tab" data-v="fallacy" id="tab-fallacy" aria-controls="dbd-fallacy">🦉 Fallacy spotter</button>
+    <button type="button" role="tab" data-v="weigh" id="tab-weigh" aria-controls="dbd-weigh">⚖️ Weighing</button>
+  </div>
+
+  <section class="dbd-panel" id="dbd-pick" role="tabpanel" aria-labelledby="tab-pick" tabindex="0">
+    <h2>Random resolution</h2>
+    <p>Pick a topic for a practice round, an impromptu speech, or a quick argument at dinner. Narrow it down if you like.</p>
+    <div class="dbx-row dbd-filters">
+      <label class="dbx-f">Level <select id="dbd-level"><option value="">Any level</option>{{ range $data.meta.levels }}<option value="{{ .key }}">{{ .label }}</option>{{ end }}</select></label>
+      <label class="dbx-f">Category <select id="dbd-cat"><option value="">Any category</option>{{ range $data.meta.categories }}<option value="{{ .key }}">{{ .label }}</option>{{ end }}</select></label>
+      <label class="dbx-f">Good for <select id="dbd-ffmt"><option value="">Any format</option>{{ range $formats }}<option value="{{ .key }}">{{ .short | default .name }}</option>{{ end }}</select></label>
+    </div>
+    <div class="hs-actions"><button type="button" class="hs-btn pri big" id="dbd-pickgo">🎲 Pick a resolution</button> <span class="hs-small" id="dbd-count"></span></div>
+    <div class="dbd-card" id="dbd-picked" aria-live="polite" hidden></div>
+  </section>
+
+  <section class="dbd-panel" id="dbd-impromptu" role="tabpanel" aria-labelledby="tab-impromptu" tabindex="0" hidden>
+    <h2>Impromptu speech</h2>
+    <p>Get a topic, plan for a short time, then speak. A common pattern: say your position, give two or three reasons with an example each, and finish by saying why it matters.</p>
+    <div class="dbx-row dbd-filters">
+      <label class="dbx-f">Prep <select id="dbd-iprep"><option value="30">30 seconds</option><option value="60">1 minute</option><option value="120" selected>2 minutes</option><option value="180">3 minutes</option><option value="300">5 minutes</option><option value="1800">30 minutes (extemp)</option></select></label>
+      <label class="dbx-f">Speech <select id="dbd-ispeak"><option value="60">1 minute</option><option value="120">2 minutes</option><option value="180">3 minutes</option><option value="300" selected>5 minutes</option><option value="420">7 minutes</option></select></label>
+    </div>
+    <label class="dbx-f dbd-wide">Topic <input type="text" id="dbd-itopic" placeholder="Pick one below or type your own"></label>
+    <div class="hs-actions"><button type="button" class="hs-btn" id="dbd-inew">🎲 Random topic</button></div>
+    <div class="dbd-clock" id="dbd-iclock">
+      <p class="dbd-phase" id="dbd-iphase">Ready</p>
+      <p class="dbd-time" id="dbd-itime" aria-live="off">2:00</p>
+      <div class="dbt-bar" aria-hidden="true"><b id="dbd-ibar"></b></div>
+      <div class="hs-actions dbd-center">
+        <button type="button" class="hs-btn pri big" id="dbd-igo">▶ Start prep</button>
+        <button type="button" class="hs-btn" id="dbd-iskip">⏭ Speak now</button>
+        <button type="button" class="hs-btn" id="dbd-ireset">↺ Reset</button>
+      </div>
+      <p class="dbx-sr" id="dbd-ilive" aria-live="assertive"></p>
+    </div>
+    <label class="dbx-f dbd-wide">Notes <textarea id="dbd-inotes" rows="4" placeholder="Position: … Reason 1: … Reason 2: … Why it matters: …"></textarea></label>
+  </section>
+
+  <section class="dbd-panel" id="dbd-steelman" role="tabpanel" aria-labelledby="tab-steelman" tabindex="0" hidden>
+    <h2>Steelman it</h2>
+    <p>A <b>strawman</b> is a weak, twisted version of someone's view. A <b>steelman</b> is the view as its best defenders would put it. Read the strawman, then write the steelman: the version a person who holds that view would say, "Yes, that's what I mean."</p>
+    <div class="dbd-card" id="dbd-sm"></div>
+  </section>
+
+  <section class="dbd-panel" id="dbd-rebuttal" role="tabpanel" aria-labelledby="tab-rebuttal" tabindex="0" hidden>
+    <h2>Four-step rebuttal</h2>
+    <p>Answer an argument in four steps: <b>They say</b> (name it), <b>but</b> (your answer), <b>because</b> (your reason or evidence), <b>therefore</b> (why it matters in the round). Try it in writing, then out loud in under a minute.</p>
+    <div class="dbd-card" id="dbd-rb"></div>
+  </section>
+
+  <section class="dbd-panel" id="dbd-cx" role="tabpanel" aria-labelledby="tab-cx" tabindex="0" hidden>
+    <h2>Cross-examination</h2>
+    <p>Good questions are short, have one clear answer, and set up what you'll say in your next speech. Good answers are honest, brief and calm. Practice both.</p>
+    <div class="dbd-seg" role="radiogroup" aria-label="Practice">
+      <label class="dbx-cb"><input type="radio" name="dbd-cxm" value="answer" checked> Answer questions</label>
+      <label class="dbx-cb"><input type="radio" name="dbd-cxm" value="ask"> Ask questions</label>
+    </div>
+    <div class="dbd-card" id="dbd-cxc"></div>
+  </section>
+
+  <section class="dbd-panel" id="dbd-fallacy" role="tabpanel" aria-labelledby="tab-fallacy" tabindex="0" hidden>
+    <h2>Fallacy spotter</h2>
+    <p>Each exchange below comes from a made-up round. Which mistake in reasoning does it make, if any? The names match the <a href="{{ "logic/informal-logic/" | relURL }}">Logic Ladder</a>, where each one has a full lesson.</p>
+    <p class="dbd-score" id="dbd-fscore"></p>
+    <div class="dbd-card" id="dbd-fq"></div>
+  </section>
+
+  <section class="dbd-panel" id="dbd-weigh" role="tabpanel" aria-labelledby="tab-weigh" tabindex="0" hidden>
+    <h2>Weighing</h2>
+    <p>When both sides win an argument, the judge has to decide which one matters more. That's <b>weighing</b>, and it usually comes down to four questions: how big (<b>magnitude</b>), how likely (<b>probability</b>), how soon (<b>timeframe</b>) and whether it can be undone (<b>reversibility</b>).</p>
+    <p class="dbd-score" id="dbd-wscore"></p>
+    <div class="dbd-card" id="dbd-wq"></div>
+    <details class="dbx-panel" id="dbd-wself">
+      <summary>Weigh your own two impacts</summary>
+      <div class="dbd-wgrid">
+        <label class="dbx-f">Your impact <input type="text" id="dbd-wa" placeholder="families save money every month"></label>
+        <label class="dbx-f">Their impact <input type="text" id="dbd-wb" placeholder="a small chance of higher taxes later"></label>
+      </div>
+      <table class="dbd-wt">
+        <thead><tr><th scope="col">Score each from 1 to 5</th><th scope="col">Yours</th><th scope="col">Theirs</th></tr></thead>
+        <tbody id="dbd-wrows"></tbody>
+      </table>
+      <p class="dbd-wout" id="dbd-wself-out" aria-live="polite"></p>
+    </details>
+  </section>
+</div>
+<script id="db-formats" type="application/json">{{ $formats | jsonify | safeJS }}</script>
+<script id="db-topics" type="application/json">{{ $data.topics | jsonify | safeJS }}</script>
+<script id="db-fallacies" type="application/json">{{ $data.fallacies | jsonify | safeJS }}</script>
+<script id="db-base" type="application/json">{{ dict "base" ("" | relURL) | jsonify | safeJS }}</script>
+{{ partial "debate-tools/script.html" "common.js" }}
+{{ partial "debate-tools/script.html" "timer-core.js" }}
+{{ partial "debate-tools/script.html" "drills-core.js" }}
+{{ partial "debate-tools/script.html" "drills.js" }}
+{{ end }}

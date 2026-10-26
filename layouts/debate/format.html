@@ -1,0 +1,77 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $f := index site.Data.debate.formats .Params.format }}
+{{ $sides := dict }}{{ range $f.sides }}{{ $sides = merge $sides (dict .id .name) }}{{ end }}
+{{ $sides = merge $sides (dict "both" "Both" "any" "Either side" ) }}
+{{ $total := 0 }}{{ range $f.speeches }}{{ $total = add $total .seconds }}{{ end }}
+<div class="hs db">
+  {{ partial "debate/crumbs.html" (slice (dict "t" "Formats" "u" "debate/formats/") (dict "t" $f.name)) }}
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">Debate · Formats{{ with $f.aka }} · {{ . }}{{ end }}</p>
+    <h1><span aria-hidden="true">{{ $f.icon }}</span> {{ $f.name }}</h1>
+    <p>{{ $f.summary }}</p>
+  </header>
+
+  <dl class="db-glance">
+    <div><dt>Who</dt><dd>{{ $f.who }}</dd></div>
+    <div><dt>Teams</dt><dd>{{ $f.team }}</dd></div>
+    <div><dt>Length</dt><dd>{{ $f.length }}</dd></div>
+    <div><dt>Topic</dt><dd>{{ $f.resolution }}</dd></div>
+    {{ with $f.prep }}<div><dt>Prep time</dt><dd>{{ .note }}</dd></div>{{ end }}
+  </dl>
+  {{ with $f.named }}<p class="db-muted">{{ . }} See the <a href="{{ "debate/topics/lincoln-douglas-1858/" | relURL }}">1858 debates</a> in the topics.</p>{{ end }}
+  {{ with $f.history }}<p class="db-muted">{{ . }}</p>{{ end }}
+
+  {{ with $f.speeches }}
+  <section class="hs-sec" id="speeches">
+    <h2>Speeches in order</h2>
+    {{ with $f.sidesNote }}<p>{{ . }}</p>{{ end }}
+    {{ with $f.speechesNote }}<p class="db-flag">{{ . }}</p>{{ end }}
+    <div class="hs-tablewrap"><table class="hs-table db-table db-speeches">
+      <thead><tr><th scope="col">#</th><th scope="col">Speech</th><th scope="col">Side</th><th scope="col">Time</th><th scope="col">What it does</th></tr></thead>
+      <tbody>
+      {{ range $i, $s := . }}
+      <tr class="db-k-{{ $s.kind }}"><td>{{ add $i 1 }}</td><th scope="row"><b>{{ $s.short }}</b><br><small>{{ $s.name }}</small></th>
+        <td>{{ if eq $s.kind "cross" "grand-cross" }}{{ if eq $s.asker "both" "any" }}{{ index $sides $s.side }}{{ else }}{{ index $sides $s.asker }} asks{{ with $s.by }} ({{ . }}){{ end }}{{ end }}{{ else }}{{ index $sides $s.side }}{{ with $s.speaker }}<br><small>{{ . }}</small>{{ end }}{{ end }}</td>
+        <td class="db-num">{{ $m := div $s.seconds 60 }}{{ $sec := mod $s.seconds 60 }}{{ $m }}:{{ printf "%02d" $sec }}</td>
+        <td>{{ $s.job }}</td></tr>
+      {{ end }}
+      </tbody>
+    </table></div>
+    {{ with $f.repeat }}<p class="db-flag">{{ .note }}</p>{{ else }}<p class="db-small">Total speaking time: {{ div $total 60 }} minutes{{ with $f.prep }}{{ if gt .seconds 0 }}, plus up to {{ div (mul .seconds (len $f.sides)) 60 }} minutes of prep{{ end }}{{ end }}.</p>{{ end }}
+    {{ with $f.grace }}<p class="db-flag">{{ .note }}</p>{{ end }}
+    {{ with $f.poi }}<div class="db-poi"><b>Points of information</b><p>{{ .note }}</p><p class="db-small">Protected time: the first {{ .protected_start }} seconds and the last {{ .protected_end }} seconds of each speech that allows them. A point lasts about {{ .max_seconds }} seconds at most.</p></div>{{ end }}
+    <p class="hs-noprint"><a class="hs-btn pri" href="{{ "debate/tools/timer/" | relURL }}#{{ $f.key }}">⏱️ Time a {{ $f.short }} round</a> <a class="hs-btn" href="{{ "debate/tools/flow/" | relURL }}#{{ $f.key }}">🗒️ Flow sheet</a> <a class="hs-btn" href="{{ "debate/tools/ballots/" | relURL }}#{{ $f.key }}">📋 Ballot</a></p>
+  </section>
+  {{ end }}
+
+  {{ partial "debate/sections.html" (dict "secs" $f.sections) }}
+
+  <div class="db-two">
+    <section class="db-s"><h2>What it rewards</h2><ul>{{ range $f.rewards }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ul></section>
+    <section class="db-s"><h2>How to start</h2><ol>{{ range $f.start }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ol></section>
+  </div>
+  {{ with $f.varies }}
+  <section class="db-s db-varies">
+    <h2>Varies by league or state</h2>
+    <ul>{{ range . }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ul>
+    <p class="db-small">Always check the rules your tournament publishes; they win over anything here.</p>
+  </section>
+  {{ end }}
+
+  {{ $mine := slice }}{{ range site.Data.debate.topics }}{{ if and (in .formats $f.key) (not .history) }}{{ $mine = $mine | append . }}{{ end }}{{ end }}
+  {{ with $mine }}
+  <section class="hs-sec">
+    <h2>Topics that suit {{ $f.short }}</h2>
+    <p class="db-tags">{{ range first 12 (sort . "order") }}<a class="db-tag" href="{{ printf "debate/topics/%s/" .slug | relURL }}">{{ .title }}</a>{{ end }}</p>
+  </section>
+  {{ end }}
+
+  {{ partial "debate/sources.html" (dict "list" $f.sources "h" "Rules and sources") }}
+  <p class="hs-small">Speech times checked against the sources above on {{ $f.checked }}.</p>
+  <nav class="db-pn hs-noprint" aria-label="Formats">
+    <a class="db-pn-prev" href="{{ "debate/formats/" | relURL }}"><small>←</small><b>All formats</b></a>
+    <a class="db-pn-next" href="{{ "debate/learn/" | relURL }}"><small>→</small><b>Learn to debate</b></a>
+  </nav>
+</div>
+{{ end }}

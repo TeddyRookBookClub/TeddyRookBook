@@ -1,0 +1,38 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $c := index site.Data.debate.chapters .Params.chapter }}
+{{ $all := sort site.Data.debate.chapters "order" }}
+{{ $srcs := partial "debate/srcmap.html" ($c.sources | default slice) }}
+{{ $prev := "" }}{{ $next := "" }}{{ range $i, $x := $all }}{{ if eq $x.key $c.key }}{{ if gt $i 0 }}{{ $prev = index $all (sub $i 1) }}{{ end }}{{ if lt (add $i 1) (len $all) }}{{ $next = index $all (add $i 1) }}{{ end }}{{ end }}{{ end }}
+<div class="hs db">
+  {{ partial "debate/crumbs.html" (slice (dict "t" "Learn" "u" "debate/learn/") (dict "t" $c.title)) }}
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">Learn to Debate · Chapter {{ $c.order }} · <span class="db-lv db-lv-{{ $c.level }}">{{ title $c.level }}</span></p>
+    <h1><span aria-hidden="true">{{ $c.icon }}</span> {{ $c.title }}</h1>
+    <p>{{ $c.summary }}</p>
+  </header>
+  <article class="db-article">
+    {{ if gt (len $c.sections) 3 }}<nav class="db-toc hs-noprint" aria-label="On this page"><b>On this page</b>{{ range $c.sections }}<a href="#{{ .id }}">{{ .h }}</a>{{ end }}{{ with $c.practice }}<a href="#practice">Practice</a>{{ end }}</nav>{{ end }}
+    {{ partial "debate/sections.html" (dict "secs" $c.sections "srcs" $srcs) }}
+    {{ with $c.practice }}
+    <section class="db-s db-practice" id="practice">
+      <h2>Practice</h2>
+      <ol>{{ range . }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ol>
+      {{ with $c.tools }}<p class="db-toolrow">{{ range . }}<a class="hs-btn" href="{{ strings.TrimPrefix "/" .u | relURL }}">{{ .t }}</a>{{ end }}</p>{{ end }}
+    </section>
+    {{ end }}
+    {{ with $c.links }}
+    <section class="db-s hs-note db-related">
+      <h2>Related</h2>
+      <ul>{{ range . }}<li><a href="{{ strings.TrimPrefix "/" .u | relURL }}">{{ .t }}</a>{{ with .note }}: {{ partial "debate/md.html" . }}{{ end }}</li>{{ end }}</ul>
+    </section>
+    {{ end }}
+    {{ partial "debate/sources.html" (dict "list" $c.sources) }}
+    {{ with $c.updated }}<p class="hs-small">Updated {{ . }}.</p>{{ end }}
+  </article>
+  <nav class="db-pn hs-noprint" aria-label="Chapters">
+    {{ with $prev }}<a class="db-pn-prev" href="{{ printf "debate/learn/%s/" .slug | relURL }}"><small>← Chapter {{ .order }}</small><b>{{ .title }}</b></a>{{ else }}<a class="db-pn-prev" href="{{ "debate/learn/" | relURL }}"><small>←</small><b>All chapters</b></a>{{ end }}
+    {{ with $next }}<a class="db-pn-next" href="{{ printf "debate/learn/%s/" .slug | relURL }}"><small>Chapter {{ .order }} →</small><b>{{ .title }}</b></a>{{ else }}<a class="db-pn-next" href="{{ "debate/topics/" | relURL }}"><small>Next →</small><b>Pick a topic</b></a>{{ end }}
+  </nav>
+</div>
+{{ end }}

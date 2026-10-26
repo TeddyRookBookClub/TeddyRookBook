@@ -1,0 +1,29 @@
+{{ $srcs := .srcs | default dict }}
+{{ range .secs }}
+<section class="db-s" id="{{ .id }}">
+  {{ with .h }}<h2>{{ . }}</h2>{{ end }}
+  {{ range .p }}{{ if hasPrefix . "> " }}<blockquote class="db-quote">{{ partial "debate/md.html" (strings.TrimPrefix "> " .) }}</blockquote>{{ else }}<p>{{ partial "debate/md.html" . }}</p>{{ end }}{{ end }}
+  {{ with .list }}<ul>{{ range . }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ul>{{ end }}
+  {{ with .ol }}<ol>{{ range . }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ol>{{ end }}
+  {{ with .table }}
+  <div class="hs-tablewrap"><table class="hs-table db-table">{{ with .note }}<caption>{{ partial "debate/md.html" . }}</caption>{{ end }}<thead><tr>{{ range .cols }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead><tbody>{{ range .rows }}<tr>{{ range $i, $c := . }}{{ if eq $i 0 }}<th scope="row">{{ partial "debate/md.html" $c }}</th>{{ else }}<td>{{ partial "debate/md.html" $c }}</td>{{ end }}{{ end }}</tr>{{ end }}</tbody></table></div>
+  {{ end }}
+  {{ with .example }}
+  <figure class="db-ex">{{ with .title }}<figcaption>{{ partial "debate/md.html" . }}</figcaption>{{ end }}
+    {{ range .lines }}<p class="db-line{{ with .side }} db-{{ . }}{{ end }}">{{ with .who }}<b class="db-who">{{ . }}</b> {{ end }}{{ partial "debate/md.html" .s }}</p>{{ end }}
+    {{ with .note }}<p class="db-exnote">{{ partial "debate/md.html" . }}</p>{{ end }}
+  </figure>
+  {{ end }}
+  {{ with .compare }}{{ $c := . }}
+  <div class="db-compare" role="table" aria-label="{{ .left }} and {{ .right }} compared">
+    <div class="db-crow db-chead" role="row"><span role="columnheader">{{ .left }}</span><span role="columnheader">{{ .right }}</span></div>
+    {{ range .rows }}<div class="db-crow" role="row"><span role="cell" class="db-cl"><i class="db-lab">{{ $c.left }}</i>{{ partial "debate/md.html" (index . 0) }}</span><span role="cell" class="db-cr"><i class="db-lab">{{ $c.right }}</i>{{ partial "debate/md.html" (index . 1) }}</span></div>{{ end }}
+  </div>
+  {{ end }}
+  {{ with .flow }}
+  <div class="db-flowwrap" tabindex="0" role="region" aria-label="Sample flow"><table class="db-flow">{{ with .note }}<caption>{{ partial "debate/md.html" . }}</caption>{{ end }}<thead><tr>{{ range .cols }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead><tbody>{{ range .rows }}<tr>{{ range . }}<td>{{ if . }}{{ partial "debate/md.html" . }}{{ end }}</td>{{ end }}</tr>{{ end }}</tbody></table></div>
+  {{ end }}
+  {{ with .try }}<div class="db-try"><b>Try it</b><ul>{{ range . }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ul></div>{{ end }}
+  {{ with .src }}<p class="db-srcref">Sources: {{ range $i, $id := . }}{{ if $i }}, {{ end }}<a href="#src-{{ $id }}">[{{ index $srcs $id | default "?" }}]</a>{{ end }}</p>{{ end }}
+</section>
+{{ end }}

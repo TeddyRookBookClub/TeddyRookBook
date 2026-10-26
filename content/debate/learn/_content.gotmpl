@@ -1,0 +1,8 @@
+{{/* One page per Learn chapter, from data/debate/chapters/<key>.json → /debate/learn/<slug>/ (layouts/debate/chapter.html) */}}
+{{ with site.Data.debate }}{{ with .chapters }}
+  {{ range $k, $c := . }}
+    {{ $.AddPage (dict "kind" "page" "path" $c.slug "title" $c.title "layout" "chapter" "weight" $c.order
+      "params" (dict "chapter" $k "description" $c.summary)
+      "dates" (dict "date" (time.AsTime ($c.updated | default "2026-10-25")))) }}
+  {{ end }}
+{{ end }}{{ end }}

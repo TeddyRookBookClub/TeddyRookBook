@@ -1,0 +1,91 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $D := site.Data.debate | default dict }}
+{{ $topics := sort ($D.topics | default dict) "order" }}{{ $chs := sort ($D.chapters | default dict) "order" }}{{ $fmts := sort ($D.formats | default dict) "order" }}
+{{ $meta := $D.meta | default dict }}
+<div class="hs db" id="db-hub">
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">Teddy Rook Book · Debate</p>
+    <h1>Debate</h1>
+    <p>Everything a new debater needs, and plenty for an old hand: how to build a case and answer one, how cross-examination and weighing work, the difference between a steelman and a strawman, every major format with its speech times, and {{ len $topics }} common debates with both sides at their strongest.</p>
+    <div class="db-cta">
+      <a class="hs-btn big db-btn-light" href="{{ "debate/learn/" | relURL }}">📘 Start learning</a>
+      <a class="hs-btn big db-btn-ghost" href="{{ "debate/topics/" | relURL }}">⚖️ Pick a topic</a>
+      <a class="hs-btn big db-btn-ghost" href="{{ "debate/tools/timer/" | relURL }}">⏱️ Debate timer</a>
+    </div>
+  </header>
+
+  <section class="hs-sec">
+    <div class="hs-cards db-doors">
+      <a class="hs-card" href="{{ "debate/learn/" | relURL }}"><span class="big" aria-hidden="true">📘</span><h2>Learn to debate</h2><p>{{ len $chs }} short chapters, beginner to competitive, each with examples and practice prompts.</p><span class="go">Read →</span></a>
+      <a class="hs-card" href="{{ "debate/topics/" | relURL }}"><span class="big" aria-hidden="true">⚖️</span><h2>Debates with both sides</h2><p>{{ len $topics }} resolutions, from school uniforms to the Electoral College, each with steelmanned arguments for and against.</p><span class="go">Browse →</span></a>
+      <a class="hs-card" href="{{ "debate/formats/" | relURL }}"><span class="big" aria-hidden="true">🏛️</span><h2>Formats</h2><p>Policy, Lincoln-Douglas, Public Forum, Congress, World Schools, British and American Parliamentary, Oxford-style, and more.</p><span class="go">Compare →</span></a>
+      <a class="hs-card" href="{{ "debate/tools/" | relURL }}"><span class="big" aria-hidden="true">⏱️</span><h2>Tools</h2><p>A timer for every format, flow sheets, a case builder, practice drills and printable ballots.</p><span class="go">Open →</span></a>
+      <a class="hs-card" href="{{ "debate/resources/" | relURL }}"><span class="big" aria-hidden="true">🧭</span><h2>Resources</h2><p>Join or start a club (school or homeschool), the leagues, free practice, and classic speeches to study.</p><span class="go">Explore →</span></a>
+      <a class="hs-card" href="{{ "debate/glossary/" | relURL }}"><span class="big" aria-hidden="true">🔤</span><h2>Glossary</h2><p>{{ with $D.glossary }}{{ len .terms }}{{ end }} debate words in plain English, from affirmative to whip.</p><span class="go">Look up →</span></a>
+    </div>
+  </section>
+
+  {{ with $chs }}
+  <section class="hs-sec">
+    <h2>Your first month</h2>
+    <p>New to debate? Read these in order, and do the practice at the end of each one. By the end you can hold a practice round.</p>
+    <ol class="db-path">
+      {{ range first 6 (where . "level" "beginner") }}
+      <li><a href="{{ printf "debate/learn/%s/" .slug | relURL }}"><span aria-hidden="true">{{ .icon }}</span> <b>{{ .title }}</b></a><small>{{ .summary }}</small></li>
+      {{ end }}
+    </ol>
+    <p><a href="{{ "debate/learn/" | relURL }}"><b>All chapters →</b></a></p>
+  </section>
+  {{ end }}
+
+  {{ with index ($D.chapters | default dict) "steelman" }}
+  <section class="hs-sec">
+    <a class="hs-card feat db-feat" href="{{ printf "debate/learn/%s/" .slug | relURL }}">
+      <span class="big" aria-hidden="true">{{ .icon }}</span>
+      <div><h2>{{ .title }}</h2><p>{{ .summary }}</p><span class="go">Read the chapter →</span> · <span class="go">then try the “steelman it” drill in <span class="db-nowrap">Practice drills</span></span></div>
+    </a>
+  </section>
+  {{ end }}
+
+  {{ with $topics }}
+  <section class="hs-sec">
+    <h2>Debates with both sides</h2>
+    <p>Each topic gives neutral background, then the strongest arguments on each side as their best advocates would make them, with the best answer from the other side. No side is declared the winner: that's your job in the round.</p>
+    <div class="db-cats">
+      {{ range $meta.categories }}{{ $k := .key }}{{ $n := len (where $topics "category" $k) }}{{ if $n }}
+      <a class="db-cat" href="{{ "debate/topics/" | relURL }}#cat={{ $k }}"><span aria-hidden="true">{{ .icon }}</span> {{ .label }} <small>({{ $n }})</small></a>
+      {{ end }}{{ end }}
+    </div>
+    <div class="db-tlist">
+      {{ range first 8 (where $topics "featured" true) }}
+      <a class="db-tcard" href="{{ printf "debate/topics/%s/" .slug | relURL }}"><b>{{ .title }}</b><small>{{ .resolution }}</small></a>
+      {{ end }}
+    </div>
+    <p><a href="{{ "debate/topics/" | relURL }}"><b>All {{ len $topics }} topics →</b></a></p>
+  </section>
+  {{ end }}
+
+  {{ with $fmts }}
+  <section class="hs-sec">
+    <h2>Formats at a glance</h2>
+    <div class="db-fstrip">
+      {{ range where . "family" "ne" "related" }}
+      <a class="db-fchip" href="{{ printf "debate/formats/%s/" .slug | relURL }}"><span aria-hidden="true">{{ .icon }}</span><span><b>{{ .name }}</b><small>{{ .team }} · {{ .length }}</small></span></a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  <section class="hs-sec hs-note">
+    <h2>Elsewhere on Teddy Rook Book</h2>
+    <ul class="db-rel">
+      <li><a href="{{ "logic/informal-logic/" | relURL }}">Informal Logic</a> on the Logic Ladder: arguments, validity, and every fallacy named in these pages, with practice.</li>
+      <li><a href="{{ "etiquette/growing-up/disagreeing/" | relURL }}">Disagreeing Kindly</a>, <a href="{{ "etiquette/growing-up/listening-well/" | relURL }}">Listening Well</a> and <a href="{{ "etiquette/growing-up/good-questions/" | relURL }}">Asking Good Questions</a> on the Etiquette Ladder.</li>
+      <li><a href="{{ "test-prep/grammar/" | relURL }}">Reading and writing for the SAT, ACT and CLT</a>: the same skills of finding a claim and its evidence.</li>
+      <li>The <a href="{{ "harvard-classics/" | relURL }}">Harvard Classics</a>: Federalist No. 1 (<a href="{{ "harvard-classics/january-11/" | relURL }}">January 11</a>), Mill’s <i>On Liberty</i> (<a href="{{ "harvard-classics/june-30/" | relURL }}">June 30</a>), Burke on the French Revolution (<a href="{{ "harvard-classics/july-14/" | relURL }}">July 14</a>), Plutarch’s lives of Demosthenes (<a href="{{ "harvard-classics/october-4/" | relURL }}">October 4</a>) and Cicero (<a href="{{ "harvard-classics/december-7/" | relURL }}">December 7</a>). More in <a href="{{ "debate/resources/" | relURL }}#speeches">classic speeches</a>.</li>
+    </ul>
+  </section>
+  <p class="hs-small">Written by Teddy Rook. Speech times are checked against each league’s published rules (see each format page for sources and dates). Facts in topic backgrounds are sourced on each page.</p>
+</div>
+{{ end }}

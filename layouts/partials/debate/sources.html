@@ -1,0 +1,6 @@
+{{ with .list }}
+<section class="hs-sec db-sources" id="sources">
+  <h2>{{ $.h | default "Sources" }}</h2>
+  <ol class="db-src">{{ range . }}<li id="src-{{ .id }}"><a href="{{ if hasPrefix .url "/" }}{{ strings.TrimPrefix "/" .url | relURL }}{{ else }}{{ .url }}{{ end }}" rel="noopener">{{ .title }}</a>{{ with .publisher }}, {{ . }}{{ end }}{{ with .date }} ({{ . }}){{ end }}{{ with .accessed }}. Accessed {{ . }}{{ end }}.{{ with .note }} {{ partial "debate/md.html" . }}{{ end }}</li>{{ end }}</ol>
+</section>
+{{ end }}

@@ -1,0 +1,13 @@
+{{- /* The debate formats for the tools, as a list (data/debate/formats/<key>.json; formats without speeches are left out).
+   Each keeps its own fields; static/debate/timer-core.js reads them. Adds "url" for the format's page. */ -}}
+{{- $src := dict -}}
+{{- with index site.Data "debate" }}{{ with .formats }}{{ $src = . }}{{ end }}{{ end -}}
+{{- $out := slice -}}
+{{- range $k, $f := $src -}}
+  {{- if or $f.speeches $f.cycle -}}
+    {{- $slug := $f.slug | default $f.key | default $k -}}
+    {{- $out = $out | append (merge $f (dict "key" ($f.key | default $k) "url" (printf "debate/formats/%s/" $slug | relURL))) -}}
+  {{- end -}}
+{{- end -}}
+{{- $out = sort $out "order" -}}
+{{- return $out -}}

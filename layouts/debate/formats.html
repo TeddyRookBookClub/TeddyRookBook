@@ -1,0 +1,57 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $fs := sort (site.Data.debate.formats | default dict) "order" }}
+<div class="hs db">
+  {{ partial "debate/crumbs.html" (slice (dict "t" "Formats")) }}
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">Debate · Formats</p>
+    <h1>Debate Formats</h1>
+    <p>The main ways people debate in schools, homeschool leagues, colleges and public events: who debates, how long each speech is, how much prep time you get, and what each format rewards. Times are checked against each league’s published rules; things that vary by league or state are marked.</p>
+  </header>
+
+  <section class="hs-sec">
+    <h2>Side by side</h2>
+    <div class="hs-tablewrap"><table class="hs-table db-table db-ftable">
+      <caption>Times are the main governing body’s published rules. Your league or tournament may differ; see each format’s page.</caption>
+      <thead><tr><th scope="col">Format</th><th scope="col">Who</th><th scope="col">Teams</th><th scope="col">Speeches</th><th scope="col">Prep</th><th scope="col">Topic</th></tr></thead>
+      <tbody>
+      {{ range where $fs "family" "ne" "related" }}{{ $f := . }}
+      <tr>
+        <th scope="row"><a href="{{ printf "debate/formats/%s/" .slug | relURL }}">{{ .name }}</a></th>
+        <td>{{ index (dict "high-school" "High school" "college" "College" "public" "Anyone") .family }}</td>
+        <td>{{ .team }}</td>
+        <td>{{ $mins := slice }}{{ range .speeches }}{{ if ne .kind "open" }}{{ $mins = $mins | append (printf "%g" (div (float .seconds) 60)) }}{{ end }}{{ end }}{{ delimit (uniq $mins) ", " }} min{{ with .sample }} <small>(sample)</small>{{ end }}</td>
+        <td>{{ with .prep }}{{ if gt .seconds 0 }}{{ div .seconds 60 }} min per {{ .per }}{{ else if .before_seconds }}{{ div .before_seconds 60 }} min before the round{{ else }}None in the round{{ end }}{{ end }}</td>
+        <td>{{ .topicShort | default .resolution }}</td>
+      </tr>
+      {{ end }}
+      </tbody>
+    </table></div>
+  </section>
+
+  {{ range slice (dict "k" "high-school" "t" "High school and homeschool leagues") (dict "k" "college" "t" "College") (dict "k" "public" "t" "Public and classroom") (dict "k" "related" "t" "Related events") }}{{ $g := . }}
+  {{ with where $fs "family" $g.k }}
+  <section class="hs-sec">
+    <h2>{{ $g.t }}</h2>
+    <div class="hs-cards">
+      {{ range . }}
+      <a class="hs-card" href="{{ printf "debate/formats/%s/" .slug | relURL }}"><span class="big" aria-hidden="true">{{ .icon }}</span><h2>{{ .name }}</h2><p>{{ .summary }}</p><p class="db-meta">{{ .team }} · {{ .length }}</p><span class="go">Details →</span></a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+  {{ end }}
+
+  <section class="hs-sec hs-note">
+    <h2>Which format should I try first?</h2>
+    <ul>
+      <li><b>Public Forum</b> if you like current events and want a partner: speeches are short and written for any listener.</li>
+      <li><b>Lincoln-Douglas</b> if you like big questions of right and wrong and want to debate on your own.</li>
+      <li><b>Policy</b> if you love research and want one topic all year.</li>
+      <li><b>Congress</b> if you like making speeches and want to try many topics in one day.</li>
+      <li><b>Oxford-style</b> for a classroom, co-op or family night: no league needed.</li>
+    </ul>
+    <p>Run any of them with the <a href="{{ "debate/tools/timer/" | relURL }}">debate timer</a>, which knows every speech in order.</p>
+  </section>
+</div>
+{{ end }}

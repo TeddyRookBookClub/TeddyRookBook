@@ -1,0 +1,2 @@
+{{- /* <script> for a file in static/debate/, with a cache-busting version */ -}}
+<script src="{{ printf "debate/%s" . | relURL }}?v={{ (os.Stat (printf "static/debate/%s" .)).ModTime.Unix }}" defer></script>

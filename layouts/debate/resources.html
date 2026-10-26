@@ -1,0 +1,52 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $r := site.Data.debate.resources }}
+{{ $srcs := partial "debate/srcmap.html" ($r.sources | default slice) }}
+<div class="hs db">
+  {{ partial "debate/crumbs.html" (slice (dict "t" "Resources")) }}
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">Debate · Resources</p>
+    <h1>Debate Resources</h1>
+    <p>{{ $r.intro }}</p>
+  </header>
+  <nav class="db-toc hs-noprint" aria-label="On this page"><b>On this page</b>{{ range $r.sections }}<a href="#{{ .id }}">{{ .h }}</a>{{ end }}<a href="#orgs">Leagues and organizations</a><a href="#practice-sources">Free practice and topics</a><a href="#speeches">Classic speeches and debates</a></nav>
+
+  {{ partial "debate/sections.html" (dict "secs" $r.sections "srcs" $srcs) }}
+
+  <section class="db-s" id="orgs">
+    <h2>Leagues and organizations</h2>
+    {{ range $r.orgs }}
+    <h3 class="db-rh">{{ .h }}</h3>
+    {{ with .p }}<p>{{ partial "debate/md.html" . }}</p>{{ end }}
+    <div class="db-orgs">
+      {{ range .items }}
+      <div class="db-org"><b>{{ if .url }}<a href="{{ .url }}" rel="noopener">{{ .name }}</a>{{ else }}{{ .name }}{{ end }}</b>{{ with .who }}<small>{{ . }}</small>{{ end }}<p>{{ partial "debate/md.html" .about }}</p></div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </section>
+
+  <section class="db-s" id="practice-sources">
+    <h2>Free practice and topic sources</h2>
+    <ul class="db-reading">{{ range $r.practice }}<li>{{ if .site }}<a href="{{ strings.TrimPrefix "/" .site | relURL }}">{{ .t }}</a>{{ else }}<a href="{{ .url }}" rel="noopener">{{ .t }}</a>{{ end }}{{ with .publisher }}, {{ . }}{{ end }}. {{ partial "debate/md.html" .note }}</li>{{ end }}</ul>
+  </section>
+
+  <section class="db-s" id="speeches">
+    <h2>Classic speeches and debates to study</h2>
+    <p class="db-muted">Read these for how they argue, not only for what they say: find the claim, the reasons, the answer to the other side, and the appeal to character and feeling. Links marked <span class="db-tag db-tag-site">On this site</span> open the text in the Harvard Classics or elsewhere on Teddy Rook Book.</p>
+    <div class="db-speechgrid">
+      {{ range $r.speeches }}
+      <article class="db-speech">
+        <h3>{{ .title }}</h3>
+        <p class="db-meta">{{ .who }}{{ with .year }} · {{ . }}{{ end }}</p>
+        <p>{{ partial "debate/md.html" .why }}</p>
+        <p class="db-links">{{ with .site }}<a class="db-tag db-tag-site" href="{{ strings.TrimPrefix "/" . | relURL }}">On this site</a>{{ end }}{{ with .url }}<a class="db-tag" href="{{ . }}" rel="noopener">Read the text</a>{{ end }}{{ with .note }} <small>{{ partial "debate/md.html" . }}</small>{{ end }}</p>
+      </article>
+      {{ end }}
+    </div>
+  </section>
+
+  {{ partial "debate/sources.html" (dict "list" $r.sources) }}
+  <p class="hs-small">Organizations change their rules, dues and websites; check each one’s own site before you sign up. Updated {{ $r.updated }}.</p>
+</div>
+{{ end }}

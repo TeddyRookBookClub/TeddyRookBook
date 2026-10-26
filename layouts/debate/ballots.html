@@ -1,0 +1,121 @@
+{{ define "main" }}
+{{ partial "debate-tools/head.html" . }}
+{{ $formats := partial "debate-tools/formats.html" . }}
+<div class="hs db dbx dbb" id="dbb">
+  {{ partial "debate-tools/crumbs.html" (slice (dict "t" "Tools" "u" "debate/tools/") (dict "t" "Judge's ballots")) }}
+  <header class="dbx-top dbb-noprint">
+    <p class="hs-eyebrow">Debate · Tools</p>
+    <h1>Judge's ballots</h1>
+    <p class="dbx-lede">Printable ballots for practice rounds, scrimmages and club tournaments, plus a simple scoring sheet. At a real tournament, use the ballot the tournament gives you; these follow the same shape so new judges and debaters know what to expect.</p>
+  </header>
+
+  <div class="dbb-pick dbb-noprint">
+    <label class="dbx-f">Ballot for <select id="dbb-fmt">{{ range $formats }}<option value="{{ .key }}">{{ .name }}</option>{{ end }}<option value="scoring">Simple scoring sheet</option></select></label>
+    <button type="button" class="hs-btn pri" id="dbb-print">🖨 Print this ballot</button>
+  </div>
+
+  {{ range $formats }}
+  {{ $f := . }}
+  {{ $sides := .sides | default slice }}
+  {{ $bp := gt (len $sides) 2 }}
+  {{ $cong := .repeat }}
+  <section class="dbb-ballot" id="dbb-{{ .key }}" data-key="{{ .key }}">
+    <header class="dbb-head">
+      <h2>{{ .name }} Ballot</h2>
+      <p class="dbb-sub">Teddy Rook Book · practice ballot</p>
+    </header>
+    <div class="dbb-fields">
+      <span>Tournament or event <i></i></span><span>Round <i></i></span><span>Room <i></i></span><span>Date <i></i></span>
+      <span class="dbb-w2">Judge <i></i></span><span class="dbb-w2">Judge's school or club (if any) <i></i></span>
+      <span class="dbb-w4">{{ if or (eq .key "worlds") (eq .key "bp") (eq .key "parli") (eq .key "oxford") }}Motion{{ else if $cong }}Legislation{{ else }}Resolution{{ end }} <i></i></span>
+    </div>
+
+    {{ if $cong }}
+    <table class="dbb-table">
+      <thead><tr><th scope="col">Legislator</th><th scope="col">Speech (Aff/Neg) or questions</th><th scope="col">Score</th><th scope="col">Comments</th></tr></thead>
+      <tbody>{{ range seq 10 }}<tr><td></td><td></td><td></td><td></td></tr>{{ end }}</tbody>
+    </table>
+    <p class="dbb-note">Score each speech on the scale your tournament gives. Judge clash with earlier speakers, evidence, organization, delivery and answers in questioning.</p>
+    <div class="dbb-box"><b>Top legislators in this session, ranked</b><ol class="dbb-lines">{{ range seq 6 }}<li></li>{{ end }}</ol></div>
+    {{ else if $bp }}
+    <table class="dbb-table">
+      <thead><tr><th scope="col">Team</th><th scope="col">Team name or code</th><th scope="col">Speakers and points</th><th scope="col">Team rank (1st to 4th)</th></tr></thead>
+      <tbody>
+      {{ range $sides }}<tr><th scope="row">{{ .name }}</th><td></td><td>{{ range .speakers }}<span class="dbb-spk">{{ . }}: <i></i> pts <i class="dbb-sm"></i></span>{{ end }}</td><td class="dbb-rank"></td></tr>{{ end }}
+      </tbody>
+    </table>
+    <p class="dbb-note">Rank the four teams from first to fourth; there are no ties in rank. Speaker points follow your tournament's scale. Higher-ranked teams usually get higher total points.</p>
+    {{ else }}
+    <table class="dbb-table">
+      <thead><tr><th scope="col">Side</th><th scope="col">Team or debater code</th><th scope="col">Speakers</th><th scope="col">Points</th><th scope="col">Rank</th></tr></thead>
+      <tbody>
+      {{ range $sides }}
+        {{ $side := . }}
+        {{ $spk := .speakers | default (slice "Speaker 1" "Speaker 2") }}
+        {{ range $i, $s := $spk }}<tr>{{ if eq $i 0 }}<th scope="row" rowspan="{{ len $spk }}">{{ $side.name }}</th><td rowspan="{{ len $spk }}"></td>{{ end }}<td>{{ $s }}: <i></i></td><td></td><td></td></tr>{{ end }}
+      {{ end }}
+      </tbody>
+    </table>
+    <p class="dbb-note">Give each speaker points on your league's scale (check the tournament's instructions) and rank the speakers in the round. In most leagues the winning team may not have fewer points than the losing team unless the judge marks a "low-point win."</p>
+    {{ end }}
+
+    {{ if not $cong }}
+    <div class="dbb-decision">
+      {{ if $bp }}<b>Ranking:</b> 1st <i></i> 2nd <i></i> 3rd <i></i> 4th <i></i>
+      {{ else }}<b>Decision:</b> The better debating was done by <i class="dbb-long"></i> on the
+      {{ range $i, $s := $sides }}{{ if $i }} / {{ end }}<span class="dbb-chk">☐ {{ $s.name }}</span>{{ end }}.
+      {{ if eq .key "oxford" }}<p class="dbb-note">Many public debates also poll the audience before and after; the side that changes more minds wins. Follow your organizer's rules. Before: For <i></i> Against <i></i> Undecided <i></i> · After: For <i></i> Against <i></i> Undecided <i></i></p>{{ end }}
+      {{ end }}
+    </div>
+    {{ end }}
+    <div class="dbb-box dbb-rfd"><b>Reason for decision</b> <span class="dbb-hint">What decided the round? Which arguments did you weigh, and why?</span><div class="dbb-ruled"></div></div>
+    <div class="dbb-cols">
+      {{ range $sides }}<div class="dbb-box"><b>Comments for the {{ .name }}</b> <span class="dbb-hint">One thing that worked, one thing to try next time.</span><div class="dbb-ruled dbb-short"></div></div>{{ end }}
+    </div>
+    <p class="dbb-sign">Judge's signature <i></i></p>
+  </section>
+  {{ end }}
+
+  <section class="dbb-ballot" id="dbb-scoring" data-key="scoring">
+    <header class="dbb-head">
+      <h2>Simple scoring sheet</h2>
+      <p class="dbb-sub">For practice rounds and club meetings · Teddy Rook Book</p>
+    </header>
+    <p class="dbb-note dbb-noprint">Type names and tap scores from 1 (needs work) to 5 (excellent). Totals add up as you go, and the sheet is saved in this browser. Print it filled in, or print it blank for judges to fill by hand.</p>
+    <div class="dbb-fields"><span class="dbb-w4">Topic <input type="text" id="dbs-topic" class="dbb-in" aria-label="Topic"></span></div>
+    <div class="dbb-scroll">
+      <table class="dbb-table dbs-table" id="dbs-table">
+        <thead><tr><th scope="col">Speaker</th><th scope="col">Side</th><th scope="col">Arguments</th><th scope="col">Evidence</th><th scope="col">Refutation</th><th scope="col">Organization</th><th scope="col">Delivery</th><th scope="col">Questions</th><th scope="col">Total</th></tr></thead>
+        <tbody id="dbs-body"></tbody>
+      </table>
+    </div>
+    <div class="hs-actions dbb-noprint">
+      <button type="button" class="hs-btn" id="dbs-add">＋ Speaker</button>
+      <button type="button" class="hs-btn" id="dbs-clear">Clear the sheet</button>
+      <button type="button" class="hs-btn" id="dbs-blank">🖨 Print blank</button>
+    </div>
+    <div class="dbb-box"><b>What to work on</b><div class="dbb-ruled dbb-short"></div></div>
+    <dl class="dbb-key">
+      <dt>Arguments</dt><dd>Clear claims with reasons that link to the resolution.</dd>
+      <dt>Evidence</dt><dd>Sources that are real, relevant, fairly quoted and cited.</dd>
+      <dt>Refutation</dt><dd>Answers the other side's best points directly.</dd>
+      <dt>Organization</dt><dd>Signposts ("my first point…") and stays on time.</dd>
+      <dt>Delivery</dt><dd>Clear, audible, steady pace, eye contact, respectful tone.</dd>
+      <dt>Questions</dt><dd>Asks short, useful questions and gives truthful, direct answers.</dd>
+    </dl>
+  </section>
+
+  <section class="hs-sec hs-note dbb-noprint dbx-about">
+    <h2>What judges look for</h2>
+    <ul>
+      <li><b>Lay judges</b> (parents, teachers, community members) decide like a thoughtful listener: who was clearer, more convincing and easier to follow. Speak plainly, explain jargon and slow down.</li>
+      <li><b>Flow judges</b> (former debaters and coaches) take notes on every argument and decide on what was said and answered. A dropped argument usually counts for the side that made it, and new arguments in the last speeches usually don't count.</li>
+      <li><b>Every judge</b> rewards honest evidence, direct answers to the other side, and a clear explanation in the last speech of why you win.</li>
+      <li><b>Write a reason for decision</b> a debater can learn from: the argument that decided it and why, not just "good job."</li>
+    </ul>
+    <p class="hs-small">Read more in <a href="{{ "debate/learn/" | relURL }}">Learn to Debate</a>. For timing the round, use the <a href="{{ "debate/tools/timer/" | relURL }}">debate timer</a>.</p>
+  </section>
+</div>
+{{ partial "debate-tools/script.html" "common.js" }}
+{{ partial "debate-tools/script.html" "ballots.js" }}
+{{ end }}

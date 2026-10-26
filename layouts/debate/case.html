@@ -1,0 +1,96 @@
+{{ define "main" }}
+{{ partial "debate-tools/head.html" . }}
+{{ $formats := partial "debate-tools/formats.html" . }}
+{{ $data := partial "debate-tools/data.html" "lite" }}
+<div class="hs db dbx dbc" id="dbc">
+  {{ partial "debate-tools/crumbs.html" (slice (dict "t" "Tools" "u" "debate/tools/") (dict "t" "Case builder")) }}
+  <header class="dbx-top dbc-noprint">
+    <p class="hs-eyebrow">Debate · Tools</p>
+    <h1>Case builder</h1>
+    <p class="dbx-lede">A case is the speech you write before the round. Build it from contentions, and build each contention from points that have a <b>claim</b> (what you say is true), a <b>warrant</b> (why it's true), <b>evidence</b> (proof from a source) and an <b>impact</b> (why it matters).</p>
+  </header>
+  <noscript><p class="dbx-warn">The case builder needs JavaScript.</p></noscript>
+  <p class="dbx-warn" id="dbc-nostore" hidden>This browser isn't letting the page save, so your case will be lost when you close it. Use <b>Save as a file</b> to keep it.</p>
+
+  <div class="dbf-bar dbc-noprint">
+    <label class="dbx-f">Case <select id="dbc-pick" aria-label="Choose a saved case"></select></label>
+    <div class="dbx-row">
+      <button type="button" class="hs-btn pri" id="dbc-new">＋ New case</button>
+      <button type="button" class="hs-btn" id="dbc-dup">⧉ Copy</button>
+      <button type="button" class="hs-btn" id="dbc-del">🗑 Delete</button>
+    </div>
+  </div>
+
+  <form class="dbc-form dbc-noprint" id="dbc-form" autocomplete="off" onsubmit="return false">
+    <div class="dbc-grid">
+      <label class="dbx-f dbc-wide">Case name <input type="text" data-f="name" maxlength="200"></label>
+      <label class="dbx-f">Format <select data-f="fmt"><option value="">Any or practice</option>{{ range $formats }}<option value="{{ .key }}">{{ .name }}</option>{{ end }}</select></label>
+      <label class="dbx-f">Side <select data-f="side" id="dbc-side"></select></label>
+      <label class="dbx-f dbc-full">Resolution
+        <input type="text" data-f="resolution" list="dbc-res" placeholder="Resolved: …" maxlength="1000">
+        <datalist id="dbc-res">{{ range $data.topics }}<option value="{{ .resolution }}">{{ end }}</datalist>
+      </label>
+    </div>
+    <p class="hs-small">Start typing to choose a resolution from <a href="{{ "debate/topics/" | relURL }}">Debates with Both Sides</a>, where each topic lists the strongest arguments on each side, or write your own.</p>
+
+    <fieldset class="dbx-fs dbc-sec">
+      <legend>Introduction</legend>
+      <textarea data-f="intro" rows="2" placeholder="A quotation, a short story, or one sentence that frames the round."></textarea>
+    </fieldset>
+
+    <fieldset class="dbx-fs dbc-sec">
+      <legend>Definitions</legend>
+      <div id="dbc-defs"></div>
+      <button type="button" class="hs-btn" id="dbc-adddef">＋ Definition</button>
+    </fieldset>
+
+    <fieldset class="dbx-fs dbc-sec dbc-vc">
+      <legend>Value and criterion</legend>
+      <label class="dbx-cb"><input type="checkbox" data-f="useVC"> Use a value and criterion (Lincoln-Douglas and some other value debates)</label>
+      <div class="dbc-vcbox" id="dbc-vcbox">
+        <div class="dbc-grid">
+          <label class="dbx-f">Value <input type="text" data-f="value" placeholder="Justice, liberty, safety…" maxlength="500"></label>
+          <label class="dbx-f">Criterion (how we measure the value) <input type="text" data-f="criterion" placeholder="Protecting rights, reducing harm…" maxlength="500"></label>
+        </div>
+        <label class="dbx-f">Why this value and criterion <textarea data-f="framework" rows="2" placeholder="Why the value matters most in this resolution, and why the criterion is the best way to weigh it."></textarea></label>
+      </div>
+    </fieldset>
+
+    <div id="dbc-conts"></div>
+    <button type="button" class="hs-btn" id="dbc-addcont">＋ Contention</button>
+
+    <fieldset class="dbx-fs dbc-sec">
+      <legend>Conclusion</legend>
+      <textarea data-f="conclusion" rows="2" placeholder="Pull your contentions together and say why they win the round."></textarea>
+    </fieldset>
+  </form>
+
+  <section class="dbc-stats dbc-noprint" id="dbc-stats" aria-live="polite"></section>
+  <p class="dbx-msg dbc-noprint" id="dbc-msg" aria-live="polite"></p>
+  <div class="hs-actions dbc-noprint">
+    <button type="button" class="hs-btn pri" id="dbc-print">🖨 Print or save as PDF</button>
+    <button type="button" class="hs-btn" id="dbc-text">⬇ Save as text</button>
+    <button type="button" class="hs-btn" id="dbc-json">⬇ Save as a file</button>
+    <button type="button" class="hs-btn" id="dbc-jsonall">⬇ Save all cases</button>
+    <button type="button" class="hs-btn" id="dbc-load">⬆ Open a saved file</button>
+  </div>
+
+  <section class="hs-sec hs-note dbc-noprint dbx-about">
+    <h2>Tips for a strong case</h2>
+    <ul>
+      <li><b>Two or three contentions</b> are plenty for most constructives. A few well-proved points beat many thin ones.</li>
+      <li><b>Every piece of evidence needs a source</b> a judge could find: the author, their qualifications, the publication and the date. Quote fairly: never cut a quotation so it says something the author didn't mean.</li>
+      <li><b>Say the impact out loud.</b> Judges won't do the work of explaining why your point matters; tell them.</li>
+      <li><b>Read it with a timer.</b> The estimate here uses a conversational 150 words a minute. Practice with the <a href="{{ "debate/tools/timer/" | relURL }}">debate timer</a>.</li>
+      <li><b>Prepare for the other side.</b> Write your answers to their best arguments, not their weakest; the <a href="{{ "debate/tools/drills/" | relURL }}">steelman drill</a> helps.</li>
+    </ul>
+    <p class="hs-small">Your cases stay in this browser; nothing is sent anywhere.</p>
+  </section>
+  <article class="dbc-printarea" id="dbc-printarea"></article>
+</div>
+<script id="db-formats" type="application/json">{{ $formats | jsonify | safeJS }}</script>
+{{ partial "debate-tools/script.html" "common.js" }}
+{{ partial "debate-tools/script.html" "timer-core.js" }}
+{{ partial "debate-tools/script.html" "case-core.js" }}
+{{ partial "debate-tools/script.html" "case.js" }}
+{{ end }}

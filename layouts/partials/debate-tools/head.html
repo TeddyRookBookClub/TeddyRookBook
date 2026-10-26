@@ -1,0 +1,5 @@
+{{- /* styles for a tool page: the shared reading styles (Content builder) and the tools' own */ -}}
+{{- if and (templates.Exists "partials/debate/head.html") (os.FileExists "static/debate/read.css") }}{{ partial "debate/head.html" . }}{{ else -}}
+<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
+{{- end }}
+<link rel="stylesheet" href="{{ "debate/tools.css" | relURL }}?v={{ (os.Stat "static/debate/tools.css").ModTime.Unix }}">

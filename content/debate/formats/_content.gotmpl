@@ -1,0 +1,8 @@
+{{/* One page per format, from data/debate/formats/<key>.json → /debate/formats/<slug>/ (layouts/debate/format.html) */}}
+{{ with site.Data.debate }}{{ with .formats }}
+  {{ range $k, $f := . }}
+    {{ $.AddPage (dict "kind" "page" "path" $f.slug "title" $f.name "layout" "format" "weight" $f.order
+      "params" (dict "format" $k "description" $f.summary)
+      "dates" (dict "date" (time.AsTime ($f.checked | default "2026-10-25")))) }}
+  {{ end }}
+{{ end }}{{ end }}

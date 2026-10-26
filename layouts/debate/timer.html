@@ -1,0 +1,111 @@
+{{ define "main" }}
+{{ partial "debate-tools/head.html" . }}
+{{ $formats := partial "debate-tools/formats.html" . }}
+<div class="hs db dbx dbt" id="dbt">
+  {{ partial "debate-tools/crumbs.html" (slice (dict "t" "Tools" "u" "debate/tools/") (dict "t" "Timer")) }}
+  <header class="dbx-top">
+    <p class="hs-eyebrow">Debate · Tools</p>
+    <h1>Debate timer</h1>
+    <p class="dbx-lede">Every speech in order, prep time for each side, and a big clock you can read from the back of the room. Pick a format and press Start.</p>
+  </header>
+  <noscript><p class="dbx-warn">The timer needs JavaScript. The speech times for each format are on the <a href="{{ "debate/formats/" | relURL }}">formats pages</a>.</p></noscript>
+
+  <div class="dbt-pick" id="dbt-pick">
+    <label class="dbx-f">Format
+      <select id="dbt-fmt" aria-describedby="dbt-fmt-note">
+        {{ range $formats }}{{ $n := .name }}<option value="{{ .key }}">{{ $n }}{{ with .short }}{{ if not (strings.Contains $n .) }} ({{ . }}){{ end }}{{ end }}</option>{{ end }}
+      </select>
+    </label>
+    <label class="dbx-f" id="dbt-swap-w" hidden>After the coin toss, the first team argues
+      <select id="dbt-swap"><option value="">Not decided yet</option><option value="pro">Pro</option><option value="con">Con</option></select>
+    </label>
+    <label class="dbx-f" id="dbt-cyc-w" hidden>Speeches <input type="number" id="dbt-cyc" min="1" max="60" value="12" inputmode="numeric"></label>
+    <span class="dbt-total hs-small" id="dbt-fmt-note"></span>
+  </div>
+
+  <section class="dbt-stage" id="dbt-stage" aria-label="Clock">
+    <div class="dbt-now">
+      <span class="dbt-side" id="dbt-side"></span>
+      <h2 class="dbt-name" id="dbt-name">Choose a format</h2>
+      <span class="dbt-mode" id="dbt-mode"></span>
+    </div>
+    <button type="button" class="dbt-clock" id="dbt-clock" aria-describedby="dbt-hint"><span id="dbt-time">0:00</span></button>
+    <div class="dbt-hand" id="dbt-hand" hidden aria-hidden="true"></div>
+    <div class="dbt-bar" aria-hidden="true"><b id="dbt-bar"></b></div>
+    <p class="dbt-poi" id="dbt-poi" hidden></p>
+    <p class="dbt-next hs-small" id="dbt-next"></p>
+    <div class="dbt-ctrls" role="group" aria-label="Timer controls">
+      <button type="button" class="hs-btn" id="dbt-prev" aria-label="Previous speech" title="Previous speech (←)">⏮<span class="dbx-lbl"> Back</span></button>
+      <button type="button" class="hs-btn pri big dbt-go" id="dbt-go" title="Start or pause (Space)">▶ Start</button>
+      <button type="button" class="hs-btn" id="dbt-nextb" aria-label="Next speech" title="Next speech (→)"><span class="dbx-lbl">Next </span>⏭</button>
+    </div>
+    <div class="dbt-ctrls dbt-ctrls2" role="group" aria-label="More controls">
+      <button type="button" class="hs-btn" id="dbt-minus" title="Take off 10 seconds (−)">−10s</button>
+      <button type="button" class="hs-btn" id="dbt-plus" title="Add 10 seconds (+)">+10s</button>
+      <button type="button" class="hs-btn" id="dbt-reset" title="Reset this speech (R)">↺ Reset</button>
+      <button type="button" class="hs-btn" id="dbt-handb" aria-pressed="false" title="Hand signals (H)">✋ Hand signals</button>
+      <button type="button" class="hs-btn" id="dbt-sound" aria-pressed="true" title="Sound (M)">🔔 Sound on</button>
+      <button type="button" class="hs-btn" id="dbt-full" aria-pressed="false" title="Full screen (F)">⛶ Full screen</button>
+    </div>
+    <p class="dbt-hint hs-small" id="dbt-hint">Tap the clock or press Space to start and pause. ← → move between speeches.</p>
+    <div class="dbt-banks" id="dbt-banks" aria-label="Prep time"></div>
+    <p class="dbt-live dbx-sr" id="dbt-live" aria-live="assertive"></p>
+  </section>
+
+  <section class="hs-sec dbt-orderw">
+    <h2>Order of speeches</h2>
+    <ol class="dbt-order" id="dbt-order"></ol>
+    <p class="hs-small" id="dbt-src"></p>
+  </section>
+
+  <details class="dbx-panel" id="dbt-set">
+    <summary>Warnings and times</summary>
+    <div class="dbt-setgrid">
+      <fieldset class="dbx-fs">
+        <legend>Warn me at</legend>
+        <div class="dbx-checks" id="dbt-warns">
+          {{ range slice (dict "s" 120 "t" "2 minutes") (dict "s" 60 "t" "1 minute") (dict "s" 30 "t" "30 seconds") (dict "s" 15 "t" "15 seconds") (dict "s" 10 "t" "10 seconds") }}
+          <label class="dbx-cb"><input type="checkbox" value="{{ .s }}"> {{ .t }} left</label>
+          {{ end }}
+        </div>
+        <p class="hs-small">At each warning the clock changes color, the screen flashes, and (with sound on) it beeps once. At zero it beeps three times and counts up in red so everyone can see the grace time.</p>
+        <label class="dbx-cb"><input type="checkbox" id="dbt-vib"> Vibrate on phones that can</label>
+      </fieldset>
+      <fieldset class="dbx-fs">
+        <legend>Your league's times</legend>
+        <p class="hs-small">Leagues and tournaments sometimes change times. Change any speech here (minutes:seconds); it's saved for this format in this browser.</p>
+        <div class="dbt-times" id="dbt-times"></div>
+        <button type="button" class="hs-btn" id="dbt-times-reset">Use the published times</button>
+      </fieldset>
+    </div>
+  </details>
+
+  <details class="dbx-panel">
+    <summary>Keyboard and touch</summary>
+    <table class="dbx-keys">
+      <tr><th scope="row"><kbd>Space</kbd></th><td>Start or pause (or tap the clock)</td></tr>
+      <tr><th scope="row"><kbd>→</kbd> <kbd>N</kbd></th><td>Next speech (or swipe left on the clock)</td></tr>
+      <tr><th scope="row"><kbd>←</kbd> <kbd>P</kbd></th><td>Previous speech (or swipe right)</td></tr>
+      <tr><th scope="row"><kbd>1</kbd> <kbd>2</kbd></th><td>Start or stop prep for the first or second side</td></tr>
+      <tr><th scope="row"><kbd>R</kbd></th><td>Reset this speech</td></tr>
+      <tr><th scope="row"><kbd>+</kbd> <kbd>−</kbd></th><td>Add or take off 10 seconds</td></tr>
+      <tr><th scope="row"><kbd>H</kbd></th><td>Hand signals on or off</td></tr>
+      <tr><th scope="row"><kbd>F</kbd></th><td>Full screen (<kbd>Esc</kbd> to leave)</td></tr>
+      <tr><th scope="row"><kbd>M</kbd></th><td>Sound on or off</td></tr>
+    </table>
+  </details>
+
+  <section class="hs-sec hs-note dbx-about">
+    <h2>Using the timer</h2>
+    <p><b>Hand signals.</b> Many timekeepers hold up fingers for the whole minutes left, a bent finger (or a "C" shape) at 30 seconds, and a closed fist at time. Hand-signal mode shows the same thing big on screen, so a speaker can glance at it. Check what your league expects; some use time cards instead.</p>
+    <p><b>Prep time.</b> In formats with running prep, each side has one bank of prep for the whole round. Press that side's prep button when they start preparing and again when they're ready. The speech clock pauses while prep runs. In formats where teams prepare before the round (World Schools and British Parliamentary), use the round-prep clock.</p>
+    <p><b>Points of information.</b> In formats that allow them, the clock shows when the protected time at the start and end of a speech is over and points may be offered.</p>
+    <p class="hs-small">The timer keeps working without a connection once this page has loaded. It saves where you are, so a reloaded page picks up at the same speech (paused). Learn more about each format on the <a href="{{ "debate/formats/" | relURL }}">formats pages</a>; for keeping notes during the round, try the <a href="{{ "debate/tools/flow/" | relURL }}">flow sheet</a>.</p>
+  </section>
+</div>
+<script id="db-formats" type="application/json">{{ $formats | jsonify | safeJS }}</script>
+{{ partial "debate-tools/script.html" "common.js" }}
+{{ partial "debate-tools/script.html" "timer-core.js" }}
+{{ partial "debate-tools/script.html" "hand.js" }}
+{{ partial "debate-tools/script.html" "timer.js" }}
+{{ end }}

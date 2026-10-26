@@ -1,0 +1,1 @@
+{{- $m := dict -}}{{- range $i, $s := . -}}{{- $m = merge $m (dict $s.id (add $i 1)) -}}{{- end -}}{{- return $m -}}

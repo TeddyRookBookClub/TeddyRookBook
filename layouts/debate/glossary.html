@@ -1,0 +1,35 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $g := site.Data.debate.glossary }}
+{{ $terms := sort $g.terms "term" }}
+{{ $letters := slice }}{{ range $terms }}{{ $L := upper (substr .term 0 1) }}{{ if not (in $letters $L) }}{{ $letters = $letters | append $L }}{{ end }}{{ end }}
+<div class="hs db">
+  {{ partial "debate/crumbs.html" (slice (dict "t" "Glossary")) }}
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">Debate · Glossary</p>
+    <h1>Debate Glossary</h1>
+    <p>{{ len $terms }} words you’ll hear at practice and tournaments, in plain English. Formats name some things differently; where a word belongs to one format, it says so.</p>
+  </header>
+  <div class="db-filter hs-noprint" role="search">
+    <label class="db-f db-fwide"><span>Find a term</span><input type="search" id="db-gq" placeholder="rebuttal, turn, POI…" autocomplete="off"></label>
+    <p class="db-count" id="db-gcount" aria-live="polite">{{ len $terms }} terms</p>
+  </div>
+  <nav class="db-az hs-noprint" aria-label="Jump to letter">{{ range $letters }}<a href="#g-{{ lower . }}">{{ . }}</a>{{ end }}</nav>
+  {{ range $letters }}{{ $L := . }}
+  <section class="db-gsec" id="g-{{ lower $L }}">
+    <h2>{{ $L }}</h2>
+    <dl class="db-gloss">
+      {{ range $terms }}{{ if eq (upper (substr .term 0 1)) $L }}
+      <div class="db-gterm" id="{{ anchorize .term }}" data-q="{{ lower (printf "%s %s" .term .def) }}"><dt>{{ .term }}{{ with .fmt }} <small class="db-kind">{{ . }}</small>{{ end }}</dt><dd>{{ partial "debate/md.html" .def }}{{ with .see }} <span class="db-see">See also: {{ range $i, $s := . }}{{ if $i }}, {{ end }}<a href="#{{ anchorize $s }}">{{ $s }}</a>{{ end }}.</span>{{ end }}{{ with .u }} <a href="{{ strings.TrimPrefix "/" . | relURL }}">More →</a>{{ end }}</dd></div>
+      {{ end }}{{ end }}
+    </dl>
+  </section>
+  {{ end }}
+</div>
+<script>
+(function(){'use strict';
+  var q=document.getElementById('db-gq'),items=[].slice.call(document.querySelectorAll('.db-gterm')),secs=[].slice.call(document.querySelectorAll('.db-gsec')),cnt=document.getElementById('db-gcount');
+  q.addEventListener('input',function(){var s=q.value.toLowerCase().trim(),n=0;items.forEach(function(d){var ok=!s||d.dataset.q.indexOf(s)>=0;d.hidden=!ok;if(ok)n++;});secs.forEach(function(x){x.hidden=!x.querySelector('.db-gterm:not([hidden])');});cnt.textContent=n+(n===1?' term':' terms');});
+})();
+</script>
+{{ end }}

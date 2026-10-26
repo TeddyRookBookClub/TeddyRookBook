@@ -1,0 +1,126 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $t := index site.Data.debate.topics .Params.topic }}
+{{ $meta := site.Data.debate.meta }}
+{{ $cat := dict }}{{ range $meta.categories }}{{ if eq .key $t.category }}{{ $cat = . }}{{ end }}{{ end }}
+{{ $srcs := partial "debate/srcmap.html" ($t.sources | default slice) }}
+{{ $A := $t.sides.aff }}{{ $N := $t.sides.neg }}
+<div class="hs db db-topic">
+  {{ partial "debate/crumbs.html" (slice (dict "t" "Topics" "u" "debate/topics/") (dict "t" $t.title)) }}
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">{{ $cat.icon }} {{ $cat.label }} · <span class="db-lv db-lv-{{ $t.level }}">{{ title $t.level }}</span> · {{ if $t.history }}Historical debate{{ else }}{{ title $t.kind }} resolution{{ end }}</p>
+    <h1 class="db-res">{{ $t.resolution }}</h1>
+    <p>{{ $t.summary }}</p>
+  </header>
+  <nav class="db-toc hs-noprint" aria-label="On this page"><b>On this page</b><a href="#background">Background</a>{{ with $t.terms }}<a href="#terms">Key terms</a>{{ end }}<a href="#sides">Both sides</a><a href="#strawmen">Strawman or steelman</a><a href="#weak">Weak arguments</a><a href="#cx">Cross-examination</a><a href="#reading">Reading</a></nav>
+
+  <section class="db-s" id="background">
+    <h2>Background</h2>
+    {{ range $t.background }}<p>{{ partial "debate/md.html" .p }}{{ with .src }} <span class="db-cite">{{ range $i, $id := . }}<a href="#src-{{ $id }}">[{{ index $srcs $id | default "?" }}]</a>{{ end }}</span>{{ end }}</p>{{ end }}
+    {{ with $t.disputed }}
+    <div class="db-disputed">
+      <b>Where the facts themselves are disputed</b>
+      {{ range . }}<div class="db-dq"><p class="db-dqq">{{ partial "debate/md.html" .q }}</p><ul>{{ range .positions }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ul></div>{{ end }}
+    </div>
+    {{ end }}
+  </section>
+
+  {{ with $t.terms }}
+  <section class="db-s" id="terms">
+    <h2>Key terms</h2>
+    <dl class="db-terms">{{ range . }}<div><dt>{{ .term }}</dt><dd>{{ partial "debate/md.html" .def }}</dd></div>{{ end }}</dl>
+  </section>
+  {{ end }}
+
+  <section class="db-s" id="sides">
+    <h2>Both sides at their strongest</h2>
+    <p class="db-muted">Each argument is written the way its best advocates would make it, followed by the strongest answer from the other side. Use them to build your case and to prepare for the other one.</p>
+    <div class="db-sides">
+      {{ range $sk, $sd := (slice (dict "k" "aff" "s" $A) (dict "k" "neg" "s" $N)) }}{{ $S := .s }}{{ $k := .k }}
+      <div class="db-side db-side-{{ $k }}">
+        <h3 class="db-sideh"><span class="db-badge db-badge-{{ $k }}">{{ $S.label }}</span></h3>
+        <p class="db-stance">{{ partial "debate/md.html" $S.stance }}</p>
+        <ol class="db-args">
+          {{ range $i, $a := $S.args }}
+          <li class="db-arg">
+            <h4><span class="db-argn">{{ if eq $k "aff" }}A{{ else }}N{{ end }}{{ add $i 1 }}</span> {{ partial "debate/md.html" $a.claim }}</h4>
+            <p><b class="db-lbl">Why</b> {{ partial "debate/md.html" $a.warrant }}</p>
+            <p><b class="db-lbl">Evidence</b> {{ partial "debate/md.html" $a.evidence }}</p>
+            <p class="db-resp"><b class="db-lbl">Best answer</b> {{ partial "debate/md.html" $a.response }}</p>
+          </li>
+          {{ end }}
+        </ol>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="db-s" id="strawmen">
+    <h2>Strawman or steelman?</h2>
+    <p class="db-muted">A strawman is a weak copy of the other side’s view, easy to knock down and unfair to the people who hold it. A steelman is that view at its strongest. Answer the steelman, and you’ve answered the real argument. (<a href="{{ "debate/learn/steelman-vs-strawman/" | relURL }}">More on steelmanning</a>.)</p>
+    <div class="db-sms">
+      {{ range $t.strawmen }}{{ $lab := cond (eq .target "aff") $A.label $N.label }}
+      <div class="db-sm db-sm-{{ .target }}">
+        <p class="db-smt">{{ $lab }}</p>
+        <p class="db-smx"><b>Strawman</b> “{{ partial "debate/md.html" .strawman }}”</p>
+        <p class="db-smw"><b>Why it’s unfair</b> {{ partial "debate/md.html" .why }}</p>
+        <p class="db-smo"><b>Steelman</b> {{ partial "debate/md.html" .steelman }}</p>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="db-s" id="weak">
+    <h2>Weak arguments to avoid</h2>
+    <div class="db-two">
+      {{ range (slice (dict "k" "aff" "S" $A) (dict "k" "neg" "S" $N)) }}{{ $k := .k }}
+      <div><h3><span class="db-badge db-badge-{{ $k }}">{{ .S.label }}</span></h3>
+        <ul class="db-weak">{{ range where $t.weak "side" $k }}<li><b>“{{ partial "debate/md.html" .arg }}”</b> {{ partial "debate/md.html" .why }}</li>{{ end }}</ul>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="db-s" id="cx">
+    <h2>Questions for cross-examination</h2>
+    <div class="db-two">
+      <div><h3>Ask the <span class="db-badge db-badge-aff">{{ $A.label }}</span></h3><ol>{{ range $t.cx.aff }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ol></div>
+      <div><h3>Ask the <span class="db-badge db-badge-neg">{{ $N.label }}</span></h3><ol>{{ range $t.cx.neg }}<li>{{ partial "debate/md.html" . }}</li>{{ end }}</ol></div>
+    </div>
+  </section>
+
+  <section class="db-s" id="reading">
+    <h2>Reading on both sides</h2>
+    <p class="db-muted">Read at least one source from each side before you debate. Look up each source’s author and publisher too: who wrote it is part of the evidence.</p>
+    {{ range (slice (dict "k" "neutral" "t" "Background and overviews") (dict "k" "both" "t" "Both sides in one place") (dict "k" "aff" "t" (printf "Mostly %s" $A.label)) (dict "k" "neg" "t" (printf "Mostly %s" $N.label))) }}{{ $g := . }}
+    {{ with where $t.reading "leans" $g.k }}
+    <h3 class="db-rh">{{ $g.t }}</h3>
+    <ul class="db-reading">{{ range . }}<li><a href="{{ if hasPrefix .url "/" }}{{ strings.TrimPrefix "/" .url | relURL }}{{ else }}{{ .url }}{{ end }}" rel="noopener">{{ .title }}</a>{{ with .publisher }}, {{ . }}{{ end }}{{ with .date }} ({{ . }}){{ end }}{{ with .note }}. <span class="db-muted">{{ partial "debate/md.html" . }}</span>{{ end }}</li>{{ end }}</ul>
+    {{ end }}
+    {{ end }}
+  </section>
+
+  <section class="db-s hs-note hs-noprint">
+    <h2>{{ if $t.history }}Study this debate{{ else }}Practice this topic{{ end }}</h2>
+    <ul>
+      {{ if $t.history }}
+      <li>Read the original texts in the reading list, and mark each speaker's claims, warrants and evidence.</li>
+      <li>Find where each side answered the other's strongest point, and where it didn't.</li>
+      <li>Compare the arguments with the <a href="{{ "debate/learn/persuasion/" | relURL }}">three means of persuasion</a> and the <a href="{{ "debate/learn/fallacies-in-debate/" | relURL }}">common fallacies</a>.</li>
+      {{ else }}
+      <li>Build a case for either side in the <a href="{{ "debate/tools/case/" | relURL }}">case builder</a>, starting from the arguments above.</li>
+      <li>Try the strawmen above in the <a href="{{ "debate/tools/drills/" | relURL }}">steelman drill</a>, and answer an argument with the four-step rebuttal.</li>
+      <li>Hold a round with the <a href="{{ "debate/tools/timer/" | relURL }}">timer</a>.{{ with $t.formats }} This topic suits {{ range $i, $k := . }}{{ with index site.Data.debate.formats $k }}{{ if $i }}, {{ end }}<a href="{{ printf "debate/formats/%s/" .slug | relURL }}">{{ .short }}</a>{{ end }}{{ end }}.{{ end }}</li>
+      {{ end }}
+      {{ range $t.links }}<li><a href="{{ strings.TrimPrefix "/" .u | relURL }}">{{ .t }}</a>{{ with .note }}: {{ partial "debate/md.html" . }}{{ end }}</li>{{ end }}
+    </ul>
+  </section>
+
+  {{ partial "debate/sources.html" (dict "list" $t.sources "h" "Sources for the background") }}
+  <p class="hs-small">{{ if $t.history }}This page presents a historical debate for study.{{ else }}Teddy Rook Book doesn’t take a side on this resolution.{{ end }} Updated {{ $t.updated }}.</p>
+  <nav class="db-pn hs-noprint" aria-label="Topics">
+    <a class="db-pn-prev" href="{{ "debate/topics/" | relURL }}"><small>←</small><b>All topics</b></a>
+    <a class="db-pn-next" href="{{ "debate/learn/steelman-vs-strawman/" | relURL }}"><small>→</small><b>Steelman vs strawman</b></a>
+  </nav>
+</div>
+{{ end }}

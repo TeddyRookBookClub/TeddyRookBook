@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $ts := sort (site.Data.debate.topics | default dict) "order" }}
+{{ $meta := site.Data.debate.meta }}
+<div class="hs db">
+  {{ partial "debate/crumbs.html" (slice (dict "t" "Topics")) }}
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">Debate · Topics</p>
+    <h1>Debates with Both Sides</h1>
+    <p>{{ len $ts }} resolutions for practice rounds and club meetings. Each page gives neutral background, then the strongest arguments for and against, each with the best answer from the other side, plus weak arguments to avoid, cross-examination questions and reading on both sides.</p>
+  </header>
+
+  <form class="db-filter hs-noprint" id="db-filter" role="search" aria-label="Filter topics" onsubmit="return false">
+    <label class="db-f"><span>Search</span><input type="search" id="db-q" placeholder="uniforms, voting, energy…" autocomplete="off"></label>
+    <label class="db-f"><span>Category</span><select id="db-cat"><option value="">All categories</option>{{ range $meta.categories }}<option value="{{ .key }}">{{ .label }}</option>{{ end }}</select></label>
+    <label class="db-f"><span>Level</span><select id="db-lv"><option value="">All levels</option>{{ range $meta.levels }}<option value="{{ .key }}">{{ .label }}</option>{{ end }}</select></label>
+    <label class="db-f"><span>Kind</span><select id="db-kind"><option value="">Fact, value or policy</option><option value="policy">Policy</option><option value="value">Value</option><option value="fact">Fact</option></select></label>
+    <p class="db-count" id="db-count" aria-live="polite">{{ len $ts }} topics</p>
+  </form>
+
+  {{ range $meta.categories }}{{ $c := . }}
+  {{ with where $ts "category" $c.key }}
+  <section class="hs-sec db-catsec" data-cat="{{ $c.key }}">
+    <h2><span aria-hidden="true">{{ $c.icon }}</span> {{ $c.label }}</h2>
+    <div class="db-tgrid">
+      {{ range . }}
+      <a class="db-tcard" href="{{ printf "debate/topics/%s/" .slug | relURL }}" data-cat="{{ .category }}" data-lv="{{ .level }}" data-kind="{{ .kind }}" data-q="{{ lower (printf "%s %s %s" .title .resolution .summary) }}">
+        <b>{{ .title }}</b><small>{{ .resolution }}</small>
+        <span class="db-tmeta"><span class="db-lv db-lv-{{ .level }}">{{ title .level }}</span> <span class="db-kind">{{ title .kind }}</span></span>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+  {{ end }}
+  <p class="db-none" id="db-none" hidden>No topics match. Try clearing a filter.</p>
+
+  <section class="hs-sec hs-note">
+    <h2>How these pages are written</h2>
+    <ul>
+      <li><b>Evenhanded.</b> Both sides get the same number of arguments, each in its strongest form, and each followed by the best answer from the other side. Teddy Rook Book doesn’t pick a winner.</li>
+      <li><b>Sourced.</b> Background facts link to their sources. Where the facts themselves are disputed, the page says so and gives the main positions.</li>
+      <li><b>Levels.</b> {{ range $i, $l := $meta.levels }}{{ if $i }} {{ end }}<i>{{ $l.label }}</i>: {{ $l.note }}{{ end }}</li>
+      <li><b>Kinds.</b> A <i>policy</i> resolution asks whether to do something; a <i>value</i> resolution asks whether something is good, right or more important; a <i>fact</i> resolution asks whether something is true. See <a href="{{ "debate/learn/resolutions/" | relURL }}">Reading a Resolution</a>.</li>
+    </ul>
+    <p>Want one at random? The <a href="{{ "debate/tools/drills/" | relURL }}">resolution picker</a> in the drills draws from this list.</p>
+  </section>
+</div>
+<script>
+(function(){'use strict';
+  var q=document.getElementById('db-q'),c=document.getElementById('db-cat'),l=document.getElementById('db-lv'),k=document.getElementById('db-kind');
+  var cards=[].slice.call(document.querySelectorAll('.db-tcard[data-cat]')),secs=[].slice.call(document.querySelectorAll('.db-catsec'));
+  var cnt=document.getElementById('db-count'),none=document.getElementById('db-none');
+  function readHash(){var m=/cat=([a-z-]+)/.exec(location.hash||'');if(m){c.value=m[1];}}
+  function run(){
+    var s=(q.value||'').toLowerCase().trim(),n=0;
+    cards.forEach(function(a){var ok=(!c.value||a.dataset.cat===c.value)&&(!l.value||a.dataset.lv===l.value)&&(!k.value||a.dataset.kind===k.value)&&(!s||a.dataset.q.indexOf(s)>=0);a.hidden=!ok;if(ok)n++;});
+    secs.forEach(function(sec){sec.hidden=!sec.querySelector('.db-tcard:not([hidden])');});
+    cnt.textContent=n+(n===1?' topic':' topics');none.hidden=n>0;
+  }
+  [q,c,l,k].forEach(function(e){e.addEventListener('input',run);e.addEventListener('change',run);});
+  window.addEventListener('hashchange',function(){readHash();run();});
+  readHash();run();
+})();
+</script>
+{{ end }}

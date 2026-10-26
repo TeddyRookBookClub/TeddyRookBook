@@ -1,0 +1,32 @@
+{{ define "main" }}
+{{ partial "debate/head.html" . }}
+{{ $chs := sort (site.Data.debate.chapters | default dict) "order" }}
+<div class="hs db">
+  {{ partial "debate/crumbs.html" (slice (dict "t" "Learn")) }}
+  <header class="hs-hero db-hero">
+    <p class="hs-eyebrow">Debate · Learn</p>
+    <h1>Learn to Debate</h1>
+    <p>Short chapters you can read in about ten minutes each, with examples and practice at the end. Start at the top if you’re new; jump around if you’re not.</p>
+  </header>
+  {{ $levels := slice
+    (dict "k" "beginner" "t" "Beginner" "p" "Your first practice rounds: what a debate is, how to read a resolution, build a case, answer the other side, speak, and argue fairly.")
+    (dict "k" "intermediate" "t" "Intermediate" "p" "Ready for a tournament: evidence, cross-examination, weighing, framework, flowing, judges, fallacies and impromptu speaking.")
+    (dict "k" "competitive" "t" "Competitive" "p" "Tournament play: getting ready for your first tournament, and the strategy experienced debaters use.") }}
+  {{ range $levels }}{{ $lv := . }}
+  {{ with where $chs "level" $lv.k }}
+  <section class="hs-sec">
+    <h2 class="db-lvh"><span class="db-lv db-lv-{{ $lv.k }}">{{ $lv.t }}</span></h2>
+    <p class="db-muted">{{ $lv.p }}</p>
+    <ol class="db-chlist">
+      {{ range . }}
+      <li><a href="{{ printf "debate/learn/%s/" .slug | relURL }}"><span class="db-chn">{{ .order }}</span><span class="db-chi" aria-hidden="true">{{ .icon }}</span><span><b>{{ .title }}</b><small>{{ .summary }}</small></span></a></li>
+      {{ end }}
+    </ol>
+  </section>
+  {{ end }}
+  {{ end }}
+  <section class="hs-sec hs-note">
+    <p>Practice as you read: the <a href="{{ "debate/tools/drills/" | relURL }}">drills</a> give you a random resolution, a rebuttal to answer, a strawman to fix, and fallacies to spot. The <a href="{{ "debate/topics/" | relURL }}">topics</a> give you both sides to start from, and the <a href="{{ "debate/glossary/" | relURL }}">glossary</a> explains any word you don’t know.</p>
+  </section>
+</div>
+{{ end }}
