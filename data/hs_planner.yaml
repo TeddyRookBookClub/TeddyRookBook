@@ -1,33 +1,33 @@
 # The lesson planner's subjects and courses (layouts/homeschool/planner.html, static/homeschool/planner.js).
-# Subject: key, name, icon, start/until (ages switched on by default; 99 = off), replaces (subjects switched off when
-#   this one is switched on), mins and hw ([age up to, minutes] rows: lesson minutes a week, study minutes a day),
-#   more: true (listed under "More subjects", with its note).
+# The ladders lead; the classic public-domain books stay as options ("also try" courses or their own subjects).
+# Subject: key, name, icon, note (shown under the name),
+#   on_ages: [[from, to], ...]  the ages it is switched on by default (empty: off until a parent switches it on),
+#   rank: [[age up to, rank], ...]  its place in the list at each age: lower comes first, ties keep this file's order,
+#     100 or more puts it under "More subjects" for that age. Ranks only order the list; they never switch anything on or off.
+#   replaces: subjects switched off when this one is switched on (by default, or by a parent),
+#   mins and hw: [[age up to, minutes], ...] rows: lesson minutes a week, study minutes a day.
 # Course: key, name, url, from/to (ages; the first course whose "to" fits a child's age is suggested), rep, alt (an
 #   "also try" course the plan never moves into), w (the word before the number: Lesson, Chapter, Session...), and one of
 #   data: <book data>   ar: <Hannah Ward curriculum>   ext: <data with lesson urls>
 #   ladder: <ladder key> + lc: <course key>   one lesson per topic (mins each, about a school year at the subject's time)
 #   practice: <page path> + sessions: N      a practice page, one session a school day (Today's practice, songs, Test Prep)
-#   section: <page path>                      the section's pages by weight (Music chapters)
+#   section: <page path>                      the section's pages by weight (Music chapters, Learn to Debate)
 #   unit: <data/science_units key>            Science Lab and Business units, chapter by chapter
+#   lab: young | teen                         Science Lab play ideas (data/hs_planner_lab.yaml), dealt out one lab after another
 #   trade: <data/trades key>   adult: [<data/adult keys>]
-# A course whose pages are missing from the build is left out of the planner.
+#   whole: true  lessons are never split across days: a lesson waits until the subject's minutes add up to it
+#     (Science Lab: 40 minutes a week of 20-minute sessions = two sessions a week).
+# A course whose pages are missing from the build is left out of the planner. Course keys are saved in people's plans:
+# don't rename them (planner.js moves a saved course to the subject that now holds it).
 subjects:
 - key: early
   name: 'Early years: math and English'
   icon: 🏡
-  start: 3
-  until: 5
-  replaces:
-  - arithmetic
-  - spelling
-  mins:
-  - - 4
-    - 100
-  - - 99
-    - 125
-  hw:
-  - - 99
-    - 0
+  on_ages: [[3, 5]]
+  rank: [[5, 1], [99, 900]]
+  replaces: [arithmetic, spelling, mathladder]
+  mins: [[4, 100], [99, 125]]
+  hw: [[99, 0]]
   courses:
   - key: ar-little-house-prek
     ar: little-house-prek
@@ -45,301 +45,18 @@ subjects:
     to: 5
     rep: 1
     mins: 25
-- key: reading
-  name: Reading
-  icon: 📖
-  mins:
-  - - 5
-    - 75
-  - - 6
-    - 75
-  - - 8
-    - 90
-  - - 10
-    - 120
-  - - 99
-    - 150
-  courses:
-  - key: ar-teach-your-child-the-alphabet
-    ar: teach-your-child-the-alphabet
-    url: /homeschool/actual-reading/teach-your-child-the-alphabet/
-    name: The Alphabet in 60 Lessons (Hannah Ward)
-    from: 3
-    to: 3
-    rep: 1
-    mins: 15
-  - key: ar-teach-your-child-to-read
-    ar: teach-your-child-to-read
-    url: /homeschool/actual-reading/teach-your-child-to-read/
-    name: Teach Your Child to Read in 120 Lessons (Hannah Ward)
-    from: 4
-    to: 5
-    rep: 1
-    mins: 15
-  - key: mcg-primer
-    data: hs_mcg_primer
-    url: /homeschool/mcguffey/primer/
-    name: McGuffey's Primer
-    from: 4
-    to: 6
-    rep: 2
-  - key: mcg-first
-    data: hs_mcg_first
-    url: /homeschool/mcguffey/first-reader/
-    name: McGuffey's First Reader
-    from: 6
-    to: 7
-    rep: 1.5
-  - key: mcg-second
-    data: hs_mcg_second
-    url: /homeschool/mcguffey/second-reader/
-    name: McGuffey's Second Reader
-    from: 7
-    to: 8
-    rep: 1.25
-  - key: mcg-third
-    data: hs_mcg_third
-    url: /homeschool/mcguffey/third-reader/
-    name: McGuffey's Third Reader
-    from: 8
-    to: 10
-    rep: 1.25
-  - key: mcg-fourth
-    data: hs_mcg_fourth
-    url: /homeschool/mcguffey/fourth-reader/
-    name: McGuffey's Fourth Reader
-    from: 10
-    to: 11
-    rep: 1
-  - key: mcg-fifth
-    data: hs_mcg_fifth
-    url: /homeschool/mcguffey/fifth-reader/
-    name: McGuffey's Fifth Reader
-    from: 11
-    to: 13
-    rep: 1
-  - key: mcg-sixth
-    data: hs_mcg_sixth
-    url: /homeschool/mcguffey/sixth-reader/
-    name: McGuffey's Sixth Reader
-    from: 13
-    to: 99
-    rep: 1
-  hw:
-  - - 7
-    - 5
-  - - 10
-    - 10
-  - - 99
-    - 15
-- key: literature
-  name: 'Literature: American Pioneer'
-  icon: 🛶
-  start: 6
-  until: 8
-  mins:
-  - - 99
-    - 125
-  hw:
-  - - 99
-    - 10
-  courses:
-  - key: ar-american-pioneer-level-1
-    ar: american-pioneer-level-1
-    url: /homeschool/actual-reading/american-pioneer-level-1/
-    name: American Pioneer, Level 1 (Hannah Ward)
-    from: 6
-    to: 99
-    rep: 1
-    mins: 25
-- key: spelling
-  name: Phonics and spelling
-  icon: ✏️
-  mins:
-  - - 7
-    - 60
-  - - 99
-    - 60
-  courses:
-  - key: webster
-    data: hs_webster
-    url: /homeschool/spelling-and-grammar/webster/
-    name: Webster's Speller
-    from: 4
-    to: 8
-    rep: 1.5
-  - key: mcg-speller
-    data: hs_mcg_speller
-    url: /homeschool/mcguffey/speller/
-    name: McGuffey's Speller
-    from: 8
-    to: 99
-    rep: 1
-  - key: ar-phonics-reading-boot-camp
-    ar: phonics-reading-boot-camp
-    url: /homeschool/actual-reading/phonics-reading-boot-camp/
-    name: Phonics Reading Boot Camp (Hannah Ward), for older learners
-    from: 9
-    to: 99
-    rep: 1
-    mins: 20
-    alt: true
-  hw:
-  - - 99
-    - 5
-- key: grammar
-  name: Grammar and composition
-  icon: 📝
-  start: 9
-  mins:
-  - - 99
-    - 75
-  courses:
-  - key: harvey-elem
-    data: hs_harvey
-    url: /homeschool/spelling-and-grammar/harvey/
-    name: Harvey's Elementary Grammar
-    from: 9
-    to: 99
-    rep: 1.5
-  hw:
-  - - 99
-    - 10
-- key: composition
-  name: Composition
-  icon: ✍️
-  start: 9
-  mins:
-  - - 99
-    - 75
-  hw:
-  - - 99
-    - 10
-  courses:
-  - key: mother-tongue
-    data: hs_mother_tongue
-    url: /homeschool/writing/mother-tongue/
-    name: The Mother Tongue, Book One
-    from: 9
-    to: 99
-    rep: 1
-- key: handwriting
-  name: Handwriting
-  icon: ✒️
-  start: 8
-  mins:
-  - - 99
-    - 60
-  hw:
-  - - 99
-    - 0
-  courses:
-  - key: palmer
-    data: hs_palmer
-    url: /homeschool/writing/palmer-method/
-    name: The Palmer Method
-    from: 8
-    to: 99
-    rep: 1
-- key: arithmetic
-  name: Arithmetic
-  icon: 🧮
-  mins:
-  - - 6
-    - 75
-  - - 8
-    - 100
-  - - 11
-    - 150
-  - - 99
-    - 180
-  courses:
-  - key: primary
-    data: rays_primary
-    url: /homeschool/rays-arithmetic/primary/
-    name: Ray's Primary Arithmetic
-    from: 4
-    to: 7
-    rep: 2
-  - key: intellectual
-    data: rays_intellectual
-    url: /homeschool/rays-arithmetic/intellectual/
-    name: Ray's Intellectual Arithmetic
-    from: 7
-    to: 9
-    rep: 2
-  - key: practical
-    data: rays_practical
-    url: /homeschool/rays-arithmetic/practical/
-    name: Ray's Practical Arithmetic
-    from: 9
-    to: 12
-    rep: 1.5
-  - key: higher
-    data: rays_higher
-    url: /homeschool/rays-arithmetic/higher/
-    name: Ray's Higher Arithmetic
-    from: 12
-    to: 99
-    rep: 1.5
-  hw:
-  - - 7
-    - 5
-  - - 10
-    - 10
-  - - 99
-    - 15
-- key: higher-math
-  name: Algebra and geometry
-  icon: 📐
-  start: 12
-  mins:
-  - - 99
-    - 150
-  courses:
-  - key: algebra
-    data: rays_algebra
-    url: /homeschool/rays-arithmetic/algebra/
-    name: Ray's Elementary Algebra
-    from: 12
-    to: 14
-    rep: 1.5
-  - key: wentworth
-    data: hs_wentworth
-    url: /homeschool/geometry/wentworth/
-    name: Wentworth's Geometry
-    from: 14
-    to: 99
-    rep: 1.5
-  hw:
-  - - 99
-    - 20
 - key: mathladder
   name: Math Ladder
   icon: 🪜
-  more: true
-  start: 99
-  replaces:
-  - arithmetic
-  - higher-math
-  mins:
-  - - 6
-    - 75
-  - - 8
-    - 100
-  - - 11
-    - 150
-  - - 99
-    - 180
-  hw:
-  - - 8
-    - 5
-  - - 99
-    - 10
-  note: "Kindergarten to college. Each lesson is a Math Ladder topic: read it, then practice until it passes. Study time is for its quick reviews."
+  on_ages: [[5, 99]]
+  rank: [[7, 5], [99, 1]]
+  replaces: [arithmetic, higher-math]
+  mins: [[6, 75], [8, 100], [11, 150], [99, 180]]
+  hw: [[8, 5], [99, 10]]
+  note: 'Kindergarten to college. Each lesson is a Math Ladder topic: read it, then practice until it passes. Study time is for its quick reviews. Ray''s Arithmetic is under More subjects.'
   courses:
   - key: ml-practice
-    name: "Today's Math Ladder practice (it picks the next lesson or review)"
+    name: Today's Math Ladder practice (it picks the next lesson or review)
     practice: /math/practice
     url: /math/practice/
     sessions: 180
@@ -545,112 +262,309 @@ subjects:
     rep: 1
     mins: 125
     alt: true
-  - key: tp-sat
-    name: "SAT Math practice (Test Prep)"
-    practice: /test-prep/sat-math
-    url: /test-prep/sat-math/
-    sessions: 60
-    w: Session
-    from: 15
-    to: 99
-    rep: 1
-    mins: 30
-    alt: true
-  - key: tp-act
-    name: "ACT Math practice (Test Prep)"
-    practice: /test-prep/act-math
-    url: /test-prep/act-math/
-    sessions: 60
-    w: Session
-    from: 15
-    to: 99
-    rep: 1
-    mins: 30
-    alt: true
-  - key: tp-clt
-    name: "CLT Quantitative practice (Test Prep)"
-    practice: /test-prep/clt-quantitative
-    url: /test-prep/clt-quantitative/
-    sessions: 60
-    w: Session
-    from: 14
-    to: 99
-    rep: 1
-    mins: 30
-    alt: true
-- key: science
-  name: Science
-  icon: 🔭
-  start: 7
-  mins:
-  - - 8
-    - 60
-  - - 11
-    - 90
-  - - 13
-    - 105
-  - - 99
-    - 150
-  hw:
-  - - 11
-    - 5
-  - - 99
-    - 15
+- key: writing
+  name: Writing & Grammar
+  icon: 🖋️
+  on_ages: [[6, 99]]
+  rank: [[5, 11], [7, 6], [99, 2]]
+  replaces: [grammar, composition]
+  mins: [[8, 60], [12, 90], [99, 150]]
+  hw: [[8, 5], [99, 10]]
+  note: 'Age 6 to college: first sentences, grammar and diagramming, usage and punctuation, composition, then rhetoric. Harvey''s Grammar and The Mother Tongue are under More subjects.'
   courses:
-  - key: fairy-land
-    data: hs_fairyland
-    url: /homeschool/science/fairy-land-of-science/
-    name: The Fairy-Land of Science
-    from: 7
+  - key: wr-practice
+    name: Today's Writing & Grammar Ladder practice
+    practice: /writing/practice
+    url: /writing/practice/
+    sessions: 180
+    w: Session
+    from: 6
+    to: 99
+    rep: 1
+    mins: 15
+    alt: true
+  - key: wr-fwr
+    ladder: writing
+    lc: fwr
+    from: 6
     to: 8
     rep: 1
-  - key: sun-moon-stars
-    data: hs_giberne_stars
-    url: /homeschool/science/sun-moon-and-stars/
-    name: Sun, Moon, and Stars (astronomy)
+    mins: 45
+  - key: wr-gram
+    ladder: writing
+    lc: gram
     from: 9
     to: 10
     rep: 1
-  - key: worlds-foundations
-    data: hs_giberne_geology
-    url: /homeschool/science/worlds-foundations/
-    name: The World's Foundations (geology)
+    mins: 75
+  - key: wr-usage
+    ladder: writing
+    lc: usage
     from: 11
+    to: 12
+    rep: 1
+    mins: 65
+  - key: wr-comp
+    ladder: writing
+    lc: comp
+    from: 13
+    to: 15
+    rep: 1
+    mins: 125
+  - key: wr-rhet
+    ladder: writing
+    lc: rhet
+    from: 16
+    to: 99
+    rep: 1
+    mins: 130
+- key: reading
+  name: Reading
+  icon: 📖
+  on_ages: [[3, 13]]
+  rank: [[7, 2], [12, 3], [99, 40]]
+  mins: [[5, 75], [6, 75], [8, 90], [10, 120], [99, 150]]
+  hw: [[7, 5], [10, 10], [99, 15]]
+  courses:
+  - key: ar-teach-your-child-the-alphabet
+    ar: teach-your-child-the-alphabet
+    url: /homeschool/actual-reading/teach-your-child-the-alphabet/
+    name: The Alphabet in 60 Lessons (Hannah Ward)
+    from: 3
+    to: 3
+    rep: 1
+    mins: 15
+  - key: ar-teach-your-child-to-read
+    ar: teach-your-child-to-read
+    url: /homeschool/actual-reading/teach-your-child-to-read/
+    name: Teach Your Child to Read in 120 Lessons (Hannah Ward)
+    from: 4
+    to: 5
+    rep: 1
+    mins: 15
+  - key: mcg-primer
+    data: hs_mcg_primer
+    url: /homeschool/mcguffey/primer/
+    name: McGuffey's Primer
+    from: 4
+    to: 6
+    rep: 2
+  - key: mcg-first
+    data: hs_mcg_first
+    url: /homeschool/mcguffey/first-reader/
+    name: McGuffey's First Reader
+    from: 6
+    to: 7
+    rep: 1.5
+  - key: mcg-second
+    data: hs_mcg_second
+    url: /homeschool/mcguffey/second-reader/
+    name: McGuffey's Second Reader
+    from: 7
+    to: 8
+    rep: 1.25
+  - key: mcg-third
+    data: hs_mcg_third
+    url: /homeschool/mcguffey/third-reader/
+    name: McGuffey's Third Reader
+    from: 8
+    to: 10
+    rep: 1.25
+  - key: mcg-fourth
+    data: hs_mcg_fourth
+    url: /homeschool/mcguffey/fourth-reader/
+    name: McGuffey's Fourth Reader
+    from: 10
     to: 11
     rep: 1
-  - key: candle
-    data: hs_candle
-    url: /homeschool/science/chemical-history-of-a-candle/
-    name: The Chemical History of a Candle (chemistry)
-    from: 12
+  - key: mcg-fifth
+    data: hs_mcg_fifth
+    url: /homeschool/mcguffey/fifth-reader/
+    name: McGuffey's Fifth Reader
+    from: 11
     to: 13
     rep: 1
-  - key: millikan
-    data: hs_millikan
-    url: /homeschool/science/first-course-in-physics/
-    name: A First Course in Physics
+  - key: mcg-sixth
+    data: hs_mcg_sixth
+    url: /homeschool/mcguffey/sixth-reader/
+    name: McGuffey's Sixth Reader
+    from: 13
+    to: 99
+    rep: 1
+- key: spelling
+  name: Phonics and spelling
+  icon: ✏️
+  on_ages: [[4, 12]]
+  rank: [[7, 3], [12, 11], [99, 160]]
+  mins: [[7, 60], [99, 60]]
+  hw: [[99, 5]]
+  courses:
+  - key: webster
+    data: hs_webster
+    url: /homeschool/spelling-and-grammar/webster/
+    name: Webster's Speller
+    from: 4
+    to: 8
+    rep: 1.5
+  - key: mcg-speller
+    data: hs_mcg_speller
+    url: /homeschool/mcguffey/speller/
+    name: McGuffey's Speller
+    from: 8
+    to: 99
+    rep: 1
+  - key: ar-phonics-reading-boot-camp
+    ar: phonics-reading-boot-camp
+    url: /homeschool/actual-reading/phonics-reading-boot-camp/
+    name: Phonics Reading Boot Camp (Hannah Ward), for older learners
+    from: 9
+    to: 99
+    rep: 1
+    mins: 20
+    alt: true
+- key: handwriting
+  name: Handwriting
+  icon: ✒️
+  on_ages: [[5, 9]]
+  rank: [[7, 4], [10, 16], [99, 175]]
+  mins: [[99, 45]]
+  hw: [[99, 0]]
+  note: Print, then cursive, on the Writing & Grammar Ladder. The Palmer Method is the classic choice in the Book menu.
+  courses:
+  - key: wr-hand
+    ladder: writing
+    lc: hand
+    from: 5
+    to: 99
+    rep: 1
+    mins: 35
+  - key: palmer
+    data: hs_palmer
+    url: /homeschool/writing/palmer-method/
+    name: The Palmer Method
+    from: 8
+    to: 99
+    rep: 1
+    alt: true
+- key: literature
+  name: 'Literature: American Pioneer'
+  icon: 🛶
+  on_ages: [[6, 8]]
+  rank: [[7, 8], [8, 13], [99, 150]]
+  mins: [[99, 125]]
+  hw: [[99, 10]]
+  courses:
+  - key: ar-american-pioneer-level-1
+    ar: american-pioneer-level-1
+    url: /homeschool/actual-reading/american-pioneer-level-1/
+    name: American Pioneer, Level 1 (Hannah Ward)
+    from: 6
+    to: 99
+    rep: 1
+    mins: 25
+- key: bio
+  name: Biology Ladder
+  icon: 🌿
+  on_ages: [[6, 8], [11, 11], [14, 14]]
+  rank: [[7, 9], [12, 4], [99, 3]]
+  replaces: [science]
+  mins: [[8, 45], [12, 120], [99, 150]]
+  hw: [[8, 0], [99, 10]]
+  note: 'Age 5 to college: seeds, animals and habitats read aloud, then cells, genes, evolution and ecosystems.'
+  courses:
+  - key: bi-practice
+    name: Today's Biology Ladder practice
+    practice: /biology/practice
+    url: /biology/practice/
+    sessions: 180
+    w: Session
+    from: 5
+    to: 99
+    rep: 1
+    mins: 15
+    alt: true
+  - key: bi-lifek
+    ladder: bio
+    lc: lifek
+    from: 5
+    to: 8
+    rep: 1
+    mins: 30
+  - key: bi-lifesci
+    ladder: bio
+    lc: lifesci
+    from: 9
+    to: 13
+    rep: 1
+    mins: 55
+  - key: bi-hsbio
+    ladder: bio
+    lc: hsbio
+    from: 14
+    to: 15
+    rep: 1
+    mins: 65
+  - key: bi-apbio
+    ladder: bio
+    lc: apbio
+    from: 16
+    to: 99
+    rep: 1
+    mins: 110
+- key: chemistry
+  name: Chemistry Ladder
+  icon: ⚗️
+  on_ages: [[15, 15]]
+  rank: [[7, 196], [12, 40], [99, 3]]
+  replaces: [science]
+  mins: [[13, 105], [99, 150]]
+  hw: [[99, 10]]
+  note: 'High school to college: atoms, bonds, moles and reactions, with practice that checks every step.'
+  courses:
+  - key: ch-practice
+    name: Today's Chemistry Ladder practice
+    practice: /chemistry/practice
+    url: /chemistry/practice/
+    sessions: 180
+    w: Session
     from: 14
     to: 99
     rep: 1
+    mins: 20
+    alt: true
+  - key: ch-chem
+    ladder: chemistry
+    lc: chem
+    from: 14
+    to: 16
+    rep: 1
+    mins: 60
+  - key: ch-gchem1
+    ladder: chemistry
+    lc: gchem1
+    from: 17
+    to: 99
+    rep: 1
+    mins: 75
+  - key: ch-gchem2
+    ladder: chemistry
+    lc: gchem2
+    from: 17
+    to: 99
+    rep: 1
+    mins: 75
 - key: physics
   name: Physics Ladder
   icon: 🪐
-  more: true
-  start: 99
-  replaces:
-  - science
-  mins:
-  - - 13
-    - 105
-  - - 99
-    - 150
-  hw:
-  - - 99
-    - 10
-  note: "Grade 8 to college. Each lesson is a ladder topic with practice. The Science Lab units are hands-on simulations to add or use on their own."
+  on_ages: [[13, 13], [16, 99]]
+  rank: [[7, 195], [12, 30], [99, 3]]
+  replaces: [science]
+  mins: [[13, 105], [99, 150]]
+  hw: [[99, 10]]
+  note: Physical Science, then Physics 1 and 2, then college physics. Each lesson is a ladder topic with practice. The Science Lab units are hands-on simulations to add or use on their own.
   courses:
   - key: ph-practice
-    name: "Today's Physics Ladder practice"
+    name: Today's Physics Ladder practice
     practice: /physics/practice
     url: /physics/practice/
     sessions: 180
@@ -733,74 +647,18 @@ subjects:
     rep: 1
     mins: 90
     alt: true
-- key: chemistry
-  name: Chemistry Ladder
-  icon: ⚗️
-  more: true
-  start: 99
-  replaces:
-  - science
-  mins:
-  - - 13
-    - 105
-  - - 99
-    - 150
-  hw:
-  - - 99
-    - 10
-  note: "High school to college: atoms, bonds, moles and reactions, with practice that checks every step."
-  courses:
-  - key: ch-practice
-    name: "Today's Chemistry Ladder practice"
-    practice: /chemistry/practice
-    url: /chemistry/practice/
-    sessions: 180
-    w: Session
-    from: 14
-    to: 99
-    rep: 1
-    mins: 20
-    alt: true
-  - key: ch-chem
-    ladder: chemistry
-    lc: chem
-    from: 14
-    to: 16
-    rep: 1
-    mins: 60
-  - key: ch-gchem1
-    ladder: chemistry
-    lc: gchem1
-    from: 17
-    to: 99
-    rep: 1
-    mins: 75
-  - key: ch-gchem2
-    ladder: chemistry
-    lc: gchem2
-    from: 17
-    to: 99
-    rep: 1
-    mins: 75
 - key: earthspace
   name: Earth & Space Ladder
   icon: 🌋
-  more: true
-  start: 99
-  replaces:
-  - science
-  mins:
-  - - 13
-    - 105
-  - - 99
-    - 150
-  hw:
-  - - 99
-    - 10
-  note: "Middle school to college: rocks, plates and volcanoes, oceans, weather and climate, and the planets."
+  on_ages: [[12, 12]]
+  rank: [[7, 197], [10, 50], [12, 5], [99, 3]]
+  replaces: [science]
+  mins: [[13, 105], [99, 150]]
+  hw: [[99, 10]]
+  note: 'Middle school to college: rocks, plates and volcanoes, oceans, weather and climate, and the planets.'
   courses:
   - key: es-practice
-    name: "Today's Earth & Space Ladder practice"
+    name: Today's Earth & Space Ladder practice
     practice: /earth-and-space/practice
     url: /earth-and-space/practice/
     sessions: 180
@@ -831,21 +689,297 @@ subjects:
     to: 99
     rep: 1
     mins: 80
+- key: science
+  name: Science
+  icon: 🔭
+  on_ages: [[9, 10]]
+  rank: [[8, 205], [10, 6], [99, 205]]
+  mins: [[8, 60], [11, 90], [13, 105], [99, 150]]
+  hw: [[11, 5], [99, 15]]
+  note: The classic science books. The Biology, Physics, Chemistry and Earth & Space Ladders take over where they have a course for the age.
+  courses:
+  - key: fairy-land
+    data: hs_fairyland
+    url: /homeschool/science/fairy-land-of-science/
+    name: The Fairy-Land of Science
+    from: 7
+    to: 8
+    rep: 1
+  - key: sun-moon-stars
+    data: hs_giberne_stars
+    url: /homeschool/science/sun-moon-and-stars/
+    name: Sun, Moon, and Stars (astronomy)
+    from: 9
+    to: 10
+    rep: 1
+  - key: worlds-foundations
+    data: hs_giberne_geology
+    url: /homeschool/science/worlds-foundations/
+    name: The World's Foundations (geology)
+    from: 11
+    to: 11
+    rep: 1
+  - key: candle
+    data: hs_candle
+    url: /homeschool/science/chemical-history-of-a-candle/
+    name: The Chemical History of a Candle (chemistry)
+    from: 12
+    to: 13
+    rep: 1
+  - key: millikan
+    data: hs_millikan
+    url: /homeschool/science/first-course-in-physics/
+    name: A First Course in Physics
+    from: 14
+    to: 99
+    rep: 1
+- key: lab
+  name: Science Lab
+  icon: 🔬
+  on_ages: [[8, 14]]
+  rank: [[7, 185], [12, 13], [99, 20]]
+  mins: [[99, 40]]
+  hw: [[99, 0]]
+  note: 'Play with the simulations: one idea a session, a different lab each time, with the ladder lesson it goes with. Forty minutes a week is two sessions; raise it for more.'
+  courses:
+  - key: lab-young
+    lab: young
+    url: /science-lab/
+    name: Science Lab play, ages 8 to 12
+    bar: Lab play
+    w: Session
+    whole: true
+    from: 8
+    to: 12
+    rep: 1
+    mins: 20
+  - key: lab-teen
+    lab: teen
+    url: /science-lab/
+    name: Science Lab play, 13 and up
+    bar: Lab play
+    w: Session
+    whole: true
+    from: 13
+    to: 99
+    rep: 1
+    mins: 25
+- key: civics
+  name: History & Civics
+  icon: 🗽
+  on_ages: [[6, 8], [13, 99]]
+  rank: [[7, 10], [12, 7], [99, 5]]
+  replaces: [history]
+  mins: [[8, 45], [99, 150]]
+  hw: [[8, 0], [99, 10]]
+  note: 'Age 5 to law school: the American story for young learners, U.S. History I and II, civics and government, then law. Famous Men of Greece and Rome are under History.'
+  courses:
+  - key: cv-practice
+    name: Today's History & Civics Ladder practice
+    practice: /american-history/practice
+    url: /american-history/practice/
+    sessions: 180
+    w: Session
+    from: 5
+    to: 99
+    rep: 1
+    mins: 15
+    alt: true
+  - key: cv-usyoung
+    ladder: civics
+    lc: usyoung
+    from: 5
+    to: 8
+    rep: 1
+    mins: 35
+  - key: cv-ush1
+    ladder: civics
+    lc: ush1
+    from: 9
+    to: 14
+    rep: 1
+    mins: 80
+  - key: cv-ush2
+    ladder: civics
+    lc: ush2
+    from: 15
+    to: 15
+    rep: 1
+    mins: 100
+  - key: cv-gov
+    ladder: civics
+    lc: gov
+    from: 16
+    to: 17
+    rep: 1
+    mins: 70
+  - key: cv-law
+    ladder: civics
+    lc: law
+    from: 18
+    to: 99
+    rep: 1
+    mins: 130
+  - key: cv-conlaw1
+    ladder: civics
+    lc: conlaw1
+    from: 18
+    to: 99
+    rep: 1
+    mins: 125
+  - key: cv-conlaw2
+    ladder: civics
+    lc: conlaw2
+    from: 18
+    to: 99
+    rep: 1
+    mins: 110
+- key: history
+  name: History
+  icon: 🏺
+  on_ages: [[9, 12]]
+  rank: [[8, 190], [12, 8], [99, 190]]
+  mins: [[10, 75], [99, 90]]
+  hw: [[99, 10]]
+  note: Famous Men of Greece, Rome and the Middle Ages. The History & Civics Ladder takes over for ages 5 to 8 and 13 and up.
+  courses:
+  - key: fm-greece
+    data: hs_fmgreece
+    url: /homeschool/history/famous-men-of-greece/
+    name: Famous Men of Greece
+    from: 8
+    to: 9
+    rep: 1
+  - key: fm-rome
+    data: hs_fmrome
+    url: /homeschool/history/famous-men-of-rome/
+    name: Famous Men of Rome
+    from: 10
+    to: 10
+    rep: 1
+  - key: fm-middle-ages
+    data: hs_fmma
+    url: /homeschool/history/famous-men-of-the-middle-ages/
+    name: Famous Men of the Middle Ages
+    from: 11
+    to: 99
+    rep: 1
+- key: nature
+  name: Nature study
+  icon: 🌿
+  on_ages: [[6, 12]]
+  rank: [[7, 7], [12, 12], [99, 170]]
+  mins: [[99, 60]]
+  hw: [[99, 0]]
+  courses:
+  - key: comstock
+    data: hs_comstock
+    url: /homeschool/nature-study/handbook-of-nature-study/
+    name: Comstock's Handbook of Nature-Study
+    from: 6
+    to: 99
+    rep: 1
+- key: geography
+  name: Geography
+  icon: 🧭
+  on_ages: [[7, 10]]
+  rank: [[6, 180], [10, 15], [99, 180]]
+  mins: [[99, 50]]
+  hw: [[99, 0]]
+  courses:
+  - key: home-geography
+    data: hs_long_geography
+    url: /homeschool/geography/home-geography/
+    name: Long's Home Geography
+    from: 7
+    to: 99
+    rep: 1
+- key: vocab
+  name: Vocabulary Ladder
+  icon: 📖
+  on_ages: [[11, 99]]
+  rank: [[8, 165], [10, 40], [12, 9], [99, 6]]
+  mins: [[99, 60]]
+  hw: [[99, 10]]
+  note: 'Grade 6 to adult: the Greek and Latin roots, then 1,000 advanced words with pictures and memory hooks, ten words a topic.'
+  courses:
+  - key: vo-practice
+    name: Today's Vocabulary Ladder practice
+    practice: /vocabulary/practice
+    url: /vocabulary/practice/
+    sessions: 180
+    w: Session
+    from: 11
+    to: 99
+    rep: 1
+    mins: 10
+    alt: true
+  - key: vo-roots
+    ladder: vocab
+    lc: roots
+    from: 11
+    to: 13
+    rep: 1
+    mins: 20
+  - key: vo-adv
+    ladder: vocab
+    lc: adv
+    from: 14
+    to: 99
+    rep: 1
+    mins: 20
+- key: logic
+  name: Logic Ladder
+  icon: 🦉
+  on_ages: [[13, 99]]
+  rank: [[11, 235], [12, 30], [99, 7]]
+  mins: [[99, 120]]
+  hw: [[99, 10]]
+  note: 'Grade 7 to college: informal logic and the fallacies, traditional logic with syllogisms, then symbolic logic with truth tables and proofs.'
+  courses:
+  - key: lg-practice
+    name: Today's Logic Ladder practice
+    practice: /logic/practice
+    url: /logic/practice/
+    sessions: 180
+    w: Session
+    from: 12
+    to: 99
+    rep: 1
+    mins: 20
+    alt: true
+  - key: lg-informal
+    ladder: logic
+    lc: informal
+    from: 12
+    to: 13
+    rep: 1
+    mins: 40
+  - key: lg-trad
+    ladder: logic
+    lc: trad
+    from: 14
+    to: 15
+    rep: 1
+    mins: 45
+  - key: lg-sym
+    ladder: logic
+    lc: sym
+    from: 16
+    to: 99
+    rep: 1
+    mins: 60
 - key: economics
   name: Economics Ladder
   icon: ⚖️
-  more: true
-  start: 99
-  mins:
-  - - 99
-    - 150
-  hw:
-  - - 99
-    - 10
-  note: "High school to college: microeconomics, macroeconomics and calculus-based micro, then Game Theory and Econometrics."
+  on_ages: [[17, 99]]
+  rank: [[12, 245], [99, 8]]
+  mins: [[99, 150]]
+  hw: [[99, 10]]
+  note: 'High school to college: microeconomics, macroeconomics and calculus-based micro, then Game Theory and Econometrics.'
   courses:
   - key: ec-practice
-    name: "Today's Economics Ladder practice"
+    name: Today's Economics Ladder practice
     practice: /economics/practice
     url: /economics/practice/
     sessions: 180
@@ -890,66 +1024,138 @@ subjects:
     to: 99
     rep: 1
     mins: 150
-- key: logic
-  name: Logic Ladder
-  icon: 🦉
-  more: true
-  start: 99
-  mins:
-  - - 99
-    - 120
-  hw:
-  - - 99
-    - 10
-  note: "Grade 7 to college: informal logic and the fallacies, traditional logic with syllogisms, then symbolic logic with truth tables and proofs."
+- key: debate
+  name: Debate
+  icon: 🎤
+  on_ages: [[15, 99]]
+  rank: [[11, 255], [99, 9]]
+  mins: [[99, 90]]
+  hw: [[99, 10]]
+  note: Learn to Debate chapter by chapter, then a practice drill each school day. Debate topics, with both sides of each resolution, are in the Book menu. Pairs well with the Logic Ladder.
   courses:
-  - key: lg-practice
-    name: "Today's Logic Ladder practice"
-    practice: /logic/practice
-    url: /logic/practice/
-    sessions: 180
+  - key: db-learn
+    section: /debate/learn
+    name: Learn to Debate
+    w: Chapter
+    from: 12
+    to: 99
+    rep: 1
+    mins: 45
+  - key: db-drills
+    name: Debate practice drills
+    practice: /debate/tools/drills
+    url: /debate/tools/drills/
+    sessions: 90
     w: Session
     from: 12
     to: 99
     rep: 1
-    mins: 20
-    alt: true
-  - key: lg-informal
-    ladder: logic
-    lc: informal
+    mins: 15
+  - key: db-topics
+    section: /debate/topics
+    name: 'Debate topics: both sides'
+    bar: Both sides
+    w: Topic
     from: 12
-    to: 13
-    rep: 1
-    mins: 40
-  - key: lg-trad
-    ladder: logic
-    lc: trad
-    from: 14
-    to: 15
-    rep: 1
-    mins: 45
-  - key: lg-sym
-    ladder: logic
-    lc: sym
-    from: 16
     to: 99
     rep: 1
     mins: 60
+    alt: true
+- key: testprep
+  name: Test Prep
+  icon: 📝
+  on_ages: [[16, 17]]
+  rank: [[12, 265], [14, 60], [99, 10]]
+  mins: [[99, 75]]
+  hw: [[99, 0]]
+  note: 'Practice for the SAT, ACT and CLT: one timed set a school day, math and then reading and grammar.'
+  courses:
+  - key: tp-sat
+    name: SAT Math practice (Test Prep)
+    practice: /test-prep/sat-math
+    url: /test-prep/sat-math/
+    sessions: 60
+    w: Session
+    from: 15
+    to: 99
+    rep: 1
+    mins: 30
+  - key: tp-verbal
+    name: Reading, writing and grammar practice (SAT, ACT and CLT)
+    practice: /test-prep/grammar
+    url: /test-prep/grammar/
+    sessions: 60
+    w: Session
+    from: 15
+    to: 99
+    rep: 1
+    mins: 30
+  - key: tp-act
+    name: ACT Math practice (Test Prep)
+    practice: /test-prep/act-math
+    url: /test-prep/act-math/
+    sessions: 60
+    w: Session
+    from: 15
+    to: 99
+    rep: 1
+    mins: 30
+    alt: true
+  - key: tp-clt
+    name: CLT Quantitative practice (Test Prep)
+    practice: /test-prep/clt-quantitative
+    url: /test-prep/clt-quantitative/
+    sessions: 60
+    w: Session
+    from: 14
+    to: 99
+    rep: 1
+    mins: 30
+    alt: true
+- key: harvard
+  name: Harvard Classics Daily
+  icon: 📚
+  on_ages: [[16, 99]]
+  rank: [[12, 240], [99, 11]]
+  mins: [[99, 75]]
+  hw: [[99, 0]]
+  note: 'High school to adult: fifteen minutes a day from Dr. Eliot''s Five Foot Shelf, one reading for each school day in the guide''s order.'
+  courses:
+  - key: hc-daily
+    section: /harvard-classics/days
+    name: The daily readings
+    url: /harvard-classics/calendar/
+    w: Day
+    from: 14
+    to: 99
+    rep: 1
+    mins: 15
+- key: latin
+  name: Latin
+  icon: 🏛️
+  on_ages: [[10, 99]]
+  rank: [[9, 140], [12, 10], [99, 12]]
+  mins: [[99, 120]]
+  hw: [[99, 15]]
+  courses:
+  - key: dooge
+    data: hs_dooge
+    url: /homeschool/latin/latin-for-beginners/
+    name: D'Ooge's Latin for Beginners
+    from: 10
+    to: 99
+    rep: 1.5
 - key: etiquette
   name: Etiquette Ladder
   icon: 🤝
-  more: true
-  start: 99
-  mins:
-  - - 99
-    - 60
-  hw:
-  - - 99
-    - 5
-  note: "Age 4 to adult: please and thank you and the family table (read aloud), then conversation, guests and notes, then formal dining, work and life's big occasions."
+  on_ages: [[4, 13]]
+  rank: [[7, 11], [12, 18], [99, 30]]
+  mins: [[99, 60]]
+  hw: [[99, 5]]
+  note: 'Age 4 to adult: please and thank you and the family table (read aloud), then conversation, guests and notes, then formal dining, work and life''s big occasions.'
   courses:
   - key: et-practice
-    name: "Today's Etiquette Ladder practice"
+    name: Today's Etiquette Ladder practice
     practice: /etiquette/practice
     url: /etiquette/practice/
     sessions: 180
@@ -983,18 +1189,14 @@ subjects:
 - key: egypt
   name: Egyptology Ladder
   icon: 🏺
-  more: true
-  start: 99
-  mins:
-  - - 99
-    - 90
-  hw:
-  - - 99
-    - 10
-  note: "Age 8 to college: a first course for young explorers, then the history, religion and art, archaeology, and two courses reading Middle Egyptian hieroglyphs."
+  on_ages: []
+  rank: [[7, 250], [99, 110]]
+  mins: [[99, 90]]
+  hw: [[99, 10]]
+  note: 'Age 8 to college: a first course for young explorers, then the history, religion and art, archaeology, and two courses reading Middle Egyptian hieroglyphs.'
   courses:
   - key: eg-practice
-    name: "Today's Egyptology Ladder practice"
+    name: Today's Egyptology Ladder practice
     practice: /egyptology/practice
     url: /egyptology/practice/
     sessions: 180
@@ -1050,18 +1252,14 @@ subjects:
 - key: scripts
   name: Ancient Scripts Ladder
   icon: 📜
-  more: true
-  start: 99
-  mins:
-  - - 99
-    - 60
-  hw:
-  - - 99
-    - 10
-  note: "High school to college: Linear A and Linear B, the Bronze Age Aegean, the decipherment and the oldest written Greek."
+  on_ages: []
+  rank: [[13, 260], [99, 115]]
+  mins: [[99, 60]]
+  hw: [[99, 10]]
+  note: 'High school to college: Linear A and Linear B, the Bronze Age Aegean, the decipherment and the oldest written Greek.'
   courses:
   - key: sc-practice
-    name: "Today's Ancient Scripts Ladder practice"
+    name: Today's Ancient Scripts Ladder practice
     practice: /ancient-scripts/practice
     url: /ancient-scripts/practice/
     sessions: 180
@@ -1078,206 +1276,14 @@ subjects:
     to: 99
     rep: 1
     mins: 45
-- key: vocab
-  name: Vocabulary Ladder
-  icon: 📖
-  more: true
-  start: 99
-  mins:
-  - - 99
-    - 60
-  hw:
-  - - 99
-    - 10
-  note: "Grade 6 to adult: the Greek and Latin roots, then 1,000 advanced words with pictures and memory hooks, ten words a topic."
-  courses:
-  - key: vo-practice
-    name: "Today's Vocabulary Ladder practice"
-    practice: /vocabulary/practice
-    url: /vocabulary/practice/
-    sessions: 180
-    w: Session
-    from: 11
-    to: 99
-    rep: 1
-    mins: 10
-    alt: true
-  - key: vo-roots
-    ladder: vocab
-    lc: roots
-    from: 11
-    to: 12
-    rep: 1
-    mins: 20
-  - key: vo-adv
-    ladder: vocab
-    lc: adv
-    from: 13
-    to: 99
-    rep: 1
-    mins: 20
-- key: harvard
-  name: Harvard Classics Daily
-  icon: 📚
-  more: true
-  start: 99
-  mins:
-  - - 99
-    - 75
-  hw:
-  - - 99
-    - 0
-  note: "High school to adult: fifteen minutes a day from Dr. Eliot's Five Foot Shelf, one reading for each school day in the guide's order."
-  courses:
-  - key: hc-daily
-    section: /harvard-classics/days
-    name: "The daily readings"
-    url: /harvard-classics/calendar/
-    w: Day
-    from: 14
-    to: 99
-    rep: 1
-    mins: 15
-- key: nature
-  name: Nature study
-  icon: 🌿
-  start: 6
-  until: 12
-  mins:
-  - - 99
-    - 60
-  hw:
-  - - 99
-    - 0
-  courses:
-  - key: comstock
-    data: hs_comstock
-    url: /homeschool/nature-study/handbook-of-nature-study/
-    name: Comstock's Handbook of Nature-Study
-    from: 6
-    to: 99
-    rep: 1
-- key: history
-  name: History
-  icon: 🏺
-  start: 8
-  mins:
-  - - 10
-    - 75
-  - - 99
-    - 90
-  hw:
-  - - 99
-    - 10
-  courses:
-  - key: fm-greece
-    data: hs_fmgreece
-    url: /homeschool/history/famous-men-of-greece/
-    name: Famous Men of Greece
-    from: 8
-    to: 9
-    rep: 1
-  - key: fm-rome
-    data: hs_fmrome
-    url: /homeschool/history/famous-men-of-rome/
-    name: Famous Men of Rome
-    from: 10
-    to: 10
-    rep: 1
-  - key: fm-middle-ages
-    data: hs_fmma
-    url: /homeschool/history/famous-men-of-the-middle-ages/
-    name: Famous Men of the Middle Ages
-    from: 11
-    to: 99
-    rep: 1
-- key: geography
-  name: Geography
-  icon: 🧭
-  start: 7
-  until: 10
-  mins:
-  - - 99
-    - 50
-  hw:
-  - - 99
-    - 0
-  courses:
-  - key: home-geography
-    data: hs_long_geography
-    url: /homeschool/geography/home-geography/
-    name: Long's Home Geography
-    from: 7
-    to: 99
-    rep: 1
-- key: latin
-  name: Latin
-  icon: 🏛️
-  start: 10
-  mins:
-  - - 99
-    - 120
-  courses:
-  - key: dooge
-    data: hs_dooge
-    url: /homeschool/latin/latin-for-beginners/
-    name: D'Ooge's Latin for Beginners
-    from: 10
-    to: 99
-    rep: 1.5
-  hw:
-  - - 99
-    - 15
-- key: asl
-  name: Sign language (ASL)
-  icon: 🤟
-  start: 99
-  mins:
-  - - 99
-    - 60
-  hw:
-  - - 99
-    - 10
-  courses:
-  - key: lifeprint
-    ext: hs_lifeprint
-    url: /asl/
-    name: Lifeprint ASL (Dr. Bill Vicars)
-    from: 6
-    to: 99
-    rep: 1
-    mins: 30
-  - key: asl-fingerspelling
-    name: Fingerspelling practice (on this site)
-    practice: /asl/fingerspelling
-    url: /asl/fingerspelling/
-    sessions: 120
-    w: Session
-    from: 6
-    to: 99
-    rep: 1
-    mins: 10
-    alt: true
 - key: music
   name: Music
   icon: 🎹
-  more: true
-  start: 99
-  mins:
-  - - 5
-    - 30
-  - - 8
-    - 45
-  - - 99
-    - 60
-  hw:
-  - - 5
-    - 5
-  - - 8
-    - 10
-  - - 99
-    - 15
-  note: "For every age: Piano Basics, then Reading Music, then songs; or choose Guitar, Ukulele or Banjo instead of piano. Study time is practice on the instrument, ten or fifteen minutes most days. The keys on the screen work if you have no piano yet."
+  on_ages: []
+  rank: [[99, 220]]
+  mins: [[5, 30], [8, 45], [99, 60]]
+  hw: [[5, 5], [8, 10], [99, 15]]
+  note: 'For every age: Piano Basics, then Reading Music, then songs; or choose Guitar, Ukulele or Banjo instead of piano. Study time is practice on the instrument, ten or fifteen minutes most days. The keys on the screen work if you have no piano yet.'
   courses:
   - key: mus-piano-basics
     section: /music/piano-basics
@@ -1332,25 +1338,44 @@ subjects:
     to: 99
     rep: 1
     mins: 15
+- key: asl
+  name: Sign language (ASL)
+  icon: 🤟
+  on_ages: []
+  rank: [[99, 230]]
+  mins: [[99, 60]]
+  hw: [[99, 10]]
+  courses:
+  - key: lifeprint
+    ext: hs_lifeprint
+    url: /asl/
+    name: Lifeprint ASL (Dr. Bill Vicars)
+    from: 6
+    to: 99
+    rep: 1
+    mins: 30
+  - key: asl-fingerspelling
+    name: Fingerspelling practice (on this site)
+    practice: /asl/fingerspelling
+    url: /asl/fingerspelling/
+    sessions: 120
+    w: Session
+    from: 6
+    to: 99
+    rep: 1
+    mins: 10
+    alt: true
 - key: lifeskills
   name: 'Life skills: Being an Adult 101 and the Trades'
   icon: 🧰
-  more: true
-  start: 99
-  mins:
-  - - 99
-    - 60
-  hw:
-  - - 99
-    - 0
-  note: "Real-world jobs done together: fix a running toilet, check the oil, make a budget. Then how houses and cars work, trade by trade."
+  on_ages: []
+  rank: [[12, 225], [99, 120]]
+  mins: [[99, 60]]
+  hw: [[99, 0]]
+  note: 'Real-world jobs done together: fix a running toilet, check the oil, make a budget. Then how houses and cars work, trade by trade.'
   courses:
   - key: adult-101
-    adult:
-    - house
-    - car
-    - money
-    - everyday
+    adult: [house, car, money, everyday]
     url: /being-an-adult/
     name: Being an Adult 101
     w: Guide
@@ -1393,3 +1418,95 @@ subjects:
     to: 99
     rep: 1
     mins: 60
+- key: arithmetic
+  name: Arithmetic
+  icon: 🧮
+  on_ages: []
+  rank: [[99, 200]]
+  mins: [[6, 75], [8, 100], [11, 150], [99, 180]]
+  hw: [[7, 5], [10, 10], [99, 15]]
+  note: Ray's Arithmetic (1877), an option beside the Math Ladder. Switching the Math Ladder on switches this off; switch it back on to do both.
+  courses:
+  - key: primary
+    data: rays_primary
+    url: /homeschool/rays-arithmetic/primary/
+    name: Ray's Primary Arithmetic
+    from: 4
+    to: 7
+    rep: 2
+  - key: intellectual
+    data: rays_intellectual
+    url: /homeschool/rays-arithmetic/intellectual/
+    name: Ray's Intellectual Arithmetic
+    from: 7
+    to: 9
+    rep: 2
+  - key: practical
+    data: rays_practical
+    url: /homeschool/rays-arithmetic/practical/
+    name: Ray's Practical Arithmetic
+    from: 9
+    to: 12
+    rep: 1.5
+  - key: higher
+    data: rays_higher
+    url: /homeschool/rays-arithmetic/higher/
+    name: Ray's Higher Arithmetic
+    from: 12
+    to: 99
+    rep: 1.5
+- key: higher-math
+  name: Algebra and geometry
+  icon: 📐
+  on_ages: []
+  rank: [[99, 201]]
+  mins: [[99, 150]]
+  hw: [[99, 20]]
+  note: Ray's Algebra and Wentworth's Geometry, options beside the Math Ladder.
+  courses:
+  - key: algebra
+    data: rays_algebra
+    url: /homeschool/rays-arithmetic/algebra/
+    name: Ray's Elementary Algebra
+    from: 12
+    to: 14
+    rep: 1.5
+  - key: wentworth
+    data: hs_wentworth
+    url: /homeschool/geometry/wentworth/
+    name: Wentworth's Geometry
+    from: 14
+    to: 99
+    rep: 1.5
+- key: grammar
+  name: Grammar and composition
+  icon: 📝
+  on_ages: []
+  rank: [[99, 210]]
+  mins: [[99, 75]]
+  hw: [[99, 10]]
+  note: Harvey's 1880 grammar, an option beside the Writing & Grammar Ladder. Switching the ladder on switches this off; switch it back on to do both.
+  courses:
+  - key: harvey-elem
+    data: hs_harvey
+    url: /homeschool/spelling-and-grammar/harvey/
+    name: Harvey's Elementary Grammar
+    from: 9
+    to: 99
+    rep: 1.5
+- key: composition
+  name: Composition
+  icon: ✍️
+  on_ages: []
+  rank: [[99, 211]]
+  mins: [[99, 75]]
+  hw: [[99, 10]]
+  note: The Mother Tongue (1900), an option beside the Writing & Grammar Ladder.
+  courses:
+  - key: mother-tongue
+    data: hs_mother_tongue
+    url: /homeschool/writing/mother-tongue/
+    name: The Mother Tongue, Book One
+    from: 9
+    to: 99
+    rep: 1

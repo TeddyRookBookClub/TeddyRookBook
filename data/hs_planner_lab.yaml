@@ -1,0 +1,214 @@
+# Science Lab play ideas for the lesson planner (layouts/homeschool/planner.html, "lab" courses in data/hs_planner.yaml).
+# Each lab: key, name (shown before each idea), url (the simulation page; left out if the page isn't in the build),
+#   young (ages 8 to 12) and teen (13 and up): ideas, each { t: the prompt, pair: <ladder key>/<course key>/<topic slug> }.
+#   pair is optional: the ladder topic the idea goes with (left out if that topic isn't in the build).
+# The planner deals the ideas out in turns, one lab after another (first idea of every lab, then the second, and so on),
+# so each session uses a different simulation. Everything happens on screen: the simulations are the lab.
+labs:
+- key: orbits
+  name: Orbit Lab
+  url: /science-lab/orbits/
+  young:
+  - { t: "Fire Newton's cannon slowly, then faster and faster. What speed sends the ball all the way around the world?", pair: earth/earthsci/gravity-orbits }
+  - { t: "Make a stretched, egg-shaped orbit. Where is the satellite fastest: close to Earth or far away?", pair: physics/physsci/gravity-mass-distance }
+  - { t: "Put a satellite in a nearly round orbit low over Earth. How long does one lap take?" }
+  - { t: "Fly from the parking orbit to the Moon and pass close by it. How many tries did it take?", pair: earth/earthsci/solar-system-scale }
+  - { t: "Go so fast that Earth can never pull you back. Write down the speed it took." }
+  teen:
+  - { t: "Fly one lap of a small orbit, then one at least twice as big. Compare the periods: do they fit Kepler's third law?", pair: physics/astro/kepler-third-law }
+  - { t: "Turn on the equal-area slices and fly an orbit with eccentricity 0.5 or more. Why are the slices near Earth short and wide?", pair: physics/astro/kepler-second-law }
+  - { t: "Find the orbit that takes one sidereal day and hangs over one spot. How high is it?", pair: physics/phys1/orbiting-satellites }
+  - { t: "Leave Earth for good. Compare your speed with the escape speed you work out on paper.", pair: physics/astro/orbits-escape }
+  - { t: "Swing past a planet and leave at least 1 km/s faster, measured from the Sun. Where did the extra speed come from?", pair: physics/phys1/elastic-collisions }
+- key: rocket
+  name: Rocket Builder
+  url: /science-lab/rocket/
+  young:
+  - { t: "Build a rocket that only just leaves the ground. What happens when the thrust is less than the weight?", pair: physics/physsci/net-force }
+  - { t: "Cross the Kármán line, 100 km up, with the smallest rocket you can build." }
+  - { t: "Fly straight up past 400 km, as high as the space station. Does the rocket stay up there?", pair: earth/earthsci/gravity-orbits }
+  - { t: "Fly the same parts as one stage, then as two stages. Which goes farther?" }
+  - { t: "Reach orbit. Watch the path: how much of the trip is sideways?", pair: physics/physsci/first-law-inertia }
+  teen:
+  - { t: "Fly the same parts as one stage, then as two. Use the rocket equation to explain the difference.", pair: physics/phys1/momentum-conservation }
+  - { t: "Try kerosene and then hydrogen in the same rocket. Which gets more speed from each kilogram of fuel, and why?", pair: physics/phys1/explosions-recoil }
+  - { t: "Reach orbit with the low point above 150 km. How fast are you going sideways when you get there?", pair: physics/phys1/orbiting-satellites }
+  - { t: "Put the 5-ton large satellite in orbit with a liftoff mass under 110 tons." }
+  - { t: "Leave Earth for good. How much more speed did it take than a low orbit?", pair: physics/astro/orbits-escape }
+- key: trebuchet
+  name: Trebuchet Workshop
+  url: /science-lab/trebuchet/
+  young:
+  - { t: "Move the tower to 100 m and hit it. Did you need a lighter or a heavier counterweight?", pair: physics/physsci/levers }
+  - { t: "Watch the energy as the weight falls. Where does it go?", pair: physics/physsci/energy-conservation-intro }
+  - { t: "Hit the tower at 200 m by changing only the counterweight.", pair: physics/physsci/potential-energy }
+  - { t: "Fire a hinged and a fixed counterweight on the same machine. Which throws farther?", pair: physics/physsci/simple-machines }
+  - { t: "Throw at 45°, then a little lower, with air drag on. Which angle goes farthest?" }
+  teen:
+  - { t: "Change only the release angle until the throw is within 0.5% of the farthest it can go.", pair: physics/phys1/projectile-angled }
+  - { t: "With air drag on, beat the 45° throw by 2 m using a lower angle. Explain why drag lowers the best angle.", pair: physics/phys1/projectile-angled }
+  - { t: "Put more than 60% of the stored energy into the stone. Where does the rest end up?", pair: physics/phys1/energy-conservation }
+  - { t: "Try a 60 kg beam. How does the beam's spin change the efficiency?", pair: physics/phys1/rotational-kinetic-energy }
+  - { t: "With drag on, strike within half a meter of the middle of a tower at least 150 m away." }
+- key: pendulums
+  name: Pendulums and Resonance
+  url: /science-lab/pendulums/
+  young:
+  - { t: "Does a heavier bob swing faster? Give one bob 4 kg and the other 1 kg, start them together, and test it." }
+  - { t: "Watch the pendulum wave until all fifteen swing together again. How long did it take?", pair: physics/physsci/wave-parts }
+  - { t: "Push the swing by hand until it reaches 25°. When is the best moment to push?" }
+  - { t: "Join two pendulums with a spring and push only one. Watch the swing pass back and forth.", pair: physics/physsci/energy-conservation-intro }
+  - { t: "Find the length that swings from one side to the other in one second." }
+  teen:
+  - { t: "Find the length for a one-second swing, then check it with T = 2π√(L/g).", pair: physics/phys1/pendulum-period }
+  - { t: "Start the wave from 60° or more. When do the pendulums line up now, and why do big swings run slow?", pair: physics/phys1/pendulum-period }
+  - { t: "Push the swing below, near and above its own frequency, and plot three points of the resonance curve.", pair: physics/phys1/shm-energy }
+  - { t: "Couple two pendulums and time how long the swing takes to pass completely from one to the other.", pair: physics/phys1/shm-graphs }
+  - { t: "Swing a heavy and a light bob side by side. Show with F = ma why the mass cancels out." }
+- key: circuits
+  name: Circuit Builder
+  url: /science-lab/circuits/
+  young:
+  - { t: "Make one closed loop: battery, bulb and back. What happens when you break the loop?", pair: physics/physsci/circuits-intro }
+  - { t: "Put two bulbs in series, then two in parallel. Which pair glows brighter?", pair: physics/physsci/series-parallel-intro }
+  - { t: "Build a light that either of two switches can turn on." }
+  - { t: "Turn an LED around. Does it still glow?" }
+  - { t: "Add a resistor so the bulb glows dimly, between 20% and 60%.", pair: physics/physsci/ohms-law }
+  teen:
+  - { t: "Measure a resistor's voltage and current with the meters. Does V ÷ I equal R?", pair: physics/phys2/current }
+  - { t: "Work out the resistor that keeps an LED between 2 and 30 mA, then build it and test your answer.", pair: physics/phys2/series-resistors }
+  - { t: "Two bulbs in series and one alone on the same battery: predict each one's brightness from P = I²R, then check.", pair: physics/phys2/resistor-power }
+  - { t: "Add bulbs in parallel one at a time. What happens to the current from the battery?", pair: physics/phys2/parallel-resistors }
+  - { t: "Wire two switches for AND, then for OR. Write the truth table for each." }
+- key: optics
+  name: Optics Bench
+  url: /science-lab/optics/
+  young:
+  - { t: "Turn the two mirrors so the laser gets over the wall and hits the target.", pair: physics/physsci/wave-behavior }
+  - { t: "Put the prism in white light and catch a rainbow on the screen. Which color bends the most?", pair: physics/physsci/color }
+  - { t: "Shine the laser into the glass block at a slant and watch it bend.", pair: physics/physsci/refraction-intro }
+  - { t: "Focus sunlight with the lens to the smallest spot you can. How far from the lens is it?" }
+  - { t: "Move the eye around the raindrop until you find the rainbow. About what angle is it?" }
+  teen:
+  - { t: "Send the laser into the glass block at 20°, 40° and 60°. Check each bend with Snell's law.", pair: physics/phys2/snells-law }
+  - { t: "Trap the laser in the glass rod for three reflections in a row. What is the critical angle?", pair: physics/phys2/total-internal-reflection }
+  - { t: "Make a sharp image of the lamp and test the distances with 1/f = 1/dₒ + 1/dᵢ.", pair: physics/phys2/thin-lens-equation }
+  - { t: "Find the second rainbow, about 51° out. Why are its colors in the opposite order?" }
+  - { t: "Swap crown glass for dense flint glass in the prism. Which spreads the colors wider, and why?", pair: physics/phys2/index-of-refraction }
+- key: gas
+  name: Gas in a Box
+  url: /science-lab/gas/
+  young:
+  - { t: "Heat the box to 600 K. What do the atoms do?", pair: physics/physsci/heat-transfer }
+  - { t: "Push the piston in slowly. What happens to the pressure?", pair: physics/physsci/pressure }
+  - { t: "Pull out the divider between the helium and the argon and wait. Do they stay apart?", pair: bio/lifesci/diffusion-osmosis }
+  - { t: "At the same temperature, which atoms move faster, helium or argon? Watch, then guess why." }
+  - { t: "With the walls insulated, push the piston in fast. Does the gas warm up, like a bike pump?", pair: physics/physsci/work-intro }
+  teen:
+  - { t: "With the thermostat on, halve the volume. Does the pressure double?", pair: chemistry/chem/boyles-law }
+  - { t: "Keep the volume fixed and raise the temperature by half. Does the pressure rise by the same factor?", pair: chemistry/chem/combined-gas-law }
+  - { t: "Start every atom at the same speed and watch collisions spread them into the Maxwell–Boltzmann curve.", pair: chemistry/chem/kinetic-molecular-theory }
+  - { t: "Squeeze a crowded gas until its pressure is 30% above the ideal-gas prediction. Why does the ideal law miss?", pair: chemistry/chem/ideal-gas-law }
+  - { t: "Check that argon moves about three times slower than helium at the same temperature. Explain it with ½mv².", pair: physics/phys2/kinetic-theory }
+- key: chem-lab
+  name: Mixing Lab
+  url: /science-lab/chem-lab/
+  young:
+  - { t: "Test all nine everyday liquids. Which is the most acidic, and which is the most basic?", pair: chemistry/chem/ph-scale }
+  - { t: "Turn red cabbage juice three different colors." }
+  - { t: "Mix an acid and a base until the pH is close to 7.", pair: chemistry/chem/neutralization }
+  - { t: "Make the reaction run twice as fast as at the start. What did you change?", pair: chemistry/chem/collision-theory }
+  - { t: "Add water to an acid. Does its pH go up or down?", pair: chemistry/chem/dilution }
+  teen:
+  - { t: "Dilute some HCl to ten times its volume. Does the pH rise by exactly 1? Show why.", pair: chemistry/chem/ph-poh }
+  - { t: "Titrate and close the burette within 0.10 mL of the equivalence point.", pair: chemistry/chem/titration }
+  - { t: "Titrate acetic acid, then read the pH halfway to the equivalence point. What does that number tell you?", pair: chemistry/chem/strong-weak-acids }
+  - { t: "With a catalyst, beat the starting rate at 5 °C or colder.", pair: chemistry/chem/activation-energy-catalysts }
+  - { t: "Compare the four indicators. Which would you choose for a strong acid and a strong base, and why?", pair: chemistry/chem/acid-base-definitions }
+- key: atom
+  name: Build an Atom
+  url: /science-lab/atom/
+  young:
+  - { t: "Build the simplest atom: one proton and one electron. Which element is it?", pair: physics/physsci/charges-in-atoms }
+  - { t: "Build a carbon atom: 6 protons, 6 neutrons and 6 electrons." }
+  - { t: "Give an atom one extra electron. What happens to its charge?", pair: chemistry/chem/ions }
+  - { t: "Fill the first two electron shells. Which element did you make?", pair: chemistry/chem/electron-shells }
+  - { t: "Watch a sample decay until half of it is left. How long did it take?", pair: earth/earthsci/half-life }
+  teen:
+  - { t: "Make carbon-14 and explain why it is unstable.", pair: chemistry/chem/isotopes }
+  - { t: "Make Na⁺ and Cl⁻ with stable nuclei. Why does each one lose or gain an electron?", pair: chemistry/chem/ions }
+  - { t: "Build the heaviest stable atom on the table.", pair: chemistry/chem/radioactive-decay }
+  - { t: "Read off a half-life from a sample of 100 or more nuclei.", pair: chemistry/chem/half-life }
+  - { t: "Date the mystery sample from its carbon-14, to within 4%.", pair: bio/hsbio/evidence-fossils-anatomy }
+- key: night-sky
+  name: Sky and Solar System
+  url: /science-lab/night-sky/
+  young:
+  - { t: "Type in your birthday and see where the planets were that day." }
+  - { t: "Find the next full moon after today.", pair: earth/earthsci/moon-phases }
+  - { t: "Run time forward until Mercury goes once around the Sun. How far did Earth get?", pair: earth/earthsci/solar-system-objects }
+  - { t: "Watch Mars move backward among the stars for 15 days." }
+  - { t: "Find a date close to a solar or a lunar eclipse.", pair: earth/earthsci/eclipses }
+  teen:
+  - { t: "Stop within 3 days of Venus at its farthest from the Sun. Use that angle to estimate Venus's distance from the Sun.", pair: physics/astro/heliocentric-model }
+  - { t: "Explain Mars's backward loop from the Solar system view.", pair: physics/astro/heliocentric-model }
+  - { t: "Line up the Sun, Earth and an outer planet within 1°. Why is that a good time to look for it?" }
+  - { t: "Find two eclipses in a row. Why don't eclipses happen every month?", pair: physics/astro/eclipses }
+  - { t: "Time the Moon from one full moon to the next. Why is it longer than one trip around Earth?", pair: physics/astro/synodic-month }
+- key: ecosystem
+  name: Predators and Prey
+  url: /science-lab/ecosystem/
+  young:
+  - { t: "Let the rabbits double their number while food is plentiful.", pair: bio/lifesci/population-growth }
+  - { t: "Watch for a fox peak after a rabbit peak. Why do the foxes come second?", pair: bio/lifesci/predator-prey }
+  - { t: "Make the foxes very good at hunting. What happens to everyone?", pair: bio/lifek/food-chains }
+  - { t: "Add a refuge where rabbits can hide. Do both kinds last longer?", pair: bio/lifesci/limiting-factors }
+  - { t: "Send a hard winter. Do the rabbits come back?", pair: bio/lifesci/web-changes }
+  teen:
+  - { t: "Keep hunting success at 80% but add a refuge, and keep both kinds alive for 40 seasons. Explain why it works.", pair: bio/hsbio/community-interactions }
+  - { t: "Tune the Lotka–Volterra equations until their cycle matches the meadow's within 10%.", pair: bio/hsbio/population-models }
+  - { t: "Find the grass regrowth that feeds the most foxes.", pair: bio/hsbio/energy-flow }
+  - { t: "Turn the seasons on and keep grass, rabbits and foxes going for 100 seasons.", pair: bio/hsbio/stability-change }
+  - { t: "Send a disease and time the recovery. Which settings make it faster?", pair: bio/hsbio/density-factors }
+- key: elements
+  name: The Elements
+  url: /science-lab/elements/
+  young:
+  - { t: "Find an element you already know, like the oxygen in air, and spin its atom in 3-D.", pair: chemistry/chem/periodic-table-organization }
+  - { t: "Find every element that is a gas at room temperature. Where do they sit on the table?", pair: chemistry/chem/states-of-matter }
+  - { t: "Take the elements quiz. How many did you get?" }
+  - { t: "Listen to a few elements as sound. Which one do you like best?" }
+  - { t: "Compare two elements side by side, like gold and iron. What is different?" }
+  teen:
+  - { t: "Color the table by electronegativity. What pattern runs across a row and down a column?", pair: chemistry/chem/electronegativity }
+  - { t: "Compare sodium and chlorine. Predict the kind of bond they form.", pair: chemistry/chem/ionic-bonding }
+  - { t: "Look at hydrogen's spectral fingerprint. Which lines can your eye see?", pair: chemistry/chem/emission-spectra }
+  - { t: "Show the atoms as orbital clouds and step through the first 20. Where does each new sublevel begin?", pair: chemistry/chem/orbitals-sublevels }
+  - { t: "Color by ionization energy. Why do the noble gases sit at the top of each row?", pair: chemistry/chem/ionization-energy }
+- key: book-cart
+  name: Book Cart
+  url: /science-lab/book-cart/
+  young:
+  - { t: "Play the first levels: swing two books up and balance them.", pair: physics/physsci/forces-intro }
+  - { t: "In the Lab, turn the gravity down. Is balancing easier or harder?", pair: physics/physsci/mass-weight }
+  - { t: "Add some wind. Which way must the cart move to keep the books up?", pair: physics/physsci/net-force }
+  - { t: "Stand every book within 5° of straight up." }
+  - { t: "Try stiff books and floppy ones. Which are easier to balance?" }
+  teen:
+  - { t: "Balance a chain of five or more books. Watch the live forces: what does each push of the cart do?", pair: physics/phys1/torque }
+  - { t: "Stand every book within 2°. Why does an upside-down pendulum fall unless you keep correcting it?", pair: physics/phys1/rotational-equilibrium }
+  - { t: "Turn the gravity down and try again. Why do you get more time to react?", pair: physics/phys1/pendulum-period }
+  - { t: "Watch the energy readout as the books swing up. Where does that energy come from?", pair: physics/phys1/work-energy-theorem }
+  - { t: "Play a level in real time instead of slow motion. How does the length of the chain change how fast it falls?", pair: physics/phys1/rotational-second-law }
+- key: magnetic-bottles
+  name: Magnetic Bottles
+  url: /science-lab/magnetic-bottles/
+  young:
+  - { t: "Turn a magnetic bottle in 3-D and follow one field line around it.", pair: physics/physsci/magnets }
+  - { t: "Slice a bottle open. What shape is the inside?" }
+  - { t: "Try the mirror test on both bottles. What does it show?" }
+  teen:
+  - { t: "Use the finder for the most pressure for the field. What does the bottle give up to get it?", pair: physics/phys2/magnetic-fields }
+  - { t: "Change the vertical scale λ and look from above. Why does nothing change from there?" }
+  - { t: "Follow a field line until it twists around the bottle. Why must a charged particle follow the field?", pair: physics/phys2/charged-particle-circles }
+  - { t: "Find a bottle that passes the mirror test exactly. What setting did it take?" }

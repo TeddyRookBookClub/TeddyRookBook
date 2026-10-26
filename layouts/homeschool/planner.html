@@ -4,7 +4,9 @@
 {{- /* Course kinds (data/hs_planner.yaml): data (a book on this site), ar (Hannah Ward's PDFs), ext (a course elsewhere),
    ladder + lc (a Math Ladder or other ladder course: one lesson per topic, URLs built in planner.js from base + slug),
    practice + sessions (a practice page: one session per school day), section (a section's chapters, by weight),
-   unit (a Science Lab or Business unit, data/science_units), trade (data/trades/<key>.json), adult (Being an Adult 101).
+   unit (a Science Lab or Business unit, data/science_units), trade (data/trades/<key>.json), adult (Being an Adult 101),
+   lab (Science Lab play ideas, data/hs_planner_lab.yaml; "x"/"xt" = the ladder topic an idea goes with).
+   Subjects: "ages" = on_ages (switched on by default), "rank" = [age up to, rank] rows that order the list (100+ = More subjects).
    A course whose pages aren't in this build is left out. "p" = where its progress lives (u: music chapters). */ -}}
 {{- $subs := slice -}}
 {{- range site.Data.hs_planner.subjects -}}
@@ -25,7 +27,7 @@
       {{- $m := .mins -}}
       {{- with site.GetPage .section -}}
         {{- $url = .RelPermalink -}}{{- $name = $name | default .Title -}}
-        {{- range $j, $p := .Pages.ByWeight -}}{{- $ls = $ls | append (dict "n" (add $j 1) "t" $p.Title "m" $m "u" $p.RelPermalink "p" (printf "u:%s" (path.Join $p.File.Dir $p.File.ContentBaseName))) -}}{{- end -}}
+        {{- range $j, $p := .Pages.ByWeight -}}{{- $l := dict "n" (add $j 1) "t" $p.Title "m" $m "u" $p.RelPermalink -}}{{- with $p.File }}{{ if not (strings.HasSuffix .Filename ".gotmpl") }}{{ $l = merge $l (dict "p" (printf "u:%s" (path.Join .Dir .ContentBaseName))) }}{{ end }}{{ end -}}{{- $ls = $ls | append $l -}}{{- end -}}
       {{- else -}}{{- $ok = false -}}{{- end -}}
     {{- else if .unit -}}
       {{- $m := .mins -}}{{- $u := index site.Data.science_units .unit -}}{{- $sec := $u.section | default "science-lab" -}}
@@ -33,6 +35,19 @@
         {{- $url = .RelPermalink -}}{{- $name = $name | default (cond (eq $sec "science-lab") (printf "%s (Science Lab)" $u.title) $u.title) -}}{{- $bar = $bar | default $u.short -}}
         {{- range $u.chapters -}}{{- $ls = $ls | append (dict "n" .num "t" .title "m" $m "u" (printf "/%s/%s/%s/" $sec $u.slug .key | relURL)) -}}{{- end -}}
       {{- else -}}{{- $ok = false -}}{{- end -}}
+    {{- else if .lab -}}
+      {{- /* Science Lab play: the ideas in data/hs_planner_lab.yaml, dealt out in turns (every lab's first idea, then every lab's second...) */ -}}
+      {{- $m := .mins -}}{{- $lv := .lab -}}{{- $labs := slice -}}{{- $mx := 0 -}}
+      {{- range site.Data.hs_planner_lab.labs -}}{{- if site.GetPage (strings.TrimSuffix "/" .url) -}}{{- $labs = $labs | append . -}}{{- $mx = math.Max $mx (len (index . $lv)) -}}{{- end -}}{{- end -}}
+      {{- if not (site.GetPage (strings.TrimSuffix "/" .url)) }}{{ $ok = false }}{{ end -}}
+      {{- if gt $mx 0 -}}{{- range $i := seq 0 (sub (int $mx) 1) -}}{{- range $labs -}}{{- $ideas := index . $lv -}}{{- if lt $i (len $ideas) -}}
+        {{- $idea := index $ideas $i -}}{{- $l := dict "n" (add (len $ls) 1) "t" (printf "%s: %s" .name $idea.t) "m" $m "u" (.url | relURL) -}}
+        {{- with $idea.pair -}}{{- $pr := split . "/" -}}{{- $PL := index (where site.Data.ladders "key" (index $pr 0)) 0 -}}{{- $PD := index site.Data (index $pr 0) -}}
+          {{- $PC := index (where $PD.courses "key" (index $pr 1)) 0 -}}{{- $PT := index (where (index $PD.topics (index $pr 1)).topics "slug" (index $pr 2)) 0 -}}
+          {{- if and $PL $PC $PT (site.GetPage (printf "/%s/%s/%s" $PL.slug $PC.slug $PT.slug)) -}}{{- $l = merge $l (dict "x" (printf "/%s/%s/%s/" $PL.slug $PC.slug $PT.slug | relURL) "xt" (printf "%s: %s" $PL.short $PT.title)) -}}{{- end -}}
+        {{- end -}}
+        {{- $ls = $ls | append $l -}}
+      {{- end -}}{{- end -}}{{- end -}}{{- end -}}
     {{- else if .trade -}}
       {{- $m := .mins -}}{{- $tk := .trade -}}
       {{- with site.GetPage (printf "/trades/%s" $tk) -}}
@@ -62,6 +77,7 @@
     {{- if and $ok (or $n (gt (len $ls) 0)) -}}
       {{- $c := dict "key" .key "name" $name "url" ($url | relURL) "from" .from "to" .to "rep" .rep "alt" (.alt | default false) "word" $word "lessons" $ls -}}
       {{- with .w }}{{ $c = merge $c (dict "w" .) }}{{ end -}}
+      {{- with .whole }}{{ $c = merge $c (dict "whole" true) }}{{ end -}}
       {{- with $bar }}{{ $c = merge $c (dict "bar" .) }}{{ end -}}
       {{- with $base }}{{ $c = merge $c (dict "base" . "pp" $pp) }}{{ end -}}
       {{- if $n }}{{ $c = merge $c (dict "sessions" $n "daily" true "sm" .mins) }}{{ end -}}
@@ -70,7 +86,10 @@
   {{- end -}}
   {{- if $cs -}}
   {{- $s := dict "key" .key "name" .name "icon" .icon "start" (.start | default 0) "until" (.until | default 99) "replaces" (.replaces | default slice) "mins" .mins "hw" (.hw | default (slice (slice 99 10))) "courses" $cs -}}
-  {{- if .more }}{{ $s = merge $s (dict "more" true "note" (.note | default "")) }}{{ end -}}
+  {{- if isset . "on_ages" }}{{ $s = merge $s (dict "ages" (.on_ages | default slice)) }}{{ end -}}
+  {{- with .rank }}{{ $s = merge $s (dict "rank" .) }}{{ end -}}
+  {{- with .note }}{{ $s = merge $s (dict "note" .) }}{{ end -}}
+  {{- if .more }}{{ $s = merge $s (dict "more" true) }}{{ end -}}
   {{- $subs = $subs | append $s -}}
   {{- end -}}
 {{- end -}}
@@ -79,13 +98,14 @@
   <header class="hs-hero hs-noprint">
     <p class="hs-eyebrow">Homeschool · Planner</p>
     <h1>Lesson planner</h1>
-    <p>Tell it who you're teaching and how much time you have, and it lays out every lesson, week by week, through the books on this site. Change anything and the plan updates. It's saved in this browser, and you can print it, save it as a PDF or picture, add it to your calendar, or keep a plan file.</p>
+    <p>Tell it who you're teaching and how much time you have, and it lays out every lesson, week by week, through the ladders and books on this site. Change anything and the plan updates. It's saved in this browser, and you can print it, save it as a PDF or picture, add it to your calendar, or keep a plan file.</p>
   </header>
 
   <section class="hs-sec pl-step hs-noprint">
     <h2><span class="pl-n">1</span> Your children</h2>
-    <p class="hs-small">For ages 3 to 5 the planner suggests <a href="{{ "homeschool/actual-reading/" | relURL }}">Hannah Ward's Actual Reading</a> curricula (Little House Pre-K and Kindergarten cover math and English together, so Arithmetic and Phonics start switched off), then the classic schoolbooks. Every subject's Book menu lists all the choices.</p>
-    <p class="hs-small">Under <b>More subjects</b> are the <a href="{{ "math/" | relURL }}">Math Ladder</a> (Kindergarten to college), the <a href="{{ "physics/" | relURL }}">Physics</a>, <a href="{{ "chemistry/" | relURL }}">Chemistry</a>, <a href="{{ "earth-and-space/" | relURL }}">Earth &amp; Space</a>, <a href="{{ "economics/" | relURL }}">Economics</a>, <a href="{{ "logic/" | relURL }}">Logic</a>, <a href="{{ "etiquette/" | relURL }}">Etiquette</a>, <a href="{{ "egyptology/" | relURL }}">Egyptology</a>, <a href="{{ "ancient-scripts/" | relURL }}">Ancient Scripts</a> and <a href="{{ "vocabulary/" | relURL }}">Vocabulary</a> Ladders, <a href="{{ "music/" | relURL }}">Music</a>, and life skills from <a href="{{ "being-an-adult/" | relURL }}">Being an Adult 101</a> and <a href="{{ "trades/" | relURL }}">The Trades</a>. Switch one on and pick a course, or pick “Today's practice” and the ladder chooses each day's lesson or review.</p>
+    <p class="hs-small">The ladders come first. The <a href="{{ "math/" | relURL }}">Math Ladder</a>, <a href="{{ "writing/" | relURL }}">Writing &amp; Grammar</a>, <a href="{{ "american-history/" | relURL }}">American History &amp; Civics</a> and the science ladders (<a href="{{ "biology/" | relURL }}">Biology</a>, <a href="{{ "earth-and-space/" | relURL }}">Earth &amp; Space</a>, <a href="{{ "physics/" | relURL }}">Physics</a> and <a href="{{ "chemistry/" | relURL }}">Chemistry</a>) switch on at the ages their courses fit, each with the course for that age. Each child's subjects are listed in the order that matters most at their age, so a six-year-old starts with reading and phonics, and a fifteen-year-old with the Math Ladder and composition.</p>
+    <p class="hs-small">For ages 3 to 5, <a href="{{ "homeschool/actual-reading/" | relURL }}">Hannah Ward's Actual Reading</a> curricula lead (Little House Pre-K and Kindergarten cover math and English together, so the Math Ladder and phonics start switched off), with McGuffey's Readers for reading. The classic books are all still here: Ray's Arithmetic, Harvey's Grammar, The Mother Tongue, the Palmer Method, Famous Men and the old science books. Pick one from a subject's Book menu or under <b>More subjects</b>.</p>
+    <p class="hs-small">The <a href="{{ "science-lab/" | relURL }}">Science Lab</a> subject gives one play idea a session, a different simulation each time, with the ladder lesson it goes with. In any ladder's Book menu, pick “Today's practice” and the ladder chooses each day's lesson or review.</p>
     <div id="pl-kids"></div>
     <button type="button" class="hs-btn" id="pl-addkid">＋ Add a child</button>
   </section>

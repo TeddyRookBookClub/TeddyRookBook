@@ -93,7 +93,7 @@ html[data-theme="dark"] .pl-tabs button[aria-selected="true"]{color:#0f1a14}
 .pl-pv-btns{display:flex;gap:.5rem;flex-wrap:wrap}
 .pl-gt{font-size:.75rem;color:var(--muted);font-weight:600;margin:.1rem 0}
 .pl-tot{font-size:.8rem;font-weight:700;color:var(--g);border-top:1px dashed var(--line);margin-top:.3rem;padding-top:.25rem}.pl-tot span{font-weight:400;color:var(--muted)}
-/* "More subjects": the Math Ladder, the science ladders, Music and life skills, folded under each child */
+/* "More subjects": what matters less at the child's age (the classic books where a ladder covers them, electives), folded under each child */
 .pl-moresubs{margin-top:.2rem;border:1px dashed var(--line);border-radius:10px;padding:0 .4rem}
 .pl-moresubs[open]{padding-bottom:.4rem}
 .pl-moresubs>summary{cursor:pointer;padding:.55rem .2rem;min-height:36px;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:.15rem .5rem;list-style:none}
@@ -107,7 +107,8 @@ html[data-theme="dark"] .pl-ms-n{color:#0f1a14}
 .pl-moresubs>summary:focus-visible{outline:2px solid var(--g);outline-offset:2px;border-radius:6px}
 .pl-sn{display:none;margin:0;font-size:.8rem;line-height:1.35;color:var(--muted)}
 .pl-sub.more.off{opacity:.8}
-.pl-sub.more.off .pl-f,.pl-sub.more.off .pl-resume{display:none}
-.pl-sub.more.off .pl-sn{display:block;grid-column:2/-1;align-self:center}
-@media (max-width:900px){.pl-sub.more.off .pl-sn{grid-column:1/-1}}
+.pl-sub.off .pl-f,.pl-sub.off .pl-resume{display:none}
+.pl-sub.off .pl-sn{display:block;grid-column:2/-1;align-self:center}
+@media (max-width:900px){.pl-sub.off .pl-sn{grid-column:1/-1}}
+.pl-l small.pl-pair{font-size:.75rem}.pl-l small.pl-pair a{color:var(--g)}
 @media print{.pl-moresubs{display:none}}

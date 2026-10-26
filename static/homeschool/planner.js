@@ -17,9 +17,20 @@
     s.courses.forEach(function (c, i) {
       c.sub = s.key; c.i = i; COURSE[c.key] = c;
       if (c.sessions) { c.lessons = []; for (var j = 1; j <= c.sessions; j++) c.lessons.push([j, '', c.sm || 20, c.url]); return; }
-      c.lessons = c.lessons.map(function (l) { return l.s ? [l.n, l.t, l.m, c.base + l.s + '/', 'm:' + c.pp + l.s] : l.u ? (l.p ? [l.n, l.t, l.m, l.u, l.p] : [l.n, l.t, l.m, l.u]) : [l.n, l.t, l.m]; });
+      c.lessons = c.lessons.map(function (l) { return l.s ? [l.n, l.t, l.m, c.base + l.s + '/', 'm:' + c.pp + l.s] : l.x ? [l.n, l.t, l.m, l.u, '', [l.x, l.xt]] : l.u ? (l.p ? [l.n, l.t, l.m, l.u, l.p] : [l.n, l.t, l.m, l.u]) : [l.n, l.t, l.m]; });
     });
   });
+  // the order of the subjects at an age: rank rows [age up to, rank] from the YAML, lower first, ties in YAML order;
+  // a rank of 100 or more puts the subject under "More subjects". Ordering never switches a subject on or off.
+  function rankOf(s, age) { var r = s.rank || []; for (var i = 0; i < r.length; i++) if (age <= r[i][0]) return r[i][1]; return s.more ? 200 : 50; }
+  function ordered(age) {
+    return DATA.subjects.map(function (s, i) { return { s: s, i: i, r: rankOf(s, age) }; })
+      .sort(function (a, b) { return a.r - b.r || a.i - b.i; }).map(function (x) { return x.s; });
+  }
+  function onAt(s, age) { // switched on by default at this age: on_ages ranges, or the older start/until
+    if (s.ages) return s.ages.some(function (r) { return age >= r[0] && age <= r[1]; });
+    return age >= (s.start || s.courses[0].from) && age <= (s.until || 99);
+  }
   function isExt(l) { return !!l[3] && /^https?:/.test(l[3]); } // Hannah Ward's PDFs and Lifeprint open on another site
 
   // ---------- state ----------
@@ -33,7 +44,7 @@
       var c = main.filter(function (c) { return age <= c.to; })[0] || main[main.length - 1];
       var m = 60; for (var i = 0; i < s.mins.length; i++) if (age <= s.mins[i][0]) { m = s.mins[i][1]; break; }
       var hw = 10; (s.hw || []).some(function (r) { if (age <= r[0]) { hw = r[1]; return true; } });
-      o[s.key] = { on: age >= (s.start || s.courses[0].from) && age <= (s.until || 99), course: c.key, lesson: 1, mins: m, pace: 1, hw: hw };
+      o[s.key] = { on: onAt(s, age), course: c.key, lesson: 1, mins: m, pace: 1, hw: hw };
     });
     // a subject that already covers others (Little House covers math and English) switches them off by default
     DATA.subjects.forEach(function (s) { if (o[s.key].on) (s.replaces || []).forEach(function (r) { if (o[r]) o[r].on = false; }); });
@@ -44,7 +55,10 @@
   function fresh() { return { kids: [newKid(1, 7)], days: [1, 2, 3, 4, 5], mode: 'week', date: nextMonday(), offs: [], len: 36, view: 'overview', week: 0 }; }
   function valid(s) { return s && Array.isArray(s.kids) && s.kids.length && Array.isArray(s.days); }
   function fix(s) { // fill gaps from older or hand-edited plans
-    s.kids.forEach(function (k, i) { k.name = k.name || 'Child ' + (i + 1); k.age = +k.age || 7; var d = defSubs(k.age); k.subs = k.subs || {}; for (var key in d) { if (!k.subs[key]) { k.subs[key] = d[key]; k.subs[key].on = false; } else if (!COURSE[k.subs[key].course]) k.subs[key] = d[key]; // subjects added since a plan was saved start switched off
+    s.kids.forEach(function (k, i) { k.name = k.name || 'Child ' + (i + 1); k.age = +k.age || 7; var d = defSubs(k.age); k.subs = k.subs || {};
+      // a course that has moved to another subject (SAT, ACT and CLT practice left the Math Ladder for Test Prep) moves with it
+      Object.keys(k.subs).forEach(function (key) { var x = k.subs[key], c = x && COURSE[x.course]; if (c && c.sub !== key && SUB[key]) { if (!k.subs[c.sub]) k.subs[c.sub] = x; k.subs[key] = d[key]; k.subs[key].on = false; } });
+      for (var key in d) { if (!k.subs[key]) { k.subs[key] = d[key]; k.subs[key].on = false; } else if (!COURSE[k.subs[key].course]) k.subs[key] = d[key]; // subjects added since a plan was saved start switched off
       if (k.subs[key].hw == null) k.subs[key].hw = d[key].hw; } });
     s.offs = s.offs || []; s.len = s.len == null ? 36 : +s.len; s.view = s.view || 'overview'; s.week = +s.week || 0; s.mode = s.mode === 'date' ? 'date' : 'week'; s.date = s.date || nextMonday();
     return s;
@@ -88,7 +102,7 @@
       var x = k.subs[s.key], c = COURSE[x.course];
       var opts = s.courses.map(function (cc) { return '<option value="' + cc.key + '"' + (cc.key === x.course ? ' selected' : '') + '>' + esc(cc.name) + '</option>'; }).join('');
       var paces = PACES.map(function (p) { return '<option value="' + p[0] + '"' + (p[0] === +x.pace ? ' selected' : '') + '>' + p[1] + '</option>'; }).join('');
-      return '<div class="pl-sub' + (x.on ? '' : ' off') + (s.more ? ' more' : '') + '" data-s="' + s.key + '">' +
+      return '<div class="pl-sub' + (x.on ? '' : ' off') + (rankOf(s, k.age) >= 100 ? ' more' : '') + '" data-s="' + s.key + '">' +
         '<label class="pl-on"><input type="checkbox" data-f="on"' + (x.on ? ' checked' : '') + '> <span>' + s.icon + ' ' + esc(s.name) + '</span></label>' +
         (s.note ? '<p class="pl-sn">' + esc(s.note) + '</p>' : '') +
         '<label class="pl-f"><span>Book</span><select data-f="course">' + opts + '</select></label>' +
@@ -99,11 +113,11 @@
         '<button type="button" class="pl-resume" data-f="resume" title="Start after the last lesson marked done on this site">↻ Pick up where we left off</button>' +
         '</div>';
     }
-    var main = DATA.subjects.filter(function (s) { return !s.more; }), more = DATA.subjects.filter(function (s) { return s.more; });
+    var all = ordered(k.age), main = all.filter(function (s) { return rankOf(s, k.age) < 100; }), more = all.filter(function (s) { return rankOf(s, k.age) >= 100; });
     var rows = main.map(row).join('');
     if (more.length) {
       var nOn = more.filter(function (s) { return k.subs[s.key].on; }).length, open = moreOpen[i] != null ? moreOpen[i] : nOn > 0;
-      rows += '<details class="pl-moresubs" data-k="' + i + '"' + (open ? ' open' : '') + '><summary><span class="pl-ms-t">More subjects</span> <span class="pl-ms-l">' + more.map(function (s) { return s.icon + ' ' + esc(s.name.replace(/:.*$/, '').replace(/ \(.*\)$/, '')); }).join(' · ') + '</span>' + (nOn ? ' <span class="pl-ms-n">' + nOn + ' on</span>' : '') + '</summary>' +
+      rows += '<details class="pl-moresubs" data-k="' + i + '"' + (open ? ' open' : '') + '><summary><span class="pl-ms-t">More subjects</span> <span class="pl-ms-l">' + more.slice(0, 8).map(function (s) { return s.icon + ' ' + esc(s.name.replace(/:.*$/, '').replace(/ \(.*\)$/, '')); }).join(' · ') + (more.length > 8 ? ' and ' + (more.length - 8) + ' more' : '') + '</span>' + (nOn ? ' <span class="pl-ms-n">' + nOn + ' on</span>' : '') + '</summary>' +
         '<div class="pl-subs">' + more.map(row).join('') + '</div></details>';
     }
     return '<div class="pl-kid" data-k="' + i + '" style="--kc:' + COLORS[i % COLORS.length] + '">' +
@@ -142,7 +156,7 @@
       var sb = SUB[t.closest('.pl-sub').dataset.s], offd = [];
       if (t.checked) (sb.replaces || []).forEach(function (r) { if (k.subs[r] && k.subs[r].on) { k.subs[r].on = false; offd.push(SUB[r].name); } });
       if (offd.length) { renderKids(); update(); msg(k.name + ': ' + offd.join(' and ') + (offd.length > 1 ? ' are' : ' is') + ' switched off, since ' + sb.name + ' covers ' + (offd.length > 1 ? 'them' : 'it') + '. Switch ' + (offd.length > 1 ? 'them' : 'it') + ' back on to do both.'); return; }
-      if (sb.more) { var det = t.closest('.pl-moresubs'), cnt = det && det.querySelector('.pl-ms-n'), nOn = det ? det.querySelectorAll('.pl-sub.more:not(.off)').length : 0; if (det) { if (!cnt && nOn) { cnt = D.createElement('span'); cnt.className = 'pl-ms-n'; det.querySelector('summary').appendChild(cnt); } if (cnt) { cnt.textContent = nOn + ' on'; cnt.hidden = !nOn; } } }
+      if (t.closest('.pl-moresubs')) { var det = t.closest('.pl-moresubs'), cnt = det && det.querySelector('.pl-ms-n'), nOn = det ? det.querySelectorAll('.pl-sub.more:not(.off)').length : 0; if (det) { if (!cnt && nOn) { cnt = D.createElement('span'); cnt.className = 'pl-ms-n'; det.querySelector('summary').appendChild(cnt); } if (cnt) { cnt.textContent = nOn + ' on'; cnt.hidden = !nOn; } } }
     }
     if (f === 'course') { x.course = t.value; x.lesson = 1; renderKids(); }
     if (f === 'lesson') { var cl = COURSE[x.course].lessons, n = cl[cl.length - 1][0]; x.lesson = Math.max(1, Math.min(n, Math.round(+t.value) || 1)); t.value = x.lesson; }
@@ -175,7 +189,7 @@
     var days = st.days.slice().sort(function (a, b) { return ((a + 6) % 7) - ((b + 6) % 7); }), nd = days.length;
     var tracks = [];
     st.kids.forEach(function (k, ki) {
-      DATA.subjects.forEach(function (s) {
+      ordered(k.age).forEach(function (s) {
         var x = k.subs[s.key]; if (!x || !x.on || !(x.mins > 0)) return;
         var c0 = COURSE[x.course], items = [], t = 0, perDay = x.mins / nd;
         for (var ci = c0.i; ci < s.courses.length; ci++) {
@@ -187,10 +201,15 @@
           });
         }
         if (!items.length) return;
-        var per = x.mins / nd, plan = [], q = 0, rem = items.length ? items[0].e - items[0].s : 0;
+        var per = x.mins / nd, plan = [], q = 0, rem = items.length ? items[0].e - items[0].s : 0, acc = 0;
         // fill each school day with about `per` minutes: finish a lesson if only a little is left, never start one in a tiny leftover
         while (q < items.length && plan.length < 4000) {
           var bud = per, list = [];
+          if (items[q].c.whole) { // one whole lesson on a day once the time has added up to most of it (Science Lab: about two a week)
+            var len = items[q].e - items[q].s; acc = Math.min(acc + per, len);
+            if (acc >= 0.75 * len - 0.01) { list.push({ it: items[q], cont: false, fin: true, m: len }); acc -= len; q++; rem = q < items.length ? items[q].e - items[q].s : 0; }
+            plan.push(list); continue;
+          }
           while (q < items.length) {
             var it = items[q];
             if (rem <= bud + 0.25 * per) { list.push({ it: it, cont: rem < it.e - it.s - 0.01, fin: true, m: rem }); bud -= rem; q++; rem = q < items.length ? items[q].e - items[q].s : 0; if (bud < 0.25 * per) break; }
@@ -261,7 +280,15 @@
   }
   function overviewHTML() {
     var total = P.cal.length, h = '', note = '';
-    if (P.cut) note += '<p class="pl-note">This plan shows ' + P.weeks.length + ' weeks. Everything to the end of the last book takes about ' + Math.ceil(P.need / P.nd) + ' school weeks; choose “until every book is finished” to see it all.</p>';
+    if (P.cut) { // how long each subject's current course takes (not the later courses of a ladder or series)
+      var cur = P.tracks.map(function (t) { return t.books[0]; }).filter(Boolean).map(function (b) { return { c: b.c, w: Math.ceil((b.d1 + 1) / P.nd) }; }).sort(function (a, b) { return b.w - a.w; })
+        .filter(function (x, i, all) { return all.findIndex(function (y) { return y.c === x.c; }) === i; }); // one entry per course (two children in one book)
+      var wk = P.weeks.length, l1 = cur[0], l2 = cur[1], said;
+      if (!l1 || l1.w <= wk) said = 'This year’s courses all finish within it.';
+      else if (!l2 || l2.w <= wk) said = 'This year’s courses finish within it, except ' + esc(l1.c.name) + ', which runs about ' + l1.w + ' school weeks.';
+      else said = 'This year’s courses take about ' + l2.w + ' school weeks' + (l1.w > l2.w ? ', and ' + esc(l1.c.name) + ' about ' + l1.w : '') + '.';
+      note += '<p class="pl-note">This plan shows ' + wk + ' weeks. ' + said + ' Choose “until every book is finished” to see the courses that come after.</p>';
+    }
     st.kids.forEach(function (k, ki) {
       var trs = P.tracks.filter(function (t) { return t.k === ki; }); if (!trs.length) return;
       var mins = trs.reduce(function (s, t) { return s + st.kids[ki].subs[t.s.key].mins; }, 0), hwk = trs.reduce(function (s, t) { return s + t.hw * P.nd; }, 0);
@@ -296,7 +323,8 @@
       return '<div class="pl-g"><span class="pl-gi" title="' + esc(g.s.name) + '">' + g.s.icon + '</span><div><div class="pl-gt">' + esc(g.s.name) + ' · ≈ ' + fm(g.m) + ' lesson' + (g.hw ? ' + ' + fm(g.hw) + ' study' : '') + '</div>' + g.list.map(function (e) {
         var isD = dn[e.it.c.key] && dn[e.it.c.key][e.it.l[0]];
         return '<div class="pl-l' + (isD ? ' done' : '') + '">' + (e.fin ? '<input type="checkbox" class="pl-ck" data-c="' + e.it.c.key + '" data-n="' + e.it.l[0] + '"' + (isD ? ' checked' : '') + ' aria-label="Done">' : '<span class="pl-ckph"></span>') +
-          '<a href="' + esc(lessonURL(e)) + '"' + (isExt(e.it.l) ? ' target="_blank" rel="noopener" title="Opens the lesson on another site"' : '') + '>' + esc(lessonText(e)) + (isExt(e.it.l) ? ' ↗' : '') + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small></div>';
+          '<a href="' + esc(lessonURL(e)) + '"' + (isExt(e.it.l) ? ' target="_blank" rel="noopener" title="Opens the lesson on another site"' : '') + '>' + esc(lessonText(e)) + (isExt(e.it.l) ? ' ↗' : '') + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small>' +
+          (e.it.l[5] ? ' <small class="pl-pair">Goes with <a href="' + esc(e.it.l[5][0]) + '">' + esc(e.it.l[5][1]) + '</a></small>' : '') + '</div>';
       }).join('') + '</div></div>';
     }).join('') + '<div class="pl-tot">Total ≈ ' + fm(tt.l + tt.h) + ' <span>(' + fm(tt.l) + ' lessons' + (tt.h ? ' + ' + fm(tt.h) + ' study' : '') + ')</span></div>';
   }
@@ -486,6 +514,8 @@
       if (!x || !c) return;
       x.course = c.key; x.lesson = Math.max(1, +pk.lesson || 1); x.on = true; said.push(courseAt(c, x.lesson));
     });
+    // a book picked without its ladder (Ray's without the Math Ladder): the ladder, on by default, steps aside for it
+    DATA.subjects.forEach(function (s) { var x = kid.subs[s.key]; if (x && x.on && !placed.picks[s.key] && s.courses.some(function (c) { return c.base; }) && (s.replaces || []).some(function (r) { return placed.picks[r] && !placed.picks[r].off; })) { x.on = false; offd.push(s.name); } });
     setTimeout(function () { msg(kid.name + (said.length ? ' is set to start at ' + said.join('; ') + '.' : ' is added.') + (offd.length ? ' ' + offd.join(' and ') + ' switched off.' : '')); }, 50);
   }
 
