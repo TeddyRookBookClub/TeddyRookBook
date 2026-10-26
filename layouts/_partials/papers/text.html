@@ -1,0 +1,25 @@
+{{- /* Renders a primary-source text with numbered paragraphs.
+   Input dict: head (slice of lines), sal (salutation), blocks (slice: strings, or maps {t: p|v|c|r, x}), sig, notes (slice {n,x}), ed (editor note html) */ -}}
+<article class="pp-text" id="text">
+  {{- range .head }}<p class="dl">{{ . | safeHTML }}</p>{{ end -}}
+  {{- with .sal }}<p class="sal">{{ . | safeHTML }}</p>{{ end -}}
+  {{- $i := 0 -}}
+  {{- range .blocks -}}
+    {{- if reflect.IsMap . -}}
+      {{- if eq .t "c" }}<p class="cl">{{ .x | safeHTML }}</p>
+      {{- else if eq .t "v" }}{{ $i = add $i 1 }}<div class="pp-par v" id="p{{ $i }}"><a class="pn" href="#p{{ $i }}" title="Paragraph {{ $i }}">{{ $i }}</a>{{ range .x }}<span>{{ . | safeHTML }}</span>{{ end }}</div>
+      {{- else if eq .t "r" }}{{ $i = add $i 1 }}<p class="pp-par rep" id="p{{ $i }}"><a class="pn" href="#p{{ $i }}" title="Paragraph {{ $i }}">{{ $i }}</a>{{ .x | safeHTML }}</p>
+      {{- else }}{{ $i = add $i 1 }}<p class="pp-par" id="p{{ $i }}"><a class="pn" href="#p{{ $i }}" title="Paragraph {{ $i }}">{{ $i }}</a>{{ .x | safeHTML }}</p>{{ end -}}
+    {{- else -}}
+      {{- $i = add $i 1 }}<p class="pp-par" id="p{{ $i }}"><a class="pn" href="#p{{ $i }}" title="Paragraph {{ $i }}">{{ $i }}</a>{{ . | safeHTML }}</p>
+    {{- end -}}
+  {{- end -}}
+  {{- with .sig }}<p class="sig">{{ . }}</p>{{ end -}}
+</article>
+{{- if or .notes .ed }}
+<section class="pp-notes" aria-label="Notes">
+  {{- with .notes }}<h2 class="pp-small" style="font:700 .8rem system-ui;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Notes in the original</h2>
+  <ol>{{ range . }}<li id="fn{{ .n }}" value="{{ .n }}">{{ .x | safeHTML }} <a href="#fr{{ .n }}" aria-label="Back to the text">↩</a></li>{{ end }}</ol>{{ end }}
+  {{- with .ed }}<p id="ed"><b>Editor's note (from the source edition):</b> {{ . | safeHTML }}</p>{{ end }}
+</section>
+{{- end }}

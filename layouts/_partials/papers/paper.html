@@ -1,0 +1,3 @@
+{{- /* newspaper label: input is the paper key */ -}}
+{{- $k := . -}}
+{{- if eq $k "IJ" }}The Independent Journal{{ else if eq $k "P" }}The New-York Packet{{ else if eq $k "DA" }}The Daily Advertiser{{ else if eq $k "M" }}McLean's book edition, volume 2{{ else }}{{ $k }}{{ end -}}

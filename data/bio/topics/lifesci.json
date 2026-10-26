@@ -1,0 +1,1317 @@
+{
+ "course": "lifesci",
+ "units": [
+  {
+   "key": "studying-life",
+   "title": "Studying Life",
+   "blurb": "What all living things share, how life scientists run fair tests, and the microscope that opened up the world of cells."
+  },
+  {
+   "key": "cells",
+   "title": "Cells",
+   "blurb": "The cell theory, the parts of a cell and their jobs, plant and animal cells, why cells are small, diffusion and osmosis, and how cells build tissues, organs and systems."
+  },
+  {
+   "key": "classifying",
+   "title": "Classifying Life",
+   "blurb": "Sorting living things by shared traits: ranks from domain to species, scientific names, dichotomous keys, and the domains and kingdoms."
+  },
+  {
+   "key": "microbes",
+   "title": "Microbes",
+   "blurb": "Bacteria, viruses, protists and fungi: what they are, how they multiply, and the ways they help and harm, in well-established terms."
+  },
+  {
+   "key": "plants",
+   "title": "Plants",
+   "blurb": "Photosynthesis and respiration, how water and food move through a plant, plant groups, flowers and seeds, and how plants respond and grow."
+  },
+  {
+   "key": "animals",
+   "title": "Animals and Adaptations",
+   "blurb": "Animals with and without backbones, the vertebrate groups, adaptations of body and behavior, and how animals handle heat and cold."
+  },
+  {
+   "key": "ecosystems",
+   "title": "Ecosystems",
+   "blurb": "Living and nonliving parts, food webs and energy pyramids, interactions between species, the cycles of matter, biomes, succession, and people's effects on ecosystems."
+  },
+  {
+   "key": "populations",
+   "title": "Populations",
+   "blurb": "How populations grow, what limits them, how predators and prey rise and fall together, and how ecologists count them."
+  },
+  {
+   "key": "body",
+   "title": "The Human Body",
+   "blurb": "Bones, muscles, digestion, the heart and blood, breathing, nerves and senses, the body's defenses and the removal of wastes, and how the systems work together."
+  },
+  {
+   "key": "heredity",
+   "title": "Heredity",
+   "blurb": "Inherited and acquired traits, DNA and genes, alleles, Punnett squares and their probabilities, mutations, and how people have changed the traits of crops and animals."
+  },
+  {
+   "key": "evolution",
+   "title": "Evolution",
+   "blurb": "The fossil record, comparing body structures, natural selection, and changes in populations over time, measured with real data."
+  }
+ ],
+ "topics": [
+  {
+   "id": "lifesci.characteristics-of-life",
+   "slug": "characteristics-of-life",
+   "unit": "studying-life",
+   "title": "The Characteristics of Life",
+   "short": "Living things are made of cells, use energy, grow and develop, respond to their surroundings, keep their insides steady, and produce offspring.",
+   "prereqs": [],
+   "xp": 1,
+   "std": "MS-LS1-1",
+   "trouble": "Students judge life by a single sign, such as movement or growth. Crystals grow and fire uses energy, but neither is made of cells or passes on traits; a living thing shows all the signs together.",
+   "viz": [
+    "bi-classify",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "lifesci.fair-tests",
+   "slug": "fair-tests",
+   "unit": "studying-life",
+   "title": "Fair Tests: Variables and Controls",
+   "short": "In a fair test you change one thing (the independent variable), measure one thing (the dependent variable), and keep everything else the same, with a control group to compare against.",
+   "prereqs": [
+    "lifesci.characteristics-of-life",
+    "g6.dependent-independent"
+   ],
+   "xp": 2,
+   "trouble": "Students change two things at once (more light and more water) and then cannot tell which one made the plants grow taller, or they leave out the control group.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.microscope",
+   "slug": "microscope",
+   "unit": "studying-life",
+   "title": "Using a Microscope",
+   "short": "A light microscope magnifies with two lenses: total magnification is the eyepiece power times the objective power, so 10× and 40× give 400×.",
+   "prereqs": [
+    "lifesci.fair-tests",
+    "g4.multiply-two-digit"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-1",
+   "trouble": "Students add the two powers (10× + 40× = 50×) instead of multiplying, and expect to see more of the slide at higher power when they really see a smaller area, larger.",
+   "viz": [
+    "bi-microscope"
+   ]
+  },
+  {
+   "id": "lifesci.field-of-view",
+   "slug": "field-of-view",
+   "unit": "studying-life",
+   "title": "Measuring with a Microscope",
+   "short": "Estimate a cell's size by how many fit across the field of view, and use micrometers: 1 millimeter = 1,000 micrometers (µm).",
+   "prereqs": [
+    "lifesci.microscope",
+    "g5.multiply-divide-powers-of-ten"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-1",
+   "trouble": "Students forget that the field of view shrinks as magnification grows (at 4 times the power it is a quarter as wide), or mix up millimeters and micrometers by a factor of 1,000.",
+   "viz": [
+    "bi-microscope"
+   ]
+  },
+  {
+   "id": "lifesci.cell-theory",
+   "slug": "cell-theory",
+   "unit": "cells",
+   "title": "The Cell Theory",
+   "short": "All living things are made of one or more cells, the cell is the basic unit of life, and every cell comes from a cell that already existed.",
+   "prereqs": [
+    "lifesci.characteristics-of-life"
+   ],
+   "xp": 1,
+   "std": "MS-LS1-1",
+   "trouble": "Students think only animals, or only large living things, are made of cells, and that cells can form from nonliving material. Every plant, fungus and bacterium is made of cells, and new cells come only from existing cells.",
+   "viz": [
+    "bi-cell",
+    "bi-microscope"
+   ]
+  },
+  {
+   "id": "lifesci.one-or-many-cells",
+   "slug": "one-or-many-cells",
+   "unit": "cells",
+   "title": "One Cell or Many",
+   "short": "Unicellular organisms, like bacteria and amoebas, live as a single cell that does every job. Multicellular organisms, like trees and people, are built of many specialized cells.",
+   "prereqs": [
+    "lifesci.cell-theory"
+   ],
+   "xp": 1,
+   "std": "MS-LS1-1",
+   "trouble": "Students think a single-celled organism is too simple to be alive, or that large organisms have larger cells. An elephant has more cells than a mouse, not bigger ones.",
+   "viz": [
+    "bi-classify",
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "lifesci.cell-parts",
+   "slug": "cell-parts",
+   "unit": "cells",
+   "title": "Membrane, Cytoplasm and Nucleus",
+   "short": "Every cell has a cell membrane that controls what enters and leaves and cytoplasm inside. Cells of plants, animals and fungi also keep their DNA in a nucleus.",
+   "prereqs": [
+    "lifesci.cell-theory"
+   ],
+   "xp": 1,
+   "std": "MS-LS1-2",
+   "trouble": "Students think the membrane is a solid wall that blocks everything, or that the nucleus is the whole \"brain\" doing every job. The membrane lets some things through; the nucleus holds the instructions while other parts do the work.",
+   "viz": [
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "lifesci.organelles",
+   "slug": "organelles",
+   "unit": "cells",
+   "title": "Organelles and Their Jobs",
+   "short": "Mitochondria release energy from food, ribosomes build proteins, the endoplasmic reticulum and Golgi apparatus make and ship materials, and vacuoles and lysosomes store and break things down.",
+   "prereqs": [
+    "lifesci.cell-parts"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-2",
+   "trouble": "Students think mitochondria make energy out of nothing. They release the energy stored in food (sugar) by using oxygen; energy changes form, it is not created.",
+   "viz": [
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "lifesci.plant-animal-cells",
+   "slug": "plant-animal-cells",
+   "unit": "cells",
+   "title": "Plant Cells and Animal Cells",
+   "short": "Plant cells have a cell wall, chloroplasts and a large central vacuole; animal cells have none of these. Both have a membrane, a nucleus and mitochondria.",
+   "prereqs": [
+    "lifesci.organelles"
+   ],
+   "xp": 1,
+   "std": "MS-LS1-2",
+   "trouble": "Students think plant cells have chloroplasts instead of mitochondria. Plant cells have both: chloroplasts make sugar, and mitochondria release its energy, day and night.",
+   "viz": [
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "lifesci.cell-size",
+   "slug": "cell-size",
+   "unit": "cells",
+   "title": "Why Cells Are Small",
+   "short": "As a cell grows, its volume grows faster than its surface, so a big cell could not move food in and wastes out fast enough. Small cells have more surface for their size.",
+   "prereqs": [
+    "lifesci.plant-animal-cells",
+    "g6.nets-surface-area",
+    "g5.volume-of-prism"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-2",
+   "trouble": "Students think a cell that doubles in width doubles its surface and volume too. Its surface grows 4 times and its volume 8 times, so the surface-to-volume ratio falls.",
+   "viz": [
+    "bi-cell",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.diffusion-osmosis",
+   "slug": "diffusion-osmosis",
+   "unit": "cells",
+   "title": "Diffusion and Osmosis",
+   "short": "Particles spread from where they are crowded to where they are less crowded (diffusion). Osmosis is the diffusion of water across a membrane, toward the side with more dissolved material.",
+   "prereqs": [
+    "lifesci.cell-parts"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-2",
+   "trouble": "Students think water moves toward the side with more water, or that particles stop moving once they are evenly spread. Water moves toward the saltier side, and at balance the particles keep moving in both directions at the same rate.",
+   "viz": [
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "lifesci.levels-of-organization",
+   "slug": "levels-of-organization",
+   "unit": "cells",
+   "title": "Cells, Tissues, Organs and Systems",
+   "short": "Similar cells form tissues, tissues form organs, organs work together in organ systems, and systems make up an organism.",
+   "prereqs": [
+    "lifesci.one-or-many-cells"
+   ],
+   "xp": 1,
+   "std": "MS-LS1-3",
+   "trouble": "Students place organs below tissues or think an organ is made of one kind of cell. The stomach, for example, has muscle, lining and nerve tissue working together.",
+   "viz": [
+    "bi-body",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.classification-ranks",
+   "slug": "classification-ranks",
+   "unit": "classifying",
+   "title": "From Domain to Species",
+   "short": "Scientists group living things in ranks: domain, kingdom, phylum, class, order, family, genus, species. Each rank holds fewer kinds of organisms that share more traits.",
+   "prereqs": [
+    "lifesci.characteristics-of-life"
+   ],
+   "xp": 1,
+   "trouble": "Students think a larger rank (kingdom) holds fewer organisms because it is \"higher\". The broadest groups hold the most kinds; the species is the narrowest.",
+   "viz": [
+    "bi-classify",
+    "bi-tree"
+   ]
+  },
+  {
+   "id": "lifesci.scientific-names",
+   "slug": "scientific-names",
+   "unit": "classifying",
+   "title": "Scientific Names",
+   "short": "Every species has a two-part scientific name, genus then species, like Canis lupus for the gray wolf. The genus starts with a capital, and the whole name is written in italics.",
+   "prereqs": [
+    "lifesci.classification-ranks"
+   ],
+   "xp": 1,
+   "trouble": "Students capitalize both words or think two animals with the same second word are close relatives. Only the genus is capitalized, and the genus, not the second word, shows close kinship.",
+   "viz": [
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.dichotomous-keys",
+   "slug": "dichotomous-keys",
+   "unit": "classifying",
+   "title": "Dichotomous Keys",
+   "short": "A dichotomous key identifies an organism by a series of either-or choices about traits you can observe, leading step by step to its name.",
+   "prereqs": [
+    "lifesci.classification-ranks"
+   ],
+   "xp": 2,
+   "trouble": "Students jump ahead or answer from what they think the organism is, instead of reading each pair of choices in order and following the step it sends them to.",
+   "viz": [
+    "bi-key"
+   ]
+  },
+  {
+   "id": "lifesci.domains-kingdoms",
+   "slug": "domains-kingdoms",
+   "unit": "classifying",
+   "title": "Three Domains and the Kingdoms",
+   "short": "Life is grouped into three domains, Bacteria, Archaea and Eukarya. Eukarya includes protists, fungi, plants and animals.",
+   "prereqs": [
+    "lifesci.scientific-names",
+    "lifesci.cell-parts"
+   ],
+   "xp": 2,
+   "trouble": "Students put fungi with plants because both grow in place, or bacteria with animals because some move. Fungi absorb food and have cell walls made of chitin; they are more closely related to animals than to plants.",
+   "viz": [
+    "bi-classify",
+    "bi-tree"
+   ]
+  },
+  {
+   "id": "lifesci.bacteria",
+   "slug": "bacteria",
+   "unit": "microbes",
+   "title": "Bacteria",
+   "short": "Bacteria are single cells with no nucleus. They live almost everywhere, and most are harmless or helpful: they break down dead matter, make yogurt and live in our gut.",
+   "prereqs": [
+    "lifesci.domains-kingdoms"
+   ],
+   "xp": 1,
+   "trouble": "Students think all bacteria are germs that make people sick. Only a small share cause disease; many are needed, from the bacteria that fix nitrogen for plants to the ones that help digest food.",
+   "viz": [
+    "bi-cell",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.bacteria-growth",
+   "slug": "bacteria-growth",
+   "unit": "microbes",
+   "title": "How Bacteria Multiply",
+   "short": "A bacterium splits into two, then those two split, and so on. With food and warmth the number doubles each generation: 1, 2, 4, 8, 16.",
+   "prereqs": [
+    "lifesci.bacteria",
+    "g6.whole-number-exponents"
+   ],
+   "xp": 2,
+   "trouble": "Students add 2 each generation (2, 4, 6, 8) instead of doubling (2, 4, 8, 16), or expect the doubling to go on forever. Food and space run out, so growth slows and stops.",
+   "viz": [
+    "bi-population",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.viruses",
+   "slug": "viruses",
+   "unit": "microbes",
+   "title": "Viruses",
+   "short": "A virus is genetic material in a protein coat. It is not a cell; it can make copies of itself only inside a living host cell.",
+   "prereqs": [
+    "lifesci.bacteria"
+   ],
+   "xp": 2,
+   "trouble": "Students think viruses are tiny bacteria and that antibiotics work on them. Viruses are far smaller, are not cells, and antibiotics do not act on them. Whether viruses count as living is still debated by scientists.",
+   "viz": [
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.protists",
+   "slug": "protists",
+   "unit": "microbes",
+   "title": "Protists",
+   "short": "Protists are mostly single-celled organisms with a nucleus: animal-like amoebas and paramecia, plant-like algae that photosynthesize, and fungus-like water molds.",
+   "prereqs": [
+    "lifesci.domains-kingdoms"
+   ],
+   "xp": 1,
+   "trouble": "Students think every microscopic organism is a bacterium. Protists have a nucleus and are often much larger than bacteria.",
+   "viz": [
+    "bi-classify",
+    "bi-microscope"
+   ]
+  },
+  {
+   "id": "lifesci.fungi",
+   "slug": "fungi",
+   "unit": "microbes",
+   "title": "Fungi",
+   "short": "Fungi, including yeasts, molds and mushrooms, absorb food from what they grow on. Many are decomposers, and yeast makes bread rise.",
+   "prereqs": [
+    "lifesci.domains-kingdoms"
+   ],
+   "xp": 1,
+   "trouble": "Students think mushrooms are plants. Fungi have no chlorophyll and cannot make food; the mushroom is only a small part of a fungus whose threads spread through the soil or wood.",
+   "viz": [
+    "bi-classify",
+    "bi-foodweb"
+   ]
+  },
+  {
+   "id": "lifesci.helpful-harmful-microbes",
+   "slug": "helpful-harmful-microbes",
+   "unit": "microbes",
+   "title": "Helpful and Harmful Microbes",
+   "short": "Microbes make foods like cheese and bread, recycle nutrients and live in our bodies; a few cause disease. Antibiotics act on bacteria, not viruses, and washing hands with soap removes many germs.",
+   "prereqs": [
+    "lifesci.viruses",
+    "lifesci.protists",
+    "lifesci.fungi"
+   ],
+   "xp": 2,
+   "trouble": "Students think every microbe is harmful and that one medicine works on all of them. Different microbes are different kinds of life, and antibiotics do nothing against a virus.",
+   "viz": [
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.photosynthesis",
+   "slug": "photosynthesis",
+   "unit": "plants",
+   "title": "Photosynthesis",
+   "short": "In chloroplasts, plants use light energy to turn carbon dioxide and water into sugar, giving off oxygen. The sugar stores the energy and builds the plant's body.",
+   "prereqs": [
+    "lifesci.plant-animal-cells"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-6",
+   "trouble": "Students think plants get their food and mass from the soil. Almost all of a plant's mass comes from carbon dioxide in the air and from water; a willow that grew for years used up only a little of its soil.",
+   "viz": [
+    "bi-energy",
+    "bi-plant"
+   ]
+  },
+  {
+   "id": "lifesci.cellular-respiration",
+   "slug": "cellular-respiration",
+   "unit": "plants",
+   "title": "Cellular Respiration",
+   "short": "Cells release the energy in sugar by combining it with oxygen, giving off carbon dioxide and water. Every living cell does it, plants included, day and night.",
+   "prereqs": [
+    "lifesci.photosynthesis"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-7",
+   "trouble": "Students think respiration means breathing, or that plants photosynthesize instead of respiring. Breathing brings in oxygen; respiration is the chemical process in every cell, and plant cells do it too.",
+   "viz": [
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "lifesci.photo-resp-together",
+   "slug": "photo-resp-together",
+   "unit": "plants",
+   "title": "Photosynthesis and Respiration Together",
+   "short": "The outputs of photosynthesis (sugar and oxygen) are the inputs of respiration, and the outputs of respiration (carbon dioxide and water) are the inputs of photosynthesis.",
+   "prereqs": [
+    "lifesci.cellular-respiration"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-6",
+   "trouble": "Students think the two processes are exact opposites happening in the same place. They form a cycle of matter, but photosynthesis happens in chloroplasts and respiration in mitochondria, and only photosynthesis needs light.",
+   "viz": [
+    "bi-energy",
+    "bi-cycle"
+   ]
+  },
+  {
+   "id": "lifesci.plant-transport",
+   "slug": "plant-transport",
+   "unit": "plants",
+   "title": "How Water and Food Move in a Plant",
+   "short": "Xylem carries water and minerals up from the roots; phloem carries sugar from the leaves to where it is used or stored. Water evaporates from leaves through tiny pores called stomata.",
+   "prereqs": [
+    "lifesci.photosynthesis"
+   ],
+   "xp": 2,
+   "trouble": "Students think water is pushed up from the roots like a pump, or that xylem and phloem carry the same things. Most of the pull comes from water evaporating from the leaves (transpiration).",
+   "viz": [
+    "bi-plant"
+   ]
+  },
+  {
+   "id": "lifesci.plant-responses",
+   "slug": "plant-responses",
+   "unit": "plants",
+   "title": "How Plants Respond",
+   "short": "Plants grow toward light (phototropism), roots grow down with gravity (gravitropism), and vines curl around what they touch (thigmotropism).",
+   "prereqs": [
+    "lifesci.plant-transport"
+   ],
+   "xp": 1,
+   "trouble": "Students think plants cannot respond to anything because they do not move from place to place. Plants respond by growing in a direction, and some, like the sensitive plant, move quickly.",
+   "viz": [
+    "bi-plant"
+   ]
+  },
+  {
+   "id": "lifesci.plant-groups",
+   "slug": "plant-groups",
+   "unit": "plants",
+   "title": "Mosses, Ferns, Conifers and Flowering Plants",
+   "short": "Mosses have no tubes for water and stay small; ferns have tubes but no seeds; conifers make seeds in cones; flowering plants make seeds inside fruits.",
+   "prereqs": [
+    "lifesci.plant-transport"
+   ],
+   "xp": 2,
+   "trouble": "Students think every plant has flowers and seeds. Mosses and ferns spread by spores, and pine trees make seeds in cones without flowers.",
+   "viz": [
+    "bi-classify",
+    "bi-tree"
+   ]
+  },
+  {
+   "id": "lifesci.flowers-seeds",
+   "slug": "flowers-seeds",
+   "unit": "plants",
+   "title": "Flowers, Pollination and Seeds",
+   "short": "A flower's stamens make pollen. Pollination carries pollen to the pistil, and then a seed forms; the part around the seeds grows into the fruit. Animals and wind help.",
+   "prereqs": [
+    "lifesci.plant-groups"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-4",
+   "trouble": "Students think a fruit is anything sweet and a vegetable is anything not sweet. In botany, any part that develops from a flower and holds seeds is a fruit, sweet or not.",
+   "viz": [
+    "bi-plant",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "lifesci.plant-growth-factors",
+   "slug": "plant-growth-factors",
+   "unit": "plants",
+   "title": "What Affects How a Plant Grows",
+   "short": "A plant's growth depends on its genes and its surroundings: light, water, nutrients, temperature and space. The same seeds grow differently in different conditions.",
+   "prereqs": [
+    "lifesci.plant-responses",
+    "lifesci.fair-tests"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-5",
+   "trouble": "Students think a plant's size is decided by genes alone, or by care alone. Genes set what is possible; conditions decide how much of it happens.",
+   "viz": [
+    "bi-chart",
+    "bi-plant"
+   ]
+  },
+  {
+   "id": "lifesci.backbones",
+   "slug": "backbones",
+   "unit": "animals",
+   "title": "Animals With and Without Backbones",
+   "short": "Vertebrates have a backbone; invertebrates do not. More than nine in ten known animal species are invertebrates.",
+   "prereqs": [
+    "lifesci.domains-kingdoms"
+   ],
+   "xp": 1,
+   "trouble": "Students think most animals have backbones because the animals they know best (pets, farm animals) do. Insects alone far outnumber all vertebrate species.",
+   "viz": [
+    "bi-classify",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "lifesci.invertebrate-groups",
+   "slug": "invertebrate-groups",
+   "unit": "animals",
+   "title": "Invertebrate Groups",
+   "short": "Sponges, cnidarians (jellyfish), worms, mollusks (snails, octopuses), arthropods (insects, spiders, crabs) and echinoderms (sea stars) are the major invertebrate groups.",
+   "prereqs": [
+    "lifesci.backbones"
+   ],
+   "xp": 2,
+   "trouble": "Students call jellyfish and starfish fish, and spiders insects. Jellyfish are cnidarians, sea stars are echinoderms, and spiders are arachnids, a different arthropod group from insects.",
+   "viz": [
+    "bi-classify",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "lifesci.vertebrate-groups",
+   "slug": "vertebrate-groups",
+   "unit": "animals",
+   "title": "Vertebrate Groups",
+   "short": "Fish, amphibians, reptiles, birds and mammals differ in coverings, how they breathe, and whether they keep a steady body temperature.",
+   "prereqs": [
+    "lifesci.backbones"
+   ],
+   "xp": 1,
+   "trouble": "Students sort by habitat (whales as fish) or by flight (bats as birds). Body traits decide the group: hair and milk for mammals, feathers for birds, gills and fins for fish.",
+   "viz": [
+    "bi-classify",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "lifesci.structural-adaptations",
+   "slug": "structural-adaptations",
+   "unit": "animals",
+   "title": "Body Adaptations",
+   "short": "Adaptations are inherited traits that help an organism survive where it lives, such as a duck's webbed feet, a hawk's hooked beak, or camouflage.",
+   "prereqs": [
+    "lifesci.vertebrate-groups",
+    "lifesci.invertebrate-groups"
+   ],
+   "xp": 2,
+   "trouble": "Students think an animal grows an adaptation because it needs it (\"the giraffe stretched its neck\"). Adaptations are inherited traits that were already in the population and became common over many generations.",
+   "viz": [
+    "bi-picture",
+    "bi-habitat"
+   ]
+  },
+  {
+   "id": "lifesci.behavioral-adaptations",
+   "slug": "behavioral-adaptations",
+   "unit": "animals",
+   "title": "Behavior: Instinct and Learning",
+   "short": "Some behaviors are instincts, done right the first time without learning, like a spider spinning a web. Others are learned, like a crow learning which trash cans hold food.",
+   "prereqs": [
+    "lifesci.structural-adaptations"
+   ],
+   "xp": 1,
+   "trouble": "Students think animals do everything by instinct or that learned behavior is passed to offspring through genes. Learned behavior must be learned again by each animal.",
+   "viz": [
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.body-temperature",
+   "slug": "body-temperature",
+   "unit": "animals",
+   "title": "Endotherms and Ectotherms",
+   "short": "Birds and mammals are endotherms: they make heat inside and keep a fairly steady body temperature. Fish, amphibians and reptiles are ectotherms: their temperature follows their surroundings.",
+   "prereqs": [
+    "lifesci.vertebrate-groups"
+   ],
+   "xp": 2,
+   "trouble": "Students think \"cold-blooded\" animals have cold blood. A lizard basking in the sun can be warmer than a person; its temperature simply depends on its surroundings.",
+   "viz": [
+    "bi-classify",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.biotic-abiotic",
+   "slug": "biotic-abiotic",
+   "unit": "ecosystems",
+   "title": "Living and Nonliving Parts",
+   "short": "An ecosystem is the living (biotic) parts, like plants, animals and microbes, together with the nonliving (abiotic) parts, like sunlight, water, soil, air and temperature.",
+   "prereqs": [
+    "lifesci.characteristics-of-life"
+   ],
+   "xp": 1,
+   "std": "MS-LS2-1",
+   "trouble": "Students treat dead leaves or a log as abiotic. Things that were once living are part of the biotic world and feed decomposers; abiotic means never living, like rock, water and sunlight.",
+   "viz": [
+    "bi-classify",
+    "bi-habitat"
+   ]
+  },
+  {
+   "id": "lifesci.levels-ecology",
+   "slug": "levels-ecology",
+   "unit": "ecosystems",
+   "title": "Organisms, Populations and Communities",
+   "short": "An organism is one living thing; a population is all of one species in an area; a community is all the populations together; an ecosystem adds the nonliving parts.",
+   "prereqs": [
+    "lifesci.biotic-abiotic"
+   ],
+   "xp": 1,
+   "trouble": "Students mix up population and community, calling all the animals in a pond a population. A population is one species only.",
+   "viz": [
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.ecosystem-roles",
+   "slug": "ecosystem-roles",
+   "unit": "ecosystems",
+   "title": "Producers, Consumers and Decomposers",
+   "short": "Producers make their own food from sunlight; consumers eat other organisms; decomposers break down dead matter and wastes and return nutrients to the soil.",
+   "prereqs": [
+    "lifesci.levels-ecology",
+    "lifesci.photosynthesis"
+   ],
+   "xp": 1,
+   "std": "MS-LS2-3",
+   "trouble": "Students leave decomposers out of the ecosystem or think they are consumers of living things only. Without decomposers, nutrients would stay locked in dead matter.",
+   "viz": [
+    "bi-foodweb",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.food-webs",
+   "slug": "food-webs",
+   "unit": "ecosystems",
+   "title": "Food Chains and Food Webs",
+   "short": "A food web is many food chains linked together. Arrows point from the food to the eater, the direction energy and matter move.",
+   "prereqs": [
+    "lifesci.ecosystem-roles"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-3",
+   "trouble": "Students read the arrows as \"eats\" and draw them backward, from the predator to the prey. The arrow shows where the energy goes: grass → rabbit means the rabbit eats the grass.",
+   "viz": [
+    "bi-foodweb"
+   ]
+  },
+  {
+   "id": "lifesci.web-changes",
+   "slug": "web-changes",
+   "unit": "ecosystems",
+   "title": "When One Population Changes",
+   "short": "If one population in a food web grows or shrinks, others change too: lose the foxes, and rabbits may boom and then overeat the grass.",
+   "prereqs": [
+    "lifesci.food-webs"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-4",
+   "trouble": "Students think removing a predator only affects its prey. The effects ripple through the whole web, including the plants two steps away.",
+   "viz": [
+    "bi-foodweb",
+    "bi-population"
+   ]
+  },
+  {
+   "id": "lifesci.energy-pyramids",
+   "slug": "energy-pyramids",
+   "unit": "ecosystems",
+   "title": "Energy Pyramids",
+   "short": "Only about 10% of the energy at one level of a food chain is stored in the next level; the rest is used for living and lost as heat. That is why there are fewer top predators.",
+   "prereqs": [
+    "lifesci.food-webs",
+    "g6.percent-of-a-number"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-3",
+   "trouble": "Students think energy is recycled through the ecosystem like matter, or that each level passes on all its energy. Matter cycles, but energy flows one way and most of it leaves as heat at each step.",
+   "viz": [
+    "bi-pyramid"
+   ]
+  },
+  {
+   "id": "lifesci.species-interactions",
+   "slug": "species-interactions",
+   "unit": "ecosystems",
+   "title": "Competition, Predation and Symbiosis",
+   "short": "Species compete for the same resources, predators eat prey, and in symbiosis two species live closely: both benefit (mutualism), one benefits without harm (commensalism), or one benefits at the other's cost (parasitism).",
+   "prereqs": [
+    "lifesci.food-webs"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-2",
+   "trouble": "Students think every close relationship is helpful, or call predation parasitism. A parasite usually lives on or in its host for a long time without killing it right away; a predator kills and eats its prey.",
+   "viz": [
+    "bi-classify",
+    "bi-foodweb"
+   ]
+  },
+  {
+   "id": "lifesci.carbon-cycle",
+   "slug": "carbon-cycle",
+   "unit": "ecosystems",
+   "title": "The Carbon Cycle",
+   "short": "Carbon moves from the air into plants by photosynthesis, into animals by eating, and back to the air by respiration, decomposition and burning.",
+   "prereqs": [
+    "lifesci.photo-resp-together",
+    "lifesci.ecosystem-roles"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-3",
+   "trouble": "Students think the carbon in food disappears when it is used. The atoms are not destroyed; respiration releases them back to the air as carbon dioxide.",
+   "viz": [
+    "bi-cycle"
+   ]
+  },
+  {
+   "id": "lifesci.nitrogen-cycle",
+   "slug": "nitrogen-cycle",
+   "unit": "ecosystems",
+   "title": "The Nitrogen Cycle",
+   "short": "Air is mostly nitrogen, but plants cannot use it directly. Bacteria in soil and in root nodules turn it into forms plants can absorb; decomposers and other bacteria return it to the soil and air.",
+   "prereqs": [
+    "lifesci.carbon-cycle",
+    "lifesci.bacteria"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-3",
+   "trouble": "Students think plants take nitrogen from the air through their leaves. Plants depend on bacteria to change nitrogen gas into compounds their roots can take up.",
+   "viz": [
+    "bi-cycle"
+   ]
+  },
+  {
+   "id": "lifesci.biomes",
+   "slug": "biomes",
+   "unit": "ecosystems",
+   "title": "Biomes",
+   "short": "Biomes are large regions with a similar climate and similar kinds of life: tropical rainforest, desert, grassland, deciduous forest, taiga and tundra.",
+   "prereqs": [
+    "lifesci.biotic-abiotic"
+   ],
+   "xp": 2,
+   "trouble": "Students define biomes by place names or by animals alone. Temperature and rainfall decide a biome, and those in turn decide which plants, and then which animals, can live there.",
+   "viz": [
+    "bi-habitat",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.succession",
+   "slug": "succession",
+   "unit": "ecosystems",
+   "title": "Ecological Succession",
+   "short": "After a disturbance, communities change in a series of stages. Primary succession starts on bare rock with no soil; secondary succession starts where soil remains, as after a fire.",
+   "prereqs": [
+    "lifesci.biomes"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-4",
+   "trouble": "Students think succession always starts from bare rock, or that an ecosystem stays the same forever once it forms. A burned forest keeps its soil, so it recovers faster, by secondary succession.",
+   "viz": [
+    "bi-lifecycle",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.biodiversity",
+   "slug": "biodiversity",
+   "unit": "ecosystems",
+   "title": "Biodiversity and Ecosystem Services",
+   "short": "Biodiversity is the variety of life. Healthy ecosystems provide clean water, fertile soil, pollination and food, and more diverse ecosystems often recover better after disturbances.",
+   "prereqs": [
+    "lifesci.species-interactions",
+    "lifesci.succession"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-5",
+   "trouble": "Students measure biodiversity by the number of individuals instead of the number of different species. A field with a thousand plants of one kind has low diversity.",
+   "viz": [
+    "bi-chart",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.human-impact",
+   "slug": "human-impact",
+   "unit": "ecosystems",
+   "title": "People and Ecosystems",
+   "short": "Habitat loss, invasive species, pollution and overharvesting can harm ecosystems, and solutions such as protected areas, cleanup and careful harvesting are weighed by what they cost and what they protect.",
+   "prereqs": [
+    "lifesci.biodiversity"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-5",
+   "trouble": "Students think any change people make harms nature, or that nature always fixes itself. Effects depend on the change; solutions trade off costs and benefits, and engineers and communities compare them.",
+   "viz": [
+    "bi-classify",
+    "bi-foodweb"
+   ]
+  },
+  {
+   "id": "lifesci.population-growth",
+   "slug": "population-growth",
+   "unit": "populations",
+   "title": "How Populations Grow",
+   "short": "A population grows when more individuals are added (by birth or arrival) than are lost (by death or leaving). With plenty of resources it can grow faster and faster.",
+   "prereqs": [
+    "lifesci.levels-ecology"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-1",
+   "trouble": "Students think a population grows by the same number each year. When each individual adds offspring, the growth itself grows: the larger the population, the more it adds.",
+   "viz": [
+    "bi-population"
+   ]
+  },
+  {
+   "id": "lifesci.limiting-factors",
+   "slug": "limiting-factors",
+   "unit": "populations",
+   "title": "Limiting Factors and Carrying Capacity",
+   "short": "Food, water, space, shelter, disease and predators limit a population. The largest population an environment can support over time is its carrying capacity.",
+   "prereqs": [
+    "lifesci.population-growth"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-1",
+   "trouble": "Students think a population stays exactly at carrying capacity, or that one plentiful resource lets it grow forever. Whatever runs short first sets the limit, and real populations rise and fall around it.",
+   "viz": [
+    "bi-population"
+   ]
+  },
+  {
+   "id": "lifesci.predator-prey",
+   "slug": "predator-prey",
+   "unit": "populations",
+   "title": "Predators and Prey",
+   "short": "When prey are plentiful, predators thrive and increase; then prey fall, and predators follow with a lag. The two populations rise and fall in turns.",
+   "prereqs": [
+    "lifesci.limiting-factors",
+    "lifesci.food-webs"
+   ],
+   "xp": 2,
+   "std": "MS-LS2-1",
+   "trouble": "Students think predators wipe out their prey, or that the two populations peak at the same time. The predator peak comes after the prey peak.",
+   "viz": [
+    "bi-population"
+   ],
+   "lab": "/science-lab/ecosystem/"
+  },
+  {
+   "id": "lifesci.sampling-populations",
+   "slug": "sampling-populations",
+   "unit": "populations",
+   "title": "Counting a Population",
+   "short": "Ecologists estimate a population by counting in a few sample squares (quadrats) and scaling up: average count per square × number of squares in the whole area.",
+   "prereqs": [
+    "lifesci.population-growth",
+    "g6.unit-rate-problems"
+   ],
+   "xp": 2,
+   "trouble": "Students multiply one square's count by the area without averaging several squares, or forget to match the units of the sample square and the whole area.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.skeletal-system",
+   "slug": "skeletal-system",
+   "unit": "body",
+   "title": "Bones and the Skeleton",
+   "short": "The skeleton supports the body, protects organs (the skull guards the brain), works with muscles to move, and makes blood cells in the bone marrow. An adult has 206 bones.",
+   "prereqs": [
+    "lifesci.levels-of-organization"
+   ],
+   "xp": 1,
+   "std": "MS-LS1-3",
+   "trouble": "Students think bones are dead, dry sticks. Living bone has cells and blood vessels, grows, and repairs itself after a break.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "lifesci.muscular-system",
+   "slug": "muscular-system",
+   "unit": "body",
+   "title": "Muscles",
+   "short": "Skeletal muscles move bones, smooth muscle moves food and blood through organs, and cardiac muscle pumps the heart. Muscles can only pull, so they work in pairs.",
+   "prereqs": [
+    "lifesci.skeletal-system"
+   ],
+   "xp": 1,
+   "std": "MS-LS1-3",
+   "trouble": "Students think a muscle pushes to straighten a joint. Muscles only shorten and pull; to straighten your arm, the triceps pulls while the biceps relaxes.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "lifesci.digestive-system",
+   "slug": "digestive-system",
+   "unit": "body",
+   "title": "Digestion",
+   "short": "Food travels from the mouth through the esophagus, stomach, small intestine and large intestine. Teeth and stomach break it up; enzymes break it into small molecules the small intestine absorbs.",
+   "prereqs": [
+    "lifesci.levels-of-organization"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-3",
+   "trouble": "Students think digestion begins in the stomach and that most absorption happens there. Digestion starts in the mouth, and most nutrients are absorbed in the small intestine.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "lifesci.circulatory-system",
+   "slug": "circulatory-system",
+   "unit": "body",
+   "title": "The Heart and Blood",
+   "short": "The heart pumps blood through arteries (away from the heart), capillaries (where exchange happens) and veins (back to the heart). Blood carries oxygen, nutrients and wastes.",
+   "prereqs": [
+    "lifesci.muscular-system"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-3",
+   "trouble": "Students think blood in veins is blue. Blood is always red; it is darker red when it carries less oxygen, and veins only look blue through the skin.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "lifesci.respiratory-system",
+   "slug": "respiratory-system",
+   "unit": "body",
+   "title": "Breathing and Gas Exchange",
+   "short": "The diaphragm pulls air into the lungs. In tiny air sacs (alveoli), oxygen moves into the blood and carbon dioxide moves out.",
+   "prereqs": [
+    "lifesci.circulatory-system"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-3",
+   "trouble": "Students think we breathe in only oxygen and breathe out only carbon dioxide. Air in is about 21% oxygen and air out is still about 16% oxygen, with more carbon dioxide and water vapor.",
+   "viz": [
+    "bi-body",
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "lifesci.nervous-system",
+   "slug": "nervous-system",
+   "unit": "body",
+   "title": "Nerves, Senses and the Brain",
+   "short": "Sense organs detect stimuli, nerves carry signals to the brain and spinal cord, and the brain sends signals out to muscles. A reflex is a fast response routed through the spinal cord.",
+   "prereqs": [
+    "lifesci.levels-of-organization"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-8",
+   "trouble": "Students think the eyes or hands \"feel\" and decide on their own. Receptors only detect; the brain interprets the signals, which is why we can be fooled by optical illusions.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "lifesci.immune-basics",
+   "slug": "immune-basics",
+   "unit": "body",
+   "title": "The Body's Defenses",
+   "short": "Skin and mucus keep most germs out. White blood cells attack germs that get in, and some remember a germ so the body can respond faster the next time.",
+   "prereqs": [
+    "lifesci.circulatory-system",
+    "lifesci.helpful-harmful-microbes"
+   ],
+   "xp": 2,
+   "trouble": "Students think a fever or a runny nose is the germ itself rather than the body's defenses at work, or that the body has only one kind of defense.",
+   "viz": [
+    "bi-body",
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "lifesci.excretory-system",
+   "slug": "excretory-system",
+   "unit": "body",
+   "title": "Removing Wastes",
+   "short": "The kidneys filter wastes from the blood and make urine, the lungs remove carbon dioxide, and the skin releases some water and salt in sweat.",
+   "prereqs": [
+    "lifesci.circulatory-system"
+   ],
+   "xp": 1,
+   "std": "MS-LS1-3",
+   "trouble": "Students think solid waste from digestion is the main waste the body makes. Undigested food just passes through; the kidneys remove the wastes that cells make, from the blood.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "lifesci.systems-together",
+   "slug": "systems-together",
+   "unit": "body",
+   "title": "Systems Working Together",
+   "short": "During exercise, muscles need more oxygen and sugar, so breathing and heart rate rise, and the body sweats to shed heat. No system works alone.",
+   "prereqs": [
+    "lifesci.respiratory-system",
+    "lifesci.nervous-system",
+    "lifesci.excretory-system",
+    "lifesci.digestive-system"
+   ],
+   "xp": 2,
+   "std": "MS-LS1-3",
+   "trouble": "Students think each organ system has its own separate job and does not affect the others. Exercise shows the muscular, respiratory, circulatory and nervous systems changing together.",
+   "viz": [
+    "bi-body",
+    "bi-feedback"
+   ]
+  },
+  {
+   "id": "lifesci.inherited-acquired",
+   "slug": "inherited-acquired",
+   "unit": "heredity",
+   "title": "Inherited and Acquired Traits",
+   "short": "Inherited traits, like eye color, are passed from parents through genes. Acquired traits, like a scar, a skill or a language, come from experience and are not passed on.",
+   "prereqs": [
+    "lifesci.characteristics-of-life"
+   ],
+   "xp": 1,
+   "trouble": "Students think a skill or an injury of a parent can be inherited, such as a weightlifter's muscles. Only traits coded in genes are passed to offspring.",
+   "viz": [
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "lifesci.dna-genes",
+   "slug": "dna-genes",
+   "unit": "heredity",
+   "title": "DNA, Genes and Chromosomes",
+   "short": "DNA carries the instructions for building an organism. A gene is a section of DNA with the instructions for one protein, and DNA is packed into chromosomes in the nucleus.",
+   "prereqs": [
+    "lifesci.inherited-acquired",
+    "lifesci.cell-parts"
+   ],
+   "xp": 2,
+   "std": "MS-LS3-1",
+   "trouble": "Students think genes and chromosomes are separate things, or that only some cells have DNA. A chromosome is a long DNA molecule carrying many genes, and nearly every cell has a full set.",
+   "viz": [
+    "bi-dna",
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "lifesci.genes-proteins-traits",
+   "slug": "genes-proteins-traits",
+   "unit": "heredity",
+   "title": "Genes Make Proteins, Proteins Make Traits",
+   "short": "A gene is a recipe for a protein, and proteins do the work of the cell: some make pigment, some build structures, some speed up reactions. That is how genes shape traits.",
+   "prereqs": [
+    "lifesci.dna-genes"
+   ],
+   "xp": 2,
+   "std": "MS-LS3-1",
+   "trouble": "Students think a gene is a tiny trait, such as \"a blue eye\". A gene codes for a protein, and the trait comes from what that protein does.",
+   "viz": [
+    "bi-central"
+   ]
+  },
+  {
+   "id": "lifesci.one-or-two-parents",
+   "slug": "one-or-two-parents",
+   "unit": "heredity",
+   "title": "One Parent or Two: Copies and Mixes",
+   "short": "Offspring of one parent, like a bacterium that splits, a yeast that buds or a plant grown from a cutting, get an exact copy of its genes. Offspring of two parents get half their genes from each, so they vary.",
+   "prereqs": [
+    "lifesci.dna-genes"
+   ],
+   "xp": 2,
+   "std": "MS-LS3-2",
+   "trouble": "Students think offspring of two parents get a blend of every trait, like mixing paint. Each parent passes on one of each pair of genes, so siblings can differ from each other and from both parents.",
+   "viz": [
+    "bi-classify",
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "lifesci.alleles",
+   "slug": "alleles",
+   "unit": "heredity",
+   "title": "Alleles: Dominant and Recessive",
+   "short": "Each gene comes in versions called alleles. You have two alleles for each gene, one from each parent. A dominant allele shows its trait even with one copy; a recessive one shows only with two copies.",
+   "prereqs": [
+    "lifesci.one-or-two-parents"
+   ],
+   "xp": 2,
+   "trouble": "Students think dominant alleles are the most common or the \"stronger, better\" version. Dominant only means it shows with one copy; some dominant alleles are rare.",
+   "viz": [
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "lifesci.genotype-phenotype",
+   "slug": "genotype-phenotype",
+   "unit": "heredity",
+   "title": "Genotype and Phenotype",
+   "short": "Your genotype is your pair of alleles (TT, Tt or tt); your phenotype is the trait that shows (tall or short). Two alleles alike is homozygous; two different is heterozygous.",
+   "prereqs": [
+    "lifesci.alleles"
+   ],
+   "xp": 2,
+   "trouble": "Students think TT and Tt must look different, or write a phenotype as letters. With a dominant allele, TT and Tt show the same phenotype.",
+   "viz": [
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "lifesci.punnett-squares",
+   "slug": "punnett-squares",
+   "unit": "heredity",
+   "title": "Punnett Squares",
+   "short": "A Punnett square shows every way the parents' alleles can combine. Put one parent's alleles across the top and the other's down the side, then fill each box.",
+   "prereqs": [
+    "lifesci.genotype-phenotype"
+   ],
+   "xp": 2,
+   "trouble": "Students put both alleles of a parent in one box, or combine letters from the same parent. Each box gets one allele from the top and one from the side.",
+   "viz": [
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "lifesci.punnett-probability",
+   "slug": "punnett-probability",
+   "unit": "heredity",
+   "title": "Chances from a Punnett Square",
+   "short": "Each box of a Punnett square is an equally likely outcome, so a box count gives a probability: 1 of 4 boxes is a 25% chance for each offspring.",
+   "prereqs": [
+    "lifesci.punnett-squares",
+    "g7.theoretical-probability"
+   ],
+   "xp": 2,
+   "trouble": "Students think a 3:1 ratio means exactly 3 of every 4 offspring will show the trait. Each offspring is a new chance; real families and litters vary from the ratio, especially when they are small.",
+   "viz": [
+    "bi-punnett",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.mutations",
+   "slug": "mutations",
+   "unit": "heredity",
+   "title": "Mutations",
+   "short": "A mutation is a change in DNA. It can be harmful, helpful or neutral, depending on how it changes a protein and on the environment.",
+   "prereqs": [
+    "lifesci.genes-proteins-traits"
+   ],
+   "xp": 2,
+   "std": "MS-LS3-1",
+   "trouble": "Students think all mutations are harmful and create monsters. Most have little or no effect, a few are harmful, and some are helpful, like the one that lets some adults digest milk sugar.",
+   "viz": [
+    "bi-dna",
+    "bi-central"
+   ]
+  },
+  {
+   "id": "lifesci.breeding-engineering",
+   "slug": "breeding-engineering",
+   "unit": "heredity",
+   "title": "Selective Breeding and Genetic Engineering",
+   "short": "People choose which plants and animals have offspring to shape traits over generations (selective breeding), and can move a gene into another organism (genetic engineering), as when bacteria make insulin.",
+   "prereqs": [
+    "lifesci.punnett-squares",
+    "lifesci.mutations"
+   ],
+   "xp": 2,
+   "std": "MS-LS4-5",
+   "trouble": "Students think selective breeding creates new genes. It works with variation already in the population; genetic engineering is the technology that moves a specific gene.",
+   "viz": [
+    "bi-classify",
+    "bi-selection"
+   ]
+  },
+  {
+   "id": "lifesci.fossil-record",
+   "slug": "fossil-record",
+   "unit": "evolution",
+   "title": "The Fossil Record",
+   "short": "Fossils in rock layers, oldest at the bottom, show that life has changed over Earth's history: many species have gone extinct, and simpler forms appear before more complex ones.",
+   "prereqs": [
+    "earthsci.fossils",
+    "earthsci.superposition"
+   ],
+   "xp": 2,
+   "std": "MS-LS4-1",
+   "trouble": "Students think the fossil record is a complete list of every species, or that all life appeared at once. Fossils form only in special conditions, so the record has gaps, but its order is consistent worldwide.",
+   "viz": [
+    "bi-tree",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "lifesci.comparing-bodies",
+   "slug": "comparing-bodies",
+   "unit": "evolution",
+   "title": "Comparing Body Structures",
+   "short": "Homologous structures, like the arm of a person, the flipper of a whale and the wing of a bat, have the same bones arranged in the same way, a sign of a shared ancestor.",
+   "prereqs": [
+    "lifesci.fossil-record",
+    "lifesci.vertebrate-groups"
+   ],
+   "xp": 2,
+   "std": "MS-LS4-2",
+   "trouble": "Students think structures that do the same job, like a bird's wing and a butterfly's wing, show close kinship. Similar jobs can evolve separately; shared inner structure is the clue to common ancestry.",
+   "viz": [
+    "bi-tree",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "lifesci.natural-selection",
+   "slug": "natural-selection",
+   "unit": "evolution",
+   "title": "Natural Selection",
+   "short": "Individuals vary; some variations are inherited; more young are born than can survive; those with helpful traits survive and reproduce more, so those traits become more common.",
+   "prereqs": [
+    "lifesci.structural-adaptations",
+    "lifesci.alleles"
+   ],
+   "xp": 2,
+   "std": "MS-LS4-4",
+   "trouble": "Students think individuals change their traits because they need to. Individuals do not evolve; populations do, as inherited traits that help survival become more common over generations.",
+   "viz": [
+    "bi-selection"
+   ]
+  },
+  {
+   "id": "lifesci.populations-change",
+   "slug": "populations-change",
+   "unit": "evolution",
+   "title": "Changes in Populations Over Time",
+   "short": "Data show natural selection at work: the dark form of the peppered moth rose and then fell as soot came and went, and bacteria exposed to antibiotics become resistant.",
+   "prereqs": [
+    "lifesci.natural-selection",
+    "lifesci.bacteria-growth"
+   ],
+   "xp": 3,
+   "std": "MS-LS4-6",
+   "trouble": "Students think antibiotics cause bacteria to become resistant. The antibiotic kills the bacteria that lack resistance, and the few already resistant survive and multiply.",
+   "viz": [
+    "bi-selection",
+    "bi-chart"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1492 @@
+{
+ "course": "hsbio",
+ "units": [
+  {
+   "key": "science",
+   "title": "Biology as a Science",
+   "blurb": "How biologists test ideas: hypotheses, controlled experiments, reading data, and what a scientific theory is."
+  },
+  {
+   "key": "chemistry",
+   "title": "The Chemistry of Life",
+   "blurb": "The elements and bonds of life, water's special properties, pH, the four kinds of large biological molecules, and enzymes."
+  },
+  {
+   "key": "cells",
+   "title": "Cell Structure",
+   "blurb": "Prokaryotic and eukaryotic cells, the endomembrane system that makes and ships proteins, and the origin of mitochondria and chloroplasts."
+  },
+  {
+   "key": "transport",
+   "title": "Membranes and Transport",
+   "blurb": "The fluid mosaic membrane, diffusion, osmosis and tonicity, channels and pumps, and moving large particles in and out."
+  },
+  {
+   "key": "energy",
+   "title": "Cellular Energy",
+   "blurb": "ATP, photosynthesis and its limiting factors, cellular respiration, fermentation, and how the two processes link through the carbon cycle."
+  },
+  {
+   "key": "division",
+   "title": "Cell Division",
+   "blurb": "The cell cycle and its controls, chromosomes and their counts, mitosis, and meiosis with the variation it creates."
+  },
+  {
+   "key": "genetics",
+   "title": "Genetics",
+   "blurb": "Mendel's experiments, monohybrid and dihybrid crosses, probability rules, patterns beyond simple dominance, X-linked traits and pedigrees."
+  },
+  {
+   "key": "dna",
+   "title": "DNA and Gene Expression",
+   "blurb": "The structure and copying of DNA, transcription and translation, the genetic code, mutations, and how cells turn genes on and off."
+  },
+  {
+   "key": "biotech",
+   "title": "Biotechnology",
+   "blurb": "Copying DNA with PCR, sorting it by size with gels, and moving genes between organisms."
+  },
+  {
+   "key": "evolution",
+   "title": "Evolution",
+   "blurb": "Natural selection and its patterns, the evidence for common ancestry, population genetics and Hardy-Weinberg, the other mechanisms of evolution, speciation, and reading phylogenetic trees."
+  },
+  {
+   "key": "ecology",
+   "title": "Ecology",
+   "blurb": "Population growth models, density-dependent limits, community interactions, energy flow and biomass, the cycles of matter, stability and change, group behavior, and biodiversity."
+  },
+  {
+   "key": "homeostasis",
+   "title": "Homeostasis and the Body",
+   "blurb": "Feedback loops, temperature and blood sugar control, and the circulatory, respiratory, digestive, nervous, immune and excretory systems in more depth, plus water balance in plants."
+  }
+ ],
+ "topics": [
+  {
+   "id": "hsbio.hypotheses-experiments",
+   "slug": "hypotheses-experiments",
+   "unit": "science",
+   "title": "Hypotheses and Controlled Experiments",
+   "short": "A hypothesis is a testable explanation that makes a prediction. A controlled experiment changes one independent variable, measures a dependent variable, holds the rest constant, and repeats trials.",
+   "prereqs": [
+    "lifesci.fair-tests"
+   ],
+   "xp": 2,
+   "trouble": "Students think a hypothesis is \"proved\" by one experiment that agrees with it. Data can support or refute a hypothesis; more trials and repeated experiments build confidence, and one good refutation counts.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.reading-data",
+   "slug": "reading-data",
+   "unit": "science",
+   "title": "Reading Graphs and Data",
+   "short": "Read a graph by its axes and units first, then the trend; compare groups by their means and spread, and tell correlation from cause.",
+   "prereqs": [
+    "hsbio.hypotheses-experiments",
+    "g6.mean"
+   ],
+   "xp": 2,
+   "trouble": "Students read a graph's trend without checking the axes or units, or treat two things that change together as cause and effect without a controlled experiment.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.scientific-theories",
+   "slug": "scientific-theories",
+   "unit": "science",
+   "title": "Scientific Theories",
+   "short": "In science, a theory is a well-tested explanation that ties together many facts and observations, like the cell theory and the theory of evolution. A law describes a pattern; a theory explains it.",
+   "prereqs": [
+    "hsbio.hypotheses-experiments"
+   ],
+   "xp": 1,
+   "trouble": "Students think \"theory\" means a guess, as in everyday speech, and that a theory becomes a law once proved. Theories and laws are different kinds of ideas; a theory is among the strongest kinds of scientific knowledge.",
+   "viz": [
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "hsbio.elements-bonds",
+   "slug": "elements-bonds",
+   "unit": "chemistry",
+   "title": "The Elements and Bonds of Life",
+   "short": "Living things are built mostly of carbon, hydrogen, oxygen and nitrogen, with phosphorus and sulfur. Atoms share electrons in covalent bonds; ionic bonds and weak hydrogen bonds hold molecules to each other.",
+   "prereqs": [
+    "physsci.charges-in-atoms"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-6",
+   "trouble": "Students think hydrogen bonds are covalent bonds to hydrogen. A hydrogen bond is a weak attraction between molecules (or parts of one), far weaker than the covalent bonds inside a molecule.",
+   "viz": [
+    "bi-molecule"
+   ]
+  },
+  {
+   "id": "hsbio.water-properties",
+   "slug": "water-properties",
+   "unit": "chemistry",
+   "title": "The Properties of Water",
+   "short": "Water is polar, so its molecules form hydrogen bonds. That gives cohesion, adhesion, surface tension, a high specific heat, its power as a solvent, and ice that floats.",
+   "prereqs": [
+    "hsbio.elements-bonds"
+   ],
+   "xp": 2,
+   "trouble": "Students think the bonds inside a water molecule break when water boils. Boiling breaks the hydrogen bonds between molecules; the molecules themselves stay H₂O.",
+   "viz": [
+    "bi-molecule"
+   ]
+  },
+  {
+   "id": "hsbio.ph",
+   "slug": "ph",
+   "unit": "chemistry",
+   "title": "Acids, Bases and pH",
+   "short": "pH measures how acidic a solution is: 7 is neutral, lower is acidic, higher is basic. Each step of 1 is a tenfold change, and buffers keep the pH of living things steady.",
+   "prereqs": [
+    "hsbio.water-properties",
+    "g6.whole-number-exponents"
+   ],
+   "xp": 2,
+   "trouble": "Students think pH 4 is twice as acidic as pH 8, or that a lower pH means fewer hydrogen ions. Each whole step is ten times, so pH 4 has 10,000 times more hydrogen ions than pH 8.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.monomers-polymers",
+   "slug": "monomers-polymers",
+   "unit": "chemistry",
+   "title": "Monomers and Polymers",
+   "short": "Large biological molecules are chains of small units. Dehydration synthesis joins monomers and releases water; hydrolysis splits polymers by adding water.",
+   "prereqs": [
+    "hsbio.elements-bonds"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-6",
+   "trouble": "Students reverse the two reactions, thinking water is added to build a chain. Building a bond removes a water molecule; breaking one uses a water molecule.",
+   "viz": [
+    "bi-molecule"
+   ]
+  },
+  {
+   "id": "hsbio.carbohydrates",
+   "slug": "carbohydrates",
+   "unit": "chemistry",
+   "title": "Carbohydrates",
+   "short": "Sugars (monosaccharides like glucose) are quick energy; polysaccharides store energy (starch in plants, glycogen in animals) or build structure (cellulose in plant cell walls).",
+   "prereqs": [
+    "hsbio.monomers-polymers"
+   ],
+   "xp": 1,
+   "std": "HS-LS1-6",
+   "trouble": "Students think starch and cellulose are different kinds of molecule because people can digest only one. Both are chains of glucose; the different links between the units make the difference.",
+   "viz": [
+    "bi-molecule",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "hsbio.lipids",
+   "slug": "lipids",
+   "unit": "chemistry",
+   "title": "Lipids",
+   "short": "Fats, oils, phospholipids and steroids do not mix with water. Fats store energy compactly, phospholipids build membranes, and steroids include cholesterol and some hormones.",
+   "prereqs": [
+    "hsbio.monomers-polymers"
+   ],
+   "xp": 1,
+   "std": "HS-LS1-6",
+   "trouble": "Students think lipids are polymers made of repeating units like the others. Fats are built from glycerol and fatty acids but are not long chains of identical monomers.",
+   "viz": [
+    "bi-molecule",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "hsbio.proteins",
+   "slug": "proteins",
+   "unit": "chemistry",
+   "title": "Proteins",
+   "short": "Proteins are chains of amino acids (20 kinds) folded into precise shapes. The shape decides the job: enzymes, structure, transport, signals and defense.",
+   "prereqs": [
+    "hsbio.monomers-polymers"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-6",
+   "trouble": "Students think a protein is just a list of amino acids. The order of amino acids decides how the chain folds, and the folded shape decides what the protein can do.",
+   "viz": [
+    "bi-molecule"
+   ]
+  },
+  {
+   "id": "hsbio.nucleic-acids",
+   "slug": "nucleic-acids",
+   "unit": "chemistry",
+   "title": "Nucleic Acids",
+   "short": "DNA and RNA are chains of nucleotides, each a sugar, a phosphate and a base. DNA stores genetic information; RNA helps use it to build proteins.",
+   "prereqs": [
+    "hsbio.monomers-polymers"
+   ],
+   "xp": 1,
+   "std": "HS-LS1-6",
+   "trouble": "Students think DNA and RNA are made of different kinds of building blocks altogether. Both are nucleotide chains; they differ in the sugar, in one base (thymine or uracil) and in usually being double or single stranded.",
+   "viz": [
+    "bi-molecule",
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "hsbio.enzymes",
+   "slug": "enzymes",
+   "unit": "chemistry",
+   "title": "Enzymes",
+   "short": "Enzymes are proteins that speed up reactions by lowering the activation energy. The substrate fits the active site; the enzyme is not used up and can work again and again.",
+   "prereqs": [
+    "hsbio.proteins"
+   ],
+   "xp": 2,
+   "trouble": "Students think enzymes are used up in the reaction or that they supply the energy for it. Enzymes come out unchanged and only lower the energy barrier.",
+   "viz": [
+    "bi-enzyme"
+   ]
+  },
+  {
+   "id": "hsbio.enzyme-conditions",
+   "slug": "enzyme-conditions",
+   "unit": "chemistry",
+   "title": "Temperature, pH and Enzymes",
+   "short": "Each enzyme works best at an optimal temperature and pH. Too far away, the enzyme's shape changes (it denatures) and it stops working.",
+   "prereqs": [
+    "hsbio.enzymes",
+    "hsbio.ph"
+   ],
+   "xp": 2,
+   "trouble": "Students think enzymes are \"killed\" by heat. Enzymes are molecules, not living things; heat changes their shape, and the reaction rate rises with temperature until the enzyme begins to denature.",
+   "viz": [
+    "bi-enzyme",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.prokaryotes-eukaryotes",
+   "slug": "prokaryotes-eukaryotes",
+   "unit": "cells",
+   "title": "Prokaryotic and Eukaryotic Cells",
+   "short": "Prokaryotic cells (bacteria and archaea) have no nucleus or membrane-bound organelles; eukaryotic cells have both. All cells have a membrane, cytoplasm, ribosomes and DNA.",
+   "prereqs": [
+    "lifesci.plant-animal-cells"
+   ],
+   "xp": 1,
+   "std": "HS-LS1-2",
+   "trouble": "Students think prokaryotes have no DNA or no ribosomes because they have no nucleus. Their DNA sits in the cytoplasm, and they have ribosomes like every cell.",
+   "viz": [
+    "bi-cell",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "hsbio.endomembrane",
+   "slug": "endomembrane",
+   "unit": "cells",
+   "title": "The Endomembrane System",
+   "short": "A protein made for export follows a path: ribosomes on the rough ER, then a vesicle to the Golgi apparatus, then a vesicle to the cell membrane, where it is released.",
+   "prereqs": [
+    "hsbio.prokaryotes-eukaryotes",
+    "hsbio.proteins"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-2",
+   "trouble": "Students send proteins from the nucleus straight to the Golgi, or think the Golgi makes proteins. Ribosomes make them; the ER and Golgi fold, tag and ship them.",
+   "viz": [
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "hsbio.endosymbiosis",
+   "slug": "endosymbiosis",
+   "unit": "cells",
+   "title": "Where Mitochondria and Chloroplasts Came From",
+   "short": "Mitochondria and chloroplasts descend from bacteria taken in by an ancient cell. Evidence: they have their own circular DNA and ribosomes, two membranes, and divide like bacteria.",
+   "prereqs": [
+    "hsbio.prokaryotes-eukaryotes"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-1",
+   "trouble": "Students think the theory is a guess with no evidence, or that chloroplasts came from mitochondria. Several independent lines of evidence point to two separate events, with chloroplasts from cyanobacteria.",
+   "viz": [
+    "bi-cell",
+    "bi-tree"
+   ]
+  },
+  {
+   "id": "hsbio.membrane-structure",
+   "slug": "membrane-structure",
+   "unit": "transport",
+   "title": "The Cell Membrane",
+   "short": "The membrane is a double layer of phospholipids (water-loving heads out, water-fearing tails in) with proteins floating in it: the fluid mosaic model.",
+   "prereqs": [
+    "hsbio.lipids",
+    "hsbio.prokaryotes-eukaryotes"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-2",
+   "trouble": "Students picture the membrane as a rigid wall with holes. It is fluid: its lipids and many proteins drift sideways, and small nonpolar molecules slip right through the lipid layer.",
+   "viz": [
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "hsbio.diffusion",
+   "slug": "diffusion",
+   "unit": "transport",
+   "title": "Diffusion and Concentration Gradients",
+   "short": "Particles spread from higher to lower concentration until evenly mixed. Small nonpolar molecules like oxygen and carbon dioxide diffuse straight through the membrane.",
+   "prereqs": [
+    "hsbio.membrane-structure"
+   ],
+   "xp": 2,
+   "trouble": "Students think diffusion stops at equilibrium. Particles keep moving both ways; at equilibrium there is no net change.",
+   "viz": [
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "hsbio.osmosis-tonicity",
+   "slug": "osmosis-tonicity",
+   "unit": "transport",
+   "title": "Osmosis and Tonicity",
+   "short": "Water moves across a membrane toward the side with more solute. In a hypotonic solution a cell gains water; in a hypertonic one it loses water; in an isotonic one there is no net change.",
+   "prereqs": [
+    "hsbio.diffusion"
+   ],
+   "xp": 2,
+   "trouble": "Students think solute moves rather than water, or mix up hypertonic and hypotonic. Compare the solution to the cell: hyper means more solute outside, so water leaves the cell.",
+   "viz": [
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "hsbio.channels-pumps",
+   "slug": "channels-pumps",
+   "unit": "transport",
+   "title": "Channels, Carriers and Pumps",
+   "short": "Ions and polar molecules cross through proteins. Facilitated diffusion goes down the gradient with no energy; active transport, like the sodium-potassium pump, uses ATP to move against it.",
+   "prereqs": [
+    "hsbio.osmosis-tonicity"
+   ],
+   "xp": 2,
+   "trouble": "Students think any transport that uses a protein must use energy. Channels and carriers in facilitated diffusion use none; only moving against the gradient costs ATP.",
+   "viz": [
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "hsbio.bulk-transport",
+   "slug": "bulk-transport",
+   "unit": "transport",
+   "title": "Endocytosis and Exocytosis",
+   "short": "Cells take in large particles by wrapping them in membrane (endocytosis) and release large molecules by fusing vesicles with the membrane (exocytosis). Both use energy.",
+   "prereqs": [
+    "hsbio.channels-pumps",
+    "hsbio.endomembrane"
+   ],
+   "xp": 1,
+   "trouble": "Students mix up the two directions. Endo means in: the membrane folds inward; exo means out: a vesicle joins the membrane and spills its contents outside.",
+   "viz": [
+    "bi-membrane",
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "hsbio.atp",
+   "slug": "atp",
+   "unit": "energy",
+   "title": "ATP: The Cell's Energy Currency",
+   "short": "ATP releases energy when its last phosphate is removed, becoming ADP. Cells couple that release to work, and recharge ADP back to ATP with energy from food.",
+   "prereqs": [
+    "hsbio.nucleic-acids"
+   ],
+   "xp": 2,
+   "trouble": "Students think energy is stored in a single \"high-energy bond\" that explodes when broken. Breaking any bond takes energy; ATP hydrolysis releases energy overall because the products are more stable.",
+   "viz": [
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "hsbio.photosynthesis",
+   "slug": "photosynthesis",
+   "unit": "energy",
+   "title": "Photosynthesis",
+   "short": "6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. In the chloroplast, the light-dependent reactions split water and make ATP and NADPH; the Calvin cycle uses them to build sugar from CO₂.",
+   "prereqs": [
+    "hsbio.atp",
+    "lifesci.photosynthesis"
+   ],
+   "xp": 3,
+   "std": "HS-LS1-5",
+   "trouble": "Students think the oxygen released comes from carbon dioxide. It comes from splitting water; the carbon and oxygen of CO₂ end up in the sugar.",
+   "viz": [
+    "bi-energy",
+    "bi-plant"
+   ]
+  },
+  {
+   "id": "hsbio.photosynthesis-factors",
+   "slug": "photosynthesis-factors",
+   "unit": "energy",
+   "title": "What Limits Photosynthesis",
+   "short": "The rate of photosynthesis rises with light, carbon dioxide and temperature until something else becomes the limiting factor, and falls at high temperature as enzymes denature.",
+   "prereqs": [
+    "hsbio.photosynthesis",
+    "hsbio.enzyme-conditions"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-5",
+   "trouble": "Students think more light always means more photosynthesis. Past a point, the curve levels off because carbon dioxide or temperature is limiting.",
+   "viz": [
+    "bi-chart",
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "hsbio.cellular-respiration",
+   "slug": "cellular-respiration",
+   "unit": "energy",
+   "title": "Cellular Respiration",
+   "short": "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP. Glycolysis (cytoplasm) splits glucose; the Krebs cycle and the electron transport chain (mitochondria) release the rest, about 30 ATP per glucose in all.",
+   "prereqs": [
+    "hsbio.atp",
+    "lifesci.cellular-respiration"
+   ],
+   "xp": 3,
+   "std": "HS-LS1-7",
+   "trouble": "Students think the oxygen we breathe becomes the carbon dioxide we breathe out. The carbon dioxide comes from glucose's carbon; oxygen accepts electrons at the end of the chain and becomes water.",
+   "viz": [
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "hsbio.fermentation",
+   "slug": "fermentation",
+   "unit": "energy",
+   "title": "Fermentation",
+   "short": "Without oxygen, cells keep glycolysis running by fermentation: muscle cells make lactic acid; yeast make ethanol and carbon dioxide, which makes bread rise. Only 2 ATP per glucose.",
+   "prereqs": [
+    "hsbio.cellular-respiration"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-3",
+   "trouble": "Students think fermentation makes as much ATP as aerobic respiration, or that it makes no ATP at all. It yields 2 ATP per glucose from glycolysis, far fewer than about 30.",
+   "viz": [
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "hsbio.photo-resp-carbon",
+   "slug": "photo-resp-carbon",
+   "unit": "energy",
+   "title": "Photosynthesis, Respiration and the Carbon Cycle",
+   "short": "Photosynthesis pulls CO₂ from the air into sugars; respiration by plants, animals and decomposers returns it. Their balance, along with burning and the ocean, sets the carbon dioxide in the air.",
+   "prereqs": [
+    "hsbio.photosynthesis",
+    "hsbio.cellular-respiration"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-5",
+   "trouble": "Students think plants only photosynthesize and animals only respire. Plants respire all the time too; over a whole day a growing plant takes in more CO₂ than it gives off.",
+   "viz": [
+    "bi-cycle",
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "hsbio.chromosomes",
+   "slug": "chromosomes",
+   "unit": "division",
+   "title": "Chromosomes and Their Numbers",
+   "short": "A body cell of a species has a set number of chromosomes in matching (homologous) pairs: 46 in humans, so the diploid number is 2n = 46 and the haploid number n = 23. A copied chromosome is two sister chromatids joined at a centromere.",
+   "prereqs": [
+    "lifesci.dna-genes"
+   ],
+   "xp": 2,
+   "std": "HS-LS3-1",
+   "trouble": "Students count each sister chromatid as its own chromosome, or think homologous chromosomes are identical copies. Count centromeres to count chromosomes; homologs carry the same genes but may carry different alleles.",
+   "viz": [
+    "bi-mitosis",
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "hsbio.cell-cycle",
+   "slug": "cell-cycle",
+   "unit": "division",
+   "title": "The Cell Cycle",
+   "short": "A cell spends most of its life in interphase (G1 growth, S DNA copying, G2 preparation), then divides in the mitotic phase. Checkpoints decide whether it goes on.",
+   "prereqs": [
+    "hsbio.chromosomes"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-4",
+   "trouble": "Students think interphase is a resting phase. The cell is busy growing and copying its DNA; it is only \"resting\" from division.",
+   "viz": [
+    "bi-mitosis",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.mitosis",
+   "slug": "mitosis",
+   "unit": "division",
+   "title": "Mitosis",
+   "short": "In prophase chromosomes condense; in metaphase they line up in the middle; in anaphase sister chromatids pull apart; in telophase two nuclei form. Cytokinesis splits the cell into two identical cells.",
+   "prereqs": [
+    "hsbio.cell-cycle"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-4",
+   "trouble": "Students think the chromosome number halves in mitosis, or that homologous pairs separate. Sister chromatids separate, so each new cell has the same number of chromosomes as the parent cell.",
+   "viz": [
+    "bi-mitosis"
+   ]
+  },
+  {
+   "id": "hsbio.cell-cycle-control",
+   "slug": "cell-cycle-control",
+   "unit": "division",
+   "title": "Controlling the Cell Cycle",
+   "short": "Proteins at checkpoints let the cycle continue only when the cell is ready and its DNA is intact. When those controls fail, cells can divide without limit, which is what happens in cancer.",
+   "prereqs": [
+    "hsbio.mitosis"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-4",
+   "trouble": "Students think cancer cells are invaders from outside the body. They are the body's own cells whose controls on division have broken, usually through several mutations.",
+   "viz": [
+    "bi-mitosis",
+    "bi-feedback"
+   ]
+  },
+  {
+   "id": "hsbio.meiosis",
+   "slug": "meiosis",
+   "unit": "division",
+   "title": "Meiosis",
+   "short": "Meiosis is two divisions that turn one diploid cell into four haploid cells. Meiosis I separates homologous pairs; meiosis II separates sister chromatids.",
+   "prereqs": [
+    "hsbio.mitosis"
+   ],
+   "xp": 3,
+   "std": "HS-LS3-2",
+   "trouble": "Students think meiosis II halves the chromosome number again, or that meiosis I separates sister chromatids. The number halves in meiosis I, when homologs part; meiosis II is like mitosis.",
+   "viz": [
+    "bi-meiosis"
+   ]
+  },
+  {
+   "id": "hsbio.meiosis-variation",
+   "slug": "meiosis-variation",
+   "unit": "division",
+   "title": "How Meiosis Makes Variation",
+   "short": "Crossing over swaps pieces between homologs, and independent assortment lines each pair up on its own: with n pairs there are 2ⁿ ways to sort the chromosomes, so every cell made is unique.",
+   "prereqs": [
+    "hsbio.meiosis"
+   ],
+   "xp": 3,
+   "std": "HS-LS3-2",
+   "trouble": "Students think crossing over happens between sister chromatids or that each pair's orientation affects the others. Crossing over is between homologs, and each pair lines up independently.",
+   "viz": [
+    "bi-meiosis"
+   ]
+  },
+  {
+   "id": "hsbio.mitosis-vs-meiosis",
+   "slug": "mitosis-vs-meiosis",
+   "unit": "division",
+   "title": "Mitosis and Meiosis Compared",
+   "short": "Mitosis: one division, two identical diploid cells, for growth and repair. Meiosis: two divisions, four different haploid cells, with crossing over and independent assortment.",
+   "prereqs": [
+    "hsbio.meiosis-variation"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-4",
+   "trouble": "Students mix the outcomes, such as four identical cells or two haploid cells. Count the divisions and ask what separates: homologs (only in meiosis I) or sister chromatids.",
+   "viz": [
+    "bi-mitosis",
+    "bi-meiosis",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "hsbio.mendel",
+   "slug": "mendel",
+   "unit": "genetics",
+   "title": "Mendel's Experiments",
+   "short": "Mendel crossed true-breeding pea plants: the F1 all showed one trait, and the F2 showed both in about a 3:1 ratio. He explained it with paired factors, now called genes, that separate (segregate).",
+   "prereqs": [
+    "lifesci.punnett-squares",
+    "hsbio.meiosis"
+   ],
+   "xp": 2,
+   "std": "HS-LS3-1",
+   "trouble": "Students think the recessive trait disappears in the F1 for good, or that traits blend. The recessive allele is hidden, not lost, and reappears in a quarter of the F2.",
+   "viz": [
+    "bi-punnett",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.monohybrid",
+   "slug": "monohybrid",
+   "unit": "genetics",
+   "title": "Monohybrid Crosses",
+   "short": "For one gene, write each parent's gametes, fill the Punnett square, and read the genotype ratio (1:2:1 for Aa × Aa) and the phenotype ratio (3:1).",
+   "prereqs": [
+    "hsbio.mendel"
+   ],
+   "xp": 2,
+   "std": "HS-LS3-3",
+   "trouble": "Students give the genotype ratio when asked for the phenotype ratio, or count AA and Aa as different phenotypes.",
+   "viz": [
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "hsbio.test-cross",
+   "slug": "test-cross",
+   "unit": "genetics",
+   "title": "The Test Cross",
+   "short": "To learn whether a dominant-looking organism is AA or Aa, cross it with a recessive (aa) one: any recessive offspring show it was Aa.",
+   "prereqs": [
+    "hsbio.monohybrid"
+   ],
+   "xp": 2,
+   "trouble": "Students cross the unknown with a dominant individual, which cannot reveal the hidden allele, or conclude AA from a few dominant offspring when the sample is small.",
+   "viz": [
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "hsbio.probability-rules",
+   "slug": "probability-rules",
+   "unit": "genetics",
+   "title": "Probability Rules for Genetics",
+   "short": "For independent events, multiply (the product rule): the chance of aa and bb is ¼ × ¼. For outcomes that can happen in different ways, add (the sum rule).",
+   "prereqs": [
+    "hsbio.monohybrid",
+    "g7.compound-probability"
+   ],
+   "xp": 2,
+   "std": "HS-LS3-3",
+   "trouble": "Students add probabilities when they should multiply, or think a family that already has three dominant children is \"due\" a recessive one. Each offspring is independent.",
+   "viz": [
+    "bi-punnett",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.dihybrid",
+   "slug": "dihybrid",
+   "unit": "genetics",
+   "title": "Dihybrid Crosses",
+   "short": "For two genes on different chromosomes, AaBb × AaBb gives four gamete types each and a 16-box square with a 9:3:3:1 phenotype ratio.",
+   "prereqs": [
+    "hsbio.probability-rules",
+    "hsbio.meiosis-variation"
+   ],
+   "xp": 3,
+   "std": "HS-LS3-3",
+   "trouble": "Students write gametes with two alleles of the same gene (Aa) instead of one allele of each gene (AB, Ab, aB, ab).",
+   "viz": [
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "hsbio.incomplete-codominance",
+   "slug": "incomplete-codominance",
+   "unit": "genetics",
+   "title": "Incomplete Dominance and Codominance",
+   "short": "In incomplete dominance the heterozygote is in between (red × white snapdragons give pink); in codominance both alleles show fully (red and white hairs in a roan coat).",
+   "prereqs": [
+    "hsbio.monohybrid"
+   ],
+   "xp": 2,
+   "trouble": "Students call pink snapdragons proof that traits blend. Crossing two pinks brings back red and white in a 1:2:1 ratio, so the alleles stayed separate.",
+   "viz": [
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "hsbio.multiple-alleles",
+   "slug": "multiple-alleles",
+   "unit": "genetics",
+   "title": "Multiple Alleles: Blood Types",
+   "short": "The ABO blood type gene has three alleles: Iᴬ and Iᴮ are codominant and both dominant to i. Six genotypes give four blood types: A, B, AB and O.",
+   "prereqs": [
+    "hsbio.incomplete-codominance"
+   ],
+   "xp": 2,
+   "trouble": "Students think a person can carry three alleles of one gene because three exist. Each person has only two; the third exists in the population.",
+   "viz": [
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "hsbio.polygenic",
+   "slug": "polygenic",
+   "unit": "genetics",
+   "title": "Polygenic Traits and the Environment",
+   "short": "Traits like human height and the color of wheat kernels are shaped by many genes and the environment, giving a smooth range (a bell-shaped curve) instead of a few clear types.",
+   "prereqs": [
+    "hsbio.dihybrid"
+   ],
+   "xp": 2,
+   "std": "HS-LS3-3",
+   "trouble": "Students expect every trait to fall into neat categories like Mendel's peas. Most human traits are polygenic and continuous, and diet, light or temperature can change how genes show.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.x-linked",
+   "slug": "x-linked",
+   "unit": "genetics",
+   "title": "X-Linked Traits",
+   "short": "Genes on the X chromosome show a special pattern: XY individuals have one X, so a single recessive allele shows. Red-green color blindness is a common example.",
+   "prereqs": [
+    "hsbio.monohybrid",
+    "hsbio.chromosomes"
+   ],
+   "xp": 3,
+   "std": "HS-LS3-1",
+   "trouble": "Students give a Y chromosome an allele for an X-linked gene, or think X-linked traits are passed from father to son. A son gets his X from his mother; his father passes him a Y.",
+   "viz": [
+    "bi-punnett",
+    "bi-pedigree"
+   ]
+  },
+  {
+   "id": "hsbio.pedigrees",
+   "slug": "pedigrees",
+   "unit": "genetics",
+   "title": "Reading Pedigrees",
+   "short": "A pedigree traces a trait through a family. Two unaffected parents with an affected child show a recessive trait; a dominant trait does not skip generations.",
+   "prereqs": [
+    "hsbio.x-linked",
+    "hsbio.test-cross"
+   ],
+   "xp": 3,
+   "std": "HS-LS3-3",
+   "trouble": "Students assume a trait that appears often must be dominant. Frequency does not decide; the pattern does: if it can skip a generation, it is recessive.",
+   "viz": [
+    "bi-pedigree"
+   ]
+  },
+  {
+   "id": "hsbio.dna-structure",
+   "slug": "dna-structure",
+   "unit": "dna",
+   "title": "The Structure of DNA",
+   "short": "DNA is a double helix of two antiparallel strands. Sugars and phosphates form the backbone; bases pair in the middle, A with T and G with C, by hydrogen bonds.",
+   "prereqs": [
+    "hsbio.nucleic-acids",
+    "hsbio.chromosomes"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-1",
+   "trouble": "Students pair A with G or think equal amounts of all four bases is the rule. A pairs with T and G with C, so %A = %T and %G = %C, but A and G can differ (Chargaff's rule).",
+   "viz": [
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "hsbio.dna-replication",
+   "slug": "dna-replication",
+   "unit": "dna",
+   "title": "DNA Replication",
+   "short": "Helicase unzips the helix; DNA polymerase adds matching nucleotides to each old strand. Each new DNA molecule has one old strand and one new (semiconservative).",
+   "prereqs": [
+    "hsbio.dna-structure"
+   ],
+   "xp": 2,
+   "std": "HS-LS3-2",
+   "trouble": "Students think the copy is made of two new strands beside the old double helix. Each copy keeps one parent strand as its template.",
+   "viz": [
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "hsbio.transcription",
+   "slug": "transcription",
+   "unit": "dna",
+   "title": "Transcription",
+   "short": "In the nucleus, RNA polymerase reads a gene's template strand and builds a matching mRNA: A in DNA pairs with U in RNA, T with A, G with C, C with G.",
+   "prereqs": [
+    "hsbio.dna-structure"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-1",
+   "trouble": "Students put T in the RNA, or copy the template strand letter for letter. RNA uses U instead of T, and the mRNA is complementary to the template strand.",
+   "viz": [
+    "bi-central",
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "hsbio.translation",
+   "slug": "translation",
+   "unit": "dna",
+   "title": "Translation",
+   "short": "At the ribosome, each three-base codon of mRNA is matched by a tRNA anticodon carrying an amino acid. The ribosome links the amino acids into a protein until it reaches a stop codon.",
+   "prereqs": [
+    "hsbio.transcription",
+    "hsbio.proteins"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-1",
+   "trouble": "Students think each base codes for one amino acid, or that tRNA carries codons. Three bases make one codon, and the tRNA carries the matching anticodon and the amino acid.",
+   "viz": [
+    "bi-central"
+   ]
+  },
+  {
+   "id": "hsbio.genetic-code",
+   "slug": "genetic-code",
+   "unit": "dna",
+   "title": "Reading the Genetic Code",
+   "short": "Use a codon table to translate mRNA: start at AUG (methionine), read three bases at a time, and stop at UAA, UAG or UGA. 64 codons code for 20 amino acids.",
+   "prereqs": [
+    "hsbio.translation"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-1",
+   "trouble": "Students read the table with DNA letters or start at the first base rather than at the start codon. Look up mRNA codons, first base, then second, then third.",
+   "viz": [
+    "bi-central"
+   ]
+  },
+  {
+   "id": "hsbio.mutations",
+   "slug": "mutations",
+   "unit": "dna",
+   "title": "Mutations",
+   "short": "A substitution can be silent (same amino acid), missense (a different one) or nonsense (a stop). An insertion or deletion shifts the reading frame, changing every codon after it.",
+   "prereqs": [
+    "hsbio.genetic-code",
+    "hsbio.dna-replication"
+   ],
+   "xp": 3,
+   "std": "HS-LS3-2",
+   "trouble": "Students think every substitution changes the protein. Many codons code for the same amino acid, so some substitutions change nothing, while a single deletion can garble the rest of the protein.",
+   "viz": [
+    "bi-central",
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "hsbio.gene-regulation",
+   "slug": "gene-regulation",
+   "unit": "dna",
+   "title": "Turning Genes On and Off",
+   "short": "Every cell has the same DNA, but each cell type uses different genes. Proteins that bind DNA switch genes on and off, as when bacteria make lactose-digesting enzymes only when lactose is present.",
+   "prereqs": [
+    "hsbio.translation"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-4",
+   "trouble": "Students think a nerve cell and a skin cell have different DNA. They have the same genes; they differ in which genes are expressed.",
+   "viz": [
+    "bi-central",
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "hsbio.pcr",
+   "slug": "pcr",
+   "unit": "biotech",
+   "title": "PCR: Copying DNA",
+   "short": "The polymerase chain reaction copies a chosen piece of DNA by cycles of heating (separate strands), cooling (primers bind) and warming (polymerase builds). Each cycle doubles it: 2ⁿ copies after n cycles.",
+   "prereqs": [
+    "hsbio.dna-replication",
+    "g8.exponent-properties"
+   ],
+   "xp": 2,
+   "trouble": "Students add copies each cycle instead of doubling, or think PCR copies the whole genome. It copies only the stretch between the two primers.",
+   "viz": [
+    "bi-dna",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.gel-electrophoresis",
+   "slug": "gel-electrophoresis",
+   "unit": "biotech",
+   "title": "Gel Electrophoresis",
+   "short": "DNA is negatively charged, so in a gel it moves toward the positive end. Shorter pieces move farther; comparing bands with a ladder of known sizes gives each piece's length.",
+   "prereqs": [
+    "hsbio.pcr"
+   ],
+   "xp": 2,
+   "trouble": "Students think bigger fragments travel farther because they are heavier, or that DNA moves toward the negative end. Small pieces slip through the gel faster, toward the positive electrode.",
+   "viz": [
+    "bi-gel"
+   ]
+  },
+  {
+   "id": "hsbio.recombinant-dna",
+   "slug": "recombinant-dna",
+   "unit": "biotech",
+   "title": "Recombinant DNA",
+   "short": "Restriction enzymes cut DNA at specific sequences; ligase joins pieces, so a gene can be put into a plasmid and taken up by bacteria, which then make the protein, such as human insulin.",
+   "prereqs": [
+    "hsbio.gel-electrophoresis",
+    "hsbio.gene-regulation"
+   ],
+   "xp": 2,
+   "trouble": "Students think bacteria cannot read a human gene. The genetic code is shared by nearly all life, which is why a bacterium can build a human protein from the right DNA.",
+   "viz": [
+    "bi-dna",
+    "bi-gel"
+   ]
+  },
+  {
+   "id": "hsbio.natural-selection",
+   "slug": "natural-selection",
+   "unit": "evolution",
+   "title": "Natural Selection",
+   "short": "Evolution by natural selection follows from variation, heritability, more offspring than can survive, and differences in survival and reproduction. Over generations, helpful heritable traits become more common.",
+   "prereqs": [
+    "lifesci.natural-selection",
+    "hsbio.meiosis-variation"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-2",
+   "trouble": "Students think \"survival of the fittest\" means the strongest or fastest survive. Fitness means leaving more offspring in a particular environment; a trait that helps in one place may hurt in another.",
+   "viz": [
+    "bi-selection"
+   ]
+  },
+  {
+   "id": "hsbio.selection-patterns",
+   "slug": "selection-patterns",
+   "unit": "evolution",
+   "title": "Directional, Stabilizing and Disruptive Selection",
+   "short": "Directional selection shifts the average one way; stabilizing selection favors the middle; disruptive selection favors both extremes. Read each from how a trait's graph changes.",
+   "prereqs": [
+    "hsbio.natural-selection",
+    "hsbio.polygenic"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-3",
+   "trouble": "Students mix up stabilizing and disruptive selection. Stabilizing narrows the curve around the middle; disruptive splits it into two peaks.",
+   "viz": [
+    "bi-selection",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.adaptation-in-action",
+   "slug": "adaptation-in-action",
+   "unit": "evolution",
+   "title": "Evolution in Action",
+   "short": "Antibiotic and pesticide resistance and the changing beaks of Galápagos finches after a drought show natural selection measured within a few generations.",
+   "prereqs": [
+    "hsbio.selection-patterns",
+    "lifesci.populations-change"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-4",
+   "trouble": "Students think the drug or the drought causes the needed mutation. The variation was already there; the environment selects among it.",
+   "viz": [
+    "bi-selection",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.evidence-fossils-anatomy",
+   "slug": "evidence-fossils-anatomy",
+   "unit": "evolution",
+   "title": "Evidence: Fossils and Anatomy",
+   "short": "Transitional fossils (early whales with legs, Tiktaalik), homologous structures, and vestigial structures such as a whale's hip bones point to common ancestry.",
+   "prereqs": [
+    "hsbio.natural-selection",
+    "lifesci.comparing-bodies"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-1",
+   "trouble": "Students treat analogous structures (wings of birds and insects) as evidence of close kinship. Only homologous structures, the same parts in different jobs, show shared ancestry.",
+   "viz": [
+    "bi-tree",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "hsbio.molecular-evidence",
+   "slug": "molecular-evidence",
+   "unit": "evolution",
+   "title": "Evidence: DNA and Proteins",
+   "short": "Species that share a more recent common ancestor have more similar DNA and protein sequences. Counting differences in a sequence lets us compare relatedness.",
+   "prereqs": [
+    "hsbio.evidence-fossils-anatomy",
+    "hsbio.genetic-code"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-1",
+   "trouble": "Students think humans evolved from chimpanzees because their DNA is so similar. Humans and chimpanzees share a common ancestor; neither species descends from the other.",
+   "viz": [
+    "bi-tree",
+    "bi-central"
+   ]
+  },
+  {
+   "id": "hsbio.phylogenetic-trees",
+   "slug": "phylogenetic-trees",
+   "unit": "evolution",
+   "title": "Reading Phylogenetic Trees",
+   "short": "A phylogenetic tree shows common ancestry: each branch point is a common ancestor. Relatedness is read from the most recent shared branch point, not from how close the tips are on the page.",
+   "prereqs": [
+    "hsbio.molecular-evidence"
+   ],
+   "xp": 3,
+   "std": "HS-LS4-1",
+   "trouble": "Students read relatedness across the tips, or think species at the right end are \"more evolved\". All living tips have evolved for the same length of time; only branch points show kinship.",
+   "viz": [
+    "bi-tree"
+   ]
+  },
+  {
+   "id": "hsbio.cladograms",
+   "slug": "cladograms",
+   "unit": "evolution",
+   "title": "Building Cladograms",
+   "short": "Group organisms by shared derived traits: the trait shared by all but one marks the first branch, and each newer trait marks a smaller group nested inside.",
+   "prereqs": [
+    "hsbio.phylogenetic-trees"
+   ],
+   "xp": 3,
+   "std": "HS-LS4-1",
+   "trouble": "Students group by overall look or by traits all the organisms share. Only derived traits, new features some have and others lack, mark branches.",
+   "viz": [
+    "bi-tree"
+   ]
+  },
+  {
+   "id": "hsbio.hardy-weinberg",
+   "slug": "hardy-weinberg",
+   "unit": "evolution",
+   "title": "Hardy-Weinberg Equilibrium",
+   "short": "In a population that is not evolving, allele frequencies p + q = 1 stay constant and genotype frequencies are p² + 2pq + q² = 1. Find q from the share of recessive individuals: q = √(q²).",
+   "prereqs": [
+    "hsbio.natural-selection",
+    "hsbio.probability-rules",
+    "g8.square-roots"
+   ],
+   "xp": 3,
+   "std": "HS-LS3-3",
+   "trouble": "Students take q as the share of recessive-looking individuals instead of its square root, or think dominant alleles must grow more common over time. Dominance alone does not change allele frequencies.",
+   "viz": [
+    "bi-chart",
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "hsbio.mechanisms-evolution",
+   "slug": "mechanisms-evolution",
+   "unit": "evolution",
+   "title": "Mutation, Drift, Gene Flow and Selection",
+   "short": "Allele frequencies change through mutation, genetic drift (chance, strongest in small populations, as in bottlenecks and founder effects), gene flow (migration) and natural selection.",
+   "prereqs": [
+    "hsbio.hardy-weinberg"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-2",
+   "trouble": "Students think every evolutionary change is an adaptation. Drift changes allele frequencies by chance alone, and it can fix a harmful allele in a small population.",
+   "viz": [
+    "bi-selection",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "hsbio.speciation",
+   "slug": "speciation",
+   "unit": "evolution",
+   "title": "How New Species Form",
+   "short": "A species splits when populations stop exchanging genes: a barrier divides them (geographic isolation), or they come to live in different habitats or flower or reproduce at different seasons. In plants, a doubled chromosome set can make a new species in one generation.",
+   "prereqs": [
+    "hsbio.mechanisms-evolution"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-5",
+   "trouble": "Students think a new species appears suddenly from one big mutation in an animal, or that speciation needs a physical barrier every time. Most speciation is gradual, and plants can split without one.",
+   "viz": [
+    "bi-tree",
+    "bi-selection"
+   ]
+  },
+  {
+   "id": "hsbio.population-models",
+   "slug": "population-models",
+   "unit": "ecology",
+   "title": "Exponential and Logistic Growth",
+   "short": "With unlimited resources a population grows exponentially (a J-curve); as resources run short, growth slows toward the carrying capacity K (an S-curve, logistic growth).",
+   "prereqs": [
+    "lifesci.limiting-factors",
+    "alg1.exponential-growth-decay"
+   ],
+   "xp": 3,
+   "std": "HS-LS2-1",
+   "trouble": "Students think growth is fastest when the population is near carrying capacity. In logistic growth it is fastest at about half of K, then slows as it approaches K.",
+   "viz": [
+    "bi-population"
+   ]
+  },
+  {
+   "id": "hsbio.density-factors",
+   "slug": "density-factors",
+   "unit": "ecology",
+   "title": "Density-Dependent and Independent Factors",
+   "short": "Density-dependent factors like food, disease and predation hit harder as a population grows crowded; density-independent factors like floods, fires and frosts hit regardless of size.",
+   "prereqs": [
+    "hsbio.population-models"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-1",
+   "trouble": "Students call every limiting factor density dependent. Ask whether its effect per individual grows with crowding; a hurricane does not care how dense the population is.",
+   "viz": [
+    "bi-classify",
+    "bi-population"
+   ]
+  },
+  {
+   "id": "hsbio.community-interactions",
+   "slug": "community-interactions",
+   "unit": "ecology",
+   "title": "Niches and Community Interactions",
+   "short": "Each species has a niche, its role and needs. Two species cannot share exactly the same niche for long (competitive exclusion); predation, mutualism and parasitism shape communities too.",
+   "prereqs": [
+    "lifesci.species-interactions"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-2",
+   "trouble": "Students think a habitat and a niche are the same. The habitat is where it lives; the niche is how it lives there: what it eats, when it is active, what it needs.",
+   "viz": [
+    "bi-classify",
+    "bi-foodweb"
+   ]
+  },
+  {
+   "id": "hsbio.energy-flow",
+   "slug": "energy-flow",
+   "unit": "ecology",
+   "title": "Energy Flow and Biomass",
+   "short": "Energy enters as sunlight captured by producers and flows up the trophic levels, with roughly 10% passed on at each step. Biomass and numbers usually shrink up the pyramid too.",
+   "prereqs": [
+    "lifesci.energy-pyramids",
+    "hsbio.cellular-respiration"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-4",
+   "trouble": "Students think the 10% rule is exact, or that lost energy is destroyed. It is an average that varies widely; the \"lost\" energy is used in respiration and released as heat, not destroyed.",
+   "viz": [
+    "bi-pyramid",
+    "bi-foodweb"
+   ]
+  },
+  {
+   "id": "hsbio.matter-cycles",
+   "slug": "matter-cycles",
+   "unit": "ecology",
+   "title": "The Carbon, Nitrogen and Phosphorus Cycles",
+   "short": "Carbon cycles through photosynthesis, respiration, the ocean and fossil fuels; nitrogen through fixation, nitrification and denitrification by bacteria; phosphorus slowly through rock, soil and water, with no gas phase.",
+   "prereqs": [
+    "hsbio.photo-resp-carbon",
+    "lifesci.nitrogen-cycle"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-5",
+   "trouble": "Students think every element cycles through the air like carbon. Phosphorus has no significant gas form; it moves through rocks, soil, water and living things.",
+   "viz": [
+    "bi-cycle"
+   ]
+  },
+  {
+   "id": "hsbio.aerobic-anaerobic",
+   "slug": "aerobic-anaerobic",
+   "unit": "ecology",
+   "title": "Aerobic and Anaerobic Conditions",
+   "short": "Where oxygen runs short, as in waterlogged soil or deep mud, some microbes use fermentation or other pathways, which changes how carbon and nitrogen cycle there.",
+   "prereqs": [
+    "hsbio.matter-cycles",
+    "hsbio.fermentation"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-3",
+   "trouble": "Students think life stops without oxygen. Many microbes thrive without it, and some cannot live with it.",
+   "viz": [
+    "bi-cycle",
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "hsbio.stability-change",
+   "slug": "stability-change",
+   "unit": "ecology",
+   "title": "Stability, Disturbance and Change",
+   "short": "Ecosystems hold fairly steady when conditions are steady, and recover from small disturbances. Large changes, like a new predator or a changed climate, can shift them to a new state.",
+   "prereqs": [
+    "hsbio.community-interactions",
+    "lifesci.succession"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-6",
+   "trouble": "Students think a balanced ecosystem never changes. Populations always fluctuate; stability means they stay within a range.",
+   "viz": [
+    "bi-population",
+    "bi-foodweb"
+   ]
+  },
+  {
+   "id": "hsbio.keystone-species",
+   "slug": "keystone-species",
+   "unit": "ecology",
+   "title": "Keystone Species and Trophic Cascades",
+   "short": "A keystone species has a much larger effect than its numbers suggest: removing sea otters let sea urchins boom and strip kelp forests, a trophic cascade.",
+   "prereqs": [
+    "hsbio.stability-change",
+    "hsbio.energy-flow"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-6",
+   "trouble": "Students think the most numerous species must be the most important. Keystone species are often uncommon predators whose effects pass down the food web.",
+   "viz": [
+    "bi-foodweb"
+   ]
+  },
+  {
+   "id": "hsbio.group-behavior",
+   "slug": "group-behavior",
+   "unit": "ecology",
+   "title": "Group Behavior",
+   "short": "Herding, flocking, schooling and cooperative hunting can improve survival: more eyes watch for predators, and individuals cut their own risk.",
+   "prereqs": [
+    "hsbio.community-interactions"
+   ],
+   "xp": 1,
+   "std": "HS-LS2-8",
+   "trouble": "Students think animals act in groups only to help the group. Group behavior persists because it raises the survival of the individuals who do it.",
+   "viz": [
+    "bi-classify",
+    "bi-population"
+   ]
+  },
+  {
+   "id": "hsbio.biodiversity-impact",
+   "slug": "biodiversity-impact",
+   "unit": "ecology",
+   "title": "Biodiversity and Human Impact",
+   "short": "Biodiversity is measured by richness (how many species) and evenness (how balanced). Habitat loss, invasive species, pollution and overharvesting reduce it; conservation solutions are judged by evidence and trade-offs.",
+   "prereqs": [
+    "hsbio.keystone-species"
+   ],
+   "xp": 2,
+   "std": "HS-LS2-7",
+   "trouble": "Students count only the number of species. Two forests with ten species each differ if one is 91% a single species.",
+   "viz": [
+    "bi-chart",
+    "bi-classify"
+   ]
+  },
+  {
+   "id": "hsbio.feedback-loops",
+   "slug": "feedback-loops",
+   "unit": "homeostasis",
+   "title": "Homeostasis and Feedback",
+   "short": "Homeostasis keeps the internal environment within a narrow range. In negative feedback a sensor detects a change and effectors push it back; positive feedback amplifies a change until an event ends it, as when blood clots.",
+   "prereqs": [
+    "hsbio.enzyme-conditions"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-3",
+   "trouble": "Students think \"negative\" feedback is bad and \"positive\" good, or that homeostasis holds values perfectly fixed. Negative feedback reverses a change; values wobble within a range.",
+   "viz": [
+    "bi-feedback"
+   ]
+  },
+  {
+   "id": "hsbio.temperature-control",
+   "slug": "temperature-control",
+   "unit": "homeostasis",
+   "title": "Controlling Body Temperature",
+   "short": "When the body is too warm, the brain triggers sweating and wider skin blood vessels; when too cold, shivering and narrower skin vessels. Each is negative feedback.",
+   "prereqs": [
+    "hsbio.feedback-loops"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-3",
+   "trouble": "Students think sweat cools by being cold. Sweat cools the skin as it evaporates and carries heat away.",
+   "viz": [
+    "bi-feedback",
+    "bi-body"
+   ]
+  },
+  {
+   "id": "hsbio.blood-sugar",
+   "slug": "blood-sugar",
+   "unit": "homeostasis",
+   "title": "Blood Sugar: Insulin and Glucagon",
+   "short": "After a meal, the pancreas releases insulin, which helps cells take up glucose and the liver store it, lowering blood sugar. Between meals, glucagon tells the liver to release glucose.",
+   "prereqs": [
+    "hsbio.feedback-loops"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-3",
+   "trouble": "Students think insulin is a sugar, or that both hormones work in the same direction. Insulin lowers blood glucose and glucagon raises it, a pair of opposing signals.",
+   "viz": [
+    "bi-feedback",
+    "bi-body"
+   ]
+  },
+  {
+   "id": "hsbio.body-systems-hierarchy",
+   "slug": "body-systems-hierarchy",
+   "unit": "homeostasis",
+   "title": "Interacting Body Systems",
+   "short": "Cells form tissues, organs and organ systems that work together: oxygen taken in by the respiratory system is carried by the circulatory system to cells, controlled by the nervous and endocrine systems.",
+   "prereqs": [
+    "hsbio.feedback-loops",
+    "lifesci.systems-together"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-2",
+   "trouble": "Students describe each system in isolation. Most functions, like getting oxygen to a muscle, need several systems acting together.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "hsbio.circulation",
+   "slug": "circulation",
+   "unit": "homeostasis",
+   "title": "The Path of Blood",
+   "short": "Blood takes two loops: right side of the heart → lungs → left side → body → back to the right side. Valves keep it moving one way.",
+   "prereqs": [
+    "hsbio.body-systems-hierarchy"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-2",
+   "trouble": "Students think blood goes from the heart to the lungs to the body in one loop, or that all arteries carry oxygen-rich blood. The pulmonary arteries carry oxygen-poor blood to the lungs.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "hsbio.gas-exchange",
+   "slug": "gas-exchange",
+   "unit": "homeostasis",
+   "title": "Gas Exchange in the Lungs",
+   "short": "In the alveoli, oxygen diffuses from air into the blood and carbon dioxide diffuses out. Huge surface area, thin walls and steady blood flow keep the gradients steep.",
+   "prereqs": [
+    "hsbio.circulation",
+    "hsbio.diffusion"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-2",
+   "trouble": "Students think the lungs pump oxygen into the blood. Gas exchange is passive diffusion down concentration gradients; breathing and blood flow keep the gradients going.",
+   "viz": [
+    "bi-body",
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "hsbio.digestion-absorption",
+   "slug": "digestion-absorption",
+   "unit": "homeostasis",
+   "title": "Digestive Enzymes and Absorption",
+   "short": "Enzymes break food into absorbable units: amylase splits starch, proteases split proteins, lipase splits fats. Villi in the small intestine absorb them into the blood and lymph.",
+   "prereqs": [
+    "hsbio.body-systems-hierarchy",
+    "hsbio.enzymes"
+   ],
+   "xp": 2,
+   "trouble": "Students think one enzyme digests all foods. Each enzyme fits particular substrates, and each part of the gut has its own pH and enzymes.",
+   "viz": [
+    "bi-body",
+    "bi-enzyme"
+   ]
+  },
+  {
+   "id": "hsbio.neurons",
+   "slug": "neurons",
+   "unit": "homeostasis",
+   "title": "Neurons and Signals",
+   "short": "A neuron receives signals at its dendrites and sends an electrical impulse along its axon. At a synapse, chemical messengers (neurotransmitters) carry the signal to the next cell.",
+   "prereqs": [
+    "hsbio.body-systems-hierarchy",
+    "hsbio.channels-pumps"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-2",
+   "trouble": "Students think the electrical signal jumps directly from one neuron to the next. At most synapses it is converted to a chemical signal that crosses the gap.",
+   "viz": [
+    "bi-body"
+   ]
+  },
+  {
+   "id": "hsbio.immune-system",
+   "slug": "immune-system",
+   "unit": "homeostasis",
+   "title": "The Immune System",
+   "short": "Innate defenses (skin, inflammation, cells that engulf germs) act fast against anything foreign. Adaptive defenses (B cells making antibodies, T cells) target one invader and leave memory cells; vaccines work by producing that memory without the illness.",
+   "prereqs": [
+    "hsbio.body-systems-hierarchy",
+    "lifesci.immune-basics"
+   ],
+   "xp": 3,
+   "trouble": "Students think antibodies are cells, or that the immune system forgets every invader. Antibodies are proteins made by B cells, and memory cells make a second response faster and stronger.",
+   "viz": [
+    "bi-body",
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "hsbio.kidneys",
+   "slug": "kidneys",
+   "unit": "homeostasis",
+   "title": "The Kidneys and Water Balance",
+   "short": "Nephrons filter blood, reabsorb what the body needs (water, glucose, salts) and leave the wastes in urine. A hormone, ADH, makes the kidneys keep more water when the body is short of it.",
+   "prereqs": [
+    "hsbio.body-systems-hierarchy",
+    "hsbio.osmosis-tonicity"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-3",
+   "trouble": "Students think the kidneys filter out only what is harmful. They filter almost everything small out of the blood, then take back what the body needs.",
+   "viz": [
+    "bi-body",
+    "bi-feedback"
+   ]
+  },
+  {
+   "id": "hsbio.plant-homeostasis",
+   "slug": "plant-homeostasis",
+   "unit": "homeostasis",
+   "title": "Water Balance in Plants",
+   "short": "Guard cells swell and open stomata when water is plentiful and shrink to close them when it is short, balancing carbon dioxide intake against water loss.",
+   "prereqs": [
+    "hsbio.feedback-loops",
+    "hsbio.osmosis-tonicity",
+    "lifesci.plant-transport"
+   ],
+   "xp": 2,
+   "std": "HS-LS1-3",
+   "trouble": "Students think stomata exist only to let oxygen out. They are a trade-off: open lets carbon dioxide in for photosynthesis and lets water out.",
+   "viz": [
+    "bi-plant",
+    "bi-feedback"
+   ]
+  }
+ ]
+}

@@ -49,7 +49,7 @@
 <div class="mlp mlp-topic{{ if $wip }} mlp-topic-wip{{ end }}" id="mlp-topic" data-id="{{ $id }}" data-course="{{ $key }}" data-ladder="{{ $lk }}" style="--mc:{{ $c.color }}">
   <nav class="mlp-crumbs" aria-label="Breadcrumbs"><a href="{{ $base }}">{{ $L.short }}</a> <span aria-hidden="true">›</span> <a href="{{ printf "%s/%s/" $L.slug $c.slug | relURL }}">{{ $c.title }}</a> <span aria-hidden="true">›</span> <a href="{{ printf "%s/%s/#unit-%s" $L.slug $c.slug $t.unit | relURL }}">{{ $u.title }}</a></nav>
   <header class="mlp-thead">
-    <p class="mlp-eyebrow"><span>{{ $c.short }}</span><span>{{ $u.title }}</span>{{ with $t.std }}<span title="{{ if $isNGSS }}Next Generation Science Standards{{ else }}Common Core State Standard{{ end }}">{{ . }}</span>{{ end }}</p>
+    <p class="mlp-eyebrow"><span>{{ $c.short }}</span><span>{{ $u.title }}</span>{{ with $t.std }}<span title="{{ if $isNGSS }}Next Generation Science Standards{{ else if hasPrefix $t.std "D2." }}C3 Framework for Social Studies State Standards{{ else }}Common Core State Standard{{ end }}">{{ . }}</span>{{ end }}</p>
     <h1>{{ $t.title }}</h1>
     {{ with $t.short }}<p class="mlp-short">{{ . }}</p>{{ end }}
     <div class="mlp-thead-row">

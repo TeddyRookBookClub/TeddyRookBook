@@ -1,0 +1,148 @@
+{{ define "main" }}
+{{/* Citizenship test practice: the official USCIS civics questions (data/civics/uscis/2025.json and 2008.json, word for word).
+     Study cards, a mock interview and the progress kept in localStorage 'trb-uscis-v1' are run by static/civics/uscis/uscis.js;
+     the full lists below are rendered here so they print and read without JavaScript. */}}
+{{ $U := site.Data.civics.uscis }}
+{{ $vs := slice (index $U "2025") (index $U "2008") }}
+<link rel="stylesheet" href="{{ "homeschool/hs.css" | relURL }}?v={{ (os.Stat "static/homeschool/hs.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "civics/uscis/uscis.css" | relURL }}?v={{ (os.Stat "static/civics/uscis/uscis.css").ModTime.Unix }}">
+<div class="hs us" id="us" data-v="2025">
+  <p class="hs-crumbs"><a href="{{ "american-history/" | relURL }}">American History &amp; Civics</a> › <a href="{{ "american-history/civics-and-government/" | relURL }}">Civics and Government</a> › <span>Citizenship test practice</span></p>
+  <header class="hs-hero us-hero hs-noprint">
+    <p class="hs-eyebrow">American History &amp; Civics · The naturalization civics test</p>
+    <h1>Citizenship Test Practice</h1>
+    <p>The official civics questions and answers from U.S. Citizenship and Immigration Services (USCIS), word for word. Study them by section with cards, take a mock interview that asks the questions out loud, and print the list.</p>
+  </header>
+
+  <div class="us-notice" role="note">
+    <b>Practice only.</b> This page is made by Teddy Rook Book. It is not a USCIS page and is not connected with USCIS. On the real test a USCIS officer asks the questions out loud at your naturalization interview, and you answer out loud. Rules and answers can change, so check <a href="https://www.uscis.gov/citizenship">uscis.gov/citizenship</a> before your interview.
+  </div>
+
+  <section class="us-s hs-noprint" aria-labelledby="us-ver-h">
+    <h2 id="us-ver-h">Which version do you take?</h2>
+    <p>USCIS uses the version that matches the date you filed Form N-400, the application for naturalization.</p>
+    <div class="us-scroll">
+    <table class="hs-table us-cmp">
+      <thead><tr><th scope="col"></th><th scope="col">2025 version</th><th scope="col">2008 version</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Who takes it</th><td>Applicants who file on or after October 20, 2025</td><td>Applicants who filed before October 20, 2025</td></tr>
+        <tr><th scope="row">Questions to study</th><td>128</td><td>100</td></tr>
+        <tr><th scope="row">Questions asked</th><td>Up to 20</td><td>Up to 10</td></tr>
+        <tr><th scope="row">To pass</th><td>12 correct</td><td>6 correct</td></tr>
+        <tr><th scope="row">Age 65 or older with 20 years as a permanent resident</th><td colspan="2">Study only the 20 questions marked with an asterisk (*). The officer asks 10 of them, and 6 correct passes. You may take the civics test in the language of your choice.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <fieldset class="us-pick">
+      <legend>Practice with</legend>
+      <label><input type="radio" name="us-v" value="2025" checked> 2025 version <span class="hs-small">(128 questions)</span></label>
+      <label><input type="radio" name="us-v" value="2008"> 2008 version <span class="hs-small">(100 questions)</span></label>
+    </fieldset>
+  </section>
+
+  <div class="us-tabs hs-noprint" role="tablist" aria-label="Ways to practice">
+    <button type="button" role="tab" id="us-t-study" aria-controls="us-study" aria-selected="true">Study cards</button>
+    <button type="button" role="tab" id="us-t-mock" aria-controls="us-mock" aria-selected="false" tabindex="-1">Mock interview</button>
+    <button type="button" role="tab" id="us-t-list" aria-controls="us-list" aria-selected="false" tabindex="-1">Full list to print</button>
+  </div>
+
+  <section class="us-panel hs-noprint" id="us-study" role="tabpanel" aria-labelledby="us-t-study">
+    <noscript><p class="us-nojs">The study cards and the mock interview need JavaScript. The full list below works without it.</p></noscript>
+    <div class="us-tools">
+      <label>Section <select id="us-sec"></select></label>
+      <button type="button" class="hs-btn" id="us-shuffle">Shuffle</button>
+      <button type="button" class="hs-btn" id="us-say" aria-label="Read the question aloud">🔊 Read aloud</button>
+    </div>
+    <div class="us-prog"><span id="us-known">0 known</span><div class="hs-bar"><b id="us-bar" style="width:0"></b></div></div>
+    <article class="us-card" id="us-card" aria-live="polite"></article>
+    <div class="us-nav">
+      <button type="button" class="hs-btn" id="us-prev">‹ Back</button>
+      <span id="us-pos" class="hs-small"></span>
+      <button type="button" class="hs-btn" id="us-next">Next ›</button>
+    </div>
+    <p class="hs-small">Mark each card. “I knew it” counts it as known; “Still learning” puts it in the <b>Still learning</b> set. Your marks stay in this browser only.</p>
+    <p class="hs-small"><button type="button" class="us-link" id="us-reset">Clear my marks for this version</button></p>
+  </section>
+
+  <section class="us-panel hs-noprint" id="us-mock" role="tabpanel" aria-labelledby="us-t-mock" hidden>
+    <div id="us-mock-start">
+      <p id="us-mock-rules"></p>
+      <div class="us-opts">
+        <label><input type="checkbox" id="us-senior"> Age 65 or older with 20 years as a permanent resident: use only the starred questions</label>
+        <label><input type="checkbox" id="us-auto"> Read each question aloud</label>
+      </div>
+      <button type="button" class="hs-btn us-go" id="us-begin">Start the mock interview</button>
+      <p class="hs-small">Answer by typing, or say your answer out loud and then show the official answers and mark yourself. Like the officer, the mock interview stops as soon as you have passed or can no longer pass.</p>
+    </div>
+    <div id="us-mock-run" hidden>
+      <p class="us-count"><span id="us-mq"></span> <span id="us-ms" class="hs-small"></span></p>
+      <article class="us-card" id="us-mcard"></article>
+    </div>
+    <div id="us-mock-end" hidden aria-live="polite"></div>
+    <div id="us-hist"></div>
+  </section>
+
+  <section class="us-panel" id="us-list" role="tabpanel" aria-labelledby="us-t-list" hidden>
+    <div class="us-tools hs-noprint"><button type="button" class="hs-btn" id="us-print">🖨 Print or save as PDF</button><span class="hs-small">Prints the version chosen above.</span></div>
+    {{ range $vs }}
+    {{ $v := . }}
+    <div class="us-full" data-ver="{{ .version }}"{{ if ne .version "2025" }} hidden{{ end }}>
+      <h2>{{ .title }}</h2>
+      <p class="us-src">From USCIS{{ with .form }}, {{ . }}{{ end }}. {{ .who }} Up to {{ .asked }} questions are asked; {{ .passMark }} correct passes. Questions marked * are the 20 for applicants 65 or older who have been permanent residents for 20 years or more. Answers that change with elections or appointments: check <a href="https://www.uscis.gov/citizenship/testupdates">uscis.gov/citizenship/testupdates</a>. Printed from teddyrookbook.com for practice; not a USCIS document.</p>
+      {{ range .sections }}
+        <h3 class="us-sh">{{ .title }}</h3>
+        {{ range .parts }}{{ $p := . }}
+          <h4 class="us-ph">{{ .title }}</h4>
+          <ol class="us-ql" start="{{ .from }}">
+          {{ range $v.questions }}{{ if and (ge .n $p.from) (le .n $p.to) }}
+            <li id="q{{ $v.version }}-{{ .n }}"><p class="q">{{ .q }}{{ if .star }} <span class="us-star" title="65/20 question">*</span>{{ end }}{{ with .note }} <span class="us-note">{{ . }}</span>{{ end }}</p>
+              <ul>{{ range .a }}<li>{{ . }}</li>{{ end }}</ul></li>
+          {{ end }}{{ end }}
+          </ol>
+        {{ end }}
+      {{ end }}
+    </div>
+    {{ end }}
+  </section>
+
+  <section class="us-s hs-noprint" aria-labelledby="us-how-h">
+    <h2 id="us-how-h">How the civics test works</h2>
+    <p>The civics test is part of the naturalization interview. The officer reads questions from the official list, and you answer out loud. Any answer on the list counts. USCIS says there may be other correct answers, but it encourages applicants to use the ones on the list. For questions such as “Name two…,” give that many answers.</p>
+    <p>Some answers change with elections and appointments: the names of the President, the Vice President, the Speaker of the House and the Chief Justice, and on the 2008 list the number of Supreme Court justices and the President’s party. Give the answer that is true <b>on the day of your interview</b>; USCIS keeps the current answers at <a href="https://www.uscis.gov/citizenship/testupdates">uscis.gov/citizenship/testupdates</a>. Other answers depend on where you live, such as your governor, your state capital, your U.S. senators and your U.S. representative. This page leaves all of these names out, because they change.</p>
+    <p>If you do not pass the civics test (or the English test) at the interview, USCIS gives you a second chance on the part you missed, usually 60 to 90 days later. Some applicants qualify for exceptions; USCIS explains them on its site.</p>
+  </section>
+
+  <section class="us-s hs-noprint" aria-labelledby="us-hist-h">
+    <h2 id="us-hist-h">The versions over time</h2>
+    <ul class="us-tl">
+      <li><b>October 1, 2008.</b> A redesigned naturalization test took effect with a list of 100 civics questions. The officer asks up to 10, and 6 correct passes.</li>
+      <li><b>December 1, 2020.</b> USCIS began a revised civics test with 128 questions, 20 asked and 12 correct to pass.</li>
+      <li><b>March 1, 2021.</b> USCIS went back to the 2008 test. Applicants who had filed between December 1, 2020, and March 1, 2021, could choose either test if their first interview came before April 19, 2021.</li>
+      <li><b>October 20, 2025.</b> The 2025 version, based on the 2020 test with changes, applies to applications filed on or after this date: 128 questions, up to 20 asked, 12 correct to pass. USCIS announced it on September 17, 2025. Applicants who filed before October 20, 2025, take the 2008 version.</li>
+    </ul>
+    <p>People disagree about how hard the test should be. Some say a longer test better shows real knowledge of American government and history; others say the longer test adds a burden without telling much more about an applicant. This page takes no side; it helps you practice the version you will take.</p>
+  </section>
+
+  <section class="us-s hs-noprint" aria-labelledby="us-src-h">
+    <h2 id="us-src-h">Sources and how the lists were checked</h2>
+    <p>The questions and answers are works of the U.S. government, which are in the public domain, and they appear here word for word, with the official numbering, section headings, asterisks and words in parentheses. Each list was transcribed from two separate copies, compared line by line by a script, and every difference was settled with a third look (transcribed {{ (index $U "2025").transcribed }}).</p>
+    {{ range $vs }}
+    <p><b>{{ .title }}</b></p>
+    <ul class="us-srcs">{{ range .sources }}<li>{{ if .url }}<a href="{{ .url }}">{{ .name }}</a>{{ else }}{{ .name }}{{ end }}</li>{{ end }}</ul>
+    {{ with .resolved }}<details class="us-diff"><summary>Differences between the two copies and how they were settled ({{ len . }})</summary><ul>{{ range . }}<li>Question {{ .n }}: {{ .note }}</li>{{ end }}</ul></details>{{ end }}
+    {{ end }}
+    <p><b>Rules and dates</b></p>
+    <ul class="us-srcs">
+      <li><a href="https://www.cliniclegal.org/resources/citizenship-and-naturalization/preparing-your-clients-2025-naturalization-civics-test">Catholic Legal Immigration Network (CLINIC), “Preparing Your Clients for the 2025 Naturalization Civics Test”</a></li>
+      <li><a href="https://www.bal.com/immigration-news/united-states-reminder-uscis-implementing-updated-2025-naturalization-civics-test-starting-oct-20">BAL, “USCIS implementing updated 2025 naturalization civics test starting Oct. 20”</a></li>
+      <li><a href="https://immpolicytracking.org/policies/uscis-implements-updated-naturalization-civics-test/">Immigration Policy Tracking Project, “USCIS Implements Updated Naturalization Civics Test” (citing the Federal Register notice of September 18, 2025)</a></li>
+      <li><a href="https://dhs.gov/archive/news/2021/03/02/us-citizenship-and-immigration-services-uscis-reverting-2008-version-naturalization">U.S. Department of Homeland Security, “USCIS Reverting to the 2008 Version of the Naturalization Civics Test” (March 2, 2021)</a></li>
+      <li><a href="https://www.migrationpolicy.org/press-release/mpi-backgrounder-examines-redesigned-citizenship-test-taking-effect-october-1st">Migration Policy Institute, on the redesigned test taking effect October 1, 2008</a></li>
+      <li><a href="https://grokipedia.com/page/American_Civics_Test">Grokipedia, “American Civics Test”</a></li>
+    </ul>
+    <p>Learn the ideas behind the answers in the course <a href="{{ "american-history/civics-and-government/civics-test-government/" | relURL }}">Citizenship Test: Government</a> and <a href="{{ "american-history/civics-and-government/civics-test-history/" | relURL }}">Citizenship Test: History and Symbols</a>.</p>
+  </section>
+</div>
+<script type="application/json" id="us-data">{{ dict "2025" (index $U "2025") "2008" (index $U "2008") | jsonify | safeJS }}</script>
+<script src="{{ "civics/uscis/uscis.js" | relURL }}?v={{ (os.Stat "static/civics/uscis/uscis.js").ModTime.Unix }}" defer></script>
+{{ end }}

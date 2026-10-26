@@ -1,0 +1,724 @@
+{
+ "course": "law",
+ "units": [
+  {
+   "key": "what-law-is",
+   "title": "What Law Is",
+   "blurb": "Law and its neighbors, the sources of American law and their order of authority, federal and state law, public and private law, and the difference between civil and criminal cases."
+  },
+  {
+   "key": "precedent",
+   "title": "Common Law and Precedent",
+   "blurb": "The common law tradition, stare decisis, binding and persuasive authority, holdings and dicta, and how courts distinguish and overrule cases."
+  },
+  {
+   "key": "courts",
+   "title": "The Court System",
+   "blurb": "Federal and state courts, jurisdiction, trial and appeal, and the paths of civil and criminal cases."
+  },
+  {
+   "key": "reading-cases",
+   "title": "Reading and Briefing Cases",
+   "blurb": "Case names and citations, the parts of an opinion, the parties, briefing a case, IRAC, and what courts do with the decisions they review."
+  },
+  {
+   "key": "reasoning",
+   "title": "Legal Reasoning",
+   "blurb": "Rules applied by deduction, reasoning by analogy, rules and standards, elements and tests, and burdens of proof."
+  },
+  {
+   "key": "statutes",
+   "title": "Statutory Interpretation",
+   "blurb": "Text and ordinary meaning, purpose, legislative history, the canons of construction, deference to agencies and the schools of interpretation, each in its best light."
+  },
+  {
+   "key": "justiciability",
+   "title": "Standing and Justiciability",
+   "blurb": "The case-or-controversy requirement, standing, ripeness and mootness, and the political question doctrine."
+  },
+  {
+   "key": "fields",
+   "title": "The Main Fields of Law",
+   "blurb": "A first look at contracts, torts, criminal law and administrative law, the subjects of the first year of law school."
+  }
+ ],
+ "topics": [
+  {
+   "id": "law.what-is-law",
+   "slug": "what-is-law",
+   "unit": "what-law-is",
+   "title": "What Law Is",
+   "short": "Law is the set of rules a government makes and enforces through courts and officials; it overlaps with morality and custom but differs from them in how it is made and enforced.",
+   "prereqs": [
+    "gov.rule-of-law"
+   ],
+   "xp": 1,
+   "trouble": "Students treat \"legal\" and \"right\" as the same thing. Some lawful acts are widely thought wrong and some unlawful acts were once widely thought right; law is defined by its sources and enforcement.",
+   "viz": [
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.sources-of-law",
+   "slug": "sources-of-law",
+   "unit": "what-law-is",
+   "title": "Sources of American Law",
+   "short": "American law comes from constitutions, statutes passed by legislatures, regulations written by agencies, court decisions (case law), treaties and local ordinances, and they rank in an order of authority: the federal Constitution first.",
+   "prereqs": [
+    "law.what-is-law"
+   ],
+   "xp": 2,
+   "trouble": "Students think only legislatures make law. Agencies write binding regulations under statutes, and courts make common law and interpret every other source.",
+   "viz": [
+    "cv-sort",
+    "cv-order"
+   ]
+  },
+  {
+   "id": "law.federal-and-state-law",
+   "slug": "federal-and-state-law",
+   "unit": "what-law-is",
+   "title": "Federal and State Law",
+   "short": "Under the Supremacy Clause valid federal law overrides conflicting state law (preemption); otherwise states make most law, and each state has its own constitution, statutes and courts.",
+   "prereqs": [
+    "law.sources-of-law",
+    "gov.federalism-basics"
+   ],
+   "xp": 2,
+   "trouble": "Students think federal law beats state law in every case. Only valid federal law within Congress's powers prevails, and only where it conflicts with or occupies the field; states may give more protection than federal law in many areas.",
+   "viz": [
+    "cv-sort",
+    "cv-clause"
+   ]
+  },
+  {
+   "id": "law.public-private-law",
+   "slug": "public-private-law",
+   "unit": "what-law-is",
+   "title": "Public and Private Law",
+   "short": "Public law governs the relation between government and people (constitutional, administrative, criminal law); private law governs relations among people and organizations (contracts, torts, property, family).",
+   "prereqs": [
+    "law.sources-of-law"
+   ],
+   "xp": 1,
+   "trouble": "Students place criminal law in private law because a person is harmed. A crime is an offense against the public, prosecuted by the government; the victim's own claim for money is a separate private case.",
+   "viz": [
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.civil-vs-criminal",
+   "slug": "civil-vs-criminal",
+   "unit": "what-law-is",
+   "title": "Civil and Criminal Cases",
+   "short": "In a criminal case the government prosecutes and must prove guilt beyond a reasonable doubt; in a civil case a plaintiff sues for a remedy such as money and usually must prove the claim by a preponderance of the evidence; one act can lead to both.",
+   "prereqs": [
+    "law.public-private-law"
+   ],
+   "xp": 2,
+   "trouble": "Students think a not-guilty verdict prevents a civil suit for the same act. The standards and parties differ, and double jeopardy applies only to criminal prosecutions, so a civil suit can follow an acquittal.",
+   "viz": [
+    "cv-sort",
+    "cv-court"
+   ]
+  },
+  {
+   "id": "law.common-law",
+   "slug": "common-law",
+   "unit": "precedent",
+   "title": "The Common Law Tradition",
+   "short": "The common law grew from English judges' decisions, case by case; the U.S. inherited it (Louisiana's private law draws on the civil law tradition), while civil law systems in much of Europe and Latin America start from comprehensive codes.",
+   "prereqs": [
+    "law.sources-of-law"
+   ],
+   "xp": 2,
+   "trouble": "Students think civil law systems ignore past cases and common law systems ignore statutes. Both use codes and cases; the difference is emphasis and the formal weight given to precedent.",
+   "viz": [
+    "cv-sort",
+    "cv-timeline"
+   ]
+  },
+  {
+   "id": "law.stare-decisis",
+   "slug": "stare-decisis",
+   "unit": "precedent",
+   "title": "Stare Decisis",
+   "short": "Stare decisis (\"to stand by things decided\") means courts follow precedent: lower courts must follow higher courts in their system (vertical), and courts usually follow their own earlier rulings (horizontal), for stability, fairness and efficiency.",
+   "prereqs": [
+    "law.common-law"
+   ],
+   "xp": 2,
+   "trouble": "Students think a court may never depart from its own precedent. Vertical stare decisis is strict; horizontal stare decisis is a strong presumption that a court can overcome, as the Supreme Court has done many times.",
+   "viz": [
+    "cv-court",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.binding-persuasive",
+   "slug": "binding-persuasive",
+   "unit": "precedent",
+   "title": "Binding and Persuasive Authority",
+   "short": "A decision binds the courts below it in the same system; decisions from other states, other circuits or lower courts are only persuasive, and so are secondary sources such as treatises and law reviews.",
+   "prereqs": [
+    "law.stare-decisis"
+   ],
+   "xp": 2,
+   "trouble": "Students think a federal court of appeals ruling binds every federal court. It binds courts within its own circuit; other circuits may disagree (a circuit split), which the Supreme Court may resolve.",
+   "viz": [
+    "cv-court",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.holding-dicta",
+   "slug": "holding-dicta",
+   "unit": "precedent",
+   "title": "Holding and Dicta",
+   "short": "The holding is the rule of law necessary to decide the case on its facts; dicta are statements in the opinion that were not necessary to the decision, and they do not bind later courts.",
+   "prereqs": [
+    "law.binding-persuasive"
+   ],
+   "xp": 3,
+   "trouble": "Students treat every sentence in an opinion as law. Ask: if this statement were removed, would the result change? If not, it is probably dictum.",
+   "viz": [
+    "cv-case",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.distinguish-overrule",
+   "slug": "distinguish-overrule",
+   "unit": "precedent",
+   "title": "Distinguishing and Overruling",
+   "short": "A court may distinguish a precedent by showing material facts differ, or overrule its own precedent; the Supreme Court weighs factors such as the quality of the earlier reasoning, workability, consistency with other decisions, later developments and reliance.",
+   "prereqs": [
+    "law.holding-dicta"
+   ],
+   "xp": 3,
+   "trouble": "Students think distinguishing a case means it was wrongly decided. Distinguishing leaves the precedent intact and says it does not reach these facts; overruling ends its authority.",
+   "viz": [
+    "cv-case",
+    "cv-timeline"
+   ]
+  },
+  {
+   "id": "law.federal-court-structure",
+   "slug": "federal-court-structure",
+   "unit": "courts",
+   "title": "The Federal Courts",
+   "short": "Article III courts include 94 district courts, 13 courts of appeals and the Supreme Court; their judges have life tenure; Congress has also created specialized courts and judges without life tenure, such as bankruptcy and magistrate judges.",
+   "prereqs": [
+    "gov.federal-courts"
+   ],
+   "xp": 1,
+   "trouble": "Students think federal courts are higher than state courts in every matter. They are separate systems; the U.S. Supreme Court reviews state court decisions only on questions of federal law.",
+   "viz": [
+    "cv-court",
+    "cv-map"
+   ]
+  },
+  {
+   "id": "law.state-court-structure",
+   "slug": "state-court-structure",
+   "unit": "courts",
+   "title": "State Courts",
+   "short": "Most states have trial courts, an intermediate appellate court and a highest court (usually called the supreme court, though in New York the trial court is the Supreme Court and the highest court is the Court of Appeals); state courts hear the great majority of cases.",
+   "prereqs": [
+    "law.federal-court-structure"
+   ],
+   "xp": 1,
+   "trouble": "Students assume every state's \"Supreme Court\" is its highest court. Names vary; identify a court by its place in the system.",
+   "viz": [
+    "cv-court"
+   ]
+  },
+  {
+   "id": "law.jurisdiction",
+   "slug": "jurisdiction",
+   "unit": "courts",
+   "title": "Jurisdiction",
+   "short": "A court needs subject-matter jurisdiction (federal courts hear federal-question cases and diversity cases between citizens of different states over $75,000) and personal jurisdiction over the defendant (enough contacts with the state that suit there is fair).",
+   "prereqs": [
+    "law.state-court-structure"
+   ],
+   "xp": 3,
+   "trouble": "Students think diversity jurisdiction needs only one plaintiff and one defendant from different states. It requires complete diversity: no plaintiff may share citizenship with any defendant.",
+   "viz": [
+    "cv-court",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.trial-and-appeal",
+   "slug": "trial-and-appeal",
+   "unit": "courts",
+   "title": "Trial Courts and Appellate Courts",
+   "short": "Trial courts find facts and apply law, with witnesses, evidence and often a jury; appellate courts review the record for legal error, reviewing questions of law de novo and deferring on facts (clear error) and many trial rulings (abuse of discretion).",
+   "prereqs": [
+    "law.federal-court-structure"
+   ],
+   "xp": 2,
+   "trouble": "Students think an appeal is a new trial. Appellate courts usually take no new evidence; they decide whether the trial court made a legal error that affected the result.",
+   "viz": [
+    "cv-court",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.civil-case-path",
+   "slug": "civil-case-path",
+   "unit": "courts",
+   "title": "The Path of a Civil Case",
+   "short": "A civil case moves from complaint and answer through motions to dismiss, discovery and summary judgment to trial, verdict, judgment and appeal; most cases settle or end on motions before trial.",
+   "prereqs": [
+    "law.trial-and-appeal",
+    "law.civil-vs-criminal"
+   ],
+   "xp": 2,
+   "trouble": "Students think most lawsuits go to trial. Only a small share of federal civil cases reach trial; most settle or are decided on motions.",
+   "viz": [
+    "cv-order",
+    "cv-court"
+   ]
+  },
+  {
+   "id": "law.criminal-case-path",
+   "slug": "criminal-case-path",
+   "unit": "courts",
+   "title": "The Path of a Criminal Case",
+   "short": "A criminal case moves from investigation and arrest to charging (by a grand jury indictment for federal felonies, or an information), arraignment and plea, pretrial motions, plea bargaining or trial, verdict, sentencing and appeal; most convictions come from guilty pleas.",
+   "prereqs": [
+    "law.civil-case-path"
+   ],
+   "xp": 2,
+   "trouble": "Students think the prosecution can appeal an acquittal. Double jeopardy bars a government appeal of a jury's acquittal; the defense may appeal a conviction.",
+   "viz": [
+    "cv-order",
+    "cv-court"
+   ]
+  },
+  {
+   "id": "law.case-names-parties",
+   "slug": "case-names-parties",
+   "unit": "reading-cases",
+   "title": "Case Names and Parties",
+   "short": "A case name lists the parties (\"Smith v. Jones\"); at trial they are plaintiff and defendant (or the government and the defendant in criminal cases), on appeal appellant and appellee, and at the Supreme Court petitioner and respondent.",
+   "prereqs": [
+    "law.civil-case-path"
+   ],
+   "xp": 1,
+   "trouble": "Students think the first name is always the plaintiff. On appeal many courts put the appealing party first, so the order can flip between courts.",
+   "viz": [
+    "cv-case",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.citations",
+   "slug": "citations",
+   "unit": "reading-cases",
+   "title": "Reading a Citation",
+   "short": "A citation such as Brown v. Board of Education, 347 U.S. 483 (1954) gives the volume (347), the reporter (U.S. Reports), the first page (483) and the year; F.3d and F.4th report the courts of appeals, F. Supp. the district courts.",
+   "prereqs": [
+    "law.case-names-parties"
+   ],
+   "xp": 1,
+   "trouble": "Students read the first number as the case number or the page. The number before the reporter is the volume; the number after it is the first page.",
+   "viz": [
+    "cv-case"
+   ]
+  },
+  {
+   "id": "law.parts-of-opinion",
+   "slug": "parts-of-opinion",
+   "unit": "reading-cases",
+   "title": "The Parts of an Opinion",
+   "short": "An appellate decision may include a syllabus (a summary that is not part of the opinion), the opinion of the Court, concurring opinions (agreeing with the result, often for other reasons), dissents and, when no reasoning wins a majority, a plurality opinion.",
+   "prereqs": [
+    "law.citations"
+   ],
+   "xp": 2,
+   "trouble": "Students quote the syllabus as the Court's words. In U.S. Reports the syllabus is prepared by the Reporter of Decisions and is not part of the opinion.",
+   "viz": [
+    "cv-case",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.case-brief",
+   "slug": "case-brief",
+   "unit": "reading-cases",
+   "title": "Briefing a Case",
+   "short": "A student case brief records the facts, the procedural history, the issue (question presented), the holding, the reasoning and the disposition, and often notes concurrences and dissents.",
+   "prereqs": [
+    "law.parts-of-opinion"
+   ],
+   "xp": 2,
+   "trouble": "Students copy long passages and miss the issue. Write the issue as a yes-or-no question that the holding answers.",
+   "viz": [
+    "cv-case",
+    "cv-order"
+   ]
+  },
+  {
+   "id": "law.irac",
+   "slug": "irac",
+   "unit": "reading-cases",
+   "title": "IRAC",
+   "short": "IRAC organizes legal analysis: state the Issue, the Rule, the Application of the rule to the facts and the Conclusion; the Application, where facts are matched to the rule's elements, does the work.",
+   "prereqs": [
+    "law.case-brief"
+   ],
+   "xp": 2,
+   "trouble": "Students state the rule and jump to the conclusion. Without the application, analysis is only a guess; tie each element of the rule to specific facts.",
+   "viz": [
+    "cv-case",
+    "cv-order",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.dispositions",
+   "slug": "dispositions",
+   "unit": "reading-cases",
+   "title": "What Appellate Courts Do",
+   "short": "An appellate court may affirm (leave the decision in place), reverse (overturn it), vacate (set it aside) or remand (send it back for more proceedings), often reversing or vacating and remanding together.",
+   "prereqs": [
+    "law.parts-of-opinion"
+   ],
+   "xp": 1,
+   "trouble": "Students think \"reversed\" means the other side wins the whole case. A reversal often comes with a remand, and the case continues in the lower court.",
+   "viz": [
+    "cv-court",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.deductive-reasoning",
+   "slug": "deductive-reasoning",
+   "unit": "reasoning",
+   "title": "Rules as Syllogisms",
+   "short": "Applying a rule is a deductive argument: the rule is the major premise, the facts are the minor premise and the result follows; most disputes are over which rule applies or what the facts are.",
+   "prereqs": [
+    "law.irac",
+    "trad.modus-ponens"
+   ],
+   "xp": 2,
+   "trouble": "Students think a valid legal syllogism settles a case. The form may be valid, but each premise (the rule's meaning, the facts) can be contested.",
+   "viz": [
+    "cv-sort",
+    "cv-order"
+   ]
+  },
+  {
+   "id": "law.analogical-reasoning",
+   "slug": "analogical-reasoning",
+   "unit": "reasoning",
+   "title": "Reasoning by Analogy",
+   "short": "Lawyers argue that a case is like a precedent in the ways that matter (analogizing) or unlike it (distinguishing); the key is identifying which facts are material to the rule's purpose.",
+   "prereqs": [
+    "law.deductive-reasoning",
+    "informal.analogies"
+   ],
+   "xp": 2,
+   "trouble": "Students compare cases on surface facts (both involve dogs). Ask what features the earlier court relied on, then whether the new case shares them.",
+   "viz": [
+    "cv-case",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.rules-standards",
+   "slug": "rules-standards",
+   "unit": "reasoning",
+   "title": "Rules and Standards",
+   "short": "A rule draws a bright line (\"speed limit 65\"); a standard calls for judgment (\"drive reasonably for conditions\"); rules are predictable but can misfit cases, while standards fit cases better but are less predictable.",
+   "prereqs": [
+    "law.analogical-reasoning"
+   ],
+   "xp": 2,
+   "trouble": "Students think one form is always better. Each has costs and benefits; much of law is the choice between them.",
+   "viz": [
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.elements-tests",
+   "slug": "elements-tests",
+   "unit": "reasoning",
+   "title": "Elements, Factors and Balancing Tests",
+   "short": "Some legal tests list elements, all of which must be proven; others list factors to weigh, none decisive by itself; a balancing test weighs interests against each other.",
+   "prereqs": [
+    "law.rules-standards"
+   ],
+   "xp": 2,
+   "trouble": "Students treat factor tests like element tests and stop when one factor fails. In a factor test the court weighs them all together.",
+   "viz": [
+    "cv-sort",
+    "cv-scrutiny"
+   ]
+  },
+  {
+   "id": "law.burdens-of-proof",
+   "slug": "burdens-of-proof",
+   "unit": "reasoning",
+   "title": "Burdens and Standards of Proof",
+   "short": "The burden of proof says which party must prove a point (production and persuasion); the standard says how sure the factfinder must be: preponderance of the evidence (more likely than not), clear and convincing evidence, or beyond a reasonable doubt.",
+   "prereqs": [
+    "law.elements-tests",
+    "law.civil-vs-criminal"
+   ],
+   "xp": 2,
+   "trouble": "Students think \"preponderance\" means a large majority of the evidence. It means more likely true than not, even by a slight margin.",
+   "viz": [
+    "cv-sort",
+    "cv-order"
+   ]
+  },
+  {
+   "id": "law.plain-meaning",
+   "slug": "plain-meaning",
+   "unit": "statutes",
+   "title": "Text and Ordinary Meaning",
+   "short": "Courts begin with the statute's text, read in its ordinary meaning at the time it was enacted and in the context of the whole statute; textualists hold that the enacted words are the law.",
+   "prereqs": [
+    "law.irac",
+    "gov.how-a-bill-becomes-law"
+   ],
+   "xp": 2,
+   "trouble": "Students think textualism means reading each word alone, as in a dictionary. Textualists read words in context, as a skilled reader of the whole statute would understand them.",
+   "viz": [
+    "cv-doc",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.purposivism",
+   "slug": "purposivism",
+   "unit": "statutes",
+   "title": "Purpose",
+   "short": "Purposivists read a statute in light of the problem it was meant to solve and its evident purpose, especially when the words are unclear or a literal reading would defeat the statute's aims.",
+   "prereqs": [
+    "law.plain-meaning"
+   ],
+   "xp": 2,
+   "trouble": "Students think purposivists ignore the text. Purposivists start with the text too; they differ in how much weight purpose gets when the text is unclear or leads to an odd result.",
+   "viz": [
+    "cv-doc",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.legislative-history",
+   "slug": "legislative-history",
+   "unit": "statutes",
+   "title": "Legislative History",
+   "short": "Legislative history includes committee reports, floor statements and earlier drafts; its supporters say it reveals what Congress meant, and its critics say only the enacted text was voted on and history can be selective.",
+   "prereqs": [
+    "law.purposivism"
+   ],
+   "xp": 2,
+   "trouble": "Students treat any statement in the record as Congress's intent. Courts that use history give committee reports more weight than a single member's floor remark.",
+   "viz": [
+    "cv-doc",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.textual-canons",
+   "slug": "textual-canons",
+   "unit": "statutes",
+   "title": "Textual Canons",
+   "short": "Textual canons are rules of thumb about language: expressio unius (listing some implies excluding others), ejusdem generis (a general word after a list takes the list's kind), noscitur a sociis (a word is known by its neighbors), the rule against surplusage and the whole-act rule.",
+   "prereqs": [
+    "law.plain-meaning"
+   ],
+   "xp": 3,
+   "trouble": "Students apply ejusdem generis to any list. It applies when general words follow specific ones (\"cars, trucks and other vehicles\") and limit them to that kind.",
+   "viz": [
+    "cv-sort",
+    "cv-doc"
+   ]
+  },
+  {
+   "id": "law.substantive-canons",
+   "slug": "substantive-canons",
+   "unit": "statutes",
+   "title": "Substantive Canons",
+   "short": "Substantive canons reflect legal values: the rule of lenity (read unclear criminal laws in the defendant's favor), constitutional avoidance (prefer a reading that avoids constitutional doubts) and clear-statement rules (Congress must speak clearly to, for example, override state sovereign immunity).",
+   "prereqs": [
+    "law.textual-canons"
+   ],
+   "xp": 3,
+   "trouble": "Students apply lenity whenever a criminal statute is hard to read. Courts generally use it only when real ambiguity remains after the other tools of interpretation.",
+   "viz": [
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.agency-deference",
+   "slug": "agency-deference",
+   "unit": "statutes",
+   "title": "Courts and Agency Interpretations",
+   "short": "Under Skidmore (1944) an agency's reading gets weight by its power to persuade; under Chevron (1984) courts deferred to reasonable agency readings of ambiguous statutes, and Mead (2001) limited when Chevron applied; the Court overruled Chevron in 2024.",
+   "prereqs": [
+    "law.substantive-canons",
+    "gov.bureaucracy-accountability"
+   ],
+   "xp": 3,
+   "trouble": "Students mix up Skidmore and Chevron. Under Skidmore an agency's reading persuades only as much as its reasoning earns; under Chevron a reasonable reading controlled.",
+   "viz": [
+    "cv-case",
+    "cv-timeline"
+   ]
+  },
+  {
+   "id": "law.interpretation-schools",
+   "slug": "interpretation-schools",
+   "unit": "statutes",
+   "title": "The Schools Compared",
+   "short": "Textualism prizes fidelity to the enacted words, predictability and the legislature's role; purposivism prizes making statutes work as intended; most judges use text, structure, purpose, history and canons in some mix.",
+   "prereqs": [
+    "law.legislative-history",
+    "law.agency-deference"
+   ],
+   "xp": 3,
+   "trouble": "Students think one school always produces liberal or conservative results. Both schools have produced results surprising to their usual allies; the debate is about method.",
+   "viz": [
+    "cv-sort",
+    "cv-doc"
+   ]
+  },
+  {
+   "id": "law.case-or-controversy",
+   "slug": "case-or-controversy",
+   "unit": "justiciability",
+   "title": "Cases and Controversies",
+   "short": "Article III limits federal courts to actual \"Cases\" and \"Controversies\": they decide real disputes between adverse parties and do not give advisory opinions.",
+   "prereqs": [
+    "law.jurisdiction",
+    "gov.article-3"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Supreme Court can rule on any law it thinks unconstitutional. A court can rule only when a proper party brings a real case; many state courts can give advisory opinions, but federal courts cannot.",
+   "viz": [
+    "cv-court",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.standing",
+   "slug": "standing",
+   "unit": "justiciability",
+   "title": "Standing",
+   "short": "To have standing a plaintiff must show (1) an injury in fact that is concrete, particularized and actual or imminent, (2) caused by the defendant's conduct and (3) likely to be redressed by a favorable ruling (Lujan v. Defenders of Wildlife, 1992).",
+   "prereqs": [
+    "law.case-or-controversy"
+   ],
+   "xp": 3,
+   "trouble": "Students think caring deeply about an issue gives standing. A general interest shared by all citizens is not enough; the plaintiff needs a personal, concrete injury.",
+   "viz": [
+    "cv-sort",
+    "cv-case"
+   ]
+  },
+  {
+   "id": "law.ripeness-mootness",
+   "slug": "ripeness-mootness",
+   "unit": "justiciability",
+   "title": "Ripeness and Mootness",
+   "short": "A case is not ripe if the harm is too speculative or the dispute not yet concrete; it is moot if events end the dispute, unless an exception applies, such as a wrong \"capable of repetition, yet evading review\" or a defendant's voluntary stop that could be resumed.",
+   "prereqs": [
+    "law.standing"
+   ],
+   "xp": 3,
+   "trouble": "Students mix up the two by timing. Ripeness asks \"too early?\"; mootness asks \"too late?\"",
+   "viz": [
+    "cv-sort",
+    "cv-timeline"
+   ]
+  },
+  {
+   "id": "law.political-question",
+   "slug": "political-question",
+   "unit": "justiciability",
+   "title": "Political Questions",
+   "short": "Courts decline questions the Constitution commits to another branch or that lack judicially manageable standards (Baker v. Carr, 1962, listing the factors); examples include Senate impeachment trials (Nixon v. United States, 1993) and partisan gerrymandering claims in federal court (Rucho v. Common Cause, 2019).",
+   "prereqs": [
+    "law.ripeness-mootness"
+   ],
+   "xp": 3,
+   "trouble": "Students think any case about politics is a political question. Many politically charged cases are decided; the doctrine is narrow and turns on the Baker factors.",
+   "viz": [
+    "cv-case",
+    "cv-sort"
+   ]
+  },
+  {
+   "id": "law.contracts-basics",
+   "slug": "contracts-basics",
+   "unit": "fields",
+   "title": "Contracts",
+   "short": "A contract is an enforceable promise; it generally needs an offer, an acceptance and consideration (a bargained-for exchange), and remedies for breach usually aim to give the injured party the benefit of the bargain.",
+   "prereqs": [
+    "law.burdens-of-proof"
+   ],
+   "xp": 2,
+   "trouble": "Students think a contract must be written to be enforceable. Many oral contracts are enforceable; the statute of frauds requires writing only for certain kinds, such as sales of land.",
+   "viz": [
+    "cv-sort",
+    "cv-order"
+   ]
+  },
+  {
+   "id": "law.torts-basics",
+   "slug": "torts-basics",
+   "unit": "fields",
+   "title": "Torts",
+   "short": "A tort is a civil wrong; negligence requires a duty, a breach of that duty, causation (actual and proximate) and damages; intentional torts include battery, assault and trespass; strict liability applies to a few activities.",
+   "prereqs": [
+    "law.burdens-of-proof"
+   ],
+   "xp": 2,
+   "trouble": "Students think any accident means someone was negligent. Negligence needs a breach of the duty of reasonable care, plus causation and harm.",
+   "viz": [
+    "cv-sort",
+    "cv-order"
+   ]
+  },
+  {
+   "id": "law.criminal-law-basics",
+   "slug": "criminal-law-basics",
+   "unit": "fields",
+   "title": "Criminal Law",
+   "short": "Most crimes require a guilty act (actus reus) and a guilty mind (mens rea); the Model Penal Code ranks mental states as purposely, knowingly, recklessly and negligently; defenses include self-defense and insanity.",
+   "prereqs": [
+    "law.burdens-of-proof",
+    "law.criminal-case-path"
+   ],
+   "xp": 2,
+   "trouble": "Students think motive is the same as intent. Intent is the mental state toward the act; motive is the reason behind it and is usually not an element.",
+   "viz": [
+    "cv-sort",
+    "cv-order"
+   ]
+  },
+  {
+   "id": "law.administrative-law-basics",
+   "slug": "administrative-law-basics",
+   "unit": "fields",
+   "title": "Administrative Law",
+   "short": "Agencies make rules, adjudicate cases and enforce laws under statutes; the Administrative Procedure Act (1946) requires notice-and-comment rulemaking for most rules and lets courts set aside agency action that is \"arbitrary, capricious\" or contrary to law.",
+   "prereqs": [
+    "law.agency-deference"
+   ],
+   "xp": 3,
+   "trouble": "Students think agency rules are only guidance. Legislative rules made through proper procedures have the force of law.",
+   "viz": [
+    "cv-order",
+    "cv-branches"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+{{- /* author label for a Federalist paper: input is the meta entry */ -}}
+{{- $a := .a -}}
+{{- if eq $a "H" }}<span class="pp-au-H">Hamilton</span>
+{{- else if eq $a "M" }}<span class="pp-au-M">Madison</span>
+{{- else if eq $a "J" }}<span class="pp-au-J">Jay</span>
+{{- else if eq $a "HM" }}<span class="pp-au-M">Madison</span>, with Hamilton <span class="pp-tag disp" title="Written jointly; most scholars credit Madison with most of the text">joint</span>
+{{- else if eq $a "D" }}<span class="pp-au-M">Madison</span> <span class="pp-tag disp" title="Once disputed between Hamilton and Madison; most scholars now credit Madison">disputed</span>
+{{- end -}}

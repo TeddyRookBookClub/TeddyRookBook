@@ -1,0 +1,15 @@
+{{- /* Search box across every text. Input: dict "id" (suffix) "scope" ("" | "fed" | "anti") */ -}}
+<div class="pp-search hs-noprint" data-index="{{ "american-history/federalist-papers/index.json" | relURL }}">
+  <form role="search" aria-label="Search the papers">
+    <label class="pp-small" for="pp-q-{{ .id }}" style="flex-basis:100%">Search every Federalist and Anti-Federalist text on this site. Put a phrase in quotes.</label>
+    <input id="pp-q-{{ .id }}" type="search" placeholder="e.g. faction, &quot;standing army&quot;" autocomplete="off">
+    <select aria-label="Which papers">
+      <option value=""{{ if not .scope }} selected{{ end }}>All texts</option>
+      <option value="fed"{{ if eq .scope "fed" }} selected{{ end }}>Federalist only</option>
+      <option value="anti"{{ if eq .scope "anti" }} selected{{ end }}>Anti-Federalist only</option>
+    </select>
+    <button class="hs-btn pri" type="submit">Search</button>
+  </form>
+  <p class="pp-small pp-msg" aria-live="polite" style="margin:.5rem 0 0"></p>
+  <ul class="pp-res"></ul>
+</div>

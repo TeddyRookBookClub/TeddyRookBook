@@ -1,0 +1,8 @@
+{{- /* One page per Anti-Federalist text: /american-history/anti-federalist-papers/<slug>/ (layouts/papers/af.html), from data/papers/af_meta.json and data/papers/af/<slug>.json. Builder: papers. */ -}}
+{{- with site.Data.papers.af_meta -}}
+  {{- range $i, $p := .pieces -}}
+    {{- $.AddPage (dict "kind" "page" "path" $p.slug "title" $p.t "type" "papers" "layout" "af" "weight" (add $i 1)
+      "params" (dict "slug" $p.slug "description" $p.desc)
+      "dates" (dict "date" (time.AsTime "2026-10-25"))) -}}
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,50 @@
+{{ define "main" }}
+{{ partial "papers/head.html" . }}
+{{ $n := int .Params.n }}
+{{ $M := site.Data.papers.fed_meta.papers }}
+{{ $m := index (where $M "n" $n) 0 }}
+{{ $T := index site.Data.papers.fed (printf "f%02d" $n) }}
+{{ $AF := site.Data.papers.af_meta.pieces }}
+{{ $base := "american-history/federalist-papers/" }}
+<div class="hs pp pp-fed" data-key="fed-{{ $n }}">
+  {{ partial "papers/crumbs.html" (slice (dict "t" "The Federalist Papers" "u" $base) (dict "t" (printf "No. %d" $n))) }}
+  <header class="pp-head">
+    <p class="hs-eyebrow">The Federalist · No. {{ $n }} of 85</p>
+    <h1>Federalist No. {{ $n }}: {{ $m.t }}</h1>
+    <p class="pp-meta"><span>By {{ partial "papers/au.html" $m }}, writing as “Publius”</span><span>{{ partial "papers/date.html" $m.d }}</span><span>{{ partial "papers/paper.html" $m.pp }}</span><span>{{ $T.words }} words · about {{ math.Ceil (div (float $T.words) 230) }} min</span><a class="hs-noprint" href="#text">Skip to the text ↓</a></p>
+  </header>
+  <div class="pp-layout">
+    <div>
+      {{ partial "papers/intro.html" $m }}
+      {{ partial "papers/tools.html" . }}
+      {{ partial "papers/text.html" (dict "sal" $T.sal "blocks" $T.p "sig" $T.sig "notes" $T.notes "ed" $T.ed) }}
+      <p class="pp-src">Text: <i>The Federalist Papers</i>, Project Gutenberg eBook #1404 (transcribed by the Constitution Society and volunteers), read from the Internet Archive's copy of that file, with original spelling. Printed editions differ a little in wording, because the authors revised some essays for later book editions. Double hyphens are shown as dashes{{ with $T.fixes }}; we corrected {{ delimit . "; " }}{{ end }}. Paragraph count checked against the 1818 Gideon edition on Wikisource{{ if ge $n 84 }} (here the 1863 Dawson edition, since Gideon's Nos. 84–85 are not yet transcribed){{ end }}. Public domain. The introduction, summary and questions are written for Teddy Rook Book.</p>
+    </div>
+    <aside class="pp-side">
+      {{ with $m.af }}
+      <div class="pp-card">
+        <h2 style="font-size:1.05rem">The other side</h2>
+        <p class="pp-small" style="margin:.2rem 0 .6rem">Anti-Federalist writing on the same subject:</p>
+        <div class="pp-pair">
+          {{ range . }}{{ $a := index (where $AF "slug" .) 0 }}{{ with $a }}<a href="{{ printf "american-history/anti-federalist-papers/%s/" .slug | relURL }}"><b>{{ .t }}</b><span>{{ .pen }}{{ with .d }} · {{ . }}{{ end }}</span></a>{{ end }}{{ end }}
+        </div>
+      </div>
+      {{ end }}
+      <div class="pp-card">
+        <h2 style="font-size:1.05rem">In this group</h2>
+        {{ $G := site.Data.papers.groups.groups }}
+        {{ range $G }}{{ if and (ge $n (index .r 0)) (le $n (index .r 1)) }}
+        <p class="pp-small" style="margin:.2rem 0 .5rem"><b>{{ .t }}</b> (Nos. {{ index .r 0 }}{{ if ne (index .r 0) (index .r 1) }}–{{ index .r 1 }}{{ end }})</p>
+        <p class="pp-small" style="margin:0">{{ range $k := seq (int (index .r 0)) (int (index .r 1)) }}{{ if eq $k $n }}<b>{{ $k }}</b>{{ else }}<a href="{{ printf "%s%d/" $base $k | relURL }}">{{ $k }}</a>{{ end }} {{ end }}</p>
+        {{ end }}{{ end }}
+      </div>
+      {{ partial "papers/search.html" (dict "id" "side" "scope" "") }}
+    </aside>
+  </div>
+  <nav class="pp-nav hs-noprint" aria-label="Previous and next paper">
+    {{ if gt $n 1 }}{{ $p := index (where $M "n" (sub $n 1)) 0 }}<a href="{{ printf "%s%d/" $base (sub $n 1) | relURL }}" rel="prev"><small>← No. {{ sub $n 1 }}</small>{{ $p.t }}</a>{{ else }}<a href="{{ $base | relURL }}"><small>←</small>Guide to the Federalist Papers</a>{{ end }}
+    {{ if lt $n 85 }}{{ $x := index (where $M "n" (add $n 1)) 0 }}<a href="{{ printf "%s%d/" $base (add $n 1) | relURL }}" rel="next" style="text-align:right;margin-left:auto"><small>No. {{ add $n 1 }} →</small>{{ $x.t }}</a>{{ else }}<a href="{{ "american-history/anti-federalist-papers/" | relURL }}" style="text-align:right;margin-left:auto"><small>Next →</small>The Anti-Federalist Papers</a>{{ end }}
+  </nav>
+</div>
+{{ partial "papers/foot.html" . }}
+{{ end }}

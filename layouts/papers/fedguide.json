@@ -1,0 +1,21 @@
+{{- /* Search index for every text (Federalist + Anti-Federalist): /american-history/federalist-papers/index.json, loaded by static/papers/papers.js on the first search. */ -}}
+{{- $out := slice -}}
+{{- range site.Data.papers.fed_meta.papers -}}
+  {{- $n := int .n -}}
+  {{- $T := index site.Data.papers.fed (printf "f%02d" $n) -}}
+  {{- $ps := slice -}}
+  {{- range $T.p -}}{{- $ps = $ps | append (. | replaceRE `<sup.*?</sup>` "" | plainify | htmlUnescape) -}}{{- end -}}
+  {{- $out = $out | append (dict "k" "fed" "u" (printf "american-history/federalist-papers/%d/" $n | relURL) "l" (printf "Federalist %d" $n) "t" .t "p" $ps) -}}
+{{- end -}}
+{{- range $a := site.Data.papers.af_meta.pieces -}}
+  {{- $T := index site.Data.papers.af $a.slug -}}
+  {{- with $T -}}
+    {{- $ps := slice -}}
+    {{- range .b -}}
+      {{- if eq .t "v" -}}{{- $ps = $ps | append (delimit .x " / " | replaceRE `<sup.*?</sup>` "" | plainify | htmlUnescape) -}}
+      {{- else if ne .t "c" -}}{{- $ps = $ps | append (.x | replaceRE `<sup.*?</sup>` "" | plainify | htmlUnescape) -}}{{- end -}}
+    {{- end -}}
+    {{- $out = $out | append (dict "k" "anti" "u" (printf "american-history/anti-federalist-papers/%s/" $a.slug | relURL) "l" $a.short "t" $a.t "p" $ps) -}}
+  {{- end -}}
+{{- end -}}
+{{- $out | jsonify -}}

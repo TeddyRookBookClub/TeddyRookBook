@@ -1,0 +1,53 @@
+{{ define "main" }}
+{{ partial "papers/head.html" . }}
+{{ $AF := site.Data.papers.af_meta.pieces }}
+{{ $m := index (where $AF "slug" .Params.slug) 0 }}
+{{ $T := index site.Data.papers.af $m.slug }}
+{{ $M := site.Data.papers.fed_meta.papers }}
+{{ $base := "american-history/anti-federalist-papers/" }}
+{{ $i := 0 }}{{ range $j, $x := $AF }}{{ if eq $x.slug $m.slug }}{{ $i = $j }}{{ end }}{{ end }}
+<div class="hs pp pp-anti" data-key="af-{{ $m.slug }}">
+  {{ partial "papers/crumbs.html" (slice (dict "t" "The Anti-Federalist Papers" "u" $base) (dict "t" $m.t)) }}
+  <header class="pp-head anti">
+    <p class="hs-eyebrow">Anti-Federalist writing · {{ $m.series }}</p>
+    <h1>{{ $m.t }}</h1>
+    <p class="pp-meta"><span>{{ $m.pen }}</span>{{ with $m.d }}<span>{{ . }}</span>{{ end }}{{ with $m.pub }}<span>{{ . }}</span>{{ end }}{{ with $T }}<span>{{ .words }} words · about {{ math.Ceil (div (float .words) 230) }} min</span><a class="hs-noprint" href="#text">Skip to the text ↓</a>{{ end }}</p>
+    <p class="pp-small" style="margin:.5rem 0 0"><b>Who wrote it?</b> {{ $m.au | markdownify }}</p>
+  </header>
+  <div class="pp-layout">
+    <div>
+      {{ partial "papers/intro.html" $m }}
+      {{ with $T }}
+      {{ partial "papers/tools.html" $ }}
+      {{ partial "papers/text.html" (dict "head" .head "sal" .sal "blocks" .b "sig" .sig "notes" .notes) }}
+      <p class="pp-src">{{ .src | markdownify }}{{ with .fixes }} We corrected {{ delimit . "; " }}.{{ end }} Public domain. The introduction and questions are written for Teddy Rook Book.</p>
+      {{ else }}
+      {{ with $m.summ }}<section class="pp-card pp-summ" style="margin-top:1rem" id="text">{{ . | markdownify }}</section>{{ end }}
+      {{ end }}
+    </div>
+    <aside class="pp-side">
+      {{ with $m.fed }}
+      <div class="pp-card">
+        <h2 style="font-size:1.05rem">The Federalist reply</h2>
+        <p class="pp-small" style="margin:.2rem 0 .6rem">Federalist papers on the same subject:</p>
+        <div class="pp-pair">
+          {{ range . }}{{ $k := int . }}{{ $f := index (where $M "n" $k) 0 }}<a href="{{ printf "american-history/federalist-papers/%d/" $k | relURL }}"><b>No. {{ $k }}: {{ $f.t }}</b><span>{{ partial "papers/au.html" $f }}</span></a>{{ end }}
+        </div>
+      </div>
+      {{ end }}
+      {{ with $m.also }}
+      <div class="pp-card">
+        <h2 style="font-size:1.05rem">Read more</h2>
+        <ul class="pp-small" style="margin:.2rem 0;padding-left:1.1rem">{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul>
+      </div>
+      {{ end }}
+      {{ partial "papers/search.html" (dict "id" "side" "scope" "") }}
+    </aside>
+  </div>
+  <nav class="pp-nav hs-noprint" aria-label="Previous and next">
+    {{ if gt $i 0 }}{{ $p := index $AF (sub $i 1) }}<a href="{{ printf "%s%s/" $base $p.slug | relURL }}" rel="prev"><small>← Previous</small>{{ $p.t }}</a>{{ else }}<a href="{{ $base | relURL }}"><small>←</small>Guide to the Anti-Federalist Papers</a>{{ end }}
+    {{ if lt $i (sub (len $AF) 1) }}{{ $x := index $AF (add $i 1) }}<a href="{{ printf "%s%s/" $base $x.slug | relURL }}" rel="next" style="text-align:right;margin-left:auto"><small>Next →</small>{{ $x.t }}</a>{{ else }}<a href="{{ "american-history/ratification-debate/" | relURL }}" style="text-align:right;margin-left:auto"><small>Next →</small>The ratification debate, side by side</a>{{ end }}
+  </nav>
+</div>
+{{ partial "papers/foot.html" . }}
+{{ end }}

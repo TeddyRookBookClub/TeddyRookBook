@@ -1,0 +1,44 @@
+# Biology Ladder courses, bottom rung to top rung (the order of this list is the ladder).
+# Contract: /tmp/briefs/ladders_spec.md and /tmp/briefs/mathladder_spec.md section 3; brief /tmp/briefs/bio_design.md.
+# Skill maps live in data/bio/topics/<key>.json (built from /tmp/work_bio/topics_<key>.py by build_topics.py).
+# Design notes and conventions: /tmp/work_bio/overview.md.
+- key: lifek
+  slug: young-learners
+  title: "Life Science for Young Learners"
+  short: "Young Learners"
+  band: "Elementary"
+  grade: "K–3"
+  icon: "🐛"
+  color: "#b85c0d"
+  blurb: "For ages 5 to 9, read aloud with a grown-up: living and nonliving, what plants and animals need, parts of a plant, seeds, animal groups, habitats, food chains, life cycles, senses, seasons and caring for living things."
+  after: []
+- key: lifesci
+  slug: life-science
+  title: "Life Science"
+  short: "Life Science"
+  band: "Middle school"
+  grade: "6–8"
+  icon: "🔬"
+  color: "#2e7d32"
+  blurb: "Cells and the microscope, classifying life, microbes, plants and photosynthesis, animals and adaptations, ecosystems and food webs, populations, the human body, heredity and Punnett squares, and evolution."
+  after: [lifek, g5]
+- key: hsbio
+  slug: high-school-biology
+  title: "High School Biology"
+  short: "High School Biology"
+  band: "High school"
+  grade: "9–10"
+  icon: "🧬"
+  color: "#0f7d5c"
+  blurb: "The chemistry of life, cells and membranes, photosynthesis and respiration, mitosis and meiosis, Mendelian genetics and pedigrees, DNA to protein, biotechnology, evolution, ecology, and homeostasis."
+  after: [lifesci, alg1]
+- key: apbio
+  slug: advanced-biology
+  title: "Advanced Biology (AP and College)"
+  short: "Advanced Biology"
+  band: "College"
+  grade: "College"
+  icon: "🧫"
+  color: "#1f5f8b"
+  blurb: "AP Biology and first-year college depth with real data: free energy and enzyme kinetics, the inner workings of photosynthesis and respiration, cell signaling, gene maps, gene regulation, population genetics, and quantitative ecology."
+  after: [hsbio, chem]

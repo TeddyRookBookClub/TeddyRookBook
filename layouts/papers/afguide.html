@@ -1,0 +1,123 @@
+{{ define "main" }}
+{{ partial "papers/head.html" . }}
+{{ $AF := site.Data.papers.af_meta.pieces }}
+{{ $M := site.Data.papers.fed_meta.papers }}
+{{ $base := "american-history/anti-federalist-papers/" }}
+{{ $fb := "american-history/federalist-papers/" }}
+<div class="hs pp pp-guide" data-key="af-guide">
+  {{ partial "papers/crumbs.html" (slice (dict "t" "The Anti-Federalist Papers")) }}
+  <header class="hs-hero pp-hero anti">
+    <p class="hs-eyebrow">American History &amp; Civics · Primary sources</p>
+    <h1>The Anti-Federalist Papers</h1>
+    <p>In 1787 and 1788, thousands of Americans argued that the new Constitution should be rejected or changed before it was adopted. They lost the vote, but their demands led to the Bill of Rights, and their questions about power, distance and liberty are still asked. Here is who they were, what they feared, and the full text of some of their most important essays and speeches, each paired with the Federalist reply.</p>
+    <div class="pp-cta">
+      <a class="hs-btn" href="#texts">Read the texts</a>
+      <a class="hs-btn ghost" href="{{ "american-history/ratification-debate/" | relURL }}">The debate, side by side</a>
+      <a class="hs-btn ghost" href="{{ $fb | relURL }}">The Federalist Papers</a>
+    </div>
+  </header>
+
+  <nav class="pp-toc hs-noprint" aria-label="On this page"><b>On this page</b><a href="#who">Who they were</a><a href="#fears">What they feared</a><a href="#collection">No single collection</a><a href="#bill-of-rights">The Bill of Rights</a><a href="#writers">The writers</a><a href="#texts">The texts</a><a href="#questions">Questions</a><a href="#search">Search</a></nav>
+
+  <section class="pp-s" id="who">
+    <h2>Who the Anti-Federalists were</h2>
+    <div class="pp-cols">
+      <p>“Anti-Federalist” was a name given by their opponents. Supporters of the Constitution called themselves Federalists, a word that had meant a friend of a league of states. Many of their critics thought the name belonged to them instead, since they wanted to keep a federal union of states rather than one national government. Some called themselves “federal republicans.”</p>
+      <p>They were not one party. They included small farmers in New England and the backcountry, state officeholders, and wealthy planters such as George Mason of Virginia. Some were leaders of the Revolution, like Patrick Henry and Richard Henry Lee. Many agreed that the Articles of Confederation needed more power over trade and money. What they disputed was this particular plan, and how much power it gave to a government far from home.</p>
+      <p>In the end every state ratified, the last in 1790, sometimes by narrow votes: 187 to 168 in Massachusetts, 89 to 79 in Virginia, 30 to 27 in New York. North Carolina and Rhode Island held out until after the new government had begun. After ratification most of them accepted the result and took part in the new government. Their arguments shaped the Bill of Rights and later debates about states’ rights, the courts and the reach of national power.</p>
+    </div>
+  </section>
+
+  <section class="pp-s" id="fears">
+    <h2>What they feared</h2>
+    <p>The Anti-Federalists made many arguments, and they did not all agree. These were the most common, put as their best advocates put them. Each has a link to a text making the case and to the Federalist answer.</p>
+    <dl class="pp-dl">
+      <div><dt>Consolidation</dt><dd>The powers to tax, to make all “necessary and proper” laws, and to establish supreme courts would, in time, turn a union of states into one national government, leaving the states little to do. <a href="{{ printf "%sbrutus/" $base | relURL }}">Brutus</a>, <a href="{{ printf "%sfederal-farmer-1/" $base | relURL }}">Federal Farmer I</a>. Reply: <a href="{{ printf "%s39/" $fb | relURL }}">Federalist 39</a>, <a href="{{ printf "%s45/" $fb | relURL }}">45</a>.</dd></div>
+      <div><dt>A distant government over a large country</dt><dd>Free republics had been small. Over so large and varied a land, people would not know their rulers, and laws would need soldiers to enforce them. <a href="{{ printf "%scato-3/" $base | relURL }}">Cato III</a>, <a href="{{ printf "%sbrutus/" $base | relURL }}">Brutus I</a>. Reply: <a href="{{ printf "%s10/" $fb | relURL }}">Federalist 10</a>, <a href="{{ printf "%s14/" $fb | relURL }}">14</a>.</dd></div>
+      <div><dt>No bill of rights</dt><dd>Because federal laws would be supreme, the rights in state constitutions would not protect people against the national government. Rights must be written down: conscience, the press, juries, protection from general warrants. <a href="{{ printf "%sfederal-farmer-4/" $base | relURL }}">Federal Farmer IV</a>, <a href="{{ printf "%smason-objections/" $base | relURL }}">Mason</a>. Reply: <a href="{{ printf "%s84/" $fb | relURL }}">Federalist 84</a>.</dd></div>
+      <div><dt>Too few representatives</dt><dd>Sixty-five members for the whole country could not know or resemble the people; they would be the wealthy and well known, and easier to corrupt. <a href="{{ printf "%sfederal-farmer-2/" $base | relURL }}">Federal Farmer II</a>, <a href="{{ printf "%scato-5/" $base | relURL }}">Cato V</a>. Reply: <a href="{{ printf "%s35/" $fb | relURL }}">Federalist 35</a>, <a href="{{ printf "%s55/" $fb | relURL }}">55</a>, <a href="{{ printf "%s57/" $fb | relURL }}">57</a>.</dd></div>
+      <div><dt>The courts</dt><dd>Judges serving for life, interpreting the Constitution by its spirit and answering to no one, would enlarge federal power and absorb the state courts; appeals “as to law and fact” endangered juries. <a href="{{ printf "%sbrutus/" $base | relURL }}">Brutus XI–XV</a>. Reply: <a href="{{ printf "%s78/" $fb | relURL }}">Federalist 78</a>, <a href="{{ printf "%s81/" $fb | relURL }}">81</a>.</dd></div>
+      <div><dt>A standing army</dt><dd>Peacetime armies had destroyed free governments; Congress’s control of the militia could leave it neglected or misused. <a href="{{ printf "%shenry-june-5/" $base | relURL }}">Henry, June 5</a>, <a href="{{ printf "%sbrutus/" $base | relURL }}">Brutus VIII–X</a>. Reply: <a href="{{ printf "%s24/" $fb | relURL }}">Federalist 24</a>, <a href="{{ printf "%s29/" $fb | relURL }}">29</a>, <a href="{{ printf "%s46/" $fb | relURL }}">46</a>.</dd></div>
+      <div><dt>The presidency</dt><dd>A single executive, re-eligible without limit, commanding the army, with no council, could become a king in all but name. <a href="{{ printf "%scato-4/" $base | relURL }}">Cato IV</a>, <a href="{{ printf "%shenry-june-5/" $base | relURL }}">Henry, June 5</a>. Reply: <a href="{{ printf "%s69/" $fb | relURL }}">Federalist 69</a>, <a href="{{ printf "%s70/" $fb | relURL }}">70</a>.</dd></div>
+      <div><dt>The Senate and aristocracy</dt><dd>A small Senate with long terms, sharing executive powers with the President, could become a permanent ruling few. <a href="{{ printf "%scentinel-1/" $base | relURL }}">Centinel I</a>, <a href="{{ printf "%smason-objections/" $base | relURL }}">Mason</a>. Reply: <a href="{{ printf "%s62/" $fb | relURL }}">Federalist 62</a>, <a href="{{ printf "%s63/" $fb | relURL }}">63</a>.</dd></div>
+      <div><dt>Haste</dt><dd>The country was at peace; there was time to amend the plan first. Once in power, the new government would never limit itself. <a href="{{ printf "%splebeian/" $base | relURL }}">A Plebeian</a>, <a href="{{ printf "%shenry-june-24/" $base | relURL }}">Henry, June 24</a>. Reply: <a href="{{ printf "%s85/" $fb | relURL }}">Federalist 85</a>.</dd></div>
+    </dl>
+  </section>
+
+  <section class="pp-s" id="collection">
+    <h2>There is no single “Anti-Federalist Papers”</h2>
+    <div class="pp-cols">
+      <p>The Federalist was planned as one series and published as one book in 1788. The Anti-Federalists never did anything like that. Their writing was scattered across hundreds of newspaper essays, pamphlets, letters and convention speeches in every state, by many authors who did not always agree.</p>
+      <p>Later editors gathered them. Paul Leicester Ford reprinted pamphlets and essays from both sides in 1888 and 1892, and Jonathan Elliot had printed the state convention debates in the 1820s and 1830s. In the twentieth century, Morton Borden (1965) and Herbert Storing (<i>The Complete Anti-Federalist</i>, 1981) published large modern collections; those editions are under copyright, and the title “The Anti-Federalist Papers” usually refers to a modern selection like Borden’s.</p>
+      <p>The selection on this site is our own. Each text is taken from a public-domain printing of the 1800s, named on its page, and arranged by author. Every introduction, summary and question is written for this site.</p>
+    </div>
+  </section>
+
+  <section class="pp-s" id="bill-of-rights">
+    <h2>How they shaped the Bill of Rights</h2>
+    <div class="pp-cols">
+      <p>The Anti-Federalists’ strongest argument was the lack of a bill of rights. In Massachusetts, where the vote was close, Federalists agreed to a compromise in February 1788: the convention would ratify and also recommend amendments. Most of the states that ratified afterward did the same; Virginia and New York sent long lists. The recommendations ranged from protections for individual rights to limits on federal taxing power and peacetime armies.</p>
+      <p>James Madison, who had at first thought a bill of rights unnecessary, promised during his 1789 campaign for Congress to support amendments. On June 8, 1789, he proposed them in the House, drawing heavily on the states’ recommendations and on Virginia’s Declaration of Rights, which George Mason had written. Congress sent twelve amendments to the states that September, and ten of them were ratified on December 15, 1791. (One of the other two, on congressional pay, was ratified in 1992 as the Twenty-seventh Amendment.)</p>
+      <p>The Bill of Rights answered the call for written protections of speech, religion, the press, assembly, arms, searches, juries and fair trials. The Ninth and Tenth Amendments spoke to fears about implied powers and consolidation. Many structural changes the Anti-Federalists wanted, such as limits on taxing power or a supermajority for peacetime armies, were not adopted, and some of them thought the amendments did not go far enough.</p>
+    </div>
+  </section>
+
+  <section class="pp-s" id="writers">
+    <h2>The main writers, and what we know about who they were</h2>
+    <p>Most Anti-Federalist essays were signed with pen names, often borrowed from Roman history. For several of them the author is still not known for certain. Here is what historians generally say.</p>
+    <div class="pp-grid">
+      <div class="pp-card"><h3>Brutus</h3><p class="pp-small">Sixteen essays, <i>New-York Journal</i>, Oct. 1787–Apr. 1788.</p><p>Often attributed to Robert Yates, a New York judge who left the Convention early; others have suggested Melancton Smith or John Williams. <b>Uncertain.</b> <a href="{{ printf "%sbrutus/" $base | relURL }}">Guide to the essays</a></p></div>
+      <div class="pp-card"><h3>Cato</h3><p class="pp-small">Seven letters, <i>New-York Journal</i>, Sept. 1787–Jan. 1788.</p><p>Long credited to Governor George Clinton of New York; some modern historians doubt it and suggest others, such as Abraham Yates Jr. <b>Uncertain.</b> <a href="{{ printf "%scato-1/" $base | relURL }}">Cato I</a></p></div>
+      <div class="pp-card"><h3>Centinel</h3><p class="pp-small">About eighteen letters, Philadelphia, from Oct. 1787.</p><p><b>Generally attributed to Samuel Bryan</b>, son of the Pennsylvania judge George Bryan, whom some at the time suspected. <a href="{{ printf "%scentinel-1/" $base | relURL }}">Centinel I</a></p></div>
+      <div class="pp-card"><h3>The Federal Farmer</h3><p class="pp-small">Letters printed as pamphlets in New York, 1787 and 1788.</p><p>Long credited to Richard Henry Lee; many scholars now doubt it, and some argue for Melancton Smith or, more recently, Elbridge Gerry. <b>Debated.</b> <a href="{{ printf "%sfederal-farmer-1/" $base | relURL }}">Letters I–V</a></p></div>
+      <div class="pp-card"><h3>A Columbian Patriot</h3><p class="pp-small">Pamphlet, Boston, February 1788.</p><p>Once credited to Elbridge Gerry; shown in 1930 to be by <b>Mercy Otis Warren</b>, poet, playwright and historian. <a href="{{ printf "%scolumbian-patriot/" $base | relURL }}">Observations</a></p></div>
+      <div class="pp-card"><h3>A Plebeian</h3><p class="pp-small">Pamphlet, New York, spring 1788.</p><p><b>Generally attributed to Melancton Smith</b>, who led New York’s Anti-Federalists and finally voted to ratify. <a href="{{ printf "%splebeian/" $base | relURL }}">Address</a></p></div>
+      <div class="pp-card"><h3>George Mason</h3><p class="pp-small">Objections, written September 1787.</p><p>Signed by Mason, author of the Virginia Declaration of Rights, who refused to sign the Constitution. <a href="{{ printf "%smason-objections/" $base | relURL }}">Objections</a></p></div>
+      <div class="pp-card"><h3>Patrick Henry</h3><p class="pp-small">Speeches in the Virginia convention, June 1788.</p><p>His words come from the shorthand record of David Robertson, printed in Elliot’s Debates. <a href="{{ printf "%shenry-june-5/" $base | relURL }}">June 5 speech</a></p></div>
+    </div>
+    <p class="pp-small" style="margin-top:.8rem">Other important Anti-Federalist writings not reproduced here include the <i>Address and Reasons of Dissent of the Minority of the Convention of Pennsylvania</i> (December 1787), the letters of “Agrippa” (generally attributed to James Winthrop of Massachusetts), Luther Martin’s <i>Genuine Information</i> to the Maryland legislature, Elbridge Gerry’s letter explaining why he did not sign, and Melancton Smith’s speeches in the New York convention.</p>
+  </section>
+
+  <section class="pp-s" id="texts">
+    <h2>The texts on this site</h2>
+    <p>{{ len $AF }} pages: full texts of {{ sub (len $AF) 1 }} essays, letters and speeches, plus a guide to the sixteen essays of Brutus. Each has an introduction, passages to notice, questions, and links to the Federalist papers that answer it.</p>
+    <div class="pp-pair" style="grid-template-columns:repeat(auto-fill,minmax(250px,1fr))">
+      {{ range $AF }}{{ $T := index site.Data.papers.af .slug }}
+      <a href="{{ printf "%s%s/" $base .slug | relURL }}"><b>{{ .t }}</b><span>{{ .pen }} · {{ .d }}{{ with $T }} · {{ .words }} words{{ else }} · summary and links{{ end }}</span></a>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="pp-s" id="questions">
+    <h2>Questions for discussion</h2>
+    <ol class="pp-qs">
+      <li>Why did the Anti-Federalists object to their name? What does the fight over the word “federal” show about the debate?</li>
+      <li>Pick one Anti-Federalist fear and trace what happened to it: was it answered by an amendment, proved right, proved wrong, or still argued about?</li>
+      <li>Both sides claimed to defend liberty. How did their ideas of what threatens liberty differ?</li>
+      <li>Why do historians still disagree about who wrote Brutus, Cato and the Federal Farmer? Why did writers use pen names?</li>
+      <li>The Anti-Federalists lost the vote, but many of their demands became the Bill of Rights. Write a short paragraph from each side explaining who “won” the ratification debate.</li>
+    </ol>
+  </section>
+
+  <section class="pp-s" id="search">
+    <h2>Search the texts</h2>
+    {{ partial "papers/search.html" (dict "id" "main" "scope" "anti") }}
+  </section>
+
+  <section class="pp-s">
+    <h2>More on this site</h2>
+    <ul>
+      <li><a href="{{ "american-history/ratification-debate/" | relURL }}">The ratification debate, side by side</a>, with a state-by-state timeline.</li>
+      <li><a href="{{ $fb | relURL }}">The Federalist Papers</a>: guide and all 85 texts.</li>
+      <li><a href="{{ "debate/topics/ratification-1788/" | relURL }}">Debate topic: Should the states ratify the proposed Constitution?</a></li>
+      <li><a href="{{ "american-history/" | relURL }}">The American History &amp; Civics Ladder</a>.</li>
+    </ul>
+  </section>
+
+  <section class="pp-s pp-small" id="sources">
+    <h2 style="font-size:1.05rem">Sources</h2>
+    <p>Texts: Paul Leicester Ford, ed., <i>Pamphlets on the Constitution of the United States</i> (1888) and <i>Essays on the Constitution of the United States</i> (1892), Project Gutenberg editions read from the Internet Archive; John Bach McMaster and Frederick D. Stone, eds., <i>Pennsylvania and the Federal Constitution, 1787–1788</i> (1888), Internet Archive scan; Jonathan Elliot, ed., <i>Debates in the Several State Conventions</i>, volume 3, as transcribed on Wikisource and checked against the Internet Archive scan. Attributions: “Anti-Federalist Papers,” Wikipedia, and the editors’ notes in Ford. Ratification votes: see the <a href="{{ "american-history/ratification-debate/#timeline" | relURL }}">timeline</a>. Introductions and summaries are original to Teddy Rook Book.</p>
+  </section>
+</div>
+{{ partial "papers/foot.html" . }}
+{{ end }}

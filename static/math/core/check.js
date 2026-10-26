@@ -182,7 +182,7 @@
   // the problem's own unit word typed after the number ("12 cookies", "15 J", "3 Ω" when p.unit is that word)
   function dropExpectedUnit(s, unit) {
     var w = unitPlain(unit); if (!w) return null;
-    var forms = [w, w + 's', w + 'es', w.replace(/ies$/, 'y'), w.replace(/es$/, ''), w.replace(/s$/, '')].filter(function (x, i, a) { return x && a.indexOf(x) === i; })
+    var forms = (w === '×' ? ['×', 'x', 'X'] : [w, w + 's', w + 'es', w.replace(/ies$/, 'y'), w.replace(/es$/, ''), w.replace(/s$/, '')]).filter(function (x, i, a) { return x && a.indexOf(x) === i; }) // × (magnification): "400x" too
       .sort(function (x, y) { return y.length - x.length; }).map(function (x) { return x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s*'); });
     var m = new RegExp('\\s*(' + forms.join('|') + ')\\.?$', w.length < 3 ? '' : 'i').exec(s);
     if (!m || m.index <= 0 || !/[\d).]\s*$/.test(s.slice(0, m.index))) return null;

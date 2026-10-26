@@ -28,6 +28,8 @@ notes: "2 copies"
 
 **Alexander Hamilton, James Madison, John Jay • 1788 • ~250 pages**
 
+Read all 85 essays online, with a guide and the Anti-Federalist replies: [The Federalist Papers](/american-history/federalist-papers/).
+
 
 ## Key Quotes
 

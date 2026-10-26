@@ -1,0 +1,94 @@
+{{ define "main" }}
+{{ partial "papers/head.html" . }}
+{{ $AF := site.Data.papers.af_meta.pieces }}
+{{ $M := site.Data.papers.fed_meta.papers }}
+{{ $R := site.Data.papers.ratification }}
+{{ $fb := "american-history/federalist-papers/" }}
+{{ $ab := "american-history/anti-federalist-papers/" }}
+<div class="hs pp pp-guide" data-key="ratification">
+  {{ partial "papers/crumbs.html" (slice (dict "t" "The Federalist Papers" "u" $fb) (dict "t" "The ratification debate")) }}
+  <header class="hs-hero pp-hero">
+    <p class="hs-eyebrow">American History &amp; Civics · 1787–1790</p>
+    <h1>The Ratification Debate, Side by Side</h1>
+    <p>From September 1787 to May 1790, Americans argued in newspapers, pamphlets and thirteen state conventions over whether to adopt the Constitution. Here the two sides answer each other subject by subject, followed by a timeline of how each state decided.</p>
+    <div class="pp-cta">
+      <a class="hs-btn" href="#pairs">Debate pairs</a>
+      <a class="hs-btn ghost" href="#timeline">Timeline by state</a>
+      <a class="hs-btn ghost" href="{{ "debate/topics/ratification-1788/" | relURL }}">Hold a class debate</a>
+    </div>
+  </header>
+
+  <nav class="pp-toc hs-noprint" aria-label="Subjects"><b>Subjects</b>{{ range site.Data.papers.pairs.pairs }}<a href="#{{ .id }}">{{ .t }}</a>{{ end }}<a href="#timeline">Timeline</a></nav>
+
+  <section class="pp-s" id="pairs">
+    <h2>Debate pairs</h2>
+    <p>Each subject gives the question, each side’s case in a few sentences, as its best advocates made it, and the texts on this site where they argue it. “What happened” tells how the question was settled later, or whether it is still argued. Both sides were patriots who had lived through the Revolution; read them as they read each other, closely.</p>
+    <div class="pp-pairs">
+    {{ range site.Data.papers.pairs.pairs }}
+      <article class="pp-pr" id="{{ .id }}">
+        <h3>{{ .t }}</h3>
+        <p class="q">{{ .q | markdownify }}</p>
+        <div class="cols">
+          <div class="col f">
+            <h4>Federalists</h4>
+            <p>{{ .f | markdownify }}</p>
+            <ul>{{ range .fed }}{{ $k := int . }}{{ $m := index (where $M "n" $k) 0 }}<li><a href="{{ printf "%s%d/" $fb $k | relURL }}">Federalist {{ $k }}</a> <span class="pp-small">{{ $m.t }}</span></li>{{ end }}</ul>
+          </div>
+          <div class="col a">
+            <h4>Anti-Federalists</h4>
+            <p>{{ .a | markdownify }}</p>
+            <ul>{{ range .anti }}{{ $p := index (where $AF "slug" .) 0 }}<li><a href="{{ printf "%s%s/" $ab . | relURL }}">{{ $p.short }}</a> <span class="pp-small">{{ $p.d }}</span></li>{{ end }}</ul>
+          </div>
+        </div>
+        <p class="q" style="padding-bottom:.8rem"><b>What happened:</b> {{ .after | markdownify }}</p>
+      </article>
+    {{ end }}
+    </div>
+  </section>
+
+  <section class="pp-s" id="timeline">
+    <h2>Ratification by state</h2>
+    <p>Article VII said the Constitution would take effect among the states that ratified once nine had done so. Each state held a special convention, elected for the purpose. The new Congress first met in March 1789 and George Washington took office on April 30, 1789, while North Carolina and Rhode Island were still outside the Union.</p>
+    <ol class="pp-tl">
+      {{ range $R.states }}{{ $t := add .y .n }}
+      <li>
+        <span class="o">{{ .o }}</span>
+        <span class="s"><b>{{ .s }}</b> · {{ partial "papers/date.html" .d }}{{ with .note }}<small>{{ . | markdownify }}</small>{{ end }}</span>
+        <span class="v">{{ .y }}–{{ .n }}<span class="pp-bar" role="img" aria-label="{{ .y }} for, {{ .n }} against"><i style="width:{{ div (mul .y 100) $t }}%"></i></span></span>
+      </li>
+      {{ end }}
+    </ol>
+    <p class="pp-small">Votes are convention votes, for and against. Sources: {{ delimit $R.sources " " }}</p>
+  </section>
+
+  <section class="pp-s" id="map">
+    <h2>A map of the order</h2>
+    <p class="pp-small">A simple tile map: each square is a state, placed roughly where it lies on the coast, numbered in the order it ratified. It is not drawn to scale.</p>
+    {{ $pos := dict "NH" (slice 4 0) "NY" (slice 3 1) "MA" (slice 4 1) "PA" (slice 2 2) "NJ" (slice 3 2) "CT" (slice 4 2) "RI" (slice 5 2) "MD" (slice 2 3) "DE" (slice 3 3) "VA" (slice 2 4) "NC" (slice 2 5) "SC" (slice 1 6) "GA" (slice 0 7) }}
+    <div class="pp-map">
+      <svg viewBox="0 0 420 560" role="img" aria-labelledby="pp-map-t">
+        <title id="pp-map-t">Tile map of the thirteen states, colored by when they ratified the Constitution</title>
+        {{ range $R.states }}{{ $p := index $pos .ab }}{{ $x := add 15 (mul (index $p 0) 66) }}{{ $y := add 10 (mul (index $p 1) 66) }}
+          {{ $fill := "#00562f" }}{{ $ink := "#ffffff" }}{{ if and (gt .o 9) (le .o 11) }}{{ $fill = "#d9b85c" }}{{ $ink = "#1d2320" }}{{ else if gt .o 11 }}{{ $fill = "#7a2338" }}{{ end }}
+          <g><title>{{ .s }}: {{ .o }}{{ if eq .o 1 }}st{{ else if eq .o 2 }}nd{{ else if eq .o 3 }}rd{{ else }}th{{ end }} to ratify, {{ partial "papers/date.html" .d }}, {{ .y }}–{{ .n }}</title>
+          <rect class="st" x="{{ $x }}" y="{{ $y }}" width="60" height="60" rx="8" fill="{{ $fill }}"/>
+          <text x="{{ add $x 30 }}" y="{{ add $y 27 }}" text-anchor="middle" style="fill:{{ $ink }};font-size:15px">{{ .ab }}</text>
+          <text x="{{ add $x 30 }}" y="{{ add $y 46 }}" text-anchor="middle" style="fill:{{ $ink }}">{{ .o }}</text></g>
+        {{ end }}
+      </svg>
+    </div>
+    <p class="pp-legend"><span><i style="background:#00562f"></i>1–9: by June 21, 1788</span><span><i style="background:#d9b85c"></i>10–11: summer 1788</span><span><i style="background:#7a2338"></i>12–13: after the new government began</span></p>
+  </section>
+
+  <section class="pp-s">
+    <h2>Keep going</h2>
+    <ul>
+      <li><a href="{{ $fb | relURL }}">The Federalist Papers</a>: guide and all 85 texts.</li>
+      <li><a href="{{ $ab | relURL }}">The Anti-Federalist Papers</a>: guide and texts.</li>
+      <li><a href="{{ "debate/topics/ratification-1788/" | relURL }}">Debate topic: Should the states ratify the proposed Constitution?</a> Arguments, cross-examination questions and a format for a class debate.</li>
+      <li><a href="{{ "american-history/" | relURL }}">The American History &amp; Civics Ladder</a>.</li>
+    </ul>
+  </section>
+</div>
+{{ partial "papers/foot.html" . }}
+{{ end }}

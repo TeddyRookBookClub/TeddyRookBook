@@ -1,0 +1,193 @@
+{{ define "main" }}
+{{ partial "papers/head.html" . }}
+{{ $M := site.Data.papers.fed_meta.papers }}
+{{ $G := site.Data.papers.groups.groups }}
+{{ $AF := site.Data.papers.af_meta.pieces }}
+{{ $base := "american-history/federalist-papers/" }}
+<div class="hs pp pp-guide" data-key="fed-guide">
+  {{ partial "papers/crumbs.html" (slice (dict "t" "The Federalist Papers")) }}
+  <header class="hs-hero pp-hero">
+    <p class="hs-eyebrow">American History &amp; Civics · Primary sources</p>
+    <h1>The Federalist Papers</h1>
+    <p>Eighty-five newspaper essays, written in 1787 and 1788 to persuade New York to ratify the Constitution. They are still the most famous explanation of how the Constitution was meant to work. Here is a guide to who wrote them and why, what they argue, and the full text of every paper, with an introduction and the Anti-Federalist essays that argued the other side.</p>
+    <div class="pp-cta">
+      <a class="hs-btn" href="{{ printf "%s1/" $base | relURL }}">Start with No. 1</a>
+      <a class="hs-btn ghost" href="#all-85">All 85 papers</a>
+      <a class="hs-btn ghost" href="{{ "american-history/anti-federalist-papers/" | relURL }}">The Anti-Federalist side</a>
+      <a class="hs-btn ghost" href="{{ "american-history/ratification-debate/" | relURL }}">The debate, side by side</a>
+    </div>
+  </header>
+
+  <nav class="pp-toc hs-noprint" aria-label="On this page"><b>On this page</b><a href="#what">What they were</a><a href="#authors">The authors</a><a href="#disputed">Disputed papers</a><a href="#plan">Plan of the work</a><a href="#most-read">Most-read papers</a><a href="#ideas">Key ideas</a><a href="#today">Courts and scholars today</a><a href="#reading-plan">Reading plan</a><a href="#questions">Study questions</a><a href="#all-85">All 85</a><a href="#search">Search</a></nav>
+
+  <section class="pp-s" id="what">
+    <h2>What they were</h2>
+    <div class="pp-cols">
+      <p>On September 17, 1787, the Constitutional Convention in Philadelphia finished its work and sent the proposed Constitution to the states. It would take effect when conventions in nine of the thirteen states ratified it. In New York the fight was hard. Governor George Clinton and many of the state’s leaders opposed the plan, and newspaper essays signed “Cato” and “Brutus” were already arguing against it.</p>
+      <p>Alexander Hamilton answered with a series of essays signed “Publius,” after Publius Valerius Publicola, an early Roman who was remembered as a founder of the Roman republic. He recruited James Madison and John Jay to help. The first essay appeared in the <i>Independent Journal</i> on October 27, 1787. Over the next seven months the essays ran in three New York newspapers, the <i>Independent Journal</i>, the <i>New-York Packet</i> and the <i>Daily Advertiser</i>, often several a week, and some were reprinted in other states.</p>
+      <p>In 1788 the printers J. and A. McLean collected them as a book, <i>The Federalist</i>, in two volumes. The first came out in March 1788 with Nos. 1 to 36. The second, on May 28, 1788, held the rest, including eight new essays (Nos. 78 to 85) that had not yet appeared in the papers. The book’s order and numbering are the ones used today.</p>
+      <p>The essays were written fast, for a political campaign, by men who were also busy with other work. Even so, readers then and since have found in them a careful account of the reasons behind the Constitution’s design. They are not neutral: they were written to win a vote. Reading the Anti-Federalists alongside them shows what the arguments were about.</p>
+      <p>New York’s convention met in Poughkeepsie in June 1788, with Anti-Federalists in the majority. By the time it voted, ten other states had ratified, and on July 26, 1788, New York ratified 30 to 27. Historians still discuss how much the essays changed anyone’s vote. Their larger influence came later, as a guide to the Constitution’s meaning.</p>
+    </div>
+  </section>
+
+  <section class="pp-s" id="authors">
+    <h2>The authors</h2>
+    <div class="pp-grid">
+      <div class="pp-card"><h3><span class="pp-au-H">Alexander Hamilton</span> (1755 or 1757–1804)</h3><p>A New York lawyer and former aide to General Washington, and one of New York’s three delegates at the Convention. He planned the series and wrote 51 of the essays, including most of those on defense, taxes, the presidency and the courts. He became the first Secretary of the Treasury.</p></div>
+      <div class="pp-card"><h3><span class="pp-au-M">James Madison</span> (1751–1836)</h3><p>A Virginian who had studied the history of republics and confederacies before the Convention and kept the fullest notes of its debates. He was in New York as a member of the Confederation Congress. He wrote 29 essays by the usual count, including Nos. 10 and 51. He later proposed the Bill of Rights in the First Congress and became the fourth President.</p></div>
+      <div class="pp-card"><h3><span class="pp-au-J">John Jay</span> (1745–1829)</h3><p>A New York lawyer and diplomat who had helped negotiate the 1783 peace treaty with Britain and was the Confederation’s Secretary for Foreign Affairs. He wrote Nos. 2 to 5 on foreign dangers, then fell ill, and later wrote No. 64 on treaties. He became the first Chief Justice of the United States.</p></div>
+    </div>
+    <p class="pp-small" style="margin-top:.8rem">Nos. 18 to 20 were written jointly, mostly from Madison’s notes on earlier confederacies, with material from Hamilton; they are usually counted with Madison’s. The essays appeared anonymously. Many readers guessed who the authors were, but lists of who wrote which papers became public only after Hamilton’s death in 1804.</p>
+  </section>
+
+  <section class="pp-s" id="disputed">
+    <h2>The disputed papers, and how scholars settled them</h2>
+    <div class="pp-cols">
+      <p>For a century and a half, no one could say for sure who wrote twelve of the essays: Nos. 49 to 58, 62 and 63. The trouble came from two lists. Shortly before his fatal duel with Aaron Burr in 1804, Hamilton left a memorandum claiming those twelve as his own. (His list also gave No. 54 to Jay by mistake; Jay wrote No. 64.) Years later Madison claimed the same twelve. His list was used in the 1818 edition printed by Jacob Gideon, and he said Hamilton’s list must have been made out in a hurry. Both men were careful writers, and both had reasons to remember accurately, so for a long time historians took sides.</p>
+      <p>In 1944 the historian Douglass Adair argued from the history of the essays and their ideas that Madison wrote all twelve. Some of the arguments in them match Madison’s known views and his notes from the Convention closely.</p>
+      <p>Then in 1963 and 1964 two statisticians, Frederick Mosteller and David L. Wallace, tried a new kind of test. Writers use small, common words at steady, personal rates without thinking about it. Hamilton, for example, wrote “upon” far more often than Madison did. Mosteller and Wallace measured how often each man used dozens of such words in essays whose authorship was certain, then used probability (a Bayesian analysis) to compare the twelve disputed essays. Their result: every one of the twelve was much more likely to be Madison’s. The evidence was weakest for No. 55, but it still pointed to Madison. Their study, published as <i>Inference and Disputed Authorship: The Federalist</i> (1964), became a famous early example of using statistics to study writing.</p>
+      <p><b>What is agreed:</b> most historians and nearly all later statistical studies, using different methods, credit Madison with the twelve papers, which gives the usual count of 51 for Hamilton, 29 for Madison and 5 for Jay. <b>What is not agreed:</b> some scholars argue that the two men worked together on more papers than the lists show, so that some essays may be partly collaborations; and the exact share of each in the joint papers 18 to 20 is still discussed. On this site, the twelve are marked “disputed” and credited to Madison, as most scholars do.</p>
+    </div>
+  </section>
+
+  <section class="pp-s" id="plan">
+    <h2>The plan of the work</h2>
+    <p>In No. 1 Hamilton promised six topics: the usefulness of the Union; the failures of the Articles of Confederation; the need for an energetic government; the plan’s agreement with republican principles; its likeness to New York’s own constitution; and the security it would give to liberty and property. The series grew as it went. The fourth topic became a long tour of the Constitution, part by part, and the last two were touched on only in No. 85. Here is how the papers fall into groups.</p>
+    <ol class="pp-plan">
+      {{ range $G }}{{ $a := int (index .r 0) }}{{ $b := int (index .r 1) }}
+      <li><b>Nos. {{ $a }}{{ if ne $a $b }}–{{ $b }}{{ end }}. {{ .t }}.</b> {{ .d }} <span class="pp-small">{{ range $k := seq $a $b }}<a href="{{ printf "%s%d/" $base $k | relURL }}">{{ $k }}</a> {{ end }}</span></li>
+      {{ end }}
+    </ol>
+  </section>
+
+  <section class="pp-s" id="most-read">
+    <h2>The most-read papers</h2>
+    <p>If you read only a few, read these. Each link leads to the full text with an introduction and the Anti-Federalist reply.</p>
+    {{ $top := slice
+      (dict "n" 1 "w" "Hamilton asks whether people can choose good government \"from reflection and choice\" rather than accepting what \"accident and force\" give them, and lays out the series.")
+      (dict "n" 10 "w" "Madison on faction: its causes are sown in human nature and cannot be removed without destroying liberty, but a large republic with elected representatives can control its effects.")
+      (dict "n" 39 "w" "Madison argues the plan is truly republican and is \"neither a national nor a federal Constitution, but a composition of both.\"")
+      (dict "n" 47 "w" "Madison explains what separation of powers really requires: not that the branches never touch, but that no one holds the whole power of two branches.")
+      (dict "n" 51 "w" "\"Ambition must be made to counteract ambition.\" Madison on checks and balances, federalism as a \"double security,\" and \"if men were angels.\"")
+      (dict "n" 70 "w" "Hamilton on \"energy in the executive\": a single President acts with decision and speed and can be held responsible, which a council cannot.")
+      (dict "n" 78 "w" "Hamilton on the courts as \"the least dangerous\" branch, life tenure for judges, and the power to declare laws contrary to the Constitution void.")
+      (dict "n" 84 "w" "Hamilton's case that a bill of rights was unnecessary and could even be dangerous, the argument the Anti-Federalists did the most to defeat.") }}
+    <div class="pp-grid">
+      {{ range $top }}{{ $m := index (where $M "n" .n) 0 }}
+      <a class="hs-card" href="{{ printf "%s%d/" $base .n | relURL }}"><h3 style="margin:0 0 .3rem">No. {{ .n }}: {{ $m.t }}</h3><p style="margin:.2rem 0 .4rem" class="pp-small">{{ partial "papers/au.html" $m }} · {{ partial "papers/date.html" $m.d }}</p><p style="margin:0">{{ .w | markdownify }}</p></a>
+      {{ end }}
+    </div>
+    <p class="pp-small" style="margin-top:.7rem">Also widely read: <a href="{{ printf "%s9/" $base | relURL }}">9</a> (confederate republics), <a href="{{ printf "%s14/" $base | relURL }}">14</a> (a republic over a large country), <a href="{{ printf "%s15/" $base | relURL }}">15</a> (the Articles’ great flaw), <a href="{{ printf "%s23/" $base | relURL }}">23</a> (powers for defense), <a href="{{ printf "%s33/" $base | relURL }}">33</a> (the Necessary and Proper Clause), <a href="{{ printf "%s45/" $base | relURL }}">45</a> (powers “few and defined”), <a href="{{ printf "%s62/" $base | relURL }}">62</a> and <a href="{{ printf "%s63/" $base | relURL }}">63</a> (the Senate), <a href="{{ printf "%s68/" $base | relURL }}">68</a> (the Electoral College), <a href="{{ printf "%s85/" $base | relURL }}">85</a> (conclusion).</p>
+  </section>
+
+  <section class="pp-s" id="ideas">
+    <h2>Key ideas</h2>
+    <dl class="pp-dl">
+      <div><dt>Faction</dt><dd>A group, majority or minority, moved by a shared passion or interest against the rights of others or the good of the whole. Madison thought its causes, above all differences in property, are permanent, so a constitution must control its effects. <a href="{{ printf "%s10/" $base | relURL }}">No. 10</a></dd></div>
+      <div><dt>The extended republic</dt><dd>Against the common view that republics must be small, Madison argued that a large one is safer: elected representatives refine public views, and the many interests in a large country make it hard for one faction to form a majority. Anti-Federalists replied that a large republic would be distant and would need force. <a href="{{ printf "%s10/" $base | relURL }}">No. 10</a>, <a href="{{ printf "%s14/" $base | relURL }}">14</a>, <a href="{{ printf "%s51/" $base | relURL }}">51</a></dd></div>
+      <div><dt>Federalism</dt><dd>Power divided between the national government, with listed powers, and the states, which keep the rest. Madison called the plan partly national and partly federal. <a href="{{ printf "%s39/" $base | relURL }}">No. 39</a>, <a href="{{ printf "%s45/" $base | relURL }}">45</a>, <a href="{{ printf "%s46/" $base | relURL }}">46</a></dd></div>
+      <div><dt>Separation of powers</dt><dd>Legislative, executive and judicial power held by different hands, because putting them together is “the very definition of tyranny.” Some overlap is allowed and even needed. <a href="{{ printf "%s47/" $base | relURL }}">No. 47</a>, <a href="{{ printf "%s48/" $base | relURL }}">48</a></dd></div>
+      <div><dt>Checks and balances</dt><dd>Each branch gets the means and the motive to resist the others: “ambition must be made to counteract ambition.” Examples: the veto, Senate consent to appointments, impeachment, two houses of Congress. <a href="{{ printf "%s51/" $base | relURL }}">No. 51</a></dd></div>
+      <div><dt>Energy in the executive</dt><dd>A single President, with a fixed term, a secure salary and real powers, so the government can act with “decision, activity, secrecy, and despatch,” and so the public knows whom to hold responsible. <a href="{{ printf "%s70/" $base | relURL }}">No. 70</a></dd></div>
+      <div><dt>Judicial review</dt><dd>Courts must treat the Constitution as a higher law and refuse to apply acts that contradict it; this places the people’s will, expressed in the Constitution, above both legislature and courts. The Supreme Court adopted similar reasoning in Marbury v. Madison (1803). <a href="{{ printf "%s78/" $base | relURL }}">No. 78</a></dd></div>
+      <div><dt>The case against a bill of rights</dt><dd>Hamilton argued that a government of listed powers needs no list of rights, and that such a list might imply powers never granted. The Anti-Federalists won this argument in practice: the Bill of Rights was ratified in 1791, and the Ninth Amendment answers Hamilton’s worry. <a href="{{ printf "%s84/" $base | relURL }}">No. 84</a></dd></div>
+    </dl>
+  </section>
+
+  <section class="pp-s" id="today">
+    <h2>How courts and scholars use them today</h2>
+    <div class="pp-cols">
+      <p>Judges, lawyers and historians read <i>The Federalist</i> as evidence of what the Constitution meant to people in 1787 and 1788. Supreme Court Justices have quoted it from the Court’s early years to the present; one scholarly count found it cited in 291 decisions by the year 2000, with Nos. 42, 78, 81, 51 and 32 among the most cited. In <i>McCulloch v. Maryland</i> (1819), Chief Justice John Marshall wrote that its authors’ opinions deserved “great respect,” while the Court kept the right to judge whether they were correct.</p>
+      <p>Justices of very different views cite it, sometimes in the same case. In <i>Printz v. United States</i> (1997), for example, the majority and the dissent both relied on passages from The Federalist (including No. 27) to reach opposite conclusions about whether Congress could require state officers to carry out a federal program.</p>
+      <p>How much weight the essays deserve is itself debated. Judges and scholars who look to the Constitution’s original meaning often treat them as strong evidence of how informed people understood the text. Others caution that they were persuasive pieces written quickly for one state’s debate, that they speak for three men rather than all the framers or ratifiers, that the authors sometimes disagreed with each other later, and that many ratifying conventions never read them. Both views are held by serious scholars, and readers can weigh the essays as they would any primary source: by asking who wrote them, when, for whom, and why.</p>
+    </div>
+  </section>
+
+  <section class="pp-s" id="reading-plan">
+    <h2>A reading plan</h2>
+    <p>The whole work is about 190,000 words, roughly 14 hours of reading. A good plan is one or two papers a day, with an Anti-Federalist piece each week. Use the paragraph numbers to mark passages and the questions at the top of each paper to check your understanding.</p>
+    {{ $plan := slice
+      (dict "w" "Week 1: Why union?" "f" (slice 1 2 6 9 10 14) "a" (slice "cato-1" "brutus") "x" "Read Brutus's argument about large republics (the summary of Brutus I) right after No. 10.")
+      (dict "w" "Week 2: What was wrong with the Articles?" "f" (slice 15 16 22 23 30 33) "a" (slice "federal-farmer-1" "henry-june-4") "x" "Notice that the Federal Farmer agrees change is needed.")
+      (dict "w" "Week 3: Republic and federalism" "f" (slice 37 39 40 41 44 45 46) "a" (slice "columbian-patriot") "x" "")
+      (dict "w" "Week 4: Separation of powers, House and Senate" "f" (slice 47 48 51 52 55 57 62 63) "a" (slice "centinel-1" "federal-farmer-2") "x" "")
+      (dict "w" "Week 5: The presidency" "f" (slice 67 68 69 70 71 72) "a" (slice "cato-4" "henry-june-5") "x" "")
+      (dict "w" "Week 6: The courts, rights and the decision" "f" (slice 78 80 81 83 84 85) "a" (slice "federal-farmer-4" "mason-objections" "plebeian" "henry-june-24") "x" "Finish with the ratification timeline.") }}
+    <ol class="pp-plan">
+      {{ range $plan }}
+      <li><b>{{ .w }}.</b> Federalist {{ range $i, $n := .f }}{{ if $i }}, {{ end }}<a href="{{ printf "%s%d/" $base $n | relURL }}">{{ $n }}</a>{{ end }}. Other side: {{ range $i, $s := .a }}{{ if $i }}, {{ end }}{{ $p := index (where $AF "slug" $s) 0 }}<a href="{{ printf "american-history/anti-federalist-papers/%s/" $s | relURL }}">{{ $p.short }}</a>{{ end }}.{{ with .x }} {{ . }}{{ end }}</li>
+      {{ end }}
+    </ol>
+    <p class="pp-small">Short on time? The essentials in one week: Nos. <a href="{{ printf "%s1/" $base | relURL }}">1</a>, <a href="{{ printf "%s10/" $base | relURL }}">10</a>, <a href="{{ printf "%s39/" $base | relURL }}">39</a>, <a href="{{ printf "%s51/" $base | relURL }}">51</a>, <a href="{{ printf "%s70/" $base | relURL }}">70</a>, <a href="{{ printf "%s78/" $base | relURL }}">78</a> and <a href="{{ printf "%s84/" $base | relURL }}">84</a>, with <a href="{{ "american-history/anti-federalist-papers/brutus/" | relURL }}">Brutus</a> and <a href="{{ "american-history/anti-federalist-papers/federal-farmer-4/" | relURL }}">the Federal Farmer IV</a>.</p>
+  </section>
+
+  <section class="pp-s" id="questions">
+    <h2>Study questions</h2>
+    <ol class="pp-qs">
+      <li>Why did Hamilton choose to write as “Publius” instead of under his own name? What are the advantages and risks of anonymous political writing?</li>
+      <li>Explain Madison’s argument in No. 10 that a large republic controls faction better than a small one. Then explain Brutus’s argument that a free republic cannot work over a large territory. Which do you find more convincing, and why?</li>
+      <li>What is the difference between separation of powers (No. 47) and checks and balances (No. 51)? Give two examples of each from the Constitution.</li>
+      <li>Hamilton says the courts are “the least dangerous” branch (No. 78). Brutus said they would be the most dangerous. Make the best case for each view.</li>
+      <li>Read No. 84 and Federal Farmer IV. Why did the Federalists at first oppose a bill of rights, and why did the Anti-Federalists insist on one? How did the Ninth Amendment respond to Hamilton’s worry?</li>
+      <li>How did statisticians help settle who wrote the disputed papers? What can and can’t word counts prove?</li>
+      <li>The Federalist was written to win a political argument. How should that affect the way judges and historians use it? Present two different views.</li>
+      <li>Which of the Federalists’ predictions came true, and which did not? Consider the House, the Electoral College, the states’ power, and the courts.</li>
+    </ol>
+  </section>
+
+  <section class="pp-s" id="all-85">
+    <h2>All 85 papers</h2>
+    <p class="pp-small">Dates and newspapers are those of first publication. Nos. 78 to 85 first appeared in the second volume of McLean’s book edition on May 28, 1788, and were reprinted in the newspapers that summer. “Disputed” marks the twelve papers once claimed by both Hamilton and Madison; most scholars credit Madison.</p>
+    <div class="pp-filter hs-noprint">
+      <label class="pp-small" for="pp-tfilter">Filter</label>
+      <input id="pp-tfilter" type="search" placeholder="Number, title, subject…" autocomplete="off">
+      <select id="pp-tauthor" aria-label="Author">
+        <option value="">All authors</option><option value="H">Hamilton</option><option value="M">Madison (incl. disputed and joint)</option><option value="D">Disputed only</option><option value="J">Jay</option>
+      </select>
+      <span class="pp-small" id="pp-tcount" aria-live="polite"></span>
+    </div>
+    <div class="pp-tablewrap">
+    <table class="pp-table" id="pp-all">
+      <thead><tr><th>No.</th><th>Title and summary</th><th>Author</th><th>First published</th></tr></thead>
+      <tbody>
+      {{ range $G }}{{ $g := . }}
+        <tr class="grp"><td colspan="4">{{ .t }} (Nos. {{ index .r 0 }}{{ if ne (index .r 0) (index .r 1) }}–{{ index .r 1 }}{{ end }})</td></tr>
+        {{ range $k := seq (int (index .r 0)) (int (index .r 1)) }}{{ $m := index (where $M "n" $k) 0 }}
+        <tr data-a="{{ $m.a }}{{ if or (eq $m.a "D") (eq $m.a "HM") }} M{{ end }}">
+          <td class="n"><a href="{{ printf "%s%d/" $base $k | relURL }}">{{ $k }}</a></td>
+          <td class="t"><a href="{{ printf "%s%d/" $base $k | relURL }}">{{ $m.t }}</a><span class="sum">{{ $m.s | markdownify }}</span></td>
+          <td class="a">{{ partial "papers/au.html" $m }}</td>
+          <td class="d">{{ partial "papers/date.html" $m.d }}<br>{{ partial "papers/paper.html" $m.pp }}</td>
+        </tr>
+        {{ end }}
+      {{ end }}
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="pp-s" id="search">
+    <h2>Search the papers</h2>
+    {{ partial "papers/search.html" (dict "id" "main" "scope" "") }}
+  </section>
+
+  <section class="pp-s">
+    <h2>More on this site</h2>
+    <ul>
+      <li><a href="{{ "american-history/anti-federalist-papers/" | relURL }}">The Anti-Federalist Papers</a>: the other side, with full texts.</li>
+      <li><a href="{{ "american-history/ratification-debate/" | relURL }}">The ratification debate, side by side</a>: paired essays by subject and a state-by-state timeline.</li>
+      <li><a href="{{ "debate/topics/ratification-1788/" | relURL }}">Debate topic: Should the states ratify the proposed Constitution?</a> Both sides at their strongest, for a class debate.</li>
+      <li><a href="{{ "harvard-classics/january-11/" | relURL }}">Harvard Classics, January 11</a>: Hamilton and The Federalist in fifteen minutes.</li>
+      <li><a href="{{ "books/the-federalist-papers-selections/" | relURL }}">The Federalist Papers in the Teddy Rook Book library</a>.</li>
+      <li><a href="{{ "american-history/" | relURL }}">The American History &amp; Civics Ladder</a>, including the Constitution itself.</li>
+    </ul>
+  </section>
+
+  <section class="pp-s pp-small" id="sources">
+    <h2 style="font-size:1.05rem">Sources</h2>
+    <p>Texts: Project Gutenberg eBook #1404, <i>The Federalist Papers</i> (transcribed by the Constitution Society and volunteers), read from the Internet Archive’s copy; paragraph counts checked against the 1818 Gideon and 1863 Dawson editions on Wikisource. Publication dates and newspapers: Center for the Study of the American Constitution, University of Wisconsin–Madison, “The Federalist: printings” (archive.csac.history.wisc.edu), checked against each paper’s day of the week. Authorship and the disputed papers: “The Federalist Papers,” Wikipedia, and the sources it cites, including Douglass Adair, “The Authorship of the Disputed Federalist Papers,” <i>William and Mary Quarterly</i> (1944), and Frederick Mosteller and David L. Wallace, “Inference in an Authorship Problem,” <i>Journal of the American Statistical Association</i> (1963). Supreme Court citation count: as reported in the same Wikipedia article. All introductions, summaries and questions are original to Teddy Rook Book.</p>
+  </section>
+</div>
+{{ partial "papers/foot.html" . }}
+{{ end }}

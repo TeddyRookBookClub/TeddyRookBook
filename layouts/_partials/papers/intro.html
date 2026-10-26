@@ -1,0 +1,15 @@
+{{- /* Original introduction for a text. Input: meta entry with c (context), m (argument), k (slice {q,w,p}), qs (questions) */ -}}
+<section class="pp-card pp-intro" aria-label="Introduction">
+  <h2>Before you read</h2>
+  <p>{{ .c | markdownify }}</p>
+  <h2>The main argument</h2>
+  <p>{{ .m | markdownify }}</p>
+  {{- with .k }}
+  <h2>Passages to notice</h2>
+  <ul>{{ range . }}<li>{{ with .p }}<a href="#p{{ . }}">¶{{ . }}</a> {{ end }}<q>{{ .q }}</q> {{ .w | markdownify }}</li>{{ end }}</ul>
+  {{- end }}
+  {{- with .qs }}
+  <h2>Questions</h2>
+  <ol class="pp-qs">{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ol>
+  {{- end }}
+</section>

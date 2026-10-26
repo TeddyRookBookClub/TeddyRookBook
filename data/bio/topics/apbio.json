@@ -1,0 +1,868 @@
+{
+ "course": "apbio",
+ "units": [
+  {
+   "key": "practices",
+   "title": "Data and Experiments",
+   "blurb": "The science practices of AP and college biology: error bars and standard error, null hypotheses, and chi-square tests."
+  },
+  {
+   "key": "molecules",
+   "title": "Molecules of Life",
+   "blurb": "How structure sets function: protein folding levels, the direction of nucleic acid strands, and how emergent properties of water shape life."
+  },
+  {
+   "key": "cells",
+   "title": "Cells and Membranes",
+   "blurb": "Surface area to volume with real formulas, water potential, membrane potential, and compartmentalization."
+  },
+  {
+   "key": "energetics",
+   "title": "Cellular Energetics",
+   "blurb": "Free energy and coupling, enzyme kinetics and inhibition, and the inner workings of the light reactions, the Calvin cycle, glycolysis, the Krebs cycle and oxidative phosphorylation."
+  },
+  {
+   "key": "signaling",
+   "title": "Cell Communication and Cell Cycle",
+   "blurb": "How cells signal: types of signaling, reception, transduction cascades and second messengers, responses, feedback, and the regulation of the cell cycle."
+  },
+  {
+   "key": "heredity",
+   "title": "Heredity",
+   "blurb": "Linked genes and gene maps, chromosome errors in meiosis, inheritance outside the nucleus, and how the environment shapes phenotype."
+  },
+  {
+   "key": "expression",
+   "title": "Gene Expression and Regulation",
+   "blurb": "Replication in detail, transcription and RNA processing, translation, operons, eukaryotic regulation and epigenetics, differentiation, and the tools of biotechnology."
+  },
+  {
+   "key": "selection",
+   "title": "Natural Selection",
+   "blurb": "Population genetics with numbers, genetic drift, molecular clocks, building trees from data, patterns of speciation and extinction, and the evidence and open questions about life's origin."
+  },
+  {
+   "key": "ecology",
+   "title": "Ecology",
+   "blurb": "Behavior and responses to the environment, energy budgets and productivity, population equations, diversity indices, and disruptions to ecosystems."
+  }
+ ],
+ "topics": [
+  {
+   "id": "apbio.error-bars",
+   "slug": "error-bars",
+   "unit": "practices",
+   "title": "Standard Error and Error Bars",
+   "short": "The standard error of a mean is SE = s/√n. Error bars of ±2 SE give roughly a 95% confidence interval; when such bars for two groups do not overlap, the difference is likely real.",
+   "prereqs": [
+    "hsbio.reading-data",
+    "stat.standard-deviation"
+   ],
+   "xp": 3,
+   "trouble": "Students read overlapping error bars as proof of no difference, or confuse standard deviation (spread of the data) with standard error (uncertainty in the mean). SE shrinks as n grows; SD does not.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.null-hypothesis",
+   "slug": "null-hypothesis",
+   "unit": "practices",
+   "title": "Null and Alternative Hypotheses",
+   "short": "The null hypothesis says there is no effect or no difference; the alternative says there is. A test asks how likely data this extreme would be if the null were true.",
+   "prereqs": [
+    "hsbio.hypotheses-experiments"
+   ],
+   "xp": 2,
+   "trouble": "Students think failing to reject the null proves it true, or that a significant result proves the alternative. A test weighs evidence against the null; it never proves either.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.chi-square",
+   "slug": "chi-square",
+   "unit": "practices",
+   "title": "Chi-Square Goodness of Fit",
+   "short": "χ² = Σ (observed − expected)² / expected. Compare it with the critical value for (categories − 1) degrees of freedom at p = 0.05: larger means reject the expected ratio.",
+   "prereqs": [
+    "apbio.null-hypothesis",
+    "hsbio.dihybrid"
+   ],
+   "xp": 3,
+   "trouble": "Students use percentages instead of counts, divide by the observed instead of the expected, or use the number of categories as the degrees of freedom instead of one less.",
+   "viz": [
+    "bi-chart",
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "apbio.protein-structure",
+   "slug": "protein-structure",
+   "unit": "molecules",
+   "title": "Levels of Protein Structure",
+   "short": "Primary structure is the amino acid sequence; secondary is α-helices and β-sheets held by backbone hydrogen bonds; tertiary is the overall fold from R-group interactions; quaternary is several chains together.",
+   "prereqs": [
+    "hsbio.proteins"
+   ],
+   "xp": 2,
+   "trouble": "Students think secondary structure comes from R-group interactions. It comes from hydrogen bonds along the backbone; R groups shape the tertiary fold.",
+   "viz": [
+    "bi-molecule"
+   ]
+  },
+  {
+   "id": "apbio.amino-acid-properties",
+   "slug": "amino-acid-properties",
+   "unit": "molecules",
+   "title": "Amino Acid R Groups",
+   "short": "Amino acids differ only in their R groups: nonpolar, polar, acidic (negative) or basic (positive). Where each kind sits, inside the fold or on the surface, sets how a protein folds.",
+   "prereqs": [
+    "apbio.protein-structure"
+   ],
+   "xp": 2,
+   "trouble": "Students think a change of one amino acid always ruins a protein. Swapping one nonpolar R group for another often changes little; swapping nonpolar for charged inside a fold can wreck it.",
+   "viz": [
+    "bi-molecule"
+   ]
+  },
+  {
+   "id": "apbio.nucleic-acid-direction",
+   "slug": "nucleic-acid-direction",
+   "unit": "molecules",
+   "title": "The Direction of DNA and RNA",
+   "short": "Each strand has a 5′ end (phosphate) and a 3′ end (hydroxyl). The two strands of DNA run antiparallel, and nucleotides are always added to the 3′ end.",
+   "prereqs": [
+    "hsbio.dna-structure"
+   ],
+   "xp": 2,
+   "trouble": "Students write the complementary strand in the same 5′ to 3′ direction as the template. The partner strand runs the other way, so read it 3′ to 5′ beside the template, or reverse it.",
+   "viz": [
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "apbio.surface-volume",
+   "slug": "surface-volume",
+   "unit": "cells",
+   "title": "Surface Area to Volume",
+   "short": "For a cube of side s, surface area is 6s² and volume s³, so SA:V = 6/s. Cells stay small, flatten, or fold their membranes to keep SA:V high enough for exchange.",
+   "prereqs": [
+    "hsbio.prokaryotes-eukaryotes",
+    "lifesci.cell-size"
+   ],
+   "xp": 2,
+   "trouble": "Students compare surface areas alone, or think a larger cell has a larger SA:V. The ratio falls as size grows, which limits how big a cell can be.",
+   "viz": [
+    "bi-cell",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.water-potential",
+   "slug": "water-potential",
+   "unit": "cells",
+   "title": "Water Potential",
+   "short": "Water moves from higher to lower water potential: Ψ = Ψs + Ψp. Solute potential is Ψs = −iCRT (R = 0.0831 L·bar/(mol·K)); adding solute makes Ψ more negative.",
+   "prereqs": [
+    "hsbio.osmosis-tonicity",
+    "chem.molarity"
+   ],
+   "xp": 3,
+   "trouble": "Students think water moves toward higher water potential, or drop the minus sign in Ψs = −iCRT. Pure water at normal pressure has Ψ = 0, and solutes lower it.",
+   "viz": [
+    "bi-membrane",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.membrane-potential",
+   "slug": "membrane-potential",
+   "unit": "cells",
+   "title": "Membrane Potential",
+   "short": "Pumps and channels make an uneven spread of ions: the sodium-potassium pump moves 3 Na⁺ out and 2 K⁺ in per ATP, and K⁺ leaks out, leaving the inside negative (about −70 mV in a resting neuron).",
+   "prereqs": [
+    "hsbio.channels-pumps"
+   ],
+   "xp": 3,
+   "trouble": "Students think the pump alone makes the negative charge. Most of the resting potential comes from potassium leaking out through channels, made possible by the gradients the pump keeps up.",
+   "viz": [
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "apbio.compartmentalization",
+   "slug": "compartmentalization",
+   "unit": "cells",
+   "title": "Compartmentalization",
+   "short": "Membranes divide eukaryotic cells into compartments with different conditions, so incompatible reactions can run at once: lysosome enzymes work at pH 5 inside, while the cytoplasm stays near pH 7.",
+   "prereqs": [
+    "hsbio.endomembrane",
+    "hsbio.endosymbiosis"
+   ],
+   "xp": 2,
+   "trouble": "Students think prokaryotes have no compartments at all. They lack membrane-bound organelles, but use their plasma membrane and folded inner membranes for the same purpose.",
+   "viz": [
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "apbio.free-energy",
+   "slug": "free-energy",
+   "unit": "energetics",
+   "title": "Free Energy and Coupled Reactions",
+   "short": "Reactions with ΔG < 0 (exergonic) release free energy and can happen on their own; ΔG > 0 (endergonic) need an input. Cells couple endergonic steps to ATP hydrolysis so the total ΔG is negative.",
+   "prereqs": [
+    "hsbio.atp",
+    "chem.exo-endo"
+   ],
+   "xp": 3,
+   "trouble": "Students think \"spontaneous\" means fast. ΔG says whether a reaction can go, not how fast; enzymes change the rate but never ΔG.",
+   "viz": [
+    "bi-energy",
+    "bi-enzyme"
+   ]
+  },
+  {
+   "id": "apbio.enzyme-kinetics",
+   "slug": "enzyme-kinetics",
+   "unit": "energetics",
+   "title": "Enzyme Kinetics",
+   "short": "Rate rises with substrate concentration and levels off when the enzymes are saturated (Vmax). Doubling the enzyme doubles Vmax; temperature and pH move the curve.",
+   "prereqs": [
+    "apbio.free-energy",
+    "hsbio.enzyme-conditions"
+   ],
+   "xp": 3,
+   "trouble": "Students think adding more substrate always speeds the reaction. Once every active site is busy, only more enzyme can raise the rate.",
+   "viz": [
+    "bi-enzyme",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.enzyme-inhibition",
+   "slug": "enzyme-inhibition",
+   "unit": "energetics",
+   "title": "Competitive and Noncompetitive Inhibition",
+   "short": "A competitive inhibitor blocks the active site, and enough substrate outcompetes it. A noncompetitive (allosteric) inhibitor binds elsewhere and changes the enzyme's shape, lowering Vmax no matter how much substrate.",
+   "prereqs": [
+    "apbio.enzyme-kinetics"
+   ],
+   "xp": 3,
+   "trouble": "Students think every inhibitor binds the active site, or that more substrate overcomes any inhibitor. Only competitive inhibition can be overcome by substrate.",
+   "viz": [
+    "bi-enzyme",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.light-reactions",
+   "slug": "light-reactions",
+   "unit": "energetics",
+   "title": "The Light Reactions",
+   "short": "In the thylakoids, photosystem II splits water (releasing O₂) and passes electrons down a chain that pumps H⁺; photosystem I re-energizes them to make NADPH; ATP synthase makes ATP as H⁺ flows back out.",
+   "prereqs": [
+    "apbio.free-energy",
+    "hsbio.photosynthesis"
+   ],
+   "xp": 3,
+   "trouble": "Students think photosystem I acts first because of its number. Electrons go from photosystem II to photosystem I; the numbers reflect the order of discovery.",
+   "viz": [
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "apbio.calvin-cycle",
+   "slug": "calvin-cycle",
+   "unit": "energetics",
+   "title": "The Calvin Cycle",
+   "short": "In the stroma, the enzyme rubisco fixes CO₂ onto RuBP; ATP and NADPH reduce the products to G3P. Three CO₂ give one G3P for the cell, using 9 ATP and 6 NADPH.",
+   "prereqs": [
+    "apbio.light-reactions"
+   ],
+   "xp": 3,
+   "trouble": "Students call it the \"dark reactions\" and think it runs only at night. It runs in the light, since it depends on ATP and NADPH from the light reactions.",
+   "viz": [
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "apbio.c4-cam",
+   "slug": "c4-cam",
+   "unit": "energetics",
+   "title": "C4 and CAM Plants",
+   "short": "When stomata close in hot, dry weather, rubisco fixes O₂ instead of CO₂ (photorespiration). C4 plants like corn separate fixation in space; CAM plants like cactuses separate it in time, taking in CO₂ at night.",
+   "prereqs": [
+    "apbio.calvin-cycle",
+    "hsbio.plant-homeostasis"
+   ],
+   "xp": 2,
+   "trouble": "Students think CAM plants do the Calvin cycle at night. They only take in and store CO₂ at night; the Calvin cycle still runs by day.",
+   "viz": [
+    "bi-plant",
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "apbio.glycolysis-krebs",
+   "slug": "glycolysis-krebs",
+   "unit": "energetics",
+   "title": "Glycolysis and the Krebs Cycle",
+   "short": "Glycolysis splits glucose into 2 pyruvate (net 2 ATP, 2 NADH). Pyruvate oxidation and the Krebs cycle release the carbons as CO₂ and load electrons onto NADH and FADH₂.",
+   "prereqs": [
+    "apbio.free-energy",
+    "hsbio.cellular-respiration"
+   ],
+   "xp": 3,
+   "trouble": "Students think the Krebs cycle makes most of the ATP. Its main product is NADH and FADH₂; most ATP is made later, by oxidative phosphorylation.",
+   "viz": [
+    "bi-energy"
+   ]
+  },
+  {
+   "id": "apbio.oxidative-phosphorylation",
+   "slug": "oxidative-phosphorylation",
+   "unit": "energetics",
+   "title": "Oxidative Phosphorylation",
+   "short": "NADH and FADH₂ give electrons to the chain in the inner mitochondrial membrane; it pumps H⁺ into the intermembrane space. H⁺ flowing back through ATP synthase makes most of the ATP; O₂ takes the spent electrons and forms water.",
+   "prereqs": [
+    "apbio.glycolysis-krebs",
+    "apbio.membrane-potential"
+   ],
+   "xp": 3,
+   "trouble": "Students think electrons pass through ATP synthase. Protons do; electrons move along the chain and end on oxygen.",
+   "viz": [
+    "bi-energy",
+    "bi-membrane"
+   ]
+  },
+  {
+   "id": "apbio.signaling-types",
+   "slug": "signaling-types",
+   "unit": "signaling",
+   "title": "How Cells Signal",
+   "short": "Cells signal by direct contact (gap junctions, surface molecules), locally (paracrine signals and synapses), or over long distances (hormones carried in the blood).",
+   "prereqs": [
+    "hsbio.neurons"
+   ],
+   "xp": 2,
+   "trouble": "Students think only hormones count as signals. Neighboring cells signal constantly, and nerve signals cross synapses as local chemical signals.",
+   "viz": [
+    "bi-feedback",
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "apbio.signal-transduction",
+   "slug": "signal-transduction",
+   "unit": "signaling",
+   "title": "Reception, Transduction and Response",
+   "short": "A ligand binds a receptor (on the surface, or inside for steroid hormones); a relay of proteins, often kinases adding phosphates and second messengers like cAMP, passes and amplifies the signal; the cell responds.",
+   "prereqs": [
+    "apbio.signaling-types",
+    "apbio.enzyme-inhibition"
+   ],
+   "xp": 3,
+   "trouble": "Students think the signal molecule enters the cell and travels all the way to the nucleus. For most surface receptors the ligand stays outside; the message is passed by a cascade inside.",
+   "viz": [
+    "bi-feedback"
+   ]
+  },
+  {
+   "id": "apbio.signal-amplification",
+   "slug": "signal-amplification",
+   "unit": "signaling",
+   "title": "Amplification and Changes in Pathways",
+   "short": "Each activated enzyme in a cascade activates many of the next, so one ligand can trigger millions of product molecules. A mutated receptor or relay protein can block a response or switch it on for good.",
+   "prereqs": [
+    "apbio.signal-transduction"
+   ],
+   "xp": 3,
+   "trouble": "Students add the gains of the steps instead of multiplying them. If each step activates 10 of the next, three steps give 10 × 10 × 10 = 1,000.",
+   "viz": [
+    "bi-feedback",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.feedback-ap",
+   "slug": "feedback-ap",
+   "unit": "signaling",
+   "title": "Feedback in Living Systems",
+   "short": "Negative feedback holds a variable near a set point (blood glucose, body temperature); positive feedback drives a change to completion (blood clotting, fruit ripening with ethylene). Disrupting either shows in the data.",
+   "prereqs": [
+    "apbio.signal-transduction",
+    "hsbio.blood-sugar"
+   ],
+   "xp": 2,
+   "trouble": "Students read any rising curve as positive feedback. Ask whether the response opposes the change (negative) or adds to it (positive).",
+   "viz": [
+    "bi-feedback",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.cell-cycle-regulation",
+   "slug": "cell-cycle-regulation",
+   "unit": "signaling",
+   "title": "Regulating the Cell Cycle",
+   "short": "Cyclins rise and fall through the cycle and switch on cyclin-dependent kinases (CDKs) that push the cell past checkpoints. Proteins like p53 halt the cycle when DNA is damaged and can trigger apoptosis.",
+   "prereqs": [
+    "apbio.signal-transduction",
+    "hsbio.cell-cycle-control"
+   ],
+   "xp": 3,
+   "trouble": "Students think CDKs come and go through the cycle. CDK levels stay fairly steady; cyclin levels rise and fall, and CDKs work only when bound to cyclin.",
+   "viz": [
+    "bi-mitosis",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.linked-genes",
+   "slug": "linked-genes",
+   "unit": "heredity",
+   "title": "Linked Genes",
+   "short": "Genes close together on one chromosome tend to be inherited together. A dihybrid test cross then gives mostly parental types and a few recombinants made by crossing over.",
+   "prereqs": [
+    "apbio.chi-square",
+    "hsbio.meiosis-variation"
+   ],
+   "xp": 3,
+   "trouble": "Students expect 1:1:1:1 from every test cross. A big excess of parental types is the sign that the genes are linked.",
+   "viz": [
+    "bi-meiosis",
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "apbio.gene-maps",
+   "slug": "gene-maps",
+   "unit": "heredity",
+   "title": "Recombination Frequency and Gene Maps",
+   "short": "Recombination frequency = recombinant offspring ÷ total offspring. 1% equals one map unit; genes far apart recombine more, so frequencies give the order of genes on a chromosome.",
+   "prereqs": [
+    "apbio.linked-genes"
+   ],
+   "xp": 3,
+   "trouble": "Students count parental types as recombinants, or think frequencies can pass 50%. Unlinked genes recombine 50% of the time, the most a test cross can show.",
+   "viz": [
+    "bi-meiosis",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.nondisjunction",
+   "slug": "nondisjunction",
+   "unit": "heredity",
+   "title": "Nondisjunction",
+   "short": "If a pair of homologs (meiosis I) or sister chromatids (meiosis II) fails to separate, some cells made get an extra chromosome (n + 1) and others are missing one (n − 1).",
+   "prereqs": [
+    "hsbio.meiosis"
+   ],
+   "xp": 3,
+   "trouble": "Students think a nondisjunction in meiosis II affects all four cells. In meiosis I it affects all four; in meiosis II only two are abnormal and two are normal.",
+   "viz": [
+    "bi-meiosis"
+   ]
+  },
+  {
+   "id": "apbio.non-nuclear-inheritance",
+   "slug": "non-nuclear-inheritance",
+   "unit": "heredity",
+   "title": "Inheritance Outside the Nucleus",
+   "short": "Mitochondria and chloroplasts carry their own genes. They are usually passed down from one parent only, most often the mother, so these traits do not show Mendelian ratios.",
+   "prereqs": [
+    "hsbio.endosymbiosis",
+    "hsbio.pedigrees"
+   ],
+   "xp": 2,
+   "trouble": "Students expect mitochondrial traits to show a 3:1 ratio. These genes are not sorted by meiosis; offspring get the organelles of one parent, usually the mother.",
+   "viz": [
+    "bi-pedigree",
+    "bi-cell"
+   ]
+  },
+  {
+   "id": "apbio.environment-phenotype",
+   "slug": "environment-phenotype",
+   "unit": "heredity",
+   "title": "Environment and Phenotype",
+   "short": "The same genotype can show different phenotypes in different conditions: hydrangea flower color follows soil pH, and Himalayan rabbits grow dark fur where their body is cooler.",
+   "prereqs": [
+    "hsbio.polygenic"
+   ],
+   "xp": 2,
+   "trouble": "Students think a phenotype that changes with the environment means the genes changed. The genotype is the same; the environment changes how it is expressed.",
+   "viz": [
+    "bi-chart",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "apbio.replication-details",
+   "slug": "replication-details",
+   "unit": "expression",
+   "title": "Replication in Detail",
+   "short": "Helicase opens the fork, primase lays an RNA primer, DNA polymerase extends 5′ to 3′: the leading strand continuously, the lagging strand in Okazaki fragments that ligase joins.",
+   "prereqs": [
+    "apbio.nucleic-acid-direction",
+    "hsbio.dna-replication"
+   ],
+   "xp": 3,
+   "trouble": "Students think the lagging strand is built 3′ to 5′. Polymerase can only add to a 3′ end; the lagging strand is built 5′ to 3′ in short pieces, away from the fork.",
+   "viz": [
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "apbio.rna-processing",
+   "slug": "rna-processing",
+   "unit": "expression",
+   "title": "Transcription and RNA Processing",
+   "short": "RNA polymerase binds a promoter and builds RNA 5′ to 3′. In eukaryotes the pre-mRNA gets a 5′ cap and a poly-A tail, and introns are spliced out; alternative splicing makes several proteins from one gene.",
+   "prereqs": [
+    "apbio.replication-details",
+    "hsbio.transcription"
+   ],
+   "xp": 3,
+   "trouble": "Students think introns are kept and exons removed, or that prokaryotes splice their mRNA. Exons are expressed and kept; prokaryotic genes generally have no introns.",
+   "viz": [
+    "bi-central"
+   ]
+  },
+  {
+   "id": "apbio.translation-details",
+   "slug": "translation-details",
+   "unit": "expression",
+   "title": "Translation in Detail",
+   "short": "The small ribosomal subunit finds the start codon; tRNAs enter the A site, the peptide moves from the P site, and empty tRNAs leave from the E site. A release factor ends the chain at a stop codon.",
+   "prereqs": [
+    "apbio.rna-processing",
+    "hsbio.genetic-code"
+   ],
+   "xp": 3,
+   "trouble": "Students put the growing chain on the tRNA in the A site from the start, or think a tRNA reads stop codons. Release factors, not tRNAs, recognize stop codons.",
+   "viz": [
+    "bi-central"
+   ]
+  },
+  {
+   "id": "apbio.operons",
+   "slug": "operons",
+   "unit": "expression",
+   "title": "Operons: lac and trp",
+   "short": "In bacteria, the lac operon is inducible: lactose inactivates the repressor, so genes are on only when lactose is present. The trp operon is repressible: tryptophan activates the repressor and shuts the genes off.",
+   "prereqs": [
+    "apbio.translation-details",
+    "hsbio.gene-regulation"
+   ],
+   "xp": 3,
+   "trouble": "Students think lactose binds the operator, or mix up which operon is on by default. The lac operon is normally off; the trp operon is normally on.",
+   "viz": [
+    "bi-central",
+    "bi-feedback"
+   ]
+  },
+  {
+   "id": "apbio.eukaryotic-regulation",
+   "slug": "eukaryotic-regulation",
+   "unit": "expression",
+   "title": "Gene Regulation in Eukaryotes",
+   "short": "Transcription factors bind promoters and enhancers; packing matters too: acetylating histones opens chromatin (more expression), methylating DNA usually closes it. These epigenetic marks can pass to daughter cells.",
+   "prereqs": [
+    "apbio.operons"
+   ],
+   "xp": 3,
+   "trouble": "Students think epigenetic changes alter the DNA sequence. They change how DNA is packed and read, not its bases.",
+   "viz": [
+    "bi-central",
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "apbio.differentiation",
+   "slug": "differentiation",
+   "unit": "expression",
+   "title": "Gene Expression and Specialization",
+   "short": "Different cell types switch on different sets of genes using different transcription factors, which is why a muscle cell and a nerve cell with the same genome make different proteins.",
+   "prereqs": [
+    "apbio.eukaryotic-regulation"
+   ],
+   "xp": 2,
+   "trouble": "Students think differentiated cells have thrown away the genes they do not use. Nearly all body cells keep the whole genome.",
+   "viz": [
+    "bi-cell",
+    "bi-central"
+   ]
+  },
+  {
+   "id": "apbio.mutation-effects",
+   "slug": "mutation-effects",
+   "unit": "expression",
+   "title": "Mutations and Their Effects",
+   "short": "Read a mutation's effect from the codon table: silent, missense, nonsense or frameshift. Its effect on the organism depends on where it falls and on the environment, and mutations are the raw material of variation.",
+   "prereqs": [
+    "apbio.translation-details",
+    "hsbio.mutations"
+   ],
+   "xp": 3,
+   "trouble": "Students assume a mutation's effect is the same in every environment. Sickle-cell hemoglobin, for example, has different effects where malaria is common.",
+   "viz": [
+    "bi-central"
+   ]
+  },
+  {
+   "id": "apbio.gel-sizing",
+   "slug": "gel-sizing",
+   "unit": "expression",
+   "title": "Sizing DNA on a Gel",
+   "short": "Distance moved is roughly linear in the logarithm of fragment size, so read an unknown band against the ladder: between the 1,000 and 500 base-pair bands means between those sizes.",
+   "prereqs": [
+    "hsbio.gel-electrophoresis"
+   ],
+   "xp": 3,
+   "trouble": "Students interpolate on a straight size scale, as if halfway between 1,000 and 500 were 750. On the log scale it is about 710.",
+   "viz": [
+    "bi-gel",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.transformation-sequencing",
+   "slug": "transformation-sequencing",
+   "unit": "expression",
+   "title": "Transformation and DNA Sequencing",
+   "short": "In bacterial transformation, cells take up a plasmid; an antibiotic-resistance gene lets only transformed cells grow on selective plates. Sequencing reads the order of bases, as in reading fragments by their ends.",
+   "prereqs": [
+    "apbio.gel-sizing",
+    "hsbio.recombinant-dna"
+   ],
+   "xp": 3,
+   "trouble": "Students think every cell on the plate took up the plasmid. Only transformed cells survive the antibiotic, so the plate selects them.",
+   "viz": [
+    "bi-gel",
+    "bi-dna"
+   ]
+  },
+  {
+   "id": "apbio.hardy-weinberg-problems",
+   "slug": "hardy-weinberg-problems",
+   "unit": "selection",
+   "title": "Hardy-Weinberg Problems",
+   "short": "From one known frequency find the rest: q² from the recessive phenotype, q = √q², p = 1 − q, carriers = 2pq. Compare observed genotypes with expected ones to test for equilibrium.",
+   "prereqs": [
+    "hsbio.hardy-weinberg",
+    "apbio.chi-square"
+   ],
+   "xp": 3,
+   "trouble": "Students compute 2pq as 2(p + q), or use the dominant phenotype share as p². The dominant phenotype is p² + 2pq together.",
+   "viz": [
+    "bi-chart",
+    "bi-punnett"
+   ]
+  },
+  {
+   "id": "apbio.genetic-drift",
+   "slug": "genetic-drift",
+   "unit": "selection",
+   "title": "Genetic Drift",
+   "short": "Drift is a random change in allele frequency, strongest in small populations. A bottleneck (most die by chance) or a founder effect (a few start a new population) can change frequencies sharply.",
+   "prereqs": [
+    "apbio.hardy-weinberg-problems",
+    "hsbio.mechanisms-evolution"
+   ],
+   "xp": 2,
+   "trouble": "Students think drift favors helpful alleles. Drift ignores fitness; it can remove a helpful allele or fix a harmful one, especially when numbers are small.",
+   "viz": [
+    "bi-selection",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.molecular-clock",
+   "slug": "molecular-clock",
+   "unit": "selection",
+   "title": "Molecular Clocks",
+   "short": "If differences in a gene build up at a roughly steady rate, the number of differences estimates how long ago two lineages split, once the rate is calibrated with fossils.",
+   "prereqs": [
+    "hsbio.molecular-evidence"
+   ],
+   "xp": 3,
+   "trouble": "Students treat the clock as exact for every gene. Rates differ between genes and lineages, so estimates have wide ranges and need calibration.",
+   "viz": [
+    "bi-tree",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.trees-from-data",
+   "slug": "trees-from-data",
+   "unit": "selection",
+   "title": "Building Trees from Data",
+   "short": "Build a tree from a table of traits or sequence differences: the pair with the fewest differences shares the most recent ancestor. Parsimony picks the tree that needs the fewest changes.",
+   "prereqs": [
+    "apbio.molecular-clock",
+    "hsbio.cladograms"
+   ],
+   "xp": 3,
+   "trouble": "Students think a tree built from data is final. Trees are hypotheses; new data can move a branch.",
+   "viz": [
+    "bi-tree"
+   ]
+  },
+  {
+   "id": "apbio.speciation-patterns",
+   "slug": "speciation-patterns",
+   "unit": "selection",
+   "title": "Patterns of Speciation and Extinction",
+   "short": "Speciation may be gradual or come in bursts after long stable periods (punctuated equilibrium). Adaptive radiation fills open niches quickly, often after mass extinctions; extinction is part of life's history.",
+   "prereqs": [
+    "hsbio.speciation",
+    "apbio.trees-from-data"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-5",
+   "trouble": "Students think punctuated equilibrium means species appear overnight. \"Rapid\" here means tens of thousands of years, quick against millions of years of stability.",
+   "viz": [
+    "bi-tree",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.origin-of-life",
+   "slug": "origin-of-life",
+   "unit": "selection",
+   "title": "Early Earth and the Origin of Life",
+   "short": "Earth formed about 4.5 billion years ago, and fossil microbes date back about 3.5 billion years. Experiments show simple organic molecules form under early-Earth conditions; how the first cells arose is still an open question, with hypotheses such as an \"RNA world\".",
+   "prereqs": [
+    "hsbio.endosymbiosis",
+    "apbio.speciation-patterns"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Miller-Urey experiment made living cells, or that the origin of life is settled. It made amino acids; the steps from molecules to cells are an active field of research.",
+   "viz": [
+    "bi-tree"
+   ]
+  },
+  {
+   "id": "apbio.behavior-responses",
+   "slug": "behavior-responses",
+   "unit": "ecology",
+   "title": "Responses to the Environment",
+   "short": "Organisms respond to cues: plants by tropisms and photoperiod, animals by kinesis (changing speed) and taxis (moving toward or away), and by signals such as alarm calls and the honeybee's waggle dance.",
+   "prereqs": [
+    "hsbio.group-behavior"
+   ],
+   "xp": 2,
+   "trouble": "Students confuse taxis and kinesis. Taxis has a direction (toward light); kinesis is a change in how much the animal moves, with no set direction.",
+   "viz": [
+    "bi-classify",
+    "bi-picture"
+   ]
+  },
+  {
+   "id": "apbio.energy-budgets",
+   "slug": "energy-budgets",
+   "unit": "ecology",
+   "title": "Energy Budgets and Metabolism",
+   "short": "Endotherms spend much of their energy keeping warm, so they need more food per gram than ectotherms; smaller endotherms have higher metabolic rates per gram. Net intake goes to growth and offspring.",
+   "prereqs": [
+    "hsbio.energy-flow",
+    "apbio.surface-volume"
+   ],
+   "xp": 2,
+   "trouble": "Students think bigger animals burn more energy per gram. Per gram, a shrew burns far more than an elephant, because its high SA:V loses heat fast.",
+   "viz": [
+    "bi-chart",
+    "bi-pyramid"
+   ]
+  },
+  {
+   "id": "apbio.productivity",
+   "slug": "productivity",
+   "unit": "ecology",
+   "title": "Primary Productivity",
+   "short": "Gross primary productivity (GPP) is all the energy producers capture; net primary productivity NPP = GPP − R (respiration). Ecologists measure it with oxygen or carbon changes in light and dark bottles.",
+   "prereqs": [
+    "apbio.energy-budgets",
+    "apbio.oxidative-phosphorylation"
+   ],
+   "xp": 3,
+   "trouble": "Students subtract in the wrong direction, or think the light bottle measures gross productivity. The light bottle shows net; adding the dark bottle's respiration gives gross.",
+   "viz": [
+    "bi-pyramid",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.population-equations",
+   "slug": "population-equations",
+   "unit": "ecology",
+   "title": "Population Growth Equations",
+   "short": "Exponential growth: dN/dt = rN. Logistic growth: dN/dt = rN(K − N)/K, which slows growth as N nears K. Calculate rates at a given N and read the S-curve.",
+   "prereqs": [
+    "hsbio.population-models"
+   ],
+   "xp": 3,
+   "std": "HS-LS2-1",
+   "trouble": "Students plug N = K into the logistic equation and expect the fastest growth. At N = K growth is zero; it is greatest at N = K/2.",
+   "viz": [
+    "bi-population",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.diversity-index",
+   "slug": "diversity-index",
+   "unit": "ecology",
+   "title": "Measuring Diversity",
+   "short": "Simpson's diversity index D = 1 − Σ(n/N)² runs from 0 (one species) toward 1 (many even species). It rewards both richness and evenness.",
+   "prereqs": [
+    "hsbio.biodiversity-impact"
+   ],
+   "xp": 3,
+   "std": "HS-LS2-2",
+   "trouble": "Students sum the fractions without squaring them, or forget to subtract from 1 and read a low value as high diversity.",
+   "viz": [
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.community-structure",
+   "slug": "community-structure",
+   "unit": "ecology",
+   "title": "Community Structure and Trophic Cascades",
+   "short": "Communities are shaped from the top down (predators) and the bottom up (nutrients). Keystone species, ecosystem engineers like beavers, and invasive species can restructure them.",
+   "prereqs": [
+    "apbio.diversity-index",
+    "hsbio.keystone-species"
+   ],
+   "xp": 2,
+   "trouble": "Students think adding nutrients always makes a community healthier. Extra nitrogen and phosphorus in a lake can cause algal blooms that use up the oxygen.",
+   "viz": [
+    "bi-foodweb",
+    "bi-chart"
+   ]
+  },
+  {
+   "id": "apbio.ecosystem-disruptions",
+   "slug": "ecosystem-disruptions",
+   "unit": "ecology",
+   "title": "Disruptions to Ecosystems",
+   "short": "Invasive species, habitat loss, pollution, disease and changes in climate can change populations fast. A population with more genetic variation is more likely to have individuals that survive a change.",
+   "prereqs": [
+    "apbio.community-structure",
+    "apbio.genetic-drift"
+   ],
+   "xp": 2,
+   "std": "HS-LS4-5",
+   "trouble": "Students think a disruption affects every species equally. Species with narrow niches or little genetic variation are hit hardest, while some generalists may gain.",
+   "viz": [
+    "bi-selection",
+    "bi-foodweb"
+   ]
+  }
+ ]
+}

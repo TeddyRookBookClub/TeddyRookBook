@@ -1,0 +1,8 @@
+{{- /* One page per Federalist paper: /american-history/federalist-papers/<n>/ (layouts/papers/fed.html), from data/papers/fed_meta.json and data/papers/fed/fNN.json. Builder: papers. */ -}}
+{{- with site.Data.papers.fed_meta -}}
+  {{- range .papers -}}{{- $n := int .n -}}
+    {{- $.AddPage (dict "kind" "page" "path" (string $n) "title" (printf "Federalist No. %d: %s" $n .t) "type" "papers" "layout" "fed" "weight" $n
+      "params" (dict "n" $n "description" (printf "Federalist No. %d (%s): the full text with paragraph numbers, a short introduction, key passages, questions, and the Anti-Federalist essays on the same subject." $n .s))
+      "dates" (dict "date" (time.AsTime "2026-10-25"))) -}}
+  {{- end -}}
+{{- end -}}
