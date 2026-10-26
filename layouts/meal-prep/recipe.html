@@ -1,0 +1,82 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{ $m := site.Data.meals }}{{ $id := .Params.recipe }}
+{{ $r := index (where $m.recipes.recipes "id" $id) 0 }}
+{{ $cat := partialCached "meal-prep/catdict.html" "c" }}
+{{ $src := partial "meal-prep/data.html" . }}
+{{ $alname := dict }}{{ range $m.meta.allergens }}{{ $alname = merge $alname (dict .id (.name | default .id)) }}{{ end }}
+<div class="hs mp" id="mp-recipe" data-src="{{ $src }}" data-id="{{ $id }}" data-plan="{{ "meal-prep/plan/" | relURL }}">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes" "u" "meal-prep/recipes/") (dict "t" $r.name)) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">{{ delimit (apply $r.meal "strings.FirstUpper" ".") " · " }}{{ with $r.protein }}{{ if ne . "vegetarian" }} · {{ strings.FirstUpper . }}{{ end }}{{ end }}</p>
+    <h1><span aria-hidden="true">{{ $r.emoji }}</span> {{ $r.name }}</h1>
+    {{ with $r.summary }}<p>{{ . }}</p>{{ end }}
+    <div class="mp-badges">
+      {{ with $r.times }}<span class="mp-badge">⏱ {{ partial "meal-prep/mins.html" .total }}{{ if .prep }} ({{ .prep }} min prep{{ with .cook }}, {{ partial "meal-prep/mins.html" . }} cooking{{ end }}{{ with .inactive }}, {{ partial "meal-prep/mins.html" . }} waiting{{ end }}){{ end }}</span>{{ end }}
+      <span class="mp-badge">🍽 Serves {{ $r.servings }}{{ with $r.serving_size }} · {{ . }}{{ end }}</span>
+      {{ range $r.tags }}<span class="mp-badge">{{ replace . "-" " " }}</span>{{ end }}
+      {{ range $r.diet }}<span class="mp-badge">{{ replace . "-" " " }}</span>{{ end }}
+    </div>
+    <div class="mp-cta hs-noprint"><a class="hs-btn" id="rp-add" href="{{ "meal-prep/plan/" | relURL }}?add={{ $id }}">📅 Add to my plan</a><button type="button" class="hs-btn ghost" id="rp-print">🖨 Print this recipe</button></div>
+  </header>
+  {{ with $r.allergens }}<p class="mp-tip"><b>Contains</b>{{ range $i, $a := . }}{{ if $i }}, {{ end }}{{ index $alname $a | default $a }}{{ end }}. Check the labels on what you buy; brands differ.</p>{{ else }}<p class="hs-small">None of the nine major allergens are in the usual versions of these ingredients. Check labels anyway; brands differ.</p>{{ end }}
+
+  <div class="mp-r">
+    <div>
+      <section class="mp-box" aria-labelledby="rp-ingh">
+        <h2 id="rp-ingh">Ingredients</h2>
+        <div class="mp-scale hs-noprint" id="rp-scale">
+          <span>Make</span>
+          <span class="mp-step"><button type="button" id="rp-minus" aria-label="Fewer servings">−</button><output id="rp-n" aria-live="polite">{{ $r.servings }}</output><button type="button" id="rp-plus" aria-label="More servings">＋</button></span>
+          <span>servings</span>
+          <button type="button" class="mp-linkbtn" id="rp-home" hidden></button>
+          <button type="button" class="mp-linkbtn" id="rp-reset" hidden>back to {{ $r.servings }}</button>
+        </div>
+        <ul class="mp-ings" id="rp-ings">
+          {{ $grp := "" }}
+          {{ range $r.ingredients }}{{ $it := index $cat .item }}
+          {{ if and .group (ne .group $grp) }}{{ $grp = .group }}<li class="mp-ingg"><h4>{{ .group }}</h4></li>{{ end }}
+          <li>{{ if .amount }}<b>{{ partial "meal-prep/amt.html" .amount }} {{ if ne .unit "each" }}{{ replace .unit "-" " " }}{{ end }}</b> {{ end }}{{ with $it }}{{ .name }}{{ end }}{{ with .prep }}, {{ . }}{{ end }}{{ if .optional }} <i>(optional)</i>{{ end }}{{ if .to_taste }} <i>(to taste)</i>{{ end }}</li>
+          {{ end }}
+        </ul>
+        <p class="hs-small" id="rp-scalenote" hidden></p>
+      </section>
+      <section class="mp-box" aria-labelledby="rp-nh">
+        <h2 id="rp-nh">Nutrition</h2>
+        <div id="rp-nutr"><p class="mp-pending">Nutrition coming: the USDA numbers for these ingredients are being added.</p></div>
+      </section>
+    </div>
+    <div>
+      <section class="mp-box" aria-labelledby="rp-sh">
+        <h2 id="rp-sh">Steps</h2>
+        {{ with $r.equipment }}<p class="hs-small"><b>You’ll need:</b> {{ delimit . ", " }}.</p>{{ end }}
+        <ol class="mp-stepsol">
+          {{ range $r.steps }}<li>{{ . | replaceRE `(\d{3}) ?°F` `<span class="mp-temp">$1°F</span>` | safeHTML }}</li>{{ end }}
+        </ol>
+        {{ with $r.safety }}
+        <p class="mp-tip"><b>🌡 Safe temperatures</b>{{ range $i, $s := . }}{{ if $i }}; {{ end }}{{ $s.food | strings.FirstUpper }} {{ $s.temp_f }}°F{{ with $s.rest_min }} with a {{ . }}-minute rest{{ end }}{{ end }}. Check the thickest part with a food thermometer (USDA). {{ with partial "meal-prep/guidelink.html" "food-safety" }}<a href="{{ .url }}">More on food safety</a>.{{ end }}</p>
+        {{ end }}
+      </section>
+      <section class="mp-tips" aria-label="Tips">
+        {{ with $r.make_ahead }}<div class="mp-tip"><b>Make ahead</b>{{ . }}</div>{{ end }}
+        {{ with $r.freezer }}{{ if .ok }}<div class="mp-tip"><b>❄️ Freezer</b>{{ .text }}</div>{{ end }}{{ end }}
+        {{ with $r.leftovers }}{{ with .text }}<div class="mp-tip"><b>↺ Leftovers</b>{{ . }}</div>{{ end }}{{ end }}
+        {{ with $r.kids }}<div class="mp-tip"><b>🧒 With kids</b>{{ . }}</div>{{ end }}
+        {{ with $r.swaps }}{{ range $k, $v := . }}{{ if $v }}<div class="mp-tip"><b>{{ cond (eq $k "gluten_free") "Gluten-free" (cond (eq $k "dairy_free") "Dairy-free" (cond (eq $k "meatless") "Meatless" (replace $k "_" " " | strings.FirstUpper))) }} swap</b>{{ $v }}</div>{{ end }}{{ end }}{{ end }}
+      </section>
+      {{ with $r.pairs }}
+      <section class="mp-box hs-noprint" style="margin-top:1rem"><h2>Goes well with</h2><p class="mp-glinks">{{ range . }}{{ with index (where $m.recipes.recipes "id" .) 0 }}<a class="mp-glink" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}">{{ .emoji }} {{ .name }}</a>{{ end }}{{ end }}</p></section>
+      {{ end }}
+      {{ $gl := slice }}{{ range $r.guides }}{{ with partial "meal-prep/guidelink.html" . }}{{ $gl = $gl | append . }}{{ end }}{{ end }}
+      {{ with $gl }}
+      <section class="mp-box hs-noprint" style="margin-top:1rem"><h2>Good to know</h2><p class="mp-glinks">{{ range . }}<a class="mp-glink" href="{{ .url }}"><span aria-hidden="true">{{ .icon }}</span> {{ .title }}</a>{{ end }}</p></section>
+      {{ end }}
+    </div>
+  </div>
+  <p class="hs-small">An original Teddy Rook Book recipe. Nutrition is estimated from USDA FoodData Central and changes with brands and portions.</p>
+</div>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pages.js").ModTime.Unix }}" defer></script>
+{{ end }}

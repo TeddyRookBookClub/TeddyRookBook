@@ -472,6 +472,16 @@ note = "What to grow for your space, plus chickens and bees"
 icon = "🥕"
 
 [[menu.main]]
+name = "Meal Prep"
+identifier = "meal-prep-misc"
+url = "/meal-prep/"
+weight = 62
+[menu.main.params]
+group = "Miscellaneous"
+note = "Plan a week or a month of family meals, scale recipes and print the shopping list"
+icon = "🍲"
+
+[[menu.main]]
 name = "Sewing & Knitting"
 url = "/sewing/"
 weight = 63
@@ -712,3 +722,6 @@ icon = "🧮"
   [segments.harvard]
     [[segments.harvard.includes]]
       path = '{/harvard-classics,/harvard-classics/**}'
+  [segments.meals]
+    [[segments.meals.includes]]
+      path = '{/meal-prep,/meal-prep/**}'

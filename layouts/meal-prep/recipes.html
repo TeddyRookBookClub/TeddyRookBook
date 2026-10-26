@@ -1,0 +1,47 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{ $m := site.Data.meals }}{{ $rs := slice }}{{ with $m }}{{ with .recipes }}{{ $rs = .recipes }}{{ end }}{{ end }}
+<div class="hs mp" id="mp-recipes">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Recipes")) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep · Recipes</p>
+    <h1>Family recipes</h1>
+    <p>{{ len $rs }} everyday recipes that scale to any number of people. Open one to change the servings, see nutrition estimates and cooking steps, or add it to your plan.</p>
+  </header>
+  <div class="mp-box mp-filters" id="rl-filters">
+    <div class="mp-filterbar"><input type="search" id="rl-q" placeholder="Search: chicken, rice, slow cooker…" aria-label="Search recipes"></div>
+    <div class="mp-chips" role="group" aria-label="Show">
+      {{ range slice (slice "breakfast" "Breakfast") (slice "lunch" "Lunch") (slice "dinner" "Dinner") (slice "side" "Sides") (slice "snack" "Snacks") (slice "quick" "⚡ Quick") (slice "budget" "💲 Budget") (slice "kid-friendly" "🧒 Kid-friendly") (slice "freezer-friendly" "❄️ Freezer") (slice "make-ahead" "Make-ahead") (slice "lunchbox" "🎒 Lunchbox") (slice "slow-cooker" "Slow cooker") (slice "sheet-pan" "Sheet pan") (slice "one-pot" "One pot") (slice "grill" "Grill") (slice "vegetarian" "Vegetarian") (slice "gluten-free" "Gluten-free") (slice "dairy-free" "Dairy-free") }}
+      <button type="button" class="mp-chipf" data-f="{{ index . 0 }}" aria-pressed="false">{{ index . 1 }}</button>
+      {{ end }}
+    </div>
+    <details class="mp-mini"><summary>Leave out allergens</summary><div class="mp-checks">{{ range $m.meta.allergens }}<label class="mp-cb"><input type="checkbox" data-av="{{ .id }}"> {{ .name | default .id }}</label>{{ end }}</div><p class="hs-small">Based on each ingredient’s usual allergens. Always read the labels on what you buy.</p></details>
+    <p class="hs-small" id="rl-count" aria-live="polite"></p>
+  </div>
+  {{ $groups := slice (slice "dinner" "Dinners") (slice "breakfast" "Breakfasts") (slice "lunch" "Lunches and lunchboxes") (slice "side" "Sides") (slice "snack" "Snacks") }}
+  {{ $cat := partialCached "meal-prep/catdict.html" "c" }}
+  {{ range $groups }}{{ $k := index . 0 }}{{ $title := index . 1 }}
+  {{ $list := slice }}{{ range $rs }}{{ if eq (index .meal 0) $k }}{{ $list = $list | append . }}{{ end }}{{ end }}
+  {{ with $list }}
+  <section class="hs-sec rl-group" id="{{ $k }}">
+    <h2>{{ $title }}</h2>
+    <div class="mp-rgrid">
+      {{ range sort . "name" }}
+      {{ $tags := union (union (.tags | default slice) (.method | default slice)) (.diet | default slice) }}{{ if eq .protein "vegetarian" }}{{ $tags = $tags | append "vegetarian" }}{{ end }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}" data-meal="{{ delimit .meal " " }}" data-tags="{{ delimit $tags " " }}" data-al="{{ delimit (.allergens | default slice) " " }}" data-q="{{ lower .name }} {{ .protein }} {{ delimit $tags " " }} {{ range .ingredients }}{{ with index $cat .item }}{{ lower .name }}{{ end }} {{ end }}" data-min="{{ with .times }}{{ .total }}{{ end }}">
+        <span class="mp-emo" aria-hidden="true">{{ .emoji }}</span>
+        <span><b>{{ .name }}</b><small>{{ with .times }}{{ partial "meal-prep/mins.html" .total }} · {{ end }}serves {{ .servings }}{{ with .protein }}{{ if ne . "vegetarian" }} · {{ . }}{{ end }}{{ end }}</small><small>{{ .summary }}</small></span>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}{{ end }}
+  <p class="mp-empty" id="rl-none" hidden>No recipes match. Clear a filter or the search.</p>
+  <section class="hs-sec hs-note">
+    <h2>Plan with them</h2>
+    <p>Put these on a calendar, scale them to your household and get one shopping list in the <a href="{{ "meal-prep/plan/" | relURL }}">meal planner</a>. You can add your own recipes there too.</p>
+  </section>
+</div>
+<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pages.js").ModTime.Unix }}" defer></script>
+{{ end }}

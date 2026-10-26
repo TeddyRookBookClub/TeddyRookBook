@@ -1,0 +1,102 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{ $src := partial "meal-prep/data.html" . }}
+<div class="hs mp mp-app" id="mp" data-src="{{ $src }}" data-print="{{ "meal-prep/print/" | relURL }}" data-recipes="{{ "meal-prep/recipes/" | relURL }}">
+  <nav class="hs-crumbs hs-noprint"><a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> › <a href="{{ "meal-prep/" | relURL }}">Meal Prep</a> › Planner</nav>
+  <header class="mp-top hs-noprint">
+    <div>
+      <p class="hs-eyebrow">Meal Prep · Planner</p>
+      <h1>Meal planner</h1>
+    </div>
+    <div class="mp-plans" id="mp-plans" aria-label="Your plans"></div>
+  </header>
+  <p class="mp-warn" id="mp-nostore" hidden>This browser isn't letting the page save anything, so your plan will be lost when you close it. Use <b>Export → Save a backup file</b> to keep it.</p>
+  <noscript><p class="mp-warn">The planner needs JavaScript. You can still browse the <a href="{{ "meal-prep/recipes/" | relURL }}">recipes</a> and <a href="{{ "meal-prep/guides/" | relURL }}">guides</a>.</p></noscript>
+
+  <details class="mp-setup" id="mp-setup">
+    <summary><span class="mp-setup-t">Plan settings</span> <span class="mp-setup-sum" id="mp-setup-sum"></span></summary>
+    <div class="mp-setup-grid">
+      <fieldset class="mp-fs">
+        <legend>Dates</legend>
+        <label class="mp-f">Start <input type="date" id="mp-start"></label>
+        <label class="mp-f">Length <select id="mp-len">
+          <option value="7">1 week</option><option value="14">2 weeks</option><option value="21">3 weeks</option><option value="28">4 weeks</option><option value="month">A month</option>
+        </select></label>
+        <div class="mp-f"><span>Meals each day</span><div class="mp-checks" id="mp-slots"></div></div>
+      </fieldset>
+      <fieldset class="mp-fs">
+        <legend>Who's eating</legend>
+        <div id="mp-people"></div>
+        <p class="hs-small" id="mp-people-sum"></p>
+        <details class="mp-mini"><summary>Portion sizes</summary><p class="hs-small">Each person counts as a share of an adult portion. Change the numbers to fit your family: a hungry teen might be 1.5, a small eater 0.5.</p><div id="mp-factors"></div></details>
+      </fieldset>
+      <fieldset class="mp-fs">
+        <legend>Food to avoid</legend>
+        <div class="mp-checks" id="mp-avoid"></div>
+        <div class="mp-checks" id="mp-diet"></div>
+        <p class="hs-small">These hide recipes in the library and in Shuffle. Always read labels yourself: products and recipes change.</p>
+      </fieldset>
+      <fieldset class="mp-fs">
+        <legend>Shuffle rules</legend>
+        <label class="mp-f">Don't repeat a meal within <select id="mp-norepeat"><option value="0">no limit</option><option value="2">2 days</option><option value="3">3 days</option><option value="5">5 days</option><option value="6">6 days</option><option value="10">10 days</option><option value="13">2 weeks</option></select></label>
+        <p class="hs-small">For lunches and dinners. Breakfasts and snacks only avoid repeating two days in a row.</p>
+        <div class="mp-f"><span>Busy days (quick dinners, 30 minutes or less)</span><div class="mp-checks" id="mp-busy"></div></div>
+      </fieldset>
+    </div>
+  </details>
+
+  <div class="mp-tabs hs-noprint" role="tablist" aria-label="Planner views" id="mp-tabs">
+    <button type="button" role="tab" data-v="cal" id="tab-cal">📅 Calendar</button>
+    <button type="button" role="tab" data-v="shop" id="tab-shop">🛒 Shopping list</button>
+    <button type="button" role="tab" data-v="nutr" id="tab-nutr">📊 Nutrition</button>
+    <button type="button" role="tab" data-v="prep" id="tab-prep">🔪 Prep day</button>
+    <button type="button" role="tab" data-v="kids" id="tab-kids">🧒 Kids' chart</button>
+    <button type="button" class="mp-export-btn" id="mp-export">⬇ Export</button>
+  </div>
+  <p class="mp-msg" id="mp-msg" aria-live="polite"></p>
+
+  <section class="mp-view" id="mp-cal" role="tabpanel" aria-labelledby="tab-cal">
+    <div class="mp-calwrap">
+      <aside class="mp-lib" id="mp-lib" aria-label="Recipe library">
+        <div class="mp-lib-head">
+          <h2>Recipes</h2>
+          <button type="button" class="mp-lib-x" id="mp-lib-x" aria-label="Close the recipe list">✕</button>
+        </div>
+        <input type="search" id="mp-q" class="mp-q" placeholder="Search recipes or ingredients" aria-label="Search recipes">
+        <div class="mp-chips" id="mp-fchips" aria-label="Filters"></div>
+        <p class="hs-small mp-lib-help" id="mp-lib-help">Drag a recipe onto a day, or tap it and then tap where it goes.</p>
+        <div class="mp-lib-list" id="mp-lib-list"></div>
+        <div class="mp-lib-foot">
+          <button type="button" class="hs-btn" id="mp-newrec">＋ My own recipe</button>
+        </div>
+      </aside>
+      <div class="mp-cal" id="mp-calmain">
+        <div class="mp-calbar">
+          <button type="button" class="hs-btn pri mp-addbtn" id="mp-open-lib">＋ Add meals</button>
+          <button type="button" class="hs-btn" id="mp-shuffle">🔀 Shuffle</button>
+          <span class="mp-weekjump" id="mp-weekjump"></span>
+        </div>
+        <div id="mp-weeks"></div>
+      </div>
+    </div>
+  </section>
+  <section class="mp-view" id="mp-shop" role="tabpanel" aria-labelledby="tab-shop" hidden></section>
+  <section class="mp-view" id="mp-nutr" role="tabpanel" aria-labelledby="tab-nutr" hidden></section>
+  <section class="mp-view" id="mp-prep" role="tabpanel" aria-labelledby="tab-prep" hidden></section>
+  <section class="mp-view" id="mp-kids" role="tabpanel" aria-labelledby="tab-kids" hidden></section>
+
+  <div class="mp-placebar" id="mp-placebar" hidden role="status"><span id="mp-placetxt"></span> <button type="button" class="hs-btn" id="mp-placedone">Done</button></div>
+  <div class="mp-trash" id="mp-trash" hidden>🗑 Drop here to remove</div>
+
+  <section class="hs-sec hs-note hs-noprint mp-about">
+    <p class="hs-small">Everything here stays in this browser (nothing is sent anywhere). Nutrition numbers are estimates from USDA FoodData Central and change with brands and portions. Cook meats to the USDA safe minimum internal temperatures given in each recipe. See the <a href="{{ "meal-prep/guides/" | relURL }}">kitchen guides</a> for cooking fats, cinnamon and more.</p>
+  </section>
+</div>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/pictures.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pictures.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/views.js" | relURL }}?v={{ (os.Stat "static/meal-prep/views.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/editor.js" | relURL }}?v={{ (os.Stat "static/meal-prep/editor.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/planner.js" | relURL }}?v={{ (os.Stat "static/meal-prep/planner.js").ModTime.Unix }}" defer></script>
+{{ end }}

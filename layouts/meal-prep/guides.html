@@ -1,0 +1,20 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+<div class="hs mp">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Guides")) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep · Guides</p>
+    <h1>Kitchen guides</h1>
+    <p>Plain answers to questions that come up while you shop and cook, with sources. Recipes link here only where a guide matters for that recipe.</p>
+  </header>
+  {{ with site.Data.meals }}{{ with .guides }}
+  <div class="mp-feats">
+    {{ range $k, $g := . }}
+    <a class="mp-rcard" href="{{ printf "meal-prep/guides/%s/" $g.key | relURL }}"><span class="mp-emo" aria-hidden="true">{{ $g.icon }}</span><span><b>{{ $g.title }}</b><small>{{ $g.summary }}</small>{{ if gt (len $g.sections) 2 }}<small>{{ range $i, $s := first 6 $g.sections }}{{ if $i }} · {{ end }}{{ $s.h }}{{ end }}{{ if gt (len $g.sections) 6 }} …{{ end }}</small>{{ end }}</span></a>
+    {{ end }}
+  </div>
+  {{ end }}{{ end }}
+  <p class="hs-small">These guides share widely accepted facts from U.S. government, university and other reliable sources, listed on each page. They aren’t medical advice; for a health condition or a child’s diet, ask your doctor.</p>
+</div>
+{{ end }}

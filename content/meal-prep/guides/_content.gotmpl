@@ -1,0 +1,13 @@
+{{/* One page per guide, from data/meals/guides/<key>.json */}}
+{{ with site.Data.meals }}{{ with .guides }}
+  {{ range $k, $g := . }}
+    {{ $.AddPage (dict
+      "kind" "page"
+      "path" $g.key
+      "title" $g.title
+      "layout" "guide"
+      "params" (dict "guide" $g.key "description" ($g.summary | default $g.title))
+      "dates" (dict "date" (time.AsTime ($g.updated | default "2026-10-25")))
+    ) }}
+  {{ end }}
+{{ end }}{{ end }}

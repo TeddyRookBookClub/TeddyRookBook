@@ -1,0 +1,8 @@
+{{- /* a link to a guide or one of its sections from a "key" or "key#section" string; returns dict {url,title} or nothing */ -}}
+{{- $p := split . "#" -}}{{- $k := index $p 0 -}}{{- $res := dict -}}
+{{- with index site.Data.meals.guides $k -}}
+  {{- $g := . -}}{{- $t := $g.title -}}{{- $u := printf "meal-prep/guides/%s/" $k | relURL -}}
+  {{- if gt (len $p) 1 -}}{{- $s := index $p 1 -}}{{- range $g.sections -}}{{- if eq .id $s -}}{{- $t = .h -}}{{- $u = printf "%s#%s" $u $s -}}{{- end -}}{{- end -}}{{- end -}}
+  {{- $res = dict "url" $u "title" $t "icon" ($g.icon | default "📘") -}}
+{{- end -}}
+{{- return $res -}}

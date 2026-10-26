@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{ $m := site.Data.meals }}{{ $rs := slice }}{{ with $m }}{{ with .recipes }}{{ $rs = .recipes }}{{ end }}{{ end }}
+<div class="hs mp" id="mp-hub">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep")) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Miscellaneous · For families</p>
+    <h1>Meal Prep</h1>
+    <p>Plan a week, or up to a month, of family meals. Every recipe scales to the people at your table, the shopping list adds itself up by store aisle, and you can print it, save it as a PDF or picture, or copy it to your phone.</p>
+    <div class="mp-cta"><a class="hs-btn big" href="{{ "meal-prep/plan/" | relURL }}">📅 Start a meal plan</a><a class="hs-btn big ghost" href="{{ "meal-prep/recipes/" | relURL }}">📖 Browse {{ with $rs }}{{ len . }} {{ end }}recipes</a></div>
+  </header>
+  <p class="mp-resume" id="mp-resume" hidden></p>
+
+  <section class="hs-sec">
+    <h2>What it does</h2>
+    <div class="mp-feats">
+      <div class="mp-feat"><span class="big" aria-hidden="true">📅</span><h3>One week to a month</h3><p>Pick a start date and a length. Turn breakfast, lunch, dinner and snacks on or off. Drag meals around, copy a day or a week, swap days, or shuffle with rules like “no repeats this week” and “quick dinners on practice nights.”</p></div>
+      <div class="mp-feat"><span class="big" aria-hidden="true">👨‍👩‍👧‍👦</span><h3>Scales to your family</h3><p>Count adults, teens, children and toddlers, each with an adjustable portion size. Add guests to one meal. Recipes scale with sensible rounding: whole eggs, whole cans, quarter pounds.</p></div>
+      <div class="mp-feat"><span class="big" aria-hidden="true">🛒</span><h3>A shopping list that adds up</h3><p>Every ingredient in the plan, combined, converted to what stores sell (“2 cans (28 oz)”, “1 dozen”) and grouped by section. Tick off what you already have, add extras, and get a list for the whole plan, a week or a day.</p></div>
+      <div class="mp-feat"><span class="big" aria-hidden="true">↺</span><h3>Cook once, eat twice</h3><p>Make a bigger dinner and put the leftovers on tomorrow’s lunch. The recipe scales up and the shopping list knows.</p></div>
+      <div class="mp-feat"><span class="big" aria-hidden="true">🔪</span><h3>Prep day</h3><p>Choose what to cook ahead and get an afternoon schedule: slow cooker first, then the oven one temperature at a time, with stovetop jobs in between.</p></div>
+      <div class="mp-feat"><span class="big" aria-hidden="true">🧒</span><h3>Made for parents</h3><p>Hide recipes with any of the nine major allergens, or show only vegetarian, gluten-free or dairy-free. Find quick, budget, freezer and lunchbox meals, and print a picture chart of the week’s dinners for the fridge.</p></div>
+      <div class="mp-feat"><span class="big" aria-hidden="true">📊</span><h3>Nutrition estimates</h3><p>Calories, protein, fat, carbs, fiber and sodium per serving and per day, estimated from USDA FoodData Central, with % Daily Values.</p></div>
+      <div class="mp-feat"><span class="big" aria-hidden="true">✏️</span><h3>Your own recipes</h3><p>Add family favorites from about {{ with $m }}{{ with .catalog }}{{ len .items }}{{ end }}{{ end }} common grocery items, plus write-ins for anything else. Save a backup file to move everything to another device.</p></div>
+    </div>
+  </section>
+
+  {{ with $rs }}
+  <section class="hs-sec">
+    <h2>The recipes</h2>
+    <p>Everyday family cooking, written for a stated number of servings and tested-style amounts, with safe cooking temperatures from the USDA, make-ahead and freezer notes, ideas for leftovers, kid-friendly tips and easy swaps.</p>
+    {{ $groups := slice (slice "dinner" "Dinners") (slice "breakfast" "Breakfasts") (slice "lunch" "Lunches") (slice "side" "Sides") (slice "snack" "Snacks") }}
+    <div class="mp-rgrid">
+      {{ range first 8 (where . "id" "in" (slice "classic-burgers" "beef-tacos" "lasagna" "spaghetti-meat-sauce" "pot-roast" "roast-chicken" "beef-chili" "pancakes")) }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/recipes/%s/" .id | relURL }}"><span class="mp-emo" aria-hidden="true">{{ .emoji }}</span><span><b>{{ .name }}</b><small>{{ with .times }}{{ partial "meal-prep/mins.html" .total }} · {{ end }}serves {{ .servings }}</small></span></a>
+      {{ end }}
+    </div>
+    <p class="mp-glinks">{{ range $groups }}{{ $k := index . 0 }}{{ $n := len (where $rs "meal" "intersect" (slice $k)) }}{{ if $n }}<a class="mp-glink" href="{{ "meal-prep/recipes/" | relURL }}#{{ $k }}">{{ index . 1 }} <small>({{ $n }})</small></a>{{ end }}{{ end }}<a class="mp-glink" href="{{ "meal-prep/recipes/" | relURL }}"><b>All recipes →</b></a></p>
+  </section>
+  {{ end }}
+
+  {{ with $m }}{{ with .guides }}
+  <section class="hs-sec">
+    <h2>Kitchen guides</h2>
+    <p>Short, sourced answers to questions that come up while cooking and shopping, kept to what the evidence supports.</p>
+    <div class="mp-rgrid">
+      {{ range $k, $g := . }}
+      <a class="mp-rcard" href="{{ printf "meal-prep/guides/%s/" $g.key | relURL }}"><span class="mp-emo" aria-hidden="true">{{ $g.icon }}</span><span><b>{{ $g.title }}</b><small>{{ $g.summary }}</small></span></a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}{{ end }}
+
+  <section class="hs-sec hs-note">
+    <h2>How it works</h2>
+    <ol class="mp-stepsol">
+      <li>Open the <a href="{{ "meal-prep/plan/" | relURL }}">planner</a> and tell it who’s eating.</li>
+      <li>Drag recipes onto the days (or tap a recipe, then tap the day). Use <b>Shuffle</b> to fill a week for you.</li>
+      <li>Check the <b>Shopping list</b>, tick what you have, and print it, save it as a picture, or copy it to your phone.</li>
+    </ol>
+    <p class="hs-small">Your plans are saved in this browser only; nothing is sent anywhere. Nutrition numbers are estimates. Read food labels for allergens yourself, since products change.</p>
+  </section>
+</div>
+<script src="{{ "meal-prep/pages.js" | relURL }}?v={{ (os.Stat "static/meal-prep/pages.js").ModTime.Unix }}" defer></script>
+{{ end }}

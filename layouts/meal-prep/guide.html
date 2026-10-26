@@ -1,0 +1,54 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{ $g := index site.Data.meals.guides .Params.guide }}
+{{ $cat := partialCached "meal-prep/catdict.html" "c" }}
+{{ $srcs := dict }}{{ range $i, $s := $g.sources }}{{ $srcs = merge $srcs (dict $s.id (add $i 1)) }}{{ end }}
+<div class="hs mp">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Guides" "u" "meal-prep/guides/") (dict "t" $g.title)) }}
+  <header class="hs-hero mp-hero">
+    <p class="hs-eyebrow">Meal Prep · Guide</p>
+    <h1><span aria-hidden="true">{{ $g.icon }}</span> {{ $g.title }}</h1>
+    {{ with $g.summary }}<p>{{ . }}</p>{{ end }}
+  </header>
+  <article class="mp-guide">
+    {{ if gt (len $g.sections) 3 }}<nav class="mp-toc" aria-label="On this page">{{ range $g.sections }}<a href="#{{ .id }}">{{ .h }}</a>{{ end }}</nav>{{ end }}
+    {{ range $g.sections }}
+    <section id="{{ .id }}">
+      <h2>{{ .h }}</h2>
+      {{ range .p }}{{ if hasPrefix . "> " }}<blockquote class="mp-quote">{{ strings.TrimPrefix "> " . | markdownify }}</blockquote>{{ else }}<p>{{ . | markdownify }}</p>{{ end }}{{ end }}
+      {{ with .list }}<ul>{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul>{{ end }}
+      {{ with .table }}
+      <div class="mp-tablewrap"><table>{{ with .note }}<caption>{{ . | markdownify }}</caption>{{ end }}<thead><tr>{{ range .cols }}<th scope="col">{{ . }}</th>{{ end }}</tr></thead><tbody>{{ range .rows }}<tr>{{ range $i, $c := . }}{{ if eq $i 0 }}<th scope="row">{{ $c | markdownify }}</th>{{ else }}<td>{{ $c | markdownify }}</td>{{ end }}{{ end }}</tr>{{ end }}</tbody></table></div>
+      {{ end }}
+      {{ with .fat_table }}
+      <div class="mp-tablewrap"><table>
+        <caption>Share of the fat that is saturated, monounsaturated and polyunsaturated, per 100 g, from USDA FoodData Central. The rest (if any) is other fatty acids and compounds. Omega-6 is linoleic acid; omega-3 is alpha-linolenic acid.</caption>
+        <thead><tr><th scope="col">Fat</th><th scope="col">Saturated</th><th scope="col">Mono&shy;unsaturated</th><th scope="col">Poly&shy;unsaturated</th><th scope="col">Omega-6 / omega-3 (g per 100 g)</th><th scope="col" style="min-width:9rem">Make-up</th></tr></thead><tbody>
+        {{ range .items }}{{ $it := index $cat . }}{{ with $it }}{{ $n := .nutrition }}
+        <tr><th scope="row">{{ .name }}</th>
+          {{ if and $n $n.fat }}{{ $f := $n.fat }}{{ $s := $n.satfat | default 0 }}{{ $mu := $n.mufa | default 0 }}{{ $pu := $n.pufa | default 0 }}
+          <td>{{ lang.FormatNumber 1 $s }} g</td><td>{{ lang.FormatNumber 1 $mu }} g</td><td>{{ lang.FormatNumber 1 $pu }} g</td><td>{{ with $n.la }}{{ lang.FormatNumber 1 . }}{{ else }}–{{ end }} / {{ with $n.ala }}{{ lang.FormatNumber (cond (lt . 0.1) 2 1) . }}{{ else }}–{{ end }}</td>
+          <td><span class="mp-bar" role="img" aria-label="{{ math.Round (mul 100 (div $s $f)) }}% saturated, {{ math.Round (mul 100 (div $mu $f)) }}% mono, {{ math.Round (mul 100 (div $pu $f)) }}% poly"><span style="width:{{ mul 100 (div $s $f) }}%;background:#b8963e"></span><span style="width:{{ mul 100 (div $mu $f) }}%;background:#00562f"></span><span style="width:{{ mul 100 (div $pu $f) }}%;background:#6cc79a"></span></span></td>
+          {{ else }}<td colspan="5" class="mp-na">USDA numbers coming</td>{{ end }}
+        </tr>
+        {{ end }}{{ end }}
+        </tbody></table></div>
+        <p class="mp-legend"><span><i style="background:#b8963e"></i>Saturated</span><span><i style="background:#00562f"></i>Monounsaturated</span><span><i style="background:#6cc79a"></i>Polyunsaturated</span></p>
+      {{ end }}
+      {{ with .src }}<p class="mp-src">Sources: {{ range $i, $id := . }}{{ if $i }}, {{ end }}<a href="#src-{{ $id }}">[{{ index $srcs $id }}]</a>{{ end }}</p>{{ end }}
+    </section>
+    {{ end }}
+    {{ with $g.sources }}
+    <section id="sources">
+      <h2>Sources</h2>
+      <ol class="mp-src">{{ range . }}<li id="src-{{ .id }}"><a href="{{ .url }}" rel="noopener">{{ .title }}</a>{{ with .publisher }}, {{ . }}{{ end }}{{ with .date }} ({{ . }}){{ end }}{{ with .accessed }}. Accessed {{ . }}{{ end }}.</li>{{ end }}</ol>
+    </section>
+    {{ end }}
+    {{ with $g.updated }}<p class="hs-small">Updated {{ . }}.</p>{{ end }}
+  </article>
+  <section class="hs-sec hs-note hs-noprint">
+    <p>More: {{ range $k, $o := site.Data.meals.guides }}{{ if ne $k $g.key }}<a href="{{ printf "meal-prep/guides/%s/" $o.key | relURL }}">{{ $o.title }}</a> · {{ end }}{{ end }}<a href="{{ "meal-prep/recipes/" | relURL }}">Recipes</a> · <a href="{{ "meal-prep/plan/" | relURL }}">Meal planner</a></p>
+  </section>
+</div>
+{{ end }}

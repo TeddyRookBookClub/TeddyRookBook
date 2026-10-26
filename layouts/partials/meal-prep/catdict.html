@@ -1,0 +1,3 @@
+{{- /* catalog items by id (call with partialCached) */ -}}
+{{- $d := dict -}}{{- with site.Data.meals -}}{{- with .catalog -}}{{- range .items -}}{{- $d = merge $d (dict .id .) -}}{{- end -}}{{- end -}}{{- end -}}
+{{- return $d -}}

@@ -1,0 +1,7 @@
+{{- /* An amount as a kitchen number: 1.5 -> "1½", 0.333 -> "⅓" (no-JS fallback; the page script rescales) */ -}}
+{{- $a := float . -}}{{- $w := math.Floor $a -}}{{- $f := sub $a $w -}}{{- $g := "" -}}
+{{- range slice (slice 0.125 "⅛") (slice 0.25 "¼") (slice 0.333 "⅓") (slice 0.5 "½") (slice 0.667 "⅔") (slice 0.75 "¾") -}}
+  {{- if lt (math.Abs (sub $f (index . 0))) 0.02 }}{{ $g = index . 1 }}{{ end -}}
+{{- end -}}
+{{- if or $g (lt $f 0.02) -}}{{- if gt $w 0 }}{{ int $w }}{{ end }}{{ $g -}}
+{{- else -}}{{- math.Round (mul $a 100) | div 100.0 -}}{{- end -}}

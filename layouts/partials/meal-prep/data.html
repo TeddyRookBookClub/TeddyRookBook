@@ -1,0 +1,28 @@
+{{- /* The planner's data as one fingerprinted JSON file (shared by every Meal Prep page, cached once):
+   meta (sections, allergens, units, nutrients), the grocery catalog, the recipes, and a guide index for links.
+   Returns the file's URL. Catalog nutrition is null until USDA numbers are filled in; the pages say so. */ -}}
+{{- $m := site.Data.meals -}}
+{{- $url := "" -}}
+{{- if and $m $m.catalog $m.recipes -}}
+  {{- $items := slice -}}
+  {{- range $m.catalog.items -}}
+    {{- $it := dict "id" .id "name" .name "section" .section "keep" (.keep | default "") "g_per_cup" .g_per_cup "counts" (.counts | default dict) "count_label" .count_label "buy" .buy "allergens" (.allergens | default slice) "diet" (.diet | default slice) "guides" (.guides | default slice) -}}
+    {{- with .aliases }}{{ $it = merge $it (dict "aliases" .) }}{{ end -}}
+    {{- with .note }}{{ $it = merge $it (dict "note" .) }}{{ end -}}
+    {{- with .edible }}{{ $it = merge $it (dict "edible" .) }}{{ end -}}
+    {{- with .check_label }}{{ $it = merge $it (dict "check_label" .) }}{{ end -}}
+    {{- with .count_labels }}{{ $it = merge $it (dict "count_labels" .) }}{{ end -}}
+    {{- with .nutrition }}{{ $it = merge $it (dict "nutrition" .) }}{{ end -}}
+    {{- with .fdc }}{{ $it = merge $it (dict "fdc" (dict "id" .id "match" (.match | default "") "proxy" (.proxy | default ""))) }}{{ end -}}
+    {{- $items = $items | append $it -}}
+  {{- end -}}
+  {{- $guides := slice -}}
+  {{- range $k, $g := $m.guides -}}
+    {{- $secs := slice -}}{{- range $g.sections -}}{{- $secs = $secs | append (dict "id" .id "h" .h) -}}{{- end -}}
+    {{- $guides = $guides | append (dict "key" $g.key "title" $g.title "icon" ($g.icon | default "") "summary" ($g.summary | default "") "sections" $secs "url" (printf "meal-prep/guides/%s/" $g.key | relURL)) -}}
+  {{- end -}}
+  {{- $d := dict "meta" $m.meta "catalog" (dict "items" $items) "recipes" $m.recipes "guides" $guides "recipeBase" ("meal-prep/recipes/" | relURL) -}}
+  {{- $r := resources.FromString "meal-prep/meals-data.json" ($d | jsonify) | fingerprint "md5" -}}
+  {{- $url = $r.RelPermalink -}}
+{{- end -}}
+{{- return $url -}}

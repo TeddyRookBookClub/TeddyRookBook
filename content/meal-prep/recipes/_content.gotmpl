@@ -1,0 +1,13 @@
+{{/* One page per recipe, from data/meals/recipes.json */}}
+{{ with site.Data.meals }}{{ with .recipes }}
+  {{ range .recipes }}
+    {{ $.AddPage (dict
+      "kind" "page"
+      "path" .id
+      "title" .name
+      "layout" "recipe"
+      "params" (dict "recipe" .id "description" (printf "%s: a family recipe that scales to your household, with nutrition, make-ahead and freezer notes. %s" .name (.summary | default "")))
+      "dates" (dict "date" (time.AsTime "2026-10-25"))
+    ) }}
+  {{ end }}
+{{ end }}{{ end }}

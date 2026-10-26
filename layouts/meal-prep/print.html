@@ -1,0 +1,26 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="stylesheet" href="{{ "meal-prep/meals.css" | relURL }}?v={{ (os.Stat "static/meal-prep/meals.css").ModTime.Unix }}">
+{{ $src := partial "meal-prep/data.html" . }}
+<div class="hs mp" id="mp-print" data-src="{{ $src }}">
+  {{ partial "meal-prep/crumbs.html" (slice (dict "t" "Meal Prep" "u" "meal-prep/") (dict "t" "Planner" "u" "meal-prep/plan/") (dict "t" "Print")) }}
+  <div class="mpp-opts" id="mpp-opts">
+    <label class="mp-f mp-inline">Plan <select id="mpp-plan"></select></label>
+    <label class="mp-f mp-inline">For <select id="mpp-range"></select></label>
+    <span class="mp-checks" id="mpp-inc">
+      <label class="mp-cb"><input type="checkbox" value="grid"> Week grid</label>
+      <label class="mp-cb"><input type="checkbox" value="shop"> Shopping list</label>
+      <label class="mp-cb"><input type="checkbox" value="cards"> Recipe cards</label>
+      <label class="mp-cb"><input type="checkbox" value="prep"> Prep day</label>
+      <label class="mp-cb"><input type="checkbox" value="kids"> Kids’ chart</label>
+    </span>
+    <button type="button" class="hs-btn pri" id="mpp-go">🖨 Print or save as PDF</button>
+    <a class="hs-btn ghost" href="{{ "meal-prep/plan/" | relURL }}">← Back to the planner</a>
+    <p class="hs-small" style="width:100%;margin:0">To save a PDF, choose “Save as PDF” (or “Microsoft Print to PDF”) as the printer.</p>
+  </div>
+  <div class="mpp" id="mpp"><p class="mpp-empty">Loading your plan…</p></div>
+</div>
+<script src="{{ "meal-prep/model.js" | relURL }}?v={{ (os.Stat "static/meal-prep/model.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/common.js" | relURL }}?v={{ (os.Stat "static/meal-prep/common.js").ModTime.Unix }}" defer></script>
+<script src="{{ "meal-prep/print.js" | relURL }}?v={{ (os.Stat "static/meal-prep/print.js").ModTime.Unix }}" defer></script>
+{{ end }}
