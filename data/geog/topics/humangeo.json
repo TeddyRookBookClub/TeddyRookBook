@@ -1,0 +1,1151 @@
+{
+ "course": "humangeo",
+ "units": [
+  {
+   "key": "thinking",
+   "title": "Thinking Geographically",
+   "blurb": "Location, place and region, scale, distance and connection, the data geographers use, and how people and environments shape each other."
+  },
+  {
+   "key": "population",
+   "title": "Population and Migration",
+   "blurb": "Where people live, how populations grow and age, the demographic transition, population policies, and why and how people move."
+  },
+  {
+   "key": "culture",
+   "title": "Cultural Patterns",
+   "blurb": "Culture traits and landscapes, how ideas spread, language families, religions and their spread, and what happens when cultures meet."
+  },
+  {
+   "key": "political",
+   "title": "Political Geography",
+   "blurb": "States and nations, sovereignty, boundaries and their disputes, the shapes and governments of states, forces that unite and divide, and organizations above the state."
+  },
+  {
+   "key": "agriculture",
+   "title": "Agriculture and Rural Land Use",
+   "blurb": "Where farming began and how it changed, kinds of farming, the von Thünen model, rural settlement and survey patterns, and debates about food."
+  },
+  {
+   "key": "cities",
+   "title": "Cities and Urban Land Use",
+   "blurb": "Why cities grow where they do, systems of cities, models of how cities are laid out, and the challenges cities face."
+  },
+  {
+   "key": "development",
+   "title": "Industry and Development",
+   "blurb": "Sectors of the economy, how industry spread and where it locates, measuring development, theories of development, trade and sustainable development."
+  }
+ ],
+ "topics": [
+  {
+   "id": "humangeo.location",
+   "slug": "location",
+   "unit": "thinking",
+   "title": "Absolute and Relative Location",
+   "short": "Absolute location is an exact address or coordinates; relative location describes a place by what is around it.",
+   "prereqs": [
+    "worldgeo.read-coordinates"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.1.9-12",
+   "trouble": "Students think relative location is less precise and so less useful. \"Just south of the Great Lakes, on the main rail lines\" explains why a city grew; coordinates alone do not.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.site-situation",
+   "slug": "site-situation",
+   "unit": "thinking",
+   "title": "Site and Situation",
+   "short": "A place's site is its own physical features (a hill, a harbor, a river crossing); its situation is how it connects to places around it.",
+   "prereqs": [
+    "humangeo.location"
+   ],
+   "xp": 2,
+   "trouble": "Students swap the two. Site is what is at the spot; situation is where the spot is in relation to other places, like trade routes and neighbors.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.regions",
+   "slug": "regions",
+   "unit": "thinking",
+   "title": "Formal, Functional and Perceptual Regions",
+   "short": "A formal region shares a trait (like a language); a functional region is tied to a central point (like a TV market); a perceptual region exists in people's minds (like \"the South\").",
+   "prereqs": [
+    "humangeo.site-situation"
+   ],
+   "xp": 2,
+   "trouble": "Students call any region with a hub a formal region. If the region is defined by connections to a center, such as a newspaper's readers or an airport's flights, it is functional.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.scale-of-analysis",
+   "slug": "scale-of-analysis",
+   "unit": "thinking",
+   "title": "Scales of Analysis",
+   "short": "The same question can be studied at the global, national, regional or local scale, and the pattern can look different at each one.",
+   "prereqs": [
+    "humangeo.regions",
+    "worldgeo.map-scale"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up map scale (the ratio of map to ground) with scale of analysis (how big an area you study). A country can look rich at the national scale and still have very poor regions.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.distance-decay",
+   "slug": "distance-decay",
+   "unit": "thinking",
+   "title": "Distance Decay and Time-Space Compression",
+   "short": "Interaction falls off with distance (distance decay), but faster travel and communication make far places feel closer (time-space compression).",
+   "prereqs": [
+    "humangeo.scale-of-analysis"
+   ],
+   "xp": 2,
+   "trouble": "Students think distance no longer matters because of the internet. Most trips, trade and migration are still short; distance decay weakens but does not vanish.",
+   "viz": [
+    "gg-diffusion",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.spatial-patterns",
+   "slug": "spatial-patterns",
+   "unit": "thinking",
+   "title": "Density, Concentration and Pattern",
+   "short": "Density is how many per area, concentration is how close together they are, and pattern is their arrangement (clustered, dispersed, linear).",
+   "prereqs": [
+    "humangeo.scale-of-analysis"
+   ],
+   "xp": 2,
+   "trouble": "Students treat density and concentration as the same. Two towns can have the same number of houses per square mile (density) but in one they are bunched together (clustered) and in the other spread evenly.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.geographic-data",
+   "slug": "geographic-data",
+   "unit": "thinking",
+   "title": "Geographic Data",
+   "short": "Geographers use numbers from censuses and satellites (quantitative data) and words and pictures from interviews and fieldwork (qualitative data).",
+   "prereqs": [
+    "humangeo.spatial-patterns",
+    "worldgeo.gps-gis"
+   ],
+   "xp": 2,
+   "trouble": "Students think only numbers count as data. Interviews, photos and field notes are data too, and they can explain what the numbers show.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.thematic-maps",
+   "slug": "thematic-maps",
+   "unit": "thinking",
+   "title": "Choosing a Thematic Map",
+   "short": "Choropleth maps shade areas by a rate, dot maps show where things are, graduated symbols show amounts, isolines join equal values, and cartograms resize places by a number.",
+   "prereqs": [
+    "humangeo.geographic-data",
+    "worldgeo.kinds-of-maps"
+   ],
+   "xp": 2,
+   "trouble": "Students shade a choropleth map by raw totals, which makes big areas look important. Choropleth maps should show rates or percentages, such as people per square kilometer.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.human-environment",
+   "slug": "human-environment",
+   "unit": "thinking",
+   "title": "People and Environment",
+   "short": "Environmental determinism said the environment sets how people live; possibilism says it offers choices; today geographers study how people and environments shape each other, and what makes use sustainable.",
+   "prereqs": [
+    "humangeo.site-situation"
+   ],
+   "xp": 2,
+   "trouble": "Students take environmental determinism as accepted. Geographers set it aside long ago because it ignored culture and choice, and it was used to rank peoples unfairly.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.population-distribution",
+   "slug": "population-distribution",
+   "unit": "population",
+   "title": "Where People Live",
+   "short": "Most people live in East Asia, South Asia and Europe, on low, well-watered land near coasts and rivers; dry, cold and high places have few people.",
+   "prereqs": [
+    "worldgeo.world-population",
+    "humangeo.location"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.7.9-12",
+   "trouble": "Students think population follows country size. Huge countries such as Canada and Australia have few people; small, fertile river valleys and deltas can be crowded.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.density-types",
+   "slug": "density-types",
+   "unit": "population",
+   "title": "Three Kinds of Density",
+   "short": "Arithmetic density is people per total land; physiological density is people per farmland; agricultural density is farmers per farmland.",
+   "prereqs": [
+    "humangeo.population-distribution",
+    "worldgeo.population-density"
+   ],
+   "xp": 3,
+   "trouble": "Students divide by the wrong land area. Physiological density uses only arable (farmable) land, so Egypt, with most people on the narrow Nile farmland, has a very high physiological density.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.birth-death-rates",
+   "slug": "birth-death-rates",
+   "unit": "population",
+   "title": "Birth Rates, Death Rates and Natural Increase",
+   "short": "The crude birth and death rates count births and deaths per 1,000 people a year; the rate of natural increase is their difference, as a percent.",
+   "prereqs": [
+    "humangeo.population-distribution",
+    "g6.percent-meaning"
+   ],
+   "xp": 2,
+   "trouble": "Students subtract and forget to change \"per 1,000\" into a percent. A birth rate of 30 and a death rate of 10 give 20 per 1,000, which is 2.0 percent a year.",
+   "viz": [
+    "gg-dtm"
+   ]
+  },
+  {
+   "id": "humangeo.fertility-mortality",
+   "slug": "fertility-mortality",
+   "unit": "population",
+   "title": "Fertility, Infant Mortality and Life Expectancy",
+   "short": "The total fertility rate is the average number of children per woman; about 2.1 replaces the population; infant mortality and life expectancy measure health.",
+   "prereqs": [
+    "humangeo.birth-death-rates"
+   ],
+   "xp": 2,
+   "trouble": "Students think a fertility rate of 2.0 keeps a population steady. Replacement is about 2.1 in rich countries because a few children die young and slightly more boys than girls are born.",
+   "viz": [
+    "gg-pyramid",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.doubling-time",
+   "slug": "doubling-time",
+   "unit": "population",
+   "title": "Doubling Time",
+   "short": "A population growing at r percent a year doubles in about 70 ÷ r years (the rule of 70).",
+   "prereqs": [
+    "humangeo.birth-death-rates"
+   ],
+   "xp": 2,
+   "trouble": "Students divide 70 by the rate written as a decimal (0.02) instead of the percent (2). Growth of 2 percent a year doubles a population in about 35 years.",
+   "viz": [
+    "gg-dtm"
+   ]
+  },
+  {
+   "id": "humangeo.population-pyramids",
+   "slug": "population-pyramids",
+   "unit": "population",
+   "title": "Reading Population Pyramids",
+   "short": "A population pyramid shows how many males and females are in each age group; its shape tells the story of births, deaths and migration.",
+   "prereqs": [
+    "humangeo.fertility-mortality"
+   ],
+   "xp": 2,
+   "trouble": "Students read the bars as numbers of births each year. Each bar is the share of the population of that age now; a narrow base means few young children today.",
+   "viz": [
+    "gg-pyramid"
+   ]
+  },
+  {
+   "id": "humangeo.pyramid-shapes",
+   "slug": "pyramid-shapes",
+   "unit": "population",
+   "title": "Pyramid Shapes",
+   "short": "A wide base means fast growth, straight sides mean slow or no growth, and a narrow base means a shrinking, aging population.",
+   "prereqs": [
+    "humangeo.population-pyramids"
+   ],
+   "xp": 2,
+   "trouble": "Students think an upside-down base always means a shrinking country today. Migration can add working-age adults, and a population with few children may still grow for years.",
+   "viz": [
+    "gg-pyramid"
+   ]
+  },
+  {
+   "id": "humangeo.dependency-ratio",
+   "slug": "dependency-ratio",
+   "unit": "population",
+   "title": "The Dependency Ratio",
+   "short": "The dependency ratio compares people under 15 and over 64 with people aged 15 to 64, who are most likely to work.",
+   "prereqs": [
+    "humangeo.population-pyramids",
+    "g6.percent-of-a-number"
+   ],
+   "xp": 2,
+   "trouble": "Students count only the elderly as dependents. Children under 15 count too; countries with many children have high dependency ratios as well.",
+   "viz": [
+    "gg-pyramid"
+   ]
+  },
+  {
+   "id": "humangeo.demographic-transition",
+   "slug": "demographic-transition",
+   "unit": "population",
+   "title": "The Demographic Transition Model",
+   "short": "As countries develop, death rates fall first and birth rates later, moving through stages from high birth and death rates to low ones.",
+   "prereqs": [
+    "humangeo.birth-death-rates",
+    "humangeo.pyramid-shapes"
+   ],
+   "xp": 3,
+   "trouble": "Students think the population grows fastest at the start. Growth is fastest in stage 2, when death rates have fallen but birth rates are still high.",
+   "viz": [
+    "gg-dtm",
+    "gg-pyramid"
+   ]
+  },
+  {
+   "id": "humangeo.epidemiological-transition",
+   "slug": "epidemiological-transition",
+   "unit": "population",
+   "title": "The Epidemiological Transition",
+   "short": "As countries develop, the main causes of death shift from infectious diseases and famine to chronic diseases such as heart disease and cancer.",
+   "prereqs": [
+    "humangeo.demographic-transition"
+   ],
+   "xp": 2,
+   "trouble": "Students think chronic diseases became common because people became less healthy. They lead because people now live long enough to get them.",
+   "viz": [
+    "gg-dtm",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.malthus",
+   "slug": "malthus",
+   "unit": "population",
+   "title": "Malthus and His Critics",
+   "short": "Thomas Malthus (1798) argued that population would outgrow food; critics point to rising farm output and falling birth rates; neo-Malthusians warn about resources.",
+   "prereqs": [
+    "humangeo.demographic-transition"
+   ],
+   "xp": 2,
+   "trouble": "Students treat Malthus as either proven right or simply wrong. Food output has outpaced population so far, but scholars still debate limits on water, land and the environment; know each side's argument.",
+   "viz": [
+    "gg-sort",
+    "gg-dtm"
+   ]
+  },
+  {
+   "id": "humangeo.population-policies",
+   "slug": "population-policies",
+   "unit": "population",
+   "title": "Population Policies",
+   "short": "Pronatalist policies encourage births (as in France, and in Singapore since 1987), antinatalist policies discourage them (as in China from 1980 to 2015), and immigration policies shape who arrives.",
+   "prereqs": [
+    "humangeo.malthus"
+   ],
+   "xp": 2,
+   "trouble": "Students think governments can set birth rates easily. Policies have mixed results; education, jobs and the cost of raising children often matter more.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.women-fertility",
+   "slug": "women-fertility",
+   "unit": "population",
+   "title": "Women, Education and Fertility",
+   "short": "Where more girls finish school and more women work for pay, families tend to have fewer children, later.",
+   "prereqs": [
+    "humangeo.population-policies",
+    "humangeo.fertility-mortality"
+   ],
+   "xp": 2,
+   "trouble": "Students reverse cause and effect, or assume one factor explains everything. Schooling, health care, cities and jobs all tend to lower fertility together.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.migration-types",
+   "slug": "migration-types",
+   "unit": "population",
+   "title": "Kinds of Migration",
+   "short": "Migration can be internal or international, voluntary or forced; chain migration follows family and friends; step migration happens in stages.",
+   "prereqs": [
+    "humangeo.population-distribution"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.8.9-12",
+   "trouble": "Students count refugees as voluntary migrants. People fleeing war or persecution are forced migrants.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.push-pull",
+   "slug": "push-pull",
+   "unit": "population",
+   "title": "Push and Pull Factors",
+   "short": "Push factors drive people away (war, few jobs, drought); pull factors draw them (jobs, safety, family); intervening obstacles stand in between.",
+   "prereqs": [
+    "humangeo.migration-types"
+   ],
+   "xp": 2,
+   "trouble": "Students sort a factor by whether it is good or bad. Jobs in another country are a pull; no jobs at home is a push. Ask: is it about the place being left or the place being chosen?",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.ravenstein",
+   "slug": "ravenstein",
+   "unit": "population",
+   "title": "Ravenstein's Laws of Migration",
+   "short": "Ernst Ravenstein (1880s) observed that most migrants move short distances, long-distance migrants head for big cities, and each flow produces a counterflow.",
+   "prereqs": [
+    "humangeo.push-pull"
+   ],
+   "xp": 2,
+   "trouble": "Students expect most migrants to cross oceans. Most people who move stay in their own country, often in their own region.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.refugees",
+   "slug": "refugees",
+   "unit": "population",
+   "title": "Refugees, Asylum Seekers and Internally Displaced People",
+   "short": "A refugee has fled their country and cannot safely return; an asylum seeker has asked for protection but awaits a decision; internally displaced people fled but stayed inside their country.",
+   "prereqs": [
+    "humangeo.migration-types"
+   ],
+   "xp": 2,
+   "trouble": "Students use \"refugee\" for anyone who fled. If they never left their own country, they are internally displaced, not refugees.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.migration-effects",
+   "slug": "migration-effects",
+   "unit": "population",
+   "title": "Effects of Migration",
+   "short": "Migration brings remittances home and workers to new places, and can mean a brain drain from the sending country and a gain for the receiving one.",
+   "prereqs": [
+    "humangeo.push-pull"
+   ],
+   "xp": 2,
+   "trouble": "Students see only one side. Economists and geographers find gains and costs for both sending and receiving places, and they debate how large each is.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.culture-traits",
+   "slug": "culture-traits",
+   "unit": "culture",
+   "title": "Culture Traits, Folk and Popular Culture",
+   "short": "A culture trait is one part of a culture, such as a food or a holiday; folk culture is local and traditional, popular culture spreads widely and changes fast.",
+   "prereqs": [
+    "humangeo.regions"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.6.9-12",
+   "trouble": "Students think folk culture is old and popular culture is new. The difference is how it spreads: folk culture by local tradition, popular culture by mass media and trade, across large areas.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.cultural-landscape",
+   "slug": "cultural-landscape",
+   "unit": "culture",
+   "title": "Cultural Landscapes",
+   "short": "The cultural landscape is the visible mark people leave on the land: buildings, fields, signs and places of worship.",
+   "prereqs": [
+    "humangeo.culture-traits"
+   ],
+   "xp": 2,
+   "trouble": "Students look only at famous buildings. Ordinary things, such as house styles, fences, street signs and field shapes, are the cultural landscape too.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.diffusion",
+   "slug": "diffusion",
+   "unit": "culture",
+   "title": "How Things Spread",
+   "short": "Relocation diffusion moves with people; expansion diffusion spreads outward as contagious (person to person), hierarchical (big places first) or stimulus (the idea changes as it spreads).",
+   "prereqs": [
+    "humangeo.culture-traits",
+    "humangeo.distance-decay"
+   ],
+   "xp": 3,
+   "trouble": "Students call any spread \"contagious.\" If a trend jumps from big city to big city before reaching small towns, it is hierarchical; if migrants carry it to a new land, it is relocation.",
+   "viz": [
+    "gg-diffusion",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.language-families",
+   "slug": "language-families",
+   "unit": "culture",
+   "title": "Language Families",
+   "short": "Languages that share an ancestor form a family; Indo-European has the most speakers, then Sino-Tibetan; others include Afro-Asiatic, Niger-Congo and Austronesian.",
+   "prereqs": [
+    "humangeo.diffusion"
+   ],
+   "xp": 2,
+   "trouble": "Students think languages in the same country belong to the same family. Finnish and Hungarian are Uralic, not Indo-European like their neighbors.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.language-branches",
+   "slug": "language-branches",
+   "unit": "culture",
+   "title": "Branches of Indo-European",
+   "short": "Indo-European branches include Germanic (English, German), Romance (Spanish, French), Balto-Slavic (Russian, Polish) and Indo-Iranian (Hindi, Persian).",
+   "prereqs": [
+    "humangeo.language-families"
+   ],
+   "xp": 2,
+   "trouble": "Students put English in the Romance branch because it has many French and Latin words. English grew from Germanic roots; borrowed words do not change its family tree.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.lingua-franca",
+   "slug": "lingua-franca",
+   "unit": "culture",
+   "title": "Lingua Franca, Pidgins and Creoles",
+   "short": "A lingua franca is a shared language for trade or work; a pidgin is a simple mix for contact; a creole is a pidgin that became a mother tongue.",
+   "prereqs": [
+    "humangeo.language-branches"
+   ],
+   "xp": 2,
+   "trouble": "Students treat pidgins and creoles as \"broken\" languages. A creole is a full language with its own grammar, learned by children as their first language.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.religions",
+   "slug": "religions",
+   "unit": "culture",
+   "title": "Universalizing and Ethnic Religions",
+   "short": "Universalizing religions, such as Christianity, Islam and Buddhism, seek members everywhere; ethnic religions, such as Hinduism and Judaism, are tied to one people and place.",
+   "prereqs": [
+    "humangeo.diffusion"
+   ],
+   "xp": 2,
+   "trouble": "Students judge a religion as universalizing by its size. Hinduism has over a billion followers but is an ethnic religion because it is closely tied to one people and region.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.religion-hearths",
+   "slug": "religion-hearths",
+   "unit": "culture",
+   "title": "Where Religions Began and Spread",
+   "short": "Christianity, Judaism and Islam began in Southwest Asia, Hinduism and Buddhism in South Asia; they spread by trade, migration, missionaries and empires.",
+   "prereqs": [
+    "humangeo.religions"
+   ],
+   "xp": 2,
+   "trouble": "Students think a religion is strongest where it began. Buddhism began in India but most Buddhists today live in East and Southeast Asia.",
+   "viz": [
+    "gg-map",
+    "gg-diffusion"
+   ]
+  },
+  {
+   "id": "humangeo.cultural-change",
+   "slug": "cultural-change",
+   "unit": "culture",
+   "title": "When Cultures Meet",
+   "short": "Acculturation is adopting traits while keeping one's culture, assimilation is merging into the larger culture, and syncretism blends two cultures into something new.",
+   "prereqs": [
+    "humangeo.diffusion"
+   ],
+   "xp": 2,
+   "trouble": "Students treat acculturation and assimilation as the same. With acculturation, people keep their own culture while adding new traits; with assimilation, the original culture fades.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.globalization-culture",
+   "slug": "globalization-culture",
+   "unit": "culture",
+   "title": "Globalization and Culture",
+   "short": "Global media, trade and travel spread popular culture, which can push out local traditions and also lead people to protect and revive them.",
+   "prereqs": [
+    "humangeo.cultural-change"
+   ],
+   "xp": 2,
+   "trouble": "Students think globalization makes all places the same. It also brings local foods, music and languages to the world, and many places revive their traditions in response.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.state-nation",
+   "slug": "state-nation",
+   "unit": "political",
+   "title": "States, Nations and Nation-States",
+   "short": "A state is a country with its own government and borders; a nation is a people who share a culture and identity; a nation-state is where the two match.",
+   "prereqs": [
+    "worldgeo.how-many-countries",
+    "humangeo.culture-traits"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.10.9-12",
+   "trouble": "Students think a \"state\" means a U.S. state and a \"nation\" means a country. In political geography a state is a sovereign country, and a nation is a people, which may have no state of its own.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.multinational",
+   "slug": "multinational",
+   "unit": "political",
+   "title": "Multinational States and Stateless Nations",
+   "short": "A multinational state holds several nations; a stateless nation, such as the Kurds, has no state of its own; a multistate nation lives across several states.",
+   "prereqs": [
+    "humangeo.state-nation"
+   ],
+   "xp": 2,
+   "trouble": "Students think most countries are nation-states. Few states are made of a single nation; most hold several peoples.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.sovereignty",
+   "slug": "sovereignty",
+   "unit": "political",
+   "title": "Sovereignty and Territoriality",
+   "short": "Sovereignty is a state's right to govern its territory without outside control; territoriality is people's urge to claim and defend space.",
+   "prereqs": [
+    "humangeo.state-nation"
+   ],
+   "xp": 2,
+   "trouble": "Students think every place that governs itself is fully sovereign. Recognition by other states matters too; places like Taiwan and Kosovo govern themselves but are recognized by some countries and not others.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.boundary-types",
+   "slug": "boundary-types",
+   "unit": "political",
+   "title": "Kinds of Boundaries",
+   "short": "Boundaries can follow physical features, cultural lines or straight geometric lines, and can be drawn before settlement (antecedent), after it (subsequent) or imposed from outside (superimposed).",
+   "prereqs": [
+    "humangeo.sovereignty"
+   ],
+   "xp": 3,
+   "trouble": "Students think straight borders are natural. Straight lines usually mark borders drawn on maps by outsiders, as in much of Africa and the western United States.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.boundary-disputes",
+   "slug": "boundary-disputes",
+   "unit": "political",
+   "title": "Boundary Disputes",
+   "short": "Disputes can be over where a line is (definitional or locational), how it works (operational) or the resources it divides (allocational).",
+   "prereqs": [
+    "humangeo.boundary-types"
+   ],
+   "xp": 3,
+   "trouble": "Students sort a dispute by how serious it is. Sort it by what it is about: the words of a treaty, the line's place on the ground, crossing rules, or resources such as oil or water.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.law-of-the-sea",
+   "slug": "law-of-the-sea",
+   "unit": "political",
+   "title": "Boundaries at Sea",
+   "short": "Under the UN Convention on the Law of the Sea, a country controls its territorial sea to 12 nautical miles and has rights to fish and minerals in an exclusive economic zone out to 200.",
+   "prereqs": [
+    "humangeo.boundary-types"
+   ],
+   "xp": 2,
+   "trouble": "Students think a country owns the sea out to 200 nautical miles. Beyond 12 nautical miles, ships of every country may pass; the EEZ gives rights to resources, not full control.",
+   "viz": [
+    "gg-models"
+   ]
+  },
+  {
+   "id": "humangeo.state-shapes",
+   "slug": "state-shapes",
+   "unit": "political",
+   "title": "Shapes of States",
+   "short": "States can be compact (Poland), elongated (Chile), prorupted (Thailand), perforated (South Africa) or fragmented (Indonesia).",
+   "prereqs": [
+    "humangeo.boundary-types"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up perforated and fragmented. A perforated state surrounds another state; a fragmented state is in several separate pieces.",
+   "viz": [
+    "gg-outline",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.unitary-federal",
+   "slug": "unitary-federal",
+   "unit": "political",
+   "title": "Unitary and Federal States",
+   "short": "A unitary state concentrates power in the central government (France, Japan); a federal state shares power with states or provinces (the United States, India).",
+   "prereqs": [
+    "humangeo.sovereignty"
+   ],
+   "xp": 2,
+   "trouble": "Students think a federal state has a weak center. Federal systems divide powers by law; both levels have real authority.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.centripetal-centrifugal",
+   "slug": "centripetal-centrifugal",
+   "unit": "political",
+   "title": "Forces That Unite and Divide",
+   "short": "Centripetal forces, such as a shared language or national symbols, pull a state together; centrifugal forces, such as regional differences, can pull it apart and lead to devolution.",
+   "prereqs": [
+    "humangeo.unitary-federal",
+    "humangeo.multinational"
+   ],
+   "xp": 2,
+   "trouble": "Students treat any difference as centrifugal. A difference becomes a dividing force when it lines up with a region and a sense of grievance.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.supranational",
+   "slug": "supranational",
+   "unit": "political",
+   "title": "Organizations Above the State",
+   "short": "Supranational organizations, such as the UN, the European Union, NATO, the African Union and ASEAN, link states for trade, defense or cooperation.",
+   "prereqs": [
+    "humangeo.sovereignty"
+   ],
+   "xp": 2,
+   "trouble": "Students think joining means giving up all sovereignty. Members share some decisions; how much varies, from the EU's common laws to looser groups that work by agreement.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.electoral-geography",
+   "slug": "electoral-geography",
+   "unit": "political",
+   "title": "Electoral Districts",
+   "short": "Legislative districts are redrawn after each census; gerrymandering draws them to favor one group, by packing its opponents' voters into a few districts or cracking them across many.",
+   "prereqs": [
+    "humangeo.boundary-types"
+   ],
+   "xp": 3,
+   "trouble": "Students think odd shapes always mean gerrymandering. Districts also follow rivers, county lines and equal-population rules; the test is the effect on representation, which courts and voters judge under the law.",
+   "viz": [
+    "gg-models"
+   ]
+  },
+  {
+   "id": "humangeo.agricultural-hearths",
+   "slug": "agricultural-hearths",
+   "unit": "agriculture",
+   "title": "Where Farming Began",
+   "short": "Farming began about 10,000 to 12,000 years ago in several hearths, including the Fertile Crescent, China, Mesoamerica and the Andes.",
+   "prereqs": [
+    "humangeo.diffusion"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.5.9-12",
+   "trouble": "Students think farming was invented once and spread from one place. It began separately in several regions, each with its own crops and animals.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.agricultural-revolutions",
+   "slug": "agricultural-revolutions",
+   "unit": "agriculture",
+   "title": "Agricultural Revolutions",
+   "short": "The first came with farming itself; the second, in Britain in the 1700s, brought new tools and crop rotations; the Green Revolution (1940s-1970s) brought high-yield seeds, fertilizer and irrigation.",
+   "prereqs": [
+    "humangeo.agricultural-hearths"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Green Revolution meant organic farming. It meant new high-yield varieties with more fertilizer and water; it raised harvests and also raised debates about cost and environment.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.intensive-extensive",
+   "slug": "intensive-extensive",
+   "unit": "agriculture",
+   "title": "Intensive and Extensive Farming",
+   "short": "Intensive farming puts much labor or capital on small plots (market gardens, rice paddies); extensive farming uses large areas with little input (ranching, nomadic herding).",
+   "prereqs": [
+    "humangeo.agricultural-revolutions"
+   ],
+   "xp": 2,
+   "trouble": "Students think intensive means large and modern. Intensive is about input per unit of land: a small, hand-worked rice paddy is intensive; a vast cattle ranch is extensive.",
+   "viz": [
+    "gg-sort",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.subsistence-commercial",
+   "slug": "subsistence-commercial",
+   "unit": "agriculture",
+   "title": "Subsistence and Commercial Farming",
+   "short": "Subsistence farmers grow food mainly for their own families; commercial farmers grow crops and animals to sell.",
+   "prereqs": [
+    "humangeo.intensive-extensive"
+   ],
+   "xp": 2,
+   "trouble": "Students think subsistence farming is always extensive. Shifting cultivation and herding are extensive, but intensive rice farming in Asia is often subsistence too.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.farming-regions",
+   "slug": "farming-regions",
+   "unit": "agriculture",
+   "title": "Farming and Climate",
+   "short": "Plantations grow in the tropics, Mediterranean farms grow grapes and olives, dairy farms sit near cities, grain grows on the plains, and herders live in dry lands.",
+   "prereqs": [
+    "humangeo.subsistence-commercial",
+    "worldgeo.climate-zones"
+   ],
+   "xp": 2,
+   "trouble": "Students think any crop can grow anywhere with enough work. Climate and soil set what grows best; markets and transport decide what pays.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.von-thunen",
+   "slug": "von-thunen",
+   "unit": "agriculture",
+   "title": "The von Thünen Model",
+   "short": "Von Thünen (1826) showed farm uses forming rings around a market town: perishable goods and dairy closest, then forest, grains, and ranching farthest out.",
+   "prereqs": [
+    "humangeo.farming-regions"
+   ],
+   "xp": 3,
+   "trouble": "Students think the rings come from soil. In the model the land is the same everywhere; the rings come from the cost of carrying goods to market.",
+   "viz": [
+    "gg-models"
+   ]
+  },
+  {
+   "id": "humangeo.rural-settlement",
+   "slug": "rural-settlement",
+   "unit": "agriculture",
+   "title": "Rural Settlements and Survey Patterns",
+   "short": "Rural settlements can be clustered, dispersed or linear; land was divided by metes and bounds, the rectangular township-and-range survey, or long lots.",
+   "prereqs": [
+    "humangeo.intensive-extensive"
+   ],
+   "xp": 2,
+   "trouble": "Students think square farm fields are natural. Township-and-range squares come from the U.S. Land Ordinance of 1785; older Eastern lands follow metes and bounds, and French areas long lots.",
+   "viz": [
+    "gg-models",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.food-debates",
+   "slug": "food-debates",
+   "unit": "agriculture",
+   "title": "Debates About Food",
+   "short": "People debate genetically modified crops, organic farming, large and small farms, and food deserts; geographers lay out the evidence and the trade-offs.",
+   "prereqs": [
+    "humangeo.agricultural-revolutions"
+   ],
+   "xp": 2,
+   "trouble": "Students expect one side to be right on every question. On many food questions, scientific findings, costs and values point in different directions; know what each side argues.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.urbanization",
+   "slug": "urbanization",
+   "unit": "cities",
+   "title": "Urbanization",
+   "short": "Urbanization is the growth in the share of people living in cities; it is fastest today in Africa and Asia.",
+   "prereqs": [
+    "humangeo.population-distribution",
+    "worldgeo.largest-cities"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.7.9-12",
+   "trouble": "Students think the largest cities are in rich countries. Most of today's largest and fastest-growing cities are in Asia and Africa.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.city-site-situation",
+   "slug": "city-site-situation",
+   "unit": "cities",
+   "title": "Why Cities Grow Where They Do",
+   "short": "Cities grow at good sites (harbors, river crossings, defensible hills) with good situations (crossroads of trade).",
+   "prereqs": [
+    "humangeo.urbanization",
+    "humangeo.site-situation"
+   ],
+   "xp": 2,
+   "trouble": "Students think a city stays important because of its first site. Many cities grew past their first reason for being; situation often matters more over time.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.central-place",
+   "slug": "central-place",
+   "unit": "cities",
+   "title": "Central Place Theory",
+   "short": "Christaller (1933) showed how towns serve the area around them: a good's threshold is the market it needs, and its range is how far people will travel for it.",
+   "prereqs": [
+    "humangeo.city-site-situation"
+   ],
+   "xp": 3,
+   "trouble": "Students mix up threshold and range. Threshold is how many customers are needed; range is how far a customer will go.",
+   "viz": [
+    "gg-models"
+   ]
+  },
+  {
+   "id": "humangeo.rank-size",
+   "slug": "rank-size",
+   "unit": "cities",
+   "title": "The Rank-Size Rule and Primate Cities",
+   "short": "In many countries the nth largest city has about 1/n the people of the largest; a primate city is more than twice as large as the next.",
+   "prereqs": [
+    "humangeo.central-place",
+    "g5.fraction-as-division"
+   ],
+   "xp": 2,
+   "trouble": "Students think every country follows the rank-size rule. Countries with a primate city, such as the United Kingdom (London) or Thailand (Bangkok), break it.",
+   "viz": [
+    "gg-models"
+   ]
+  },
+  {
+   "id": "humangeo.urban-models",
+   "slug": "urban-models",
+   "unit": "cities",
+   "title": "Models of North American Cities",
+   "short": "The concentric zone model (Burgess), the sector model (Hoyt) and the multiple nuclei model (Harris and Ullman) each describe how a city's land uses are arranged.",
+   "prereqs": [
+    "humangeo.central-place"
+   ],
+   "xp": 3,
+   "trouble": "Students think a model describes one real city exactly. Models are simplified patterns; each fits some cities and parts of cities better than others.",
+   "viz": [
+    "gg-models"
+   ]
+  },
+  {
+   "id": "humangeo.global-city-models",
+   "slug": "global-city-models",
+   "unit": "cities",
+   "title": "Models of Cities Around the World",
+   "short": "The Latin American city model has a wealthy spine and outer squatter settlements; models of African and Southeast Asian cities show colonial and market districts.",
+   "prereqs": [
+    "humangeo.urban-models"
+   ],
+   "xp": 3,
+   "trouble": "Students apply the U.S. pattern everywhere. In many Latin American cities the wealthy live near the center along a main boulevard, and the poorest live at the edges.",
+   "viz": [
+    "gg-models"
+   ]
+  },
+  {
+   "id": "humangeo.urban-challenges",
+   "slug": "urban-challenges",
+   "unit": "cities",
+   "title": "Urban Challenges and Responses",
+   "short": "Cities face sprawl, traffic, housing costs, informal settlements and segregation; responses include public transit, new urbanism, smart growth and redevelopment, each with debated effects.",
+   "prereqs": [
+    "humangeo.urban-models"
+   ],
+   "xp": 2,
+   "trouble": "Students think gentrification is simply good or bad. It can bring investment and also raise rents for long-time residents; people disagree about how to weigh the two.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.economic-sectors",
+   "slug": "economic-sectors",
+   "unit": "development",
+   "title": "Sectors of the Economy",
+   "short": "The primary sector takes from the earth (farming, mining), the secondary makes things, the tertiary provides services, and the quaternary and quinary handle information and top decisions.",
+   "prereqs": [
+    "humangeo.regions"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.11.9-12",
+   "trouble": "Students put a factory's office workers in the secondary sector. Sort by the work itself: designing and managing are services, even inside a manufacturing company.",
+   "viz": [
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.industrialization",
+   "slug": "industrialization",
+   "unit": "development",
+   "title": "The Spread of Industry",
+   "short": "The Industrial Revolution began in Britain in the late 1700s and spread to Europe, North America and Japan, and later to East Asia and beyond.",
+   "prereqs": [
+    "humangeo.economic-sectors"
+   ],
+   "xp": 2,
+   "trouble": "Students think industry is now leaving the world. Manufacturing has moved around the world; today it is largest in China.",
+   "viz": [
+    "gg-map",
+    "gg-diffusion"
+   ]
+  },
+  {
+   "id": "humangeo.weber",
+   "slug": "weber",
+   "unit": "development",
+   "title": "Weber's Least Cost Theory",
+   "short": "Alfred Weber (1909) argued factories locate to keep transport and labor costs lowest; bulk-reducing industries locate near raw materials, bulk-gaining near markets.",
+   "prereqs": [
+    "humangeo.industrialization"
+   ],
+   "xp": 3,
+   "trouble": "Students mix up bulk-reducing and bulk-gaining. If the product weighs less than its inputs (copper ore to copper), build near the mine; if it weighs more (bottling soda), build near customers.",
+   "viz": [
+    "gg-models"
+   ]
+  },
+  {
+   "id": "humangeo.measuring-development",
+   "slug": "measuring-development",
+   "unit": "development",
+   "title": "Measuring Development",
+   "short": "GDP and GNI per capita measure income; the Human Development Index (UNDP) combines life expectancy, schooling and income; other indexes measure gender equality.",
+   "prereqs": [
+    "humangeo.economic-sectors"
+   ],
+   "xp": 2,
+   "trouble": "Students treat GDP per capita as a full measure of well-being. It leaves out health, education and how income is shared, which is why the HDI adds them.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.development-theories",
+   "slug": "development-theories",
+   "unit": "development",
+   "title": "Theories of Development",
+   "short": "Rostow's stages of growth (1960) see every country on one path; Wallerstein's world-systems theory sees a core, semi-periphery and periphery linked by trade; dependency theory stresses unequal ties.",
+   "prereqs": [
+    "humangeo.measuring-development"
+   ],
+   "xp": 3,
+   "trouble": "Students treat one theory as fact. Each explains some cases; scholars debate them, and many point out that countries have developed by different paths.",
+   "viz": [
+    "gg-models",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "humangeo.trade-globalization",
+   "slug": "trade-globalization",
+   "unit": "development",
+   "title": "Trade and Globalization",
+   "short": "Countries trade by comparative advantage; supply chains, outsourcing and special economic zones spread production around the world, with gains and costs.",
+   "prereqs": [
+    "humangeo.development-theories",
+    "humangeo.supranational"
+   ],
+   "xp": 2,
+   "trouble": "Students think trade helps only one side. Trade can benefit both countries overall while some workers and places lose; economists agree on the overall gains and debate how to help those who lose.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "humangeo.sustainable-development",
+   "slug": "sustainable-development",
+   "unit": "development",
+   "title": "Sustainable Development",
+   "short": "Sustainable development meets today's needs without harming future generations' ability to meet theirs; the UN's 17 Sustainable Development Goals (2015) set targets for 2030.",
+   "prereqs": [
+    "humangeo.trade-globalization",
+    "humangeo.human-environment"
+   ],
+   "xp": 2,
+   "trouble": "Students think sustainability is only about the environment. The UN goals also cover poverty, health, education, equality and jobs.",
+   "viz": [
+    "gg-sort"
+   ]
+  }
+ ]
+}

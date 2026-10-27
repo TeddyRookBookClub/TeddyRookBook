@@ -413,6 +413,17 @@ subjects:
     from: 8
     to: 99
     rep: 1
+  - key: phonics-practice
+    name: Phonics Practice (Teddy Rook Book, goes with Hannah Ward's lessons)
+    practice: /homeschool/actual-reading/phonics-practice
+    url: /homeschool/actual-reading/phonics-practice/
+    sessions: 120
+    w: Session
+    from: 4
+    to: 8
+    rep: 1
+    mins: 10
+    alt: true
   - key: ar-phonics-reading-boot-camp
     ar: phonics-reading-boot-camp
     url: /homeschool/actual-reading/phonics-reading-boot-camp/
@@ -880,13 +891,53 @@ subjects:
     to: 99
     rep: 1
 - key: geography
-  name: Geography
+  name: Geography Ladder
   icon: 🧭
-  on_ages: [[7, 10]]
+  on_ages: [[6, 14]]
   rank: [[6, 180], [10, 15], [99, 180]]
   mins: [[99, 50]]
   hw: [[99, 0]]
+  note: 'Age 5 to AP Human Geography: maps and places, the 50 states, the countries of the world, and how people live on the land.'
   courses:
+  - key: gg-practice
+    name: Today's Geography Ladder practice
+    practice: /geography/practice
+    url: /geography/practice/
+    sessions: 180
+    w: Session
+    from: 5
+    to: 99
+    rep: 1
+    mins: 10
+    alt: true
+  - key: gg-maps
+    ladder: geog
+    lc: maps
+    from: 5
+    to: 8
+    rep: 1
+    mins: 15
+  - key: gg-usgeo
+    ladder: geog
+    lc: usgeo
+    from: 9
+    to: 11
+    rep: 1
+    mins: 20
+  - key: gg-worldgeo
+    ladder: geog
+    lc: worldgeo
+    from: 12
+    to: 14
+    rep: 1
+    mins: 20
+  - key: gg-humangeo
+    ladder: geog
+    lc: humangeo
+    from: 15
+    to: 99
+    rep: 1
+    mins: 25
   - key: home-geography
     data: hs_long_geography
     url: /homeschool/geography/home-geography/
@@ -894,6 +945,62 @@ subjects:
     from: 7
     to: 99
     rep: 1
+    alt: true
+- key: art
+  name: Art & Drawing Ladder
+  icon: 🎨
+  on_ages: [[5, 12]]
+  rank: [[8, 40], [12, 45], [99, 120]]
+  mins: [[8, 40], [99, 60]]
+  hw: [[99, 0]]
+  note: 'Age 5 to college: drawing for young artists, drawing basics, color and design, and two art history courses with pictures from the great museums.'
+  courses:
+  - key: ar-practice
+    name: Today's Art & Drawing Ladder practice
+    practice: /art/practice
+    url: /art/practice/
+    sessions: 180
+    w: Session
+    from: 5
+    to: 99
+    rep: 1
+    mins: 10
+    alt: true
+  - key: ar-ydraw
+    ladder: art
+    lc: ydraw
+    from: 5
+    to: 9
+    rep: 1
+    mins: 20
+  - key: ar-draw
+    ladder: art
+    lc: draw
+    from: 10
+    to: 13
+    rep: 1
+    mins: 25
+  - key: ar-design
+    ladder: art
+    lc: design
+    from: 14
+    to: 15
+    rep: 1
+    mins: 25
+  - key: ar-ah1
+    ladder: art
+    lc: ah1
+    from: 16
+    to: 16
+    rep: 1
+    mins: 30
+  - key: ar-ah2
+    ladder: art
+    lc: ah2
+    from: 17
+    to: 99
+    rep: 1
+    mins: 30
 - key: vocab
   name: Vocabulary Ladder
   icon: 📖

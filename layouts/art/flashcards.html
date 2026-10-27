@@ -1,0 +1,31 @@
+{{- /* /art/flashcards/: art history flashcards with spaced review (static/art/app/flash.js; storage trb-art-cards-v1).
+   The cards come from the kit's catalog (MathLadder.art.WORKS in static/art/viz/art.js). */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "art/app/pages.css" }}
+<div class="mlp arpg arpg-flash" id="arf" style="--mc:#b8197f">
+  <header class="arpg-head">
+    <p class="mlp-eyebrow"><a href="{{ "art/" | relURL }}">Art &amp; Drawing Ladder</a> · Flashcards</p>
+    <h1>Art history flashcards</h1>
+    <p>Look at a work and say who made it, about when, and which period or tradition it belongs to. Then flip the card and grade yourself. Each card comes back just before you would forget it. Works still under copyright, and works whose pictures are on the way, show their title instead of a picture.</p>
+    <p class="arpg-links"><a class="mlp-btn small" href="{{ "art/gallery/" | relURL }}">Museum walk</a> <a class="mlp-btn small" href="{{ "art/" | relURL }}">The ladder</a></p>
+  </header>
+  <section class="arpg-box arpg-filters" aria-label="Choose cards">
+    <label class="arpg-field"><span>Deck</span><select id="arf-deck"><option value="all">All works</option><option value="c:ah1">Art History I: Prehistoric to Renaissance</option><option value="c:ah2">Art History II: Baroque to Modern</option></select></label>
+    <label class="arpg-field"><span>Region</span><select id="arf-track"><option value="">All regions</option></select></label>
+    <div class="arpg-field"><span>Show first</span><div class="arpg-seg" id="arf-dir" role="group" aria-label="Which side first"><button type="button" data-v="w">The work</button><button type="button" data-v="a">The artist</button></div></div>
+    <label class="arpg-field"><span>New cards per day</span><select id="arf-new"><option value="10">10</option><option value="20">20</option><option value="40">40</option><option value="9999">No limit</option></select></label>
+  </section>
+  <div class="arf-bar"><span id="arf-pos"></span><span class="arf-prog"><i id="arf-prog"></i></span><span id="arf-due"></span></div>
+  <div class="arf-stage" id="arf-stage" tabindex="0" aria-live="polite" aria-label="Flashcard: press Space to flip"><p>Loading the cards…</p></div>
+  <div class="arf-actions">
+    <button type="button" class="mlp-btn pri" id="arf-flip">Show the answer</button>
+    <div class="arf-grade" id="arf-grade" hidden>
+      <button type="button" class="mlp-btn" data-q="1">Again</button><button type="button" class="mlp-btn" data-q="2">Hard</button><button type="button" class="mlp-btn" data-q="3">Good</button><button type="button" class="mlp-btn" data-q="4">Easy</button>
+    </div>
+  </div>
+  <p class="mlp-small">Keys: Space or Enter flips; 1–4 grade (Again, Hard, Good, Easy). Progress is saved in this browser; the site's <a href="{{ "progress/" | relURL }}">My Progress</a> page backs it up. <button type="button" class="mlp-btn small" id="arf-reset">Reset this deck</button></p>
+</div>
+{{ partial "inline/ml-js.html" "art/viz/art.js" }}
+{{ partial "inline/ml-js.html" "art/app/flash.js" }}
+{{ end }}

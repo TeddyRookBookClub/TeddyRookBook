@@ -1,0 +1,1285 @@
+{
+ "course": "worldgeo",
+ "units": [
+  {
+   "key": "lat-long",
+   "title": "Latitude and Longitude",
+   "blurb": "The grid of parallels and meridians that gives every place on Earth an address in degrees."
+  },
+  {
+   "key": "maps-projections",
+   "title": "Maps and Projections",
+   "blurb": "Why every flat map stretches something, what Mercator, equal-area and compromise maps each keep, map scale, and the kinds of maps."
+  },
+  {
+   "key": "time",
+   "title": "Time Around the World",
+   "blurb": "Why there are time zones, how to work out the time elsewhere, and the International Date Line."
+  },
+  {
+   "key": "physical-world",
+   "title": "The Physical World",
+   "blurb": "Continents compared, oceans and seas, the great rivers, mountains, deserts, lakes, islands, peninsulas and straits."
+  },
+  {
+   "key": "climate-biomes",
+   "title": "Climate and Biomes",
+   "blurb": "What controls climate, the world's climate zones, reading a climograph, and the biomes that grow in each climate."
+  },
+  {
+   "key": "countries",
+   "title": "Countries of the World",
+   "blurb": "How many countries there are and why the count depends on who is counting, and which countries have no coast."
+  },
+  {
+   "key": "americas",
+   "title": "North America, Central America and the Caribbean, South America",
+   "blurb": "Countries, capitals and physical features of the Americas."
+  },
+  {
+   "key": "europe",
+   "title": "Europe",
+   "blurb": "Countries, capitals and physical features of Northern, Western, Southern and Eastern Europe."
+  },
+  {
+   "key": "africa",
+   "title": "Africa",
+   "blurb": "Countries, capitals and physical features of North, West, Central, East and Southern Africa."
+  },
+  {
+   "key": "asia",
+   "title": "Asia",
+   "blurb": "Countries, capitals and physical features of Southwest, Central, South, East and Southeast Asia."
+  },
+  {
+   "key": "oceania",
+   "title": "Oceania and Antarctica",
+   "blurb": "Australia, New Zealand and the Pacific island countries, and the continent with no countries."
+  },
+  {
+   "key": "population",
+   "title": "People and Cities of the World",
+   "blurb": "Where the world's eight billion people live: the most populous countries, the largest countries, crowding, and the largest cities."
+  }
+ ],
+ "topics": [
+  {
+   "id": "worldgeo.parallels-meridians",
+   "slug": "parallels-meridians",
+   "unit": "lat-long",
+   "title": "Parallels and Meridians",
+   "short": "Parallels (lines of latitude) run east and west around the globe; meridians (lines of longitude) run north and south from pole to pole.",
+   "prereqs": [
+    "maps.hemispheres"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.1.6-8",
+   "trouble": "Students mix up the two because of the directions: lines of latitude run east-west but measure how far north or south you are; meridians run north-south but measure east-west.",
+   "viz": [
+    "gg-globe",
+    "gg-latlon"
+   ]
+  },
+  {
+   "id": "worldgeo.latitude",
+   "slug": "latitude",
+   "unit": "lat-long",
+   "title": "Latitude",
+   "short": "Latitude tells how many degrees north or south of the equator a place is, from 0° at the equator to 90° at each pole.",
+   "prereqs": [
+    "worldgeo.parallels-meridians"
+   ],
+   "xp": 2,
+   "trouble": "Students forget to write N or S, or think latitude can be more than 90°. Latitude 40° means nothing until you say 40° N or 40° S.",
+   "viz": [
+    "gg-latlon",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "worldgeo.longitude",
+   "slug": "longitude",
+   "unit": "lat-long",
+   "title": "Longitude",
+   "short": "Longitude tells how many degrees east or west of the prime meridian (through Greenwich, England) a place is, up to 180°.",
+   "prereqs": [
+    "worldgeo.parallels-meridians"
+   ],
+   "xp": 2,
+   "trouble": "Students think longitude runs to 360° or that the prime meridian runs around the world like the equator. It runs pole to pole; across the globe from it is the 180° meridian.",
+   "viz": [
+    "gg-latlon",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "worldgeo.read-coordinates",
+   "slug": "read-coordinates",
+   "unit": "lat-long",
+   "title": "Reading Coordinates",
+   "short": "Give a place's location as latitude first, then longitude: Washington, D.C., is at about 39° N, 77° W.",
+   "prereqs": [
+    "worldgeo.latitude",
+    "worldgeo.longitude"
+   ],
+   "xp": 2,
+   "trouble": "Students give longitude first, as in an (x, y) graph, or drop the letters. Geographers write latitude first, and each number needs its N, S, E or W.",
+   "viz": [
+    "gg-latlon",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.find-by-coordinates",
+   "slug": "find-by-coordinates",
+   "unit": "lat-long",
+   "title": "Find a Place by Its Coordinates",
+   "short": "Go to the latitude line, then along it to the longitude line, and name the city or country where they meet.",
+   "prereqs": [
+    "worldgeo.read-coordinates"
+   ],
+   "xp": 2,
+   "trouble": "Students count in the wrong direction from 0°: west longitudes grow toward the left of a map, and south latitudes grow downward.",
+   "viz": [
+    "gg-latlon",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.special-parallels",
+   "slug": "special-parallels",
+   "unit": "lat-long",
+   "title": "The Tropics and the Polar Circles",
+   "short": "The Tropic of Cancer (about 23.4° N), the Tropic of Capricorn (23.4° S), the Arctic Circle (66.6° N) and the Antarctic Circle (66.6° S).",
+   "prereqs": [
+    "worldgeo.latitude"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up Cancer and Capricorn, or think the tropics are where it is hottest. The Tropic of Cancer is the northern one and Capricorn the southern; they mark how far from the equator the noon Sun can be straight overhead.",
+   "viz": [
+    "gg-latlon",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "worldgeo.coordinates-hemispheres",
+   "slug": "coordinates-hemispheres",
+   "unit": "lat-long",
+   "title": "Coordinates and Hemispheres",
+   "short": "The letters in a place's coordinates tell its two hemispheres: 34° S, 151° E (Sydney) is in the Southern and Eastern Hemispheres.",
+   "prereqs": [
+    "worldgeo.read-coordinates",
+    "maps.hemispheres"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Western Hemisphere is just \"the Americas\" and the Eastern just \"Asia.\" West longitudes also cover part of Europe and Africa west of Greenwich.",
+   "viz": [
+    "gg-latlon",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "worldgeo.degrees-minutes",
+   "slug": "degrees-minutes",
+   "unit": "lat-long",
+   "title": "Degrees and Minutes",
+   "short": "A degree has 60 minutes, so 40° 30′ is 40.5°; GPS often writes south and west as negative numbers.",
+   "prereqs": [
+    "worldgeo.read-coordinates",
+    "g5.fractions-and-decimals"
+   ],
+   "xp": 2,
+   "trouble": "Students read 40° 30′ as 40.30°. Thirty minutes is 30 out of 60, or half a degree: 40.5°.",
+   "viz": [
+    "gg-latlon"
+   ]
+  },
+  {
+   "id": "worldgeo.degree-distance",
+   "slug": "degree-distance",
+   "unit": "lat-long",
+   "title": "How Far Is a Degree?",
+   "short": "One degree of latitude is about 111 km (69 miles) everywhere; a degree of longitude shrinks from 111 km at the equator to nothing at the poles.",
+   "prereqs": [
+    "worldgeo.degrees-minutes",
+    "g4.multiply-two-digit"
+   ],
+   "xp": 3,
+   "trouble": "Students think a degree of longitude is the same length everywhere. Meridians meet at the poles, so the space between them shrinks as you go north or south.",
+   "viz": [
+    "gg-globe",
+    "gg-latlon"
+   ]
+  },
+  {
+   "id": "worldgeo.flat-maps",
+   "slug": "flat-maps",
+   "unit": "maps-projections",
+   "title": "Why Flat Maps Stretch",
+   "short": "You cannot flatten a ball without stretching or tearing it, so every flat world map changes some sizes, shapes, distances or directions.",
+   "prereqs": [
+    "maps.globe-vs-map",
+    "worldgeo.parallels-meridians"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.3.6-8",
+   "trouble": "Students think one \"correct\" flat map exists. Every projection is a choice of what to keep true and what to let stretch.",
+   "viz": [
+    "gg-projection",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "worldgeo.mercator",
+   "slug": "mercator",
+   "unit": "maps-projections",
+   "title": "The Mercator Projection",
+   "short": "Mercator keeps shapes and directions true in small areas, which made it good for sailing, but it makes lands near the poles look far too big.",
+   "prereqs": [
+    "worldgeo.flat-maps"
+   ],
+   "xp": 2,
+   "trouble": "Students believe Greenland is as big as Africa because it looks that way on a Mercator map. Africa is about 14 times bigger.",
+   "viz": [
+    "gg-projection",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.equal-area",
+   "slug": "equal-area",
+   "unit": "maps-projections",
+   "title": "Equal-Area Maps",
+   "short": "Equal-area projections, such as Gall-Peters, Mollweide and Equal Earth, show every country at its true size compared with others, but bend shapes.",
+   "prereqs": [
+    "worldgeo.mercator"
+   ],
+   "xp": 2,
+   "trouble": "Students think an equal-area map has no distortion. It keeps areas, but shapes, especially near the edges, are squeezed or stretched.",
+   "viz": [
+    "gg-projection"
+   ]
+  },
+  {
+   "id": "worldgeo.compromise-projections",
+   "slug": "compromise-projections",
+   "unit": "maps-projections",
+   "title": "Compromise Maps",
+   "short": "Robinson and Winkel tripel maps keep nothing perfectly but stretch everything only a little; many atlases use them for world maps.",
+   "prereqs": [
+    "worldgeo.equal-area"
+   ],
+   "xp": 2,
+   "trouble": "Students want to know which map is \"right.\" For a world wall map, a compromise looks most like the globe; for navigation, Mercator; for comparing sizes, an equal-area map.",
+   "viz": [
+    "gg-projection"
+   ]
+  },
+  {
+   "id": "worldgeo.tissot",
+   "slug": "tissot",
+   "unit": "maps-projections",
+   "title": "Seeing Distortion with Circles",
+   "short": "Draw same-size circles all over the globe and project them: where the circles grow, the map enlarges areas; where they squash, it bends shapes.",
+   "prereqs": [
+    "worldgeo.compromise-projections"
+   ],
+   "xp": 3,
+   "trouble": "Students look at country shapes alone and cannot tell what a map distorts. Same-size circles on the globe make the stretching visible.",
+   "viz": [
+    "gg-projection"
+   ]
+  },
+  {
+   "id": "worldgeo.map-scale",
+   "slug": "map-scale",
+   "unit": "maps-projections",
+   "title": "Map Scale",
+   "short": "A scale such as 1:100,000 means 1 unit on the map stands for 100,000 of the same unit on the ground.",
+   "prereqs": [
+    "maps.map-scale",
+    "g7.scale-drawings"
+   ],
+   "xp": 2,
+   "trouble": "Students think a \"large-scale\" map shows a large area. A large-scale map (like 1:10,000) shows a small area in great detail; a small-scale map (1:10,000,000) shows a large area with little detail.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.kinds-of-maps",
+   "slug": "kinds-of-maps",
+   "unit": "maps-projections",
+   "title": "Kinds of Maps",
+   "short": "Political maps show borders and cities, physical maps show landforms, and thematic maps show one topic, such as rainfall or population.",
+   "prereqs": [
+    "worldgeo.flat-maps"
+   ],
+   "xp": 2,
+   "trouble": "Students read a choropleth map (areas shaded by a number) as showing where things are inside each area. It shows only one value for each whole area.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.gps-gis",
+   "slug": "gps-gis",
+   "unit": "maps-projections",
+   "title": "GPS, GIS and Satellite Images",
+   "short": "GPS finds your position from satellite signals, satellites photograph Earth, and a GIS stacks map layers to answer questions.",
+   "prereqs": [
+    "worldgeo.kinds-of-maps",
+    "worldgeo.read-coordinates"
+   ],
+   "xp": 2,
+   "trouble": "Students think GPS is the map on the phone. GPS only gives the position; the map app and its layers are a separate system.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "worldgeo.why-time-zones",
+   "slug": "why-time-zones",
+   "unit": "time",
+   "title": "Why We Have Time Zones",
+   "short": "Earth turns 360° in 24 hours, 15° each hour, so noon moves west around the world; time zones are about 15° wide.",
+   "prereqs": [
+    "worldgeo.longitude",
+    "usgeo.time-zones"
+   ],
+   "xp": 2,
+   "trouble": "Students think time zones follow straight lines. They roughly follow 15° bands but bend around countries and states; China uses one time zone across about 60° of longitude.",
+   "viz": [
+    "gg-timezones",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "worldgeo.world-time-math",
+   "slug": "world-time-math",
+   "unit": "time",
+   "title": "Time Around the World",
+   "short": "Use UTC offsets to find the time somewhere else: subtract your offset to get UTC, then add the other place's offset.",
+   "prereqs": [
+    "worldgeo.why-time-zones",
+    "usgeo.time-zone-math",
+    "g6.negatives-in-context"
+   ],
+   "xp": 3,
+   "trouble": "Students forget that some offsets are not whole hours (India is UTC+5:30, Nepal UTC+5:45) or that the answer may fall on a different day.",
+   "viz": [
+    "gg-timezones"
+   ]
+  },
+  {
+   "id": "worldgeo.date-line",
+   "slug": "date-line",
+   "unit": "time",
+   "title": "The International Date Line",
+   "short": "The date line runs near 180° longitude; crossing it going west, you skip ahead one day; going east, you go back one day.",
+   "prereqs": [
+    "worldgeo.world-time-math"
+   ],
+   "xp": 3,
+   "trouble": "Students get the direction backward. Places just west of the line (like Samoa and Kiribati) are among the first to start each new day.",
+   "viz": [
+    "gg-timezones",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "worldgeo.continents-compared",
+   "slug": "continents-compared",
+   "unit": "physical-world",
+   "title": "The Continents Compared",
+   "short": "Asia is the largest continent in area and people; Australia is the smallest; Antarctica has no permanent residents.",
+   "prereqs": [
+    "maps.find-continents"
+   ],
+   "xp": 2,
+   "trouble": "Students think Europe is a separate landmass. Europe and Asia share one landmass, Eurasia; the Ural Mountains and the Caucasus are the usual dividing lines.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.oceans-seas",
+   "slug": "oceans-seas",
+   "unit": "physical-world",
+   "title": "Oceans and Seas",
+   "short": "Find the oceans and major seas: the Mediterranean, Caribbean, Arabian, South China, North, Black, Red and Bering Seas.",
+   "prereqs": [
+    "worldgeo.continents-compared",
+    "maps.oceans"
+   ],
+   "xp": 2,
+   "trouble": "Students think a sea is the same as an ocean or a lake. A sea is a smaller part of the ocean, partly closed in by land (the Caspian \"Sea\" is really a lake).",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.world-rivers",
+   "slug": "world-rivers",
+   "unit": "physical-world",
+   "title": "Great Rivers of the World",
+   "short": "Find the Nile, Amazon, Yangtze, Mississippi, Congo, Ganges, Mekong, Danube and Volga, and the continents they flow through.",
+   "prereqs": [
+    "worldgeo.continents-compared",
+    "maps.river-parts"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Nile flows south because it is at the \"top\" of Africa. It flows north into the Mediterranean. Whether the Nile or the Amazon is longest depends on where you measure the source; most lists put the Nile first, but some studies find the Amazon longer.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.world-mountains",
+   "slug": "world-mountains",
+   "unit": "physical-world",
+   "title": "Mountains of the World",
+   "short": "The Himalayas hold Mount Everest (8,849 m, the highest); the Andes are the longest range above sea level; find the Rockies, Alps, Urals and Atlas too.",
+   "prereqs": [
+    "worldgeo.continents-compared",
+    "maps.mountains-hills-valleys"
+   ],
+   "xp": 2,
+   "trouble": "Students think the highest mountains are near the poles because it is cold there. The highest ranges are where plates collide, such as India pushing into Asia.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.world-deserts",
+   "slug": "world-deserts",
+   "unit": "physical-world",
+   "title": "Deserts of the World",
+   "short": "The Sahara is the largest hot desert; the Atacama is the driest place outside the poles; Antarctica is the largest desert of all.",
+   "prereqs": [
+    "worldgeo.continents-compared",
+    "maps.deserts-forests-grasslands"
+   ],
+   "xp": 2,
+   "trouble": "Students think a desert must be hot and sandy. Deserts are dry places; Antarctica and the Gobi are cold deserts.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.lakes-falls",
+   "slug": "lakes-falls",
+   "unit": "physical-world",
+   "title": "Lakes and Waterfalls",
+   "short": "The Caspian Sea is the largest lake by area, Lake Baikal the deepest, Lake Superior the largest freshwater lake by area; Angel Falls is the tallest waterfall.",
+   "prereqs": [
+    "worldgeo.world-rivers"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Caspian Sea is part of the ocean. It is a salty lake with land all around it.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.islands-peninsulas",
+   "slug": "islands-peninsulas",
+   "unit": "physical-world",
+   "title": "Islands and Peninsulas",
+   "short": "Greenland is the largest island; find New Guinea, Borneo, Madagascar and Great Britain, and the Arabian, Iberian, Scandinavian, Italian and Korean peninsulas.",
+   "prereqs": [
+    "worldgeo.continents-compared",
+    "maps.island-peninsula"
+   ],
+   "xp": 2,
+   "trouble": "Students call Australia the largest island. Geographers count Australia as a continent, so Greenland is the largest island.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.straits-canals",
+   "slug": "straits-canals",
+   "unit": "physical-world",
+   "title": "Straits and Canals",
+   "short": "Straits such as Gibraltar, the Bosporus, Hormuz, Malacca and Bering, and the Panama and Suez Canals, link seas and carry much of the world's shipping.",
+   "prereqs": [
+    "worldgeo.oceans-seas",
+    "maps.landform-pairs"
+   ],
+   "xp": 3,
+   "trouble": "Students mix up a strait and an isthmus. A strait is a narrow passage of water; a canal is a strait dug by people, often across an isthmus, as at Panama.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.climate-controls",
+   "slug": "climate-controls",
+   "unit": "climate-biomes",
+   "title": "What Controls Climate",
+   "short": "Latitude, height above sea level, nearness to the ocean, ocean currents, winds and mountains together set a place's climate.",
+   "prereqs": [
+    "worldgeo.latitude",
+    "maps.equator"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.4.6-8",
+   "trouble": "Students think climate depends only on latitude. Quito, Ecuador, sits almost on the equator but is mild all year because it is 2,850 m high.",
+   "viz": [
+    "gg-map",
+    "gg-climate"
+   ],
+   "lab": "/earth-and-space/earth-science/climate-factors/"
+  },
+  {
+   "id": "worldgeo.climate-zones",
+   "slug": "climate-zones",
+   "unit": "climate-biomes",
+   "title": "World Climate Zones",
+   "short": "Geographers group climates into five main types: tropical, dry, temperate, continental and polar (the Köppen groups A to E), plus highland climates in mountains.",
+   "prereqs": [
+    "worldgeo.climate-controls"
+   ],
+   "xp": 2,
+   "trouble": "Students think climate zones are neat bands by latitude. Deserts sit near 30° N and S, west coasts are milder than east coasts, and mountains have their own climates.",
+   "viz": [
+    "gg-map",
+    "gg-climate"
+   ],
+   "lab": "/earth-and-space/weather-and-climate/climate-zones/"
+  },
+  {
+   "id": "worldgeo.climographs",
+   "slug": "climographs",
+   "unit": "climate-biomes",
+   "title": "Reading a Climograph",
+   "short": "A climograph shows a place's average temperature (a line) and rainfall (bars) for each month; use it to tell the climate and the hemisphere.",
+   "prereqs": [
+    "worldgeo.climate-zones",
+    "g3.scaled-graphs"
+   ],
+   "xp": 2,
+   "trouble": "Students read the rainfall bars against the temperature scale. Each has its own axis: temperature on one side, precipitation on the other. A summer peak in July means the Northern Hemisphere.",
+   "viz": [
+    "gg-climate"
+   ]
+  },
+  {
+   "id": "worldgeo.biomes",
+   "slug": "biomes",
+   "unit": "climate-biomes",
+   "title": "Biomes of the World",
+   "short": "A biome is a large region with similar climate, plants and animals: tropical rainforest, savanna, desert, grassland, temperate forest, Mediterranean, taiga and tundra.",
+   "prereqs": [
+    "worldgeo.climate-zones"
+   ],
+   "xp": 2,
+   "trouble": "Students think a biome is a country or a habitat for one animal. A biome is defined by climate and plants and can stretch across many countries and continents.",
+   "viz": [
+    "gg-biome",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.biome-climate",
+   "slug": "biome-climate",
+   "unit": "climate-biomes",
+   "title": "Matching Biomes and Climates",
+   "short": "Temperature and rainfall decide the biome: hot and wet makes rainforest, hot with a dry season savanna, cold and dry tundra.",
+   "prereqs": [
+    "worldgeo.biomes",
+    "worldgeo.climographs"
+   ],
+   "xp": 3,
+   "trouble": "Students match by temperature alone. Rainfall matters as much: a hot place with little rain is a desert, not a rainforest.",
+   "viz": [
+    "gg-biome",
+    "gg-climate"
+   ]
+  },
+  {
+   "id": "worldgeo.how-many-countries",
+   "slug": "how-many-countries",
+   "unit": "countries",
+   "title": "How Many Countries?",
+   "short": "There are 193 UN member states and 2 observer states (the Holy See and Palestine); places like Taiwan and Kosovo govern themselves but are not UN members.",
+   "prereqs": [
+    "worldgeo.continents-compared"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.2.6-8",
+   "trouble": "Students expect one exact count. The answer depends on who is counting: the UN lists 193 members, and other lists add places that some countries recognize and others do not.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.landlocked",
+   "slug": "landlocked",
+   "unit": "countries",
+   "title": "Landlocked Countries",
+   "short": "A landlocked country has no coast on the open ocean; Kazakhstan is the largest, and Bolivia and Paraguay are the two in South America.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students count a country on an inland sea, like the Caspian, as coastal. Kazakhstan touches the Caspian but has no way to the open ocean, so it is landlocked.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-nca",
+   "slug": "countries-nca",
+   "unit": "americas",
+   "title": "Countries of North and Central America",
+   "short": "Find Canada, the United States, Mexico and the seven countries of Central America, from Guatemala and Belize to Panama.",
+   "prereqs": [
+    "worldgeo.how-many-countries",
+    "maps.north-america"
+   ],
+   "xp": 2,
+   "trouble": "Students think Mexico is in Central America or South America. Mexico is part of North America; Central America begins at Guatemala and Belize.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-nca",
+   "slug": "capitals-nca",
+   "unit": "americas",
+   "title": "Capitals of North and Central America",
+   "short": "Match each country with its capital, from Ottawa and Mexico City to Panama City.",
+   "prereqs": [
+    "worldgeo.countries-nca"
+   ],
+   "xp": 2,
+   "trouble": "Students say Toronto for Canada; the capital is Ottawa. Several capitals share the country's name: Guatemala City, Panama City, Mexico City.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-caribbean",
+   "slug": "countries-caribbean",
+   "unit": "americas",
+   "title": "Countries of the Caribbean",
+   "short": "Find the thirteen island countries of the Caribbean, from Cuba, Jamaica and the Bahamas to Trinidad and Tobago.",
+   "prereqs": [
+    "worldgeo.countries-nca"
+   ],
+   "xp": 2,
+   "trouble": "Students think every Caribbean island is a country. Puerto Rico is a U.S. territory, and islands such as Aruba and Curaçao are parts of the Kingdom of the Netherlands.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-caribbean",
+   "slug": "capitals-caribbean",
+   "unit": "americas",
+   "title": "Capitals of the Caribbean",
+   "short": "Match each Caribbean country with its capital, such as Havana (Cuba), Kingston (Jamaica) and Nassau (Bahamas).",
+   "prereqs": [
+    "worldgeo.countries-caribbean"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up Hispaniola's two countries: Haiti (capital Port-au-Prince) is the western part, the Dominican Republic (Santo Domingo) the eastern.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-south-america",
+   "slug": "countries-south-america",
+   "unit": "americas",
+   "title": "Countries of South America",
+   "short": "Find the twelve countries of South America; Brazil is the largest and touches every country except Chile and Ecuador.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up Uruguay and Paraguay. Uruguay is on the coast between Brazil and Argentina; Paraguay is landlocked, north of Argentina.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-south-america",
+   "slug": "capitals-south-america",
+   "unit": "americas",
+   "title": "Capitals of South America",
+   "short": "Match each South American country with its capital, such as Brasília (Brazil) and Buenos Aires (Argentina).",
+   "prereqs": [
+    "worldgeo.countries-south-america"
+   ],
+   "xp": 2,
+   "trouble": "Students say Rio de Janeiro or São Paulo for Brazil; the capital is Brasília, a planned city. Bolivia has two capitals: Sucre and La Paz.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.physical-americas",
+   "slug": "physical-americas",
+   "unit": "americas",
+   "title": "Physical Features of the Americas",
+   "short": "The Rockies and Andes run down the west side, the Amazon drains the largest rainforest, and plains such as the Great Plains and the Pampas lie in the middle.",
+   "prereqs": [
+    "worldgeo.countries-nca",
+    "worldgeo.countries-south-america",
+    "worldgeo.world-mountains"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Amazon is only in Brazil. Brazil holds about 60 percent of the Amazon rainforest; the rest spreads into Peru, Colombia and six more countries and territories.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-northern-europe",
+   "slug": "countries-northern-europe",
+   "unit": "europe",
+   "title": "Countries of Northern Europe",
+   "short": "Find the ten countries of Northern Europe: the United Kingdom and Ireland, the Nordic countries and the Baltic states.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up the three Baltic states. From north to south they are Estonia, Latvia and Lithuania (in alphabetical order).",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-northern-europe",
+   "slug": "capitals-northern-europe",
+   "unit": "europe",
+   "title": "Capitals of Northern Europe",
+   "short": "Match each country of Northern Europe with its capital, such as Oslo (Norway) and Stockholm (Sweden).",
+   "prereqs": [
+    "worldgeo.countries-northern-europe"
+   ],
+   "xp": 2,
+   "trouble": "Students swap the Nordic capitals: Oslo is Norway's, Stockholm Sweden's, Copenhagen Denmark's and Helsinki Finland's.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-western-europe",
+   "slug": "countries-western-europe",
+   "unit": "europe",
+   "title": "Countries of Western Europe",
+   "short": "Find the nine countries of Western Europe, from France and Germany to the tiny states of Monaco and Liechtenstein.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up Belgium, the Netherlands and Luxembourg. The Netherlands is the northern one, on the North Sea; Luxembourg is the small landlocked one to the south.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-western-europe",
+   "slug": "capitals-western-europe",
+   "unit": "europe",
+   "title": "Capitals of Western Europe",
+   "short": "Match each country of Western Europe with its capital, such as Berlin (Germany) and Bern (Switzerland).",
+   "prereqs": [
+    "worldgeo.countries-western-europe"
+   ],
+   "xp": 2,
+   "trouble": "Students say Geneva or Zurich for Switzerland; the federal city is Bern. The Netherlands' capital is Amsterdam, though its government meets in The Hague.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-southern-europe",
+   "slug": "countries-southern-europe",
+   "unit": "europe",
+   "title": "Countries of Southern Europe",
+   "short": "Find the countries of Southern Europe, from Portugal and Spain through Italy to Greece and the Balkans.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students lose the small Balkan countries that formed from Yugoslavia: Slovenia, Croatia, Bosnia and Herzegovina, Serbia, Montenegro and North Macedonia.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-southern-europe",
+   "slug": "capitals-southern-europe",
+   "unit": "europe",
+   "title": "Capitals of Southern Europe",
+   "short": "Match each country of Southern Europe with its capital, such as Lisbon (Portugal) and Belgrade (Serbia).",
+   "prereqs": [
+    "worldgeo.countries-southern-europe"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up similar Balkan capitals: Ljubljana (Slovenia), Zagreb (Croatia), Sarajevo (Bosnia and Herzegovina), Skopje (North Macedonia).",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-eastern-europe",
+   "slug": "countries-eastern-europe",
+   "unit": "europe",
+   "title": "Countries of Eastern Europe",
+   "short": "Find the ten countries of Eastern Europe, from Poland and Czechia to Ukraine and Russia.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up Slovakia and Slovenia. Slovakia is in Central Europe, next to Czechia; Slovenia is on the Adriatic, next to Italy.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-eastern-europe",
+   "slug": "capitals-eastern-europe",
+   "unit": "europe",
+   "title": "Capitals of Eastern Europe",
+   "short": "Match each country of Eastern Europe with its capital, such as Warsaw (Poland) and Kyiv (Ukraine).",
+   "prereqs": [
+    "worldgeo.countries-eastern-europe"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up Budapest (Hungary) and Bucharest (Romania).",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.physical-europe",
+   "slug": "physical-europe",
+   "unit": "europe",
+   "title": "Physical Features of Europe",
+   "short": "Find the Alps, Pyrenees, Carpathians and Urals, the North European Plain, the Danube and Rhine, and the Iberian, Italian, Balkan and Scandinavian peninsulas.",
+   "prereqs": [
+    "worldgeo.countries-western-europe",
+    "worldgeo.countries-eastern-europe",
+    "worldgeo.world-mountains"
+   ],
+   "xp": 2,
+   "trouble": "Students think Europe is cold because it is far north. Much of Europe is as far north as Canada, but the North Atlantic Current and westerly winds keep its west coast mild.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-north-africa",
+   "slug": "countries-north-africa",
+   "unit": "africa",
+   "title": "North Africa: Countries and Capitals",
+   "short": "Find Morocco, Algeria, Tunisia, Libya, Egypt and Sudan and their capitals, and Western Sahara, a disputed territory.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Sahara is one country. It stretches across about ten countries and territories, from the Atlantic coast to the Red Sea.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-west-africa",
+   "slug": "countries-west-africa",
+   "unit": "africa",
+   "title": "Countries of West Africa",
+   "short": "Find the sixteen countries of West Africa, from Senegal and Mali to Nigeria, the most populous country in Africa.",
+   "prereqs": [
+    "worldgeo.countries-north-africa"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up Guinea, Guinea-Bissau and Equatorial Guinea. Guinea-Bissau and Guinea are next to each other on the west coast; Equatorial Guinea is far to the east, in Central Africa.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-west-africa",
+   "slug": "capitals-west-africa",
+   "unit": "africa",
+   "title": "Capitals of West Africa",
+   "short": "Match each West African country with its capital, such as Abuja (Nigeria) and Accra (Ghana).",
+   "prereqs": [
+    "worldgeo.countries-west-africa"
+   ],
+   "xp": 2,
+   "trouble": "Students say Lagos for Nigeria; the capital moved to Abuja in 1991. Côte d'Ivoire's official capital is Yamoussoukro, though Abidjan is the biggest city.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-central-africa",
+   "slug": "countries-central-africa",
+   "unit": "africa",
+   "title": "Countries of Central Africa",
+   "short": "Find the nine countries of Central Africa, including the two Congos, Cameroon, Chad and Angola.",
+   "prereqs": [
+    "worldgeo.countries-west-africa"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up the two Congos. The Democratic Republic of the Congo (capital Kinshasa) is the large one; the Republic of the Congo (capital Brazzaville) is the smaller one across the river.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-central-africa",
+   "slug": "capitals-central-africa",
+   "unit": "africa",
+   "title": "Capitals of Central Africa",
+   "short": "Match each Central African country with its capital, such as Kinshasa (DR Congo) and Luanda (Angola).",
+   "prereqs": [
+    "worldgeo.countries-central-africa"
+   ],
+   "xp": 2,
+   "trouble": "Students swap Kinshasa and Brazzaville, which face each other across the Congo River.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-east-africa",
+   "slug": "countries-east-africa",
+   "unit": "africa",
+   "title": "Countries of East Africa",
+   "short": "Find the countries of East Africa, from Ethiopia and Kenya to Tanzania, Madagascar and the island nations of the Indian Ocean.",
+   "prereqs": [
+    "worldgeo.countries-north-africa"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Horn of Africa is one country. It is the peninsula that holds Somalia, Ethiopia, Eritrea and Djibouti.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-east-africa",
+   "slug": "capitals-east-africa",
+   "unit": "africa",
+   "title": "Capitals of East Africa",
+   "short": "Match each East African country with its capital, such as Nairobi (Kenya) and Addis Ababa (Ethiopia).",
+   "prereqs": [
+    "worldgeo.countries-east-africa"
+   ],
+   "xp": 2,
+   "trouble": "Students say Dar es Salaam for Tanzania; the official capital is Dodoma.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-southern-africa",
+   "slug": "countries-southern-africa",
+   "unit": "africa",
+   "title": "Southern Africa: Countries and Capitals",
+   "short": "Find South Africa, Namibia, Botswana, Lesotho and Eswatini and their capitals; South Africa has three capital cities.",
+   "prereqs": [
+    "worldgeo.countries-central-africa",
+    "worldgeo.countries-east-africa"
+   ],
+   "xp": 2,
+   "trouble": "Students think Lesotho is part of South Africa. It is an independent country completely surrounded by South Africa.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.physical-africa",
+   "slug": "physical-africa",
+   "unit": "africa",
+   "title": "Physical Features of Africa",
+   "short": "Find the Sahara, the Sahel, the Nile and Congo rivers, the Great Rift Valley, Mount Kilimanjaro, Lake Victoria and the Kalahari.",
+   "prereqs": [
+    "worldgeo.countries-north-africa",
+    "worldgeo.countries-east-africa",
+    "worldgeo.world-deserts"
+   ],
+   "xp": 2,
+   "trouble": "Students picture Africa as all desert or all jungle. It has deserts, wide savannas, rainforests, high plateaus and snowy mountains.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-southwest-asia",
+   "slug": "countries-southwest-asia",
+   "unit": "asia",
+   "title": "Countries of Southwest Asia",
+   "short": "Find the countries of Southwest Asia, from Türkiye and the countries of the Caucasus to Saudi Arabia and the Gulf states.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up Iran and Iraq, which sit side by side. Iraq is the western, smaller one, between the Tigris and Euphrates; Iran is the larger one to the east.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-southwest-asia",
+   "slug": "capitals-southwest-asia",
+   "unit": "asia",
+   "title": "Capitals of Southwest Asia",
+   "short": "Match each country of Southwest Asia with its capital, such as Ankara (Türkiye) and Riyadh (Saudi Arabia).",
+   "prereqs": [
+    "worldgeo.countries-southwest-asia"
+   ],
+   "xp": 2,
+   "trouble": "Students say Istanbul for Türkiye or Dubai for the United Arab Emirates; the capitals are Ankara and Abu Dhabi.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-central-south-asia",
+   "slug": "countries-central-south-asia",
+   "unit": "asia",
+   "title": "Countries of Central and South Asia",
+   "short": "Find the five \"-stan\" countries of Central Asia, and Afghanistan, Iran, Pakistan, India, Nepal, Bhutan, Bangladesh, Sri Lanka and the Maldives.",
+   "prereqs": [
+    "worldgeo.countries-southwest-asia"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up the Central Asian \"-stans.\" From largest to smallest: Kazakhstan, Turkmenistan, Uzbekistan, Kyrgyzstan, Tajikistan.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-central-south-asia",
+   "slug": "capitals-central-south-asia",
+   "unit": "asia",
+   "title": "Capitals of Central and South Asia",
+   "short": "Match each country with its capital, such as New Delhi (India) and Islamabad (Pakistan).",
+   "prereqs": [
+    "worldgeo.countries-central-south-asia"
+   ],
+   "xp": 2,
+   "trouble": "Students say Karachi for Pakistan or Mumbai for India; the capitals are Islamabad and New Delhi.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-east-asia",
+   "slug": "countries-east-asia",
+   "unit": "asia",
+   "title": "East Asia: Countries and Capitals",
+   "short": "Find China, Japan, Mongolia, North Korea and South Korea and their capitals, and Taiwan, which governs itself.",
+   "prereqs": [
+    "worldgeo.countries-central-south-asia"
+   ],
+   "xp": 2,
+   "trouble": "Students say Shanghai for China or Osaka for Japan; the capitals are Beijing and Tokyo.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-southeast-asia",
+   "slug": "countries-southeast-asia",
+   "unit": "asia",
+   "title": "Countries of Southeast Asia",
+   "short": "Find the eleven countries of Southeast Asia, on the mainland (such as Thailand and Vietnam) and on islands (such as Indonesia and the Philippines).",
+   "prereqs": [
+    "worldgeo.countries-east-asia"
+   ],
+   "xp": 2,
+   "trouble": "Students think Indonesia is one island. It is a country of thousands of islands, and the world's largest island country.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-southeast-asia",
+   "slug": "capitals-southeast-asia",
+   "unit": "asia",
+   "title": "Capitals of Southeast Asia",
+   "short": "Match each country of Southeast Asia with its capital, such as Bangkok (Thailand) and Hanoi (Vietnam).",
+   "prereqs": [
+    "worldgeo.countries-southeast-asia"
+   ],
+   "xp": 2,
+   "trouble": "Students say Ho Chi Minh City for Vietnam or Yangon for Myanmar; the capitals are Hanoi and Naypyidaw.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.physical-asia",
+   "slug": "physical-asia",
+   "unit": "asia",
+   "title": "Physical Features of Asia",
+   "short": "Find the Himalayas, the Plateau of Tibet, Siberia, the Gobi and Arabian deserts, and the Yangtze, Ganges, Mekong, Tigris and Euphrates rivers.",
+   "prereqs": [
+    "worldgeo.countries-east-asia",
+    "worldgeo.countries-central-south-asia",
+    "worldgeo.world-mountains"
+   ],
+   "xp": 2,
+   "trouble": "Students think Asia's great rivers start in many places. Many of them, including the Yangtze, Mekong, Ganges and Indus, begin on or near the Plateau of Tibet.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.countries-oceania",
+   "slug": "countries-oceania",
+   "unit": "oceania",
+   "title": "Countries of Oceania",
+   "short": "Find Australia, New Zealand, Papua New Guinea and the island countries of Melanesia, Micronesia and Polynesia.",
+   "prereqs": [
+    "worldgeo.how-many-countries"
+   ],
+   "xp": 2,
+   "trouble": "Students put New Zealand next to Australia or think it is part of Australia. It is a separate country about 2,000 km (1,200 miles) to the southeast.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "worldgeo.capitals-oceania",
+   "slug": "capitals-oceania",
+   "unit": "oceania",
+   "title": "Capitals of Oceania",
+   "short": "Match each country of Oceania with its capital, such as Canberra (Australia) and Wellington (New Zealand).",
+   "prereqs": [
+    "worldgeo.countries-oceania"
+   ],
+   "xp": 2,
+   "trouble": "Students say Sydney for Australia or Auckland for New Zealand; the capitals are Canberra and Wellington.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.physical-oceania-antarctica",
+   "slug": "physical-oceania-antarctica",
+   "unit": "oceania",
+   "title": "Australia's Land and Antarctica",
+   "short": "Find the Outback, the Great Dividing Range, the Great Barrier Reef, the Southern Alps and Antarctica, a continent with no countries, set aside for science.",
+   "prereqs": [
+    "worldgeo.countries-oceania",
+    "worldgeo.continents-compared"
+   ],
+   "xp": 2,
+   "trouble": "Students think Antarctica belongs to one country. Several countries have claims, but the Antarctic Treaty (1959) sets them aside and keeps the continent for peaceful science.",
+   "viz": [
+    "gg-map",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "worldgeo.world-population",
+   "slug": "world-population",
+   "unit": "population",
+   "title": "Eight Billion People",
+   "short": "The world has about 8.2 billion people (UN, 2025); most live in Asia, and growth is slowing.",
+   "prereqs": [
+    "worldgeo.continents-compared"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.7.6-8",
+   "trouble": "Students think the world's population is spread evenly. About 6 in 10 people live in Asia, and large areas, such as deserts and the far north, have almost no one.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.most-populous",
+   "slug": "most-populous",
+   "unit": "population",
+   "title": "The Most Populous Countries",
+   "short": "India (about 1.45 billion in 2024) and China (about 1.42 billion) have the most people, followed by the United States, Indonesia and Pakistan (UN World Population Prospects 2024).",
+   "prereqs": [
+    "worldgeo.world-population"
+   ],
+   "xp": 2,
+   "trouble": "Students still think China is the most populous country. India passed China in 2023, according to the UN.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.largest-countries",
+   "slug": "largest-countries",
+   "unit": "population",
+   "title": "The Largest Countries by Area",
+   "short": "Russia is by far the largest country, then Canada; the United States and China come next, and their order depends on how water and disputed land are counted; then Brazil and Australia.",
+   "prereqs": [
+    "worldgeo.continents-compared",
+    "worldgeo.mercator"
+   ],
+   "xp": 2,
+   "trouble": "Students judge size from a Mercator map, so Canada and Russia look even bigger and countries near the equator, like Brazil and the Democratic Republic of the Congo, look smaller than they are.",
+   "viz": [
+    "gg-map",
+    "gg-projection"
+   ]
+  },
+  {
+   "id": "worldgeo.population-density",
+   "slug": "population-density",
+   "unit": "population",
+   "title": "Crowded Places",
+   "short": "Population density is the number of people per square kilometer: divide the people by the land area.",
+   "prereqs": [
+    "worldgeo.most-populous",
+    "worldgeo.largest-countries",
+    "g6.unit-rate"
+   ],
+   "xp": 2,
+   "trouble": "Students confuse a large population with a high density. Bangladesh has fewer people than the United States but is far more crowded.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "worldgeo.largest-cities",
+   "slug": "largest-cities",
+   "unit": "population",
+   "title": "The World's Largest Cities",
+   "short": "Jakarta, Dhaka and Tokyo are the largest cities in the UN's 2025 count; lists differ because they draw city edges differently.",
+   "prereqs": [
+    "worldgeo.world-population",
+    "worldgeo.population-density"
+   ],
+   "xp": 2,
+   "trouble": "Students expect one fixed ranking. In the UN's older lists (2018), Tokyo was first; the 2025 report measures cities by where people actually live close together and puts Jakarta first.",
+   "viz": [
+    "gg-map"
+   ]
+  }
+ ]
+}

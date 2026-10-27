@@ -24,6 +24,9 @@
     <h2>How to use it</h2>
     <ul class="hs-how">{{ range $c.how }}<li>{{ . | safeHTML }}</li>{{ end }}</ul>
   </section>
+  {{ with index site.Data.phonics.practice $c.key }}
+  <p class="ar-practice">✏️ <b>Practice online:</b> <a href="{{ if .step }}{{ printf "homeschool/actual-reading/phonics-practice/%s/" .step | relURL }}{{ else }}{{ "homeschool/actual-reading/phonics-practice/" | relURL }}#steps{{ end }}">{{ .text }}</a>, in Teddy Rook Book's Phonics Practice. It's extra practice made by us, not part of Hannah's curriculum.</p>
+  {{ end }}
 
   {{ if eq $c.kind "lessons" }}
   <section class="hs-progress" aria-live="polite">

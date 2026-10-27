@@ -1,0 +1,91 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "homeschool/phonics/phonics.css" | relURL }}?v={{ (os.Stat "static/homeschool/phonics/phonics.css").ModTime.Unix }}">
+{{ $d := site.Data.phonics }}{{ $hc := site.Data.hs_hannah.curricula }}
+<div class="hs pp pp-hub" id="pp">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › Phonics Practice</nav>
+  <header class="hs-hero pp-hero">
+    <p class="hs-eyebrow">Actual Reading · A practice companion by Teddy Rook Book</p>
+    <h1>Phonics Practice</h1>
+    <p>Short, cheerful practice for children learning to read: letter sounds, sounding out words, word families, and on to vowel teams and longer words. Each step has games, heart words, sentences and tiny stories that use only the sounds taught so far, plus printable word cards.</p>
+  </header>
+
+  <aside class="pp-made pp-made-big" id="about">
+    <p><b>Made by Teddy Rook Book, to practice alongside Hannah Ward's lessons.</b> This practice is not part of Hannah's curriculum, and Hannah did not write it. The word lists, sentences and stories here are our own. Her lessons come first: <a href="{{ "homeschool/actual-reading/" | relURL }}">teach from her curricula</a>, then use a few minutes here for extra practice with the sounds she has taught.</p>
+  </aside>
+
+  <section class="pp-kids" aria-labelledby="pp-kids-h">
+    <h2 id="pp-kids-h">Who's practicing?</h2>
+    <p class="hs-small">Add each child who practices on this device, so each one keeps their own stars. Names stay in this browser only.</p>
+    <div class="pp-kidlist" id="pp-kidlist"></div>
+    <form class="pp-addf" id="pp-addf">
+      <label for="pp-name">Add a child</label>
+      <input id="pp-name" maxlength="24" autocomplete="off" placeholder="Name">
+      <button type="submit" class="hs-btn pri">Add</button>
+    </form>
+  </section>
+
+  <section class="hs-sec" aria-labelledby="pp-steps-h">
+    <h2 id="pp-steps-h">The twelve steps</h2>
+    <p class="hs-small">Go in order, and go back a step whenever it helps. A step is done when your child has finished each of its activities once.</p>
+    <ol class="pp-steps" id="steps">
+      {{ range $d.steps }}
+      <li><a class="pp-step" href="{{ printf "homeschool/actual-reading/phonics-practice/%s/" .key | relURL }}" data-step="{{ .key }}" data-acts="{{ len .acts }}">
+        <span class="pp-step-n">{{ .n }}</span>
+        <span class="pp-step-ic" aria-hidden="true">{{ .icon }}</span>
+        <span class="pp-step-t"><b>{{ .title }}</b><span>{{ .blurb }}</span></span>
+        <span class="pp-step-p" aria-live="polite"></span>
+      </a></li>
+      {{ end }}
+    </ol>
+  </section>
+
+  <section class="hs-sec pp-gu" aria-labelledby="pp-how-h">
+    <h2 id="pp-how-h">For grown-ups</h2>
+    <div class="pp-gu-grid">
+      <div class="pp-box">
+        <h3>A few minutes a day</h3>
+        <ul>
+          <li>Sit with your child. Five to ten minutes of practice most days does more than a long session once a week.</li>
+          <li>Praise effort and careful sounding out: “You tapped every sound!”</li>
+          <li>Stop while it's still fun. If a step feels hard, go back one.</li>
+          <li>Read aloud to your child every day, too. Hearing good books builds the words and love of stories that make reading worth the work.</li>
+        </ul>
+      </div>
+      <div class="pp-box">
+        <h3>Saying the sounds</h3>
+        <p>Say each sound pure and short. Hold the sounds you can hold (“mmm,” “sss,” “fff”) and keep the others crisp: /b/, not “buh”; /t/, not “tuh.” An extra “uh” makes blending harder (“buh-a-tuh” doesn't sound like bat).</p>
+        <p>That's why the voice on these pages only ever says whole words and sentences. Single sounds come from you, with a key word and a picture to help: “m, as in moon.” You can turn the voice off at any time.</p>
+      </div>
+      <div class="pp-box">
+        <h3>Heart words</h3>
+        <p>A few very common words (the, said, was, of) have a part that doesn't follow the rules a beginner knows. We call them heart words: sound out the regular parts, and learn the tricky ♥ part by heart. Each step adds a few.</p>
+      </div>
+      <div class="pp-box">
+        <h3>Every story is decodable</h3>
+        <p>The sentences and stories at each step use only the sounds taught up to that step, plus the heart words taught so far, so your child can read every word by sounding it out. A checking program tests every word before anything is published here.</p>
+      </div>
+    </div>
+
+    <h3 class="pp-h3">Which step goes with which of Hannah's curricula</h3>
+    <ul class="pp-match">
+      {{ range $k, $v := $d.practice }}{{ $c := index (where $hc "key" $k) 0 }}{{ with $c }}
+      <li><a href="{{ printf "homeschool/actual-reading/%s/" .slug | relURL }}">{{ .icon }} {{ .title }}</a>: {{ if $v.step }}{{ $st := index (where $d.steps "key" $v.step) 0 }}<a href="{{ printf "homeschool/actual-reading/phonics-practice/%s/" $v.step | relURL }}">Step {{ $st.n }}, {{ $st.title }}</a>{{ if eq $v.step "blending" }}, and the steps after it as her lessons bring in new sounds{{ end }}{{ else }}any step, as her lessons reach it{{ end }}.</li>
+      {{ end }}{{ end }}
+    </ul>
+
+    <h3 class="pp-h3">After phonics</h3>
+    <p>When your child can read the Step 12 stories, real books are next. On this site, <a href="{{ "homeschool/mcguffey/primer/" | relURL }}">McGuffey's Primer</a> and <a href="{{ "homeschool/mcguffey/first-reader/" | relURL }}">McGuffey's First Reader</a> give short lessons for reading aloud, and <a href="{{ "homeschool/spelling-and-grammar/webster/" | relURL }}">Webster's speller</a> gives lots more practice with sounds and spelling. Hannah's <a href="{{ "homeschool/actual-reading/american-pioneer-level-1/" | relURL }}">American Pioneer Level 1</a> carries on from her reading lessons.</p>
+
+    <h3 class="pp-h3">Sources</h3>
+    <ul class="pp-src hs-small">
+      <li>National Reading Panel (2000), <a href="https://www.nichd.nih.gov/publications/pubs/nrp/findings" target="_blank" rel="noopener">Report of the National Reading Panel: Teaching Children to Read, findings</a>, National Institute of Child Health and Human Development. It found that systematic phonics teaching helps children from kindergarten through 6th grade, with the largest effects in kindergarten and 1st grade, and that phonics is one part of a full reading program alongside phonemic awareness, fluency and comprehension.</li>
+      <li>Institute of Education Sciences, What Works Clearinghouse, <a href="https://ies.ed.gov/ncee/wwc/practiceguide/21" target="_blank" rel="noopener">Foundational Skills to Support Reading for Understanding in Kindergarten Through 3rd Grade</a> (practice guide, 2016), and its <a href="https://ies.ed.gov/ncee/wwc/Docs/PracticeGuide/wwc_fr_tips_022118.pdf" target="_blank" rel="noopener">tips for supporting reading skills at home</a>: sound out words left to right, blend the sounds together, and read aloud daily.</li>
+      <li>The word lists, sentences, stories and heart-word list are original to Teddy Rook Book. Spelling is checked against the Hunspell en_US word list.</li>
+    </ul>
+  </section>
+</div>
+{{ partial "phonics-assets.html" . }}
+{{ end }}

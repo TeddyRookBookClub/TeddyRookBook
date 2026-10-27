@@ -1,0 +1,788 @@
+{
+ "course": "usgeo",
+ "units": [
+  {
+   "key": "the-us",
+   "title": "The United States on the Map",
+   "blurb": "Where the country is, its 50 states and capital, its territories, its regions and the two-letter postal codes."
+  },
+  {
+   "key": "states-capitals",
+   "title": "States and Capitals by Region",
+   "blurb": "Every state and its capital, region by region, then all fifty together, and which states share a border."
+  },
+  {
+   "key": "land-water",
+   "title": "Land and Water",
+   "blurb": "The physical regions, mountain ranges, high and low points, rivers, the Great Lakes, coasts, deserts, Alaska and Hawaii."
+  },
+  {
+   "key": "parks",
+   "title": "National Parks and Landmarks",
+   "blurb": "What a national park is, famous parks of the West and the East, and landmarks you can find on the map."
+  },
+  {
+   "key": "climate-time",
+   "title": "Time Zones and Climate",
+   "blurb": "Why clocks differ across the country, how to figure the time somewhere else, and the main climate regions."
+  },
+  {
+   "key": "people-places",
+   "title": "People and Places",
+   "blurb": "Where Americans live, the largest cities, the most and least populous states, and what grows and is made where."
+  },
+  {
+   "key": "growth",
+   "title": "How the Country Grew",
+   "blurb": "The first thirteen states, the lands the country added, and the order in which states joined, as dated facts."
+  }
+ ],
+ "topics": [
+  {
+   "id": "usgeo.us-on-the-map",
+   "slug": "us-on-the-map",
+   "unit": "the-us",
+   "title": "Where Is the United States?",
+   "short": "The United States is in North America, between Canada and Mexico, with the Atlantic Ocean to the east and the Pacific to the west.",
+   "prereqs": [
+    "maps.north-america",
+    "maps.oceans"
+   ],
+   "xp": 1,
+   "std": "D2.Geo.2.3-5",
+   "trouble": "Students think Alaska is an island near Mexico because many maps put it in a small box in the corner. Alaska is in the far northwest, next to Canada.",
+   "viz": [
+    "gg-map",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "usgeo.fifty-states",
+   "slug": "fifty-states",
+   "unit": "the-us",
+   "title": "Fifty States and a Capital",
+   "short": "The country has 50 states and the District of Columbia; 48 states touch one another, and Alaska and Hawaii stand apart.",
+   "prereqs": [
+    "usgeo.us-on-the-map",
+    "maps.capital-city"
+   ],
+   "xp": 1,
+   "trouble": "Students think Washington, D.C., is in Washington State, or that it is a state. The District of Columbia is a federal district on the East Coast, between Maryland and Virginia.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.territories",
+   "slug": "territories",
+   "unit": "the-us",
+   "title": "U.S. Territories",
+   "short": "Puerto Rico, Guam, the U.S. Virgin Islands, the Northern Mariana Islands and American Samoa are U.S. territories, not states.",
+   "prereqs": [
+    "usgeo.fifty-states"
+   ],
+   "xp": 2,
+   "trouble": "Students think Puerto Rico is a separate country or a state. It is a U.S. territory, and people born there are U.S. citizens.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.regions",
+   "slug": "regions",
+   "unit": "the-us",
+   "title": "Regions of the United States",
+   "short": "The U.S. Census Bureau groups the states into four regions: the Northeast, the Midwest, the South and the West.",
+   "prereqs": [
+    "usgeo.fifty-states"
+   ],
+   "xp": 1,
+   "trouble": "Students expect one official way to divide the country. Many books use five regions (adding a Southeast and a Southwest); this ladder uses the Census Bureau's four regions and nine divisions.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "usgeo.postal-codes",
+   "slug": "postal-codes",
+   "unit": "the-us",
+   "title": "State Postal Codes",
+   "short": "Each state has a two-letter postal code, such as CA for California, TX for Texas and NY for New York.",
+   "prereqs": [
+    "usgeo.fifty-states"
+   ],
+   "xp": 2,
+   "trouble": "Students guess from the first two letters: AK is Alaska and AR is Arkansas; MI is Michigan, MN Minnesota, MS Mississippi, MO Missouri, MA Massachusetts, ME Maine and MD Maryland.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "usgeo.northeast-states",
+   "slug": "northeast-states",
+   "unit": "states-capitals",
+   "title": "States of the Northeast",
+   "short": "Find the nine states of the Northeast: the six New England states and New York, New Jersey and Pennsylvania.",
+   "prereqs": [
+    "usgeo.regions"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up the small New England states, especially Vermont and New Hampshire (Vermont is the western one, New Hampshire touches the ocean).",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.northeast-capitals",
+   "slug": "northeast-capitals",
+   "unit": "states-capitals",
+   "title": "Capitals of the Northeast",
+   "short": "Match each Northeastern state with its capital, such as Albany for New York and Boston for Massachusetts.",
+   "prereqs": [
+    "usgeo.northeast-states"
+   ],
+   "xp": 2,
+   "trouble": "Students pick the biggest city: New York's capital is Albany, not New York City, and Pennsylvania's is Harrisburg, not Philadelphia.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.midwest-states",
+   "slug": "midwest-states",
+   "unit": "states-capitals",
+   "title": "States of the Midwest",
+   "short": "Find the twelve Midwestern states, from Ohio in the east to North Dakota, Nebraska and Kansas in the west.",
+   "prereqs": [
+    "usgeo.regions"
+   ],
+   "xp": 2,
+   "trouble": "Students switch Iowa and Missouri, or Nebraska and Kansas (Nebraska is the northern one, Kansas is directly south of it).",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.midwest-capitals",
+   "slug": "midwest-capitals",
+   "unit": "states-capitals",
+   "title": "Capitals of the Midwest",
+   "short": "Match each Midwestern state with its capital, such as Springfield for Illinois and Saint Paul for Minnesota.",
+   "prereqs": [
+    "usgeo.midwest-states"
+   ],
+   "xp": 2,
+   "trouble": "Students pick the biggest city: Illinois's capital is Springfield, not Chicago; Michigan's is Lansing, not Detroit; Missouri's is Jefferson City.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.south-atlantic-states",
+   "slug": "south-atlantic-states",
+   "unit": "states-capitals",
+   "title": "States of the South Atlantic",
+   "short": "Find the South Atlantic states, from Delaware and Maryland down the coast to Florida, plus West Virginia and Washington, D.C.",
+   "prereqs": [
+    "usgeo.regions"
+   ],
+   "xp": 2,
+   "trouble": "Students forget that Delaware, Maryland and West Virginia count as part of the South in the Census Bureau's regions.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.south-atlantic-capitals",
+   "slug": "south-atlantic-capitals",
+   "unit": "states-capitals",
+   "title": "Capitals of the South Atlantic",
+   "short": "Match each South Atlantic state with its capital, such as Tallahassee for Florida and Raleigh for North Carolina.",
+   "prereqs": [
+    "usgeo.south-atlantic-states"
+   ],
+   "xp": 2,
+   "trouble": "Students pick Miami for Florida or Charlotte for North Carolina; the capitals are Tallahassee and Raleigh.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.south-central-states",
+   "slug": "south-central-states",
+   "unit": "states-capitals",
+   "title": "States of the South Central",
+   "short": "Find the eight South Central states: Kentucky, Tennessee, Alabama and Mississippi, and Arkansas, Louisiana, Oklahoma and Texas.",
+   "prereqs": [
+    "usgeo.regions"
+   ],
+   "xp": 2,
+   "trouble": "Students switch Alabama and Mississippi, which sit side by side (Mississippi is the western one, along the Mississippi River).",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.south-central-capitals",
+   "slug": "south-central-capitals",
+   "unit": "states-capitals",
+   "title": "Capitals of the South Central",
+   "short": "Match each South Central state with its capital, such as Austin for Texas and Nashville for Tennessee.",
+   "prereqs": [
+    "usgeo.south-central-states"
+   ],
+   "xp": 2,
+   "trouble": "Students pick Houston for Texas or New Orleans for Louisiana; the capitals are Austin and Baton Rouge.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.mountain-states",
+   "slug": "mountain-states",
+   "unit": "states-capitals",
+   "title": "States of the Mountain West",
+   "short": "Find the eight Mountain states: Montana, Idaho, Wyoming, Nevada, Utah, Colorado, Arizona and New Mexico.",
+   "prereqs": [
+    "usgeo.regions"
+   ],
+   "xp": 2,
+   "trouble": "Students switch Wyoming and Colorado, two near-rectangles (Wyoming is the northern one), or Arizona and New Mexico (Arizona is the western one).",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.mountain-capitals",
+   "slug": "mountain-capitals",
+   "unit": "states-capitals",
+   "title": "Capitals of the Mountain West",
+   "short": "Match each Mountain state with its capital, such as Denver for Colorado and Carson City for Nevada.",
+   "prereqs": [
+    "usgeo.mountain-states"
+   ],
+   "xp": 2,
+   "trouble": "Students pick Las Vegas for Nevada or Albuquerque for New Mexico; the capitals are Carson City and Santa Fe.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.pacific-states",
+   "slug": "pacific-states",
+   "unit": "states-capitals",
+   "title": "States of the Pacific",
+   "short": "Find the five Pacific states: Washington, Oregon, California, Alaska and Hawaii.",
+   "prereqs": [
+    "usgeo.regions"
+   ],
+   "xp": 1,
+   "trouble": "Students mix up Washington State with Washington, D.C., which is on the other side of the country.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.pacific-capitals",
+   "slug": "pacific-capitals",
+   "unit": "states-capitals",
+   "title": "Capitals of the Pacific",
+   "short": "Match each Pacific state with its capital, such as Sacramento for California and Juneau for Alaska.",
+   "prereqs": [
+    "usgeo.pacific-states"
+   ],
+   "xp": 2,
+   "trouble": "Students pick Los Angeles for California or Seattle for Washington; the capitals are Sacramento and Olympia.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.all-states",
+   "slug": "all-states",
+   "unit": "states-capitals",
+   "title": "All Fifty States",
+   "short": "Find any state on the map of the whole country, and name a state from its place or its shape.",
+   "prereqs": [
+    "usgeo.northeast-states",
+    "usgeo.midwest-states",
+    "usgeo.south-atlantic-states",
+    "usgeo.south-central-states",
+    "usgeo.mountain-states",
+    "usgeo.pacific-states"
+   ],
+   "xp": 3,
+   "trouble": "Students know states only inside their region and lose them on the full map; small Eastern states and the square Western states are the usual mix-ups.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.all-capitals",
+   "slug": "all-capitals",
+   "unit": "states-capitals",
+   "title": "All Fifty Capitals",
+   "short": "Name the capital of any state, or the state that a capital belongs to.",
+   "prereqs": [
+    "usgeo.northeast-capitals",
+    "usgeo.midwest-capitals",
+    "usgeo.south-atlantic-capitals",
+    "usgeo.south-central-capitals",
+    "usgeo.mountain-capitals",
+    "usgeo.pacific-capitals"
+   ],
+   "xp": 3,
+   "trouble": "Students mix up capitals with similar names: Columbia (South Carolina) and Columbus (Ohio), Charleston (West Virginia's capital; also a big city in South Carolina), Jackson and Jefferson City.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.neighbor-states",
+   "slug": "neighbor-states",
+   "unit": "states-capitals",
+   "title": "Neighboring States",
+   "short": "Name the states that share a border with a state; Tennessee and Missouri each touch eight others, and Maine touches only one.",
+   "prereqs": [
+    "usgeo.all-states"
+   ],
+   "xp": 2,
+   "trouble": "Students count states that only meet at a point: at the Four Corners, Arizona and Colorado, and Utah and New Mexico, touch only at one spot and do not share a border.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.physical-regions",
+   "slug": "physical-regions",
+   "unit": "land-water",
+   "title": "Landform Regions",
+   "short": "From east to west: the Coastal Plain, the Appalachian Mountains, the Central Lowland, the Great Plains, the Rocky Mountains, the high basins and plateaus, and the Pacific mountains.",
+   "prereqs": [
+    "usgeo.all-states",
+    "maps.plains-plateaus"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.2.3-5",
+   "trouble": "Students think the land rises evenly from east to west. The Appalachians are old, worn-down mountains in the East; the higher, younger Rockies rise suddenly at the western edge of the Great Plains.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.mountain-ranges",
+   "slug": "mountain-ranges",
+   "unit": "land-water",
+   "title": "Mountain Ranges",
+   "short": "The Appalachians run near the East Coast; the Rockies run from New Mexico to Montana and on into Canada; the Sierra Nevada and the Cascades rise near the Pacific.",
+   "prereqs": [
+    "usgeo.physical-regions"
+   ],
+   "xp": 2,
+   "trouble": "Students mix up the Sierra Nevada (in California and Nevada) with the Rockies, or put the Appalachians in the West.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.high-low-points",
+   "slug": "high-low-points",
+   "unit": "land-water",
+   "title": "Highest and Lowest Places",
+   "short": "Denali in Alaska is the highest peak in North America (20,310 feet); Badwater Basin in Death Valley is the lowest point (282 feet below sea level).",
+   "prereqs": [
+    "usgeo.mountain-ranges"
+   ],
+   "xp": 2,
+   "trouble": "Students think the highest point is in the Rockies. Denali is in the Alaska Range; the highest peak in the 48 states next to each other is Mount Whitney in California's Sierra Nevada. Denali's federal name has been Mount McKinley since 2025; Alaska and many others still call it Denali.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.continental-divide",
+   "slug": "continental-divide",
+   "unit": "land-water",
+   "title": "The Continental Divide",
+   "short": "Along the high Rockies runs the Continental Divide: rain on its west side flows toward the Pacific, rain on its east side toward the Atlantic and the Gulf.",
+   "prereqs": [
+    "usgeo.mountain-ranges",
+    "maps.river-parts"
+   ],
+   "xp": 2,
+   "trouble": "Students think rivers flow toward the nearest ocean. A river flows downhill, so which side of the Divide it starts on decides where it goes.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.major-rivers",
+   "slug": "major-rivers",
+   "unit": "land-water",
+   "title": "Major Rivers",
+   "short": "Find the Mississippi, Missouri, Ohio, Colorado, Columbia and Rio Grande rivers and the states they pass through.",
+   "prereqs": [
+    "usgeo.physical-regions",
+    "maps.river-parts"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Mississippi is the longest U.S. river; by the U.S. Geological Survey's measure the Missouri is a little longer, and it flows into the Mississippi.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.mississippi-system",
+   "slug": "mississippi-system",
+   "unit": "land-water",
+   "title": "The Mississippi River System",
+   "short": "The Missouri, Ohio and Arkansas rivers flow into the Mississippi, and the Tennessee flows into the Ohio; the Mississippi carries all their water to the Gulf.",
+   "prereqs": [
+    "usgeo.major-rivers",
+    "usgeo.continental-divide"
+   ],
+   "xp": 2,
+   "trouble": "Students think a river's basin is just the river. The Mississippi's basin is all the land its tributaries drain: parts of 31 states and two Canadian provinces.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.great-lakes",
+   "slug": "great-lakes",
+   "unit": "land-water",
+   "title": "The Great Lakes",
+   "short": "The five Great Lakes are Superior, Michigan, Huron, Erie and Ontario (\"HOMES\"); Lake Michigan is the only one entirely inside the United States.",
+   "prereqs": [
+    "usgeo.major-rivers",
+    "maps.oceans-lakes-rivers"
+   ],
+   "xp": 2,
+   "trouble": "Students think the Great Lakes are all in the United States. Canada shares four of them; only Lake Michigan lies wholly in the U.S.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.coasts-bays",
+   "slug": "coasts-bays",
+   "unit": "land-water",
+   "title": "Coasts, Bays and Peninsulas",
+   "short": "Find the Atlantic, Gulf and Pacific coasts, Chesapeake Bay, Cape Cod, the Florida Peninsula, Puget Sound and San Francisco Bay.",
+   "prereqs": [
+    "usgeo.physical-regions",
+    "maps.bays-gulfs"
+   ],
+   "xp": 2,
+   "trouble": "Students forget the Gulf coast, the long southern shore from Florida to Texas. Its body of water is the Gulf of Mexico; since 2025 the U.S. federal government calls it the Gulf of America.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.deserts",
+   "slug": "deserts",
+   "unit": "land-water",
+   "title": "Deserts of the United States",
+   "short": "The four big deserts are the Mojave, the Sonoran, the Chihuahuan and the Great Basin, all in the West and Southwest.",
+   "prereqs": [
+    "usgeo.physical-regions",
+    "maps.deserts-forests-grasslands"
+   ],
+   "xp": 2,
+   "trouble": "Students think deserts are only hot. The Great Basin Desert is a cold desert, with snowy winters.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.alaska-hawaii",
+   "slug": "alaska-hawaii",
+   "unit": "land-water",
+   "title": "Alaska and Hawaii",
+   "short": "Alaska is the largest state, with glaciers, mountains and tundra; Hawaii is a chain of volcanic islands in the middle of the Pacific.",
+   "prereqs": [
+    "usgeo.fifty-states",
+    "usgeo.high-low-points"
+   ],
+   "xp": 2,
+   "trouble": "Students judge Alaska's size from small inset maps. Alaska is more than twice as big as Texas.",
+   "viz": [
+    "gg-map",
+    "gg-outline"
+   ]
+  },
+  {
+   "id": "usgeo.national-parks",
+   "slug": "national-parks",
+   "unit": "parks",
+   "title": "What Is a National Park?",
+   "short": "National parks protect special places for everyone; Yellowstone (1872) was the first, and the National Park Service has run the parks since 1916.",
+   "prereqs": [
+    "usgeo.physical-regions"
+   ],
+   "xp": 1,
+   "trouble": "Students think every park is a national park. The country has more than 60 national parks and hundreds of other places, such as monuments and historic sites, that the Park Service cares for.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.parks-west",
+   "slug": "parks-west",
+   "unit": "parks",
+   "title": "National Parks of the West",
+   "short": "Find Yellowstone, Yosemite, the Grand Canyon, Zion, Glacier, Rocky Mountain, Olympic, Denali and other parks of the West.",
+   "prereqs": [
+    "usgeo.national-parks",
+    "usgeo.mountain-ranges"
+   ],
+   "xp": 2,
+   "trouble": "Students put the Grand Canyon in Colorado because the Colorado River carved it. Grand Canyon National Park is in Arizona.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.parks-east",
+   "slug": "parks-east",
+   "unit": "parks",
+   "title": "National Parks of the Middle and East",
+   "short": "Find the Great Smoky Mountains, Acadia, the Everglades, Shenandoah, Mammoth Cave, Big Bend and other parks east of the Rockies.",
+   "prereqs": [
+    "usgeo.national-parks"
+   ],
+   "xp": 2,
+   "trouble": "Students think all the big parks are in the West. The most visited national park is the Great Smoky Mountains, on the border of Tennessee and North Carolina.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.landmarks",
+   "slug": "landmarks",
+   "unit": "parks",
+   "title": "Famous Landmarks",
+   "short": "Match landmarks to their states: the Statue of Liberty (New York), Mount Rushmore (South Dakota), the Golden Gate Bridge (California), the Gateway Arch (Missouri).",
+   "prereqs": [
+    "usgeo.all-states"
+   ],
+   "xp": 1,
+   "trouble": "Students confuse landmarks made by people with natural ones. Mount Rushmore is carved by people into a natural mountain; Old Faithful is a natural geyser.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "usgeo.time-zones",
+   "slug": "time-zones",
+   "unit": "climate-time",
+   "title": "U.S. Time Zones",
+   "short": "The 50 states span six time zones: Eastern, Central, Mountain, Pacific, Alaska and Hawaii-Aleutian; it gets earlier as you go west.",
+   "prereqs": [
+    "usgeo.all-states",
+    "maps.sun-directions"
+   ],
+   "xp": 2,
+   "trouble": "Students think it is later in the West. The Sun rises first in the East, so when it is noon in New York it is 9 a.m. in California.",
+   "viz": [
+    "gg-timezones",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.time-zone-math",
+   "slug": "time-zone-math",
+   "unit": "climate-time",
+   "title": "What Time Is It There?",
+   "short": "Count the zones between two places and add hours going east or subtract going west.",
+   "prereqs": [
+    "usgeo.time-zones",
+    "g3.elapsed-time"
+   ],
+   "xp": 2,
+   "trouble": "Students add when they should subtract. Going west, clocks are earlier: subtract one hour for each zone you cross.",
+   "viz": [
+    "gg-timezones"
+   ]
+  },
+  {
+   "id": "usgeo.daylight-saving",
+   "slug": "daylight-saving",
+   "unit": "climate-time",
+   "title": "Daylight Saving Time",
+   "short": "In most states, clocks move ahead an hour in spring and back in fall; Hawaii and most of Arizona stay on standard time all year.",
+   "prereqs": [
+    "usgeo.time-zones"
+   ],
+   "xp": 1,
+   "trouble": "Students think every state changes its clocks. Hawaii and most of Arizona do not, so in summer Arizona has the same clock time as California.",
+   "viz": [
+    "gg-timezones"
+   ]
+  },
+  {
+   "id": "usgeo.climate-regions",
+   "slug": "climate-regions",
+   "unit": "climate-time",
+   "title": "Climate Regions",
+   "short": "Hot, humid summers in the Southeast; cold winters in the North; dry lands in the Southwest; mild, rainy winters on the Pacific coast; tropical Hawaii; cold Alaska.",
+   "prereqs": [
+    "usgeo.physical-regions",
+    "maps.deserts-forests-grasslands"
+   ],
+   "xp": 2,
+   "std": "D2.Geo.2.3-5",
+   "trouble": "Students think the farther south, the hotter, always. Mountains and oceans matter too: coastal San Francisco has cool summers, and high Denver is colder than low places at the same latitude.",
+   "viz": [
+    "gg-climate",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.storms-hazards",
+   "slug": "storms-hazards",
+   "unit": "climate-time",
+   "title": "Where Storms Strike",
+   "short": "Hurricanes strike the Gulf and Atlantic coasts, tornadoes are most common on the Great Plains and in the South, and earthquakes are most common in the West and Alaska.",
+   "prereqs": [
+    "usgeo.climate-regions"
+   ],
+   "xp": 2,
+   "trouble": "Students think tornadoes happen only in one \"Tornado Alley.\" Tornadoes occur in every state; they are most frequent in the central and southern plains and the Southeast.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "usgeo.largest-cities",
+   "slug": "largest-cities",
+   "unit": "people-places",
+   "title": "The Largest Cities",
+   "short": "New York, Los Angeles, Chicago, Houston and Phoenix are the largest U.S. cities by population (2020 Census).",
+   "prereqs": [
+    "usgeo.all-states",
+    "g4.compare-large-numbers"
+   ],
+   "xp": 2,
+   "trouble": "Students think a state's largest city is its capital. Of the ten largest cities in the 2020 Census, only Phoenix is a state capital.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.state-populations",
+   "slug": "state-populations",
+   "unit": "people-places",
+   "title": "Most and Fewest People",
+   "short": "California, Texas, Florida, New York and Pennsylvania have the most people; Wyoming has the fewest (2020 Census).",
+   "prereqs": [
+    "usgeo.largest-cities"
+   ],
+   "xp": 2,
+   "trouble": "Students think the biggest states by area have the most people. Alaska is the largest state but has one of the smallest populations.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.population-density-us",
+   "slug": "population-density-us",
+   "unit": "people-places",
+   "title": "Crowded and Uncrowded",
+   "short": "Population density is people per square mile: New Jersey is the most crowded state and Alaska the least.",
+   "prereqs": [
+    "usgeo.state-populations",
+    "g6.unit-rate"
+   ],
+   "xp": 2,
+   "trouble": "Students compare total population when the question is about crowding. Density divides people by land area, so a small state can be more crowded than a big one.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.farms-resources",
+   "slug": "farms-resources",
+   "unit": "people-places",
+   "title": "What Grows Where",
+   "short": "Iowa and Illinois lead in corn, Kansas and North Dakota in wheat, Texas in cotton, Idaho in potatoes, and California in fruits and vegetables.",
+   "prereqs": [
+    "usgeo.physical-regions",
+    "usgeo.climate-regions"
+   ],
+   "xp": 2,
+   "trouble": "Students think one state grows everything. Crops follow climate and soil: corn needs warm, wet summers; wheat grows on the drier plains; citrus needs mild winters.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "usgeo.first-thirteen",
+   "slug": "first-thirteen",
+   "unit": "growth",
+   "title": "The First Thirteen States",
+   "short": "The thirteen original states were the colonies along the Atlantic coast; Delaware was the first to approve the Constitution, in 1787.",
+   "prereqs": [
+    "usgeo.northeast-states",
+    "usgeo.south-atlantic-states"
+   ],
+   "xp": 2,
+   "trouble": "Students include Vermont or Maine, which were part of the land but joined as separate states later (1791 and 1820).",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "usgeo.growth-of-the-us",
+   "slug": "growth-of-the-us",
+   "unit": "growth",
+   "title": "Land Added to the Country",
+   "short": "The Louisiana Purchase (1803), Florida (1819), Texas (1845), the Oregon Country (1846), the Mexican Cession (1848), Alaska (1867) and Hawaii (1898).",
+   "prereqs": [
+    "usgeo.first-thirteen",
+    "usgeo.physical-regions"
+   ],
+   "xp": 3,
+   "trouble": "Students think the country simply grew westward one strip at a time. It grew by purchases, treaties, annexations and a war, in big pieces, and not always from east to west (Alaska came before many Western states).",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "usgeo.statehood-order",
+   "slug": "statehood-order",
+   "unit": "growth",
+   "title": "When the States Joined",
+   "short": "Put states in order of joining: Delaware first (1787) and Hawaii last (1959); many Western states joined around 1890.",
+   "prereqs": [
+    "usgeo.growth-of-the-us"
+   ],
+   "xp": 2,
+   "trouble": "Students think states joined from east to west in order. Texas and California joined years before nearby states, and Alaska and Hawaii joined last, both in 1959.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  }
+ ]
+}

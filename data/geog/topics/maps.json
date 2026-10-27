@@ -1,0 +1,701 @@
+{
+ "course": "maps",
+ "units": [
+  {
+   "key": "what-map",
+   "title": "What Is a Map?",
+   "blurb": "A map is a picture of a place seen from above. Symbols, a key and colors tell us what is there."
+  },
+  {
+   "key": "directions",
+   "title": "Which Way?",
+   "blurb": "Words for where things are, the four cardinal directions, the compass rose, and the in-between directions."
+  },
+  {
+   "key": "grids",
+   "title": "Grids, Routes and Distance",
+   "blurb": "Finding a square on a grid map, following a route, and using a scale bar to tell how far."
+  },
+  {
+   "key": "where-i-live",
+   "title": "Where I Live",
+   "blurb": "An address, the places we live inside one another, towns and cities, states, our country and its capital."
+  },
+  {
+   "key": "land-water",
+   "title": "Land and Water",
+   "blurb": "Mountains, valleys and plains; islands and peninsulas; oceans, lakes, rivers and bays; deserts and forests."
+  },
+  {
+   "key": "our-world",
+   "title": "Our World",
+   "blurb": "The globe, the seven continents and five oceans, the equator, the poles and the hemispheres."
+  }
+ ],
+ "topics": [
+  {
+   "id": "maps.what-is-a-map",
+   "slug": "what-is-a-map",
+   "unit": "what-map",
+   "title": "What Is a Map?",
+   "short": "A map is a drawing of a place as if you were looking down on it from the sky.",
+   "prereqs": [],
+   "xp": 1,
+   "std": "D2.Geo.1.K-2",
+   "trouble": "Children think a map is a picture taken from the side, like a photo of the front of a house. A map shows the tops of things, the way a bird sees them.",
+   "viz": [
+    "gg-birdseye",
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.birds-eye-view",
+   "slug": "birds-eye-view",
+   "unit": "what-map",
+   "title": "A Bird's-Eye View",
+   "short": "From above, a table looks like a rectangle and a ball looks like a circle; match each thing to its top view.",
+   "prereqs": [
+    "maps.what-is-a-map"
+   ],
+   "xp": 1,
+   "trouble": "Children match the side view they are used to (a tree as a trunk and leaves, a car with wheels) instead of the shape from above (a round green top, a rectangle).",
+   "viz": [
+    "gg-birdseye"
+   ]
+  },
+  {
+   "id": "maps.room-map",
+   "slug": "room-map",
+   "unit": "what-map",
+   "title": "A Map of a Room",
+   "short": "A map of a room shows where the bed, the table and the door are, drawn smaller than the real room.",
+   "prereqs": [
+    "maps.birds-eye-view"
+   ],
+   "xp": 1,
+   "std": "D2.Geo.1.K-2",
+   "trouble": "Children think things on a map must be drawn the real size. A map keeps the same places in the same order, only smaller.",
+   "viz": [
+    "gg-birdseye",
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.map-symbols",
+   "slug": "map-symbols",
+   "unit": "what-map",
+   "title": "Map Symbols",
+   "short": "A symbol is a small picture or shape on a map that stands for a real thing, like a tree, a house, a road or a school.",
+   "prereqs": [
+    "maps.room-map"
+   ],
+   "xp": 1,
+   "trouble": "Children read a symbol as the real size or color of the thing: a tiny tree symbol is not one small tree, and a red line for a road does not mean the road is red.",
+   "viz": [
+    "gg-town",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "maps.map-key",
+   "slug": "map-key",
+   "unit": "what-map",
+   "title": "The Map Key",
+   "short": "The key (also called the legend) is the box that tells what each symbol on the map means.",
+   "prereqs": [
+    "maps.map-symbols"
+   ],
+   "xp": 1,
+   "std": "D2.Geo.1.K-2",
+   "trouble": "Children guess what a symbol means instead of checking the key. Different maps can use different symbols, so always look at the key first.",
+   "viz": [
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.map-colors",
+   "slug": "map-colors",
+   "unit": "what-map",
+   "title": "Colors on a Map",
+   "short": "On many maps blue means water, green means parks, forests or low land, and brown or tan means mountains or dry land.",
+   "prereqs": [
+    "maps.map-key"
+   ],
+   "xp": 1,
+   "trouble": "Children think green on a map always means grass or brown always means dirt. Colors follow the map's key; on a political map, colors just tell one country or state from the next.",
+   "viz": [
+    "gg-town",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "maps.parts-of-a-map",
+   "slug": "parts-of-a-map",
+   "unit": "what-map",
+   "title": "The Parts of a Map",
+   "short": "Most maps have a title, a key, a compass rose and a scale: together they say what, where and how far.",
+   "prereqs": [
+    "maps.map-colors"
+   ],
+   "xp": 1,
+   "trouble": "Children mix up the key (what symbols mean) and the compass rose (which way is north). The key explains pictures; the compass rose explains directions.",
+   "viz": [
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.location-words",
+   "slug": "location-words",
+   "unit": "directions",
+   "title": "Where Is It?",
+   "short": "Words like left, right, above, below, next to, between, near and far tell where things are.",
+   "prereqs": [
+    "k.position-words",
+    "maps.room-map"
+   ],
+   "xp": 1,
+   "trouble": "Children use \"left\" and \"right\" from their own point of view when the picture shows someone facing them. On a map, left and right are the map's left and right as you look at it.",
+   "viz": [
+    "gg-town",
+    "gg-birdseye"
+   ]
+  },
+  {
+   "id": "maps.cardinal-directions",
+   "slug": "cardinal-directions",
+   "unit": "directions",
+   "title": "North, South, East and West",
+   "short": "The four cardinal directions are north, south, east and west; on most maps north is at the top.",
+   "prereqs": [
+    "maps.location-words"
+   ],
+   "xp": 1,
+   "std": "D2.Geo.1.K-2",
+   "trouble": "Children think north means \"up\" in the sky or \"straight ahead.\" North is a direction across the ground, toward the North Pole; on a map we usually put it at the top.",
+   "viz": [
+    "gg-compass",
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.compass-rose",
+   "slug": "compass-rose",
+   "unit": "directions",
+   "title": "The Compass Rose",
+   "short": "A compass rose shows the directions on a map; going clockwise from the top they are north, east, south and west.",
+   "prereqs": [
+    "maps.cardinal-directions"
+   ],
+   "xp": 1,
+   "trouble": "Children swap east and west. Going around clockwise from north, the order is N, E, S, W; a saying like \"Never Eat Soggy Waffles\" helps.",
+   "viz": [
+    "gg-compass"
+   ]
+  },
+  {
+   "id": "maps.follow-directions",
+   "slug": "follow-directions",
+   "unit": "directions",
+   "title": "Following Directions on a Map",
+   "short": "Follow steps like \"go 2 blocks north, then 3 blocks east\" to find where you end up.",
+   "prereqs": [
+    "maps.compass-rose"
+   ],
+   "xp": 2,
+   "trouble": "Children turn the wrong way after the first step, or count the square they start on as one of the blocks.",
+   "viz": [
+    "gg-town",
+    "gg-compass"
+   ]
+  },
+  {
+   "id": "maps.intermediate-directions",
+   "slug": "intermediate-directions",
+   "unit": "directions",
+   "title": "In-Between Directions",
+   "short": "Northeast, southeast, southwest and northwest are halfway between the cardinal directions.",
+   "prereqs": [
+    "maps.compass-rose"
+   ],
+   "xp": 2,
+   "trouble": "Children say \"eastnorth\" or put west first. In-between directions always start with north or south: northeast, southwest.",
+   "viz": [
+    "gg-compass",
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.sun-directions",
+   "slug": "sun-directions",
+   "unit": "directions",
+   "title": "The Sun Shows the Way",
+   "short": "The Sun rises in the east and sets in the west, so morning sunlight comes from the east.",
+   "prereqs": [
+    "maps.cardinal-directions"
+   ],
+   "xp": 1,
+   "trouble": "Children think the Sun is always in the south or overhead. It rises in the eastern sky and sets in the western sky (exactly east and west only near the start of spring and fall).",
+   "viz": [
+    "gg-compass"
+   ]
+  },
+  {
+   "id": "maps.using-a-compass",
+   "slug": "using-a-compass",
+   "unit": "directions",
+   "title": "Using a Compass",
+   "short": "A compass needle turns to point north; once you know north, you can find every other direction.",
+   "prereqs": [
+    "maps.compass-rose"
+   ],
+   "xp": 2,
+   "trouble": "Children think the needle points where they are going. The needle always points north (magnetic north); turn the compass so N lines up with the needle, then read your direction.",
+   "viz": [
+    "gg-compass"
+   ]
+  },
+  {
+   "id": "maps.grid-squares",
+   "slug": "grid-squares",
+   "unit": "grids",
+   "title": "Finding a Square on a Grid",
+   "short": "A grid map has letters along one edge and numbers along another, so every square has a name like B3.",
+   "prereqs": [
+    "maps.location-words"
+   ],
+   "xp": 1,
+   "trouble": "Children read the number first or look at the line instead of the square. Find the letter's column, then go along to the number's row: the square where they meet.",
+   "viz": [
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.grid-locate",
+   "slug": "grid-locate",
+   "unit": "grids",
+   "title": "Name the Square",
+   "short": "Look at where a thing is on a grid map, then name its square with its letter and number.",
+   "prereqs": [
+    "maps.grid-squares"
+   ],
+   "xp": 2,
+   "trouble": "Children name the square next to the right one because they count from the wrong corner. Use the letters and numbers printed on the edges, not counting.",
+   "viz": [
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.routes",
+   "slug": "routes",
+   "unit": "grids",
+   "title": "Routes on a Map",
+   "short": "A route is the way you travel from one place to another; on a map you can trace it and count the blocks.",
+   "prereqs": [
+    "maps.follow-directions",
+    "maps.grid-squares"
+   ],
+   "xp": 2,
+   "trouble": "Children think the route that looks straightest is always the shortest, or cut through buildings and parks that have no road.",
+   "viz": [
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.map-scale",
+   "slug": "map-scale",
+   "unit": "grids",
+   "title": "How Far? The Scale Bar",
+   "short": "A scale bar shows how far a length on the map is in real life, like 1 inch for 1 mile.",
+   "prereqs": [
+    "maps.routes",
+    "g2.skip-count-5-10-100"
+   ],
+   "xp": 2,
+   "trouble": "Children think places that look close on any map are close in real life. A map of the whole country and a map of one town can show the same length on paper for very different distances.",
+   "viz": [
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.address",
+   "slug": "address",
+   "unit": "where-i-live",
+   "title": "An Address",
+   "short": "An address tells exactly where a home is: a house number, a street, a town or city, a state and a ZIP code.",
+   "prereqs": [
+    "maps.map-key"
+   ],
+   "xp": 1,
+   "trouble": "Children give only their street or their town. Each part of the address narrows it down, from the state to the one house.",
+   "viz": [
+    "gg-nested"
+   ]
+  },
+  {
+   "id": "maps.nested-places",
+   "slug": "nested-places",
+   "unit": "where-i-live",
+   "title": "Places Inside Places",
+   "short": "Your home is in a neighborhood, in a town or city, in a state, in a country, on a continent, on planet Earth.",
+   "prereqs": [
+    "maps.address"
+   ],
+   "xp": 1,
+   "std": "D2.Geo.2.K-2",
+   "trouble": "Children think a state is bigger than a country, or that a city and a country are the same kind of place. Each place sits inside the next bigger one.",
+   "viz": [
+    "gg-nested",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "maps.city-suburb-rural",
+   "slug": "city-suburb-rural",
+   "unit": "where-i-live",
+   "title": "City, Suburb and Country",
+   "short": "A city is a big, busy town; a suburb is a town of homes near a city; rural places have farms, fields and few houses.",
+   "prereqs": [
+    "maps.nested-places"
+   ],
+   "xp": 1,
+   "std": "D2.Geo.2.K-2",
+   "trouble": "Children call any town a city, or think rural means \"far away from everything.\" Rural just means land with few people and lots of open space.",
+   "viz": [
+    "gg-sort",
+    "gg-town"
+   ]
+  },
+  {
+   "id": "maps.states-of-us",
+   "slug": "states-of-us",
+   "unit": "where-i-live",
+   "title": "The United States and Its States",
+   "short": "The United States is a country made of 50 states; each state has its own shape on the map.",
+   "prereqs": [
+    "maps.nested-places"
+   ],
+   "xp": 1,
+   "trouble": "Children think a state is a separate country, or that their own state is the whole country.",
+   "viz": [
+    "gg-map",
+    "gg-nested"
+   ]
+  },
+  {
+   "id": "maps.capital-city",
+   "slug": "capital-city",
+   "unit": "where-i-live",
+   "title": "Capital Cities",
+   "short": "A capital is the city where a country's or a state's government meets; Washington, D.C., is the capital of the United States.",
+   "prereqs": [
+    "maps.states-of-us"
+   ],
+   "xp": 1,
+   "trouble": "Children think the biggest city is always the capital. New York City is the largest U.S. city, but the country's capital is Washington, D.C.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "maps.north-america",
+   "slug": "north-america",
+   "unit": "where-i-live",
+   "title": "Our Neighbors: Canada and Mexico",
+   "short": "The United States is in North America; Canada is to the north and Mexico is to the south.",
+   "prereqs": [
+    "maps.states-of-us",
+    "maps.cardinal-directions"
+   ],
+   "xp": 1,
+   "trouble": "Children mix up which neighbor is north and which is south, or think Mexico is in South America.",
+   "viz": [
+    "gg-map"
+   ]
+  },
+  {
+   "id": "maps.land-and-water",
+   "slug": "land-and-water",
+   "unit": "land-water",
+   "title": "Land and Water",
+   "short": "Earth has land and water; about 71 out of every 100 parts of its surface are water, mostly ocean.",
+   "prereqs": [
+    "maps.map-colors"
+   ],
+   "xp": 1,
+   "trouble": "Children think there is more land than water because they live on land. Most of Earth's surface is ocean.",
+   "viz": [
+    "gg-globe",
+    "gg-landforms"
+   ]
+  },
+  {
+   "id": "maps.mountains-hills-valleys",
+   "slug": "mountains-hills-valleys",
+   "unit": "land-water",
+   "title": "Mountains, Hills and Valleys",
+   "short": "A mountain is very high land, a hill is lower and rounder, and a valley is the low land between them.",
+   "prereqs": [
+    "maps.land-and-water"
+   ],
+   "xp": 1,
+   "trouble": "Children call any bump a mountain, or think a valley is a river. A valley is low land; a river often runs along its bottom.",
+   "viz": [
+    "gg-landforms"
+   ]
+  },
+  {
+   "id": "maps.plains-plateaus",
+   "slug": "plains-plateaus",
+   "unit": "land-water",
+   "title": "Plains and Plateaus",
+   "short": "A plain is wide, flat, low land; a plateau is flat land high up, with steep sides.",
+   "prereqs": [
+    "maps.mountains-hills-valleys"
+   ],
+   "xp": 1,
+   "trouble": "Children think all flat land is a plain. A plateau is flat too, but raised high above the land around it, like a tabletop.",
+   "viz": [
+    "gg-landforms"
+   ]
+  },
+  {
+   "id": "maps.island-peninsula",
+   "slug": "island-peninsula",
+   "unit": "land-water",
+   "title": "Islands and Peninsulas",
+   "short": "An island is land with water all around it; a peninsula has water on three sides and joins the mainland on one.",
+   "prereqs": [
+    "maps.land-and-water"
+   ],
+   "xp": 1,
+   "trouble": "Children call a peninsula an island because it looks surrounded. Follow the coast: if the land connects to the mainland, it is a peninsula.",
+   "viz": [
+    "gg-landforms",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "maps.oceans-lakes-rivers",
+   "slug": "oceans-lakes-rivers",
+   "unit": "land-water",
+   "title": "Oceans, Lakes and Rivers",
+   "short": "An ocean is a huge body of salt water; a lake has land all around it; a river is water flowing across the land.",
+   "prereqs": [
+    "maps.land-and-water"
+   ],
+   "xp": 1,
+   "trouble": "Children think all lakes are small and all water is salty, or that a lake and an ocean are the same thing.",
+   "viz": [
+    "gg-landforms",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "maps.river-parts",
+   "slug": "river-parts",
+   "unit": "land-water",
+   "title": "A River's Journey",
+   "short": "A river starts at its source, flows downhill, gets help from smaller rivers called tributaries, and ends at its mouth.",
+   "prereqs": [
+    "maps.oceans-lakes-rivers"
+   ],
+   "xp": 2,
+   "trouble": "Children think rivers flow from the bottom of the map to the top, or toward the north. Rivers flow downhill, in any direction, from the source to the mouth.",
+   "viz": [
+    "gg-landforms"
+   ]
+  },
+  {
+   "id": "maps.bays-gulfs",
+   "slug": "bays-gulfs",
+   "unit": "land-water",
+   "title": "Bays, Gulfs and Coasts",
+   "short": "A coast is where land meets the sea; a bay is part of the sea that curves into the land, and a gulf is a very large bay.",
+   "prereqs": [
+    "maps.island-peninsula",
+    "maps.oceans-lakes-rivers"
+   ],
+   "xp": 2,
+   "trouble": "Children call a bay a lake. A bay opens to the sea on one side; a lake is closed in by land.",
+   "viz": [
+    "gg-landforms",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "maps.landform-pairs",
+   "slug": "landform-pairs",
+   "unit": "land-water",
+   "title": "Opposite Pairs",
+   "short": "Some land and water shapes are opposites: an island and a lake, a peninsula and a bay, an isthmus and a strait.",
+   "prereqs": [
+    "maps.bays-gulfs"
+   ],
+   "xp": 2,
+   "trouble": "Children mix up the pairs. An island is land in water; a lake is water in land. An isthmus is a thin strip of land joining two lands; a strait is a thin strip of water joining two seas.",
+   "viz": [
+    "gg-landforms"
+   ]
+  },
+  {
+   "id": "maps.deserts-forests-grasslands",
+   "slug": "deserts-forests-grasslands",
+   "unit": "land-water",
+   "title": "Deserts, Forests and Grasslands",
+   "short": "A desert gets very little rain, a forest is covered with trees, and a grassland is wide open land covered with grass.",
+   "prereqs": [
+    "maps.land-and-water"
+   ],
+   "xp": 1,
+   "trouble": "Children think every desert is hot and sandy. A desert is any place with very little rain; some deserts are cold, rocky or icy.",
+   "viz": [
+    "gg-landforms",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "maps.globe",
+   "slug": "globe",
+   "unit": "our-world",
+   "title": "The Globe",
+   "short": "A globe is a small, round model of Earth that shows land and water in their true shapes.",
+   "prereqs": [
+    "maps.land-and-water"
+   ],
+   "xp": 1,
+   "trouble": "Children think Earth is flat like the maps in their books. Earth is round like a ball, and a globe is the truest model of it.",
+   "viz": [
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "maps.globe-vs-map",
+   "slug": "globe-vs-map",
+   "unit": "our-world",
+   "title": "Globe or Flat Map?",
+   "short": "A flat map is easy to carry and shows the whole world at once, but it stretches some places; a globe does not.",
+   "prereqs": [
+    "maps.globe"
+   ],
+   "xp": 2,
+   "trouble": "Children believe Greenland is as big as Africa because a flat map shows it that way. Africa is about 14 times bigger than Greenland.",
+   "viz": [
+    "gg-globe",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "maps.continents",
+   "slug": "continents",
+   "unit": "our-world",
+   "title": "The Seven Continents",
+   "short": "The seven continents are Africa, Antarctica, Asia, Australia, Europe, North America and South America.",
+   "prereqs": [
+    "maps.globe"
+   ],
+   "xp": 1,
+   "std": "D2.Geo.2.K-2",
+   "trouble": "Children confuse continents with countries (\"Africa is a country\"). A continent is a huge area of land that holds many countries; Africa has more than 50.",
+   "viz": [
+    "gg-map",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "maps.find-continents",
+   "slug": "find-continents",
+   "unit": "our-world",
+   "title": "Find the Continents",
+   "short": "Find each continent on a world map by its shape and its place: Asia is the biggest, Australia the smallest, Antarctica at the bottom.",
+   "prereqs": [
+    "maps.continents"
+   ],
+   "xp": 2,
+   "trouble": "Children mix up North and South America, or Europe and Asia, which share one big landmass.",
+   "viz": [
+    "gg-map",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "maps.oceans",
+   "slug": "oceans",
+   "unit": "our-world",
+   "title": "The Five Oceans",
+   "short": "The five oceans are the Pacific, Atlantic, Indian, Arctic and Southern; the Pacific is the biggest and the Arctic the smallest.",
+   "prereqs": [
+    "maps.find-continents"
+   ],
+   "xp": 2,
+   "trouble": "Children think the oceans are separate pools. They are all connected into one world ocean; we name parts of it.",
+   "viz": [
+    "gg-map",
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "maps.continent-animals",
+   "slug": "continent-animals",
+   "unit": "our-world",
+   "title": "Animals Around the World",
+   "short": "Many animals live wild on only one continent: kangaroos in Australia, emperor penguins on Antarctica, giraffes in Africa.",
+   "prereqs": [
+    "maps.find-continents"
+   ],
+   "xp": 1,
+   "trouble": "Children place animals by where they saw them, such as in a zoo. Think of where the animal lives in the wild.",
+   "viz": [
+    "gg-map",
+    "gg-sort"
+   ]
+  },
+  {
+   "id": "maps.equator",
+   "slug": "equator",
+   "unit": "our-world",
+   "title": "The Equator",
+   "short": "The equator is an imaginary line around the middle of Earth, halfway between the North Pole and the South Pole.",
+   "prereqs": [
+    "maps.globe"
+   ],
+   "xp": 1,
+   "trouble": "Children think the equator is a real line you could see on the ground. It is imaginary; mapmakers draw it to help us find places.",
+   "viz": [
+    "gg-globe",
+    "gg-map"
+   ]
+  },
+  {
+   "id": "maps.poles",
+   "slug": "poles",
+   "unit": "our-world",
+   "title": "The North and South Poles",
+   "short": "The North Pole is the farthest point north on Earth, in the Arctic Ocean; the South Pole is the farthest south, on Antarctica.",
+   "prereqs": [
+    "maps.equator",
+    "maps.cardinal-directions"
+   ],
+   "xp": 1,
+   "trouble": "Children think the North Pole is on land, or that penguins live there. The North Pole is on floating sea ice in the Arctic Ocean; wild penguins live in the south.",
+   "viz": [
+    "gg-globe"
+   ]
+  },
+  {
+   "id": "maps.hemispheres",
+   "slug": "hemispheres",
+   "unit": "our-world",
+   "title": "Halves of the World",
+   "short": "The equator cuts Earth into the Northern and Southern Hemispheres; another line splits it into the Eastern and Western Hemispheres.",
+   "prereqs": [
+    "maps.equator"
+   ],
+   "xp": 2,
+   "trouble": "Children think a place can only be in one hemisphere. Every place is in two at once: North or South, and East or West.",
+   "viz": [
+    "gg-globe",
+    "gg-map"
+   ]
+  }
+ ]
+}

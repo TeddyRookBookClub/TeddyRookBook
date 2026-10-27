@@ -1,0 +1,62 @@
+{{- /* /art/gallery/: the Museum Walk. Every work in data/art/images.json (the Art & Drawing Ladder's catalog, built by
+   /tmp/work_art/build_kit.py), grouped by period in time order. A picture shows only when its file static/art/img/<id>.webp
+   exists and the catalog marks it approved (public domain or CC0, looked at, no nudity or violence); otherwise a framed
+   label stands in. The page works without JavaScript; static/art/app/gallery.js adds the filters. */ -}}
+{{ define "main" }}
+{{ partial "inline/ml-head.html" . }}
+{{ partial "inline/ml-css.html" "art/app/pages.css" }}
+{{- $I := site.Data.art.images -}}
+{{- $C := site.Data.art.courses | default slice -}}
+{{- $cs := dict }}{{ range $C }}{{ $cs = merge $cs (dict .key .slug) }}{{ end -}}
+{{- $T := dict }}{{ range $k, $d := site.Data.art.topics }}{{ range $d.topics }}{{ $T = merge $T (dict .id .title) }}{{ end }}{{ end -}}
+{{- $n := 0 }}{{ $np := 0 }}{{ range $I.works }}{{ $n = add $n 1 }}{{ if and .file (eq .image.status "approved") (fileExists (printf "static/%s" .file)) }}{{ $np = add $np 1 }}{{ end }}{{ end -}}
+<div class="mlp arpg arpg-gallery" id="arg" style="--mc:#b8197f">
+  <header class="arpg-head">
+    <p class="mlp-eyebrow"><a href="{{ "art/" | relURL }}">Art &amp; Drawing Ladder</a> · Museum walk</p>
+    <h1>Museum walk</h1>
+    <p>Every work the Art &amp; Drawing Ladder teaches with, in time order: {{ $n }} paintings, sculptures, buildings, prints and photographs from Europe, the Islamic world, Asia, Africa and the Americas. Each label gives the artist, the date, the materials and where the work is now, and notes what scholars still debate. {{ if lt $np $n }}{{ if $np }}{{ $np }} have pictures so far; the others show their labels while their pictures are prepared.{{ else }}The pictures are being prepared; for now each work shows its museum label.{{ end }} Works still under copyright are described, never shown.{{ end }}</p>
+    <p class="arpg-links"><a class="mlp-btn small" href="{{ "art/flashcards/" | relURL }}">Art history flashcards</a> <a class="mlp-btn small" href="{{ "art/art-history-1/" | relURL }}">Art History I</a> <a class="mlp-btn small" href="{{ "art/art-history-2/" | relURL }}">Art History II</a></p>
+  </header>
+  <section class="arpg-box arpg-filters" aria-label="Filter the works">
+    <label class="arpg-field arpg-grow"><span>Search</span><input type="search" id="arg-q" placeholder="A title, an artist or a place" autocomplete="off"></label>
+    <label class="arpg-field"><span>Region</span><select id="arg-track"><option value="">All regions</option>{{ range $I.tracks }}<option value="{{ .key }}">{{ .name }}</option>{{ end }}</select></label>
+    <label class="arpg-field"><span>Period</span><select id="arg-period"><option value="">All periods</option>{{ range sort $I.periods "start" }}<option value="{{ .key }}" data-track="{{ .track }}">{{ .name }}</option>{{ end }}</select></label>
+    <label class="arpg-check"><input type="checkbox" id="arg-pics"> Only works with pictures</label>
+    <p class="arpg-count" id="arg-count" aria-live="polite"></p>
+  </section>
+  {{- range $p := sort $I.periods "start" }}
+  {{- $ws := where $I.works "period" $p.key -}}
+  {{- if $ws }}
+  <section class="arpg-period" id="p-{{ $p.key }}" data-period="{{ $p.key }}" data-track="{{ $p.track }}">
+    <h2>{{ $p.name }} <small>{{ if lt $p.start 0 }}{{ if le $p.start -10000 }}{{ div (sub 0 $p.start) 1000 }},000{{ else }}{{ sub 0 $p.start }}{{ end }} BC{{ else }}{{ if lt $p.start 1000 }}AD {{ end }}{{ $p.start }}{{ end }} to {{ if lt $p.end 0 }}{{ sub 0 $p.end }} BC{{ else }}{{ if lt $p.end 1000 }}AD {{ end }}{{ $p.end }}{{ end }}</small></h2>
+    <div class="arpg-grid">
+    {{- range sort $ws "year" }}
+      {{- $has := and .file (eq .image.status "approved") (fileExists (printf "static/%s" .file)) -}}
+      {{- $at := index $I.cities .now -}}
+      <figure class="arpg-card" id="w-{{ .id }}" data-pic="{{ if $has }}1{{ end }}" data-s="{{ lower (printf "%s %s %s %s %s" .title .artist .date .at (index $at 0)) }}">
+        {{- if $has }}
+        <a class="arpg-pic" href="{{ .file | relURL }}"><img src="{{ .file | relURL }}" alt="{{ .title }}, {{ .artist }}, {{ .date }}" loading="lazy"{{ with .image.width }} width="{{ . }}"{{ end }}{{ with .image.height }} height="{{ . }}"{{ end }}></a>
+        {{- else }}
+        <div class="arpg-ph" aria-hidden="true"><span><b>{{ .title }}</b>{{ if not .public_domain }}<small>Still under copyright: described, not shown</small>{{ else }}<small>Picture to come</small>{{ end }}</span></div>
+        {{- end }}
+        <figcaption>
+          <b class="arpg-t">{{ .title }}</b>
+          <span class="arpg-a">{{ .artist }}, {{ .date }}</span>
+          <span class="arpg-m">{{ .medium }}</span>
+          <span class="arpg-at">{{ .at }}</span>
+          {{- with .style }}<span class="arpg-st">{{ . }}</span>{{ end }}
+          {{- with .note }}<span class="arpg-n">{{ . }}</span>{{ end }}
+          {{- if $has }}<span class="arpg-cr">Image: {{ .image.credit | default .image.license }}{{ with .image.source_page }}, <a href="{{ . }}">source</a>{{ end }}</span>{{ end }}
+          {{- $tp := slice }}{{ range .topics }}{{ $parts := split . "." }}{{ $ck := index $parts 0 }}{{ if and (index $cs $ck) (in (slice "ah1" "ah2") $ck) }}{{ $tp = $tp | append . }}{{ end }}{{ end -}}
+          {{- with first 2 $tp }}<span class="arpg-on">On the ladder: {{ range $i, $t := . }}{{ if $i }}, {{ end }}{{ $parts := split $t "." }}<a href="{{ printf "art/%s/%s/" (index $cs (index $parts 0)) (index $parts 1) | relURL }}">{{ index $T $t }}</a>{{ end }}</span>{{ end }}
+        </figcaption>
+      </figure>
+    {{- end }}
+    </div>
+  </section>
+  {{- end }}
+  {{- end }}
+  <p class="mlp-small arpg-foot">Pictures come only from public-domain sources and museum open-access (CC0) collections, credited on each label. Dates marked "about" are estimates; where the date, the artist or the ownership of a work is debated, the label says so.</p>
+</div>
+{{ partial "inline/ml-js.html" "art/app/gallery.js" }}
+{{ end }}

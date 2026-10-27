@@ -1,0 +1,5 @@
+{{- /* Phonics Practice scripts: the data (one cached file built from data/phonics.json), the checker, the app. */ -}}
+{{- $data := printf "window.PHONICS=%s;" (site.Data.phonics | jsonify) | resources.FromString "homeschool/phonics/data.js" | minify | fingerprint "md5" -}}
+<script src="{{ $data.RelPermalink }}" defer></script>
+<script src="{{ "homeschool/phonics/decode.js" | relURL }}?v={{ (os.Stat "static/homeschool/phonics/decode.js").ModTime.Unix }}" defer></script>
+<script src="{{ "homeschool/phonics/phonics.js" | relURL }}?v={{ (os.Stat "static/homeschool/phonics/phonics.js").ModTime.Unix }}" defer></script>

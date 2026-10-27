@@ -1,0 +1,115 @@
+{{ define "main" }}
+{{ partial "hs-head.html" . }}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap">
+<link rel="stylesheet" href="{{ "homeschool/phonics/phonics.css" | relURL }}?v={{ (os.Stat "static/homeschool/phonics/phonics.css").ModTime.Unix }}">
+{{ $d := site.Data.phonics }}{{ $key := .Params.step }}
+{{ $s := index (where $d.steps "key" $key) 0 }}{{ $n := int $s.n }}{{ $all := len $d.steps }}
+{{ $hub := "homeschool/actual-reading/phonics-practice/" | relURL }}
+{{ $hc := site.Data.hs_hannah.curricula }}
+<div class="hs pp" id="pp" data-step="{{ $s.key }}">
+  <nav class="hs-crumbs"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › <a href="{{ "homeschool/actual-reading/" | relURL }}">Actual Reading</a> › <a href="{{ $hub }}">Phonics Practice</a> › Step {{ $n }}</nav>
+
+  <header class="pp-head">
+    <span class="pp-head-ic" aria-hidden="true">{{ $s.icon }}</span>
+    <div>
+      <p class="pp-eyebrow">Phonics Practice · Step {{ $n }} of {{ $all }}</p>
+      <h1>{{ $s.title }}</h1>
+      <p>{{ $s.blurb }}</p>
+    </div>
+  </header>
+  <p class="pp-made"><b>Made by Teddy Rook Book</b> to practice alongside Hannah Ward's lessons. It is not part of her curriculum. <a href="{{ $hub }}#about">About this practice</a></p>
+
+  <section class="pp-kid" id="pp-kid" aria-label="Practice for your child">
+    <div class="pp-bar">
+      <label class="pp-who">
+        <span>Reader</span>
+        <select id="pp-child" aria-label="Who is practicing?"><option>Reader 1</option></select>
+      </label>
+      <button type="button" class="pp-mini" id="pp-add" aria-label="Add a child">＋ Add</button>
+      <span class="pp-sp"></span>
+      <button type="button" class="pp-mini" id="pp-sound" aria-pressed="true" title="The voice says whole words and sentences, never single sounds.">🔊 Voice on</button>
+      <button type="button" class="pp-mini" id="pp-full" aria-pressed="false">⛶ Big screen</button>
+    </div>
+    <form class="pp-addf" id="pp-addf" hidden>
+      <label for="pp-name">Child's name</label>
+      <input id="pp-name" maxlength="24" autocomplete="off">
+      <button type="submit" class="hs-btn pri">Add</button>
+      <button type="button" class="hs-btn ghost" id="pp-addx">Cancel</button>
+    </form>
+    <div class="pp-acts" id="pp-acts" role="group" aria-label="Activities"></div>
+    <div class="pp-stage" id="pp-stage">
+      <noscript><p class="pp-nojs">The practice games need JavaScript. Everything below, including the printable cards, works without it.</p></noscript>
+    </div>
+  </section>
+
+  <section class="pp-gu" aria-labelledby="pp-gu-h">
+    <h2 id="pp-gu-h">For grown-ups</h2>
+    <div class="pp-gu-grid">
+      <div class="pp-box">
+        <h3>What this step teaches</h3>
+        <p>{{ $s.teaches }}</p>
+        <p class="pp-tip"><b>As you practice:</b> {{ $s.tip }}</p>
+      </div>
+      <div class="pp-box">
+        <h3>Away from the screen</h3>
+        <ul>{{ range $s.offscreen }}<li>{{ . }}</li>{{ end }}</ul>
+      </div>
+      <div class="pp-box pp-han">
+        <h3>With Hannah's lessons</h3>
+        <p>{{ $s.hannah }}</p>
+        <p class="pp-hl">{{ range $s.hlinks }}{{ $c := index (where $hc "slug" .) 0 }}{{ with $c }}<a href="{{ printf "homeschool/actual-reading/%s/" .slug | relURL }}">{{ .icon }} {{ .short }}</a>{{ end }}{{ end }}</p>
+        <p class="hs-small">Hannah's lessons may bring in sounds in a different order. Follow her order, and use the step here that matches what she has taught.</p>
+      </div>
+    </div>
+
+    {{ with $s.units }}
+    <h3 class="pp-h3">{{ if eq $n 1 }}The letter sounds{{ else if eq $s.key "endings" }}The endings{{ else }}The new sounds{{ end }}, and how to say them</h3>
+    {{ if le $n 2 }}<p class="hs-small pp-pure">Say pure, short sounds: /m/ is “mmm,” not “muh,” and /t/ is a crisp /t/, not “tuh.” The voice on this page only says whole words, because computer voices add “uh” to single sounds.</p>{{ end }}
+    <ul class="pp-sounds">
+      {{ range . }}<li><b class="pp-g">{{ replace .g "_" "–" }}</b> <span class="pp-k">{{ with .pic }}{{ if not (hasPrefix . "svg:") }}<span class="pp-emo" aria-hidden="true">{{ . }}</span> {{ end }}{{ end }}as in <i>{{ .key }}</i></span><span class="pp-say">{{ .say }}</span></li>{{ end }}
+    </ul>
+    {{ end }}
+
+    {{ with $s.heart }}
+    <h3 class="pp-h3">Heart words for this step</h3>
+    <p class="hs-small">Heart words are common words with a part that doesn't follow the rules your child knows yet. Sound out the regular parts, and learn the ♥ part by heart.</p>
+    <p class="pp-hearts">{{ range . }}<span class="pp-hw">{{ replaceRE (printf "(%s)" .h) "<span class=\"pp-h\">$1</span>" .w 1 | safeHTML }}</span>{{ end }}</p>
+    {{ end }}
+
+    <div class="pp-printbar">
+      <h3>Print</h3>
+      <p class="hs-small">Uses your browser's print window; choose “Save as PDF” to keep a copy.</p>
+      <p><button type="button" class="hs-btn" data-print="cards">🖨 {{ if le $n 2 }}Letter cards{{ else }}Word cards{{ end }}</button>{{ if $s.sentences }} <button type="button" class="hs-btn" data-print="text">🖨 Sentence strips and stories</button>{{ end }}</p>
+    </div>
+  </section>
+
+  <nav class="pp-nav" aria-label="Steps">
+    {{ if gt $n 1 }}{{ $p := index $d.steps (sub $n 2) }}<a class="hs-btn ghost" href="{{ printf "homeschool/actual-reading/phonics-practice/%s/" $p.key | relURL }}">← Step {{ sub $n 1 }}: {{ $p.title }}</a>{{ else }}<span></span>{{ end }}
+    <a class="hs-btn ghost" href="{{ $hub }}">All steps</a>
+    {{ if lt $n $all }}{{ $q := index $d.steps $n }}<a class="hs-btn ghost" href="{{ printf "homeschool/actual-reading/phonics-practice/%s/" $q.key | relURL }}">Step {{ add $n 1 }}: {{ $q.title }} →</a>{{ else }}<a class="hs-btn ghost" href="{{ "homeschool/mcguffey/primer/" | relURL }}">Next: McGuffey's Primer →</a>{{ end }}
+  </nav>
+
+  {{/* Printable sheets: hidden on screen, shown when printing */}}
+  <section class="pp-print" id="pp-print" aria-hidden="true">
+    <div class="pp-pr-cards">
+      <p class="pp-pr-h">Phonics Practice · Step {{ $n }}: {{ $s.title }} · teddyrookbook.com</p>
+      <div class="pp-cards">
+        {{ if le $n 2 }}{{ range $s.units }}<div class="pp-c pp-c-l"><b>{{ if eq .g "qu" }}Qu qu{{ else }}{{ upper .g }}{{ .g }}{{ end }}</b><span>{{ .key }}</span></div>{{ end }}
+        {{ else }}{{ range $s.words }}<div class="pp-c">{{ replace . "|" "" }}</div>{{ end }}{{ end }}
+      </div>
+      {{ with $s.heart }}<p class="pp-pr-h">Heart words</p><div class="pp-cards">{{ range . }}<div class="pp-c pp-c-h">{{ replaceRE (printf "(%s)" .h) "<span class=\"pp-h\">$1</span>" .w 1 | safeHTML }}</div>{{ end }}</div>{{ end }}
+    </div>
+    {{ if $s.sentences }}
+    <div class="pp-pr-text">
+      <p class="pp-pr-h">Sentence strips · Step {{ $n }}: {{ $s.title }} · teddyrookbook.com</p>
+      {{ range $s.sentences }}<p class="pp-strip">{{ . }}</p>{{ end }}
+      {{ range $s.stories }}
+      <div class="pp-pr-story"><h2>{{ .title }}</h2>{{ range .lines }}<p>{{ . }}</p>{{ end }}<p class="pp-pr-foot">A Teddy Rook Book practice story for Step {{ $n }}: {{ $s.title }}.</p></div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </section>
+</div>
+{{ partial "phonics-assets.html" . }}
+{{ end }}

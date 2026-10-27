@@ -469,7 +469,7 @@
     var cv = makePicture(pvView), img = pv.querySelector('img'), note = pv.querySelector('.pl-pv-note');
     pvFile = null;
     if (!cv) { img.removeAttribute('src'); note.textContent = 'That plan is too long for one picture. Choose “This week”, or a shorter plan.'; return; }
-    note.textContent = canShareFiles() ? 'Tap “Save to Photos / Share”, then “Save Image” to put it in your photos.' : 'This is exactly the picture you’ll get, made in your browser.';
+    note.textContent = canShareFiles() ? 'To put it in your photos: press and hold the picture above and choose “Save to Photos” (or “Add to Photos”). Or tap “Share”, then “Save Image”.' : 'This is exactly the picture you’ll get, made in your browser.';
     img.src = cv.toDataURL('image/png');
     cv.toBlob(function (b) { pvFile = new File([b], picName(pvView), { type: 'image/png' }); }, 'image/png');
   }
@@ -479,14 +479,14 @@
   $('#pl-png').addEventListener('click', function () {
     if (!pv) {
       pv = D.createElement('div'); pv.className = 'pl-pv'; pv.hidden = true;
-      pv.innerHTML = '<div class="pl-pv-in" role="dialog" aria-label="Save the plan as a picture"><div class="pl-pv-opts"><label><input type="radio" name="pl-pv" value="week"> This week</label> <label><input type="radio" name="pl-pv" value="overview"> The overview</label></div><div class="pl-pv-img"><img alt="Preview of the plan picture"></div><p class="pl-pv-note hs-small"></p><div class="pl-pv-btns"><button type="button" class="hs-btn pri" id="pl-pv-share" hidden>📲 Save to Photos / Share</button><button type="button" class="hs-btn" id="pl-pv-dl">⬇ Download picture</button><button type="button" class="hs-btn ghost" id="pl-pv-x">Close</button></div></div>';
+      pv.innerHTML = '<div class="pl-pv-in" role="dialog" aria-label="Save the plan as a picture"><div class="pl-pv-opts"><label><input type="radio" name="pl-pv" value="week"> This week</label> <label><input type="radio" name="pl-pv" value="overview"> The overview</label></div><div class="pl-pv-img"><img alt="Preview of the plan picture"></div><p class="pl-pv-note hs-small"></p><div class="pl-pv-btns"><button type="button" class="hs-btn pri" id="pl-pv-share" hidden>📲 Share</button><button type="button" class="hs-btn" id="pl-pv-dl">⬇ Download picture</button><button type="button" class="hs-btn ghost" id="pl-pv-x">Close</button></div></div>';
       root.appendChild(pv);
       pv.addEventListener('click', function (e) { if (e.target === pv || e.target.id === 'pl-pv-x') pv.hidden = true; });
       pv.addEventListener('change', function (e) { if (e.target.name === 'pl-pv') { pvView = e.target.value; refreshPic(); } });
       D.addEventListener('keydown', function (e) { if (e.key === 'Escape' && pv && !pv.hidden) pv.hidden = true; });
       pv.querySelector('#pl-pv-share').addEventListener('click', function () {
         if (!pvFile) return;
-        navigator.share({ files: [pvFile], title: 'Lesson plan' }).catch(function (e) { if (e && e.name !== 'AbortError') download(pvFile.name, 'image/png', pvFile); });
+        navigator.share({ files: [pvFile] }).catch(function (e) { if (e && e.name !== 'AbortError') download(pvFile.name, 'image/png', pvFile); });
       });
       pv.querySelector('#pl-pv-dl').addEventListener('click', function () { if (pvFile) { download(pvFile.name, 'image/png', pvFile); msg('Picture saved.'); } });
       if (canShareFiles()) { pv.querySelector('#pl-pv-share').hidden = false; pv.querySelector('#pl-pv-dl').classList.remove('pri'); pv.querySelector('#pl-pv-dl').textContent = '⬇ Download file'; }

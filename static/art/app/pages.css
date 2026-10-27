@@ -1,0 +1,53 @@
+/* Art & Drawing Ladder pages beyond the ladder: the Museum Walk (/art/gallery/) and the flashcards (/art/flashcards/). */
+.arpg{--ac:#b8197f;--acs:rgba(184,25,127,.10);--card:#fff;--line:#e3ddd2;--muted:#5d6862;--paper:#fbf8f0}
+html[data-theme="dark"] .arpg{--ac:#ff86cf;--acs:rgba(255,134,207,.14);--card:#14211a;--line:#2f4a3b;--muted:#a9b8af;--paper:#1b2b22}
+.arpg-head h1{margin:.2rem 0 .4rem}
+.arpg-head p{max-width:46rem;line-height:1.55}
+.arpg-links{display:flex;flex-wrap:wrap;gap:.4rem}
+.arpg-box{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:.7rem .8rem;margin:1rem 0}
+.arpg-filters{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:flex-end}
+.arpg-field{display:flex;flex-direction:column;gap:.2rem;font-size:.85rem;color:var(--muted);min-width:0}
+.arpg-field select,.arpg-field input{font:inherit;font-size:.95rem;padding:.4rem .5rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:inherit;min-height:40px;max-width:100%}
+.arpg-grow{flex:1 1 14rem}
+.arpg-check{display:flex;align-items:center;gap:.4rem;font-size:.9rem;min-height:40px}
+.arpg-count{margin:0;font-size:.85rem;color:var(--muted);flex-basis:100%}
+.arpg-period h2{font-size:1.25rem;margin:1.6rem 0 .6rem;border-bottom:2px solid var(--ac);padding-bottom:.2rem}
+.arpg-period h2 small{font-size:.8rem;font-weight:500;color:var(--muted);margin-left:.4rem}
+.arpg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.8rem}
+.arpg-card{margin:0;border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden;display:flex;flex-direction:column}
+.arpg-card[hidden],.arpg-period[hidden]{display:none}
+.arpg-pic{display:block;background:#111}
+.arpg-pic img{display:block;width:100%;height:220px;object-fit:contain}
+.arpg-ph{display:grid;place-items:center;height:160px;background:var(--paper);padding:.7rem}
+.arpg-ph span{display:flex;flex-direction:column;gap:.25rem;align-items:center;text-align:center;border:8px solid #b8963e;padding:.6rem .8rem;background:var(--card);max-width:100%}
+.arpg-ph b{font-family:Georgia,serif;font-size:1rem;line-height:1.3}
+.arpg-ph small{font-size:.75rem;color:var(--muted)}
+.arpg-card figcaption{padding:.55rem .7rem .7rem;font-size:.86rem;line-height:1.45;display:flex;flex-direction:column;gap:.1rem}
+.arpg-t{font-family:Georgia,serif;font-style:italic;font-size:1rem}
+.arpg-m,.arpg-at{color:var(--muted)}
+.arpg-st{color:var(--ac);font-weight:600}
+.arpg-n{font-size:.8rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:.3rem;padding-top:.3rem}
+.arpg-cr{font-size:.75rem;color:var(--muted)}
+.arpg-on{font-size:.8rem;margin-top:.25rem}
+.arpg-on a{color:var(--ac)}
+.arpg-foot{margin-top:1.5rem}
+/* flashcards */
+.arpg-flash .arf-stage{min-height:300px;display:grid;place-items:center;border:1px solid var(--line);border-radius:16px;background:var(--card);padding:1rem;text-align:center}
+.arf-card{max-width:36rem;width:100%}
+.arf-card img{max-width:100%;max-height:340px;object-fit:contain;border-radius:8px;background:#111}
+.arf-front-t{font-family:Georgia,serif;font-size:1.5rem;line-height:1.3;margin:.2rem 0}
+.arf-ask{font-size:.95rem;color:var(--muted);margin:.4rem 0 0}
+.arf-back{margin-top:.8rem;padding-top:.8rem;border-top:2px solid var(--ac);font-size:1rem;line-height:1.5}
+.arf-back b{font-family:Georgia,serif;font-style:italic}
+.arf-back .arf-per{color:var(--ac);font-weight:600}
+.arf-actions{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin:.8rem 0}
+.arf-grade{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
+.arf-grade button{min-width:6rem}
+.arf-bar{display:flex;gap:.6rem;align-items:center;font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.arf-prog{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}.arf-prog i{display:block;height:100%;background:var(--ac);width:0}
+.arpg-seg{display:inline-flex;flex-wrap:wrap;gap:.3rem}
+.arpg-seg button{font:600 .85rem system-ui,sans-serif;min-height:38px;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:inherit;cursor:pointer}
+.arpg-seg button[aria-pressed="true"]{background:var(--ac);border-color:var(--ac);color:#fff}
+html[data-theme="dark"] .arpg-seg button[aria-pressed="true"]{color:#2a0b1e}
+@media (max-width:520px){.arpg-grid{grid-template-columns:1fr 1fr;gap:.5rem}.arpg-pic img{height:150px}.arpg-ph{height:120px}.arpg-card figcaption{font-size:.8rem}}
+@media (max-width:360px){.arpg-grid{grid-template-columns:1fr}}

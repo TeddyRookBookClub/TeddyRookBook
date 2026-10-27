@@ -1,0 +1,10 @@
+{{/* One page per practice step, from data/phonics.json */}}
+{{ range site.Data.phonics.steps }}
+  {{ $.AddPage (dict
+    "kind" "page"
+    "path" .key
+    "title" (printf "Phonics Practice, Step %d: %s" (int .n) .title)
+    "params" (dict "step" .key "description" (printf "Phonics practice, step %d: %s. %s Made by Teddy Rook Book to practice alongside Hannah Ward's reading lessons." (int .n) .title .blurb))
+    "dates" (dict "date" (time.AsTime "2026-10-25"))
+  ) }}
+{{ end }}
