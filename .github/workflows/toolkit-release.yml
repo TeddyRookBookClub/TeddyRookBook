@@ -1,0 +1,45 @@
+name: Toolkit release
+
+# Builds the site, then the Teddy Rook toolkit (the practice engine and the content of twelve ladders, released as-is:
+# MIT for code, CC BY-NC 4.0 for content), and puts teddy-rook-toolkit.zip on the GitHub release called "toolkit".
+# /developers/ links to that release. Runs only by hand or when a tag starting with "toolkit" is pushed, never on every push.
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "toolkit*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "toolkit-release"
+  cancel-in-progress: true
+
+jobs:
+  toolkit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: false
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.0'
+          extended: true
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Toolkit zip
+        run: node scripts/toolkit/build-toolkit.js public toolkit-dist
+
+      - name: Upload to the "toolkit" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view toolkit >/dev/null 2>&1 || gh release create toolkit --title "Teddy Rook toolkit" --notes "The Teddy Rook Book practice engine and the content of twelve ladders, to run yourself. Released as-is, with no support. Code: MIT. Content: CC BY-NC 4.0 (credit and a link back). Download teddy-rook-toolkit.zip and read README.md. More: https://teddyrookbook.com/developers/" --latest=false
+          gh release upload toolkit toolkit-dist/teddy-rook-toolkit.zip --clobber

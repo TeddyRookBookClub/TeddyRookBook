@@ -166,7 +166,7 @@ themes/PaperMod/    The theme.
 You need Hugo 0.147 or newer (the extended edition).
 
 ```
-git clone https://github.com/TeddyRookBookClub/TeddyRookBookClub.com.git
+git clone https://github.com/TeddyRookBookClub/TeddyRookBook.git
 cd TeddyRookBookClub.com
 hugo server
 ```
@@ -204,6 +204,10 @@ These data files are produced by scripts and shouldn't be edited by hand:
 | `data/jerome/*.json` | `python3 scripts/jerome/build.py` (reads the study companion PDF in `static/pdfs/`; needs pdfplumber) |
 | `static/markets/data/` | `python3 scripts/fetch_market_data.py` (run automatically at each build; not stored in the repository) |
 
+## Stable addresses
+
+Other sites frame these pages, so their addresses and parameters must keep working: `/embed/practice/?topic=<topic id>` (or `?course=<course key>`), `/embed/word/` (optional `?word=`) and `/embed/reading/`, each with optional `?theme=light|dark|auto`. They are listed in `data/embed.json`, shown on `/developers/`, and checked after every build by `node scripts/embed/check-embeds.js public` (the deploy fails if one breaks). The pages are `layouts/embed/`, `static/embed/`; they stay out of the search, the sitemap and the service worker. Their content can change freely. The toolkit zip for developers is built by `scripts/toolkit/build-toolkit.js` and published by the "Toolkit release" workflow (by hand or a `toolkit*` tag).
+
 ## Sources and licences
 
 The language data comes from openly licensed scholarly projects, and each keeps its own licence. The full list, with licences, is in [`static/lang/data/SOURCES.md`](static/lang/data/SOURCES.md). In short:
@@ -216,7 +220,7 @@ The language data comes from openly licensed scholarly projects, and each keeps 
 - **Garden data:** university extension publications, USDA FoodData Central and the CDC; each crop and guide section lists its sources.
 - **Market data:** FRED (Federal Reserve Bank of St. Louis), the US Treasury, and TradingView widgets.
 
-Because some of that data is licensed for non-commercial use only, the site as a whole is non-commercial. The infographics and written content are © Teddy Rook; please link to them rather than re-hosting.
+Because some of that data is licensed for non-commercial use only, the site as a whole is non-commercial. The infographics and written content are © Teddy Rook; please link to them rather than re-hosting. The ladder engine's code is MIT (copyright Teddy Rook); lessons and other content offered for reuse are CC BY-NC 4.0 with credit and a link back. See [/developers/](https://teddyrookbook.com/developers/).
 
 ## Contact
 

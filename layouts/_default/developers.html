@@ -1,0 +1,120 @@
+{{ define "main" }}
+{{- /* For developers & co-ops (/developers/): the embeds with copy-paste code and live previews, a snippet builder, the
+   toolkit download and the terms. The embeds and the toolkit facts come from data/embed.json (the same list
+   scripts/embed/check-embeds.js checks in every build). The builder's topic lists are published at build time as
+   /developers/topics.json (topic ids and titles of every ladder course, about 300 KB; fetched when the builder is used).
+   Scripts: static/developers/dev.js. Previews add ?preview=1, so trying one never touches the visitor's own progress. */ -}}
+{{- $E := site.Data.embed -}}
+{{- $site := "" | absURL -}}
+{{- $g := partialCached "inline/ml-graph.html" "graph" -}}
+{{- $lads := slice }}{{ $T := dict -}}
+{{- range partial "inline/ml-ladders.html" "x" -}}
+  {{- $L := . }}{{ $LD := index site.Data .dir | default dict }}{{ $cs := slice -}}
+  {{- range $LD.courses | default slice -}}
+    {{- $c := . }}{{ $ts := slice -}}
+    {{- with index ($LD.topics | default dict) .key }}{{ range .topics }}{{ if not (index $g.soon .id) }}{{ $ts = $ts | append (dict "i" .id "t" .title) }}{{ end }}{{ end }}{{ end -}}
+    {{- if $ts }}{{ $cs = $cs | append (dict "key" .key "title" .title) }}{{ $T = merge $T (dict .key $ts) }}{{ end -}}
+  {{- end -}}
+  {{- if $cs }}{{ $lads = $lads | append (dict "key" $L.key "title" $L.title "courses" $cs) }}{{ end -}}
+{{- end -}}
+{{- $topics := resources.FromString "developers/topics.json" ($T | jsonify) | fingerprint "md5" -}}
+<link rel="stylesheet" href="{{ "developers/dev.css" | relURL }}?v={{ (os.Stat "static/developers/dev.css").ModTime.Unix }}">
+<div class="trb-group dev" id="dev" data-site="{{ $site }}" data-topics="{{ $topics.RelPermalink }}">
+  <header class="trb-ghero">
+    <p class="trb-geyebrow">Teddy Rook Book · For developers &amp; co-ops</p>
+    <h1>Use Teddy Rook Book on your own site</h1>
+    <p>Put ladder practice, the Vocabulary word of the day or the day’s Harvard Classics reading on your co-op’s site with one line of HTML. Or download the practice engine and its lessons and problem banks to run yourself. It’s all free, and it comes as-is.</p>
+  </header>
+
+  <nav class="dev-toc" aria-label="On this page">
+    <a href="#embeds">Embeds</a><a href="#builder">Build your snippet</a><a href="#toolkit">The toolkit</a><a href="#terms">Terms</a><a href="#not-included">What’s not included</a>
+  </nav>
+
+  <section class="dev-sec" id="embeds" aria-labelledby="embeds-h">
+    <h2 id="embeds-h">Embeds: one line of HTML</h2>
+    <p>Each embed is a small page on teddyrookbook.com made to sit in a frame on another site. It has no menus or ads, it works from 280 to 900 pixels wide, and it always shows a small “From Teddy Rook Book” link. Because it runs on this site, it gets every fix and new lesson on its own. Paste the code where you want it to appear.</p>
+    <div class="dev-cards">
+    {{- range $i, $e := $E.embeds }}
+      {{- $src := printf "%s%s" (strings.TrimPrefix "/" $e.path | absURL) (cond (ne $e.query "") (printf "?%s" $e.query) "") -}}
+      {{- $snip := printf "<iframe src=\"%s\" title=\"%s from Teddy Rook Book\" width=\"100%%\" height=\"%d\" style=\"border:0;max-width:900px\" loading=\"lazy\"></iframe>" $src $e.title (int $e.height) -}}
+      {{- $prev := printf "%s%spreview=1" $src (cond (ne $e.query "") "&" "?") }}
+      <article class="dev-card" id="embed-{{ $e.key }}">
+        <div class="dev-card-text">
+          <h3>{{ $e.title }}</h3>
+          <p>{{ $e.text }}</p>
+          <p class="dev-addr"><code>{{ $e.path }}{{ with $e.query }}?{{ . }}{{ end }}</code>{{ with $e.params }}<br><span>{{ . }}</span>{{ end }}<br><span>theme (optional): auto, light or dark</span></p>
+          <div class="dev-code">
+            <label class="dev-sr" for="snip-{{ $i }}">Code for {{ $e.title }}</label>
+            <textarea id="snip-{{ $i }}" class="dev-snip" readonly rows="4" spellcheck="false">{{ $snip }}</textarea>
+            <button type="button" class="dev-btn" data-copy="snip-{{ $i }}">Copy the code</button>
+          </div>
+        </div>
+        <div class="dev-prev">
+          <p class="dev-prev-lab">Live preview</p>
+          <iframe src="{{ $prev }}" title="Preview: {{ $e.title }}" height="{{ $e.height }}" loading="lazy"></iframe>
+        </div>
+      </article>
+    {{- end }}
+    </div>
+    <p class="dev-note">Progress in a practice embed is kept in the visitor’s browser, inside the frame. Browsers keep a framed page’s storage apart from the same site opened in its own tab, so a learner’s embed progress and their progress on teddyrookbook.com don’t mix. Each embed says so in small print, with a link to open the same thing on the full site. If a browser blocks storage in frames, practice still works; it just isn’t saved.</p>
+  </section>
+
+  <section class="dev-sec" id="builder" aria-labelledby="builder-h">
+    <h2 id="builder-h">Build your snippet</h2>
+    <p>Pick a ladder, a course and a topic (or the whole course), then a theme and a height. Copy the code, or preview it first.</p>
+    <form class="dev-build" id="dev-build" onsubmit="return false">
+      <label><span>Ladder</span><select id="b-ladder">{{ range $lads }}<option value="{{ .key }}">{{ .title }}</option>{{ end }}</select></label>
+      <label><span>Course</span><select id="b-course"></select></label>
+      <label class="dev-wide"><span>Topic</span><select id="b-topic"><option value="">Whole course: the ladder’s mixed practice</option></select></label>
+      <label><span>Theme</span><select id="b-theme"><option value="auto">Auto (matches the visitor’s device)</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+      <label><span>Height</span><select id="b-height"><option value="480">480 px</option><option value="560" selected>560 px</option><option value="640">640 px</option><option value="720">720 px</option><option value="900">900 px</option></select></label>
+    </form>
+    <div class="dev-code">
+      <label class="dev-sr" for="b-out">Your code</label>
+      <textarea id="b-out" class="dev-snip" readonly rows="4" spellcheck="false">Choose a ladder and course above.</textarea>
+      <div class="dev-acts"><button type="button" class="dev-btn" data-copy="b-out">Copy the code</button><button type="button" class="dev-btn ghost" id="b-prev">Preview it</button><span class="dev-msg" id="b-msg" aria-live="polite"></span></div>
+    </div>
+    <div class="dev-prev dev-bprev" id="b-prevbox" hidden><p class="dev-prev-lab">Preview</p><iframe id="b-frame" title="Preview of your embed" height="560"></iframe></div>
+    <noscript><p class="dev-note">The builder needs JavaScript. You can still copy the code above and change the topic id by hand.</p></noscript>
+    <script type="application/json" id="dev-lads">{{ $lads | jsonify | safeJS }}</script>
+  </section>
+
+  <section class="dev-sec" id="toolkit" aria-labelledby="toolkit-h">
+    <h2 id="toolkit-h">The toolkit: run it yourself</h2>
+    <p>For developers who want the practice on their own server or in their own app, with no connection to this site. One zip file holds:</p>
+    <ul class="dev-list">
+      <li><b>The engine:</b> the answer checker, the math typesetter, the answer box, the mastery and review engine and the problem card (plain JavaScript and CSS, no outside libraries).</li>
+      <li><b>Twelve ladders:</b> Math, Physics, Chemistry, Biology, Earth &amp; Space, Writing &amp; Grammar, Vocabulary, Logic, Geography, American History &amp; Civics, Economics and Etiquette, each with its topic maps, lessons, problem generators and visuals.</li>
+      <li><b>Vocabulary:</b> the 1,000-word list with meanings, memory hooks and the drawings for each word.</li>
+      <li><b>The Family Study units</b> (one theme for the whole family, each child at their level).</li>
+      <li><b>An example page</b> that runs practice for any topic, with no internet connection.</li>
+      <li>The licenses, a list of the outside pieces and their licenses, and a short README.</li>
+    </ul>
+    <p><a class="dev-btn pri" href="{{ $E.toolkit.download }}">Download teddy-rook-toolkit.zip</a> <a class="dev-btn ghost" href="{{ $E.toolkit.release }}">The release page</a>{{ with $E.toolkit.size }} <span class="dev-msg">About {{ . }}</span>{{ end }}</p>
+    <p class="dev-note">If the download says “Not Found”, the first release hasn’t been published yet. Please check back later. Developers can also build the zip from the site’s source: run <code>hugo</code>, then <code>node scripts/toolkit/build-toolkit.js public</code>.</p>
+  </section>
+
+  <section class="dev-sec" id="terms" aria-labelledby="terms-h">
+    <h2 id="terms-h">The terms, in plain words</h2>
+    <dl class="dev-terms">
+      <div><dt>It’s free.</dt><dd>No fee, no sign-up and no key. Embeds and the toolkit carry no ads and no tracking.</dd></div>
+      <div><dt>The code is MIT.</dt><dd>The engine’s code (the JavaScript and CSS) is under the MIT License, copyright Teddy Rook. Use it, change it and share it, even in paid products, as long as the copyright and license notice stay with it.</dd></div>
+      <div><dt>The content is CC BY-NC 4.0.</dt><dd>The lessons, the problem generators’ question text, the topic maps, the word lists and the readings’ guides are under <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0</a>. Use and adapt them for teaching that isn’t sold, and give credit with a link back, like this: <q>From Teddy Rook Book (teddyrookbook.com), CC BY-NC 4.0.</q> Say if you changed anything. Public-domain texts, like the Harvard Classics readings themselves, stay public domain.</dd></div>
+      <div><dt>Embeds just work.</dt><dd>You’re welcome to frame an embed on your site, co-op page or class page. Please keep the “From Teddy Rook Book” link visible.</dd></div>
+      <div><dt>The addresses stay put.</dt><dd>The embed addresses above (<code>/embed/practice/</code>, <code>/embed/word/</code> and <code>/embed/reading/</code>, with the parameters shown) will keep working for as long as the site is up. What’s inside them will change as lessons improve.</dd></div>
+      <div><dt>As-is, with no support.</dt><dd>This is a one-person project. Everything here comes as-is, with no guarantees and no promise of help, fixes or notice of changes. There are no versions to track and no support line. Test it on your site, and keep a copy of the toolkit you rely on.</dd></div>
+    </dl>
+    <p class="dev-note">To share a note or a broken link, Teddy Rook is on X as <a href="https://x.com/teddyrookbook" rel="noopener">@teddyrookbook</a>. Replies aren’t promised.</p>
+  </section>
+
+  <section class="dev-sec" id="not-included" aria-labelledby="ni-h">
+    <h2 id="ni-h">What’s not included, and why</h2>
+    <ul class="dev-list">
+      {{- range $E.withheld }}<li><b>{{ .name }}:</b> {{ .why }}. They stay on the site only.</li>{{ end }}
+      {{- range $E.left_out }}<li><b>{{ .name }}:</b> {{ .why }}.</li>{{ end }}
+    </ul>
+    <p class="dev-note">The embeds show only what’s on this site. The toolkit leaves out anything whose license doesn’t let us pass it on.</p>
+  </section>
+</div>
+<script src="{{ "developers/dev.js" | relURL }}?v={{ (os.Stat "static/developers/dev.js").ModTime.Unix }}" defer></script>
+{{ end }}

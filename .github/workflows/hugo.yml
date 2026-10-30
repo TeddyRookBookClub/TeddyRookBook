@@ -43,6 +43,10 @@ jobs:
       - name: Build
         run: hugo --minify
 
+      # Other sites frame /embed/… (data/embed.json); fail the deploy if a documented embed address or example breaks.
+      - name: Check embeds
+        run: node scripts/embed/check-embeds.js public
+
       # Lists every file of each section with a fingerprint, for /offline/ and the download kit's updater.
       - name: Offline manifests
         run: node scripts/offline/build-manifests.js public

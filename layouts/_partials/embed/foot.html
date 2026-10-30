@@ -1,0 +1,8 @@
+{{- /* Embeds: the bar at the bottom of every embed (always in view): the "From Teddy Rook Book" link, and for practice the
+   note on where progress is kept. Argument: (dict "open" <the same thing's URL on the site> "save" true|false). */ -}}
+<footer class="emb-foot">
+  <a class="emb-brand" href="{{ "" | absURL }}" target="_blank" rel="noopener"><span class="emb-logo" aria-hidden="true">♜</span> From <b>Teddy Rook Book</b></a>
+  <p class="emb-fine">{{ if .save }}<span id="emb-save">Progress is saved in this browser, for this frame only.</span> {{ end }}<a id="emb-open" href="{{ .open | absURL }}" target="_blank" rel="noopener">Open on Teddy Rook Book</a></p>
+</footer>
+</body>
+</html>

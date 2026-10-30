@@ -1,0 +1,68 @@
+{
+  "about": "The embed and toolkit contract. The /embed/ addresses below are promised to keep working. scripts/embed/check-embeds.js checks every one in the build (run by .github/workflows/hugo.yml); /developers/ shows them; scripts/toolkit/build-toolkit.js reads toolkit and withheld. Edit with care.",
+  "embeds": [
+    {
+      "key": "practice-topic",
+      "path": "/embed/practice/",
+      "query": "topic=g3.add-within-1000",
+      "title": "Practice one topic",
+      "text": "Problems for one ladder topic, checked as you go, with the lesson a tap away. Three right answers, the last two in a row, pass the topic.",
+      "height": 560,
+      "params": "topic: a topic id, like g3.add-within-1000 (pick one below)"
+    },
+    {
+      "key": "practice-course",
+      "path": "/embed/practice/",
+      "query": "course=micro",
+      "title": "Practice a whole course",
+      "text": "The ladder’s own practice for one course: new topics in teaching order, mixed reviews and checkpoints.",
+      "height": 620,
+      "params": "course: a course key, like micro or alg1"
+    },
+    {
+      "key": "word",
+      "path": "/embed/word/",
+      "query": "",
+      "title": "Vocabulary word of the day",
+      "text": "One word from the Vocabulary Ladder each day, the same for everyone, with its picture, meaning and memory hook.",
+      "height": 600,
+      "params": "word (optional): one word from the list, like indignant"
+    },
+    {
+      "key": "reading",
+      "path": "/embed/reading/",
+      "query": "",
+      "title": "Today’s Harvard Classics reading",
+      "text": "The day’s fifteen-minute reading from the Harvard Classics, with a link to the full text.",
+      "height": 420,
+      "params": ""
+    }
+  ],
+  "examples": {
+    "topics": ["g3.add-within-1000", "alg1.evaluate-expressions", "phys1.average-velocity", "chem.states-of-matter", "micro.opportunity-cost", "informal.arguments", "young.please", "fwr.what-is-a-sentence", "adv.angry", "worldgeo.latitude", "gov.purposes-of-government", "lifesci.microscope", "earthsci.day-and-night"],
+    "courses": ["g3", "alg1", "phys1", "micro", "fwr"],
+    "words": ["indignant"]
+  },
+  "options": {
+    "theme": ["auto", "light", "dark"]
+  },
+  "toolkit": {
+    "release": "https://github.com/TeddyRookBookClub/TeddyRookBook/releases/tag/toolkit",
+    "download": "https://github.com/TeddyRookBookClub/TeddyRookBook/releases/download/toolkit/teddy-rook-toolkit.zip",
+    "size": "13 MB",
+    "ladders": ["math", "physics", "chemistry", "bio", "earth", "writing", "vocab", "logic", "geog", "civics", "economics", "etiquette"]
+  },
+  "withheld": [
+    {
+      "name": "Hannah Ward’s Actual Reading lessons",
+      "why": "shared on the site with her permission, which doesn’t yet cover embeds or downloads",
+      "paths": ["/homeschool/actual-reading/"],
+      "data": ["hs_hannah"]
+    }
+  ],
+  "left_out": [
+    { "name": "Markets data", "why": "FRED and other data providers set their own terms" },
+    { "name": "Greek and Latin language data", "why": "several sources allow only non-commercial use under their own licenses (see static/lang/data/SOURCES.md)" },
+    { "name": "Art, Egyptology and Ancient Scripts ladders", "why": "they use artwork, fonts and images with their own licenses" }
+  ]
+}

@@ -1,0 +1,14 @@
+{{- /* Embeds (/embed/…): the top of every embed page. A whole page of its own (no site header, footer, menu, profiles,
+   install prompts or fonts from other sites), made to sit in an <iframe> on another site. Argument: the page.
+   Theme from ?theme=light|dark|auto (static/embed/embed.js, run before the page paints). Links open in a new tab. */ -}}
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title>{{ .Title }} · Teddy Rook Book</title>
+<base target="_blank">
+<script src="{{ "embed/embed.js" | relURL }}?v={{ (os.Stat "static/embed/embed.js").ModTime.Unix }}"></script>
+<link rel="stylesheet" href="{{ "embed/embed.css" | relURL }}?v={{ (os.Stat "static/embed/embed.css").ModTime.Unix }}">

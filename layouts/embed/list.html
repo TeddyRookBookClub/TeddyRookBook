@@ -1,0 +1,11 @@
+{{- /* /embed/: not an embed itself; points people to /developers/, which lists the embeds and how to use them. */ -}}
+{{- partial "embed/head.html" . -}}
+</head>
+<body class="emb emb-index">
+<main class="emb-main">
+  <div class="emb-card">
+    <h1>Teddy Rook Book embeds</h1>
+    <p>These small pages are made to sit inside other sites. To see them all and get the one line of code for each, visit <a href="{{ "developers/" | relURL }}">For developers &amp; co-ops</a>.</p>
+  </div>
+</main>
+{{ partial "embed/foot.html" (dict "open" "developers/") }}

@@ -1,0 +1,75 @@
+{{- /* Embeds: /embed/practice/, /embed/word/ and /embed/reading/ (content/embed/<name>.md, param embed). Each is a whole page
+   with no site chrome, for an <iframe> on another site. The addresses and their parameters are a promise to other sites:
+   they are listed in data/embed.json, shown on /developers/ and checked in every build by scripts/embed/check-embeds.js.
+   Not in the search, the sitemap or the feed (content/embed/_index.md); the service worker leaves /embed/ alone. */ -}}
+{{- $k := .Params.embed -}}
+{{- partial "embed/head.html" . -}}
+{{- if eq $k "practice" }}
+{{ partial "inline/ml-css.html" "math/core/core.css" }}
+{{ partial "inline/ml-css.html" "math/viz/viz.css" }}
+{{ partial "inline/ml-css.html" "math/math.css" }}
+{{ partial "inline/ml-css.html" "math/viz/basic.css" }}
+{{ partial "inline/ml-css.html" "math/viz/adv.css" }}
+</head>
+<body class="emb emb-practice">
+<main class="emb-main">
+  <div class="mlp emb-prac" id="emb-prac">
+    <header class="emb-head" id="emb-head"></header>
+    <div id="emb-task" class="mlp-task" aria-live="polite"><p class="mlp-loading">Loading practice…</p></div>
+    <noscript><p class="mlp-soon">Practice needs JavaScript turned on.</p></noscript>
+  </div>
+</main>
+{{ partial "inline/ml-cfg.html" (dict "page" "embed" "ladder" "math") }}
+<script type="application/json" id="emb-withheld">{{ $paths := slice }}{{ range site.Data.embed.withheld }}{{ $paths = $paths | append .paths }}{{ end }}{{ $paths | jsonify | safeJS }}</script>
+<script>
+/* Pick the ladder from ?topic= or ?course= before the ladder scripts read the config (they run after this, deferred). */
+(function (W, D) {
+  var ML = W.MathLadder = W.MathLadder || {}, c;
+  try { c = JSON.parse(D.getElementById('ml-cfg').textContent); } catch (e) { return; }
+  var q = new URLSearchParams(W.location.search), t = (q.get('topic') || '').trim(), k = (q.get('course') || '').trim() || t.split('.')[0];
+  var co = (c.courses || []).filter(function (x) { return x.key === k; })[0], lk = (co && co.ladder) || 'math';
+  var L = (c.ladders || []).filter(function (x) { return x.key === lk; })[0];
+  c.ladder = lk; if (L) c.base = L.url;
+  ML.cfg = c;
+})(window, document);
+</script>
+{{ partial "inline/ml-js.html" "homeschool/calc/cas.js" }}
+{{ partial "inline/ml-js.html" "math/core/gen.js" }}
+{{ partial "inline/ml-js.html" "math/core/tex.js" }}
+{{ partial "inline/ml-js.html" "math/core/check.js" }}
+{{ partial "inline/ml-js.html" "math/core/input.js" }}
+{{ partial "inline/ml-js.html" "math/core/engine.js" }}
+{{ partial "inline/ml-js.html" "math/core/runner.js" }}
+{{ partial "inline/ml-js.html" "math/viz/core.js" }}
+{{ partial "inline/ml-js.html" "math/app/ui.js" }}
+{{ partial "inline/ml-js.html" "embed/practice.js" }}
+{{ partial "embed/foot.html" (dict "open" "math/" "save" true) }}
+
+{{- else if eq $k "word" }}
+{{ partial "inline/ml-css.html" "math/core/core.css" }}
+{{ partial "inline/ml-css.html" "math/math.css" }}
+{{ partial "inline/ml-css.html" "vocab/viz/vocab.css" }}
+{{ partial "inline/ml-css.html" "vocab/app/pages.css" }}
+</head>
+<body class="emb emb-word">
+<main class="emb-main">
+  {{- $O := partialCached "vocab/order.html" "x" -}}
+  {{- $slugs := slice }}{{ range $O.words }}{{ $slugs = $slugs | append (. | urlize) }}{{ end }}
+  <div class="mlp vop emb-wordbox" id="emb-word" data-base="{{ "vocabulary/words/" | relURL }}">
+    <p class="emb-eye"><a href="{{ "vocabulary/" | relURL }}">Vocabulary</a> <span id="emb-wdate">Word of the day</span></p>
+    <div id="emb-wcard"><p class="mlp-loading">Finding today’s word…</p></div>
+  </div>
+  <script type="application/json" id="emb-words">{{ $slugs | jsonify | safeJS }}</script>
+</main>
+{{ partial "inline/ml-js.html" "vocab/viz/vocab.js" }}
+{{ partial "inline/ml-js.html" "embed/word.js" }}
+{{ partial "embed/foot.html" (dict "open" "vocabulary/") }}
+
+{{- else if eq $k "reading" }}
+</head>
+<body class="emb emb-reading">
+<main class="emb-main">
+  {{ partial "hc-today.html" . }}
+</main>
+{{ partial "embed/foot.html" (dict "open" "harvard-classics/") }}
+{{- end }}

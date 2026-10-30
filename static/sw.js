@@ -6,14 +6,14 @@
      "not saved" page.
    - Other files: the network first; the saved copy only when the network fails. So online browsing
      works exactly as without this file.
-   - Live data (Markets) and the offline manifests are never touched.
+   - Live data (Markets), the offline manifests and the embeds for other sites (/embed/) are never touched.
    - Saving, removing and updating sections is done by /js/offline-core.js (shared with /offline/).
 */
 'use strict';
 importScripts('/js/offline-core.js');
 var SHELL = 'trb-off-shell-v1';
 var FALLBACK = '/offline/fallback/';
-var SKIP = /^\/(markets|offline\/manifests)\//;
+var SKIP = /^\/(markets|offline\/manifests|embed)\//;
 var FONTS = /^https:\/\/fonts\.(googleapis|gstatic)\.com\//;
 
 /* Keep a copy of the small "not saved" page and its stylesheet, so it can be shown even before any section is saved. */

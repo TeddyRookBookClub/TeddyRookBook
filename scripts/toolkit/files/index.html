@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice · Teddy Rook toolkit example</title>
+<!-- The Teddy Rook toolkit's example: practice for one topic, with no internet connection.
+     Open this file in a browser (or serve the folder with any web server; then the lessons and Geography maps load too).
+     Pick a topic below, or add #<topic id> to the address, like index.html#g3.add-within-1000 -->
+<link rel="stylesheet" href="math/core/core.css">
+<link rel="stylesheet" href="math/viz/viz.css">
+<link rel="stylesheet" href="math/viz/basic.css">
+<link rel="stylesheet" href="math/viz/adv.css">
+<link rel="stylesheet" href="math/math.css">
+<link rel="stylesheet" href="example.css">
+<script>try { if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) { }</script>
+</head>
+<body>
+<main class="ex-main">
+  <header class="ex-head">
+    <p class="ex-eye">Teddy Rook toolkit · example</p>
+    <h1>Practice a topic</h1>
+    <form class="ex-pick" onsubmit="return false">
+      <label>Ladder <select id="ex-ladder"></select></label>
+      <label>Course <select id="ex-course"></select></label>
+      <label>Topic <select id="ex-topic"></select></label>
+    </form>
+  </header>
+  <div class="mlp" id="ex-topic-box">
+    <h2 class="ex-title" id="ex-title"></h2>
+    <p class="ex-short" id="ex-short"></p>
+    <details class="mlp-inlesson" id="ex-lesson"><summary>The lesson</summary><div id="ex-lesson-body"><p class="mlp-loading">Loading…</p></div></details>
+    <div id="ex-runner"><p class="mlp-loading">Loading…</p></div>
+  </div>
+  <footer class="ex-foot">Content from <a href="https://teddyrookbook.com/">Teddy Rook Book</a> (teddyrookbook.com), CC BY-NC 4.0. Engine code MIT. Progress is kept in this browser.</footer>
+</main>
+<script src="cfg.js"></script>
+<script src="graph.js"></script>
+<script src="homeschool/calc/cas.js"></script>
+<script src="math/core/gen.js"></script>
+<script src="math/core/tex.js"></script>
+<script src="math/core/check.js"></script>
+<script src="math/core/input.js"></script>
+<script src="math/core/engine.js"></script>
+<script src="math/core/runner.js"></script>
+<script src="math/viz/core.js"></script>
+<script src="example.js"></script>
+</body>
+</html>
