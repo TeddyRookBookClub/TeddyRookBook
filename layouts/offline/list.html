@@ -1,0 +1,90 @@
+{{ define "main" }}
+{{- /* Offline: choose sections to keep on this device (static/offline/offline.js, static/js/offline-core.js, static/sw.js),
+       and the download kit for a computer. Section list and sizes come from /offline/manifests/index.json, written at build time
+       by scripts/offline/build-manifests.js. */ -}}
+{{- $kit := "https://github.com/TeddyRookBookClub/TeddyRookBook/releases/download/offline/TeddyRookBook-offline-kit.zip" -}}
+<link rel="stylesheet" href="{{ "offline/offline.css" | relURL }}?v={{ (os.Stat "static/offline/offline.css").ModTime.Unix }}">
+<div class="trb-group off" id="off">
+  <header class="trb-ghero">
+    <p class="trb-geyebrow">Teddy Rook Book · Offline</p>
+    <h1>Use the site without a connection</h1>
+    <p>Keep the parts you use most on this device. Lessons, ladder practice, the planner and most games then work on a plane, in the car or anywhere the internet is slow. When the site changes, only the changed files download.</p>
+  </header>
+
+  <noscript><p class="off-note">Saving pages for offline use needs JavaScript. The download kit below works without it.</p></noscript>
+
+  <section class="off-card" id="off-status" aria-live="polite">
+    <h2>On this device</h2>
+    <p class="off-note" data-off="msg">Checking what is saved…</p>
+    <div class="off-stats" data-off="stats" hidden></div>
+    <div class="off-update" id="update" data-off="update" hidden></div>
+    <div class="off-saved" data-off="saved" hidden></div>
+    <div class="off-install" data-off="install" hidden>
+      <button type="button" class="off-btn" data-off="install-btn">Install the app</button>
+      <span class="off-note">Adds Teddy Rook Book to your home screen or app list, with its own window.</span>
+    </div>
+  </section>
+
+  <section class="off-card" id="off-pick">
+    <h2>Choose what to keep offline</h2>
+    <p class="off-note">Tick the sections you want. The sizes are what they take on this device. Every choice also saves the site basics: the home page, menus, styles and search (<span data-off="core-size">a few MB</span>).</p>
+    <div class="off-groups" data-off="groups"><p class="off-note">Loading the list of sections…</p></div>
+    <div class="off-bar" data-off="bar">
+      <p class="off-sum" data-off="sum">Nothing chosen yet.</p>
+      <div class="off-acts">
+        <button type="button" class="off-btn pri" data-off="apply" disabled>Save my choices</button>
+        <button type="button" class="off-btn" data-off="stop" hidden>Stop</button>
+      </div>
+      <div class="off-prog" data-off="prog" hidden><div class="off-prog-bar"><span></span></div><p class="off-note" data-off="prog-txt"></p></div>
+    </div>
+  </section>
+
+  <section class="off-card off-doc">
+    <h2>Two ways to use the site offline</h2>
+    <div class="off-two">
+      <div>
+        <h3>1. Save sections in your browser</h3>
+        <p>Use the list above. It works on phones, tablets and computers, in Chrome, Edge, Safari and Firefox.</p>
+        <ol>
+          <li>Tick the sections you want and press <b>Save my choices</b>. Keep this page open until it says it is done.</li>
+          <li>For an icon of its own, install the app. In Chrome or Edge, press <b>Install the app</b> above, or use the install icon in the address bar. On an iPhone or iPad, open the site in Safari, tap <b>Share</b>, then <b>Add to Home Screen</b>. On Android, open the browser menu and choose <b>Install app</b> or <b>Add to Home screen</b>.</li>
+          <li>When the site changes, you will see <b>Update available</b> with its size. Press <b>Update</b> and only the changed files download.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>2. Download a copy for a computer</h3>
+        <p>The download kit keeps a full copy of the sections you pick in a folder on a Mac, Windows or Linux computer. Nothing to install.</p>
+        <ol>
+          <li><a href="{{ $kit }}">Download the kit</a> (a small zip file) and unzip it where you like.</li>
+          <li>Open the folder and double-click <b>Get or Update Sections</b>. Pick the sections you want by number. It downloads them and, later, only what changed.</li>
+          <li>Double-click <b>Start Teddy Rook Book</b>. The site opens in your browser from your own computer, at <code>http://localhost:8317</code>. Close the small window to stop it.</li>
+        </ol>
+        <p class="off-note">On a Mac, the first time, right-click the file and choose <b>Open</b>. On Windows, if a blue box appears, choose <b>More info</b>, then <b>Run anyway</b>. On Linux, run <code>./start.sh</code> and <code>./update.sh</code>.</p>
+      </div>
+    </div>
+
+    <h3>Which one to choose</h3>
+    <div class="off-tw"><table class="off-tab">
+      <thead><tr><th></th><th>Save in your browser</th><th>Download kit</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Works on</th><td>Phones, tablets and computers</td><td>Mac, Windows and Linux computers</td></tr>
+        <tr><th scope="row">Getting started</th><td>Tick sections on this page</td><td>Download a zip, then double-click</td></tr>
+        <tr><th scope="row">Updates</th><td>One button; only changed files</td><td>Double-click Update; only changed files</td></tr>
+        <tr><th scope="row">Saves and learner profiles</th><td>The same ones you use here</td><td>Kept separately; move them with My Progress</td></tr>
+        <tr><th scope="row">Space</th><td>The browser decides how much it allows</td><td>Any folder or USB stick</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Good to know</h3>
+    <ul>
+      <li><b>Your saves stay on your device.</b> Learner profiles, progress and planner notes are kept in your browser, online or not. The download kit runs at its own address, so it keeps its own saves. To move them, use <a href="{{ "progress/" | relURL }}">My Progress</a> to save a file and load it in the other copy.</li>
+      <li><b>Some things always need the internet:</b> Markets and its live data, Free Books, Your Tax Receipt, YouTube videos, the recorded Greek Gospel readings and links to other websites.</li>
+      <li><b>Pages you did not save</b> show a short note when there is no connection, with a link back to what you have.</li>
+      <li><b>Space:</b> a phone or tablet may clear saved websites when it runs very low on space. Safari can also clear them for a site you have not opened in a while, unless it is on your Home Screen. If that happens, choose your sections again.</li>
+      <li><b>Nothing downloads unless you ask.</b> Visiting the site does not save anything large on your device.</li>
+    </ul>
+  </section>
+</div>
+<script src="{{ "js/offline-core.js" | relURL }}?v={{ (os.Stat "static/js/offline-core.js").ModTime.Unix }}"></script>
+<script src="{{ "offline/offline.js" | relURL }}?v={{ (os.Stat "static/offline/offline.js").ModTime.Unix }}"></script>
+{{ end }}

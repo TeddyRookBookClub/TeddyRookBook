@@ -1,0 +1,93 @@
+# Family Study unit (the format is described at the top of layouts/homeschool/family.html).
+# key = file name; parts = about one week each; read/more = [title, URL on this site]; ask = three depths (all, older, oldest);
+# A, B, C, D = ladder topic ids for ages 5-7, 8-10, 11-13 and 14-18; projects A-D = { t, do, rubric: [3 or 4 things to look for] }.
+key: measurement
+title: "Measurement"
+subject: math
+icon: "📏"
+blurb: "Length, weight, capacity, time and temperature, measured around the house, with units, conversions and estimates."
+parts:
+  - title: "Length"
+    read: ["Measure Length", "/math/grade-2/measure-length/"]
+    ask:
+      - "How many of your hands tall is the table?"
+      - "Why did people stop measuring with hands and feet?"
+      - "Why does the world mostly use meters, and why does the United States still use feet and inches?"
+    do: "Measure the same table with hand spans, a shoe, a ruler and a tape measure. Compare everyone's hand-span answers and talk about why they differ."
+    A: [k.compare-directly, g1.order-by-length, g1.measure-with-units]
+    B: [g2.measure-length, g2.estimate-length, g3.measure-half-quarter-inch]
+    C: [g4.convert-units, g5.convert-units-multistep, g6.convert-units-ratios]
+    D: [chem.si-prefixes, chem.dimensional-analysis, phys1.dimensional-analysis]
+  - title: "Weight and Mass"
+    read: ["Mass and Liquid Volume", "/math/grade-3/mass-and-liquid-volume/"]
+    ask:
+      - "Which is heavier, a pillow or a can of beans?"
+      - "Big things are not always heavy. Why not?"
+      - "What is the difference between mass and weight? Would you weigh the same on the Moon?"
+    do: "Make a balance from a hanger and two cups. Compare pairs of things from the kitchen, then check with a kitchen scale."
+    A: [k.compare-directly, k.describe-attributes, k.more-fewer-same]
+    B: [g3.mass-and-liquid-volume, g4.convert-units, g4.measurement-word-problems]
+    C: [g4.measurement-word-problems, chem.density, physsci.mass-weight]
+    D: [physsci.mass-weight, phys1.gravitational-field, chem.density]
+  - title: "Capacity and Volume"
+    read: ["Volume with Unit Cubes", "/math/grade-5/volume-unit-cubes/"]
+    ask:
+      - "Which glass holds the most? Guess, then pour to check."
+      - "How many cups make a quart? A gallon?"
+      - "A tall thin glass and a short wide one can hold the same amount. How can you prove it?"
+    do: "Pouring station at the sink: cups, pints, quarts and a gallon jug. Find how many of each fill the next one, and make a chart."
+    A: [k.compare-directly, k.more-fewer-same, g1.measure-with-units]
+    B: [g3.mass-and-liquid-volume, g5.volume-unit-cubes, g5.volume-of-prism]
+    C: [g5.volume-base-times-height, g6.volume-fractional-edges, g7.volume-prisms]
+    D: [g8.volume-cylinders, g8.volume-cones, g8.volume-spheres, geo.scaling-solids]
+  - title: "Time"
+    read: ["Time to the Hour and Half Hour", "/math/grade-1/time-hour-half-hour/"]
+    more: [["Home Geography: How the sun shows direction", "/homeschool/geography/home-geography/lesson-2/"]]
+    ask:
+      - "What time do we eat breakfast? Lunch?"
+      - "How much time passes from when school starts to lunch?"
+      - "Before clocks, how did people tell time? Why did railroads need everyone's clocks to agree?"
+    do: "Make a family daily schedule with clock faces drawn for each part of the day. Use a timer to guess and check how long chores really take."
+    A: [g1.time-hour-half-hour, g2.time-five-minutes, g2.am-pm]
+    B: [g2.time-five-minutes, g3.time-to-minute, g3.elapsed-time]
+    C: [g3.elapsed-time, usgeo.time-zones, worldgeo.world-time-math]
+    D: [worldgeo.why-time-zones, worldgeo.world-time-math, worldgeo.date-line, astro.solar-sidereal-day]
+  - title: "Temperature"
+    read: ["Temperature Scales in Chemistry", "/chemistry/chemistry/temperature-scales/"]
+    ask:
+      - "Is it hot or cold outside today? How can we know for sure?"
+      - "What temperature does water freeze at? Boil at?"
+      - "Why are there different temperature scales, and how do you change from one to another?"
+    do: "Read a thermometer at the same time each day for a week, indoors and out. Graph both lines on the same chart."
+    A: [g1.data-three-groups, k.more-fewer-same, k.compare-numerals]
+    B: [g2.line-plots, g3.scaled-graphs, physsci.heat-transfer]
+    C: [g6.negatives-in-context, g7.add-integers, physsci.heat-transfer]
+    D: [chem.temperature-scales, chem.heat-temperature, chem.specific-heat]
+  - title: "Estimating and Checking"
+    read: ["Estimate Length", "/math/grade-2/estimate-length/"]
+    ask:
+      - "How many steps is it to the mailbox? Guess, then count."
+      - "When is a good estimate better than an exact answer?"
+      - "Every measurement has some error. How do scientists show how sure they are?"
+    do: "Estimation Olympics: everyone guesses the length, weight, volume and time of five things, then measures. Score how close each guess was."
+    A: [g2.estimate-length, k.how-many, k.compare-numerals]
+    B: [g2.estimate-length, g3.estimate-sums-differences, g3.round-10-100]
+    C: [g4.round-any-place, g5.estimate-decimal-products, g7.percent-error]
+    D: [g7.percent-error, chem.accuracy-precision, chem.significant-figures, chem.sig-fig-calculations]
+projects:
+  A:
+    t: "Measuring book"
+    do: "Make a book called 'How big is it?' with five things you measured using blocks or hand spans, drawn and labeled."
+    rubric: ["Five things measured", "The unit is named (blocks, hands)", "Can tell which is longest"]
+  B:
+    t: "Measure our house"
+    do: "Measure five rooms or things in feet and inches, a few things in cups and pounds, and how long three chores take. Present it as a chart."
+    rubric: ["At least ten measurements with units", "Correct units chosen", "A clear chart", "Measurements checked twice"]
+  C:
+    t: "Scale floor plan"
+    do: "Measure one floor of your home and draw it to scale on graph paper. Work out the area of each room and the whole floor."
+    rubric: ["Accurate measurements", "A correct scale", "Area calculations shown", "A neat, labeled plan"]
+  D:
+    t: "Measurement and error lab"
+    do: "Measure one quantity (the period of a pendulum, the length of a room, the density of a stone) ten times. Report the mean, the spread, the percent error against a known value, and how you could improve."
+    rubric: ["Ten careful trials with units", "Mean and spread calculated correctly", "Percent error worked out", "Honest discussion of error sources"]

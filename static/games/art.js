@@ -29,7 +29,9 @@
     if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw || 1; c.stroke(); }
   }
   // Iso box with footprint (x,y,w,h) in tile units from height z0 to z1.
+  var FLIP = false; // set while drawing a mirrored (odd-turn) sprite, so the lit faces stay on the same screen side
   function box(c, x, y, w, h, z0, z1, top, left, right, edge) {
+    if (FLIP) { var sw = left; left = right; right = sw; }
     var A = P(x, y, z1), Bt = P(x + w, y, z1), Ct = P(x + w, y + h, z1), Dt = P(x, y + h, z1);
     var B0 = P(x + w, y, z0), C0 = P(x + w, y + h, z0), D0 = P(x, y + h, z0);
     poly(c, [D0, C0, Ct, Dt], left, edge, 0.6);
@@ -91,6 +93,14 @@
       c.beginPath(); c.ellipse(base[0] + ox, base[1] + oy, rr, rr * 0.8, 0, 0, Math.PI * 2); c.fill();
     }
     c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.ellipse(base[0] - 6, base[1] - 44, 7, 4, 0, 0, Math.PI * 2); c.fill();
+  }
+  // A small cartoon person standing at screen point (x, y): one skin color for everyone.
+  var SKIN = '#ffcc4d', SKIN_D = '#e8a93a';
+  function person(c, x, y, tunic, hair) {
+    c.fillStyle = tunic; c.beginPath(); c.moveTo(x - 4, y - 2); c.lineTo(x - 3, y - 13); c.lineTo(x + 3, y - 13); c.lineTo(x + 4, y - 2); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 0.6; c.stroke();
+    c.fillStyle = SKIN; c.strokeStyle = SKIN_D; c.lineWidth = 0.8; c.beginPath(); c.arc(x, y - 16, 3.2, 0, Math.PI * 2); c.fill(); c.stroke();
+    c.fillStyle = hair || '#3a2a1e'; c.beginPath(); c.arc(x, y - 17, 3.2, Math.PI, 0); c.fill();
   }
   function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   function shadow(c, w, h, k) {
@@ -157,8 +167,6 @@
       for (i = 0; i <= nx; i++) column(c, x0 + (x1 - x0) * i / nx, y0, 12, 58, p.marble);
       for (i = 1; i < ny; i++) column(c, x0, y0 + (y1 - y0) * i / ny, 12, 58, p.marble);
       mbox(c, 0.75, 0.65, w - 1.5, h - 1.3, 12, 56, p.marbleS);
-      c.fillStyle = shade(p.wood, -0.35); var d = P(w - 0.75, h / 2 - 0.2, 12), d2 = P(w - 0.75, h / 2 + 0.2, 12);
-      poly(c, [d, d2, [d2[0], d2[1] - 28], [d[0], d[1] - 28]], shade(p.wood, -0.4));
       for (i = 0; i <= nx; i++) column(c, x0 + (x1 - x0) * i / nx, y1, 12, 58, p.marble);
       for (i = 1; i <= ny; i++) column(c, x1, y0 + (y1 - y0) * i / ny, 12, 58, p.marble);
       box(c, 0.2, 0.2, w - 0.4, h - 0.4, 58, 68, shade(p.marble, 0.1), p.accent, shade(p.accent, -0.2));
@@ -171,7 +179,7 @@
       mbox(c, 0, 0, w, 0.35, 0, 30, p.marbleS); mbox(c, 0, 0.35, 0.35, h - 0.35, 0, 30, p.marbleS);
       box(c, 0, 0, w, 0.5, 30, 34, shade(p.roof, 0.05), p.roofD, p.roofD); box(c, 0, 0.5, 0.5, h - 0.5, 30, 34, shade(p.roof, 0.05), p.roofD, p.roofD);
       // wrestlers
-      [[w / 2 - 0.15, h / 2], [w / 2 + 0.15, h / 2 + 0.05]].forEach(function (q, k) { var b = P(q[0], q[1], 1); c.fillStyle = '#b07a4f'; c.fillRect(b[0] - 2.5, b[1] - 16, 5, 13); c.beginPath(); c.arc(b[0], b[1] - 19, 3.2, 0, Math.PI * 2); c.fill(); });
+      [[w / 2 - 0.15, h / 2], [w / 2 + 0.15, h / 2 + 0.05]].forEach(function (q, k) { var b = P(q[0], q[1], 1); person(c, b[0], b[1], k ? p.accent : p.cloth[1]); });
       for (var i = 0; i <= 6; i++) column(c, 0.2 + (w - 0.4) * i / 6, h - 0.18, 0, 26, p.marble, 2.4);
       for (i = 0; i < 6; i++) column(c, w - 0.18, 0.2 + (h - 0.4) * i / 6, 0, 26, p.marble, 2.4);
       box(c, 0.1, h - 0.3, w - 0.1, 0.3, 26, 29, shade(p.roof, 0.05), p.roofD, p.roofD);
@@ -182,7 +190,6 @@
       mbox(c, 0.1, 0.1, w - 0.2, h - 0.2, 0, 34, p.marbleS);
       for (var i = 0; i < 4; i++) { var q = P(0.35 + i * 0.4, h - 0.1, 8); c.fillStyle = shade(p.marbleD, -0.3); c.beginPath(); c.moveTo(q[0] - 3, q[1]); c.lineTo(q[0] - 3, q[1] - 12); c.arc(q[0], q[1] - 12, 3, Math.PI, 0); c.lineTo(q[0] + 3, q[1]); c.fill(); }
       hipRoof(c, 0.02, 0.02, w - 0.04, h - 0.04, 34, 26, p.roof);
-      var b = P(w - 0.1, h / 2, 0); poly(c, [b, P(w - 0.1, h / 2 + 0.3, 0), P(w - 0.1, h / 2 + 0.3, 20), P(w - 0.1, h / 2, 20)], shade(p.wood, -0.3));
     },
     bakery: function (c, w, h, p) { stall(c, p, function () {
       var l = [[0.35, 0.55], [0.55, 0.45], [0.5, 0.65]]; l.forEach(function (q) { var b = P(q[0], q[1], 17); c.fillStyle = '#c48a45'; c.beginPath(); c.ellipse(b[0], b[1], 6, 3.5, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#e0ae6a'; c.beginPath(); c.ellipse(b[0] - 1, b[1] - 1, 3, 1.5, 0, 0, Math.PI * 2); c.fill(); });
@@ -212,7 +219,6 @@
     latrine: function (c, w, h, p) {
       mbox(c, 0.15, 0.2, 0.7, 0.6, 0, 24, p.stone);
       box(c, 0.1, 0.15, 0.8, 0.7, 24, 28, shade(p.roof, 0.05), p.roofD, shade(p.roofD, -0.1));
-      var a = P(0.85, 0.4, 0), b = P(0.85, 0.62, 0); poly(c, [a, b, [b[0], b[1] - 17], [a[0], a[1] - 17]], shade(p.wood, -0.25));
     },
     bench: function (c, w, h, p) {
       mbox(c, 0.25, 0.42, 0.1, 0.16, 0, 6, p.stoneD); mbox(c, 0.65, 0.42, 0.1, 0.16, 0, 6, p.stoneD);
@@ -272,7 +278,6 @@
       mbox(c, 0.12, 0.12, w - 0.24, h - 0.24, 0, 42, p.sand);
       var i, q;
       for (i = 0; i < 3; i++) { q = P(0.4 + i * 0.55, h - 0.12, 30); c.fillStyle = shade(p.wood, -0.35); c.fillRect(q[0] - 3, q[1] - 8, 6, 8); q = P(w - 0.12, 0.4 + i * 0.55, 30); c.fillRect(q[0] - 3, q[1] - 8, 6, 8); }
-      q = P(w - 0.12, h / 2, 0); poly(c, [q, P(w - 0.12, h / 2 + 0.32, 0), P(w - 0.12, h / 2 + 0.32, 20), P(w - 0.12, h / 2, 20)], shade(p.wood, -0.25));
       hipRoof(c, 0.02, 0.02, w - 0.04, h - 0.04, 42, 22, p.roof);
     },
     altar: function (c, w, h, p) {
@@ -290,7 +295,6 @@
       shadow(c, w, h);
       mbox(c, 0.02, 0.02, w - 0.04, h - 0.04, 0, 5, p.stone); mbox(c, 0.1, 0.1, w - 0.2, h - 0.2, 5, 10, p.stone);
       mbox(c, 0.3, 0.3, w - 0.75, h - 0.6, 10, 56, p.marbleS);
-      var d = P(w - 0.45, h / 2 - 0.2, 10), d2 = P(w - 0.45, h / 2 + 0.2, 10); poly(c, [d, d2, [d2[0], d2[1] - 30], [d[0], d[1] - 30]], p.accent2, shade(p.accent2, -0.4));
       for (var i = 0; i <= 4; i++) column(c, w - 0.25, 0.3 + (h - 0.6) * i / 4, 10, 56, p.marble, 3);
       box(c, 0.2, 0.2, w - 0.4, h - 0.4, 56, 63, shade(p.marble, 0.1), p.accent, shade(p.accent, -0.2));
       gable(c, 0.15, 0.15, w - 0.3, h - 0.3, 63, 20, p.roof, p.marbleS);
@@ -309,13 +313,34 @@
       var f = P(w - 0.2, h - 0.2, 38); c.strokeStyle = '#3a2a16'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(f[0], f[1]); c.lineTo(f[0], f[1] - 24); c.stroke();
       c.fillStyle = p.accent; c.beginPath(); c.moveTo(f[0], f[1] - 24); c.lineTo(f[0] + 14, f[1] - 20); c.lineTo(f[0], f[1] - 15); c.fill();
     },
+    market: function (c, w, h, p) { stall(c, p, function () {
+      [[0.32, 0.5, '#b8683f'], [0.5, 0.42, p.accent], [0.62, 0.6, p.accent2]].forEach(function (q) { var b = P(q[0], q[1], 15); c.fillStyle = q[2]; c.beginPath(); c.ellipse(b[0], b[1] - 4, 3.5, 5, 0, 0, Math.PI * 2); c.fill(); c.fillRect(b[0] - 1.2, b[1] - 11, 2.4, 3); });
+      var t = P(0.45, 0.68, 15); c.fillStyle = '#f6e7b0'; c.fillRect(t[0] - 1, t[1] - 9, 2, 6); c.fillStyle = '#f6a63a'; c.beginPath(); c.arc(t[0], t[1] - 10.5, 1.4, 0, Math.PI * 2); c.fill();
+    }, false, [p.accent2, p.marble]); },
+    torch: function (c, w, h, p) {
+      mbox(c, 0.4, 0.4, 0.2, 0.2, 0, 4, p.stoneD);
+      column(c, 0.5, 0.5, 4, 34, p.wood, 1.6);
+      var f = P(0.5, 0.5, 34); c.fillStyle = shade(p.wood, -0.3); c.fillRect(f[0] - 3, f[1] - 3, 6, 4);
+      c.fillStyle = '#e8862a'; c.beginPath(); c.moveTo(f[0] - 4, f[1] - 2); c.quadraticCurveTo(f[0] - 2, f[1] - 10, f[0], f[1] - 15); c.quadraticCurveTo(f[0] + 3, f[1] - 8, f[0] + 4, f[1] - 2); c.fill();
+      c.fillStyle = '#f6d24a'; c.beginPath(); c.moveTo(f[0] - 2, f[1] - 2); c.lineTo(f[0], f[1] - 9); c.lineTo(f[0] + 2, f[1] - 2); c.fill();
+    },
+    aqueduct: function (c, w, h, p) {
+      shadow(c, w, h, 0.3);
+      var x0 = 0.3, x1 = 0.7, H = 46, i;
+      for (i = 0; i < h; i++) { mbox(c, x0, i + 0.05, x1 - x0, 0.26, 0, H, p.stone); mbox(c, x0, i + 0.31, x1 - x0, 0.69, H - 10, H, p.stone); }
+      mbox(c, x0 - 0.05, 0, x1 - x0 + 0.1, h, H, H + 8, p.stone);
+      poly(c, [P(x0 + 0.05, 0.05, H + 8.5), P(x1 - 0.05, 0.05, H + 8.5), P(x1 - 0.05, h - 0.05, H + 8.5), P(x0 + 0.05, h - 0.05, H + 8.5)], p.water);
+      mbox(c, 0.15, h - 0.85, 0.7, 0.7, 0, 22, p.marbleS);
+      var t = P(0.5, h - 0.5, 22); c.beginPath(); c.ellipse(t[0], t[1], 12, 6, 0, 0, Math.PI * 2); c.fillStyle = p.water; c.fill();
+    },
     flowers: function (c, w, h, p, seed) {
       var r = mulberry(seed || 3), cols = ['#d14d5b', '#f0c330', '#ffffff', '#b565c2', '#e58a3a'];
       poly(c, [P(0.12, 0.12, 1), P(0.88, 0.12, 1), P(0.88, 0.88, 1), P(0.12, 0.88, 1)], shade(p.leaf, -0.05));
       for (var i = 0; i < 26; i++) { var q = P(0.18 + r() * 0.64, 0.18 + r() * 0.64, 3 + r() * 3); c.fillStyle = cols[i % cols.length]; c.beginPath(); c.arc(q[0], q[1], 1.8, 0, Math.PI * 2); c.fill(); }
     }
   };
-  function stall(c, p, goods, vine) {
+  function stall(c, p, goods, vine, cloth) {
+    cloth = cloth || p.cloth;
     shadow(c, 1, 1, 0.3);
     mbox(c, 0.18, 0.28, 0.64, 0.5, 0, 15, p.wood);
     goods();
@@ -328,29 +353,49 @@
     var n = 6;
     for (var k = 0; k < n; k++) {
       var y0 = 0.22, y1 = 0.88, x = 0.14 + 0.72 * k / n, x2 = 0.14 + 0.72 * (k + 1) / n;
-      poly(c, [P(x, y0, 38), P(x2, y0, 38), P(x2, y1, 30), P(x, y1, 30)], k % 2 ? p.cloth[1] : p.cloth[0]);
+      poly(c, [P(x, y0, 38), P(x2, y0, 38), P(x2, y1, 30), P(x, y1, 30)], k % 2 ? cloth[1] : cloth[0]);
     }
-    for (k = 0; k < n; k++) { var a = P(0.14 + 0.72 * k / n, 0.88, 30), b2 = P(0.14 + 0.72 * (k + 1) / n, 0.88, 30); c.fillStyle = k % 2 ? p.cloth[1] : p.cloth[0]; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b2[0], b2[1]); c.lineTo((a[0] + b2[0]) / 2, (a[1] + b2[1]) / 2 + 5); c.fill(); }
+    for (k = 0; k < n; k++) { var a = P(0.14 + 0.72 * k / n, 0.88, 30), b2 = P(0.14 + 0.72 * (k + 1) / n, 0.88, 30); c.fillStyle = k % 2 ? cloth[1] : cloth[0]; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b2[0], b2[1]); c.lineTo((a[0] + b2[0]) / 2, (a[1] + b2[1]) / 2 + 5); c.fill(); }
   }
 
   // Sprite cache: draw each building once at 2x into an offscreen canvas.
   var cache = {};
   var MAXZ = 110;
-  function sprite(type, w, h, setting, seed) {
-    var key = type + w + 'x' + h + setting + (seed || '');
+  // An entrance gate on the +x face (front) or the -x face (back) of a w-by-h footprint, centered on tile row ty.
+  function gate(c, w, h, p, back, ty) {
+    var x = back ? 0 : w, y = ty + 0.5, o = back ? 0.06 : -0.06, k;
+    poly(c, [P(x - o * 2, y - 0.3, 0.5), P(x + o, y - 0.3, 0.5), P(x + o, y + 0.3, 0.5), P(x - o * 2, y + 0.3, 0.5)], shade(p.stone, 0.1), shade(p.stoneD, -0.2), 0.6);
+    var a = P(x + o * 0.3, y - 0.17, 1), b = P(x + o * 0.3, y + 0.17, 1);
+    poly(c, [a, b, [b[0], b[1] - 21], [a[0], a[1] - 21]], 'rgba(40,26,14,.88)');
+    for (k = -1; k <= 1; k += 2) column(c, x + o * 0.3, y + k * 0.22, 0.5, 24, p.marble, 1.9);
+    var l0 = P(x + o * 0.3, y - 0.3, 24), l1 = P(x + o * 0.3, y + 0.3, 24);
+    poly(c, [l0, l1, [l1[0], l1[1] - 5], [l0[0], l0[1] - 5]], p.accent2, shade(p.accent2, -0.35), 0.6);
+  }
+  var NODOOR = { gate: 1, olive: 1, cypress: 1, statue: 1, flowers: 1, altar: 1, trophy: 1, torch: 1, aqueduct: 1 };
+  // rot: 0-3. Odd turns are drawn mirrored (width and depth swap); turns 2 and 3 put the entrance on a back face.
+  function sprite(type, w, h, setting, seed, rot) {
+    rot = rot || 0;
+    var key = type + w + 'x' + h + setting + (seed || '') + 'r' + rot;
     if (cache[key]) return cache[key];
-    var sc = 2, m = 6, cw = (w + h) * HW + m * 2, ch = (w + h) * HH + MAXZ + m * 2;
+    var sc = 2, m = 6, cw = (w + h) * HW + m * 2, ch = (w + h) * HH + MAXZ + m * 2, p = PAL[setting], door = !NODOOR[type], back = rot >= 2;
+    var ty = back ? Math.floor((h - 1) / 2) : Math.floor(h / 2);
     var cv = document.createElement('canvas'); cv.width = cw * sc; cv.height = ch * sc;
-    var c = cv.getContext('2d'); c.scale(sc, sc); c.translate(h * HW + m, MAXZ + m);
+    var c = cv.getContext('2d'); c.scale(sc, sc);
+    if (rot & 1) { c.translate(cw, 0); c.scale(-1, 1); FLIP = true; }
+    c.translate(h * HW + m, MAXZ + m);
     c.lineJoin = 'round';
-    DRAW[type](c, w, h, PAL[setting], seed);
-    return (cache[key] = { cv: cv, ox: h * HW + m, oy: MAXZ + m, w: cw, h: ch });
+    if (door && back) gate(c, w, h, p, true, ty);
+    DRAW[type](c, w, h, p, seed);
+    if (door && !back) gate(c, w, h, p, false, ty);
+    FLIP = false;
+    var fh = (rot & 1) ? w : h;
+    return (cache[key] = { cv: cv, ox: fh * HW + m, oy: MAXZ + m, w: cw, h: ch });
   }
   function icon(canvas, type, w, h, setting) {
-    var s = sprite(type, w, h, setting, 5), c = canvas.getContext('2d'), k = Math.min(canvas.width / s.w, canvas.height / (s.h - MAXZ * 0.35)) * 0.95;
+    var s = sprite(type, w, h, setting, 5, 0), c = canvas.getContext('2d'), k = Math.min(canvas.width / s.w, canvas.height / (s.h - MAXZ * 0.35)) * 0.95;
     c.clearRect(0, 0, canvas.width, canvas.height);
     c.drawImage(s.cv, (canvas.width - s.w * k) / 2, canvas.height - s.h * k - 2, s.w * k, s.h * k);
   }
 
-  W.FestArt = { TW: TW, TH: TH, PAL: PAL, P: P, poly: poly, shade: shade, sprite: sprite, icon: icon, isoEllipse: isoEllipse, stadium: stadium, mulberry: mulberry };
+  W.FestArt = { TW: TW, TH: TH, PAL: PAL, P: P, poly: poly, shade: shade, sprite: sprite, icon: icon, isoEllipse: isoEllipse, stadium: stadium, mulberry: mulberry, person: person, SKIN: SKIN, SKIN_D: SKIN_D };
 })(window);

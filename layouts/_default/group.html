@@ -4,7 +4,9 @@
     <p class="trb-geyebrow">{{ .Params.eyebrow | default "Teddy Rook Book" }}</p>
     <h1>{{ .Title }}</h1>
     {{ with .Params.lead }}<p>{{ . }}</p>{{ end }}
+    {{ with .Params.startlink }}<p style="margin-top:.7rem"><a href="{{ . | relURL }}" style="color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px;box-shadow:none">New here? Find what’s for you →</a></p>{{ end }}
   </header>
+  {{ if eq .Params.group "Education" }}{{ partial "whats-next.html" . }}{{ end }}
   {{ partial "group-tiles.html" (dict "group" .Params.group) }}
   {{ with .Content }}<div class="trb-gnote">{{ . }}</div>{{ end }}
 </div>

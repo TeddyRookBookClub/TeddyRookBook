@@ -28,10 +28,52 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
 .pg-msg{font-weight:600;margin-left:.3rem}
 [data-theme="dark"] .pg h1,[data-theme="dark"] .pg-card h2,[data-theme="dark"] .pg-stat b{color:#6cc79a}
 @media (max-width:600px){.pg-tab .gm{display:none}}
+.pf-row{display:flex;gap:.7rem;align-items:flex-start;border:1px solid var(--border);border-radius:12px;padding:.65rem .75rem;margin:.5rem 0;background:var(--theme)}
+.pf-row.on{border-color:#00562f;box-shadow:0 0 0 1px #00562f inset}
+[data-theme="dark"] .pf-row.on{border-color:#6cc79a;box-shadow:0 0 0 1px #6cc79a inset}
+.pf-ic{font-size:1.7rem;line-height:1.2;flex:none}
+.pf-body{flex:1;min-width:0}
+.pf-body h3{margin:0;font:700 1.08rem Georgia,serif}
+.pf-tag{display:inline-block;font:600 .72rem system-ui;text-transform:uppercase;letter-spacing:.05em;background:#004225;color:#fff;border-radius:999px;padding:1px 8px;margin-left:.4rem;vertical-align:2px}
+[data-theme="dark"] .pf-tag{background:#6cc79a;color:#0b1a13}
+.pf-sum{margin:.25rem 0 .1rem;padding-left:1.1rem;font-size:.9rem;line-height:1.55;color:var(--secondary)}
+.pf-sum b{color:var(--primary);font-weight:600}
+.pf-row .pg-bar{margin:.4rem 0 0}
+.pf-row .pg-btn{font-size:.85rem;padding:.3rem .6rem}
+.pf-code,.pf-how{margin:.4rem 0;font-size:.95rem}
+.pf-code summary,.pf-how summary{cursor:pointer;font-weight:600;color:#00562f}
+[data-theme="dark"] .pf-code summary,[data-theme="dark"] .pf-how summary{color:#6cc79a}
+#pf-code-in{width:100%;box-sizing:border-box;font:12px/1.35 ui-monospace,monospace;padding:.45rem;border:1px solid var(--border);border-radius:9px;background:var(--theme);color:var(--primary);margin-top:.3rem}
+.pf-warn{border-left:4px solid #b8963e;padding:.5rem .7rem;background:var(--theme);border-radius:8px}
 </style>
 <div class="pg" id="pg">
   <h1>{{ .Title }}</h1>
   <p class="pg-lead">Everything here is kept in this browser on this device; nothing is sent anywhere. To carry it to another phone or computer, save it to a file below and load the file there.</p>
+
+  <section class="pg-card" id="pf" aria-labelledby="pf-h">
+    <h2 id="pf-h">Learners</h2>
+    <p class="pg-note" id="pf-intro">More than one person learning here? Give each one a learner profile, and each keeps their own ladders, lessons, games and words. Switch from the name at the top of every page.</p>
+    <div id="pf-list"></div>
+    <div class="pg-bar">
+      <button type="button" class="pg-btn pri" id="pf-add">＋ Add a learner</button>
+      <button type="button" class="pg-btn" id="pf-all" hidden>⬇ Save the whole family to one file</button>
+      <button type="button" class="pg-btn" id="pf-open">⬆ Open a learner or family file</button>
+    </div>
+    <details class="pf-code" data-noexpand><summary>Load a save code</summary>
+      <label class="pg-note" for="pf-code-in">Paste a learner’s save code (it starts with TRB1.):</label>
+      <textarea id="pf-code-in" rows="3" spellcheck="false" autocomplete="off"></textarea>
+      <div class="pg-bar"><button type="button" class="pg-btn" id="pf-code-go">Load the code</button><span class="pg-msg" id="pf-msg" aria-live="polite"></span></div>
+    </details>
+    <details class="pf-how" data-noexpand><summary>How learner profiles work</summary>
+      <ul class="pg-list">
+        <li>Learners live in this browser only. There are no accounts, and nothing is sent anywhere.</li>
+        <li>Each learner has their own progress: the ladders, lesson ticks, phonics, flashcards, words, games and tools. Text size, units, light or dark, the lesson planner and the meal and garden plans are shared by everyone on this device.</li>
+        <li>To use a learner on another phone or computer, save them to a file (or copy a save code) and open it there.</li>
+        <li>Clearing this browser’s data (history, cookies and site data) removes every learner. A file keeps a copy safe.</li>
+        <li>In the <a href="/homeschool/planner/">lesson planner</a>, link each child to a learner to see that learner’s work for today and their ladder progress.</li>
+      </ul>
+    </details>
+  </section>
 
   <section class="pg-card">
     <h2>Words I met in the games</h2>
@@ -51,7 +93,7 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
 
   <section class="pg-card">
     <h2>Save or move my progress</h2>
-    <p class="pg-note">The file holds your flashcard schedule, game saves and settings, and the words list. Loading a file replaces those on this device with the ones in the file.</p>
+    <p class="pg-note">The file holds your flashcard schedule, game saves and settings, and the words list (for the learner using this browser now, if you have learners). Loading a file replaces those on this device with the ones in the file. To move several learners at once, use the family file under Learners.</p>
     <div class="pg-bar">
       <button type="button" class="pg-btn pri" id="pg-save">⬇ Save my progress to a file</button>
       <label class="pg-btn">⬆ Load progress from a file<input type="file" id="pg-load" accept=".json,application/json" hidden></label>
@@ -84,8 +126,9 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
     $('#pg-words').innerHTML = '<table class="pg-tab"><thead><tr><th>' + (lang === 'g' ? 'Greek' : 'Latin') + '</th><th>Meaning</th><th class="gm">Where</th><th>Seen</th></tr></thead><tbody>' +
       list.map(function (e) { var tr = lang === 'g' && W.grTranslit ? '<span class="tr">' + esc(W.grTranslit(e.f)) + '</span>' : ''; return '<tr><td><span class="w">' + esc(e.f) + '</span>' + tr + '</td><td>' + esc(e.e) + '</td><td class="gm">' + Object.keys(e.g).map(function (k) { return esc(GN[k] || k); }).join(', ') + '</td><td>' + (game ? e.g[game] : e.n) + '×</td></tr>'; }).join('') + '</tbody></table>';
   }
-  function other() {
+  function summary(get) {
     var out = [], f = get('trb-flash-v1'), now = Date.now();
+    var ml = get('trb-math-v1'); if (ml && ml.t) { var mp = 0, md = 0, dd = Math.round((Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) - Date.UTC(2020, 0, 1)) / 864e5); for (var mk in ml.t) { var mr = ml.t[mk]; if (mr && mr.s === 2) { mp++; if (mr.due <= dd) md++; } } if (mp) out.push('<b>Ladders:</b> ' + mp + ' topic' + (mp === 1 ? '' : 's') + ' passed' + (md ? ', ' + md + ' due for review' : '') + '.'); }
     if (f && f.cards) { var ids = Object.keys(f.cards), due = ids.filter(function (k) { return f.cards[k].d <= now; }).length; out.push('<b>Flashcards:</b> ' + ids.length + ' cards studied, ' + due + ' due now. <a href="/languages/flashcards/">Open the flashcards</a>'); }
     var h = get('trb-hero-v1'); if (h && h.done) { var gd = Object.keys(h.done).filter(function (k) { return /^gr/.test(k); }).length, rd = Object.keys(h.done).filter(function (k) { return /^ro/.test(k); }).length, od = Object.keys(h.done).filter(function (k) { return /^od/.test(k); }).length; if (gd + rd + od) out.push('<b>Hero’s Road:</b> Greece ' + gd + '/10, Rome ' + rd + '/10, Odysseus ' + od + '/10 levels finished.'); }
     var m = get('trb-mosaic-v1'); if (m && m.best > 1) out.push('<b>Mosaic Match:</b> reached level ' + m.best + (m.hi ? ', best score ' + m.hi.toLocaleString() : '') + '.');
@@ -95,12 +138,57 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
     var a = get('trb-alpha-v1'); if (a && a.done) out.push('<b>Greek Alphabet:</b> ' + Object.keys(a.done).length + ' lessons finished.');
     var hs = get('trb-homeschool-v1'); if (hs && hs.done) {{ $cs := slice }}{{ range $k, $d := site.Data }}{{ if and (or (hasPrefix $k "rays_") (hasPrefix $k "hs_")) (isset $d "lessons") }}{{ $cs = $cs | append (dict "k" $d.book.key "t" $d.book.title "n" (len $d.lessons)) }}{{ end }}{{ end }}{{ $cs | jsonify | safeJS }}.forEach(function (b) { var hn = hs.done[b.k] ? Object.keys(hs.done[b.k]).length : 0; if (hn) out.push('<b>' + b.t + ':</b> ' + hn + ' of ' + b.n + ' lessons taught.'); }); if (hs && hs.done) {{ $ar := slice }}{{ range site.Data.hs_hannah.curricula }}{{ if .total }}{{ $ar = $ar | append (dict "k" (printf "ar-%s" .key) "t" .title "n" .total) }}{{ end }}{{ end }}{{ $ar | jsonify | safeJS }}.forEach(function (b) { var hn = 0; for (var q in (hs.done[b.k] || {})) if (hs.done[b.k][q]) hn++; if (hn) out.push('<b>' + b.t + ' (Hannah Ward):</b> ' + hn + ' of ' + b.n + ' lessons done.'); });
     ['chess', 'tabula', 'terni', 'morris', 'latrunculi', 'knucklebones'].forEach(function (k) { var b = get('trb-' + k); if (b && b.stats && (b.stats.w || b.stats.l || b.stats.d)) out.push('<b>' + ({ chess: 'Chess of the Ancients', tabula: 'Tabula', terni: 'Terni Lapilli', ur: 'Royal Game of Ur', morris: 'Nine Men’s Morris', latrunculi: 'Latrunculi', knucklebones: 'Knucklebones' }[k]) + ':</b> ' + (b.stats.w || 0) + ' won, ' + (b.stats.l || 0) + ' lost' + (b.stats.d ? ', ' + b.stats.d + ' drawn' : '') + '.'); });
-    $('#pg-other').innerHTML = out.length ? out.map(function (x) { return '<li>' + x + '</li>'; }).join('') : '<li class="pg-empty">Nothing yet on this device.</li>';
+    return out;
   }
+  function other() {
+    var out = summary(get);
+    $('#pg-other').innerHTML = out.length ? out.map(function (x) { return '<li>' + x + '</li>'; }).join('') : '<li class="pg-empty">Nothing yet on this device.</li>';
+    learners();
+  }
+  /* Learners: every profile with a short summary (the same lines as above, read from that learner's saves) */
+  var PF = W.TRBProfiles;
+  function UI() { return W.TRBProfilesUI; }
+  function learners() {
+    if (!PF) return;
+    var box = $('#pf-list'), on = PF.on();
+    $('#pf-all').hidden = !on;
+    $('#pf-add').textContent = on ? '＋ Add a learner' : '＋ Add a learner profile';
+    if (PF.damaged()) {
+      box.innerHTML = '<p class="pf-warn">The list of learners in this browser can’t be read, so it has been left as it is and every page uses the progress saved in the normal way. You can save the unreadable list to a file (to keep it), then start the list again.</p><div class="pg-bar"><button type="button" class="pg-btn" id="pf-raw">⬇ Save the unreadable list</button><button type="button" class="pg-btn" id="pf-forget">Start the learner list again</button></div>';
+      $('#pf-raw').onclick = function () { var a = D.createElement('a'); a.href = URL.createObjectURL(new Blob([PF.raw() || ''], { type: 'application/json' })); a.download = 'teddy-rook-learners-unreadable.json'; D.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 1000); };
+      $('#pf-forget').onclick = function () { if (W.confirm('Start the learner list again? The progress saved in the normal way stays; the unreadable list is removed.')) { PF.forget(); W.location.reload(); } };
+      return;
+    }
+    if (!on) { box.innerHTML = ''; return; }
+    var act = PF.active();
+    box.innerHTML = PF.list().map(function (p) {
+      var snap = PF.snapshot(p.id), sum = summary(function (k) { try { return JSON.parse(snap[k]); } catch (e) { return null; } });
+      var wn = 0; try { wn = Object.keys((JSON.parse(snap['trb-words-v1']) || {}).w || {}).length; } catch (e) { }
+      if (wn) sum.unshift('<b>Words met in the games:</b> ' + wn + '.');
+      var me = p.id === act.id;
+      return '<div class="pf-row' + (me ? ' on' : '') + '"><span class="pf-ic" aria-hidden="true">' + esc(p.icon || '🙂') + '</span><div class="pf-body"><h3>' + esc(PF.label(p)) + (me ? '<span class="pf-tag">Learning now</span>' : '') + '</h3>' +
+        (sum.length ? '<ul class="pf-sum">' + sum.slice(0, 4).map(function (x) { return '<li>' + x.replace(/<a [^>]*>.*?<\/a>/g, '').trim() + '</li>'; }).join('') + (sum.length > 4 ? '<li>and ' + (sum.length - 4) + ' more</li>' : '') + '</ul>' : '<p class="pg-note">No progress yet.</p>') +
+        '<div class="pg-bar">' + (me ? '' : '<button type="button" class="pg-btn pri" data-a="sw" data-id="' + esc(p.id) + '">Switch to ' + esc(p.name) + '</button>') +
+        '<button type="button" class="pg-btn" data-a="edit" data-id="' + esc(p.id) + '">Rename or delete</button><button type="button" class="pg-btn" data-a="save" data-id="' + esc(p.id) + '">⬇ Save to a file</button><button type="button" class="pg-btn" data-a="code" data-id="' + esc(p.id) + '">📋 Copy save code</button></div></div></div>';
+    }).join('');
+  }
+  $('#pf-list').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-a]'); if (!b || !UI()) return; var id = b.dataset.id;
+    if (b.dataset.a === 'sw') UI().switchTo(id); else if (b.dataset.a === 'edit') UI().openEdit(id); else if (b.dataset.a === 'save') UI().saveFile([id]); else if (b.dataset.a === 'code') UI().copyCode(id);
+  });
+  function whenUI(f) { return function () { if (UI()) f(UI()); else W.addEventListener('trb-profiles-ui', function () { f(UI()); }, { once: true }); }; }
+  $('#pf-add').onclick = whenUI(function (u) { u.openAdd(); });
+  $('#pf-all').onclick = whenUI(function (u) { u.saveFile(null, true); });
+  $('#pf-open').onclick = whenUI(function (u) { u.openFile(); });
+  $('#pf-code-go').onclick = whenUI(function (u) {
+    u.loadCode($('#pf-code-in').value).then(function (r) { $('#pf-msg').textContent = r.ok ? 'Loaded.' : r.msg; if (r.ok) $('#pf-code-in').value = ''; });
+  });
+  W.addEventListener('trb-profiles-ui', function () { UI().onChange(learners); });
+  if (UI()) UI().onChange(learners);
   function msg(t) { $('#pg-msg').textContent = t; setTimeout(function () { if ($('#pg-msg').textContent === t) $('#pg-msg').textContent = ''; }, 5000); }
   $('#pg-save').onclick = function () {
     var o = { site: 'teddyrookbook.com', saved: new Date().toISOString(), data: {} };
-    for (var i = 0; i < W.localStorage.length; i++) { var k = W.localStorage.key(i); o.data[k] = W.localStorage.getItem(k); }
+    for (var i = 0; i < W.localStorage.length; i++) { var k = W.localStorage.key(i); if (k !== 'trb-profiles-v1') o.data[k] = W.localStorage.getItem(k); }
     var blob = new Blob([JSON.stringify(o)], { type: 'application/json' }), a = D.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = 'teddy-rook-book-progress-' + new Date().toISOString().slice(0, 10) + '.json';
     D.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
@@ -112,6 +200,7 @@ table.pg-tab{width:100%;border-collapse:collapse;font-size:.95rem;display:table}
       var o = JSON.parse(t); if (!o || o.site !== 'teddyrookbook.com' || typeof o.data !== 'object') throw new Error('not a progress file');
       var keys = Object.keys(o.data);
       if (W.confirm && !W.confirm('Load ' + keys.length + ' items saved on ' + String(o.saved || '').slice(0, 10) + '? They replace the same items on this device.')) return;
+      keys = keys.filter(function (k) { return k !== 'trb-profiles-v1'; });
       keys.forEach(function (k) { if (typeof o.data[k] === 'string') W.localStorage.setItem(k, o.data[k]); });
       msg('Loaded ' + keys.length + ' items.'); words(); other();
     }).catch(function () { msg('That file is not a Teddy Rook Book progress file.'); }).then(function () { self.value = ''; });

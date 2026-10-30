@@ -59,7 +59,20 @@
     evRain: { g: 'Βρέχει.', l: 'Pluit.', e: 'It is raining: fewer visitors today.' },
     evFeast: { g: 'Ἑορτή ἐστιν σήμερον.', l: 'Dies festus est hodie.', e: 'Today is a feast day: more visitors.' },
     evAthlete: { g: 'Ἀθλητὴς ἔνδοξος ἥκει.', l: 'Athleta clarus adest.', e: 'A famous athlete is here: your fame grows.' },
-    evTax: { g: 'Ὁ τελώνης ἥκει.', l: 'Publicanus adest.', e: 'The tax collector is here.' }
+    evTax: { g: 'Ὁ τελώνης ἥκει.', l: 'Publicanus adest.', e: 'The tax collector is here.' },
+    // rotation, entrances, tools
+    rotate: { g: 'Στρέφε', l: 'Verte', e: 'Rotate' },
+    move: { g: 'Κίνει', l: 'Move', e: 'Move' },
+    undo: { e: 'Undo' },
+    entrance: { g: 'εἴσοδος', l: 'aditus', e: 'entrance' },
+    noEntrance: { e: 'The entrance needs a path. Closed until one is laid.' },
+    noLink: { e: 'This path doesn’t reach the gate.' },
+    gStaff: { g: 'Ὑπηρέται', l: 'Ministri', e: 'Staff' },
+    stats: { e: 'Stats' },
+    calendar: { e: 'Festival calendar' },
+    spent: { e: 'spending' },
+    night: { g: 'νύξ', l: 'nox', e: 'night' },
+    festival: { g: 'ἑορτή', l: 'dies festus', e: 'festival' }
   };
 
   // Building names differ a little by setting (Greek festival vs Roman games) but every name is given in both languages.
@@ -89,7 +102,12 @@
     altar: { g: 'βωμός', l: 'ara', e: 'altar' },
     trophy: { g: 'τρόπαιον', l: 'tropaeum', e: 'victory monument' },
     curia: { g: 'βουλευτήριον', l: 'curia', e: 'council house' },
-    barracks: { g: 'παρεμβολή', l: 'castra', e: 'army camp' }
+    barracks: { g: 'παρεμβολή', l: 'castra', e: 'army camp' },
+    market: { g: 'σκηνή', l: 'taberna', e: 'market stall' },
+    torch: { g: 'λαμπάς', l: 'fax', e: 'torch' },
+    aqueduct: { l: 'aquaeductus', e: 'aqueduct' },
+    worker: { g: 'ἐργάτης', l: 'operarius', e: 'worker (sweeps litter)' },
+    musician: { g: 'αὐλητής', l: 'tibicen', e: 'pipe player (cheers visitors)' }
   };
 
   // Visitor thoughts, first person, short and useful.
@@ -129,7 +147,12 @@
     library: { g: 'Ἀναγινώσκω βιβλίον.', l: 'Librum lego.', e: 'I’m reading a book.' },
     amphitheater: { g: 'Μέγα τὸ θέαμα!', l: 'Magnum spectaculum!', e: 'What a great show!' },
     stoa: { g: 'Ἀναπαύομαι ἐν τῇ σκιᾷ.', l: 'In umbra quiesco.', e: 'I’m resting in the shade.' },
-    inn: { g: 'Καλῶς ἐκοιμήθην.', l: 'Bene dormivi.', e: 'I slept well.' }
+    inn: { g: 'Καλῶς ἐκοιμήθην.', l: 'Bene dormivi.', e: 'I slept well.' },
+    market: { e: 'I bought a little gift.' },
+    dark: { e: 'It’s too dark here.' },
+    dirty: { e: 'This path is messy.' },
+    music: { g: 'Ἡδεῖα ἡ μουσική.', l: 'Dulcis est musica.', e: 'The music is sweet.' },
+    fest: { g: 'Ἑορτή ἐστιν σήμερον!', l: 'Dies festus est hodie!', e: 'It’s a festival day!' }
   };
 
   var NAMES = {

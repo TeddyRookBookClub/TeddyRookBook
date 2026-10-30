@@ -163,7 +163,7 @@ document.addEventListener('click', function (e) {
   function esc(s) { return String(s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function load() {
     if (!loading) loading = fetch('/index.json').then(function (r) { return r.json(); }).then(function (d) {
-      idx = d.map(function (e) { e.nt = norm(e.t); e.nd = norm(e.d); e.nx = norm(e.x); return e; }); return idx;
+      idx = d.map(function (e) { e.nt = norm(e.t); e.nd = norm(e.d); e.nx = norm(e.x); e.ns = e.s ? ' ' + norm(e.s) + ' ' : ''; return e; }); return idx;
     }).catch(function () { loading = null; res.innerHTML = '<li class="trb-snote">Search could not load. Check your connection and try again.</li>'; });
     return loading;
   }
@@ -175,7 +175,8 @@ document.addEventListener('click', function (e) {
       var sc = 0;
       for (var i = 0; i < terms.length; i++) {
         var t = terms[i], s = 0;
-        if (e.nt.indexOf(t) === 0) s = 10; else if (e.nt.indexOf(' ' + t) >= 0) s = 8; else if (e.nt.indexOf(t) >= 0) s = 6;
+        if (e.ns && e.ns.indexOf(' ' + t + ' ') >= 0) s = 12; // a main section's own search word (data/start.yaml)
+        else if (e.nt.indexOf(t) === 0) s = 10; else if (e.nt.indexOf(' ' + t) >= 0) s = 8; else if (e.nt.indexOf(t) >= 0) s = 6;
         else if (e.nx.indexOf(t) >= 0) s = 4; else if (e.nd.indexOf(t) >= 0) s = 2;
         if (!s) return; sc += s;
       }
@@ -213,3 +214,5 @@ document.addEventListener('click', function (e) {
   window.trbSearch = open;
 })();
 </script>
+{{- /* Offline: only for people who saved sections on /offline/. Keeps the service worker registered and shows "Update available". */}}
+<script>try{if(localStorage.getItem('trb-off')&&'serviceWorker' in navigator){var s=document.createElement('script');s.src='{{ "js/offline-notice.js" | relURL }}?v={{ (os.Stat "static/js/offline-notice.js").ModTime.Unix }}';s.defer=true;document.head.appendChild(s)}}catch(e){}</script>

@@ -1,0 +1,944 @@
+# "Find what's for you" (/start/): the data behind the recommendations.
+# Edit freely to tune it. Each section gets points for every answer it matches; the best 6 to 10 are shown.
+#
+# Section fields
+#   key      short id, unique
+#   name     the card title
+#   icon     one emoji
+#   url      the section's main page
+#   ages     [youngest, oldest] it suits (99 = any adult). Sections outside every chosen age are left out.
+#   for      who it suits: self, child, class (leave out for everyone)
+#   goals    homeschool, subject, testprep, lifeskills, greatbooks, fun, business
+#   subjects keys from the subjects list below
+#   mins     the shortest useful sitting, in minutes (a little lower in the list if it needs more time than chosen)
+#   weight   0 to 3: a nudge up for the best starting places
+#   planner  true when the lesson planner can schedule it (shows "make a plan with this")
+#   why      one short sentence for the card
+#   start    the first page to open, by age: the first row whose "to" is at or above the youngest chosen age wins
+#   words    search words: the site search (layouts/index.json) puts this page first for these words
+# Every url must be a page on the site; the build warns about any that isn't.
+
+who:
+  - {key: self, label: "Myself"}
+  - {key: child, label: "My child or children"}
+  - {key: class, label: "A class or co-op"}
+
+ages:
+  - {key: "3-5", label: "3 to 5", min: 3, max: 5}
+  - {key: "6-8", label: "6 to 8", min: 6, max: 8}
+  - {key: "9-11", label: "9 to 11", min: 9, max: 11}
+  - {key: "12-14", label: "12 to 14", min: 12, max: 14}
+  - {key: "15-18", label: "15 to 18", min: 15, max: 18}
+  - {key: "adult", label: "Adult", min: 19, max: 99}
+
+goals:
+  - {key: homeschool, label: "A full homeschool"}
+  - {key: subject, label: "One subject"}
+  - {key: testprep, label: "Test prep"}
+  - {key: lifeskills, label: "Life skills"}
+  - {key: greatbooks, label: "Reading the great books"}
+  - {key: fun, label: "Fun and games"}
+  - {key: business, label: "Business and markets"}
+
+subjects:
+  - {key: reading, label: "Reading and phonics"}
+  - {key: writing, label: "Writing and handwriting"}
+  - {key: math, label: "Math"}
+  - {key: science, label: "Science"}
+  - {key: history, label: "History and civics"}
+  - {key: geography, label: "Geography"}
+  - {key: languages, label: "Greek, Latin and ASL"}
+  - {key: ancient, label: "The ancient world"}
+  - {key: art, label: "Art and drawing"}
+  - {key: music, label: "Music"}
+  - {key: logic, label: "Logic and debate"}
+  - {key: manners, label: "Manners"}
+  - {key: economics, label: "Economics"}
+
+times:
+  - {key: 15, label: "About 15 minutes"}
+  - {key: 30, label: "About 30 minutes"}
+  - {key: 60, label: "About an hour"}
+  - {key: 120, label: "Two hours or more"}
+
+planner: /homeschool/planner/
+
+sections:
+  # ---------- Homeschool ----------
+  - key: homeschool
+    name: "Homeschool"
+    icon: "🏫"
+    url: /homeschool/
+    ages: [3, 14]
+    for: [child, class]
+    goals: [homeschool]
+    subjects: [reading, writing, math, science, history, geography]
+    mins: 60
+    weight: 3
+    planner: true
+    why: "A full school day from classic schoolbooks, with a guide for teaching every lesson."
+    start:
+      - {to: 4, url: /homeschool/actual-reading/little-house-pre-k/, label: "Little House Pre-K"}
+      - {to: 99, url: /homeschool/placement/, label: "The 10-minute placement check"}
+    words: [homeschool, home school, curriculum, lesson plans]
+
+  - key: early-reading
+    name: "Learning to Read"
+    icon: "🔤"
+    url: /homeschool/actual-reading/
+    ages: [3, 7]
+    for: [child, class]
+    goals: [homeschool, subject]
+    subjects: [reading]
+    mins: 15
+    weight: 2
+    planner: true
+    why: "Hannah Ward’s gentle early-reading lessons, from the alphabet to the first books."
+    start:
+      - {to: 4, url: /homeschool/actual-reading/teach-your-child-the-alphabet/, label: "Teach Your Child the Alphabet"}
+      - {to: 99, url: /homeschool/actual-reading/teach-your-child-to-read/, label: "Teach Your Child to Read"}
+    words: [learn to read, reading lessons, alphabet]
+
+  - key: phonics
+    name: "Phonics Practice"
+    icon: "🅰️"
+    url: /homeschool/actual-reading/phonics-practice/
+    ages: [4, 8]
+    for: [child, class]
+    goals: [subject, homeschool, fun]
+    subjects: [reading]
+    mins: 15
+    weight: 2
+    why: "Short, interactive steps from letter sounds to blends and vowel teams."
+    start:
+      - {to: 99, url: /homeschool/actual-reading/phonics-practice/, label: "Phonics Practice, step 1"}
+    words: [phonics, letter sounds, blends]
+
+  - key: mcguffey
+    name: "McGuffey’s Readers"
+    icon: "📖"
+    url: /homeschool/mcguffey/
+    ages: [5, 14]
+    for: [child, class]
+    goals: [homeschool, subject]
+    subjects: [reading]
+    mins: 15
+    weight: 1
+    planner: true
+    why: "The classic readers, with a teaching guide for each lesson."
+    start:
+      - {to: 6, url: /homeschool/mcguffey/primer/, label: "The Primer"}
+      - {to: 99, url: /homeschool/mcguffey/, label: "Pick a reader"}
+    words: [mcguffey, readers]
+
+  - key: spelling-grammar
+    name: "Spelling and Grammar"
+    icon: "✏️"
+    url: /homeschool/spelling-and-grammar/
+    ages: [6, 14]
+    for: [child, class]
+    goals: [homeschool, subject]
+    subjects: [writing, reading]
+    mins: 15
+    weight: 0
+    planner: true
+    why: "Webster’s blue-backed speller and Harvey’s grammar, a little each day."
+    start:
+      - {to: 99, url: /homeschool/spelling-and-grammar/, label: "Spelling and Grammar"}
+    words: [spelling, speller]
+
+  - key: rays
+    name: "Ray’s Arithmetic"
+    icon: "🧮"
+    url: /homeschool/rays-arithmetic/
+    ages: [5, 14]
+    for: [child, class]
+    goals: [homeschool, subject]
+    subjects: [math]
+    mins: 15
+    weight: 0
+    planner: true
+    why: "The 19th-century arithmetic series, with lesson guides, for a classic math path."
+    start:
+      - {to: 99, url: /homeschool/rays-arithmetic/, label: "Ray’s Arithmetic"}
+    words: [arithmetic]
+
+  - key: nature-study
+    name: "Nature Study"
+    icon: "🌿"
+    url: /homeschool/nature-study/
+    ages: [5, 14]
+    for: [child, class]
+    goals: [homeschool, subject, fun]
+    subjects: [science]
+    mins: 30
+    weight: 1
+    planner: true
+    why: "Comstock’s lessons for looking closely at birds, bugs, trees and flowers outside."
+    start:
+      - {to: 99, url: /homeschool/nature-study/, label: "Nature Study"}
+    words: [nature study, nature]
+
+  - key: hs-history
+    name: "History Books for Children"
+    icon: "🏺"
+    url: /homeschool/history/
+    ages: [8, 14]
+    for: [child, class]
+    goals: [homeschool]
+    subjects: [history, ancient]
+    mins: 15
+    weight: 0
+    planner: true
+    why: "Famous Men of Greece and Rome and other classic history read-alouds."
+    start:
+      - {to: 99, url: /homeschool/history/, label: "History books"}
+
+  - key: hs-latin
+    name: "Latin for Beginners"
+    icon: "🏛️"
+    url: /homeschool/latin/
+    ages: [10, 18]
+    for: [child, class]
+    goals: [homeschool, subject]
+    subjects: [languages, ancient]
+    mins: 30
+    weight: 0
+    planner: true
+    why: "D’Ooge’s first-year Latin with a step-by-step teaching guide."
+    start:
+      - {to: 99, url: /homeschool/latin/, label: "Latin for Beginners"}
+
+  - key: old-exams
+    name: "The Old Eighth-Grade Exams"
+    icon: "📜"
+    url: /homeschool/old-exams/
+    ages: [12, 99]
+    goals: [testprep, homeschool, fun]
+    subjects: [math, history, geography, writing]
+    mins: 30
+    weight: 0
+    why: "Real exams from 1895 to 1912 to try at home, with answer notes."
+    start:
+      - {to: 99, url: /homeschool/old-exams/, label: "The old exams"}
+    words: [eighth grade exam, 1895]
+
+  - key: outdoor
+    name: "Outdoor Skills"
+    icon: "🧭"
+    url: /homeschool/outdoor-skills/
+    ages: [6, 14]
+    for: [child, class]
+    goals: [lifeskills, fun]
+    subjects: [science]
+    mins: 30
+    weight: 0
+    why: "Knots, maps and compass, animal tracks and more, for time outdoors."
+    start:
+      - {to: 99, url: /homeschool/outdoor-skills/, label: "Outdoor Skills"}
+    words: [outdoor skills, knots, compass]
+
+  # ---------- The ladders ----------
+  - key: math
+    name: "Math Ladder"
+    icon: "🪜"
+    url: /math/
+    ages: [4, 99]
+    goals: [subject, homeschool, testprep]
+    subjects: [math]
+    mins: 15
+    weight: 3
+    planner: true
+    why: "Math from counting to college, with practice that checks every answer and review that brings topics back."
+    start:
+      - {to: 5, url: /math/kindergarten/, label: "Kindergarten math"}
+      - {to: 99, url: /math/placement/, label: "Find your rung (placement)"}
+    words: [math, algebra, arithmetic, geometry, calculus, fractions, precalculus, statistics]
+
+  - key: handwriting
+    name: "Handwriting: Print and Cursive"
+    icon: "✍️"
+    url: /writing/handwriting/
+    ages: [5, 10]
+    for: [child, class]
+    goals: [subject, homeschool]
+    subjects: [writing]
+    mins: 15
+    weight: 2
+    planner: true
+    why: "Every print and cursive letter, step by step, with a grown-up nearby."
+    start:
+      - {to: 99, url: /writing/handwriting/, label: "Handwriting"}
+    words: [handwriting, cursive, penmanship, print letters]
+
+  - key: writing
+    name: "Writing & Grammar Ladder"
+    icon: "📝"
+    url: /writing/
+    ages: [6, 99]
+    goals: [subject, homeschool, testprep]
+    subjects: [writing]
+    mins: 15
+    weight: 2
+    planner: true
+    why: "Sentences to essays: grammar, diagramming, composition and rhetoric."
+    start:
+      - {to: 8, url: /writing/first-writing/, label: "First Writing"}
+      - {to: 99, url: /writing/placement/, label: "Find your rung (placement)"}
+    words: [writing, grammar, composition, essay, diagramming]
+
+  - key: vocabulary
+    name: "Vocabulary Ladder"
+    icon: "🔠"
+    url: /vocabulary/
+    ages: [10, 99]
+    goals: [subject, testprep]
+    subjects: [reading, writing, languages]
+    mins: 15
+    weight: 1
+    why: "1,000 illustrated words and the Greek and Latin roots behind them."
+    start:
+      - {to: 99, url: /vocabulary/placement/, label: "Find your rung (placement)"}
+    words: [vocabulary, roots, word roots]
+
+  - key: physics
+    name: "Physics Ladder"
+    icon: "🪐"
+    url: /physics/
+    ages: [12, 99]
+    goals: [subject, homeschool, testprep]
+    subjects: [science]
+    mins: 15
+    weight: 1
+    planner: true
+    why: "Physical science through astrophysics, built from first principles."
+    start:
+      - {to: 99, url: /physics/placement/, label: "Find your rung (placement)"}
+    words: [physics, physical science, astronomy]
+
+  - key: chemistry
+    name: "Chemistry Ladder"
+    icon: "⚗️"
+    url: /chemistry/
+    ages: [14, 99]
+    goals: [subject, homeschool, testprep]
+    subjects: [science]
+    mins: 15
+    weight: 1
+    planner: true
+    why: "High school through general chemistry, one short topic at a time."
+    start:
+      - {to: 99, url: /chemistry/placement/, label: "Find your rung (placement)"}
+    words: [chemistry]
+
+  - key: biology
+    name: "Biology Ladder"
+    icon: "🧬"
+    url: /biology/
+    ages: [5, 99]
+    goals: [subject, homeschool, testprep]
+    subjects: [science]
+    mins: 15
+    weight: 1
+    planner: true
+    why: "Life science from age 5 through AP Biology."
+    start:
+      - {to: 9, url: /biology/young-learners/, label: "Life Science for Young Learners"}
+      - {to: 99, url: /biology/placement/, label: "Find your rung (placement)"}
+    words: [biology, life science]
+
+  - key: earth
+    name: "Earth & Space Ladder"
+    icon: "🌋"
+    url: /earth-and-space/
+    ages: [10, 99]
+    goals: [subject, homeschool]
+    subjects: [science, geography]
+    mins: 15
+    weight: 0
+    planner: true
+    why: "Rocks and plates, oceans, weather and climate, and Earth’s place in space."
+    start:
+      - {to: 99, url: /earth-and-space/placement/, label: "Find your rung (placement)"}
+    words: [earth science, geology, weather]
+
+  - key: science-lab
+    name: "Science Lab"
+    icon: "⚛️"
+    url: /science-lab/
+    ages: [6, 99]
+    goals: [subject, fun, homeschool]
+    subjects: [science]
+    mins: 15
+    weight: 2
+    why: "Simulations to play with: orbits, rockets, a trebuchet, circuits, gases and more."
+    start:
+      - {to: 11, url: /science-lab/, label: "Pick a simulation"}
+      - {to: 99, url: /science-lab/newtons-laws/, label: "Newton’s Laws of Motion"}
+    words: [science lab, simulations, experiments]
+
+  - key: civics
+    name: "American History & Civics Ladder"
+    icon: "🦅"
+    url: /american-history/
+    ages: [5, 99]
+    goals: [subject, homeschool]
+    subjects: [history]
+    mins: 15
+    weight: 2
+    planner: true
+    why: "U.S. history, how the government works, and the Constitution, from first stories to law school."
+    start:
+      - {to: 8, url: /american-history/young-learners/, label: "American History for Young Learners"}
+      - {to: 99, url: /american-history/placement/, label: "Find your rung (placement)"}
+    words: [civics, american history, us history, government, constitution]
+
+  - key: citizenship
+    name: "Citizenship Test Practice"
+    icon: "🗽"
+    url: /american-history/citizenship-test/
+    ages: [12, 99]
+    goals: [testprep, subject]
+    subjects: [history]
+    mins: 15
+    weight: 0
+    why: "The official civics questions and answers, word for word, to practice."
+    start:
+      - {to: 99, url: /american-history/citizenship-test/, label: "Citizenship Test Practice"}
+    words: [citizenship test, naturalization]
+
+  - key: geography
+    name: "Geography Ladder"
+    icon: "🗺️"
+    url: /geography/
+    ages: [5, 99]
+    goals: [subject, homeschool]
+    subjects: [geography]
+    mins: 15
+    weight: 1
+    planner: true
+    why: "Maps and places, the 50 states and the countries of the world."
+    start:
+      - {to: 8, url: /geography/maps-and-places/, label: "Maps and Places"}
+      - {to: 99, url: /geography/placement/, label: "Find your rung (placement)"}
+    words: [geography, maps, states, countries]
+
+  - key: art
+    name: "Art & Drawing Ladder"
+    icon: "🎨"
+    url: /art/
+    ages: [5, 99]
+    goals: [subject, homeschool, fun]
+    subjects: [art]
+    mins: 15
+    weight: 2
+    why: "Drawing from age 5, color and design, and a walk through art history."
+    start:
+      - {to: 9, url: /art/young-artists/, label: "Drawing for Young Artists"}
+      - {to: 99, url: /art/drawing-basics/, label: "Drawing Basics"}
+    words: [art, drawing, sketching, painting, art history]
+
+  - key: music
+    name: "Music"
+    icon: "🎹"
+    url: /music/
+    ages: [5, 99]
+    goals: [subject, fun]
+    subjects: [music]
+    mins: 15
+    weight: 2
+    why: "Piano, guitar, ukulele or banjo from the first note, and reading music step by step."
+    start:
+      - {to: 99, url: /music/piano-basics/, label: "Piano Basics"}
+    words: [music, piano, guitar, ukulele, reading music]
+
+  - key: logic
+    name: "Logic Ladder"
+    icon: "🧠"
+    url: /logic/
+    ages: [12, 99]
+    goals: [subject, homeschool]
+    subjects: [logic]
+    mins: 15
+    weight: 1
+    why: "Arguments and fallacies, syllogisms, truth tables and proofs."
+    start:
+      - {to: 99, url: /logic/placement/, label: "Find your rung (placement)"}
+    words: [logic, fallacies, syllogism]
+
+  - key: debate
+    name: "Debate"
+    icon: "🎤"
+    url: /debate/
+    ages: [12, 99]
+    goals: [subject, fun]
+    subjects: [logic, history]
+    mins: 30
+    weight: 1
+    why: "From the first practice round to tournaments, with both sides of 50 debates set out fairly."
+    start:
+      - {to: 99, url: /debate/learn/, label: "Learn to Debate"}
+    words: [debate, public speaking]
+
+  - key: economics
+    name: "Economics Ladder"
+    icon: "📈"
+    url: /economics/
+    ages: [14, 99]
+    goals: [subject, business, testprep]
+    subjects: [economics]
+    mins: 15
+    weight: 1
+    why: "Micro and macroeconomics, short lessons with practice."
+    start:
+      - {to: 99, url: /economics/placement/, label: "Find your rung (placement)"}
+    words: [economics, microeconomics, macroeconomics]
+
+  - key: etiquette
+    name: "Etiquette Ladder"
+    icon: "🎩"
+    url: /etiquette/
+    ages: [4, 99]
+    goals: [lifeskills, subject]
+    subjects: [manners]
+    mins: 15
+    weight: 1
+    why: "Manners from please and thank you to formal dinners and job interviews."
+    start:
+      - {to: 8, url: /etiquette/young-children/, label: "Manners for Young Children"}
+      - {to: 13, url: /etiquette/placement/, label: "Find your rung (placement)"}
+      - {to: 99, url: /etiquette/teens-and-adults/, label: "Etiquette for Teens and Adults"}
+    words: [etiquette, manners]
+
+  - key: egyptology
+    name: "Egyptology Ladder"
+    icon: "🏜️"
+    url: /egyptology/
+    ages: [8, 99]
+    goals: [subject, fun]
+    subjects: [ancient, history]
+    mins: 15
+    weight: 1
+    why: "Pharaohs and pyramids, gods and hieroglyphs, and how archaeologists know."
+    start:
+      - {to: 12, url: /egyptology/young-explorers/, label: "Ancient Egypt for Young Explorers"}
+      - {to: 99, url: /egyptology/placement/, label: "Find your rung (placement)"}
+    words: [egypt, egyptology, hieroglyphs, pyramids]
+
+  - key: scripts
+    name: "Ancient Scripts Ladder"
+    icon: "🔣"
+    url: /ancient-scripts/
+    ages: [12, 99]
+    goals: [subject]
+    subjects: [ancient, languages]
+    mins: 15
+    weight: 0
+    why: "Linear A and Linear B, and how lost writing gets deciphered."
+    start:
+      - {to: 99, url: /ancient-scripts/placement/, label: "Find your rung (placement)"}
+    words: [linear b, ancient scripts, decipherment]
+
+  - key: languages
+    name: "Koine Greek and Latin"
+    icon: "🗣️"
+    url: /languages/
+    ages: [10, 99]
+    goals: [subject, greatbooks]
+    subjects: [languages, ancient]
+    mins: 15
+    weight: 2
+    why: "Learn Greek and Latin from the Gospels and the classics, with a reader that explains every word."
+    start:
+      - {to: 99, url: /languages/, label: "Choose Greek or Latin"}
+    words: [greek, latin, koine]
+
+  - key: asl
+    name: "Sign Language (ASL)"
+    icon: "🤟"
+    url: /asl/
+    ages: [3, 99]
+    goals: [subject, fun]
+    subjects: [languages]
+    mins: 15
+    weight: 1
+    why: "A family path into American Sign Language, starting with fingerspelling."
+    start:
+      - {to: 99, url: /asl/, label: "Sign Language (ASL)"}
+    words: [asl, sign language, fingerspelling]
+
+  # ---------- Test prep ----------
+  - key: sat
+    name: "SAT Math Practice"
+    icon: "📝"
+    url: /test-prep/sat-math/
+    ages: [14, 18]
+    goals: [testprep]
+    subjects: [math]
+    mins: 30
+    weight: 2
+    why: "Practice by area, then timed mixed sets in the SAT’s own format."
+    start:
+      - {to: 99, url: /test-prep/sat-math/, label: "SAT Math Practice"}
+    words: [sat, test prep, sat math]
+
+  - key: act
+    name: "ACT Math Practice"
+    icon: "📝"
+    url: /test-prep/act-math/
+    ages: [14, 18]
+    goals: [testprep]
+    subjects: [math]
+    mins: 30
+    weight: 1
+    why: "Practice by reporting category, then timed four-choice sets."
+    start:
+      - {to: 99, url: /test-prep/act-math/, label: "ACT Math Practice"}
+    words: [act, act math]
+
+  - key: clt
+    name: "CLT Quantitative Practice"
+    icon: "📝"
+    url: /test-prep/clt-quantitative/
+    ages: [12, 18]
+    goals: [testprep]
+    subjects: [math]
+    mins: 30
+    weight: 0
+    why: "Practice for the Classic Learning Test’s math section."
+    start:
+      - {to: 99, url: /test-prep/clt-quantitative/, label: "CLT Practice"}
+    words: [clt, classic learning test]
+
+  - key: test-grammar
+    name: "Reading and Grammar for the SAT, ACT and CLT"
+    icon: "📚"
+    url: /test-prep/grammar/
+    ages: [14, 18]
+    goals: [testprep]
+    subjects: [writing, reading]
+    mins: 30
+    weight: 1
+    why: "What the reading and writing sections ask, with grammar practice."
+    start:
+      - {to: 99, url: /test-prep/grammar/, label: "Reading and Grammar"}
+
+  - key: ap
+    name: "AP Courses on the Ladders"
+    icon: "🎓"
+    url: /test-prep/ap/
+    ages: [14, 18]
+    goals: [testprep]
+    subjects: [math, science]
+    mins: 30
+    weight: 0
+    why: "How AP math and science units line up with the ladders’ topics."
+    start:
+      - {to: 99, url: /test-prep/ap/, label: "The AP map"}
+    words: [ap, advanced placement]
+
+  # ---------- Great books ----------
+  - key: harvard
+    name: "Harvard Classics Daily"
+    icon: "📚"
+    url: /harvard-classics/
+    ages: [14, 99]
+    goals: [greatbooks]
+    subjects: [reading, history]
+    mins: 15
+    weight: 3
+    why: "Fifteen minutes a day from Dr. Eliot’s Five Foot Shelf, with today’s reading ready."
+    start:
+      - {to: 99, url: /harvard-classics/, label: "Today’s reading"}
+    words: [great books, harvard classics, five foot shelf, classics]
+
+  - key: paths
+    name: "Reading Paths"
+    icon: "🧭"
+    url: /books/paths/
+    ages: [12, 99]
+    goals: [greatbooks]
+    subjects: [reading, history, ancient]
+    mins: 15
+    weight: 2
+    why: "Guided routes through the great books: where to start with the Greeks, the Romans, myths and more."
+    start:
+      - {to: 99, url: /books/paths/, label: "Pick a reading path"}
+    words: [great books, reading list, reading paths]
+
+  - key: free-books
+    name: "Free Books"
+    icon: "📗"
+    url: /free-books/
+    ages: [8, 99]
+    goals: [greatbooks]
+    subjects: [reading]
+    mins: 15
+    weight: 1
+    why: "Tens of thousands of free public-domain ebooks and audiobooks."
+    start:
+      - {to: 99, url: /free-books/, label: "Search the free books"}
+    words: [free books, ebooks, audiobooks]
+
+  - key: infographics
+    name: "Infographics"
+    icon: "🖼️"
+    url: /infographics/
+    ages: [12, 99]
+    goals: [greatbooks, fun]
+    subjects: [reading, history]
+    mins: 15
+    weight: 1
+    why: "One-page guides to great books and big ideas, to read on screen or print for a group."
+    start:
+      - {to: 99, url: /infographics/, label: "Browse the infographics"}
+
+  - key: library
+    name: "The Library"
+    icon: "🏛️"
+    url: /books/
+    ages: [14, 99]
+    for: [self]
+    goals: [greatbooks]
+    subjects: [reading]
+    mins: 15
+    weight: 0
+    why: "Teddy Rook’s own home library, by author, year and country."
+    start:
+      - {to: 99, url: /books/, label: "The Library"}
+    words: [great books, library]
+
+  - key: timeline
+    name: "Timeline of the Ancient World"
+    icon: "⏳"
+    url: /timeline/
+    ages: [8, 99]
+    goals: [greatbooks, subject]
+    subjects: [history, ancient]
+    mins: 15
+    weight: 1
+    why: "From the first kings of Egypt to the fall of Rome, linked to the books and games here."
+    start:
+      - {to: 99, url: /timeline/, label: "The Timeline"}
+    words: [timeline, ancient history]
+
+  # ---------- Life skills ----------
+  - key: adult
+    name: "Being an Adult 101"
+    icon: "🔧"
+    url: /being-an-adult/
+    ages: [13, 99]
+    goals: [lifeskills]
+    mins: 15
+    weight: 3
+    why: "Step-by-step guides: reset a breaker, change a tire, read a paycheck, make a budget."
+    start:
+      - {to: 99, url: /being-an-adult/, label: "Pick a guide"}
+    words: [life skills, adulting, home repair, budget]
+
+  - key: trades
+    name: "The Trades"
+    icon: "🛠️"
+    url: /trades/
+    ages: [14, 99]
+    goals: [lifeskills]
+    mins: 30
+    weight: 1
+    why: "Full courses on how cars, plumbing, electrical, HVAC and buildings work, and how to fix them."
+    start:
+      - {to: 99, url: /trades/cars/, label: "Start with Cars"}
+    words: [trades, life skills, plumbing, electrical, cars]
+
+  - key: meal-prep
+    name: "Meal Prep"
+    icon: "🍲"
+    url: /meal-prep/
+    ages: [14, 99]
+    goals: [lifeskills]
+    mins: 15
+    weight: 1
+    why: "Plan a week of family meals, scale the recipes and print a shopping list."
+    start:
+      - {to: 99, url: /meal-prep/plan/, label: "The Meal Planner"}
+    words: [meal prep, life skills, recipes, cooking]
+
+  - key: garden
+    name: "Food Garden Planner"
+    icon: "🥕"
+    url: /garden/
+    ages: [6, 99]
+    goals: [lifeskills, fun]
+    subjects: [science]
+    mins: 30
+    weight: 0
+    why: "Grow food in any space, from a windowsill to a backyard, with guides for chickens and bees."
+    start:
+      - {to: 99, url: /garden/, label: "Plan a garden"}
+    words: [garden, gardening, chickens, bees]
+
+  - key: sewing
+    name: "Sewing & Knitting"
+    icon: "🧵"
+    url: /sewing/
+    ages: [8, 99]
+    goals: [lifeskills, fun]
+    subjects: [art]
+    mins: 15
+    weight: 0
+    why: "From threading a needle to mending, the machine, knitting and crochet."
+    start:
+      - {to: 99, url: /sewing/thread-a-needle/, label: "Thread a Needle"}
+    words: [sewing, knitting, crochet, mending]
+
+  # ---------- Fun and games ----------
+  - key: games
+    name: "Games"
+    icon: "⚔️"
+    url: /games/
+    ages: [7, 99]
+    goals: [fun]
+    subjects: [languages, history, ancient]
+    mins: 15
+    weight: 2
+    why: "Browser games in ancient Greece and Rome that teach Greek and Latin as you play."
+    start:
+      - {to: 11, url: /games/hero/, label: "Hero’s Road"}
+      - {to: 99, url: /games/, label: "Pick a game"}
+    words: [games]
+
+  - key: brain-games
+    name: "Brain Games"
+    icon: "🧩"
+    url: /games/brain-games/
+    ages: [6, 99]
+    goals: [fun]
+    subjects: [logic]
+    mins: 15
+    weight: 1
+    why: "Short challenges for memory, attention, speed and spatial thinking."
+    start:
+      - {to: 99, url: /games/brain-games/, label: "Brain Games"}
+
+  - key: puzzles
+    name: "Brain Puzzles to Print"
+    icon: "🔢"
+    url: /puzzles/
+    ages: [8, 99]
+    goals: [fun]
+    subjects: [math, logic]
+    mins: 15
+    weight: 1
+    why: "Sudoku, logic grids, mazes and ciphers, made fresh each time, with answer keys."
+    start:
+      - {to: 99, url: /puzzles/, label: "Pick a puzzle"}
+    words: [puzzles, sudoku, printable puzzles]
+
+  - key: daily
+    name: "Daily Word Puzzle"
+    icon: "🔤"
+    url: /games/daily/
+    ages: [10, 99]
+    goals: [fun]
+    subjects: [languages]
+    mins: 15
+    weight: 0
+    why: "Guess today’s five-letter Latin or Greek word in six tries."
+    start:
+      - {to: 99, url: /games/daily/, label: "Today’s puzzle"}
+
+  - key: chess
+    name: "Chess of the Ancients"
+    icon: "♟️"
+    url: /games/chess/
+    ages: [7, 99]
+    goals: [fun]
+    subjects: [logic]
+    mins: 15
+    weight: 0
+    why: "Chess with Greek or Roman armies."
+    start:
+      - {to: 99, url: /games/chess/, label: "Play chess"}
+
+  - key: code-quest
+    name: "Code Quest"
+    icon: "🔐"
+    url: /homeschool/code-quest/
+    ages: [8, 14]
+    goals: [fun]
+    subjects: [math, logic]
+    mins: 30
+    weight: 0
+    why: "A puzzle trail of secret codes, and a scavenger-hunt maker."
+    start:
+      - {to: 99, url: /homeschool/code-quest/, label: "Code Quest"}
+
+  # ---------- Business and markets ----------
+  - key: cases
+    name: "Business Cases"
+    icon: "💼"
+    url: /business/cases/
+    ages: [14, 99]
+    goals: [business]
+    subjects: [economics]
+    mins: 15
+    weight: 3
+    why: "Short stories of real companies, each with the lesson up front."
+    start:
+      - {to: 99, url: /business/cases/, label: "Read a case"}
+    words: [business, case studies]
+
+  - key: game-theory
+    name: "Game Theory"
+    icon: "♞"
+    url: /business/game-theory/
+    ages: [15, 99]
+    goals: [business, subject]
+    subjects: [economics, logic, math]
+    mins: 30
+    weight: 1
+    why: "A full course in strategy, from the prisoner’s dilemma to auctions, with live simulations."
+    start:
+      - {to: 99, url: /business/game-theory/, label: "Game Theory, chapter 1"}
+    words: [game theory]
+
+  - key: econometrics
+    name: "Econometrics"
+    icon: "📊"
+    url: /business/econometrics/
+    ages: [17, 99]
+    goals: [business, subject]
+    subjects: [economics, math]
+    mins: 30
+    weight: 0
+    why: "A full course from the regression line to cause and effect."
+    start:
+      - {to: 99, url: /business/econometrics/, label: "Econometrics"}
+    words: [econometrics, regression]
+
+  - key: markets
+    name: "Markets & Economy"
+    icon: "💹"
+    url: /markets/
+    ages: [18, 99]
+    for: [self]
+    goals: [business]
+    subjects: [economics]
+    mins: 15
+    weight: 1
+    why: "Stock charts, a screener, economic data and calculators in one place."
+    start:
+      - {to: 99, url: /markets/, label: "The markets dashboard"}
+    words: [markets, stocks, investing]
+
+  - key: tax-receipt
+    name: "Your Tax Receipt"
+    icon: "🧾"
+    url: /business/tax-receipt/
+    ages: [16, 99]
+    goals: [business, lifeskills]
+    subjects: [economics, history]
+    mins: 15
+    weight: 0
+    why: "Enter the federal income tax you paid and see where it went, item by item."
+    start:
+      - {to: 99, url: /business/tax-receipt/, label: "Your Tax Receipt"}

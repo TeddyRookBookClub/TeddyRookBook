@@ -43,6 +43,10 @@ jobs:
       - name: Build
         run: hugo --minify
 
+      # Lists every file of each section with a fingerprint, for /offline/ and the download kit's updater.
+      - name: Offline manifests
+        run: node scripts/offline/build-manifests.js public
+
       - name: Add CNAME for custom domain
         run: echo "teddyrookbook.com" > public/CNAME
 

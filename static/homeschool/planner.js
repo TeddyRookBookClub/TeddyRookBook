@@ -3,12 +3,25 @@
   'use strict';
   var root = D.getElementById('pl'); if (!root) return;
   var DATA = JSON.parse(D.getElementById('pl-data').textContent);
-  var KEY = 'trb-planner-v1', HS = 'trb-homeschool-v1';
+  var KEY = 'trb-planner-v1', HS = 'trb-homeschool-v1', DIGEST = 'trb-planner-days';
+  // Learner profiles (static/js/profiles.js): a child can be linked to a learner (kid.pid). The plan itself is shared by the
+  // family; a linked child's ticks and ladder progress are read from and written to that learner's saves.
+  var PF = W.TRBProfiles && W.TRBProfiles.on() ? W.TRBProfiles : null;
+  function pidOf(ki) { var k = ki == null ? null : st.kids[ki]; return PF && k && k.pid && PF.get(k.pid) ? k.pid : null; }
+  function rd(ki, key) { var id = pidOf(ki); try { return id ? PF.getKey(id, key) : W.localStorage.getItem(key); } catch (e) { return null; } }
   var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], DOWL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var COLORS = ['#b5442f', '#2d6aa8', '#3d8a4a', '#7a4fb0', '#c7811a', '#1f7f86', '#a8336f', '#555'];
   var PACES = [[1.3, 'Gentle'], [1, 'Normal'], [0.8, 'Brisk']];
   var $ = function (s, el) { return (el || root).querySelector(s); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  // Family Study units added to the planner (static/homeschool/family/, saved in 'trb-family-v1') make the "Family study"
+  // subject: one course per unit (oldest first), one lesson per school day, each linking to that week of the unit.
+  var FAM = null; try { FAM = JSON.parse(W.localStorage.getItem('trb-family-v1') || 'null'); } catch (e) { }
+  var famUnits = FAM && Array.isArray(FAM.units) ? FAM.units.filter(function (u) { return u && u.id && u.pl && Array.isArray(u.pl.days) && u.pl.days.length; }).sort(function (a, b) { return (a.made || 0) - (b.made || 0); }) : [];
+  if (famUnits.length) DATA.subjects.unshift({ key: 'family', name: 'Family study', icon: '👪', start: 0, until: 99, replaces: [], mins: [[99, 240]], hw: [[99, 0]], ages: [], rank: [[99, 1]], note: 'Your Family Study units: what you do together and this child’s own work each day.', courses: famUnits.map(function (u) {
+    var page = String(u.pl.u || '').split('#')[0];
+    return { key: 'fam-' + u.id, name: (u.pl.t || u.key) + ' (family study)', url: page + '#u=' + u.id, from: 0, to: 99, rep: 1, alt: false, w: 'Day', lessons: u.pl.days.map(function (t, i) { var m = /^Week (\d+), day \d+: (.*)$/.exec(t); return { n: i + 1, t: m ? m[2] + ' (week ' + m[1] + ')' : t, m: +u.pl.m || 60, u: page + '#u=' + u.id + (m ? '&w=' + m[1] : '') }; }) };
+  }) });
   var SUB = {}, COURSE = {};
   // lessons become [number, title, minutes, url?, progress id?]. Ladder topics: url = course base + slug, progress = the
   // ladder's topic id (trb-math-v1). Practice courses (sessions): one session per school day, all on the same page.
@@ -68,13 +81,13 @@
   if (fromHash) { try { var hp = JSON.parse(decodeURIComponent(escape(atob(fromHash[1].replace(/-/g, '+').replace(/_/g, '/'))))); if (valid(hp)) st = fix(hp); } catch (e) { } }
   if (!st) st = fresh();
   var saveT = 0;
-  function save() { clearTimeout(saveT); saveT = setTimeout(function () { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } }, 250); }
-  function done() {
-    var d = {}; try { var h = JSON.parse(W.localStorage.getItem(HS) || 'null'); d = (h && h.done) || {}; } catch (e) { }
+  function save() { clearTimeout(saveT); saveT = setTimeout(function () { try { W.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) { } digest(); }, 250); }
+  function done(ki) { // lessons done for child ki: from the learner the child is linked to, else from this browser's saves
+    var d = {}; try { var h = JSON.parse(rd(ki, HS) || 'null'); d = (h && h.done) || {}; } catch (e) { }
     // lessons finished elsewhere on the site count too: ladder topics passed (trb-math-v1) and music chapters read (trb-music-read-v1)
     var ml = null, mu = null;
-    try { ml = (JSON.parse(W.localStorage.getItem('trb-math-v1') || 'null') || {}).t || null; } catch (e) { }
-    try { mu = (JSON.parse(W.localStorage.getItem('trb-music-read-v1') || 'null') || {}).done || null; } catch (e) { }
+    try { ml = (JSON.parse(rd(ki, 'trb-math-v1') || 'null') || {}).t || null; } catch (e) { }
+    try { mu = (JSON.parse(rd(ki, 'trb-music-read-v1') || 'null') || {}).done || null; } catch (e) { }
     if (ml || mu) DATA.subjects.forEach(function (s) {
       s.courses.forEach(function (c) {
         c.lessons.forEach(function (l) {
@@ -86,10 +99,20 @@
     });
     return d;
   }
-  function setDone(course, num, on) {
-    var h; try { h = JSON.parse(W.localStorage.getItem(HS) || 'null'); } catch (e) { } if (!h || !h.done) h = { done: {} };
+  function setDone(course, num, on, ki) {
+    var h; try { h = JSON.parse(rd(ki, HS) || 'null'); } catch (e) { } if (!h || !h.done) h = { done: {} };
     var c = h.done[course] || (h.done[course] = {}); if (on) c[num] = 1; else delete c[num];
-    try { W.localStorage.setItem(HS, JSON.stringify(h)); } catch (e) { }
+    var id = pidOf(ki), r = { ok: true };
+    try { if (id) r = PF.setKey(id, HS, JSON.stringify(h)); else W.localStorage.setItem(HS, JSON.stringify(h)); } catch (e) { r = { ok: false }; }
+    if (!r.ok) msg('That tick couldn’t be saved: this browser’s storage is full.');
+  }
+  // a linked learner's ladder progress, for the child's row: "Ladders: 34 topics passed, 3 due for review"
+  function ladderLine(ki) {
+    var id = pidOf(ki); if (!id) return '';
+    var m = null; try { m = JSON.parse(rd(ki, 'trb-math-v1') || 'null'); } catch (e) { }
+    var p = PF.get(id), n = 0, due = 0, t = new Date(), day = Math.round((Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()) - Date.UTC(2020, 0, 1)) / 864e5);
+    if (m && m.t) for (var x in m.t) if (m.t[x] && m.t[x].s === 2) { n++; if (m.t[x].due <= day) due++; }
+    return esc(p.icon || '') + ' ' + esc(p.name) + '’s ladders: ' + (n ? n + ' topic' + (n === 1 ? '' : 's') + ' passed' + (due ? ', ' + due + ' due for review' : '') : 'nothing passed yet') + '.';
   }
   // "Arithmetic: Ray's Practical Arithmetic, lesson 12", or just "Math Ladder: Grade 3, lesson 2" when the course already names its subject
   function courseAt(c, n, bare) { var sn = SUB[c.sub].name; return (bare || c.name.indexOf(sn) === 0 ? '' : sn + ': ') + c.name + ', ' + (c.w || 'Lesson').toLowerCase() + ' ' + n; }
@@ -123,7 +146,9 @@
     return '<div class="pl-kid" data-k="' + i + '" style="--kc:' + COLORS[i % COLORS.length] + '">' +
       '<div class="pl-kidtop"><span class="pl-dot"></span><input class="pl-name" type="text" value="' + esc(k.name) + '" aria-label="Name" maxlength="30">' +
       '<label class="pl-age">Age <select data-f="age">' + ages + '</select></label>' +
+      (PF ? '<label class="pl-age pl-who">Learner <select data-f="pid"><option value="">Not linked</option>' + PF.list().map(function (p) { return '<option value="' + esc(p.id) + '"' + (p.id === k.pid ? ' selected' : '') + '>' + esc(p.icon + ' ' + PF.label(p)) + '</option>'; }).join('') + '</select></label>' : '') +
       (st.kids.length > 1 ? '<button type="button" class="pl-x" data-f="del" aria-label="Remove ' + esc(k.name) + '">✕</button>' : '') + '</div>' +
+      (pidOf(i) ? '<p class="pl-lad hs-small">' + ladderLine(i) + '</p>' : '') +
       '<div class="pl-subs">' + rows + '</div></div>';
   }
   var moreOpen = {}; // which children's "More subjects" lists are open (just for this visit)
@@ -138,7 +163,7 @@
     var ki = +b.closest('.pl-kid').dataset.k, k = st.kids[ki];
     if (b.dataset.f === 'del') { st.kids.splice(ki, 1); renderKids(); update(); }
     if (b.dataset.f === 'resume') {
-      var s = SUB[b.closest('.pl-sub').dataset.s], dn = done(), best = null;
+      var s = SUB[b.closest('.pl-sub').dataset.s], dn = done(ki), best = null;
       s.courses.forEach(function (c) { var d = dn[c.key]; if (!d) return; c.lessons.forEach(function (l, j) { if (d[l[0]]) best = { c: c, j: j }; }); });
       if (!best) { msg('Nothing in ' + s.name + ' is marked done yet in this browser.'); return; }
       var c = best.c, j = best.j + 1; if (j >= c.lessons.length) { var nc = c.alt ? null : s.courses.filter(function (q) { return q.i > c.i && !q.alt; })[0]; if (nc) { c = nc; j = 0; } else { msg('That subject is all done!'); return; } }
@@ -149,6 +174,7 @@
   function onKid(e) {
     var t = e.target, f = t.dataset.f; if (!f) return;
     var ki = +t.closest('.pl-kid').dataset.k, k = st.kids[ki];
+    if (f === 'pid') { if (t.value) k.pid = t.value; else delete k.pid; renderKids(); update(); return; }
     if (f === 'age') { k.age = +t.value; k.subs = defSubs(k.age); renderKids(); update(); msg('Books and times reset to suggestions for age ' + k.age + '. Change any of them.'); return; }
     var x = k.subs[t.closest('.pl-sub').dataset.s];
     if (f === 'on') {
@@ -269,9 +295,52 @@
   function lessonURL(e) { return e.it.l[3] || e.it.c.url + 'lesson-' + e.it.l[0] + '/'; } // Hannah Ward's lessons are PDFs on her site
   function absURL(e) { var u = lessonURL(e); return /^https?:/.test(u) ? u : location.origin + u; }
 
+  // ---------- today: the active learner's lessons, and a digest for the "What's next" card ----------
+  // The days a child has lessons on, from today: date plans use real dates; a numbered-weeks plan uses the week shown in
+  // "Week by week" and today's weekday.
+  function upcoming(ki, max) {
+    var out = [], now = new Date(); now.setHours(0, 0, 0, 0);
+    if (st.mode === 'date') { for (var i = 0; i < P.cal.length && out.length < max; i++) { var d = P.cal[i]; if (d.date >= now && d.kids[ki].length) out.push({ d: d, i: i }); } }
+    else { var w = P.weeks[st.week]; if (w) { var end = st.week + 1 < P.weeks.length ? P.weeks[st.week + 1].from : P.cal.length; for (var j = w.from; j < end && out.length < max; j++) if (P.cal[j].kids[ki].length) out.push({ d: P.cal[j], i: j }); } }
+    return out;
+  }
+  function isToday(d) { var n = new Date(); return st.mode === 'date' ? d.date && d.date.toDateString() === n.toDateString() : d.dow === n.getDay(); }
+  function digest() {
+    if (!P) return;
+    var o = { v: 1, mode: st.mode, week: P.weeks[st.week] ? P.weeks[st.week].n : 1, at: Date.now(), kids: st.kids.map(function (k, ki) {
+      return { pid: k.pid || '', name: k.name, days: upcoming(ki, 6).map(function (x) {
+        var items = []; x.d.kids[ki].forEach(function (g) { g.list.forEach(function (e) { items.push([g.s.name + ': ' + lessonText(e) + (e.cont ? ' (continued)' : ''), lessonURL(e), e.fin ? e.it.c.key : '', e.it.l[0], e.it.l[4] || '']); }); });
+        return { d: x.d.date ? iso(x.d.date) : '', dow: x.d.dow, items: items };
+      }) };
+    }) };
+    try { W.localStorage.setItem(DIGEST, JSON.stringify(o)); } catch (e) { }
+  }
+  function todayHTML() {
+    var act = PF && PF.active(); if (!act) return '';
+    var h = '';
+    st.kids.forEach(function (k, ki) {
+      if (pidOf(ki) !== act.id) return;
+      var dn = done(ki), up = upcoming(ki, 6), day = null;
+      up.forEach(function (x) { if (!day && isToday(x.d)) day = x; });
+      var title = esc(act.icon + ' ' + act.name) + '’s work today' + (k.name.toLowerCase() !== act.name.toLowerCase() && !/^Child \d+$/.test(k.name) ? ' <small>(' + esc(k.name) + ' in the plan)</small>' : '') + (st.mode === 'date' ? '' : ' <small>(' + esc(weekLabel(P.weeks[st.week])) + ', ' + DOWL[new Date().getDay()] + ')</small>');
+      h += '<div class="pl-today-k"><h3>' + title + '</h3>' + (day ? dayCell(day.d, ki, dn) : '<p class="hs-small">Nothing planned for today.' + (up[0] ? ' Next: ' + esc(dayLabel(up[0].d)) + '.' : '') + '</p>') + '</div>';
+    });
+    return h;
+  }
+  function renderToday() {
+    var box = D.getElementById('pl-today');
+    if (!box) { if (!PF) return; box = D.createElement('div'); box.id = 'pl-today'; box.className = 'pl-today hs-noprint'; var tabs = root.querySelector('.pl-tabs'); tabs.parentNode.insertBefore(box, tabs); }
+    var h = P && P.tracks.length ? todayHTML() : ''; box.innerHTML = h; box.hidden = !h;
+  }
+  D.addEventListener('change', function (e) { // ticks in the "today" box
+    var t = e.target; if (!t.classList || !t.classList.contains('pl-ck') || !t.closest('#pl-today')) return;
+    setDone(t.dataset.c, t.dataset.n, t.checked, +t.dataset.k); render();
+  });
+
   // ---------- views ----------
   function update() { save(); compute(); render(); }
   function render() {
+    renderToday();
     root.querySelectorAll('.pl-tabs button').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.v === st.view ? 'true' : 'false'); });
     var v = $('#pl-view');
     if (!P.tracks.length) { v.innerHTML = '<p class="pl-empty">Turn on at least one subject with some minutes a week, and the plan appears here.</p>'; return; }
@@ -322,30 +391,30 @@
     return groups.map(function (g) {
       return '<div class="pl-g"><span class="pl-gi" title="' + esc(g.s.name) + '">' + g.s.icon + '</span><div><div class="pl-gt">' + esc(g.s.name) + ' · ≈ ' + fm(g.m) + ' lesson' + (g.hw ? ' + ' + fm(g.hw) + ' study' : '') + '</div>' + g.list.map(function (e) {
         var isD = dn[e.it.c.key] && dn[e.it.c.key][e.it.l[0]];
-        return '<div class="pl-l' + (isD ? ' done' : '') + '">' + (e.fin ? '<input type="checkbox" class="pl-ck" data-c="' + e.it.c.key + '" data-n="' + e.it.l[0] + '"' + (isD ? ' checked' : '') + ' aria-label="Done">' : '<span class="pl-ckph"></span>') +
+        return '<div class="pl-l' + (isD ? ' done' : '') + '">' + (e.fin ? '<input type="checkbox" class="pl-ck" data-k="' + ki + '" data-c="' + e.it.c.key + '" data-n="' + e.it.l[0] + '"' + (isD ? ' checked' : '') + ' aria-label="Done">' : '<span class="pl-ckph"></span>') +
           '<a href="' + esc(lessonURL(e)) + '"' + (isExt(e.it.l) ? ' target="_blank" rel="noopener" title="Opens the lesson on another site"' : '') + '>' + esc(lessonText(e)) + (isExt(e.it.l) ? ' ↗' : '') + '</a>' + (e.cont ? ' <em>(continued)</em>' : '') + ' <small>' + esc(e.it.c.name) + '</small>' +
           (e.it.l[5] ? ' <small class="pl-pair">Goes with <a href="' + esc(e.it.l[5][0]) + '">' + esc(e.it.l[5][1]) + '</a></small>' : '') + '</div>';
       }).join('') + '</div></div>';
     }).join('') + '<div class="pl-tot">Total ≈ ' + fm(tt.l + tt.h) + ' <span>(' + fm(tt.l) + ' lessons' + (tt.h ? ' + ' + fm(tt.h) + ' study' : '') + ')</span></div>';
   }
   function weekHTML() {
-    var w = P.weeks[st.week], dn = done(); if (!w) return '';
+    var w = P.weeks[st.week], dn = st.kids.map(function (k, ki) { return done(ki); }); if (!w) return '';
     var end = st.week + 1 < P.weeks.length ? P.weeks[st.week + 1].from : P.cal.length;
     var h = '<div class="pl-wnav"><button type="button" class="hs-btn" data-wk="-1"' + (st.week ? '' : ' disabled') + '>← Previous</button><select id="pl-wsel" aria-label="Week">' + P.weeks.map(function (x, i) { return '<option value="' + i + '"' + (i === st.week ? ' selected' : '') + '>' + esc(weekLabel(x)) + '</option>'; }).join('') + '</select><button type="button" class="hs-btn" data-wk="1"' + (st.week + 1 < P.weeks.length ? '' : ' disabled') + '>Next →</button>' + (st.mode === 'date' ? '<button type="button" class="hs-btn ghost" data-wk="today">This week</button>' : '') + '</div>';
     h += '<div class="pl-days-grid">';
     for (var i = w.from; i < end; i++) {
       var d = P.cal[i], body = '';
-      st.kids.forEach(function (k, ki) { var c = dayCell(d, ki, dn); if (c) body += '<div class="pl-dk" style="--kc:' + COLORS[ki % COLORS.length] + '"><b><span class="pl-dot"></span>' + esc(k.name) + '</b>' + c + '</div>'; });
+      st.kids.forEach(function (k, ki) { var c = dayCell(d, ki, dn[ki]); if (c) body += '<div class="pl-dk" style="--kc:' + COLORS[ki % COLORS.length] + '"><b><span class="pl-dot"></span>' + esc(k.name) + '</b>' + c + '</div>'; });
       h += '<div class="pl-day"><h3>' + esc(dayLabel(d)) + '</h3>' + (body || '<p class="hs-small">Nothing planned.</p>') + '</div>';
     }
     return h + '</div>';
   }
   function allHTML() {
-    var dn = done(), h = '<p class="hs-small hs-noprint">Every school day of the plan. Use “Print or save as PDF” to keep a paper copy.</p>';
+    var dn = st.kids.map(function (k, ki) { return done(ki); }), h = '<p class="hs-small hs-noprint">Every school day of the plan. Use “Print or save as PDF” to keep a paper copy.</p>';
     P.weeks.forEach(function (w, wi) {
       var end = wi + 1 < P.weeks.length ? P.weeks[wi + 1].from : P.cal.length;
       h += '<div class="pl-wk"><h3>' + esc(weekLabel(w)) + '</h3><table class="pl-tab"><thead><tr><th>Day</th>' + st.kids.map(function (k, ki) { return '<th style="--kc:' + COLORS[ki % COLORS.length] + '"><span class="pl-dot"></span>' + esc(k.name) + '</th>'; }).join('') + '</tr></thead><tbody>';
-      for (var i = w.from; i < end; i++) { var d = P.cal[i]; h += '<tr><th>' + esc(dayLabel(d)) + '</th>' + st.kids.map(function (k, ki) { return '<td>' + dayCell(d, ki, dn) + '</td>'; }).join('') + '</tr>'; }
+      for (var i = w.from; i < end; i++) { var d = P.cal[i]; h += '<tr><th>' + esc(dayLabel(d)) + '</th>' + st.kids.map(function (k, ki) { return '<td>' + dayCell(d, ki, dn[ki]) + '</td>'; }).join('') + '</tr>'; }
       h += '</tbody></table></div>';
     });
     return h;
@@ -359,7 +428,7 @@
   });
   $('#pl-view').addEventListener('change', function (e) {
     if (e.target.id === 'pl-wsel') { st.week = +e.target.value; save(); render(); return; }
-    if (e.target.classList.contains('pl-ck')) { setDone(e.target.dataset.c, e.target.dataset.n, e.target.checked); e.target.closest('.pl-l').classList.toggle('done', e.target.checked); }
+    if (e.target.classList.contains('pl-ck')) { setDone(e.target.dataset.c, e.target.dataset.n, e.target.checked, e.target.dataset.k == null ? null : +e.target.dataset.k); e.target.closest('.pl-l').classList.toggle('done', e.target.checked); }
   });
 
   // ---------- exports ----------
@@ -517,6 +586,28 @@
     // a book picked without its ladder (Ray's without the Math Ladder): the ladder, on by default, steps aside for it
     DATA.subjects.forEach(function (s) { var x = kid.subs[s.key]; if (x && x.on && !placed.picks[s.key] && s.courses.some(function (c) { return c.base; }) && (s.replaces || []).some(function (r) { return placed.picks[r] && !placed.picks[r].off; })) { x.on = false; offd.push(s.name); } });
     setTimeout(function () { msg(kid.name + (said.length ? ' is set to start at ' + said.join('; ') + '.' : ' is added.') + (offd.length ? ' ' + offd.join(' and ') + ' switched off.' : '')); }, 50);
+  }
+
+  // ---------- a Family Study unit sent from /homeschool/family/ ("Add to my lesson planner") ----------
+  if (famUnits.some(function (u) { return u.add; })) {
+    var famSaid = [], hadPlan = false; try { hadPlan = !!W.localStorage.getItem(KEY); } catch (e) { }
+    famUnits.forEach(function (u) {
+      if (!u.add) return; delete u.add;
+      var c = COURSE['fam-' + u.id]; if (!c) return;
+      (u.kids || []).forEach(function (fk) {
+        var kid = null, nm = String(fk.name || '').trim().toLowerCase();
+        st.kids.forEach(function (k) { if (!kid && ((fk.pid && k.pid === fk.pid) || (nm && k.name.toLowerCase() === nm))) kid = k; });
+        if (!kid) {
+          var blank = st.kids.length === 1 && /^Child \d+$/.test(st.kids[0].name) && !hadPlan;
+          kid = newKid(st.kids.length + 1, Math.max(3, Math.min(18, +fk.age || 7))); if (fk.name) kid.name = String(fk.name).slice(0, 30); if (fk.pid) kid.pid = fk.pid;
+          if (blank) st.kids = [kid]; else st.kids.push(kid);
+        }
+        kid.subs.family = { on: true, course: c.key, lesson: 1, mins: Math.max(1, +u.days || 4) * (+u.pl.m || 60), pace: 1, hw: 0 };
+        famSaid.push(kid.name);
+      });
+    });
+    try { W.localStorage.setItem('trb-family-v1', JSON.stringify(FAM)); } catch (e) { }
+    if (famSaid.length) setTimeout(function () { msg('Family study is on for ' + famSaid.join(', ') + '. Its days are in each child’s week.'); }, 60);
   }
 
   // ---------- start ----------

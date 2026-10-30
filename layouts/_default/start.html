@@ -1,0 +1,53 @@
+{{ define "main" }}
+{{- /* "Find what's for you": a few quick questions, then a ranked list of places to start. Data: data/start.yaml; ranking: static/start/rank.js. */ -}}
+{{- $d := site.Data.start -}}
+{{- range $d.sections -}}{{- $us := slice .url -}}{{- range .start -}}{{- $us = $us | append .url -}}{{- end -}}
+  {{- range $us -}}{{- if not (site.GetPage .) -}}{{- warnf "data/start.yaml: %q is not a page on the site" . -}}{{- end -}}{{- end -}}
+{{- end -}}
+<link rel="stylesheet" href="{{ "start/start.css" | relURL }}?v={{ (os.Stat "static/start/start.css").ModTime.Unix }}">
+<div class="trb-group st" id="st">
+  <header class="trb-ghero">
+    <p class="trb-geyebrow">Teddy Rook Book · Start here</p>
+    <h1>Find what’s for you</h1>
+    <p>There’s a lot here, and all of it is free. Answer a few quick questions, or skip any of them, and you’ll get a short list of good places to start, each with a link to the very first page.</p>
+  </header>
+
+  <div class="st-qs" id="st-qs">
+    <fieldset class="st-q" data-q="who" data-one>
+      <legend><span class="st-n">1</span> Who is it for?</legend>
+      <div class="st-chips">{{ range $d.who }}<button type="button" class="st-chip" data-v="{{ .key }}" aria-pressed="false">{{ .label }}</button>{{ end }}</div>
+    </fieldset>
+    <fieldset class="st-q" data-q="ages">
+      <legend><span class="st-n">2</span> How old? <small>Pick all that apply.</small></legend>
+      <div class="st-chips">{{ range $d.ages }}<button type="button" class="st-chip" data-v="{{ .key }}" aria-pressed="false">{{ .label }}</button>{{ end }}</div>
+    </fieldset>
+    <fieldset class="st-q" data-q="goals">
+      <legend><span class="st-n">3</span> What are you hoping for? <small>Pick any.</small></legend>
+      <div class="st-chips">{{ range $d.goals }}<button type="button" class="st-chip" data-v="{{ .key }}" aria-pressed="false">{{ .label }}</button>{{ end }}</div>
+    </fieldset>
+    <fieldset class="st-q" data-q="subjects">
+      <legend><span class="st-n">4</span> Any subjects in mind? <small>Optional.</small></legend>
+      <div class="st-chips">{{ range $d.subjects }}<button type="button" class="st-chip" data-v="{{ .key }}" aria-pressed="false">{{ .label }}</button>{{ end }}</div>
+    </fieldset>
+    <fieldset class="st-q" data-q="time" data-one>
+      <legend><span class="st-n">5</span> How much time a day?</legend>
+      <div class="st-chips">{{ range $d.times }}<button type="button" class="st-chip" data-v="{{ .key }}" aria-pressed="false">{{ .label }}</button>{{ end }}</div>
+    </fieldset>
+    <div class="st-go">
+      <button type="button" class="st-btn st-prim" id="st-show">Show my starting points</button>
+      <button type="button" class="st-btn" id="st-reset">Start over</button>
+    </div>
+  </div>
+
+  <section class="st-res" id="st-res" aria-labelledby="st-res-h" tabindex="-1">
+    <h2 id="st-res-h">Good places to start</h2>
+    <p class="st-status" id="st-status" role="status"></p>
+    <ol class="st-cards" id="st-cards"></ol>
+    <noscript><p>This picker needs JavaScript. You can also browse everything on the <a href="{{ "education/" | relURL }}">Education</a> page.</p></noscript>
+    <p class="st-more">Looking for something in particular? <button type="button" class="st-link" id="st-search">Search the site</button>, or see everything on the <a href="{{ "education/" | relURL }}">Education</a>, <a href="{{ "games/" | relURL }}">Games</a>, <a href="{{ "miscellaneous/" | relURL }}">Miscellaneous</a> and <a href="{{ "business/" | relURL }}">Business</a> pages.</p>
+  </section>
+</div>
+<script type="application/json" id="st-data">{{ $d | jsonify | safeJS }}</script>
+<script src="{{ "start/rank.js" | relURL }}?v={{ (os.Stat "static/start/rank.js").ModTime.Unix }}" defer></script>
+<script src="{{ "start/start.js" | relURL }}?v={{ (os.Stat "static/start/start.js").ModTime.Unix }}" defer></script>
+{{ end }}

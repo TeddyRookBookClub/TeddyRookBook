@@ -1,0 +1,13 @@
+{{- /* "What's next" card for the active learner (home page and Education). Built in the browser by static/js/whats-next.js
+   from this browser's saves only (the planner's digest, trb-math-v1, trb-hc-v1, trb-phonics-v1); the page itself is the
+   same for everyone and the card stays hidden for a visitor with no progress or plan. The JSON below names the ladder
+   courses and phonics steps so the card can label its links without loading the ladders' graph. */ -}}
+{{- $L := dict -}}{{- $C := dict -}}
+{{- range site.Data.ladders -}}
+  {{- $lk := .key -}}{{- $L = merge $L (dict $lk (slice .slug .title)) -}}
+  {{- with index site.Data $lk -}}{{- range .courses -}}{{- $C = merge $C (dict .key (slice .title $lk)) -}}{{- end -}}{{- end -}}
+{{- end -}}
+{{- $ph := slice -}}{{- range site.Data.phonics.steps -}}{{- $ph = $ph | append (dict "k" .key "t" .title "a" .acts) -}}{{- end -}}
+<div class="trb-wn" id="trb-wn" hidden></div>
+<script type="application/json" id="trb-wn-data">{{ dict "L" $L "C" $C "ph" $ph | jsonify | safeJS }}</script>
+<script src="{{ "js/whats-next.js" | relURL }}?v={{ (os.Stat "static/js/whats-next.js").ModTime.Unix }}" defer></script>

@@ -1,0 +1,21 @@
+{
+  "_about": "Rules for scripts/offline/build-manifests.js. Sections come from the main menu in hugo.toml (one per menu URL). These settings only add the exceptions.",
+  "onlineOnly": {
+    "/markets/": "Live market data needs a connection.",
+    "/free-books/": "Free Books searches Project Gutenberg and LibriVox live.",
+    "/videos/": "The videos play from YouTube.",
+    "/business/tax-receipt/": "The receipt uses live U.S. Treasury data."
+  },
+  "corePages": ["/", "/education/", "/games/", "/miscellaneous/", "/business/", "/offline/", "/start/", "/progress/", "/404.html"],
+  "coreFiles": ["/index.json", "/favicon.ico", "/favicon-16x16.png", "/favicon-32x32.png", "/apple-touch-icon.png", "/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png", "/js/offline-core.js", "/js/offline-notice.js"],
+  "leftovers": [
+    { "prefix": "/games/", "id": "games-more", "title": "More games", "group": "Games", "icon": "🎲", "note": "The smaller games and simulations that are not in the menu" },
+    { "prefix": "/", "id": "other", "title": "Other pages", "group": "Miscellaneous", "icon": "📄", "note": "Pages that are not in the menu" }
+  ],
+  "exclude": ["/offline/manifests/", "/tags/", "/categories/", "/sw.js", "/CNAME", "/robots.txt", "/sitemap.xml", "*.xml"],
+  "sharedRoots": ["img", "js", "css", "assets", "pdfs", "icons", "fonts"],
+  "extra": {
+    "/languages/": ["/lang/"],
+    "/geography/": ["/geog/"]
+  }
+}

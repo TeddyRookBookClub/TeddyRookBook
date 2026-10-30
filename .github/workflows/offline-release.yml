@@ -1,0 +1,52 @@
+name: Offline download kit
+
+# Builds the site, splits it into one zip per section, and puts the zips on the GitHub release
+# called "offline" (not on GitHub Pages, so the site stays far under its 1 GB limit).
+# The kit's updater only uses these zips for a section's first download; after that it fetches
+# just the changed files from the website. So the zips do not need rebuilding often.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 6 1 * *"   # once a month
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "offline-release"
+  cancel-in-progress: true
+
+jobs:
+  zips:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: false
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.147.0'
+          extended: true
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Offline manifests
+        run: node scripts/offline/build-manifests.js public
+
+      - name: Zips
+        run: VERBOSE=1 node scripts/offline/build-archives.js public offline-dist
+
+      - name: Upload to the "offline" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view offline >/dev/null 2>&1 || gh release create offline --title "Offline download kit" --notes "Teddy Rook Book for use without the internet. Download TeddyRookBook-offline-kit.zip, unzip it, and read README.txt. The kit downloads the other zips itself. Instructions: https://teddyrookbook.com/offline/" --latest=false
+          gh release upload offline offline-dist/* --clobber
+          # remove zips of sections that no longer exist
+          for a in $(gh release view offline --json assets -q '.assets[].name'); do
+            [ -e "offline-dist/$a" ] || gh release delete-asset offline "$a" -y
+          done

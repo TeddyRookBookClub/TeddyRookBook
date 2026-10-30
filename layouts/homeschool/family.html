@@ -1,0 +1,118 @@
+{{ define "main" }}
+{{- /* Family Study (/homeschool/family/): one theme for the whole family, then each child's work at their level.
+   Scripts: static/homeschool/family/plan.js (the plan, shared with the Node tests in scripts/family/) and family.js (the
+   page), on top of the ladders' shared engine (ML.loadTopics, ML.makeProblem, ML.typeset, ML.viz) for the problems.
+
+   THE UNIT LIBRARY: data/family/units/<key>.yaml, one file per unit. To add a unit, copy one and change it:
+     key       the file name without .yaml
+     title     "Ancient Egypt"                 subject  history | science | geography | language | math | art | logic | nature
+     icon      one emoji                        blurb    one sentence for the unit's card
+     parts     about six, each about one week (with more weeks a part takes two or three; with fewer, a week takes two):
+       title   the part's name
+       read    ["Title", "/url/on/this/site/"]  the shared read-aloud or lesson (a ladder lesson, a Harvard Classics reading,
+               a Homeschool book chapter, a Science Lab activity)
+       more    [["Title", "/url/"], …]          more to read or do together (optional)
+       ask     three discussion questions: for everyone, going deeper (8 and up), deepest (11 and up)
+       do      the family activity or project for the week
+       A, B, C, D   ladder topic ids (as in data/<ladder>/topics/<course>.json) for ages 5–7, 8–10, 11–13 and 14–18.
+               Each needs a generator (static/<ladder>/gen/<course>.js): the worksheets, quizzes and test come from them.
+     projects  A, B, C, D: { t: title, do: the task, rubric: [three or four things to look for] }
+   Check a new unit with:  node scripts/family/test-family.js   (every id, URL and generator; Ancient Egypt for ages 6, 9, 14). */ -}}
+{{ partial "inline/ml-head.html" . }}
+<link rel="stylesheet" href="{{ "homeschool/planner.css" | relURL }}?v={{ (os.Stat "static/homeschool/planner.css").ModTime.Unix }}">
+<link rel="stylesheet" href="{{ "homeschool/family/family.css" | relURL }}?v={{ (os.Stat "static/homeschool/family/family.css").ModTime.Unix }}">
+{{- /* the library as one JSON file: units, and the title, URL and course grades of every topic they use */ -}}
+{{- $S := newScratch -}}{{- $units := slice -}}
+{{- range $k, $u := site.Data.family.units -}}
+  {{- $units = $units | append $u -}}
+  {{- range $u.parts -}}{{- $p := . -}}{{- range slice "A" "B" "C" "D" -}}{{- range (index $p .) -}}{{- $S.SetInMap "ids" . true -}}{{- end -}}{{- end -}}{{- end -}}
+{{- end -}}
+{{- $ids := $S.Get "ids" | default dict -}}
+{{- range $L := site.Data.ladders -}}
+  {{- with index site.Data $L.key -}}
+    {{- $tops := .topics | default dict -}}
+    {{- range $c := (.courses | default slice) -}}
+      {{- with index $tops $c.key -}}{{- range .topics -}}{{- if isset $ids .id -}}
+        {{- $S.SetInMap "T" .id (dict "t" .title "u" (printf "/%s/%s/%s/" $L.slug $c.slug .slug) "g" (printf "%v" ($c.grade | default "")) "ls" ($c.short | default $c.title)) -}}
+      {{- end -}}{{- end -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $json := resources.FromString "homeschool/family/units.json" (dict "units" $units "T" ($S.Get "T" | default dict) | jsonify) | fingerprint "md5" -}}
+<div class="hs fam" id="fam" data-src="{{ $json.RelPermalink }}" data-root="{{ "/" | relURL }}" data-planner="{{ "homeschool/planner/" | relURL }}">
+  <nav class="hs-crumbs hs-noprint"><a href="{{ "homeschool/" | relURL }}">Homeschool</a> › Family Study</nav>
+  <header class="hs-hero hs-noprint">
+    <p class="hs-eyebrow">Homeschool · Family Study</p>
+    <h1>Family Study</h1>
+    <p>Pick one theme for the whole family. Each week you read, talk and make something together. Then each child does lessons, a worksheet, a quiz and a project at their own level. Print a teacher's copy and a copy for each child, and add the unit to your lesson planner.</p>
+  </header>
+
+  <section class="hs-sec fam-step hs-noprint" id="fam-s1">
+    <h2><span class="pl-n">1</span> Pick a theme</h2>
+    <div class="fam-filter" id="fam-filter" role="group" aria-label="Subject"></div>
+    <div class="fam-units" id="fam-units" role="radiogroup" aria-label="Units"><p class="hs-small">Loading the units…</p></div>
+  </section>
+
+  <section class="hs-sec fam-step hs-noprint">
+    <h2><span class="pl-n">2</span> Your children</h2>
+    <div id="fam-kids"></div>
+    <div class="hs-actions"><button type="button" class="hs-btn" id="fam-addkid">＋ Add a child</button><span id="fam-from" class="fam-from"></span></div>
+    <details class="fam-how">
+      <summary>How each child's level is chosen</summary>
+      <p>Each child works at one of four levels, chosen from their age:</p>
+      <ul>
+        <li><b>Level A, ages 5 to 7</b> (about kindergarten to grade 2): picture-rich ladder lessons for young learners; questions are read aloud, and answers are pointed to or circled.</li>
+        <li><b>Level B, ages 8 to 10</b> (about grades 3 to 5): the young-learner ladders at their harder end, and the first middle-school lessons.</li>
+        <li><b>Level C, ages 11 to 13</b> (about grades 6 to 8): the middle-school ladder courses.</li>
+        <li><b>Level D, ages 14 to 18</b> (high school): the high-school ladder courses.</li>
+      </ul>
+      <p>Children of 3 or 4 work at level A, alongside an older brother or sister. If a child is ahead or behind for their age, choose another level next to their name. The problems on each sheet come from the ladder lessons for that level. They are made a little harder when a lesson's course is meant for younger grades than the child's level, and a little easier when it is meant for older grades.</p>
+    </details>
+  </section>
+
+  <section class="hs-sec fam-step hs-noprint">
+    <h2><span class="pl-n">3</span> How long</h2>
+    <div class="fam-len">
+      <label>Length <select id="fam-weeks">{{ range seq 2 12 }}<option value="{{ . }}">{{ . }} weeks</option>{{ end }}</select></label>
+      <label>School days a week <select id="fam-days">{{ range seq 1 5 }}<option value="{{ . }}">{{ . }}</option>{{ end }}</select></label>
+    </div>
+    <p class="hs-small">Each unit has about six parts. In six weeks you do one a week; in twelve, each part gets two weeks; in two or three weeks, two or three parts share a week.</p>
+  </section>
+
+  <section class="hs-sec fam-out hs-noprint" id="fam-out">
+    <h2><span class="pl-n">4</span> Your unit</h2>
+    <div class="fam-saved" id="fam-saved" hidden></div>
+    <div class="fam-sum" id="fam-sum"></div>
+    <div class="fam-export">
+      <button type="button" class="hs-btn pri" id="fam-toplanner">🗓️ Add to my lesson planner</button>
+      <button type="button" class="hs-btn" id="fam-tprint">🖨 Teacher's copy</button>
+      <span id="fam-kprint" class="fam-kprint"></span>
+      <details class="pl-more"><summary class="hs-btn ghost">More…</summary>
+        <div class="pl-morebox">
+          <button type="button" class="hs-btn" id="fam-new">🔀 New problems</button>
+          <button type="button" class="hs-btn" id="fam-save">💾 Save unit file</button>
+          <label class="hs-btn">📂 Open unit file<input type="file" id="fam-open" accept=".json,application/json" hidden></label>
+          <button type="button" class="hs-btn ghost" id="fam-another">＋ Start another unit</button>
+        </div>
+      </details>
+      <span class="hs-small" id="fam-msg" aria-live="polite"></span>
+    </div>
+    <p class="hs-small">The printed copies are made in your browser. Choose “Save as PDF” in the print window to keep a file. The teacher's copy has every answer key; the children's copies have none.</p>
+    <div class="fam-wnav"><button type="button" class="hs-btn" id="fam-prev">← Previous</button><select id="fam-wsel" aria-label="Week"></select><button type="button" class="hs-btn" id="fam-next">Next →</button></div>
+    <div id="fam-week"></div>
+  </section>
+  <div id="fam-print" class="fam-print"></div>
+  <noscript><p>Family Study needs JavaScript turned on.</p></noscript>
+</div>
+{{ partial "inline/ml-cfg.html" "family" }}
+{{ partial "inline/ml-js.html" "homeschool/calc/cas.js" }}
+{{ partial "inline/ml-js.html" "math/core/gen.js" }}
+{{ partial "inline/ml-js.html" "math/core/tex.js" }}
+{{ partial "inline/ml-js.html" "math/core/check.js" }}
+{{ partial "inline/ml-js.html" "math/core/input.js" }}
+{{ partial "inline/ml-js.html" "math/core/engine.js" }}
+{{ partial "inline/ml-js.html" "math/core/runner.js" }}
+{{ partial "inline/ml-js.html" "math/viz/core.js" }}
+{{ partial "inline/ml-js.html" "homeschool/family/plan.js" }}
+{{ partial "inline/ml-js.html" "homeschool/family/family.js" }}
+{{ end }}

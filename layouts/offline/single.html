@@ -1,0 +1,31 @@
+{{ define "main" }}
+{{- /* Shown by the service worker (static/sw.js) when there is no connection and the page asked for is not saved.
+       The address bar still shows the page that was asked for. */ -}}
+<link rel="stylesheet" href="{{ "offline/offline.css" | relURL }}?v={{ (os.Stat "static/offline/offline.css").ModTime.Unix }}">
+<div class="trb-group off off-fb">
+  <header class="trb-ghero">
+    <p class="trb-geyebrow">Teddy Rook Book · No connection</p>
+    <h1>This page is not saved on this device</h1>
+    <p>You seem to be offline, and this page was not saved for offline use. When the connection is back, reload the page. Meanwhile, here is what you can open now.</p>
+  </header>
+  <section class="off-card">
+    <h2>Saved on this device</h2>
+    <ul class="off-fb-list" data-off="fb-list"><li class="off-note">Looking…</li></ul>
+    <p class="off-acts"><button type="button" class="off-btn pri" onclick="location.reload()">Try again</button> <a class="off-btn" href="{{ "offline/" | relURL }}">Offline settings</a> <a class="off-btn" href="{{ "" | relURL }}">Home page</a></p>
+  </section>
+</div>
+<script src="{{ "js/offline-core.js" | relURL }}?v={{ (os.Stat "static/js/offline-core.js").ModTime.Unix }}"></script>
+<script>
+(function () {
+  var ul = document.querySelector('[data-off="fb-list"]');
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  if (!window.caches || !window.TRBOffline) { ul.innerHTML = '<li>Nothing is saved yet.</li>'; return; }
+  TRBOffline.state().then(function (st) {
+    var ids = Object.keys(st.sections).filter(function (id) { return id !== 'core'; });
+    var titles = st.titles || {};
+    if (!ids.length) { ul.innerHTML = '<li>Nothing is saved yet. When you are back online, choose sections on the <a href="/offline/">offline page</a>.</li>'; return; }
+    ul.innerHTML = ids.map(function (id) { var t = titles[id] || {}; return '<li>' + (t.url ? '<a href="' + esc(t.url) + '">' + esc((t.icon ? t.icon + ' ' : '') + t.title) + '</a>' : esc(t.title || id)) + '</li>'; }).join('');
+  }).catch(function () { ul.innerHTML = '<li>Could not read what is saved.</li>'; });
+})();
+</script>
+{{ end }}

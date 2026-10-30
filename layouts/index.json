@@ -1,5 +1,8 @@
 {{- /* Site-search index: every page, plus each infographic and timeline entry. k = kind, t = title, u = url, d = description, x = extra words to match. */ -}}
 {{- $out := slice -}}
+{{- /* s = section search words from data/start.yaml ("words"): the search puts these main pages first for those words */ -}}
+{{- $kw := dict -}}
+{{- range site.Data.start.sections -}}{{- $u := .url -}}{{- with .words -}}{{- $kw = merge $kw (dict $u (delimit . " ")) -}}{{- end -}}{{- end -}}
 {{- range site.Pages -}}
   {{- if or .Params.searchHidden (eq .Kind "taxonomy") (eq .Kind "term") (eq .Kind "home") -}}{{- continue -}}{{- end -}}
   {{- if and .Params.isListPage (not .Params.searchable) -}}{{- continue -}}{{- end -}}
@@ -16,7 +19,9 @@
   {{- with .Params.year }}{{ $x = $x | append (string .) }}{{ end -}}
   {{- with .Params.tags }}{{ $x = $x | append . }}{{ end -}}
   {{- with .Params.keywords }}{{ $x = $x | append . }}{{ end -}}
-  {{- $out = $out | append (dict "k" $k "t" .Title "u" .RelPermalink "d" (.Description | default "" | plainify) "x" (delimit $x " ")) -}}
+  {{- $e := dict "k" $k "t" .Title "u" .RelPermalink "d" (.Description | default "" | plainify) "x" (delimit $x " ") -}}
+  {{- with index $kw .RelPermalink }}{{ $e = merge $e (dict "s" .) }}{{ end -}}
+  {{- $out = $out | append $e -}}
 {{- end -}}
 {{- range where site.Data.infographics "show" true -}}
   {{- $out = $out | append (dict "k" "Infographic" "t" .title "u" (printf "/infographics/%s/" .file) "d" .description "x" (delimit (.tags | default slice) " ") "i" (printf "/img/infographics/%s-thumb.jpg" .file)) -}}
