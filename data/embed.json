@@ -36,8 +36,67 @@
       "text": "The day’s fifteen-minute reading from the Harvard Classics, with a link to the full text.",
       "height": 420,
       "params": ""
+    },
+    {
+      "key": "lang-word",
+      "path": "/embed/lang-word/",
+      "query": "lang=grc",
+      "title": "Greek or Latin word of the day",
+      "text": "One common word from the Gospels each day, the same for everyone: its dictionary form, meaning, a real form with its grammar, and a verse where it appears, with the King James Version English.",
+      "height": 560,
+      "params": "lang: grc (Koine Greek) or lat (Latin)",
+      "sources": { "grc": ["nestle", "macula", "dodson", "kjv"], "lat": ["vulgate", "proiel", "whitaker", "kjv"] }
+    },
+    {
+      "key": "lang-drill",
+      "path": "/embed/lang-drill/",
+      "query": "lang=lat&set=gospels",
+      "title": "A short sentence drill",
+      "text": "A few Latin or Greek sentences a day to hear, say back and understand, like the site’s Sentence Drills. Tap any word for its meaning and grammar. Gospel verses come with the King James Version; classical sentences with old public-domain translations.",
+      "height": 660,
+      "params": "lang: grc or lat · set: gospels (part of a Gospel passage each day) or classical (Caesar, Cicero, Virgil and Ovid in Latin; Herodotus, Homer and Plutarch in Greek)",
+      "sources": { "grc-gospels": ["nestle", "macula", "dodson", "kjv", "phemister"], "lat-gospels": ["vulgate", "proiel", "whitaker", "kjv", "voices"], "lat-classical": ["proiel", "perseus-tb", "perseus-tr", "whitaker", "voices"], "grc-classical": ["proiel", "perseus-tb", "perseus-tr", "lsj", "voices"] }
+    },
+    {
+      "key": "alphabet",
+      "path": "/embed/alphabet/",
+      "query": "",
+      "title": "Greek alphabet practice",
+      "text": "Six short lessons, from the letters to reading real words from the New Testament, each with a quick quiz.",
+      "height": 640,
+      "params": "",
+      "sources": { "": ["trb-alphabet", "nestle"] }
+    },
+    {
+      "key": "hieroglyphs",
+      "path": "/embed/hieroglyphs/",
+      "query": "",
+      "title": "Write your name in hieroglyphs",
+      "text": "Type a name and see it spelled with Egyptian sound signs in a cartouche, the way scribes wrote Greek and Roman names. Choose other signs, then save it as a picture.",
+      "height": 720,
+      "params": "",
+      "sources": { "": ["trb-cartouche", "gardiner", "trb-font", "freeserif"] }
     }
   ],
+  "sources": {
+    "nestle": { "name": "Nestle 1904 Greek New Testament", "by": "Eberhard Nestle, editor (British and Foreign Bible Society, 1904)", "what": "Greek text", "license": "Public domain", "url": "https://github.com/biblicalhumanities/Nestle1904" },
+    "macula": { "name": "MACULA Greek", "by": "Clear Bible and Biblica", "what": "Greek grammar (lemmas and morphology) and word-by-word glosses", "license": "CC BY 4.0", "license_url": "https://creativecommons.org/licenses/by/4.0/", "url": "https://github.com/Clear-Bible/macula-greek" },
+    "dodson": { "name": "Dodson Greek Lexicon", "by": "John Jeffrey Dodson", "what": "Greek dictionary", "license": "Public domain", "url": "https://github.com/biblicalhumanities/Dodson-Greek-Lexicon" },
+    "vulgate": { "name": "The Latin Vulgate Gospels", "by": "Jerome (about AD 383), as edited in the PROIEL Treebank", "what": "Latin text", "license": "Public-domain text; the PROIEL edition is CC BY-NC-SA 3.0", "license_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/", "url": "https://github.com/proiel/proiel-treebank" },
+    "proiel": { "name": "PROIEL Treebank", "by": "the PROIEL project, University of Oslo", "what": "Latin and Greek grammar (lemmas, morphology, syntax), with the texts of the Vulgate, Caesar, Cicero’s Letters to Atticus and Herodotus", "license": "CC BY-NC-SA 3.0", "license_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/", "url": "https://github.com/proiel/proiel-treebank" },
+    "perseus-tb": { "name": "Ancient Greek and Latin Dependency Treebank 2.1", "by": "the Perseus Digital Library, Tufts University", "what": "texts and grammar for Cicero’s Against Catiline, Virgil, Ovid, Homer and Plutarch", "license": "CC BY-SA 3.0", "license_url": "https://creativecommons.org/licenses/by-sa/3.0/", "url": "https://github.com/PerseusDL/treebank_data" },
+    "perseus-tr": { "name": "English translations, from the Perseus Digital Library", "by": "W. A. McDevitte & W. S. Bohn, E. S. Shuckburgh, C. D. Yonge, T. C. Williams, Brookes More, A. D. Godley, A. T. Murray and Bernadotte Perrin", "what": "English for the classical sentences", "license": "Public-domain translations; Perseus’s digital editions are CC BY-SA 4.0", "license_url": "https://creativecommons.org/licenses/by-sa/4.0/", "url": "https://github.com/PerseusDL/canonical-latinLit" },
+    "lsj": { "name": "Liddell–Scott–Jones Greek–English Lexicon", "by": "the Perseus Digital Library, with thanks to Tufts University", "what": "Greek dictionary for the classical sentences", "license": "CC BY-SA 4.0", "license_url": "https://creativecommons.org/licenses/by-sa/4.0/", "url": "https://github.com/PerseusDL/lexica" },
+    "whitaker": { "name": "William Whitaker’s Words", "by": "William Whitaker", "what": "Latin dictionary", "license": "Free to copy, by the author’s terms", "url": "https://github.com/mk270/whitakers-words" },
+    "kjv": { "name": "King James Version", "by": "1611; the standard 1769 Oxford text, from the kjv package (npm), checked word by word against Wikisource’s transcription of the 1772 Oxford edition", "what": "English for the Gospel verses", "license": "Public domain", "url": "https://en.wikisource.org/wiki/Bible_(King_James)" },
+    "phemister": { "name": "Audio Greek New Testament", "by": "read by Marilyn Phemister (Westcott–Hort text), © 2001", "what": "Greek audio, streamed from the Internet Archive", "license": "Free for non-commercial use with credit", "url": "https://archive.org/details/AudiogreeknewtestamentOfWescott.hort.readByMarilynPhemister" },
+    "voices": { "name": "Your device’s own voices", "by": "the text-to-speech built into the browser", "what": "audio (Latin with an Italian voice, Greek with a modern Greek voice)", "license": "Nothing is recorded or sent", "url": "" },
+    "trb-alphabet": { "name": "Greek Alphabet lessons", "by": "Teddy Rook Book", "what": "lessons and quizzes", "license": "CC BY-NC 4.0", "license_url": "https://creativecommons.org/licenses/by-nc/4.0/", "url": "https://teddyrookbook.com/languages/alphabet/" },
+    "trb-cartouche": { "name": "Cartouche maker", "by": "Teddy Rook Book", "what": "the spelling rules, sign choices and drawing", "license": "CC BY-NC 4.0", "license_url": "https://creativecommons.org/licenses/by-nc/4.0/", "url": "https://teddyrookbook.com/languages/hieroglyphs/cartouche/" },
+    "gardiner": { "name": "Egyptian Grammar", "by": "Sir Alan Gardiner (Oxford, 1927; 3rd edition 1957), and its Sign List", "what": "signs, sound values and Gardiner codes", "license": "Facts and readings, cited", "url": "https://archive.org/search?query=gardiner+egyptian+grammar" },
+    "trb-font": { "name": "TRB Hieroglyphs font", "by": "Teddy Rook Book (original drawings)", "what": "the hieroglyphs", "license": "SIL Open Font License 1.1", "license_url": "https://openfontlicense.org", "url": "https://teddyrookbook.com/languages/hieroglyphs/" },
+    "freeserif": { "name": "FreeSerif, a subset", "by": "GNU FreeFont contributors", "what": "transliteration letters", "license": "GPL 3 or later, with the font exception", "url": "https://savannah.gnu.org/projects/freefont/" }
+  },
   "examples": {
     "topics": ["g3.add-within-1000", "alg1.evaluate-expressions", "phys1.average-velocity", "chem.states-of-matter", "micro.opportunity-cost", "informal.arguments", "young.please", "fwr.what-is-a-sentence", "adv.angry", "worldgeo.latitude", "gov.purposes-of-government", "lifesci.microscope", "earthsci.day-and-night"],
     "courses": ["g3", "alg1", "phys1", "micro", "fwr"],
@@ -49,8 +108,16 @@
   "toolkit": {
     "release": "https://github.com/TeddyRookBookClub/TeddyRookBook/releases/tag/toolkit",
     "download": "https://github.com/TeddyRookBookClub/TeddyRookBook/releases/download/toolkit/teddy-rook-toolkit.zip",
-    "size": "13 MB",
-    "ladders": ["math", "physics", "chemistry", "bio", "earth", "writing", "vocab", "logic", "geog", "civics", "economics", "etiquette"]
+    "size": "15 MB",
+    "ladders": ["math", "physics", "chemistry", "bio", "earth", "writing", "vocab", "logic", "geog", "civics", "economics", "etiquette"],
+    "packs": [
+      { "dir": "greek", "name": "Koine Greek: the four Gospels", "what": "Every word of Matthew, Mark, Luke and John in Greek, with lemma, grammar code and gloss, and the Greek dictionary", "license": "CC BY 4.0", "license_url": "https://creativecommons.org/licenses/by/4.0/", "sources": ["nestle", "macula", "dodson"] },
+      { "dir": "latin", "name": "Latin: the Vulgate Gospels", "what": "The four Gospels in Latin, with lemma, grammar and syntax for every word, and the Latin dictionary", "license": "CC BY-NC-SA 3.0", "license_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/", "sources": ["vulgate", "proiel", "whitaker"] },
+      { "dir": "classical", "name": "Classical sentences", "what": "The sentence drills’ Latin and Greek sentences from Caesar, Cicero, Virgil, Ovid, Herodotus, Homer and Plutarch, with grammar and English, in files named for their source", "license": "Per file: CC BY-NC-SA 3.0 (PROIEL) or CC BY-SA 3.0 (Perseus); Greek dictionary CC BY-SA 4.0", "license_url": "", "sources": ["proiel", "perseus-tb", "perseus-tr", "lsj", "whitaker"] },
+      { "dir": "english-kjv", "name": "English: King James Version", "what": "The KJV for every Gospel verse the embeds and drills use (936 verses)", "license": "Public domain", "license_url": "", "sources": ["kjv"] },
+      { "dir": "tools/alphabet", "name": "Greek alphabet tool", "what": "The six alphabet lessons and quizzes, ready to open", "license": "Code MIT; content CC BY-NC 4.0", "license_url": "", "sources": ["trb-alphabet"] },
+      { "dir": "tools/hieroglyphs", "name": "Cartouche maker", "what": "Write a name in hieroglyphs, with the Egyptology model and fonts", "license": "Code MIT; content CC BY-NC 4.0; TRB Hieroglyphs font SIL OFL 1.1; FreeSerif subset GPL with font exception", "license_url": "", "sources": ["trb-cartouche", "gardiner", "trb-font", "freeserif"] }
+    ]
   },
   "withheld": [
     {
@@ -62,7 +129,8 @@
   ],
   "left_out": [
     { "name": "Markets data", "why": "FRED and other data providers set their own terms" },
-    { "name": "Greek and Latin language data", "why": "several sources allow only non-commercial use under their own licenses (see static/lang/data/SOURCES.md)" },
+    { "name": "The ESV English", "why": "the site quotes 499 verses of the ESV under Crossway’s quotation allowance, which doesn’t cover embeds or downloads, so the embeds and the toolkit use the King James Version instead" },
+    { "name": "The Greek audio recording", "why": "Marilyn Phemister’s reading is free for non-commercial use with credit; the Greek drill embed streams it from the Internet Archive with that credit, but it isn’t ours to bundle in a download" },
     { "name": "Art, Egyptology and Ancient Scripts ladders", "why": "they use artwork, fonts and images with their own licenses" }
   ]
 }

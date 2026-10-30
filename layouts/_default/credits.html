@@ -1,0 +1,102 @@
+{{- /* /credits/: every source in one place. Built from data/credits.yaml (site, sections, more), the homeschool books
+   (data/hs_series/*.yaml), the Outdoor Skills handbooks (data/outdoor_skills.yaml) and the Art Ladder's pictures
+   (data/art/images.json). Pages show their own part in the "Sources and credits" block (layouts/_partials/credits-block.html). */ -}}
+{{ define "main" }}
+{{- $C := site.Data.credits -}}
+<style>
+.cr{--g:#004225;--muted:#5d6862;--line:#dde5df;--card:#fff;max-width:860px;margin:0 auto;line-height:1.6}
+html[data-theme="dark"] .cr{--g:#6cc79a;--muted:#a3b3a9;--line:#3c4a42;--card:#222a25}
+.cr h1{font:700 2rem Georgia,serif;color:var(--g);margin:.2rem 0 .4rem}
+.cr .cr-lead{color:var(--muted);font-size:1.02rem;margin:0 0 1rem}
+.cr h2{font:700 1.35rem Georgia,serif;color:var(--g);margin:2rem 0 .5rem;padding-top:.6rem;border-top:2px solid #b8963e}
+.cr h3{font-size:1.02rem;margin:1.2rem 0 .3rem;color:var(--g)}
+.cr ul{padding-left:1.2rem;margin:.2rem 0 .6rem}
+.cr li{margin:.2rem 0;font-size:.93rem;overflow-wrap:anywhere}
+.cr .lic{color:var(--muted)}
+.cr .note{color:var(--muted);font-size:.9rem;margin:.2rem 0 .5rem}
+.cr .cr-toc{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 0;padding:0;list-style:none}
+.cr .cr-toc li{margin:0}
+.cr li a,.cr p a{color:var(--g);text-decoration:underline;text-decoration-color:#b8963e;text-underline-offset:2px;box-shadow:none}
+.cr h3 a{color:var(--g);box-shadow:none}
+.cr-toc a{display:inline-block;padding:.2rem .7rem;border:1px solid var(--line);border-radius:999px;font-size:.85rem;text-decoration:none;box-shadow:none;color:var(--g)}
+.cr details{border:1px solid var(--line);border-radius:10px;padding:.4rem .8rem;margin:.5rem 0;background:var(--card)}
+.cr summary{cursor:pointer;font-weight:600;color:var(--g)}
+.cr-box{border:1px solid var(--line);border-left:4px solid #b8963e;border-radius:10px;padding:.7rem 1rem;background:var(--card)}
+.cr-box p{margin:.3rem 0;font-size:.93rem}
+@media print{.cr-toc{display:none}.cr details{border:0;padding:0}.cr h2{break-after:avoid}.cr a{color:#000}}
+</style>
+<div class="cr">
+  <nav class="hs-crumbs" style="font-size:.88rem"><a href="{{ "" | relURL }}">Home</a> › Sources and credits</nav>
+  <h1>Sources and credits</h1>
+  <p class="cr-lead">Teddy Rook Book is built on the work of many people: old schoolbooks and the libraries that scanned them, museums that share their pictures, scholars who publish open data, and the makers of free fonts and code. This page names them all, with their licences. Pages that use outside material also show their own sources at the bottom, under "Sources and credits".</p>
+  <ul class="cr-toc">
+    <li><a href="#use">Using our content</a></li>
+    <li><a href="#site">Fonts and code</a></li>
+    <li><a href="#sections">By section</a></li>
+    <li><a href="#books">Homeschool books</a></li>
+    <li><a href="#pictures">Art pictures</a></li>
+    {{- range $i, $g := $C.more }}<li><a href="#more-{{ $i }}">{{ $g.group }}</a></li>{{ end }}
+  </ul>
+
+  <h2 id="use">Using our content</h2>
+  <div class="cr-box">
+    <p>The infographics and written content are © Teddy Rook. Please link to them rather than re-hosting them. Lessons and other content offered for reuse are under <a href="https://creativecommons.org/licenses/by-nc/4.0/" rel="noopener">CC BY-NC 4.0</a>, with credit and a link back; the ladder engine's code is under the MIT License. See the <a href="{{ "developers/" | relURL }}">developers page</a>.</p>
+    <p>Some of the language data is licensed for non-commercial use only, so the site as a whole is non-commercial. Material from others keeps its own licence, listed below.</p>
+  </div>
+
+  <h2 id="site">Fonts and code</h2>
+  {{- range $C.site }}
+  <h3>{{ .group }}</h3>
+  <ul>{{ range .items }}{{ partial "inline/cr-item.html" . }}{{ end }}</ul>
+  {{- end }}
+
+  <h2 id="sections">By section</h2>
+  <p class="note">What each part of the site draws on. These are the same credits the pages show.</p>
+  {{- range $C.sections }}{{ if and .title (or .items .hook) }}
+  <h3>{{ if .exact }}<a href="{{ .prefix | relURL }}">{{ .title }}</a>{{ else }}{{ .title }}{{ end }}</h3>
+  <ul>
+    {{- if eq .hook "hs-series" }}<li>The schoolbooks: scans kept by the <a href="https://archive.org/" rel="noopener">Internet Archive</a>, from the libraries named under each book; all were published before 1931, so they are in the public domain in the United States. The full list is <a href="#books">below</a>.</li>{{ end }}
+    {{- if eq .hook "outdoor-skills" }}{{ range site.Data.outdoor_skills.sources }}<li><a href="https://archive.org/details/{{ .id }}" rel="noopener">{{ .title }}</a> ({{ .year }})</li>{{ end }}{{ end }}
+    {{- range .items }}{{ partial "inline/cr-item.html" . }}{{ end }}
+  </ul>
+  {{- end }}{{ end }}
+
+  <h2 id="books">Homeschool books</h2>
+  <p class="note">Every book here is in the public domain in the United States. The scans are kept by the <a href="https://archive.org/" rel="noopener">Internet Archive</a>, which shows them on our pages and supplies the PDF downloads; the libraries that lent the copies are named where we know them. The teaching guides are written for Teddy Rook Book.</p>
+  {{- $order := slice "mcguffey" "rays" "spelling" "writing" "latin" "greek" "geometry" "geography" "history" "science" "nature" -}}
+  {{- range $order }}{{ with index site.Data.hs_series . }}
+  <details>
+    <summary>{{ .title }}</summary>
+    <ul>
+      {{- range .groups }}{{ range .books }}
+      <li><a href="https://archive.org/details/{{ .id }}" rel="noopener"><i>{{ .title }}</i></a>{{ with .year }} ({{ . }}){{ end }}{{ with .scan }}. <span class="lic">{{ . }}</span>{{ end }}</li>
+      {{- end }}{{ end }}
+    </ul>
+  </details>
+  {{- end }}{{ end }}
+
+  <h2 id="pictures">Art pictures</h2>
+  <p class="note">The Art &amp; Drawing Ladder shows only pictures that are in the public domain or shared by museums under CC0. Each comes through Wikimedia Commons; the museum, archive or photographer is named where known. Works still under copyright are described, not shown. Coastlines on the art maps come from <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain).</p>
+  {{- $W := where site.Data.art.images.works "image.status" "approved" }}
+  <details>
+    <summary>All {{ len $W }} pictures</summary>
+    <ul>
+      {{- range sort $W "year" }}
+      <li><a href="{{ .image.source_page }}" rel="noopener"><i>{{ .title }}</i></a>, {{ .artist }}, {{ .date }}. {{ .image.credit | default .image.license }}</li>
+      {{- end }}
+    </ul>
+  </details>
+
+  {{- range $i, $g := $C.more }}
+  <h2 id="more-{{ $i }}">{{ $g.group }}</h2>
+  {{- with $g.note }}<p class="note">{{ . }}</p>{{ end }}
+  <ul>{{ range $g.items }}{{ partial "inline/cr-item.html" . }}{{ end }}</ul>
+  {{- end }}
+
+  <p class="note" style="margin-top:2rem">If we have missed a credit or got one wrong, please tell us on <a href="https://x.com/teddyrookbook" rel="noopener">X</a> or <a href="https://github.com/TeddyRookBookClub" rel="noopener">GitHub</a>, and we will fix it.</p>
+</div>
+{{ end }}
+
+{{- define "partials/inline/cr-item.html" -}}
+<li>{{ if .url }}<a href="{{ .url }}" rel="noopener">{{ .name }}</a>{{ else if .link }}<a href="{{ .link | relURL }}">{{ .name }}</a>{{ else }}<b>{{ .name }}</b>{{ end }}{{ with .what }}: {{ . }}{{ end }}{{ with .licence }} <span class="lic">({{ . }})</span>{{ end }}</li>
+{{- end -}}

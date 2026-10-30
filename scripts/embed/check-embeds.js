@@ -7,6 +7,8 @@
 
   - every documented /embed/ page exists, is a whole page of its own (no site header) and is marked noindex;
   - every file those pages load from this site exists;
+  - the language embeds have their data files and a "Sources and credits" note naming every source in data/embed.json,
+    and no ESV verse appears in them (they use the King James Version);
   - every example topic id resolves to a topic in the ladders' graph, with a generator file, and every example course
     key to a course with topics; every example word has its word page;
   - /embed/ stays out of the sitemap and the site search, and the service worker leaves it alone;
@@ -102,6 +104,54 @@ else {
   for (let i = 0; i < words.length; i += 97) if (!fs.existsSync(page('/vocabulary/words/' + encodeURIComponent(words[i]) + '/'))) fail('word page for ' + words[i] + ' is missing');
 }
 if (!/hc-card/.test(read(page('/embed/reading/')) || '')) fail('/embed/reading/ has no reading card');
+
+/* 2b. the language embeds: their data, their credits, and no ESV.
+   The ESV (static/lang/data/esv.json) is quoted on the site under Crossway's allowance, which doesn't cover embeds, so
+   no embed page and no file under /embed/lang/ may contain an ESV verse (verses the ESV and KJV word alike are skipped). */
+const LANG = { '/embed/lang-word/': ['word-grc.json', 'word-lat.json'], '/embed/lang-drill/': ['gos-grc.json', 'gos-lat.json', 'cls-grc.json', 'cls-lat.json'] };
+const norm = s => String(s).toLowerCase().replace(/<[^>]+>/g, ' ').replace(/[^a-z ]+/g, ' ').replace(/\s+/g, ' ').trim();
+let esvProbes = [];
+try {
+  const esv = JSON.parse(fs.readFileSync(path.join(ROOT, 'static/lang/data/esv.json'), 'utf8'));
+  const kjv = Object.values(JSON.parse(fs.readFileSync(path.join(ROOT, 'static/lang/data/kjv.json'), 'utf8'))).map(norm).join(' | ');
+  esvProbes = Object.values(esv).map(norm).filter(t => t.length >= 25 && !kjv.includes(t));
+} catch (e) { fail('static/lang/data/esv.json or kjv.json could not be read for the ESV check'); }
+function noESV(label, text) {
+  const s = norm(text);
+  const hit = esvProbes.find(p => s.includes(p));
+  if (hit) fail(label + ' contains ESV text ("' + hit.slice(0, 50) + '…"); embeds must use the KJV');
+}
+for (const e of C.embeds || []) {
+  if (!e.sources) continue;
+  const html = read(page(e.path)) || '';
+  if (!/id=["']?emb-src/.test(html)) fail(e.path + ' lost its "Sources and credits" note');
+  const unent = u => { u = u.replace(/&#(\d+);/g, (m, n) => String.fromCharCode(+n)).replace(/&amp;/g, '&'); try { return decodeURI(u); } catch (x) { return u; } };
+  const hrefs = new Set(); let hm; const hre = /href=["']?([^"' >]+)/g;
+  while ((hm = hre.exec(html))) hrefs.add(unent(hm[1]));
+  for (const set of Object.keys(e.sources)) {
+    for (const k of e.sources[set]) {
+      const s = (C.sources || {})[k];
+      if (!s) { fail(e.path + ': source "' + k + '" is not in data/embed.json "sources"'); continue; }
+      if (s.url && !hrefs.has(unent(s.url))) fail(e.path + ' does not credit ' + s.name + ' (' + set + ')');
+    }
+  }
+  noESV(e.path, html);
+  for (const f of LANG[e.path] || []) {
+    const t = read(file('/embed/lang/' + f));
+    if (!t) { fail(e.path + ' needs /embed/lang/' + f + ', which is missing'); continue; }
+    try { JSON.parse(t); } catch (x) { fail('/embed/lang/' + f + ' is not valid JSON'); continue; }
+    noESV('/embed/lang/' + f, t.replace(/","/g, ' '));
+  }
+  pass();
+}
+if (!/id=["']?ab["' >]/.test(read(page('/embed/alphabet/')) || '')) fail('/embed/alphabet/ has no lesson box (#ab)');
+if (!/id=["']?hc-name/.test(read(page('/embed/hieroglyphs/')) || '')) fail('/embed/hieroglyphs/ has no name box (#hc-name)');
+if (!fs.existsSync(file('/egypt/fonts/trb-hieroglyphs.woff'))) fail('the hieroglyph font /egypt/fonts/trb-hieroglyphs.woff is missing');
+for (const e of C.embeds || []) {
+  const q = new URLSearchParams(e.query || '');
+  if (q.get('lang') && !['grc', 'lat'].includes(q.get('lang'))) fail(e.path + ': example lang=' + q.get('lang') + ' is not grc or lat');
+  if (q.get('set') && !['gospels', 'classical'].includes(q.get('set'))) fail(e.path + ': example set=' + q.get('set') + ' is not gospels or classical');
+}
 
 /* 3. kept out of the sitemap, the search and the service worker */
 const sm = read(file('sitemap.xml')) || '';

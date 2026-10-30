@@ -23,11 +23,11 @@
   <header class="trb-ghero">
     <p class="trb-geyebrow">Teddy Rook Book · For developers &amp; co-ops</p>
     <h1>Use Teddy Rook Book on your own site</h1>
-    <p>Put ladder practice, the Vocabulary word of the day or the day’s Harvard Classics reading on your co-op’s site with one line of HTML. Or download the practice engine and its lessons and problem banks to run yourself. It’s all free, and it comes as-is.</p>
+    <p>Put ladder practice, the Vocabulary word of the day, the day’s Harvard Classics reading, or Greek, Latin and hieroglyph practice on your co-op’s site with one line of HTML. Or download the practice engine and its lessons and problem banks to run yourself. It’s all free, and it comes as-is.</p>
   </header>
 
   <nav class="dev-toc" aria-label="On this page">
-    <a href="#embeds">Embeds</a><a href="#builder">Build your snippet</a><a href="#toolkit">The toolkit</a><a href="#terms">Terms</a><a href="#not-included">What’s not included</a>
+    <a href="#embeds">Embeds</a><a href="#builder">Build your snippet</a><a href="#toolkit">The toolkit</a><a href="#terms">Terms</a><a href="#licenses">Licenses &amp; credits</a><a href="#not-included">What’s not included</a>
   </nav>
 
   <section class="dev-sec" id="embeds" aria-labelledby="embeds-h">
@@ -87,7 +87,8 @@
       <li><b>Twelve ladders:</b> Math, Physics, Chemistry, Biology, Earth &amp; Space, Writing &amp; Grammar, Vocabulary, Logic, Geography, American History &amp; Civics, Economics and Etiquette, each with its topic maps, lessons, problem generators and visuals.</li>
       <li><b>Vocabulary:</b> the 1,000-word list with meanings, memory hooks and the drawings for each word.</li>
       <li><b>The Family Study units</b> (one theme for the whole family, each child at their level).</li>
-      <li><b>An example page</b> that runs practice for any topic, with no internet connection.</li>
+      <li><b>An example page</b> that runs practice for any topic, with no internet connection, and a second one (<code>language.html</code>) that reads a Gospel passage in Greek with the King James Version, a word at a time.</li>
+      <li><b>Language packs:</b> the Greek and Latin Gospels word by word, the classical sentences, the King James Version for the verses used, the Greek alphabet lessons and the cartouche maker. Each pack has its own LICENSE and CREDITS file; see <a href="#licenses">the table below</a>.</li>
       <li>The licenses, a list of the outside pieces and their licenses, and a short README.</li>
     </ul>
     <p><a class="dev-btn pri" href="{{ $E.toolkit.download }}">Download teddy-rook-toolkit.zip</a> <a class="dev-btn ghost" href="{{ $E.toolkit.release }}">The release page</a>{{ with $E.toolkit.size }} <span class="dev-msg">About {{ . }}</span>{{ end }}</p>
@@ -99,12 +100,37 @@
     <dl class="dev-terms">
       <div><dt>It’s free.</dt><dd>No fee, no sign-up and no key. Embeds and the toolkit carry no ads and no tracking.</dd></div>
       <div><dt>The code is MIT.</dt><dd>The engine’s code (the JavaScript and CSS) is under the MIT License, copyright Teddy Rook. Use it, change it and share it, even in paid products, as long as the copyright and license notice stay with it.</dd></div>
-      <div><dt>The content is CC BY-NC 4.0.</dt><dd>The lessons, the problem generators’ question text, the topic maps, the word lists and the readings’ guides are under <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0</a>. Use and adapt them for teaching that isn’t sold, and give credit with a link back, like this: <q>From Teddy Rook Book (teddyrookbook.com), CC BY-NC 4.0.</q> Say if you changed anything. Public-domain texts, like the Harvard Classics readings themselves, stay public domain.</dd></div>
+      <div><dt>The content is CC BY-NC 4.0.</dt><dd>The lessons, the problem generators’ question text, the topic maps, the word lists and the readings’ guides are under <a href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0</a>. Use and adapt them for teaching that isn’t sold, and give credit with a link back, like this: <q>From Teddy Rook Book (teddyrookbook.com), CC BY-NC 4.0.</q> Say if you changed anything. Public-domain texts, like the Harvard Classics readings themselves, stay public domain. The Greek and Latin material comes from other projects under their own licenses; see <a href="#licenses">Licenses &amp; credits</a>.</dd></div>
       <div><dt>Embeds just work.</dt><dd>You’re welcome to frame an embed on your site, co-op page or class page. Please keep the “From Teddy Rook Book” link visible.</dd></div>
-      <div><dt>The addresses stay put.</dt><dd>The embed addresses above (<code>/embed/practice/</code>, <code>/embed/word/</code> and <code>/embed/reading/</code>, with the parameters shown) will keep working for as long as the site is up. What’s inside them will change as lessons improve.</dd></div>
+      <div><dt>The addresses stay put.</dt><dd>The embed addresses above ({{ $paths := slice }}{{ range $E.embeds }}{{ $paths = $paths | append .path }}{{ end }}{{ $paths = $paths | uniq }}{{ range $i, $p := $paths }}{{ if $i }}{{ if eq (add $i 1) (len $paths) }} and {{ else }}, {{ end }}{{ end }}<code>{{ $p }}</code>{{ end }}, with the parameters shown) will keep working for as long as the site is up. What’s inside them will change as lessons improve.</dd></div>
       <div><dt>As-is, with no support.</dt><dd>This is a one-person project. Everything here comes as-is, with no guarantees and no promise of help, fixes or notice of changes. There are no versions to track and no support line. Test it on your site, and keep a copy of the toolkit you rely on.</dd></div>
     </dl>
     <p class="dev-note">To share a note or a broken link, Teddy Rook is on X as <a href="https://x.com/teddyrookbook" rel="noopener">@teddyrookbook</a>. Replies aren’t promised.</p>
+  </section>
+
+  <section class="dev-sec" id="licenses" aria-labelledby="lic-h">
+    <h2 id="lic-h">Licenses &amp; credits for the language material</h2>
+    <p>The language embeds and packs are built on the work of other scholars and projects. We name every one of them, even where the license doesn’t ask us to. The site’s own lessons and tools stay under CC BY-NC 4.0 (content) and MIT (code); the packs below keep the license of what they’re made from.</p>
+    <div class="dev-tablewrap">
+    <table class="dev-table">
+      <caption>Which license applies to which pack in the toolkit</caption>
+      <thead><tr><th scope="col">Folder in the zip</th><th scope="col">What’s in it</th><th scope="col">License</th><th scope="col">From</th></tr></thead>
+      <tbody>
+      {{- range $E.toolkit.packs }}
+        <tr><th scope="row"><code>{{ .dir }}/</code></th><td>{{ .name }}. {{ .what }}.</td><td>{{ if .license_url }}<a href="{{ .license_url }}">{{ .license }}</a>{{ else }}{{ .license }}{{ end }}</td><td>{{ range $i, $k := .sources }}{{ if $i }}; {{ end }}{{ (index $E.sources $k).name }}{{ end }}</td></tr>
+      {{- end }}
+        <tr><th scope="row">Everything else</th><td>The practice engine, the twelve ladders, Vocabulary and the Family Study units</td><td>Code <a href="https://opensource.org/license/mit">MIT</a>; content <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></td><td>Teddy Rook Book</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="dev-note">CC BY-NC-SA material (the Latin Gospels and the PROIEL sentences) may not be used commercially, and anything you make from it must be shared under the same license. CC BY-SA material may be used commercially, but must be shared alike. Every embed shows its own sources in a small “Sources and credits” note.</p>
+    <h3>Credits</h3>
+    <ul class="dev-list dev-credits">
+      {{- range $k, $s := $E.sources }}
+      <li><b>{{ if $s.url }}<a href="{{ $s.url }}">{{ $s.name }}</a>{{ else }}{{ $s.name }}{{ end }}</b>, {{ $s.by }}. {{ $s.what | strings.FirstUpper }}. {{ if $s.license_url }}<a href="{{ $s.license_url }}">{{ $s.license }}</a>{{ else }}{{ $s.license }}{{ end }}.</li>
+      {{- end }}
+    </ul>
+    <p class="dev-note">The site itself quotes 499 verses of the ESV® Bible (© 2001 by Crossway) under Crossway’s quotation allowance. That allowance doesn’t cover embeds or downloads, so the embeds and the toolkit use the King James Version instead, for the same verses.</p>
   </section>
 
   <section class="dev-sec" id="not-included" aria-labelledby="ni-h">

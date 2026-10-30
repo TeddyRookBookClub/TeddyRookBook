@@ -1,7 +1,7 @@
 name: Toolkit release
 
-# Builds the site, then the Teddy Rook toolkit (the practice engine and the content of twelve ladders, released as-is:
-# MIT for code, CC BY-NC 4.0 for content), and puts teddy-rook-toolkit.zip on the GitHub release called "toolkit".
+# Builds the site, then the Teddy Rook toolkit (the practice engine, the content of twelve ladders and the language packs,
+# released as-is: MIT for code, CC BY-NC 4.0 for content, each language pack under its sources' license), and puts teddy-rook-toolkit.zip on the GitHub release called "toolkit".
 # /developers/ links to that release. Runs only by hand or when a tag starting with "toolkit" is pushed, never on every push.
 on:
   workflow_dispatch:
@@ -41,5 +41,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view toolkit >/dev/null 2>&1 || gh release create toolkit --title "Teddy Rook toolkit" --notes "The Teddy Rook Book practice engine and the content of twelve ladders, to run yourself. Released as-is, with no support. Code: MIT. Content: CC BY-NC 4.0 (credit and a link back). Download teddy-rook-toolkit.zip and read README.md. More: https://teddyrookbook.com/developers/" --latest=false
+          gh release view toolkit >/dev/null 2>&1 || gh release create toolkit --title "Teddy Rook toolkit" --notes "The Teddy Rook Book practice engine, the content of twelve ladders, and Greek, Latin, King James Version and hieroglyph packs, to run yourself. Released as-is, with no support. Code: MIT. Content: CC BY-NC 4.0 (credit and a link back). Each language pack keeps its sources' license and has its own LICENSE and CREDITS.md. Download teddy-rook-toolkit.zip and read README.md. More: https://teddyrookbook.com/developers/" --latest=false
           gh release upload toolkit toolkit-dist/teddy-rook-toolkit.zip --clobber

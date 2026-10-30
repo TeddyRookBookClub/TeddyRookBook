@@ -14,4 +14,7 @@
 
 - `flash.json` (flashcards): built from the Greek and Latin Gospel files above. Words are ranked by how often they occur in the four Gospels; every word form is attested in the Gospels, with its parsing and an example. Greek–Latin pairs for the three-sided cards were found by comparing parallel verses and then checked by hand; words without a clear single equivalent are left out of those cards. Some Latin glosses were rewritten for their Gospel sense.
 
-Build scripts live outside the site; ask Claude to regenerate if the verse selection changes.
+- `kjv.json`: the King James Version (public domain) for 936 Gospel verses: the 499 drill verses (the same references as `esv.json`) and the verses the word-of-the-day embed quotes. The text is the standard 1769 Oxford text, from the public-domain `kjv` package (https://www.npmjs.com/package/kjv, `json/verses-1769.json`; italics brackets and paragraph marks removed). It was checked word by word against Wikisource's proofread transcription of the 1772 Oxford edition (https://en.wikisource.org/wiki/Bible_(King_James)): 477 of the 499 drill verses match exactly, and the rest differ only in that edition's spelling (Cesar, Zaccheus, Judea, farther), capitals or punctuation, or in two slips in the Wikisource transcription (John 8:33 "to to", John 14:6 "and the truth"). The embeds and the toolkit use this file instead of the ESV. Rebuild with `scripts/embed/build-lang-embeds.py --kjv <verses-1769.json>`.
+- `/embed/lang/*.json` (outside this folder) are built from these files by `scripts/embed/build-lang-embeds.py` for the language embeds, with the KJV for English and no ESV.
+
+The build scripts live outside the site; the files must be regenerated if the verse selection changes.

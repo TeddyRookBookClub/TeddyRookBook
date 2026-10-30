@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Read the Gospels in Greek · Teddy Rook toolkit example</title>
+<!-- The toolkit's language example: a Gospel passage in Koine Greek, word by word, with the King James Version.
+     Open this file in a browser; it needs no web server and no internet connection.
+     Data: language-data.js (built from greek/ and english-kjv/; see their LICENSE and CREDITS files).
+     Grammar labels: lang/grammar.js (the site's decoder for the Greek grammar codes). -->
+<link rel="stylesheet" href="example.css">
+<link rel="stylesheet" href="language.css">
+<script>try { if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) { }</script>
+</head>
+<body>
+<main class="ex-main">
+  <header class="ex-head">
+    <p class="ex-eye">Teddy Rook toolkit · language example</p>
+    <h1>Read a Gospel passage in Greek</h1>
+    <form class="ex-pick" onsubmit="return false">
+      <label>Passage <select id="lx-passage"></select></label>
+    </form>
+  </header>
+  <p class="lx-help">Tap a Greek word to see its dictionary form, meaning and grammar.</p>
+  <div id="lx-verses" class="lx-verses"></div>
+  <aside id="lx-word" class="lx-word" aria-live="polite"><p class="lx-muted">No word chosen yet.</p></aside>
+  <footer class="ex-foot">Greek: Nestle 1904 (public domain) with grammar and glosses from MACULA Greek (Clear Bible and Biblica, CC BY 4.0) and definitions from the Dodson Greek Lexicon (public domain). English: King James Version (public domain). Page code MIT, from <a href="https://teddyrookbook.com/">Teddy Rook Book</a>.</footer>
+</main>
+<script src="lang/grammar.js"></script>
+<script src="language-data.js"></script>
+<script src="language.js"></script>
+</body>
+</html>

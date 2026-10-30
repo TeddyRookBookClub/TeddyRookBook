@@ -16,6 +16,8 @@ and open http://localhost:8000/.
 
 To start on a topic, add its id to the address: `index.html#phys1.average-velocity`.
 
+For the languages, open `language.html` (a Gospel passage in Greek, word by word, with the King James Version), `tools/alphabet/index.html` (the Greek alphabet) or `tools/hieroglyphs/index.html` (your name in hieroglyphs).
+
 ## What's inside
 
 | Folder or file | What it is |
@@ -32,7 +34,14 @@ To start on a topic, add its id to the address: `index.html#phys1.average-veloci
 | `content/courses.json`, `content/ladders.json` | The courses and ladders. |
 | `content/vocab/` | The Vocabulary Ladder's 1,000 words (`words/<topic>.json`: meaning, example, memory hook and a `scene` that `vocab/viz/vocab.js` draws as a picture), the list and the roots. |
 | `content/family/units.json` | The Family Study units: one theme for the whole family, with readings, questions, an activity and topic ids for four age groups. |
-| `LICENSE`, `CONTENT-LICENSE`, `NOTICE` | The licenses (below). |
+| `language.html`, `language.js`, `language-data.js` | The language example: a Gospel passage in Koine Greek, a word at a time, with the King James Version. It works from a file on disk. |
+| `greek/` | The four Gospels in Greek, word by word (`grc-MAT.json` … `grc-JHN.json`: chapter → verse → tokens `[text, after, dictionary index, gloss, grammar code, role, words of Jesus]`), and the dictionary (`grc-lex.json`: `l` lemma, `b` brief and `d` full meaning, `s` Strong's number, `n` count). CC BY 4.0. |
+| `latin/` | The Vulgate Gospels, word by word (tokens `[form, before, after, dictionary index, part of speech, PROIEL morphology, relation, words of Jesus]`), and the dictionary (`lat-lex.json`). CC BY-NC-SA 3.0. |
+| `classical/` | The sentence drills' classical Latin and Greek sentences, one file per language and source, with their English and dictionaries. Each file names its license. |
+| `english-kjv/` | The King James Version for the 936 Gospel verses used (`kjv.json`, keys `BBCCCVVV`). Public domain. |
+| `lang/grammar.js` | Turns the Greek and Latin grammar codes into words (`Grammar.greek(code, role)`, `Grammar.latin(pos, morph, rel)`). |
+| `tools/alphabet/`, `tools/hieroglyphs/` | The Greek alphabet lessons and the cartouche maker (write your name in hieroglyphs), ready to open. |
+| `LICENSE`, `CONTENT-LICENSE`, `NOTICE` | The licenses (below). Each language folder also has its own `LICENSE` and `CREDITS.md`. |
 
 The ladders: {{LADDERS}}.
 
@@ -47,6 +56,9 @@ The engine keeps a learner's progress in the browser's localStorage under `trb-m
 - **Code** (the JavaScript and CSS): MIT, copyright Teddy Rook. See `LICENSE`.
 - **Content** (lessons, the generators' question text, topic maps, word lists, units): CC BY-NC 4.0. Not for commercial use; give credit with a link back: *From Teddy Rook Book (https://teddyrookbook.com), CC BY-NC 4.0.* See `CONTENT-LICENSE`.
 - **Third-party pieces** (d3-geo, Natural Earth data): see `NOTICE`.
+- **Language packs** keep the license of their sources: `greek/` CC BY 4.0, `latin/` CC BY-NC-SA 3.0, `classical/` per file (CC BY-NC-SA 3.0 or CC BY-SA 3.0, Greek dictionary CC BY-SA 4.0), `english-kjv/` public domain. The tools in `tools/` are MIT (code) and CC BY-NC 4.0 (content); their fonts have their own licenses. Each folder's `CREDITS.md` names every source.
+
+There is no ESV text and no audio in this toolkit. The site quotes the ESV under a permission that doesn't cover downloads, so the English here is the King James Version.
 
 ## Embeds instead
 

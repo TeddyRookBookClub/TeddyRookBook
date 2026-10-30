@@ -1,0 +1,19 @@
+{{- /* Embeds: the "Sources and credits" note of a language embed. Argument: the embed's key in data/embed.json. Its
+   "sources" map lists, for each variant ("grc", "lat-classical", … or "" for one list), the keys of data/embed.json
+   "sources". Every variant is written out; the embed's script hides the ones that don't match its ?lang= and ?set=
+   (static/embed/lang-embed.js, TRBLang.sources). Credit is given even where a license doesn't ask for it. */ -}}
+{{- $key := . -}}
+{{- $S := site.Data.embed.sources -}}
+{{- range site.Data.embed.embeds }}{{ if eq .key $key }}
+<details class="emb-src" id="emb-src">
+  <summary>Sources and credits</summary>
+  {{- range $set, $list := .sources }}
+  <ul class="emb-srclist" data-set="{{ $set }}">
+    {{- range $list }}{{ with index $S . }}
+    <li><b>{{ .what | strings.FirstUpper }}:</b> {{ if .url }}<a href="{{ .url }}" rel="noopener">{{ .name }}</a>{{ else }}{{ .name }}{{ end }}, {{ .by }}. {{ if .license_url }}<a href="{{ .license_url }}" rel="noopener">{{ .license }}</a>{{ else }}{{ .license }}{{ end }}.</li>
+    {{- end }}{{ end }}
+  </ul>
+  {{- end }}
+  <p class="emb-srcnote">Everything else here is by Teddy Rook Book, CC BY-NC 4.0. <a href="{{ "developers/#licenses" | absURL }}">All the terms</a>.</p>
+</details>
+{{- end }}{{ end -}}

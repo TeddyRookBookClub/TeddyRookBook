@@ -1,4 +1,5 @@
-{{- /* Embeds: /embed/practice/, /embed/word/ and /embed/reading/ (content/embed/<name>.md, param embed). Each is a whole page
+{{- /* Embeds: /embed/practice/, /embed/word/, /embed/reading/, and the language embeds /embed/lang-word/, /embed/lang-drill/,
+   /embed/alphabet/ and /embed/hieroglyphs/ (content/embed/<name>.md, param embed). Each is a whole page
    with no site chrome, for an <iframe> on another site. The addresses and their parameters are a promise to other sites:
    they are listed in data/embed.json, shown on /developers/ and checked in every build by scripts/embed/check-embeds.js.
    Not in the search, the sitemap or the feed (content/embed/_index.md); the service worker leaves /embed/ alone. */ -}}
@@ -72,4 +73,116 @@
   {{ partial "hc-today.html" . }}
 </main>
 {{ partial "embed/foot.html" (dict "open" "harvard-classics/") }}
+
+{{- /* The language embeds: /embed/lang-word/, /embed/lang-drill/ (data: static/embed/lang/, built by
+   scripts/embed/build-lang-embeds.py, English from the King James Version, never the ESV), /embed/alphabet/ and
+   /embed/hieroglyphs/ (the site's own tools, unchanged). Each shows its "Sources and credits" (embed/sources.html). */ -}}
+{{- else if in (slice "lang-word" "lang-drill" "alphabet" "hieroglyphs") $k }}
+{{- $css := slice "lang/lang.css" -}}
+{{- if eq $k "alphabet" }}{{ $css = $css | append "lang/alphabet.css" }}{{ end -}}
+{{- if eq $k "hieroglyphs" }}{{ $css = $css | append (slice "math/viz/viz.css" "egypt/viz/egypt.css" "languages/hieroglyphs/hiero.css") }}{{ end -}}
+{{- range $css | append "embed/lang.css" }}
+<link rel="stylesheet" href="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}">
+{{- end }}
+<meta name="emb-lang-base" content="{{ "embed/lang/" | relURL }}">
+</head>
+<body class="emb emb-lang emb-{{ $k }}">
+<main class="emb-main">
+{{- if eq $k "lang-word" }}
+  {{- $js := slice "embed/lang-embed.js" "lang/core.js" "embed/lang-word.js" }}
+  <div class="lang emb-lw">
+    <p class="emb-eye"><a href="{{ "languages/" | relURL }}" id="lw-lang">Greek or Latin</a> <span id="lw-date">Word of the day</span></p>
+    <div id="lw-card" class="lw-card" data-site="{{ "" | absURL }}" aria-live="polite"><p class="emb-loading">Finding today’s word…</p></div>
+    <noscript><p>The word of the day needs JavaScript turned on.</p></noscript>
+    {{ partial "embed/sources.html" "lang-word" }}
+  </div>
+  {{- range $js }}
+  <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+  {{- end }}
+{{- else if eq $k "lang-drill" }}
+  {{- $js := slice "embed/lang-embed.js" "lang/grammar.js" "lang/core.js" "embed/lang-drill.js" }}
+  <div class="lang emb-ld" id="ld" data-site="{{ "" | absURL }}">
+    <p class="emb-eye"><a href="{{ "languages/sentences/" | relURL }}" id="ld-lang">Sentence drill</a> <span id="ld-date">Today’s set</span></p>
+    <h1 class="emb-title" id="ld-title">Loading today’s sentences…</h1>
+    <p class="emb-st" id="ld-sub"></p>
+    <section class="ld-card" aria-live="polite">
+      <div class="ld-top"><span class="ld-ref" id="ld-ref"></span><span class="ld-count" id="ld-count"></span></div>
+      <p class="ld-tgt" id="ld-tgt"></p>
+      <div class="ld-enbox" id="ld-enbox"><p class="ld-en" id="ld-en"></p><p class="ld-tr" id="ld-tr"></p></div>
+      <div class="ld-ctl">
+        <button type="button" class="ld-btn" id="ld-prev">⏮ Back</button>
+        <button type="button" class="ld-btn pri" id="ld-play" aria-pressed="false">▶ Listen</button>
+        <button type="button" class="ld-btn" id="ld-next">Next ⏭</button>
+      </div>
+      <div class="ld-opts">
+        <label><input type="checkbox" id="ld-auto" checked> Keep going: a pause to say it back, then the next</label>
+        <label><input type="checkbox" id="ld-showen" checked> Show the English right away</label>
+      </div>
+      <p class="ld-done" id="ld-done" hidden>That’s today’s set. Come back tomorrow for new sentences, or <a href="{{ "languages/sentences/" | relURL }}">keep going on Teddy Rook Book</a>.</p>
+    </section>
+    <div class="ld-panel wpanel" id="ld-panel"></div>
+    <noscript><p>The drill needs JavaScript turned on.</p></noscript>
+    {{ partial "embed/sources.html" "lang-drill" }}
+  </div>
+  {{- range $js }}
+  <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+  {{- end }}
+{{- else if eq $k "alphabet" }}
+  <div class="lang ab-wrap emb-ab">
+    <p class="emb-eye"><a href="{{ "languages/alphabet/" | relURL }}">Greek alphabet</a> <span><span class="grc">Γράμματα</span>, “letters”</span></p>
+    <div id="ab"><noscript>The lessons need JavaScript turned on.</noscript></div>
+    {{ partial "embed/sources.html" "alphabet" }}
+  </div>
+  {{- range slice "js/translit.js" "lang/alphabet.js" }}
+  <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+  {{- end }}
+{{- else }}
+  <div class="lang hg hc emb-hg" data-hg-root>
+    <p class="emb-eye"><a href="{{ "languages/hieroglyphs/cartouche/" | relURL }}">Hieroglyphs</a> <span>Your name in a cartouche</span></p>
+    <p class="emb-hgnote"><b>A modern game, played with real signs.</b> Egyptians wrote only royal names in cartouches, and they wrote mostly consonants. When scribes of the Ptolemaic and Roman periods had to write Greek and Latin names (Ptolemy, Cleopatra, Caesar), they spelled them with sound signs, as this tool does. So there is no single right way to write your name.</p>
+    <section class="hc-make">
+      <div class="box hc-ctl">
+        <label class="hc-namelab" for="hc-name">Name</label>
+        <input id="hc-name" class="hc-name" type="text" maxlength="20" autocomplete="off" spellcheck="false" value="Teddy" aria-describedby="hc-name-help">
+        <p class="hc-help" id="hc-name-help">Letters A to Z; up to 16 letters. Accents are dropped.</p>
+        <div class="hc-opts">
+          <div class="hc-opt"><span class="fc-lab">Layout</span><div class="hg-seg" id="hc-lay"><button type="button" data-v="h">Across</button><button type="button" data-v="v">Down</button></div></div>
+          <div class="hc-opt"><span class="fc-lab">Signs face</span><div class="hg-seg" id="hc-dir"><button type="button" data-v="l">Left (read →)</button><button type="button" data-v="r">Right (read ←)</button></div></div>
+          <div class="hc-opt"><span class="fc-lab">Signs</span><div class="hg-seg" id="hc-grp"><button type="button" data-v="1">In blocks</button><button type="button" data-v="0">In a row</button></div></div>
+          <label class="hc-opt"><span class="fc-lab">Title before it</span><select id="hc-title"><option value="">None</option><option value="zara">Son of Ra (before a king’s birth name)</option><option value="nesubit">King of Upper and Lower Egypt (before a throne name)</option></select></label>
+          <label class="hc-opt"><span class="fc-lab">Last sign</span><select id="hc-det"><option value="">None (as in most kings’ cartouches)</option><option value="A1">Seated man (ends men’s names)</option><option value="B1">Seated woman (ends women’s names)</option><option value="X1:H8">t and egg (as in Cleopatra’s cartouche)</option></select></label>
+        </div>
+        <div class="hc-vowels"><span class="fc-lab">Vowels</span> <button type="button" class="chip" id="hc-allv">Write every vowel</button> <button type="button" class="chip" id="hc-nov">Drop the vowels inside the name, Egyptian style</button></div>
+      </div>
+      <div class="hc-out">
+        <div class="hc-stage" id="hc-stage" aria-live="polite"></div>
+        <p class="hc-cap" id="hc-cap"></p>
+        <div class="hc-acts">
+          <button type="button" class="cbtn play" id="hc-png">⬇ Save as picture (PNG)</button>
+          <button type="button" class="cbtn" id="hc-svg">⬇ SVG</button>
+          <button type="button" class="cbtn" id="hc-print">🖨 Print</button>
+          <button type="button" class="cbtn" id="hc-copy">Copy as text</button>
+        </div>
+      </div>
+    </section>
+    <details class="emb-more">
+      <summary>Letter by letter: choose other signs</summary>
+      <p class="hg-lead">Tap a sign to use it for that letter. The first choice is the one Ptolemaic scribes would most likely have used.</p>
+      <div class="hc-segs" id="hc-segs"></div>
+    </details>
+    <details class="emb-more">
+      <summary>Read a real cartouche</summary>
+      <p class="hg-lead">The names of real rulers as they appear in their cartouches. Watch for the sun disk <span class="eg-h">𓇳</span> of the god Ra: it is written first out of respect but often read last.</p>
+      <div class="hc-quiz box" id="hc-quiz"></div>
+      <div class="hc-rulers" id="hc-rulers"></div>
+    </details>
+    <div id="hc-printarea" class="hc-printarea" aria-hidden="true"></div>
+    {{ partial "embed/sources.html" "hieroglyphs" }}
+  </div>
+  {{- range slice "math/viz/core.js" "egypt/viz/egypt.js" "languages/hieroglyphs/hiero.js" "languages/hieroglyphs/cartouche.js" }}
+  <script src="{{ . | relURL }}?v={{ (os.Stat (printf "static/%s" .)).ModTime.Unix }}" defer></script>
+  {{- end }}
+{{- end }}
+</main>
+{{ partial "embed/foot.html" (dict "open" (index (dict "lang-word" "languages/flashcards/" "lang-drill" "languages/sentences/" "alphabet" "languages/alphabet/" "hieroglyphs" "languages/hieroglyphs/cartouche/") $k) "save" (eq $k "alphabet")) }}
 {{- end }}

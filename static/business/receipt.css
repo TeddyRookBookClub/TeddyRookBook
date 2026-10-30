@@ -1,6 +1,7 @@
 /* Your tax receipt */
 .tr-form{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,1.3fr) auto;gap:.6rem 1rem;align-items:end;margin-bottom:.4rem}
-.tr-form label{display:flex;flex-direction:column;gap:.25rem;font-size:.85rem;color:var(--muted)}
+.tr-form label{display:flex;flex-direction:column;gap:.25rem;font-size:.85rem;color:var(--muted);min-width:0}
+.tr-form input[type=number],.tr-form select{box-sizing:border-box;width:100%;min-width:0}
 .tr-form input[type=number],.tr-form select{font:inherit;font-size:1rem;padding:.5rem .6rem;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
 .tr-form .tr-chk{flex-direction:row;align-items:center;gap:.4rem;padding-bottom:.6rem;color:var(--ink)}
 .tr-hint{margin:0 0 1.2rem}

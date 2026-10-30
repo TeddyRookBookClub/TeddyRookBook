@@ -1,0 +1,85 @@
+{{- /* "Sources and credits": the block at the bottom of a page that uses outside material. Called from layouts/baseof.html
+   after the page's main block. Items, in order: the page's own front matter (credits: [{name, url, what, licence}]; credits:
+   false turns the block off), data the page is built from (a homeschool book and its scan; the pictures an Art Ladder lesson
+   shows), then every entry of data/credits.yaml whose path matches. The whole list is on /credits/.
+   Looks: a quiet box with the heading "Sources and credits". own: true (the page lists its own sources above) makes it a
+   compact list under a small heading; tight: true (tools and games) makes it one line that opens. Print opens it. */ -}}
+{{- $p := . -}}
+{{- if and (ne .Params.credits false) (ne .Kind "404") (ne .Layout "credits") -}}
+{{- $path := .RelPermalink -}}
+{{- $C := site.Data.credits -}}
+{{- $items := slice }}{{ $own := false }}{{ $tight := false }}{{ $seen := dict -}}
+{{- /* 1. front matter */ -}}
+{{- with .Params.credits }}{{ if reflect.IsSlice . }}{{ range . }}{{ $items = $items | append . }}{{ end }}{{ end }}{{ end -}}
+{{- /* 2a. homeschool book: its title, year and Internet Archive scan (data/hs_*.yaml, rays_*.yaml) */ -}}
+{{- if hasPrefix $path "/homeschool/" -}}
+  {{- $dk := "" -}}
+  {{- with .Params.data }}{{ $dk = . }}{{ else }}{{ if eq .Kind "page" }}{{ with .CurrentSection }}{{ with .Params.data }}{{ $dk = . }}{{ else }}{{ with .Params.course }}{{ if hasPrefix $path "/homeschool/rays-arithmetic/" }}{{ $dk = printf "rays_%s" . }}{{ end }}{{ end }}{{ end }}{{ end }}{{ else }}{{ with .Params.course }}{{ if hasPrefix $path "/homeschool/rays-arithmetic/" }}{{ $dk = printf "rays_%s" . }}{{ end }}{{ end }}{{ end }}{{ end -}}
+  {{- with $dk }}{{ with index site.Data . }}{{ with .book }}{{ if .id -}}
+    {{- $items = $items | append (dict "name" (printf "%s (%s)" .title .year) "url" (printf "https://archive.org/details/%s" .id) "what" "the book and its pages; scan kept by the Internet Archive" "licence" "public domain in the United States") -}}
+    {{- with .key_id }}{{ $items = $items | append (dict "name" "The answer key" "url" (printf "https://archive.org/details/%s" .) "what" "scan kept by the Internet Archive" "licence" "public domain in the United States") }}{{ end -}}
+  {{- end }}{{ end }}{{ end }}{{ end -}}
+{{- end -}}
+{{- /* 2b. Art Ladder lesson: the pictures it shows (data/art/images.json) and Natural Earth for its maps */ -}}
+{{- if and (eq .Params.ladder "art") .Params.course .Params.topic -}}
+  {{- with index (site.Data.art.lessons | default dict) .Params.course }}{{ with index . $p.Params.topic -}}
+    {{- $ids := slice }}{{ $map := false -}}
+    {{- range .blocks }}{{ if eq .t "viz" }}{{ if eq .name "ar-map" }}{{ $map = true }}{{ end }}{{ with .opts -}}
+      {{- with .work }}{{ $ids = $ids | append . }}{{ end }}{{ with .works }}{{ range . }}{{ $ids = $ids | append . }}{{ end }}{{ end -}}
+      {{- with .cards }}{{ range . }}{{ if reflect.IsMap . }}{{ with .work }}{{ $ids = $ids | append . }}{{ end }}{{ end }}{{ end }}{{ end -}}
+    {{- end }}{{ end }}{{ end -}}
+    {{- range uniq $ids }}{{ with index (where site.Data.art.images.works "id" .) 0 }}{{ if eq .image.status "approved" -}}
+      {{- $items = $items | append (dict "name" (printf "%s, %s" .title .artist) "url" .image.source_page "what" (printf "picture from %s" (.image.credit | default .image.license))) -}}
+    {{- end }}{{ end }}{{ end -}}
+    {{- if $map }}{{ $items = $items | append (dict "name" "Natural Earth" "url" "https://www.naturalearthdata.com/" "what" "the coastlines on the map" "licence" "public domain") }}{{ end -}}
+  {{- end }}{{ end -}}
+{{- end -}}
+{{- /* 3. section entries in data/credits.yaml */ -}}
+{{- range $C.sections -}}
+  {{- $hit := cond (.exact | default false) (eq $path .prefix) (hasPrefix $path .prefix) -}}
+  {{- if and $hit (in (.skip | default slice) $path) }}{{ $hit = false }}{{ end -}}
+  {{- if $hit -}}
+    {{- if .own }}{{ $own = true }}{{ end }}{{ if .tight }}{{ $tight = true }}{{ end -}}
+    {{- if and (eq .hook "hs-series") $p.Params.series -}}
+      {{- $items = $items | append (dict "name" "Internet Archive" "url" "https://archive.org/" "what" "keeps the scans shown on this page and supplies the PDF downloads, from the libraries named under each book") -}}
+      {{- $items = $items | append (dict "name" "The books" "what" "published before 1931, so in the public domain in the United States") -}}
+    {{- end -}}
+    {{- if eq .hook "outdoor-skills" }}{{ range site.Data.outdoor_skills.sources -}}
+      {{- $items = $items | append (dict "name" (printf "%s (%d)" .title .year) "url" (printf "https://archive.org/details/%s" .id)) -}}
+    {{- end }}{{ end -}}
+    {{- range .items }}{{ $items = $items | append . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- with $p.Store.Get "trbOwnSources" }}{{ $own = true }}{{ end -}}
+{{- /* drop repeats (same name) */ -}}
+{{- $list := slice }}{{ range $items }}{{ if not (index $seen .name) }}{{ $seen = merge $seen (dict .name true) }}{{ $list = $list | append . }}{{ end }}{{ end -}}
+{{- with $list }}
+<aside class="trb-cr{{ if $own }} trb-cr-own{{ end }}{{ if $tight }} trb-cr-tight{{ end }}" data-noexpand aria-label="Sources and credits">
+  {{- if $tight }}<details><summary>Sources and credits</summary>{{ else }}<h2 class="trb-cr-h">Sources and credits</h2>{{ end }}
+  <ul>
+    {{- range . }}
+    <li>{{ if .url }}<a href="{{ .url }}" rel="noopener">{{ .name }}</a>{{ else }}<b>{{ .name }}</b>{{ end }}{{ with .what }}: {{ . }}{{ end }}{{ with .licence }} <span class="trb-cr-lic">({{ . }})</span>{{ end }}</li>
+    {{- end }}
+  </ul>
+  <p class="trb-cr-all">Every source and licence the site uses is on the <a href="{{ "credits/" | relURL }}">Credits page</a>.</p>
+  {{- if $tight }}</details>{{ end }}
+</aside>
+<style>
+.trb-cr{clear:both;margin:2.2rem 0 .6rem;padding:.75rem 1rem .6rem;border:1px solid var(--border);border-left:3px solid #b8963e;border-radius:10px;font-size:.84rem;line-height:1.5;color:var(--secondary);max-width:100%;overflow-wrap:anywhere}
+.trb-cr .trb-cr-h,.trb-cr summary{font-size:.92rem;font-weight:700;color:#004225;margin:0 0 .35rem;letter-spacing:.01em}
+.trb-cr summary{cursor:pointer;margin:0;list-style-position:inside}
+.trb-cr details[open] summary{margin-bottom:.35rem}
+.trb-cr ul{margin:0;padding-left:1.1rem}
+.trb-cr li{margin:.15rem 0}
+.trb-cr a{color:inherit;text-decoration:underline;text-decoration-color:#b8963e;text-underline-offset:2px;box-shadow:none}
+.trb-cr a:hover{color:#004225}
+.trb-cr .trb-cr-all{margin:.4rem 0 0;font-size:.8rem}
+.trb-cr-own{margin-top:1rem;padding:.55rem .9rem .5rem}
+.trb-cr-own .trb-cr-h{font-size:.85rem}
+.trb-cr-tight{padding:.5rem .9rem}
+[data-theme="dark"] .trb-cr .trb-cr-h,[data-theme="dark"] .trb-cr summary,[data-theme="dark"] .trb-cr a:hover{color:#6cc79a}
+@media print{.trb-cr{break-inside:avoid;border-color:#999;color:#000;font-size:9pt}.trb-cr a{color:#000}.trb-cr .trb-cr-h,.trb-cr summary{color:#000}.trb-cr summary{list-style:none}.trb-cr .trb-cr-all{display:none}}
+</style>
+{{- if $tight }}<script>addEventListener('beforeprint',function(){document.querySelectorAll('.trb-cr details').forEach(function(d){d.open=true})})</script>{{ end }}
+{{- end -}}
+{{- end -}}

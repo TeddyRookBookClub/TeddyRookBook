@@ -1,0 +1,438 @@
+# Sources and credits, shown at the bottom of pages by layouts/_partials/credits-block.html and in full on /credits/.
+#
+# sections: each entry matches pages by URL path. "prefix" matches the path and everything under it; with exact: true it
+#   matches only that one path. "skip" lists paths (exact) the entry leaves out. Every matching entry adds its items.
+#   own: true      the pages already list their own sources; the block then shows only these extra items, compactly.
+#   tight: true    a tool or game: the block is one "Sources and credits" line that opens when pressed.
+#   hook: …        items built from site data (see the partial): hs-series, outdoor-skills.
+# items: name (required), url, what (what it supplies), licence. Plain text; keep it short and accurate.
+#
+# Page-level additions come from front matter (credits: [ {name, url, what, licence} ], or credits: false to switch the
+# block off) and from data the partial reads: homeschool book scans (book.id in data/hs_*.yaml and rays_*.yaml) and the
+# Art Ladder's pictures (data/art/images.json, for the works a lesson shows).
+#
+# site: the credits for the whole site (theme, fonts, code). Shown only on /credits/.
+# Keep this file consistent with static/lang/data/SOURCES.md and README.md ("Sources and licences").
+
+site:
+  - group: Website
+    items:
+      - name: Hugo
+        url: https://gohugo.io/
+        what: the static site generator that builds every page
+        licence: Apache License 2.0
+      - name: PaperMod theme
+        url: https://github.com/adityatelange/hugo-PaperMod
+        what: the theme the site's look is built on, by Aditya Telange and contributors
+        licence: MIT License
+  - group: Fonts
+    items:
+      - name: Gentium Book Plus
+        url: https://software.sil.org/gentium/
+        what: Greek and Latin text in Languages, the Harvard Classics and elsewhere; by SIL International, served by Google Fonts
+        licence: SIL Open Font License 1.1
+      - name: Andika
+        url: https://software.sil.org/andika/
+        what: easy-to-read letters for early readers (Phonics Practice and practice sheets); by SIL International, served by Google Fonts
+        licence: SIL Open Font License 1.1
+      - name: Playwrite US Trad
+        url: https://fonts.google.com/specimen/Playwrite+US+Trad
+        what: the handwriting model on the practice sheets; by TypeTogether, served by Google Fonts
+        licence: SIL Open Font License 1.1
+      - name: TeX Gyre Pagella (as "HC Book Serif")
+        url: http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella
+        what: the Harvard Classics print and e-book exports; by B. Jackowski, J. M. Nowacki, P. Pianowski and P. Strzelczyk, converted to TrueType outlines for this site
+        licence: GUST Font License
+      - name: GFS Porson (as "HC Book Greek")
+        url: https://www.greekfontsociety.org/
+        what: Greek in the Harvard Classics exports; by the Greek Font Society, converted to TrueType outlines for this site
+        licence: SIL Open Font License 1.1
+      - name: GNU FreeFont (FreeSerif, subset)
+        url: https://savannah.gnu.org/projects/freefont/
+        what: Coptic letters and the letters used to transliterate Egyptian, with two added composite letters
+        licence: GNU GPL v3 or later, with the font exception
+      - name: TRB Hieroglyphs, TRB Linear B and TRB Linear A
+        what: drawn sign by sign for Teddy Rook Book
+        licence: SIL Open Font License 1.1
+  - group: Code from others
+    items:
+      - name: d3-geo and d3-array
+        url: https://github.com/d3/d3-geo
+        what: map projections for the Geography Ladder; by Mike Bostock, with parts from GeographicLib by Charles Karney
+        licence: ISC License (GeographicLib parts MIT)
+      - name: Box2D-Lite
+        url: https://github.com/erincatto/box2d-lite
+        what: the design the Siege game's physics follows; by Erin Catto
+        licence: zlib License
+      - name: PhotoCraft
+        url: https://github.com/storytold/photocraft
+        what: the image editor hosted at /photocraft/, by the ArtCraft Team and contributors (with the Inter and JetBrains Mono fonts and Lucide icons)
+        licence: MIT or Apache 2.0; fonts SIL OFL 1.1; icons ISC
+      - name: TradingView widgets
+        url: https://www.tradingview.com/
+        what: charts, screener, heatmaps, calendar and quotes on the Markets pages
+      - name: YouTube
+        what: plays the videos (from youtube-nocookie.com, only when you press play)
+
+sections:
+  # ---- Home page: the verse of the day and the word of the day
+  - prefix: /
+    exact: true
+    title: Home page
+    items:
+      - name: ESV® Bible
+        url: https://www.esv.org/
+        what: 'English of the verse of the day. Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.'
+      - name: Nestle 1904 Greek New Testament, with MACULA Greek
+        url: https://github.com/Clear-Bible/macula-greek
+        what: Greek of the verse of the day; text public domain, data by Biblica
+        licence: CC BY 4.0
+      - name: PROIEL Treebank
+        url: https://github.com/proiel/proiel-treebank
+        what: Latin Vulgate of the verse of the day
+        licence: CC BY-NC-SA 3.0
+
+  # ---- Homeschool: the old schoolbooks. Each book's course and lesson pages credit their own book and scan (from data).
+  - prefix: /homeschool/
+    title: Homeschool books
+    hook: hs-series
+    items: []
+  - prefix: /homeschool/outdoor-skills/
+    title: Outdoor Skills
+    hook: outdoor-skills
+    skip: [/homeschool/outdoor-skills/]
+    items:
+      - name: Internet Archive
+        url: https://archive.org/
+        what: keeps the scans of these old handbooks, which are in the public domain in the United States
+  - prefix: /homeschool/language-mix/
+    title: Language Mix
+    items:
+      - name: Handshape drawings by Paul Sherman
+        url: https://commons.wikimedia.org/wiki/File:Sign_language_A.svg
+        what: the fingerspelling letters (wpclipart.com, via Wikimedia Commons)
+        licence: public domain
+  - prefix: /asl/
+    title: Sign Language
+    items:
+      - name: Lifeprint ASL University (Dr. Bill Vicars)
+        url: https://www.lifeprint.com/
+        what: the free lessons this path links to; nothing is copied
+  - prefix: /asl/fingerspelling/
+    exact: true
+    title: Fingerspelling
+    items:
+      - name: Handshape drawings by Paul Sherman
+        url: https://commons.wikimedia.org/wiki/File:Sign_language_A.svg
+        what: the fingerspelling letters (wpclipart.com, via Wikimedia Commons), with the hands colored in
+        licence: public domain
+
+  # ---- Harvard Classics
+  - prefix: /harvard-classics/
+    title: Harvard Classics
+    items:
+      - name: 'Fifteen Minutes a Day: The Reading Guide (P. F. Collier & Son, 1930)'
+        url: https://archive.org/details/Harvard-Classics/000_Harvard_Classics
+        what: the daily reading plan and its notes; scan kept by the Internet Archive
+        licence: public domain in the United States
+      - name: The Harvard Classics, edited by Charles W. Eliot (P. F. Collier & Son, 1909–1910)
+        url: https://archive.org/details/Harvard-Classics
+        what: the texts of the daily readings, as printed in the scanned volumes; scans kept by the Internet Archive
+        licence: public domain in the United States
+  - prefix: /harvard-classics/export/
+    title: Harvard Classics export
+    items:
+      - name: TeX Gyre Pagella and GFS Porson
+        url: http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella
+        what: the fonts of the printed and e-book editions, converted to TrueType outlines (details in harvard-classics/fonts/LICENSES.txt)
+        licence: GUST Font License; SIL Open Font License 1.1
+
+  # ---- American History: the Brutus page has summaries, not the text
+  - prefix: /american-history/anti-federalist-papers/brutus/
+    exact: true
+    title: The Essays of Brutus
+    items:
+      - name: 'Historical Society of the New York Courts, "The Anti-Federalist Papers"'
+        url: https://history.nycourts.gov/about_period/antifederalist-papers/
+        what: the dates of the essays (Brutus II's date is from elsewhere, as the page says)
+      - name: National Constitution Center and Teaching American History
+        url: https://teachingamericanhistory.org/
+        what: the full texts this page links to; the summaries are our own
+
+  # ---- Languages
+  - prefix: /languages/jerome/
+    title: Greek and Latin with Jerome
+    skip: [/languages/jerome/]
+    items:
+      - name: 'The Greek New Testament: SBL Edition (SBLGNT), edited by Michael W. Holmes'
+        url: https://sblgnt.com/
+        what: the Greek text; © 2010 Society of Biblical Literature and Logos Bible Software. Text-critical signs were removed for display. The publishers do not endorse this book.
+        licence: CC BY 4.0
+      - name: 'MorphGNT: SBLGNT Edition, edited by James K. Tauber'
+        url: https://github.com/morphgnt/sblgnt
+        what: Greek word analysis
+        licence: CC BY-SA 3.0
+      - name: greek-inflexion and greek-accentuation (James Tauber)
+        url: https://github.com/jtauber/greek-inflexion
+        what: used to generate the Greek verb forms, then checked against the SBLGNT
+        licence: MIT License
+      - name: Clementine Vulgate (1592), Clementine Text Project
+        url: https://vulsearch.sourceforge.net/
+        what: the Latin text, via the public-domain vul reader by Luke Smith
+        licence: public domain
+      - name: Collatinus (Yves Ouvrard and Philippe Verkerk, Biblissima)
+        what: Latin forms and vowel lengths, corrected and completed by hand
+        licence: GNU GPL v3
+  - prefix: /languages/trees/
+    exact: true
+    title: Sentence trees
+    items:
+      - name: Perseus Ancient Greek and Latin Dependency Treebanks
+        url: https://github.com/PerseusDL/treebank_data
+        what: the sentence trees and grammar, for Phaedrus's fables (Latin) and Aesop's (Greek)
+        licence: CC BY-SA 3.0
+
+  # ---- Ladders whose lessons list their own sources: extra items only
+  - prefix: /geography/
+    title: Geography Ladder
+    own: true
+    items:
+      - name: Natural Earth
+        url: https://www.naturalearthdata.com/
+        what: the map data (countries, states, rivers, lakes, regions, time zones) the Geography Ladder's maps are drawn from
+        licence: public domain
+      - name: d3-geo (Mike Bostock)
+        url: https://github.com/d3/d3-geo
+        what: the map projections
+        licence: ISC License
+  - prefix: /egyptology/
+    title: Egyptology Ladder
+    own: true
+    items:
+      - name: GNU FreeFont (FreeSerif, subset)
+        url: https://savannah.gnu.org/projects/freefont/
+        what: Coptic and transliteration letters; the hieroglyphs are drawn for this site (TRB Hieroglyphs, SIL Open Font License)
+        licence: GNU GPL v3 or later, with the font exception
+  - prefix: /egypt/
+    title: Ancient Egypt
+    own: true
+    items:
+      - name: GNU FreeFont (FreeSerif, subset)
+        url: https://savannah.gnu.org/projects/freefont/
+        what: Coptic and transliteration letters; the hieroglyphs are drawn for this site (TRB Hieroglyphs, SIL Open Font License)
+        licence: GNU GPL v3 or later, with the font exception
+  - prefix: /art/
+    title: Art & Drawing Ladder
+    own: true
+    items: []
+  - prefix: /art/flashcards/
+    exact: true
+    title: Art flashcards
+    items:
+      - name: Wikimedia Commons and museum open-access collections
+        url: https://commons.wikimedia.org/
+        what: the pictures, all public domain or CC0, from the museums and archives named on each label of the Museum Walk (/art/gallery/)
+        licence: public domain or CC0
+
+  # ---- Meal Prep
+  - prefix: /meal-prep/
+    title: Meal Prep
+    items:
+      - name: USDA FoodData Central (SR Legacy)
+        url: https://fdc.nal.usda.gov/
+        what: nutrition per 100 g for every grocery item, used for the nutrition estimates
+        licence: public domain, CC0
+  - prefix: /meal-prep/recipes/
+    title: Meal Prep recipes and planner
+    items: &mealsafety
+      - name: USDA Food Safety and Inspection Service
+        url: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart
+        what: safe minimum internal temperatures in the recipes
+      - name: U.S. Food and Drug Administration
+        url: https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
+        what: the Daily Values behind the % Daily Value figures
+  - prefix: /meal-prep/
+    exact: true
+    items: *mealsafety
+  - prefix: /meal-prep/plan/
+    exact: true
+    items: *mealsafety
+  - prefix: /meal-prep/print/
+    exact: true
+    items: *mealsafety
+  - prefix: /meal-prep/guides/
+    own: true
+    skip: [/meal-prep/guides/]
+    items: []
+  - prefix: /meal-prep/scratch/
+    own: true
+    skip: [/meal-prep/scratch/]
+    items: []
+
+  # ---- Timeline
+  - prefix: /timeline/
+    exact: true
+    title: Timeline
+    items:
+      - name: 'Ian Shaw, ed., The Oxford History of Ancient Egypt (Oxford, 2000)'
+        what: the dates of the Egypt track (before 664 BC they are approximate)
+
+  # ---- Business
+  - prefix: /business/tax-receipt/
+    exact: true
+    title: Your tax receipt
+    tight: true
+    items:
+      - name: 'U.S. Treasury, FiscalData: Monthly Treasury Statement, Table 9'
+        url: https://fiscaldata.treasury.gov/
+        what: net outlays by budget function (the main lines) and the year-end deficit figures
+        licence: public domain (U.S. government work)
+      - name: USAspending.gov
+        url: https://www.usaspending.gov/explorer
+        what: obligations by subfunction, federal account and program activity (the drill-down split)
+        licence: public domain (U.S. government work)
+
+  # ---- Games: tight (one line that opens). The science games live in /science-lab/, whose pages list their own sources.
+  - prefix: /games/siege/
+    exact: true
+    title: Siege game
+    tight: true
+    items:
+      - name: Box2D-Lite (Erin Catto)
+        url: https://github.com/erincatto/box2d-lite
+        what: the design the game's physics engine follows
+        licence: zlib License
+      - name: Ancient writers
+        what: Polybius, Livy, Plutarch and Vitruvius, for the historical notes (each note names its source)
+  - prefix: /games/thief/
+    exact: true
+    title: Thief game
+    tight: true
+    items:
+      - name: Ancient writers
+        what: Herodotus, Livy, Plutarch, Polybius and Vitruvius, for the stories behind the clues
+  - prefix: /games/hero/
+    exact: true
+    title: Hero game
+    tight: true
+    items:
+      - name: Ancient writers
+        what: Virgil (Aeneid 8) and Livy (book 1), for the story of Hercules and Cacus
+  - prefix: /games/thermopylae/
+    exact: true
+    title: Thermopylae game
+    tight: true
+    items:
+      - name: Ancient writers
+        what: Herodotus and Plutarch, for the story of the battle
+  - prefix: /games/daily/
+    exact: true
+    title: Daily word game
+    tight: true
+    items:
+      - name: Perseus and PROIEL treebanks
+        url: https://github.com/PerseusDL/treebank_data
+        what: the Latin and Greek word forms a guess may use
+        licence: CC BY-SA 3.0; CC BY-NC-SA 3.0
+
+# Shown only on /credits/: sections that credit their sources on their own pages, summed up here, and the language data in
+# full (from static/lang/data/SOURCES.md; keep the two in step).
+more:
+  - group: Languages (Greek, Latin and Scripture)
+    link: /languages/
+    items:
+      - name: Nestle 1904 Greek New Testament
+        what: the Greek Gospels text
+        licence: public domain
+      - name: MACULA Greek (Clear Bible / Biblica)
+        url: https://github.com/Clear-Bible/macula-greek
+        what: Greek morphology, lemmas and English glosses
+        licence: CC BY 4.0
+      - name: Dodson Greek Lexicon
+        what: brief and long Greek definitions
+        licence: public domain
+      - name: PROIEL Treebank
+        url: https://github.com/proiel/proiel-treebank
+        what: the Latin Vulgate Gospels with lemmas, morphology and syntax; classical sentences from Caesar, Cicero's Letters to Atticus and Herodotus. Files derived from it are shared under the same licence.
+        licence: CC BY-NC-SA 3.0
+      - name: Perseus Ancient Greek and Latin Dependency Treebank v2.1
+        url: https://github.com/PerseusDL/treebank_data
+        what: classical sentences (Cicero, Virgil, Ovid, Homer, Plutarch), the sentence trees, and the readings from Aesop and Phaedrus
+        licence: CC BY-SA 3.0
+      - name: Perseus canonical texts
+        url: https://github.com/PerseusDL/canonical-latinLit
+        what: 'public-domain English translations: McDevitte and Bohn (Caesar), Shuckburgh and Yonge (Cicero), T. C. Williams (Virgil), Brookes More (Ovid), Godley (Herodotus), Murray (Homer), Perrin (Plutarch)'
+        licence: CC BY-SA 4.0 markup
+      - name: Liddell–Scott–Jones Greek–English Lexicon (Perseus Digital Library)
+        url: https://github.com/PerseusDL/lexica
+        what: Greek definitions for the classical sentences
+        licence: CC BY-SA 4.0
+      - name: "William Whitaker's WORDS"
+        what: Latin definitions
+        licence: free to copy
+      - name: ESV® Bible
+        url: https://www.esv.org/
+        what: 'English for a fixed set of 499 verses, used under Crossway''s quotation allowance. Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.'
+      - name: King James Version (standard 1769 Oxford text)
+        url: https://www.npmjs.com/package/kjv
+        what: English in the language embeds and the developers' toolkit, from the public-domain kjv package, checked against Wikisource's transcription of the 1772 Oxford edition
+        licence: public domain
+      - name: Audio Greek New Testament, read by Marilyn Phemister
+        url: https://archive.org/details/AudiogreeknewtestamentOfWescott.hort.readByMarilynPhemister
+        what: Greek audio (Westcott–Hort text), streamed from the Internet Archive; © 2001, used for non-commercial purposes with credit
+      - name: Gardiner, Egyptian Grammar (1927; 3rd ed. 1957), and Bennett's Linear B sign list
+        what: sign codes, sound values and meanings for the hieroglyph and Linear B pages
+  - group: Pages that list their own sources
+    note: These pages name their sources on the page itself, at the point of use or under "Sources".
+    items:
+      - name: The Ladders
+        link: /math/
+        what: the lessons of the Math, Physics, Chemistry, Biology, Earth and Space, Economics, Logic, Writing, Vocabulary, American History, Geography, Art, Etiquette, Egyptology and Ancient Scripts ladders list their sources and further reading at the bottom
+      - name: The Federalist and Anti-Federalist Papers
+        link: /american-history/federalist-papers/
+        what: 'texts from Project Gutenberg eBook #1404 (read from the Internet Archive''s copy), checked against the 1818 Gideon and 1863 Dawson editions on Wikisource; Anti-Federalist texts from Paul Leicester Ford''s editions (1888, 1892), McMaster and Stone (1888) and Elliot''s Debates, via Project Gutenberg, the Internet Archive and Wikisource. All public domain.'
+      - name: Debate
+        link: /debate/
+        what: each topic and chapter lists its sources; format times are sourced on each format page
+      - name: Science Lab
+        link: /science-lab/
+        what: each simulation lists its sources
+      - name: Trades, Being an Adult, Sewing and Knitting
+        link: /trades/
+        what: each guide lists its sources
+      - name: Food Garden Planner
+        link: /garden/
+        what: yields from university extension tables, nutrition from USDA FoodData Central, and the CDC; each crop and guide lists its sources
+      - name: Kitchen guides and from-scratch recipes
+        link: /meal-prep/guides/
+        what: each guide and recipe lists its sources (USDA, FDA, the National Center for Home Food Preservation and university extension services)
+      - name: Markets
+        link: /markets/
+        what: 'economic data from FRED® (Federal Reserve Bank of St. Louis); Treasury yields and auctions from the U.S. Department of the Treasury; charts and quotes from TradingView widgets'
+      - name: Business cases and courses
+        link: /business/
+        what: each case and chapter lists its sources
+      - name: Test Prep
+        link: /test-prep/
+        what: facts link to their sources (mostly the College Board, ACT and the Classic Learning Test) where they are used, and the Test Prep page lists them all
+      - name: Music
+        link: /music/
+        what: each song names where its melody was checked (for example the Mutopia Project's public-domain editions) or says it is an original tune
+      - name: Ancient Egypt sites
+        link: /egypt/sites/
+        what: each site lists its sources
+      - name: Old exams
+        link: /homeschool/old-exams/
+        what: each exam lists where its text comes from
+      - name: Actual Reading, by Hannah Ward, M.Ed.
+        link: /homeschool/actual-reading/
+        what: Hannah Ward's curricula, shared here with her permission (© Actual Reading); the lessons open from her website
+      - name: Free Books
+        link: /free-books/
+        what: 'texts from Project Gutenberg via Gutendex; scans from the Internet Archive; recordings by LibriVox volunteers, served by the Internet Archive'
+      - name: Videos
+        link: /videos/
+        what: each video page lists the texts and tools it used, where it has any
+      - name: Harvard Classics day pages
+        link: /harvard-classics/
+        what: each reading links to its page in the scanned volume

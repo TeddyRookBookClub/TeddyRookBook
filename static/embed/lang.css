@@ -1,0 +1,82 @@
+/* Language embeds (/embed/lang-word/, /embed/lang-drill/, /embed/alphabet/, /embed/hieroglyphs/): on top of embed.css and
+   the Languages styles (static/lang/lang.css, which sets the .lang colors for light and dark). System fonts only: Greek
+   falls back from Gentium (if installed) to Georgia and the device's serif. */
+html body.emb-lang .lang{max-width:none;margin:0;--card:var(--e-card);--line:var(--e-line);--muted:var(--e-muted);--ink:var(--e-ink)}
+.emb-lang .lang .grc,.emb-lang .lang .lat{font-family:"Gentium Book Plus","Gentium Plus","Noto Serif",Georgia,"Times New Roman",serif}
+.emb-lang .emb-eye{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 10px;margin:0 0 6px}
+.emb-lang .emb-eye span{color:var(--e-muted);letter-spacing:.04em}
+.emb-loading{color:var(--e-muted);margin:1rem 0}
+
+/* sources and credits */
+.emb-src{margin:14px 0 0;font-size:12.5px;line-height:1.45;color:var(--e-muted);border-top:1px solid var(--e-line);padding-top:8px}
+.emb-src summary{cursor:pointer;font-weight:700;color:var(--e-g);min-height:28px;display:flex;align-items:center}
+.emb-src summary::before{content:"▸";margin-right:6px;font-size:11px}
+.emb-src[open] summary::before{content:"▾"}
+.emb-src summary::-webkit-details-marker{display:none}
+.emb-src ul{margin:4px 0 6px;padding-left:1.1rem}
+.emb-src li{margin:3px 0;overflow-wrap:anywhere}
+.emb-src b{color:var(--e-ink);font-weight:600}
+.emb-src a{color:var(--e-g)}
+.emb-srcnote{margin:4px 0 0}
+
+/* word of the day */
+.lw-card{background:var(--e-card);border:1px solid var(--e-line);border-radius:12px;padding:14px 16px}
+.lw-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px}
+.emb-lang .lw-w{margin:0;font-size:2.2rem;line-height:1.15;font-weight:700;color:var(--e-g);overflow-wrap:anywhere}
+.lw-say{font:inherit;font-size:14px;padding:6px 12px;min-height:36px;border-radius:999px;border:1px solid var(--e-line);background:transparent;color:var(--e-ink);cursor:pointer}
+.lw-say:hover{border-color:var(--e-g)}
+.lw-mean{margin:4px 0 2px;font:italic 1.2rem/1.35 Georgia,"Times New Roman",serif}
+.lw-meta{margin:0 0 10px;font-size:13px;color:var(--e-muted)}
+.lw-form{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--e-g) 8%,transparent);font-size:14px}
+.lw-lab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--e-gold)}
+.lw-form b{font-size:1.25rem}
+.lw-fp{color:var(--e-muted)}
+.lw-ex{margin:12px 0 0}
+.lw-ex blockquote{margin:0;padding:2px 0 2px 12px;border-left:3px solid var(--e-gold)}
+.lw-src{margin:0 0 4px}
+.lw-src mark{background:color-mix(in srgb,var(--e-gold) 30%,transparent);color:inherit;border-radius:3px;padding:0 .1em}
+.lw-en{margin:0;font-family:Georgia,"Times New Roman",serif;line-height:1.5}
+.lw-ex figcaption{margin:6px 0 0;font-size:12.5px;color:var(--e-muted)}
+
+/* sentence drill */
+.ld-card{background:var(--e-card);border:1px solid var(--e-line);border-radius:12px;padding:12px 14px;margin:8px 0 10px}
+.ld-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 10px;font-size:13px;color:var(--e-muted)}
+.ld-ref{font-weight:700;color:var(--e-gold)}
+.ld-tgt{margin:8px 0 6px;font-size:1.35rem;line-height:1.7;overflow-wrap:anywhere}
+.emb-lang .ld-tgt.grc{font-size:1.4rem}
+.ld-tgt .w{cursor:pointer}
+.ld-tgt .w:hover{background:color-mix(in srgb,var(--e-g) 14%,transparent)}
+.ld-tgt .w:focus-visible{outline:2px solid var(--e-g);outline-offset:1px}
+.is-playing .ld-tgt{color:var(--e-g)}
+.ld-enbox{border-top:1px dashed var(--e-line);padding-top:6px}
+.ld-enbox[hidden]{display:none}
+.ld-en{margin:0;font-family:Georgia,"Times New Roman",serif;line-height:1.5}
+.ld-tr{margin:2px 0 0;font-size:12px;color:var(--e-muted)}
+.ld-ctl{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}
+.ld-btn{font:inherit;font-size:15px;padding:8px 14px;min-height:40px;border-radius:10px;border:1px solid var(--e-line);background:transparent;color:var(--e-ink);cursor:pointer}
+.ld-btn:hover:not([disabled]){border-color:var(--e-g)}
+.ld-btn[disabled]{opacity:.45;cursor:default}
+.ld-btn.pri{background:#00562f;border-color:#00562f;color:#fff;font-weight:700;flex:1 1 8rem}
+html[data-theme="dark"] .ld-btn.pri{background:#6cc79a;border-color:#6cc79a;color:#0b1a13}
+.ld-btn:focus-visible,.lw-say:focus-visible{outline:2px solid var(--e-gold);outline-offset:2px}
+.ld-opts{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--e-muted)}
+.ld-opts label{display:flex;gap:6px;align-items:flex-start;min-height:26px}
+.ld-opts input{margin-top:3px;accent-color:var(--e-g)}
+.ld-done{margin:8px 0 0;font-weight:600}
+.ld-panel{background:var(--e-card);border:1px solid var(--e-line);border-radius:12px;padding:10px 14px}
+.emb-lang .ld-panel .wp-word{font-size:1.6rem}
+
+/* alphabet */
+.emb-ab.ab-wrap{max-width:none}
+.emb-ab .ab-les{padding:.7rem .8rem}
+@media (max-width:420px){.emb-ab .ab-lessons{grid-template-columns:1fr}.emb-ab .ab-grid{grid-template-columns:1fr 1fr}.emb-ab .ab-marks{grid-template-columns:1fr}}
+
+/* hieroglyphs */
+.emb-hg{max-width:none}
+.emb-hgnote{margin:0 0 10px;font-size:13px;line-height:1.45;color:var(--e-muted)}
+.emb-hgnote b{color:var(--e-ink)}
+.emb-more{margin:10px 0 0;border:1px solid var(--e-line);border-radius:10px;padding:6px 12px;background:var(--e-card)}
+.emb-more summary{cursor:pointer;font-weight:700;color:var(--e-g);min-height:32px;display:flex;align-items:center}
+.emb-more[open]{padding-bottom:12px}
+/* Greek in an uppercase eyebrow keeps its own letters and accents */
+.emb-lang .emb-eye .grc{text-transform:none;letter-spacing:0;font-size:1.05em}
